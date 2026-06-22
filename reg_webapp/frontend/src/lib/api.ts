@@ -219,8 +219,8 @@ export type BindingChild = Schemas["BindingChild"];
  * variable's full embedded longitudinal record (states + edges; see
  * reg_webapp/DESIGN.md → Catalog router structure). */
 export type BindingNodeData = Schemas["BindingNode"];
-export type VariableStateModel = Schemas["VariableStateModel"];
-export type VariableRefModel = Schemas["VariableRefModel"];
+export type VariableStateModel = Schemas["VariableState"];
+export type VariableRefModel = Schemas["VariableRef"];
 /** One edition in a variable's embedded FULL succession timeline (#582) — the
  * variable-grain dual of `ClassificationChainEdition`. The chain arrives
  * oldest-first, terminal last, with `is_self`/`is_current` flags and per-edition
@@ -228,22 +228,22 @@ export type VariableRefModel = Schemas["VariableRefModel"];
  * (#355/#411): a valid `fqid` (301-redirects to the current edition) but a null
  * `name` (no live row). `fqid` is null only on a malformed triple. The browse
  * panel renders the whole chain synchronously from these. */
-export type VariableEditionModel = Schemas["VariableEditionModel"];
-export type RelatedRefModel = Schemas["RelatedRefModel"];
-export type LineageEdgeModel = Schemas["LineageEdgeModel"];
-export type LineageWarningModel = Schemas["LineageWarningModel"];
+export type VariableEditionModel = Schemas["VariableEdition"];
+export type RelatedRefModel = Schemas["RelatedRef"];
+export type LineageEdgeModel = Schemas["LineageEdge"];
+export type LineageWarningModel = Schemas["LineageWarning"];
 
 /** A derived concept group (#303) on a register / classification-root node —
  * a PRESENTATION-ONLY fold of near-identical rows. Members carry the real leaf
  * FQIDs (the same entries also appear in `children`); the browse collapses the
  * member rows under the group and expands to a facet picker. */
-export type ConceptGroup = Schemas["ConceptGroupModel"];
-export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
+export type ConceptGroup = Schemas["ConceptGroupSummary"];
+export type ConceptGroupMember = Schemas["ConceptGroupMember"];
 /** One facet assignment on a group member (`axis`/`value`/`label`) — shared by
  * the browse `ConceptGroupMember` and the subject-page `ConceptGroupNodeMember`,
  * so the facet-grid helpers (`axisValues`/`memberAt`) can be generic over the
  * member type. */
-export type GroupFacetModel = Schemas["GroupFacetModel"];
+export type GroupFacetModel = Schemas["GroupFacet"];
 
 /** The concept group as a browsable SUBJECT (#617), returned by the fixed
  * `/catalog/group/<provider>/<register>/<key>` route — group identity +
@@ -258,7 +258,7 @@ export type ConceptGroupNodeMember = Schemas["ConceptGroupNodeMember"];
 /** The concept group a binding belongs to (#616), as `(provider, register,
  * key)` — carried on `BindingNode.group` (null when ungrouped) so a member page
  * links to its group subject without a second fetch. */
-export type BindingGroupRef = Schemas["BindingGroupRefModel"];
+export type BindingGroupRef = Schemas["BindingGroupRef"];
 
 // The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
 // binding leaf is queried with `?period` (the resolve_at subset), and a
@@ -274,11 +274,11 @@ export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
  * succession editions are live), so `fqid` is null only when the slug is
  * missing/unresolvable, in which case it renders as plain text. The browse panel
  * renders the whole chain synchronously from these. */
-export type ClassificationChainEdition = Schemas["ClassificationChainEdition"];
+export type ClassificationChainEdition = Schemas["ClassificationEdition"];
 /** One code/label entry in a classification edition's value set (#609), embedded
  * on `ClassificationNodeData.codes`. `is_valid` is canonical (true) / observed-only
  * (false) / unknown (null — no canonical CSV for the edition). */
-export type ClassificationCodeModel = Schemas["ClassificationCodeModel"];
+export type ClassificationCodeModel = Schemas["ClassificationCode"];
 /** The resolved classification leaf the catch-all returns — carries its embedded
  * FULL succession chain (`edition_chain`, oldest first / terminal last), the
  * resolved edition's value-set `codes` (#609), and the curated umbrella

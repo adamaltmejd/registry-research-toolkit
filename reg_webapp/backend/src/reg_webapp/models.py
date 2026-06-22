@@ -1,10 +1,11 @@
 """Webapp-local Pydantic response models.
 
-These are reg_webapp's OWN response models — NOT reg_schema models and NOT
-reg_meta dataclasses (see DESIGN.md → Pydantic boundary). reg_meta's library
-surface is plain dataclasses;
-the backend wraps its domain types in per-endpoint Pydantic models (the only
-place a 1:1 wrapper remains). reg_schema models are used directly only for
+These are reg_webapp's OWN response models (see DESIGN.md → Pydantic boundary):
+the node/envelope shapes that carry the `kind` discriminator and server-computed
+enrichment (coverage, edition chains). reg_meta's catalog surface is now frozen
+Pydantic too (#681), so the per-endpoint 1:1 LEAF wrappers are gone — these models
+EMBED reg_meta's `VariableState` / `VariableRef` / `ConceptGroupSummary` / … directly
+instead of re-modeling them. reg_schema models are used directly for
 project_data-shaped responses (A5.1b+).
 """
 
@@ -13,6 +14,22 @@ from __future__ import annotations
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
+from reg_meta.catalog import (
+    BindingGroupRef,
+    ClassificationCode,
+    ClassificationEdition,
+    ConceptGroupMember,
+    ConceptGroupSummary,
+    LineageEdge,
+    LineageWarning,
+    RegisterCoverage,
+    RelatedRef,
+    VariableCoverage,
+    VariableEdition,
+    VariableRef,
+    VariableState,
+    VariantSummary,
+)
 from reg_meta.fqid import CLASSIFICATION_PREFIX
 
 
@@ -80,13 +97,15 @@ class ContextResponse(BaseModel):
 
 
 # ── Catalog browse (see DESIGN.md → Catalog router structure) ───────────────
-# Webapp-local 1:1 Pydantic wrappers of reg_meta's frozen Catalog dataclasses
-# (see DESIGN.md → Pydantic boundary). reg_meta dataclasses are NOT imported as
-# response models. FQID fields
-# serialize as plain `str` (the catalog mapper passes `str(fqid)`), NOT nested
-# models — so `openapi-typescript` emits flat string fields. Each node model
-# carries a `kind` Literal discriminator so the catch-all's response is a
-# Pydantic discriminated union (clean tagged union in the codegen'd TS).
+# The NODE / envelope models below carry the `kind` discriminator and any
+# server-computed enrichment; their embedded leaf fields are reg_meta's frozen
+# Pydantic models (`VariableState` / `VariableRef` / `ConceptGroupSummary` / …),
+# imported directly as response models (#681 — the prior 1:1 leaf wrappers are
+# gone). reg_meta's `Fqid` fields serialize as plain `str` via reg_meta's own
+# Pydantic core schema, so `openapi-typescript` still emits flat string fields.
+# Each node model carries a `kind` Literal discriminator so the catch-all's
+# response is a Pydantic discriminated union (clean tagged union in the codegen'd
+# TS).
 
 
 class ProviderNode(BaseModel):
@@ -110,32 +129,11 @@ class ClassificationRootNode(BaseModel):
 
 
 # ── Coverage aggregates (#351; see DESIGN.md → Coverage aggregates) ─────────
-# ADDITIVE, query-time browse aggregates over `variable_state`. `coverage` is
-# None on a node that wasn't enriched (e.g. a register's OWN node — coverage is
-# populated only in the PROVIDER-children and REGISTER-children listings). The
-# SPA does not read these yet and must tolerate their absence (payload-skew rule
-# #317). `coverage_to` is None when the latest window is open-ended (`open_ended`
-# True → "ongoing") OR there are no states; `state_count > 1` in a study window
-# signals a break.
-
-
-class VariableCoverageModel(BaseModel):
-    """Per-variable coverage over its `variable_state` windows."""
-
-    coverage_from: str | None = None
-    coverage_to: str | None = None
-    open_ended: bool = False
-    state_count: int = 0
-
-
-class RegisterCoverageModel(BaseModel):
-    """Per-register coverage: `variable_count` slugged variables + the span over
-    all their states."""
-
-    variable_count: int = 0
-    coverage_from: str | None = None
-    coverage_to: str | None = None
-    open_ended: bool = False
+# ADDITIVE, query-time browse aggregates over `variable_state`, embedded directly
+# as reg_meta's `VariableCoverage` / `RegisterCoverage` (#681). `coverage` is None
+# on a node that wasn't enriched (e.g. a register's OWN node — coverage is
+# populated only in the PROVIDER-children and REGISTER-children listings). The SPA
+# does not read these yet and must tolerate their absence (payload-skew rule #317).
 
 
 class RegisterNode(BaseModel):
@@ -149,78 +147,7 @@ class RegisterNode(BaseModel):
     fqid: str
     name: str | None = None
     purpose: str | None = None
-    coverage: RegisterCoverageModel | None = None
-
-
-class ClassificationChainEdition(BaseModel):
-    """One edition in a classification's FULL succession timeline (#571), as
-    embedded on `ClassificationNode.edition_chain`. The browse panel renders the
-    whole chain (oldest first, terminal last) synchronously from these — no
-    per-neighbor fetch.
-
-    `slug` is the load-bearing identity. Every chain edition is a LIVE
-    `classification` row — the build validator guarantees succession editions are
-    live (it fails on any `classification_replaced_by` edge whose endpoint has no
-    live row), so `fqid` is None only when the slug is malformed/unresolvable (the
-    SPA renders such an edition as plain text, not a link). `effective_year` is the
-    year on the succession edge that names this edition as the predecessor — i.e. the
-    year it was superseded by its successor (None for a terminal, which has no
-    outbound edge). `is_current` flags a terminal (current) edition; `is_self`
-    flags the edition the caller queried (resolved to its canonical live slug when
-    the query was a `same_as` alias). A 1→many SPLIT root (#605/#579 — e.g. querying
-    `sun1996`, whose chain fans out into the niva/inriktning/grupp branches) yields
-    MULTIPLE `is_current` editions, one per branch tip; the common linear chain has
-    exactly one. A dedicated model (NOT the search `ClassificationEditionModel`,
-    which has no is_current/is_self) keeps the search edition a clean 4-field
-    shape."""
-
-    slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
-    fqid: str | None = Field(
-        description="The edition's 2-seg classification FQID, or None only when the "
-        "slug is malformed/unresolvable (the build validator guarantees succession "
-        "editions are live classification rows; rendered as plain text, not a link)."
-    )
-    name: str | None = Field(
-        description="The edition's display name (every chain edition is a live row)."
-    )
-    effective_year: int | None = Field(
-        description="The year on the succession edge naming this edition as the "
-        "predecessor — i.e. the year it was superseded by its successor; None for "
-        "the terminal (head) edition, which has no outbound edge."
-    )
-    is_current: bool = Field(
-        description="True for a terminal (current) edition — no outbound successor. "
-        "A 1-to-many split root's chain has MULTIPLE such editions (one per branch "
-        "tip); a linear chain has exactly one."
-    )
-    is_self: bool = Field(
-        description="True for the edition the caller queried (resolved to its "
-        "canonical live slug when the query was a same_as alias)."
-    )
-
-
-class ClassificationCodeModel(BaseModel):
-    """One code/label entry in a classification edition's value set (#609),
-    embedded on `ClassificationNode.codes`. Scoped to the RESOLVED edition (codes
-    key per `classification_id`), so the leaf shows the codes of the edition being
-    viewed — other editions are reached via the edition-chain panel. These are
-    PUBLIC classification codes, not row-level data.
-
-    `is_valid` is the canonical/observed flag, surfaced (not filtered) so the SPA
-    can show the full list with a validity hint: True = canonical (in the
-    classification's valid-codes CSV), False = observed-only (seen in data, not
-    canonical), None = no CSV exists so validity is unknown (the whole edition is
-    NULL there)."""
-
-    code: str = Field(description="The provider-native value code (e.g. '3').")
-    label: str = Field(description="The human label for the code.")
-    level: int | None = Field(
-        description="The hierarchy depth, or None when the classification is flat."
-    )
-    is_valid: bool | None = Field(
-        description="Canonical (True) / observed-only (False) / unknown (None — no "
-        "canonical CSV exists for this edition)."
-    )
+    coverage: RegisterCoverage | None = None
 
 
 class ClassificationNode(BaseModel):
@@ -241,17 +168,17 @@ class ClassificationNode(BaseModel):
     # edition. #605: querying a 1→many SPLIT root (#579) fans the chain out into ALL
     # downstream branches, so it can carry MULTIPLE `is_current` editions (one per
     # branch tip); a leaf's chain stays its single linear path.
-    edition_chain: list[ClassificationChainEdition] = Field(default_factory=list)
+    edition_chain: list[ClassificationEdition] = Field(default_factory=list)
     # #609: the RESOLVED edition's value-set codes (code-ordered), embedded so the
     # SPA's code viewer renders synchronously — mirroring `edition_chain`. Scoped to
     # the viewed edition only (codes are per-edition); a different edition's codes
     # arrive on ITS `class/<slug>` leaf. Empty when the edition carries no codes.
-    codes: list[ClassificationCodeModel] = Field(default_factory=list)
+    codes: list[ClassificationCode] = Field(default_factory=list)
     # #609: the curated umbrella group(s) this edition belongs to (e.g. `group:sun`)
     # — the niva ↔ aggregate granularity cross-reference (#585/#608). Read off the
-    # existing concept-group table; reuses the browse `ConceptGroupModel`. Empty for
-    # an ungrouped classification (the common case).
-    dimensions: list[ConceptGroupModel] = Field(default_factory=list)
+    # existing concept-group table; reuses the browse `ConceptGroupSummary`. Empty
+    # for an ungrouped classification (the common case).
+    dimensions: list[ConceptGroupSummary] = Field(default_factory=list)
 
 
 class BindingChild(BaseModel):
@@ -262,7 +189,7 @@ class BindingChild(BaseModel):
     kind: Literal["binding"] = "binding"
     fqid: str
     name: str | None = None
-    coverage: VariableCoverageModel | None = None
+    coverage: VariableCoverage | None = None
 
 
 class VariantsRef(BaseModel):
@@ -276,213 +203,21 @@ class VariantsRef(BaseModel):
 
 
 # ── Derived concept groups (#303; see reg_meta/DESIGN.md → Concept groups) ──
-# PRESENTATION-ONLY browse folding: the register / classification-root
-# responses carry `groups` ALONGSIDE the full flat children list (members
-# repeat in both); the SPA hides grouped leaves and renders group rows that
-# expand to a facet picker. A group is not FQID-addressable — members carry
-# the real leaf FQIDs.
-
-
-class GroupFacetModel(BaseModel):
-    """One facet assignment on a group member: `axis` names the dimension
-    ('month' / 'rank' / 'vintage'), `value` sorts, `label` displays."""
-
-    axis: str
-    value: str
-    label: str
-
-
-class ConceptGroupMemberModel(BaseModel):
-    """A group member: the leaf's real FQID (binding or `class/<slug>`), its
-    display name, and its facet assignments (empty on edge-group members)."""
-
-    fqid: str
-    name: str | None = None
-    facets: list[GroupFacetModel]
-
-
-class ConceptGroupModel(BaseModel):
-    """One derived concept group. `key` is the scope-unique derivation key (a
-    UI anchor, not an FQID); `source` records the derivation dimension; `axes`
-    are the sorted facet axes the members carry (empty for edge groups);
-    members are ordered by facet values along `axes`, then slug."""
-
-    key: str
-    label: str
-    source: Literal["edge", "token", "curated"]
-    axes: list[str]
-    members: list[ConceptGroupMemberModel]
-
-
-class BindingGroupRefModel(BaseModel):
-    """The concept group a binding belongs to, as the group's addressable
-    `(provider, register, key)` (#616). Carried by `BindingNode.group` so a
-    member page knows its home group and can link to the group subject
-    (`/catalog/group/<provider>/<register>/<key>`) without a second fetch.
-    Membership is register-scoped and 1:1, so this is a singular ref — the full
-    member list lives behind the group route. `key` is `ConceptGroupModel.key`
-    (the scope-unique derivation key), NOT an FQID segment. Maps reg_meta's
-    `BindingGroupRef` 1:1.
-
-    The Python attr is `register_name` (alias `register`) to avoid the
-    `BaseModel.register` method shadow — same pattern as `VariableRefModel`; the
-    wire/JSON key stays `register`, and the mapper constructs with `register=`."""
-
-    provider: str
-    register_name: str = Field(alias="register")
-    key: str
+# PRESENTATION-ONLY browse folding: the register / classification-root responses
+# carry `groups` ALONGSIDE the full flat children list (members repeat in both);
+# the SPA hides grouped leaves and renders group rows that expand to a facet
+# picker. A group is not FQID-addressable — members carry the real leaf FQIDs.
+# The group/member/facet shapes are reg_meta's `ConceptGroupSummary` /
+# `ConceptGroupMember` / `GroupFacet`, embedded directly (#681).
 
 
 # ── Binding-leaf embedded longitudinal record ──────────────────────────────
 # The binding LEAF (3-seg) embeds the variable's FULL record from one
-# `Catalog.resolve` call: every state + variable-grain edges. These
-# mirror the reg_meta dataclasses 1:1. `ResolvedVariable` does NOT carry
-# lineage_warnings, so they are OMITTED here (they arrive via A5.2's
+# `Catalog.resolve` call: every state + variable-grain edges. These are reg_meta's
+# frozen Pydantic models (`VariableState` / `VariableRef` / `RelatedRef` /
+# `LineageEdge` / `VariableEdition`) embedded directly (#681). `ResolvedVariable`
+# does NOT carry lineage_warnings, so they are OMITTED here (they arrive via A5.2's
 # `/lineage_warnings`).
-
-
-class ValueSetMember(BaseModel):
-    """One (code, label) pair of a state's value set."""
-
-    code: str
-    label: str
-
-
-class VariableStateModel(BaseModel):
-    """One `variable_state` row — a per-delivery shape tagged with its variant
-    coordinate (see reg_meta/DESIGN.md → Two-level variable model). `value_set` is
-    the hydrated (code, label) pairs, None when
-    the state carries no value set."""
-
-    state_id: int
-    variant: str
-    register_variant_id: int
-    valid_from: str
-    valid_to: str
-    data_type: str | None
-    data_length: str | None
-    delivery_column_name: str | None
-    value_set_version_label: str
-    value_set_id: int | None
-    value_set: list[ValueSetMember] | None
-    is_identifier: bool
-    classification_slug: str | None
-    # The COARSEST period token exactly covering [valid_from, valid_to]
-    # (`reg_meta.fqid.period_token_for_bounds` — the #271 display inverse:
-    # "2009", "VT2009", "2009-Q3", or an explicit "lo..hi" range for a
-    # non-grammar window). None for an open-ended state (valid_to is the
-    # `9999-12-31` sentinel — no finite token exists; clients render "since
-    # valid_from"). Defaulted (additive) per the #317 rule: the SPA must
-    # tolerate one edge-cache generation of payloads missing it (#321).
-    period_token: str | None = None
-
-
-class VariableRefModel(BaseModel):
-    """A variable-grain edge endpoint (`same_as` / succession). `fqid` is the
-    neighbor's 3-seg binding FQID (None when its slug isn't populated); the
-    `provider`/`register`/`variable` triple is the load-bearing identity when
-    `fqid` is None. `reason` / `effective_year` are succession-only (#142), None
-    on `same_as`.
-
-    The Python attribute is `register_name` because a bare `register` field
-    shadows `BaseModel.register` (a Pydantic v2 method) and warns; the wire/JSON
-    key stays `register` via the alias (the alias is also the canonical init
-    param — the mapper constructs with `register=`). FastAPI serializes by alias
-    by default, so the response key is `register`.
-    """
-
-    fqid: str | None
-    provider: str
-    register_name: str = Field(alias="register")
-    variable: str
-    reason: str | None = None
-    effective_year: int | None = None
-
-
-class RelatedRefModel(BaseModel):
-    """A split-sibling edge (`variable_related_to` — see reg_meta_build/DESIGN.md →
-    Build-time triage (SCB)) with its
-    `relation_kind`. `register` is the alias for `register_name` (see
-    `VariableRefModel`) — avoids the `BaseModel.register` method shadow."""
-
-    fqid: str | None
-    provider: str
-    register_name: str = Field(alias="register")
-    variable: str
-    relation_kind: str
-
-
-class LineageEdgeModel(BaseModel):
-    """A consumer-side lineage edge (state grain — see reg_meta_build/DESIGN.md →
-    Consumer-side lineage (variable_state_lineage)) tying a consumer state to
-    a source state over their validity intersection. `source_fqid` is the source
-    state's 3-seg binding FQID (None when the source slugs aren't populated)."""
-
-    consumer_state_id: int
-    source_state_id: int
-    valid_from: str
-    valid_to: str
-    source_fqid: str | None = None
-
-
-class VariableEditionModel(BaseModel):
-    """One edition in a variable's FULL succession timeline (#582), as embedded on
-    `BindingNode.succession_chain`. The variable-grain dual of
-    `ClassificationChainEdition`: the browse panel renders the whole chain (oldest
-    first, terminal last) synchronously from these — no per-neighbor fetch.
-
-    The `(provider, register, variable)` triple is the load-bearing identity. A chain
-    edition may be a DEAD/renamed predecessor with no live `variable` row — the
-    #355/#411 renamed-slug model: variable succession tolerates dead predecessor
-    editions by design, and (UNLIKE `ClassificationChainEdition`) no
-    `variable_replaced_by` validator forbids it. Such an edition still carries its
-    (syntactically-valid) binding `fqid` so a citation 301-redirects to the current
-    edition, but its `name` is None (no live row to read); the SPA can render it as a
-    dimmed/non-resolving node. `fqid` is None only when the triple is
-    malformed/unresolvable (rendered as plain text, not a link). `effective_year` is
-    the year on the succession edge that names this edition as the predecessor — i.e.
-    the year it was superseded by its successor (None for the terminal, which has no
-    outbound edge). `reason` carries that edge's `beskrivning` (the human transition
-    reason — UNLIKE `ClassificationChainEdition`, whose succession table has no reason
-    column). `is_current` flags the terminal (current) edition; `is_self` flags the
-    edition the caller queried (resolved to its canonical live triple when the query
-    was a `same_as` alias).
-
-    The `register` field uses the `register_name` Python attribute aliased to
-    `register` to avoid the `BaseModel.register` method shadow (see
-    `VariableRefModel`)."""
-
-    fqid: str | None = Field(
-        description="The edition's 3-seg binding FQID. A dead/renamed predecessor "
-        "(no live variable row — tolerated by design, #355/#411) still carries a valid "
-        "fqid that 301-redirects to the current edition; this is None only when the "
-        "triple is malformed/unresolvable (rendered as plain text, not a link)."
-    )
-    provider: str = Field(description="The edition's provider slug.")
-    register_name: str = Field(
-        alias="register", description="The edition's register slug."
-    )
-    variable: str = Field(description="The edition's variable slug.")
-    name: str | None = Field(
-        description="The edition's display name; None for a dead/renamed predecessor "
-        "with no live variable row (tolerated by design, #355/#411)."
-    )
-    effective_year: int | None = Field(
-        description="The year on the succession edge naming this edition as the "
-        "predecessor — i.e. the year it was superseded by its successor; None for "
-        "the terminal (head) edition, which has no outbound edge."
-    )
-    reason: str | None = Field(
-        description="The transition reason (the succession edge's `beskrivning`); "
-        "None for the terminal (no outbound edge)."
-    )
-    is_current: bool = Field(
-        description="True for the terminal (current) edition — no outbound successor."
-    )
-    is_self: bool = Field(
-        description="True for the edition the caller queried (resolved to its "
-        "canonical live triple when the query was a same_as alias)."
-    )
 
 
 class BindingNode(BaseModel):
@@ -511,24 +246,24 @@ class BindingNode(BaseModel):
     is_identifier: bool
     source_register_id: int | None
     source_register_text: str | None
-    states: list[VariableStateModel]
-    same_as: list[VariableRefModel]
+    states: list[VariableState]
+    same_as: list[VariableRef]
     # #582: the FULL variable succession timeline (every edition in the chain,
     # oldest first, terminal last), resolved server-side (`Catalog.variable_chain`)
     # and embedded so the SPA renders the whole edition chain synchronously —
     # superseding the immediate-neighbor `replaced_by` embed. A variable with no
     # succession carries a single self+current edition. The `/predecessors` /
     # `/successors` sub-resources stay (they back the #411 permalink-redirect rails).
-    succession_chain: list[VariableEditionModel] = Field(default_factory=list)
-    related_to: list[RelatedRefModel]
-    lineage: list[LineageEdgeModel]
+    succession_chain: list[VariableEdition] = Field(default_factory=list)
+    related_to: list[RelatedRef]
+    lineage: list[LineageEdge]
     # #616/#617: the binding's owning concept group as its addressable
     # `(provider, register, key)` when it is a group member, else None. Lets a
     # member page render group-aware (a link to the group subject) without a
     # second fetch. Membership is 1:1 (DB PK), so this is singular; the member
     # list lives behind the group route. Defaulted (additive) per the #317 rule —
     # the SPA must tolerate one edge-cache generation of payloads missing it.
-    group: BindingGroupRefModel | None = None
+    group: BindingGroupRef | None = None
     via_same_as: list[str] | None = None
 
 
@@ -551,7 +286,7 @@ class RegisterResponse(RegisterNode):
     stays complete, the SPA folds it)."""
 
     children: list[RegisterChild]
-    groups: list[ConceptGroupModel] = []
+    groups: list[ConceptGroupSummary] = []
 
 
 class ClassificationRootResponse(ClassificationRootNode):
@@ -560,7 +295,7 @@ class ClassificationRootResponse(ClassificationRootNode):
     classifications ALSO appear in `children`)."""
 
     children: list[ClassificationNode]
-    groups: list[ConceptGroupModel] = []
+    groups: list[ConceptGroupSummary] = []
 
 
 class RootResponse(BaseModel):
@@ -575,20 +310,22 @@ class RootResponse(BaseModel):
 # A concept group addressed by `/catalog/group/<provider>/<register>/<key>` — a
 # browsable subject in its own right (a group's default selection is "all
 # members", which a single member FQID can't express, so it needs its own
-# address). DISTINCT from the presentation-only `ConceptGroupModel` folded into a
-# register/classification listing: this is the resolved group as a first-class
+# address). DISTINCT from the presentation-only `ConceptGroupSummary` folded into
+# a register/classification listing: this is the resolved group as a first-class
 # node, carrying per-member coverage so the page renders without a second fetch.
 
 
-class ConceptGroupNodeMember(ConceptGroupMemberModel):
-    """A concept-group member on the group SUBJECT node — the browse
-    `ConceptGroupMemberModel` (fqid + name + facets) PLUS the per-member
-    study-window `coverage` (#351; reusing `VariableCoverageModel`, zipped on by
-    the group route from `register_variable_coverage`). `coverage` is None for a
-    member with no coverage row (a stateless variable, or a member whose leaf
-    slug didn't match the register's coverage map — defensive)."""
+class ConceptGroupNodeMember(ConceptGroupMember):
+    """A concept-group member on the group SUBJECT node — reg_meta's browse
+    `ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window
+    `coverage` (#351; reg_meta's `VariableCoverage`, zipped on by the group route
+    from `register_variable_coverage`). `coverage` is None for a member with no
+    coverage row (a stateless variable, or a member whose leaf slug didn't match
+    the register's coverage map — defensive). Subclassing the frozen,
+    `extra="forbid"` reg_meta model to declare one new field is supported in
+    Pydantic v2 — the subclass owns `coverage`."""
 
-    coverage: VariableCoverageModel | None = None
+    coverage: VariableCoverage | None = None
 
 
 class ConceptGroupNode(BaseModel):
@@ -607,8 +344,8 @@ class ConceptGroupNode(BaseModel):
     register_name: str = Field(
         alias="register",
         description="The group's register slug. The Python attr is `register_name` "
-        "to avoid the BaseModel.register method shadow (see VariableRefModel); the "
-        "wire key is `register` via the alias.",
+        "to avoid the BaseModel.register method shadow (see reg_meta's VariableRef); "
+        "the wire key is `register` via the alias.",
     )
     key: str
     label: str
@@ -639,42 +376,11 @@ CatalogNode = Annotated[
 
 # ── A5.2a-ii sub-endpoint models (see DESIGN.md → Catalog router structure) ──
 # The 7 suffixed/sub-resource read endpoints. Each returns a thin envelope
-# echoing the queried `binding` (or `register`) FQID plus the mapped reg_meta
-# dataclass list, so the SPA codegen sees one response type per endpoint. These
-# REUSE the leaf edge models above (`VariableStateModel`, `VariableRefModel`,
-# `RelatedRefModel`, `LineageEdgeModel`) — the sub-endpoints are the standalone
-# accessors for the same edges the leaf embeds.
-
-
-class LineageWarningModel(BaseModel):
-    """A build-time lineage warning for a consumer state:
-    `variable_state_lineage_warning`. `warning_kind` is `no_source_state` or
-    `ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`."""
-
-    consumer_state_id: int
-    warning_kind: str
-    message: str
-
-
-class VariantModel(BaseModel):
-    """One register variant (the `register_variant` sub-resource) — the
-    `?variant=` browse axis. A variant is NOT FQID-addressable (the variant left
-    the binding FQID — see reg_meta/DESIGN.md → Two-level variable model), so it
-    carries the variant `slug` (the browse coordinate) + display fields, not an
-    `Fqid`. Maps 1:1 to
-    `reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`
-    fields: `panel_entity_key` is a bare variable-slug string or a list of slugs
-    (composite); `panel_time_key` is "period", a variable-slug, or a list of
-    slugs (composite); `panel_time_grain` is 'delivery'/'row'. Most variants
-    carry no panel data → all three are None."""
-
-    slug: str
-    name: str | None = None
-    description: str | None = None
-    display_group: str | None = None
-    panel_entity_key: str | list[str] | None = None
-    panel_time_key: str | list[str] | None = None
-    panel_time_grain: str | None = None
+# echoing the queried `binding` (or `register`) FQID plus the reg_meta model list,
+# so the SPA codegen sees one response type per endpoint. These EMBED the same
+# reg_meta models the leaf embeds (`VariableState` / `VariableRef` / `RelatedRef` /
+# `LineageEdge` / `LineageWarning` / `VariantSummary`) — the sub-endpoints are the
+# standalone accessors for the same edges the leaf embeds (#681).
 
 
 class StatesResponse(BaseModel):
@@ -684,39 +390,39 @@ class StatesResponse(BaseModel):
     subset (uniform: codegen sees one state-list type)."""
 
     binding: str
-    states: list[VariableStateModel]
+    states: list[VariableState]
 
 
 class PredecessorsResponse(BaseModel):
     """`GET /api/catalog/{fqid}/predecessors` — inbound succession."""
 
     binding: str
-    predecessors: list[VariableRefModel]
+    predecessors: list[VariableRef]
 
 
 class SuccessorsResponse(BaseModel):
     """`GET /api/catalog/{fqid}/successors` — outbound succession."""
 
     binding: str
-    successors: list[VariableRefModel]
+    successors: list[VariableRef]
 
 
 class DimensionsResponse(BaseModel):
     """`GET /api/catalog/{fqid}/dimensions` (#489) — the concept-group
     dimension memberships containing this binding's variable (the
     'pick your variant' facet groups: level / population / rank / …). A
-    `ConceptGroupModel` per containing group; empty when the variable is in
+    `ConceptGroupSummary` per containing group; empty when the variable is in
     no group."""
 
     binding: str
-    dimensions: list[ConceptGroupModel]
+    dimensions: list[ConceptGroupSummary]
 
 
 class RelatedResponse(BaseModel):
     """`GET /api/catalog/{fqid}/related` — split-sibling edges."""
 
     binding: str
-    related: list[RelatedRefModel]
+    related: list[RelatedRef]
 
 
 class LineageResponse(BaseModel):
@@ -728,7 +434,7 @@ class LineageResponse(BaseModel):
     reg_meta enhancement, NOT blocked on here — see DESIGN.md."""
 
     binding: str
-    lineage_edges: list[LineageEdgeModel]
+    lineage_edges: list[LineageEdge]
 
 
 class LineageWarningsResponse(BaseModel):
@@ -736,21 +442,21 @@ class LineageWarningsResponse(BaseModel):
     Empty list when lineage resolved cleanly."""
 
     binding: str
-    lineage_warnings: list[LineageWarningModel]
+    lineage_warnings: list[LineageWarning]
 
 
 class VariantsResponse(BaseModel):
     """`GET /api/catalog/{provider}/{register}/variants` — the variant browser.
     The wire key `register` is the 2-seg register FQID; `variants` the
-    register's `register_variant` sub-resource list.
+    register's `register_variant` sub-resource list (reg_meta's `VariantSummary`).
 
     The Python attr is `register_name` (aliased to `register`) for the same reason
-    as `VariableRefModel`: a bare `register` field shadows `BaseModel.register` (a
-    Pydantic v2 method) and warns. FastAPI serializes by alias, so the wire key
+    as reg_meta's `VariableRef`: a bare `register` field shadows `BaseModel.register`
+    (a Pydantic v2 method) and warns. FastAPI serializes by alias, so the wire key
     stays `register`; the alias is also the canonical init param."""
 
     register_name: str = Field(alias="register")
-    variants: list[VariantModel]
+    variants: list[VariantSummary]
 
 
 # ── A5.2b-ii write surface (see DESIGN.md → Project-write surface
@@ -831,7 +537,7 @@ class VariableSearchResult(BaseModel):
     fqid: str | None
     name: str | None = None
     # `register_name` aliased to the wire key `register` — a bare `register`
-    # field shadows `BaseModel.register` (see `VariableRefModel`). The alias is
+    # field shadows `BaseModel.register` (see reg_meta's `VariableRef`). The alias is
     # the canonical init param; FastAPI serializes by alias, so the JSON key is
     # `register`.
     register_name: str | None = Field(default=None, alias="register")
@@ -933,13 +639,16 @@ class ConceptGroupSearchResult(BaseModel):
     group_label: str
     source: str | None = None
     # `register_name` aliased to the wire key `register` (avoids the
-    # `BaseModel.register` shadow — see `VariableRefModel`). None for a
+    # `BaseModel.register` shadow — see reg_meta's `VariableRef`). None for a
     # classification-kind group (catalog-scoped, no owning register).
     register_name: str | None = Field(default=None, alias="register")
     member_count: int = 0
     matched_count: int = 0
     label_matched: bool = False
-    members: list[ConceptGroupMemberModel] = []
+    # reg_meta's `ConceptGroupMember` embedded directly (#681) — the search path
+    # constructs them from the `reg_meta.queries.search` member dicts (`fqid` is a
+    # string the `Fqid` field parses; `facets` are `{axis, value, label}` dicts).
+    members: list[ConceptGroupMember] = []
 
 
 # Discriminated on `type`: a variables/classifications group mixes leaf hits with
@@ -992,7 +701,7 @@ class ClassificationSearchGroup(BaseModel):
 class CodeOwnerVariable(BaseModel):
     """A variable that carries a code (#352). `register` is the owning register's
     display name (context for the omnibox); the Python attr is `register_name` to
-    avoid the `BaseModel.register` method shadow (see `VariableRefModel`)."""
+    avoid the `BaseModel.register` method shadow (see reg_meta's `VariableRef`)."""
 
     fqid: str | None
     name: str | None = None

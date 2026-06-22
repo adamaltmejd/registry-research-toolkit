@@ -51,7 +51,6 @@ from reg_meta.catalog import (
     ResolvedRegister,
     ResolvedVariable,
     VariableState,
-    VariantSummary,
 )
 from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from reg_meta.fqid import (
@@ -72,42 +71,26 @@ from reg_webapp.catalog_fqid import (
 from reg_webapp.conn import catalog_conn as _catalog_conn
 from reg_webapp.models import (
     BindingChild,
-    BindingGroupRefModel,
     BindingNode,
     CatalogNode,
-    ClassificationChainEdition,
-    ClassificationCodeModel,
     ClassificationNode,
     ClassificationRootNode,
     ClassificationRootResponse,
-    ConceptGroupMemberModel,
-    ConceptGroupModel,
     ConceptGroupNode,
     ConceptGroupNodeMember,
     DimensionsResponse,
-    GroupFacetModel,
-    LineageEdgeModel,
     LineageResponse,
-    LineageWarningModel,
     LineageWarningsResponse,
     PredecessorsResponse,
     ProviderNode,
     ProviderResponse,
     RegisterChild,
-    RegisterCoverageModel,
     RegisterNode,
     RegisterResponse,
-    RelatedRefModel,
     RelatedResponse,
     RootResponse,
     StatesResponse,
     SuccessorsResponse,
-    ValueSetMember,
-    VariableCoverageModel,
-    VariableEditionModel,
-    VariableRefModel,
-    VariableStateModel,
-    VariantModel,
     VariantsRef,
     VariantsResponse,
 )
@@ -224,132 +207,13 @@ def _http_404_if_not_found(exc: RegMetaError) -> None:
     raise exc
 
 
-# ── reg_meta dataclass → Pydantic mappers (1:1 wrappers; see DESIGN.md →
-# Pydantic boundary) ───────────────────────────────────────────────────────
-
-
-def _state_model(state) -> VariableStateModel:
-    return VariableStateModel(
-        state_id=state.state_id,
-        variant=state.variant,
-        register_variant_id=state.register_variant_id,
-        valid_from=state.valid_from,
-        valid_to=state.valid_to,
-        data_type=state.data_type,
-        data_length=state.data_length,
-        delivery_column_name=state.delivery_column_name,
-        value_set_version_label=state.value_set_version_label,
-        value_set_id=state.value_set_id,
-        value_set=(
-            [ValueSetMember(code=m.code, label=m.label) for m in state.value_set]
-            if state.value_set is not None
-            else None
-        ),
-        is_identifier=state.is_identifier,
-        classification_slug=state.classification_slug,
-        # #321/#681: the coarsest exact display token for the window (None for an
-        # open-ended state). reg_meta computes it on `VariableState.period_token`
-        # now (was recomputed here from valid_from/valid_to), so pass it through.
-        period_token=state.period_token,
-    )
-
-
-def _var_ref_model(ref) -> VariableRefModel:
-    # reg_meta's `VariableRef` now aliases its `register` attr to `register_name`
-    # (#681 BaseModel.register shadow), so READ `ref.register_name`; CONSTRUCT the
-    # wire model via its own `register=` alias (unchanged).
-    return VariableRefModel(
-        fqid=str(ref.fqid) if ref.fqid is not None else None,
-        provider=ref.provider,
-        register=ref.register_name,
-        variable=ref.variable,
-        reason=ref.reason,
-        effective_year=ref.effective_year,
-    )
-
-
-def _related_ref_model(ref) -> RelatedRefModel:
-    # `ref.register_name` (#681 alias); wire model's own `register=` alias unchanged.
-    return RelatedRefModel(
-        fqid=str(ref.fqid) if ref.fqid is not None else None,
-        provider=ref.provider,
-        register=ref.register_name,
-        variable=ref.variable,
-        relation_kind=ref.relation_kind,
-    )
-
-
-def _lineage_edge_model(edge) -> LineageEdgeModel:
-    return LineageEdgeModel(
-        consumer_state_id=edge.consumer_state_id,
-        source_state_id=edge.source_state_id,
-        valid_from=edge.valid_from,
-        valid_to=edge.valid_to,
-        source_fqid=str(edge.source_fqid) if edge.source_fqid is not None else None,
-    )
-
-
-def _lineage_warning_model(warning) -> LineageWarningModel:
-    return LineageWarningModel(
-        consumer_state_id=warning.consumer_state_id,
-        warning_kind=warning.warning_kind,
-        message=warning.message,
-    )
-
-
-def _variant_model(variant: VariantSummary) -> VariantModel:
-    # A4.4c: VariantSummary.panel_entity_key / panel_time_key are
-    # str | tuple | None; the wire model uses a JSON list for the composite case.
-    entity_key = variant.panel_entity_key
-    if isinstance(entity_key, tuple):
-        entity_key = list(entity_key)
-    time_key = variant.panel_time_key
-    if isinstance(time_key, tuple):
-        time_key = list(time_key)
-    return VariantModel(
-        slug=variant.slug,
-        name=variant.name,
-        description=variant.description,
-        display_group=variant.display_group,
-        panel_entity_key=entity_key,
-        panel_time_key=time_key,
-        panel_time_grain=variant.panel_time_grain,
-    )
-
-
-def _variable_chain_edition(edition) -> VariableEditionModel:
-    """Map a `reg_meta.VariableEdition` (#582) 1:1 onto the wire model — one node of
-    the full variable succession timeline. Every chain edition is a live `variable`
-    row (the build validator guarantees succession editions are live), so `fqid` is
-    None only when the triple is malformed/unresolvable, which the SPA renders as
-    plain text, not a link. Constructs via the alias `register=` (the canonical init
-    param; the Python attr is `register_name`, avoiding the BaseModel.register
-    shadow — see `_var_ref_model`)."""
-    return VariableEditionModel(
-        fqid=str(edition.fqid) if edition.fqid is not None else None,
-        provider=edition.provider,
-        register=edition.register_name,
-        variable=edition.variable,
-        name=edition.name,
-        effective_year=edition.effective_year,
-        reason=edition.reason,
-        is_current=edition.is_current,
-        is_self=edition.is_self,
-    )
-
-
-def _binding_group_ref_model(ref) -> BindingGroupRefModel | None:
-    """Map a reg_meta `BindingGroupRef` (#616) 1:1 onto the wire model — the
-    binding's owning group as `(provider, register, key)`. None when the binding
-    is ungrouped (`ResolvedVariable.group` is None). Constructs via the alias
-    `register=` (the canonical init param; the Python attr is `register_name`,
-    avoiding the BaseModel.register shadow — see `_var_ref_model`)."""
-    if ref is None:
-        return None
-    # `ref.register_name` (#681 alias); wire model's own `register=` alias unchanged.
-    return BindingGroupRefModel(
-        provider=ref.provider, register=ref.register_name, key=ref.key
-    )
+# ── reg_meta model → catalog node mappers (see DESIGN.md → Pydantic boundary) ──
+# The per-leaf 1:1 wrappers are gone (#681): reg_meta now returns frozen Pydantic
+# models whose `Fqid` fields serialize to the canonical string and whose
+# register-bearing models already dump `register`, so the leaf shapes pass straight
+# through. Only the NODE mappers remain — they carry genuine server-side
+# enrichment (the `kind` discriminator, the `catalog.*_chain` / `classification_*`
+# server-side resolution, the coverage zip, the `via_same_as` stringify).
 
 
 def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
@@ -359,8 +223,10 @@ def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
     `lineage_warnings` are NOT on `ResolvedVariable` so they're omitted (A5.2
     `/lineage_warnings`).
 
-    The FULL variable succession chain (#582) is embedded as `succession_chain` —
-    resolved server-side (`Catalog.variable_chain`, same_as-canonicalized + walked
+    The leaf edges (`states` / `same_as` / `related_to` / `lineage`) are reg_meta's
+    frozen Pydantic models, passed straight through (#681). The FULL variable
+    succession chain (#582) is embedded as `succession_chain` — resolved server-side
+    (`Catalog.variable_chain`, same_as-canonicalized + walked
     terminal→predecessors) so the SPA renders the whole timeline synchronously,
     superseding the immediate-neighbor `replaced_by` embed. The `/predecessors` /
     `/successors` sub-resources are unaffected — they back the #411 redirect rails."""
@@ -376,52 +242,23 @@ def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
         is_identifier=resolved.is_identifier,
         source_register_id=resolved.source_register_id,
         source_register_text=resolved.source_register_text,
-        states=[_state_model(s) for s in resolved.states],
-        same_as=[_var_ref_model(r) for r in resolved.same_as],
-        succession_chain=[
-            _variable_chain_edition(e) for e in catalog.variable_chain(resolved.fqid)
-        ],
-        related_to=[_related_ref_model(r) for r in resolved.related_to],
-        lineage=[_lineage_edge_model(e) for e in resolved.lineage],
+        # `ResolvedVariable`'s edge collections are tuples (frozen model); the
+        # response model fields are `list`, so coerce — wire-identical (#681).
+        states=list(resolved.states),
+        same_as=list(resolved.same_as),
+        succession_chain=catalog.variable_chain(resolved.fqid),
+        related_to=list(resolved.related_to),
+        lineage=list(resolved.lineage),
         # #616/#617: the binding's owning group as `(provider, register, key)` so a
         # member page links to the group subject without a second fetch; None when
         # ungrouped. Keyed on the RESOLVED variable's triple, so a same_as alias
         # reports its target's group (reg_meta sets it on `ResolvedVariable.group`).
-        group=_binding_group_ref_model(resolved.group),
+        group=resolved.group,
         via_same_as=(
             [str(f) for f in resolved.via_same_as]
             if resolved.via_same_as is not None
             else None
         ),
-    )
-
-
-def _classification_chain_edition(edition) -> ClassificationChainEdition:
-    """Map a `reg_meta.ClassificationEdition` (#571) 1:1 onto the wire model — one
-    node of the full succession timeline. Every chain edition is a live
-    `classification` row (the build validator guarantees succession editions are
-    live), so `fqid` is None only when the slug is malformed/unresolvable, which the
-    SPA renders as plain text, not a link."""
-    return ClassificationChainEdition(
-        slug=edition.slug,
-        fqid=str(edition.fqid) if edition.fqid is not None else None,
-        name=edition.name,
-        effective_year=edition.effective_year,
-        is_current=edition.is_current,
-        is_self=edition.is_self,
-    )
-
-
-def _classification_code_model(code) -> ClassificationCodeModel:
-    """Map a `reg_meta.ClassificationCode` (#609) 1:1 onto the wire model — one
-    code/label entry of the resolved edition's value set (these are PUBLIC
-    classification codes, not row-level data). `is_valid` is passed through as
-    canonical/observed/unknown (True/False/None)."""
-    return ClassificationCodeModel(
-        code=code.code,
-        label=code.label,
-        level=code.level,
-        is_valid=code.is_valid,
     )
 
 
@@ -440,7 +277,8 @@ def _classification_node(
     only the viewed edition's list; other editions are reached via the chain) — and
     `dimensions` — the curated umbrella group(s) this edition belongs to (the niva ↔
     aggregate granularity cross-reference, read off the existing concept-group
-    table)."""
+    table). The chain / codes / dimensions are reg_meta's frozen Pydantic models,
+    embedded directly (#681)."""
     return ClassificationNode(
         fqid=str(resolved.fqid),
         short_name=resolved.short_name,
@@ -450,39 +288,9 @@ def _classification_node(
             if resolved.via_same_as is not None
             else None
         ),
-        edition_chain=[
-            _classification_chain_edition(e)
-            for e in catalog.classification_chain(resolved.fqid)
-        ],
-        codes=[
-            _classification_code_model(c)
-            for c in catalog.classification_codes(resolved.fqid)
-        ],
-        dimensions=[
-            _concept_group_model(g)
-            for g in catalog.classification_dimensions(resolved.fqid)
-        ],
-    )
-
-
-def _concept_group_model(group) -> ConceptGroupModel:
-    """Map a reg_meta `ConceptGroupSummary` (#303) 1:1 onto the wire model."""
-    return ConceptGroupModel(
-        key=group.key,
-        label=group.label,
-        source=group.source,
-        axes=list(group.axes),
-        members=[
-            ConceptGroupMemberModel(
-                fqid=str(m.fqid),
-                name=m.name,
-                facets=[
-                    GroupFacetModel(axis=f.axis, value=f.value, label=f.label)
-                    for f in m.facets
-                ],
-            )
-            for m in group.members
-        ],
+        edition_chain=catalog.classification_chain(resolved.fqid),
+        codes=catalog.classification_codes(resolved.fqid),
+        dimensions=catalog.classification_dimensions(resolved.fqid),
     )
 
 
@@ -495,6 +303,9 @@ def _concept_group_node(
 ) -> ConceptGroupNode:
     """Map a reg_meta `ConceptGroupSummary` (#303) onto the group SUBJECT node
     (#617), zipping per-member study-window `coverage` (#351) onto each member.
+    `ConceptGroupNodeMember` extends reg_meta's `ConceptGroupMember` with `coverage`,
+    so the member's `fqid` / `name` / `facets` (reg_meta `GroupFacet`s) pass straight
+    through and only `coverage` is added (#681).
 
     Coverage reuses the SAME `register_variable_coverage` map the register
     listing uses (keyed by variable SLUG — the binding-FQID leaf segment), so no
@@ -511,13 +322,10 @@ def _concept_group_node(
         leaf_slug = str(m.fqid).rsplit("/", 1)[-1]
         members.append(
             ConceptGroupNodeMember(
-                fqid=str(m.fqid),
+                fqid=m.fqid,
                 name=m.name,
-                facets=[
-                    GroupFacetModel(axis=f.axis, value=f.value, label=f.label)
-                    for f in m.facets
-                ],
-                coverage=_variable_coverage_model(coverage.get(leaf_slug)),
+                facets=m.facets,
+                coverage=coverage.get(leaf_slug),
             )
         )
     return ConceptGroupNode(
@@ -529,28 +337,6 @@ def _concept_group_node(
         axes=list(group.axes),
         members=members,
         member=member_hint,
-    )
-
-
-def _register_coverage_model(cov) -> RegisterCoverageModel | None:
-    if cov is None:
-        return None
-    return RegisterCoverageModel(
-        variable_count=cov.variable_count,
-        coverage_from=cov.coverage_from,
-        coverage_to=cov.coverage_to,
-        open_ended=cov.open_ended,
-    )
-
-
-def _variable_coverage_model(cov) -> VariableCoverageModel | None:
-    if cov is None:
-        return None
-    return VariableCoverageModel(
-        coverage_from=cov.coverage_from,
-        coverage_to=cov.coverage_to,
-        open_ended=cov.open_ended,
-        state_count=cov.state_count,
     )
 
 
@@ -572,10 +358,9 @@ def _provider_response(
                 name=r.name,
                 purpose=r.purpose,
                 # r.fqid.register is always set for a register summary; the guard
-                # keeps the dict key str-typed.
-                coverage=_register_coverage_model(
-                    coverage.get(r.fqid.register) if r.fqid.register else None
-                ),
+                # keeps the dict key str-typed. reg_meta's `RegisterCoverage` passes
+                # straight through (#681).
+                coverage=coverage.get(r.fqid.register) if r.fqid.register else None,
             )
             for r in registers
         ],
@@ -599,10 +384,9 @@ def _register_response(
             fqid=str(b.fqid),
             name=b.name,
             # b.fqid.variable is always set for a binding summary; the guard keeps
-            # the dict key str-typed.
-            coverage=_variable_coverage_model(
-                coverage.get(b.fqid.variable) if b.fqid.variable else None
-            ),
+            # the dict key str-typed. reg_meta's `VariableCoverage` passes straight
+            # through (#681).
+            coverage=coverage.get(b.fqid.variable) if b.fqid.variable else None,
         )
         for b in bindings
     ]
@@ -612,12 +396,10 @@ def _register_response(
         name=resolved.name,
         purpose=resolved.purpose,
         children=children,
-        # #303 concept groups: grouped bindings ALSO stay in `children` (the
-        # flat list is complete); the SPA folds members under the group rows.
-        groups=[
-            _concept_group_model(g)
-            for g in catalog.list_concept_groups(provider_slug, register_slug)
-        ],
+        # #303 concept groups: grouped bindings ALSO stay in `children` (the flat
+        # list is complete); the SPA folds members under the group rows. reg_meta's
+        # `ConceptGroupSummary` passes straight through (#681).
+        groups=catalog.list_concept_groups(provider_slug, register_slug),
     )
 
 
@@ -664,9 +446,8 @@ def _classification_root_response(
     # Curated classification umbrella groups (e.g. group:sun over its dimensions;
     # #516). Grouped classifications ALSO stay in `children`; the SPA folds them.
     # Members are terminal editions, so the superseded-by filter above keeps them.
-    groups = [
-        _concept_group_model(g) for g in Catalog(conn).list_classification_groups()
-    ]
+    # reg_meta's `ConceptGroupSummary` list passes straight through (#681).
+    groups = Catalog(conn).list_classification_groups()
     return ClassificationRootResponse(children=children, groups=groups)
 
 
@@ -821,10 +602,9 @@ def get_register_variants(
         variants = catalog.list_variants(provider, register)
     # Construct via the alias `register=` (the canonical init param; the Python
     # attr is `register_name` to avoid the BaseModel.register method shadow).
-    return VariantsResponse(
-        register=register_fqid,
-        variants=[_variant_model(v) for v in variants],
-    )
+    # reg_meta's `VariantSummary` list passes straight through (#681 — the
+    # composite panel keys are tuples that serialize as JSON arrays directly).
+    return VariantsResponse(register=register_fqid, variants=variants)
 
 
 # The concept-group SUBJECT route (#617). A FIXED 4-seg shape with a literal
@@ -915,7 +695,7 @@ def get_binding_states(
             states = catalog.states(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/states")
-    return StatesResponse(binding=str(parsed), states=[_state_model(s) for s in states])
+    return StatesResponse(binding=str(parsed), states=states)
 
 
 @router.get("/catalog/{fqid:path}/predecessors", response_model=PredecessorsResponse)
@@ -934,9 +714,7 @@ def get_binding_predecessors(
             return _redirect_or_4xx(
                 catalog, parsed, exc, request, suffix="/predecessors"
             )
-    return PredecessorsResponse(
-        binding=str(parsed), predecessors=[_var_ref_model(r) for r in refs]
-    )
+    return PredecessorsResponse(binding=str(parsed), predecessors=refs)
 
 
 @router.get("/catalog/{fqid:path}/successors", response_model=SuccessorsResponse)
@@ -953,9 +731,7 @@ def get_binding_successors(
             refs = catalog.successors(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/successors")
-    return SuccessorsResponse(
-        binding=str(parsed), successors=[_var_ref_model(r) for r in refs]
-    )
+    return SuccessorsResponse(binding=str(parsed), successors=refs)
 
 
 @router.get("/catalog/{fqid:path}/dimensions", response_model=DimensionsResponse)
@@ -976,9 +752,7 @@ def get_binding_dimensions(
             groups = catalog.dimensions(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/dimensions")
-    return DimensionsResponse(
-        binding=str(parsed), dimensions=[_concept_group_model(g) for g in groups]
-    )
+    return DimensionsResponse(binding=str(parsed), dimensions=groups)
 
 
 @router.get("/catalog/{fqid:path}/related", response_model=RelatedResponse)
@@ -996,9 +770,7 @@ def get_binding_related(
             refs = catalog.related(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/related")
-    return RelatedResponse(
-        binding=str(parsed), related=[_related_ref_model(r) for r in refs]
-    )
+    return RelatedResponse(binding=str(parsed), related=refs)
 
 
 @router.get("/catalog/{fqid:path}/lineage", response_model=LineageResponse)
@@ -1018,9 +790,7 @@ def get_binding_lineage(
             edges = catalog.lineage(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/lineage")
-    return LineageResponse(
-        binding=str(parsed), lineage_edges=[_lineage_edge_model(e) for e in edges]
-    )
+    return LineageResponse(binding=str(parsed), lineage_edges=edges)
 
 
 @router.get(
@@ -1043,10 +813,7 @@ def get_binding_lineage_warnings(
             return _redirect_or_4xx(
                 catalog, parsed, exc, request, suffix="/lineage_warnings"
             )
-    return LineageWarningsResponse(
-        binding=str(parsed),
-        lineage_warnings=[_lineage_warning_model(w) for w in warnings],
-    )
+    return LineageWarningsResponse(binding=str(parsed), lineage_warnings=warnings)
 
 
 # The catch-all — MUST be the last route declared in this router (see seam above).
@@ -1154,7 +921,7 @@ def get_catalog_node(
                     return _redirect_or_4xx(catalog, parsed, exc, request)
             return StatesResponse(
                 binding=str(parsed),
-                states=[_state_model(s) for s in states_by_id.values()],
+                states=list(states_by_id.values()),
             )
 
     with _catalog_conn(request) as conn:

@@ -7,7 +7,7 @@
           "coverage": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/VariableCoverageModel"
+                "$ref": "#/components/schemas/VariableCoverage"
               },
               {
                 "type": "null"
@@ -42,8 +42,9 @@
         "title": "BindingChild",
         "type": "object"
       },
-      "BindingGroupRefModel": {
-        "description": "The concept group a binding belongs to, as the group's addressable\n`(provider, register, key)` (#616). Carried by `BindingNode.group` so a\nmember page knows its home group and can link to the group subject\n(`/catalog/group/<provider>/<register>/<key>`) without a second fetch.\nMembership is register-scoped and 1:1, so this is a singular ref \u2014 the full\nmember list lives behind the group route. `key` is `ConceptGroupModel.key`\n(the scope-unique derivation key), NOT an FQID segment. Maps reg_meta's\n`BindingGroupRef` 1:1.\n\nThe Python attr is `register_name` (alias `register`) to avoid the\n`BaseModel.register` method shadow \u2014 same pattern as `VariableRefModel`; the\nwire/JSON key stays `register`, and the mapper constructs with `register=`.",
+      "BindingGroupRef": {
+        "additionalProperties": false,
+        "description": "The concept group a binding belongs to, as the group's addressable\n`(provider, register, key)` (#616). Carried by `ResolvedVariable.group` so a\nmember URL renders group-aware without a second fetch. Membership is\nregister-scoped and 1:1 (the `concept_group_variable.variable_id` PK enforces\nat most one home group per variable), so this is a singular ref \u2014 the full\nmember list lives behind `Catalog.concept_group(provider, register, key)`.\n`key` is `ConceptGroupSummary.key` (the scope-unique derivation key), not an\nFQID segment.\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\naliased to the `register` wire/init name (#681); construct/serialize as\n`register`, read as `.register_name`.",
         "properties": {
           "key": {
             "title": "Key",
@@ -63,7 +64,7 @@
           "register",
           "key"
         ],
-        "title": "BindingGroupRefModel",
+        "title": "BindingGroupRef",
         "type": "object"
       },
       "BindingNode": {
@@ -98,7 +99,7 @@
           "group": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/BindingGroupRefModel"
+                "$ref": "#/components/schemas/BindingGroupRef"
               },
               {
                 "type": "null"
@@ -121,7 +122,7 @@
           },
           "lineage": {
             "items": {
-              "$ref": "#/components/schemas/LineageEdgeModel"
+              "$ref": "#/components/schemas/LineageEdge"
             },
             "title": "Lineage",
             "type": "array"
@@ -154,14 +155,14 @@
           },
           "related_to": {
             "items": {
-              "$ref": "#/components/schemas/RelatedRefModel"
+              "$ref": "#/components/schemas/RelatedRef"
             },
             "title": "Related To",
             "type": "array"
           },
           "same_as": {
             "items": {
-              "$ref": "#/components/schemas/VariableRefModel"
+              "$ref": "#/components/schemas/VariableRef"
             },
             "title": "Same As",
             "type": "array"
@@ -190,14 +191,14 @@
           },
           "states": {
             "items": {
-              "$ref": "#/components/schemas/VariableStateModel"
+              "$ref": "#/components/schemas/VariableState"
             },
             "title": "States",
             "type": "array"
           },
           "succession_chain": {
             "items": {
-              "$ref": "#/components/schemas/VariableEditionModel"
+              "$ref": "#/components/schemas/VariableEdition"
             },
             "title": "Succession Chain",
             "type": "array"
@@ -265,8 +266,57 @@
         "title": "CatalogDriftWarning",
         "type": "object"
       },
-      "ClassificationChainEdition": {
-        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. Every chain edition is a LIVE\n`classification` row \u2014 the build validator guarantees succession editions are\nlive (it fails on any `classification_replaced_by` edge whose endpoint has no\nlive row), so `fqid` is None only when the slug is malformed/unresolvable (the\nSPA renders such an edition as plain text, not a link). `effective_year` is the\nyear on the succession edge that names this edition as the predecessor \u2014 i.e. the\nyear it was superseded by its successor (None for a terminal, which has no\noutbound edge). `is_current` flags a terminal (current) edition; `is_self`\nflags the edition the caller queried (resolved to its canonical live slug when\nthe query was a `same_as` alias). A 1\u2192many SPLIT root (#605/#579 \u2014 e.g. querying\n`sun1996`, whose chain fans out into the niva/inriktning/grupp branches) yields\nMULTIPLE `is_current` editions, one per branch tip; the common linear chain has\nexactly one. A dedicated model (NOT the search `ClassificationEditionModel`,\nwhich has no is_current/is_self) keeps the search edition a clean 4-field\nshape.",
+      "ClassificationCode": {
+        "additionalProperties": false,
+        "description": "One code/label entry in a classification edition's value set (#609), as\nreturned by `Catalog.classification_codes`. Keyed per EDITION\n(`classification_code.classification_id`) \u2014 every edition (slug) is its own\n`classification` row, so the codes are scoped to the resolved edition the leaf\nis viewing, not the whole succession chain.\n\n`code`/`label` come from `value_code` (provider-native strings \u2014 these are\nPUBLIC classification codes, not row-level data). `level` is the optional\nhierarchy depth (None when the classification is flat). `is_valid` is the\ncanonical/observed flag: True = canonical (in the classification's valid-codes\nCSV), False = observed-only (seen in data, not canonical), None = no CSV exists\nso validity is unknown (the whole edition has `is_valid=NULL`). It's surfaced\n(not filtered) so the leaf can show the full code list with a validity hint.",
+        "properties": {
+          "code": {
+            "description": "The provider-native value code (e.g. '3').",
+            "title": "Code",
+            "type": "string"
+          },
+          "is_valid": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Canonical (True) / observed-only (False) / unknown (None \u2014 no canonical CSV exists for this edition).",
+            "title": "Is Valid"
+          },
+          "label": {
+            "description": "The human label for the code.",
+            "title": "Label",
+            "type": "string"
+          },
+          "level": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The hierarchy depth, or None when the classification is flat.",
+            "title": "Level"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "level",
+          "is_valid"
+        ],
+        "title": "ClassificationCode",
+        "type": "object"
+      },
+      "ClassificationEdition": {
+        "additionalProperties": false,
+        "description": "One edition in a classification succession chain (#571), as returned by\n`Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge\nendpoint), this is a fully-hydrated node in the WHOLE chain \u2014 the webapp\nbrowse panel renders the complete edition timeline from a list of these.\n\n`slug` is the load-bearing identity (succession references the exact edition\nslug). Every chain edition is a LIVE `classification` row \u2014\n`reg_meta_build`'s validator (`validate.py`, the `classification_replaced_by`\ncheck) fails the build if any succession edge references a slug with no live\nrow, so a \"dead edition\" can't exist in a validated DB. `fqid` is None only on\na *malformed* slug (a lower-level slug-grammar concern, also build-prevented;\n`_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes\nfrom the live row. `effective_year` is the year on the\n`classification_replaced_by` edge that names this edition as `predecessor_slug`\n\u2014 i.e. the year this edition was superseded by its successor (None for the\nterminal, which has no outbound edge). `is_current` marks the\nterminal (head) edition \u2014 the one with no outbound successor; `is_self` marks\nthe edition the caller queried (resolved to its canonical live slug when the\nquery was a `same_as` alias).",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -328,54 +378,7 @@
           "is_current",
           "is_self"
         ],
-        "title": "ClassificationChainEdition",
-        "type": "object"
-      },
-      "ClassificationCodeModel": {
-        "description": "One code/label entry in a classification edition's value set (#609),\nembedded on `ClassificationNode.codes`. Scoped to the RESOLVED edition (codes\nkey per `classification_id`), so the leaf shows the codes of the edition being\nviewed \u2014 other editions are reached via the edition-chain panel. These are\nPUBLIC classification codes, not row-level data.\n\n`is_valid` is the canonical/observed flag, surfaced (not filtered) so the SPA\ncan show the full list with a validity hint: True = canonical (in the\nclassification's valid-codes CSV), False = observed-only (seen in data, not\ncanonical), None = no CSV exists so validity is unknown (the whole edition is\nNULL there).",
-        "properties": {
-          "code": {
-            "description": "The provider-native value code (e.g. '3').",
-            "title": "Code",
-            "type": "string"
-          },
-          "is_valid": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Canonical (True) / observed-only (False) / unknown (None \u2014 no canonical CSV exists for this edition).",
-            "title": "Is Valid"
-          },
-          "label": {
-            "description": "The human label for the code.",
-            "title": "Label",
-            "type": "string"
-          },
-          "level": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The hierarchy depth, or None when the classification is flat.",
-            "title": "Level"
-          }
-        },
-        "required": [
-          "code",
-          "label",
-          "level",
-          "is_valid"
-        ],
-        "title": "ClassificationCodeModel",
+        "title": "ClassificationEdition",
         "type": "object"
       },
       "ClassificationEditionModel": {
@@ -434,21 +437,21 @@
         "properties": {
           "codes": {
             "items": {
-              "$ref": "#/components/schemas/ClassificationCodeModel"
+              "$ref": "#/components/schemas/ClassificationCode"
             },
             "title": "Codes",
             "type": "array"
           },
           "dimensions": {
             "items": {
-              "$ref": "#/components/schemas/ConceptGroupModel"
+              "$ref": "#/components/schemas/ConceptGroupSummary"
             },
             "title": "Dimensions",
             "type": "array"
           },
           "edition_chain": {
             "items": {
-              "$ref": "#/components/schemas/ClassificationChainEdition"
+              "$ref": "#/components/schemas/ClassificationEdition"
             },
             "title": "Edition Chain",
             "type": "array"
@@ -535,7 +538,7 @@
           "groups": {
             "default": [],
             "items": {
-              "$ref": "#/components/schemas/ConceptGroupModel"
+              "$ref": "#/components/schemas/ConceptGroupSummary"
             },
             "title": "Groups",
             "type": "array"
@@ -797,7 +800,7 @@
         "type": "object"
       },
       "CodeOwnerVariable": {
-        "description": "A variable that carries a code (#352). `register` is the owning register's\ndisplay name (context for the omnibox); the Python attr is `register_name` to\navoid the `BaseModel.register` method shadow (see `VariableRefModel`).",
+        "description": "A variable that carries a code (#352). `register` is the owning register's\ndisplay name (context for the omnibox); the Python attr is `register_name` to\navoid the `BaseModel.register` method shadow (see reg_meta's `VariableRef`).",
         "properties": {
           "fqid": {
             "anyOf": [
@@ -929,12 +932,13 @@
         "title": "CodeSearchResult",
         "type": "object"
       },
-      "ConceptGroupMemberModel": {
-        "description": "A group member: the leaf's real FQID (binding or `class/<slug>`), its\ndisplay name, and its facet assignments (empty on edge-group members).",
+      "ConceptGroupMember": {
+        "additionalProperties": false,
+        "description": "A group member: the leaf's FQID (binding or classification), its\ndisplay name, and its facet assignments (empty on edge-group members).",
         "properties": {
           "facets": {
             "items": {
-              "$ref": "#/components/schemas/GroupFacetModel"
+              "$ref": "#/components/schemas/GroupFacet"
             },
             "title": "Facets",
             "type": "array"
@@ -957,54 +961,10 @@
         },
         "required": [
           "fqid",
+          "name",
           "facets"
         ],
-        "title": "ConceptGroupMemberModel",
-        "type": "object"
-      },
-      "ConceptGroupModel": {
-        "description": "One derived concept group. `key` is the scope-unique derivation key (a\nUI anchor, not an FQID); `source` records the derivation dimension; `axes`\nare the sorted facet axes the members carry (empty for edge groups);\nmembers are ordered by facet values along `axes`, then slug.",
-        "properties": {
-          "axes": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Axes",
-            "type": "array"
-          },
-          "key": {
-            "title": "Key",
-            "type": "string"
-          },
-          "label": {
-            "title": "Label",
-            "type": "string"
-          },
-          "members": {
-            "items": {
-              "$ref": "#/components/schemas/ConceptGroupMemberModel"
-            },
-            "title": "Members",
-            "type": "array"
-          },
-          "source": {
-            "enum": [
-              "edge",
-              "token",
-              "curated"
-            ],
-            "title": "Source",
-            "type": "string"
-          }
-        },
-        "required": [
-          "key",
-          "label",
-          "source",
-          "axes",
-          "members"
-        ],
-        "title": "ConceptGroupModel",
+        "title": "ConceptGroupMember",
         "type": "object"
       },
       "ConceptGroupNode": {
@@ -1054,7 +1014,7 @@
             "type": "string"
           },
           "register": {
-            "description": "The group's register slug. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see VariableRefModel); the wire key is `register` via the alias.",
+            "description": "The group's register slug. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see reg_meta's VariableRef); the wire key is `register` via the alias.",
             "title": "Register",
             "type": "string"
           },
@@ -1081,12 +1041,13 @@
         "type": "object"
       },
       "ConceptGroupNodeMember": {
-        "description": "A concept-group member on the group SUBJECT node \u2014 the browse\n`ConceptGroupMemberModel` (fqid + name + facets) PLUS the per-member\nstudy-window `coverage` (#351; reusing `VariableCoverageModel`, zipped on by\nthe group route from `register_variable_coverage`). `coverage` is None for a\nmember with no coverage row (a stateless variable, or a member whose leaf\nslug didn't match the register's coverage map \u2014 defensive).",
+        "additionalProperties": false,
+        "description": "A concept-group member on the group SUBJECT node \u2014 reg_meta's browse\n`ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window\n`coverage` (#351; reg_meta's `VariableCoverage`, zipped on by the group route\nfrom `register_variable_coverage`). `coverage` is None for a member with no\ncoverage row (a stateless variable, or a member whose leaf slug didn't match\nthe register's coverage map \u2014 defensive). Subclassing the frozen,\n`extra=\"forbid\"` reg_meta model to declare one new field is supported in\nPydantic v2 \u2014 the subclass owns `coverage`.",
         "properties": {
           "coverage": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/VariableCoverageModel"
+                "$ref": "#/components/schemas/VariableCoverage"
               },
               {
                 "type": "null"
@@ -1095,7 +1056,7 @@
           },
           "facets": {
             "items": {
-              "$ref": "#/components/schemas/GroupFacetModel"
+              "$ref": "#/components/schemas/GroupFacet"
             },
             "title": "Facets",
             "type": "array"
@@ -1118,6 +1079,7 @@
         },
         "required": [
           "fqid",
+          "name",
           "facets"
         ],
         "title": "ConceptGroupNodeMember",
@@ -1160,7 +1122,7 @@
           "members": {
             "default": [],
             "items": {
-              "$ref": "#/components/schemas/ConceptGroupMemberModel"
+              "$ref": "#/components/schemas/ConceptGroupMember"
             },
             "title": "Members",
             "type": "array"
@@ -1202,6 +1164,52 @@
         "title": "ConceptGroupSearchResult",
         "type": "object"
       },
+      "ConceptGroupSummary": {
+        "additionalProperties": false,
+        "description": "One derived concept group. `key` is the scope-unique derivation key\n(slug stem / min member slug / curated key) \u2014 a stable anchor for UI\nstate, not an FQID. `axes` holds the group's single facet axis (a 0-or-1\nelement tuple: empty for edge groups, one axis for token/curated groups);\nmembers are ordered by their facet value along that axis, then slug. The\ntuple shape is retained for the response contract \u2014 the DB is single-axis\n(#585).",
+        "properties": {
+          "axes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Axes",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupMember"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "source": {
+            "enum": [
+              "edge",
+              "token",
+              "curated"
+            ],
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "source",
+          "axes",
+          "members"
+        ],
+        "title": "ConceptGroupSummary",
+        "type": "object"
+      },
       "ContextResponse": {
         "description": "``GET /api/context`` \u2014 deployment identity, branding, build info.\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages. ``catalog_drift_warnings`` is the steward-catalog\ndrift surfaced at boot \u2014 empty for ``global`` and for an up-to-date catalog.",
         "properties": {
@@ -1231,7 +1239,7 @@
         "type": "object"
       },
       "DimensionsResponse": {
-        "description": "`GET /api/catalog/{fqid}/dimensions` (#489) \u2014 the concept-group\ndimension memberships containing this binding's variable (the\n'pick your variant' facet groups: level / population / rank / \u2026). A\n`ConceptGroupModel` per containing group; empty when the variable is in\nno group.",
+        "description": "`GET /api/catalog/{fqid}/dimensions` (#489) \u2014 the concept-group\ndimension memberships containing this binding's variable (the\n'pick your variant' facet groups: level / population / rank / \u2026). A\n`ConceptGroupSummary` per containing group; empty when the variable is in\nno group.",
         "properties": {
           "binding": {
             "title": "Binding",
@@ -1239,7 +1247,7 @@
           },
           "dimensions": {
             "items": {
-              "$ref": "#/components/schemas/ConceptGroupModel"
+              "$ref": "#/components/schemas/ConceptGroupSummary"
             },
             "title": "Dimensions",
             "type": "array"
@@ -1548,8 +1556,9 @@
         "title": "DocVariableMentions",
         "type": "object"
       },
-      "GroupFacetModel": {
-        "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank' / 'vintage'), `value` sorts, `label` displays.",
+      "GroupFacet": {
+        "additionalProperties": false,
+        "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank' / 'vintage'), `value` sorts (zero-padded where needed),\n`label` displays.",
         "properties": {
           "axis": {
             "title": "Axis",
@@ -1569,7 +1578,7 @@
           "value",
           "label"
         ],
-        "title": "GroupFacetModel",
+        "title": "GroupFacet",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -1585,8 +1594,9 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "LineageEdgeModel": {
-        "description": "A consumer-side lineage edge (state grain \u2014 see reg_meta_build/DESIGN.md \u2192\nConsumer-side lineage (variable_state_lineage)) tying a consumer state to\na source state over their validity intersection. `source_fqid` is the source\nstate's 3-seg binding FQID (None when the source slugs aren't populated).",
+      "LineageEdge": {
+        "additionalProperties": false,
+        "description": "Consumer-side lineage at STATE grain (see reg_meta_build/DESIGN.md \u2192 Consumer-side lineage (variable_state_lineage)): one `variable_state_lineage`\nrow tying a consumer state to a source state over their validity\nintersection. `source_fqid` is the source state's 3-part binding FQID,\nbest-effort (None when the source's slugs aren't populated).",
         "properties": {
           "consumer_state_id": {
             "title": "Consumer State Id",
@@ -1622,7 +1632,7 @@
           "valid_from",
           "valid_to"
         ],
-        "title": "LineageEdgeModel",
+        "title": "LineageEdge",
         "type": "object"
       },
       "LineageResponse": {
@@ -1634,7 +1644,7 @@
           },
           "lineage_edges": {
             "items": {
-              "$ref": "#/components/schemas/LineageEdgeModel"
+              "$ref": "#/components/schemas/LineageEdge"
             },
             "title": "Lineage Edges",
             "type": "array"
@@ -1647,8 +1657,9 @@
         "title": "LineageResponse",
         "type": "object"
       },
-      "LineageWarningModel": {
-        "description": "A build-time lineage warning for a consumer state:\n`variable_state_lineage_warning`. `warning_kind` is `no_source_state` or\n`ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`.",
+      "LineageWarning": {
+        "additionalProperties": false,
+        "description": "Build-time lineage warning for a consumer state (see reg_meta_build/DESIGN.md \u2192 Consumer-side lineage (variable_state_lineage)):\n`variable_state_lineage_warning`. `warning_kind` is 'no_source_state' or\n'ambiguous_source_variant'.",
         "properties": {
           "consumer_state_id": {
             "title": "Consumer State Id",
@@ -1668,7 +1679,7 @@
           "warning_kind",
           "message"
         ],
-        "title": "LineageWarningModel",
+        "title": "LineageWarning",
         "type": "object"
       },
       "LineageWarningsResponse": {
@@ -1680,7 +1691,7 @@
           },
           "lineage_warnings": {
             "items": {
-              "$ref": "#/components/schemas/LineageWarningModel"
+              "$ref": "#/components/schemas/LineageWarning"
             },
             "title": "Lineage Warnings",
             "type": "array"
@@ -1702,7 +1713,7 @@
           },
           "predecessors": {
             "items": {
-              "$ref": "#/components/schemas/VariableRefModel"
+              "$ref": "#/components/schemas/VariableRef"
             },
             "title": "Predecessors",
             "type": "array"
@@ -1806,8 +1817,9 @@
         "title": "RegMetaInfo",
         "type": "object"
       },
-      "RegisterCoverageModel": {
-        "description": "Per-register coverage: `variable_count` slugged variables + the span over\nall their states.",
+      "RegisterCoverage": {
+        "additionalProperties": false,
+        "description": "Coverage aggregate for one register (#351): `variable_count` is its\nslugged (browsable) variables; the span is over ALL their states.\n`coverage_to`/`open_ended` follow `VariableCoverage`.",
         "properties": {
           "coverage_from": {
             "anyOf": [
@@ -1832,17 +1844,21 @@
             "title": "Coverage To"
           },
           "open_ended": {
-            "default": false,
             "title": "Open Ended",
             "type": "boolean"
           },
           "variable_count": {
-            "default": 0,
             "title": "Variable Count",
             "type": "integer"
           }
         },
-        "title": "RegisterCoverageModel",
+        "required": [
+          "variable_count",
+          "coverage_from",
+          "coverage_to",
+          "open_ended"
+        ],
+        "title": "RegisterCoverage",
         "type": "object"
       },
       "RegisterNode": {
@@ -1851,7 +1867,7 @@
           "coverage": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/RegisterCoverageModel"
+                "$ref": "#/components/schemas/RegisterCoverage"
               },
               {
                 "type": "null"
@@ -1924,7 +1940,7 @@
           "coverage": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/RegisterCoverageModel"
+                "$ref": "#/components/schemas/RegisterCoverage"
               },
               {
                 "type": "null"
@@ -1938,7 +1954,7 @@
           "groups": {
             "default": [],
             "items": {
-              "$ref": "#/components/schemas/ConceptGroupModel"
+              "$ref": "#/components/schemas/ConceptGroupSummary"
             },
             "title": "Groups",
             "type": "array"
@@ -2056,8 +2072,9 @@
         "title": "RegisterSearchResult",
         "type": "object"
       },
-      "RelatedRefModel": {
-        "description": "A split-sibling edge (`variable_related_to` \u2014 see reg_meta_build/DESIGN.md \u2192\nBuild-time triage (SCB)) with its\n`relation_kind`. `register` is the alias for `register_name` (see\n`VariableRefModel`) \u2014 avoids the `BaseModel.register` method shadow.",
+      "RelatedRef": {
+        "additionalProperties": false,
+        "description": "A variable-grain \"see also\" link from `variable_related_to`. Same 3-part\nidentity as `VariableRef` plus the `relation_kind`. The table carries the\nMEANINGFUL links: the non-foldable auto-derived split reasons\n(`code_vs_label_pair`, `import_bug_suspect`) and curated see-also kinds. The\nbulk mechanical `same_definition_different_column` split siblings are NOT here\n\u2014 they're the concept group (presentation fold), not a related edge (#591;\nfull taxonomy in reg_meta_build/DESIGN.md). `fqid` is the sibling's 3-segment\nbinding FQID (A2.6).\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\naliased to the `register` wire/init name (#681); construct/serialize as\n`register`, read as `.register_name` (see `BindingGroupRef`).",
         "properties": {
           "fqid": {
             "anyOf": [
@@ -2094,7 +2111,7 @@
           "variable",
           "relation_kind"
         ],
-        "title": "RelatedRefModel",
+        "title": "RelatedRef",
         "type": "object"
       },
       "RelatedResponse": {
@@ -2106,7 +2123,7 @@
           },
           "related": {
             "items": {
-              "$ref": "#/components/schemas/RelatedRefModel"
+              "$ref": "#/components/schemas/RelatedRef"
             },
             "title": "Related",
             "type": "array"
@@ -2208,7 +2225,7 @@
           },
           "states": {
             "items": {
-              "$ref": "#/components/schemas/VariableStateModel"
+              "$ref": "#/components/schemas/VariableState"
             },
             "title": "States",
             "type": "array"
@@ -2254,7 +2271,7 @@
           },
           "successors": {
             "items": {
-              "$ref": "#/components/schemas/VariableRefModel"
+              "$ref": "#/components/schemas/VariableRef"
             },
             "title": "Successors",
             "type": "array"
@@ -2364,7 +2381,8 @@
         "type": "object"
       },
       "ValueSetMember": {
-        "description": "One (code, label) pair of a state's value set.",
+        "additionalProperties": false,
+        "description": "One (code, label) entry in a state's value set (#681). Was a bare\n`(code, label)` tuple inside `VariableState.value_set`; promoted to a model so\nthe wire serializes named objects (`{\"code\": ..., \"label\": ...}`) rather than a\n2-element array. The codes/labels are PUBLIC value-set strings, not row-level\ndata.",
         "properties": {
           "code": {
             "title": "Code",
@@ -2382,8 +2400,9 @@
         "title": "ValueSetMember",
         "type": "object"
       },
-      "VariableCoverageModel": {
-        "description": "Per-variable coverage over its `variable_state` windows.",
+      "VariableCoverage": {
+        "additionalProperties": false,
+        "description": "Coverage aggregate for one variable over its `variable_state` windows\n(#351): the study-window signal a browse row needs without resolving every\nstate. `coverage_from` is the earliest `valid_from`; `coverage_to` the latest\nFINITE `valid_to` (None when the latest window is open-ended \u2014 see\n`open_ended` \u2014 or when the variable has no states); `state_count` > 1 inside a\nwindow signals a break worth surfacing. A variable with no states has\n`state_count == 0` and both bounds None (distinct from open-ended).",
         "properties": {
           "coverage_from": {
             "anyOf": [
@@ -2408,21 +2427,26 @@
             "title": "Coverage To"
           },
           "open_ended": {
-            "default": false,
             "title": "Open Ended",
             "type": "boolean"
           },
           "state_count": {
-            "default": 0,
             "title": "State Count",
             "type": "integer"
           }
         },
-        "title": "VariableCoverageModel",
+        "required": [
+          "coverage_from",
+          "coverage_to",
+          "open_ended",
+          "state_count"
+        ],
+        "title": "VariableCoverage",
         "type": "object"
       },
-      "VariableEditionModel": {
-        "description": "One edition in a variable's FULL succession timeline (#582), as embedded on\n`BindingNode.succession_chain`. The variable-grain dual of\n`ClassificationChainEdition`: the browse panel renders the whole chain (oldest\nfirst, terminal last) synchronously from these \u2014 no per-neighbor fetch.\n\nThe `(provider, register, variable)` triple is the load-bearing identity. A chain\nedition may be a DEAD/renamed predecessor with no live `variable` row \u2014 the\n#355/#411 renamed-slug model: variable succession tolerates dead predecessor\neditions by design, and (UNLIKE `ClassificationChainEdition`) no\n`variable_replaced_by` validator forbids it. Such an edition still carries its\n(syntactically-valid) binding `fqid` so a citation 301-redirects to the current\nedition, but its `name` is None (no live row to read); the SPA can render it as a\ndimmed/non-resolving node. `fqid` is None only when the triple is\nmalformed/unresolvable (rendered as plain text, not a link). `effective_year` is\nthe year on the succession edge that names this edition as the predecessor \u2014 i.e.\nthe year it was superseded by its successor (None for the terminal, which has no\noutbound edge). `reason` carries that edge's `beskrivning` (the human transition\nreason \u2014 UNLIKE `ClassificationChainEdition`, whose succession table has no reason\ncolumn). `is_current` flags the terminal (current) edition; `is_self` flags the\nedition the caller queried (resolved to its canonical live triple when the query\nwas a `same_as` alias).\n\nThe `register` field uses the `register_name` Python attribute aliased to\n`register` to avoid the `BaseModel.register` method shadow (see\n`VariableRefModel`).",
+      "VariableEdition": {
+        "additionalProperties": false,
+        "description": "One edition in a variable succession chain (#582), as returned by\n`Catalog.variable_chain`. The variable-grain dual of `ClassificationEdition`:\nunlike `VariableRef` (a single edge endpoint), this is a fully-hydrated node in\nthe WHOLE chain \u2014 the webapp browse panel renders the complete variable timeline\nfrom a list of these.\n\nThe `(provider, register, variable)` triple is the load-bearing identity (the\nbinding FQID is exactly that triple now that variant/period left the grammar; see\nDESIGN.md \u2192 FQID grammar). A chain edition may be a DEAD/renamed predecessor with\nno live `variable` row \u2014 that is the #355/#411 renamed-slug model (catalog.py\n`VariableRef` / `resolve_terminal_successor`): succession tolerates dead\npredecessor editions by design. There is NO `variable_replaced_by` validator\nforbidding it (UNLIKE `ClassificationEdition`, where the classification validator\n\u2014 `validate.py`, the `classification_replaced_by` check \u2014 DOES fail the build on a\ndead endpoint). A dead edition still carries its (syntactically-valid) binding\n`fqid`, so a citation 301-redirects to the current edition (`_ref_fqid`); its\n`name` is None (no live row to read). `fqid` is None only on a *malformed* triple\n(a lower-level slug-grammar concern; `_ref_fqid` mirrors `VariableRef.fqid`'s\nnullability). On the corpus today all 12 succession edges are live, but the model\npermits a dead predecessor.\n\n`effective_year` is the year on the `variable_replaced_by` edge that names this\nedition as the predecessor \u2014 i.e. the year this edition was superseded by its\nsuccessor (None for the terminal, which has no outbound edge). `reason` carries\nthat edge's `beskrivning` (the human transition reason) \u2014\nUNLIKE `ClassificationEdition`, which has no reason column on its succession\ntable (its edges carry `note` provenance instead); the variable grain mirrors\nhow `VariableRef` carries `reason`. `is_current` marks the terminal (head)\nedition \u2014 the one with no outbound successor; `is_self` marks the edition the\ncaller queried (resolved to its canonical live triple when the query was a\n`same_as` alias).\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\naliased to the `register` wire/init name (#681); construct/serialize as\n`register`, read as `.register_name` (see `BindingGroupRef`).",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -2509,11 +2533,12 @@
           "is_current",
           "is_self"
         ],
-        "title": "VariableEditionModel",
+        "title": "VariableEdition",
         "type": "object"
       },
-      "VariableRefModel": {
-        "description": "A variable-grain edge endpoint (`same_as` / succession). `fqid` is the\nneighbor's 3-seg binding FQID (None when its slug isn't populated); the\n`provider`/`register`/`variable` triple is the load-bearing identity when\n`fqid` is None. `reason` / `effective_year` are succession-only (#142), None\non `same_as`.\n\nThe Python attribute is `register_name` because a bare `register` field\nshadows `BaseModel.register` (a Pydantic v2 method) and warns; the wire/JSON\nkey stays `register` via the alias (the alias is also the canonical init\nparam \u2014 the mapper constructs with `register=`). FastAPI serializes by alias\nby default, so the response key is `register`.",
+      "VariableRef": {
+        "additionalProperties": false,
+        "description": "A variable-grain edge endpoint (see DESIGN.md \u2192 Composite registers and source tracking): the 3-part `(provider, register,\nvariable)` identity of a `same_as` / `replaced_by` neighbor. Carried by\n`predecessors`/`successors` and `ResolvedVariable.same_as`/`.replaced_by`.\n\nA2.6: `fqid` is the neighbor's 3-segment binding FQID \u2014 the edge triple IS\nthe binding FQID now that the variant/period left the grammar (see DESIGN.md \u2192 FQID grammar and Composite registers and source tracking).\nBuild-time slug validation guarantees the triple round-trips, so this is\nnever None in practice.\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\naliased to the `register` wire/init name (#681); construct/serialize as\n`register`, read as `.register_name` (see `BindingGroupRef`).",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -2567,7 +2592,7 @@
           "register",
           "variable"
         ],
-        "title": "VariableRefModel",
+        "title": "VariableRef",
         "type": "object"
       },
       "VariableSearchGroup": {
@@ -2694,8 +2719,9 @@
         "title": "VariableSearchResult",
         "type": "object"
       },
-      "VariableStateModel": {
-        "description": "One `variable_state` row \u2014 a per-delivery shape tagged with its variant\ncoordinate (see reg_meta/DESIGN.md \u2192 Two-level variable model). `value_set` is\nthe hydrated (code, label) pairs, None when\nthe state carries no value set.",
+      "VariableState": {
+        "additionalProperties": false,
+        "description": "One `variable_state` row (see DESIGN.md \u2192 Two-level variable model) \u2014 a variable's per-delivery shape, tagged\nwith the **variant coordinate** it was delivered in. The longitudinal\n`ResolvedVariable.states` is a tuple of these; `resolve_at` returns the\nsubset whose validity range intersects the queried period.",
         "properties": {
           "classification_slug": {
             "anyOf": [
@@ -2821,11 +2847,11 @@
           "is_identifier",
           "classification_slug"
         ],
-        "title": "VariableStateModel",
+        "title": "VariableState",
         "type": "object"
       },
-      "VariantModel": {
-        "description": "One register variant (the `register_variant` sub-resource) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID \u2014 see reg_meta/DESIGN.md \u2192 Two-level variable model), so it\ncarries the variant `slug` (the browse coordinate) + display fields, not an\n`Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`\nfields: `panel_entity_key` is a bare variable-slug string or a list of slugs\n(composite); `panel_time_key` is \"period\", a variable-slug, or a list of\nslugs (composite); `panel_time_grain` is 'delivery'/'row'. Most variants\ncarry no panel data \u2192 all three are None.",
+      "VariantSummary": {
+        "additionalProperties": false,
         "properties": {
           "description": {
             "anyOf": [
@@ -2911,9 +2937,15 @@
           }
         },
         "required": [
-          "slug"
+          "slug",
+          "name",
+          "description",
+          "display_group",
+          "panel_entity_key",
+          "panel_time_key",
+          "panel_time_grain"
         ],
-        "title": "VariantModel",
+        "title": "VariantSummary",
         "type": "object"
       },
       "VariantsRef": {
@@ -2937,7 +2969,7 @@
         "type": "object"
       },
       "VariantsResponse": {
-        "description": "`GET /api/catalog/{provider}/{register}/variants` \u2014 the variant browser.\nThe wire key `register` is the 2-seg register FQID; `variants` the\nregister's `register_variant` sub-resource list.\n\nThe Python attr is `register_name` (aliased to `register`) for the same reason\nas `VariableRefModel`: a bare `register` field shadows `BaseModel.register` (a\nPydantic v2 method) and warns. FastAPI serializes by alias, so the wire key\nstays `register`; the alias is also the canonical init param.",
+        "description": "`GET /api/catalog/{provider}/{register}/variants` \u2014 the variant browser.\nThe wire key `register` is the 2-seg register FQID; `variants` the\nregister's `register_variant` sub-resource list (reg_meta's `VariantSummary`).\n\nThe Python attr is `register_name` (aliased to `register`) for the same reason\nas reg_meta's `VariableRef`: a bare `register` field shadows `BaseModel.register`\n(a Pydantic v2 method) and warns. FastAPI serializes by alias, so the wire key\nstays `register`; the alias is also the canonical init param.",
         "properties": {
           "register": {
             "title": "Register",
@@ -2945,7 +2977,7 @@
           },
           "variants": {
             "items": {
-              "$ref": "#/components/schemas/VariantModel"
+              "$ref": "#/components/schemas/VariantSummary"
             },
             "title": "Variants",
             "type": "array"

@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import json
 from collections import deque
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, Literal, TypeVar, cast
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -198,9 +198,34 @@ class ConceptGroupSummary(_CatalogModel):
 
     key: str
     label: str
-    source: str  # 'edge' | 'token' | 'curated'
+    # The derivation dimension. The DB writer constrains it to these three
+    # (`concept_group.source` CHECK in reg_meta_build/db.py); narrowed to the
+    # Literal (#681) so it is the tight API contract the webapp consumes directly
+    # (the prior `str` was looser than the webapp's own `ConceptGroupModel`).
+    source: Literal["edge", "token", "curated"]
     axes: tuple[str, ...]
     members: tuple[ConceptGroupMember, ...]
+
+
+# The three `concept_group.source` values the DB CHECK permits (reg_meta_build/db.py).
+_GROUP_SOURCES: frozenset[str] = frozenset({"edge", "token", "curated"})
+
+
+def _group_source(raw: str) -> Literal["edge", "token", "curated"]:
+    """Validate a `concept_group.source` DB string against the three allowed values
+    at the read boundary (#681). The build's CHECK constraint already enforces this,
+    so a violation is a corrupt-DB/build-invariant break — fail fast rather than
+    emit an off-contract `ConceptGroupSummary.source`. The `cast` is sound: the guard
+    above proves membership in the Literal."""
+    if raw not in _GROUP_SOURCES:
+        raise RegMetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="corrupt_concept_group_source",
+            error_class="query",
+            message=f"concept_group.source has unexpected value {raw!r}",
+            remediation="Rebuild the reg_meta DB; the source CHECK constraint is violated.",
+        )
+    return cast('Literal["edge", "token", "curated"]', raw)
 
 
 class BindingGroupRef(_CatalogModel):
@@ -422,12 +447,29 @@ class ClassificationEdition(_CatalogModel):
     the edition the caller queried (resolved to its canonical live slug when the
     query was a `same_as` alias)."""
 
-    slug: str
-    fqid: Fqid | None
-    name: str | None
-    effective_year: int | None
-    is_current: bool
-    is_self: bool
+    slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
+    fqid: Fqid | None = Field(
+        description="The edition's 2-seg classification FQID, or None only when the "
+        "slug is malformed/unresolvable (the build validator guarantees succession "
+        "editions are live classification rows; rendered as plain text, not a link)."
+    )
+    name: str | None = Field(
+        description="The edition's display name (every chain edition is a live row)."
+    )
+    effective_year: int | None = Field(
+        description="The year on the succession edge naming this edition as the "
+        "predecessor — i.e. the year it was superseded by its successor; None for "
+        "the terminal (head) edition, which has no outbound edge."
+    )
+    is_current: bool = Field(
+        description="True for a terminal (current) edition — no outbound successor. "
+        "A 1-to-many split root's chain has MULTIPLE such editions (one per branch "
+        "tip); a linear chain has exactly one."
+    )
+    is_self: bool = Field(
+        description="True for the edition the caller queried (resolved to its "
+        "canonical live slug when the query was a same_as alias)."
+    )
 
 
 class VariableEdition(_CatalogModel):
@@ -467,15 +509,37 @@ class VariableEdition(_CatalogModel):
     aliased to the `register` wire/init name (#681); construct/serialize as
     `register`, read as `.register_name` (see `BindingGroupRef`)."""
 
-    fqid: Fqid | None
-    provider: str
-    register_name: str = Field(alias="register")
-    variable: str
-    name: str | None
-    effective_year: int | None
-    reason: str | None
-    is_current: bool
-    is_self: bool
+    fqid: Fqid | None = Field(
+        description="The edition's 3-seg binding FQID. A dead/renamed predecessor "
+        "(no live variable row — tolerated by design, #355/#411) still carries a valid "
+        "fqid that 301-redirects to the current edition; this is None only when the "
+        "triple is malformed/unresolvable (rendered as plain text, not a link)."
+    )
+    provider: str = Field(description="The edition's provider slug.")
+    register_name: str = Field(
+        alias="register", description="The edition's register slug."
+    )
+    variable: str = Field(description="The edition's variable slug.")
+    name: str | None = Field(
+        description="The edition's display name; None for a dead/renamed predecessor "
+        "with no live variable row (tolerated by design, #355/#411)."
+    )
+    effective_year: int | None = Field(
+        description="The year on the succession edge naming this edition as the "
+        "predecessor — i.e. the year it was superseded by its successor; None for "
+        "the terminal (head) edition, which has no outbound edge."
+    )
+    reason: str | None = Field(
+        description="The transition reason (the succession edge's `beskrivning`); "
+        "None for the terminal (no outbound edge)."
+    )
+    is_current: bool = Field(
+        description="True for the terminal (current) edition — no outbound successor."
+    )
+    is_self: bool = Field(
+        description="True for the edition the caller queried (resolved to its "
+        "canonical live triple when the query was a same_as alias)."
+    )
 
 
 class ClassificationCode(_CatalogModel):
@@ -493,10 +557,15 @@ class ClassificationCode(_CatalogModel):
     so validity is unknown (the whole edition has `is_valid=NULL`). It's surfaced
     (not filtered) so the leaf can show the full code list with a validity hint."""
 
-    code: str
-    label: str
-    level: int | None
-    is_valid: bool | None
+    code: str = Field(description="The provider-native value code (e.g. '3').")
+    label: str = Field(description="The human label for the code.")
+    level: int | None = Field(
+        description="The hierarchy depth, or None when the classification is flat."
+    )
+    is_valid: bool | None = Field(
+        description="Canonical (True) / observed-only (False) / unknown (None — no "
+        "canonical CSV exists for this edition)."
+    )
 
 
 class RelatedRef(_CatalogModel):
@@ -911,7 +980,7 @@ class Catalog:
             ConceptGroupSummary(
                 key=key,
                 label=label,
-                source=source,
+                source=_group_source(source),
                 axes=(axis,) if axis is not None else (),
                 members=tuple(members),
             )
@@ -980,7 +1049,7 @@ class Catalog:
             ConceptGroupSummary(
                 key=key,
                 label=label,
-                source=source,
+                source=_group_source(source),
                 axes=(axis,),
                 members=tuple(members),
             )
