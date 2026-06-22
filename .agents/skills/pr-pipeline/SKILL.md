@@ -37,8 +37,10 @@ Agent-surface notes:
 2. Read issue bodies, comments, Relationships, the parent epic, blockers, linked PRs,
    repository guidance (`AGENTS.md`; `CLAUDE.md` is intentionally equivalent for agent
    surfaces that use it), relevant `<package>/DESIGN.md`, and affected code.
-3. Shape the smallest coherent PR set. Sequence by dependency. For multi-PR or ambiguous
-   work, show the breakdown before editing.
+3. Shape the smallest coherent PR set — at altitude first: does the work need to exist
+   at all, or does an existing subsystem or installed library already subsume it? Prefer
+   extending existing architecture to adding a module. Sequence by dependency. For
+   multi-PR or ambiguous work, show the breakdown before editing.
 4. Decide whether behavior changed enough to need a dedicated test-gap pass and whether
    authored docs can drift.
 
@@ -73,8 +75,15 @@ pre-v1 means no shims, compatibility layers, migrations, or dead-code retention;
 validate JSON boundaries; keep domain logic separate from IO/prompts/integrations; use
 `uv`, `bun`, `rg`, and `fd`.
 
-Before edits, understand the relevant design docs. During edits, prefer existing
-patterns and delete obsolete code directly.
+Before edits, understand the relevant design docs. During edits, apply the AGENTS.md
+reuse-first ladder: reuse an existing internal helper / stdlib / installed dep before
+hand-rolling, no speculative abstractions, prefer deletion to addition. The common miss
+is leaf-helper duplication — a validator / write-loop / clamp-gate re-pasted into a new
+module instead of hoisted into `reg_meta_build`'s `_curation.py` / `db.py` or
+`reg_webapp`'s `query_input.py`; a large hoist that grows scope is a call to confirm
+with the user, not to do silently. Before review, re-read your own diff and cut what's
+cuttable — but never simplify away PII/MONA confinement, k-anonymity, determinism,
+JSON-contract validation, or anything requested.
 
 Run focused verification as the work evolves:
 
@@ -105,7 +114,11 @@ Run focused verification as the work evolves:
    are unavailable, run `registry-code-review` in-session only as a diagnostic
    checklist, state that it does not satisfy the independent review gate, and stop
    before ready/merge until an external or subagent review signal is available. Fix or
-   explicitly dismiss every material finding with a reason.
+   explicitly dismiss every material finding with a reason. Beyond correctness, weigh
+   reuse/simplification/altitude cleanup — a one-caller abstraction, a module
+   duplicating a subsystem elsewhere, a library that subsumes the approach — and route
+   those cuts like any finding. (There is no `/simplify` on this surface; it is a Claude
+   Code skill only.)
 4. Re-review substantial fixes until the review converges.
 5. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
