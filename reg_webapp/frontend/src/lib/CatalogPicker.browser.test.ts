@@ -1,6 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
+
+// ROLE MIGRATION (UI-foundation spike Arm A, #689): the picker's filter+list
+// interaction moved from a hand-rolled FilterInput + <ul><button class=pick> lists
+// to Bits UI's headless `Command` primitive. Two ARIA roles changed, so the
+// behavioral assertions below were re-pointed (every behavior they cover is
+// preserved — this is a faithful role translation, not a coverage weakening):
+//   • pick ROWS: <button> → Command.Item (role="option"). A row-pick that was
+//     getByRole("button", { name }) is now getByRole("option", { name }).
+//   • the filter INPUT: a plain <input type=text> (role="textbox") → Command.Input,
+//     which is the listbox's controller (role="combobox", per the WAI-ARIA combobox
+//     pattern). getByRole("textbox", …) → getByRole("combobox", …); the accessible
+//     name still comes from the same label string (now Command.Root's `label`,
+//     rendered as the visually-hidden <label> the combobox points to).
+// Rows that are NOT Command options stay <button>s and keep their role: the Cancel
+// / Back chrome, the representation-chooser picks (a small static set, not a
+// filterable list), and ConceptGroupRow's member chips (the nested expander does
+// NOT fit Command's flat-option model — see CatalogPicker.svelte "THE FRICTION").
 import type {
   CatalogNode,
   RootResponse,
@@ -98,9 +115,11 @@ describe("CatalogPicker", () => {
     await expect
       .element(page.getByText(/Set the source period to auto-fill/))
       .toBeVisible();
-    // …and the list is the register's binding children only.
+    // …and the list is the register's binding children only. Pick rows are now Bits
+    // UI Command options (role="option"), not <button>s — the a11y win this spike
+    // demonstrates (single tab-stop + arrow-nav over the options).
     await expect
-      .element(page.getByRole("button", { name: /Lön/ }))
+      .element(page.getByRole("option", { name: /Lön/ }))
       .toBeVisible();
     // The scoped browse fetch hit exactly the register prefix.
     expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa");
@@ -119,7 +138,7 @@ describe("CatalogPicker", () => {
     });
 
     await expect.element(page.getByText(/Pick a variant of/)).toBeVisible();
-    await page.getByRole("button", { name: /v2019/ }).click();
+    await page.getByRole("option", { name: /v2019/ }).click();
     // C2: the picker now emits the WHOLE register_variant (it owns the register —
     // here the hand-typed `scb/lisa` prefix), not the bare variant slug.
     expect(onpickVariant).toHaveBeenCalledWith("scb/lisa/v2019");
@@ -153,33 +172,33 @@ describe("CatalogPicker", () => {
     // Step 1: the provider list (filterable); the classification-root is excluded.
     await expect.element(page.getByText(/choose a provider/)).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /scb/ }))
+      .element(page.getByRole("option", { name: /scb/ }))
       .toBeVisible();
-    // The provider filter is present + functional.
-    const providerFilter = page.getByRole("textbox", {
+    // The provider filter (the Command combobox) is present + functional.
+    const providerFilter = page.getByRole("combobox", {
       name: "Filter providers",
     });
     await expect.element(providerFilter).toBeVisible();
     // Drill into scb.
-    await page.getByRole("button", { name: /^scb/ }).click();
+    await page.getByRole("option", { name: /^scb/ }).click();
 
     // Step 2: the register list under scb (the filter narrows it).
     await expect.element(page.getByText(/Pick a register in/)).toBeVisible();
-    const registerFilter = page.getByRole("textbox", {
+    const registerFilter = page.getByRole("combobox", {
       name: "Filter registers",
     });
     await registerFilter.fill("lisa");
     await expect
-      .element(page.getByRole("button", { name: /LISA/ }))
+      .element(page.getByRole("option", { name: /LISA/ }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /RTB/ }))
+      .element(page.getByRole("option", { name: /RTB/ }))
       .not.toBeInTheDocument();
-    await page.getByRole("button", { name: /LISA/ }).click();
+    await page.getByRole("option", { name: /LISA/ }).click();
 
     // Step 3: the variant list; picking emits the WHOLE register_variant.
     await expect.element(page.getByText(/Pick a variant of/)).toBeVisible();
-    await page.getByRole("button", { name: /v2019/ }).click();
+    await page.getByRole("option", { name: /v2019/ }).click();
     expect(onpickVariant).toHaveBeenCalledWith("scb/lisa/v2019");
   });
 
@@ -198,7 +217,7 @@ describe("CatalogPicker", () => {
     // Straight to variants — never the provider/register browse.
     await expect.element(page.getByText(/Pick a variant of/)).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /v2020/ }))
+      .element(page.getByRole("option", { name: /v2020/ }))
       .toBeVisible();
     // The root was never fetched (no browse step).
     expect(getCatalogRoot).not.toHaveBeenCalled();
@@ -232,7 +251,7 @@ describe("CatalogPicker", () => {
       oncancel: vi.fn(),
     });
 
-    await page.getByRole("button", { name: /Lön/ }).click();
+    await page.getByRole("option", { name: /Lön/ }).click();
 
     // `int` storage type → numeric; the delivery column is the display_name
     // default. A single-representation derive now explicitly clears
@@ -291,7 +310,9 @@ describe("CatalogPicker", () => {
       oncancel: vi.fn(),
     });
 
-    await page.getByRole("button", { name: /SSYK/ }).click();
+    // The variable row is a Command option; the chooser picks below are plain
+    // <button>s (a small static set, not a filterable list — see the file header).
+    await page.getByRole("option", { name: /SSYK/ }).click();
 
     // Ambiguous → defer to the chooser instead of emitting immediately.
     await expect
@@ -330,9 +351,10 @@ describe("CatalogPicker", () => {
       oncancel: vi.fn(),
     });
 
-    const filter = page.getByRole("textbox", { name: "Filter variables" });
+    const filter = page.getByRole("combobox", { name: "Filter variables" });
     await expect.element(filter).toBeVisible();
-    // The filter is focused on open (the authoring blocker this PR fixes).
+    // The filter is focused on open (the authoring blocker this PR fixes — now via
+    // Command.Input's `autofocus`).
     await vi.waitFor(() =>
       expect(filter.element()).toBe(document.activeElement),
     );
@@ -340,21 +362,21 @@ describe("CatalogPicker", () => {
     // Diacritic-blind, case-insensitive: "kon" surfaces "Kön", drops the agi rows.
     await filter.fill("kon");
     await expect
-      .element(page.getByRole("button", { name: /Kön/ }))
+      .element(page.getByRole("option", { name: /Kön/ }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /AGI 2019/ }))
+      .element(page.getByRole("option", { name: /AGI 2019/ }))
       .not.toBeInTheDocument();
-    // Result count reflects the narrowed list.
+    // Result count reflects the narrowed list (the aria-live "N of M" sibling).
     await expect.element(page.getByText("1 of 3")).toBeVisible();
 
     // Matching on the FQID slug, not just the display name.
     await filter.fill("agi_2020");
     await expect
-      .element(page.getByRole("button", { name: /AGI 2020/ }))
+      .element(page.getByRole("option", { name: /AGI 2020/ }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /Kön/ }))
+      .element(page.getByRole("option", { name: /Kön/ }))
       .not.toBeInTheDocument();
   });
 
@@ -385,12 +407,15 @@ describe("CatalogPicker", () => {
       oncancel: vi.fn(),
     });
 
-    await page.getByRole("textbox", { name: "Filter variables" }).fill("kon");
+    await page.getByRole("combobox", { name: "Filter variables" }).fill("kon");
 
     // "Kön" must be the FIRST pick row (folded-exact on slug `kon` + name `kon`),
     // despite sorting last alphabetically — proves the ranking, not a coincidence.
-    // Buttons in document order: [0] = Cancel (picker head), [1] = first pick row.
-    const firstPick = page.getByRole("button").nth(1);
+    // Pick rows are now Command options; the first OPTION in document order is the
+    // top-ranked row (Cancel is a <button>, so it no longer offsets the index — and
+    // this also proves rankFilter still drives order: Command's own scoring is OFF,
+    // so the option order is exactly the pre-ranked `filteredVariables`).
+    const firstPick = page.getByRole("option").nth(0);
     await expect.element(firstPick).toBeVisible();
     await vi.waitFor(() =>
       expect(firstPick.element().textContent).toContain("Kön"),
@@ -447,15 +472,19 @@ describe("CatalogPicker", () => {
       oncancel: vi.fn(),
     });
 
-    // One group row (label + member count) + the ungrouped leaf.
+    // One group row (label + member count) + the ungrouped leaf. The group row is a
+    // plain <details> rendered in the listbox DOM as role="presentation" (NOT a
+    // Command option — see "THE FRICTION" in CatalogPicker.svelte); the leaf Kön is
+    // a Command option.
     await expect.element(page.getByText("Inkomst per månad")).toBeVisible();
     await expect.element(page.getByText("3 variables")).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /Kön/ }))
+      .element(page.getByRole("option", { name: /Kön/ }))
       .toBeVisible();
-    // The folded members are NOT flat pick rows.
+    // The folded members are NOT flat pick options (they live inside the group's
+    // expander, reached by opening it — not as top-level rows).
     await expect
-      .element(page.getByRole("button", { name: /Inkomst januari/ }))
+      .element(page.getByRole("option", { name: /Inkomst januari/ }))
       .not.toBeInTheDocument();
   });
 
@@ -473,11 +502,11 @@ describe("CatalogPicker", () => {
     // A member-only needle keeps the FAMILY visible (groupFilterKeys) and
     // drops the unrelated leaf; the count expands the group to member units.
     await page
-      .getByRole("textbox", { name: "Filter variables" })
+      .getByRole("combobox", { name: "Filter variables" })
       .fill("februari");
     await expect.element(page.getByText("Inkomst per månad")).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /Kön/ }))
+      .element(page.getByRole("option", { name: /Kön/ }))
       .not.toBeInTheDocument();
     await expect.element(page.getByText("3 of 4")).toBeVisible();
   });
@@ -549,10 +578,10 @@ describe("CatalogPicker", () => {
     });
 
     await expect
-      .element(page.getByRole("button", { name: /Inkomst januari/ }))
+      .element(page.getByRole("option", { name: /Inkomst januari/ }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: /Kön/ }))
+      .element(page.getByRole("option", { name: /Kön/ }))
       .toBeVisible();
   });
 });

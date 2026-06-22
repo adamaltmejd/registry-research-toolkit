@@ -66,9 +66,12 @@ describe("BindingEditor derive-on-pick", () => {
       issues: [],
     });
 
-    // Open the inline picker, then pick the scoped variable.
+    // Open the inline picker, then pick the scoped variable. The picker's pick rows
+    // are now Bits UI Command options (role="option"); "Pick variable" stays a
+    // <button> (it's BindingEditor's open toggle, not a picker row). See #689 /
+    // CatalogPicker.browser.test.ts header.
     await page.getByRole("button", { name: "Pick variable" }).click();
-    await page.getByRole("button", { name: /Lön/ }).click();
+    await page.getByRole("option", { name: /Lön/ }).click();
 
     // The pick funnels through onPickVariable → projectStore.applyPickedBinding.
     await vi.waitFor(() => {
@@ -105,7 +108,7 @@ describe("BindingEditor derive-on-pick", () => {
     });
 
     await page.getByRole("button", { name: "Pick variable" }).click();
-    await page.getByRole("button", { name: /Lön/ }).click();
+    await page.getByRole("option", { name: /Lön/ }).click();
 
     // The binding stays opaque, and the marker explains why (set the period).
     await vi.waitFor(() => {
