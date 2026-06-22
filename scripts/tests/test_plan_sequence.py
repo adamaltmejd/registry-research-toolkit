@@ -390,6 +390,27 @@ def test_reject_incomplete_lanes() -> None:
     assert ps.reject_incomplete_lanes("1. lane — #1", "garbage") is None
 
 
+def test_restamp_validates_preserved_content(monkeypatch: pytest.MonkeyPatch) -> None:
+    # #663 review #3 (line 540): a running-set-only tick must not re-stamp a preserved block
+    # that already drops a free candidate — that would bless an incomplete body with a fresh
+    # `free=` basis and read fresh forever. Restamp validates and forces a re-rank instead.
+    basis = ps.basis_comment({1, 2, 3}, {9}, "sig", {1, 2, 3})  # free={1,2,3}
+
+    incomplete = ps.render_lanes_block("1. lane — #1, #2", basis)  # #3 dropped
+    monkeypatch.setattr(ps, "epic_body", lambda epic: incomplete)
+    monkeypatch.setattr(
+        ps,
+        "write_lanes_block",
+        lambda *a: pytest.fail("must not write an incomplete block"),
+    )
+    assert ps.restamp_lanes_block(328, basis) == 1  # force re-rank
+
+    complete = ps.render_lanes_block("1. lane — #1, #2, #3", basis)
+    monkeypatch.setattr(ps, "epic_body", lambda epic: complete)
+    monkeypatch.setattr(ps, "write_lanes_block", lambda epic, block: 0)
+    assert ps.restamp_lanes_block(328, basis) == 0  # complete → re-stamps
+
+
 # --- lanes freshness: fresh / re-stamp / re-rank (#468) -------------------------------
 
 
