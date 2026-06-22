@@ -614,6 +614,30 @@ def reject_lanes_stdin(content: str) -> str | None:
     return None
 
 
+def reject_incomplete_lanes(content: str, basis: str) -> str | None:
+    """Why agent-supplied lanes `content` is incomplete vs its `basis`, or None if fine.
+
+    `/plan-lanes` ranks the `ready` set the `basis` was stamped against; every ready issue
+    must surface in the rendered body — placed in a lane or parked under `**Held:**`. A
+    silent drop is invisible to `lanes_freshness` (which compares only the basis stamp, not
+    the rendered membership), so the stamp reads fresh while `/pr-pipeline` never picks the
+    dropped issue. Catch it at the write boundary: any `ready` number absent from `content`
+    is a refusal. Extra `#N` references (non-candidates) are harmless; `#(\\d+)` matches a
+    whole run of digits, so no candidate is masked by a longer id (#42 ≠ #420).
+    """
+    parsed = parse_basis(basis)
+    if parsed is None:
+        # No parsable basis to check against (callers already guard well-formedness).
+        return None
+    ready, _running, _sig = parsed
+    present = {int(n) for n in re.findall(r"#(\d+)", content)}
+    missing = sorted(ready - present)
+    if missing:
+        nums = ", ".join(f"#{n}" for n in missing)
+        return f"lanes drop ready issue(s) {nums} — place each in a lane or under `**Held:**`"
+    return None
+
+
 def render_lanes_block(content: str, basis: str = "") -> str:
     """Frame agent-supplied ranked-lane text as the epic's plan-lanes block.
 
@@ -755,6 +779,9 @@ def main() -> int:
         if not _BASIS_RE.search(args.basis):
             print(f"--write-lanes: malformed --basis: {args.basis!r}", file=sys.stderr)
             return 2
+        if (why := reject_incomplete_lanes(content, args.basis)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
+            return 2
         return write_lanes_block(args.epic, render_lanes_block(content, args.basis))
 
     # Fast path: re-stamp keeps the existing ranking and only swaps the basis stamp, so it
@@ -824,6 +851,9 @@ def main() -> int:
     if args.write_lanes:
         content = sys.stdin.read()
         if (why := reject_lanes_stdin(content)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
+            return 2
+        if (why := reject_incomplete_lanes(content, live_basis)) is not None:
             print(f"--write-lanes: {why}", file=sys.stderr)
             return 2
         return write_lanes_block(args.epic, render_lanes_block(content, live_basis))

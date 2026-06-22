@@ -342,6 +342,30 @@ def test_reject_lanes_stdin() -> None:
     assert ps.reject_lanes_stdin("1. lane A — #1") is None  # clean content passes
 
 
+# --- lanes completeness guard (#662) -------------------------------------------------
+
+
+def test_reject_incomplete_lanes() -> None:
+    basis = ps.basis_comment({1, 2, 3}, {9}, "sig")  # ready = {1, 2, 3}
+
+    # Every ready issue placed in a lane → accepted.
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2\n2. lane — #3", basis) is None
+    # A ready issue parked under Held counts as accounted-for.
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2\n**Held:** #3", basis) is None
+
+    # A dropped ready issue is refused, and the message names exactly what's missing.
+    why = ps.reject_incomplete_lanes("1. lane — #1, #2", basis)
+    assert why is not None and "#3" in why
+    assert "#1" not in why and "#2" not in why  # only the missing one is named
+
+    # Whole-number matching: #30 must not satisfy ready #3 by substring.
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30", basis) is not None
+    # Extra non-candidate references (e.g. epic/follow-up ids) are harmless.
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2, #3 (see #99)", basis) is None
+    # No parsable basis → nothing to check against (callers guard well-formedness).
+    assert ps.reject_incomplete_lanes("1. lane — #1", "garbage") is None
+
+
 # --- lanes freshness: fresh / re-stamp / re-rank (#468) -------------------------------
 
 
