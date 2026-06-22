@@ -345,34 +345,62 @@ def test_reject_lanes_stdin() -> None:
 # --- lanes completeness guard (#662) -------------------------------------------------
 
 
-def test_reject_incomplete_lanes() -> None:
-    basis = ps.basis_comment(
-        {1, 2, 3}, set(), "sig"
-    )  # ready={1,2,3}, nothing in flight
+def test_placed_numbers_only_counts_lane_and_held_lines() -> None:
+    body = (
+        "**Lanes (ranked)** — open issues 5\n"
+        "1. **Lane A** — #1, #2 · `area`\n"
+        "   - why: follows #99; serialize #1 → #2\n"  # rationale — NOT a placement
+        "2. **Lane B** — #3\n"
+        "**Held:** #4\n"
+        "**Run concurrently now:** lanes 1–2\n"
+        "**Notes:** all accounted: #1 #2 #3 #4 #5\n"  # #5 only here — NOT a placement
+    )
+    # #5 (Notes-only) and #99 (rationale) are excluded; lane/Held members counted.
+    assert ps._placed_numbers(body) == {1, 2, 3, 4}
 
-    # Every ready candidate placed in a lane → accepted.
+
+def test_reject_incomplete_lanes() -> None:
+    # The reference floor is the basis `free=` set, matched against placement lines only.
+    basis = ps.basis_comment({1, 2, 3}, set(), "sig", {1, 2, 3})
+
+    # Every free candidate placed in a lane → accepted.
     assert ps.reject_incomplete_lanes("1. lane — #1, #2\n2. lane — #3", basis) is None
+    # A candidate parked under Held counts as accounted-for.
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2\n**Held:** #3", basis) is None
 
     # A dropped candidate is refused, and the message names exactly what's missing.
     why = ps.reject_incomplete_lanes("1. lane — #1, #2", basis)
     assert why is not None and "#3" in why
     assert "#1" not in why and "#2" not in why  # only the missing one is named
 
-    # Whole-number matching (#3 ≠ #30): a superstring of a candidate id doesn't satisfy it —
+    # Finding B (#663 re-review): a candidate named only in a rationale sub-bullet is NOT a
+    # placement — it must be ranked, not merely mentioned.
+    why = ps.reject_incomplete_lanes("1. lane — #1, #2\n   - why: related to #3", basis)
+    assert why is not None and "#3" in why
+
+    # Whole-number matching (#3 ≠ #30): a superstring on a lane line doesn't satisfy #3 —
     # #30 alone leaves #3 missing (reject), but adding #3 back accepts (locks `\d+` vs `\d`).
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30", basis) is not None
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30, #3", basis) is None
-    # Extra non-candidate references (e.g. epic/follow-up ids) are harmless.
-    assert ps.reject_incomplete_lanes("1. lane — #1, #2, #3 (see #99)", basis) is None
-    # No parsable basis → nothing to check against (callers guard well-formedness).
-    assert ps.reject_incomplete_lanes("1. lane — #1", "garbage") is None
 
-    # In-flight work: a ready issue can be HELD (excluded from /plan-lanes' floor), and the
-    # all-held floor lists no IDs — so the guard abstains rather than false-reject + wedge.
-    inflight = ps.basis_comment({1, 2, 3}, {9}, "sig")  # running={9}
+    # Finding A (#663 re-review): a DISJOINT in-flight PR leaves candidates free — they are
+    # still checked. free={1,2,3} though running={9}; dropping #3 is refused.
+    inflight = ps.basis_comment({1, 2, 3}, {9}, "sig", {1, 2, 3})
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2", inflight) is not None
+
+    # All-held: free= is stamped empty → nothing must be placed → "nothing dispatchable"
+    # body passes (no false-reject, no wedge).
+    allheld = ps.basis_comment({1, 2, 3}, {9}, "sig", set())
     assert (
-        ps.reject_incomplete_lanes("1. lane — #1", inflight) is None
-    )  # #2/#3 absent, abstained
+        ps.reject_incomplete_lanes("No ready issues free of conflicts.", allheld)
+        is None
+    )
+
+    # Legacy basis with no free= field → abstain (can't check soundly; re-stamped next tick).
+    legacy = ps.basis_comment({1, 2, 3}, set(), "sig")  # no free arg
+    assert ps.reject_incomplete_lanes("1. lane — #1", legacy) is None
+    # No parsable basis → abstain.
+    assert ps.reject_incomplete_lanes("1. lane — #1", "garbage") is None
 
 
 # --- lanes freshness: fresh / re-stamp / re-rank (#468) -------------------------------

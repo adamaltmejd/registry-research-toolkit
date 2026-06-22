@@ -439,7 +439,8 @@ def render_block(recs: list[Rec], debt: str | None) -> str:
 # existed) still parses — it reads back with an empty sig, which differs from any live
 # signature, so the lanes re-rank once and self-upgrade to the new stamp.
 _BASIS_RE = re.compile(
-    r"<!-- plan-lanes:basis ready=([\d,]*) running=([\d,]*)(?: sig=(\w+))? -->"
+    r"<!-- plan-lanes:basis ready=([\d,]*) running=([\d,]*)"
+    r"(?: sig=(\w+))?(?: free=([\d,]*))? -->"
 )
 
 
@@ -512,7 +513,9 @@ def lanes_content_signature(records: list[Rec]) -> str:
     return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:12]
 
 
-def basis_comment(ready: set[int], running: set[int], sig: str) -> str:
+def basis_comment(
+    ready: set[int], running: set[int], sig: str, free: set[int] | None = None
+) -> str:
     """The machine-readable freshness basis embedded in the lanes block.
 
     Records the ready + running issue numbers AND a content `sig`
@@ -523,10 +526,19 @@ def basis_comment(ready: set[int], running: set[int], sig: str) -> str:
     `touches`/area/`priority`/`Relationships` edit that moves no issue trip staleness too;
     keeping `running` as its own field lets `lanes_freshness` tell a content move (re-rank)
     apart from a running-set-only move (cheap re-stamp).
+
+    `free` (optional) records the candidate floor `/plan-lanes` was handed
+    (`free_candidates` — ready issues not held by in-flight work). It is stamped ONLY for
+    the completeness guard (`reject_incomplete_lanes`); `lanes_freshness` ignores it (a
+    free-set move already flips `sig`). Omitted ⟹ no `free=` field (a legacy basis the
+    guard then abstains on).
     """
     r = ",".join(str(n) for n in sorted(ready))
     g = ",".join(str(n) for n in sorted(running))
-    return f"<!-- plan-lanes:basis ready={r} running={g} sig={sig} -->"
+    out = f"<!-- plan-lanes:basis ready={r} running={g} sig={sig}"
+    if free is not None:
+        out += " free=" + ",".join(str(n) for n in sorted(free))
+    return out + " -->"
 
 
 def parse_basis(block: str) -> tuple[set[int], set[int], str] | None:
@@ -540,6 +552,19 @@ def parse_basis(block: str) -> tuple[set[int], set[int], str] | None:
         return None
     nums = lambda s: {int(x) for x in s.split(",") if x}  # noqa: E731
     return nums(m.group(1)), nums(m.group(2)), m.group(3) or ""
+
+
+def _basis_free(basis: str) -> set[int] | None:
+    """The `free=` candidate floor stamped in a basis, or None if the field is absent.
+
+    An empty set (`free=` present but listing no numbers — the all-held case, where nothing
+    must be placed) is distinct from None (a pre-`free=` basis the completeness guard can't
+    check and so abstains on).
+    """
+    m = _BASIS_RE.search(basis)
+    if not m or m.group(4) is None:
+        return None
+    return {int(x) for x in m.group(4).split(",") if x}
 
 
 def lanes_freshness(block: str, ready: set[int], running: set[int], sig: str) -> str:
@@ -614,38 +639,49 @@ def reject_lanes_stdin(content: str) -> str | None:
     return None
 
 
-def reject_incomplete_lanes(content: str, basis: str) -> str | None:
-    """Why agent-supplied lanes `content` is incomplete vs its `basis`, or None if fine.
+def _placed_numbers(content: str) -> set[int]:
+    """Issue numbers on a PLACEMENT line of a lanes body — a ranked lane or the Held line.
 
-    `/plan-lanes` ranks the candidate floor the `basis` was stamped against; every
-    candidate must surface in the rendered body. A silent drop is invisible to
-    `lanes_freshness` (which compares only the basis stamp, not the rendered membership),
-    so the stamp reads fresh while `/pr-pipeline` never picks the dropped issue. Catch it
-    at the write boundary: any expected number absent from `content` is a refusal. Extra
-    `#N` references (non-candidates) are harmless; `#(\\d+)` matches a whole run of digits,
-    so no candidate is masked by a longer id (#42 ≠ #420).
-
-    The floor is the FREE set, not the full `ready` set: a ready issue whose files overlap
-    an in-flight (running) PR is HELD and excluded from `/plan-lanes`' candidates
-    (`free_candidates`/`dispatch_view`) — and in the all-held degenerate case the floor
-    lists no IDs at all, so requiring every `ready` number would false-reject a valid
-    "nothing dispatchable" body and wedge the loop. The basis numbers can't recover the
-    free/held split, but `running` empty ⟹ `free == ready` exactly — so enforce only then
-    (the common state, and the one the original silent-drop was observed in); abstain when
-    work is in flight rather than risk a false reject.
+    A lane renders as `N. **Title** — #a, #b …`; held candidates sit on the `**Held:**`
+    line. Rationale sub-bullets (`- why: … #c`), the `Run concurrently` line, and the
+    `Notes` accounting can name issues that are NOT placements (follow-ups, deps, or a
+    self-asserted "all accounted for" list), so they're excluded — a candidate only
+    name-dropped there was not actually ranked, and counting `#N` anywhere would let such
+    an incidental mention satisfy the completeness guard. `#(\\d+)` matches a whole digit
+    run, so no candidate is masked by a longer id (#42 ≠ #420).
     """
-    parsed = parse_basis(basis)
-    if parsed is None:
-        # No parsable basis to check against (callers already guard well-formedness).
-        return None
-    ready, running, _sig = parsed
-    if running:
-        return None  # held/free split unknowable from basis numbers — see docstring.
-    present = {int(n) for n in re.findall(r"#(\d+)", content)}
-    missing = sorted(ready - present)
+    nums: set[int] = set()
+    for line in content.splitlines():
+        s = line.lstrip()
+        if re.match(r"\d+\.", s) or s.lower().startswith("**held"):
+            nums.update(int(n) for n in re.findall(r"#(\d+)", line))
+    return nums
+
+
+def reject_incomplete_lanes(content: str, basis: str) -> str | None:
+    """Why agent-supplied lanes `content` drops a candidate vs its `basis`, or None if fine.
+
+    `/plan-lanes` is handed a FREE candidate floor (`dispatch_view`'s "Candidate set" —
+    `free_candidates`: ready issues whose files don't collide with in-flight work) and must
+    rank every one into a lane. A silent drop is invisible to `lanes_freshness` (it compares
+    only the basis stamp, not the rendered body), so the stamp reads fresh while
+    `/pr-pipeline` never picks the dropped issue. Catch it at the write boundary: every free
+    candidate must appear on a placement line (`_placed_numbers`).
+
+    The reference set is the `free=` set stamped in the basis — exactly the floor
+    `/plan-lanes` was handed at the same `--tick`, so the check is free of TOCTOU and of the
+    held/free guesswork the basis numbers alone can't do: a disjoint in-flight PR leaves most
+    candidates free (still checked), while the all-held degenerate case stamps `free=` empty
+    (nothing required — no false reject). A basis with no `free=` field (legacy/pre-stamp)
+    can't be checked soundly, so abstain; the next `--tick` re-stamps with the field.
+    """
+    free = _basis_free(basis)
+    if free is None:
+        return None  # legacy/unstamped basis — re-stamped on the next tick.
+    missing = sorted(free - _placed_numbers(content))
     if missing:
         nums = ", ".join(f"#{n}" for n in missing)
-        return f"lanes drop ready candidate(s) {nums} — rank each in a lane"
+        return f"lanes drop candidate(s) {nums} — rank each in a lane (or list under **Held:**)"
     return None
 
 
@@ -813,12 +849,15 @@ def main() -> int:
     work = [r for r in recs if not r.is_epic]
     ready_nums = {r.number for r in work if r.status == "ready"}
     running_nums = {r.number for r in work if r.status == "running"}
+    # The free candidate floor /plan-lanes is handed (ready minus held-by-in-flight-work);
+    # stamped into the basis for reject_incomplete_lanes' completeness guard.
+    free_nums = {r.number for r in free_candidates(work)}
     # The lanes' freshness basis: the ready/running sets + a content signature over the
     # lane-affecting projection (so an edit that re-shapes ranking without moving a section
     # still re-ranks, while a running-set-only delta only re-stamps — see
     # lanes_content_signature / lanes_freshness).
     content_sig = lanes_content_signature(work)
-    live_basis = basis_comment(ready_nums, running_nums, content_sig)
+    live_basis = basis_comment(ready_nums, running_nums, content_sig, free_nums)
 
     if args.lane:
         print(dispatch_view(recs))

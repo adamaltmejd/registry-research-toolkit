@@ -62,10 +62,11 @@ Default epic is `328`.
      uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N> --basis "$basis"
    ```
 
-   `--write-lanes` refuses (non-zero exit, no write) a body that drops a ready candidate
-   — one absent from every ranked lane (checked when nothing is in flight). That means
-   the ranking was incomplete: re-run `plan-lanes` accounting for every ready candidate
-   and persist the corrected markdown; do not retry the same body.
+   `--write-lanes` refuses (non-zero exit, no write) a body that drops a candidate from
+   the floor `plan-lanes` was handed (the basis `free=` set) — one absent from every
+   ranked lane and the Held line (a mention in a rationale/Notes line doesn't count).
+   That means the ranking was incomplete: re-run `plan-lanes` accounting for every
+   candidate and persist the corrected markdown; do not retry the same body.
 
 ## Output
 
