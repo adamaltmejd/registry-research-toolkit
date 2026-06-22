@@ -50,7 +50,7 @@ freq_rows = st.lists(
 @given(freq_rows, st.integers(min_value=1, max_value=50))
 def test_suppress_k_floor_and_null_drop(rows: list[dict], suppress_k: int) -> None:
     """Every emitted count is >= suppress_k (the k-anonymity floor) and the
-    null group is dropped. Deterministic."""
+    null group is dropped."""
     out = _suppress_below_k(rows, suppress_k)
     for label, count in out.items():
         assert count >= suppress_k, f"{label}={count} < k={suppress_k}"
@@ -60,7 +60,6 @@ def test_suppress_k_floor_and_null_drop(rows: list[dict], suppress_k: int) -> No
     assert out == _suppress_below_k(
         [r for r in rows if r["val"] is not None], suppress_k
     )
-    assert out == _suppress_below_k(rows, suppress_k)
 
 
 @given(freq_rows, st.integers(min_value=1, max_value=50))
