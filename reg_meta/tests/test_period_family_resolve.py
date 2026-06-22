@@ -104,6 +104,28 @@ def test_resolve_at_full_year_returns_all_months(merged_db: Path) -> None:
         conn.close()
 
 
+def test_month_window_period_token_is_own_month(merged_db: Path) -> None:
+    """Each expanded month window's `period_token` recomputes from that window's
+    OWN bounds (e.g. the march column → `"2018-03"`), NOT the base annual token
+    (`"2018"`). Regression for `_expand_state_windows` dropping `period_token`
+    from its `model_copy(update=…)` — which would leave every window carrying the
+    annual token (#681)."""
+    conn = open_db(merged_db)
+    try:
+        cat = Catalog(conn)
+        states = cat.resolve_at(_FQID, 2018)
+        tokens = {s.delivery_column_name: s.period_token for s in states}
+        # The window token is the OWN month, distinct from the annual "2018".
+        assert tokens == {
+            "LonFinkJan": "2018-01",
+            "LonFinkFeb": "2018-02",
+            "LonFinkMars": "2018-03",
+        }
+        assert all(t != "2018" for t in tokens.values())
+    finally:
+        conn.close()
+
+
 def test_resolve_at_other_year_excluded(merged_db: Path) -> None:
     conn = open_db(merged_db)
     try:

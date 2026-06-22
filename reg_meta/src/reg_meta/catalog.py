@@ -49,9 +49,16 @@ class _CatalogModel(BaseModel):
     follow-up). Frozen preserves the immutability the prior `@dataclass(frozen=True)`
     gave; `Fqid` fields ride the `Fqid.__get_pydantic_core_schema__` hook (wire =
     the canonical FQID string). Constructed by KEYWORD (Pydantic takes no
-    positional args)."""
+    positional args).
 
-    model_config = ConfigDict(frozen=True)
+    `populate_by_name` + `extra="forbid"` are hoisted here so the
+    `register`-aliasing register-bearing models don't each repeat them, and so a
+    typo'd kwarg fails loudly (restoring the prior `@dataclass`'s fail-fast).
+    Mirrors reg_schema's `_Model` shape (frozen + extra-forbid +
+    populate_by_name) — a separate base by design: reg_meta must NOT depend on
+    reg_schema."""
+
+    model_config = ConfigDict(frozen=True, populate_by_name=True, extra="forbid")
 
 
 class ResolvedProvider(_CatalogModel):
@@ -201,8 +208,6 @@ class BindingGroupRef(_CatalogModel):
     aliased to the `register` wire/init name (#681); construct/serialize as
     `register`, read as `.register_name`."""
 
-    model_config = ConfigDict(frozen=True, populate_by_name=True)
-
     provider: str
     register_name: str = Field(alias="register")
     key: str
@@ -351,10 +356,8 @@ class VariableRef(_CatalogModel):
 
     `register` is a `BaseModel` method, so the Python attr is `register_name`
     aliased to the `register` wire/init name (#681); construct/serialize as
-    `register`, read as `.register_name`.
+    `register`, read as `.register_name` (see `BindingGroupRef`).
     """
-
-    model_config = ConfigDict(frozen=True, populate_by_name=True)
 
     fqid: Fqid | None
     provider: str
@@ -453,9 +456,7 @@ class VariableEdition(_CatalogModel):
 
     `register` is a `BaseModel` method, so the Python attr is `register_name`
     aliased to the `register` wire/init name (#681); construct/serialize as
-    `register`, read as `.register_name`."""
-
-    model_config = ConfigDict(frozen=True, populate_by_name=True)
+    `register`, read as `.register_name` (see `BindingGroupRef`)."""
 
     fqid: Fqid | None
     provider: str
@@ -501,9 +502,7 @@ class RelatedRef(_CatalogModel):
 
     `register` is a `BaseModel` method, so the Python attr is `register_name`
     aliased to the `register` wire/init name (#681); construct/serialize as
-    `register`, read as `.register_name`."""
-
-    model_config = ConfigDict(frozen=True, populate_by_name=True)
+    `register`, read as `.register_name` (see `BindingGroupRef`)."""
 
     fqid: Fqid | None
     provider: str
