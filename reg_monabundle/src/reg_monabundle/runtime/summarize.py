@@ -13,6 +13,7 @@ rows. No individual-level data passes through Python.
 from __future__ import annotations
 
 import random
+import re
 from datetime import date, datetime, timedelta
 from typing import TYPE_CHECKING, Any
 
@@ -104,7 +105,10 @@ def _to_date(v: Any, override_format: str | None = None) -> date | None:
     for fmt in formats:
         try:
             return datetime.strptime(s, fmt).date()
-        except ValueError, TypeError:
+        # A malformed override format (e.g. a ``%Y%Y`` group-name collision)
+        # raises ``re.error`` at format-compile time inside strptime; it must
+        # fall through like any other unusable format.
+        except ValueError, TypeError, re.error:
             continue
     # ISO-ish fallback: trim a trailing time component before retrying.
     head = s.split(" ", 1)[0]

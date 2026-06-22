@@ -122,7 +122,12 @@ def test_jitter_date_bounded_and_deterministic(d: date, seed: int) -> None:
 arbitrary = st.one_of(
     st.none(),
     st.text(),
-    st.integers(),
+    # SQL-returned ints never exceed the driver's numeric range (BIGINT ~9.2e18,
+    # DuckDB HUGEINT ~1.7e38), both far below float's ~1.8e308 overflow point, so
+    # the float-overflow input that an unbounded ``st.integers()`` would feed
+    # ``_detect_id_subtype`` -> ``_python_kind`` (``float(10**400)``) can't arrive
+    # from a real column sample. Bound to the SQL BIGINT domain.
+    st.integers(min_value=-(2**63), max_value=2**63 - 1),
     st.floats(allow_nan=False, allow_infinity=False),
     st.dates(),
     st.datetimes(),
@@ -140,3 +145,9 @@ def test_to_date_total(v: object, override_format: str | None) -> None:
 def test_detect_id_subtype_total(sample: list[object]) -> None:
     """Never raises on arbitrary samples; returns 'integer' or 'string'."""
     assert _detect_id_subtype(sample) in ("integer", "string")
+
+
+def test_to_date_malformed_format_falls_through() -> None:
+    """A group-name-collision override format (re.error at compile) must fall
+    through to the built-in parsers, not raise (regression)."""
+    assert _to_date("2020-01-01", "%Y%Y") == date(2020, 1, 1)
