@@ -78,8 +78,11 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 - **Library packages** (`reg_meta`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
   - Modeling: `@dataclass`. The **hard** no-Pydantic + stdlib-module-level-imports rule
-    binds only the **bundle runner** (`reg_monabundle.runtime.*`, the amalgamated slice)
-    — it must stay liftable into MONA's offline WinPython env. `reg_meta`'s no-Pydantic
+    binds **every slice amalgamated into the bundle** — the lightweight
+    `constants`/`validate`/`scan` slices **plus** `reg_monabundle.runtime.*`, i.e.
+    everything lifted into the uploaded `.py` (`validate` runs at bundle load on MONA,
+    `scan` gates exports there), not the runtime alone — each must stay liftable into
+    MONA's offline WinPython env. `reg_meta`'s no-Pydantic
     is a **soft** preference (import-ergonomics — importable from Jupyter/scripts without
     pulling pydantic-core — plus an aspirational query-layer port), **not** a MONA
     requirement: reg_meta is already absent from MONA-side code. Decided 2026-06-22

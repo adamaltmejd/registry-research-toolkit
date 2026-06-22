@@ -309,9 +309,15 @@ Consequences:
   slicing) **and the \~950 LOC of amalgamation tests** (determinism, size-budget,
   lightweight-surface, no-Pydantic-in-bundle scans) — they exist only to make
   amalgamation safe, and a standalone runner has nothing to amalgamate.
-- **Re-home the PII-scanner and provenance-DB-confinement guarantees** as a guard on the
-  **emitted artifact** — an output-artifact gate over the standalone `.py` — rather than
-  an invariant maintained through the amalgamation pipeline.
+- **Keep the PII scanner a runtime export gate.** The standalone runner carries
+  `scan.write_export` and runs it on every payload immediately before writing (the same
+  in-memory-scan → temp-file → atomic-rename it does today) — **not** a static artifact
+  scan: a misclassified personnummer-like column leaks as a frequency-table key only at
+  runtime, which a scan of the `.py` source cannot catch.
+- **Re-home the provenance-DB-confinement guarantee** (plus the no-`reg_meta` /
+  no-Pydantic *source* guarantees) as a **static output-artifact gate** over the emitted
+  `.py` — an AST import walk + literal scan — replacing the invariant currently
+  maintained through the amalgamation pipeline.
 - **Replace the duplicated `COLUMN_TYPES` / `CONTRACT_VERSION` constants** between the
   bundle runner and the local generator (\~33 LOC, hand-copied across modules to avoid
   importing the runtime tier) **with the versioned stats-v1 data contract + golden
@@ -401,7 +407,10 @@ The SQL↔spec-type machinery is owned by `reg_monabundle`'s importable, **non-r
 lightweight side**, which `reg_webapp` imports for the realign-review UI. The future
 standalone runner imports no toolkit code, so it will carry its **own copy** of this
 logic — the same way `kit.py` hand-copies `COLUMN_TYPES` today to honor the runtime
-import boundary:
+import boundary. A golden/drift test pins the runner's copy against the canonical
+`reg_monabundle.types`, so a newly-learned cast can't land in one without the other —
+otherwise the webapp could call a spec/source pair compatible while the uploaded runner
+reports a mismatch (or skips under `--force`):
 
 - `is_compatible(spec_type, sql_type) -> bool` — what the extract code can ingest
   (`numeric` ↔ `VARCHAR`/`INTEGER`/`DECIMAL`/`DOUBLE`; `date` ↔

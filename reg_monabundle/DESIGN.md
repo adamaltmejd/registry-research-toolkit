@@ -23,14 +23,17 @@ pre-resolution) lives in `REFACTOR_SPEC.md`.
   validated Pydantic `ProjectData` into the stdlib `LoadedSpec` the runtime consumes.
 - **Bundle runtime** (`reg_monabundle.runtime.*`). The modules amalgamated into the
   bundle and executed on MONA: `classify`, `sql_emit`, `sources`, `summarize`, `spec`,
-  `extract`. Pulls duckdb/pyodbc, which WinPython preinstalls on MONA. **This runner is
-  the one surface the MONA air-gap austerity legitimately binds** — no Pydantic,
-  stdlib-only module-level imports, amalgamatable — because it is the slice lifted into
-  MONA's offline env. The rest of the toolkit does not pay that tax (ARCHITECTURE.md →
-  Repo-wide invariants). **Forward-pointer:** REFACTOR_SPEC.md §10a rebuilds this runner
-  as a **standalone** runner that imports no toolkit code (deleting the amalgamator +
-  the amalgamation tests, re-homing the PII / provenance gates onto the emitted
-  artifact); the present-tense amalgamation described below is current truth until then.
+  `extract`. Pulls duckdb/pyodbc, which WinPython preinstalls on MONA. **The MONA
+  air-gap austerity legitimately binds the whole amalgamated bundle** — this runtime
+  *plus* the lightweight `constants`/`validate`/`scan` slices it ships alongside
+  (`validate` runs at bundle load on MONA, `scan` gates exports there) — no Pydantic,
+  stdlib-only module-level imports, amalgamatable — because every one of those slices is
+  lifted into MONA's offline env. The rest of the toolkit does not pay that tax
+  (ARCHITECTURE.md → Repo-wide invariants). **Forward-pointer:** REFACTOR_SPEC.md §10a
+  rebuilds this runner as a **standalone** runner that imports no toolkit code (deleting
+  the amalgamator + the amalgamation tests, re-homing provenance confinement onto the
+  emitted artifact while the PII scanner stays a runtime export gate); the present-tense
+  amalgamation described below is current truth until then.
 - **PII scanner** (`reg_monabundle.scan`). Final pre-export gate over every JSON payload
   the bundle writes (see "PII scanner" below).
 - **§6.8.2 namespaced-block validator** (`reg_monabundle.validate_block`). Validates the
