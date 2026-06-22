@@ -312,10 +312,11 @@ Consequences:
 - **Re-home the PII-scanner and provenance-DB-confinement guarantees** as a guard on the
   **emitted artifact** — an output-artifact gate over the standalone `.py` — rather than
   an invariant maintained through the amalgamation pipeline.
-- **Replace the shared-import handshake** between the bundle runner and the local
-  generator (the `COLUMN_TYPES` / `CONTRACT_VERSION`-style shared constants, \~33 LOC)
-  **with the versioned stats-v1 data contract + golden fixtures** (§8): producer and
-  consumer agree on JSON shape, not on shared code.
+- **Replace the duplicated `COLUMN_TYPES` / `CONTRACT_VERSION` constants** between the
+  bundle runner and the local generator (\~33 LOC, hand-copied across modules to avoid
+  importing the runtime tier) **with the versioned stats-v1 data contract + golden
+  fixtures** (§8): producer and consumer agree on JSON shape, not on duplicated
+  constants.
 
 The realign-then-extract *workflow* below is unaffected — it is the MONA workflow being
 built; the pivot is only about how the runner is assembled (standalone, not
@@ -396,10 +397,11 @@ incompatible declared-vs-observed types.
 
 ### Type compatibility lives in `reg_monabundle`
 
-The SQL↔spec-type machinery is owned by `reg_monabundle`'s pure-python lightweight side,
-imported by `reg_webapp` for the realign-review UI. Under the standalone-runner decision
-above the type-compat map lives **in the standalone runner** (not an amalgamated slice);
-`reg_webapp` consumes the same module for its realign-review UI:
+The SQL↔spec-type machinery is owned by `reg_monabundle`'s importable, **non-runtime
+lightweight side**, which `reg_webapp` imports for the realign-review UI. The future
+standalone runner imports no toolkit code, so it will carry its **own copy** of this
+logic — the same way `kit.py` hand-copies `COLUMN_TYPES` today to honor the runtime
+import boundary:
 
 - `is_compatible(spec_type, sql_type) -> bool` — what the extract code can ingest
   (`numeric` ↔ `VARCHAR`/`INTEGER`/`DECIMAL`/`DOUBLE`; `date` ↔
