@@ -19,6 +19,7 @@ import {
 } from "./period";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
+import TechnicalDetails from "./TechnicalDetails.svelte";
 import { windowStore } from "./window.svelte";
 
 // The concept-group SUBJECT page (#617): fetches a group by (provider, register,
@@ -28,9 +29,10 @@ import { windowStore } from "./window.svelte";
 // browse path that CatalogNodeView serves.
 //
 // Renders through the unified SubjectView shell (#638 PR1), same as the binding +
-// classification leaves. A group fills two of the shell's sections — the meta
-// `description` (key/source + facets) and a `picker` (#638 PR2a, below). It has no
-// single fqid (its key shows inside the meta), no value set, no docs, and (post
+// classification leaves. A group fills two of the shell's sections — the
+// `description` (just a Technical details disclosure holding key/facets/source) and
+// a `picker` (#638 PR2a, below). It has no single fqid (its key shows inside the
+// disclosure), no value set, no docs, and (post
 // PR2a) no `relationships` — its members live IN the picker's selector now — so
 // those sections are omitted. The breadcrumbs + loading / error arms stay OUTSIDE
 // the shell (the shell is the success-arm body only).
@@ -254,14 +256,22 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   </p>
 {:else if node}
   {#snippet description()}
-    <dl class="meta">
-      <dt>Group</dt>
-      <dd><code>{node.key}</code> · {node.source}</dd>
-      {#if node.axes.length > 0}
-        <dt>Facets</dt>
-        <dd>{node.axes.join(", ")}</dd>
-      {/if}
-    </dl>
+    <!-- The group's key, facets, and source are all build-derivation metadata, not
+         researcher-facing — so all three are demoted together behind the "Technical
+         details" disclosure. The page then leads with the title + member selector
+         (mirrors the variable page, whose Technical details also lives here). -->
+    <TechnicalDetails>
+      <dl class="meta">
+        <dt>Group</dt>
+        <dd><code>{node.key}</code></dd>
+        {#if node.axes.length > 0}
+          <dt>Facets</dt>
+          <dd>{node.axes.join(", ")}</dd>
+        {/if}
+        <dt>Source</dt>
+        <dd>{node.source}</dd>
+      </dl>
+    </TechnicalDetails>
   {/snippet}
 
   <!-- One snippet per member, used by every selector shape. Renders the member as
@@ -396,10 +406,11 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   .breadcrumbs .current {
     color: var(--muted);
   }
+  /* #638 PR4: row spacing standardized to 0.3rem across the three subject kinds. */
   .meta {
     display: grid;
     grid-template-columns: max-content 1fr;
-    gap: 0.35rem 1rem;
+    gap: 0.3rem 1rem;
     margin: 1rem 0;
   }
   .meta dt {

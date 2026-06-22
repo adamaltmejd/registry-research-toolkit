@@ -92,6 +92,21 @@ const coexisting = [
 /** One variant → `segments` (no population choice). */
 const single = [state({ state_id: 1, variant: "individer" })];
 
+/** A single visible state carrying STRUCTURAL fields (data_type + delivery column)
+ * so StatesView's single-state detail renders its own "Technical details"
+ * disclosure (#638 PR4) — distinct from the description's Sensitive/Identifier one.
+ * The default `single` fixture has both fields null, so that path is never exercised
+ * there. */
+const singleWithStructural = [
+  state({
+    state_id: 1,
+    variant: "individer",
+    data_type: "char",
+    data_length: "1",
+    delivery_column_name: "Kon",
+  }),
+];
+
 /** A DIFFERENT pair of co-existing variants — node B for the membership-gate
  * test. Its variants do NOT overlap node A's (`individer`/`arbetsstallen`), so a
  * pick made against A is a non-member of B's options. */
@@ -310,6 +325,89 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
     expect(
       document.body.querySelector('[aria-label="Pick a register variant"]'),
     ).toBeNull();
+  });
+
+  it("demotes Sensitive / Identifier into a 'Technical details' disclosure (#638 PR4)", async () => {
+    // The structural flags are backend metadata — kept available but behind the
+    // collapsed disclosure rather than in the prominent definition meta.
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The disclosure renders with a visible "Technical details" summary, collapsed
+    // by default. The demoted rows are in the DOM but NOT visible while collapsed,
+    // so assert STRUCTURE (inside the disclosure), not visibility.
+    await expect.element(page.getByText("Technical details")).toBeVisible();
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "details.tech-details",
+    );
+    expect(disclosure).not.toBeNull();
+    expect(disclosure?.open).toBe(false);
+    // Sensitive + Identifier live INSIDE the disclosure, not the prominent meta.
+    expect(disclosure?.textContent).toContain("Sensitive");
+    expect(disclosure?.textContent).toContain("Identifier");
+    // ...and are NOT in any other (prominent) meta block on the page.
+    const promptMeta = [...document.querySelectorAll("dl.meta")].filter(
+      (dl) => !dl.closest("details.tech-details"),
+    );
+    for (const dl of promptMeta) {
+      expect(dl.textContent).not.toContain("Sensitive");
+      expect(dl.textContent).not.toContain("Identifier");
+    }
+  });
+
+  it("demotes a single state's Data type / Delivery column into its own 'Technical details' disclosure (#638 PR4)", async () => {
+    // The StatesView single-state detail moves the STRUCTURAL fields (data_type +
+    // delivery column) behind their own collapsed disclosure, keeping Variant /
+    // Valid / Value-set version prominent. The default `single` fixture has both
+    // structural fields null (disclosure omitted), so this fixture supplies them.
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(singleWithStructural),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The "Technical details" summary is visible (two of them render — assert the
+    // summary text exists, then disambiguate by content below). The demoted rows
+    // are in the DOM but NOT visible while collapsed, so assert STRUCTURE.
+    await expect
+      .element(page.getByText("Technical details").first())
+      .toBeVisible();
+
+    // Disambiguation hazard (#638 PR4): TWO `details.tech-details` render here —
+    // the description's (Sensitive/Identifier) AND the state detail's (Data type/
+    // Delivery column). Select the state's by its content, not by index.
+    const stateTech = [
+      ...document.querySelectorAll<HTMLDetailsElement>("details.tech-details"),
+    ].find((d) => d.textContent?.includes("Data type"));
+    expect(stateTech).toBeDefined();
+    // Collapsed by default, with both structural rows inside (content stays in the
+    // DOM while collapsed).
+    expect(stateTech?.open).toBe(false);
+    expect(stateTech?.textContent).toContain("Data type");
+    expect(stateTech?.textContent).toContain("Delivery column");
+    // The user-facing state fields stay PROMINENT — in the state detail's own
+    // meta block, NOT inside any tech-details disclosure. (`.state-detail` is the
+    // single-state container; its prominent `dl.meta` is the one not nested in a
+    // disclosure.)
+    const stateDetail = stateTech?.closest(".state-detail");
+    const promptMeta = [
+      ...(stateDetail?.querySelectorAll("dl.meta") ?? []),
+    ].find((dl) => !dl.closest("details.tech-details"));
+    expect(promptMeta).toBeDefined();
+    const promptText = promptMeta?.textContent ?? "";
+    expect(promptText).toContain("Variant");
+    expect(promptText).toContain("Valid");
+    expect(promptText).toContain("Value-set version");
+    // ...and those prominent labels are NOT inside the structural disclosure.
+    expect(stateTech?.textContent).not.toContain("Variant");
+    expect(stateTech?.textContent).not.toContain("Value-set version");
   });
 
   it("Add stays seed-gated (disabled) until the deployment seed is present", async () => {
