@@ -66,9 +66,13 @@ bridges agentic local work to MONA projects.
   pyproject setting makes plain `uv run` discard the committed lock on checkouts without
   a matching global config.
 - `requires-python` is really a **ceiling on the bundle runner** (MONA's bundled Python,
-  3.13.7) — the code that executes on MONA — not a toolkit-wide floor; non-MONA packages
-  are free to move ahead. See `mock_data_wizard/DESIGN.md` "MONA Python runtime" before
-  raising it for the runner.
+  3.13.7) — the code that executes on MONA — not a MONA-imposed floor on non-MONA code.
+  But the root `pyproject.toml` depends on every workspace package and CI runs a
+  workspace-wide `uv sync --frozen`, so the floor binds the whole workspace today: a
+  non-MONA package moves ahead only via a **coordinated bump of the root/CI
+  `requires-python`** (per-package floors or a workspace split), tracked by **#682** —
+  not a unilateral per-package bump. See `mock_data_wizard/DESIGN.md` "MONA Python
+  runtime" before raising it for the runner.
 
 ## Stack
 

@@ -306,9 +306,15 @@ a change already made.
 Consequences:
 
 - **Delete the AST amalgamator** (`build/__init__.py`'s `ast.parse`/`ast.unparse`
-  slicing) **and the \~950 LOC of amalgamation tests** (determinism, size-budget,
-  lightweight-surface, no-Pydantic-in-bundle scans) — they exist only to make
-  amalgamation safe, and a standalone runner has nothing to amalgamate.
+  slicing) **and the amalgamation-specific tests** — bundle determinism and the
+  no-Pydantic / no-`reg_meta`-in-bundle *source* scans — which exist only to make
+  amalgamation safe and have nothing to test once the runner is standalone. Two of the
+  \~950 LOC of amalgamation tests are **not** amalgamation artifacts and survive,
+  re-targeted: the **1 MB size-budget cap** is MONA's *upload* limit (re-asserted on the
+  emitted standalone `.py`; see reg_monabundle/DESIGN.md "Bundle-size budget"), and the
+  **lightweight-surface import-boundary test** guards `reg_webapp`'s runtime-free import
+  of `reg_monabundle.build` (no duckdb/pyodbc in the webapp container) — kept or
+  replaced, re-targeted onto the standalone artifact / boundary.
 - **Keep the PII scanner a runtime export gate.** The standalone runner carries
   `scan.write_export` and runs it on every payload immediately before writing (the same
   in-memory-scan → temp-file → atomic-rename it does today) — **not** a static artifact
