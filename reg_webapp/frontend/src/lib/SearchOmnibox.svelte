@@ -41,10 +41,21 @@ const SUGGESTION_LIMIT = 8;
 
 // Seed from `?q=` so a cold deep-link to `/search?q=foo` populates the box.
 let query = $state(router.getQueryParam("q") ?? "");
-// Whether the suggestion popup is open (bound to the Combobox). Bits UI manages
-// open/close on focus/blur/escape/selection; we only need the binding to read it
-// (and to keep the popup from opening on a too-short query — see `suggestions`).
+// Whether the suggestion popup is open (bound to the Combobox). We own this flag
+// rather than letting Bits UI manage it freely: a reconcile effect drives it to
+// track `suggestions.length > 0 && !dismissed` (see below), so the popup is open
+// EXACTLY when there are suggestions for the CURRENT query that the user hasn't
+// dismissed — no stale-query options, no first-batch-hidden race.
 let open = $state(false);
+// The Combobox's selected item value (its href). Bound so we can RESET it to ""
+// after handling a selection — otherwise Bits UI keeps the chosen href selected,
+// and re-selecting the same option later is a no-op (no `onValueChange`), so that
+// suggestion would silently stop navigating (#689 review #3).
+let selectedValue = $state("");
+// User dismissed the popup for the CURRENT query (Escape on an open popup). Gates
+// the reconcile effect so a dismiss isn't immediately undone by suggestions still
+// being present; cleared whenever the query text changes (a new query reopens).
+let dismissed = $state(false);
 
 /** One popup option: the suggestion's display label + the catalog route to
  * navigate to on selection. `value` is the Combobox item value — we use the href
@@ -99,15 +110,22 @@ function flatten(resp: SearchResponse): Suggestion[] {
     } else if (group.group === "codes") {
       for (const r of group.results) {
         // A code's actionable target is its OWNING entity (variable, then
-        // classification) — the bare (code,label) isn't FQID-addressable. The
-        // two owner shapes differ (variable has `name`; classification has
-        // `short_name`/`name`), so resolve each on its own branch.
-        const variable = r.variables[0];
-        const classification = r.classifications[0];
+        // classification) — the bare (code,label) isn't FQID-addressable. Owner
+        // `fqid`s are nullable (a malformed/unresolvable slug → null), so pick the
+        // FIRST owner with a non-null fqid, scanning variables before
+        // classifications; only skip the code if NONE is addressable. (Taking
+        // `variables[0]` unconditionally would drop a quick-jump whenever the first
+        // variable owner happened to be unaddressable — #689 review #6.) The two
+        // owner shapes differ (variable has `name`; classification has
+        // `short_name`/`name`), so label each on its own branch.
         const fallback = `${r.code} ${r.label}`;
+        const variable = r.variables.find((v) => v.fqid);
         if (variable) {
           push(variable.fqid, variable.name ?? fallback, `${r.code}`);
-        } else if (classification) {
+          continue;
+        }
+        const classification = r.classifications.find((c) => c.fqid);
+        if (classification) {
           push(
             classification.fqid,
             classification.short_name ?? classification.name ?? fallback,
@@ -168,8 +186,15 @@ $effect(() => {
 // box. This isolation is what keeps the existing no-mock browser test green.
 $effect(() => {
   const raw = query.trim();
+  // The query text changed: drop the PRIOR query's suggestions IMMEDIATELY
+  // (before the debounced fetch resolves) so a slow `/api/search` can never leave
+  // options for an old query rendered/selectable under the new text — clicking one
+  // would navigate to an unrelated node (#689 review #1). The brief empty-popup
+  // flicker during the 300ms debounce is the accepted cost; correctness wins.
+  // Also clear the user-dismiss flag: a new query is a fresh chance to suggest.
+  suggestions = [];
+  dismissed = false;
   if (raw.length < SEARCH_MIN_QUERY_LENGTH) {
-    suggestions = [];
     return;
   }
   const controller = new AbortController();
@@ -201,15 +226,23 @@ $effect(() => {
   };
 });
 
-// Reconcile Bits UI's `open` flag with whether any suggestions actually render:
-// the popup Content is gated on `suggestions.length > 0`, but `open` is otherwise
-// independent, so it could be true while nothing shows — which would make Escape
-// take its "popup open" branch (leave the query) even though no popup is visible,
-// and make aria-expanded lie. Forcing `open = false` when the list is empty keeps
-// `open` honest: it can only be true when a popup is genuinely shown.
+// THE open-state contract: the popup is open EXACTLY when there are suggestions
+// for the current query AND the user hasn't dismissed them. This single effect
+// owns `open` so it stays honest in both directions:
+//   • OPENS when an async fetch returns a non-empty list (typing opens Bits UI's
+//     combobox before the fetch resolves; without this nothing would reopen it
+//     once the first batch arrives — #689 review #2);
+//   • CLOSES when the list goes empty (too-short query, fetch miss, or a stale
+//     list just cleared on edit) so `open`/`aria-expanded`/the Escape branch never
+//     lie about a popup that isn't rendered (the Content is gated on the same
+//     `suggestions.length > 0`).
+// Loop-safe: writing `open` doesn't feed back into `suggestions` or `dismissed`,
+// so it converges in one pass; the `open !== shouldOpen` guard avoids a redundant
+// write (and fighting Bits UI's own focus/blur toggles per keystroke).
 $effect(() => {
-  if (suggestions.length === 0) {
-    open = false;
+  const shouldOpen = suggestions.length > 0 && !dismissed;
+  if (open !== shouldOpen) {
+    open = shouldOpen;
   }
 });
 
@@ -240,17 +273,22 @@ $effect(() => {
 function onSelect(href: string): void {
   if (href) {
     router.navigate(href);
-    // Clearing `query` does three things at once: (1) closes the popup (the
-    // Content is gated on `suggestions.length > 0`, and the reconcile-effect drops
-    // `open`); (2) neutralizes the pending routing-commit timer — the commit
-    // $effect keys on `query`, so re-running it reschedules a BLANK commit (a
-    // no-op via `commit`'s blank-trimmed early return), so the stale timer can't
-    // fire ~300ms later and clobber the catalog node we just navigated to; (3)
-    // re-runs the suggestion $effect, whose teardown aborts any in-flight fetch.
-    // The URL→box adopt-effect returns early here (we're now on the catalog-node
-    // route, not /search), so clearing the box can't fight that sync.
+    // Clearing `query` does three things at once: (1) empties `suggestions` (the
+    // query-change effect), which the reconcile-effect turns into `open = false`,
+    // closing the popup; (2) neutralizes the pending routing-commit timer — the
+    // commit $effect keys on `query`, so re-running it reschedules a BLANK commit
+    // (a no-op via `commit`'s blank-trimmed early return), so the stale timer
+    // can't fire ~300ms later and clobber the catalog node we just navigated to;
+    // (3) re-runs the suggestion $effect, whose teardown aborts any in-flight
+    // fetch. The URL→box adopt-effect returns early here (we're now on the
+    // catalog-node route, not /search), so clearing the box can't fight that sync.
     query = "";
-    open = false;
+    // Reset the Combobox's selected value. Bits UI keeps the chosen href selected
+    // otherwise, so if the SAME href surfaces again later, re-selecting it is
+    // treated as re-selecting the already-selected item — `onValueChange` does NOT
+    // fire and the suggestion silently stops navigating (#689 review #3). Clearing
+    // to "" lets the next selection of any href (including this one) fire again.
+    selectedValue = "";
   }
 }
 
@@ -261,7 +299,7 @@ function onSelect(href: string): void {
  * the typed query to /search" (nothing highlighted). */
 let hadHighlightOnKeydown = false;
 
-function onKeydown(event: KeyboardEvent): void {
+function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
   // Enter: route to /search (the original behavior) ONLY when no suggestion was
   // highlighted. When one was, Bits UI already selected it (→ onValueChange →
   // onSelect navigates to the node); committing here too would double-navigate.
@@ -274,10 +312,17 @@ function onKeydown(event: KeyboardEvent): void {
     return;
   }
   if (event.key === "Escape") {
-    // Clear the box on Escape when the popup is closed (the original behavior).
-    // When the popup is OPEN, Bits UI handles Escape (dismiss the popup) and we
-    // leave the query intact.
-    if (!open) {
+    // Branch on the popup state SNAPSHOT taken BEFORE Bits UI's handler ran (the
+    // caller captures it): Bits UI's Escape synchronously closes the popup via
+    // `bind:open`, so reading the live `open` here would always see `false` and
+    // wrongly clear the text even when Escape only meant "dismiss the popup".
+    //   • popup was OPEN → dismiss it, PRESERVE the text. Set `dismissed` so the
+    //     reconcile effect keeps it closed (suggestions are still present) until
+    //     the query changes — otherwise it would reopen on the next tick.
+    //   • popup was CLOSED → clear the box (the original empty-box Escape).
+    if (wasOpen) {
+      dismissed = true;
+    } else {
       query = "";
     }
   }
@@ -294,14 +339,18 @@ function onKeydown(event: KeyboardEvent): void {
   <Combobox.Root
     type="single"
     bind:open
+    bind:value={selectedValue}
     inputValue={query}
     onValueChange={onSelect}
     items={suggestions}
   >
-    <!-- The `child` snippet renders our OWN <input> so we can pin role="searchbox"
-         + type="search" (the header-search contract / the test's
-         getByRole("searchbox")) — Bits UI's default input hard-codes
-         role="combobox", which a later attribute on our own element overrides.
+    <!-- The `child` snippet renders our OWN <input> so we can compose our routing
+         handlers onto Bits UI's. We KEEP Bits UI's default `role="combobox"` (from
+         `{...props}`) — that accessible combobox semantics (expandable suggestions)
+         is the whole point of the migration; overriding to `role="searchbox"` would
+         make screen readers announce a plain search field and hide the listbox. We
+         pin `type="text"` so the native `search` input type can't re-impose the
+         searchbox role.
          CRUCIAL: a plain `{...props}` spread + an explicit `onkeydown`/`oninput`
          would REPLACE Bits UI's handlers (Svelte doesn't compose spread handlers),
          silently killing the popup's open/keyboard/highlight behavior — so we
@@ -316,15 +365,9 @@ function onKeydown(event: KeyboardEvent): void {
         {@const bitsInput = props.oninput as
           | ((e: Event) => void)
           | undefined}
-        <!-- role="searchbox" is NOT redundant here: `{...props}` injects Bits
-             UI's role="combobox", and this later attribute overrides it back to
-             the searchbox role the header-search contract (and the existing
-             browser test's getByRole("searchbox")) requires. -->
-        <!-- svelte-ignore a11y_no_redundant_roles -->
         <input
           {...props}
-          type="search"
-          role="searchbox"
+          type="text"
           aria-label="Search the catalog"
           autocomplete="off"
           placeholder="Search registers, variables, codes…"
@@ -342,8 +385,12 @@ function onKeydown(event: KeyboardEvent): void {
               !!(e.currentTarget as HTMLElement).getAttribute(
                 "aria-activedescendant",
               );
+            // Snapshot the popup-open state BEFORE Bits UI's handler — Escape
+            // synchronously closes it via `bind:open`, so the Escape branch must
+            // see the pre-close value to distinguish dismiss-popup from clear-box.
+            const wasOpen = open;
             bitsKeydown?.(e);
-            onKeydown(e);
+            onKeydown(e, wasOpen);
           }}
         />
       {/snippet}
