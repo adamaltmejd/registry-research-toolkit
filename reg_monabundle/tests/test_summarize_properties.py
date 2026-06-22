@@ -27,11 +27,19 @@ from reg_monabundle.runtime.summarize import (
 
 # A frequency-table row: ``{"val": <group or None>, "n": <count>}``. ``val`` is
 # None (the null group, always dropped) or an arbitrary value coerced via str();
-# ``n`` is a non-negative count.
+# ``n`` is a non-negative count. The text arm excludes ``OTHER_LABEL`` — that
+# string is a reserved output key (the suppressed-remainder bucket), so a row
+# carrying it as a value would collide with that bucket and break the
+# remainder-accounting invariant in ``test_suppress_k_other_iff_remainder_reaches_k``.
 freq_rows = st.lists(
     st.fixed_dictionaries(
         {
-            "val": st.one_of(st.none(), st.text(), st.integers(), st.booleans()),
+            "val": st.one_of(
+                st.none(),
+                st.text().filter(lambda s: s != OTHER_LABEL),
+                st.integers(),
+                st.booleans(),
+            ),
             "n": st.integers(min_value=0, max_value=10_000),
         }
     ),
@@ -42,12 +50,16 @@ freq_rows = st.lists(
 @given(freq_rows, st.integers(min_value=1, max_value=50))
 def test_suppress_k_floor_and_null_drop(rows: list[dict], suppress_k: int) -> None:
     """Every emitted count is >= suppress_k (the k-anonymity floor) and the
-    null group never appears. Deterministic."""
+    null group is dropped. Deterministic."""
     out = _suppress_below_k(rows, suppress_k)
     for label, count in out.items():
         assert count >= suppress_k, f"{label}={count} < k={suppress_k}"
-    # The null group is keyed by str(None) only if it ever leaked through.
-    assert "None" not in out
+    # Null-drop is by identity (val is None), not by the string "None" — so the
+    # invariant is that removing the null rows up front leaves the output
+    # unchanged (a generated ``"None"``-string group is a legitimate emission).
+    assert out == _suppress_below_k(
+        [r for r in rows if r["val"] is not None], suppress_k
+    )
     assert out == _suppress_below_k(rows, suppress_k)
 
 

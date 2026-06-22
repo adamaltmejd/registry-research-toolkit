@@ -34,15 +34,17 @@ def _encode_panel_key(key: str | tuple[str, ...] | None) -> str | None:
     return key
 
 
-# A slug-string component of a composite panel key. The keys store variable
-# slugs (or the "period" sentinel); use text broad enough to stress json's
-# escaping without forcing valid-slug shape — the round-trip is format-agnostic.
-key_component = st.text(min_size=1)
+# A slug-string component of a composite panel key. Real stored keys are only a
+# variable slug (matches ``_SLUG_RE``, leading ``[a-z]``), the ``"period"``
+# sentinel, or a JSON-array of slugs — so mirror that domain. Generating bare
+# ``st.text()`` would emit ``"["``-leading strings that the decoder's
+# ``startswith("[")`` reads as JSON arrays, a false round-trip failure.
+slug_component = st.from_regex(_SLUG_RE, fullmatch=True)
 panel_keys = st.one_of(
     st.none(),
     st.just("period"),
-    key_component,  # bare-slug / sentinel string
-    st.lists(key_component, min_size=1, max_size=4).map(tuple),  # composite
+    slug_component,  # bare-slug / sentinel string
+    st.lists(slug_component, min_size=1, max_size=4).map(tuple),  # composite
 )
 
 
