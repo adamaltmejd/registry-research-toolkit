@@ -16,6 +16,7 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.catalog import (
+    OPEN_ENDED_VALID_TO,
     BindingGroupRef,
     Catalog,
     ClassificationCode,
@@ -26,6 +27,7 @@ from reg_meta.catalog import (
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
+    ValueSetMember,
     VariableEdition,
 )
 from reg_meta.errors import RegMetaError
@@ -725,13 +727,46 @@ class TestResolveVariableLongitudinal:
         states = Catalog(conn).resolve_at(_KON, 2020, variant="individer-15plus")
         coded = [s for s in states if s.value_set_id == 7]
         assert len(coded) == 1
-        assert coded[0].value_set == (("1", "Man"), ("2", "Kvinna"))
+        assert coded[0].value_set == (
+            ValueSetMember(code="1", label="Man"),
+            ValueSetMember(code="2", label="Kvinna"),
+        )
 
     def test_state_without_value_set_is_none(
         self, slugged_conn: sqlite3.Connection
     ) -> None:
         r = Catalog(slugged_conn).resolve(_KON)
         assert r.states[0].value_set is None
+
+    def test_open_ended_state_has_no_period_token(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # #681: reg_meta now populates `VariableState.period_token`. The fixture's
+        # base state is open-ended (2018-01-01..9999-12-31), so its token is None
+        # (the open sentinel has no finite token — the SPA renders "since 2018").
+        state = Catalog(slugged_conn).resolve(_KON).states[0]
+        assert state.valid_to == OPEN_ENDED_VALID_TO
+        assert state.period_token is None
+
+    def test_closed_state_carries_coarsest_period_token(self) -> None:
+        # #681: a CLOSED window carries the coarsest exact display token —
+        # `period_token_for_bounds(valid_from, valid_to)` — populated on the
+        # resolved state (was the webapp's `_state_model` job). A full calendar
+        # year → the bare year token.
+        conn = build_slugged_db()
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            delivery_column_name="Kon",
+        )
+        states = Catalog(conn).resolve_at(_KON, 2020, variant="individer-15plus")
+        closed = [s for s in states if s.valid_to == "2020-12-31"]
+        assert len(closed) == 1
+        assert closed[0].period_token == "2020"
 
 
 class TestResolveAt:
@@ -967,7 +1002,7 @@ class TestEdgeAccessors:
         conn = build_slugged_db()
         self._seed_replaced_by(conn)
         succ = Catalog(conn).successors(_KON)
-        assert [(s.provider, s.register, s.variable) for s in succ] == [
+        assert [(s.provider, s.register_name, s.variable) for s in succ] == [
             ("scb", "lisa", "civilstand")
         ]
         # Outbound edges also ride on ResolvedVariable.replaced_by.
@@ -981,7 +1016,7 @@ class TestEdgeAccessors:
         # but predecessors() reads the edge table, not the predecessor variable).
         self._seed_replaced_by(conn)
         pred = Catalog(conn).predecessors("scb/lisa/civilstand")
-        assert [(p.provider, p.register, p.variable) for p in pred] == [
+        assert [(p.provider, p.register_name, p.variable) for p in pred] == [
             ("scb", "lisa", "kon")
         ]
 
@@ -1274,7 +1309,7 @@ class TestEdgeAccessors:
         conn.commit()
         chain = Catalog(conn).variable_chain("scb/rtb/kon")
         # Resolves to the canonical scb/lisa/kon (the same_as target).
-        assert [(e.register, e.variable) for e in chain] == [("lisa", "kon")]
+        assert [(e.register_name, e.variable) for e in chain] == [("lisa", "kon")]
         assert chain[0].is_self is True
         assert chain[0].is_current is True
 
@@ -1558,7 +1593,7 @@ class TestEdgeAccessors:
             )
         conn.commit()
         r = Catalog(conn).resolve(_KON)
-        assert [(x.provider, x.register, x.variable) for x in r.same_as] == [
+        assert [(x.provider, x.register_name, x.variable) for x in r.same_as] == [
             ("scb", "rtb", "kon")
         ]
         # same_as refs carry no reason/effective_year (succession-only).
@@ -1567,6 +1602,38 @@ class TestEdgeAccessors:
         # A2.6: the edge endpoint now carries its 3-seg binding FQID (the triple
         # IS the binding FQID once variant/period left the grammar).
         assert str(r.same_as[0].fqid) == "scb/rtb/kon"
+
+    def test_register_bearing_model_dumps_with_wire_alias(self) -> None:
+        # #681: the register-bearing models alias the `register_name` Python attr
+        # (the `BaseModel.register`-method clash) to the public wire key
+        # `register`. With `serialize_by_alias` on the base, a DIRECT `model_dump`
+        # / `model_dump_json` (library/CLI path, not just FastAPI's by_alias
+        # response path) must emit `register`, never the internal `register_name`.
+        conn = build_slugged_db()
+        for src, tgt in (
+            (("scb", "lisa", "kon"), ("scb", "rtb", "kon")),
+            (("scb", "rtb", "kon"), ("scb", "lisa", "kon")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+                (*src, *tgt),
+            )
+        conn.commit()
+        r = Catalog(conn).resolve(_KON)
+        ref = r.same_as[0]
+        dumped = ref.model_dump()
+        assert dumped["register"] == "rtb"
+        assert "register_name" not in dumped
+        # The JSON dump carries the alias too (no `register_name` key on the wire).
+        ref_json = ref.model_dump_json()
+        assert '"register":"rtb"' in ref_json
+        assert "register_name" not in ref_json
+        # Nested: a parent dump propagates alias serialization into the nested
+        # VariableRef under `same_as`, so the wire key is `register` there too.
+        nested = r.model_dump()["same_as"][0]
+        assert nested["register"] == "rtb"
+        assert "register_name" not in nested
 
     def test_related(self) -> None:
         conn = build_slugged_db()
@@ -1669,7 +1736,7 @@ class TestEdgeAccessors:
         # Querying the phantom slug resolves to kon, so successors() reports
         # kon's outbound edge.
         succ = Catalog(conn).successors("scb/lisa/phantom")
-        assert [(s.provider, s.register, s.variable) for s in succ] == [
+        assert [(s.provider, s.register_name, s.variable) for s in succ] == [
             ("scb", "lisa", "civilstand")
         ]
 
@@ -1894,7 +1961,7 @@ class TestResolvedVariableGroupRef:
             member_slugs=["kon", "civilstand"],
         )
         r = Catalog(conn).resolve(_KON)
-        assert r.group == BindingGroupRef("scb", "lisa", "demog")
+        assert r.group == BindingGroupRef(provider="scb", register="lisa", key="demog")
 
     def test_ungrouped_variable_has_no_group_ref(
         self, slugged_conn: sqlite3.Connection
@@ -1928,7 +1995,9 @@ class TestResolvedVariableGroupRef:
             member_slugs=["kon"],
         )
         r = Catalog(conn).resolve("scb/lisa/phantom")
-        assert r.group == BindingGroupRef("scb", "rtb", "rtbdemog")
+        assert r.group == BindingGroupRef(
+            provider="scb", register="rtb", key="rtbdemog"
+        )
 
 
 class TestClassificationCodes:

@@ -120,15 +120,15 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 `REFACTOR_SPEC.md` tracks the remaining work.
 
 - **Library packages** (`reg_meta`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
-  - Modeling: `@dataclass`. The **hard** no-Pydantic + stdlib-module-level-imports rule
-    binds **every slice amalgamated into the bundle** — the lightweight
-    `constants`/`validate`/`scan` slices **plus** `reg_monabundle.runtime.*`, i.e.
-    everything lifted into the uploaded `.py` (`validate` runs at bundle load on MONA,
-    `scan` gates exports there), not the runtime alone — each must stay liftable into
-    MONA's offline WinPython env. `reg_meta`'s no-Pydantic is a **soft** preference
-    (import-ergonomics — importable from Jupyter/scripts without pulling pydantic-core —
-    plus an aspirational query-layer port), **not** a MONA requirement: reg_meta is
-    already absent from MONA-side code. Decided 2026-06-22 (#680); see
+  - Modeling: `@dataclass` for `reg_monabundle`, `reg_mockdata`, `reg_meta_build`. The
+    **hard** no-Pydantic + stdlib-module-level-imports rule binds **every slice
+    amalgamated into the bundle** — the lightweight `constants`/`validate`/`scan` slices
+    **plus** `reg_monabundle.runtime.*`, i.e. everything lifted into the uploaded `.py`
+    (`validate` runs at bundle load on MONA, `scan` gates exports there), not the
+    runtime alone — each must stay liftable into MONA's offline WinPython env.
+    `reg_meta` is **not** subject to this rule (it is absent from MONA-side code); as of
+    #681 (2026-06-22) its catalog return surface uses frozen Pydantic v2
+    (`_CatalogModel` base) so FastAPI can consume the models directly. See
     `REFACTOR_SPEC.md` §10a.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
@@ -147,8 +147,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   `reg_schema/DESIGN.md` and `reg_monabundle/DESIGN.md` for the boundary.
 - **Web backend** (`reg_webapp/backend/`): FastAPI + Pydantic REST. `reg_schema`
   Pydantic models are response models directly (no wrapper layer). For `reg_meta`
-  (dataclass-based) responses, the backend defines per-endpoint Pydantic response
-  wrappers — the only place 1:1 wrappers remain.
+  responses, the backend currently defines per-endpoint Pydantic response wrappers — the
+  only place 1:1 wrappers remain (collapse to direct consumption is the #681 follow-up,
+  PR2).
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
   TS types codegen'd from FastAPI's `openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into

@@ -407,15 +407,21 @@ resolving raises `fqid_not_found`. The method signatures are the reference in
 `catalog.py` itself; the webapp's `/api/catalog/*` shape derives directly from this
 surface (see `reg_webapp/DESIGN.md`).
 
-The exact dataclass shapes live here. They are frozen `@dataclass`; collection fields
-are tuples for frozen-dataclass immutability/hashability. The no-Pydantic choice is a
-**soft** preference here, **not** a MONA air-gap requirement — reg_meta is already
-absent from MONA-side code, so the "liftable into the bundle" justification never
-applied to it (that binds only the bundle runner; see root CLAUDE.md "Stack" and
-ARCHITECTURE.md). It rests on import-ergonomics (importable from Jupyter/scripts without
-pulling pydantic-core) and an aspirational Go/Rust port of the query layer, whose real
-cross-impl contracts are the SQLite `SCHEMA_VERSION` + `openapi.json` (Pydantic touches
-neither). Decided 2026-06-22 (#680).
+The catalog return shapes are frozen Pydantic v2 models on a shared `_CatalogModel` base
+(`BaseModel` with `frozen=True, populate_by_name=True, extra="forbid"`). This mirrors
+`reg_schema`'s `_Model` shape but is a **separate** base — reg_meta takes no dependency
+on reg_schema. Collection fields stay `tuple[...]`; Pydantic serializes tuples to JSON
+arrays. `Fqid` stays a frozen `@dataclass` but carries `__get_pydantic_core_schema__` so
+`fqid` fields validate from `str` or `Fqid` and serialize to the canonical FQID string
+(OpenAPI `string`). The four register-bearing models (`VariableRef`, `RelatedRef`,
+`BindingGroupRef`, `VariableEdition`) use Python attr `register_name` with
+`Field(alias="register")` to avoid the `BaseModel.register` shadow; wire/init name stays
+`register`. The earlier no-Pydantic soft preference (import-ergonomics + aspirational
+Go/Rust port) is historical — #681 (2026-06-22) resolved that the port's real cross-impl
+contracts are the SQLite `SCHEMA_VERSION` + `openapi.json` (both Pydantic-independent),
+so reg_meta adopted Pydantic so FastAPI can consume its catalog models directly. The
+**hard** no-Pydantic rule still binds every bundle-amalgamated slice; reg_meta was never
+subject to it (see root CLAUDE.md "Stack" and ARCHITECTURE.md).
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`

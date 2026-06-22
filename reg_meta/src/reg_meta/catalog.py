@@ -15,8 +15,9 @@ from __future__ import annotations
 
 import json
 from collections import deque
-from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING, TypeVar
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from .db import db_path_from_args, open_db
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
@@ -26,6 +27,7 @@ from .fqid import (
     FqidError,
     FqidKind,
     parse,
+    period_token_for_bounds,
     period_token_to_bounds,
 )
 
@@ -40,15 +42,41 @@ if TYPE_CHECKING:
 _SuccTuple = TypeVar("_SuccTuple", tuple[str, str, str], tuple[str, str], tuple[str])
 
 
-@dataclass(frozen=True)
-class ResolvedProvider:
+class _CatalogModel(BaseModel):
+    """Frozen Pydantic base for the catalog return surface (#681): the
+    `Resolved*` / `*Summary` / `*Ref` / edition / coverage / group / tag models
+    the webapp consumes as response models (collapsing its 1:1 wrappers in a
+    follow-up). Frozen preserves the immutability the prior `@dataclass(frozen=True)`
+    gave; `Fqid` fields ride the `Fqid.__get_pydantic_core_schema__` hook (wire =
+    the canonical FQID string). Constructed by KEYWORD (Pydantic takes no
+    positional args).
+
+    `populate_by_name` + `extra="forbid"` are hoisted here so the
+    `register`-aliasing register-bearing models don't each repeat them, and so a
+    typo'd kwarg fails loudly (restoring the prior `@dataclass`'s fail-fast).
+    `serialize_by_alias` makes a direct `model_dump()` / `model_dump_json()` emit
+    the public wire key (`register`, not the internal `register_name` attr the
+    `BaseModel.register`-method clash forced; #681) — keeping a library/CLI dump
+    aligned with the FastAPI response path, which already serializes `by_alias`.
+    Harmless on the alias-free models. Mirrors reg_schema's `_Model` shape
+    (frozen + extra-forbid + populate_by_name) — a separate base by design:
+    reg_meta must NOT depend on reg_schema."""
+
+    model_config = ConfigDict(
+        frozen=True,
+        populate_by_name=True,
+        extra="forbid",
+        serialize_by_alias=True,
+    )
+
+
+class ResolvedProvider(_CatalogModel):
     fqid: Fqid
     provider_id: int
     name: str
 
 
-@dataclass(frozen=True)
-class ResolvedRegister:
+class ResolvedRegister(_CatalogModel):
     fqid: Fqid
     register_id: int
     provider_id: int
@@ -58,8 +86,7 @@ class ResolvedRegister:
     purpose: str | None
 
 
-@dataclass(frozen=True)
-class ResolvedClassification:
+class ResolvedClassification(_CatalogModel):
     fqid: Fqid
     classification_id: int
     short_name: str
@@ -75,21 +102,18 @@ class ResolvedClassification:
 # catalog browse (`/api/catalog` → providers → registers → bindings). Each carries
 # the addressable `Fqid` (webapp serializes `str(fqid)`) + a display `name`,
 # mirroring the `Resolved*` style but without the per-entity detail those carry.
-@dataclass(frozen=True)
-class ProviderSummary:
+class ProviderSummary(_CatalogModel):
     fqid: Fqid
     name: str
 
 
-@dataclass(frozen=True)
-class RegisterSummary:
+class RegisterSummary(_CatalogModel):
     fqid: Fqid
     name: str
     purpose: str | None
 
 
-@dataclass(frozen=True)
-class BindingSummary:
+class BindingSummary(_CatalogModel):
     fqid: Fqid
     name: str | None
 
@@ -99,8 +123,7 @@ class BindingSummary:
 OPEN_ENDED_VALID_TO = "9999-12-31"
 
 
-@dataclass(frozen=True)
-class VariableCoverage:
+class VariableCoverage(_CatalogModel):
     """Coverage aggregate for one variable over its `variable_state` windows
     (#351): the study-window signal a browse row needs without resolving every
     state. `coverage_from` is the earliest `valid_from`; `coverage_to` the latest
@@ -115,8 +138,7 @@ class VariableCoverage:
     state_count: int
 
 
-@dataclass(frozen=True)
-class RegisterCoverage:
+class RegisterCoverage(_CatalogModel):
     """Coverage aggregate for one register (#351): `variable_count` is its
     slugged (browsable) variables; the span is over ALL their states.
     `coverage_to`/`open_ended` follow `VariableCoverage`."""
@@ -146,8 +168,7 @@ def _coverage_bounds(
 # fold-and-pick affordance for browse surfaces. Classification VINTAGE editions
 # (lkf1980…lkf2026, ssyk1996→ssyk2012) are NOT folded here — they surface as
 # succession edges in `classification_replaced_by` (#571).
-@dataclass(frozen=True)
-class GroupFacet:
+class GroupFacet(_CatalogModel):
     """One facet assignment on a group member: `axis` names the dimension
     ('month' / 'rank' / 'vintage'), `value` sorts (zero-padded where needed),
     `label` displays."""
@@ -157,8 +178,7 @@ class GroupFacet:
     label: str
 
 
-@dataclass(frozen=True)
-class ConceptGroupMember:
+class ConceptGroupMember(_CatalogModel):
     """A group member: the leaf's FQID (binding or classification), its
     display name, and its facet assignments (empty on edge-group members)."""
 
@@ -167,8 +187,7 @@ class ConceptGroupMember:
     facets: tuple[GroupFacet, ...]
 
 
-@dataclass(frozen=True)
-class ConceptGroupSummary:
+class ConceptGroupSummary(_CatalogModel):
     """One derived concept group. `key` is the scope-unique derivation key
     (slug stem / min member slug / curated key) — a stable anchor for UI
     state, not an FQID. `axes` holds the group's single facet axis (a 0-or-1
@@ -184,8 +203,7 @@ class ConceptGroupSummary:
     members: tuple[ConceptGroupMember, ...]
 
 
-@dataclass(frozen=True)
-class BindingGroupRef:
+class BindingGroupRef(_CatalogModel):
     """The concept group a binding belongs to, as the group's addressable
     `(provider, register, key)` (#616). Carried by `ResolvedVariable.group` so a
     member URL renders group-aware without a second fetch. Membership is
@@ -193,15 +211,18 @@ class BindingGroupRef:
     at most one home group per variable), so this is a singular ref — the full
     member list lives behind `Catalog.concept_group(provider, register, key)`.
     `key` is `ConceptGroupSummary.key` (the scope-unique derivation key), not an
-    FQID segment."""
+    FQID segment.
+
+    `register` is a `BaseModel` method, so the Python attr is `register_name`
+    aliased to the `register` wire/init name (#681); construct/serialize as
+    `register`, read as `.register_name`."""
 
     provider: str
-    register: str
+    register_name: str = Field(alias="register")
     key: str
 
 
-@dataclass(frozen=True)
-class TagSummary:
+class TagSummary(_CatalogModel):
     """One curated thematic tag (#311) in the global vocabulary. `slug` is the
     globally-unique tag id; `member_count` / `starred_count` are this tag's total
     members and the subset flagged golden/recommended (across both grains)."""
@@ -213,8 +234,7 @@ class TagSummary:
     starred_count: int
 
 
-@dataclass(frozen=True)
-class TagMembership:
+class TagMembership(_CatalogModel):
     """A tag a register/variable belongs to (#311), from its side: the tag's
     `slug`/`label`, plus THIS membership's `rank` (curated order within the tag),
     `starred` (golden/recommended flag) and one-line `note` rationale."""
@@ -246,8 +266,7 @@ def _tag_membership(row: sqlite3.Row) -> TagMembership:
 # (composite), the `panel_time_key` ("period", a variable-slug, or a tuple of
 # slugs (composite)), and the `panel_time_grain` ('delivery'/'row'). Most
 # variants carry no panel data → all three are None.
-@dataclass(frozen=True)
-class VariantSummary:
+class VariantSummary(_CatalogModel):
     slug: str
     name: str | None
     description: str | None
@@ -277,8 +296,18 @@ def _decode_panel_entity_key(raw: str | None) -> str | tuple[str, ...] | None:
 Period = int | str | dict
 
 
-@dataclass(frozen=True)
-class VariableState:
+class ValueSetMember(_CatalogModel):
+    """One (code, label) entry in a state's value set (#681). Was a bare
+    `(code, label)` tuple inside `VariableState.value_set`; promoted to a model so
+    the wire serializes named objects (`{"code": ..., "label": ...}`) rather than a
+    2-element array. The codes/labels are PUBLIC value-set strings, not row-level
+    data."""
+
+    code: str
+    label: str
+
+
+class VariableState(_CatalogModel):
     """One `variable_state` row (see DESIGN.md → Two-level variable model) — a variable's per-delivery shape, tagged
     with the **variant coordinate** it was delivered in. The longitudinal
     `ResolvedVariable.states` is a tuple of these; `resolve_at` returns the
@@ -302,10 +331,10 @@ class VariableState:
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.
     value_set_version_label: str
     value_set_id: int | None
-    # (code, label) pairs for `value_set_id`, hydrated eagerly when non-NULL.
-    # None when the state carries no value set. Eager (frozen dataclass favors
-    # it); typical per-state code fan-out is small.
-    value_set: tuple[tuple[str, str], ...] | None
+    # `ValueSetMember` (code, label) entries for `value_set_id`, hydrated eagerly
+    # when non-NULL. None when the state carries no value set. Eager (frozen model
+    # favors it); typical per-state code fan-out is small.
+    value_set: tuple[ValueSetMember, ...] | None
     # Variable-grain `variable.is_identifier` denormalized onto every state via a
     # JOIN (constant across a variable's states), so consumers with no
     # ResolvedVariable in scope (the `resolve_at` / `/states` paths) can still
@@ -315,10 +344,16 @@ class VariableState:
     # resolved per-state from `variable_state.classification_id` — it varies
     # across a variable's states. None for code-less / unclassified states.
     classification_slug: str | None
+    # The coarsest exact display token for this window (#321/#681): the token
+    # `period_token_for_bounds(valid_from, valid_to)` expands back to exactly
+    # `(valid_from, valid_to)`, or the explicit `lo..hi` range for a non-grammar
+    # window. None for an open-ended state (the `9999-12-31` sentinel has no finite
+    # token — the SPA renders "since valid_from"). Computed in `_row_to_state` so
+    # the webapp reads it instead of recomputing (was `_state_model`'s job).
+    period_token: str | None = None
 
 
-@dataclass(frozen=True)
-class VariableRef:
+class VariableRef(_CatalogModel):
     """A variable-grain edge endpoint (see DESIGN.md → Composite registers and source tracking): the 3-part `(provider, register,
     variable)` identity of a `same_as` / `replaced_by` neighbor. Carried by
     `predecessors`/`successors` and `ResolvedVariable.same_as`/`.replaced_by`.
@@ -327,11 +362,15 @@ class VariableRef:
     the binding FQID now that the variant/period left the grammar (see DESIGN.md → FQID grammar and Composite registers and source tracking).
     Build-time slug validation guarantees the triple round-trips, so this is
     never None in practice.
+
+    `register` is a `BaseModel` method, so the Python attr is `register_name`
+    aliased to the `register` wire/init name (#681); construct/serialize as
+    `register`, read as `.register_name` (see `BindingGroupRef`).
     """
 
     fqid: Fqid | None
     provider: str
-    register: str
+    register_name: str = Field(alias="register")
     variable: str
     # #142: succession refs (predecessors/successors) carry the human transition
     # reason (`timeseries_event.beskrivning`) and the AktuellVariabel-grain
@@ -342,8 +381,7 @@ class VariableRef:
     effective_year: int | None = None
 
 
-@dataclass(frozen=True)
-class ClassificationRef:
+class ClassificationRef(_CatalogModel):
     """A classification-grain succession edge endpoint (#571): one
     `classification_replaced_by` neighbor of a classification edition. Carried by
     `classification_predecessors`/`classification_successors` and
@@ -363,8 +401,7 @@ class ClassificationRef:
     note: str | None = None
 
 
-@dataclass(frozen=True)
-class ClassificationEdition:
+class ClassificationEdition(_CatalogModel):
     """One edition in a classification succession chain (#571), as returned by
     `Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge
     endpoint), this is a fully-hydrated node in the WHOLE chain — the webapp
@@ -393,8 +430,7 @@ class ClassificationEdition:
     is_self: bool
 
 
-@dataclass(frozen=True)
-class VariableEdition:
+class VariableEdition(_CatalogModel):
     """One edition in a variable succession chain (#582), as returned by
     `Catalog.variable_chain`. The variable-grain dual of `ClassificationEdition`:
     unlike `VariableRef` (a single edge endpoint), this is a fully-hydrated node in
@@ -425,11 +461,15 @@ class VariableEdition:
     how `VariableRef` carries `reason`. `is_current` marks the terminal (head)
     edition — the one with no outbound successor; `is_self` marks the edition the
     caller queried (resolved to its canonical live triple when the query was a
-    `same_as` alias)."""
+    `same_as` alias).
+
+    `register` is a `BaseModel` method, so the Python attr is `register_name`
+    aliased to the `register` wire/init name (#681); construct/serialize as
+    `register`, read as `.register_name` (see `BindingGroupRef`)."""
 
     fqid: Fqid | None
     provider: str
-    register: str
+    register_name: str = Field(alias="register")
     variable: str
     name: str | None
     effective_year: int | None
@@ -438,8 +478,7 @@ class VariableEdition:
     is_self: bool
 
 
-@dataclass(frozen=True)
-class ClassificationCode:
+class ClassificationCode(_CatalogModel):
     """One code/label entry in a classification edition's value set (#609), as
     returned by `Catalog.classification_codes`. Keyed per EDITION
     (`classification_code.classification_id`) — every edition (slug) is its own
@@ -460,8 +499,7 @@ class ClassificationCode:
     is_valid: bool | None
 
 
-@dataclass(frozen=True)
-class RelatedRef:
+class RelatedRef(_CatalogModel):
     """A variable-grain "see also" link from `variable_related_to`. Same 3-part
     identity as `VariableRef` plus the `relation_kind`. The table carries the
     MEANINGFUL links: the non-foldable auto-derived split reasons
@@ -469,17 +507,20 @@ class RelatedRef:
     bulk mechanical `same_definition_different_column` split siblings are NOT here
     — they're the concept group (presentation fold), not a related edge (#591;
     full taxonomy in reg_meta_build/DESIGN.md). `fqid` is the sibling's 3-segment
-    binding FQID (A2.6)."""
+    binding FQID (A2.6).
+
+    `register` is a `BaseModel` method, so the Python attr is `register_name`
+    aliased to the `register` wire/init name (#681); construct/serialize as
+    `register`, read as `.register_name` (see `BindingGroupRef`)."""
 
     fqid: Fqid | None
     provider: str
-    register: str
+    register_name: str = Field(alias="register")
     variable: str
     relation_kind: str
 
 
-@dataclass(frozen=True)
-class LineageEdge:
+class LineageEdge(_CatalogModel):
     """Consumer-side lineage at STATE grain (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)): one `variable_state_lineage`
     row tying a consumer state to a source state over their validity
     intersection. `source_fqid` is the source state's 3-part binding FQID,
@@ -492,8 +533,7 @@ class LineageEdge:
     source_fqid: Fqid | None = None
 
 
-@dataclass(frozen=True)
-class LineageWarning:
+class LineageWarning(_CatalogModel):
     """Build-time lineage warning for a consumer state (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)):
     `variable_state_lineage_warning`. `warning_kind` is 'no_source_state' or
     'ambiguous_source_variant'."""
@@ -503,8 +543,7 @@ class LineageWarning:
     message: str
 
 
-@dataclass(frozen=True)
-class ResolvedVariable:
+class ResolvedVariable(_CatalogModel):
     """Longitudinal resolution of a binding FQID (see DESIGN.md → Catalog API surface): the addressable
     variable's shared metadata + its full `variable_state` history (each state
     tagged with its variant) + variable-grain edges."""
@@ -855,7 +894,7 @@ class Catalog:
                 (r["group_key"], r["group_label"], r["source"], r["axis"], []),
             )
             facets = (
-                (GroupFacet(axis, r["facet_value"], r["facet_label"]),)
+                (GroupFacet(axis=axis, value=r["facet_value"], label=r["facet_label"]),)
                 if axis is not None
                 else ()
             )
@@ -930,7 +969,11 @@ class Catalog:
                 ConceptGroupMember(
                     fqid=Fqid.classification_fqid(r["cls_slug"]),
                     name=r["cls_name"],
-                    facets=(GroupFacet(axis, r["facet_value"], r["facet_label"]),),
+                    facets=(
+                        GroupFacet(
+                            axis=axis, value=r["facet_value"], label=r["facet_label"]
+                        ),
+                    ),
                 )
             )
         return [
@@ -1177,7 +1220,9 @@ class Catalog:
         ).fetchone()
         if row is None:
             return None
-        return BindingGroupRef(provider_slug, register_slug, row["group_key"])
+        return BindingGroupRef(
+            provider=provider_slug, register=register_slug, key=row["group_key"]
+        )
 
     # ── A2.5 state-anchored resolution helpers ─────────────────────────────
 
@@ -1271,9 +1316,9 @@ class Catalog:
 
     def _value_set_codes(
         self, value_set_id: int | None
-    ) -> tuple[tuple[str, str], ...] | None:
-        """(code, label) pairs for a `value_set_id`, deterministically ordered.
-        None when the state carries no value set."""
+    ) -> tuple[ValueSetMember, ...] | None:
+        """`ValueSetMember` (code, label) entries for a `value_set_id`,
+        deterministically ordered. None when the state carries no value set."""
         if value_set_id is None:
             return None
         rows = self._conn.execute(
@@ -1282,7 +1327,18 @@ class Catalog:
             "WHERE vsm.value_set_id = ? ORDER BY vc.code, vc.label",
             (value_set_id,),
         ).fetchall()
-        return tuple((r["code"], r["label"]) for r in rows)
+        return tuple(ValueSetMember(code=r["code"], label=r["label"]) for r in rows)
+
+    @staticmethod
+    def _period_token_for_window(valid_from: str, valid_to: str) -> str | None:
+        """The coarsest exact display token for a `(valid_from, valid_to)` window
+        (#321/#681), or None for the open-ended sentinel (`9999-12-31` — no finite
+        token). Single source for `VariableState.period_token` — populated on the
+        annual row in `_row_to_state` and re-derived per month-window in
+        `_expand_state_windows` (the window's bounds, not the annual base's)."""
+        if valid_to == OPEN_ENDED_VALID_TO:
+            return None
+        return period_token_for_bounds(valid_from, valid_to)
 
     def _row_to_state(self, row: sqlite3.Row) -> VariableState:
         """Build a `VariableState` from a `variable_state` row, tagging it with
@@ -1317,6 +1373,9 @@ class Catalog:
             value_set=self._value_set_codes(row["value_set_id"]),
             is_identifier=bool(row["is_identifier"]),
             classification_slug=row["classification_slug"],
+            period_token=self._period_token_for_window(
+                row["valid_from"], row["valid_to"]
+            ),
         )
 
     def _states_for_variable(self, variable_id: int) -> tuple[VariableState, ...]:
@@ -1390,12 +1449,16 @@ class Catalog:
                 out.append(base)
                 continue
             for col, wfrom, wto in matched:
+                # The window's own bounds drive `period_token` (recompute — the
+                # base annual token doesn't describe the month window).
                 out.append(
-                    replace(
-                        base,
-                        delivery_column_name=col,
-                        valid_from=wfrom,
-                        valid_to=wto,
+                    base.model_copy(
+                        update={
+                            "delivery_column_name": col,
+                            "valid_from": wfrom,
+                            "valid_to": wto,
+                            "period_token": self._period_token_for_window(wfrom, wto),
+                        }
                     )
                 )
         out.sort(key=lambda s: (s.valid_from, s.valid_to, s.delivery_column_name or ""))
@@ -1843,7 +1906,7 @@ class Catalog:
         """The load-bearing (provider, register, variable) triple of a
         `VariableRef` edge endpoint — the key the `variable_replaced_by` walk steps
         on (the `fqid` is best-effort, but the triple is always present)."""
-        return (ref.provider, ref.register, ref.variable)
+        return (ref.provider, ref.register_name, ref.variable)
 
     def _variable_chain_names(
         self, triples: Iterable[tuple[str, str, str]]
@@ -2395,8 +2458,8 @@ class Catalog:
             return None
         # Outbound succession edges (#571) key on the resolved row's OWN slug
         # (`fqid.classification` == the row's slug on a direct hit). The same_as
-        # path `replace(hit, fqid=fqid, …)`s off this direct hit, so it inherits
-        # the resolved edition's edges (only `fqid`/`via_same_as` are overridden).
+        # path `model_copy`s off this direct hit (update={fqid, via_same_as}), so
+        # it inherits the resolved edition's edges (only those two are overridden).
         return ResolvedClassification(
             fqid=fqid,
             classification_id=row["id"],
@@ -2465,7 +2528,9 @@ class Catalog:
                 # graph in case a further hop lands on a present row.
                 hit = self._resolve_classification_direct(n_fqid)
                 if hit is not None:
-                    return replace(hit, fqid=fqid, via_same_as=(*path, n_fqid))
+                    return hit.model_copy(
+                        update={"fqid": fqid, "via_same_as": (*path, n_fqid)}
+                    )
                 queue.append((n_prov, n_slug, (*path, n_fqid)))
         return None
 

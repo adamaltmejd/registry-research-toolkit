@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import _var_row
 from _shared_fixtures import build_with_rows, vm_rows
-from reg_meta.catalog import Catalog
+from reg_meta.catalog import Catalog, ValueSetMember
 from reg_meta.db import open_db
 
 if TYPE_CHECKING:
@@ -82,7 +82,10 @@ def test_resolve_at_month_returns_one_column(merged_db: Path) -> None:
         assert s.valid_from == "2018-03-01"
         assert s.valid_to == "2018-03-31"
         # value set comes from the annual claim.
-        assert s.value_set == (("1", "Låg"), ("2", "Hög"))
+        assert s.value_set == (
+            ValueSetMember(code="1", label="Låg"),
+            ValueSetMember(code="2", label="Hög"),
+        )
     finally:
         conn.close()
 
@@ -97,6 +100,28 @@ def test_resolve_at_full_year_returns_all_months(merged_db: Path) -> None:
         cols = sorted(s.delivery_column_name for s in states)
         assert cols == ["LonFinkFeb", "LonFinkJan", "LonFinkMars"]
         assert all(s.valid_from.startswith("2018-") for s in states)
+    finally:
+        conn.close()
+
+
+def test_month_window_period_token_is_own_month(merged_db: Path) -> None:
+    """Each expanded month window's `period_token` recomputes from that window's
+    OWN bounds (e.g. the march column → `"2018-03"`), NOT the base annual token
+    (`"2018"`). Regression for `_expand_state_windows` dropping `period_token`
+    from its `model_copy(update=…)` — which would leave every window carrying the
+    annual token (#681)."""
+    conn = open_db(merged_db)
+    try:
+        cat = Catalog(conn)
+        states = cat.resolve_at(_FQID, 2018)
+        tokens = {s.delivery_column_name: s.period_token for s in states}
+        # The window token is the OWN month, distinct from the annual "2018".
+        assert tokens == {
+            "LonFinkJan": "2018-01",
+            "LonFinkFeb": "2018-02",
+            "LonFinkMars": "2018-03",
+        }
+        assert all(t != "2018" for t in tokens.values())
     finally:
         conn.close()
 
@@ -124,7 +149,14 @@ def test_states_returns_all_windows(merged_db: Path) -> None:
         assert ("LonFinkJan", "2018-01-01") in windows
         assert ("LonFinkMars", "2019-03-01") in windows
         # Each window shares the annual claim's value set.
-        assert all(s.value_set == (("1", "Låg"), ("2", "Hög")) for s in states)
+        assert all(
+            s.value_set
+            == (
+                ValueSetMember(code="1", label="Låg"),
+                ValueSetMember(code="2", label="Hög"),
+            )
+            for s in states
+        )
     finally:
         conn.close()
 

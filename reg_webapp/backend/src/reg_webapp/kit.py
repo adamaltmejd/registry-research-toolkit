@@ -264,7 +264,10 @@ def _binding_codes(
             ):
                 continue
             if state.value_set:
-                pairs.extend(state.value_set)
+                # #681: `VariableState.value_set` is now a tuple of
+                # `ValueSetMember`s (was bare (code, label) tuples) — project back
+                # to the (code, label) pairs `_code_pairs` consumes.
+                pairs.extend((m.code, m.label) for m in state.value_set)
     return _code_pairs(pairs)
 
 

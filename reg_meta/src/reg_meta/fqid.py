@@ -35,10 +35,13 @@ import unicodedata
 from dataclasses import dataclass
 from datetime import date
 from enum import StrEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from pydantic import GetCoreSchemaHandler
+    from pydantic_core import CoreSchema
 
 
 class FqidKind(StrEnum):
@@ -442,6 +445,31 @@ class Fqid:
         in the slug, not a separate segment (see DESIGN.md → FQID grammar)."""
         validate_slug(classification, FqidKind.CLASSIFICATION)
         return cls(kind=FqidKind.CLASSIFICATION, classification=classification)
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls, source_type: Any, handler: GetCoreSchemaHandler
+    ) -> CoreSchema:
+        """Pydantic v2 hook so a `BaseModel` with an `Fqid` field treats it as a
+        STRING on the wire (#681): serialize via the canonical `str(fqid)`,
+        validate by accepting an existing `Fqid` as-is or parsing a `str` via
+        `parse`, and emit `type: string` in the JSON/OpenAPI schema (not an
+        object). `core_schema` is imported lazily so the eager `import reg_meta`
+        stays cheap (mirrors the `__init__.py` lazy-import note)."""
+        from pydantic_core import core_schema
+
+        from_str = core_schema.no_info_after_validator_function(
+            parse, core_schema.str_schema()
+        )
+        return core_schema.json_or_python_schema(
+            json_schema=from_str,
+            python_schema=core_schema.union_schema(
+                [core_schema.is_instance_schema(cls), from_str]
+            ),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                str, when_used="always"
+            ),
+        )
 
 
 def parse(value: str) -> Fqid:

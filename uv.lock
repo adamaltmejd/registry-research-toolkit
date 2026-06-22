@@ -370,11 +370,15 @@ name = "reg-meta"
 version = "0.19.0"
 source = { editable = "reg_meta" }
 dependencies = [
+    { name = "pydantic" },
     { name = "zstandard" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "zstandard", specifier = ">=0.23" }]
+requires-dist = [
+    { name = "pydantic", specifier = ">=2.13.4" },
+    { name = "zstandard", specifier = ">=0.23" },
+]
 
 [[package]]
 name = "reg-meta-build"

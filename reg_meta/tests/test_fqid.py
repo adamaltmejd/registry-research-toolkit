@@ -668,3 +668,50 @@ class TestBindingFqid:
         f = parse("sos/lss")
         assert f.kind is FqidKind.REGISTER
         assert str(f) == "sos/lss"
+
+
+# ---------------------------------------------------------------------------
+# Pydantic interop (#681): `Fqid` rides a `__get_pydantic_core_schema__` hook so
+# a `BaseModel` with an `Fqid` field treats it as a STRING on the wire.
+# ---------------------------------------------------------------------------
+
+
+class TestPydanticSchema:
+    def _model(self):
+        from pydantic import BaseModel, ConfigDict
+
+        class M(BaseModel):
+            model_config = ConfigDict(frozen=True)
+            fqid: Fqid
+            opt: Fqid | None = None
+
+        return M
+
+    def test_json_schema_emits_type_string(self) -> None:
+        schema = self._model().model_json_schema()
+        assert schema["properties"]["fqid"] == {"title": "Fqid", "type": "string"}
+        # `Fqid | None` → nullable string, not an object.
+        assert {"type": "string"} in schema["properties"]["opt"]["anyOf"]
+
+    def test_validate_from_str_parses(self) -> None:
+        m = self._model()(fqid="scb/lisa/kon")
+        assert isinstance(m.fqid, Fqid)
+        assert m.fqid == Fqid.binding_fqid("scb", "lisa", "kon")
+
+    def test_validate_accepts_an_existing_fqid_instance(self) -> None:
+        existing = Fqid.register_fqid("scb", "lisa")
+        assert self._model()(fqid=existing).fqid == existing
+
+    def test_validate_rejects_a_malformed_fqid_string(self) -> None:
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
+            self._model()(fqid="not//a/valid/fqid")
+
+    def test_serializes_via_canonical_str(self) -> None:
+        m = self._model()(fqid="scb/lisa/kon")
+        assert m.model_dump_json() == '{"fqid":"scb/lisa/kon","opt":null}'
+
+    def test_round_trips_str_to_fqid_to_str(self) -> None:
+        m = self._model()(fqid="class/sun2020")
+        assert str(m.fqid) == "class/sun2020"
