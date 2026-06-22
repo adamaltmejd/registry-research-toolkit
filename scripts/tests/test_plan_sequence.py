@@ -345,52 +345,29 @@ def test_reject_lanes_stdin() -> None:
 # --- lanes completeness guard (#662) -------------------------------------------------
 
 
-def test_placed_numbers_counts_lanes_held_notes_not_rationale() -> None:
-    body = (
-        "**Lanes (ranked)** — open issues 6\n"
-        "1. **Lane A** — #1, #2 · `area`\n"
-        "   - why: follows #99; serialize #1 → #2\n"  # rationale sub-bullet — NOT counted
-        "2. **Lane B** — #3\n"
-        "**Held:** #4 ← PR #50\n"
-        "**Run concurrently now:** lanes 1–2\n"
-        "**Notes:** #5 blocked by a semantic dep on #2's artifact\n"  # Notes park — counted
-    )
-    # The three accounting surfaces — lanes (#1,#2,#3), Held (#4), Notes-park (#5) — are
-    # counted; the lane's `- why:` rationale (#99) is not.
-    assert ps._placed_numbers(body) == {1, 2, 3, 4, 5}
-
-
 def test_reject_incomplete_lanes() -> None:
-    # The reference floor is the basis `free=` set, matched against placement lines only.
+    # Backstop semantics (#663): the reference floor is the basis `free=` set; every free
+    # candidate must appear SOMEWHERE in the body (catch the silent vanish). Exact placement
+    # is /plan-lanes' own self-check, not this net's.
     basis = ps.basis_comment({1, 2, 3}, set(), "sig", {1, 2, 3})
 
-    # Every free candidate placed in a lane → accepted.
+    # Every free candidate present → accepted.
     assert ps.reject_incomplete_lanes("1. lane — #1, #2\n2. lane — #3", basis) is None
-    # A candidate parked under Held counts as accounted-for.
-    assert ps.reject_incomplete_lanes("1. lane — #1, #2\n**Held:** #3", basis) is None
 
-    # A dropped candidate is refused, and the message names exactly what's missing.
+    # A candidate absent from the body entirely → refused, naming exactly what's missing.
     why = ps.reject_incomplete_lanes("1. lane — #1, #2", basis)
     assert why is not None and "#3" in why
     assert "#1" not in why and "#2" not in why  # only the missing one is named
 
-    # Finding B (#663 re-review): a candidate named only in a lane's rationale sub-bullet is
-    # NOT an accounting surface — it must be ranked or parked, not merely mentioned.
-    why = ps.reject_incomplete_lanes("1. lane — #1, #2\n   - why: related to #3", basis)
-    assert why is not None and "#3" in why
-
-    # …but a floor candidate found blocked is legitimately parked on the Notes line
-    # (/plan-lanes step 5b: never force a discovered-blocked one into a ranked lane). That
-    # accounts for it — no false-reject (this is the non-convergent wedge #663 review #2 hit).
+    # Backstop scope: a candidate present ANYWHERE (a Notes park, or even a rationale
+    # mention) passes — placement quality is /plan-lanes' step-5 self-check, not this guard.
     assert (
-        ps.reject_incomplete_lanes(
-            "1. lane — #1, #2\n**Notes:** #3 blocked by a semantic dep", basis
-        )
+        ps.reject_incomplete_lanes("1. lane — #1, #2\n**Notes:** #3 blocked", basis)
         is None
     )
 
-    # Whole-number matching (#3 ≠ #30): a superstring on a lane line doesn't satisfy #3 —
-    # #30 alone leaves #3 missing (reject), but adding #3 back accepts (locks `\d+` vs `\d`).
+    # Whole-number matching (#3 ≠ #30): a superstring doesn't satisfy #3 — #30 alone leaves
+    # #3 missing (reject), but adding #3 back accepts (locks `\d+` vs `\d`).
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30", basis) is not None
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30, #3", basis) is None
 
@@ -399,8 +376,7 @@ def test_reject_incomplete_lanes() -> None:
     inflight = ps.basis_comment({1, 2, 3}, {9}, "sig", {1, 2, 3})
     assert ps.reject_incomplete_lanes("1. lane — #1, #2", inflight) is not None
 
-    # All-held: free= is stamped empty → nothing must be placed → "nothing dispatchable"
-    # body passes (no false-reject, no wedge).
+    # All-held: free= is stamped empty → nothing required → "nothing dispatchable" passes.
     allheld = ps.basis_comment({1, 2, 3}, {9}, "sig", set())
     assert (
         ps.reject_incomplete_lanes("No ready issues free of conflicts.", allheld)

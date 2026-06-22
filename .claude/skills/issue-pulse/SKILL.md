@@ -81,8 +81,8 @@ tooling. Don't narrate the steps; just run them and report the result.
      uv run --no-project python scripts/plan_sequence.py --restamp-lanes --epic <N> --basis "$basis"
      ```
 
-     If `--restamp-lanes` itself exits **1** (`no existing lanes content to re-stamp` —
-     a stamped-but-empty block, so there's no ranking to keep), fall through to the
+     If `--restamp-lanes` itself exits **1** (no existing lanes content to keep, or the
+     preserved content is itself incomplete vs the live floor), fall through to the
      re-rank path below instead.
 
    - **exit `1` (re-rank).** Lane content moved — the ready set, or a lane-affecting
@@ -97,10 +97,11 @@ tooling. Don't narrate the steps; just run them and report the result.
        uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N> --basis "$basis"
      ```
 
-     `--write-lanes` **refuses** (exit non-zero, no write) a body that drops a candidate
-     from the floor `/plan-lanes` was handed (the basis `free=` set) — one absent from
-     the accounting surfaces (a ranked lane, the `**Held:**` line, or the `**Notes:**`
-     line; a lane's `- why:` rationale doesn't count). That means the ranking was
+     `--write-lanes` **refuses** (exit non-zero, no write) a body that silently drops a
+     free candidate — one from the floor `/plan-lanes` was handed (the basis `free=`
+     set) that doesn't appear *anywhere* in the body. That's the catastrophic
+     silent-vanish case; it's a deliberately coarse backstop, not a placement checker
+     (exact placement is `/plan-lanes`' own self-check). On a refusal the ranking was
      incomplete: re-run `/plan-lanes` accounting for every candidate and persist the
      corrected markdown — don't retry the same body. (Empty stdout from step 1 is the
      different, transient case.)

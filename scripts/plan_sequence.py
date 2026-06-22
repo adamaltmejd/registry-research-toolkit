@@ -616,12 +616,21 @@ def restamp_lanes_block(epic: int, basis: str) -> int:
     the next genuine re-rank — cosmetic, and never a contamination source (`/plan-lanes`
     sources its candidate floor from the live `--lane` view, not the stored block).
 
-    Falls back to exit 1 (caller should re-rank) if there's no existing content to keep.
+    Falls back to exit 1 (caller should re-rank) if there's no existing content to keep, or
+    if that content is itself incomplete vs the new basis. The latter guards a block written
+    before the completeness guard (or before `free=` existed): re-stamping would bless an
+    already-incomplete body with a fresh `free=`-bearing basis, so it would read fresh
+    forever and `/pr-pipeline` would never see the dropped candidate. A re-stamp only fires
+    on a running-set-only delta (the free set is unchanged — `lanes_content_signature` folds
+    it in), so the new basis's `free=` is the set the content should already cover.
     """
     block = extract_block(epic_body(epic), LANES_START, LANES_END)
     content = extract_lanes_content(block)
     if not content:
         print("no existing lanes content to re-stamp; re-rank instead", file=sys.stderr)
+        return 1
+    if (why := reject_incomplete_lanes(content, basis)) is not None:
+        print(f"preserved lanes incomplete ({why}); re-rank instead", file=sys.stderr)
         return 1
     return write_lanes_block(epic, render_lanes_block(content, basis))
 
@@ -639,53 +648,36 @@ def reject_lanes_stdin(content: str) -> str | None:
     return None
 
 
-def _placed_numbers(content: str) -> set[int]:
-    """Issue numbers on an ACCOUNTING line of a lanes body — a ranked lane, Held, or Notes.
-
-    `/plan-lanes`' contract accounts for every floor candidate "exactly once across ranked
-    lanes plus the Held/Notes lines" (its `SKILL.md` step 5b): a lane renders
-    `N. **Title** — #a, #b …`; a candidate found blocked only after reading bodies is parked
-    on `**Held:**` (held by in-flight work, `← PR #p`) or `**Notes:**` (a semantic blocker
-    the `touches` floor missed), each with a reason and never forced into a ranked lane.
-    Those three are the accounting surfaces. A lane's `- why:` rationale sub-bullet, the
-    `Run concurrently` line, and the header are NOT — a candidate merely name-dropped there
-    was not placed, and counting `#N` anywhere would let an incidental mention satisfy the
-    guard. The `(?<!PR )` drops the Held line's `← PR #p` references — those are PRs, not
-    issue placements. `#(\\d+)` matches a whole digit run, so no candidate is masked by a
-    longer id (#42 ≠ #420).
-    """
-    nums: set[int] = set()
-    for line in content.splitlines():
-        s = line.lstrip().lower()
-        if re.match(r"\d+\.", s) or s.startswith(("**held", "**notes")):
-            nums.update(int(n) for n in re.findall(r"(?<!PR )#(\d+)", line))
-    return nums
-
-
 def reject_incomplete_lanes(content: str, basis: str) -> str | None:
-    """Why agent-supplied lanes `content` drops a candidate vs its `basis`, or None if fine.
+    """Why agent-supplied lanes `content` silently drops a free candidate, or None if fine.
 
-    `/plan-lanes` is handed a FREE candidate floor (`dispatch_view`'s "Candidate set" —
-    `free_candidates`: ready issues whose files don't collide with in-flight work) and must
-    rank every one into a lane. A silent drop is invisible to `lanes_freshness` (it compares
-    only the basis stamp, not the rendered body), so the stamp reads fresh while
-    `/pr-pipeline` never picks the dropped issue. Catch it at the write boundary: every free
-    candidate must appear on a placement line (`_placed_numbers`).
+    This is a write-boundary **backstop for the catastrophic case**: a free candidate that
+    vanishes from the body ENTIRELY. Such a silent drop is invisible to `lanes_freshness`
+    (it compares only the basis stamp, not the body), so the stamp reads fresh while
+    `/pr-pipeline` never sees the issue (the original #662 failure). The rule is therefore
+    deliberately coarse — every free candidate must appear *somewhere* in `content`. Exact
+    placement quality (ranked exactly once, not merely name-dropped, no duplicate lanes) is
+    `/plan-lanes`' own step-5 self-check's job, not this net's: a mispositioned-but-present
+    candidate is still visible in the body and recoverable, unlike a silent vanish. (Kept
+    simple by design — see PR #663; a structured exactly-once validator was considered and
+    declined as overkill for a safety net.)
 
-    The reference set is the `free=` set stamped in the basis — exactly the floor
-    `/plan-lanes` was handed at the same `--tick`, so the check is free of TOCTOU and of the
-    held/free guesswork the basis numbers alone can't do: a disjoint in-flight PR leaves most
-    candidates free (still checked), while the all-held degenerate case stamps `free=` empty
-    (nothing required — no false reject). A basis with no `free=` field (legacy/pre-stamp)
-    can't be checked soundly, so abstain; the next `--tick` re-stamps with the field.
+    The reference set is the `free=` set stamped in the basis — the floor `/plan-lanes` was
+    handed at the same `--tick`, so the check is TOCTOU-free and excludes held issues: a
+    disjoint in-flight PR leaves most candidates free (still checked), while the all-held
+    case stamps `free=` empty (nothing required). A basis with no `free=` field (legacy)
+    can't be checked, so abstain; the next `--tick` re-stamps with the field. `#(\\d+)`
+    matches a whole digit run, so no candidate is masked by a longer id (#42 ≠ #420); a PR
+    reference can't equal a free candidate (GitHub shares the issue/PR number space).
     """
     free = _basis_free(basis)
     if free is None:
         return None  # legacy/unstamped basis — re-stamped on the next tick.
-    missing = sorted(free - _placed_numbers(content))
+    present = {int(n) for n in re.findall(r"#(\d+)", content)}
+    missing = sorted(free - present)
     if missing:
         nums = ", ".join(f"#{n}" for n in missing)
-        return f"lanes drop candidate(s) {nums} — rank each in a lane (or list under **Held:**)"
+        return f"lanes drop free candidate(s) {nums} — every candidate must appear in the body"
     return None
 
 
