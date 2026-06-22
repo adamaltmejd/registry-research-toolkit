@@ -144,6 +144,56 @@ describe("CatalogPicker", () => {
     expect(onpickVariant).toHaveBeenCalledWith("scb/lisa/v2019");
   });
 
+  it("keyboard-navigates the variant list: ArrowDown highlights, Enter picks (the a11y win)", async () => {
+    // The headline a11y win of the Command migration: a SINGLE tab-stop on the
+    // input + arrow-nav over the options + Enter to pick — previously only click
+    // was covered. The input IS the listbox controller (role="combobox"); the rows
+    // are Command options. ArrowDown sets aria-activedescendant on the input, Enter
+    // selects the active row → fires onSelect → onpickVariant.
+    const onpickVariant = vi.fn();
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [{ slug: "v2019", name: "2019 vintage" }],
+    } as unknown as VariantsResponse);
+    await render(CatalogPicker, {
+      mode: "variant",
+      register: "scb/lisa",
+      onpickVariant,
+      oncancel: vi.fn(),
+    });
+
+    const filter = page.getByRole("combobox", { name: "Filter variants" });
+    await expect.element(filter).toBeVisible();
+    await expect
+      .element(page.getByRole("option", { name: /v2019/ }))
+      .toBeVisible();
+
+    // Drive the keyboard on the Command input: ArrowDown to highlight row 1, Enter
+    // to select it. Real KeyboardEvents (Command keys off `event.key`).
+    const input = filter.element() as HTMLInputElement;
+    input.focus();
+    input.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "ArrowDown",
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await vi.waitFor(() =>
+      expect(input.getAttribute("aria-activedescendant")).toBeTruthy(),
+    );
+    input.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "Enter",
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+
+    await vi.waitFor(() =>
+      expect(onpickVariant).toHaveBeenCalledWith("scb/lisa/v2019"),
+    );
+  });
+
   // ── C2: register-browse mode (no hand-typed prefix) ────────────────────────
   it("browses provider → register → variant when no register prefix is given", async () => {
     const onpickVariant = vi.fn();
