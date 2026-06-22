@@ -360,6 +360,7 @@ function emitVariant(slug: string): void {
   shown: number,
   empty: string,
   body: import("svelte").Snippet,
+  explicitEmptyCount?: number,
 )}
   <Command.Root shouldFilter={false} {label} class="cmd">
     <div class="cmd-head">
@@ -379,7 +380,22 @@ function emitVariant(slug: string): void {
     <Command.List class="cmd-list">
       <Command.Viewport>
         {@render body()}
-        <Command.Empty class="cmd-empty">{empty}</Command.Empty>
+        <!-- Empty-state: Command.Empty counts only registered Command.Items, which
+             is WRONG for the variable list — its folded ConceptGroupRow rows are
+             role="presentation", NOT Command.Items, so a filter that survives only
+             group rows (or a register with zero ungrouped leaves) leaves the item
+             count at 0 and Command.Empty would show "No variables match" beside a
+             VISIBLE group. So the variable list passes `explicitEmptyCount` (the
+             TRUE filtered count) and we gate the message on that. The homogeneous
+             variant/provider/register lists have no group rows → their item count
+             IS the filtered count, so Command.Empty is correct (and cheaper). -->
+        {#if explicitEmptyCount !== undefined}
+          {#if explicitEmptyCount === 0}
+            <p class="cmd-empty">{empty}</p>
+          {/if}
+        {:else}
+          <Command.Empty class="cmd-empty">{empty}</Command.Empty>
+        {/if}
       </Command.Viewport>
     </Command.List>
   </Command.Root>
@@ -481,6 +497,9 @@ function emitVariant(slug: string): void {
         countFoldedMembers(filteredVariables),
         `No variables match “${filter}”.`,
         variableRowsBody,
+        // The TRUE filtered count (leaves + folded group rows) — NOT Command's
+        // item count, which excludes the role="presentation" group rows (#2).
+        filteredVariables.length,
       )}
     {:else}
       <p class="muted">No variables in this register.</p>
@@ -716,7 +735,14 @@ function emitVariant(slug: string): void {
   /* The flat pick rows (Command.Item, role="option"). The keyboard-active row is
      marked data-selected by Bits UI; style it like the old :hover so arrow-nav and
      pointer read the same. */
-  :global(.pick) {
+  /* CONFINED to this component's subtree: `.pick` is a class Bits UI forwards onto
+     a Command.Item primitive element Svelte's scoping can't hash, so the rule must
+     be `:global`. But an UNSCOPED `:global(.pick)` leaks into the OTHER components
+     that define their own scoped `.pick` buttons (BindingLeafView's rep-chooser),
+     a build-order-dependent specificity battle on hover/selected. Prefixing with
+     `.picker` (which IS in this component's markup → Svelte hashes it) keeps `.pick`
+     global but matches only inside THIS picker's container (#689 review #3). */
+  .picker :global(.pick) {
     display: flex;
     align-items: baseline;
     gap: var(--space-3);
@@ -729,12 +755,12 @@ function emitVariant(slug: string): void {
     background: transparent;
     cursor: pointer;
   }
-  :global(.pick:hover:not([data-disabled])),
-  :global(.pick[data-selected]:not([data-disabled])) {
+  .picker :global(.pick:hover:not([data-disabled])),
+  .picker :global(.pick[data-selected]:not([data-disabled])) {
     border-color: var(--accent);
     background: var(--accent-bg);
   }
-  :global(.pick[data-disabled]) {
+  .picker :global(.pick[data-disabled]) {
     opacity: 0.5;
     cursor: not-allowed;
   }

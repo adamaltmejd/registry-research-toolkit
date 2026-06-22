@@ -10,7 +10,7 @@ import type {
   SearchType,
   VariableSearchResult,
 } from "./api";
-import { docSearch, search } from "./api";
+import { docSearch, SEARCH_MIN_QUERY_LENGTH, search } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, showingOf } from "./catalog";
 import { router } from "./router.svelte";
@@ -56,11 +56,6 @@ function selectType(type: SearchType): void {
   router.replace(type === "all" ? base : `${base}&type=${type}`);
 }
 
-// Don't fire /api/search below this — a single-char query is the most expensive
-// server-side AND the least useful. The "keep typing" hint covers 1 char; the
-// empty-query hint covers 0 (see the template's state branches).
-const MIN_QUERY_LENGTH = 2;
-
 // asyncResource registers an $effect, so it can't be created conditionally; the
 // fetch fn short-circuits a too-short `q` to an EMPTY response WITHOUT a network
 // call (and reads `q` so it refetches when the query changes). It also threads the
@@ -69,7 +64,7 @@ const MIN_QUERY_LENGTH = 2;
 const results = asyncResource<SearchResponse>((signal) =>
   // Read `searchType` HERE so the resource refetches when `?type=` changes (the
   // scoped-search toggle, #393 item 1).
-  q.length >= MIN_QUERY_LENGTH
+  q.length >= SEARCH_MIN_QUERY_LENGTH
     ? search(q, { signal, type: searchType })
     : Promise.resolve({ kind: "search", query: q, groups: [] }),
 );
@@ -86,7 +81,7 @@ const results = asyncResource<SearchResponse>((signal) =>
 // `docsHasHits` stays false → the section is hidden). Read `searchType` HERE so the
 // resource refetches when the scope returns to `all`.
 const docs = asyncResource<DocSearchResponse>((signal) =>
-  q.length >= MIN_QUERY_LENGTH && searchType === "all"
+  q.length >= SEARCH_MIN_QUERY_LENGTH && searchType === "all"
     ? docSearch(q, { signal })
     : Promise.resolve({
         kind: "doc-search",
@@ -120,7 +115,7 @@ const groups = $derived(results.data?.groups ?? []);
 // matches" above a rendered docs group; gated on `!docs.loading && !docsHasHits`
 // so a docs failure/empty/absent-index still lets the main "No matches" show.
 const noMatches = $derived(
-  q.length >= MIN_QUERY_LENGTH &&
+  q.length >= SEARCH_MIN_QUERY_LENGTH &&
     !results.loading &&
     !results.error &&
     groups.every((g) => g.results.length === 0) &&
@@ -203,7 +198,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     <p class="muted">
       Start typing to search registers, variables, codes, classifications.
     </p>
-  {:else if q.length < MIN_QUERY_LENGTH}
+  {:else if q.length < SEARCH_MIN_QUERY_LENGTH}
     <p class="muted">Keep typing to search…</p>
   {:else if results.loading}
     <p class="muted" aria-busy="true">Searching…</p>

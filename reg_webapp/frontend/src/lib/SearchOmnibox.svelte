@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Combobox } from "bits-ui";
 import { untrack } from "svelte";
-import { type SearchResponse, search } from "./api";
+import { SEARCH_MIN_QUERY_LENGTH, type SearchResponse, search } from "./api";
 import { catalogHref } from "./catalog";
 import { router } from "./router.svelte";
 
@@ -38,10 +38,6 @@ const DEBOUNCE_MS = 300;
 // Top-N suggestions across all four groups (the popup is a quick-jump shortcut,
 // not the full results page — that's what routing to /search is for).
 const SUGGESTION_LIMIT = 8;
-
-// Don't fetch suggestions below this — a single char is the most expensive query
-// server-side and the least useful (mirrors SearchView's MIN_QUERY_LENGTH).
-const MIN_QUERY_LENGTH = 2;
 
 // Seed from `?q=` so a cold deep-link to `/search?q=foo` populates the box.
 let query = $state(router.getQueryParam("q") ?? "");
@@ -172,25 +168,49 @@ $effect(() => {
 // box. This isolation is what keeps the existing no-mock browser test green.
 $effect(() => {
   const raw = query.trim();
-  if (raw.length < MIN_QUERY_LENGTH) {
+  if (raw.length < SEARCH_MIN_QUERY_LENGTH) {
     suggestions = [];
     return;
   }
   const controller = new AbortController();
   const timer = setTimeout(() => {
+    // Last-request-wins: a slow older fetch can resolve AFTER a newer query has
+    // re-rendered (abort doesn't guarantee the in-flight promise rejects before
+    // it resolves), so only mutate `suggestions` if this request is still the
+    // current query. `query.trim()` is read at settle time (untracked — this is a
+    // guard, not a dependency; the effect already re-runs on `query`).
+    const isCurrent = () => untrack(() => query.trim()) === raw;
     search(raw, { limit: SUGGESTION_LIMIT, signal: controller.signal })
       .then((resp) => {
-        suggestions = flatten(resp);
+        if (isCurrent()) {
+          suggestions = flatten(resp);
+        }
       })
       .catch(() => {
-        // Network error / timeout / supersede-abort — degrade to no suggestions.
-        suggestions = [];
+        // Network error / timeout / supersede-abort — degrade to no suggestions,
+        // but only for the CURRENT query (a superseded request's failure must not
+        // wipe a newer query's already-rendered suggestions).
+        if (isCurrent()) {
+          suggestions = [];
+        }
       });
   }, DEBOUNCE_MS);
   return () => {
     clearTimeout(timer);
     controller.abort();
   };
+});
+
+// Reconcile Bits UI's `open` flag with whether any suggestions actually render:
+// the popup Content is gated on `suggestions.length > 0`, but `open` is otherwise
+// independent, so it could be true while nothing shows — which would make Escape
+// take its "popup open" branch (leave the query) even though no popup is visible,
+// and make aria-expanded lie. Forcing `open = false` when the list is empty keeps
+// `open` honest: it can only be true when a popup is genuinely shown.
+$effect(() => {
+  if (suggestions.length === 0) {
+    open = false;
+  }
 });
 
 // URL → box: when on the search route and the URL's `q` differs from the box,
@@ -220,6 +240,16 @@ $effect(() => {
 function onSelect(href: string): void {
   if (href) {
     router.navigate(href);
+    // Clearing `query` does three things at once: (1) closes the popup (the
+    // Content is gated on `suggestions.length > 0`, and the reconcile-effect drops
+    // `open`); (2) neutralizes the pending routing-commit timer — the commit
+    // $effect keys on `query`, so re-running it reschedules a BLANK commit (a
+    // no-op via `commit`'s blank-trimmed early return), so the stale timer can't
+    // fire ~300ms later and clobber the catalog node we just navigated to; (3)
+    // re-runs the suggestion $effect, whose teardown aborts any in-flight fetch.
+    // The URL→box adopt-effect returns early here (we're now on the catalog-node
+    // route, not /search), so clearing the box can't fight that sync.
+    query = "";
     open = false;
   }
 }

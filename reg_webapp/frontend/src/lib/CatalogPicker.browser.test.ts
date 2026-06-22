@@ -561,6 +561,95 @@ describe("CatalogPicker", () => {
     await expect.element(page.getByText("3 of 4")).toBeVisible();
   });
 
+  // A register whose variables ALL fold into one group — ZERO ungrouped leaves, so
+  // the variable list registers NO Command.Items (folded group rows are
+  // role="presentation"). This is the #2 trap: Command.Empty's item-count-based
+  // logic would render "No variables match" beside the visible group.
+  function allFoldedRegisterNode(): CatalogNode {
+    const node = registerNode(
+      "scb/lisa",
+      { fqid: "scb/lisa/inkjan", name: "Inkomst januari" },
+      { fqid: "scb/lisa/inkfeb", name: "Inkomst februari" },
+    ) as unknown as Record<string, unknown>;
+    node.groups = [
+      {
+        key: "ink",
+        label: "Inkomst per månad",
+        source: "token",
+        axes: ["month"],
+        members: [
+          {
+            fqid: "scb/lisa/inkjan",
+            name: "Inkomst januari",
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+          },
+          {
+            fqid: "scb/lisa/inkfeb",
+            name: "Inkomst februari",
+            facets: [{ axis: "month", value: "02", label: "februari" }],
+          },
+        ],
+      },
+    ];
+    return node as unknown as CatalogNode;
+  }
+
+  it("shows the group (and NOT the empty message) when a filter survives only a folded group (#2)", async () => {
+    // REGRESSION (#689 review #2): with shouldFilter=false, folded group rows are
+    // role="presentation", NOT Command.Items — so when a filter survives ONLY group
+    // rows (here a register with zero ungrouped leaves), Command's item count is 0
+    // and Command.Empty would render "No variables match" BESIDE the visible group.
+    // The fix keys the variable-list empty message on filteredVariables.length.
+    vi.mocked(getCatalogNode).mockResolvedValue(allFoldedRegisterNode());
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: null,
+      variant: "",
+      onpickVariable: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    // Unfiltered: the group is the only row, no empty message.
+    await expect.element(page.getByText("Inkomst per månad")).toBeVisible();
+    await expect
+      .element(page.getByText(/No variables match/))
+      .not.toBeInTheDocument();
+
+    // Filter to a MEMBER needle that survives ONLY via the group (groupFilterKeys):
+    // the group stays visible and the empty message must STAY ABSENT — even though
+    // zero Command.Items match, the true filtered count is 1 (the group row).
+    await page
+      .getByRole("combobox", { name: "Filter variables" })
+      .fill("februari");
+    await expect.element(page.getByText("Inkomst per månad")).toBeVisible();
+    await expect
+      .element(page.getByText(/No variables match/))
+      .not.toBeInTheDocument();
+  });
+
+  it("DOES show the empty message when the filter matches nothing at all", async () => {
+    // The complement of the #2 fix: a needle that survives neither a leaf NOR a
+    // group must still surface "No variables match" (filteredVariables.length===0).
+    vi.mocked(getCatalogNode).mockResolvedValue(allFoldedRegisterNode());
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: null,
+      variant: "",
+      onpickVariable: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    await page
+      .getByRole("combobox", { name: "Filter variables" })
+      .fill("zzz-no-such-thing");
+    await expect.element(page.getByText(/No variables match/)).toBeVisible();
+    await expect
+      .element(page.getByText("Inkomst per månad"))
+      .not.toBeInTheDocument();
+  });
+
   it("picks a member from the expanded family through derive-on-pick", async () => {
     const onpickVariable = vi.fn();
     // Browse (no params) → grouped register node; resolve (with params) → state.

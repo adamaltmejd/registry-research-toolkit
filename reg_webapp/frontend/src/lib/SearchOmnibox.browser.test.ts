@@ -284,6 +284,42 @@ describe("SearchOmnibox — live suggestions (#689 Arm A)", () => {
     expect(router.getQueryParam("q")).toBeNull();
   });
 
+  // ── 2b. The pending routing-commit timer can't fire AFTER a select ──────────
+  it("does NOT redirect to /search after a select once the debounce window elapses", async () => {
+    // REGRESSION (#689 review #1): selecting a suggestion navigates to the catalog
+    // node, but the debounced routing-commit timer (keyed on `query`) was still
+    // armed from the typing that produced the suggestions — ~300ms later it would
+    // fire and clobber the node with `/search?q=…`. The existing selection tests
+    // poll (and exit) BEFORE the timer fires, so the bug was invisible. Here we
+    // wait PAST DEBOUNCE_MS and assert the route is STILL the catalog node.
+    vi.mocked(search).mockResolvedValue(
+      searchResponse({
+        variables: [
+          {
+            type: "variable",
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            register: "LISA",
+          },
+        ],
+      }),
+    );
+    await render(SearchOmnibox);
+    await userEvent.type(page.getByRole("searchbox").element(), "kon");
+
+    const option = page.getByRole("option", { name: /Kön/ });
+    await expect.element(option).toBeVisible();
+    await option.click();
+
+    await expect.poll(() => router.route.name).toBe("catalog-node");
+
+    // Wait well past the 300ms debounce — the pending commit must NOT fire.
+    await new Promise((r) => setTimeout(r, 400));
+    expect(router.route.name).toBe("catalog-node");
+    expect(window.location.pathname).toBe("/catalog/scb/lisa/kon");
+    expect(router.getQueryParam("q")).toBeNull();
+  });
+
   // ── 3. A code suggestion routes to the OWNING variable, not the bare code ───
   it("routes a code hit to its owning variable's catalog node", async () => {
     vi.mocked(search).mockResolvedValue(
