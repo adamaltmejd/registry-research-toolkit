@@ -2,7 +2,7 @@
 name = "registry-research-toolkit"
 version = "0.4.0"
 description = "Workspace coordinator for mock_data_wizard, reg_meta, reg_meta_build, reg_monabundle, and reg_schema"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
   "mock-data-wizard",
   "reg-meta",
@@ -35,7 +35,7 @@ testpaths = [
 markers = ["integration: full pipeline tests requiring Docker"]
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
 # Trimmed pydevtools recommendation: dropped TD (TODO diligence — conflicts

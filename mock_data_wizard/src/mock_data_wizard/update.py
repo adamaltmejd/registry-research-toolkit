@@ -120,7 +120,7 @@ class UpdateChecker:
                     self._checked = True
                     self._from_cache = True
                     return
-            except (json.JSONDecodeError, OSError):
+            except json.JSONDecodeError, OSError:
                 pass
 
         try:

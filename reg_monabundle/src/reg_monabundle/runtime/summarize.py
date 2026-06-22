@@ -104,13 +104,13 @@ def _to_date(v: Any, override_format: str | None = None) -> date | None:
     for fmt in formats:
         try:
             return datetime.strptime(s, fmt).date()
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             continue
     # ISO-ish fallback: trim a trailing time component before retrying.
     head = s.split(" ", 1)[0]
     try:
         return datetime.strptime(head, "%Y-%m-%d").date()
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         return None
 
 
@@ -198,7 +198,7 @@ def _date_quantiles_from_sample(
             continue
         try:
             parsed.append(datetime.strptime(str(v), date_format).date())
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             continue
     if not parsed:
         return {}

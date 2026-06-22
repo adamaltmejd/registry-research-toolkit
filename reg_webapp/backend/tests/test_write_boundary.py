@@ -88,7 +88,7 @@ def test_no_route_handler_references_provenance_db(app):
             continue
         try:
             source = inspect.getsource(module)
-        except (OSError, TypeError):  # pragma: no cover — source always available here
+        except OSError, TypeError:  # pragma: no cover — source always available here
             continue
         # Match the actual provenance-DB reference (`reg_meta.provenance` import or
         # attribute), NOT the bare word "provenance" — a docstring/comment mentioning

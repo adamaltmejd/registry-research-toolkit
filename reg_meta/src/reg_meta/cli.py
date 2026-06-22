@@ -1051,7 +1051,7 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                         v["doc_available"] = True
         finally:
             doc_conn.close()
-    except (RegMetaError, sqlite3.Error):
+    except RegMetaError, sqlite3.Error:
         pass
 
     duration_ms = int((time.perf_counter() - start) * 1000)

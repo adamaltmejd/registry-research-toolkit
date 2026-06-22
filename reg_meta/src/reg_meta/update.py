@@ -145,7 +145,7 @@ class UpdateChecker:
                     self._checked = True
                     self._from_cache = True
                     return
-            except (json.JSONDecodeError, OSError):
+            except json.JSONDecodeError, OSError:
                 pass
 
         # Stale or missing cache — hit the network. We ask PyPI (not GitHub
@@ -206,7 +206,7 @@ def _read_source_tag(path: Path) -> str | None:
     """Read the release tag an artifact was downloaded from."""
     try:
         return json.loads(path.read_text()).get("tag")
-    except (FileNotFoundError, json.JSONDecodeError, OSError):
+    except FileNotFoundError, json.JSONDecodeError, OSError:
         return None
 
 

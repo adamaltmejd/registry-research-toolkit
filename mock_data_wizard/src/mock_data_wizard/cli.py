@@ -106,7 +106,7 @@ def _confirm() -> bool:
         # Windows — fall back to line input
         try:
             return input().strip().lower() == "y"
-        except (KeyboardInterrupt, EOFError):
+        except KeyboardInterrupt, EOFError:
             return False
 
 

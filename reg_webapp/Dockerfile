@@ -55,7 +55,7 @@ RUN bun run gen:types && bun run build
 # re-fetching it on every build. `reg-meta update` (not raw curl) does the
 # fetch: it owns release resolution, asset naming, and zstd unpack, and tag
 # slashes (`reg_meta/vX.Y.Z`) make hand-built download URLs fragile.
-FROM python:3.13.13-slim-bookworm AS regmeta-db
+FROM python:3.14.6-slim-bookworm AS regmeta-db
 COPY --from=ghcr.io/astral-sh/uv:0.11.19 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
@@ -111,12 +111,12 @@ RUN /app/.venv/bin/reg-meta update --db /opt/reg_meta --tag "$REG_META_TAG" --ye
 # ---------------------------------------------------------------------------
 # Stage 3 — backend build: install the Python backend venv.
 # ---------------------------------------------------------------------------
-# Pin BOTH the interpreter and uv deterministically: base on python:3.13-slim
+# Pin BOTH the interpreter and uv deterministically: base on python:3.14-slim
 # (same image the runtime stage uses, so the baked venv's interpreter path
 # matches) and copy a version-pinned uv binary off its official image. uv's own
 # combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
 # python jointly the way we need, so we compose the pin ourselves.
-FROM python:3.13.13-slim-bookworm AS backend
+FROM python:3.14.6-slim-bookworm AS backend
 COPY --from=ghcr.io/astral-sh/uv:0.11.19 /uv /usr/local/bin/uv
 
 # Deterministic install: bytecode-compile ahead of time, copy (not symlink) into
@@ -157,9 +157,9 @@ RUN uv sync --frozen --no-dev --package reg-webapp
 # Stage 4 — runtime: lean image serving the API with uvicorn.
 # ---------------------------------------------------------------------------
 # python:slim (no uv) — runtime needs only the interpreter + the baked .venv.
-# Pinned to the same 3.13 minor the backend stage built against so the venv's
+# Pinned to the same 3.14 minor the backend stage built against so the venv's
 # absolute interpreter path resolves.
-FROM python:3.13.13-slim-bookworm AS runtime
+FROM python:3.14.6-slim-bookworm AS runtime
 
 # Non-root runtime user (the API needs no write access to anything it ships).
 RUN groupadd --system app && useradd --system --gid app --home /app app
@@ -172,7 +172,7 @@ WORKDIR /app
 # reg_schema, reg_monabundle, and reg_webapp itself — so all four src trees are
 # copied and no .pth entry dangles. Plus the baked DB pair, the SPA bundle, and
 # the steward configs. UV_LINK_MODE=copy made the venv relocatable; both stages
-# are python3.13 slim-bookworm so the venv's interpreter path matches.
+# are python3.14 slim-bookworm so the venv's interpreter path matches.
 COPY --from=backend /app/.venv /app/.venv
 COPY --from=backend /app/reg_meta/src /app/reg_meta/src
 COPY --from=backend /app/reg_schema/src /app/reg_schema/src

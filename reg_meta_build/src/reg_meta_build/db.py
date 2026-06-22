@@ -1763,7 +1763,7 @@ def _materialize_replaced_by_edges(
     ).fetchall():
         try:
             var_id = int(provider_key)
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             # Non-integer provider_key (e.g. a SOS merged variable name): no
             # integer `timeseries_event` id maps to it.
             continue

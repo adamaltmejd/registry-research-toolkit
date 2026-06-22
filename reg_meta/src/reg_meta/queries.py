@@ -75,7 +75,7 @@ def _try_int(value: str) -> int | str:
     """Convert to int if the string is numeric, otherwise return as-is."""
     try:
         return int(value)
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         return value
 
 

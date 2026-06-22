@@ -672,7 +672,7 @@ for cmd in PIP_INVOCATIONS:
         if subprocess.run(cmd, capture_output=True, timeout=15).returncode == 0:
             pip_ok = True
             break
-    except (FileNotFoundError, OSError):
+    except FileNotFoundError, OSError:
         continue
 
 # Was any candidate mirror present?
