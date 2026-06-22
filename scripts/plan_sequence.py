@@ -617,24 +617,35 @@ def reject_lanes_stdin(content: str) -> str | None:
 def reject_incomplete_lanes(content: str, basis: str) -> str | None:
     """Why agent-supplied lanes `content` is incomplete vs its `basis`, or None if fine.
 
-    `/plan-lanes` ranks the `ready` set the `basis` was stamped against; every ready issue
-    must surface in the rendered body — placed in a lane or parked under `**Held:**`. A
-    silent drop is invisible to `lanes_freshness` (which compares only the basis stamp, not
-    the rendered membership), so the stamp reads fresh while `/pr-pipeline` never picks the
-    dropped issue. Catch it at the write boundary: any `ready` number absent from `content`
-    is a refusal. Extra `#N` references (non-candidates) are harmless; `#(\\d+)` matches a
-    whole run of digits, so no candidate is masked by a longer id (#42 ≠ #420).
+    `/plan-lanes` ranks the candidate floor the `basis` was stamped against; every
+    candidate must surface in the rendered body. A silent drop is invisible to
+    `lanes_freshness` (which compares only the basis stamp, not the rendered membership),
+    so the stamp reads fresh while `/pr-pipeline` never picks the dropped issue. Catch it
+    at the write boundary: any expected number absent from `content` is a refusal. Extra
+    `#N` references (non-candidates) are harmless; `#(\\d+)` matches a whole run of digits,
+    so no candidate is masked by a longer id (#42 ≠ #420).
+
+    The floor is the FREE set, not the full `ready` set: a ready issue whose files overlap
+    an in-flight (running) PR is HELD and excluded from `/plan-lanes`' candidates
+    (`free_candidates`/`dispatch_view`) — and in the all-held degenerate case the floor
+    lists no IDs at all, so requiring every `ready` number would false-reject a valid
+    "nothing dispatchable" body and wedge the loop. The basis numbers can't recover the
+    free/held split, but `running` empty ⟹ `free == ready` exactly — so enforce only then
+    (the common state, and the one the original silent-drop was observed in); abstain when
+    work is in flight rather than risk a false reject.
     """
     parsed = parse_basis(basis)
     if parsed is None:
         # No parsable basis to check against (callers already guard well-formedness).
         return None
-    ready, _running, _sig = parsed
+    ready, running, _sig = parsed
+    if running:
+        return None  # held/free split unknowable from basis numbers — see docstring.
     present = {int(n) for n in re.findall(r"#(\d+)", content)}
     missing = sorted(ready - present)
     if missing:
         nums = ", ".join(f"#{n}" for n in missing)
-        return f"lanes drop ready issue(s) {nums} — place each in a lane or under `**Held:**`"
+        return f"lanes drop ready candidate(s) {nums} — rank each in a lane"
     return None
 
 

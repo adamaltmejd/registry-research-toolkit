@@ -346,19 +346,19 @@ def test_reject_lanes_stdin() -> None:
 
 
 def test_reject_incomplete_lanes() -> None:
-    basis = ps.basis_comment({1, 2, 3}, {9}, "sig")  # ready = {1, 2, 3}
+    basis = ps.basis_comment(
+        {1, 2, 3}, set(), "sig"
+    )  # ready={1,2,3}, nothing in flight
 
-    # Every ready issue placed in a lane → accepted.
+    # Every ready candidate placed in a lane → accepted.
     assert ps.reject_incomplete_lanes("1. lane — #1, #2\n2. lane — #3", basis) is None
-    # A ready issue parked under Held counts as accounted-for.
-    assert ps.reject_incomplete_lanes("1. lane — #1, #2\n**Held:** #3", basis) is None
 
-    # A dropped ready issue is refused, and the message names exactly what's missing.
+    # A dropped candidate is refused, and the message names exactly what's missing.
     why = ps.reject_incomplete_lanes("1. lane — #1, #2", basis)
     assert why is not None and "#3" in why
     assert "#1" not in why and "#2" not in why  # only the missing one is named
 
-    # Whole-number matching (#3 ≠ #30): a superstring of a ready id doesn't satisfy it —
+    # Whole-number matching (#3 ≠ #30): a superstring of a candidate id doesn't satisfy it —
     # #30 alone leaves #3 missing (reject), but adding #3 back accepts (locks `\d+` vs `\d`).
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30", basis) is not None
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30, #3", basis) is None
@@ -366,6 +366,13 @@ def test_reject_incomplete_lanes() -> None:
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #3 (see #99)", basis) is None
     # No parsable basis → nothing to check against (callers guard well-formedness).
     assert ps.reject_incomplete_lanes("1. lane — #1", "garbage") is None
+
+    # In-flight work: a ready issue can be HELD (excluded from /plan-lanes' floor), and the
+    # all-held floor lists no IDs — so the guard abstains rather than false-reject + wedge.
+    inflight = ps.basis_comment({1, 2, 3}, {9}, "sig")  # running={9}
+    assert (
+        ps.reject_incomplete_lanes("1. lane — #1", inflight) is None
+    )  # #2/#3 absent, abstained
 
 
 # --- lanes freshness: fresh / re-stamp / re-rank (#468) -------------------------------

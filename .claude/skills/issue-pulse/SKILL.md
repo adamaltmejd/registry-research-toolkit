@@ -97,12 +97,12 @@ tooling. Don't narrate the steps; just run them and report the result.
        uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N> --basis "$basis"
      ```
 
-     `--write-lanes` **refuses** (exit non-zero, no write) a body that drops a
-     basis-`ready` issue — one that appears neither in a lane nor under `**Held:**`.
-     That means the `/plan-lanes` ranking was incomplete: re-run `/plan-lanes`
-     (instructing it to account for every ready candidate) and persist the corrected
-     markdown — don't retry the same body. (Empty stdout from step 1 is the different,
-     transient case.)
+     `--write-lanes` **refuses** (exit non-zero, no write) a body that drops a ready
+     candidate — one absent from every ranked lane (checked when nothing is in flight,
+     where every ready issue is a candidate). That means the `/plan-lanes` ranking was
+     incomplete: re-run `/plan-lanes` (instructing it to account for every ready
+     candidate) and persist the corrected markdown — don't retry the same body. (Empty
+     stdout from step 1 is the different, transient case.)
 
    Gating on the three-way signal is the point: pay for the non-deterministic
    `/plan-lanes` re-rank only when lane content actually moved, not on every PR merge.
