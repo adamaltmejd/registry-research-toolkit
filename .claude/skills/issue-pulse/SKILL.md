@@ -106,6 +106,14 @@ tooling. Don't narrate the steps; just run them and report the result.
      corrected markdown — don't retry the same body. (Empty stdout from step 1 is the
      different, transient case.)
 
+     **Stale-basis caveat:** the refusal is judged against `$basis`'s `free=` set,
+     captured back in step 1. If a candidate *closed/became held* between then and
+     `/plan-lanes` reading the live floor, the new (correct) ranking omits it but the
+     stale basis still demands it — and re-running `/plan-lanes` can't converge. So if a
+     refusal names a candidate that's no longer on the live `--lane` floor (or it
+     persists across a re-rank), the basis is stale: **restart the tick** (re-capture
+     `$basis` from a fresh `--tick`) instead of re-ranking against the old one.
+
    Gating on the three-way signal is the point: pay for the non-deterministic
    `/plan-lanes` re-rank only when lane content actually moved, not on every PR merge.
    The basis stamps a content signature over the lane-affecting projection (the free

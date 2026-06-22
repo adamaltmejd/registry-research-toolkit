@@ -580,10 +580,18 @@ def lanes_freshness(block: str, ready: set[int], running: set[int], sig: str) ->
     The ready check is belt-and-suspenders: a ready-set move already flips the content `sig`
     (every non-running issue is signed with its status), but comparing the set too guards
     against a hash blind spot and keeps the re-stamp path provably running-set-only.
+
+    A block whose basis predates the `free=` field (legacy) is forced to **rerank** even
+    when ready/running/sig match: `reject_incomplete_lanes` can't completeness-check it
+    without `free=`, so an already-incomplete legacy block would otherwise read `fresh`
+    forever and never face the guard. The one-time re-rank upgrades it (stamps `free=`) and
+    runs the guard on the result.
     """
     basis = parse_basis(block)
     if basis is None:
         return "rerank"
+    if _basis_free(block) is None:
+        return "rerank"  # legacy (pre-`free=`) block — upgrade so the guard can run.
     b_ready, b_running, b_sig = basis
     if b_sig != sig or b_ready != set(ready):
         return "rerank"

@@ -69,6 +69,13 @@ Default epic is `328`.
    On a refusal the ranking was incomplete: re-run `plan-lanes` accounting for every
    candidate and persist the corrected markdown; do not retry the same body.
 
+   Stale-basis caveat: the refusal is judged against `$basis`'s `free=` set captured in
+   step 1. If a candidate closed/became held before `plan-lanes` read the live floor,
+   the correct new ranking omits it but the stale basis still demands it, and a re-rank
+   can't converge. So if a refusal names a candidate no longer on the live `--lane`
+   floor (or it persists across a re-rank), restart the tick (re-capture `$basis` from a
+   fresh `--tick`) instead of re-ranking against the old basis.
+
 ## Output
 
 Keep pulse output terse.

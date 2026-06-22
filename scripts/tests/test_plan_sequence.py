@@ -415,7 +415,7 @@ def test_restamp_validates_preserved_content(monkeypatch: pytest.MonkeyPatch) ->
 
 
 def test_lanes_freshness_three_way() -> None:
-    block = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}, "sig"))
+    block = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}, "sig", {1, 2}))
     assert ps.lanes_freshness(block, {1, 2}, {3}, "sig") == "fresh"  # nothing moved
     # Running-set-only delta (PR #3 merged → its issue cleared): content sig + ready set
     # unchanged, only `running` moved → cheap re-stamp, no /plan-lanes.
@@ -429,13 +429,28 @@ def test_lanes_freshness_three_way() -> None:
     assert ps.lanes_freshness("", {1}, set(), "sig") == "rerank"  # no parsable basis
 
 
+def test_legacy_basis_without_free_forces_rerank() -> None:
+    # #663 review #4 (line 443): a pre-`free=` block reads fresh on a ready/running/sig
+    # match, so reject_incomplete_lanes never runs on it. Force a one-time re-rank to upgrade
+    # it (stamp `free=`) — otherwise an already-incomplete legacy block stays invisible.
+    legacy = ps.render_lanes_block("1. lane — #1", ps.basis_comment({1}, set(), "sig"))
+    assert ps.lanes_freshness(legacy, {1}, set(), "sig") == "rerank"
+    # Once upgraded (free= present), the same unchanged state reads fresh.
+    upgraded = ps.render_lanes_block(
+        "1. lane — #1", ps.basis_comment({1}, set(), "sig", {1})
+    )
+    assert ps.lanes_freshness(upgraded, {1}, set(), "sig") == "fresh"
+
+
 def test_signature_flips_freshness_on_touches_edit_no_section_move() -> None:
     # The FU-2 fix carried over: a `touches` edit that moves no issue between sections must
     # still re-rank, where a membership-only basis (same ready/running sets) would miss it.
     ready, running = {1}, set()
     old_sig = ps.lanes_content_signature([_rec(1, touches=["a.py"])])
     new_sig = ps.lanes_content_signature([_rec(1, touches=["a.py", "b.py"])])
-    block = ps.render_lanes_block("lanes", ps.basis_comment(ready, running, old_sig))
+    block = ps.render_lanes_block(
+        "lanes", ps.basis_comment(ready, running, old_sig, {1})
+    )
     assert ps.lanes_freshness(block, ready, running, old_sig) == "fresh"  # unchanged
     assert (
         ps.lanes_freshness(block, ready, running, new_sig) == "rerank"
@@ -452,7 +467,7 @@ def test_running_set_only_merge_is_restamp_end_to_end() -> None:
             9, area="reg_meta", open_prs=[100], touches=["z.py"]
         ),  # in-flight, disjoint
     ]
-    basis = ps.basis_comment({1}, {9}, ps.lanes_content_signature(before))
+    basis = ps.basis_comment({1}, {9}, ps.lanes_content_signature(before), {1})
     block = ps.render_lanes_block("1. lane — #1", basis)
     after = [_rec(1, area="reg_meta", touches=["a.py"])]  # #9 merged + closed
     assert (
