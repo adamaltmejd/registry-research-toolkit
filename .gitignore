@@ -17,6 +17,7 @@ dist/
 .ruff_cache/
 .pytest_cache/
 .mypy_cache/
+.hypothesis/
 node_modules/
 
 # IDE

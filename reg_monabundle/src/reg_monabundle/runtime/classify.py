@@ -272,15 +272,27 @@ class RegMetaSignal:
     n_classifications: int = 0
 
 
+def _head_keyword(type_str: str) -> str | None:
+    """First whitespace-delimited token before any ``(`` in a type string.
+
+    "DECIMAL(18,2)" → "decimal"; "TIMESTAMP WITH TIME ZONE" → "timestamp".
+    Returns ``None`` when the stripped string is empty or begins with ``(``
+    (e.g. ``"(18,2)"``) — both leave no keyword before the paren.
+    """
+    stripped = type_str.strip()
+    if not stripped:
+        return None
+    keyword = stripped.split("(", 1)[0].split()
+    return keyword[0].lower() if keyword else None
+
+
 def _sql_type_kind(sql_type: str | None) -> str | None:
     """Map a sql_type string to ``"numeric"``, ``"date"``, or ``None``."""
     if not sql_type:
         return None
-    stripped = sql_type.strip()
-    if not stripped:
+    head = _head_keyword(sql_type)
+    if head is None:
         return None
-    # "DECIMAL(18,2)" → "DECIMAL"; "TIMESTAMP WITH TIME ZONE" → "TIMESTAMP".
-    head = stripped.split("(", 1)[0].split()[0].lower()
     if head in _NUMERIC_SQL:
         return "numeric"
     if head in _DATE_SQL:
@@ -297,7 +309,9 @@ def _reg_meta_data_type_kind(data_type: str | None) -> str | None:
     """
     if not data_type:
         return None
-    head = data_type.strip().split("(", 1)[0].split()[0].lower()
+    head = _head_keyword(data_type)
+    if head is None:
+        return None
     if head in _REG_META_NUMERIC:
         return "numeric"
     if head in _REG_META_DATE:
