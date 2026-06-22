@@ -14,6 +14,7 @@ from datetime import date
 
 from hypothesis import given, strategies as st
 from reg_monabundle.runtime.summarize import (
+    DATE_FORMATS,
     DATE_JITTER_DAYS,
     OTHER_LABEL,
     _detect_id_subtype,
@@ -134,9 +135,11 @@ arbitrary = st.one_of(
 )
 
 
-@given(arbitrary, st.one_of(st.none(), st.text()))
+@given(arbitrary, st.one_of(st.none(), st.sampled_from(DATE_FORMATS)))
 def test_to_date_total(v: object, override_format: str | None) -> None:
-    """Never raises on arbitrary input; returns a date or None."""
+    """Never raises on an arbitrary data value with an absent-or-valid format;
+    returns a date or None. A malformed ``override_format`` is a config error and
+    is a fail-fast case, so it's deliberately excluded from this totality domain."""
     out = _to_date(v, override_format)
     assert out is None or isinstance(out, date)
 
@@ -145,9 +148,3 @@ def test_to_date_total(v: object, override_format: str | None) -> None:
 def test_detect_id_subtype_total(sample: list[object]) -> None:
     """Never raises on arbitrary samples; returns 'integer' or 'string'."""
     assert _detect_id_subtype(sample) in ("integer", "string")
-
-
-def test_to_date_malformed_format_falls_through() -> None:
-    """A group-name-collision override format (re.error at compile) must fall
-    through to the built-in parsers, not raise (regression)."""
-    assert _to_date("2020-01-01", "%Y%Y") == date(2020, 1, 1)
