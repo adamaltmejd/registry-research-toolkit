@@ -619,22 +619,24 @@ def test_register_node_register_field_alias_on_wire(client):
     assert "register_name" not in ref
 
 
-def test_state_model_period_token_is_the_coarsest_exact_token():
-    """#321: `_state_model` exposes `period_token_for_bounds(valid_from,
-    valid_to)` for a CLOSED window — the coarsest token that expands back to
-    exactly the window (term/quarter/month/year), or the explicit `lo..hi`
-    range for a non-grammar window — and None for the open-ended sentinel."""
+def test_state_model_period_token_passes_through_reg_meta():
+    """#321/#681: `_state_model` no longer computes the coarsest exact display
+    token — reg_meta populates `VariableState.period_token` (see
+    `reg_meta.catalog.Catalog._period_token_for_window`, covered by
+    test_fqid.py's `period_token_for_bounds` round-trips and the resolve-path
+    coverage in test_catalog.py). The mapper just passes it through to the wire,
+    so the value reg_meta sets is exactly what serializes."""
     from types import SimpleNamespace
 
     from reg_webapp.routes.catalog import _state_model
 
-    def stub(valid_from: str, valid_to: str):
+    def stub(period_token: str | None):
         return SimpleNamespace(
             state_id=1,
             variant="v",
             register_variant_id=1,
-            valid_from=valid_from,
-            valid_to=valid_to,
+            valid_from="2018-01-01",
+            valid_to="2018-12-31",
             data_type=None,
             data_length=None,
             delivery_column_name=None,
@@ -643,15 +645,8 @@ def test_state_model_period_token_is_the_coarsest_exact_token():
             value_set=None,
             is_identifier=False,
             classification_slug=None,
+            period_token=period_token,
         )
 
-    cases = [
-        ("2018-01-01", "2018-12-31", "2018"),  # year-grain → bare year
-        ("2009-01-01", "2009-06-30", "VT2009"),  # spring term
-        ("2020-07-01", "2020-09-30", "2020-Q3"),  # quarter
-        ("2020-02-01", "2020-02-29", "2020-02"),  # month (leap)
-        ("1992-01-01", "2009-12-31", "1992-01-01..2009-12-31"),  # multi-year
-        ("2018-01-01", "9999-12-31", None),  # open-ended sentinel
-    ]
-    for valid_from, valid_to, expected in cases:
-        assert _state_model(stub(valid_from, valid_to)).period_token == expected
+    for token in ("2018", "VT2009", "1992-01-01..2009-12-31", None):
+        assert _state_model(stub(token)).period_token == token

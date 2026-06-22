@@ -44,7 +44,6 @@ from typing import TYPE_CHECKING
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from reg_meta.catalog import (
-    OPEN_ENDED_VALID_TO,
     Catalog,
     Period,
     ResolvedClassification,
@@ -61,7 +60,6 @@ from reg_meta.fqid import (
     FqidError,
     FqidKind,
     parse,
-    period_token_for_bounds,
     validate_slug,
 )
 from reg_meta.queries import list_classifications
@@ -229,11 +227,6 @@ def _http_404_if_not_found(exc: RegMetaError) -> None:
 # ── reg_meta dataclass → Pydantic mappers (1:1 wrappers; see DESIGN.md →
 # Pydantic boundary) ───────────────────────────────────────────────────────
 
-# `OPEN_ENDED_VALID_TO` (the open-ended `variable_state.valid_to` sentinel — an
-# open window has no finite period token, #321) is now imported from
-# `reg_meta.catalog`, the single source of the DDL-default constant (#351 added
-# it there for the coverage aggregates).
-
 
 def _state_model(state) -> VariableStateModel:
     return VariableStateModel(
@@ -248,31 +241,27 @@ def _state_model(state) -> VariableStateModel:
         value_set_version_label=state.value_set_version_label,
         value_set_id=state.value_set_id,
         value_set=(
-            [ValueSetMember(code=c, label=lbl) for c, lbl in state.value_set]
+            [ValueSetMember(code=m.code, label=m.label) for m in state.value_set]
             if state.value_set is not None
             else None
         ),
         is_identifier=state.is_identifier,
         classification_slug=state.classification_slug,
-        # #321: the coarsest exact display token for the window; None for an
-        # open-ended state (the `9999-12-31` DDL-default sentinel — see
-        # reg_meta_build db.py — has no finite token; the SPA renders "since
-        # valid_from").
-        period_token=(
-            None
-            if state.valid_to == OPEN_ENDED_VALID_TO
-            else period_token_for_bounds(state.valid_from, state.valid_to)
-        ),
+        # #321/#681: the coarsest exact display token for the window (None for an
+        # open-ended state). reg_meta computes it on `VariableState.period_token`
+        # now (was recomputed here from valid_from/valid_to), so pass it through.
+        period_token=state.period_token,
     )
 
 
 def _var_ref_model(ref) -> VariableRefModel:
-    # Construct via the alias `register=` (the canonical init param); the Python
-    # attr is `register_name` (avoids the BaseModel.register method shadow).
+    # reg_meta's `VariableRef` now aliases its `register` attr to `register_name`
+    # (#681 BaseModel.register shadow), so READ `ref.register_name`; CONSTRUCT the
+    # wire model via its own `register=` alias (unchanged).
     return VariableRefModel(
         fqid=str(ref.fqid) if ref.fqid is not None else None,
         provider=ref.provider,
-        register=ref.register,
+        register=ref.register_name,
         variable=ref.variable,
         reason=ref.reason,
         effective_year=ref.effective_year,
@@ -280,10 +269,11 @@ def _var_ref_model(ref) -> VariableRefModel:
 
 
 def _related_ref_model(ref) -> RelatedRefModel:
+    # `ref.register_name` (#681 alias); wire model's own `register=` alias unchanged.
     return RelatedRefModel(
         fqid=str(ref.fqid) if ref.fqid is not None else None,
         provider=ref.provider,
-        register=ref.register,
+        register=ref.register_name,
         variable=ref.variable,
         relation_kind=ref.relation_kind,
     )
@@ -338,7 +328,7 @@ def _variable_chain_edition(edition) -> VariableEditionModel:
     return VariableEditionModel(
         fqid=str(edition.fqid) if edition.fqid is not None else None,
         provider=edition.provider,
-        register=edition.register,
+        register=edition.register_name,
         variable=edition.variable,
         name=edition.name,
         effective_year=edition.effective_year,
@@ -356,8 +346,9 @@ def _binding_group_ref_model(ref) -> BindingGroupRefModel | None:
     avoiding the BaseModel.register shadow — see `_var_ref_model`)."""
     if ref is None:
         return None
+    # `ref.register_name` (#681 alias); wire model's own `register=` alias unchanged.
     return BindingGroupRefModel(
-        provider=ref.provider, register=ref.register, key=ref.key
+        provider=ref.provider, register=ref.register_name, key=ref.key
     )
 
 

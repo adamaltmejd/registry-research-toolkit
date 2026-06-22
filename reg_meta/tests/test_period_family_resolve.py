@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import _var_row
 from _shared_fixtures import build_with_rows, vm_rows
-from reg_meta.catalog import Catalog
+from reg_meta.catalog import Catalog, ValueSetMember
 from reg_meta.db import open_db
 
 if TYPE_CHECKING:
@@ -82,7 +82,10 @@ def test_resolve_at_month_returns_one_column(merged_db: Path) -> None:
         assert s.valid_from == "2018-03-01"
         assert s.valid_to == "2018-03-31"
         # value set comes from the annual claim.
-        assert s.value_set == (("1", "Låg"), ("2", "Hög"))
+        assert s.value_set == (
+            ValueSetMember(code="1", label="Låg"),
+            ValueSetMember(code="2", label="Hög"),
+        )
     finally:
         conn.close()
 
@@ -124,7 +127,14 @@ def test_states_returns_all_windows(merged_db: Path) -> None:
         assert ("LonFinkJan", "2018-01-01") in windows
         assert ("LonFinkMars", "2019-03-01") in windows
         # Each window shares the annual claim's value set.
-        assert all(s.value_set == (("1", "Låg"), ("2", "Hög")) for s in states)
+        assert all(
+            s.value_set
+            == (
+                ValueSetMember(code="1", label="Låg"),
+                ValueSetMember(code="2", label="Hög"),
+            )
+            for s in states
+        )
     finally:
         conn.close()
 
