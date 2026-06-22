@@ -106,6 +106,12 @@ altitude duties) and the implementer role (the leaf craft).
   now contain 3.14-only PEP 758 syntax (`except A, B:`) that would SyntaxError on MONA's
   3.13.7 — §10a must reconcile this. See `mock_data_wizard/DESIGN.md` "MONA Python
   runtime" for the probe details.
+- A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
+  `uv run --no-project` tooling** (the issue-hygiene / plan-sequence scripts in CI and
+  the issue-tracker skills) resolves the `>=3.14` floor instead of the runner's ambient
+  Python. `--no-project` skips workspace discovery, so without this pin the
+  `requires-python` floor is bypassed for those runs and the 3.14-only PEP 758 syntax in
+  `scripts/` would `SyntaxError` on a < 3.14 runner.
 
 ## Stack
 
