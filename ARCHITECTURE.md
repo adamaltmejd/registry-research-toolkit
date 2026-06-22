@@ -149,15 +149,17 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   (`validate` runs at bundle load on MONA and `scan` gates exports there, so the air-gap
   binds them too — not `runtime.*` alone). All of it must stay liftable into MONA's
   offline WinPython env, so its module-level imports resolve against stdlib + MONA's
-  preinstalled deps (duckdb/pyodbc/numpy) only. `reg_meta`'s no-Pydantic is a **soft**
-  preference — import-ergonomics (importable from Jupyter/scripts without pulling
-  pydantic-core) plus an aspirational query-layer port — **not** a MONA requirement:
-  `reg_meta` is already absent from MONA-side code (see above), so the "liftable into
-  MONA" justification never applied to it. `reg_schema` is the deliberate exception
-  (canonical validator + webapp response-model source); the build-side IR in
-  `reg_meta_build` is Pydantic but build-time-only and never reaches the bundle;
-  `reg_mockdata` consumes JSON only. Decided 2026-06-22 (#680) — see REFACTOR_SPEC.md
-  §10a. See `reg_schema/DESIGN.md`, `reg_meta_build/DESIGN.md`, and
+  preinstalled deps (duckdb/pyodbc/numpy) only. `reg_meta` adopted Pydantic for its
+  catalog return surface in #681 — the air-gap never bound it (`reg_meta` is absent from
+  MONA-side code, see above, so the "liftable into MONA" justification never applied),
+  and the earlier **soft** no-Pydantic preference (import-ergonomics + an aspirational
+  query-layer port) was retired once #681 established the port isn't blocked (its
+  cross-impl contracts are the SQLite `SCHEMA_VERSION` + `openapi.json`, both
+  Pydantic-independent). `reg_schema` is Pydantic too (canonical validator + webapp
+  response-model source); the build-side IR in `reg_meta_build` is Pydantic but
+  build-time-only and never reaches the bundle; `reg_mockdata` consumes JSON only.
+  Decided 2026-06-22 (#680 re-attribution, #681 adoption) — see REFACTOR_SPEC.md §10a.
+  See `reg_schema/DESIGN.md`, `reg_meta_build/DESIGN.md`, and
   `reg_monabundle/DESIGN.md`.
 - **Build / runtime cleanly separated.** `reg_meta` (query) is small and pure;
   `reg_meta_build` is operator-side. A future port replaces query only; build stays

@@ -152,7 +152,7 @@ register=`<variable>`, key=`states`) instead of the binding's `/states`. Reservi
 
 **Classification succession is embedded, not a sub-resource (#571/#578).** The
 classification leaf node carries the **full edition chain** inline as `edition_chain`
-(`list[ClassificationChainEdition]`, mapped 1:1 from reg_meta's
+(reg_meta's `ClassificationEdition`, embedded directly from
 `Catalog.classification_chain`), so the browse panel renders the entire succession
 timeline synchronously — no per-neighbor fetch. The server-side walk resolves a
 `classification_same_as` alias to its canonical edition, then walks the QUERIED
@@ -171,20 +171,20 @@ link). The earlier immediate-neighbor routes (`/classification_predecessors`,
 remain as public API and back the chain walk.)
 
 The classification leaf also embeds two further payloads inline for synchronous SPA
-render (#609): `codes` (`list[ClassificationCodeModel]`, mapped 1:1 from
+render (#609): `codes` (reg_meta's `ClassificationCode`, embedded directly from
 `Catalog.classification_codes` — the resolved edition's value-set codes and labels, with
 `is_valid` = canonical/observed/unknown; omitted when empty) and `dimensions`
-(`list[ConceptGroupModel]`, mapped 1:1 from `Catalog.classification_dimensions` — the
-curated umbrella group(s) the edition belongs to, reading
-`concept_group_classification`; omitted when empty). The SPA renders these as a
-code/label panel (shared `CodeList` viewer — the same component used for the variable
-value set, with a size-dependent filter: the search box appears only when the set
-reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets; #638) and a granularity
+(reg_meta's `ConceptGroupSummary`, embedded directly from
+`Catalog.classification_dimensions` — the curated umbrella group(s) the edition belongs
+to, reading `concept_group_classification`; omitted when empty). The SPA renders these
+as a code/label panel (shared `CodeList` viewer — the same component used for the
+variable value set, with a size-dependent filter: the search box appears only when the
+set reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets; #638) and a granularity
 cross-reference panel respectively.
 
 **Variable succession is embedded too (#582).** The binding leaf node carries the **full
-variable succession chain** inline as `succession_chain` (`list[VariableEditionModel]`,
-mapped 1:1 from reg_meta's `Catalog.variable_chain`) — the variable-grain dual of the
+variable succession chain** inline as `succession_chain` (reg_meta's `VariableEdition`,
+embedded directly from `Catalog.variable_chain`) — the variable-grain dual of the
 classification `edition_chain`. The server-side walk same_as-canonicalizes the queried
 binding, then walks the QUERIED binding's own path over `variable_replaced_by` (forward
 to the terminal via the deterministic-first successor, backward to the root via the
@@ -257,8 +257,8 @@ binding/register grains. (`classification_chain` itself tolerates dead slugs int
 citation of a slug with no live row AND no successor edge still 404s.)
 
 **Concept groups (#303).** The register and classification-root responses carry a
-`groups` list (`ConceptGroupModel`, mapped 1:1 from reg_meta's `ConceptGroupSummary` —
-see reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` list:
+`groups` list (reg_meta's `ConceptGroupSummary`, embedded directly — see
+reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` list:
 grouped members appear in both, so the contract stays additive and group-unaware
 consumers keep working. The SPA folds client-side (`catalog.ts::foldGroupedRows`):
 grouped leaves hide under one expandable `ConceptGroupRow` (a month×rank value matrix
