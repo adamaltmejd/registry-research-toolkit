@@ -7,8 +7,15 @@ fiddly and has been shipped wrong before (Codex submits reviews/comments as logi
 `chatgpt-codex-connector` but reacts as `chatgpt-codex-connector[bot]`, so a poller keyed
 on one login misses the other). This script is the get-it-right-once classifier: given a
 PR number it fetches reviews, issue comments, and PR-body reactions, then reports the
-Codex signal as JSON — every signal gated on the head commit's timestamp, because a
-verdict from before the latest push is stale.
+Codex signal as JSON — reviews bound to the head commit, body reactions/comments gated on
+the head commit's timestamp, so a verdict from before the latest push is stale.
+
+Scope: this computes the **Codex** signal only — Codex is the bot whose 👍/👀-reaction
+verdict is invisible to `gh pr view`. Copilot (the gate's other bot) posts ordinary
+reviews that `gh pr view --json reviews` already surfaces, so it needs no special poller;
+a `none`/`exhausted` here says nothing about Copilot. `exhausted` (Codex out of tokens) is
+"settled" per the gate's "not a blocker", NOT "a bot reviewed and approved" — independent
+review is a separate gate line the agent still owns.
 
 Signals (see the gate doc):
   clean      — a 👍 reaction on the PR body from the Codex bot (its no-findings verdict,
@@ -80,6 +87,7 @@ def _parse_ts(ts: str) -> datetime:
 
 def classify(
     *,
+    head_oid: str,
     push_ts: str,
     reviews: list[dict[str, Any]],
     comments: list[dict[str, Any]],
@@ -88,25 +96,34 @@ def classify(
 ) -> dict[str, Any]:
     """Resolve the Codex signal from raw GitHub records. Pure — the tested core.
 
-    Every event is gated on `> push_ts` (the head commit's timestamp): a verdict from
-    before the latest push is stale. Resolution: if the *newest* Codex event after the push
-    is a 👀, Codex is mid-review → `reviewing` (the gate must never conclude then).
-    Otherwise report the strongest verdict it left, by priority `findings > clean >
-    exhausted` — surface actionable feedback over a bare 👍, and a real verdict over an
-    out-of-tokens note (the priority only ever resolves multiple verdicts on one HEAD;
-    across a fix-push the stale ones are gated out).
+    Staleness is gated two ways. A **review** carries the `commit_id` it was submitted
+    against, so we bind findings exactly to `head_oid` — rebase-proof, no timestamp guess.
+    A **reaction/comment** is on the PR body, not a commit, so it can only be gated on
+    `created_at > push_ts` (the head commit's timestamp). Resolution: if the *newest* Codex
+    event is a 👀, Codex is mid-review → `reviewing` (the gate must never conclude then).
+    Otherwise report the strongest verdict, by priority `findings > clean > exhausted` —
+    surface actionable feedback over a bare 👍, a real verdict over an out-of-tokens note.
 
     How Codex actually signals (observed): it delivers **findings** as a submitted *review*
-    (state COMMENTED/CHANGES_REQUESTED, body "automated review suggestions" + inline
-    comments). It signals **clean** with a 👍 reaction on the PR body, accompanied by a
-    narration *comment* ("Codex Review: Didn't find any major issues"). So a top-level
-    comment is narration or the usage-limit note — never the findings vehicle; we read
-    comments only for `exhausted`, and trust the review/👍 for findings/clean. (If Codex
-    ever posts findings as a bare comment with no review, this misses them — unobserved;
-    the agent reads the PR regardless.)
+    on the head commit (body "automated review suggestions" + inline comments). It signals
+    **clean** with a 👍 reaction on the PR body, accompanied by a narration *comment*
+    ("Codex Review: Didn't find any major issues"). So a top-level comment is narration or
+    the usage-limit note — never the findings vehicle; we read comments only for
+    `exhausted`, and trust the review/👍 for findings/clean. (If Codex ever posts findings
+    as a bare comment with no review, this misses them — unobserved; the agent reads the PR
+    regardless.)
+
+    simplify: the clean 👍 / 👀 reactions are gated on `committedDate`, not the true push
+    time. Git stamps the committer date at rebase/amend/cherry-pick time (≈ the push), so
+    this is accurate in the normal case; only a date-preserving rebase
+    (`--committer-date-is-author-date`, replaying old commits) can leave `committedDate`
+    earlier than the real push and let a stale 👍 read as fresh. Findings are commit-exact
+    so that edge can't surface a false `findings`; the residual is a narrow false-`clean`,
+    backstopped by the gate's independent `/code-review` pass and the `@codex review`
+    re-request after a push. Tighten with the timeline force-push event if it ever bites.
 
     Record shapes (the subset used; GitHub's REST field names):
-      review : {"user": {"login"}, "state", "submitted_at", "html_url", "body"}
+      review : {"user": {"login"}, "state", "commit_id", "submitted_at", "html_url"}
       comment: {"user": {"login"}, "body", "created_at", "html_url"}
       reaction:{"content", "user": {"login"}, "created_at"}
     """
@@ -119,15 +136,16 @@ def classify(
     def after_push(ts: str | None) -> bool:
         return bool(ts) and _parse_ts(ts) > push
 
-    # Every Codex signal after the push, as (ts, kind, detail). `reviewing` is the 👀
-    # in-progress marker; the rest are verdicts.
+    # Every Codex signal we keep, as (ts, kind, detail). `reviewing` is the 👀 in-progress
+    # marker; the rest are verdicts. Reviews are bound to the head commit; body
+    # reactions/comments are gated on the push timestamp.
     events: list[tuple[datetime, str, dict[str, Any]]] = []
 
     for r in reviews:
         if (
             is_bot(r)
             and r.get("state") in VERDICT_REVIEW_STATES
-            and after_push(r.get("submitted_at"))
+            and r.get("commit_id") == head_oid
         ):
             events.append(
                 (
@@ -181,18 +199,21 @@ def classify(
 
 
 def _head_push_ts(pr: dict[str, Any]) -> str:
-    """The head commit's committedDate — our latest-push reference.
+    """The head commit's committedDate — the push reference for body reactions/comments.
 
-    simplify: committedDate is a stand-in for the actual push time (a rebased commit can
-    pre-date its push). Good enough for the after-push gate; revisit if a rebase race ever
-    surfaces a stale-verdict false-positive.
+    Only reactions/comments lean on this (reviews are commit-bound); see `classify`'s
+    note for why committedDate is the right approximation. Fails fast (exit 2) on the
+    degenerate empty-commits PR rather than dying with a bare ValueError.
     """
-    head = pr["headRefOid"]
-    by_oid = {c["oid"]: c["committedDate"] for c in pr["commits"]}
-    if head in by_oid:
-        return by_oid[head]
+    commits = pr.get("commits") or []
+    if not commits:
+        sys.stderr.write(f"PR has no commits: {pr.get('headRefOid')!r}\n")
+        raise SystemExit(2)
+    by_oid = {c["oid"]: c["committedDate"] for c in commits}
+    if pr["headRefOid"] in by_oid:
+        return by_oid[pr["headRefOid"]]
     # Detached/unknown head: fall back to the newest commit we can see.
-    return max(c["committedDate"] for c in pr["commits"])
+    return max(c["committedDate"] for c in commits)
 
 
 def evaluate(owner: str, name: str, pr: int, bot: str = DEFAULT_BOT) -> dict[str, Any]:
@@ -204,6 +225,7 @@ def evaluate(owner: str, name: str, pr: int, bot: str = DEFAULT_BOT) -> dict[str
     reactions = gh_json(["api", "--paginate", f"{base}/issues/{pr}/reactions"])
     push_ts = _head_push_ts(pr_view)
     result = classify(
+        head_oid=pr_view["headRefOid"],
         push_ts=push_ts,
         reviews=reviews,
         comments=comments,
@@ -233,6 +255,7 @@ def poll(
     A timeout is not a failure: AGENTS.md treats absence at the ceiling as "not a blocker".
     The caller reads the returned signal (likely `reviewing`/`none`) and proceeds.
     """
+    interval_sec = max(1.0, interval_sec)  # floor: never busy-loop hammering the gh API
     deadline = time.monotonic() + timeout_min * 60
     while True:
         result = evaluate(owner, name, pr, bot)

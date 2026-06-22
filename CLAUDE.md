@@ -355,10 +355,11 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   **👀 reaction** = still reviewing — never conclude or merge while it's the newest
   signal; an out-of-tokens comment ("reached your Codex usage limits", in
   `gh api repos/<owner>/<repo>/issues/<pr>/comments`) = a definitive end-of-wait, not a
-  blocker. Every signal is gated on being **timestamped after the latest push** (the
-  script handles this). \~10 min with no signal is the ceiling — bots may skip a push
-  entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
-  requested by commenting `@codex review`). Absence at the ceiling is not a blocker.
+  blocker. Every signal is **scoped to the current HEAD** — reviews bound by their
+  `commit_id`, body reactions/comments gated on the head commit's timestamp (the script
+  handles this). \~10 min with no signal is the ceiling — bots may skip a push entirely
+  (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be requested by
+  commenting `@codex review`). Absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,

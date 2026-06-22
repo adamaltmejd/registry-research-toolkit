@@ -13,6 +13,8 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import pytest
+
 _SCRIPTS = Path(__file__).resolve().parents[1]
 _SPEC = importlib.util.spec_from_file_location(
     "pr_review_status", _SCRIPTS / "pr_review_status.py"
@@ -26,6 +28,8 @@ _SPEC.loader.exec_module(prs)
 BOT_REVIEW = "chatgpt-codex-connector"  # reviews + comments
 BOT_REACT = "chatgpt-codex-connector[bot]"  # reactions
 HUMAN = "octocat"
+HEAD = "headsha000"  # the PR's current head commit
+OLD = "oldsha111"  # a pre-fix commit that is no longer head
 PUSH = "2026-06-22T12:00:00Z"
 BEFORE = "2026-06-22T11:00:00Z"
 AFTER1 = "2026-06-22T12:30:00Z"
@@ -33,10 +37,11 @@ AFTER2 = "2026-06-22T13:00:00Z"
 USAGE_LIMIT = "You have reached your Codex usage limits for code reviews."
 
 
-def _review(login, *, state="COMMENTED", at=AFTER1, url="r"):
+def _review(login, *, state="COMMENTED", commit_id=HEAD, at=AFTER1, url="r"):
     return {
         "user": {"login": login},
         "state": state,
+        "commit_id": commit_id,
         "submitted_at": at,
         "html_url": url,
     }
@@ -52,6 +57,7 @@ def _reaction(content, login, *, at=AFTER1):
 
 def _classify(*, reviews=None, comments=None, reactions=None):
     return prs.classify(
+        head_oid=HEAD,
         push_ts=PUSH,
         reviews=reviews or [],
         comments=comments or [],
@@ -112,13 +118,22 @@ def test_empty_is_none() -> None:
     assert out["verdict_ts"] is None
 
 
-# --- the after-push gate -------------------------------------------------------------
+# --- staleness gates -----------------------------------------------------------------
 
 
-def test_signals_before_push_are_ignored() -> None:
+def test_review_on_non_head_commit_is_ignored() -> None:
+    # Reviews are bound to the head commit by `commit_id`, not by timestamp — a review on
+    # a superseded commit (even one submitted "after" the push clock) is stale. This is the
+    # rebase-proof gate: a stale verdict can never read as fresh findings.
+    out = _classify(reviews=[_review(BOT_REVIEW, commit_id=OLD, at=AFTER2)])
+    assert out["signal"] == "none"
+
+
+def test_reactions_before_push_are_ignored() -> None:
+    # Body reactions/comments are commit-unbound, so they fall back to the push timestamp.
     out = _classify(
-        reviews=[_review(BOT_REVIEW, at=BEFORE)],
         reactions=[_reaction("+1", BOT_REACT, at=BEFORE)],
+        comments=[_comment(BOT_REVIEW, USAGE_LIMIT, at=BEFORE)],
     )
     assert out["signal"] == "none"
 
@@ -126,7 +141,12 @@ def test_signals_before_push_are_ignored() -> None:
 def test_pending_and_dismissed_reviews_are_ignored() -> None:
     out = _classify(
         reviews=[
-            {"user": {"login": BOT_REVIEW}, "state": "PENDING", "submitted_at": None},
+            {
+                "user": {"login": BOT_REVIEW},
+                "state": "PENDING",
+                "commit_id": HEAD,
+                "submitted_at": None,
+            },  # fmt: skip
             _review(BOT_REVIEW, state="DISMISSED"),
         ]
     )
@@ -175,14 +195,25 @@ def test_findings_outrank_exhausted() -> None:
     assert out["signal"] == "findings"
 
 
+def test_clean_outranks_exhausted() -> None:
+    # Pins the `clean > exhausted` priority rung: a 👍 and an out-of-tokens note on the
+    # same HEAD must read clean (Codex both reviewed-clean and later re-ran out), not
+    # exhausted. Without this, reordering the priority tuple regresses silently.
+    out = _classify(
+        reactions=[_reaction("+1", BOT_REACT, at=AFTER1)],
+        comments=[_comment(BOT_REVIEW, USAGE_LIMIT, at=AFTER2)],
+    )
+    assert out["signal"] == "clean"
+
+
 def test_clean_when_thumbs_up_accompanies_narration_comment() -> None:
     # The PR #692 false-positive: a clean verdict (👍 + narration comment), preceded by
-    # findings reviews from *before* the final fix-push. Must read clean, not findings —
-    # the stale reviews are gated out and the narration comment is not a verdict.
+    # findings reviews on the *pre-fix* commits. Must read clean, not findings — the stale
+    # reviews are off-head (gated out) and the narration comment is not a verdict.
     out = _classify(
         reviews=[
-            _review(BOT_REVIEW, at=BEFORE),  # review on a pre-fix commit
-            _review(BOT_REVIEW, at=BEFORE),
+            _review(BOT_REVIEW, commit_id=OLD),  # review on a pre-fix commit
+            _review(BOT_REVIEW, commit_id=OLD),
         ],
         comments=[_comment(BOT_REVIEW, "Codex Review: Didn't find any major issues.")],
         reactions=[_reaction("+1", BOT_REACT)],
@@ -236,3 +267,11 @@ def test_head_push_ts_falls_back_to_newest_commit() -> None:
         ],
     }
     assert prs._head_push_ts(pr) == AFTER2
+
+
+def test_head_push_ts_empty_commits_exits_with_tool_error() -> None:
+    # Degenerate (near-unreachable) PR with no commits must fail fast as a tool error
+    # (exit 2), not die with a bare ValueError under a misleading exit code.
+    with pytest.raises(SystemExit) as exc:
+        prs._head_push_ts({"headRefOid": "x", "commits": []})
+    assert exc.value.code == 2

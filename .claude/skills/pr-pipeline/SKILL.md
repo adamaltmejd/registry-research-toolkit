@@ -199,8 +199,8 @@ bot-review window settled · real-data validation for build-affecting work · **
 verification (a rendered-view `preview_screenshot`) for UI changes** · stale-head check.
 For the bot-review window, run **`scripts/pr_review_status.py <pr>`** (`--wait` to poll
 to the ceiling; background a long wait) — it computes Codex's signal on the **current
-HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`, gated on after-the-push), so
-you don't re-derive the login-sensitive `gh api` calls. Act on the signal (route
+HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`, scoped to the current HEAD),
+so you don't re-derive the login-sensitive `gh api` calls. Act on the signal (route
 `findings` to a fix, `@codex review` after a new push, never conclude on `reviewing`);
 never key the window on CI going green. Pipeline-specific operational notes the gate
 doesn't carry:
