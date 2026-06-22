@@ -225,6 +225,7 @@ def classify(
     for r in reviews:
         if (
             is_bot(r)
+            and r.get("state") in VERDICT_REVIEW_STATES
             and r.get("commit_id") == head_oid
             and (r.get("body") or "").strip()
         ):

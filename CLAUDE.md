@@ -349,17 +349,18 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   the **bot's own signal on the current HEAD**, NOT for CI finishing — CI is a separate
   gate that usually goes green far sooner, so a poller that exits on CI-done has not
   actually given the bot its window. The signals: a submitted Codex **review** =
-  findings (its suggestions vehicle); a **👍 reaction** on the PR body (invisible to
-  `gh pr view`; `gh api repos/<owner>/<repo>/issues/<pr>/reactions`) = its clean
-  verdict, which ships alongside a "Codex Review: …" narration **comment** that is *not*
-  itself findings; a **👀 reaction** = still reviewing — never conclude or merge while
-  it's the newest signal; an out-of-tokens comment ("reached your Codex usage limits",
-  in `gh api repos/<owner>/<repo>/issues/<pr>/comments`) = a definitive end-of-wait, not
-  a blocker. Every signal is **scoped to the current HEAD** — reviews bound by their
-  `commit_id`, body reactions/comments gated on the head commit's timestamp (the script
-  handles this). \~10 min with no signal is the ceiling — bots may skip a push entirely
-  (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be requested by
-  commenting `@codex review`). Absence at the ceiling is not a blocker.
+  findings (its suggestions vehicle); Codex's "Codex Review: …" **comment** stamped
+  `Reviewed commit: <sha>` for the head (it also reacts 👍, invisible to `gh pr view`) =
+  its clean verdict; a **👀 reaction** = still reviewing — never conclude or merge while
+  it's the newest signal; an out-of-tokens comment ("reached your Codex usage limits") =
+  a definitive end-of-wait, not a blocker. The two merge-gating verdicts (findings,
+  clean) are **bound to the head commit by SHA** — a review by its `commit_id`, a clean
+  comment by its `Reviewed commit:` stamp — so a verdict from a prior push is never
+  mistaken for fresh (GitHub exposes no reliable push time). The poller also returns the
+  verdict bodies in `messages`, so you read them without a second `gh` call. \~10 min
+  with no signal is the ceiling — bots may skip a push entirely (Codex auto-reviews on
+  open/ready only; a verdict on a new HEAD must be requested by commenting
+  `@codex review`). Absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,
