@@ -201,7 +201,7 @@ class ConceptGroupSummary(_CatalogModel):
     # The derivation dimension. The DB writer constrains it to these three
     # (`concept_group.source` CHECK in reg_meta_build/db.py); narrowed to the
     # Literal (#681) so it is the tight API contract the webapp consumes directly
-    # (the prior `str` was looser than the webapp's own `ConceptGroupModel`).
+    # (the prior `str` was looser than the webapp wrapper, now collapsed).
     source: Literal["edge", "token", "curated"]
     axes: tuple[str, ...]
     members: tuple[ConceptGroupMember, ...]

@@ -146,10 +146,11 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   `LoadedSpec` (`reg_monabundle.runtime.spec`) which the bundle amalgamates instead. See
   `reg_schema/DESIGN.md` and `reg_monabundle/DESIGN.md` for the boundary.
 - **Web backend** (`reg_webapp/backend/`): FastAPI + Pydantic REST. `reg_schema`
-  Pydantic models are response models directly (no wrapper layer). For `reg_meta`
-  responses, the backend currently defines per-endpoint Pydantic response wrappers — the
-  only place 1:1 wrappers remain (collapse to direct consumption is the #681 follow-up,
-  PR2).
+  Pydantic models are response models directly (no wrapper layer). `reg_meta`'s frozen
+  Pydantic catalog models are consumed directly — the webapp's `kind`-discriminated node
+  models embed them as field types (collapsed in #681). The only remaining 1:1 wrapper
+  is reg_schema's `ValidationResult`/`ValidationIssue` (reg_schema stays a frozen
+  dataclass consumed cross-runtime by the MONA bundle and the SPA).
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
   TS types codegen'd from FastAPI's `openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into
