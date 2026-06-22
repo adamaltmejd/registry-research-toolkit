@@ -90,7 +90,7 @@ describe("ConceptGroupView (#617)", () => {
       .toBeVisible();
   });
 
-  it("demotes the source into a 'Technical details' disclosure (#638 PR4)", async () => {
+  it("demotes the key, facets, and source into a 'Technical details' disclosure (#638 PR4)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
 
     await render(ConceptGroupView, {
@@ -99,21 +99,32 @@ describe("ConceptGroupView (#617)", () => {
       key: "ink",
     });
 
-    // The disclosure exists, is collapsed by default, and carries the demoted
-    // source row INSIDE it (a collapsed <details> keeps its content in the DOM).
+    // The disclosure renders with a visible "Technical details" summary, collapsed
+    // by default. The demoted rows are in the DOM but NOT visible while collapsed,
+    // so assert STRUCTURE (inside the disclosure), not visibility.
     await expect.element(page.getByText("Technical details")).toBeVisible();
     const disclosure = document.querySelector<HTMLDetailsElement>(
       "details.tech-details",
     );
     expect(disclosure).not.toBeNull();
     expect(disclosure?.open).toBe(false);
-    // The source row lives inside the disclosure, not in the prominent meta.
+    // All three build-derivation rows — Group key, Facets, and Source — live
+    // INSIDE the disclosure now (#638 PR4 demoted them together).
+    expect(disclosure?.textContent).toContain("Group");
+    expect(disclosure?.textContent).toContain("ink");
+    expect(disclosure?.textContent).toContain("Facets");
+    expect(disclosure?.textContent).toContain("month"); // the `node()` axis
     expect(disclosure?.textContent).toContain("Source");
     expect(disclosure?.textContent).toContain("token");
-    // The prominent Group line is now just the key — no inline "· source".
-    const groupRow = page.getByText("ink", { exact: true });
-    await expect.element(groupRow).toBeVisible();
-    expect(groupRow.element().closest("details")).toBeNull();
+    // The group key's <code> sits inside the disclosure — not in a prominent block.
+    // (Exact "ink" matches only the key, not "Inkomst"/the inkjan/inkfeb members.)
+    const groupKey = page.getByText("ink", { exact: true }).element();
+    expect(groupKey.closest("details.tech-details")).not.toBeNull();
+    // There is NO prominent (non-disclosure) `dl.meta` left in the description.
+    const promptMeta = [...document.querySelectorAll("dl.meta")].filter(
+      (dl) => !dl.closest("details.tech-details"),
+    );
+    expect(promptMeta).toHaveLength(0);
   });
 });
 
