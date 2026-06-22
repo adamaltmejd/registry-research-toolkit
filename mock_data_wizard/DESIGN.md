@@ -59,7 +59,9 @@ a result the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and
 SyntaxError on MONA's 3.13.7. The runner's true MONA-compat floor is deferred to
 REFACTOR_SPEC §10a, which rebuilds the runner standalone and must either target 3.14+ or
 re-parenthesize those clauses. See ARCHITECTURE.md → Repo-wide invariants; decided
-2026-06-22, #680.
+2026-06-22, #680. `scripts/probe_mona_python.py` was also reformatted to 3.14-only
+syntax by the same bump (#682), so re-running the probe requires MONA (or the local
+interpreter) to be on 3.14 — deliberately accepted, matching the uniform-3.14 posture.
 
 The batch client ships with the WinPython-31700 distribution at
 `E:\Programs\WinPython-31700\python` (Python 3.13.7, MSC v.1944 64-bit). This is a
