@@ -56,7 +56,6 @@ describe("DualThumbTrack", () => {
     expect(track?.contains(deco)).toBe(true);
     // … and precedes the thumbs in DOM order (so the thumbs paint over it).
     expect(
-      // biome-ignore lint/style/noNonNullAssertion: asserted non-null above.
       deco!.compareDocumentPosition(thumb!) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   });

@@ -3,8 +3,8 @@ name: plan-sequence
 description: >-
   Registry Research Toolkit issue sequencing workflow. Use when asked to run the
   plan-sequence workflow, preview or refresh epic #328 sequencing, inspect
-  ready/running/blocked/parallel-safe issues, update the generated plan-sequence
-  block, or carve the deterministic ready lane floor with scripts/plan_sequence.py.
+  ready/running/blocked/parallel-safe issues, update the generated plan-sequence block,
+  or carve the deterministic ready lane floor with scripts/plan_sequence.py.
 ---
 
 # Registry Plan Sequence

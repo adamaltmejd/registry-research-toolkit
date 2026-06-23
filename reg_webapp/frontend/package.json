@@ -13,14 +13,14 @@
     "gen:types": "openapi-typescript ../backend/openapi.json -o src/lib/api-types.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.16",
+    "@biomejs/biome": "2.5.0",
     "@sveltejs/vite-plugin-svelte": "7.1.2",
     "@vitest/browser-playwright": "4.1.8",
     "fake-indexeddb": "6.2.5",
     "jsdom": "29.1.1",
     "openapi-typescript": "7.13.0",
     "playwright": "1.60.0",
-    "svelte": "5.56.1",
+    "svelte": "5.56.3",
     "svelte-check": "4.6.0",
     "typescript": "6.0.3",
     "vite": "8.0.16",
