@@ -12,6 +12,7 @@ import {
   countFoldedMembers,
   foldGroupedRows,
   groupFilterKeys,
+  groupHref,
   leafSlug,
   narrowCatalogNode,
   nodeLabel,
@@ -113,14 +114,16 @@ $effect(() => {
           label="Filter registers"
         />
         {#if registers.length > 0}
-          <ul class="children">
+          <ul class="children table">
             {#each registers as register (register.fqid)}
               <li>
-                <a href={catalogHref(register.fqid)}>
+                <a href={catalogHref(register.fqid)} title={register.fqid}>
                   <span class="label">{register.name ?? register.fqid}</span>
+                  {#if register.purpose}
+                    <span class="purpose muted">{register.purpose}</span>
+                  {/if}
                   <code class="child-fqid">{register.fqid}</code>
                 </a>
-                {#if register.purpose}<p class="muted">{register.purpose}</p>{/if}
               </li>
             {/each}
           </ul>
@@ -157,18 +160,28 @@ $effect(() => {
           label="Filter variables"
         />
         {#if filteredRows.length > 0}
-          <ul class="children">
+          <ul class="children table">
             {#each filteredRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
-              <li>
-                {#if row.kind === "group"}
-                  <ConceptGroupRow group={row.group} noun="variables" />
-                {:else}
-                  <a href={catalogHref(row.item.fqid)}>
+              {#if row.kind === "group"}
+                <!-- #673 (M6): a group row in the register arm LINKS to its
+                     subject page (register-only route) instead of expanding
+                     inline. The group row is a self-contained widget — it spans
+                     the table's columns (`.group-row`) and owns its own layout. -->
+                <li class="group-row">
+                  <ConceptGroupRow
+                    group={row.group}
+                    noun="variables"
+                    href={groupHref(node.fqid, row.group.key)}
+                  />
+                </li>
+              {:else}
+                <li>
+                  <a href={catalogHref(row.item.fqid)} title={row.item.fqid}>
                     <span class="label">{row.item.name ?? row.item.fqid}</span>
                     <code class="child-fqid">{row.item.fqid}</code>
                   </a>
-                {/if}
-              </li>
+                </li>
+              {/if}
             {/each}
           </ul>
         {:else}
@@ -195,21 +208,26 @@ $effect(() => {
       <h2>{nodeLabel(node)}</h2>
       <h3>Classifications</h3>
       {#if clsRows.length > 0}
-        <ul class="children">
+        <ul class="children table">
           {#each clsRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
-            <li>
-              {#if row.kind === "group"}
+            {#if row.kind === "group"}
+              <!-- #673: NO href — the classification-umbrella group has no
+                   register-only subject page, so it KEEPS the inline <details>.
+                   Spans the table columns + owns its layout (`.group-row`). -->
+              <li class="group-row">
                 <ConceptGroupRow
                   group={row.group}
                   noun={axisNoun(row.group.axes)}
                 />
-              {:else}
-                <a href={catalogHref(row.item.fqid)}>
+              </li>
+            {:else}
+              <li>
+                <a href={catalogHref(row.item.fqid)} title={row.item.short_name}>
                   <span class="label">{row.item.name}</span>
                   <code class="child-fqid">{row.item.short_name}</code>
                 </a>
-              {/if}
-            </li>
+              </li>
+            {/if}
           {/each}
         </ul>
       {:else}
@@ -248,20 +266,64 @@ $effect(() => {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
   }
-  .children li a {
-    display: flex;
+  /* #673 (M5): a compact, column-aligned, scannable table. Rows are tight
+     (one text line each); the name forms a scannable left column and the
+     secondary info (purpose, fqid) aligns in its own column. A CSS grid on the
+     <ul> aligns columns ACROSS rows without per-row width guessing — one link
+     per row (the <li>/<a> are display:contents so the grid tracks the <a>'s
+     cells, keeping exactly one interactive element per row, no nested links). */
+  .children.table {
+    display: grid;
+    /* name (max-content, capped) · purpose (flexes, hidden when absent) · fqid. */
+    grid-template-columns: minmax(auto, max-content) 1fr auto;
+    row-gap: var(--space-1);
+    column-gap: var(--space-3);
     align-items: baseline;
-    gap: 0.75rem;
+  }
+  /* A LEAF row's <li>/<a> dissolve into the grid (display:contents) so the <a>'s
+     three children become the row's grid cells — one link per row, no nesting. */
+  .children.table li:not(.group-row),
+  .children.table li:not(.group-row) > a {
+    display: contents;
+  }
+  .children.table li:not(.group-row) > a > * {
+    /* Tighten each cell to a single line; truncate the flexible purpose column. */
+    min-width: 0;
+    padding: var(--space-1) 0;
+  }
+  /* A GROUP row is a self-contained widget (ConceptGroupRow: link or <details>):
+     span the full table width and let it own its internal layout. */
+  .children.table li.group-row {
+    grid-column: 1 / -1;
+    padding: var(--space-1) 0;
   }
   .children .label {
     font-weight: 600;
   }
+  /* The purpose blurb (provider arm) sits in the flexible middle column, muted
+     and clamped to one line so the table stays scannable (the row links to the
+     register page where the full purpose renders). */
+  .purpose {
+    grid-column: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--text-sm);
+  }
+  /* #673 (M3): de-emphasize the fqid/short_name — the NAME is primary. The fqid
+     lives in the right column, muted and hidden by default, REVEALED on row
+     hover AND keyboard focus (:focus-within covers keyboard users). It stays in
+     the DOM (discoverable/greppable) and on the link's `title` (tooltip + AX). */
   .child-fqid {
+    grid-column: 3;
     color: var(--muted);
-    font-size: 0.85em;
+    font-size: var(--text-sm);
+    text-align: right;
+    visibility: hidden;
+  }
+  .children.table li:not(.group-row) > a:hover .child-fqid,
+  .children.table li:not(.group-row) > a:focus-within .child-fqid {
+    visibility: visible;
   }
 </style>

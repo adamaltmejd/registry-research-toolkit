@@ -279,6 +279,26 @@ export function catalogHref(fqidPath: string): string {
   return fqidPath ? `/catalog/${encodeFqid(fqidPath)}` : "/catalog";
 }
 
+/** The href for a concept-group SUBJECT page (#617): the fixed
+ * `/catalog/group/<provider>/<register>/<key>` route, NOT the `/catalog/<fqid>`
+ * browse path. `registerFqid` is the 2-seg `provider/register` of the browsing
+ * register; `key` is the group's derivation key. Each segment is percent-encoded
+ * the same way `catalogHref` encodes (per-segment `encodeURIComponent`), so a
+ * reserved/non-ASCII char in a key can't produce a malformed URL — a no-op for
+ * today's ASCII slugs/keys. The route is REGISTER-only (the backend validates
+ * provider/register as a register FQID), so only the register-arm browse links
+ * to it; classification-umbrella groups have no group page (#673). */
+export function groupHref(registerFqid: string, key: string): string {
+  const [provider, register] = fqidSegments(registerFqid);
+  return `/catalog/group/${enc(provider)}/${enc(register)}/${enc(key)}`;
+}
+
+/** Per-segment percent-encode (the encoding `catalogHref`/`encodeFqid` apply),
+ * tolerating an absent segment as "". */
+function enc(segment: string | undefined): string {
+  return encodeURIComponent(segment ?? "");
+}
+
 /** Segments of an FQID path (`scb/lisa/kon` → `["scb", "lisa", "kon"]`).
  * Empty string → `[]` (the root). */
 export function fqidSegments(fqidPath: string): string[] {

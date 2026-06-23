@@ -79,3 +79,84 @@ describe("VariantBrowser — name/display_group dedupe (D1.4)", () => {
       .toBeVisible();
   });
 });
+
+describe("VariantBrowser — hide the section without a real variant (#673/M4)", () => {
+  it("renders NOTHING when the only variant is the synthesized/stored _default", async () => {
+    // `_default` is NOT a user-facing variant (it's a stored variant for some
+    // registers and the synthesized default for others). A register whose only
+    // "variant" is _default has no real variant axis → no section, no heading,
+    // no "No variants." text (the M4 complaint: a useless "Variants" heading).
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [{ slug: "_default", name: null, display_group: null }],
+    } as unknown as VariantsResponse);
+
+    const { container } = await render(VariantBrowser, {
+      registerFqid: "scb/sol",
+    });
+
+    // No "Variants" heading, no section.
+    expect(
+      page.getByRole("heading", { name: "Variants" }).elements(),
+    ).toHaveLength(0);
+    expect(container.querySelector("section.variants")).toBeNull();
+  });
+
+  it("renders NOTHING for an empty variant list", async () => {
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [],
+    } as unknown as VariantsResponse);
+
+    const { container } = await render(VariantBrowser, {
+      registerFqid: "scb/empty",
+    });
+
+    expect(
+      page.getByRole("heading", { name: "Variants" }).elements(),
+    ).toHaveLength(0);
+    expect(container.querySelector("section.variants")).toBeNull();
+    // The dropped fallback text must not appear either.
+    expect(page.getByText("No variants.").elements()).toHaveLength(0);
+  });
+
+  it("renders the section for a single real variant", async () => {
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [{ slug: "individer", name: "Individer", display_group: null }],
+    } as unknown as VariantsResponse);
+
+    await render(VariantBrowser, { registerFqid: "scb/lisa" });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Variants" }))
+      .toBeVisible();
+    // The slug span (exact, to avoid also matching the "Individer" name span).
+    await expect
+      .element(page.getByText("individer", { exact: true }))
+      .toBeVisible();
+  });
+
+  it("renders the section for a real variant mixed with _default (no _default filtering of the list)", async () => {
+    // ≥1 real variant → render the FULL list unchanged; _default is NOT filtered
+    // out of a mixed list (out of scope), so it still appears alongside the real
+    // one — only the all-_default/empty cases suppress the section.
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [
+        { slug: "individer", name: "Individer", display_group: null },
+        { slug: "_default", name: null, display_group: null },
+      ],
+    } as unknown as VariantsResponse);
+
+    await render(VariantBrowser, { registerFqid: "scb/lisa" });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Variants" }))
+      .toBeVisible();
+    // Both slug spans render — the real variant AND _default (mixed lists keep
+    // _default; only all-_default/empty lists suppress the section).
+    await expect
+      .element(page.getByText("individer", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("_default", { exact: true }))
+      .toBeVisible();
+  });
+});

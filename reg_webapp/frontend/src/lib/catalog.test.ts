@@ -14,6 +14,7 @@ import {
   formatWindow,
   fqidSegments,
   grainsFromStates,
+  groupHref,
   leafSlug,
   matchesFilter,
   memberCoverageUnion,
@@ -235,6 +236,22 @@ describe("catalogHref", () => {
 
   it("percent-encodes reserved/non-ASCII chars per segment", () => {
     expect(catalogHref("scb/lisa/kön")).toBe("/catalog/scb/lisa/k%C3%B6n");
+  });
+});
+
+describe("groupHref", () => {
+  it("builds the /catalog/group/<provider>/<register>/<key> route from a 2-seg register fqid", () => {
+    // #673: the register-arm group rows link to the group SUBJECT page (a fixed
+    // register-only route), NOT the /catalog/<fqid> browse path.
+    expect(groupHref("scb/lisa", "ink")).toBe("/catalog/group/scb/lisa/ink");
+  });
+
+  it("percent-encodes each segment the same way catalogHref does", () => {
+    // A reserved/non-ASCII char in the key can't produce a malformed URL; the
+    // `/` separators between the fixed segments survive (per-segment encoding).
+    expect(groupHref("scb/lsön", "a/b")).toBe(
+      "/catalog/group/scb/ls%C3%B6n/a%2Fb",
+    );
   });
 });
 
