@@ -2,6 +2,7 @@
 import { type BindingNodeData, getDocsForVariable } from "./api";
 import { asyncResource } from "./async.svelte";
 import { fqidSegments, showingOf } from "./catalog";
+import { parseInlineMarkdown } from "./inline_markdown";
 
 // The binding-leaf "Mentioned in documentation" panel (#402). A SIBLING of
 // LineagePanels — a deliberately SEPARATE component over a SEPARATE optional DB
@@ -77,11 +78,20 @@ const show = $derived(
               <span class="label">{r.display_name ?? r.filename}</span>
             </a>
             {#if r.snippet}
-              <!-- An FTS EXCERPT rendered as TEXT only (Svelte auto-escapes
-                   `{value}`) — NEVER {@html}: it may carry highlight markers and the
-                   full body lives at the SCB source (republication policy; see
-                   reg_webapp/DESIGN.md → Docs library endpoints). -->
-              <span class="hit-detail muted">{r.snippet}</span>
+              <!-- An FTS EXCERPT rendered through a SAFE inline-emphasis subset
+                   (parseInlineMarkdown → DATA segments, never HTML). Each `{seg.text}`
+                   is normal Svelte interpolation, so it is auto-escaped — NEVER
+                   {@html} (the full body lives at the SCB source; republication
+                   policy, see reg_webapp/DESIGN.md → Docs library endpoints). The
+                   `**…**` markers are dominantly the FTS highlight delimiter wrapping
+                   the matched term (reg_meta/doc_queries.py), so a `strong` segment
+                   renders as <mark> ("matched term"); `*…*`/`_…_` render as <em>. -->
+              <span class="hit-detail muted"
+                >{#each parseInlineMarkdown(r.snippet) as seg, si (si)}{#if seg.emphasis === "strong"}<mark
+                    >{seg.text}</mark
+                  >{:else if seg.emphasis === "em"}<em>{seg.text}</em
+                  >{:else}{seg.text}{/if}{/each}</span
+              >
             {/if}
           </li>
         {/each}
@@ -129,6 +139,15 @@ const show = $derived(
   .hit-detail {
     flex-basis: 100%;
     font-size: 0.9em;
+  }
+  /* The FTS matched-term highlight (`**…**` → <mark>): the accent tint already in
+     the palette, NOT the browser default yellow, so it reads as one family with the
+     rest of the app. */
+  .hit-detail mark {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-radius: var(--radius);
+    padding: 0 0.1em;
   }
   .count {
     margin: 0.5rem 0 0;

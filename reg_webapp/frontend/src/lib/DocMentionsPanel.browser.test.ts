@@ -149,6 +149,35 @@ describe("DocMentionsPanel (#402)", () => {
     expect(document.querySelector(".mentions b")).toBeNull();
   });
 
+  it("renders the FTS `**…**` highlight as a <mark>, not literal markers (#672)", async () => {
+    // The `**` markers are the FTS highlight delimiter; they must render as a
+    // <mark> matched-term span, NOT surface as literal `**` characters. Rendering
+    // still goes through auto-escaped interpolation (no {@html}).
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({
+        register_ingested: true,
+        total_count: 1,
+        results: [
+          {
+            filename: "lisa_kon.md",
+            display_name: "LISA — Kön",
+            snippet: "…the **kön** variable…",
+            fuzzy: true,
+            tags: [],
+          },
+        ],
+      }),
+    );
+    await render(DocMentionsPanel, { node: node() });
+
+    const highlight = document.querySelector(".mentions mark");
+    expect(highlight?.textContent).toBe("kön");
+    // The literal delimiter never reaches the DOM text.
+    await expect
+      .element(page.getByText("**kön**", { exact: false }))
+      .not.toBeInTheDocument();
+  });
+
   it("shows 'showing N of M' only when the slice is truncated", async () => {
     // (a) truncated → caption shows.
     vi.mocked(getDocsForVariable).mockResolvedValue(
