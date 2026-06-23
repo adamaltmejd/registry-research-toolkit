@@ -398,7 +398,7 @@ def search(
             code="usage_error",
             error_class="usage",
             message=f"Invalid search field '{field}'. Valid: {sorted(SEARCH_FIELDS)}",
-            remediation="Use --datacolumn, --varname, --description, --value, or --all-fields.",
+            remediation="Pass a valid --field value (datacolumn, varname, description, value, or all).",
         )
     if type not in SEARCH_TYPES:
         raise RegMetaError(

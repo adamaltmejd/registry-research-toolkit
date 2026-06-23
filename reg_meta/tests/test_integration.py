@@ -155,7 +155,7 @@ def test_update_and_query(docker: str, image: str):
     hard gate, where a compatible published asset is guaranteed to exist."""
     cmd = (
         "reg-meta update --yes > /dev/null"
-        " && reg-meta --format json search --query kommun --datacolumn"
+        " && reg-meta --format json search --query kommun --field datacolumn"
     )
     result = _docker_run(docker, image, cmd, timeout=600)
     assert result.returncode == 0, (
