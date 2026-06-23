@@ -149,6 +149,113 @@ describe("DocMentionsPanel (#402)", () => {
     expect(document.querySelector(".mentions b")).toBeNull();
   });
 
+  it("renders the FTS `**…**` highlight as a <mark>, not literal markers (#672)", async () => {
+    // The `**` markers are the FTS highlight delimiter; they must render as a
+    // <mark> matched-term span, NOT surface as literal `**` characters. Rendering
+    // still goes through auto-escaped interpolation (no {@html}).
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({
+        register_ingested: true,
+        total_count: 1,
+        results: [
+          {
+            filename: "lisa_kon.md",
+            display_name: "LISA — Kön",
+            snippet: "…the **kön** variable…",
+            fuzzy: true,
+            tags: [],
+          },
+        ],
+      }),
+    );
+    await render(DocMentionsPanel, { node: node() });
+
+    const highlight = document.querySelector(".mentions mark");
+    expect(highlight?.textContent).toBe("kön");
+    // The literal delimiter never reaches the DOM text.
+    await expect
+      .element(page.getByText("**kön**", { exact: false }))
+      .not.toBeInTheDocument();
+  });
+
+  it("renders an `_em_` snippet as an <em>, not a <mark> (em template branch, #672)", async () => {
+    // `_…_` (literal markdown emphasis from the source body, not an FTS highlight)
+    // takes the `em` template branch → <em>, distinct from the `strong` → <mark>
+    // matched-term branch. Exercises the previously-untested em arm.
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({
+        register_ingested: true,
+        total_count: 1,
+        results: [
+          {
+            filename: "lisa_kon.md",
+            display_name: "LISA — Kön",
+            snippet: "see _below_ for detail",
+            fuzzy: true,
+            tags: [],
+          },
+        ],
+      }),
+    );
+    await render(DocMentionsPanel, { node: node() });
+
+    expect(document.querySelector(".mentions em")?.textContent).toBe("below");
+    expect(document.querySelector(".mentions mark")).toBeNull();
+  });
+
+  it("renders a markerless snippet verbatim with no <mark> or <em> (plain branch)", async () => {
+    // No emphasis markers → one plain segment → the else branch; the snippet text
+    // surfaces verbatim and neither emphasis element is created.
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({
+        register_ingested: true,
+        total_count: 1,
+        results: [
+          {
+            filename: "lisa_kon.md",
+            display_name: "LISA — Kön",
+            snippet: "some plain context",
+            fuzzy: true,
+            tags: [],
+          },
+        ],
+      }),
+    );
+    await render(DocMentionsPanel, { node: node() });
+
+    expect(document.querySelector(".mentions mark")).toBeNull();
+    expect(document.querySelector(".mentions em")).toBeNull();
+    expect(document.querySelector(".hit-detail")?.textContent).toBe(
+      "some plain context",
+    );
+  });
+
+  it("renders one <mark> per `**…**` highlight in a multi-match snippet (#672)", async () => {
+    // A realistic FTS snippet wraps every matched term; each must become its own
+    // <mark>, in order, with the delimiters dropped.
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({
+        register_ingested: true,
+        total_count: 1,
+        results: [
+          {
+            filename: "lisa_kon.md",
+            display_name: "LISA — Kön",
+            snippet: "…**kön** och **ålder**…",
+            fuzzy: true,
+            tags: [],
+          },
+        ],
+      }),
+    );
+    await render(DocMentionsPanel, { node: node() });
+
+    const marks = document.querySelectorAll(".mentions mark");
+    expect(marks.length).toBe(2);
+    expect(marks[0]?.textContent).toBe("kön");
+    expect(marks[1]?.textContent).toBe("ålder");
+  });
+
   it("shows 'showing N of M' only when the slice is truncated", async () => {
     // (a) truncated → caption shows.
     vi.mocked(getDocsForVariable).mockResolvedValue(
