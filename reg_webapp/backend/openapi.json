@@ -381,57 +381,6 @@
         "title": "ClassificationEdition",
         "type": "object"
       },
-      "ClassificationEditionModel": {
-        "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. Every edition is a live `classification` row (the build\nvalidator guarantees succession editions are live), so `fqid` is None only when\nthe slug is malformed/unresolvable.",
-        "properties": {
-          "effective_year": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.",
-            "title": "Effective Year"
-          },
-          "fqid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).",
-            "title": "Fqid"
-          },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The edition's display name, None when un-hydrated.",
-            "title": "Name"
-          },
-          "slug": {
-            "description": "The edition's literal slug (e.g. 'sun2000').",
-            "title": "Slug",
-            "type": "string"
-          }
-        },
-        "required": [
-          "slug"
-        ],
-        "title": "ClassificationEditionModel",
-        "type": "object"
-      },
       "ClassificationNode": {
         "description": "A classification leaf (`class/<slug>`, 2 seg).",
         "properties": {
@@ -608,6 +557,7 @@
         "type": "object"
       },
       "ClassificationSearchResult": {
+        "additionalProperties": false,
         "description": "A classification hit (`classification_fts` short_name/name/name_en/\ndescription \u2014 #350 activates this previously-unsearched index). When the hit\nis a LONE member of a vintage group (the family didn't fold because only one\nmember matched), `concept_group`/`concept_group_label` annotate the family so\nit stays discoverable \u2014 symmetric with `VariableSearchResult`; both None\notherwise.",
         "properties": {
           "concept_group": {
@@ -654,6 +604,10 @@
             ],
             "title": "Name"
           },
+          "rank": {
+            "title": "Rank",
+            "type": "number"
+          },
           "short_name": {
             "anyOf": [
               {
@@ -685,18 +639,20 @@
           }
         },
         "required": [
-          "fqid"
+          "fqid",
+          "rank"
         ],
         "title": "ClassificationSearchResult",
         "type": "object"
       },
       "ClassificationSuccessionSearchResult": {
+        "additionalProperties": false,
         "description": "A folded classification-succession row (#571): a query hit \u22652 distinct\neditions of one classification chain (the vintages, e.g. SUN 1996/2000), so they\ncollapse to a single result keyed on the TERMINAL (current) edition. `editions`\nis the full chain (terminal-first, descending year) so the SPA can render \"this\nclassification has editions \u2026\"; `matched_count` is how many editions the query\nactually hit. A succession row is NOT itself a concept group \u2014 the terminal\n`fqid` is the navigable target.",
         "properties": {
           "editions": {
-            "description": "The full edition chain, terminal-first then descending year.",
+            "default": [],
             "items": {
-              "$ref": "#/components/schemas/ClassificationEditionModel"
+              "$ref": "#/components/schemas/SearchClassificationEdition"
             },
             "title": "Editions",
             "type": "array"
@@ -731,6 +687,10 @@
             "description": "The terminal edition's display name.",
             "title": "Name"
           },
+          "rank": {
+            "title": "Rank",
+            "type": "number"
+          },
           "short_name": {
             "anyOf": [
               {
@@ -751,12 +711,14 @@
           }
         },
         "required": [
-          "fqid"
+          "fqid",
+          "rank"
         ],
         "title": "ClassificationSuccessionSearchResult",
         "type": "object"
       },
       "CodeOwnerClassification": {
+        "additionalProperties": false,
         "description": "A classification that carries a code (#352) \u2014 catalog-scoped (no owning\nregister).",
         "properties": {
           "fqid": {
@@ -800,7 +762,8 @@
         "type": "object"
       },
       "CodeOwnerVariable": {
-        "description": "A variable that carries a code (#352). `register` is the owning register's\ndisplay name (context for the omnibox); the Python attr is `register_name` to\navoid the `BaseModel.register` method shadow (see reg_meta's `VariableRef`).",
+        "additionalProperties": false,
+        "description": "A variable that carries a code (#352). `register` is the owning register's\ndisplay name (context for the omnibox); the Python attr is `register_name` to\navoid the `BaseModel.register` method shadow (see catalog's `VariableRef`).",
         "properties": {
           "fqid": {
             "anyOf": [
@@ -871,6 +834,7 @@
         "type": "object"
       },
       "CodeSearchResult": {
+        "additionalProperties": false,
         "description": "A code/value hit (`value_code_fts` label match + code-shape match, #352).\n`code`/`label` are the SCB value pair; `variables`/`classifications` are a\nbounded representative slice of the owning entities (the researcher's actual\ntarget), and `variable_count`/`classification_count` are the full totals before\nthe slice cap.",
         "properties": {
           "classification_count": {
@@ -905,6 +869,10 @@
             "title": "Label",
             "type": "string"
           },
+          "rank": {
+            "title": "Rank",
+            "type": "number"
+          },
           "type": {
             "const": "code",
             "default": "code",
@@ -927,7 +895,8 @@
         },
         "required": [
           "code",
-          "label"
+          "label",
+          "rank"
         ],
         "title": "CodeSearchResult",
         "type": "object"
@@ -1086,7 +1055,8 @@
         "type": "object"
       },
       "ConceptGroupSearchResult": {
-        "description": "A folded concept-group row (#322): \u22652 sibling members matched OR the\ngroup's own label matched, so the family collapses to one result. `kind` is\n'variable' or 'classification' (which group bucket it belongs to);\n`member_count` is the family's full size, `matched_count` how many members\nthe query hit, `label_matched` whether the group label/key matched directly.\n`members` is the full facet-ordered member list (each a real leaf FQID) so\nthe SPA can expand the family inline \u2014 a group is NOT itself FQID-addressable.",
+        "additionalProperties": false,
+        "description": "A folded concept-group row (#322): \u22652 sibling members matched OR the\ngroup's own label matched, so the family collapses to one result. `kind` is\n'variable' or 'classification' (which group bucket it belongs to);\n`member_count` is the family's full size, `matched_count` how many members the\nquery hit, `label_matched` whether the group label/key matched directly.\n`members` is the full facet-ordered member list (each a real leaf FQID) so the\nSPA can expand the family inline \u2014 a group is NOT itself FQID-addressable.",
         "properties": {
           "group_key": {
             "title": "Group Key",
@@ -1127,6 +1097,10 @@
             "title": "Members",
             "type": "array"
           },
+          "rank": {
+            "title": "Rank",
+            "type": "number"
+          },
           "register": {
             "anyOf": [
               {
@@ -1159,7 +1133,8 @@
         "required": [
           "kind",
           "group_key",
-          "group_label"
+          "group_label",
+          "rank"
         ],
         "title": "ConceptGroupSearchResult",
         "type": "object"
@@ -2024,6 +1999,7 @@
         "type": "object"
       },
       "RegisterSearchResult": {
+        "additionalProperties": false,
         "description": "A register hit (`register_fts` name/purpose).",
         "properties": {
           "fqid": {
@@ -2059,6 +2035,10 @@
             ],
             "title": "Purpose"
           },
+          "rank": {
+            "title": "Rank",
+            "type": "number"
+          },
           "type": {
             "const": "register",
             "default": "register",
@@ -2067,7 +2047,8 @@
           }
         },
         "required": [
-          "fqid"
+          "fqid",
+          "rank"
         ],
         "title": "RegisterSearchResult",
         "type": "object"
@@ -2164,6 +2145,58 @@
           "children"
         ],
         "title": "RootResponse",
+        "type": "object"
+      },
+      "SearchClassificationEdition": {
+        "additionalProperties": false,
+        "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. Every edition is a live `classification` row (the build\nvalidator guarantees succession editions are live), so `fqid` is None only when\nthe slug is malformed/unresolvable. A nested node \u2014 no `type`/`rank`.",
+        "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.",
+            "title": "Effective Year"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).",
+            "title": "Fqid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's display name, None when un-hydrated.",
+            "title": "Name"
+          },
+          "slug": {
+            "description": "The edition's literal slug (e.g. 'sun2000').",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug"
+        ],
+        "title": "SearchClassificationEdition",
         "type": "object"
       },
       "SearchResponse": {
@@ -2638,7 +2671,8 @@
         "type": "object"
       },
       "VariableSearchResult": {
-        "description": "A variable hit (`variable_fts` name/definition/description). `register` is\nthe owning register's display name (context for the omnibox). When the hit is\na LONE member of a concept group (#322 \u2014 the family didn't fold because only\none member matched), `concept_group`/`concept_group_label` annotate the\nfamily so it stays discoverable; both None otherwise.",
+        "additionalProperties": false,
+        "description": "A variable hit (`variable_fts` name/definition/description). `register` is\nthe owning register's display name (context for the omnibox). When the hit is\na LONE member of a concept group (#322 \u2014 the family didn't fold because only\none member matched), `concept_group`/`concept_group_label` annotate the family\nso it stays discoverable; both None otherwise.",
         "properties": {
           "concept_group": {
             "anyOf": [
@@ -2695,6 +2729,10 @@
             ],
             "title": "Name"
           },
+          "rank": {
+            "title": "Rank",
+            "type": "number"
+          },
           "register": {
             "anyOf": [
               {
@@ -2714,7 +2752,8 @@
           }
         },
         "required": [
-          "fqid"
+          "fqid",
+          "rank"
         ],
         "title": "VariableSearchResult",
         "type": "object"

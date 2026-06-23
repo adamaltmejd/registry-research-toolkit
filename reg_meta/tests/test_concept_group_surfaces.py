@@ -99,13 +99,18 @@ def _seeded_conn() -> sqlite3.Connection:
     return conn
 
 
-def _assert_no_internal_keys(results: list[dict]) -> None:
-    # Recurses: `matched` can nest two deep (a classification_succession row under
-    # a group row's `matched`), so a shallow check would miss the leak (#571).
+def _assert_no_internal_keys(results: tuple) -> None:
+    # The typed result models (#701) have `extra="forbid"`, so a fold-internal key
+    # (`_variable_id`/`_classification_id`) could never appear as a field — assert it
+    # via the serialized dump (the public wire), which is what `_strip_internal_keys`
+    # used to guard pre-conversion. Group/succession rows now carry a scalar
+    # `matched_count`, not the raw `matched` leaf list, so there is no nested
+    # leaf-hit list to recurse into.
     for r in results:
-        assert "_variable_id" not in r
-        assert "_classification_id" not in r
-        _assert_no_internal_keys(r.get("matched", []))
+        dumped = r.model_dump()
+        assert "_variable_id" not in dumped
+        assert "_classification_id" not in dumped
+        assert "matched" not in dumped
 
 
 def _rebuild_fts(conn: sqlite3.Connection) -> None:
@@ -144,56 +149,54 @@ class TestSearchFolding:
     def test_sibling_hits_fold_into_one_group_row(self) -> None:
         conn = _seeded_conn()
         # 'Lönesumma' hits all three member names AND the group label.
-        results = search(conn, "Lönesumma")["results"]
-        assert [r["type"] for r in results] == ["group"]
+        results = search(conn, "Lönesumma").results
+        assert [r.type for r in results] == ["group"]
         (group,) = results
-        assert group["kind"] == "variable"
-        assert group["group_key"] == "agiink"
-        assert group["group_label"] == "Lönesumma per månad"
-        assert group["group_source"] == "curated"
-        assert group["register_id"] == 1
-        assert group["register_name"] == "LISA"
-        assert group["axes"] == ["month"]
-        assert group["member_count"] == 3
-        # Members come facet-ordered via the Catalog reuse, with leaf FQIDs.
-        assert [m["fqid"] for m in group["members"]] == [
+        assert group.kind == "variable"
+        assert group.group_key == "agiink"
+        assert group.group_label == "Lönesumma per månad"
+        assert group.source == "curated"
+        assert group.register_name == "LISA"
+        assert group.member_count == 3
+        # The three member hits folded — the public model carries the count, not the
+        # raw leaf list (the per-leaf names were checked pre-conversion).
+        assert group.matched_count == 3
+        # Members come facet-ordered via the Catalog reuse, with leaf FQIDs; the
+        # facet axis ('month') rides on each member's facets (the group model carries
+        # no separate `axes` field — the webapp wrapper never exposed one either).
+        assert [str(m.fqid) for m in group.members] == [
             "scb/lisa/agiinkjan",
             "scb/lisa/agiinkfeb",
             "scb/lisa/agiinkmar",
         ]
-        # The original leaf hits ride under `matched` (one varname hit each).
-        assert {m["variable_name"] for m in group["matched"]} == {
-            "Lönesumma januari",
-            "Lönesumma februari",
-            "Lönesumma mars",
-        }
+        assert {m.facets[0].axis for m in group.members} == {"month"}
         _assert_no_internal_keys(results)
 
     def test_fold_counts_one_result_for_pagination(self) -> None:
         conn = _seeded_conn()
         data = search(conn, "Lönesumma")
-        assert data["total_count"] == 1
+        assert data.total_count == 1
 
     def test_lone_member_hit_stays_leaf_with_annotation(self) -> None:
         conn = _seeded_conn()
         # 'januari' hits only one member (and not the group label/key).
-        results = search(conn, "januari")["results"]
-        assert [r["type"] for r in results] == ["varname"]
+        results = search(conn, "januari").results
+        assert [r.type for r in results] == ["varname"]
         (leaf,) = results
-        assert leaf["variable_name"] == "Lönesumma januari"
-        assert leaf["concept_group"] == "agiink"
-        assert leaf["concept_group_label"] == "Lönesumma per månad"
+        assert leaf.name == "Lönesumma januari"
+        assert leaf.concept_group == "agiink"
+        assert leaf.concept_group_label == "Lönesumma per månad"
         _assert_no_internal_keys(results)
 
     def test_group_label_matches_without_leaf_hits(self) -> None:
         conn = _seeded_conn()
         # 'per månad' appears only in the group LABEL, not in any member name.
-        results = search(conn, "per månad")["results"]
-        assert [r["type"] for r in results] == ["group"]
+        results = search(conn, "per månad").results
+        assert [r.type for r in results] == ["group"]
         (group,) = results
-        assert group["label_matched"] is True
-        assert group["matched"] == []
-        assert group["member_count"] == 3
+        assert group.label_matched is True
+        assert group.matched_count == 0
+        assert group.member_count == 3
 
     def test_group_label_like_metacharacters_match_literally(self) -> None:
         conn = _seeded_conn()
@@ -221,60 +224,62 @@ class TestSearchFolding:
                 (variable_id, group_id),
             )
 
-        underscore = search(conn, "12_", field="description")["results"]
-        assert {r["group_key"] for r in underscore if r["type"] == "group"} == {
+        underscore = search(conn, "12_", field="description").results
+        assert {r.group_key for r in underscore if r.type == "group"} == {
             "literal-underscore"
         }
 
-        percent = search(conn, "99%", field="description")["results"]
-        assert {r["group_key"] for r in percent if r["type"] == "group"} == {
+        percent = search(conn, "99%", field="description").results
+        assert {r.group_key for r in percent if r.type == "group"} == {
             "literal-percent"
         }
 
     def test_classification_group_label_matches(self) -> None:
         conn = _seeded_conn()
-        results = search(conn, "utbildningsnomenklatur")["results"]
-        groups = [r for r in results if r["type"] == "group"]
+        results = search(conn, "utbildningsnomenklatur").results
+        groups = [r for r in results if r.type == "group"]
         assert len(groups) == 1
         (group,) = groups
-        assert group["kind"] == "classification"
-        assert group["group_key"] == "sun"
-        assert group["register_id"] is None
-        assert [m["fqid"] for m in group["members"]] == [
+        assert group.kind == "classification"
+        assert group.group_key == "sun"
+        # A classification-kind group has no owning register.
+        assert group.register_name is None
+        assert [str(m.fqid) for m in group.members] == [
             "class/sun2000",
             "class/sun2020",
         ]
-        assert [m["facets"][0]["value"] for m in group["members"]] == ["2000", "2020"]
+        assert [m.facets[0].value for m in group.members] == ["2000", "2020"]
 
     def test_no_fold_returns_flat_member_rows(self) -> None:
         conn = _seeded_conn()
-        results = search(conn, "Lönesumma", fold_groups=False)["results"]
-        assert {r["variable_name"] for r in results} == {
+        results = search(conn, "Lönesumma", fold_groups=False).results
+        assert {r.name for r in results} == {
             "Lönesumma januari",
             "Lönesumma februari",
             "Lönesumma mars",
         }
-        assert all(r["type"] == "varname" for r in results)
-        assert all("concept_group" not in r for r in results)
+        assert all(r.type == "varname" for r in results)
+        # Unfolded varname rows carry no lone-member annotation.
+        assert all(r.concept_group is None for r in results)
         _assert_no_internal_keys(results)
 
     def test_type_register_excludes_groups(self) -> None:
         conn = _seeded_conn()
-        assert search(conn, "Lönesumma", type="register")["results"] == []
+        assert search(conn, "Lönesumma", type="register").results == ()
 
     def test_register_scope_keeps_variable_group_drops_classification(self) -> None:
         conn = _seeded_conn()
-        scoped = search(conn, "Lönesumma", register="LISA")["results"]
-        assert [r["type"] for r in scoped] == ["group"]
-        assert scoped[0]["kind"] == "variable"
+        scoped = search(conn, "Lönesumma", register="LISA").results
+        assert [r.type for r in scoped] == ["group"]
+        assert scoped[0].kind == "variable"
         # Classification groups are catalog-scoped → excluded under --register.
-        assert search(conn, "utbildningsnomenklatur", register="LISA")["results"] == []
+        assert search(conn, "utbildningsnomenklatur", register="LISA").results == ()
 
     def test_type_variable_keeps_variable_group_drops_classification(self) -> None:
         conn = _seeded_conn()
-        kept = search(conn, "Lönesumma", type="variable")["results"]
-        assert [r["type"] for r in kept] == ["group"]
-        assert search(conn, "utbildningsnomenklatur", type="variable")["results"] == []
+        kept = search(conn, "Lönesumma", type="variable").results
+        assert [r.type for r in kept] == ["group"]
+        assert search(conn, "utbildningsnomenklatur", type="variable").results == ()
 
     def test_label_only_match_respects_years_filter(self) -> None:
         # Codex P2 on #331: --years must apply to the label-only path through
@@ -282,11 +287,11 @@ class TestSearchFolding:
         # 2018→open-ended; the other members have no states at all).
         conn = _seeded_conn()
         # Out of range: no member state overlaps 1900 → the group is dropped.
-        assert search(conn, "per månad", years="1900")["results"] == []
+        assert search(conn, "per månad", years="1900").results == ()
         # In range (open-ended window covers 2020) → the group survives.
-        kept = search(conn, "per månad", years="2020")["results"]
-        assert [r["type"] for r in kept] == ["group"]
-        assert kept[0]["label_matched"] is True
+        kept = search(conn, "per månad", years="2020").results
+        assert [r.type for r in kept] == ["group"]
+        assert kept[0].label_matched is True
 
 
 class TestClassificationSuccessionFold:
@@ -318,34 +323,31 @@ class TestClassificationSuccessionFold:
 
     def test_chain_collapses_to_terminal_row(self) -> None:
         conn = self._chain_conn()
-        results = search(conn, "yrkesklassificering", field="description")["results"]
-        succ = [r for r in results if r["type"] == "classification_succession"]
+        results = search(conn, "yrkesklassificering", field="description").results
+        succ = [r for r in results if r.type == "classification_succession"]
         assert len(succ) == 1
         (row,) = succ
         # The collapsed row IS the terminal (current) edition.
-        assert row["fqid"] == "class/ssyk2012"
-        assert row["short_name"] == "SSYK2012"
+        assert str(row.fqid) == "class/ssyk2012"
+        assert row.short_name == "SSYK2012"
         # All three editions ride under `editions`, terminal-first then descending
         # effective_year.
-        assert [e["slug"] for e in row["editions"]] == [
+        assert [e.slug for e in row.editions] == [
             "ssyk2012",
             "ssyk2001",
             "ssyk1996",
         ]
-        assert [e["effective_year"] for e in row["editions"]] == [None, 2012, 2001]
-        # The original leaf hits ride under `matched`; no separate edition leaves.
-        assert {m["fqid"] for m in row["matched"]} == {
-            "class/ssyk1996",
-            "class/ssyk2001",
-            "class/ssyk2012",
-        }
-        assert not [r for r in results if r["type"] == "classification"]
+        assert [e.effective_year for e in row.editions] == [None, 2012, 2001]
+        # All three editions matched; the public row carries the count (the per-leaf
+        # fqids were checked pre-conversion via `matched`).
+        assert row.matched_count == 3
+        assert not [r for r in results if r.type == "classification"]
         _assert_no_internal_keys(results)
 
     def test_chain_counts_one_result_for_pagination(self) -> None:
         conn = self._chain_conn()
         data = search(conn, "yrkesklassificering", field="description")
-        assert data["total_count"] == 1
+        assert data.total_count == 1
 
     def test_lone_terminal_hit_stays_leaf(self) -> None:
         # Only the TERMINAL edition matches (rename the predecessors out of the
@@ -361,12 +363,12 @@ class TestClassificationSuccessionFold:
         _add_succession_edge(conn, predecessor="ssyk2001", successor="ssyk2012")
         conn.commit()
         _rebuild_fts(conn)
-        results = search(conn, "aktuell", field="description")["results"]
-        assert [r["type"] for r in results] == ["classification"]
-        assert results[0]["fqid"] == "class/ssyk2012"
+        results = search(conn, "aktuell", field="description").results
+        assert [r.type for r in results] == ["classification"]
+        assert str(results[0].fqid) == "class/ssyk2012"
         # No succession row, and the terminal itself carries no terminal_fqid (it
         # IS the terminal).
-        assert "terminal_fqid" not in results[0]
+        assert results[0].terminal_fqid is None
 
     def test_lone_old_edition_hit_annotated_with_terminal(self) -> None:
         # Only an OLD (non-terminal) edition matches → stays a leaf, annotated
@@ -385,10 +387,10 @@ class TestClassificationSuccessionFold:
         _add_succession_edge(conn, predecessor="ssyk2001", successor="ssyk2012")
         conn.commit()
         _rebuild_fts(conn)
-        results = search(conn, "gammal", field="description")["results"]
-        assert [r["type"] for r in results] == ["classification"]
-        assert results[0]["fqid"] == "class/ssyk2001"
-        assert results[0]["terminal_fqid"] == "class/ssyk2012"
+        results = search(conn, "gammal", field="description").results
+        assert [r.type for r in results] == ["classification"]
+        assert str(results[0].fqid) == "class/ssyk2001"
+        assert str(results[0].terminal_fqid) == "class/ssyk2012"
 
     def test_collapsed_terminal_then_folds_into_umbrella_group(self) -> None:
         """The interaction: editions collapse to their terminal FIRST, then the
@@ -428,14 +430,14 @@ class TestClassificationSuccessionFold:
         )
         conn.commit()
         _rebuild_fts(conn)
-        results = search(conn, "utbildningsnomenklatur", field="description")["results"]
+        results = search(conn, "utbildningsnomenklatur", field="description").results
         # The two collapsed terminals (sun2000, sun2020) then fold into ONE
         # umbrella group row — no stray succession or leaf rows survive.
-        groups = [r for r in results if r["type"] == "group"]
+        groups = [r for r in results if r.type == "group"]
         assert len(groups) == 1
-        assert groups[0]["group_key"] == "sun"
-        assert not [r for r in results if r["type"] == "classification_succession"]
-        assert not [r for r in results if r["type"] == "classification"]
+        assert groups[0].group_key == "sun"
+        assert not [r for r in results if r.type == "classification_succession"]
+        assert not [r for r in results if r.type == "classification"]
         _assert_no_internal_keys(results)
 
 
@@ -520,23 +522,27 @@ class TestClassificationSuccessionSplitRoot:
             )
         conn.commit()
         _rebuild_fts(conn)
-        results = search(conn, "gammal", field="description")["results"]
-        assert [r["type"] for r in results] == ["classification"]
-        assert results[0]["fqid"] == "class/sun1996"
+        results = search(conn, "gammal", field="description").results
+        assert [r.type for r in results] == ["classification"]
+        assert str(results[0].fqid) == "class/sun1996"
         # The fix: NO misleading "current" pointing at one arbitrary branch.
-        assert "terminal_fqid" not in results[0]
+        assert results[0].terminal_fqid is None
 
     def test_split_root_does_not_fold_branch_hit(self) -> None:
         # sun1996 AND one branch edition (sun-niva2000) both match. They resolve to
         # DIFFERENT terminals (sun1996 itself vs sun-niva2020), so they do NOT
         # collapse into one succession row — sun1996's branch is not "current".
         conn = self._split_conn()
-        results = search(conn, "utbildningsnomenklatur", field="description")["results"]
+        results = search(conn, "utbildningsnomenklatur", field="description").results
         # sun1996 is its own terminal with no sibling in that bucket → leaf.
-        leaves = [r for r in results if r.get("fqid") == "class/sun1996"]
+        leaves = [
+            r
+            for r in results
+            if getattr(r, "fqid", None) and str(r.fqid) == "class/sun1996"
+        ]
         assert len(leaves) == 1
-        assert leaves[0]["type"] == "classification"
-        assert "terminal_fqid" not in leaves[0]
+        assert leaves[0].type == "classification"
+        assert leaves[0].terminal_fqid is None
 
     def test_same_branch_linear_pair_still_folds(self) -> None:
         # A linear vintage pair WITHIN one branch (sun-niva2000 → sun-niva2020)
@@ -557,15 +563,15 @@ class TestClassificationSuccessionSplitRoot:
         )
         conn.commit()
         _rebuild_fts(conn)
-        results = search(conn, "niva", field="description")["results"]
-        succ = [r for r in results if r["type"] == "classification_succession"]
+        results = search(conn, "niva", field="description").results
+        succ = [r for r in results if r.type == "classification_succession"]
         assert len(succ) == 1
-        assert succ[0]["fqid"] == "class/sun-niva2020"
-        assert {e["slug"] for e in succ[0]["editions"]} == {
+        assert str(succ[0].fqid) == "class/sun-niva2020"
+        assert {e.slug for e in succ[0].editions} == {
             "sun-niva2000",
             "sun-niva2020",
         }
-        assert not [r for r in results if r["type"] == "classification"]
+        assert not [r for r in results if r.type == "classification"]
 
     def test_hits_on_two_branches_stay_separate(self) -> None:
         # Hits on two DIFFERENT branches (a niva edition vs a grupp edition) resolve
@@ -596,12 +602,12 @@ class TestClassificationSuccessionSplitRoot:
         _add_succession_edge(conn, predecessor="sun1996", successor="sun-grupp2020")
         conn.commit()
         _rebuild_fts(conn)
-        results = search(conn, "niva", field="description")["results"]
+        results = search(conn, "niva", field="description").results
         # No co-fold: each terminal (sun-niva2020, sun-grupp2020) is lone in its
         # bucket, and sun1996 (the split root) is lone in its own. All three stay
         # leaves — none is a succession row.
-        assert not [r for r in results if r["type"] == "classification_succession"]
-        fqids = {r["fqid"] for r in results if r["type"] == "classification"}
+        assert not [r for r in results if r.type == "classification_succession"]
+        fqids = {str(r.fqid) for r in results if r.type == "classification"}
         assert fqids == {"class/sun-niva2020", "class/sun-grupp2020", "class/sun1996"}
 
 
@@ -747,12 +753,19 @@ class TestCliGroups:
         assert len(data["results"]) == 3
 
 
+def _wire_results(data: object) -> list[dict]:
+    """Serialize a `SearchResults` to the wire dict rows the CLI renderer consumes,
+    mirroring `_cmd_search` (`model_dump(mode="json", by_alias=True)`, #701)."""
+    return [m.model_dump(mode="json", by_alias=True) for m in data.results]
+
+
 class TestSearchTableDisplay:
     def test_group_rows_render_with_counts(self, tmp_path: Path) -> None:
         from reg_meta.cli import _write_payload
 
         conn = _seeded_conn()
-        payload = {"data": search(conn, "Lönesumma")}
+        results = _wire_results(search(conn, "Lönesumma"))
+        payload = {"data": {"results": results, "total_count": len(results)}}
         out = tmp_path / "out.txt"
         _write_payload(("search", None), payload, str(out), fmt="list")
         text = out.read_text(encoding="utf-8")
@@ -767,8 +780,8 @@ class TestSearchTableDisplay:
         # 'summa jan' style query that hits both a group and the lone Kön leaf
         # is hard to construct; synthesize a mixed payload instead — the
         # renderer only looks at the result dicts.
-        group_row = search(conn, "Lönesumma")["results"][0]
-        leaf = search(conn, "Kön", fold_groups=False)["results"][0]
+        group_row = _wire_results(search(conn, "Lönesumma"))[0]
+        leaf = _wire_results(search(conn, "Kön", fold_groups=False))[0]
         payload = {"data": {"results": [leaf, group_row], "total_count": 2}}
         out = tmp_path / "out.txt"
         _write_payload(("search", None), payload, str(out), fmt="list")

@@ -177,11 +177,12 @@ def test_classification_to_variables_var_id_guard(db: sqlite3.Connection) -> Non
 
 def test_search_varname_var_id_guard(db: sqlite3.Connection) -> None:
     # field="varname" is the LIKE-over-name path (no FTS rebuild needed).
-    scb = search(db, "Kön", field="varname")["results"]
-    assert scb and scb[0]["var_id"] == 44
+    # The typed `varname` row (#701) carries `var_id`/`name` as attributes.
+    scb = search(db, "Kön", field="varname").results
+    assert scb and scb[0].var_id == 44
 
-    sos = search(db, "Diagnos", field="varname")["results"]
-    by_name = {r["variable_name"]: r["var_id"] for r in sos}
+    sos = search(db, "Diagnos", field="varname").results
+    by_name = {r.name: r.var_id for r in sos}
     assert by_name["Diagnos"] is None
     assert by_name["Diagnos curated"] is None
 

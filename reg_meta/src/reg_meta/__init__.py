@@ -44,6 +44,21 @@ from .queries import (
     resolve_register_ids,
     search,
 )
+from .search import (
+    ClassificationSearchResult,
+    ClassificationSuccessionSearchResult,
+    CodeOwnerClassification,
+    CodeOwnerVariable,
+    CodeSearchResult,
+    ConceptGroupSearchResult,
+    DatacolumnSearchResult,
+    RegisterSearchResult,
+    SearchClassificationEdition,
+    SearchResult,
+    SearchResults,
+    VariableSearchResult,
+    VarnameSearchResult,
+)
 
 __all__ = [
     "BindingGroupRef",
@@ -51,7 +66,14 @@ __all__ = [
     "ClassificationCode",
     "ClassificationEdition",
     "ClassificationRef",
+    "ClassificationSearchResult",
+    "ClassificationSuccessionSearchResult",
+    "CodeOwnerClassification",
+    "CodeOwnerVariable",
+    "CodeSearchResult",
     "compare",
+    "ConceptGroupSearchResult",
+    "DatacolumnSearchResult",
     "db_path_from_args",
     "default_db_dir",
     "derive_period",
@@ -77,6 +99,7 @@ __all__ = [
     "open_db",
     "parse_fqid",
     "Period",
+    "RegisterSearchResult",
     "RelatedRef",
     "resolve",
     "resolve_register_ids",
@@ -85,10 +108,15 @@ __all__ = [
     "ResolvedRegister",
     "ResolvedVariable",
     "search",
+    "SearchClassificationEdition",
+    "SearchResult",
+    "SearchResults",
     "ValueSetMember",
     "VariableEdition",
     "VariableRef",
+    "VariableSearchResult",
     "VariableState",
+    "VarnameSearchResult",
 ]
 
 __version__ = "0.19.0"

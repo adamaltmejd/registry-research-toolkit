@@ -16,32 +16,27 @@ as a bound parameter.
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from reg_meta.catalog import ConceptGroupMember, GroupFacet
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
 from reg_webapp import golden
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
-    ClassificationEditionModel,
     ClassificationSearchGroup,
-    ClassificationSearchItem,
-    ClassificationSearchResult,
-    ClassificationSuccessionSearchResult,
-    CodeOwnerClassification,
-    CodeOwnerVariable,
     CodeSearchGroup,
-    CodeSearchResult,
-    ConceptGroupSearchResult,
     RegisterSearchGroup,
-    RegisterSearchResult,
     SearchGroup,
     SearchResponse,
     VariableSearchGroup,
-    VariableSearchResult,
 )
 from reg_webapp.query_input import validate_text_query
+
+if TYPE_CHECKING:
+    from reg_meta.search import CodeSearchResult, RegisterSearchResult
+
+    from reg_webapp.models import ClassificationSearchItem, VariableSearchItem
 
 router = APIRouter(prefix="/api")
 
@@ -85,7 +80,7 @@ def _has_searchable_token(q: str) -> bool:
     return _WORD_CHAR.search(q) is not None
 
 
-def _rank_codes(results: list[dict]) -> list[dict]:
+def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
     """Re-rank a code/value page so classification-backed (curated) codes lead,
     then by classification_count, then variable_count — all DESCENDING; FTS order
     is preserved within ties (stable sort, #393 item 2).
@@ -96,151 +91,16 @@ def _rank_codes(results: list[dict]) -> list[dict]:
     reorders WITHIN that page — it cannot pull a curated code that ranked below the
     FTS cutoff into view. Accepted as an easy-win until ranking moves into reg_meta.
 
-    Pure helper (no IO) so it's unit-testable in isolation."""
+    Operates on reg_meta's `CodeSearchResult` models directly (#701) — no per-row
+    re-wrapping. Pure helper (no IO) so it's unit-testable in isolation."""
     return sorted(
         results,
         key=lambda r: (
-            r.get("classification_count", 0) > 0,
-            r.get("classification_count", 0),
-            r.get("variable_count", 0),
+            r.classification_count > 0,
+            r.classification_count,
+            r.variable_count,
         ),
         reverse=True,
-    )
-
-
-def _code_system(classifications: list[dict]) -> str | None:
-    """The code system a code belongs to (#393 item 3): the primary/first owning
-    classification's `short_name` (fall back to `name`). None for register-local /
-    bespoke codes with no owning classification. Pure helper (unit-testable)."""
-    if not classifications:
-        return None
-    first = classifications[0]
-    return first.get("short_name") or first.get("name")
-
-
-def _register_result(r: dict) -> RegisterSearchResult:
-    return RegisterSearchResult(
-        fqid=r.get("fqid"),
-        name=r.get("register_name"),
-        purpose=r.get("register_purpose"),
-    )
-
-
-def _variable_result(r: dict) -> VariableSearchResult:
-    return VariableSearchResult(
-        fqid=r.get("fqid"),
-        name=r.get("variable_name"),
-        register=r.get("register_name"),
-        definition=r.get("variable_definition"),
-        concept_group=r.get("concept_group"),
-        concept_group_label=r.get("concept_group_label"),
-    )
-
-
-def _classification_result(r: dict) -> ClassificationSearchResult:
-    return ClassificationSearchResult(
-        fqid=r.get("fqid"),
-        short_name=r.get("short_name"),
-        name=r.get("classification_name"),
-        # Preserve the lone-member family hint (symmetric with variables) so a
-        # non-folded vintage member stays discoverable.
-        concept_group=r.get("concept_group"),
-        concept_group_label=r.get("concept_group_label"),
-        # A lone non-terminal edition hit (#571) carries the current edition's
-        # fqid so the SPA can offer a "go to current edition" link; absent/None
-        # for a current edition or a non-edition classification.
-        terminal_fqid=r.get("terminal_fqid"),
-    )
-
-
-def _classification_succession_result(
-    r: dict,
-) -> ClassificationSuccessionSearchResult:
-    """Map a reg_meta `type: "classification_succession"` fold row (#571) onto the
-    wire model: the terminal edition's identity (`fqid`/`short_name`/`name` from
-    `classification_name`) + the full `editions` chain + `matched_count` (how many
-    editions the query hit, from the raw `matched` leaf-hit list)."""
-    return ClassificationSuccessionSearchResult(
-        fqid=r.get("fqid"),
-        short_name=r.get("short_name"),
-        name=r.get("classification_name"),
-        editions=[
-            ClassificationEditionModel(
-                slug=e["slug"],
-                fqid=e.get("fqid"),
-                name=e.get("name"),
-                effective_year=e.get("effective_year"),
-            )
-            for e in r.get("editions", [])
-        ],
-        matched_count=len(r.get("matched") or []),
-    )
-
-
-def _classification_search_item(r: dict) -> ClassificationSearchItem:
-    """Dispatch one classifications-arm row to its wire model: an umbrella
-    concept-group fold (`type: "group"`, #516) → `_group_result`; an edition
-    succession fold (`type: "classification_succession"`, #571) →
-    `_classification_succession_result`; otherwise a leaf classification hit (which
-    may carry a `terminal_fqid` for a lone old-edition row — surfaced on
-    `ClassificationSearchResult` so the SPA can link to the current edition) →
-    `_classification_result`."""
-    row_type = r.get("type")
-    if row_type == "group":
-        return _group_result(r)
-    if row_type == "classification_succession":
-        return _classification_succession_result(r)
-    return _classification_result(r)
-
-
-def _code_result(r: dict) -> CodeSearchResult:
-    # reg_meta's value/code search (type="value") already bounds the owner lists
-    # and carries the full counts; the webapp just re-shapes them. `register` is
-    # the owning register's display name for each variable owner.
-    return CodeSearchResult(
-        code=r["code"],
-        label=r["label"],
-        variables=[
-            CodeOwnerVariable(
-                fqid=v.get("fqid"), name=v.get("name"), register=v.get("register")
-            )
-            for v in r.get("variables", [])
-        ],
-        variable_count=r.get("variable_count", 0),
-        classifications=[
-            CodeOwnerClassification(
-                fqid=c.get("fqid"),
-                short_name=c.get("short_name"),
-                name=c.get("name"),
-            )
-            for c in r.get("classifications", [])
-        ],
-        classification_count=r.get("classification_count", 0),
-        code_system=_code_system(r.get("classifications", [])),
-    )
-
-
-def _group_result(r: dict) -> ConceptGroupSearchResult:
-    return ConceptGroupSearchResult(
-        kind=r["kind"],
-        group_key=r["group_key"],
-        group_label=r["group_label"],
-        source=r.get("group_source"),
-        register=r.get("register_name"),
-        member_count=r.get("member_count", 0),
-        matched_count=len(r.get("matched") or []),
-        label_matched=r.get("label_matched", False),
-        # reg_meta's `ConceptGroupMember` (#681) — the `reg_meta.queries.search`
-        # member dicts carry a string `fqid` (the `Fqid` field parses it, serializing
-        # back to the same string) and `{axis, value, label}` facet dicts.
-        members=[
-            ConceptGroupMember(
-                fqid=m["fqid"],
-                name=m.get("name"),
-                facets=tuple(GroupFacet(**f) for f in m.get("facets", [])),
-            )
-            for m in r.get("members", [])
-        ],
     )
 
 
@@ -293,6 +153,10 @@ def get_search(
         # builds the safe FTS MATCH expression from the raw query internally; one
         # call per type yields a per-group total_count + limit. Registers have no
         # concept groups, so folding is off there.
+        # reg_meta `search()` now returns typed `SearchResults` (#701): each arm's
+        # rows are ALREADY the right reg_meta result models, so the webapp slices
+        # and groups them directly — no per-row re-wrapping. The golden seam and the
+        # FastAPI response models all operate on the same reg_meta types.
         if want_register:
             reg = reg_meta_search(
                 conn,
@@ -302,15 +166,19 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
             )
-            reg_results = golden.apply_golden_boost(conn, q, "register", reg["results"])
+            reg_results = golden.apply_golden_boost(conn, q, "register", reg.results)
+            # `search(type="register")` yields only register rows, but the static
+            # element type is the broad `SearchResult` union — narrow to what the
+            # group declares (the `type=` param is the runtime guarantee).
             # total_count counts the full boosted set (incl. a net-new pin), but the
             # displayed page is capped at `limit` — a pin prepended onto an already-full
             # FTS page must not push the group past the requested cap (#393 item 2).
             groups.append(
                 RegisterSearchGroup(
-                    total_count=reg["total_count"]
-                    + (len(reg_results) - len(reg["results"])),
-                    results=[_register_result(r) for r in reg_results[:limit]],
+                    total_count=reg.total_count + (len(reg_results) - len(reg.results)),
+                    results=cast(
+                        "list[RegisterSearchResult]", list(reg_results[:limit])
+                    ),
                 )
             )
         if want_variable:
@@ -321,17 +189,11 @@ def get_search(
                 type="variable",
                 limit=limit,
             )
-            var_results = golden.apply_golden_boost(conn, q, "variable", var["results"])
+            var_results = golden.apply_golden_boost(conn, q, "variable", var.results)
             groups.append(
                 VariableSearchGroup(
-                    total_count=var["total_count"]
-                    + (len(var_results) - len(var["results"])),
-                    results=[
-                        _group_result(r)
-                        if r["type"] == "group"
-                        else _variable_result(r)
-                        for r in var_results[:limit]
-                    ],
+                    total_count=var.total_count + (len(var_results) - len(var.results)),
+                    results=cast("list[VariableSearchItem]", list(var_results[:limit])),
                 )
             )
         if want_classification:
@@ -343,15 +205,14 @@ def get_search(
                 limit=limit,
             )
             cls_results = golden.apply_golden_boost(
-                conn, q, "classification", cls["results"]
+                conn, q, "classification", cls.results
             )
             groups.append(
                 ClassificationSearchGroup(
-                    total_count=cls["total_count"]
-                    + (len(cls_results) - len(cls["results"])),
-                    results=[
-                        _classification_search_item(r) for r in cls_results[:limit]
-                    ],
+                    total_count=cls.total_count + (len(cls_results) - len(cls.results)),
+                    results=cast(
+                        "list[ClassificationSearchItem]", list(cls_results[:limit])
+                    ),
                 )
             )
         if want_value:
@@ -370,8 +231,9 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
             )
-            boosted_codes = golden.apply_golden_boost(
-                conn, q, "value", codes["results"]
+            boosted_codes = cast(
+                "list[CodeSearchResult]",
+                golden.apply_golden_boost(conn, q, "value", codes.results),
             )
             # Rank the FULL boosted set first (so a high-ranking net-new pin can lead),
             # THEN cap the displayed page at `limit`; total_count still counts the full
@@ -379,9 +241,9 @@ def get_search(
             code_results = _rank_codes(boosted_codes)[:limit]
             groups.append(
                 CodeSearchGroup(
-                    total_count=codes["total_count"]
-                    + (len(boosted_codes) - len(codes["results"])),
-                    results=[_code_result(r) for r in code_results],
+                    total_count=codes.total_count
+                    + (len(boosted_codes) - len(codes.results)),
+                    results=code_results,
                 )
             )
 

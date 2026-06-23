@@ -674,37 +674,6 @@ export interface components {
             slug: string;
         };
         /**
-         * ClassificationEditionModel
-         * @description One edition of a folded classification succession chain (#571): a vintage
-         *     of the same classification (e.g. `sun1996`, `sun2000`). Carried by
-         *     `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
-         *     `effective_year`. Every edition is a live `classification` row (the build
-         *     validator guarantees succession editions are live), so `fqid` is None only when
-         *     the slug is malformed/unresolvable.
-         */
-        ClassificationEditionModel: {
-            /**
-             * Effective Year
-             * @description The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.
-             */
-            effective_year?: number | null;
-            /**
-             * Fqid
-             * @description The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).
-             */
-            fqid?: string | null;
-            /**
-             * Name
-             * @description The edition's display name, None when un-hydrated.
-             */
-            name?: string | null;
-            /**
-             * Slug
-             * @description The edition's literal slug (e.g. 'sun2000').
-             */
-            slug: string;
-        };
-        /**
          * ClassificationNode
          * @description A classification leaf (`class/<slug>`, 2 seg).
          */
@@ -819,6 +788,8 @@ export interface components {
             fqid: string | null;
             /** Name */
             name?: string | null;
+            /** Rank */
+            rank: number;
             /** Short Name */
             short_name?: string | null;
             /**
@@ -845,9 +816,9 @@ export interface components {
         ClassificationSuccessionSearchResult: {
             /**
              * Editions
-             * @description The full edition chain, terminal-first then descending year.
+             * @default []
              */
-            editions?: components["schemas"]["ClassificationEditionModel"][];
+            editions: components["schemas"]["SearchClassificationEdition"][];
             /**
              * Fqid
              * @description The terminal (current) edition's classification FQID — the navigable target. None only when the slug is malformed/unresolvable (the terminal is always a live classification row).
@@ -864,6 +835,8 @@ export interface components {
              * @description The terminal edition's display name.
              */
             name?: string | null;
+            /** Rank */
+            rank: number;
             /**
              * Short Name
              * @description The terminal edition's short name (e.g. 'SUN').
@@ -892,7 +865,7 @@ export interface components {
          * CodeOwnerVariable
          * @description A variable that carries a code (#352). `register` is the owning register's
          *     display name (context for the omnibox); the Python attr is `register_name` to
-         *     avoid the `BaseModel.register` method shadow (see reg_meta's `VariableRef`).
+         *     avoid the `BaseModel.register` method shadow (see catalog's `VariableRef`).
          */
         CodeOwnerVariable: {
             /** Fqid */
@@ -943,6 +916,8 @@ export interface components {
             code_system?: string | null;
             /** Label */
             label: string;
+            /** Rank */
+            rank: number;
             /**
              * Type
              * @default code
@@ -1040,10 +1015,10 @@ export interface components {
          * @description A folded concept-group row (#322): ≥2 sibling members matched OR the
          *     group's own label matched, so the family collapses to one result. `kind` is
          *     'variable' or 'classification' (which group bucket it belongs to);
-         *     `member_count` is the family's full size, `matched_count` how many members
-         *     the query hit, `label_matched` whether the group label/key matched directly.
-         *     `members` is the full facet-ordered member list (each a real leaf FQID) so
-         *     the SPA can expand the family inline — a group is NOT itself FQID-addressable.
+         *     `member_count` is the family's full size, `matched_count` how many members the
+         *     query hit, `label_matched` whether the group label/key matched directly.
+         *     `members` is the full facet-ordered member list (each a real leaf FQID) so the
+         *     SPA can expand the family inline — a group is NOT itself FQID-addressable.
          */
         ConceptGroupSearchResult: {
             /** Group Key */
@@ -1075,6 +1050,8 @@ export interface components {
              * @default []
              */
             members: components["schemas"]["ConceptGroupMember"][];
+            /** Rank */
+            rank: number;
             /** Register */
             register?: string | null;
             /** Source */
@@ -1500,6 +1477,8 @@ export interface components {
             name?: string | null;
             /** Purpose */
             purpose?: string | null;
+            /** Rank */
+            rank: number;
             /**
              * Type
              * @default register
@@ -1558,6 +1537,37 @@ export interface components {
              * @constant
              */
             kind: "root";
+        };
+        /**
+         * SearchClassificationEdition
+         * @description One edition of a folded classification succession chain (#571): a vintage
+         *     of the same classification (e.g. `sun1996`, `sun2000`). Carried by
+         *     `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
+         *     `effective_year`. Every edition is a live `classification` row (the build
+         *     validator guarantees succession editions are live), so `fqid` is None only when
+         *     the slug is malformed/unresolvable. A nested node — no `type`/`rank`.
+         */
+        SearchClassificationEdition: {
+            /**
+             * Effective Year
+             * @description The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.
+             */
+            effective_year?: number | null;
+            /**
+             * Fqid
+             * @description The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).
+             */
+            fqid?: string | null;
+            /**
+             * Name
+             * @description The edition's display name, None when un-hydrated.
+             */
+            name?: string | null;
+            /**
+             * Slug
+             * @description The edition's literal slug (e.g. 'sun2000').
+             */
+            slug: string;
         };
         /**
          * SearchResponse
@@ -1831,8 +1841,8 @@ export interface components {
          * @description A variable hit (`variable_fts` name/definition/description). `register` is
          *     the owning register's display name (context for the omnibox). When the hit is
          *     a LONE member of a concept group (#322 — the family didn't fold because only
-         *     one member matched), `concept_group`/`concept_group_label` annotate the
-         *     family so it stays discoverable; both None otherwise.
+         *     one member matched), `concept_group`/`concept_group_label` annotate the family
+         *     so it stays discoverable; both None otherwise.
          */
         VariableSearchResult: {
             /** Concept Group */
@@ -1845,6 +1855,8 @@ export interface components {
             fqid: string | null;
             /** Name */
             name?: string | null;
+            /** Rank */
+            rank: number;
             /** Register */
             register?: string | null;
             /**

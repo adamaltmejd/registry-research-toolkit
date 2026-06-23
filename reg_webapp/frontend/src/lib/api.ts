@@ -440,7 +440,8 @@ export type ClassificationSearchResult = Schemas["ClassificationSearchResult"];
  * target (NOT a concept group). */
 export type ClassificationSuccessionSearchResult =
   Schemas["ClassificationSuccessionSearchResult"];
-export type ClassificationEditionModel = Schemas["ClassificationEditionModel"];
+export type SearchClassificationEdition =
+  Schemas["SearchClassificationEdition"];
 export type ConceptGroupSearchResult = Schemas["ConceptGroupSearchResult"];
 export type CodeSearchResult = Schemas["CodeSearchResult"];
 export type CodeOwnerVariable = Schemas["CodeOwnerVariable"];

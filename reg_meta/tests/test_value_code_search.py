@@ -89,14 +89,14 @@ def test_code_shaped_hit_ranks_above_label_hit(conn: sqlite3.Connection) -> None
     _map(conn, 2, vid)
     _finalize(conn)
 
-    results = search(conn, "0180", field="value", type="value")["results"]
-    by_code = {r["code"]: r for r in results}
+    results = search(conn, "0180", field="value", type="value").results
+    by_code = {r.code: r for r in results}
     assert "0180" in by_code, "code-exact hit must be present"
     assert "9999" in by_code, "label-text hit must be present"
     # Smaller fts_rank sorts first; the code-exact hit is seeded below the FTS floor.
-    assert by_code["0180"]["fts_rank"] < by_code["9999"]["fts_rank"]
+    assert by_code["0180"].rank < by_code["9999"].rank
     # And it is actually first in the returned (pre-sorted) order.
-    assert results[0]["code"] == "0180"
+    assert results[0].code == "0180"
 
 
 def test_dedup_code_id_appears_once(conn: sqlite3.Connection) -> None:
@@ -109,8 +109,8 @@ def test_dedup_code_id_appears_once(conn: sqlite3.Connection) -> None:
     _map(conn, 1, vid)
     _finalize(conn)
 
-    results = search(conn, "0180", field="value", type="value")["results"]
-    codes = [r["code"] for r in results]
+    results = search(conn, "0180", field="value", type="value").results
+    codes = [r.code for r in results]
     assert codes.count("0180") == 1, f"expected one dedup'd hit, got {codes}"
 
 
@@ -129,8 +129,7 @@ def test_code_like_metacharacters_match_literally(conn: sqlite3.Connection) -> N
 
     def _codes(query: str) -> set[str]:
         return {
-            r["code"]
-            for r in search(conn, query, field="value", type="value")["results"]
+            r.code for r in search(conn, query, field="value", type="value").results
         }
 
     assert _codes("12_") == {"12_5"}
@@ -151,15 +150,15 @@ def test_register_scope_drops_out_of_scope_only_owners(
     _finalize(conn)
 
     # Scoped to register 1 (rega) → no surviving owner → dropped.
-    scoped = search(conn, "Singelkod", field="value", type="value", register="rega")[
-        "results"
-    ]
-    assert scoped == [], f"out-of-scope-only code should be dropped, got {scoped}"
+    scoped = search(
+        conn, "Singelkod", field="value", type="value", register="rega"
+    ).results
+    assert scoped == (), f"out-of-scope-only code should be dropped, got {scoped}"
     # Scoped to register 2 (regb) → the owner survives → present.
-    in_scope = search(conn, "Singelkod", field="value", type="value", register="regb")[
-        "results"
-    ]
-    assert any(r["label"] == "Singelkod" for r in in_scope)
+    in_scope = search(
+        conn, "Singelkod", field="value", type="value", register="regb"
+    ).results
+    assert any(r.label == "Singelkod" for r in in_scope)
 
 
 def test_owner_cap_vs_full_count(conn: sqlite3.Connection) -> None:
@@ -174,10 +173,10 @@ def test_owner_cap_vs_full_count(conn: sqlite3.Connection) -> None:
         _map(conn, 1, vid)
     _finalize(conn)
 
-    results = search(conn, "Delad kod", field="value", type="value")["results"]
-    hit = next(r for r in results if r["label"] == "Delad kod")
-    assert hit["variable_count"] == 6
-    assert len(hit["variables"]) == _CODE_OWNERS_PER_HIT == 5
+    results = search(conn, "Delad kod", field="value", type="value").results
+    hit = next(r for r in results if r.label == "Delad kod")
+    assert hit.variable_count == 6
+    assert len(hit.variables) == _CODE_OWNERS_PER_HIT == 5
 
 
 def test_mapping_count_downweight_orders_rarer_first(conn: sqlite3.Connection) -> None:
@@ -198,12 +197,12 @@ def test_mapping_count_downweight_orders_rarer_first(conn: sqlite3.Connection) -
     counts = dict(conn.execute("SELECT code, mapping_count FROM value_code").fetchall())
     assert counts["1"] == 8 and counts["2"] == 1
 
-    results = search(conn, "Sjukdom vanlig", field="value", type="value")["results"]
-    rank = {r["code"]: r["fts_rank"] for r in results}
+    results = search(conn, "Sjukdom vanlig", field="value", type="value").results
+    rank = {r.code: r.rank for r in results}
     assert "1" in rank and "2" in rank
     # Rarer pair (code "2", mapping_count 1) sorts before the common one (code "1").
     assert rank["2"] < rank["1"]
-    assert results[0]["code"] == "2"
+    assert results[0].code == "2"
 
 
 def _seed_n_label_codes(conn: sqlite3.Connection, n: int, label: str) -> None:
@@ -222,23 +221,23 @@ def test_total_count_reflects_true_match_count(conn: sqlite3.Connection) -> None
     the value arm used to truncate internally to `limit`, capping total_count)."""
     _seed_n_label_codes(conn, 8, "Diagnos")
     out = search(conn, "Diagnos", field="value", type="value", limit=3)
-    assert out["total_count"] == 8, out["total_count"]
-    assert len(out["results"]) == 3  # the page is still limit-bounded
+    assert out.total_count == 8, out.total_count
+    assert len(out.results) == 3  # the page is still limit-bounded
 
 
 def test_offset_paginates_codes(conn: sqlite3.Connection) -> None:
     """offset paginates the value arm (regression: offset>0 used to return [])."""
     _seed_n_label_codes(conn, 8, "Diagnos")
-    page1 = search(conn, "Diagnos", field="value", type="value", limit=3, offset=0)[
-        "results"
-    ]
-    page2 = search(conn, "Diagnos", field="value", type="value", limit=3, offset=3)[
-        "results"
-    ]
+    page1 = search(
+        conn, "Diagnos", field="value", type="value", limit=3, offset=0
+    ).results
+    page2 = search(
+        conn, "Diagnos", field="value", type="value", limit=3, offset=3
+    ).results
     assert len(page1) == 3
     assert len(page2) == 3, "offset=limit must return the NEXT page, not []"
     # Disjoint pages (same deterministic order across calls).
-    assert {r["code"] for r in page1}.isdisjoint({r["code"] for r in page2})
+    assert {r.code for r in page1}.isdisjoint({r.code for r in page2})
 
 
 def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> None:
@@ -264,8 +263,8 @@ def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> N
     scoped = search(
         conn, "Diagnos", field="value", type="value", register="rega", limit=3
     )
-    assert scoped["total_count"] == 1, scoped["total_count"]
-    assert [r["label"] for r in scoped["results"]] == ["Diagnos A"]
+    assert scoped.total_count == 1, scoped.total_count
+    assert [r.label for r in scoped.results] == ["Diagnos A"]
 
 
 # --------------------------------------------------------------------------- #
@@ -303,8 +302,8 @@ def test_annotate_only_the_page_unscoped(
             "the full match set is being annotated (perf regression)"
         )
     # Sanity: more codes matched than were annotated.
-    assert out["total_count"] == 30
-    assert len(out["results"]) == limit
+    assert out.total_count == 30
+    assert len(out.results) == limit
 
 
 def test_total_count_unchanged_with_deferred_annotation(
@@ -315,8 +314,8 @@ def test_total_count_unchanged_with_deferred_annotation(
     unannotated, so len(all_results) is identical to the old full-annotate path)."""
     _seed_n_label_codes(conn, 12, "Diagnos")
     out = search(conn, "Diagnos", field="value", type="value", limit=4)
-    assert out["total_count"] == 12
-    assert len(out["results"]) == 4
+    assert out.total_count == 12
+    assert len(out.results) == 4
 
 
 def test_page_rows_carry_correct_owners(conn: sqlite3.Connection) -> None:
@@ -330,14 +329,14 @@ def test_page_rows_carry_correct_owners(conn: sqlite3.Connection) -> None:
         _map(conn, 1, vid)
     _finalize(conn)
 
-    results = search(conn, "Delad kod", field="value", type="value")["results"]
-    hit = next(r for r in results if r["label"] == "Delad kod")
-    assert hit["variable_count"] == 3
-    assert len(hit["variables"]) == 3
-    assert hit["classification_count"] == 0
-    assert hit["classifications"] == []
+    results = search(conn, "Delad kod", field="value", type="value").results
+    hit = next(r for r in results if r.label == "Delad kod")
+    assert hit.variable_count == 3
+    assert len(hit.variables) == 3
+    assert hit.classification_count == 0
+    assert hit.classifications == ()
     # The deferred-annotation marker must be stripped before results go public.
-    assert "_code_id" not in hit
+    assert not hasattr(hit, "_code_id")
 
 
 def test_offset_page_annotated(conn: sqlite3.Connection) -> None:
@@ -357,15 +356,15 @@ def test_offset_page_annotated(conn: sqlite3.Connection) -> None:
 
     page1 = search(conn, "Diagnos", field="value", type="value", limit=1, offset=0)
     page2 = search(conn, "Diagnos", field="value", type="value", limit=1, offset=1)
-    assert len(page1["results"]) == 1
-    assert len(page2["results"]) == 1
+    assert len(page1.results) == 1
+    assert len(page2.results) == 1
     # Disjoint pages, each annotated with its OWN code's owner count.
-    p1, p2 = page1["results"][0], page2["results"][0]
-    assert p1["code"] != p2["code"]
-    by_code = {p1["code"]: p1, p2["code"]: p2}
-    assert by_code["1"]["variable_count"] == 1
-    assert by_code["2"]["variable_count"] == 2
-    assert "_code_id" not in p1 and "_code_id" not in p2
+    p1, p2 = page1.results[0], page2.results[0]
+    assert p1.code != p2.code
+    by_code = {p1.code: p1, p2.code: p2}
+    assert by_code["1"].variable_count == 1
+    assert by_code["2"].variable_count == 2
+    assert not hasattr(p1, "_code_id") and not hasattr(p2, "_code_id")
 
 
 def test_reg_scope_does_not_use_code_id_marker(conn: sqlite3.Connection) -> None:
@@ -386,10 +385,10 @@ def test_reg_scope_does_not_use_code_id_marker(conn: sqlite3.Connection) -> None
 
     scoped = search(conn, "Diagnos", field="value", type="value", register="rega")
     # Only the regA-owned code survives the reg-scope drop.
-    assert scoped["total_count"] == 1
-    assert [r["label"] for r in scoped["results"]] == ["Diagnos A"]
-    assert all("_code_id" not in r for r in scoped["results"])
-    assert scoped["results"][0]["variable_count"] == 1
+    assert scoped.total_count == 1
+    assert [r.label for r in scoped.results] == ["Diagnos A"]
+    assert all(not hasattr(r, "_code_id") for r in scoped.results)
+    assert scoped.results[0].variable_count == 1
 
 
 def test_type_all_only_code_rows_annotated(conn: sqlite3.Connection) -> None:
@@ -405,13 +404,13 @@ def test_type_all_only_code_rows_annotated(conn: sqlite3.Connection) -> None:
     _finalize(conn)
 
     out = search(conn, "Cancer", field="all", type="all", fold_groups=False)
-    results = out["results"]
-    types = {r["type"] for r in results}
+    results = out.results
+    types = {r.type for r in results}
     assert "code" in types, "the code/value row must be present"
-    code_row = next(r for r in results if r["type"] == "code")
-    assert code_row["variable_count"] == 1
+    code_row = next(r for r in results if r.type == "code")
+    assert code_row.variable_count == 1
     # No row (code or otherwise) leaks the internal marker.
-    assert all("_code_id" not in r for r in results)
+    assert all(not hasattr(r, "_code_id") for r in results)
 
 
 def test_code_shaped_drops_ownerless_dangling_code(conn: sqlite3.Connection) -> None:
@@ -440,8 +439,7 @@ def test_code_shaped_drops_ownerless_dangling_code(conn: sqlite3.Connection) -> 
 
     def _codes(query: str) -> list[str]:
         return [
-            r["code"]
-            for r in search(conn, query, field="value", type="value")["results"]
+            r.code for r in search(conn, query, field="value", type="value").results
         ]
 
     owned = _codes("9001")

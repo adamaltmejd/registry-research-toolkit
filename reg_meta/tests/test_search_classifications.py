@@ -248,7 +248,7 @@ def test_like_metacharacter_query_matches_literally(
     out = search(
         db_with_like_metachar_codes, "12_", field="description", type="classification"
     )
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/underscore-owner" in fqids
     assert "class/plain-owner" not in fqids
 
@@ -259,7 +259,7 @@ def test_code_shaped_query_surfaces_owning_classification(
     # 'C12' matches no classification NAME under sun2020, but sun2020 CONTAINS the
     # code → it surfaces via code-containment with a navigable fqid.
     out = search(db_with_class_codes, "C12", field="description", type="classification")
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/sun2020" in fqids
 
 
@@ -270,8 +270,8 @@ def test_code_containment_dedups_against_name_hit(
     # containment candidate if it owned the code — but it owns no code here, so the
     # real dedup target is the general invariant: each classification appears once.
     out = search(db_with_class_codes, "C12", field="description", type="classification")
-    leaves = [r for r in out["results"] if r["type"] == "classification"]
-    fqids = [r["fqid"] for r in leaves]
+    leaves = [r for r in out.results if r.type == "classification"]
+    fqids = [str(r.fqid) for r in leaves]
     assert len(fqids) == len(set(fqids)), f"duplicate classification rows: {fqids}"
     # icd10 is the name hit; sun2020 the code-containment hit.
     assert "class/icd10" in fqids
@@ -284,7 +284,7 @@ def test_name_fts_hits_precede_code_containment_hits(
     # icd10 matches by NAME (negative bm25 rank); sun2020 only by code-containment
     # (positive base rank) → the name hit sorts first.
     out = search(db_with_class_codes, "C12", field="description", type="classification")
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert fqids.index("class/icd10") < fqids.index("class/sun2020")
 
 
@@ -300,7 +300,7 @@ def test_code_containment_excluded_under_register_scope(
         type="classification",
         register="lisa",
     )
-    assert out["results"] == []
+    assert out.results == ()
 
 
 def test_code_containment_in_type_all(
@@ -308,7 +308,7 @@ def test_code_containment_in_type_all(
 ) -> None:
     # type="all" also surfaces the code-containing classification.
     out = search(db_with_class_codes, "C12", field="description", type="all")
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/sun2020" in fqids
 
 
@@ -320,7 +320,7 @@ def test_non_code_shaped_query_has_no_code_containment(
     out = search(
         db_with_class_codes, "Tongue", field="description", type="classification"
     )
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/sun2020" not in fqids
 
 
@@ -330,7 +330,7 @@ def test_two_char_code_query_has_no_code_containment(
     # A 2-char code ('C1') fails the len>=3 code-shape gate, so no code-containment
     # rows — guards the gate's length floor.
     out = search(db_with_class_codes, "C1", field="description", type="classification")
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/sun2020" not in fqids
 
 
@@ -344,16 +344,16 @@ def test_code_containment_hits_fold_into_concept_group(
     out = search(
         db_with_class_code_group, "V10", field="description", type="classification"
     )
-    rows = out["results"]
-    groups = [r for r in rows if r["type"] == "group"]
-    leaves = [r for r in rows if r["type"] == "classification"]
+    rows = out.results
+    groups = [r for r in rows if r.type == "group"]
+    leaves = [r for r in rows if r.type == "classification"]
     assert len(groups) == 1
-    assert groups[0]["kind"] == "classification"
-    assert groups[0]["group_key"] == "sun"
-    member_fqids = {m["fqid"] for m in groups[0]["members"]}
+    assert groups[0].kind == "classification"
+    assert groups[0].group_key == "sun"
+    member_fqids = {str(m.fqid) for m in groups[0].members}
     assert {"class/sun2000", "class/sun2020"} <= member_fqids
     # No leaf row may duplicate a folded member's fqid.
-    assert not ({r["fqid"] for r in leaves} & member_fqids)
+    assert not ({str(r.fqid) for r in leaves} & member_fqids)
 
 
 def test_exact_code_classification_precedes_prefix_across_classifications(
@@ -368,7 +368,7 @@ def test_exact_code_classification_precedes_prefix_across_classifications(
         field="description",
         type="classification",
     )
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/icd10" in fqids
     assert "class/sun2020" in fqids
     assert fqids.index("class/icd10") < fqids.index("class/sun2020")
@@ -420,7 +420,7 @@ def test_lowercase_code_query_ranks_exact_first(
         field="description",
         type="classification",
     )
-    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    fqids = [str(r.fqid) for r in out.results if r.type == "classification"]
     assert "class/icd10" in fqids
     assert "class/sun2020" in fqids
     assert fqids.index("class/sun2020") < fqids.index("class/icd10")
@@ -435,15 +435,15 @@ def test_classification_label_match_folds_and_subsumes_leaves(
     out = search(
         db_with_cls_group, "Svensk", field="description", type="classification"
     )
-    rows = out["results"]
-    groups = [r for r in rows if r["type"] == "group"]
-    leaves = [r for r in rows if r["type"] == "classification"]
+    rows = out.results
+    groups = [r for r in rows if r.type == "group"]
+    leaves = [r for r in rows if r.type == "classification"]
     assert len(groups) == 1
-    assert groups[0]["kind"] == "classification"
-    assert groups[0]["group_key"] == "sun"
-    member_fqids = {m["fqid"] for m in groups[0]["members"]}
+    assert groups[0].kind == "classification"
+    assert groups[0].group_key == "sun"
+    member_fqids = {str(m.fqid) for m in groups[0].members}
     assert {"class/sun2000", "class/sun2020"} <= member_fqids
-    assert not ({r["fqid"] for r in leaves} & member_fqids)
+    assert not ({str(r.fqid) for r in leaves} & member_fqids)
 
 
 def test_classification_member_fold_without_label_match(
@@ -453,58 +453,58 @@ def test_classification_member_fold_without_label_match(
     # label "Svensk …" — ≥2 member hits still fold the family (symmetric with
     # variables).
     out = search(db_with_cls_group, "SUN", field="description", type="classification")
-    groups = [r for r in out["results"] if r["type"] == "group"]
-    assert any(r["group_key"] == "sun" for r in groups)
+    groups = [r for r in out.results if r.type == "group"]
+    assert any(r.group_key == "sun" for r in groups)
 
 
-def _types(results: list[dict]) -> set[str]:
-    return {r["type"] for r in results}
+def _types(results: tuple) -> set[str]:
+    return {r.type for r in results}
 
 
 def test_classification_fts_match_carries_fqid(db: sqlite3.Connection) -> None:
     # The default classification is SUN2020 "Svensk utbildningsnomenklatur".
     out = search(db, "Svensk", field="description", type="classification")
-    rows = out["results"]
+    rows = out.results
     assert _types(rows) == {"classification"}
     row = rows[0]
-    assert row["fqid"] == "class/sun2020"
-    assert row["short_name"] == "SUN2020"
-    assert row["classification_name"] == "Svensk utbildningsnomenklatur"
+    assert str(row.fqid) == "class/sun2020"
+    assert row.short_name == "SUN2020"
+    assert row.name == "Svensk utbildningsnomenklatur"
 
 
 def test_classification_matches_short_name(db: sqlite3.Connection) -> None:
     out = search(db, "sun2020", field="description", type="classification")
-    assert [r["fqid"] for r in out["results"]] == ["class/sun2020"]
+    assert [str(r.fqid) for r in out.results] == ["class/sun2020"]
 
 
 def test_register_fts_row_carries_fqid(db: sqlite3.Connection) -> None:
     out = search(db, "LISA", field="description", type="register")
-    rows = out["results"]
+    rows = out.results
     assert _types(rows) == {"register"}
-    assert rows[0]["fqid"] == "scb/lisa"
+    assert str(rows[0].fqid) == "scb/lisa"
 
 
 def test_variable_fts_row_carries_binding_fqid(db: sqlite3.Connection) -> None:
     out = search(db, "Kön", field="description", type="variable")
-    rows = out["results"]
+    rows = out.results
     assert _types(rows) == {"variable"}
-    assert rows[0]["fqid"] == "scb/lisa/kon"
+    assert str(rows[0].fqid) == "scb/lisa/kon"
 
 
 def test_type_all_spans_classification(db: sqlite3.Connection) -> None:
     # One query that hits a register/variable AND a classification token.
     reg = search(db, "Svensk", field="description", type="all")
-    assert "classification" in _types(reg["results"])
+    assert "classification" in _types(reg.results)
 
 
 def test_register_type_excludes_classification(db: sqlite3.Connection) -> None:
     out = search(db, "Svensk", field="description", type="register")
-    assert "classification" not in _types(out["results"])
+    assert "classification" not in _types(out.results)
 
 
 def test_variable_type_excludes_classification(db: sqlite3.Connection) -> None:
     out = search(db, "Svensk", field="description", type="variable")
-    assert "classification" not in _types(out["results"])
+    assert "classification" not in _types(out.results)
 
 
 def test_register_scope_excludes_classification(db: sqlite3.Connection) -> None:
@@ -513,7 +513,7 @@ def test_register_scope_excludes_classification(db: sqlite3.Connection) -> None:
     out = search(
         db, "Svensk", field="description", type="classification", register="lisa"
     )
-    assert out["results"] == []
+    assert out.results == ()
 
 
 def test_invalid_type_raises(db: sqlite3.Connection) -> None:
@@ -552,13 +552,15 @@ def test_cli_display_row_projects_classification() -> None:
     # columns so a `--type all` table doesn't render it blank (Codex P2).
     from reg_meta.cli import _search_display_row
 
+    # `_search_display_row` consumes the typed-model wire shape (#701): a
+    # classification row carries `name` (not `classification_name`) and `rank`.
     row = _search_display_row(
         {
             "type": "classification",
             "fqid": "class/sun2020",
             "short_name": "SUN2020",
-            "classification_name": "Svensk utbildningsnomenklatur",
-            "fts_rank": -1.0,
+            "name": "Svensk utbildningsnomenklatur",
+            "rank": -1.0,
         }
     )
     assert row["register_name"] == "SUN2020"
@@ -572,20 +574,7 @@ def test_cli_display_row_projects_classification_succession() -> None:
     # appends a folded-family hint so a `--type all` table reads clearly.
     from reg_meta.cli import _search_display_row
 
-    row = _search_display_row(
-        {
-            "type": "classification_succession",
-            "fqid": "class/ssyk2012",
-            "short_name": "SSYK2012",
-            "classification_name": "Standard för svensk yrkesklassificering",
-            "editions": [
-                {"slug": "ssyk2012", "name": "SSYK 2012", "effective_year": None},
-                {"slug": "ssyk96", "name": "SSYK 96", "effective_year": 1996},
-            ],
-            "matched": [],
-            "fts_rank": -1.0,
-        }
-    )
+    row = _search_display_row(_succession_row())
     assert row["register_name"] == "SSYK2012"
     assert (
         row["variable_name"] == "Standard för svensk yrkesklassificering (2 editions)"
@@ -597,17 +586,19 @@ def test_cli_display_row_projects_classification_succession() -> None:
 
 
 def _succession_row() -> dict[str, object]:
+    # The typed-model wire shape (#701): `name` (not `classification_name`),
+    # `matched_count` (not the raw `matched` list), `rank` (not `fts_rank`).
     return {
         "type": "classification_succession",
         "fqid": "class/ssyk2012",
         "short_name": "SSYK2012",
-        "classification_name": "Standard för svensk yrkesklassificering",
+        "name": "Standard för svensk yrkesklassificering",
         "editions": [
             {"slug": "ssyk2012", "name": "SSYK 2012", "effective_year": None},
             {"slug": "ssyk96", "name": "SSYK 96", "effective_year": 1996},
         ],
-        "matched": [],
-        "fts_rank": -1.0,
+        "matched_count": 0,
+        "rank": -1.0,
     }
 
 
@@ -616,8 +607,8 @@ def _classification_row() -> dict[str, object]:
         "type": "classification",
         "fqid": "class/sun2020",
         "short_name": "SUN2020",
-        "classification_name": "Svensk utbildningsnomenklatur",
-        "fts_rank": -1.0,
+        "name": "Svensk utbildningsnomenklatur",
+        "rank": -1.0,
     }
 
 
@@ -662,7 +653,7 @@ def test_empty_description_query_folds_nothing(
     # so an empty/punctuation query must NOT return every concept group via the
     # raw `%%` LIKE pattern (Codex P2).
     for q in ("", "   ", '"" -- ;'):
-        assert search(db_with_cls_group, q, field="description")["results"] == []
+        assert search(db_with_cls_group, q, field="description").results == ()
 
 
 def test_years_excludes_classifications(
@@ -673,7 +664,7 @@ def test_years_excludes_classifications(
     # (Codex P2). Without --years the same query DOES return the family.
     assert search(
         db_with_cls_group, "Svensk", field="description", type="classification"
-    )["results"]
+    ).results
     assert (
         search(
             db_with_cls_group,
@@ -681,8 +672,8 @@ def test_years_excludes_classifications(
             field="description",
             type="classification",
             years="2010",
-        )["results"]
-        == []
+        ).results
+        == ()
     )
 
 
