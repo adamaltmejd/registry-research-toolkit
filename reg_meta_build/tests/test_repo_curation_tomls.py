@@ -29,7 +29,7 @@ from reg_meta_build.concept_groups import (
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
 from reg_meta_build.period_family_merges import load_period_family_merges
-from reg_meta_build.relations import load_relations
+from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
 from reg_meta_build.source_column_repairs import (
     load_column_merges,
     load_fold_overrides,
@@ -127,12 +127,40 @@ def test_repo_relations_parses() -> None:
     # — a malformed entry would otherwise surface only on a real build. Endpoint
     # RESOLUTION is maintainer-build territory (the materializers fail fast).
     relations = load_relations(_ROOT / "curation" / "relations.toml")
-    # The #508 tier-1 batch: 380 curated variable-grain identity edges.
-    assert len(relations.same_as) == 380
+    # The #508 tier-1 batch: 615 curated variable-grain identity edges.
+    assert len(relations.same_as) == 615
     assert all(
         e.grain is FqidKind.VARIABLE_BINDING and e.a_variable and e.b_variable
         for e in relations.same_as
     )
+    # The two load-bearing same_as invariants the bare count doesn't pin:
+    # (1) DISTINCT unordered pairs — no edge repeats a {a, b} pair (the loader
+    #     rejects duplicates, so a regression here means the loader's dedup broke
+    #     or the file was hand-edited to bypass it).
+    pairs = {frozenset((e.a_fqid(), e.b_fqid())) for e in relations.same_as}
+    assert len(pairs) == len(relations.same_as)
+    # (2) COMPONENT CAP — the actual safety property same_as exists to protect: a
+    #     mistaken edge welds two identity components into a runaway resolver blob.
+    #     Recompute connected components (union-find over the endpoint FQIDs) and
+    #     assert the max <= _SAME_AS_MAX_COMPONENT, so a bad curation edge fails the
+    #     unit suite, not only the maintainer build's `materialize_same_as` guard.
+    parent: dict[str, str] = {}
+
+    def find(x: str) -> str:
+        parent.setdefault(x, x)
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for e in relations.same_as:
+        ra, rb = find(e.a_fqid()), find(e.b_fqid())
+        if ra != rb:
+            parent[ra] = rb
+    sizes: dict[str, int] = {}
+    for node in parent:
+        sizes[find(node)] = sizes.get(find(node), 0) + 1
+    assert max(sizes.values()) <= _SAME_AS_MAX_COMPONENT
     # 11 #375 variable succession edges + 3 #579 classification split edges.
     assert len(relations.replaced_by) == 14
     assert len(relations.related_to) == 3  # the moved #403 see-also edges

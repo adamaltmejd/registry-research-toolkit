@@ -926,9 +926,9 @@ class TestMovedEdges:
         # split) + 3 related_to (#403).
         assert len(rel.replaced_by) == 14
         assert len(rel.related_to) == 3
-        # The #508 tier-1 batch: 380 curated same_as identity edges (79 connected
+        # The #508 tier-1 batch: 615 curated same_as identity edges (62 connected
         # components, each ≤32 FQIDs). All variable-grain with a non-empty note.
-        assert len(rel.same_as) == 380
+        assert len(rel.same_as) == 615
         assert all(
             e.grain is FqidKind.VARIABLE_BINDING
             and e.a_variable

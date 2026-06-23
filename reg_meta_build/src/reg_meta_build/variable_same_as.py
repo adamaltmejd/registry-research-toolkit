@@ -6,9 +6,10 @@ transitively, and the build cycle-checks the as-declared graph. A wrong edge
 corrupts resolution, so the surface has a human gate between inference and load:
 
   - The CURATED loader/materializer lives in `relations.py` (#522), parsing the
-    `type = "same_as"` edges from `curation/relations.toml`. The file ships
-    EMPTY — only confirmed identity ever loads into a build; NOTHING
-    auto-materializes.
+    `type = "same_as"` edges from `curation/relations.toml`. That file now
+    carries the #508 tier-1 canonical-family identity batch; only confirmed
+    identity a maintainer copied in ever loads into a build — NOTHING
+    auto-materializes from the generator below.
   - The GENERATOR below (`infer_same_as_candidates` + `render_candidates_toml`,
     driven by `reg-meta-build same-as-candidates`). It reads structured signals
     off a BUILT DB — shared classification, shared value set, name agreement —

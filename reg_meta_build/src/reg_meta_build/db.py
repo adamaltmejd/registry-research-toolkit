@@ -2424,9 +2424,10 @@ def _variable_set_via_same_as(
         plus renames transitively reachable from the matched source node.
 
     The earlier single-seed form (source node only) silently missed the
-    mismatched-slug cross-register edge — a latent gap while `variable_same_as`
-    is empty, fixed here per the A2.4 review. The COMMON case is no `same_as`
-    edge at all → the result is just `{variable_slug}` (the identity match).
+    mismatched-slug cross-register edge — a gap that stayed latent while
+    `variable_same_as` was empty, fixed here per the A2.4 review. The COMMON
+    case is no `same_as` edge at all → the result is just `{variable_slug}` (the
+    identity match).
 
     Edges are stored both directions (per `relations.materialize_same_as`), so a
     single forward adjacency query per node suffices. A `visited` set makes the
@@ -3488,12 +3489,14 @@ def materialize(
         )
         # #522: same_as curated counts now reach the manifest (previously
         # missing) — both grains, mirroring the related_to / replaced_by curated
-        # keys. Emitted ONLY when non-zero: the curated same_as file ships EMPTY
-        # today, and an always-present `…: 0` pair would change the manifest
-        # `row_counts` JSON blob vs the released DB, tripping the dbdiff
-        # byte-identity gate for a count that carries no information. The keys
-        # appear (and dbdiff legitimately moves) the first build a same_as edge
-        # lands — exactly when the count becomes informative.
+        # keys. Emitted ONLY when non-zero: a build with no same_as edge for a
+        # grain (e.g. classification today, or any partial `--providers` build
+        # that gates out the #508 variable batch) would otherwise carry an
+        # always-present `…: 0` pair that changes the manifest `row_counts` JSON
+        # blob vs the released DB, tripping the dbdiff byte-identity gate for a
+        # count that carries no information. The key appears (and dbdiff
+        # legitimately moves) the first build a same_as edge of that grain lands
+        # — exactly when the count becomes informative.
         if sa_counts["variable"]:
             row_counts["variable_same_as_curated"] = sa_counts["variable"]
         if sa_counts["classification"]:
