@@ -1317,25 +1317,35 @@ peer of `router.svelte.ts` and `project_store.svelte.ts` — that is the **singl
 read/write path** for the active study window (`{from, to}` int years, or `null` = full
 history). The header `YearWindowSlider` and each page's period picker go through it
 rather than touching the project store or `localStorage` directly. The per-page
-`PeriodPicker` now defaults to `PeriodWindowSlider` (#615): it seeds the local
-dual-thumb slider from the window over the subject's coverage track
-(`coverageFromStates`), with precedence `?period` > window > full history; a local
-change writes `?period` only (never the global window) and surfaces two amber deviation
-states — user-deviation (`?period` ≠ window, with a reset affordance) and
-availability-deviation (selection outside the subject's data-coverage span). The
-per-page picker shares the header slider's vintage ceiling (#631): `App.svelte` threads
-the ceiling (`context.reg_meta.import_date`'s year) down through `CatalogNodeView` →
-`BindingLeafView` → `PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker`
-(#638). On the concept-group subject page the picker is a **client-side availability
-lens** over the union of member coverage spans — it greys members not delivered in the
-active window but drives no refetch (`getConceptGroup` takes no period parameter). The
-vintage is the ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still
-delivered") projects to — the catalog only knows delivery up to its vintage — so the
-coverage band ends at the vintage and a selection past it reads as "not delivered after
-`<vintage>`". It is NOT a floor on the slider bounds: a FINITE coverage keeps its real
-end (never extended to the vintage), and a window/selection past the vintage still
-widens the bounds (the thumb renders the real value) without extending coverage.
-Wall-clock is the pre-context fallback only.
+`PeriodPicker` now defaults to `PeriodWindowSlider` (#615/#671): it seeds the local
+dual-thumb slider with coverage-aware precedence — explicit year `?period` >
+intersection(coverage, window) when a window is set > the coverage span when none is >
+the bare window when there is no coverage > full bounds when neither — so a variable's
+true data coverage shows up front instead of the full 1960–vintage track reading as
+available (M11). The out-of-coverage track renders immediately as a greyed
+**non-selectable** band (no drag needed), and the thumbs are hard-clamped to coverage
+via `DualThumbTrack`'s opt-in `selectableMin/Max` (the header `YearWindowSlider` passes
+neither and is unchanged). A local change writes `?period` only (never the global
+window). The user-deviation hint (`?period`/drag ≠ window) fires only on an explicit
+`?period` or a live thumb drag — not on the untouched coverage-clamped default seed
+(`userChosen`); the data narrowing the window is not a user deviation. This supersedes
+the #615/#639 "grey only after drag" posture for this slider: #639's anti-alarm intent
+is preserved (the up-front band is a passive "no data here", not a selection warning),
+while an explicit out-of-coverage `?period` still renders honestly with its
+not-delivered gap. Open-ended coverage additionally surfaces a **"coverage through
+\<vintage\>"** note (M21). The per-page picker shares the header slider's vintage
+ceiling (#631): `App.svelte` threads the ceiling (`context.reg_meta.import_date`'s year)
+down through `CatalogNodeView` → `BindingLeafView` → `PeriodPicker`, and also through
+`ConceptGroupView` → `PeriodPicker` (#638). On the concept-group subject page the picker
+is a **client-side availability lens** over the union of member coverage spans — it
+greys members not delivered in the active window but drives no refetch
+(`getConceptGroup` takes no period parameter). The vintage is the ceiling an OPEN-ENDED
+coverage (`coverage.to === null`, "still delivered") projects to — the catalog only
+knows delivery up to its vintage — so the coverage band ends at the vintage and a
+selection past it reads as "not delivered after `<vintage>`". It is NOT a floor on the
+slider bounds: a FINITE coverage keeps its real end (never extended to the vintage), and
+a window/selection past the vintage still widens the bounds (the thumb renders the real
+value) without extending coverage. Wall-clock is the pre-context fallback only.
 
 Precedence — two backing stores, one source of truth:
 

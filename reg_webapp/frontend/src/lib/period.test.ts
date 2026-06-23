@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   clampYearWindow,
   grainOfToken,
+  intersectCoverageWindow,
   looksLikePeriod,
   nextResolutionQuery,
   notDeliveredGaps,
@@ -537,6 +538,152 @@ describe("clampYearWindow", () => {
     const w = clampYearWindow({ from: 2030, to: 2040 }, 1960, 2026);
     expect(w.from).toBeLessThanOrEqual(w.to);
     expect(w).toEqual({ from: 2026, to: 2026 });
+  });
+});
+
+describe("intersectCoverageWindow (#671 coverage-aware seed)", () => {
+  it("window inside coverage → the window itself", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: 2015 },
+        { from: 2000, to: 2010 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 2000, to: 2010 });
+  });
+
+  it("window wider than coverage → narrowed to the coverage span (the intersection)", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: 2008 },
+        { from: 1990, to: 2020 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 1995, to: 2008 });
+  });
+
+  it("partial overlap → the overlapping span", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: 2015 },
+        { from: 1990, to: 2005 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 1995, to: 2005 });
+  });
+
+  it("open coverage START resolves to fallbackMin", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: null, to: 2008 },
+        { from: 1950, to: 2005 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 1960, to: 2005 });
+  });
+
+  it("open coverage START + a pre-1960 window: the WINDOW-AWARE fallbackMin keeps the covered pre-1960 years (Fix 5)", () => {
+    // Fix 5: a project window may legitimately start before 1960. The picker passes
+    // a window-aware lower fallback (`sliderBounds.min` = 1950 here, not the fixed
+    // 1960 floor), so an OPEN-start coverage extends to the rendered track start —
+    // window 1950–2005 ∩ coverage {null..2008} → 1950–2005, NOT 1960–2005 (which
+    // silently dropped the covered 1950–1959 years).
+    expect(
+      intersectCoverageWindow(
+        { from: null, to: 2008 },
+        { from: 1950, to: 2005 },
+        1950,
+        2026,
+      ),
+    ).toEqual({ from: 1950, to: 2005 });
+  });
+
+  it("open coverage END resolves to fallbackMax (the vintage ceiling)", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: null },
+        { from: 2000, to: 2030 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 2000, to: 2026 });
+  });
+
+  it("no window → the (effective) coverage span", () => {
+    expect(
+      intersectCoverageWindow({ from: 1995, to: 2008 }, null, 1960, 2026),
+    ).toEqual({ from: 1995, to: 2008 });
+  });
+
+  it("no window, fully-open coverage → the full fallback bounds", () => {
+    expect(
+      intersectCoverageWindow({ from: null, to: null }, null, 1960, 2026),
+    ).toEqual({ from: 1960, to: 2026 });
+  });
+
+  it("no coverage but a SET window → the window (a stateless variable honours its window, Fix A)", () => {
+    // FIX A: coverage null + a window must seed at the window, NOT widen to full
+    // history — else a stateless variable's Apply would submit 1960..vintage.
+    expect(
+      intersectCoverageWindow(null, { from: 2000, to: 2010 }, 1960, 2026),
+    ).toEqual({ from: 2000, to: 2010 });
+  });
+
+  it("no coverage AND no window → the full fallback bounds (nothing to narrow to, Fix A)", () => {
+    expect(intersectCoverageWindow(null, null, 1960, 2026)).toEqual({
+      from: 1960,
+      to: 2026,
+    });
+  });
+
+  it("window wholly AFTER coverage → snaps to the coverage end (a covered year, not inverted)", () => {
+    const seed = intersectCoverageWindow(
+      { from: 1995, to: 2008 },
+      { from: 2012, to: 2018 },
+      1960,
+      2026,
+    );
+    expect(seed.from).toBeLessThanOrEqual(seed.to);
+    expect(seed).toEqual({ from: 2008, to: 2008 });
+  });
+
+  it("window wholly BEFORE coverage → snaps to the coverage start", () => {
+    const seed = intersectCoverageWindow(
+      { from: 2000, to: 2010 },
+      { from: 1980, to: 1990 },
+      1960,
+      2026,
+    );
+    expect(seed.from).toBeLessThanOrEqual(seed.to);
+    expect(seed).toEqual({ from: 2000, to: 2000 });
+  });
+
+  it("INVERTED effective coverage (open end past the vintage), no window → the full bounds, NOT a manufactured no-data span (mirrors slider Fix D)", () => {
+    // Open-ended coverage from 2025 on a 2024-vintage catalog → covFrom 2025 >
+    // covTo 2024 (inverted). The old Math.min/Math.max manufactured {2024, 2025}
+    // (a selectable no-data span); inverted coverage is now treated as NO coverage,
+    // so the seed is the full fallback bounds — agreeing with PeriodWindowSlider's
+    // `bandEdges` (Fix D), which nulls the band (no clamp).
+    expect(
+      intersectCoverageWindow({ from: 2025, to: null }, null, 1960, 2024),
+    ).toEqual({ from: 1960, to: 2024 });
+  });
+
+  it("INVERTED effective coverage WITH a window → the window (inverted coverage is no coverage; mirrors slider Fix D)", () => {
+    // Same inverted case but a window is set: treated as no coverage, so the seed
+    // is the bare window (the stateless-variable rule), never the manufactured span.
+    expect(
+      intersectCoverageWindow(
+        { from: 2025, to: null },
+        { from: 2000, to: 2010 },
+        1960,
+        2024,
+      ),
+    ).toEqual({ from: 2000, to: 2010 });
   });
 });
 

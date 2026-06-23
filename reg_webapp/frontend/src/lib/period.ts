@@ -516,6 +516,68 @@ export interface Coverage {
   to: number | null;
 }
 
+/** The seed window for the availability slider when there is no explicit
+ * `?period` to honour (#671): the part of the data COVERAGE the project window
+ * actually frames, so a variable's true coverage shows UP FRONT rather than the
+ * full 1960–vintage span reading as available. Pure (no runes) — unit-tested in
+ * `period.test.ts`.
+ *
+ * Sides resolve against the supplied fallbacks, which the caller passes as the
+ * EFFECTIVE coverage edges (open coverage end → the vintage; open coverage start
+ * → the slider floor) so an open-sided coverage still yields a finite seed:
+ *   - coverage start = `coverage.from ?? fallbackMin`;
+ *   - coverage end   = `coverage.to   ?? fallbackMax`.
+ * Then:
+ *   - WITH a `window`: the intersection `[max(covStart, window.from),
+ *     min(covEnd, window.to)]` — the window narrowed to where data exists. When
+ *     the window lies WHOLLY outside coverage the intersection inverts; we clamp
+ *     it to the nearest coverage edge (an empty single-year seed there, never an
+ *     inverted span) so the thumbs still land on a covered year, and the
+ *     window-vs-data deviation hint speaks for the mismatch.
+ *   - WITHOUT a window (`null`): the effective coverage span itself.
+ *   - NO coverage (`null`): a SET window still seeds at the window (a stateless
+ *     variable with a project window honours it, never widening to full history —
+ *     that would regress the seed and Apply to `fallbackMin..vintage`); only
+ *     no-window + no-coverage falls to the full `[fallbackMin, fallbackMax]`
+ *     bounds (nothing to narrow to).
+ *   - INVERTED effective coverage (`covFrom > covTo` after the fallbacks resolve,
+ *     e.g. open-ended coverage `{from:2025, to:null}` on a 2024-vintage catalog →
+ *     covFrom 2025 > covTo 2024): treated as NO coverage, so the seed is the
+ *     window (else the full bounds) rather than a manufactured `Math.min..Math.max`
+ *     span that would include no-data years. This MIRRORS PeriodWindowSlider's
+ *     `bandEdges` (Fix D), which nulls an inverted band (no band, no clamp) — so
+ *     the seed and the slider agree on "no selectable no-data span". */
+export function intersectCoverageWindow(
+  coverage: Coverage | null,
+  window: StudyWindow | null,
+  fallbackMin: number,
+  fallbackMax: number,
+): StudyWindow {
+  if (coverage === null) {
+    return window ?? { from: fallbackMin, to: fallbackMax };
+  }
+  const covFrom = coverage.from ?? fallbackMin;
+  const covTo = coverage.to ?? fallbackMax;
+  // Inverted effective coverage = no coverage (mirrors the slider's `bandEdges`
+  // Fix D): seed from the window, else the full bounds — never a manufactured
+  // span over no-data years.
+  if (covFrom > covTo) {
+    return window ?? { from: fallbackMin, to: fallbackMax };
+  }
+  if (window === null) {
+    return { from: Math.min(covFrom, covTo), to: Math.max(covFrom, covTo) };
+  }
+  const from = Math.max(covFrom, window.from);
+  const to = Math.min(covTo, window.to);
+  // A window wholly outside coverage inverts (from > to): snap to the nearest
+  // coverage edge so the seed is a covered year, never an inverted/empty span.
+  if (from > to) {
+    const edge = window.to < covFrom ? covFrom : covTo;
+    return { from: edge, to: edge };
+  }
+  return { from, to };
+}
+
 /** The not-delivered gaps of a `selection` window against the subject's
  * `coverage` — the sub-spans inside the selection but OUTSIDE coverage (#615
  * availability deviation). Returns the leading gap (selection starts before a

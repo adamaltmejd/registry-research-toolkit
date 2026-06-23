@@ -38,9 +38,21 @@ import type { Snippet } from "svelte";
 import { untrack } from "svelte";
 
 interface Props {
-  // The thumb bounds (inclusive years). `step` is 1 (year grain).
+  // The thumb bounds (inclusive years). `step` is 1 (year grain). These stay the
+  // FULL track geometry — the native `<input min/max>` is kept at [min, max] so
+  // the browser's value→pixel mapping matches the consumer's [min, max] track.
   min: number;
   max: number;
+  // OPTIONAL hard-selectable sub-range (#671): the thumbs are CLAMPED to
+  // [selectableMin, selectableMax] in the handlers AND the controlled re-sync, so
+  // a thumb can't enter the region outside it by drag OR keyboard — while the
+  // native input keeps the full [min, max] range (narrowing the input's own
+  // min/max would desync the native value→pixel mapping from the track). Default
+  // to the full bounds, so a consumer that doesn't pass them (YearWindowSlider) is
+  // unchanged. PeriodWindowSlider passes the coverage edges to lock dragging into
+  // the delivered span.
+  selectableMin?: number;
+  selectableMax?: number;
   // The selection to seed the thumbs from. The buffer re-syncs to this whenever
   // it (or the bounds) change — a controlled component: the consumer's prop is
   // the source of truth, `from`/`to` is a smooth-drag buffer over it.
@@ -64,6 +76,8 @@ interface Props {
 let {
   min,
   max,
+  selectableMin,
+  selectableMax,
   selection,
   from = $bindable(),
   to = $bindable(),
@@ -75,6 +89,20 @@ let {
 function clamp(year: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, year));
 }
+
+// The hard-selectable range for USER input (#671): the optional [selectableMin,
+// selectableMax] when supplied, else the full bounds (the unconstrained default).
+// USER writes (drag/keyboard via the handlers) clamp to THIS, so a thumb can't
+// enter a not-selectable region by drag OR keyboard (a keyboard step fires
+// `oninput` → the same handler). The SEED / controlled re-sync clamp only to the
+// full [min, max] bounds, NOT this range: the consumer's `selection` prop is the
+// source of truth, and an explicit out-of-range value it sets (e.g. an URL
+// `?period` outside coverage) must still render honestly — the consumer flags it
+// (PeriodWindowSlider's not-delivered gap); only the user's own moves are barred
+// from the region. The native input min/max stay [min, max] (see Props) so the
+// geometry doesn't desync.
+const selLo = $derived(selectableMin ?? min);
+const selHi = $derived(selectableMax ?? max);
 
 // Seed the buffer once (untracked so it's a one-shot init, not a tracked dep —
 // the $effect below owns re-seeding on prop change).
@@ -88,23 +116,25 @@ $effect(() => {
   to = clamp(selection.to, min, max);
 });
 
-// LIVE input: update the buffer (smooth drag), clamped so the thumbs can't cross.
+// LIVE input: update the buffer (smooth drag/keyboard step), clamped to the
+// selectable range so a thumb can't enter the not-selectable region, and
+// non-crossing.
 function onFrom(event: Event): void {
   const v = clamp(
     Number((event.currentTarget as HTMLInputElement).value),
-    min,
-    max,
+    selLo,
+    selHi,
   );
-  from = Math.min(v, to ?? max); // never cross past `to`
+  from = Math.min(v, to ?? selHi); // never cross past `to`
   onLiveInput?.();
 }
 function onTo(event: Event): void {
   const v = clamp(
     Number((event.currentTarget as HTMLInputElement).value),
-    min,
-    max,
+    selLo,
+    selHi,
   );
-  to = Math.max(v, from ?? min); // never cross before `from`
+  to = Math.max(v, from ?? selLo); // never cross before `from`
   onLiveInput?.();
 }
 </script>
@@ -113,7 +143,27 @@ function onTo(event: Event): void {
   {@render children?.()}
   <!-- Two overlaid native range thumbs (real slider role + keyboard for free);
        the `from` thumb sits above so a coincident pair stays grabbable apart.
-       `oninput` updates the LIVE buffer; `onchange` commits (consumer-policy). -->
+       `oninput` updates the LIVE buffer; `onchange` commits (consumer-policy).
+       The native `min`/`max` stay the FULL [min, max] (the value→pixel geometry),
+       but user input is hard-clamped to [selLo, selHi]; `aria-valuemin`/`-valuemax`
+       announce that selectable sub-range so a screen reader matches the reachable
+       range, not the full track (Fix F). With no selectable range supplied
+       (YearWindowSlider) selLo/selHi = min/max, so its ARIA is unchanged.
+       Fix 6: an explicit out-of-coverage `?period` can SEED a thumb beyond
+       [selLo, selHi] (see the Fix C note below — the seed clamps only to
+       [min, max]), so each thumb WIDENS its own ARIA bound to include its current
+       value: a native slider's `aria-valuenow` must lie within [valuemin, valuemax],
+       so advertising only [selLo, selHi] when the value sits outside it is invalid
+       ARIA. In the common in-coverage case the widen collapses to [selLo, selHi]
+       (unchanged); with the props absent (YearWindowSlider) selLo/selHi = min/max,
+       and the value is always within them, so it stays [min, max].
+       KNOWN LIMITATION (Fix C, intentional — no behavior change): an explicit
+       out-of-coverage `?period` can SEED a thumb beyond [selLo, selHi] (the seed
+       clamps only to [min, max], so the consumer renders the URL's value
+       honestly); a subsequent small drag then snaps it back to the coverage edge,
+       and dragging the `to` thumb first can leave it temporarily stuck until
+       `from` is moved. This is inherent to honest-rendering an out-of-coverage
+       explicit period and is accepted, not a latent surprise. -->
   <input
     class="thumb thumb-from"
     type="range"
@@ -122,6 +172,8 @@ function onTo(event: Event): void {
     step="1"
     value={from}
     aria-label="From year"
+    aria-valuemin={Math.min(selLo, from ?? selLo)}
+    aria-valuemax={Math.max(selHi, from ?? selHi)}
     oninput={onFrom}
     onchange={() => onCommit?.()}
   />
@@ -133,6 +185,8 @@ function onTo(event: Event): void {
     step="1"
     value={to}
     aria-label="To year"
+    aria-valuemin={Math.min(selLo, to ?? selLo)}
+    aria-valuemax={Math.max(selHi, to ?? selHi)}
     oninput={onTo}
     onchange={() => onCommit?.()}
   />
