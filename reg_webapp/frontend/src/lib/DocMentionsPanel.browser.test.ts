@@ -365,6 +365,33 @@ describe("DocMentionsPanel (#402)", () => {
       .toBeVisible();
   });
 
+  it("does NOT show the concept-grain caption for a grouped member with zero hits (#670)", async () => {
+    // The concept-grain caption lives INSIDE the resolved-data branch, which only
+    // renders when there are usable hits (`results.length > 0`). A grouped member
+    // with zero hits omits the WHOLE section (omit-when-empty), so the caption
+    // never appears — pin that it doesn't leak out of the results branch.
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({ ingested: true, register_ingested: true, total_count: 0 }),
+    );
+    await render(DocMentionsPanel, {
+      node: node({
+        fqid: "scb/lisa/agi1astsni2007g",
+        name: "Näringsgren, största förvärvskälla",
+        group: { provider: "scb", register: "lisa", key: "naringsgren" },
+      }),
+    });
+
+    // The whole section is omitted (no heading), so the caption is absent too.
+    await expect
+      .element(
+        page.getByRole("heading", { name: "Mentioned in documentation" }),
+      )
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByText(/shared concept name/i))
+      .not.toBeInTheDocument();
+  });
+
   it("does NOT caption an ungrouped variable's hits (no node.group)", async () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({

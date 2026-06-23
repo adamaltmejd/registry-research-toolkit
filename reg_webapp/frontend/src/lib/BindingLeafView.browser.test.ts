@@ -529,8 +529,12 @@ describe("BindingLeafView member identity (#670)", () => {
       vintageYear: 2024,
     });
 
-    // The slug qualifier is present in the identity row, rendered as <code>.
-    const slug = page.getByText("agi1astsni2007g");
+    // The slug qualifier is present in the IDENTITY ROW, rendered as <code>.
+    // Scope to `.member-identity` — the same slug also appears in the
+    // DimensionsPanel member list (a facetless edge group renders each member's
+    // leaf slug), so a bare `getByText` is ambiguous now that the identity row
+    // and the panel both render once /dimensions resolves (the flicker gate).
+    const slug = page.getByText("agi1astsni2007g").first();
     await expect.element(slug).toBeVisible();
     const slugEl = document.querySelector(
       ".member-identity code.qualifier.slug",
@@ -542,6 +546,39 @@ describe("BindingLeafView member identity (#670)", () => {
         page.getByRole("link", { name: "Näringsgren, största förvärvskälla" }),
       )
       .toBeVisible();
+  });
+
+  it("renders no identity row while /dimensions is loading (no transient slug flicker)", async () => {
+    // The flicker fix: the identity row gates on a RESOLVED fetch (`!dimLoading
+    // && !dimError`), not just `!error`. While /dimensions is in flight,
+    // `dimGroups` is [] — deriving the qualifier then would hit the slug fallback
+    // (a grouped member has no facets yet) and the row would FLASH the slug, then
+    // flip to the facet label once loaded. With the gate, the header (node.name)
+    // renders but NO `.member-identity` row appears until the fetch resolves.
+    vi.mocked(getBindingDimensions).mockReturnValue(new Promise(() => {}));
+
+    render(BindingLeafView, {
+      fqidPath: groupedFqid,
+      node: groupedNode,
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The header renders immediately (the leaf is never blanked).
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "Näringsgren, största förvärvskälla",
+          level: 2,
+        }),
+      )
+      .toBeVisible();
+    // No identity row while loading — no transient slug, no "member of" link.
+    expect(document.querySelector(".member-identity")).toBeNull();
+    expect(
+      document.querySelector(".member-identity code.qualifier.slug"),
+    ).toBeNull();
   });
 
   it("an ungrouped variable renders neither qualifier nor group link", async () => {

@@ -760,19 +760,21 @@ describe("memberQualifier (#670)", () => {
   });
 
   it("joins a member's facet labels (multiple facets)", () => {
-    expect(memberQualifier([naringsgren], "scb/lisa/agi1astsni2007g")).toBe(
-      "AGI · 2007 SNI edition",
-    );
+    expect(memberQualifier([naringsgren], "scb/lisa/agi1astsni2007g")).toEqual({
+      text: "AGI · 2007 SNI edition",
+      kind: "facets",
+    });
   });
 
   it("handles a single facet", () => {
-    expect(memberQualifier([naringsgren], "scb/lisa/ku1astsni2002g")).toBe(
-      "KU",
-    );
+    expect(memberQualifier([naringsgren], "scb/lisa/ku1astsni2002g")).toEqual({
+      text: "KU",
+      kind: "facets",
+    });
   });
 
-  it("returns '' for an UNGROUPED member (in no group, no canonical key)", () => {
-    expect(memberQualifier([naringsgren], "scb/lisa/notamember")).toBe("");
+  it("returns null for an UNGROUPED member (in no group, no canonical key)", () => {
+    expect(memberQualifier([naringsgren], "scb/lisa/notamember")).toBeNull();
   });
 
   it("falls back to the member slug for a GROUPED facet-less member (edge group split sibling)", () => {
@@ -786,20 +788,34 @@ describe("memberQualifier (#670)", () => {
         { fqid: "scb/lisa/ku1astsni", name: "Näringsgren", facets: [] },
       ],
     });
-    expect(memberQualifier([facetless], "scb/lisa/agi1astsni2007g")).toBe(
-      "agi1astsni2007g",
-    );
-    expect(memberQualifier([facetless], "scb/lisa/ku1astsni")).toBe(
-      "ku1astsni",
-    );
+    expect(memberQualifier([facetless], "scb/lisa/agi1astsni2007g")).toEqual({
+      text: "agi1astsni2007g",
+      kind: "slug",
+    });
+    expect(memberQualifier([facetless], "scb/lisa/ku1astsni")).toEqual({
+      text: "ku1astsni",
+      kind: "slug",
+    });
   });
 
   it("falls back to the slug when the member is grouped only via its canonical key", () => {
     // The member isn't found in the passed `groups` (e.g. a /dimensions skew),
     // but `node.group` (canonicalKey) marks it grouped → still distinguish it.
-    expect(memberQualifier([], "scb/lisa/agi1astsni2007g", "naringsgren")).toBe(
-      "agi1astsni2007g",
-    );
+    expect(
+      memberQualifier([], "scb/lisa/agi1astsni2007g", "naringsgren"),
+    ).toEqual({ text: "agi1astsni2007g", kind: "slug" });
+  });
+
+  it("yields a safe slug result for a grouped member whose fqid has no 3rd segment", () => {
+    // Defensive: a malformed/2-seg fqid on a grouped member (via the canonical
+    // key) must NOT masquerade as a facet qualifier. `leafSlug` yields the last
+    // segment (here "lisa"), and the result is the slug kind — a `<code>`
+    // identifier, never a human facet label. The point is the DISCRIMINANT
+    // (`kind: "slug"`), so the styling can't mis-render it.
+    expect(memberQualifier([], "scb/lisa", "naringsgren")).toEqual({
+      text: "lisa",
+      kind: "slug",
+    });
   });
 
   it("prefers the canonical group's facets when the member is in several groups", () => {
@@ -823,7 +839,7 @@ describe("memberQualifier (#670)", () => {
         "scb/lisa/agi1astsni2007g",
         "naringsgren",
       ),
-    ).toBe("AGI · 2007 SNI edition");
+    ).toEqual({ text: "AGI · 2007 SNI edition", kind: "facets" });
     // canonical = "other" → the level facet wins instead.
     expect(
       memberQualifier(
@@ -831,7 +847,7 @@ describe("memberQualifier (#670)", () => {
         "scb/lisa/agi1astsni2007g",
         "other",
       ),
-    ).toBe("5-digit");
+    ).toEqual({ text: "5-digit", kind: "facets" });
   });
 });
 

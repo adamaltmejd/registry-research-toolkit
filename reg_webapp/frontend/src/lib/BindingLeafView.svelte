@@ -119,39 +119,37 @@ const isNarrowed = $derived(!!params.period && !narrowedError);
 //
 // FAILURE-DOMAIN isolation is preserved: this resource is independent of `node`,
 // so a dimensions error/timeout never blanks the leaf — the header just omits the
-// qualifier/link (both gate on `!dimError`, additive), and DimensionsPanel renders
-// its own inline loading/error from the same resource.
+// qualifier/link (both gate on a RESOLVED fetch, additive), and DimensionsPanel
+// renders its own inline loading/error from the same resource.
 const dimResource = asyncResource(() => getBindingDimensions(fqidPath));
 const dimGroups = $derived(dimResource.data?.dimensions ?? []);
 const dimLoading = $derived(dimResource.loading);
 const dimError = $derived(dimResource.error);
 
-// The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — this
-// member's facet labels across its dimension groups, the canonical
-// `node.group` group leading. For a GROUPED member with no facets (an edge
-// group's split siblings) it falls back to the member's slug (the 3rd FQID
-// segment) so those siblings never share an identical header (#670). "" only for
-// an ungrouped variable (its `node.name` suffices), or while loading / errored.
-const qualifier = $derived(
-  dimError ? "" : memberQualifier(dimGroups, node.fqid, node.group?.key),
-);
+// The identity row (qualifier + group link) renders ONCE the /dimensions fetch
+// has RESOLVED — gated on `!dimLoading && !dimError`. During the sub-second load
+// `dimGroups` is still [], so deriving the qualifier then would hit the slug
+// fallback (a grouped member has no facets yet) and the row would flash the slug,
+// then flip to the facet label once loaded — a visible content flicker. Gating on
+// resolved instead means the header shows just `node.name` while loading, then
+// the correct qualifier appears once — the leaf is never blanked (failure domain
+// preserved; an error keeps it omitted, DimensionsPanel surfaces the error).
+const dimReady = $derived(!dimLoading && !dimError);
 
-// Whether `qualifier` is the SLUG fallback (a grouped member with no facets in
-// any group) rather than facet labels — drives rendering it as a technical
-// identifier (mono `<code>`) instead of a human label. Order-independent: only
-// the PRESENCE of any facet matters here (canonical ordering decides only WHICH
-// facet label wins, in `memberQualifier`).
-const qualifierIsSlug = $derived(
-  qualifier !== "" &&
-    !dimGroups.some((g) =>
-      g.members.some((m) => m.fqid === node.fqid && m.facets.length > 0),
-    ),
+// The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — this
+// member's facet labels across its dimension groups (`kind: "facets"`), the
+// canonical `node.group` group leading. For a GROUPED member with no facets (an
+// edge group's split siblings) it falls back to the member's slug
+// (`kind: "slug"`) so those siblings never share an identical header (#670).
+// `null` for an ungrouped variable (its `node.name` suffices), or until resolved.
+const qualifier = $derived(
+  dimReady ? memberQualifier(dimGroups, node.fqid, node.group?.key) : null,
 );
 
 // The "member of ⟨group label⟩" context link to the group subject page (#670) —
-// null when ungrouped, or while loading / errored (additive; never blanks).
+// null when ungrouped, or until the fetch resolves (additive; never blanks).
 const groupLink = $derived(
-  dimError ? null : memberGroupLink(dimGroups, node.group, node.fqid),
+  dimReady ? memberGroupLink(dimGroups, node.group, node.fqid) : null,
 );
 
 /** Write the resolution params to the URL (preserving the pathname), which the
@@ -375,19 +373,20 @@ const repSegment = $derived(
 {#snippet description()}
   <!-- #670: the member-distinguishing qualifier + "member of ⟨group⟩" context
        link, rendered directly under the header (the shell renders `description`
-       first). Both are ADDITIVE and gated on a resolved /dimensions fetch — an
+       first). Both are ADDITIVE and gated on a RESOLVED /dimensions fetch — an
        ungrouped variable, or a loading/errored fetch, renders neither, leaving
-       the page exactly as it was. -->
+       the page exactly as it was. Gating on resolved (not just !error) avoids a
+       transient slug flicker before the facets load. -->
   {#if qualifier || groupLink}
     <p class="member-identity">
       {#if qualifier}
-        {#if qualifierIsSlug}
+        {#if qualifier.kind === "slug"}
           <!-- #670: a grouped member with no facets (edge-group split siblings):
                the slug is the only differentiator, rendered as a technical
                identifier (mono) rather than a human label. -->
-          <code class="qualifier slug">{qualifier}</code>
+          <code class="qualifier slug">{qualifier.text}</code>
         {:else}
-          <span class="qualifier">{qualifier}</span>
+          <span class="qualifier">{qualifier.text}</span>
         {/if}
       {/if}
       {#if groupLink}
