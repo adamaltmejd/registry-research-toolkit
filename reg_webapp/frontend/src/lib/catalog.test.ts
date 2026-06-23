@@ -18,6 +18,8 @@ import {
   leafSlug,
   matchesFilter,
   memberCoverageUnion,
+  memberGroupLink,
+  memberQualifier,
   narrowCatalogNode,
   nodeLabel,
   rankFilter,
@@ -592,7 +594,7 @@ describe("representationsCollapse", () => {
 
 // ── Concept-group folding (#303) ─────────────────────────────────────────────
 
-import type { ConceptGroup } from "./api";
+import type { BindingGroupRef, ConceptGroup } from "./api";
 import {
   axisValues,
   countFoldedMembers,
@@ -732,6 +734,166 @@ describe("axisValues / memberAt", () => {
         { axis: "rank", value: "2" },
       ]),
     ).toBeUndefined();
+  });
+});
+
+describe("memberQualifier (#670)", () => {
+  const naringsgren = group({
+    key: "naringsgren",
+    label: "Näringsgren, största förvärvskälla",
+    axes: ["source", "edition"],
+    members: [
+      {
+        fqid: "scb/lisa/agi1astsni2007g",
+        name: "Näringsgren",
+        facets: [
+          { axis: "source", value: "agi", label: "AGI" },
+          { axis: "edition", value: "sni2007", label: "2007 SNI edition" },
+        ],
+      },
+      {
+        fqid: "scb/lisa/ku1astsni2002g",
+        name: "Näringsgren",
+        facets: [{ axis: "source", value: "ku", label: "KU" }],
+      },
+    ],
+  });
+
+  it("joins a member's facet labels (multiple facets)", () => {
+    expect(memberQualifier([naringsgren], "scb/lisa/agi1astsni2007g")).toEqual({
+      text: "AGI · 2007 SNI edition",
+      kind: "facets",
+    });
+  });
+
+  it("handles a single facet", () => {
+    expect(memberQualifier([naringsgren], "scb/lisa/ku1astsni2002g")).toEqual({
+      text: "KU",
+      kind: "facets",
+    });
+  });
+
+  it("returns null for an UNGROUPED member (in no group, no canonical key)", () => {
+    expect(memberQualifier([naringsgren], "scb/lisa/notamember")).toBeNull();
+  });
+
+  it("falls back to the member slug for a GROUPED facet-less member (edge group split sibling)", () => {
+    // M10's exact case: an edge group (`axes: []`) whose members carry no
+    // facets, so the slug is the only differentiator between the siblings.
+    const facetless = group({
+      key: "edge",
+      axes: [],
+      members: [
+        { fqid: "scb/lisa/agi1astsni2007g", name: "Näringsgren", facets: [] },
+        { fqid: "scb/lisa/ku1astsni", name: "Näringsgren", facets: [] },
+      ],
+    });
+    expect(memberQualifier([facetless], "scb/lisa/agi1astsni2007g")).toEqual({
+      text: "agi1astsni2007g",
+      kind: "slug",
+    });
+    expect(memberQualifier([facetless], "scb/lisa/ku1astsni")).toEqual({
+      text: "ku1astsni",
+      kind: "slug",
+    });
+  });
+
+  it("falls back to the slug when the member is grouped only via its canonical key", () => {
+    // The member isn't found in the passed `groups` (e.g. a /dimensions skew),
+    // but `node.group` (canonicalKey) marks it grouped → still distinguish it.
+    expect(
+      memberQualifier([], "scb/lisa/agi1astsni2007g", "naringsgren"),
+    ).toEqual({ text: "agi1astsni2007g", kind: "slug" });
+  });
+
+  it("yields a safe slug result for a grouped member whose fqid has no 3rd segment", () => {
+    // Defensive: a malformed/2-seg fqid on a grouped member (via the canonical
+    // key) must NOT masquerade as a facet qualifier. `leafSlug` yields the last
+    // segment (here "lisa"), and the result is the slug kind — a `<code>`
+    // identifier, never a human facet label. The point is the DISCRIMINANT
+    // (`kind: "slug"`), so the styling can't mis-render it.
+    expect(memberQualifier([], "scb/lisa", "naringsgren")).toEqual({
+      text: "lisa",
+      kind: "slug",
+    });
+  });
+
+  it("prefers the canonical group's facets when the member is in several groups", () => {
+    // The same member appears in two groups; the canonical key selects which
+    // group's facets lead.
+    const other = group({
+      key: "other",
+      axes: ["level"],
+      members: [
+        {
+          fqid: "scb/lisa/agi1astsni2007g",
+          name: "Näringsgren",
+          facets: [{ axis: "level", value: "5", label: "5-digit" }],
+        },
+      ],
+    });
+    // canonical = "naringsgren" → its facets win even though `other` is first.
+    expect(
+      memberQualifier(
+        [other, naringsgren],
+        "scb/lisa/agi1astsni2007g",
+        "naringsgren",
+      ),
+    ).toEqual({ text: "AGI · 2007 SNI edition", kind: "facets" });
+    // canonical = "other" → the level facet wins instead.
+    expect(
+      memberQualifier(
+        [other, naringsgren],
+        "scb/lisa/agi1astsni2007g",
+        "other",
+      ),
+    ).toEqual({ text: "5-digit", kind: "facets" });
+  });
+});
+
+describe("memberGroupLink (#670)", () => {
+  const ref: BindingGroupRef = {
+    provider: "scb",
+    register: "lisa",
+    key: "naringsgren",
+  };
+  const naringsgren = group({
+    key: "naringsgren",
+    label: "Näringsgren, största förvärvskälla",
+    members: [{ fqid: "scb/lisa/agi1astsni2007g", name: "N", facets: [] }],
+  });
+
+  it("returns the matching group's label + the group-subject href", () => {
+    expect(
+      memberGroupLink([naringsgren], ref, "scb/lisa/agi1astsni2007g"),
+    ).toEqual({
+      label: "Näringsgren, största förvärvskälla",
+      href: "/catalog/group/scb/lisa/naringsgren",
+    });
+  });
+
+  it("returns null when the binding is ungrouped (no ref)", () => {
+    expect(
+      memberGroupLink([naringsgren], null, "scb/lisa/agi1astsni2007g"),
+    ).toBeNull();
+  });
+
+  it("returns null when no fetched group matches (key + member miss)", () => {
+    expect(memberGroupLink([], ref, "scb/lisa/agi1astsni2007g")).toBeNull();
+  });
+
+  it("falls back to the group containing the member when the key doesn't match", () => {
+    // Defensive: a skew between node.group.key and /dimensions still links if the
+    // member is found in some fetched group (uses the ref's href, that group's label).
+    const skewed = group({
+      key: "different-key",
+      label: "Näringsgren (skewed)",
+      members: [{ fqid: "scb/lisa/agi1astsni2007g", name: "N", facets: [] }],
+    });
+    expect(memberGroupLink([skewed], ref, "scb/lisa/agi1astsni2007g")).toEqual({
+      label: "Näringsgren (skewed)",
+      href: "/catalog/group/scb/lisa/naringsgren",
+    });
   });
 });
 

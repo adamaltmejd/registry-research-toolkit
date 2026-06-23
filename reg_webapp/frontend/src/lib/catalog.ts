@@ -6,6 +6,7 @@
  */
 import {
   type BindingChild,
+  type BindingGroupRef,
   type CatalogNode,
   type ConceptGroup,
   encodeFqid,
@@ -179,6 +180,95 @@ export function memberAt<M extends FacetedMember>(
       m.facets.some((f) => f.axis === c.axis && f.value === c.value),
     ),
   );
+}
+
+// ── Member-distinguishing qualifier (#670) ──────────────────────────────────
+// A grouped binding leaf (`scb/lisa/agi1astsni2007g`) shares its concept
+// `node.name` with ~31 siblings, so the header alone can't tell members apart.
+// The /dimensions groups carry per-member `facets` (axis:value:label) that
+// LOCATE each member in its group — the qualifier is THIS member's facet labels
+// (e.g. "AGI · 2007 SNI edition"). Derived from the SAME /dimensions data
+// DimensionsPanel renders (lifted into BindingLeafView; no extra fetch).
+
+/** A member-distinguishing qualifier and whether it is the facet-label form or
+ * the slug fallback — the discriminant the caller styles on (`facets` → a human
+ * label `<span>`, `slug` → a technical-identifier `<code>`). */
+export type MemberQualifier = { text: string; kind: "facets" | "slug" };
+
+/** The member-distinguishing qualifier for `fqid` across its dimension `groups`
+ * — the facet labels (axis:value pairs) that locate THIS member in its group,
+ * joined with " · ". A variable can be in MULTIPLE groups; the CANONICAL group
+ * (`canonicalKey` = `BindingNode.group.key`, the member's own register group)
+ * leads, so its facets win when several groups carry the member.
+ *
+ * A GROUPED member ALWAYS gets a qualifier: when no group yields facets (an edge
+ * group's split siblings — e.g. `agi1astsni2007g` vs `ku1astsni`, `axes: []`,
+ * empty facets), the member's leaf slug is the fallback (`kind: "slug"`), since
+ * the slug is the only thing that distinguishes those siblings (it encodes the
+ * edition/vintage/variant) — without it the sibling pages render IDENTICAL
+ * headers (the shared concept name; #670 / dogfooding M10). "Grouped" = a
+ * canonical `canonicalKey`, or the member appears in some group. Returns `null`
+ * ONLY for an UNGROUPED member (a normal variable whose `node.name` already
+ * suffices). The discriminated `kind` lets the caller pick a presentation
+ * (facet label vs. mono code) without re-scanning the groups. */
+export function memberQualifier(
+  groups: readonly ConceptGroup[],
+  fqid: string,
+  canonicalKey?: string | null,
+): MemberQualifier | null {
+  // Canonical group first so its facets lead when the member is in several
+  // groups; the rest follow in their incoming order. /dimensions can return
+  // MULTIPLE dimension groups for one member (level / population / rank
+  // memberships — DimensionsPanel/#489), hence canonical-first.
+  const ordered =
+    canonicalKey == null
+      ? groups
+      : [...groups].sort((a, b) => {
+          const aCanon = a.key === canonicalKey ? 0 : 1;
+          const bCanon = b.key === canonicalKey ? 0 : 1;
+          return aCanon - bCanon;
+        });
+  let grouped = canonicalKey != null;
+  for (const group of ordered) {
+    const member = group.members.find((m) => m.fqid === fqid);
+    if (member) {
+      grouped = true;
+    }
+    const facets = member?.facets ?? [];
+    if (facets.length > 0) {
+      return { text: facets.map((f) => f.label).join(" · "), kind: "facets" };
+    }
+  }
+  // Grouped but no group yields facets → fall back to the member's leaf slug so
+  // the edge-group split siblings still get a distinguishing header element. An
+  // ungrouped member returns null (its `node.name` already distinguishes it).
+  return grouped ? { text: leafSlug(fqid), kind: "slug" } : null;
+}
+
+/** The group a binding leaf links back to (#670): the dimension group matching
+ * the member's canonical `node.group.key`, else (defensively) the first
+ * dimension group containing the member — its `{ label, href }` for the
+ * "member of ⟨label⟩" context link. `null` when ungrouped, or when no fetched
+ * group matches (loading / error / a stale skew between `node.group` and
+ * /dimensions). The href targets the group SUBJECT route via `groupHref`. */
+export function memberGroupLink(
+  groups: readonly ConceptGroup[],
+  ref: BindingGroupRef | null | undefined,
+  fqid: string,
+): { label: string; href: string } | null {
+  if (!ref) {
+    return null;
+  }
+  const byKey = groups.find((g) => g.key === ref.key);
+  const containing =
+    byKey ?? groups.find((g) => g.members.some((m) => m.fqid === fqid));
+  if (!containing) {
+    return null;
+  }
+  return {
+    label: containing.label,
+    href: groupHref(`${ref.provider}/${ref.register}`, ref.key),
+  };
 }
 
 /** A node's display label — its `name` when present, else its FQID (providers

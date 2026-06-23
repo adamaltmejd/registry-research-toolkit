@@ -329,4 +329,94 @@ describe("DocMentionsPanel (#402)", () => {
     const call = vi.mocked(getDocsForVariable).mock.calls[0];
     expect(call?.[0]).toBe("kon");
   });
+
+  it("captions a grouped member's hits as concept-grain (#670)", async () => {
+    // A grouped member (`node.group` set) shares its concept name with its
+    // siblings, so the FTS hits are concept-grain (common across the group) — the
+    // panel adds a clarifying caption above the fuzzy note. Not suppression: the
+    // hit list still renders.
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({
+        register_ingested: true,
+        total_count: 1,
+        results: [
+          {
+            filename: "lisa_naringsgren.md",
+            display_name: "LISA — Näringsgren",
+            snippet: null,
+            fuzzy: true,
+            tags: [],
+          },
+        ],
+      }),
+    );
+    await render(DocMentionsPanel, {
+      node: node({
+        fqid: "scb/lisa/agi1astsni2007g",
+        name: "Näringsgren, största förvärvskälla",
+        group: { provider: "scb", register: "lisa", key: "naringsgren" },
+      }),
+    });
+
+    await expect.element(page.getByText(/shared concept name/i)).toBeVisible();
+    // Still shows the hit (caption clarifies grain, does not suppress).
+    await expect
+      .element(page.getByRole("link", { name: /LISA — Näringsgren/ }))
+      .toBeVisible();
+  });
+
+  it("does NOT show the concept-grain caption for a grouped member with zero hits (#670)", async () => {
+    // The concept-grain caption lives INSIDE the resolved-data branch, which only
+    // renders when there are usable hits (`results.length > 0`). A grouped member
+    // with zero hits omits the WHOLE section (omit-when-empty), so the caption
+    // never appears — pin that it doesn't leak out of the results branch.
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({ ingested: true, register_ingested: true, total_count: 0 }),
+    );
+    await render(DocMentionsPanel, {
+      node: node({
+        fqid: "scb/lisa/agi1astsni2007g",
+        name: "Näringsgren, största förvärvskälla",
+        group: { provider: "scb", register: "lisa", key: "naringsgren" },
+      }),
+    });
+
+    // The whole section is omitted (no heading), so the caption is absent too.
+    await expect
+      .element(
+        page.getByRole("heading", { name: "Mentioned in documentation" }),
+      )
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByText(/shared concept name/i))
+      .not.toBeInTheDocument();
+  });
+
+  it("does NOT caption an ungrouped variable's hits (no node.group)", async () => {
+    vi.mocked(getDocsForVariable).mockResolvedValue(
+      mentions({
+        register_ingested: true,
+        total_count: 1,
+        results: [
+          {
+            filename: "lisa_kon.md",
+            display_name: "LISA — Kön",
+            snippet: null,
+            fuzzy: true,
+            tags: [],
+          },
+        ],
+      }),
+    );
+    // The default node() fixture has no `group`.
+    await render(DocMentionsPanel, { node: node() });
+
+    await expect
+      .element(page.getByText(/shared concept name/i))
+      .not.toBeInTheDocument();
+    // The ordinary fuzzy note still renders.
+    await expect
+      .element(page.getByText(/Heuristic name matches/))
+      .toBeVisible();
+  });
 });

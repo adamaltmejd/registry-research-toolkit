@@ -14,6 +14,7 @@ import type { Snippet } from "svelte";
 let {
   title,
   fqid,
+  showFqid = true,
   description,
   picker,
   valueSet,
@@ -24,6 +25,11 @@ let {
   // Absent for a concept group (a group has no single fqid — its key shows inside
   // the description meta block instead); present for variable + classification.
   fqid?: string;
+  // #670: opt OUT of the under-header fqid line (the binding leaf passes false —
+  // its breadcrumb already ends in the slug, so the line is redundant there). The
+  // classification leaf keeps the default `true` (its breadcrumb shows the class
+  // axis, not the leaf slug). A no-op when `fqid` is absent.
+  showFqid?: boolean;
   description?: Snippet;
   picker?: Snippet;
   valueSet?: Snippet;
@@ -34,7 +40,7 @@ let {
 
 <article>
   <h2>{title}</h2>
-  {#if fqid}
+  {#if fqid && showFqid}
     <p class="fqid"><code>{fqid}</code></p>
   {/if}
   {@render description?.()}

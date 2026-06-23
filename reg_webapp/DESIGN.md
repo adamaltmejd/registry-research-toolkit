@@ -850,9 +850,11 @@ title/fqid header, and one **canonical section order**:
 title, and no restyling. Each section arrives as a Svelte `Snippet` from the leaf view
 and the shell `{@render}`s the five in the fixed order. Every slot is **optional** — a
 kind that has nothing for a section simply doesn't pass that snippet and the slot
-renders nothing (no empty wrapper, no "none found" wall). `fqid` is shown for the
-variable + classification; a concept group has no single fqid (its key lives in the
-description's Technical details), so it's omitted.
+renders nothing (no empty wrapper, no "none found" wall). The variable leaf suppresses
+the under-header fqid line (`showFqid={false}` — its breadcrumb already ends in the
+slug, making the line redundant); the classification leaf keeps the default
+(`showFqid=true`). A concept group has no single fqid (its key lives in the
+description's Technical details), so it's omitted regardless.
 
 **Dispatch.** `CatalogNodeView.svelte` resolves a node by FQID (a no-query browse fetch,
 so the response is always a `kind`-tagged node) and switches on `kind`. The
@@ -872,6 +874,17 @@ Per-kind mapping into the five sections:
   | value / codes | states (`StatesView`, each state's value set via `CodeList`)                                             | `ClassificationCodesPanel` (`CodeList`)                                         | —                                                            |
   | relationships | `DimensionsPanel` + `LineagePanels`                                                                      | `ClassificationDimensionsPanel` + `ClassificationLineagePanels` (edition chain) | — (members live in the picker)                               |
   | docs          | `DocMentionsPanel`                                                                                       | —                                                                               | —                                                            |
+
+**#670 — member identity and fetch ownership.** For a grouped variable,
+`BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
+2007 SNI edition", falling back to the slug for edge-group split siblings) and a "member
+of ⟨group⟩" context link directly under the header — both additive and gated on a
+resolved `/dimensions` fetch. The fetch itself is owned by `BindingLeafView` (lifted
+from `DimensionsPanel`), which derives the qualifier and link from it and passes the
+resolved `groups`/`loading`/`error` down to `DimensionsPanel` as props;
+`DimensionsPanel` is now purely presentational. One shared fetch serves the header and
+the panel; failure domain is unchanged — a dimensions error renders the panel's inline
+alert without affecting the rest of the leaf.
 
 ### The picker — slice axis × time axis
 
