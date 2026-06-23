@@ -581,7 +581,6 @@ import {
   countFoldedMembers,
   foldGroupedRows,
   groupFilterKeys,
-  groupMatchesFilter,
   memberAt,
 } from "./catalog";
 
@@ -626,19 +625,6 @@ describe("foldGroupedRows", () => {
     const rows = foldGroupedRows(bindings, []);
     expect(rows.every((r) => r.kind === "leaf")).toBe(true);
     expect(rows).toHaveLength(4);
-  });
-});
-
-describe("groupMatchesFilter", () => {
-  it("matches on the group label/key", () => {
-    expect(groupMatchesFilter("inkomst", group({}))).toBe(true);
-    expect(groupMatchesFilter("ink", group({}))).toBe(true);
-  });
-
-  it("matches on a member name/FQID (folded, diacritic-blind)", () => {
-    expect(groupMatchesFilter("februari", group({}))).toBe(true);
-    expect(groupMatchesFilter("inkjan", group({}))).toBe(true);
-    expect(groupMatchesFilter("nomatch", group({}))).toBe(false);
   });
 });
 

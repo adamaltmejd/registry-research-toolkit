@@ -200,8 +200,8 @@ const filteredVariants = $derived(
 );
 // Variable rows are group-folded (#322): a group row matches/ranks on its
 // label/key + every member's name/FQID (`groupFilterKeys` — the same match set
-// as the browse's `groupMatchesFilter`), so target-hunting a member ("maj")
-// still surfaces the family that folded it.
+// the browse uses), so target-hunting a member ("maj") still surfaces the
+// family that folded it.
 const filteredVariables = $derived(
   rankFilter(variableRows, filter, (row) =>
     row.kind === "group"

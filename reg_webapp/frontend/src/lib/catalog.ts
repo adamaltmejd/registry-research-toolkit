@@ -113,8 +113,8 @@ export function countFoldedMembers<T>(rows: GroupedRow<T>[]): number {
 
 /** The filterable text of a group row: its own label/key plus every member's
  * name/FQID — so filtering for a member (e.g. "maj") still surfaces the group
- * that folded it. One source of truth for `groupMatchesFilter` (the browse
- * type-to-filter) and the pickers' `rankFilter` keys (#322). */
+ * that folded it. One source of truth for the browse type-to-filter and the
+ * pickers' `rankFilter` keys over a group row (#322). */
 export function groupFilterKeys(
   group: ConceptGroup,
 ): (string | null | undefined)[] {
@@ -123,14 +123,6 @@ export function groupFilterKeys(
     group.key,
     ...group.members.flatMap((m) => [m.name, m.fqid]),
   ];
-}
-
-/** Whether a group row survives the type-to-filter (see `groupFilterKeys`). */
-export function groupMatchesFilter(
-  needle: string,
-  group: ConceptGroup,
-): boolean {
-  return matchesFilter(needle, ...groupFilterKeys(group));
 }
 
 // `axisValues`/`memberAt` are GENERIC over the member type (#638 PR2a): the
