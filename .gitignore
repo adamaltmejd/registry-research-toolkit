@@ -96,6 +96,9 @@ mdw_upload_probe_*.txt
 # <provider>.toml, the freeze.toml state map, and .snapshot.json are committed.
 # Covers the global dir and per-steward subdirs (fqid_slugs/swecov/).
 # See reg_meta_build/DESIGN.md → Slug immutability.
+# To pin a provider (curating/frozen) its auto.toml MUST be committed: either
+# `git add -f reg_meta_build/fqid_slugs/<provider>.auto.toml`, or add a
+# per-provider negation here: `!reg_meta_build/fqid_slugs/<provider>.auto.toml`.
 reg_meta_build/fqid_slugs/**/*.auto.toml
 
 # SCB source PDFs (binary, copyrighted, not committed)

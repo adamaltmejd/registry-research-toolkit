@@ -2423,9 +2423,12 @@ REFACTOR_SPEC.md / #209 (machinery #470 / curation #471 / seal #472).
 
 Note: `*.auto.toml` is gitignored by default, so advancing a provider to `curating` or
 `frozen` requires force-adding its generated file
-(`git add -f reg_meta_build/fqid_slugs/<provider>.auto.toml`). The per-provider
-`.gitignore` exception and any pin-failure safeguard ship with the actual curation/seal
-work (#471 / #472) — this PR ships all-churning, so no `auto.toml` is committed yet.
+(`git add -f reg_meta_build/fqid_slugs/<provider>.auto.toml`). The pin-failure safeguard
+(#471) now ships: a `curating`/`frozen` provider that has variables but lacks a
+committed `<provider>.auto.toml` fails fast with `slug_freeze_auto_missing` rather than
+silently re-deriving its slugs (which would defeat the pin). The per-provider
+`.gitignore` negation (or `git add -f`) is applied when a provider is actually pinned —
+this repo ships all-churning, so no `auto.toml` is committed yet.
 
 ## Doc-DB build
 
