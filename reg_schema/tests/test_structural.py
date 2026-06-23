@@ -900,8 +900,9 @@ def test_panel_string_member_missing_panel_defaults_is_not_structural() -> None:
     # Effective-key *presence* is no longer a structural rule:
     # an omitted entity_key/time_key inherits from the member's variant
     # panel_template, which needs reg_meta — so the "no effective key"
-    # case is the semantic `panel_inheritance_unresolvable` check,
-    # not emitted here.
+    # case can only be checked once inheritance is materialized at kit-build
+    # time, a path deferred to the from-scratch MONA rebuild (#699). Not
+    # emitted here.
     spec = _spec_with_panels(members=["lisa_2018"])  # no panel time_key
     spec["panels"][0].pop("time_key", None)
     spec["panels"][0].pop("entity_key", None)
@@ -1295,8 +1296,10 @@ def test_validator_accepts_arbitrary_mapping() -> None:
 # WIRE name (``field.alias or name``), NOT the bare Python attribute name: the
 # structural validator checks JSON KEYS, so if a field ever gains an alias the
 # frozenset must carry the alias (the models are alias-free today, so this is
-# future-proofing). This test file may import pydantic freely: only the
-# BUNDLE-amalgamated modules must stay pydantic-free; structural.py is build-side.
+# future-proofing). This test file may import pydantic freely — it introspects
+# the models. (structural.py itself stays pydantic-free; that constraint's
+# original MONA-amalgamation rationale is archived and pending re-evaluation —
+# see #699.)
 
 
 def _wire_keys(model: type) -> set[str]:

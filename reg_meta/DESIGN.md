@@ -25,7 +25,7 @@ tables** (no `scb_*`, no `sos_*`): provider variation is captured purely as fill
 the universal columns (some providers populate fewer fields). Provider-specific parsing
 lives in `reg_meta_build`; what query commands see is the unified shape. This keeps one
 mental model for consumers across every provider, and keeps reg_meta importable from any
-context (Jupyter, scripts, the MONA bundle) with no provider conditionals.
+context (Jupyter, scripts, future tooling) with no provider conditionals.
 
 The earlier (v0.11) scheme worked but baked SCB's CSV vocabulary and yearly publication
 cadence into the universal model; adding a second provider (Socialstyrelsen) and a third
@@ -40,7 +40,7 @@ provenance DB (see "What's not in the catalog").
 
 ## Agent-first design
 
-The primary consumers are LLM agent skills and `mock_data_wizard`. Human terminal use is
+The primary consumers are LLM agent skills and webapp features. Human terminal use is
 supported but secondary. This drives several choices:
 
 - Three output formats: table (default), list, and JSON for machine consumption
@@ -420,8 +420,9 @@ arrays. `Fqid` stays a frozen `@dataclass` but carries `__get_pydantic_core_sche
 Go/Rust port) is historical — #681 (2026-06-22) resolved that the port's real cross-impl
 contracts are the SQLite `SCHEMA_VERSION` + `openapi.json` (both Pydantic-independent),
 so reg_meta adopted Pydantic so FastAPI can consume its catalog models directly. The
-**hard** no-Pydantic rule still binds every bundle-amalgamated slice; reg_meta was never
-subject to it (see root CLAUDE.md "Stack" and ARCHITECTURE.md).
+hard no-Pydantic rule applied only to `reg_monabundle`'s amalgamated bundle (now
+archived); reg_meta was never subject to it. See root CLAUDE.md "Stack" and
+ARCHITECTURE.md.
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
@@ -857,8 +858,8 @@ identifier (`PersonNr`) but every related identity column (`PersonNrMor`, `Perso
 `PersonNrSambo`, ...). It is distinct from the narrower "which identifier is the
 *subject* of this variant?", which `variant.panel_entity_key` answers. Downstream
 consumers (SPA authoring's default `display_name`, the validator's info-level
-pseudonymization-prefix check, the MONA bundle's PII scanner) key off `is_identifier`;
-only panel-default inheritance keys off `panel_entity_key`.
+pseudonymization-prefix check, the future MONA runner's PII scanner) key off
+`is_identifier`; only panel-default inheritance keys off `panel_entity_key`.
 
 ## Versioning and compatibility
 
@@ -897,8 +898,8 @@ goes live — see `.claude/skills/release/SKILL.md`. The `TestSchemaCompat` test
 ### Release tags and distribution
 
 The monorepo uses **per-package release tags**: `reg_meta/v0.5.0`,
-`reg_meta_build/v0.1.0`, `mock-data-wizard/v0.4.0`, etc. Each tag corresponds to a
-GitHub release scoped to that package.
+`reg_meta_build/v0.1.0`, etc. Each tag corresponds to a GitHub release scoped to that
+package.
 
   | Channel              | Trigger                                                     | What it distributes                       |
   | -------------------- | ----------------------------------------------------------- | ----------------------------------------- |

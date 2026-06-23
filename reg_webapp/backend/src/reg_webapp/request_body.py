@@ -1,17 +1,15 @@
 """Raw JSON request-body reader for the project-WRITE endpoints.
 
-See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
+See DESIGN.md → Project-write surface (routes/project.py).
 
-``POST /api/project/validate`` and ``POST /api/bundle`` both read the body as a
-RAW dict rather than a typed Pydantic body: ``/validate`` must DIAGNOSE a malformed
-spec (a typed body would make FastAPI 422 the very inputs it exists to report), and
-``/bundle`` must EMBED the spec verbatim — including steward-namespaced blocks
-(``swecov`` / ``reg_mockdata`` — see reg_monabundle/DESIGN.md → The two halves)
-that the ``ProjectData`` model drops
-(``extra="ignore"``). So both share this reader, which json.loads the body
-ourselves and maps a malformed REQUEST (non-JSON, duplicate key, non-object,
-pathologically nested) to a 4xx — distinct from a well-formed object that simply
-fails validation (a 200 with ``ok=false`` on ``/validate``).
+``POST /api/project/validate`` reads the body as a RAW dict rather than a typed
+Pydantic body: ``/validate`` must DIAGNOSE a malformed spec (a typed body would
+make FastAPI 422 the very inputs it exists to report), and it must preserve
+steward-namespaced blocks (``swecov`` / ``reg_monabundle`` …) that the
+``ProjectData`` model drops (``extra="ignore"``). So it uses this reader, which
+json.loads the body ourselves and maps a malformed REQUEST (non-JSON, duplicate
+key, non-object, pathologically nested) to a 4xx — distinct from a well-formed
+object that simply fails validation (a 200 with ``ok=false`` on ``/validate``).
 """
 
 from __future__ import annotations
@@ -30,11 +28,7 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
     The default keeps the last value silently — a hand-edited project_data.json
     with a duplicated field would validate against the wrong (last-wins) value.
-    Fires at every nesting depth (the hook runs per object). We own a webapp-local
-    copy rather than importing ``reg_monabundle.runtime.spec._reject_duplicate_keys``:
-    that module is the MONA-amalgamated runtime, off-limits per the import
-    boundary (the lightweight/runtime split — see reg_monabundle/DESIGN.md → The
-    two halves; enforced by the import-graph test)."""
+    Fires at every nesting depth (the hook runs per object)."""
     seen: dict[str, Any] = {}
     for key, value in pairs:
         if key in seen:

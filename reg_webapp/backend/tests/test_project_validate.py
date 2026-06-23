@@ -1,6 +1,6 @@
 """`POST /api/project/validate` against the slugged ``catalog_db`` fixture.
 
-See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
+See DESIGN.md → Project-write surface (routes/project.py).
 Covers the status discipline that defines this endpoint:
 
 - a clean spec → 200 ``ok=true`` ``issues=[]``;
@@ -11,7 +11,7 @@ Covers the status discipline that defines this endpoint:
   ``ProjectData`` is ``extra=ignore`` so a stray top-level key is a tolerated
   namespaced block, not an error);
 - malformed JSON / duplicate keys / non-object body → 4xx (a malformed REQUEST);
-- the three-layer concatenation (structural ⧺ block ⧺ semantic);
+- the two-layer concatenation (structural ⧺ semantic);
 - a concurrency smoke test (the cross-thread sqlite P1 the sequential TestClient
   default MASKS — see ``test_catalog_browse``).
 
@@ -145,22 +145,6 @@ def test_non_leap_feb_range_to_endpoint_is_200_not_500(client):
     assert "range_period_partially_covered" not in codes, codes
 
 
-def test_validate_catches_orphan_binding_options(client):
-    """Divergence reconciliation: an orphan ``reg_monabundle.binding_options`` key
-    (a binding FQID not bound in any source) that /api/bundle 422s on is now ALSO
-    flagged by /validate (code ``binding_options_orphan_fqid``) — so a /validate-
-    clean spec is buildable for that class."""
-    spec = _clean_spec()
-    spec["reg_monabundle"] = {
-        "binding_options": {"scb/lisa/notbound": {"suppress_k": 10}}
-    }
-    resp = client.post("/api/project/validate", json=spec)
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["ok"] is False
-    assert "binding_options_orphan_fqid" in {i["code"] for i in body["issues"]}
-
-
 def test_model_issue_empty_loc_is_whole_document_pointer():
     """A model-level (empty-``loc``) residual ValidationError must map to the RFC
     6901 whole-document pointer ``""`` — NOT ``"/"`` (a property keyed by the empty
@@ -175,20 +159,6 @@ def test_model_issue_empty_loc_is_whole_document_pointer():
     issue = _model_issue("residual model error", exc)
     assert issue.path == ""
     assert issue.code == "invalid_field"
-
-
-def test_malformed_binding_options_value_is_issue_not_500(client):
-    """A non-dict per-FQID binding_options value (an int) is malformed — the block
-    validator flags it (invalid_block). /validate ACCUMULATES issues (it doesn't
-    fail-fast like /bundle's raise), so the cross-block check must skip the non-dict
-    value defensively, not `"suppress_k" not in <int>` → TypeError → 500."""
-    spec = _clean_spec()
-    spec["reg_monabundle"] = {"binding_options": {"scb/lisa/kon": 1}}  # bound, non-dict
-    resp = client.post("/api/project/validate", json=spec)
-    assert resp.status_code == 200, f"malformed binding_options → {resp.status_code}"
-    body = resp.json()
-    assert body["ok"] is False
-    assert "invalid_block" in {i["code"] for i in body["issues"]}
 
 
 def test_top_level_extra_key_is_issue_not_500(client):
@@ -256,38 +226,34 @@ def test_invalid_utf8_body_is_400_not_500(client):
     assert resp.status_code == 400, f"invalid-utf8 → {resp.status_code} (want 400)"
 
 
-def test_three_layer_concatenation(client):
-    """The response issue list concatenates the three layers (no merge).
-    Feed a spec that trips structural (bad period token) AND semantic
-    (unresolvable value_set) and assert codes from BOTH layers appear in the one
-    200 list."""
+def test_two_layer_concatenation(client):
+    """The response issue list concatenates the two layers (no merge): structural
+    runs first, and the reg_meta-backed semantic layer runs only when structural
+    passes. Feed a structurally CLEAN spec whose binding is unresolvable so the
+    semantic layer fires, and assert the semantic code lands in the one 200 list
+    with no spurious structural code."""
     spec = _clean_spec()
-    # Structural: a malformed period token → an emitted structural issue.
-    spec["sources"][0]["period"] = "not-a-period!"
-    # Semantic would also fire, but structural failure short-circuits the model
-    # build; the block layer is independent, so add a bad block too to prove
-    # block issues ride alongside structural ones.
-    spec["reg_monabundle"] = {"binding_options": {"bogus": {"suppress_k": 5}}}
+    spec["sources"][0]["bindings"][0]["variable"] = "scb/lisa/nosuchvariable"
     resp = client.post("/api/project/validate", json=spec)
     assert resp.status_code == 200
     body = resp.json()
     assert body["ok"] is False
     codes = {i["code"] for i in body["issues"]}
-    # A structural issue (the bad period) and the block issue both present.
-    assert any(c != "invalid_block" for c in codes), codes
-    assert "invalid_block" in codes, codes
+    assert "fqid_unresolved" in codes, codes
+    # Structural passed, so no structural code is concatenated alongside it.
+    assert "unexpected_field" not in codes, codes
 
 
-def test_block_layer_runs_even_when_structural_passes(client):
-    """A structurally-clean spec with a broken ``reg_monabundle`` block → the
-    block layer fires its ``invalid_block`` issue (the block layer is composed
-    in regardless of the structural outcome)."""
+def test_namespaced_block_is_tolerated_not_validated(client):
+    """A steward-namespaced block (e.g. ``reg_monabundle``) on a structurally clean
+    spec round-trips untouched — ``ProjectData`` is ``extra=ignore``, so the block
+    rides along without being validated or rejected. The webapp no longer runs a
+    block-validation layer (the bundle build that owned it was archived)."""
     spec = _clean_spec()
-    spec["reg_monabundle"] = {"unknown_key": 1}
+    spec["reg_monabundle"] = {"binding_options": {"scb/lisa/kon": {"suppress_k": 5}}}
     resp = client.post("/api/project/validate", json=spec)
     assert resp.status_code == 200
-    codes = {i["code"] for i in resp.json()["issues"]}
-    assert "invalid_block" in codes
+    assert resp.json()["ok"] is True
 
 
 def test_concurrent_validate_no_cross_thread_error(unthrottled_client):

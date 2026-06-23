@@ -393,17 +393,15 @@ provider-specific tables or columns, and `reg_meta`'s read side is untouched. Th
 the contract.
 
 **IR** (`reg_meta_build/ir/__init__.py`). Pydantic v2 models. The build-time IR never
-reaches the amalgamated bundle, so the no-Pydantic boundary (see ARCHITECTURE.md — "No
-Pydantic in the amalgamated bundle") doesn't bind it; Pydantic earns its place here
-because model-level validators catch *builder* bugs at construction (a state validity
-range that crosses zero, a variable referencing a non-existent variant) rather than
-surfacing them as corrupt catalog rows. `_IRBase` sets `extra="forbid"`: Pydantic's
-default silently drops unknown keys, so a misspelled `is_sensitive=True` would vanish
-and the field would quietly stay `False` — adapters speak a strict contract, unknown
-keys must raise. Build-time only: never imported by `reg_meta` runtime,
-`reg_monabundle.runtime`, the MONA bundle, or the webapp (those stick to stdlib
-dataclasses). Treat `ir/__init__.py` as the source of truth for field shapes; a few that
-bite:
+reaches the webapp or the future MONA runner (those use `reg_meta`'s read surface or the
+`reg_schema`-validated `project_data.json`); Pydantic earns its place here because
+model-level validators catch *builder* bugs at construction (a state validity range that
+crosses zero, a variable referencing a non-existent variant) rather than surfacing them
+as corrupt catalog rows. `_IRBase` sets `extra="forbid"`: Pydantic's default silently
+drops unknown keys, so a misspelled `is_sensitive=True` would vanish and the field would
+quietly stay `False` — adapters speak a strict contract, unknown keys must raise.
+Build-time only: never imported by `reg_meta` runtime or the webapp. Treat
+`ir/__init__.py` as the source of truth for field shapes; a few that bite:
 
 - `IRVariable` is **register-scoped** (the "define once" addressable variable); the
   variant coordinate lives down on `IRVariableState.register_variant_id`. `provider_key`
@@ -597,9 +595,9 @@ Both the universal and provenance DBs rotate one generation on rebuild
 (`rotate_db_to_prev`): `reg_meta.db` → `reg_meta.db.prev`, evicting any prior `.prev`.
 No auto-cleanup of older generations — a maintainer who wants to keep more than one
 `mv`s the `.prev` aside. The provenance write is wrapped non-fatally: a provenance
-failure must not flip the build exit code. Confinement is enforced cross-package —
-`reg_monabundle`'s bundle amalgamator carries an import allow-list that rejects any
-module opening this DB, so it can never reach MONA (see ARCHITECTURE.md).
+failure must not flip the build exit code. Confinement is enforced cross-package — The
+provenance DB is build-side only — the future MONA runner reads only `reg_schema`
+validated `project_data.json`, not the catalog or provenance DBs (see ARCHITECTURE.md).
 
 ## Deterministic ID minting
 
@@ -1580,12 +1578,11 @@ reason).
   schema-version churn since introduction), one read-side method
   (`_expand_state_windows`, 1:1 byte-identical passthrough for non-merged variables).
 - **Reversal moves complexity, doesn't remove it.** The main practical argument for
-  reversal — that bundle/export/mock-data would get explicit leaf bindings instead of
-  hidden `resolve_at` expansion — is already true today: the kit forces
-  one-binding→one-column via `check_single_delivery_column`; the bundle consumes static
-  resolved columns with zero runtime `resolve_at`; mock-data doesn't touch monthly
-  families. Reversal would re-create month expansion for the programmatic
-  `resolve_at("YYYY-MM")` path or accept that regression.
+  reversal — that export tooling would get explicit leaf bindings instead of hidden
+  `resolve_at` expansion — is already true today: order-export forces
+  one-binding→one-column via `check_single_delivery_column`; downstream consumers get
+  static resolved columns with zero runtime `resolve_at`. Reversal would re-create month
+  expansion for the programmatic `resolve_at("YYYY-MM")` path or accept that regression.
 
 **#523 ↔ #496 boundary (concept-group fold layer).** The merge and #496 are
 complementary layers:
@@ -2134,10 +2131,10 @@ Two entry kinds ship today, both in `delivery_enrichment.toml`:
   row for an existing variable (SWECOV delivers it under a name that differs from the
   SCB metadata header, e.g. FEK `BidragForVerksamheten` ↔ `bidrag-for-verksamheten`).
   The alias joins the variable's delivery-column history that `get_datacolumns` /
-  `resolve` read and the MONA bundle matches columns against; it is attached to every
-  `register_variant` in which the variable has a state. Adding *extra* alias rows is
-  safe because the validator invariant is one-directional — every `variable_state`
-  column must be in `variable_alias`, but not the reverse
+  `resolve` read (and future MONA-side tooling matches columns against); it is attached
+  to every `register_variant` in which the variable has a state. Adding *extra* alias
+  rows is safe because the validator invariant is one-directional — every
+  `variable_state` column must be in `variable_alias`, but not the reverse
   (`_check_variable_alias_covers_state_columns`). No `variable_alias_window` (those are
   #319's monthly per-month *expansion*, a different shape). Gap-fill variable grafts
   remain deferred (the candidate set needs type curation; see #365).

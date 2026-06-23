@@ -27,11 +27,10 @@
 # this commit and both deploy jobs require its success — an image that builds
 # but fails lint/types/tests never ships.
 #
-# Image filter scope (DECIDED 2026-06-11): reg_schema / reg_monabundle are
-# baked deps but deliberately NOT in the image filter — they'd rebuild on most
-# monorepo PRs and are already exercised by ci.yml's test job. After a baked-dep
-# change that should ship, run the manual `workflow_dispatch`. That is the
-# rule, not a gap.
+# Image filter scope (DECIDED 2026-06-11): reg_schema is a baked dep but
+# deliberately NOT in the image filter — it'd rebuild on most monorepo PRs and is
+# already exercised by ci.yml's test job. After a baked-dep change that should
+# ship, run the manual `workflow_dispatch`. That is the rule, not a gap.
 
 name: Container build
 
@@ -40,8 +39,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  # Manual escape hatch: rebuild + deploy after a baked-dep (reg_schema /
-  # reg_monabundle) change the image filter intentionally skips, or after a
+  # Manual escape hatch: rebuild + deploy after a baked-dep (reg_schema)
+  # change the image filter intentionally skips, or after a
   # DATA-only reg_meta release. The bake build-arg always carries the CONCRETE
   # newest reg_meta/v* tag (resolved per run, below), so a data-only release
   # busts the bake layer's cache by itself — no input needed unless pinning an

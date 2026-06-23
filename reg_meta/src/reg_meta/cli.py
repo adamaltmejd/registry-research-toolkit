@@ -2908,10 +2908,6 @@ Common workflows
 
   "How has my register changed since I last looked?"
     reg-meta get diff --register LISA --from 2018 --to 2023
-
-  "What SCB data exists but isn't in my local mock data?"
-    mock-data-wizard compare mock_data/manifest.json
-    (requires the mock-data-wizard package)
 """
 
 # Display order for --examples (all)

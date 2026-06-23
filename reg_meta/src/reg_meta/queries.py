@@ -2,7 +2,7 @@
 
 Pure query logic against an open sqlite3.Connection. No CLI concerns
 (argument parsing, output formatting, envelopes, timing). These are
-the functions that library consumers (e.g. mock_data_wizard) import.
+the functions that library consumers import.
 """
 
 from __future__ import annotations

@@ -12,7 +12,7 @@ import ValidationPanel from "./ValidationPanel.svelte";
 // ValidationPanel are UNCHANGED. This is:
 //  - the home/new screen (draft == null): New / Open buttons,
 //  - the loaded-draft view: top-level fields, a dirty indicator, a toolbar
-//    (New / Open / Download / Validate / Download order CSV / Download bundle),
+//    (New / Open / Download / Validate / Download order CSV),
 //    the open-error banner, the EDITABLE sources/bindings list, the ValidationPanel.
 //
 // `reg_meta_version` (bare package version) and `steward` (the deployment's
@@ -116,9 +116,9 @@ async function onFilePicked(event: Event): Promise<void> {
       >
         {projectStore.busy ? "Validating…" : "Validate"}
       </button>
-      <!-- The order / bundle downloads are gated behind a clean /validate: the
-           backend rejects a structurally invalid spec with a 422, so requiring a
-           green validation first is the clearest UX (no surprise error banner). -->
+      <!-- The order CSV download is gated behind a clean /validate: the backend
+           rejects a structurally invalid spec with a 422, so requiring a green
+           validation first is the clearest UX (no surprise error banner). -->
       <button
         type="button"
         disabled={!projectStore.validatedClean || projectStore.busy}
@@ -128,16 +128,6 @@ async function onFilePicked(event: Event): Promise<void> {
         onclick={() => projectStore.downloadOrder()}
       >
         Download order CSV
-      </button>
-      <button
-        type="button"
-        disabled={!projectStore.validatedClean || projectStore.busy}
-        title={projectStore.validatedClean
-          ? "Download the MONA bundle"
-          : "Validate the project first"}
-        onclick={() => projectStore.downloadBundleFile()}
-      >
-        Download bundle
       </button>
     </div>
 

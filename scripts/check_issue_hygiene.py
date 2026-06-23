@@ -56,6 +56,9 @@ AREA_LABELS = {
     "reg_meta",
     "reg_meta_build",
     "reg_schema",
+    # reg_monabundle + mock_data_wizard were archived to `archive/mona-subsystem`
+    # pending a from-scratch MONA rebuild; their labels are retained here so the
+    # historical (open + closed) issues that carry them keep validating.
     "reg_monabundle",
     "reg_webapp",
     "mock_data_wizard",

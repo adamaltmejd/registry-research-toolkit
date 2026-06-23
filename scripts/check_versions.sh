@@ -13,8 +13,6 @@ err() { echo "ERROR: $*" >&2; errors=$((errors + 1)); }
 packages=(
     "reg_meta reg_meta/pyproject.toml reg_meta/src/reg_meta/__init__.py"
     "reg_meta_build reg_meta_build/pyproject.toml reg_meta_build/src/reg_meta_build/__init__.py"
-    "reg_monabundle reg_monabundle/pyproject.toml reg_monabundle/src/reg_monabundle/__init__.py"
-    "mock_data_wizard mock_data_wizard/pyproject.toml mock_data_wizard/src/mock_data_wizard/__init__.py"
 )
 
 extract_pyproject_version() {

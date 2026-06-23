@@ -5,12 +5,12 @@
  * (`register_variant`, `period`, `bindings[]`); `panels[]` and steward-namespaced
  * blocks (`reg_monabundle`, `swecov`, …) ROUND-TRIP VERBATIM — they ride on the
  * dict side and are NEVER stripped on open/save (matching the backend raw-dict
- * embed; see reg_monabundle/DESIGN.md → The two halves and `routes/bundle.py`).
+ * embed; reg_schema keeps these as opaque blocks).
  *
  * This is NOT a structural validator — the backend is canonical (see
  * reg_webapp/DESIGN.md → Pydantic boundary). These
  * helpers only construct + immutably edit the shape the SPA posts to
- * `/api/project/validate` / `/order` / `/bundle`. The field names mirror
+ * `/api/project/validate` / `/order`. The field names mirror
  * `reg_schema/src/reg_schema/project_data.py` (see reg_schema/DESIGN.md → Two
  * layers: models vs. validator).
  *

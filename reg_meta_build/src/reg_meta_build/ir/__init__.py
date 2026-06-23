@@ -6,9 +6,9 @@ Pydantic v2 models so model-level validators can catch builder bugs at
 construction (e.g. "state validity range crosses zero", "variable
 references non-existent variant"). See DESIGN.md → IR + adapter architecture.
 
-Build-time only. **Never imported by `reg_meta` runtime, by
-`reg_monabundle.runtime`, by the MONA bundle, or by the webapp** —
-those surfaces stick to stdlib dataclasses (CLAUDE.md "Stack" /
+Build-time only. **Never imported by `reg_meta` runtime, by the webapp,
+or by any future MONA-side runner** — those surfaces stick to stdlib
+dataclasses (CLAUDE.md "Stack" /
 DESIGN.md → IR + adapter architecture). The Pydantic-on-IR carve-out
 matches `reg_schema`'s existing carve-out: build-time validation
 where it pays for itself, dataclasses everywhere else.

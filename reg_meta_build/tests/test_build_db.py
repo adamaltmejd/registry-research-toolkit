@@ -810,9 +810,9 @@ class TestBuildDb:
         assert count == 0
 
     def test_seed_providers_idempotent(self, tmp_path: Path):
-        # `seed_providers` is a public helper used by both `build_db` and
-        # mock_data_wizard's reg_meta fixture; a plain INSERT would raise
-        # IntegrityError on the fixed PKs the second time.
+        # `seed_providers` is a public helper that may run more than once
+        # against the same DB; a plain INSERT would raise IntegrityError on the
+        # fixed PKs the second time.
         import sqlite3 as _sqlite3
 
         from reg_meta_build.db import DDL, seed_providers

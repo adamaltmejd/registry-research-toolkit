@@ -6,11 +6,11 @@ rule (``CLAUDE.md`` stack §): these models are the canonical project_data
 shape, FastAPI response models in ``reg_webapp``, and the source of the
 SPA's TypeScript types via ``model_json_schema()``.
 
-Models are ``frozen`` + tuple-backed so consumers (mock_data_wizard,
-reg_webapp, reg_monabundle, the SPA via TS codegen) can hash, share, and
-pass instances freely. Pydantic coerces list → tuple for ``tuple[...]``
-fields automatically, so callers may construct from list-shaped
-composites without losing the frozen + hashable contract.
+Models are ``frozen`` + tuple-backed so consumers (reg_webapp and the SPA
+via TS codegen) can hash, share, and pass instances freely. Pydantic
+coerces list → tuple for ``tuple[...]`` fields automatically, so callers
+may construct from list-shaped composites without losing the frozen +
+hashable contract.
 
 JSON deserialization and structural validation are deliberately
 separate concerns:
@@ -19,19 +19,14 @@ separate concerns:
   well-formedness, panel ordering, period grammar, etc.) live in
   ``validate_structural()`` and run on the **raw dict** before any
   model is constructed. They accumulate every issue into a
-  ``ValidationResult`` rather than raising, so the three runtimes that
-  share the contract (SPA, MONA bundle, webapp) all see the full issue
-  list. The models intentionally do NOT re-encode those rules as
+  ``ValidationResult`` rather than raising, so every runtime that shares
+  the contract (SPA, webapp, any future MONA-side runner) sees the full
+  issue list. The models intentionally do NOT re-encode those rules as
   raising field validators — that would replace the issue-accumulating
   contract with a fail-fast one.
-- Models are constructed at boundaries (API ingress, bundle build) from
-  data that already passed ``validate_structural``. A Pydantic raise at
-  that point signals validator/model drift, not user error.
-
-On MONA the models are NOT used: bundle-build converts a validated
-``Source`` into a stdlib-dataclass ``LoadedSpec`` (reg_monabundle, A3.4)
-that the bundle amalgamates instead — Pydantic never ships to MONA
-(see reg_monabundle/DESIGN.md → The two halves).
+- Models are constructed at boundaries (API ingress) from data that
+  already passed ``validate_structural``. A Pydantic raise at that point
+  signals validator/model drift, not user error.
 """
 
 from __future__ import annotations
@@ -312,16 +307,16 @@ class ProjectData(_Model):
     by design — namespaced consumers own their payload lifecycle.
 
     ``extra="ignore"`` (overriding ``_Model``'s ``forbid``) tolerates
-    additional steward-namespaced blocks (``swecov``, ``reg_mockdata``,
-    …) without modeling them as fields: they ride through on the dict side
+    additional steward-namespaced blocks (``swecov``, …) without modeling
+    them as fields: they ride through on the dict side
     and are handled by the owning package (see DESIGN.md → Not in scope (intentionally)), exactly as the v0.x
     dataclass did. If a field is wanted for one, we add it deliberately
     rather than growing an ``extras`` dict.
 
     Because the ``reg_monabundle`` block is an opaque (typically
     unhashable) ``Mapping``, an instance carrying one is unhashable on
-    demand. No consumer hashes ``ProjectData`` (the bundle wraps it in a
-    ``LoadedSpec``; the webapp serializes it), so ``frozen=True`` is kept
+    demand. No consumer hashes ``ProjectData`` (the webapp serializes it),
+    so ``frozen=True`` is kept
     for value-immutability and ``__eq__`` without a custom ``__hash__``.
     """
 

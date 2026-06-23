@@ -3,8 +3,7 @@
 The same shape is consumed by three runtimes:
 
 - ``reg_schema`` itself (Python, structural layer).
-- ``reg_monabundle`` (Python, amalgamated into the MONA bundle for
-  embedded JSON validation at bundle load time).
+- the ``reg_webapp`` API ingress and any future MONA-side runner (Python).
 - The SPA (TypeScript, codegen'd from OpenAPI).
 
 Composition of layers concatenates ``issues`` — no merge semantics

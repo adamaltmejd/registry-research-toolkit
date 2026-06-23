@@ -3019,32 +3019,6 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/api/bundle": {
-      "post": {
-        "description": "Build the MONA bundle embedding the posted ``project_data.json`` and return\nthe ``.py`` bytes. Reads the raw dict (preserving namespaced blocks) and\noffloads the blocking build to the threadpool.",
-        "operationId": "build_mona_bundle_api_bundle_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": true,
-                "type": "object"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/octet-stream": {}
-            },
-            "description": "Successful Response"
-          }
-        },
-        "summary": "Build Mona Bundle"
-      }
-    },
     "/api/catalog": {
       "get": {
         "description": "The catalog root: every provider plus the classification-root sentinel.",
@@ -3789,32 +3763,6 @@
         "summary": "Get Docs Search"
       }
     },
-    "/api/kit": {
-      "post": {
-        "description": "Build the generation kit from the posted ``project_data.json`` and return\nthe ZIP bytes. Reads the raw dict (preserving namespaced blocks) and offloads\nthe blocking validate-then-build to the threadpool.",
-        "operationId": "build_kit_api_kit_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": true,
-                "type": "object"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/zip": {}
-            },
-            "description": "Successful Response"
-          }
-        },
-        "summary": "Build Kit"
-      }
-    },
     "/api/project/order": {
       "post": {
         "description": "Render the steward's default v1 order-export CSV.\n\nReads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md \u2192\nStructural rules and issue codes) before rendering: the\n``ProjectData`` model enforces only field types, while the structural rules\n(FQID shape, period grammar, the binding/source-prefix match) live in\n``validate_structural`` \u2014 so a Pydantic-valid-but-structurally-invalid spec\n(e.g. a malformed ``register_variant`` or bad period token) would otherwise\nrender a bad provider order at 200. A structurally invalid spec \u2192 422.\n``async`` + ``run_in_threadpool`` (blocking display_name resolution off the\nevent loop), mirroring ``/validate``.",
@@ -3843,7 +3791,7 @@
     },
     "/api/project/validate": {
       "post": {
-        "description": "Validate a ``project_data.json``. Returns 200 with the concatenated\nstructural \u29fa block \u29fa semantic issue list + the derived ``ok`` flag; a 4xx is\nreserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).\n\nThis is the SEMANTIC validator (reg_meta-backed). It now ALSO runs the\nbuild-time cross-block referential checks (orphan ``binding_options`` keys /\nsuppress_k-on-non-categorical) \u2014 that half of the old ``/validate``\u2194``/bundle``\ndivergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the\nstep-4 capability gates (e.g. a build-required ``display_name``), which\n``/validate`` does NOT \u2014 so a spec ``/validate`` greenlights can still 422 at\n``/bundle`` on a capability gate (an intentional lenient residual: ``/validate``\ndefaults ``display_name`` from reg_meta).\n\n``async`` only to read the body off the wire; the BLOCKING work (the structural\nparse + the semantic layer's per-binding sqlite resolution) is offloaded to the\nthreadpool via ``run_in_threadpool`` so it never stalls the event loop (the\ncatalog routes are plain ``def`` for the same reason). The reg_meta connection\nopens on that threadpool thread (one thread \u2192 the cross-thread sqlite P1 can't\nrecur).",
+        "description": "Validate a ``project_data.json``. Returns 200 with the concatenated\nstructural \u29fa semantic issue list + the derived ``ok`` flag; a 4xx is\nreserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).\n\nThis is the SEMANTIC validator (reg_meta-backed).\n\n``async`` only to read the body off the wire; the BLOCKING work (the structural\nparse + the semantic layer's per-binding sqlite resolution) is offloaded to the\nthreadpool via ``run_in_threadpool`` so it never stalls the event loop (the\ncatalog routes are plain ``def`` for the same reason). The reg_meta connection\nopens on that threadpool thread (one thread \u2192 the cross-thread sqlite P1 can't\nrecur).",
         "operationId": "validate_project_api_project_validate_post",
         "requestBody": {
           "content": {

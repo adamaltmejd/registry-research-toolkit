@@ -158,7 +158,6 @@ describe("codeLabel / KNOWN_CODES", () => {
       "fqid_register_variant_mismatch",
       "empty_bindings",
       "display_name_collision",
-      "invalid_block",
       "fqid_unresolved",
       "value_set_missing",
       "fqid_outside_steward_catalog",

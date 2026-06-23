@@ -460,15 +460,14 @@ class VariantsResponse(BaseModel):
 
 
 # ── A5.2b-ii write surface (see DESIGN.md → Project-write surface
-# (routes/project.py + routes/bundle.py)) ───────────────────────────────────
+# (routes/project.py)) ───────────────────────────────────────────────────────
 # `POST /api/project/validate` returns the concatenated issue list. The
 # webapp wraps reg_schema's FROZEN `ValidationResult` / `ValidationIssue`
 # dataclasses (see DESIGN.md → Pydantic boundary: reg_schema stays a dataclass —
-# it's consumed cross-runtime
-# by the MONA bundle + the SPA — so the webapp Pydantic-wraps it 1:1, exactly
+# it's consumed by the SPA — so the webapp Pydantic-wraps it 1:1, exactly
 # like the catalog node wrappers). This is the ONLY place reg_schema's
-# ValidationResult is re-modeled; the rest of the write surface (`/order`,
-# `/bundle`) takes `reg_schema.ProjectData` directly as the typed request body.
+# ValidationResult is re-modeled; the rest of the write surface (`/order`) takes
+# `reg_schema.ProjectData` directly as the typed request body.
 
 
 class ValidationIssueModel(BaseModel):

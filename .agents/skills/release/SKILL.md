@@ -2,8 +2,8 @@
 name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
-  the release workflow, bump and publish reg_meta, reg_meta_build, reg_schema,
-  reg_monabundle, or mock_data_wizard, create package tags/releases, upload reg_meta DB
+  the release workflow, bump and publish reg_meta, reg_meta_build, or reg_schema,
+  create package tags/releases, upload reg_meta DB
   assets, or monitor publish workflows.
 ---
 
@@ -25,13 +25,6 @@ current and planned versions.
 - `reg_schema`: `reg_schema/pyproject.toml` only; no checked `__version__` and no
   publish workflow exist yet. Before the first PyPI release, stop and add or confirm the
   publish path instead of silently omitting the package.
-- `reg_monabundle`: `reg_monabundle/pyproject.toml`,
-  `reg_monabundle/src/reg_monabundle/__init__.py`; no publish workflow exists yet.
-  Before the first PyPI release, stop and add or confirm the publish path instead of
-  silently omitting the package.
-- `mock_data_wizard`: `mock_data_wizard/pyproject.toml`,
-  `mock_data_wizard/src/mock_data_wizard/__init__.py`, workflow
-  `publish_mock_data_wizard.yml`.
 
 Publish workflows are unattended as of 2026-06-10; do not rely on a PyPI environment
 approval pause.
@@ -68,10 +61,9 @@ approval pause.
    resolve against stale schema constants.
 
 4. Release upstream dependencies before downstream packages, and verify they exist on
-   PyPI before publishing dependents. `reg_monabundle` depends on `reg_schema`;
-   `mock_data_wizard` depends on `reg_monabundle`. If an upstream package has no
-   confirmed publish workflow/path yet, stop instead of publishing a downstream wheel
-   that cannot resolve its dependency.
+   PyPI before publishing dependents. `reg_meta_build` depends on `reg_meta`. If an
+   upstream package has no confirmed publish workflow/path yet, stop instead of
+   publishing a downstream wheel that cannot resolve its dependency.
 
 ## Per-Package Steps
 
