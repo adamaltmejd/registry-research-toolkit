@@ -557,6 +557,31 @@ def test_apply_golden_boost_dedups_when_pin_is_already_a_hit(conn, pinned):
     assert [str(r.fqid) for r in boosted] == ["scb/lisa"]
 
 
+def test_apply_golden_boost_skips_fqidless_group_row(conn, pinned):
+    # A `ConceptGroupSearchResult` carries no `fqid` field, so the dedup's
+    # `_fqid_str(getattr(r, "fqid", None))` guard must treat it as un-pinnable and
+    # leave it untouched — a regression to `r.fqid` would `AttributeError` here.
+    # The classification leaf (fqid class/sun2020) DOES match the 'gizmo'
+    # classification pin, so it is deduped out; the group survives unchanged.
+    from reg_meta.search import ClassificationSearchResult, ConceptGroupSearchResult
+
+    group = ConceptGroupSearchResult(
+        kind="classification",
+        group_key="sun",
+        group_label="SUN editions",
+        rank=0.0,
+        members=(),
+    )
+    leaf = ClassificationSearchResult(
+        fqid="class/sun2020", short_name="SUN2020", rank=0.5
+    )
+    boosted = apply_golden_boost(conn, "gizmo", "classification", (group, leaf))
+    # The group is preserved by identity (never deduped); the matching leaf is
+    # removed and re-prepended as the freshly-built pin.
+    assert group in boosted
+    assert [str(getattr(r, "fqid", None)) for r in boosted] == ["class/sun2020", "None"]
+
+
 def test_apply_golden_boost_promotes_on_page_hit_to_rank_1(conn, pinned):
     # The pin (scb/lisa) is on the page but NOT at rank 1 in the FTS order: it must
     # be PROMOTED to rank 1, appear EXACTLY ONCE (removed from its FTS slot, not
