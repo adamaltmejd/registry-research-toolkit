@@ -216,6 +216,13 @@ def classify(
     for x in reactions:
         # A 👍 is a clean verdict when Codex left no comment; 👀 means still reviewing. Both
         # are commit-unbound, so they count only within the current review window.
+        # simplify: a 👍 carries no commit ref, so its only staleness guard is the window
+        # floor (committedDate, raised by @codex-review). A date-preserving rebase whose new
+        # head has an *earlier* committedDate than a stale 👍 — with no @codex-review
+        # re-trigger — could read that 👍 as clean (false-settle). The workflow (re-trigger
+        # @codex-review after every push, which raises the floor) and the independent
+        # /code-review gate cover it; close it here only if a real push-time ever appears.
+        # A SHA-stamped clean comment, when present, is preferred and is rebase-proof.
         if not is_bot(x) or not in_window(x.get("created_at")):
             continue
         if x.get("content") == THUMBS_UP:

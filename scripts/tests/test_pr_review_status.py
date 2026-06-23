@@ -203,6 +203,23 @@ def test_thumbs_up_before_window_start_is_ignored() -> None:
     assert out["signal"] == "none"
 
 
+def test_thumbs_up_clean_trusts_the_committed_date_floor() -> None:
+    # Documents the accepted ceiling for the commit-unbound 👍-clean: with no @codex-review
+    # request, the window floor is the head's committedDate, so a 👍 after it reads clean.
+    # (A date-preserving rebase that lowers committedDate below a stale 👍 is the residual
+    # the `simplify:` note names; the workflow re-triggers @codex-review to raise the floor.)
+    out = _classify(
+        committed_date=PUSH,
+        reactions=[_reaction("+1", BOT_REACT, at=AFTER1)],
+    )
+    assert out["signal"] == "clean"
+    # a 👍 at/before the committedDate floor is excluded (strict >)
+    stale = _classify(
+        committed_date=AFTER1, reactions=[_reaction("+1", BOT_REACT, at=BEFORE)]
+    )
+    assert stale["signal"] == "none"
+
+
 def test_stale_exhausted_before_review_window_is_ignored() -> None:
     # Codex finding A: a usage-limit comment after the head commit but before the current
     # @codex-review request is from a prior window — it must NOT settle the new run as
