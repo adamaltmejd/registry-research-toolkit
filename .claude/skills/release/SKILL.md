@@ -133,7 +133,13 @@ bumped) `db.py` or `doc_db.py`:
 Bump <package> version to X.Y.Z
 ```
 
-Then push to main.
+Then push to main. **The push now runs the full pre-push gate** (#710): the entire
+pytest suite — including the `reg_meta` Docker integration test as a *hard* gate
+(`--run-integration`, so its `docker` fixture **fails** rather than skips) — runs at
+push time, not commit. The bump commit touches `pyproject.toml` and `__init__.py`, which
+the gate's `files: \.(py|toml|json)$` filter matches, so the suite **will** run on this
+push. **Docker must be running** or the push is blocked — start it and push again, never
+bypass with `--no-verify`.
 
 ### 7. Create draft GitHub release
 

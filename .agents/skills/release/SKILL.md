@@ -109,7 +109,11 @@ approval pause.
 7. Push and verify the bump commit is on `origin/main`, then create a draft GitHub
    release. The tag is created by this command; do not create it separately. Pass the
    verified main commit as `--target` so the tag cannot be created from an older default
-   branch head.
+   branch head. The push runs the full pre-push gate (#710): the entire pytest suite,
+   including the `reg_meta` Docker integration test as a hard gate (`--run-integration`,
+   fails rather than skips), runs at push time. The bump commit's `.py`/`.toml` files
+   match the gate's `files: \.(py|toml|json)$` filter, so the suite runs — Docker must
+   be up or the push is blocked; start it and push again rather than bypassing.
 
    ```sh
    git push origin HEAD:main
