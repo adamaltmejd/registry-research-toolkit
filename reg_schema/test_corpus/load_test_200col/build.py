@@ -42,7 +42,7 @@ SOURCES: tuple[tuple[str, str, int], ...] = (
 
 # ~25 bindings per source: 1 id, ~5 categorical-with-classification, ~10
 # numeric, ~3 date, ~4 categorical-ad-hoc, ~2 opaque. The mix exercises
-# every binding-type code path in the validator and the bundle slicer.
+# every binding-type code path in the validator.
 # ``value_set`` classification FQIDs are 2-segment, version baked into
 # the slug (see reg_meta/DESIGN.md → FQID grammar): ``class/sun2020``, not the old ``class/sun/2020``.
 BINDING_TEMPLATES: tuple[tuple[str, str, dict[str, str | None]], ...] = (

@@ -1297,9 +1297,12 @@ def test_validator_accepts_arbitrary_mapping() -> None:
 # structural validator checks JSON KEYS, so if a field ever gains an alias the
 # frozenset must carry the alias (the models are alias-free today, so this is
 # future-proofing). This test file may import pydantic freely — it introspects
-# the models. (structural.py itself stays pydantic-free; that constraint's
-# original MONA-amalgamation rationale is archived and pending re-evaluation —
-# see #699.)
+# the models. (structural.py itself stays pydantic-free for the two-layer
+# raw-dict / issue-accumulating contract: it validates a parsed dict so rules
+# like "type ∈ enum" fire on raw JSON values before any ``Literal`` cast would
+# coerce or reject, accumulating every issue into a ``ValidationResult`` rather
+# than failing fast on the first bad value — see DESIGN.md → Two layers: models
+# vs. validator. That reason survives the archived MONA bundle.)
 
 
 def _wire_keys(model: type) -> set[str]:

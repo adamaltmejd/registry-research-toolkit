@@ -87,7 +87,12 @@ The `reg_webapp` `/api/bundle` and `/api/kit` endpoints are removed along with t
 packages they depended on. The surviving authoring surface is `/api/project/validate`,
 `/api/project/order`, and the SPA's order-CSV download. `reg_schema`'s opaque
 `reg_monabundle` block field in `ProjectData` is **kept** — it is `reg_schema`-owned,
-forward-compatible, and requires no code import of the archived package.
+forward-compatible, and requires no code import of the archived package. The rebuilt
+MONA-side runner will consume the existing dict-based `reg_schema.structural` validator
+(Pydantic-free, reg_meta-free), which keeps carrying its own parity-test-gated
+period-grammar copy because it can't import reg_meta — that Pydantic-free / one-way-dep
+/ duplicated-grammar split is forward-useful for the rebuild, not a bundle vestige
+(#702).
 
 Step 10b (composite `entity_key` / `time_key` runtime support) gates on the MONA rebuild
 rather than on §10a as originally planned.
