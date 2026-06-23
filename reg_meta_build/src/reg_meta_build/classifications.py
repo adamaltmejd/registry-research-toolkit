@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Any
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from .concept_groups import classification_slug_stem
+from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
     import sqlite3
@@ -1586,11 +1587,29 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
         if not multi_unclassified:
             return ResidueResult(value_sets=(), total=0, safe_count=0)
 
+        # Materialize the residue value_set_id set so the candidate and state queries
+        # can be RESTRICTED to it in SQL (a JOIN), instead of fetching every `_vs_cls`
+        # candidate row / every unclassified `variable_state` across the whole DB and
+        # discarding non-residue ones in Python. Results are identical; the full-table
+        # fetch is avoided. Maintainer diagnostic, not a hot path — a plain temp table
+        # + JOIN is enough.
+        conn.execute("DROP TABLE IF EXISTS _residue_vs")
+        conn.execute(
+            "CREATE TEMP TABLE _residue_vs (value_set_id INTEGER PRIMARY KEY) "
+            "WITHOUT ROWID"
+        )
+        conn.executemany(
+            "INSERT INTO _residue_vs (value_set_id) VALUES (?)",
+            [(vs_id,) for vs_id in multi_unclassified],
+        )
+
         # n_codes per residual value set (read off `_vs_cls`, which carries the
         # per-row n_codes the containment was scored against).
         n_codes_by_vs = dict(
             conn.execute(
-                "SELECT value_set_id, MAX(n_codes) FROM _vs_cls GROUP BY value_set_id"
+                "SELECT vc.value_set_id, MAX(vc.n_codes) FROM _vs_cls vc "
+                "JOIN _residue_vs rv ON rv.value_set_id = vc.value_set_id "
+                "GROUP BY vc.value_set_id"
             )
         )
 
@@ -1626,14 +1645,13 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                     ) AS REAL) / vc.n_codes
                 ) AS label_agree
             FROM _vs_cls vc
+            JOIN _residue_vs rv ON rv.value_set_id = vc.value_set_id
             JOIN classification cl ON cl.id = vc.cls_id
             ORDER BY vc.value_set_id, cl.short_name
             """
         ).fetchall()
         candidates_by_vs: dict[int, list[ResidueCandidate]] = {}
         for value_set_id, short_name, containment, standalone, label_agree in cand_rows:
-            if value_set_id not in multi_unclassified:
-                continue
             candidates_by_vs.setdefault(value_set_id, []).append(
                 ResidueCandidate(
                     short_name=short_name,
@@ -1657,18 +1675,16 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                 v.slug AS variable_slug,
                 v.name AS name
             FROM variable_state vs
+            JOIN _residue_vs rv ON rv.value_set_id = vs.value_set_id
             JOIN variable v ON v.variable_id = vs.variable_id
             JOIN register r ON r.register_id = v.register_id
             JOIN provider p ON p.provider_id = r.provider_id
             WHERE vs.classification_id IS NULL
-              AND vs.value_set_id IS NOT NULL
             ORDER BY vs.value_set_id, vs.variable_id
             """
         ).fetchall()
         states_by_vs: dict[int, list[ResidualState]] = {}
         for value_set_id, variable_id, p_slug, r_slug, v_slug, name in state_rows:
-            if value_set_id not in multi_unclassified:
-                continue
             fqid = f"{p_slug or ''}/{r_slug or ''}/{v_slug or ''}"
             states_by_vs.setdefault(value_set_id, []).append(
                 ResidualState(variable_id=variable_id, fqid=fqid, name=name)
@@ -1680,15 +1696,18 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             states = tuple(states_by_vs.get(value_set_id, ()))
             # SAFE: exactly one standalone candidate clears the label floor and
             # every OTHER candidate is below it (label-unambiguous single standalone).
+            # Key the partition by candidate INDEX, not value-equality membership, so
+            # two candidates with coincidentally-equal fields can't conflate (a
+            # `c not in qualifying` test on frozen dataclasses dedups by value).
             qualifying = [
-                c
-                for c in candidates
+                i
+                for i, c in enumerate(candidates)
                 if c.standalone and c.label_agree >= _SAFE_LABEL_AGREE
             ]
             others_below = all(
                 c.label_agree < _SAFE_LABEL_AGREE
-                for c in candidates
-                if c not in qualifying
+                for i, c in enumerate(candidates)
+                if i not in qualifying
             )
             safe = len(qualifying) == 1 and others_below
             value_sets.append(
@@ -1701,7 +1720,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                 )
             )
     finally:
-        for tmp in ("_vs_cls", "_vs_stats", "_vs_codes", "_canon_codes"):
+        for tmp in ("_residue_vs", "_vs_cls", "_vs_stats", "_vs_codes", "_canon_codes"):
             conn.execute(f"DROP TABLE IF EXISTS {tmp}")
 
     safe_count = sum(1 for vs in value_sets if vs.safe)
@@ -1718,19 +1737,62 @@ def render_residue_toml(result: ResidueResult) -> str:
     """Render the residue worklist as a `[[link]]` TOML string a maintainer curates
     from — the exact shape `classification_links.toml` accepts, so a CONFIRMED
     candidate copies across verbatim. Built by hand (not `tomli_w`) so the
-    per-value-set evidence `#` comments survive (`tomli_w` drops comments).
+    per-value-set evidence `#` comments survive (`tomli_w` drops comments); every
+    emitted string value (`variable`, `classification`, `note`) and every value
+    interpolated into a `#` comment goes through the shared `_toml_str` /
+    `_toml_comment` leaves (`fqid_slugs.py`) for round-trip safety, the same as
+    `concept_group_candidates.render_candidates_toml`.
 
-    The SAFE subset (single label-unambiguous standalone candidate) is emitted
-    FIRST and clearly marked — that's the curatable tier (#494 part 2). Each
-    `[[link]]` carries one `variable = "p/r/v"` per unclassified state, the
-    standalone candidate's `classification`, and a `note = "residue:safe"`
-    provenance marker; the preceding `#` comment shows n_codes and every candidate's
-    containment / label_agree / standalone so a reviewer sees the full evidence. The
-    AMBIGUOUS residue (no single safe standalone) is emitted as comment-only evidence
-    blocks — NOTHING uncommented to copy, since its true family needs a human call.
-    NOTHING materializes — read-only worklist only."""
+    The SAFE subset (single label-unambiguous standalone candidate) is emitted FIRST
+    and clearly marked — that's the curatable tier (#494 part 2). It is emitted as
+    one `[[link]]` per DISTINCT variable FQID (NOT per state): the curated loader
+    `load_classification_links` rejects a duplicate `variable`, and one variable can
+    surface as an unclassified state on several safe value sets, so a per-state emit
+    would produce duplicate `variable` blocks that fail to load verbatim. When a
+    variable's safe value sets all resolve to the SAME classification it gets ONE
+    block; when they resolve to DIFFERENT classifications that is a genuine conflict —
+    it is NOT emitted as a copyable link but routed to the ambiguous section as a
+    comment-flagged conflict for human resolution. Each `[[link]]` carries the
+    standalone candidate's `classification` and a `note = "residue:safe"` provenance
+    marker; the preceding `#` comment shows n_codes and every candidate's containment
+    / label_agree / standalone so a reviewer sees the full evidence. The AMBIGUOUS
+    residue (no single safe standalone, plus the safe-but-conflicting variables) is
+    comment-only — NOTHING uncommented to copy, since its true family needs a human
+    call. NOTHING materializes — read-only worklist only."""
     safe = [vs for vs in result.value_sets if vs.safe]
     ambiguous = [vs for vs in result.value_sets if not vs.safe]
+
+    def _safe_target(vs: ResidueValueSet) -> ResidueCandidate:
+        """The single qualifying standalone candidate of a safe value set."""
+        return next(
+            c
+            for c in vs.candidates
+            if c.standalone and c.label_agree >= _SAFE_LABEL_AGREE
+        )
+
+    # Group the safe states by variable FQID so each FQID emits at most one
+    # `[[link]]` — `load_classification_links` rejects a duplicate `variable`, and a
+    # variable can be an unclassified state on several safe value sets. Carry the
+    # variable name (first seen) for the evidence comment. A variable whose safe value
+    # sets resolve to MORE THAN ONE classification is a genuine conflict: it is pulled
+    # out of the copyable set and reported as a comment-flagged conflict below.
+    safe_targets_by_fqid: dict[str, set[str]] = {}
+    safe_name_by_fqid: dict[str, str | None] = {}
+    for vs in safe:
+        target = _safe_target(vs)
+        for st in vs.states:
+            safe_targets_by_fqid.setdefault(st.fqid, set()).add(target.short_name)
+            safe_name_by_fqid.setdefault(st.fqid, st.name)
+    safe_links = {
+        fqid: next(iter(targets))
+        for fqid, targets in safe_targets_by_fqid.items()
+        if len(targets) == 1
+    }
+    conflicts = {
+        fqid: sorted(targets)
+        for fqid, targets in safe_targets_by_fqid.items()
+        if len(targets) > 1
+    }
 
     lines = [
         "# GENERATED classification-linkage residue worklist — "
@@ -1760,42 +1822,56 @@ def render_residue_toml(result: ResidueResult) -> str:
         ]
         for c in vs.candidates:
             out.append(
-                f"#   candidate {c.short_name}: containment={c.containment:.2f}, "
+                f"#   candidate {_toml_comment(c.short_name)}: "
+                f"containment={c.containment:.2f}, "
                 f"label_agree={c.label_agree:.2f}, "
                 f"standalone={'yes' if c.standalone else 'no'}"
+            )
+        for st in vs.states:
+            name = f" ({_toml_comment(st.name)})" if st.name else ""
+            out.append(
+                f"#   state: variable = {_toml_comment(st.fqid)}{name} "
+                f"(variable_id {st.variable_id})"
             )
         return out
 
     lines.append("")
     lines.append("# === SAFE subset (curatable: copy the [[link]] blocks below) ===")
-    if not safe:
-        lines.append("# (none)")
     for vs in safe:
         lines.extend(_evidence_comment(vs))
-        # The single qualifying standalone candidate is the curated target.
-        target = next(
-            c
-            for c in vs.candidates
-            if c.standalone and c.label_agree >= _SAFE_LABEL_AGREE
-        )
-        for st in vs.states:
-            lines.append("[[link]]")
-            lines.append(f'variable = "{st.fqid}"')
-            lines.append(f'classification = "{target.short_name}"')
-            lines.append('note = "residue:safe"')
-            lines.append("")
+    if not safe_links:
+        lines.append("")
+        lines.append("# (no copyable links)")
+    # One [[link]] per distinct variable FQID (deduped above) so the block loads
+    # verbatim. Sorted for deterministic output.
+    for fqid in sorted(safe_links):
+        name = safe_name_by_fqid.get(fqid)
+        lines.append("")
+        if name:
+            lines.append(f"# {_toml_comment(name)}")
+        lines.append("[[link]]")
+        lines.append(f"variable = {_toml_str(fqid)}")
+        lines.append(f"classification = {_toml_str(safe_links[fqid])}")
+        lines.append(f"note = {_toml_str('residue:safe')}")
 
     lines.append("")
     lines.append(
         "# === AMBIGUOUS residue (evidence only — a human must pick the family) ==="
     )
-    if not ambiguous:
+    if not ambiguous and not conflicts:
         lines.append("# (none)")
+    # Variables whose safe value sets resolve to MORE THAN ONE classification: a
+    # genuine conflict, not copyable. Flagged for human resolution.
+    for fqid in sorted(conflicts):
+        name = safe_name_by_fqid.get(fqid)
+        suffix = f" ({_toml_comment(name)})" if name else ""
+        lines.append("")
+        lines.append(
+            f"# CONFLICT: variable {_toml_comment(fqid)}{suffix} maps to multiple "
+            f"safe classifications {conflicts[fqid]} across its value sets — "
+            "a human must pick one."
+        )
     for vs in ambiguous:
         lines.extend(_evidence_comment(vs))
-        for st in vs.states:
-            lines.append(
-                f"#   state: variable = {st.fqid!r}  (variable_id {st.variable_id})"
-            )
 
     return "\n".join(lines) + "\n"

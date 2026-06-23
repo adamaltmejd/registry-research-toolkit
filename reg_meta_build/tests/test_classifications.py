@@ -2354,12 +2354,98 @@ class TestDumpClassificationResidue:
         assert g.candidates() == before  # no rows written
         # Temp tables are gone — a subsequent detector run rebuilds them cleanly.
         leaked = g.conn.execute(
-            "SELECT name FROM sqlite_temp_master WHERE name LIKE '_vs%' OR name = '_canon_codes'"
+            "SELECT name FROM sqlite_temp_master "
+            "WHERE name LIKE '_vs%' OR name = '_canon_codes' OR name = '_residue_vs'"
         ).fetchall()
         assert leaked == []
         # And the detector still runs (multi-family → no link, as expected).
         counts = link_value_set_classifications(g.conn)
         assert counts["multi_family"] == 1
+
+    def test_variable_on_two_safe_value_sets_emits_one_link(
+        self, tmp_path: Path
+    ) -> None:
+        """A variable that is an unclassified state on TWO safe value sets — both
+        resolving to the SAME standalone classification — must emit ONE `[[link]]`,
+        not one per state: `load_classification_links` rejects a duplicate `variable`.
+        Asserts the worklist round-trips through the loader WITHOUT a duplicate-
+        `variable` error. (Fails against a per-state renderer: it emits two identical
+        `variable = "scb/ulf/dualvar"` blocks.)"""
+        from reg_meta_build.classification_links import load_classification_links
+        from reg_meta_build.classifications import (
+            dump_classification_residue,
+            render_residue_toml,
+        )
+
+        g = _Graph()
+        # FAM_A is the single label-unambiguous standalone for BOTH value sets: it
+        # contains both code groups under matching labels (label_agree 1.0 each).
+        s1 = _numeric_codes("S1", 10, 4)  # 0001..0010
+        s2 = [(str(i).zfill(4), f"S2 {i}") for i in range(11, 21)]  # 0011..0020
+        g.add_classification(20, "FAM_A", s1 + s2 + [("9000", "A only")])
+        # Two relabeled B families, one per value set → each value set is multi-family
+        # but FAM_A is the only label-unambiguous candidate (FAM_B* label_agree 0).
+        g.add_classification(21, "FAM_B1", [(c, f"relabel {c}") for c, _ in s1])
+        g.add_classification(22, "FAM_B2", [(c, f"relabel {c}") for c, _ in s2])
+        g.add_value_set(201, s1)
+        g.add_value_set(202, s2)
+        # ONE variable, TWO states (distinct value sets, distinct valid_from to clear
+        # the variable_state UNIQUE constraint).
+        g.add_variable_state(950, 201, slug="dualvar", valid_from="2010-01-01")
+        g.add_variable_state(950, 202, slug="dualvar", valid_from="2015-01-01")
+
+        result = dump_classification_residue(g.conn)
+        assert result.safe_count == 2  # both value sets safe
+
+        toml = render_residue_toml(result)
+        # Exactly one [[link]] for the variable — not one per state.
+        assert toml.count('variable = "scb/ulf/dualvar"') == 1
+        # Round-trips through the curated loader without a duplicate-variable raise.
+        path = tmp_path / "residue.toml"
+        path.write_text(toml, encoding="utf-8")
+        links = load_classification_links(path)
+        assert [
+            (e.provider, e.register, e.variable, e.classification) for e in links
+        ] == [("scb", "ulf", "dualvar", "FAM_A")]
+
+    def test_variable_safe_on_two_value_sets_conflicting_class_is_flagged(
+        self, tmp_path: Path
+    ) -> None:
+        """When a variable's two safe value sets resolve to DIFFERENT standalone
+        classifications, that is a genuine conflict: it is NOT emitted as a copyable
+        `[[link]]` (which would mislead a verbatim copy) but routed to the ambiguous
+        section as a comment-flagged conflict. The worklist still round-trips."""
+        from reg_meta_build.classification_links import load_classification_links
+        from reg_meta_build.classifications import (
+            dump_classification_residue,
+            render_residue_toml,
+        )
+
+        g = _Graph()
+        s1 = _numeric_codes("S1", 10, 4)
+        s2 = [(str(i).zfill(4), f"S2 {i}") for i in range(11, 21)]
+        # value_set 201 → safe FAM_A; value_set 202 → safe FAM_C (different family).
+        g.add_classification(20, "FAM_A", s1 + [("9000", "A only")])
+        g.add_classification(21, "FAM_B1", [(c, f"relabel {c}") for c, _ in s1])
+        g.add_classification(23, "FAM_C", s2 + [("9003", "C only")])
+        g.add_classification(24, "FAM_B2", [(c, f"relabel {c}") for c, _ in s2])
+        g.add_value_set(201, s1)
+        g.add_value_set(202, s2)
+        g.add_variable_state(951, 201, slug="conflvar", valid_from="2010-01-01")
+        g.add_variable_state(951, 202, slug="conflvar", valid_from="2015-01-01")
+
+        result = dump_classification_residue(g.conn)
+        assert result.safe_count == 2
+
+        toml = render_residue_toml(result)
+        # No copyable [[link]] for the conflicting variable, and it is flagged.
+        assert 'variable = "scb/ulf/conflvar"' not in toml
+        assert "CONFLICT" in toml
+        assert "conflvar" in toml
+        # Whatever links DID emit still load (here: none).
+        path = tmp_path / "residue.toml"
+        path.write_text(toml, encoding="utf-8")
+        assert load_classification_links(path) == ()
 
 
 class TestClassificationResidueCli:

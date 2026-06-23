@@ -984,24 +984,28 @@ read-only **residue diagnostic** (below) recomputes `_vs_cls` byte-identically; 
 detector owns steps 4+ (its write side).
 
 **Residue diagnostic (`classification-residue`, #513).**
-`reg-meta-build classification-residue` (`dump_classification_residue`) productizes that
-994-value-set residue as a reusable, read-only worklist — replacing the #494 throwaway
-recompute — so a maintainer can curate `classification_links.toml` from it. It NEVER
-mutates the DB. It rebuilds `_vs_cls` via the shared helper and joins the multi-family
-value sets (>1 candidate cls) to the SHIPPED `variable_state.classification_id IS NULL`
-signal: a value set is residual iff it is multi-family AND has ≥1 still-unclassified
-state. (The build scratch table `classification_candidate` is dropped before ship, so on
-a built DB the final folded NULL — not a scratch miss — is the "still unclassified"
-fact.) For each residual value set it reports `n_codes`, the unclassified states
-(variable FQID + name), and the candidate classifications with per-candidate
-containment, the exact-(code,label) `label_agree` (step 5's metric), and a STANDALONE
-flag (no `supersedes_id` chain neighbour). The SAFE subset — exactly one standalone
-candidate at `label_agree ≥ 0.90` with all others below — is the curatable #494-part-2
-tier and is emitted first as copyable `[[link]]` blocks (`-o`); the ambiguous residue is
-comment-only evidence. On the current scb,sos corpus the safe subset is empty (the 13
-label-unambiguous standalones #494 found are already in `classification_links.toml`, so
-no longer residual); the 994 remaining are vintage chains and genuine cross-family
-coincidences a human must triage.
+`reg-meta-build classification-residue` (`dump_classification_residue`) productizes the
+multi-family curation residue as a reusable, read-only worklist — replacing the #494
+throwaway recompute — so a maintainer can curate `classification_links.toml` from it. It
+NEVER mutates the DB. It rebuilds `_vs_cls` via the shared helper and joins the
+multi-family value sets (>1 candidate cls) to the SHIPPED
+`variable_state.classification_id IS NULL` signal: a value set is residual iff it is
+multi-family AND has ≥1 still-unclassified state. (The build scratch table
+`classification_candidate` is dropped before ship, so on a built DB the final folded
+NULL — not a scratch miss — is the "still unclassified" fact.) For each residual value
+set it reports `n_codes`, the unclassified states (variable FQID + name), and the
+candidate classifications with per-candidate containment, the exact-(code,label)
+`label_agree` (step 5's metric), and a STANDALONE flag (no `supersedes_id` chain
+neighbour). The SAFE subset — exactly one standalone candidate at `label_agree ≥ 0.90`
+with all others below — is the curatable #494-part-2 tier and is emitted first as
+copyable `[[link]]` blocks (one per distinct variable FQID, since
+`classification_links.toml` rejects a duplicate `variable`; `-o`); the ambiguous residue
+is comment-only evidence. By construction the safe subset is mostly already harvested:
+the confident auto-curatable tier (a single label-unambiguous standalone class) is
+exactly what the #494 reclaim/curation already copied into `classification_links.toml`,
+so those value sets are no longer residual. What typically remains is vintage chains
+(candidates that are NOT standalone) plus genuine cross-family coincidences — a human
+must triage them.
 
 **Design decisions:**
 
