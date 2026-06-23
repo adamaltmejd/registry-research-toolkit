@@ -31,10 +31,11 @@ BOT_REACT = "chatgpt-codex-connector[bot]"  # reactions
 HUMAN = "octocat"
 HEAD = "abcdef1234567890"  # the PR's current head commit (hex, like a real SHA)
 OLD = "fedcba0987654321"  # a pre-fix commit that is no longer head
-PUSH = "2026-06-22T12:00:00Z"
+PUSH = "2026-06-22T12:00:00Z"  # the head commit's committedDate (window-start floor)
 BEFORE = "2026-06-22T11:00:00Z"
 AFTER1 = "2026-06-22T12:30:00Z"
 AFTER2 = "2026-06-22T13:00:00Z"
+AFTER3 = "2026-06-22T13:30:00Z"
 USAGE_LIMIT = "You have reached your Codex usage limits for code reviews."
 
 
@@ -69,6 +70,11 @@ def _reaction(content, login, *, at=AFTER1):
     return {"content": content, "user": {"login": login}, "created_at": at}
 
 
+def _review_request(*, login=HUMAN, at=AFTER1):
+    """A human `@codex review` comment — re-opens the window (raises the window start)."""
+    return {"user": {"login": login}, "body": "@codex review", "created_at": at}
+
+
 def _review_comment(
     login, body, *, commit_id=HEAD, at=AFTER1, url="rc", path="f.py", line=1
 ):
@@ -83,10 +89,17 @@ def _review_comment(
     }
 
 
-def _classify(*, reviews=None, comments=None, reactions=None, review_comments=None):
+def _classify(
+    *,
+    committed_date=PUSH,
+    reviews=None,
+    comments=None,
+    reactions=None,
+    review_comments=None,
+):
     return prs.classify(
         head_oid=HEAD,
-        push_ts=PUSH,
+        committed_date=committed_date,
         reviews=reviews or [],
         comments=comments or [],
         reactions=reactions or [],
@@ -122,6 +135,18 @@ def test_both_login_forms_are_recognized() -> None:
     # pinning that the matcher sees both halves of the same bot.
     assert _classify(reviews=[_review(BOT_REVIEW)])["signal"] == "findings"
     assert _classify(reactions=[_reaction("eyes", BOT_REACT)])["signal"] == "reviewing"
+
+
+def test_impostor_login_is_rejected() -> None:
+    # The login is matched EXACTLY (not as a substring), so an actor like
+    # `chatgpt-codex-connector-test` cannot pose as the bot to settle the gate.
+    impostor = f"{BOT_REVIEW}-test"
+    out = _classify(
+        comments=[_comment(impostor, "Codex Review: no issues", reviewed_commit=HEAD)],
+        reactions=[_reaction("+1", impostor)],
+        reviews=[_review(impostor, state="CHANGES_REQUESTED")],
+    )
+    assert out["signal"] == "none"
 
 
 def test_eyes_only_is_reviewing_and_unsettled() -> None:
@@ -160,15 +185,47 @@ def test_clean_comment_for_non_head_commit_is_ignored() -> None:
     assert out["signal"] == "none"
 
 
-def test_bare_thumbs_up_reaction_is_not_clean() -> None:
-    # The fix for the rebase/no-push-time gap: a 👍 reaction is commit-unbound, so on its
-    # own it is NOT a clean verdict — clean requires the SHA-stamped narration comment.
-    out = _classify(reactions=[_reaction("+1", BOT_REACT, at=AFTER2)])
+def test_thumbs_up_within_window_is_clean() -> None:
+    # When Codex finishes a no-suggestions review it may post ONLY a 👍 (no SHA comment).
+    # An in-window 👍 is that clean verdict — missing it would hang the gate to the ceiling.
+    out = _classify(reactions=[_reaction("+1", BOT_REACT, at=AFTER1)])
+    assert out["signal"] == "clean"
+    assert out["settled"] is True
+
+
+def test_thumbs_up_before_window_start_is_ignored() -> None:
+    # A 👍 from a *prior* review window (before the latest @codex-review request) is stale
+    # and must not settle the re-triggered run — the window-start gate, not a commit clock.
+    out = _classify(
+        comments=[_review_request(at=AFTER2)],  # raises window start to AFTER2
+        reactions=[_reaction("+1", BOT_REACT, at=AFTER1)],  # older 👍 → excluded
+    )
     assert out["signal"] == "none"
 
 
-def test_exhausted_before_push_is_ignored() -> None:
-    # The out-of-tokens note carries no SHA, so it falls back to the push timestamp.
+def test_stale_exhausted_before_review_window_is_ignored() -> None:
+    # Codex finding A: a usage-limit comment after the head commit but before the current
+    # @codex-review request is from a prior window — it must NOT settle the new run as
+    # exhausted (which would prematurely end the bot-review window on unreviewed changes).
+    out = _classify(
+        comments=[
+            _comment(BOT_REVIEW, USAGE_LIMIT, at=AFTER1),  # stale, pre-request
+            _review_request(at=AFTER2),  # window reopens here
+        ],
+    )
+    assert out["signal"] == "none"
+    # but a usage-limit AFTER the request is in-window → exhausted
+    fresh = _classify(
+        comments=[
+            _review_request(at=AFTER2),
+            _comment(BOT_REVIEW, USAGE_LIMIT, at=AFTER3),
+        ],
+    )
+    assert fresh["signal"] == "exhausted"
+
+
+def test_exhausted_before_committed_date_is_ignored() -> None:
+    # Floor of the window is the head commit time; an out-of-tokens note before it is stale.
     out = _classify(comments=[_comment(BOT_REVIEW, USAGE_LIMIT, at=BEFORE)])
     assert out["signal"] == "none"
 

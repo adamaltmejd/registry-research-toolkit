@@ -18,8 +18,8 @@ tokens) is "settled" per the gate's "not a blocker", NOT "a bot reviewed and app
 independent review is a separate gate line the agent still owns.
 
 Signals (see the gate doc):
-  clean      — Codex's "Codex Review: no issues" comment stamped with the head commit's
-               SHA (its no-findings verdict; it also reacts 👍).
+  clean      — Codex's no-findings verdict: a "Codex Review: no issues" comment stamped
+               with the head SHA, or (when it posts no comment) a 👍 within the window.
   findings   — a submitted Codex review on the head commit (its suggestions vehicle): read.
   reviewing  — a 👀 reaction from Codex with nothing newer: still reviewing, never
                conclude.
@@ -74,22 +74,25 @@ _GHSPEC.loader.exec_module(_gh)
 gh_json = _gh.gh_json
 repo_owner_name = _gh.repo_owner_name
 
-# Codex's review/comment login is `chatgpt-codex-connector`; its reaction login is
-# `chatgpt-codex-connector[bot]`. The default is a case-insensitive substring that catches
-# BOTH (the bug a one-login poller hits) yet is specific enough to reject an unrelated actor
-# whose login merely contains "codex". Override with --bot for a different reviewer bot.
+# Codex authors its reviews, comments, and reactions as `chatgpt-codex-connector` and/or
+# `chatgpt-codex-connector[bot]`. We match the login EXACTLY against those two forms (not a
+# substring) so an impostor like `chatgpt-codex-connector-test` can't post a clean/exhausted
+# signal and settle the gate. Override with --bot for a different reviewer bot.
 DEFAULT_BOT = "chatgpt-codex-connector"
 # The out-of-tokens comment Codex posts instead of a review ("You have reached your Codex
 # usage limits for code reviews"). Matched on a Codex-authored comment → `exhausted`.
 USAGE_LIMIT_RE = re.compile(r"usage limit", re.IGNORECASE)
-# Codex stamps every verdict comment/review body with "Reviewed commit: `<abbrev-sha>`".
-# We bind `clean` to the head via this SHA (commit-exact, like findings' commit_id) rather
-# than trusting the 👍 reaction's timestamp — GitHub exposes no reliable push time
-# (`pushedDate` is null here), so a 👍 from a prior head could otherwise read as fresh.
+# A human's `@codex review` request re-opens the bot-review window on an unchanged head; its
+# timestamp is the window start for signals that aren't bound to the head commit (below).
+CODEX_REVIEW_REQUEST_RE = re.compile(r"@codex\s+review", re.IGNORECASE)
+# Codex stamps a no-findings verdict comment/review body with "Reviewed commit: `<sha>`".
+# We bind `clean` to the head via this SHA (commit-exact, like findings' commit_id).
 REVIEWED_COMMIT_RE = re.compile(
     r"reviewed commit:[^0-9a-fA-F]*([0-9a-fA-F]{7,40})", re.IGNORECASE
 )
-# GitHub reaction content string for 👀 (the in-progress marker).
+# GitHub reaction content strings: 👍 (a clean verdict when Codex posts no comment) / 👀
+# (the in-progress marker).
+THUMBS_UP = "+1"
 EYES = "eyes"
 # Review states that count as a submitted verdict. PENDING (never submitted) is excluded by
 # the submitted_at gate; DISMISSED is a withdrawn verdict, not an active one.
@@ -115,7 +118,7 @@ def _parse_ts(ts: str) -> datetime:
 def classify(
     *,
     head_oid: str,
-    push_ts: str,
+    committed_date: str,
     reviews: list[dict[str, Any]],
     comments: list[dict[str, Any]],
     reactions: list[dict[str, Any]],
@@ -125,30 +128,28 @@ def classify(
     """Resolve the Codex signal from raw GitHub records. Pure — the tested core.
 
     Returns the `signal` plus a `messages` list carrying the bodies of Codex's activity on
-    the current HEAD (head-bound review summaries + inline comments, and post-push issue
+    the current HEAD (head-bound review summaries + inline comments, and in-window issue
     comments) so the caller has the actual text in one shot and never re-runs `gh`. A
-    `clean` signal is authoritative — it means Codex reviewed *this* commit and found no
-    issues; any accompanying comment (also in `messages`) is narration, not something to
-    re-read and second-guess.
+    `clean` signal is authoritative — Codex reviewed *this* commit and found no issues; any
+    accompanying comment (also in `messages`) is narration, not something to second-guess.
 
-    The two verdicts that gate merge are bound to the head commit, not to a timestamp:
-    **findings** = a submitted *review* whose `commit_id == head_oid`; **clean** = Codex's
-    "Codex Review: …" narration *comment* stamped with `Reviewed commit: <head>`. Both are
-    rebase-proof. (GitHub exposes no reliable push time — `pushedDate` is null — so a
-    timestamp gate on the 👍 reaction could let a 👍 from a *prior* head read as fresh; the
-    SHA stamp avoids that.) Only the lower-stakes signals fall back to the push timestamp:
-    **exhausted** (the out-of-tokens comment carries no SHA) and **reviewing** (a 👀
-    reaction — and a stale 👀 only over-waits, the safe direction).
+    Each signal is scoped one of two ways:
+
+    - **Head-bound** (rebase-proof, no timestamp): **findings** = a submitted *review* with
+      `commit_id == head_oid`; a SHA-stamped **clean** = a "Codex Review: …" comment carrying
+      `Reviewed commit: <head>`.
+    - **Window-bound** for the signals GitHub doesn't tie to a commit — a 👍 reaction (Codex
+      posts no comment on some clean runs, so the 👍 is the only signal), the out-of-tokens
+      **exhausted** comment, and the 👀 **reviewing** marker. These count only if they land
+      after the *review window start* = the later of the head commit's `committed_date` and
+      the most recent human `@codex review` request. That start, not a bare commit timestamp,
+      is what stops a stale 👍/usage-limit from a *prior* window settling a re-triggered run
+      (GitHub exposes no reliable push time — `pushedDate` is null — so the commit date alone
+      would admit them).
 
     Resolution: if the *newest* event is a 👀, Codex is mid-review → `reviewing` (never
     conclude then). Otherwise the strongest verdict wins, by priority `findings > clean >
     exhausted` — actionable feedback over a no-issues note, a real verdict over out-of-tokens.
-
-    How Codex actually signals (observed): **findings** = a submitted review on the head
-    commit (summary body + inline comments); **clean** = a 👍 reaction *and* the SHA-stamped
-    narration comment. A top-level comment is therefore narration or the usage-limit note —
-    never the findings vehicle. (If Codex ever delivers findings as a bare comment with no
-    review, this misses them — unobserved; the agent reads the PR regardless.)
 
     Record shapes (the subset used; GitHub's REST field names):
       review        : {"user": {"login"}, "state", "commit_id", "submitted_at",
@@ -159,18 +160,27 @@ def classify(
                        "path", "line", "body"}  (inline; GET /pulls/{pr}/comments)
     """
     review_comments = review_comments or []
-    bot_re = re.compile(re.escape(bot), re.IGNORECASE)
-    push = _parse_ts(push_ts)
+    bot_logins = {bot.lower(), f"{bot}[bot]".lower()}
 
     def is_bot(rec: dict[str, Any]) -> bool:
-        return bool(bot_re.search((rec.get("user") or {}).get("login", "")))
+        return (rec.get("user") or {}).get("login", "").lower() in bot_logins
 
-    def after_push(ts: str | None) -> bool:
-        return bool(ts) and _parse_ts(ts) > push
+    # Window start = the later of the head commit time and the newest human @codex-review
+    # request (the bot's own comments quote "@codex review" in their footer — exclude them).
+    window_start = _parse_ts(committed_date)
+    for c in comments:
+        if (
+            not is_bot(c)
+            and c.get("created_at")
+            and CODEX_REVIEW_REQUEST_RE.search(c.get("body") or "")
+        ):
+            window_start = max(window_start, _parse_ts(c["created_at"]))
+
+    def in_window(ts: str | None) -> bool:
+        return bool(ts) and _parse_ts(ts) > window_start
 
     # Every Codex signal we keep, as (ts, kind, detail). `reviewing` is the 👀 in-progress
-    # marker; the rest are verdicts. Reviews are bound to the head commit; body
-    # reactions/comments are gated on the push timestamp.
+    # marker; the rest are verdicts. See the docstring for head-bound vs window-bound.
     events: list[tuple[datetime, str, dict[str, Any]]] = []
 
     for r in reviews:
@@ -196,17 +206,21 @@ def classify(
         ts, body = c["created_at"], c.get("body") or ""
         sha = _reviewed_commit(body)
         if USAGE_LIMIT_RE.search(body):
-            # Out-of-tokens note carries no reviewed-commit, so gate it on the push time.
-            if after_push(ts):
+            # Out-of-tokens note carries no reviewed-commit → gate it on the window start.
+            if in_window(ts):
                 events.append((_parse_ts(ts), "exhausted", {"url": c.get("html_url")}))
         elif sha and head_oid.startswith(sha):
             # The "Codex Review: no issues" narration, stamped with the head SHA → clean.
             events.append((_parse_ts(ts), "clean", {"url": c.get("html_url")}))
 
     for x in reactions:
-        # Only 👀 is consulted (the in-progress marker); the clean 👍 is superseded by the
-        # commit-bound narration comment above. A stale 👀 only over-waits — the safe way.
-        if is_bot(x) and x.get("content") == EYES and after_push(x.get("created_at")):
+        # A 👍 is a clean verdict when Codex left no comment; 👀 means still reviewing. Both
+        # are commit-unbound, so they count only within the current review window.
+        if not is_bot(x) or not in_window(x.get("created_at")):
+            continue
+        if x.get("content") == THUMBS_UP:
+            events.append((_parse_ts(x["created_at"]), "clean", {}))
+        elif x.get("content") == EYES:
             events.append((_parse_ts(x["created_at"]), "reviewing", {}))
 
     signal: str = "none"
@@ -250,7 +264,7 @@ def classify(
             continue
         sha = _reviewed_commit(c.get("body"))
         head_bound = bool(sha and head_oid.startswith(sha))
-        if head_bound or after_push(c.get("created_at")):
+        if head_bound or in_window(c.get("created_at")):
             messages.append({"kind": "comment", "ts": c.get("created_at"),
                              "url": c.get("html_url"), "body": c.get("body")})  # fmt: skip
     messages.sort(key=lambda m: m["ts"] or "")
@@ -265,11 +279,11 @@ def classify(
 
 
 def _head_push_ts(pr: dict[str, Any]) -> str:
-    """The head commit's committedDate — the push reference for body reactions/comments.
+    """The head commit's committedDate — the floor of `classify`'s review-window start.
 
-    Only reactions/comments lean on this (reviews are commit-bound); see `classify`'s
-    note for why committedDate is the right approximation. Fails fast (exit 2) on the
-    degenerate empty-commits PR rather than dying with a bare ValueError.
+    Window-bound signals (👍 / exhausted / 👀) must post no earlier than this; a later
+    `@codex review` request raises the floor. Fails fast (exit 2) on the degenerate
+    empty-commits PR rather than dying with a bare ValueError.
     """
     commits = pr.get("commits") or []
     if not commits:
@@ -301,10 +315,10 @@ def evaluate(owner: str, name: str, pr: int, bot: str = DEFAULT_BOT) -> dict[str
     comments = _paginated(f"{base}/issues/{pr}/comments")
     reactions = _paginated(f"{base}/issues/{pr}/reactions")
     review_comments = _paginated(f"{base}/pulls/{pr}/comments")
-    push_ts = _head_push_ts(pr_view)
+    committed_date = _head_push_ts(pr_view)
     result = classify(
         head_oid=pr_view["headRefOid"],
-        push_ts=push_ts,
+        committed_date=committed_date,
         reviews=reviews,
         comments=comments,
         reactions=reactions,
@@ -315,7 +329,7 @@ def evaluate(owner: str, name: str, pr: int, bot: str = DEFAULT_BOT) -> dict[str
         "pr": pr,
         "pr_state": pr_view["state"],
         "head_oid": pr_view["headRefOid"],
-        "push_ts": push_ts,
+        "committed_date": committed_date,
         **result,
     }
 
