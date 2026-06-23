@@ -465,7 +465,9 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   `DimensionsPanel` (#612); loading and error states still render inline, so an
   in-flight or errored fetch never reads as a confirmed absence. When results are
   present, fuzzy hits are labelled as such; each hit links to the `/doc/<filename>`
-  viewer and renders the FTS snippet as plain text (not `{@html}`).
+  viewer and renders the FTS snippet via a safe inline-emphasis subset (`**…**` →
+  `<mark>` for matched-term highlight, `*…*`/`_…_` → `<em>`) through auto-escaped Svelte
+  interpolation — never `{@html}`, still excerpt-only.
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
