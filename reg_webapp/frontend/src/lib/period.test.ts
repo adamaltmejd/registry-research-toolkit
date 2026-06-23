@@ -586,6 +586,22 @@ describe("intersectCoverageWindow (#671 coverage-aware seed)", () => {
     ).toEqual({ from: 1960, to: 2005 });
   });
 
+  it("open coverage START + a pre-1960 window: the WINDOW-AWARE fallbackMin keeps the covered pre-1960 years (Fix 5)", () => {
+    // Fix 5: a project window may legitimately start before 1960. The picker passes
+    // a window-aware lower fallback (`sliderBounds.min` = 1950 here, not the fixed
+    // 1960 floor), so an OPEN-start coverage extends to the rendered track start —
+    // window 1950–2005 ∩ coverage {null..2008} → 1950–2005, NOT 1960–2005 (which
+    // silently dropped the covered 1950–1959 years).
+    expect(
+      intersectCoverageWindow(
+        { from: null, to: 2008 },
+        { from: 1950, to: 2005 },
+        1950,
+        2026,
+      ),
+    ).toEqual({ from: 1950, to: 2005 });
+  });
+
   it("open coverage END resolves to fallbackMax (the vintage ceiling)", () => {
     expect(
       intersectCoverageWindow(

@@ -371,6 +371,29 @@ describe("PeriodWindowSlider", () => {
       .not.toBeInTheDocument();
   });
 
+  it("INVERTED coverage: no 'coverage through' note (the band/seed discard it, Fix 7)", async () => {
+    // Inverted coverage {from:2025, to:null} on a 2024 vintage → effective
+    // 2025..2024 (open end projected to the vintage), which `bandEdges` nulls as
+    // unusable (Fix D: no band, no clamp). The "coverage through 2024" note would
+    // contradict the "data 2025–…" readout, so Fix 7 gates it on `bandEdges` — the
+    // note must NOT render. The raw readout still shows the open end as an ellipsis.
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      min: 1990,
+      max: 2024,
+      coverage: { from: 2025, to: null },
+      vintageYear: 2024,
+      selection: { from: 2000, to: 2010 },
+      window: { from: 2000, to: 2010 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect.element(screen.getByText("data 2025–…")).toBeVisible();
+    await expect
+      .element(screen.getByText(/coverage through/))
+      .not.toBeInTheDocument();
+  });
+
   it("sub-annual ?period: availability gaps are suppressed (the projection isn't the real selection)", async () => {
     // selection 2000–2020 vs coverage 1995–2015 WOULD gap 2016–2020 — but the
     // shown span is the window PROJECTION, not the real (sub-annual) value, so the

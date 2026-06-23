@@ -160,6 +160,26 @@ describe("PeriodPicker — window slider (#615)", () => {
       .toHaveValue("2008");
   });
 
+  it("open-start coverage + a pre-1960 window seeds From at the window start, not the 1960 floor (Fix 5)", async () => {
+    // Fix 5: window 1950–2005 starts before the SLIDER_FLOOR_YEAR (1960), so the
+    // bounds widen below the floor. An OPEN-start coverage ({null..2008}) must
+    // extend to that rendered track start — the From thumb seeds at 1950, NOT 1960
+    // (which would have silently dropped the covered 1950–1959 years).
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 1950, to: 2005 } as StudyWindow,
+      coverage: { from: null, to: 2008 } as Coverage,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("1950");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2005");
+  });
+
   it("an explicit ?period overrides the window (precedence ?period > window)", async () => {
     const screen = await render(PeriodPicker, {
       period: "2004..2006",

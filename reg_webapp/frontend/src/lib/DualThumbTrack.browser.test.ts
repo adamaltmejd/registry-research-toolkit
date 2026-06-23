@@ -178,5 +178,43 @@ describe("DualThumbTrack", () => {
       await fromThumb.fill("1990");
       await expect.element(fromThumb).toHaveValue("1990");
     });
+
+    it("an in-range value advertises the selectable bound as aria-valuemax (Fix 6)", async () => {
+      const screen = await render(DualThumbTrack, {
+        ...base, // 1990–2020
+        selectableMin: 1995,
+        selectableMax: 2015,
+        selection: { from: 2000, to: 2010 }, // both within [1995, 2015]
+      });
+      // The value is inside the selectable sub-range → the widen collapses to it:
+      // the To thumb advertises selHi (2015), not the full track max.
+      await expect
+        .element(screen.getByRole("slider", { name: "To year" }))
+        .toHaveAttribute("aria-valuemax", "2015");
+      await expect
+        .element(screen.getByRole("slider", { name: "From year" }))
+        .toHaveAttribute("aria-valuemin", "1995");
+    });
+
+    it("an out-of-coverage seed widens aria-valuemax to include the value (valuenow stays in-range, Fix 6)", async () => {
+      const screen = await render(DualThumbTrack, {
+        ...base, // 1990–2020
+        selectableMin: 1995,
+        selectableMax: 2015,
+        // An explicit out-of-coverage `?period` seeds To beyond selectableMax
+        // (the seed clamps only to [min, max] → To = 2018, honest render).
+        selection: { from: 2000, to: 2018 },
+      });
+      const toThumb = screen.getByRole("slider", { name: "To year" });
+      // The seeded value renders honestly past the selectable ceiling…
+      await expect.element(toThumb).toHaveValue("2018");
+      // …and aria-valuemax WIDENS to >= it (2018), so aria-valuenow (2018) is
+      // never outside [valuemin, valuemax] — valid ARIA, not the smaller selHi.
+      await expect.element(toThumb).toHaveAttribute("aria-valuemax", "2018");
+      // The From thumb (in-range) is unaffected — still the selectable floor.
+      await expect
+        .element(screen.getByRole("slider", { name: "From year" }))
+        .toHaveAttribute("aria-valuemin", "1995");
+    });
   });
 });

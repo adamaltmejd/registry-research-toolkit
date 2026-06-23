@@ -296,8 +296,16 @@ const availabilityNote = $derived.by(() => {
 // reads as an explained corpus ceiling rather than an unbounded span. For a FINITE
 // coverage the `data <from>–<to>` readout already names the end, so this stays
 // quiet (no redundant note). Empty when there's no coverage.
+// Fix 7: gated on `bandEdges !== null` — the SAME non-inverted condition the band
+// and the thumb seed use (Fix D). An INVERTED coverage (e.g. `{from:2025, to:null}`
+// on a 2024 vintage → effective 2025..2024) is discarded as unusable (no band, no
+// clamp), so naming a "coverage through 2024" ceiling next to "data 2025–…" would
+// be a contradiction — the note stays quiet there too.
 const coverageThrough = $derived(
-  coverage !== null && coverage.to === null && effectiveCoverage?.to != null
+  bandEdges !== null &&
+    coverage !== null &&
+    coverage.to === null &&
+    effectiveCoverage?.to != null
     ? effectiveCoverage.to
     : null,
 );

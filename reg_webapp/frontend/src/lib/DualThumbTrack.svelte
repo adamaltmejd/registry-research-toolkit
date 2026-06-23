@@ -149,6 +149,14 @@ function onTo(event: Event): void {
        announce that selectable sub-range so a screen reader matches the reachable
        range, not the full track (Fix F). With no selectable range supplied
        (YearWindowSlider) selLo/selHi = min/max, so its ARIA is unchanged.
+       Fix 6: an explicit out-of-coverage `?period` can SEED a thumb beyond
+       [selLo, selHi] (see the Fix C note below — the seed clamps only to
+       [min, max]), so each thumb WIDENS its own ARIA bound to include its current
+       value: a native slider's `aria-valuenow` must lie within [valuemin, valuemax],
+       so advertising only [selLo, selHi] when the value sits outside it is invalid
+       ARIA. In the common in-coverage case the widen collapses to [selLo, selHi]
+       (unchanged); with the props absent (YearWindowSlider) selLo/selHi = min/max,
+       and the value is always within them, so it stays [min, max].
        KNOWN LIMITATION (Fix C, intentional — no behavior change): an explicit
        out-of-coverage `?period` can SEED a thumb beyond [selLo, selHi] (the seed
        clamps only to [min, max], so the consumer renders the URL's value
@@ -164,8 +172,8 @@ function onTo(event: Event): void {
     step="1"
     value={from}
     aria-label="From year"
-    aria-valuemin={selLo}
-    aria-valuemax={selHi}
+    aria-valuemin={Math.min(selLo, from ?? selLo)}
+    aria-valuemax={Math.max(selHi, from ?? selHi)}
     oninput={onFrom}
     onchange={() => onCommit?.()}
   />
@@ -177,8 +185,8 @@ function onTo(event: Event): void {
     step="1"
     value={to}
     aria-label="To year"
-    aria-valuemin={selLo}
-    aria-valuemax={selHi}
+    aria-valuemin={Math.min(selLo, to ?? selLo)}
+    aria-valuemax={Math.max(selHi, to ?? selHi)}
     oninput={onTo}
     onchange={() => onCommit?.()}
   />

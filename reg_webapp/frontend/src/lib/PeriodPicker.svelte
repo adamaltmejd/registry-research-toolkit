@@ -156,22 +156,6 @@ const activeYearSelection = $derived<StudyWindow | null>(
   yearWindowFromWire(period) ?? window,
 );
 
-/** The window the slider THUMBS seed from (#671). An explicit year `?period`
- * (the user's chosen local value) wins verbatim. Otherwise the seed is
- * coverage-aware so the variable's real coverage shows up front:
- * `intersectCoverageWindow` against the EFFECTIVE coverage edges (open start →
- * the slider floor, open end → the vintage ceiling) yields window∩coverage when a
- * window is set, the coverage span when none is, the window itself when there's no
- * coverage to narrow to (a stateless variable still honours its window), and the
- * full bounds only when neither is set. NOTE: WITH coverage the bare window is
- * intentionally NOT the seed — only its intersection with coverage is (the
- * window's out-of-coverage tail must not read as available); the bare-window seed
- * is the no-coverage case alone. */
-const seededSelection = $derived<StudyWindow>(
-  yearWindowFromWire(period) ??
-    intersectCoverageWindow(coverage, window, SLIDER_FLOOR_YEAR, ceilingYear),
-);
-
 /** The active `?period` wire when it is set but NOT year-representable (a
  * sub-annual token / segment list / `_default` / text) — null otherwise. In
  * this case `activeYearSelection` fell back to the window, so the slider's span
@@ -213,6 +197,30 @@ const sliderBounds = $derived.by(() => {
   const min = Math.min(SLIDER_FLOOR_YEAR, ...years, max);
   return { min, max };
 });
+
+/** The window the slider THUMBS seed from (#671). An explicit year `?period`
+ * (the user's chosen local value) wins verbatim. Otherwise the seed is
+ * coverage-aware so the variable's real coverage shows up front:
+ * `intersectCoverageWindow` against the EFFECTIVE coverage edges (open start →
+ * the slider's rendered FLOOR, open end → the vintage ceiling) yields
+ * window∩coverage when a window is set, the coverage span when none is, the window
+ * itself when there's no coverage to narrow to (a stateless variable still honours
+ * its window), and the full bounds only when neither is set. NOTE: WITH coverage
+ * the bare window is intentionally NOT the seed — only its intersection with
+ * coverage is (the window's out-of-coverage tail must not read as available); the
+ * bare-window seed is the no-coverage case alone.
+ *
+ * Fix 5: the open-start fallback is `sliderBounds.min`, the slider's actual
+ * rendered floor — NOT the fixed `SLIDER_FLOOR_YEAR`. A project window may
+ * legitimately start before 1960, which widens `sliderBounds.min` below the floor;
+ * an OPEN-start coverage must then extend to that rendered track edge, not clip at
+ * 1960 (which silently dropped the covered pre-1960 years). The open-END fallback
+ * stays `ceilingYear` — the #631 vintage is the correct cap there. (Declared after
+ * `sliderBounds` so the `sliderBounds.min` read is a plain forward reference.) */
+const seededSelection = $derived<StudyWindow>(
+  yearWindowFromWire(period) ??
+    intersectCoverageWindow(coverage, window, sliderBounds.min, ceilingYear),
+);
 
 /** The selection to seed the slider thumbs from — the #671 seed precedence
  * (`seededSelection`: active selection, else window∩coverage, else coverage,
@@ -293,11 +301,14 @@ $effect(() => {
  * and the slider's `bandEdges` (Fix D): `seededSelection` then falls back to the
  * window, else the FULL bounds. So with no window such a coverage gives a full-span
  * seed containing no data — which `applySlider` must NOT submit on an untouched
- * Apply (Fix 4). Mirrors the inversion test those two share (open start → the
- * slider floor, open end → the vintage ceiling). */
+ * Apply (Fix 4). Mirrors the inversion test `intersectCoverageWindow` runs — the
+ * SAME open-start fallback (`sliderBounds.min`, Fix 5) and open-end fallback
+ * (`ceilingYear`) — so this gate's "usable" verdict stays in lockstep with the seed
+ * the helper actually produces (an open-start coverage ending below 1960 is a real
+ * covered span, not an inversion). */
 const effectiveCoverageUsable = $derived(
   coverage !== null &&
-    (coverage.from ?? SLIDER_FLOOR_YEAR) <= (coverage.to ?? ceilingYear),
+    (coverage.from ?? sliderBounds.min) <= (coverage.to ?? ceilingYear),
 );
 
 /** Apply the slider's current selection. A moved thumb (`sliderWire`) wins;
