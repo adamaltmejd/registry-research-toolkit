@@ -298,6 +298,87 @@ class TestProviderToml:
         assert entry.panel_time_key == "period"
         assert entry.panel_entity_key == "kon"
 
+    @pytest.mark.parametrize(
+        "panel_lines",
+        [
+            # "period" sentinel is delivery-aligned; "row" contradicts it.
+            'panel_time_key = "period"\npanel_time_grain = "row"\n',
+            # A bare slug key is a per-row coordinate; "delivery" contradicts it.
+            'panel_time_key = "manad"\npanel_time_grain = "delivery"\n',
+            # A composite key is likewise per-row; "delivery" contradicts it.
+            'panel_time_key = ["ar", "kvartal"]\npanel_time_grain = "delivery"\n',
+        ],
+    )
+    def test_variant_panel_time_key_grain_mismatch_rejected(
+        self, tmp_path: Path, panel_lines: str
+    ):
+        # #576: panel_time_key and panel_time_grain must agree — the delivery-aligned
+        # "period" sentinel pairs only with "delivery", a slug/composite key only
+        # with "row". A contradictory pair would render an incoherent panel axis.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\nslug = "x"\n' + panel_lines,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        # Both kind_desc branches ("period" sentinel vs slug/composite) end the
+        # message with `expected {grain!r}.`, so every reject case names the
+        # expected grain.
+        assert "expected" in exc.value.message
+
+    @pytest.mark.parametrize(
+        ("panel_lines", "expected_key", "expected_grain"),
+        [
+            (
+                'panel_time_key = "period"\npanel_time_grain = "delivery"\n',
+                "period",
+                "delivery",
+            ),
+            ('panel_time_key = "period"\n', "period", None),  # grain optional
+            ('panel_time_key = "manad"\npanel_time_grain = "row"\n', "manad", "row"),
+            ('panel_time_key = "manad"\n', "manad", None),  # grain optional
+            (
+                'panel_time_key = ["ar", "kvartal"]\npanel_time_grain = "row"\n',
+                ("ar", "kvartal"),
+                "row",
+            ),
+            (
+                'panel_time_key = ["ar", "kvartal"]\n',
+                ("ar", "kvartal"),
+                None,
+            ),  # grain optional for composite
+        ],
+    )
+    def test_variant_panel_time_key_grain_consistent_accepted(
+        self,
+        tmp_path: Path,
+        panel_lines: str,
+        expected_key: str | tuple[str, ...],
+        expected_grain: str | None,
+    ):
+        # #576: a consistent pair (or a key with grain unset — the coupling stays
+        # optional) loads cleanly.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\nslug = "x"\n' + panel_lines,
+        )
+        entry = load_provider_toml(path)[0]
+        assert entry.panel_time_key == expected_key
+        assert entry.panel_time_grain == expected_grain
+
+    def test_variant_panel_time_grain_without_key_rejected(self, tmp_path: Path):
+        # #576: grain is optional, but a lone `panel_time_grain` (no
+        # `panel_time_key`) qualifies a time key that does not exist — incoherent
+        # metadata — and must fail at load, not silently persist.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\nslug = "x"\npanel_time_grain = "row"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
     def test_variable_override(self, tmp_path: Path):
         path = _write(
             tmp_path / "scb.toml",
