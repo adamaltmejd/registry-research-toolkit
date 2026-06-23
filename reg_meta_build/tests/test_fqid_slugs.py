@@ -322,6 +322,10 @@ class TestProviderToml:
         with pytest.raises(RegMetaError) as exc:
             load_provider_toml(path)
         assert exc.value.code == "slug_toml_invalid"
+        # Both kind_desc branches ("period" sentinel vs slug/composite) end the
+        # message with `expected {grain!r}.`, so every reject case names the
+        # expected grain.
+        assert "expected" in exc.value.message
 
     @pytest.mark.parametrize(
         ("panel_lines", "expected_key", "expected_grain"),
@@ -339,6 +343,11 @@ class TestProviderToml:
                 ("ar", "kvartal"),
                 "row",
             ),
+            (
+                'panel_time_key = ["ar", "kvartal"]\n',
+                ("ar", "kvartal"),
+                None,
+            ),  # grain optional for composite
         ],
     )
     def test_variant_panel_time_key_grain_consistent_accepted(
