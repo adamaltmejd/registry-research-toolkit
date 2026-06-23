@@ -57,6 +57,16 @@ jobs:
       - run: uv build reg_meta/ --out-dir dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
 
+  # Post-release end-to-end smoke: install reg_meta into a clean Docker container
+  # and run the full install → `reg-meta update` (downloads this release's DB) →
+  # query pipeline. Stronger than the `publish` job's in-runner verify above
+  # (clean container, only the package installed — the real user path). Inherits
+  # the reg_meta/v* gate via `needs: publish` (publish needs the tag-gated `ci`
+  # job), so it never fires for reg_meta_build/v* releases.
+  integration:
+    needs: publish
+    uses: ./.github/workflows/integration.yml
+
   # Self-clearing deploy (#448): a reg_meta release can ship the DB asset an
   # already-merged schema bump was waiting on — the schema-bump's main-push
   # build-image went green-skipped, deferring the origin deploy. Publishing the

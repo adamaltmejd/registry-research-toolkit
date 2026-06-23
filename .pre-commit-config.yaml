@@ -1,10 +1,11 @@
-# `pre-commit install` wires BOTH the commit gate and the post-checkout
+# `pre-commit install` wires THREE hook types: the commit gate (fast lint/type/
+# format), the pre-push gate (the full test suite), and the post-checkout
 # provisioner (below). Existing clones: re-run `pre-commit install` once to pick
-# up the post-checkout hook.
+# up the pre-push + post-checkout hooks.
 # NOTE: pre-commit refuses to install while `core.hooksPath` is set (even to the
 # default `.git/hooks`). If `git config --get core.hooksPath` returns a value,
 # `git config --unset core.hooksPath` first, then `pre-commit install`.
-default_install_hook_types: [pre-commit, post-checkout]
+default_install_hook_types: [pre-commit, pre-push, post-checkout]
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -53,12 +54,28 @@ repos:
         pass_filenames: false
         files: \.md$
         stages: [pre-commit]
+      # Full test suite — runs at PUSH time, not on every commit, so the tight
+      # commit loop stays fast (ruff/ty/panache only, all sub-second). The
+      # --run-integration flag opts the Docker integration test
+      # (reg_meta/tests/test_integration.py) IN past the root conftest's
+      # collection gate, making a running Docker daemon a REQUIRED pre-push gate:
+      # with Docker down the integration test FAILS (its `docker` fixture fails,
+      # not skips, once opted in), so the push is blocked until Docker is up —
+      # start it and push again rather than bypassing with --no-verify. CI's
+      # `test` job runs `-m "not integration"` (and passes no --run-integration),
+      # so pre-push is the only automated home for the integration test. The
+      # files gate runs the suite for code (.py) AND the committed data the suite
+      # validates directly — .toml (curation pins, fqid_slugs snapshots, concept
+      # groups; see test_repo_curation_tomls.py / test_slug_snapshot.py) and
+      # .json (openapi snapshot, fixtures) — skipping only pushes confined to
+      # docs/markdown/workflow-YAML (over the whole push range).
       - id: pytest
-        name: pytest (parallel)
-        entry: uv run python -m pytest -n auto -q
+        name: pytest (parallel, pre-push)
+        entry: uv run python -m pytest -n auto -q --run-integration
         language: system
         pass_filenames: false
-        stages: [pre-commit]
+        files: \.(py|toml|json)$
+        stages: [pre-push]
       # post-checkout only: provision a freshly checked-out / `git worktree add`ed
       # tree (its own .venv + node_modules) so worktrees created mid-session — by
       # `git worktree add`, or the harness (which uses it under the hood) — are

@@ -1,0 +1,50 @@
+name: Integration (Docker)
+
+# Server-side home for the Docker integration test
+# (reg_meta/tests/test_integration.py): it installs reg_meta into a clean
+# python:3.14-slim container and exercises install → `reg-meta update`
+# (downloads the DB from GitHub Releases) → query. It needs Docker AND a
+# published release asset matching the current SCHEMA_VERSION, so it deliberately
+# does NOT run on push/PR — a red X on unrelated work when a release is merely
+# owed would be noise. The same tests run locally as a pre-push gate
+# (.pre-commit-config.yaml, --run-integration only); CI's `test` job runs
+# `-m "not integration"`. This workflow is the only automated home for the
+# release-asset-dependent path.
+on:
+  # Weekly drift catch (base image, uv, GitHub Releases availability). Off the
+  # top of the hour — GitHub delays/drops crons scheduled at :00 under load.
+  schedule:
+    - cron: "17 6 * * 1"
+  # Called by publish_reg_meta.yml after a reg_meta/v* release is published, to
+  # validate the just-published artifact end-to-end from a clean container.
+  workflow_call:
+  # Manual on-demand run (e.g. after uploading a fresh DB asset).
+  workflow_dispatch:
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest # Docker daemon preinstalled and running
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.2.0
+      - run: uv sync --frozen
+      # Both opt-in flags: --run-integration (all Docker tests) and --run-release
+      # (the subset that downloads a published release asset). Serial, NOT
+      # `-n auto`: the module-scoped image fixture builds the container once;
+      # xdist would rebuild it per worker. GITHUB_TOKEN authenticates the
+      # in-container `reg-meta update` GitHub API call (forwarded by
+      # _docker_run) — the unauthenticated 60/hr-per-IP limit is easily
+      # exhausted from shared runner IPs.
+      #
+      # A failure during a release-owed window (main's SCHEMA_VERSION past the
+      # newest published asset) is expected and informative — it mirrors the
+      # issue-hygiene "DB content changed since last tag" drift alert, not a code
+      # regression. The post-release call never hits this (the matching asset was
+      # just published).
+      - name: Run Docker integration + release tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run python -m pytest --run-integration --run-release -m "integration or release"

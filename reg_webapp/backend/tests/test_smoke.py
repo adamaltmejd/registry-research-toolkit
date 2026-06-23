@@ -61,7 +61,12 @@ def _make_handler(routes: dict[str, tuple[int, object]]):
 def _serve(routes: dict[str, tuple[int, object]]) -> Iterator[str]:
     """Run a stub HTTP server for the body of the `with`, yielding its base URL."""
     server = HTTPServer(("127.0.0.1", 0), _make_handler(routes))
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    # poll_interval bounds how long shutdown() blocks (it waits for the serve
+    # loop's next poll). The default 0.5s makes every test's teardown cost ~0.5s;
+    # 0.05s keeps shutdown responsive without measurable busy-wait.
+    thread = threading.Thread(
+        target=lambda: server.serve_forever(poll_interval=0.05), daemon=True
+    )
     thread.start()
     try:
         yield f"http://127.0.0.1:{server.server_address[1]}"
@@ -115,10 +120,13 @@ def test_run_smoke_fails_on_500_context() -> None:
 
 def test_run_smoke_times_out_when_unreachable() -> None:
     # Nothing listening on this port → readiness wait gives up → TimeoutError.
+    # A short deadline keeps this fast: the readiness loop's poll_s is a hardcoded
+    # 0.5s (not threaded through run_smoke), so a sub-poll deadline bounds the wait
+    # to a single attempt+sleep (~0.5s) instead of the 1.0s two-cycle wait.
     with pytest.raises(TimeoutError):
         run_smoke(
             "http://127.0.0.1:1",
-            ready_deadline_s=1.0,
+            ready_deadline_s=0.3,
             timeout_s=0.5,
         )
 
