@@ -283,7 +283,6 @@ def test_project_data_defaults() -> None:
     pd = _project()
     assert pd.panels == ()
     assert pd.window is None  # absent window = full history (backward compatible)
-    assert pd.reg_monabundle is None
 
 
 def test_project_data_carries_optional_window() -> None:
@@ -298,8 +297,9 @@ def test_project_data_carries_optional_window() -> None:
         window=StudyWindow.model_validate({"from": 2000, "to": 2020}),
     )
     assert pd.window == StudyWindow.model_validate({"from": 2000, "to": 2020})
-    # exclude_none mirrors wire serialization: an absent reg_monabundle block
-    # must not dump as null (the structural validator rejects a null block).
+    # exclude_none mirrors wire serialization: an absent optional field (e.g.
+    # window) must not dump as null (the structural validator rejects a null
+    # window).
     dumped = pd.model_dump(mode="json", exclude_none=True)
     assert dumped["window"] == {"from": 2000, "to": 2020}
     result = validate_structural(dumped)
@@ -329,59 +329,12 @@ def test_project_data_is_frozen() -> None:
         pd.name = "other"  # type: ignore[misc]
 
 
-def test_project_data_carries_opaque_reg_monabundle_block() -> None:
-    block = {"binding_options": {"scb/lisa/dispink04": {"suppress_k": 20}}}
-    pd = ProjectData(
-        schema_version="2.0.0",
-        steward="global",
-        reg_meta_version="reg_meta/v1.0.0",
-        name="demo",
-        sources=(_source(),),
-        reg_monabundle=block,
-    )
-    # Carried by value (Pydantic validates the Mapping field, so it is
-    # equal-but-not-identical to the input dict).
-    assert pd.reg_monabundle == block
-
-
-def test_project_data_with_dict_block_is_unhashable_on_demand() -> None:
-    # The reg_monabundle block is a plain (unhashable) dict, and the
-    # frozen model's __hash__ includes it, so an instance carrying a
-    # populated block is unhashable. Documented in ProjectData's
-    # docstring — no consumer hashes a ProjectData with a block.
-    pd_no_block = _project()
-    assert hash(pd_no_block) is not None  # hashable without a block
-    pd_with_block = ProjectData(
-        schema_version="2.0.0",
-        steward="global",
-        reg_meta_version="reg_meta/v1.0.0",
-        name="demo",
-        sources=(_source(),),
-        reg_monabundle={"binding_options": {"scb/lisa/kon": {"suppress_k": 20}}},
-    )
-    with pytest.raises(TypeError):
-        hash(pd_with_block)
-
-
-def test_project_data_eq_compares_namespaced_block() -> None:
-    base_kwargs = {
-        "schema_version": "2.0.0",
-        "steward": "global",
-        "reg_meta_version": "reg_meta/v1.0.0",
-        "name": "demo",
-        "sources": (_source(),),
-    }
-    pd_a = ProjectData(**base_kwargs, reg_monabundle={"k": 1})
-    pd_b = ProjectData(**base_kwargs, reg_monabundle={"k": 2})
-    pd_c = ProjectData(**base_kwargs, reg_monabundle={"k": 1})
-    assert pd_a != pd_b
-    assert pd_a == pd_c
-
-
 def test_project_data_ignores_extra_steward_blocks() -> None:
     # extra="ignore" (overriding _Model's forbid): unmodeled steward
     # blocks ride through on the dict side and are handled by the owning
-    # package (see DESIGN.md → Not in scope (intentionally)); the model neither stores them nor errors.
+    # package (see DESIGN.md → Not in scope (intentionally)); the model
+    # neither stores them nor errors. reg_monabundle is no longer a typed
+    # field — it is a plain namespaced block exactly like swecov.
     pd = ProjectData(
         schema_version="2.0.0",
         steward="global",
@@ -389,8 +342,10 @@ def test_project_data_ignores_extra_steward_blocks() -> None:
         name="demo",
         sources=(_source(),),
         swecov={"filters": {}},  # type: ignore[call-arg]
+        reg_monabundle={"binding_options": {}},  # type: ignore[call-arg]
     )
     assert not hasattr(pd, "swecov")
+    assert not hasattr(pd, "reg_monabundle")
 
 
 # JSON schema (SPA TypeScript codegen source) ---------------------------

@@ -63,10 +63,10 @@ root `ARCHITECTURE.md`; remaining/unbuilt schema work lives in `REFACTOR_SPEC.md
 
 `ValidationResult.__post_init__` coerces `issues` to a tuple but does **not** verify
 each element is a `ValidationIssue` instance. JSON deserialization belongs at read/write
-boundaries — the API ingress in `reg_webapp` and any future MONA-side runner — not in
-the contract module itself. Python-internal callers are type-checked; cross-runtime
-callers own their decode step. If `result.ok` ever crashes with `AttributeError` on
-`.level`, that is a boundary bug to fix upstream, not a defensive check to add here.
+boundaries — the API ingress in `reg_webapp` — not in the contract module itself.
+Python-internal callers are type-checked; cross-runtime callers own their decode step.
+If `result.ok` ever crashes with `AttributeError` on `.level`, that is a boundary bug to
+fix upstream, not a defensive check to add here.
 
 The `level` allowlist *is* enforced at construction because the cost of a
 silently-weakened `ok` (returning `True` for a result that should block) is higher than
@@ -118,15 +118,15 @@ two are kept apart on purpose:
   and the `Period` / `EntityKey` / `TimeKey` / `TimePoint` type aliases. **Pure shape
   definitions** — structural rules are *not* re-encoded as raising field validators.
   Re-encoding them would replace the issue-accumulating contract with a fail-fast one,
-  and every runtime that shares the contract (SPA, webapp, future MONA runner) needs the
-  full issue list, not the first exception.
+  and every runtime that shares the contract (SPA, webapp) needs the full issue list,
+  not the first exception.
 - **Structural validator** (`structural.py`, §6.8.1): the entrypoint
   `validate_structural(data: Mapping[str, object]) -> ValidationResult` operates on a
   **parsed dict, not the Pydantic models**, for two reasons. First, rules like "`type` ∈
   enum" must fire on raw JSON values *before* any `Literal` cast would coerce or reject
   them — a wrong enum value has to surface as an accumulated `invalid_enum_value` issue,
   not a constructor crash. Second, staying off the model surface keeps the validator
-  Pydantic-free so it ports to the TS SPA and any future MONA-side runner.
+  Pydantic-free so it ports cleanly to the TS SPA.
 
 Models are constructed at boundaries (API ingress) only *after* `validate_structural`
 has passed; a Pydantic raise at that point signals validator/model drift, not user
@@ -136,10 +136,8 @@ error.
 
 `reg_schema/test_corpus/` is the single artifact that keeps the §6.8.1 structural rules
 behaving identically in the two runtimes that carry a copy of them — the canonical
-Python `validate_structural` and the SPA's TypeScript port. (The §6.8.0
-`ValidationResult` *shape* will also be used by the future MONA-side runner's
-namespaced-block validator; the structural *corpus* is not — see below.) Each case is a
-directory containing an `input.json` (a `project_data.json` payload) and an
+Python `validate_structural` and the SPA's TypeScript port. Each case is a directory
+containing an `input.json` (a `project_data.json` payload) and an
 `expected_ValidationResult.json` (the validator output the structural rules must
 produce). See `test_corpus/README.md` for the directory layout, file formats, and the
 rule for adding cases.

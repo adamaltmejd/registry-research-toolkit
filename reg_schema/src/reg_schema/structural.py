@@ -8,11 +8,12 @@ fire on raw JSON values before any ``Literal`` cast — the dataclass
 constructors deliberately don't enforce them (see ``project_data.py``).
 
 Same code is consumed by multiple runtimes (browser SPA via TS mirror,
-webapp via direct import, or a future MONA-side runner); see
-``DESIGN.md`` for the dependency direction. FQID well-formedness is
-checked locally (segment count + per-segment chars) rather than
-importing reg_meta — keeps the dependency direction one-way and the
-duplicated surface tight.
+webapp via direct import); see ``DESIGN.md`` for the dependency
+direction. FQID well-formedness is checked locally (segment count +
+per-segment chars) rather than importing reg_meta — reg_schema is the
+lightweight canonical-schema package and depending on the heavier
+catalog-query reg_meta would invert the layering, so the dependency
+stays one-way and the duplicated surface tight.
 
 Issue ``code`` values are stable across releases (see DESIGN.md → Structural rules and issue codes): tests pin
 codes; the SPA maps them to UI affordances; new codes are additive.

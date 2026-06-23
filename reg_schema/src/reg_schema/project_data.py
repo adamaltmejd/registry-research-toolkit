@@ -20,7 +20,7 @@ separate concerns:
   ``validate_structural()`` and run on the **raw dict** before any
   model is constructed. They accumulate every issue into a
   ``ValidationResult`` rather than raising, so every runtime that shares
-  the contract (SPA, webapp, any future MONA-side runner) sees the full
+  the contract (SPA via TS mirror, webapp via direct import) sees the full
   issue list. The models intentionally do NOT re-encode those rules as
   raising field validators — that would replace the issue-accumulating
   contract with a fail-fast one.
@@ -31,9 +31,6 @@ separate concerns:
 
 from __future__ import annotations
 
-# Runtime import (not TYPE_CHECKING): Pydantic resolves field annotations at
-# model-build time, so `Mapping` must be in the module namespace.
-from collections.abc import Mapping  # noqa: TC003
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -130,10 +127,10 @@ class Binding(_Model):
 
     ``display_name`` is optional: when absent, reg_meta-backed consumers
     resolve the default from ``variable_alias.delivery_column_name`` for
-    the binding's state at the source's ``(register_variant, period)``.
-    Reg_meta-free consumers (bundle on MONA, kit runs) never see an
-    unresolved ``display_name`` — bundle build and kit build materialize
-    defaults before emitting their artifacts.
+    the binding's state at the source's ``(register_variant, period)``. A
+    reg_meta-free consumer that materializes data artifacts must resolve
+    the default itself before emitting them — it never carries an
+    unresolved ``display_name`` into its output.
     """
 
     variable: str
@@ -299,25 +296,19 @@ class StudyWindow(_Model):
 class ProjectData(_Model):
     """The top-level ``project_data.json`` shape.
 
-    ``reg_monabundle`` (and any other namespaced block added later) is
-    intentionally typed as an opaque ``Mapping``: reg_schema delegates
-    validation of namespaced blocks to their owning package (see
-    DESIGN.md → Not in scope (intentionally)), and
-    reg_schema's frozen-ness does not deep-freeze nested mappings. That is
-    by design — namespaced consumers own their payload lifecycle.
-
     ``extra="ignore"`` (overriding ``_Model``'s ``forbid``) tolerates
-    additional steward-namespaced blocks (``swecov``, …) without modeling
-    them as fields: they ride through on the dict side
-    and are handled by the owning package (see DESIGN.md → Not in scope (intentionally)), exactly as the v0.x
-    dataclass did. If a field is wanted for one, we add it deliberately
-    rather than growing an ``extras`` dict.
+    steward-namespaced blocks (``swecov``, ``reg_monabundle``, … — any
+    namespaced block) WITHOUT modeling them as fields: reg_schema delegates
+    their content validation to the owning package (see DESIGN.md → Not in
+    scope (intentionally)), so the block rides through on the dict side and
+    is handled by that package (on the webapp write path the raw-body reader
+    preserves it verbatim, precisely because ``extra="ignore"`` drops it from
+    the model). If a field is genuinely wanted for one, we add it
+    deliberately rather than growing an ``extras`` dict.
 
-    Because the ``reg_monabundle`` block is an opaque (typically
-    unhashable) ``Mapping``, an instance carrying one is unhashable on
-    demand. No consumer hashes ``ProjectData`` (the webapp serializes it),
-    so ``frozen=True`` is kept
-    for value-immutability and ``__eq__`` without a custom ``__hash__``.
+    ``frozen=True`` is the trivial base default — value-immutability plus
+    hashability (no namespaced block is stored on the model, so every
+    ``ProjectData`` is hashable like any other frozen ``_Model``).
     """
 
     model_config = ConfigDict(frozen=True, extra="ignore")
@@ -331,4 +322,3 @@ class ProjectData(_Model):
     # Optional global study window (see issue #611 → Period model). Absent =
     # full history; existing specs validate unchanged (additive surface).
     window: StudyWindow | None = None
-    reg_monabundle: Mapping[str, object] | None = None

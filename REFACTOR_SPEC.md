@@ -85,9 +85,12 @@ realign-then-extract MONA workflow + standalone runner build (§10a). Tracking i
 
 The `reg_webapp` `/api/bundle` and `/api/kit` endpoints are removed along with the
 packages they depended on. The surviving authoring surface is `/api/project/validate`,
-`/api/project/order`, and the SPA's order-CSV download. `reg_schema`'s opaque
-`reg_monabundle` block field in `ProjectData` is **kept** — it is `reg_schema`-owned,
-forward-compatible, and requires no code import of the archived package.
+`/api/project/order`, and the SPA's order-CSV download. The typed `reg_monabundle` block
+field has been **removed** from `reg_schema`'s `ProjectData` (#702): it was a vestige of
+the deleted bundle consumer, the sole reason that field was modeled. `reg_monabundle`
+now rides through the generic steward-namespaced-block mechanism (`extra="ignore"` +
+`structural.py`'s "namespaced block must be an object" check) exactly like `swecov`,
+requiring no modeled field.
 
 Step 10b (composite `entity_key` / `time_key` runtime support) gates on the MONA rebuild
 rather than on §10a as originally planned.

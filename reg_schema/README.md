@@ -1,7 +1,7 @@
 # reg_schema
 
-`project_data.json` schema and structural validator. Importable by the webapp, the SPA
-(via TS codegen), and any future MONA-side runner.
+`project_data.json` schema and structural validator. Importable by the webapp and the
+SPA (via TS codegen).
 
 Python ≥3.14. One runtime dependency: Pydantic v2 (the deliberate exception to the
 workspace no-Pydantic rule); the structural validator itself operates on raw dicts and
