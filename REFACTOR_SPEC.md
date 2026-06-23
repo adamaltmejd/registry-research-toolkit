@@ -148,13 +148,32 @@ to `curating` then `frozen` in `freeze.toml`. There is no single global delete t
 the gate — immutability is per-provider and per-zone. See #470 (machinery), #471
 (curation), #472 (seal).
 
-**Preconditions — resolve before committing auto-TOMLs or advancing to `curating`:**
-#196 (curated column-merge primitive + auto case-fold + panel-key re-curation) and #197
-(the FRIDA `borgnr` cross-var_id attribution decision) both churn variable identity —
-merges collapse sibling variables and re-mint slugs — which is exactly what the
-grow-only gate locks. Land them in a pre-freeze curation pass (natural slot: around step
-7.5); arming the gate while either is unresolved either bakes fragmented identities into
-v1 or forces post-freeze immutability exceptions.
+**Preconditions — the hard identity-churn blockers are resolved.** #196 (curated
+column-merge primitive + auto case-fold + panel-key re-curation) and #197 (the FRIDA
+`borgnr` cross-var_id attribution decision) both churned variable identity — merges
+collapse sibling variables and re-mint slugs, exactly what the grow-only gate locks —
+and **both closed COMPLETED 2026-06-10**, so neither gates the freeze any longer. The
+remaining identity-churn risk to clear *per provider before pinning it* is any open
+issue that still splits or re-mints that provider's slugs (e.g. #677 if its RTB "Ålder"
+per-column-split path is taken) plus the slug-anchored-overlay staleness debt (#660 —
+delivery_enrichment backfills already rotted on churn; regenerate before pinning) and
+the missing-canonical-column class (#400/#428 — mint these into the baseline rather than
+as a post-freeze grow-only wave). None are hard blockers; they are the curation backlog
+that makes the pinned baseline clean.
+
+**Improve the auto-derivation before pinning — pinning ratchets the generator output.**
+The pin freezes whatever the generator emits, and #471 then hand-renames away from it,
+so every slug the generator gets right pre-pin is a manual rename saved. The real
+mechanical ugliness on the live corpus is (1) verbose name-fallback slugs
+blind-truncated at the 60-char cap into near-duplicate families and (2) drift/collision
+siblings routed to opaque column-code + `-N` tails (e.g. `ha06-2`, `besvar`/`besvar-2`).
+Both are *systematic* — generator-fixable (smarter `_name_slug` truncation;
+ordinal-suffix-aware disambiguation, aligning with #374) — not per-variable judgement.
+Note there is **no Swedish→English slug glossary** to expand (the "glossary" is a
+DB-column rename, not a token map) and `v<digit>` slugs are mostly real SCB column
+codes, not failures — so neither is a lever. Sequence: improve the generator → one
+coordinated re-key of slug-anchored overlays (#660 et al.) → pin → #471 curate the
+residue → seal. Tracked in #732.
 
 The reserved HTTP-suffix slug rejection (`states`/`predecessors`/…/`variants`) shipped
 in #228 — it is already enforced at curation time and does not need to precede the
