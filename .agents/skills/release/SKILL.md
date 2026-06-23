@@ -2,9 +2,8 @@
 name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
-  the release workflow, bump and publish reg_meta, reg_meta_build, or reg_schema,
-  create package tags/releases, upload reg_meta DB
-  assets, or monitor publish workflows.
+  the release workflow, bump and publish reg_meta, reg_meta_build, or reg_schema, create
+  package tags/releases, upload reg_meta DB assets, or monitor publish workflows.
 ---
 
 # Registry Release

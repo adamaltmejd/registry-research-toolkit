@@ -13,7 +13,7 @@ from __future__ import annotations
 import sqlite3
 
 import pytest
-from fastapi.routing import APIRoute
+from _route_helpers import flat_api_routes
 from fastapi.testclient import TestClient
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import (
@@ -66,9 +66,7 @@ def test_catalog_catch_all_route_present_and_last():
     # suffixed routes must precede the greedy catch-all).
     app = create_app()
     catalog_routes = [
-        r.path
-        for r in app.routes
-        if isinstance(r, APIRoute) and r.path.startswith("/api/catalog")
+        r.path for r in flat_api_routes(app) if r.path.startswith("/api/catalog")
     ]
     assert _CATCH_ALL in catalog_routes, (
         f"the bare catalog catch-all must be present; routes were {catalog_routes}"
@@ -85,7 +83,7 @@ def test_suffixed_routes_declared_before_catch_all():
     # catch-all moved up) is caught here, not in production as a silently-shadowed
     # endpoint.
     app = create_app()
-    declaration_order = [r.path for r in app.routes if isinstance(r, APIRoute)]
+    declaration_order = [r.path for r in flat_api_routes(app)]
     catch_all_index = declaration_order.index(_CATCH_ALL)
     for path in _ROUTES_BEFORE_CATCH_ALL:
         assert path in declaration_order, f"missing suffixed route: {path}"
@@ -108,9 +106,7 @@ def test_reserved_slug_set_mirrors_catalog_routes():
     # and every reserved token HAS a live route.
     app = create_app()
     catalog_routes = [
-        r.path
-        for r in app.routes
-        if isinstance(r, APIRoute) and r.path.startswith("/api/catalog")
+        r.path for r in flat_api_routes(app) if r.path.startswith("/api/catalog")
     ]
     # The `{fqid:path}/<suffix>` binding routes → their suffix tails must equal
     # RESERVED_HTTP_SUFFIX_SLUGS. The bare catch-all `/api/catalog/{fqid:path}`
