@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ConceptGroup } from "./api";
-import { axisValues, catalogHref, memberAt } from "./catalog";
+import { axisValues, catalogHref, leafSlug, memberAt } from "./catalog";
 
 // One folded concept-group row (#303): a <details> that expands to the facet
 // picker — a value matrix for two axes (month × rank), chips for one axis
@@ -11,17 +11,31 @@ import { axisValues, catalogHref, memberAt } from "./catalog";
 // catalogHref links; pick mode (`onpick` set — the CatalogPicker's variable
 // list) renders them as buttons that emit the member FQID instead of
 // navigating. `disabled` greys the buttons while the picker resolves.
+//
+// `href` (#673): in the REGISTER-arm browse, the row LINKS to the group subject
+// page instead of expanding inline (the group has its own register-only subject
+// route). When `href` is set AND `onpick` is NOT, the summary line renders as a
+// link — no <details>, no matrix. Otherwise (no href, or pick mode) the inline
+// <details> stays: the classification-umbrella arm (no register-only subject
+// page) browses with no href, and pick mode keeps its member-pick buttons.
 let {
   group,
   noun = "variables",
+  href,
   onpick,
   disabled = false,
 }: {
   group: ConceptGroup;
   noun?: string;
+  href?: string;
   onpick?: (fqid: string) => void;
   disabled?: boolean;
 } = $props();
+
+// Link mode only when a subject href is supplied AND we're not in pick mode
+// (pick mode must keep the inline member-pick buttons). The link reuses the same
+// summary content (label + count + group-key badge) the <summary> shows.
+const asLink = $derived(href !== undefined && onpick === undefined);
 
 const axes = $derived(group.axes);
 // Matrix orientation: first axis → rows, second axis → columns.
@@ -39,10 +53,6 @@ const ungridded = $derived(
       )
     : [],
 );
-
-function leafSlug(fqid: string): string {
-  return fqid.split("/").at(-1) ?? fqid;
-}
 </script>
 
 {#snippet memberItem(member: ConceptGroup["members"][number])}
@@ -68,17 +78,27 @@ function leafSlug(fqid: string): string {
   {/if}
 {/snippet}
 
+{#snippet summaryLine()}
+  <span class="label">{group.label}</span>
+  <span class="count">{group.members.length} {noun}</span>
+  <!-- The group key is a presentation anchor (slug stem / min-member slug /
+       curated key per ConceptGroupSummary), NOT an addressable variable
+       (#498). Deliberately NOT a <code>/.child-fqid: monospace + that class
+       read as a pickable leaf FQID and confused a maintainer. Render it as a
+       muted non-monospace group-id badge so it reads as a grouping anchor —
+       don't "restore" the code look. -->
+  <span class="group-key">{group.key}</span>
+{/snippet}
+
+{#if asLink}
+  <!-- #673: the register-arm browse links to the group SUBJECT page instead of
+       expanding inline. Same summary content as the <details> summary, just a
+       link — one interactive element per row (no nested controls). -->
+  <a class="group-link" {href}>{@render summaryLine()}</a>
+{:else}
 <details class="group">
   <summary>
-    <span class="label">{group.label}</span>
-    <span class="count">{group.members.length} {noun}</span>
-    <!-- The group key is a presentation anchor (slug stem / min-member slug /
-         curated key per ConceptGroupSummary), NOT an addressable variable
-         (#498). Deliberately NOT a <code>/.child-fqid: monospace + that class
-         read as a pickable leaf FQID and confused a maintainer. Render it as a
-         muted non-monospace group-id badge so it reads as a grouping anchor —
-         don't "restore" the code look. -->
-    <span class="group-key">{group.key}</span>
+    {@render summaryLine()}
   </summary>
   {#if axes.length >= 2}
     <table class="facet-matrix">
@@ -166,18 +186,27 @@ function leafSlug(fqid: string): string {
     </ul>
   {/if}
 </details>
+{/if}
 
 <style>
-  summary {
+  summary,
+  .group-link {
     display: flex;
     align-items: baseline;
     gap: 0.75rem;
     cursor: pointer;
   }
-  summary .label {
+  /* #673: the register-arm link variant carries the row's own accent color (it
+     navigates), but the summary content styling (label/count/badge) is shared. */
+  .group-link {
+    color: var(--accent);
+  }
+  summary .label,
+  .group-link .label {
     font-weight: 600;
   }
-  summary .count {
+  summary .count,
+  .group-link .count {
     color: var(--muted);
     font-size: 0.85em;
     white-space: nowrap;

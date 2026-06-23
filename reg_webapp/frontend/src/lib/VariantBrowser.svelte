@@ -11,6 +11,16 @@ const { registerFqid }: { registerFqid: string } = $props();
 
 const variants = asyncResource(() => getRegisterVariants(registerFqid));
 
+// The non-`_default` variants (#673/M4): `_default` is NOT a user-facing variant
+// — it's a STORED variant for some registers (LSS/BU/SOL) and the synthesized
+// default for others. A register whose only "variant" is `_default` (or that has
+// none) has no real variant axis, so the whole section is suppressed (no useless
+// "Variants" heading). A register with ≥1 real variant renders the FULL list
+// unchanged — `_default` is NOT filtered out of a mixed list (out of scope).
+const realVariants = $derived(
+  variants.data?.variants.filter((v) => v.slug !== "_default") ?? [],
+);
+
 // `display_group` duplicates `name` for most variants (SCB delivers them
 // identical), so show it only when it ADDS information. Compare trimmed: some
 // source rows carry trailing-whitespace noise on one side ("…AGI/KU " vs
@@ -23,15 +33,23 @@ function showsDistinctGroup(
 }
 </script>
 
-<section class="variants" aria-labelledby="variants-heading">
-  <h3 id="variants-heading">Variants</h3>
-  {#if variants.loading}
-    <p class="muted" aria-busy="true">Loading variants…</p>
-  {:else if variants.error}
+<!-- #673/M4: render the section ONLY when there's a real (non-`_default`)
+     variant, or an error. While loading, render nothing (the variants are a
+     secondary affordance — no "Loading variants…" flash); a register with no
+     real variant (empty list OR `_default`-only) renders nothing at all (no
+     section, no heading, no "No variants." text). -->
+{#if variants.error}
+  <section class="variants" aria-labelledby="variants-heading">
+    <h3 id="variants-heading">Variants</h3>
     <p class="error" role="alert">Failed to load variants: {variants.error}</p>
-  {:else if variants.data && variants.data.variants.length > 0}
+  </section>
+{:else if realVariants.length > 0}
+  <!-- The GATE is "≥1 real variant", but the rendered list is the FULL list
+       unchanged — _default is NOT filtered out of a mixed list (out of scope). -->
+  <section class="variants" aria-labelledby="variants-heading">
+    <h3 id="variants-heading">Variants</h3>
     <ul class="variant-list">
-      {#each variants.data.variants as variant (variant.slug)}
+      {#each variants.data?.variants ?? [] as variant (variant.slug)}
         <li>
           <div class="variant">
             <span class="slug">{variant.slug}</span>
@@ -48,10 +66,8 @@ function showsDistinctGroup(
         </li>
       {/each}
     </ul>
-  {:else}
-    <p class="muted">No variants.</p>
-  {/if}
-</section>
+  </section>
+{/if}
 
 <style>
   .variants {
