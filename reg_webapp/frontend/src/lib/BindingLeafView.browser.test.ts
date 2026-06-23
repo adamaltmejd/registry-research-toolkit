@@ -500,6 +500,75 @@ describe("BindingLeafView member identity (#670)", () => {
       .toHaveAttribute("href", "/catalog/group/scb/lisa/naringsgren");
   });
 
+  it("resolves the qualifier + link from the RESOLVED target when opened via a same_as alias (#670 Codex P2)", async () => {
+    // The alias bug: a grouped leaf opened through a `same_as` alias keeps
+    // `node.fqid` = the requested ALIAS, but /dimensions keys its members on the
+    // RESOLVED target (the last `via_same_as` hop). Matching on `node.fqid` would
+    // miss the faceted member and fall back to the alias slug; the fix matches on
+    // the resolved fqid so the facet qualifier + group link resolve.
+    const aliasFqid = "scb/lisa/inkjan-alias";
+    const resolvedFqid = "scb/rams/inkjan";
+    const aliasNode = node(single, {
+      fqid: aliasFqid,
+      name: "Näringsgren, största förvärvskälla",
+      group: { provider: "scb", register: "lisa", key: "naringsgren" },
+      via_same_as: [resolvedFqid],
+    });
+    const aliasDimensions = {
+      binding: aliasFqid,
+      dimensions: [
+        {
+          key: "naringsgren",
+          label: "Näringsgren, största förvärvskälla",
+          source: "edge",
+          axes: ["source", "edition"],
+          members: [
+            {
+              // Keyed on the RESOLVED target, NOT the requested alias.
+              fqid: resolvedFqid,
+              name: "Näringsgren, största förvärvskälla",
+              facets: [
+                { axis: "source", value: "agi", label: "AGI" },
+                {
+                  axis: "edition",
+                  value: "sni2007",
+                  label: "2007 SNI edition",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    vi.mocked(getBindingDimensions).mockResolvedValue(aliasDimensions as never);
+
+    render(BindingLeafView, {
+      fqidPath: aliasFqid,
+      node: aliasNode,
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The qualifier is the RESOLVED member's facet labels — NOT the alias slug.
+    await expect
+      .element(page.getByText("AGI · 2007 SNI edition"))
+      .toBeVisible();
+    expect(
+      document.querySelector(".member-identity code.qualifier.slug"),
+    ).toBeNull();
+
+    // The "member of ⟨label⟩" link resolves (containment fallback now matches the
+    // resolved member); its href comes from `node.group`.
+    const link = page.getByRole("link", {
+      name: "Näringsgren, största förvärvskälla",
+    });
+    await expect.element(link).toBeVisible();
+    await expect
+      .element(link)
+      .toHaveAttribute("href", "/catalog/group/scb/lisa/naringsgren");
+  });
+
   it("a grouped member with no facets renders the slug qualifier as a code identifier (#670 M10)", async () => {
     // M10's exact case: an edge group (`axes: []`) whose members carry NO facets,
     // so the slug — the only differentiator — is the fallback qualifier, rendered

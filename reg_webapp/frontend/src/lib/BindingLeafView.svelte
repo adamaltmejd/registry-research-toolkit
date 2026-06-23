@@ -136,6 +136,15 @@ const dimError = $derived(dimResource.error);
 // preserved; an error keeps it omitted, DimensionsPanel surfaces the error).
 const dimReady = $derived(!dimLoading && !dimError);
 
+// The fqid to match a member by in the /dimensions groups. When the leaf is
+// opened through a `same_as` ALIAS, the backend resolves to the target variable
+// but keeps `node.fqid` as the REQUESTED alias, while the /dimensions members
+// are keyed on the RESOLVED target — so matching on `node.fqid` would never find
+// the faceted member and wrongly fall back to the alias slug (#670 Codex P2). The
+// last `via_same_as` hop is the resolved target binding; with no alias it's
+// empty/absent and `lookupFqid === node.fqid` (unchanged behavior).
+const lookupFqid = $derived(node.via_same_as?.at(-1) ?? node.fqid);
+
 // The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — this
 // member's facet labels across its dimension groups (`kind: "facets"`), the
 // canonical `node.group` group leading. For a GROUPED member with no facets (an
@@ -143,13 +152,15 @@ const dimReady = $derived(!dimLoading && !dimError);
 // (`kind: "slug"`) so those siblings never share an identical header (#670).
 // `null` for an ungrouped variable (its `node.name` suffices), or until resolved.
 const qualifier = $derived(
-  dimReady ? memberQualifier(dimGroups, node.fqid, node.group?.key) : null,
+  dimReady ? memberQualifier(dimGroups, lookupFqid, node.group?.key) : null,
 );
 
 // The "member of ⟨group label⟩" context link to the group subject page (#670) —
 // null when ungrouped, or until the fetch resolves (additive; never blanks).
+// `node.group` stays the link's provider/register/key source (already the
+// resolved group ref); only the member-matching fqid uses the resolved target.
 const groupLink = $derived(
-  dimReady ? memberGroupLink(dimGroups, node.group, node.fqid) : null,
+  dimReady ? memberGroupLink(dimGroups, node.group, lookupFqid) : null,
 );
 
 /** Write the resolution params to the URL (preserving the pathname), which the
