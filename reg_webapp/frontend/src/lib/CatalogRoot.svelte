@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getCatalogRoot } from "./api";
 import { asyncResource } from "./async.svelte";
-import { catalogHref, matchesFilter } from "./catalog";
+import { catalogHref, DATA_BROWSER_LABEL, matchesFilter } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
 
 // The catalog root: every provider plus the classification-root sentinel
@@ -20,7 +20,7 @@ const filtered = $derived(
 </script>
 
 <article>
-  <h2>Catalog</h2>
+  <h2>{DATA_BROWSER_LABEL}</h2>
   {#if root.loading}
     <p class="muted" aria-busy="true">Loading…</p>
   {:else if root.error}

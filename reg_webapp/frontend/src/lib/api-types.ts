@@ -458,6 +458,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Stats
+         * @description Headline catalog counts (providers / registers / variables) for the
+         *     landing page — slug-aware, matching the browse. A filtered steward still
+         *     sees full-universe counts (a follow-up; see DESIGN.md → Catalog stats).
+         */
+        get: operations["get_stats_api_stats_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -580,6 +602,19 @@ export interface components {
             message: string;
             /** Path */
             path: string;
+        };
+        /**
+         * CatalogSizes
+         * @description Headline catalog-size counts — browse-addressable (slugged)
+         *     providers/registers/variables; the grain the catalog listings render.
+         */
+        CatalogSizes: {
+            /** Providers */
+            providers: number;
+            /** Registers */
+            registers: number;
+            /** Variables */
+            variables: number;
         };
         /**
          * ClassificationCode
@@ -2515,6 +2550,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_stats_api_stats_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogSizes"];
                 };
             };
         };

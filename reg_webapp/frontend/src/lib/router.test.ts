@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { onNavClick, parseRoute, router } from "./router.svelte";
 
 describe("parseRoute", () => {
-  it("maps / and /catalog to the root", () => {
-    expect(parseRoute("/")).toEqual({ name: "root" });
+  it("maps / to home and /catalog to the data-browser root (#675)", () => {
+    // The landing page split: `/` is the home route, `/catalog` (and its
+    // trailing-slash form) is the data browser — same URL, distinct route.
+    expect(parseRoute("/")).toEqual({ name: "home" });
     expect(parseRoute("/catalog")).toEqual({ name: "root" });
     expect(parseRoute("/catalog/")).toEqual({ name: "root" }); // trailing slash
   });

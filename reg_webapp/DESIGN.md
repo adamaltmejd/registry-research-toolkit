@@ -509,10 +509,30 @@ QUERY PLAN reports `USING COVERING INDEX`).
   signal is span + counts; cadence is a follow-up (a defined source or a build-time
   field) — not shipped here.
 
+## Catalog stats (`routes/stats.py`, #675)
+
+`GET /api/stats` returns the headline catalog-size counts
+(`{providers, registers, variables}`) the landing page renders. It is a **TOP-LEVEL**
+route (a sibling of `/api/context`), deliberately NOT under `/api/catalog`: that prefix
+is the `{fqid:path}` catch-all, so a `/api/catalog/stats` would be swallowed by the
+catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration). The
+counts are a cheap raw `COUNT(*)` over reg_meta's `provider` / `register` / `variable`
+tables, opened through the SAME per-request `catalog_conn` seam (`conn.py`) the catalog
+routes use. ETag + Cache-Control ride the generic `ETagMiddleware` (a GET read); the
+counts are rebuild-stable, so the default 24h `cache_control_for` tier fits.
+
+**Full-universe counts — a known v1 limitation.** The counts are EXACT for the v1
+`global` deployment (no steward filter). For a FILTERED steward the browse admits only a
+subset (the in-memory `CatalogIndex`), so a raw `COUNT(*)` would OVERSTATE what that
+steward can browse — a **steward-aware count is a follow-up** (it would intersect the
+index, not `COUNT(*)` the universe). The raw count also includes NULL-slug
+(un-addressable) registers/variables the browse listings drop, so it's a headline
+figure, not the exact browsable-node total.
+
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
-Every read endpoint (`/api/context`, the `/api/catalog` root + catch-all, the 7
-binding-suffix sub-endpoints) carries
+Every read endpoint (`/api/context`, `/api/stats`, the `/api/catalog` root + catch-all,
+the 7 binding-suffix sub-endpoints) carries
 `ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and a per-route
 `Cache-Control` (`cache_control_for`) in three tiers: `/api/context` revalidates always
 (see below); fold-bearing reads (`/api/catalog/*` and `/api/search`) keep

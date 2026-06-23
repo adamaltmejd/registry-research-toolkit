@@ -266,6 +266,31 @@
         "title": "CatalogDriftWarning",
         "type": "object"
       },
+      "CatalogSizes": {
+        "additionalProperties": false,
+        "description": "Headline catalog-size counts \u2014 browse-addressable (slugged)\nproviders/registers/variables; the grain the catalog listings render.",
+        "properties": {
+          "providers": {
+            "title": "Providers",
+            "type": "integer"
+          },
+          "registers": {
+            "title": "Registers",
+            "type": "integer"
+          },
+          "variables": {
+            "title": "Variables",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "providers",
+          "registers",
+          "variables"
+        ],
+        "title": "CatalogSizes",
+        "type": "object"
+      },
       "ClassificationCode": {
         "additionalProperties": false,
         "description": "One code/label entry in a classification edition's value set (#609), as\nreturned by `Catalog.classification_codes`. Keyed per EDITION\n(`classification_code.classification_id`) \u2014 every edition (slug) is its own\n`classification` row, so the codes are scoped to the resolved edition the leaf\nis viewing, not the whole succession chain.\n\n`code`/`label` come from `value_code` (provider-native strings \u2014 these are\nPUBLIC classification codes, not row-level data). `level` is the optional\nhierarchy depth (None when the classification is flat). `is_valid` is the\ncanonical/observed flag: True = canonical (in the classification's valid-codes\nCSV), False = observed-only (seen in data, not canonical), None = no CSV exists\nso validity is unknown (the whole edition has `is_valid=NULL`). It's surfaced\n(not filtered) so the leaf can show the full code list with a validity hint.",
@@ -3916,6 +3941,25 @@
           }
         },
         "summary": "Get Search"
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "description": "Headline catalog counts (providers / registers / variables) for the\nlanding page \u2014 slug-aware, matching the browse. A filtered steward still\nsees full-universe counts (a follow-up; see DESIGN.md \u2192 Catalog stats).",
+        "operationId": "get_stats_api_stats_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogSizes"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Stats"
       }
     }
   }

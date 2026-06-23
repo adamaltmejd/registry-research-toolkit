@@ -196,6 +196,13 @@ export function triggerDownload(blob: Blob, filename: string): void {
 // — callers narrow on `kind` (see `lib/catalog.ts`).
 
 export type Context = Schemas["ContextResponse"];
+/** Deployment identity + branding (`id` / `name` / `long_name`) — the `steward`
+ * block of `/api/context`, threaded into the Home landing page (#675). */
+export type StewardInfo = Schemas["StewardInfo"];
+/** The headline catalog-size counts (#675) the landing page renders —
+ * slug-aware (matching the browse listings) for the `global` deployment; a
+ * steward-aware count is a follow-up, see the backend DESIGN.md. */
+export type CatalogStats = Schemas["CatalogSizes"];
 export type RootResponse = Schemas["RootResponse"];
 export type VariantsResponse = Schemas["VariantsResponse"];
 
@@ -310,6 +317,13 @@ export function encodeFqid(fqidPath: string): string {
 
 export function getContext(): Promise<Context> {
   return apiGet<Context>("/context");
+}
+
+/** The landing-page catalog counts (#675) — providers / registers / variables.
+ * A small GET read; the Home page fetches it with `asyncResource` so the page
+ * renders before the counts arrive. */
+export function getStats(): Promise<CatalogStats> {
+  return apiGet<CatalogStats>("/stats");
 }
 
 export function getCatalogRoot(): Promise<RootResponse> {

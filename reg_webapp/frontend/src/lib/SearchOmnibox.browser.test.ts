@@ -165,9 +165,10 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     const form = (box.element() as HTMLInputElement).form;
     form?.requestSubmit();
 
-    // The route stays at root — a blank query never enters /search. Poll so a
-    // (hypothetical) async navigation would still be caught before asserting.
-    await expect.poll(() => router.route.name).toBe("root");
+    // The route stays at home (the beforeEach base, #675) — a blank query never
+    // enters /search. Poll so a (hypothetical) async navigation would still be
+    // caught before asserting.
+    await expect.poll(() => router.route.name).toBe("home");
   });
 
   it("preserves an active ?type= scope when refining the query (#393 item 1)", async () => {
@@ -617,7 +618,7 @@ describe("SearchOmnibox — live suggestions (#689 Arm A)", () => {
     // Move off the node so a re-navigation is observable, then bring the same
     // suggestion back up (onSelect cleared the box, so retype) and select it again.
     setUrl("/");
-    await expect.poll(() => router.route.name).toBe("root");
+    await expect.poll(() => router.route.name).toBe("home");
     await userEvent.type(input, "kon");
     await page.getByRole("option", { name: /Kön/ }).click();
 

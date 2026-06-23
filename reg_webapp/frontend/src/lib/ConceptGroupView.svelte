@@ -4,6 +4,7 @@ import { asyncResource } from "./async.svelte";
 import {
   axisValues,
   catalogHref,
+  DATA_BROWSER_LABEL,
   formatWindow,
   memberAt,
   memberCoverageUnion,
@@ -238,7 +239,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
 </script>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
-  <a href="/catalog">catalog</a>
+  <a href="/catalog">{DATA_BROWSER_LABEL}</a>
   <span class="sep" aria-hidden="true">/</span>
   <a href={catalogHref(provider)}>{provider}</a>
   <span class="sep" aria-hidden="true">/</span>

@@ -4,7 +4,9 @@ import { type Context, errMessage, getContext } from "./lib/api";
 import CatalogNodeView from "./lib/CatalogNodeView.svelte";
 import CatalogRoot from "./lib/CatalogRoot.svelte";
 import ConceptGroupView from "./lib/ConceptGroupView.svelte";
+import { DATA_BROWSER_LABEL } from "./lib/catalog";
 import DocView from "./lib/DocView.svelte";
+import Home from "./lib/Home.svelte";
 import ProjectEditor from "./lib/ProjectEditor.svelte";
 import { projectStore } from "./lib/project_store.svelte";
 import { link, router } from "./lib/router.svelte";
@@ -89,7 +91,12 @@ const windowMaxYear = $derived(
       {/if}
     </div>
     <nav class="nav">
-      <a href="/catalog" class:active={route.name === "root" || route.name === "catalog-node"}>Catalog</a>
+      <a
+        href="/catalog"
+        class:active={route.name === "root" ||
+          route.name === "catalog-node" ||
+          route.name === "group"}>{DATA_BROWSER_LABEL}</a>
+
       <a href="/project" class:active={route.name === "project"}>
         Project
         {#if projectStore.dirty}<span class="nav-dirty" title="Unsaved changes">●</span>{/if}
@@ -133,7 +140,11 @@ const windowMaxYear = $derived(
   {/if}
 
   <main>
-    {#if route.name === "root"}
+    {#if route.name === "home"}
+      <!-- #675: the landing page at `/`, split from the data browser. App holds
+           the context, so pass the steward through — Home fetches only /api/stats. -->
+      <Home steward={context?.steward ?? null} />
+    {:else if route.name === "root"}
       <CatalogRoot />
     {:else if route.name === "catalog-node"}
       {#key route.fqidPath}
@@ -168,7 +179,7 @@ const windowMaxYear = $derived(
       <article>
         <h2>Not found</h2>
         <p>No page at <code>{route.path}</code>.</p>
-        <p><a href="/catalog">Back to the catalog</a></p>
+        <p><a href="/catalog">Back to the data browser</a></p>
       </article>
     {/if}
   </main>
