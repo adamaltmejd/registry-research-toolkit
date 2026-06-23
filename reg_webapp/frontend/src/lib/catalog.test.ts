@@ -14,6 +14,7 @@ import {
   formatWindow,
   fqidSegments,
   grainsFromStates,
+  leafSlug,
   matchesFilter,
   memberCoverageUnion,
   narrowCatalogNode,
@@ -145,6 +146,33 @@ describe("rankFilter", () => {
   it("drops non-matches", () => {
     expect(rankFilter(items, "zzz", keys)).toEqual([]);
   });
+
+  it("ranks a leaf-slug match above a purpose-blurb-only match (#674)", () => {
+    // The register-browse case: `scb/rtb` matches the needle "rtb" by its leaf
+    // slug; `scb/breg` matches ONLY via its purpose blurb. Without the leaf-slug
+    // key both land at tier 2 (the provider prefix blocks a `scb/rtb` PREFIX
+    // match) and `breg` wins alphabetically. With `leafSlug` as a key, `rtb` is a
+    // tier-0 exact and outranks `breg` — while `breg` still appears (it matches).
+    const registers = [
+      {
+        name: "Företagsregister", // breg, alphabetically first
+        fqid: "scb/breg",
+        purpose: "Registret över totalbefolkningen och dess struktur (rtb)",
+      },
+      {
+        name: "Registret över totalbefolkningen",
+        fqid: "scb/rtb",
+        purpose: "Befolkningsdata",
+      },
+    ];
+    const out = rankFilter(registers, "rtb", (r) => [
+      leafSlug(r.fqid),
+      r.name,
+      r.fqid,
+      r.purpose,
+    ]).map((r) => r.fqid);
+    expect(out).toEqual(["scb/rtb", "scb/breg"]);
+  });
 });
 
 describe("nodeLabel", () => {
@@ -222,6 +250,14 @@ describe("fqidSegments / breadcrumbs", () => {
       { label: "lisa", fqidPath: "scb/lisa" },
       { label: "kon", fqidPath: "scb/lisa/kon" },
     ]);
+  });
+});
+
+describe("leafSlug", () => {
+  it("returns the last segment of an FQID; a bare slug is itself", () => {
+    expect(leafSlug("scb/rtb")).toBe("rtb");
+    expect(leafSlug("scb/lisa/kon")).toBe("kon");
+    expect(leafSlug("rtb")).toBe("rtb"); // no separator → the whole string
   });
 });
 

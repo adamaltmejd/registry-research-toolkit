@@ -235,10 +235,13 @@ export function matchesFilter(
  * for target-hunting: (1) folded-exact key match, (2) folded-prefix key match,
  * (3) other substring matches — each tier keeping the input order (a STABLE
  * sort, so the caller's existing alphabetical order survives within a tier).
- * Used by the PICKERS (where the user hunts a specific row: "kon" → Kön first),
- * NOT the browse pages (which keep plain alphabetical order — the filter only
- * narrows). An empty needle returns the matched list unchanged (every row is
- * tier 3, stable). */
+ * Used by the PICKERS (where the user hunts a specific row: "kon" → Kön first)
+ * AND by the browse children lists (registers + variables, #674): under an
+ * active filter the browse ranks the same way (a slug-named target jumps above a
+ * purpose-blurb-only match — see `leafSlug`), so typing the target's slug
+ * surfaces it first. An empty needle returns the matched list unchanged (every
+ * row is tier 3, stable), so the UNFILTERED browse list keeps its incoming
+ * (alphabetical) order. */
 export function rankFilter<T>(
   items: T[],
   needle: string,
@@ -283,6 +286,16 @@ export function catalogHref(fqidPath: string): string {
  * Empty string → `[]` (the root). */
 export function fqidSegments(fqidPath: string): string[] {
   return fqidPath ? fqidPath.split("/") : [];
+}
+
+/** The leaf slug of an FQID — its last `/`-separated segment (`scb/rtb` →
+ * `"rtb"`, a bare `"rtb"` → `"rtb"`). A ranking key for the browse type-to-filter
+ * (`rankFilter`): the leaf slug exact-/prefix-matches the needle even though the
+ * full FQID's provider prefix would block it (`foldText("scb/rtb")` doesn't start
+ * with `"rtb"`), so a slug-named target (`scb/rtb` for "rtb") outranks a purpose-
+ * blurb-only match (#674). */
+export function leafSlug(fqid: string): string {
+  return fqid.split("/").at(-1) ?? fqid;
 }
 
 /** Breadcrumb trail for an FQID path: each ancestor + the node itself, as
