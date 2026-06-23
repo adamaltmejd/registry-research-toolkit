@@ -1470,7 +1470,7 @@ def _check_panel_member(
     # variant `panel_template`, which needs reg_meta — so the "no effective key"
     # case can only be checked once inheritance is materialized at kit-build time.
     # That kit-build path (and its check) is deferred to the from-scratch MONA
-    # rebuild (#699); the structural layer keeps a pre-kit authoring spec valid
+    # rebuild (#707); the structural layer keeps a pre-kit authoring spec valid
     # while panel keys are still unresolved. A `None` eff_entity / eff_time simply
     # has no refs to check below.
 

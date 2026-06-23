@@ -202,7 +202,7 @@ The v0.x `missing_effective_entity_key` / `missing_effective_time_key` codes do 
 exist in this layer. Under Model A an omitted `entity_key` / `time_key` inherits from
 the member's variant's `panel_template`, which needs reg_meta state — so the "no
 effective key" case can only be checked once inheritance is materialized at kit-build
-time, a path deferred to the from-scratch MONA rebuild (#699). A member with no panel
+time, a path deferred to the from-scratch MONA rebuild (#707). A member with no panel
 default and no override is simply not flagged at this layer.
 
 The composite/literal panel rules that **are** structural live in the issue-code table
@@ -213,7 +213,7 @@ pre-authoring spec valid even while inheritance is still unresolved — it never
 materializes defaults, only checks shapes.
 
 The `panel_inheritance_unresolvable` check and key materialization are deferred to the
-MONA rebuild (see `REFACTOR_SPEC.md` §8/9/10a — archived, #699).
+MONA rebuild (see `REFACTOR_SPEC.md` §8/9/10a; tracked in #707, archived #699).
 
 ### Semantic codes — defined, not emitted by `reg_schema`
 
@@ -232,7 +232,7 @@ here so the stable-code registry is complete and the SPA can map them:
 
 (The `panel_inheritance_unresolvable` code is **not** in this live set — its kit-build
 check is deferred to the from-scratch MONA rebuild, see above and `REFACTOR_SPEC.md`
-§8/9/10a — archived, #699.)
+§8/9/10a; tracked in #707, archived #699.)
 
 ## Why no FQID parser dependency
 

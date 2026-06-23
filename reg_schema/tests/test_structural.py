@@ -901,7 +901,7 @@ def test_panel_string_member_missing_panel_defaults_is_not_structural() -> None:
     # an omitted entity_key/time_key inherits from the member's variant
     # panel_template, which needs reg_meta — so the "no effective key"
     # case can only be checked once inheritance is materialized at kit-build
-    # time, a path deferred to the from-scratch MONA rebuild (#699). Not
+    # time, a path deferred to the from-scratch MONA rebuild (#707). Not
     # emitted here.
     spec = _spec_with_panels(members=["lisa_2018"])  # no panel time_key
     spec["panels"][0].pop("time_key", None)

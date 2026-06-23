@@ -15,7 +15,7 @@ and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
 The `reg_monabundle` (MONA bundle build + runtime + PII scanner) and `mock_data_wizard`
 (local mock-data generation) packages have been archived to branch
 `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`) and removed from `main`,
-pending a from-scratch MONA rebuild. See `REFACTOR_SPEC.md` and tracking issue #699.
+pending a from-scratch MONA rebuild. See `REFACTOR_SPEC.md` and tracking issue #707.
 
 ## MONA constraint
 

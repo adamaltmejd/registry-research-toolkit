@@ -23,7 +23,7 @@ autosave, validate / order / bundle endpoints).
 mock-data subsystem (kit-build, the realign-then-extract MONA workflow,
 `mock_data_wizard` → `reg_mockdata` rename) have been removed from `main` and archived
 to branch `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`), pending a
-from-scratch rebuild. Tracking issue #699.
+from-scratch rebuild tracked in #707 (archived under #699).
 
 **Remaining (this document):** composite panel keys, the real steward catalogs, and the
 v1 slug freeze. (Webapp deployment — step 6.5 — shipped 2026-06-11; the webapp-authoring
@@ -39,8 +39,8 @@ step numbering.
   | 6.5     | Containerize + Cloudflare + `global` deploy                               | A5       | #278, #220, #224 |
   | 7       | Webapp-authoring hard-cut; delete `mock_data_wizard/web/`                 | 6.5      | —                |
   | 7.5     | `global` dogfood (2 weeks)                                                | 7        | #200, #266       |
-  | 8/9/10a | MONA bundle + mock-data subsystem — **archived** (see below)              | —        | #699             |
-  | 10b     | Composite `entity_key` / `time_key` support (gates on MONA rebuild, #699) | —        | —                |
+  | 8/9/10a | MONA bundle + mock-data subsystem — **archived** (see below)              | —        | #707             |
+  | 10b     | Composite `entity_key` / `time_key` support (gates on MONA rebuild, #707) | —        | —                |
   | 11      | Steward catalogs (ifau, swecov)                                           | 7.5      | #206             |
   | 12      | Per-steward order templates + `extensions` toggles                        | 11       | —                |
   | —       | v1 slug freeze + arm immutability                                         | all      | #209, #196, #197 |
@@ -80,8 +80,8 @@ the staging environment; no separate staging tier.
 `mona-subsystem-pre-rebuild`), pending a from-scratch rebuild. The archived subsystem
 covered: kit-build (`POST /api/kit` + `codes.json` + stats v1 — §8), the
 `mock_data_wizard` → `reg_mockdata` rename and reg_meta-dep removal (§9), and the
-realign-then-extract MONA workflow + standalone runner build (§10a). Tracking issue
-#699.
+realign-then-extract MONA workflow + standalone runner build (§10a). Archived under
+#699; the from-scratch rebuild is tracked in #707.
 
 The `reg_webapp` `/api/bundle` and `/api/kit` endpoints are removed along with the
 packages they depended on. The surviving authoring surface is `/api/project/validate`,
@@ -99,7 +99,7 @@ rather than on §10a as originally planned.
 
 The panel schema already accepts composite `entity_key` (firm × workplace, household ×
 person) and composite `time_key` (year × quarter). Runtime support is deferred until the
-MONA rebuild (§8/9/10a — tracking issue #699) provides the extract and generate
+MONA rebuild (§8/9/10a — tracking issue #707) provides the extract and generate
 surfaces. The schema-level composites are additive; single-key panels keep working
 unchanged.
 
@@ -166,7 +166,7 @@ Carried from the testing strategy; the shipped categories are in
 [`ARCHITECTURE.md`](ARCHITECTURE.md). Still to build:
 
 - **Kit reproducibility** — same spec + codes + stats → identical kit zip. Deferred to
-  the MONA rebuild (#699; was gated on `/api/kit`).
+  the MONA rebuild (#707; was gated on `/api/kit`).
 - **Performance gate** — wire the 200-column fixture into a load-test harness measuring
   the p95 budgets (see ARCHITECTURE.md → Repo-wide invariants) and failing CI on
   regression.
@@ -174,7 +174,7 @@ Carried from the testing strategy; the shipped categories are in
 ## Open / deferred decisions
 
 - **MONA rebuild** — the archived §8/§9/§10a work (kit-build, mock-data generation,
-  realign-then-extract workflow) is deferred to a from-scratch rebuild (#699). The
+  realign-then-extract workflow) is deferred to a from-scratch rebuild (#707). The
   realign-patch-lifecycle and `same_as`-at-generate-time questions are also gated on
   this rebuild.
 - **Chronological period `kind` field** — a future `kind` (`year_month`,
@@ -203,12 +203,13 @@ Carried from the testing strategy; the shipped categories are in
 
 ## Tracking issues
 
-Open issues seeded from or feeding this plan: #699 (MONA bundle + mock-data archive,
-tracking the rebuild), #206 (steward admission keying — decided column-based 2026-06-11
-and implemented), #209 (v1 slug freeze), #196 + #197 (identity-churning curation —
+Open issues seeded from or feeding this plan: #707 (from-scratch MONA bundle + mock-data
+rebuild epic), #206 (steward admission keying — decided column-based 2026-06-11 and
+implemented), #209 (v1 slug freeze), #196 + #197 (identity-churning curation —
 pre-freeze), and #200 + #266 (authoring-UX ride-alongs for the 7.5 dogfood). Deferred
 beyond v1 but recorded so pointers resolve: #212 (materializer-owned value tables) and
-#271 (interval-native resolver). Resolved since this spec was seeded: #220 + #224 + #278
+#271 (interval-native resolver). Resolved since this spec was seeded: #699 (MONA bundle
+and mock-data archive, closed when PR #700 removed the subsystem), #220 + #224 + #278
 (the 6.5 deployment set, closed when 6.5 shipped 2026-06-11), #210 (SOS classification
 path, closed via PRs #273/#274), #211 (LOVA/LVM deldatamängd→variant curation, shipped
 early via PR #359 2026-06-12 instead of batching with step 11; merge-quality follow-up
