@@ -7,7 +7,13 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_state, add_variable, build_slugged_db
+from _slugged_db import (
+    add_register,
+    add_state,
+    add_variable,
+    add_variant,
+    build_slugged_db,
+)
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import derive_variable_slug
 
@@ -3409,6 +3415,10 @@ class TestFreezeStateAutoRegenerate:
         assert exc.value.code == "slug_freeze_auto_missing"
         assert "scb" in exc.value.message
         assert state in exc.value.message
+        # The remediation must point the maintainer at the concrete fix — the
+        # exact gitignored file to force-add and the command to do it with.
+        assert "scb.auto.toml" in exc.value.remediation
+        assert "git add -f" in exc.value.remediation
 
     def test_missing_auto_does_not_raise_when_churning(self, tmp_path: Path) -> None:
         # The critical false-fire regression: the default (churning) provider
@@ -3420,6 +3430,50 @@ class TestFreezeStateAutoRegenerate:
         counts = populate_variable_slugs(conn, d)  # must NOT raise
         assert self._stored(conn) == "kon"
         assert counts["auto_new"] == 1
+
+    def test_missing_auto_guard_is_per_provider(self, tmp_path: Path) -> None:
+        # #471 pin guard fires inside a per-provider loop, so it must be scoped to
+        # the OFFENDING provider — not the first one seen, and not a churning
+        # sibling. Here `scb` is curating with no committed auto.toml (must fire),
+        # while a second live provider (`fohm`, which sorts BEFORE `scb` in the
+        # `_live_providers` ORDER BY p.slug loop) is churning with no auto.toml
+        # (must NOT fire — churning legitimately re-derives every build). A
+        # loop-scoping bug that mis-attributed the state would either skip `scb`
+        # or wrongly flag the churning sibling.
+        conn = self._db(kol="Kon")  # scb register/variant/variable
+        # Wire a genuine second live provider (fohm, provider_id 3) the same way
+        # the fixture seeds scb: a register + variant + variable + state era.
+        add_register(
+            conn,
+            register_id=2,
+            slug="folkbokforing",
+            name="Folkbokföring",
+            provider_id=3,
+        )
+        add_variant(
+            conn,
+            register_variant_id=20,
+            register_id=2,
+            slug="personer",
+            name="Personer",
+        )
+        add_variable(conn, register_id=2, var_id=77, name="Kommun", slug=None)
+        add_state(
+            conn,
+            register_id=2,
+            var_id=77,
+            register_variant_id=20,
+            delivery_column_name="Kommun",
+        )
+        conn.commit()
+        # scb is pinned but missing its auto.toml; fohm stays churning (unlisted).
+        d = self._dir_no_auto(tmp_path, freeze="curating")
+        (tmp_path / "fohm.toml").write_text("", encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_auto_missing"
+        assert "scb" in exc.value.message
+        assert "fohm" not in exc.value.message  # the churning sibling is not flagged
 
     @pytest.mark.parametrize("state", ["curating", "frozen"])
     def test_missing_auto_skipped_for_variableless_provider(
