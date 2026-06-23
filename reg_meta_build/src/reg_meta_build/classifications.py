@@ -16,6 +16,7 @@ import csv
 import sys
 import time
 import tomllib
+from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -927,87 +928,27 @@ def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
     return n_set
 
 
-def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
-    """Detect value sets that enumerate a known classification's codes inline and
-    feed the confident matches into `classification_candidate` (#416).
+def _build_containment_temp_tables(conn: sqlite3.Connection) -> None:
+    """Build the shared `_canon_codes` / `_vs_codes` / `_vs_stats` / `_vs_cls`
+    temp tables (steps 1-3 of the #416 code-set-containment detector) on `conn`.
 
-    Many value sets list a classification's codes verbatim (e.g. an ULF health
-    variable carrying 2043/2057 ICD-10-SE codes) but sit unlinked
-    (`variable_state.classification_id IS NULL`) because SCB declared no
-    classification for them. SCB's `populate_classifications` name-map and the SOS
-    / #446 feeds only catch the DECLARED cases; this pass catches the rest by their
-    CODES — a deterministic containment test, no name patterns.
+    READ-ONLY against the persistent schema: it only CREATEs TEMP tables and their
+    indexes, never touching `classification_candidate` / `variable_state`. Both
+    `link_value_set_classifications` (the producer) and `dump_classification_residue`
+    (the read-only diagnostic) call this so the containment SQL — the canonical-code
+    projection, per-value-set `n_codes`/`dom_level`, and the grain-filtered
+    `_vs_cls` containment under the `_MIN_CODES` / `_MIN_CONTAINMENT` thresholds —
+    lives in ONE place. Each caller DROPs these tables in its own lifecycle (the
+    detector reuses them through step 7; the diagnostic drops them once it has read
+    `_vs_cls`).
 
-    Additive producer: it INSERTs `(variable_id, value_set_id, classification_id)`
-    rows into the provider-blind `classification_candidate` table (the same seam
-    `_backfill_state_classifications` folds), guarded so it NEVER emits a candidate
-    for a `(variable_id, value_set_id)` state key that already has one. Curated /
-    name-based / SCB / SOS / #446 links therefore always win; this only fills gaps.
-    Inline value codes are never deleted or re-pointed — linkage is additive.
+    Behaviour-preserving: the SQL here is moved verbatim from the detector, so the
+    linkage output is byte-identical. Do NOT change the thresholds or grain logic.
 
-    Algorithm (temp-table SQL, mirroring `_apply_valid_codes` — no Python row
-    loops over the ~60k value sets):
-
-      1. `_canon_codes`: canonical (cls_id, kod, level, label) from
-         `classification_code` where `is_valid IS NOT 0` (1 OR NULL; NULL = a
-         no-CSV classification whose observed codes ARE its code set).
-      2. `_vs_codes` / `_vs_stats`: per value set, the distinct code strings, the
-         distinct-code count `n_codes`, and `dom_level` = the single digit-length
-         when EVERY code is an all-digit string of that length, else NULL.
-      3. `_vs_cls`: containment per (value_set_id, cls_id) with a GRAIN filter —
-         when `dom_level` is set, a value-set code matches a canonical row only at
-         the same `level` (a 4-digit set matches the cls's 4-digit codes, not its
-         2-digit ones); kept when `n_codes >= 8 AND containment >= 0.90`.
-      4. Single-family value sets (EXACTLY one surviving cls), with label agreement
-         for that one candidate.
-      5. `_vs_confident`: single-family AND (`n_codes >= 15` OR `label_agree >=
-         0.90`).
-      6. Emit the confident map into `classification_candidate`, additively.
-      7. Vintage-period reclaim (#494 PART 1): much of the multi-family residue is
-         ONE family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
-         editions) — distinct `classification` rows on one `supersedes_id` chain.
-         Resolve a multi-family value set ONLY when its candidate cls share ONE
-         vintage family, keyed on BOTH the supersedes-chain root (`_chain_root`)
-         AND the slug STEM (`classification_stem`, the year-tail-stripped slug). The
-         chain root alone is NOT enough: the #579 sun1996 → {niva, inriktning, grupp}
-         curated split puts three ORTHOGONAL SUN dimensions under one chain root, so
-         a code-ambiguous label-less value set spanning e.g. SUN nivå + inriktning
-         would collapse to one dimension on the root guard alone — the shared-stem
-         requirement (sun-niva* vs sun-inriktning* are different stems) keeps it in
-         the residue. If even one candidate is off-chain (a genuine cross-family
-         coincidence, e.g. SNI vs SSYK), or the candidates span two stems, leave the
-         whole set in the residue for curation. For each reclaimed (variable_id,
-         value_set_id), pick the LATEST candidate vintage whose [valid_from,valid_to]
-         overlaps AT LEAST ONE of the pair's real state windows (per-state, NOT the
-         aggregate MIN/MAX span — a disjoint-states span would falsely "overlap" a
-         gap vintage) — then emit it additively too.
-
-    Returns counts (also logged) — value sets / variables auto-linked, the
-    single-family-below-threshold and multi-family (ambiguous) populations, plus the
-    vintage-reclaimed counts and the still-ambiguous residue after reclaim, so drift
-    in the curated tail stays visible. No row-level content is logged.
-    """
-    _progress("Linking inline classification-coded value sets (#416)...")
-
-    # Stem function for the #494 vintage-reclaim family guard (7b). Deterministic;
-    # scoped to this connection. `classification_slug_stem` is the canonical
-    # year-tail-stripping rule shared with `derive_classification_succession`.
-    conn.create_function(
-        "classification_stem", 1, classification_slug_stem, deterministic=True
-    )
-
-    for tmp in (
-        "_canon_codes",
-        "_vs_codes",
-        "_vs_stats",
-        "_vs_cls",
-        "_vs_single",
-        "_vs_confident",
-        "_chain_root",
-        "_vs_multi_onechain",
-        "_vs_vintage",
-        "_vs_vintage_emit",
-    ):
+    Steps 4+ (`_vs_single` / `_vs_confident` / the vintage reclaim) stay in
+    `link_value_set_classifications` — they are the WRITE side; the residue
+    diagnostic recomputes multi-family from `_vs_cls` directly."""
+    for tmp in ("_canon_codes", "_vs_codes", "_vs_stats", "_vs_cls"):
         conn.execute(f"DROP TABLE IF EXISTS {tmp}")
 
     # 1. Canonical (cls_id, kod, level, label). is_valid IS NOT 0 keeps both the
@@ -1102,6 +1043,93 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         """
     )
     conn.execute("CREATE INDEX _vs_cls_vs ON _vs_cls(value_set_id)")
+
+
+def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
+    """Detect value sets that enumerate a known classification's codes inline and
+    feed the confident matches into `classification_candidate` (#416).
+
+    Many value sets list a classification's codes verbatim (e.g. an ULF health
+    variable carrying 2043/2057 ICD-10-SE codes) but sit unlinked
+    (`variable_state.classification_id IS NULL`) because SCB declared no
+    classification for them. SCB's `populate_classifications` name-map and the SOS
+    / #446 feeds only catch the DECLARED cases; this pass catches the rest by their
+    CODES — a deterministic containment test, no name patterns.
+
+    Additive producer: it INSERTs `(variable_id, value_set_id, classification_id)`
+    rows into the provider-blind `classification_candidate` table (the same seam
+    `_backfill_state_classifications` folds), guarded so it NEVER emits a candidate
+    for a `(variable_id, value_set_id)` state key that already has one. Curated /
+    name-based / SCB / SOS / #446 links therefore always win; this only fills gaps.
+    Inline value codes are never deleted or re-pointed — linkage is additive.
+
+    Algorithm (temp-table SQL, mirroring `_apply_valid_codes` — no Python row
+    loops over the ~60k value sets):
+
+      1. `_canon_codes`: canonical (cls_id, kod, level, label) from
+         `classification_code` where `is_valid IS NOT 0` (1 OR NULL; NULL = a
+         no-CSV classification whose observed codes ARE its code set).
+      2. `_vs_codes` / `_vs_stats`: per value set, the distinct code strings, the
+         distinct-code count `n_codes`, and `dom_level` = the single digit-length
+         when EVERY code is an all-digit string of that length, else NULL.
+      3. `_vs_cls`: containment per (value_set_id, cls_id) with a GRAIN filter —
+         when `dom_level` is set, a value-set code matches a canonical row only at
+         the same `level` (a 4-digit set matches the cls's 4-digit codes, not its
+         2-digit ones); kept when `n_codes >= 8 AND containment >= 0.90`.
+      4. Single-family value sets (EXACTLY one surviving cls), with label agreement
+         for that one candidate.
+      5. `_vs_confident`: single-family AND (`n_codes >= 15` OR `label_agree >=
+         0.90`).
+      6. Emit the confident map into `classification_candidate`, additively.
+      7. Vintage-period reclaim (#494 PART 1): much of the multi-family residue is
+         ONE family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
+         editions) — distinct `classification` rows on one `supersedes_id` chain.
+         Resolve a multi-family value set ONLY when its candidate cls share ONE
+         vintage family, keyed on BOTH the supersedes-chain root (`_chain_root`)
+         AND the slug STEM (`classification_stem`, the year-tail-stripped slug). The
+         chain root alone is NOT enough: the #579 sun1996 → {niva, inriktning, grupp}
+         curated split puts three ORTHOGONAL SUN dimensions under one chain root, so
+         a code-ambiguous label-less value set spanning e.g. SUN nivå + inriktning
+         would collapse to one dimension on the root guard alone — the shared-stem
+         requirement (sun-niva* vs sun-inriktning* are different stems) keeps it in
+         the residue. If even one candidate is off-chain (a genuine cross-family
+         coincidence, e.g. SNI vs SSYK), or the candidates span two stems, leave the
+         whole set in the residue for curation. For each reclaimed (variable_id,
+         value_set_id), pick the LATEST candidate vintage whose [valid_from,valid_to]
+         overlaps AT LEAST ONE of the pair's real state windows (per-state, NOT the
+         aggregate MIN/MAX span — a disjoint-states span would falsely "overlap" a
+         gap vintage) — then emit it additively too.
+
+    Returns counts (also logged) — value sets / variables auto-linked, the
+    single-family-below-threshold and multi-family (ambiguous) populations, plus the
+    vintage-reclaimed counts and the still-ambiguous residue after reclaim, so drift
+    in the curated tail stays visible. No row-level content is logged.
+    """
+    _progress("Linking inline classification-coded value sets (#416)...")
+
+    # Stem function for the #494 vintage-reclaim family guard (7b). Deterministic;
+    # scoped to this connection. `classification_slug_stem` is the canonical
+    # year-tail-stripping rule shared with `derive_classification_succession`.
+    conn.create_function(
+        "classification_stem", 1, classification_slug_stem, deterministic=True
+    )
+
+    for tmp in (
+        "_vs_single",
+        "_vs_confident",
+        "_chain_root",
+        "_vs_multi_onechain",
+        "_vs_vintage",
+        "_vs_vintage_emit",
+    ):
+        conn.execute(f"DROP TABLE IF EXISTS {tmp}")
+
+    # Steps 1-3 (canonical codes, per-value-set stats, grain-filtered containment)
+    # live in the shared `_build_containment_temp_tables` helper so the read-only
+    # `dump_classification_residue` diagnostic computes `_vs_cls` identically. It
+    # DROPs and recreates `_canon_codes`/`_vs_codes`/`_vs_stats`/`_vs_cls`; this
+    # function owns the steps-4+ temp tables (dropped above and at the end).
+    _build_containment_temp_tables(conn)
 
     # 4. Single-family value sets: EXACTLY one surviving candidate cls.
     conn.execute(
@@ -1439,3 +1467,335 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         "vintage_variables_linked": vintage_variables_linked,
         "multi_family_after": multi_family_after,
     }
+
+
+# --- classification-linkage residue diagnostic (#513) ------------------------
+# Productizes the multi-family residue `link_value_set_classifications` leaves for
+# curation (the #494 throwaway recompute, made reusable). It recomputes the SHARED
+# `_vs_cls` containment read-only (NEVER mutates the DB) and joins it to the SHIPPED
+# `variable_state.classification_id IS NULL` final-fold signal — `classification_
+# candidate` is build-scratch DROPPED before ship, so on a built DB the "still
+# unclassified" fact is the NULL state, not a scratch-table miss.
+
+# Label-unambiguity gate for the SAFE subset: a residual value set is curatable
+# when EXACTLY ONE of its candidate classifications is a STANDALONE (no
+# supersedes-chain neighbour) whose exact-(kod,label) agreement is >= this floor,
+# AND every other candidate is < this floor. Mirrors `_CONFIDENT_LABEL_AGREE`
+# (the detector's own label-precision lever) — a label-unambiguous standalone is
+# exactly the #494-part-2 tier a maintainer copied verbatim into
+# classification_links.toml.
+_SAFE_LABEL_AGREE = _CONFIDENT_LABEL_AGREE
+
+
+@dataclass(frozen=True)
+class ResidueCandidate:
+    """One candidate classification for a residual value set: its `short_name`,
+    containment (matched / n_codes), label_agree (the exact-(kod,label) agreement
+    step 5 uses), and whether it is STANDALONE (no `supersedes_id` chain neighbour
+    — not part of a vintage succession). Evidence for the worklist comment."""
+
+    short_name: str
+    containment: float
+    label_agree: float
+    standalone: bool
+
+
+@dataclass(frozen=True)
+class ResidualState:
+    """One unclassified `(variable_id, value_set_id)` state on a residual value
+    set, addressed by its variable FQID + name so a maintainer can act on it."""
+
+    variable_id: int
+    fqid: str  # provider/register/variable, or None-slug → empty segments
+    name: str | None
+
+
+@dataclass(frozen=True)
+class ResidueValueSet:
+    """A residual (multi-family, still-unclassified) value set: its `n_codes`, the
+    distinct unclassified states, the candidate classifications with evidence, and
+    `safe` — True iff EXACTLY ONE candidate is a label-unambiguous standalone
+    (>= _SAFE_LABEL_AGREE while all others are below it). The `safe` set is the
+    curatable tier (the #494-part-2 shape)."""
+
+    value_set_id: int
+    n_codes: int
+    candidates: tuple[ResidueCandidate, ...]
+    states: tuple[ResidualState, ...]
+    safe: bool
+
+
+@dataclass(frozen=True)
+class ResidueResult:
+    """The diagnostic's output: every residual value set plus the headline counts
+    (total residue value sets, the safe-subset size). Read-only — nothing is
+    materialized."""
+
+    value_sets: tuple[ResidueValueSet, ...]
+    total: int
+    safe_count: int
+
+
+def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
+    """Emit the #416 classification-linkage RESIDUE worklist from a BUILT DB
+    (read-only — NEVER mutates).
+
+    A value set is RESIDUAL iff it is MULTI-FAMILY (>1 candidate classification in
+    the shared `_vs_cls` containment) AND >= 1 of its `variable_state` rows is still
+    unclassified (`classification_id IS NULL`). On a shipped DB that NULL is the
+    final folded signal — `classification_candidate` (the build-scratch table the
+    detector feeds) is DROPPED before ship, so it cannot be the read-side signal.
+
+    For each residual value set it gathers `n_codes`, the distinct unclassified
+    `(variable_id, value_set_id)` states (variable FQID + name), and the candidate
+    classifications — per candidate the `containment`, the exact-(kod,label)
+    `label_agree` (the SAME metric step 5 uses for the confident tier), and whether
+    the candidate is STANDALONE (no `supersedes_id` chain neighbour). The SAFE
+    subset (`safe=True`) is the curatable tier: EXACTLY ONE candidate is a standalone
+    with label_agree >= `_SAFE_LABEL_AGREE` and every other candidate is below it —
+    the #494-part-2 label-unambiguous-single-standalone shape.
+
+    Builds (and drops) the shared `_vs_cls` containment via
+    `_build_containment_temp_tables`, so it stays byte-consistent with the detector.
+    No row-level sensitive content beyond codes/labels/FQIDs (the same exposure the
+    detector already logs)."""
+    _build_containment_temp_tables(conn)
+    try:
+        # Multi-family value sets (>1 candidate cls) that still have >= 1
+        # unclassified state. `variable_state.classification_id IS NULL` is the
+        # shipped final-fold signal; restrict to value-set-bearing states (a
+        # code-less NULL-value_set state can't carry a classification link).
+        multi_unclassified = {
+            row[0]
+            for row in conn.execute(
+                """
+                SELECT mc.value_set_id
+                FROM (
+                    SELECT value_set_id FROM _vs_cls
+                    GROUP BY value_set_id HAVING COUNT(*) > 1
+                ) mc
+                WHERE EXISTS (
+                    SELECT 1 FROM variable_state vs
+                    WHERE vs.value_set_id = mc.value_set_id
+                      AND vs.classification_id IS NULL
+                )
+                """
+            )
+        }
+
+        if not multi_unclassified:
+            return ResidueResult(value_sets=(), total=0, safe_count=0)
+
+        # n_codes per residual value set (read off `_vs_cls`, which carries the
+        # per-row n_codes the containment was scored against).
+        n_codes_by_vs = dict(
+            conn.execute(
+                "SELECT value_set_id, MAX(n_codes) FROM _vs_cls GROUP BY value_set_id"
+            )
+        )
+
+        # Candidate classifications per residual value set, with containment,
+        # standalone flag (no supersedes_id chain neighbour — neither a predecessor
+        # nor a successor), and the exact-(kod,label) label_agree (step 5's metric:
+        # COUNT(DISTINCT v.kod matching a canonical (kod,label) of THIS cls) /
+        # n_codes). `standalone` = supersedes_id IS NULL (no predecessor) AND no
+        # other classification supersedes it (no successor).
+        cand_rows = conn.execute(
+            """
+            SELECT
+                vc.value_set_id,
+                cl.short_name,
+                vc.containment,
+                (
+                    cl.supersedes_id IS NULL
+                    AND NOT EXISTS (
+                        SELECT 1 FROM classification s WHERE s.supersedes_id = cl.id
+                    )
+                ) AS standalone,
+                (
+                    CAST((
+                        SELECT COUNT(DISTINCT v.kod)
+                        FROM _vs_codes v
+                        WHERE v.value_set_id = vc.value_set_id
+                          AND EXISTS (
+                              SELECT 1 FROM _canon_codes c
+                              WHERE c.cls_id = vc.cls_id
+                                AND c.kod = v.kod
+                                AND c.label = v.label
+                          )
+                    ) AS REAL) / vc.n_codes
+                ) AS label_agree
+            FROM _vs_cls vc
+            JOIN classification cl ON cl.id = vc.cls_id
+            ORDER BY vc.value_set_id, cl.short_name
+            """
+        ).fetchall()
+        candidates_by_vs: dict[int, list[ResidueCandidate]] = {}
+        for value_set_id, short_name, containment, standalone, label_agree in cand_rows:
+            if value_set_id not in multi_unclassified:
+                continue
+            candidates_by_vs.setdefault(value_set_id, []).append(
+                ResidueCandidate(
+                    short_name=short_name,
+                    containment=float(containment),
+                    label_agree=float(label_agree),
+                    standalone=bool(standalone),
+                )
+            )
+
+        # Unclassified states per residual value set: the distinct (variable_id,
+        # value_set_id) state keys with classification_id NULL, joined to the
+        # variable FQID + name. A NULL slug segment (a partial/--skip-slugs build)
+        # renders as an empty segment — the FQID is still informative.
+        state_rows = conn.execute(
+            """
+            SELECT DISTINCT
+                vs.value_set_id,
+                vs.variable_id,
+                p.slug AS provider_slug,
+                r.slug AS register_slug,
+                v.slug AS variable_slug,
+                v.name AS name
+            FROM variable_state vs
+            JOIN variable v ON v.variable_id = vs.variable_id
+            JOIN register r ON r.register_id = v.register_id
+            JOIN provider p ON p.provider_id = r.provider_id
+            WHERE vs.classification_id IS NULL
+              AND vs.value_set_id IS NOT NULL
+            ORDER BY vs.value_set_id, vs.variable_id
+            """
+        ).fetchall()
+        states_by_vs: dict[int, list[ResidualState]] = {}
+        for value_set_id, variable_id, p_slug, r_slug, v_slug, name in state_rows:
+            if value_set_id not in multi_unclassified:
+                continue
+            fqid = f"{p_slug or ''}/{r_slug or ''}/{v_slug or ''}"
+            states_by_vs.setdefault(value_set_id, []).append(
+                ResidualState(variable_id=variable_id, fqid=fqid, name=name)
+            )
+
+        value_sets: list[ResidueValueSet] = []
+        for value_set_id in sorted(multi_unclassified):
+            candidates = tuple(candidates_by_vs.get(value_set_id, ()))
+            states = tuple(states_by_vs.get(value_set_id, ()))
+            # SAFE: exactly one standalone candidate clears the label floor and
+            # every OTHER candidate is below it (label-unambiguous single standalone).
+            qualifying = [
+                c
+                for c in candidates
+                if c.standalone and c.label_agree >= _SAFE_LABEL_AGREE
+            ]
+            others_below = all(
+                c.label_agree < _SAFE_LABEL_AGREE
+                for c in candidates
+                if c not in qualifying
+            )
+            safe = len(qualifying) == 1 and others_below
+            value_sets.append(
+                ResidueValueSet(
+                    value_set_id=value_set_id,
+                    n_codes=int(n_codes_by_vs.get(value_set_id, 0)),
+                    candidates=candidates,
+                    states=states,
+                    safe=safe,
+                )
+            )
+    finally:
+        for tmp in ("_vs_cls", "_vs_stats", "_vs_codes", "_canon_codes"):
+            conn.execute(f"DROP TABLE IF EXISTS {tmp}")
+
+    safe_count = sum(1 for vs in value_sets if vs.safe)
+    _progress(
+        f"  {len(value_sets):,} residual value sets "
+        f"({safe_count:,} safe-subset: single label-unambiguous standalone)"
+    )
+    return ResidueResult(
+        value_sets=tuple(value_sets), total=len(value_sets), safe_count=safe_count
+    )
+
+
+def render_residue_toml(result: ResidueResult) -> str:
+    """Render the residue worklist as a `[[link]]` TOML string a maintainer curates
+    from — the exact shape `classification_links.toml` accepts, so a CONFIRMED
+    candidate copies across verbatim. Built by hand (not `tomli_w`) so the
+    per-value-set evidence `#` comments survive (`tomli_w` drops comments).
+
+    The SAFE subset (single label-unambiguous standalone candidate) is emitted
+    FIRST and clearly marked — that's the curatable tier (#494 part 2). Each
+    `[[link]]` carries one `variable = "p/r/v"` per unclassified state, the
+    standalone candidate's `classification`, and a `note = "residue:safe"`
+    provenance marker; the preceding `#` comment shows n_codes and every candidate's
+    containment / label_agree / standalone so a reviewer sees the full evidence. The
+    AMBIGUOUS residue (no single safe standalone) is emitted as comment-only evidence
+    blocks — NOTHING uncommented to copy, since its true family needs a human call.
+    NOTHING materializes — read-only worklist only."""
+    safe = [vs for vs in result.value_sets if vs.safe]
+    ambiguous = [vs for vs in result.value_sets if not vs.safe]
+
+    lines = [
+        "# GENERATED classification-linkage residue worklist — "
+        "reg-meta-build classification-residue.",
+        "#",
+        "# The #416 code-set-containment detector auto-links the confident tier and",
+        "# vintage-reclaims one-family residue; what remains is MULTI-FAMILY value",
+        "# sets with >= 1 still-unclassified (classification_id IS NULL) state. These",
+        "# are INFERRED candidates, NOT confirmed links. NOTHING here loads into a",
+        "# build — review each and copy ONLY confirmed links into",
+        "# reg_meta_build/classification_links.toml (drop/replace the residue note).",
+        "#",
+        f"# {result.total} residual value set(s); "
+        f"{result.safe_count} safe-subset (single label-unambiguous standalone).",
+        "#",
+        "# label_agree = exact (code,label) agreement vs the candidate's canonical",
+        "# pairs (the detector's step-5 metric); standalone = not on a supersedes",
+        "# vintage chain. SAFE = exactly one standalone candidate >= "
+        f"{_SAFE_LABEL_AGREE:.2f} label_agree, all others below.",
+    ]
+
+    def _evidence_comment(vs: ResidueValueSet) -> list[str]:
+        out = [
+            "",
+            f"# value_set {vs.value_set_id}: n_codes={vs.n_codes}, "
+            f"{len(vs.states)} unclassified state(s)",
+        ]
+        for c in vs.candidates:
+            out.append(
+                f"#   candidate {c.short_name}: containment={c.containment:.2f}, "
+                f"label_agree={c.label_agree:.2f}, "
+                f"standalone={'yes' if c.standalone else 'no'}"
+            )
+        return out
+
+    lines.append("")
+    lines.append("# === SAFE subset (curatable: copy the [[link]] blocks below) ===")
+    if not safe:
+        lines.append("# (none)")
+    for vs in safe:
+        lines.extend(_evidence_comment(vs))
+        # The single qualifying standalone candidate is the curated target.
+        target = next(
+            c
+            for c in vs.candidates
+            if c.standalone and c.label_agree >= _SAFE_LABEL_AGREE
+        )
+        for st in vs.states:
+            lines.append("[[link]]")
+            lines.append(f'variable = "{st.fqid}"')
+            lines.append(f'classification = "{target.short_name}"')
+            lines.append('note = "residue:safe"')
+            lines.append("")
+
+    lines.append("")
+    lines.append(
+        "# === AMBIGUOUS residue (evidence only — a human must pick the family) ==="
+    )
+    if not ambiguous:
+        lines.append("# (none)")
+    for vs in ambiguous:
+        lines.extend(_evidence_comment(vs))
+        for st in vs.states:
+            lines.append(
+                f"#   state: variable = {st.fqid!r}  (variable_id {st.variable_id})"
+            )
+
+    return "\n".join(lines) + "\n"
