@@ -63,15 +63,18 @@ repos:
       # not skips, once opted in), so the push is blocked until Docker is up —
       # start it and push again rather than bypassing with --no-verify. CI's
       # `test` job runs `-m "not integration"` (and passes no --run-integration),
-      # so pre-push is the only automated home for the integration test. files
-      # gate skips the suite for doc-/config-only pushes (over the whole push
-      # range).
+      # so pre-push is the only automated home for the integration test. The
+      # files gate runs the suite for code (.py) AND the committed data the suite
+      # validates directly — .toml (curation pins, fqid_slugs snapshots, concept
+      # groups; see test_repo_curation_tomls.py / test_slug_snapshot.py) and
+      # .json (openapi snapshot, fixtures) — skipping only pushes confined to
+      # docs/markdown/workflow-YAML (over the whole push range).
       - id: pytest
         name: pytest (parallel, pre-push)
         entry: uv run python -m pytest -n auto -q --run-integration
         language: system
         pass_filenames: false
-        files: \.py$
+        files: \.(py|toml|json)$
         stages: [pre-push]
       # post-checkout only: provision a freshly checked-out / `git worktree add`ed
       # tree (its own .venv + node_modules) so worktrees created mid-session — by
