@@ -203,9 +203,9 @@ resolve later.
 The v0.x `missing_effective_entity_key` / `missing_effective_time_key` codes do **not**
 exist in this layer. Under Model A an omitted `entity_key` / `time_key` inherits from
 the member's variant's `panel_template`, which needs reg_meta state — so the "no
-effective key" case is the semantic `panel_inheritance_unresolvable` check (§6.8.3), not
-here. A member with no panel default and no override is simply not flagged at this
-layer.
+effective key" case can only be checked once inheritance is materialized at kit-build
+time, a path deferred to the from-scratch MONA rebuild (#699). A member with no panel
+default and no override is simply not flagged at this layer.
 
 The composite/literal panel rules that **are** structural live in the issue-code table
 above (`composite_key_inconsistent` ordering, `composite_time_key_mixed_kinds`
@@ -231,7 +231,10 @@ here so the stable-code registry is complete and the SPA can map them:
   | `binding_value_set_version_ambiguous` | error                                 | A binding's `(variant, period)` resolves to several **CO-EXISTING delivery columns** (distinct columns valid at the SAME instant — overlapping windows) — parallel REPRESENTATIONS of the one concept (SSYK 3/4/5-digit, age brackets) — and the binding sets no `representation`. The author must pick one (the SPA offers a chooser); this is where the retired `@version` pin's job now lives, keyed on the delivery column. Distinct columns in NON-overlapping windows (a sequential rename) are drift, not ambiguity. (Also re-used as a backstop for the rarer case of distinct value sets co-delivered on ONE column — a reg_meta build co-delivery the `validate` invariant should make unreachable.)                                                                                |
   | `binding_representation_unknown`      | error (→ warning on the steward path) | A binding's `representation` is not a delivery column of the concept at the source's `(variant, period)`. Downgraded for steward-catalog load (reg_meta dropped/renamed the pinned column = drift), like `period_outside_state_validity`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
   | `variable_replaced`                   | info                                  | The binding has a `variable_replaced_by` edge effective at or before the source's `period`; hint points at the successor.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-  | `panel_inheritance_unresolvable`      | error                                 | A member has no effective `entity_key` / `time_key` and its variant has no `panel_template` to inherit from.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+(The `panel_inheritance_unresolvable` code is **not** in this live set — its kit-build
+check is deferred to the from-scratch MONA rebuild, see above and `REFACTOR_SPEC.md`
+§8/9/10a — archived, #699.)
 
 ## Why no FQID parser dependency
 

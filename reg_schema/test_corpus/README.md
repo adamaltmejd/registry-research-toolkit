@@ -2,8 +2,8 @@
 
 Golden `(input.json, expected_ValidationResult.json)` pairs that pin the cross-runtime
 contract for `project_data.json` validation. The corpus is the single artifact that
-makes the §6.8.0 `ValidationResult` shape coherent across the three runtimes that
-consume it.
+makes the §6.8.0 `ValidationResult` shape coherent across every runtime that consumes
+it.
 
 ## Layout
 
@@ -21,10 +21,10 @@ reg_schema/test_corpus/
 
 Discovery rule: any directory under `test_corpus/` that contains both files is a case.
 The directory name is the case ID; recommended form is lowercase snake_case
-(`[a-z0-9_]+`) to keep IDs portable across the three runtimes, but the harness does not
-enforce this — any directory name the filesystem accepts will be picked up.
-Subdirectories that lack one of the two files are ignored, so README assets and helper
-files coexist without confusing the runners.
+(`[a-z0-9_]+`) to keep IDs portable across runtimes, but the harness does not enforce
+this — any directory name the filesystem accepts will be picked up. Subdirectories that
+lack one of the two files are ignored, so README assets and helper files coexist without
+confusing the runners.
 
 ## File formats
 
@@ -73,21 +73,19 @@ output is a tuple. Test harnesses compare as unordered sets
 (`set(actual.issues) == set(expected_issues)`) so cases do not pin emission order. If a
 future use case needs ordering guarantees, that becomes a separate corpus dimension.
 
-## Three consumers
+## Consumers
 
-The three runtimes that validate `project_data.json` all read this corpus to confirm
-they produce the same `ValidationResult` for the same input:
+The runtimes that validate `project_data.json` all read this corpus to confirm they
+produce the same `ValidationResult` for the same input:
 
 1. **`reg_schema` Python tests** — `reg_schema/tests/test_corpus.py` discovers cases and
    runs `validate_structural()` on each `input.json`.
-2. **`reg_monabundle` amalgamated bundle** — the bundle build pulls the corpus into a
-   self-test that runs on MONA load, so the amalgamated copy of the validator stays in
-   sync with the reg_schema source.
-3. **SPA TypeScript tests** — the SPA imports the corpus as JSON fixtures and runs its
+2. **SPA TypeScript tests** — the SPA imports the corpus as JSON fixtures and runs its
    TS port of the structural validator against them.
 
-All three read the same JSON. If any one diverges, the corpus catches it before
-downstream consumers do.
+Any future MONA-side runner that re-validates `project_data.json` is expected to read
+the same corpus. All consumers read the same JSON, so if any one diverges, the corpus
+catches it before downstream consumers do.
 
 ## Growth
 

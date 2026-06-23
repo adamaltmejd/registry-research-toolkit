@@ -217,10 +217,6 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The binding has a replacement edge at/before this period",
     hint: "info",
   },
-  panel_inheritance_unresolvable: {
-    label: "Panel member has no effective entity_key / time_key to inherit",
-    hint: "error",
-  },
 };
 
 /** The friendly label for a code, or the raw code when it isn't registered (an

@@ -15,11 +15,10 @@ proceed without clear intent to release.
 
 ## Packages
 
-  | Package          | pyproject.toml                    | `__init__.py`                                       | Publish workflow                                                                                |
-  | ---------------- | --------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-  | reg_meta         | `reg_meta/pyproject.toml`         | `reg_meta/src/reg_meta/__init__.py`                 | `publish_reg_meta.yml` (unattended — `pypi` environment review gate removed 2026-06-10)         |
-  | reg_meta_build   | `reg_meta_build/pyproject.toml`   | `reg_meta_build/src/reg_meta_build/__init__.py`     | `publish_reg_meta_build.yml` (unattended — `pypi` environment review gate removed 2026-06-10)   |
-  | mock_data_wizard | `mock_data_wizard/pyproject.toml` | `mock_data_wizard/src/mock_data_wizard/__init__.py` | `publish_mock_data_wizard.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
+  | Package        | pyproject.toml                  | `__init__.py`                                   | Publish workflow                                                                              |
+  | -------------- | ------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
+  | reg_meta       | `reg_meta/pyproject.toml`       | `reg_meta/src/reg_meta/__init__.py`             | `publish_reg_meta.yml` (unattended — `pypi` environment review gate removed 2026-06-10)       |
+  | reg_meta_build | `reg_meta_build/pyproject.toml` | `reg_meta_build/src/reg_meta_build/__init__.py` | `publish_reg_meta_build.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
 
 reg_meta_build is the build pipeline that produces `reg_meta`'s SQLite assets; it has
 its own PyPI release on the `reg_meta_build/v*` tag but ships no DB release assets
@@ -33,8 +32,8 @@ each command separately and using the returned value in the next call.
 
 1. **Resolve the bump level**: one of `$0` or `$1` must be `patch`, `minor`, or `major`.
    If neither is provided, stop and ask the user.
-2. **Resolve the package(s)**: if a package name (`reg_meta`, `reg_meta_build`, or
-   `mock_data_wizard`) is provided, use it. Otherwise, infer from context:
+2. **Resolve the package(s)**: if a package name (`reg_meta` or `reg_meta_build`) is
+   provided, use it. Otherwise, infer from context:
    - Find the last release tag for each package (tags follow the pattern
      `<package>/vX.Y.Z`).
    - Run `git log --oneline <tag>..HEAD -- <package>/` for each to see which packages

@@ -898,8 +898,8 @@ goes live — see `.claude/skills/release/SKILL.md`. The `TestSchemaCompat` test
 ### Release tags and distribution
 
 The monorepo uses **per-package release tags**: `reg_meta/v0.5.0`,
-`reg_meta_build/v0.1.0`, `mock-data-wizard/v0.4.0`, etc. Each tag corresponds to a
-GitHub release scoped to that package.
+`reg_meta_build/v0.1.0`, etc. Each tag corresponds to a GitHub release scoped to that
+package.
 
   | Channel              | Trigger                                                     | What it distributes                       |
   | -------------------- | ----------------------------------------------------------- | ----------------------------------------- |

@@ -1466,11 +1466,12 @@ def _check_panel_member(
 
     # NOTE: effective-key *presence* is no longer a structural rule.
     # Under Model A an omitted entity_key/time_key inherits from the member's
-    # variant `panel_template`, which needs reg_meta — so the
-    # "no effective key" case is the semantic `panel_inheritance_unresolvable`
-    # check (see DESIGN.md → Semantic codes — defined, not emitted by
-    # reg_schema), raised by kit/bundle-build, not here. A `None` eff_entity
-    # / eff_time simply has no refs to check below.
+    # variant `panel_template`, which needs reg_meta — so the "no effective key"
+    # case can only be checked once inheritance is materialized at kit-build time.
+    # That kit-build path (and its check) is deferred to the from-scratch MONA
+    # rebuild (#699); the structural layer keeps a pre-kit authoring spec valid
+    # while panel keys are still unresolved. A `None` eff_entity / eff_time simply
+    # has no refs to check below.
 
     # Member-vs-panel composite kind match: only fires when both panel
     # default and member override are composite time_keys (scalar
