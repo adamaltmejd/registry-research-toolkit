@@ -38,6 +38,10 @@ from reg_meta.errors import (
     RegMetaError,
 )
 
+from .classifications import (
+    dump_classification_residue,
+    render_residue_toml,
+)
 from .concept_group_candidates import (
     infer_concept_group_candidates,
     render_candidates_toml as render_concept_candidates_toml,
@@ -606,6 +610,46 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    residue_p = sub.add_parser(
+        "classification-residue",
+        help="Emit the #416 classification-linkage residue worklist (maintainer review).",
+        description=(
+            "Emit the code-set-containment (#416) RESIDUE from a BUILT DB: the\n"
+            "MULTI-FAMILY value sets (>1 candidate classification by code containment)\n"
+            "that still have >= 1 unclassified (variable_state.classification_id IS\n"
+            "NULL) state after the detector's confident tier + #494 vintage reclaim.\n"
+            "Productizes the #494 throwaway recompute so a maintainer can curate\n"
+            "reg_meta_build/classification_links.toml from it. Reads a built DB; NEVER\n"
+            "mutates it and NOTHING is materialized.\n\n"
+            "For each residual value set it reports n_codes, the unclassified states\n"
+            "(variable FQID + name), and the candidate classifications — per candidate\n"
+            "the containment, the exact (code,label) `label_agree` (the detector's\n"
+            "step-5 metric), and whether the candidate is STANDALONE (not on a\n"
+            "supersedes vintage chain).\n\n"
+            "The SAFE subset — value sets with EXACTLY ONE standalone candidate at\n"
+            ">= 0.90 label_agree and all others below — is the curatable tier (the\n"
+            "#494-part-2 label-unambiguous shape); it is emitted FIRST and clearly\n"
+            "marked. The JSON summary reports the total residue and the safe-subset\n"
+            "count.\n\n"
+            "-o/--output-toml writes a `[[link]]`-shaped worklist (the exact shape\n"
+            "classification_links.toml accepts) so a CONFIRMED safe candidate copies\n"
+            "across verbatim; the ambiguous residue is comment-only evidence.\n\n"
+            "Examples:\n"
+            "  reg-meta-build --db <built-db> classification-residue -o /tmp/residue.toml\n"
+            "  reg-meta-build --db <built-db> classification-residue  # counts only"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    residue_p.add_argument(
+        "-o",
+        "--output-toml",
+        default=None,
+        help=(
+            "Write the residue worklist TOML to this path. Without it the JSON counts "
+            "summary still prints; the TOML is included in the payload."
+        ),
+    )
+
     # `reg-meta-build` has no `--examples` handler (the query CLI's `--examples`
     # interceptor lives in `reg_meta.cli.run`); suppress the epilog so each
     # subcommand's --help doesn't point at an unrecognized flag.
@@ -1080,6 +1124,24 @@ def _cmd_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+def _emit_toml(output_toml: str | None, toml: str, data: dict[str, Any]) -> None:
+    """Emit a generator's TOML worklist to the JSON `data` payload.
+
+    With `--output-toml` set, write the TOML to the resolved path and record that
+    path under `data["output_toml"]`; otherwise carry the TOML inline under
+    `data["toml"]` so a no-target run doesn't lose the worklist. Shared by every
+    `--output-toml`-shaped subcommand (`same-as-candidates`,
+    `concept-group-candidates`, `entity-key-pins`'s combined-file arm,
+    `classification-residue`) so the write semantics stay identical.
+    """
+    if output_toml:
+        out_path = Path(output_toml).expanduser().resolve()
+        out_path.write_text(toml, encoding="utf-8")
+        data["output_toml"] = str(out_path)
+    else:
+        data["toml"] = toml
+
+
 def _cmd_same_as_candidates(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
@@ -1123,13 +1185,7 @@ def _cmd_same_as_candidates(
         "max_signal_fanout": fanout,
         "hub_suppressed": result.hub_suppressed,
     }
-    if args.output_toml:
-        out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(toml, encoding="utf-8")
-        data["output_toml"] = str(out_path)
-    else:
-        # No file target — carry the TOML in the payload so the worklist isn't lost.
-        data["toml"] = toml
+    _emit_toml(args.output_toml, toml, data)
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1304,17 +1360,14 @@ def _cmd_entity_key_pins(
         )
         data["out_dir"] = str(out_dir)
         data["files"] = written
-    elif args.output_toml:
-        # Single combined file, all providers — for inspection only.
-        out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(
-            render_entity_key_pins_toml(pins, flavored=args.flavored), encoding="utf-8"
-        )
-        data["output_toml"] = str(out_path)
     else:
-        # No file target — carry the combined TOML in the payload so the pins
-        # aren't lost.
-        data["toml"] = render_entity_key_pins_toml(pins, flavored=args.flavored)
+        # No --out-dir: a single combined file (--output-toml, inspection only)
+        # or the TOML carried inline in the payload.
+        _emit_toml(
+            args.output_toml,
+            render_entity_key_pins_toml(pins, flavored=args.flavored),
+            data,
+        )
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1375,13 +1428,7 @@ def _cmd_concept_group_candidates(
         "min_label_prefix": args.min_label_prefix,
         "min_agreement": args.min_agreement,
     }
-    if args.output_toml:
-        out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(toml, encoding="utf-8")
-        data["output_toml"] = str(out_path)
-    else:
-        # No file target — carry the TOML in the payload so the worklist isn't lost.
-        data["toml"] = toml
+    _emit_toml(args.output_toml, toml, data)
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1392,6 +1439,39 @@ def _cmd_concept_group_candidates(
             "min_agreement": args.min_agreement,
             "output_toml": args.output_toml,
         },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_classification_residue(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    # Schema-checked open: the diagnostic reads current-schema tables
+    # (variable_state.classification_id, classification.supersedes_id), so a stale
+    # DB should fail fast with the standard actionable schema-mismatch error.
+    conn = open_db(db)
+    try:
+        result = dump_classification_residue(conn)
+    finally:
+        conn.close()
+
+    toml = render_residue_toml(result)
+
+    data: dict[str, Any] = {
+        "total": result.total,
+        "safe_count": result.safe_count,
+        "ambiguous_count": result.total - result.safe_count,
+    }
+    _emit_toml(args.output_toml, toml, data)
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="classification-residue",
+        args_payload={"output_toml": args.output_toml},
         db_info=None,
         data=data,
         duration_ms=duration_ms,
@@ -1415,6 +1495,7 @@ COMMAND_DISPATCH: dict[
     "same-as-candidates": _cmd_same_as_candidates,
     "entity-key-pins": _cmd_entity_key_pins,
     "concept-group-candidates": _cmd_concept_group_candidates,
+    "classification-residue": _cmd_classification_residue,
 }
 
 
@@ -1462,6 +1543,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "concept-group-candidates [-o TOML] [--min-siblings N] "
         "[--min-label-prefix N] [--min-agreement F]",
         "Infer concept-group fold candidates (maintainer review worklist).",
+    ),
+    (
+        "classification-residue [-o TOML]",
+        "Emit the #416 classification-linkage residue worklist (maintainer review).",
     ),
 ]
 
