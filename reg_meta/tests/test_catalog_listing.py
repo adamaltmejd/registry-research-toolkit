@@ -156,16 +156,29 @@ class TestCatalogSizes:
 
     def test_excludes_null_slug_registers(self) -> None:
         # scb/lisa (slugged) + a NULL-slug register → only the slugged one counts.
-        conn = build_slugged_db()
+        # The NULL-slug register also gets a SLUGGED variable: the browse can't
+        # navigate into a NULL-slug register, so that variable is unreachable and
+        # must NOT be counted — proving the variable count joins the parent
+        # register's slug, not just `variable.slug IS NOT NULL`.
+        conn = build_slugged_db()  # scb/lisa (register_id 1) with variable `kon`
         conn.execute(
             "INSERT INTO register (register_id, provider_id, slug, name) "
             "VALUES (8, 1, NULL, 'Unslugged Register')"
         )
+        add_variable(conn, register_id=8, var_id=80, name="Stranded", slug="stranded")
         conn.commit()
         cat = Catalog(conn)
         assert cat.catalog_sizes().registers == 1
         raw = cat._conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
         assert raw == 2
+        # The stranded variable is slugged but lives under the NULL-slug register,
+        # so only `kon` (under slugged scb/lisa) counts. A `variable.slug IS NOT
+        # NULL`-only query would wrongly see 2.
+        assert cat.catalog_sizes().variables == 1
+        raw_vars = cat._conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE slug IS NOT NULL"
+        ).fetchone()[0]
+        assert raw_vars == 2
 
 
 def test_listing_disambiguates_by_parent_scope() -> None:

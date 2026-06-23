@@ -787,19 +787,25 @@ class Catalog:
         """Headline catalog-size counts for the landing page — the
         BROWSE-ADDRESSABLE (slugged) grain, so each count mirrors its `list_*`
         method's filter exactly: providers are always slugged (`list_providers`
-        applies no filter); registers and variables count only the slugged rows
+        applies no filter); registers count only the slugged rows
         (`slug IS NOT NULL` — a NULL-slug row isn't reachable by an FQID, so the
-        browse listings drop it). These are FULL-UNIVERSE (the whole DB) — a
-        steward-filter-aware count (a filtered deployment browses fewer nodes) is
-        a webapp concern / follow-up, NOT reg_meta's job (reg_meta has no notion
-        of webapp steward filtering). Three cheap COUNT queries."""
+        browse listings drop it). The variable count requires BOTH the variable
+        AND its parent register to be slugged: the browse can't navigate into a
+        NULL-slug register (`list_registers` drops it), so a slugged variable
+        under one is unreachable and must not be counted. These are FULL-UNIVERSE
+        (the whole DB) — a steward-filter-aware count (a filtered deployment
+        browses fewer nodes) is a webapp concern / follow-up, NOT reg_meta's job
+        (reg_meta has no notion of webapp steward filtering). Three cheap COUNT
+        queries."""
         return CatalogSizes(
             providers=self._conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0],
             registers=self._conn.execute(
                 "SELECT COUNT(*) FROM register WHERE slug IS NOT NULL"
             ).fetchone()[0],
             variables=self._conn.execute(
-                "SELECT COUNT(*) FROM variable WHERE slug IS NOT NULL"
+                "SELECT COUNT(*) FROM variable v "
+                "JOIN register r ON v.register_id = r.register_id "
+                "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL"
             ).fetchone()[0],
         )
 
