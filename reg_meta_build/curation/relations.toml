@@ -208,3 +208,3229 @@ a = "scb/lisa/csfvi"                  # Sammanräknad förvärvsinkomst
 b = "scb/rams/arbink"                 # Arbetsinkomst i RAMS
 relation_kind = "similar_concept"
 note = "curated:cross_register"
+
+# ── #508 tier-1 same_as: auto-curated canonical-family identities ──
+# Reproducible derivation (re-runnable for the deferred follow-up):
+#  1. `reg-meta-build same-as-candidates --max-tier 1` on a real scb,sos build
+#     (tier 1 = shared classification + shared ≥15-code value set + exact
+#     normalized name agreement, cross-register).
+#  2. KEEP a pair iff the variable's name maps to its canonical SCB
+#     classification family AND the observed shared classification is that
+#     same family (drops code-coincidence noise, e.g. civilstånd/employee-
+#     size-class spuriously tagged SSYK). Name→family map: kommun / län /
+#     församling / landsting / nuts / valkrets / säteskommun / säteslän → LKF;
+#     näringsgren / bransch → SNI; utbildning* / skolform / gymnasieprogram →
+#     SUN; juridisk form → JURFORM; sektor* → SEKTOR; yrke* → SSYK.
+#  3. Group the kept pairs into connected identity components, then DROP a
+#     component if it has >32 FQIDs (the _SAME_AS_MAX_COMPONENT guard — the
+#     oversized standards kommun/län/näringsgren/utbildning/juridisk form)
+#     OR >1 variable in a single register (a transitive merge of distinct
+#     same-register columns — the generator excludes within-register pairs,
+#     but their cross-register closure can reintroduce them; these are NOT
+#     one identity and are left for manual curation).
+#  4. Author the FULL pairwise clique of each surviving component: the build
+#     stores only listed pairs (no transitive closure) and Catalog reads
+#     DIRECT `variable_same_as` rows, so each member must edge every other
+#     for the complete equivalence listing.
+# Result: 62 components, 249 variables, 615 edges (max component 13 FQIDs).
+# Deferred to the manual curation pass: the >32 oversized standards, the >1-
+# per-register components, and tiers 2-4.
+
+# 'juridisk form' — legal form (JURFORM), 5 variables (JURFORM2000, JURFORM2020)
+[[edge]]
+type = "same_as"
+a = "scb/anst/jurform"
+b = "scb/bas/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anst/jurform"
+b = "scb/lsum/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anst/jurform"
+b = "scb/rams/juridisk-form"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anst/jurform"
+b = "scb/stativ/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/jurform"
+b = "scb/lsum/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/jurform"
+b = "scb/rams/juridisk-form"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/jurform"
+b = "scb/stativ/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/jurform"
+b = "scb/rams/juridisk-form"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/jurform"
+b = "scb/stativ/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/juridisk-form"
+b = "scb/stativ/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+
+# 'juridisk form' — legal form (JURFORM), 2 variables (JURFORM2000)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bjurform"
+b = "scb/ftr/jurform"
+note = "curated:#508 tier-1 JURFORM cross-register identity"
+
+# 'födelselän' — geographic (LKF), 5 variables (LKF2004, LKF2006, LKF2009, LKF2010)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bflan"
+b = "scb/frida/bflan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bflan"
+b = "scb/hek/bflanut"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bflan"
+b = "scb/iot/fodelselan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bflan"
+b = "scb/lsum/fodelselan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/bflan"
+b = "scb/hek/bflanut"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/bflan"
+b = "scb/iot/fodelselan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/bflan"
+b = "scb/lsum/fodelselan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bflanut"
+b = "scb/iot/fodelselan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bflanut"
+b = "scb/lsum/fodelselan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/iot/fodelselan"
+b = "scb/lsum/fodelselan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'församling far' — geographic (LKF), 2 variables (LKF2002)
+[[edge]]
+type = "same_as"
+a = "scb/breg/forsamlingfar"
+b = "scb/rtb/forsamlingfar"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'församling mor' — geographic (LKF), 2 variables (LKF2002)
+[[edge]]
+type = "same_as"
+a = "scb/breg/forsamlingmor"
+b = "scb/rtb/forsamlingmor"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'kommun' — geographic (LKF), 2 variables (LKF2016)
+[[edge]]
+type = "same_as"
+a = "scb/iot/kommun"
+b = "scb/kapitalvinster/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'kommun för arbetsställe' — geographic (LKF), 13 variables (LKF1993, LKF1994, LKF1995, LKF1996, LKF1997, LKF1998, LKF1999, LKF2000, LKF2001, LKF2002, LKF2003, LKF2004, LKF2005, LKF2006, LKF2007, LKF2008, LKF2009, LKF2015, LKF2017, LKF2018, LKF2019, LKF2020, LKF2021, LKF2022, LKF2023, LKF2024)
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/branslestatistik/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/fdb/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/foretagsreg/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/industrins-vattenanvandning/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/isen/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/lisa/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/lor/bkommunkod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/astkommun"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/fdb/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/foretagsreg/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/industrins-vattenanvandning/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/isen/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/lisa/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/lor/bkommunkod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/branslestatistik/kommun"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/foretagsreg/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/industrins-vattenanvandning/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/isen/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/lisa/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/lor/bkommunkod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/kommun-for-arbetsstalle"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/industrins-vattenanvandning/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/isen/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/lisa/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/lor/bkommunkod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/kommun-for-arbetsstalle"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/isen/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/lisa/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/lor/bkommunkod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/kommun"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/isen/kommun"
+b = "scb/lisa/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/isen/kommun"
+b = "scb/lor/bkommunkod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/isen/kommun"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/isen/kommun"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/isen/kommun"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/isen/kommun"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/isen/kommun"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/kommun-for-arbetsstalle"
+b = "scb/lor/bkommunkod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/kommun-for-arbetsstalle"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/kommun-for-arbetsstalle"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/kommun-for-arbetsstalle"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/kommun-for-arbetsstalle"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/kommun-for-arbetsstalle"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lor/bkommunkod"
+b = "scb/lsum/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lor/bkommunkod"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lor/bkommunkod"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lor/bkommunkod"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lor/bkommunkod"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/astkommun"
+b = "scb/rams/kommun-for-arbetsstalle"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/astkommun"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/astkommun"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/astkommun"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/sls/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/sls/kommun"
+b = "scb/stativ/astkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/sls/kommun"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/stativ/astkommun"
+b = "scb/utforarreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'kommun för bostaden' — geographic (LKF), 4 variables (LKF1994, LKF1995, LKF1997, LKF1998, LKF1999, LKF2002, LKF2003, LKF2004, LKF2007, LKF2008, LKF2009)
+[[edge]]
+type = "same_as"
+a = "scb/aku/kommun-for-bostaden"
+b = "scb/fasit/bfastlk"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/aku/kommun-for-bostaden"
+b = "scb/lisa/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/aku/kommun-for-bostaden"
+b = "scb/yrkesreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bfastlk"
+b = "scb/lisa/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bfastlk"
+b = "scb/yrkesreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/kommun"
+b = "scb/yrkesreg/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'kommun för folkbokföring' — geographic (LKF), 2 variables (LKF2006)
+[[edge]]
+type = "same_as"
+a = "scb/ekonomiskt-bistand/fbfkommun"
+b = "scb/ftr/folkbokfkom"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'kommun för skola/skolenhet' — geographic (LKF), 10 variables (LKF1998, LKF1999, LKF2002, LKF2003, LKF2004, LKF2005, LKF2007, LKF2008, LKF2009, LKF2010, LKF2012, LKF2017, LKF2023)
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/grundskola-prov-ak3/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/grundskola-prov-ak6/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/komvux/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolkommun"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/grundskola-prov-ak3/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/grundskola-prov-ak6/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/komvux/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/kommun"
+b = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/kommun"
+b = "scb/grundskola-prov-ak6/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/kommun"
+b = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/kommun"
+b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/kommun"
+b = "scb/komvux/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/kommun"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/kommun"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/grundskola-prov-ak6/kommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/komvux/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/kommun"
+b = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/kommun"
+b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/kommun"
+b = "scb/komvux/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/kommun"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/kommun"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+b = "scb/komvux/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+b = "scb/komvux/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/komvux/kommun-for-skola-skolenhet"
+b = "scb/rpu/skommunht"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/komvux/kommun-for-skola-skolenhet"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rpu/skommunht"
+b = "scb/ssv/skolkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'kommun för skola/skolenhet' — geographic (LKF), 2 variables (LKF2015)
+[[edge]]
+type = "same_as"
+a = "scb/elevpaneler/kommun"
+b = "scb/kkv/utbkommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'kommun för skola/skolenhet' — geographic (LKF), 2 variables (LKF2019)
+[[edge]]
+type = "same_as"
+a = "scb/gyst/skola-kommun"
+b = "scb/komvux-sfi/kommun-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'landsting' — geographic (LKF), 2 variables (LKF2019)
+[[edge]]
+type = "same_as"
+a = "scb/klr/landsting"
+b = "scb/kvartalsutfall/landsting"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'landstingskod' — geographic (LKF), 3 variables (LKF1999, LKF2007)
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/lk"
+b = "scb/fortroendevalda/landstingskod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/lk"
+b = "scb/klr/landstingskod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/landstingskod"
+b = "scb/klr/landstingskod"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'län för arbetsstället' — geographic (LKF), 2 variables (LKF2014)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/lan-for-arbetsstallet"
+b = "scb/forskola/lan-for-arbetsstallet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'län för arbetsstället' — geographic (LKF), 8 variables (LKF1996, LKF1997, LKF1998, LKF1999, LKF2000, LKF2001, LKF2005, LKF2006, LKF2009, LKF2010, LKF2012, LKF2013, LKF2017, LKF2018, LKF2019, LKF2020, LKF2021, LKF2022)
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lan-for-arbetsstallet"
+b = "scb/industrins-vattenanvandning/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lan-for-arbetsstallet"
+b = "scb/ks/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lan-for-arbetsstallet"
+b = "scb/kv/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lan-for-arbetsstallet"
+b = "scb/linda/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lan-for-arbetsstallet"
+b = "scb/rams/astlan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lan-for-arbetsstallet"
+b = "scb/sls/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lan-for-arbetsstallet"
+b = "scb/utforarreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/lan"
+b = "scb/ks/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/lan"
+b = "scb/kv/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/lan"
+b = "scb/linda/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/lan"
+b = "scb/rams/astlan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/lan"
+b = "scb/sls/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/industrins-vattenanvandning/lan"
+b = "scb/utforarreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ks/lan"
+b = "scb/kv/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ks/lan"
+b = "scb/linda/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ks/lan"
+b = "scb/rams/astlan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ks/lan"
+b = "scb/sls/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ks/lan"
+b = "scb/utforarreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/kv/lan"
+b = "scb/linda/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/kv/lan"
+b = "scb/rams/astlan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/kv/lan"
+b = "scb/sls/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/kv/lan"
+b = "scb/utforarreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/lan"
+b = "scb/rams/astlan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/lan"
+b = "scb/sls/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/lan"
+b = "scb/utforarreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/astlan"
+b = "scb/sls/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/astlan"
+b = "scb/utforarreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/sls/lan"
+b = "scb/utforarreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'län för bostaden' — geographic (LKF), 2 variables (LKF2006, LKF2010)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/lan"
+b = "scb/yrkesreg/lan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'län för skola/skolenhet' — geographic (LKF), 5 variables (LKF1997, LKF1998, LKF2006)
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skollan"
+b = "scb/gymnasieskola-betyg/lan-for-skola-skolenhet"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skollan"
+b = "scb/komvux-sfi/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skollan"
+b = "scb/komvux/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skollan"
+b = "scb/ssv/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/lan-for-skola-skolenhet"
+b = "scb/komvux-sfi/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/lan-for-skola-skolenhet"
+b = "scb/komvux/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/lan-for-skola-skolenhet"
+b = "scb/ssv/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/komvux-sfi/skollan"
+b = "scb/komvux/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/komvux-sfi/skollan"
+b = "scb/ssv/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/komvux/skollan"
+b = "scb/ssv/skollan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'län, kommun, församling' — geographic (LKF), 2 variables (LKF2008)
+[[edge]]
+type = "same_as"
+a = "scb/hek/lan-kommun-forsamling"
+b = "scb/ulf/lan-kommun-forsamling"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'säteskommun' — geographic (LKF), 5 variables (LKF2003, LKF2004, LKF2006, LKF2007, LKF2008, LKF2009, LKF2010, LKF2011, LKF2013, LKF2017, LKF2019, LKF2021, LKF2022, LKF2023)
+[[edge]]
+type = "same_as"
+a = "scb/civila-samhallet/sateskommun"
+b = "scb/fek/sateskommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/civila-samhallet/sateskommun"
+b = "scb/frida/sateskommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/civila-samhallet/sateskommun"
+b = "scb/lisa/org-satekommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/civila-samhallet/sateskommun"
+b = "scb/offentligt-agda-foretag/kommunsate"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sateskommun"
+b = "scb/frida/sateskommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sateskommun"
+b = "scb/lisa/org-satekommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sateskommun"
+b = "scb/offentligt-agda-foretag/kommunsate"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/sateskommun"
+b = "scb/lisa/org-satekommun"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/sateskommun"
+b = "scb/offentligt-agda-foretag/kommunsate"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/org-satekommun"
+b = "scb/offentligt-agda-foretag/kommunsate"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'säteskommun' — geographic (LKF), 2 variables (LKF1999, LKF2000, LKF2002, LKF2003, LKF2007, LKF2008, LKF2019)
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sateskommun"
+b = "scb/foretagsreg/kommunsate"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'säteslän' — geographic (LKF), 3 variables (LKF1999, LKF2000, LKF2006, LKF2009)
+[[edge]]
+type = "same_as"
+a = "scb/fdb/lansate"
+b = "scb/foretagsreg/lansate"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/lansate"
+b = "scb/frida/sateslan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/lansate"
+b = "scb/frida/sateslan"
+note = "curated:#508 tier-1 LKF cross-register identity"
+
+# 'institutionell sektor' — sector (SEKTOR), 6 variables (SEKTOR2000)
+[[edge]]
+type = "same_as"
+a = "scb/ksju/inst"
+b = "scb/moms/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ksju/inst"
+b = "scb/nystartade-foretag-kvartal/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ksju/inst"
+b = "scb/rams/institutionell-sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ksju/inst"
+b = "scb/rpu/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ksju/inst"
+b = "scb/svdb/issueresa95sector"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/moms/sektor"
+b = "scb/nystartade-foretag-kvartal/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/moms/sektor"
+b = "scb/rams/institutionell-sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/moms/sektor"
+b = "scb/rpu/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/moms/sektor"
+b = "scb/svdb/issueresa95sector"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/nystartade-foretag-kvartal/sektor"
+b = "scb/rams/institutionell-sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/nystartade-foretag-kvartal/sektor"
+b = "scb/rpu/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/nystartade-foretag-kvartal/sektor"
+b = "scb/svdb/issueresa95sector"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/institutionell-sektor"
+b = "scb/rpu/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/institutionell-sektor"
+b = "scb/svdb/issueresa95sector"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rpu/sektor"
+b = "scb/svdb/issueresa95sector"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+
+# 'sektor' — sector (SEKTOR), 2 variables (SEKTOR2000)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bsektor"
+b = "scb/frida/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+
+# 'sektortillhörighet' — sector (SEKTOR), 9 variables (SEKTOR2000)
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/fek/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/foretagsreg/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/foretagsstatistik/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/frida/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/hek/bsektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/offentligt-agda-foretag/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/rams/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/sektor"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sektor"
+b = "scb/foretagsreg/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sektor"
+b = "scb/foretagsstatistik/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sektor"
+b = "scb/frida/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sektor"
+b = "scb/hek/bsektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sektor"
+b = "scb/offentligt-agda-foretag/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sektor"
+b = "scb/rams/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/sektor"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/sektortillhorighet"
+b = "scb/foretagsstatistik/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/sektortillhorighet"
+b = "scb/frida/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/sektortillhorighet"
+b = "scb/hek/bsektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/sektortillhorighet"
+b = "scb/offentligt-agda-foretag/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/sektortillhorighet"
+b = "scb/rams/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/sektortillhorighet"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/sektor"
+b = "scb/frida/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/sektor"
+b = "scb/hek/bsektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/sektor"
+b = "scb/offentligt-agda-foretag/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/sektor"
+b = "scb/rams/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/sektor"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/sektortillhorighet"
+b = "scb/hek/bsektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/sektortillhorighet"
+b = "scb/offentligt-agda-foretag/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/sektortillhorighet"
+b = "scb/rams/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/sektortillhorighet"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsektor"
+b = "scb/offentligt-agda-foretag/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsektor"
+b = "scb/rams/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsektor"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/offentligt-agda-foretag/sektor"
+b = "scb/rams/sektortillhorighet"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/offentligt-agda-foretag/sektor"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sektortillhorighet"
+b = "scb/utforarreg/sektor"
+note = "curated:#508 tier-1 SEKTOR cross-register identity"
+
+# 'bransch' — industry (SNI), 3 variables (SNI2002, SNI2007)
+[[edge]]
+type = "same_as"
+a = "scb/arbetsplatsomraden-utanfor-tatort/bransch"
+b = "scb/konjunkturstatistik-industri/ipisni"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsplatsomraden-utanfor-tatort/bransch"
+b = "scb/ksju/bransch"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/konjunkturstatistik-industri/ipisni"
+b = "scb/ksju/bransch"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgren för anställda' — industry (SNI), 2 variables (SNI69)
+[[edge]]
+type = "same_as"
+a = "scb/iot/naringsgren-for-anstallda"
+b = "scb/linda/kusni"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgren för enskild näringsidkare' — industry (SNI), 5 variables (SNI2002, SNI2007, SNI92)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+b = "scb/frida/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+b = "scb/hek/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+b = "scb/iot/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+b = "scb/linda/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/bngre"
+b = "scb/hek/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/bngre"
+b = "scb/iot/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/frida/bngre"
+b = "scb/linda/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bngre"
+b = "scb/iot/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bngre"
+b = "scb/linda/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/iot/bngre"
+b = "scb/linda/bngre"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgren för företag' — industry (SNI), 3 variables (SNI2007)
+[[edge]]
+type = "same_as"
+a = "scb/anst/jengs1"
+b = "scb/bas/jengs07"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anst/jengs1"
+b = "scb/rams/ftgsni"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bas/jengs07"
+b = "scb/rams/ftgsni"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgren för statistiken' — industry (SNI), 7 variables (SNI2007, SNI92)
+[[edge]]
+type = "same_as"
+a = "scb/fek/ngs"
+b = "scb/infi/vengs"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/ngs"
+b = "scb/investeringsenkaten/naringsgren-for-statistiken"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/ngs"
+b = "scb/laps/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/ngs"
+b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/ngs"
+b = "scb/lor/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fek/ngs"
+b = "scb/tjansteforetagens-forbrukning/ngs"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/infi/vengs"
+b = "scb/investeringsenkaten/naringsgren-for-statistiken"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/infi/vengs"
+b = "scb/laps/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/infi/vengs"
+b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/infi/vengs"
+b = "scb/lor/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/infi/vengs"
+b = "scb/tjansteforetagens-forbrukning/ngs"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/investeringsenkaten/naringsgren-for-statistiken"
+b = "scb/laps/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/investeringsenkaten/naringsgren-for-statistiken"
+b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/investeringsenkaten/naringsgren-for-statistiken"
+b = "scb/lor/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/investeringsenkaten/naringsgren-for-statistiken"
+b = "scb/tjansteforetagens-forbrukning/ngs"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/laps/ngs1"
+b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/laps/ngs1"
+b = "scb/lor/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/laps/ngs1"
+b = "scb/tjansteforetagens-forbrukning/ngs"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+b = "scb/lor/ngs1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+b = "scb/tjansteforetagens-forbrukning/ngs"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lor/ngs1"
+b = "scb/tjansteforetagens-forbrukning/ngs"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgren för statistiken, på 5 siffer sni' — industry (SNI), 2 variables (SNI2007)
+[[edge]]
+type = "same_as"
+a = "scb/fou/naringsgren-for-statistiken-pa-5-siffer-sni"
+b = "scb/pin/ngs1id"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgren sni2007 (tvåsifferkod) i huvudsysslan' — industry (SNI), 2 variables (SNI2007)
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/naringsgren-sni2007-tvasifferkod-i-huvudsysslan"
+b = "scb/arbetsorsakade-besvar/naringsgren-sni2007-tvasifferkod-i-huvudsysslan"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgren, huvudsaklig' — industry (SNI), 3 variables (SNI2007, SNI92)
+[[edge]]
+type = "same_as"
+a = "scb/fdb/ng1"
+b = "scb/foretagsreg/ng1"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/ng1"
+b = "scb/lsum/ftgsni200"
+note = "curated:#508 tier-1 SNI cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/ng1"
+b = "scb/lsum/ftgsni200"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgrenskod, sni 2002' — industry (SNI), 2 variables (SNI2002)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bkungr02"
+b = "scb/fordonsreg/naringsgrenskod-sni-2002"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'näringsgrenskod, sni 2007, 2-ställig' — industry (SNI), 2 variables (SNI2007)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/bngr2"
+b = "scb/fou/indu-main-group"
+note = "curated:#508 tier-1 SNI cross-register identity"
+
+# 'yrke på 2-siffernivå i huvudsysslan' — occupation (SSYK), 3 variables (SSYK2012, SSYK96)
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/yrke-pa-2-sifferniva-i-huvudsysslan"
+b = "scb/arbetsorsakade-besvar/yrke-pa-2-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/yrke-pa-2-sifferniva-i-huvudsysslan"
+b = "scb/it-anvandning/yrke-pa-2-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsorsakade-besvar/yrke-pa-2-sifferniva-i-huvudsysslan"
+b = "scb/it-anvandning/yrke-pa-2-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+
+# 'yrke på 3-siffernivå, största förvärvskällan' — occupation (SSYK), 2 variables (SSYK2012, SSYK96)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/yrke-pa-3-sifferniva-storsta-forvarvskallan"
+b = "scb/yrkesreg/yrke-pa-3-sifferniva-storsta-forvarvskallan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+
+# 'yrke på 4-siffernivå i huvudsysslan' — occupation (SSYK), 6 variables (SSYK2012, SSYK96)
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/it-anvandning/hussyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/it-anvandning/hussyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/it-anvandning/hussyk4"
+b = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/it-anvandning/hussyk4"
+b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/it-anvandning/hussyk4"
+b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+
+# 'yrke på 4-siffernivå, största förvärvskällan' — occupation (SSYK), 3 variables (SSYK2012, SSYK96)
+[[edge]]
+type = "same_as"
+a = "scb/linda/ssyk"
+b = "scb/lisa/yrke-pa-4-sifferniva-storsta-forvarvskallan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/ssyk"
+b = "scb/yrkesreg/yrke-pa-4-sifferniva-storsta-forvarvskallan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/yrke-pa-4-sifferniva-storsta-forvarvskallan"
+b = "scb/yrkesreg/yrke-pa-4-sifferniva-storsta-forvarvskallan"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+
+# 'yrkesuppgift' — occupation (SSYK), 6 variables (SSYK2012, SSYK96)
+[[edge]]
+type = "same_as"
+a = "scb/bonus-oregelbundna/yrke"
+b = "scb/slh/ssyk12"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bonus-oregelbundna/yrke"
+b = "scb/slk/ssyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bonus-oregelbundna/yrke"
+b = "scb/slp/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bonus-oregelbundna/yrke"
+b = "scb/slr/ssyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/bonus-oregelbundna/yrke"
+b = "scb/sls/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/ssyk12"
+b = "scb/slk/ssyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/ssyk12"
+b = "scb/slp/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/ssyk12"
+b = "scb/slr/ssyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/ssyk12"
+b = "scb/sls/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slk/ssyk4"
+b = "scb/slp/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slk/ssyk4"
+b = "scb/slr/ssyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slk/ssyk4"
+b = "scb/sls/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slp/yrkesuppgift"
+b = "scb/slr/ssyk4"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slp/yrkesuppgift"
+b = "scb/sls/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slr/ssyk4"
+b = "scb/sls/yrkesuppgift"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+
+# 'faderns utbildningsnivå' — education (SUN), 9 variables (SUN2000-NIVA, SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/forskola/faderns-utbildningsniva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/forskoleklass/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/fritidshem/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/grundskola-ak9/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/grundskola-betyg-ak6/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/grundskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/gymnasieskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/faderns-utbildningsniva"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/faderns-utbildningsniva"
+b = "scb/forskoleklass/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/faderns-utbildningsniva"
+b = "scb/fritidshem/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/faderns-utbildningsniva"
+b = "scb/grundskola-ak9/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/faderns-utbildningsniva"
+b = "scb/grundskola-betyg-ak6/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/faderns-utbildningsniva"
+b = "scb/grundskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/faderns-utbildningsniva"
+b = "scb/gymnasieskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/faderns-utbildningsniva"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-far"
+b = "scb/fritidshem/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-far"
+b = "scb/grundskola-ak9/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-far"
+b = "scb/grundskola-betyg-ak6/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-far"
+b = "scb/grundskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-far"
+b = "scb/gymnasieskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-far"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-far"
+b = "scb/grundskola-ak9/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-far"
+b = "scb/grundskola-betyg-ak6/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-far"
+b = "scb/grundskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-far"
+b = "scb/gymnasieskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-far"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-far"
+b = "scb/grundskola-betyg-ak6/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-far"
+b = "scb/grundskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-far"
+b = "scb/gymnasieskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-far"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2020niva-far"
+b = "scb/grundskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2020niva-far"
+b = "scb/gymnasieskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2020niva-far"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2020niva-far"
+b = "scb/gymnasieskola-elever/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2020niva-far"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-elever/sun2020niva-far"
+b = "scb/specialskola/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'faderns utbildningsnivå' — education (SUN), 4 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-far"
+b = "scb/grundskola-prov-ak3/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-far"
+b = "scb/grundskola-prov-ak6/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-far"
+b = "scb/grundskola-prov-ak9/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-far"
+b = "scb/grundskola-prov-ak6/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-far"
+b = "scb/grundskola-prov-ak9/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2020niva-far"
+b = "scb/grundskola-prov-ak9/sun2020niva-far"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'föräldrarnas utbildningsnivå' — education (SUN), 9 variables (SUN2000-NIVA, SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/anpassad-grundskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/forskola/foraldrarnas-utbildningsniva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/forskoleklass/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/fritidshem/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/grundskola-ak9/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/grundskola-betyg-ak6/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/grundskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/foraldrarnas-utbildningsniva"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-for"
+b = "scb/forskola/foraldrarnas-utbildningsniva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-for"
+b = "scb/forskoleklass/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-for"
+b = "scb/fritidshem/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-for"
+b = "scb/grundskola-ak9/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-for"
+b = "scb/grundskola-betyg-ak6/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-for"
+b = "scb/grundskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-for"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/foraldrarnas-utbildningsniva"
+b = "scb/forskoleklass/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/foraldrarnas-utbildningsniva"
+b = "scb/fritidshem/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/foraldrarnas-utbildningsniva"
+b = "scb/grundskola-ak9/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/foraldrarnas-utbildningsniva"
+b = "scb/grundskola-betyg-ak6/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/foraldrarnas-utbildningsniva"
+b = "scb/grundskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/foraldrarnas-utbildningsniva"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-for"
+b = "scb/fritidshem/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-for"
+b = "scb/grundskola-ak9/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-for"
+b = "scb/grundskola-betyg-ak6/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-for"
+b = "scb/grundskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-for"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-for"
+b = "scb/grundskola-ak9/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-for"
+b = "scb/grundskola-betyg-ak6/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-for"
+b = "scb/grundskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-for"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-for"
+b = "scb/grundskola-betyg-ak6/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-for"
+b = "scb/grundskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-for"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2020niva-for"
+b = "scb/grundskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2020niva-for"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2020niva-for"
+b = "scb/specialskola/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'föräldrarnas utbildningsnivå' — education (SUN), 10 variables (SUN2000-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/anpassad-gymnasieskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/forskoleklass/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/grundskola-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/grundskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/grundskola-prov-ak3/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/grundskola-prov-ak6/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/grundskola-prov-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/forskoleklass/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/grundskola-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/grundskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/grundskola-prov-ak3/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/grundskola-prov-ak6/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/grundskola-prov-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2000niva-for"
+b = "scb/grundskola-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2000niva-for"
+b = "scb/grundskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2000niva-for"
+b = "scb/grundskola-prov-ak3/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2000niva-for"
+b = "scb/grundskola-prov-ak6/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2000niva-for"
+b = "scb/grundskola-prov-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2000niva-for"
+b = "scb/grundskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2000niva-for"
+b = "scb/grundskola-prov-ak3/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2000niva-for"
+b = "scb/grundskola-prov-ak6/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2000niva-for"
+b = "scb/grundskola-prov-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2000niva-for"
+b = "scb/grundskola-prov-ak3/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2000niva-for"
+b = "scb/grundskola-prov-ak6/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2000niva-for"
+b = "scb/grundskola-prov-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2000niva-for"
+b = "scb/grundskola-prov-ak6/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2000niva-for"
+b = "scb/grundskola-prov-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2000niva-for"
+b = "scb/grundskola-prov-ak9/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak9/sun2000niva-for"
+b = "scb/gymnasieskola-elever/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak9/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-elever/sun2000niva-for"
+b = "scb/specialskola/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'föräldrarnas utbildningsnivå' — education (SUN), 3 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2020niva-for"
+b = "scb/gymnasieskola-betyg/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-gymnasieskola/sun2020niva-for"
+b = "scb/gymnasieskola-prov/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/sun2020niva-for"
+b = "scb/gymnasieskola-prov/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'föräldrarnas utbildningsnivå' — education (SUN), 2 variables (SUN2000-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2000niva-for"
+b = "scb/gymnasieskola-betyg/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'föräldrarnas utbildningsnivå' — education (SUN), 4 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-for"
+b = "scb/grundskola-prov-ak6/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-for"
+b = "scb/grundskola-prov-ak9/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-for"
+b = "scb/gymnasieskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2020niva-for"
+b = "scb/grundskola-prov-ak9/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2020niva-for"
+b = "scb/gymnasieskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak9/sun2020niva-for"
+b = "scb/gymnasieskola-elever/sun2020niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'föräldrarnas utbildningsnivå' — education (SUN), 2 variables (SUN2000-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-prov/sun2000niva-for"
+b = "scb/gymnasieskola-sokande/sun2000niva-for"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'moderns utbildningsnivå' — education (SUN), 9 variables (SUN2000-NIVA, SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/anpassad-grundskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/forskola/moderns-utbildningsniva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/forskoleklass/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/fritidshem/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/grundskola-ak9/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/grundskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/moderns-utbildningsniva"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-mor"
+b = "scb/forskola/moderns-utbildningsniva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-mor"
+b = "scb/forskoleklass/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-mor"
+b = "scb/fritidshem/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-mor"
+b = "scb/grundskola-ak9/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-mor"
+b = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-mor"
+b = "scb/grundskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/anpassad-grundskola/sun2020niva-mor"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/moderns-utbildningsniva"
+b = "scb/forskoleklass/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/moderns-utbildningsniva"
+b = "scb/fritidshem/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/moderns-utbildningsniva"
+b = "scb/grundskola-ak9/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/moderns-utbildningsniva"
+b = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/moderns-utbildningsniva"
+b = "scb/grundskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/moderns-utbildningsniva"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-mor"
+b = "scb/fritidshem/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-mor"
+b = "scb/grundskola-ak9/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-mor"
+b = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-mor"
+b = "scb/grundskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/sun2020niva-mor"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-mor"
+b = "scb/grundskola-ak9/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-mor"
+b = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-mor"
+b = "scb/grundskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fritidshem/sun2020niva-mor"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-mor"
+b = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-mor"
+b = "scb/grundskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/sun2020niva-mor"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+b = "scb/grundskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-betyg-ak6/sun2020niva-mor"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-elever/sun2020niva-mor"
+b = "scb/specialskola/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'moderns utbildningsnivå' — education (SUN), 4 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-mor"
+b = "scb/grundskola-prov-ak6/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-mor"
+b = "scb/grundskola-prov-ak9/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak3/sun2020niva-mor"
+b = "scb/gymnasieskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2020niva-mor"
+b = "scb/grundskola-prov-ak9/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak6/sun2020niva-mor"
+b = "scb/gymnasieskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak9/sun2020niva-mor"
+b = "scb/gymnasieskola-elever/sun2020niva-mor"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'typ av gymnasieprogram' — education (SUN), 2 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/kkv/gymnasiebakgrund-sun2020niva"
+b = "scb/yrkeshogskolan/gymnasiebakgrund-sun2020niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningens inriktning enligt sun 2000' — education (SUN), 2 variables (SUN2000-INRIKTNING)
+[[edge]]
+type = "same_as"
+a = "scb/slk/utbildningens-inriktning-enligt-sun-2000"
+b = "scb/yrkesreg/utbildningens-inriktning-enligt-sun-2000"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningens nivå och inriktning' — education (SUN), 7 variables (SUN1996)
+[[edge]]
+type = "same_as"
+a = "scb/iot/utbildningens-niva-och-inriktning"
+b = "scb/linda/utbildningens-niva-och-inriktning"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/iot/utbildningens-niva-och-inriktning"
+b = "scb/rams/hutbsun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/iot/utbildningens-niva-och-inriktning"
+b = "scb/rpu/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/iot/utbildningens-niva-och-inriktning"
+b = "scb/sls/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/iot/utbildningens-niva-och-inriktning"
+b = "scb/stativ/hutbsun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/iot/utbildningens-niva-och-inriktning"
+b = "scb/ureg/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/utbildningens-niva-och-inriktning"
+b = "scb/rams/hutbsun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/utbildningens-niva-och-inriktning"
+b = "scb/rpu/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/utbildningens-niva-och-inriktning"
+b = "scb/sls/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/utbildningens-niva-och-inriktning"
+b = "scb/stativ/hutbsun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/linda/utbildningens-niva-och-inriktning"
+b = "scb/ureg/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/hutbsun"
+b = "scb/rpu/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/hutbsun"
+b = "scb/sls/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/hutbsun"
+b = "scb/stativ/hutbsun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/hutbsun"
+b = "scb/ureg/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rpu/sun"
+b = "scb/sls/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rpu/sun"
+b = "scb/stativ/hutbsun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rpu/sun"
+b = "scb/ureg/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/sls/sun"
+b = "scb/stativ/hutbsun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/sls/sun"
+b = "scb/ureg/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/stativ/hutbsun"
+b = "scb/ureg/sun"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsinriktning' — education (SUN), 2 variables (SUN2000-INRIKTNING)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/sun2000inr"
+b = "scb/forskola/sun2000inr"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsinriktning' — education (SUN), 2 variables (SUN2020-INRIKTNING)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/sun2020inr-prio"
+b = "scb/forskola/sun2020inr-prio"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsnivå' — education (SUN), 3 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valdeltagande/sun2020niva"
+b = "scb/ep-val-nominerade/sun2020niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valdeltagande/sun2020niva"
+b = "scb/sls/sun2020niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2020niva"
+b = "scb/sls/sun2020niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsnivå' — education (SUN), 2 variables (SUN2000-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/sun2000niva"
+b = "scb/forskola/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsnivå' — education (SUN), 3 variables (SUN2000-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/sun2000niva-prio"
+b = "scb/forskola/sun2000niva-prio"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/sun2000niva-prio"
+b = "scb/intradet-pa-arbetsmarknaden/utbildningsniva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/forskola/sun2000niva-prio"
+b = "scb/intradet-pa-arbetsmarknaden/utbildningsniva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsnivå' — education (SUN), 2 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/sun2020niva"
+b = "scb/forskola/sun2020niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsnivå' — education (SUN), 2 variables (SUN2020-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/annan-pedagogisk-verksamhet/sun2020niva-prio"
+b = "scb/forskola/sun2020niva-prio"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsnivå (3 positioner)' — education (SUN), 11 variables (SUN2000-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/ep-val-nominerade/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/fortroendevalda/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/hek/bsunniv"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/lisa/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/personalutbildningsstatistik/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/rams/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/slh/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/fortroendevalda/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/hek/bsunniv"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/lisa/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/personalutbildningsstatistik/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/rams/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/slh/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/sun2000niva"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/hek/bsunniv"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/lisa/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/personalutbildningsstatistik/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/rams/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/slh/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsunniv"
+b = "scb/lisa/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsunniv"
+b = "scb/personalutbildningsstatistik/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsunniv"
+b = "scb/rams/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsunniv"
+b = "scb/slh/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsunniv"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsunniv"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/hek/bsunniv"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/sun2000niva"
+b = "scb/personalutbildningsstatistik/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/sun2000niva"
+b = "scb/rams/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/sun2000niva"
+b = "scb/slh/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/sun2000niva"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/sun2000niva"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/sun2000niva"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/sun2000niva"
+b = "scb/rams/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/sun2000niva"
+b = "scb/slh/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/sun2000niva"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/sun2000niva"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/sun2000niva"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sun2000niva"
+b = "scb/slh/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sun2000niva"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sun2000niva"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sun2000niva"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/utbildningsniva-3-positioner"
+b = "scb/sls/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/utbildningsniva-3-positioner"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slh/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/sls/utbildningsniva-3-positioner"
+b = "scb/stativ/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/sls/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/stativ/sun2000niva"
+b = "scb/yrkesreg/utbildningsniva-3-positioner"
+note = "curated:#508 tier-1 SUN cross-register identity"
+
+# 'utbildningsnivå (sun2000)' — education (SUN), 2 variables (SUN2000-NIVA)
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valresultat/sun2000niva"
+b = "scb/ep-val-resultat/sun2000niva"
+note = "curated:#508 tier-1 SUN cross-register identity"

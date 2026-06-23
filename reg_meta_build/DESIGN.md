@@ -747,8 +747,8 @@ source state(s) and emits one edge per pair whose validity ranges intersect, wit
   `bar`; see reg_meta/DESIGN.md → Composite registers and source tracking). The common
   no-rename case yields just the identity slug, so an edge is always additive. (An
   earlier single-seed form expanded only the source node and silently missed
-  mismatched-slug cross-register edges — latent while `variable_same_as` is empty; since
-  fixed.)
+  mismatched-slug cross-register edges — latent while `variable_same_as` was empty;
+  since fixed.)
 - **Variant pinning is TOML-only — no SQL table.** A `[lineage_defaults]` block picks
   one source variant per source register; a
   `[lineage."<consumer_register>.<variable_slug>"]` block overrides it per consumer

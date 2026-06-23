@@ -104,8 +104,9 @@ _REPLACED_BY_NOTE_VINTAGE_LIFT = "derived:classification_vintage_lift"
 # two large, genuinely-distinct concept clusters into one resolver blob. Refuse
 # any edge whose merged component would exceed this many distinct FQIDs — a
 # curated identity cluster that large is almost certainly a curation error, not a
-# real concept. Forward-looking: the file ships EMPTY, so this guards future
-# curation rather than today's data.
+# real concept. This now governs SHIPPED data: the #508 tier-1 batch carries 615
+# edges across 62 identity components (max component 13 FQIDs), so the guard
+# actively bounds the live data (with comfortable headroom under the cap).
 _SAME_AS_MAX_COMPONENT = 32
 
 # Replaced_by grains: register-, variable-, or classification-grain. The variant
