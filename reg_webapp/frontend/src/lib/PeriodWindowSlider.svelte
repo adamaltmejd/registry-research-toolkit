@@ -67,6 +67,14 @@ interface Props {
   // the #639 alarm. The coverage band still renders too (an FYI of where data
   // exists, not a deviation claim).
   hasSelection: boolean;
+  // Whether the user has ACTUALLY chosen a year-window value distinct from the
+  // project window (an explicit year `?period`, or a live thumb drag) — gates the
+  // USER-deviation hint (Fix B). FALSE for the untouched coverage-clamped default
+  // seed: the data narrowing the window to coverage is NOT a user deviation, so the
+  // amber "Deviates from project window · reset" hint (and its bare-window reset)
+  // must not fire on the default render. Distinct from `hasSelection`, which is true
+  // whenever a window is set and so can't tell the default from a real choice.
+  userChosen: boolean;
   // Emitted with the live selection as the thumbs move (the picker holds it and
   // submits the wire on Apply).
   onchange: (next: StudyWindow) => void;
@@ -83,6 +91,7 @@ let {
   vintageYear,
   subAnnualPeriod,
   hasSelection,
+  userChosen,
   onchange,
   onreset,
 }: Props = $props();
@@ -131,20 +140,38 @@ const effectiveCoverage = $derived<Coverage | null>(
     : { from: coverage.from, to: coverage.to ?? vintageYear ?? max },
 );
 
-// The coverage (available-data) band — a solid track segment; the not-delivered
-// gaps draw OVER the selection fill as greyed cells. An open start extends the
-// band to the track edge (`min`); the open end stops at the vintage ceiling (via
-// `effectiveCoverage`).
-const coverageBand = $derived.by(() => {
+// The resolved band edges (#671) — the single source both the solid coverage band
+// and its greyed `unavailable` complement read, so they can never drift (Fix E).
+// Open sides resolve to the track edges (open start → `min`, open end → `max`,
+// after `effectiveCoverage` has already vintage-projected a finite open end).
+// Fix D (defensive): an INVERTED effective coverage (`from > to` — e.g. a register
+// first delivered 2025 on a 2024-vintage catalog → effectiveCoverage {2025, 2024})
+// would give the band a negative width and make the unavailable regions overlap /
+// the hard-clamp degenerate. Treat it as "no band" (null) so the geometry degrades
+// cleanly to no-band / no-clamp rather than emitting negative-width cells.
+const bandEdges = $derived.by<{ from: number; to: number } | null>(() => {
   if (effectiveCoverage === null) {
     return null;
   }
   const bandFrom = effectiveCoverage.from ?? min;
   const bandTo = effectiveCoverage.to ?? max;
-  return { left: leftPct(bandFrom), width: widthPct(bandFrom, bandTo) };
+  return bandFrom > bandTo ? null : { from: bandFrom, to: bandTo };
 });
 
-// The UNAVAILABLE regions (#671): the track spans OUTSIDE the effective coverage —
+// The coverage (available-data) band — a solid track segment; the not-delivered
+// gaps draw OVER the selection fill as greyed cells. An open start extends the
+// band to the track edge (`min`); the open end stops at the vintage ceiling (via
+// `bandEdges`).
+const coverageBand = $derived(
+  bandEdges === null
+    ? null
+    : {
+        left: leftPct(bandEdges.from),
+        width: widthPct(bandEdges.from, bandEdges.to),
+      },
+);
+
+// The UNAVAILABLE regions (#671): the track spans OUTSIDE the coverage band —
 // left of the band start, right of the band end — rendered ALWAYS (no drag), as
 // greyed NON-SELECTABLE cells so a variable's true data coverage reads up front.
 // The thumbs are hard-clamped to coverage (`selectableMin/Max` below), so the
@@ -152,21 +179,24 @@ const coverageBand = $derived.by(() => {
 // backdrop, NOT a "your selection is bad" warning (that distinction is how this
 // supersedes the #639 gap-suppression without resurrecting its alarm — see `gaps`).
 // Skipped while a sub-annual `?period` projects the window (the band itself is then
-// just an FYI; nothing is selectable on this slider anyway).
+// just an FYI; nothing is selectable on this slider anyway). Reads the shared
+// `bandEdges` so it can't drift from the solid band (Fix E) and inherits the
+// inverted-coverage guard (Fix D — a null band yields no unavailable regions).
 const unavailable = $derived.by(() => {
-  if (effectiveCoverage === null || subAnnualPeriod !== null) {
+  if (bandEdges === null || subAnnualPeriod !== null) {
     return [];
   }
-  const bandFrom = effectiveCoverage.from ?? min;
-  const bandTo = effectiveCoverage.to ?? max;
   const regions: { left: number; width: number }[] = [];
-  if (bandFrom > min) {
-    regions.push({ left: leftPct(min), width: widthPct(min, bandFrom - 1) });
-  }
-  if (bandTo < max) {
+  if (bandEdges.from > min) {
     regions.push({
-      left: leftPct(bandTo + 1),
-      width: widthPct(bandTo + 1, max),
+      left: leftPct(min),
+      width: widthPct(min, bandEdges.from - 1),
+    });
+  }
+  if (bandEdges.to < max) {
+    regions.push({
+      left: leftPct(bandEdges.to + 1),
+      width: widthPct(bandEdges.to + 1, max),
     });
   }
   return regions;
@@ -199,14 +229,20 @@ const gaps = $derived(
 );
 
 // ── Deviation states ─────────────────────────────────────────────────────────
-// USER deviation: an active selection different from the project window. Only
+// USER deviation: a user-CHOSEN selection different from the project window. Only
 // meaningful WHEN a window is set (no window → nothing to deviate from) AND the
 // shown span IS the active selection — for a sub-annual `?period` the span is
 // the window PROJECTION, so `same==window` here is an artefact, not a real
-// "no deviation"; the sub-annual cue below speaks for that case instead.
+// "no deviation"; the sub-annual cue below speaks for that case instead. Gated on
+// `userChosen` (Fix B): the untouched coverage-clamped default seed (e.g. window
+// 2000–2010 narrowed to coverage 2000–2008) differs from the bare window but is
+// NOT a user deviation — the data constrained it, not the user — so the hint (and
+// its bare-window reset, which would re-render the not-delivered gap #671 avoids)
+// must not fire until the user picks an explicit `?period` or drags a thumb.
 const userDeviation = $derived(
   projectWindow !== null &&
     subAnnualPeriod === null &&
+    userChosen &&
     !sameYearWindow({ from, to }, projectWindow),
 );
 
@@ -280,8 +316,8 @@ const coverageThrough = $derived(
     <DualThumbTrack
       {min}
       {max}
-      selectableMin={effectiveCoverage?.from ?? min}
-      selectableMax={effectiveCoverage?.to ?? max}
+      selectableMin={bandEdges?.from ?? min}
+      selectableMax={bandEdges?.to ?? max}
       {selection}
       bind:from
       bind:to

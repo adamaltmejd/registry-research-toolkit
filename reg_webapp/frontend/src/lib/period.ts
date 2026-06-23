@@ -535,8 +535,11 @@ export interface Coverage {
  *     inverted span) so the thumbs still land on a covered year, and the
  *     window-vs-data deviation hint speaks for the mismatch.
  *   - WITHOUT a window (`null`): the effective coverage span itself.
- *   - NO coverage (`null`): the full `[fallbackMin, fallbackMax]` bounds (nothing
- *     to narrow to). */
+ *   - NO coverage (`null`): a SET window still seeds at the window (a stateless
+ *     variable with a project window honours it, never widening to full history —
+ *     that would regress the seed and Apply to `fallbackMin..vintage`); only
+ *     no-window + no-coverage falls to the full `[fallbackMin, fallbackMax]`
+ *     bounds (nothing to narrow to). */
 export function intersectCoverageWindow(
   coverage: Coverage | null,
   window: StudyWindow | null,
@@ -544,7 +547,7 @@ export function intersectCoverageWindow(
   fallbackMax: number,
 ): StudyWindow {
   if (coverage === null) {
-    return { from: fallbackMin, to: fallbackMax };
+    return window ?? { from: fallbackMin, to: fallbackMax };
   }
   const covFrom = coverage.from ?? fallbackMin;
   const covTo = coverage.to ?? fallbackMax;

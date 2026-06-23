@@ -243,6 +243,47 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2002..2008");
   });
 
+  it("no spurious deviation on the coverage-clamped default seed (window 2000–2010 ∩ coverage 1995–2008, no ?period) (Fix B)", async () => {
+    // Fix B: the default seed clamps to 2000–2008 (window ∩ coverage), which ≠ the
+    // bare window 2000–2010 — but the user chose nothing, the data constrained it.
+    // The amber "Deviates from project window" hint must NOT fire on this default
+    // render (else its reset would submit the bare window and render the gap #671
+    // avoids).
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: WINDOW, // 2000–2010
+      coverage: COVERAGE, // 1995–2008 → seed 2000–2008
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    // The seed is the clamped 2000–2008…
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2008");
+    // …yet no deviation hint fires (the user hasn't chosen anything).
+    await expect
+      .element(screen.getByText(/Deviates from project window/))
+      .not.toBeInTheDocument();
+  });
+
+  it("after the user drags a thumb to a value ≠ window, the deviation hint fires (Fix B)", async () => {
+    // Once the user actually moves a thumb (userChosen via the live sliderWire),
+    // the deviation hint becomes meaningful again — the suppression is only for the
+    // untouched default seed.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: WINDOW, // 2000–2010
+      coverage: COVERAGE, // 1995–2008
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    // Drag the From thumb to 2003 (≠ window start) → a user-chosen selection.
+    await screen.getByRole("slider", { name: "From year" }).fill("2003");
+    await expect
+      .element(screen.getByText(/Deviates from project window/))
+      .toBeVisible();
+  });
+
   it("user deviation: ?period ≠ window shows the hint; reset NARROWS to the window wire (Fix B)", async () => {
     // Fix B: "reset to project window" must NARROW back like Apply — submit the
     // window's wire so BindingLeafView (narrows only on ?period) lands on the

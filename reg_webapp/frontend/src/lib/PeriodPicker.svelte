@@ -146,8 +146,8 @@ $effect(() => {
 // SEED PRECEDENCE for the THUMBS (#671) is a SUPERSET of the above, so a
 // variable's true data COVERAGE shows up front instead of the full 1960–vintage
 // span reading as available: explicit year `?period` > intersection(coverage,
-// window) when a window is set > the coverage span when no window is set > the
-// full bounds when there's no coverage. `seededSelection` below applies it.
+// window) > coverage span (no window) > window (no coverage) > full bounds
+// (neither). `seededSelection` below applies it.
 
 /** The year window the slider treats as the ACTIVE (user-chosen) selection — a
  * year-representable `?period` wins; else the project window; else null (nothing
@@ -161,10 +161,12 @@ const activeYearSelection = $derived<StudyWindow | null>(
  * coverage-aware so the variable's real coverage shows up front:
  * `intersectCoverageWindow` against the EFFECTIVE coverage edges (open start →
  * the slider floor, open end → the vintage ceiling) yields window∩coverage when a
- * window is set, the coverage span when none is, and the full bounds when there's
- * no coverage to narrow to. NOTE: the bare window is intentionally NOT the seed —
- * only its intersection with coverage is (the window's out-of-coverage tail must
- * not read as available). */
+ * window is set, the coverage span when none is, the window itself when there's no
+ * coverage to narrow to (a stateless variable still honours its window), and the
+ * full bounds only when neither is set. NOTE: WITH coverage the bare window is
+ * intentionally NOT the seed — only its intersection with coverage is (the
+ * window's out-of-coverage tail must not read as available); the bare-window seed
+ * is the no-coverage case alone. */
 const seededSelection = $derived<StudyWindow>(
   yearWindowFromWire(period) ??
     intersectCoverageWindow(coverage, window, SLIDER_FLOOR_YEAR, ceilingYear),
@@ -234,6 +236,20 @@ let sliderWire = $state<string | null>(null);
  * and nothing else (a stale drag never survives a seed/ceiling change). */
 const hasSliderSelection = $derived(
   activeYearSelection !== null || sliderWire !== null,
+);
+
+/** Whether the user has ACTUALLY chosen a year-window value distinct from the
+ * project window — drives the slider's USER-deviation hint (Fix B). True only for
+ * an explicit year `?period` OR a live dragged `sliderWire`; FALSE for the
+ * untouched coverage-clamped default seed. Without this, the common
+ * window∩coverage seed (e.g. window 2000–2010, coverage 1995–2008 → 2000–2008)
+ * compares the clamped thumbs to the bare window and fires a spurious "Deviates
+ * from project window" hint with no user action — and its reset would submit the
+ * bare window, rendering the not-delivered gap #671 avoids. NOTE: `hasSelection`
+ * is NOT usable here — it's true whenever a window is set (`activeYearSelection =
+ * wire ?? window`), so it can't tell the untouched default from a real choice. */
+const userChosen = $derived(
+  yearWindowFromWire(period) !== null || sliderWire !== null,
 );
 
 // The "more options" expander. Opens by default for an active `?period` the year
@@ -363,6 +379,7 @@ const MODE_LABELS: Record<PickerMode, string> = {
         vintageYear={ceilingYear}
         {subAnnualPeriod}
         hasSelection={hasSliderSelection}
+        {userChosen}
         onchange={(next) => (sliderWire = yearWindowToWire(next))}
         onreset={() => resetToWindow()}
       />

@@ -609,10 +609,19 @@ describe("intersectCoverageWindow (#671 coverage-aware seed)", () => {
     ).toEqual({ from: 1960, to: 2026 });
   });
 
-  it("no coverage → the full fallback bounds (nothing to narrow to)", () => {
+  it("no coverage but a SET window → the window (a stateless variable honours its window, Fix A)", () => {
+    // FIX A: coverage null + a window must seed at the window, NOT widen to full
+    // history — else a stateless variable's Apply would submit 1960..vintage.
     expect(
       intersectCoverageWindow(null, { from: 2000, to: 2010 }, 1960, 2026),
-    ).toEqual({ from: 1960, to: 2026 });
+    ).toEqual({ from: 2000, to: 2010 });
+  });
+
+  it("no coverage AND no window → the full fallback bounds (nothing to narrow to, Fix A)", () => {
+    expect(intersectCoverageWindow(null, null, 1960, 2026)).toEqual({
+      from: 1960,
+      to: 2026,
+    });
   });
 
   it("window wholly AFTER coverage → snaps to the coverage end (a covered year, not inverted)", () => {

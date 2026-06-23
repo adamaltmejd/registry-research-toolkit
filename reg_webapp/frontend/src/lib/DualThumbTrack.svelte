@@ -143,7 +143,19 @@ function onTo(event: Event): void {
   {@render children?.()}
   <!-- Two overlaid native range thumbs (real slider role + keyboard for free);
        the `from` thumb sits above so a coincident pair stays grabbable apart.
-       `oninput` updates the LIVE buffer; `onchange` commits (consumer-policy). -->
+       `oninput` updates the LIVE buffer; `onchange` commits (consumer-policy).
+       The native `min`/`max` stay the FULL [min, max] (the value→pixel geometry),
+       but user input is hard-clamped to [selLo, selHi]; `aria-valuemin`/`-valuemax`
+       announce that selectable sub-range so a screen reader matches the reachable
+       range, not the full track (Fix F). With no selectable range supplied
+       (YearWindowSlider) selLo/selHi = min/max, so its ARIA is unchanged.
+       KNOWN LIMITATION (Fix C, intentional — no behavior change): an explicit
+       out-of-coverage `?period` can SEED a thumb beyond [selLo, selHi] (the seed
+       clamps only to [min, max], so the consumer renders the URL's value
+       honestly); a subsequent small drag then snaps it back to the coverage edge,
+       and dragging the `to` thumb first can leave it temporarily stuck until
+       `from` is moved. This is inherent to honest-rendering an out-of-coverage
+       explicit period and is accepted, not a latent surprise. -->
   <input
     class="thumb thumb-from"
     type="range"
@@ -152,6 +164,8 @@ function onTo(event: Event): void {
     step="1"
     value={from}
     aria-label="From year"
+    aria-valuemin={selLo}
+    aria-valuemax={selHi}
     oninput={onFrom}
     onchange={() => onCommit?.()}
   />
@@ -163,6 +177,8 @@ function onTo(event: Event): void {
     step="1"
     value={to}
     aria-label="To year"
+    aria-valuemin={selLo}
+    aria-valuemax={selHi}
     oninput={onTo}
     onchange={() => onCommit?.()}
   />

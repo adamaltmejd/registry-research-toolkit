@@ -20,6 +20,10 @@ describe("PeriodWindowSlider", () => {
     // A real selection/window is set in these tests (not the no-op full-history
     // default), so the availability gap is live (#639).
     hasSelection: true,
+    // The user has chosen the shown selection (an explicit ?period or a drag),
+    // so the USER-deviation hint is live (Fix B); the default-seed-suppression
+    // case is its own test below.
+    userChosen: true,
   };
 
   it("seeds two thumbs + the readout from the selection, shows the coverage span", async () => {
@@ -69,6 +73,25 @@ describe("PeriodWindowSlider", () => {
       .getByRole("button", { name: "reset to project window" })
       .click();
     expect(onreset).toHaveBeenCalledOnce();
+  });
+
+  it("userChosen:false suppresses the deviation hint even when the seed ≠ window (Fix B)", async () => {
+    // The coverage-clamped default seed (selection 2000–2008 from window 2000–2010
+    // ∩ coverage) differs from the bare window, but the user chose nothing — the
+    // data constrained it. With `userChosen:false` the amber "Deviates" hint must
+    // NOT fire on this untouched default render.
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      userChosen: false,
+      coverage: { from: 1995, to: 2008 } as Coverage,
+      selection: { from: 2000, to: 2008 },
+      window: { from: 2000, to: 2010 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Deviates from project window/))
+      .not.toBeInTheDocument();
   });
 
   it("no user-deviation hint when the selection matches the window", async () => {
@@ -190,6 +213,7 @@ describe("PeriodWindowSlider", () => {
       coverage: null,
       subAnnualPeriod: null,
       hasSelection: true,
+      userChosen: true,
       selection: { from: 2000, to: 2010 },
       window: { from: 2000, to: 2010 },
       onchange: vi.fn(),
@@ -235,6 +259,7 @@ describe("PeriodWindowSlider", () => {
       coverage: { from: 1995, to: 2008 } as Coverage,
       subAnnualPeriod: null,
       hasSelection: false,
+      userChosen: false,
       selection: { from: 1960, to: 2008 },
       window: null,
       onchange: vi.fn(),
@@ -257,6 +282,7 @@ describe("PeriodWindowSlider", () => {
       coverage: { from: 1995, to: 2008 } as Coverage,
       subAnnualPeriod: null,
       hasSelection: true,
+      userChosen: true,
       selection: { from: 1960, to: 2008 },
       window: null,
       onchange: vi.fn(),
