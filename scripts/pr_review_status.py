@@ -33,10 +33,18 @@ agent has the actual text in one shot and never re-runs `gh pr view`. A `clean` 
 authoritative: Codex reviewed this commit and found no issues, so the narration comment in
 `messages` is not a finding to re-read and second-guess.
 
+By default it **polls** (re-fetches every `--interval`, default 30 s) until the window
+settles or `--timeout-min` (default 15) elapses — there are no GitHub webhooks here, so a
+fresh verdict is seen only by re-asking. One poll per HEAD covers the whole window; launch
+it **backgrounded** (the default wait outlasts a 10-min foreground command cap), once after
+the PR goes ready and again after each `@codex review` on a new push. Pass `--once` for a
+single non-blocking snapshot.
+
 Exit code answers only "is the window settled?": 0 settled (clean | findings | exhausted),
-1 not settled (reviewing | none). 2 is a tool error (gh failed, or bad args). The agent
-reads the JSON `signal`/`detail`/`messages` for what to *do* — read findings, request
-`@codex review` after a push, decide to merge. The script reports; the agent acts.
+1 not settled (reviewing | none — including a poll that hit the ceiling). 2 is a tool error
+(gh failed, or bad args). The agent reads the JSON `signal`/`detail`/`messages` for what to
+*do* — read findings, request `@codex review` after a push, decide to merge. The script
+reports; the agent acts.
 
 Stdlib only — run with `uv run --no-project python scripts/pr_review_status.py <pr>`. The
 deterministic resolver (`classify`) is unit-tested; the gh fetchers are covered by a live
@@ -321,10 +329,12 @@ def poll(
     timeout_min: float,
     interval_sec: float,
 ) -> dict[str, Any]:
-    """Re-evaluate until the window settles or `timeout_min` elapses (the gate ceiling).
+    """Re-evaluate every `interval_sec` until the window settles or `timeout_min` elapses.
 
-    A timeout is not a failure: AGENTS.md treats absence at the ceiling as "not a blocker".
-    The caller reads the returned signal (likely `reviewing`/`none`) and proceeds.
+    There are no webhooks — a new Codex verdict is seen only by re-fetching, so this is a
+    timed poll, not a push subscription. A timeout is not a failure: AGENTS.md treats
+    absence at the ceiling as "not a blocker"; the result carries `timed_out: true` and the
+    caller reads the (likely `reviewing`/`none`) signal and proceeds.
     """
     interval_sec = max(1.0, interval_sec)  # floor: never busy-loop hammering the gh API
     deadline = time.monotonic() + timeout_min * 60
@@ -344,25 +354,28 @@ def poll(
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
-        description="Report the Codex bot-review-window signal for a PR (JSON to stdout)."
+        description="Report the Codex bot-review-window signal for a PR (JSON to stdout). "
+        "Polls until the window settles or --timeout-min elapses; pass --once for a single "
+        "snapshot. A default poll outlasts a 10-min foreground command cap — run it "
+        "backgrounded."
     )
     ap.add_argument("pr", type=int, help="PR number")
     ap.add_argument(
-        "--wait",
+        "--once",
         action="store_true",
-        help="poll until the window settles or --timeout-min elapses",
+        help="report the current signal once and exit, instead of polling",
     )
     ap.add_argument(
         "--timeout-min",
         type=float,
-        default=10.0,
-        help="--wait ceiling in minutes (default 10, the gate's window)",
+        default=15.0,
+        help="poll ceiling in minutes (default 15; Codex can take >13 min)",
     )
     ap.add_argument(
         "--interval",
         type=float,
         default=30.0,
-        help="--wait poll interval in seconds (default 30)",
+        help="poll interval in seconds (default 30)",
     )
     ap.add_argument(
         "--bot",
@@ -372,7 +385,9 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     owner, name = repo_owner_name()
-    if args.wait:
+    if args.once:
+        result = evaluate(owner, name, args.pr, args.bot)
+    else:
         result = poll(
             owner,
             name,
@@ -381,8 +396,6 @@ def main(argv: list[str] | None = None) -> int:
             timeout_min=args.timeout_min,
             interval_sec=args.interval,
         )
-    else:
-        result = evaluate(owner, name, args.pr, args.bot)
 
     print(json.dumps(result, indent=2))
     return 0 if result["settled"] else 1

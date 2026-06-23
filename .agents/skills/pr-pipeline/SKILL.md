@@ -139,11 +139,14 @@ For merge, satisfy the repo gate:
 - independent review converged;
 - CI green;
 - bot review window settled on the current HEAD — run
-  `uv run --no-project python scripts/pr_review_status.py <pr>` (`--wait` to poll to the
-  ceiling) to compute Codex's signal (`clean`/`findings`/`reviewing`/`exhausted`/`none`,
-  scoped to the current HEAD; verdict bodies returned in `messages`, no second `gh`
-  call) instead of re-deriving the login-sensitive `gh api` calls; never conclude while
-  it reports `reviewing`;
+  `uv run --no-project python scripts/pr_review_status.py <pr>` to compute Codex's
+  signal (`clean`/`findings`/`reviewing`/`exhausted`/`none`, scoped to the current HEAD;
+  verdict bodies returned in `messages`, no second `gh` call) instead of re-deriving the
+  login-sensitive `gh api` calls. It defaults to polling (re-fetch every 30 s — no
+  webhooks — to a \~15-min ceiling), so launch it once per HEAD as a background task
+  (the wait outlasts a 10-min foreground cap); `--once` is a single snapshot. Never
+  conclude while it reports `reviewing`; after a new push, re-trigger with
+  `@codex review` and launch a fresh background poll;
 - real-data validation when build pipeline or DB content changed;
 - stale-head check before and after merge.
 
