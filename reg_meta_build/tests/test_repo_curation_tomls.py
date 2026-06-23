@@ -19,6 +19,7 @@ from pathlib import Path
 
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.fqid import FqidKind
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
     load_classification_groups,
@@ -121,13 +122,17 @@ def test_repo_period_family_merges_parses() -> None:
 def test_repo_relations_parses() -> None:
     # The single typed `[[edge]]` surface (#522). It ships with the #375 variable
     # succession edges + the #579 sun1996 classification split (both
-    # `type = "replaced_by"`) + the #403 see-also edges (`type = "related_to"`);
-    # same_as ships EMPTY (resolver-load-bearing identity; only confirmed edges
-    # ever land). The gate is load-time shape — a malformed entry would otherwise
-    # surface only on a real build. Endpoint RESOLUTION is maintainer-build
-    # territory (the materializers fail fast).
+    # `type = "replaced_by"`) + the #403 see-also edges (`type = "related_to"`) +
+    # the #508 tier-1 curated `same_as` identity batch. The gate is load-time shape
+    # — a malformed entry would otherwise surface only on a real build. Endpoint
+    # RESOLUTION is maintainer-build territory (the materializers fail fast).
     relations = load_relations(_ROOT / "curation" / "relations.toml")
-    assert not relations.same_as  # empty today
+    # The #508 tier-1 batch: 380 curated variable-grain identity edges.
+    assert len(relations.same_as) == 380
+    assert all(
+        e.grain is FqidKind.VARIABLE_BINDING and e.a_variable and e.b_variable
+        for e in relations.same_as
+    )
     # 11 #375 variable succession edges + 3 #579 classification split edges.
     assert len(relations.replaced_by) == 14
     assert len(relations.related_to) == 3  # the moved #403 see-also edges

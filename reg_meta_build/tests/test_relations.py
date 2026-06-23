@@ -926,7 +926,16 @@ class TestMovedEdges:
         # split) + 3 related_to (#403).
         assert len(rel.replaced_by) == 14
         assert len(rel.related_to) == 3
-        assert rel.same_as == ()  # ships empty
+        # The #508 tier-1 batch: 380 curated same_as identity edges (79 connected
+        # components, each ≤32 FQIDs). All variable-grain with a non-empty note.
+        assert len(rel.same_as) == 380
+        assert all(
+            e.grain is FqidKind.VARIABLE_BINDING
+            and e.a_variable
+            and e.b_variable
+            and e.note
+            for e in rel.same_as
+        )
         # Spot-check one moved edge of each type.
         assert ("scb/lisa/anninkf", "scb/lisa/anninkf04") in {
             (str(e.predecessor), str(e.successor)) for e in rel.replaced_by
