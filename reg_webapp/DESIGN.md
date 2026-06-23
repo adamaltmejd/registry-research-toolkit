@@ -355,8 +355,10 @@ annotated with their owning variables/classifications). **Docs (#354) join as a 
 of the `SearchGroup` union + new result models — existing groups are never reshaped.**
 The SPA must tolerate an unknown `group` value (skip it) so a new group can ship before
 the SPA renders it (the same payload-skew tolerance the `?period` additive fields rely
-on). Each result carries its navigable `fqid`; results within a group are pre-sorted by
-FTS rank.
+on). Each result carries its navigable `fqid` and a `rank: float` (the FTS rank the
+CLI's doc-merge interleaves by, #701); results within a group are pre-sorted by FTS rank
+before grouping, so the SPA may ignore `rank` — it is present on the wire as the shared
+sort key.
 
 - **One reg_meta call per group**: register/variable/classification via the FTS
   `field="description"` path; **codes (#352) via the `field="value", type="value"`
@@ -387,16 +389,16 @@ FTS rank.
   it ships with the runtime image) prepends a canonical result to the TOP of its group
   even when FTS would not surface it — e.g. `sysselsättning` → `scb/lisa` (RAMS is stale
   → BAS; steer to LISA) and `diagnos` → `sos/par` (Patientregistret), both registers
-  that don't rank for those terms today. It operates on the RAW reg_meta result dicts
-  (pre-shaping) so the route AND the eval runner (`scripts/run_search_eval.py`) apply
-  the SAME function — that's what makes the eval measure the route's TRUE behavior. Pins
-  dedup by `fqid` (a pin already an FTS hit injects nothing), and a group's
-  `total_count` adds the count of net-new injected results. `register` +
-  `classification` pins are implemented (resolve cheaply by slug); a `variable`/`value`
-  pin is a config error at LOAD (fail fast). The TOML is parsed + validated once at
-  import; a typo'd fqid raises at apply (never silently drops). Eval gaps the pins close
-  are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone gap — a
-  concept-group modeling issue, not a golden-boost one).
+  that don't rank for those terms today. It operates on reg_meta's typed search models
+  (the `SearchResult` union, #701) so the route AND the eval runner
+  (`scripts/run_search_eval.py`) apply the SAME function — that's what makes the eval
+  measure the route's TRUE behavior. Pins dedup by `fqid` (a pin already an FTS hit
+  injects nothing), and a group's `total_count` adds the count of net-new injected
+  results. `register` + `classification` pins are implemented (resolve cheaply by slug);
+  a `variable`/`value` pin is a config error at LOAD (fail fast). The TOML is parsed +
+  validated once at import; a typo'd fqid raises at apply (never silently drops). Eval
+  gaps the pins close are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains
+  the lone gap — a concept-group modeling issue, not a golden-boost one).
 - **ETag/caching is automatic**: `/api/search` is a GET, so the `ETagMiddleware` stamps
   a body-derived ETag (the query is part of the URL → part of the CF edge cache key, and
   part of the body → part of the ETag). No per-route caching code.
