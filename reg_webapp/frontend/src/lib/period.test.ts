@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   clampYearWindow,
   grainOfToken,
+  intersectCoverageWindow,
   looksLikePeriod,
   nextResolutionQuery,
   notDeliveredGaps,
@@ -537,6 +538,103 @@ describe("clampYearWindow", () => {
     const w = clampYearWindow({ from: 2030, to: 2040 }, 1960, 2026);
     expect(w.from).toBeLessThanOrEqual(w.to);
     expect(w).toEqual({ from: 2026, to: 2026 });
+  });
+});
+
+describe("intersectCoverageWindow (#671 coverage-aware seed)", () => {
+  it("window inside coverage → the window itself", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: 2015 },
+        { from: 2000, to: 2010 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 2000, to: 2010 });
+  });
+
+  it("window wider than coverage → narrowed to the coverage span (the intersection)", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: 2008 },
+        { from: 1990, to: 2020 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 1995, to: 2008 });
+  });
+
+  it("partial overlap → the overlapping span", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: 2015 },
+        { from: 1990, to: 2005 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 1995, to: 2005 });
+  });
+
+  it("open coverage START resolves to fallbackMin", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: null, to: 2008 },
+        { from: 1950, to: 2005 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 1960, to: 2005 });
+  });
+
+  it("open coverage END resolves to fallbackMax (the vintage ceiling)", () => {
+    expect(
+      intersectCoverageWindow(
+        { from: 1995, to: null },
+        { from: 2000, to: 2030 },
+        1960,
+        2026,
+      ),
+    ).toEqual({ from: 2000, to: 2026 });
+  });
+
+  it("no window → the (effective) coverage span", () => {
+    expect(
+      intersectCoverageWindow({ from: 1995, to: 2008 }, null, 1960, 2026),
+    ).toEqual({ from: 1995, to: 2008 });
+  });
+
+  it("no window, fully-open coverage → the full fallback bounds", () => {
+    expect(
+      intersectCoverageWindow({ from: null, to: null }, null, 1960, 2026),
+    ).toEqual({ from: 1960, to: 2026 });
+  });
+
+  it("no coverage → the full fallback bounds (nothing to narrow to)", () => {
+    expect(
+      intersectCoverageWindow(null, { from: 2000, to: 2010 }, 1960, 2026),
+    ).toEqual({ from: 1960, to: 2026 });
+  });
+
+  it("window wholly AFTER coverage → snaps to the coverage end (a covered year, not inverted)", () => {
+    const seed = intersectCoverageWindow(
+      { from: 1995, to: 2008 },
+      { from: 2012, to: 2018 },
+      1960,
+      2026,
+    );
+    expect(seed.from).toBeLessThanOrEqual(seed.to);
+    expect(seed).toEqual({ from: 2008, to: 2008 });
+  });
+
+  it("window wholly BEFORE coverage → snaps to the coverage start", () => {
+    const seed = intersectCoverageWindow(
+      { from: 2000, to: 2010 },
+      { from: 1980, to: 1990 },
+      1960,
+      2026,
+    );
+    expect(seed.from).toBeLessThanOrEqual(seed.to);
+    expect(seed).toEqual({ from: 2000, to: 2000 });
   });
 });
 

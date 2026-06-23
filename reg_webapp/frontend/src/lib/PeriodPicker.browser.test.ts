@@ -104,21 +104,60 @@ describe("PeriodPicker — window slider (#615)", () => {
   const WINDOW: StudyWindow = { from: 2000, to: 2010 };
   const COVERAGE: Coverage = { from: 1995, to: 2008 };
 
-  it("seeds the slider thumbs from the project window when no ?period is set", async () => {
+  it("seeds the slider thumbs from window∩coverage when no ?period is set (#671)", async () => {
     const screen = await render(PeriodPicker, {
       period: null,
-      window: WINDOW,
-      coverage: COVERAGE,
+      window: WINDOW, // 2000–2010
+      coverage: COVERAGE, // 1995–2008
       onsubmit: vi.fn(),
       onclear: vi.fn(),
     });
-    // Precedence: no ?period → the window seeds the thumbs.
+    // #671: no ?period → the thumbs seed at the window narrowed to coverage
+    // (2000–2008), so the variable's real coverage shows up front instead of the
+    // window's 2009–2010 tail reading as available.
     await expect
       .element(screen.getByRole("slider", { name: "From year" }))
       .toHaveValue("2000");
     await expect
       .element(screen.getByRole("slider", { name: "To year" }))
-      .toHaveValue("2010");
+      .toHaveValue("2008");
+  });
+
+  it("seeds the thumbs at window∩coverage when a window extends past coverage (#671)", async () => {
+    // #671 seed precedence: no ?period, window 2000–2010 but coverage only
+    // 1995–2008 → the thumbs seed at the intersection 2000–2008 (the window
+    // narrowed to where data exists), not the bare window 2000–2010.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 2000, to: 2010 },
+      coverage: { from: 1995, to: 2008 } as Coverage,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2008");
+  });
+
+  it("seeds the thumbs at the coverage span when no window is set (#671)", async () => {
+    // No ?period, no window, coverage 1995–2008 → the thumbs seed at the coverage
+    // span (the variable's true coverage shown up front), not the full bounds.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 1995, to: 2008 } as Coverage,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("1995");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2008");
   });
 
   it("an explicit ?period overrides the window (precedence ?period > window)", async () => {
@@ -137,29 +176,48 @@ describe("PeriodPicker — window slider (#615)", () => {
       .toHaveValue("2006");
   });
 
-  it("Apply on the seeded window default (no ?period, no thumb moved) submits the window wire, not a no-op", async () => {
-    // Codex P2: the slider is visibly seeded from the window but `sliderWire`
-    // stays null until a thumb moves — clicking the default Apply must still
-    // submit the SHOWN window, else BindingLeafView (narrows only on ?period)
-    // leaves the user on full history despite "accepting" the displayed window.
+  it("Apply on the seeded window∩coverage default (no thumb moved) submits the shown wire, not a no-op", async () => {
+    // Codex P2 invariant under #671: the slider is visibly seeded from the
+    // window narrowed to coverage (2000–2008), and Apply on the untouched seed
+    // must submit the SHOWN span — else BindingLeafView (narrows only on ?period)
+    // leaves the user on full history despite "accepting" the displayed default.
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
       period: null,
-      window: WINDOW,
-      coverage: COVERAGE,
+      window: WINDOW, // 2000–2010
+      coverage: COVERAGE, // 1995–2008 → seed 2000–2008
       onsubmit,
       onclear: vi.fn(),
     });
     await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2000..2010");
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2008");
   });
 
-  it("Apply with NO window and no ?period stays a no-op (full history — nothing to apply)", async () => {
+  it("Apply on the up-front coverage seed (no window, no ?period) submits the coverage span (#671)", async () => {
+    // #671: with no window/?period but a finite coverage, the thumbs seed at the
+    // coverage span (shown up front), so Apply on the untouched seed narrows to
+    // it — accepting the displayed default applies it (the Codex P2 invariant),
+    // now over coverage rather than no-opping on the old full-history default.
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
       period: null,
       window: null,
-      coverage: COVERAGE,
+      coverage: COVERAGE, // 1995–2008
+      onsubmit,
+      onclear: vi.fn(),
+    });
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("1995..2008");
+  });
+
+  it("Apply with NO window, no ?period AND no coverage stays a no-op (nothing to narrow to)", async () => {
+    // Only the truly-empty case (no selection AND no coverage) keeps the no-op:
+    // the seed is the full bounds, nothing meaningful was chosen.
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: null,
       onsubmit,
       onclear: vi.fn(),
     });
@@ -178,10 +236,11 @@ describe("PeriodPicker — window slider (#615)", () => {
     });
     // Move a thumb, then Apply → a wire is emitted (a single ?period write; the
     // picker has no window-write path at all — it only ever calls onsubmit /
-    // onclear, both ?period operations).
+    // onclear, both ?period operations). The To thumb seeds at the coverage end
+    // (2008) under #671, so dragging only From yields 2002..2008.
     await screen.getByRole("slider", { name: "From year" }).fill("2002");
     await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2002..2010");
+    expect(onsubmit).toHaveBeenLastCalledWith("2002..2008");
   });
 
   it("user deviation: ?period ≠ window shows the hint; reset NARROWS to the window wire (Fix B)", async () => {
@@ -240,10 +299,13 @@ describe("PeriodPicker — window slider (#615)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("availability deviation: a selection past coverage greys the not-delivered span", async () => {
-    // Window 2000–2010, coverage 1995–2008 → 2009–2010 is not delivered.
+  it("availability deviation: an explicit ?period past coverage greys the not-delivered span", async () => {
+    // An explicit ?period 2000–2010 (the URL's source of truth) past coverage
+    // 1995–2008 → 2009–2010 is not delivered. Unlike the #671 default seed (which
+    // is clipped INTO coverage and clamped), an explicit out-of-coverage ?period
+    // renders honestly with its gap.
     const screen = await render(PeriodPicker, {
-      period: null,
+      period: "2000..2010",
       window: WINDOW,
       coverage: COVERAGE,
       onsubmit: vi.fn(),
@@ -294,10 +356,14 @@ describe("PeriodPicker — window slider (#615)", () => {
     // the slider re-seeds. The stale buffer must clear so the next Apply submits
     // the NOW-DISPLAYED window, not the old dragged value (Codex P2).
     const onsubmit = vi.fn<(period: string) => void>();
+    // Coverage spans both windows here so the #671 seed = the window verbatim
+    // (window ⊆ coverage), isolating the Fix-C re-seed behavior from the
+    // intersection-clip (covered by its own tests above).
+    const WIDE: Coverage = { from: 1990, to: 2020 };
     const screen = await render(PeriodPicker, {
       period: null,
       window: WINDOW, // 2000–2010
-      coverage: COVERAGE,
+      coverage: WIDE,
       onsubmit,
       onclear: vi.fn(),
     });
@@ -307,7 +373,7 @@ describe("PeriodPicker — window slider (#615)", () => {
     await screen.rerender({
       period: null,
       window: { from: 2012, to: 2018 },
-      coverage: COVERAGE,
+      coverage: WIDE,
       onsubmit,
       onclear: vi.fn(),
     });
@@ -330,17 +396,18 @@ describe("PeriodPicker — window slider (#615)", () => {
     });
     await screen.getByRole("slider", { name: "From year" }).fill("2003");
     await screen.getByRole("button", { name: "Apply period" }).click();
-    expect(onsubmit).toHaveBeenLastCalledWith("2003..2010");
+    // To seeds at the coverage end (2008) under #671 → 2003..2008.
+    expect(onsubmit).toHaveBeenLastCalledWith("2003..2008");
   });
 
-  it("OPEN-ended coverage projects to the VINTAGE: a stale window past it doesn't defeat the cap (#631)", async () => {
-    // The model: an open-ended coverage ("still delivered") reaches only as far
-    // as the catalog knows = the vintage (2021), NOT wherever a stale window /
-    // selection runs. A stale localStorage window 2000–2026 on a 2021 catalog
-    // WIDENS the bounds (the thumb renders the real 2026), but the coverage band
-    // still ENDS at 2021 and the 2022–2026 span gaps as "Not delivered after
-    // 2021" — the old `coverage.to ?? max` projection filled to 2026 and showed
-    // no gap, defeating the cap (Codex P2 #1).
+  it("OPEN-ended coverage: a stale window past the vintage seeds INTO the vintage-capped coverage (#631 + #671)", async () => {
+    // The #631 cap (an open-ended coverage projects only to the vintage, not the
+    // track edge) under the #671 coverage-aware seed: a stale window 2000–2026 on
+    // a 2021 catalog with open-ended coverage from 1995 → the seed is
+    // window∩effective-coverage = 2000–2021 (clipped to the vintage), and the
+    // thumbs are clamped to 2021. So the 2022–2026 span beyond the vintage is the
+    // up-front non-selectable `unavailable` band, NOT a selected not-delivered gap
+    // — the cap holds without the default seed ever overrunning it.
     const screen = await render(PeriodPicker, {
       period: null,
       window: { from: 2000, to: 2026 } as StudyWindow, // stale, past the vintage
@@ -349,16 +416,27 @@ describe("PeriodPicker — window slider (#615)", () => {
       onsubmit: vi.fn(),
       onclear: vi.fn(),
     });
-    // The bounds WIDEN to fit the real window value (never clip the thumb)…
+    // The bounds WIDEN to fit the real window value (never clip the track)…
     await expect
       .element(screen.getByRole("slider", { name: "To year" }))
       .toHaveAttribute("max", "2026");
-    // …but the open end reads as an ellipsis (projected only to the vintage), and
-    // the 2022–2026 span beyond the vintage is flagged not-delivered.
+    // …but the seed To clamps to the vintage (the open-end cap), so the default
+    // span tops out at 2021 with no not-delivered gap, and the beyond-vintage
+    // 2022–2026 span is the unavailable backdrop. The open end still reads as an
+    // ellipsis, with the "coverage through 2021" note naming the ceiling.
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2021");
     await expect.element(screen.getByText("data 1995–…")).toBeVisible();
     await expect
-      .element(screen.getByText(/Not delivered after 2021/))
+      .element(screen.getByText("coverage through 2021"))
       .toBeVisible();
+    await expect
+      .element(screen.getByText(/Not delivered/))
+      .not.toBeInTheDocument();
+    expect(
+      screen.container.querySelectorAll(".unavailable").length,
+    ).toBeGreaterThan(0);
   });
 
   it("FINITE coverage is NOT extended to the vintage: default span reflects the real end (#631)", async () => {
@@ -380,11 +458,13 @@ describe("PeriodPicker — window slider (#615)", () => {
     await expect
       .element(screen.getByRole("slider", { name: "To year" }))
       .toHaveAttribute("max", "2008");
-    // …so the default span tops out at 2008 and there is NO spurious "not
-    // delivered after" gap for the 2009–2021 years the old forced bounds invented
-    // (the leading 1960–1994 gap below coverage is pre-existing #615 behavior,
-    // unrelated to the vintage cap — assert only on the trailing-gap regression).
-    await expect.element(screen.getByText(/1960–2008/)).toBeVisible();
+    // …and the thumbs seed at the coverage span (#671: coverage shown up front,
+    // no window → the coverage span), so the readout is 1995–2008, NOT the old
+    // full-bounds 1960–2008. There is NO spurious "not delivered after" gap for
+    // the 2009–2021 years the old forced bounds invented.
+    await expect
+      .element(screen.getByText("1995–2008", { exact: true }))
+      .toBeVisible();
     await expect
       .element(screen.getByText(/Not delivered after/))
       .not.toBeInTheDocument();
@@ -473,12 +553,13 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(screen.container.querySelectorAll(".gap").length).toBe(0);
   });
 
-  it("a live drag from the full-history default fires the availability gap before Apply (#639 follow-up)", async () => {
-    // #639 follow-up (Codex P2): the no-?period / no-window default suppresses the
-    // gap (activeYearSelection null → hasSelection false). But a live thumb DRAG is
-    // a real selection even before Apply — the picker now also treats a non-null
-    // `sliderWire` as a selection, so dragging the default [1960, 2008] span into a
-    // pre-coverage span surfaces the not-delivered feedback during the drag.
+  it("dragging a thumb into the not-delivered region is hard-clamped to coverage (#671)", async () => {
+    // #671 supersedes the #639 follow-up: rather than firing an availability gap
+    // once a drag enters not-delivered years, the thumbs are HARD-CLAMPED to
+    // coverage so they can't get there at all. The variable's true coverage shows
+    // up front (the seed sits at [1995, 2008] and the out-of-coverage track is a
+    // non-selectable greyed band), so the alarming "you dragged into bad data"
+    // state never arises (the #639 intent, satisfied a different way).
     const screen = await render(PeriodPicker, {
       period: null,
       window: null,
@@ -486,25 +567,33 @@ describe("PeriodPicker — window slider (#615)", () => {
       onsubmit: vi.fn(),
       onclear: vi.fn(),
     });
-    // Before the drag: the suppressed default → no gap.
+    // The seed sits at the coverage span (shown up front), and the up-front
+    // unavailable band renders without any interaction.
+    await expect
+      .element(screen.getByText("1995–2008", { exact: true }))
+      .toBeVisible();
+    expect(
+      screen.container.querySelectorAll(".unavailable").length,
+    ).toBeGreaterThan(0);
+    // Drag the To thumb back to 1980 → clamped UP to the coverage start (1995);
+    // it cannot enter the pre-coverage region, so no not-delivered gap fires.
+    await screen.getByRole("slider", { name: "To year" }).fill("1980");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("1995");
     await expect
       .element(screen.getByText(/Not delivered/))
       .not.toBeInTheDocument();
-    // Drag the To thumb back to 1980 → the selection [1960, 1980] sits entirely
-    // before coverage start (1995) → "Not delivered before 1995" fires NOW, not
-    // only after Apply.
-    await screen.getByRole("slider", { name: "To year" }).fill("1980");
-    await expect
-      .element(screen.getByText(/Not delivered before 1995/))
-      .toBeVisible();
-    expect(screen.container.querySelectorAll(".gap").length).toBe(1);
+    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
   });
 
-  it("a window makes the leading gap fire (window set → hasSelection:true, #639)", async () => {
-    // Complement: a project window 1960–2008 makes activeYearSelection non-null
-    // → hasSelection:true, so the leading 1960–1994 span below coverage
-    // (1995–2008) fires "Not delivered before 1995" at the picker level. Locks
-    // the #639 suppression as conditional on a real selection, not a removal.
+  it("a window wider than coverage seeds INTO coverage — the pre-coverage span is the unavailable band, not a gap (#671)", async () => {
+    // Under #671 the window 1960–2008 is intersected with coverage 1995–2008, so
+    // the thumbs seed at 1995–2008 (the pre-coverage 1960–1994 span is no longer
+    // SELECTED). That span reads as the up-front non-selectable `unavailable` band
+    // — NOT a "Not delivered before" gap (which #671 supersedes for the default
+    // seed; the alarming selection-gap only fires for an explicit out-of-coverage
+    // ?period). This supersedes the old #639 "window set → leading gap fires" lock.
     const screen = await render(PeriodPicker, {
       period: null,
       window: { from: 1960, to: 2008 } as StudyWindow,
@@ -513,8 +602,14 @@ describe("PeriodPicker — window slider (#615)", () => {
       onclear: vi.fn(),
     });
     await expect
-      .element(screen.getByText(/Not delivered before 1995/))
-      .toBeVisible();
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("1995");
+    await expect
+      .element(screen.getByText(/Not delivered/))
+      .not.toBeInTheDocument();
+    expect(
+      screen.container.querySelectorAll(".unavailable").length,
+    ).toBeGreaterThan(0);
   });
 
   it("no window set: the availability note softens (no amber deviation) + a 'set a window' hint shows", async () => {

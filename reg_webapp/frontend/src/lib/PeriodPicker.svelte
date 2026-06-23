@@ -5,6 +5,7 @@ import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
 import {
   type Coverage,
   clampYearWindow,
+  intersectCoverageWindow,
   looksLikePeriod,
   type PeriodGrain,
   periodFieldFromQuery,
@@ -134,18 +135,39 @@ $effect(() => {
 });
 
 // ── Year-window slider (#615 default control) ───────────────────────────────
-// PRECEDENCE for the slider's active selection: a year-representable `?period`
-// (explicit local) > the project window > full history. A sub-annual / list /
-// `_default` / text `?period` is NOT year-representable — it can't live on the
-// year slider, so the picker opens the "more" expander straight away (the
-// range/list/text modes hold it), with the slider showing only the window/full
-// fallback when collapsed back.
+// PRECEDENCE for what the slider shows as ACTIVE (the user-intent selection,
+// driving the deviation hint + the Apply fallback): a year-representable
+// `?period` (explicit local) > the project window > null (none chosen). A
+// sub-annual / list / `_default` / text `?period` is NOT year-representable — it
+// can't live on the year slider, so the picker opens the "more" expander
+// straight away (the range/list/text modes hold it), with the slider showing
+// only the window/coverage fallback when collapsed back.
+//
+// SEED PRECEDENCE for the THUMBS (#671) is a SUPERSET of the above, so a
+// variable's true data COVERAGE shows up front instead of the full 1960–vintage
+// span reading as available: explicit year `?period` > intersection(coverage,
+// window) when a window is set > the coverage span when no window is set > the
+// full bounds when there's no coverage. `seededSelection` below applies it.
 
-/** The year window the slider should show as ACTIVE, applying the precedence. A
- * year-representable `?period` wins; else the project window; else null (full
- * history → the slider parks at the coverage/bounds span as a no-op default). */
+/** The year window the slider treats as the ACTIVE (user-chosen) selection — a
+ * year-representable `?period` wins; else the project window; else null (nothing
+ * explicitly chosen; the thumbs then seed from coverage via `seededSelection`). */
 const activeYearSelection = $derived<StudyWindow | null>(
   yearWindowFromWire(period) ?? window,
+);
+
+/** The window the slider THUMBS seed from (#671). An explicit year `?period`
+ * (the user's chosen local value) wins verbatim. Otherwise the seed is
+ * coverage-aware so the variable's real coverage shows up front:
+ * `intersectCoverageWindow` against the EFFECTIVE coverage edges (open start →
+ * the slider floor, open end → the vintage ceiling) yields window∩coverage when a
+ * window is set, the coverage span when none is, and the full bounds when there's
+ * no coverage to narrow to. NOTE: the bare window is intentionally NOT the seed —
+ * only its intersection with coverage is (the window's out-of-coverage tail must
+ * not read as available). */
+const seededSelection = $derived<StudyWindow>(
+  yearWindowFromWire(period) ??
+    intersectCoverageWindow(coverage, window, SLIDER_FLOOR_YEAR, ceilingYear),
 );
 
 /** The active `?period` wire when it is set but NOT year-representable (a
@@ -190,13 +212,11 @@ const sliderBounds = $derived.by(() => {
   return { min, max };
 });
 
-/** The selection to seed the slider thumbs from — the active selection clamped
- * to the bounds, or the full bounds span when none is set (a no-op "full
- * history" default the user can then narrow). */
+/** The selection to seed the slider thumbs from — the #671 seed precedence
+ * (`seededSelection`: active selection, else window∩coverage, else coverage,
+ * else full bounds) clamped to the rendered bounds. */
 const sliderSelection = $derived<StudyWindow>(
-  activeYearSelection
-    ? clampYearWindow(activeYearSelection, sliderBounds.min, sliderBounds.max)
-    : { from: sliderBounds.min, to: sliderBounds.max },
+  clampYearWindow(seededSelection, sliderBounds.min, sliderBounds.max),
 );
 
 // The slider's live selection (null until the user moves a thumb — Apply then
@@ -244,17 +264,19 @@ $effect(() => {
 });
 
 /** Apply the slider's current selection. A moved thumb (`sliderWire`) wins;
- * otherwise fall back to the SEEDED selection so accepting the displayed
- * window-default actually applies it — without this, Apply on an untouched
- * seeded window no-ops and BindingLeafView (narrowing only on `?period`) leaves
- * the user on full history (Codex P2). No `activeYearSelection` (full-history
- * default) → nothing to apply, so the no-op stands. */
+ * otherwise fall back to the SEEDED selection so accepting the displayed default
+ * actually applies it — without this, Apply on an untouched seed no-ops and
+ * BindingLeafView (narrowing only on `?period`) leaves the user on full history
+ * (Codex P2). The fallback is the #671 seed (`seededSelection`): the active
+ * selection, else the coverage-framed span the thumbs already show — so
+ * accepting the up-front coverage default narrows to it. Only the no-coverage /
+ * no-selection case (the seed is the full bounds, nothing meaningful chosen)
+ * stays a no-op. */
 function applySlider(): void {
-  const wire =
-    sliderWire ??
-    (activeYearSelection !== null
-      ? yearWindowToWire(activeYearSelection)
-      : null);
+  let wire: string | null = sliderWire;
+  if (wire === null && (activeYearSelection !== null || coverage !== null)) {
+    wire = yearWindowToWire(seededSelection);
+  }
   if (wire !== null) {
     onsubmit(wire);
   }

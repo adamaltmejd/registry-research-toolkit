@@ -1,10 +1,14 @@
 <script lang="ts">
-// The #615 availability-aware local period slider — the subject page's DEFAULT
-// period control (#611 → Period model). A year-grain dual-thumb slider (mirrors
-// the header's YearWindowSlider mechanics) over the project WINDOW, drawn on a
-// track that also shows the subject's data COVERAGE: the not-delivered span
-// (inside the selection but outside coverage) is GREYED, and two amber
-// deviation hints fire:
+// The #615/#671 availability-aware local period slider — the subject page's
+// DEFAULT period control (#611 → Period model). A year-grain dual-thumb slider
+// (mirrors the header's YearWindowSlider mechanics) over the project WINDOW,
+// drawn on a track that shows the subject's data COVERAGE UP FRONT (#671): the
+// out-of-coverage region is a greyed NON-SELECTABLE band rendered immediately
+// (no drag needed), and the thumbs are hard-clamped to coverage (via the shared
+// primitive's `selectableMin/Max`) so a true data span like 1995–2008 is visible
+// at a glance instead of the full 1960–vintage track reading as available. The
+// not-delivered GAP (inside the selection but outside coverage) is GREYED, and
+// two amber deviation hints fire:
 //   • USER deviation — the active selection ≠ the project window → "deviates
 //     from project window · reset to project window" (reset = clear `?period`,
 //     which falls back to the window; the parent owns that URL write).
@@ -55,10 +59,13 @@ interface Props {
   // show an honest cue pointing at the real value in the (already-open) "more"
   // expander, instead of presenting the window as if it were selected.
   subAnnualPeriod: string | null;
-  // false = the no-op full-history default, neither `?period` nor window set —
-  // suppress the not-delivered availability gap, which would otherwise flag a
-  // span the user never chose (#639). The coverage band still renders (an FYI of
-  // where data exists, not a deviation claim).
+  // false = no `?period` nor window chosen — suppress the not-delivered
+  // availability GAP (the selection-vs-coverage deviation), which would otherwise
+  // flag a span the user never chose (#639). Independent of the #671 up-front
+  // `unavailable` band, which renders regardless (a passive "no data here", not a
+  // selection warning) — that's how #671 surfaces coverage without resurrecting
+  // the #639 alarm. The coverage band still renders too (an FYI of where data
+  // exists, not a deviation claim).
   hasSelection: boolean;
   // Emitted with the live selection as the thumbs move (the picker holds it and
   // submits the wire on Apply).
@@ -137,16 +144,49 @@ const coverageBand = $derived.by(() => {
   return { left: leftPct(bandFrom), width: widthPct(bandFrom, bandTo) };
 });
 
+// The UNAVAILABLE regions (#671): the track spans OUTSIDE the effective coverage —
+// left of the band start, right of the band end — rendered ALWAYS (no drag), as
+// greyed NON-SELECTABLE cells so a variable's true data coverage reads up front.
+// The thumbs are hard-clamped to coverage (`selectableMin/Max` below), so the
+// default selection never reaches these regions; they're a passive "no data here"
+// backdrop, NOT a "your selection is bad" warning (that distinction is how this
+// supersedes the #639 gap-suppression without resurrecting its alarm — see `gaps`).
+// Skipped while a sub-annual `?period` projects the window (the band itself is then
+// just an FYI; nothing is selectable on this slider anyway).
+const unavailable = $derived.by(() => {
+  if (effectiveCoverage === null || subAnnualPeriod !== null) {
+    return [];
+  }
+  const bandFrom = effectiveCoverage.from ?? min;
+  const bandTo = effectiveCoverage.to ?? max;
+  const regions: { left: number; width: number }[] = [];
+  if (bandFrom > min) {
+    regions.push({ left: leftPct(min), width: widthPct(min, bandFrom - 1) });
+  }
+  if (bandTo < max) {
+    regions.push({
+      left: leftPct(bandTo + 1),
+      width: widthPct(bandTo + 1, max),
+    });
+  }
+  return regions;
+});
+
 // The not-delivered gaps of the ACTIVE selection (fires relative to the active
 // selection, per the spec), as greyed cells over the fill — against the vintage-
 // projected `effectiveCoverage`, so a selection past an open-ended coverage's
-// vintage ceiling gaps too (#631). SUPPRESSED for a sub-annual `?period`: the
-// shown span is then the window PROJECTION, not the real selection, so a gap
+// vintage ceiling gaps too (#631). With the thumbs hard-clamped to coverage
+// (#671), the DEFAULT seed never overruns coverage, so this fires only for an
+// explicit out-of-coverage `?period` the URL carries (the consumer's source of
+// truth, rendered honestly past the clamp). SUPPRESSED for a sub-annual `?period`:
+// the shown span is then the window PROJECTION, not the real selection, so a gap
 // against it is meaningless (a genuinely-covered `HT2020` would otherwise show
 // unrelated "Not delivered" warnings) — the sub-annual cue already points the
 // user at the real value (Codex P2). Also SUPPRESSED on the no-op full-history
-// default (`!hasSelection`): the thumbs sit at the full bounds the user never
-// chose, so a leading/trailing gap there would flag a span they never selected (#639).
+// default (`!hasSelection`): no `?period`/window means the thumbs sit at the seed
+// the user never chose, so a residual gap there would flag a span they never
+// selected (#639 — the up-front `unavailable` band carries the "no data" message
+// instead, without the selection-gap alarm).
 const gaps = $derived(
   subAnnualPeriod !== null || !hasSelection
     ? []
@@ -198,6 +238,18 @@ const availabilityNote = $derived.by(() => {
   }
   return `Not delivered after ${effectiveCoverage.to}`;
 });
+
+// "Coverage through <year>" (M21/#671): when coverage is OPEN-ended ("still
+// delivered"), the raw readout shows an ellipsis — so name the catalog's delivery
+// ceiling (the vintage-projected `effectiveCoverage.to`) explicitly, so the bound
+// reads as an explained corpus ceiling rather than an unbounded span. For a FINITE
+// coverage the `data <from>–<to>` readout already names the end, so this stays
+// quiet (no redundant note). Empty when there's no coverage.
+const coverageThrough = $derived(
+  coverage !== null && coverage.to === null && effectiveCoverage?.to != null
+    ? effectiveCoverage.to
+    : null,
+);
 </script>
 
 <div class="period-window">
@@ -209,6 +261,13 @@ const availabilityNote = $derived.by(() => {
       <span class="coverage-readout muted"
         >data {coverage.from ?? "…"}–{coverage.to ?? "…"}</span
       >
+      {#if coverageThrough !== null}
+        <!-- Open-ended coverage: name the delivery ceiling so the ellipsis end
+             reads as an explained corpus bound, not an unbounded span (M21). -->
+        <span class="coverage-through muted"
+          >coverage through {coverageThrough}</span
+        >
+      {/if}
     {/if}
   </div>
 
@@ -218,7 +277,25 @@ const availabilityNote = $derived.by(() => {
        cells are this slider's own in-track decoration (year-as-cell geometry),
        drawn behind the primitive's thumbs via the children snippet. -->
   <div class="track-host" role="group" aria-label="Period window (years)">
-    <DualThumbTrack {min} {max} {selection} bind:from bind:to {onLiveInput}>
+    <DualThumbTrack
+      {min}
+      {max}
+      selectableMin={effectiveCoverage?.from ?? min}
+      selectableMax={effectiveCoverage?.to ?? max}
+      {selection}
+      bind:from
+      bind:to
+      {onLiveInput}
+    >
+      <!-- Unavailable (no-data) regions outside coverage: greyed NON-SELECTABLE
+           backdrop, shown UP FRONT (#671). The thumbs can't enter them (hard
+           clamp), so they read as "no data here", not a selection warning. -->
+      {#each unavailable as region (`${region.left}:${region.width}`)}
+        <div
+          class="unavailable"
+          style="left: {region.left}%; width: {region.width}%;"
+        ></div>
+      {/each}
       <!-- The coverage (available-data) band: a solid segment of the rail. -->
       {#if coverageBand}
         <div
@@ -285,7 +362,8 @@ const availabilityNote = $derived.by(() => {
     font-variant-numeric: tabular-nums;
     font-weight: 600;
   }
-  .coverage-readout {
+  .coverage-readout,
+  .coverage-through {
     font-size: 0.8rem;
     font-variant-numeric: tabular-nums;
   }
@@ -297,6 +375,25 @@ const availabilityNote = $derived.by(() => {
     --track-height: 1.4rem;
     --rail-height: 4px;
     --thumb-size: 0.95rem;
+  }
+  /* The unavailable (no-data) regions outside coverage (#671) — a faint hatched
+     backdrop shown up front so the variable's true coverage is obvious before any
+     interaction. Distinct from `.gap` (a selection-vs-coverage deviation): this is
+     a passive "no data here", neutral grey, never amber. */
+  .unavailable {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 8px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--muted) 0,
+      var(--muted) 2px,
+      transparent 2px,
+      transparent 5px
+    );
+    opacity: 0.35;
   }
   /* The available-data band — a muted solid segment so the user sees where data
      actually exists relative to their selection. */

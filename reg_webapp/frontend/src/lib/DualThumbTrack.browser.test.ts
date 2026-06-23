@@ -123,4 +123,60 @@ describe("DualThumbTrack", () => {
     await fromThumb.fill("2005");
     await expect.element(fromThumb).toHaveValue("2005");
   });
+
+  // ── #671 hard-selectable sub-range (opt-in, default = full bounds) ──────────
+  describe("selectableMin / selectableMax (#671)", () => {
+    it("clamps a drag below selectableMin up to it (can't enter the not-selectable region)", async () => {
+      const onLiveInput = vi.fn();
+      const screen = await render(DualThumbTrack, {
+        ...base, // 1990–2020
+        selectableMin: 1995,
+        selectableMax: 2015,
+        selection: { from: 2000, to: 2010 },
+        onLiveInput,
+      });
+      const fromThumb = screen.getByRole("slider", { name: "From year" });
+      // Drag From down to 1990 → clamped UP to the selectable floor 1995.
+      await fromThumb.fill("1990");
+      await expect.element(fromThumb).toHaveValue("1995");
+    });
+
+    it("clamps a drag above selectableMax down to it (drag OR keyboard share the handler)", async () => {
+      const screen = await render(DualThumbTrack, {
+        ...base, // 1990–2020
+        selectableMin: 1995,
+        selectableMax: 2015,
+        selection: { from: 2000, to: 2010 },
+      });
+      const toThumb = screen.getByRole("slider", { name: "To year" });
+      // Drag To up to 2020 → clamped DOWN to the selectable ceiling 2015.
+      await toThumb.fill("2020");
+      await expect.element(toThumb).toHaveValue("2015");
+    });
+
+    it("keeps the native input min/max at the FULL bounds (geometry must not desync)", async () => {
+      const screen = await render(DualThumbTrack, {
+        ...base, // 1990–2020
+        selectableMin: 1995,
+        selectableMax: 2015,
+        selection: { from: 2000, to: 2010 },
+      });
+      // The clamp is on the VALUE, not the input range — the native min/max stay
+      // the full track so the browser value→pixel mapping matches [min, max].
+      const fromThumb = screen.getByRole("slider", { name: "From year" });
+      await expect.element(fromThumb).toHaveAttribute("min", "1990");
+      await expect.element(fromThumb).toHaveAttribute("max", "2020");
+    });
+
+    it("with the props ABSENT, dragging into the former-not-selectable region is unchanged (YearWindowSlider path)", async () => {
+      const screen = await render(DualThumbTrack, {
+        ...base, // 1990–2020, no selectableMin/Max
+        selection: { from: 2000, to: 2010 },
+      });
+      const fromThumb = screen.getByRole("slider", { name: "From year" });
+      // No selectable range → clamps only to the full bounds: 1990 is allowed.
+      await fromThumb.fill("1990");
+      await expect.element(fromThumb).toHaveValue("1990");
+    });
+  });
 });
