@@ -39,12 +39,22 @@ IMAGE_TAG = "reg-meta-integration-test"
 
 @pytest.fixture(scope="module")
 def docker() -> str:
+    """Resolve a working Docker daemon, or FAIL the test.
+
+    This fixture only runs when integration tests are opted into via
+    ``--run-integration`` (the root conftest skips them at collection otherwise),
+    so opting in IS the assertion that Docker is available: a missing binary or a
+    stopped daemon is a hard failure here, not a skip. The pre-push hook
+    (.pre-commit-config.yaml) passes ``--run-integration``, which is what makes a
+    running Docker daemon a required pre-push gate — start Docker and push again
+    rather than bypassing with ``--no-verify``.
+    """
     path = shutil.which("docker")
     if not path:
-        pytest.skip("Docker not available")
+        pytest.fail("Docker not available (binary not found on PATH)", pytrace=False)
     result = subprocess.run([path, "info"], capture_output=True, timeout=10)
     if result.returncode != 0:
-        pytest.skip("Docker daemon not running")
+        pytest.fail("Docker daemon not running — start Docker and retry", pytrace=False)
     return path
 
 
@@ -107,8 +117,15 @@ def test_version_importable(docker: str, image: str):
     assert result.stdout.strip()
 
 
+@pytest.mark.release
 def test_update_and_query(docker: str, image: str):
-    """Full pipeline: update (downloads DB) from GitHub Releases and run a query."""
+    """Full pipeline: update (downloads DB) from GitHub Releases and run a query.
+
+    Carries the `release` marker on top of the module-level `integration` mark, so
+    it needs BOTH --run-integration AND --run-release. The pre-push hook passes
+    only the former (so this is skipped — a push isn't blocked when a release is
+    merely owed); a post-release / scheduled CI job passes both and runs it as a
+    hard gate, where a compatible published asset is guaranteed to exist."""
     cmd = (
         "reg-meta update --yes > /dev/null"
         " && reg-meta --format json search --query kommun --datacolumn"

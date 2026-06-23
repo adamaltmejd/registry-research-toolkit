@@ -22,12 +22,11 @@ jobs:
       - run: uv sync --frozen
       - run: uv run ruff check
       - run: uv run ruff format --check
-      # Backstop: run the pre-commit suite that an agent could have bypassed
-      # locally with `--no-verify`. Covers panache + ty + ruff hooks.
-      # SKIP=pytest avoids duplicating the test job below.
+      # Backstop: run the pre-commit-stage hooks that an agent could have
+      # bypassed locally with `--no-verify`. Covers panache + ty + ruff. The
+      # pytest hook is pre-push-staged, so `pre-commit run` (pre-commit stage)
+      # doesn't invoke it — the dedicated `test` job below is its CI home.
       - run: uvx --from pre-commit==4.6.0 pre-commit run --all-files
-        env:
-          SKIP: pytest
       # Type check via ty (Astral, beta). Pinned via uvx so CI, pre-commit,
       # and cached Codex environments resolve the same checker without making
       # ty a workspace dev dependency. ty moves quickly, so bump this pin

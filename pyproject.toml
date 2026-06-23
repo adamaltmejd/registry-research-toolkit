@@ -29,7 +29,10 @@ testpaths = [
   "reg_webapp/backend/tests",
   "scripts/tests",
 ]
-markers = ["integration: full pipeline tests requiring Docker"]
+markers = [
+  "integration: full pipeline tests requiring Docker",
+  "release: integration tests that download a published GitHub release asset",
+]
 
 [tool.ruff]
 target-version = "py314"
