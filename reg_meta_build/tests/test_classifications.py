@@ -2447,6 +2447,139 @@ class TestDumpClassificationResidue:
         path.write_text(toml, encoding="utf-8")
         assert load_classification_links(path) == ()
 
+    def test_mixed_state_variable_is_not_copyable_safe_only_variable_is(
+        self, tmp_path: Path
+    ) -> None:
+        """P2: a curated `[[link]]` is VARIABLE-grain —
+        `materialize_classification_links` applies the chosen classification to EVERY
+        value-set state of the variable. So a variable with a safe value set but ALSO
+        another (ambiguous) state must NOT be emitted as a copyable link (a
+        variable-wide link would mis-tag the ambiguous state); it is comment-flagged
+        MIXED-STATE. A variable whose ONLY state is the safe one IS copyable. The
+        emitted worklist round-trips through the loader, applying ONLY the safe-only
+        variable's link.
+
+        (Fails against the pre-P2 renderer: it emits a copyable `[[link]]` for the
+        mixed-state variable too, over-applying the classification variable-wide.)"""
+        from reg_meta_build.classification_links import load_classification_links
+        from reg_meta_build.classifications import (
+            dump_classification_residue,
+            render_residue_toml,
+        )
+
+        g = _Graph()
+        s1 = _numeric_codes("S1", 10, 4)  # 0001..0010
+        s2 = [(str(i).zfill(4), f"S2 {i}") for i in range(11, 21)]  # 0011..0020
+        # value_set 201 (s1) is SAFE: FAM_A label-matches (standalone), FAM_B1 is
+        # relabeled (label_agree 0) → exactly one label-unambiguous standalone.
+        g.add_classification(20, "FAM_A", s1 + [("9000", "A only")])
+        g.add_classification(21, "FAM_B1", [(c, f"relabel {c}") for c, _ in s1])
+        g.add_value_set(201, s1)
+        # value_set 202 (s2) is AMBIGUOUS: TWO standalones both label-match s2 →
+        # not safe (the safe gate needs exactly one standalone above the floor).
+        g.add_classification(22, "FAM_C", s2 + [("9002", "C only")])
+        g.add_classification(23, "FAM_D", s2 + [("9003", "D only")])
+        g.add_value_set(202, s2)
+
+        # mixedvar: state on the SAFE 201 AND the AMBIGUOUS 202 → mixed-state.
+        g.add_variable_state(960, 201, slug="mixedvar", valid_from="2010-01-01")
+        g.add_variable_state(960, 202, slug="mixedvar", valid_from="2015-01-01")
+        # safevar: ONLY a state on the SAFE 201 → cleanly copyable.
+        g.add_variable_state(961, 201, slug="safevar", valid_from="2010-01-01")
+
+        result = dump_classification_residue(g.conn)
+        # 201 is safe, 202 is ambiguous.
+        assert result.safe_count == 1
+        # mixedvar (960) flagged; safevar (961) is NOT.
+        assert 960 in result.mixed_state_variable_ids
+        assert 961 not in result.mixed_state_variable_ids
+
+        toml = render_residue_toml(result)
+        # The mixed-state variable is comment-only and flagged; the safe-only one is
+        # a copyable [[link]].
+        assert 'variable = "scb/ulf/mixedvar"' not in toml
+        assert "MIXED-STATE" in toml
+        assert "mixedvar" in toml
+        assert 'variable = "scb/ulf/safevar"' in toml
+        assert 'classification = "FAM_A"' in toml
+
+        # The worklist round-trips: ONLY the safe-only variable's link loads (the
+        # mixed-state variable was never emitted as a copyable block).
+        path = tmp_path / "residue.toml"
+        path.write_text(toml, encoding="utf-8")
+        links = load_classification_links(path)
+        assert [
+            (e.provider, e.register, e.variable, e.classification) for e in links
+        ] == [("scb", "ulf", "safevar", "FAM_A")]
+
+    def test_mixed_state_other_state_classified_to_different_class(self) -> None:
+        """P2 variant: a variable with a safe value set whose OTHER state is already
+        classified to a DIFFERENT classification is mixed-state — a variable-wide
+        link would re-point that state. (An other-state classified to the SAME target
+        is NOT mixed.)"""
+        from reg_meta_build.classifications import dump_classification_residue
+
+        g = _Graph()
+        s1 = _numeric_codes("S1", 10, 4)
+        s2 = [(str(i).zfill(4), f"S2 {i}") for i in range(11, 21)]
+        g.add_classification(20, "FAM_A", s1 + [("9000", "A only")])
+        g.add_classification(21, "FAM_B1", [(c, f"relabel {c}") for c, _ in s1])
+        # An unrelated single-family value set, pre-classified to FAM_E.
+        g.add_classification(30, "FAM_E", s2)
+        g.add_value_set(201, s1)  # safe (FAM_A)
+        g.add_value_set(202, s2)
+        g.add_variable_state(970, 201, slug="diffvar", valid_from="2010-01-01")
+        g.add_variable_state(970, 202, slug="diffvar", valid_from="2015-01-01")
+        # Classify diffvar's 202 state to FAM_E (different from the safe target FAM_A).
+        g.conn.execute(
+            "UPDATE variable_state SET classification_id = 30 "
+            "WHERE variable_id = 970 AND value_set_id = 202"
+        )
+
+        result = dump_classification_residue(g.conn)
+        assert result.safe_count == 1
+        assert 970 in result.mixed_state_variable_ids
+
+    def test_unslugged_safe_variable_is_not_copyable(self, tmp_path: Path) -> None:
+        """P3: a NULL slug segment (a `--skip-slugs` / partial build) makes the FQID
+        carry an empty segment (e.g. `scb/ulf/`), which `load_classification_links`
+        rejects. The SAFE renderer must NOT emit such a variable as a copyable
+        `[[link]]` — it is comment-flagged UNSLUGGED — so the advertised copyable
+        worklist always loads.
+
+        (Fails against the pre-P3 renderer: it emits `variable = "scb/ulf/"`, which
+        the loader then refuses.)"""
+        from reg_meta_build.classification_links import load_classification_links
+        from reg_meta_build.classifications import (
+            dump_classification_residue,
+            render_residue_toml,
+        )
+
+        g = _Graph()
+        s1 = _numeric_codes("S1", 10, 4)
+        g.add_classification(20, "FAM_A", s1 + [("9000", "A only")])
+        g.add_classification(21, "FAM_B1", [(c, f"relabel {c}") for c, _ in s1])
+        g.add_value_set(201, s1)  # safe (FAM_A)
+        g.add_variable_state(980, 201, slug="unsluggedvar")
+        # Simulate a partial / --skip-slugs build: NULL the variable's slug segment.
+        g.conn.execute("UPDATE variable SET slug = NULL WHERE variable_id = 980")
+
+        result = dump_classification_residue(g.conn)
+        assert result.safe_count == 1
+        # The FQID renders with an empty variable segment.
+        rvs = result.value_sets[0]
+        assert rvs.states[0].fqid == "scb/ulf/"
+
+        toml = render_residue_toml(result)
+        # No copyable [[link]] block emitted (the header comment mentions "[[link]]";
+        # an EMITTED block is a standalone `[[link]]` line); it is flagged UNSLUGGED.
+        assert "[[link]]" not in toml.splitlines()
+        assert "UNSLUGGED" in toml
+        # The advertised worklist still loads (nothing copyable to over-apply).
+        path = tmp_path / "residue.toml"
+        path.write_text(toml, encoding="utf-8")
+        assert load_classification_links(path) == ()
+
 
 class TestClassificationResidueCli:
     """The `classification-residue` CLI subcommand: a built DB in, a JSON counts

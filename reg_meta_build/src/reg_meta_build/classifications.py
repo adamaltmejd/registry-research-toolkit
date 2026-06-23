@@ -1539,11 +1539,25 @@ class ResidueValueSet:
 class ResidueResult:
     """The diagnostic's output: every residual value set plus the headline counts
     (total residue value sets, the safe-subset size). Read-only — nothing is
-    materialized."""
+    materialized.
+
+    `mixed_state_variable_ids` is the P2 copyability gate: a curated `[[link]]` is
+    VARIABLE-grain — `materialize_classification_links` applies the chosen
+    classification to EVERY value-set state of the variable (DELETE-then-INSERT per
+    state key), not just the safe one. So a variable that has a safe value set but
+    ALSO another state that would be wrongly reclassified variable-wide (a state on
+    an ambiguous/non-safe value set, or one already classified to a DIFFERENT
+    classification) must NOT be emitted as a bare copyable link. This set holds the
+    variable_ids of exactly those non-conflict safe variables whose variable-wide
+    link is NOT provably safe; the renderer routes them to the comment-only section
+    flagged `# MIXED-STATE` instead of emitting a copyable `[[link]]`. Conflict
+    variables (safe value sets resolving to different classifications) are handled
+    separately by the renderer and are NOT included here."""
 
     value_sets: tuple[ResidueValueSet, ...]
     total: int
     safe_count: int
+    mixed_state_variable_ids: frozenset[int] = frozenset()
 
 
 def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
@@ -1625,6 +1639,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             """
             SELECT
                 vc.value_set_id,
+                cl.id AS cls_id,
                 cl.short_name,
                 vc.containment,
                 vc.n_codes,
@@ -1654,10 +1669,17 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             """
         ).fetchall()
         candidates_by_vs: dict[int, list[ResidueCandidate]] = {}
+        # cls_id per candidate, index-aligned with `candidates_by_vs`, so the safe
+        # target's classification_id can be recovered (the P2 variable-wide gate
+        # compares it against a variable's other states' classification_id). Kept
+        # parallel rather than on `ResidueCandidate` so the public dataclass — and
+        # the worklist comment it feeds — stays short_name-only.
+        cand_cls_ids_by_vs: dict[int, list[int]] = {}
         # n_codes is constant across a value set's candidate rows; first row wins.
         n_codes_by_vs: dict[int, int] = {}
         for (
             value_set_id,
+            cls_id,
             short_name,
             containment,
             n_codes,
@@ -1672,6 +1694,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                     standalone=bool(standalone),
                 )
             )
+            cand_cls_ids_by_vs.setdefault(value_set_id, []).append(int(cls_id))
             n_codes_by_vs.setdefault(value_set_id, int(n_codes))
 
         # Unclassified states per residual value set: the distinct (variable_id,
@@ -1704,6 +1727,8 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             )
 
         value_sets: list[ResidueValueSet] = []
+        # safe value set → its safe-target classification_id, for the P2 gate below.
+        safe_target_cls_id_by_vs: dict[int, int] = {}
         for value_set_id in sorted(multi_unclassified):
             candidates = tuple(candidates_by_vs.get(value_set_id, ()))
             states = tuple(states_by_vs.get(value_set_id, ()))
@@ -1725,11 +1750,12 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                 for i, c in enumerate(candidates)
                 if i not in qualifying
             )
-            safe_target = (
-                candidates[qualifying[0]]
-                if len(qualifying) == 1 and others_below
-                else None
-            )
+            safe = len(qualifying) == 1 and others_below
+            safe_target = candidates[qualifying[0]] if safe else None
+            if safe:
+                safe_target_cls_id_by_vs[value_set_id] = cand_cls_ids_by_vs[
+                    value_set_id
+                ][qualifying[0]]
             value_sets.append(
                 ResidueValueSet(
                     value_set_id=value_set_id,
@@ -1739,6 +1765,10 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                     safe_target=safe_target,
                 )
             )
+
+        mixed_state_variable_ids = _mixed_state_variable_ids(
+            conn, value_sets, safe_target_cls_id_by_vs
+        )
     finally:
         for tmp in ("_residue_vs", "_vs_cls", "_vs_stats", "_vs_codes", "_canon_codes"):
             conn.execute(f"DROP TABLE IF EXISTS {tmp}")
@@ -1749,8 +1779,75 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
         f"({safe_count:,} safe-subset: single label-unambiguous standalone)"
     )
     return ResidueResult(
-        value_sets=tuple(value_sets), total=len(value_sets), safe_count=safe_count
+        value_sets=tuple(value_sets),
+        total=len(value_sets),
+        safe_count=safe_count,
+        mixed_state_variable_ids=mixed_state_variable_ids,
     )
+
+
+def _mixed_state_variable_ids(
+    conn: sqlite3.Connection,
+    value_sets: list[ResidueValueSet],
+    safe_target_cls_id_by_vs: dict[int, int],
+) -> frozenset[int]:
+    """P2: the variable_ids whose safe `[[link]]` is NOT provably safe variable-wide.
+
+    A curated `[[link]]` is VARIABLE-grain: `materialize_classification_links`
+    applies the chosen classification to EVERY non-NULL value-set state of the
+    variable (DELETE-then-INSERT per state key). So a copyable link is only correct
+    when applying it variable-wide reclassifies nothing wrongly. We gather, per
+    variable that surfaces as an unclassified state on a SAFE value set, its FULL
+    distinct `(value_set_id, classification_id)` state set (not just the residual
+    ones) and require, for the SINGLE safe target `T` it resolves to:
+
+      - every state already classified is classified to `T` (no DIFFERENT class), and
+      - every UNCLASSIFIED state sits on a safe value set whose safe-target is `T`
+        (no unproven family on an ambiguous/non-safe/non-residual value set).
+
+    A variable whose safe value sets resolve to MORE THAN ONE target is a CONFLICT,
+    handled by the renderer; it is excluded here (returns it un-flagged so the
+    renderer's conflict path owns it). Read-only — only SELECTs."""
+    # Per variable: the set of safe targets it resolves to (across the safe value
+    # sets it is an unclassified state on), and the safe value sets themselves.
+    safe_targets_by_var: dict[int, set[int]] = {}
+    safe_vs_by_var: dict[int, set[int]] = {}
+    for vs in value_sets:
+        if not vs.safe:
+            continue
+        target = safe_target_cls_id_by_vs[vs.value_set_id]
+        for st in vs.states:
+            safe_targets_by_var.setdefault(st.variable_id, set()).add(target)
+            safe_vs_by_var.setdefault(st.variable_id, set()).add(vs.value_set_id)
+
+    mixed: set[int] = set()
+    for variable_id, targets in safe_targets_by_var.items():
+        # Conflict (>1 safe target) is the renderer's path, not a mixed-state flag.
+        if len(targets) != 1:
+            continue
+        (target,) = tuple(targets)
+        safe_vs = safe_vs_by_var[variable_id]
+        # The variable's FULL distinct state set (value-set-bearing states only — a
+        # NULL-value_set state can't carry a classification link and is never touched
+        # by materialize). One row per (value_set_id, classification_id).
+        full_states = conn.execute(
+            "SELECT DISTINCT value_set_id, classification_id FROM variable_state "
+            "WHERE variable_id = ? AND value_set_id IS NOT NULL",
+            (variable_id,),
+        ).fetchall()
+        for value_set_id, classification_id in full_states:
+            if classification_id is not None:
+                # Already classified: safe only if to the SAME target T.
+                if classification_id != target:
+                    mixed.add(variable_id)
+                    break
+            elif value_set_id not in safe_vs:
+                # Unclassified state on a value set that is NOT a safe target for T
+                # (ambiguous residue, non-residual, or a different safe set): its
+                # family is unproven, so a variable-wide link would mis-tag it.
+                mixed.add(variable_id)
+                break
+    return frozenset(mixed)
 
 
 def render_residue_toml(result: ResidueResult) -> str:
@@ -1775,21 +1872,38 @@ def render_residue_toml(result: ResidueResult) -> str:
     comment-flagged conflict for human resolution. Each `[[link]]` carries the
     standalone candidate's `classification` and a `note = "residue:safe"` provenance
     marker; the preceding `#` comment shows n_codes and every candidate's containment
-    / label_agree / standalone so a reviewer sees the full evidence. The AMBIGUOUS
-    residue (no single safe standalone, plus the safe-but-conflicting variables) is
-    comment-only — NOTHING uncommented to copy, since its true family needs a human
-    call. NOTHING materializes — read-only worklist only."""
+    / label_agree / standalone so a reviewer sees the full evidence.
+
+    A copyable `[[link]]` is VARIABLE-grain (it reclassifies EVERY value-set state of
+    the variable), so it is held back to comment-only — never uncommented — in two
+    further cases, since copying it verbatim would either mis-tag other states or fail
+    to load:
+
+    - MIXED-STATE (P2): the variable has a safe value set but ALSO a state that a
+      variable-wide link would wrongly reclassify (an ambiguous/non-safe state, or one
+      already classified to a different class). `result.mixed_state_variable_ids` flags
+      these; curate the scoping by hand.
+    - UNSLUGGED (P3): a NULL slug segment (a `--skip-slugs` / partial build) makes the
+      FQID carry an empty segment (e.g. `scb//var`), which `load_classification_links`
+      rejects — so the advertised copyable worklist would not load.
+
+    The AMBIGUOUS residue (no single safe standalone, plus the safe-but-conflicting /
+    mixed-state / unslugged variables) is comment-only — NOTHING uncommented to copy,
+    since its true family or scoping needs a human call. NOTHING materializes —
+    read-only worklist only."""
     safe = [vs for vs in result.value_sets if vs.safe]
     ambiguous = [vs for vs in result.value_sets if not vs.safe]
 
     # Group the safe states by variable FQID so each FQID emits at most one
     # `[[link]]` — `load_classification_links` rejects a duplicate `variable`, and a
     # variable can be an unclassified state on several safe value sets. Carry the
-    # variable name (first seen) for the evidence comment. A variable whose safe value
-    # sets resolve to MORE THAN ONE classification is a genuine conflict: it is pulled
-    # out of the copyable set and reported as a comment-flagged conflict below.
+    # variable name (first seen) for the evidence comment, and the variable_ids behind
+    # each FQID (for the P2 mixed-state gate). A variable whose safe value sets resolve
+    # to MORE THAN ONE classification is a genuine conflict: it is pulled out of the
+    # copyable set and reported as a comment-flagged conflict below.
     safe_targets_by_fqid: dict[str, set[str]] = {}
     safe_name_by_fqid: dict[str, str | None] = {}
+    var_ids_by_fqid: dict[str, set[int]] = {}
     for vs in safe:
         # vs.safe is True here, so safe_target is the stored qualifying candidate.
         assert vs.safe_target is not None
@@ -1798,16 +1912,36 @@ def render_residue_toml(result: ResidueResult) -> str:
                 vs.safe_target.short_name
             )
             safe_name_by_fqid.setdefault(st.fqid, st.name)
-    safe_links = {
-        fqid: next(iter(targets))
-        for fqid, targets in safe_targets_by_fqid.items()
-        if len(targets) == 1
-    }
+            var_ids_by_fqid.setdefault(st.fqid, set()).add(st.variable_id)
+
+    def _unslugged(fqid: str) -> bool:
+        # A NULL slug segment renders as an empty piece (e.g. `scb//var`); such an
+        # FQID is rejected by `load_classification_links`, so it can't be copyable.
+        return any(seg == "" for seg in fqid.split("/"))
+
+    def _mixed(fqid: str) -> bool:
+        # P2: a copyable link is VARIABLE-grain; hold it back if ANY variable behind
+        # the FQID has a state a variable-wide link would wrongly reclassify.
+        return bool(var_ids_by_fqid.get(fqid, set()) & result.mixed_state_variable_ids)
+
     conflicts = {
         fqid: sorted(targets)
         for fqid, targets in safe_targets_by_fqid.items()
         if len(targets) > 1
     }
+    # Copyable: single safe target, not a conflict, provably safe variable-wide (P2),
+    # and fully slugged (P3). The held-back single-target variables (mixed / unslugged)
+    # are flagged comment-only below.
+    safe_links = {
+        fqid: next(iter(targets))
+        for fqid, targets in safe_targets_by_fqid.items()
+        if len(targets) == 1 and not _mixed(fqid) and not _unslugged(fqid)
+    }
+    held_back = sorted(
+        fqid
+        for fqid, targets in safe_targets_by_fqid.items()
+        if len(targets) == 1 and (_mixed(fqid) or _unslugged(fqid))
+    )
 
     lines = [
         "# GENERATED classification-linkage residue worklist — "
@@ -1873,7 +2007,7 @@ def render_residue_toml(result: ResidueResult) -> str:
     lines.append(
         "# === AMBIGUOUS residue (evidence only — a human must pick the family) ==="
     )
-    if not ambiguous and not conflicts:
+    if not ambiguous and not conflicts and not held_back:
         lines.append("# (none)")
     # Variables whose safe value sets resolve to MORE THAN ONE classification: a
     # genuine conflict, not copyable. Flagged for human resolution.
@@ -1886,6 +2020,28 @@ def render_residue_toml(result: ResidueResult) -> str:
             f"safe classifications {conflicts[fqid]} across its value sets — "
             "a human must pick one."
         )
+    # Single-target safe variables held back from the copyable set: a variable-wide
+    # link would mis-tag another state (MIXED-STATE, P2) or the FQID is unslugged so
+    # it can't load (UNSLUGGED, P3). Flag the target as a comment so a maintainer can
+    # scope it by hand; never uncommented.
+    for fqid in held_back:
+        name = safe_name_by_fqid.get(fqid)
+        suffix = f" ({_toml_comment(name)})" if name else ""
+        target = next(iter(safe_targets_by_fqid[fqid]))
+        flag = "UNSLUGGED" if _unslugged(fqid) else "MIXED-STATE"
+        lines.append("")
+        if flag == "UNSLUGGED":
+            lines.append(
+                f"# UNSLUGGED: variable {_toml_comment(fqid)}{suffix} has a safe value "
+                f"set (target {_toml_comment(target)}) but a NULL slug segment — a "
+                "partial/--skip-slugs build; rebuild with slugs, then curate manually."
+            )
+        else:
+            lines.append(
+                f"# MIXED-STATE: variable {_toml_comment(fqid)}{suffix} has a safe value "
+                f"set (target {_toml_comment(target)}) but other states need scoping — "
+                "a variable-wide link would mis-tag them; curate manually."
+            )
     for vs in ambiguous:
         lines.extend(_evidence_comment(vs))
 
