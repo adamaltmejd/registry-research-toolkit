@@ -138,14 +138,18 @@ def classify(
     - **Head-bound** (rebase-proof, no timestamp): **findings** = a submitted *review* with
       `commit_id == head_oid`; a SHA-stamped **clean** = a "Codex Review: …" comment carrying
       `Reviewed commit: <head>`.
-    - **Window-bound** for the signals GitHub doesn't tie to a commit — a 👍 reaction (Codex
-      posts no comment on some clean runs, so the 👍 is the only signal), the out-of-tokens
-      **exhausted** comment, and the 👀 **reviewing** marker. These count only if they land
-      after the *review window start* = the later of the head commit's `committed_date` and
-      the most recent human `@codex review` request. That start, not a bare commit timestamp,
-      is what stops a stale 👍/usage-limit from a *prior* window settling a re-triggered run
-      (GitHub exposes no reliable push time — `pushedDate` is null — so the commit date alone
-      would admit them).
+    - **Window-bound** for the signals GitHub doesn't tie to a commit — a 👍 reaction, the
+      out-of-tokens **exhausted** comment, and the 👀 **reviewing** marker. These count only
+      if they land after the *review window start* = the later of the head commit's
+      `committed_date` and the most recent human `@codex review` request. That start, not a
+      bare commit timestamp, is what stops a stale 👍/usage-limit from a *prior* window
+      settling a re-triggered run (GitHub exposes no reliable push time — `pushedDate` is
+      null — so the commit date alone would admit them).
+
+    The 👍 path is load-bearing, not a fallback: Codex's **automatic** open/ready review
+    signals a clean verdict with a bare 👍 and NO comment; only an explicit `@codex review`
+    makes it post the SHA-stamped "Codex Review: …" comment (confirmed across the PR corpus).
+    So the common first-window clean is 👍-only — reading just the comment would miss it.
 
     Resolution: if the *newest* event is a 👀, Codex is mid-review → `reviewing` (never
     conclude then). Otherwise the strongest verdict wins, by priority `findings > clean >
