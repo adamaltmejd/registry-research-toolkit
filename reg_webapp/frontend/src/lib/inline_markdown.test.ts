@@ -58,6 +58,28 @@ describe("parseInlineMarkdown", () => {
     ]);
   });
 
+  it("keeps every `**…**` highlight in a multi-match snippet (realistic FTS shape)", () => {
+    // FTS `snippet()` wraps EACH matched term — a real snippet routinely carries
+    // several `**…**` highlights; all must survive as separate strong segments.
+    expect(parseInlineMarkdown("…**kön** och **ålder**…")).toEqual([
+      { text: "…", emphasis: null },
+      { text: "kön", emphasis: "strong" },
+      { text: " och ", emphasis: null },
+      { text: "ålder", emphasis: "strong" },
+      { text: "…", emphasis: null },
+    ]);
+  });
+
+  it("matches Swedish letters inside a `**…**` span (the load-bearing `u` flag)", () => {
+    // å/ä/ö are `\p{L}` only under the regex `u` flag; the inner `[^*]+?` must keep
+    // them, so an all-Swedish matched term still highlights.
+    expect(parseInlineMarkdown("…**ålder**…")).toEqual([
+      { text: "…", emphasis: null },
+      { text: "ålder", emphasis: "strong" },
+      { text: "…", emphasis: null },
+    ]);
+  });
+
   it("preserves `<`, `>`, `&` verbatim in segment text (escape boundary intact)", () => {
     // No HTML is produced here; special chars ride through as literal text so the
     // downstream Svelte interpolation escapes them. A `<b>` must NOT become markup.
@@ -133,6 +155,17 @@ describe("parseInlineMarkdown", () => {
       { text: "(", emphasis: null },
       { text: "x", emphasis: "em" },
       { text: ")", emphasis: null },
+    ]);
+  });
+
+  it("does NOT support `__bold__` (CommonMark double-underscore bold is no feature)", () => {
+    // Deliberate non-support: the tokenizer has no `__` arm. `__bold__` reads as a
+    // single `_…_` em span (`_bold_`) with the outer underscores left as literal
+    // text — NOT a strong span. Pinned so a future `__` bold isn't added by accident.
+    expect(parseInlineMarkdown("__bold__")).toEqual([
+      { text: "_", emphasis: null },
+      { text: "bold", emphasis: "em" },
+      { text: "_", emphasis: null },
     ]);
   });
 
