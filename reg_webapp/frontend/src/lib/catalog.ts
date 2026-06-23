@@ -24,6 +24,13 @@ import {
   periodTokenBounds,
 } from "./period";
 
+/** The user-facing label for the data-browser root (the `/catalog` URL is
+ * unchanged — this is the LABEL only, #675). Shared by the App nav link and the
+ * root breadcrumb crumb in `CatalogNodeView` / `ConceptGroupView` so the three
+ * stay in sync. (The route path stays `/catalog`; only the displayed text reads
+ * "Data browser".) */
+export const DATA_BROWSER_LABEL = "Data browser";
+
 /** Narrow the catch-all browse response to a browsable `CatalogNode`, or `null`
  * for a no-`kind` payload (a `?period` `StatesResponse` or a sub-endpoint
  * envelope) — the boundary every browse consumer narrows at before switching on

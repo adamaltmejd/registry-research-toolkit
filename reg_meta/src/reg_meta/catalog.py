@@ -118,6 +118,15 @@ class BindingSummary(_CatalogModel):
     name: str | None
 
 
+class CatalogSizes(_CatalogModel):
+    """Headline catalog-size counts — browse-addressable (slugged)
+    providers/registers/variables; the grain the catalog listings render."""
+
+    providers: int
+    registers: int
+    variables: int
+
+
 # The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
 # default). A window ending here is "ongoing" — it has no finite upper bound.
 OPEN_ENDED_VALID_TO = "9999-12-31"
@@ -773,6 +782,26 @@ class Catalog:
     # FQID-leaf the webapp links on). An unknown parent slug returns an empty
     # list — not an error: a genuinely-absent node maps to 404 via `resolve()`,
     # and a present parent with no children maps to an empty children list.
+
+    def catalog_sizes(self) -> CatalogSizes:
+        """Headline catalog-size counts for the landing page — the
+        BROWSE-ADDRESSABLE (slugged) grain, so each count mirrors its `list_*`
+        method's filter exactly: providers are always slugged (`list_providers`
+        applies no filter); registers and variables count only the slugged rows
+        (`slug IS NOT NULL` — a NULL-slug row isn't reachable by an FQID, so the
+        browse listings drop it). These are FULL-UNIVERSE (the whole DB) — a
+        steward-filter-aware count (a filtered deployment browses fewer nodes) is
+        a webapp concern / follow-up, NOT reg_meta's job (reg_meta has no notion
+        of webapp steward filtering). Three cheap COUNT queries."""
+        return CatalogSizes(
+            providers=self._conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0],
+            registers=self._conn.execute(
+                "SELECT COUNT(*) FROM register WHERE slug IS NOT NULL"
+            ).fetchone()[0],
+            variables=self._conn.execute(
+                "SELECT COUNT(*) FROM variable WHERE slug IS NOT NULL"
+            ).fetchone()[0],
+        )
 
     def list_providers(self) -> list[ProviderSummary]:
         """Every provider in the catalog (e.g. scb, sos), ordered by slug."""

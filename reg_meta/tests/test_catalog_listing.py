@@ -14,6 +14,7 @@ from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta.catalog import (
     BindingSummary,
     Catalog,
+    CatalogSizes,
     ProviderSummary,
     RegisterSummary,
     VariantSummary,
@@ -115,6 +116,56 @@ class TestListBindings:
 
     def test_unknown_provider_is_empty_not_error(self) -> None:
         assert _catalog().list_bindings("nope", "rams") == []
+
+
+class TestCatalogSizes:
+    """`catalog_sizes()` returns the headline browse-addressable counts (#675).
+
+    The grain is slug-aware: it mirrors each `list_*` filter, so a NULL-slug
+    register/variable (un-addressable, dropped by the browse listings) is
+    EXCLUDED from the register/variable counts — the regression guard for the
+    whole point of moving this off the webapp's raw `COUNT(*)`."""
+
+    def test_counts_match_the_slug_aware_listings(self) -> None:
+        cat = _catalog()
+        sizes = cat.catalog_sizes()
+        assert isinstance(sizes, CatalogSizes)
+
+        # providers: every provider (always slugged).
+        assert sizes.providers == len(cat.list_providers())
+        # registers: slugged registers across all providers.
+        assert sizes.registers == sum(
+            len(cat.list_registers(p.fqid.provider)) for p in cat.list_providers()
+        )
+        # variables: slugged bindings across all registers.
+        assert sizes.variables == sum(
+            len(cat.list_bindings(p.fqid.provider, r.fqid.register))
+            for p in cat.list_providers()
+            for r in cat.list_registers(p.fqid.provider)
+        )
+
+    def test_excludes_null_slug_variables(self) -> None:
+        # `_catalog()` seeds scb/rams with 3 variables, one NULL-slug; the count
+        # tracks the 2 slugged ones (kon in lisa + syss/bransch in rams = 3),
+        # NOT a raw COUNT(*) of 4.
+        cat = _catalog()
+        assert cat.catalog_sizes().variables == 3
+        # Proof the filter is load-bearing: a raw COUNT(*) would see the NULL row.
+        raw = cat._conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0]
+        assert raw == 4
+
+    def test_excludes_null_slug_registers(self) -> None:
+        # scb/lisa (slugged) + a NULL-slug register → only the slugged one counts.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, slug, name) "
+            "VALUES (8, 1, NULL, 'Unslugged Register')"
+        )
+        conn.commit()
+        cat = Catalog(conn)
+        assert cat.catalog_sizes().registers == 1
+        raw = cat._conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
+        assert raw == 2
 
 
 def test_listing_disambiguates_by_parent_scope() -> None:

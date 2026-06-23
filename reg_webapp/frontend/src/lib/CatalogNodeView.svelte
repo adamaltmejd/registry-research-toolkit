@@ -10,6 +10,7 @@ import {
   breadcrumbs,
   catalogHref,
   countFoldedMembers,
+  DATA_BROWSER_LABEL,
   foldGroupedRows,
   groupFilterKeys,
   groupHref,
@@ -76,7 +77,7 @@ $effect(() => {
 </script>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
-  <a href="/catalog">catalog</a>
+  <a href="/catalog">{DATA_BROWSER_LABEL}</a>
   {#each crumbs as crumb (crumb.fqidPath)}
     <span class="sep" aria-hidden="true">/</span>
     <a href={catalogHref(crumb.fqidPath)}>{crumb.label}</a>

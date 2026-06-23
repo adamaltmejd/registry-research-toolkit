@@ -14,11 +14,13 @@
  * fallback by default (`appType: 'spa'`), so `bun run dev` deep-links work.
  */
 
-/** The parsed current route. `root` is `/` and `/catalog`; `catalog-node`
- * carries the FQID path after `/catalog/`; `project` is the authoring surface
- * (A5.3c); `search` is the results page (the query lives in `?q=`, not the path,
- * #379); `not-found` is anything else. */
+/** The parsed current route. `home` is `/` (the landing page, #675); `root` is
+ * `/catalog` (the data browser); `catalog-node` carries the FQID path after
+ * `/catalog/`; `project` is the authoring surface (A5.3c); `search` is the
+ * results page (the query lives in `?q=`, not the path, #379); `not-found` is
+ * anything else. */
 export type Route =
+  | { name: "home" }
   | { name: "root" }
   | { name: "catalog-node"; fqidPath: string }
   // `group` is the concept-group SUBJECT page (#617):
@@ -51,7 +53,12 @@ function safeDecode(segment: string): string | null {
  * percent-encoded segment routes to not-found (never throws). */
 export function parseRoute(pathname: string): Route {
   const path = pathname.replace(/\/+$/, "") || "/";
-  if (path === "/" || path === "/catalog") {
+  if (path === "/") {
+    // The landing/home page (#675) — split from the data browser at `/catalog`
+    // so `/` can carry a welcome + entry points instead of the provider list.
+    return { name: "home" };
+  }
+  if (path === "/catalog") {
     return { name: "root" };
   }
   if (path === "/project") {
