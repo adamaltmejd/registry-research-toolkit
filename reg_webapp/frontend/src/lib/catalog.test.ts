@@ -8,6 +8,7 @@ import {
   catalogHref,
   coverageFromStates,
   deriveType,
+  distinctValueSets,
   foldText,
   formatDataType,
   formatStateWindow,
@@ -15,6 +16,7 @@ import {
   fqidSegments,
   grainsFromStates,
   groupHref,
+  humanizeClassificationSlug,
   leafSlug,
   matchesFilter,
   memberCoverageUnion,
@@ -26,8 +28,6 @@ import {
   registerPrefixOf,
   representationsCollapse,
   representationsFromStates,
-  stateChangeHints,
-  stateKey,
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
@@ -1256,194 +1256,6 @@ describe("formatStateWindow (#309 sentinel hiding + #321 period tokens)", () => 
   });
 });
 
-describe("stateChangeHints (#309 what-differs)", () => {
-  it("flags a data-type-only change between adjacent same-variant states (int → bigint)", () => {
-    const s1 = state({
-      state_id: 1,
-      variant: "v1",
-      valid_from: "2010-01-01",
-      valid_to: "2015-12-31",
-      data_type: "int",
-    });
-    const s2 = state({
-      state_id: 2,
-      variant: "v1",
-      valid_from: "2016-01-01",
-      valid_to: "2023-12-31",
-      data_type: "bigint",
-    });
-    const hints = stateChangeHints([s1, s2]);
-    expect(hints.get(stateKey(s2))).toEqual(["type int → bigint"]);
-    expect(hints.has(stateKey(s1))).toBe(false);
-  });
-
-  it("flags a column rename and a value-set content change (same label → 'value set changed')", () => {
-    const s1 = state({
-      state_id: 1,
-      variant: "v1",
-      valid_from: "2010-01-01",
-      valid_to: "2015-12-31",
-      delivery_column_name: "Old",
-      value_set_id: 10,
-      value_set_version_label: "v",
-    });
-    const s2 = state({
-      state_id: 2,
-      variant: "v1",
-      valid_from: "2016-01-01",
-      valid_to: "2023-12-31",
-      delivery_column_name: "New",
-      value_set_id: 11, // content key differs, label does NOT
-      value_set_version_label: "v",
-    });
-    const hints = stateChangeHints([s1, s2]);
-    expect(hints.get(stateKey(s2))).toEqual([
-      "column Old → New",
-      "value set changed",
-    ]);
-  });
-
-  it("names the labels when the value-set version label changes too", () => {
-    const s1 = state({
-      state_id: 1,
-      variant: "v1",
-      valid_from: "2010-01-01",
-      valid_to: "2015-12-31",
-      value_set_id: 10,
-      value_set_version_label: "SSYK 96",
-    });
-    const s2 = state({
-      state_id: 2,
-      variant: "v1",
-      valid_from: "2016-01-01",
-      valid_to: "2023-12-31",
-      value_set_id: 11,
-      value_set_version_label: "SSYK 2012",
-    });
-    const hints = stateChangeHints([s1, s2]);
-    expect(hints.get(stateKey(s2))).toEqual(["value set SSYK 96 → SSYK 2012"]);
-  });
-
-  it("never diffs across the same-state_id windows of a merged monthly family (#319/#384)", () => {
-    // ONE annual state (state_id 10) expanded into 3 per-month windows: SAME
-    // variant + state_id, distinct per-month delivery columns and
-    // non-overlapping consecutive months. The windows are 3 representations of
-    // a single claim, not a column succession — no spurious
-    // "column LonFinkJan → LonFinkFeb" hint.
-    const hints = stateChangeHints([
-      state({
-        state_id: 10,
-        variant: "v1",
-        valid_from: "2020-01-01",
-        valid_to: "2020-01-31",
-        delivery_column_name: "LonFinkJan",
-      }),
-      state({
-        state_id: 10,
-        variant: "v1",
-        valid_from: "2020-02-01",
-        valid_to: "2020-02-29",
-        delivery_column_name: "LonFinkFeb",
-      }),
-      state({
-        state_id: 10,
-        variant: "v1",
-        valid_from: "2020-03-01",
-        valid_to: "2020-03-31",
-        delivery_column_name: "LonFinkMar",
-      }),
-    ]);
-    expect(hints.size).toBe(0);
-  });
-
-  it("hints a genuine transition INTO a merged family without collapsing onto its sibling windows (#384)", () => {
-    // A prior annual state (state_id 9, earlier non-overlapping window, distinct
-    // column) succeeded by a merged monthly family (state_id 10, ≥2 windows).
-    const prior = state({
-      state_id: 9,
-      variant: "v1",
-      valid_from: "2019-01-01",
-      valid_to: "2019-12-31",
-      delivery_column_name: "LonFinkArs",
-    });
-    const jan = state({
-      state_id: 10,
-      variant: "v1",
-      valid_from: "2020-01-01",
-      valid_to: "2020-01-31",
-      delivery_column_name: "LonFinkJan",
-    });
-    const feb = state({
-      state_id: 10,
-      variant: "v1",
-      valid_from: "2020-02-01",
-      valid_to: "2020-02-29",
-      delivery_column_name: "LonFinkFeb",
-    });
-    const hints = stateChangeHints([prior, jan, feb]);
-    // Exactly ONE hint — the prior → first-family-window transition. Keyed by
-    // the compound key, so it lands on the first window only…
-    expect(hints.size).toBe(1);
-    expect(hints.get(stateKey(jan))).toEqual([
-      "column LonFinkArs → LonFinkJan",
-    ]);
-    // …and the sibling window neither collapses the hint onto itself nor gets a
-    // spurious cross-window hint of its own.
-    expect(hints.get(stateKey(feb))).toBeUndefined();
-  });
-
-  it("never diffs OVERLAPPING same-variant states (parallel alternatives, not a transition)", () => {
-    // Two co-delivered vintages at the same window (Codex P2 on #335): a
-    // chronological "changed" hint would be misleading — these co-exist.
-    const hints = stateChangeHints([
-      state({
-        state_id: 1,
-        variant: "v1",
-        valid_from: "2010-01-01",
-        valid_to: "2020-12-31",
-        delivery_column_name: "Ssyk3",
-        value_set_id: 1,
-      }),
-      state({
-        state_id: 2,
-        variant: "v1",
-        valid_from: "2010-01-01",
-        valid_to: "2023-12-31",
-        delivery_column_name: "Ssyk4",
-        value_set_id: 2,
-      }),
-    ]);
-    expect(hints.size).toBe(0);
-  });
-
-  it("never hints across variants and stays silent for identical shapes", () => {
-    const hints = stateChangeHints([
-      state({
-        state_id: 1,
-        variant: "a",
-        valid_from: "1992-01-01",
-        valid_to: "2009-12-31",
-        data_type: "int",
-      }),
-      state({
-        state_id: 2,
-        variant: "b", // a variant change is visible on the row, not a hint
-        valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
-        data_type: "bigint",
-      }),
-      state({
-        state_id: 3,
-        variant: "b", // identical shape to state 2 → no hint
-        valid_from: "2016-01-01",
-        valid_to: "2023-12-31",
-        data_type: "bigint",
-      }),
-    ]);
-    expect(hints.size).toBe(0);
-  });
-});
-
 describe("windowTitle (#309 sentinel-free tooltips)", () => {
   it("renders exact dates; the sentinel reads open-ended", () => {
     expect(windowTitle("2010-01-01", "2015-12-31")).toBe(
@@ -1659,5 +1471,228 @@ describe("memberCoverageUnion (#638 PR2a group availability span)", () => {
         },
       ]),
     ).toEqual({ from: null, to: 2008 });
+  });
+});
+
+describe("humanizeClassificationSlug (#668)", () => {
+  it("renders the clean <letters><year> vintage form as 'LETTERS year'", () => {
+    expect(humanizeClassificationSlug("lkf2007")).toBe("LKF 2007");
+    expect(humanizeClassificationSlug("lkf1980")).toBe("LKF 1980");
+    expect(humanizeClassificationSlug("isced2011")).toBe("ISCED 2011");
+  });
+
+  it("falls back to the raw slug verbatim when it doesn't parse", () => {
+    // Suffixed / hyphenated / non-vintage slugs keep their stable identifier.
+    expect(humanizeClassificationSlug("sun-niva2000")).toBe("sun-niva2000");
+    expect(humanizeClassificationSlug("icd-10-se")).toBe("icd-10-se");
+    expect(humanizeClassificationSlug("atc")).toBe("atc");
+    // A trailing-suffix vintage isn't the clean form → verbatim.
+    expect(humanizeClassificationSlug("agi1astsni2007g")).toBe(
+      "agi1astsni2007g",
+    );
+  });
+});
+
+describe("distinctValueSets (#668 — value-set-centric fold)", () => {
+  // The kommun shape in miniature: states fanned across variants × vintages, many
+  // sharing one `value_set_id` — and several `value_set_id`s sharing one
+  // classification edition (the M13 two-level dedup).
+  it("dedups NON-classification states by value_set_id, preserving first-seen order", () => {
+    const states = [
+      state({ value_set_id: 10, variant: "a", valid_from: "2000-01-01" }),
+      state({ value_set_id: 20, variant: "a", valid_from: "2001-01-01" }),
+      state({ value_set_id: 10, variant: "b", valid_from: "2000-01-01" }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs.map((v) => v.key)).toEqual(["id/10", "id/20"]);
+  });
+
+  it("collapses several value_set_ids that share one classification_slug into ONE entry (M13)", () => {
+    // kommun's LKF editions: SCB ships ≥2 distinct `value_set_id`s per vintage
+    // (lkf1980 ×2, lkf1995 ×3, …). They are the SAME classification edition, so
+    // they MUST collapse to one "= LKF 1980" row — not a duplicate per id.
+    const states = [
+      state({
+        value_set_id: 100,
+        classification_slug: "lkf1980",
+        variant: "doda",
+        valid_from: "1980-01-01",
+        valid_to: "1980-12-31",
+      }),
+      state({
+        value_set_id: 101, // distinct id, SAME edition
+        classification_slug: "lkf1980",
+        variant: "fodda",
+        valid_from: "1981-01-01",
+        valid_to: "1981-12-31",
+      }),
+      state({
+        value_set_id: 200,
+        classification_slug: "lkf1995",
+        variant: "doda",
+        valid_from: "1995-01-01",
+        valid_to: "1995-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    // One entry per distinct slug — NOT per value_set_id.
+    expect(vs.map((v) => v.key)).toEqual(["class/lkf1980", "class/lkf1995"]);
+    // The collapsed edition's usages are the UNION across its ids' variants.
+    const lkf1980 = vs[0];
+    expect(lkf1980.classificationSlug).toBe("lkf1980");
+    expect(lkf1980.usages.map((u) => u.variant).sort()).toEqual([
+      "doda",
+      "fodda",
+    ]);
+  });
+
+  it("buckets a null value_set_id as its own 'no value set' entry", () => {
+    const states = [
+      state({ value_set_id: null, variant: "a" }),
+      state({ value_set_id: 5, variant: "a" }),
+      state({ value_set_id: null, variant: "b" }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs.map((v) => v.key)).toEqual(["id/none", "id/5"]);
+    const nullVs = vs.find((v) => v.key === "id/none");
+    expect(nullVs?.variants.sort()).toEqual(["a", "b"]);
+  });
+
+  it("exposes each entry's overall span (the view's non-classification disambiguator)", () => {
+    // Two plain value sets sharing a version label ("Kommun historisk" ×N): the
+    // helper must carry each entry's outer min(valid_from)…max(valid_to) so the
+    // view can disambiguate the otherwise-identical rows by span.
+    const states = [
+      state({
+        value_set_id: 1,
+        value_set_version_label: "Kommun historisk",
+        variant: "a",
+        valid_from: "1968-01-01",
+        valid_to: "1970-12-31",
+      }),
+      state({
+        value_set_id: 2,
+        value_set_version_label: "Kommun historisk",
+        variant: "a",
+        valid_from: "1971-01-01",
+        valid_to: "1973-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs.map((v) => v.overallSpan)).toEqual([
+      { from: "1968-01-01", to: "1970-12-31" },
+      { from: "1971-01-01", to: "1973-12-31" },
+    ]);
+  });
+
+  it("carries classification_slug + version label from the representative state", () => {
+    const states = [
+      state({
+        value_set_id: 1,
+        classification_slug: "lkf2007",
+        value_set_version_label: "LKF",
+        variant: "a",
+      }),
+      state({
+        value_set_id: 2,
+        classification_slug: null,
+        value_set_version_label: "Kommun historisk",
+        variant: "a",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].classificationSlug).toBe("lkf2007");
+    expect(vs[1].classificationSlug).toBeNull();
+    expect(vs[1].versionLabel).toBe("Kommun historisk");
+  });
+
+  it("lists which variants use a value set (the cross-variant case)", () => {
+    const states = [
+      state({ value_set_id: 1, variant: "doda", valid_from: "1983-01-01" }),
+      state({ value_set_id: 1, variant: "fodda", valid_from: "1983-01-01" }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages.map((u) => u.variant).sort()).toEqual([
+      "doda",
+      "fodda",
+    ]);
+  });
+
+  it("collapses contiguous same-year states into one span (M20)", () => {
+    // The AGI annual-state design: 8 annual states under one value set / variant
+    // fuse into a single 1983–1990 span.
+    const years = [1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990];
+    const states = years.map((y) =>
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: `${y}-01-01`,
+        valid_to: `${y}-12-31`,
+      }),
+    );
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "1983-01-01", to: "1990-12-31" },
+    ]);
+  });
+
+  it("a gap year splits a span in two", () => {
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2000-01-01",
+        valid_to: "2000-12-31",
+      }),
+      // 2001 missing → gap.
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2002-01-01",
+        valid_to: "2002-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2000-01-01", to: "2000-12-31" },
+      { from: "2002-01-01", to: "2002-12-31" },
+    ]);
+  });
+
+  it("does not merge across different variants (spans are per-variant)", () => {
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2000-01-01",
+        valid_to: "2000-12-31",
+      }),
+      state({
+        value_set_id: 1,
+        variant: "fodda",
+        valid_from: "2001-01-01",
+        valid_to: "2001-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    const doda = vs[0].usages.find((u) => u.variant === "doda");
+    const fodda = vs[0].usages.find((u) => u.variant === "fodda");
+    expect(doda?.spans).toEqual([{ from: "2000-01-01", to: "2000-12-31" }]);
+    expect(fodda?.spans).toEqual([{ from: "2001-01-01", to: "2001-12-31" }]);
+  });
+
+  it("keeps the open-ended ceiling on a still-delivered span", () => {
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2016-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2016-01-01", to: "9999-12-31" },
+    ]);
   });
 });
