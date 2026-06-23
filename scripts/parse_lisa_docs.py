@@ -1399,7 +1399,7 @@ def _panache_format(out_dir: Path) -> None:
     print(f"Formatting {out_dir} with panache...")
     # Pinned (7-day release-age policy); keep in sync with .pre-commit-config.yaml.
     subprocess.run(
-        ["uvx", "--from", "panache-cli==2.54.0", "panache", "format", str(out_dir)],
+        ["uvx", "--from", "panache-cli==2.55.0", "panache", "format", str(out_dir)],
         check=True,
     )
 

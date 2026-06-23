@@ -41,14 +41,14 @@ repos:
       # files gate skips non-doc commits. CI runs via `pre-commit run --all-files`.
       - id: panache-format
         name: panache format --check
-        entry: uvx --from panache-cli==2.54.0 panache format --check .
+        entry: uvx --from panache-cli==2.55.0 panache format --check .
         language: system
         pass_filenames: false
         files: \.md$
         stages: [pre-commit]
       - id: panache-lint
         name: panache lint --check
-        entry: uvx --from panache-cli==2.54.0 panache lint --check .
+        entry: uvx --from panache-cli==2.55.0 panache lint --check .
         language: system
         pass_filenames: false
         files: \.md$

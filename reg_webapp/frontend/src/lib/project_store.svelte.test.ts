@@ -330,6 +330,7 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     const stop = $effect.root(() => {
       loaded = initPersistence();
     });
+    // biome-ignore lint/style/noNonNullAssertion: assigned synchronously in the root.
     await loaded!;
     expect(fake.load).toHaveBeenCalled();
     stop();

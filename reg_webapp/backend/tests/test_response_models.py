@@ -16,8 +16,13 @@ Two contract shapes are allowed:
 
 from __future__ import annotations
 
-from fastapi.routing import APIRoute
+from typing import TYPE_CHECKING
+
+from _route_helpers import flat_api_routes
 from reg_webapp.app import create_app
+
+if TYPE_CHECKING:
+    from fastapi.routing import APIRoute
 
 # The binary/download endpoints: no Pydantic response_model (raw bytes), but
 # each MUST declare its download media type in OpenAPI instead. Pinned by path +
@@ -28,10 +33,7 @@ _DOWNLOAD_ENDPOINTS: dict[str, str] = {
 
 
 def _api_routes() -> list[APIRoute]:
-    app = create_app()
-    routes = [
-        r for r in app.routes if isinstance(r, APIRoute) and r.path.startswith("/api")
-    ]
+    routes = [r for r in flat_api_routes(create_app()) if r.path.startswith("/api")]
     assert routes, "expected at least one /api route"
     return routes
 
