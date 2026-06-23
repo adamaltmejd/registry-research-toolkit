@@ -2009,7 +2009,8 @@ def populate_variable_slugs(
         # their markers — it regenerates the whole file from scratch, so every
         # slug is freshly classed (the gitignored auto.toml is still rewritten).
         auto_derivation: dict[str, str] = {}
-        if freeze_state(states, provider_slug) != "churning":
+        state = freeze_state(states, provider_slug)
+        if state != "churning":
             # #471 pin guard: a pinned provider (curating/frozen) reads slugs
             # back from its committed `<provider>.auto.toml` and never recomputes
             # them. `*.auto.toml` is gitignored, so if the maintainer set the
@@ -2021,7 +2022,6 @@ def populate_variable_slugs(
             # a variable-less provider from false-flagging (the file is only
             # required because there are slugs to pin).
             if not auto_path.is_file() and _provider_has_variables(conn, provider_slug):
-                state = freeze_state(states, provider_slug)
                 raise _err(
                     "slug_freeze_auto_missing",
                     f"Provider {provider_slug!r} is {state!r} but its committed "
