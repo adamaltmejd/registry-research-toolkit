@@ -133,6 +133,16 @@ const shownValueSets = $derived(
 // GREYED (not removed) so the full coding history stays visible. The period axis
 // is already applied to `states` upstream (BindingLeafView passes the narrowed
 // subset), so only the variant axis remains to grey on here.
+//
+// Greying only has a VISIBLE effect when `states` is MULTI-variant — i.e. full
+// history (no `?period`), a `?variant`-without-`?period` deep link, or the
+// narrowedError fallback. In the normal variant-pick flow the SERVER narrows the
+// states to the active variant, so the out-of-scope value sets are simply ABSENT
+// and `inScope` is a no-op (every remaining value set matches `activeVariant`).
+// Keeping the test here makes the grey appear whenever multi-variant states DO
+// reach the view, without the view needing to know which path produced them.
+// (Follow-up: a richer "show full history + grey out-of-scope even on a
+// server-narrowed variant-pick" behavior is out of scope for #668.)
 function inScope(vs: DistinctValueSet): boolean {
   return activeVariant == null || vs.variants.includes(activeVariant);
 }

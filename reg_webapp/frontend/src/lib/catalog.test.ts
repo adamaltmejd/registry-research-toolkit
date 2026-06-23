@@ -1695,4 +1695,107 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       { from: "2016-01-01", to: "9999-12-31" },
     ]);
   });
+
+  it("collapses contiguous years across the UNION of ids in one classification edition (M20)", () => {
+    // Two distinct value_set_ids share `lkf1980` (the M13 collapse) and deliver
+    // adjacent years (1980, 1981) under the SAME variant. The per-variant M20
+    // collapse runs over the UNION of those ids' states, so they fuse into ONE
+    // span — not one per id (which would leave two adjacent rows).
+    const states = [
+      state({
+        value_set_id: 100,
+        classification_slug: "lkf1980",
+        variant: "doda",
+        valid_from: "1980-01-01",
+        valid_to: "1980-12-31",
+      }),
+      state({
+        value_set_id: 101, // distinct id, SAME edition + variant + adjacent year
+        classification_slug: "lkf1980",
+        variant: "doda",
+        valid_from: "1981-01-01",
+        valid_to: "1981-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs).toHaveLength(1);
+    expect(vs[0].usages).toHaveLength(1);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "1980-01-01", to: "1981-12-31" },
+    ]);
+  });
+
+  it("collapseSpans: overlapping windows extend into one span", () => {
+    // Two states whose windows OVERLAP (not merely back-to-back) fuse into a
+    // single span spanning the outer bounds.
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2000-01-01",
+        valid_to: "2003-12-31",
+      }),
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2002-01-01", // starts INSIDE the first window
+        valid_to: "2005-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2000-01-01", to: "2005-12-31" },
+    ]);
+  });
+
+  it("collapseSpans: a real >1-day gap splits into two spans", () => {
+    // A multi-day gap between windows (not a same-day continuation) starts a new
+    // span — the day-after adjacency test must NOT fuse across it.
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2000-01-01",
+        valid_to: "2000-06-30",
+      }),
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2000-08-01", // a one-month gap after 2000-06-30
+        valid_to: "2000-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2000-01-01", to: "2000-06-30" },
+      { from: "2000-08-01", to: "2000-12-31" },
+    ]);
+  });
+
+  it("collapseSpans: two open-ended states under one (value set, variant) → ONE span (FIX A)", () => {
+    // Regression for the `dayAfter("9999-12-31")` year-10000 overflow: two
+    // still-delivered states (both `valid_to: 9999-12-31`) for one (value set,
+    // variant) MUST collapse to a single open-ended span. Before the fix the
+    // overflowed day-after sorted BELOW any real `valid_from`, so the second
+    // open-ended state wrongly opened a spurious "since 2020" span beside the
+    // "since 2016" one.
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2016-01-01",
+        valid_to: "9999-12-31",
+      }),
+      state({
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2020-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2016-01-01", to: "9999-12-31" },
+    ]);
+  });
 });

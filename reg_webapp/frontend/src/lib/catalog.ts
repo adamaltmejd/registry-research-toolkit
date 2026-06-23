@@ -744,8 +744,9 @@ export interface DistinctValueSet {
  * the open span when it is contiguous with it — its `valid_from` is at or before
  * the day after the running `valid_to` (so back-to-back annual states `…-12-31`
  * → `…-01-01`, and any overlap, fuse; a real gap year starts a new span). ISO
- * `YYYY-MM-DD` strings compare chronologically. Same `delivery_column_name` is
- * guaranteed by the caller's grouping, so this only tests time-adjacency. */
+ * `YYYY-MM-DD` strings compare chronologically. The caller groups by (value set,
+ * variant) — NOT by delivery column (a merged monthly-family value set fuses
+ * across its 12 month columns by design) — so this tests ONLY time-adjacency. */
 function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
   const ordered = [...states].sort(
     (a, b) =>
@@ -755,6 +756,15 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
   const spans: ValueSetSpan[] = [];
   for (const s of ordered) {
     const open = spans.at(-1);
+    // An already-open OPEN-ENDED span swallows everything after it: its ceiling
+    // is the `9999-12-31` sentinel ("still delivered"), so any later state of the
+    // same (value set, variant) is contiguous with it by definition. Handled
+    // explicitly because `dayAfter("9999-12-31")` would overflow into year 10000
+    // (`Date.toISOString()`'s `±YYYYYY` expanded form sorts BELOW real dates),
+    // which would wrongly split a second still-delivered state into its own span.
+    if (open && open.to === OPEN_ENDED_VALID_TO) {
+      continue;
+    }
     // Contiguous (or overlapping) with the open span → extend it. The day-after
     // test fuses back-to-back annual windows (`2019-12-31` then `2020-01-01`)
     // without merging across a skipped year (`2019-12-31` then `2021-01-01`).
@@ -771,10 +781,12 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
 
 /** The ISO day after an `YYYY-MM-DD` date — the adjacency boundary for
  * `collapseSpans` (two annual states are adjacent iff the later starts on or
- * before this). Uses a UTC `Date` so month/year rollovers are correct; the
- * open-ended `9999-12-31` ceiling maps past any real start, so an open-ended run
- * never wrongly splits. A non-parseable bound returns the input unchanged
- * (defensive on a malformed/edge wire — it then only fuses exact-equal bounds). */
+ * before this). Uses a UTC `Date` so month/year rollovers are correct. The
+ * open-ended `9999-12-31` ceiling is NOT passed here (`collapseSpans` short-
+ * circuits an open span before calling), so the +1-day year-10000 overflow it
+ * would produce never reaches the adjacency test. A non-parseable bound returns
+ * the input unchanged (defensive on a malformed/edge wire — it then only fuses
+ * exact-equal bounds). */
 function dayAfter(iso: string): string {
   const ms = Date.parse(`${iso}T00:00:00Z`);
   if (Number.isNaN(ms)) {

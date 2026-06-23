@@ -184,6 +184,70 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       .toBeVisible();
   });
 
+  it("Isolate after filtering isolates the FILTERED value set (stable key, not list index)", async () => {
+    // `plainState` is the SECOND value set in the unfiltered list. Filtering to it
+    // leaves a single row whose Isolate must focus IT — not the first of the
+    // unfiltered list. If isolation keyed on a list INDEX, the filtered row's
+    // index 0 would wrongly isolate `classState` (= LKF 2007); keying on the
+    // stable `vs.key` isolates the right one.
+    render(StatesView, {
+      states: [classState, plainState],
+      narrowed: false,
+      ...noopCallbacks,
+    });
+    const filter = page.getByRole("textbox", { name: "Filter value sets" });
+    await filter.fill("historisk");
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
+    await page.getByRole("button", { name: "Isolate" }).click();
+    // The isolated detail shows the plain value set, NOT the classification one:
+    // its heading reads "Kommun historisk" and there is no LKF classification link.
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    expect(
+      document.querySelector(".vs-detail .vs-heading")?.textContent,
+    ).toContain("Kommun historisk");
+    expect(
+      document.querySelector('a[href="/catalog/class/lkf2007"]'),
+    ).toBeNull();
+  });
+
+  it("a plain value set with no inline value_set renders 'No value set.' when isolated", async () => {
+    // A plain (non-classification) value set whose `value_set` is null/empty: the
+    // isolated body has no codes to dump and no classification to link, so it
+    // reads the explicit "No value set." rather than rendering nothing.
+    const codeless = state({
+      state_id: 1,
+      value_set_id: 300,
+      value_set_version_label: "Codeless",
+      variant: "a",
+      value_set: null,
+    });
+    const other = state({
+      state_id: 2,
+      value_set_id: 301,
+      value_set_version_label: "Other",
+      variant: "a",
+    });
+    render(StatesView, {
+      states: [codeless, other],
+      narrowed: false,
+      ...noopCallbacks,
+    });
+    await page.getByRole("button", { name: "Isolate" }).first().click();
+    await expect.element(page.getByText("No value set.")).toBeVisible();
+  });
+
+  it("narrowed=false with multiple variants does NOT render the narrowing picker", async () => {
+    // The narrowing picker (`.picker`) writes `?variant`/`?value_set_version`,
+    // which the server only honors WITH a `?period` — so it must NOT appear in the
+    // full-history (`narrowed: false`) view, even when several variants exist.
+    render(StatesView, {
+      states: [classState, plainState], // distinct variants doda / fodda
+      narrowed: false,
+      ...noopCallbacks,
+    });
+    expect(document.querySelector(".picker")).toBeNull();
+  });
+
   it("greys an out-of-scope value set when a variant is active", async () => {
     // `lkf2007` is used by `doda`, `Kommun historisk` by `fodda`. Pinning variant
     // `doda` greys the `fodda`-only value set (greyed, NOT removed).
@@ -216,9 +280,10 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       ...noopCallbacks,
     });
     // The single-state detail renders its own dl.meta + the value-set heading —
-    // NOT the value-set isolation tabs.
+    // NOT the multi-state value-set list UI (`.vs-list`, which only the >1-state
+    // view emits), so this really guards the single/multi boundary.
     await expect.element(page.getByText("Variant")).toBeVisible();
-    expect(document.querySelector(".vs-tabs")).toBeNull();
+    expect(document.querySelector(".vs-list")).toBeNull();
     await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
   });
 
