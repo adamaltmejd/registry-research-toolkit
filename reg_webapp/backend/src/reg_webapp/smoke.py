@@ -7,7 +7,7 @@ with a non-zero exit so a container that booted against a broken DB bake / empty
 catalog never serves.
 
 Stdlib-only (``urllib``) on purpose: the runtime venv is installed with
-``--no-dev``, so ``httpx`` / Starlette's ``TestClient`` are absent. Probing the
+``--no-dev``, so ``httpx2`` / Starlette's ``TestClient`` are absent. Probing the
 real uvicorn process over loopback also exercises the actual serving path
 (lifespan, DB open, middleware), not just an in-process app object.
 

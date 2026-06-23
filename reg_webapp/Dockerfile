@@ -56,7 +56,7 @@ RUN bun run gen:types && bun run build
 # fetch: it owns release resolution, asset naming, and zstd unpack, and tag
 # slashes (`reg_meta/vX.Y.Z`) make hand-built download URLs fragile.
 FROM python:3.14.6-slim-bookworm AS regmeta-db
-COPY --from=ghcr.io/astral-sh/uv:0.11.19 /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
     UV_NO_INSTALLER_METADATA=1
@@ -115,7 +115,7 @@ RUN /app/.venv/bin/reg-meta update --db /opt/reg_meta --tag "$REG_META_TAG" --ye
 # combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
 # python jointly the way we need, so we compose the pin ourselves.
 FROM python:3.14.6-slim-bookworm AS backend
-COPY --from=ghcr.io/astral-sh/uv:0.11.19 /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /usr/local/bin/uv
 
 # Deterministic install: bytecode-compile ahead of time, copy (not symlink) into
 # .venv so the venv is self-contained when copied to the runtime stage.
