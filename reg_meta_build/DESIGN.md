@@ -1892,8 +1892,9 @@ OR a **composite** (a TOML list of slugs, persisted as a JSON array) — e.g.
 `["ar", "kvartal"]`. `panel_time_key` additionally accepts the `"period"`
 delivery-aligned sentinel, which is **single-only** (it may not appear inside a
 composite list). The key and grain must agree, enforced at load: `"period"` ⟺
-`panel_time_grain = "delivery"`, a slug/composite key ⟺ `panel_time_grain = "row"`
-(grain stays optional — the coupling binds only when both are set). `seed-slugs`
+`panel_time_grain = "delivery"`, a slug/composite key ⟺ `panel_time_grain = "row"`.
+`panel_time_grain` is optional, but **when set requires a `panel_time_key`** (a lone
+grain qualifies a time key that does not exist) and must agree with it. `seed-slugs`
 proposes defaults from SCB `Tabelldefinitioner.sql` PK declarations and
 `Identifierare.csv` (SOS: `is_join_variable` annotations); a curator confirms. These are
 grammar-checked at load so a typo fails loudly at build, not as a runtime JSON-decode

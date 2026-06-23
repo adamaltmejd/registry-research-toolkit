@@ -367,6 +367,18 @@ class TestProviderToml:
         assert entry.panel_time_key == expected_key
         assert entry.panel_time_grain == expected_grain
 
+    def test_variant_panel_time_grain_without_key_rejected(self, tmp_path: Path):
+        # #576: grain is optional, but a lone `panel_time_grain` (no
+        # `panel_time_key`) qualifies a time key that does not exist — incoherent
+        # metadata — and must fail at load, not silently persist.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\nslug = "x"\npanel_time_grain = "row"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
     def test_variable_override(self, tmp_path: Path):
         path = _write(
             tmp_path / "scb.toml",

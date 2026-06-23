@@ -509,12 +509,21 @@ def _validate_panel_time_consistency(
     """`panel_time_key` and `panel_time_grain` must agree: the "period" sentinel
     is delivery-aligned (time IS the delivery vintage), so it pairs only with
     `panel_time_grain = "delivery"`; a slug/composite key is a per-row coordinate,
-    so it pairs only with `"row"`. Grain stays OPTIONAL — the coupling is enforced
-    only when both are present (#576). By the time this runs, both fields are
+    so it pairs only with `"row"`. Grain stays OPTIONAL — a key with no grain (or
+    neither field) is fine — but when set it REQUIRES a `panel_time_key` and must
+    agree with it (#576): a lone `panel_time_grain` qualifies a time key that does
+    not exist, which is incoherent metadata. By the time this runs, both fields are
     already individually valid: the grain is one of delivery/row/None, and a tuple
     key never contains "period" (`_validate_panel_time_key` rejects it)."""
-    if panel_time_key is None or panel_time_grain is None:
+    if panel_time_grain is None:
         return
+    if panel_time_key is None:
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `panel_time_grain` is set "
+            f"({panel_time_grain!r}) without a `panel_time_key`.",
+            "Add a `panel_time_key`, or remove `panel_time_grain`.",
+        )
     is_period = panel_time_key == "period"
     expected = "delivery" if is_period else "row"
     if panel_time_grain != expected:

@@ -372,7 +372,6 @@ panel_time_grain = "row"
 [register_variant."7664376130118991107.6332006637200314922"]
 slug = "arende-atgard"
 display_group = "Tandvårdsstödet"
-panel_time_grain = "row"
 
 # Underhållsstöd
 [register."9011624717046135047"]
