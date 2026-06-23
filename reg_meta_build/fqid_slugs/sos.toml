@@ -47,8 +47,8 @@ panel_time_grain = "delivery"
 slug = "ekb-manad"
 display_group = "EKB_MANAD"
 panel_entity_key = "pnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Cancerregistret (CAN)
 [register."7119586976865944958"]
