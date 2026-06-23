@@ -112,16 +112,21 @@ export function countFoldedMembers<T>(rows: GroupedRow<T>[]): number {
 }
 
 /** The filterable text of a group row: its own label/key plus every member's
- * name/FQID — so filtering for a member (e.g. "maj") still surfaces the group
- * that folded it. One source of truth for the browse type-to-filter and the
- * pickers' `rankFilter` keys over a group row (#322). */
+ * name/FQID/leaf slug — so filtering for a member (e.g. "maj") still surfaces
+ * the group that folded it, AND a member-slug hunt (e.g. "inkjan" for
+ * `scb/lisa/inkjan`) ranks the folding group at exact/prefix tier rather than as
+ * an "other substring" — consistent with leaf rows ranking by their `leafSlug`
+ * (#674; the member's leaf slug is a substring of its FQID, so the match SET is
+ * unchanged, only the `rankFilter` tier improves). One source of truth for the
+ * browse type-to-filter and the pickers' `rankFilter` keys over a group row
+ * (#322). */
 export function groupFilterKeys(
   group: ConceptGroup,
 ): (string | null | undefined)[] {
   return [
     group.label,
     group.key,
-    ...group.members.flatMap((m) => [m.name, m.fqid]),
+    ...group.members.flatMap((m) => [m.name, m.fqid, leafSlug(m.fqid)]),
   ];
 }
 

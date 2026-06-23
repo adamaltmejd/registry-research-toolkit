@@ -629,15 +629,33 @@ describe("foldGroupedRows", () => {
 });
 
 describe("groupFilterKeys", () => {
-  it("carries the label/key plus every member's name and FQID (#322)", () => {
+  it("carries the label/key plus every member's name, FQID, and leaf slug (#322, #674)", () => {
     expect(groupFilterKeys(group({}))).toEqual([
       "Inkomst",
       "ink",
       "Inkomst i januari",
       "scb/lisa/inkjan",
+      "inkjan",
       "Inkomst i februari",
       "scb/lisa/inkfeb",
+      "inkfeb",
     ]);
+  });
+
+  it("ranks the folding group at exact/prefix tier on a member-slug needle (#674)", () => {
+    // A hidden member's leaf slug ("inkjan") now ranks its folding group at
+    // prefix tier (1) — tier 0/1 — rather than as an "other substring" (2),
+    // consistent with how leaf rows rank by `leafSlug`. We rank the group row
+    // against an unrelated decoy whose only match is a tier-2 substring.
+    type Row = { id: string; group?: ConceptGroup };
+    const rows: Row[] = [
+      { id: "decoy" }, // matches "inkjan" only via the substring below
+      { id: "ink-group", group: group({}) },
+    ];
+    const keysOf = (r: Row): (string | null | undefined)[] =>
+      r.group ? groupFilterKeys(r.group) : [`zzz-inkjan-zzz`];
+    const ranked = rankFilter(rows, "inkjan", keysOf);
+    expect(ranked[0].id).toBe("ink-group");
   });
 });
 
