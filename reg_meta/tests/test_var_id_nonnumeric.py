@@ -152,6 +152,16 @@ def db() -> sqlite3.Connection:
             delivery_column_name=name,
             classification_id=cls_id,
         )
+        # `add_state` seeds only `variable_state`; the datacolumn search reads
+        # `variable_alias.delivery_column_name` (the column-alias LIKE path), so
+        # seed an alias row too (= the name, mirroring the state) for the
+        # field="datacolumn" guard.
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, ?, ?)",
+            (variable_id, variant_id, name),
+        )
 
     conn.commit()
     return conn
@@ -177,11 +187,27 @@ def test_classification_to_variables_var_id_guard(db: sqlite3.Connection) -> Non
 
 def test_search_varname_var_id_guard(db: sqlite3.Connection) -> None:
     # field="varname" is the LIKE-over-name path (no FTS rebuild needed).
-    scb = search(db, "Kön", field="varname")["results"]
-    assert scb and scb[0]["var_id"] == 44
+    # The typed `varname` row (#701) carries `var_id`/`name` as attributes.
+    scb = search(db, "Kön", field="varname").results
+    assert scb and scb[0].var_id == 44
 
-    sos = search(db, "Diagnos", field="varname")["results"]
-    by_name = {r["variable_name"]: r["var_id"] for r in sos}
+    sos = search(db, "Diagnos", field="varname").results
+    by_name = {r.name: r.var_id for r in sos}
+    assert by_name["Diagnos"] is None
+    assert by_name["Diagnos curated"] is None
+
+
+def test_search_datacolumn_var_id_guard(db: sqlite3.Connection) -> None:
+    # field="datacolumn" is the LIKE-over-`delivery_column_name` path; the fixture
+    # sets each state's `delivery_column_name` = the variable's `name`, so the same
+    # "Kön"/"Diagnos" queries match here (mirror of the varname guard above).
+    # The typed `datacolumn` row (#701) carries `var_id`/`name` as attributes.
+    scb = search(db, "Kön", field="datacolumn").results
+    assert scb and scb[0].var_id == 44
+    assert isinstance(scb[0].var_id, int)
+
+    sos = search(db, "Diagnos", field="datacolumn").results
+    by_name = {r.name: r.var_id for r in sos}
     assert by_name["Diagnos"] is None
     assert by_name["Diagnos curated"] is None
 

@@ -60,11 +60,11 @@ def test_varname_like_metacharacters_match_literally() -> None:
         delivery_column_name="Col994",
     )
 
-    underscore = search(conn, "12_", field="varname", fold_groups=False)["results"]
-    assert {r["variable_name"] for r in underscore} == {"Literal 12_5"}
+    underscore = search(conn, "12_", field="varname", fold_groups=False).results
+    assert {r.name for r in underscore} == {"Literal 12_5"}
 
-    percent = search(conn, "99%", field="varname", fold_groups=False)["results"]
-    assert {r["variable_name"] for r in percent} == {"Literal 99%5"}
+    percent = search(conn, "99%", field="varname", fold_groups=False).results
+    assert {r.name for r in percent} == {"Literal 99%5"}
 
 
 def test_datacolumn_like_metacharacters_match_literally() -> None:
@@ -98,8 +98,8 @@ def test_datacolumn_like_metacharacters_match_literally() -> None:
         delivery_column_name="Col994",
     )
 
-    underscore = search(conn, "12_", field="datacolumn", fold_groups=False)["results"]
-    assert {r["datacolumn"] for r in underscore} == {"Col12_5"}
+    underscore = search(conn, "12_", field="datacolumn", fold_groups=False).results
+    assert {r.datacolumn for r in underscore} == {"Col12_5"}
 
-    percent = search(conn, "99%", field="datacolumn", fold_groups=False)["results"]
-    assert {r["datacolumn"] for r in percent} == {"Col99%5"}
+    percent = search(conn, "99%", field="datacolumn", fold_groups=False).results
+    assert {r.datacolumn for r in percent} == {"Col99%5"}

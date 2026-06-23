@@ -7,11 +7,11 @@ re-prepended at rank 1, not duplicated. This closes confirmed eval gaps where th
 register a researcher should land on does not rank for a topical term
 (``sysselsättning`` → ``scb/lisa``; ``diagnos`` → ``sos/par``).
 
-Why it lives here (not in the route): golden-boost must operate on the RAW
-reg_meta result dicts (the pre-shaping ``reg_meta.queries.search`` output) so BOTH
-the route AND the eval runner (`scripts/run_search_eval.py`, which works on raw
-dicts) apply the SAME function. That is what makes the eval measure the route's
-TRUE behavior rather than an approximation of it.
+Why it lives here (not in the route): golden-boost must operate on the reg_meta
+typed search models (the ``reg_meta.queries.search`` output, #701) so BOTH the
+route AND the eval runner (`scripts/run_search_eval.py`) apply the SAME function.
+That is what makes the eval measure the route's TRUE behavior rather than an
+approximation of it.
 
 The curated pins live in ``reg_webapp/backend/src/reg_webapp/search_golden.toml``
 (INSIDE the importable package so it travels with the src tree the runtime Docker
@@ -32,12 +32,16 @@ import tomllib
 import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from reg_meta.fqid import FqidError, parse as parse_fqid
+from reg_meta.search import ClassificationSearchResult, RegisterSearchResult
 
 if TYPE_CHECKING:
     import sqlite3
+    from collections.abc import Callable
+
+    from reg_meta.search import SearchResult
 
 # Packaged INSIDE reg_webapp (beside this module) so it ships with the src tree the
 # runtime Docker stage copies (Dockerfile: `COPY .../reg_webapp/backend/src ...`); a
@@ -70,10 +74,10 @@ class _Pin:
     note: str | None
 
 
-def _register_raw_dict(conn: sqlite3.Connection, fqid: str) -> dict[str, Any]:
-    """Build the RAW register result dict for a pinned register fqid, with the same
-    keys ``routes.search._register_result`` reads (`fqid`, `register_name`,
-    `register_purpose`). Resolves the 2-seg fqid (`provider/register`) by slug."""
+def _register_pin(conn: sqlite3.Connection, fqid: str) -> RegisterSearchResult:
+    """Build the `RegisterSearchResult` model for a pinned register fqid (#701).
+    Resolves the 2-seg fqid (`provider/register`) by slug. A pin is order-prepended,
+    not rank-sorted, so `rank=0.0`."""
     parsed = parse_fqid(fqid)
     row = conn.execute(
         "SELECT r.name AS register_name, r.purpose AS register_purpose "
@@ -84,18 +88,22 @@ def _register_raw_dict(conn: sqlite3.Connection, fqid: str) -> dict[str, Any]:
     ).fetchone()
     if row is None:
         raise ValueError(f"golden pin fqid {fqid!r} does not resolve to a register")
-    return {
-        "type": "register",
-        "fqid": fqid,
-        "register_name": row["register_name"],
-        "register_purpose": row["register_purpose"],
-    }
+    # Pass the parsed `Fqid` (not the raw string) — the field is `Fqid | None`; it
+    # serializes back to the identical canonical string on the wire.
+    return RegisterSearchResult(
+        fqid=parsed,
+        name=row["register_name"],
+        purpose=row["register_purpose"],
+        rank=0.0,
+    )
 
 
-def _classification_raw_dict(conn: sqlite3.Connection, fqid: str) -> dict[str, Any]:
-    """Build the RAW classification result dict for a pinned classification fqid,
-    with the same keys ``routes.search._classification_result`` reads (`fqid`,
-    `short_name`, `classification_name`). Resolves ``class/<slug>`` by slug."""
+def _classification_pin(
+    conn: sqlite3.Connection, fqid: str
+) -> ClassificationSearchResult:
+    """Build the `ClassificationSearchResult` model for a pinned classification fqid
+    (#701). Resolves ``class/<slug>`` by slug; `rank=0.0` (a pin is order-prepended,
+    not rank-sorted)."""
     parsed = parse_fqid(fqid)
     row = conn.execute(
         "SELECT short_name, name AS classification_name "
@@ -106,12 +114,14 @@ def _classification_raw_dict(conn: sqlite3.Connection, fqid: str) -> dict[str, A
         raise ValueError(
             f"golden pin fqid {fqid!r} does not resolve to a classification"
         )
-    return {
-        "type": "classification",
-        "fqid": fqid,
-        "short_name": row["short_name"],
-        "classification_name": row["classification_name"],
-    }
+    # Pass the parsed `Fqid` (see `_register_pin`): the field is `Fqid | None` and
+    # serializes back to the identical canonical string.
+    return ClassificationSearchResult(
+        fqid=parsed,
+        short_name=row["short_name"],
+        name=row["classification_name"],
+        rank=0.0,
+    )
 
 
 # Builders are the single source of truth for which groups golden-boost supports;
@@ -120,11 +130,11 @@ def _classification_raw_dict(conn: sqlite3.Connection, fqid: str) -> dict[str, A
 # apply). register + classification both resolve cheaply by slug; variable/value
 # pins are NOT implemented — a pin targeting them is a config error at load (fail
 # fast) rather than a silent no-op.
-_RAW_DICT_BUILDERS = {
-    "register": _register_raw_dict,
-    "classification": _classification_raw_dict,
+_PIN_BUILDERS: dict[str, Callable[[sqlite3.Connection, str], SearchResult]] = {
+    "register": _register_pin,
+    "classification": _classification_pin,
 }
-_SUPPORTED_GROUPS = frozenset(_RAW_DICT_BUILDERS)
+_SUPPORTED_GROUPS = frozenset(_PIN_BUILDERS)
 
 
 def _load_pins(path: Path) -> dict[tuple[str, str], _Pin]:
@@ -196,14 +206,14 @@ def apply_golden_boost(
     conn: sqlite3.Connection,
     query: str,
     group: str,
-    results: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
+    results: tuple[SearchResult, ...],
+) -> list[SearchResult]:
     """Promote any curated pin for ``(query, group)`` to the TOP of ``results``.
 
     For a pin matching the normalized query + group, each pin fqid is resolved into
-    its raw result dict and PREPENDED (in pin order) to the front. Any existing entry
-    in ``results`` whose ``fqid`` equals a pin fqid is REMOVED first, so the pinned
-    entity is promoted to rank 1 rather than duplicated. Net effect on length:
+    its reg_meta result MODEL and PREPENDED (in pin order) to the front. Any existing
+    entry in ``results`` whose ``fqid`` equals a pin fqid is REMOVED first, so the
+    pinned entity is promoted to rank 1 rather than duplicated. Net effect on length:
 
     - pin already on the page → removed from its FTS slot, re-prepended at rank 1
       (promoted, no dup) → ``len`` unchanged → the route's ``total_count`` delta is 0
@@ -211,12 +221,15 @@ def apply_golden_boost(
     - pin not on the page (the shipped non-matching case) → prepended → ``len`` +1 →
       ``total_count`` +1 (correct: a net-new injection).
 
-    The common case — no matching pin — returns ``results`` unchanged (kept cheap:
-    one dict lookup).
+    The common case — no matching pin — returns ``results`` as a list unchanged (kept
+    cheap: one dict lookup).
 
-    Operates on the raw reg_meta result dicts so the route and the eval runner share
-    one behavior. A pin whose fqid does not resolve raises (fail fast) rather than
-    silently dropping.
+    Operates on the reg_meta typed search models (#701) so the route and the eval
+    runner share one behavior. A pin whose fqid does not resolve raises (fail fast)
+    rather than silently dropping. Dedup compares the SERIALIZED fqid string (a result
+    model's `fqid` is an `Fqid | None`; a pin's fqids are the canonical strings). A
+    `ConceptGroupSearchResult` (foldable into the classification arm) carries no
+    `fqid` field, so `getattr(..., None)` treats it as un-pinnable — never deduped.
 
     LIMITATION: only the result PAGE is visible here, not the full FTS match set. A
     pin that is itself an FTS match ranking BEYOND the page can't be deduped — it is
@@ -226,9 +239,17 @@ def apply_golden_boost(
     """
     pin = _PINS.get((_normalize(query), group))
     if pin is None:
-        return results
-    build = _RAW_DICT_BUILDERS[group]
+        return list(results)
+    build = _PIN_BUILDERS[group]
     pinned = [build(conn, fqid) for fqid in pin.fqids]
     pin_fqids = set(pin.fqids)
-    kept = [r for r in results if r.get("fqid") not in pin_fqids]
+    # `getattr(..., None)`: a `ConceptGroupSearchResult` carries no `fqid` field, so
+    # it can never match a pin (matches the old dict `.get("fqid")` semantics).
+    kept = [r for r in results if _fqid_str(getattr(r, "fqid", None)) not in pin_fqids]
     return pinned + kept
+
+
+def _fqid_str(fqid: object | None) -> str | None:
+    """The canonical string form of a result model's `Fqid | None` field, for
+    comparison against a pin's canonical fqid strings (None stays None)."""
+    return str(fqid) if fqid is not None else None

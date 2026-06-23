@@ -31,6 +31,14 @@ from reg_meta.catalog import (
     VariantSummary,
 )
 from reg_meta.fqid import CLASSIFICATION_PREFIX
+from reg_meta.search import (
+    ClassificationSearchResult,
+    ClassificationSuccessionSearchResult,
+    CodeSearchResult,
+    ConceptGroupSearchResult,
+    RegisterSearchResult,
+    VariableSearchResult,
+)
 
 
 class StewardInfo(BaseModel):
@@ -511,143 +519,12 @@ class ValidationResultModel(BaseModel):
 # `SearchGroup` member + result model with its own `group` literal — existing
 # groups and their result models are never reshaped. The SPA must tolerate an
 # unknown `group` value (skip it), so a new arm can ship before the SPA learns
-# to render it. Each result carries its navigable `fqid`; results within a group
-# are pre-sorted by FTS rank (after the #311 golden-boost seam), so the wire
-# carries no raw rank.
-
-
-class RegisterSearchResult(BaseModel):
-    """A register hit (`register_fts` name/purpose)."""
-
-    type: Literal["register"] = "register"
-    fqid: str | None
-    name: str | None = None
-    purpose: str | None = None
-
-
-class VariableSearchResult(BaseModel):
-    """A variable hit (`variable_fts` name/definition/description). `register` is
-    the owning register's display name (context for the omnibox). When the hit is
-    a LONE member of a concept group (#322 — the family didn't fold because only
-    one member matched), `concept_group`/`concept_group_label` annotate the
-    family so it stays discoverable; both None otherwise."""
-
-    type: Literal["variable"] = "variable"
-    fqid: str | None
-    name: str | None = None
-    # `register_name` aliased to the wire key `register` — a bare `register`
-    # field shadows `BaseModel.register` (see reg_meta's `VariableRef`). The alias is
-    # the canonical init param; FastAPI serializes by alias, so the JSON key is
-    # `register`.
-    register_name: str | None = Field(default=None, alias="register")
-    definition: str | None = None
-    concept_group: str | None = None
-    concept_group_label: str | None = None
-
-
-class ClassificationSearchResult(BaseModel):
-    """A classification hit (`classification_fts` short_name/name/name_en/
-    description — #350 activates this previously-unsearched index). When the hit
-    is a LONE member of a vintage group (the family didn't fold because only one
-    member matched), `concept_group`/`concept_group_label` annotate the family so
-    it stays discoverable — symmetric with `VariableSearchResult`; both None
-    otherwise."""
-
-    type: Literal["classification"] = "classification"
-    fqid: str | None
-    short_name: str | None = None
-    name: str | None = None
-    concept_group: str | None = None
-    concept_group_label: str | None = None
-    terminal_fqid: str | None = Field(
-        default=None,
-        description="When this is a non-current edition that the query hit alone, "
-        "the fqid of the current/terminal edition in its succession chain (#571) — "
-        "lets the UI link to the current edition; None for a current edition or a "
-        "non-edition classification.",
-    )
-
-
-class ClassificationEditionModel(BaseModel):
-    """One edition of a folded classification succession chain (#571): a vintage
-    of the same classification (e.g. `sun1996`, `sun2000`). Carried by
-    `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
-    `effective_year`. Every edition is a live `classification` row (the build
-    validator guarantees succession editions are live), so `fqid` is None only when
-    the slug is malformed/unresolvable."""
-
-    slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
-    fqid: str | None = Field(
-        default=None,
-        description="The edition's 2-seg classification FQID, None only when the "
-        "slug is malformed/unresolvable (succession editions are live rows).",
-    )
-    name: str | None = Field(
-        default=None, description="The edition's display name, None when un-hydrated."
-    )
-    effective_year: int | None = Field(
-        default=None,
-        description="The year this edition was superseded by its successor (from its "
-        "outbound succession edge); None for the terminal (head) edition, which has "
-        "no outbound edge.",
-    )
-
-
-class ClassificationSuccessionSearchResult(BaseModel):
-    """A folded classification-succession row (#571): a query hit ≥2 distinct
-    editions of one classification chain (the vintages, e.g. SUN 1996/2000), so they
-    collapse to a single result keyed on the TERMINAL (current) edition. `editions`
-    is the full chain (terminal-first, descending year) so the SPA can render "this
-    classification has editions …"; `matched_count` is how many editions the query
-    actually hit. A succession row is NOT itself a concept group — the terminal
-    `fqid` is the navigable target."""
-
-    type: Literal["classification_succession"] = "classification_succession"
-    fqid: str | None = Field(
-        description="The terminal (current) edition's classification FQID — the "
-        "navigable target. None only when the slug is malformed/unresolvable (the "
-        "terminal is always a live classification row)."
-    )
-    short_name: str | None = Field(
-        default=None, description="The terminal edition's short name (e.g. 'SUN')."
-    )
-    name: str | None = Field(
-        default=None, description="The terminal edition's display name."
-    )
-    editions: list[ClassificationEditionModel] = Field(
-        default_factory=list,
-        description="The full edition chain, terminal-first then descending year.",
-    )
-    matched_count: int = Field(
-        default=0, description="How many editions in the chain the query hit."
-    )
-
-
-class ConceptGroupSearchResult(BaseModel):
-    """A folded concept-group row (#322): ≥2 sibling members matched OR the
-    group's own label matched, so the family collapses to one result. `kind` is
-    'variable' or 'classification' (which group bucket it belongs to);
-    `member_count` is the family's full size, `matched_count` how many members
-    the query hit, `label_matched` whether the group label/key matched directly.
-    `members` is the full facet-ordered member list (each a real leaf FQID) so
-    the SPA can expand the family inline — a group is NOT itself FQID-addressable."""
-
-    type: Literal["group"] = "group"
-    kind: Literal["variable", "classification"]
-    group_key: str
-    group_label: str
-    source: str | None = None
-    # `register_name` aliased to the wire key `register` (avoids the
-    # `BaseModel.register` shadow — see reg_meta's `VariableRef`). None for a
-    # classification-kind group (catalog-scoped, no owning register).
-    register_name: str | None = Field(default=None, alias="register")
-    member_count: int = 0
-    matched_count: int = 0
-    label_matched: bool = False
-    # reg_meta's `ConceptGroupMember` embedded directly (#681) — the search path
-    # constructs them from the `reg_meta.queries.search` member dicts (`fqid` is a
-    # string the `Fqid` field parses; `facets` are `{axis, value, label}` dicts).
-    members: list[ConceptGroupMember] = []
+# to render it. Each result carries its navigable `fqid`. The per-result MODELS
+# now live in reg_meta (`reg_meta.search`, #701) — the search-surface analog of
+# the #681 catalog-typing collapse: `reg_meta.queries.search` returns them
+# directly, and the webapp embeds them as FastAPI response models instead of
+# re-wrapping. Each result also carries a `rank` (the CLI's doc-merge interleaves
+# by it); results within a group are pre-sorted server-side, so the SPA may ignore it.
 
 
 # Discriminated on `type`: a variables/classifications group mixes leaf hits with
@@ -689,52 +566,6 @@ class ClassificationSearchGroup(BaseModel):
     group: Literal["classifications"] = "classifications"
     total_count: int
     results: list[ClassificationSearchItem]
-
-
-# ── Code/value search (#352; see reg_meta queries.search type="value") ───────
-# A code hit's actionable target is the VARIABLE or CLASSIFICATION carrying the
-# code, not the bare (code, label) pair — so each hit surfaces a bounded
-# representative slice of its owners plus the full count (the SPA shows "+N more").
-
-
-class CodeOwnerVariable(BaseModel):
-    """A variable that carries a code (#352). `register` is the owning register's
-    display name (context for the omnibox); the Python attr is `register_name` to
-    avoid the `BaseModel.register` method shadow (see reg_meta's `VariableRef`)."""
-
-    fqid: str | None
-    name: str | None = None
-    register_name: str | None = Field(default=None, alias="register")
-
-
-class CodeOwnerClassification(BaseModel):
-    """A classification that carries a code (#352) — catalog-scoped (no owning
-    register)."""
-
-    fqid: str | None
-    short_name: str | None = None
-    name: str | None = None
-
-
-class CodeSearchResult(BaseModel):
-    """A code/value hit (`value_code_fts` label match + code-shape match, #352).
-    `code`/`label` are the SCB value pair; `variables`/`classifications` are a
-    bounded representative slice of the owning entities (the researcher's actual
-    target), and `variable_count`/`classification_count` are the full totals before
-    the slice cap."""
-
-    type: Literal["code"] = "code"
-    code: str
-    label: str
-    variables: list[CodeOwnerVariable] = []
-    variable_count: int = 0
-    classifications: list[CodeOwnerClassification] = []
-    classification_count: int = 0
-    # Inferred from the owning classification: the primary/first owning
-    # classification's short_name (fall back to its name). None for
-    # register-local / bespoke codes with no owning classification (#393 item 3).
-    # The SPA groups the codes group into per-code-system subsections off this.
-    code_system: str | None = None
 
 
 class CodeSearchGroup(BaseModel):

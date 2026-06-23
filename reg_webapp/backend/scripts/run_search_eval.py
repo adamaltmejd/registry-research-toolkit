@@ -32,10 +32,14 @@ import argparse
 import sys
 import tomllib
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from reg_meta.db import db_path_from_args, open_db
 from reg_meta.queries import search
 from reg_webapp.golden import apply_golden_boost
+
+if TYPE_CHECKING:
+    from reg_meta.search import SearchResult
 
 EVAL_PATH = Path(__file__).resolve().parents[1] / "search_eval.toml"
 
@@ -75,15 +79,17 @@ def _group_call(group: str) -> tuple[str, bool]:
         ) from None
 
 
-def _result_id(row: dict) -> str | None:
+def _result_id(row: SearchResult) -> str | None:
     """The identifier a case's `intended` is matched against: ``group:<key>`` for a
-    folded concept-group row, else the leaf FQID."""
-    if row.get("type") == "group":
-        return f"group:{row.get('group_key')}"
-    return row.get("fqid")
+    folded concept-group row, else the leaf FQID (as a canonical string). Operates on
+    the reg_meta typed search models (#701)."""
+    if row.type == "group":
+        return f"group:{row.group_key}"
+    fqid = getattr(row, "fqid", None)
+    return str(fqid) if fqid is not None else None
 
 
-def _rank_of(results: list[dict], intended: str) -> int | None:
+def _rank_of(results: list[SearchResult], intended: str) -> int | None:
     """1-based rank of `intended` among `results`, or None if absent."""
     for i, row in enumerate(results, start=1):
         if _result_id(row) == intended:
@@ -135,12 +141,12 @@ def main() -> int:
             limit=args.limit,
             fold_groups=fold,
         )
-        # Apply golden-boost the same way `/api/search` does (over the raw dicts),
-        # so the eval reflects the route's true post-boost ranking. The net-new
-        # injection bumps the displayed total too, matching the route's
-        # total_count adjustment.
-        boosted = apply_golden_boost(conn, c["query"], c["group"], res["results"])
-        total = res["total_count"] + (len(boosted) - len(res["results"]))
+        # Apply golden-boost the same way `/api/search` does (over the reg_meta typed
+        # search models, #701), so the eval reflects the route's true post-boost
+        # ranking. The net-new injection bumps the displayed total too, matching the
+        # route's total_count adjustment.
+        boosted = apply_golden_boost(conn, c["query"], c["group"], res.results)
+        total = res.total_count + (len(boosted) - len(res.results))
         # The route caps the displayed page at `limit` (a net-new pin must not push the
         # group past the cap), so measure the rank against the page the user sees — not
         # the un-trimmed boosted list. `total` stays the full count (computed above).

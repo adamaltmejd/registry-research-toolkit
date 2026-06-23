@@ -867,7 +867,10 @@ def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
                     "var_id": "",
                     "variable_name": var or r["filename"],
                     "display_name": r["display_name"],
-                    "fts_rank": rank,
+                    # `rank` is the canonical sort key shared with the typed search
+                    # rows (#701) — this dict is merged with `search()`'s
+                    # `model_dump`ed rows and sorted on `rank`; consumed ONLY here.
+                    "rank": rank,
                 }
             )
         return results
@@ -895,11 +898,15 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     finally:
         conn.close()
 
-    # Merge doc results (always included regardless of --type filter)
+    # Merge doc results (always included regardless of --type filter). `search()`
+    # now returns typed `SearchResults` (#701); dump its rows to JSON-ready dicts
+    # (mode="json" → `Fqid`→string, tuples→lists; by_alias → the `register` wire
+    # key) so the doc rows (plain dicts) interleave on the shared `rank` sort key.
+    search_rows = [m.model_dump(mode="json", by_alias=True) for m in data.results]
     doc_results = _search_docs(args.query, db_arg=args.db)
-    all_results = data["results"] + doc_results
-    all_results.sort(key=lambda x: x.get("fts_rank", 0))
-    total_count = data["total_count"] + len(doc_results)
+    all_results = search_rows + doc_results
+    all_results.sort(key=lambda x: x.get("rank", 0))
+    total_count = data.total_count + len(doc_results)
     results = all_results[: args.limit]
 
     doc_total = sum(1 for r in all_results if r.get("type") == "doc")
@@ -1482,28 +1489,32 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
-    """Project one search result onto the table/list renderer's keys.
+    """Project one search result onto the table/list renderer's display keys.
 
-    `type: "group"` rows (#322) carry nested `members`/`matched` lists the
-    renderer can't show — flatten them to counts and fill the generic columns
-    (`variable_name` shows the group label) so a group row reads sensibly in
-    both the pure-group and the mixed-type column sets. Leaf rows pass through,
-    with the `concept_group` annotation re-keyed to a short `group` column.
+    The rows are now reg_meta's typed search models serialized by alias (#701), so
+    their wire keys are the canonical names (`name`, `register`, `source`,
+    `matched_count`, …) and the leaf rows no longer carry the internal
+    `register_id`/`var_id` (only the CLI-only datacolumn/varname arms keep `var_id`).
+    This is the single normalization layer that maps those onto the renderer's
+    generic display columns (`variable_name`/`register_name`/`var_id`/…) — so the
+    column sets below, and the doc rows (which `_search_docs` builds with the legacy
+    display keys directly), share one shape.
 
-    Classification rows (#350) carry `short_name`/`classification_name`/`fqid`,
-    none of which are in the mixed-type fallback columns — so in a `--type all`
-    table they'd render blank. Project their identity onto the generic columns
-    (mirroring the group-row treatment) so they read sensibly there too; the
-    pure-classification column set selects the native keys directly.
+    `type: "group"` rows (#322) carry nested `members` lists and a `matched_count`
+    the renderer can't show as a list — flatten to counts and fill the generic
+    columns (`variable_name` shows the group label). Leaf rows project their identity
+    onto the generic columns, with the `concept_group` annotation re-keyed to a short
+    `group` column.
 
-    `classification_succession` rows (#571) collapse an edition chain and carry
-    the same `short_name`/`classification_name`/`fqid` plus an `editions` list —
-    share the classification projection, and append a folded-family hint to
-    `variable_name` (mirroring the group row's "(N/M members matched)" idiom) so
-    the collapse reads clearly in a mixed table. A scalar `n_editions` count is
-    also stamped (distinct from the raw `editions` list, which feeds --format
-    json) for the classification column set's trailing `n_editions` column."""
-    if r.get("type") == "code":
+    Classification rows (#350) project `short_name`/`name`/`fqid` onto the generic
+    columns so they read sensibly in a `--type all` table; the pure-classification
+    column set selects the native keys directly. `classification_succession` rows
+    (#571) collapse an edition chain — share the classification projection, append a
+    folded-family hint to `variable_name`, and stamp a scalar `n_editions` for the
+    classification column set's trailing column (the raw `editions` list feeds
+    --format json)."""
+    row_type = r.get("type")
+    if row_type == "code":
         # Code/value hits (#352) carry their owning variables/classifications as
         # nested lists the table renderer can't show — flatten to a representative
         # owner + the full counts (the full owner lists live in --format json).
@@ -1515,43 +1526,56 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
             "short_name", ""
         )
         return r
-    if r.get("type") != "group":
-        is_classification = r.get("type") in (
-            "classification",
-            "classification_succession",
-        )
-        if is_classification or r.get("concept_group"):
-            r = dict(r)
-        if is_classification:
-            r.setdefault("register_name", r.get("short_name", ""))
-            r.setdefault("variable_name", r.get("classification_name", ""))
-        if r.get("type") == "classification_succession":
-            editions = len(r.get("editions") or [])
-            r["variable_name"] = (
-                f"{r.get('classification_name', '')} ({editions} editions)"
-            )
-            # Distinct from the raw `editions` list key (which feeds --format
-            # json): a scalar count for the classification column set's trailing
-            # `n_editions` column.
-            r["n_editions"] = editions
-        if r.get("concept_group"):
-            r["group"] = r["concept_group"]
-        return r
-    matched = len(r.get("matched") or [])
-    total = r.get("member_count") or 0
-    return {
-        "type": "group",
-        "group_key": r.get("group_key", ""),
-        "group_label": r.get("group_label", ""),
-        "group": r.get("group_key", ""),
-        "source": r.get("group_source", ""),
-        "register_id": r.get("register_id") or "",
-        "register_name": r.get("register_name") or "",
-        "var_id": "",
-        "variable_name": f"{r.get('group_label', '')} ({matched}/{total} members matched)",
-        "matched": matched,
-        "members": total,
-    }
+    if row_type == "group":
+        matched = r.get("matched_count") or 0
+        total = r.get("member_count") or 0
+        return {
+            "type": "group",
+            "group_key": r.get("group_key", ""),
+            "group_label": r.get("group_label", ""),
+            "group": r.get("group_key", ""),
+            "source": r.get("source", ""),
+            "register_id": "",
+            "register_name": r.get("register") or "",
+            "var_id": "",
+            "variable_name": (
+                f"{r.get('group_label', '')} ({matched}/{total} members matched)"
+            ),
+            "matched": matched,
+            "members": total,
+        }
+    # Leaf rows: normalize the canonical wire keys onto the renderer's display keys.
+    r = dict(r)
+    # `register` is the alias key on the register-bearing arms; the renderer column
+    # is `register_name`. Leaf arms that carry no register (register/classification)
+    # simply lack it.
+    if "register" in r:
+        r.setdefault("register_name", r.get("register"))
+    is_classification = row_type in ("classification", "classification_succession")
+    if is_classification:
+        # Classification arms carry `name`/`short_name`; project onto the generic
+        # columns (the pure-classification column set re-keys `classification_name`).
+        r["classification_name"] = r.get("name", "")
+        r.setdefault("register_name", r.get("short_name", ""))
+        r.setdefault("variable_name", r.get("name", ""))
+    elif row_type in ("variable", "varname", "datacolumn"):
+        # These arms carry `name` (the variable name); the renderer column is
+        # `variable_name`.
+        r.setdefault("variable_name", r.get("name", ""))
+    elif row_type == "register":
+        # A register HAS a name (its own display name) but carries no `register`
+        # alias key, unlike the variable-bearing arms; the renderer column is
+        # `register_name`.
+        r.setdefault("register_name", r.get("name", ""))
+    if row_type == "classification_succession":
+        editions = len(r.get("editions") or [])
+        r["variable_name"] = f"{r.get('name', '')} ({editions} editions)"
+        # Distinct from the raw `editions` list key (which feeds --format json): a
+        # scalar count for the classification column set's trailing `n_editions`.
+        r["n_editions"] = editions
+    if r.get("concept_group"):
+        r["group"] = r["concept_group"]
+    return r
 
 
 def _write_payload(
@@ -1573,9 +1597,10 @@ def _write_payload(
         results = [_search_display_row(r) for r in data.get("results", [])]
         types = {r.get("type") for r in results}
         if types == {"datacolumn"}:
+            # The typed rows (#701) no longer carry the internal register_id; the
+            # `register_name` (alias `register`) display name is the register column.
             cols = [
                 "datacolumn",
-                "register_id",
                 "register_name",
                 "var_id",
                 "variable_name",
@@ -1592,7 +1617,7 @@ def _write_payload(
                 "classification_count",
             ]
         elif types == {"varname"}:
-            cols = ["variable_name", "register_id", "register_name", "var_id"]
+            cols = ["variable_name", "register_name", "var_id"]
         elif types == {"doc"}:
             cols = ["variable_name", "display_name"]
         elif types and types <= {"classification", "classification_succession"}:
@@ -1611,7 +1636,7 @@ def _write_payload(
                 "members",
             ]
         else:
-            cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
+            cols = ["type", "register_name", "var_id", "variable_name"]
         # Lone member hits carry a `concept_group` annotation (#322): surface
         # it as a trailing column only when at least one row has it.
         if types != {"group"} and any(r.get("group") for r in results):
@@ -2284,7 +2309,9 @@ def _collect_hints(
         total = data.get("total_count", 0)
         results = data.get("results", [])
         group_rows = [r for r in results if r.get("type") == "group"]
-        folded = sum(len(r.get("matched") or []) for r in group_rows)
+        # The typed group rows (#701) carry the scalar `matched_count` (the raw
+        # `matched` leaf list is folded away in reg_meta — not on the wire).
+        folded = sum(r.get("matched_count") or 0 for r in group_rows)
         if folded:
             hint_add(
                 hints,

@@ -254,5 +254,5 @@ def test_search_years_filters_each_nonscb_variable_by_its_own_states() -> None:
     # field="varname" is the LIKE-over-name path; "Findable" matches both rows
     # pre-filter. The 2020 filter must keep ONLY Findable A.
     out = search(conn, "Findable", field="varname", years="2020")
-    names = {r["variable_name"] for r in out["results"]}
+    names = {r.name for r in out.results}
     assert names == {"Findable A"}

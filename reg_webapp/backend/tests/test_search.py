@@ -17,10 +17,11 @@ from pathlib import Path
 import pytest
 import reg_meta.db
 from fastapi.testclient import TestClient
+from reg_meta.queries import _code_system
+from reg_meta.search import CodeSearchResult
 from reg_webapp.app import create_app
 from reg_webapp.golden import _Pin, apply_golden_boost
 from reg_webapp.routes.search import (
-    _code_system,
     _has_searchable_token,
     _rank_codes,
     _validated_limit,
@@ -415,40 +416,52 @@ def test_validated_limit_clamps():
     assert _validated_limit(10) == 10
 
 
+def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):
+    """A minimal `CodeSearchResult` model (#701) for the `_rank_codes` unit tests —
+    it now operates on reg_meta's typed models, not raw dicts."""
+    return CodeSearchResult(
+        code=code,
+        label=code,
+        classification_count=classification_count,
+        variable_count=variable_count,
+        rank=0.0,
+    )
+
+
 def test_rank_codes_classification_backed_precede():
     # classification_count > 0 sorts ahead of == 0 regardless of variable_count.
     results = [
-        {"code": "a", "classification_count": 0, "variable_count": 99},
-        {"code": "b", "classification_count": 1, "variable_count": 0},
+        _code("a", classification_count=0, variable_count=99),
+        _code("b", classification_count=1, variable_count=0),
     ]
-    assert [r["code"] for r in _rank_codes(results)] == ["b", "a"]
+    assert [r.code for r in _rank_codes(results)] == ["b", "a"]
 
 
 def test_rank_codes_orders_by_classification_then_variable_count():
     results = [
-        {"code": "a", "classification_count": 1, "variable_count": 1},
-        {"code": "b", "classification_count": 3, "variable_count": 0},
-        {"code": "c", "classification_count": 1, "variable_count": 5},
+        _code("a", classification_count=1, variable_count=1),
+        _code("b", classification_count=3, variable_count=0),
+        _code("c", classification_count=1, variable_count=5),
     ]
     # b (cls 3) leads; among cls==1, c (var 5) precedes a (var 1).
-    assert [r["code"] for r in _rank_codes(results)] == ["b", "c", "a"]
+    assert [r.code for r in _rank_codes(results)] == ["b", "c", "a"]
 
 
 def test_rank_codes_is_stable_on_ties():
     # Equal sort keys preserve the incoming (FTS) order.
     results = [
-        {"code": "a", "classification_count": 2, "variable_count": 1},
-        {"code": "b", "classification_count": 2, "variable_count": 1},
-        {"code": "c", "classification_count": 2, "variable_count": 1},
+        _code("a", classification_count=2, variable_count=1),
+        _code("b", classification_count=2, variable_count=1),
+        _code("c", classification_count=2, variable_count=1),
     ]
-    assert [r["code"] for r in _rank_codes(results)] == ["a", "b", "c"]
+    assert [r.code for r in _rank_codes(results)] == ["a", "b", "c"]
 
 
-def test_rank_codes_tolerates_missing_counts():
-    # Missing count keys default to 0 (a code with no annotation sinks below a
-    # backed one rather than raising).
-    results = [{"code": "a"}, {"code": "b", "classification_count": 1}]
-    assert [r["code"] for r in _rank_codes(results)] == ["b", "a"]
+def test_rank_codes_tolerates_default_counts():
+    # Default counts are 0 (a code with no owners sinks below a backed one rather
+    # than raising).
+    results = [_code("a"), _code("b", classification_count=1)]
+    assert [r.code for r in _rank_codes(results)] == ["b", "a"]
 
 
 def test_code_system_first_short_name():
@@ -513,27 +526,60 @@ def pinned(monkeypatch):
     )
 
 
+def _reg(fqid: str, name: str):
+    """A `RegisterSearchResult` model standing in for an FTS register hit (#701) —
+    `apply_golden_boost` now operates on the reg_meta typed models, not raw dicts."""
+    from reg_meta.search import RegisterSearchResult
+
+    return RegisterSearchResult(fqid=fqid, name=name, purpose=None, rank=0.0)
+
+
 def test_apply_golden_boost_injects_register_at_rank_1(conn, pinned):
     # 'gizmo' has no register FTS hit, so the pinned scb/rams is the only result —
-    # rank 1, raw-dict keys match what _register_result reads.
-    boosted = apply_golden_boost(conn, "gizmo", "register", [])
-    assert [r["fqid"] for r in boosted] == ["scb/rams"]
-    assert boosted[0]["register_name"] == "RAMS"
-    assert "register_purpose" in boosted[0]
+    # rank 1, built as a `RegisterSearchResult` model.
+    boosted = apply_golden_boost(conn, "gizmo", "register", ())
+    assert [str(r.fqid) for r in boosted] == ["scb/rams"]
+    assert boosted[0].name == "RAMS"
+    assert hasattr(boosted[0], "purpose")  # carries the purpose field
 
 
 def test_apply_golden_boost_prepends_before_fts(conn, pinned):
     # The pin lands at rank 1 even when FTS already returned other registers.
-    fts = [{"fqid": "scb/other", "register_name": "Other", "register_purpose": None}]
+    fts = (_reg("scb/other", "Other"),)
     boosted = apply_golden_boost(conn, "gizmo", "register", fts)
-    assert [r["fqid"] for r in boosted] == ["scb/rams", "scb/other"]
+    assert [str(r.fqid) for r in boosted] == ["scb/rams", "scb/other"]
 
 
 def test_apply_golden_boost_dedups_when_pin_is_already_a_hit(conn, pinned):
     # 'LISA' is an FTS hit AND pinned to scb/lisa → no duplicate, order unchanged.
-    fts = [{"fqid": "scb/lisa", "register_name": "LISA", "register_purpose": None}]
+    fts = (_reg("scb/lisa", "LISA"),)
     boosted = apply_golden_boost(conn, "LISA", "register", fts)
-    assert [r["fqid"] for r in boosted] == ["scb/lisa"]
+    assert [str(r.fqid) for r in boosted] == ["scb/lisa"]
+
+
+def test_apply_golden_boost_skips_fqidless_group_row(conn, pinned):
+    # A `ConceptGroupSearchResult` carries no `fqid` field, so the dedup's
+    # `_fqid_str(getattr(r, "fqid", None))` guard must treat it as un-pinnable and
+    # leave it untouched — a regression to `r.fqid` would `AttributeError` here.
+    # The classification leaf (fqid class/sun2020) DOES match the 'gizmo'
+    # classification pin, so it is deduped out; the group survives unchanged.
+    from reg_meta.search import ClassificationSearchResult, ConceptGroupSearchResult
+
+    group = ConceptGroupSearchResult(
+        kind="classification",
+        group_key="sun",
+        group_label="SUN editions",
+        rank=0.0,
+        members=(),
+    )
+    leaf = ClassificationSearchResult(
+        fqid="class/sun2020", short_name="SUN2020", rank=0.5
+    )
+    boosted = apply_golden_boost(conn, "gizmo", "classification", (group, leaf))
+    # The group is preserved by identity (never deduped); the matching leaf is
+    # removed and re-prepended as the freshly-built pin.
+    assert group in boosted
+    assert [str(getattr(r, "fqid", None)) for r in boosted] == ["class/sun2020", "None"]
 
 
 def test_apply_golden_boost_promotes_on_page_hit_to_rank_1(conn, pinned):
@@ -541,35 +587,37 @@ def test_apply_golden_boost_promotes_on_page_hit_to_rank_1(conn, pinned):
     # be PROMOTED to rank 1, appear EXACTLY ONCE (removed from its FTS slot, not
     # duplicated), and the page length is unchanged → the route's total_count delta
     # is 0 (it was already counted by FTS).
-    fts = [
-        {"fqid": "scb/other", "register_name": "Other", "register_purpose": None},
-        {"fqid": "scb/lisa", "register_name": "LISA", "register_purpose": None},
-        {"fqid": "scb/third", "register_name": "Third", "register_purpose": None},
-    ]
+    fts = (
+        _reg("scb/other", "Other"),
+        _reg("scb/lisa", "LISA"),
+        _reg("scb/third", "Third"),
+    )
     boosted = apply_golden_boost(conn, "LISA", "register", fts)
-    assert [r["fqid"] for r in boosted] == ["scb/lisa", "scb/other", "scb/third"]
-    assert [r["fqid"] for r in boosted].count("scb/lisa") == 1
+    assert [str(r.fqid) for r in boosted] == ["scb/lisa", "scb/other", "scb/third"]
+    assert [str(r.fqid) for r in boosted].count("scb/lisa") == 1
     assert len(boosted) == len(fts)  # delta 0: no net-new injection
 
 
 def test_apply_golden_boost_normalizes_query(conn, pinned):
     # casefold + strip: "  GIZMO  " resolves to the "gizmo" pin.
-    boosted = apply_golden_boost(conn, "  GIZMO  ", "register", [])
-    assert [r["fqid"] for r in boosted] == ["scb/rams"]
+    boosted = apply_golden_boost(conn, "  GIZMO  ", "register", ())
+    assert [str(r.fqid) for r in boosted] == ["scb/rams"]
 
 
 def test_apply_golden_boost_non_pinned_query_unchanged(conn, pinned):
-    fts = [{"fqid": "scb/other", "register_name": "Other", "register_purpose": None}]
+    fts = (_reg("scb/other", "Other"),)
     boosted = apply_golden_boost(conn, "no-such-pin", "register", fts)
-    assert boosted is fts  # identity fast-path: the common case is cheap
+    # No matching pin → the same results, materialized as a list (no re-ordering).
+    assert [str(r.fqid) for r in boosted] == ["scb/other"]
+    assert boosted == list(fts)
 
 
 def test_apply_golden_boost_classification_builder(conn, pinned):
-    # The classification arm builds the raw dict _classification_result reads.
-    boosted = apply_golden_boost(conn, "gizmo", "classification", [])
-    assert [r["fqid"] for r in boosted] == ["class/sun2020"]
-    assert boosted[0]["short_name"] == "SUN2020"
-    assert "classification_name" in boosted[0]
+    # The classification arm builds a `ClassificationSearchResult` model.
+    boosted = apply_golden_boost(conn, "gizmo", "classification", ())
+    assert [str(r.fqid) for r in boosted] == ["class/sun2020"]
+    assert boosted[0].short_name == "SUN2020"
+    assert boosted[0].name is not None
 
 
 def test_apply_golden_boost_unresolvable_fqid_raises(conn, monkeypatch):
@@ -584,7 +632,7 @@ def test_apply_golden_boost_unresolvable_fqid_raises(conn, monkeypatch):
         },
     )
     with pytest.raises(ValueError, match="does not resolve to a register"):
-        apply_golden_boost(conn, "gizmo", "register", [])
+        apply_golden_boost(conn, "gizmo", "register", ())
 
 
 def test_golden_boost_register_injection_end_to_end(client, pinned):
@@ -670,8 +718,8 @@ def test_diacriticless_query_resolves_diacritic_pin(conn, monkeypatch):
             )
         },
     )
-    boosted = apply_golden_boost(conn, "sysselsattning", "register", [])
-    assert [r["fqid"] for r in boosted] == ["scb/rams"]
+    boosted = apply_golden_boost(conn, "sysselsattning", "register", ())
+    assert [str(r.fqid) for r in boosted] == ["scb/rams"]
 
 
 # ── Fix 1: packaging + fail-fast on a missing config ─────────────────────────

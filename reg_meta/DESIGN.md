@@ -407,14 +407,14 @@ resolving raises `fqid_not_found`. The method signatures are the reference in
 `catalog.py` itself; the webapp's `/api/catalog/*` shape derives directly from this
 surface (see `reg_webapp/DESIGN.md`).
 
-The catalog return shapes are frozen Pydantic v2 models on a shared `_CatalogModel` base
+The catalog return shapes — and, as of #701 (2026-06-23), the search return shapes in
+`search.py` — are frozen Pydantic v2 models on a shared `_CatalogModel` base
 (`BaseModel` with `frozen=True, populate_by_name=True, extra="forbid"`). This mirrors
 `reg_schema`'s `_Model` shape but is a **separate** base — reg_meta takes no dependency
 on reg_schema. Collection fields stay `tuple[...]`; Pydantic serializes tuples to JSON
 arrays. `Fqid` stays a frozen `@dataclass` but carries `__get_pydantic_core_schema__` so
 `fqid` fields validate from `str` or `Fqid` and serialize to the canonical FQID string
-(OpenAPI `string`). The four register-bearing models (`VariableRef`, `RelatedRef`,
-`BindingGroupRef`, `VariableEdition`) use Python attr `register_name` with
+(OpenAPI `string`). Register-bearing models use Python attr `register_name` with
 `Field(alias="register")` to avoid the `BaseModel.register` shadow; wire/init name stays
 `register`. The earlier no-Pydantic soft preference (import-ergonomics + aspirational
 Go/Rust port) is historical — #681 (2026-06-22) resolved that the port's real cross-impl
@@ -423,6 +423,14 @@ so reg_meta adopted Pydantic so FastAPI can consume its catalog models directly.
 hard no-Pydantic rule applied only to `reg_monabundle`'s amalgamated bundle (now
 archived); reg_meta was never subject to it. See root CLAUDE.md "Stack" and
 ARCHITECTURE.md.
+
+**`search.py` — the typed search surface (#701).** `queries.search` builds its result
+rows as plain dicts through the internal pipeline and converts ONCE at the end into the
+`SearchResult` discriminated union (eight arms, each `type:`-literal-discriminated, each
+carrying `rank: float`). The `SearchResults` envelope (`total_count` + `results` tuple)
+is what callers receive. This is the search-surface analog of the catalog-typing move
+(#681): the webapp's per-result mapper functions and `models.py` search wrappers are
+deleted; the FastAPI response models embed reg_meta's search types directly.
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
@@ -745,21 +753,25 @@ None when ungrouped) so a member page can render group-aware without a second fe
 result-shaping over the 5.3.0 tables (`reg_meta.queries`). `get groups REGISTER` (and
 `get groups --classifications`) lists groups with members-with-facets, JSON-able like
 every other command. `search` folds sibling hits: when ≥2 distinct member variables of
-one group match, the leaf hits collapse into a single `type: "group"` result row
-(original hits under `matched`, the facet-ordered member list under `members`); a lone
-member hit stays a leaf annotated with `concept_group`/`concept_group_label`; and group
-LABELS themselves match (searching a family label finds its group row even though no
-single leaf row matches). `--no-fold` flattens. `get schema` carries
-`concept_group`(`_label`) per column so the fold is visible inline.
+one group match, the leaf hits collapse into a single `type: "group"` result row (the
+facet-ordered member list under `members`, and the count of folded hits as
+`matched_count` on the typed model); a lone member hit stays a leaf annotated with
+`concept_group`/`concept_group_label`; and group LABELS themselves match (searching a
+family label finds its group row even though no single leaf row matches). `--no-fold`
+flattens. `get schema` carries `concept_group`(`_label`) per column so the fold is
+visible inline.
 
 **Classification edition chains fold in search separately (#571).** Before the
 concept-group fold, `_fold_classification_succession` collapses classification edition
 hits that share a `classification_replaced_by` chain into one
 `type: "classification_succession"` result row — the terminal (current) edition's
 identity, plus the full `editions` list (terminal-first by BFS depth — date-independent,
-so robust to undated `effective_year` edges; #588) and the original leaf hits under
-`matched`. This fold is terminal-centric (it collapses a whole family onto its terminal,
-with no queried node), so collect-all-ancestors is correct here — unlike
+so robust to undated `effective_year` edges; #588) and the count of folded hits as
+`matched_count`. The internal dict pipeline carries the raw `matched` leaf list for fold
+arithmetic and `_strip_internal_keys` drops `_classification_id` from it;
+`_row_to_model` reads `matched` to compute `matched_count` and does not put `matched` on
+the typed model. This fold is terminal-centric (it collapses a whole family onto its
+terminal, with no queried node), so collect-all-ancestors is correct here — unlike
 `Catalog.classification_chain` / `variable_chain`, which anchor on the QUERIED node's
 path (also #588) so a merge sibling on a different inbound branch is excluded. A lone
 edition hit (whether terminal or an old vintage) stays a leaf; an old-vintage lone hit
@@ -767,9 +779,8 @@ is annotated with `terminal_fqid` so the webapp can link "current". This fold ru
 **before** the concept-group fold so collapsed terminals can then fold into a curated
 umbrella group (e.g. `group:sun`, #516) cleanly — the succession row keeps the
 terminal's `_classification_id` so the umbrella pass treats it as that classification.
-`_strip_internal_keys` recurses into `matched` at both depths to drop the fold-internal
-`_classification_id` before results go public. All folds happen before pagination — a
-succession row and a group row each count as one result.
+All folds happen before pagination — a succession row and a group row each count as one
+result.
 
 ## Thematic tags (discovery overlay, #311)
 

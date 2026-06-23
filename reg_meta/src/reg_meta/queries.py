@@ -11,9 +11,24 @@ import math
 import re
 from typing import TYPE_CHECKING, Any
 
-from .catalog import Catalog
+from .catalog import Catalog, ConceptGroupMember, GroupFacet
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import Fqid, try_emit
+from .search import (
+    ClassificationSearchResult,
+    ClassificationSuccessionSearchResult,
+    CodeOwnerClassification,
+    CodeOwnerVariable,
+    CodeSearchResult,
+    ConceptGroupSearchResult,
+    DatacolumnSearchResult,
+    RegisterSearchResult,
+    SearchClassificationEdition,
+    SearchResult,
+    SearchResults,
+    VariableSearchResult,
+    VarnameSearchResult,
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -341,7 +356,7 @@ def search(
     limit: int = 50,
     offset: int = 0,
     fold_groups: bool = True,
-) -> dict[str, Any]:
+) -> SearchResults:
     """Search across registers, variables, and classifications.
 
     field controls what is searched:
@@ -373,8 +388,9 @@ def search(
     label/key emits the group row even when no leaf row matches. Result-shaping
     only; folding happens before pagination, so a group row counts as one result.
 
-    Returns {"total_count": int, "results": [...]}.
-    Doc results are NOT included here — the CLI layer merges them separately.
+    Returns a `SearchResults` (`total_count` + the sliced, folded `results` tuple
+    of typed result models, discriminated on `type`). Doc results are NOT included
+    here — the CLI layer merges them separately.
     """
     if field not in SEARCH_FIELDS:
         raise RegMetaError(
@@ -397,7 +413,7 @@ def search(
     if register:
         ids = resolve_register_ids(conn, register)
         if not ids:
-            return {"total_count": 0, "results": []}
+            return SearchResults(total_count=0, results=())
         reg_ids = set(ids)
 
     _REGISTER_TYPES = {"register"}
@@ -523,7 +539,162 @@ def search(
     # touches only `_INTERNAL_KEYS`, never `fts_rank`, so the sort above is safe.)
     _strip_internal_keys(results)
 
-    return {"total_count": total_count, "results": results}
+    # Convert the internal dict rows to the typed result models ONCE, at the end
+    # (#701): the dict pipeline above is unchanged; this is the single read/write
+    # boundary where the heterogeneous rows become the discriminated `SearchResult`
+    # union. `fts_rank` → the public `rank`.
+    return SearchResults(
+        total_count=total_count,
+        results=tuple(_row_to_model(r) for r in results),
+    )
+
+
+def _matched_count(row: dict[str, Any]) -> int:
+    """How many leaf hits a fold row (`group` / `classification_succession`)
+    collapsed — the length of its `matched` list."""
+    return len(row.get("matched") or [])
+
+
+def _member_models(row: dict[str, Any]) -> tuple[ConceptGroupMember, ...]:
+    """Rehydrate a fold row's `members` dicts into `ConceptGroupMember`s (the
+    `fqid` is a string the `Fqid` field parses; `facets` are `{axis, value, label}`
+    dicts)."""
+    return tuple(
+        ConceptGroupMember(
+            fqid=m["fqid"],
+            name=m.get("name"),
+            facets=tuple(GroupFacet(**f) for f in m.get("facets", [])),
+        )
+        for m in row.get("members", [])
+    )
+
+
+def _code_system(classifications: list[dict[str, Any]]) -> str | None:
+    """The code system a code belongs to (#393 item 3): the primary/first owning
+    classification's `short_name` (fall back to `name`). None for register-local /
+    bespoke codes with no owning classification."""
+    if not classifications:
+        return None
+    first = classifications[0]
+    return first.get("short_name") or first.get("name")
+
+
+def _row_to_model(row: dict[str, Any]) -> SearchResult:
+    """Map one internal search-result dict to its typed model, dispatching on
+    `row["type"]` (#701). `fts_rank` → `rank`; nested members / editions / owners
+    are rehydrated into their models. This is the ONLY place the dict-pipeline rows
+    cross into the typed contract — the arms upstream stay dict-based."""
+    row_type = row["type"]
+    rank = row.get("fts_rank", 0)
+    if row_type == "register":
+        return RegisterSearchResult(
+            fqid=row.get("fqid"),
+            name=row.get("register_name"),
+            purpose=row.get("register_purpose"),
+            rank=rank,
+        )
+    if row_type == "variable":
+        return VariableSearchResult(
+            fqid=row.get("fqid"),
+            name=row.get("variable_name"),
+            register=row.get("register_name"),
+            definition=row.get("variable_definition"),
+            concept_group=row.get("concept_group"),
+            concept_group_label=row.get("concept_group_label"),
+            rank=rank,
+        )
+    if row_type == "classification":
+        return ClassificationSearchResult(
+            fqid=row.get("fqid"),
+            short_name=row.get("short_name"),
+            name=row.get("classification_name"),
+            concept_group=row.get("concept_group"),
+            concept_group_label=row.get("concept_group_label"),
+            terminal_fqid=row.get("terminal_fqid"),
+            rank=rank,
+        )
+    if row_type == "classification_succession":
+        return ClassificationSuccessionSearchResult(
+            fqid=row.get("fqid"),
+            short_name=row.get("short_name"),
+            name=row.get("classification_name"),
+            editions=tuple(
+                SearchClassificationEdition(
+                    slug=e["slug"],
+                    fqid=e.get("fqid"),
+                    name=e.get("name"),
+                    effective_year=e.get("effective_year"),
+                )
+                for e in row.get("editions", [])
+            ),
+            matched_count=_matched_count(row),
+            rank=rank,
+        )
+    if row_type == "group":
+        return ConceptGroupSearchResult(
+            kind=row["kind"],
+            group_key=row["group_key"],
+            group_label=row["group_label"],
+            source=row.get("group_source"),
+            register=row.get("register_name"),
+            member_count=row.get("member_count", 0),
+            matched_count=_matched_count(row),
+            label_matched=row.get("label_matched", False),
+            members=_member_models(row),
+            rank=rank,
+        )
+    if row_type == "code":
+        classifications = row.get("classifications", [])
+        return CodeSearchResult(
+            code=row["code"],
+            label=row["label"],
+            variables=tuple(
+                CodeOwnerVariable(
+                    fqid=v.get("fqid"),
+                    name=v.get("name"),
+                    register=v.get("register"),
+                )
+                for v in row.get("variables", [])
+            ),
+            variable_count=row.get("variable_count", 0),
+            classifications=tuple(
+                CodeOwnerClassification(
+                    fqid=c.get("fqid"),
+                    short_name=c.get("short_name"),
+                    name=c.get("name"),
+                )
+                for c in classifications
+            ),
+            classification_count=row.get("classification_count", 0),
+            code_system=_code_system(classifications),
+            rank=rank,
+        )
+    if row_type == "datacolumn":
+        return DatacolumnSearchResult(
+            datacolumn=row["datacolumn"],
+            register=row.get("register_name"),
+            var_id=row.get("var_id"),
+            name=row.get("variable_name"),
+            concept_group=row.get("concept_group"),
+            concept_group_label=row.get("concept_group_label"),
+            rank=rank,
+        )
+    if row_type == "varname":
+        return VarnameSearchResult(
+            register=row.get("register_name"),
+            var_id=row.get("var_id"),
+            name=row.get("variable_name"),
+            concept_group=row.get("concept_group"),
+            concept_group_label=row.get("concept_group_label"),
+            rank=rank,
+        )
+    raise RegMetaError(
+        exit_code=EXIT_NOT_FOUND,
+        code="unknown_search_row_type",
+        error_class="query",
+        message=f"search produced a row with unknown type {row_type!r}",
+        remediation="This is an internal invariant break; please report it.",
+    )
 
 
 def _search_datacolumns(

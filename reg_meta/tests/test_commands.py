@@ -46,7 +46,10 @@ class TestSearch:
         assert data["data"]["total_count"] >= 1
         result = data["data"]["results"][0]
         assert result["type"] == "variable"
-        assert result["var_id"] == 100
+        # The typed `variable` row (#701) carries the navigable fqid/name, not the
+        # internal var_id (that's the CLI-only datacolumn/varname arms' identity).
+        assert result["fqid"] == "scb/testreg/testcol"
+        assert result["name"] == "TestVar"
 
     def test_search_register(self, db_path: str):
         data, code = _run_json(
@@ -54,7 +57,8 @@ class TestSearch:
         )
         assert code == 0
         assert data["data"]["total_count"] >= 1
-        assert data["data"]["results"][0]["register_id"] == 1
+        # The typed `register` row (#701) carries the navigable fqid, not register_id.
+        assert data["data"]["results"][0]["fqid"] == "scb/testreg"
 
     def test_search_type_filter(self, db_path: str):
         data, _ = _run_json(
@@ -69,8 +73,11 @@ class TestSearch:
             ["--db", db_path, "search", "--query", "Kön", "--register", "TESTREG"]
         )
         assert code == 0
+        # The typed rows (#701) carry no internal register_id; the register-scope
+        # guarantee is now read off the `register` display-name field, present on
+        # every register-bearing arm (variable/varname/datacolumn/code-owner).
         for r in data["data"]["results"]:
-            assert r["register_id"] == 1
+            assert r["register"] == "TESTREG"
 
     def test_search_register_filter_no_match(self, db_path: str):
         data, code = _run_json(
@@ -2021,7 +2028,7 @@ class TestSearchYearOverlap:
         conn = _overlap_db()
         # 2011 is the MID year of the multi-year state; the variable must survive.
         out = search(conn, "Kön", field="varname", years="2011")
-        assert out["total_count"] >= 1
+        assert out.total_count >= 1
 
     def test_var_pair_kept_for_far_future_open_ended(self):
         from reg_meta.queries import search
@@ -2031,7 +2038,7 @@ class TestSearchYearOverlap:
         # Pre-fix `_years_in_range` capped both at their opening year, so 2099
         # matched nothing and the variable was wrongly dropped.
         out = search(conn, "Kön", field="varname", years="2099")
-        assert out["total_count"] >= 1
+        assert out.total_count >= 1
 
     def test_var_pair_kept_for_gap_year_covered_only_by_yearless(self):
         from reg_meta.queries import search
@@ -2042,7 +2049,7 @@ class TestSearchYearOverlap:
         # Pre-fix the yearless window enumerated as just [1], so 2013 matched no
         # state and the variable was dropped.
         out = search(conn, "Kön", field="varname", years="2013")
-        assert out["total_count"] >= 1
+        assert out.total_count >= 1
 
     def test_var_pair_dropped_when_no_window_covers_year(self):
         from reg_meta.queries import search
@@ -2050,7 +2057,7 @@ class TestSearchYearOverlap:
         conn = _overlap_db()
         # Year 0 is below every window (yearless starts at 0001) → no match.
         out = search(conn, "Kön", field="varname", years="0-0")
-        assert out["total_count"] == 0
+        assert out.total_count == 0
 
 
 # ---------------------------------------------------------------------------
