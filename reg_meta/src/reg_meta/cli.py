@@ -1562,6 +1562,11 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
         # These arms carry `name` (the variable name); the renderer column is
         # `variable_name`.
         r.setdefault("variable_name", r.get("name", ""))
+    elif row_type == "register":
+        # A register HAS a name (its own display name) but carries no `register`
+        # alias key, unlike the variable-bearing arms; the renderer column is
+        # `register_name`.
+        r.setdefault("register_name", r.get("name", ""))
     if row_type == "classification_succession":
         editions = len(r.get("editions") or [])
         r["variable_name"] = f"{r.get('name', '')} ({editions} editions)"

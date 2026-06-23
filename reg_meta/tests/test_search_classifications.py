@@ -567,6 +567,25 @@ def test_cli_display_row_projects_classification() -> None:
     assert row["variable_name"] == "Svensk utbildningsnomenklatur"
 
 
+def test_cli_display_row_projects_register() -> None:
+    # A register row carries `name` (its display name) but no `register` alias
+    # key, and `type == "register"` isn't classification/variable — so without a
+    # dedicated projection the `register_name` column renders blank (#701
+    # typed-return regression: the old dict carried `register_name` directly).
+    from reg_meta.cli import _search_display_row
+
+    row = _search_display_row(
+        {
+            "type": "register",
+            "fqid": "scb/lisa",
+            "name": "LISA",
+            "purpose": "Longitudinal integration database",
+            "rank": -1.0,
+        }
+    )
+    assert row["register_name"] == "LISA"
+
+
 def test_cli_display_row_projects_classification_succession() -> None:
     # A `classification_succession` row (#571) collapses an edition chain; it
     # shares the classification identity columns but adds an `editions` list.
