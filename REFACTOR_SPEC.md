@@ -148,13 +148,37 @@ to `curating` then `frozen` in `freeze.toml`. There is no single global delete t
 the gate — immutability is per-provider and per-zone. See #470 (machinery), #471
 (curation), #472 (seal).
 
-**Preconditions — resolve before committing auto-TOMLs or advancing to `curating`:**
-#196 (curated column-merge primitive + auto case-fold + panel-key re-curation) and #197
-(the FRIDA `borgnr` cross-var_id attribution decision) both churn variable identity —
-merges collapse sibling variables and re-mint slugs — which is exactly what the
-grow-only gate locks. Land them in a pre-freeze curation pass (natural slot: around step
-7.5); arming the gate while either is unresolved either bakes fragmented identities into
-v1 or forces post-freeze immutability exceptions.
+**Preconditions — the hard identity-churn blockers are resolved.** #196 (curated
+column-merge primitive + auto case-fold + panel-key re-curation) and #197 (the FRIDA
+`borgnr` cross-var_id attribution decision) both churned variable identity — merges
+collapse sibling variables and re-mint slugs, exactly what the grow-only gate locks —
+and **both closed COMPLETED 2026-06-10**, so neither gates the freeze any longer. The
+remaining identity-churn risk to clear *per provider before pinning it* is any open
+issue that still splits or re-mints that provider's slugs (e.g. #677 if its RTB "Ålder"
+per-column-split path is taken) plus the slug-anchored-overlay staleness debt (#660 —
+delivery_enrichment backfills already rotted on churn; regenerate before pinning) and
+the missing-canonical-column class (#400/#428 — mint these into the baseline rather than
+as a post-freeze grow-only wave). None are hard blockers; they are the curation backlog
+that makes the pinned baseline clean.
+
+**Improve the auto-derivation as part of pinning — but derive it *from* the curation,
+not before it.** The pin freezes the generator's output, so any generator improvement
+must land before the pin; but the right rules aren't guessable up front. Run the
+curation fan-out first — agents turn the worklist into final canonical FQIDs (#471) —
+then mine those results for the systematic rules the auto-slugger can absorb (#732), so
+the generator reproduces a slice of the curation mechanically. The curated final FQID is
+**authoritative**: a generator change only decides override-vs-auto (the reconcile pins
+each result to the final FQID regardless), so it never alters an outcome — it shrinks
+the committed-override surface and improves the default for future deliveries.
+Real-corpus targets: verbose name-fallbacks blind-truncated at the 60-char cap, and
+collisions routed to opaque `-N` tails — including an exact-single-column claim losing
+its slug to a fold-stem sibling (`fedunsatreason`), where exact-match should win and the
+fold takes `<stem>-fold` / `<stem>-1-5`. Non-levers: there is **no Swedish→English
+glossary** to expand (the "glossary" is a DB-column rename), and `v<digit>` slugs are
+mostly real SCB column codes. **Scope (Step 0, real-seed `precheck-slugs`):** the
+worklist is effectively SCB-only — \~11,802 name-derived SCB slugs; the other 7
+providers are clean column-derived and pin-ready as-is. Tracked in #471 (curation) +
+#732 (the derived generator pass).
 
 The reserved HTTP-suffix slug rejection (`states`/`predecessors`/…/`variants`) shipped
 in #228 — it is already enforced at curation time and does not need to precede the
