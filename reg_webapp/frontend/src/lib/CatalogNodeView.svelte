@@ -11,10 +11,11 @@ import {
   catalogHref,
   countFoldedMembers,
   foldGroupedRows,
-  groupMatchesFilter,
-  matchesFilter,
+  groupFilterKeys,
+  leafSlug,
   narrowCatalogNode,
   nodeLabel,
+  rankFilter,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
 import VariantBrowser from "./VariantBrowser.svelte";
@@ -58,8 +59,12 @@ const crumbs = $derived(breadcrumbs(fqidPath));
 
 // In-memory type-to-filter over the current node's child list (a provider's 238
 // registers / a register's 740 bindings render flat otherwise). Reset on
-// navigation so a new node opens unfiltered. Match on BOTH display name and FQID
-// (registers also match their purpose blurb); matchesFilter folds diacritics.
+// navigation so a new node opens unfiltered. `rankFilter` matches on the leaf
+// slug + display name + FQID (registers also match their purpose blurb) and,
+// under an active filter, RANKS the survivors (exact → prefix → other-substring)
+// so a slug-named target jumps above a purpose-blurb-only match (#674); an empty
+// needle leaves the incoming alphabetical order untouched. matchesFilter folds
+// diacritics.
 let filter = $state("");
 $effect(() => {
   // `fqidPath` is the navigation key — touching it here clears the filter when
@@ -90,9 +95,12 @@ $effect(() => {
 {:else if node}
   <article>
     {#if node.kind === "provider"}
-      {@const registers = node.children.filter((r) =>
-        matchesFilter(filter, r.name, r.fqid, r.purpose),
-      )}
+      {@const registers = rankFilter(node.children, filter, (r) => [
+        leafSlug(r.fqid),
+        r.name,
+        r.fqid,
+        r.purpose,
+      ])}
       <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
       <h3>Registers</h3>
@@ -127,10 +135,10 @@ $effect(() => {
            group row (ConceptGroupRow); ungrouped bindings stay leaf rows. The
            flat `children` list is complete — `foldGroupedRows` hides members. -->
       {@const rows = foldGroupedRows(bindingChildren(node), node.groups)}
-      {@const filteredRows = rows.filter((row) =>
+      {@const filteredRows = rankFilter(rows, filter, (row) =>
         row.kind === "group"
-          ? groupMatchesFilter(filter, row.group)
-          : matchesFilter(filter, row.item.name, row.item.fqid),
+          ? groupFilterKeys(row.group)
+          : [leafSlug(row.item.fqid), row.item.fqid, row.item.name],
       )}
       <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>

@@ -14,6 +14,7 @@ import {
   formatWindow,
   fqidSegments,
   grainsFromStates,
+  leafSlug,
   matchesFilter,
   memberCoverageUnion,
   narrowCatalogNode,
@@ -145,6 +146,33 @@ describe("rankFilter", () => {
   it("drops non-matches", () => {
     expect(rankFilter(items, "zzz", keys)).toEqual([]);
   });
+
+  it("ranks a leaf-slug match above a purpose-blurb-only match (#674)", () => {
+    // The register-browse case: `scb/rtb` matches the needle "rtb" by its leaf
+    // slug; `scb/breg` matches ONLY via its purpose blurb. Without the leaf-slug
+    // key both land at tier 2 (the provider prefix blocks a `scb/rtb` PREFIX
+    // match) and `breg` wins alphabetically. With `leafSlug` as a key, `rtb` is a
+    // tier-0 exact and outranks `breg` — while `breg` still appears (it matches).
+    const registers = [
+      {
+        name: "Företagsregister", // breg, alphabetically first
+        fqid: "scb/breg",
+        purpose: "Registret över totalbefolkningen och dess struktur (rtb)",
+      },
+      {
+        name: "Registret över totalbefolkningen",
+        fqid: "scb/rtb",
+        purpose: "Befolkningsdata",
+      },
+    ];
+    const out = rankFilter(registers, "rtb", (r) => [
+      leafSlug(r.fqid),
+      r.name,
+      r.fqid,
+      r.purpose,
+    ]).map((r) => r.fqid);
+    expect(out).toEqual(["scb/rtb", "scb/breg"]);
+  });
 });
 
 describe("nodeLabel", () => {
@@ -222,6 +250,14 @@ describe("fqidSegments / breadcrumbs", () => {
       { label: "lisa", fqidPath: "scb/lisa" },
       { label: "kon", fqidPath: "scb/lisa/kon" },
     ]);
+  });
+});
+
+describe("leafSlug", () => {
+  it("returns the last segment of an FQID; a bare slug is itself", () => {
+    expect(leafSlug("scb/rtb")).toBe("rtb");
+    expect(leafSlug("scb/lisa/kon")).toBe("kon");
+    expect(leafSlug("rtb")).toBe("rtb"); // no separator → the whole string
   });
 });
 
@@ -545,7 +581,6 @@ import {
   countFoldedMembers,
   foldGroupedRows,
   groupFilterKeys,
-  groupMatchesFilter,
   memberAt,
 } from "./catalog";
 
@@ -593,29 +628,34 @@ describe("foldGroupedRows", () => {
   });
 });
 
-describe("groupMatchesFilter", () => {
-  it("matches on the group label/key", () => {
-    expect(groupMatchesFilter("inkomst", group({}))).toBe(true);
-    expect(groupMatchesFilter("ink", group({}))).toBe(true);
-  });
-
-  it("matches on a member name/FQID (folded, diacritic-blind)", () => {
-    expect(groupMatchesFilter("februari", group({}))).toBe(true);
-    expect(groupMatchesFilter("inkjan", group({}))).toBe(true);
-    expect(groupMatchesFilter("nomatch", group({}))).toBe(false);
-  });
-});
-
 describe("groupFilterKeys", () => {
-  it("carries the label/key plus every member's name and FQID (#322)", () => {
+  it("carries the label/key plus every member's name, FQID, and leaf slug (#322, #674)", () => {
     expect(groupFilterKeys(group({}))).toEqual([
       "Inkomst",
       "ink",
       "Inkomst i januari",
       "scb/lisa/inkjan",
+      "inkjan",
       "Inkomst i februari",
       "scb/lisa/inkfeb",
+      "inkfeb",
     ]);
+  });
+
+  it("ranks the folding group at exact/prefix tier on a member-slug needle (#674)", () => {
+    // A hidden member's leaf slug ("inkjan") now ranks its folding group at
+    // prefix tier (1) — tier 0/1 — rather than as an "other substring" (2),
+    // consistent with how leaf rows rank by `leafSlug`. We rank the group row
+    // against an unrelated decoy whose only match is a tier-2 substring.
+    type Row = { id: string; group?: ConceptGroup };
+    const rows: Row[] = [
+      { id: "decoy" }, // matches "inkjan" only via the substring below
+      { id: "ink-group", group: group({}) },
+    ];
+    const keysOf = (r: Row): (string | null | undefined)[] =>
+      r.group ? groupFilterKeys(r.group) : [`zzz-inkjan-zzz`];
+    const ranked = rankFilter(rows, "inkjan", keysOf);
+    expect(ranked[0].id).toBe("ink-group");
   });
 });
 

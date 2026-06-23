@@ -112,25 +112,22 @@ export function countFoldedMembers<T>(rows: GroupedRow<T>[]): number {
 }
 
 /** The filterable text of a group row: its own label/key plus every member's
- * name/FQID — so filtering for a member (e.g. "maj") still surfaces the group
- * that folded it. One source of truth for `groupMatchesFilter` (the browse
- * type-to-filter) and the pickers' `rankFilter` keys (#322). */
+ * name/FQID/leaf slug — so filtering for a member (e.g. "maj") still surfaces
+ * the group that folded it, AND a member-slug hunt (e.g. "inkjan" for
+ * `scb/lisa/inkjan`) ranks the folding group at exact/prefix tier rather than as
+ * an "other substring" — consistent with leaf rows ranking by their `leafSlug`
+ * (#674; the member's leaf slug is a substring of its FQID, so the match SET is
+ * unchanged, only the `rankFilter` tier improves). One source of truth for the
+ * browse type-to-filter and the pickers' `rankFilter` keys over a group row
+ * (#322). */
 export function groupFilterKeys(
   group: ConceptGroup,
 ): (string | null | undefined)[] {
   return [
     group.label,
     group.key,
-    ...group.members.flatMap((m) => [m.name, m.fqid]),
+    ...group.members.flatMap((m) => [m.name, m.fqid, leafSlug(m.fqid)]),
   ];
-}
-
-/** Whether a group row survives the type-to-filter (see `groupFilterKeys`). */
-export function groupMatchesFilter(
-  needle: string,
-  group: ConceptGroup,
-): boolean {
-  return matchesFilter(needle, ...groupFilterKeys(group));
 }
 
 // `axisValues`/`memberAt` are GENERIC over the member type (#638 PR2a): the
@@ -235,10 +232,13 @@ export function matchesFilter(
  * for target-hunting: (1) folded-exact key match, (2) folded-prefix key match,
  * (3) other substring matches — each tier keeping the input order (a STABLE
  * sort, so the caller's existing alphabetical order survives within a tier).
- * Used by the PICKERS (where the user hunts a specific row: "kon" → Kön first),
- * NOT the browse pages (which keep plain alphabetical order — the filter only
- * narrows). An empty needle returns the matched list unchanged (every row is
- * tier 3, stable). */
+ * Used by the PICKERS (where the user hunts a specific row: "kon" → Kön first)
+ * AND by the browse children lists (registers + variables, #674): under an
+ * active filter the browse ranks the same way (a slug-named target jumps above a
+ * purpose-blurb-only match — see `leafSlug`), so typing the target's slug
+ * surfaces it first. An empty needle returns the matched list unchanged (every
+ * row is tier 3, stable), so the UNFILTERED browse list keeps its incoming
+ * (alphabetical) order. */
 export function rankFilter<T>(
   items: T[],
   needle: string,
@@ -283,6 +283,16 @@ export function catalogHref(fqidPath: string): string {
  * Empty string → `[]` (the root). */
 export function fqidSegments(fqidPath: string): string[] {
   return fqidPath ? fqidPath.split("/") : [];
+}
+
+/** The leaf slug of an FQID — its last `/`-separated segment (`scb/rtb` →
+ * `"rtb"`, a bare `"rtb"` → `"rtb"`). A ranking key for the browse type-to-filter
+ * (`rankFilter`): the leaf slug exact-/prefix-matches the needle even though the
+ * full FQID's provider prefix would block it (`foldText("scb/rtb")` doesn't start
+ * with `"rtb"`), so a slug-named target (`scb/rtb` for "rtb") outranks a purpose-
+ * blurb-only match (#674). */
+export function leafSlug(fqid: string): string {
+  return fqid.split("/").at(-1) ?? fqid;
 }
 
 /** Breadcrumb trail for an FQID path: each ancestor + the node itself, as
