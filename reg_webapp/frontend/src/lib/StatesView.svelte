@@ -2,12 +2,17 @@
 import type { VariableStateModel } from "./api";
 import CodeList from "./CodeList.svelte";
 import {
+  catalogHref,
+  type DistinctValueSet,
+  distinctValueSets,
   formatDataType,
   formatStateWindow,
-  stateChangeHints,
-  stateKey,
+  formatWindow,
+  humanizeClassificationSlug,
+  matchesFilter,
   windowTitle,
 } from "./catalog";
+import FilterInput from "./FilterInput.svelte";
 import { VALUE_SET_VERSION_NONE } from "./period";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 
@@ -19,9 +24,17 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 //   length === 1 → single-state DETAIL (variant, validity, type/length, column,
 //                  value-set version + the (code, label) table in a
 //                  height-constrained scroll container).
-//   length  > 1 → a PICKER grouping by `variant` (cross-variant) AND by
-//                  `value_set_version_label` (multi-vintage). Selecting writes
-//                  `&variant=`/`&value_set_version=` to narrow to length-1.
+//   length  > 1 → a VALUE-SET-centric view (#668 / dogfooding M13/M18/M20):
+//                  the states dedup at TWO levels into DISTINCT value sets
+//                  (classification editions by `classification_slug`, others by
+//                  `value_set_id` — kommun's 415 states → ~21 LKF editions + a few
+//                  plain code lists), shown as a compact list by DEFAULT (the
+//                  union). A FilterInput narrows the list and a per-row "Isolate"
+//                  focuses one (both LOCAL view state); "All value sets" resets.
+//                  A classification value set links out (no code dump); a plain
+//                  one expands its codes. The narrowing picker (variant /
+//                  value-set version) still writes `?variant`/`?value_set_version`
+//                  to resolve to length-1 — distinct from the LOCAL isolation.
 //   length === 0 → a clean "no state delivered for this period" message (a valid
 //                  period outside every validity window — NOT an error).
 // No add affordance here: the page-level "Add to project" (#306) lives in
@@ -66,18 +79,86 @@ const hasEmptyVersion = $derived(versionsAll.includes(""));
 // Whether either narrowing axis can actually resolve the multi-state set to one.
 const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 
-// #309: per-transition "what changed" hints (keyed by the LATER state's
-// compound `stateKey`) — adjacent same-variant states that differ only
-// invisibly (the int→bigint case) get an explicit diff line under the row.
-const changeHints = $derived(stateChangeHints(states));
+// #668: the dedup that powers the multi-state view — the DISTINCT value sets
+// (classification editions by slug, others by `value_set_id`), each carrying
+// which variants/spans use it. kommun's 415 states collapse to ~21 LKF editions
+// + a few plain code lists here.
+const valueSets = $derived(distinctValueSets(states));
 
-// #310: inline per-state value-set expansion in LIST mode (keyed by stateKey;
-// reassigned-on-toggle so the runes see the change). Cleared when the state set
-// changes underneath (narrowing) — a surviving state's open table legitimately
-// survives a narrow.
-let expanded = $state<Record<string, boolean>>({});
-function toggleExpanded(key: string): void {
-  expanded = { ...expanded, [key]: !expanded[key] };
+// A version label shared by ≥2 NON-classification rows can't tell them apart on
+// its own (kommun's "Kommun historisk" ×22) — those rows get their overall span
+// appended to disambiguate. A label unique among the plain rows stays bare.
+const ambiguousLabels = $derived.by(() => {
+  const counts = new Map<string, number>();
+  for (const vs of valueSets) {
+    if (!vs.classificationSlug) {
+      const label = vs.versionLabel || "(no version)";
+      counts.set(label, (counts.get(label) ?? 0) + 1);
+    }
+  }
+  return new Set(
+    [...counts.entries()].filter(([, n]) => n > 1).map(([label]) => label),
+  );
+});
+
+// Local filter + isolate: LOCAL view state (NOT a URL write — distinct from the
+// `?variant`/`?value_set_version` narrowing picker, which BindingLeafView owns).
+// Isolation is keyed by the value set's STABLE `key` (not a list index, which the
+// filter's slice would invalidate); null = the union (default). Both reset when
+// the state set changes underneath (navigation / narrowing) so a stale key can't
+// isolate / a stale needle can't hide the wrong value set.
+let isolatedKey = $state<string | null>(null);
+let filter = $state("");
+$effect(() => {
+  void states;
+  isolatedKey = null;
+  filter = "";
+});
+const isolated = $derived(
+  isolatedKey == null
+    ? null
+    : (valueSets.find((vs) => vs.key === isolatedKey) ?? null),
+);
+// The filtered union list — matched against the row label + every variant slug,
+// so hunting a variant ("doda") surfaces the value sets it uses. The isolate view
+// shows the single isolated set and ignores the filter.
+const shownValueSets = $derived(
+  valueSets.filter((vs) =>
+    matchesFilter(filter, valueSetLabel(vs), ...vs.variants),
+  ),
+);
+
+// A value set is IN SCOPE for the active resolution when no variant is pinned, or
+// when one of its variants matches the pinned `?variant`. Out-of-scope ones are
+// GREYED (not removed) so the full coding history stays visible. The period axis
+// is already applied to `states` upstream (BindingLeafView passes the narrowed
+// subset), so only the variant axis remains to grey on here.
+//
+// Greying only has a VISIBLE effect when `states` is MULTI-variant — i.e. full
+// history (no `?period`), a `?variant`-without-`?period` deep link, or the
+// narrowedError fallback. In the normal variant-pick flow the SERVER narrows the
+// states to the active variant, so the out-of-scope value sets are simply ABSENT
+// and `inScope` is a no-op (every remaining value set matches `activeVariant`).
+// Keeping the test here makes the grey appear whenever multi-variant states DO
+// reach the view, without the view needing to know which path produced them.
+// (Follow-up: a richer "show full history + grey out-of-scope even on a
+// server-narrowed variant-pick" behavior is out of scope for #668.)
+function inScope(vs: DistinctValueSet): boolean {
+  return activeVariant == null || vs.variants.includes(activeVariant);
+}
+
+// The label for a distinct value set: a classification value set reads
+// "LKF ⟨vintage⟩" (humanized slug); otherwise its version label (or a
+// "(no version)" fallback for the empty default), with the overall span appended
+// when that label is shared by another plain row ("Kommun historisk · 1968–1970").
+function valueSetLabel(vs: DistinctValueSet): string {
+  if (vs.classificationSlug) {
+    return humanizeClassificationSlug(vs.classificationSlug);
+  }
+  const label = vs.versionLabel || "(no version)";
+  return ambiguousLabels.has(label)
+    ? `${label} · ${formatWindow(vs.overallSpan.from, vs.overallSpan.to)}`
+    : label;
 }
 </script>
 
@@ -92,6 +173,42 @@ function toggleExpanded(key: string): void {
     filterLabel="Filter value set"
     filterPlaceholder="Filter value set…"
   />
+{/snippet}
+
+<!-- #668: which variants / period spans use a distinct value set — one line per
+     variant, its adjacent-collapsed (M20) spans joined compactly. `formatWindow`
+     renders each span's bounds the same coarsest-exact way the single-state detail
+     does (the open-ended ceiling reads "since …"). -->
+{#snippet usage(vs: DistinctValueSet)}
+  <ul class="vs-usage">
+    {#each vs.usages as u (u.variant)}
+      <li>
+        <code class="vs-usage-variant">{u.variant}</code>
+        <span class="muted vs-usage-spans">
+          {u.spans.map((sp) => formatWindow(sp.from, sp.to)).join(", ")}
+        </span>
+      </li>
+    {/each}
+  </ul>
+{/snippet}
+
+<!-- #668: a classification value set links to its classification instead of
+     dumping its (often 1000+) codes — the M13/kommun fix; a plain value set
+     expands its codes inline through the shared CodeList (#310). -->
+{#snippet valueSetBody(vs: DistinctValueSet)}
+  {#if vs.classificationSlug}
+    <p class="vs-classification">
+      Codes from the
+      <a href={catalogHref(`class/${vs.classificationSlug}`)}>
+        {humanizeClassificationSlug(vs.classificationSlug)}
+      </a>
+      classification.
+    </p>
+  {:else if vs.valueSet && vs.valueSet.length > 0}
+    {@render valueSetTable(vs.valueSet)}
+  {:else}
+    <p class="muted">No value set.</p>
+  {/if}
 {/snippet}
 
 {#if states.length === 0}
@@ -147,13 +264,16 @@ function toggleExpanded(key: string): void {
     {/if}
   </div>
 {:else}
-  <!-- Multiple states. The narrowing picker writes `?variant`/`?value_set_version`,
-       which the server only honors WITH a `?period` (it 422s them otherwise), so
-       it's shown only when a period is active (`narrowed`). Without a period the
-       list is the full state history — set a period to narrow to one. -->
+  <!-- Multiple states → the value-set-centric view (#668). The narrowing picker
+       writes `?variant`/`?value_set_version`, which the server only honors WITH a
+       `?period` (it 422s them otherwise), so it's shown only when a period is
+       active (`narrowed`). Without a period the view is the full state history —
+       set a period to narrow to one. -->
   {#if narrowed && canNarrow}
     <p class="muted picker-hint">
-      {states.length} states at this period across {variants.length}
+      {valueSets.length}
+      {valueSets.length === 1 ? "value set" : "value sets"} at this period across
+      {variants.length}
       {variants.length === 1 ? "variant" : "variants"}. Narrow to a single state:
     </p>
     {#if variants.length > 1}
@@ -210,62 +330,101 @@ function toggleExpanded(key: string): void {
          value-set version (e.g. a RANGE crossing validity windows): no narrowing
          axis can pick one, so don't promise "narrow to a single state". -->
     <p class="muted picker-hint">
-      {states.length} overlapping states at this period — narrow to a single
+      {valueSets.length} overlapping value sets at this period — narrow to a single
       point period to resolve to one.
     </p>
   {:else}
     <p class="muted picker-hint">
-      {states.length} states over time. Set a period above to resolve to one.
+      {valueSets.length}
+      {valueSets.length === 1 ? "value set" : "value sets"} across {states.length}
+      states over time. Set a period above to resolve to one.
     </p>
   {/if}
 
-  <ul class="state-list">
-    {#each states as s (stateKey(s))}
-      {@const key = stateKey(s)}
-      {@const typeLabel = formatDataType(s.data_type, s.data_length)}
-      {@const hints = changeHints.get(stateKey(s))}
-      <li>
-        <div class="state-row">
-          <span class="state-variant"><code>{s.variant}</code></span>
-          <!-- #309/#321: sentinel-free, coarsest-exact window; raw ISO on the
-               tooltip. -->
-          <span class="state-validity muted" title={windowTitle(s.valid_from, s.valid_to)}>
-            {formatStateWindow(s)}
-          </span>
-          {#if typeLabel}
-            <!-- #309: every diffed field must be VISIBLE — states can differ
-                 by data type alone (int → bigint). -->
-            <span class="state-type muted">{typeLabel}</span>
+  {#if isolated}
+    <!-- ISOLATED: one value set's full detail — its label/link or code table,
+         then which variants/spans use it. "All value sets" returns to the union
+         (the one always-present reset — replaces the old all-chips strip). -->
+    {@const vs = isolated}
+    <div class="vs-detail">
+      <button
+        type="button"
+        class="chip vs-reset"
+        onclick={() => (isolatedKey = null)}
+      >
+        ← All value sets
+      </button>
+      <h4 class="vs-heading">
+        {#if vs.classificationSlug}
+          <a href={catalogHref(`class/${vs.classificationSlug}`)}>
+            = {humanizeClassificationSlug(vs.classificationSlug)}
+          </a>
+        {:else}
+          {valueSetLabel(vs)}
+          {#if vs.valueSet && vs.valueSet.length > 0}
+            <span class="muted">({vs.valueSet.length})</span>
           {/if}
-          <span class="state-vsv muted">
-            {s.value_set_version_label || "(no version)"}
-          </span>
-          {#if s.delivery_column_name}
-            <code class="state-col">{s.delivery_column_name}</code>
-          {/if}
-          {#if s.value_set && s.value_set.length > 0}
-            <!-- #310: inspect a state's codes WITHOUT narrowing to one state. -->
+        {/if}
+      </h4>
+      {@render valueSetBody(vs)}
+      <h5 class="vs-usage-heading">Used by</h5>
+      {@render usage(vs)}
+    </div>
+  {:else}
+    <!-- UNION (default): the distinct value sets, compact. A FilterInput narrows
+         the list (a row label / variant-slug substring) — the SCALABLE form of
+         the old all-chips strip — and each row carries an Isolate affordance.
+         A classification value set shows the "= LKF ⟨vintage⟩" link (NO code dump
+         — the M13/kommun fix); a plain one expands its codes inline (#310).
+         Out-of-scope value sets are greyed, not removed. -->
+    {#if valueSets.length > 1}
+      <FilterInput
+        bind:value={filter}
+        total={valueSets.length}
+        shown={shownValueSets.length}
+        label="Filter value sets"
+        placeholder="Filter value sets…"
+      />
+    {/if}
+    {#if shownValueSets.length === 0}
+      <p class="muted">No value set matches the filter.</p>
+    {/if}
+    <ul class="vs-list">
+      {#each shownValueSets as vs (vs.key)}
+        <li class:out-of-scope={!inScope(vs)}>
+          <div class="vs-row">
+            {#if vs.classificationSlug}
+              <!-- A classification value set: link out, never dump the (huge)
+                   code list. -->
+              <a class="vs-label" href={catalogHref(`class/${vs.classificationSlug}`)}>
+                = {humanizeClassificationSlug(vs.classificationSlug)}
+              </a>
+            {:else}
+              <span class="vs-label">{valueSetLabel(vs)}</span>
+              {#if vs.valueSet && vs.valueSet.length > 0}
+                <span class="muted vs-count">({vs.valueSet.length})</span>
+              {/if}
+            {/if}
             <button
               type="button"
-              class="vs-toggle"
-              aria-expanded={!!expanded[key]}
-              onclick={() => toggleExpanded(key)}
+              class="chip vs-isolate"
+              onclick={() => (isolatedKey = vs.key)}
             >
-              {expanded[key] ? "Hide values" : "Values"} ({s.value_set.length})
+              Isolate
             </button>
+          </div>
+          {@render usage(vs)}
+          {#if !vs.classificationSlug && vs.valueSet && vs.valueSet.length > 0}
+            <!-- #310: inspect a plain value set's codes inline, without isolating. -->
+            <details class="vs-codes">
+              <summary>Values ({vs.valueSet.length})</summary>
+              {@render valueSetTable(vs.valueSet)}
+            </details>
           {/if}
-        </div>
-        {#if hints && hints.length > 0}
-          <!-- #309: what actually changed vs the previous state of this
-               variant — the int→bigint case renders an explicit diff. -->
-          <p class="state-changed">changed: {hints.join(" · ")}</p>
-        {/if}
-        {#if expanded[key] && s.value_set && s.value_set.length > 0}
-          {@render valueSetTable(s.value_set)}
-        {/if}
-      </li>
-    {/each}
-  </ul>
+        </li>
+      {/each}
+    </ul>
+  {/if}
 {/if}
 
 <style>
@@ -317,49 +476,84 @@ function toggleExpanded(key: string): void {
     background: var(--accent);
     filter: brightness(0.95);
   }
-  .state-list {
+  /* #668: the "← All value sets" reset on the isolated detail — a one-click
+     return to the union (replaces the old all-chips strip). */
+  .vs-reset {
+    font-size: 0.75rem;
+    padding: 0.1rem 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .vs-list {
     list-style: none;
     padding: 0;
-    margin: 0.75rem 0 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
   }
-  .state-list li {
+  .vs-list li {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    padding: 0.35rem 0.5rem;
+    gap: 0.3rem;
+    padding: 0.4rem 0.5rem;
     border: 1px solid var(--border);
     border-radius: 4px;
   }
-  .state-row {
+  .vs-list li.out-of-scope {
+    opacity: 0.55;
+  }
+  .vs-row {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
-  .state-col {
-    margin-left: auto;
+  .vs-label {
+    font-weight: 600;
+  }
+  .vs-count {
     font-size: 0.85em;
   }
-  .vs-toggle {
-    font: inherit;
+  .vs-isolate {
+    margin-left: auto;
     font-size: 0.75rem;
-    padding: 0.1rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface);
-    color: var(--accent);
-    cursor: pointer;
+    padding: 0.1rem 0.6rem;
   }
-  .vs-toggle:hover {
-    border-color: var(--accent);
-  }
-  /* #309: the per-transition diff line — advisory amber, not an error. */
-  .state-changed {
+  /* Per-variant usage lines — compact, monospace variant + muted spans. */
+  .vs-usage {
+    list-style: none;
+    padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.85rem;
+  }
+  .vs-usage li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .vs-usage-variant {
+    font-size: 0.9em;
+  }
+  .vs-codes {
+    margin-top: 0.1rem;
+  }
+  .vs-codes summary {
+    cursor: pointer;
     font-size: 0.8rem;
-    color: var(--level-warning, #92600a);
+    color: var(--accent);
+  }
+  .vs-detail {
+    margin-top: 0.25rem;
+  }
+  .vs-classification {
+    margin: 0.25rem 0;
+  }
+  .vs-usage-heading {
+    margin: 0.75rem 0 0.3rem;
+    font-size: 0.85rem;
   }
 </style>

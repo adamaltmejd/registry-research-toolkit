@@ -677,6 +677,198 @@ export function representationsCollapse(reps: Representation[]): boolean {
   return reps.every((r) => r.codingKey === reps[0]?.codingKey);
 }
 
+// ── Value-set-centric state fold (#668 — dogfooding M13/M18/M20) ──────────────
+// A binding leaf's `variable_state` rows blow up by VINTAGE: `scb/rtb/kommun` has
+// 415 states but only ~28 distinct value-set ids — which themselves collapse to
+// ~21 classification editions. The leaf's multi-state view is value-SET-centric,
+// not state-centric, and dedups at TWO levels (M13):
+//   - a CLASSIFICATION value set (one with a `classification_slug`) dedups by
+//     `classification_slug`, so the several `value_set_id`s SCB ships for one LKF
+//     edition (lkf1980 ×2, lkf1995 ×3, …) collapse to ONE "= LKF 1980" row — they
+//     are the same classification edition. It links out to the classification
+//     instead of dumping its (huge) code list.
+//   - a NON-classification value set (no slug) keeps per `value_set_id`: each id
+//     is a genuinely distinct code list. When several share a `versionLabel`
+//     (e.g. "Kommun historisk" ×22) the VIEW disambiguates the row with its
+//     overall period span so the rows aren't indistinguishable.
+// The usages of a collapsed classification row are the UNION of all states across
+// its `value_set_id`s (the per-variant adjacent-year M20 collapse runs over that
+// union). Pure projection, unit-tested in catalog.test.ts; the StatesView is
+// presentational over the result.
+
+/** A contiguous delivery-year run within one (value set, variant), collapsed
+ * across ADJACENT years (#668 / dogfooding M20). The per-variable annual states
+ * (AGI's design) merge into a range render-side — `from`/`to` are the run's outer
+ * ISO bounds (the open-ended `9999-12-31` ceiling survives so `formatWindow`
+ * renders "since …"). */
+export interface ValueSetSpan {
+  from: string;
+  to: string;
+}
+
+/** One variant's usage of a distinct value set — the variant slug and its
+ * adjacent-collapsed period spans. */
+export interface ValueSetVariantUsage {
+  variant: string;
+  spans: ValueSetSpan[];
+}
+
+/** One distinct value set across a variable's states — the dedup unit of the
+ * value-set-centric leaf view (#668). `key` is the STABLE dedup identity (a
+ * `class/<slug>` for a classification edition, an `id/<value_set_id>` otherwise —
+ * the `null` "no value set" bucket is `id/none`); the view keys its `{#each}` and
+ * its local isolation on it (NOT a list index, which a FilterInput's filtered
+ * slice would invalidate). `classificationSlug`, when set, makes this value set a
+ * known classification (link out instead of dumping codes — and the dedup is by
+ * slug, so several `value_set_id`s for one edition collapse here). `versionLabel`,
+ * `valueSet`, `dataType`/`dataLength` come from the representative (first-seen)
+ * state. `usages` lists which variants/spans use it (the UNION across a collapsed
+ * classification's ids); `variants` is the flat distinct variant list (the
+ * active-variant scope test). `overallSpan` is the entry's outer
+ * min(valid_from)…max(valid_to) — the view's disambiguator when several
+ * non-classification rows share a `versionLabel`. */
+export interface DistinctValueSet {
+  key: string;
+  classificationSlug: string | null;
+  versionLabel: string;
+  valueSet: NonNullable<VariableStateModel["value_set"]> | null;
+  dataType: string | null;
+  dataLength: string | null;
+  usages: ValueSetVariantUsage[];
+  variants: string[];
+  overallSpan: ValueSetSpan;
+}
+
+/** Collapse a variant's states (already filtered to one value set) into
+ * adjacent-year spans (#668 / M20): order by `valid_from`, then merge a state into
+ * the open span when it is contiguous with it — its `valid_from` is at or before
+ * the day after the running `valid_to` (so back-to-back annual states `…-12-31`
+ * → `…-01-01`, and any overlap, fuse; a real gap year starts a new span). ISO
+ * `YYYY-MM-DD` strings compare chronologically. The caller groups by (value set,
+ * variant) — NOT by delivery column (a merged monthly-family value set fuses
+ * across its 12 month columns by design) — so this tests ONLY time-adjacency. */
+function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
+  const ordered = [...states].sort(
+    (a, b) =>
+      a.valid_from.localeCompare(b.valid_from) ||
+      a.valid_to.localeCompare(b.valid_to),
+  );
+  const spans: ValueSetSpan[] = [];
+  for (const s of ordered) {
+    const open = spans.at(-1);
+    // An already-open OPEN-ENDED span swallows everything after it: its ceiling
+    // is the `9999-12-31` sentinel ("still delivered"), so any later state of the
+    // same (value set, variant) is contiguous with it by definition. Handled
+    // explicitly because `dayAfter("9999-12-31")` would overflow into year 10000
+    // (`Date.toISOString()`'s `±YYYYYY` expanded form sorts BELOW real dates),
+    // which would wrongly split a second still-delivered state into its own span.
+    if (open && open.to === OPEN_ENDED_VALID_TO) {
+      continue;
+    }
+    // Contiguous (or overlapping) with the open span → extend it. The day-after
+    // test fuses back-to-back annual windows (`2019-12-31` then `2020-01-01`)
+    // without merging across a skipped year (`2019-12-31` then `2021-01-01`).
+    if (open && s.valid_from <= dayAfter(open.to)) {
+      if (s.valid_to > open.to) {
+        open.to = s.valid_to;
+      }
+    } else {
+      spans.push({ from: s.valid_from, to: s.valid_to });
+    }
+  }
+  return spans;
+}
+
+/** The ISO day after an `YYYY-MM-DD` date — the adjacency boundary for
+ * `collapseSpans` (two annual states are adjacent iff the later starts on or
+ * before this). Uses a UTC `Date` so month/year rollovers are correct. The
+ * open-ended `9999-12-31` ceiling is NOT passed here (`collapseSpans` short-
+ * circuits an open span before calling), so the +1-day year-10000 overflow it
+ * would produce never reaches the adjacency test. A non-parseable bound returns
+ * the input unchanged (defensive on a malformed/edge wire — it then only fuses
+ * exact-equal bounds). */
+function dayAfter(iso: string): string {
+  const ms = Date.parse(`${iso}T00:00:00Z`);
+  if (Number.isNaN(ms)) {
+    return iso;
+  }
+  return new Date(ms + 86_400_000).toISOString().slice(0, 10);
+}
+
+/** The TWO-LEVEL dedup key for a state's value set (M13): a classification value
+ * set keys by `class/<slug>` so an edition's several `value_set_id`s collapse to
+ * one entry; a non-classification one keys by `id/<value_set_id>` (`id/none` for
+ * the null "no value set" bucket) so each distinct code list stays its own row.
+ * The `class/` vs `id/` prefixes keep the two namespaces from ever colliding. */
+function valueSetDedupKey(s: VariableStateModel): string {
+  return s.classification_slug
+    ? `class/${s.classification_slug}`
+    : `id/${s.value_set_id ?? "none"}`;
+}
+
+/** Project a variable's multi-state set into DISTINCT value sets (#668), deduped
+ * at TWO levels: classification value sets by `classification_slug`, others by
+ * `value_set_id` (see `valueSetDedupKey` and the section header). First-seen order
+ * is preserved so the list is stable; within each entry the states group by
+ * variant and collapse adjacent years (M20) over the UNION of all states in the
+ * bucket (so a collapsed classification edition's usages span its ids). The
+ * representative (first-seen) state supplies the version label / value set / data
+ * type. Pure — unit-tested. */
+export function distinctValueSets(
+  states: VariableStateModel[],
+): DistinctValueSet[] {
+  const byKey = new Map<string, VariableStateModel[]>();
+  for (const s of states) {
+    const k = valueSetDedupKey(s);
+    const group = byKey.get(k);
+    if (group) {
+      group.push(s);
+    } else {
+      byKey.set(k, [s]);
+    }
+  }
+  return [...byKey.entries()].map(([key, group]) => {
+    const rep = group[0];
+    const byVariant = statesByVariant(group);
+    const usages: ValueSetVariantUsage[] = [...byVariant.entries()].map(
+      ([variant, ss]) => ({ variant, spans: collapseSpans(ss) }),
+    );
+    // The entry's outer window across ALL its states — the view's disambiguator
+    // when several non-classification rows share a version label.
+    const overallSpan: ValueSetSpan = {
+      from: group.reduce(
+        (m, s) => (s.valid_from < m ? s.valid_from : m),
+        rep.valid_from,
+      ),
+      to: group.reduce(
+        (m, s) => (s.valid_to > m ? s.valid_to : m),
+        rep.valid_to,
+      ),
+    };
+    return {
+      key,
+      classificationSlug: rep.classification_slug ?? null,
+      versionLabel: rep.value_set_version_label,
+      valueSet: rep.value_set,
+      dataType: rep.data_type,
+      dataLength: rep.data_length,
+      usages,
+      variants: usages.map((u) => u.variant),
+      overallSpan,
+    };
+  });
+}
+
+/** Humanize a classification slug for the value-set label (#668): the clean
+ * vintage form `<letters><4-digit-year>` (e.g. `lkf2007`) becomes
+ * `"<LETTERS-UPPER> <year>"` (`"LKF 2007"`); anything else (suffixed/hyphenated
+ * slugs like `sun-niva2000`, `icd-10-se`, or a non-vintage slug) falls back to
+ * the raw slug verbatim — a stable identifier beats a mangled guess. */
+export function humanizeClassificationSlug(slug: string): string {
+  const m = /^([a-z]+)(\d{4})$/.exec(slug);
+  return m ? `${m[1].toUpperCase()} ${m[2]}` : slug;
+}
+
 // ── One-click add plan (#306) ────────────────────────────────────────────────
 // The variable page's page-level "Add to project" auto-picks everything that
 // isn't a GENUINE choice: time-sequential register-variant succession within
@@ -737,7 +929,7 @@ export const OPEN_ENDED_VALID_TO = "9999-12-31";
 export const YEARLESS_VALID_FROM = "0001-01-01";
 
 /** Group state rows by their variant slug, preserving input order — shared by
- * the add planner (#306) and the change-hint differ (#309). */
+ * the add planner (#306) and the value-set-centric fold (#668). */
 function statesByVariant(
   states: VariableStateModel[],
 ): Map<string, VariableStateModel[]> {
@@ -968,86 +1160,6 @@ export function memberCoverageUnion(
     return null;
   }
   return { from, to: unionTo };
-}
-
-/** Per-state stable key — NOT `state_id` alone. A merged monthly-family
- * variable (#319) expands ONE annual `variable_state` row into up to 12
- * same-`state_id` per-month windows (they SHARE the annual state's `state_id`
- * and `value_set_version_label`; only `delivery_column_name` + the validity
- * bounds are overridden per window — see reg_meta `catalog.py`
- * `_expand_state_windows`). So `state_id` is no longer unique in the list — the
- * compound `(state_id, delivery_column_name, valid_from)` is. Single source of
- * truth for the `StatesView` `#each` key, its #310 inline-expansion map, and the
- * `stateChangeHints` Map key (#384). */
-export function stateKey(s: VariableStateModel): string {
-  return `${s.state_id}:${s.delivery_column_name ?? ""}:${s.valid_from}`;
-}
-
-/**
- * Per-state "what changed" hints (#309): for each variant's states in
- * `valid_from` order, diff every state against its predecessor and report the
- * fields that actually changed — data type (formatted), delivery column, and
- * value set (`value_set_id` is the CONTENT key: the coding can change even
- * when the version label doesn't). Keyed by the LATER state's compound
- * `stateKey` — `state_id` alone collides across the same-`state_id` windows a
- * merged monthly family (#319) expands into, collapsing all 12 month rows onto
- * one Map entry (#384). Cross-variant transitions are never hinted (the variant
- * is its own visible column). Two states differing in none of these render
- * identically without a hint — exactly the int→bigint invisibility this fixes,
- * so every diffed field must also be VISIBLE in the row.
- */
-export function stateChangeHints(
-  states: VariableStateModel[],
-): Map<string, string[]> {
-  const byVariant = statesByVariant(states);
-  const hints = new Map<string, string[]>();
-  for (const group of byVariant.values()) {
-    const ordered = [...group].sort(
-      (a, b) =>
-        a.valid_from.localeCompare(b.valid_from) || a.state_id - b.state_id,
-    );
-    for (let i = 1; i < ordered.length; i++) {
-      const prev = ordered[i - 1];
-      const cur = ordered[i];
-      // The windows of a merged monthly family (#319) SHARE one annual
-      // `state_id`: they are 12 representations of a SINGLE claim, not a
-      // before→after succession. They are non-overlapping consecutive months,
-      // so the overlap guard below does NOT catch them — skip them explicitly
-      // (a spurious "column LonFinkJan → LonFinkFeb" hint otherwise, #384).
-      if (prev.state_id === cur.state_id) {
-        continue;
-      }
-      // Only a genuine SUCCESSION is a transition: overlapping same-variant
-      // states (co-delivered vintages/columns at one period) are parallel
-      // ALTERNATIVES — diffing them as before→after would be misleading
-      // (Codex P2 on #335).
-      if (prev.valid_to >= cur.valid_from) {
-        continue;
-      }
-      const changes: string[] = [];
-      const prevType = formatDataType(prev.data_type, prev.data_length);
-      const curType = formatDataType(cur.data_type, cur.data_length);
-      if (prevType !== curType) {
-        changes.push(`type ${prevType || "—"} → ${curType || "—"}`);
-      }
-      if (prev.delivery_column_name !== cur.delivery_column_name) {
-        changes.push(
-          `column ${prev.delivery_column_name ?? "—"} → ${cur.delivery_column_name ?? "—"}`,
-        );
-      }
-      if (prev.value_set_id !== cur.value_set_id) {
-        changes.push(
-          prev.value_set_version_label !== cur.value_set_version_label
-            ? `value set ${prev.value_set_version_label || "(no version)"} → ${cur.value_set_version_label || "(no version)"}`
-            : "value set changed",
-        );
-      }
-      if (changes.length > 0) {
-        hints.set(stateKey(cur), changes);
-      }
-    }
-  }
-  return hints;
 }
 
 /** Render a clipped ISO bound as a period-range ENDPOINT token, collapsing

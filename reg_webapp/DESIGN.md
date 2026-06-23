@@ -871,7 +871,7 @@ Per-kind mapping into the five sections:
   | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------ |
   | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                                               | Technical details only (key / facets / source)               |
   | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via the succession panel)                                    | member selector (slice) + `PeriodPicker` (availability lens) |
-  | value / codes | states (`StatesView`, each state's value set via `CodeList`)                                             | `ClassificationCodesPanel` (`CodeList`)                                         | —                                                            |
+  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                                         | —                                                            |
   | relationships | `DimensionsPanel` + `LineagePanels`                                                                      | `ClassificationDimensionsPanel` + `ClassificationLineagePanels` (edition chain) | — (members live in the picker)                               |
   | docs          | `DocMentionsPanel`                                                                                       | —                                                                               | —                                                            |
 
@@ -933,12 +933,12 @@ form when the start is unknown (#658).
 - **`CodeList`** (#638 PR3) — the single value-set / code viewer. A variable's value set
   and a classification's code list are the same shape (a code → label set, and a value
   set often *is* a classification), so they render identically: `StatesView` uses it for
-  each state's value set, and `ClassificationCodesPanel` for the edition's codes. It
-  owns a **size-dependent filter** (a search box appears only at ≥
-  `CODE_FILTER_THRESHOLD` codes — pointless for a handful) and a height-constrained
-  scroll for the long LISA sets; the classification side's per-code `is_valid` surfaces
-  an "observed" tag (a variable member omits it, so no tag shows — same component, fewer
-  columns of signal).
+  each distinct value set in the multi-state view (and for the single value set in the
+  detail mode), and `ClassificationCodesPanel` for the edition's codes. It owns a
+  **size-dependent filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD`
+  codes — pointless for a handful) and a height-constrained scroll for the long LISA
+  sets; the classification side's per-code `is_valid` surfaces an "observed" tag (a
+  variable member omits it, so no tag shows — same component, fewer columns of signal).
 - **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
   disclosure that demotes **backend/structural** fields below the user-facing ones: the
   variable's sensitive / identifier flags, a state's type / length / delivery column
