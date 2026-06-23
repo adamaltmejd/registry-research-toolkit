@@ -645,6 +645,30 @@ describe("intersectCoverageWindow (#671 coverage-aware seed)", () => {
     expect(seed.from).toBeLessThanOrEqual(seed.to);
     expect(seed).toEqual({ from: 2000, to: 2000 });
   });
+
+  it("INVERTED effective coverage (open end past the vintage), no window → the full bounds, NOT a manufactured no-data span (mirrors slider Fix D)", () => {
+    // Open-ended coverage from 2025 on a 2024-vintage catalog → covFrom 2025 >
+    // covTo 2024 (inverted). The old Math.min/Math.max manufactured {2024, 2025}
+    // (a selectable no-data span); inverted coverage is now treated as NO coverage,
+    // so the seed is the full fallback bounds — agreeing with PeriodWindowSlider's
+    // `bandEdges` (Fix D), which nulls the band (no clamp).
+    expect(
+      intersectCoverageWindow({ from: 2025, to: null }, null, 1960, 2024),
+    ).toEqual({ from: 1960, to: 2024 });
+  });
+
+  it("INVERTED effective coverage WITH a window → the window (inverted coverage is no coverage; mirrors slider Fix D)", () => {
+    // Same inverted case but a window is set: treated as no coverage, so the seed
+    // is the bare window (the stateless-variable rule), never the manufactured span.
+    expect(
+      intersectCoverageWindow(
+        { from: 2025, to: null },
+        { from: 2000, to: 2010 },
+        1960,
+        2024,
+      ),
+    ).toEqual({ from: 2000, to: 2010 });
+  });
 });
 
 describe("notDeliveredGaps (selection minus coverage)", () => {

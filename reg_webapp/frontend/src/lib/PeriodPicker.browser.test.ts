@@ -423,6 +423,35 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2012..2018");
   });
 
+  it("a COVERAGE change (same ?period + window) clears a stale dragged buffer → Apply submits the new coverage-clamped seed (Fix C, #671 coverage seed)", async () => {
+    // #671 made the thumb seed depend on `coverage`, but the reset effect tracked
+    // only period/activeYearSelection/ceiling. Navigating between leaves that share
+    // the URL (?period null) AND the window but differ in COVERAGE re-seeds the
+    // thumbs without moving any of those — so a stale drag survived and Apply
+    // submitted the PRIOR leaf's dragged span. The effect now tracks
+    // `seededSelection`, so the coverage change clears the buffer.
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = {
+      period: null,
+      window: WINDOW, // 2000–2010
+      coverage: { from: 1995, to: 2008 } as Coverage, // leaf A → seed 2000–2008
+      onsubmit,
+      onclear: vi.fn(),
+    };
+    const screen = await render(PeriodPicker, props);
+    // Drag the From thumb on leaf A → buffer holds 2005..2008.
+    await screen.getByRole("slider", { name: "From year" }).fill("2005");
+    // Navigate to leaf B: SAME ?period (null) and window, DIFFERENT coverage.
+    await screen.rerender({
+      ...props,
+      coverage: { from: 1995, to: 2004 } as Coverage, // leaf B → seed 2000–2004
+    });
+    // Apply submits leaf B's coverage-clamped seed (2000..2004), NOT the stale
+    // leaf-A drag (2005..2008).
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2004");
+  });
+
   it("a drag-then-Apply with NO intervening seed change still submits the dragged value (Fix C guard)", async () => {
     // The legitimate path must survive: a drag sets the buffer; Apply right after
     // (no seed/URL change between) submits it — the buffer only clears on a

@@ -270,11 +270,19 @@ $effect(() => {
   // resolves seeds the ceiling at wall-clock, then flips to the catalog vintage
   // when the prop threads down — without clearing, a stale drag past the vintage
   // would survive the display correction and Apply a beyond-vintage wire (Codex P2).
+  // And track the THUMB SEED (`seededSelection`): #671 made the seed depend on
+  // `coverage` too, so navigating between leaves that share `?period`/window but
+  // differ in coverage re-seeds the thumbs WITHOUT moving `period`/
+  // `activeYearSelection`/`ceilingYear` — a stale drag must clear there as well, or
+  // Apply submits the prior leaf's dragged span instead of the now-shown coverage-
+  // clamped seed (Codex P2). `seededSelection` subsumes the coverage+window+period+
+  // ceiling re-seed precisely, so it's the load-bearing read here.
   // A drag alone changes none of these, so the legitimate drag-then-Apply path is
   // untouched (the effect only re-fires on a re-seed / ceiling flip).
   void period;
   void activeYearSelection;
   void ceilingYear;
+  void seededSelection;
   sliderWire = null;
   showMore = period !== null && !yearWindowRepresentable(period);
 });

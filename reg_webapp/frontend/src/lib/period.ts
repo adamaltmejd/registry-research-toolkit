@@ -539,7 +539,14 @@ export interface Coverage {
  *     variable with a project window honours it, never widening to full history —
  *     that would regress the seed and Apply to `fallbackMin..vintage`); only
  *     no-window + no-coverage falls to the full `[fallbackMin, fallbackMax]`
- *     bounds (nothing to narrow to). */
+ *     bounds (nothing to narrow to).
+ *   - INVERTED effective coverage (`covFrom > covTo` after the fallbacks resolve,
+ *     e.g. open-ended coverage `{from:2025, to:null}` on a 2024-vintage catalog →
+ *     covFrom 2025 > covTo 2024): treated as NO coverage, so the seed is the
+ *     window (else the full bounds) rather than a manufactured `Math.min..Math.max`
+ *     span that would include no-data years. This MIRRORS PeriodWindowSlider's
+ *     `bandEdges` (Fix D), which nulls an inverted band (no band, no clamp) — so
+ *     the seed and the slider agree on "no selectable no-data span". */
 export function intersectCoverageWindow(
   coverage: Coverage | null,
   window: StudyWindow | null,
@@ -551,6 +558,12 @@ export function intersectCoverageWindow(
   }
   const covFrom = coverage.from ?? fallbackMin;
   const covTo = coverage.to ?? fallbackMax;
+  // Inverted effective coverage = no coverage (mirrors the slider's `bandEdges`
+  // Fix D): seed from the window, else the full bounds — never a manufactured
+  // span over no-data years.
+  if (covFrom > covTo) {
+    return window ?? { from: fallbackMin, to: fallbackMax };
+  }
   if (window === null) {
     return { from: Math.min(covFrom, covTo), to: Math.max(covFrom, covTo) };
   }
