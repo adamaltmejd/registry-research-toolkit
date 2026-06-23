@@ -1124,6 +1124,24 @@ def _cmd_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+def _emit_toml(output_toml: str | None, toml: str, data: dict[str, Any]) -> None:
+    """Emit a generator's TOML worklist to the JSON `data` payload.
+
+    With `--output-toml` set, write the TOML to the resolved path and record that
+    path under `data["output_toml"]`; otherwise carry the TOML inline under
+    `data["toml"]` so a no-target run doesn't lose the worklist. Shared by every
+    `--output-toml`-shaped subcommand (`same-as-candidates`,
+    `concept-group-candidates`, `entity-key-pins`'s combined-file arm,
+    `classification-residue`) so the write semantics stay identical.
+    """
+    if output_toml:
+        out_path = Path(output_toml).expanduser().resolve()
+        out_path.write_text(toml, encoding="utf-8")
+        data["output_toml"] = str(out_path)
+    else:
+        data["toml"] = toml
+
+
 def _cmd_same_as_candidates(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
@@ -1167,13 +1185,7 @@ def _cmd_same_as_candidates(
         "max_signal_fanout": fanout,
         "hub_suppressed": result.hub_suppressed,
     }
-    if args.output_toml:
-        out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(toml, encoding="utf-8")
-        data["output_toml"] = str(out_path)
-    else:
-        # No file target — carry the TOML in the payload so the worklist isn't lost.
-        data["toml"] = toml
+    _emit_toml(args.output_toml, toml, data)
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1348,17 +1360,14 @@ def _cmd_entity_key_pins(
         )
         data["out_dir"] = str(out_dir)
         data["files"] = written
-    elif args.output_toml:
-        # Single combined file, all providers — for inspection only.
-        out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(
-            render_entity_key_pins_toml(pins, flavored=args.flavored), encoding="utf-8"
-        )
-        data["output_toml"] = str(out_path)
     else:
-        # No file target — carry the combined TOML in the payload so the pins
-        # aren't lost.
-        data["toml"] = render_entity_key_pins_toml(pins, flavored=args.flavored)
+        # No --out-dir: a single combined file (--output-toml, inspection only)
+        # or the TOML carried inline in the payload.
+        _emit_toml(
+            args.output_toml,
+            render_entity_key_pins_toml(pins, flavored=args.flavored),
+            data,
+        )
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1419,13 +1428,7 @@ def _cmd_concept_group_candidates(
         "min_label_prefix": args.min_label_prefix,
         "min_agreement": args.min_agreement,
     }
-    if args.output_toml:
-        out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(toml, encoding="utf-8")
-        data["output_toml"] = str(out_path)
-    else:
-        # No file target — carry the TOML in the payload so the worklist isn't lost.
-        data["toml"] = toml
+    _emit_toml(args.output_toml, toml, data)
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
@@ -1463,13 +1466,7 @@ def _cmd_classification_residue(
         "safe_count": result.safe_count,
         "ambiguous_count": result.total - result.safe_count,
     }
-    if args.output_toml:
-        out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(toml, encoding="utf-8")
-        data["output_toml"] = str(out_path)
-    else:
-        # No file target — carry the TOML in the payload so the worklist isn't lost.
-        data["toml"] = toml
+    _emit_toml(args.output_toml, toml, data)
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(

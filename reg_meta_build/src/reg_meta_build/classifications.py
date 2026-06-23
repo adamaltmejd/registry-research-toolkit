@@ -1515,15 +1515,24 @@ class ResidualState:
 class ResidueValueSet:
     """A residual (multi-family, still-unclassified) value set: its `n_codes`, the
     distinct unclassified states, the candidate classifications with evidence, and
-    `safe` — True iff EXACTLY ONE candidate is a label-unambiguous standalone
-    (>= _SAFE_LABEL_AGREE while all others are below it). The `safe` set is the
-    curatable tier (the #494-part-2 shape)."""
+    `safe_target` — the single label-unambiguous standalone candidate (the one
+    >= _SAFE_LABEL_AGREE while all others are below it) when the set is curatable,
+    else None. A safe value set is exactly one with a non-None `safe_target`; `safe`
+    is that boolean, so the qualifying-candidate predicate lives in ONE place
+    (`dump_classification_residue`) and the renderer reads the resolved target rather
+    than re-deriving it. The safe set is the curatable tier (the #494-part-2 shape)."""
 
     value_set_id: int
     n_codes: int
     candidates: tuple[ResidueCandidate, ...]
     states: tuple[ResidualState, ...]
-    safe: bool
+    safe_target: ResidueCandidate | None
+
+    @property
+    def safe(self) -> bool:
+        """True iff this value set has a single label-unambiguous standalone
+        candidate (the curatable tier). Derived from `safe_target`."""
+        return self.safe_target is not None
 
 
 @dataclass(frozen=True)
@@ -1603,28 +1612,22 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             [(vs_id,) for vs_id in multi_unclassified],
         )
 
-        # n_codes per residual value set (read off `_vs_cls`, which carries the
-        # per-row n_codes the containment was scored against).
-        n_codes_by_vs = dict(
-            conn.execute(
-                "SELECT vc.value_set_id, MAX(vc.n_codes) FROM _vs_cls vc "
-                "JOIN _residue_vs rv ON rv.value_set_id = vc.value_set_id "
-                "GROUP BY vc.value_set_id"
-            )
-        )
-
         # Candidate classifications per residual value set, with containment,
         # standalone flag (no supersedes_id chain neighbour — neither a predecessor
         # nor a successor), and the exact-(kod,label) label_agree (step 5's metric:
         # COUNT(DISTINCT v.kod matching a canonical (kod,label) of THIS cls) /
         # n_codes). `standalone` = supersedes_id IS NULL (no predecessor) AND no
-        # other classification supersedes it (no successor).
+        # other classification supersedes it (no successor). `vc.n_codes` is the
+        # per-value-set distinct-code count (constant across a value set's candidate
+        # rows — it comes from `_vs_stats`), so we capture it once per value set here
+        # rather than running a separate MAX(n_codes) GROUP BY query.
         cand_rows = conn.execute(
             """
             SELECT
                 vc.value_set_id,
                 cl.short_name,
                 vc.containment,
+                vc.n_codes,
                 (
                     cl.supersedes_id IS NULL
                     AND NOT EXISTS (
@@ -1651,7 +1654,16 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             """
         ).fetchall()
         candidates_by_vs: dict[int, list[ResidueCandidate]] = {}
-        for value_set_id, short_name, containment, standalone, label_agree in cand_rows:
+        # n_codes is constant across a value set's candidate rows; first row wins.
+        n_codes_by_vs: dict[int, int] = {}
+        for (
+            value_set_id,
+            short_name,
+            containment,
+            n_codes,
+            standalone,
+            label_agree,
+        ) in cand_rows:
             candidates_by_vs.setdefault(value_set_id, []).append(
                 ResidueCandidate(
                     short_name=short_name,
@@ -1660,6 +1672,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                     standalone=bool(standalone),
                 )
             )
+            n_codes_by_vs.setdefault(value_set_id, int(n_codes))
 
         # Unclassified states per residual value set: the distinct (variable_id,
         # value_set_id) state keys with classification_id NULL, joined to the
@@ -1698,7 +1711,10 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             # every OTHER candidate is below it (label-unambiguous single standalone).
             # Key the partition by candidate INDEX, not value-equality membership, so
             # two candidates with coincidentally-equal fields can't conflate (a
-            # `c not in qualifying` test on frozen dataclasses dedups by value).
+            # `c not in qualifying` test on frozen dataclasses dedups by value). This
+            # is the SOLE site of the qualifying-candidate predicate: when safe, the
+            # one qualifying candidate is stored as `safe_target` and the renderer
+            # reads it back rather than re-deriving the predicate.
             qualifying = [
                 i
                 for i, c in enumerate(candidates)
@@ -1709,14 +1725,18 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                 for i, c in enumerate(candidates)
                 if i not in qualifying
             )
-            safe = len(qualifying) == 1 and others_below
+            safe_target = (
+                candidates[qualifying[0]]
+                if len(qualifying) == 1 and others_below
+                else None
+            )
             value_sets.append(
                 ResidueValueSet(
                     value_set_id=value_set_id,
                     n_codes=int(n_codes_by_vs.get(value_set_id, 0)),
                     candidates=candidates,
                     states=states,
-                    safe=safe,
+                    safe_target=safe_target,
                 )
             )
     finally:
@@ -1762,14 +1782,6 @@ def render_residue_toml(result: ResidueResult) -> str:
     safe = [vs for vs in result.value_sets if vs.safe]
     ambiguous = [vs for vs in result.value_sets if not vs.safe]
 
-    def _safe_target(vs: ResidueValueSet) -> ResidueCandidate:
-        """The single qualifying standalone candidate of a safe value set."""
-        return next(
-            c
-            for c in vs.candidates
-            if c.standalone and c.label_agree >= _SAFE_LABEL_AGREE
-        )
-
     # Group the safe states by variable FQID so each FQID emits at most one
     # `[[link]]` — `load_classification_links` rejects a duplicate `variable`, and a
     # variable can be an unclassified state on several safe value sets. Carry the
@@ -1779,9 +1791,12 @@ def render_residue_toml(result: ResidueResult) -> str:
     safe_targets_by_fqid: dict[str, set[str]] = {}
     safe_name_by_fqid: dict[str, str | None] = {}
     for vs in safe:
-        target = _safe_target(vs)
+        # vs.safe is True here, so safe_target is the stored qualifying candidate.
+        assert vs.safe_target is not None
         for st in vs.states:
-            safe_targets_by_fqid.setdefault(st.fqid, set()).add(target.short_name)
+            safe_targets_by_fqid.setdefault(st.fqid, set()).add(
+                vs.safe_target.short_name
+            )
             safe_name_by_fqid.setdefault(st.fqid, st.name)
     safe_links = {
         fqid: next(iter(targets))
