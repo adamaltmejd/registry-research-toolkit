@@ -225,6 +225,27 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).not.toHaveBeenCalled();
   });
 
+  it("Apply with an INVERTED (discarded) coverage and no window stays a no-op (Fix 4)", async () => {
+    // Fix 4: an inverted effective coverage (e.g. {from:2025, to:null} on a 2024
+    // vintage → effective 2025..2024) is treated as NO coverage by both
+    // `intersectCoverageWindow` and the slider's `bandEdges` (Fix D), so with no
+    // window the seed falls back to the FULL bounds (1960..2024) — a span containing
+    // no data. The old gate (`coverage !== null`) still fired here (raw coverage is
+    // non-null) and Apply submitted that full span. The refined gate keys on a
+    // USABLE coverage, so this follows the no-op path instead.
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 2025, to: null } as Coverage, // inverted vs the vintage
+      vintageYear: 2024,
+      onsubmit,
+      onclear: vi.fn(),
+    });
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+  });
+
   it("a slider change submits a ?period wire and never mutates the window", async () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
@@ -264,6 +285,30 @@ describe("PeriodPicker — window slider (#615)", () => {
     await expect
       .element(screen.getByText(/Deviates from project window/))
       .not.toBeInTheDocument();
+  });
+
+  it("DISJOINT window/coverage: the default seed snaps OUTSIDE the window → the deviation hint DOES fire (Fix 3)", async () => {
+    // Fix 3 refines Fix B's suppression: when the window and coverage do NOT
+    // overlap (window 2012–2018, coverage 1995–2008, no ?period),
+    // `intersectCoverageWindow` snaps the seed to the nearest coverage edge (2008),
+    // which lands OUTSIDE the project window. That mismatch IS worth reporting — so
+    // the "Deviates from project window" hint must fire even on the untouched
+    // default seed (unlike the within-window narrowing case, which stays silent).
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 2012, to: 2018 } as StudyWindow,
+      coverage: { from: 1995, to: 2008 } as Coverage, // disjoint → seed snaps to 2008
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    // The seed snaps to the coverage edge (2008), outside the 2012–2018 window…
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2008");
+    // …so the deviation hint fires without any user action (the snap is reportable).
+    await expect
+      .element(screen.getByText(/Deviates from project window/))
+      .toBeVisible();
   });
 
   it("after the user drags a thumb to a value ≠ window, the deviation hint fires (Fix B)", async () => {

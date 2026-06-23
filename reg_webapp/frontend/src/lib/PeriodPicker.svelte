@@ -287,18 +287,37 @@ $effect(() => {
   showMore = period !== null && !yearWindowRepresentable(period);
 });
 
+/** Whether `coverage` yields a USABLE seed — non-null AND not inverted. An
+ * INVERTED effective coverage (e.g. `{from:2025, to:null}` on a 2024 vintage →
+ * effective `2025..2024`) is treated as NO coverage by both `intersectCoverageWindow`
+ * and the slider's `bandEdges` (Fix D): `seededSelection` then falls back to the
+ * window, else the FULL bounds. So with no window such a coverage gives a full-span
+ * seed containing no data — which `applySlider` must NOT submit on an untouched
+ * Apply (Fix 4). Mirrors the inversion test those two share (open start → the
+ * slider floor, open end → the vintage ceiling). */
+const effectiveCoverageUsable = $derived(
+  coverage !== null &&
+    (coverage.from ?? SLIDER_FLOOR_YEAR) <= (coverage.to ?? ceilingYear),
+);
+
 /** Apply the slider's current selection. A moved thumb (`sliderWire`) wins;
  * otherwise fall back to the SEEDED selection so accepting the displayed default
  * actually applies it — without this, Apply on an untouched seed no-ops and
  * BindingLeafView (narrowing only on `?period`) leaves the user on full history
  * (Codex P2). The fallback is the #671 seed (`seededSelection`): the active
  * selection, else the coverage-framed span the thumbs already show — so
- * accepting the up-front coverage default narrows to it. Only the no-coverage /
- * no-selection case (the seed is the full bounds, nothing meaningful chosen)
- * stays a no-op. */
+ * accepting the up-front coverage default narrows to it. The gate submits the seed
+ * only when there is something meaningful to narrow to: a selection, a window, or a
+ * USABLE coverage (`effectiveCoverageUsable` — Fix 4). The no-op cases: no
+ * selection + no window + no coverage (the seed is the full bounds), AND an
+ * inverted/discarded coverage with no window (which also seeds the full bounds —
+ * raw `coverage !== null` would wrongly fire there and submit a no-data span). */
 function applySlider(): void {
   let wire: string | null = sliderWire;
-  if (wire === null && (activeYearSelection !== null || coverage !== null)) {
+  if (
+    wire === null &&
+    (activeYearSelection !== null || window !== null || effectiveCoverageUsable)
+  ) {
     wire = yearWindowToWire(seededSelection);
   }
   if (wire !== null) {

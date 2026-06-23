@@ -69,11 +69,13 @@ interface Props {
   hasSelection: boolean;
   // Whether the user has ACTUALLY chosen a year-window value distinct from the
   // project window (an explicit year `?period`, or a live thumb drag) — gates the
-  // USER-deviation hint (Fix B). FALSE for the untouched coverage-clamped default
-  // seed: the data narrowing the window to coverage is NOT a user deviation, so the
-  // amber "Deviates from project window · reset" hint (and its bare-window reset)
-  // must not fire on the default render. Distinct from `hasSelection`, which is true
-  // whenever a window is set and so can't tell the default from a real choice.
+  // USER-deviation hint (Fix B, refined by Fix 3). FALSE for the untouched
+  // coverage-clamped default seed; combined with the `seedWithinWindow` carve-out
+  // below, a default-seed deviation is silenced ONLY when the seed is a true
+  // within-window narrowing (window∩coverage). A DISJOINT window/coverage default
+  // seed snaps OUTSIDE the window, so the hint fires even without `userChosen`.
+  // Distinct from `hasSelection`, which is true whenever a window is set and so
+  // can't tell the default from a real choice.
   userChosen: boolean;
   // Emitted with the live selection as the thumbs move (the picker holds it and
   // submits the wire on Apply).
@@ -233,17 +235,30 @@ const gaps = $derived(
 // meaningful WHEN a window is set (no window → nothing to deviate from) AND the
 // shown span IS the active selection — for a sub-annual `?period` the span is
 // the window PROJECTION, so `same==window` here is an artefact, not a real
-// "no deviation"; the sub-annual cue below speaks for that case instead. Gated on
-// `userChosen` (Fix B): the untouched coverage-clamped default seed (e.g. window
-// 2000–2010 narrowed to coverage 2000–2008) differs from the bare window but is
-// NOT a user deviation — the data constrained it, not the user — so the hint (and
-// its bare-window reset, which would re-render the not-delivered gap #671 avoids)
-// must not fire until the user picks an explicit `?period` or drags a thumb.
+// "no deviation"; the sub-annual cue below speaks for that case instead.
+//
+// Fix B suppression, refined (Fix 3): the default coverage-clamped seed must not
+// fire a spurious hint — but ONLY when that seed is a true NARROWING, i.e. it sits
+// WITHIN the window (`seedWithinWindow`). The common window∩coverage case (window
+// 2000–2010 narrowed to coverage 2000–2008) is within-window: the data
+// constrained it, not the user, so the hint (and its bare-window reset, which
+// would re-render the not-delivered gap #671 avoids) stays silent until the user
+// picks an explicit `?period` or drags a thumb. But when the window and coverage
+// are DISJOINT the seed SNAPS to the nearest coverage edge, landing OUTSIDE the
+// window (e.g. window 2012–2018, coverage 1995–2008 → seed 2008): that mismatch
+// IS worth reporting, so the hint fires even on the default seed. Hence: a
+// user-chosen deviation always shows; a default-seed deviation shows only when the
+// seed falls outside the window.
+const seedWithinWindow = $derived(
+  projectWindow !== null &&
+    from >= projectWindow.from &&
+    to <= projectWindow.to,
+);
 const userDeviation = $derived(
   projectWindow !== null &&
     subAnnualPeriod === null &&
-    userChosen &&
-    !sameYearWindow({ from, to }, projectWindow),
+    !sameYearWindow({ from, to }, projectWindow) &&
+    (userChosen || !seedWithinWindow),
 );
 
 // AVAILABILITY deviation: coverage doesn't cover the active selection. SOFTENED
