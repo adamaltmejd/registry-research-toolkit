@@ -3,7 +3,7 @@
 Drives ``run_smoke`` against a stdlib ``http.server`` stub so the golden-check
 logic is exercised without Docker or the real app — deterministic and offline.
 The smoke module is stdlib-only (urllib) for exactly this reason: it ships in
-the ``--no-dev`` runtime venv where httpx/TestClient are absent.
+the ``--no-dev`` runtime venv where httpx2/TestClient are absent.
 """
 
 from __future__ import annotations
