@@ -1891,15 +1891,18 @@ OR a **composite** (a TOML list of slugs, persisted as a JSON array) — e.g.
 `utrikeshandel-tjanster` (UHT) is a quarterly company panel whose time coordinate is
 `["ar", "kvartal"]`. `panel_time_key` additionally accepts the `"period"`
 delivery-aligned sentinel, which is **single-only** (it may not appear inside a
-composite list). `seed-slugs` proposes defaults from SCB `Tabelldefinitioner.sql` PK
-declarations and `Identifierare.csv` (SOS: `is_join_variable` annotations); a curator
-confirms. These are grammar-checked at load so a typo fails loudly at build, not as a
-runtime JSON-decode crash when the webapp serves the variant. The structural validator
-fails the build if a panel key does not resolve to a real `variable.slug` in the
-variant's own register (`validate.py::_check_panel_refs_resolve`) or resolves but has no
-`variable_state` rows in the variant itself (`_check_panel_refs_have_states`, #287 — a
-key pointing at a sibling fragment passes resolution yet renders an empty panel axis in
-the webapp; the `panel_time_key = "period"` sentinel is exempt from both).
+composite list). The key and grain must agree, enforced at load: `"period"` ⟺
+`panel_time_grain = "delivery"`, a slug/composite key ⟺ `panel_time_grain = "row"`
+(grain stays optional — the coupling binds only when both are set). `seed-slugs`
+proposes defaults from SCB `Tabelldefinitioner.sql` PK declarations and
+`Identifierare.csv` (SOS: `is_join_variable` annotations); a curator confirms. These are
+grammar-checked at load so a typo fails loudly at build, not as a runtime JSON-decode
+crash when the webapp serves the variant. The structural validator fails the build if a
+panel key does not resolve to a real `variable.slug` in the variant's own register
+(`validate.py::_check_panel_refs_resolve`) or resolves but has no `variable_state` rows
+in the variant itself (`_check_panel_refs_have_states`, #287 — a key pointing at a
+sibling fragment passes resolution yet renders an empty panel axis in the webapp; the
+`panel_time_key = "period"` sentinel is exempt from both).
 
 **Entity-key slug freeze (#546, #554, #559).** A `panel_entity_key` ref binds to
 `variable.slug`, but variable slugs CHURN every build (the default "churning" freeze

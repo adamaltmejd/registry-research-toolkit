@@ -364,6 +364,7 @@ def _validate_entry(
     panel_time_grain = _validate_panel_time_grain(
         kind, source_id, entry.get("panel_time_grain")
     )
+    _validate_panel_time_consistency(kind, source_id, panel_time_key, panel_time_grain)
     return SlugEntry(
         kind=kind,
         source_id=source_id,
@@ -497,6 +498,37 @@ def _validate_panel_time_grain(
             "Set panel_time_grain to 'delivery' or 'row'.",
         )
     return raw
+
+
+def _validate_panel_time_consistency(
+    kind: EntityKind,
+    source_id: str,
+    panel_time_key: str | tuple[str, ...] | None,
+    panel_time_grain: str | None,
+) -> None:
+    """`panel_time_key` and `panel_time_grain` must agree: the "period" sentinel
+    is delivery-aligned (time IS the delivery vintage), so it pairs only with
+    `panel_time_grain = "delivery"`; a slug/composite key is a per-row coordinate,
+    so it pairs only with `"row"`. Grain stays OPTIONAL — the coupling is enforced
+    only when both are present (#576). By the time this runs, both fields are
+    already individually valid: the grain is one of delivery/row/None, and a tuple
+    key never contains "period" (`_validate_panel_time_key` rejects it)."""
+    if panel_time_key is None or panel_time_grain is None:
+        return
+    is_period = panel_time_key == "period"
+    expected = "delivery" if is_period else "row"
+    if panel_time_grain != expected:
+        kind_desc = (
+            'the "period" delivery-aligned sentinel'
+            if is_period
+            else f"the slug/composite key {panel_time_key!r}"
+        )
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `panel_time_key` is {kind_desc} but "
+            f"`panel_time_grain` is {panel_time_grain!r}; expected {expected!r}.",
+            f"Set panel_time_grain to {expected!r}, or omit it.",
+        )
 
 
 def _resolve_replaced_by(entries: list[SlugEntry], *, scope: str) -> None:
