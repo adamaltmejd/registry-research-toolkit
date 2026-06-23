@@ -894,8 +894,8 @@ slug = "kls"
 slug = "_default"
 display_group = "Konjunkturstatistik, löner för statlig sektor"
 panel_entity_key = "personnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Geografidatabasen (GDB)
 [register."70"]
@@ -1083,8 +1083,8 @@ slug = "klk"
 slug = "_default"
 display_group = "Konjunkturstatistik, löner för kommuner"
 panel_entity_key = "peorgnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Konjunkturstatistik, löner för regioner (KLR)
 [register."90"]
@@ -1102,8 +1102,8 @@ slug = "klp"
 slug = "_default"
 display_group = "Konjunkturstatistik, löner för privat sektor"
 panel_entity_key = "peorgnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "undersokningsmanad"]
+panel_time_grain = "row"
 
 # Hushållens ekonomi (HEK)
 [register."97"]
@@ -1215,8 +1215,8 @@ panel_time_grain = "delivery"
 slug = "studiemedel-erhallet"
 display_group = "Studiemedel, erhållet"
 panel_entity_key = "personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["kalenderar", "halvar"]
+panel_time_grain = "row"
 
 # Elevpaneler för longitudinella studier
 [register."104"]
@@ -1864,8 +1864,8 @@ slug = "mabra"
 slug = "_default"
 display_group = "Månatlig bränsle-, gas och lagerstatistik"
 panel_entity_key = "cfarnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Register över månatlig elstatistik (MANEL)
 [register."142"]
@@ -2150,8 +2150,8 @@ slug = "laps"
 slug = "_default"
 display_group = "Lönesummor, arbetsgivaravgifter och preliminär A-skatt"
 panel_entity_key = "peorgnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
 
 # Riksbankens finansmarknadsstatistik (FMR)
 [register."181"]
@@ -2279,29 +2279,29 @@ slug = "konjunkturstatistik-industri"
 slug = "industriproduktionsindex"
 display_group = "Industriproduktionsindex"
 panel_entity_key = "verksamhetsenhetens-identitetsnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 [register_variant."187.370"]
 slug = "industrins-leverans-orderlage"
 display_group = "Industrins leverans- och orderläge"
 panel_entity_key = "verksamhetsenhetens-identitetsnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 [register_variant."187.371"]
 slug = "industrins-lager"
 display_group = "Industrins lager"
 panel_entity_key = "verksamhetsenhetens-identitetsnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
 
 [register_variant."187.1115"]
 slug = "industrins-orderingang"
 display_group = "Industrins orderingång och omsättning"
 panel_entity_key = "verksamhetsenhetens-identitetsnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 [register_variant."187.1523"]
 slug = "industrins-lager-2015"
@@ -3501,8 +3501,8 @@ slug = "elpriser-elavtal"
 slug = "_default"
 display_group = "Elpriser och elavtal"
 panel_entity_key = "orgnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Nätpriser på naturgas och byten av naturgasleverantör
 [register."284"]
@@ -3673,8 +3673,8 @@ slug = "aes"
 slug = "_default"
 display_group = "Undersökningen om vuxnas deltagande i utbildning (AES)"
 panel_entity_key = "personnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar-for-intervju", "matmanad"]
+panel_time_grain = "row"
 
 # Högutbildades arbetsmarknad
 [register."302"]
@@ -4225,8 +4225,8 @@ slug = "nystartade-foretag-kvartal"
 slug = "_default"
 display_group = "Nystartade företag"
 panel_entity_key = "peorgnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
 
 # Analyser och statistik om befolkningens utbildning
 [register."366"]
@@ -4615,8 +4615,8 @@ slug = "pin"
 slug = "industrins-kapacitetsutnyttjande"
 display_group = "Industrins kapacitetsutnyttjande"
 panel_entity_key = "organisationsnummer-12-siffror"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
 
 [register_variant."382.1429"]
 slug = "omsattning-tjanstesektorn-tom2014"
@@ -4650,15 +4650,15 @@ panel_time_grain = "delivery"
 slug = "industrins-orderingang"
 display_group = "Industrins orderingång och omsättning fr.o.m 2015"
 panel_entity_key = "organisationsnummer-12-siffror"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 [register_variant."382.1564"]
 slug = "omsattning-tjanstesektorn-2015"
 display_group = "Omsättning inom tjänstesektorn fr.o.m. 2015"
 panel_entity_key = "organisationsnummer-12-siffror"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Utförarregistret
 [register."383"]
