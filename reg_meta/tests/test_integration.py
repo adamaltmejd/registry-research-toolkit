@@ -8,6 +8,7 @@ Not run by default. Requires Docker and a published GitHub release.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -60,7 +61,17 @@ def docker() -> str:
 
 @pytest.fixture(scope="module")
 def image(docker: str) -> str:
-    """Build a Docker image with reg_meta installed from local source."""
+    """Build a Docker image with reg_meta installed from local source.
+
+    The tag is per-xdist-worker (PYTEST_XDIST_WORKER) so a parallel `-n auto` run
+    — what the pre-push hook uses — can't race on a shared tag: without this, two
+    workers each get their own module-scoped instance of this fixture, and one's
+    teardown `rmi` can delete the image out from under the other's `docker run`.
+    Docker's layer cache makes the extra per-worker build effectively free. A
+    serial run (CI, plain pytest) has no worker id and uses the bare tag.
+    """
+    worker = os.environ.get("PYTEST_XDIST_WORKER")
+    tag = f"{IMAGE_TAG}-{worker}" if worker else IMAGE_TAG
     with tempfile.TemporaryDirectory() as ctx_str:
         ctx = Path(ctx_str)
 
@@ -76,7 +87,7 @@ def image(docker: str) -> str:
         (ctx / "Dockerfile").write_text(DOCKERFILE)
 
         result = subprocess.run(
-            [docker, "build", "-t", IMAGE_TAG, "."],
+            [docker, "build", "-t", tag, "."],
             cwd=ctx,
             capture_output=True,
             text=True,
@@ -84,16 +95,28 @@ def image(docker: str) -> str:
         )
         assert result.returncode == 0, f"Docker build failed:\n{result.stderr}"
 
-    yield IMAGE_TAG
+    yield tag
 
-    subprocess.run([docker, "rmi", IMAGE_TAG], capture_output=True, timeout=30)
+    subprocess.run([docker, "rmi", tag], capture_output=True, timeout=30)
 
 
 def _docker_run(
     docker: str, image: str, cmd: str, *, timeout: int = 60
 ) -> subprocess.CompletedProcess[str]:
+    # Forward a GitHub token into the container when the host has one (CI sets
+    # GITHUB_TOKEN), so the in-container `reg-meta update` authenticates its
+    # GitHub Releases API call — the unauthenticated 60/hr-per-IP limit is
+    # easily exhausted from shared CI runner IPs. `-e VAR` (no value) forwards
+    # the host value without leaking it into argv. No token set (the usual local
+    # case) → no -e flags, behavior unchanged.
+    env_flags = [
+        flag
+        for var in ("GITHUB_TOKEN", "GH_TOKEN")
+        if os.environ.get(var)
+        for flag in ("-e", var)
+    ]
     return subprocess.run(
-        [docker, "run", "--rm", image, "sh", "-c", cmd],
+        [docker, "run", "--rm", *env_flags, image, "sh", "-c", cmd],
         capture_output=True,
         text=True,
         timeout=timeout,
@@ -104,8 +127,12 @@ def test_install_and_cli_help(docker: str, image: str):
     """Package installs cleanly and CLI is functional."""
     result = _docker_run(docker, image, "reg-meta --help")
     assert result.returncode == 0
-    assert "search" in result.stdout
-    assert "update" in result.stdout
+    # reg_meta's CLI prints its custom help to stderr (cli.py `_print_help`, with
+    # `add_help=False` on the parser), so assert over the combined stream rather
+    # than pinning stdout — robust whichever way help is routed.
+    help_text = result.stdout + result.stderr
+    assert "search" in help_text
+    assert "update" in help_text
 
 
 def test_version_importable(docker: str, image: str):
