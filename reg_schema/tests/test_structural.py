@@ -1302,7 +1302,7 @@ def test_validator_accepts_arbitrary_mapping() -> None:
 # like "type ∈ enum" fire on raw JSON values before any ``Literal`` cast would
 # coerce or reject, accumulating every issue into a ``ValidationResult`` rather
 # than failing fast on the first bad value — see DESIGN.md → Two layers: models
-# vs. validator. That reason survives the archived MONA bundle.)
+# vs. validator.)
 
 
 def _wire_keys(model: type) -> set[str]:

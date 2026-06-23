@@ -83,9 +83,9 @@ produce the same `ValidationResult` for the same input:
 2. **SPA TypeScript tests** — the SPA imports the corpus as JSON fixtures and runs its
    TS port of the structural validator against them.
 
-Any future MONA-side runner that re-validates `project_data.json` is expected to read
-the same corpus. All consumers read the same JSON, so if any one diverges, the corpus
-catches it before downstream consumers do.
+Any other runtime that re-validates `project_data.json` is expected to read the same
+corpus. All consumers read the same JSON, so if any one diverges, the corpus catches it
+before downstream consumers do.
 
 ## Growth
 

@@ -1,9 +1,9 @@
 """Cross-runtime validation contract (see DESIGN.md → Structural rules and issue codes).
 
-The same shape is consumed by three runtimes:
+The same shape is consumed by multiple runtimes:
 
 - ``reg_schema`` itself (Python, structural layer).
-- the ``reg_webapp`` API ingress and any future MONA-side runner (Python).
+- the ``reg_webapp`` API ingress (Python).
 - The SPA (TypeScript, codegen'd from OpenAPI).
 
 Composition of layers concatenates ``issues`` — no merge semantics
