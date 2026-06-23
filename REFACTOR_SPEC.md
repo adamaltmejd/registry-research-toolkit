@@ -161,19 +161,24 @@ the missing-canonical-column class (#400/#428 — mint these into the baseline r
 as a post-freeze grow-only wave). None are hard blockers; they are the curation backlog
 that makes the pinned baseline clean.
 
-**Improve the auto-derivation before pinning — pinning ratchets the generator output.**
-The pin freezes whatever the generator emits, and #471 then hand-renames away from it,
-so every slug the generator gets right pre-pin is a manual rename saved. The real
-mechanical ugliness on the live corpus is (1) verbose name-fallback slugs
-blind-truncated at the 60-char cap into near-duplicate families and (2) drift/collision
-siblings routed to opaque column-code + `-N` tails (e.g. `ha06-2`, `besvar`/`besvar-2`).
-Both are *systematic* — generator-fixable (smarter `_name_slug` truncation;
-ordinal-suffix-aware disambiguation, aligning with #374) — not per-variable judgement.
-Note there is **no Swedish→English slug glossary** to expand (the "glossary" is a
-DB-column rename, not a token map) and `v<digit>` slugs are mostly real SCB column
-codes, not failures — so neither is a lever. Sequence: improve the generator → one
-coordinated re-key of slug-anchored overlays (#660 et al.) → pin → #471 curate the
-residue → seal. Tracked in #732.
+**Improve the auto-derivation as part of pinning — but derive it *from* the curation,
+not before it.** The pin freezes the generator's output, so any generator improvement
+must land before the pin; but the right rules aren't guessable up front. Run the
+curation fan-out first — agents turn the worklist into final canonical FQIDs (#471) —
+then mine those results for the systematic rules the auto-slugger can absorb (#732), so
+the generator reproduces a slice of the curation mechanically. The curated final FQID is
+**authoritative**: a generator change only decides override-vs-auto (the reconcile pins
+each result to the final FQID regardless), so it never alters an outcome — it shrinks
+the committed-override surface and improves the default for future deliveries.
+Real-corpus targets: verbose name-fallbacks blind-truncated at the 60-char cap, and
+collisions routed to opaque `-N` tails — including an exact-single-column claim losing
+its slug to a fold-stem sibling (`fedunsatreason`), where exact-match should win and the
+fold takes `<stem>-fold` / `<stem>-1-5`. Non-levers: there is **no Swedish→English
+glossary** to expand (the "glossary" is a DB-column rename), and `v<digit>` slugs are
+mostly real SCB column codes. **Scope (Step 0, real-seed `precheck-slugs`):** the
+worklist is effectively SCB-only — \~11,802 name-derived SCB slugs; the other 7
+providers are clean column-derived and pin-ready as-is. Tracked in #471 (curation) +
+#732 (the derived generator pass).
 
 The reserved HTTP-suffix slug rejection (`states`/`predecessors`/…/`variants`) shipped
 in #228 — it is already enforced at curation time and does not need to precede the
