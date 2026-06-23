@@ -1619,10 +1619,13 @@ class TestPopulateVariableSlugs:
     def test_existing_auto_not_recomputed_on_rename(self, tmp_path: Path) -> None:
         # The pinned-auto behavior is curating/frozen (#470): a churning zone
         # would re-derive `konkod` on the rebuild instead.
-        # First build: auto-derives `kon` from `Kon`, persists to .auto.toml.
+        # Generate build (churning): auto-derives `kon` from `Kon`, persists the
+        # .auto.toml. Pinning REQUIRES that committed file (#471), so the maintainer
+        # commits it (`git add -f`) and only THEN flips the zone to curating.
         conn = self._db(kol="Kon")
-        d = self._slug_dir(tmp_path, scb_freeze="curating")
+        d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
         # SCB renames the delivery column; rebuild reads the existing
         # .auto.toml and keeps the original slug (immutability).
         conn2 = self._db(kol="Konkod")  # would derive `konkod`
@@ -2242,11 +2245,14 @@ class TestAutoDerivationMarker:
         conn = build_slugged_db(variable=None)
         self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
         self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path, scb_freeze="curating")
+        # Generate build (churning) writes the baseline .auto.toml; pinning requires
+        # that committed file (#471), so flip to curating only AFTER it exists.
+        d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
         first = read_auto_derivations(self._auto_path(d))
         assert first["1.20"] == "name-fallback"
         assert first["1.21"] == "name-fallback"
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
         # Add a NEW variable and rebuild — the full file is rewritten. (30 is now
         # the only pending var, so its OBS_VALUE column is unique among pending →
         # it takes the kolumnnamn slug; the class differs from 20/21, which is
@@ -2294,8 +2300,11 @@ class TestAutoDerivationMarker:
         conn = build_slugged_db(variable=None)
         self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
         self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path, scb_freeze="curating")
+        # Generate build (churning) writes the baseline .auto.toml; pinning requires
+        # that committed file (#471), so flip to curating only AFTER it exists.
+        d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
         before = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
         assert {"1.20", "1.21"} <= before
         # Curate 1.20 — its auto entry/marker persist, but it drops from the list.
@@ -3376,6 +3385,53 @@ class TestFreezeStateAutoRegenerate:
         assert self._stored(conn) == "kon"
         assert counts["auto_existing"] == 1
         assert counts["auto_new"] == 0
+
+    @staticmethod
+    def _dir_no_auto(tmp_path: Path, *, freeze: str | None) -> Path:
+        # Like `_dir` but WITHOUT committing the auto.toml — the maintainer-forgot
+        # case (`*.auto.toml` is gitignored, so a pin needs `git add -f`).
+        (tmp_path / "scb.toml").write_text("", encoding="utf-8")
+        if freeze is not None:
+            (tmp_path / FREEZE_STATE_FILE).write_text(
+                f'scb = "{freeze}"\n', encoding="utf-8"
+            )
+        return tmp_path
+
+    @pytest.mark.parametrize("state", ["curating", "frozen"])
+    def test_missing_auto_raises_when_pinned(self, tmp_path: Path, state: str) -> None:
+        # #471 pin guard: a curating/frozen provider WITH variables but no
+        # committed auto.toml must fail loud, not silently re-derive (which would
+        # defeat the pin).
+        conn = self._db(kol="Kon")
+        d = self._dir_no_auto(tmp_path, freeze=state)
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_auto_missing"
+        assert "scb" in exc.value.message
+        assert state in exc.value.message
+
+    def test_missing_auto_does_not_raise_when_churning(self, tmp_path: Path) -> None:
+        # The critical false-fire regression: the default (churning) provider
+        # legitimately has no committed auto.toml and re-derives every build. The
+        # #471 guard lives strictly inside the curating/frozen branch, so churning
+        # must be UNAFFECTED.
+        conn = self._db(kol="Kon")
+        d = self._dir_no_auto(tmp_path, freeze=None)
+        counts = populate_variable_slugs(conn, d)  # must NOT raise
+        assert self._stored(conn) == "kon"
+        assert counts["auto_new"] == 1
+
+    @pytest.mark.parametrize("state", ["curating", "frozen"])
+    def test_missing_auto_skipped_for_variableless_provider(
+        self, tmp_path: Path, state: str
+    ) -> None:
+        # The guard gates on the provider HAVING variables: `_live_providers`
+        # returns providers with >= 1 register (a superset of those with variable
+        # rows), so a register-only provider has no slugs to pin and must not be
+        # flagged even when pinned.
+        conn = build_slugged_db(variable=None)  # scb register, zero variables
+        d = self._dir_no_auto(tmp_path, freeze=state)
+        populate_variable_slugs(conn, d)  # must NOT raise
 
 
 # ---------------------------------------------------------------------------

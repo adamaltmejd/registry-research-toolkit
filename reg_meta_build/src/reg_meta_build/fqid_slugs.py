@@ -230,6 +230,25 @@ def _live_providers(conn: sqlite3.Connection) -> list[str]:
     ]
 
 
+def _provider_has_variables(conn: sqlite3.Connection, provider_slug: str) -> bool:
+    """Whether ``provider_slug`` has >= 1 variable row.
+
+    `_live_providers` gates on registers, not variables, so the #471 pin guard
+    uses this to avoid flagging a (theoretical) variable-less provider that has
+    no slugs to pin.
+    """
+    return (
+        conn.execute(
+            "SELECT 1 FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? LIMIT 1",
+            (provider_slug,),
+        ).fetchone()
+        is not None
+    )
+
+
 # ---------------------------------------------------------------------------
 # Parsing and validation
 # ---------------------------------------------------------------------------
@@ -1990,9 +2009,33 @@ def populate_variable_slugs(
         # their markers — it regenerates the whole file from scratch, so every
         # slug is freshly classed (the gitignored auto.toml is still rewritten).
         auto_derivation: dict[str, str] = {}
-        if freeze_state(states, provider_slug) != "churning" and auto_path.is_file():
-            auto = _auto_variable_slugs(load_provider_toml(auto_path))
-            auto_derivation.update(read_auto_derivations(auto_path))
+        if freeze_state(states, provider_slug) != "churning":
+            # #471 pin guard: a pinned provider (curating/frozen) reads slugs
+            # back from its committed `<provider>.auto.toml` and never recomputes
+            # them. `*.auto.toml` is gitignored, so if the maintainer set the
+            # state without force-adding the file, a silent fall-through to the
+            # churning re-derivation would defeat the pin. Fail loud instead.
+            # Gated on the provider actually having variables — the loop iterates
+            # `_live_providers` (providers with >= 1 register), which is a
+            # superset of providers with variable rows, so an EXISTS check keeps
+            # a variable-less provider from false-flagging (the file is only
+            # required because there are slugs to pin).
+            if not auto_path.is_file() and _provider_has_variables(conn, provider_slug):
+                state = freeze_state(states, provider_slug)
+                raise _err(
+                    "slug_freeze_auto_missing",
+                    f"Provider {provider_slug!r} is {state!r} but its committed "
+                    f"{auto_path.name} is missing. A pinned provider reads its slugs "
+                    "back from that file; without it the slugs would silently "
+                    "re-derive and the pin would fail.",
+                    f"Force-add the generated file "
+                    f"(git add -f reg_meta_build/fqid_slugs/{auto_path.name}) or add a "
+                    f"per-provider .gitignore negation "
+                    f"(!reg_meta_build/fqid_slugs/{auto_path.name}).",
+                )
+            if auto_path.is_file():
+                auto = _auto_variable_slugs(load_provider_toml(auto_path))
+                auto_derivation.update(read_auto_derivations(auto_path))
         # variable_state.delivery_column_name is the coalesced per-era column
         # (not raw variable_alias) — stays correct after A2.7 drops
         # variable_instance. "Latest" = highest valid_to, lexically smallest on
