@@ -58,8 +58,13 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
 }
 
 /** A minimal BindingNode leaf carrying `states`; the embedded edge arms are empty
- * (no succession/related/lineage panels) so only the picker under test renders. */
-function node(states: VariableStateModel[]): BindingNodeData {
+ * (no succession/related/lineage panels) so only the picker under test renders.
+ * `over` lets a case add fields the #670 member-identity path reads (`fqid`,
+ * `name`, `group`). */
+function node(
+  states: VariableStateModel[],
+  over: Partial<BindingNodeData> = {},
+): BindingNodeData {
   return {
     kind: "binding",
     fqid: "scb/lisa/kon",
@@ -79,6 +84,7 @@ function node(states: VariableStateModel[]): BindingNodeData {
     lineage: [],
     succession_chain: [],
     via_same_as: null,
+    ...over,
   } as unknown as BindingNodeData;
 }
 
@@ -422,5 +428,170 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
     await expect
       .element(page.getByRole("button", { name: "Add to project" }))
       .toBeDisabled();
+  });
+});
+
+describe("BindingLeafView member identity (#670)", () => {
+  // A grouped member: its `node.group` references a register concept group, and
+  // /dimensions returns that group with the member carrying distinguishing
+  // facets. The qualifier reads the member's facet labels; the link targets the
+  // group subject route built from `node.group`.
+  const groupedFqid = "scb/lisa/agi1astsni2007g";
+  const groupedNode = node(single, {
+    fqid: groupedFqid,
+    name: "Näringsgren, största förvärvskälla",
+    group: { provider: "scb", register: "lisa", key: "naringsgren" },
+  });
+  const groupedDimensions = {
+    binding: groupedFqid,
+    dimensions: [
+      {
+        key: "naringsgren",
+        label: "Näringsgren, största förvärvskälla",
+        source: "edge",
+        axes: ["source", "edition"],
+        members: [
+          {
+            fqid: groupedFqid,
+            name: "Näringsgren, största förvärvskälla",
+            facets: [
+              { axis: "source", value: "agi", label: "AGI" },
+              { axis: "edition", value: "sni2007", label: "2007 SNI edition" },
+            ],
+          },
+          {
+            fqid: "scb/lisa/ku1astsni2002g",
+            name: "Näringsgren, största förvärvskälla",
+            facets: [
+              { axis: "source", value: "ku", label: "KU" },
+              { axis: "edition", value: "sni2002", label: "2002 SNI edition" },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  it("renders the member qualifier and a 'member of ⟨label⟩' link with the correct href", async () => {
+    vi.mocked(getBindingDimensions).mockResolvedValue(
+      groupedDimensions as never,
+    );
+
+    render(BindingLeafView, {
+      fqidPath: groupedFqid,
+      node: groupedNode,
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The qualifier is THIS member's facet labels (canonical group's facets).
+    await expect
+      .element(page.getByText("AGI · 2007 SNI edition"))
+      .toBeVisible();
+
+    // The context link targets the group subject route from `node.group`.
+    const link = page.getByRole("link", {
+      name: "Näringsgren, största förvärvskälla",
+    });
+    await expect.element(link).toBeVisible();
+    await expect
+      .element(link)
+      .toHaveAttribute("href", "/catalog/group/scb/lisa/naringsgren");
+  });
+
+  it("a grouped member with no facets renders the slug qualifier as a code identifier (#670 M10)", async () => {
+    // M10's exact case: an edge group (`axes: []`) whose members carry NO facets,
+    // so the slug — the only differentiator — is the fallback qualifier, rendered
+    // as a technical identifier (mono `<code>`), not a human facet label.
+    const edgeDimensions = {
+      binding: groupedFqid,
+      dimensions: [
+        {
+          key: "naringsgren",
+          label: "Näringsgren, största förvärvskälla",
+          source: "edge",
+          axes: [],
+          members: [
+            { fqid: groupedFqid, name: "Näringsgren", facets: [] },
+            { fqid: "scb/lisa/ku1astsni", name: "Näringsgren", facets: [] },
+          ],
+        },
+      ],
+    };
+    vi.mocked(getBindingDimensions).mockResolvedValue(edgeDimensions as never);
+
+    render(BindingLeafView, {
+      fqidPath: groupedFqid,
+      node: groupedNode,
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The slug qualifier is present in the identity row, rendered as <code>.
+    const slug = page.getByText("agi1astsni2007g");
+    await expect.element(slug).toBeVisible();
+    const slugEl = document.querySelector(
+      ".member-identity code.qualifier.slug",
+    );
+    expect(slugEl?.textContent).toBe("agi1astsni2007g");
+    // ...and the "member of ⟨label⟩" link still renders alongside it.
+    await expect
+      .element(
+        page.getByRole("link", { name: "Näringsgren, största förvärvskälla" }),
+      )
+      .toBeVisible();
+  });
+
+  it("an ungrouped variable renders neither qualifier nor group link", async () => {
+    // The default beforeEach stubs `getBindingDimensions` → empty dimensions, and
+    // the plain `node()` fixture has no `group`. So a normal variable page shows
+    // no member-identity row at all (today's behavior).
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The page renders (header present), but no member-identity affordances.
+    await expect
+      .element(page.getByRole("heading", { name: "Kön", level: 2 }))
+      .toBeVisible();
+    expect(document.querySelector(".member-identity")).toBeNull();
+    await expect.element(page.getByText(/member of/)).not.toBeInTheDocument();
+  });
+
+  it("degrades gracefully when the dimensions fetch errors (header survives, no qualifier/link)", async () => {
+    // The dimensions fetch is an independent failure domain: an error must NOT
+    // blank the leaf — the header (node.name) still renders, the qualifier/link
+    // are simply omitted (additive). DimensionsPanel surfaces the inline error.
+    vi.mocked(getBindingDimensions).mockRejectedValue(new Error("dims down"));
+
+    render(BindingLeafView, {
+      fqidPath: groupedFqid,
+      node: groupedNode,
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The leaf is NOT blanked — the concept header (node.name) still renders.
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "Näringsgren, största förvärvskälla",
+          level: 2,
+        }),
+      )
+      .toBeVisible();
+    // No qualifier/link on error (both gate on a resolved fetch).
+    expect(document.querySelector(".member-identity")).toBeNull();
+    // The DimensionsPanel section still surfaces the error inline (shared resource).
+    await expect
+      .element(page.getByText(/Failed to load dimensions/))
+      .toBeVisible();
   });
 });

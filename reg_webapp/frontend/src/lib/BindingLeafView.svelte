@@ -2,6 +2,7 @@
 import {
   type BindingNodeData,
   type CatalogNode,
+  getBindingDimensions,
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
@@ -13,6 +14,8 @@ import {
   coverageFromStates,
   formatWindow,
   grainsFromStates,
+  memberGroupLink,
+  memberQualifier,
   registerPrefixOf,
   type VariantWindow,
 } from "./catalog";
@@ -105,6 +108,51 @@ const states = $derived.by(() =>
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
 // + StatesView's empty-message wording).
 const isNarrowed = $derived(!!params.period && !narrowedError);
+
+// ── #670: member identity from the concept-group dimensions ─────────────────
+// LIFTED from DimensionsPanel: the leaf now owns the ONE `/dimensions` fetch and
+// derives the header qualifier + group context link from it, then passes the
+// resolved groups (+ loading/error) DOWN to DimensionsPanel as props — so the
+// page makes a single `/dimensions` request, shared. Read `fqidPath`
+// synchronously inside `fn` so the resource refetches when the leaf changes (same
+// pattern as `periodResource`).
+//
+// FAILURE-DOMAIN isolation is preserved: this resource is independent of `node`,
+// so a dimensions error/timeout never blanks the leaf — the header just omits the
+// qualifier/link (both gate on `!dimError`, additive), and DimensionsPanel renders
+// its own inline loading/error from the same resource.
+const dimResource = asyncResource(() => getBindingDimensions(fqidPath));
+const dimGroups = $derived(dimResource.data?.dimensions ?? []);
+const dimLoading = $derived(dimResource.loading);
+const dimError = $derived(dimResource.error);
+
+// The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — this
+// member's facet labels across its dimension groups, the canonical
+// `node.group` group leading. For a GROUPED member with no facets (an edge
+// group's split siblings) it falls back to the member's slug (the 3rd FQID
+// segment) so those siblings never share an identical header (#670). "" only for
+// an ungrouped variable (its `node.name` suffices), or while loading / errored.
+const qualifier = $derived(
+  dimError ? "" : memberQualifier(dimGroups, node.fqid, node.group?.key),
+);
+
+// Whether `qualifier` is the SLUG fallback (a grouped member with no facets in
+// any group) rather than facet labels — drives rendering it as a technical
+// identifier (mono `<code>`) instead of a human label. Order-independent: only
+// the PRESENCE of any facet matters here (canonical ordering decides only WHICH
+// facet label wins, in `memberQualifier`).
+const qualifierIsSlug = $derived(
+  qualifier !== "" &&
+    !dimGroups.some((g) =>
+      g.members.some((m) => m.fqid === node.fqid && m.facets.length > 0),
+    ),
+);
+
+// The "member of ⟨group label⟩" context link to the group subject page (#670) —
+// null when ungrouped, or while loading / errored (additive; never blanks).
+const groupLink = $derived(
+  dimError ? null : memberGroupLink(dimGroups, node.group, node.fqid),
+);
 
 /** Write the resolution params to the URL (preserving the pathname), which the
  * reactive query picks up → refetch. An empty `period` clears the narrowing
@@ -325,6 +373,31 @@ const repSegment = $derived(
      snippets (description / picker / value set / relationships / docs), passed in
      the canonical order the shell renders. -->
 {#snippet description()}
+  <!-- #670: the member-distinguishing qualifier + "member of ⟨group⟩" context
+       link, rendered directly under the header (the shell renders `description`
+       first). Both are ADDITIVE and gated on a resolved /dimensions fetch — an
+       ungrouped variable, or a loading/errored fetch, renders neither, leaving
+       the page exactly as it was. -->
+  {#if qualifier || groupLink}
+    <p class="member-identity">
+      {#if qualifier}
+        {#if qualifierIsSlug}
+          <!-- #670: a grouped member with no facets (edge-group split siblings):
+               the slug is the only differentiator, rendered as a technical
+               identifier (mono) rather than a human label. -->
+          <code class="qualifier slug">{qualifier}</code>
+        {:else}
+          <span class="qualifier">{qualifier}</span>
+        {/if}
+      {/if}
+      {#if groupLink}
+        <span class="group-context">
+          member of <a href={groupLink.href}>{groupLink.label}</a>
+        </span>
+      {/if}
+    </p>
+  {/if}
+
   {#if node.via_same_as && node.via_same_as.length > 0}
     <p class="muted via">
       Resolved via <code>same_as</code>: {node.via_same_as.join(" → ")}
@@ -546,11 +619,14 @@ const repSegment = $derived(
 {/snippet}
 
 {#snippet relationships()}
-  <!-- #489: the concept-group dimensions this variable belongs to (the "pick your
-       variant" facet groups). A SIBLING of LineagePanels — a separate component
-       over a separate fetch (its own failure domain; a dimensions error never
-       blanks the leaf). Omits itself entirely when the variable is in no group. -->
-  <DimensionsPanel {fqidPath} />
+  <!-- #489/#670: the concept-group dimensions this variable belongs to (the "pick
+       your variant" facet groups). PRESENTATIONAL since #670 — the `/dimensions`
+       fetch is owned by THIS view (it also feeds the header qualifier + group
+       link), so the panel receives the resolved groups + loading/error as props
+       (one shared fetch). Its failure domain is unchanged: the dimensions resource
+       is independent of `node`, so an error renders the panel's inline alert
+       without blanking the leaf. Omits itself entirely when in no group. -->
+  <DimensionsPanel groups={dimGroups} loading={dimLoading} error={dimError} />
 
   <LineagePanels {fqidPath} {node} />
 {/snippet}
@@ -565,6 +641,7 @@ const repSegment = $derived(
 <SubjectView
   title={node.name ?? node.fqid}
   fqid={node.fqid}
+  showFqid={false}
   {description}
   {picker}
   {valueSet}
@@ -575,6 +652,31 @@ const repSegment = $derived(
 <style>
   .via code {
     font-size: 0.9em;
+  }
+  /* #670: the member-distinguishing qualifier + group context link, sitting just
+     under the shared concept header. Two inline pieces separated by a thin
+     divider so the qualifier (what locates this member) reads as primary and the
+     "member of …" link as secondary context. */
+  .member-identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.75rem;
+    margin: -0.25rem 0 0.75rem;
+    font-size: 0.9rem;
+  }
+  .member-identity .qualifier {
+    font-weight: 600;
+  }
+  /* #670: the slug-fallback qualifier reads as a technical identifier, not a
+     human label — mono, lighter weight, in a subtle code chip. */
+  .member-identity .qualifier.slug {
+    font-family: var(--mono, monospace);
+    font-weight: 500;
+    font-size: 0.85em;
+  }
+  .member-identity .group-context {
+    color: var(--muted);
   }
   /* #638 PR4: row spacing standardized to 0.3rem across the three subject kinds. */
   .meta {

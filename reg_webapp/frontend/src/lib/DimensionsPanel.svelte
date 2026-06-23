@@ -1,44 +1,49 @@
 <script lang="ts">
-import { getBindingDimensions } from "./api";
-import { asyncResource } from "./async.svelte";
+import type { ConceptGroup } from "./api";
 import ConceptGroupRow from "./ConceptGroupRow.svelte";
 
 // The binding-leaf "Variants / dimensions" panel (#489): the concept-group
 // dimension memberships ("pick your variant" facet groups — level / population /
-// rank / …) that contain this variable. A SIBLING of LineagePanels — a separate
-// component over its own fetch (`/dimensions`), so it's an independent FAILURE
-// DOMAIN: a dimensions fetch error / timeout never blanks or wedges the leaf
-// (mirrors DocMentionsPanel's rationale). Each group renders via the shared
-// browse `ConceptGroupRow` (no `onpick` → members are catalog links); the current
+// rank / …) that contain this variable. Each group renders via the shared browse
+// `ConceptGroupRow` (no `onpick` → members are catalog links); the current
 // variable appears as one member of its group.
+//
+// PRESENTATIONAL (#670): the `/dimensions` fetch is now OWNED by the parent
+// BindingLeafView (which also derives the header qualifier + group link from it),
+// so this panel receives the resolved `groups` + `loading` + `error` as props —
+// ONE shared fetch, no duplicate `/dimensions` request. The FAILURE-DOMAIN
+// isolation is unchanged: the parent's dimensions resource is independent of the
+// leaf node, so an error here renders this section's inline alert WITHOUT blanking
+// the leaf (mirrors DocMentionsPanel's rationale).
 //
 // Omit-when-empty (the LineagePanels ethos): the WHOLE section is omitted when
 // the variable is in no group — but NOT while still loading or on error (we never
 // hide a section whose state is unknown, which would read as a confirmed absence).
-let { fqidPath }: { fqidPath: string } = $props();
+let {
+  groups,
+  loading,
+  error,
+}: {
+  groups: ConceptGroup[];
+  loading: boolean;
+  error: string | null;
+} = $props();
 
-// Read `fqidPath` synchronously inside `fn` so the resource refetches when the
-// leaf changes (same pattern as LineagePanels' predecessors resource).
-const resource = asyncResource(() => getBindingDimensions(fqidPath));
-
-const groups = $derived(resource.data?.dimensions ?? []);
 // Show the section while loading / on error / when it has groups; omit it only
 // once we KNOW it's empty (resolved with no groups).
-const show = $derived(
-  resource.loading || !!resource.error || groups.length > 0,
-);
+const show = $derived(loading || !!error || groups.length > 0);
 </script>
 
 {#if show}
   <section aria-labelledby="dimensions-heading">
     <h3 id="dimensions-heading">Variants / dimensions</h3>
 
-    {#if resource.loading}
+    {#if loading}
       <p class="muted" aria-busy="true">Loading…</p>
-    {:else if resource.error}
+    {:else if error}
       <!-- Any dimensions failure stays INLINE — it never blanks the leaf. -->
       <p class="error" role="alert">
-        Failed to load dimensions: {resource.error}
+        Failed to load dimensions: {error}
       </p>
     {:else}
       <div class="dimension-groups">

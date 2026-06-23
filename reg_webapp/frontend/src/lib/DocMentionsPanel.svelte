@@ -28,6 +28,13 @@ const register = $derived(fqidSegments(node.fqid)[1]);
 // segment). $derived off `node` so the fetch refetches when the leaf changes.
 const q = $derived(node.name?.trim() || fqidSegments(node.fqid)[2]);
 
+// #670: a grouped member shares its concept `node.name` with ~31 siblings, and
+// the FTS runs on that shared name — so a member's hits are CONCEPT-grain
+// (identical across the group), not member-specific. Caption them as such so the
+// shared matches don't read as member-specific. Conditioned on `node.group` (the
+// grouped-member marker); ungrouped variables keep only the fuzzy note.
+const grouped = $derived(!!node.group);
+
 // Read `q`/`register` SYNCHRONOUSLY inside `fn` so the effect tracks them and
 // refetches when the leaf changes (same pattern as BindingLeafView's
 // periodResource / LineagePanels' resources). The teardown `signal` aborts a
@@ -61,6 +68,15 @@ const show = $derived(
         Failed to load documentation mentions: {resource.error}
       </p>
     {:else if data}
+      {#if grouped}
+        <!-- #670: a grouped member's hits are CONCEPT-grain — the FTS matched the
+             shared concept name, so these are identical across the group's
+             members, not member-specific. -->
+        <p class="muted concept-grain-note">
+          Matches on the shared concept name — these mentions are common to the
+          group's members, not specific to this variable.
+        </p>
+      {/if}
       <!-- One section-level caption marks the WHOLE list as fuzzy/heuristic name
            matches (every result is `fuzzy:true`) — cleaner than per-row badges. -->
       <p class="muted fuzzy-note">
@@ -116,6 +132,12 @@ const show = $derived(
     border-bottom: 1px solid var(--border);
   }
   .fuzzy-note {
+    margin: 0 0 0.5rem;
+    font-size: 0.85em;
+  }
+  /* #670: the concept-grain caption — same muted/small treatment as the fuzzy
+     note it sits above. */
+  .concept-grain-note {
     margin: 0 0 0.5rem;
     font-size: 0.85em;
   }

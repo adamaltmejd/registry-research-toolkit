@@ -1,63 +1,39 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { DimensionsResponse } from "./api";
-import { getBindingDimensions } from "./api";
+import type { ConceptGroup } from "./api";
 import DimensionsPanel from "./DimensionsPanel.svelte";
 
-// Mock the single GET the panel drives (mirrors DocMentionsPanel's api-mock
-// style); keep the rest of api.ts real (the type exports).
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return {
-    ...actual,
-    getBindingDimensions: vi.fn(),
-  };
-});
+// PRESENTATIONAL since #670: the `/dimensions` fetch moved up to BindingLeafView
+// (which shares the resource with the header qualifier + group link), so the
+// panel now takes resolved `groups` + `loading` + `error` props — no api mock.
 
-// A dimensions envelope; cases override `dimensions`.
-function response(
-  overrides: Partial<DimensionsResponse> = {},
-): DimensionsResponse {
-  return {
-    binding: "scb/rams/inkjan",
-    dimensions: [],
-    ...overrides,
-  } as unknown as DimensionsResponse;
-}
+const inkomst: ConceptGroup = {
+  key: "ink",
+  label: "Inkomst",
+  source: "token",
+  axes: ["month"],
+  members: [
+    {
+      fqid: "scb/rams/inkjan",
+      name: "Inkomst",
+      facets: [{ axis: "month", value: "01", label: "januari" }],
+    },
+    {
+      fqid: "scb/rams/inkfeb",
+      name: "Inkomst",
+      facets: [{ axis: "month", value: "02", label: "februari" }],
+    },
+  ],
+} as unknown as ConceptGroup;
 
-beforeEach(() => {
-  vi.mocked(getBindingDimensions).mockReset();
-});
-
-describe("DimensionsPanel (#489)", () => {
-  it("renders a fetched concept group via ConceptGroupRow", async () => {
-    vi.mocked(getBindingDimensions).mockResolvedValue(
-      response({
-        dimensions: [
-          {
-            key: "ink",
-            label: "Inkomst",
-            source: "token",
-            axes: ["month"],
-            members: [
-              {
-                fqid: "scb/rams/inkjan",
-                name: "Inkomst",
-                facets: [{ axis: "month", value: "01", label: "januari" }],
-              },
-              {
-                fqid: "scb/rams/inkfeb",
-                name: "Inkomst",
-                facets: [{ axis: "month", value: "02", label: "februari" }],
-              },
-            ],
-          },
-        ],
-      } as unknown as DimensionsResponse),
-    );
-
-    await render(DimensionsPanel, { fqidPath: "scb/rams/inkjan" });
+describe("DimensionsPanel (#489 / #670 presentational)", () => {
+  it("renders a passed concept group via ConceptGroupRow", async () => {
+    await render(DimensionsPanel, {
+      groups: [inkomst],
+      loading: false,
+      error: null,
+    });
 
     await expect
       .element(page.getByRole("heading", { name: "Variants / dimensions" }))
@@ -68,23 +44,29 @@ describe("DimensionsPanel (#489)", () => {
   });
 
   it("omits the whole section when the variable is in no group", async () => {
-    vi.mocked(getBindingDimensions).mockResolvedValue(
-      response({ dimensions: [] }),
-    );
-
-    await render(DimensionsPanel, { fqidPath: "scb/rams/syss" });
+    await render(DimensionsPanel, { groups: [], loading: false, error: null });
 
     await expect
       .element(page.getByRole("heading", { name: "Variants / dimensions" }))
       .not.toBeInTheDocument();
   });
 
-  it("keeps the section visible with an inline error when the fetch fails", async () => {
-    vi.mocked(getBindingDimensions).mockRejectedValue(
-      new Error("backend down"),
-    );
+  it("shows the aria-busy loading line while the parent's fetch is pending", async () => {
+    await render(DimensionsPanel, { groups: [], loading: true, error: null });
 
-    await render(DimensionsPanel, { fqidPath: "scb/rams/inkjan" });
+    await expect
+      .element(page.getByRole("heading", { name: "Variants / dimensions" }))
+      .toBeVisible();
+    await expect.element(page.getByText("Loading…")).toBeVisible();
+    expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
+  });
+
+  it("keeps the section visible with an inline error when the fetch failed", async () => {
+    await render(DimensionsPanel, {
+      groups: [],
+      loading: false,
+      error: "backend down",
+    });
 
     // A fetch failure must NOT silently collapse the section (that would read as
     // "in no group"); it stays visible with the inline error.

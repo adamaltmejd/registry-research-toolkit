@@ -39,6 +39,37 @@ describe("SubjectView (#638 shell)", () => {
     expect(screen.container.querySelector(".fqid")).toBeNull();
   });
 
+  it("omits the fqid line when showFqid=false even with an fqid (#670 binding leaf opt-out)", async () => {
+    // The binding leaf passes showFqid=false — its breadcrumb already ends in the
+    // slug, so the under-header fqid line is redundant (M12). The fqid prop is
+    // still present (used for the docs/dimensions wiring), but the line is dropped.
+    const screen = await render(SubjectView, {
+      title: "Näringsgren, största förvärvskälla",
+      fqid: "scb/lisa/agi1astsni2007g",
+      showFqid: false,
+    });
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "Näringsgren, största förvärvskälla",
+          level: 2,
+        }),
+      )
+      .toBeVisible();
+    expect(screen.container.querySelector(".fqid")).toBeNull();
+  });
+
+  it("keeps the fqid line by default (the classification leaf still shows it)", async () => {
+    // showFqid defaults to true — the classification leaf keeps the under-header
+    // fqid line (its breadcrumb shows the class axis, not the leaf slug).
+    const screen = await render(SubjectView, {
+      title: "SSYK 2012",
+      fqid: "scb/class/ssyk2012",
+    });
+    expect(screen.container.querySelector(".fqid")).not.toBeNull();
+    await expect.element(page.getByText("scb/class/ssyk2012")).toBeVisible();
+  });
+
   it("renders the sections in the canonical order when all are provided", async () => {
     const screen = await render(SubjectView, {
       title: "Kön",
