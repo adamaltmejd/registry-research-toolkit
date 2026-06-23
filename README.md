@@ -3,14 +3,12 @@
 Tools for working with Swedish registry microdata on [SCB
 MONA](https://www.scb.se/mona).
 
-  | Package                                 | Description                                                               |
-  | --------------------------------------- | ------------------------------------------------------------------------- |
-  | [`reg_meta`](reg_meta/)                 | Search and query SCB registry metadata (CLI `reg-meta`)                   |
-  | [`reg_meta_build`](reg_meta_build/)     | Build the `reg_meta` metadata DBs from agency exports (maintainer-only)   |
-  | [`reg_schema`](reg_schema/)             | `project_data.json` schema and structural validator                       |
-  | [`reg_monabundle`](reg_monabundle/)     | MONA bundle build + runtime + PII scanner                                 |
-  | [`reg_webapp`](reg_webapp/)             | Web app (FastAPI + Svelte): catalog browse + project authoring            |
-  | [`mock_data_wizard`](mock_data_wizard/) | Generate mock CSV data from MONA projects without exporting personal data |
+  | Package                             | Description                                                             |
+  | ----------------------------------- | ----------------------------------------------------------------------- |
+  | [`reg_meta`](reg_meta/)             | Search and query SCB registry metadata (CLI `reg-meta`)                 |
+  | [`reg_meta_build`](reg_meta_build/) | Build the `reg_meta` metadata DBs from agency exports (maintainer-only) |
+  | [`reg_schema`](reg_schema/)         | `project_data.json` schema and structural validator                     |
+  | [`reg_webapp`](reg_webapp/)         | Web app (FastAPI + Svelte): catalog browse + project authoring          |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
@@ -63,12 +61,7 @@ host. The skills use the underlying CLIs below; install those once per machine.
 ```bash
 uv tool install reg-meta
 reg-meta update            # download metadata DB (~400 MB compressed)
-
-uv tool install mock-data-wizard   # depends on reg_meta
 ```
-
-Both CLIs check for updates on startup and ship explicit upgrade paths
-(`reg-meta update`, `mock-data-wizard update`).
 
 ## Quick start
 
@@ -82,17 +75,7 @@ reg-meta get schema --register LISA --years 2020      # columns for a year
 reg-meta docs search "disponibel inkomst"             # search documentation
 ```
 
-### mock-data-wizard
-
-```bash
-mock-data-wizard build-bundle                        # build mdw_runner.py
-# Upload the bundle to MONA, edit configure(), run `python mdw_runner.py`,
-# download mdw_step3_stats.json
-mock-data-wizard generate --stats mdw_step3_stats.json --seed 42   # mock CSVs
-```
-
-See per-package READMEs for details: [reg_meta](reg_meta/README.md) \|
-[mock_data_wizard](mock_data_wizard/README.md)
+See the [reg_meta README](reg_meta/README.md) for details.
 
 ## License
 

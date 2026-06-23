@@ -4,28 +4,6 @@
  */
 
 export interface paths {
-    "/api/bundle": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Build Mona Bundle
-         * @description Build the MONA bundle embedding the posted ``project_data.json`` and return
-         *     the ``.py`` bytes. Reads the raw dict (preserving namespaced blocks) and
-         *     offloads the blocking build to the threadpool.
-         */
-        post: operations["build_mona_bundle_api_bundle_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/catalog": {
         parameters: {
             query?: never;
@@ -390,28 +368,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/kit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Build Kit
-         * @description Build the generation kit from the posted ``project_data.json`` and return
-         *     the ZIP bytes. Reads the raw dict (preserving namespaced blocks) and offloads
-         *     the blocking validate-then-build to the threadpool.
-         */
-        post: operations["build_kit_api_kit_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/project/order": {
         parameters: {
             query?: never;
@@ -454,17 +410,10 @@ export interface paths {
         /**
          * Validate Project
          * @description Validate a ``project_data.json``. Returns 200 with the concatenated
-         *     structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
+         *     structural ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
          *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
-         *     This is the SEMANTIC validator (reg_meta-backed). It now ALSO runs the
-         *     build-time cross-block referential checks (orphan ``binding_options`` keys /
-         *     suppress_k-on-non-categorical) — that half of the old ``/validate``↔``/bundle``
-         *     divergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the
-         *     step-4 capability gates (e.g. a build-required ``display_name``), which
-         *     ``/validate`` does NOT — so a spec ``/validate`` greenlights can still 422 at
-         *     ``/bundle`` on a capability gate (an intentional lenient residual: ``/validate``
-         *     defaults ``display_name`` from reg_meta).
+         *     This is the SEMANTIC validator (reg_meta-backed).
          *
          *     ``async`` only to read the body off the wire; the BLOCKING work (the structural
          *     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
@@ -2016,32 +1965,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    build_mona_bundle_api_bundle_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/octet-stream": unknown;
-                };
-            };
-        };
-    };
     get_catalog_root_api_catalog_get: {
         parameters: {
             query?: never;
@@ -2495,32 +2418,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    build_kit_api_kit_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    [key: string]: unknown;
-                };
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/zip": unknown;
                 };
             };
         };

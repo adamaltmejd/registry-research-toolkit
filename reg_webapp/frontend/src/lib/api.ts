@@ -126,8 +126,8 @@ export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
  * response blob. The filename is taken from the response's `Content-Disposition`
  * (`attachment; filename="..."`), falling back to `fallbackFilename`. A non-2xx is
  * an `ApiError` (the backend's 400/422 — a malformed request or an invalid spec
- * the download endpoints reject, unlike `/validate`'s 200 diagnosis). Used for the
- * CSV order export + the MONA bundle (`/project/order`, `/bundle`).
+ * the download endpoint rejects, unlike `/validate`'s 200 diagnosis). Used for the
+ * CSV order export (`/project/order`).
  *
  * The download is wired with a transient `<a download>` + `createObjectURL`,
  * revoked after the click — the standard no-dep blob-download pattern.
@@ -383,11 +383,11 @@ export function getBindingDimensions(
 }
 
 // ── Project write surface (A5.2b-ii) ────────────────────────────────────────
-// The three POST endpoints the authoring SPA drives (see reg_webapp/DESIGN.md →
-// Project-write surface (routes/project.py + routes/bundle.py)). Each takes the WHOLE
-// serialized draft as an open object (the requestBodies are
-// `additionalProperties: true`), so steward-namespaced blocks ride along — the
-// backend embeds the raw dict (routes/project.py, routes/bundle.py).
+// The POST endpoints the authoring SPA drives (see reg_webapp/DESIGN.md →
+// Project-write surface (routes/project.py)). Each takes the WHOLE serialized
+// draft as an open object (the requestBodies are `additionalProperties: true`),
+// so steward-namespaced blocks ride along — the backend embeds the raw dict
+// (routes/project.py).
 
 export type ValidationResultModel = Schemas["ValidationResultModel"];
 
@@ -416,12 +416,6 @@ export function validateProject(
  * `/validate`, the order endpoint cannot render from an invalid spec. */
 export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
   return apiPostForBlob("/project/order", draft, "order.csv");
-}
-
-/** POST a draft to `/api/bundle` and download the single-file MONA `.py` bundle.
- * A build-gate failure (bad input) is the backend's 422 (an `ApiError`). */
-export function downloadBundle(draft: ProjectDataBody): Promise<void> {
-  return apiPostForBlob("/bundle", draft, "mona_bundle.py");
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────

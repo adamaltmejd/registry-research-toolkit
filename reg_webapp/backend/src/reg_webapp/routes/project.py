@@ -1,11 +1,11 @@
 """`POST /api/project/*` — the project-WRITE surface (A5.2b-ii).
 
-See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
+See DESIGN.md → Project-write surface (routes/project.py).
 Two endpoints:
 
-- ``POST /api/project/validate`` — runs the three-layer validator over a
+- ``POST /api/project/validate`` — runs the two-layer validator over a
   raw ``project_data.json`` and returns the CONCATENATED issue list (structural
-  ⧺ block ⧺ semantic) as a ``ValidationResultModel``.
+  ⧺ semantic) as a ``ValidationResultModel``.
 - ``POST /api/project/order`` — renders the steward's default v1 order-export CSV
   (``order_export.render_order_csv``) as a ``text/csv`` download.
 
@@ -25,21 +25,12 @@ issue; a residual model-construction failure is a thin defensive issue (still co
 + the semantic layer's per-binding sqlite resolution) is offloaded to the
 threadpool via ``run_in_threadpool`` so it never stalls the event loop — the
 catalog routes are plain ``def`` for the same reason.
-``project_validation.per_request_conn`` (shared with ``/api/kit``) opens the
-reg_meta connection on that worker thread (``/order`` is a sync ``def``, so on its
-threadpool thread): open + query + close stay on ONE thread — NOT a generator
-``Depends``, which would run on a possibly-different AnyIO thread → cross-thread
-``sqlite3.ProgrammingError`` (the A5.2a/b-i P1). The body parse + structural/block
-layers are DB-FREE and run BEFORE the open, so a malformed or structurally-rejected
-body costs no DB hit.
-
-Import boundary (see reg_monabundle/DESIGN.md → The two halves): this module
-imports ``reg_schema`` (structural validator + ``ProjectData``)
-and the BUILD-side ``reg_monabundle.build.spec_loader`` issue forms (``block_issue``
-/ ``binding_options_issues``, which wrap the block + the cross-block
-referential checks as canonical ``ValidationIssue``s) — NOT
-``reg_monabundle.runtime.*`` / duckdb / pyodbc (``spec_loader`` imports the runtime
-lazily, so this stays out of the import graph; the import-graph test pins it).
+``project_validation.per_request_conn`` opens the reg_meta connection on that
+worker thread (``/order`` is a sync ``def``, so on its threadpool thread): open +
+query + close stay on ONE thread — NOT a generator ``Depends``, which would run on
+a possibly-different AnyIO thread → cross-thread ``sqlite3.ProgrammingError`` (the
+A5.2a/b-i P1). The body parse + structural layer are DB-FREE and run BEFORE the
+open, so a malformed or structurally-rejected body costs no DB hit.
 """
 
 from __future__ import annotations
@@ -60,7 +51,6 @@ from reg_webapp.models import (
 )
 from reg_webapp.order_export import render_order_csv
 from reg_webapp.project_validation import (
-    block_issues,
     per_request_conn,
     semantic_issues,
 )
@@ -113,22 +103,18 @@ def _to_result_model(result: ValidationResult) -> ValidationResultModel:
 def _semantic_issues(
     raw: dict[str, Any], catalog: Catalog, index: CatalogIndex | None
 ) -> list[ValidationIssue]:
-    """Build the ``ProjectData`` model, then run the SHARED semantic + cross-block
-    referential layer (``project_validation.semantic_issues``, also used by
-    ``/api/kit``). The cross-block check closes the documented
-    ``/validate``↔``/bundle`` divergence — a spec that bundles must also validate
-    clean on that class.
+    """Build the ``ProjectData`` model, then run the reg_meta-backed semantic layer
+    (``project_validation.semantic_issues``).
 
     ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
     ``global`` deployment); the semantic layer consults it to flag a resolvable
     binding outside the steward's filtered subset (``fqid_outside_steward_catalog``
     / ``representation_outside_steward_catalog`` — column-based admission, #206).
 
-    Reached only when the structural layer passed. The model build is the
-    ``/validate``-specific bit (kept here, not shared): a residual model
+    Reached only when the structural layer passed. A residual model
     ``ValidationError`` is a constraint structural didn't replicate — surfaced as a
     200 ISSUE (NOT a 500), and the semantic step is skipped (it needs a built
-    model). The kit's route makes the opposite choice (422 on the same case)."""
+    model)."""
     try:
         project = ProjectData.model_validate(raw)
     except ValidationError as exc:
@@ -139,7 +125,7 @@ def _semantic_issues(
                 exc,
             )
         ]
-    return semantic_issues(project, raw, catalog, index)
+    return semantic_issues(project, catalog, index)
 
 
 # The body is read RAW (not a typed param), so FastAPI emits no `requestBody` in
@@ -167,17 +153,10 @@ def _semantic_issues(
 )
 async def validate_project(request: Request) -> ValidationResultModel:
     """Validate a ``project_data.json``. Returns 200 with the concatenated
-    structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
+    structural ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
 
-    This is the SEMANTIC validator (reg_meta-backed). It now ALSO runs the
-    build-time cross-block referential checks (orphan ``binding_options`` keys /
-    suppress_k-on-non-categorical) — that half of the old ``/validate``↔``/bundle``
-    divergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the
-    step-4 capability gates (e.g. a build-required ``display_name``), which
-    ``/validate`` does NOT — so a spec ``/validate`` greenlights can still 422 at
-    ``/bundle`` on a capability gate (an intentional lenient residual: ``/validate``
-    defaults ``display_name`` from reg_meta).
+    This is the SEMANTIC validator (reg_meta-backed).
 
     ``async`` only to read the body off the wire; the BLOCKING work (the structural
     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
@@ -199,11 +178,10 @@ async def validate_project(request: Request) -> ValidationResultModel:
 def _validate_blocking(
     db_path: Path, raw: dict[str, Any], index: CatalogIndex | None
 ) -> ValidationResultModel:
-    """The three-layer composition, run on a threadpool thread (off the
+    """The two-layer composition, run on a threadpool thread (off the
     event loop). Layer order (DB-free first, so a structurally-rejected body costs
-    no DB hit): structural → block → (model build + semantic). When structural
-    fails we SKIP the model build + semantic step (they assume a structurally valid
-    spec) but STILL report the block issues — the block validator is independent.
+    no DB hit): structural → (model build + semantic). When structural fails we SKIP
+    the model build + semantic step (they assume a structurally valid spec).
 
     ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
     ``global`` deployment), threaded into the semantic layer for the steward
@@ -212,7 +190,6 @@ def _validate_blocking(
     issues: list[ValidationIssue] = []
     structural = validate_structural(raw)
     issues.extend(structural.issues)
-    issues.extend(block_issues(raw))
 
     if structural.ok:
         # The connection opens HERE on this threadpool thread (one thread), AFTER

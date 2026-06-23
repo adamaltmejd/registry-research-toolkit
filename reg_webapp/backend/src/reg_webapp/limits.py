@@ -3,7 +3,7 @@
 See DESIGN.md → Cost protection (limits.py). There is no auth — the data is
 public-ish registry metadata and there's no
 server-side user state. "Auth" is cost protection on the actual-work POST
-endpoints (`/api/project/validate`, `/api/project/order`, `/api/bundle`). Two
+endpoints (`/api/project/validate`, `/api/project/order`). Two
 stdlib-only ASGI middlewares, no new dependency (no slowapi):
 
 - ``BodySizeLimitMiddleware`` — a STREAMING byte-count guard that 413s a request

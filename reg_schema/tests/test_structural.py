@@ -1295,8 +1295,10 @@ def test_validator_accepts_arbitrary_mapping() -> None:
 # WIRE name (``field.alias or name``), NOT the bare Python attribute name: the
 # structural validator checks JSON KEYS, so if a field ever gains an alias the
 # frozenset must carry the alias (the models are alias-free today, so this is
-# future-proofing). This test file may import pydantic freely: only the
-# BUNDLE-amalgamated modules must stay pydantic-free; structural.py is build-side.
+# future-proofing). This test file may import pydantic freely — it introspects
+# the models. (structural.py itself stays pydantic-free; that constraint's
+# original MONA-amalgamation rationale is archived and pending re-evaluation —
+# see #699.)
 
 
 def _wire_keys(model: type) -> set[str]:

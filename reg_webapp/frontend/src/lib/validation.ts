@@ -13,10 +13,8 @@
  * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
  *    the level it's typically raised at. Hand-maintained from the validator
  *    sources: structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md →
- *    Structural rules and issue codes), semantic (see reg_webapp/DESIGN.md →
- *    Semantic validation (semantic.py)), and the block codes
- *    (`reg_monabundle.build.spec_loader`; see reg_monabundle/DESIGN.md → The two
- *    halves). An UNKNOWN code
+ *    Structural rules and issue codes) and semantic (see reg_webapp/DESIGN.md →
+ *    Semantic validation (semantic.py)). An UNKNOWN code
  *    degrades gracefully (the issue is still shown with its raw code + level).
  */
 
@@ -108,8 +106,6 @@ export interface CodeInfo {
  * new codes are ADDITIVE, so a code missing here is not a bug, it just
  * renders with its raw code (see `codeLabel`). Sourced from:
  * - structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md → Structural rules and issue codes)
- * - block (`reg_monabundle.build.spec_loader`: `invalid_block`,
- *   `binding_options_orphan_fqid`, `suppress_k_on_non_categorical`; see reg_monabundle/DESIGN.md → The two halves)
  * - semantic (`reg_webapp.semantic`; see reg_webapp/DESIGN.md → Semantic validation (semantic.py))
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
@@ -176,17 +172,6 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   // Thin defensive code: a residual ProjectData model-construction failure
   // structural didn't replicate (routes/project.py `_model_issue`).
   invalid_field: { label: "Invalid field", hint: "error" },
-
-  // ── block (reg_monabundle) ────────────────────────────────────────────────
-  invalid_block: { label: "Invalid reg_monabundle block", hint: "error" },
-  binding_options_orphan_fqid: {
-    label: "binding_options key references no bound variable",
-    hint: "error",
-  },
-  suppress_k_on_non_categorical: {
-    label: "suppress_k set on a non-categorical column",
-    hint: "error",
-  },
 
   // ── semantic (reg_meta-backed) ────────────────────────────────────────────
   fqid_unresolved: {

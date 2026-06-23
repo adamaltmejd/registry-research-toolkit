@@ -1,8 +1,8 @@
 # reg_webapp deployment image (REFACTOR_SPEC.md §6.5 — Deployment).
 #
 # Build context is the REPO ROOT (not reg_webapp/), because reg-webapp is a uv
-# workspace member whose deps (reg-meta / reg-schema / reg-monabundle) resolve
-# via [tool.uv.sources] against the root uv.lock — the lockfile and the sibling
+# workspace member whose deps (reg-meta / reg-schema) resolve via
+# [tool.uv.sources] against the root uv.lock — the lockfile and the sibling
 # member source trees must all be in context. Build from the repo root with:
 #
 #   docker build -f reg_webapp/Dockerfile -t reg-webapp .
@@ -71,10 +71,8 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 COPY reg_meta/ ./reg_meta/
 COPY reg_meta_build/pyproject.toml reg_meta_build/README.md ./reg_meta_build/
-COPY reg_monabundle/pyproject.toml reg_monabundle/README.md ./reg_monabundle/
 COPY reg_schema/pyproject.toml reg_schema/README.md ./reg_schema/
 COPY reg_webapp/backend/pyproject.toml reg_webapp/backend/README.md ./reg_webapp/backend/
-COPY mock_data_wizard/pyproject.toml ./mock_data_wizard/
 
 # Install ONLY reg-meta + its runtime dep closure — just enough to run the
 # `reg-meta update` fetch below.
@@ -131,22 +129,19 @@ WORKDIR /app
 # pyproject + uv.lock define the workspace; every member listed in
 # [tool.uv.workspace].members must have its pyproject present for the locked
 # resolution to validate. Full source trees only for the members this stage
-# actually installs (reg-webapp's dep closure); reg_meta_build /
-# mock_data_wizard stay pyproject-only so their churn doesn't bust the sync
-# layer (#290).
+# actually installs (reg-webapp's dep closure); reg_meta_build stays
+# pyproject-only so its churn doesn't bust the sync layer (#290).
 COPY pyproject.toml uv.lock ./
 COPY reg_meta/ ./reg_meta/
 COPY reg_meta_build/pyproject.toml reg_meta_build/README.md ./reg_meta_build/
-COPY reg_monabundle/ ./reg_monabundle/
 COPY reg_schema/ ./reg_schema/
-COPY mock_data_wizard/pyproject.toml ./mock_data_wizard/
 COPY reg_webapp/backend/ ./reg_webapp/backend/
 
 # Install ONLY the reg-webapp package + its runtime dep closure (reg-meta /
-# reg-schema / reg-monabundle), no dev deps. --frozen asserts the lockfile is up
-# to date (CI parity). --package scopes the sync so reg-meta-build /
-# mock-data-wizard (other workspace members, not reg-webapp deps) are NOT
-# installed. This pulls the `reg-meta` console script into /app/.venv/bin.
+# reg-schema), no dev deps. --frozen asserts the lockfile is up to date (CI
+# parity). --package scopes the sync so reg-meta-build (another workspace member,
+# not a reg-webapp dep) is NOT installed. This pulls the `reg-meta` console script
+# into /app/.venv/bin.
 #
 # uv installs the workspace members as EDITABLE (.pth links into /app/<member>/src),
 # so the runtime stage copies those member src trees alongside the venv (below) —
@@ -169,14 +164,13 @@ WORKDIR /app
 # The venv + the editable member src trees its .pth files point at (uv installs
 # workspace members editable; the .pth entries reference /app/<member>/src). The
 # frozen --package sync installed exactly reg-webapp's dep closure — reg_meta,
-# reg_schema, reg_monabundle, and reg_webapp itself — so all four src trees are
-# copied and no .pth entry dangles. Plus the baked DB pair, the SPA bundle, and
-# the steward configs. UV_LINK_MODE=copy made the venv relocatable; both stages
-# are python3.14 slim-bookworm so the venv's interpreter path matches.
+# reg_schema, and reg_webapp itself — so all three src trees are copied and no
+# .pth entry dangles. Plus the baked DB pair, the SPA bundle, and the steward
+# configs. UV_LINK_MODE=copy made the venv relocatable; both stages are
+# python3.14 slim-bookworm so the venv's interpreter path matches.
 COPY --from=backend /app/.venv /app/.venv
 COPY --from=backend /app/reg_meta/src /app/reg_meta/src
 COPY --from=backend /app/reg_schema/src /app/reg_schema/src
-COPY --from=backend /app/reg_monabundle/src /app/reg_monabundle/src
 COPY --from=backend /app/reg_webapp/backend/src /app/reg_webapp/backend/src
 COPY --from=regmeta-db /opt/reg_meta /opt/reg_meta
 COPY --from=frontend /build/frontend/dist /opt/reg_webapp/spa
@@ -186,10 +180,10 @@ COPY reg_webapp/stewards/ /opt/reg_webapp/stewards/
 COPY reg_webapp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# #224 provenance-confinement assertion #3 (deployment-side). Assertions #1
-# (bundle amalgamates no provenance-importing module) and #2 (no FastAPI route
-# references the provenance path — backend/tests/test_write_boundary.py) already
-# ship; this is the third. `reg-meta update` only fetches reg_meta.db.zst /
+# #224 provenance-confinement assertion #3 (deployment-side). Assertion #2 (no
+# FastAPI route references the provenance path — backend/tests/test_write_boundary.py)
+# already ships; this is the third. (Assertion #1 lived in the now-archived MONA
+# bundle build.) `reg-meta update` only fetches reg_meta.db.zst /
 # reg_meta_docs.db.zst (verified in reg_meta/download.py — no provenance asset),
 # so the maintainer-only reg_meta.provenance.db* debug sibling should never enter
 # the image. This RUN is defense in depth: it FAILS THE BUILD if any

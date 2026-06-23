@@ -7,11 +7,11 @@ endpoint without a typed contract is a hole.
 Two contract shapes are allowed:
 
 - a Pydantic ``response_model`` (the JSON endpoints), OR
-- a documented BINARY/DOWNLOAD media type (``/api/project/order`` → ``text/csv``,
-  ``/api/bundle`` → ``application/octet-stream``). These cannot declare a Pydantic
-  ``response_model`` (they return raw bytes), but they DO declare their media type
-  in the route's ``responses=`` so the OpenAPI contract (and the SPA codegen) sees
-  a download, not an untyped JSON body. This is the sanctioned carve-out.
+- a documented BINARY/DOWNLOAD media type (``/api/project/order`` → ``text/csv``).
+  These cannot declare a Pydantic ``response_model`` (they return raw bytes), but
+  they DO declare their media type in the route's ``responses=`` so the OpenAPI
+  contract (and the SPA codegen) sees a download, not an untyped JSON body. This is
+  the sanctioned carve-out.
 """
 
 from __future__ import annotations
@@ -24,8 +24,6 @@ from reg_webapp.app import create_app
 # expected media type so a new download endpoint is a deliberate addition here.
 _DOWNLOAD_ENDPOINTS: dict[str, str] = {
     "/api/project/order": "text/csv",
-    "/api/bundle": "application/octet-stream",
-    "/api/kit": "application/zip",
 }
 
 

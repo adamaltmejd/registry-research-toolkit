@@ -1,9 +1,9 @@
 """Cross-grammar parity gate: ``reg_meta.fqid`` vs ``reg_schema.structural``.
 
 The period-token grammar is DUPLICATED on purpose. ``reg_schema`` is reg_meta-free
-by design (one-way dependency + MONA amalgamation — see ``reg_schema/DESIGN.md``
-and ``reg_monabundle/DESIGN.md``), and ``reg_meta`` stays Pydantic-free; neither
-can import the other, so each carries its own copy of the period grammar
+by design (one-way dependency — see ``reg_schema/DESIGN.md``), and ``reg_meta``
+stays Pydantic-free; neither can import the other, so each carries its own copy of
+the period grammar
 (``reg_meta.fqid._PERIOD_PATTERNS`` + the ``is_period`` calendar check, and
 ``reg_schema.structural._PERIOD_TOKEN`` + ``_is_period_endpoint``). A looser copy
 on either side would let a spec pass one gate yet fail the other (a structurally

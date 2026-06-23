@@ -1,8 +1,8 @@
 # Registry Research Toolkit
 
 Multi-package workspace for Swedish register research: catalog metadata, schema
-validation, and MONA bundle / mock-data generation. See `ARCHITECTURE.md` for the
-cross-package design and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
+validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design
+and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
 
 ## Packages
 
@@ -10,17 +10,18 @@ cross-package design and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
 - `reg_meta_build` (CLI `reg-meta-build`) — build the reg_meta SQLite DBs from SCB
   exports (maintainer-only).
 - `reg_schema` (library) — `project_data.json` schema and structural validator.
-- `reg_monabundle` (library) — MONA bundle build + runtime + PII scanner.
 - `reg_webapp` — FastAPI backend + Svelte SPA: catalog browse + project authoring.
-- `mock_data_wizard` (CLI `mock-data-wizard`) — local mock-data generation; pending
-  rename to `reg_mockdata` + reg_meta-dep removal (see `REFACTOR_SPEC.md`).
+
+The `reg_monabundle` (MONA bundle build + runtime + PII scanner) and `mock_data_wizard`
+(local mock-data generation) packages have been archived to branch
+`archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`) and removed from `main`,
+pending a from-scratch MONA rebuild. See `REFACTOR_SPEC.md` and tracking issue #699.
 
 ## MONA constraint
 
 [MONA](https://www.scb.se/mona) is Statistics Sweden's microdata platform. Agents are
 not allowed on MONA. **PII must never leave MONA — only aggregate statistics are
-exported.** `mock_data_wizard` (post-refactor: `reg_monabundle` + `reg_mockdata`)
-bridges agentic local work to MONA projects.
+exported.** This is a domain invariant that remains true regardless of the tooling state.
 
 # Governance
 
@@ -64,9 +65,8 @@ count) on every change. Two repo-specific notes:
   typical homes). Extend it; don't re-type it.
 - **The ladder cuts both ways.** This repo *under*-uses libraries as often as it
   over-builds (e.g. `reg_meta_build` hand-rolls TOML validators though it already ships
-  Pydantic for its build-time IR — Stack makes no-Pydantic *hard* only for the
-  amalgamated bundle, soft elsewhere). "Installed dep solves it → use it" binds as hard
-  as "don't add a dep for what a few lines do" — add one only when it removes more
+  Pydantic for its build-time IR). "Installed dep solves it → use it" binds as hard as
+  "don't add a dep for what a few lines do" — add one only when it removes more
   complexity than it adds.
 
 **Never simplify away** the load-bearing guards: PII/MONA confinement, k-anonymity /
@@ -99,13 +99,7 @@ altitude duties) and the implementer role (the leaf craft).
   pyproject setting makes plain `uv run` discard the committed lock on checkouts without
   a matching global config.
 - The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
-  after a coordinated bump (#682, 2026-06-22). The MONA runner's actual ceiling is
-  WinPython 3.13.7 — **deliberately not enforced right now**: the runner floor is
-  deferred to REFACTOR_SPEC §10a, which rebuilds the runner standalone. As a
-  consequence, the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and
-  `summarize.py`) now contain 3.14-only PEP 758 syntax (`except A, B:`) that would
-  SyntaxError on MONA's 3.13.7 — §10a must reconcile this. See
-  `mock_data_wizard/DESIGN.md` "MONA Python runtime" for the probe details.
+  after a coordinated bump (#682, 2026-06-22).
 - A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
   `uv run --no-project` tooling** (the issue-hygiene / plan-sequence scripts in CI and
   the issue-tracker skills) resolves the `>=3.14` floor instead of the runner's ambient
@@ -119,38 +113,26 @@ Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.m
 the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 `REFACTOR_SPEC.md` tracks the remaining work.
 
-- **Library packages** (`reg_meta`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
-  - Modeling: `@dataclass` for `reg_monabundle`, `reg_mockdata`, `reg_meta_build`. The
-    **hard** no-Pydantic + stdlib-module-level-imports rule binds **every slice
-    amalgamated into the bundle** — the lightweight `constants`/`validate`/`scan` slices
-    **plus** `reg_monabundle.runtime.*`, i.e. everything lifted into the uploaded `.py`
-    (`validate` runs at bundle load on MONA, `scan` gates exports there), not the
-    runtime alone — each must stay liftable into MONA's offline WinPython env.
-    `reg_meta` is **not** subject to this rule (it is absent from MONA-side code); as of
-    #681 (2026-06-22) its catalog return surface uses frozen Pydantic v2
-    (`_CatalogModel` base) so FastAPI can consume the models directly. See
-    `REFACTOR_SPEC.md` §10a.
+- **Library packages** (`reg_meta`, `reg_meta_build`):
+  - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base) so FastAPI can
+    consume its catalog models directly (adopted #681, 2026-06-22); `reg_meta_build`
+    uses `@dataclass` for its build-time IR.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.
   - Analytical queries: DuckDB where needed.
   - CLI: argparse. No click/typer.
-- **`reg_schema`** (authoring/validation surface — exception to the no-Pydantic rule):
-  Pydantic v2. Reasons: (1) it's the canonical structural validator for
-  `project_data.json` — Pydantic's declarative field/model validators are the right
-  tool; (2) FastAPI in `reg_webapp/backend/` consumes `reg_schema` models directly as
-  response models, killing the 1:1 wrapper drift surface; (3) `model_json_schema()`
-  gives the SPA's TypeScript codegen a free, always-correct schema source. Runtime
-  escape valve: the MONA bundle does **not** ship Pydantic; bundle-build runs the
-  Pydantic validator as the gate, then converts validated `Source` → dataclass
-  `LoadedSpec` (`reg_monabundle.runtime.spec`) which the bundle amalgamates instead. See
-  `reg_schema/DESIGN.md` and `reg_monabundle/DESIGN.md` for the boundary.
+- **`reg_schema`** (authoring/validation surface): Pydantic v2. Reasons: (1) it's the
+  canonical structural validator for `project_data.json` — Pydantic's declarative
+  field/model validators are the right tool; (2) FastAPI in `reg_webapp/backend/`
+  consumes `reg_schema` models directly as response models, killing the 1:1 wrapper
+  drift surface; (3) `model_json_schema()` gives the SPA's TypeScript codegen a free,
+  always-correct schema source. See `reg_schema/DESIGN.md`.
 - **Web backend** (`reg_webapp/backend/`): FastAPI + Pydantic REST. `reg_schema`
   Pydantic models are response models directly (no wrapper layer). `reg_meta`'s frozen
   Pydantic catalog models are consumed directly — the webapp's `kind`-discriminated node
   models embed them as field types (collapsed in #681). The only remaining 1:1 wrapper
-  is reg_schema's `ValidationResult`/`ValidationIssue` (reg_schema stays a frozen
-  dataclass consumed cross-runtime by the MONA bundle and the SPA).
+  is reg_schema's `ValidationResult`/`ValidationIssue`.
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
   TS types codegen'd from FastAPI's `openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into
@@ -159,21 +141,13 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume
   gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`, which
   validates by default with `corpus=True` (opt out with `--no-validate`). Hypothesis
-  (dev-only, not in the MONA bundle) is used for property-based tests on invariant-heavy
-  surfaces (`test_*_properties.py` across `reg_meta`, `reg_meta_build`,
-  `reg_monabundle`), additive to the example/snapshot suites.
+  (dev-only) is used for property-based tests on invariant-heavy surfaces
+  (`test_*_properties.py` in `reg_meta` and `reg_meta_build`), additive to the
+  example/snapshot suites.
 - **Type checking**: `uvx --from ty==0.0.44 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
   keep `pyproject.toml` clean.
-- **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates
-  into a single file uploaded to MONA. Each added runtime dep must already be in MONA's
-  WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
-
-`mock_data_wizard`'s old local authoring path (editor/server/`ui` subcommand and the
-`web/` SPA) is fully deleted, superseded by `reg_webapp`; `classify.py` was **moved** to
-`reg_monabundle/runtime/classify.py` (not deleted — it backs the bundle's runtime
-classification). Don't revive that path — extend the new packages.
 
 # Run (dev servers)
 

@@ -8,19 +8,10 @@ payload, but the filename follows the corpus harness contract (see
 A realistic-shape SCB project: LISA + LOUISE + RTB across a handful of
 years, ~25 bindings per source, a panel linking the LISA years, and a
 populated ``reg_monabundle.binding_options`` block with ``suppress_k``
-overrides. Used by two consumers:
-
-- ``reg_monabundle/tests/test_bundle_size_budget.py`` embeds this fixture
-  into ``build_bundle(..., project_data=...)`` and asserts the emitted
-  ``.py`` stays under the 1 MB v1 cap (see ARCHITECTURE.md → Repo-wide invariants). The size
-  budget gate fires only on real regressions; today's bundle on this
-  fixture is well under cap (the v1 ceiling is forward-looking, not a
-  tight bound on current shape). Its ``LOAD_FIXTURE_EXPECTED_COLUMNS``
-  constant pins the total binding count emitted here.
-- The structural corpus harness in
-  ``reg_schema/tests/test_corpus.py`` picks it up automatically (the
-  case directory carries ``input.json`` + ``expected_ValidationResult.json``)
-  and pins that the fixture stays structurally valid.
+overrides. Consumed by the structural corpus harness in
+``reg_schema/tests/test_corpus.py``, which picks it up automatically (the
+case directory carries ``input.json`` + ``expected_ValidationResult.json``)
+and pins that the fixture stays structurally valid.
 
 Re-run with ``uv run python reg_schema/test_corpus/load_test_200col/build.py``
 after editing the binding lists; commit the regenerated JSON.

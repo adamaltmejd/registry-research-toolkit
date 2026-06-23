@@ -2,7 +2,7 @@
 
 See DESIGN.md → Deterministic ID minting. Build-side only —
 consumed by the SOS adapter and the namespace property test. NOT imported by
-`reg_meta` runtime, `reg_monabundle.runtime`, the MONA bundle, or the webapp;
+`reg_meta` runtime, the webapp, or any future MONA-side runner;
 keeping it in `reg_meta_build` respects the build/runtime boundary even though
 it is pure stdlib.
 

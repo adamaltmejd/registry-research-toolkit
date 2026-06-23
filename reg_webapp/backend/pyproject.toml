@@ -22,13 +22,11 @@ classifiers = [
 # `reg-meta>=0.12.0`). Exact pins are deliberately NOT used — they'd force
 # monorepo-wide version lockstep and wouldn't enable out-of-workspace builds
 # anyway (these packages resolve via [tool.uv.sources], not PyPI).
-# reg-schema is load-bearing for A5.1b (project_data response models; see reg_webapp/DESIGN.md → Pydantic boundary) and
-# reg-monabundle for the /api/bundle write endpoint (A5.2+); both are declared
-# now so the member's runtime surface is complete and `uv sync` resolves the edge.
+# reg-schema is load-bearing for A5.1b (project_data response models; see
+# reg_webapp/DESIGN.md → Pydantic boundary).
 dependencies = [
     "reg-meta>=1.0.0",
     "reg-schema>=2.0.0",
-    "reg-monabundle>=0.4.0",
     "fastapi>=0.136.3",
     "uvicorn>=0.48.0",
     "pydantic>=2.13.4",

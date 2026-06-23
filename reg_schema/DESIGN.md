@@ -38,39 +38,35 @@ root `ARCHITECTURE.md`; remaining/unbuilt schema work lives in `REFACTOR_SPEC.md
   coordinate), `Source.period` grammar, panel composite ordering, source-collision,
   panel key-refs landing on the source's `display_name` strings, etc.
 - The §6.8.0 cross-runtime contract: `ValidationIssue` / `ValidationResult`. Same shape
-  consumed by `reg_schema` (Python), `reg_monabundle`'s amalgamated bundle-load
-  validator (Python), and the SPA (TypeScript codegen'd from OpenAPI). Composition just
-  concatenates `issues`.
+  consumed by `reg_schema` (Python) and the SPA (TypeScript codegen'd from OpenAPI).
+  Composition just concatenates `issues`.
 
 ## Not in scope (intentionally)
 
 - **§6.8.2 namespaced-block rules.** Each namespaced block (`reg_monabundle`, `swecov`,
-  …) is validated by its owning package. `reg_schema` treats those blocks as opaque
-  objects — it only checks shape, not contents.
+  …) is validated by its owning package where it exists. `reg_schema` treats those
+  blocks as opaque objects — it only checks shape, not contents.
 - **§6.8.3 semantic rules (reg_meta-backed).** FQID resolution against a live reg_meta
   DB, classification existence, steward-catalog membership, drift detection. Lives in
   `reg_webapp` (and any local CLI that loads reg_meta). The split is what lets
   `reg_schema` ship reg_meta-free.
-- The `project_data.codes.json` sibling file (see REFACTOR_SPEC.md → 8 — Kit-build).
-  Codes live alongside the spec but are dereferenced from reg_meta by kit-build in
-  `reg_webapp` (decided #217 — no SPA ad-hoc-code authoring path; the SPA's IndexedDB
-  persists the full draft only). It may grow a schema dataclass here later; phase 1
-  keeps it out.
+- The `project_data.codes.json` sibling file. Codes live alongside the spec and are
+  dereferenced from reg_meta at kit-build time; deferred to the MONA rebuild (see
+  REFACTOR_SPEC.md §8/9/10a — archived). It may grow a schema dataclass here later;
+  phase 1 keeps it out.
 - **Per-source SQL filtering (`where`).** There is no `where` field in the v1 baseline
   `Source`. Cohort/row filtering is a property of the MONA-side runner, not the order
-  spec — it lives in `reg_monabundle`'s `configure()` (per `sql_table` / `file_source`).
-  A steward that wants to record a filter for audit puts it in its own namespaced block
-  (e.g. `swecov.filters`); see `reg_monabundle/DESIGN.md`.
+  spec. A steward that wants to record a filter for audit puts it in its own namespaced
+  block (e.g. `swecov.filters`).
 
 ## What this layer does NOT validate
 
 `ValidationResult.__post_init__` coerces `issues` to a tuple but does **not** verify
 each element is a `ValidationIssue` instance. JSON deserialization belongs at read/write
-boundaries — the bundle-load validator in `reg_monabundle` and the API ingress in
-`reg_webapp` — not in the contract module itself. Python-internal callers are
-type-checked; cross-runtime callers own their decode step. If `result.ok` ever crashes
-with `AttributeError` on `.level`, that is a boundary bug to fix upstream, not a
-defensive check to add here.
+boundaries — the API ingress in `reg_webapp` and any future MONA-side runner — not in
+the contract module itself. Python-internal callers are type-checked; cross-runtime
+callers own their decode step. If `result.ok` ever crashes with `AttributeError` on
+`.level`, that is a boundary bug to fix upstream, not a defensive check to add here.
 
 The `level` allowlist *is* enforced at construction because the cost of a
 silently-weakened `ok` (returning `True` for a result that should block) is higher than
@@ -88,50 +84,29 @@ actually-loaded reg_meta DB is a §6.8.3 semantic concern.
 
 ## Dependency direction
 
-`reg_schema` has **one runtime dependency: Pydantic v2** — the single deliberate
-exception to the no-Pydantic rule (the cross-cutting "No Pydantic in the amalgamated
-bundle (hard); soft preference elsewhere" policy and why `reg_schema` is exempt live in
-`ARCHITECTURE.md`; the reg_schema-specific reasons follow). The models are the canonical
+`reg_schema` has **one runtime dependency: Pydantic v2**. The models are the canonical
 project_data shape, double as FastAPI response models in `reg_webapp`, and feed the
 SPA's TypeScript types via `model_json_schema()`; those three jobs make Pydantic's
 declarative field/model validators the right tool here, and keeping `reg_schema` as the
-*only* Pydantic surface kills the 1:1 wrapper-drift that a separate validation model
-would create between the schema and the API.
+only Pydantic surface kills the 1:1 wrapper-drift that a separate validation model would
+create between the schema and the API.
 
 The **structural validator** (`structural.py`) uses no Pydantic in its rule logic — it
 operates on a parsed dict. (It does import the `Literal` type aliases from
-`project_data.py`, which pulls Pydantic into the import chain; the MONA bundle ships
-`reg_monabundle`'s own §6.8.2 validator, not this one, so that never reaches MONA — see
-below.) The Pydantic models live on the model surface (`project_data.py`).
+`project_data.py`, which pulls Pydantic into the import chain.) The Pydantic models live
+on the model surface (`project_data.py`).
 
-**MONA boundary (see reg_monabundle/DESIGN.md → The two halves).** Pydantic must **not**
-ship to MONA, and does not: the bundle never amalgamates `project_data.py`. A caller
-(the mdw CLI / `reg_webapp`) runs the Pydantic structural gate at build time —
-`reg_monabundle/build/spec_loader.py` (`validate_project_data`, plus a `LoadedSpec`
-round-trip that fails fast on runtime-unsupported specs) — and the bundle then embeds
-the project's **JSON**. On MONA the stdlib runtime deserializes that JSON into a
-`LoadedSpec` (`reg_monabundle.runtime.spec.loadedspec_from_dict`), so it sees only
-stdlib dataclasses, never Pydantic. The CI gate
-(`test_bundle_carries_no_pydantic_or_reg_schema`) line-scans + AST-checks the emitted
-bundle to prove it carries no Pydantic and no `reg_schema`.
+Why the dep split matters: the spec is validated in two execution contexts with
+different dependency availability — only the webapp backend has reg_meta. Keeping the
+structural layer dep-free means:
 
-Why the dep split matters: the spec is validated in three execution contexts with very
-different dependency availability — only the webapp backend has reg_meta, only the
-bundle runs on MONA. Keeping the structural layer dep-free means:
-
-- The MONA bundle ships **no** `reg_schema` at all: the pure-stdlib §6.8.2 block
-  validator in `reg_monabundle` is what runs on MONA, while `reg_schema`'s §6.8.1
-  structural validator runs only at the build-time gate. Confining Pydantic to
-  `project_data.py` keeps the structural layer importable in dep-light contexts without
-  dragging in the model surface.
-- `reg_mockdata` can consume `reg_schema` reg_meta-free, without re-introducing reg_meta
-  transitively.
+- Confining Pydantic to `project_data.py` keeps the structural layer importable in
+  dep-light contexts without dragging in the model surface.
 - The TypeScript SPA mirrors a small, stable surface.
 
-The inbound dependency graph (who imports `reg_schema`, and the amalgamation edge into
-the MONA bundle) is part of the cross-cutting package topology — see `ARCHITECTURE.md`.
-The constraint `reg_schema` itself imposes is the one above: it pulls in **only**
-Pydantic, and only on the model surface.
+The inbound dependency graph (who imports `reg_schema`) is part of the cross-cutting
+package topology — see `ARCHITECTURE.md`. The constraint `reg_schema` itself imposes is
+the one above: it pulls in **only** Pydantic, and only on the model surface.
 
 ## Two layers: models vs. validator
 
@@ -143,7 +118,7 @@ two are kept apart on purpose:
   and the `Period` / `EntityKey` / `TimeKey` / `TimePoint` type aliases. **Pure shape
   definitions** — structural rules are *not* re-encoded as raising field validators.
   Re-encoding them would replace the issue-accumulating contract with a fail-fast one,
-  and the three runtimes that share the contract (SPA, MONA bundle, webapp) need the
+  and every runtime that shares the contract (SPA, webapp, future MONA runner) needs the
   full issue list, not the first exception.
 - **Structural validator** (`structural.py`, §6.8.1): the entrypoint
   `validate_structural(data: Mapping[str, object]) -> ValidationResult` operates on a
@@ -151,18 +126,18 @@ two are kept apart on purpose:
   enum" must fire on raw JSON values *before* any `Literal` cast would coerce or reject
   them — a wrong enum value has to surface as an accumulated `invalid_enum_value` issue,
   not a constructor crash. Second, staying off the model surface keeps the validator
-  Pydantic-free so it ports to the MONA bundle and the TS SPA.
+  Pydantic-free so it ports to the TS SPA and any future MONA-side runner.
 
-Models are constructed at boundaries (API ingress, bundle build) only *after*
-`validate_structural` has passed; a Pydantic raise at that point signals validator/model
-drift, not user error.
+Models are constructed at boundaries (API ingress) only *after* `validate_structural`
+has passed; a Pydantic raise at that point signals validator/model drift, not user
+error.
 
 ## Shared validator corpus (`test_corpus/`)
 
 `reg_schema/test_corpus/` is the single artifact that keeps the §6.8.1 structural rules
 behaving identically in the two runtimes that carry a copy of them — the canonical
 Python `validate_structural` and the SPA's TypeScript port. (The §6.8.0
-`ValidationResult` *shape* is shared by a third runtime too, the MONA bundle's
+`ValidationResult` *shape* will also be used by the future MONA-side runner's
 namespaced-block validator; the structural *corpus* is not — see below.) Each case is a
 directory containing an `input.json` (a `project_data.json` payload) and an
 `expected_ValidationResult.json` (the validator output the structural rules must
@@ -178,13 +153,6 @@ rule for adding cases.
   mirrors.
 - The SPA's TypeScript test suite imports the JSON as fixtures and runs its TS port of
   the validator against them.
-
-The MONA bundle is **not** a third consumer of this corpus: it amalgamates the §6.8.2
-namespaced-block validator (`reg_monabundle.validate.validate_block`), not the §6.8.1
-structural layer. The bundle never re-runs structural validation on MONA — it
-deserializes a `LoadedSpec` that bundle-build already gated through `reg_schema`
-(`spec_loader.validate_project_data`). So the structural corpus has only the two
-runtimes that carry a structural-rule copy to keep aligned.
 
 The corpus grows alongside the validator: at least one well-formed empty-issues case to
 prove the format/harness/round-trip, plus one (or more) negative case per structural
@@ -226,39 +194,34 @@ UI affordances, new codes are additive (§6.8.0). Current codes:
 
 The "ref exists on source" check is intentionally lenient: when any binding on the
 source lacks an explicit `display_name`, the structural layer skips matching that
-source's refs entirely. The bundle / kit / webapp paths materialize defaults from
-reg_meta before they emit artifacts, and a pre-kit SPA-state spec shouldn't be flagged
-for refs that will resolve later.
+source's refs entirely. The webapp materializes defaults from reg_meta before emitting
+artifacts, and a pre-authoring SPA-state spec shouldn't be flagged for refs that will
+resolve later.
 
 ### Effective-key presence is not structural
 
 The v0.x `missing_effective_entity_key` / `missing_effective_time_key` codes do **not**
 exist in this layer. Under Model A an omitted `entity_key` / `time_key` inherits from
 the member's variant's `panel_template`, which needs reg_meta state — so the "no
-effective key" case is the semantic `panel_inheritance_unresolvable` check (§6.8.3),
-raised by kit/bundle-build, not here. A member with no panel default and no override is
-simply not flagged at this layer.
+effective key" case is the semantic `panel_inheritance_unresolvable` check (§6.8.3), not
+here. A member with no panel default and no override is simply not flagged at this
+layer.
 
 The composite/literal panel rules that **are** structural live in the issue-code table
 above (`composite_key_inconsistent` ordering, `composite_time_key_mixed_kinds`
 homogeneity, `literal_time_key_duplicate` uniqueness, member-vs-panel
 `time_key_member_kind_mismatch`). The structural layer deliberately keeps the SPA's
-pre-kit authoring spec valid even while inheritance is still unresolved — it never
+pre-authoring spec valid even while inheritance is still unresolved — it never
 materializes defaults, only checks shapes.
 
-The `panel_inheritance_unresolvable` **check** ships at kit-build (A5.2c, #217:
-`reg_webapp.semantic.validate_panel_inheritance`, run by `POST /api/kit`) — a member
-that resolves no effective key from override → panel default → variant `panel_template`
-is a 422. Remaining: the inheritance **materialization** (writing the resolved keys into
-the emitted kit/bundle `project_data.json` the way `display_name` is) — deferred until
-`reg_mockdata`'s panel contract settles (step 10b); see `REFACTOR_SPEC.md` / #217.
+The `panel_inheritance_unresolvable` check and key materialization are deferred to the
+MONA rebuild (see `REFACTOR_SPEC.md` §8/9/10a — archived, #699).
 
 ### Semantic codes — defined, not emitted by `reg_schema`
 
 These `code` values are part of the §6.8.0 contract but are raised by the
-**reg_meta-backed §6.8.3 layer** (`reg_webapp`, kit-build, bundle-build), never by
-`validate_structural`. Listed here so the stable-code registry is complete and the SPA
-can map them:
+**reg_meta-backed §6.8.3 layer** (`reg_webapp`), never by `validate_structural`. Listed
+here so the stable-code registry is complete and the SPA can map them:
 
   | Code                                  | Level                                 | Rule (§6.8.3)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
   | ------------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -282,7 +245,7 @@ reasons:
 
 - Keeps the dependency direction one-way (`reg_meta` → `reg_meta_build` is the only
   cross-dep today; adding `reg_schema` → `reg_meta` would pull reg_meta into every
-  consumer of reg_schema, including the MONA bundle).
+  consumer of reg_schema).
 - Structural well-formedness is a small, stable surface (segment count + segment slug
   characters). Duplicating it is cheaper than the coupling.
 

@@ -5,9 +5,9 @@ structural (``reg_schema``) and namespaced-block (owning packages) run first;
 this one resolves every
 FQID in a *structurally valid* ``project_data.json`` against a live reg_meta
 ``Catalog``. It lives in the webapp — NOT ``reg_schema`` — because ``reg_schema``
-is reg_meta-free by design (MONA-amalgamatable); semantic rules need the
-DB, so they belong where the DB is (the webapp backend, and any local tool that
-has loaded reg_meta).
+is reg_meta-free by design (the shared validation surface stays importable
+without pulling reg_meta); semantic rules need the DB, so they belong where the
+DB is (the webapp backend, and any local tool that has loaded reg_meta).
 
 It emits the same frozen ``reg_schema.ValidationIssue`` shape the other layers
 do — composition is tuple concatenation, no merge semantics. It takes a

@@ -7,8 +7,8 @@ rules like "type is one of the enum values" must
 fire on raw JSON values before any ``Literal`` cast — the dataclass
 constructors deliberately don't enforce them (see ``project_data.py``).
 
-Same code is consumed by three runtimes (browser SPA via TS mirror,
-MONA bundle via amalgamation, webapp via direct import); see
+Same code is consumed by multiple runtimes (browser SPA via TS mirror,
+webapp via direct import, or a future MONA-side runner); see
 ``DESIGN.md`` for the dependency direction. FQID well-formedness is
 checked locally (segment count + per-segment chars) rather than
 importing reg_meta — keeps the dependency direction one-way and the
@@ -290,7 +290,7 @@ def _is_classification_fqid(value: object) -> bool:
 # Period-token grammar: bare year, year-month, full date, Swedish terms
 # (HT/VT), quarters, half-years. The bounds (year 1900-2099, month 01-12,
 # day 01-31) mirror the canonical grammar in ``reg_meta.fqid._PERIOD_PATTERNS``.
-# reg_schema can't import reg_meta (one-way dep + MONA amalgamation; see
+# reg_schema can't import reg_meta (one-way dep; see
 # DESIGN.md), so the grammar is duplicated here — keep the two in sync: a looser
 # copy would let a spec pass this structural gate yet fail reg_meta's period
 # resolution. BOTH grammars also calendar-validate the author-supplied day of a
@@ -356,7 +356,7 @@ def _is_period_range_obj(value: object) -> bool:
 
 # Bounds expansion for the LIST-form ordering/overlap rule (#307). Mirrors
 # ``reg_meta.fqid.period_token_to_bounds`` + its int-year arm — reg_schema can't
-# import reg_meta (one-way dep + MONA amalgamation; see DESIGN.md), so like the
+# import reg_meta (one-way dep; see DESIGN.md), so like the
 # token regex above this is a deliberate duplicate kept in lockstep by the
 # cross-grammar parity test (reg_webapp/backend/tests/test_period_grammar_parity.py).
 # February's synthesized upper bound is 29 regardless of leap year — the same
@@ -679,7 +679,7 @@ def _check_namespaced_blocks(
     #
     # DELIBERATE: the TOP LEVEL stays OPEN. ``ProjectData`` is
     # ``extra="ignore"`` (project_data.py) precisely so steward-namespaced
-    # blocks (``reg_monabundle``, ``swecov``, ``reg_mockdata``, …) ride
+    # blocks (``reg_monabundle``, ``swecov``, …) ride
     # through without being modeled as fields. A top-level unknown key is a
     # namespaced block, NOT an ``unexpected_field`` — do not "tighten" this
     # to mirror the closed-object check in ``_check_unexpected_keys`` (which

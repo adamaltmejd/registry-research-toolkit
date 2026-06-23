@@ -181,7 +181,7 @@ def format_rows(
     """Render rows as a table or list string.
 
     Auto-selects list format for ≤5 rows. Truncates wide columns to fit
-    max_width when given. Importable by other packages (e.g. mock-data-wizard).
+    max_width when given. Importable by other packages.
     """
     if not rows:
         return "(no results)\n"

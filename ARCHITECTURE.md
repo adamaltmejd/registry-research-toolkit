@@ -60,12 +60,11 @@ registers/variables on top of a released global DB).
 
 A web application (FastAPI + Svelte SPA), deployed in three steward-scoped flavours off
 one image, that lets researchers browse a catalog, author a per-project variable list,
-export it as a data order, and later drive mock-data generation outside MONA from the
-same authored file. Backed by Python packages usable standalone via CLI.
+and export it as a data order. Backed by Python packages usable standalone via CLI.
 
 The unifying artifact is **`project_data.json`** — written by the webapp, consumed by
-everything downstream (the MONA bundle, the mock generator, future exporters). Its
-schema and structural validator are `reg_schema`
+everything downstream (future exporters, the planned MONA runner rebuild). Its schema
+and structural validator are `reg_schema`
 ([`reg_schema/DESIGN.md`](reg_schema/DESIGN.md)).
 
 Pipeline coverage: explore metadata → author a variable list → order data → mock-data
@@ -74,19 +73,16 @@ executed only inside MONA) is deliberately out of scope.
 
 ## Package layout
 
-Monorepo, five Python packages + one webapp, all sharing the `reg_*` prefix. CLI
-binaries match package names (`reg-meta`, `reg-meta-build`, `reg-mockdata`); no short
-aliases for v1.
+Monorepo, four Python packages + one webapp, all sharing the `reg_*` prefix. CLI
+binaries match package names (`reg-meta`, `reg-meta-build`); no short aliases for v1.
 
 ```text
 registry-research-toolkit/
   reg_meta/         # catalog query lib + CLI (binary: reg-meta)
   reg_meta_build/   # catalog DB builder (binary: reg-meta-build)
   reg_schema/       # project_data.json schema + structural validator
-  reg_monabundle/   # MONA bundle build + bundle runtime + PII scanner
-  reg_mockdata/     # local mock CSV generation + compare  [PLANNED — see REFACTOR_SPEC.md]
   reg_webapp/
-    backend/        # FastAPI; depends on reg_meta + reg_schema + reg_monabundle
+    backend/        # FastAPI; depends on reg_meta + reg_schema
     frontend/       # Svelte 5 + Vite (bun)
     stewards/
       global/       # steward.toml only (full universe)
@@ -94,18 +90,16 @@ registry-research-toolkit/
       swecov/       # steward.toml + steward.project_data.json   [PLANNED]
 ```
 
-> Current vs target: `reg_mockdata` does **not** exist yet — its code still lives in
-> `mock_data_wizard/` (reg_meta-coupled, not yet renamed/split). Only the `global/`
-> steward dir is populated. These are the headline remaining items in
+> The `reg_monabundle` and `mock_data_wizard` packages have been archived to
+> `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`), pending a from-scratch
+> MONA rebuild. Only the `global/` steward dir is populated. See
 > [`REFACTOR_SPEC.md`](REFACTOR_SPEC.md).
 
 Dependency graph (acyclic):
 
 ```text
 reg_meta_build → reg_meta
-reg_webapp     → reg_meta, reg_schema, reg_monabundle
-reg_monabundle → reg_schema
-reg_mockdata   → reg_schema
+reg_webapp     → reg_meta, reg_schema
 reg_schema     → (none)
 ```
 
@@ -122,45 +116,24 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
   `$XDG_DATA_HOME/reg_meta/`. Mirrors the build/runtime separation a future Go/Rust port
   of the query layer would need.
 - **`reg_schema` standalone** — the `project_data.json` schema has many consumers
-  (webapp authors it, `reg_monabundle` validates it on MONA, `reg_mockdata` reads it,
-  future exporters read it). Tiny, focused, no `reg_meta` dep: the schema uses string
-  IDs and leaves resolution to the consumer.
-- **`reg_monabundle` vs `reg_mockdata`** — the MONA bundle (built by the webapp, runs on
-  MONA) and the local mock generator (runs on a researcher's laptop) are different tools
-  with different deps and audiences. `reg_monabundle` is two halves: a *lightweight*
-  surface (`build`, `scan`, `validate`) imported by the webapp, and a *runtime* surface
-  (`runtime.*`) amalgamated into the bundle. The runtime's heavy deps (duckdb/pyodbc)
-  are lazily imported on use and will be declared behind a `runtime` extras group
-  (currently empty, reserved); MONA's WinPython preinstalls them, and the webapp
-  container installs `reg_monabundle` without extras so it never pulls them.
-- **`reg_meta` is absent from MONA-side code** — types come from the spec (authored
-  against `reg_meta` in the webapp), so neither the bundle nor `reg_mockdata` needs
-  `reg_meta` in-process.
+  (webapp authors it, future exporters and the planned MONA runner rebuild read it).
+  Tiny, focused, no `reg_meta` dep: the schema uses string IDs and leaves resolution to
+  the consumer.
 
 ## Repo-wide invariants
 
 These are hygiene that keeps options open, enforced in CI where noted. Package-local
 mechanisms are documented in the owning DESIGN.md and only summarized here.
 
-- **No Pydantic in the amalgamated bundle (hard); soft preference elsewhere.** The hard
-  air-gap rule — no Pydantic, stdlib imports at module level — binds **every slice
-  amalgamated into the bundle**: the lightweight `constants` / `validate` / `scan`
-  slices **plus** `runtime.*`, i.e. everything lifted into the uploaded `.py`
-  (`validate` runs at bundle load on MONA and `scan` gates exports there, so the air-gap
-  binds them too — not `runtime.*` alone). All of it must stay liftable into MONA's
-  offline WinPython env, so its module-level imports resolve against stdlib + MONA's
-  preinstalled deps (duckdb/pyodbc/numpy) only. `reg_meta` adopted Pydantic for its
-  catalog return surface in #681 — the air-gap never bound it (`reg_meta` is absent from
-  MONA-side code, see above, so the "liftable into MONA" justification never applied),
-  and the earlier **soft** no-Pydantic preference (import-ergonomics + an aspirational
-  query-layer port) was retired once #681 established the port isn't blocked (its
-  cross-impl contracts are the SQLite `SCHEMA_VERSION` + `openapi.json`, both
-  Pydantic-independent). `reg_schema` is Pydantic too (canonical validator + webapp
-  response-model source); the build-side IR in `reg_meta_build` is Pydantic but
-  build-time-only and never reaches the bundle; `reg_mockdata` consumes JSON only.
-  Decided 2026-06-22 (#680 re-attribution, #681 adoption) — see REFACTOR_SPEC.md §10a.
-  See `reg_schema/DESIGN.md`, `reg_meta_build/DESIGN.md`, and
-  `reg_monabundle/DESIGN.md`.
+- **No Pydantic rule (historical; now retired).** `reg_meta` adopted Pydantic for its
+  catalog return surface in #681 (2026-06-22); the earlier no-Pydantic preference was a
+  soft import-ergonomics call, not a MONA constraint (`reg_meta` is absent from
+  MONA-side code). `reg_schema` is Pydantic (canonical validator + webapp response-model
+  source); the build-side IR in `reg_meta_build` is Pydantic but build-time-only. The
+  hard MONA air-gap rule (no Pydantic + stdlib-only module-level imports) applied to
+  `reg_monabundle`'s amalgamated bundle — that package is now archived; see
+  `REFACTOR_SPEC.md`. Decided 2026-06-22 (#680 re-attribution, #681 adoption). See
+  `reg_schema/DESIGN.md` and `reg_meta_build/DESIGN.md`.
 - **Build / runtime cleanly separated.** `reg_meta` (query) is small and pure;
   `reg_meta_build` is operator-side. A future port replaces query only; build stays
   Python.
@@ -173,25 +146,18 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `bun run gen:types` + `git diff --exit-code` so the codegen'd TS types stay in sync.
   (There is no `make` target — drift is a failing test, not a Makefile step.) A future
   Go/Rust port of the query API reproduces the same spec; clients are unaffected.
-- **Bundle-size budget — 1 MB.** The MONA bundle's emitted `.py` is capped at 1 MB
-  (uploaded through MONA's GUI per round-trip);
-  `reg_monabundle/tests/test_bundle_size_budget.py` byte-counts it in CI. Current \~104
-  KB.
 - **Performance budget (v1 targets, not yet enforced).** Starting points:
   `/api/catalog/*` p95 ≤ 200 ms (cache miss); `/api/project/validate`,
-  `/api/project/order` p95 ≤ 1 s; `/api/bundle`, `/api/kit` p95 ≤ 5 s. The 200-column
-  load-test fixture is committed (`reg_schema/test_corpus/load_test_200col/`) and reused
-  by the bundle-size test, but the load-test harness and CI perf gate are remaining work
-  (see REFACTOR_SPEC.md).
+  `/api/project/order` p95 ≤ 1 s. The 200-column load-test fixture is committed
+  (`reg_schema/test_corpus/load_test_200col/`), but the load-test harness and CI perf
+  gate are remaining work (see REFACTOR_SPEC.md).
 - **Cross-package version compatibility.** `reg_webapp` **floor-pins** its runtime deps
-  (`reg-meta>=…`, `reg-schema>=…`, `reg-monabundle>=…`), not exact pins: the packages
-  resolve via `[tool.uv.sources]` in the workspace, and exact pins would force
-  monorepo-wide lockstep without enabling out-of-workspace builds. `reg_meta_build`
-  releases independently (it produces the DB asset `reg_meta` fetches). `reg_mockdata`
-  (once it exists) floor-pins `reg_schema` so kits authored against a newer webapp still
-  generate on a slightly-older local install. Schema breakage is signalled by
-  `project_data.json`'s `schema_version` (major 2 = Model A); per the compatibility
-  policy below, v1 ships no migration shims.
+  (`reg-meta>=…`, `reg-schema>=…`), not exact pins: the packages resolve via
+  `[tool.uv.sources]` in the workspace, and exact pins would force monorepo-wide
+  lockstep without enabling out-of-workspace builds. `reg_meta_build` releases
+  independently (it produces the DB asset `reg_meta` fetches). Schema breakage is
+  signalled by `project_data.json`'s `schema_version` (major 2 = Model A); per the
+  compatibility policy below, v1 ships no migration shims.
 
 ## API style
 
@@ -202,34 +168,25 @@ reproduce. See [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
 
 ## Testing strategy
 
-Eight load-bearing test categories span the packages; the consolidated view (full detail
+Six load-bearing test categories span the packages; the consolidated view (full detail
 in each owning DESIGN.md):
 
 1. **Shared validator corpus** — `reg_schema/test_corpus/` golden
    `(input.json, expected_ValidationResult.json)` pairs, run by **two** consumers:
-   `reg_schema`'s Python tests and the SPA's TS tests. (The MONA bundle amalgamates the
-   §6.8.2 namespaced-block validator, not the structural corpus.) — shipped.
+   `reg_schema`'s Python tests and the SPA's TS tests. — shipped.
 2. **FQID property tests** — round-trip, segment-count discrimination, reserved-slug
    rejection, slug-immutability snapshot. — shipped.
-3. **Bundle determinism** — same spec → byte-identical `.py` (ast.unparse amalgamation),
-   asserted by `reg_monabundle/tests/test_bundle_determinism.py`. — shipped.
-4. **Kit reproducibility** — same spec + codes + stats → identical kit zip.
-   **Remaining** (blocked on `/api/kit`).
-5. **Steward catalog filtering** — `fqid_outside_steward_catalog` /
+3. **Kit reproducibility** — same spec + codes + stats → identical kit zip.
+   **Remaining** (see REFACTOR_SPEC.md).
+4. **Steward catalog filtering** — `fqid_outside_steward_catalog` /
    `representation_outside_steward_catalog` semantics. Shipped: boot-time catalog drop +
    wiring into `/validate` (issue #227); column-based admission (issue #206).
-6. **MONA-shape integration** — a `mcr.microsoft.com/mssql/server` Docker container
-   running the bundle's extract SQL end-to-end via `pyodbc`
-   (`reg_monabundle/tests/test_integration_mssql.py`), gated behind
-   `@pytest.mark.integration` and skipping cleanly without Docker/pyodbc. — shipped.
-   (The marker is also used by `reg_meta`'s install test.)
-7. **Per-deploy smoke tests** — golden `/api/context` + shallow `/api/catalog` walk on
+5. **Per-deploy smoke tests** — golden `/api/context` + shallow `/api/catalog` walk on
    container start. **Remaining** (no deployment yet).
-8. **Server-side input-validation gates** — period canonicalization and FQID
+6. **Server-side input-validation gates** — period canonicalization and FQID
    route-segment validation (422-before-SQL), provider-ID namespace property,
    provenance-DB confinement. — shipped (see `reg_webapp/DESIGN.md` and
-   `reg_meta_build/DESIGN.md`). Plus the grow-only PII-scanner regression corpus
-   (`reg_monabundle`).
+   `reg_meta_build/DESIGN.md`).
 
 ## Maturity and compatibility policy
 
@@ -246,12 +203,12 @@ revisited only when the toolkit graduates to a wider user base.
 The Model A refactor spec dissolved into the docs below. Per-PR landing history lives in
 git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
 
-  | Old spec section                                                                                                                                | New home                            |
-  | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-  | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview                                  | this file                           |
-  | §5 object model, FQID grammar, edge semantics, library API, glossary                                                                            | `reg_meta/DESIGN.md`                |
-  | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                                                   | `reg_meta_build/DESIGN.md`          |
-  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                                             | `reg_schema/DESIGN.md`              |
-  | §6.8.3 semantic rules, §9 webapp                                                                                                                | `reg_webapp/DESIGN.md`              |
-  | §7 (shipped bundle bits), §10-bundle, §16 PII/determinism                                                                                       | `reg_monabundle/DESIGN.md`          |
-  | §6.6 codes, §7 realign/merged-mode, §8 stats+kit, §9 deployment/kit/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–12, remaining §16 | `REFACTOR_SPEC.md` (remaining work) |
+  | Old spec section                                                                                                    | New home                            |
+  | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+  | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview      | this file                           |
+  | §5 object model, FQID grammar, edge semantics, library API, glossary                                                | `reg_meta/DESIGN.md`                |
+  | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                       | `reg_meta_build/DESIGN.md`          |
+  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                 | `reg_schema/DESIGN.md`              |
+  | §6.8.3 semantic rules, §9 webapp                                                                                    | `reg_webapp/DESIGN.md`              |
+  | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                             | `archive/mona-subsystem`            |
+  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–12, remaining §16 | `REFACTOR_SPEC.md` (remaining work) |

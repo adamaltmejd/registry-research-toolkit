@@ -1,13 +1,11 @@
 [project]
 name = "registry-research-toolkit"
 version = "0.4.0"
-description = "Workspace coordinator for mock_data_wizard, reg_meta, reg_meta_build, reg_monabundle, and reg_schema"
+description = "Workspace coordinator for reg_meta, reg_meta_build, and reg_schema"
 requires-python = ">=3.14"
 dependencies = [
-  "mock-data-wizard",
   "reg-meta",
   "reg-meta-build",
-  "reg-monabundle",
   "reg-schema",
   "reg-webapp",
 ]
@@ -25,10 +23,8 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = [
-  "mock_data_wizard",
   "reg_meta",
   "reg_meta_build",
-  "reg_monabundle",
   "reg_schema",
   "reg_webapp/backend/tests",
   "scripts/tests",
@@ -97,19 +93,15 @@ package = false
 exclude-newer = "7 days"
 
 [tool.uv.sources]
-mock-data-wizard = { workspace = true }
 reg-meta = { workspace = true }
 reg-meta-build = { workspace = true }
-reg-monabundle = { workspace = true }
 reg-schema = { workspace = true }
 reg-webapp = { workspace = true }
 
 [tool.uv.workspace]
 members = [
-  "mock_data_wizard",
   "reg_meta",
   "reg_meta_build",
-  "reg_monabundle",
   "reg_schema",
   "reg_webapp/backend",
 ]

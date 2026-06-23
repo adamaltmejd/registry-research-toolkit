@@ -137,7 +137,7 @@ describe("dirty flag", () => {
     await projectStore.validate();
     expect(projectStore.validation?.ok).toBe(true);
     expect(projectStore.validatedClean).toBe(true);
-    // An edit must invalidate it so the order/bundle download gate re-closes.
+    // An edit must invalidate it so the order download gate re-closes.
     projectStore.addSource();
     expect(projectStore.validation).toBeNull();
     expect(projectStore.validatedClean).toBe(false);
@@ -551,7 +551,7 @@ describe("stable client-side ids (issue #200)", () => {
       expect(sent.sources.map((s) => s.name)).toEqual(["s0", "s1", "s2"]);
     });
 
-    it("the /order + /bundle POST bodies carry no client id", async () => {
+    it("the /order POST body carries no client id", async () => {
       const bodies: unknown[] = [];
       Object.defineProperty(URL, "createObjectURL", {
         value: vi.fn(() => "blob:mock"),
@@ -576,8 +576,7 @@ describe("stable client-side ids (issue #200)", () => {
       });
       seedThreeSources();
       await projectStore.downloadOrder();
-      await projectStore.downloadBundleFile();
-      expect(bodies.length).toBeGreaterThanOrEqual(2);
+      expect(bodies.length).toBeGreaterThanOrEqual(1);
       for (const body of bodies) {
         assertNoIdLeak(body);
       }

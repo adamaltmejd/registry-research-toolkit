@@ -25,7 +25,6 @@
  */
 
 import {
-  downloadBundle,
   downloadOrderCsv,
   errMessage,
   type ProjectDataBody,
@@ -198,7 +197,7 @@ let draft = $state<ProjectData | null>(null);
 // objects (`extra="forbid"` in reg_schema/structural.py) — an injected `_uid` would
 // trip `unexpected_field` AND leak into the downloaded project_data.json. So the
 // store owns a PARALLEL id tree, kept in lockstep with every mutator, that the draft
-// (and thus every serialize / validate / order / bundle POST, all of which
+// (and thus every serialize / validate / order POST, all of which
 // JSON.stringify the draft) never sees. The immutable mutators replace edited
 // objects on every edit, so an object-keyed WeakMap wouldn't survive — the store
 // owns the id↔position association positionally, patching it alongside each
@@ -349,7 +348,7 @@ const dirty = $derived(
   draft != null && serializeProjectData(draft) !== lastDownloaded,
 );
 
-/** A clean draft that has VALIDATED ok — the gate for the order/bundle downloads.
+/** A clean draft that has VALIDATED ok — the gate for the order CSV download.
  * Re-validation is required after any edit (an edit clears `validation`). */
 const validatedClean = $derived(validation?.ok === true);
 
@@ -557,7 +556,7 @@ export const projectStore = {
     // Compute the id mirror BEFORE mutating any store state so the replacement is
     // atomic: a throw here would otherwise leave a malformed draft loaded while
     // lastDownloaded/validation/openError still belong to the previous document
-    // (stale validatedClean keeps the order/bundle downloads enabled). buildIds is
+    // (stale validatedClean keeps the order download enabled). buildIds is
     // guarded never to throw, but the atomic order is the durable invariant.
     const opened = obj as ProjectData;
     const ids = buildIds(opened);
@@ -640,23 +639,6 @@ export const projectStore = {
     requestError = null;
     try {
       await downloadOrderCsv(draft as ProjectDataBody);
-    } catch (e) {
-      requestError = errMessage(e);
-    } finally {
-      busy = false;
-    }
-  },
-
-  /** Download the MONA `.py` bundle (`/bundle`). A build-gate failure is the
-   * backend's 422 → `requestError`. */
-  async downloadBundleFile(): Promise<void> {
-    if (draft == null) {
-      return;
-    }
-    busy = true;
-    requestError = null;
-    try {
-      await downloadBundle(draft as ProjectDataBody);
     } catch (e) {
       requestError = errMessage(e);
     } finally {
