@@ -34,10 +34,15 @@ def test_no_route_handler_references_provenance_db(app):
     ``provenance`` reg_meta accessor."""
     import inspect
 
+    from _route_helpers import flat_routes
     from starlette.routing import Route
 
     offenders: list[str] = []
-    for route in app.routes:
+    # flat_routes flattens the FastAPI 0.137 _IncludedRouter tree: pre-0.137
+    # app.routes held every APIRoute directly, but now the included catalog/search/
+    # project/docs/context handlers are nested, so a bare `app.routes` walk would
+    # scan only the directly-added routes and silently skip the API handlers.
+    for route in flat_routes(app):
         if not isinstance(route, Route):
             continue
         endpoint = route.endpoint
