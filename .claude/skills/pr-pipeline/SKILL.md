@@ -197,9 +197,28 @@ docs push after the hold starts restarts it).
 converged (your `/code-review` loop is the independent Claude pass) · CI green ·
 bot-review window settled · real-data validation for build-affecting work · **visual
 verification (a rendered-view `preview_screenshot`) for UI changes** · stale-head check.
-For the bot-review window, follow the gate's method: poll for Codex's signal on the
-**current HEAD** — a review/comment, a 👍/👀 reaction (`gh api .../reactions`), or an
-out-of-tokens comment (`gh api .../comments`) — keyed on the bot, NOT on CI going green.
+For the bot-review window, run
+**`uv run --no-project python scripts/pr_review_status.py <pr>`** — it computes Codex's
+signal on the **current HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`) and
+returns the verdict bodies in `messages` (no second `gh` call), so you don't re-derive
+the login-sensitive `gh api` calls. Operate it like this:
+
+- **Launch it once per HEAD as a background task** (`Bash` with
+  `run_in_background: true`) right after you mark ready (or after a new push +
+  `@codex review`). It defaults to **polling** — re-fetching every 30 s (there are no
+  webhooks; a fresh verdict is seen only by re-asking) to a **\~15-min** ceiling — and
+  the harness re-invokes you when it exits, so you keep working meanwhile. It is **not**
+  continuous and **not** many launches: one background poll spans the whole window for
+  that HEAD. The 15-min wait outlasts the 10-min foreground `Bash` cap, which is why it
+  must be backgrounded; `--once` is the quick snapshot when you just want the current
+  state.
+- **Act on the settled signal:** route `findings` to a fix (the suggestions are in
+  `messages` — no need to open the PR), merge-eligible on `clean`, treat `exhausted` as
+  end-of-wait (not a blocker), never conclude on `reviewing`/`none`. A new push
+  invalidates the verdict — re-trigger with `@codex review` and launch a fresh
+  background poll on the new HEAD.
+- Never key the window on CI going green — CI is a separate gate.
+
 Pipeline-specific operational notes the gate doesn't carry:
 
 - Run the cheap gates first and the real `build-db` **LAST and ONCE** on the truly-final

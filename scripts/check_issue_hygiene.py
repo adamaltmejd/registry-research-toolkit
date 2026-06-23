@@ -31,13 +31,26 @@ diff); both are present and authenticated in CI. Stdlib only — run with
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+
+# gh/git process primitives live in the shared _gh module (loaded via spec so it resolves
+# regardless of sys.path — same idiom plan_sequence.py uses to load this module).
+_GHSPEC = importlib.util.spec_from_file_location(
+    "_gh", Path(__file__).with_name("_gh.py")
+)
+assert _GHSPEC and _GHSPEC.loader
+_gh = importlib.util.module_from_spec(_GHSPEC)
+_GHSPEC.loader.exec_module(_gh)
+
+run = _gh.run
+gh_json = _gh.gh_json
+repo_owner_name = _gh.repo_owner_name
 
 AREA_LABELS = {
     "reg_meta",
@@ -101,28 +114,6 @@ class Findings:
     @property
     def errors(self) -> int:
         return sum(1 for level, _, _ in self.items if level == "ERROR")
-
-
-def run(cmd: list[str]) -> str:
-    proc = subprocess.run(cmd, capture_output=True, text=True)
-    if proc.returncode != 0:
-        sys.stderr.write(f"command failed: {' '.join(cmd)}\n{proc.stderr}\n")
-        raise SystemExit(2)
-    return proc.stdout
-
-
-def gh_json(args: list[str]) -> Any:
-    return json.loads(run(["gh", *args]))
-
-
-def repo_owner_name() -> tuple[str, str]:
-    slug = os.environ.get("GITHUB_REPOSITORY")
-    if not slug:
-        slug = json.loads(run(["gh", "repo", "view", "--json", "nameWithOwner"]))[
-            "nameWithOwner"
-        ]
-    owner, name = slug.split("/", 1)
-    return owner, name
 
 
 def _normalize(body: str | None) -> str:

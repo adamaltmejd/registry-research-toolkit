@@ -343,20 +343,33 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   unanswered. Review is iterative: if fixes introduce substantial new changes, run
   another round on the new diff — repeat until a round produces nothing material.
 - **Bot-review window** — after the PR is ready (and after each substantive push), give
-  Codex/Copilot a bounded window. Poll for the **bot's own signal on the current HEAD**,
-  NOT for CI finishing — CI is a separate gate that usually goes green far sooner, so a
-  poller that exits on CI-done has not actually given the bot its window. The signal is
-  one of: a submitted review/comment; Codex's clean verdict — a 👍 reaction on the PR
-  body from `chatgpt-codex-connector[bot]` with no review submitted (invisible to
-  `gh pr view`; check `gh api repos/<owner>/<repo>/issues/<pr>/reactions`); or a 👀
-  reaction there meaning Codex is still reviewing — never conclude the window or merge
-  while 👀 is present. Codex can also run **out of tokens**, in which case it posts an
-  issue comment like "You have reached your Codex usage limits for code reviews" (in
-  `gh api repos/<owner>/<repo>/issues/<pr>/comments`, not a review or reaction) — treat
-  that as a definitive end-of-wait, not a blocker. Otherwise \~10 min with no signal is
-  the ceiling — bots may skip a push entirely (Codex auto-reviews on open/ready only; a
-  verdict on a new HEAD must be requested by commenting `@codex review`). Only trust a
-  verdict timestamped after the latest push; absence at the ceiling is not a blocker.
+  Codex/Copilot a bounded window.
+  **`uv run --no-project python scripts/pr_review_status.py <pr>`** computes the signal:
+  JSON to stdout (`signal` ∈ `clean`/`findings`/`reviewing`/`exhausted`/`none`), exit
+  **0** settled · **1** not-settled · **2** tool error. By default it **polls**
+  (re-fetch every 30 s — there are no webhooks) to a \~15-min ceiling, so launch it
+  **once per HEAD as a background task** (`run_in_background: true`) — the wait outlasts
+  the 10-min foreground `Bash` cap; `--once` gives a single non-blocking snapshot
+  instead. Prefer it over re-deriving the `gh api` calls by hand, which is where this
+  gets shipped wrong: Codex submits reviews as login `chatgpt-codex-connector` but
+  reacts as `chatgpt-codex-connector[bot]`, so a one-login poller misses half the
+  signal. Poll for the **bot's own signal on the current HEAD**, NOT for CI finishing —
+  CI is a separate gate that usually goes green far sooner, so a poller that exits on
+  CI-done has not actually given the bot its window. The signals: a submitted Codex
+  **review** = findings (its suggestions vehicle); Codex's "Codex Review: …" **comment**
+  stamped `Reviewed commit: <sha>` for the head — or, when it posts no comment, a **👍
+  reaction** (invisible to `gh pr view`) within the review window — = its clean verdict;
+  a **👀 reaction** = still reviewing — never conclude or merge while it's the newest
+  signal; an out-of-tokens comment ("reached your Codex usage limits") = a definitive
+  end-of-wait, not a blocker. The poller scopes each signal to the current HEAD so a
+  stale verdict can't read as fresh: the **review** by its `commit_id` and the
+  SHA-stamped **clean comment** by its stamp (rebase-proof); the commit-unbound signals
+  (👍, exhausted, 👀) by the **review window** = the later of the head commit time and
+  the most recent `@codex review` request (GitHub exposes no reliable push time). The
+  poller also returns the verdict bodies in `messages`, so you read them without a
+  second `gh` call. \~15 min with no signal is the ceiling — bots may skip a push
+  entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
+  requested by commenting `@codex review`). Absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,
