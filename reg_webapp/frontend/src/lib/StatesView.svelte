@@ -147,7 +147,7 @@ const isolated = $derived(
 const shownValueSets = $derived(
   valueSets
     .filter((vs) => matchesFilter(filter, valueSetLabel(vs), ...vs.variants))
-    .filter((vs) => scopeValueSetKeys === null || inScope(vs)),
+    .filter((vs) => inPeriod(vs)),
 );
 const collapsedValueSets = $derived(
   scopeValueSetKeys === null
@@ -156,7 +156,7 @@ const collapsedValueSets = $derived(
         .filter((vs) =>
           matchesFilter(filter, valueSetLabel(vs), ...vs.variants),
         )
-        .filter((vs) => !inScope(vs)),
+        .filter((vs) => !inPeriod(vs)),
 );
 
 // A value set is IN SCOPE for the active resolution when no variant is pinned, or
@@ -174,12 +174,14 @@ const collapsedValueSets = $derived(
 // reach the view, without the view needing to know which path produced them.
 // (Follow-up: a richer "show full history + grey out-of-scope even on a
 // server-narrowed variant-pick" behavior is out of scope for #668.)
+function inPeriod(vs: DistinctValueSet): boolean {
+  return scopeValueSetKeys === null ? true : scopeValueSetKeys.has(vs.key);
+}
+
 function inScope(vs: DistinctValueSet): boolean {
-  const inPeriod =
-    scopeValueSetKeys === null ? true : scopeValueSetKeys.has(vs.key);
   const inVariant =
     activeVariant == null || vs.variants.includes(activeVariant);
-  return inPeriod && inVariant;
+  return inPeriod(vs) && inVariant;
 }
 
 // The label for a distinct value set: a classification value set reads

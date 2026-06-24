@@ -335,6 +335,38 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       .toBeVisible();
   });
 
+  it("keeps same-period other-variant value sets inline and greyed (#744 review)", async () => {
+    const samePeriodOtherVariant = state({
+      state_id: 3,
+      value_set_id: 201,
+      value_set_version_label: "Same-period other variant",
+      variant: "fodda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [classState, samePeriodOtherVariant, plainState],
+      scopeStates: [classState, samePeriodOtherVariant],
+      narrowed: true,
+      activeVariant: "doda",
+      ...noopCallbacks,
+    });
+    const inlineRows = [
+      ...document.querySelectorAll<HTMLLIElement>(
+        "ul.vs-list:not(.out-of-period-list) > li",
+      ),
+    ];
+    expect(inlineRows).toHaveLength(2);
+    const otherVariantRow = inlineRows.find((row) =>
+      row.textContent?.includes("Same-period other variant"),
+    );
+    expect(otherVariantRow).toBeDefined();
+    expect(otherVariantRow?.classList.contains("out-of-scope")).toBe(true);
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+  });
+
   it("keeps single-state detail resolution when full history is available (#744)", async () => {
     render(StatesView, {
       states: [classState, plainState],
