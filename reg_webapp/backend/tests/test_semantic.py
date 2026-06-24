@@ -622,13 +622,13 @@ def test_representation_under_covering_default_is_drift(uneven_representation_ca
 @pytest.fixture
 def representation_internal_gap_catalog():
     """The PINNED column `kon` is delivered in TWO disjoint windows (2010-2012 and
-    2018-2020); a SIBLING column `kon_detalj` fills the middle (2013-2017). All
+    2018-9999); a SIBLING column `kon_detalj` fills the middle (2013-2017). All
     three windows are non-overlapping, so no column co-exists with another (no
-    `binding_value_set_version_ambiguous`). Over a 2010..2020 range the OUTER
-    bounds of the pinned column (min_from 2010, max_to 2020) equal those of the
-    full state set, so the old outer-bounds check stays silent — yet the pinned
+    `binding_value_set_version_ambiguous`). Over a 2010..2020 range the pinned
+    column has the same outer coverage as the full state set once clamped to the
+    requested range, so the old outer-bounds check stays silent — yet the pinned
     column's 2013-2017 extract is empty because only the sibling delivers it. This
-    is the #342 internal-gap case the gap-based check must catch."""
+    is the #342/#465 internal-gap case the gap-based check must catch."""
     from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
 
     conn = build_slugged_db()
@@ -645,7 +645,7 @@ def representation_internal_gap_catalog():
         variable_slug="kon",
         register_variant_id=10,
         valid_from="2018-01-01",
-        valid_to="2020-12-31",
+        valid_to="9999-12-31",
         delivery_column_name="kon",
     )
     # Sibling column filling the gap between the two pinned eras.
@@ -695,6 +695,70 @@ def test_representation_internal_gap_in_range_is_drift(
     assert result.ok
 
 
+def test_representation_internal_gap_in_default_is_drift(
+    representation_internal_gap_catalog,
+):
+    # #465: `_default` compares the pinned column against the full state history.
+    # The upper bound is the open-end sentinel, so this also exercises the
+    # sentinel-safe gap cursor.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": "_default",
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), representation_internal_gap_catalog, caller="researcher"
+    )
+    drift = [
+        i
+        for i in result.issues
+        if i.code == "binding_state_drifts_within_period"
+        and "covers only part of period _default" in i.message
+    ]
+    assert len(drift) == 1
+    assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
+    assert result.ok
+
+
+def test_representation_internal_gap_in_list_range_segment_is_drift(
+    representation_internal_gap_catalog,
+):
+    # #465: a list segment can be a range. The pin covers the segment's outer
+    # bounds but leaves the 2013-2017 middle to a sibling column, so the old
+    # per-segment presence loop is not enough.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": [{"from": 2010, "to": 2020}, 2022],
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), representation_internal_gap_catalog, caller="researcher"
+    )
+    drift = [
+        i
+        for i in result.issues
+        if i.code == "binding_state_drifts_within_period"
+        and "covers only part of period 2010..2020" in i.message
+    ]
+    assert len(drift) == 1
+    assert "segment of 2010..2020,2022" in drift[0].message
+    assert result.ok
+
+
 def test_representation_full_coverage_range_is_no_drift(
     representation_internal_gap_catalog,
 ):
@@ -717,6 +781,31 @@ def test_representation_full_coverage_range_is_no_drift(
     )
     codes = {i.code for i in result.issues}
     assert "binding_state_drifts_within_period" not in codes
+    assert result.ok
+
+
+def test_representation_full_default_coverage_to_open_end_is_no_drift(
+    uneven_representation_catalog,
+):
+    # Pinning the long-lived column covers the `_default` bounds through
+    # 9999-12-31. This guards both overflow and a spurious one-day trailing gap at
+    # the open-end sentinel.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": "_default",
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), uneven_representation_catalog, caller="researcher"
+    )
+    assert result.issues == ()
     assert result.ok
 
 

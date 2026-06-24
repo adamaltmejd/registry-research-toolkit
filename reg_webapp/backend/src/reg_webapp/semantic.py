@@ -60,9 +60,8 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import FqidError, parse, period_token_to_bounds
 
-# Runtime import (not just TYPE_CHECKING): the representation drift split below
-# branches on `isinstance(source.period, PeriodRange)` to scope the gap-based
-# under-coverage check to explicit ranges only.
+# Runtime import (not just TYPE_CHECKING): semantic coverage checks branch on
+# `isinstance(..., PeriodRange)` for explicit range math.
 from reg_schema.project_data import PeriodRange
 from reg_schema.validation import ValidationIssue, ValidationResult
 
@@ -319,6 +318,11 @@ def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     return lo, _snap_to_real_month_end(hi)
 
 
+def _state_union_bounds(states) -> tuple[str, str]:  # noqa: ANN001 — reg_meta states
+    """Inclusive ISO bounds spanning a non-empty set of variable states."""
+    return min(s.valid_from for s in states), max(s.valid_to for s in states)
+
+
 def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta VariableState
     """CO-DELIVERY: are ≥2 states with DISTINCT VALUE SETS (different
     ``value_set_id`` — not merely a different free-text version label) valid at the
@@ -383,7 +387,8 @@ def _range_coverage_gaps(
     non-adjacent states) is returned as an inclusive ``(gap_lo, gap_hi)`` pair.
     Day-adjacent windows (e.g. ``..2013-12-31`` then ``2014-01-01..``) leave no
     gap. Dates are real calendar ISO ``YYYY-MM-DD``; ``9999-12-31`` is the
-    open-ended sentinel but, clamped to ``hi``, never overflows ``date`` math."""
+    open-ended sentinel, so a window that reaches ``hi`` marks the cursor
+    complete instead of computing ``hi + 1 day``."""
     one_day = timedelta(days=1)
     windows = sorted(
         (max(s.valid_from, lo), min(s.valid_to, hi))
@@ -391,16 +396,32 @@ def _range_coverage_gaps(
         if s.valid_from <= hi and s.valid_to >= lo
     )
     gaps: list[tuple[str, str]] = []
-    cursor = date.fromisoformat(lo)
+    end = date.fromisoformat(hi)
+    cursor: date | None = date.fromisoformat(lo)
     for w_lo, w_hi in windows:
+        if cursor is None:
+            break
         start = date.fromisoformat(w_lo)
         if start > cursor:
             gaps.append((cursor.isoformat(), (start - one_day).isoformat()))
-        cursor = max(cursor, date.fromisoformat(w_hi) + one_day)
-    end = date.fromisoformat(hi)
-    if cursor <= end:
+        finish = date.fromisoformat(w_hi)
+        if finish >= end:
+            cursor = None
+            break
+        cursor = max(cursor, finish + one_day)
+    if cursor is not None and cursor <= end:
         gaps.append((cursor.isoformat(), hi))
     return gaps
+
+
+def _representation_under_covers(
+    matched,  # noqa: ANN001 — reg_meta VariableState
+    states,  # noqa: ANN001 — reg_meta VariableState
+    lo: str,
+    hi: str,
+) -> bool:
+    """True when the chosen representation leaves gaps a sibling fills."""
+    return _range_coverage_gaps(matched, lo, hi) != _range_coverage_gaps(states, lo, hi)
 
 
 def _check_binding(
@@ -661,50 +682,44 @@ def _check_binding_period(
         # The chosen column may not span the whole MULTI-period: resolve_at returns
         # only intersecting states, so narrowing to `matched` can silently drop a
         # sub-range the column doesn't cover (e.g. SSYK5 from 2014 under a 2010–2020
-        # binding → 2010–2013 lost). Surface it as info. A point int period is a
-        # single instant (no gap), so neither branch below fires for it.
+        # binding → 2010–2013 lost). Surface it as info. A point int/token period
+        # is treated as a single instant (no gap); explicit ranges, `_default`
+        # full-history bounds, and range segments in a list have spans to compare.
         #
-        # The drift detection splits BY PERIOD TYPE because the two cases need
-        # different coverage math:
-        #
-        # (1) An explicit `PeriodRange` has a FINITE author-supplied `[lo, hi]`,
-        #     so we can do real `date`-interval gap math against it. Comparing
-        #     only the OUTER bounds (the old min/max test) misses an INTERNAL gap:
-        #     a column delivering 2010–2012 AND 2018–2020 (two disjoint states)
-        #     under a 2010..2020 binding has the same min_from/max_to as a sibling
-        #     covering 2013–2017, so the outer test stays silent while the
-        #     2013–2017 extract is empty for the pinned column. Instead, compute
-        #     the uncovered sub-ranges for the pinned column (`matched`) vs all
-        #     columns (`states`) over `[lo, hi]`. Since `matched ⊆ states`,
-        #     `all_gaps` is always a subset of `matched_gaps`; they DIFFER exactly
-        #     when a sibling column fills a sub-range the pinned column does not —
-        #     which is precisely the under-coverage we want to flag. This
-        #     SUBSUMES the old outer-bounds test (a leading/trailing gap is just
-        #     another gap) AND catches internal gaps, so the `PeriodRange` case
-        #     runs ONLY this check (running the old min/max too would double-report).
-        #
-        # (2) `_default` (full history) and a list period stay on the OUTER-bounds
-        #     min/max test. `_default`'s upper bound is the open-end sentinel
-        #     `9999-12-31`, and `_range_coverage_gaps` does `valid_to + 1 day`,
-        #     which would overflow `date.max` on an open-ended state — so `_default`
-        #     can't use the gap path and stays on the overflow-safe comparison.
-        #     The internal-gap sub-case for `_default`, and per-range-segment of a
-        #     list, is a deferred follow-up; the per-segment presence loop just
-        #     below already flags a list segment NO pinned state covers.
-        if isinstance(source.period, PeriodRange):
+        # Comparing only OUTER bounds misses an INTERNAL gap: a column delivering
+        # 2010–2012 AND 2018–9999 (two disjoint states) can have the same
+        # min_from/max_to as the full state set while a sibling covers 2013–2017.
+        # Instead, compute uncovered sub-ranges for the pinned column (`matched`)
+        # vs all columns (`states`) over the relevant bounds. Since
+        # `matched ⊆ states`, the gap sets DIFFER exactly when a sibling column
+        # fills a sub-range the pinned column does not. For list periods, range
+        # segments are checked independently; a segment with NO pinned state stays
+        # owned by the per-segment presence loop below to avoid double-reporting.
+        under_covered_periods: list[tuple[int | str | PeriodRange, str]] = []
+        if source.period == "_default":
+            lo, hi = _state_union_bounds(states)
+            if _representation_under_covers(matched, states, lo, hi):
+                under_covered_periods.append((source.period, ""))
+        elif isinstance(source.period, PeriodRange):
             lo, hi = _requested_range_bounds(source.period)
-            matched_gaps = _range_coverage_gaps(matched, lo, hi)
-            all_gaps = _range_coverage_gaps(states, lo, hi)
-            under_covers = matched_gaps != all_gaps
-        else:
-            is_multi_period = (
-                not isinstance(source.period, (int, str)) or source.period == "_default"
-            )
-            under_covers = is_multi_period and (
-                min(s.valid_from for s in matched) > min(s.valid_from for s in states)
-                or max(s.valid_to for s in matched) < max(s.valid_to for s in states)
-            )
-        if under_covers:
+            if _representation_under_covers(matched, states, lo, hi):
+                under_covered_periods.append((source.period, ""))
+        elif isinstance(source.period, tuple):
+            for segment, seg_states in per_segment:
+                if not isinstance(segment, PeriodRange):
+                    continue
+                seg_matched = [
+                    s
+                    for s in seg_states
+                    if s.delivery_column_name == binding.representation
+                ]
+                if not seg_matched:
+                    continue
+                lo, hi = _requested_range_bounds(segment)
+                if _representation_under_covers(seg_matched, seg_states, lo, hi):
+                    under_covered_periods.append((segment, series_context))
+
+        for under_covered_period, context in under_covered_periods:
             issues.append(
                 _issue(
                     "binding_state_drifts_within_period",
@@ -713,7 +728,8 @@ def _check_binding_period(
                     var_path,
                     f"binding {binding.variable!r} representation "
                     f"{binding.representation!r} covers only part of period "
-                    f"{period_display(source.period)} at {source.register_variant}; "
+                    f"{period_display(under_covered_period)}{context} at "
+                    f"{source.register_variant}; "
                     f"the rest of the range has no state for that column",
                 )
             )

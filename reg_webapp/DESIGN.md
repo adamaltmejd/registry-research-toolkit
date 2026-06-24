@@ -1205,12 +1205,12 @@ Rules, walking each source's `register_variant` + every binding:
   crossing a state transition (sequential, non-overlapping states) →
   `binding_state_drifts_within_period` (info); the same `(info)` code also fires when a
   pinned `representation` column under-covers the requested range vs a sibling column
-  that delivers the shortfall — a leading/trailing gap, or (for an explicit range) an
-  **internal** gap inside it (#342, gap-based; `_default`/list keep the outer-bounds
-  test). A **#307 list period** (interrupted series; structurally sorted + disjoint,
-  wire form comma-joined — `2005..2010,2015..2020`) resolves **per segment**:
-  `period_outside_state_validity` and `range_period_partially_covered` fire per
-  uncovered/under-covered segment (naming it), and the PER-INSTANT probes —
+  that delivers the shortfall — a leading/trailing gap or **internal** gap inside an
+  explicit range, `_default`'s full-history bounds, or a range segment of a list
+  (#342/#465, gap-based). A **#307 list period** (interrupted series; structurally
+  sorted + disjoint, wire form comma-joined — `2005..2010,2015..2020`) resolves **per
+  segment**: `period_outside_state_validity` and `range_period_partially_covered` fire
+  per uncovered/under-covered segment (naming it), and the PER-INSTANT probes —
   co-existence/ambiguity, the co-delivered-value-set backstop, the pinned
   representation's presence — also run per segment (the whole-series union would
   false-positive on windows overlapping only BETWEEN segments). Only the series-level
