@@ -431,6 +431,57 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
   });
 });
 
+describe("BindingLeafView period-scoped value-set history (#744)", () => {
+  it("uses the period subset for Add while rendering full history with outside-period collapse", async () => {
+    const inA = state({
+      state_id: 10,
+      variant: "individer",
+      value_set_id: 10,
+      value_set_version_label: "In-period A",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const inB = state({
+      state_id: 11,
+      variant: "individer",
+      value_set_id: 11,
+      value_set_version_label: "In-period B",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    const outside = state({
+      state_id: 12,
+      variant: "outside-population",
+      value_set_id: 12,
+      value_set_version_label: "Outside period",
+      valid_from: "1990-01-01",
+      valid_to: "1990-12-31",
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: [inA, inB],
+    } as never);
+    router.navigate("/catalog/scb/lisa/kon?period=2007..2008");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([inA, inB, outside]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+    await expect
+      .element(page.getByText(/pick one to add/i))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .toBeEnabled();
+  });
+});
+
 describe("BindingLeafView member identity (#670)", () => {
   // A grouped member: its `node.group` references a register concept group, and
   // /dimensions returns that group with the member carrying distinguishing

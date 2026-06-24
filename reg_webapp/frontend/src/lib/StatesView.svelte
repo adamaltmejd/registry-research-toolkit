@@ -10,6 +10,7 @@ import {
   formatWindow,
   humanizeClassificationSlug,
   matchesFilter,
+  type ValueSetTechnicalChange,
   windowTitle,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
@@ -44,6 +45,7 @@ let {
   narrowed,
   activeVariant = null,
   activeValueSetVersion = null,
+  scopeStates = null,
   onpickVariant,
   onpickValueSetVersion,
 }: {
@@ -52,25 +54,37 @@ let {
   narrowed: boolean;
   activeVariant?: string | null;
   activeValueSetVersion?: string | null;
+  /** The period-resolved subset when `states` intentionally carries full history. */
+  scopeStates?: VariableStateModel[] | null;
   onpickVariant: (variant: string) => void;
   onpickValueSetVersion: (valueSetVersion: string) => void;
 } = $props();
 
-const single = $derived(states.length === 1 ? states[0] : null);
+const resolutionStates = $derived(scopeStates ?? states);
+const single = $derived(
+  narrowed
+    ? resolutionStates.length === 1
+      ? resolutionStates[0]
+      : null
+    : states.length === 1
+      ? states[0]
+      : null,
+);
 
 // Distinct variants / value-set versions across the (multi-state) set — the two
 // narrowing axes. Order-preserving de-dup so the picker is stable.
 function distinct<K>(xs: K[]): K[] {
   return [...new Set(xs)];
 }
-const variants = $derived(distinct(states.map((s) => s.variant)));
+const choiceStates = $derived(narrowed ? resolutionStates : states);
+const variants = $derived(distinct(choiceStates.map((s) => s.variant)));
 // ALL distinct versions, INCLUDING the empty default label (`value_set_version_label`
 // is `TEXT NOT NULL DEFAULT ''`): the states DIFFER by version when this has >1,
 // so it drives whether the version axis can narrow. The CHIPS, though, are only
 // the non-empty labels — you can't narrow to "no version" via `?value_set_version=`
 // (it would be omitted), so an empty-label state is narrowed by variant instead.
 const versionsAll = $derived(
-  distinct(states.map((s) => s.value_set_version_label)),
+  distinct(choiceStates.map((s) => s.value_set_version_label)),
 );
 const versionChips = $derived(versionsAll.filter((v) => v !== ""));
 // A state may carry the empty/default label; it gets a "(no version)" chip
@@ -84,6 +98,13 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 // which variants/spans use it. kommun's 415 states collapse to ~21 LKF editions
 // + a few plain code lists here.
 const valueSets = $derived(distinctValueSets(states));
+const resolutionValueSets = $derived(distinctValueSets(choiceStates));
+const scopeValueSetKeys = $derived.by(() => {
+  if (scopeStates === null) {
+    return null;
+  }
+  return new Set(distinctValueSets(scopeStates).map((vs) => vs.key));
+});
 
 // A version label shared by ≥2 NON-classification rows can't tell them apart on
 // its own (kommun's "Kommun historisk" ×22) — those rows get their overall span
@@ -111,6 +132,7 @@ let isolatedKey = $state<string | null>(null);
 let filter = $state("");
 $effect(() => {
   void states;
+  void scopeStates;
   isolatedKey = null;
   filter = "";
 });
@@ -123,16 +145,25 @@ const isolated = $derived(
 // so hunting a variant ("doda") surfaces the value sets it uses. The isolate view
 // shows the single isolated set and ignores the filter.
 const shownValueSets = $derived(
-  valueSets.filter((vs) =>
-    matchesFilter(filter, valueSetLabel(vs), ...vs.variants),
-  ),
+  valueSets
+    .filter((vs) => matchesFilter(filter, valueSetLabel(vs), ...vs.variants))
+    .filter((vs) => scopeValueSetKeys === null || inScope(vs)),
+);
+const collapsedValueSets = $derived(
+  scopeValueSetKeys === null
+    ? []
+    : valueSets
+        .filter((vs) =>
+          matchesFilter(filter, valueSetLabel(vs), ...vs.variants),
+        )
+        .filter((vs) => !inScope(vs)),
 );
 
 // A value set is IN SCOPE for the active resolution when no variant is pinned, or
-// when one of its variants matches the pinned `?variant`. Out-of-scope ones are
-// GREYED (not removed) so the full coding history stays visible. The period axis
-// is already applied to `states` upstream (BindingLeafView passes the narrowed
-// subset), so only the variant axis remains to grey on here.
+// when one of its variants matches the pinned `?variant`, and when the
+// period-resolved subset contains the value-set key. Period-out-of-scope rows are
+// collapsed under a disclosure so high-cardinality variables keep their context
+// without rendering every historical code list inline (#744).
 //
 // Greying only has a VISIBLE effect when `states` is MULTI-variant — i.e. full
 // history (no `?period`), a `?variant`-without-`?period` deep link, or the
@@ -144,7 +175,11 @@ const shownValueSets = $derived(
 // (Follow-up: a richer "show full history + grey out-of-scope even on a
 // server-narrowed variant-pick" behavior is out of scope for #668.)
 function inScope(vs: DistinctValueSet): boolean {
-  return activeVariant == null || vs.variants.includes(activeVariant);
+  const inPeriod =
+    scopeValueSetKeys === null ? true : scopeValueSetKeys.has(vs.key);
+  const inVariant =
+    activeVariant == null || vs.variants.includes(activeVariant);
+  return inPeriod && inVariant;
 }
 
 // The label for a distinct value set: a classification value set reads
@@ -159,6 +194,20 @@ function valueSetLabel(vs: DistinctValueSet): string {
   return ambiguousLabels.has(label)
     ? `${label} · ${formatWindow(vs.overallSpan.from, vs.overallSpan.to)}`
     : label;
+}
+
+function usageChanges(
+  usage: DistinctValueSet["usages"][number],
+): ValueSetTechnicalChange[] {
+  return usage.spans.flatMap((span) => span.changes ?? []);
+}
+
+function changeDateLabel(at: string): string {
+  return /^\d{4}-01-01$/.test(at) ? at.slice(0, 4) : at;
+}
+
+function technicalChangeLabel(change: ValueSetTechnicalChange): string {
+  return `changed ${changeDateLabel(change.at)}: ${change.notes.join("; ")}`;
 }
 </script>
 
@@ -182,11 +231,19 @@ function valueSetLabel(vs: DistinctValueSet): string {
 {#snippet usage(vs: DistinctValueSet)}
   <ul class="vs-usage">
     {#each vs.usages as u (u.variant)}
+      {@const changes = usageChanges(u)}
       <li>
         <code class="vs-usage-variant">{u.variant}</code>
         <span class="muted vs-usage-spans">
           {u.spans.map((sp) => formatWindow(sp.from, sp.to)).join(", ")}
         </span>
+        {#if changes.length > 0}
+          <span class="vs-change-list">
+            {#each changes as change (`${change.at}:${change.notes.join("|")}`)}
+              <span class="vs-change">{technicalChangeLabel(change)}</span>
+            {/each}
+          </span>
+        {/if}
       </li>
     {/each}
   </ul>
@@ -209,6 +266,40 @@ function valueSetLabel(vs: DistinctValueSet): string {
   {:else}
     <p class="muted">No value set.</p>
   {/if}
+{/snippet}
+
+{#snippet valueSetRow(vs: DistinctValueSet)}
+  <li class:out-of-scope={!inScope(vs)}>
+    <div class="vs-row">
+      {#if vs.classificationSlug}
+        <!-- A classification value set: link out, never dump the (huge)
+             code list. -->
+        <a class="vs-label" href={catalogHref(`class/${vs.classificationSlug}`)}>
+          = {humanizeClassificationSlug(vs.classificationSlug)}
+        </a>
+      {:else}
+        <span class="vs-label">{valueSetLabel(vs)}</span>
+        {#if vs.valueSet && vs.valueSet.length > 0}
+          <span class="muted vs-count">({vs.valueSet.length})</span>
+        {/if}
+      {/if}
+      <button
+        type="button"
+        class="chip vs-isolate"
+        onclick={() => (isolatedKey = vs.key)}
+      >
+        Isolate
+      </button>
+    </div>
+    {@render usage(vs)}
+    {#if !vs.classificationSlug && vs.valueSet && vs.valueSet.length > 0}
+      <!-- #310: inspect a plain value set's codes inline, without isolating. -->
+      <details class="vs-codes">
+        <summary>Values ({vs.valueSet.length})</summary>
+        {@render valueSetTable(vs.valueSet)}
+      </details>
+    {/if}
+  </li>
 {/snippet}
 
 {#if states.length === 0}
@@ -269,10 +360,15 @@ function valueSetLabel(vs: DistinctValueSet): string {
        `?period` (it 422s them otherwise), so it's shown only when a period is
        active (`narrowed`). Without a period the view is the full state history —
        set a period to narrow to one. -->
-  {#if narrowed && canNarrow}
+  {#if narrowed && resolutionStates.length === 0}
     <p class="muted picker-hint">
-      {valueSets.length}
-      {valueSets.length === 1 ? "value set" : "value sets"} at this period across
+      No state delivered for this period. Historical value sets outside this period
+      are collapsed below.
+    </p>
+  {:else if narrowed && canNarrow}
+    <p class="muted picker-hint">
+      {resolutionValueSets.length}
+      {resolutionValueSets.length === 1 ? "value set" : "value sets"} at this period across
       {variants.length}
       {variants.length === 1 ? "variant" : "variants"}. Narrow to a single state:
     </p>
@@ -330,7 +426,7 @@ function valueSetLabel(vs: DistinctValueSet): string {
          value-set version (e.g. a RANGE crossing validity windows): no narrowing
          axis can pick one, so don't promise "narrow to a single state". -->
     <p class="muted picker-hint">
-      {valueSets.length} overlapping value sets at this period — narrow to a single
+      {resolutionValueSets.length} overlapping value sets at this period — narrow to a single
       point period to resolve to one.
     </p>
   {:else}
@@ -386,44 +482,28 @@ function valueSetLabel(vs: DistinctValueSet): string {
         placeholder="Filter value sets…"
       />
     {/if}
-    {#if shownValueSets.length === 0}
+    {#if shownValueSets.length === 0 && collapsedValueSets.length === 0}
       <p class="muted">No value set matches the filter.</p>
     {/if}
     <ul class="vs-list">
       {#each shownValueSets as vs (vs.key)}
-        <li class:out-of-scope={!inScope(vs)}>
-          <div class="vs-row">
-            {#if vs.classificationSlug}
-              <!-- A classification value set: link out, never dump the (huge)
-                   code list. -->
-              <a class="vs-label" href={catalogHref(`class/${vs.classificationSlug}`)}>
-                = {humanizeClassificationSlug(vs.classificationSlug)}
-              </a>
-            {:else}
-              <span class="vs-label">{valueSetLabel(vs)}</span>
-              {#if vs.valueSet && vs.valueSet.length > 0}
-                <span class="muted vs-count">({vs.valueSet.length})</span>
-              {/if}
-            {/if}
-            <button
-              type="button"
-              class="chip vs-isolate"
-              onclick={() => (isolatedKey = vs.key)}
-            >
-              Isolate
-            </button>
-          </div>
-          {@render usage(vs)}
-          {#if !vs.classificationSlug && vs.valueSet && vs.valueSet.length > 0}
-            <!-- #310: inspect a plain value set's codes inline, without isolating. -->
-            <details class="vs-codes">
-              <summary>Values ({vs.valueSet.length})</summary>
-              {@render valueSetTable(vs.valueSet)}
-            </details>
-          {/if}
-        </li>
+        {@render valueSetRow(vs)}
       {/each}
     </ul>
+    {#if collapsedValueSets.length > 0}
+      <details class="out-of-period">
+        <summary>
+          {collapsedValueSets.length}
+          {collapsedValueSets.length === 1 ? "value set" : "value sets"} outside
+          this period
+        </summary>
+        <ul class="vs-list out-of-period-list">
+          {#each collapsedValueSets as vs (vs.key)}
+            {@render valueSetRow(vs)}
+          {/each}
+        </ul>
+      </details>
+    {/if}
   {/if}
 {/if}
 
@@ -538,6 +618,16 @@ function valueSetLabel(vs: DistinctValueSet): string {
   .vs-usage-variant {
     font-size: 0.9em;
   }
+  .vs-change-list {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    color: var(--muted);
+  }
+  .vs-change {
+    font-size: 0.9em;
+  }
   .vs-codes {
     margin-top: 0.1rem;
   }
@@ -555,5 +645,16 @@ function valueSetLabel(vs: DistinctValueSet): string {
   .vs-usage-heading {
     margin: 0.75rem 0 0.3rem;
     font-size: 0.85rem;
+  }
+  .out-of-period {
+    margin-top: 0.5rem;
+  }
+  .out-of-period summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 0.85rem;
+  }
+  .out-of-period-list {
+    margin-top: 0.4rem;
   }
 </style>

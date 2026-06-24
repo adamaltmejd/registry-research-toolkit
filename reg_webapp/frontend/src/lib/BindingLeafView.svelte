@@ -99,15 +99,31 @@ const narrowedError = $derived(
   params.period && periodResource.error ? periodResource.error : null,
 );
 
-// States to show: the narrowed subset when a valid `?period` is active (null
-// while it loads → "Loading states…"); else the full node's embedded states
-// (full history, or the fallback when a bad modifier 422'd).
-const states = $derived.by(() =>
+// States that drive resolution-sensitive behavior: Add planning and the
+// single-state detail stay on the `?period` subset. The value-set list may render
+// full history separately so out-of-period value sets can be collapsed instead of
+// removed (#744).
+const resolvedStates = $derived.by(() =>
   params.period && !narrowedError ? narrowedStates : node.states,
 );
+
+// States to show: loading while a period resolve is in flight; a single resolved
+// state renders the detail view; multi/empty period resolves render the full
+// embedded history with `scopeStates` marking what is in-period (#744).
+const states = $derived.by(() => {
+  if (!params.period || narrowedError) {
+    return node.states;
+  }
+  if (narrowedStates === null) {
+    return null;
+  }
+  return narrowedStates.length === 1 ? narrowedStates : node.states;
+});
+
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
 // + StatesView's empty-message wording).
 const isNarrowed = $derived(!!params.period && !narrowedError);
+const stateScope = $derived(isNarrowed ? resolvedStates : null);
 
 // ── #670: member identity from the concept-group dimensions ─────────────────
 // LIFTED from DimensionsPanel: the leaf now owns the ONE `/dimensions` fetch and
@@ -235,11 +251,12 @@ let addOutcome = $state<{
   already: number;
 } | null>(null);
 
-// The reactive add plan over the VISIBLE (period-narrowed) states at the page's
-// wire period — recomputed whenever the states or period change. Drives BOTH the
+// The reactive add plan over the RESOLVED (period-narrowed) states at the page's
+// wire period — recomputed whenever the resolution or period changes. Drives BOTH the
 // proactive `choose-variant` selector (rendered only when ≥2 variants co-exist
 // for the period) and the Add gate. `buildAddPlan` is pure + unit-tested.
-const addPlan = $derived(buildAddPlan(states ?? [], params.period ?? null));
+const addStates = $derived(resolvedStates ?? []);
+const addPlan = $derived(buildAddPlan(addStates, params.period ?? null));
 
 // #638 PR2b: the picker's chosen population, when the plan is `choose-variant`.
 // INVISIBLE unless ≥2 variants co-exist for the period; defaults to NONE (so a
@@ -295,7 +312,7 @@ function startAdd(): void {
     // variant's states — a single variant can't
     // be `choose-variant` again, so the result is always `segments` (at most a
     // rep prompt remains); the defensive `kind` guard keeps TS sound.
-    const subset = (states ?? []).filter((s) => s.variant === addVariant);
+    const subset = addStates.filter((s) => s.variant === addVariant);
     const plan = buildAddPlan(subset, params.period ?? null);
     if (plan.kind === "segments") {
       continueWithSegments(plan.segments);
@@ -501,8 +518,7 @@ const repSegment = $derived(
       type="button"
       class="add-to-project"
       disabled={!seedReady ||
-        !states ||
-        states.length === 0 ||
+        addStates.length === 0 ||
         (addPlan.kind === "choose-variant" &&
           !addPlan.options.some((o) => o.variant === addVariant))}
       onclick={startAdd}
@@ -616,6 +632,7 @@ const repSegment = $derived(
       <StatesView
         {states}
         narrowed={isNarrowed}
+        scopeStates={stateScope}
         activeVariant={params.variant ?? null}
         activeValueSetVersion={params.value_set_version ?? null}
         onpickVariant={(variant) => setResolution({ variant })}

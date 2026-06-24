@@ -1636,6 +1636,90 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ]);
   });
 
+  it("carries technical changes inside a folded value-set span (#743)", () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2010-01-01",
+        valid_to: "2010-12-31",
+        data_type: "int",
+        delivery_column_name: "KOMMUN",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2011-01-01",
+        valid_to: "2011-12-31",
+        data_type: "bigint",
+        delivery_column_name: "KOMMUN_ID",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      {
+        from: "2010-01-01",
+        to: "2011-12-31",
+        changes: [
+          {
+            at: "2011-01-01",
+            notes: ["type int -> bigint", "column KOMMUN -> KOMMUN_ID"],
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("does not report technical changes for same-state monthly windows", () => {
+    const states = [
+      state({
+        state_id: 10,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2020-01-31",
+        delivery_column_name: "LonFinkJan",
+      }),
+      state({
+        state_id: 10,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-02-01",
+        valid_to: "2020-02-29",
+        delivery_column_name: "LonFinkFeb",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2020-01-01", to: "2020-02-29" },
+    ]);
+  });
+
+  it("does not report technical changes for overlapping alternatives", () => {
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "A",
+      }),
+      state({
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-06-01",
+        valid_to: "2021-12-31",
+        delivery_column_name: "B",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2020-01-01", to: "2021-12-31" },
+    ]);
+  });
+
   it("a gap year splits a span in two", () => {
     const states = [
       state({

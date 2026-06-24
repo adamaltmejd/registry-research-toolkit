@@ -267,6 +267,85 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
     expect(greyed[0].textContent).toContain("Kommun historisk");
   });
 
+  it("renders technical-change hints inside a folded value-set usage (#743)", async () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 300,
+        value_set_version_label: "Kommun historisk",
+        variant: "doda",
+        valid_from: "2010-01-01",
+        valid_to: "2010-12-31",
+        data_type: "int",
+        delivery_column_name: "KOMMUN",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 300,
+        value_set_version_label: "Kommun historisk",
+        variant: "doda",
+        valid_from: "2011-01-01",
+        valid_to: "2011-12-31",
+        data_type: "bigint",
+        delivery_column_name: "KOMMUN_ID",
+      }),
+    ];
+    render(StatesView, { states, narrowed: false, ...noopCallbacks });
+    await expect
+      .element(
+        page.getByText(
+          "changed 2011: type int -> bigint; column KOMMUN -> KOMMUN_ID",
+        ),
+      )
+      .toBeVisible();
+  });
+
+  it("collapses period-out-of-scope value sets behind a disclosure (#744)", async () => {
+    const inScopePlain = state({
+      state_id: 3,
+      value_set_id: 201,
+      value_set_version_label: "In-period plain",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [classState, inScopePlain, plainState],
+      scopeStates: [classState, inScopePlain],
+      narrowed: true,
+      ...noopCallbacks,
+    });
+    const inlineRows = document.querySelectorAll(
+      "ul.vs-list:not(.out-of-period-list) > li",
+    );
+    expect(inlineRows).toHaveLength(2);
+    expect(inlineRows[0].textContent).toContain("LKF 2007");
+    expect(
+      [...inlineRows].map((row) => row.textContent).join(" "),
+    ).not.toContain("Kommun historisk");
+
+    const disclosure = page.getByText("1 value set outside this period");
+    await expect.element(disclosure).toBeVisible();
+    await expect
+      .element(page.getByText("Kommun historisk", { exact: true }))
+      .not.toBeVisible();
+    await disclosure.click();
+    await expect
+      .element(page.getByText("Kommun historisk", { exact: true }))
+      .toBeVisible();
+  });
+
+  it("keeps single-state detail resolution when full history is available (#744)", async () => {
+    render(StatesView, {
+      states: [classState, plainState],
+      scopeStates: [classState],
+      narrowed: true,
+      ...noopCallbacks,
+    });
+    await expect.element(page.getByText("Variant")).toBeVisible();
+    expect(document.querySelector(".vs-list")).toBeNull();
+  });
+
   it("single-state DETAIL mode is unchanged (Variant / Valid / value set)", async () => {
     render(StatesView, {
       states: [
