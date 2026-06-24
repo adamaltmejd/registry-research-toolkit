@@ -397,6 +397,7 @@ export function historyGraphFromClassification(
             is_self: true,
           },
         ];
+  const fanOut = editions.filter((edition) => edition.is_current).length > 1;
   const nodes: HistoryGraphNode[] = editions.map((edition, i) => {
     const previousCut = i > 0 ? editions[i - 1].effective_year : null;
     return {
@@ -404,7 +405,7 @@ export function historyGraphFromClassification(
       kind: "classification",
       label: edition.name ?? edition.slug,
       fqid: edition.fqid,
-      from: previousCut,
+      from: fanOut ? null : previousCut,
       to: edition.effective_year,
       current: edition.is_current,
       self: edition.is_self,
@@ -412,18 +413,20 @@ export function historyGraphFromClassification(
     };
   });
   const edges: HistoryGraphEdge[] = [];
-  for (let i = 1; i < editions.length; i += 1) {
-    const previous = editions[i - 1];
-    const current = editions[i];
-    edges.push({
-      id: `classification:${previous.slug}->${current.slug}`,
-      kind: "succession",
-      from: previous.fqid ?? `class/${previous.slug}`,
-      to: current.fqid ?? `class/${current.slug}`,
-      fromYear: previous.effective_year,
-      toYear: previous.effective_year,
-      label: null,
-    });
+  if (!fanOut) {
+    for (let i = 1; i < editions.length; i += 1) {
+      const previous = editions[i - 1];
+      const current = editions[i];
+      edges.push({
+        id: `classification:${previous.slug}->${current.slug}`,
+        kind: "succession",
+        from: previous.fqid ?? `class/${previous.slug}`,
+        to: current.fqid ?? `class/${current.slug}`,
+        fromYear: previous.effective_year,
+        toYear: previous.effective_year,
+        label: null,
+      });
+    }
   }
 
   return {
@@ -431,7 +434,11 @@ export function historyGraphFromClassification(
     title: "History graph prototype",
     nodes,
     edges,
-    warnings: [],
+    warnings: fanOut
+      ? [
+          "Classification fan-out chains arrive as a flattened client closure; real branch edges and incoming windows need a backend graph payload.",
+        ]
+      : [],
     nodeGrain: "entity-with-column-slices",
     dataContract: "client-stitch-prototype",
   };

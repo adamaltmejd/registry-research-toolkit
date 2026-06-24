@@ -232,4 +232,88 @@ describe("history graph prototype model", () => {
       },
     ]);
   });
+
+  it("does not invent succession edges for classification fan-out closures", () => {
+    const graph = historyGraphFromClassification({
+      kind: "classification",
+      fqid: "class/sun1996",
+      name: "SUN 1996",
+      short_name: "SUN",
+      codes: [],
+      dimensions: [],
+      edition_chain: [
+        {
+          slug: "sun1996",
+          fqid: "class/sun1996",
+          name: "SUN 1996",
+          effective_year: 2000,
+          is_self: true,
+          is_current: false,
+        },
+        {
+          slug: "sun-grupp2000",
+          fqid: "class/sun-grupp2000",
+          name: "SUN grupp 2000",
+          effective_year: 2020,
+          is_self: false,
+          is_current: false,
+        },
+        {
+          slug: "sun-grupp2020",
+          fqid: "class/sun-grupp2020",
+          name: "SUN grupp 2020",
+          effective_year: null,
+          is_self: false,
+          is_current: true,
+        },
+        {
+          slug: "sun-inriktning2000",
+          fqid: "class/sun-inriktning2000",
+          name: "SUN inriktning 2000",
+          effective_year: 2020,
+          is_self: false,
+          is_current: false,
+        },
+        {
+          slug: "sun-inriktning2020",
+          fqid: "class/sun-inriktning2020",
+          name: "SUN inriktning 2020",
+          effective_year: null,
+          is_self: false,
+          is_current: true,
+        },
+        {
+          slug: "sun-niva2000",
+          fqid: "class/sun-niva2000",
+          name: "SUN niva 2000",
+          effective_year: 2020,
+          is_self: false,
+          is_current: false,
+        },
+        {
+          slug: "sun-niva2020",
+          fqid: "class/sun-niva2020",
+          name: "SUN niva 2020",
+          effective_year: null,
+          is_self: false,
+          is_current: true,
+        },
+      ],
+    } as ClassificationNodeData);
+
+    expect(graph.nodes.map((node) => node.id)).toEqual([
+      "class/sun1996",
+      "class/sun-grupp2000",
+      "class/sun-grupp2020",
+      "class/sun-inriktning2000",
+      "class/sun-inriktning2020",
+      "class/sun-niva2000",
+      "class/sun-niva2020",
+    ]);
+    expect(graph.nodes.every((node) => node.from === null)).toBe(true);
+    expect(graph.edges).toEqual([]);
+    expect(graph.warnings.join("\n")).toContain(
+      "fan-out chains arrive as a flattened client closure",
+    );
+  });
 });
