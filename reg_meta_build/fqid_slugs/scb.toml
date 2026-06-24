@@ -57,7 +57,7 @@ panel_time_grain = "delivery"
 [register_variant."1.427"]
 slug = "juridiska-enheter"
 display_group = "Juridiska enheter"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -100,7 +100,7 @@ panel_time_grain = "delivery"
 [register_variant."2.54"]
 slug = "familjer-fran-1998"
 display_group = "Familjer från 1998-"
-panel_entity_key = "familjeidentitet-rtb-familj"
+panel_entity_key = "famid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -192,7 +192,7 @@ panel_time_grain = "delivery"
 [register_variant."2.1524"]
 slug = "familjer-1990-1997"
 display_group = "Familjer 1990-1997"
-panel_entity_key = "familjeidentitet-rtb-familj"
+panel_entity_key = "famid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -217,7 +217,7 @@ panel_time_grain = "delivery"
 [register_variant."7.197"]
 slug = "agare"
 display_group = "Ägare"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -320,7 +320,7 @@ panel_time_grain = "delivery"
 [register_variant."10.1203"]
 slug = "brukare"
 display_group = "Brukare"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -355,14 +355,14 @@ panel_time_grain = "delivery"
 [register_variant."10.1643"]
 slug = "iaks-arealer"
 display_group = "IAKS_arealer"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."10.1644"]
 slug = "iaks-brukare"
 display_group = "IAKS_brukare"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -373,7 +373,7 @@ slug = "moms"
 [register_variant."13.536"]
 slug = "momsdeklarationsregistret"
 display_group = "Momsdeklarationsregistret"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -409,49 +409,49 @@ slug = "ureg"
 [register_variant."24.78"]
 slug = "personens-hogsta-utbildning-16-74"
 display_group = "Personens högsta utbildning,16-74 år"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."24.709"]
 slug = "personens-hogsta-utbildning"
 display_group = "Personens högsta utbildning"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."24.1225"]
 slug = "ut-invandrares-utbildning"
 display_group = "Ut-och invandrares utbildning"
-panel_entity_key = "personnr"
+panel_entity_key = "eget-personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."24.1383"]
 slug = "personens-samtliga-utbildningar"
 display_group = "Personens samtliga utbildningar"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."24.1630"]
 slug = "komvux"
 display_group = "Komvux"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."24.1631"]
 slug = "gymnasieintyg"
 display_group = "Gymnasieintyg"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."24.1634"]
 slug = "samlat-betygsdokument"
 display_group = "Samlat betygsdokument/studiebevis"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -462,21 +462,21 @@ slug = "iot"
 [register_variant."25.763"]
 slug = "individer-och-dodsbon"
 display_group = "Individer och dödsbon"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."25.1153"]
 slug = "bostadshushall"
 display_group = "Bostadshushåll"
-panel_entity_key = "bhidhb"
+panel_entity_key = "hushallsid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."25.1642"]
 slug = "kontrolluppgifter-rantor"
 display_group = "Kontrolluppgifter räntor och utdelningar (KURU)"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -494,7 +494,7 @@ panel_time_grain = "delivery"
 [register_variant."26.158"]
 slug = "foretag"
 display_group = "Företag"
-panel_entity_key = "peorgnr-2"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -508,28 +508,28 @@ panel_time_grain = "delivery"
 [register_variant."26.617"]
 slug = "fad-arbetsstallen"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Arbetsställen"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."26.618"]
 slug = "fad-foretag"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Företag"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."26.657"]
 slug = "fad-nedlagda-arbetsstallen"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Nedlagda arbetsställen"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."26.658"]
 slug = "fad-nedlagda-foretag"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Nedlagda företag"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -547,49 +547,49 @@ slug = "linda"
 [register_variant."29.102"]
 slug = "panelurval-befolkningen"
 display_group = "Panelurval av befolkningen inkl. familjemedlemmar"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."29.103"]
 slug = "tillaggsurval-utrikesfodda"
 display_group = "Tilläggsurval av utrikesfödda inkl. familjemedlemmar"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."29.784"]
 slug = "panelurval-yrke-och-lon"
 display_group = "Panelurval – yrke och lön"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."29.815"]
 slug = "panelurval-familjemedlemmar-yrke-lon"
 display_group = "Panelurval inkl. familjemedlemmar – yrke och lön"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."29.1607"]
 slug = "lindaurval-familjemedlemmar-lon"
 display_group = "Lindaurval inkl. familjemedlemmar - lön"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."29.1613"]
 slug = "panelurval-taxeringshushall"
 display_group = "Panelurval av befolkningen inklusive taxeringshushåll"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."29.1618"]
 slug = "tillaggsurval-utrikesfodda-taxeringshushall"
 display_group = "Tilläggsurval av utrikesfödda inkl. taxeringshushåll"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -632,49 +632,49 @@ slug = "lisa"
 [register_variant."34.151"]
 slug = "arbetsstallen"
 display_group = "Arbetsställen"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."34.152"]
 slug = "foretag"
 display_group = "Företag"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."34.153"]
 slug = "individer-15plus"
 display_group = "Individer, 15 år och äldre"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."34.1335"]
 slug = "individer-16plus"
 display_group = "Individer, 16 år och äldre"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."34.1582"]
 slug = "individer-fodelseland"
 display_group = "Individer födelseland"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."34.1583"]
 slug = "individer-in-utvandring"
 display_group = "Individer in- och utvandring"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."34.1584"]
 slug = "individer-avlidna"
 display_group = "Individer avlidna"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -693,7 +693,7 @@ slug = "hreg"
 [register_variant."47.1"]
 slug = "antagna-forskarniva"
 display_group = "Antagna till högskoleutbildning på forskarnivå"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -702,98 +702,98 @@ panel_time_grain = "delivery"
 [register_variant."47.2"]
 slug = "sokande-grund-avancerad"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå"
-panel_entity_key = "fspersonnr"
+panel_entity_key = "personnr-fs"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.3"]
 slug = "grundutbildning-1977"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1977 års studieordning"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.4"]
 slug = "grundutbildning-examina"
 display_group = "Examina inom grundläggande högskoleutbildning"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.5"]
 slug = "grundutbildning-examina-aldre"
 display_group = "Äldre examina inom grundläggande högskoleutbildning"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.10"]
 slug = "doktorander-aktivitet"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, aktivitet"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.11"]
 slug = "doktorander-forsorjning"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, försörjning"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.15"]
 slug = "doktorander-examina"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, examina"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.17"]
 slug = "grundutbildning-poang"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.104"]
 slug = "personal-vid-universitet"
 display_group = "Personal vid universitet och högskolor 2001–"
-panel_entity_key = "personnr"
+panel_entity_key = "personnr-samord"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.264"]
 slug = "grundutbildning-1993"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.960"]
 slug = "personal-1995-2000"
 display_group = "Personal vid universitet och högskola, september 1995-2000"
-panel_entity_key = "personnr"
+panel_entity_key = "personnr-samord"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.1389"]
 slug = "doktorander-mobilitet"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, mobilitet"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.1390"]
 slug = "doktorander-forskarskolor"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, forskarskolor lärare"
-panel_entity_key = "fspersonnr"
+panel_entity_key = "personnr-fs"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.1391"]
 slug = "doktorander-anknytande-hogskolor"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, anknytande högskolor"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -806,14 +806,14 @@ panel_time_grain = "delivery"
 [register_variant."47.1506"]
 slug = "forskarutbildning-tillgodoraknande"
 display_group = "Forskarutbildning, beslut om tillgodoräknande"
-panel_entity_key = "personnummer-motsvarande"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."47.1623"]
 slug = "sokande-sommarkurser"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser"
-panel_entity_key = "fspersonnr"
+panel_entity_key = "personnr-fs"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -824,7 +824,7 @@ display_group = "Sökande och antagna till högskoleutbildning på grundnivå oc
 [register_variant."47.1625"]
 slug = "sokande-internationella-omgangar"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar"
-panel_entity_key = "fspersonnr"
+panel_entity_key = "personnr-fs"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -846,7 +846,7 @@ slug = "slr"
 [register_variant."51.170"]
 slug = "_default"
 display_group = "Lönestrukturstatistik, regioner"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -857,7 +857,7 @@ slug = "sls"
 [register_variant."52.174"]
 slug = "_default"
 display_group = "Lönestrukturstatistik, statlig sektor"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -904,7 +904,7 @@ slug = "gdb"
 [register_variant."70.227"]
 slug = "fastigheter"
 display_group = "Fastigheter"
-panel_entity_key = "fastighetsbeteckning"
+panel_entity_key = "fastbet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -942,14 +942,14 @@ panel_time_grain = "row"
 [register_variant."71.333"]
 slug = "forvarvare-av-fastighet"
 display_group = "Förvärvare av fastighet"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."71.334"]
 slug = "overlatare-av-fastighet"
 display_group = "Överlåtare av fastighet"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -960,14 +960,14 @@ slug = "ombyggnad-och-rivning"
 [register_variant."72.198"]
 slug = "ombyggnad-flerbostadshus"
 display_group = "Ombyggnad av flerbostadshus"
-panel_entity_key = "fastighetsbeteckning"
+panel_entity_key = "fastbet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."72.199"]
 slug = "rivning-av-flerbostadshus"
 display_group = "Rivning av flerbostadshus"
-panel_entity_key = "fastighetsbeteckning"
+panel_entity_key = "fastbet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1013,14 +1013,14 @@ slug = "bylbbs"
 [register_variant."76.190"]
 slug = "nybyggnad-av-bostader"
 display_group = "Nybyggnad av bostäder"
-panel_entity_key = "fastighetsbeteckning"
+panel_entity_key = "fastbet"
 panel_time_key = "paborjandear-manad"
 panel_time_grain = "row"
 
 [register_variant."76.191"]
 slug = "bygglov-for-bostader"
 display_group = "Bygglov för bostäder och lokaler"
-panel_entity_key = "fastighetsbeteckning"
+panel_entity_key = "fastbet"
 panel_time_key = "datum-for-bygglovets-beslut"
 panel_time_grain = "row"
 
@@ -1064,14 +1064,14 @@ panel_time_grain = "delivery"
 [register_variant."86.1664"]
 slug = "hushall-2021"
 display_group = "Hushåll 2021-"
-panel_entity_key = "bubnrh"
+panel_entity_key = "hushallsid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."86.1665"]
 slug = "individ-2021"
 display_group = "Individ 2021-"
-panel_entity_key = "personnr"
+panel_entity_key = "eget-personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1082,7 +1082,7 @@ slug = "klk"
 [register_variant."89.164"]
 slug = "_default"
 display_group = "Konjunkturstatistik, löner för kommuner"
-panel_entity_key = "peorgnr"
+panel_entity_key = "orgnr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
@@ -1101,7 +1101,7 @@ slug = "klp"
 [register_variant."91.166"]
 slug = "_default"
 display_group = "Konjunkturstatistik, löner för privat sektor"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = ["ar", "undersokningsmanad"]
 panel_time_grain = "row"
 
@@ -1118,7 +1118,7 @@ display_group = "Kosthushåll"
 [register_variant."97.99"]
 slug = "individregister"
 display_group = "Individregister"
-panel_entity_key = "bpnr"
+panel_entity_key = "eget-personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1207,14 +1207,14 @@ slug = "rpu"
 [register_variant."103.109"]
 slug = "befolkningens-studiedeltagande"
 display_group = "Befolkningens studiedeltagande"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."103.1518"]
 slug = "studiemedel-erhallet"
 display_group = "Studiemedel, erhållet"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = ["kalenderar", "halvar"]
 panel_time_grain = "row"
 
@@ -1227,21 +1227,21 @@ slug = "elevpaneler"
 [register_variant."104.840"]
 slug = "elevpanel-7"
 display_group = "Elevpanel 7"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."104.1090"]
 slug = "elevpanel-6"
 display_group = "Elevpanel 6"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."104.1164"]
 slug = "elevpanel-8"
 display_group = "Elevpanel 8"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1304,7 +1304,7 @@ slug = "hogutbildade-utrikes-fodda"
 [register_variant."110.122"]
 slug = "_default"
 display_group = "Högutbildade utrikes födda"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1315,7 +1315,7 @@ slug = "intradet-pa-arbetsmarknaden"
 [register_variant."111.123"]
 slug = "intradet-gymnasieavgangna"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1331,7 +1331,7 @@ panel_time_grain = "delivery"
 [register_variant."111.1091"]
 slug = "hogskolestuderande"
 display_group = "Högskolestuderande"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1347,7 +1347,7 @@ panel_time_grain = "delivery"
 [register_variant."111.1677"]
 slug = "yh-examinerade"
 display_group = "Examinerade från yrkeshögskolan"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1358,7 +1358,7 @@ slug = "offentligt-agda-foretag"
 [register_variant."114.129"]
 slug = "_default"
 display_group = "Offentligt ägda företag"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1371,14 +1371,14 @@ slug = "kommunalskatter"
 [register_variant."115.130"]
 slug = "kommunalskatter"
 display_group = "Kommunalskatter - Primärkommun"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."115.646"]
 slug = "kommunalskatter-landsting"
 display_group = "Kommunalskatter-Landsting"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1430,105 +1430,105 @@ slug = "frida"
 [register_variant."121.237"]
 slug = "deklarationsuppgifter"
 display_group = "Deklarationsuppgifter för enskilda näringsidkare"
-panel_entity_key = "person-organisationsnummer-2"
+panel_entity_key = "person-orgnr-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.930"]
 slug = "punktskatter-for-energi"
 display_group = "Punktskatter för energi- och koldioxidskatter"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.935"]
 slug = "bolagsverket"
 display_group = "Bolagsverket"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.936"]
 slug = "korstrackor"
 display_group = "Körsträckor"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.937"]
 slug = "fastigheter"
 display_group = "Fastigheter"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.938"]
 slug = "energi-tabell"
 display_group = "Energi-tabell"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.939"]
 slug = "handelssystemet"
 display_group = "Handelssystemet"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.940"]
 slug = "import-och-export"
 display_group = "Import och export"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.941"]
 slug = "forskning-och-utveckling"
 display_group = "Forskning och utveckling"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.942"]
 slug = "investmentbolag"
 display_group = "Investmentbolag"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.943"]
 slug = "finansbolag"
 display_group = "Finansbolag"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.944"]
 slug = "forsakringsbolag"
 display_group = "Försäkringsbolag"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.945"]
 slug = "aktiebolag"
 display_group = "Aktiebolag"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.947"]
 slug = "bilaga-k10"
 display_group = "Bilaga K10"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.948"]
 slug = "handelsbolag"
 display_group = "Handelsbolag"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1542,49 +1542,49 @@ panel_time_grain = "delivery"
 [register_variant."121.953"]
 slug = "bilaga-n3b"
 display_group = "Bilaga N3B"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.955"]
 slug = "bilaga-k10a"
 display_group = "Bilaga K10A"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.956"]
 slug = "bilaga-n8"
 display_group = "Bilaga N8"
-panel_entity_key = "person-organisationsnummer-2"
+panel_entity_key = "person-orgnr-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.957"]
 slug = "individtabeller"
 display_group = "Individtabeller"
-panel_entity_key = "person-organisationsnummer-2"
+panel_entity_key = "person-orgnr-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.1596"]
 slug = "bilaga-k12"
 display_group = "Bilaga K12"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.1597"]
 slug = "rot-och-rut"
 display_group = "ROT och RUT"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."121.1747"]
 slug = "bilaga-n9"
 display_group = "Bilaga N9"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1595,21 +1595,21 @@ slug = "aku"
 [register_variant."122.142"]
 slug = "aku-april-2005-dec-2020"
 display_group = "AKU april 2005 - dec 2020"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."122.278"]
 slug = "aku-1987-mars-2005"
 display_group = "AKU 1987 - mars 2005"
-panel_entity_key = "personnr"
+panel_entity_key = "personnr-urval"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."122.1628"]
 slug = "aku-januari-2021"
 display_group = "AKU fr.o.m. januari 2021"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1682,40 +1682,40 @@ slug = "lsum"
 # the case wobble → non-drifter → it would slug from the column (`peorgnr`),
 # dangling `panel_entity_key = "person-organisationsnummer"`. Pin the name slug.
 [variable."128.56"]
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [register_variant."128.154"]
 slug = "anstallningar-nattbefolkning"
 display_group = "Anställningar - nattbefolkning"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."128.155"]
 slug = "foretag-kuagg"
 display_group = "Företag - Uppgifter aggregerade till företagsnivå (KUAGG)"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."128.156"]
 slug = "arbetsstallen-uppgifter"
 display_group = "Arbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST)"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."128.280"]
 slug = "individer-sociala-agi-ku"
 display_group = "Individer - sociala AGI/KU"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."128.451"]
 slug = "anstallningar-dagbefolkning"
 display_group = "Anställningar - dagbefolkning"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1728,12 +1728,12 @@ slug = "slk"
 # value-set fold collapses the case wobble → non-drifter → it would slug from the
 # column (`personnr`), dangling `panel_entity_key = "personnummer"`. Pin the name.
 [variable."130.57"]
-slug = "personnummer"
+slug = "personnr"
 
 [register_variant."130.169"]
 slug = "_default"
 display_group = "Lönestrukturstatistik, kommuner"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1744,14 +1744,14 @@ slug = "ireg"
 [register_variant."131.175"]
 slug = "lagerstatistik"
 display_group = "Lagerstatistik för varuhandel och tjänstenäringar"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."131.177"]
 slug = "kvartalsomsattning-tjanstesektorn"
 display_group = "Kvartalsomsättning tjänstesektorn"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1766,7 +1766,7 @@ slug = "isen"
 [register_variant."132.178"]
 slug = "_default"
 display_group = "Industrins energianvändning"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1777,14 +1777,14 @@ slug = "rego"
 [register_variant."133.182"]
 slug = "arbetsstalle-manad"
 display_group = "Arbetsställe, månad"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."133.183"]
 slug = "arbetsstalle-ar"
 display_group = "Arbetsställe, år"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1814,14 +1814,14 @@ slug = "ivp"
 [register_variant."135.186"]
 slug = "industrins-varuproduktion"
 display_group = "Industrins varuproduktion"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."135.1635"]
 slug = "returravara"
 display_group = "Returråvara"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1832,7 +1832,7 @@ slug = "branslestatistik"
 [register_variant."139.203"]
 slug = "industrins-bransleforbrukning"
 display_group = "Industrins bränsleförbrukning och lager"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1841,7 +1841,7 @@ panel_time_grain = "delivery"
 [register_variant."139.204"]
 slug = "varmeverkens-energi"
 display_group = "Värmeverkens energiförbrukning, energianvändning och lager"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1852,7 +1852,7 @@ slug = "energi-lokaler"
 [register_variant."140.206"]
 slug = "_default"
 display_group = "Energistatistik för lokaler"
-panel_entity_key = "fastighetsbeteckning"
+panel_entity_key = "fastbet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1863,7 +1863,7 @@ slug = "mabra"
 [register_variant."141.207"]
 slug = "_default"
 display_group = "Månatlig bränsle-, gas och lagerstatistik"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
@@ -1874,7 +1874,7 @@ slug = "manel"
 [register_variant."142.208"]
 slug = "_default"
 display_group = "Register över månatlig elstatistik"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1925,7 +1925,7 @@ panel_time_grain = "delivery"
 [register_variant."147.1339"]
 slug = "godselmedelsanvandning-2016"
 display_group = "Gödselmedelsanvändning i jordbruket fr o m 2016"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1947,21 +1947,21 @@ slug = "inkvarteringsstatistik"
 [register_variant."151.933"]
 slug = "hotell-stugbyar"
 display_group = "Hotell, stugbyar och vandrarhem"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."151.973"]
 slug = "camping"
 display_group = "Camping"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."151.974"]
 slug = "privata-stugor-lagenheter"
 display_group = "Förmedlare av privata stugor och lägenheter"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1980,7 +1980,7 @@ slug = "trafo"
 [register_variant."155.222"]
 slug = "vagtrafikolyckor"
 display_group = "Vägtrafikolyckor med personskada"
-panel_entity_key = "persnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "indat"
 panel_time_grain = "row"
 
@@ -1991,7 +1991,7 @@ slug = "industrins-miljoskyddskostnader"
 [register_variant."156.223"]
 slug = "_default"
 display_group = "Industrins miljöskyddskostnader"
-panel_entity_key = "identitet"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2037,7 +2037,7 @@ slug = "lastbilstrafik"
 [register_variant."162.233"]
 slug = "_default"
 display_group = "Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar"
-panel_entity_key = "peorgnr"
+panel_entity_key = "orgnr"
 panel_time_key = "datum"
 panel_time_grain = "row"
 
@@ -2081,7 +2081,7 @@ slug = "konkurser"
 [register_variant."167.240"]
 slug = "konkurser-offentliga-ackord"
 display_group = "Konkurser o offentliga ackord"
-panel_entity_key = "opnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2092,7 +2092,7 @@ slug = "fek"
 [register_variant."168.241"]
 slug = "fek-slutdata"
 display_group = "FEK Slutdata (företagsenhet)"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2105,7 +2105,7 @@ display_group = "FEK Slutdata (verksamhetsenhet)"
 [register_variant."168.283"]
 slug = "fek-slutdata-lokal"
 display_group = "FEK Slutdata (lokal verksamhetsenhet)"
-panel_entity_key = "lokal-verksamhetsenhetsnummer"
+panel_entity_key = "lvenr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2120,7 +2120,7 @@ display_group = "FEK Slutdata (Investeringar per kommun)"
 [register_variant."168.897"]
 slug = "fek-preliminara-data-fe"
 display_group = "FEK Preliminära data (FE)"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2138,7 +2138,7 @@ slug = "livsmedelsforsaljning"
 [register_variant."176.242"]
 slug = "_default"
 display_group = "Livsmedelsförsäljning fördelad på varugrupper"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2149,7 +2149,7 @@ slug = "laps"
 [register_variant."179.247"]
 slug = "_default"
 display_group = "Lönesummor, arbetsgivaravgifter och preliminär A-skatt"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = ["ar", "kvartal"]
 panel_time_grain = "row"
 
@@ -2168,70 +2168,70 @@ slug = "fou"
 [register_variant."182.357"]
 slug = "statliga-myndigheter"
 display_group = "Statliga myndigheter"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.358"]
 slug = "uoh-ekonomi"
 display_group = "UoH ekonomi"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.373"]
 slug = "foretagssektorn"
 display_group = "Företagssektorn"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.441"]
 slug = "uoh-personal"
 display_group = "UoH personal"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.442"]
 slug = "kommuner"
 display_group = "Kommuner"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.443"]
 slug = "landsting"
 display_group = "Landsting"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.444"]
 slug = "lokala-regionala-fou"
 display_group = "Lokala och regionala FoU-enheter"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.446"]
 slug = "pnp"
 display_group = "Privata icke vinstdrivande organisationer (PNP)"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.1448"]
 slug = "svenska-internationella-koncerner"
 display_group = "Svenska internationella koncerner"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."182.1544"]
 slug = "offentlig-sektor"
 display_group = "Offentlig sektor"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2242,21 +2242,21 @@ slug = "investeringsenkaten"
 [register_variant."183.253"]
 slug = "investeringsenkaten-fullstandigt"
 display_group = "Fullständigt innehåll"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."183.254"]
 slug = "investeringsenkaten-resultat"
 display_group = "Resultat"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."183.1700"]
 slug = "investeringsenkaten-2019"
 display_group = "Investeringsenkäten 2019-"
-panel_entity_key = "peorgnr"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2278,35 +2278,35 @@ slug = "konjunkturstatistik-industri"
 [register_variant."187.369"]
 slug = "industriproduktionsindex"
 display_group = "Industriproduktionsindex"
-panel_entity_key = "verksamhetsenhetens-identitetsnummer"
+panel_entity_key = "venr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
 [register_variant."187.370"]
 slug = "industrins-leverans-orderlage"
 display_group = "Industrins leverans- och orderläge"
-panel_entity_key = "verksamhetsenhetens-identitetsnummer"
+panel_entity_key = "venr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
 [register_variant."187.371"]
 slug = "industrins-lager"
 display_group = "Industrins lager"
-panel_entity_key = "verksamhetsenhetens-identitetsnummer"
+panel_entity_key = "venr"
 panel_time_key = ["ar", "kvartal"]
 panel_time_grain = "row"
 
 [register_variant."187.1115"]
 slug = "industrins-orderingang"
 display_group = "Industrins orderingång och omsättning"
-panel_entity_key = "verksamhetsenhetens-identitetsnummer"
+panel_entity_key = "venr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
 [register_variant."187.1523"]
 slug = "industrins-lager-2015"
 display_group = "Industrins lager 2015-"
-panel_entity_key = "verksamhetsenhetens-identitetsnummer"
+panel_entity_key = "venr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2536,7 +2536,7 @@ slug = "avgifter-hyror"
 [register_variant."198.300"]
 slug = "_default"
 display_group = "Avgifter/hyror för nybyggda lägenheter"
-panel_entity_key = "fastighetsbeteckning"
+panel_entity_key = "fastbet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2558,21 +2558,21 @@ slug = "arlig-energistatistik"
 [register_variant."200.302"]
 slug = "elproduktion-elhandel"
 display_group = "Elproduktion, elhandel, fjärrvärme (ovr)"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."200.801"]
 slug = "elproducerande-industriforetag"
 display_group = "Elproducerande industriföretag (ind)"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."200.802"]
 slug = "elnatforetag-nat"
 display_group = "Elnätföretag (nät)"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2586,7 +2586,7 @@ panel_time_grain = "delivery"
 [register_variant."200.1673"]
 slug = "vindkraft"
 display_group = "Vindkraft"
-panel_entity_key = "organisationsnummer-10-siffror"
+panel_entity_key = "orgnr-10"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2597,7 +2597,7 @@ slug = "oljeleveranser-kommunvis"
 [register_variant."201.303"]
 slug = "_default"
 display_group = "Oljeleveranser, kommunvis redovisning"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2608,7 +2608,7 @@ slug = "energianvandning-bygg"
 [register_variant."203.304"]
 slug = "_default"
 display_group = "Energianvändning inom byggsektorn"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2638,7 +2638,7 @@ slug = "skord-slattervall"
 [register_variant."211.312"]
 slug = "_default"
 display_group = "Skörd av slåttervall fr o m 2016"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2651,14 +2651,14 @@ slug = "vattenbruk"
 [register_variant."215.316"]
 slug = "vattenbruk"
 display_group = "Vattenbruk"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."215.1538"]
 slug = "kostnadsenkaten"
 display_group = "Kostnadsenkäten"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2717,7 +2717,7 @@ slug = "industrins-vattenanvandning"
 [register_variant."223.324"]
 slug = "_default"
 display_group = "Industrins vattenanvändning"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2744,14 +2744,14 @@ slug = "infi"
 [register_variant."227.459"]
 slug = "ravaror"
 display_group = "Råvaror"
-panel_entity_key = "peorgnrhe"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."227.462"]
 slug = "externa-kostnader"
 display_group = "Externa kostnader"
-panel_entity_key = "peorgnrhe"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2762,7 +2762,7 @@ slug = "formogenhetsreg"
 [register_variant."228.388"]
 slug = "individ"
 display_group = "Individ"
-panel_entity_key = "bpnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2806,21 +2806,21 @@ slug = "lararreg"
 [register_variant."232.411"]
 slug = "tjansteregistret"
 display_group = "Tjänsteregistret"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."232.412"]
 slug = "personregistret"
 display_group = "Personregistret"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."232.1497"]
 slug = "lararprognos-skola-forskola"
 display_group = "Lärarprognos inom skola och förskola"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2842,7 +2842,7 @@ slug = "lcs"
 [register_variant."234.409"]
 slug = "_default"
 display_group = "Labour Cost Survey"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2853,7 +2853,7 @@ slug = "vaxtskyddsmedel"
 [register_variant."235.431"]
 slug = "_default"
 display_group = "Växtskyddsmedelsundersökningen"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2871,21 +2871,21 @@ panel_time_grain = "delivery"
 [register_variant."237.457"]
 slug = "individer-16-84-ar-ulf"
 display_group = "Individer 16-84 år (ULF)"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."237.458"]
 slug = "individer-16plus-ulf"
 display_group = "Individer 16 år och uppåt (ULF)"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."237.1657"]
 slug = "ulf-2021"
 display_group = "ULF från och med 2021"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2996,7 +2996,7 @@ slug = "ep-val-deltagande"
 [register_variant."245.474"]
 slug = "_default"
 display_group = "Valdeltagande"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3033,7 +3033,7 @@ slug = "hogskolestuderandes-levnadsvillkor"
 [register_variant."247.492"]
 slug = "_default"
 display_group = "Högskolestuderandes levnadsvillkor"
-panel_entity_key = "uenr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3062,35 +3062,35 @@ slug = "komvux"
 [register_variant."249.498"]
 slug = "kursdeltagare"
 display_group = "Kursdeltagare i kommunal vuxenutbildning"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."249.1107"]
 slug = "elever"
 display_group = "Elever i kommunal vuxenutbildning"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."249.1215"]
 slug = "kursdeltagare-slutbetyg"
 display_group = "Kursdeltagare med slutbetyg eller gymnasieexamen"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."249.1222"]
 slug = "elever-slutbetyg"
 display_group = "Elever med slutbetyg eller gymnasieexamen"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."249.1405"]
 slug = "nationella-prov"
 display_group = "Nationella prov"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3174,7 +3174,7 @@ slug = "innovation-foretag"
 [register_variant."257.553"]
 slug = "_default"
 display_group = "Innovation i företagssektorn"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3185,14 +3185,14 @@ slug = "it-anvandning"
 [register_variant."258.556"]
 slug = "it-anvandning-i-foretag"
 display_group = "IT-användning i företag"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."258.557"]
 slug = "befolkningens-it-anvandning"
 display_group = "Befolkningens IT-användning"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3203,7 +3203,7 @@ slug = "foretagens-utgifter-it"
 [register_variant."259.530"]
 slug = "_default"
 display_group = "Företagens utgifter för IT"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3214,35 +3214,35 @@ slug = "gymnasieskola-sokande"
 [register_variant."260.598"]
 slug = "bakgrund-elev-1994-2016"
 display_group = "Bakgrund - elev, 1994 – 2016"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."260.1246"]
 slug = "sokande-1994-och-senare"
 display_group = "Sökande, 1994 och senare"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."260.1247"]
 slug = "antagna-1994-2016"
 display_group = "Antagna, 1994 – 2016"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."260.1323"]
 slug = "sokande-antagna-1985-1993"
 display_group = "Sökande och Antagna, 1985 – 1993"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."260.1327"]
 slug = "antagna-bakgrund-2017"
 display_group = "Antagna och Bakgrund - elev, 2017 och senare"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3261,91 +3261,91 @@ slug = "sru"
 [register_variant."264.607"]
 slug = "register"
 display_group = "Register för inkomstblanketter INK2 och INK4"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.610"]
 slug = "deklarationsbilaga-n1"
 display_group = "Deklarationsbilaga N1"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.613"]
 slug = "deklarationsbilaga-n2"
 display_group = "Deklarationsbilaga N2"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.666"]
 slug = "deklarationsbilaga-k10"
 display_group = "Deklarationsbilaga K10"
-panel_entity_key = "personnummer"
+panel_entity_key = "person-organisationsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.667"]
 slug = "deklarationsbilaga-n6"
 display_group = "Deklarationsbilaga N6"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.668"]
 slug = "deklarationsbilaga-n3a"
 display_group = "Deklarationsbilaga N3A"
-panel_entity_key = "personnummer"
+panel_entity_key = "person-organisationsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.669"]
 slug = "deklarationsbilaga-n3b"
 display_group = "Deklarationsbilaga N3B"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.671"]
 slug = "register-for-inkomstblanketter-ink3"
 display_group = "Register för inkomstblanketter INK3"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.672"]
 slug = "bilaga-n4"
 display_group = "Bilaga N4"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.729"]
 slug = "deklarationsbilaga-ne"
 display_group = "Deklarationsbilaga NE"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.730"]
 slug = "deklarationsbilaga-nea"
 display_group = "Deklarationsbilaga NEA"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.731"]
 slug = "register-for-inkomstblanketter-ink2"
 display_group = "Register för inkomstblanketter INK2"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."264.747"]
 slug = "deklarationsblankett"
 display_group = "Deklarationsblankett INK4 fr 2007"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3369,14 +3369,14 @@ slug = "fortroendevalda"
 [register_variant."270.638"]
 slug = "fortroendevalda"
 display_group = "Förtroendevalda i kommuner"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."270.1094"]
 slug = "fortroendevalda-i-regioner-landsting"
 display_group = "Förtroendevalda i regioner/landsting"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3387,7 +3387,7 @@ slug = "namnstatistik"
 [register_variant."271.639"]
 slug = "folkbokforda-personer"
 display_group = "Folkbokförda - personer"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3400,7 +3400,7 @@ display_group = "Folkbokförda - namn"
 [register_variant."271.641"]
 slug = "namngivna-nyfodda"
 display_group = "Namngivna nyfödda"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3629,14 +3629,14 @@ slug = "prisindex"
 [register_variant."296.828"]
 slug = "konsumentprisindex-kpi"
 display_group = "Konsumentprisindex (KPI)"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."296.980"]
 slug = "tjansteprisindex-tpi"
 display_group = "Tjänsteprisindex (TPI)"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3672,7 +3672,7 @@ slug = "aes"
 [register_variant."301.849"]
 slug = "_default"
 display_group = "Undersökningen om vuxnas deltagande i utbildning (AES)"
-panel_entity_key = "personnr"
+panel_entity_key = "eget-personnummer"
 panel_time_key = ["ar-for-intervju", "matmanad"]
 panel_time_grain = "row"
 
@@ -3779,7 +3779,7 @@ slug = "tjansteforetagens-forbrukning"
 [register_variant."312.883"]
 slug = "_default"
 display_group = "Tjänsteföretagens förbrukning"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3856,7 +3856,7 @@ slug = "svdb"
 [register_variant."323.1003"]
 slug = "rantebarande"
 display_group = "Räntebärande"
-panel_entity_key = "isincode"
+panel_entity_key = "isin"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3875,21 +3875,21 @@ slug = "kompletterande-utbildning"
 [register_variant."326.1025"]
 slug = "deltagare-2012-2015"
 display_group = "Deltagare, 2012-2015"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."326.1465"]
 slug = "deltagare-2001-2011"
 display_group = "Deltagare, 2001-2011"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."326.1467"]
 slug = "utbildningsdeltagare-fullfoljt-2001-2011"
 display_group = "Utbildningsdeltagare som fullföljt utbildningen, 2001-2011"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3900,7 +3900,7 @@ slug = "aktieagarstatistik"
 [register_variant."330.1070"]
 slug = "_default"
 display_group = "Aktieägarstatistik"
-panel_entity_key = "agarorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4026,7 +4026,7 @@ slug = "hbr"
 slug = "_default"
 display_group = "Historiska befolkningsregistret"
 panel_entity_key = "personnr"
-panel_time_key = "datfran"
+panel_time_key = "startdatum"
 panel_time_grain = "row"
 
 # Flergenerationsregistret
@@ -4036,21 +4036,21 @@ slug = "flergenreg"
 [register_variant."349.1177"]
 slug = "folkbokforda-biologiska"
 display_group = "Folkbokförda personer med kopplingar till biologiska föräldrar"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."349.1178"]
 slug = "folkbokforda-adoptivforaldrar"
 display_group = "Folkbokförda personer med kopplingar till adoptivföräldrar"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."349.1179"]
 slug = "barns-ordningsnummer"
 display_group = "Barns ordningsnummer"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4146,7 +4146,7 @@ slug = "tradbransle-torv"
 [register_variant."355.1229"]
 slug = "_default"
 display_group = "Trädbränsle-, torv- och avfallspriser"
-panel_entity_key = "peorgnr"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4176,7 +4176,7 @@ slug = "eget-personnummer"
 [register_variant."357.1267"]
 slug = "hushall"
 display_group = "Hushåll"
-panel_entity_key = "bubnrh"
+panel_entity_key = "hushallsid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4194,7 +4194,7 @@ slug = "tradbransle-produktion"
 [register_variant."358.1286"]
 slug = "oforadlat-tradbransle"
 display_group = "Oförädlat trädbränsle"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4224,7 +4224,7 @@ slug = "nystartade-foretag-kvartal"
 [register_variant."361.1292"]
 slug = "_default"
 display_group = "Nystartade företag"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = ["ar", "kvartal"]
 panel_time_grain = "row"
 
@@ -4235,14 +4235,14 @@ slug = "utbildningsanalyser"
 [register_variant."366.1320"]
 slug = "internationell-rorlighet"
 display_group = "Internationell rörlighet för utbildning bland unga i Sverige"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."366.1350"]
 slug = "ungdomar-utan-fullfoljd-gymnasieutbildning"
 display_group = "Ungdomar utan fullföljd gymnasieutbildning"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4256,7 +4256,7 @@ panel_time_grain = "delivery"
 [register_variant."366.1439"]
 slug = "doktorsexaminerades-villkor"
 display_group = "Doktorsexaminerades villkor"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4334,7 +4334,7 @@ slug = "internationella-foretag"
 [register_variant."369.1330"]
 slug = "svenska-koncerner"
 display_group = "Svenska koncerner med dotterbolag i utlandet"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4345,70 +4345,70 @@ slug = "fasit"
 [register_variant."371.1344"]
 slug = "individregister"
 display_group = "Individregister"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1345"]
 slug = "bostadshushallsregister"
 display_group = "Bostadshushållsregister"
-panel_entity_key = "bidnrhb"
+panel_entity_key = "hushallsid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1357"]
 slug = "arbetsloshetsregister"
 display_group = "Arbetslöshetsregister"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1358"]
 slug = "fastighetsregister"
 display_group = "Fastighetsregister"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1359"]
 slug = "register-k5-k6"
 display_group = "Register över K5/K6"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1360"]
 slug = "register-k10"
 display_group = "Register över K10"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1361"]
 slug = "register-k10a"
 display_group = "Register över K10A"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1362"]
 slug = "enskilda-naringsidkare"
 display_group = "Enskilda näringsidkare"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1363"]
 slug = "delagare-i-handelsbolag"
 display_group = "Delägare i handelsbolag"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1381"]
 slug = "sjukpenningsregister"
 display_group = "Sjukpenningsregister"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4422,21 +4422,21 @@ panel_time_grain = "delivery"
 [register_variant."371.1385"]
 slug = "foraldrapenningsregister"
 display_group = "Föräldrapenningsregister"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1386"]
 slug = "barnregister"
 display_group = "Barnregister"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."371.1404"]
 slug = "tandvardsregister"
 display_group = "Tandvårdsregister"
-panel_entity_key = "bidnr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4460,7 +4460,7 @@ panel_time_grain = "delivery"
 [register_variant."372.1347"]
 slug = "juridiska-enheter"
 display_group = "Juridiska enheter"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4471,7 +4471,7 @@ slug = "cvts"
 [register_variant."374.1356"]
 slug = "_default"
 display_group = "Continuing Vocational Training Survey"
-panel_entity_key = "enterpr"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4482,14 +4482,14 @@ slug = "foretagsstatistik"
 [register_variant."375.1369"]
 slug = "fs-slutdata-foretagsenhet"
 display_group = "FS Slutdata (företagsenhet)"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."375.1370"]
 slug = "fs-slutdata-lokal"
 display_group = "FS Slutdata (lokal verksamhetsenhet)"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4503,14 +4503,14 @@ panel_time_grain = "delivery"
 [register_variant."375.1372"]
 slug = "fs-slutdata-foretagsenhet-ovr"
 display_group = "FS Slutdata (företagsenhet_Ovr)"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."375.1373"]
 slug = "fs-slutdata-resultatrakning"
 display_group = "FS Slutdata (företagsenhet resultaträkning)"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4614,49 +4614,49 @@ slug = "pin"
 [register_variant."382.372"]
 slug = "industrins-kapacitetsutnyttjande"
 display_group = "Industrins kapacitetsutnyttjande"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = ["ar", "kvartal"]
 panel_time_grain = "row"
 
 [register_variant."382.1429"]
 slug = "omsattning-tjanstesektorn-tom2014"
 display_group = "Omsättning inom tjänstesektorn t.o.m. 2014"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."382.1473"]
 slug = "industriproduktionsindex"
 display_group = "Industriproduktionsindex (IPI)  fr.o.m. 2015"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."382.1481"]
 slug = "produktionsvardeindex-pvi"
 display_group = "Produktionsvärdeindex (PVI)"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."382.1559"]
 slug = "tjansteproduktionsindex"
 display_group = "Tjänsteproduktionsindex (TjPI)  fr.o.m. 2015"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."382.1563"]
 slug = "industrins-orderingang"
 display_group = "Industrins orderingång och omsättning fr.o.m 2015"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
 [register_variant."382.1564"]
 slug = "omsattning-tjanstesektorn-2015"
 display_group = "Omsättning inom tjänstesektorn fr.o.m. 2015"
-panel_entity_key = "organisationsnummer-12-siffror"
+panel_entity_key = "orgnr-12"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
@@ -4667,7 +4667,7 @@ slug = "utforarreg"
 [register_variant."383.1442"]
 slug = "_default"
 display_group = "Utförarregistret"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4773,21 +4773,21 @@ slug = "stuv"
 [register_variant."397.1558"]
 slug = "studieforbund-stuv-2012"
 display_group = "Studieförbund (STUV) 2012 - 2019"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."397.1572"]
 slug = "deltagare"
 display_group = "Deltagare i studieförbundens verksamhet"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."397.1633"]
 slug = "studieforbund-stuv-2020"
 display_group = "Studieförbund (STUV) 2020 -"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4844,21 +4844,21 @@ slug = "bas"
 [register_variant."404.1663"]
 slug = "preliminara-manadsuppgifter"
 display_group = "Preliminära månadsuppgifter"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."404.1707"]
 slug = "slutliga-manadsuppgifter"
 display_group = "Slutliga månadsuppgifter"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."404.1708"]
 slug = "arsuppgifter"
 display_group = "Årsuppgifter"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4872,7 +4872,7 @@ panel_time_grain = "delivery"
 [register_variant."404.1722"]
 slug = "arsuppgifter-arbetsstallen"
 display_group = "Årsuppgifter - Arbetsställen"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4921,7 +4921,7 @@ panel_time_grain = "delivery"
 [register_variant."407.1706"]
 slug = "innovation-juridiska"
 display_group = "Innovation i offentlig sektor - Juridiska enheter"
-panel_entity_key = "scbid"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4939,21 +4939,21 @@ panel_time_grain = "row"
 [register_variant."408.1733"]
 slug = "anstallningar-grund"
 display_group = "Anställningar, grund"
-panel_entity_key = "anstpersonnr"
+panel_entity_key = "person-samordningsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."408.1743"]
 slug = "anstallningar-period"
 display_group = "Anställningar, period"
-panel_entity_key = "anstpersonnr"
+panel_entity_key = "person-samordningsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."408.1752"]
 slug = "anstallningar-laps"
 display_group = "Anställningar, LAPS"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4964,7 +4964,7 @@ slug = "civila-samhallet"
 [register_variant."409.1720"]
 slug = "_default"
 display_group = "Civila samhället"
-panel_entity_key = "peorgnr"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4975,14 +4975,14 @@ slug = "esk"
 [register_variant."410.1740"]
 slug = "lagerinvesteringar"
 display_group = "Lagerinvesteringar"
-panel_entity_key = "person-organisationsnummer"
+panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."410.1741"]
 slug = "fasta-bruttoinvesteringar"
 display_group = "Fasta bruttoinvesteringar"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4993,21 +4993,21 @@ slug = "lor"
 [register_variant."411.1750"]
 slug = "lediga-jobb-lor"
 display_group = "Lediga jobb (LOR)"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."411.1751"]
 slug = "rekryteringserfarenheter"
 display_group = "Rekryteringserfarenheter och rekryteringsbehov (LOR)"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."411.1755"]
 slug = "rekryteringserfarenheter-yrke"
 display_group = "Rekryteringserfarenheter och rekryteringsbehov per yrke (LOR)"
-panel_entity_key = "cfarnr"
+panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -5021,7 +5021,7 @@ slug = "sjalvforsorjning"
 [register_variant."414.1757"]
 slug = "sjalvforsorjning-20-65-ar"
 display_group = "Självförsörjning 20-65 år"
-panel_entity_key = "personnr"
+panel_entity_key = "eget-personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -5035,76 +5035,76 @@ panel_time_grain = "delivery"
 # Generated + verified collision-free against a real-seed build; see #539.
 
 [variable."47.3636"]  # hreg: panel_entity_key = "personnr"
-slug = "personnr"
+slug = "personnr-samord"
 
 [variable."99.14"]  # arbetskraftsbarometern: panel_entity_key = "cfar-nummer"
 slug = "cfar-nummer"
 
 [variable."103.57.personnr"]  # rpu: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."111.57"]  # intradet-pa-arbetsmarknaden: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."34.57"]  # lisa: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."128.57"]  # lsum: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."26.56.peorgnr"]  # rams: panel_entity_key = "peorgnr-2"
-slug = "peorgnr-2"
+slug = "person-orgnr"
 
 [variable."52.57"]  # sls: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."132.14"]  # isen: panel_entity_key = "cfarnr"
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."135.56"]  # ivp: panel_entity_key = "person-organisationsnummer"
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."76.26"]  # bylbbs: panel_entity_key = "fastighetsbeteckning"
-slug = "fastighetsbeteckning"
+slug = "fastbet"
 
 [variable."147.7550"]  # godselmedelsanvandning: panel_entity_key = "foretagsidentitet"
 slug = "foretagsidentitet"
 
 [variable."70.26"]  # gdb: panel_entity_key = "fastighetsbeteckning"
-slug = "fastighetsbeteckning"
+slug = "fastbet"
 
 [variable."176.56"]  # livsmedelsforsaljning: panel_entity_key = "person-organisationsnummer"
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."122.7020"]  # aku: panel_entity_key = "personnr"
-slug = "personnr"
+slug = "personnr-urval"
 
 [variable."198.26"]  # avgifter-hyror: panel_entity_key = "fastighetsbeteckning"
-slug = "fastighetsbeteckning"
+slug = "fastbet"
 
 [variable."201.3578"]  # oljeleveranser-kommunvis: panel_entity_key = "organisationsnummer-12-siffror"
-slug = "organisationsnummer-12-siffror"
+slug = "orgnr-12"
 
 [variable."232.57"]  # lararreg: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."1.14"]  # fdb: panel_entity_key = "cfar-nummer"
 slug = "cfar-nummer"
 
 [variable."249.57"]  # komvux: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."260.57"]  # gymnasieskola-sokande: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."271.57"]  # namnstatistik: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."104.57"]  # elevpaneler: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."326.57"]  # kompletterande-utbildning: panel_entity_key = "personnummer"
-slug = "personnummer"
+slug = "personnr"
 
 [variable."349.323"]  # flergenreg: panel_entity_key = "personnummer-far"
 slug = "personnummer-far"
@@ -5113,16 +5113,16 @@ slug = "personnummer-far"
 slug = "personnummer-mor"
 
 [variable."24.4544"]  # ureg: panel_entity_key = "personnr"
-slug = "personnr"
+slug = "eget-personnummer"
 
 [variable."358.1839"]  # tradbransle-produktion: panel_entity_key = "organisationsnummer"
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."375.56"]  # foretagsstatistik: panel_entity_key = "person-organisationsnummer"
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."382.56"]  # pin: panel_entity_key = "person-organisationsnummer"
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."55.2736.sektorkod"]  # yrkesreg: classification_links = "sektorkod-2"
 slug = "sektorkod-2"
@@ -5150,19 +5150,19 @@ slug = "fenr"
 slug = "lvenr"
 
 [variable."1.56"]  # fdb: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."1.1454"]  # fdb: panel_entity_key = 'venr'
 slug = "venr"
 
 [variable."2.372"]  # rtb: panel_entity_key = 'familjeidentitet-rtb-familj'
-slug = "familjeidentitet-rtb-familj"
+slug = "famid"
 
 [variable."7.26"]  # ftr: panel_entity_key = 'fastbet'
 slug = "fastbet"
 
 [variable."7.56"]  # ftr: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."7.449"]  # ftr: panel_entity_key = 'idtaxenhet'
 slug = "idtaxenhet"
@@ -5174,31 +5174,31 @@ slug = "chassi"
 slug = "lantbruk-foretags-id"
 
 [variable."10.56"]  # lbr: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."10.1839"]  # lbr: panel_entity_key = 'orgnr'
 slug = "orgnr"
 
 [variable."13.56"]  # moms: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."22.57"]  # ekonomiskt-bistand: panel_entity_key = 'personnr'
 slug = "personnr"
 
 [variable."24.57"]  # ureg: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."25.56"]  # iot: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."25.57"]  # iot: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."26.57"]  # rams: panel_entity_key = 'personnr'
 slug = "personnr"
 
 [variable."29.57"]  # linda: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."32.57"]  # fob: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5213,7 +5213,7 @@ slug = "famfpersonnr"
 slug = "personnr"
 
 [variable."51.57"]  # slr: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."55.57"]  # yrkesreg: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5228,10 +5228,10 @@ slug = "riksnyckel"
 slug = "fastbet"
 
 [variable."71.56"]  # fastighetspriser: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."72.26"]  # ombyggnad-och-rivning: panel_entity_key = 'fastighetsbeteckning'
-slug = "fastighetsbeteckning"
+slug = "fastbet"
 
 [variable."73.17413"]  # priser-nyproducerade-bostader: panel_entity_key = 'husbeteckning'
 slug = "husbeteckning"
@@ -5249,22 +5249,22 @@ slug = "ordningsnummer-inom-kosthushallet"
 slug = "lopnummer-kosthushall"
 
 [variable."86.4544"]  # hut: panel_entity_key = 'personnr'
-slug = "personnr"
+slug = "eget-personnummer"
 
 [variable."86.5708"]  # hut: panel_entity_key = 'kundnr'
 slug = "kundnr"
 
 [variable."86.30360"]  # hut: panel_entity_key = 'bubnrh'
-slug = "bubnrh"
+slug = "hushallsid"
 
 [variable."89.1839"]  # klk: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "orgnr"
 
 [variable."91.56"]  # klp: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."97.4544"]  # hek: panel_entity_key = 'bpnr'
-slug = "bpnr"
+slug = "eget-personnummer"
 
 [variable."102.57"]  # gymnasieskola-betyg: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5276,28 +5276,28 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."110.57"]  # hogutbildade-utrikes-fodda: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."111.2179"]  # intradet-pa-arbetsmarknaden: panel_entity_key = 'lopnummer'
 slug = "lopnummer"
 
 [variable."114.56"]  # offentligt-agda-foretag: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."115.36"]  # kommunalskatter: panel_entity_key = 'kommun'
 slug = "kommun"
 
 [variable."115.56"]  # kommunalskatter: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."121.1839"]  # frida: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."121.4544"]  # frida: panel_entity_key = 'eget-personnummer'
 slug = "eget-personnummer"
 
 [variable."122.57"]  # aku: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."123.57"]  # arbetsmiljoundersokningen: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5312,34 +5312,34 @@ slug = "uenr"
 slug = "cfar-nummer"
 
 [variable."128.14"]  # lsum: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."131.56"]  # ireg: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."131.3578"]  # ireg: panel_entity_key = 'organisationsnummer-12-siffror'
-slug = "organisationsnummer-12-siffror"
+slug = "orgnr-12"
 
 [variable."133.14"]  # rego: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."134.14"]  # ks: panel_entity_key = 'cfar-nummer'
 slug = "cfar-nummer"
 
 [variable."139.1839"]  # branslestatistik: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."139.16315"]  # branslestatistik: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."140.26"]  # energi-lokaler: panel_entity_key = 'fastighetsbeteckning'
-slug = "fastighetsbeteckning"
+slug = "fastbet"
 
 [variable."141.14"]  # mabra: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."142.14"]  # manel: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."143.1970"]  # oha: panel_entity_key = 'foretagsidentifikation'
 slug = "foretagsidentifikation"
@@ -5351,25 +5351,25 @@ slug = "taxeringsid"
 slug = "addid"
 
 [variable."147.56"]  # godselmedelsanvandning: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."149.2222"]  # forsaljning-mineralgodsel: panel_entity_key = 'leverantorsnummer'
 slug = "leverantorsnummer"
 
 [variable."151.14"]  # inkvarteringsstatistik: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."155.56"]  # trafo: panel_entity_key = 'persnr'
-slug = "persnr"
+slug = "person-orgnr"
 
 [variable."156.145"]  # industrins-miljoskyddskostnader: panel_entity_key = 'identitet'
-slug = "identitet"
+slug = "scbid"
 
 [variable."161.2312"]  # hamn: panel_entity_key = 'imo'
 slug = "imo"
 
 [variable."162.1839"]  # lastbilstrafik: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "orgnr"
 
 [variable."164.16388"]  # psu: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5381,43 +5381,43 @@ slug = "orgnr"
 slug = "orgnr"
 
 [variable."167.56"]  # konkurser: panel_entity_key = 'opnr'
-slug = "opnr"
+slug = "person-orgnr"
 
 [variable."168.48"]  # fek: panel_entity_key = 'lokal-verksamhetsenhetsnummer'
-slug = "lokal-verksamhetsenhetsnummer"
+slug = "lvenr"
 
 [variable."168.56"]  # fek: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."168.4810"]  # fek: panel_entity_key = 'velopnr'
 slug = "velopnr"
 
 [variable."179.56"]  # laps: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."182.56"]  # fou: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."182.57"]  # fou: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."182.1839"]  # fou: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."182.3578"]  # fou: panel_entity_key = 'organisationsnummer-12-siffror'
-slug = "organisationsnummer-12-siffror"
+slug = "orgnr-12"
 
 [variable."183.56"]  # investeringsenkaten: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."183.1839"]  # investeringsenkaten: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "orgnr"
 
 [variable."186.57"]  # slh: panel_entity_key = 'personnr'
 slug = "personnr"
 
 [variable."187.1454"]  # konjunkturstatistik-industri: panel_entity_key = 'verksamhetsenhetens-identitetsnummer'
-slug = "verksamhetsenhetens-identitetsnummer"
+slug = "venr"
 
 [variable."189.57"]  # grundskola-ak9: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5447,34 +5447,34 @@ slug = "fastbet"
 slug = "lghbet"
 
 [variable."200.1839"]  # arlig-energistatistik: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."200.3577"]  # arlig-energistatistik: panel_entity_key = 'organisationsnummer-10-siffror'
-slug = "organisationsnummer-10-siffror"
+slug = "orgnr-10"
 
 [variable."200.16728"]  # arlig-energistatistik: panel_entity_key = 'foretagets-id-nummer'
 slug = "foretagets-id-nummer"
 
 [variable."203.56"]  # energianvandning-bygg: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."208.7550"]  # skord-spannmal: panel_entity_key = 'ftgid'
 slug = "ftgid"
 
 [variable."211.56"]  # skord-slattervall: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."215.1839"]  # vattenbruk: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."223.14"]  # industrins-vattenanvandning: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."227.56"]  # infi: panel_entity_key = 'peorgnrhe'
-slug = "peorgnrhe"
+slug = "person-orgnr"
 
 [variable."228.57"]  # formogenhetsreg: panel_entity_key = 'bpnr'
-slug = "bpnr"
+slug = "personnr"
 
 [variable."228.4855"]  # formogenhetsreg: panel_entity_key = 'bidnrh'
 slug = "bidnrh"
@@ -5489,13 +5489,13 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."234.14"]  # lcs: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."235.56"]  # vaxtskyddsmedel: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."237.57"]  # ulf: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."237.22856"]  # ulf: panel_entity_key = 'pnr'
 slug = "pnr"
@@ -5519,13 +5519,13 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."245.57"]  # ep-val-deltagande: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."246.17328"]  # ses: panel_entity_key = 'individnyckel'
 slug = "individnyckel"
 
 [variable."247.4600"]  # hogskolestuderandes-levnadsvillkor: panel_entity_key = 'uenr'
-slug = "uenr"
+slug = "scbid"
 
 [variable."248.57"]  # komvux-sfi: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5540,28 +5540,28 @@ slug = "personnr"
 slug = "ftgid"
 
 [variable."257.1839"]  # innovation-foretag: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."258.56"]  # it-anvandning: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."258.57"]  # it-anvandning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."259.3578"]  # foretagens-utgifter-it: panel_entity_key = 'organisationsnummer-12-siffror'
-slug = "organisationsnummer-12-siffror"
+slug = "orgnr-12"
 
 [variable."264.56"]  # sru: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."264.57"]  # sru: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "person-organisationsnummer"
 
 [variable."269.57"]  # bonus-oregelbundna: panel_entity_key = 'personnr'
 slug = "personnr"
 
 [variable."270.57"]  # fortroendevalda: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."282.29828"]  # bostadsbestand: panel_entity_key = 'rnplgh-ridlgh'
 slug = "rnplgh-ridlgh"
@@ -5576,13 +5576,13 @@ slug = "orgnr"
 slug = "personnr"
 
 [variable."296.56"]  # prisindex: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."296.7550"]  # prisindex: panel_entity_key = 'fo-id'
 slug = "fo-id"
 
 [variable."301.4544"]  # aes: panel_entity_key = 'personnr'
-slug = "personnr"
+slug = "eget-personnummer"
 
 [variable."304.57"]  # fritidshem: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5594,7 +5594,7 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."312.56"]  # tjansteforetagens-forbrukning: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."320.57"]  # grundskola-prov-ak6: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5603,10 +5603,10 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."323.28747"]  # svdb: panel_entity_key = 'isincode'
-slug = "isincode"
+slug = "isin"
 
 [variable."330.56"]  # aktieagarstatistik: panel_entity_key = 'agarorgnr'
-slug = "agarorgnr"
+slug = "person-orgnr"
 
 [variable."333.57"]  # breg: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5636,7 +5636,7 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."349.57"]  # flergenreg: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."349.39445"]  # flergenreg: panel_entity_key = 'personnummer-avliden-person'
 slug = "personnummer-avliden-person"
@@ -5657,16 +5657,16 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."357.30360"]  # but: panel_entity_key = 'bubnrh'
-slug = "bubnrh"
+slug = "hushallsid"
 
 [variable."359.23923"]  # solel: panel_entity_key = 'knr'
 slug = "knr"
 
 [variable."361.56"]  # nystartade-foretag-kvartal: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."366.57"]  # utbildningsanalyser: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."366.104"]  # utbildningsanalyser: panel_entity_key = 'skolkod'
 slug = "skolkod"
@@ -5684,13 +5684,13 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."369.1839"]  # internationella-foretag: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."371.4600"]  # fasit: panel_entity_key = 'bidnr'
-slug = "bidnr"
+slug = "scbid"
 
 [variable."371.30360"]  # fasit: panel_entity_key = 'bidnrhb'
-slug = "bidnrhb"
+slug = "hushallsid"
 
 [variable."371.37435"]  # fasit: panel_entity_key = 'familjehushallsidentitet'
 slug = "familjehushallsidentitet"
@@ -5699,13 +5699,13 @@ slug = "familjehushallsidentitet"
 slug = "cfar-nummer"
 
 [variable."372.56"]  # foretagsreg: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."374.4600"]  # cvts: panel_entity_key = 'enterpr'
-slug = "enterpr"
+slug = "scbid"
 
 [variable."375.14"]  # foretagsstatistik: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."375.38071"]  # foretagsstatistik: panel_entity_key = 'velopnr'
 slug = "velopnr"
@@ -5723,10 +5723,10 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."382.3578"]  # pin: panel_entity_key = 'organisationsnummer-12-siffror'
-slug = "organisationsnummer-12-siffror"
+slug = "orgnr-12"
 
 [variable."383.14"]  # utforarreg: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."387.49985"]  # krita: panel_entity_key = 'institutioncode'
 slug = "institutioncode"
@@ -5753,16 +5753,16 @@ slug = "personnr"
 slug = "personnr"
 
 [variable."397.57"]  # stuv: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."400.57"]  # statund: panel_entity_key = 'personnr'
 slug = "personnr"
 
 [variable."404.14"]  # bas: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."404.57"]  # bas: panel_entity_key = 'personnummer'
-slug = "personnummer"
+slug = "personnr"
 
 [variable."404.47187"]  # bas: panel_entity_key = 'person-samordningsnummer'
 slug = "person-samordningsnummer"
@@ -5777,49 +5777,49 @@ slug = "personnr"
 slug = "cfar-nummer"
 
 [variable."407.56"]  # innovation-offentlig: panel_entity_key = 'scbid'
-slug = "scbid"
+slug = "person-orgnr"
 
 [variable."408.57"]  # anst: panel_entity_key = 'personnr'
 slug = "personnr"
 
 [variable."408.47187"]  # anst: panel_entity_key = 'anstpersonnr'
-slug = "anstpersonnr"
+slug = "person-samordningsnummer"
 
 [variable."409.22865"]  # civila-samhallet: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."410.56"]  # esk: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."410.1839"]  # esk: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+slug = "orgnr"
 
 [variable."411.14"]  # lor: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."414.4544"]  # sjalvforsorjning: panel_entity_key = 'personnr'
-slug = "personnr"
+slug = "eget-personnummer"
 
 [variable."121.56.borgnr"]  # frida: panel_entity_key = 'person-organisationsnummer'
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 
 [variable."121.56.bpnr"]  # frida: panel_entity_key = 'person-organisationsnummer-2'
-slug = "person-organisationsnummer-2"
+slug = "person-orgnr-2"
 
 [variable."2.29828.rnplgh-ridlgh"]  # rtb: panel_entity_key = 'rnplgh-ridlgh'
 slug = "rnplgh-ridlgh"
 
 [variable."25.30360.bhidhb"]  # iot: panel_entity_key = 'bhidhb'
-slug = "bhidhb"
+slug = "hushallsid"
 
 [variable."26.14.cfarnr"]  # rams: panel_entity_key = 'cfar-nummer'
 slug = "cfar-nummer"
 
 [variable."26.14.cfarnr1"]  # rams: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer-2"
 
 [variable."26.56.peorgnr2"]  # rams: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr-2"
 
 [variable."273.57.personnr"]  # stativ: panel_entity_key = 'personnr'
 slug = "personnr"
@@ -5840,22 +5840,22 @@ slug = "ridadrpl"
 slug = "uuidregbyg"
 
 [variable."34.14.cfarnr"]  # lisa: panel_entity_key = 'cfarnr'
-slug = "cfarnr"
+slug = "cfar-nummer"
 
 [variable."34.56.peorgnr"]  # lisa: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."355.1839.peorgnr"]  # tradbransle-torv: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "orgnr"
 
 [variable."408.56.peorgnr"]  # anst: panel_entity_key = 'peorgnr'
-slug = "peorgnr"
+slug = "person-orgnr"
 
 [variable."47.1346.fspersonnr"]  # hreg: panel_entity_key = 'fspersonnr'
-slug = "fspersonnr"
+slug = "personnr-fs"
 
 [variable."47.1346.personnr"]  # hreg: panel_entity_key = 'personnummer-motsvarande'
-slug = "personnummer-motsvarande"
+slug = "personnr"
 
 [variable."70.29378.uuid-adr"]  # gdb: panel_entity_key = 'uuid-adr'
 slug = "uuid-adr"
@@ -6499,7 +6499,7 @@ slug = "naringsgren-for-statistiken-huvudsaklig"
 
 # register 24 (ureg)
 [variable."24.26"]
-slug = "fastighetsbeteckning"
+slug = "fastbet"
 [variable."24.44"]
 slug = "kon"
 [variable."24.73"]
@@ -7459,7 +7459,7 @@ slug = "kommun"
 [variable."26.49"]
 slug = "lan"
 [variable."26.372"]
-slug = "familjeidentitet-rtb-familj"
+slug = "famid"
 [variable."26.667"]
 slug = "ast-kommun"
 [variable."26.753"]
@@ -8641,7 +8641,7 @@ slug = "lonesumma-formaner"
 [variable."51.511"]
 slug = "ssyk4-huvud"
 [variable."51.1839"]
-slug = "organisationsnummer"
+slug = "orgnr"
 [variable."51.2519"]
 slug = "lopnr-anstallningar"
 [variable."51.2686"]
@@ -8815,7 +8815,7 @@ slug = "smaort"
 [variable."70.64"]
 slug = "tatort-tom2010"
 [variable."70.135"]
-slug = "fastighetsnyckel"
+slug = "fnr"
 [variable."70.485"]
 slug = "fastighetens-status"
 [variable."70.487"]
@@ -10321,7 +10321,7 @@ slug = "manadslon"
 [variable."111.3877"]
 slug = "arbete-hemifran"
 [variable."111.4600"]
-slug = "identitetsnummer-for-scb"
+slug = "scbid"
 [variable."111.4613"]
 slug = "populationsstorlek-per-stratum"
 [variable."111.4614"]
@@ -10725,7 +10725,7 @@ slug = "kommun"
 [variable."114.972"]
 slug = "aktuellt-antal-anstallda"
 [variable."114.1839"]
-slug = "organisationsnummer"
+slug = "orgnr"
 [variable."114.3577"]
 slug = "orgnr-10"
 [variable."114.4210"]
@@ -14281,7 +14281,7 @@ slug = "bransleanvandning-transport"
 [variable."132.16314"]
 slug = "antal-anstallda-arbetsstallet"
 [variable."132.16315"]
-slug = "cfarnr-arbetsstallet"
+slug = "cfar-nummer-arbetsstalle"
 [variable."132.16328"]
 slug = "benamning-arbetsstallet"
 [variable."132.16413"]
@@ -14305,7 +14305,7 @@ slug = "scb-kommentar-granskning"
 [variable."132.16422"]
 slug = "kontrollnr-arbetsstallet"
 [variable."132.16423"]
-slug = "orgnr-foretaget"
+slug = "orgnr"
 [variable."132.16424"]
 slug = "statuskod-scb-granskning"
 [variable."132.16425"]
@@ -15575,13 +15575,13 @@ slug = "antal-fou-helarspersoner"
 
 # register 183 (investeringsenkaten)
 [variable."183.29"]
-slug = "foretagsenhetsnummer"
+slug = "fenr"
 [variable."183.49"]
 slug = "lan"
 [variable."183.1350"]
 slug = "anstallda-storleksklass"
 [variable."183.1454"]
-slug = "verksamhetsenhetsnummer"
+slug = "venr"
 [variable."183.1653"]
 slug = "kommentar-uppgiftslamnare"
 [variable."183.1728"]
@@ -15743,7 +15743,7 @@ slug = "tilldatum"
 [variable."187.3310"]
 slug = "branschgrupp"
 [variable."187.3578"]
-slug = "organisationsnummer-12"
+slug = "orgnr-12"
 [variable."187.4027"]
 slug = "naringsgren"
 [variable."187.4042"]
@@ -15919,13 +15919,13 @@ slug = "antal-ovriga-skolledare-man"
 
 # register 193 (grundskola-elever)
 [variable."193.56"]
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 [variable."193.1554"]
 slug = "ar-termin-aktivitet"
 [variable."193.1579"]
 slug = "termin"
 [variable."193.1839"]
-slug = "organisationsnummer"
+slug = "orgnr"
 [variable."193.6809"]
 slug = "folkbokforingskommun"
 [variable."193.7914"]
@@ -16077,7 +16077,7 @@ slug = "bostadsarea-bygglov"
 [variable."198.7781"]
 slug = "lagenheter-per-typ"
 [variable."198.7786"]
-slug = "lagenhetsnummer"
+slug = "lghnr"
 [variable."198.8092"]
 slug = "lagenhetsinnehavare"
 [variable."198.22357"]
@@ -16131,7 +16131,7 @@ slug = "hyra-december-justerad"
 [variable."200.36"]
 slug = "kommun"
 [variable."200.145"]
-slug = "identitet"
+slug = "scbid"
 [variable."200.537"]
 slug = "postnummer"
 [variable."200.1721"]
@@ -17115,7 +17115,7 @@ slug = "pedagogisk-hogskoleexamen"
 [variable."232.8773"]
 slug = "typ-av-anstallning"
 [variable."232.30366"]
-slug = "skolenhet"
+slug = "skolenhetskod"
 [variable."232.30578"]
 slug = "verksamhetstyp"
 [variable."232.30664"]
@@ -19613,7 +19613,7 @@ slug = "nyinskriven"
 [variable."249.4"]
 slug = "datum"
 [variable."249.56"]
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 [variable."249.73"]
 slug = "ar"
 [variable."249.257"]
@@ -19657,7 +19657,7 @@ slug = "utbildningsniva"
 [variable."250.257"]
 slug = "fodelseland-rtb"
 [variable."250.1839"]
-slug = "organisationsnummer"
+slug = "orgnr"
 [variable."250.6809"]
 slug = "folkbokforingskommun"
 [variable."250.8552"]
@@ -22479,7 +22479,7 @@ slug = "nettosparande-ovr-fond-utl"
 
 # register 257 (innovation-foretag)
 [variable."257.29"]
-slug = "foretagsenhetsnummer"
+slug = "fenr"
 [variable."257.73"]
 slug = "ar"
 [variable."257.462"]
@@ -23925,7 +23925,7 @@ slug = "mjukvara-inkop-invest"
 [variable."260.34"]
 slug = "juridisk-form"
 [variable."260.56"]
-slug = "orgnr-huvudman"
+slug = "person-orgnr"
 [variable."260.73"]
 slug = "ar"
 [variable."260.257"]
@@ -24489,11 +24489,11 @@ slug = "markering-hur-resultatrakningen-rattad"
 
 # register 269 (bonus-oregelbundna)
 [variable."269.56"]
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 [variable."269.462"]
 slug = "stratum"
 [variable."269.1839"]
-slug = "organisationsnummer"
+slug = "orgnr"
 
 # register 270 (fortroendevalda)
 [variable."270.22"]
@@ -25305,7 +25305,7 @@ slug = "utbildningsbehov"
 
 # register 304 (fritidshem)
 [variable."304.56"]
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 [variable."304.6809"]
 slug = "folkbokforingskommun"
 
@@ -25787,7 +25787,7 @@ slug = "ar-termin"
 [variable."344.1579"]
 slug = "termin"
 [variable."344.1839"]
-slug = "organisationsnummer"
+slug = "orgnr"
 [variable."344.3592"]
 slug = "antal-amnen-godkand"
 [variable."344.3626"]
@@ -25861,7 +25861,7 @@ slug = "agarkontroll"
 [variable."350.108"]
 slug = "taxeringsenhet-typkod"
 [variable."350.135"]
-slug = "fastighetsnyckel"
+slug = "fnr"
 [variable."350.749"]
 slug = "aldersgrupp"
 [variable."350.2188"]
@@ -25907,9 +25907,9 @@ slug = "inom-tatort"
 
 # register 353 (anpassad-gymnasieskola)
 [variable."353.56"]
-slug = "person-organisationsnummer"
+slug = "person-orgnr"
 [variable."353.1839"]
-slug = "organisationsnummer"
+slug = "orgnr"
 [variable."353.26032"]
 slug = "integrerad-elev-anpassad"
 [variable."353.40835"]
@@ -25949,7 +25949,7 @@ slug = "alder-31-12"
 [variable."358.466"]
 slug = "upprakningstal"
 [variable."358.4600"]
-slug = "identitetsnummer-for-scb"
+slug = "scbid"
 
 # register 359 (solel)
 [variable."359.400"]
@@ -27379,7 +27379,7 @@ slug = "anvandaridentitet-uppgiftsnotering"
 [variable."382.887"]
 slug = "procent-tid-omsattning"
 [variable."382.1454"]
-slug = "verksamhetsenhet-nr"
+slug = "venr"
 [variable."382.2005"]
 slug = "anvandaridentitet"
 [variable."382.2642"]
@@ -28129,7 +28129,7 @@ slug = "underkod"
 [variable."10.44427.tradgard"]
 slug = "tradgard-areal-i-ha"
 [variable."10.5708.kundnr"]
-slug = "kundnummer"
+slug = "kundnr"
 [variable."10.5712.grodid"]
 slug = "grodid"
 
@@ -28145,7 +28145,7 @@ slug = "programbidrag"
 [variable."102.1996.verkform"]
 slug = "skolform"
 [variable."102.30366.skolenhetskod"]
-slug = "skolenhet"
+slug = "skolenhetskod"
 [variable."102.30392.beht-ehs"]
 slug = "behorighet-gy-ehs"
 [variable."102.30392.beht-ehs-ak9"]
@@ -28759,7 +28759,7 @@ slug = "totb-kvant1"
 
 # register 139 (branslestatistik)
 [variable."139.145.idnr"]
-slug = "identitet"
+slug = "idnr"
 [variable."139.16721.lid"]
 slug = "land-for-import-export"
 [variable."139.2581.brslag"]
@@ -30056,3 +30056,211 @@ slug = "fr2"
 slug = "f30"
 
 # === END #471 SCB slug curation overrides ===
+
+# === BEGIN #471 entity-key/identifier canonicalization (generated) ===
+# 101 new overrides for previously-uncurated identifier vars
+# canonicalized to match their entity-key siblings (#471 entity-key pass).
+[variable."25.4544"]
+slug = "eget-personnummer"
+[variable."29.4544"]
+slug = "eget-personnummer"
+[variable."29.4600"]
+slug = "scbid"
+[variable."34.29832"]
+slug = "lopnummer-bostadshushall"
+[variable."34.30360"]
+slug = "hushallsid"
+[variable."50.56"]
+slug = "person-orgnr"
+[variable."52.1839"]
+slug = "orgnr"
+[variable."60.1839"]
+slug = "orgnr"
+[variable."71.449"]
+slug = "idtaxenhet"
+[variable."73.16423"]
+slug = "orgnr"
+[variable."91.14"]
+slug = "cfar-nummer"
+[variable."97.1839"]
+slug = "orgnr"
+[variable."99.1839"]
+slug = "orgnr"
+[variable."102.56"]
+slug = "person-orgnr"
+[variable."105.56"]
+slug = "person-orgnr"
+[variable."110.22021"]
+slug = "personnr-2"
+[variable."130.1839"]
+slug = "orgnr"
+[variable."133.56"]
+slug = "person-orgnr"
+[variable."134.56"]
+slug = "person-orgnr"
+[variable."139.16423"]
+slug = "orgnr-foretaget"
+[variable."140.145"]
+slug = "fastbet-id"
+[variable."140.1839"]
+slug = "orgnr"
+[variable."151.1839"]
+slug = "orgnr"
+[variable."157.25139"]
+slug = "startdatum"
+[variable."168.14"]
+slug = "cfar-nummer"
+[variable."182.29"]
+slug = "fenr"
+[variable."182.3577"]
+slug = "orgnr-10"
+[variable."186.56"]
+slug = "person-orgnr"
+[variable."189.56"]
+slug = "person-orgnr"
+[variable."190.56"]
+slug = "person-orgnr"
+[variable."192.30366"]
+slug = "skolenhetskod"
+[variable."195.14"]
+slug = "cfar-nummer"
+[variable."195.56"]
+slug = "person-orgnr"
+[variable."200.7550"]
+slug = "ftgid"
+[variable."216.25139"]
+slug = "startdatum"
+[variable."228.56"]
+slug = "person-orgnr"
+[variable."228.372"]
+slug = "famid"
+[variable."231.56"]
+slug = "person-orgnr"
+[variable."233.56"]
+slug = "person-orgnr"
+[variable."237.22857"]
+slug = "personnr-2"
+[variable."250.56"]
+slug = "person-orgnr"
+[variable."257.3578"]
+slug = "orgnr-12"
+[variable."258.16388"]
+slug = "uppgiftslamnarens-personnummer"
+[variable."259.56"]
+slug = "person-orgnr"
+[variable."270.4544"]
+slug = "eget-personnummer"
+[variable."273.56"]
+slug = "person-orgnr"
+[variable."276.56"]
+slug = "person-orgnr"
+[variable."296.14"]
+slug = "cfar-nummer"
+[variable."305.56"]
+slug = "person-orgnr"
+[variable."307.14"]
+slug = "cfar-nummer"
+[variable."307.56"]
+slug = "person-orgnr"
+[variable."320.56"]
+slug = "person-orgnr"
+[variable."323.3578"]
+slug = "orgnr-12"
+[variable."333.372"]
+slug = "famid"
+[variable."340.56"]
+slug = "person-orgnr"
+[variable."342.56"]
+slug = "person-orgnr"
+[variable."348.26"]
+slug = "fastbet"
+[variable."348.25139"]
+slug = "startdatum"
+[variable."368.25139"]
+slug = "startdatum"
+[variable."377.25139"]
+slug = "startdatum-kurs"
+[variable."378.56"]
+slug = "person-orgnr"
+[variable."379.14"]
+slug = "cfar-nummer"
+[variable."379.56"]
+slug = "person-orgnr"
+[variable."383.56"]
+slug = "person-orgnr"
+[variable."392.56"]
+slug = "person-orgnr"
+[variable."404.56"]
+slug = "person-orgnr"
+[variable."407.1839"]
+slug = "orgnr"
+[variable."10.5708.kundnr1"]
+slug = "kundnr-2"
+[variable."103.57.pnr11"]
+slug = "personnr-2"
+[variable."121.56.borgnr-bolag"]
+slug = "person-orgnr-bolag"
+[variable."199.56.apeorgnr"]
+slug = "person-orgnr"
+[variable."199.56.fpeorgnr"]
+slug = "person-orgnr-2"
+[variable."2.135.fnrfar"]
+slug = "fnr-far"
+[variable."2.135.fnrg"]
+slug = "fnr-g"
+[variable."2.135.fnrmor"]
+slug = "fnr-mor"
+[variable."2.135.fnrrel"]
+slug = "fnr-rel"
+[variable."2.57.personnrankn"]
+slug = "personnr-ankn"
+[variable."2.57.personnrsamh"]
+slug = "personnr-samh"
+[variable."232.56.peorgnr"]
+slug = "person-orgnr"
+[variable."232.56.peorgnr-anord"]
+slug = "person-orgnr-anordnare"
+[variable."25.30360.bhidvxhb"]
+slug = "hushallsid-vx"
+[variable."273.14.cfarnr"]
+slug = "cfar-nummer"
+[variable."273.14.cfarnrnymet"]
+slug = "cfar-nummer-2"
+[variable."273.57.personnrankn"]
+slug = "personnr-ankn"
+[variable."276.135.tillhfnr"]
+slug = "fnr-tillh"
+[variable."307.25139.inskrdat"]
+slug = "startdatum-inskr"
+[variable."307.25139.startdat"]
+slug = "startdatum"
+[variable."34.14.cfarnr-lisa"]
+slug = "cfar-nummer-2"
+[variable."34.14.cfarnrsreg"]
+slug = "cfar-nummer-3"
+[variable."34.56.peorgnr-lisa"]
+slug = "person-orgnr-2"
+[variable."34.56.peorgnrsreg"]
+slug = "person-orgnr-3"
+[variable."355.1839.orgnr"]
+slug = "orgnr-2"
+[variable."379.25139.inskrdat"]
+slug = "startdatum-inskr"
+[variable."379.25139.startdat"]
+slug = "startdatum"
+[variable."408.56.agipeorgnr"]
+slug = "person-orgnr-2"
+[variable."408.56.anstpeorgnr"]
+slug = "person-orgnr-anstalld"
+[variable."408.56.peorgnrram"]
+slug = "person-orgnr-3"
+[variable."97.26.bffastin"]
+slug = "fastbet-in"
+[variable."97.26.bffastut"]
+slug = "fastbet-ut"
+[variable."97.372.bfamidin"]
+slug = "famid-in"
+[variable."97.372.bfamidut"]
+slug = "famid-ut"
+
+# === END #471 entity-key/identifier canonicalization ===
