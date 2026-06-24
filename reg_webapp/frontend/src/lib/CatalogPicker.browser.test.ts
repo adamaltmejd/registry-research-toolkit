@@ -252,6 +252,33 @@ describe("CatalogPicker", () => {
     expect(onpickVariant).toHaveBeenCalledWith("scb/lisa/v2019");
   });
 
+  it("ranks register browse matches by leaf slug before other substrings (#724)", async () => {
+    vi.mocked(getCatalogRoot).mockResolvedValue(rootResponse("scb"));
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      providerNode(
+        "scb",
+        { fqid: "scb/breg", name: "Befolkningsregister RTB mirror" },
+        { fqid: "scb/rtb", name: "Registret över totalbefolkningen" },
+      ),
+    );
+
+    await render(CatalogPicker, {
+      mode: "variant",
+      register: "",
+      onpickVariant: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    await page.getByRole("option", { name: /^scb/ }).click();
+    await page.getByRole("combobox", { name: "Filter registers" }).fill("rtb");
+
+    const firstPick = page.getByRole("option").nth(0);
+    await expect.element(firstPick).toBeVisible();
+    await vi.waitFor(() =>
+      expect(firstPick.element().textContent).toContain("scb/rtb"),
+    );
+  });
+
   it("a hand-typed prefix jumps straight to the variant list (no provider browse)", async () => {
     vi.mocked(getRegisterVariants).mockResolvedValue({
       variants: [{ slug: "v2020", name: "2020 vintage" }],

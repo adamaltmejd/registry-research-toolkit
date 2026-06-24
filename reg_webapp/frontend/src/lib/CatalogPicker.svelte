@@ -17,6 +17,7 @@ import {
   deriveType,
   foldGroupedRows,
   groupFilterKeys,
+  leafSlug,
   narrowCatalogNode,
   type PickedVariable,
   type Representation,
@@ -211,10 +212,18 @@ const filteredVariables = $derived(
 );
 // C2: the browse-step lists, same rankFilter (target-hunt a provider/register).
 const filteredProviders = $derived(
-  rankFilter(browseProviders, filter, (p) => [p.fqid, p.name]),
+  rankFilter(browseProviders, filter, (p) => [
+    leafSlug(p.fqid),
+    p.fqid,
+    p.name,
+  ]),
 );
 const filteredRegisters = $derived(
-  rankFilter(browseRegisters, filter, (r) => [r.fqid, r.name]),
+  rankFilter(browseRegisters, filter, (r) => [
+    leafSlug(r.fqid),
+    r.fqid,
+    r.name,
+  ]),
 );
 
 // C2: reset the filter when the browse STEP changes (provider → register →
