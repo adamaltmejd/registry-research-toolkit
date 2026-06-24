@@ -74,6 +74,9 @@ const params = $derived({
   variant: router.getQueryParam("variant") ?? undefined,
   value_set_version: router.getQueryParam("value_set_version") ?? undefined,
 });
+const hasResolutionModifier = $derived(
+  params.variant !== undefined || params.value_set_version !== undefined,
+);
 
 // Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
 // node's embedded states are shown (no redundant request; CatalogNodeView already
@@ -82,10 +85,28 @@ const periodResource = asyncResource<CatalogNode | StatesResponse | null>(() =>
   params.period ? getCatalogNode(fqidPath, params) : Promise.resolve(null),
 );
 
+// When `?variant` / `?value_set_version` narrows the resolution, the value-set
+// history still needs a PERIOD-ONLY scope for #744's outside-period disclosure.
+// Otherwise same-period rows for other variants/versions would be mislabeled as
+// outside the period instead of staying inline and greyed.
+const periodScopeResource = asyncResource<CatalogNode | StatesResponse | null>(
+  () =>
+    params.period && hasResolutionModifier
+      ? getCatalogNode(fqidPath, { period: params.period })
+      : Promise.resolve(null),
+);
+
 const narrowedStates = $derived.by(() => {
   const data = periodResource.data;
   // A `?period` resolve returns a StatesResponse (the only non-node arm here);
   // `!isCatalogNode` narrows `CatalogNode | StatesResponse` to it.
+  return data !== null && !isCatalogNode(data) ? data.states : null;
+});
+const periodScopeStates = $derived.by(() => {
+  if (!hasResolutionModifier) {
+    return null;
+  }
+  const data = periodScopeResource.data;
   return data !== null && !isCatalogNode(data) ? data.states : null;
 });
 
@@ -96,7 +117,9 @@ const narrowedStates = $derived.by(() => {
 // `narrowedStates` null and wedge the states section on a permanent
 // "Loading states…" with no feedback.
 const narrowedError = $derived(
-  params.period && periodResource.error ? periodResource.error : null,
+  params.period && (periodResource.error || periodScopeResource.error)
+    ? (periodResource.error ?? periodScopeResource.error)
+    : null,
 );
 
 // States that drive resolution-sensitive behavior: Add planning and the
@@ -114,7 +137,10 @@ const states = $derived.by(() => {
   if (!params.period || narrowedError) {
     return node.states;
   }
-  if (narrowedStates === null) {
+  if (
+    narrowedStates === null ||
+    (hasResolutionModifier && periodScopeStates === null)
+  ) {
     return null;
   }
   return narrowedStates.length === 1 ? narrowedStates : node.states;
@@ -123,7 +149,13 @@ const states = $derived.by(() => {
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
 // + StatesView's empty-message wording).
 const isNarrowed = $derived(!!params.period && !narrowedError);
-const stateScope = $derived(isNarrowed ? resolvedStates : null);
+const stateScope = $derived(
+  isNarrowed
+    ? hasResolutionModifier
+      ? periodScopeStates
+      : resolvedStates
+    : null,
+);
 
 // ── #670: member identity from the concept-group dimensions ─────────────────
 // LIFTED from DimensionsPanel: the leaf now owns the ONE `/dimensions` fetch and

@@ -1720,6 +1720,51 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     ]);
   });
 
+  it("keeps the span-end predecessor after a contained overlap", () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2021-12-31",
+        data_type: "int",
+        delivery_column_name: "A",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2021-01-01",
+        valid_to: "2021-06-30",
+        data_type: "char",
+        delivery_column_name: "B",
+      }),
+      state({
+        state_id: 3,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2022-01-01",
+        valid_to: "2022-12-31",
+        data_type: "bigint",
+        delivery_column_name: "C",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      {
+        from: "2020-01-01",
+        to: "2022-12-31",
+        changes: [
+          {
+            at: "2022-01-01",
+            notes: ["type int -> bigint", "column A -> C"],
+          },
+        ],
+      },
+    ]);
+  });
+
   it("a gap year splits a span in two", () => {
     const states = [
       state({

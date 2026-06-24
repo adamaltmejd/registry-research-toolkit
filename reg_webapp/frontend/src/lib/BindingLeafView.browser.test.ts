@@ -480,6 +480,69 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .element(page.getByRole("button", { name: "Add to project" }))
       .toBeEnabled();
   });
+
+  it("uses a period-only scope when a variant modifier is active", async () => {
+    const inA = state({
+      state_id: 20,
+      variant: "individer",
+      value_set_id: 20,
+      value_set_version_label: "In-period A",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const inB = state({
+      state_id: 21,
+      variant: "individer",
+      value_set_id: 21,
+      value_set_version_label: "In-period B",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    const samePeriodOtherVariant = state({
+      state_id: 22,
+      variant: "other-population",
+      value_set_id: 22,
+      value_set_version_label: "Same-period other variant",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    const outside = state({
+      state_id: 23,
+      variant: "outside-population",
+      value_set_id: 23,
+      value_set_version_label: "Outside period",
+      valid_from: "1990-01-01",
+      valid_to: "1990-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(
+      async (_fqid, params) =>
+        ({
+          states: params?.variant
+            ? [inA, inB]
+            : [inA, inB, samePeriodOtherVariant],
+        }) as never,
+    );
+    router.navigate(
+      "/catalog/scb/lisa/kon?period=2007..2008&variant=individer",
+    );
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([inA, inB, samePeriodOtherVariant, outside]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+    expect(
+      [...document.querySelectorAll(".vs-label")].some(
+        (el) => el.textContent === "Same-period other variant",
+      ),
+    ).toBe(true);
+  });
 });
 
 describe("BindingLeafView member identity (#670)", () => {

@@ -818,7 +818,6 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
       if (previous) {
         appendTechnicalChanges(open, previous, s);
       }
-      previous = s;
       continue;
     }
     // Contiguous (or overlapping) with the open span → extend it. The day-after
@@ -830,11 +829,12 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
       }
       if (s.valid_to > open.to) {
         open.to = s.valid_to;
+        previous = s;
       }
     } else {
       spans.push({ from: s.valid_from, to: s.valid_to });
+      previous = s;
     }
-    previous = s;
   }
   return spans;
 }
