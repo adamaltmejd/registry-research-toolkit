@@ -1714,6 +1714,44 @@ def read_auto_derivations(path: Path) -> dict[str, str]:
 # boundary. Residual truncation collisions get a numeric suffix via _uniquify.
 _NAME_SLUG_MAX_LEN = 60
 
+# Measurement-unit parenthetical de-noise (#732 lever A, mined from the #471 SCB
+# curation). A trailing/embedded parenthetical whose ENTIRE content is a pure
+# measurement/unit annotation is noise in a leaf slug: "Sockerbetor (areal i
+# hektar)" should derive to `sockerbetor`, not `sockerbetor-areal-i-hektar`. Strip
+# such a parenthetical from the NAME before folding. The unit vocabulary is a
+# CLOSED set deliberately scoped to pure units (`areal i ha`, `i procent`, `kr`,
+# …) so a *distinguishing* parenthetical (`(3 positioner)`, `(landsting)`,
+# `(SRU)`) is never dropped — those carry signal a curator keeps. This reproduces
+# the agricultural-area families (`sockerbetor`/`trada`/`energiskog`/…) the
+# curators denoised by hand. Broader stopword stripping and tail-preserving
+# truncation were mined too but regress the conservative human keeps (the curation
+# is dominantly semantic) — deferred to curation judgement; see DESIGN.md → Slug
+# curation (name-arm generator rules) and the #732 spec.
+_UNIT_ANNOTATION_RE = re.compile(
+    r"^(?:areal\s+i\s+(?:hektar|ha)"
+    r"|i\s+(?:hektar|ha|procent|kronor|kr|tkr|mkr)"
+    r"|hektar|procent|kvm|kronor|kr|tkr|mkr)$"
+)
+_PARENTHETICAL_RE = re.compile(r"\s*\(([^)]*)\)")
+
+
+def _strip_unit_parentheticals(name: str) -> str:
+    """Remove parentheticals whose whole content is a pure measurement-unit
+    annotation (`_UNIT_ANNOTATION_RE`); leave distinguishing parentheticals intact.
+    Content is NFKD→ASCII folded before matching so `(areal i hektar)` matches."""
+
+    def repl(m: re.Match[str]) -> str:
+        inner = (
+            unicodedata.normalize("NFKD", m.group(1))
+            .encode("ascii", "ignore")
+            .decode("ascii")
+            .strip()
+            .lower()
+        )
+        return "" if _UNIT_ANNOTATION_RE.match(inner) else m.group(0)
+
+    return _PARENTHETICAL_RE.sub(repl, name).strip()
+
 
 def _name_slug(name: str | None, *, cap: int = _NAME_SLUG_MAX_LEN) -> str | None:
     """Derive a length-capped variable slug from a variable NAME (fallback).
@@ -1726,7 +1764,13 @@ def _name_slug(name: str | None, *, cap: int = _NAME_SLUG_MAX_LEN) -> str | None
     to ``cap`` on a hyphen boundary so the leaf stays readable. Returns ``None``
     when the name yields nothing slug-shaped (empty / leading-digit / all
     non-ASCII after fold).
+
+    Measurement-unit parentheticals are stripped first (#732 lever A,
+    `_strip_unit_parentheticals`) so a unit annotation never eats slug budget.
     """
+    if name is not None:
+        # Unit-paren de-noise; fall back to the raw name if it strips to nothing.
+        name = _strip_unit_parentheticals(name) or name
     base = derive_variable_slug(name)
     if base is None or len(base) <= cap:
         return base

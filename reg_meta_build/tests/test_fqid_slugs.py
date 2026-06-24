@@ -1750,6 +1750,40 @@ class TestPopulateVariableSlugs:
         # Round-trips through the validator (not reserved / period / malformed).
         assert derive_variable_slug(result) == result
 
+    def test_unit_parenthetical_denoise(self) -> None:
+        # #732 lever A (mined from the #471 SCB curation): a parenthetical whose
+        # whole content is a pure measurement-unit annotation is noise — strip it
+        # so it doesn't eat the slug. Reproduces the agricultural-area families the
+        # curators denoised by hand.
+        from reg_meta_build.fqid_slugs import _name_slug, _strip_unit_parentheticals
+
+        assert (
+            _strip_unit_parentheticals("Sockerbetor (areal i hektar)") == "Sockerbetor"
+        )
+        assert _strip_unit_parentheticals("Träda (areal i ha)") == "Träda"
+        assert _name_slug("Sockerbetor (areal i hektar)") == "sockerbetor"
+        assert _name_slug("Övriga växtslag (areal i ha)") == "ovriga-vaxtslag"
+
+    def test_distinguishing_parenthetical_kept(self) -> None:
+        # A parenthetical that is NOT a pure unit annotation carries signal a
+        # curator keeps (level count, entity qualifier, source acronym) — the
+        # closed unit vocabulary must never strip it.
+        from reg_meta_build.fqid_slugs import _name_slug, _strip_unit_parentheticals
+
+        for name in (
+            "Utbildningsnivå (3 positioner)",
+            "Kostnad (landsting)",
+            "Resultat (SRU)",
+        ):
+            assert _strip_unit_parentheticals(name) == name
+        assert (
+            _name_slug("Utbildningsnivå (3 positioner)")
+            == "utbildningsniva-3-positioner"
+        )
+        # A name that is ONLY a unit parenthetical falls back to the raw name
+        # rather than emptying out.
+        assert _name_slug("(areal i ha)") is not None
+
     def test_auto_toml_parses_as_provider_scb(self, tmp_path: Path) -> None:
         # The generated scb.auto.toml must load via load_slug_dir as provider
         # `scb` (the `.auto` suffix must not break provider-slug grammar).
