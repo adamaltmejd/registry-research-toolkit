@@ -398,15 +398,21 @@ export function historyGraphFromClassification(
           },
         ];
   const fanOut = editions.filter((edition) => edition.is_current).length > 1;
+  const fanOutKnownYears = editions
+    .map((edition) => edition.effective_year)
+    .filter((year): year is number => year !== null);
+  const fanOutCurrentYear =
+    fanOutKnownYears.length > 0 ? Math.max(...fanOutKnownYears) : null;
   const nodes: HistoryGraphNode[] = editions.map((edition, i) => {
     const previousCut = i > 0 ? editions[i - 1].effective_year : null;
+    const fanOutYear = edition.effective_year ?? fanOutCurrentYear;
     return {
       id: edition.fqid ?? `class/${edition.slug}`,
       kind: "classification",
       label: edition.name ?? edition.slug,
       fqid: edition.fqid,
-      from: fanOut ? null : previousCut,
-      to: edition.effective_year,
+      from: fanOut ? fanOutYear : previousCut,
+      to: fanOut ? fanOutYear : edition.effective_year,
       current: edition.is_current,
       self: edition.is_self,
       columns: [],

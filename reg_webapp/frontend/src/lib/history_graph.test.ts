@@ -310,7 +310,21 @@ describe("history graph prototype model", () => {
       "class/sun-niva2000",
       "class/sun-niva2020",
     ]);
-    expect(graph.nodes.every((node) => node.from === null)).toBe(true);
+    expect(
+      graph.nodes.map((node) => ({
+        id: node.id,
+        from: node.from,
+        to: node.to,
+      })),
+    ).toEqual([
+      { id: "class/sun1996", from: 2000, to: 2000 },
+      { id: "class/sun-grupp2000", from: 2020, to: 2020 },
+      { id: "class/sun-grupp2020", from: 2020, to: 2020 },
+      { id: "class/sun-inriktning2000", from: 2020, to: 2020 },
+      { id: "class/sun-inriktning2020", from: 2020, to: 2020 },
+      { id: "class/sun-niva2000", from: 2020, to: 2020 },
+      { id: "class/sun-niva2020", from: 2020, to: 2020 },
+    ]);
     expect(graph.edges).toEqual([]);
     expect(graph.warnings.join("\n")).toContain(
       "fan-out chains arrive as a flattened client closure",
