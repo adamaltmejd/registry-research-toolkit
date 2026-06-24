@@ -809,6 +809,111 @@ def test_representation_full_default_coverage_to_open_end_is_no_drift(
     assert result.ok
 
 
+@pytest.fixture
+def list_year_segment_gap_catalog():
+    """The pinned column `kon` starts midway through the 2020 list segment while
+    sibling `kon_detalj` fills the leading half. The pin is present in the
+    segment, so the per-segment presence loop is not enough."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET delivery_column_name = 'kon', "
+        "valid_from = '2020-07-01', valid_to = '9999-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2020-01-01",
+        valid_to="2020-06-30",
+        delivery_column_name="kon_detalj",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_representation_gap_in_list_year_segment_is_drift(
+    list_year_segment_gap_catalog,
+):
+    # The 2020 segment is an interval, even though it is encoded as an int member
+    # of the list. Pinning `kon` would silently omit Jan-Jun 2020 without the
+    # per-segment gap comparison.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": [2020, 2021],
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), list_year_segment_gap_catalog, caller="researcher"
+    )
+    drift = [
+        i
+        for i in result.issues
+        if i.code == "binding_state_drifts_within_period"
+        and "covers only part of period 2020" in i.message
+    ]
+    assert len(drift) == 1
+    assert "segment of 2020,2021" in drift[0].message
+    assert result.ok
+
+
+@pytest.fixture
+def synthesized_feb_end_catalog():
+    """A state whose upper bound is the grammar-generated non-leap Feb-29.
+
+    reg_meta period-token windows may carry this ISO-shaped but non-calendar
+    bound, so semantic gap math must normalize it before using `date` arithmetic.
+    """
+    from _slugged_db import build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET delivery_column_name = 'kon', "
+        "valid_from = '2019-02-01', valid_to = '2019-02-29' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_representation_default_with_synthesized_feb_end_does_not_crash(
+    synthesized_feb_end_catalog,
+):
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": "_default",
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), synthesized_feb_end_catalog, caller="researcher"
+    )
+    assert result.issues == ()
+    assert result.ok
+
+
 # ── #207: an explicit range PARTIALLY covered by the concept's states.
 # `resolve_at` returns the states INTERSECTING the requested `[from, to]`; if their
 # union leaves a gap NO column delivers, the binding silently drops that sub-range.

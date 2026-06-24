@@ -47,8 +47,9 @@ rules and issue codes) — every caller runs structural
 first and short-circuits before semantic — so this layer no longer pre-checks it.
 What structural does NOT guarantee is the SYNTHESIZED upper bound: a non-leap
 ``YYYY-02`` month token expands to an over-counted ``-02-29`` ``hi`` (intentional
-in reg_meta for lexical interval overlap), so before the gap math does real
-``date`` arithmetic this layer snaps that bound to the real month-end
+in reg_meta for lexical interval overlap). State/window bounds can carry that
+same grammar-generated end date, so before the gap math does real ``date``
+arithmetic this layer snaps those upper bounds to the real month-end
 (``_snap_to_real_month_end``).
 """
 
@@ -292,12 +293,14 @@ def _snap_to_real_month_end(iso: str) -> str:
     day 29 (`_MONTH_LAST_DAY["02"]`) regardless of leap year — intentional and
     harmless for reg_meta's LEXICAL ISO-string interval overlap, but this layer
     does real `date` arithmetic (`_range_coverage_gaps`), where a non-leap
-    `2019-02-29` raises `ValueError`. The only token whose synthesized `hi` is a
-    non-real date is a non-leap `YYYY-02` month token, so only `YYYY-02-29` in a
-    non-leap year can reach the fallback; snapping it to `-02-28` is also MORE
-    correct (a window through "Feb 2019" really ends Feb 28, and it avoids a
-    spurious 1-day phantom gap). Author-supplied `YYYY-MM-DD` days are already
-    calendar-valid (structural guarantee), so they pass the try arm."""
+    `2019-02-29` raises `ValueError`. The synthesized value can appear either in
+    requested period bounds or in reg_meta state/window bounds. The only token
+    whose synthesized `hi` is a non-real date is a non-leap `YYYY-02` month
+    token, so only `YYYY-02-29` in a non-leap year can reach the fallback;
+    snapping it to `-02-28` is also MORE correct (a window through "Feb 2019"
+    really ends Feb 28, and it avoids a spurious 1-day phantom gap).
+    Author-supplied `YYYY-MM-DD` days are already calendar-valid (structural
+    guarantee), so they pass the try arm."""
     try:
         date.fromisoformat(iso)
     except ValueError:
@@ -315,6 +318,21 @@ def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     gap math does real `date` arithmetic on it."""
     lo, _ = _endpoint_bounds(period.from_)
     _, hi = _endpoint_bounds(period.to)
+    return lo, _snap_to_real_month_end(hi)
+
+
+def _period_segment_bounds(period: int | str | PeriodRange) -> tuple[str, str] | None:
+    """Inclusive ISO bounds for one source-period segment, or None for `_default`.
+
+    The scalar `int | str` arms are intentionally used only when the caller is
+    already iterating a LIST period: standalone scalar periods keep their older
+    point/token semantics for representation drift, while a list segment names a
+    requested interval whose leading/trailing representation gaps can be lost."""
+    if isinstance(period, PeriodRange):
+        return _requested_range_bounds(period)
+    if period == "_default":
+        return None
+    lo, hi = _endpoint_bounds(period)
     return lo, _snap_to_real_month_end(hi)
 
 
@@ -386,17 +404,19 @@ def _range_coverage_gaps(
     state, a trailing gap after the last, or an internal gap between two
     non-adjacent states) is returned as an inclusive ``(gap_lo, gap_hi)`` pair.
     Day-adjacent windows (e.g. ``..2013-12-31`` then ``2014-01-01..``) leave no
-    gap. Dates are real calendar ISO ``YYYY-MM-DD``; ``9999-12-31`` is the
-    open-ended sentinel, so a window that reaches ``hi`` marks the cursor
+    gap. Bounds are ISO-shaped ``YYYY-MM-DD`` strings; synthesized non-leap
+    February ends are snapped before conversion to ``date``. ``9999-12-31`` is
+    the open-ended sentinel, so a window that reaches ``hi`` marks the cursor
     complete instead of computing ``hi + 1 day``."""
     one_day = timedelta(days=1)
+    real_hi = _snap_to_real_month_end(hi)
     windows = sorted(
         (max(s.valid_from, lo), min(s.valid_to, hi))
         for s in states
         if s.valid_from <= hi and s.valid_to >= lo
     )
     gaps: list[tuple[str, str]] = []
-    end = date.fromisoformat(hi)
+    end = date.fromisoformat(real_hi)
     cursor: date | None = date.fromisoformat(lo)
     for w_lo, w_hi in windows:
         if cursor is None:
@@ -404,13 +424,13 @@ def _range_coverage_gaps(
         start = date.fromisoformat(w_lo)
         if start > cursor:
             gaps.append((cursor.isoformat(), (start - one_day).isoformat()))
-        finish = date.fromisoformat(w_hi)
+        finish = date.fromisoformat(_snap_to_real_month_end(w_hi))
         if finish >= end:
             cursor = None
             break
         cursor = max(cursor, finish + one_day)
     if cursor is not None and cursor <= end:
-        gaps.append((cursor.isoformat(), hi))
+        gaps.append((cursor.isoformat(), real_hi))
     return gaps
 
 
@@ -683,8 +703,8 @@ def _check_binding_period(
         # only intersecting states, so narrowing to `matched` can silently drop a
         # sub-range the column doesn't cover (e.g. SSYK5 from 2014 under a 2010–2020
         # binding → 2010–2013 lost). Surface it as info. A point int/token period
-        # is treated as a single instant (no gap); explicit ranges, `_default`
-        # full-history bounds, and range segments in a list have spans to compare.
+        # keeps its older point/token behavior; explicit ranges, `_default`
+        # full-history bounds, and all segments of a list have spans to compare.
         #
         # Comparing only OUTER bounds misses an INTERNAL gap: a column delivering
         # 2010–2012 AND 2018–9999 (two disjoint states) can have the same
@@ -692,9 +712,9 @@ def _check_binding_period(
         # Instead, compute uncovered sub-ranges for the pinned column (`matched`)
         # vs all columns (`states`) over the relevant bounds. Since
         # `matched ⊆ states`, the gap sets DIFFER exactly when a sibling column
-        # fills a sub-range the pinned column does not. For list periods, range
-        # segments are checked independently; a segment with NO pinned state stays
-        # owned by the per-segment presence loop below to avoid double-reporting.
+        # fills a sub-range the pinned column does not. For list periods, segments
+        # are checked independently; a segment with NO pinned state stays owned by
+        # the per-segment presence loop below to avoid double-reporting.
         under_covered_periods: list[tuple[int | str | PeriodRange, str]] = []
         if source.period == "_default":
             lo, hi = _state_union_bounds(states)
@@ -706,7 +726,8 @@ def _check_binding_period(
                 under_covered_periods.append((source.period, ""))
         elif isinstance(source.period, tuple):
             for segment, seg_states in per_segment:
-                if not isinstance(segment, PeriodRange):
+                bounds = _period_segment_bounds(segment)
+                if bounds is None:
                     continue
                 seg_matched = [
                     s
@@ -715,7 +736,7 @@ def _check_binding_period(
                 ]
                 if not seg_matched:
                     continue
-                lo, hi = _requested_range_bounds(segment)
+                lo, hi = bounds
                 if _representation_under_covers(seg_matched, seg_states, lo, hi):
                     under_covered_periods.append((segment, series_context))
 

@@ -1206,7 +1206,7 @@ Rules, walking each source's `register_variant` + every binding:
   `binding_state_drifts_within_period` (info); the same `(info)` code also fires when a
   pinned `representation` column under-covers the requested range vs a sibling column
   that delivers the shortfall — a leading/trailing gap or **internal** gap inside an
-  explicit range, `_default`'s full-history bounds, or a range segment of a list
+  explicit range, `_default`'s full-history bounds, or a segment of a list period
   (#342/#465, gap-based). A **#307 list period** (interrupted series; structurally
   sorted + disjoint, wire form comma-joined — `2005..2010,2015..2020`) resolves **per
   segment**: `period_outside_state_validity` and `range_period_partially_covered` fire
