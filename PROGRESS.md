@@ -81,16 +81,22 @@ spec for a follow-up #732 PR. Never end with nothing mergeable.
     15→18 `[variable]`. Reconcile build (`db3`) VALIDATED; `verify_full.py` fixpoint:
     **0 worklist + 0 clean discrepancies**; `.snapshot.json` refreshed (11,818 added).
 - [x] **P4 — Reconcile + generator rules** — COMPLETE.
-- \[\~\] **P5 — Gates → ready-to-merge**:
-  - ✅ ruff check / ruff format / ty check (whole repo) clean.
-  - ✅ pytest: 3,236 passed (non-integration); reg_meta_build 1,530 passed;
-    test_slug_snapshot 6/6. (Integration runs on pre-push, Docker up.)
-  - ✅ real-seed `build-db` (db3) validates by default; **dbdiff** baseline→reconcile:
-    `variable` 6,253 slug renames + slug-derived downstream (concept_group re-key,
-    same_as/related_to/replaced_by endpoint updates, variable_alias −30 benign
-    re-parent, variable_state_lineage −1,232/+561 warnings = #660/#418 re-key fallout).
-  - 3 commits pushed; ⏳ `/code-review` high; mark ready; Codex window; stale-head;
-    STOP.
+- [x] **P5 — Gates → ready-to-merge** — COMPLETE; PR #746 ready, awaiting sign-off.
+  - ✅ ruff / ruff format / ty (whole repo) clean.
+  - ✅ pytest 3,236 (non-integration) + integration (pre-push, Docker) green;
+    test_slug_snapshot regenerated.
+  - ✅ real-seed `build-db` on the **committed head** (db4) validates; db3≡db4 IDENTICAL
+    (review fix build-neutral). **dbdiff** baseline→head: `variable` 6,253 renames +
+    slug-derived downstream (concept_group re-key, same_as/related_to/replaced_by
+    endpoint updates, variable_alias −30 benign re-parent, variable_state_lineage
+    −1,232/+561 advisory = #660/#418 re-key fallout). Clean-slug guard 0; worklist 0.
+  - ✅ `/code-review` high: 3 finders (generator / ref-fix / conventions). Ref-fix +
+    conventions CLEAN. 1 generator finding (unit-paren strip dropping a derivable slug
+    on a reserved/period remainder) FIXED + regression test (commit 4e4a0db2);
+    name_freq- collapse edge → DESIGN note (dbdiff-gated); SOS comment label fixed.
+  - ✅ 5 deliverable commits pushed; stale-head MATCH (4e4a0db2).
+  - ⏳ Codex window polling (`pr_review_status.py 746`, bg). STOP — do not merge; await
+    sign-off. A `reg_meta_build` DB release is owed (note, don't cut).
 
 ## Key numbers
 
