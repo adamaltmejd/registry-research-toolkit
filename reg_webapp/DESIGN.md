@@ -515,19 +515,21 @@ QUERY PLAN reports `USING COVERING INDEX`).
 (`{providers, registers, variables}`) the landing page renders. It is a **TOP-LEVEL**
 route (a sibling of `/api/context`), deliberately NOT under `/api/catalog`: that prefix
 is the `{fqid:path}` catch-all, so a `/api/catalog/stats` would be swallowed by the
-catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration). The
-counts are a cheap raw `COUNT(*)` over reg_meta's `provider` / `register` / `variable`
-tables, opened through the SAME per-request `catalog_conn` seam (`conn.py`) the catalog
-routes use. ETag + Cache-Control ride the generic `ETagMiddleware` (a GET read); the
-counts are rebuild-stable, so the default 24h `cache_control_for` tier fits.
+catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration).
 
-**Full-universe counts — a known v1 limitation.** The counts are EXACT for the v1
-`global` deployment (no steward filter). For a FILTERED steward the browse admits only a
-subset (the in-memory `CatalogIndex`), so a raw `COUNT(*)` would OVERSTATE what that
-steward can browse — a **steward-aware count is a follow-up** (it would intersect the
-index, not `COUNT(*)` the universe). The raw count also includes NULL-slug
-(un-addressable) registers/variables the browse listings drop, so it's a headline
-figure, not the exact browsable-node total.
+The `global` deployment (no steward filter) uses reg_meta's `Catalog.catalog_sizes()`,
+opened through the SAME per-request `catalog_conn` seam (`conn.py`) the catalog routes
+use. Those are full-universe, browse-addressable counts: slugged providers, slugged
+registers, and slugged variables under slugged registers. A FILTERED steward uses the
+boot-time in-memory `CatalogIndex` instead, so the landing-page stats reflect only that
+steward's catalog. The index is column-based for admission, so stats de-dupe variables
+by binding FQID rather than resolved delivery column; registers come from valid steward
+sources plus any kept binding's parent register. Drift-dropped bindings do not inflate
+the variable count.
+
+ETag + Cache-Control ride the generic `ETagMiddleware` (a GET read); the counts are
+rebuild-stable within a deployed reg_meta/steward pair, so the default 24h
+`cache_control_for` tier fits.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 

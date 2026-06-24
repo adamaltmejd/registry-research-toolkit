@@ -21,17 +21,22 @@ both pointed at a tmp stewards dir holding a minimal ``ifau`` catalog.
 
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 import pytest
 import reg_meta.db
+from _steward_helpers import (
+    CLEAN_SOURCES as _CLEAN_SOURCES,
+    steward_project as _steward_project,
+    write_global as _write_global,
+    write_steward as _write_steward,
+)
 from fastapi.testclient import TestClient
-from reg_meta.catalog import Catalog
+from reg_meta.catalog import Catalog, CatalogSizes
 from reg_schema.project_data import ProjectData
 from reg_schema.validation import ValidationIssue
 from reg_webapp.app import create_app
-from reg_webapp.catalog_index import build_catalog_index
+from reg_webapp.catalog_index import CatalogIndex, build_catalog_index
 from reg_webapp.semantic import validate_semantic
 
 from reg_webapp.stewards import (
@@ -42,66 +47,6 @@ from reg_webapp.stewards import (
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-_IFAU_TOML = """\
-id = "ifau"
-name = "IFAU"
-long_name = "Institute for Evaluation of Labour Market and Education Policy"
-hostname = "ifau.example.org"
-"""
-
-
-def _steward_project(sources: list[dict]) -> dict:
-    return {
-        "schema_version": "2.0.0",
-        "steward": "ifau",
-        "reg_meta_version": "5.1.0",
-        "name": "ifau-catalog",
-        "sources": sources,
-    }
-
-
-# The fixture DB resolves scb/lisa/individer-15plus (binding scb/lisa/kon, state
-# 2018+) and scb/rams/standard (binding scb/rams/syss).
-_CLEAN_SOURCES = [
-    {
-        "name": "lisa",
-        "register_variant": "scb/lisa/individer-15plus",
-        "period": 2018,
-        "bindings": [
-            {
-                "variable": "scb/lisa/kon",
-                "type": "categorical",
-                "value_set": "class/sun2020",
-            }
-        ],
-    },
-    {
-        "name": "rams",
-        "register_variant": "scb/rams/standard",
-        "period": 2019,
-        "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
-    },
-]
-
-
-def _write_steward(stewards_dir: Path, steward_id: str, sources: list[dict]) -> None:
-    base = stewards_dir / steward_id
-    base.mkdir(parents=True)
-    (base / "steward.toml").write_text(_IFAU_TOML, encoding="utf-8")
-    (base / "steward.project_data.json").write_text(
-        json.dumps(_steward_project(sources)), encoding="utf-8"
-    )
-
-
-def _write_global(stewards_dir: Path) -> None:
-    base = stewards_dir / "global"
-    base.mkdir(parents=True)
-    (base / "steward.toml").write_text(
-        'id = "global"\nname = "Global"\nlong_name = "Full universe"\n'
-        'hostname = "global.example.org"\n',
-        encoding="utf-8",
-    )
 
 
 @pytest.fixture
@@ -158,6 +103,27 @@ def test_index_admits_known_and_rejects_unknown(catalog):
     assert not index.admits("scb/lisa/kon", "KonDetailed")
     assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
     assert index.held_columns("scb/rams/nosuchbinding") == frozenset()
+
+
+def test_catalog_sizes_de_dupes_binding_columns():
+    index = CatalogIndex(
+        bindings_by_variant={
+            "scb/lisa/individer-15plus": frozenset(
+                {
+                    ("scb/lisa/kon", "Kon"),
+                    ("scb/lisa/kon", "KonDetaljerad"),
+                }
+            ),
+            "sos/patient/_default": frozenset({("sos/patient/diagnos", None)}),
+        },
+        period_range_by_register={
+            "scb/lisa": ("2018", "2018"),
+            "sos/patient": ("2020", "2020"),
+        },
+        drift_warnings=(),
+    )
+
+    assert index.catalog_sizes() == CatalogSizes(providers=2, registers=2, variables=2)
 
 
 # ── drift drops a binding from the index (unit) ────────────────────────────

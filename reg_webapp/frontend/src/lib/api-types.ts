@@ -468,8 +468,8 @@ export interface paths {
         /**
          * Get Stats
          * @description Headline catalog counts (providers / registers / variables) for the
-         *     landing page — slug-aware, matching the browse. A filtered steward still
-         *     sees full-universe counts (a follow-up; see DESIGN.md → Catalog stats).
+         *     landing page — full-universe for ``global``, steward-filtered when the
+         *     deployment loaded a ``CatalogIndex``.
          */
         get: operations["get_stats_api_stats_get"];
         put?: never;
