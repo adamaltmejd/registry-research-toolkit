@@ -1840,6 +1840,47 @@ Each auto slug records *which* arm produced it as a `# source:` comment in the a
 or the snapshot and never perturbs slug values). The name-derived / last-resort classes
 form the curation worklist the precheck surfaces.
 
+**Name-arm generator rules (#732, mined from the #471 curation).** The name arm
+(`_name_slug`, steps 3a/5) is the dominant source of poor slugs — long human names get a
+lossy head-cut. The #471 SCB curation pass (a two-round agent fleet that turned the
+\~11.8k name-derived worklist into authoritative final slugs) was mined for
+**deterministic rules the auto-slugger can absorb**, each gated so it touches **only
+worklist slugs** (`_name_slug` feeds only name-derived / drift-name derivations; a
+fresh-build `scb.auto.toml` diff confirms no `fold` / `kolumnnamn` /
+`drift-earliest-column` clean slug moves):
+
+- **Lever A — measurement-unit parenthetical de-noise (IMPLEMENTED).**
+  `_strip_unit_parentheticals` drops a parenthetical whose *entire* content is a pure
+  measurement/unit annotation (`(areal i hektar)`, `(i procent)`, `(kr)`, …) before
+  folding, so `Sockerbetor (areal i hektar)` → `sockerbetor`. The unit vocabulary is a
+  **closed set** scoped to pure units, so a *distinguishing* parenthetical
+  (`(3   positioner)`, `(landsting)`, `(SRU)`) is never dropped. Mined coverage:
+  reproduces the agricultural-area families (\~16 SCB slugs) exactly; 0 clean-slug
+  movement. A strip that empties the name, or leaves a reserved/period-shaped remainder,
+  falls back to the raw name — the de-noise never *loses* a slug. In principle stripping
+  could collapse two drift siblings that differ only by their unit parenthetical onto
+  one `name_freq` base and re-route a *clean* drift slug; the rule is therefore gated by
+  the real-seed `dbdiff` proving 0 non-worklist slug moved (a per-corpus safety
+  certificate, not an in-code invariant).
+- **Deferred (mined, evidence-backed — kept as curation judgement, NOT generator
+  rules):**
+  - *General Swedish stopword strip* reproduces \~645 renames but **regresses \~1,587
+    conservative human keeps** (curators keep `inkomst-av-tjanst` rather than
+    `inkomst-tjanst`) — net *more* overrides. The curation is dominantly semantic.
+  - *General parenthetical strip* regresses \~307 keeps (distinguishing parentheticals).
+  - *Tail-preserving truncation / lower cap* shortens future name slugs but reproduces
+    \~0 existing finals (the agents compress semantically, not by mechanical
+    token-drop), so it saves no override — a default-quality lever, not a reconcile
+    lever.
+  - *Lever C — exact-single-column-match > fold-stem* (numeric `_1..N` batteries) would
+    move **non-worklist `fold` slugs**, failing the clean-slug guard; it stays a
+    separate #496/fold-cluster concern.
+
+Because the reconcile step pins every authoritative final slug where the improved
+generator still differs, **no generator rule can change a shipped outcome** — a rule
+only shrinks the committed-override surface and improves the default for future
+deliveries.
+
 **Split-sibling cache key.** A triage split puts several siblings under one
 `provider_key`, so `(register_id, provider_key)` is *not* a unique auto-slug cache key.
 The auto-file source-ID for a split sibling takes a third segment — its earliest-column

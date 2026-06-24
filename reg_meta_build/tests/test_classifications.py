@@ -2130,10 +2130,10 @@ class TestCuratedClassificationLinks:
             ("scb", "lisa", "org-sektorkod"): "SEKTOR2000",
             ("scb", "lisa", "sektorkod"): "SEKTOR2000",
             ("scb", "rams", "institutionell-sektorkod"): "SEKTOR2000",
-            ("scb", "yrkesreg", "sektor"): "SEKTOR2000",
+            ("scb", "yrkesreg", "sektor-ku1"): "SEKTOR2000",
             ("scb", "yrkesreg", "sektorkod"): "SEKTOR2000",
             ("scb", "yrkesreg", "sektorkod-2"): "SEKTOR2000",
-            ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"): "SEKTOR2000",
+            ("scb", "yrkesreg", "sektorkod-storsta"): "SEKTOR2000",
         }
         links = load_classification_links(path)
         assert {

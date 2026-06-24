@@ -385,3 +385,23 @@ slug = "pnr"
 [variable."9047831179457584381.PNR"]  # sol: panel_entity_key = 'pnr'
 slug = "pnr"
 
+# === BEGIN #471 SOS slug curation overrides (generated) ===
+# 4 curated variable-slug overrides from the #471 fan-out
+# curation (2 LLM rounds + code validation; agent final_slug authoritative).
+# Emitted only where the improved name-arm generator (#732 lever A) still
+# differs from the curated slug. Regenerate via the curation pipeline; do
+# not hand-edit inside the markers.
+
+# register 5891427617861710725 (par)
+[variable."5891427617861710725.ATC.atc"]
+slug = "dia-yo-kod-ar-atc-kod"
+[variable."5891427617861710725.ATC.atc-1"]
+slug = "atc-komplement-diagnos"
+
+# register 7550156225339591583 (bu)
+[variable."7550156225339591583.FOD_DATUMN.fod-datumn"]
+slug = "barn-fodelsedatum"
+[variable."7550156225339591583.FOD_DATUMN.fod-datumn-1"]
+slug = "fodelsedatum"
+
+# === END #471 SOS slug curation overrides ===

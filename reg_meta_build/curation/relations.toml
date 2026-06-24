@@ -412,7 +412,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/bas/astkommun"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -467,7 +467,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/branslestatistik/kommun"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -517,7 +517,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/fdb/kommun-for-arbetsstalle"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -562,7 +562,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/foretagsreg/kommun-for-arbetsstalle"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -602,7 +602,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/industrins-vattenanvandning/kommun"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -637,7 +637,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/isen/kommun"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -667,7 +667,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/lisa/kommun-for-arbetsstalle"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -692,7 +692,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/lor/bkommunkod"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -712,7 +712,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/lsum/astkommun"
-b = "scb/rams/kommun-for-arbetsstalle"
+b = "scb/rams/ast-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -731,17 +731,17 @@ b = "scb/utforarreg/kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/rams/kommun-for-arbetsstalle"
+a = "scb/rams/ast-kommun"
 b = "scb/sls/kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/rams/kommun-for-arbetsstalle"
+a = "scb/rams/ast-kommun"
 b = "scb/stativ/astkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/rams/kommun-for-arbetsstalle"
+a = "scb/rams/ast-kommun"
 b = "scb/utforarreg/kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
@@ -803,7 +803,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/cfl/skolkommun"
-b = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+b = "scb/folkhogskolan/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -813,7 +813,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/cfl/skolkommun"
-b = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/grundskola-prov-ak5/skolans-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -833,7 +833,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/cfl/skolkommun"
-b = "scb/komvux/kommun-for-skola-skolenhet"
+b = "scb/komvux/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -847,48 +847,48 @@ b = "scb/ssv/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
 b = "scb/grundskola-prov-ak3/kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
-b = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
+b = "scb/grundskola-prov-ak5/skolans-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
 b = "scb/grundskola-prov-ak6/kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
 b = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
 b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
-b = "scb/komvux/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
+b = "scb/komvux/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
 b = "scb/rpu/skommunht"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/folkhogskolan/kommun-for-skola-skolenhet"
+a = "scb/folkhogskolan/skolkommun"
 b = "scb/ssv/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/grundskola-prov-ak3/kommun"
-b = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+b = "scb/grundskola-prov-ak5/skolans-kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -908,7 +908,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/grundskola-prov-ak3/kommun"
-b = "scb/komvux/kommun-for-skola-skolenhet"
+b = "scb/komvux/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -922,32 +922,32 @@ b = "scb/ssv/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+a = "scb/grundskola-prov-ak5/skolans-kommun"
 b = "scb/grundskola-prov-ak6/kommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+a = "scb/grundskola-prov-ak5/skolans-kommun"
 b = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+a = "scb/grundskola-prov-ak5/skolans-kommun"
 b = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
-b = "scb/komvux/kommun-for-skola-skolenhet"
+a = "scb/grundskola-prov-ak5/skolans-kommun"
+b = "scb/komvux/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+a = "scb/grundskola-prov-ak5/skolans-kommun"
 b = "scb/rpu/skommunht"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/grundskola-prov-ak5/kommun-for-skola-skolenhet"
+a = "scb/grundskola-prov-ak5/skolans-kommun"
 b = "scb/ssv/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
@@ -963,7 +963,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/grundskola-prov-ak6/kommun"
-b = "scb/komvux/kommun-for-skola-skolenhet"
+b = "scb/komvux/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -983,7 +983,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/gymnasieskola-betyg/kommun-for-skola-skolenhet"
-b = "scb/komvux/kommun-for-skola-skolenhet"
+b = "scb/komvux/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -998,7 +998,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/kompletterande-utbildning/kommun-for-skola-skolenhet"
-b = "scb/komvux/kommun-for-skola-skolenhet"
+b = "scb/komvux/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
@@ -1012,12 +1012,12 @@ b = "scb/ssv/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/komvux/kommun-for-skola-skolenhet"
+a = "scb/komvux/skolkommun"
 b = "scb/rpu/skommunht"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/komvux/kommun-for-skola-skolenhet"
+a = "scb/komvux/skolkommun"
 b = "scb/ssv/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
@@ -1037,7 +1037,7 @@ note = "curated:#508 tier-1 LKF cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/gyst/skola-kommun"
-b = "scb/komvux-sfi/kommun-for-skola-skolenhet"
+b = "scb/komvux-sfi/skolkommun"
 note = "curated:#508 tier-1 LKF cross-register identity"
 
 # 'landsting' — geographic (LKF), 2 variables (LKF2019)
@@ -1648,22 +1648,22 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 # 'näringsgren för enskild näringsidkare' — industry (SNI), 5 variables (SNI2002, SNI2007, SNI92)
 [[edge]]
 type = "same_as"
-a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+a = "scb/fasit/naringsgren-enskild-naringsidkare"
 b = "scb/frida/bngre"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+a = "scb/fasit/naringsgren-enskild-naringsidkare"
 b = "scb/hek/bngre"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+a = "scb/fasit/naringsgren-enskild-naringsidkare"
 b = "scb/iot/bngre"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fasit/naringsgren-for-enskild-naringsidkare"
+a = "scb/fasit/naringsgren-enskild-naringsidkare"
 b = "scb/linda/bngre"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
@@ -1733,7 +1733,7 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/fek/ngs"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+b = "scb/livsmedelsforsaljning/naringsgren-statistik"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
@@ -1758,7 +1758,7 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/infi/vengs"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+b = "scb/livsmedelsforsaljning/naringsgren-statistik"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
@@ -1778,7 +1778,7 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/investeringsenkaten/naringsgren-for-statistiken"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+b = "scb/livsmedelsforsaljning/naringsgren-statistik"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
@@ -1793,7 +1793,7 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/laps/ngs1"
-b = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+b = "scb/livsmedelsforsaljning/naringsgren-statistik"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
@@ -1807,12 +1807,12 @@ b = "scb/tjansteforetagens-forbrukning/ngs"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+a = "scb/livsmedelsforsaljning/naringsgren-statistik"
 b = "scb/lor/ngs1"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/livsmedelsforsaljning/naringsgren-for-statistiken"
+a = "scb/livsmedelsforsaljning/naringsgren-statistik"
 b = "scb/tjansteforetagens-forbrukning/ngs"
 note = "curated:#508 tier-1 SNI cross-register identity"
 [[edge]]
@@ -1824,15 +1824,15 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 # 'näringsgren för statistiken, på 5 siffer sni' — industry (SNI), 2 variables (SNI2007)
 [[edge]]
 type = "same_as"
-a = "scb/fou/naringsgren-for-statistiken-pa-5-siffer-sni"
+a = "scb/fou/naringsgren-sni-5-siffer"
 b = "scb/pin/ngs1id"
 note = "curated:#508 tier-1 SNI cross-register identity"
 
 # 'näringsgren sni2007 (tvåsifferkod) i huvudsysslan' — industry (SNI), 2 variables (SNI2007)
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/naringsgren-sni2007-tvasifferkod-i-huvudsysslan"
-b = "scb/arbetsorsakade-besvar/naringsgren-sni2007-tvasifferkod-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/sni2007-2siffror"
+b = "scb/arbetsorsakade-besvar/sni2007-2siffror"
 note = "curated:#508 tier-1 SNI cross-register identity"
 
 # 'näringsgren, huvudsaklig' — industry (SNI), 3 variables (SNI2007, SNI92)
@@ -1869,119 +1869,119 @@ note = "curated:#508 tier-1 SNI cross-register identity"
 # 'yrke på 2-siffernivå i huvudsysslan' — occupation (SSYK), 3 variables (SSYK2012, SSYK96)
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/yrke-pa-2-sifferniva-i-huvudsysslan"
-b = "scb/arbetsorsakade-besvar/yrke-pa-2-sifferniva-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/hussyk-2siffror"
+b = "scb/arbetsorsakade-besvar/hussyk2"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/yrke-pa-2-sifferniva-i-huvudsysslan"
-b = "scb/it-anvandning/yrke-pa-2-sifferniva-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/hussyk-2siffror"
+b = "scb/it-anvandning/hussyk2"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/arbetsorsakade-besvar/yrke-pa-2-sifferniva-i-huvudsysslan"
-b = "scb/it-anvandning/yrke-pa-2-sifferniva-i-huvudsysslan"
+a = "scb/arbetsorsakade-besvar/hussyk2"
+b = "scb/it-anvandning/hussyk2"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 
 # 'yrke på 3-siffernivå, största förvärvskällan' — occupation (SSYK), 2 variables (SSYK2012, SSYK96)
 [[edge]]
 type = "same_as"
-a = "scb/lisa/yrke-pa-3-sifferniva-storsta-forvarvskallan"
-b = "scb/yrkesreg/yrke-pa-3-sifferniva-storsta-forvarvskallan"
+a = "scb/lisa/ku1ssyk3"
+b = "scb/yrkesreg/ssyk3-storsta"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 
 # 'yrke på 4-siffernivå i huvudsysslan' — occupation (SSYK), 6 variables (SSYK2012, SSYK96)
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/hussyk4"
+b = "scb/fortroendevalda/yrke-ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/hussyk4"
 b = "scb/it-anvandning/hussyk4"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/hussyk4"
+b = "scb/slh/ssyk4"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/hussyk4"
+b = "scb/slk/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/arbetsmiljoundersokningen/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/arbetsmiljoundersokningen/hussyk4"
+b = "scb/slr/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/fortroendevalda/yrke-ssyk4-huvud"
 b = "scb/it-anvandning/hussyk4"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/fortroendevalda/yrke-ssyk4-huvud"
+b = "scb/slh/ssyk4"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/fortroendevalda/yrke-ssyk4-huvud"
+b = "scb/slk/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
-note = "curated:#508 tier-1 SSYK cross-register identity"
-[[edge]]
-type = "same_as"
-a = "scb/it-anvandning/hussyk4"
-b = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/fortroendevalda/yrke-ssyk4-huvud"
+b = "scb/slr/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/it-anvandning/hussyk4"
-b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slh/ssyk4"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/it-anvandning/hussyk4"
-b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+b = "scb/slk/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/it-anvandning/hussyk4"
+b = "scb/slr/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/slh/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/slh/ssyk4"
+b = "scb/slk/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/slk/yrke-pa-4-sifferniva-i-huvudsysslan"
-b = "scb/slr/yrke-pa-4-sifferniva-i-huvudsysslan"
+a = "scb/slh/ssyk4"
+b = "scb/slr/ssyk4-huvud"
+note = "curated:#508 tier-1 SSYK cross-register identity"
+[[edge]]
+type = "same_as"
+a = "scb/slk/ssyk4-huvud"
+b = "scb/slr/ssyk4-huvud"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 
 # 'yrke på 4-siffernivå, största förvärvskällan' — occupation (SSYK), 3 variables (SSYK2012, SSYK96)
 [[edge]]
 type = "same_as"
 a = "scb/linda/ssyk"
-b = "scb/lisa/yrke-pa-4-sifferniva-storsta-forvarvskallan"
+b = "scb/lisa/ku1ssyk4"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/linda/ssyk"
-b = "scb/yrkesreg/yrke-pa-4-sifferniva-storsta-forvarvskallan"
+b = "scb/yrkesreg/ssyk4-storsta"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/yrke-pa-4-sifferniva-storsta-forvarvskallan"
-b = "scb/yrkesreg/yrke-pa-4-sifferniva-storsta-forvarvskallan"
+a = "scb/lisa/ku1ssyk4"
+b = "scb/yrkesreg/ssyk4-storsta"
 note = "curated:#508 tier-1 SSYK cross-register identity"
 
 # 'yrkesuppgift' — occupation (SSYK), 6 variables (SSYK2012, SSYK96)
@@ -2971,15 +2971,15 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 # 'utbildningens inriktning enligt sun 2000' — education (SUN), 2 variables (SUN2000-INRIKTNING)
 [[edge]]
 type = "same_as"
-a = "scb/slk/utbildningens-inriktning-enligt-sun-2000"
-b = "scb/yrkesreg/utbildningens-inriktning-enligt-sun-2000"
+a = "scb/slk/sun2000inr"
+b = "scb/yrkesreg/sun2000inr"
 note = "curated:#508 tier-1 SUN cross-register identity"
 
 # 'utbildningens nivå och inriktning' — education (SUN), 7 variables (SUN1996)
 [[edge]]
 type = "same_as"
 a = "scb/iot/utbildningens-niva-och-inriktning"
-b = "scb/linda/utbildningens-niva-och-inriktning"
+b = "scb/linda/utbildning-niva-inriktning"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3008,27 +3008,27 @@ b = "scb/ureg/sun"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/linda/utbildningens-niva-och-inriktning"
+a = "scb/linda/utbildning-niva-inriktning"
 b = "scb/rams/hutbsun"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/linda/utbildningens-niva-och-inriktning"
+a = "scb/linda/utbildning-niva-inriktning"
 b = "scb/rpu/sun"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/linda/utbildningens-niva-och-inriktning"
+a = "scb/linda/utbildning-niva-inriktning"
 b = "scb/sls/sun"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/linda/utbildningens-niva-och-inriktning"
+a = "scb/linda/utbildning-niva-inriktning"
 b = "scb/stativ/hutbsun"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/linda/utbildningens-niva-och-inriktning"
+a = "scb/linda/utbildning-niva-inriktning"
 b = "scb/ureg/sun"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
@@ -3154,58 +3154,58 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 # 'utbildningsnivå (3 positioner)' — education (SUN), 11 variables (SUN2000-NIVA)
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/ep-val-nominerade/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
-b = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
+b = "scb/fortroendevalda/utbildningsniva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/hek/bsunniv"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/lisa/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/personalutbildningsstatistik/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/rams/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/slh/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/sls/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
 b = "scb/stativ/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+a = "scb/allmanna-val-nominerade/sun-niva"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/ep-val-nominerade/sun2000niva"
-b = "scb/fortroendevalda/utbildningsniva-3-positioner"
+b = "scb/fortroendevalda/utbildningsniva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3245,47 +3245,47 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/ep-val-nominerade/sun2000niva"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
 b = "scb/hek/bsunniv"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
 b = "scb/lisa/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
 b = "scb/personalutbildningsstatistik/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
 b = "scb/rams/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
 b = "scb/slh/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
 b = "scb/sls/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
 b = "scb/stativ/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/fortroendevalda/utbildningsniva-3-positioner"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+a = "scb/fortroendevalda/utbildningsniva"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3320,7 +3320,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/hek/bsunniv"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3350,7 +3350,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/lisa/sun2000niva"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3375,7 +3375,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/personalutbildningsstatistik/sun2000niva"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3395,7 +3395,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/rams/sun2000niva"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3410,7 +3410,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/slh/utbildningsniva-3-positioner"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3420,12 +3420,12 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/sls/utbildningsniva-3-positioner"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/stativ/sun2000niva"
-b = "scb/yrkesreg/utbildningsniva-3-positioner"
+b = "scb/yrkesreg/sun2000niva-3pos"
 note = "curated:#508 tier-1 SUN cross-register identity"
 
 # 'utbildningsnivå (sun2000)' — education (SUN), 2 variables (SUN2000-NIVA)
