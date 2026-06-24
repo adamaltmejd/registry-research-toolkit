@@ -82,6 +82,69 @@ const standaloneClassificationGraph: HistoryGraph = {
   warnings: [],
 };
 
+const classificationGraph: HistoryGraph = {
+  mode: "classification",
+  title: "Classification editions",
+  nodeGrain: "entity-with-column-slices",
+  dataContract: "client-stitch-prototype",
+  nodes: [
+    {
+      id: "class/sun1996",
+      kind: "classification",
+      label: "sun1996",
+      fqid: "class/sun1996",
+      from: 1996,
+      to: 1996,
+      self: true,
+      current: false,
+      columns: [],
+    },
+    {
+      id: "class/sun2000-inriktning",
+      kind: "classification",
+      label: "sun2000-inriktning",
+      fqid: "class/sun2000-inriktning",
+      from: 2000,
+      to: 2000,
+      self: false,
+      current: false,
+      columns: [],
+    },
+    {
+      id: "class/sun2020-inriktning",
+      kind: "classification",
+      label: "sun2020-inriktning",
+      fqid: "class/sun2020-inriktning",
+      from: 2020,
+      to: 2020,
+      self: false,
+      current: true,
+      columns: [],
+    },
+  ],
+  edges: [
+    {
+      id: "classification:sun1996->sun2000-inriktning",
+      kind: "succession",
+      from: "class/sun1996",
+      to: "class/sun2000-inriktning",
+      fromYear: 2000,
+      toYear: 2000,
+      label: null,
+    },
+    {
+      id: "classification:sun2000-inriktning->sun2020-inriktning",
+      kind: "succession",
+      from: "class/sun2000-inriktning",
+      to: "class/sun2020-inriktning",
+      fromYear: 2020,
+      toYear: 2020,
+      label: null,
+    },
+  ],
+  warnings: [],
+};
+
 describe("HistoryGraphPrototype", () => {
   it("renders the graph, column count, legend, and contract gaps", async () => {
     await render(HistoryGraphPrototype, { graph });
@@ -102,5 +165,24 @@ describe("HistoryGraphPrototype", () => {
     });
 
     expect(document.querySelector(".history-graph")).toBeNull();
+  });
+
+  it("renders classifications through the shared graph surface without a timeline axis", async () => {
+    await render(HistoryGraphPrototype, {
+      graph: classificationGraph,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Classification editions" }))
+      .toBeVisible();
+    expect(
+      [...document.querySelectorAll(".node-label.in-bar")].map((node) =>
+        node.textContent?.trim(),
+      ),
+    ).toEqual(["sun1996", "sun2000-inriktning", "sun2020-inriktning"]);
+    await expect.element(page.getByText("succession")).toBeVisible();
+    expect(document.querySelector(".edition-svg")).toBeNull();
+    expect(document.querySelector(".axis")).toBeNull();
+    expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
   });
 });

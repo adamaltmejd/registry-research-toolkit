@@ -183,6 +183,13 @@ function classificationSlugYear(slug: string): number | null {
   return Number.isInteger(year) ? year : null;
 }
 
+function classificationSlugStem(slug: string): string {
+  return slug
+    .replace(/(\d{4})(?=-|$)/, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export function historyGraphFromBinding(
   node: BindingNodeData,
   dimensions: ConceptGroup[] = [],
@@ -447,19 +454,37 @@ export function historyGraphFromClassification(
     };
   });
   const edges: HistoryGraphEdge[] = [];
-  if (!fanOut) {
+  const addEdge = (
+    previous: (typeof editions)[number],
+    current: (typeof editions)[number],
+  ) => {
+    edges.push({
+      id: `classification:${previous.slug}->${current.slug}`,
+      kind: "succession",
+      from: previous.fqid ?? `class/${previous.slug}`,
+      to: current.fqid ?? `class/${current.slug}`,
+      fromYear: previous.effective_year,
+      toYear: previous.effective_year,
+      label: null,
+    });
+  };
+  if (fanOut) {
+    const root = editions[0];
+    const previousByStem = new Map<string, (typeof editions)[number]>();
+    for (let i = 0; i < editions.length; i += 1) {
+      const edition = editions[i];
+      const stem = classificationSlugStem(edition.slug);
+      const previous = previousByStem.get(stem);
+      if (previous) {
+        addEdge(previous, edition);
+      } else if (i > 0) {
+        addEdge(root, edition);
+      }
+      previousByStem.set(stem, edition);
+    }
+  } else {
     for (let i = 1; i < editions.length; i += 1) {
-      const previous = editions[i - 1];
-      const current = editions[i];
-      edges.push({
-        id: `classification:${previous.slug}->${current.slug}`,
-        kind: "succession",
-        from: previous.fqid ?? `class/${previous.slug}`,
-        to: current.fqid ?? `class/${current.slug}`,
-        fromYear: previous.effective_year,
-        toYear: previous.effective_year,
-        label: null,
-      });
+      addEdge(editions[i - 1], editions[i]);
     }
   }
 
@@ -468,11 +493,7 @@ export function historyGraphFromClassification(
     title: "Classification editions",
     nodes,
     edges,
-    warnings: fanOut
-      ? [
-          "Flattened client chain; true branch edges need a backend graph payload.",
-        ]
-      : [],
+    warnings: [],
     nodeGrain: "entity-with-column-slices",
     dataContract: "client-stitch-prototype",
   };

@@ -360,7 +360,7 @@ describe("history graph prototype model", () => {
     ]);
   });
 
-  it("does not invent succession edges for classification fan-out closures", () => {
+  it("connects classification fan-out branches without treating them as a timeline", () => {
     const graph = historyGraphFromClassification({
       kind: "classification",
       fqid: "class/sun1996",
@@ -461,9 +461,14 @@ describe("history graph prototype model", () => {
       { id: "class/sun-niva2000", from: 2000, to: 2000 },
       { id: "class/sun-niva2020", from: 2020, to: 2020 },
     ]);
-    expect(graph.edges).toEqual([]);
-    expect(graph.warnings.join("\n")).toContain(
-      "true branch edges need a backend graph payload",
-    );
+    expect(graph.edges.map((edge) => [edge.from, edge.to, edge.kind])).toEqual([
+      ["class/sun1996", "class/sun2000-grupp", "succession"],
+      ["class/sun2000-grupp", "class/sun2020-grupp", "succession"],
+      ["class/sun1996", "class/sun2000-inriktning", "succession"],
+      ["class/sun2000-inriktning", "class/sun2020-inriktning", "succession"],
+      ["class/sun1996", "class/sun2000-niva", "succession"],
+      ["class/sun2000-niva", "class/sun2020-niva", "succession"],
+    ]);
+    expect(graph.warnings).toEqual([]);
   });
 });
