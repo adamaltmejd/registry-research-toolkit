@@ -265,7 +265,7 @@ Pipeline-specific operational notes the gate doesn't carry:
 
   ```sh
   git clean -fdX reg_meta_build/fqid_slugs/
-  rm -rf /tmp/regmeta-<slug>
+  rm -rf "$db_dir"
   ```
 
 - Squash-merge matching the repo's `(#issue) (#PR)` title history. **Worktree caveat:**
