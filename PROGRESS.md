@@ -35,10 +35,11 @@ foretagsenhetsnummer / verksamhetsenhetsnummer.
 ## Phases
 
 - [x] P0a branch + scratch + baseline slug-dir copy
-- [ ] P0b baseline real-seed DB → /tmp/scb-cur/n747/db_base (bg id: b2qft2ngy)
-- [ ] P0c mine concept-inconsistency worklist (folded name, base-variance across regs +
-  canonical-SCB alignment) → per-concept batches; counts here
-- [ ] P1 pilot 2–3 concept families; iterate prompt to clean
+- [x] P0b baseline real-seed DB → /tmp/scb-cur/n747/db_base (built, validated)
+- [x] P0c mine concept worklist → 2,776 concepts / 14,191 inst; batches + chunk files
+- [x] P1 pilot kon/kommun/person-orgnr/civilstand → RULES tightened (MINIMIZE CHURN: no
+  demote prose→cryptic, no invented `<prose>-<columncode>`); re-piloted clean. RULES
+  frozen.
 - [ ] P2 full fan-out (Workflow, resumable) round-1 + round-2 escalation; runIds here
 - [ ] P3 apply (pin all) + repoint refs + rebuild + dbdiff vs db_base + base→concept
   audit → fixpoint (0 worklist mismatch / 0 unintended ripple / 0 collision);
@@ -51,11 +52,39 @@ foretagsenhetsnummer / verksamhetsenhetsnummer.
 
 ## Key numbers
 
-(filled as phases complete)
+- baseline DB built (exit 0, validated) → db_base; scb.auto.toml written.
+- mining (folded name + base-variance across regs, canonical always surfaced):
+  - 48,900 SCB vars; 31,673 concepts; **worklist 2,776 concepts / 14,191 instances**.
+  - 29 canonical-SCB instances; 38% of worklist instances are cryptic column-codes.
+  - **2,600/2,776 (94%) span >1 delivery-column set** → over-merge risk is pervasive.
+
+## Scope decision (autonomous; surfaced, not blocked — issue #747 open question)
+
+The worklist's bulk is the cryptic COLUMN-code population #471 left untouched (name-arm
+only). #471 itself **tried a broad sweep and dropped it** ("PERSORG/bare-N filters swept
+in thousands of meaningful series — dropped"; canon_build.py). Over-merge is the
+dangerous failure mode (mission). So this pass is CONSERVATIVE-by-correctness,
+catalog-wide-by-reach:
+
+- DO (locked, low-risk, high-value): canonical-SCB seed alignment; identifier/entity-key
+  families across the catalog (locked forms); converge same-ROLE instances of a concept
+  to its canonical prose slug.
+- KEEP DISTINCT (default when unsure): generic names reused for distinct roles split by
+  column (kommun→Kommun/MantKommun/FtgKommun; kon vs KonSamh); size-2 distinct-fold
+  collisions; anything ambiguous. Over-merge > under-merge in cost.
+- Agents decide per-concept (unify/split/keep) with column+definition context; hard
+  validation (grammar/uniqueness) + base→concept audit + round-2 on flagged merges;
+  dbdiff guard. Genuinely-debatable tail unifications left as documented follow-up,
+  surfaced in PR.
 
 ## Workflow runIds
 
-(filled at fan-out)
+- round-1 fan-out (310 chunks, sonnet): `wf_feb94680-d0c` (task w81yfcak3). 310 chunk
+  files /tmp/scb-cur/n747/chunks/cNNN.json; proposals →
+  /tmp/scb-cur/n747/proposals/<bid>.json. Resume: Workflow({scriptPath:
+  …scb-slug-consistency-fanout-wf_feb94680-d0c.js, resumeFromRunId: "wf_feb94680-d0c"})
+  — agents idempotent (skip written proposals).
+- baseline DB: /tmp/scb-cur/n747/db_base; slug-dir copy: /tmp/scb-cur/n747/slugdir_base.
 
 ## Gotchas carried from #471 (do not relearn)
 
