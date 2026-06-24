@@ -14,6 +14,7 @@ from _steward_helpers import write_steward
 from fastapi.testclient import TestClient
 from reg_meta.catalog import Catalog, CatalogSizes
 from reg_webapp.app import create_app
+from reg_webapp.etag import CACHE_CONTROL_SHORT
 
 
 @pytest.fixture
@@ -25,6 +26,7 @@ def client(catalog_db):
 def test_stats_returns_global_catalog_sizes(client, catalog_db):
     resp = client.get("/api/stats")
     assert resp.status_code == 200
+    assert resp.headers["cache-control"] == CACHE_CONTROL_SHORT
 
     stats = CatalogSizes.model_validate(resp.json())
     conn = reg_meta.db.open_db(catalog_db, check_schema=False)
@@ -58,6 +60,7 @@ def test_stats_uses_steward_index_for_filtered_catalog(
         resp = client.get("/api/stats")
 
     assert resp.status_code == 200
+    assert resp.headers["cache-control"] == CACHE_CONTROL_SHORT
     assert CatalogSizes.model_validate(resp.json()) == CatalogSizes(
         providers=1, registers=1, variables=1
     )
