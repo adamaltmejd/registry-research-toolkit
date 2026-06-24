@@ -45,8 +45,8 @@ the lead runs the authoritative union Verify on the assembled result.
    file set, is an altitude fork to surface (below), not to do silently. Keep the diff
    tight and idiomatic to the surrounding code.
 3. Run the plan's Verify (or the touched package's standard checks) until green:
-   - Python: `uv run ruff check`, `uv run ruff format --check`, `uvx ty check`,
-     `uv run python -m pytest <pkg>/`.
+   - Python: `uv run ruff check`, `uv run ruff format --check`,
+     `uvx --from ty==0.0.49 ty check`, `uv run python -m pytest <pkg>/`.
    - Build-affecting changes (SCB/SOS triage, slugs, DDL): the real `build-db` is the
      LEAD's merge-gate check (\~20 min, run once on final HEAD) — do **not** run it
      yourself unless the plan explicitly asks. Cover the change with the fast

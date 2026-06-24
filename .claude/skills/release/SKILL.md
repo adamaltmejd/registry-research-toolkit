@@ -134,6 +134,7 @@ bash scripts/check_versions.sh
 uv run python -m pytest <package>/ -x -q
 uv run ruff check
 uv run ruff format --check
+uvx --from ty==0.0.49 ty check
 ```
 
 This pytest is a fast per-package pre-flight; the **full** suite runs at push time (step
@@ -207,7 +208,12 @@ but new releases must not rely on it. The CI smoke step runs `reg-meta update` a
 if it can't resolve a compatible pair of assets.)
 
 The raw SCB CSV exports and curated classification CSVs live under
-`reg_meta_build/input_data/` (gitignored). If missing, ask the user.
+`reg_meta_build/input_data/` (gitignored). If missing, ask the user. If running from a
+worktree whose untracked seed lives in another checkout, build an overlay input root:
+start with that seed-bearing checkout's untracked inputs, then copy this release
+checkout's tracked `reg_meta_build/input_data/**` files on top and mirror tracked
+deletions/renames. Do not point `--input-dir` directly at another checkout if tracked
+inputs changed in this release.
 
 #### 8a. Main DB asset (`reg_meta.db.zst`)
 
@@ -257,7 +263,10 @@ set -euo pipefail
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_db.XXXXXX")"
 slug_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_slugs.XXXXXX")"
 cp -R reg_meta_build/fqid_slugs/. "$slug_dir/"
-uv run reg-meta-build --db "$db_dir" build-db --input-dir reg_meta_build/input_data/ --slug-dir "$slug_dir"
+input_dir="reg_meta_build/input_data"
+# If the untracked seed lives in another checkout, set input_dir to an overlay
+# root that includes this checkout's tracked input_data changes.
+uv run reg-meta-build --db "$db_dir" build-db --input-dir "$input_dir" --slug-dir "$slug_dir"
 db="$db_dir/reg_meta.db"
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"
 zstd -3 -T0 "$db" -o reg_meta.db.zst

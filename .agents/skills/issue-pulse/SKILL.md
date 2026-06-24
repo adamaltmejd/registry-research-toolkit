@@ -54,8 +54,8 @@ Default epic is `328`.
    If restamp exits `1` (no existing lanes content, or the preserved content is
    incomplete vs the live floor), fall through to re-rank.
 
-4. If `tick_status` was `1`, use the `plan-lanes` procedure to produce ranked markdown,
-   then persist it:
+4. If `tick_status` was `1`, or step 3's restamp exited `1`, use the `plan-lanes`
+   procedure to produce ranked markdown, then persist it:
 
    ```sh
    printf '%s' "<ranked lanes markdown>" |

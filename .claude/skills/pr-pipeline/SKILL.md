@@ -196,8 +196,8 @@ docs push after the hold starts restarts it).
 **E · Merge.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full — independent review
 converged (your `/code-review` loop is the independent Claude pass) · CI green ·
 bot-review window settled · real-data validation for build-affecting work · **visual
-verification (a rendered-view `preview_screenshot`) for UI changes** · stale-head check.
-For the bot-review window, run
+verification (`dev.sh smoke` / `dev.sh shot` screenshot) for UI changes** · stale-head
+check. For the bot-review window, run
 **`uv run --no-project python scripts/pr_review_status.py <pr>`** — it computes Codex's
 signal on the **current HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`) and
 returns the verdict bodies in `messages` (no second `gh` call), so you don't re-derive
@@ -226,11 +226,14 @@ Pipeline-specific operational notes the gate doesn't carry:
   foreground `Bash` cap silently kills it mid-import). In a worktree the 14 GB seed
   lives in the MAIN checkout, so pass an ABSOLUTE `--input-dir`, plus `--db` (a
   DIRECTORY, BEFORE the subcommand) so the build lands in scratch instead of clobbering
-  the real query DB:
+  the real query DB. Use the main checkout's input dir only when the PR does not change
+  tracked `reg_meta_build/input_data/**`; otherwise set `input_dir` to the overlay root
+  described below:
 
   ```sh
-  reg-meta-build --db /tmp/regmeta-<slug> build-db \
-    --input-dir <main-checkout>/reg_meta_build/input_data
+  db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"
+  input_dir="<main-checkout>/reg_meta_build/input_data"
+  reg-meta-build --db "$db_dir" build-db --input-dir "$input_dir"
   ```
 
   **Narrowing with `--providers` is fine for a scoped dbdiff** — e.g.
@@ -247,13 +250,13 @@ Pipeline-specific operational notes the gate doesn't carry:
   then carry every global provider's seed dir).
 
   If the PR changes **any tracked** `reg_meta_build/input_data/**` file (a provider's
-  `*.toml`, a `classifications/` or `scb_canonical/` CSV, an add / delete / rename), the
-  absolute `--input-dir` above reads the *main* checkout's copy, so the gate validates
-  main's data, not yours, and can miss a DB-content regression. Point `--input-dir` at
-  an overlay root that presents the PR-HEAD tracked `input_data` on top of the main
-  checkout's untracked seed: **copy** the worktree's changed tracked files in (never
-  write back *through* a symlink into the main checkout) and mirror any deletion/rename,
-  so the build sees exactly your PR's tree.
+  `*.toml`, a `classifications/` or `scb_canonical/` CSV, an add / delete / rename), a
+  direct main-checkout `--input-dir` validates main's tracked data, not yours, and can
+  miss a DB-content regression. Point `input_dir` at an overlay root that presents the
+  PR-HEAD tracked `input_data` on top of the main checkout's untracked seed: **copy**
+  the worktree's changed tracked files in (never write back *through* a symlink into the
+  main checkout) and mirror any deletion/rename, so the build sees exactly your PR's
+  tree.
 
   Then clean up — the build writes **gitignored** `*.auto.toml` into the slug dir, and
   the scratch DB is yours to remove. The slug files are ignored, so plain `git clean -f`
