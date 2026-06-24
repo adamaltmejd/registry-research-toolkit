@@ -15,17 +15,19 @@ when the body moves:
 - ``/api/context`` (the deployment-identity read the SPA vintage footer renders)
   carries ``no-cache`` — it must revalidate on every request because it visibly
   asserts a version/date, so any stale copy would lie after a deploy.
-- The fold-bearing reads (``/api/catalog/*`` and ``/api/search``) carry a SHORT
-  ``max-age=60`` window: freshly-curated concept-group folds (and other catalog
-  edits) must surface promptly for a returning user whose browser holds the
-  unversioned cached copy. The body-hash ETag already changes when the group set
-  changes, but a 24h ``max-age`` lets the browser serve its cached copy for a day
-  WITHOUT revalidating, so the new fold never appears. ``/api/search`` embeds the
-  same #322 concept-group folds, so it has the identical staleness gap #499 fixed
-  for catalog (#506). A short window forces revalidation soon (the ETag keeps it a
-  304); we keep it ``public`` (NOT ``no-cache``) so the Cloudflare edge stays
-  cacheable — ``CF-Cache-Status: HIT`` and the #220 probe survive, which
-  ``no-cache`` would break.
+- The fold- or steward-dependent reads (``/api/catalog/*``, ``/api/search``, and
+  ``/api/stats``) carry a SHORT ``max-age=60`` window: freshly-curated
+  concept-group folds, steward catalog edits, and other catalog edits must surface
+  promptly for a returning user whose browser holds the unversioned cached copy.
+  The body-hash ETag already changes when the response body changes, but a 24h
+  ``max-age`` lets the browser serve its cached copy for a day WITHOUT
+  revalidating, so the new body never appears. ``/api/search`` embeds the same
+  #322 concept-group folds, so it has the identical staleness gap #499 fixed for
+  catalog (#506); ``/api/stats`` depends on the boot-loaded steward catalog index
+  for filtered deployments (#726). A short window forces revalidation soon (the
+  ETag keeps it a 304); we keep it ``public`` (NOT ``no-cache``) so the Cloudflare
+  edge stays cacheable — ``CF-Cache-Status: HIT`` and the #220 probe survive,
+  which ``no-cache`` would break.
 - The rebuild-stable doc-library reads (``/api/docs/*``) keep the 24h
   ``max-age=86400`` window: their content only changes on a DB rebuild (which the
   ``reg_meta_version`` ETag prefix already invalidates), so they carry no
@@ -53,14 +55,14 @@ CACHE_CONTROL = "public, max-age=86400, must-revalidate"
 # unchanged and a fresh 200 right after a deploy.
 CACHE_CONTROL_REVALIDATE = "no-cache"
 
-# Short window for fold-bearing reads (catalog + search): a freshly-curated
-# concept-group fold (or any catalog edit) must surface promptly for a returning
-# user whose browser holds the unversioned cached copy. The body-hash ETag
-# already changes on a fold, but the 24h `CACHE_CONTROL` window lets the browser
-# serve its stale copy for a day WITHOUT revalidating — so the fold never
-# appears. 60s forces revalidation soon (the ETag keeps it a cheap 304). We keep
-# it `public` (NOT `no-cache`) so the Cloudflare edge stays cacheable:
-# `CF-Cache-Status: HIT` and the #220 probe survive, which `no-cache` would break.
+# Short window for fold-bearing reads (catalog + search) and steward-dependent
+# stats. A fresh fold or steward catalog edit must surface promptly for a
+# returning user whose browser holds the unversioned cached copy. The body-hash
+# ETag already changes when the body changes, but the 24h `CACHE_CONTROL` window
+# lets the browser serve its stale copy for a day WITHOUT revalidating. 60s
+# forces revalidation soon (the ETag keeps it a cheap 304). We keep it `public`
+# (NOT `no-cache`) so the Cloudflare edge stays cacheable: `CF-Cache-Status: HIT`
+# and the #220 probe survive, which `no-cache` would break.
 CACHE_CONTROL_SHORT = "public, max-age=60, must-revalidate"
 
 # Exact API paths that must revalidate every request because they visibly assert
@@ -74,10 +76,14 @@ REVALIDATE_ALWAYS_PATHS = frozenset({"/api/context"})
 # catch-all — all share the `/api/catalog` prefix. `/api/search` is the
 # variable/code search route (routes/search.py); it embeds the same #322
 # concept-group folds, so it shares the staleness gap and the short window (#506).
+# `/api/stats` uses the boot-loaded steward catalog index for filtered
+# deployments (#726), so a same-id steward catalog redeploy needs a prompt
+# revalidation opportunity too.
 # The doc-library search lives at `/api/docs/search` (under the `/api/docs` prefix)
 # and is rebuild-stable, so it correctly stays on the 24h tier: it does NOT start
-# with either prefix here (`/api/docs/search`.startswith(`/api/search`) is False).
-SHORT_CACHE_PATH_PREFIXES = ("/api/catalog", "/api/search")
+# with any short-cache prefix here (`/api/docs/search`.startswith(`/api/search`)
+# is False).
+SHORT_CACHE_PATH_PREFIXES = ("/api/catalog", "/api/search", "/api/stats")
 
 # 16 hex chars of the body sha256 — enough to make per-URL ETags
 # collision-safe in practice while keeping the header short.
@@ -92,9 +98,10 @@ def cache_control_for(path: str) -> str:
     - ``REVALIDATE_ALWAYS_PATHS`` (exact match, currently ``/api/context``) →
       ``CACHE_CONTROL_REVALIDATE`` (``no-cache``): revalidate every request, they
       assert a deploy version/date.
-    - ``SHORT_CACHE_PATH_PREFIXES`` (prefix match, the fold-bearing
-      ``/api/catalog/*`` and ``/api/search`` reads) → ``CACHE_CONTROL_SHORT``
-      (60s): curated folds must surface promptly.
+    - ``SHORT_CACHE_PATH_PREFIXES`` (prefix match, the fold- or steward-dependent
+      ``/api/catalog/*``, ``/api/search``, and ``/api/stats`` reads) →
+      ``CACHE_CONTROL_SHORT`` (60s): curated folds and steward catalog edits must
+      surface promptly.
     - everything else (the rebuild-stable ``/api/docs/*`` reads) → the 24h
       ``CACHE_CONTROL``.
 

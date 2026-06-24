@@ -515,19 +515,23 @@ QUERY PLAN reports `USING COVERING INDEX`).
 (`{providers, registers, variables}`) the landing page renders. It is a **TOP-LEVEL**
 route (a sibling of `/api/context`), deliberately NOT under `/api/catalog`: that prefix
 is the `{fqid:path}` catch-all, so a `/api/catalog/stats` would be swallowed by the
-catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration). The
-counts are a cheap raw `COUNT(*)` over reg_meta's `provider` / `register` / `variable`
-tables, opened through the SAME per-request `catalog_conn` seam (`conn.py`) the catalog
-routes use. ETag + Cache-Control ride the generic `ETagMiddleware` (a GET read); the
-counts are rebuild-stable, so the default 24h `cache_control_for` tier fits.
+catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration).
 
-**Full-universe counts — a known v1 limitation.** The counts are EXACT for the v1
-`global` deployment (no steward filter). For a FILTERED steward the browse admits only a
-subset (the in-memory `CatalogIndex`), so a raw `COUNT(*)` would OVERSTATE what that
-steward can browse — a **steward-aware count is a follow-up** (it would intersect the
-index, not `COUNT(*)` the universe). The raw count also includes NULL-slug
-(un-addressable) registers/variables the browse listings drop, so it's a headline
-figure, not the exact browsable-node total.
+The `global` deployment (no steward filter) uses reg_meta's `Catalog.catalog_sizes()`,
+opened through the SAME per-request `catalog_conn` seam (`conn.py`) the catalog routes
+use. Those are full-universe, browse-addressable counts: slugged providers, slugged
+registers, and slugged variables under slugged registers. A FILTERED steward uses the
+boot-time in-memory `CatalogIndex` instead, so the landing-page stats reflect only that
+steward's catalog. The index is column-based for admission, so stats de-dupe variables
+by binding FQID rather than resolved delivery column; registers come from valid steward
+sources plus any kept binding's parent register. Drift-dropped bindings do not inflate
+the variable count.
+
+ETag + Cache-Control ride the generic `ETagMiddleware` (a GET read). `/api/stats` uses
+the short `public, max-age=60, must-revalidate` tier: for a filtered deployment the body
+depends on `steward.project_data.json`, so a same-id steward catalog redeploy must get a
+prompt revalidation opportunity instead of letting the browser serve a stale count for
+24h.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
@@ -535,12 +539,12 @@ Every read endpoint (`/api/context`, `/api/stats`, the `/api/catalog` root + cat
 the 7 binding-suffix sub-endpoints) carries
 `ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and a per-route
 `Cache-Control` (`cache_control_for`) in three tiers: `/api/context` revalidates always
-(see below); fold-bearing reads (`/api/catalog/*` and `/api/search`) keep
-`public, max-age=60, must-revalidate`; rebuild-stable doc-library reads (`/api/docs/*`)
-keep `public, max-age=86400, must-revalidate`. A matching `If-None-Match` yields a
-**304** with no body. The pure logic lives in `etag.py` (`compute_etag` + `etag_matches` +
-`cache_control_for`); an ASGI middleware (`ETagMiddleware`) wires it DRY onto every GET
-read response.
+(see below); fold- or steward-dependent reads (`/api/catalog/*`, `/api/search`, and
+`/api/stats`) keep `public, max-age=60, must-revalidate`; rebuild-stable doc-library
+reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
+`If-None-Match` yields a **304** with no body. The pure logic lives in `etag.py`
+(`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
+(`ETagMiddleware`) wires it DRY onto every GET read response.
 
 - **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
   package release), NOT the DB `schema_version` manifest. `steward_id` is
@@ -555,13 +559,15 @@ read response.
   a deploy bumps the version. Catalog and search endpoints use `max-age=60` because both
   embed the #322 concept-group folds (which change without a rebuild/deploy) and a
   sub-minute-stale fold set would surface the wrong grouping for a returning user whose
-  browser holds the unversioned copy; the body-hash ETag keeps revalidation a cheap 304
-  when nothing changed, and `public` keeps the CF edge cacheable (the #220 probe
-  survives). Only `/api/docs/*` keeps `max-age=86400` — doc-library content is
-  rebuild-stable and a sub-day-stale list is acceptable there; the ETag still guarantees
-  correctness on revalidation. The edge worker (`reg_webapp/edge/`) defers to this
-  origin's `Cache-Control` contract (it only stamps the `__edge_v` cache-generation
-  param, orthogonal to caching policy), so the per-route policy needs no edge change.
+  browser holds the unversioned copy; `/api/stats` shares that short tier because a
+  filtered steward's counts depend on the steward catalog index, which can change on a
+  same-id redeploy. The body-hash ETag keeps revalidation a cheap 304 when nothing
+  changed, and `public` keeps the CF edge cacheable (the #220 probe survives). Only
+  `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable and a
+  sub-day-stale list is acceptable there; the ETag still guarantees correctness on
+  revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
+  `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
+  orthogonal to caching policy), so the per-route policy needs no edge change.
 - **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
   so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
   error body isn't a cacheable representation, and handing the client a validator for a

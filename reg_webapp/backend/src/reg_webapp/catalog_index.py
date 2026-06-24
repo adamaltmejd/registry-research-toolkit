@@ -33,6 +33,10 @@ Two maps (derived directly from the steward project's ``sources[]``):
   span for UI hinting, NOT a validity gate (the semantic validator's per-binding
   ``period_outside_state_validity`` is the gate).
 
+The index also derives steward-filtered ``/api/stats`` counts. Variables de-dupe
+by binding FQID (not delivery column), while registers come from valid steward
+sources plus any kept binding's parent register.
+
 This is an INTERNAL dataclass — never a response body — so it is a plain stdlib
 frozen ``@dataclass``, not Pydantic (see DESIGN.md → Pydantic boundary: only
 response models are Pydantic; reg_webapp internals are dataclasses). The ``global`` deployment
@@ -52,6 +56,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta.catalog import CatalogSizes
 from reg_meta.fqid import parse
 
 from reg_webapp.semantic import period_for_resolve, period_segments
@@ -109,6 +114,28 @@ class CatalogIndex:
             for bindings in self.bindings_by_variant.values()
             for f, column in bindings
             if f == fqid
+        )
+
+    def catalog_sizes(self) -> CatalogSizes:
+        """Headline catalog counts for a filtered steward deployment.
+
+        The index is column-based, so a single binding FQID can appear more than
+        once (different variants or resolved delivery columns). The landing-page
+        variable count is browse-grain, not column-grain, so it de-dupes by FQID.
+        ``period_range_by_register`` contributes valid source registers even if
+        every binding under one drift-dropped from the authorable set."""
+        variable_fqids = {
+            fqid
+            for bindings in self.bindings_by_variant.values()
+            for fqid, _column in bindings
+        }
+        register_fqids = set(self.period_range_by_register)
+        register_fqids.update("/".join(fqid.split("/")[:2]) for fqid in variable_fqids)
+        provider_slugs = {fqid.split("/", 1)[0] for fqid in register_fqids}
+        return CatalogSizes(
+            providers=len(provider_slugs),
+            registers=len(register_fqids),
+            variables=len(variable_fqids),
         )
 
 

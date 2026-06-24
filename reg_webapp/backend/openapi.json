@@ -3945,7 +3945,7 @@
     },
     "/api/stats": {
       "get": {
-        "description": "Headline catalog counts (providers / registers / variables) for the\nlanding page \u2014 slug-aware, matching the browse. A filtered steward still\nsees full-universe counts (a follow-up; see DESIGN.md \u2192 Catalog stats).",
+        "description": "Headline catalog counts (providers / registers / variables) for the\nlanding page \u2014 full-universe for ``global``, steward-filtered when the\ndeployment loaded a ``CatalogIndex``.",
         "operationId": "get_stats_api_stats_get",
         "responses": {
           "200": {

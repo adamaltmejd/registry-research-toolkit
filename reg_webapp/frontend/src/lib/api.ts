@@ -200,8 +200,8 @@ export type Context = Schemas["ContextResponse"];
  * block of `/api/context`, threaded into the Home landing page (#675). */
 export type StewardInfo = Schemas["StewardInfo"];
 /** The headline catalog-size counts (#675) the landing page renders —
- * slug-aware (matching the browse listings) for the `global` deployment; a
- * steward-aware count is a follow-up, see the backend DESIGN.md. */
+ * slug-aware (matching the browse listings) for `global`, and filtered through
+ * the steward catalog index when the deployment has one (#726). */
 export type CatalogStats = Schemas["CatalogSizes"];
 export type RootResponse = Schemas["RootResponse"];
 export type VariantsResponse = Schemas["VariantsResponse"];
