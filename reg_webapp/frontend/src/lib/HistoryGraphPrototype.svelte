@@ -14,6 +14,11 @@ const rightPad = 34;
 const topPad = 44;
 const rowHeight = 68;
 const barHeight = 18;
+const editionWidth = 170;
+const editionHeight = 38;
+const editionTopPad = 52;
+const editionSidePad = 28;
+const editionRowHeight = 72;
 const domain = $derived(historyGraphYears(graph));
 const innerWidth = $derived(width - leftPad - rightPad);
 const height = $derived(
@@ -23,6 +28,45 @@ const span = $derived(domain.max - domain.min || 1);
 const nodeIds = $derived(new Set(graph.nodes.map((node) => node.id)));
 const edgeRows = $derived(
   graph.edges.filter((edge) => nodeIds.has(edge.from) && nodeIds.has(edge.to)),
+);
+const editionYears = $derived(
+  [
+    ...new Set(
+      graph.nodes.flatMap((node) =>
+        node.from !== null ? [node.from] : node.to !== null ? [node.to] : [],
+      ),
+    ),
+  ].sort((a, b) => a - b),
+);
+const editionInnerWidth = $derived(width - editionSidePad * 2 - editionWidth);
+const editionSpan = $derived(Math.max(editionYears.length - 1, 1));
+const editionLayout = $derived.by(() => {
+  const rowByYear = new Map<number | null, number>();
+  return graph.nodes.map((node, index) => {
+    const year = node.from ?? node.to;
+    const yearIndex =
+      year === null ? 0 : Math.max(editionYears.indexOf(year), 0);
+    const row = edgeRows.length > 0 ? 0 : (rowByYear.get(year) ?? 0);
+    if (edgeRows.length === 0) {
+      rowByYear.set(year, row + 1);
+    }
+    return {
+      node,
+      x: editionSidePad + (yearIndex / editionSpan) * editionInnerWidth,
+      y: editionTopPad + row * editionRowHeight,
+      row,
+      order: index,
+    };
+  });
+});
+const editionLayoutById = $derived(
+  new Map(editionLayout.map((item) => [item.node.id, item])),
+);
+const editionHeightTotal = $derived(
+  editionTopPad +
+    (Math.max(...editionLayout.map((item) => item.row), 0) + 1) *
+      editionRowHeight +
+    20,
 );
 
 function xForYear(year: number | null): number {
@@ -73,6 +117,20 @@ function edgePath(edge: HistoryGraphEdge): string {
   return `M ${fromX} ${fromY} C ${midX} ${fromY}, ${midX} ${toY}, ${toX} ${toY}`;
 }
 
+function editionEdgePath(edge: HistoryGraphEdge): string {
+  const from = editionLayoutById.get(edge.from);
+  const to = editionLayoutById.get(edge.to);
+  if (!from || !to) {
+    return "";
+  }
+  const fromX = from.x + editionWidth;
+  const toX = to.x;
+  const fromY = from.y + editionHeight / 2;
+  const toY = to.y + editionHeight / 2;
+  const midX = fromX + (toX - fromX) / 2;
+  return `M ${fromX} ${fromY} C ${midX} ${fromY}, ${midX} ${toY}, ${toX} ${toY}`;
+}
+
 function shortLabel(label: string): string {
   return label.length > 29 ? `${label.slice(0, 28)}...` : label;
 }
@@ -85,12 +143,69 @@ function shortLabel(label: string): string {
       <span class="mode">{graph.mode}</span>
     </div>
 
-    <div class="graph-shell">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        role="img"
-        aria-label={`${graph.mode} history graph prototype`}
-      >
+    <div class="graph-shell" class:edition-shell={graph.mode === "classification"}>
+      {#if graph.mode === "classification"}
+        <svg
+          class="edition-svg"
+          viewBox={`0 0 ${width} ${editionHeightTotal}`}
+          role="img"
+          aria-label="classification edition graph prototype"
+        >
+          <defs>
+            <marker
+              id="edition-arrow"
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="5"
+              markerHeight="5"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
+          <g class="edition-years">
+            {#each editionYears as year (year)}
+              {@const yearIndex = Math.max(editionYears.indexOf(year), 0)}
+              {@const x = editionSidePad + (yearIndex / editionSpan) * editionInnerWidth}
+              <text x={x + editionWidth / 2} y="22" text-anchor="middle">{year}</text>
+              <line
+                x1={x + editionWidth / 2}
+                y1="30"
+                x2={x + editionWidth / 2}
+                y2={editionHeightTotal - 16}
+                vector-effect="non-scaling-stroke"
+              />
+            {/each}
+          </g>
+          <g class="edition-edges">
+            {#each edgeRows as edge (edge.id)}
+              <path d={editionEdgePath(edge)} marker-end="url(#edition-arrow)" />
+            {/each}
+          </g>
+          <g class="edition-nodes">
+            {#each editionLayout as item (item.node.id)}
+              <g
+                class="edition-node"
+                class:self={item.node.self}
+                class:current={item.node.current}
+                transform={`translate(${item.x}, ${item.y})`}
+              >
+                <title>{item.node.detail ?? item.node.label}</title>
+                <rect width={editionWidth} height={editionHeight} rx="6" />
+                <text x={editionWidth / 2} y="24" text-anchor="middle">
+                  {item.node.label}
+                </text>
+              </g>
+            {/each}
+          </g>
+        </svg>
+      {:else}
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          role="img"
+          aria-label={`${graph.mode} history graph prototype`}
+        >
         <g class="axis">
           <line
             x1={leftPad}
@@ -153,15 +268,18 @@ function shortLabel(label: string): string {
             </g>
           {/each}
         </g>
-      </svg>
+        </svg>
+      {/if}
     </div>
 
-    <div class="legend" aria-label="Graph edge legend">
-      <span><i class="succession"></i>succession</span>
-      <span><i class="related"></i>related</span>
-      <span><i class="lineage"></i>lineage</span>
-      <span><i class="member"></i>member</span>
-    </div>
+    {#if graph.mode !== "classification"}
+      <div class="legend" aria-label="Graph edge legend">
+        <span><i class="succession"></i>succession</span>
+        <span><i class="related"></i>related</span>
+        <span><i class="lineage"></i>lineage</span>
+        <span><i class="member"></i>member</span>
+      </div>
+    {/if}
 
     {#if graph.warnings.length > 0}
       <details class="contract-gaps" open={edgeRows.length === 0}>
@@ -201,10 +319,46 @@ function shortLabel(label: string): string {
     border-radius: var(--radius, 8px);
     background: var(--surface, #fff);
   }
+  .edition-shell {
+    overflow-x: hidden;
+  }
   svg {
     display: block;
     width: 100%;
     height: auto;
+  }
+  .edition-years text {
+    fill: var(--muted);
+    font-size: 12px;
+  }
+  .edition-years line {
+    stroke: var(--border);
+    stroke-dasharray: 2 5;
+  }
+  .edition-edges path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.7;
+    vector-effect: non-scaling-stroke;
+  }
+  #edition-arrow path {
+    fill: var(--accent);
+  }
+  .edition-node rect {
+    fill: #f7f4e9;
+    stroke: #8a6f2a;
+    stroke-width: 1.2;
+  }
+  .edition-node.self rect {
+    stroke-width: 2.2;
+  }
+  .edition-node.current rect {
+    fill: #eadfbd;
+  }
+  .edition-node text {
+    fill: currentColor;
+    font-size: 13px;
+    font-weight: 650;
   }
   .axis line {
     stroke: var(--border);

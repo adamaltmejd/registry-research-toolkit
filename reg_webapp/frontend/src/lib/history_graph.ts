@@ -426,21 +426,22 @@ export function historyGraphFromClassification(
     fanOutKnownYears.length > 0 ? Math.max(...fanOutKnownYears) : null;
   const nodes: HistoryGraphNode[] = editions.map((edition, i) => {
     const previousCut = i > 0 ? editions[i - 1].effective_year : null;
-    const fanOutYear =
+    const fallbackYear =
       classificationSlugYear(edition.slug) ??
       edition.effective_year ??
+      previousCut ??
       fanOutCurrentYear;
     return {
       id: edition.fqid ?? `class/${edition.slug}`,
       kind: "classification",
-      label: classificationLabel(edition),
+      label: edition.slug,
       fqid: edition.fqid,
-      from: fanOut ? fanOutYear : previousCut,
-      to: fanOut ? fanOutYear : edition.effective_year,
+      from: fallbackYear,
+      to: fallbackYear,
       current: edition.is_current,
       self: edition.is_self,
       columns: [],
-      detail: edition.name ?? undefined,
+      detail: edition.name ?? classificationLabel(edition),
     };
   });
   const edges: HistoryGraphEdge[] = [];
@@ -462,12 +463,12 @@ export function historyGraphFromClassification(
 
   return {
     mode: "classification",
-    title: "History graph prototype",
+    title: "Classification editions",
     nodes,
     edges,
     warnings: fanOut
       ? [
-          "Classification fan-out chains arrive as a flattened client closure; real branch edges and incoming windows need a backend graph payload.",
+          "Flattened client chain; true branch edges need a backend graph payload.",
         ]
       : [],
     nodeGrain: "entity-with-column-slices",

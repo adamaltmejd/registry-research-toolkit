@@ -223,6 +223,10 @@ describe("history graph prototype model", () => {
       "class/sun2000",
       "class/sun2020",
     ]);
+    expect(graph.nodes.map((node) => [node.id, node.from, node.to])).toEqual([
+      ["class/sun2000", 2000, 2000],
+      ["class/sun2020", 2020, 2020],
+    ]);
     expect(graph.edges).toMatchObject([
       {
         kind: "succession",
@@ -311,13 +315,13 @@ describe("history graph prototype model", () => {
       "class/sun-niva2020",
     ]);
     expect(graph.nodes.map((node) => node.label)).toEqual([
-      "SUN 1996",
-      "2000 · Utbildningsgrupper",
-      "2020 · Utbildningsgrupper",
-      "2000 · Utbildningsinriktning",
-      "2020 · Utbildningsinriktning",
-      "2000 · Utbildningsnivå",
-      "2020 · Utbildningsnivå",
+      "sun1996",
+      "sun-grupp2000",
+      "sun-grupp2020",
+      "sun-inriktning2000",
+      "sun-inriktning2020",
+      "sun-niva2000",
+      "sun-niva2020",
     ]);
     expect(
       graph.nodes.map((node) => ({
@@ -336,7 +340,7 @@ describe("history graph prototype model", () => {
     ]);
     expect(graph.edges).toEqual([]);
     expect(graph.warnings.join("\n")).toContain(
-      "fan-out chains arrive as a flattened client closure",
+      "true branch edges need a backend graph payload",
     );
   });
 });
