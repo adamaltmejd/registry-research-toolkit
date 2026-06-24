@@ -664,6 +664,7 @@ const repSegment = $derived(
       <StatesView
         {states}
         narrowed={isNarrowed}
+        resolutionStates={isNarrowed ? resolvedStates : null}
         scopeStates={stateScope}
         activeVariant={params.variant ?? null}
         activeValueSetVersion={params.value_set_version ?? null}

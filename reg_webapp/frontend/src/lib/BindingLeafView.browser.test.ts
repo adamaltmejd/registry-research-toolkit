@@ -543,6 +543,45 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       ),
     ).toBe(true);
   });
+
+  it("keeps modifier-resolved single-state detail with a broader period-only scope", async () => {
+    const picked = state({
+      state_id: 30,
+      variant: "individer",
+      value_set_id: 30,
+      value_set_version_label: "Picked",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const samePeriodOtherVariant = state({
+      state_id: 31,
+      variant: "other-population",
+      value_set_id: 31,
+      value_set_version_label: "Same-period other variant",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(
+      async (_fqid, params) =>
+        ({
+          states: params?.variant ? [picked] : [picked, samePeriodOtherVariant],
+        }) as never,
+    );
+    router.navigate("/catalog/scb/lisa/kon?period=2007&variant=individer");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([picked, samePeriodOtherVariant]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText("Value-set version", { exact: true }))
+      .toBeVisible();
+    expect(document.querySelector(".vs-list")).toBeNull();
+  });
 });
 
 describe("BindingLeafView member identity (#670)", () => {

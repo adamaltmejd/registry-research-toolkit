@@ -45,6 +45,7 @@ let {
   narrowed,
   activeVariant = null,
   activeValueSetVersion = null,
+  resolutionStates = null,
   scopeStates = null,
   onpickVariant,
   onpickValueSetVersion,
@@ -54,17 +55,21 @@ let {
   narrowed: boolean;
   activeVariant?: string | null;
   activeValueSetVersion?: string | null;
+  /** The modifier-resolved subset, when it differs from the period scope. */
+  resolutionStates?: VariableStateModel[] | null;
   /** The period-resolved subset when `states` intentionally carries full history. */
   scopeStates?: VariableStateModel[] | null;
   onpickVariant: (variant: string) => void;
   onpickValueSetVersion: (valueSetVersion: string) => void;
 } = $props();
 
-const resolutionStates = $derived(scopeStates ?? states);
+const resolvedChoiceStates = $derived(
+  resolutionStates ?? scopeStates ?? states,
+);
 const single = $derived(
   narrowed
-    ? resolutionStates.length === 1
-      ? resolutionStates[0]
+    ? resolvedChoiceStates.length === 1
+      ? resolvedChoiceStates[0]
       : null
     : states.length === 1
       ? states[0]
@@ -76,7 +81,7 @@ const single = $derived(
 function distinct<K>(xs: K[]): K[] {
   return [...new Set(xs)];
 }
-const choiceStates = $derived(narrowed ? resolutionStates : states);
+const choiceStates = $derived(narrowed ? resolvedChoiceStates : states);
 const variants = $derived(distinct(choiceStates.map((s) => s.variant)));
 // ALL distinct versions, INCLUDING the empty default label (`value_set_version_label`
 // is `TEXT NOT NULL DEFAULT ''`): the states DIFFER by version when this has >1,
@@ -105,6 +110,15 @@ const scopeValueSetKeys = $derived.by(() => {
   }
   return new Set(distinctValueSets(scopeStates).map((vs) => vs.key));
 });
+const activeScopeValueSetKeys = $derived.by(() => {
+  if (resolutionStates === null) {
+    return null;
+  }
+  if (activeVariant === null && activeValueSetVersion === null) {
+    return null;
+  }
+  return new Set(distinctValueSets(resolutionStates).map((vs) => vs.key));
+});
 
 // A version label shared by ≥2 NON-classification rows can't tell them apart on
 // its own (kommun's "Kommun historisk" ×22) — those rows get their overall span
@@ -132,6 +146,7 @@ let isolatedKey = $state<string | null>(null);
 let filter = $state("");
 $effect(() => {
   void states;
+  void resolutionStates;
   void scopeStates;
   isolatedKey = null;
   filter = "";
@@ -179,9 +194,20 @@ function inPeriod(vs: DistinctValueSet): boolean {
 }
 
 function inScope(vs: DistinctValueSet): boolean {
+  if (!inPeriod(vs)) {
+    return false;
+  }
+  if (activeScopeValueSetKeys !== null) {
+    return activeScopeValueSetKeys.has(vs.key);
+  }
   const inVariant =
     activeVariant == null || vs.variants.includes(activeVariant);
-  return inPeriod(vs) && inVariant;
+  const activeVersion =
+    activeValueSetVersion === VALUE_SET_VERSION_NONE
+      ? ""
+      : activeValueSetVersion;
+  const inVersion = activeVersion == null || vs.versionLabel === activeVersion;
+  return inVariant && inVersion;
 }
 
 // The label for a distinct value set: a classification value set reads
@@ -362,7 +388,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
        `?period` (it 422s them otherwise), so it's shown only when a period is
        active (`narrowed`). Without a period the view is the full state history —
        set a period to narrow to one. -->
-  {#if narrowed && resolutionStates.length === 0}
+  {#if narrowed && resolvedChoiceStates.length === 0}
     <p class="muted picker-hint">
       No state delivered for this period. Historical value sets outside this period
       are collapsed below.

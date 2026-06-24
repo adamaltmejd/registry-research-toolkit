@@ -367,6 +367,100 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       .toBeVisible();
   });
 
+  it("uses modifier-resolved states for detail mode when period scope is broader (#744 review)", async () => {
+    render(StatesView, {
+      states: [classState],
+      resolutionStates: [classState],
+      scopeStates: [classState, plainState],
+      narrowed: true,
+      activeVariant: "doda",
+      ...noopCallbacks,
+    });
+    await expect.element(page.getByText("Variant")).toBeVisible();
+    expect(document.querySelector(".vs-list")).toBeNull();
+  });
+
+  it("greys same-period rows outside the active value-set version (#744 review)", async () => {
+    const selectedA = state({
+      state_id: 4,
+      value_set_id: 301,
+      value_set_version_label: "Selected",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-06-30",
+    });
+    const selectedB = state({
+      state_id: 5,
+      value_set_id: 302,
+      value_set_version_label: "Selected",
+      variant: "doda",
+      valid_from: "2008-07-01",
+      valid_to: "2008-12-31",
+    });
+    const otherVersion = state({
+      state_id: 6,
+      value_set_id: 303,
+      value_set_version_label: "Other version",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [selectedA, selectedB, otherVersion, plainState],
+      resolutionStates: [selectedA, selectedB],
+      scopeStates: [selectedA, selectedB, otherVersion],
+      narrowed: true,
+      activeValueSetVersion: "Selected",
+      ...noopCallbacks,
+    });
+    const inlineRows = [
+      ...document.querySelectorAll<HTMLLIElement>(
+        "ul.vs-list:not(.out-of-period-list) > li",
+      ),
+    ];
+    const otherRow = inlineRows.find((row) =>
+      row.textContent?.includes("Other version"),
+    );
+    expect(otherRow).toBeDefined();
+    expect(otherRow?.classList.contains("out-of-scope")).toBe(true);
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+  });
+
+  it("ties active variant styling to the period-matched rows (#744 review)", async () => {
+    const historicalActiveVariant = state({
+      state_id: 7,
+      value_set_id: 304,
+      value_set_version_label: "Shared value set",
+      variant: "doda",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const periodOtherVariant = state({
+      state_id: 8,
+      value_set_id: 304,
+      value_set_version_label: "Shared value set",
+      variant: "fodda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [historicalActiveVariant, periodOtherVariant],
+      resolutionStates: [],
+      scopeStates: [periodOtherVariant],
+      narrowed: true,
+      activeVariant: "doda",
+      ...noopCallbacks,
+    });
+    const rows = document.querySelectorAll<HTMLLIElement>(
+      "ul.vs-list:not(.out-of-period-list) > li",
+    );
+    expect(rows).toHaveLength(1);
+    expect(rows[0].classList.contains("out-of-scope")).toBe(true);
+    expect(document.querySelector(".out-of-period")).toBeNull();
+  });
+
   it("keeps single-state detail resolution when full history is available (#744)", async () => {
     render(StatesView, {
       states: [classState, plainState],
