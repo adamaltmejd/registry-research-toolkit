@@ -104,7 +104,7 @@ function columnSlices(states: VariableStateModel[]): HistoryColumnSlice[] {
     if (existing) {
       existing.from =
         existing.from === null || from === null
-          ? (existing.from ?? from)
+          ? null
           : Math.min(existing.from, from);
       existing.to =
         existing.to === null || to === null ? null : Math.max(existing.to, to);
@@ -131,21 +131,23 @@ function coverageFromStates(states: VariableStateModel[]): {
 } {
   let from: number | null = null;
   let to: number | null = null;
+  let hasUnknownStart = false;
+  let hasOpenEnd = false;
   for (const state of states) {
     const stateFrom = wireYear(state.valid_from);
     const stateTo = wireYear(state.valid_to);
-    if (stateFrom !== null) {
+    if (stateFrom === null) {
+      hasUnknownStart = true;
+    } else if (!hasUnknownStart) {
       from = from === null ? stateFrom : Math.min(from, stateFrom);
     }
     if (stateTo === null) {
-      to = null;
-    } else if (to !== null) {
-      to = Math.max(to, stateTo);
-    } else if (!states.some((s) => wireYear(s.valid_to) === null)) {
-      to = stateTo;
+      hasOpenEnd = true;
+    } else if (!hasOpenEnd) {
+      to = to === null ? stateTo : Math.max(to, stateTo);
     }
   }
-  return { from, to };
+  return { from: hasUnknownStart ? null : from, to: hasOpenEnd ? null : to };
 }
 
 function dimensionHint(dimensions: ConceptGroup[]): string | undefined {
@@ -188,7 +190,7 @@ export function historyGraphFromBinding(
   const nodes = new Map<string, HistoryGraphNode>();
   const edges: HistoryGraphEdge[] = [];
   const warnings: string[] = [];
-  const currentId = node.fqid;
+  const currentId = node.via_same_as?.at(-1) ?? node.fqid;
   const currentCoverage = coverageFromStates(node.states);
   const currentColumns = columnSlices(node.states);
   const chain = node.succession_chain ?? [];
@@ -233,8 +235,8 @@ export function historyGraphFromBinding(
     nodes.set(currentId, {
       id: currentId,
       kind: "variable",
-      label: node.name ?? leafSlug(node.fqid),
-      fqid: node.fqid,
+      label: node.name ?? leafSlug(currentId),
+      fqid: currentId,
       from: currentCoverage.from,
       to: currentCoverage.to,
       current: true,
@@ -248,8 +250,8 @@ export function historyGraphFromBinding(
     nodes.set(currentId, {
       id: currentId,
       kind: "variable",
-      label: node.name ?? leafSlug(node.fqid),
-      fqid: node.fqid,
+      label: node.name ?? leafSlug(currentId),
+      fqid: currentId,
       from: currentCoverage.from,
       to: currentCoverage.to,
       current: true,
@@ -481,12 +483,15 @@ export function historyGraphYears(graph: HistoryGraph): {
   max: number;
 } {
   const years: number[] = [];
+  let hasOpenEnd = false;
   for (const node of graph.nodes) {
     if (node.from !== null) {
       years.push(node.from);
     }
     if (node.to !== null) {
       years.push(node.to);
+    } else if (node.from !== null) {
+      hasOpenEnd = true;
     }
     for (const column of node.columns) {
       if (column.from !== null) {
@@ -494,6 +499,8 @@ export function historyGraphYears(graph: HistoryGraph): {
       }
       if (column.to !== null) {
         years.push(column.to);
+      } else if (column.from !== null) {
+        hasOpenEnd = true;
       }
     }
   }
@@ -505,8 +512,11 @@ export function historyGraphYears(graph: HistoryGraph): {
       years.push(edge.toYear);
     }
   }
+  const year = new Date().getFullYear();
+  if (hasOpenEnd) {
+    years.push(year);
+  }
   if (years.length === 0) {
-    const year = new Date().getFullYear();
     return { min: year - 2, max: year + 2 };
   }
   const min = Math.min(...years);

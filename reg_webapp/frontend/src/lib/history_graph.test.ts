@@ -9,6 +9,7 @@ import {
   historyGraphFromBinding,
   historyGraphFromClassification,
   historyGraphFromGroup,
+  historyGraphYears,
 } from "./history_graph";
 
 function state(over: Partial<VariableStateModel>): VariableStateModel {
@@ -144,6 +145,128 @@ describe("history graph prototype model", () => {
     expect(graph.warnings.join("\n")).toContain(
       "related_to has no validity window",
     );
+  });
+
+  it("uses the resolved same_as target as the current graph id", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        fqid: "scb/lisa/income-alias",
+        via_same_as: ["scb/rams/income"],
+        states: [
+          state({
+            state_id: 10,
+            delivery_column_name: "INK",
+            valid_from: "2010-01-01",
+          }),
+        ],
+        succession_chain: [
+          {
+            provider: "scb",
+            register: "rams",
+            variable: "old-income",
+            fqid: "scb/rams/old-income",
+            name: "Old income",
+            effective_year: 2010,
+            reason: "renamed",
+            is_self: false,
+            is_current: false,
+          },
+          {
+            provider: "scb",
+            register: "rams",
+            variable: "income",
+            fqid: "scb/rams/income",
+            name: "Income",
+            effective_year: null,
+            reason: null,
+            is_self: true,
+            is_current: true,
+          },
+        ],
+        related_to: [
+          {
+            provider: "scb",
+            register: "lisa",
+            variable: "sibling",
+            fqid: "scb/lisa/sibling",
+            relation_kind: "related_to",
+          },
+        ],
+        lineage: [
+          {
+            source_state_id: 1,
+            consumer_state_id: 10,
+            source_fqid: "scb/rtb/source",
+            valid_from: "2010-01-01",
+            valid_to: "9999-12-31",
+          },
+        ],
+      }),
+    );
+
+    expect(graph.nodes.map((node) => node.id)).not.toContain(
+      "scb/lisa/income-alias",
+    );
+    expect(graph.nodes.find((node) => node.self)?.id).toBe("scb/rams/income");
+    expect(graph.edges).toContainEqual(
+      expect.objectContaining({
+        kind: "related",
+        from: "scb/rams/income",
+        to: "scb/lisa/sibling",
+      }),
+    );
+    expect(graph.edges).toContainEqual(
+      expect.objectContaining({
+        kind: "lineage",
+        from: "scb/rtb/source",
+        to: "scb/rams/income",
+      }),
+    );
+  });
+
+  it("preserves unknown starts when mixed with finite state windows", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        states: [
+          state({
+            state_id: 1,
+            delivery_column_name: "VALUE",
+            valid_from: "0001-01-01",
+            valid_to: "2010-12-31",
+          }),
+          state({
+            state_id: 2,
+            delivery_column_name: "VALUE",
+            valid_from: "2011-01-01",
+            valid_to: "9999-12-31",
+          }),
+        ],
+      }),
+    );
+
+    expect(graph.nodes[0]).toMatchObject({ from: null, to: null });
+    expect(graph.nodes[0].columns).toMatchObject([
+      { label: "VALUE", from: null, to: null, stateIds: [1, 2] },
+    ]);
+  });
+
+  it("extends open-ended variable domains through the current year", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        states: [
+          state({
+            state_id: 1,
+            valid_from: "2019-01-01",
+            valid_to: "9999-12-31",
+          }),
+        ],
+      }),
+    );
+
+    const domain = historyGraphYears(graph);
+
+    expect(domain.min).toBe(2019);
+    expect(domain.max).toBeGreaterThanOrEqual(new Date().getFullYear());
   });
 
   it("shows group members and records why group mode wants a backend graph payload", () => {
