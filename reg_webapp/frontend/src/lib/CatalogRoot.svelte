@@ -34,10 +34,10 @@ const filtered = $derived(
       label="Filter providers"
     />
     {#if filtered.length > 0}
-      <ul class="children">
+      <ul class="children table">
         {#each filtered as child (child.fqid)}
           <li>
-            <a href={catalogHref(child.fqid)}>
+            <a href={catalogHref(child.fqid)} title={child.fqid}>
               <span class="label">
                 {child.kind === "classification-root" ? child.name : (child.name ?? child.fqid)}
               </span>
@@ -57,20 +57,38 @@ const filtered = $derived(
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+  .children.table {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-1);
   }
-  .children li a {
-    display: flex;
+  .children.table li > a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--space-3);
     align-items: baseline;
-    gap: 0.75rem;
+    padding: var(--space-1) 0;
+  }
+  .children.table li > a > * {
+    min-width: 0;
   }
   .children .label {
     font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .child-fqid {
+    grid-column: 2;
     color: var(--muted);
-    font-size: 0.85em;
+    font-size: var(--text-sm);
+    text-align: right;
+    visibility: hidden;
+  }
+  .children.table li > a:hover .child-fqid,
+  .children.table li > a:focus-visible .child-fqid,
+  .children.table li > a:focus-within .child-fqid {
+    visibility: visible;
   }
 </style>
