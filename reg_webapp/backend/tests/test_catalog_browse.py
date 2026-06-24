@@ -460,15 +460,23 @@ def test_classification_leaf_resolves(client):
 
 
 def test_classification_leaf_embeds_full_edition_chain(client):
-    # #571: the classification leaf embeds the FULL succession timeline (oldest
+    # #571: the classification leaf embeds the FULL succession chain (oldest
     # first, terminal last) so the browse panel renders every edition synchronously.
     # The fixture seeds sun1996 → sun2000 → sun2020 (live terminal) — all LIVE rows,
     # matching the build validator's invariant (succession edges resolve to live
     # classification slugs; validate.py, the classification_replaced_by check).
     resp = client.get("/api/catalog/class/sun2020")
     assert resp.status_code == 200
-    chain = resp.json()["edition_chain"]
+    body = resp.json()
+    chain = body["edition_chain"]
     assert [e["slug"] for e in chain] == ["sun1996", "sun2000", "sun2020"]
+    assert [
+        (e["predecessor_slug"], e["successor_slug"], e["effective_year"])
+        for e in body["edition_edges"]
+    ] == [
+        ("sun1996", "sun2000", 2000),
+        ("sun2000", "sun2020", 2020),
+    ]
     by_slug = {e["slug"]: e for e in chain}
     # Every edition is a live row → each carries a fqid (no dead-edition shape).
     assert all(e["fqid"] == f"class/{e['slug']}" for e in chain)
@@ -532,7 +540,8 @@ def test_classification_split_root_edition_chain_fans_out(client):
     # < niv), each branch's 2000→2020 subtree before the next.
     resp = client.get("/api/catalog/class/sni-root1996")
     assert resp.status_code == 200
-    chain = resp.json()["edition_chain"]
+    body = resp.json()
+    chain = body["edition_chain"]
     assert [e["slug"] for e in chain] == [
         "sni-root1996",
         "sni-grp2000",
@@ -551,6 +560,17 @@ def test_classification_split_root_edition_chain_fans_out(client):
     assert self_editions == ["sni-root1996"]
     by_slug = {e["slug"]: e for e in chain}
     assert by_slug["sni-root1996"]["effective_year"] == 2000
+    assert [
+        (e["predecessor_slug"], e["successor_slug"], e["effective_year"])
+        for e in body["edition_edges"]
+    ] == [
+        ("sni-root1996", "sni-grp2000", 2000),
+        ("sni-grp2000", "sni-grp2020", 2020),
+        ("sni-root1996", "sni-ink2000", 2000),
+        ("sni-ink2000", "sni-ink2020", 2020),
+        ("sni-root1996", "sni-niv2000", 2000),
+        ("sni-niv2000", "sni-niv2020", 2020),
+    ]
 
 
 def test_classification_split_branch_leaf_scopes_to_own_path(client):
@@ -558,7 +578,8 @@ def test_classification_split_branch_leaf_scopes_to_own_path(client):
     # to the root — the inriktning/grupp sibling branches are NOT included.
     resp = client.get("/api/catalog/class/sni-niv2020")
     assert resp.status_code == 200
-    chain = resp.json()["edition_chain"]
+    body = resp.json()
+    chain = body["edition_chain"]
     assert [e["slug"] for e in chain] == [
         "sni-root1996",
         "sni-niv2000",
@@ -566,6 +587,13 @@ def test_classification_split_branch_leaf_scopes_to_own_path(client):
     ]
     assert [e["slug"] for e in chain if e["is_current"]] == ["sni-niv2020"]
     assert [e["slug"] for e in chain if e["is_self"]] == ["sni-niv2020"]
+    assert [
+        (e["predecessor_slug"], e["successor_slug"], e["effective_year"])
+        for e in body["edition_edges"]
+    ] == [
+        ("sni-root1996", "sni-niv2000", 2000),
+        ("sni-niv2000", "sni-niv2020", 2020),
+    ]
 
 
 def test_missing_provider_returns_404(client):

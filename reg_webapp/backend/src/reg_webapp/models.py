@@ -136,6 +136,19 @@ class ClassificationRootNode(BaseModel):
     name: str = "Classifications"
 
 
+class ClassificationSuccessionEdge(BaseModel):
+    """One explicit classification succession edge inside a leaf's embedded
+    edition graph. Unlike ``edition_chain`` ordering, this is the real pairwise
+    edge from ``classification_replaced_by``."""
+
+    predecessor_slug: str
+    predecessor_fqid: str | None = None
+    successor_slug: str
+    successor_fqid: str | None = None
+    effective_year: int | None = None
+    note: str | None = None
+
+
 # ── Coverage aggregates (#351; see DESIGN.md → Coverage aggregates) ─────────
 # ADDITIVE, query-time browse aggregates over `variable_state`, embedded directly
 # as reg_meta's `VariableCoverage` / `RegisterCoverage` (#681). `coverage` is None
@@ -177,6 +190,11 @@ class ClassificationNode(BaseModel):
     # downstream branches, so it can carry MULTIPLE `is_current` editions (one per
     # branch tip); a leaf's chain stays its single linear path.
     edition_chain: list[ClassificationEdition] = Field(default_factory=list)
+    # The explicit pairwise edges among ``edition_chain`` nodes, read from
+    # ``classification_replaced_by``. The chain is a flattened traversal; this carries
+    # the actual graph edges so the SPA does not infer split/fan-out topology from
+    # slugs or ordering.
+    edition_edges: list[ClassificationSuccessionEdge] = Field(default_factory=list)
     # #609: the RESOLVED edition's value-set codes (code-ordered), embedded so the
     # SPA's code viewer renders synchronously — mirroring `edition_chain`. Scoped to
     # the viewed edition only (codes are per-edition); a different edition's codes

@@ -183,13 +183,6 @@ function classificationSlugYear(slug: string): number | null {
   return Number.isInteger(year) ? year : null;
 }
 
-function classificationSlugStem(slug: string): string {
-  return slug
-    .replace(/(\d{4})(?=-|$)/, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
 export function historyGraphFromBinding(
   node: BindingNodeData,
   dimensions: ConceptGroup[] = [],
@@ -427,19 +420,18 @@ export function historyGraphFromClassification(
             is_self: true,
           },
         ];
-  const fanOut = editions.filter((edition) => edition.is_current).length > 1;
-  const fanOutKnownYears = editions
+  const knownYears = editions
     .map((edition) => edition.effective_year)
     .filter((year): year is number => year !== null);
-  const fanOutCurrentYear =
-    fanOutKnownYears.length > 0 ? Math.max(...fanOutKnownYears) : null;
+  const latestKnownYear =
+    knownYears.length > 0 ? Math.max(...knownYears) : null;
   const nodes: HistoryGraphNode[] = editions.map((edition, i) => {
     const previousCut = i > 0 ? editions[i - 1].effective_year : null;
     const fallbackYear =
       classificationSlugYear(edition.slug) ??
       edition.effective_year ??
       previousCut ??
-      fanOutCurrentYear;
+      latestKnownYear;
     return {
       id: edition.fqid ?? `class/${edition.slug}`,
       kind: "classification",
@@ -454,38 +446,17 @@ export function historyGraphFromClassification(
     };
   });
   const edges: HistoryGraphEdge[] = [];
-  const addEdge = (
-    previous: (typeof editions)[number],
-    current: (typeof editions)[number],
-  ) => {
+  for (const edge of node.edition_edges ?? []) {
+    const effectiveYear = edge.effective_year ?? null;
     edges.push({
-      id: `classification:${previous.slug}->${current.slug}`,
+      id: `classification:${edge.predecessor_slug}->${edge.successor_slug}`,
       kind: "succession",
-      from: previous.fqid ?? `class/${previous.slug}`,
-      to: current.fqid ?? `class/${current.slug}`,
-      fromYear: previous.effective_year,
-      toYear: previous.effective_year,
+      from: edge.predecessor_fqid ?? `class/${edge.predecessor_slug}`,
+      to: edge.successor_fqid ?? `class/${edge.successor_slug}`,
+      fromYear: effectiveYear,
+      toYear: effectiveYear,
       label: null,
     });
-  };
-  if (fanOut) {
-    const root = editions[0];
-    const previousByStem = new Map<string, (typeof editions)[number]>();
-    for (let i = 0; i < editions.length; i += 1) {
-      const edition = editions[i];
-      const stem = classificationSlugStem(edition.slug);
-      const previous = previousByStem.get(stem);
-      if (previous) {
-        addEdge(previous, edition);
-      } else if (i > 0) {
-        addEdge(root, edition);
-      }
-      previousByStem.set(stem, edition);
-    }
-  } else {
-    for (let i = 1; i < editions.length; i += 1) {
-      addEdge(editions[i - 1], editions[i]);
-    }
   }
 
   return {

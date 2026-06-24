@@ -561,6 +561,13 @@
             "title": "Edition Chain",
             "type": "array"
           },
+          "edition_edges": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationSuccessionEdge"
+            },
+            "title": "Edition Edges",
+            "type": "array"
+          },
           "fqid": {
             "title": "Fqid",
             "type": "string"
@@ -799,6 +806,69 @@
           "rank"
         ],
         "title": "ClassificationSearchResult",
+        "type": "object"
+      },
+      "ClassificationSuccessionEdge": {
+        "description": "One explicit classification succession edge inside a leaf's embedded\nedition graph. Unlike ``edition_chain`` ordering, this is the real pairwise\nedge from ``classification_replaced_by``.",
+        "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective Year"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "predecessor_fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Predecessor Fqid"
+          },
+          "predecessor_slug": {
+            "title": "Predecessor Slug",
+            "type": "string"
+          },
+          "successor_fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Successor Fqid"
+          },
+          "successor_slug": {
+            "title": "Successor Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "predecessor_slug",
+          "successor_slug"
+        ],
+        "title": "ClassificationSuccessionEdge",
         "type": "object"
       },
       "ClassificationSuccessionSearchResult": {

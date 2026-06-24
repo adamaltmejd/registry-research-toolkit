@@ -78,6 +78,7 @@ from reg_webapp.models import (
     ClassificationNode,
     ClassificationRootNode,
     ClassificationRootResponse,
+    ClassificationSuccessionEdge,
     ConceptGroupNode,
     ConceptGroupNodeMember,
     DimensionsResponse,
@@ -268,7 +269,7 @@ def _classification_node(
     catalog: Catalog, resolved: ResolvedClassification
 ) -> ClassificationNode:
     """Map a resolved classification onto its leaf node, embedding the FULL
-    succession edition chain (#571) so the browse panel renders the whole timeline
+    succession edition chain (#571) so the browse panel renders the edition graph
     synchronously — no per-neighbor fetch. The chain resolves `same_as`
     server-side (`Catalog.classification_chain`); every edition is a live
     `classification` row (the build validator guarantees succession editions are
@@ -279,8 +280,31 @@ def _classification_node(
     only the viewed edition's list; other editions are reached via the chain) — and
     `dimensions` — the curated umbrella group(s) this edition belongs to (the niva ↔
     aggregate granularity cross-reference, read off the existing concept-group
-    table). The chain / codes / dimensions are reg_meta's frozen Pydantic models,
-    embedded directly (#681)."""
+    table). `edition_edges` carries explicit pairwise succession edges so the SPA does
+    not infer graph topology from the chain traversal. The chain / codes /
+    dimensions are reg_meta's frozen Pydantic models, embedded directly (#681)."""
+    edition_chain = catalog.classification_chain(resolved.fqid)
+    chain_slugs = {edition.slug for edition in edition_chain}
+    edition_edges: list[ClassificationSuccessionEdge] = []
+    for edition in edition_chain:
+        for predecessor in catalog.classification_predecessors(f"class/{edition.slug}"):
+            if predecessor.slug not in chain_slugs:
+                continue
+            edition_edges.append(
+                ClassificationSuccessionEdge(
+                    predecessor_slug=predecessor.slug,
+                    predecessor_fqid=(
+                        str(predecessor.fqid) if predecessor.fqid is not None else None
+                    ),
+                    successor_slug=edition.slug,
+                    successor_fqid=(
+                        str(edition.fqid) if edition.fqid is not None else None
+                    ),
+                    effective_year=predecessor.effective_year,
+                    note=predecessor.note,
+                )
+            )
+
     return ClassificationNode(
         fqid=str(resolved.fqid),
         short_name=resolved.short_name,
@@ -290,7 +314,8 @@ def _classification_node(
             if resolved.via_same_as is not None
             else None
         ),
-        edition_chain=catalog.classification_chain(resolved.fqid),
+        edition_chain=edition_chain,
+        edition_edges=edition_edges,
         codes=catalog.classification_codes(resolved.fqid),
         dimensions=catalog.classification_dimensions(resolved.fqid),
     )

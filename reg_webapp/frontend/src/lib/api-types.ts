@@ -896,6 +896,8 @@ export interface components {
             dimensions?: components["schemas"]["ConceptGroupSummary"][];
             /** Edition Chain */
             edition_chain?: components["schemas"]["ClassificationEdition"][];
+            /** Edition Edges */
+            edition_edges?: components["schemas"]["ClassificationSuccessionEdge"][];
             /** Fqid */
             fqid: string;
             /**
@@ -1014,6 +1016,26 @@ export interface components {
              * @enum {string}
              */
             type: "classification";
+        };
+        /**
+         * ClassificationSuccessionEdge
+         * @description One explicit classification succession edge inside a leaf's embedded
+         *     edition graph. Unlike ``edition_chain`` ordering, this is the real pairwise
+         *     edge from ``classification_replaced_by``.
+         */
+        ClassificationSuccessionEdge: {
+            /** Effective Year */
+            effective_year?: number | null;
+            /** Note */
+            note?: string | null;
+            /** Predecessor Fqid */
+            predecessor_fqid?: string | null;
+            /** Predecessor Slug */
+            predecessor_slug: string;
+            /** Successor Fqid */
+            successor_fqid?: string | null;
+            /** Successor Slug */
+            successor_slug: string;
         };
         /**
          * ClassificationSuccessionSearchResult

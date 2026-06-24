@@ -340,6 +340,16 @@ describe("history graph prototype model", () => {
           is_current: true,
         },
       ],
+      edition_edges: [
+        {
+          predecessor_slug: "sun2000",
+          predecessor_fqid: "class/sun2000",
+          successor_slug: "sun2020",
+          successor_fqid: "class/sun2020",
+          effective_year: 2020,
+          note: null,
+        },
+      ],
     } as ClassificationNodeData);
 
     expect(graph.nodes.map((node) => node.id)).toEqual([
@@ -424,6 +434,56 @@ describe("history graph prototype model", () => {
           effective_year: null,
           is_self: false,
           is_current: true,
+        },
+      ],
+      edition_edges: [
+        {
+          predecessor_slug: "sun1996",
+          predecessor_fqid: "class/sun1996",
+          successor_slug: "sun2000-grupp",
+          successor_fqid: "class/sun2000-grupp",
+          effective_year: 2000,
+          note: null,
+        },
+        {
+          predecessor_slug: "sun2000-grupp",
+          predecessor_fqid: "class/sun2000-grupp",
+          successor_slug: "sun2020-grupp",
+          successor_fqid: "class/sun2020-grupp",
+          effective_year: 2020,
+          note: null,
+        },
+        {
+          predecessor_slug: "sun1996",
+          predecessor_fqid: "class/sun1996",
+          successor_slug: "sun2000-inriktning",
+          successor_fqid: "class/sun2000-inriktning",
+          effective_year: 2000,
+          note: null,
+        },
+        {
+          predecessor_slug: "sun2000-inriktning",
+          predecessor_fqid: "class/sun2000-inriktning",
+          successor_slug: "sun2020-inriktning",
+          successor_fqid: "class/sun2020-inriktning",
+          effective_year: 2020,
+          note: null,
+        },
+        {
+          predecessor_slug: "sun1996",
+          predecessor_fqid: "class/sun1996",
+          successor_slug: "sun2000-niva",
+          successor_fqid: "class/sun2000-niva",
+          effective_year: 2000,
+          note: null,
+        },
+        {
+          predecessor_slug: "sun2000-niva",
+          predecessor_fqid: "class/sun2000-niva",
+          successor_slug: "sun2020-niva",
+          successor_fqid: "class/sun2020-niva",
+          effective_year: 2020,
+          note: null,
         },
       ],
     } as ClassificationNodeData);
