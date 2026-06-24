@@ -623,7 +623,8 @@ def get_register_variants(
 # a slug — it's a curated/token/edge derivation key), so it is NOT slug-validated,
 # only resolved (a non-existent key is a clean 404).
 @router.get(
-    "/catalog/group/{provider}/{register}/{key}", response_model=ConceptGroupNode
+    "/catalog/group/{provider}/{register}/{key:path}",
+    response_model=ConceptGroupNode,
 )
 def get_concept_group(
     request: Request,

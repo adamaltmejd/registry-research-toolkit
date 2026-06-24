@@ -315,6 +315,17 @@ export function encodeFqid(fqidPath: string): string {
   return fqidPath.split("/").map(encodeURIComponent).join("/");
 }
 
+/** The concept-group subject route, shared by SPA links and API fetches. `key`
+ * rides the route tail, so encode it directly rather than joining it into an
+ * FQID-shaped path where embedded `/` would become a separator. */
+export function conceptGroupPath(
+  provider: string,
+  register: string,
+  key: string,
+): string {
+  return `/catalog/group/${encodeURIComponent(provider)}/${encodeURIComponent(register)}/${encodeURIComponent(key)}`;
+}
+
 export function getContext(): Promise<Context> {
   return apiGet<Context>("/context");
 }
@@ -364,7 +375,7 @@ export function getConceptGroup(
   key: string,
   member?: string,
 ): Promise<ConceptGroupNodeData> {
-  const path = `/catalog/group/${encodeFqid(`${provider}/${register}/${key}`)}`;
+  const path = conceptGroupPath(provider, register, key);
   const query = member ? `?member=${encodeURIComponent(member)}` : "";
   return apiGet<ConceptGroupNodeData>(`${path}${query}`);
 }

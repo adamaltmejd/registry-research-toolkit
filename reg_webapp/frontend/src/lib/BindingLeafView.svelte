@@ -74,6 +74,9 @@ const params = $derived({
   variant: router.getQueryParam("variant") ?? undefined,
   value_set_version: router.getQueryParam("value_set_version") ?? undefined,
 });
+const hasResolutionModifier = $derived(
+  params.variant !== undefined || params.value_set_version !== undefined,
+);
 
 // Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
 // node's embedded states are shown (no redundant request; CatalogNodeView already
@@ -82,14 +85,32 @@ const periodResource = asyncResource<CatalogNode | StatesResponse | null>(() =>
   params.period ? getCatalogNode(fqidPath, params) : Promise.resolve(null),
 );
 
+// When `?variant` / `?value_set_version` narrows the resolution, the value-set
+// history still needs a PERIOD-ONLY scope for #744's outside-period disclosure.
+// Otherwise same-period rows for other variants/versions would be mislabeled as
+// outside the period instead of staying inline and greyed.
+const periodScopeResource = asyncResource<CatalogNode | StatesResponse | null>(
+  () =>
+    params.period && hasResolutionModifier
+      ? getCatalogNode(fqidPath, { period: params.period })
+      : Promise.resolve(null),
+);
+
 const narrowedStates = $derived.by(() => {
   const data = periodResource.data;
   // A `?period` resolve returns a StatesResponse (the only non-node arm here);
   // `!isCatalogNode` narrows `CatalogNode | StatesResponse` to it.
   return data !== null && !isCatalogNode(data) ? data.states : null;
 });
+const periodScopeStates = $derived.by(() => {
+  if (!hasResolutionModifier) {
+    return null;
+  }
+  const data = periodScopeResource.data;
+  return data !== null && !isCatalogNode(data) ? data.states : null;
+});
 
-// ANY error on the period resolve (a 422 bad-modifier, but also a 5xx / 502 /
+// ANY error on the primary period resolve (a 422 bad-modifier, but also a 5xx / 502 /
 // network drop where `status` stays null) is surfaced inline — the metadata +
 // the picker stay usable and the states fall back to the full history. Without
 // this (filtering to only 422/400), a server/network error would leave
@@ -98,16 +119,48 @@ const narrowedStates = $derived.by(() => {
 const narrowedError = $derived(
   params.period && periodResource.error ? periodResource.error : null,
 );
+const scopeError = $derived(
+  params.period && !periodResource.error && hasResolutionModifier
+    ? periodScopeResource.error
+    : null,
+);
 
-// States to show: the narrowed subset when a valid `?period` is active (null
-// while it loads → "Loading states…"); else the full node's embedded states
-// (full history, or the fallback when a bad modifier 422'd).
-const states = $derived.by(() =>
+// States that drive resolution-sensitive behavior: Add planning and the
+// single-state detail stay on the `?period` subset. The value-set list may render
+// full history separately so out-of-period value sets can be collapsed instead of
+// removed (#744).
+const resolvedStates = $derived.by(() =>
   params.period && !narrowedError ? narrowedStates : node.states,
 );
+
+// States to show: loading while a period resolve is in flight; a single resolved
+// state renders the detail view; multi/empty period resolves render the full
+// embedded history with `scopeStates` marking what is in-period (#744).
+const states = $derived.by(() => {
+  if (!params.period || narrowedError) {
+    return node.states;
+  }
+  if (
+    narrowedStates === null ||
+    (hasResolutionModifier &&
+      periodScopeStates === null &&
+      periodScopeResource.loading)
+  ) {
+    return null;
+  }
+  return narrowedStates.length === 1 ? narrowedStates : node.states;
+});
+
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
 // + StatesView's empty-message wording).
 const isNarrowed = $derived(!!params.period && !narrowedError);
+const stateScope = $derived(
+  isNarrowed
+    ? hasResolutionModifier
+      ? (periodScopeStates ?? resolvedStates)
+      : resolvedStates
+    : null,
+);
 
 // ── #670: member identity from the concept-group dimensions ─────────────────
 // LIFTED from DimensionsPanel: the leaf now owns the ONE `/dimensions` fetch and
@@ -235,11 +288,12 @@ let addOutcome = $state<{
   already: number;
 } | null>(null);
 
-// The reactive add plan over the VISIBLE (period-narrowed) states at the page's
-// wire period — recomputed whenever the states or period change. Drives BOTH the
+// The reactive add plan over the RESOLVED (period-narrowed) states at the page's
+// wire period — recomputed whenever the resolution or period changes. Drives BOTH the
 // proactive `choose-variant` selector (rendered only when ≥2 variants co-exist
 // for the period) and the Add gate. `buildAddPlan` is pure + unit-tested.
-const addPlan = $derived(buildAddPlan(states ?? [], params.period ?? null));
+const addStates = $derived(resolvedStates ?? []);
+const addPlan = $derived(buildAddPlan(addStates, params.period ?? null));
 
 // #638 PR2b: the picker's chosen population, when the plan is `choose-variant`.
 // INVISIBLE unless ≥2 variants co-exist for the period; defaults to NONE (so a
@@ -295,7 +349,7 @@ function startAdd(): void {
     // variant's states — a single variant can't
     // be `choose-variant` again, so the result is always `segments` (at most a
     // rep prompt remains); the defensive `kind` guard keeps TS sound.
-    const subset = (states ?? []).filter((s) => s.variant === addVariant);
+    const subset = addStates.filter((s) => s.variant === addVariant);
     const plan = buildAddPlan(subset, params.period ?? null);
     if (plan.kind === "segments") {
       continueWithSegments(plan.segments);
@@ -501,8 +555,7 @@ const repSegment = $derived(
       type="button"
       class="add-to-project"
       disabled={!seedReady ||
-        !states ||
-        states.length === 0 ||
+        addStates.length === 0 ||
         (addPlan.kind === "choose-variant" &&
           !addPlan.options.some((o) => o.variant === addVariant))}
       onclick={startAdd}
@@ -601,6 +654,11 @@ const repSegment = $derived(
          Surface it inline (the picker stays usable) rather than blanking. -->
     <p class="error inline-error" role="alert">{narrowedError}</p>
   {/if}
+  {#if scopeError}
+    <p class="error inline-error" role="alert">
+      Could not load full period value-set context: {scopeError}
+    </p>
+  {/if}
 {/snippet}
 
 {#snippet valueSet()}
@@ -616,6 +674,8 @@ const repSegment = $derived(
       <StatesView
         {states}
         narrowed={isNarrowed}
+        resolutionStates={isNarrowed ? resolvedStates : null}
+        scopeStates={stateScope}
         activeVariant={params.variant ?? null}
         activeValueSetVersion={params.value_set_version ?? null}
         onpickVariant={(variant) => setResolution({ variant })}

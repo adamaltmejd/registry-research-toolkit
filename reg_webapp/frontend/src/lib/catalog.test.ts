@@ -250,7 +250,7 @@ describe("groupHref", () => {
 
   it("percent-encodes each segment the same way catalogHref does", () => {
     // A reserved/non-ASCII char in the key can't produce a malformed URL; the
-    // `/` separators between the fixed segments survive (per-segment encoding).
+    // `/` separators between the route segments survive (per-segment encoding).
     expect(groupHref("scb/lsön", "a/b")).toBe(
       "/catalog/group/scb/ls%C3%B6n/a%2Fb",
     );
@@ -1633,6 +1633,168 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     const vs = distinctValueSets(states);
     expect(vs[0].usages[0].spans).toEqual([
       { from: "1983-01-01", to: "1990-12-31" },
+    ]);
+  });
+
+  it("carries technical changes inside a folded value-set span (#743)", () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2010-01-01",
+        valid_to: "2010-12-31",
+        data_type: "int",
+        delivery_column_name: "KOMMUN",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 1,
+        variant: "doda",
+        valid_from: "2011-01-01",
+        valid_to: "2011-12-31",
+        data_type: "bigint",
+        delivery_column_name: "KOMMUN_ID",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      {
+        from: "2010-01-01",
+        to: "2011-12-31",
+        changes: [
+          {
+            at: "2011-01-01",
+            notes: ["type int -> bigint", "column KOMMUN -> KOMMUN_ID"],
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("does not report technical changes for same-state monthly windows", () => {
+    const states = [
+      state({
+        state_id: 10,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2020-01-31",
+        delivery_column_name: "LonFinkJan",
+      }),
+      state({
+        state_id: 10,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-02-01",
+        valid_to: "2020-02-29",
+        delivery_column_name: "LonFinkFeb",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2020-01-01", to: "2020-02-29" },
+    ]);
+  });
+
+  it("does not report technical changes for overlapping alternatives", () => {
+    const states = [
+      state({
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "A",
+      }),
+      state({
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-06-01",
+        valid_to: "2021-12-31",
+        delivery_column_name: "B",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2020-01-01", to: "2021-12-31" },
+    ]);
+  });
+
+  it("keeps the span-end predecessor after a contained overlap", () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2021-12-31",
+        data_type: "int",
+        delivery_column_name: "A",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2021-01-01",
+        valid_to: "2021-06-30",
+        data_type: "char",
+        delivery_column_name: "B",
+      }),
+      state({
+        state_id: 3,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2022-01-01",
+        valid_to: "2022-12-31",
+        data_type: "bigint",
+        delivery_column_name: "C",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      {
+        from: "2020-01-01",
+        to: "2022-12-31",
+        changes: [
+          {
+            at: "2022-01-01",
+            notes: ["type int -> bigint", "column A -> C"],
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("does not pick an arbitrary transition after equal-end overlapping alternatives", () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "A",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-06-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "B",
+      }),
+      state({
+        state_id: 3,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2021-01-01",
+        valid_to: "2021-12-31",
+        delivery_column_name: "C",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2020-01-01", to: "2021-12-31" },
     ]);
   });
 

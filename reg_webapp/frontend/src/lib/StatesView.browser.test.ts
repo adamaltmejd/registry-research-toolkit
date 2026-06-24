@@ -267,6 +267,234 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
     expect(greyed[0].textContent).toContain("Kommun historisk");
   });
 
+  it("renders technical-change hints inside a folded value-set usage (#743)", async () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 300,
+        value_set_version_label: "Kommun historisk",
+        variant: "doda",
+        valid_from: "2010-01-01",
+        valid_to: "2010-12-31",
+        data_type: "int",
+        delivery_column_name: "KOMMUN",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 300,
+        value_set_version_label: "Kommun historisk",
+        variant: "doda",
+        valid_from: "2011-01-01",
+        valid_to: "2011-12-31",
+        data_type: "bigint",
+        delivery_column_name: "KOMMUN_ID",
+      }),
+    ];
+    render(StatesView, { states, narrowed: false, ...noopCallbacks });
+    await expect
+      .element(
+        page.getByText(
+          "changed 2011: type int -> bigint; column KOMMUN -> KOMMUN_ID",
+        ),
+      )
+      .toBeVisible();
+  });
+
+  it("collapses period-out-of-scope value sets behind a disclosure (#744)", async () => {
+    const inScopePlain = state({
+      state_id: 3,
+      value_set_id: 201,
+      value_set_version_label: "In-period plain",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [classState, inScopePlain, plainState],
+      scopeStates: [classState, inScopePlain],
+      narrowed: true,
+      ...noopCallbacks,
+    });
+    const inlineRows = document.querySelectorAll(
+      "ul.vs-list:not(.out-of-period-list) > li",
+    );
+    expect(inlineRows).toHaveLength(2);
+    expect(inlineRows[0].textContent).toContain("LKF 2007");
+    expect(
+      [...inlineRows].map((row) => row.textContent).join(" "),
+    ).not.toContain("Kommun historisk");
+
+    const disclosure = page.getByText("1 value set outside this period");
+    await expect.element(disclosure).toBeVisible();
+    await expect
+      .element(page.getByText("Kommun historisk", { exact: true }))
+      .not.toBeVisible();
+    await disclosure.click();
+    await expect
+      .element(page.getByText("Kommun historisk", { exact: true }))
+      .toBeVisible();
+  });
+
+  it("counts filtered matches inside the outside-period disclosure (#744 review)", async () => {
+    const inScopePlain = state({
+      state_id: 3,
+      value_set_id: 201,
+      value_set_version_label: "In-period plain",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [classState, inScopePlain, plainState],
+      scopeStates: [classState, inScopePlain],
+      narrowed: true,
+      ...noopCallbacks,
+    });
+    const filter = page.getByRole("textbox", { name: "Filter value sets" });
+    await filter.fill("historisk");
+    await expect.element(page.getByText("1 of 3")).toBeVisible();
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+  });
+
+  it("keeps same-period other-variant value sets inline and greyed (#744 review)", async () => {
+    const samePeriodOtherVariant = state({
+      state_id: 3,
+      value_set_id: 201,
+      value_set_version_label: "Same-period other variant",
+      variant: "fodda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [classState, samePeriodOtherVariant, plainState],
+      scopeStates: [classState, samePeriodOtherVariant],
+      narrowed: true,
+      activeVariant: "doda",
+      ...noopCallbacks,
+    });
+    const inlineRows = [
+      ...document.querySelectorAll<HTMLLIElement>(
+        "ul.vs-list:not(.out-of-period-list) > li",
+      ),
+    ];
+    expect(inlineRows).toHaveLength(2);
+    const otherVariantRow = inlineRows.find((row) =>
+      row.textContent?.includes("Same-period other variant"),
+    );
+    expect(otherVariantRow).toBeDefined();
+    expect(otherVariantRow?.classList.contains("out-of-scope")).toBe(true);
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+  });
+
+  it("uses modifier-resolved states for detail mode when period scope is broader (#744 review)", async () => {
+    render(StatesView, {
+      states: [classState],
+      resolutionStates: [classState],
+      scopeStates: [classState, plainState],
+      narrowed: true,
+      activeVariant: "doda",
+      ...noopCallbacks,
+    });
+    await expect.element(page.getByText("Variant")).toBeVisible();
+    expect(document.querySelector(".vs-list")).toBeNull();
+  });
+
+  it("greys same-period rows outside the active value-set version (#744 review)", async () => {
+    const selectedA = state({
+      state_id: 4,
+      value_set_id: 301,
+      value_set_version_label: "Selected",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-06-30",
+    });
+    const selectedB = state({
+      state_id: 5,
+      value_set_id: 302,
+      value_set_version_label: "Selected",
+      variant: "doda",
+      valid_from: "2008-07-01",
+      valid_to: "2008-12-31",
+    });
+    const otherVersion = state({
+      state_id: 6,
+      value_set_id: 303,
+      value_set_version_label: "Other version",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [selectedA, selectedB, otherVersion, plainState],
+      resolutionStates: [selectedA, selectedB],
+      scopeStates: [selectedA, selectedB, otherVersion],
+      narrowed: true,
+      activeValueSetVersion: "Selected",
+      ...noopCallbacks,
+    });
+    const inlineRows = [
+      ...document.querySelectorAll<HTMLLIElement>(
+        "ul.vs-list:not(.out-of-period-list) > li",
+      ),
+    ];
+    const otherRow = inlineRows.find((row) =>
+      row.textContent?.includes("Other version"),
+    );
+    expect(otherRow).toBeDefined();
+    expect(otherRow?.classList.contains("out-of-scope")).toBe(true);
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+  });
+
+  it("ties active variant styling to the period-matched rows (#744 review)", async () => {
+    const historicalActiveVariant = state({
+      state_id: 7,
+      value_set_id: 304,
+      value_set_version_label: "Shared value set",
+      variant: "doda",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const periodOtherVariant = state({
+      state_id: 8,
+      value_set_id: 304,
+      value_set_version_label: "Shared value set",
+      variant: "fodda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [historicalActiveVariant, periodOtherVariant],
+      resolutionStates: [],
+      scopeStates: [periodOtherVariant],
+      narrowed: true,
+      activeVariant: "doda",
+      ...noopCallbacks,
+    });
+    const rows = document.querySelectorAll<HTMLLIElement>(
+      "ul.vs-list:not(.out-of-period-list) > li",
+    );
+    expect(rows).toHaveLength(1);
+    expect(rows[0].classList.contains("out-of-scope")).toBe(true);
+    expect(document.querySelector(".out-of-period")).toBeNull();
+  });
+
+  it("keeps single-state detail resolution when full history is available (#744)", async () => {
+    render(StatesView, {
+      states: [classState, plainState],
+      scopeStates: [classState],
+      narrowed: true,
+      ...noopCallbacks,
+    });
+    await expect.element(page.getByText("Variant")).toBeVisible();
+    expect(document.querySelector(".vs-list")).toBeNull();
+  });
+
   it("single-state DETAIL mode is unchanged (Variant / Valid / value set)", async () => {
     render(StatesView, {
       states: [

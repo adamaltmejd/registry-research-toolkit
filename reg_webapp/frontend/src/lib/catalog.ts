@@ -9,6 +9,7 @@ import {
   type BindingGroupRef,
   type CatalogNode,
   type ConceptGroup,
+  conceptGroupPath,
   encodeFqid,
   type GroupFacetModel,
   getCatalogNode,
@@ -387,13 +388,7 @@ export function catalogHref(fqidPath: string): string {
  * to it; classification-umbrella groups have no group page (#673). */
 export function groupHref(registerFqid: string, key: string): string {
   const [provider, register] = fqidSegments(registerFqid);
-  return `/catalog/group/${enc(provider)}/${enc(register)}/${enc(key)}`;
-}
-
-/** Per-segment percent-encode (the encoding `catalogHref`/`encodeFqid` apply),
- * tolerating an absent segment as "". */
-function enc(segment: string | undefined): string {
-  return encodeURIComponent(segment ?? "");
+  return conceptGroupPath(provider ?? "", register ?? "", key);
 }
 
 /** Segments of an FQID path (`scb/lisa/kon` → `["scb", "lisa", "kon"]`).
@@ -700,10 +695,18 @@ export function representationsCollapse(reps: Representation[]): boolean {
  * across ADJACENT years (#668 / dogfooding M20). The per-variable annual states
  * (AGI's design) merge into a range render-side — `from`/`to` are the run's outer
  * ISO bounds (the open-ended `9999-12-31` ceiling survives so `formatWindow`
- * renders "since …"). */
+ * renders "since …"). `changes` carries the #309 technical-schema transitions
+ * that would otherwise disappear when adjacent states fold into one span. */
 export interface ValueSetSpan {
   from: string;
   to: string;
+  changes?: ValueSetTechnicalChange[];
+}
+
+/** A technical-schema transition inside one collapsed value-set span (#743). */
+export interface ValueSetTechnicalChange {
+  at: string;
+  notes: string[];
 }
 
 /** One variant's usage of a distinct value set — the variant slug and its
@@ -739,6 +742,51 @@ export interface DistinctValueSet {
   overallSpan: ValueSetSpan;
 }
 
+function displayTechnicalValue(value: string): string {
+  const trimmed = value.trim();
+  return trimmed === "" ? "(none)" : trimmed;
+}
+
+function technicalChangeNotes(
+  prev: VariableStateModel,
+  next: VariableStateModel,
+): string[] {
+  const notes: string[] = [];
+  const prevType = formatDataType(prev.data_type, prev.data_length);
+  const nextType = formatDataType(next.data_type, next.data_length);
+  if (prevType !== nextType) {
+    notes.push(
+      `type ${displayTechnicalValue(prevType)} -> ${displayTechnicalValue(nextType)}`,
+    );
+  }
+  const prevColumn = prev.delivery_column_name ?? "";
+  const nextColumn = next.delivery_column_name ?? "";
+  if (prevColumn !== nextColumn) {
+    notes.push(
+      `column ${displayTechnicalValue(prevColumn)} -> ${displayTechnicalValue(nextColumn)}`,
+    );
+  }
+  return notes;
+}
+
+function appendTechnicalChanges(
+  span: ValueSetSpan,
+  prev: VariableStateModel,
+  next: VariableStateModel,
+): void {
+  // Same-state expanded windows (#319) and overlapping co-delivered alternatives
+  // are not before-after transitions; folding may still combine them for display,
+  // but a "changed" hint would mis-describe them as succession.
+  if (prev.state_id === next.state_id || prev.valid_to >= next.valid_from) {
+    return;
+  }
+  const notes = technicalChangeNotes(prev, next);
+  if (notes.length === 0) {
+    return;
+  }
+  span.changes = [...(span.changes ?? []), { at: next.valid_from, notes }];
+}
+
 /** Collapse a variant's states (already filtered to one value set) into
  * adjacent-year spans (#668 / M20): order by `valid_from`, then merge a state into
  * the open span when it is contiguous with it — its `valid_from` is at or before
@@ -746,14 +794,19 @@ export interface DistinctValueSet {
  * → `…-01-01`, and any overlap, fuse; a real gap year starts a new span). ISO
  * `YYYY-MM-DD` strings compare chronologically. The caller groups by (value set,
  * variant) — NOT by delivery column (a merged monthly-family value set fuses
- * across its 12 month columns by design) — so this tests ONLY time-adjacency. */
+ * across its 12 month columns by design) — so this tests ONLY time-adjacency; the
+ * #743 technical-field transitions are attached as notes instead of splitting the
+ * value-set row. */
 function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
   const ordered = [...states].sort(
     (a, b) =>
       a.valid_from.localeCompare(b.valid_from) ||
+      a.state_id - b.state_id ||
       a.valid_to.localeCompare(b.valid_to),
   );
   const spans: ValueSetSpan[] = [];
+  let previous: VariableStateModel | null = null;
+  let previousAmbiguous = false;
   for (const s of ordered) {
     const open = spans.at(-1);
     // An already-open OPEN-ENDED span swallows everything after it: its ceiling
@@ -763,17 +816,31 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
     // (`Date.toISOString()`'s `±YYYYYY` expanded form sorts BELOW real dates),
     // which would wrongly split a second still-delivered state into its own span.
     if (open && open.to === OPEN_ENDED_VALID_TO) {
+      if (previous && !previousAmbiguous) {
+        appendTechnicalChanges(open, previous, s);
+      }
       continue;
     }
     // Contiguous (or overlapping) with the open span → extend it. The day-after
     // test fuses back-to-back annual windows (`2019-12-31` then `2020-01-01`)
     // without merging across a skipped year (`2019-12-31` then `2021-01-01`).
     if (open && s.valid_from <= dayAfter(open.to)) {
+      if (previous && !previousAmbiguous) {
+        appendTechnicalChanges(open, previous, s);
+      }
       if (s.valid_to > open.to) {
         open.to = s.valid_to;
+        previous = s;
+        previousAmbiguous = false;
+      } else if (s.valid_to === open.to && s.valid_from <= open.to) {
+        // Two co-delivered alternatives reach the same span end; a later
+        // successor has no single predecessor for a technical-change hint.
+        previousAmbiguous = true;
       }
     } else {
       spans.push({ from: s.valid_from, to: s.valid_to });
+      previous = s;
+      previousAmbiguous = false;
     }
   }
   return spans;

@@ -6,6 +6,7 @@ import {
   docSearch,
   getBindingLineageWarnings,
   getCatalogNode,
+  getConceptGroup,
   getDoc,
   getDocsForVariable,
   isCatalogNode,
@@ -130,6 +131,20 @@ describe("getCatalogNode", () => {
   it("percent-encodes a param value with reserved characters", async () => {
     const url = await urlFor("scb/lisa/kon", { period: "2020 Q3&x" });
     expect(url).toContain("?period=2020+Q3%26x");
+  });
+});
+
+describe("getConceptGroup", () => {
+  it("encodes provider/register/key as fixed route segments", async () => {
+    let seen = "";
+    stubFetch(async (url) => {
+      seen = url;
+      return { ok: true, status: 200, json: async () => ({}) };
+    });
+    await getConceptGroup("scb", "lsön", "a/b", "member x/y");
+    expect(seen).toBe(
+      "/api/catalog/group/scb/ls%C3%B6n/a%2Fb?member=member%20x%2Fy",
+    );
   });
 });
 

@@ -431,6 +431,200 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
   });
 });
 
+describe("BindingLeafView period-scoped value-set history (#744)", () => {
+  it("uses the period subset for Add while rendering full history with outside-period collapse", async () => {
+    const inA = state({
+      state_id: 10,
+      variant: "individer",
+      value_set_id: 10,
+      value_set_version_label: "In-period A",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const inB = state({
+      state_id: 11,
+      variant: "individer",
+      value_set_id: 11,
+      value_set_version_label: "In-period B",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    const outside = state({
+      state_id: 12,
+      variant: "outside-population",
+      value_set_id: 12,
+      value_set_version_label: "Outside period",
+      valid_from: "1990-01-01",
+      valid_to: "1990-12-31",
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: [inA, inB],
+    } as never);
+    router.navigate("/catalog/scb/lisa/kon?period=2007..2008");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([inA, inB, outside]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+    await expect
+      .element(page.getByText(/pick one to add/i))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .toBeEnabled();
+  });
+
+  it("uses a period-only scope when a variant modifier is active", async () => {
+    const inA = state({
+      state_id: 20,
+      variant: "individer",
+      value_set_id: 20,
+      value_set_version_label: "In-period A",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const inB = state({
+      state_id: 21,
+      variant: "individer",
+      value_set_id: 21,
+      value_set_version_label: "In-period B",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    const samePeriodOtherVariant = state({
+      state_id: 22,
+      variant: "other-population",
+      value_set_id: 22,
+      value_set_version_label: "Same-period other variant",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    const outside = state({
+      state_id: 23,
+      variant: "outside-population",
+      value_set_id: 23,
+      value_set_version_label: "Outside period",
+      valid_from: "1990-01-01",
+      valid_to: "1990-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(
+      async (_fqid, params) =>
+        ({
+          states: params?.variant
+            ? [inA, inB]
+            : [inA, inB, samePeriodOtherVariant],
+        }) as never,
+    );
+    router.navigate(
+      "/catalog/scb/lisa/kon?period=2007..2008&variant=individer",
+    );
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([inA, inB, samePeriodOtherVariant, outside]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+    expect(
+      [...document.querySelectorAll(".vs-label")].some(
+        (el) => el.textContent === "Same-period other variant",
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps modifier-resolved single-state detail with a broader period-only scope", async () => {
+    const picked = state({
+      state_id: 30,
+      variant: "individer",
+      value_set_id: 30,
+      value_set_version_label: "Picked",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const samePeriodOtherVariant = state({
+      state_id: 31,
+      variant: "other-population",
+      value_set_id: 31,
+      value_set_version_label: "Same-period other variant",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(
+      async (_fqid, params) =>
+        ({
+          states: params?.variant ? [picked] : [picked, samePeriodOtherVariant],
+        }) as never,
+    );
+    router.navigate("/catalog/scb/lisa/kon?period=2007&variant=individer");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([picked, samePeriodOtherVariant]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText("Value-set version", { exact: true }))
+      .toBeVisible();
+    expect(document.querySelector(".vs-list")).toBeNull();
+  });
+
+  it("keeps Add scoped to the primary resolve when the period-scope fetch fails", async () => {
+    const picked = state({
+      state_id: 40,
+      variant: "individer",
+      value_set_id: 40,
+      value_set_version_label: "Picked",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const otherVariant = state({
+      state_id: 41,
+      variant: "other-population",
+      value_set_id: 41,
+      value_set_version_label: "Other",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      if (params?.variant) {
+        return { states: [picked] } as never;
+      }
+      throw new Error("scope failed");
+    });
+    router.navigate("/catalog/scb/lisa/kon?period=2007&variant=individer");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([picked, otherVariant]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText(/Could not load full period value-set context/))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .toBeEnabled();
+  });
+});
+
 describe("BindingLeafView member identity (#670)", () => {
   // A grouped member: its `node.group` references a register concept group, and
   // /dimensions returns that group with the member carrying distinguishing

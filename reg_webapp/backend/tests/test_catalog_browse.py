@@ -10,6 +10,7 @@ stub, and the 404-on-not-found mapping. The path-traversal guard lives in
 
 from __future__ import annotations
 
+import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
@@ -242,6 +243,24 @@ def test_group_route_returns_concept_group_node(client):
     ]
     # No focus hint requested → `member` is null.
     assert body["member"] is None
+
+
+def test_group_route_accepts_slash_bearing_key(catalog_db):
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source, facet_axis) "
+            "VALUES (98, 'variable', 2, 'slash/key', 'Slash key', 'edge', NULL)"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable (variable_id, group_id) "
+            "SELECT variable_id, 98 FROM variable "
+            "WHERE register_id = 2 AND slug = 'syss'"
+        )
+    with TestClient(create_app()) as client:
+        resp = client.get("/api/catalog/group/scb/rams/slash%2Fkey")
+    assert resp.status_code == 200
+    assert resp.json()["key"] == "slash/key"
 
 
 def test_group_route_carries_per_member_coverage(client):

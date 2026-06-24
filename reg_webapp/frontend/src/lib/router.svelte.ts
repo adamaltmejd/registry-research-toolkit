@@ -92,17 +92,16 @@ export function parseRoute(pathname: string): Route {
     }
     const segs = segments as string[];
     // The concept-group SUBJECT route (#617):
-    // `/catalog/group/<provider>/<register>/<key>` (4 segs, `group` prefix). It
-    // mirrors the backend's fixed-shape route, distinct from an FQID path — a
-    // group isn't FQID-addressable. Anything `group/...` of a different arity is
-    // NOT a group route and falls through to `catalog-node` (a bogus FQID that
-    // 404s server-side), matching the backend (the fixed 4-seg route only).
-    if (segs.length === 4 && segs[0] === "group") {
+    // `/catalog/group/<provider>/<register>/<key...>` (`group` prefix). It
+    // mirrors the backend's `{key:path}` route, distinct from an FQID path — a
+    // group isn't FQID-addressable. Anything `group/<provider>/<register>` with
+    // no key falls through to `catalog-node` (a bogus FQID that 404s server-side).
+    if (segs.length >= 4 && segs[0] === "group") {
       return {
         name: "group",
         provider: segs[1],
         register: segs[2],
-        key: segs[3],
+        key: segs.slice(3).join("/"),
       };
     }
     return { name: "catalog-node", fqidPath: segs.join("/") };

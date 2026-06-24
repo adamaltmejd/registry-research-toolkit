@@ -57,7 +57,7 @@ describe("parseRoute", () => {
   });
 
   it("parses the concept-group SUBJECT route (#617)", () => {
-    // `/catalog/group/<provider>/<register>/<key>` (4 segs, `group` prefix) is the
+    // `/catalog/group/<provider>/<register>/<key...>` (`group` prefix) is the
     // group subject — NOT an FQID path. Distinct route name + parsed triple.
     expect(parseRoute("/catalog/group/scb/rams/ink")).toEqual({
       name: "group",
@@ -67,10 +67,25 @@ describe("parseRoute", () => {
     });
   });
 
-  it("does NOT treat a non-4-seg group path as the group route (#617)", () => {
-    // A bare `group/<p>/<r>` (3 segs) is NOT the fixed group route — it falls
+  it("parses slash-bearing concept-group keys as the group route", () => {
+    expect(parseRoute("/catalog/group/scb/rams/a%2Fb")).toEqual({
+      name: "group",
+      provider: "scb",
+      register: "rams",
+      key: "a/b",
+    });
+    expect(parseRoute("/catalog/group/scb/rams/a/b")).toEqual({
+      name: "group",
+      provider: "scb",
+      register: "rams",
+      key: "a/b",
+    });
+  });
+
+  it("does NOT treat a keyless group path as the group route (#617)", () => {
+    // A bare `group/<p>/<r>` (3 segs) is NOT the group route — it falls
     // through to `catalog-node` (a bogus FQID that 404s server-side), mirroring
-    // the backend's fixed 4-seg route.
+    // the backend route's required key tail.
     expect(parseRoute("/catalog/group/scb/rams")).toEqual({
       name: "catalog-node",
       fqidPath: "group/scb/rams",
