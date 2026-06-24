@@ -806,6 +806,7 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
   );
   const spans: ValueSetSpan[] = [];
   let previous: VariableStateModel | null = null;
+  let previousAmbiguous = false;
   for (const s of ordered) {
     const open = spans.at(-1);
     // An already-open OPEN-ENDED span swallows everything after it: its ceiling
@@ -815,7 +816,7 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
     // (`Date.toISOString()`'s `±YYYYYY` expanded form sorts BELOW real dates),
     // which would wrongly split a second still-delivered state into its own span.
     if (open && open.to === OPEN_ENDED_VALID_TO) {
-      if (previous) {
+      if (previous && !previousAmbiguous) {
         appendTechnicalChanges(open, previous, s);
       }
       continue;
@@ -824,16 +825,22 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
     // test fuses back-to-back annual windows (`2019-12-31` then `2020-01-01`)
     // without merging across a skipped year (`2019-12-31` then `2021-01-01`).
     if (open && s.valid_from <= dayAfter(open.to)) {
-      if (previous) {
+      if (previous && !previousAmbiguous) {
         appendTechnicalChanges(open, previous, s);
       }
       if (s.valid_to > open.to) {
         open.to = s.valid_to;
         previous = s;
+        previousAmbiguous = false;
+      } else if (s.valid_to === open.to && s.valid_from <= open.to) {
+        // Two co-delivered alternatives reach the same span end; a later
+        // successor has no single predecessor for a technical-change hint.
+        previousAmbiguous = true;
       }
     } else {
       spans.push({ from: s.valid_from, to: s.valid_to });
       previous = s;
+      previousAmbiguous = false;
     }
   }
   return spans;

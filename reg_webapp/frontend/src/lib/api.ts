@@ -315,9 +315,9 @@ export function encodeFqid(fqidPath: string): string {
   return fqidPath.split("/").map(encodeURIComponent).join("/");
 }
 
-/** The fixed concept-group subject route, shared by SPA links and API fetches.
- * `key` is one path segment, so encode it directly rather than joining it into
- * an FQID-shaped path where embedded `/` would become a separator. */
+/** The concept-group subject route, shared by SPA links and API fetches. `key`
+ * rides the route tail, so encode it directly rather than joining it into an
+ * FQID-shaped path where embedded `/` would become a separator. */
 export function conceptGroupPath(
   provider: string,
   register: string,

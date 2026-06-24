@@ -250,7 +250,7 @@ describe("groupHref", () => {
 
   it("percent-encodes each segment the same way catalogHref does", () => {
     // A reserved/non-ASCII char in the key can't produce a malformed URL; the
-    // `/` separators between the fixed segments survive (per-segment encoding).
+    // `/` separators between the route segments survive (per-segment encoding).
     expect(groupHref("scb/lsön", "a/b")).toBe(
       "/catalog/group/scb/ls%C3%B6n/a%2Fb",
     );
@@ -1762,6 +1762,39 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
           },
         ],
       },
+    ]);
+  });
+
+  it("does not pick an arbitrary transition after equal-end overlapping alternatives", () => {
+    const states = [
+      state({
+        state_id: 1,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-01-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "A",
+      }),
+      state({
+        state_id: 2,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2020-06-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "B",
+      }),
+      state({
+        state_id: 3,
+        value_set_id: 1,
+        variant: "individer",
+        valid_from: "2021-01-01",
+        valid_to: "2021-12-31",
+        delivery_column_name: "C",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs[0].usages[0].spans).toEqual([
+      { from: "2020-01-01", to: "2021-12-31" },
     ]);
   });
 

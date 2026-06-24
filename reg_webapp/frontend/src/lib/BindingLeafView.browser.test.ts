@@ -582,6 +582,47 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .toBeVisible();
     expect(document.querySelector(".vs-list")).toBeNull();
   });
+
+  it("keeps Add scoped to the primary resolve when the period-scope fetch fails", async () => {
+    const picked = state({
+      state_id: 40,
+      variant: "individer",
+      value_set_id: 40,
+      value_set_version_label: "Picked",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const otherVariant = state({
+      state_id: 41,
+      variant: "other-population",
+      value_set_id: 41,
+      value_set_version_label: "Other",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      if (params?.variant) {
+        return { states: [picked] } as never;
+      }
+      throw new Error("scope failed");
+    });
+    router.navigate("/catalog/scb/lisa/kon?period=2007&variant=individer");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([picked, otherVariant]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText(/Could not load full period value-set context/))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Add to project" }))
+      .toBeEnabled();
+  });
 });
 
 describe("BindingLeafView member identity (#670)", () => {

@@ -173,6 +173,9 @@ const collapsedValueSets = $derived(
         )
         .filter((vs) => !inPeriod(vs)),
 );
+const filteredValueSetCount = $derived(
+  shownValueSets.length + collapsedValueSets.length,
+);
 
 // A value set is IN SCOPE for the active resolution when no variant is pinned, or
 // when one of its variants matches the pinned `?variant`, and when the
@@ -505,7 +508,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
       <FilterInput
         bind:value={filter}
         total={valueSets.length}
-        shown={shownValueSets.length}
+        shown={filteredValueSetCount}
         label="Filter value sets"
         placeholder="Filter value sets…"
       />

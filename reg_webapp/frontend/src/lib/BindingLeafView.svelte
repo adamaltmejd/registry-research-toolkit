@@ -110,15 +110,18 @@ const periodScopeStates = $derived.by(() => {
   return data !== null && !isCatalogNode(data) ? data.states : null;
 });
 
-// ANY error on the period resolve (a 422 bad-modifier, but also a 5xx / 502 /
+// ANY error on the primary period resolve (a 422 bad-modifier, but also a 5xx / 502 /
 // network drop where `status` stays null) is surfaced inline — the metadata +
 // the picker stay usable and the states fall back to the full history. Without
 // this (filtering to only 422/400), a server/network error would leave
 // `narrowedStates` null and wedge the states section on a permanent
 // "Loading states…" with no feedback.
 const narrowedError = $derived(
-  params.period && (periodResource.error || periodScopeResource.error)
-    ? (periodResource.error ?? periodScopeResource.error)
+  params.period && periodResource.error ? periodResource.error : null,
+);
+const scopeError = $derived(
+  params.period && !periodResource.error && hasResolutionModifier
+    ? periodScopeResource.error
     : null,
 );
 
@@ -139,7 +142,9 @@ const states = $derived.by(() => {
   }
   if (
     narrowedStates === null ||
-    (hasResolutionModifier && periodScopeStates === null)
+    (hasResolutionModifier &&
+      periodScopeStates === null &&
+      periodScopeResource.loading)
   ) {
     return null;
   }
@@ -152,7 +157,7 @@ const isNarrowed = $derived(!!params.period && !narrowedError);
 const stateScope = $derived(
   isNarrowed
     ? hasResolutionModifier
-      ? periodScopeStates
+      ? (periodScopeStates ?? resolvedStates)
       : resolvedStates
     : null,
 );
@@ -648,6 +653,11 @@ const repSegment = $derived(
     <!-- The full node is still shown; a bad ?period/?variant modifier 422'd.
          Surface it inline (the picker stays usable) rather than blanking. -->
     <p class="error inline-error" role="alert">{narrowedError}</p>
+  {/if}
+  {#if scopeError}
+    <p class="error inline-error" role="alert">
+      Could not load full period value-set context: {scopeError}
+    </p>
   {/if}
 {/snippet}
 

@@ -46,7 +46,7 @@ _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{provider}/{register}/variants",
     # #617: the concept-group SUBJECT route — a fixed-shape 4-seg route with a
     # `group` literal PREFIX, declared above the greedy catch-all.
-    "/api/catalog/group/{provider}/{register}/{key}",
+    "/api/catalog/group/{provider}/{register}/{key:path}",
     "/api/catalog/{fqid:path}/states",
     "/api/catalog/{fqid:path}/predecessors",
     "/api/catalog/{fqid:path}/successors",
@@ -140,7 +140,7 @@ def test_reserved_slug_set_mirrors_catalog_routes():
         f"route: live routes have {sorted(variants_tails)}, reserved value is "
         f"{RESERVED_VARIANTS_SLUG!r}. Update reg_meta.fqid or routes/catalog.py."
     )
-    # The `/catalog/group/{provider}/{register}/{key}` subject route (#617) puts a
+    # The `/catalog/group/{provider}/{register}/{key:path}` subject route (#617) puts a
     # LITERAL token at the position the `{provider}` segment then follows, so unlike
     # `variants` (a tail) its reservation is on the PROVIDER SLOT — a provider named
     # `group` would have its binding-suffix URL captured by this earlier-declared

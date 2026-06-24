@@ -335,6 +335,29 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       .toBeVisible();
   });
 
+  it("counts filtered matches inside the outside-period disclosure (#744 review)", async () => {
+    const inScopePlain = state({
+      state_id: 3,
+      value_set_id: 201,
+      value_set_version_label: "In-period plain",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(StatesView, {
+      states: [classState, inScopePlain, plainState],
+      scopeStates: [classState, inScopePlain],
+      narrowed: true,
+      ...noopCallbacks,
+    });
+    const filter = page.getByRole("textbox", { name: "Filter value sets" });
+    await filter.fill("historisk");
+    await expect.element(page.getByText("1 of 3")).toBeVisible();
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+  });
+
   it("keeps same-period other-variant value sets inline and greyed (#744 review)", async () => {
     const samePeriodOtherVariant = state({
       state_id: 3,
