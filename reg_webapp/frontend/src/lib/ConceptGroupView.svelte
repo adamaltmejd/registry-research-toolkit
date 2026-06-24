@@ -11,6 +11,8 @@ import {
   OPEN_ENDED_VALID_TO,
   YEARLESS_VALID_FROM,
 } from "./catalog";
+import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
+import { historyGraphFromGroup } from "./history_graph";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
   type Coverage,
@@ -60,6 +62,7 @@ const resource = asyncResource(() =>
   getConceptGroup(provider, register, key, memberHint ?? undefined),
 );
 const node = $derived(resource.data);
+const historyGraph = $derived(node ? historyGraphFromGroup(node) : null);
 
 // The register the group lives under — the breadcrumb target and a member's
 // shared ancestor (a group is always register-scoped).
@@ -395,7 +398,13 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     />
   {/snippet}
 
-  <SubjectView title={node.label} {description} {picker} />
+  {#snippet relationships()}
+    {#if historyGraph}
+      <HistoryGraphPrototype graph={historyGraph} />
+    {/if}
+  {/snippet}
+
+  <SubjectView title={node.label} {description} {picker} {relationships} />
 {/if}
 
 <style>

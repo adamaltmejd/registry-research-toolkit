@@ -4,6 +4,8 @@ import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationDimensionsPanel from "./ClassificationDimensionsPanel.svelte";
 import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 import { nodeLabel } from "./catalog";
+import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
+import { historyGraphFromClassification } from "./history_graph";
 import SubjectView from "./SubjectView.svelte";
 
 // The classification LEAF — a standard ("Utbildningsnivå") rendered through the
@@ -14,6 +16,7 @@ import SubjectView from "./SubjectView.svelte";
 // is a later PR), and no docs surface (classifications carry no doc mentions), so
 // those two SubjectView sections are omitted.
 let { node }: { node: ClassificationNodeData } = $props();
+const historyGraph = $derived(historyGraphFromClassification(node));
 </script>
 
 {#snippet description()}
@@ -33,6 +36,7 @@ let { node }: { node: ClassificationNodeData } = $props();
      succession chain (#571, oldest → current). Each omits itself when empty / for a
      standalone classification with no succession. -->
 {#snippet relationships()}
+  <HistoryGraphPrototype graph={historyGraph} />
   <ClassificationDimensionsPanel {node} />
   <ClassificationLineagePanels {node} />
 {/snippet}

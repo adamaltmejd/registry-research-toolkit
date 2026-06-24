@@ -21,6 +21,8 @@ import {
 } from "./catalog";
 import DimensionsPanel from "./DimensionsPanel.svelte";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
+import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
+import { historyGraphFromBinding } from "./history_graph";
 import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
@@ -178,6 +180,7 @@ const dimResource = asyncResource(() => getBindingDimensions(fqidPath));
 const dimGroups = $derived(dimResource.data?.dimensions ?? []);
 const dimLoading = $derived(dimResource.loading);
 const dimError = $derived(dimResource.error);
+const historyGraph = $derived(historyGraphFromBinding(node, dimGroups));
 
 // The identity row (qualifier + group link) renders ONCE the /dimensions fetch
 // has RESOLVED — gated on `!dimLoading && !dimError`. During the sub-second load
@@ -689,6 +692,8 @@ const repSegment = $derived(
 {/snippet}
 
 {#snippet relationships()}
+  <HistoryGraphPrototype graph={historyGraph} />
+
   <!-- #489/#670: the concept-group dimensions this variable belongs to (the "pick
        your variant" facet groups). PRESENTATIONAL since #670 — the `/dimensions`
        fetch is owned by THIS view (it also feeds the header qualifier + group

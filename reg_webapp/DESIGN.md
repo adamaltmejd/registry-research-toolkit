@@ -991,6 +991,44 @@ edition chain with a granularity cross-reference (`ClassificationDimensionsPanel
 Keeping them separate means each renders exactly its own embedded shape (see Catalog
 router structure → variable / classification chains) with no kind-branching.
 
+### History graph spike (#667) — model and primitive recommendation
+
+The #666 unified history view should use **entity nodes with column slices**, not
+top-level column nodes and not variable-only nodes that hide columns. The primary nodes
+are variable editions, group members, and classification editions; each variable node
+can carry zero or more `column_slices` keyed by delivery column / variant / validity
+window. This keeps monthly families such as `agi1lonfink` readable as one variable over
+time while still exposing the 12 delivery columns that matter for same-column versus
+different-variable contrast. A top-level column-node graph would explode dense families
+and group pages; a variable-only graph would lose the column distinction that motivated
+the spike.
+
+The production data contract should be a **backend history-graph payload**, not
+client-side stitching over the existing subject payloads. The #667 frontend prototype
+can stitch enough to render the viewed variable, group members, and classification
+edition chains from today's `succession_chain`, `related_to`, `lineage`, `/dimensions`,
+and `edition_chain` shapes, but the gaps are load-bearing:
+
+- predecessor/successor variables do not include their delivery states or column windows
+  in the viewed binding payload;
+- `related_to` carries no validity window;
+- lineage names source states but not their source-state column/value-set shape;
+- group mode has members + coverage only, so all-member succession/related/lineage would
+  require N+1 leaf fetches and inconsistent failure domains.
+
+The backend graph payload should therefore carry `{nodes, edges, window}` directly:
+nodes = entity nodes plus variable `column_slices`; edges = succession / related /
+lineage / group-member with validity windows and optional column relation metadata. The
+frontend should render that payload without re-deriving graph semantics.
+
+The graph primitive should start as **hand-built SVG + scoped CSS**, not a graph
+library. The view is a deterministic time-axis graph, not a force layout: lanes, bars,
+edge curves, labels, keyboard/ARIA wrappers, and responsive overflow are small enough to
+own locally and can reuse the existing design-token set. Revisit a dedicated viz
+dependency only if production requirements add pan/zoom, collision-avoidance,
+large-graph virtualization, or interactive graph editing that materially exceeds this
+custom primitive.
+
 ## Deployment (`global` on Fly.io, Cloudflare edge in front)
 
 §6.5's origin-platform decision (2026-06-11): the container runs on **Fly.io**, with a
