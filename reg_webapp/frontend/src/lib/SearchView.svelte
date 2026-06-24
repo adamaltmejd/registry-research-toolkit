@@ -13,6 +13,7 @@ import type {
 import { docSearch, SEARCH_MIN_QUERY_LENGTH, search } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, showingOf } from "./catalog";
+import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
@@ -486,10 +487,11 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
 {/snippet}
 
 <!-- A documentation hit (#394): links to the minimal /doc viewer (the shell's
-     use:link intercepts it). `snippet` is an FTS EXCERPT rendered as TEXT only
-     (Svelte auto-escapes `{value}`) — NEVER {@html}, as it may carry highlight
-     markers and the full body is never fetched/rendered (it lives at the SCB
-     source). -->
+     use:link intercepts it). `snippet` is an FTS EXCERPT rendered through the
+     same SAFE inline-emphasis subset as DocMentionsPanel: parse into DATA
+     segments, then interpolate each `{seg.text}` so Svelte auto-escapes it.
+     NEVER {@html}, as the full body is never fetched/rendered (it lives at the
+     SCB source). -->
 {#snippet docHit(result: DocResult)}
   <a href={`/doc/${encodeURIComponent(result.filename)}`}>
     <span class="label">{result.display_name ?? result.filename}</span>
@@ -498,7 +500,12 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     <span class="hit-context muted">{result.register}</span>
   {/if}
   {#if result.snippet}
-    <span class="hit-detail muted">{result.snippet}</span>
+    <span class="hit-detail muted"
+      >{#each parseInlineMarkdown(result.snippet) as seg, si (si)}{#if seg.emphasis === "strong"}<mark
+          >{seg.text}</mark
+        >{:else if seg.emphasis === "em"}<em>{seg.text}</em
+        >{:else}{seg.text}{/if}{/each}</span
+    >
   {/if}
 {/snippet}
 
@@ -586,6 +593,12 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   .hit-detail {
     flex-basis: 100%;
     font-size: 0.9em;
+  }
+  .hit-detail mark {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-radius: var(--radius);
+    padding: 0 0.1em;
   }
   .concept-group summary {
     display: flex;

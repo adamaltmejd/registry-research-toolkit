@@ -897,10 +897,10 @@ describe("SearchView — docs group (#394)", () => {
     expect(docSearch).not.toHaveBeenCalled();
   });
 
-  it("renders a docs snippet as LITERAL TEXT, never parsed HTML (republication guard)", async () => {
-    // The snippet may carry FTS markers; `{value}` auto-escapes. A `<b>` in the
-    // snippet must surface as literal characters, not a parsed element — so no
-    // `<b>` exists inside the docs section.
+  it("renders a docs snippet as escaped text, never parsed HTML (republication guard)", async () => {
+    // The snippet may carry HTML-looking text; the inline renderer still
+    // interpolates DATA segments through Svelte, so a `<b>` in the snippet must
+    // surface as literal characters, not as a parsed element.
     vi.mocked(search).mockResolvedValue(ONE_REGISTER);
     vi.mocked(docSearch).mockResolvedValue(
       docHits([
@@ -922,6 +922,33 @@ describe("SearchView — docs group (#394)", () => {
 
     await expect.element(page.getByText("foo <b>bar</b> baz")).toBeVisible();
     expect(document.querySelector(".search-view b")).toBeNull();
+  });
+
+  it("renders docs FTS highlight markers with safe inline markdown (#745)", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockResolvedValue(
+      docHits([
+        {
+          filename: "lisa_kon.md",
+          display_name: "LISA — Kön",
+          fuzzy: false,
+          register: "LISA",
+          snippet: "…the **kön** variable and _below_ <b>tag</b>…",
+          source: null,
+          source_url: null,
+          tags: [],
+          variable: null,
+        },
+      ]),
+    );
+    setQuery("kon");
+    await render(SearchView);
+
+    const detail = document.querySelector(".search-view .hit-detail");
+    expect(detail?.textContent).toBe("…the kön variable and below <b>tag</b>…");
+    expect(detail?.querySelector("mark")?.textContent).toBe("kön");
+    expect(detail?.querySelector("em")?.textContent).toBe("below");
+    expect(detail?.querySelector("b")).toBeNull();
   });
 });
 
