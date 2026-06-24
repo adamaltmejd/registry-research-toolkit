@@ -8,8 +8,8 @@ import {
 
 let { graph }: { graph: HistoryGraph } = $props();
 
-const width = 920;
-const leftPad = 172;
+const width = 760;
+const leftPad = 258;
 const rightPad = 34;
 const topPad = 44;
 const rowHeight = 68;
@@ -49,7 +49,8 @@ function nodeBar(node: { from: number | null; to: number | null }): {
   const from = node.from ?? domain.min;
   const to = displayTo(node.to);
   const start = xForYear(from);
-  return { x: start, width: Math.max(xForYear(to) - start, 10) };
+  const minimumWidth = node.from !== null && node.from === node.to ? 18 : 10;
+  return { x: start, width: Math.max(xForYear(to) - start, minimumWidth) };
 }
 
 function columnBar(column: HistoryColumnSlice): { x: number; width: number } {
@@ -73,7 +74,7 @@ function edgePath(edge: HistoryGraphEdge): string {
 }
 
 function shortLabel(label: string): string {
-  return label.length > 21 ? `${label.slice(0, 20)}...` : label;
+  return label.length > 29 ? `${label.slice(0, 28)}...` : label;
 }
 </script>
 
@@ -163,7 +164,7 @@ function shortLabel(label: string): string {
     </div>
 
     {#if graph.warnings.length > 0}
-      <details class="contract-gaps">
+      <details class="contract-gaps" open={edgeRows.length === 0}>
         <summary>Contract gaps</summary>
         <ul>
           {#each graph.warnings as warning (warning)}
@@ -202,7 +203,6 @@ function shortLabel(label: string): string {
   }
   svg {
     display: block;
-    min-width: 720px;
     width: 100%;
     height: auto;
   }
@@ -232,6 +232,9 @@ function shortLabel(label: string): string {
   .classification .bar {
     fill: #f0efe8;
     stroke: #8a6f2a;
+  }
+  .classification.current .bar {
+    fill: #eadfbd;
   }
   .self .bar {
     stroke-width: 2;

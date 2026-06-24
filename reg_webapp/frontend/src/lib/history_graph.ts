@@ -160,6 +160,27 @@ function dimensionHint(dimensions: ConceptGroup[]): string | undefined {
   return axes.size > 0 ? `facets: ${[...axes].sort().join(", ")}` : undefined;
 }
 
+function classificationLabel(edition: {
+  name?: string | null;
+  slug: string;
+}): string {
+  const name = edition.name ?? edition.slug;
+  const suffix = name.split(" — ").at(-1);
+  const year = classificationSlugYear(edition.slug)?.toString();
+  if (suffix && suffix !== name && year) {
+    return `${year} · ${suffix}`;
+  }
+  return edition.slug
+    .replaceAll("-", " ")
+    .replace(/([A-Za-zÅÄÖåäö]+)(\d{4})$/, "$1 $2")
+    .replace(/^([a-zåäö]+)(?= )/, (prefix) => prefix.toUpperCase());
+}
+
+function classificationSlugYear(slug: string): number | null {
+  const year = Number(slug.match(/(\d{4})$/)?.[1]);
+  return Number.isInteger(year) ? year : null;
+}
+
 export function historyGraphFromBinding(
   node: BindingNodeData,
   dimensions: ConceptGroup[] = [],
@@ -405,17 +426,21 @@ export function historyGraphFromClassification(
     fanOutKnownYears.length > 0 ? Math.max(...fanOutKnownYears) : null;
   const nodes: HistoryGraphNode[] = editions.map((edition, i) => {
     const previousCut = i > 0 ? editions[i - 1].effective_year : null;
-    const fanOutYear = edition.effective_year ?? fanOutCurrentYear;
+    const fanOutYear =
+      classificationSlugYear(edition.slug) ??
+      edition.effective_year ??
+      fanOutCurrentYear;
     return {
       id: edition.fqid ?? `class/${edition.slug}`,
       kind: "classification",
-      label: edition.name ?? edition.slug,
+      label: classificationLabel(edition),
       fqid: edition.fqid,
       from: fanOut ? fanOutYear : previousCut,
       to: fanOut ? fanOutYear : edition.effective_year,
       current: edition.is_current,
       self: edition.is_self,
       columns: [],
+      detail: edition.name ?? undefined,
     };
   });
   const edges: HistoryGraphEdge[] = [];

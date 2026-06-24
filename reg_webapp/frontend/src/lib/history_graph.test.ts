@@ -245,7 +245,7 @@ describe("history graph prototype model", () => {
         {
           slug: "sun1996",
           fqid: "class/sun1996",
-          name: "SUN 1996",
+          name: "Svensk utbildningsnomenklatur 1996",
           effective_year: 2000,
           is_self: true,
           is_current: false,
@@ -253,7 +253,7 @@ describe("history graph prototype model", () => {
         {
           slug: "sun-grupp2000",
           fqid: "class/sun-grupp2000",
-          name: "SUN grupp 2000",
+          name: "Svensk utbildningsnomenklatur 2000 — Utbildningsgrupper",
           effective_year: 2020,
           is_self: false,
           is_current: false,
@@ -261,7 +261,7 @@ describe("history graph prototype model", () => {
         {
           slug: "sun-grupp2020",
           fqid: "class/sun-grupp2020",
-          name: "SUN grupp 2020",
+          name: "Svensk utbildningsnomenklatur 2020 — Utbildningsgrupper",
           effective_year: null,
           is_self: false,
           is_current: true,
@@ -269,7 +269,7 @@ describe("history graph prototype model", () => {
         {
           slug: "sun-inriktning2000",
           fqid: "class/sun-inriktning2000",
-          name: "SUN inriktning 2000",
+          name: "Svensk utbildningsnomenklatur 2000 — Utbildningsinriktning",
           effective_year: 2020,
           is_self: false,
           is_current: false,
@@ -277,7 +277,7 @@ describe("history graph prototype model", () => {
         {
           slug: "sun-inriktning2020",
           fqid: "class/sun-inriktning2020",
-          name: "SUN inriktning 2020",
+          name: "Svensk utbildningsnomenklatur 2020 — Utbildningsinriktning",
           effective_year: null,
           is_self: false,
           is_current: true,
@@ -285,7 +285,7 @@ describe("history graph prototype model", () => {
         {
           slug: "sun-niva2000",
           fqid: "class/sun-niva2000",
-          name: "SUN niva 2000",
+          name: "Svensk utbildningsnomenklatur 2000 — Utbildningsnivå",
           effective_year: 2020,
           is_self: false,
           is_current: false,
@@ -293,7 +293,7 @@ describe("history graph prototype model", () => {
         {
           slug: "sun-niva2020",
           fqid: "class/sun-niva2020",
-          name: "SUN niva 2020",
+          name: "Svensk utbildningsnomenklatur 2020 — Utbildningsnivå",
           effective_year: null,
           is_self: false,
           is_current: true,
@@ -310,6 +310,15 @@ describe("history graph prototype model", () => {
       "class/sun-niva2000",
       "class/sun-niva2020",
     ]);
+    expect(graph.nodes.map((node) => node.label)).toEqual([
+      "SUN 1996",
+      "2000 · Utbildningsgrupper",
+      "2020 · Utbildningsgrupper",
+      "2000 · Utbildningsinriktning",
+      "2020 · Utbildningsinriktning",
+      "2000 · Utbildningsnivå",
+      "2020 · Utbildningsnivå",
+    ]);
     expect(
       graph.nodes.map((node) => ({
         id: node.id,
@@ -317,12 +326,12 @@ describe("history graph prototype model", () => {
         to: node.to,
       })),
     ).toEqual([
-      { id: "class/sun1996", from: 2000, to: 2000 },
-      { id: "class/sun-grupp2000", from: 2020, to: 2020 },
+      { id: "class/sun1996", from: 1996, to: 1996 },
+      { id: "class/sun-grupp2000", from: 2000, to: 2000 },
       { id: "class/sun-grupp2020", from: 2020, to: 2020 },
-      { id: "class/sun-inriktning2000", from: 2020, to: 2020 },
+      { id: "class/sun-inriktning2000", from: 2000, to: 2000 },
       { id: "class/sun-inriktning2020", from: 2020, to: 2020 },
-      { id: "class/sun-niva2000", from: 2020, to: 2020 },
+      { id: "class/sun-niva2000", from: 2000, to: 2000 },
       { id: "class/sun-niva2020", from: 2020, to: 2020 },
     ]);
     expect(graph.edges).toEqual([]);
