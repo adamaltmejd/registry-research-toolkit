@@ -1013,6 +1013,8 @@ and `edition_chain` shapes, but the gaps are load-bearing:
   in the viewed binding payload;
 - `related_to` carries no validity window;
 - lineage names source states but not their source-state column/value-set shape;
+- classification fan-out chains arrive as flattened closures, so the client cannot
+  recover real branch edges or incoming windows without re-querying succession data;
 - group mode has members + coverage only, so all-member succession/related/lineage would
   require N+1 leaf fetches and inconsistent failure domains.
 
