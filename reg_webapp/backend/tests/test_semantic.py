@@ -914,6 +914,33 @@ def test_representation_default_with_synthesized_feb_end_does_not_crash(
     assert result.ok
 
 
+def test_representation_default_merged_family_uses_expanded_windows(catalog):
+    # #319/#465: lonfink is one annual state expanded into Jan/Feb/Mars windows
+    # sharing the same state_id. `_default` must compare the expanded windows, not
+    # collapse them by state_id before checking a pinned representation.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": "_default",
+        "bindings": [
+            {
+                "variable": "scb/lisa/lonfink",
+                "type": "numeric",
+                "representation": "LonFinkMars",
+            }
+        ],
+    }
+    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    drift = [
+        i
+        for i in result.issues
+        if i.code == "binding_state_drifts_within_period"
+        and "covers only part of period _default" in i.message
+    ]
+    assert len(drift) == 1
+    assert result.ok
+
+
 # ── #207: an explicit range PARTIALLY covered by the concept's states.
 # `resolve_at` returns the states INTERSECTING the requested `[from, to]`; if their
 # union leaves a gap NO column delivers, the binding silently drops that sub-range.
@@ -1492,7 +1519,7 @@ def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalo
 # before this layer runs; semantic resolution is PER SEGMENT
 # (`period_outside_state_validity` / `range_period_partially_covered` name the
 # segment) while the representation/ambiguity/drift checks run on the
-# `state_id`-deduped union of every segment's states.
+# compound-key-deduped union of every segment's states.
 
 
 def test_list_period_clean_resolves_without_issues(catalog):

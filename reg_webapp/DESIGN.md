@@ -1215,7 +1215,7 @@ Rules, walking each source's `register_variant` + every binding:
   representation's presence — also run per segment (the whole-series union would
   false-positive on windows overlapping only BETWEEN segments). Only the series-level
   properties — the resolved columns for steward admission and the sequential-drift info
-  — use the `state_id`-deduped union of every segment's states. `Catalog.resolve_at`
+  — use the compound-key-deduped union of every segment's states. `Catalog.resolve_at`
   never sees the list form; since #340 the catalog `?period=` query accepts the comma
   wire by doing the same per-segment resolve + union in the route (see The `?period`
   query above).

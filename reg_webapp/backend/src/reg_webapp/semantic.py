@@ -444,6 +444,11 @@ def _representation_under_covers(
     return _range_coverage_gaps(matched, lo, hi) != _range_coverage_gaps(states, lo, hi)
 
 
+def _state_window_key(state) -> tuple[int, str | None, str]:  # noqa: ANN001
+    """Identity for one resolved state/window, matching the catalog route dedup."""
+    return state.state_id, state.delivery_column_name, state.valid_from
+
+
 def _check_binding(
     binding: Binding,
     source: Source,
@@ -554,7 +559,7 @@ def _check_binding_period(
     (requested instants only exist inside segments; the whole-series union
     would false-positive on windows overlapping BETWEEN segments). Only the
     series-level properties — the resolved columns for steward admission and
-    the sequential-drift info — use the `state_id`-deduped UNION of every
+    the sequential-drift info — use the compound-key-deduped UNION of every
     segment's states.
 
     Returns the binding's RESOLVED delivery columns (the distinct
@@ -572,17 +577,19 @@ def _check_binding_period(
     variant = source.register_variant.split("/")[2]
     # Resolve PER SEGMENT (#307): the list form is structurally sorted and
     # disjoint, and `Catalog.resolve_at` never sees it — each segment resolves
-    # on its own. The union is keyed by `state_id` because one state can
-    # intersect several segments and must count ONCE (a duplicate would falsely
-    # trip the sequential-drift info below). For a scalar period this is a
-    # single iteration over the same resolve_at call as before.
+    # on its own. The union is keyed by the catalog route's compound state-window
+    # identity: one state can intersect several segments and must count ONCE, but
+    # a merged monthly-family state expands into several windows that share the
+    # same annual `state_id` and differ by column/window start (#319).
+    # For a scalar period this is a single iteration over the same resolve_at
+    # call as before.
     segments = period_segments(source.period)
     # Loop-invariant whole-series context appended to per-segment messages
     # (empty for a scalar period, so scalar message text is unchanged).
     series_context = (
         f" (segment of {period_display(source.period)})" if len(segments) > 1 else ""
     )
-    states_by_id: dict[int, VariableState] = {}
+    states_by_key: dict[tuple[int, str | None, str], VariableState] = {}
     # Per-segment state lists, retained because two checks below are
     # PER-INSTANT properties and must not see the whole-series union:
     # co-existence/ambiguity (Codex P2 on #334 — two columns whose windows
@@ -604,7 +611,7 @@ def _check_binding_period(
         if not seg_states:
             uncovered.append(segment)
             continue
-        states_by_id.update((s.state_id, s) for s in seg_states)
+        states_by_key.update((_state_window_key(s), s) for s in seg_states)
         per_segment.append((segment, seg_states))
 
         # PARTIAL RANGE COVERAGE (the whole-concept-under-coverage case), PER
@@ -671,7 +678,7 @@ def _check_binding_period(
     # Chronological union across segments (resolve_at returns each segment
     # ascending; segments are sorted, but a state spanning two segments lands
     # once, so re-sort for the window math below).
-    states = sorted(states_by_id.values(), key=lambda s: (s.valid_from, s.valid_to))
+    states = sorted(states_by_key.values(), key=lambda s: (s.valid_from, s.valid_to))
 
     # REPRESENTATION. A FQID names one concept; the reg_meta build enforces
     # one value set per `(variable, variant, period, delivery_column)`, but a
@@ -760,9 +767,9 @@ def _check_binding_period(
         # 2020 but only a sibling column covers 2015 — outer bounds match, yet
         # the 2015 extract would be silently empty for this column). Same
         # `info` semantics as the under-coverage check above.
-        matched_ids = {s.state_id for s in matched}
+        matched_keys = {_state_window_key(s) for s in matched}
         for segment, seg_states in per_segment:
-            if not any(s.state_id in matched_ids for s in seg_states):
+            if not any(_state_window_key(s) in matched_keys for s in seg_states):
                 issues.append(
                     _issue(
                         "binding_state_drifts_within_period",
@@ -793,13 +800,13 @@ def _check_binding_period(
     # kept set (the pinned column when `representation` is set — so this still
     # never fires on a pinned binding). For a scalar period this is exactly the
     # old single-probe behavior (one segment, seg_states == the union).
-    kept_ids = {s.state_id for s in states}
+    kept_keys = {_state_window_key(s) for s in states}
     coexisting = sorted(
         {
             column
             for _segment, seg_states in per_segment
             for column in _coexisting_columns(
-                [s for s in seg_states if s.state_id in kept_ids]
+                [s for s in seg_states if _state_window_key(s) in kept_keys]
             )
         }
     )
@@ -825,7 +832,9 @@ def _check_binding_period(
     # make this unreachable against a clean catalog). Per segment for the same
     # reason as the co-existence probe above (a per-instant property).
     if any(
-        _has_codelivered_versions([s for s in seg_states if s.state_id in kept_ids])
+        _has_codelivered_versions(
+            [s for s in seg_states if _state_window_key(s) in kept_keys]
+        )
         for _segment, seg_states in per_segment
     ):
         labels: dict[int | None, str] = {}
