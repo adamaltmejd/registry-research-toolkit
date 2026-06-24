@@ -75,7 +75,7 @@ classification = "SEKTOR2000"
 note           = "curated:#494 label-unambiguous sector codes"
 
 [[link]]
-variable       = "scb/yrkesreg/sektor"
+variable       = "scb/yrkesreg/sektor-ku1"
 classification = "SEKTOR2000"
 note           = "curated:#494 label-unambiguous sector codes"
 
@@ -90,7 +90,7 @@ classification = "SEKTOR2000"
 note           = "curated:#494 label-unambiguous sector codes"
 
 [[link]]
-variable       = "scb/yrkesreg/sektorkod-storsta-forvarvskalla"
+variable       = "scb/yrkesreg/sektorkod-storsta"
 classification = "SEKTOR2000"
 note           = "curated:#494 label-unambiguous sector codes"
 
