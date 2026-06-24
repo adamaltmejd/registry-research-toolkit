@@ -1784,6 +1784,22 @@ class TestPopulateVariableSlugs:
         # rather than emptying out.
         assert _name_slug("(areal i ha)") is not None
 
+    def test_unit_strip_falls_back_when_remainder_underivable(self) -> None:
+        # Stripping a unit parenthetical must never turn a derivable name into None.
+        # If the remainder is a RESERVED token or PERIOD-shaped, fall back to the
+        # raw name (which slugs fine) instead of dropping to the last-resort arm.
+        from reg_meta.fqid import derive_variable_slug
+
+        from reg_meta_build.fqid_slugs import _name_slug
+
+        # remainder "Class" is reserved on its own → keep the full slug.
+        assert _name_slug("Class (procent)") == "class-procent"
+        # remainder "2020" is period-shaped → keep the full slug.
+        assert _name_slug("(kr) 2020") == "kr-2020"
+        # both round-trip through the validator (addressable slugs).
+        for slug in ("class-procent", "kr-2020"):
+            assert derive_variable_slug(slug) == slug
+
     def test_auto_toml_parses_as_provider_scb(self, tmp_path: Path) -> None:
         # The generated scb.auto.toml must load via load_slug_dir as provider
         # `scb` (the `.auto` suffix must not break provider-slug grammar).

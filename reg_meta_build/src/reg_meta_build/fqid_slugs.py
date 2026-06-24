@@ -1769,8 +1769,16 @@ def _name_slug(name: str | None, *, cap: int = _NAME_SLUG_MAX_LEN) -> str | None
     `_strip_unit_parentheticals`) so a unit annotation never eats slug budget.
     """
     if name is not None:
-        # Unit-paren de-noise; fall back to the raw name if it strips to nothing.
-        name = _strip_unit_parentheticals(name) or name
+        # Unit-paren de-noise (#732 lever A). Adopt the stripped name ONLY if it
+        # differs AND still derives to a valid slug — stripping must never turn a
+        # derivable name into None: a strip that empties the name, or leaves a
+        # reserved token (`Class (procent)` → `Class`) or a period-shaped token
+        # (`(kr) 2020` → `2020`), falls back to the raw name (which the un-stripped
+        # path slugged fine). derive is only re-run when a paren was actually
+        # stripped (rare), so the no-paren common case pays nothing.
+        stripped = _strip_unit_parentheticals(name)
+        if stripped != name and stripped and derive_variable_slug(stripped) is not None:
+            name = stripped
     base = derive_variable_slug(name)
     if base is None or len(base) <= cap:
         return base

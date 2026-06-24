@@ -1856,7 +1856,12 @@ fresh-build `scb.auto.toml` diff confirms no `fold` / `kolumnnamn` /
   **closed set** scoped to pure units, so a *distinguishing* parenthetical
   (`(3   positioner)`, `(landsting)`, `(SRU)`) is never dropped. Mined coverage:
   reproduces the agricultural-area families (\~16 SCB slugs) exactly; 0 clean-slug
-  movement.
+  movement. A strip that empties the name, or leaves a reserved/period-shaped remainder,
+  falls back to the raw name — the de-noise never *loses* a slug. In principle stripping
+  could collapse two drift siblings that differ only by their unit parenthetical onto
+  one `name_freq` base and re-route a *clean* drift slug; the rule is therefore gated by
+  the real-seed `dbdiff` proving 0 non-worklist slug moved (a per-corpus safety
+  certificate, not an in-code invariant).
 - **Deferred (mined, evidence-backed — kept as curation judgement, NOT generator
   rules):**
   - *General Swedish stopword strip* reproduces \~645 renames but **regresses \~1,587
