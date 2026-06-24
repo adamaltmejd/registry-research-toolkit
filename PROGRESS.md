@@ -49,6 +49,17 @@ spec for a follow-up #732 PR. Never end with nothing mergeable.
     runs: `wf_c2ac01f8-c81` (v1), `wf_dba9389c-0dc` (v2).
   - On restart: re-invoke `Workflow({scriptPath:"/tmp/scb-cur/wf_curate.js"})` — done
     batches skip; then `python3 /tmp/scb-cur/validate_proposals.py`.
+  - **Round-1 result**: keep 5,877 / rename 5,929 (**49.8% keep — matches \~half**), 0
+    grammar/reserved/period/non-worklist collisions, 40 intra-register duplicates. 1
+    batch failed mid-run (`scb-258-c3`, API error) → re-curated.
+  - **Round-2**: 3,821 flagged across 107 registers → 136 chunks (`round2_input/`, run
+    `wf_dfcf5c30-eb8`). Reasons: long 2,540, hard 1,018, coined 924, over40 237,
+    collision 80. Validator now also flags long *keeps* (>32c) — caught two lazy
+    all-keep batches (`scb-254-c4`/`scb-258-c3`). Reviewers get per-register reserved
+    namespace + family slugs + flag reasons; `round2/<chunk>.json` overrides round1 per
+    source_id.
+  - Round-2 restart: `Workflow({scriptPath:"/tmp/scb-cur/wf_round2.js"})` (done chunks
+    skip); rebuild round2_input via `python3 /tmp/scb-cur/round2_export.py` if lost.
 - [ ] **P4 — Reconcile + generator rules** (#732): mine (auto→final) pairs → rule
   structure; implement safe rules in `fqid_slugs.py` (+ tests + DESIGN.md); per-rule
   dbdiff guard (must move NO clean slug); reconcile → emit `scb.toml`/SOS overrides
