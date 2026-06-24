@@ -60,6 +60,28 @@ const graph: HistoryGraph = {
   warnings: ["prototype gap"],
 };
 
+const standaloneClassificationGraph: HistoryGraph = {
+  mode: "classification",
+  title: "Classification editions",
+  nodeGrain: "entity-with-column-slices",
+  dataContract: "client-stitch-prototype",
+  nodes: [
+    {
+      id: "class/sun2020",
+      kind: "classification",
+      label: "sun2020",
+      fqid: "class/sun2020",
+      from: 2020,
+      to: 2020,
+      self: true,
+      current: true,
+      columns: [],
+    },
+  ],
+  edges: [],
+  warnings: [],
+};
+
 describe("HistoryGraphPrototype", () => {
   it("renders the graph, column count, legend, and contract gaps", async () => {
     await render(HistoryGraphPrototype, { graph });
@@ -72,5 +94,13 @@ describe("HistoryGraphPrototype", () => {
     await expect.element(page.getByText("4 columns")).toBeVisible();
     await expect.element(page.getByText("succession")).toBeVisible();
     await expect.element(page.getByText("Contract gaps")).toBeVisible();
+  });
+
+  it("omits a graph with only one plain entity", async () => {
+    await render(HistoryGraphPrototype, {
+      graph: standaloneClassificationGraph,
+    });
+
+    expect(document.querySelector(".history-graph")).toBeNull();
   });
 });

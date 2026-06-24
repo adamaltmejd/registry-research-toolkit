@@ -29,6 +29,11 @@ const nodeIds = $derived(new Set(graph.nodes.map((node) => node.id)));
 const edgeRows = $derived(
   graph.edges.filter((edge) => nodeIds.has(edge.from) && nodeIds.has(edge.to)),
 );
+const hasGraphContent = $derived(
+  graph.nodes.length > 1 ||
+    edgeRows.length > 0 ||
+    graph.nodes.some((node) => node.columns.length > 1),
+);
 const editionYears = $derived(
   [
     ...new Set(
@@ -136,7 +141,7 @@ function shortLabel(label: string): string {
 }
 </script>
 
-{#if graph.nodes.length > 0}
+{#if hasGraphContent}
   <section class="history-graph" aria-labelledby={`${graph.mode}-history-graph-heading`}>
     <div class="heading-row">
       <h3 id={`${graph.mode}-history-graph-heading`}>{graph.title}</h3>
