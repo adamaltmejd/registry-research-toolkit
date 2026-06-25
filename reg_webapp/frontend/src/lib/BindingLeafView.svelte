@@ -9,6 +9,7 @@ import {
   type StatesResponse,
 } from "./api";
 import { asyncResource } from "./async.svelte";
+import BindingLineageWarnings from "./BindingLineageWarnings.svelte";
 import {
   type AddSegment,
   buildAddPlan,
@@ -27,7 +28,6 @@ import {
   historyGraphFromBinding,
   historyGraphFromGroup,
 } from "./history_graph";
-import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
 import { regMetaReleaseTag } from "./project_data";
@@ -39,10 +39,10 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 import { windowStore } from "./window.svelte";
 
 // The binding LEAF — the addressable variable, its resolution controls, the
-// states view, and the lineage panels. The FULL record (metadata + embedded
+// states view, and the relationship graph. The FULL record (metadata + embedded
 // edges + the default states) is resolved ONCE by the parent (CatalogNodeView,
 // no query) and passed in as `node`, so it's ALWAYS present — a cold deep-link
-// to `…/kon?period=2020` renders the metadata + lineage immediately while the
+// to `…/kon?period=2020` renders the metadata + relationships immediately while the
 // states narrow.
 //
 // Resolution state (`?period`/`?variant`/`?value_set_version`) lives in the URL
@@ -727,11 +727,11 @@ const repSegment = $derived(
        without blanking the leaf. Omits itself entirely when in no group. -->
   <DimensionsPanel groups={dimGroups} loading={dimLoading} error={dimError} />
 
-  <LineagePanels {fqidPath} {node} />
+  <BindingLineageWarnings {fqidPath} />
 {/snippet}
 
 {#snippet docs()}
-  <!-- #402: "Mentioned in documentation" — a SIBLING of the lineage panels,
+  <!-- #402: "Mentioned in documentation" — a sibling optional panel,
        deliberately a separate component over a separate optional DB (its own
        failure domain; a docs error/timeout/absent-index never blanks the leaf). -->
   <DocMentionsPanel {node} />

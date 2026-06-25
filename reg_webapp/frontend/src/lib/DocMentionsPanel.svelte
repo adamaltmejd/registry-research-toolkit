@@ -4,9 +4,9 @@ import { asyncResource } from "./async.svelte";
 import { fqidSegments, showingOf } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 
-// The binding-leaf "Mentioned in documentation" panel (#402). A SIBLING of
-// LineagePanels — a deliberately SEPARATE component over a SEPARATE optional DB
-// (the docs FTS index), so it's an independent FAILURE DOMAIN: a docs fetch
+// The binding-leaf "Mentioned in documentation" panel (#402). A deliberately
+// SEPARATE component over a SEPARATE optional DB (the docs FTS index), so it's
+// an independent FAILURE DOMAIN: a docs fetch
 // error / timeout / absent index must NEVER blank or wedge the leaf (mirrors how
 // #394's SearchView fires a second independent asyncResource for its docs group).
 // The whole panel's worst case is one inline muted/error line inside this section.
@@ -15,7 +15,7 @@ import { parseInlineMarkdown } from "./inline_markdown";
 // match, NOT an authoritative variable→doc link; the section-level caption marks
 // the list as heuristic.
 //
-// Omit-when-empty (the LineagePanels / DimensionsPanel ethos): the WHOLE section
+// Omit-when-empty: the WHOLE section
 // is omitted when there's nothing usable to show — no docs index, no docs for
 // this register, or zero hits — but NOT while still loading or on error (we never
 // hide a section whose state is unknown, which would read as a confirmed absence).
@@ -36,9 +36,9 @@ const q = $derived(node.name?.trim() || fqidSegments(node.fqid)[2]);
 const grouped = $derived(!!node.group);
 
 // Read `q`/`register` SYNCHRONOUSLY inside `fn` so the effect tracks them and
-// refetches when the leaf changes (same pattern as BindingLeafView's
-// periodResource / LineagePanels' resources). The teardown `signal` aborts a
-// superseded request; `getDocsForVariable` layers its ~12s timeout on top.
+// refetches when the leaf changes (same pattern as BindingLeafView's period
+// resource). The teardown `signal` aborts a superseded request;
+// `getDocsForVariable` layers its ~12s timeout on top.
 const resource = asyncResource((signal) =>
   getDocsForVariable(q, { register, limit: 5, signal }),
 );
@@ -121,8 +121,6 @@ const show = $derived(
 {/if}
 
 <style>
-  /* Match LineagePanels' section/h3 vocabulary (scoped styles don't pierce into
-     this child component, so the minimal h3 rules are copied here). */
   .doc-mentions {
     margin-top: 1.5rem;
   }

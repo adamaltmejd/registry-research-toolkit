@@ -5,12 +5,12 @@ import CodeList from "./CodeList.svelte";
 // The classification-leaf value-set / code viewer (#609) — the section a user
 // drilling into a standard ("Utbildningsnivå") reads to see and SEARCH its codes.
 // The node EMBEDS the resolved edition's codes (`codes`, code-ordered), so the
-// panel renders SYNCHRONOUSLY — no fetch (mirrors ClassificationLineagePanels'
-// embedded `edition_chain`). The codes are PUBLIC classification codes, not
+// panel renders SYNCHRONOUSLY — no fetch (mirrors the embedded `edition_chain`).
+// The codes are PUBLIC classification codes, not
 // row-level data. Codes are per-edition: this list is the VIEWED edition's only;
 // other editions are reached via the edition-chain panel (each loads its own).
 //
-// Omit-when-empty (the LineagePanels ethos): no codes → no section at all. Since
+// Omit-when-empty: no codes → no section at all. Since
 // the codes arrive embedded (resolved with the node), "empty" is a confirmed
 // absence, not an unknown-loading state, so there is no loading/error arm here.
 //

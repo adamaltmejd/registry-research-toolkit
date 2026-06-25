@@ -11,7 +11,7 @@ import ConceptGroupRow from "./ConceptGroupRow.svelte";
 // aggregate" surfaces as a sibling-edition list. This is the classification dual of
 // the binding-leaf DimensionsPanel.
 //
-// Omit-when-empty (the LineagePanels ethos): a classification in no umbrella group
+// Omit-when-empty: a classification in no umbrella group
 // (the common case) shows nothing. The codes arrive embedded, so "empty" is a
 // confirmed absence — no loading/error arm.
 let { node }: { node: ClassificationNodeData } = $props();

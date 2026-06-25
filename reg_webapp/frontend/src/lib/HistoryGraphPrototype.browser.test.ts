@@ -246,9 +246,9 @@ describe("HistoryGraphPrototype", () => {
       ),
     ).not.toBeNull();
     expect(document.querySelector(".legend")).toBeNull();
-    expect(
-      document.querySelector<HTMLDetailsElement>("details.contract-gaps")?.open,
-    ).toBe(false);
+    await expect
+      .element(page.getByRole("button", { name: "Contract gaps" }))
+      .toBeVisible();
   });
 
   it("renders classifications through the shared graph surface without a timeline axis", async () => {

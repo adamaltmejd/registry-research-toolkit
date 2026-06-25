@@ -16,7 +16,7 @@ import ConceptGroupRow from "./ConceptGroupRow.svelte";
 // leaf node, so an error here renders this section's inline alert WITHOUT blanking
 // the leaf (mirrors DocMentionsPanel's rationale).
 //
-// Omit-when-empty (the LineagePanels ethos): the WHOLE section is omitted when
+// Omit-when-empty: the WHOLE section is omitted when
 // the variable is in no group — but NOT while still loading or on error (we never
 // hide a section whose state is unknown, which would read as a confirmed absence).
 let {

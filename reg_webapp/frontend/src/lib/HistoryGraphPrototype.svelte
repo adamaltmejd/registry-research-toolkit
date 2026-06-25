@@ -1,4 +1,5 @@
 <script lang="ts">
+import { Collapsible } from "bits-ui";
 import { catalogHref } from "./catalog";
 import {
   type HistoryColumnSlice,
@@ -297,14 +298,18 @@ function shortLabel(label: string, max = 29): string {
     {/if}
 
     {#if graph.warnings.length > 0}
-      <details class="contract-gaps">
-        <summary>Contract gaps</summary>
-        <ul>
-          {#each graph.warnings as warning (warning)}
-            <li>{warning}</li>
-          {/each}
-        </ul>
-      </details>
+      <Collapsible.Root class="contract-gaps">
+        <Collapsible.Trigger class="disclosure-trigger">
+          Contract gaps
+        </Collapsible.Trigger>
+        <Collapsible.Content>
+          <ul class="contract-gap-list">
+            {#each graph.warnings as warning (warning)}
+              <li>{warning}</li>
+            {/each}
+          </ul>
+        </Collapsible.Content>
+      </Collapsible.Root>
     {/if}
   </section>
 {/if}
@@ -438,7 +443,17 @@ function shortLabel(label: string, max = 29): string {
     color: var(--muted);
     font-size: var(--text-sm, 0.9rem);
   }
-  .contract-gaps ul {
+  .disclosure-trigger {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-align: left;
+  }
+  .contract-gap-list {
     margin: 0.4rem 0 0;
     padding-left: 1.25rem;
   }

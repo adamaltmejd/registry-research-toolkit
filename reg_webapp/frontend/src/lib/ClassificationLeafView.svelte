@@ -8,7 +8,6 @@ import {
 import { asyncResource } from "./async.svelte";
 import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationDimensionsPanel from "./ClassificationDimensionsPanel.svelte";
-import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 import { nodeLabel } from "./catalog";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
 import {
@@ -127,7 +126,6 @@ const graphError = $derived(graphData.error);
     <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
   {/if}
   <ClassificationDimensionsPanel {node} />
-  <ClassificationLineagePanels {node} />
 {/snippet}
 
 <SubjectView

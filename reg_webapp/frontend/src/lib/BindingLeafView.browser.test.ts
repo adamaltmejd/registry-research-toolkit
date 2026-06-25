@@ -64,7 +64,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
 }
 
 /** A minimal BindingNode leaf carrying `states`; the embedded edge arms are empty
- * (no succession/related/lineage panels) so only the picker under test renders.
+ * so only the picker under test renders.
  * `over` lets a case add fields the #670 member-identity path reads (`fqid`,
  * `name`, `group`). */
 function node(
@@ -204,6 +204,46 @@ beforeEach(() => {
 });
 
 const SEED = { regMetaVersion: "reg_meta/v1.0.0", steward: "global" } as const;
+
+describe("BindingLeafView relationship warnings", () => {
+  it("renders lineage warnings as a compact disclosure, not the retired panels", async () => {
+    vi.mocked(getBindingLineageWarnings).mockResolvedValue({
+      binding: "scb/lisa/kon",
+      lineage_warnings: [
+        {
+          consumer_state_id: 42,
+          warning_kind: "no_source_state",
+          message: "No source state found for this consumer state.",
+        },
+      ],
+    } as never);
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    const trigger = page.getByRole("button", { name: /Lineage warnings/ });
+    await expect.element(trigger).toBeVisible();
+    await expect.element(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect
+      .element(page.getByText("No source state found for this consumer state."))
+      .not.toBeVisible();
+
+    await trigger.click();
+    await expect.element(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect
+      .element(page.getByText("No source state found for this consumer state."))
+      .toBeVisible();
+    expect(document.querySelector(".lineage-panels")).toBeNull();
+    await expect
+      .element(page.getByText("No succession or lineage links."))
+      .not.toBeInTheDocument();
+  });
+});
 
 describe("BindingLeafView add gate (#638 PR2b)", () => {
   it("≥2 co-existing variants render the population selector and gate Add until picked", async () => {
@@ -362,21 +402,20 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
       vintageYear: 2024,
     });
 
-    // The disclosure renders with a visible "Technical details" summary, collapsed
-    // by default. The demoted rows are in the DOM but NOT visible while collapsed,
-    // so assert STRUCTURE (inside the disclosure), not visibility.
-    await expect.element(page.getByText("Technical details")).toBeVisible();
-    const disclosure = document.querySelector<HTMLDetailsElement>(
-      "details.tech-details",
-    );
+    const trigger = page.getByRole("button", { name: "Technical details" });
+    await expect.element(trigger).toBeVisible();
+    await expect.element(trigger).toHaveAttribute("aria-expanded", "false");
+
+    await trigger.click();
+    await expect.element(trigger).toHaveAttribute("aria-expanded", "true");
+    const disclosure = document.querySelector<HTMLElement>(".tech-details");
     expect(disclosure).not.toBeNull();
-    expect(disclosure?.open).toBe(false);
     // Sensitive + Identifier live INSIDE the disclosure, not the prominent meta.
     expect(disclosure?.textContent).toContain("Sensitive");
     expect(disclosure?.textContent).toContain("Identifier");
     // ...and are NOT in any other (prominent) meta block on the page.
     const promptMeta = [...document.querySelectorAll("dl.meta")].filter(
-      (dl) => !dl.closest("details.tech-details"),
+      (dl) => !dl.closest(".tech-details"),
     );
     for (const dl of promptMeta) {
       expect(dl.textContent).not.toContain("Sensitive");
@@ -397,23 +436,27 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
       vintageYear: 2024,
     });
 
-    // The "Technical details" summary is visible (two of them render — assert the
-    // summary text exists, then disambiguate by content below). The demoted rows
-    // are in the DOM but NOT visible while collapsed, so assert STRUCTURE.
+    // The "Technical details" trigger is visible (two of them render — expand
+    // both, then disambiguate by content below).
     await expect
-      .element(page.getByText("Technical details").first())
+      .element(page.getByRole("button", { name: "Technical details" }).first())
       .toBeVisible();
+    await page
+      .getByRole("button", { name: "Technical details" })
+      .first()
+      .click();
+    await page
+      .getByRole("button", { name: "Technical details" })
+      .nth(1)
+      .click();
 
-    // Disambiguation hazard (#638 PR4): TWO `details.tech-details` render here —
+    // Disambiguation hazard (#638 PR4): TWO `.tech-details` render here —
     // the description's (Sensitive/Identifier) AND the state detail's (Data type/
     // Delivery column). Select the state's by its content, not by index.
     const stateTech = [
-      ...document.querySelectorAll<HTMLDetailsElement>("details.tech-details"),
+      ...document.querySelectorAll<HTMLElement>(".tech-details"),
     ].find((d) => d.textContent?.includes("Data type"));
     expect(stateTech).toBeDefined();
-    // Collapsed by default, with both structural rows inside (content stays in the
-    // DOM while collapsed).
-    expect(stateTech?.open).toBe(false);
     expect(stateTech?.textContent).toContain("Data type");
     expect(stateTech?.textContent).toContain("Delivery column");
     // The user-facing state fields stay PROMINENT — in the state detail's own
@@ -423,7 +466,7 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
     const stateDetail = stateTech?.closest(".state-detail");
     const promptMeta = [
       ...(stateDetail?.querySelectorAll("dl.meta") ?? []),
-    ].find((dl) => !dl.closest("details.tech-details"));
+    ].find((dl) => !dl.closest(".tech-details"));
     expect(promptMeta).toBeDefined();
     const promptText = promptMeta?.textContent ?? "";
     expect(promptText).toContain("Variant");

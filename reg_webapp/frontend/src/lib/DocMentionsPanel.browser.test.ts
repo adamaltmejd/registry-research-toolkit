@@ -5,8 +5,8 @@ import type { BindingNodeData, DocVariableMentions } from "./api";
 import { getDocsForVariable } from "./api";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 
-// Mock the single GET the panel drives (mirrors LineagePanels' api-mock style);
-// keep the rest of api.ts real (the type exports). Each case stubs
+// Mock the single GET the panel drives; keep the rest of api.ts real (the type
+// exports). Each case stubs
 // `getDocsForVariable` and renders `<DocMentionsPanel node=… />`.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
@@ -17,7 +17,7 @@ vi.mock("./api", async (importOriginal) => {
 });
 
 // A binding leaf node. The panel only reads `node.fqid` and `node.name`, so the
-// other fields are empty/zero (mirrors how LineagePanels' test builds its node).
+// other fields are empty/zero.
 function node(over: Partial<BindingNodeData> = {}): BindingNodeData {
   return {
     kind: "binding",

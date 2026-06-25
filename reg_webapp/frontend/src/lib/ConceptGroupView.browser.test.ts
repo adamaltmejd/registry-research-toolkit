@@ -178,15 +178,14 @@ describe("ConceptGroupView (#617)", () => {
       key: "ink",
     });
 
-    // The disclosure renders with a visible "Technical details" summary, collapsed
-    // by default. The demoted rows are in the DOM but NOT visible while collapsed,
-    // so assert STRUCTURE (inside the disclosure), not visibility.
-    await expect.element(page.getByText("Technical details")).toBeVisible();
-    const disclosure = document.querySelector<HTMLDetailsElement>(
-      "details.tech-details",
-    );
+    const trigger = page.getByRole("button", { name: "Technical details" });
+    await expect.element(trigger).toBeVisible();
+    await expect.element(trigger).toHaveAttribute("aria-expanded", "false");
+
+    await trigger.click();
+    await expect.element(trigger).toHaveAttribute("aria-expanded", "true");
+    const disclosure = document.querySelector<HTMLElement>(".tech-details");
     expect(disclosure).not.toBeNull();
-    expect(disclosure?.open).toBe(false);
     // All three build-derivation rows — Group key, Facets, and Source — live
     // INSIDE the disclosure now (#638 PR4 demoted them together).
     expect(disclosure?.textContent).toContain("Group");
@@ -198,10 +197,10 @@ describe("ConceptGroupView (#617)", () => {
     // The group key's <code> sits inside the disclosure — not in a prominent block.
     // (Exact "ink" matches only the key, not "Inkomst"/the inkjan/inkfeb members.)
     const groupKey = page.getByText("ink", { exact: true }).element();
-    expect(groupKey.closest("details.tech-details")).not.toBeNull();
+    expect(groupKey.closest(".tech-details")).not.toBeNull();
     // There is NO prominent (non-disclosure) `dl.meta` left in the description.
     const promptMeta = [...document.querySelectorAll("dl.meta")].filter(
-      (dl) => !dl.closest("details.tech-details"),
+      (dl) => !dl.closest(".tech-details"),
     );
     expect(promptMeta).toHaveLength(0);
   });
