@@ -2237,21 +2237,25 @@ already-grouped member:
      `concept_groups.auto.toml`, or a stale `exclude` — FAIL the build (EXIT_CONFIG);
      curation drift is fixed, not silently dropped. Both kinds are provider-gated (a
      `--providers=sos` build skips scb families instead of failing).
-   - `[[classification_group]]` (#516) — a curated single-axis classification umbrella:
-     a `key`, `label`, `axis` (the single `facet_axis` every member shares), and a list
-     of `[[classification_group.members]]` entries, each with `classification` (a
-     classification slug), `value` (the facet value, e.g. `"niva"`), and `label` (the
-     facet display label). This is the `kind='classification'` dual of
-     `_apply_curated_groups` — it populates `concept_group_classification` rather than
-     `concept_group_variable`. The SUN group is the worked example: `group:sun` with
-     `axis = "dimension"`, members `sun2020-niva` (Utbildningsnivå),
+   - `[[classification_group]]` (#516) — a curated classification umbrella: a `key`,
+     `label`, optional `axis`, and a list of `[[classification_group.members]]` entries,
+     each with `classification` (a classification slug), `value` (the picker label key,
+     e.g. `"niva"`), and `label` (the picker display label). This is the
+     `kind='classification'` dual of `_apply_curated_groups` — it populates
+     `concept_group_classification` rather than `concept_group_variable`. The umbrella
+     `axis` is **optional**: the shipped umbrellas (SUN `group:sun`, ISCED
+     `isced2011`+`isced-f2013`, NordDRG `drg`+`mdc`) are **axis-less** — their members
+     are distinct classifications, not points on a shared scale, so `facet_axis` is NULL
+     at the group level. Each member still carries its curated short `value`/`label`
+     (the picker label); `concept_group_classification`'s per-member facet columns are
+     non-NULL regardless of the absent group axis. The webapp renders the member-noun as
+     "members". The SUN group has members `sun2020-niva` (Utbildningsnivå),
      `sun2020-inriktning` (Utbildningsinriktning), `sun2020-grupp` (Utbildningsgrupper),
      `niva-oldv1` (Nivå – aggregat, 7 nivåer), and `niva-grovv1` (Nivå – aggregat, 5
-     nivåer). The two nivå aggregates are version-independent coarsenings (no succession
-     edge) so they ride the single `dimension` axis; the proper granularity surface is
-     deferred to the value-set viewer (#609). Prior editions (`sun1996`, 2000 editions)
-     are intentionally excluded — they are temporal predecessors of each dimension and
-     belong in `classification_replaced_by` (#571), not in the umbrella group.
+     nivåer); the proper granularity surface is deferred to the value-set viewer (#609).
+     Prior editions (`sun1996`, 2000 editions) are intentionally excluded — they are
+     temporal predecessors and belong in `classification_replaced_by` (#571), not in the
+     umbrella group.
 
 Every `group_key` — whether derived (edge: min member slug; token: stem) or curated — is
 validated URL-path-safe at the single `_insert_group` seam that writes all
