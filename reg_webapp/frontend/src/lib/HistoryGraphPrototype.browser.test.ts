@@ -79,6 +79,33 @@ const graph: HistoryGraph = {
   warnings: ["prototype gap"],
 };
 
+const relatedColumnGraph: HistoryGraph = {
+  ...graph,
+  nodes: [
+    ...graph.nodes,
+    {
+      id: "scb/lisa/related-income",
+      kind: "variable",
+      label: "Related income",
+      fqid: "scb/lisa/related-income",
+      from: 2019,
+      to: null,
+      columns: [],
+    },
+  ],
+  edges: [
+    {
+      id: "related:scb/lisa/agi->scb/lisa/related-income",
+      kind: "related",
+      from: "scb/lisa/agi",
+      to: "scb/lisa/related-income",
+      fromYear: null,
+      toYear: null,
+      label: "related_to",
+    },
+  ],
+};
+
 const standaloneClassificationGraph: HistoryGraph = {
   mode: "classification",
   title: "Classification relationships",
@@ -198,7 +225,7 @@ const classificationGraph: HistoryGraph = {
 
 describe("HistoryGraphPrototype", () => {
   it("renders the graph, column count, and contract gaps", async () => {
-    await render(HistoryGraphPrototype, { graph });
+    await render(HistoryGraphPrototype, { graph: relatedColumnGraph });
 
     await expect
       .element(page.getByRole("heading", { name: "Variable relationships" }))
@@ -208,8 +235,16 @@ describe("HistoryGraphPrototype", () => {
       .toBeVisible();
     await expect.element(page.getByText("Monthly income")).toBeVisible();
     await expect.element(page.getByText("4 columns")).toBeVisible();
-    expect(document.querySelector(".legend")).toBeNull();
+    await expect
+      .element(page.getByText("related", { exact: true }))
+      .toBeVisible();
     await expect.element(page.getByText("Contract gaps")).toBeVisible();
+  });
+
+  it("omits a graph with one variable node even when it has column slices", async () => {
+    await render(HistoryGraphPrototype, { graph });
+
+    expect(document.querySelector(".history-graph")).toBeNull();
   });
 
   it("omits a graph with only one plain entity", async () => {

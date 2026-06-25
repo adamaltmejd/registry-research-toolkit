@@ -20,6 +20,9 @@ const topPad = 44;
 const rowHeight = 68;
 const graphNodeWidth = 164;
 const graphNodeHeight = 30;
+const columnLaneHeight = 6;
+const columnLaneGap = 3;
+const columnLaneTop = 30;
 const graphSidePad = 28;
 const domain = $derived(historyGraphYears(graph, vintageYear));
 const innerWidth = $derived(width - leftPad - rightPad);
@@ -84,11 +87,7 @@ const height = $derived(
       rowHeight +
     26,
 );
-const hasGraphContent = $derived(
-  graph.nodes.length > 1 ||
-    edgeRows.length > 0 ||
-    graph.nodes.some((node) => node.columns.length > 1),
-);
+const hasGraphContent = $derived(graph.nodes.length > 1 || edgeRows.length > 0);
 
 function xForYear(year: number | null): number {
   const value = year ?? domain.max;
@@ -150,8 +149,16 @@ function nodeBar(
     x: clamp(center - displayWidth / 2, leftPad, Math.max(leftPad, maxX)),
     y: rowY(index),
     width: displayWidth,
-    height: graphNodeHeight,
+    height: nodeHeight(node),
   };
+}
+
+function nodeHeight(node: HistoryGraphNode): number {
+  if (!hasTimeAxis || node.columns.length === 0) {
+    return graphNodeHeight;
+  }
+  const lanes = Math.min(node.columns.length, 3);
+  return columnLaneTop + lanes * (columnLaneHeight + columnLaneGap) + 10;
 }
 
 function columnBar(column: HistoryColumnSlice): { x: number; width: number } {
@@ -252,7 +259,7 @@ function shortLabel(label: string, max = 29): string {
                 <text
                   class="node-label in-bar"
                   x={bar.x + bar.width / 2}
-                  y={bar.y + bar.height / 2 + 5}
+                  y={bar.y + 18}
                   text-anchor="middle"
                 >
                   {label}
@@ -263,14 +270,19 @@ function shortLabel(label: string, max = 29): string {
                     <rect
                       class="column-slice"
                       x={col.x}
-                      y={bar.y + 24 + (ci % 3) * 9}
+                      y={bar.y + columnLaneTop + (ci % 3) * (columnLaneHeight + columnLaneGap)}
                       width={col.width}
-                      height="6"
+                      height={columnLaneHeight}
                       rx="2"
                     />
                   {/each}
                   {#if node.columns.length > 3}
-                    <text class="column-count" x={leftPad} y={bar.y + 58}>
+                    <text
+                      class="column-count"
+                      x={bar.x + bar.width - 8}
+                      y={bar.y + bar.height - 4}
+                      text-anchor="end"
+                    >
                       {node.columns.length} columns
                     </text>
                   {/if}
