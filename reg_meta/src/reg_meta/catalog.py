@@ -36,6 +36,8 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
     from pathlib import Path
 
+    from .graph import RelationshipGraph
+
 # Succession-chain tuple grain (variable triple, register pair, or classification
 # 1-tuple); shared so `_walk_terminal` preserves arity across grains (see
 # `resolve_terminal_successor`).
@@ -1102,6 +1104,22 @@ class Catalog:
                 acc2.values(), key=lambda g: g[0]
             )
         ]
+
+    def classification_group(self, key: str) -> ConceptGroupSummary | None:
+        """The one curated classification umbrella group addressed by its
+        derivation `key` (#761) — a filter over `list_classification_groups()`, the
+        classification dual of `concept_group(provider, register, key)`. Classification
+        umbrellas are catalog-global (`register_id NULL`), so the key alone addresses
+        them (no provider/register scope). None when no umbrella has that key.
+
+        #756 did the same class-by-key filter INLINE in the webapp to avoid a
+        reg_meta release; #761 ships a reg_meta release anyway, so the accessor
+        lands here (and the webapp's `get_classification_group` can dedupe onto it —
+        an optional follow-on)."""
+        for g in self.list_classification_groups():
+            if g.key == key:
+                return g
+        return None
 
     def list_tags(self) -> list[TagSummary]:
         """The curated thematic tag vocabulary (#311) with per-tag member counts,
@@ -2332,6 +2350,40 @@ class Catalog:
             for g in self.list_concept_groups(provider, register)
             if any(str(m.fqid) == target for m in g.members)
         ]
+
+    def graph_for_fqid(self, fqid: str | Fqid) -> RelationshipGraph:
+        """The relationship-graph contract for a variable subject (#761): one node
+        per variable with its representation-run state history + succession/related
+        edges + same_as/group metadata, unioned over the variable's concept-group
+        members (Fork B — a member page renders the same group union as the group
+        page). Resolves `same_as` and raises `not_a_binding_fqid` / `fqid_not_found`
+        like the sibling edge accessors (the webapp's 4xx/301 path). The topology +
+        domain predicates live in `graph.py`; this is the thin entry point."""
+        from . import graph  # local: graph.py imports catalog (one-directional)
+
+        parsed = self._parse_binding(fqid)
+        resolved = self._resolve_binding(parsed)
+        return graph.graph_for_fqid(self, resolved)
+
+    def graph_for_group(
+        self, provider_slug: str, register_slug: str, key: str
+    ) -> RelationshipGraph | None:
+        """The relationship-graph contract for a register concept group (#761),
+        keyed by `(provider, register, key)` (NOT an FQID). The union of all member
+        variables' graphs, `focus_id=None`. None when the group doesn't exist (the
+        webapp maps it to 404). Delegates to `graph.py`."""
+        from . import graph  # local: graph.py imports catalog (one-directional)
+
+        return graph.graph_for_concept_group(self, provider_slug, register_slug, key)
+
+    def graph_for_classification_group(self, key: str) -> RelationshipGraph | None:
+        """The relationship-graph contract for a classification umbrella group
+        (#761), keyed by its derivation `key`. The union of all member editions'
+        classification-succession chains, `focus_id=None`. None when the group
+        doesn't exist (the webapp maps it to 404). Delegates to `graph.py`."""
+        from . import graph  # local: graph.py imports catalog (one-directional)
+
+        return graph.graph_for_classification_group(self, key)
 
     def lineage(self, fqid: str | Fqid) -> list[LineageEdge]:
         """see DESIGN.md → Catalog API surface: consumer-side composite lineage edges (state grain; see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage))."""

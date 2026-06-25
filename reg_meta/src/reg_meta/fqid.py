@@ -69,7 +69,10 @@ DEFAULT_VARIANT_SLUG = "_default"
 # grammar already rejects it before this check runs; it's listed anyway to keep
 # the set a faithful mirror of the route list and to stay correct if the grammar
 # ever loosened.) `dimensions` (#489) is the concept-group membership
-# sub-resource. (#571's classification succession is no longer a sub-resource: the
+# sub-resource. `graph` (#761) is the relationship-graph sub-resource: like the
+# others it shadows a 3-seg variable leaf (`scb/lisa/graph`), a 2-seg register
+# (`scb/graph`), AND a classification (`class/graph`) — reserved in all three
+# slots. (#571's classification succession is no longer a sub-resource: the
 # FULL edition chain is embedded on the classification node as `edition_chain`, so
 # the immediate-neighbor routes were retired.)
 RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
@@ -81,6 +84,7 @@ RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
         "lineage",
         "lineage_warnings",
         "dimensions",
+        "graph",
     }
 )
 # The literal `/catalog/{provider}/{register}/variants` register sub-resource

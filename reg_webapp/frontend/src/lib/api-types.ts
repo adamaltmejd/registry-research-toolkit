@@ -62,6 +62,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/group/class/{key}/graph": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Classification Group Graph
+         * @description The relationship graph for a classification umbrella group (#761) — the
+         *     union of its member editions' succession chains (`focus_id=None`). 404 when no
+         *     classification group has that key. Shares the `/api/catalog` cache. By-key
+         *     resolution lives in reg_meta (`Catalog.graph_for_classification_group` →
+         *     `classification_group(key)`).
+         */
+        get: operations["get_classification_group_graph_api_catalog_group_class__key__graph_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/group/{provider}/{register}/{key}": {
         parameters: {
             query?: never;
@@ -88,6 +112,30 @@ export interface paths {
          *     is a clean 404 from `concept_group`.
          */
         get: operations["get_concept_group_api_catalog_group__provider___register___key__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/group/{provider}/{register}/{key}/graph": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Concept Group Graph
+         * @description The relationship graph for a register concept group (#761) — the union of
+         *     its member variables' graphs (`focus_id=None`). 404 when no group with that key
+         *     exists for the (provider, register) pair. `provider`/`register` are validated as
+         *     a register FQID before the connection opens (mirrors `get_concept_group`); `key`
+         *     is the derivation key (not slug-validated — an unknown key is a clean 404).
+         */
+        get: operations["get_concept_group_graph_api_catalog_group__provider___register___key__graph_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -153,6 +201,31 @@ export interface paths {
          *     dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).
          */
         get: operations["get_binding_dimensions_api_catalog__fqid__dimensions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{fqid}/graph": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Binding Graph
+         * @description The relationship graph for a binding's variable (#761) — one node per
+         *     variable with its representation-run state history + succession/related edges +
+         *     same_as/group metadata, unioned over the variable's concept group (Fork B). An
+         *     empty graph (`nodes: []`) is the "don't render" signal. A dead/renamed binding
+         *     301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`
+         *     cache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`).
+         */
+        get: operations["get_binding_graph_api_catalog__fqid__graph_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -745,6 +818,31 @@ export interface components {
              * @description The edition's literal slug (e.g. 'sun2000').
              */
             slug: string;
+        };
+        /**
+         * ClassificationGraphNode
+         * @description A classification-edition node: time is a POINT (``version_year``), never an
+         *     interval — an edition is not "dead" after its successor. ``is_current`` marks a
+         *     terminal (head) edition.
+         */
+        ClassificationGraphNode: {
+            /** Fqid */
+            fqid: string | null;
+            /** Group Key */
+            group_key: string | null;
+            /** Id */
+            id: string;
+            /** Is Current */
+            is_current: boolean;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "classification";
+            /** Label */
+            label: string;
+            /** Version Year */
+            version_year: number | null;
         };
         /**
          * ClassificationGroupNode
@@ -1357,6 +1455,59 @@ export interface components {
             total_count: number;
         };
         /**
+         * GraphEdge
+         * @description A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``
+         *     is DIRECTED (predecessor → successor); ``related`` is UNDIRECTED — its
+         *     endpoints are canonicalized (sorted by node id) so the same relation seen from
+         *     both ends during group expansion collapses to one edge. ``label`` is the
+         *     succession reason / the related ``relation_kind``.
+         */
+        GraphEdge: {
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "succession" | "related";
+            /** Label */
+            label: string | null;
+            /** Source */
+            source: string;
+            /** Target */
+            target: string;
+        };
+        /**
+         * GraphState
+         * @description One ``variable_state`` inside a variable node, emitted ordered by
+         *     ``(variant, valid_from)``. ``representation_run_id`` groups consecutive states
+         *     into rendered cells: states sharing it form ONE cell. The id increments at each
+         *     #526 representation boundary and at every ``variant`` change (a run never spans
+         *     variants). ``data_type`` / ``data_length`` are the #526 boundary INPUTS,
+         *     consumed server-side to compute ``representation_run_id`` — they are NOT on the
+         *     wire (the renderer reads the run id, not the raw type).
+         */
+        GraphState: {
+            /** Classification Slug */
+            classification_slug: string | null;
+            /** Delivery Column Name */
+            delivery_column_name: string | null;
+            /** Representation Run Id */
+            representation_run_id: number;
+            /** State Id */
+            state_id: number;
+            /** Valid From */
+            valid_from: string | null;
+            /** Valid To */
+            valid_to: string | null;
+            /** Value Set Id */
+            value_set_id: number | null;
+            /** Value Set Version Label */
+            value_set_version_label: string;
+            /** Variant */
+            variant: string;
+        };
+        /**
          * GroupFacet
          * @description One facet assignment on a group member: `axis` names the dimension
          *     ('month' / 'rank') when the group has one, or None for an AXIS-LESS group —
@@ -1638,6 +1789,23 @@ export interface components {
             related: components["schemas"]["RelatedRef"][];
         };
         /**
+         * RelationshipGraph
+         * @description The relationship graph for a subject. ``nodes: []`` is the "don't render"
+         *     signal (the frontend gate is ``nodes.length === 0``): a lone variable with no
+         *     succession / related / group siblings / meaningful representation boundary, or
+         *     a lone classification edition with no succession chain and no group context.
+         *     ``focus_id`` is the node matching the requested FQID (post same_as); None for
+         *     group-addressed calls.
+         */
+        RelationshipGraph: {
+            /** Edges */
+            edges: components["schemas"]["GraphEdge"][];
+            /** Focus Id */
+            focus_id: string | null;
+            /** Nodes */
+            nodes: (components["schemas"]["VariableGraphNode"] | components["schemas"]["ClassificationGraphNode"])[];
+        };
+        /**
          * RootResponse
          * @description `GET /api/catalog` — the catalog root: every provider plus the
          *     classification-root sentinel.
@@ -1651,6 +1819,19 @@ export interface components {
              * @constant
              */
             kind: "root";
+        };
+        /**
+         * SameAsRef
+         * @description A ``same_as`` alias resolved away to the canonical node — node metadata, not
+         *     an edge (the canonical IS the node; the aliases are the FQIDs that resolve to
+         *     it). ``register`` is the wire/init name; the Python attr is ``register_name``
+         *     to avoid the ``BaseModel.register`` shadow (#681).
+         */
+        SameAsRef: {
+            /** Fqid */
+            fqid: string;
+            /** Register */
+            register: string;
         };
         /**
          * SearchClassificationEdition
@@ -1907,6 +2088,32 @@ export interface components {
             variable: string;
         };
         /**
+         * VariableGraphNode
+         * @description A variable node: ONE node per variable, its full ``variable_state`` history
+         *     as sub-structure (ordered ``(variant, valid_from)``; the run ids drive cells).
+         *     Nodes are variables — not states — because succession / related / same_as /
+         *     group are all variable-grain and the FQID must map to exactly one node.
+         */
+        VariableGraphNode: {
+            /** Fqid */
+            fqid: string | null;
+            /** Group Key */
+            group_key: string | null;
+            /** Id */
+            id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "variable";
+            /** Label */
+            label: string;
+            /** Same As */
+            same_as: components["schemas"]["SameAsRef"][];
+            /** States */
+            states: components["schemas"]["GraphState"][];
+        };
+        /**
          * VariableRef
          * @description A variable-grain edge endpoint (see DESIGN.md → Composite registers and source tracking): the 3-part `(provider, register,
          *     variable)` identity of a `same_as` / `replaced_by` neighbor. Carried by
@@ -2142,6 +2349,37 @@ export interface operations {
             };
         };
     };
+    get_classification_group_graph_api_catalog_group_class__key__graph_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RelationshipGraph"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_concept_group_api_catalog_group__provider___register___key__get: {
         parameters: {
             query?: {
@@ -2164,6 +2402,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConceptGroupNode"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_concept_group_graph_api_catalog_group__provider___register___key__graph_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+                register: string;
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RelationshipGraph"];
                 };
             };
             /** @description Validation Error */
@@ -2230,6 +2501,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DimensionsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_binding_graph_api_catalog__fqid__graph_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                fqid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RelationshipGraph"];
                 };
             };
             /** @description Validation Error */

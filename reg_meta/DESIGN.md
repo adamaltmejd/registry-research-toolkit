@@ -784,6 +784,83 @@ terminal's `_classification_id` so the umbrella pass treats it as that classific
 All folds happen before pagination — a succession row and a group row each count as one
 result.
 
+## Relationship graph (#761)
+
+The webapp's subject-page graph view (#666 epic, renderer #678) consumes a single typed
+**graph object** from reg_meta — topology plus the domain predicates that shape it (is a
+single-variable graph meaningful? how does a group expand? which editions dedup? where
+does a representation run break?) — so the SPA renders a graph as-is and never assembles
+graph *semantics*. The model + builders live in **`graph.py`** (off the \~2.6k-line
+`catalog.py`); `Catalog` exposes three thin accessors that delegate there:
+`graph_for_fqid(fqid)`, `graph_for_group(provider, register, key)`,
+`graph_for_classification_group(key)`. `graph.py` imports from `catalog.py`;
+`catalog.py` imports `graph` lazily inside those methods, so the dependency stays
+one-directional. The graph models are frozen `_CatalogModel`s used **directly** as the
+webapp's FastAPI response models (no wrapper, per #681); there is **no CLI surface** —
+the webapp is the only consumer.
+
+**Compose, don't re-query.** The builder orchestrates the existing accessors — each the
+single source of truth for its edge type: `variable_chain` (variable succession),
+`related` (see-also), `dimensions` / `concept_group` (group membership),
+`classification_chain` + `classification_predecessors` (classification editions),
+`resolve` (same_as canonicalization). The only genuinely new logic is group expansion,
+edition dedup, and the representation-run computation.
+
+**Model.** One node per variable (`VariableGraphNode`) or per classification edition
+(`ClassificationGraphNode`), discriminated by `kind`. A variable node carries its full
+`variable_state` history as sub-structure (`GraphState`, ordered
+`(variant, valid_from)`), plus `same_as[]` (resolved-away aliases, metadata) and a
+shared `group_key` (clustering metadata — there is **no** `group:<key>` node). A
+classification node carries a **point** `version_year` (never an interval — an edition
+is not "dead" after its successor) + `is_current`. Time semantics live on the node, so
+there is no top-level `mode`: the renderer draws a time axis when interval (variable)
+nodes are present and a version ordering when point-year (classification) nodes are.
+**Two edge kinds only**: `succession` (directed, predecessor→successor) and `related`
+(undirected — endpoints canonicalized by sorted node id so the same relation seen from
+both ends collapses). Everything else is metadata/affordance: `lineage` /
+`source_register` are #678's provenance affordance (not edges); `same_as` is resolved
+away to the canonical node; representation / value-set transitions are
+states-within-a-node (the run ids), not edges. Every edge carries a stable `id` that
+doubles as its dedup key, so a shared succession edge or an undirected related edge
+surfaced from two members during a group union collapses.
+
+**Representation runs (the #526 fold, query-side mirror).** Each `GraphState` carries a
+`representation_run_id` (int, unique within the node): consecutive states sharing it
+form **one rendered cell**. The id increments at each representation boundary **and** at
+every `variant` change (a run never spans variants — this replaces an ambiguous
+per-state boolean). A boundary is a meaningful representation change between adjacent
+`variable_state` rows — value-set identity (`value_set_id`), classification
+(`classification_slug`), or the per-era coalesced `delivery_column_name` — with
+technical-only `int -> bigint` / type-length wobble **suppressed** exactly as
+reg_meta_build's #526 value-set-anchored fold does (the char↔varchar `_canon_data_type`
+fold is mirrored query-side over the materialized rows). The rule is a **deliberate
+query-side mirror**, not the build helper: reg_meta must not depend on reg_meta_build
+(wrong dependency direction), and the build fold already coalesced per-delivery churn
+into the surviving rows, so the boundary is scoped to "distinctions that survive in
+`variable_state`". Per-period alias multiplexing (monthly families' 12 columns, held in
+`variable_alias_window`, not in `states`) is an alias concern, **not** a coding boundary
+— those expanded windows share a `state_id` and are folded back to the single claim
+before runs are computed.
+
+**Empty graph** (`nodes: []`) is the "don't render" signal (the frontend gate is
+`nodes.length === 0`): a lone variable with no succession, no related, no group
+siblings, and no meaningful representation boundary (the `akters` `int -> bigint`
+type-only case), or a lone classification edition with no succession chain and no group
+context. A lone variable **with** a value-set/column change but no succession returns
+one node whose states span ≥2 runs → renders (as ≥2 cells).
+
+**Fork B (group ⇄ member).** `graph_for_fqid` roots the union on the resolved variable's
+`.group` members (or itself when ungrouped) and sets `focus_id` to the resolved node;
+`graph_for_group` / `graph_for_classification_group` root on the members directly with
+`focus_id=None`. A member page therefore renders the **same** group union as the group
+page, with the current node highlighted client-side (highlight is the renderer's, driven
+by `focus_id`); the union is entry-independent and cacheable by group key. Group keys
+are `(provider, register, key)` and `class/<key>`, **not** FQIDs: register groups
+resolve via `concept_group`, classification umbrellas via the new thin
+`classification_group(key)` accessor (a filter over `list_classification_groups()`). The
+`graph` suffix is reserved in `RESERVED_HTTP_SUFFIX_SLUGS` (it shadows a variable leaf,
+a register, and a classification slot, like `states`/`lineage`).
+
 ## Thematic tags (discovery overlay, #311)
 
 Orthogonal to concept groups (which fold column families *structurally* within ONE
