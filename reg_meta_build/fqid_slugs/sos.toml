@@ -428,7 +428,7 @@ slug = "personlig-assistans-9-2-lss"
 [variable."5028920659479690770.LSS3"]
 slug = "ledsagarservice"
 [variable."5028920659479690770.LSS4"]
-slug = "kontaktperson"
+slug = "kontaktperson-lss"
 [variable."5028920659479690770.LSS5"]
 slug = "avlosarservice"
 [variable."5028920659479690770.LSS6"]
@@ -571,7 +571,7 @@ slug = "antal-barn-15-ar"
 [variable."5352018376318353790.ANTBARN16"]
 slug = "antal-barn-16-ar"
 [variable."5352018376318353790.ANTBARN1617"]
-slug = "antal-barn-16-17-ar-v2"
+slug = "antal-barn-16-17-ar-2"
 [variable."5352018376318353790.ANTBARN17"]
 slug = "antal-barn-17-ar"
 [variable."5352018376318353790.ANTBARN2"]
@@ -743,7 +743,7 @@ slug = "fodelsear"
 [variable."5352018376318353790.FODDAT"]
 slug = "fodelsedatum"
 [variable."5352018376318353790.FODDATN"]
-slug = "fodelsedatum-n"
+slug = "fodelsedatum-numerisk"
 [variable."5352018376318353790.FSTOD"]
 slug = "forsorjningsstod-belopp"
 [variable."5352018376318353790.FSTODBELOPP01"]
@@ -947,7 +947,7 @@ slug = "introduktionsersattning-november"
 [variable."5352018376318353790.IEBELOPP12"]
 slug = "introduktionsersattning-december"
 [variable."5352018376318353790.INSALDST01"]
-slug = "aldste-insats-arbetsforebredande"
+slug = "aldste-insats-arbetsforberedande"
 [variable."5352018376318353790.INSALDST02"]
 slug = "aldste-insats-arbetspraktik"
 [variable."5352018376318353790.INSALDST03"]
@@ -961,7 +961,7 @@ slug = "aldste-insats-ovriga-arbetsmarknads"
 [variable."5352018376318353790.INSALDST07"]
 slug = "aldste-insats-ej-aktuellt-arbetsmarknads"
 [variable."5352018376318353790.INSYNGST01"]
-slug = "yngstes-insats-arbetsforeberedande"
+slug = "yngstes-insats-arbetsforberedande"
 [variable."5352018376318353790.INSYNGST02"]
 slug = "yngstes-insats-arbetspraktik"
 [variable."5352018376318353790.INSYNGST03"]
@@ -1041,11 +1041,11 @@ slug = "aldstes-hinder-januari-sok1"
 [variable."5352018376318353790.SOK1HINDER02"]
 slug = "aldstes-hinder-februari-sok1"
 [variable."5352018376318353790.SOK1HINDER03"]
-slug = "sok1-hinder-mars"
+slug = "aldstes-hinder-mars-sok1"
 [variable."5352018376318353790.SOK1HINDER04"]
 slug = "aldstes-hinder-april-sok1"
 [variable."5352018376318353790.SOK1HINDER05"]
-slug = "sok1-hinder-maj"
+slug = "aldstes-hinder-maj-sok1"
 [variable."5352018376318353790.SOK1HINDER06"]
 slug = "aldstes-hinder-juni-sok1"
 [variable."5352018376318353790.SOK1HINDER07"]
@@ -1053,11 +1053,11 @@ slug = "aldstes-hinder-juli-sok1"
 [variable."5352018376318353790.SOK1HINDER08"]
 slug = "aldstes-hinder-augusti-sok1"
 [variable."5352018376318353790.SOK1HINDER09"]
-slug = "sok1-hinder-september"
+slug = "aldstes-hinder-september-sok1"
 [variable."5352018376318353790.SOK1HINDER10"]
-slug = "sok1-hinder-oktober"
+slug = "aldstes-hinder-oktober-sok1"
 [variable."5352018376318353790.SOK1HINDER11"]
-slug = "sok1-hinder-november"
+slug = "aldstes-hinder-november-sok1"
 [variable."5352018376318353790.SOK1HINDER12"]
 slug = "aldstes-hinder-december-sok1"
 [variable."5352018376318353790.SOK2HINDER"]
@@ -1141,29 +1141,29 @@ slug = "personnr-aldsta-sokande-2"
 [variable."5352018376318353790.SOKINS01"]
 slug = "arbetsforberedande-insatser"
 [variable."5352018376318353790.SOKINS01_01"]
-slug = "arbetsforeberedande-insatser-januari"
+slug = "arbetsforberedande-insatser-januari"
 [variable."5352018376318353790.SOKINS01_02"]
-slug = "arbetsforeberedande-insatser-februari"
+slug = "arbetsforberedande-insatser-februari"
 [variable."5352018376318353790.SOKINS01_03"]
-slug = "arbetsforeberedande-insatser-mars"
+slug = "arbetsforberedande-insatser-mars"
 [variable."5352018376318353790.SOKINS01_04"]
 slug = "arbetsforberedande-insatser-april"
 [variable."5352018376318353790.SOKINS01_05"]
-slug = "arbetsforeberedande-insatser-maj"
+slug = "arbetsforberedande-insatser-maj"
 [variable."5352018376318353790.SOKINS01_06"]
-slug = "arbetsforeberedande-insatser-juni"
+slug = "arbetsforberedande-insatser-juni"
 [variable."5352018376318353790.SOKINS01_07"]
-slug = "arbetsforeberedande-insatser-juli"
+slug = "arbetsforberedande-insatser-juli"
 [variable."5352018376318353790.SOKINS01_08"]
 slug = "arbetsforberedande-insatser-augusti"
 [variable."5352018376318353790.SOKINS01_09"]
-slug = "arbetsforeberedande-insatser-september"
+slug = "arbetsforberedande-insatser-september"
 [variable."5352018376318353790.SOKINS01_10"]
-slug = "arbetsforeberedande-insatser-oktober"
+slug = "arbetsforberedande-insatser-oktober"
 [variable."5352018376318353790.SOKINS01_11"]
-slug = "arbetsforeberedande-insatser-november"
+slug = "arbetsforberedande-insatser-november"
 [variable."5352018376318353790.SOKINS01_12"]
-slug = "arbetsforeberedande-insatser-december"
+slug = "arbetsforberedande-insatser-december"
 [variable."5352018376318353790.SOKINS02"]
 slug = "arbetspraktik"
 [variable."5352018376318353790.SOKINS02_01"]
@@ -2278,7 +2278,7 @@ slug = "tumornummer"
 slug = "topografisk-kod"
 # register 7550156225339591583
 [variable."7550156225339591583.FODDATN"]
-slug = "fodelsedatum-n"
+slug = "fodelsedatum-numerisk"
 [variable."7550156225339591583.FODELSELANDNAMN"]
 slug = "fodelseland-namn"
 [variable."7550156225339591583.FODLAND"]
@@ -2313,7 +2313,7 @@ slug = "antal-uthamtade-ddd"
 [variable."7661979173609203267.FODDAT"]
 slug = "fodelsedatum"
 [variable."7661979173609203267.FODDATN"]
-slug = "fodelsedatum-n"
+slug = "fodelsedatum-numerisk"
 [variable."7661979173609203267.FORPS"]
 slug = "forpacknings-storlek-beskrivning"
 [variable."7661979173609203267.FTYP"]
@@ -2552,7 +2552,7 @@ slug = "fodelsear"
 [variable."9047831179457584381.FODDAT"]
 slug = "fodelsedatum"
 [variable."9047831179457584381.FODDATN"]
-slug = "fodelsedatum-n"
+slug = "fodelsedatum-numerisk"
 [variable."9047831179457584381.HKOM"]
 slug = "hemkommun-periodens-slut"
 [variable."9047831179457584381.HTJ"]

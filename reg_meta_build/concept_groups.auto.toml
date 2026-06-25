@@ -5659,7 +5659,7 @@ label = "4"
 # axis=ordinal agreement=1.00 members=3  HCP_INTERVALL_
 [[variable_group]]
 register = "fk/tandvardsstodet"
-key = "hcp-intervall"
+key = "tandvard-ersattning-intervall"
 label = "HCP_INTERVALL_"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5671,7 +5671,7 @@ variable = "tandvard-ersattning-intervall-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "tandvardsersattning-intervall-2"
+variable = "tandvard-ersattning-intervall-2"
 value = "2"
 label = "2"
 
@@ -10962,15 +10962,15 @@ key = "sokins01"
 label = "Arbetsförberedande insatser"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-januari"
+variable = "arbetsforberedande-insatser-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-februari"
+variable = "arbetsforberedande-insatser-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-mars"
+variable = "arbetsforberedande-insatser-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
@@ -10978,15 +10978,15 @@ variable = "arbetsforberedande-insatser-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-maj"
+variable = "arbetsforberedande-insatser-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-juni"
+variable = "arbetsforberedande-insatser-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-juli"
+variable = "arbetsforberedande-insatser-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
@@ -10994,19 +10994,19 @@ variable = "arbetsforberedande-insatser-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-september"
+variable = "arbetsforberedande-insatser-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-oktober"
+variable = "arbetsforberedande-insatser-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-november"
+variable = "arbetsforberedande-insatser-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "arbetsforeberedande-insatser-december"
+variable = "arbetsforberedande-insatser-december"
 value = "12"
 label = "12"
 
@@ -12133,7 +12133,7 @@ variable = "aldstes-hinder-februari-sok1"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sok1-hinder-mars"
+variable = "aldstes-hinder-mars-sok1"
 value = "03"
 label = "3"
 [[variable_group.members]]
@@ -12141,7 +12141,7 @@ variable = "aldstes-hinder-april-sok1"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sok1-hinder-maj"
+variable = "aldstes-hinder-maj-sok1"
 value = "05"
 label = "5"
 [[variable_group.members]]
@@ -12157,15 +12157,15 @@ variable = "aldstes-hinder-augusti-sok1"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sok1-hinder-september"
+variable = "aldstes-hinder-september-sok1"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sok1-hinder-oktober"
+variable = "aldstes-hinder-oktober-sok1"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sok1-hinder-november"
+variable = "aldstes-hinder-november-sok1"
 value = "11"
 label = "11"
 [[variable_group.members]]
@@ -13731,7 +13731,7 @@ variable = "antal-barn-17-ar"
 value = "0017"
 label = "17"
 [[variable_group.members]]
-variable = "antal-barn-16-17-ar-v2"
+variable = "antal-barn-16-17-ar-2"
 value = "1617"
 label = "1617"
 
@@ -14533,7 +14533,7 @@ key = "insaldst"
 label = "Den äldste sökande/medsökandes insats"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "aldste-insats-arbetsforebredande"
+variable = "aldste-insats-arbetsforberedande"
 value = "1"
 label = "1"
 [[variable_group.members]]
@@ -14568,7 +14568,7 @@ key = "insyngst"
 label = "Den yngste sökande/medsökandes insats"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "yngstes-insats-arbetsforeberedande"
+variable = "yngstes-insats-arbetsforberedande"
 value = "1"
 label = "1"
 [[variable_group.members]]

@@ -755,7 +755,7 @@ slug = "tandvard-ersattning-intervall-0"
 [variable."7664376130118991107.HCP_INTERVALL_1"]
 slug = "tandvard-ersattning-intervall-1"
 [variable."7664376130118991107.HCP_INTERVALL_2"]
-slug = "tandvardsersattning-intervall-2"
+slug = "tandvard-ersattning-intervall-2"
 # register 8881065292063230279
 [variable."8881065292063230279.Askp"]
 slug = "arbetsskadesjukpenning"
