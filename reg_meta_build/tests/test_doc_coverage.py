@@ -4,10 +4,20 @@ The diagnostic diffs doc-documented columns (the ingested SCB doc library, the
 `doc` table) against the built catalog's `variable_alias.delivery_column_name`
 set, per register, and lists the documented-but-metadata-missing columns.
 
-Pairs the real synthetic catalog (`fixture_db` → registers TESTREG with columns
-{AaoCol, Kon, TestCol, TestKolumn} and OTHERREG with {ExtCol, KON, LopNr,
-ParenCol, UniqCol}) with a doc DB built from controlled markdown via
+Pairs the real synthetic catalog (`fixture_db` → registers slug `testreg` with
+columns {AaoCol, Kon, TestCol, TestKolumn} and slug `otherreg` with {ExtCol, KON,
+LopNr, ParenCol, UniqCol}) with a doc DB built from controlled markdown via
 `build_doc_db`, so both the catalog and doc schemas are exercised end to end.
+
+Regression guard for the real-data slug-join bug: the join is
+`register.slug == doc.register` (the doc subdir IS the slug), NOT
+`lower(register.name) == doc.register`. In real data `register.name` is the full
+descriptive SCB string (e.g. "Longitudinell ... (LISA)") while the doc subdir is
+the register slug ("lisa"), so a name-join matches nothing. The fixture catalog
+ships `name` == "TESTREG"/"OTHERREG" (which would lower-match the slug and hide
+the bug), so `doc_db_dir` REWRITES each `register.name` to a full descriptive
+string distinct from its slug — a name-join then fails and only the slug-join
+surfaces the documented-missing columns.
 """
 
 from __future__ import annotations
@@ -53,18 +63,49 @@ def _write_doc(reg_dir: Path, stem: str, *, variable: str | None, **front: str) 
     (reg_dir / filename).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+# Full descriptive SCB-style names, DISTINCT from each register's slug and the
+# doc subdir, so a `lower(register.name) == doc.register` join would match
+# nothing — only the correct `register.slug == doc.register` join works. Keyed by
+# slug (the column the rewrite targets via register.slug).
+_DESCRIPTIVE_NAMES = {
+    "testreg": "Testregistret för longitudinella studier (TESTREG)",
+    "otherreg": "Annat register med företagsuppgifter (OTHERREG)",
+}
+
+
+def _rewrite_register_names_distinct_from_slug(db_path: Path) -> None:
+    """Rewrite each `register.name` to a full descriptive string distinct from its
+    slug, mimicking real SCB data where `register.name` is the long literal (e.g.
+    "Longitudinell ... (LISA)") and the doc subdir is the slug ("lisa"). This is
+    what makes the slug-join the only join that works — a name-join now fails."""
+    import sqlite3
+
+    conn = sqlite3.connect(db_path)
+    try:
+        for slug, name in _DESCRIPTIVE_NAMES.items():
+            conn.execute("UPDATE register SET name = ? WHERE slug = ?", (name, slug))
+        conn.commit()
+    finally:
+        conn.close()
+
+
 @pytest.fixture
 def doc_db_dir(fixture_db: Path, tmp_path: Path) -> Path:
     """A `--db` dir holding BOTH the fixture catalog `reg_meta.db` and a
     doc DB built from controlled markdown for registers `testreg` / `otherreg`
-    (lowercase subdir names → `lower(register.name)` join against TESTREG /
-    OTHERREG). Returns the dir.
+    (subdir names == `register.slug` → the `register.slug == doc.register` join).
+    Returns the dir.
 
     The catalog DB is copied out of the session-scoped fixture dir so this
-    test's doc DB does not clobber the shared stub doc DB other tests rely on."""
+    test's doc DB does not clobber the shared stub doc DB other tests rely on —
+    and so we can rewrite each `register.name` to a full descriptive string
+    DISTINCT from the slug (the slug-join regression guard) without mutating the
+    shared fixture."""
     db_dir = tmp_path / "db"
     db_dir.mkdir()
-    shutil.copy(fixture_db, db_dir / "reg_meta.db")
+    catalog_db = db_dir / "reg_meta.db"
+    shutil.copy(fixture_db, catalog_db)
+    _rewrite_register_names_distinct_from_slug(catalog_db)
 
     docs = tmp_path / "docs"
     testreg = docs / "testreg"
@@ -127,7 +168,13 @@ class TestComputeDocCoverage:
         assert ("testreg", "MissingOne") in cols
         assert ("testreg", "MissingTwo") in cols
         assert ("otherreg", "GapCol") in cols
-        # Evidence is carried through from the doc row.
+        # Slug-join regression pin: the doc_db_dir fixture rewrote register.name
+        # to a long descriptive string ("Testregistret ... (TESTREG)") that does
+        # NOT lower-match the doc subdir "testreg". The documented-missing column
+        # still surfaces, so the join must be register.slug == doc.register; a
+        # name-join would leave `testreg` unmapped and this set empty.
+        assert _DESCRIPTIVE_NAMES["testreg"].lower() != "testreg"
+        assert result.unmapped_doc_registers == ()
         missing_one = next(m for m in result.missing if m.column == "MissingOne")
         assert missing_one.display_name == "Saknad kolumn 1"
         # build_doc_db canonicalizes the source by stripping a trailing `.md`.
@@ -161,7 +208,7 @@ class TestComputeDocCoverage:
 
         assert result.total == 3
         assert result.per_register_counts == {"testreg": 2, "otherreg": 1}
-        # No unmapped registers — both testreg/otherreg map to TESTREG/OTHERREG.
+        # No unmapped registers — both doc subdirs match a register.slug.
         assert result.unmapped_doc_registers == ()
         # Deterministic sort by (register, column, filename).
         keys = [(m.register, m.column) for m in result.missing]

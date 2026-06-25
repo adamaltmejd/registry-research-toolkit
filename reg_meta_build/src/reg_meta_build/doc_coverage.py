@@ -14,14 +14,15 @@ doc DB, reads, and materializes nothing. Minting the missing columns (via
 ``scb_canonical/``) is a separate, deferred curation step (#400 PR2), driven by
 hand from this worklist.
 
-The register join is the one genuine ambiguity: the doc library keys each doc on
-its subdirectory name (``doc.register``, e.g. ``"lisa"``), while the catalog
-keys registers on the SCB literal ``register.name`` (e.g. ``"LISA"``). They are
-matched deterministically on ``lower(register.name) == doc.register`` — the SCB
-literal name is the source-of-truth register identity the doc subdir was derived
-from, and (unlike ``register.slug``) it does not churn. A doc register that maps
-to NO catalog register is REPORTED (never silently dropped) so the gap stays
-fail-loud.
+The register join is on the register SLUG: the doc library organizes each doc by
+its subdirectory name (``doc.register``, e.g. ``"lisa"``), and that subdir is
+authored to equal the catalog's ``register.slug`` (the canonical normalized
+lowercase-kebab key set by ``populate_slugs``). They are matched on
+``register.slug == doc.register``. The descriptive ``register.name`` is the full
+SCB literal (e.g. ``"Longitudinell integrationsdatabas för sjukförsäkrings- och
+arbetsmarknadsstudier (LISA)"``) and does NOT match the subdir, so it cannot be
+the join key. A doc register that maps to NO catalog slug is REPORTED (never
+silently dropped) so the gap stays fail-loud.
 
 Columns are matched CASE-INSENSITIVELY: SCB delivery columns are case-variant
 (``Ssyk4_J16`` in docs vs ``Ssyk4_2012_J16`` in delivery, ``Kon`` vs ``KON``),
@@ -60,7 +61,7 @@ class DocCoverageResult:
 
     ``missing`` is sorted by (register, column) for deterministic output.
     ``unmapped_doc_registers`` holds the doc-library register subdir names that
-    map to NO catalog register (``lower(register.name)`` matched none) — reported,
+    map to NO catalog register (no ``register.slug`` matched) — reported,
     never silently dropped, since each is itself a coverage gap. ``total`` is the
     number of missing columns; ``per_register_counts`` is ``{register: count}``
     over the mapped registers (a doc register with no missing columns is absent)."""
@@ -80,7 +81,7 @@ def compute_doc_coverage(
     For each doc register (``doc.register``), compute the documented columns
     (``doc.variable``) that are NOT present, case-insensitively, in that
     register's ``variable_alias.delivery_column_name`` set. The register join is
-    ``lower(register.name) == doc.register`` (see module docstring). Read-only:
+    ``register.slug == doc.register`` (see module docstring). Read-only:
     only SELECTs against both connections; nothing is written or materialized.
 
     Rows in ``doc`` with a NULL ``variable`` are skipped (an appendix/topic doc
@@ -88,20 +89,28 @@ def compute_doc_coverage(
     reported in ``unmapped_doc_registers`` (every documented column under it is a
     gap, but with no register to diff against they are surfaced as the whole
     register being uncovered, not enumerated as phantom-missing columns)."""
-    # Catalog delivery columns per register, keyed by lower(register.name). One
-    # set of lowercased column names per register name — the case-insensitive
-    # membership test the diff needs. The doc DB is small (one register today);
-    # this whole-catalog projection is a maintainer diagnostic, not a hot path.
+    # Catalog delivery columns per register, keyed by register.slug (the doc
+    # subdir name). One set of lowercased column names per slug — the
+    # case-insensitive membership test the diff needs. A NULL slug (a register
+    # populate_slugs left unslugged) is skipped so no columns pool under a NULL
+    # key. The doc DB is small (one register today); this whole-catalog
+    # projection is a maintainer diagnostic, not a hot path.
     catalog_cols_by_register: dict[str, set[str]] = {}
-    for name, column in catalog_conn.execute(
+    for slug, column in catalog_conn.execute(
         """
-        SELECT r.name, va.delivery_column_name
+        SELECT r.slug, va.delivery_column_name
         FROM variable_alias va
         JOIN variable v ON v.variable_id = va.variable_id
         JOIN register r ON r.register_id = v.register_id
+        WHERE r.slug IS NOT NULL
         """
     ).fetchall():
-        catalog_cols_by_register.setdefault(name.lower(), set()).add(column.lower())
+        # Assumes a single-provider (SCB) doc library: register.slug is not
+        # globally unique, and the doc table has no provider column to
+        # disambiguate, so two providers reusing a slug would pool their columns
+        # under one key and understate the gap. Revisit if the doc library gains
+        # a second provider.
+        catalog_cols_by_register.setdefault(slug, set()).add(column.lower())
 
     # Documented columns per doc register, with the evidence fields. DISTINCT on
     # the projection: a column documented in two files surfaces once per filename
@@ -117,9 +126,11 @@ def compute_doc_coverage(
         """
     ).fetchall():
         seen_doc_registers.add(register)
+        # The doc subdir is authored to equal register.slug; the defensive
+        # lower() guards a stray upper-case subdir (slugs are lowercase-kebab).
         catalog_cols = catalog_cols_by_register.get(register.lower())
         if catalog_cols is None:
-            # Doc register maps to no catalog register — reported below as an
+            # Doc register matches no catalog slug — reported below as an
             # unmapped register, not as per-column rows (no register to diff).
             continue
         if variable.lower() not in catalog_cols:
