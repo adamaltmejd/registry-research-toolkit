@@ -19,17 +19,18 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 //
 // Renders through the unified SubjectView shell (#638 PR1), same as the register
 // group + the leaves: a `description` (a Technical details disclosure holding
-// key/axes/source) and a `picker` (the member selector — always single-axis facet
-// chips, since classification umbrellas carry one dimension axis). The breadcrumbs
+// key/axes/source) and a `picker` (the member selector — member chips, each
+// labelled by the member's own curated short facet label; classification umbrellas
+// are axis-less, so there is no shared group facet axis). The breadcrumbs
 // + loading / error arms stay OUTSIDE the shell (the shell is the success body).
 let { key }: { key: string } = $props();
 
 const resource = asyncResource(() => getClassificationGroup(key));
 const node = $derived(resource.data);
 
-/** A member's display label: its single facet's label (classification umbrellas
- * are single-axis, so each member carries exactly one facet), falling back to the
- * member name, then its leaf slug. */
+/** A member's display label: its own curated short facet label (umbrellas are
+ * axis-less — each member carries its own picker label, with no shared group
+ * axis), falling back to the member name, then its leaf slug. */
 function memberLabel(
   member: ClassificationGroupNodeData["members"][number],
 ): string {
@@ -76,10 +77,10 @@ function memberLabel(
   {/snippet}
 
   {#snippet picker()}
-    <!-- The member selector: classification umbrellas are always single-axis, so
-         the members render as facet chips, each a link to its classification leaf
-         FQID. No coverage / availability lens — classifications have no year-grain
-         study window. -->
+    <!-- The member selector: classification umbrellas are axis-less, so each
+         member renders as a chip labelled by its own curated short facet label, a
+         link to its classification leaf FQID. No coverage / availability lens —
+         classifications have no year-grain study window. -->
     <section class="member-selector" aria-labelledby="members-heading">
       <h3 id="members-heading">Members</h3>
       <ul class="facet-chips">

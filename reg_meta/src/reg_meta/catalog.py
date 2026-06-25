@@ -2221,8 +2221,8 @@ class Catalog:
     def classification_dimensions(self, fqid: str | Fqid) -> list[ConceptGroupSummary]:
         """The curated classification umbrella group(s) this edition belongs to
         (#609) — the classification-grain dual of `dimensions` (#516). Surfaces the
-        niva ↔ aggregate granularity relationship that #585/#608 model as flat
-        `dimension`-axis members of `group:sun` (e.g. `sun2020-niva` alongside the
+        niva ↔ aggregate granularity relationship that #585/#608 model as
+        axis-less members of `group:sun` (e.g. `sun2020-niva` alongside the
         7-level `niva-old` and 5-level `niva-grov` aggregates): the leaf reads its
         sibling members from the EXISTING `concept_group_classification` table — no
         new query infra, no browse-fold/group-membership change.
