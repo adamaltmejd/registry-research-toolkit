@@ -40,7 +40,14 @@ foretagsenhetsnummer / verksamhetsenhetsnummer.
 - [x] P1 pilot kon/kommun/person-orgnr/civilstand → RULES tightened (MINIMIZE CHURN: no
   demote prose→cryptic, no invented `<prose>-<columncode>`); re-piloted clean. RULES
   frozen.
-- [ ] P2 full fan-out (Workflow, resumable) round-1 + round-2 escalation; runIds here
+- \[\~\] P2 round-1 fan-out COMPLETE (2,776/2,776 proposals; runs wf_feb94680-d0c +
+  wf_41688b4a-da2 after weekly-limit recovery). Validation: 7,142 renames / 7,048 keeps;
+  HARD_FAIL — 282 intra-register collisions (many true-twins → need -N; some
+  cross-concept), 193 cross-concept over-merge bases (e.g. alder-31-12→alder, postnummer
+  roles→postnr), 2 over-40 grammar, 1 dup sid, 1 missing (26.16). 705 round-2-flagged.
+  NEXT: round-2 resolution (conservative: -N true twins; REVERT cross-concept
+  over-merges to keep-distinct per mission default-distinct; fix grammar/dup/missing) →
+  re-validate → apply.
 - [ ] P3 apply (pin all) + repoint refs + rebuild + dbdiff vs db_base + base→concept
   audit → fixpoint (0 worklist mismatch / 0 unintended ripple / 0 collision);
   refresh snapshot
@@ -85,8 +92,15 @@ catalog-wide-by-reach:
   …scb-slug-consistency-fanout-wf_feb94680-d0c.js, resumeFromRunId: "wf_feb94680-d0c"})
   — agents idempotent (skip written proposals).
 - round-1 hit weekly rate-limit at \~199/310 chunks (1,791 valid proposals recovered).
-- round-1 RESUME (110 incomplete chunks, sonnet): `wf_41688b4a-da2` (task wp1khgw5e);
-  incomplete_chunks.json lists them; agents idempotent so partial chunks finish cleanly.
+- round-1 RESUME (110 incomplete chunks, sonnet): `wf_41688b4a-da2` (task wp1khgw5e) —
+  done.
+- round-2 (collision resolution, 15 chunks, opus): `wf_044a6ca4-dfb`. Maintainer steer:
+  cross-register base-sharing (unit-of-observation naming) is the CONSISTENCY GOAL, NOT
+  over-merge — KEEP it; only genuinely-different concepts stay distinct. So round-2
+  fixes only WITHIN-register collisions: 208 true-twin -N (deterministic,
+  twin_fixes.json) + 55 distinct-concept collision groups (round2/<gid>.json →
+  round2_out/<gid>.json overrides). RULES.md updated with the refined over-merge
+  definition.
 - baseline DB: /tmp/scb-cur/n747/db_base; slug-dir copy: /tmp/scb-cur/n747/slugdir_base.
 
 ## Gotchas carried from #471 (do not relearn)
