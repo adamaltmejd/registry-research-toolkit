@@ -2387,26 +2387,27 @@ def populate_variable_slugs(
                 # tag it so the worklist surfaces it regardless of base class.
                 if slug != base:
                     kind = f"{kind}+disambiguated"
-                conn.execute(
-                    "UPDATE variable SET slug = ? WHERE variable_id = ?",
-                    (slug, variable_id),
-                )
-                used.add(slug)
                 source_id = _source_id(register_id, provider_key, variable_id)
                 counts["auto_new"] += 1
                 # #786: a NEW variable on a `frozen` provider whose slug came
                 # from a fragile basis would become immutable — flag it for the
                 # post-loop gate (raised once, with every offender, below).
                 if state == "frozen" and _is_name_fallback_derivation(kind):
+                    # Rejected offender: record ONLY. Do not write the DB row,
+                    # reserve the slug, or persist to auto — a rejected slug must
+                    # not influence sibling derivation (a clean sibling that only
+                    # collides with this phantom slug would be falsely flagged,
+                    # the Codex P2) and must stay first-sight so a rerun re-derives
+                    # and the gate re-fires (a persisted entry would read back as
+                    # `auto_existing` in Pass 1, so the gate would never re-fire
+                    # and the fragile slug would silently ship).
                     frozen_new_fallback.append((provider_slug, source_id, slug, kind))
-                    # Do NOT persist this offender into the auto file. The build
-                    # fails on the post-loop raise, but if we wrote the entry it
-                    # would be read back as `auto_existing` on a bare rerun (Pass
-                    # 1), making the variable no longer first-sight — the gate
-                    # would never re-fire and the fragile slug would silently ship
-                    # (the Codex P2). Skipping the write keeps the variable
-                    # first-sight so a rerun re-derives it and the gate re-fires.
                     continue
+                conn.execute(
+                    "UPDATE variable SET slug = ? WHERE variable_id = ?",
+                    (slug, variable_id),
+                )
+                used.add(slug)
                 auto[source_id] = slug
                 auto_derivation[source_id] = kind
                 auto_dirty = True
@@ -2469,8 +2470,10 @@ def populate_variable_slugs(
             f"{len(frozen_new_fallback)} NEW variable(s) on a frozen provider would "
             "take a slug derived from a fragile (name-fallback/last-resort/"
             f"disambiguated) basis and become immutable: {sample}.",
-            'Pin each with a [variable."<reg>.<var>"] slug in the provider TOML '
-            "(the curated override wins and is the deliberate review), then rebuild.",
+            'Pin each with a [variable."<source-id>"] slug in the provider TOML, '
+            "using the EXACT source id shown in the sample (including any "
+            "split-discriminator suffix, e.g. <reg>.<var>.<disc>) — the curated "
+            "override wins and is the deliberate review, then rebuild.",
         )
 
     if skipped_overrides:

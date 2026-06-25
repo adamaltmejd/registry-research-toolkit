@@ -1958,6 +1958,39 @@ class TestPopulateVariableSlugs:
         assert exc2.value.code == "slug_freeze_new_fallback"
         assert "1.88" in exc2.value.message
 
+    def test_frozen_rejected_offender_does_not_overreport_clean_sibling(
+        self, tmp_path: Path
+    ) -> None:
+        # Codex P2: a REJECTED frozen offender must not reserve its slug — a
+        # rejected slug is never persisted, so it must not influence any sibling's
+        # derivation. Two NEW first-sight variables on the same frozen register
+        # whose bases COLLIDE on "vinst":
+        #   A (var 88): kol "3DOMR" (no slugify) → name-fallback "vinst" (fragile
+        #     ⇒ a real offender).
+        #   B (var 99): clean kolumnnamn "Vinst" → "vinst" — register-unique among
+        #     pending, so the non-fragile kolumnnamn arm wins.
+        # A is processed first (lower variable_id). If A reserved its slug before
+        # the `continue` (the pre-fix bug), "vinst" would be in `used`, the clean
+        # kolumnnamn arm would fail for B, and B would fall to the kolumnnamn-
+        # residual arm (also fragile) ⇒ B would be falsely flagged. B's name
+        # "4K-vy" doesn't name-slug, so the kolumnnamn arm is the ONLY thing
+        # keeping B clean — proving the over-report once A's phantom slug leaks.
+        # Post-fix A reserves nothing, so B derives clean "vinst" and is NOT
+        # reported. Only the real offender A (1.88) appears.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="Vinst", kol="3DOMR")
+        self._add_variable(conn, var_id=99, name="4K-vy", kol="Vinst")
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        # Only the genuine offender A is reported; the clean sibling B is not.
+        assert "1.88" in exc.value.message
+        assert "1.99" not in exc.value.message
+        assert exc.value.message.startswith("1 NEW")
+
     # --- #143: drift-stable slug basis (+ doable-now part of #141) --------
 
     @staticmethod
