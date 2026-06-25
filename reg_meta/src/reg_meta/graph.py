@@ -18,8 +18,9 @@ the webapp's FastAPI response models (no wrapper, per #681).
 
 **Compose, don't re-query.** The builder orchestrates the existing ``Catalog``
 accessors — each the single source of truth for its edge type (``variable_chain``
-for succession, ``related`` for see-also, ``dimensions`` / ``concept_group`` for
-group membership, ``classification_chain`` for classification editions,
+for succession, ``related`` for see-also, ``resolve``'s ``ResolvedVariable.group``
++ ``concept_group`` for variable-group membership, ``classification_group`` for the
+classification umbrella, ``classification_chain`` for classification editions,
 ``resolve`` for same_as canonicalization). The only genuinely new logic is group
 expansion, edition dedup, and the representation-run computation — no fresh SQL
 re-deriving succession / lineage (that would fork the edge logic; the repo's
@@ -39,8 +40,8 @@ from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
 
-from .catalog import ResolvedVariable, _CatalogModel
-from .errors import RegMetaError
+from .catalog import OPEN_ENDED_VALID_TO, ResolvedVariable, _CatalogModel
+from .errors import EXIT_NOT_FOUND, RegMetaError
 from .fqid import Fqid
 
 if TYPE_CHECKING:
@@ -63,8 +64,8 @@ class GraphState(_CatalogModel):
     variants). Raw ``data_type`` / ``data_length`` are intentionally NOT on the wire
     AND are NOT boundary signals: SCB's per-delivery ``Datatyp`` / length is
     low-trust passthrough (#526 blanks it), so a type/length wobble alone never
-    opens a new run — the boundary is value-set / classification / column identity
-    only (see ``_is_representation_boundary``)."""
+    opens a new run — the boundary is value-set identity (id + version label) /
+    classification / column identity only (see ``_is_representation_boundary``)."""
 
     state_id: int
     variant: str
@@ -158,26 +159,28 @@ def _is_representation_boundary(prev: VariableState, cur: VariableState) -> bool
     state ``prev`` in the same variant — the #526 fold rule, scoped to materialized
     rows (#761).
 
-    A boundary is EXACTLY one of three identity changes between adjacent states:
-    the value-set identity (``value_set_id``), the classification
-    (``classification_slug``), or the coalesced ``delivery_column_name`` (the
-    per-era surviving column — a cross-era column RENAME). These are precisely the
-    distinctions that survive #526's value-set-anchored fold in ``variable_state``.
-    Raw ``data_type`` / ``data_length`` are NEVER a boundary signal on their own:
-    SCB's per-delivery ``Datatyp`` / length is low-trust passthrough that #526
-    blanks, so an `int -> bigint` or char↔varchar wobble does NOT open a run. Per-
-    period alias multiplexing (monthly families' 12 columns, held in
-    ``variable_alias_window`` not in ``states``) is an alias concern, NOT a coding
-    boundary — those expanded windows share a ``state_id`` and are never compared
-    here (a node folds its states by state_id before this runs)."""
+    A boundary is EXACTLY one of FOUR identity changes between adjacent states:
+    the value-set IDENTITY — both its ``value_set_id`` AND its
+    ``value_set_version_label`` (the #526 state-identity gkey for a VALUED state is
+    keyed on both; two states sharing a ``value_set_id`` but differing in label are
+    DISTINCT materialized states, so the label is part of value-set identity, not a
+    low-trust wobble) — the classification (``classification_slug``), or the
+    coalesced ``delivery_column_name`` (the per-era surviving column — a cross-era
+    column RENAME). These are precisely the distinctions that survive #526's
+    value-set-anchored fold in ``variable_state``. The label is ``''`` for valueless
+    states, so it never spuriously fires there. Raw ``data_type`` / ``data_length``
+    are NEVER a boundary signal on their own: SCB's per-delivery ``Datatyp`` / length
+    is low-trust passthrough that #526 blanks, so an `int -> bigint` or char↔varchar
+    wobble does NOT open a run. Per-period alias multiplexing (monthly families' 12
+    columns, held in ``variable_alias_window`` not in ``states``) is an alias
+    concern, NOT a coding boundary — those expanded windows share a ``state_id`` and
+    are never compared here (a node folds its states by state_id before this runs)."""
     return (
         prev.value_set_id != cur.value_set_id
+        or prev.value_set_version_label != cur.value_set_version_label
         or prev.classification_slug != cur.classification_slug
         or prev.delivery_column_name != cur.delivery_column_name
     )
-
-
-_OPEN_ENDED_VALID_TO = "9999-12-31"
 
 
 def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
@@ -211,7 +214,7 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
                 value_set_version_label=s.value_set_version_label,
                 classification_slug=s.classification_slug,
                 valid_from=s.valid_from,
-                valid_to=None if s.valid_to == _OPEN_ENDED_VALID_TO else s.valid_to,
+                valid_to=None if s.valid_to == OPEN_ENDED_VALID_TO else s.valid_to,
             )
         )
         prev = s
@@ -267,33 +270,47 @@ class _GraphBuilder:
         self._nodes: dict[str, GraphNode] = {}
         self._edges: dict[str, GraphEdge] = {}
 
-    def add_variable(self, fqid: Fqid) -> str | None:
+    def add_variable(self, fqid: Fqid, *, follow_related: bool = True) -> str | None:
         """Build the variable node for ``fqid`` (resolving same_as to canonical) and
         all its variable-grain edges (succession + related), recursing into
         succession-chain members and related neighbors so the union is complete.
-        Returns the canonical node id, or None when the FQID doesn't resolve."""
+        Returns the CANONICAL node id (the resolved variable's own identity, not the
+        caller's same_as alias), or None when the FQID resolves to no live variable.
+
+        ``follow_related=False`` adds the node + its succession chain but does NOT
+        chase its related edges — so a related neighbor is one hop, never the
+        transitive closure of related-of-related (#761 scopes the union to the
+        subject/group + their succession chains + related edges among/from the
+        union, not related-of-related). Only the focus + group members seed related
+        expansion (``follow_related=True``)."""
         try:
             resolved = self._catalog.resolve(fqid)
-        except RegMetaError:
-            # A dead/missing member (e.g. a renamed slug surfaced by a chain walk)
-            # is skipped from the union, not fatal to the whole graph.
-            return None
+        except RegMetaError as exc:
+            # A dead/not-found member (e.g. a renamed slug surfaced by a chain walk)
+            # is skipped from the union, not fatal to the whole graph. A genuinely
+            # malformed FQID (any other RegMetaError) fails fast — it must not vanish
+            # silently from the union.
+            if exc.exit_code == EXIT_NOT_FOUND:
+                return None
+            raise
         if not isinstance(resolved, ResolvedVariable):
             return None
-        node_id = str(resolved.fqid)
+        node_id = str(resolved.canonical_fqid)
         if node_id in self._nodes:
             return node_id
         self._nodes[node_id] = self._variable_node(resolved)
-        self._add_succession(resolved.fqid)
-        self._add_related(resolved.fqid)
+        self._add_succession(resolved.canonical_fqid)
+        if follow_related:
+            self._add_related(resolved.canonical_fqid)
         return node_id
 
     def _variable_node(self, resolved: ResolvedVariable) -> VariableGraphNode:
         group_key = resolved.group.key if resolved.group is not None else None
+        node_id = str(resolved.canonical_fqid)
         return VariableGraphNode(
-            id=str(resolved.fqid),
-            fqid=resolved.fqid,
-            label=resolved.name or str(resolved.fqid),
+            id=node_id,
+            fqid=resolved.canonical_fqid,
+            label=resolved.name or node_id,
             group_key=group_key,
             states=_graph_states(resolved.states),
             same_as=[
@@ -341,14 +358,18 @@ class _GraphBuilder:
 
     def _add_related(self, fqid: Fqid) -> None:
         """Add undirected related edges for ``fqid`` (``related`` — the single
-        source of truth). Each neighbor becomes a node (recursing so the neighbor's
-        own states/edges are present). ``variable_related_to`` stores both
-        directions, but the canonicalized edge id collapses the pair to one."""
+        source of truth). ``fqid`` is the CANONICAL fqid (the caller passes
+        ``resolved.canonical_fqid``), so ``source_id`` matches the node id. Each
+        neighbor becomes a node WITH its own succession chain, but with
+        ``follow_related=False`` so the union does NOT chase the neighbor's OWN
+        related edges — the union is one related hop, not the transitive closure
+        (#761). ``variable_related_to`` stores both directions, but the
+        canonicalized edge id collapses the pair to one."""
         source_id = str(fqid)
         for ref in self._catalog.related(fqid):
             if ref.fqid is None:
                 continue
-            target_id = self.add_variable(ref.fqid)
+            target_id = self.add_variable(ref.fqid, follow_related=False)
             if target_id is None:
                 continue
             edge = _related_edge(source_id, target_id, ref.relation_kind)
@@ -357,19 +378,31 @@ class _GraphBuilder:
     def add_classification(self, slug: str) -> str | None:
         """Build the classification-edition nodes + succession edges for the chain
         the edition ``slug`` sits on (``classification_chain`` — the single source
-        of truth, branch-aware at #579 splits). Returns the queried edition's node
-        id, or None when it doesn't resolve."""
-        fqid = Fqid.classification_fqid(slug)
+        of truth, branch-aware at #579 splits). Returns the queried (self) edition's
+        node id, or None when it doesn't resolve.
+
+        Early-out: if the queried edition's node is already present, the whole chain
+        was walked by a prior member (a SUN-style umbrella's niva/inriktning/grupp
+        members share one chain), so we skip re-walking ``classification_chain`` +
+        the predecessor SQL — the same node-dedup short-circuit ``add_variable``
+        has."""
+        self_id = str(Fqid.classification_fqid(slug))
+        if self_id in self._nodes:
+            return self_id
         try:
-            chain = self._catalog.classification_chain(fqid)
+            chain = self._catalog.classification_chain(Fqid.classification_fqid(slug))
         except RegMetaError:
             return None
         if not chain:
             return None
-        self_id: str | None = None
+        self_id = None
         slug_to_id: dict[str, str] = {}
         for edition in chain:
-            node_id = f"class/{edition.slug}"
+            # A chain edition's fqid is None only on a malformed slug (build-
+            # prevented; mirrors `_ensure_edition_node`) — it can't be a node.
+            if edition.fqid is None:
+                continue
+            node_id = str(edition.fqid)
             slug_to_id[edition.slug] = node_id
             if node_id not in self._nodes:
                 self._nodes[node_id] = ClassificationGraphNode(
@@ -377,7 +410,7 @@ class _GraphBuilder:
                     fqid=edition.fqid,
                     label=edition.name or node_id,
                     group_key=None,
-                    version_year=edition.effective_year,
+                    version_year=edition.version_year,
                     is_current=edition.is_current,
                 )
             if edition.is_self:

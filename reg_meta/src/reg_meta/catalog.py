@@ -474,6 +474,13 @@ class ClassificationEdition(_CatalogModel):
         "predecessor — i.e. the year it was superseded by its successor; None for "
         "the terminal (head) edition, which has no outbound edge."
     )
+    version_year: int | None = Field(
+        description="The edition's OWN point-in-time vintage year, read off the "
+        "`classification` row's `valid_from` (the vintage lives in slug + name + "
+        "valid_from). UNLIKE `effective_year` (the supersession year), this is the "
+        "edition's intrinsic year — sun1996→1996, sun2020→2020 regardless of "
+        "whether it has a successor. None when the row carries no `valid_from`."
+    )
     is_current: bool = Field(
         description="True for a terminal (current) edition — no outbound successor. "
         "A 1-to-many split root's chain has MULTIPLE such editions (one per branch "
@@ -633,6 +640,12 @@ class ResolvedVariable(_CatalogModel):
     # The caller's 3-segment binding FQID, preserved through a `same_as`
     # traversal (so a result reports the FQID the caller asked for).
     fqid: Fqid
+    # The CANONICAL binding FQID of the resolved variable itself (the
+    # (provider, register, slug) triple the binding resolved *to*). Equals `fqid`
+    # on a direct hit; differs when `fqid` is a `same_as` alias. This is the
+    # identity the edge accessors key off — graph nodes use it so an alias-entry
+    # graph keys on the canonical, not the caller's address.
+    canonical_fqid: Fqid
     variable_id: int
     register_id: int
     provider_key: str
@@ -1316,6 +1329,7 @@ class Catalog:
         )
         return ResolvedVariable(
             fqid=fqid,
+            canonical_fqid=Fqid.binding_fqid(*triple),
             variable_id=var["variable_id"],
             register_id=meta["register_id"],
             provider_key=meta["provider_key"],
@@ -2049,7 +2063,7 @@ class Catalog:
         absent from the map, so the caller's `name_by_triple.get(triple)` yields None
         for it — exactly the dead-edition behavior. A present-but-NULL name is a live
         row with no name and stays in the map. The variable-grain dual of
-        `_classification_chain_names`, joining provider/register slugs to key on the
+        `_classification_chain_rows`, joining provider/register slugs to key on the
         (provider, register, variable) triple."""
         triple_list = list(triples)
         if not triple_list:
@@ -2189,13 +2203,14 @@ class Catalog:
             for slug, _ in ordered
             if not self._classification_successor_edges(slug)
         }
-        name_by_slug = self._classification_chain_names(s for s, _ in ordered)
+        row_by_slug = self._classification_chain_rows(s for s, _ in ordered)
         return [
             ClassificationEdition(
                 slug=slug,
                 fqid=self._class_ref_fqid(slug),
-                name=name_by_slug.get(slug),
+                name=row["name"] if (row := row_by_slug.get(slug)) else None,
                 effective_year=year,
+                version_year=row["valid_from"] if row else None,
                 is_current=(slug in terminals),
                 is_self=(slug == canonical),
             )
@@ -2319,21 +2334,25 @@ class Catalog:
         ).fetchone()
         return row["slug"] if row and row["slug"] is not None else slug
 
-    def _classification_chain_names(
+    def _classification_chain_rows(
         self, slugs: Iterable[str]
-    ) -> dict[str, str | None]:
-        """Map each chain slug to its live `classification.name`. Every chain slug
-        is a live row (the validator forbids succession edges to dead slugs; see
-        `classification_chain`), so the map covers every slug; a present-but-NULL
-        name is a live row with no name and stays in the map."""
+    ) -> dict[str, sqlite3.Row]:
+        """Map each chain slug to its live `classification` row (`name` +
+        `valid_from`). Every chain slug is a live row (the validator forbids
+        succession edges to dead slugs; see `classification_chain`), so the map
+        covers every slug; a present-but-NULL `name`/`valid_from` is a live row with
+        a NULL column and stays in the map. `valid_from` is the edition's OWN
+        point-in-time vintage year (an INTEGER; vintage lives in slug + name +
+        valid_from), distinct from the succession-edge `effective_year`."""
         slug_list = list(slugs)
         if not slug_list:
             return {}
         placeholders = ",".join("?" * len(slug_list))
         return {
-            row["slug"]: row["name"]
+            row["slug"]: row
             for row in self._conn.execute(
-                f"SELECT slug, name FROM classification WHERE slug IN ({placeholders})",
+                "SELECT slug, name, valid_from FROM classification "
+                f"WHERE slug IN ({placeholders})",
                 slug_list,
             ).fetchall()
         }

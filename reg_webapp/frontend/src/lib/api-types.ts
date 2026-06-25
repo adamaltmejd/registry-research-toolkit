@@ -39,13 +39,10 @@ export interface paths {
          *     umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
          *     classification group has that key.
          *
-         *     By-key resolution FILTERS `Catalog.list_classification_groups()` in the webapp
-         *     rather than adding a reg_meta `classification_group(key)` accessor: the curated
-         *     umbrella list is tiny + global (a handful of groups), the issue scopes this to
-         *     reg_webapp, and a new reg_meta accessor would force a query-side reg_meta
-         *     release for a trivial filter. `list_classification_groups()` is already the
-         *     reg_meta read surface the webapp consumes here — it's what
-         *     `_classification_root_response` reads for the classification-root's `groups`.
+         *     By-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped
+         *     the reg_meta accessor; #756 did this filter inline here to avoid a release). The
+         *     accessor is the single source of truth for the class-by-key filter — the route
+         *     no longer re-pastes the `list_classification_groups()` loop.
          *
          *     No provider/register/key is slug-validated: `class` is a fixed literal in the
          *     path, and `key` is a derivation key (not a slug). So there is no
@@ -818,6 +815,11 @@ export interface components {
              * @description The edition's literal slug (e.g. 'sun2000').
              */
             slug: string;
+            /**
+             * Version Year
+             * @description The edition's OWN point-in-time vintage year, read off the `classification` row's `valid_from` (the vintage lives in slug + name + valid_from). UNLIKE `effective_year` (the supersession year), this is the edition's intrinsic year — sun1996→1996, sun2020→2020 regardless of whether it has a successor. None when the row carries no `valid_from`.
+             */
+            version_year: number | null;
         };
         /**
          * ClassificationGraphNode
@@ -1486,8 +1488,8 @@ export interface components {
          *     variants). Raw ``data_type`` / ``data_length`` are intentionally NOT on the wire
          *     AND are NOT boundary signals: SCB's per-delivery ``Datatyp`` / length is
          *     low-trust passthrough (#526 blanks it), so a type/length wobble alone never
-         *     opens a new run — the boundary is value-set / classification / column identity
-         *     only (see ``_is_representation_boundary``).
+         *     opens a new run — the boundary is value-set identity (id + version label) /
+         *     classification / column identity only (see ``_is_representation_boundary``).
          */
         GraphState: {
             /** Classification Slug */

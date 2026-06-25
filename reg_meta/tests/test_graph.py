@@ -45,6 +45,21 @@ def _seed_replaced_by(
     conn.commit()
 
 
+def _seed_same_as(
+    conn: sqlite3.Connection,
+    alias: tuple[str, str, str],
+    canonical: tuple[str, str, str],
+) -> None:
+    # variable_same_as: the ALIAS triple is an a-side source key with no live
+    # `variable` row, so it resolves THROUGH to the live canonical b-side.
+    conn.execute(
+        "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+        "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+        (*alias, *canonical),
+    )
+    conn.commit()
+
+
 def _seed_related(
     conn: sqlite3.Connection,
     a: tuple[str, str, str],
@@ -88,11 +103,17 @@ def _add_concept_group(
 
 
 def _add_classification(
-    conn: sqlite3.Connection, *, cid: int, slug: str, name: str = "C"
+    conn: sqlite3.Connection,
+    *,
+    cid: int,
+    slug: str,
+    name: str = "C",
+    valid_from: int | None = None,
 ) -> None:
     conn.execute(
-        "INSERT INTO classification (id, short_name, name, slug) VALUES (?, ?, ?, ?)",
-        (cid, slug.upper(), name, slug),
+        "INSERT INTO classification (id, short_name, name, slug, valid_from) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (cid, slug.upper(), name, slug, valid_from),
     )
     conn.commit()
 
@@ -230,6 +251,30 @@ class TestRepresentationRuns:
         assert isinstance(node, VariableGraphNode)
         assert [s.representation_run_id for s in node.states] == [0, 1]
 
+    def test_value_set_version_label_change_is_a_boundary(self) -> None:
+        # Two valued states sharing a value_set_id but differing in
+        # value_set_version_label are DISTINCT materialized states (the #526
+        # state-identity gkey keys on id + label) → two representation runs. Label is
+        # part of value-set identity, not a low-trust wobble.
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+        conn.execute("DELETE FROM variable_state")
+        for vf, label in (("2018-01-01", "v1"), ("2019-01-01", "v2")):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=10,
+                valid_from=vf,
+                delivery_column_name="Kon",
+                value_set_id=1,
+                value_set_version_label=label,
+            )
+        conn.commit()
+        node = Catalog(conn).graph_for_fqid(_KON).nodes[0]
+        assert isinstance(node, VariableGraphNode)
+        assert [s.representation_run_id for s in node.states] == [0, 1]
+
     def test_run_never_spans_variants(self) -> None:
         # Two variants delivering identical-shaped states must still break the run at
         # the variant change (a run never spans variants), even with NO #526 boundary.
@@ -352,6 +397,69 @@ class TestEdges:
         }
         # Both endpoints are real nodes.
         assert {n.id for n in g.nodes} >= {"scb/lisa/kon", "scb/lisa/kon-alt"}
+
+    def test_related_expansion_is_one_hop(self) -> None:
+        # A related B, B related C. Querying A pulls A + its immediate related
+        # neighbor B (one hop), but NOT C (related-of-related). The #761 union is the
+        # subject + its succession chains + related edges among/from the union, not
+        # the transitive closure of related.
+        conn = build_slugged_db()  # A = kon
+        for vid, slug, col in ((45, "btwo", "BTwo"), (46, "cthree", "CThree")):
+            add_variable(conn, register_id=1, var_id=vid, name=slug, slug=slug)
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                delivery_column_name=col,
+            )
+        _seed_related(conn, ("scb", "lisa", "kon"), ("scb", "lisa", "btwo"))
+        _seed_related(conn, ("scb", "lisa", "btwo"), ("scb", "lisa", "cthree"))
+        g = Catalog(conn).graph_for_fqid(_KON)
+        ids = {n.id for n in g.nodes}
+        assert "scb/lisa/kon" in ids
+        assert "scb/lisa/btwo" in ids  # one hop
+        assert "scb/lisa/cthree" not in ids  # NOT related-of-related
+        # Only the A--B related edge, never B--C.
+        related = {(e.source, e.target) for e in g.edges if e.kind == "related"}
+        assert related == {("scb/lisa/btwo", "scb/lisa/kon")}
+
+    def test_alias_entry_keys_on_canonical_node(self) -> None:
+        # A pure-alias FQID (no live variable row) resolving via same_as to a
+        # DIFFERENT canonical variable must mint exactly ONE node for that variable,
+        # keyed on the CANONICAL id — not the alias. The focus node's succession edge
+        # must reference the canonical id (no orphan/duplicate alias node).
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        # kon has a succession edge → its graph is non-empty.
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "civilstand"),
+            reason="renamed",
+        )
+        # `kon-alias` has NO live variable row; it resolves THROUGH to `kon`.
+        _seed_same_as(conn, ("scb", "lisa", "kon-alias"), ("scb", "lisa", "kon"))
+        g = Catalog(conn).graph_for_fqid("scb/lisa/kon-alias")
+        # The focus is the CANONICAL node, never the alias.
+        assert g.focus_id == "scb/lisa/kon"
+        assert "scb/lisa/kon-alias" not in {n.id for n in g.nodes}
+        # Exactly one node per variable — no duplicate alias/canonical pair for kon.
+        kon_nodes = [n for n in g.nodes if n.id == "scb/lisa/kon"]
+        assert len(kon_nodes) == 1
+        # The focus node's succession edge references the canonical id, and the focus
+        # is actually connected to its own edges.
+        succ = [e for e in g.edges if e.kind == "succession"]
+        assert len(succ) == 1
+        assert succ[0].source == "scb/lisa/kon"
+        assert g.focus_id in {succ[0].source, succ[0].target}
 
 
 # ── Variable groups (Fork B) ─────────────────────────────────────────────────
@@ -477,9 +585,12 @@ class TestVariableGroups:
 class TestClassificationChains:
     def test_chain_nodes_are_point_year(self) -> None:
         conn = build_slugged_db(classification=None)
-        _add_classification(conn, cid=1, slug="sun1996")
-        _add_classification(conn, cid=2, slug="sun2000")
-        _add_classification(conn, cid=3, slug="sun2020")
+        # version_year = each edition's OWN vintage (classification.valid_from), NOT
+        # the year it was superseded. Seed valid_from per edition distinct from the
+        # succession effective_year so a regression that reuses effective_year fails.
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
         _add_class_succession(
             conn, predecessor="sun1996", successor="sun2000", effective_year=2000
         )
@@ -504,7 +615,12 @@ class TestClassificationChains:
         # No `group:sun` node — the umbrella is metadata, not a node.
         assert "class/group:sun" not in nodes
         assert "group:sun" not in nodes
-        # Point-year (effective_year), terminal is_current.
+        # version_year is each edition's OWN point-in-time vintage (valid_from), NOT
+        # the supersession year. Crucially the TERMINAL current edition keeps its
+        # own vintage (2020), not None (which `effective_year` would yield there).
+        assert nodes["class/sun1996"].version_year == 1996
+        assert nodes["class/sun2000"].version_year == 2000
+        assert nodes["class/sun2020"].version_year == 2020
         assert nodes["class/sun2020"].is_current is True
         # Two directed succession edges, deduped (no duplicate from co-membership).
         succ = [e for e in g.edges if e.kind == "succession"]

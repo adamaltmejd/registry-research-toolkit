@@ -812,26 +812,31 @@ edition dedup, and the representation-run computation.
 `(variant, valid_from)`), plus `same_as[]` (resolved-away aliases, metadata) and a
 shared `group_key` (clustering metadata — there is **no** `group:<key>` node). A
 classification node carries a **point** `version_year` (never an interval — an edition
-is not "dead" after its successor) + `is_current`. Time semantics live on the node, so
-there is no top-level `mode`: the renderer draws a time axis when interval (variable)
-nodes are present and a version ordering when point-year (classification) nodes are.
-**Two edge kinds only**: `succession` (directed, predecessor→successor) and `related`
-(undirected — endpoints canonicalized by sorted node id so the same relation seen from
-both ends collapses). Everything else is metadata/affordance: `lineage` /
-`source_register` are #678's provenance affordance (not edges); `same_as` is resolved
-away to the canonical node; representation / value-set transitions are
-states-within-a-node (the run ids), not edges. Every edge carries a stable `id` that
-doubles as its dedup key, so a shared succession edge or an undirected related edge
-surfaced from two members during a group union collapses.
+is not "dead" after its successor; the edition's OWN vintage from the `classification`
+row's `valid_from`, NOT the supersession year — so the terminal current edition keeps
+its own year, not None) + `is_current`. Time semantics live on the node, so there is no
+top-level `mode`: the renderer draws a time axis when interval (variable) nodes are
+present and a version ordering when point-year (classification) nodes are. **Two edge
+kinds only**: `succession` (directed, predecessor→successor) and `related` (undirected —
+endpoints canonicalized by sorted node id so the same relation seen from both ends
+collapses). Everything else is metadata/affordance: `lineage` / `source_register` are
+#678's provenance affordance (not edges); `same_as` is resolved away to the canonical
+node; representation / value-set transitions are states-within-a-node (the run ids), not
+edges. Every edge carries a stable `id` that doubles as its dedup key, so a shared
+succession edge or an undirected related edge surfaced from two members during a group
+union collapses.
 
 **Representation runs (the #526 fold, query-side mirror).** Each `GraphState` carries a
 `representation_run_id` (int, unique within the node): consecutive states sharing it
 form **one rendered cell**. The id increments at each representation boundary **and** at
 every `variant` change (a run never spans variants — this replaces an ambiguous
-per-state boolean). A boundary is **exactly one of three** identity changes between
-adjacent `variable_state` rows — value-set identity (`value_set_id`), classification
-(`classification_slug`), or the per-era coalesced `delivery_column_name`. Raw
-`data_type` / `data_length` are **never** a boundary signal on their own: SCB's
+per-state boolean). A boundary is **exactly one of four** identity changes between
+adjacent `variable_state` rows — the value-set IDENTITY (`value_set_id` **and** its
+`value_set_version_label`: the #526 state-identity gkey for a valued state keys on both,
+so two states sharing a `value_set_id` but differing in label are distinct materialized
+states; the label is `''` for valueless states, so it never spuriously fires there),
+classification (`classification_slug`), or the per-era coalesced `delivery_column_name`.
+Raw `data_type` / `data_length` are **never** a boundary signal on their own: SCB's
 per-delivery `Datatyp` / length is low-trust passthrough that #526 blanks, so an
 `int -> bigint` or char↔varchar wobble does NOT open a run. This scopes the boundary to
 "distinctions that survive in `variable_state`" — precisely what reg_meta_build's #526
