@@ -4,6 +4,25 @@ import { render } from "vitest-browser-svelte";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
 import type { HistoryGraph } from "./history_graph";
 
+const neutralBarStyle = {
+  fill: "rgb(245, 245, 245)",
+  stroke: "none",
+  strokeWidth: "1.2px",
+};
+
+function barStyle(selector: string): typeof neutralBarStyle {
+  const bar = document.querySelector<SVGRectElement>(selector);
+  if (!bar) {
+    throw new Error(`Missing graph bar for selector ${selector}`);
+  }
+  const style = getComputedStyle(bar);
+  return {
+    fill: style.fill,
+    stroke: style.stroke,
+    strokeWidth: style.strokeWidth,
+  };
+}
+
 const graph: HistoryGraph = {
   mode: "variable",
   title: "Variable relationships",
@@ -217,6 +236,9 @@ describe("HistoryGraphPrototype", () => {
     ).toEqual(["agi1astsni2007g", "agi1astsni2007u"]);
     expect(document.querySelector(".axis")).not.toBeNull();
     expect(document.querySelector(".detail")).toBeNull();
+    expect(barStyle(".node.group-member:not(.self) .bar")).toEqual(
+      neutralBarStyle,
+    );
     expect(document.querySelectorAll(".node.self")).toHaveLength(1);
     expect(
       document.querySelector(
@@ -248,6 +270,9 @@ describe("HistoryGraphPrototype", () => {
     expect(document.querySelector(".edition-svg")).toBeNull();
     expect(document.querySelector(".axis")).toBeNull();
     expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
+    expect(
+      barStyle(".node.classification:not(.self):not(.current) .bar"),
+    ).toEqual(neutralBarStyle);
     expect(
       document
         .querySelector('a[href="/catalog/class/sun2000-inriktning"]')

@@ -358,24 +358,9 @@ function shortLabel(label: string, max = 29): string {
     pointer-events: none;
   }
   .bar {
-    fill: var(--surface-selected, #e6f0ff);
-    stroke: var(--accent);
+    fill: var(--surface-hover, #f5f5f5);
+    stroke: var(--muted);
     stroke-width: 1.2;
-  }
-  .group .bar {
-    fill: var(--surface-hover, #f5f5f5);
-    stroke: var(--muted);
-  }
-  .group-member .bar {
-    fill: var(--surface-hover, #f5f5f5);
-    stroke: var(--muted);
-  }
-  .classification .bar {
-    fill: #f0efe8;
-    stroke: #8a6f2a;
-  }
-  .classification.current .bar {
-    fill: #eadfbd;
   }
   .self .bar {
     fill: var(--surface-selected, #e6f0ff);
