@@ -35,8 +35,13 @@ adapter-emit time. So it runs in the slug-guarded block right after
 to the backfill below the block).
 
 Guards / discipline (mirrors `variable_grafts`):
-* **Gap-fill only.** An attach whose column already exists as a `variable_state`
-  column in that `(register, variant)` is skipped — never duplicate.
+* **Documented-missing only (fail fast on a present column).** An attach
+  documents a column NOT in SCB's machine export; if that column already delivers
+  a `variable_state` in the target `(register, variant)` — folded on the SAME
+  `fold_column` identity the loader dedups on — the entry is obsolete and the
+  build FAILS (EXIT_CONFIG, `canonical_attach_now_present`), converting the
+  otherwise-confusing downstream `slug_variable_override_stale` (the stranded
+  curated slug pin) into a clear reconciliation signal. NOT silently skipped.
 * **Strict load, lenient resolve.** A structural TOML defect fails the build
   (EXIT_CONFIG); a `(register, variant)` that doesn't resolve is counted
   `unresolved`, not fatal (pre-v1 slug churn).
@@ -384,11 +389,13 @@ def materialize_canonical_attach(
     `materialize` feeds to `_feed_classification_candidates`, so the existing
     backfill tags `variable_state.classification_id`.
 
-    Returns `{minted, skipped, unresolved}`. `skipped` = the column already exists
-    as a state in that variant (never duplicate); `unresolved` = the register or
-    variant slug didn't resolve."""
+    Returns `{minted, unresolved}`. `unresolved` = the register or variant slug
+    didn't resolve. An attach whose column ALREADY delivers a state in that
+    variant is NOT silently skipped — it is a fail-fast (EXIT_CONFIG): the seed
+    documents a column expected to be MISSING from SCB's machine export, so its
+    presence means the entry is obsolete (see below)."""
     warn = warn or (lambda _msg: None)
-    counts = {"minted": 0, "skipped": 0, "unresolved": 0}
+    counts = {"minted": 0, "unresolved": 0}
     active = [a for a in entries if a.provider in providers]
     if not active:
         return counts
@@ -399,18 +406,42 @@ def materialize_canonical_attach(
             counts["unresolved"] += 1
             continue
         register_variant_id, register_id = resolved
-        # Gap-fill only: skip if the column is already a delivered state column in
-        # this variant (case/diacritic-folded — same LOWER() match as grafts).
-        exists = conn.execute(
-            "SELECT 1 FROM variable_state vs JOIN variable v "
-            "ON vs.variable_id = v.variable_id "
-            "WHERE v.register_id = ? AND vs.register_variant_id = ? "
-            "AND LOWER(vs.delivery_column_name) = LOWER(?) LIMIT 1",
-            (register_id, register_variant_id, a.column),
-        ).fetchone()
-        if exists:
-            counts["skipped"] += 1
-            continue
+        # Presence check on the SAME column identity the loader dedups on:
+        # `fold_column` (NFKD + ASCII-strip + lower), NOT SQLite LOWER() (which
+        # leaves diacritics, so `Kön` (existing) vs `Kon` (attach) wouldn't match
+        # and a duplicate variable/state would mint). SQLite has no fold_column, so
+        # fetch the variant's delivered columns and compare folded in Python.
+        folded_attach = fold_column(a.column)
+        present = any(
+            fold_column(row[0]) == folded_attach
+            for row in conn.execute(
+                "SELECT vs.delivery_column_name FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = ? AND vs.register_variant_id = ?",
+                (register_id, register_variant_id),
+            )
+        )
+        if present:
+            # The seed documents a column expected to be MISSING from the SCB
+            # machine export; its presence means the export now ships it (keyed by
+            # numeric VarId, not provider_key=<column>), so the attach entry is
+            # obsolete AND its curated `[variable."<reg>.<column>"]` slug pin would
+            # strand (no provider_key=<column> variable to match →
+            # `slug_variable_override_stale` later). Fail loud with the
+            # reconciliation signal instead of skipping silently.
+            raise curation_error(
+                "canonical_attach_now_present",
+                f"canonical_attach {a.register}/{a.variant}/{a.column}: a "
+                "canonical-attach seed entry documents a column expected to be "
+                "MISSING from the SCB machine export, but it is now present in "
+                f"register {a.register!r} variant {a.variant!r} — so the entry is "
+                "obsolete.",
+                f"Remove the [[attach]] for {a.column!r} from "
+                "input_data/scb_canonical/lisa_canonical.toml and re-curate its "
+                f'slug onto the machine variable (move the `[variable."<reg_id>.'
+                f'{a.column}"]` slug pin in scb.toml to the numeric-VarId-keyed '
+                "machine variable).",
+            )
 
         variable_id = mint_canonical_scb("scb", a.register, a.variant, a.column)
         state_id = mint_canonical_scb("scb", a.register, a.variant, a.column, "state")

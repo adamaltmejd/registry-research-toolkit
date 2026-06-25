@@ -3371,8 +3371,7 @@ def materialize(
         row_counts["canonical_attach"] = attach_counts["minted"]
         _progress(
             f"  {attach_counts['minted']:,} canonical-SCB attaches "
-            f"({attach_counts['skipped']:,} already present, "
-            f"{attach_counts['unresolved']:,} unresolved)"
+            f"({attach_counts['unresolved']:,} unresolved)"
         )
 
         # Stored `variable.slug`. Runs after populate_slugs

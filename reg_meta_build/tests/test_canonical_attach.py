@@ -2,7 +2,8 @@
 
 Covers the TOML loader (structural validation, EXIT_CONFIG) and the
 materialization pass: minting variable+state+alias onto an existing
-(register, variant) with canonical-SCB-banded ids, gap-fill skip, lenient
+(register, variant) with canonical-SCB-banded ids, fail-fast on an
+already-present column (fold_column identity), lenient
 unresolved, the provider gate, verbatim validity window, the open-ended sentinel
 when valid_to is omitted, source_label, and the classification backfill
 side-channel (a candidate fed to the shared backfill tags
@@ -283,7 +284,7 @@ class TestMaterialize:
             providers=_SCB,
             classification_candidates=candidates,
         )
-        assert counts == {"minted": 1, "skipped": 0, "unresolved": 0}
+        assert counts == {"minted": 1, "unresolved": 0}
         row = _variable(conn, "Ssyk4_J16")
         assert row is not None
         vid, name, desc, source_label, slug = row
@@ -370,19 +371,42 @@ class TestMaterialize:
             ids.append(_variable(conn, "Ssyk4_J16")[0])
         assert ids[0] == ids[1]
 
-    def test_gap_fill_skips_existing_column(self) -> None:
+    def test_already_present_column_fails_fast(self) -> None:
+        # P2: the seed documents a column expected to be MISSING from the SCB
+        # machine export. If it is already a delivered state column, the entry is
+        # obsolete and its curated slug pin would strand → fail loud (EXIT_CONFIG)
+        # with the reconciliation signal, NOT silently skip.
         conn = build_slugged_db()  # Kön already delivers column 'Kon' in variant 10
-        counts = materialize_canonical_attach(
-            conn, [_a("Kon")], providers=_SCB, classification_candidates=[]
-        )
-        assert counts == {"minted": 0, "skipped": 1, "unresolved": 0}
+        with pytest.raises(RegMetaError) as exc:
+            materialize_canonical_attach(
+                conn, [_a("Kon")], providers=_SCB, classification_candidates=[]
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "canonical_attach_now_present"
+        assert _variable(conn, "Kon") is None  # nothing minted
 
-    def test_gap_fill_skip_is_case_insensitive(self) -> None:
+    def test_already_present_is_case_insensitive(self) -> None:
         conn = build_slugged_db()
-        counts = materialize_canonical_attach(
-            conn, [_a("kON")], providers=_SCB, classification_candidates=[]
-        )
-        assert counts["skipped"] == 1 and counts["minted"] == 0
+        with pytest.raises(RegMetaError) as exc:
+            materialize_canonical_attach(
+                conn, [_a("kON")], providers=_SCB, classification_candidates=[]
+            )
+        assert exc.value.code == "canonical_attach_now_present"
+
+    def test_already_present_folds_diacritics(self) -> None:
+        # P3: the presence check must use `fold_column` (NFKD + ASCII-strip), the
+        # SAME identity the loader dedups on — NOT SQLite LOWER() (diacritic-blind).
+        # An existing diacritic column `Kön` vs an ASCII attach `Kon` folds to the
+        # same identity, so the attach is detected as present (→ the P2 error)
+        # rather than minting a duplicate variable/state.
+        conn = build_slugged_db(delivery_column_name="Kön")  # existing diacritic col
+        with pytest.raises(RegMetaError) as exc:
+            materialize_canonical_attach(
+                conn, [_a("Kon")], providers=_SCB, classification_candidates=[]
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "canonical_attach_now_present"
+        assert _variable(conn, "Kon") is None  # no duplicate minted
 
     def test_unresolved_variant_counted(self) -> None:
         conn = build_slugged_db()
@@ -394,7 +418,7 @@ class TestMaterialize:
             classification_candidates=[],
             warn=warnings.append,
         )
-        assert counts == {"minted": 0, "skipped": 0, "unresolved": 1}
+        assert counts == {"minted": 0, "unresolved": 1}
         assert any("did not resolve" in w for w in warnings)
 
     def test_provider_gate_skips_inactive(self) -> None:
@@ -405,7 +429,7 @@ class TestMaterialize:
             providers=frozenset({"sos"}),
             classification_candidates=[],
         )
-        assert counts == {"minted": 0, "skipped": 0, "unresolved": 0}
+        assert counts == {"minted": 0, "unresolved": 0}
         assert _variable(conn, "X") is None
 
     def test_classification_tagged_after_backfill(self) -> None:
