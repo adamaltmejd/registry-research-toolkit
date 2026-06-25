@@ -1809,6 +1809,11 @@ class TestPopulateVariableSlugs:
         # classifications.toml stub so load_slug_dir is happy.
         (d / "classifications.toml").write_text("", encoding="utf-8")
         populate_variable_slugs(conn, d)
+        # load_slug_dir skips a churning zone's auto.toml (#775); pin scb AFTER
+        # the build (not via scb_freeze=, which would trip the #471
+        # slug_freeze_auto_missing guard with no committed auto file yet) so the
+        # generated auto slugs flow through the pinned-load path.
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
         entries = load_slug_dir(d)
         var_entries = [
             e for e in entries if e.kind == "variable" and e.provider == "scb"
@@ -1816,12 +1821,15 @@ class TestPopulateVariableSlugs:
         assert any(e.source_id == "1.44" and e.slug == "kon" for e in var_entries)
 
     def test_auto_slugs_flow_into_snapshot(self, tmp_path: Path) -> None:
-        # Auto-derived variable slugs (in .auto.toml) must land in the snapshot
-        # payload's "variable" kind so the grow-only guard covers them.
+        # A PINNED provider's auto-derived variable slugs (in its committed
+        # .auto.toml) must land in the snapshot payload's "variable" kind so the
+        # grow-only guard covers them. (A churning zone's auto.toml is skipped by
+        # load_slug_dir — #775 — so pin scb after the build.)
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
         (d / "classifications.toml").write_text("", encoding="utf-8")
         populate_variable_slugs(conn, d)
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
         payload = snapshot_payload(load_slug_dir(d))
         assert payload["variable"].get("scb/1.44") == "kon"
         # A rename of the auto slug is flagged by diff_snapshot.
@@ -2129,7 +2137,10 @@ class TestAutoDerivationMarker:
         assert e.source_id == "1.44"
         assert e.slug == "kon"
         # No stray attribute carries the derivation — SlugEntry has a fixed
-        # field set; the snapshot payload is unaffected.
+        # field set; the snapshot payload is unaffected. Pin scb after the build
+        # so load_slug_dir loads the auto file (#775: churning auto.toml is
+        # skipped); the direct load_provider_toml read above is state-agnostic.
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
         payload = snapshot_payload(load_slug_dir(d))
         assert payload["variable"] == {"scb/1.44": "kon"}
 

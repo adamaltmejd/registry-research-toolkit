@@ -2581,7 +2581,11 @@ The three states advance deliberately; **`frozen` is a one-way seal**:
   these FQIDs. Consequently a churning provider has no committed `<provider>.auto.toml`
   and contributes **0 variable entries** to `.snapshot.json` (the snapshot covers only
   register / variant / classification slugs, which live in the curated
-  `<provider>.toml`).
+  `<provider>.toml`). `load_slug_dir` enforces this at load time (#775): it skips a
+  churning zone's `<provider>.auto.toml` entirely, so a leftover untracked file from a
+  prior build cannot inflate the snapshot — mirroring the `populate_variable_slugs`
+  freeze gate. The test-layer `test_pinned_providers_auto_toml_git_tracked` guard
+  remains the commit-time backstop for pinned zones.
 - **`curating`** — the committed `<provider>.auto.toml` is **pinned**: its slugs are
   read back and never recomputed (a kolumnnamn/name change can't rot a published slug),
   and new variables append. Renames/removals on the curated surface are still
