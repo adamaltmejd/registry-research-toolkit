@@ -809,6 +809,15 @@ def frozen_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
     return frozenset(z for z, s in states.items() if s == "frozen")
 
 
+def pinned_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
+    """Provider zones pinned to a committed ``<provider>.auto.toml`` (curating or
+    frozen). Excludes the reserved CLASSIFICATIONS_ZONE — classifications carry no
+    per-provider auto file."""
+    return frozenset(
+        z for z, s in states.items() if s != "churning" and z != CLASSIFICATIONS_ZONE
+    )
+
+
 def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
     """Load every TOML under ``slug_dir`` into a flat ``SlugEntry`` list."""
     if not slug_dir.is_dir():
@@ -3436,6 +3445,7 @@ __all__ = (
     "load_freeze_states",
     "load_provider_toml",
     "load_slug_dir",
+    "pinned_zones",
     "populate_slugs",
     "populate_variable_slugs",
     "precheck_slugs",
