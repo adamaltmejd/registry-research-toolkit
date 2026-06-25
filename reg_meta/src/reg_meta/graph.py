@@ -8,9 +8,10 @@ that). The renderer (#678) consumes this object; layout / visual grain / time ax
 / the lineage-provenance affordance are all its concern, NOT this module's.
 
 Placement (see DESIGN.md → Relationship graph): the model + the builders live here,
-off ``catalog.py`` (which is already ~2.6k lines), and ``Catalog`` exposes three
-thin accessors (``graph_for_fqid`` / ``graph_for_group`` /
-``graph_for_classification_group``) that delegate here.
+off ``catalog.py`` (which is already ~2.6k lines), and ``Catalog`` exposes thin
+accessors (``graph_for_fqid`` / ``graph_for_group`` /
+``graph_for_classification_group``) that delegate here. ``graph_for_fqid`` covers
+both variable bindings and classification FQIDs.
 ``graph.py`` imports from ``catalog.py``; ``catalog.py`` imports ``graph`` lazily
 inside those two methods, so the dependency stays one-directional (``catalog`` is
 the lower layer). The graph models are FROZEN ``_CatalogModel``s used DIRECTLY as
@@ -43,6 +44,7 @@ from pydantic import Field
 from .catalog import (
     OPEN_ENDED_VALID_TO,
     UNKNOWN_VALID_FROM,
+    ResolvedClassification,
     ResolvedVariable,
     _CatalogModel,
 )
@@ -144,77 +146,99 @@ class GraphEdge(_CatalogModel):
     label: str | None
 
 
+class GraphTimeDomain(_CatalogModel):
+    """The absolute time axis for variable graphs. A register-scoped graph uses
+    the full register coverage span, not only the returned nodes' local states, so
+    a short-lived member keeps its position in the register's full timeline."""
+
+    kind: Literal["register"] = "register"
+    provider: str
+    register_name: str = Field(alias="register")
+    coverage_from: str | None
+    coverage_to: str | None
+    open_ended: bool
+
+
 class RelationshipGraph(_CatalogModel):
     """The relationship graph for a subject. ``nodes: []`` is the "don't render"
     signal (the frontend gate is ``nodes.length === 0``): a lone variable with no
     succession / related / group siblings / meaningful representation boundary, or
     a lone classification edition with no succession chain and no group context.
     ``focus_id`` is the node matching the requested FQID (post same_as); None for
-    group-addressed calls."""
+    group-addressed calls. ``time_domain`` fixes variable graphs to the requested
+    register's full coverage span; classification graphs leave it None."""
 
     nodes: list[GraphNode]
     edges: list[GraphEdge]
     focus_id: str | None
+    time_domain: GraphTimeDomain | None = None
 
 
 # ── Representation-run computation (the #526 fold, query-side mirror) ────────
 
 
-def _is_representation_boundary(prev: VariableState, cur: VariableState) -> bool:
+_RepresentationSignature = tuple[int | None, str, str | None, tuple[str | None, ...]]
+
+
+def _is_representation_boundary(
+    prev: _RepresentationSignature,
+    cur: _RepresentationSignature,
+) -> bool:
     """Whether ``cur`` opens a NEW representation run relative to the preceding
-    state ``prev`` in the same variant — the #526 fold rule, scoped to materialized
-    rows (#761).
+    state signature in the same variant — the #526 fold rule, scoped to
+    materialized rows (#761).
 
     A boundary is EXACTLY one of FOUR identity changes between adjacent states:
-    the value-set IDENTITY — both its ``value_set_id`` AND its
-    ``value_set_version_label`` (the #526 state-identity gkey for a VALUED state is
-    keyed on both; two states sharing a ``value_set_id`` but differing in label are
-    DISTINCT materialized states, so the label is part of value-set identity, not a
-    low-trust wobble) — the classification (``classification_slug``), or the
-    coalesced ``delivery_column_name`` (the per-era surviving column — a cross-era
-    column RENAME). These are precisely the distinctions that survive #526's
-    value-set-anchored fold in ``variable_state``. The label is ``''`` for valueless
-    states, so it never spuriously fires there. Raw ``data_type`` / ``data_length``
-    are NEVER a boundary signal on their own: SCB's per-delivery ``Datatyp`` / length
-    is low-trust passthrough that #526 blanks, so an `int -> bigint` or char↔varchar
-    wobble does NOT open a run. Per-period alias multiplexing (monthly families' 12
-    columns, held in ``variable_alias_window`` not in ``states``) is an alias
-    concern, NOT a coding boundary — those expanded windows share a ``state_id`` and
-    are never compared here (a node folds its states by state_id before this runs)."""
-    return (
-        prev.value_set_id != cur.value_set_id
-        or prev.value_set_version_label != cur.value_set_version_label
-        or prev.classification_slug != cur.classification_slug
-        or prev.delivery_column_name != cur.delivery_column_name
-    )
+    value-set IDENTITY (``value_set_id`` + ``value_set_version_label``),
+    classification (``classification_slug``), or column identity. Monthly-family
+    aliases are represented as the full column set for one ``state_id``, so the
+    Jan..Dec multiplexing stays one run across years, while a genuine cross-era
+    column-set rename still opens a run. Raw ``data_type`` / ``data_length`` are
+    NEVER a boundary signal on their own."""
+    return prev != cur
 
 
 def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
     """Fold a variable's ``variable_state`` history into ``GraphState`` rows with
     ``representation_run_id`` assigned. Ordered by ``(variant, valid_from)``; the
     run id increments at each #526 representation boundary AND at every variant
-    change (a run never spans variants). States are first deduped by ``state_id``
-    (a monthly-family annual state expands READ-TIME into N per-month windows
-    sharing one ``state_id`` — alias multiplexing, not a coding boundary; we fold
-    those back to the single claim so a family doesn't mint phantom runs)."""
-    by_state: dict[int, VariableState] = {}
-    for s in states:
-        by_state.setdefault(s.state_id, s)
-    ordered = sorted(by_state.values(), key=lambda s: (s.variant, s.valid_from))
+    change (a run never spans variants). Monthly-family annual states expand
+    READ-TIME into N per-month windows sharing one ``state_id``; those windows stay
+    in the graph payload so the renderer can show the concrete columns, but they
+    keep the same run id because alias multiplexing is not a coding boundary."""
+    grouped: dict[int, list[VariableState]] = {}
+    for state in states:
+        grouped.setdefault(state.state_id, []).append(state)
+    run_id_by_state: dict[int, int] = {}
+    ordered_groups = sorted(grouped.values(), key=_state_group_sort_key)
 
-    out: list[GraphState] = []
     run_id = 0
-    prev: VariableState | None = None
-    for s in ordered:
-        if prev is not None and (
-            s.variant != prev.variant or _is_representation_boundary(prev, s)
+    prev_variant: str | None = None
+    prev_signature: _RepresentationSignature | None = None
+    for group in ordered_groups:
+        first = min(group, key=_state_sort_key)
+        signature = _state_group_signature(group)
+        if prev_signature is not None and (
+            first.variant != prev_variant
+            or _is_representation_boundary(prev_signature, signature)
         ):
             run_id += 1
+        run_id_by_state[first.state_id] = run_id
+        prev_variant = first.variant
+        prev_signature = signature
+
+    ordered = sorted(
+        states,
+        key=_state_sort_key,
+    )
+
+    out: list[GraphState] = []
+    for s in ordered:
         out.append(
             GraphState(
                 state_id=s.state_id,
                 variant=s.variant,
-                representation_run_id=run_id,
+                representation_run_id=run_id_by_state[s.state_id],
                 delivery_column_name=s.delivery_column_name,
                 value_set_id=s.value_set_id,
                 value_set_version_label=s.value_set_version_label,
@@ -223,8 +247,39 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
                 valid_to=None if s.valid_to == OPEN_ENDED_VALID_TO else s.valid_to,
             )
         )
-        prev = s
     return out
+
+
+def _state_sort_key(state: VariableState) -> tuple[str, str, str, str, int]:
+    return (
+        state.variant,
+        state.valid_from,
+        state.valid_to,
+        state.delivery_column_name or "",
+        state.state_id,
+    )
+
+
+def _state_group_sort_key(group: list[VariableState]) -> tuple[str, str, str, str, int]:
+    return _state_sort_key(min(group, key=_state_sort_key))
+
+
+def _state_group_signature(
+    group: list[VariableState],
+) -> _RepresentationSignature:
+    first = group[0]
+    columns = tuple(
+        sorted(
+            {state.delivery_column_name for state in group},
+            key=lambda value: value or "",
+        )
+    )
+    return (
+        first.value_set_id,
+        first.value_set_version_label,
+        first.classification_slug,
+        columns,
+    )
 
 
 def _has_meaningful_runs(states: list[GraphState]) -> bool:
@@ -440,7 +495,7 @@ class _GraphBuilder:
             VariableGraphNode(
                 id=node_id,
                 fqid=edition.fqid,
-                label=edition.short_name or edition.name or node_id,
+                label=edition.name or node_id,
                 group_key=None,
                 states=[],
                 same_as=[],
@@ -562,7 +617,12 @@ class _GraphBuilder:
                 edge = _succession_edge(pred_id, node_id, pred.note)
                 self._edges.setdefault(edge.id, edge)
 
-    def build(self, focus_id: str | None) -> RelationshipGraph:
+    def build(
+        self,
+        focus_id: str | None,
+        *,
+        time_domain: GraphTimeDomain | None = None,
+    ) -> RelationshipGraph:
         """Assemble the graph. EMPTY-graph gate: a single ungrouped, edgeless node
         whose states carry no meaningful representation run renders nothing
         (``nodes: []``). A lone variable WITH a value-set/column change (≥2 runs)
@@ -575,6 +635,7 @@ class _GraphBuilder:
             nodes=list(self._nodes.values()),
             edges=list(self._edges.values()),
             focus_id=focus_id,
+            time_domain=time_domain,
         )
 
 
@@ -602,7 +663,7 @@ def graph_for_fqid(catalog: Catalog, resolved: ResolvedVariable) -> Relationship
     renders the SAME group union as the group page (Fork B), with the current node
     highlighted client-side via ``focus_id``."""
     builder = _GraphBuilder(catalog)
-    focus_id = builder.add_variable(resolved.fqid)
+    focus_id: str | None = None
 
     if resolved.group is not None:
         group = catalog.concept_group(
@@ -610,8 +671,18 @@ def graph_for_fqid(catalog: Catalog, resolved: ResolvedVariable) -> Relationship
         )
         if group is not None:
             _add_group_members(builder, group)
+            focus_id = builder.add_variable(resolved.fqid)
 
-    return builder.build(focus_id)
+    if focus_id is None:
+        focus_id = builder.add_variable(resolved.fqid)
+
+    provider = resolved.fqid.provider
+    register = resolved.fqid.register
+    assert provider is not None and register is not None
+    return builder.build(
+        focus_id,
+        time_domain=_register_time_domain(catalog, provider, register),
+    )
 
 
 def graph_for_concept_group(
@@ -626,7 +697,56 @@ def graph_for_concept_group(
         return None
     builder = _GraphBuilder(catalog)
     _add_group_members(builder, group)
-    return builder.build(focus_id=None)
+    return builder.build(
+        focus_id=None,
+        time_domain=_register_time_domain(catalog, provider, register),
+    )
+
+
+def _register_time_domain(
+    catalog: Catalog, provider: str, register: str
+) -> GraphTimeDomain | None:
+    coverages = catalog.register_variable_coverage(provider, register).values()
+    finite_froms = [
+        coverage.coverage_from
+        for coverage in coverages
+        if coverage.coverage_from not in (None, UNKNOWN_VALID_FROM)
+    ]
+    finite_tos = [
+        coverage.coverage_to
+        for coverage in coverages
+        if coverage.coverage_to is not None
+    ]
+    open_ended = any(coverage.open_ended for coverage in coverages)
+    coverage_from = min(finite_froms, default=None)
+    coverage_to = None if open_ended else max(finite_tos, default=None)
+    if coverage_from is None and coverage_to is None and not open_ended:
+        return None
+    return GraphTimeDomain(
+        provider=provider,
+        register=register,
+        coverage_from=coverage_from,
+        coverage_to=coverage_to,
+        open_ended=open_ended,
+    )
+
+
+def graph_for_classification_fqid(
+    catalog: Catalog, resolved: ResolvedClassification
+) -> RelationshipGraph:
+    """The classification edition subject graph for an already-resolved
+    classification FQID. Root set = the edition's umbrella group when present,
+    including when the umbrella membership is on another edition in its succession
+    chain; else the edition's own succession chain. ``focus_id`` is the resolved
+    canonical edition node so a member page renders the same group union as the
+    group page, with only highlighting changed."""
+    slug = _resolved_classification_slug(resolved)
+    builder = _GraphBuilder(catalog)
+    groups = _classification_groups_for_chain(catalog, slug)
+    if groups:
+        _add_classification_group_members(builder, groups[0])
+    focus_id = builder.add_classification(slug)
+    return builder.build(focus_id=focus_id)
 
 
 def graph_for_classification_group(
@@ -640,7 +760,24 @@ def graph_for_classification_group(
     if group is None:
         return None
     builder = _GraphBuilder(catalog)
-    group_key = f"class/{key}"
+    _add_classification_group_members(builder, group)
+    return builder.build(focus_id=None)
+
+
+def _add_group_members(builder: _GraphBuilder, group: ConceptGroupSummary) -> None:
+    """Union every member of a register concept group into the builder. Members are
+    variable bindings; ``add_variable`` recurses into each member's succession +
+    related neighbors and dedups shared nodes/edges."""
+    for member in group.members:
+        if member.fqid is not None:
+            builder.add_variable(member.fqid)
+
+
+def _add_classification_group_members(
+    builder: _GraphBuilder, group: ConceptGroupSummary
+) -> None:
+    """Union every member of a classification umbrella group into the builder."""
+    group_key = f"class/{group.key}"
     member_slugs = frozenset(
         member.fqid.classification
         for member in group.members
@@ -654,13 +791,38 @@ def graph_for_classification_group(
             group_key=group_key,
             member_slugs=member_slugs,
         )
-    return builder.build(focus_id=None)
 
 
-def _add_group_members(builder: _GraphBuilder, group: ConceptGroupSummary) -> None:
-    """Union every member of a register concept group into the builder. Members are
-    variable bindings; ``add_variable`` recurses into each member's succession +
-    related neighbors and dedups shared nodes/edges."""
-    for member in group.members:
-        if member.fqid is not None:
-            builder.add_variable(member.fqid)
+def _classification_groups_for_chain(
+    catalog: Catalog, slug: str
+) -> list[ConceptGroupSummary]:
+    """Classification umbrella groups that touch any edition in ``slug``'s chain.
+
+    The curated SUN umbrella often names the current editions (for example
+    ``sun2020-grupp``), while historical editions (``sun2000-grupp``) are reached
+    through succession. A member page must still render the same umbrella union as
+    its successor/current page, so group lookup is chain-grain, not only direct
+    membership on the queried slug.
+    """
+    chain = catalog.classification_chain(Fqid.classification_fqid(slug))
+    chain_targets = {str(edition.fqid) for edition in chain if edition.fqid is not None}
+    if not chain_targets:
+        chain_targets.add(str(Fqid.classification_fqid(slug)))
+    return [
+        group
+        for group in catalog.list_classification_groups()
+        if any(
+            member.fqid is not None and str(member.fqid) in chain_targets
+            for member in group.members
+        )
+    ]
+
+
+def _resolved_classification_slug(resolved: ResolvedClassification) -> str:
+    """The canonical live classification slug behind a resolved classification."""
+    if resolved.via_same_as:
+        last = resolved.via_same_as[-1].classification
+        if last is not None:
+            return last
+    assert resolved.fqid.classification is not None
+    return resolved.fqid.classification

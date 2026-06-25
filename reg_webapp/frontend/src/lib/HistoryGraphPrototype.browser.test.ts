@@ -1,355 +1,158 @@
 import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
+import type { GraphState, RelationshipGraph } from "./api";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
-import type { HistoryGraph } from "./history_graph";
 
-const neutralBarStyle = {
-  fill: "rgb(245, 245, 245)",
-  stroke: "none",
-  strokeWidth: "1.2px",
-};
-
-function barStyle(selector: string): typeof neutralBarStyle {
-  const bar = document.querySelector<SVGRectElement>(selector);
-  if (!bar) {
-    throw new Error(`Missing graph bar for selector ${selector}`);
-  }
-  const style = getComputedStyle(bar);
+function state(over: Partial<GraphState>): GraphState {
   return {
-    fill: style.fill,
-    stroke: style.stroke,
-    strokeWidth: style.strokeWidth,
+    state_id: 1,
+    variant: "_default",
+    representation_run_id: 0,
+    delivery_column_name: "AGI01",
+    value_set_id: null,
+    value_set_version_label: "",
+    classification_slug: null,
+    valid_from: "2019-01-01",
+    valid_to: null,
+    ...over,
   };
 }
 
-const graph: HistoryGraph = {
-  mode: "variable",
-  title: "Variable relationships",
-  nodeGrain: "entity-with-column-slices",
-  dataContract: "client-stitch-prototype",
+const variableGraph: RelationshipGraph = {
+  focus_id: "scb/lisa/agi1astsni2007u",
   nodes: [
     {
-      id: "scb/lisa/agi",
       kind: "variable",
-      label: "Monthly income",
-      fqid: "scb/lisa/agi",
-      from: 2019,
-      to: null,
-      self: true,
-      current: true,
-      detail: "facets: month",
-      columns: [
-        {
-          id: "_default:AGI01",
-          label: "AGI01",
-          variant: "_default",
-          from: 2019,
-          to: null,
-          stateIds: [1],
-        },
-        {
-          id: "_default:AGI02",
-          label: "AGI02",
-          variant: "_default",
-          from: 2019,
-          to: null,
-          stateIds: [2],
-        },
-        {
-          id: "_default:AGI03",
-          label: "AGI03",
-          variant: "_default",
-          from: 2019,
-          to: null,
-          stateIds: [3],
-        },
-        {
-          id: "_default:AGI04",
-          label: "AGI04",
-          variant: "_default",
-          from: 2019,
-          to: null,
-          stateIds: [4],
-        },
-      ],
-    },
-  ],
-  edges: [],
-  warnings: ["prototype gap"],
-};
-
-const relatedColumnGraph: HistoryGraph = {
-  ...graph,
-  nodes: [
-    ...graph.nodes,
-    {
-      id: "scb/lisa/related-income",
-      kind: "variable",
-      label: "Related income",
-      fqid: "scb/lisa/related-income",
-      from: 2019,
-      to: null,
-      columns: [],
-    },
-  ],
-  edges: [
-    {
-      id: "related:scb/lisa/agi->scb/lisa/related-income",
-      kind: "related",
-      from: "scb/lisa/agi",
-      to: "scb/lisa/related-income",
-      fromYear: null,
-      toYear: null,
-      label: "related_to",
-    },
-  ],
-};
-
-const repeatedStateGraph: HistoryGraph = {
-  ...graph,
-  nodes: [
-    {
-      ...graph.nodes[0],
-      columns: [
-        {
-          id: "individer-15plus:AktErs:54412",
-          label: "AktErs",
-          variant: "individer-15plus",
-          from: 2010,
-          to: 2015,
-          stateIds: [54412],
-        },
-        {
-          id: "individer-15plus:AktErs:54413",
-          label: "AktErs",
-          variant: "individer-15plus",
-          from: 2016,
-          to: 2023,
-          stateIds: [54413],
-        },
-      ],
-    },
-  ],
-};
-
-const standaloneClassificationGraph: HistoryGraph = {
-  mode: "classification",
-  title: "Classification relationships",
-  nodeGrain: "entity-with-column-slices",
-  dataContract: "client-stitch-prototype",
-  nodes: [
-    {
-      id: "class/sun2020",
-      kind: "classification",
-      label: "SUN2020",
-      fqid: "class/sun2020",
-      from: 2020,
-      to: 2020,
-      self: true,
-      current: true,
-      columns: [],
-    },
-  ],
-  edges: [],
-  warnings: [],
-};
-
-const variableGroupGraph: HistoryGraph = {
-  mode: "group",
-  title: "Variable relationships",
-  nodeGrain: "entity-with-column-slices",
-  dataContract: "client-stitch-prototype",
-  nodes: [
-    {
       id: "scb/lisa/agi1astsni2007g",
-      kind: "group-member",
-      label: "agi1astsni2007g",
-      detail: "Näringsgren",
       fqid: "scb/lisa/agi1astsni2007g",
-      from: 2019,
-      to: 2023,
-      columns: [],
+      label: "AGI2007G",
+      group_key: "scb/lisa/agi1astsni2007",
+      states: [
+        state({
+          state_id: 10,
+          delivery_column_name: "AGI1AstSNI2007G",
+          representation_run_id: 0,
+          valid_from: "2019-01-01",
+          valid_to: "2019-01-31",
+        }),
+        state({
+          state_id: 10,
+          delivery_column_name: "AGI1AstSNI2007GExtra",
+          representation_run_id: 0,
+          valid_from: "2019-02-01",
+          valid_to: "2019-02-28",
+        }),
+      ],
+      same_as: [],
     },
     {
+      kind: "variable",
       id: "scb/lisa/agi1astsni2007u",
-      kind: "group-member",
-      label: "agi1astsni2007u",
-      detail: "Näringsgren",
       fqid: "scb/lisa/agi1astsni2007u",
-      from: 2019,
-      to: 2023,
-      self: true,
-      columns: [],
-    },
-  ],
-  edges: [],
-  warnings: ["group graph gap"],
-};
-
-const classificationGraph: HistoryGraph = {
-  mode: "classification",
-  title: "Classification relationships",
-  nodeGrain: "entity-with-column-slices",
-  dataContract: "client-stitch-prototype",
-  nodes: [
-    {
-      id: "class/sun1996",
-      kind: "classification",
-      label: "SUN1996",
-      fqid: "class/sun1996",
-      from: 1996,
-      to: 1996,
-      self: true,
-      current: false,
-      columns: [],
-    },
-    {
-      id: "class/sun2000-inriktning",
-      kind: "classification",
-      label: "SUN2000-INRIKTNING",
-      fqid: "class/sun2000-inriktning",
-      from: 2000,
-      to: 2000,
-      self: false,
-      current: false,
-      columns: [],
-    },
-    {
-      id: "class/sun2020-inriktning",
-      kind: "classification",
-      label: "SUN2020-INRIKTNING",
-      fqid: "class/sun2020-inriktning",
-      from: 2020,
-      to: 2020,
-      self: false,
-      current: true,
-      columns: [],
+      label: "AGI2007U",
+      group_key: "scb/lisa/agi1astsni2007",
+      states: [
+        state({
+          state_id: 20,
+          delivery_column_name: "AGI1AstSNI2007U",
+          representation_run_id: 0,
+          valid_from: "2019-01-01",
+          valid_to: null,
+        }),
+        state({
+          state_id: 21,
+          delivery_column_name: "AGI1AstSNI2007U",
+          representation_run_id: 1,
+          valid_from: "2020-01-01",
+          value_set_version_label: "SNI2007",
+        }),
+      ],
+      same_as: [],
     },
   ],
   edges: [
     {
-      id: "classification:sun1996->sun2000-inriktning",
-      kind: "succession",
-      from: "class/sun1996",
-      to: "class/sun2000-inriktning",
-      fromYear: 2000,
-      toYear: 2000,
-      label: null,
-    },
-    {
-      id: "classification:sun2000-inriktning->sun2020-inriktning",
-      kind: "succession",
-      from: "class/sun2000-inriktning",
-      to: "class/sun2020-inriktning",
-      fromYear: 2020,
-      toYear: 2020,
-      label: null,
+      id: "related:scb/lisa/agi1astsni2007g--scb/lisa/agi1astsni2007u",
+      kind: "related",
+      source: "scb/lisa/agi1astsni2007g",
+      target: "scb/lisa/agi1astsni2007u",
+      label: "split_sibling",
     },
   ],
-  warnings: [],
+};
+
+const classificationGraph: RelationshipGraph = {
+  focus_id: "class/sun2020-inriktning",
+  nodes: [
+    {
+      kind: "classification",
+      id: "class/sun2000-inriktning",
+      fqid: "class/sun2000-inriktning",
+      label: "SUN2000-INRIKTNING",
+      group_key: "class/sun",
+      version_year: 2000,
+      is_current: false,
+    },
+    {
+      kind: "classification",
+      id: "class/sun2020-inriktning",
+      fqid: "class/sun2020-inriktning",
+      label: "SUN2020-INRIKTNING",
+      group_key: "class/sun",
+      version_year: 2020,
+      is_current: true,
+    },
+  ],
+  edges: [
+    {
+      id: "succession:class/sun2000-inriktning->class/sun2020-inriktning",
+      kind: "succession",
+      source: "class/sun2000-inriktning",
+      target: "class/sun2020-inriktning",
+      label: "derived:vintage_chain",
+    },
+  ],
 };
 
 describe("HistoryGraphPrototype", () => {
-  it("renders the graph, column count, and contract gaps", async () => {
-    await render(HistoryGraphPrototype, { graph: relatedColumnGraph });
-
-    await expect
-      .element(page.getByRole("heading", { name: "Variable relationships" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByText("variable", { exact: true }))
-      .toBeVisible();
-    await expect.element(page.getByText("Monthly income")).toBeVisible();
-    await expect.element(page.getByText("4 columns")).toBeVisible();
-    await expect
-      .element(page.getByText("related", { exact: true }))
-      .toBeVisible();
-    await expect.element(page.getByText("Contract gaps")).toBeVisible();
-  });
-
-  it("renders a single variable graph when delivery columns change", async () => {
-    await render(HistoryGraphPrototype, { graph });
-
-    await expect
-      .element(page.getByRole("heading", { name: "Variable relationships" }))
-      .toBeVisible();
-    await expect.element(page.getByText("4 columns")).toBeVisible();
-    expect(document.querySelector(".legend")).toBeNull();
-  });
-
-  it("omits a graph with one variable node when only states changed", async () => {
-    await render(HistoryGraphPrototype, { graph: repeatedStateGraph });
-
-    expect(document.querySelector(".history-graph")).toBeNull();
-  });
-
-  it("omits a graph with only one plain entity", async () => {
+  it("renders API variable graph labels and links inside the graph", async () => {
     await render(HistoryGraphPrototype, {
-      graph: standaloneClassificationGraph,
-    });
-
-    expect(document.querySelector(".history-graph")).toBeNull();
-  });
-
-  it("renders coverage-only variable group graphs when they have multiple members", async () => {
-    await render(HistoryGraphPrototype, {
-      graph: variableGroupGraph,
+      graph: variableGraph,
       vintageYear: 2024,
     });
 
     await expect
-      .element(page.getByRole("heading", { name: "Variable relationships" }))
+      .element(page.getByRole("heading", { name: "Relations" }))
       .toBeVisible();
-    expect(
-      [...document.querySelectorAll(".node-label.in-bar")].map((node) =>
-        node.textContent?.trim(),
-      ),
-    ).toEqual(["agi1astsni2007g", "agi1astsni2007u"]);
-    expect(document.querySelector(".axis")).not.toBeNull();
-    expect(document.querySelector(".detail")).toBeNull();
-    expect(barStyle(".node.group-member:not(.self) .bar")).toEqual(
-      neutralBarStyle,
-    );
-    expect(document.querySelectorAll(".node.self")).toHaveLength(1);
-    expect(
-      document.querySelector(
-        'a[href="/catalog/scb/lisa/agi1astsni2007u"] .node.self',
-      ),
-    ).not.toBeNull();
-    expect(document.querySelector(".legend")).toBeNull();
+    await expect.element(page.getByText("AGI1AstSNI2007U")).toBeVisible();
     await expect
-      .element(page.getByRole("button", { name: "Contract gaps" }))
-      .toBeVisible();
+      .element(page.getByRole("link", { name: "Open AGI2007U" }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/agi1astsni2007u");
+    await expect.element(page.getByText("2 columns")).toBeVisible();
+    expect(
+      document.querySelector(".node.variable title")?.textContent,
+    ).toContain("Columns: AGI1AstSNI2007G, AGI1AstSNI2007GExtra");
+    expect(
+      document.querySelector(".edges path.related title")?.textContent,
+    ).toBe("split_sibling");
+    expect(document.querySelector(".column-slice")).toBeNull();
   });
 
-  it("renders classifications through the shared graph surface without a timeline axis", async () => {
+  it("omits empty graph payloads", async () => {
     await render(HistoryGraphPrototype, {
-      graph: classificationGraph,
+      graph: { focus_id: null, nodes: [], edges: [] },
     });
 
-    await expect
-      .element(
-        page.getByRole("heading", { name: "Classification relationships" }),
-      )
-      .toBeVisible();
-    expect(
-      [...document.querySelectorAll(".node-label.in-bar")].map((node) =>
-        node.textContent?.trim(),
-      ),
-    ).toEqual(["SUN1996", "SUN2000-INRIKTNING", "SUN2020-INRIKTNING"]);
-    await expect.element(page.getByText("succession")).toBeVisible();
-    expect(document.querySelector(".edition-svg")).toBeNull();
+    expect(document.querySelector(".history-graph")).toBeNull();
+  });
+
+  it("renders classification graphs without a time axis", async () => {
+    await render(HistoryGraphPrototype, { graph: classificationGraph });
+
     expect(document.querySelector(".axis")).toBeNull();
-    expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
-    expect(
-      barStyle(".node.classification:not(.self):not(.current) .bar"),
-    ).toEqual(neutralBarStyle);
-    expect(
-      document
-        .querySelector('a[href="/catalog/class/sun2000-inriktning"]')
-        ?.querySelector(".node-label")
-        ?.textContent?.trim(),
-    ).toBe("SUN2000-INRIKTNING");
+    await expect.element(page.getByText("SUN2000-INRIKTNING")).toBeVisible();
+    await expect.element(page.getByText("SUN2020-INRIKTNING")).toBeVisible();
+    expect(document.querySelectorAll("path.succession")).toHaveLength(1);
   });
 });

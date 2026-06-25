@@ -39,16 +39,11 @@ export interface paths {
          *     umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
          *     classification group has that key.
          *
-         *     By-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped
-         *     the reg_meta accessor; #756 did this filter inline here to avoid a release). The
-         *     accessor is the single source of truth for the class-by-key filter — the route
-         *     no longer re-pastes the `list_classification_groups()` loop.
+         *     By-key resolution delegates to `Catalog.classification_group(key)` (#761). The
+         *     accessor is the single source of truth for the class-by-key filter.
          *
          *     No provider/register/key is slug-validated: `class` is a fixed literal in the
-         *     path, and `key` is a derivation key (not a slug). So there is no
-         *     `Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)
-         *     — just open the connection (mirroring the register route's per-request model)
-         *     and resolve.
+         *     path, and `key` is a derivation key (not a slug).
          */
         get: operations["get_classification_group_api_catalog_group_class__key__get"];
         put?: never;
@@ -215,12 +210,14 @@ export interface paths {
         };
         /**
          * Get Binding Graph
-         * @description The relationship graph for a binding's variable (#761) — one node per
-         *     variable with its representation-run state history + succession/related edges +
-         *     same_as/group metadata, unioned over the variable's concept group (Fork B). An
-         *     empty graph (`nodes: []`) is the "don't render" signal. A dead/renamed binding
-         *     301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`
-         *     cache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`).
+         * @description The relationship graph for a variable or classification FQID (#761). Variables
+         *     render one node per variable with representation-run state history + succession /
+         *     related edges + same_as/group metadata, unioned over the variable's concept group
+         *     (Fork B). Classifications render the same union as their classification group
+         *     page, with `focus_id` set to the requested edition. An empty graph (`nodes: []`)
+         *     is the "don't render" signal. A dead/renamed binding 301s to `/graph` on its
+         *     terminal successor (#411); shares the `/api/catalog` cache. The topology +
+         *     predicates live in reg_meta (`Catalog.graph_for_fqid`).
          */
         get: operations["get_binding_graph_api_catalog__fqid__graph_get"];
         put?: never;
@@ -1190,10 +1187,11 @@ export interface components {
         /**
          * ConceptGroupNode
          * @description The concept group as a browsable subject (#617): the group identity
-         *     (provider/register/key + label/source/axes) and its members WITH per-member
-         *     coverage. Returned by `/catalog/group/{provider}/{register}/{key}` — a
-         *     fixed-shape route, NOT an FQID kind (a group is not FQID-addressable; its
-         *     members carry the real leaf FQIDs).
+         *     (scope/key + label/source/axes) and its members. Returned by
+         *     `/catalog/group/{provider}/{register}/{key}` for variable groups and
+         *     `/catalog/group/class/{key}` for classification groups — fixed-shape routes,
+         *     NOT FQID kinds (a group is not FQID-addressable; its members carry the real
+         *     leaf FQIDs).
          *
          *     `member` echoes a validated `?member=<slug>` focus hint (a member leaf slug to
          *     highlight), or None when absent / unrecognized — the page stays first-class
@@ -1220,9 +1218,9 @@ export interface components {
             provider: string;
             /**
              * Register
-             * @description The group's register slug. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see reg_meta's VariableRef); the wire key is `register` via the alias.
+             * @description The group's register slug for register-scoped variable groups; None for classification groups. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see reg_meta's VariableRef); the wire key is `register` via the alias.
              */
-            register: string;
+            register?: string | null;
             /**
              * Source
              * @enum {string}
@@ -1232,13 +1230,12 @@ export interface components {
         /**
          * ConceptGroupNodeMember
          * @description A concept-group member on the group SUBJECT node — reg_meta's browse
-         *     `ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window
-         *     `coverage` (#351; reg_meta's `VariableCoverage`, zipped on by the group route
-         *     from `register_variable_coverage`). `coverage` is None for a member with no
-         *     coverage row (a stateless variable, or a member whose leaf slug didn't match
-         *     the register's coverage map — defensive). Subclassing the frozen,
-         *     `extra="forbid"` reg_meta model to declare one new field is supported in
-         *     Pydantic v2 — the subclass owns `coverage`.
+         *     `ConceptGroupMember` (fqid + name + facets) PLUS optional per-member
+         *     study-window `coverage` (#351). Variable groups zip this on from
+         *     `register_variable_coverage`; classification groups have no delivery coverage
+         *     and leave it None. Subclassing the frozen, `extra="forbid"` reg_meta model to
+         *     declare one new field is supported in Pydantic v2 — the subclass owns
+         *     `coverage`.
          */
         ConceptGroupNodeMember: {
             coverage?: components["schemas"]["VariableCoverage"] | null;
@@ -1539,6 +1536,30 @@ export interface components {
             variant: string;
         };
         /**
+         * GraphTimeDomain
+         * @description The absolute time axis for variable graphs. A register-scoped graph uses
+         *     the full register coverage span, not only the returned nodes' local states, so
+         *     a short-lived member keeps its position in the register's full timeline.
+         */
+        GraphTimeDomain: {
+            /** Coverage From */
+            coverage_from: string | null;
+            /** Coverage To */
+            coverage_to: string | null;
+            /**
+             * Kind
+             * @default register
+             * @constant
+             */
+            kind: "register";
+            /** Open Ended */
+            open_ended: boolean;
+            /** Provider */
+            provider: string;
+            /** Register */
+            register: string;
+        };
+        /**
          * GroupFacet
          * @description One facet assignment on a group member: `axis` names the dimension
          *     ('month' / 'rank') when the group has one, or None for an AXIS-LESS group —
@@ -1826,7 +1847,8 @@ export interface components {
          *     succession / related / group siblings / meaningful representation boundary, or
          *     a lone classification edition with no succession chain and no group context.
          *     ``focus_id`` is the node matching the requested FQID (post same_as); None for
-         *     group-addressed calls.
+         *     group-addressed calls. ``time_domain`` fixes variable graphs to the requested
+         *     register's full coverage span; classification graphs leave it None.
          */
         RelationshipGraph: {
             /** Edges */
@@ -1835,6 +1857,7 @@ export interface components {
             focus_id: string | null;
             /** Nodes */
             nodes: (components["schemas"]["VariableGraphNode"] | components["schemas"]["ClassificationGraphNode"])[];
+            time_domain?: components["schemas"]["GraphTimeDomain"] | null;
         };
         /**
          * RootResponse

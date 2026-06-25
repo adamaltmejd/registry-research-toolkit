@@ -247,6 +247,18 @@ def test_classification_group_graph_endpoint(client):
     assert all(n["kind"] == "classification" for n in body["nodes"])
 
 
+def test_classification_leaf_graph_endpoint_matches_group_with_focus(client):
+    group_body = client.get("/api/catalog/group/class/sun/graph").json()
+    resp = client.get("/api/catalog/class/sun2020/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["focus_id"] == "class/sun2020"
+    assert {n["id"] for n in body["nodes"]} == {n["id"] for n in group_body["nodes"]}
+    assert {(e["source"], e["target"]) for e in body["edges"]} == {
+        (e["source"], e["target"]) for e in group_body["edges"]
+    }
+
+
 def test_classification_group_graph_unknown_key_404(client):
     resp = client.get("/api/catalog/group/class/nope/graph")
     assert resp.status_code == 404

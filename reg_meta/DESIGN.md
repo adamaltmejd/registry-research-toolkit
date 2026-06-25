@@ -791,13 +791,13 @@ The webapp's subject-page graph view (#666 epic, renderer #678) consumes a singl
 single-variable graph meaningful? how does a group expand? which editions dedup? where
 does a representation run break?) — so the SPA renders a graph as-is and never assembles
 graph *semantics*. The model + builders live in **`graph.py`** (off the \~2.6k-line
-`catalog.py`); `Catalog` exposes three thin accessors that delegate there:
+`catalog.py`); `Catalog` exposes thin accessors that delegate there:
 `graph_for_fqid(fqid)`, `graph_for_group(provider, register, key)`,
-`graph_for_classification_group(key)`. `graph.py` imports from `catalog.py`;
-`catalog.py` imports `graph` lazily inside those methods, so the dependency stays
-one-directional. The graph models are frozen `_CatalogModel`s used **directly** as the
-webapp's FastAPI response models (no wrapper, per #681); there is **no CLI surface** —
-the webapp is the only consumer.
+`graph_for_classification_group(key)`. `graph_for_fqid` accepts variable bindings and
+classification FQIDs. `graph.py` imports from `catalog.py`; `catalog.py` imports `graph`
+lazily inside those methods, so the dependency stays one-directional. The graph models
+are frozen `_CatalogModel`s used **directly** as the webapp's FastAPI response models
+(no wrapper, per #681); there is **no CLI surface** — the webapp is the only consumer.
 
 **Compose, don't re-query.** The builder orchestrates the existing accessors — each the
 single source of truth for its edge type: `variable_chain` (variable succession),
@@ -858,13 +858,14 @@ value-set/column change but no succession returns one node whose states span ≥
 renders (as ≥2 cells).
 
 **Fork B (group ⇄ member).** `graph_for_fqid` roots the union on the resolved variable's
-`.group` members (or itself when ungrouped) and sets `focus_id` to the resolved node;
-`graph_for_group` / `graph_for_classification_group` root on the members directly with
-`focus_id=None`. A member page therefore renders the **same** group union as the group
-page, with the current node highlighted client-side (highlight is the renderer's, driven
-by `focus_id`); the union is entry-independent and cacheable by group key. Group keys
-are `(provider, register, key)` and `class/<key>`, **not** FQIDs: register groups
-resolve via `concept_group`, classification umbrellas via the new thin
+`.group` members (or itself when ungrouped), or on the resolved classification's
+umbrella group (or its own succession chain when ungrouped), and sets `focus_id` to the
+resolved node. `graph_for_group` / `graph_for_classification_group` root on the members
+directly with `focus_id=None`. A member page therefore renders the **same** group union
+as the group page, with the current node highlighted client-side (highlight is the
+renderer's, driven by `focus_id`); the union is entry-independent and cacheable by group
+key. Group keys are `(provider, register, key)` and `class/<key>`, **not** FQIDs:
+register groups resolve via `concept_group`, classification umbrellas via the new thin
 `classification_group(key)` accessor (a filter over `list_classification_groups()`). The
 `graph` suffix is reserved in `RESERVED_HTTP_SUFFIX_SLUGS` (it shadows a variable leaf,
 a register, and a classification slot, like `states`/`lineage`).

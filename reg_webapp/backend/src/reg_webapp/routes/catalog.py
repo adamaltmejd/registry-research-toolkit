@@ -608,6 +608,7 @@ def get_catalog_root(request: Request) -> RootResponse:
     children.append(ClassificationRootNode())
     return RootResponse(children=children)
 
+
 # ── Group `/graph` sub-resources (#761) ─────────────────────────────────────
 # Sub-resources of the #756 group subject routes. Declaration-order gotcha (greedy
 # `{key:path}`): each `…/{key:path}/graph` route MUST be declared ABOVE its
@@ -877,12 +878,14 @@ def get_binding_graph(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
 ) -> RelationshipGraph | RedirectResponse:
-    """The relationship graph for a binding's variable (#761) — one node per
-    variable with its representation-run state history + succession/related edges +
-    same_as/group metadata, unioned over the variable's concept group (Fork B). An
-    empty graph (`nodes: []`) is the "don't render" signal. A dead/renamed binding
-    301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`
-    cache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`)."""
+    """The relationship graph for a variable or classification FQID (#761). Variables
+    render one node per variable with representation-run state history + succession /
+    related edges + same_as/group metadata, unioned over the variable's concept group
+    (Fork B). Classifications render the same union as their classification group
+    page, with `focus_id` set to the requested edition. An empty graph (`nodes: []`)
+    is the "don't render" signal. A dead/renamed binding 301s to `/graph` on its
+    terminal successor (#411); shares the `/api/catalog` cache. The topology +
+    predicates live in reg_meta (`Catalog.graph_for_fqid`)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)

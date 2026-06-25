@@ -1,18 +1,21 @@
 <script lang="ts">
 import { Collapsible } from "bits-ui";
+import type { RelationshipGraph } from "./api";
 import { catalogHref } from "./catalog";
 import {
-  type HistoryColumnSlice,
   type HistoryGraph,
   type HistoryGraphEdge,
   type HistoryGraphEdgeKind,
   type HistoryGraphNode,
   hasRenderableHistoryGraph,
+  historyGraphFromRelationshipGraph,
   historyGraphYears,
 } from "./history_graph";
 
-let { graph, vintageYear }: { graph: HistoryGraph; vintageYear?: number } =
-  $props();
+let {
+  graph: relationshipGraph,
+  vintageYear,
+}: { graph: RelationshipGraph; vintageYear?: number } = $props();
 
 const width = 760;
 const leftPad = 56;
@@ -21,10 +24,12 @@ const topPad = 44;
 const rowHeight = 68;
 const graphNodeWidth = 164;
 const graphNodeHeight = 30;
-const columnLaneHeight = 6;
-const columnLaneGap = 3;
-const columnLaneTop = 30;
+const variableNodeHeight = 34;
+const variableNodeHeightWithCaption = 48;
 const graphSidePad = 28;
+const graph: HistoryGraph = $derived(
+  historyGraphFromRelationshipGraph(relationshipGraph),
+);
 const domain = $derived(historyGraphYears(graph, vintageYear));
 const innerWidth = $derived(width - leftPad - rightPad);
 const span = $derived(domain.max - domain.min || 1);
@@ -38,8 +43,6 @@ const edgeLegend = $derived.by(() => {
   const entries: { kind: HistoryGraphEdgeKind; label: string }[] = [
     { kind: "succession", label: "succession" },
     { kind: "related", label: "related" },
-    { kind: "lineage", label: "lineage" },
-    { kind: "member", label: "member" },
   ];
   return entries.filter((entry) => present.has(entry.kind));
 });
@@ -111,12 +114,18 @@ function labelMinWidth(label: string): number {
   return Math.min(graphNodeWidth, Math.max(58, label.length * 7 + 22));
 }
 
-function distinctColumnLabels(node: HistoryGraphNode): string[] {
+function distinctRunLabels(node: HistoryGraphNode): string[] {
   return [...new Set(node.columns.map((column) => column.label))];
 }
 
-function columnCaption(node: HistoryGraphNode): string | null {
-  const labels = distinctColumnLabels(node);
+function allColumnLabels(node: HistoryGraphNode): string[] {
+  return [...new Set(node.columns.flatMap((column) => column.columnLabels))];
+}
+
+function joinedLabelSummary(labels: string[], noun: string): string | null {
+  if (labels.length === 1) {
+    return labels[0];
+  }
   if (labels.length === 2) {
     return labels.join(" -> ");
   }
@@ -124,8 +133,22 @@ function columnCaption(node: HistoryGraphNode): string | null {
     return labels.join(" · ");
   }
   if (labels.length > 3) {
-    return `${labels.length} columns`;
+    return `${labels.length} ${noun}`;
   }
+  return null;
+}
+
+function variableColumnLabel(node: HistoryGraphNode): string | null {
+  const labels = distinctRunLabels(node);
+  return joinedLabelSummary(labels, "columns");
+}
+
+function columnCountCaption(node: HistoryGraphNode): string | null {
+  const count = allColumnLabels(node).length;
+  return count > 1 ? `${count} columns` : null;
+}
+
+function valueSetCaption(node: HistoryGraphNode): string | null {
   const valueLabels = [
     ...new Set(
       node.columns
@@ -133,20 +156,40 @@ function columnCaption(node: HistoryGraphNode): string | null {
         .filter((label): label is string => label !== null),
     ),
   ];
-  if (valueLabels.length === 2) {
-    return valueLabels.join(" -> ");
+  return joinedLabelSummary(valueLabels, "value sets");
+}
+
+function primaryNodeLabel(node: HistoryGraphNode): string {
+  if (node.kind === "variable") {
+    return variableColumnLabel(node) ?? node.label;
   }
-  if (valueLabels.length === 3) {
-    return valueLabels.join(" · ");
+  return node.label;
+}
+
+function secondaryNodeCaption(node: HistoryGraphNode): string | null {
+  if (node.kind === "variable") {
+    return valueSetCaption(node) ?? columnCountCaption(node);
   }
-  if (valueLabels.length > 3) {
-    return `${valueLabels.length} value sets`;
+  return null;
+}
+
+function nodeTitle(node: HistoryGraphNode): string | null {
+  const primaryLabel = primaryNodeLabel(node);
+  const columns = allColumnLabels(node);
+  if (node.kind === "variable" && columns.length > 1) {
+    return `${node.label}\nColumns: ${columns.join(", ")}`;
+  }
+  if (shortLabel(primaryLabel, 22) !== primaryLabel) {
+    return primaryLabel;
   }
   return null;
 }
 
 function nodeTextWidthLabel(node: HistoryGraphNode): string {
-  return [shortLabel(node.label, 22), columnCaption(node) ?? ""].reduce(
+  return [
+    shortLabel(primaryNodeLabel(node), 22),
+    secondaryNodeCaption(node) ?? "",
+  ].reduce(
     (longest, value) => (value.length > longest.length ? value : longest),
     "",
   );
@@ -199,15 +242,9 @@ function nodeHeight(node: HistoryGraphNode): number {
   if (!hasTimeAxis || node.columns.length === 0) {
     return graphNodeHeight;
   }
-  const lanes = Math.min(node.columns.length, 3);
-  return columnLaneTop + lanes * (columnLaneHeight + columnLaneGap) + 10;
-}
-
-function columnBar(column: HistoryColumnSlice): { x: number; width: number } {
-  const from = column.from ?? domain.min;
-  const to = displayTo(column.to);
-  const start = xForYear(from);
-  return { x: start, width: Math.max(xForYear(to) - start, 6) };
+  return secondaryNodeCaption(node)
+    ? variableNodeHeightWithCaption
+    : variableNodeHeight;
 }
 
 function edgePath(edge: HistoryGraphEdge): string {
@@ -274,7 +311,15 @@ function shortLabel(label: string, max = 29): string {
 
         <g class="edges">
           {#each edgeRows as edge (edge.id)}
-            <path class={edge.kind} d={edgePath(edge)} />
+            <path
+              class={edge.kind}
+              d={edgePath(edge)}
+              aria-label={edge.label ?? edge.kind}
+            >
+              {#if edge.label}
+                <title>{edge.label}</title>
+              {/if}
+            </path>
           {/each}
         </g>
 
@@ -282,14 +327,15 @@ function shortLabel(label: string, max = 29): string {
           {#each graph.nodes as node, i (node.id)}
             {@const bar = nodeBar(node, i)}
             {@const label = shortLabel(
-              node.label,
+              primaryNodeLabel(node),
               22,
             )}
-            {@const caption = columnCaption(node)}
+            {@const caption = secondaryNodeCaption(node)}
+            {@const title = nodeTitle(node)}
             {#snippet nodeGlyph()}
               <g class={`node ${node.kind}`} class:self={node.self} class:current={node.current}>
-                {#if label !== node.label || !hasTimeAxis}
-                  <title>{node.label}</title>
+                {#if title}
+                  <title>{title}</title>
                 {/if}
                 <rect
                   class="bar"
@@ -302,33 +348,20 @@ function shortLabel(label: string, max = 29): string {
                 <text
                   class="node-label in-bar"
                   x={bar.x + bar.width / 2}
-                  y={bar.y + 18}
+                  y={caption ? bar.y + 18 : bar.y + bar.height / 2 + 4}
                   text-anchor="middle"
                 >
                   {label}
                 </text>
-                {#if hasTimeAxis && node.columns.length > 0}
-                  {#each node.columns as column, ci (column.id)}
-                    {@const col = columnBar(column)}
-                    <rect
-                      class="column-slice"
-                      x={col.x}
-                      y={bar.y + columnLaneTop + (ci % 3) * (columnLaneHeight + columnLaneGap)}
-                      width={col.width}
-                      height={columnLaneHeight}
-                      rx="2"
-                    />
-                  {/each}
-                  {#if caption}
-                    <text
-                      class="column-count"
-                      x={bar.x + bar.width - 8}
-                      y={bar.y + bar.height - 4}
-                      text-anchor="end"
-                    >
-                      {shortLabel(caption, 26)}
-                    </text>
-                  {/if}
+                {#if caption}
+                  <text
+                    class="column-count"
+                    x={bar.x + bar.width - 8}
+                    y={bar.y + bar.height - 8}
+                    text-anchor="end"
+                  >
+                    {shortLabel(caption, 26)}
+                  </text>
                 {/if}
               </g>
             {/snippet}
@@ -438,10 +471,6 @@ function shortLabel(label: string, max = 29): string {
   .node-link:focus-visible .bar {
     stroke-width: 2.4;
   }
-  .column-slice {
-    fill: var(--accent);
-    opacity: 0.72;
-  }
   .edges path {
     fill: none;
     stroke-width: 1.6;
@@ -453,14 +482,6 @@ function shortLabel(label: string, max = 29): string {
   .edges .related {
     stroke: #7a5ca7;
     stroke-dasharray: 5 4;
-  }
-  .edges .lineage {
-    stroke: #386f6b;
-    stroke-dasharray: 2 4;
-  }
-  .edges .member {
-    stroke: var(--muted);
-    stroke-dasharray: 3 4;
   }
   .legend {
     display: flex;
@@ -484,13 +505,6 @@ function shortLabel(label: string, max = 29): string {
   }
   .legend .related {
     border-color: #7a5ca7;
-    border-top-style: dashed;
-  }
-  .legend .lineage {
-    border-color: #386f6b;
-    border-top-style: dotted;
-  }
-  .legend .member {
     border-top-style: dashed;
   }
   .contract-gaps {

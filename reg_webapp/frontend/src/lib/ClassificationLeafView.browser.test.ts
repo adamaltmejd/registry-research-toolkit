@@ -2,22 +2,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { ClassificationNodeData } from "./api";
-import { getCatalogNode } from "./api";
+import { getCatalogGraph } from "./api";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
-
-// The classification leaf rendered through the unified SubjectView shell (#638 PR1).
-// Most surfaces are EMBEDDED on the node (codes / dimensions / edition_chain). When a
-// classification belongs to a concept group, the view fetches the group members'
-// classification leaves so the graph matches the group page. This guards the
-// shell wiring: the title (nodeLabel = name), the short-name meta dl, and that the
-// embedded codes panel renders inside the shell. The panels' own behaviour is
-// covered by their dedicated suites.
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
+    getCatalogGraph: vi.fn(),
   };
 });
 
@@ -30,6 +22,7 @@ function node(
     name: "Svensk utbildningsnomenklatur",
     short_name: "SUN2020",
     edition_chain: [],
+    edition_edges: [],
     codes: [
       { code: "1", label: "Förgymnasial", level: 1, is_valid: true },
       { code: "3", label: "Eftergymnasial", level: 1, is_valid: true },
@@ -39,31 +32,19 @@ function node(
   } as unknown as ClassificationNodeData;
 }
 
-function fetchedClassification(
-  overrides: Partial<ClassificationNodeData>,
-): ClassificationNodeData {
-  return {
-    kind: "classification",
-    fqid: "class/example",
-    name: "Example",
-    short_name: "EXAMPLE",
-    codes: [],
-    dimensions: [],
-    edition_chain: [],
-    edition_edges: [],
-    ...overrides,
-  } as unknown as ClassificationNodeData;
-}
-
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getCatalogGraph).mockReset();
+  vi.mocked(getCatalogGraph).mockResolvedValue({
+    focus_id: null,
+    nodes: [],
+    edges: [],
+  });
 });
 
 describe("ClassificationLeafView (#638 shell)", () => {
   it("renders the title, short-name meta, and the embedded codes panel", async () => {
     await render(ClassificationLeafView, { node: node() });
 
-    // The shell's title is nodeLabel(node) = the classification name.
     await expect
       .element(
         page.getByRole("heading", {
@@ -72,17 +53,13 @@ describe("ClassificationLeafView (#638 shell)", () => {
         }),
       )
       .toBeVisible();
-    // The fqid header.
     await expect.element(page.getByText("class/sun2020")).toBeVisible();
-    // The description meta dl: the Short name term + value. `exact` on the value —
-    // a non-exact "SUN2020" also substring-matches the fqid <code>class/sun2020</code>.
     await expect
       .element(page.getByText("Short name", { exact: true }))
       .toBeVisible();
     await expect
       .element(page.getByText("SUN2020", { exact: true }))
       .toBeVisible();
-    // The embedded value-set codes panel renders inside the shell.
     await expect
       .element(page.getByRole("heading", { name: "Codes" }))
       .toBeVisible();
@@ -92,7 +69,6 @@ describe("ClassificationLeafView (#638 shell)", () => {
   it("omits the codes panel when the edition carries no codes", async () => {
     await render(ClassificationLeafView, { node: node({ codes: [] }) });
 
-    // The leaf still renders (title + short name), but the codes panel omits itself.
     await expect
       .element(
         page.getByRole("heading", {
@@ -106,417 +82,58 @@ describe("ClassificationLeafView (#638 shell)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("renders the same concept-group graph as the group page, focused on the viewed member", async () => {
-    vi.mocked(getCatalogNode).mockImplementation((fqidPath) => {
-      if (fqidPath === "class/sun2020-inriktning") {
-        return Promise.resolve(
-          fetchedClassification({
-            fqid: "class/sun2020-inriktning",
-            name: "SUN 2020 — inriktning",
-            short_name: "SUN2020-INRIKTNING",
-            edition_chain: [
-              {
-                slug: "sun1996",
-                fqid: "class/sun1996",
-                name: "SUN 1996",
-                short_name: "SUN1996",
-                effective_year: 2000,
-                is_self: false,
-                is_current: false,
-              },
-              {
-                slug: "sun2000-inriktning",
-                fqid: "class/sun2000-inriktning",
-                name: "SUN 2000 — inriktning",
-                short_name: "SUN2000-INRIKTNING",
-                effective_year: 2020,
-                is_self: false,
-                is_current: false,
-              },
-              {
-                slug: "sun2020-inriktning",
-                fqid: "class/sun2020-inriktning",
-                name: "SUN 2020 — inriktning",
-                short_name: "SUN2020-INRIKTNING",
-                effective_year: null,
-                is_self: true,
-                is_current: true,
-              },
-            ],
-            edition_edges: [
-              {
-                predecessor_slug: "sun1996",
-                predecessor_fqid: "class/sun1996",
-                successor_slug: "sun2000-inriktning",
-                successor_fqid: "class/sun2000-inriktning",
-                effective_year: 2000,
-                note: null,
-              },
-              {
-                predecessor_slug: "sun2000-inriktning",
-                predecessor_fqid: "class/sun2000-inriktning",
-                successor_slug: "sun2020-inriktning",
-                successor_fqid: "class/sun2020-inriktning",
-                effective_year: 2020,
-                note: null,
-              },
-            ],
-          }),
-        );
-      }
-      return Promise.resolve(
-        fetchedClassification({
-          fqid: "class/niva-grovv1",
-          name: "Utbildningsnivå, grov",
-          short_name: "NIVA-GROV",
-        }),
-      );
+  it("renders the API graph for the viewed classification and highlights focus", async () => {
+    vi.mocked(getCatalogGraph).mockResolvedValue({
+      focus_id: "class/sun2020-inriktning",
+      nodes: [
+        {
+          kind: "classification",
+          id: "class/sun2000-inriktning",
+          fqid: "class/sun2000-inriktning",
+          label: "SUN2000-INRIKTNING",
+          group_key: "class/sun",
+          version_year: 2000,
+          is_current: false,
+        },
+        {
+          kind: "classification",
+          id: "class/sun2020-inriktning",
+          fqid: "class/sun2020-inriktning",
+          label: "SUN2020-INRIKTNING",
+          group_key: "class/sun",
+          version_year: 2020,
+          is_current: true,
+        },
+      ],
+      edges: [
+        {
+          id: "succession:class/sun2000-inriktning->class/sun2020-inriktning",
+          kind: "succession",
+          source: "class/sun2000-inriktning",
+          target: "class/sun2020-inriktning",
+          label: "derived:vintage_chain",
+        },
+      ],
     });
 
     await render(ClassificationLeafView, {
       node: node({
-        fqid: "class/niva-grovv1",
-        name: "Utbildningsnivå, grov",
-        short_name: "NIVA-GROV",
-        codes: [],
-        edition_chain: [],
-        edition_edges: [],
-        dimensions: [
-          {
-            key: "sun",
-            label: "Svensk utbildningsnomenklatur (SUN)",
-            source: "curated",
-            axes: ["dimension"],
-            members: [
-              {
-                fqid: "class/sun2020-inriktning",
-                name: "Utbildningsinriktning",
-                facets: [
-                  {
-                    axis: "dimension",
-                    value: "inriktning",
-                    label: "Inriktning",
-                  },
-                ],
-              },
-              {
-                fqid: "class/niva-grovv1",
-                name: "Utbildningsnivå, grov",
-                facets: [
-                  {
-                    axis: "dimension",
-                    value: "niva-grov",
-                    label: "Aggregat",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      } as unknown as Partial<ClassificationNodeData>),
+        fqid: "class/sun2020-inriktning",
+        name: "SUN 2020 - inriktning",
+        short_name: "SUN2020-INRIKTNING",
+      }),
     });
 
-    await expect
-      .element(
-        page.getByRole("heading", { name: "Classification relationships" }),
-      )
-      .toBeVisible();
+    expect(getCatalogGraph).toHaveBeenCalledWith("class/sun2020-inriktning");
     expect(
       [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
-        (label) => label.textContent?.trim(),
+        (item) => item.textContent?.trim(),
       ),
-    ).toEqual([
-      "SUN1996",
-      "SUN2000-INRIKTNING",
-      "SUN2020-INRIKTNING",
-      "NIVA-GROV",
-    ]);
+    ).toEqual(["SUN2000-INRIKTNING", "SUN2020-INRIKTNING"]);
     expect(
-      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
-        (label) => label.textContent?.trim(),
+      document.querySelector(
+        'a[href="/catalog/class/sun2020-inriktning"] .node.self',
       ),
-    ).not.toContain("sun");
-    expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
-    expect(document.querySelectorAll(".edges .member")).toHaveLength(0);
-    expect(document.querySelector(".node.self title")?.textContent).toBe(
-      "NIVA-GROV",
-    );
-  });
-
-  it("uses the current edition to find the group graph for a historical member", async () => {
-    const sunGroup: NonNullable<ClassificationNodeData["dimensions"]>[number] =
-      {
-        key: "sun",
-        label: "Svensk utbildningsnomenklatur (SUN)",
-        source: "curated",
-        axes: ["dimension"],
-        members: [
-          {
-            fqid: "class/sun-inriktning2020",
-            name: "Utbildningsinriktning",
-            facets: [
-              {
-                axis: "dimension",
-                value: "inriktning",
-                label: "Inriktning",
-              },
-            ],
-          },
-          {
-            fqid: "class/niva-grovv1",
-            name: "Utbildningsnivå, grov",
-            facets: [
-              {
-                axis: "dimension",
-                value: "niva-grov",
-                label: "Aggregat",
-              },
-            ],
-          },
-        ],
-      };
-    vi.mocked(getCatalogNode).mockImplementation((fqidPath) => {
-      if (fqidPath === "class/sun-inriktning2020") {
-        return Promise.resolve(
-          fetchedClassification({
-            fqid: "class/sun-inriktning2020",
-            name: "SUN 2020 — inriktning",
-            short_name: "SUN2020-INRIKTNING",
-            dimensions: [sunGroup],
-            edition_chain: [
-              {
-                slug: "sun1996",
-                fqid: "class/sun1996",
-                name: "SUN 1996",
-                short_name: "SUN1996",
-                effective_year: 2000,
-                is_self: false,
-                is_current: false,
-              },
-              {
-                slug: "sun-inriktning2000",
-                fqid: "class/sun-inriktning2000",
-                name: "SUN 2000 — inriktning",
-                short_name: "SUN2000-INRIKTNING",
-                effective_year: 2020,
-                is_self: false,
-                is_current: false,
-              },
-              {
-                slug: "sun-inriktning2020",
-                fqid: "class/sun-inriktning2020",
-                name: "SUN 2020 — inriktning",
-                short_name: "SUN2020-INRIKTNING",
-                effective_year: null,
-                is_self: true,
-                is_current: true,
-              },
-            ],
-            edition_edges: [
-              {
-                predecessor_slug: "sun1996",
-                predecessor_fqid: "class/sun1996",
-                successor_slug: "sun-inriktning2000",
-                successor_fqid: "class/sun-inriktning2000",
-                effective_year: 2000,
-                note: null,
-              },
-              {
-                predecessor_slug: "sun-inriktning2000",
-                predecessor_fqid: "class/sun-inriktning2000",
-                successor_slug: "sun-inriktning2020",
-                successor_fqid: "class/sun-inriktning2020",
-                effective_year: 2020,
-                note: null,
-              },
-            ],
-          }),
-        );
-      }
-      return Promise.resolve(
-        fetchedClassification({
-          fqid: "class/niva-grovv1",
-          name: "Utbildningsnivå, grov",
-          short_name: "NIVA-GROV",
-        }),
-      );
-    });
-
-    await render(ClassificationLeafView, {
-      node: node({
-        fqid: "class/sun-inriktning2000",
-        name: "SUN 2000 — inriktning",
-        short_name: "SUN2000-INRIKTNING",
-        codes: [],
-        dimensions: [],
-        edition_chain: [
-          {
-            slug: "sun1996",
-            fqid: "class/sun1996",
-            name: "SUN 1996",
-            short_name: "SUN1996",
-            effective_year: 2000,
-            is_self: false,
-            is_current: false,
-          },
-          {
-            slug: "sun-inriktning2000",
-            fqid: "class/sun-inriktning2000",
-            name: "SUN 2000 — inriktning",
-            short_name: "SUN2000-INRIKTNING",
-            effective_year: 2020,
-            is_self: true,
-            is_current: false,
-          },
-          {
-            slug: "sun-inriktning2020",
-            fqid: "class/sun-inriktning2020",
-            name: "SUN 2020 — inriktning",
-            short_name: "SUN2020-INRIKTNING",
-            effective_year: null,
-            is_self: false,
-            is_current: true,
-          },
-        ],
-        edition_edges: [
-          {
-            predecessor_slug: "sun1996",
-            predecessor_fqid: "class/sun1996",
-            successor_slug: "sun-inriktning2000",
-            successor_fqid: "class/sun-inriktning2000",
-            effective_year: 2000,
-            note: null,
-          },
-          {
-            predecessor_slug: "sun-inriktning2000",
-            predecessor_fqid: "class/sun-inriktning2000",
-            successor_slug: "sun-inriktning2020",
-            successor_fqid: "class/sun-inriktning2020",
-            effective_year: 2020,
-            note: null,
-          },
-        ],
-      } as unknown as Partial<ClassificationNodeData>),
-    });
-
-    await expect
-      .element(
-        page.getByRole("heading", { name: "Classification relationships" }),
-      )
-      .toBeVisible();
-    await vi.waitFor(() => {
-      expect(
-        [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
-          (label) => label.textContent?.trim(),
-        ),
-      ).toContain("NIVA-GROV");
-    });
-
-    expect(
-      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
-        (label) => label.textContent?.trim(),
-      ),
-    ).toEqual([
-      "SUN1996",
-      "SUN2000-INRIKTNING",
-      "SUN2020-INRIKTNING",
-      "NIVA-GROV",
-    ]);
-    expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
-    expect(document.querySelector(".node.self title")?.textContent).toBe(
-      "SUN2000-INRIKTNING",
-    );
-  });
-
-  it("focuses the resolved classification node when opened through an alias", async () => {
-    const sunGroup: NonNullable<ClassificationNodeData["dimensions"]>[number] =
-      {
-        key: "sun",
-        label: "Svensk utbildningsnomenklatur (SUN)",
-        source: "curated",
-        axes: ["dimension"],
-        members: [
-          {
-            fqid: "class/sun-inriktning2020",
-            name: "Utbildningsinriktning",
-            facets: [
-              {
-                axis: "dimension",
-                value: "inriktning",
-                label: "Inriktning",
-              },
-            ],
-          },
-          {
-            fqid: "class/niva-grovv1",
-            name: "Utbildningsnivå, grov",
-            facets: [
-              {
-                axis: "dimension",
-                value: "niva-grov",
-                label: "Aggregat",
-              },
-            ],
-          },
-        ],
-      };
-    vi.mocked(getCatalogNode).mockImplementation((fqidPath) => {
-      if (fqidPath === "class/sun-inriktning2020") {
-        return Promise.resolve(
-          fetchedClassification({
-            fqid: "class/sun-inriktning2020",
-            name: "SUN 2020 — inriktning",
-            short_name: "SUN2020-INRIKTNING",
-            dimensions: [sunGroup],
-            edition_chain: [
-              {
-                slug: "sun-inriktning2020",
-                fqid: "class/sun-inriktning2020",
-                name: "SUN 2020 — inriktning",
-                short_name: "SUN2020-INRIKTNING",
-                effective_year: null,
-                is_self: true,
-                is_current: true,
-              },
-            ],
-          }),
-        );
-      }
-      return Promise.resolve(
-        fetchedClassification({
-          fqid: "class/niva-grovv1",
-          name: "Utbildningsnivå, grov",
-          short_name: "NIVA-GROV",
-        }),
-      );
-    });
-
-    await render(ClassificationLeafView, {
-      node: node({
-        fqid: "class/sun-inriktning-alias",
-        via_same_as: ["class/sun-inriktning2020"],
-        name: "SUN alias",
-        short_name: "SUN-ALIAS",
-        codes: [],
-        dimensions: [],
-        edition_chain: [
-          {
-            slug: "sun-inriktning2020",
-            fqid: "class/sun-inriktning2020",
-            name: "SUN 2020 — inriktning",
-            short_name: "SUN2020-INRIKTNING",
-            effective_year: null,
-            is_self: true,
-            is_current: true,
-          },
-        ],
-      } as unknown as Partial<ClassificationNodeData>),
-    });
-
-    await vi.waitFor(() => {
-      expect(document.querySelector(".node.self title")?.textContent).toBe(
-        "SUN2020-INRIKTNING",
-      );
-    });
+    ).not.toBeNull();
   });
 });

@@ -219,35 +219,35 @@ export function onNavClick(event: MouseEvent): void {
   if (!(target instanceof Element)) {
     return;
   }
-  // `closest("a")` also matches an SVG `<a>` (SVGAElement), which lacks the
-  // HTMLHyperlinkElementUtils URL fields (`origin`/`pathname`/…) read below;
-  // narrow to HTMLAnchorElement so those reads are sound (and skip SVG anchors).
   const anchor = target.closest("a");
-  if (!(anchor instanceof HTMLAnchorElement)) {
+  if (anchor === null) {
     return;
   }
   const href = anchor.getAttribute("href");
   // Only intercept internal, same-tab, non-download links.
   if (
     href === null ||
-    anchor.target ||
+    anchor.getAttribute("target") ||
     anchor.hasAttribute("download") ||
-    anchor.origin !== window.location.origin ||
     !href.startsWith("/")
   ) {
+    return;
+  }
+  const url = new URL(href, window.location.href);
+  if (url.origin !== window.location.origin) {
     return;
   }
   // Only intercept paths the SPA router OWNS (root + `/catalog/...`). A
   // same-origin link to a BACKEND route (`/api/...`, `/docs`, `/openapi.json`)
   // or any other path must fall through to the browser — pushState-routing it
   // would render the SPA not-found instead of hitting the server.
-  if (parseRoute(anchor.pathname).name === "not-found") {
+  if (parseRoute(url.pathname).name === "not-found") {
     return;
   }
   event.preventDefault();
   // Preserve query + hash so deep-link refinements (A5.3b's `?period`/`?variant`)
   // survive the pushState navigation rather than being silently dropped.
-  router.navigate(anchor.pathname + anchor.search + anchor.hash);
+  router.navigate(url.pathname + url.search + url.hash);
 }
 
 /**

@@ -68,12 +68,10 @@ describe("parseRoute", () => {
   });
 
   it("parses the classification concept-group SUBJECT route (#667)", () => {
-    // Classification groups live directly under the reserved class root, not
-    // under a provider/register pair.
+    // Classification groups remain a distinct route shape because they live
+    // directly under the reserved class root, not under a provider/register pair.
     expect(parseRoute("/catalog/group/class/sun")).toEqual({
-      name: "group",
-      provider: "class",
-      register: null,
+      name: "class-group",
       key: "sun",
     });
   });
@@ -93,17 +91,13 @@ describe("parseRoute", () => {
     });
   });
 
-  it("parses slash-bearing classification group keys as the group route", () => {
+  it("parses slash-bearing classification group keys as the class-group route", () => {
     expect(parseRoute("/catalog/group/class/a%2Fb")).toEqual({
-      name: "group",
-      provider: "class",
-      register: null,
+      name: "class-group",
       key: "a/b",
     });
     expect(parseRoute("/catalog/group/class/a/b")).toEqual({
-      name: "group",
-      provider: "class",
-      register: null,
+      name: "class-group",
       key: "a/b",
     });
   });
@@ -221,6 +215,24 @@ describe("onNavClick", () => {
     return event;
   }
 
+  function clickSvgAnchor(href: string): MouseEvent {
+    const container = document.createElement("div");
+    container.addEventListener("click", onNavClick);
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const a = document.createElementNS("http://www.w3.org/2000/svg", "a");
+    a.setAttribute("href", href);
+    svg.appendChild(a);
+    container.appendChild(svg);
+    document.body.appendChild(container);
+    const event = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    a.dispatchEvent(event);
+    return event;
+  }
+
   it("intercepts an internal same-origin link (preventDefault)", () => {
     const event = clickAnchor("/catalog/scb");
     expect(event.defaultPrevented).toBe(true);
@@ -256,6 +268,12 @@ describe("onNavClick", () => {
 
   it("intercepts an SPA route under /catalog", () => {
     expect(clickAnchor("/catalog/scb/lisa/kon").defaultPrevented).toBe(true);
+  });
+
+  it("intercepts SVG graph-node links as SPA routes", () => {
+    expect(
+      clickSvgAnchor("/catalog/class/sun2020-inriktning").defaultPrevented,
+    ).toBe(true);
   });
 
   it("intercepts the concept-group SUBJECT route (#617)", () => {

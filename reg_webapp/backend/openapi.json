@@ -1176,7 +1176,7 @@
         "type": "object"
       },
       "ConceptGroupNode": {
-        "description": "The concept group as a browsable subject (#617): the group identity\n(provider/register/key + label/source/axes) and its members WITH per-member\ncoverage. Returned by `/catalog/group/{provider}/{register}/{key}` \u2014 a\nfixed-shape route, NOT an FQID kind (a group is not FQID-addressable; its\nmembers carry the real leaf FQIDs).\n\n`member` echoes a validated `?member=<slug>` focus hint (a member leaf slug to\nhighlight), or None when absent / unrecognized \u2014 the page stays first-class\neither way (a bad hint is ignored, not a 404).",
+        "description": "The concept group as a browsable subject (#617): the group identity\n(scope/key + label/source/axes) and its members. Returned by\n`/catalog/group/{provider}/{register}/{key}` for variable groups and\n`/catalog/group/class/{key}` for classification groups \u2014 fixed-shape routes,\nNOT FQID kinds (a group is not FQID-addressable; its members carry the real\nleaf FQIDs).\n\n`member` echoes a validated `?member=<slug>` focus hint (a member leaf slug to\nhighlight), or None when absent / unrecognized \u2014 the page stays first-class\neither way (a bad hint is ignored, not a 404).",
         "properties": {
           "axes": {
             "items": {
@@ -1222,9 +1222,16 @@
             "type": "string"
           },
           "register": {
-            "description": "The group's register slug. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see reg_meta's VariableRef); the wire key is `register` via the alias.",
-            "title": "Register",
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The group's register slug for register-scoped variable groups; None for classification groups. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see reg_meta's VariableRef); the wire key is `register` via the alias.",
+            "title": "Register"
           },
           "source": {
             "enum": [
@@ -1238,7 +1245,6 @@
         },
         "required": [
           "provider",
-          "register",
           "key",
           "label",
           "source",
@@ -1250,7 +1256,7 @@
       },
       "ConceptGroupNodeMember": {
         "additionalProperties": false,
-        "description": "A concept-group member on the group SUBJECT node \u2014 reg_meta's browse\n`ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window\n`coverage` (#351; reg_meta's `VariableCoverage`, zipped on by the group route\nfrom `register_variable_coverage`). `coverage` is None for a member with no\ncoverage row (a stateless variable, or a member whose leaf slug didn't match\nthe register's coverage map \u2014 defensive). Subclassing the frozen,\n`extra=\"forbid\"` reg_meta model to declare one new field is supported in\nPydantic v2 \u2014 the subclass owns `coverage`.",
+        "description": "A concept-group member on the group SUBJECT node \u2014 reg_meta's browse\n`ConceptGroupMember` (fqid + name + facets) PLUS optional per-member\nstudy-window `coverage` (#351). Variable groups zip this on from\n`register_variable_coverage`; classification groups have no delivery coverage\nand leave it None. Subclassing the frozen, `extra=\"forbid\"` reg_meta model to\ndeclare one new field is supported in Pydantic v2 \u2014 the subclass owns\n`coverage`.",
         "properties": {
           "coverage": {
             "anyOf": [
@@ -1906,6 +1912,61 @@
         "title": "GraphState",
         "type": "object"
       },
+      "GraphTimeDomain": {
+        "additionalProperties": false,
+        "description": "The absolute time axis for variable graphs. A register-scoped graph uses\nthe full register coverage span, not only the returned nodes' local states, so\na short-lived member keeps its position in the register's full timeline.",
+        "properties": {
+          "coverage_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage From"
+          },
+          "coverage_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage To"
+          },
+          "kind": {
+            "const": "register",
+            "default": "register",
+            "title": "Kind",
+            "type": "string"
+          },
+          "open_ended": {
+            "title": "Open Ended",
+            "type": "boolean"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "register": {
+            "title": "Register",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "register",
+          "coverage_from",
+          "coverage_to",
+          "open_ended"
+        ],
+        "title": "GraphTimeDomain",
+        "type": "object"
+      },
       "GroupFacet": {
         "additionalProperties": false,
         "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank') when the group has one, or None for an AXIS-LESS group \u2014\na curated classification umbrella (SUN/ISCED/NordDRG), whose members are\ndistinct classifications carrying their own short label, not points on a\nshared scale. `value` sorts (zero-padded where needed), `label` displays.",
@@ -2501,7 +2562,7 @@
       },
       "RelationshipGraph": {
         "additionalProperties": false,
-        "description": "The relationship graph for a subject. ``nodes: []`` is the \"don't render\"\nsignal (the frontend gate is ``nodes.length === 0``): a lone variable with no\nsuccession / related / group siblings / meaningful representation boundary, or\na lone classification edition with no succession chain and no group context.\n``focus_id`` is the node matching the requested FQID (post same_as); None for\ngroup-addressed calls.",
+        "description": "The relationship graph for a subject. ``nodes: []`` is the \"don't render\"\nsignal (the frontend gate is ``nodes.length === 0``): a lone variable with no\nsuccession / related / group siblings / meaningful representation boundary, or\na lone classification edition with no succession chain and no group context.\n``focus_id`` is the node matching the requested FQID (post same_as); None for\ngroup-addressed calls. ``time_domain`` fixes variable graphs to the requested\nregister's full coverage span; classification graphs leave it None.",
         "properties": {
           "edges": {
             "items": {
@@ -2541,6 +2602,16 @@
             },
             "title": "Nodes",
             "type": "array"
+          },
+          "time_domain": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GraphTimeDomain"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -3599,7 +3670,7 @@
     },
     "/api/catalog/group/class/{key}": {
       "get": {
-        "description": "The classification umbrella group addressed by `key` (#756, e.g. the SUN\numbrella `sun`) \u2014 a browsable subject (all members selected), mirroring the\nregister-scoped `get_concept_group` but for catalog-global classification\numbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no\nclassification group has that key.\n\nBy-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped\nthe reg_meta accessor; #756 did this filter inline here to avoid a release). The\naccessor is the single source of truth for the class-by-key filter \u2014 the route\nno longer re-pastes the `list_classification_groups()` loop.\n\nNo provider/register/key is slug-validated: `class` is a fixed literal in the\npath, and `key` is a derivation key (not a slug). So there is no\n`Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)\n\u2014 just open the connection (mirroring the register route's per-request model)\nand resolve.",
+        "description": "The classification umbrella group addressed by `key` (#756, e.g. the SUN\numbrella `sun`) \u2014 a browsable subject (all members selected), mirroring the\nregister-scoped `get_concept_group` but for catalog-global classification\numbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no\nclassification group has that key.\n\nBy-key resolution delegates to `Catalog.classification_group(key)` (#761). The\naccessor is the single source of truth for the class-by-key filter.\n\nNo provider/register/key is slug-validated: `class` is a fixed literal in the\npath, and `key` is a derivation key (not a slug).",
         "operationId": "get_classification_group_api_catalog_group_class__key__get",
         "parameters": [
           {
@@ -3973,7 +4044,7 @@
     },
     "/api/catalog/{fqid}/graph": {
       "get": {
-        "description": "The relationship graph for a binding's variable (#761) \u2014 one node per\nvariable with its representation-run state history + succession/related edges +\nsame_as/group metadata, unioned over the variable's concept group (Fork B). An\nempty graph (`nodes: []`) is the \"don't render\" signal. A dead/renamed binding\n301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`\ncache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`).",
+        "description": "The relationship graph for a variable or classification FQID (#761). Variables\nrender one node per variable with representation-run state history + succession /\nrelated edges + same_as/group metadata, unioned over the variable's concept group\n(Fork B). Classifications render the same union as their classification group\npage, with `focus_id` set to the requested edition. An empty graph (`nodes: []`)\nis the \"don't render\" signal. A dead/renamed binding 301s to `/graph` on its\nterminal successor (#411); shares the `/api/catalog` cache. The topology +\npredicates live in reg_meta (`Catalog.graph_for_fqid`).",
         "operationId": "get_binding_graph_api_catalog__fqid__graph_get",
         "parameters": [
           {

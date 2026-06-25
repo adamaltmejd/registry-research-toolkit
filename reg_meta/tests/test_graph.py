@@ -276,6 +276,62 @@ class TestRepresentationRuns:
         assert isinstance(node, VariableGraphNode)
         assert [s.representation_run_id for s in node.states] == [0, 1]
 
+    def test_alias_windows_stay_visible_without_opening_runs(self) -> None:
+        # Monthly families expand read-time into multiple alias windows that share
+        # one state_id. The graph payload must keep those concrete columns so the
+        # renderer can tell users what is inside the node, but the shared state_id
+        # proves this is alias multiplexing, not a representation boundary.
+        conn = build_slugged_db()
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'kon'"
+        ).fetchone()[0]
+        conn.execute("DELETE FROM variable_state WHERE variable_id = ?", (vid,))
+        for lo, hi in (
+            ("2018-01-01", "2018-12-31"),
+            ("2019-01-01", "2019-12-31"),
+        ):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=10,
+                valid_from=lo,
+                valid_to=hi,
+                delivery_column_name="KonJan",
+            )
+        for col, lo, hi in (
+            ("KonJan", "2018-01-01", "2018-01-31"),
+            ("KonFeb", "2018-02-01", "2018-02-28"),
+            ("KonJan", "2019-01-01", "2019-01-31"),
+            ("KonFeb", "2019-02-01", "2019-02-28"),
+        ):
+            conn.execute(
+                "INSERT INTO variable_alias_window "
+                "(variable_id, register_variant_id, delivery_column_name, "
+                "valid_from, valid_to) VALUES (?, 10, ?, ?, ?)",
+                (vid, col, lo, hi),
+            )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="month",
+            member_slugs=["kon"],
+        )
+
+        graph = Catalog(conn).graph_for_group("scb", "lisa", "month")
+        assert graph is not None
+        (node,) = graph.nodes
+        assert isinstance(node, VariableGraphNode)
+        assert [
+            (s.delivery_column_name, s.representation_run_id) for s in node.states
+        ] == [
+            ("KonJan", 0),
+            ("KonFeb", 0),
+            ("KonJan", 0),
+            ("KonFeb", 0),
+        ]
+
     def test_run_never_spans_variants(self) -> None:
         # Two variants delivering identical-shaped states must still break the run at
         # the variant change (a run never spans variants), even with NO #526 boundary.
@@ -698,6 +754,48 @@ class TestVariableGroups:
         assert g.focus_id is None
         assert {n.id for n in g.nodes} == {"scb/lisa/kon", "scb/lisa/civilstand"}
 
+    def test_variable_graph_uses_register_time_domain(self) -> None:
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Old", slug="old")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="old",
+            register_variant_id=10,
+            valid_from="2010-01-01",
+            valid_to="2015-12-31",
+            delivery_column_name="Old",
+        )
+        add_variable(conn, register_id=1, var_id=46, name="Unknown", slug="unknown")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="unknown",
+            register_variant_id=10,
+            valid_from="0001-01-01",
+            valid_to="2008-12-31",
+            delivery_column_name="Unknown",
+        )
+        _add_concept_group(
+            conn, group_id=40, register_id=1, group_key="demog", member_slugs=["kon"]
+        )
+
+        catalog = Catalog(conn)
+        member_graph = catalog.graph_for_fqid(_KON)
+        group_graph = catalog.graph_for_group("scb", "lisa", "demog")
+
+        assert group_graph is not None
+        for graph in (member_graph, group_graph):
+            assert {n.id for n in graph.nodes} == {"scb/lisa/kon"}
+            assert graph.time_domain is not None
+            assert graph.time_domain.provider == "scb"
+            assert graph.time_domain.register_name == "lisa"
+            # The axis domain is the whole register, not only the returned node.
+            # Unknown-start sentinels are ignored; they must not floor the axis.
+            assert graph.time_domain.coverage_from == "2010-01-01"
+            assert graph.time_domain.coverage_to is None
+            assert graph.time_domain.open_ended is True
+
     def test_unknown_group_is_none(self) -> None:
         conn = build_slugged_db()
         assert Catalog(conn).graph_for_group("scb", "lisa", "nope") is None
@@ -783,7 +881,8 @@ class TestVariableGroups:
 
     def test_fork_b_entry_independent(self) -> None:
         # Fork B: graph_for_fqid on two DIFFERENT members of the same group yields
-        # identical node/edge SETS — only focus_id differs.
+        # identical node/edge order — only focus_id differs. The selected member must
+        # not jump to the top of the rendered graph.
         conn = build_slugged_db()
         add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
         add_state(
@@ -803,7 +902,11 @@ class TestVariableGroups:
         catalog = Catalog(conn)
         g_kon = catalog.graph_for_fqid(_KON)
         g_civ = catalog.graph_for_fqid("scb/lisa/civilstand")
-        assert {n.id for n in g_kon.nodes} == {n.id for n in g_civ.nodes}
+        g_group = catalog.graph_for_group("scb", "lisa", "demog")
+
+        assert g_group is not None
+        assert [n.id for n in g_kon.nodes] == [n.id for n in g_group.nodes]
+        assert [n.id for n in g_civ.nodes] == [n.id for n in g_group.nodes]
         assert {e.id for e in g_kon.edges} == {e.id for e in g_civ.edges}
         assert g_kon.focus_id == _KON
         assert g_civ.focus_id == "scb/lisa/civilstand"
@@ -1050,3 +1153,93 @@ class TestClassificationChains:
         assert g is not None
         assert g.nodes == []
         assert g.edges == []
+
+    def test_classification_member_graph_matches_group_with_focus(self) -> None:
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000", effective_year=2000
+        )
+        _add_class_succession(
+            conn, predecessor="sun2000", successor="sun2020", effective_year=2020
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (3, 12, '2020', '2020')"
+        )
+        conn.commit()
+
+        catalog = Catalog(conn)
+        group_graph = catalog.graph_for_classification_group("sun")
+        member_graph = catalog.graph_for_fqid("class/sun2020")
+
+        assert group_graph is not None
+        assert [node.id for node in member_graph.nodes] == [
+            node.id for node in group_graph.nodes
+        ]
+        assert [(edge.id, edge.source, edge.target) for edge in member_graph.edges] == [
+            (edge.id, edge.source, edge.target) for edge in group_graph.edges
+        ]
+        assert member_graph.focus_id == "class/sun2020"
+        assert group_graph.focus_id is None
+
+    def test_historical_classification_member_uses_successor_group(self) -> None:
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-grupp", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2020-grupp", valid_from=2020)
+        _add_classification(conn, cid=4, slug="sun2000-inriktning", valid_from=2000)
+        _add_classification(conn, cid=5, slug="sun2020-inriktning", valid_from=2020)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000-grupp", effective_year=2000
+        )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-grupp",
+            successor="sun2020-grupp",
+            effective_year=2020,
+        )
+        _add_class_succession(
+            conn,
+            predecessor="sun1996",
+            successor="sun2000-inriktning",
+            effective_year=2000,
+        )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-inriktning",
+            successor="sun2020-inriktning",
+            effective_year=2020,
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
+        )
+        # The umbrella names only the current editions; a historical predecessor
+        # page must still use the same umbrella union via its successor chain.
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 12, ?, ?)",
+            [(3, "grupp", "grupp"), (5, "inriktning", "inriktning")],
+        )
+        conn.commit()
+
+        catalog = Catalog(conn)
+        group_graph = catalog.graph_for_classification_group("sun")
+        member_graph = catalog.graph_for_fqid("class/sun2000-grupp")
+
+        assert group_graph is not None
+        assert {node.id for node in member_graph.nodes} == {
+            node.id for node in group_graph.nodes
+        }
+        assert {(edge.id, edge.source, edge.target) for edge in member_graph.edges} == {
+            (edge.id, edge.source, edge.target) for edge in group_graph.edges
+        }
+        assert member_graph.focus_id == "class/sun2000-grupp"
+        assert group_graph.focus_id is None

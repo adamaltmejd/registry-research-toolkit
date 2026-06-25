@@ -3,7 +3,6 @@ import { onMount } from "svelte";
 import { type Context, errMessage, getContext } from "./lib/api";
 import CatalogNodeView from "./lib/CatalogNodeView.svelte";
 import CatalogRoot from "./lib/CatalogRoot.svelte";
-import ClassificationGroupView from "./lib/ClassificationGroupView.svelte";
 import ConceptGroupView from "./lib/ConceptGroupView.svelte";
 import { DATA_BROWSER_LABEL } from "./lib/catalog";
 import DocView from "./lib/DocView.svelte";
@@ -172,9 +171,15 @@ const windowMaxYear = $derived(
     {:else if route.name === "class-group"}
       <!-- #756: the classification-umbrella SUBJECT page. Keyed on the group key so
            navigating between umbrellas remounts. Catalog-global (no
-           provider/register/period), so it takes only the key. -->
+           register/period), so it reuses the unified concept-group subject with a
+           null register. -->
       {#key route.key}
-        <ClassificationGroupView key={route.key} />
+        <ConceptGroupView
+          provider="class"
+          register={null}
+          key={route.key}
+          vintageYear={windowMaxYear}
+        />
       {/key}
     {:else if route.name === "project"}
       <ProjectEditor {regMetaVersion} {steward} />

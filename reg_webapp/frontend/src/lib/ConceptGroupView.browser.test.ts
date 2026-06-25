@@ -1,8 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { ClassificationNodeData, ConceptGroupNodeData } from "./api";
-import { getCatalogNode, getConceptGroup } from "./api";
+import type { ClassificationGroupNodeData, ConceptGroupNodeData } from "./api";
+import {
+  getClassificationGroup,
+  getClassificationGroupGraph,
+  getConceptGroup,
+  getConceptGroupGraph,
+} from "./api";
 import ConceptGroupView from "./ConceptGroupView.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
@@ -13,8 +18,10 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
+    getClassificationGroup: vi.fn(),
+    getClassificationGroupGraph: vi.fn(),
     getConceptGroup: vi.fn(),
+    getConceptGroupGraph: vi.fn(),
   };
 });
 
@@ -54,8 +61,20 @@ function node(
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getClassificationGroup).mockReset();
+  vi.mocked(getClassificationGroupGraph).mockReset();
+  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+    focus_id: null,
+    nodes: [],
+    edges: [],
+  });
   vi.mocked(getConceptGroup).mockReset();
+  vi.mocked(getConceptGroupGraph).mockReset();
+  vi.mocked(getConceptGroupGraph).mockResolvedValue({
+    focus_id: null,
+    nodes: [],
+    edges: [],
+  });
   // Reset the URL + the global window so the availability-lens tests start clean
   // (these stores are module singletons shared across cases).
   router.navigate("/catalog/group/scb/rams/ink");
@@ -79,6 +98,54 @@ function memberLink(name: RegExp): HTMLAnchorElement {
 describe("ConceptGroupView (#617)", () => {
   it("renders the group label + members with facets and coverage", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      focus_id: null,
+      nodes: [
+        {
+          kind: "variable",
+          id: "scb/rams/inkjan",
+          fqid: "scb/rams/inkjan",
+          label: "januari",
+          group_key: "scb/rams/ink",
+          states: [
+            {
+              state_id: 1,
+              variant: "_default",
+              representation_run_id: 0,
+              delivery_column_name: "INKJAN",
+              value_set_id: null,
+              value_set_version_label: "",
+              classification_slug: null,
+              valid_from: "2019-01-01",
+              valid_to: "2021-12-31",
+            },
+          ],
+          same_as: [],
+        },
+        {
+          kind: "variable",
+          id: "scb/rams/inkfeb",
+          fqid: "scb/rams/inkfeb",
+          label: "februari",
+          group_key: "scb/rams/ink",
+          states: [
+            {
+              state_id: 2,
+              variant: "_default",
+              representation_run_id: 0,
+              delivery_column_name: "INKFEB",
+              value_set_id: null,
+              value_set_version_label: "",
+              classification_slug: null,
+              valid_from: "2019-01-01",
+              valid_to: "2021-12-31",
+            },
+          ],
+          same_as: [],
+        },
+      ],
+      edges: [],
+    });
 
     await render(ConceptGroupView, {
       provider: "scb",
@@ -106,13 +173,13 @@ describe("ConceptGroupView (#617)", () => {
       .element(page.getByText("2019 – 2021", { exact: true }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("heading", { name: "Variable relationships" }))
+      .element(page.getByRole("heading", { name: "Relations" }))
       .toBeVisible();
     expect(
       [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
         (item) => item.textContent?.trim(),
       ),
-    ).toEqual(["januari", "februari"]);
+    ).toEqual(["INKJAN", "INKFEB"]);
     expect(document.querySelector(".history-graph .axis")).not.toBeNull();
     expect(document.querySelectorAll(".history-graph .detail")).toHaveLength(0);
     expect(document.querySelector(".history-graph .group")).toBeNull();
@@ -206,108 +273,86 @@ describe("ConceptGroupView (#617)", () => {
   });
 
   it("renders classification groups as first-class member graph pages", async () => {
-    vi.mocked(getCatalogNode).mockImplementation((fqidPath) =>
-      Promise.resolve({
-        kind: "classification",
-        fqid: fqidPath,
-        name: fqidPath,
-        short_name:
-          fqidPath === "class/niva-grovv1"
-            ? "NIVA-GROV"
-            : (fqidPath.split("/").at(-1)?.toUpperCase() ?? fqidPath),
-        codes: [],
-        dimensions: [],
-        edition_chain:
-          fqidPath === "class/sun2020-inriktning"
-            ? [
-                {
-                  slug: "sun1996",
-                  fqid: "class/sun1996",
-                  name: "SUN 1996",
-                  short_name: "SUN1996",
-                  effective_year: 2000,
-                  is_self: false,
-                  is_current: false,
-                },
-                {
-                  slug: "sun2000-inriktning",
-                  fqid: "class/sun2000-inriktning",
-                  name: "SUN 2000 — inriktning",
-                  short_name: "SUN2000-INRIKTNING",
-                  effective_year: 2020,
-                  is_self: false,
-                  is_current: false,
-                },
-                {
-                  slug: "sun2020-inriktning",
-                  fqid: "class/sun2020-inriktning",
-                  name: "SUN 2020 — inriktning",
-                  short_name: "SUN2020-INRIKTNING",
-                  effective_year: null,
-                  is_self: true,
-                  is_current: true,
-                },
-              ]
-            : [],
-        edition_edges:
-          fqidPath === "class/sun2020-inriktning"
-            ? [
-                {
-                  predecessor_slug: "sun1996",
-                  predecessor_fqid: "class/sun1996",
-                  successor_slug: "sun2000-inriktning",
-                  successor_fqid: "class/sun2000-inriktning",
-                  effective_year: 2000,
-                  note: null,
-                },
-                {
-                  predecessor_slug: "sun2000-inriktning",
-                  predecessor_fqid: "class/sun2000-inriktning",
-                  successor_slug: "sun2020-inriktning",
-                  successor_fqid: "class/sun2020-inriktning",
-                  effective_year: 2020,
-                  note: null,
-                },
-              ]
-            : [],
-      } as ClassificationNodeData),
-    );
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      node({
-        provider: "class",
-        register: null,
-        key: "sun",
-        label: "Svensk utbildningsnomenklatur (SUN)",
-        source: "curated",
-        axes: ["dimension"],
-        members: [
-          {
-            fqid: "class/sun2020-inriktning",
-            name: "Utbildningsinriktning",
-            facets: [
-              {
-                axis: "dimension",
-                value: "inriktning",
-                label: "Inriktning",
-              },
-            ],
-            coverage: null,
-          },
-          {
-            fqid: "class/niva-grovv1",
-            name: "Utbildningsnivå, grov",
-            facets: [
-              {
-                axis: "dimension",
-                value: "niva-grov",
-                label: "Aggregat",
-              },
-            ],
-            coverage: null,
-          },
-        ],
-      } as unknown as Partial<ConceptGroupNodeData>),
-    );
+    vi.mocked(getClassificationGroup).mockResolvedValue({
+      kind: "classification-group",
+      key: "sun",
+      label: "Svensk utbildningsnomenklatur (SUN)",
+      source: "curated",
+      axes: ["dimension"],
+      members: [
+        {
+          fqid: "class/sun2020-inriktning",
+          name: "Utbildningsinriktning",
+          facets: [
+            { axis: "dimension", value: "inriktning", label: "Inriktning" },
+          ],
+        },
+        {
+          fqid: "class/niva-grovv1",
+          name: "Utbildningsnivå, grov",
+          facets: [
+            { axis: "dimension", value: "niva-grov", label: "Aggregat" },
+          ],
+        },
+      ],
+    } as unknown as ClassificationGroupNodeData);
+    vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+      focus_id: null,
+      nodes: [
+        {
+          kind: "classification",
+          id: "class/sun1996",
+          fqid: "class/sun1996",
+          label: "SUN1996",
+          group_key: null,
+          version_year: 1996,
+          is_current: false,
+        },
+        {
+          kind: "classification",
+          id: "class/sun2000-inriktning",
+          fqid: "class/sun2000-inriktning",
+          label: "SUN2000-INRIKTNING",
+          group_key: null,
+          version_year: 2000,
+          is_current: false,
+        },
+        {
+          kind: "classification",
+          id: "class/sun2020-inriktning",
+          fqid: "class/sun2020-inriktning",
+          label: "SUN2020-INRIKTNING",
+          group_key: "class/sun",
+          version_year: 2020,
+          is_current: true,
+        },
+        {
+          kind: "classification",
+          id: "class/niva-grovv1",
+          fqid: "class/niva-grovv1",
+          label: "NIVA-GROV",
+          group_key: "class/sun",
+          version_year: 2020,
+          is_current: true,
+        },
+      ],
+      edges: [
+        {
+          id: "succession:class/sun1996->class/sun2000-inriktning",
+          kind: "succession",
+          source: "class/sun1996",
+          target: "class/sun2000-inriktning",
+          label: null,
+        },
+        {
+          id: "succession:class/sun2000-inriktning->class/sun2020-inriktning",
+          kind: "succession",
+          source: "class/sun2000-inriktning",
+          target: "class/sun2020-inriktning",
+          label: null,
+        },
+      ],
+    });
 
     await render(ConceptGroupView, {
       provider: "class",
@@ -323,17 +368,11 @@ describe("ConceptGroupView (#617)", () => {
         }),
       )
       .toBeVisible();
-    expect(getConceptGroup).toHaveBeenCalledWith(
-      "class",
-      null,
-      "sun",
-      undefined,
-    );
+    expect(getClassificationGroup).toHaveBeenCalledWith("sun");
+    expect(getClassificationGroupGraph).toHaveBeenCalledWith("sun");
     expect(document.querySelector(".period-picker")).toBeNull();
     await expect
-      .element(
-        page.getByRole("heading", { name: "Classification relationships" }),
-      )
+      .element(page.getByRole("heading", { name: "Relations" }))
       .toBeVisible();
     expect(
       [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
@@ -351,7 +390,6 @@ describe("ConceptGroupView (#617)", () => {
       ),
     ).not.toContain("sun");
     expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
-    expect(document.querySelectorAll(".edges .member")).toHaveLength(0);
     expect(
       document.querySelector(
         '.member-selector a[href="/catalog/class/sun2020-inriktning"]',

@@ -159,7 +159,8 @@ Plus two **concept-group subject routes**, both declared above the catch-all:
   unconstructable: `class` is not a valid provider slug (`Fqid.register_fqid` rejects
   it), so no real register-group URL can share this shape. Classification-root browse
   rows link to this route (via `classGroupHref`) and render through a dedicated
-  `ClassificationGroupView` component.
+  `ConceptGroupView` instance with `register=null` so register groups and classification
+  groups share the same member-selector + relation-graph surface.
 
 The `group` literal **is** reserved in the **provider slot** of the FQID grammar
 (`RESERVED_GROUP_SLUG`, see reg_meta/DESIGN.md → FQID grammar): because the
@@ -891,19 +892,19 @@ not through `SubjectView`. The three **leaf** kinds each delegate to a per-kind 
 that fills the shell: `binding` → `BindingLeafView`, `classification` →
 `ClassificationLeafView`, and the `concept-group` (served by the fixed
 `/catalog/group/{provider}/{register}/{key}` route, see Catalog router structure above)
-→ `ConceptGroupView`. The classification-umbrella group (served by the fixed
-`/catalog/group/class/{key}` route) is a fourth non-catch-all kind
-(`classification-group`) → `ClassificationGroupView`, its sibling.
+→ `ConceptGroupView`. The classification-umbrella route (`/catalog/group/class/{key}`)
+remains a distinct router shape (`classification-group`) but also renders through
+`ConceptGroupView` with `register=null`, avoiding a second group-subject implementation.
 
 Per-kind mapping into the five sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)                                       | Concept group (`ConceptGroupView`)                           |
-  | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                                               | Technical details only (key / facets / source)               |
-  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via the succession panel)                                    | member selector (slice) + `PeriodPicker` (availability lens) |
-  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                                         | —                                                            |
-  | relationships | `DimensionsPanel` + `LineagePanels`                                                                      | `ClassificationDimensionsPanel` + `ClassificationLineagePanels` (edition chain) | — (members live in the picker)                               |
-  | docs          | `DocMentionsPanel`                                                                                       | —                                                                               | —                                                            |
+  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)        | Concept group (`ConceptGroupView`)                           |
+  | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                | Technical details only (key / facets / source)               |
+  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via the succession panel)     | member selector (slice) + `PeriodPicker` (availability lens) |
+  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)          | —                                                            |
+  | relationships | relation graph + `DimensionsPanel` / lineage warnings                                                    | relation graph + `ClassificationDimensionsPanel` | relation graph                                               |
+  | docs          | `DocMentionsPanel`                                                                                       | —                                                | —                                                            |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
@@ -1010,25 +1011,15 @@ therefore renders slug-only edition nodes inside a version graph (`sun1996` →
 rather than validity intervals. Fan-out roots render the available edition nodes without
 inventing branch edges.
 
-The production data contract should be a **backend history-graph payload**, not
-client-side stitching over the existing subject payloads. The #667 frontend prototype
-can stitch enough to render the viewed variable, group members, and classification
-edition chains from today's `succession_chain`, `related_to`, `lineage`, `/dimensions`,
-and `edition_chain` shapes, but the gaps are load-bearing:
-
-- predecessor/successor variables do not include their delivery states or column windows
-  in the viewed binding payload;
-- `related_to` carries no validity window;
-- lineage names source states but not their source-state column/value-set shape;
-- classification fan-out chains arrive as flattened closures, so the client cannot
-  recover real branch edges or incoming windows without re-querying succession data;
-- group mode has members + coverage only, so all-member succession/related/lineage would
-  require N+1 leaf fetches and inconsistent failure domains.
-
-The backend graph payload should therefore carry `{nodes, edges, window}` directly:
-nodes = entity nodes plus variable `column_slices`; edges = succession / related /
-lineage / group-member with validity windows and optional column relation metadata. The
-frontend should render that payload without re-deriving graph semantics.
+The production data contract is the reg_meta-owned `RelationshipGraph` payload (#761),
+not client-side stitching over subject payloads. Subject pages call `/graph` for the
+current FQID or group route; an empty `{nodes: []}` is the server-owned "do not render"
+signal. Variable nodes carry their full `GraphState` history and
+`representation_run_id`s, which the renderer groups into in-node cells; classification
+nodes carry point `version_year`s. The only graph edge kinds are `succession` and
+`related`; lineage, same_as, and group membership are metadata/affordances rather than
+client-invented graph edges. Group pages and member pages consume the same graph
+payload, with member pages differing only by `focus_id`.
 
 The graph primitive should start as **hand-built SVG + scoped CSS**, not a graph
 library. The variable/group view is a deterministic time-axis graph; the classification

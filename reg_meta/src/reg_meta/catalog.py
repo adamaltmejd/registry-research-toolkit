@@ -2385,18 +2385,28 @@ class Catalog:
         ]
 
     def graph_for_fqid(self, fqid: str | Fqid) -> RelationshipGraph:
-        """The relationship-graph contract for a variable subject (#761): one node
-        per variable with its representation-run state history + succession/related
-        edges + same_as/group metadata, unioned over the variable's concept-group
-        members (Fork B — a member page renders the same group union as the group
-        page). Resolves `same_as` and raises `not_a_binding_fqid` / `fqid_not_found`
-        like the sibling edge accessors (the webapp's 4xx/301 path). The topology +
-        domain predicates live in `graph.py`; this is the thin entry point."""
+        """The relationship-graph contract for an addressable variable or
+        classification subject (#761): variables render their group-aware variable
+        union; classifications render their umbrella-aware edition union. Resolves
+        `same_as`; the topology + domain predicates live in `graph.py`; this is
+        the thin entry point."""
         from . import graph  # local: graph.py imports catalog (one-directional)
 
-        parsed = self._parse_binding(fqid)
-        resolved = self._resolve_binding(parsed)
-        return graph.graph_for_fqid(self, resolved)
+        resolved = self.resolve(fqid)
+        if isinstance(resolved, ResolvedVariable):
+            return graph.graph_for_fqid(self, resolved)
+        if isinstance(resolved, ResolvedClassification):
+            return graph.graph_for_classification_fqid(self, resolved)
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="graph_subject_not_supported",
+            error_class="query",
+            message=(
+                "graph is only available for variables and classifications: "
+                f"{resolved.fqid!s}"
+            ),
+            remediation="Pass a variable-binding FQID or classification FQID.",
+        )
 
     def graph_for_group(
         self, provider_slug: str, register_slug: str, key: str

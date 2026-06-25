@@ -1,10 +1,11 @@
 <script lang="ts">
 import {
-  type ClassificationNodeData,
-  type ConceptGroupNodeMember,
-  getCatalogNode,
+  type ClassificationGroupNodeData,
+  type ConceptGroupNodeData,
+  getClassificationGroup,
+  getClassificationGroupGraph,
   getConceptGroup,
-  isCatalogNode,
+  getConceptGroupGraph,
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
@@ -18,10 +19,6 @@ import {
   YEARLESS_VALID_FROM,
 } from "./catalog";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
-import {
-  historyGraphFromClassificationGroup,
-  historyGraphFromGroup,
-} from "./history_graph";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
   type Coverage,
@@ -68,47 +65,37 @@ let {
 // doesn't remount this view. Read it reactively and pass it to the fetch (the
 // backend echoes it on the node only when it names a real member).
 const memberHint = $derived(router.getQueryParam("member"));
-const resource = asyncResource(() =>
-  getConceptGroup(provider, register, key, memberHint ?? undefined),
+const resource = asyncResource<
+  ConceptGroupNodeData | ClassificationGroupNodeData
+>(() =>
+  register === null
+    ? getClassificationGroup(key)
+    : getConceptGroup(provider, register, key, memberHint ?? undefined),
 );
 const node = $derived(resource.data);
 const isClassificationGroup = $derived(register === null);
-const classificationGraphMembers = asyncResource<ClassificationNodeData[]>(
-  async (signal) => {
-    if (!node || !isClassificationGroup) {
-      return [];
-    }
-    return Promise.all(
-      node.members.map(async (member) => {
-        const resolved = await getCatalogNode(member.fqid, undefined, {
-          signal,
-        });
-        if (isCatalogNode(resolved) && resolved.kind === "classification") {
-          return resolved;
-        }
-        throw new Error(`Expected classification node for ${member.fqid}`);
-      }),
-    );
-  },
+const graphResource = asyncResource(() =>
+  register === null
+    ? getClassificationGroupGraph(key)
+    : getConceptGroupGraph(provider, register, key),
 );
-const historyGraph = $derived(
-  node
-    ? isClassificationGroup
-      ? classificationGraphMembers.data
-        ? historyGraphFromClassificationGroup(
-            node,
-            classificationGraphMembers.data,
-          )
-        : null
-      : historyGraphFromGroup(node)
-    : null,
-);
+const historyGraph = $derived(graphResource.data);
 
 // The parent the group lives under — a register for variable groups, the
 // classification root for classification groups.
 const parentFqid = $derived(
   register === null ? "class" : `${provider}/${register}`,
 );
+
+type GroupNodeMember =
+  | ConceptGroupNodeData["members"][number]
+  | ClassificationGroupNodeData["members"][number];
+
+function isVariableGroupNode(
+  value: ClassificationGroupNodeData | ConceptGroupNodeData | null | undefined,
+): value is ConceptGroupNodeData {
+  return value?.kind === "concept-group";
+}
 
 function leafSlug(fqid: string): string {
   return fqid.split("/").at(-1) ?? fqid;
@@ -119,8 +106,8 @@ function leafSlug(fqid: string): string {
  * sides). Delegates to `formatWindow` so the display matches the rest of the
  * catalog (year-collapsed bounds; the open-ended sentinel renders "since <year>",
  * never the raw 9999). */
-function coverageText(member: ConceptGroupNodeMember): string {
-  const cov = member.coverage;
+function coverageText(member: GroupNodeMember): string {
+  const cov = "coverage" in member ? member.coverage : null;
   if (!cov) {
     return "";
   }
@@ -200,7 +187,9 @@ const grains: PeriodGrain[] = ["year"];
 // the end when any member is still delivered) — so the slider shows where the
 // group as a whole has data.
 const unionCoverage = $derived<Coverage | null>(
-  node ? memberCoverageUnion(node.members.map((m) => m.coverage)) : null,
+  isVariableGroupNode(node)
+    ? memberCoverageUnion(node.members.map((m) => m.coverage))
+    : null,
 );
 
 /** Write `?period` to the group URL (preserving the pathname + any `?member=`
@@ -244,8 +233,8 @@ const ceilingYear = $derived(vintageYear ?? new Date().getFullYear());
 /** A member's coverage as a year-grain `Coverage` (open-ended end → null = "still
  * delivered"), or null when the member is stateless — reused for the per-member
  * availability gap. */
-function memberCoverage(member: ConceptGroupNodeMember): Coverage | null {
-  return memberCoverageUnion([member.coverage]);
+function memberCoverage(member: GroupNodeMember): Coverage | null {
+  return memberCoverageUnion(["coverage" in member ? member.coverage : null]);
 }
 
 /** Whether a member is NOT fully delivered across the active window — the
@@ -254,7 +243,7 @@ function memberCoverage(member: ConceptGroupNodeMember): Coverage | null {
  * coverage end, where an open-ended end is first projected to the catalog
  * vintage). False when no window is active, or the member is stateless (nothing
  * to gap against — don't grey a member whose coverage is simply unknown). */
-function notDelivered(member: ConceptGroupNodeMember): boolean {
+function notDelivered(member: GroupNodeMember): boolean {
   if (activeWindow === null) {
     return false;
   }
@@ -275,11 +264,15 @@ function notDelivered(member: ConceptGroupNodeMember): boolean {
 
 /** The "not delivered <window>" note for a greyed member, or "" when delivered /
  * no active window. */
-function notDeliveredNote(member: ConceptGroupNodeMember): string {
+function notDeliveredNote(member: GroupNodeMember): string {
   if (!notDelivered(member) || activeWindow === null) {
     return "";
   }
   return `not delivered ${formatWindow(`${activeWindow.from}-01-01`, `${activeWindow.to}-12-31`)}`;
+}
+
+function isFocusedMember(slug: string): boolean {
+  return isVariableGroupNode(node) && node.member === slug;
 }
 </script>
 
@@ -328,9 +321,9 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   <!-- One snippet per member, used by every selector shape. Renders the member as
        a link to its leaf FQID, with the `?member=` focus accent, per-member
        coverage, and the availability-lens greying + note. -->
-  {#snippet memberLink(member: ConceptGroupNodeMember, label: string)}
+  {#snippet memberLink(member: GroupNodeMember, label: string)}
     {@const slug = leafSlug(member.fqid)}
-    {@const focused = node?.member === slug}
+    {@const focused = isFocusedMember(slug)}
     {@const muted = notDelivered(member)}
     <a
       href={memberHref(member.fqid)}
@@ -445,10 +438,10 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   {/snippet}
 
   {#snippet relationships()}
-    {#if isClassificationGroup && classificationGraphMembers.loading}
-      <p class="muted" aria-busy="true">Loading member graph…</p>
-    {:else if isClassificationGroup && classificationGraphMembers.error}
-      <p class="error" role="alert">{classificationGraphMembers.error}</p>
+    {#if graphResource.loading}
+      <p class="muted" aria-busy="true">Loading relation graph…</p>
+    {:else if graphResource.error}
+      <p class="error" role="alert">{graphResource.error}</p>
     {:else if historyGraph}
       <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
     {/if}

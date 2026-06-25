@@ -447,17 +447,20 @@ export function getBindingDimensions(
   );
 }
 
-/** The relationship graph for a binding's variable (#761) — the typed graph the
- * renderer (#678) draws. An empty graph (`nodes: []`) means "don't render". A
- * dead/renamed binding 301s server-side to its terminal successor's `/graph`. */
-export function getBindingGraph(fqidPath: string): Promise<RelationshipGraph> {
+/** The relationship graph for a variable or classification FQID (#761) — the
+ * typed graph the renderer (#678) draws. An empty graph (`nodes: []`) means
+ * "don't render". A dead/renamed binding 301s server-side to its terminal
+ * successor's `/graph`. */
+export function getCatalogGraph(fqidPath: string): Promise<RelationshipGraph> {
   return apiGet<RelationshipGraph>(`/catalog/${encodeFqid(fqidPath)}/graph`);
 }
+
+export const getBindingGraph = getCatalogGraph;
 
 /** The relationship graph for a register concept group SUBJECT (#761) — the
  * union of its member variables' graphs (`focus_id` null). A 404 (unknown key /
  * register) surfaces as an `ApiError`. The group page (#757) renders this; a
- * member page renders the SAME union via `getBindingGraph` with the member
+ * member page renders the SAME union via `getCatalogGraph` with the member
  * highlighted (Fork B). */
 export function getConceptGroupGraph(
   provider: string,

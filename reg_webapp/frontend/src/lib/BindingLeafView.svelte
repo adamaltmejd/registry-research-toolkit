@@ -3,8 +3,8 @@ import {
   type BindingNodeData,
   type CatalogNode,
   getBindingDimensions,
+  getCatalogGraph,
   getCatalogNode,
-  getConceptGroup,
   isCatalogNode,
   type StatesResponse,
 } from "./api";
@@ -24,10 +24,6 @@ import {
 import DimensionsPanel from "./DimensionsPanel.svelte";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
-import {
-  historyGraphFromBinding,
-  historyGraphFromGroup,
-} from "./history_graph";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
 import { regMetaReleaseTag } from "./project_data";
@@ -204,20 +200,10 @@ const dimReady = $derived(!dimLoading && !dimError);
 // empty/absent and `lookupFqid === node.fqid` (unchanged behavior).
 const lookupFqid = $derived(node.via_same_as?.at(-1) ?? node.fqid);
 
-const groupGraphResource = asyncResource(() =>
-  node.group
-    ? getConceptGroup(node.group.provider, node.group.register, node.group.key)
-    : Promise.resolve(null),
-);
-const historyGraph = $derived(
-  groupGraphResource.data
-    ? historyGraphFromGroup(groupGraphResource.data, lookupFqid)
-    : historyGraphFromBinding(node, dimGroups),
-);
-const graphLoading = $derived(
-  Boolean(node.group && groupGraphResource.loading),
-);
-const graphError = $derived(node.group ? groupGraphResource.error : null);
+const graphResource = asyncResource(() => getCatalogGraph(fqidPath));
+const historyGraph = $derived(graphResource.data);
+const graphLoading = $derived(graphResource.loading);
+const graphError = $derived(graphResource.error);
 
 // The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — this
 // member's facet labels across its dimension groups (`kind: "facets"`), the
@@ -714,7 +700,7 @@ const repSegment = $derived(
     <p class="muted" aria-busy="true">Loading group graph…</p>
   {:else if graphError}
     <p class="error" role="alert">{graphError}</p>
-  {:else}
+  {:else if historyGraph}
     <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
   {/if}
 
