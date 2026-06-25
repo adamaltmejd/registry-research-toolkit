@@ -269,6 +269,13 @@ class _GraphBuilder:
         self._catalog = catalog
         self._nodes: dict[str, GraphNode] = {}
         self._edges: dict[str, GraphEdge] = {}
+        # Node-build dedup and related-expansion are decoupled: a node first reached
+        # as another node's one-hop related neighbor (follow_related=False) builds the
+        # node but does NOT expand its related edges, so a later focus/group-member
+        # arrival (follow_related=True) must still be able to COMPLETE that expansion
+        # on the already-built node — otherwise a member's one-hop neighbors would be
+        # dropped purely by traversal order (#761).
+        self._related_expanded: set[str] = set()
 
     def add_variable(self, fqid: Fqid, *, follow_related: bool = True) -> str | None:
         """Build the variable node for ``fqid`` (resolving same_as to canonical) and
@@ -296,11 +303,17 @@ class _GraphBuilder:
         if not isinstance(resolved, ResolvedVariable):
             return None
         node_id = str(resolved.canonical_fqid)
-        if node_id in self._nodes:
-            return node_id
-        self._nodes[node_id] = self._variable_node(resolved)
-        self._add_succession(resolved.canonical_fqid)
-        if follow_related:
+        # Build the node (+ its succession chain) exactly once.
+        if node_id not in self._nodes:
+            self._nodes[node_id] = self._variable_node(resolved)
+            self._add_succession(resolved.canonical_fqid)
+        # Related expansion is gated separately: a follow_related=True arrival
+        # completes the one-hop neighbor walk even on an already-built node, but
+        # only once (no transitive closure — neighbors are added with
+        # follow_related=False and stay un-expanded so a later True arrival can
+        # still expand them).
+        if follow_related and node_id not in self._related_expanded:
+            self._related_expanded.add(node_id)
             self._add_related(resolved.canonical_fqid)
         return node_id
 

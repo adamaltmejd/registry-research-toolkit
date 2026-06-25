@@ -424,6 +424,52 @@ class TestEdges:
         related = {(e.source, e.target) for e in g.edges if e.kind == "related"}
         assert related == {("scb/lisa/btwo", "scb/lisa/kon")}
 
+    def test_member_pre_seeded_as_neighbor_still_expands_related(self) -> None:
+        # Order-dependent dropped-edge regression: group {A, B} with A related B and
+        # B related C (C outside the group). graph_for_fqid(A) reaches B FIRST as A's
+        # one-hop related neighbor (follow_related=False, B built but un-expanded),
+        # THEN as a group member (follow_related=True). The member arrival must
+        # COMPLETE B's related expansion so its one-hop neighbor C appears — B is a
+        # member, so its one-hop neighbor C is in the union regardless of which order
+        # B/its neighbors are reached. Before the fix the unconditional node-dedup
+        # early-out dropped C.
+        conn = build_slugged_db()  # A = kon
+        for vid, slug, col in ((45, "btwo", "BTwo"), (46, "cthree", "CThree")):
+            add_variable(conn, register_id=1, var_id=vid, name=slug, slug=slug)
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                delivery_column_name=col,
+            )
+        _seed_related(conn, ("scb", "lisa", "kon"), ("scb", "lisa", "btwo"))
+        _seed_related(conn, ("scb", "lisa", "btwo"), ("scb", "lisa", "cthree"))
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "btwo"],
+        )
+        catalog = Catalog(conn)
+
+        g = catalog.graph_for_fqid(_KON)
+        ids = {n.id for n in g.nodes}
+        # C is B's one-hop neighbor and B is a member, so C is in the union.
+        assert ids >= {"scb/lisa/kon", "scb/lisa/btwo", "scb/lisa/cthree"}
+        related = {(e.source, e.target) for e in g.edges if e.kind == "related"}
+        assert ("scb/lisa/btwo", "scb/lisa/cthree") in related
+
+        # Same union via the group accessor, independent of member traversal order.
+        gg = catalog.graph_for_group("scb", "lisa", "demog")
+        assert gg is not None
+        assert {n.id for n in gg.nodes} >= {
+            "scb/lisa/kon",
+            "scb/lisa/btwo",
+            "scb/lisa/cthree",
+        }
+
     def test_alias_entry_keys_on_canonical_node(self) -> None:
         # A pure-alias FQID (no live variable row) resolving via same_as to a
         # DIFFERENT canonical variable must mint exactly ONE node for that variable,
