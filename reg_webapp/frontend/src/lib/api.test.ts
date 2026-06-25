@@ -3,9 +3,11 @@ import {
   ApiError,
   apiGet,
   type BindingNodeData,
+  classificationGroupPath,
   docSearch,
   getBindingLineageWarnings,
   getCatalogNode,
+  getClassificationGroup,
   getConceptGroup,
   getDoc,
   getDocsForVariable,
@@ -145,6 +147,24 @@ describe("getConceptGroup", () => {
     expect(seen).toBe(
       "/api/catalog/group/scb/ls%C3%B6n/a%2Fb?member=member%20x%2Fy",
     );
+  });
+});
+
+describe("classificationGroupPath / getClassificationGroup (#756)", () => {
+  it("builds the fixed `class` route with the key encoded", () => {
+    // The path is `/api`-less (like conceptGroupPath) — `apiGet` prepends `/api`.
+    expect(classificationGroupPath("sun")).toBe("/catalog/group/class/sun");
+    expect(classificationGroupPath("a/b")).toBe("/catalog/group/class/a%2Fb");
+  });
+
+  it("GETs the classification-group route — literal `class`, no provider/register", async () => {
+    let seen = "";
+    stubFetch(async (url) => {
+      seen = url;
+      return { ok: true, status: 200, json: async () => ({}) };
+    });
+    await getClassificationGroup("sun");
+    expect(seen).toBe("/api/catalog/group/class/sun");
   });
 });
 

@@ -73,6 +73,7 @@ from reg_webapp.models import (
     BindingChild,
     BindingNode,
     CatalogNode,
+    ClassificationGroupNode,
     ClassificationNode,
     ClassificationRootNode,
     ClassificationRootResponse,
@@ -337,6 +338,21 @@ def _concept_group_node(
         axes=list(group.axes),
         members=members,
         member=member_hint,
+    )
+
+
+def _classification_group_node(group) -> ClassificationGroupNode:
+    """Map a reg_meta `ConceptGroupSummary` (a classification umbrella, #756) onto
+    its group SUBJECT node. The classification SIBLING of `_concept_group_node`,
+    but simpler: classification members carry NO provider/register/coverage, so the
+    members (reg_meta's frozen browse `ConceptGroupMember` — fqid + name + facets)
+    map straight through with nothing zipped on."""
+    return ClassificationGroupNode(
+        key=group.key,
+        label=group.label,
+        source=group.source,
+        axes=list(group.axes),
+        members=list(group.members),
     )
 
 
@@ -605,6 +621,41 @@ def get_register_variants(
     # reg_meta's `VariantSummary` list passes straight through (#681 — the
     # composite panel keys are tuples that serialize as JSON arrays directly).
     return VariantsResponse(register=register_fqid, variants=variants)
+
+
+# The classification-group SUBJECT route (#756) — the classification sibling of
+# the register-scoped `get_concept_group` below. Declared IMMEDIATELY ABOVE it (and
+# thus above the greedy catch-all) so the LITERAL `class` segment is matched before
+# the register route's `{provider}` param could capture it: `/catalog/group/class/sun`
+# resolves here, NOT as a register group with provider=`class`. The `class` literal
+# is fixed in the path (no provider/register to slug-validate), and `key` is the
+# group's derivation key (NOT slug-validated — an unknown key is a clean 404).
+@router.get("/catalog/group/class/{key:path}", response_model=ClassificationGroupNode)
+def get_classification_group(request: Request, key: str) -> ClassificationGroupNode:
+    """The classification umbrella group addressed by `key` (#756, e.g. the SUN
+    umbrella `sun`) — a browsable subject (all members selected), mirroring the
+    register-scoped `get_concept_group` but for catalog-global classification
+    umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
+    classification group has that key.
+
+    By-key resolution FILTERS `Catalog.list_classification_groups()` in the webapp
+    rather than adding a reg_meta `classification_group(key)` accessor: the curated
+    umbrella list is tiny + global (a handful of groups), the issue scopes this to
+    reg_webapp, and a new reg_meta accessor would force a query-side reg_meta
+    release for a trivial filter. `list_classification_groups()` is already the
+    reg_meta read surface the webapp consumes here — it's what
+    `_classification_root_response` reads for the classification-root's `groups`.
+
+    No provider/register/key is slug-validated: `class` is a fixed literal in the
+    path, and `key` is a derivation key (not a slug). So there is no
+    `Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)
+    — just open the connection (mirroring the register route's per-request model)
+    and resolve."""
+    with _catalog_conn(request) as conn:
+        for group in Catalog(conn).list_classification_groups():
+            if group.key == key:
+                return _classification_group_node(group)
+    raise HTTPException(status_code=404, detail=f"no classification group {key!r}")
 
 
 # The concept-group SUBJECT route (#617). A FIXED 4-seg shape with a literal

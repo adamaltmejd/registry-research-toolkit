@@ -24,6 +24,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/group/class/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Classification Group
+         * @description The classification umbrella group addressed by `key` (#756, e.g. the SUN
+         *     umbrella `sun`) — a browsable subject (all members selected), mirroring the
+         *     register-scoped `get_concept_group` but for catalog-global classification
+         *     umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
+         *     classification group has that key.
+         *
+         *     By-key resolution FILTERS `Catalog.list_classification_groups()` in the webapp
+         *     rather than adding a reg_meta `classification_group(key)` accessor: the curated
+         *     umbrella list is tiny + global (a handful of groups), the issue scopes this to
+         *     reg_webapp, and a new reg_meta accessor would force a query-side reg_meta
+         *     release for a trivial filter. `list_classification_groups()` is already the
+         *     reg_meta read surface the webapp consumes here — it's what
+         *     `_classification_root_response` reads for the classification-root's `groups`.
+         *
+         *     No provider/register/key is slug-validated: `class` is a fixed literal in the
+         *     path, and `key` is a derivation key (not a slug). So there is no
+         *     `Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)
+         *     — just open the connection (mirroring the register route's per-request model)
+         *     and resolve.
+         */
+        get: operations["get_classification_group_api_catalog_group_class__key__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/group/{provider}/{register}/{key}": {
         parameters: {
             query?: never;
@@ -707,6 +745,45 @@ export interface components {
              * @description The edition's literal slug (e.g. 'sun2000').
              */
             slug: string;
+        };
+        /**
+         * ClassificationGroupNode
+         * @description The classification umbrella group as a browsable subject (#756) — the
+         *     classification SIBLING of `ConceptGroupNode`, served only by its own fixed
+         *     route `/catalog/group/class/{key}`. Distinct from `ConceptGroupNode` because
+         *     classification members carry NO provider/register/coverage: a classification
+         *     umbrella (e.g. the SUN umbrella, key `sun`) groups version-independent
+         *     classification editions across the whole catalog (`register_id NULL`), so
+         *     there is no register scope to key on and no per-member study-window coverage
+         *     to zip — members are reg_meta's frozen browse `ConceptGroupMember` used
+         *     DIRECTLY (fqid + name + facets), NOT subclassed.
+         *
+         *     Like `ConceptGroupNode`, NOT a `CatalogNode` arm: a group is not
+         *     FQID-addressable (its members carry the real `class/<slug>` leaf FQIDs), and
+         *     it is served only by its fixed route, so the catch-all union never advertises
+         *     it. There is no `member` focus-hint field — no consumer needs one (member
+         *     highlight is #757's surface), so this stays minimal.
+         */
+        ClassificationGroupNode: {
+            /** Axes */
+            axes: string[];
+            /** Key */
+            key: string;
+            /**
+             * Kind
+             * @default classification-group
+             * @constant
+             */
+            kind: "classification-group";
+            /** Label */
+            label: string;
+            /** Members */
+            members: components["schemas"]["ConceptGroupMember"][];
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "edge" | "token" | "curated";
         };
         /**
          * ClassificationNode
@@ -2028,6 +2105,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RootResponse"];
+                };
+            };
+        };
+    };
+    get_classification_group_api_catalog_group_class__key__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassificationGroupNode"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

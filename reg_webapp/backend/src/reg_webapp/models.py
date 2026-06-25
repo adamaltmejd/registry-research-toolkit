@@ -365,13 +365,39 @@ class ConceptGroupNode(BaseModel):
     member: str | None = None
 
 
+class ClassificationGroupNode(BaseModel):
+    """The classification umbrella group as a browsable subject (#756) — the
+    classification SIBLING of `ConceptGroupNode`, served only by its own fixed
+    route `/catalog/group/class/{key}`. Distinct from `ConceptGroupNode` because
+    classification members carry NO provider/register/coverage: a classification
+    umbrella (e.g. the SUN umbrella, key `sun`) groups version-independent
+    classification editions across the whole catalog (`register_id NULL`), so
+    there is no register scope to key on and no per-member study-window coverage
+    to zip — members are reg_meta's frozen browse `ConceptGroupMember` used
+    DIRECTLY (fqid + name + facets), NOT subclassed.
+
+    Like `ConceptGroupNode`, NOT a `CatalogNode` arm: a group is not
+    FQID-addressable (its members carry the real `class/<slug>` leaf FQIDs), and
+    it is served only by its fixed route, so the catch-all union never advertises
+    it. There is no `member` focus-hint field — no consumer needs one (member
+    highlight is #757's surface), so this stays minimal."""
+
+    kind: Literal["classification-group"] = "classification-group"
+    key: str
+    label: str
+    source: Literal["edge", "token", "curated"]
+    axes: list[str]
+    members: list[ConceptGroupMember]
+
+
 # The catch-all `/api/catalog/{fqid:path}` returns one of these, discriminated
 # by `kind` so the codegen'd TS is a tagged union (A5.3). A binding leaf is a
 # `BindingNode` (full record embedded); a classification leaf a
-# `ClassificationNode`. `ConceptGroupNode` is deliberately NOT an arm: the group
-# SUBJECT (#617) is served ONLY by the fixed-shape `/catalog/group/...` route
-# (which declares `response_model=ConceptGroupNode` directly), never by the
-# catch-all — so this union advertises exactly the kinds the catch-all can return.
+# `ClassificationNode`. `ConceptGroupNode` / `ClassificationGroupNode` are
+# deliberately NOT arms: the group SUBJECTS (#617/#756) are served ONLY by their
+# fixed-shape `/catalog/group/...` routes (which declare their own response_model
+# directly), never by the catch-all — so this union advertises exactly the kinds
+# the catch-all can return.
 CatalogNode = Annotated[
     ProviderResponse
     | RegisterResponse

@@ -29,6 +29,11 @@ export type Route =
   // route. `member` is the optional `?member=` focus hint (read off the query,
   // like `?period`, NOT the path — so refining it doesn't remount the view).
   | { name: "group"; provider: string; register: string; key: string }
+  // `class-group` is the classification-umbrella SUBJECT page (#756):
+  // `/catalog/group/class/<key>`. The classification sibling of `group` — a
+  // classification umbrella (e.g. the SUN umbrella, key `sun`) is catalog-global
+  // (no provider/register), so it carries only the `key`.
+  | { name: "class-group"; key: string }
   | { name: "project" }
   | { name: "search" }
   // `doc` is the minimal documentation viewer (#394); `identifier` is the doc
@@ -91,6 +96,14 @@ export function parseRoute(pathname: string): Route {
       return { name: "not-found", path };
     }
     const segs = segments as string[];
+    // The classification-group SUBJECT route (#756):
+    // `/catalog/group/class/<key...>`. Checked BEFORE the register-group route
+    // below so the literal `class` segment routes here (mirrors the backend
+    // declaration order), not as a register group with provider=`class`.
+    // Classification umbrellas have no provider/register — only a `key`.
+    if (segs[0] === "group" && segs[1] === "class" && segs.length >= 3) {
+      return { name: "class-group", key: segs.slice(2).join("/") };
+    }
     // The concept-group SUBJECT route (#617):
     // `/catalog/group/<provider>/<register>/<key...>` (`group` prefix). It
     // mirrors the backend's `{key:path}` route, distinct from an FQID path — a

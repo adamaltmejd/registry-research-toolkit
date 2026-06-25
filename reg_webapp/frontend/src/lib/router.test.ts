@@ -92,6 +92,28 @@ describe("parseRoute", () => {
     });
   });
 
+  it("parses the classification-group SUBJECT route (#756)", () => {
+    // `/catalog/group/class/<key...>` is the classification-umbrella subject —
+    // the literal `class` segment routes here (NOT a register group with
+    // provider=`class`), and it carries only the key (no provider/register).
+    expect(parseRoute("/catalog/group/class/sun")).toEqual({
+      name: "class-group",
+      key: "sun",
+    });
+  });
+
+  it("still parses a register-group path as the `group` route (#756 ordering)", () => {
+    // The class-group check is `group/class/...` specifically — a normal
+    // register group (`group/<provider>/<register>/<key>`) with a non-`class`
+    // provider must still resolve to the register `group` route, unaffected.
+    expect(parseRoute("/catalog/group/scb/rams/ink")).toEqual({
+      name: "group",
+      provider: "scb",
+      register: "rams",
+      key: "ink",
+    });
+  });
+
   it("parses the /project authoring route (A5.3c)", () => {
     expect(parseRoute("/project")).toEqual({ name: "project" });
     expect(parseRoute("/project/")).toEqual({ name: "project" }); // trailing slash
