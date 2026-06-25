@@ -40,6 +40,14 @@ it **backgrounded** (the default wait outlasts a 10-min foreground command cap),
 the PR goes ready and again after each `@codex review` on a new push. Pass `--once` for a
 single non-blocking snapshot.
 
+The full ceiling is the wait for a *verdict*; the wait for Codex to even *start* is
+short-circuited. If no 👀/verdict appears within `--engage-grace-sec` (default 90 s), the
+poll returns early with `no_engagement: true` + a `recommendation` to post `@codex review`
+— its auto-review fires a 👀 within ~a minute when it triggers at all, so a persistent
+`none` past the grace means it didn't fire (flaky open/ready trigger or rate-limit) and
+blocking the whole ceiling on a review that never began is wasted. Once a 👀 lands the grace
+no longer applies.
+
 Exit code answers only "is the window settled?": 0 settled (clean | findings | exhausted),
 1 not settled (reviewing | none — including a poll that hit the ceiling). 2 is a tool error
 (gh failed, or bad args). The agent reads the JSON `signal`/`detail`/`messages` for what to
@@ -345,6 +353,26 @@ def evaluate(owner: str, name: str, pr: int, bot: str = DEFAULT_BOT) -> dict[str
     }
 
 
+def should_bail_no_engagement(
+    signal: str, engaged: bool, elapsed_sec: float, grace_sec: float
+) -> bool:
+    """True when the bot has shown NO sign of starting — never a 👀 nor any verdict — past
+    the short `grace_sec` start window.
+
+    There are two distinct waits hiding behind one ceiling: waiting for the bot to *start*
+    (it posts a 👀 within ~a minute when its auto-review triggers at all) and waiting for
+    it to *finish* (the verdict, which legitimately takes many minutes). Only the second
+    deserves the long `--timeout-min`. A persistent `none` past the grace means the
+    auto-review almost certainly didn't fire — a flaky open/ready webhook or rate-limiting —
+    so blocking the full ceiling on a review that never began is wasted time. Bail and let
+    the caller post `@codex review`. Once a 👀 lands (`engaged` latches True) this never
+    fires again — the long wait is now for the verdict. `grace_sec <= 0` disables the bail.
+    """
+    return (
+        grace_sec > 0 and signal == "none" and not engaged and elapsed_sec >= grace_sec
+    )
+
+
 def poll(
     owner: str,
     name: str,
@@ -353,6 +381,7 @@ def poll(
     bot: str,
     timeout_min: float,
     interval_sec: float,
+    engage_grace_sec: float = 90.0,
 ) -> dict[str, Any]:
     """Re-evaluate every `interval_sec` until the window settles or `timeout_min` elapses.
 
@@ -360,13 +389,41 @@ def poll(
     timed poll, not a push subscription. A timeout is not a failure: AGENTS.md treats
     absence at the ceiling as "not a blocker"; the result carries `timed_out: true` and the
     caller reads the (likely `reviewing`/`none`) signal and proceeds.
+
+    The full ceiling is for the *verdict* wait. The *start* wait is short-circuited by
+    `engage_grace_sec`: if the bot never engages (no 👀, no verdict) within the grace, the
+    poll returns early with `no_engagement: true` + a `recommendation` to post
+    `@codex review`, instead of blocking the whole ceiling on an auto-review that didn't
+    fire (see `should_bail_no_engagement`).
     """
     interval_sec = max(1.0, interval_sec)  # floor: never busy-loop hammering the gh API
-    deadline = time.monotonic() + timeout_min * 60
+    start = time.monotonic()
+    deadline = start + timeout_min * 60
+    engaged = (
+        False  # latches once a 👀/verdict is seen — then the grace no longer applies
+    )
     while True:
         result = evaluate(owner, name, pr, bot)
+        if result["signal"] != "none":
+            engaged = True
         if result["settled"] or time.monotonic() >= deadline:
             result["timed_out"] = not result["settled"]
+            return result
+        elapsed = time.monotonic() - start
+        if should_bail_no_engagement(
+            result["signal"], engaged, elapsed, engage_grace_sec
+        ):
+            result["timed_out"] = True
+            result["no_engagement"] = True
+            result["recommendation"] = (
+                f"No {bot} engagement (no 👀, no verdict) {elapsed:.0f}s into the poll — its "
+                "auto-review likely didn't fire (flaky open/ready trigger or rate-limit). "
+                "Post an `@codex review` comment to start it, then re-run this poller."
+            )
+            sys.stderr.write(
+                f"pr #{pr}: no engagement after {elapsed:.0f}s — bailing the start wait; "
+                "post `@codex review`\n"
+            )
             return result
         remaining = deadline - time.monotonic()
         sys.stderr.write(
@@ -403,6 +460,14 @@ def main(argv: list[str] | None = None) -> int:
         help="poll interval in seconds (default 30)",
     )
     ap.add_argument(
+        "--engage-grace-sec",
+        type=float,
+        default=90.0,
+        help="bail the START wait after this many seconds with no bot engagement (no 👀 / "
+        "verdict) and recommend `@codex review` (default 90). Once a 👀 lands, the full "
+        "--timeout-min applies for the verdict. 0 disables the early bail.",
+    )
+    ap.add_argument(
         "--bot",
         default=DEFAULT_BOT,
         help=f"case-insensitive reviewer-bot login substring (default {DEFAULT_BOT!r})",
@@ -420,6 +485,7 @@ def main(argv: list[str] | None = None) -> int:
             bot=args.bot,
             timeout_min=args.timeout_min,
             interval_sec=args.interval,
+            engage_grace_sec=args.engage_grace_sec,
         )
 
     print(json.dumps(result, indent=2))
