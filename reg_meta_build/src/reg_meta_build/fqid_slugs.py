@@ -1956,7 +1956,13 @@ def populate_variable_slugs(
     *,
     incremental: bool = False,
 ) -> dict[str, int]:
-    """Populate register-unique `variable.slug` (see DESIGN.md → Slug curation) — always succeeds.
+    """Populate register-unique `variable.slug` (see DESIGN.md → Slug curation).
+
+    Raises `EXIT_CONFIG` on a maintainer-fixable curation error: a missing
+    pinned `<provider>.auto.toml` (`slug_freeze_auto_missing`), a stale/conflicting
+    `[variable]` override (`slug_variable_override_stale` / `_conflict`), or a NEW
+    fragile-basis slug on a `frozen` provider (`slug_freeze_new_fallback`, #786).
+    Otherwise always derives a slug (the fallback chain never leaves one unset).
 
     `fold_slugs` maps a *folded* variable's `variable_id` to its
     shared-column-stem slug base. A fold keeps one variable whose states span
