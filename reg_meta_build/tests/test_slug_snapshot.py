@@ -82,8 +82,10 @@ def test_no_removed_or_renamed_slugs(slug_dir):
 
     Per-provider (#470): only ``frozen`` zones are guarded — a rename/removal in
     a ``churning``/``curating`` zone is allowed (curators iterate pre-seal).
-    The repo ships all-churning (no ``freeze.toml``), so this actively verifies
-    that no zone advanced to ``frozen`` has been violated.
+    The 8 global providers are now ``curating`` (#759); ``frozen`` seals (#472)
+    are the remaining per-provider advance that will arm the rename-refusal gate,
+    so this actively verifies that no zone already advanced to ``frozen`` has been
+    violated.
     """
     fz = frozen_zones(load_freeze_states(slug_dir))
     previous = read_snapshot(slug_dir / SNAPSHOT_FILENAME)
@@ -199,8 +201,9 @@ def test_pinned_providers_auto_toml_git_tracked(slug_dir):
     tolerates a variable-less pinned provider (it has no variable slugs to pin and
     so writes no auto file) via ``_provider_has_variables``.
 
-    The build is git-agnostic by design, so this lives in the test layer. Today
-    the repo ships all-churning (no ``freeze.toml``), so this passes vacuously.
+    The build is git-agnostic by design, so this lives in the test layer. The 8
+    global providers are now ``curating`` (#759), so this guard actively exercises
+    the committed-tree check for those pinned zones.
     """
     missing = _untracked_pinned_autos(slug_dir)
     if missing is None:
