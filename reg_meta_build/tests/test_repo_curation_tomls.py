@@ -162,8 +162,8 @@ def test_repo_relations_parses() -> None:
         sizes[find(node)] = sizes.get(find(node), 0) + 1
     assert max(sizes.values()) <= _SAME_AS_MAX_COMPONENT
     # 11 #375 variable succession edges + 3 #579 classification split edges
-    # + 3 #770 ICD/KS disease-classification succession edges.
-    assert len(relations.replaced_by) == 17
+    # + 2 #770 ICD/KS disease-classification succession edges.
+    assert len(relations.replaced_by) == 16
     assert len(relations.related_to) == 3  # the moved #403 see-also edges
     assert all(
         e.a_provider
