@@ -2613,10 +2613,13 @@ silently re-deriving its slugs (which would defeat the pin). The per-provider
 `.gitignore` negation (or `git add -f`) is applied when a provider is actually pinned —
 this repo ships all-churning, so no `auto.toml` is committed yet. A complementary
 test-layer guard (`test_pinned_providers_auto_toml_git_tracked`) closes the window
-between commit and clean checkout: it asserts that every `curating`/`frozen` provider's
-`<provider>.auto.toml` is git-tracked (not merely present on disk), so a
-force-added-but-never-committed baseline is caught at commit/CI time rather than only
-when the build-time guard fires on a fresh checkout.
+between commit and clean checkout: it flags a `curating`/`frozen` provider's
+`<provider>.auto.toml` that is present-on-disk-but-untracked (e.g. a leftover from a
+prior `churning` build, which `is_file()` reports as present locally yet vanishes on a
+fresh checkout), catching it at commit/CI time. The absent-auto case stays the
+build-time `slug_freeze_auto_missing` guard's responsibility — it tolerates a
+variable-less pinned provider (no variable slugs to pin ⇒ no auto file written) via
+`_provider_has_variables`, so the test deliberately does not flag a missing auto file.
 
 ## Doc-DB build
 

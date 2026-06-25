@@ -150,10 +150,20 @@ def _git_tracked_filenames(directory: Path) -> set[str] | None:
 
 
 def _untracked_pinned_autos(slug_dir: Path) -> list[str] | None:
-    """The committed-auto filenames a pinned (curating/frozen) zone OWES but git
-    does not track in ``slug_dir`` — sorted. ``[]`` when nothing is pinned or
-    every pinned zone's auto file is tracked; ``None`` when ``slug_dir`` is not
-    inside a git work tree (caller skips rather than false-fails)."""
+    """The ``<provider>.auto.toml`` filenames a pinned (curating/frozen) zone has
+    PRESENT on disk but git does not track in ``slug_dir`` — sorted.
+
+    Scoped to present-but-untracked on purpose: that is the case the build-time
+    ``slug_freeze_auto_missing`` guard CANNOT see (``is_file()`` is true locally,
+    so the file looks fine to the build, yet it vanishes on a clean checkout). A
+    pinned zone with NO auto file on disk is deliberately NOT flagged here — the
+    absent case is the build guard's job, and it tolerates a variable-less pinned
+    provider (gated on ``_provider_has_variables``, which has no variable slugs to
+    pin and so writes no auto file).
+
+    ``[]`` when nothing is pinned or every present pinned auto file is tracked;
+    ``None`` when ``slug_dir`` is not inside a git work tree (caller skips rather
+    than false-fails)."""
     pinned = pinned_zones(load_freeze_states(slug_dir))
     if not pinned:
         return []
@@ -161,17 +171,24 @@ def _untracked_pinned_autos(slug_dir: Path) -> list[str] | None:
     if tracked is None:
         return None
     return sorted(
-        name for zone in pinned if (name := f"{zone}{AUTO_FILE_SUFFIX}") not in tracked
+        name
+        for zone in pinned
+        if (name := f"{zone}{AUTO_FILE_SUFFIX}") not in tracked
+        and (slug_dir / name).is_file()
     )
 
 
 def test_pinned_providers_auto_toml_git_tracked(slug_dir):
     """A provider pinned ``curating``/``frozen`` reads its slugs back from a
-    committed ``<provider>.auto.toml``. That file is gitignored, so if the
-    maintainer set the state without force-adding (or negating the ignore) the
-    file, a present-but-untracked artifact from a prior ``churning`` build passes
-    here yet vanishes on a clean checkout — where the build-time
-    ``slug_freeze_auto_missing`` guard fires. Catch it git-side instead.
+    committed ``<provider>.auto.toml``. That file is gitignored, so a
+    present-but-untracked artifact from a prior ``churning`` build (``is_file()``
+    true locally) passes the build-time check yet vanishes on a clean checkout.
+    This guard catches exactly that present-but-untracked window git-side.
+
+    The ABSENT-auto case is deliberately out of scope here: it stays the
+    build-time ``slug_freeze_auto_missing`` guard's responsibility, which
+    tolerates a variable-less pinned provider (it has no variable slugs to pin and
+    so writes no auto file) via ``_provider_has_variables``.
 
     The build is git-agnostic by design, so this lives in the test layer. Today
     the repo ships all-churning (no ``freeze.toml``), so this passes vacuously.
@@ -234,6 +251,26 @@ def test_untracked_pinned_auto_detected(tmp_path):
         capture_output=True,
         check=True,
         env=_git_env(),
+    )
+    assert _untracked_pinned_autos(tmp_path) == []
+
+
+def test_variable_less_pinned_provider_not_flagged(tmp_path):
+    """A pinned provider with NO ``<provider>.auto.toml`` on disk is NOT flagged —
+    the variable-less case. ``write_auto_toml`` only writes an auto file when there
+    are variable auto slugs, so a pinned provider with no variable rows legitimately
+    has none; flagging it would be STRICTER than the build-time
+    ``slug_freeze_auto_missing`` guard (gated on ``_provider_has_variables``) and
+    would demand a synthetic empty auto file. The absent case is the build guard's
+    job. Self-contained — does not read the repo's state."""
+    subprocess.run(
+        ["git", "init"], cwd=tmp_path, capture_output=True, check=True, env=_git_env()
+    )
+    # `foo` is pinned (curating); the provider stub makes it a known zone so
+    # load_freeze_states accepts it. No `foo.auto.toml` is written → absent case.
+    (tmp_path / "freeze.toml").write_text('foo = "curating"\n', encoding="utf-8")
+    (tmp_path / "foo.toml").write_text(
+        '[register."1"]\nslug = "foo-reg"\n', encoding="utf-8"
     )
     assert _untracked_pinned_autos(tmp_path) == []
 
