@@ -122,17 +122,20 @@ grammar (see reg_meta/DESIGN.md → FQID grammar) at build time, so a variable s
 `states` can't shadow a sub-endpoint. The validate→parse→Catalog-dispatch→Pydantic-map
 flow is factored into reusable helpers.
 
-The suffixed surface has one family declared above the catch-all: seven **binding-suffix
+The suffixed surface has one family declared above the catch-all: eight **binding-suffix
 routes** (`/states`, `/predecessors`, `/successors`, `/related`, `/lineage`,
-`/lineage_warnings`, `/dimensions`), each mapping 1:1 to a `Catalog` accessor and
-returning a thin `{binding, <list>}` envelope so the SPA codegen sees one response type
-per endpoint. Plus one **register sub-resource** `/{provider}/{register}/variants` (a
-FIXED 3-seg shape with a literal `variants` tail — explicit `{provider}`/`{register}`
-segments, NOT an `{fqid:path}` suffix). The binding-suffix routes are binding-only: a
-non-binding FQID raises reg_meta's `not_a_binding_fqid` (EXIT_USAGE) → **422** (a usage
-error, not a 500); an absent binding → 404. A register node's children include a
-`variants` reference (`VariantsRef`) so the variant browser has a stable slot in the
-discriminated union without the variant being an FQID.
+`/lineage_warnings`, `/dimensions`, `/graph`), each mapping 1:1 to a `Catalog` accessor
+and returning a thin `{binding, <list>}` envelope so the SPA codegen sees one response
+type per endpoint. (`/graph` returns a `RelationshipGraph` — no `{binding, …}` wrapper —
+so its shape differs from the others, but the declaration position and slug-reservation
+rules are identical.) Plus one **register sub-resource**
+`/{provider}/{register}/variants` (a FIXED 3-seg shape with a literal `variants` tail —
+explicit `{provider}`/`{register}` segments, NOT an `{fqid:path}` suffix). The
+binding-suffix routes are binding-only: a non-binding FQID raises reg_meta's
+`not_a_binding_fqid` (EXIT_USAGE) → **422** (a usage error, not a 500); an absent
+binding → 404. A register node's children include a `variants` reference (`VariantsRef`)
+so the variant browser has a stable slot in the discriminated union without the variant
+being an FQID.
 
 Plus two **concept-group subject routes**, both declared above the catch-all:
 
@@ -253,16 +256,16 @@ A truly-unknown slug — no successor edge, or a PROVIDER FQID — re-raises the
 
 The redirect covers all entry points into a dead binding slug (#411): the no-period
 catch-all node path, the `?period` branch (query string preserved, so `?period=2019` /
-`?variant` ride to the terminal), and all seven binding-suffix sub-endpoints (`/states`,
+`?variant` ride to the terminal), and all eight binding-suffix sub-endpoints (`/states`,
 `/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings`,
-`/dimensions`), which redirect to the **same suffix** on the terminal (e.g. a dead slug
-`/states` → terminal slug `/states`). The shared `_redirect_or_4xx` helper implements
-this policy for the `?period` branch and all sub-endpoints; the no-period node path has
-a sibling implementation at the `HTTPException` layer (keep the two in sync on any
-301→308 switch). Only a genuine `fqid_not_found` ever redirects — a usage 422 (e.g. an
-inverted `?period` range) and a build-invariant 500 are never turned into redirects. The
-301 is permanent and cache-eligible; the terminal resolution guarantees the redirect
-target stays stable under double renames (see
+`/dimensions`, `/graph`), which redirect to the **same suffix** on the terminal (e.g. a
+dead slug `/states` → terminal slug `/states`). The shared `_redirect_or_4xx` helper
+implements this policy for the `?period` branch and all sub-endpoints; the no-period
+node path has a sibling implementation at the `HTTPException` layer (keep the two in
+sync on any 301→308 switch). Only a genuine `fqid_not_found` ever redirects — a usage
+422 (e.g. an inverted `?period` range) and a build-invariant 500 are never turned into
+redirects. The 301 is permanent and cache-eligible; the terminal resolution guarantees
+the redirect target stays stable under double renames (see
 `reg_meta/DESIGN.md → resolve_terminal_successor`).
 
 A dead/renamed **classification** slug still redirects via the catch-all node path: a
@@ -554,7 +557,7 @@ prompt revalidation opportunity instead of letting the browser serve a stale cou
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
 Every read endpoint (`/api/context`, `/api/stats`, the `/api/catalog` root + catch-all,
-the 7 binding-suffix sub-endpoints) carries
+the 8 binding-suffix sub-endpoints) carries
 `ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and a per-route
 `Cache-Control` (`cache_control_for`) in three tiers: `/api/context` revalidates always
 (see below); fold- or steward-dependent reads (`/api/catalog/*`, `/api/search`, and

@@ -349,7 +349,7 @@ route and make the entity unreachable. Two constants in `fqid.py` encode the
 reservation:
 
 - `RESERVED_HTTP_SUFFIX_SLUGS` —
-  `{states, predecessors, successors, related, lineage, lineage_warnings, dimensions}`.
+  `{states, predecessors, successors, related, lineage, lineage_warnings, dimensions, graph}`.
   The binding-suffix routes (`/catalog/{fqid:path}/<suffix>`) greedy-match any FQID
   path, so each collides with a 3-segment variable leaf, a 2-segment register, and a
   classification. All three slots are therefore reserved.
