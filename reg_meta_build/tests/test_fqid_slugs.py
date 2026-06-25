@@ -1880,6 +1880,48 @@ class TestPopulateVariableSlugs:
         assert self._stored_slug(conn, 88) == "tredimensionellt-omrade"
         assert counts["curated"] == 1
 
+    def test_frozen_new_disambiguated_basis_rejected(self, tmp_path: Path) -> None:
+        # The OTHER way the gate fires (vs test_frozen_new_fallback_basis_rejected's
+        # pure last-resort arm): a NEW frozen-provider variable whose base is an
+        # otherwise CLEAN kolumnnamn but COLLIDES with an already-pinned slug, so
+        # `_uniquify` appends `-N` and the kind carries `+disambiguated`. The gate's
+        # `_is_name_fallback_derivation` is true via its `endswith("+disambiguated")`
+        # branch, not its name-fallback-class branch. The new var (kol "Kon") shares
+        # the existing pinned var 44's clean kolumnnamn → derives "kon", which is
+        # reserved → the kolumnnamn arm is collision-gated, so the name basis wins
+        # and gets `kon-2` tagged `name-fallback+disambiguated` (the `-N` suffix is
+        # what trips the gate, regardless of base class).
+        conn, d = self._frozen_with_new_var(tmp_path, new_name="Kon", new_kol="Kon")
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "1.88" in exc.value.message
+        # The trigger is specifically the disambiguator suffix, not a name/last-resort
+        # base class — assert the offending slug/kind surfaced in the message.
+        assert "kon-2" in exc.value.message
+        assert "+disambiguated" in exc.value.message
+
+    def test_frozen_new_fallback_aggregates_offenders(self, tmp_path: Path) -> None:
+        # Two NEW fragile-basis variables on the SAME frozen provider raise ONCE,
+        # listing both (mirrors the stale-override aggregation) so a curator pins
+        # them in a single pass. Both kol+name lead with a digit ⇒ neither
+        # slugifies ⇒ the `v<key>` last-resort arm for each.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="3D-område", kol="3DOMR")
+        self._add_variable(conn, var_id=99, name="4K-vy", kol="4KSKM")
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        assert exc.value.exit_code == EXIT_CONFIG
+        # One raise, both offenders, count of 2.
+        assert exc.value.message.startswith("2 NEW")
+        assert "1.88" in exc.value.message
+        assert "1.99" in exc.value.message
+
     # --- #143: drift-stable slug basis (+ doable-now part of #141) --------
 
     @staticmethod
