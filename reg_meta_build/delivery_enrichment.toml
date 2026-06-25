@@ -1279,12 +1279,6 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/hreg"
-variable = "lasar"
-description = "Läsår"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/hreg"
 variable = "linr"
 description = "Högskolans interna programinriktning"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
@@ -2053,20 +2047,8 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/moms"
-variable = "person-orgnr"
-description = "Organisations-/personnummer (löpnumrerad)"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/moms"
 variable = "redovisningsgrupp-moms"
 description = "Redovisningsgrupp för moms"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/moms"
-variable = "sateskommun"
-description = "Kommunkod 4 siffror (län+kommun)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
@@ -2091,12 +2073,6 @@ provenance = "Bilaga 2 - Variabellista.xlsx"
 register = "scb/rams"
 variable = "anstalld-till-manad"
 description = "Anställd till och med månad"
-provenance = "Bilaga 2 - Variabellista.xlsx"
-
-[[description]]
-register = "scb/rams"
-variable = "antal-sysselsatta-ast-syssreg"
-description = "Antal sysselsatta på arbetsstället enligt sysselsättningsregisret"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
