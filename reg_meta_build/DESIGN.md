@@ -1888,6 +1888,40 @@ discriminator slug — so the build replays the right slug onto each sibling acr
 rebuilds instead of the last one overwriting the shared entry. Unsplit keys (\~96%) stay
 2-part.
 
+**Leaf-slug curation conventions (the canonical-form rules).** When a curator overrides
+an auto pick (the chain's arm 1), the chosen leaf must read as the *concept* in
+canonical Swedish prose, **derived from the variable NAME, not the cryptic
+delivery-column code** the machine slug was built from (`glsh` "Glas höger öga" →
+`glas-hoger-oga`, not `glsh`). The form rules, applied uniformly across SCB (#471/#747)
+and the non-SCB providers (#760):
+
+- **Grammar.** ASCII-folded (å/ä→a, ö→o, é→e), `^[a-z](?:-?[a-z0-9])*$`, target ≤24
+  chars / **hard cap ≤40**, not a reserved token, not period-shaped. Reach the length
+  target by dropping whole filler words, never by coining an opaque contraction of a
+  Swedish word.
+- **One concept → one slug.** The same concept gets an identical leaf across every
+  register and provider it appears in; converge divergent instances on the clearest
+  prose already in use rather than minting a new form. Cross-register base-sharing where
+  the name merely bakes in the register's unit of observation (`Fastighetens postnummer`
+  → `postnr`) is this consistency goal, **not** an over-merge.
+- **Same name ≠ same concept; default to distinct.** A generic name reused for genuinely
+  different roles (distinguished by delivery column / definition) is **split**, each
+  role its own slug. When unsure two instances are the same role, keep them distinct —
+  **over-merge** (a genuinely different concept silently sharing a slug, e.g. a
+  deprecated code space or a different measurement basis) is the dangerous failure,
+  since it conflates join keys.
+- **Batteries.** A numbered series takes a meaningful suffix from the NAME (ordinal /
+  Swedish month / age), on **one consistent stem with the digit trailing**
+  (`morsak1..48` → `dodsorsak-1..48`; `fstodbelopp07` "…juli" → `forsorjningsstod-juli`)
+  — never a raw column code, and never a bare `-N` where a real role discriminator
+  exists. Trailing-digit + single stem is also what lets the concept-group auto-grouper
+  (which keys on the maximal trailing digit run) re-detect the family.
+- **Minimize churn.** Keep a slug that is already clean canonical prose; never demote
+  it. Rename only on a clear improvement — a cryptic/column-code slug → the prose of the
+  same role, or an alignment to a locked identifier family (below). Don't invent a
+  `<prose>-<columncode>` discriminator; if a sibling can't be given a clean prose role
+  slug, keep it as-is.
+
 **Identifier-family canonical slugs (cross-provider locked forms).** Person- and
 organisation-number columns recur across every provider, so they are curated to ONE
 canonical leaf slug per identifier family — independent of each provider's delivery
