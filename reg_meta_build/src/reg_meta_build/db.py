@@ -970,14 +970,15 @@ CREATE TABLE concept_group (
     label       TEXT NOT NULL,
     source      TEXT NOT NULL CHECK (source IN ('edge', 'token', 'curated')),
     -- The group's SINGLE facet axis: 'month' for a token month group, the
-    -- curated `axis` for a curated variable/classification family (e.g.
-    -- 'rank' for the LISA agi rank facet, 'dimension' for the SUN umbrella —
-    -- niva/inriktning/grupp). Members carry their value/label on this one axis
-    -- inline (`concept_group_variable.facet_value`/`facet_label` for variables,
-    -- `concept_group_classification.facet_value`/`facet_label` for
-    -- classifications). NULL for edge groups (the member list IS the
-    -- presentation — no facet) and for the retained-but-empty derived
-    -- classification machinery. Single-axis is enforced by this one-column
+    -- curated `axis` for a curated variable family (e.g. 'rank' for the LISA agi
+    -- rank facet). NULL for: edge groups (the member list IS the presentation —
+    -- no facet), the retained-but-empty derived classification machinery, AND
+    -- curated `[[classification_group]]` umbrellas (SUN/ISCED/NordDRG) — those
+    -- are axis-less (members are distinct classifications, not points on a
+    -- scale), so the umbrella carries no axis while each member still keeps its
+    -- own `concept_group_classification.facet_value`/`facet_label` inline. A
+    -- curated variable family's members carry their value/label inline on
+    -- `concept_group_variable`. At most one axis is enforced by this one-column
     -- shape, not by convention. #516/#585.
     facet_axis  TEXT,
     CHECK ((kind = 'variable') = (register_id IS NOT NULL))
@@ -992,14 +993,18 @@ CREATE INDEX idx_concept_group_register ON concept_group(register_id);
 
 -- Membership, one table per kind (avoids nullable composite PKs). The
 -- single-column PK enforces the at-most-one-group invariant per member. Each
--- member carries its facet on the group's SINGLE axis (`concept_group.facet_axis`)
--- inline: `facet_value` sorts (zero-padded month '05', rank '1'), `facet_label`
--- displays ('maj', 'största förvärvskällan'). Both are NULL for edge-group
--- members (the member list IS the presentation — no facet). INVARIANT: a
--- member's `facet_value`/`facet_label` are non-NULL iff its group's
--- `facet_axis` is non-NULL (token/curated groups) and NULL for edge groups
--- (`facet_axis` NULL). #585 dropped the multi-axis `concept_group_variable_facet`
--- table — the corpus carries only single-axis groups, so the facet moves inline
+-- member carries its facet value/label inline: `facet_value` sorts (zero-padded
+-- month '05', rank '1'), `facet_label` displays ('maj', 'största
+-- förvärvskällan'). Both are NULL for edge-group members (the member list IS the
+-- presentation — no facet). VARIABLE-member INVARIANT (validated, #585): a
+-- `concept_group_variable` member's `facet_value`/`facet_label` are non-NULL iff
+-- its group's `facet_axis` is non-NULL (token/curated groups) and NULL for edge
+-- groups (`facet_axis` NULL). `concept_group_classification` members do NOT obey
+-- this coupling: curated `[[classification_group]]` umbrellas are AXIS-LESS
+-- (`facet_axis` NULL) yet each member keeps a non-NULL `facet_value`/`facet_label`
+-- (its own short picker label), so the iff invariant is variable-only. #585
+-- dropped the multi-axis `concept_group_variable_facet` table — the corpus
+-- carries only single-axis (or axis-less) groups, so the facet moves inline
 -- here, mirroring `concept_group_classification`, and multi-axis is now
 -- unrepresentable by schema shape.
 CREATE TABLE concept_group_variable (

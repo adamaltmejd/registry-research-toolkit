@@ -786,11 +786,14 @@ class TestCuratedGroups:
 
 
 def _sun_group(**overrides) -> ClassificationGroup:
-    """A SUN-like 3-dimension umbrella over single-axis distinct classifications."""
+    """A SUN-like umbrella over distinct classifications. AXIS-LESS by default
+    (`axis=None`, mirroring the real curation) — each member still carries its
+    own short value/label. Pass `axis="..."` to exercise the still-accepted
+    explicit-axis path."""
     kwargs: dict = {
         "key": "sun",
         "label": "Svensk utbildningsnomenklatur (SUN)",
-        "axis": "dimension",
+        "axis": None,
         "members": (
             ClassificationGroupMember("sun-niva2020", "niva", "Utbildningsnivå"),
             ClassificationGroupMember(
@@ -818,7 +821,9 @@ class TestClassificationGroups:
         )
         return conn
 
-    def test_resolves_to_one_dimension_group(self) -> None:
+    def test_resolves_to_axis_less_group(self) -> None:
+        # The umbrella is axis-less: facet_axis stores NULL, but every member
+        # still carries its own short value/label (the picker label).
         conn = self._db()
         counts = materialize_concept_groups(
             conn, classification_groups=(_sun_group(),), providers=_SCB
@@ -829,12 +834,26 @@ class TestClassificationGroups:
         assert group["kind"] == "classification"
         assert group["register_id"] is None
         assert group["source"] == "curated"
-        # facet_value-ordered members carry the dimension facet.
+        # facet_value-ordered members keep their inline value/label.
         assert group["cls_members"] == [
             ("sun-grupp2020", "grupp", "Utbildningsgrupper"),
             ("sun-inriktning2020", "inriktning", "Utbildningsinriktning"),
             ("sun-niva2020", "niva", "Utbildningsnivå"),
         ]
+        axis = conn.execute(
+            "SELECT facet_axis FROM concept_group WHERE group_key = 'sun'"
+        ).fetchone()[0]
+        assert axis is None
+
+    def test_explicit_axis_still_stored(self) -> None:
+        # A provided axis is still accepted and stored (the loader/materializer
+        # do not force axis-less); members still carry their inline value/label.
+        conn = self._db()
+        materialize_concept_groups(
+            conn,
+            classification_groups=(_sun_group(axis="dimension"),),
+            providers=_SCB,
+        )
         axis = conn.execute(
             "SELECT facet_axis FROM concept_group WHERE group_key = 'sun'"
         ).fetchone()[0]
@@ -947,20 +966,45 @@ class TestClassificationGroupLoader:
         )
         assert len(groups) == 1
         assert groups[0].key == "sun"
+        # A provided axis is still accepted (the loader does not require it).
         assert groups[0].axis == "dimension"
         assert [m.classification for m in groups[0].members] == [
             "sun-niva2020",
             "sun-grupp2020",
         ]
 
-    @pytest.mark.parametrize(
-        "text",
-        [
-            # missing axis
+    def test_axis_is_optional(self, tmp_path) -> None:
+        # axis is now optional — an umbrella with no `axis` loads with axis=None
+        # (axis-less), members keeping their value/label.
+        groups = self._load(
+            tmp_path,
             """
             [[classification_group]]
             key = "sun"
             label = "SUN"
+            [[classification_group.members]]
+            classification = "sun-niva2020"
+            value = "niva"
+            label = "Nivå"
+            [[classification_group.members]]
+            classification = "sun-grupp2020"
+            value = "grupp"
+            label = "Grupp"
+            """,
+        )
+        assert len(groups) == 1
+        assert groups[0].axis is None
+        assert groups[0].members[0].value == "niva"
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            # blank axis (present-but-blank is still drift, unlike absent)
+            """
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = ""
             [[classification_group.members]]
             classification = "a"
             value = "1"

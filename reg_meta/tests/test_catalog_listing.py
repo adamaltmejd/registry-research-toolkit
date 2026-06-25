@@ -503,3 +503,39 @@ class TestListClassificationGroups:
             "dimension",
             "dimension",
         ]
+
+    def test_axis_less_umbrella(self) -> None:
+        """The curated classification umbrellas are AXIS-LESS (#516 stage 1):
+        `concept_group.facet_axis` is NULL, so `axes` is the empty tuple and each
+        member's `GroupFacet.axis` is None — yet the members still carry their
+        own short facet `value`/`label` (the picker label)."""
+        conn = build_slugged_db()  # ships sun2020
+        for cid, short, slug in (
+            (70, "SUN2020-NIVA", "sun-niva2020"),
+            (71, "SUN2020-INR", "sun-inriktning2020"),
+        ):
+            conn.execute(
+                "INSERT INTO classification (id, short_name, name, slug) "
+                "VALUES (?, ?, 'SUN', ?)",
+                (cid, short, slug),
+            )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source, facet_axis) VALUES "
+            "(21, 'classification', NULL, 'sun', 'SUN', 'curated', NULL)"
+        )
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 21, ?, ?)",
+            [(70, "niva", "Nivå"), (71, "inriktning", "Inriktning")],
+        )
+        conn.commit()
+        (group,) = Catalog(conn).list_classification_groups()
+        assert group.axes == ()
+        # Members keep their inline value/label, but the facet axis is None.
+        assert [
+            (f.axis, f.value, f.label) for m in group.members for f in m.facets
+        ] == [
+            (None, "inriktning", "Inriktning"),
+            (None, "niva", "Nivå"),
+        ]

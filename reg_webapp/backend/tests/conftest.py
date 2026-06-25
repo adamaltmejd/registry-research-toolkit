@@ -402,10 +402,12 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     exercise the `groups` surface (grouped members ALSO stay in `children`):
 
     - a token month group `ink` on scb/rams over two added variables; and
-    - a #516 classification umbrella group `sun` (DIMENSION axis, mirroring the
-      real group:sun shape post-#571) over the terminal `sun2020` edition plus a
-      standalone non-succession `niva-test` aggregate — both TERMINAL members so
-      the classification-root's superseded-by drop keeps them.
+    - a #516 classification umbrella group `sun` (AXIS-LESS — `facet_axis` NULL,
+      mirroring the real group:sun shape) over the terminal `sun2020` edition plus
+      a standalone non-succession `niva-test` aggregate — both TERMINAL members so
+      the classification-root's superseded-by drop keeps them. The members keep
+      their own short facet `value`/`label` (the picker label) even though the
+      umbrella carries no axis.
 
     Also seeds the sun1996 → sun2000 → sun2020 succession chain and projects
     `classification.supersedes_id` from it exactly as the build does (see
@@ -442,16 +444,17 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
         "INSERT INTO classification (id, short_name, name, slug) "
         "VALUES (51, 'NIVA', 'Utbildningsnivå – aggregat', 'niva-test')"
     )
-    # #516 umbrella group `sun` over its DIMENSIONS (axis='dimension', mirroring the
-    # real group:sun post-#571). Members are TERMINAL classifications only — the
-    # current `sun2020` edition + the version-independent `niva-test` aggregate — so
-    # the classification-root's superseded-by filter keeps them. sun2000 is NOT a
-    # member: it's purely a superseded succession edition now (reached via the leaf's
-    # edition-chain panel, not the umbrella fold).
+    # #516 umbrella group `sun` over its distinct classifications (AXIS-LESS —
+    # `facet_axis` NULL, mirroring the real group:sun). Members are TERMINAL
+    # classifications only — the current `sun2020` edition + the version-independent
+    # `niva-test` aggregate — so the classification-root's superseded-by filter keeps
+    # them. sun2000 is NOT a member: it's purely a superseded succession edition now
+    # (reached via the leaf's edition-chain panel, not the umbrella fold). Each member
+    # keeps its own short facet value/label despite the absent group axis.
     src.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
         "label, source, facet_axis) VALUES (11, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'token', 'dimension')"
+        "'Svensk utbildningsnomenklatur', 'curated', NULL)"
     )
     src.executemany(
         "INSERT INTO concept_group_classification (classification_id, group_id, "

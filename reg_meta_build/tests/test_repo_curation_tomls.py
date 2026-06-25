@@ -89,11 +89,14 @@ def test_repo_classification_groups_parses() -> None:
     # Curated `[[classification_group]]` umbrellas (#516) live in the same
     # `concept_groups.toml`. The SUN umbrella ships with the repo; slug RESOLUTION
     # (the classifications exist) is maintainer-build territory — this gate is the
-    # load-time shape (non-empty axis/members, >= 2 members, unique keys/slugs).
+    # load-time shape (>= 2 members, unique keys/slugs). The umbrellas are now
+    # AXIS-LESS (axis is None — members are distinct classifications, not points
+    # on a scale), so this no longer asserts a truthy axis.
     groups = load_classification_groups(_ROOT / "concept_groups.toml")
     assert groups
     assert {g.key for g in groups} >= {"sun"}
-    assert all(g.axis and len(g.members) >= 2 for g in groups)
+    assert all(len(g.members) >= 2 for g in groups)
+    assert all(g.axis is None for g in groups)
 
 
 def test_repo_delivery_enrichment_parses() -> None:

@@ -1609,11 +1609,18 @@
       },
       "GroupFacet": {
         "additionalProperties": false,
-        "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank' / 'vintage'), `value` sorts (zero-padded where needed),\n`label` displays.",
+        "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank') when the group has one, or None for an AXIS-LESS group \u2014\na curated classification umbrella (SUN/ISCED/NordDRG), whose members are\ndistinct classifications carrying their own short label, not points on a\nshared scale. `value` sorts (zero-padded where needed), `label` displays.",
         "properties": {
           "axis": {
-            "title": "Axis",
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Axis"
           },
           "label": {
             "title": "Label",
