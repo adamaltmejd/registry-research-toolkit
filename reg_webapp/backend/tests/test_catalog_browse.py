@@ -366,6 +366,34 @@ def test_classification_group_route_matched_before_catch_all(client):
     assert body["kind"] == "classification-group"
 
 
+def test_classification_group_route_accepts_slash_bearing_key(catalog_db):
+    """#756: a slash in a classification umbrella key survives the `{key:path}` route
+    (mirrors `test_group_route_accepts_slash_bearing_key` for the register-scoped
+    group). Seed a fresh classification + a classification umbrella with a slash-bearing
+    key over it (each classification can belong to only one group — the seeded
+    members are already taken), then request it `%2F`-encoded."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO classification (id, short_name, name, slug) "
+            "VALUES (60, 'SLASH', 'Slash member', 'slash-member')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source, facet_axis) "
+            "VALUES (99, 'classification', NULL, 'a/b', 'Slash key', 'token', "
+            "'dimension')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_classification "
+            "(classification_id, group_id, facet_value, facet_label) "
+            "VALUES (60, 99, 'aggregat', 'Aggregat')"
+        )
+    with TestClient(create_app()) as client:
+        resp = client.get("/api/catalog/group/class/a%2Fb")
+    assert resp.status_code == 200
+    assert resp.json()["key"] == "a/b"
+
+
 def test_grouped_binding_leaf_carries_group_ref(client):
     """#616/#617: a grouped binding's leaf carries its owning group as a
     `(provider, register, key)` ref, so a member page knows its home group without
