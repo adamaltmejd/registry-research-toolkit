@@ -120,12 +120,16 @@ def test_snapshot_covers_committed_additions(slug_dir):
         )
 
 
-def _git_tracked_filenames(directory: Path) -> set[str] | None:
-    """The filenames git tracks DIRECTLY under ``directory`` (top-level only),
-    or ``None`` when ``directory`` is not inside a git work tree.
+def _git_committed_filenames(directory: Path) -> set[str] | None:
+    """The filenames present in the committed HEAD tree DIRECTLY under
+    ``directory`` (top-level only), or ``None`` when ``directory`` is not inside a
+    git work tree OR HEAD is unborn (no commits) — the caller skips in that case.
 
-    Staged-but-uncommitted counts as tracked — ``git ls-files`` reads the index —
-    which is exactly what we want: the guard catches present-but-UNTRACKED files.
+    Reads the committed tree (``git ls-tree HEAD``), NOT the staging index: a
+    staged-but-uncommitted file is deliberately NOT counted, because it won't
+    survive a clean checkout. That is the whole point — the guard must catch a
+    ``git add -f``'d-but-uncommitted file, which the index would falsely report as
+    fine.
     """
     inside = subprocess.run(
         ["git", "rev-parse", "--is-inside-work-tree"],
@@ -137,23 +141,25 @@ def _git_tracked_filenames(directory: Path) -> set[str] | None:
     if inside.returncode != 0 or inside.stdout.strip() != "true":
         return None
     listed = subprocess.run(
-        ["git", "ls-files", "-z", "--", "."],
+        ["git", "ls-tree", "-z", "-r", "--name-only", "HEAD", "--", "."],
         cwd=directory,
         capture_output=True,
         text=True,
         env=_git_env(),
     )
     if listed.returncode != 0:
-        return None
+        return None  # also covers an unborn HEAD (no commit) — can't assert
     names = (n for n in listed.stdout.split("\0") if n)
     return {n for n in names if "/" not in n}  # top-level entries only
 
 
 def _untracked_pinned_autos(slug_dir: Path) -> list[str] | None:
     """The ``<provider>.auto.toml`` filenames a pinned (curating/frozen) zone has
-    PRESENT on disk but git does not track in ``slug_dir`` — sorted.
+    PRESENT on disk but NOT in the committed HEAD tree of ``slug_dir`` — i.e. they
+    won't survive a clean checkout (a leftover from a prior ``churning`` build, OR
+    a ``git add -f``'d-but-uncommitted file) — sorted.
 
-    Scoped to present-but-untracked on purpose: that is the case the build-time
+    Scoped to present-but-uncommitted on purpose: that is the case the build-time
     ``slug_freeze_auto_missing`` guard CANNOT see (``is_file()`` is true locally,
     so the file looks fine to the build, yet it vanishes on a clean checkout). A
     pinned zone with NO auto file on disk is deliberately NOT flagged here — the
@@ -161,19 +167,19 @@ def _untracked_pinned_autos(slug_dir: Path) -> list[str] | None:
     provider (gated on ``_provider_has_variables``, which has no variable slugs to
     pin and so writes no auto file).
 
-    ``[]`` when nothing is pinned or every present pinned auto file is tracked;
-    ``None`` when ``slug_dir`` is not inside a git work tree (caller skips rather
-    than false-fails)."""
+    ``[]`` when nothing is pinned or every present pinned auto file is committed;
+    ``None`` when ``slug_dir`` is not in a git work tree or HEAD is unborn (caller
+    skips rather than false-fails)."""
     pinned = pinned_zones(load_freeze_states(slug_dir))
     if not pinned:
         return []
-    tracked = _git_tracked_filenames(slug_dir)
-    if tracked is None:
+    committed = _git_committed_filenames(slug_dir)
+    if committed is None:
         return None
     return sorted(
         name
         for zone in pinned
-        if (name := f"{zone}{AUTO_FILE_SUFFIX}") not in tracked
+        if (name := f"{zone}{AUTO_FILE_SUFFIX}") not in committed
         and (slug_dir / name).is_file()
     )
 
@@ -181,9 +187,12 @@ def _untracked_pinned_autos(slug_dir: Path) -> list[str] | None:
 def test_pinned_providers_auto_toml_git_tracked(slug_dir):
     """A provider pinned ``curating``/``frozen`` reads its slugs back from a
     committed ``<provider>.auto.toml``. That file is gitignored, so a
-    present-but-untracked artifact from a prior ``churning`` build (``is_file()``
-    true locally) passes the build-time check yet vanishes on a clean checkout.
-    This guard catches exactly that present-but-untracked window git-side.
+    present-but-uncommitted artifact — a leftover from a prior ``churning`` build,
+    OR a ``git add -f``'d-but-uncommitted file — reports ``is_file()`` true locally
+    and passes the build-time check yet vanishes on a clean checkout. This guard
+    reads the committed HEAD tree (not the staging index), so it catches exactly
+    that present-but-uncommitted window git-side — including a staged-but-uncommitted
+    file the index would have reported as fine.
 
     The ABSENT-auto case is deliberately out of scope here: it stays the
     build-time ``slug_freeze_auto_missing`` guard's responsibility, which
@@ -199,18 +208,21 @@ def test_pinned_providers_auto_toml_git_tracked(slug_dir):
     if missing:
         listed = "\n".join(f"  {name}" for name in missing)
         pytest.fail(
-            "Pinned provider(s) have a present-but-untracked auto.toml "
+            "Pinned provider(s) have a present-but-uncommitted auto.toml "
             f"(would vanish on a clean checkout):\n{listed}\n"
-            "Force-add the generated file "
-            "(git add -f reg_meta_build/fqid_slugs/<name>) or add a per-provider "
-            ".gitignore negation (!reg_meta_build/fqid_slugs/<name>)."
+            "Force-add AND commit the generated file "
+            "(git add -f reg_meta_build/fqid_slugs/<name>, then commit it), or add "
+            "a per-provider .gitignore negation "
+            "(!reg_meta_build/fqid_slugs/<name>) and commit the file. Staging alone "
+            "is not enough — the guard checks the committed tree."
         )
 
 
 def test_untracked_pinned_auto_detected(tmp_path):
-    """Regression for the guard: a pinned zone whose auto file is on disk but
-    untracked is flagged; staging it clears the flag. A churning zone's untracked
-    auto file is never flagged. Self-contained — does not read the repo's state."""
+    """Regression for the guard: a pinned zone whose auto file is on disk but not
+    in the committed HEAD tree is flagged; committing it clears the flag. A
+    churning zone's auto file is never flagged. Self-contained — does not read the
+    repo's state."""
     subprocess.run(
         ["git", "init"], cwd=tmp_path, capture_output=True, check=True, env=_git_env()
     )
@@ -229,12 +241,38 @@ def test_untracked_pinned_auto_detected(tmp_path):
     (tmp_path / "umu.toml").write_text(
         '[register."1"]\nslug = "umu-reg"\n', encoding="utf-8"
     )
-    # A churning zone's untracked auto file must NOT be flagged.
+    # A churning zone's auto file must NOT be flagged (churning zones are never
+    # pinned). Committed here or not is irrelevant — included in the initial commit.
     (tmp_path / "umu.auto.toml").write_text(
         '[variable."1.x"]\nslug = "umu-x"\n', encoding="utf-8"
     )
+    # Establish HEAD: the guard reads the committed tree, so without an initial
+    # commit there is no HEAD to assert against (unborn → guard returns None).
+    subprocess.run(
+        ["git", "add", "-A"],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.email=test@example.com",
+            "-c",
+            "user.name=test",
+            "commit",
+            "-m",
+            "init",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
 
-    # 1. Both pinned autos on disk but untracked → flagged, sorted lexically
+    # 1. Both pinned autos on disk but uncommitted → flagged, sorted lexically
     #    across both pinned providers ("fk" < "scb"); churning `umu` is absent.
     (tmp_path / "fk.auto.toml").write_text(
         '[variable."1.personnummer"]\nslug = "personnummer"\n', encoding="utf-8"
@@ -244,7 +282,8 @@ def test_untracked_pinned_auto_detected(tmp_path):
     )
     assert _untracked_pinned_autos(tmp_path) == ["fk.auto.toml", "scb.auto.toml"]
 
-    # 2. Stage both (no commit needed — git ls-files reads the index) → cleared.
+    # 2. Commit both (staging alone no longer clears it — the guard reads HEAD,
+    #    not the index) → cleared.
     subprocess.run(
         ["git", "add", "fk.auto.toml", "scb.auto.toml"],
         cwd=tmp_path,
@@ -252,7 +291,78 @@ def test_untracked_pinned_auto_detected(tmp_path):
         check=True,
         env=_git_env(),
     )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.email=test@example.com",
+            "-c",
+            "user.name=test",
+            "commit",
+            "-m",
+            "pin autos",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
     assert _untracked_pinned_autos(tmp_path) == []
+
+
+def test_staged_but_uncommitted_pinned_auto_flagged(tmp_path):
+    """The exact Codex P2: the suite runs as a pre-push hook, so a pinned auto file
+    that was ``git add -f``'d but NEVER committed sits in the index yet is absent
+    from the committed tree the push will publish. Reading the index (the old
+    ``git ls-files``) would treat it as fine and let the push through; the pushed
+    commit lacks the file, so it vanishes on a clean checkout. Reading HEAD
+    (``git ls-tree``) flags it. Self-contained — does not read the repo's state."""
+    subprocess.run(
+        ["git", "init"], cwd=tmp_path, capture_output=True, check=True, env=_git_env()
+    )
+    # `bar` is pinned (curating); the provider stub makes it a known zone.
+    (tmp_path / "freeze.toml").write_text('bar = "curating"\n', encoding="utf-8")
+    (tmp_path / "bar.toml").write_text(
+        '[register."1"]\nslug = "bar-reg"\n', encoding="utf-8"
+    )
+    # Establish HEAD WITHOUT the auto file (the committed tree the push publishes).
+    subprocess.run(
+        ["git", "add", "-A"],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.email=test@example.com",
+            "-c",
+            "user.name=test",
+            "commit",
+            "-m",
+            "init",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
+    # Stage the auto file but DO NOT commit — the bypass the index check missed.
+    (tmp_path / "bar.auto.toml").write_text(
+        '[variable."1.x"]\nslug = "bar-x"\n', encoding="utf-8"
+    )
+    subprocess.run(
+        ["git", "add", "bar.auto.toml"],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
+    # Staged-but-uncommitted → not in HEAD → flagged. (Passes only against the
+    # ls-tree HEAD reader; the old ls-files index reader would return [].)
+    assert _untracked_pinned_autos(tmp_path) == ["bar.auto.toml"]
 
 
 def test_variable_less_pinned_provider_not_flagged(tmp_path):
@@ -272,6 +382,30 @@ def test_variable_less_pinned_provider_not_flagged(tmp_path):
     (tmp_path / "foo.toml").write_text(
         '[register."1"]\nslug = "foo-reg"\n', encoding="utf-8"
     )
+    # Establish HEAD so the guard has a committed tree to read (unborn → None).
+    subprocess.run(
+        ["git", "add", "-A"],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.email=test@example.com",
+            "-c",
+            "user.name=test",
+            "commit",
+            "-m",
+            "init",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
     assert _untracked_pinned_autos(tmp_path) == []
 
 
@@ -290,9 +424,9 @@ def test_guard_isolated_from_inherited_git_dir(tmp_path, monkeypatch):
     monkeypatch.setenv("GIT_DIR", str(outer / ".git"))
     monkeypatch.setenv("GIT_INDEX_FILE", str(outer / ".git" / "index"))
 
-    # The guard, run against a SEPARATE inner repo, must read inner's OWN index.
-    # `fk` is pinned (curating) and its auto file is STAGED in inner, so a
-    # cwd-discovered git sees it as tracked → nothing owed → [].
+    # The guard, run against a SEPARATE inner repo, must read inner's OWN HEAD.
+    # `fk` is pinned (curating) and its auto file is COMMITTED in inner, so a
+    # cwd-discovered git sees it in inner's committed tree → nothing owed → [].
     inner = tmp_path / "inner"
     inner.mkdir()
     subprocess.run(
@@ -306,15 +440,28 @@ def test_guard_isolated_from_inherited_git_dir(tmp_path, monkeypatch):
         '[variable."1.x"]\nslug = "x"\n', encoding="utf-8"
     )
     subprocess.run(
-        ["git", "add", "fk.auto.toml"],
+        ["git", "add", "-A"], cwd=inner, capture_output=True, check=True, env=_git_env()
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.email=test@example.com",
+            "-c",
+            "user.name=test",
+            "commit",
+            "-m",
+            "pin fk auto",
+        ],
         cwd=inner,
         capture_output=True,
         check=True,
         env=_git_env(),
     )
 
-    # With the scrub: `git ls-files` reads inner's index, sees the staged
-    # fk.auto.toml as tracked → []. Without it (regression): inherited GIT_DIR
-    # points ls-files at outer's EMPTY index → fk.auto.toml reads as untracked
-    # → ["fk.auto.toml"]. The staged-but-cross-repo case is what the scrub fixes.
+    # With the scrub: `git ls-tree HEAD` reads inner's committed tree, sees the
+    # committed fk.auto.toml → []. Without it (regression): inherited GIT_DIR
+    # points the calls at the outer repo (unborn HEAD / no such committed file) →
+    # the guard returns None, not []. The cross-repo redirect is what the scrub
+    # fixes — and only this test makes that CI-catchable.
     assert _untracked_pinned_autos(inner) == []
