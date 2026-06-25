@@ -113,6 +113,7 @@ describe("ConceptGroupView (#617)", () => {
         item.textContent?.trim(),
       ),
     ).toEqual(["januari", "februari"]);
+    expect(document.querySelectorAll(".history-graph .detail")).toHaveLength(0);
     expect(document.querySelector(".history-graph .group")).toBeNull();
   });
 
@@ -210,7 +211,10 @@ describe("ConceptGroupView (#617)", () => {
         kind: "classification",
         fqid: fqidPath,
         name: fqidPath,
-        short_name: fqidPath.split("/").at(-1)?.toUpperCase() ?? fqidPath,
+        short_name:
+          fqidPath === "class/niva-grovv1"
+            ? "NIVA-GROV"
+            : (fqidPath.split("/").at(-1)?.toUpperCase() ?? fqidPath),
         codes: [],
         dimensions: [],
         edition_chain:
@@ -220,6 +224,7 @@ describe("ConceptGroupView (#617)", () => {
                   slug: "sun1996",
                   fqid: "class/sun1996",
                   name: "SUN 1996",
+                  short_name: "SUN1996",
                   effective_year: 2000,
                   is_self: false,
                   is_current: false,
@@ -228,6 +233,7 @@ describe("ConceptGroupView (#617)", () => {
                   slug: "sun2000-inriktning",
                   fqid: "class/sun2000-inriktning",
                   name: "SUN 2000 — inriktning",
+                  short_name: "SUN2000-INRIKTNING",
                   effective_year: 2020,
                   is_self: false,
                   is_current: false,
@@ -236,6 +242,7 @@ describe("ConceptGroupView (#617)", () => {
                   slug: "sun2020-inriktning",
                   fqid: "class/sun2020-inriktning",
                   name: "SUN 2020 — inriktning",
+                  short_name: "SUN2020-INRIKTNING",
                   effective_year: null,
                   is_self: true,
                   is_current: true,
@@ -333,10 +340,10 @@ describe("ConceptGroupView (#617)", () => {
         (label) => label.textContent?.trim(),
       ),
     ).toEqual([
-      "sun1996",
-      "sun2000-inriktning",
-      "sun2020-inriktning",
-      "niva-grovv1",
+      "SUN1996",
+      "SUN2000-INRIKTNING",
+      "SUN2020-INRIKTNING",
+      "NIVA-GROV",
     ]);
     expect(
       [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(

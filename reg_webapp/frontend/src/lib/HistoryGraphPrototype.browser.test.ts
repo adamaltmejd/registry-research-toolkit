@@ -69,7 +69,7 @@ const standaloneClassificationGraph: HistoryGraph = {
     {
       id: "class/sun2020",
       kind: "classification",
-      label: "sun2020",
+      label: "SUN2020",
       fqid: "class/sun2020",
       from: 2020,
       to: 2020,
@@ -123,7 +123,7 @@ const classificationGraph: HistoryGraph = {
     {
       id: "class/sun1996",
       kind: "classification",
-      label: "sun1996",
+      label: "SUN1996",
       fqid: "class/sun1996",
       from: 1996,
       to: 1996,
@@ -134,7 +134,7 @@ const classificationGraph: HistoryGraph = {
     {
       id: "class/sun2000-inriktning",
       kind: "classification",
-      label: "sun2000-inriktning",
+      label: "SUN2000-INRIKTNING",
       fqid: "class/sun2000-inriktning",
       from: 2000,
       to: 2000,
@@ -145,7 +145,7 @@ const classificationGraph: HistoryGraph = {
     {
       id: "class/sun2020-inriktning",
       kind: "classification",
-      label: "sun2020-inriktning",
+      label: "SUN2020-INRIKTNING",
       fqid: "class/sun2020-inriktning",
       from: 2020,
       to: 2020,
@@ -241,7 +241,7 @@ describe("HistoryGraphPrototype", () => {
       [...document.querySelectorAll(".node-label.in-bar")].map((node) =>
         node.textContent?.trim(),
       ),
-    ).toEqual(["sun1996", "sun2000-inriktning", "sun2020-inriktning"]);
+    ).toEqual(["SUN1996", "SUN2000-INRIKTNING", "SUN2020-INRIKTNING"]);
     await expect.element(page.getByText("succession")).toBeVisible();
     expect(document.querySelector(".edition-svg")).toBeNull();
     expect(document.querySelector(".axis")).toBeNull();
@@ -251,6 +251,6 @@ describe("HistoryGraphPrototype", () => {
         .querySelector('a[href="/catalog/class/sun2000-inriktning"]')
         ?.querySelector(".node-label")
         ?.textContent?.trim(),
-    ).toBe("sun2000-inriktning");
+    ).toBe("SUN2000-INRIKTNING");
   });
 });

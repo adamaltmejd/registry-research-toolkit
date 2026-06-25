@@ -882,6 +882,7 @@ describe("BindingLeafView member identity (#670)", () => {
         item.textContent?.trim(),
       ),
     ).toEqual(["agi1astsni2007g", "agi1astsni2007u"]);
+    expect(document.querySelectorAll(".history-graph .detail")).toHaveLength(0);
     expect(
       document.querySelector(".history-graph .node.self .node-label")
         ?.textContent,

@@ -17,6 +17,7 @@ function edition(
   return {
     fqid: `class/${over.slug}`,
     name: over.slug.toUpperCase(),
+    short_name: over.slug.toUpperCase(),
     effective_year: 2000,
     version_year: 2000,
     is_current: false,

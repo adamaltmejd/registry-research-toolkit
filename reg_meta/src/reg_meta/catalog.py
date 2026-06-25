@@ -456,8 +456,8 @@ class ClassificationEdition(_CatalogModel):
     check) fails the build if any succession edge references a slug with no live
     row, so a "dead edition" can't exist in a validated DB. `fqid` is None only on
     a *malformed* slug (a lower-level slug-grammar concern, also build-prevented;
-    `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes
-    from the live row. `effective_year` is the year on the
+    `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability);
+    `short_name`/`name` come from the live row. `effective_year` is the year on the
     `classification_replaced_by` edge that names this edition as `predecessor_slug`
     — i.e. the year this edition was superseded by its successor (None for the
     terminal, which has no outbound edge). `is_current` marks the
@@ -473,6 +473,9 @@ class ClassificationEdition(_CatalogModel):
     )
     name: str | None = Field(
         description="The edition's display name (every chain edition is a live row)."
+    )
+    short_name: str | None = Field(
+        description="The edition's short display name (every chain edition is a live row)."
     )
     effective_year: int | None = Field(
         description="The year on the succession edge naming this edition as the "
@@ -2219,6 +2222,7 @@ class Catalog:
                     slug=slug,
                     fqid=self._class_ref_fqid(slug),
                     name=row["name"] if row else None,
+                    short_name=row["short_name"] if row else None,
                     effective_year=year,
                     version_year=row["valid_from"] if row else None,
                     is_current=(slug in terminals),
@@ -2347,13 +2351,13 @@ class Catalog:
     def _classification_chain_rows(
         self, slugs: Iterable[str]
     ) -> dict[str, sqlite3.Row]:
-        """Map each chain slug to its live `classification` row (`name` +
-        `valid_from`). Every chain slug is a live row (the validator forbids
-        succession edges to dead slugs; see `classification_chain`), so the map
-        covers every slug; a present-but-NULL `name`/`valid_from` is a live row with
-        a NULL column and stays in the map. `valid_from` is the edition's OWN
-        point-in-time vintage year (an INTEGER; vintage lives in slug + name +
-        valid_from), distinct from the succession-edge `effective_year`."""
+        """Map each chain slug to its live `classification` row (`short_name`,
+        `name`, and `valid_from`). Every chain slug is a live row (the validator
+        forbids succession edges to dead slugs; see `classification_chain`), so the
+        map covers every slug; a present-but-NULL label or `valid_from` is a live
+        row with a NULL column and stays in the map. `valid_from` is the edition's
+        OWN point-in-time vintage year (an INTEGER), distinct from the
+        succession-edge `effective_year`."""
         slug_list = list(slugs)
         if not slug_list:
             return {}
@@ -2361,7 +2365,7 @@ class Catalog:
         return {
             row["slug"]: row
             for row in self._conn.execute(
-                "SELECT slug, name, valid_from FROM classification "
+                "SELECT slug, short_name, name, valid_from FROM classification "
                 f"WHERE slug IN ({placeholders})",
                 slug_list,
             ).fetchall()

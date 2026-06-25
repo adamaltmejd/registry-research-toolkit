@@ -69,6 +69,7 @@ describe("history graph prototype model", () => {
     const graph = historyGraphFromBinding(binding({ states }));
 
     expect(graph.nodes).toHaveLength(1);
+    expect(graph.nodes[0].label).toBe("agi1lonfink");
     expect(graph.nodes[0].columns.map((c) => c.label)).toHaveLength(12);
     expect(graph.nodes[0].kind).toBe("variable");
     expect(graph.nodeGrain).toBe("entity-with-column-slices");
@@ -135,6 +136,12 @@ describe("history graph prototype model", () => {
       "succession",
       "related",
       "lineage",
+    ]);
+    expect(graph.nodes.map((node) => [node.id, node.label])).toEqual([
+      ["scb/lisa/old", "old"],
+      ["scb/lisa/current", "current"],
+      ["scb/lisa/sibling", "sibling"],
+      ["scb/rtb/source", "source"],
     ]);
     expect(graph.nodes.some((node) => node.id === "scb/lisa/sibling")).toBe(
       true,
@@ -335,8 +342,8 @@ describe("history graph prototype model", () => {
     expect(
       graph.nodes.map((node) => [node.id, node.label, node.detail]),
     ).toEqual([
-      ["scb/lisa/agi01", "January", "Income"],
-      ["scb/lisa/agi02", "February", "Income"],
+      ["scb/lisa/agi01", "January", undefined],
+      ["scb/lisa/agi02", "February", undefined],
     ]);
     expect(graph.nodes.map((node) => [node.id, node.self])).toEqual([
       ["scb/lisa/agi01", false],
@@ -461,6 +468,7 @@ describe("history graph prototype model", () => {
             slug: "sun1996",
             fqid: "class/sun1996",
             name: "SUN 1996",
+            short_name: "SUN1996",
             effective_year: 2000,
             is_self: false,
             is_current: false,
@@ -469,6 +477,7 @@ describe("history graph prototype model", () => {
             slug: "sun2000-inriktning",
             fqid: "class/sun2000-inriktning",
             name: "SUN 2000 — inriktning",
+            short_name: "SUN2000-INRIKTNING",
             effective_year: 2020,
             is_self: false,
             is_current: false,
@@ -477,6 +486,7 @@ describe("history graph prototype model", () => {
             slug: "sun2020-inriktning",
             fqid: "class/sun2020-inriktning",
             name: "SUN 2020 — inriktning",
+            short_name: "SUN2020-INRIKTNING",
             effective_year: null,
             is_self: true,
             is_current: true,
@@ -513,6 +523,7 @@ describe("history graph prototype model", () => {
             slug: "sun1996",
             fqid: "class/sun1996",
             name: "SUN 1996",
+            short_name: "SUN1996",
             effective_year: 2000,
             is_self: false,
             is_current: false,
@@ -521,6 +532,7 @@ describe("history graph prototype model", () => {
             slug: "sun2000-niva",
             fqid: "class/sun2000-niva",
             name: "SUN 2000 — nivå",
+            short_name: "SUN2000-NIVA",
             effective_year: 2020,
             is_self: false,
             is_current: false,
@@ -529,6 +541,7 @@ describe("history graph prototype model", () => {
             slug: "sun2020-niva",
             fqid: "class/sun2020-niva",
             name: "SUN 2020 — nivå",
+            short_name: "SUN2020-NIVA",
             effective_year: null,
             is_self: true,
             is_current: true,
@@ -573,6 +586,14 @@ describe("history graph prototype model", () => {
       "class/sun2020-niva",
       "class/niva-grovv1",
     ]);
+    expect(graph.nodes.map((node) => node.label)).toEqual([
+      "SUN1996",
+      "SUN2000-INRIKTNING",
+      "SUN2020-INRIKTNING",
+      "SUN2000-NIVA",
+      "SUN2020-NIVA",
+      "NIVA-GROV",
+    ]);
     expect(graph.nodes.map((node) => node.id)).not.toContain("group:sun");
     expect(graph.edges.map((edge) => [edge.from, edge.to, edge.kind])).toEqual([
       ["class/sun1996", "class/sun2000-inriktning", "succession"],
@@ -596,6 +617,7 @@ describe("history graph prototype model", () => {
               slug: graphNode.label,
               fqid: graphNode.id,
               name: graphNode.label,
+              short_name: graphNode.label,
               effective_year: graphNode.from,
               is_self: true,
               is_current: graphNode.current ?? false,
@@ -647,6 +669,7 @@ describe("history graph prototype model", () => {
               slug: "sun-inriktning2000",
               fqid: "class/sun-inriktning2000",
               name: "SUN 2000 — inriktning",
+              short_name: "SUN2000-INRIKTNING",
               effective_year: 2020,
               is_self: false,
               is_current: false,
@@ -655,6 +678,7 @@ describe("history graph prototype model", () => {
               slug: "sun-inriktning2020",
               fqid: "class/sun-inriktning2020",
               name: "SUN 2020 — inriktning",
+              short_name: "SUN2020-INRIKTNING",
               effective_year: null,
               is_self: true,
               is_current: true,
@@ -693,6 +717,7 @@ describe("history graph prototype model", () => {
           slug: "sun2000",
           fqid: "class/sun2000",
           name: "SUN 2000",
+          short_name: "SUN2000",
           effective_year: 2020,
           is_self: false,
           is_current: false,
@@ -701,6 +726,7 @@ describe("history graph prototype model", () => {
           slug: "sun2020",
           fqid: "class/sun2020",
           name: "SUN 2020",
+          short_name: "SUN2020",
           effective_year: null,
           is_self: true,
           is_current: true,
@@ -780,7 +806,7 @@ describe("history graph prototype model", () => {
     } as ClassificationNodeData);
 
     expect(graph.nodes.map((node) => [node.id, node.kind, node.label])).toEqual(
-      [["class/niva-grovv1", "classification", "niva-grovv1"]],
+      [["class/niva-grovv1", "classification", "NIVA-GROV"]],
     );
     expect(
       graph.nodes.find((node) => node.id === "class/niva-grovv1"),
@@ -803,6 +829,7 @@ describe("history graph prototype model", () => {
           slug: "sun1996",
           fqid: "class/sun1996",
           name: "Svensk utbildningsnomenklatur 1996",
+          short_name: "SUN1996",
           effective_year: 2000,
           is_self: true,
           is_current: false,
@@ -811,6 +838,7 @@ describe("history graph prototype model", () => {
           slug: "sun-grupp2000",
           fqid: "class/sun-grupp2000",
           name: "Svensk utbildningsnomenklatur 2000 — Utbildningsgrupper",
+          short_name: "SUN2000-GRUPP",
           effective_year: 2020,
           is_self: false,
           is_current: false,
@@ -819,6 +847,7 @@ describe("history graph prototype model", () => {
           slug: "sun-grupp2020",
           fqid: "class/sun-grupp2020",
           name: "Svensk utbildningsnomenklatur 2020 — Utbildningsgrupper",
+          short_name: "SUN2020-GRUPP",
           effective_year: null,
           is_self: false,
           is_current: true,
@@ -827,6 +856,7 @@ describe("history graph prototype model", () => {
           slug: "sun-inriktning2000",
           fqid: "class/sun-inriktning2000",
           name: "Svensk utbildningsnomenklatur 2000 — Utbildningsinriktning",
+          short_name: "SUN2000-INRIKTNING",
           effective_year: 2020,
           is_self: false,
           is_current: false,
@@ -835,6 +865,7 @@ describe("history graph prototype model", () => {
           slug: "sun-inriktning2020",
           fqid: "class/sun-inriktning2020",
           name: "Svensk utbildningsnomenklatur 2020 — Utbildningsinriktning",
+          short_name: "SUN2020-INRIKTNING",
           effective_year: null,
           is_self: false,
           is_current: true,
@@ -843,6 +874,7 @@ describe("history graph prototype model", () => {
           slug: "sun-niva2000",
           fqid: "class/sun-niva2000",
           name: "Svensk utbildningsnomenklatur 2000 — Utbildningsnivå",
+          short_name: "SUN2000-NIVA",
           effective_year: 2020,
           is_self: false,
           is_current: false,
@@ -851,6 +883,7 @@ describe("history graph prototype model", () => {
           slug: "sun-niva2020",
           fqid: "class/sun-niva2020",
           name: "Svensk utbildningsnomenklatur 2020 — Utbildningsnivå",
+          short_name: "SUN2020-NIVA",
           effective_year: null,
           is_self: false,
           is_current: true,
@@ -918,13 +951,13 @@ describe("history graph prototype model", () => {
       "class/sun-niva2020",
     ]);
     expect(graph.nodes.map((node) => node.label)).toEqual([
-      "sun1996",
-      "sun-grupp2000",
-      "sun-grupp2020",
-      "sun-inriktning2000",
-      "sun-inriktning2020",
-      "sun-niva2000",
-      "sun-niva2020",
+      "SUN1996",
+      "SUN2000-GRUPP",
+      "SUN2020-GRUPP",
+      "SUN2000-INRIKTNING",
+      "SUN2020-INRIKTNING",
+      "SUN2000-NIVA",
+      "SUN2020-NIVA",
     ]);
     expect(
       graph.nodes.map((node) => ({

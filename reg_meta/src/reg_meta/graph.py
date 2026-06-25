@@ -440,7 +440,7 @@ class _GraphBuilder:
             VariableGraphNode(
                 id=node_id,
                 fqid=edition.fqid,
-                label=edition.name or node_id,
+                label=edition.short_name or edition.name or node_id,
                 group_key=None,
                 states=[],
                 same_as=[],
@@ -521,7 +521,7 @@ class _GraphBuilder:
                 self._nodes[node_id] = ClassificationGraphNode(
                     id=node_id,
                     fqid=edition.fqid,
-                    label=edition.name or node_id,
+                    label=edition.short_name or edition.name or node_id,
                     group_key=group_key if is_member else None,
                     version_year=edition.version_year,
                     is_current=edition.is_current,

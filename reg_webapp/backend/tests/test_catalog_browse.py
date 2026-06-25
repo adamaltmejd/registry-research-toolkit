@@ -492,6 +492,9 @@ def test_classification_leaf_embeds_full_edition_chain(client):
     by_slug = {e["slug"]: e for e in chain}
     # Every edition is a live row → each carries a fqid (no dead-edition shape).
     assert all(e["fqid"] == f"class/{e['slug']}" for e in chain)
+    assert by_slug["sun1996"]["short_name"] == "SUN1996"
+    assert by_slug["sun2000"]["short_name"] == "SUN2000"
+    assert by_slug["sun2020"]["short_name"] == "SUN2020"
     assert by_slug["sun1996"]["name"] == "Svensk utbildningsnomenklatur"
     assert by_slug["sun1996"]["effective_year"] == 2000
     # Live terminal == the queried edition: is_current AND is_self.

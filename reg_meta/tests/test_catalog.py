@@ -1151,6 +1151,7 @@ class TestEdgeAccessors:
         # succession and marks the queried slug as is_self.
         chain = Catalog(conn).classification_chain("class/sun2000")
         assert [e.slug for e in chain] == ["sun1996", "sun2000", "sun2020"]
+        assert [e.short_name for e in chain] == ["SUN1996", "SUN2000", "SUN2020"]
         assert [e.effective_year for e in chain] == [2000, 2020, None]
         assert all(isinstance(e, ClassificationEdition) for e in chain)
         # Every edition is a live row → non-None fqid (no dead-edition shape).

@@ -67,6 +67,7 @@ type ClassificationEditionLike = {
   slug: string;
   fqid?: string | null;
   name?: string | null;
+  short_name?: string | null;
   effective_year?: number | null;
   is_current?: boolean;
   is_self?: boolean;
@@ -211,6 +212,7 @@ function fallbackClassificationEditions(
           slug: leafSlug(node.fqid),
           fqid: node.fqid,
           name: node.name,
+          short_name: node.short_name,
           effective_year: null,
           is_current: true,
           is_self: true,
@@ -260,7 +262,7 @@ function addClassificationHistory(
     mergeClassificationNode(nodesById, {
       id: edition.fqid ?? `class/${edition.slug}`,
       kind: "classification",
-      label: edition.slug,
+      label: edition.short_name ?? edition.slug,
       fqid: edition.fqid ?? null,
       from: fallbackYear,
       to: fallbackYear,
@@ -308,7 +310,7 @@ export function historyGraphFromBinding(
       nodes.set(id, {
         id,
         kind: "variable",
-        label: edition.name ?? edition.variable,
+        label: edition.variable,
         fqid: edition.fqid,
         from: isViewed ? currentCoverage.from : null,
         to: isViewed ? currentCoverage.to : edition.effective_year,
@@ -337,7 +339,7 @@ export function historyGraphFromBinding(
     nodes.set(currentId, {
       id: currentId,
       kind: "variable",
-      label: node.name ?? leafSlug(currentId),
+      label: leafSlug(currentId),
       fqid: currentId,
       from: currentCoverage.from,
       to: currentCoverage.to,
@@ -352,7 +354,7 @@ export function historyGraphFromBinding(
     nodes.set(currentId, {
       id: currentId,
       kind: "variable",
-      label: node.name ?? leafSlug(currentId),
+      label: leafSlug(currentId),
       fqid: currentId,
       from: currentCoverage.from,
       to: currentCoverage.to,
@@ -465,7 +467,7 @@ export function historyGraphFromGroup(
     const label = classificationGroup ? memberSlug : facetLabel || memberSlug;
     const detail = classificationGroup
       ? (member.name ?? facetDetail)
-      : (member.name ?? undefined);
+      : undefined;
     nodes.push({
       id: member.fqid,
       kind: classificationGroup ? "classification" : "group-member",

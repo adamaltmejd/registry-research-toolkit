@@ -119,6 +119,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
                 slug: "sun1996",
                 fqid: "class/sun1996",
                 name: "SUN 1996",
+                short_name: "SUN1996",
                 effective_year: 2000,
                 is_self: false,
                 is_current: false,
@@ -127,6 +128,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
                 slug: "sun2000-inriktning",
                 fqid: "class/sun2000-inriktning",
                 name: "SUN 2000 — inriktning",
+                short_name: "SUN2000-INRIKTNING",
                 effective_year: 2020,
                 is_self: false,
                 is_current: false,
@@ -135,6 +137,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
                 slug: "sun2020-inriktning",
                 fqid: "class/sun2020-inriktning",
                 name: "SUN 2020 — inriktning",
+                short_name: "SUN2020-INRIKTNING",
                 effective_year: null,
                 is_self: true,
                 is_current: true,
@@ -223,10 +226,10 @@ describe("ClassificationLeafView (#638 shell)", () => {
         (label) => label.textContent?.trim(),
       ),
     ).toEqual([
-      "sun1996",
-      "sun2000-inriktning",
-      "sun2020-inriktning",
-      "niva-grovv1",
+      "SUN1996",
+      "SUN2000-INRIKTNING",
+      "SUN2020-INRIKTNING",
+      "NIVA-GROV",
     ]);
     expect(
       [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
@@ -236,7 +239,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
     expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
     expect(document.querySelectorAll(".edges .member")).toHaveLength(0);
     expect(document.querySelector(".node.self title")?.textContent).toBe(
-      "niva-grovv1",
+      "NIVA-GROV",
     );
   });
 
@@ -285,6 +288,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
                 slug: "sun1996",
                 fqid: "class/sun1996",
                 name: "SUN 1996",
+                short_name: "SUN1996",
                 effective_year: 2000,
                 is_self: false,
                 is_current: false,
@@ -293,6 +297,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
                 slug: "sun-inriktning2000",
                 fqid: "class/sun-inriktning2000",
                 name: "SUN 2000 — inriktning",
+                short_name: "SUN2000-INRIKTNING",
                 effective_year: 2020,
                 is_self: false,
                 is_current: false,
@@ -301,6 +306,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
                 slug: "sun-inriktning2020",
                 fqid: "class/sun-inriktning2020",
                 name: "SUN 2020 — inriktning",
+                short_name: "SUN2020-INRIKTNING",
                 effective_year: null,
                 is_self: true,
                 is_current: true,
@@ -348,6 +354,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
             slug: "sun1996",
             fqid: "class/sun1996",
             name: "SUN 1996",
+            short_name: "SUN1996",
             effective_year: 2000,
             is_self: false,
             is_current: false,
@@ -356,6 +363,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
             slug: "sun-inriktning2000",
             fqid: "class/sun-inriktning2000",
             name: "SUN 2000 — inriktning",
+            short_name: "SUN2000-INRIKTNING",
             effective_year: 2020,
             is_self: true,
             is_current: false,
@@ -364,6 +372,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
             slug: "sun-inriktning2020",
             fqid: "class/sun-inriktning2020",
             name: "SUN 2020 — inriktning",
+            short_name: "SUN2020-INRIKTNING",
             effective_year: null,
             is_self: false,
             is_current: true,
@@ -400,7 +409,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
         [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
           (label) => label.textContent?.trim(),
         ),
-      ).toContain("niva-grovv1");
+      ).toContain("NIVA-GROV");
     });
 
     expect(
@@ -408,14 +417,14 @@ describe("ClassificationLeafView (#638 shell)", () => {
         (label) => label.textContent?.trim(),
       ),
     ).toEqual([
-      "sun1996",
-      "sun-inriktning2000",
-      "sun-inriktning2020",
-      "niva-grovv1",
+      "SUN1996",
+      "SUN2000-INRIKTNING",
+      "SUN2020-INRIKTNING",
+      "NIVA-GROV",
     ]);
     expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
     expect(document.querySelector(".node.self title")?.textContent).toBe(
-      "sun-inriktning2000",
+      "SUN2000-INRIKTNING",
     );
   });
 });

@@ -775,8 +775,8 @@ export interface components {
          *     check) fails the build if any succession edge references a slug with no live
          *     row, so a "dead edition" can't exist in a validated DB. `fqid` is None only on
          *     a *malformed* slug (a lower-level slug-grammar concern, also build-prevented;
-         *     `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes
-         *     from the live row. `effective_year` is the year on the
+         *     `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability);
+         *     `short_name`/`name` come from the live row. `effective_year` is the year on the
          *     `classification_replaced_by` edge that names this edition as `predecessor_slug`
          *     — i.e. the year this edition was superseded by its successor (None for the
          *     terminal, which has no outbound edge). `is_current` marks the
@@ -810,6 +810,11 @@ export interface components {
              * @description The edition's display name (every chain edition is a live row).
              */
             name: string | null;
+            /**
+             * Short Name
+             * @description The edition's short display name (every chain edition is a live row).
+             */
+            short_name: string | null;
             /**
              * Slug
              * @description The edition's literal slug (e.g. 'sun2000').
