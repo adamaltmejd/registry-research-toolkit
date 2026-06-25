@@ -394,7 +394,9 @@ def poll(
     `engage_grace_sec`: if the bot never engages (no 👀, no verdict) within the grace, the
     poll returns early with `no_engagement: true` + a `recommendation` to post
     `@codex review`, instead of blocking the whole ceiling on an auto-review that didn't
-    fire (see `should_bail_no_engagement`).
+    fire (see `should_bail_no_engagement`). That early bail keeps `timed_out: false` — the
+    ceiling was NOT reached — so a caller can't read it as the at-ceiling "absence is not a
+    blocker, proceed"; `no_engagement` says the opposite (the bot never started, retry it).
     """
     interval_sec = max(1.0, interval_sec)  # floor: never busy-loop hammering the gh API
     start = time.monotonic()
@@ -413,7 +415,11 @@ def poll(
         if should_bail_no_engagement(
             result["signal"], engaged, elapsed, engage_grace_sec
         ):
-            result["timed_out"] = True
+            # NOT `timed_out`: the ceiling was not reached. `timed_out` means "absence at
+            # the --timeout-min ceiling", which the gate reads as not-a-blocker → proceed.
+            # The early bail is the opposite — Codex never started, so the caller should
+            # post `@codex review`, not proceed. `no_engagement` carries that distinctly.
+            result["timed_out"] = False
             result["no_engagement"] = True
             result["recommendation"] = (
                 f"No {bot} engagement (no 👀, no verdict) {elapsed:.0f}s into the poll — its "

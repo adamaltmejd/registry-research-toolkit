@@ -483,6 +483,9 @@ def test_poll_bails_on_persistent_no_engagement(monkeypatch) -> None:
     )
     assert out["no_engagement"] is True
     assert out["settled"] is False
+    # NOT timed_out: the ceiling wasn't reached, so a caller can't mistake the early bail
+    # for an exhausted (proceed-anyway) window — it must post `@codex review` instead.
+    assert out["timed_out"] is False
     assert "recommendation" in out and "@codex review" in out["recommendation"]
     # bailed at the grace (~4 evals), not the 15-min / 30-eval ceiling
     assert calls[0] <= 5
