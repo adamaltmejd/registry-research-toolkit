@@ -968,7 +968,6 @@ def populate_slugs(
     slug_dir: Path,
     *,
     strict: bool = True,
-    skipped_classifications: frozenset[str] = frozenset(),
 ) -> dict[str, int]:
     """Read ``slug_dir`` and write slug columns on register / register_variant /
     classification. (A2.6: register_version has no slug — version left the FQID
@@ -978,11 +977,10 @@ def populate_slugs(
     ID has no slug entry. Tests pass ``strict=False`` to populate whatever's
     available without enforcing coverage.
 
-    ``skipped_classifications`` names short_names that were provider-skipped by
-    ``populate_classifications`` this build (e.g. SOS entries in a ``--providers=scb``
-    build). Their slug entries have no DB row, so the forward-miss is expected
-    and skipped instead of raising; a forward-miss for any other short_name is
-    still a genuine typo and raises.
+    Every classification is seeded by ``populate_classifications`` (shared
+    standards with git-tracked CSVs), so a classification slug entry with no DB
+    row is always a genuine typo and raises (subject to the ``deprecated``
+    short-circuit).
 
     Returns ``{"register": n, "register_variant": n, "classification": n}``.
     """
@@ -1120,11 +1118,8 @@ def populate_slugs(
         if row is None:
             if entry.deprecated:
                 continue
-            # Provider-skipped this build (e.g. SOS entry in an SCB-only build):
-            # the seed entry exists but was filtered out, so no DB row is
-            # expected. A short_name NOT in the skipped set is a genuine typo.
-            if entry.source_id in skipped_classifications:
-                continue
+            # Every classification is seeded, so a missing DB row (not flagged
+            # deprecated) is a genuine typo in the slug TOML.
             raise _err(
                 "slug_unknown_source_id",
                 f"{CLASSIFICATIONS_FILE}: classification.{entry.source_id!r} "

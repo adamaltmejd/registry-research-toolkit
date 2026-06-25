@@ -2301,14 +2301,16 @@ def test_synthetic_combined_scb_subset_identical_to_scb_only(tmp_path: Path) -> 
 
 # Seed covering the SCB fixture's "Kön" vardemangdsversion (so SCB classification
 # linkage is NON-empty) plus the SOS ICD-10-SE entry the resolving SOS variable
-# below points at. ICD-10-SE is provider="sos" so it is provider-skipped in an
-# SCB-only build — exactly the gate that keeps the SCB-subset byte-identical.
+# below points at. ICD-10-SE is provider="sos"; it is SEEDED on the SCB-only
+# build too (classifications are always seeded), but the SCB-subset stays
+# byte-identical because the SOS feed tags only SOS states.
 _PR2_SEED_TOML = """\
 [[classification]]
 short_name = "TESTKON"
 name = "Test classification for gender codes"
 publisher = "TEST"
 valid_from = 2000
+valid_codes_file = "testkon.csv"
 vardemangdsversion = ["Kön"]
 
 [[classification]]
@@ -2343,11 +2345,16 @@ _PR2_SOS_REGISTERS = (
 
 
 def _write_pr2_seed(tmp_path: Path) -> Path:
-    # The ICD-10-SE entry needs a valid_codes CSV under a classifications dir.
+    # Every classification needs a valid_codes CSV under a classifications dir.
     seed = tmp_path / "classifications.toml"
     seed.write_text(_PR2_SEED_TOML, encoding="utf-8")
     cls_dir = tmp_path / "input" / "classifications"
     cls_dir.mkdir(parents=True, exist_ok=True)
+    # TESTKON codes mirror the SCB fixture's observed Kön codes (1=Man, 2=Kvinna)
+    # so no canonical-only rows are added.
+    (cls_dir / "testkon.csv").write_text(
+        "code,label\n1,Man\n2,Kvinna\n", encoding="utf-8"
+    )
     (cls_dir / "icd-10-se.csv").write_text(
         "code,label\nA01,Diagnos A\nB02,Diagnos B\n", encoding="utf-8"
     )

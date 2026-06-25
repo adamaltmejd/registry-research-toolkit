@@ -1280,9 +1280,8 @@ def materialize_concept_groups(
     """Derive the concept-group tables (#303). Ordering contract: runs after
     `populate_variable_slugs` (the edge pass resolves slug-anchored siblings) and
     after `populate_slugs` / `populate_classifications` (classification slugs +
-    rows). `providers` gates curated/accept entries to the providers in this build
-    (mirrors `populate_classifications`' provider gate, so a `--providers=sos`
-    build doesn't fail on an scb family).
+    rows). `providers` gates curated/accept entries to the providers in this build,
+    so a `--providers=sos` build doesn't fail on an scb family.
 
     Dimension 0 (`edge`) folds the IN-BUILD `same_def` split-sibling pairs
     (`edge_siblings`, `(variable_id, variable_id)`), NOT a `variable_related_to`

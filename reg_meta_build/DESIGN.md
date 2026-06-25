@@ -343,15 +343,16 @@ feeding the same provider-blind candidate path SOS uses (`external_classificatio
 resolver); the `_backfill_state_classifications` pass then tags the variable's states,
 keying on `(variable_id, NULL)`. The `classification` short_name is validated at TOML
 load against the seed manifest (`classifications.toml`): an **undeclared** short_name
-fails the build fast (a typo guard — `"ICD-10"` for `"ICD-10-SE"`), while a **declared**
-but provider-gated classification not seeded in the current build's provider subset is
-allowed and the link simply drops at feed time. FOHM (SmiNet + the national vaccination
-register) is the first thin provider; Försäkringskassan is the second, modeled in two
-tiers (28 registers): 12 publicly-documented registers grounded in FK's published
-variabelförteckningar (each with one variant per documented delivery table —
-fall/delfall, mottagare/barn/beviljanden/avslag, the tandvård delivery tables — e.g.
-sjukpenning, sjuk- och aktivitetsersättning, föräldrapenning, tandvardsstodet) plus 16
-thin SWECOV-core benefits with no public variable doc (barnbidrag, bostadsbidrag, … — a
+fails the build fast (a typo guard — `"ICD-10"` for `"ICD-10-SE"`). Every **declared**
+classification is seeded on every build (shared standards with git-tracked code CSVs;
+see below), so a declared reference always resolves to a present classification. FOHM
+(SmiNet + the national vaccination register) is the first thin provider;
+Försäkringskassan is the second, modeled in two tiers (28 registers): 12
+publicly-documented registers grounded in FK's published variabelförteckningar (each
+with one variant per documented delivery table — fall/delfall,
+mottagare/barn/beviljanden/avslag, the tandvård delivery tables — e.g. sjukpenning,
+sjuk- och aktivitetsersättning, föräldrapenning, tandvardsstodet) plus 16 thin
+SWECOV-core benefits with no public variable doc (barnbidrag, bostadsbidrag, … — a
 single `_default` variant carrying the payment/period core). FK's diagnosis-CODE fields
 are linked to the catalog `ICD-10-SE` classification (the SmiNet precedent): FK codes
 diagnoses per the version current in the data year, so ICD-10-SE tags the modern bulk
@@ -904,17 +905,17 @@ strings are deterministic and auditable: any maintainer can enumerate them via
 then projects it onto the **shipped** `variable_state.classification_id` (per-era,
 attributed to the owning split sibling) before `variable_instance` is dropped.
 
-**Provider gate.** A seed entry may carry `provider = "<name>"` (e.g. `"sos"`) to
-declare its **label-source** — which provider's
+**Always seeded; `provider` is label-source only.** A seed entry may carry
+`provider = "<name>"` (e.g. `"sos"`) to declare its **label-source** — which provider's
 `variable_instance.value_set_version_label` strings carry that classification. Untagged
 entries are implicitly SCB-sourced. Many classifications are shared standards (e.g.
 `ICD-10-SE`/`ATC` are tagged `provider="sos"` but referenced via curated
-`classification=` links by FOHM, FK, Läkemedelsverket, and Pliktverket). A
-provider-tagged entry is seeded when its tag-provider is built **or** a built provider
-references it via a curated `classification=` link — so `ICD-10-SE` stays seeded on a
-`--providers fk` build and FK's diagnosis variables classify. It is skipped only when
-neither holds. Untagged entries are always seeded. No `provider` column exists in the
-shipped DB; the catalog remains provider-blind (#597).
+`classification=` links by FOHM, FK, Läkemedelsverket, and Pliktverket). **Every**
+classification is seeded on **every** build regardless of `--providers`: they are shared
+standards and each carries a git-tracked `valid_codes_file` CSV, so a classification's
+canonical codes are always available — provider-gating the seed is unnecessary. The
+`provider` tag's **sole** remaining role is scoping the seed-drift demotion below. No
+`provider` column exists in the shipped DB; the catalog remains provider-blind (#597).
 
 **`vardemangdsversion`-free seeds.** A classification may omit `vardemangdsversion`
 entirely. Without it, no variable instance is tagged and the classification row carries
@@ -928,8 +929,8 @@ Build-time invariants (violations fail `reg-meta-build build-db` loudly, exit 10
 - Every seed `vardemangdsversion` string must match at least one instance (entries
   without `vardemangdsversion` are exempt). Drift checking is **per-classification on
   label-source**: an unmatched string is a hard error (exit 10) when the
-  classification's label-source provider is built (`providers=None`, or the label-source
-  — its `provider` tag, or `scb` if untagged — is in the build) **or** the
+  classification's label-source provider is built (`built_providers=None`, or the
+  label-source — its `provider` tag, or `scb` if untagged — is in the build) **or** the
   classification is mixed (≥1 string matched, ≥1 unmatched). It is demoted to a progress
   note only when the label-source provider is not built **and** the whole classification
   is absent (zero strings matched). Concretely: `--providers scb` stays strict for
@@ -938,10 +939,12 @@ Build-time invariants (violations fail `reg-meta-build build-db` loudly, exit 10
 - Every classification with at least one tagged instance must resolve to at least one
   value code.
 - A given `vardemangdsversion` string may belong to at most one classification.
-- Every `valid_codes_file`, when present, must resolve to a CSV under the
+- Every entry must declare a `valid_codes_file`, and it must resolve to a CSV under the
   classifications directory whose first two columns are the code and label (either
   `vardekod,vardebenamning` or the universal `code,label` header; further columns are
-  ignored).
+  ignored). Requiring it on every entry is what makes always-seed safe: a thin
+  `--providers` build seeds every classification, and the CSV always supplies codes so
+  the empty-classification guard never trips.
 
 The seed declares **no succession**. Which classification edition supersedes which lives
 in `classification_replaced_by` (auto year-tail chains + curated `relations.toml`
@@ -950,7 +953,7 @@ edge table at build time — see "Classification succession" below.
 
 ### Canonical code CSVs
 
-A seed entry's optional `valid_codes_file` points at a CSV under
+Every seed entry's (required) `valid_codes_file` points at a CSV under
 `reg_meta_build/input_data/classifications/`. Accepted headers: the SCB convention
 `vardekod,vardebenamning` or the universal `code,label`; only the first two columns are
 read — further columns are silently ignored. At build time:
@@ -959,8 +962,7 @@ read — further columns are silently ignored. At build time:
   get a fresh row with no `value_set_member` linkage).
 - Every `classification_code` row in that classification is marked `is_valid=1`
   (canonical) or `is_valid=0` (observed-only).
-- `classification.valid_code_count` caches the canonical count; it is `NULL` for
-  classifications without a CSV.
+- `classification.valid_code_count` caches the canonical count.
 
 The CLI surface (`get classification --codes --only-valid`, `is_valid` in JSON output)
 is documented in [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Canonical vs observed
@@ -2233,9 +2235,8 @@ already-grouped member:
      attachments the generator guaranteed non-colliding). Dangling references — a
      missing register/variable, an accept of a family absent from
      `concept_groups.auto.toml`, or a stale `exclude` — FAIL the build (EXIT_CONFIG);
-     curation drift is fixed, not silently dropped. Both kinds are provider-gated like
-     the classification seed, so a `--providers=sos` build skips scb families instead of
-     failing.
+     curation drift is fixed, not silently dropped. Both kinds are provider-gated (a
+     `--providers=sos` build skips scb families instead of failing).
    - `[[classification_group]]` (#516) — a curated single-axis classification umbrella:
      a `key`, `label`, `axis` (the single `facet_axis` every member shares), and a list
      of `[[classification_group.members]]` entries, each with `classification` (a
@@ -2328,7 +2329,7 @@ Two entry kinds ship today, both in `delivery_enrichment.toml`:
 
 The apply pass runs in the same slug-gated post-pass block as concept groups (after
 `populate_variable_slugs`, so `(register, variable)` resolves off stored slugs) and is
-provider-gated like the classification seed.
+provider-gated (entries for an unbuilt provider are skipped, not failed).
 
 Two guards, both deliberate:
 

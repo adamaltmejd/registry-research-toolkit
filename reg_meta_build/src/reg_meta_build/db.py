@@ -3203,20 +3203,6 @@ def materialize(
     # concept-group families whose provider isn't in this build are skipped,
     # not errors (a `--providers=sos` build must not fail on an scb entry).
     active_providers = frozenset(a.provider for a, _ in adapters)
-    # #597 P2 #1: short_names a BUILT provider references via a curated
-    # `classification = "..."` link. Classifications are shared standards (e.g.
-    # FK references SOS-tagged ICD-10-SE), so a referenced classification must be
-    # SEEDED even when its label-source provider isn't built — otherwise the
-    # referencing variables go unclassified. The adapter loop above fully drained
-    # each adapter's emit() (populating `classification_candidates`), so the
-    # candidate side channel is complete here. SCB feeds candidates via SQL, not
-    # this attribute (getattr default []); only SOS + curated thin providers
-    # expose it.
-    referenced_classifications = frozenset(
-        short
-        for adapter, _src in adapters
-        for (_vid, _vsid, short) in getattr(adapter, "classification_candidates", [])
-    )
 
     # Curated pairwise relations (#522): one typed `[[edge]]` surface loaded
     # ONCE here, then materialized into its three table groups — `related_to`
@@ -3225,11 +3211,10 @@ def materialize(
     # installs).
     relations = load_relations(repo_relations_path())
 
-    # Classifications — maintainer-curated normalized code systems.
-    # Provider-skipped classifications (seed entries whose `provider` is set but
-    # absent from this build) are threaded into populate_slugs so their slug
-    # entries don't raise on the missing DB row.
-    skipped_classifications: frozenset[str] = frozenset()
+    # Classifications — maintainer-curated normalized code systems. Every
+    # classification is seeded regardless of `--providers` (shared standards with
+    # git-tracked canonical-code CSVs), so there are no provider-skipped entries
+    # to thread anywhere.
     if skip_classifications:
         _progress("Skipping classifications (skip_classifications=True)")
     else:
@@ -3250,17 +3235,14 @@ def materialize(
                 ),
             )
         valid_codes_dir = cls_dir if cls_dir.is_dir() else None
-        # Provider gate: seed only classifications whose provider is in this
-        # build (entries with no provider are always seeded).
-        # #597 P2s: `providers` gates seeding + per-classification label-source
-        # drift; `referenced_classifications` keeps a shared classification a
-        # built provider references even when its label-source isn't built.
-        n_classifications, skipped_classifications = populate_classifications(
+        # Every classification is seeded; `built_providers` only scopes the #597
+        # per-classification seed-drift demotion (a label-source provider that
+        # isn't built relaxes its classification's unmatched-string drift).
+        n_classifications = populate_classifications(
             conn,
             seed,
             valid_codes_dir=valid_codes_dir,
-            providers=active_providers,
-            referenced_classifications=referenced_classifications,
+            built_providers=active_providers,
         )
         row_counts["classifications.toml"] = n_classifications
 
@@ -3286,12 +3268,7 @@ def materialize(
                     "`reg-meta update` to fetch the prebuilt DB."
                 ),
             )
-        populate_slugs(
-            conn,
-            slug_root,
-            strict=True,
-            skipped_classifications=skipped_classifications,
-        )
+        populate_slugs(conn, slug_root, strict=True)
 
         # Period column-family merges (#319) — fold each curated family's period
         # (today, month) columns into ONE variable BEFORE variable slugs are

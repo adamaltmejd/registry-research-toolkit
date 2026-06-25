@@ -268,8 +268,28 @@ def load_seed(path: Path) -> list[dict[str, Any]]:
                     )
                 seen_versions[v] = short
 
+        # Every classification carries a git-tracked canonical-codes CSV. This
+        # is what makes seeding provider-agnostic safe: a thin --providers build
+        # seeds every classification regardless of which provider is built, and
+        # the CSV always supplies codes so the `classification_empty` guard never
+        # trips. An entry without `valid_codes_file` would silently break that
+        # guarantee, so require it (fail-fast) rather than discover it on a build.
         vcf = entry.get("valid_codes_file")
-        if vcf is not None and not isinstance(vcf, str):
+        if not vcf:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="classification_seed_invalid",
+                error_class="configuration",
+                message=(
+                    f"{short}: every classification must declare a "
+                    "valid_codes_file (canonical codes are always seeded)."
+                ),
+                remediation=(
+                    "Add valid_codes_file = '<name>.csv' and place the CSV under "
+                    "<input_dir>/classifications/."
+                ),
+            )
+        if not isinstance(vcf, str):
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="classification_seed_invalid",
@@ -278,9 +298,10 @@ def load_seed(path: Path) -> list[dict[str, Any]]:
                 remediation="Use a relative filename like 'sun2000-niva.csv'.",
             )
 
-        # provider is an optional build-time seed filter (not a DB column). An
-        # entry with no provider is always seeded; a provider-tagged entry is
-        # seeded only when its provider is in the active build set.
+        # provider is an optional LABEL-SOURCE tag (not a DB column): which
+        # provider's instance value-set-version-label strings carry it. It no
+        # longer gates seeding (classifications are always seeded) — its sole
+        # role is scoping the #597 seed-drift demotion.
         prov = entry.get("provider")
         if prov is not None and not isinstance(prov, str):
             raise RegMetaError(
@@ -596,9 +617,8 @@ def populate_classifications(
     seed_path: Path,
     *,
     valid_codes_dir: Path | None = None,
-    providers: frozenset[str] | None = None,
-    referenced_classifications: frozenset[str] = frozenset(),
-) -> tuple[int, frozenset[str]]:
+    built_providers: frozenset[str] | None = None,
+) -> int:
     """Populate classification / classification_code / variable_instance.classification_id.
 
     Called once per ``build_db`` run, after value codes are imported and
@@ -610,71 +630,45 @@ def populate_classifications(
       ``valid_codes_dir`` → fail
 
     ``valid_codes_dir`` is the directory containing per-classification CSVs of
-    canonical codes. When an entry has ``valid_codes_file = "<name>.csv"``, the
-    CSV is loaded and used to mark each ``classification_code`` row as
-    ``is_valid=1`` (canonical) or ``is_valid=0`` (observed-only). Canonical
-    codes that don't appear in observed data are still inserted (they get a
-    fresh ``value_code`` row with no ``value_set_member`` linkage).
+    canonical codes. Every entry has ``valid_codes_file = "<name>.csv"`` (the
+    seed loader requires it): the CSV is loaded and used to mark each
+    ``classification_code`` row as ``is_valid=1`` (canonical) or ``is_valid=0``
+    (observed-only). Canonical codes that don't appear in observed data are still
+    inserted (they get a fresh ``value_code`` row with no ``value_set_member``
+    linkage).
 
-    ``providers`` and ``referenced_classifications`` together gate which entries
-    are seeded. An entry's ``provider`` field is its LABEL-SOURCE declaration —
-    which provider's ``variable_instance.value_set_version_label`` strings carry
-    it (untagged entries are implicitly SCB-sourced). But classifications are
-    SHARED standards: e.g. ``ICD-10-SE``/``ATC`` are tagged ``provider="sos"``
-    yet referenced via curated ``classification = "..."`` links by FOHM, FK,
-    Läkemedelsverket, Pliktverket. So a provider-tagged entry is KEPT when its
-    label-source provider is built OR it is referenced by a built provider — it
-    is SKIPPED only when ``providers`` is set, its provider is absent, AND its
-    short_name is not in ``referenced_classifications`` (the set of short_names a
-    built provider's curated link points at; #597 P2 #1 — without this, a
-    ``--providers fk`` build would drop ICD-10-SE and leave FK's diagnosis
-    variables unclassified). Untagged entries are always seeded. ``providers``
-    ``None`` (the default) seeds every entry.
+    EVERY classification is seeded, regardless of ``--providers``. Classifications
+    are SHARED standards (e.g. ``ICD-10-SE``/``ATC`` are tagged ``provider="sos"``
+    yet referenced by FOHM, FK, Läkemedelsverket, Pliktverket) and each carries a
+    git-tracked ``valid_codes_file`` CSV, so a classification's canonical codes
+    are always available — provider-gating the seed is unnecessary. The
+    ``provider`` tag's SOLE remaining role is scoping the #597 seed-drift
+    demotion below.
 
-    Seed-drift demotion is decided PER-CLASSIFICATION on label-source (#597 P2
-    #2). Each kept entry's label-source is its ``provider`` tag, or ``"scb"`` if
-    untagged. For each unmatched version string of a classification: it is a HARD
-    drift (a real typo/stale on a built provider) when the label-source provider
-    IS built (``providers is None`` or label-source in ``providers``) OR the
-    classification is MIXED (≥1 of its strings matched — a partial-present
-    source). It is DEMOTED (a ``_progress`` note, no error) only when the
-    label-source provider isn't built AND the whole classification is absent
-    (zero strings matched) — the expected shape on a subset build. Without the
-    per-classification rule, a ``--providers scb`` build would wrongly relax
-    drift for the untagged (SCB-sourced) classifications even though SCB IS
-    built, demoting a real typo. Either way every kept classification is still
-    seeded — its CSV ``valid_codes_file`` supplies codes — so the downstream
-    ``classification_empty`` guard is unaffected.
+    Seed-drift demotion is decided PER-CLASSIFICATION on label-source (#597). An
+    entry's ``provider`` field is its LABEL-SOURCE declaration — which provider's
+    ``variable_instance.value_set_version_label`` strings carry it; untagged
+    entries are implicitly SCB-sourced. For each unmatched version string of a
+    classification: it is a HARD drift (a real typo/stale on a built provider)
+    when the label-source provider IS built (``built_providers is None`` or
+    label-source in ``built_providers``) OR the classification is MIXED (≥1 of
+    its strings matched — a partial-present source). It is DEMOTED (a
+    ``_progress`` note, no error) only when the label-source provider isn't built
+    AND the whole classification is absent (zero strings matched) — the expected
+    shape on a subset build. Without the per-classification rule, a
+    ``--providers scb`` build would wrongly relax drift for the untagged
+    (SCB-sourced) classifications even though SCB IS built, demoting a real typo.
+    ``built_providers`` ``None`` (the default = full build) is strict everywhere.
+    Either way every classification is seeded — its CSV ``valid_codes_file``
+    supplies codes — so the downstream ``classification_empty`` guard is
+    unaffected.
 
-    Returns ``(n_seeded, skipped_short_names)`` — the count of classifications
-    inserted and the set of provider-skipped short_names (the caller threads the
-    latter into ``populate_slugs`` so their slug entries don't raise). The
-    ``skipped`` set holds only entries actually skipped, so that threading stays
-    correct.
+    Returns ``n_seeded`` — the count of classifications inserted.
     """
     entries = load_seed(seed_path)
-    skipped: set[str] = set()
-    if providers is not None:
-        active: list[dict[str, Any]] = []
-        for entry in entries:
-            prov = entry.get("provider")
-            # Keep a provider-tagged entry when its label-source is built OR a
-            # built provider references it (shared standard); skip only when
-            # neither holds (#597 P2 #1).
-            if (
-                prov is not None
-                and prov not in providers
-                and entry["short_name"] not in referenced_classifications
-            ):
-                skipped.add(entry["short_name"])
-            else:
-                active.append(entry)
-        entries = active
     csv_paths = _resolve_valid_codes_paths(entries, valid_codes_dir)
-    skipped_note = f", {len(skipped)} provider-skipped" if skipped else ""
     _progress(
-        f"Populating classifications from {seed_path.name} "
-        f"({len(entries)} entries{skipped_note})..."
+        f"Populating classifications from {seed_path.name} ({len(entries)} entries)..."
     )
 
     # Insert classification rows. supersedes_id stays NULL at insert — it is a
@@ -764,10 +758,10 @@ def populate_classifications(
         matched_count[short] = matched_count.get(short, 0) + (1 if matched else 0)
 
     # Per-classification label-source: its `provider` tag, or "scb" if untagged
-    # (untagged entries are implicitly SCB-sourced). Keyed off the kept/active
-    # `entries` list. #597 P2 #2: the demote decision is made on THIS, not on a
-    # whole-build partial flag — so a built label-source (e.g. scb on a
-    # `--providers scb` build) stays strict even on a provider subset.
+    # (untagged entries are implicitly SCB-sourced). #597: the demote decision is
+    # made on THIS, not on a whole-build partial flag — so a built label-source
+    # (e.g. scb on a `--providers scb` build) stays strict even on a provider
+    # subset.
     label_source_by_short = {
         e["short_name"]: (e.get("provider") or "scb") for e in entries
     }
@@ -778,7 +772,7 @@ def populate_classifications(
         if matched:
             continue
         label_source = label_source_by_short.get(short, "scb")
-        source_built = providers is None or label_source in providers
+        source_built = built_providers is None or label_source in built_providers
         # Hard error when the label-source IS built (a real typo/stale on a built
         # provider) OR the classification is MIXED (≥1 matched → a partly-present
         # source). Demote only when the label-source provider isn't built AND the
@@ -880,7 +874,7 @@ def populate_classifications(
     ).fetchone()
     _progress(f"  {n_cls} classifications, {total_codes:,} codes tagged")
 
-    return len(entries), frozenset(skipped)
+    return len(entries)
 
 
 def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
