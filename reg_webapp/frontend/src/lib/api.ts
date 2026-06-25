@@ -378,10 +378,11 @@ export function getCatalogRoot(): Promise<RootResponse> {
 export function getCatalogNode(
   fqidPath: string,
   params?: ResolutionParams,
+  options?: { signal?: AbortSignal },
 ): Promise<CatalogNode | StatesResponse> {
   const query = params ? queryFromParams(params) : "";
   const path = `/catalog/${encodeFqid(fqidPath)}${query ? `?${query}` : ""}`;
-  return apiGet<CatalogNode | StatesResponse>(path);
+  return apiGet<CatalogNode | StatesResponse>(path, options);
 }
 
 /** List a register's variants (the `?variant=` browse axis). `register`

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { ConceptGroupNodeData } from "./api";
-import { getConceptGroup } from "./api";
+import type { ClassificationNodeData, ConceptGroupNodeData } from "./api";
+import { getCatalogNode, getConceptGroup } from "./api";
 import ConceptGroupView from "./ConceptGroupView.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
@@ -13,6 +13,7 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
+    getCatalogNode: vi.fn(),
     getConceptGroup: vi.fn(),
   };
 });
@@ -53,6 +54,7 @@ function node(
 }
 
 beforeEach(() => {
+  vi.mocked(getCatalogNode).mockReset();
   vi.mocked(getConceptGroup).mockReset();
   // Reset the URL + the global window so the availability-lens tests start clean
   // (these stores are module singletons shared across cases).
@@ -179,6 +181,66 @@ describe("ConceptGroupView (#617)", () => {
   });
 
   it("renders classification groups as first-class member graph pages", async () => {
+    vi.mocked(getCatalogNode).mockImplementation((fqidPath) =>
+      Promise.resolve({
+        kind: "classification",
+        fqid: fqidPath,
+        name: fqidPath,
+        short_name: fqidPath.split("/").at(-1)?.toUpperCase() ?? fqidPath,
+        codes: [],
+        dimensions: [],
+        edition_chain:
+          fqidPath === "class/sun2020-inriktning"
+            ? [
+                {
+                  slug: "sun1996",
+                  fqid: "class/sun1996",
+                  name: "SUN 1996",
+                  effective_year: 2000,
+                  is_self: false,
+                  is_current: false,
+                },
+                {
+                  slug: "sun2000-inriktning",
+                  fqid: "class/sun2000-inriktning",
+                  name: "SUN 2000 — inriktning",
+                  effective_year: 2020,
+                  is_self: false,
+                  is_current: false,
+                },
+                {
+                  slug: "sun2020-inriktning",
+                  fqid: "class/sun2020-inriktning",
+                  name: "SUN 2020 — inriktning",
+                  effective_year: null,
+                  is_self: true,
+                  is_current: true,
+                },
+              ]
+            : [],
+        edition_edges:
+          fqidPath === "class/sun2020-inriktning"
+            ? [
+                {
+                  predecessor_slug: "sun1996",
+                  predecessor_fqid: "class/sun1996",
+                  successor_slug: "sun2000-inriktning",
+                  successor_fqid: "class/sun2000-inriktning",
+                  effective_year: 2000,
+                  note: null,
+                },
+                {
+                  predecessor_slug: "sun2000-inriktning",
+                  predecessor_fqid: "class/sun2000-inriktning",
+                  successor_slug: "sun2020-inriktning",
+                  successor_fqid: "class/sun2020-inriktning",
+                  effective_year: 2020,
+                  note: null,
+                },
+              ]
+            : [],
+      } as ClassificationNodeData),
+    );
     vi.mocked(getConceptGroup).mockResolvedValue(
       node({
         provider: "class",
@@ -242,6 +304,23 @@ describe("ConceptGroupView (#617)", () => {
         page.getByRole("heading", { name: "Classification relationships" }),
       )
       .toBeVisible();
+    expect(
+      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+        (label) => label.textContent?.trim(),
+      ),
+    ).toEqual([
+      "sun1996",
+      "sun2000-inriktning",
+      "sun2020-inriktning",
+      "niva-grovv1",
+    ]);
+    expect(
+      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+        (label) => label.textContent?.trim(),
+      ),
+    ).not.toContain("sun");
+    expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
+    expect(document.querySelectorAll(".edges .member")).toHaveLength(0);
     await expect
       .element(page.getByRole("link", { name: /sun2020-inriktning/ }))
       .toHaveAttribute("href", "/catalog/class/sun2020-inriktning");

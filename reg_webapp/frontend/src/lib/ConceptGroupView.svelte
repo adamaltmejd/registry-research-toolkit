@@ -1,5 +1,11 @@
 <script lang="ts">
-import { type ConceptGroupNodeMember, getConceptGroup } from "./api";
+import {
+  type ClassificationNodeData,
+  type ConceptGroupNodeMember,
+  getCatalogNode,
+  getConceptGroup,
+  isCatalogNode,
+} from "./api";
 import { asyncResource } from "./async.svelte";
 import {
   axisValues,
@@ -12,7 +18,10 @@ import {
   YEARLESS_VALID_FROM,
 } from "./catalog";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
-import { historyGraphFromGroup } from "./history_graph";
+import {
+  historyGraphFromClassificationGroup,
+  historyGraphFromGroup,
+} from "./history_graph";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
   type Coverage,
@@ -63,8 +72,37 @@ const resource = asyncResource(() =>
   getConceptGroup(provider, register, key, memberHint ?? undefined),
 );
 const node = $derived(resource.data);
-const historyGraph = $derived(node ? historyGraphFromGroup(node) : null);
 const isClassificationGroup = $derived(register === null);
+const classificationGraphMembers = asyncResource<ClassificationNodeData[]>(
+  async (signal) => {
+    if (!node || !isClassificationGroup) {
+      return [];
+    }
+    return Promise.all(
+      node.members.map(async (member) => {
+        const resolved = await getCatalogNode(member.fqid, undefined, {
+          signal,
+        });
+        if (isCatalogNode(resolved) && resolved.kind === "classification") {
+          return resolved;
+        }
+        throw new Error(`Expected classification node for ${member.fqid}`);
+      }),
+    );
+  },
+);
+const historyGraph = $derived(
+  node
+    ? isClassificationGroup
+      ? classificationGraphMembers.data
+        ? historyGraphFromClassificationGroup(
+            node,
+            classificationGraphMembers.data,
+          )
+        : null
+      : historyGraphFromGroup(node)
+    : null,
+);
 
 // The parent the group lives under — a register for variable groups, the
 // classification root for classification groups.
@@ -407,7 +445,11 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   {/snippet}
 
   {#snippet relationships()}
-    {#if historyGraph}
+    {#if isClassificationGroup && classificationGraphMembers.loading}
+      <p class="muted" aria-busy="true">Loading member graph…</p>
+    {:else if isClassificationGroup && classificationGraphMembers.error}
+      <p class="error" role="alert">{classificationGraphMembers.error}</p>
+    {:else if historyGraph}
       <HistoryGraphPrototype graph={historyGraph} />
     {/if}
   {/snippet}

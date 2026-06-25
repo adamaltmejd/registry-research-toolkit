@@ -8,6 +8,7 @@ import type {
 import {
   historyGraphFromBinding,
   historyGraphFromClassification,
+  historyGraphFromClassificationGroup,
   historyGraphFromGroup,
   historyGraphYears,
 } from "./history_graph";
@@ -269,7 +270,7 @@ describe("history graph prototype model", () => {
     expect(domain.max).toBeGreaterThanOrEqual(new Date().getFullYear());
   });
 
-  it("shows group members and records why group mode wants a backend graph payload", () => {
+  it("shows group members without inventing a group entity node", () => {
     const graph = historyGraphFromGroup({
       kind: "concept-group",
       key: "agi-months",
@@ -306,15 +307,17 @@ describe("history graph prototype model", () => {
     } as ConceptGroupNodeData);
 
     expect(graph.nodes.map((node) => node.kind)).toEqual([
-      "group",
       "group-member",
       "group-member",
     ]);
-    expect(graph.edges.every((edge) => edge.kind === "member")).toBe(true);
-    expect(graph.warnings.join("\n")).toContain("N+1 leaf fetches");
+    expect(graph.nodes.map((node) => node.id)).not.toContain(
+      "group:agi-months",
+    );
+    expect(graph.edges).toEqual([]);
+    expect(graph.warnings.join("\n")).toContain("member leaves");
   });
 
-  it("shows classification group members as slug-labelled membership graph nodes", () => {
+  it("omits the synthetic group node from shallow classification group graphs", () => {
     const graph = historyGraphFromGroup({
       kind: "concept-group",
       key: "sun",
@@ -356,14 +359,194 @@ describe("history graph prototype model", () => {
     expect(graph.title).toBe("Classification relationships");
     expect(graph.nodes.map((node) => [node.id, node.kind, node.label])).toEqual(
       [
-        ["group:sun", "group", "sun"],
         ["class/sun2020-inriktning", "classification", "sun2020-inriktning"],
         ["class/niva-grovv1", "classification", "niva-grovv1"],
       ],
     );
+    expect(graph.nodes.map((node) => node.id)).not.toContain("group:sun");
+    expect(graph.edges).toEqual([]);
+  });
+
+  it("merges classification group member histories and succession edges", () => {
+    const group = {
+      kind: "concept-group",
+      key: "sun",
+      label: "Svensk utbildningsnomenklatur (SUN)",
+      provider: "class",
+      register: null,
+      source: "curated",
+      axes: ["dimension"],
+      member: null,
+      members: [
+        {
+          fqid: "class/sun2020-inriktning",
+          name: "Utbildningsinriktning",
+          facets: [
+            {
+              axis: "dimension",
+              value: "inriktning",
+              label: "Inriktning",
+            },
+          ],
+          coverage: null,
+        },
+        {
+          fqid: "class/sun2020-niva",
+          name: "Utbildningsnivå",
+          facets: [
+            {
+              axis: "dimension",
+              value: "niva",
+              label: "Nivå",
+            },
+          ],
+          coverage: null,
+        },
+        {
+          fqid: "class/niva-grovv1",
+          name: "Utbildningsnivå, grov",
+          facets: [
+            {
+              axis: "dimension",
+              value: "niva-grov",
+              label: "Aggregat",
+            },
+          ],
+          coverage: null,
+        },
+      ],
+    } as ConceptGroupNodeData;
+    const graph = historyGraphFromClassificationGroup(group, [
+      {
+        kind: "classification",
+        fqid: "class/sun2020-inriktning",
+        name: "SUN 2020 — inriktning",
+        short_name: "SUN2020-INRIKTNING",
+        codes: [],
+        dimensions: [],
+        edition_chain: [
+          {
+            slug: "sun1996",
+            fqid: "class/sun1996",
+            name: "SUN 1996",
+            effective_year: 2000,
+            is_self: false,
+            is_current: false,
+          },
+          {
+            slug: "sun2000-inriktning",
+            fqid: "class/sun2000-inriktning",
+            name: "SUN 2000 — inriktning",
+            effective_year: 2020,
+            is_self: false,
+            is_current: false,
+          },
+          {
+            slug: "sun2020-inriktning",
+            fqid: "class/sun2020-inriktning",
+            name: "SUN 2020 — inriktning",
+            effective_year: null,
+            is_self: true,
+            is_current: true,
+          },
+        ],
+        edition_edges: [
+          {
+            predecessor_slug: "sun1996",
+            predecessor_fqid: "class/sun1996",
+            successor_slug: "sun2000-inriktning",
+            successor_fqid: "class/sun2000-inriktning",
+            effective_year: 2000,
+            note: null,
+          },
+          {
+            predecessor_slug: "sun2000-inriktning",
+            predecessor_fqid: "class/sun2000-inriktning",
+            successor_slug: "sun2020-inriktning",
+            successor_fqid: "class/sun2020-inriktning",
+            effective_year: 2020,
+            note: null,
+          },
+        ],
+      },
+      {
+        kind: "classification",
+        fqid: "class/sun2020-niva",
+        name: "SUN 2020 — nivå",
+        short_name: "SUN2020-NIVA",
+        codes: [],
+        dimensions: [],
+        edition_chain: [
+          {
+            slug: "sun1996",
+            fqid: "class/sun1996",
+            name: "SUN 1996",
+            effective_year: 2000,
+            is_self: false,
+            is_current: false,
+          },
+          {
+            slug: "sun2000-niva",
+            fqid: "class/sun2000-niva",
+            name: "SUN 2000 — nivå",
+            effective_year: 2020,
+            is_self: false,
+            is_current: false,
+          },
+          {
+            slug: "sun2020-niva",
+            fqid: "class/sun2020-niva",
+            name: "SUN 2020 — nivå",
+            effective_year: null,
+            is_self: true,
+            is_current: true,
+          },
+        ],
+        edition_edges: [
+          {
+            predecessor_slug: "sun1996",
+            predecessor_fqid: "class/sun1996",
+            successor_slug: "sun2000-niva",
+            successor_fqid: "class/sun2000-niva",
+            effective_year: 2000,
+            note: null,
+          },
+          {
+            predecessor_slug: "sun2000-niva",
+            predecessor_fqid: "class/sun2000-niva",
+            successor_slug: "sun2020-niva",
+            successor_fqid: "class/sun2020-niva",
+            effective_year: 2020,
+            note: null,
+          },
+        ],
+      },
+      {
+        kind: "classification",
+        fqid: "class/niva-grovv1",
+        name: "Utbildningsnivå, grov",
+        short_name: "NIVA-GROV",
+        codes: [],
+        dimensions: [],
+        edition_chain: [],
+        edition_edges: [],
+      },
+    ] as ClassificationNodeData[]);
+
+    expect(graph.nodes.map((node) => node.id)).toEqual([
+      "class/sun1996",
+      "class/sun2000-inriktning",
+      "class/sun2020-inriktning",
+      "class/sun2000-niva",
+      "class/sun2020-niva",
+      "class/niva-grovv1",
+    ]);
+    expect(graph.nodes.map((node) => node.id)).not.toContain("group:sun");
     expect(graph.edges.map((edge) => [edge.from, edge.to, edge.kind])).toEqual([
-      ["group:sun", "class/sun2020-inriktning", "member"],
-      ["group:sun", "class/niva-grovv1", "member"],
+      ["class/sun1996", "class/sun2000-inriktning", "succession"],
+      ["class/sun2000-inriktning", "class/sun2020-inriktning", "succession"],
+      ["class/sun1996", "class/sun2000-niva", "succession"],
+      ["class/sun2000-niva", "class/sun2020-niva", "succession"],
     ]);
     expect(graph.warnings).toEqual([]);
   });
