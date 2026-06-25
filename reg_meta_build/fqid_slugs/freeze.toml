@@ -1,0 +1,18 @@
+# Per-provider slug-freeze state (#470). `<zone> = "<state>"`, state ∈
+# churning | curating | frozen; an absent file or unlisted zone ⇒ churning.
+# See reg_meta_build/DESIGN.md → "Slug immutability".
+#
+# All 8 global providers advanced churning → curating (#759, epic #209): each
+# provider's committed `<provider>.auto.toml` is now PINNED (read back, no free
+# re-derivation); renames are still allowed until the frozen seal (#472).
+# riksarkivet's auto.toml is header-only — #760 fully curated its variable slugs
+# in riksarkivet.toml, so it has no auto-derived slugs to pin (the empty pinned
+# baseline still grows-and-guards any future non-curated variable).
+scb = "curating"
+sos = "curating"
+fk = "curating"
+fohm = "curating"
+lakemedelsverket = "curating"
+pliktverket = "curating"
+riksarkivet = "curating"
+umu = "curating"

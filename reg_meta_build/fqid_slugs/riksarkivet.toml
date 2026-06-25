@@ -5,8 +5,9 @@
 # Single-table historical inskrivningsregister → synthesized _default variant.
 # Panel: entity = penr, time = bari (år för inskrivning — a clean year-grain temporal
 # axis; inst/inställelsedatum encodes date+omgång together, less suitable as the panel
-# key), grain = row. Variable
-# slugs stay AUTO. Regenerate .snapshot.json after edits:
+# key), grain = row. Variable slugs are fully curated here (#760), so
+# riksarkivet.auto.toml is an empty (header-only) pinned baseline (#759).
+# Regenerate .snapshot.json after edits:
 #   reg-meta-build precheck-slugs --update-snapshot
 
 
