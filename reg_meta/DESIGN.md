@@ -828,26 +828,27 @@ surfaced from two members during a group union collapses.
 `representation_run_id` (int, unique within the node): consecutive states sharing it
 form **one rendered cell**. The id increments at each representation boundary **and** at
 every `variant` change (a run never spans variants — this replaces an ambiguous
-per-state boolean). A boundary is a meaningful representation change between adjacent
-`variable_state` rows — value-set identity (`value_set_id`), classification
-(`classification_slug`), or the per-era coalesced `delivery_column_name` — with
-technical-only `int -> bigint` / type-length wobble **suppressed** exactly as
-reg_meta_build's #526 value-set-anchored fold does (the char↔varchar `_canon_data_type`
-fold is mirrored query-side over the materialized rows). The rule is a **deliberate
-query-side mirror**, not the build helper: reg_meta must not depend on reg_meta_build
-(wrong dependency direction), and the build fold already coalesced per-delivery churn
-into the surviving rows, so the boundary is scoped to "distinctions that survive in
-`variable_state`". Per-period alias multiplexing (monthly families' 12 columns, held in
+per-state boolean). A boundary is **exactly one of three** identity changes between
+adjacent `variable_state` rows — value-set identity (`value_set_id`), classification
+(`classification_slug`), or the per-era coalesced `delivery_column_name`. Raw
+`data_type` / `data_length` are **never** a boundary signal on their own: SCB's
+per-delivery `Datatyp` / length is low-trust passthrough that #526 blanks, so an
+`int -> bigint` or char↔varchar wobble does NOT open a run. This scopes the boundary to
+"distinctions that survive in `variable_state`" — precisely what reg_meta_build's #526
+value-set-anchored fold leaves in the materialized rows; reg_meta re-derives it
+query-side (it must not depend on reg_meta_build — wrong dependency direction).
+Per-period alias multiplexing (monthly families' 12 columns, held in
 `variable_alias_window`, not in `states`) is an alias concern, **not** a coding boundary
 — those expanded windows share a `state_id` and are folded back to the single claim
 before runs are computed.
 
 **Empty graph** (`nodes: []`) is the "don't render" signal (the frontend gate is
 `nodes.length === 0`): a lone variable with no succession, no related, no group
-siblings, and no meaningful representation boundary (the `akters` `int -> bigint`
-type-only case), or a lone classification edition with no succession chain and no group
-context. A lone variable **with** a value-set/column change but no succession returns
-one node whose states span ≥2 runs → renders (as ≥2 cells).
+siblings, and no meaningful representation boundary (the `akters` `int -> bigint` case —
+`data_type` is not a boundary signal, so it stays one run), or a lone classification
+edition with no succession chain and no group context. A lone variable **with** a
+value-set/column change but no succession returns one node whose states span ≥2 runs →
+renders (as ≥2 cells).
 
 **Fork B (group ⇄ member).** `graph_for_fqid` roots the union on the resolved variable's
 `.group` members (or itself when ungrouped) and sets `focus_id` to the resolved node;

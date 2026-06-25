@@ -119,9 +119,29 @@ def _add_class_succession(
 class TestEmptyGraph:
     def test_lone_variable_type_only_split_is_empty(self) -> None:
         # The `akters` case: a lone variable, no succession / related / group, whose
-        # two states differ ONLY by a technical char↔varchar `data_type` wobble that
-        # the #526 fold suppresses → one representation run → empty (don't render).
-        conn = build_slugged_db()  # one state on kon, seed type `int`
+        # two states differ ONLY by `data_type` `int` -> `bigint` (same column, no
+        # value-set, no classification). `data_type` is NOT a boundary signal at all
+        # (low-trust passthrough #526 blanks), so both states share one
+        # representation run → empty (don't render).
+        conn = build_slugged_db()  # seed state on kon: data_type `int`, column `Kon`
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2019-01-01",
+            delivery_column_name="Kon",
+            data_type="bigint",
+        )
+        conn.commit()
+        g = Catalog(conn).graph_for_fqid(_KON)
+        assert g.nodes == []
+        assert g.edges == []
+        assert g.focus_id is None
+
+    def test_lone_variable_text_family_wobble_is_empty(self) -> None:
+        # char↔varchar wobble is likewise not a boundary signal → one run → empty.
+        conn = build_slugged_db()
         add_state(
             conn,
             register_id=1,
@@ -131,8 +151,6 @@ class TestEmptyGraph:
             delivery_column_name="Kon",
             data_type="varchar",
         )
-        # Rewrite the seed state's type to `char` so BOTH states are text-family
-        # (folded to one canonical `text` token) — only the wobble differs.
         conn.execute(
             "UPDATE variable_state SET data_type = 'char' "
             "WHERE valid_from = '2018-01-01'"
@@ -141,7 +159,6 @@ class TestEmptyGraph:
         g = Catalog(conn).graph_for_fqid(_KON)
         assert g.nodes == []
         assert g.edges == []
-        assert g.focus_id is None
 
     def test_lone_classification_no_chain_is_empty(self) -> None:
         conn = build_slugged_db()  # seeds sun2020, no succession
@@ -247,6 +264,42 @@ class TestRepresentationRuns:
             per_variant[s.variant].add(s.representation_run_id)
         assert per_variant["individer-15plus"].isdisjoint(per_variant["individer-all"])
         assert runs == sorted(runs)
+
+    def test_open_ended_valid_to_sentinel_is_none(self) -> None:
+        # The `9999-12-31` open-end sentinel normalizes to None on the wire (so the
+        # renderer reads "ongoing", not a year-9999 tick). Two value-set-distinct
+        # states keep the node renderable; the open-ended later state is the one to
+        # check (the bounded earlier one keeps its explicit valid_to).
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+        conn.execute("DELETE FROM variable_state")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            valid_to="2018-12-31",
+            delivery_column_name="Kon",
+            value_set_id=1,
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2019-01-01",
+            valid_to="9999-12-31",
+            delivery_column_name="Kon",
+            value_set_id=2,
+        )
+        conn.commit()
+        node = Catalog(conn).graph_for_fqid(_KON).nodes[0]
+        assert isinstance(node, VariableGraphNode)
+        by_from = {s.valid_from: s.valid_to for s in node.states}
+        assert by_from["2018-01-01"] == "2018-12-31"
+        assert by_from["2019-01-01"] is None
 
 
 # ── Edges ────────────────────────────────────────────────────────────────────
@@ -354,6 +407,69 @@ class TestVariableGroups:
         conn = build_slugged_db()
         assert Catalog(conn).graph_for_group("scb", "lisa", "nope") is None
 
+    def test_group_shared_succession_edge_deduped(self) -> None:
+        # Two group members where A (kon) is the predecessor of B (civilstand): the
+        # union surfaces the SAME succession edge from both members, but dedup-by-id
+        # collapses it to ONE edge (source=A, target=B).
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "civilstand"),
+            reason="renamed",
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+        )
+        g = Catalog(conn).graph_for_group("scb", "lisa", "demog")
+        assert g is not None
+        succ = [e for e in g.edges if e.kind == "succession"]
+        assert len(succ) == 1
+        assert (succ[0].source, succ[0].target) == (
+            "scb/lisa/kon",
+            "scb/lisa/civilstand",
+        )
+
+    def test_fork_b_entry_independent(self) -> None:
+        # Fork B: graph_for_fqid on two DIFFERENT members of the same group yields
+        # identical node/edge SETS — only focus_id differs.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+        )
+        catalog = Catalog(conn)
+        g_kon = catalog.graph_for_fqid(_KON)
+        g_civ = catalog.graph_for_fqid("scb/lisa/civilstand")
+        assert {n.id for n in g_kon.nodes} == {n.id for n in g_civ.nodes}
+        assert {e.id for e in g_kon.edges} == {e.id for e in g_civ.edges}
+        assert g_kon.focus_id == _KON
+        assert g_civ.focus_id == "scb/lisa/civilstand"
+        assert g_kon.focus_id != g_civ.focus_id
+
 
 # ── Classification chains + SUN-style groups ─────────────────────────────────
 
@@ -423,3 +539,31 @@ class TestClassificationChains:
         assert sorted(ids) == ["class/sun1996", "class/sun2000-niva"]
         assert len(ids) == len(set(ids))  # deduped
         assert all(not n.id.startswith("group:") for n in g.nodes)
+        # Exactly one shared succession edge across the two members (no double from
+        # co-membership reaching the same chain).
+        succ = [e for e in g.edges if e.kind == "succession"]
+        assert len(succ) == 1
+        assert (succ[0].source, succ[0].target) == (
+            "class/sun1996",
+            "class/sun2000-niva",
+        )
+
+    def test_lone_classification_group_of_one_is_empty(self) -> None:
+        # A classification umbrella whose single member has NO succession chain →
+        # the solo edition is empty (the `_is_empty_solo` ClassificationGraphNode
+        # path via the group accessor, not just via graph_for_fqid).
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun2020")
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (1, 12, '2020', '2020')"
+        )
+        conn.commit()
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        assert g.nodes == []
+        assert g.edges == []

@@ -1483,9 +1483,11 @@ export interface components {
          *     ``(variant, valid_from)``. ``representation_run_id`` groups consecutive states
          *     into rendered cells: states sharing it form ONE cell. The id increments at each
          *     #526 representation boundary and at every ``variant`` change (a run never spans
-         *     variants). ``data_type`` / ``data_length`` are the #526 boundary INPUTS,
-         *     consumed server-side to compute ``representation_run_id`` — they are NOT on the
-         *     wire (the renderer reads the run id, not the raw type).
+         *     variants). Raw ``data_type`` / ``data_length`` are intentionally NOT on the wire
+         *     AND are NOT boundary signals: SCB's per-delivery ``Datatyp`` / length is
+         *     low-trust passthrough (#526 blanks it), so a type/length wobble alone never
+         *     opens a new run — the boundary is value-set / classification / column identity
+         *     only (see ``_is_representation_boundary``).
          */
         GraphState: {
             /** Classification Slug */

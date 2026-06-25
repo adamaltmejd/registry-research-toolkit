@@ -35,7 +35,6 @@ value-set transitions are states-within-a-node (the run ids), not edges.
 
 from __future__ import annotations
 
-import re
 from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
@@ -61,9 +60,11 @@ class GraphState(_CatalogModel):
     ``(variant, valid_from)``. ``representation_run_id`` groups consecutive states
     into rendered cells: states sharing it form ONE cell. The id increments at each
     #526 representation boundary and at every ``variant`` change (a run never spans
-    variants). ``data_type`` / ``data_length`` are the #526 boundary INPUTS,
-    consumed server-side to compute ``representation_run_id`` — they are NOT on the
-    wire (the renderer reads the run id, not the raw type)."""
+    variants). Raw ``data_type`` / ``data_length`` are intentionally NOT on the wire
+    AND are NOT boundary signals: SCB's per-delivery ``Datatyp`` / length is
+    low-trust passthrough (#526 blanks it), so a type/length wobble alone never
+    opens a new run — the boundary is value-set / classification / column identity
+    only (see ``_is_representation_boundary``)."""
 
     state_id: int
     variant: str
@@ -151,73 +152,29 @@ class RelationshipGraph(_CatalogModel):
 
 # ── Representation-run computation (the #526 fold, query-side mirror) ────────
 
-# Text-family `data_type` tokens SCB's low-trust per-delivery `Datatyp` wobbles
-# between for the SAME logical column (`char` ↔ `varchar`, plus the national-
-# character `n…` variants) — folded to one token so a char↔varchar flip is NOT a
-# representation boundary. This MIRRORS reg_meta_build's `_canon_data_type` (#526
-# `sources/scb.py`) on the materialized `variable_state.data_type` rows.
-#
-# WHY a query-side mirror, not the build helper itself: reg_meta MUST NOT depend on
-# reg_meta_build (wrong dependency direction — reg_meta is the read package), so
-# the build-side fold rule can't be imported. The #761 contract scopes the boundary
-# to "distinctions that survive in `variable_state`", and the build fold already
-# coalesced the per-delivery churn into the surviving rows — so this re-derives the
-# SAME value-set-anchored boundary semantics over the SURVIVING adjacent rows
-# (a small, focused predicate), it does not re-run the build's grouping. If a
-# genuinely shared home for the rule ever exists that BOTH packages can import
-# without inverting the dependency, hoist it there.
-_TEXT_FAMILY_TYPES: frozenset[str] = frozenset({"char", "varchar", "nchar", "nvarchar"})
-_TEXT_FAMILY_CANON = "text"
-_EMBEDDED_LEN_RE = re.compile(r"\(\s*\d+\s*\)")
-
-
-def _canon_data_type(dt: str | None) -> str:
-    """Canonical low-trust `data_type` token for the representation-boundary
-    comparison — the query-side mirror of reg_meta_build's `_canon_data_type`
-    (#526). ASCII-lowercases + collapses whitespace, strips an embedded width, then
-    maps the text family (`char`/`varchar`/`nchar`/`nvarchar`) to one token so a
-    char↔varchar wobble is not a boundary. Does NOT collapse across classes — a
-    numeric↔text flip stays a boundary; a same-class width wobble rides the
-    separate length comparison. `None`/blank → `''`."""
-    if not dt:
-        return ""
-    s = " ".join(dt.lower().split())
-    # Strip an embedded `(n)` width so `varchar(1)` canonicalizes to bare `varchar`
-    # (mirrors the build's `_EMBEDDED_LEN_RE`; SCB ships the width in a separate
-    # column, so this is defensive).
-    s = _EMBEDDED_LEN_RE.sub("", s).strip()
-    return _TEXT_FAMILY_CANON if s in _TEXT_FAMILY_TYPES else s
-
 
 def _is_representation_boundary(prev: VariableState, cur: VariableState) -> bool:
     """Whether ``cur`` opens a NEW representation run relative to the preceding
     state ``prev`` in the same variant — the #526 fold rule, scoped to materialized
     rows (#761).
 
-    A boundary = a meaningful representation change between adjacent states:
-    a value-set identity change (``value_set_id``), a classification change
-    (``classification_slug``), or a coalesced ``delivery_column_name`` change
-    (the per-era surviving column — a cross-era column RENAME). Technical-only
-    ``data_type`` / ``data_length`` wobble is SUPPRESSED: the type comparison
-    folds char↔varchar (`_canon_data_type`) so an `int -> bigint`-style class flip
-    on a valueless column is checked, but a same-token wobble is not — exactly the
-    build's value-set-anchored fold. Per-period alias multiplexing (monthly
-    families' 12 columns, held in ``variable_alias_window`` not in ``states``) is
-    an alias concern, NOT a coding boundary — those expanded windows share a
-    ``state_id`` and are never compared here (a node folds its states by state_id
-    before this runs)."""
-    if prev.value_set_id != cur.value_set_id:
-        return True
-    if prev.classification_slug != cur.classification_slug:
-        return True
-    if prev.delivery_column_name != cur.delivery_column_name:
-        return True
-    # Technical type / length: a class flip (e.g. numeric↔text, or a distinct
-    # numeric token like int↔bigint) is a real shape change; a char↔varchar wobble
-    # is not (folded). Length only matters within the same canonical type.
-    if _canon_data_type(prev.data_type) != _canon_data_type(cur.data_type):
-        return True
-    return prev.data_length != cur.data_length
+    A boundary is EXACTLY one of three identity changes between adjacent states:
+    the value-set identity (``value_set_id``), the classification
+    (``classification_slug``), or the coalesced ``delivery_column_name`` (the
+    per-era surviving column — a cross-era column RENAME). These are precisely the
+    distinctions that survive #526's value-set-anchored fold in ``variable_state``.
+    Raw ``data_type`` / ``data_length`` are NEVER a boundary signal on their own:
+    SCB's per-delivery ``Datatyp`` / length is low-trust passthrough that #526
+    blanks, so an `int -> bigint` or char↔varchar wobble does NOT open a run. Per-
+    period alias multiplexing (monthly families' 12 columns, held in
+    ``variable_alias_window`` not in ``states``) is an alias concern, NOT a coding
+    boundary — those expanded windows share a ``state_id`` and are never compared
+    here (a node folds its states by state_id before this runs)."""
+    return (
+        prev.value_set_id != cur.value_set_id
+        or prev.classification_slug != cur.classification_slug
+        or prev.delivery_column_name != cur.delivery_column_name
+    )
 
 
 _OPEN_ENDED_VALID_TO = "9999-12-31"
@@ -265,8 +222,8 @@ def _has_meaningful_runs(states: list[GraphState]) -> bool:
     """Whether the variable's states span ≥2 representation runs — the "renders as
     ≥2 cells" signal for a lone variable with no edges/group (a value-set / column
     change with no succession). A single run (one cell) on an otherwise-edgeless,
-    ungrouped node is the empty-graph case (the `akters` `int -> bigint` type-only
-    split: technical wobble, suppressed → one run → don't render)."""
+    ungrouped node is the empty-graph case (the `akters` `int -> bigint` split:
+    raw ``data_type`` is not a boundary signal at all → one run → don't render)."""
     return any(s.representation_run_id > 0 for s in states)
 
 

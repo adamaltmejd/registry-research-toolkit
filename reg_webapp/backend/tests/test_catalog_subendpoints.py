@@ -188,6 +188,17 @@ def test_graph_endpoint_variable(client):
     assert len(related) == 1
 
 
+def test_graph_endpoint_variable_carries_same_as(client):
+    # The fixture seeds a curated same_as edge kon→syss; the kon graph node must
+    # carry the syss alias in its `same_as[]` (node metadata, not an edge — #761).
+    resp = client.get(f"/api/catalog/{_KON}/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    kon_node = next(n for n in body["nodes"] if n["id"] == _KON)
+    alias_fqids = {ref["fqid"] for ref in kon_node["same_as"]}
+    assert _SYSS in alias_fqids
+
+
 def test_graph_endpoint_dead_binding_301s_to_successor(client):
     # A dead/renamed binding 301s to /graph on its terminal successor (#411).
     resp = client.get(

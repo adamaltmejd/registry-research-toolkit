@@ -1722,7 +1722,7 @@
       },
       "GraphState": {
         "additionalProperties": false,
-        "description": "One ``variable_state`` inside a variable node, emitted ordered by\n``(variant, valid_from)``. ``representation_run_id`` groups consecutive states\ninto rendered cells: states sharing it form ONE cell. The id increments at each\n#526 representation boundary and at every ``variant`` change (a run never spans\nvariants). ``data_type`` / ``data_length`` are the #526 boundary INPUTS,\nconsumed server-side to compute ``representation_run_id`` \u2014 they are NOT on the\nwire (the renderer reads the run id, not the raw type).",
+        "description": "One ``variable_state`` inside a variable node, emitted ordered by\n``(variant, valid_from)``. ``representation_run_id`` groups consecutive states\ninto rendered cells: states sharing it form ONE cell. The id increments at each\n#526 representation boundary and at every ``variant`` change (a run never spans\nvariants). Raw ``data_type`` / ``data_length`` are intentionally NOT on the wire\nAND are NOT boundary signals: SCB's per-delivery ``Datatyp`` / length is\nlow-trust passthrough (#526 blanks it), so a type/length wobble alone never\nopens a new run \u2014 the boundary is value-set / classification / column identity\nonly (see ``_is_representation_boundary``).",
         "properties": {
           "classification_slug": {
             "anyOf": [
