@@ -5127,6 +5127,87 @@ slug = "person-orgnr"
 [variable."55.2736.sektorkod"]  # yrkesreg: classification_links = "sektorkod-2"
 slug = "sektorkod-2"
 
+# #418: concept_groups.toml member-ref slug pins (pre-#472-seal harden). Every
+# `variable =` ref in concept_groups.toml binds to a variable.slug; if that slug
+# rests only on an auto-derived pin (scb.auto.toml) it churns each build and can
+# dangle the group ref. These 24 lisa (register 34) refs — the agi{1,2,3}lonfink
+# monthly family and the three näringsgren SNI families (arbetsställe ast-sni*,
+# individ astsni*, företag org-sni*) — were the only auto-only group members;
+# pin each to the slug it already carries in auto so the ref rests on a curated
+# basis before the seal. Each value EQUALS its current auto slug → dbdiff-identical.
+
+[variable."34.43033"]  # agilonfink: concept_groups member
+slug = "agi1lonfink"
+
+[variable."34.43049"]  # agilonfink: concept_groups member
+slug = "agi2lonfink"
+
+[variable."34.43087"]  # agilonfink: concept_groups member
+slug = "agi3lonfink"
+
+[variable."34.19054.ast-sni92"]  # näringsgren arbetsställe: concept_groups member
+slug = "ast-sni"
+
+[variable."34.19054.ast-sni92b"]  # näringsgren arbetsställe: concept_groups member
+slug = "ast-sni92b"
+
+[variable."34.19054.ast-sni92g"]  # näringsgren arbetsställe: concept_groups member
+slug = "ast-sni92g"
+
+[variable."34.19054.ast-sni2002b"]  # näringsgren arbetsställe: concept_groups member
+slug = "ast-sni2002b"
+
+[variable."34.19054.ast-sni2002g"]  # näringsgren arbetsställe: concept_groups member
+slug = "ast-sni2002g"
+
+[variable."34.19054.ast-sni2007g"]  # näringsgren arbetsställe: concept_groups member
+slug = "ast-sni2007g"
+
+[variable."34.19054.ast-sni2007u"]  # näringsgren arbetsställe: concept_groups member
+slug = "ast-sni2007u"
+
+[variable."34.19054.astsni69"]  # näringsgren individ: concept_groups member
+slug = "astsni"
+
+[variable."34.19054.astsni92b"]  # näringsgren individ: concept_groups member
+slug = "astsni92b"
+
+[variable."34.19054.astsni92g"]  # näringsgren individ: concept_groups member
+slug = "astsni92g"
+
+[variable."34.19054.astsni2002b"]  # näringsgren individ: concept_groups member
+slug = "astsni2002b"
+
+[variable."34.19054.astsni2002g"]  # näringsgren individ: concept_groups member
+slug = "astsni2002g"
+
+[variable."34.19054.astsni2007g"]  # näringsgren individ: concept_groups member
+slug = "astsni2007g"
+
+[variable."34.19054.astsni2007u"]  # näringsgren individ: concept_groups member
+slug = "astsni2007u"
+
+[variable."34.19054.org-sni92"]  # näringsgren företag: concept_groups member
+slug = "org-sni"
+
+[variable."34.19054.org-sni92b"]  # näringsgren företag: concept_groups member
+slug = "org-sni92b"
+
+[variable."34.19054.org-sni92g"]  # näringsgren företag: concept_groups member
+slug = "org-sni92g"
+
+[variable."34.19054.org-sni2002b"]  # näringsgren företag: concept_groups member
+slug = "org-sni2002b"
+
+[variable."34.19054.org-sni2002g"]  # näringsgren företag: concept_groups member
+slug = "org-sni2002g"
+
+[variable."34.19054.org-sni2007g"]  # näringsgren företag: concept_groups member
+slug = "org-sni2007g"
+
+[variable."34.19054.org-sni2007u"]  # näringsgren företag: concept_groups member
+slug = "org-sni2007u"
+
 
 # GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546).
 #
