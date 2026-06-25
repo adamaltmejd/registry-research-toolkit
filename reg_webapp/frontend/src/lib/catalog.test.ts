@@ -189,11 +189,12 @@ describe("nodeLabel", () => {
 
 describe("axisNoun", () => {
   it("pluralizes the group's single facet axis, else falls back to members", () => {
-    // The real classification-umbrella case (#608) — must read "dimensions",
-    // never a re-hardcoded "vintages".
+    // Single-axis token groups pluralize their axis (never a re-hardcoded
+    // "vintages"). Classification umbrellas are now AXIS-LESS (`axes: []`, #516)
+    // → the empty-axis fallback "members" is the umbrella's member noun.
     expect(axisNoun(["dimension"])).toBe("dimensions");
     expect(axisNoun(["vintage"])).toBe("vintages");
-    expect(axisNoun([])).toBe("members"); // no axis → generic fallback
+    expect(axisNoun([])).toBe("members"); // no axis (umbrella) → generic fallback
   });
 });
 

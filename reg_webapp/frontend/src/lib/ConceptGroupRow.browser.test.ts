@@ -77,4 +77,45 @@ describe("ConceptGroupRow (#673 M6)", () => {
     expect(container.querySelector("a.group-link")).toBeNull();
     expect(container.querySelector("details.group")).not.toBeNull();
   });
+
+  it("renders facet LABELS for an AXIS-LESS umbrella (axes: [], members carry facets)", async () => {
+    // Classification umbrellas are axis-less (`axes: []`, #516) but each member
+    // carries a curated `{axis: null, label}` facet. The row must render the
+    // facet labels as chips — NOT drop to the bare-slug plain list (regression:
+    // the old `axes.length === 1` chip branch fell through to the slug list for
+    // an empty `axes`, hiding the curated labels).
+    render(ConceptGroupRow, {
+      // The axis-less caller (CatalogNodeView) passes `axisNoun([]) === "members"`.
+      noun: "members",
+      group: group({
+        key: "sun",
+        label: "Utbildningsnivå",
+        axes: [],
+        members: [
+          {
+            fqid: "class/niva-aggregat",
+            name: "Nivå – aggregat",
+            facets: [
+              { axis: null, value: "aggregat", label: "Nivå – aggregat" },
+            ],
+          },
+          {
+            fqid: "class/niva-7",
+            name: "Nivå – 7 nivåer",
+            facets: [{ axis: null, value: "niva7", label: "7 nivåer" }],
+          },
+        ],
+      } as unknown as Partial<ConceptGroup>),
+    });
+
+    // The chips carry the curated facet labels and link to the member leaf FQIDs;
+    // the bare slug ("niva-aggregat") must NOT be what's shown.
+    await page.getByText("2 members").click();
+    await expect
+      .element(page.getByRole("link", { name: "Nivå – aggregat" }))
+      .toHaveAttribute("href", "/catalog/class/niva-aggregat");
+    await expect
+      .element(page.getByRole("link", { name: "7 nivåer" }))
+      .toHaveAttribute("href", "/catalog/class/niva-7");
+  });
 });

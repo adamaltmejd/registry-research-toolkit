@@ -3,9 +3,10 @@ import type { ConceptGroup } from "./api";
 import { axisValues, catalogHref, leafSlug, memberAt } from "./catalog";
 
 // One folded concept-group row (#303): a <details> that expands to the facet
-// picker — a value matrix for two axes (month × rank), chips for one axis
-// (months / vintages), and a plain member list for edge groups (split
-// siblings, no facets — names usually shared, so the slug is the signal).
+// picker — a value matrix for two axes (month × rank), chips for FACETED members
+// (single-axis token groups AND axis-less classification umbrellas — each member
+// carries a curated short label), and a plain member list for edge groups (split
+// siblings, NO facets — names usually shared, so the slug is the signal).
 //
 // Two member-action modes (#322): browse (default) renders members as
 // catalogHref links; pick mode (`onpick` set — the CatalogPicker's variable
@@ -54,6 +55,15 @@ const ungridded = $derived(
       )
     : [],
 );
+// Below the matrix threshold, render chips when the MEMBERS carry facets — true
+// for single-axis token groups AND for axis-less classification umbrellas
+// (`axes: []`, members each carry one curated `{axis: null, label}` facet, #516).
+// Driving off member-facet presence (not `axes[0]`) keeps the curated umbrella
+// labels instead of dropping to bare slugs. A member's chip label is its first
+// facet's label: in a single-axis group that IS the axis facet; in an umbrella it
+// is the curated short label. Truly facet-less members (edge groups — split
+// siblings) fall through to the plain member list below.
+const faceted = $derived(group.members.some((m) => m.facets.length > 0));
 </script>
 
 {#snippet memberItem(member: ConceptGroup["members"][number])}
@@ -152,10 +162,10 @@ const ungridded = $derived(
         {/each}
       </ul>
     {/if}
-  {:else if axes.length === 1}
+  {:else if faceted}
     <ul class="facet-chips">
       {#each group.members as member (member.fqid)}
-        {@const facet = member.facets.find((f) => f.axis === axes[0])}
+        {@const facet = member.facets[0]}
         <li>
           {#if onpick}
             <button

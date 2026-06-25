@@ -8,27 +8,29 @@ import ClassificationDimensionsPanel from "./ClassificationDimensionsPanel.svelt
 // mocking. The cross-reference is the curated umbrella group (e.g. group:sun) the
 // edition belongs to, rendered through the shared ConceptGroupRow.
 
-// A `group:sun`-shaped umbrella: one `dimension` axis, three granularity members.
+// A `group:sun`-shaped umbrella: AXIS-LESS (`axes: []`, #516), three granularity
+// members each carrying a curated `{axis: null, label}` facet (the short label).
+// ConceptGroupRow must surface those curated labels even with no group axis.
 const SUN_GROUP: ConceptGroup = {
   key: "sun",
   label: "Utbildningsnivå",
   source: "curated",
-  axes: ["dimension"],
+  axes: [],
   members: [
     {
       fqid: "class/sun-niva2020",
       name: "Nivå",
-      facets: [{ axis: "dimension", value: "niva", label: "Nivå" }],
+      facets: [{ axis: null, value: "niva", label: "Nivå" }],
     },
     {
       fqid: "class/niva-oldv1",
       name: "Nivå (7 nivåer)",
-      facets: [{ axis: "dimension", value: "niva-old", label: "7-nivå" }],
+      facets: [{ axis: null, value: "niva-old", label: "7-nivå" }],
     },
     {
       fqid: "class/niva-grovv1",
       name: "Nivå (5 nivåer)",
-      facets: [{ axis: "dimension", value: "niva-grov", label: "5-nivå" }],
+      facets: [{ axis: null, value: "niva-grov", label: "5-nivå" }],
     },
   ],
 } as unknown as ConceptGroup;
@@ -63,7 +65,8 @@ describe("ClassificationDimensionsPanel — niva ↔ aggregate cross-reference (
     await expect.element(page.getByText("Utbildningsnivå")).toBeVisible();
     await expect.element(page.getByText("3 granularities")).toBeVisible();
     // The members fold into a closed <details> (ConceptGroupRow's idiom) — expand
-    // it, then the single-axis (dimension) facet chips link to each sibling.
+    // it, then the curated facet-label chips link to each sibling. This is the
+    // regression: with `axes: []` the curated labels (not bare slugs) must show.
     await page.getByText("3 granularities").click();
     await expect
       .element(page.getByRole("link", { name: "7-nivå" }))
