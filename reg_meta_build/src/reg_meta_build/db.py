@@ -3348,10 +3348,20 @@ def materialize(
         canonical_dir = next(
             (d for _a, d in adapters if d.name == _CANONICAL_SCB_DIRNAME), None
         )
+        attach_seed_path = canonical_attach_path(canonical_dir)
+        # Provenance: record the attach seed alongside the other canonical-SCB
+        # inputs (scb_canonical.toml + CSVs, keyed by basename via `_file_sha256`).
+        # Only when the seed actually resolved (None ⇒ no canonical adapter, a
+        # legitimate no-op — matching the no-canonical-dir case; a stale-but-present
+        # dir already failed loud in `canonical_attach_path`). Without this, a build
+        # audit sees scb_canonical.toml recorded but NOT the seed that minted the
+        # LISA rows.
+        if attach_seed_path is not None:
+            source_checksums[attach_seed_path.name] = _file_sha256(attach_seed_path)
         attach_counts = materialize_canonical_attach(
             conn,
             load_canonical_attach(
-                canonical_attach_path(canonical_dir),
+                attach_seed_path,
                 classification_seed_path=seed_path,
             ),
             providers=active_providers,
