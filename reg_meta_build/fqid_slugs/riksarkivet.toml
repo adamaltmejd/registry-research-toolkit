@@ -135,7 +135,7 @@ slug = "lakarkod"
 [variable."7217173874749089767.LNGD"]
 slug = "langd"
 [variable."7217173874749089767.MASS"]
-slug = "vikt"
+slug = "kroppsvikt"
 [variable."7217173874749089767.MFAK"]
 slug = "muskelfaktor"
 [variable."7217173874749089767.MFKD"]

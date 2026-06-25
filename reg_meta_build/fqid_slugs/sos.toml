@@ -497,11 +497,11 @@ slug = "belopp-annat-juli"
 [variable."5352018376318353790.ANNATBELOPP08"]
 slug = "belopp-annat-augusti"
 [variable."5352018376318353790.ANNATBELOPP09"]
-slug = "livsforing-annat-september"
+slug = "belopp-annat-september"
 [variable."5352018376318353790.ANNATBELOPP10"]
-slug = "livsforing-annat-oktober"
+slug = "belopp-annat-oktober"
 [variable."5352018376318353790.ANNATBELOPP11"]
-slug = "livsforing-annat-november"
+slug = "belopp-annat-november"
 [variable."5352018376318353790.ANNATBELOPP12"]
 slug = "belopp-annat-december"
 [variable."5352018376318353790.ANNATIND01"]
@@ -683,9 +683,9 @@ slug = "ekonomiskt-bistand-utbetalt-juli"
 [variable."5352018376318353790.EKBUTB08"]
 slug = "ekonomiskt-bistand-utbetalt-augusti"
 [variable."5352018376318353790.EKBUTB09"]
-slug = "ekb-utbetalt-september"
+slug = "ekonomiskt-bistand-utbetalt-september"
 [variable."5352018376318353790.EKBUTB10"]
-slug = "ekb-utbetalt-oktober"
+slug = "ekonomiskt-bistand-utbetalt-oktober"
 [variable."5352018376318353790.EKBUTB11"]
 slug = "ekonomiskt-bistand-utbetalt-november"
 [variable."5352018376318353790.EKBUTB12"]
@@ -903,7 +903,7 @@ slug = "ovrigt-hyresskuld-januari"
 [variable."5352018376318353790.HYRESSKULDIND02"]
 slug = "ovrigt-hyresskuld-februari"
 [variable."5352018376318353790.HYRESSKULDIND03"]
-slug = "hyresskuld-mars"
+slug = "ovrigt-hyresskuld-mars"
 [variable."5352018376318353790.HYRESSKULDIND04"]
 slug = "ovrigt-hyresskuld-april"
 [variable."5352018376318353790.HYRESSKULDIND05"]
@@ -915,11 +915,11 @@ slug = "ovrigt-hyresskuld-juli"
 [variable."5352018376318353790.HYRESSKULDIND08"]
 slug = "ovrigt-hyresskuld-augusti"
 [variable."5352018376318353790.HYRESSKULDIND09"]
-slug = "hyresskuld-september"
+slug = "ovrigt-hyresskuld-september"
 [variable."5352018376318353790.HYRESSKULDIND10"]
-slug = "hyresskuld-oktober"
+slug = "ovrigt-hyresskuld-oktober"
 [variable."5352018376318353790.HYRESSKULDIND11"]
-slug = "hyresskuld-november"
+slug = "ovrigt-hyresskuld-november"
 [variable."5352018376318353790.HYRESSKULDIND12"]
 slug = "ovrigt-hyresskuld-december"
 [variable."5352018376318353790.IEBELOPP01"]
@@ -1277,7 +1277,7 @@ slug = "arbetsmarknadsinsatser-februari"
 [variable."5352018376318353790.SOKINS06_03"]
 slug = "arbetsmarknadsinsatser-mars"
 [variable."5352018376318353790.SOKINS06_04"]
-slug = "ovriga-arbetsmarknadsinsatser-april"
+slug = "arbetsmarknadsinsatser-april"
 [variable."5352018376318353790.SOKINS06_05"]
 slug = "arbetsmarknadsinsatser-maj"
 [variable."5352018376318353790.SOKINS06_06"]
@@ -1375,11 +1375,11 @@ slug = "personnr-yngsta-sokande-2"
 [variable."5352018376318353790.TANDVBELOPP01"]
 slug = "tandvard-belopp-januari"
 [variable."5352018376318353790.TANDVBELOPP02"]
-slug = "livsforing-tandvard-februari"
+slug = "tandvard-belopp-februari"
 [variable."5352018376318353790.TANDVBELOPP03"]
 slug = "tandvard-belopp-mars"
 [variable."5352018376318353790.TANDVBELOPP04"]
-slug = "livsforing-tandvard-april"
+slug = "tandvard-belopp-april"
 [variable."5352018376318353790.TANDVBELOPP05"]
 slug = "tandvard-belopp-maj"
 [variable."5352018376318353790.TANDVBELOPP06"]
@@ -1387,7 +1387,7 @@ slug = "tandvard-belopp-juni"
 [variable."5352018376318353790.TANDVBELOPP07"]
 slug = "tandvard-belopp-juli"
 [variable."5352018376318353790.TANDVBELOPP08"]
-slug = "livsforing-tandvard-augusti"
+slug = "tandvard-belopp-augusti"
 [variable."5352018376318353790.TANDVBELOPP09"]
 slug = "tandvard-belopp-september"
 [variable."5352018376318353790.TANDVBELOPP10"]
@@ -1395,7 +1395,7 @@ slug = "tandvard-belopp-oktober"
 [variable."5352018376318353790.TANDVBELOPP11"]
 slug = "tandvard-belopp-november"
 [variable."5352018376318353790.TANDVBELOPP12"]
-slug = "livsforing-tandvard-december"
+slug = "tandvard-belopp-december"
 [variable."5352018376318353790.TANDVIND01"]
 slug = "tandvard-januari"
 [variable."5352018376318353790.TANDVIND02"]

@@ -9135,7 +9135,7 @@ variable = "ovrigt-hyresskuld-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "hyresskuld-mars"
+variable = "ovrigt-hyresskuld-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
@@ -9159,15 +9159,15 @@ variable = "ovrigt-hyresskuld-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "hyresskuld-september"
+variable = "ovrigt-hyresskuld-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "hyresskuld-oktober"
+variable = "ovrigt-hyresskuld-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "hyresskuld-november"
+variable = "ovrigt-hyresskuld-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
@@ -9590,7 +9590,7 @@ variable = "tandvard-belopp-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "livsforing-tandvard-februari"
+variable = "tandvard-belopp-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
@@ -9598,7 +9598,7 @@ variable = "tandvard-belopp-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "livsforing-tandvard-april"
+variable = "tandvard-belopp-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
@@ -9614,7 +9614,7 @@ variable = "tandvard-belopp-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "livsforing-tandvard-augusti"
+variable = "tandvard-belopp-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
@@ -9630,7 +9630,7 @@ variable = "tandvard-belopp-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "livsforing-tandvard-december"
+variable = "tandvard-belopp-december"
 value = "12"
 label = "12"
 
@@ -9998,15 +9998,15 @@ variable = "belopp-annat-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "livsforing-annat-september"
+variable = "belopp-annat-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "livsforing-annat-oktober"
+variable = "belopp-annat-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "livsforing-annat-november"
+variable = "belopp-annat-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
@@ -10335,7 +10335,7 @@ variable = "arbetsmarknadsinsatser-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "ovriga-arbetsmarknadsinsatser-april"
+variable = "arbetsmarknadsinsatser-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
@@ -13420,11 +13420,11 @@ variable = "ekonomiskt-bistand-utbetalt-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "ekb-utbetalt-september"
+variable = "ekonomiskt-bistand-utbetalt-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "ekb-utbetalt-oktober"
+variable = "ekonomiskt-bistand-utbetalt-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
