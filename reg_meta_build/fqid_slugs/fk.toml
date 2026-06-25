@@ -419,7 +419,7 @@ slug = "aktivitetsstod"
 [register_variant."5184724777840514491.6697432127942940279"]
 slug = "_default"
 display_group = "Aktivitetsstöd"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -430,7 +430,7 @@ slug = "barnbidrag"
 [register_variant."4635732609514065093.5324721756578836203"]
 slug = "_default"
 display_group = "Barnbidrag"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -441,7 +441,7 @@ slug = "bostadsbidrag"
 [register_variant."8901855898588660269.6926768036030898876"]
 slug = "_default"
 display_group = "Bostadsbidrag"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -452,7 +452,7 @@ slug = "bostadsersattning"
 [register_variant."6540524901503254771.5937192435242425286"]
 slug = "_default"
 display_group = "Bostadsersättning"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -463,7 +463,7 @@ slug = "bostadstillagg"
 [register_variant."7208666679773615290.8993303221003818160"]
 slug = "_default"
 display_group = "Bostadstillägg"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -474,7 +474,7 @@ slug = "ersattning-karens"
 [register_variant."7296709609943288914.9204483061530265555"]
 slug = "_default"
 display_group = "Ersättning för karens"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -485,7 +485,7 @@ slug = "ersattning-riskgrupper"
 [register_variant."5304830980745799212.8049980962017583996"]
 slug = "_default"
 display_group = "Ersättning till riskgrupper"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -496,7 +496,7 @@ slug = "ersattning-sjuklonekostnader"
 [register_variant."7791929252178908414.6117630078032501785"]
 slug = "_default"
 display_group = "Ersättning för sjuklönekostnader"
-panel_entity_key = "organisationsnummer"
+panel_entity_key = "lopnr-orgnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -507,7 +507,7 @@ slug = "etableringsersattning"
 [register_variant."5110940353417222695.9051315687489963701"]
 slug = "_default"
 display_group = "Etableringsersättning"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -518,7 +518,7 @@ slug = "etableringstillagg"
 [register_variant."5025807446792777547.6060193209099644170"]
 slug = "_default"
 display_group = "Etableringstillägg"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -529,7 +529,7 @@ slug = "graviditetspenning"
 [register_variant."7612505802412930990.4921892111850379854"]
 slug = "_default"
 display_group = "Graviditetspenning"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -540,7 +540,7 @@ slug = "handikappersattning"
 [register_variant."6861565800980927454.5002536168826239399"]
 slug = "_default"
 display_group = "Handikappersättning"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -551,7 +551,7 @@ slug = "narstaendepenning"
 [register_variant."5136717806447986475.6449766685553259956"]
 slug = "_default"
 display_group = "Närståendepenning"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -562,7 +562,7 @@ slug = "smittbararpenning"
 [register_variant."7588615323625434168.6987757354346637054"]
 slug = "_default"
 display_group = "Smittbärarpenning"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -573,7 +573,7 @@ slug = "utvecklingsersattning"
 [register_variant."5517508967525103350.8173457916985157617"]
 slug = "_default"
 display_group = "Utvecklingsersättning"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -584,7 +584,7 @@ slug = "vardbidrag"
 [register_variant."5430440157686027706.5740549366009254918"]
 slug = "_default"
 display_group = "Vårdbidrag"
-panel_entity_key = ["personnummer", "personnummer-barn"]
+panel_entity_key = ["lopnr-personnr", "lopnr-personnr-barn"]
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -605,20 +605,20 @@ panel_time_grain = "row"
 # pins reproduce the slug the variable already carries).
 # 38 pin(s).
 
-[variable."4635732609514065093.personnummer"]  # barnbidrag: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."4635732609514065093.personnummer"]  # barnbidrag: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."5025807446792777547.personnummer"]  # etableringstillagg: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5025807446792777547.personnummer"]  # etableringstillagg: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."5110940353417222695.personnummer"]  # etableringsersattning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5110940353417222695.personnummer"]  # etableringsersattning: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."5136717806447986475.personnummer"]  # narstaendepenning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5136717806447986475.personnummer"]  # narstaendepenning: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."5184724777840514491.personnummer"]  # aktivitetsstod: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5184724777840514491.personnummer"]  # aktivitetsstod: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
 [variable."5285952033367956531.Lopnr"]  # arbetsskadeersattning: panel_entity_key = 'lopnr'
 slug = "lopnr"
@@ -626,14 +626,14 @@ slug = "lopnr"
 [variable."5301353483611203358.Lopnr"]  # assistansersattning: panel_entity_key = 'lopnr'
 slug = "lopnr"
 
-[variable."5304830980745799212.personnummer"]  # ersattning-riskgrupper: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5304830980745799212.personnummer"]  # ersattning-riskgrupper: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."5430440157686027706.personnummer"]  # vardbidrag: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5430440157686027706.personnummer"]  # vardbidrag: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."5430440157686027706.personnummer_barn"]  # vardbidrag: panel_entity_key = 'personnummer-barn'
-slug = "personnummer-barn"
+[variable."5430440157686027706.personnummer_barn"]  # vardbidrag: panel_entity_key = 'lopnr-personnr-barn'
+slug = "lopnr-personnr-barn"
 
 [variable."5488356780395367498.Lopnr_barn"]  # bilstod: panel_entity_key = 'lopnr-barn'
 slug = "lopnr-barn"
@@ -641,8 +641,8 @@ slug = "lopnr-barn"
 [variable."5488356780395367498.Lopnr_sokande"]  # bilstod: panel_entity_key = 'lopnr-sokande'
 slug = "lopnr-sokande"
 
-[variable."5517508967525103350.personnummer"]  # utvecklingsersattning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5517508967525103350.personnummer"]  # utvecklingsersattning: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
 [variable."5597417723181852215.Lopnr"]  # sjuk-aktivitetsersattning: panel_entity_key = 'lopnr'
 slug = "lopnr"
@@ -659,17 +659,17 @@ slug = "lopnr"
 [variable."6486633934264544358.LOPNR_BARN"]  # tillfallig-foraldrapenning: panel_entity_key = 'lopnr-barn'
 slug = "lopnr-barn"
 
-[variable."6540524901503254771.personnummer"]  # bostadsersattning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."6540524901503254771.personnummer"]  # bostadsersattning: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."6861565800980927454.personnummer"]  # handikappersattning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."6861565800980927454.personnummer"]  # handikappersattning: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."7208666679773615290.personnummer"]  # bostadstillagg: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."7208666679773615290.personnummer"]  # bostadstillagg: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."7296709609943288914.personnummer"]  # ersattning-karens: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."7296709609943288914.personnummer"]  # ersattning-karens: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
 [variable."7493079423846267575.Lopnr"]  # merkostnadsersattning: panel_entity_key = 'lopnr'
 slug = "lopnr"
@@ -677,11 +677,11 @@ slug = "lopnr"
 [variable."7493079423846267575.Lopnr_barn"]  # merkostnadsersattning: panel_entity_key = 'lopnr-barn'
 slug = "lopnr-barn"
 
-[variable."7588615323625434168.personnummer"]  # smittbararpenning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."7588615323625434168.personnummer"]  # smittbararpenning: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
-[variable."7612505802412930990.personnummer"]  # graviditetspenning: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."7612505802412930990.personnummer"]  # graviditetspenning: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
 [variable."7664376130118991107.LOPNR_ARENDE_ID"]  # tandvardsstodet: panel_entity_key = 'lopnr-arende-id'
 slug = "lopnr-arende-id"
@@ -695,8 +695,8 @@ slug = "persid"
 [variable."7724610645254369578.PERSID_BARN"]  # foraldrapenning: panel_entity_key = 'persid-barn'
 slug = "persid-barn"
 
-[variable."7791929252178908414.organisationsnummer"]  # ersattning-sjuklonekostnader: panel_entity_key = 'organisationsnummer'
-slug = "organisationsnummer"
+[variable."7791929252178908414.organisationsnummer"]  # ersattning-sjuklonekostnader: panel_entity_key = 'lopnr-orgnr'
+slug = "lopnr-orgnr"
 
 [variable."7970092672219058188.LOPNR"]  # lakarintygsregistret: panel_entity_key = 'lopnr'
 slug = "lopnr"
@@ -704,8 +704,8 @@ slug = "lopnr"
 [variable."8881065292063230279.Lopnr"]  # sjukpenning: panel_entity_key = 'lopnr'
 slug = "lopnr"
 
-[variable."8901855898588660269.personnummer"]  # bostadsbidrag: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."8901855898588660269.personnummer"]  # bostadsbidrag: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
 [variable."9011624717046135047.LOPNR_BARN"]  # underhallsstod: panel_entity_key = 'lopnr-barn'
 slug = "lopnr-barn"
@@ -719,3 +719,53 @@ slug = "lopnr-bs"
 [variable."9011624717046135047.LOPNR_D85"]  # underhallsstod: panel_entity_key = 'lopnr-d85'
 slug = "lopnr-d85"
 
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 19 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 5597417723181852215
+[variable."5597417723181852215.A"]
+slug = "har-aktivitetsersattning"
+[variable."5597417723181852215.Ftp"]
+slug = "fortidspension"
+[variable."5597417723181852215.S"]
+slug = "sjukersattning"
+[variable."5597417723181852215.Sjb"]
+slug = "sjukbidrag"
+# register 6486633934264544358
+[variable."6486633934264544358.A10"]
+slug = "adoption-10-dagar"
+[variable."6486633934264544358.ASJ"]
+slug = "allvarligt-sjukt-barn"
+[variable."6486633934264544358.DAB"]
+slug = "barn-avliden"
+[variable."6486633934264544358.F10"]
+slug = "fodsel-10-dagar"
+[variable."6486633934264544358.KD"]
+slug = "kontaktdagar"
+[variable."6486633934264544358.OVS"]
+slug = "ordinarie-vardares-sjukdom"
+[variable."6486633934264544358.VAB"]
+slug = "vard-av-barn"
+# register 7664376130118991107
+[variable."7664376130118991107.HCP_INTERVALL_0"]
+slug = "tandvard-ersattning-intervall-0"
+[variable."7664376130118991107.HCP_INTERVALL_1"]
+slug = "tandvard-ersattning-intervall-1"
+[variable."7664376130118991107.HCP_INTERVALL_2"]
+slug = "tandvard-ersattning-intervall-2"
+# register 8881065292063230279
+[variable."8881065292063230279.Askp"]
+slug = "arbetsskadesjukpenning"
+[variable."8881065292063230279.Fall_from_datum2"]
+slug = "sjukfall-startdatum"
+[variable."8881065292063230279.Sig_a"]
+slug = "sjukpenning-a-inkomst"
+[variable."8881065292063230279.Sig_b"]
+slug = "sjukpenning-b-inkomst"
+[variable."8881065292063230279.Sjp"]
+slug = "sjukpenning"
+
+# === END #760 non-SCB concept-slug curation ===

@@ -15,7 +15,7 @@ slug = "insark"
 [register_variant."7137015638745956087.5842664909372042601"]
 slug = "_default"
 display_group = "Mönstringsregister"
-panel_entity_key = "penr"
+panel_entity_key = "personnr"
 panel_time_key = "mofdag"
 panel_time_grain = "row"
 
@@ -26,7 +26,7 @@ slug = "insiprov"
 [register_variant."8006336455308083750.6194374819318977043"]
 slug = "_default"
 display_group = "Inskrivningsprov"
-panel_entity_key = "penr"
+panel_entity_key = "personnr"
 panel_time_key = "pkapdat"
 panel_time_grain = "row"
 
@@ -37,8 +37,8 @@ slug = "diagnos"
 [register_variant."6636188647364956026.6063080116017535578"]
 slug = "_default"
 display_group = "Diagnoser"
-panel_entity_key = "penr"
-panel_time_key = "diagdat"
+panel_entity_key = "personnr"
+panel_time_key = "diagnosdatum"
 panel_time_grain = "row"
 
 
@@ -58,12 +58,139 @@ panel_time_grain = "row"
 # pins reproduce the slug the variable already carries).
 # 3 pin(s).
 
-[variable."6636188647364956026.penr"]  # diagnos: panel_entity_key = 'penr'
-slug = "penr"
+[variable."6636188647364956026.penr"]  # diagnos: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."7137015638745956087.penr"]  # insark: panel_entity_key = 'penr'
-slug = "penr"
+[variable."7137015638745956087.penr"]  # insark: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."8006336455308083750.penr"]  # insiprov: panel_entity_key = 'penr'
-slug = "penr"
+[variable."8006336455308083750.penr"]  # insiprov: panel_entity_key = 'personnr'
+slug = "personnr"
 
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 58 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 6636188647364956026
+[variable."6636188647364956026.diagdat"]
+slug = "diagnosdatum"
+[variable."6636188647364956026.kap"]
+slug = "kapitelnummer-sjukdom"
+[variable."6636188647364956026.sjnr"]
+slug = "sjukdomsnummer"
+# register 7137015638745956087
+[variable."7137015638745956087.apul"]
+slug = "arbetspuls"
+[variable."7137015638745956087.befl"]
+slug = "befalslamplighet"
+[variable."7137015638745956087.btkd"]
+slug = "befattningskod-efter-monstring"
+[variable."7137015638745956087.cylh"]
+slug = "cylinder-hoger-oga"
+[variable."7137015638745956087.cylv"]
+slug = "cylinder-vanster-oga"
+[variable."7137015638745956087.dias"]
+slug = "diastoliskt-blodtryck"
+[variable."7137015638745956087.fingh"]
+slug = "fingerrakning-hoger-oga"
+[variable."7137015638745956087.fingv"]
+slug = "fingerrakning-vanster-oga"
+[variable."7137015638745956087.hals"]
+slug = "halsotillstandskod"
+[variable."7137015638745956087.inrar"]
+slug = "inryckningsar"
+[variable."7137015638745956087.inrk"]
+slug = "inskrivande-regionkontor"
+[variable."7137015638745956087.lkf"]
+slug = "forsamlingskod"
+[variable."7137015638745956087.lngd"]
+slug = "langd"
+[variable."7137015638745956087.mass"]
+slug = "kroppsvikt"
+[variable."7137015638745956087.mufak"]
+slug = "muskelfaktor"
+[variable."7137015638745956087.orh1"]
+slug = "matfrekvens-250hz-hoger-ora"
+[variable."7137015638745956087.orh2"]
+slug = "matfrekvens-500hz-hoger-ora"
+[variable."7137015638745956087.orh3"]
+slug = "matfrekvens-1000hz-hoger-ora"
+[variable."7137015638745956087.orh4"]
+slug = "matfrekvens-2000hz-hoger-ora"
+[variable."7137015638745956087.orh5"]
+slug = "matfrekvens-3000hz-hoger-ora"
+[variable."7137015638745956087.orh6"]
+slug = "matfrekvens-4000hz-hoger-ora"
+[variable."7137015638745956087.orh7"]
+slug = "matfrekvens-6000hz-hoger-ora"
+[variable."7137015638745956087.orh8"]
+slug = "matfrekvens-8000hz-hoger-ora"
+[variable."7137015638745956087.orv1"]
+slug = "matfrekvens-250hz-vanster-ora"
+[variable."7137015638745956087.orv2"]
+slug = "matfrekvens-500hz-vanster-ora"
+[variable."7137015638745956087.orv3"]
+slug = "matfrekvens-1000hz-vanster-ora"
+[variable."7137015638745956087.orv4"]
+slug = "matfrekvens-2000hz-vanster-ora"
+[variable."7137015638745956087.orv5"]
+slug = "matfrekvens-3000hz-vanster-ora"
+[variable."7137015638745956087.orv6"]
+slug = "matfrekvens-4000hz-vanster-ora"
+[variable."7137015638745956087.orv7"]
+slug = "matfrekvens-6000hz-vanster-ora"
+[variable."7137015638745956087.orv8"]
+slug = "matfrekvens-8000hz-vanster-ora"
+[variable."7137015638745956087.psyf"]
+slug = "psykisk-funktionsformaga"
+[variable."7137015638745956087.refh"]
+slug = "sfarisk-korrektion-hoger-oga"
+[variable."7137015638745956087.refv"]
+slug = "sfarisk-korrektion-vanster-oga"
+[variable."7137015638745956087.rerk"]
+slug = "redovisande-regionkontor"
+[variable."7137015638745956087.spul"]
+slug = "slutpuls"
+[variable."7137015638745956087.statu"]
+slug = "monstringstatus"
+[variable."7137015638745956087.steph"]
+slug = "stegtest-hoger-ben"
+[variable."7137015638745956087.stepv"]
+slug = "stegtest-vanster-ben"
+[variable."7137015638745956087.sykh"]
+slug = "korrigerad-synskarpa-hoger-oga"
+[variable."7137015638745956087.sykv"]
+slug = "korrigerad-synskarpa-vanster-oga"
+[variable."7137015638745956087.syoh"]
+slug = "synskarpa-hoger-oga"
+[variable."7137015638745956087.syov"]
+slug = "synskarpa-vanster-oga"
+[variable."7137015638745956087.syst"]
+slug = "systoliskt-blodtryck"
+[variable."7137015638745956087.tavl"]
+slug = "antal-fellasta-tavlor"
+[variable."7137015638745956087.upprh"]
+slug = "uppresning-hoger-ben-jagartest"
+[variable."7137015638745956087.upprv"]
+slug = "uppresning-vanster-ben-jagartest"
+[variable."7137015638745956087.utan"]
+slug = "utbildningsansvarig-enhet"
+[variable."7137015638745956087.vilja"]
+slug = "vilja-varnplikt"
+[variable."7137015638745956087.vpfri"]
+slug = "vapenfri"
+[variable."7137015638745956087.vpul"]
+slug = "vilopuls"
+[variable."7137015638745956087.wmax"]
+slug = "maximal-effekt-cykelprov"
+# register 8006336455308083750
+[variable."8006336455308083750.gckap"]
+slug = "verbal-formaga"
+[variable."8006336455308083750.gkap"]
+slug = "g-faktor"
+[variable."8006336455308083750.gvkap"]
+slug = "spatial-formaga"
+
+# === END #760 non-SCB concept-slug curation ===

@@ -24,7 +24,7 @@ slug = "lmed"
 [register_variant."7661979173609203267.8189345851195899633"]
 slug = "lmed"
 display_group = "LMED"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "edatum"
 panel_time_grain = "row"
 
@@ -39,14 +39,14 @@ slug = "ekb"
 [register_variant."5352018376318353790.6291235931365109975"]
 slug = "ekb-ar"
 display_group = "EKB_AR"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."5352018376318353790.5596904919895902135"]
 slug = "ekb-manad"
 display_group = "EKB_MANAD"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
@@ -57,15 +57,15 @@ slug = "can"
 [register_variant."7119586976865944958.5186039963966324433"]
 slug = "can"
 display_group = "CAN"
-panel_entity_key = "pnr"
-panel_time_key = "diadat"
+panel_entity_key = "personnr"
+panel_time_key = "diagnosdatum"
 panel_time_grain = "row"
 
 [register_variant."7119586976865944958.9216896336296984035"]
 slug = "can-bc"
 display_group = "CAN_BC"
 panel_entity_key = "pseudo"
-panel_time_key = "diadat"
+panel_time_key = "diagnosdatum"
 panel_time_grain = "row"
 
 # Dödsorsaksregistret (DORS)
@@ -75,15 +75,15 @@ slug = "dors"
 [register_variant."5369119272181688462.7577027114532436818"]
 slug = "dors-avi"
 display_group = "DORS_AVI"
-panel_entity_key = "pnr"
-panel_time_key = "dodsdat"
+panel_entity_key = "personnr"
+panel_time_key = "dodsdatum"
 panel_time_grain = "row"
 
 [register_variant."5369119272181688462.7117668989275245835"]
 slug = "dors"
 display_group = "DORS"
-panel_entity_key = "pnr"
-panel_time_key = "dodsdat"
+panel_entity_key = "personnr"
+panel_time_key = "dodsdatum"
 panel_time_grain = "row"
 
 # Event register like its dors/dors-avi siblings (#211: the DORS-COV token map
@@ -91,8 +91,8 @@ panel_time_grain = "row"
 [register_variant."5369119272181688462.5309929884760526431"]
 slug = "cov-dors-hermes"
 display_group = "COV_DORS_HERMES"
-panel_entity_key = "pnr"
-panel_time_key = "dodsdat"
+panel_entity_key = "personnr"
+panel_time_key = "dodsdatum"
 panel_time_grain = "row"
 
 # Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA) (LOVA)
@@ -145,7 +145,7 @@ slug = "lss"
 [register_variant."5028920659479690770.5751215697700503870"]
 slug = "_default"
 display_group = "_default"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -156,15 +156,15 @@ slug = "hsl"
 [register_variant."6512206290021964828.5569968863053916323"]
 slug = "hsl"
 display_group = "HSL"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."6512206290021964828.5726579377988208763"]
 slug = "hsl2"
 display_group = "HSL2"
-panel_entity_key = "pnr"
-panel_time_key = "atg-datum"
+panel_entity_key = "personnr"
+panel_time_key = "atgardsdatum"
 panel_time_grain = "row"
 
 # Registret över insatser till barn och unga (BU)
@@ -174,7 +174,7 @@ slug = "bu"
 [register_variant."7550156225339591583.6478131538792493195"]
 slug = "_default"
 display_group = "_default"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "insats-beslut-datumn"
 panel_time_grain = "row"
 
@@ -185,28 +185,28 @@ slug = "mfr"
 [register_variant."6052270801387609014.6500057991853870690"]
 slug = "mfr"
 display_group = "MFR"
-panel_entity_key = "mpnr"
+panel_entity_key = "personnr-mor"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."6052270801387609014.8238708481874343227"]
 slug = "mfr-fok"
 display_group = "MFR_FOK"
-panel_entity_key = "bpnr"
+panel_entity_key = "personnr-barn"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."6052270801387609014.7877915304423976076"]
 slug = "mfr-ivf"
 display_group = "MFR_IVF"
-panel_entity_key = "mpnr"
+panel_entity_key = "personnr-mor"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."6052270801387609014.5479369406799642076"]
 slug = "mfr-lmed"
 display_group = "MFR_LMED"
-panel_entity_key = "mpnr"
+panel_entity_key = "personnr-mor"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -217,21 +217,21 @@ slug = "par"
 [register_variant."5891427617861710725.6299896919770839454"]
 slug = "par-sv"
 display_group = "PAR_SV"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "indatum"
 panel_time_grain = "row"
 
 [register_variant."5891427617861710725.5623677195158740599"]
 slug = "par-ov"
 display_group = "PAR_OV"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "indatum"
 panel_time_grain = "row"
 
 [register_variant."5891427617861710725.6508659120530331974"]
 slug = "par-tv"
 display_group = "PAR_TV"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "indatum"
 panel_time_grain = "row"
 
@@ -248,21 +248,21 @@ slug = "lvm"
 [register_variant."6293204766641962219.6579580878381606150"]
 slug = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "ansdatumn"
 panel_time_grain = "row"
 
 [register_variant."6293204766641962219.5504744580319271019"]
 slug = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "besdatumn"
 panel_time_grain = "row"
 
 [register_variant."6293204766641962219.5577711036561484975"]
 slug = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "stdatumn"
 panel_time_grain = "row"
 
@@ -273,21 +273,21 @@ slug = "sol"
 [register_variant."9047831179457584381.7344771358524101306"]
 slug = "sol"
 display_group = "SOL"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."9047831179457584381.9078593388686399599"]
 slug = "sol-incr"
 display_group = "SOL_INCR"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."9047831179457584381.6418472685745483159"]
 slug = "sol-2007-2012"
 display_group = "SOL_2007_2012"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -298,28 +298,28 @@ slug = "thr"
 [register_variant."8948214044434034899.9064008527617471683"]
 slug = "thr-besok"
 display_group = "THR_BESOK"
-panel_entity_key = "pnr"
-panel_time_key = "besoksdatumn"
+panel_entity_key = "personnr"
+panel_time_key = "besoksdatum"
 panel_time_grain = "row"
 
 [register_variant."8948214044434034899.6658941053497987406"]
 slug = "thr-besok-landsting"
 display_group = "THR_BESOK_LANDSTING"
-panel_entity_key = "pnr"
-panel_time_key = "besoksdatumn"
+panel_entity_key = "personnr"
+panel_time_key = "besoksdatum"
 panel_time_grain = "row"
 
 [register_variant."8948214044434034899.6343572965862509640"]
 slug = "thr-tandhalsa"
 display_group = "THR_TANDHALSA"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."8948214044434034899.5474396019852278710"]
 slug = "thr-tandhalsa-landsting"
 display_group = "THR_TANDHALSA_LANDSTING"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -340,50 +340,50 @@ panel_time_grain = "delivery"
 # pins reproduce the slug the variable already carries).
 # 15 pin(s).
 
-[variable."5028920659479690770.PNR"]  # lss: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."5028920659479690770.PNR"]  # lss: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."5352018376318353790.PNR"]  # ekb: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."5352018376318353790.PNR"]  # ekb: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."5369119272181688462.PNR"]  # dors: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."5369119272181688462.PNR"]  # dors: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."5891427617861710725.PNR"]  # par: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."5891427617861710725.PNR"]  # par: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."6052270801387609014.BPNR"]  # mfr: panel_entity_key = 'bpnr'
-slug = "bpnr"
+[variable."6052270801387609014.BPNR"]  # mfr: panel_entity_key = 'personnr-barn'
+slug = "personnr-barn"
 
-[variable."6052270801387609014.MPNR"]  # mfr: panel_entity_key = 'mpnr'
-slug = "mpnr"
+[variable."6052270801387609014.MPNR"]  # mfr: panel_entity_key = 'personnr-mor'
+slug = "personnr-mor"
 
-[variable."6293204766641962219.PNR"]  # lvm: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."6293204766641962219.PNR"]  # lvm: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."6512206290021964828.PNR"]  # hsl: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."6512206290021964828.PNR"]  # hsl: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."7119586976865944958.PNR"]  # can: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."7119586976865944958.PNR"]  # can: panel_entity_key = 'personnr'
+slug = "personnr"
 
 [variable."7119586976865944958.PSEUDO"]  # can: panel_entity_key = 'pseudo'
 slug = "pseudo"
 
-[variable."7550156225339591583.PNR"]  # bu: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."7550156225339591583.PNR"]  # bu: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."7661979173609203267.PNR"]  # lmed: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."7661979173609203267.PNR"]  # lmed: panel_entity_key = 'personnr'
+slug = "personnr"
 
 [variable."7847722537922273761.LOPNR"]  # lova: panel_entity_key = 'lopnr'
 slug = "lopnr"
 
-[variable."8948214044434034899.PNR"]  # thr: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."8948214044434034899.PNR"]  # thr: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."9047831179457584381.PNR"]  # sol: panel_entity_key = 'pnr'
-slug = "pnr"
+[variable."9047831179457584381.PNR"]  # sol: panel_entity_key = 'personnr'
+slug = "personnr"
 
 # === BEGIN #471 SOS slug curation overrides (generated) ===
 # 4 curated variable-slug overrides from the #471 fan-out
@@ -405,3 +405,2197 @@ slug = "barn-fodelsedatum"
 slug = "fodelsedatum"
 
 # === END #471 SOS slug curation overrides ===
+
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 1086 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 5028920659479690770
+[variable."5028920659479690770.BKOMM"]
+slug = "boendekommun"
+[variable."5028920659479690770.DYGN6"]
+slug = "antal-dygn-man-lss-6"
+[variable."5028920659479690770.FODDAT"]
+slug = "fodelsedatum"
+[variable."5028920659479690770.LK"]
+slug = "rapporterande-kommun"
+[variable."5028920659479690770.LSS10"]
+slug = "daglig-verksamhet-lss-10"
+[variable."5028920659479690770.LSS2"]
+slug = "personlig-assistans-9-2-lss"
+[variable."5028920659479690770.LSS3"]
+slug = "ledsagarservice"
+[variable."5028920659479690770.LSS4"]
+slug = "kontaktperson-lss"
+[variable."5028920659479690770.LSS5"]
+slug = "avlosarservice"
+[variable."5028920659479690770.LSS6"]
+slug = "korttidsvistelse"
+[variable."5028920659479690770.LSS7"]
+slug = "korttidstillsyn"
+[variable."5028920659479690770.LSS81"]
+slug = "familjehem-barn-ungdomar-lss"
+[variable."5028920659479690770.LSS82"]
+slug = "bostad-sarskild-service-barn-lss-8"
+[variable."5028920659479690770.LSS9"]
+slug = "boende-vuxna-lss-9-9"
+[variable."5028920659479690770.LSS91"]
+slug = "bostad-sarskild-service-vuxna-lss-9"
+[variable."5028920659479690770.LSS92"]
+slug = "sarskilt-anpassad-bostad-vuxna-lss-9"
+[variable."5028920659479690770.PKRETS"]
+slug = "personkrets"
+[variable."5028920659479690770.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."5028920659479690770.TIM2"]
+slug = "antal-timmar-man-lss-2"
+[variable."5028920659479690770.TIM3"]
+slug = "antal-timmar-man-lss-3"
+[variable."5028920659479690770.TIM5"]
+slug = "antal-timmar-man-lss-5"
+[variable."5028920659479690770.UK10"]
+slug = "utforande-kommun-lss-9-10"
+[variable."5028920659479690770.UK2"]
+slug = "utforande-kommun-lss-9-2"
+[variable."5028920659479690770.UK3"]
+slug = "utforande-kommun-lss-9-3"
+[variable."5028920659479690770.UK4"]
+slug = "utforande-kommun-lss-9-4"
+[variable."5028920659479690770.UK5"]
+slug = "utforande-kommun-lss-9-5"
+[variable."5028920659479690770.UK6"]
+slug = "utforande-kommun-lss-9-6"
+[variable."5028920659479690770.UK7"]
+slug = "utforande-kommun-lss-9-7"
+[variable."5028920659479690770.UK81"]
+slug = "utforande-kommun-lss-9-8-familjehem"
+[variable."5028920659479690770.UK82"]
+slug = "utforande-kommun-lss-9-8-sarskild"
+[variable."5028920659479690770.UK9"]
+slug = "utforande-kommun-lss-9-9-vuxna"
+[variable."5028920659479690770.UK91"]
+slug = "utforande-kommun-lss-9-9-sarskild"
+[variable."5028920659479690770.UK92"]
+slug = "utforande-kommun-lss-9-9-bostad"
+# register 5352018376318353790
+[variable."5352018376318353790.ANNATBELOPP01"]
+slug = "belopp-annat-januari"
+[variable."5352018376318353790.ANNATBELOPP02"]
+slug = "belopp-annat-februari"
+[variable."5352018376318353790.ANNATBELOPP03"]
+slug = "belopp-annat-mars"
+[variable."5352018376318353790.ANNATBELOPP04"]
+slug = "belopp-annat-april"
+[variable."5352018376318353790.ANNATBELOPP05"]
+slug = "belopp-annat-maj"
+[variable."5352018376318353790.ANNATBELOPP06"]
+slug = "belopp-annat-juni"
+[variable."5352018376318353790.ANNATBELOPP07"]
+slug = "belopp-annat-juli"
+[variable."5352018376318353790.ANNATBELOPP08"]
+slug = "belopp-annat-augusti"
+[variable."5352018376318353790.ANNATBELOPP09"]
+slug = "belopp-annat-september"
+[variable."5352018376318353790.ANNATBELOPP10"]
+slug = "belopp-annat-oktober"
+[variable."5352018376318353790.ANNATBELOPP11"]
+slug = "belopp-annat-november"
+[variable."5352018376318353790.ANNATBELOPP12"]
+slug = "belopp-annat-december"
+[variable."5352018376318353790.ANNATIND01"]
+slug = "ovrigt-annat-januari"
+[variable."5352018376318353790.ANNATIND02"]
+slug = "ovrigt-annat-februari"
+[variable."5352018376318353790.ANNATIND03"]
+slug = "ovrigt-annat-mars"
+[variable."5352018376318353790.ANNATIND04"]
+slug = "ovrigt-annat-april"
+[variable."5352018376318353790.ANNATIND05"]
+slug = "ovrigt-annat-maj"
+[variable."5352018376318353790.ANNATIND06"]
+slug = "ovrigt-annat-juni"
+[variable."5352018376318353790.ANNATIND07"]
+slug = "ovrigt-annat-juli"
+[variable."5352018376318353790.ANNATIND08"]
+slug = "ovrigt-annat-augusti"
+[variable."5352018376318353790.ANNATIND09"]
+slug = "ovrigt-annat-september"
+[variable."5352018376318353790.ANNATIND10"]
+slug = "ovrigt-annat-oktober"
+[variable."5352018376318353790.ANNATIND11"]
+slug = "ovrigt-annat-november"
+[variable."5352018376318353790.ANNATIND12"]
+slug = "ovrigt-annat-december"
+[variable."5352018376318353790.ANTBARN0"]
+slug = "antal-barn-0-ar"
+[variable."5352018376318353790.ANTBARN00"]
+slug = "antal-barn-00-ar"
+[variable."5352018376318353790.ANTBARN0015"]
+slug = "antal-barn-under-16-ar"
+[variable."5352018376318353790.ANTBARN0017"]
+slug = "antal-barn-under-18-ar"
+[variable."5352018376318353790.ANTBARN01"]
+slug = "antal-barn-01-ar"
+[variable."5352018376318353790.ANTBARN02"]
+slug = "antal-barn-02-ar"
+[variable."5352018376318353790.ANTBARN03"]
+slug = "antal-barn-03-ar"
+[variable."5352018376318353790.ANTBARN04"]
+slug = "antal-barn-04-ar"
+[variable."5352018376318353790.ANTBARN05"]
+slug = "antal-barn-05-ar"
+[variable."5352018376318353790.ANTBARN06"]
+slug = "antal-barn-06-ar"
+[variable."5352018376318353790.ANTBARN07"]
+slug = "antal-barn-07-ar"
+[variable."5352018376318353790.ANTBARN08"]
+slug = "antal-barn-08-ar"
+[variable."5352018376318353790.ANTBARN09"]
+slug = "antal-barn-09-ar"
+[variable."5352018376318353790.ANTBARN1"]
+slug = "antal-barn-1-ar"
+[variable."5352018376318353790.ANTBARN10"]
+slug = "antal-barn-10-ar"
+[variable."5352018376318353790.ANTBARN11"]
+slug = "antal-barn-11-ar"
+[variable."5352018376318353790.ANTBARN12"]
+slug = "antal-barn-12-ar"
+[variable."5352018376318353790.ANTBARN13"]
+slug = "antal-barn-13-ar"
+[variable."5352018376318353790.ANTBARN14"]
+slug = "antal-barn-14-ar"
+[variable."5352018376318353790.ANTBARN15"]
+slug = "antal-barn-15-ar"
+[variable."5352018376318353790.ANTBARN16"]
+slug = "antal-barn-16-ar"
+[variable."5352018376318353790.ANTBARN1617"]
+slug = "antal-barn-16-17-ar-2"
+[variable."5352018376318353790.ANTBARN17"]
+slug = "antal-barn-17-ar"
+[variable."5352018376318353790.ANTBARN2"]
+slug = "antal-barn-2-ar"
+[variable."5352018376318353790.ANTBARN3"]
+slug = "antal-barn-3-ar"
+[variable."5352018376318353790.ANTBARN4"]
+slug = "antal-barn-4-ar"
+[variable."5352018376318353790.ANTBARN5"]
+slug = "antal-barn-5-ar"
+[variable."5352018376318353790.ANTBARN6"]
+slug = "antal-barn-6-ar"
+[variable."5352018376318353790.ANTBARN7"]
+slug = "antal-barn-7-ar"
+[variable."5352018376318353790.ANTBARN8"]
+slug = "antal-barn-8-ar"
+[variable."5352018376318353790.ANTBARN9"]
+slug = "antal-barn-9-ar"
+[variable."5352018376318353790.ANTPERS1821"]
+slug = "antal-ovriga-personer-18-21-ar"
+[variable."5352018376318353790.AVSLUT01"]
+slug = "avslutskod-januari"
+[variable."5352018376318353790.AVSLUT02"]
+slug = "avslutskod-februari"
+[variable."5352018376318353790.AVSLUT03"]
+slug = "avslutskod-mars"
+[variable."5352018376318353790.AVSLUT04"]
+slug = "avslutskod-april"
+[variable."5352018376318353790.AVSLUT05"]
+slug = "avslutskod-maj"
+[variable."5352018376318353790.AVSLUT06"]
+slug = "avslutskod-juni"
+[variable."5352018376318353790.AVSLUT07"]
+slug = "avslutskod-juli"
+[variable."5352018376318353790.AVSLUT08"]
+slug = "avslutskod-augusti"
+[variable."5352018376318353790.AVSLUT09"]
+slug = "avslutskod-september"
+[variable."5352018376318353790.AVSLUT10"]
+slug = "avslutskod-oktober"
+[variable."5352018376318353790.AVSLUT11"]
+slug = "avslutskod-november"
+[variable."5352018376318353790.AVSLUT12"]
+slug = "avslutskod-december"
+[variable."5352018376318353790.AVSLUTHH01"]
+slug = "avslutskod-hushallet-januari"
+[variable."5352018376318353790.AVSLUTHH02"]
+slug = "avslutskod-hushallet-februari"
+[variable."5352018376318353790.AVSLUTHH03"]
+slug = "avslutskod-hushallet-mars"
+[variable."5352018376318353790.AVSLUTHH04"]
+slug = "avslutskod-hushallet-april"
+[variable."5352018376318353790.AVSLUTHH05"]
+slug = "avslutskod-hushallet-maj"
+[variable."5352018376318353790.AVSLUTHH06"]
+slug = "avslutskod-hushallet-juni"
+[variable."5352018376318353790.AVSLUTHH07"]
+slug = "avslutskod-hushallet-juli"
+[variable."5352018376318353790.AVSLUTHH08"]
+slug = "avslutskod-hushallet-augusti"
+[variable."5352018376318353790.AVSLUTHH09"]
+slug = "avslutskod-hushallet-september"
+[variable."5352018376318353790.AVSLUTHH10"]
+slug = "avslutskod-hushallet-oktober"
+[variable."5352018376318353790.AVSLUTHH11"]
+slug = "avslutskod-hushallet-november"
+[variable."5352018376318353790.AVSLUTHH12"]
+slug = "avslutskod-hushallet-december"
+[variable."5352018376318353790.BARN1617"]
+slug = "antal-barn-16-17-ar"
+[variable."5352018376318353790.EKBBELOPP01"]
+slug = "ekonomiskt-bistand-januari"
+[variable."5352018376318353790.EKBBELOPP02"]
+slug = "ekonomiskt-bistand-februari"
+[variable."5352018376318353790.EKBBELOPP03"]
+slug = "ekonomiskt-bistand-mars"
+[variable."5352018376318353790.EKBBELOPP04"]
+slug = "ekonomiskt-bistand-april"
+[variable."5352018376318353790.EKBBELOPP05"]
+slug = "ekonomiskt-bistand-maj"
+[variable."5352018376318353790.EKBBELOPP06"]
+slug = "ekonomiskt-bistand-juni"
+[variable."5352018376318353790.EKBBELOPP07"]
+slug = "ekonomiskt-bistand-juli"
+[variable."5352018376318353790.EKBBELOPP08"]
+slug = "ekonomiskt-bistand-augusti"
+[variable."5352018376318353790.EKBBELOPP09"]
+slug = "ekonomiskt-bistand-september"
+[variable."5352018376318353790.EKBBELOPP10"]
+slug = "ekonomiskt-bistand-oktober"
+[variable."5352018376318353790.EKBBELOPP11"]
+slug = "ekonomiskt-bistand-november"
+[variable."5352018376318353790.EKBBELOPP12"]
+slug = "ekonomiskt-bistand-december"
+[variable."5352018376318353790.EKBUTB01"]
+slug = "ekonomiskt-bistand-utbetalt-januari"
+[variable."5352018376318353790.EKBUTB02"]
+slug = "ekonomiskt-bistand-utbetalt-februari"
+[variable."5352018376318353790.EKBUTB03"]
+slug = "ekonomiskt-bistand-utbetalt-mars"
+[variable."5352018376318353790.EKBUTB04"]
+slug = "ekonomiskt-bistand-utbetalt-april"
+[variable."5352018376318353790.EKBUTB05"]
+slug = "ekonomiskt-bistand-utbetalt-maj"
+[variable."5352018376318353790.EKBUTB06"]
+slug = "ekonomiskt-bistand-utbetalt-juni"
+[variable."5352018376318353790.EKBUTB07"]
+slug = "ekonomiskt-bistand-utbetalt-juli"
+[variable."5352018376318353790.EKBUTB08"]
+slug = "ekonomiskt-bistand-utbetalt-augusti"
+[variable."5352018376318353790.EKBUTB09"]
+slug = "ekonomiskt-bistand-utbetalt-september"
+[variable."5352018376318353790.EKBUTB10"]
+slug = "ekonomiskt-bistand-utbetalt-oktober"
+[variable."5352018376318353790.EKBUTB11"]
+slug = "ekonomiskt-bistand-utbetalt-november"
+[variable."5352018376318353790.EKBUTB12"]
+slug = "ekonomiskt-bistand-utbetalt-december"
+[variable."5352018376318353790.ELSKULDBELOPP01"]
+slug = "livsforing-elskuld-januari"
+[variable."5352018376318353790.ELSKULDBELOPP02"]
+slug = "livsforing-elskuld-februari"
+[variable."5352018376318353790.ELSKULDBELOPP03"]
+slug = "livsforing-elskuld-mars"
+[variable."5352018376318353790.ELSKULDBELOPP04"]
+slug = "livsforing-elskuld-april"
+[variable."5352018376318353790.ELSKULDBELOPP05"]
+slug = "livsforing-elskuld-maj"
+[variable."5352018376318353790.ELSKULDBELOPP06"]
+slug = "livsforing-elskuld-juni"
+[variable."5352018376318353790.ELSKULDBELOPP07"]
+slug = "livsforing-elskuld-juli"
+[variable."5352018376318353790.ELSKULDBELOPP08"]
+slug = "livsforing-elskuld-augusti"
+[variable."5352018376318353790.ELSKULDBELOPP09"]
+slug = "livsforing-elskuld-september"
+[variable."5352018376318353790.ELSKULDBELOPP10"]
+slug = "livsforing-elskuld-oktober"
+[variable."5352018376318353790.ELSKULDBELOPP11"]
+slug = "livsforing-elskuld-november"
+[variable."5352018376318353790.ELSKULDBELOPP12"]
+slug = "livsforing-elskuld-december"
+[variable."5352018376318353790.ELSKULDIND01"]
+slug = "ovrigt-elskuld-januari"
+[variable."5352018376318353790.ELSKULDIND02"]
+slug = "ovrigt-elskuld-februari"
+[variable."5352018376318353790.ELSKULDIND03"]
+slug = "ovrigt-elskuld-mars"
+[variable."5352018376318353790.ELSKULDIND04"]
+slug = "ovrigt-elskuld-april"
+[variable."5352018376318353790.ELSKULDIND05"]
+slug = "ovrigt-elskuld-maj"
+[variable."5352018376318353790.ELSKULDIND06"]
+slug = "ovrigt-elskuld-juni"
+[variable."5352018376318353790.ELSKULDIND07"]
+slug = "ovrigt-elskuld-juli"
+[variable."5352018376318353790.ELSKULDIND08"]
+slug = "ovrigt-elskuld-augusti"
+[variable."5352018376318353790.ELSKULDIND09"]
+slug = "ovrigt-elskuld-september"
+[variable."5352018376318353790.ELSKULDIND10"]
+slug = "ovrigt-elskuld-oktober"
+[variable."5352018376318353790.ELSKULDIND11"]
+slug = "ovrigt-elskuld-november"
+[variable."5352018376318353790.ELSKULDIND12"]
+slug = "ovrigt-elskuld-december"
+[variable."5352018376318353790.FODAR"]
+slug = "fodelsear"
+[variable."5352018376318353790.FODDAT"]
+slug = "fodelsedatum"
+[variable."5352018376318353790.FODDATN"]
+slug = "fodelsedatum-numerisk"
+[variable."5352018376318353790.FSTOD"]
+slug = "forsorjningsstod-belopp"
+[variable."5352018376318353790.FSTODBELOPP01"]
+slug = "forsorjningsstod-januari"
+[variable."5352018376318353790.FSTODBELOPP02"]
+slug = "forsorjningsstod-februari"
+[variable."5352018376318353790.FSTODBELOPP03"]
+slug = "forsorjningsstod-mars"
+[variable."5352018376318353790.FSTODBELOPP04"]
+slug = "forsorjningsstod-april"
+[variable."5352018376318353790.FSTODBELOPP05"]
+slug = "forsorjningsstod-maj"
+[variable."5352018376318353790.FSTODBELOPP06"]
+slug = "forsorjningsstod-juni"
+[variable."5352018376318353790.FSTODBELOPP07"]
+slug = "forsorjningsstod-juli"
+[variable."5352018376318353790.FSTODBELOPP08"]
+slug = "forsorjningsstod-augusti"
+[variable."5352018376318353790.FSTODBELOPP09"]
+slug = "forsorjningsstod-september"
+[variable."5352018376318353790.FSTODBELOPP10"]
+slug = "forsorjningsstod-oktober"
+[variable."5352018376318353790.FSTODBELOPP11"]
+slug = "forsorjningsstod-november"
+[variable."5352018376318353790.FSTODBELOPP12"]
+slug = "forsorjningsstod-december"
+[variable."5352018376318353790.FSTODBOENDEBELOPP01"]
+slug = "forsorjningsstod-boende-januari"
+[variable."5352018376318353790.FSTODBOENDEBELOPP02"]
+slug = "forsorjningsstod-boende-februari"
+[variable."5352018376318353790.FSTODBOENDEBELOPP03"]
+slug = "forsorjningsstod-boende-mars"
+[variable."5352018376318353790.FSTODBOENDEBELOPP04"]
+slug = "forsorjningsstod-boende-april"
+[variable."5352018376318353790.FSTODBOENDEBELOPP05"]
+slug = "forsorjningsstod-boende-maj"
+[variable."5352018376318353790.FSTODBOENDEBELOPP06"]
+slug = "forsorjningsstod-boende-juni"
+[variable."5352018376318353790.FSTODBOENDEBELOPP07"]
+slug = "forsorjningsstod-boende-juli"
+[variable."5352018376318353790.FSTODBOENDEBELOPP08"]
+slug = "forsorjningsstod-boende-augusti"
+[variable."5352018376318353790.FSTODBOENDEBELOPP09"]
+slug = "forsorjningsstod-boende-september"
+[variable."5352018376318353790.FSTODBOENDEBELOPP10"]
+slug = "forsorjningsstod-boende-oktober"
+[variable."5352018376318353790.FSTODBOENDEBELOPP11"]
+slug = "forsorjningsstod-boende-november"
+[variable."5352018376318353790.FSTODBOENDEBELOPP12"]
+slug = "forsorjningsstod-boende-december"
+[variable."5352018376318353790.HID"]
+slug = "hushallsid"
+[variable."5352018376318353790.HINDER01"]
+slug = "forsorjningshinder-januari"
+[variable."5352018376318353790.HINDER02"]
+slug = "forsorjningshinder-februari"
+[variable."5352018376318353790.HINDER03"]
+slug = "forsorjningshinder-mars"
+[variable."5352018376318353790.HINDER04"]
+slug = "forsorjningshinder-april"
+[variable."5352018376318353790.HINDER05"]
+slug = "forsorjningshinder-maj"
+[variable."5352018376318353790.HINDER06"]
+slug = "forsorjningshinder-juni"
+[variable."5352018376318353790.HINDER07"]
+slug = "forsorjningshinder-juli"
+[variable."5352018376318353790.HINDER08"]
+slug = "forsorjningshinder-augusti"
+[variable."5352018376318353790.HINDER09"]
+slug = "forsorjningshinder-september"
+[variable."5352018376318353790.HINDER10"]
+slug = "forsorjningshinder-oktober"
+[variable."5352018376318353790.HINDER11"]
+slug = "forsorjningshinder-november"
+[variable."5352018376318353790.HINDER12"]
+slug = "forsorjningshinder-december"
+[variable."5352018376318353790.HSBEL"]
+slug = "halso-sjukvard-belopp"
+[variable."5352018376318353790.HSBELOPP01"]
+slug = "livsforing-halso-sjukvard-januari"
+[variable."5352018376318353790.HSBELOPP02"]
+slug = "livsforing-halso-sjukvard-februari"
+[variable."5352018376318353790.HSBELOPP03"]
+slug = "livsforing-halso-sjukvard-mars"
+[variable."5352018376318353790.HSBELOPP04"]
+slug = "livsforing-halso-sjukvard-april"
+[variable."5352018376318353790.HSBELOPP05"]
+slug = "livsforing-halso-sjukvard-maj"
+[variable."5352018376318353790.HSBELOPP06"]
+slug = "livsforing-halso-sjukvard-juni"
+[variable."5352018376318353790.HSBELOPP07"]
+slug = "livsforing-halso-sjukvard-juli"
+[variable."5352018376318353790.HSBELOPP08"]
+slug = "livsforing-halso-sjukvard-augusti"
+[variable."5352018376318353790.HSBELOPP09"]
+slug = "livsforing-halso-sjukvard-september"
+[variable."5352018376318353790.HSBELOPP10"]
+slug = "livsforing-halso-sjukvard-oktober"
+[variable."5352018376318353790.HSBELOPP11"]
+slug = "livsforing-halso-sjukvard-november"
+[variable."5352018376318353790.HSBELOPP12"]
+slug = "livsforing-halso-sjukvard-december"
+[variable."5352018376318353790.HSIND"]
+slug = "utbetalning-livsforing-ovrigt"
+[variable."5352018376318353790.HSIND01"]
+slug = "ovrigt-halso-sjukvard-januari"
+[variable."5352018376318353790.HSIND02"]
+slug = "ovrigt-halso-sjukvard-februari"
+[variable."5352018376318353790.HSIND03"]
+slug = "ovrigt-halso-sjukvard-mars"
+[variable."5352018376318353790.HSIND04"]
+slug = "ovrigt-halso-sjukvard-april"
+[variable."5352018376318353790.HSIND05"]
+slug = "ovrigt-halso-sjukvard-maj"
+[variable."5352018376318353790.HSIND06"]
+slug = "ovrigt-halso-sjukvard-juni"
+[variable."5352018376318353790.HSIND07"]
+slug = "ovrigt-halso-sjukvard-juli"
+[variable."5352018376318353790.HSIND08"]
+slug = "ovrigt-halso-sjukvard-augusti"
+[variable."5352018376318353790.HSIND09"]
+slug = "ovrigt-halso-sjukvard-september"
+[variable."5352018376318353790.HSIND10"]
+slug = "ovrigt-halso-sjukvard-oktober"
+[variable."5352018376318353790.HSIND11"]
+slug = "ovrigt-halso-sjukvard-november"
+[variable."5352018376318353790.HSIND12"]
+slug = "ovrigt-halso-sjukvard-december"
+[variable."5352018376318353790.HTYP"]
+slug = "hushallstyp"
+[variable."5352018376318353790.HYRESSKULDBELOPP01"]
+slug = "livsforing-hyresskuld-januari"
+[variable."5352018376318353790.HYRESSKULDBELOPP02"]
+slug = "livsforing-hyresskuld-februari"
+[variable."5352018376318353790.HYRESSKULDBELOPP03"]
+slug = "livsforing-hyresskuld-mars"
+[variable."5352018376318353790.HYRESSKULDBELOPP04"]
+slug = "livsforing-hyresskuld-april"
+[variable."5352018376318353790.HYRESSKULDBELOPP05"]
+slug = "livsforing-hyresskuld-maj"
+[variable."5352018376318353790.HYRESSKULDBELOPP06"]
+slug = "livsforing-hyresskuld-juni"
+[variable."5352018376318353790.HYRESSKULDBELOPP07"]
+slug = "livsforing-hyresskuld-juli"
+[variable."5352018376318353790.HYRESSKULDBELOPP08"]
+slug = "livsforing-hyresskuld-augusti"
+[variable."5352018376318353790.HYRESSKULDBELOPP09"]
+slug = "livsforing-hyresskuld-september"
+[variable."5352018376318353790.HYRESSKULDBELOPP10"]
+slug = "livsforing-hyresskuld-oktober"
+[variable."5352018376318353790.HYRESSKULDBELOPP11"]
+slug = "livsforing-hyresskuld-november"
+[variable."5352018376318353790.HYRESSKULDBELOPP12"]
+slug = "livsforing-hyresskuld-december"
+[variable."5352018376318353790.HYRESSKULDIND01"]
+slug = "ovrigt-hyresskuld-januari"
+[variable."5352018376318353790.HYRESSKULDIND02"]
+slug = "ovrigt-hyresskuld-februari"
+[variable."5352018376318353790.HYRESSKULDIND03"]
+slug = "ovrigt-hyresskuld-mars"
+[variable."5352018376318353790.HYRESSKULDIND04"]
+slug = "ovrigt-hyresskuld-april"
+[variable."5352018376318353790.HYRESSKULDIND05"]
+slug = "ovrigt-hyresskuld-maj"
+[variable."5352018376318353790.HYRESSKULDIND06"]
+slug = "ovrigt-hyresskuld-juni"
+[variable."5352018376318353790.HYRESSKULDIND07"]
+slug = "ovrigt-hyresskuld-juli"
+[variable."5352018376318353790.HYRESSKULDIND08"]
+slug = "ovrigt-hyresskuld-augusti"
+[variable."5352018376318353790.HYRESSKULDIND09"]
+slug = "ovrigt-hyresskuld-september"
+[variable."5352018376318353790.HYRESSKULDIND10"]
+slug = "ovrigt-hyresskuld-oktober"
+[variable."5352018376318353790.HYRESSKULDIND11"]
+slug = "ovrigt-hyresskuld-november"
+[variable."5352018376318353790.HYRESSKULDIND12"]
+slug = "ovrigt-hyresskuld-december"
+[variable."5352018376318353790.IEBELOPP01"]
+slug = "introduktionsersattning-januari"
+[variable."5352018376318353790.IEBELOPP02"]
+slug = "introduktionsersattning-februari"
+[variable."5352018376318353790.IEBELOPP03"]
+slug = "introduktionsersattning-mars"
+[variable."5352018376318353790.IEBELOPP04"]
+slug = "introduktionsersattning-april"
+[variable."5352018376318353790.IEBELOPP05"]
+slug = "introduktionsersattning-maj"
+[variable."5352018376318353790.IEBELOPP06"]
+slug = "introduktionsersattning-juni"
+[variable."5352018376318353790.IEBELOPP07"]
+slug = "introduktionsersattning-juli"
+[variable."5352018376318353790.IEBELOPP08"]
+slug = "introduktionsersattning-augusti"
+[variable."5352018376318353790.IEBELOPP09"]
+slug = "introduktionsersattning-september"
+[variable."5352018376318353790.IEBELOPP10"]
+slug = "introduktionsersattning-oktober"
+[variable."5352018376318353790.IEBELOPP11"]
+slug = "introduktionsersattning-november"
+[variable."5352018376318353790.IEBELOPP12"]
+slug = "introduktionsersattning-december"
+[variable."5352018376318353790.INSALDST01"]
+slug = "aldste-insats-arbetsforberedande"
+[variable."5352018376318353790.INSALDST02"]
+slug = "aldste-insats-arbetspraktik"
+[variable."5352018376318353790.INSALDST03"]
+slug = "aldste-insats-jobbsokaraktivitet"
+[variable."5352018376318353790.INSALDST04"]
+slug = "aldste-insats-kurs"
+[variable."5352018376318353790.INSALDST05"]
+slug = "aldste-insats-studievagledning"
+[variable."5352018376318353790.INSALDST06"]
+slug = "aldste-insats-ovriga-arbetsmarknads"
+[variable."5352018376318353790.INSALDST07"]
+slug = "aldste-insats-ej-aktuellt-arbetsmarknads"
+[variable."5352018376318353790.INSYNGST01"]
+slug = "yngstes-insats-arbetsforberedande"
+[variable."5352018376318353790.INSYNGST02"]
+slug = "yngstes-insats-arbetspraktik"
+[variable."5352018376318353790.INSYNGST03"]
+slug = "yngstes-insats-jobbsokaraktivitet"
+[variable."5352018376318353790.INSYNGST04"]
+slug = "yngstes-insats-kurs"
+[variable."5352018376318353790.INSYNGST05"]
+slug = "yngstes-insats-studie-yrkesvagledning"
+[variable."5352018376318353790.INSYNGST06"]
+slug = "yngstes-insats-ovriga-kommunala"
+[variable."5352018376318353790.INSYNGST07"]
+slug = "yngstes-insats-ej-kommunala"
+[variable."5352018376318353790.KOMMUN"]
+slug = "kommunkod"
+[variable."5352018376318353790.LK"]
+slug = "lan-kommun-fran-folkbokforing"
+[variable."5352018376318353790.OVRIGSKULDBELOPP01"]
+slug = "livsforing-ovrig-skuld-januari"
+[variable."5352018376318353790.OVRIGSKULDBELOPP02"]
+slug = "livsforing-ovrig-skuld-februari"
+[variable."5352018376318353790.OVRIGSKULDBELOPP03"]
+slug = "livsforing-ovrig-skuld-mars"
+[variable."5352018376318353790.OVRIGSKULDBELOPP04"]
+slug = "livsforing-ovrig-skuld-april"
+[variable."5352018376318353790.OVRIGSKULDBELOPP05"]
+slug = "livsforing-ovrig-skuld-maj"
+[variable."5352018376318353790.OVRIGSKULDBELOPP06"]
+slug = "livsforing-ovrig-skuld-juni"
+[variable."5352018376318353790.OVRIGSKULDBELOPP07"]
+slug = "livsforing-ovrig-skuld-juli"
+[variable."5352018376318353790.OVRIGSKULDBELOPP08"]
+slug = "livsforing-ovrig-skuld-augusti"
+[variable."5352018376318353790.OVRIGSKULDBELOPP09"]
+slug = "livsforing-ovrig-skuld-september"
+[variable."5352018376318353790.OVRIGSKULDBELOPP10"]
+slug = "livsforing-ovrig-skuld-oktober"
+[variable."5352018376318353790.OVRIGSKULDBELOPP11"]
+slug = "livsforing-ovrig-skuld-november"
+[variable."5352018376318353790.OVRIGSKULDBELOPP12"]
+slug = "livsforing-ovrig-skuld-december"
+[variable."5352018376318353790.OVRIGSKULDIND01"]
+slug = "ovrig-skuld-januari"
+[variable."5352018376318353790.OVRIGSKULDIND02"]
+slug = "ovrig-skuld-februari"
+[variable."5352018376318353790.OVRIGSKULDIND03"]
+slug = "ovrig-skuld-mars"
+[variable."5352018376318353790.OVRIGSKULDIND04"]
+slug = "ovrig-skuld-april"
+[variable."5352018376318353790.OVRIGSKULDIND05"]
+slug = "ovrig-skuld-maj"
+[variable."5352018376318353790.OVRIGSKULDIND06"]
+slug = "ovrig-skuld-juni"
+[variable."5352018376318353790.OVRIGSKULDIND07"]
+slug = "ovrig-skuld-juli"
+[variable."5352018376318353790.OVRIGSKULDIND08"]
+slug = "ovrig-skuld-augusti"
+[variable."5352018376318353790.OVRIGSKULDIND09"]
+slug = "ovrig-skuld-september"
+[variable."5352018376318353790.OVRIGSKULDIND10"]
+slug = "ovrig-skuld-oktober"
+[variable."5352018376318353790.OVRIGSKULDIND11"]
+slug = "ovrig-skuld-november"
+[variable."5352018376318353790.OVRIGSKULDIND12"]
+slug = "ovrig-skuld-december"
+[variable."5352018376318353790.PERSONNR_ALDST"]
+slug = "personnr-aldsta-sokande"
+[variable."5352018376318353790.PERSONNR_YNGST"]
+slug = "personnr-yngsta-sokande"
+[variable."5352018376318353790.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."5352018376318353790.SOK1ALDER"]
+slug = "alder-sokande-1"
+[variable."5352018376318353790.SOK1HINDER"]
+slug = "hinder-sokande-1"
+[variable."5352018376318353790.SOK1HINDER01"]
+slug = "aldstes-hinder-januari-sok1"
+[variable."5352018376318353790.SOK1HINDER02"]
+slug = "aldstes-hinder-februari-sok1"
+[variable."5352018376318353790.SOK1HINDER03"]
+slug = "aldstes-hinder-mars-sok1"
+[variable."5352018376318353790.SOK1HINDER04"]
+slug = "aldstes-hinder-april-sok1"
+[variable."5352018376318353790.SOK1HINDER05"]
+slug = "aldstes-hinder-maj-sok1"
+[variable."5352018376318353790.SOK1HINDER06"]
+slug = "aldstes-hinder-juni-sok1"
+[variable."5352018376318353790.SOK1HINDER07"]
+slug = "aldstes-hinder-juli-sok1"
+[variable."5352018376318353790.SOK1HINDER08"]
+slug = "aldstes-hinder-augusti-sok1"
+[variable."5352018376318353790.SOK1HINDER09"]
+slug = "aldstes-hinder-september-sok1"
+[variable."5352018376318353790.SOK1HINDER10"]
+slug = "aldstes-hinder-oktober-sok1"
+[variable."5352018376318353790.SOK1HINDER11"]
+slug = "aldstes-hinder-november-sok1"
+[variable."5352018376318353790.SOK1HINDER12"]
+slug = "aldstes-hinder-december-sok1"
+[variable."5352018376318353790.SOK2HINDER"]
+slug = "hinder-sokande-2"
+[variable."5352018376318353790.SOK2HINDER01"]
+slug = "sok2-hinder-januari"
+[variable."5352018376318353790.SOK2HINDER02"]
+slug = "sok2-hinder-februari"
+[variable."5352018376318353790.SOK2HINDER03"]
+slug = "sok2-hinder-mars"
+[variable."5352018376318353790.SOK2HINDER04"]
+slug = "sok2-hinder-april"
+[variable."5352018376318353790.SOK2HINDER05"]
+slug = "sok2-hinder-maj"
+[variable."5352018376318353790.SOK2HINDER06"]
+slug = "sok2-hinder-juni"
+[variable."5352018376318353790.SOK2HINDER07"]
+slug = "sok2-hinder-juli"
+[variable."5352018376318353790.SOK2HINDER08"]
+slug = "sok2-hinder-augusti"
+[variable."5352018376318353790.SOK2HINDER09"]
+slug = "sok2-hinder-september"
+[variable."5352018376318353790.SOK2HINDER10"]
+slug = "sok2-hinder-oktober"
+[variable."5352018376318353790.SOK2HINDER11"]
+slug = "sok2-hinder-november"
+[variable."5352018376318353790.SOK2HINDER12"]
+slug = "sok2-hinder-december"
+[variable."5352018376318353790.SOKALDSTALDER"]
+slug = "alder-sokande-aldst"
+[variable."5352018376318353790.SOKALDSTAVSLUT01"]
+slug = "avslutskod-aldsta-sokande-januari"
+[variable."5352018376318353790.SOKALDSTAVSLUT02"]
+slug = "avslutskod-aldsta-sokande-februari"
+[variable."5352018376318353790.SOKALDSTAVSLUT03"]
+slug = "avslutskod-aldsta-sokande-mars"
+[variable."5352018376318353790.SOKALDSTAVSLUT04"]
+slug = "avslutskod-aldsta-sokande-april"
+[variable."5352018376318353790.SOKALDSTAVSLUT05"]
+slug = "avslutskod-aldsta-sokande-maj"
+[variable."5352018376318353790.SOKALDSTAVSLUT06"]
+slug = "avslutskod-aldsta-sokande-juni"
+[variable."5352018376318353790.SOKALDSTAVSLUT07"]
+slug = "avslutskod-aldsta-sokande-juli"
+[variable."5352018376318353790.SOKALDSTAVSLUT08"]
+slug = "avslutskod-aldsta-sokande-augusti"
+[variable."5352018376318353790.SOKALDSTAVSLUT09"]
+slug = "avslutskod-aldsta-sokande-september"
+[variable."5352018376318353790.SOKALDSTAVSLUT10"]
+slug = "avslutskod-aldsta-sokande-oktober"
+[variable."5352018376318353790.SOKALDSTAVSLUT11"]
+slug = "avslutskod-aldsta-sokande-november"
+[variable."5352018376318353790.SOKALDSTAVSLUT12"]
+slug = "avslutskod-aldsta-sokande-december"
+[variable."5352018376318353790.SOKALDSTHINDER01"]
+slug = "aldstes-hinder-januari"
+[variable."5352018376318353790.SOKALDSTHINDER02"]
+slug = "aldstes-hinder-februari"
+[variable."5352018376318353790.SOKALDSTHINDER03"]
+slug = "aldstes-hinder-mars"
+[variable."5352018376318353790.SOKALDSTHINDER04"]
+slug = "aldstes-hinder-april"
+[variable."5352018376318353790.SOKALDSTHINDER05"]
+slug = "aldstes-hinder-maj"
+[variable."5352018376318353790.SOKALDSTHINDER06"]
+slug = "aldstes-hinder-juni"
+[variable."5352018376318353790.SOKALDSTHINDER07"]
+slug = "aldstes-hinder-juli"
+[variable."5352018376318353790.SOKALDSTHINDER08"]
+slug = "aldstes-hinder-augusti"
+[variable."5352018376318353790.SOKALDSTHINDER09"]
+slug = "aldstes-hinder-september"
+[variable."5352018376318353790.SOKALDSTHINDER10"]
+slug = "aldstes-hinder-oktober"
+[variable."5352018376318353790.SOKALDSTHINDER11"]
+slug = "aldstes-hinder-november"
+[variable."5352018376318353790.SOKALDSTHINDER12"]
+slug = "aldstes-hinder-december"
+[variable."5352018376318353790.SOKALDSTPNR"]
+slug = "personnr-aldsta-sokande-2"
+[variable."5352018376318353790.SOKINS01"]
+slug = "arbetsforberedande-insatser"
+[variable."5352018376318353790.SOKINS01_01"]
+slug = "arbetsforberedande-insatser-januari"
+[variable."5352018376318353790.SOKINS01_02"]
+slug = "arbetsforberedande-insatser-februari"
+[variable."5352018376318353790.SOKINS01_03"]
+slug = "arbetsforberedande-insatser-mars"
+[variable."5352018376318353790.SOKINS01_04"]
+slug = "arbetsforberedande-insatser-april"
+[variable."5352018376318353790.SOKINS01_05"]
+slug = "arbetsforberedande-insatser-maj"
+[variable."5352018376318353790.SOKINS01_06"]
+slug = "arbetsforberedande-insatser-juni"
+[variable."5352018376318353790.SOKINS01_07"]
+slug = "arbetsforberedande-insatser-juli"
+[variable."5352018376318353790.SOKINS01_08"]
+slug = "arbetsforberedande-insatser-augusti"
+[variable."5352018376318353790.SOKINS01_09"]
+slug = "arbetsforberedande-insatser-september"
+[variable."5352018376318353790.SOKINS01_10"]
+slug = "arbetsforberedande-insatser-oktober"
+[variable."5352018376318353790.SOKINS01_11"]
+slug = "arbetsforberedande-insatser-november"
+[variable."5352018376318353790.SOKINS01_12"]
+slug = "arbetsforberedande-insatser-december"
+[variable."5352018376318353790.SOKINS02"]
+slug = "arbetspraktik"
+[variable."5352018376318353790.SOKINS02_01"]
+slug = "arbetspraktik-januari"
+[variable."5352018376318353790.SOKINS02_02"]
+slug = "arbetspraktik-februari"
+[variable."5352018376318353790.SOKINS02_03"]
+slug = "arbetspraktik-mars"
+[variable."5352018376318353790.SOKINS02_04"]
+slug = "arbetspraktik-april"
+[variable."5352018376318353790.SOKINS02_05"]
+slug = "arbetspraktik-maj"
+[variable."5352018376318353790.SOKINS02_06"]
+slug = "arbetspraktik-juni"
+[variable."5352018376318353790.SOKINS02_07"]
+slug = "arbetspraktik-juli"
+[variable."5352018376318353790.SOKINS02_08"]
+slug = "arbetspraktik-augusti"
+[variable."5352018376318353790.SOKINS02_09"]
+slug = "arbetspraktik-september"
+[variable."5352018376318353790.SOKINS02_10"]
+slug = "arbetspraktik-oktober"
+[variable."5352018376318353790.SOKINS02_11"]
+slug = "arbetspraktik-november"
+[variable."5352018376318353790.SOKINS02_12"]
+slug = "arbetspraktik-december"
+[variable."5352018376318353790.SOKINS03"]
+slug = "jobbsokaraktivitet"
+[variable."5352018376318353790.SOKINS03_01"]
+slug = "jobbsokaraktivitet-januari"
+[variable."5352018376318353790.SOKINS03_02"]
+slug = "jobbsokaraktivitet-februari"
+[variable."5352018376318353790.SOKINS03_03"]
+slug = "jobbsokaraktivitet-mars"
+[variable."5352018376318353790.SOKINS03_04"]
+slug = "jobbsokaraktivitet-april"
+[variable."5352018376318353790.SOKINS03_05"]
+slug = "jobbsokaraktivitet-maj"
+[variable."5352018376318353790.SOKINS03_06"]
+slug = "jobbsokaraktivitet-juni"
+[variable."5352018376318353790.SOKINS03_07"]
+slug = "jobbsokaraktivitet-juli"
+[variable."5352018376318353790.SOKINS03_08"]
+slug = "jobbsokaraktivitet-augusti"
+[variable."5352018376318353790.SOKINS03_09"]
+slug = "jobbsokaraktivitet-september"
+[variable."5352018376318353790.SOKINS03_10"]
+slug = "jobbsokaraktivitet-oktober"
+[variable."5352018376318353790.SOKINS03_11"]
+slug = "jobbsokaraktivitet-november"
+[variable."5352018376318353790.SOKINS03_12"]
+slug = "jobbsokaraktivitet-december"
+[variable."5352018376318353790.SOKINS04"]
+slug = "kurs"
+[variable."5352018376318353790.SOKINS04_01"]
+slug = "kurs-januari"
+[variable."5352018376318353790.SOKINS04_02"]
+slug = "kurs-februari"
+[variable."5352018376318353790.SOKINS04_03"]
+slug = "kurs-mars"
+[variable."5352018376318353790.SOKINS04_04"]
+slug = "kurs-april"
+[variable."5352018376318353790.SOKINS04_05"]
+slug = "kurs-maj"
+[variable."5352018376318353790.SOKINS04_06"]
+slug = "kurs-juni"
+[variable."5352018376318353790.SOKINS04_07"]
+slug = "kurs-juli"
+[variable."5352018376318353790.SOKINS04_08"]
+slug = "kurs-augusti"
+[variable."5352018376318353790.SOKINS04_09"]
+slug = "kurs-september"
+[variable."5352018376318353790.SOKINS04_10"]
+slug = "kurs-oktober"
+[variable."5352018376318353790.SOKINS04_11"]
+slug = "kurs-november"
+[variable."5352018376318353790.SOKINS04_12"]
+slug = "kurs-december"
+[variable."5352018376318353790.SOKINS05"]
+slug = "studie-yrkesvagledning"
+[variable."5352018376318353790.SOKINS05_01"]
+slug = "studie-yrkesvagledning-januari"
+[variable."5352018376318353790.SOKINS05_02"]
+slug = "studie-yrkesvagledning-februari"
+[variable."5352018376318353790.SOKINS05_03"]
+slug = "studie-yrkesvagledning-mars"
+[variable."5352018376318353790.SOKINS05_04"]
+slug = "studie-yrkesvagledning-april"
+[variable."5352018376318353790.SOKINS05_05"]
+slug = "studie-yrkesvagledning-maj"
+[variable."5352018376318353790.SOKINS05_06"]
+slug = "studie-yrkesvagledning-juni"
+[variable."5352018376318353790.SOKINS05_07"]
+slug = "studie-yrkesvagledning-juli"
+[variable."5352018376318353790.SOKINS05_08"]
+slug = "studie-yrkesvagledning-augusti"
+[variable."5352018376318353790.SOKINS05_09"]
+slug = "studie-yrkesvagledning-september"
+[variable."5352018376318353790.SOKINS05_10"]
+slug = "studie-yrkesvagledning-oktober"
+[variable."5352018376318353790.SOKINS05_11"]
+slug = "studie-yrkesvagledning-november"
+[variable."5352018376318353790.SOKINS05_12"]
+slug = "studie-yrkesvagledning-december"
+[variable."5352018376318353790.SOKINS06"]
+slug = "ovriga-arbetsmarknadsinsatser"
+[variable."5352018376318353790.SOKINS06_01"]
+slug = "arbetsmarknadsinsatser-januari"
+[variable."5352018376318353790.SOKINS06_02"]
+slug = "arbetsmarknadsinsatser-februari"
+[variable."5352018376318353790.SOKINS06_03"]
+slug = "arbetsmarknadsinsatser-mars"
+[variable."5352018376318353790.SOKINS06_04"]
+slug = "arbetsmarknadsinsatser-april"
+[variable."5352018376318353790.SOKINS06_05"]
+slug = "arbetsmarknadsinsatser-maj"
+[variable."5352018376318353790.SOKINS06_06"]
+slug = "arbetsmarknadsinsatser-juni"
+[variable."5352018376318353790.SOKINS06_07"]
+slug = "arbetsmarknadsinsatser-juli"
+[variable."5352018376318353790.SOKINS06_08"]
+slug = "arbetsmarknadsinsatser-augusti"
+[variable."5352018376318353790.SOKINS06_09"]
+slug = "arbetsmarknadsinsatser-september"
+[variable."5352018376318353790.SOKINS06_10"]
+slug = "arbetsmarknadsinsatser-oktober"
+[variable."5352018376318353790.SOKINS06_11"]
+slug = "arbetsmarknadsinsatser-november"
+[variable."5352018376318353790.SOKINS06_12"]
+slug = "arbetsmarknadsinsatser-december"
+[variable."5352018376318353790.SOKINS07"]
+slug = "ej-arbetsmarknadsinsatser"
+[variable."5352018376318353790.SOKINS07_01"]
+slug = "ej-arbetsmarknadsinsatser-januari"
+[variable."5352018376318353790.SOKINS07_02"]
+slug = "ej-arbetsmarknadsinsatser-februari"
+[variable."5352018376318353790.SOKINS07_03"]
+slug = "ej-arbetsmarknadsinsatser-mars"
+[variable."5352018376318353790.SOKINS07_04"]
+slug = "ej-arbetsmarknadsinsatser-april"
+[variable."5352018376318353790.SOKINS07_05"]
+slug = "ej-arbetsmarknadsinsatser-maj"
+[variable."5352018376318353790.SOKINS07_06"]
+slug = "ej-arbetsmarknadsinsatser-juni"
+[variable."5352018376318353790.SOKINS07_07"]
+slug = "ej-arbetsmarknadsinsatser-juli"
+[variable."5352018376318353790.SOKINS07_08"]
+slug = "ej-arbetsmarknadsinsatser-augusti"
+[variable."5352018376318353790.SOKINS07_09"]
+slug = "ej-arbetsmarknadsinsatser-september"
+[variable."5352018376318353790.SOKINS07_10"]
+slug = "ej-arbetsmarknadsinsatser-oktober"
+[variable."5352018376318353790.SOKINS07_11"]
+slug = "ej-arbetsmarknadsinsatser-november"
+[variable."5352018376318353790.SOKINS07_12"]
+slug = "ej-arbetsmarknadsinsatser-december"
+[variable."5352018376318353790.SOKYNGSTALDER"]
+slug = "alder-sokande-yngst"
+[variable."5352018376318353790.SOKYNGSTAVSLUT01"]
+slug = "avslutskod-yngsta-sokande-januari"
+[variable."5352018376318353790.SOKYNGSTAVSLUT02"]
+slug = "avslutskod-yngsta-sokande-februari"
+[variable."5352018376318353790.SOKYNGSTAVSLUT03"]
+slug = "avslutskod-yngsta-sokande-mars"
+[variable."5352018376318353790.SOKYNGSTAVSLUT04"]
+slug = "avslutskod-yngsta-sokande-april"
+[variable."5352018376318353790.SOKYNGSTAVSLUT05"]
+slug = "avslutskod-yngsta-sokande-maj"
+[variable."5352018376318353790.SOKYNGSTAVSLUT06"]
+slug = "avslutskod-yngsta-sokande-juni"
+[variable."5352018376318353790.SOKYNGSTAVSLUT07"]
+slug = "avslutskod-yngsta-sokande-juli"
+[variable."5352018376318353790.SOKYNGSTAVSLUT08"]
+slug = "avslutskod-yngsta-sokande-augusti"
+[variable."5352018376318353790.SOKYNGSTAVSLUT09"]
+slug = "avslutskod-yngsta-sokande-september"
+[variable."5352018376318353790.SOKYNGSTAVSLUT10"]
+slug = "avslutskod-yngsta-sokande-oktober"
+[variable."5352018376318353790.SOKYNGSTAVSLUT11"]
+slug = "avslutskod-yngsta-sokande-november"
+[variable."5352018376318353790.SOKYNGSTAVSLUT12"]
+slug = "avslutskod-yngsta-sokande-december"
+[variable."5352018376318353790.SOKYNGSTHINDER01"]
+slug = "yngstes-hinder-januari"
+[variable."5352018376318353790.SOKYNGSTHINDER02"]
+slug = "yngstes-hinder-februari"
+[variable."5352018376318353790.SOKYNGSTHINDER03"]
+slug = "yngstes-hinder-mars"
+[variable."5352018376318353790.SOKYNGSTHINDER04"]
+slug = "yngstes-hinder-april"
+[variable."5352018376318353790.SOKYNGSTHINDER05"]
+slug = "yngstes-hinder-maj"
+[variable."5352018376318353790.SOKYNGSTHINDER06"]
+slug = "yngstes-hinder-juni"
+[variable."5352018376318353790.SOKYNGSTHINDER07"]
+slug = "yngstes-hinder-juli"
+[variable."5352018376318353790.SOKYNGSTHINDER08"]
+slug = "yngstes-hinder-augusti"
+[variable."5352018376318353790.SOKYNGSTHINDER09"]
+slug = "yngstes-hinder-september"
+[variable."5352018376318353790.SOKYNGSTHINDER10"]
+slug = "yngstes-hinder-oktober"
+[variable."5352018376318353790.SOKYNGSTHINDER11"]
+slug = "yngstes-hinder-november"
+[variable."5352018376318353790.SOKYNGSTHINDER12"]
+slug = "yngstes-hinder-december"
+[variable."5352018376318353790.SOKYNGSTPNR"]
+slug = "personnr-yngsta-sokande-2"
+[variable."5352018376318353790.TANDVBELOPP01"]
+slug = "tandvard-belopp-januari"
+[variable."5352018376318353790.TANDVBELOPP02"]
+slug = "tandvard-belopp-februari"
+[variable."5352018376318353790.TANDVBELOPP03"]
+slug = "tandvard-belopp-mars"
+[variable."5352018376318353790.TANDVBELOPP04"]
+slug = "tandvard-belopp-april"
+[variable."5352018376318353790.TANDVBELOPP05"]
+slug = "tandvard-belopp-maj"
+[variable."5352018376318353790.TANDVBELOPP06"]
+slug = "tandvard-belopp-juni"
+[variable."5352018376318353790.TANDVBELOPP07"]
+slug = "tandvard-belopp-juli"
+[variable."5352018376318353790.TANDVBELOPP08"]
+slug = "tandvard-belopp-augusti"
+[variable."5352018376318353790.TANDVBELOPP09"]
+slug = "tandvard-belopp-september"
+[variable."5352018376318353790.TANDVBELOPP10"]
+slug = "tandvard-belopp-oktober"
+[variable."5352018376318353790.TANDVBELOPP11"]
+slug = "tandvard-belopp-november"
+[variable."5352018376318353790.TANDVBELOPP12"]
+slug = "tandvard-belopp-december"
+[variable."5352018376318353790.TANDVIND01"]
+slug = "tandvard-januari"
+[variable."5352018376318353790.TANDVIND02"]
+slug = "tandvard-februari"
+[variable."5352018376318353790.TANDVIND03"]
+slug = "tandvard-mars"
+[variable."5352018376318353790.TANDVIND04"]
+slug = "tandvard-april"
+[variable."5352018376318353790.TANDVIND05"]
+slug = "tandvard-maj"
+[variable."5352018376318353790.TANDVIND06"]
+slug = "tandvard-juni"
+[variable."5352018376318353790.TANDVIND07"]
+slug = "tandvard-juli"
+[variable."5352018376318353790.TANDVIND08"]
+slug = "tandvard-augusti"
+[variable."5352018376318353790.TANDVIND09"]
+slug = "tandvard-september"
+[variable."5352018376318353790.TANDVIND10"]
+slug = "tandvard-oktober"
+[variable."5352018376318353790.TANDVIND11"]
+slug = "tandvard-november"
+[variable."5352018376318353790.TANDVIND12"]
+slug = "tandvard-december"
+[variable."5352018376318353790.UTLHH"]
+slug = "utlanskt-hushall"
+# register 5369119272181688462
+[variable."5369119272181688462.DALDKL5"]
+slug = "dodsalder-femarsklasser"
+[variable."5369119272181688462.DBGRUND1"]
+slug = "obduktion"
+[variable."5369119272181688462.DBGRUND5"]
+slug = "undersokning-fore-doden"
+[variable."5369119272181688462.DBGRUND6"]
+slug = "undersokning-utanfor-sjukhus"
+[variable."5369119272181688462.DBGRUND7"]
+slug = "yttre-undersokning-efter-doden"
+[variable."5369119272181688462.DBGRUND8"]
+slug = "annan-kalla"
+[variable."5369119272181688462.DODSDAT"]
+slug = "dodsdatum"
+[variable."5369119272181688462.FCIV"]
+slug = "foregaende-civilstand"
+[variable."5369119272181688462.FLAND"]
+slug = "fodelseland-fritext"
+[variable."5369119272181688462.FODDAT"]
+slug = "fodelsedatum"
+[variable."5369119272181688462.FODDATN"]
+slug = "fodelsedatum-sas"
+[variable."5369119272181688462.FOD_LAN"]
+slug = "fodelselan"
+[variable."5369119272181688462.GKOD"]
+slug = "granskningskod"
+[variable."5369119272181688462.INLAS"]
+slug = "inlasningsdatum"
+[variable."5369119272181688462.INTYG"]
+slug = "dodsorsak-inrapporteringssatt"
+[variable."5369119272181688462.KAP17"]
+slug = "kapitel-17-kod-icd-9"
+[variable."5369119272181688462.KAP19"]
+slug = "skadans-natur-kap19"
+[variable."5369119272181688462.KAP22"]
+slug = "skadans-natur-kap22"
+[variable."5369119272181688462.LK"]
+slug = "lan-kommun-fran-folkbokforing"
+[variable."5369119272181688462.LKF"]
+slug = "forsamlingskod"
+[variable."5369119272181688462.MORSAK1"]
+slug = "dodsorsak-1"
+[variable."5369119272181688462.MORSAK10"]
+slug = "dodsorsak-10"
+[variable."5369119272181688462.MORSAK11"]
+slug = "dodsorsak-11"
+[variable."5369119272181688462.MORSAK12"]
+slug = "dodsorsak-12"
+[variable."5369119272181688462.MORSAK13"]
+slug = "dodsorsak-13"
+[variable."5369119272181688462.MORSAK14"]
+slug = "dodsorsak-14"
+[variable."5369119272181688462.MORSAK15"]
+slug = "dodsorsak-15"
+[variable."5369119272181688462.MORSAK16"]
+slug = "dodsorsak-16"
+[variable."5369119272181688462.MORSAK17"]
+slug = "dodsorsak-17"
+[variable."5369119272181688462.MORSAK18"]
+slug = "dodsorsak-18"
+[variable."5369119272181688462.MORSAK19"]
+slug = "dodsorsak-19"
+[variable."5369119272181688462.MORSAK2"]
+slug = "dodsorsak-2"
+[variable."5369119272181688462.MORSAK20"]
+slug = "dodsorsak-20"
+[variable."5369119272181688462.MORSAK21"]
+slug = "dodsorsak-21"
+[variable."5369119272181688462.MORSAK22"]
+slug = "dodsorsak-22"
+[variable."5369119272181688462.MORSAK23"]
+slug = "dodsorsak-23"
+[variable."5369119272181688462.MORSAK24"]
+slug = "dodsorsak-24"
+[variable."5369119272181688462.MORSAK25"]
+slug = "dodsorsak-25"
+[variable."5369119272181688462.MORSAK26"]
+slug = "dodsorsak-26"
+[variable."5369119272181688462.MORSAK27"]
+slug = "dodsorsak-27"
+[variable."5369119272181688462.MORSAK28"]
+slug = "dodsorsak-28"
+[variable."5369119272181688462.MORSAK29"]
+slug = "dodsorsak-29"
+[variable."5369119272181688462.MORSAK3"]
+slug = "dodsorsak-3"
+[variable."5369119272181688462.MORSAK30"]
+slug = "dodsorsak-30"
+[variable."5369119272181688462.MORSAK31"]
+slug = "dodsorsak-31"
+[variable."5369119272181688462.MORSAK32"]
+slug = "dodsorsak-32"
+[variable."5369119272181688462.MORSAK33"]
+slug = "dodsorsak-33"
+[variable."5369119272181688462.MORSAK34"]
+slug = "dodsorsak-34"
+[variable."5369119272181688462.MORSAK35"]
+slug = "dodsorsak-35"
+[variable."5369119272181688462.MORSAK36"]
+slug = "dodsorsak-36"
+[variable."5369119272181688462.MORSAK37"]
+slug = "dodsorsak-37"
+[variable."5369119272181688462.MORSAK38"]
+slug = "dodsorsak-38"
+[variable."5369119272181688462.MORSAK39"]
+slug = "dodsorsak-39"
+[variable."5369119272181688462.MORSAK4"]
+slug = "dodsorsak-4"
+[variable."5369119272181688462.MORSAK40"]
+slug = "dodsorsak-40"
+[variable."5369119272181688462.MORSAK41"]
+slug = "dodsorsak-41"
+[variable."5369119272181688462.MORSAK42"]
+slug = "dodsorsak-42"
+[variable."5369119272181688462.MORSAK43"]
+slug = "dodsorsak-43"
+[variable."5369119272181688462.MORSAK44"]
+slug = "dodsorsak-44"
+[variable."5369119272181688462.MORSAK45"]
+slug = "dodsorsak-45"
+[variable."5369119272181688462.MORSAK46"]
+slug = "dodsorsak-46"
+[variable."5369119272181688462.MORSAK47"]
+slug = "dodsorsak-47"
+[variable."5369119272181688462.MORSAK48"]
+slug = "dodsorsak-48"
+[variable."5369119272181688462.MORSAK5"]
+slug = "dodsorsak-5"
+[variable."5369119272181688462.MORSAK6"]
+slug = "dodsorsak-6"
+[variable."5369119272181688462.MORSAK7"]
+slug = "dodsorsak-7"
+[variable."5369119272181688462.MORSAK8"]
+slug = "dodsorsak-8"
+[variable."5369119272181688462.MORSAK9"]
+slug = "dodsorsak-9"
+[variable."5369119272181688462.OPDAT"]
+slug = "operationsdatum"
+[variable."5369119272181688462.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."5369119272181688462.RO1"]
+slug = "dodsorsak-position-1"
+[variable."5369119272181688462.RO10"]
+slug = "dodsorsak-position-10"
+[variable."5369119272181688462.RO11"]
+slug = "dodsorsak-position-11"
+[variable."5369119272181688462.RO12"]
+slug = "dodsorsak-position-12"
+[variable."5369119272181688462.RO13"]
+slug = "dodsorsak-position-13"
+[variable."5369119272181688462.RO14"]
+slug = "dodsorsak-position-14"
+[variable."5369119272181688462.RO15"]
+slug = "dodsorsak-position-15"
+[variable."5369119272181688462.RO16"]
+slug = "dodsorsak-position-16"
+[variable."5369119272181688462.RO17"]
+slug = "dodsorsak-position-17"
+[variable."5369119272181688462.RO18"]
+slug = "dodsorsak-position-18"
+[variable."5369119272181688462.RO19"]
+slug = "dodsorsak-position-19"
+[variable."5369119272181688462.RO2"]
+slug = "dodsorsak-position-2"
+[variable."5369119272181688462.RO20"]
+slug = "dodsorsak-position-20"
+[variable."5369119272181688462.RO21"]
+slug = "dodsorsak-position-21"
+[variable."5369119272181688462.RO22"]
+slug = "dodsorsak-position-22"
+[variable."5369119272181688462.RO23"]
+slug = "dodsorsak-position-23"
+[variable."5369119272181688462.RO24"]
+slug = "dodsorsak-position-24"
+[variable."5369119272181688462.RO25"]
+slug = "dodsorsak-position-25"
+[variable."5369119272181688462.RO26"]
+slug = "dodsorsak-position-26"
+[variable."5369119272181688462.RO27"]
+slug = "dodsorsak-position-27"
+[variable."5369119272181688462.RO28"]
+slug = "dodsorsak-position-28"
+[variable."5369119272181688462.RO29"]
+slug = "dodsorsak-position-29"
+[variable."5369119272181688462.RO3"]
+slug = "dodsorsak-position-3"
+[variable."5369119272181688462.RO30"]
+slug = "dodsorsak-position-30"
+[variable."5369119272181688462.RO31"]
+slug = "dodsorsak-position-31"
+[variable."5369119272181688462.RO32"]
+slug = "dodsorsak-position-32"
+[variable."5369119272181688462.RO33"]
+slug = "dodsorsak-position-33"
+[variable."5369119272181688462.RO34"]
+slug = "dodsorsak-position-34"
+[variable."5369119272181688462.RO35"]
+slug = "dodsorsak-position-35"
+[variable."5369119272181688462.RO36"]
+slug = "dodsorsak-position-36"
+[variable."5369119272181688462.RO37"]
+slug = "dodsorsak-position-37"
+[variable."5369119272181688462.RO38"]
+slug = "dodsorsak-position-38"
+[variable."5369119272181688462.RO39"]
+slug = "dodsorsak-position-39"
+[variable."5369119272181688462.RO4"]
+slug = "dodsorsak-position-4"
+[variable."5369119272181688462.RO40"]
+slug = "dodsorsak-position-40"
+[variable."5369119272181688462.RO41"]
+slug = "dodsorsak-position-41"
+[variable."5369119272181688462.RO42"]
+slug = "dodsorsak-position-42"
+[variable."5369119272181688462.RO43"]
+slug = "dodsorsak-position-43"
+[variable."5369119272181688462.RO44"]
+slug = "dodsorsak-position-44"
+[variable."5369119272181688462.RO45"]
+slug = "dodsorsak-position-45"
+[variable."5369119272181688462.RO46"]
+slug = "dodsorsak-position-46"
+[variable."5369119272181688462.RO47"]
+slug = "dodsorsak-position-47"
+[variable."5369119272181688462.RO48"]
+slug = "dodsorsak-position-48"
+[variable."5369119272181688462.RO5"]
+slug = "dodsorsak-position-5"
+[variable."5369119272181688462.RO6"]
+slug = "dodsorsak-position-6"
+[variable."5369119272181688462.RO7"]
+slug = "dodsorsak-position-7"
+[variable."5369119272181688462.RO8"]
+slug = "dodsorsak-position-8"
+[variable."5369119272181688462.RO9"]
+slug = "dodsorsak-position-9"
+[variable."5369119272181688462.SUBSTANS1"]
+slug = "substans-1"
+[variable."5369119272181688462.SUBSTANS10"]
+slug = "substans-10"
+[variable."5369119272181688462.SUBSTANS11"]
+slug = "substans-11"
+[variable."5369119272181688462.SUBSTANS12"]
+slug = "substans-12"
+[variable."5369119272181688462.SUBSTANS13"]
+slug = "substans-13"
+[variable."5369119272181688462.SUBSTANS14"]
+slug = "substans-14"
+[variable."5369119272181688462.SUBSTANS15"]
+slug = "substans-15"
+[variable."5369119272181688462.SUBSTANS16"]
+slug = "substans-16"
+[variable."5369119272181688462.SUBSTANS17"]
+slug = "substans-17"
+[variable."5369119272181688462.SUBSTANS18"]
+slug = "substans-18"
+[variable."5369119272181688462.SUBSTANS19"]
+slug = "substans-19"
+[variable."5369119272181688462.SUBSTANS2"]
+slug = "substans-2"
+[variable."5369119272181688462.SUBSTANS20"]
+slug = "substans-20"
+[variable."5369119272181688462.SUBSTANS21"]
+slug = "substans-21"
+[variable."5369119272181688462.SUBSTANS22"]
+slug = "substans-22"
+[variable."5369119272181688462.SUBSTANS23"]
+slug = "substans-23"
+[variable."5369119272181688462.SUBSTANS24"]
+slug = "substans-24"
+[variable."5369119272181688462.SUBSTANS25"]
+slug = "substans-25"
+[variable."5369119272181688462.SUBSTANS26"]
+slug = "substans-26"
+[variable."5369119272181688462.SUBSTANS27"]
+slug = "substans-27"
+[variable."5369119272181688462.SUBSTANS28"]
+slug = "substans-28"
+[variable."5369119272181688462.SUBSTANS29"]
+slug = "substans-29"
+[variable."5369119272181688462.SUBSTANS3"]
+slug = "substans-3"
+[variable."5369119272181688462.SUBSTANS30"]
+slug = "substans-30"
+[variable."5369119272181688462.SUBSTANS31"]
+slug = "substans-31"
+[variable."5369119272181688462.SUBSTANS32"]
+slug = "substans-32"
+[variable."5369119272181688462.SUBSTANS33"]
+slug = "substans-33"
+[variable."5369119272181688462.SUBSTANS34"]
+slug = "substans-34"
+[variable."5369119272181688462.SUBSTANS35"]
+slug = "substans-35"
+[variable."5369119272181688462.SUBSTANS36"]
+slug = "substans-36"
+[variable."5369119272181688462.SUBSTANS37"]
+slug = "substans-37"
+[variable."5369119272181688462.SUBSTANS38"]
+slug = "substans-38"
+[variable."5369119272181688462.SUBSTANS39"]
+slug = "substans-39"
+[variable."5369119272181688462.SUBSTANS4"]
+slug = "substans-4"
+[variable."5369119272181688462.SUBSTANS40"]
+slug = "substans-40"
+[variable."5369119272181688462.SUBSTANS41"]
+slug = "substans-41"
+[variable."5369119272181688462.SUBSTANS42"]
+slug = "substans-42"
+[variable."5369119272181688462.SUBSTANS43"]
+slug = "substans-43"
+[variable."5369119272181688462.SUBSTANS44"]
+slug = "substans-44"
+[variable."5369119272181688462.SUBSTANS45"]
+slug = "substans-45"
+[variable."5369119272181688462.SUBSTANS46"]
+slug = "substans-46"
+[variable."5369119272181688462.SUBSTANS47"]
+slug = "substans-47"
+[variable."5369119272181688462.SUBSTANS48"]
+slug = "substans-48"
+[variable."5369119272181688462.SUBSTANS5"]
+slug = "substans-5"
+[variable."5369119272181688462.SUBSTANS6"]
+slug = "substans-6"
+[variable."5369119272181688462.SUBSTANS7"]
+slug = "substans-7"
+[variable."5369119272181688462.SUBSTANS8"]
+slug = "substans-8"
+[variable."5369119272181688462.SUBSTANS9"]
+slug = "substans-9"
+# register 5891427617861710725
+[variable."5891427617861710725.ALDER_S"]
+slug = "alder-vid-arets-slut"
+[variable."5891427617861710725.ANE1"]
+slug = "anestesikod-1"
+[variable."5891427617861710725.ANE2"]
+slug = "anestesikod-2"
+[variable."5891427617861710725.ATCO"]
+slug = "atc-komplement-atgardskod"
+[variable."5891427617861710725.ATG"]
+slug = "atgardskod-eller-atc-kod"
+[variable."5891427617861710725.ATGARD"]
+slug = "atgardskod-eller-atc-kod-2"
+[variable."5891427617861710725.ATGDATUM"]
+slug = "atgardsdatum"
+[variable."5891427617861710725.DIA"]
+slug = "diagnoskod-atc-skada-forgiftning"
+[variable."5891427617861710725.DRG"]
+slug = "diagnosrelaterad-grupp"
+[variable."5891427617861710725.EKOD"]
+slug = "yttre-orsakskoder"
+[variable."5891427617861710725.EKOD1"]
+slug = "yttre-orsakskod-1"
+[variable."5891427617861710725.EKOD2"]
+slug = "yttre-orsakskod-2"
+[variable."5891427617861710725.EKOD3"]
+slug = "yttre-orsakskod-3"
+[variable."5891427617861710725.EKOD4"]
+slug = "yttre-orsakskod-4"
+[variable."5891427617861710725.EKOD5"]
+slug = "yttre-orsakskod-5"
+[variable."5891427617861710725.EKOD6"]
+slug = "yttre-orsakskod-6"
+[variable."5891427617861710725.EKOD7"]
+slug = "yttre-orsakskod-7"
+[variable."5891427617861710725.FLAND"]
+slug = "fodelseland"
+[variable."5891427617861710725.FODAR"]
+slug = "fodelsear"
+[variable."5891427617861710725.FODDATN"]
+slug = "fodelsedatum-sas"
+[variable."5891427617861710725.FODDATUMN"]
+slug = "fodelsedatum-sas-m"
+[variable."5891427617861710725.HDIA"]
+slug = "typ-av-diagnos"
+[variable."5891427617861710725.IDNR"]
+slug = "lopnr-oppenvardskontakt"
+[variable."5891427617861710725.KTYP"]
+slug = "form-oppenvardskontakt"
+[variable."5891427617861710725.LK"]
+slug = "folkbokforingsort-lan-kommun"
+[variable."5891427617861710725.LKF"]
+slug = "folkbokforingsort-lan-kommun-forsamling"
+[variable."5891427617861710725.LT_IN"]
+slug = "uppgiftslamnare"
+[variable."5891427617861710725.MVO"]
+slug = "medicinskt-verksamhetsomrade"
+[variable."5891427617861710725.OP"]
+slug = "atgardskoder"
+[variable."5891427617861710725.OPD1"]
+slug = "atgardsdatum-1"
+[variable."5891427617861710725.OPD10"]
+slug = "atgardsdatum-10"
+[variable."5891427617861710725.OPD11"]
+slug = "atgardsdatum-11"
+[variable."5891427617861710725.OPD12"]
+slug = "atgardsdatum-12"
+[variable."5891427617861710725.OPD13"]
+slug = "atgardsdatum-13"
+[variable."5891427617861710725.OPD14"]
+slug = "atgardsdatum-14"
+[variable."5891427617861710725.OPD15"]
+slug = "atgardsdatum-15"
+[variable."5891427617861710725.OPD16"]
+slug = "atgardsdatum-16"
+[variable."5891427617861710725.OPD17"]
+slug = "atgardsdatum-17"
+[variable."5891427617861710725.OPD18"]
+slug = "atgardsdatum-18"
+[variable."5891427617861710725.OPD19"]
+slug = "atgardsdatum-19"
+[variable."5891427617861710725.OPD2"]
+slug = "atgardsdatum-2"
+[variable."5891427617861710725.OPD20"]
+slug = "atgardsdatum-20"
+[variable."5891427617861710725.OPD21"]
+slug = "atgardsdatum-21"
+[variable."5891427617861710725.OPD22"]
+slug = "atgardsdatum-22"
+[variable."5891427617861710725.OPD23"]
+slug = "atgardsdatum-23"
+[variable."5891427617861710725.OPD24"]
+slug = "atgardsdatum-24"
+[variable."5891427617861710725.OPD25"]
+slug = "atgardsdatum-25"
+[variable."5891427617861710725.OPD26"]
+slug = "atgardsdatum-26"
+[variable."5891427617861710725.OPD27"]
+slug = "atgardsdatum-27"
+[variable."5891427617861710725.OPD28"]
+slug = "atgardsdatum-28"
+[variable."5891427617861710725.OPD29"]
+slug = "atgardsdatum-29"
+[variable."5891427617861710725.OPD3"]
+slug = "atgardsdatum-3"
+[variable."5891427617861710725.OPD30"]
+slug = "atgardsdatum-30"
+[variable."5891427617861710725.OPD4"]
+slug = "atgardsdatum-4"
+[variable."5891427617861710725.OPD5"]
+slug = "atgardsdatum-5"
+[variable."5891427617861710725.OPD6"]
+slug = "atgardsdatum-6"
+[variable."5891427617861710725.OPD7"]
+slug = "atgardsdatum-7"
+[variable."5891427617861710725.OPD8"]
+slug = "atgardsdatum-8"
+[variable."5891427617861710725.OPD9"]
+slug = "atgardsdatum-9"
+[variable."5891427617861710725.OP_NR"]
+slug = "sekvensnr-atgard"
+[variable."5891427617861710725.PERM"]
+slug = "permission"
+[variable."5891427617861710725.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."5891427617861710725.PVARD"]
+slug = "planerad-vardkontakt"
+[variable."5891427617861710725.RNR"]
+slug = "reservnummer"
+[variable."5891427617861710725.RTC"]
+slug = "kvalitetsvariabel-drg"
+[variable."5891427617861710725.SENINV"]
+slug = "senaste-invandring"
+[variable."5891427617861710725.SENINV1"]
+slug = "senaste-invandring-1"
+[variable."5891427617861710725.SLUT"]
+slug = "slutdatum-psyk-vardform"
+[variable."5891427617861710725.START"]
+slug = "startdatum-psykiatrisk-vardform"
+[variable."5891427617861710725.VTID"]
+slug = "vardtid"
+[variable."5891427617861710725.YO"]
+slug = "yttre-orsakskod-eller-atc"
+# register 6052270801387609014
+[variable."6052270801387609014.AMNIO"]
+slug = "fosterdiagnostik-amniocentes"
+[variable."6052270801387609014.APGAR1"]
+slug = "apgar-1-minut"
+[variable."6052270801387609014.APGAR10"]
+slug = "apgar-10-minuter"
+[variable."6052270801387609014.APGAR5"]
+slug = "apgar-5-minut"
+[variable."6052270801387609014.BAD"]
+slug = "smartlindring-bad"
+[variable."6052270801387609014.BDIAG1"]
+slug = "diagnoskod-barnet-1"
+[variable."6052270801387609014.BDIAG10"]
+slug = "diagnoskod-barnet-10"
+[variable."6052270801387609014.BDIAG11"]
+slug = "diagnoskod-barnet-11"
+[variable."6052270801387609014.BDIAG12"]
+slug = "diagnoskod-barnet-12"
+[variable."6052270801387609014.BDIAG13"]
+slug = "diagnoskod-barnet-13"
+[variable."6052270801387609014.BDIAG14"]
+slug = "diagnoskod-barnet-14"
+[variable."6052270801387609014.BDIAG15"]
+slug = "diagnoskod-barnet-15"
+[variable."6052270801387609014.BDIAG16"]
+slug = "diagnoskod-barnet-16"
+[variable."6052270801387609014.BDIAG17"]
+slug = "diagnoskod-barnet-17"
+[variable."6052270801387609014.BDIAG18"]
+slug = "diagnoskod-barnet-18"
+[variable."6052270801387609014.BDIAG19"]
+slug = "diagnoskod-barnet-19"
+[variable."6052270801387609014.BDIAG2"]
+slug = "diagnoskod-barnet-2"
+[variable."6052270801387609014.BDIAG20"]
+slug = "diagnoskod-barnet-20"
+[variable."6052270801387609014.BDIAG3"]
+slug = "diagnoskod-barnet-3"
+[variable."6052270801387609014.BDIAG4"]
+slug = "diagnoskod-barnet-4"
+[variable."6052270801387609014.BDIAG5"]
+slug = "diagnoskod-barnet-5"
+[variable."6052270801387609014.BDIAG6"]
+slug = "diagnoskod-barnet-6"
+[variable."6052270801387609014.BDIAG7"]
+slug = "diagnoskod-barnet-7"
+[variable."6052270801387609014.BDIAG8"]
+slug = "diagnoskod-barnet-8"
+[variable."6052270801387609014.BDIAG9"]
+slug = "diagnoskod-barnet-9"
+[variable."6052270801387609014.BDIAG_BK1"]
+slug = "barnets-diagnoskod-bk-1"
+[variable."6052270801387609014.BDIAG_BK2"]
+slug = "barnets-diagnoskod-bk-2"
+[variable."6052270801387609014.BDIAG_BK3"]
+slug = "barnets-diagnoskod-bk-3"
+[variable."6052270801387609014.BDIAG_BK4"]
+slug = "barnets-diagnoskod-bk-4"
+[variable."6052270801387609014.BDIAG_BK5"]
+slug = "barnets-diagnoskod-bk-5"
+[variable."6052270801387609014.BDIAG_BK6"]
+slug = "barnets-diagnoskod-bk-6"
+[variable."6052270801387609014.BDIAG_BK7"]
+slug = "barnets-diagnoskod-bk-7"
+[variable."6052270801387609014.BDIAG_BK8"]
+slug = "barnets-diagnoskod-bk-8"
+[variable."6052270801387609014.BESOK"]
+slug = "antal-modrahalsovardsbesok"
+[variable."6052270801387609014.BFLOP"]
+slug = "atgardskod-barnet"
+[variable."6052270801387609014.BFLOP1"]
+slug = "atgardskod-barnet-1"
+[variable."6052270801387609014.BFLOP10"]
+slug = "atgardskod-barnet-10"
+[variable."6052270801387609014.BFLOP11"]
+slug = "atgardskod-barnet-11"
+[variable."6052270801387609014.BFLOP12"]
+slug = "atgardskod-barnet-12"
+[variable."6052270801387609014.BFLOP2"]
+slug = "atgardskod-barnet-2"
+[variable."6052270801387609014.BFLOP3"]
+slug = "atgardskod-barnet-3"
+[variable."6052270801387609014.BFLOP4"]
+slug = "atgardskod-barnet-4"
+[variable."6052270801387609014.BFLOP5"]
+slug = "atgardskod-barnet-5"
+[variable."6052270801387609014.BFLOP6"]
+slug = "atgardskod-barnet-6"
+[variable."6052270801387609014.BFLOP7"]
+slug = "atgardskod-barnet-7"
+[variable."6052270801387609014.BFLOP8"]
+slug = "atgardskod-barnet-8"
+[variable."6052270801387609014.BFLOP9"]
+slug = "atgardskod-barnet-9"
+[variable."6052270801387609014.BLANGD"]
+slug = "barnets-fodelselangd"
+[variable."6052270801387609014.BLANGDF2"]
+slug = "barnets-fodelselangd-2"
+[variable."6052270801387609014.BORD"]
+slug = "borduppgift"
+[variable."6052270801387609014.BORDF2"]
+slug = "borduppgift-f2"
+[variable."6052270801387609014.BORDNR"]
+slug = "bordordning"
+[variable."6052270801387609014.BORDNRF2"]
+slug = "bordordning-f2"
+[variable."6052270801387609014.BPNRQ"]
+slug = "personnummerkvalitet-barnet"
+[variable."6052270801387609014.BVIKT"]
+slug = "barnets-fodelsevikt"
+[variable."6052270801387609014.CVB"]
+slug = "fosterdiagnostik-chorionvillibiopsi"
+[variable."6052270801387609014.DODKL"]
+slug = "dodsklockslag-barnet"
+[variable."6052270801387609014.EPIBL"]
+slug = "smartlindring-epidural"
+[variable."6052270801387609014.FBARN"]
+slug = "friskt-barn"
+[variable."6052270801387609014.FID"]
+slug = "unikt-lopnummer"
+[variable."6052270801387609014.FLOP"]
+slug = "forlossningsoperation"
+[variable."6052270801387609014.FLOP1"]
+slug = "atgardskod-forlosta-1"
+[variable."6052270801387609014.FLOP10"]
+slug = "atgardskod-forlosta-10"
+[variable."6052270801387609014.FLOP11"]
+slug = "atgardskod-forlosta-11"
+[variable."6052270801387609014.FLOP12"]
+slug = "atgardskod-forlosta-12"
+[variable."6052270801387609014.FLOP2"]
+slug = "atgardskod-forlosta-2"
+[variable."6052270801387609014.FLOP3"]
+slug = "atgardskod-forlosta-3"
+[variable."6052270801387609014.FLOP4"]
+slug = "atgardskod-forlosta-4"
+[variable."6052270801387609014.FLOP5"]
+slug = "atgardskod-forlosta-5"
+[variable."6052270801387609014.FLOP6"]
+slug = "atgardskod-forlosta-6"
+[variable."6052270801387609014.FLOP7"]
+slug = "atgardskod-forlosta-7"
+[variable."6052270801387609014.FLOP8"]
+slug = "atgardskod-forlosta-8"
+[variable."6052270801387609014.FLOP9"]
+slug = "atgardskod-forlosta-9"
+[variable."6052270801387609014.FNAT"]
+slug = "medborgarskap-fader"
+[variable."6052270801387609014.FODKL"]
+slug = "fodelseklockslag"
+[variable."6052270801387609014.GDIAG1"]
+slug = "diagnoskod-graviditet-1"
+[variable."6052270801387609014.GDIAG2"]
+slug = "diagnoskod-graviditet-2"
+[variable."6052270801387609014.GDIAG3"]
+slug = "diagnoskod-graviditet-3"
+[variable."6052270801387609014.GDIAG4"]
+slug = "diagnoskod-graviditet-4"
+[variable."6052270801387609014.GRDBS"]
+slug = "graviditetslangd-dagar-basta-skattning"
+[variable."6052270801387609014.GRDFV"]
+slug = "graviditetslangd-dagar-utover-veckor"
+[variable."6052270801387609014.GRDSM"]
+slug = "graviditetslangd-dagar-utover-veckor-sm"
+[variable."6052270801387609014.GRDUL"]
+slug = "graviditetslangd-dagar-utover-veckor-ul"
+[variable."6052270801387609014.GRVBS"]
+slug = "graviditetslangd-veckor-basta-skattning"
+[variable."6052270801387609014.GRVFV"]
+slug = "graviditetslangd-fullbordade-veckor"
+[variable."6052270801387609014.GRVSM"]
+slug = "graviditetslangd-veckor-sista-mens"
+[variable."6052270801387609014.GRVUL"]
+slug = "graviditetslangd-veckor-ultraljud"
+[variable."6052270801387609014.HOMF"]
+slug = "barnets-huvudomfang"
+[variable."6052270801387609014.IFSML"]
+slug = "smartlindring-ej-farmakologisk"
+[variable."6052270801387609014.INTUB"]
+slug = "upplivningsatgarder-intubation"
+[variable."6052270801387609014.ISML"]
+slug = "smartlindring-ingen"
+[variable."6052270801387609014.KLIPP"]
+slug = "perinealklipp"
+[variable."6052270801387609014.LK"]
+slug = "kommunkod"
+[variable."6052270801387609014.LKF"]
+slug = "lan-kommun-forsamlingskod"
+[variable."6052270801387609014.MDIAG1"]
+slug = "diagnoskod-forlosta-1"
+[variable."6052270801387609014.MDIAG10"]
+slug = "diagnoskod-forlosta-10"
+[variable."6052270801387609014.MDIAG11"]
+slug = "diagnoskod-forlosta-11"
+[variable."6052270801387609014.MDIAG12"]
+slug = "diagnoskod-forlosta-12"
+[variable."6052270801387609014.MDIAG2"]
+slug = "diagnoskod-forlosta-2"
+[variable."6052270801387609014.MDIAG3"]
+slug = "diagnoskod-forlosta-3"
+[variable."6052270801387609014.MDIAG4"]
+slug = "diagnoskod-forlosta-4"
+[variable."6052270801387609014.MDIAG5"]
+slug = "diagnoskod-forlosta-5"
+[variable."6052270801387609014.MDIAG6"]
+slug = "diagnoskod-forlosta-6"
+[variable."6052270801387609014.MDIAG7"]
+slug = "diagnoskod-forlosta-7"
+[variable."6052270801387609014.MDIAG8"]
+slug = "diagnoskod-forlosta-8"
+[variable."6052270801387609014.MDIAG9"]
+slug = "diagnoskod-forlosta-9"
+[variable."6052270801387609014.METOD"]
+slug = "behandlingsmetod"
+[variable."6052270801387609014.MFLOP"]
+slug = "atgardskod-forlosta"
+[variable."6052270801387609014.MHVNR"]
+slug = "modrahalsovardsnr"
+[variable."6052270801387609014.MISSB"]
+slug = "fosterskada-kromosomavvikelse"
+[variable."6052270801387609014.MLGA"]
+slug = "tung-for-tiden-lga"
+[variable."6052270801387609014.MNAT"]
+slug = "medborgarskap-forlosta"
+[variable."6052270801387609014.MPNRQ"]
+slug = "personnummerkvalitet-gravida"
+[variable."6052270801387609014.MSGA"]
+slug = "latt-for-tiden-sga"
+[variable."6052270801387609014.MVIKT"]
+slug = "forsta-uppmatta-vikt-gravida"
+[variable."6052270801387609014.PUDBL"]
+slug = "smartlindring-pudendus"
+[variable."6052270801387609014.ROK0"]
+slug = "rokning-fore-graviditet"
+[variable."6052270801387609014.ROK1"]
+slug = "rokning-inskrivning-mhv"
+[variable."6052270801387609014.ROK2"]
+slug = "rokning-senare-graviditet"
+[variable."6052270801387609014.SMDAT"]
+slug = "senaste-menstruation-dag"
+[variable."6052270801387609014.SNUS0"]
+slug = "snusning-3-manader-fore-graviditet"
+[variable."6052270801387609014.SNUS1"]
+slug = "snusning-vid-inskrivning-mhv"
+[variable."6052270801387609014.SNUS2"]
+slug = "snusning-senare-graviditet"
+[variable."6052270801387609014.TANG"]
+slug = "forlossningsavslut-tang"
+[variable."6052270801387609014.TID7DOD"]
+slug = "barn-doda-0-6-dygn-antal"
+[variable."6052270801387609014.TNS"]
+slug = "smartlindring-tens"
+[variable."6052270801387609014.VENT"]
+slug = "upplivningsatgarder-ventilation-pa-mask"
+# register 6293204766641962219
+[variable."6293204766641962219.ANSDATUM"]
+slug = "ansokningsdatum"
+[variable."6293204766641962219.AR"]
+slug = "beslutsar"
+[variable."6293204766641962219.BESDATUM"]
+slug = "beslutsdatum"
+[variable."6293204766641962219.BHEM"]
+slug = "behandlingshem"
+[variable."6293204766641962219.FODLAND"]
+slug = "fodelseland"
+[variable."6293204766641962219.FRIV"]
+slug = "frivillig-vard"
+[variable."6293204766641962219.LK"]
+slug = "placerande-kommun"
+[variable."6293204766641962219.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."6293204766641962219.PROVN"]
+slug = "provningsbeslut"
+# register 6512206290021964828
+[variable."6512206290021964828.APR"]
+slug = "hade-hsl-april"
+[variable."6512206290021964828.ATG_DATUM"]
+slug = "atgardsdatum"
+[variable."6512206290021964828.AUG"]
+slug = "hade-hsl-augusti"
+[variable."6512206290021964828.DEC"]
+slug = "hade-hsl-december"
+[variable."6512206290021964828.FEB"]
+slug = "hade-hsl-februari"
+[variable."6512206290021964828.FODDATN"]
+slug = "fodelsedatum"
+[variable."6512206290021964828.HKOM"]
+slug = "hemkommun"
+[variable."6512206290021964828.JAN"]
+slug = "hade-hsl-januari"
+[variable."6512206290021964828.JUL"]
+slug = "hade-hsl-juli"
+[variable."6512206290021964828.JUN"]
+slug = "hade-hsl-juni"
+[variable."6512206290021964828.KDEL"]
+slug = "kommundel"
+[variable."6512206290021964828.LK"]
+slug = "kommun"
+[variable."6512206290021964828.MAJ"]
+slug = "hade-hsl-maj"
+[variable."6512206290021964828.MAR"]
+slug = "hade-hsl-mars"
+[variable."6512206290021964828.NOV"]
+slug = "hade-hsl-november"
+[variable."6512206290021964828.OKT"]
+slug = "hade-hsl-oktober"
+[variable."6512206290021964828.PERIOD"]
+slug = "ar-manad"
+[variable."6512206290021964828.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."6512206290021964828.SEP"]
+slug = "hade-hsl-september"
+[variable."6512206290021964828.YRKESBET1"]
+slug = "yrkesbeteckning-1"
+[variable."6512206290021964828.YRKESBET2"]
+slug = "yrkesbeteckning-2"
+[variable."6512206290021964828.YRKESBET3"]
+slug = "yrkesbeteckning-3"
+[variable."6512206290021964828.YRKESBET4"]
+slug = "yrkesbeteckning-4"
+[variable."6512206290021964828.YRKESBET5"]
+slug = "yrkesbeteckning-5"
+# register 7119586976865944958
+[variable."7119586976865944958.BEN"]
+slug = "malign-benign"
+[variable."7119586976865944958.DIADAT"]
+slug = "diagnosdatum"
+[variable."7119586976865944958.DIGR"]
+slug = "diagnosgrund"
+[variable."7119586976865944958.DODCA"]
+slug = "avliden-i-cancer"
+[variable."7119586976865944958.DODSDAT"]
+slug = "dodsdatum"
+[variable."7119586976865944958.EXNR"]
+slug = "tumorraknare-brost"
+[variable."7119586976865944958.FODDAT"]
+slug = "fodelsedatum"
+[variable."7119586976865944958.FODDATN"]
+slug = "fodelsedatum-sas"
+[variable."7119586976865944958.HEMFR"]
+slug = "framskriving-folkbokforingsort"
+[variable."7119586976865944958.ICDO10"]
+slug = "icd-o-2-med-icd-10"
+[variable."7119586976865944958.ICDO3"]
+slug = "icd-o-3"
+[variable."7119586976865944958.JNR"]
+slug = "journalnummer"
+[variable."7119586976865944958.LKF"]
+slug = "lan-kommun-forsamling-vid-diagnos"
+[variable."7119586976865944958.M"]
+slug = "tumorutbredning-m-kategori"
+[variable."7119586976865944958.MORF"]
+slug = "morfologisk-typ"
+[variable."7119586976865944958.N"]
+slug = "tumorutbredning-n-kategori"
+[variable."7119586976865944958.OBD1"]
+slug = "obduktionsfynd"
+[variable."7119586976865944958.PAD"]
+slug = "histopatologisk-diagnos"
+[variable."7119586976865944958.PAT"]
+slug = "patolog-cytolog"
+[variable."7119586976865944958.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."7119586976865944958.PREP"]
+slug = "preparatnummer"
+[variable."7119586976865944958.REGION"]
+slug = "sjukvardsregion"
+[variable."7119586976865944958.SNOMED3"]
+slug = "snomed-o-3"
+[variable."7119586976865944958.SNOMEDO10"]
+slug = "snomed-o-2-10"
+[variable."7119586976865944958.T"]
+slug = "tumorutbredning-t-kategori"
+[variable."7119586976865944958.TNR"]
+slug = "tumornummer"
+[variable."7119586976865944958.TOPO"]
+slug = "topografisk-kod"
+# register 7550156225339591583
+[variable."7550156225339591583.FODDATN"]
+slug = "fodelsedatum-numerisk"
+[variable."7550156225339591583.FODELSELANDNAMN"]
+slug = "fodelseland-namn"
+[variable."7550156225339591583.FODLAND"]
+slug = "fodelseland"
+[variable."7550156225339591583.LK"]
+slug = "kommun"
+[variable."7550156225339591583.PLACDAT1"]
+slug = "datum-start-placering"
+[variable."7550156225339591583.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."7550156225339591583.SENAR"]
+slug = "senaste-ar-med-insats"
+[variable."7550156225339591583.SPEC"]
+slug = "specifikation-insatsen"
+# register 7661979173609203267
+[variable."7661979173609203267.AFORM"]
+slug = "agarform"
+[variable."7661979173609203267.ANTAL_MULTIPEL_1"]
+slug = "forpackningsmultipel-1"
+[variable."7661979173609203267.ANTAL_MULTIPEL_2"]
+slug = "forpackningsmultipel-2"
+[variable."7661979173609203267.APRIS"]
+slug = "pris-per-forpackning"
+[variable."7661979173609203267.ARTIKEL_BENAMNING"]
+slug = "varubenamning"
+[variable."7661979173609203267.BYTET"]
+slug = "bytet-tillatet"
+[variable."7661979173609203267.DOSER"]
+slug = "doseringstext"
+[variable."7661979173609203267.FDDD"]
+slug = "antal-uthamtade-ddd"
+[variable."7661979173609203267.FODDAT"]
+slug = "fodelsedatum"
+[variable."7661979173609203267.FODDATN"]
+slug = "fodelsedatum-numerisk"
+[variable."7661979173609203267.FORPS"]
+slug = "forpacknings-storlek-beskrivning"
+[variable."7661979173609203267.FTYP"]
+slug = "formanstyp"
+[variable."7661979173609203267.LAKEMEDELSFORM"]
+slug = "beredningsform"
+[variable."7661979173609203267.LFORM"]
+slug = "lakemedelsform"
+[variable."7661979173609203267.LK"]
+slug = "lan-och-kommun"
+[variable."7661979173609203267.LKF"]
+slug = "lan-kommun-forsamling"
+[variable."7661979173609203267.LNMN"]
+slug = "artikel-benamning"
+[variable."7661979173609203267.OTYP"]
+slug = "ordinationstyp-forsaljningssatt"
+[variable."7661979173609203267.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."7661979173609203267.RECB"]
+slug = "receptbelagd-status"
+[variable."7661979173609203267.SPKOD1"]
+slug = "specialistutbildningskod-1"
+[variable."7661979173609203267.SPKOD2"]
+slug = "specialistutbildningskod-2"
+[variable."7661979173609203267.SPKOD3"]
+slug = "specialistutbildningskod-3"
+[variable."7661979173609203267.TKOST"]
+slug = "totalkostnad-exkl-moms"
+[variable."7661979173609203267.URSPR"]
+slug = "ursprung"
+[variable."7661979173609203267.UTBK"]
+slug = "utbildningskod"
+[variable."7661979173609203267.VERKS"]
+slug = "verksamhetsinriktning"
+[variable."7661979173609203267.VFORM"]
+slug = "vardform"
+# register 7847722537922273761
+[variable."7847722537922273761.ALDER"]
+slug = "alder-vid-arets-slut"
+[variable."7847722537922273761.ASTSNI2007"]
+slug = "arbetsstellets-naringsgren-sni2007"
+[variable."7847722537922273761.AVLIDENDATUM"]
+slug = "dodsdatum"
+[variable."7847722537922273761.BRYT_DAT_1_NOV"]
+slug = "flagga-brytdatum-1-november"
+[variable."7847722537922273761.HSKOD"]
+slug = "hogskola"
+[variable."7847722537922273761.INVARN1"]
+slug = "invandringsdatum-1-numerisk"
+[variable."7847722537922273761.INVARN2"]
+slug = "invandringsdatum-2-numerisk"
+[variable."7847722537922273761.INVARN3"]
+slug = "invandringsdatum-3-numerisk"
+[variable."7847722537922273761.INVARN4"]
+slug = "invandringsdatum-4-numerisk"
+[variable."7847722537922273761.INVARN5"]
+slug = "invandringsdatum-5-numerisk"
+[variable."7847722537922273761.INVARN6"]
+slug = "invandringsdatum-6-numerisk"
+[variable."7847722537922273761.INVARN7"]
+slug = "invandringsdatum-7-numerisk"
+[variable."7847722537922273761.INVARN8"]
+slug = "invandringsdatum-8-numerisk"
+[variable."7847722537922273761.INVARN9"]
+slug = "invandringsdatum-9-numerisk"
+[variable."7847722537922273761.INVDATUM1"]
+slug = "invandringsdatum-1"
+[variable."7847722537922273761.INVDATUM2"]
+slug = "invandringsdatum-2"
+[variable."7847722537922273761.INVDATUM3"]
+slug = "invandringsdatum-3"
+[variable."7847722537922273761.INVDATUM4"]
+slug = "invandringsdatum-4"
+[variable."7847722537922273761.INVDATUM5"]
+slug = "invandringsdatum-5"
+[variable."7847722537922273761.INVDATUM6"]
+slug = "invandringsdatum-6"
+[variable."7847722537922273761.INVDATUM7"]
+slug = "invandringsdatum-7"
+[variable."7847722537922273761.INVDATUM8"]
+slug = "invandringsdatum-8"
+[variable."7847722537922273761.INVDATUM9"]
+slug = "invandringsdatum-9"
+[variable."7847722537922273761.INVLAND1"]
+slug = "invandringsland-1"
+[variable."7847722537922273761.INVLAND2"]
+slug = "invandringsland-2"
+[variable."7847722537922273761.INVLAND3"]
+slug = "invandringsland-3"
+[variable."7847722537922273761.INVLAND4"]
+slug = "invandringsland-4"
+[variable."7847722537922273761.INVLAND5"]
+slug = "invandringsland-5"
+[variable."7847722537922273761.INVLAND6"]
+slug = "invandringsland-6"
+[variable."7847722537922273761.INVLAND7"]
+slug = "invandringsland-7"
+[variable."7847722537922273761.INVLAND8"]
+slug = "invandringsland-8"
+[variable."7847722537922273761.INVLAND9"]
+slug = "invandringsland-9"
+[variable."7847722537922273761.KU2ASTSNI2007"]
+slug = "nast-storsta-forvarvskalla-sni2007"
+[variable."7847722537922273761.PEORGNR"]
+slug = "orgnr-foretaget"
+[variable."7847722537922273761.SSYK3"]
+slug = "ssyk96-3"
+[variable."7847722537922273761.SSYK3_2012_J16"]
+slug = "ssyk2012-3-foretagare"
+[variable."7847722537922273761.SSYK3_J16"]
+slug = "ssyk96-3-foretagare"
+[variable."7847722537922273761.SSYK4"]
+slug = "ssyk96-4"
+[variable."7847722537922273761.SSYK4_2012"]
+slug = "ssyk2012-4-foretagare"
+[variable."7847722537922273761.SSYK4_2012_J16"]
+slug = "ssyk2012-4-foretagare-j16"
+[variable."7847722537922273761.SSYK4_J16"]
+slug = "ssyk96-4-foretagare"
+[variable."7847722537922273761.SSYKAR_J16"]
+slug = "artal-yrkesuppgift"
+[variable."7847722537922273761.SSYKSTATUS_J16"]
+slug = "ssyk-overensstammelse"
+[variable."7847722537922273761.SUN2000INR"]
+slug = "utbildningsinriktning-sun2000"
+[variable."7847722537922273761.SUN2000NIVA"]
+slug = "utbildningsniva-sun2000"
+[variable."7847722537922273761.SUN2020INR"]
+slug = "utbildningsinriktning-sun2020"
+[variable."7847722537922273761.SUN2020NIVA"]
+slug = "utbildningsniva-sun2020"
+[variable."7847722537922273761.TMGRP"]
+slug = "examen-grov-gruppering-kod"
+[variable."7847722537922273761.UTVARN1"]
+slug = "utvandringsdatum-1-numerisk"
+[variable."7847722537922273761.UTVARN2"]
+slug = "utvandringsdatum-2-numerisk"
+[variable."7847722537922273761.UTVARN3"]
+slug = "utvandringsdatum-3-numerisk"
+[variable."7847722537922273761.UTVARN4"]
+slug = "utvandringsdatum-4-numerisk"
+[variable."7847722537922273761.UTVARN5"]
+slug = "utvandringsdatum-5-numerisk"
+[variable."7847722537922273761.UTVARN6"]
+slug = "utvandringsdatum-6-numerisk"
+[variable."7847722537922273761.UTVARN7"]
+slug = "utvandringsdatum-7-numerisk"
+[variable."7847722537922273761.UTVARN8"]
+slug = "utvandringsdatum-8-numerisk"
+[variable."7847722537922273761.UTVARN9"]
+slug = "utvandringsdatum-9-numerisk"
+[variable."7847722537922273761.UTVDATUM1"]
+slug = "utvandringsdatum-1"
+[variable."7847722537922273761.UTVDATUM2"]
+slug = "utvandringsdatum-2"
+[variable."7847722537922273761.UTVDATUM3"]
+slug = "utvandringsdatum-3"
+[variable."7847722537922273761.UTVDATUM4"]
+slug = "utvandringsdatum-4"
+[variable."7847722537922273761.UTVDATUM5"]
+slug = "utvandringsdatum-5"
+[variable."7847722537922273761.UTVDATUM6"]
+slug = "utvandringsdatum-6"
+[variable."7847722537922273761.UTVDATUM7"]
+slug = "utvandringsdatum-7"
+[variable."7847722537922273761.UTVDATUM8"]
+slug = "utvandringsdatum-8"
+[variable."7847722537922273761.UTVDATUM9"]
+slug = "utvandringsdatum-9"
+[variable."7847722537922273761.UTVLAND1"]
+slug = "utvandringsland-1"
+[variable."7847722537922273761.UTVLAND2"]
+slug = "utvandringsland-2"
+[variable."7847722537922273761.UTVLAND3"]
+slug = "utvandringsland-3"
+[variable."7847722537922273761.UTVLAND4"]
+slug = "utvandringsland-4"
+[variable."7847722537922273761.UTVLAND5"]
+slug = "utvandringsland-5"
+[variable."7847722537922273761.UTVLAND6"]
+slug = "utvandringsland-6"
+[variable."7847722537922273761.UTVLAND7"]
+slug = "utvandringsland-7"
+[variable."7847722537922273761.UTVLAND8"]
+slug = "utvandringsland-8"
+[variable."7847722537922273761.UTVLAND9"]
+slug = "utvandringsland-9"
+# register 8948214044434034899
+[variable."8948214044434034899.BESLUTSDATUMN"]
+slug = "beslutsdatum"
+[variable."8948214044434034899.BESOKSDATUMN"]
+slug = "besoksdatum"
+[variable."8948214044434034899.EU_PAT"]
+slug = "eu-patient"
+[variable."8948214044434034899.FODLAND"]
+slug = "fodelseland"
+[variable."8948214044434034899.GRUND"]
+slug = "grund-till-vard"
+[variable."8948214044434034899.MEDBORG"]
+slug = "medborgarskap"
+[variable."8948214044434034899.ORG_NR"]
+slug = "orgnr"
+[variable."8948214044434034899.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."8948214044434034899.SENINV"]
+slug = "senaste-invandring"
+# register 9047831179457584381
+[variable."9047831179457584381.ABDAT"]
+slug = "beslutsdatum-avslutat-bistand"
+[variable."9047831179457584381.ABIDR"]
+slug = "anhorigbidrag"
+[variable."9047831179457584381.ABIST"]
+slug = "annat-bistandsbeslut"
+[variable."9047831179457584381.ABO"]
+slug = "annat-boende"
+[variable."9047831179457584381.ADAT"]
+slug = "datum-avslut"
+[variable."9047831179457584381.ANNAN"]
+slug = "annan-insats"
+[variable."9047831179457584381.AVAN"]
+slug = "avlosning-av-anhorig"
+[variable."9047831179457584381.AVDAT"]
+slug = "datum-avslut-utan-verkstallan"
+[variable."9047831179457584381.BDAT"]
+slug = "beslutsdatum"
+[variable."9047831179457584381.BOSTO"]
+slug = "boendestod"
+[variable."9047831179457584381.BOTIM"]
+slug = "boendestodstimmar"
+[variable."9047831179457584381.DAGV"]
+slug = "dagverksamhet"
+[variable."9047831179457584381.EPH"]
+slug = "enpersonshushall"
+[variable."9047831179457584381.FODAR"]
+slug = "fodelsear"
+[variable."9047831179457584381.FODDAT"]
+slug = "fodelsedatum"
+[variable."9047831179457584381.FODDATN"]
+slug = "fodelsedatum-numerisk"
+[variable."9047831179457584381.HKOM"]
+slug = "hemkommun-periodens-slut"
+[variable."9047831179457584381.HTJ"]
+slug = "hemtjanst"
+[variable."9047831179457584381.HTJLED"]
+slug = "hemtjanst-ledsagning"
+[variable."9047831179457584381.HTJPOMV"]
+slug = "hemtjanst-personlig-omvardnad"
+[variable."9047831179457584381.HTJSERV"]
+slug = "hemtjanst-service"
+[variable."9047831179457584381.KDEL"]
+slug = "kommundel"
+[variable."9047831179457584381.KONTF"]
+slug = "kontaktfamilj"
+[variable."9047831179457584381.KONTP"]
+slug = "kontaktperson"
+[variable."9047831179457584381.LED"]
+slug = "hemtjanst-ledsagning-2"
+[variable."9047831179457584381.LK"]
+slug = "kommun"
+[variable."9047831179457584381.MATD"]
+slug = "matdistribution"
+[variable."9047831179457584381.OBO"]
+slug = "ordinart-boende"
+[variable."9047831179457584381.OMDR"]
+slug = "sarskilt-boende-hemtjanst-dygnet-runt"
+[variable."9047831179457584381.PNRQ"]
+slug = "personnummerkvalitet"
+[variable."9047831179457584381.POMV"]
+slug = "hemtjanst-personlig-omvardnad-2"
+[variable."9047831179457584381.SBO"]
+slug = "sarskilt-boende"
+[variable."9047831179457584381.SERV"]
+slug = "hemtjanst-service-2"
+[variable."9047831179457584381.SURV"]
+slug = "forandring-perioden"
+[variable."9047831179457584381.TRYGG"]
+slug = "trygghetslarm"
+[variable."9047831179457584381.VBDAT"]
+slug = "bistandsbeslutsdatum"
+[variable."9047831179457584381.VDAT"]
+slug = "datum-verkstallighet"
+[variable."9047831179457584381.VVDAT"]
+slug = "datum-verkstallighet-bistandsbeslut"
+
+# === END #760 non-SCB concept-slug curation ===

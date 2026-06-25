@@ -1888,6 +1888,69 @@ discriminator slug — so the build replays the right slug onto each sibling acr
 rebuilds instead of the last one overwriting the shared entry. Unsplit keys (\~96%) stay
 2-part.
 
+**Leaf-slug curation conventions (the canonical-form rules).** When a curator overrides
+an auto pick (the chain's arm 1), the chosen leaf must read as the *concept* in
+canonical Swedish prose, **derived from the variable NAME, not the cryptic
+delivery-column code** the machine slug was built from (`glsh` "Glas höger öga" →
+`glas-hoger-oga`, not `glsh`). The form rules, applied uniformly across SCB (#471/#747)
+and the non-SCB providers (#760):
+
+- **Grammar.** ASCII-folded (å/ä→a, ö→o, é→e), `^[a-z](?:-?[a-z0-9])*$`, target ≤24
+  chars / **hard cap ≤40**, not a reserved token, not period-shaped. Reach the length
+  target by dropping whole filler words, never by coining an opaque contraction of a
+  Swedish word.
+- **One concept → one slug.** The same concept gets an identical leaf across every
+  register and provider it appears in; converge divergent instances on the clearest
+  prose already in use rather than minting a new form. Cross-register base-sharing where
+  the name merely bakes in the register's unit of observation (`Fastighetens postnummer`
+  → `postnr`) is this consistency goal, **not** an over-merge.
+- **Same name ≠ same concept; default to distinct.** A generic name reused for genuinely
+  different roles (distinguished by delivery column / definition) is **split**, each
+  role its own slug. When unsure two instances are the same role, keep them distinct —
+  **over-merge** (a genuinely different concept silently sharing a slug, e.g. a
+  deprecated code space or a different measurement basis) is the dangerous failure,
+  since it conflates join keys.
+- **Batteries.** A numbered series takes a meaningful suffix from the NAME (ordinal /
+  Swedish month / age), on **one consistent stem with the digit trailing**
+  (`morsak1..48` → `dodsorsak-1..48`; `fstodbelopp07` "…juli" → `forsorjningsstod-juli`)
+  — never a raw column code, and never a bare `-N` where a real role discriminator
+  exists. Trailing-digit + single stem is also what lets the concept-group auto-grouper
+  (which keys on the maximal trailing digit run) re-detect the family.
+- **Minimize churn.** Keep a slug that is already clean canonical prose; never demote
+  it. Rename only on a clear improvement — a cryptic/column-code slug → the prose of the
+  same role, or an alignment to a locked identifier family (below). Don't invent a
+  `<prose>-<columncode>` discriminator; if a sibling can't be given a clean prose role
+  slug, keep it as-is.
+
+**Identifier-family canonical slugs (cross-provider locked forms).** Person- and
+organisation-number columns recur across every provider, so they are curated to ONE
+canonical leaf slug per identifier family — independent of each provider's delivery
+column name — so a researcher querying `personnr` finds the person key in SCB, SOS, FK,
+and the agencies alike. The locked forms (SCB #471/#747, extended to the non-SCB global
+providers in #760):
+
+  | concept                                                      | slug                                          |
+  | ------------------------------------------------------------ | --------------------------------------------- |
+  | subject person number (`personnummer` / `samordningsnummer`) | `personnr`                                    |
+  | person-or-organisation number                                | `person-orgnr`                                |
+  | organisation number                                          | `orgnr` (company-specific: `orgnr-foretaget`) |
+
+Role variants take a prose suffix off the base: `personnr-barn` (barnet), `personnr-mor`
+(the pregnant/delivered person), `personnr-far`, `personnr-aldsta-sokande`,
+`personnr-yngsta-sokande`, … — matching the role the column's *name* documents, not its
+code.
+
+*Pseudonymization.* When — and only when — a provider's **metadata spec explicitly
+documents the column as pseudonymized / de-identified** (the name or definition contains
+`pseudonymiser*` / `avidentifier*`), the identity slug takes a `lopnr-` **prefix**:
+`lopnr-personnr`, `lopnr-orgnr`, `lopnr-personnr-barn`. SCB's metadata describes the
+conceptual delivered column and never marks pseudonymization, so SCB stays plain
+`personnr`/`orgnr`; FK/Läkemedelsverket/UMU say "levereras pseudonymiserat" /
+"avidentifieras till löpnummer", so their person keys are `lopnr-personnr`. A column
+that is *named* a löpnummer or pseudonummer (rather than an identity number) is **not**
+forced into this family — it keeps its own descriptive slug (`lopnr`, `lopnr-barn`,
+`lopnr-arende-id`, …); default-to-distinct governs the ambiguous cases.
+
 **Edge field on `[variable]` rows.** The one surviving curatable edge field is
 `replaced_by` — a **single in-file key string** (a typo-correction pointer to another
 row's TOML key in the same file), validated for shape and cycle-freedom — *not* a

@@ -17,8 +17,8 @@ slug = "inskrivning"
 [register_variant."7217173874749089767.4861471296827173126"]
 slug = "_default"
 display_group = "Inskrivningsregister (mönstring)"
-panel_entity_key = "penr"
-panel_time_key = "bari"
+panel_entity_key = "personnr"
+panel_time_key = "ar-for-inskrivning"
 panel_time_grain = "row"
 
 
@@ -38,6 +38,221 @@ panel_time_grain = "row"
 # pins reproduce the slug the variable already carries).
 # 1 pin(s).
 
-[variable."7217173874749089767.PENR"]  # inskrivning: panel_entity_key = 'penr'
-slug = "penr"
+[variable."7217173874749089767.PENR"]  # inskrivning: panel_entity_key = 'personnr'
+slug = "personnr"
 
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 103 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 7217173874749089767
+[variable."7217173874749089767.ABOJ"]
+slug = "armbojning"
+[variable."7217173874749089767.AEKG"]
+slug = "arbetsekg"
+[variable."7217173874749089767.ANOM"]
+slug = "fargsinne-anomaloskop"
+[variable."7217173874749089767.APRV"]
+slug = "typ-av-arbetsprov"
+[variable."7217173874749089767.APUL"]
+slug = "arbetspuls"
+[variable."7217173874749089767.ASTH"]
+slug = "astigmatisk-hoger-oga"
+[variable."7217173874749089767.ASTV"]
+slug = "astigmatisk-vanster-oga"
+[variable."7217173874749089767.BARI"]
+slug = "ar-for-inskrivning"
+[variable."7217173874749089767.BEF1"]
+slug = "befattning-1"
+[variable."7217173874749089767.BEF2"]
+slug = "befattning-2"
+[variable."7217173874749089767.BEVF"]
+slug = "blod-erytrocyter-volym"
+[variable."7217173874749089767.BSAT"]
+slug = "bosattningskod"
+[variable."7217173874749089767.CYLH"]
+slug = "cylinder-hoger-oga"
+[variable."7217173874749089767.CYLV"]
+slug = "cylinder-vanster-oga"
+[variable."7217173874749089767.DIAS"]
+slug = "viloblodtryck-diastoliskt"
+[variable."7217173874749089767.EKOD"]
+slug = "psykologkod"
+[variable."7217173874749089767.ESIM"]
+slug = "simkunnighet"
+[variable."7217173874749089767.FAR1"]
+slug = "korkort"
+[variable."7217173874749089767.FAR2"]
+slug = "forarbevis"
+[variable."7217173874749089767.FAR3"]
+slug = "certifikat"
+[variable."7217173874749089767.FAR4"]
+slug = "sprak"
+[variable."7217173874749089767.FAR5"]
+slug = "militar-fardighet"
+[variable."7217173874749089767.FBD1"]
+slug = "forstahandsonskemal-forband"
+[variable."7217173874749089767.FBD2"]
+slug = "andrahandsonskemal-forband"
+[variable."7217173874749089767.FBD3"]
+slug = "tredjehandsonskemal-forband"
+[variable."7217173874749089767.FSGR"]
+slug = "forsvarsgren"
+[variable."7217173874749089767.GLSH"]
+slug = "glas-hoger-oga"
+[variable."7217173874749089767.GLSV"]
+slug = "glas-vanster-oga"
+[variable."7217173874749089767.GTGF"]
+slug = "telegrafiprov"
+[variable."7217173874749089767.GUI1"]
+slug = "grundutbildningsmyndighet-1"
+[variable."7217173874749089767.GUI2"]
+slug = "grundutbildningsmyndighet-2"
+[variable."7217173874749089767.HALS"]
+slug = "halsoprofil"
+[variable."7217173874749089767.HGRP"]
+slug = "handgrepp"
+[variable."7217173874749089767.HLSG"]
+slug = "halsogrupp"
+[variable."7217173874749089767.IMOT"]
+slug = "intresseanmalan"
+[variable."7217173874749089767.INST"]
+slug = "installelsedatum-omgang"
+[variable."7217173874749089767.IPRV"]
+slug = "i-provbedomning"
+[variable."7217173874749089767.KNST"]
+slug = "knastrackning"
+[variable."7217173874749089767.KPRF"]
+slug = "medicinsk-kapacitetsprofil"
+[variable."7217173874749089767.KRUN"]
+slug = "kravunderskridande"
+[variable."7217173874749089767.LASV"]
+slug = "las-och-skrivsvarigheter"
+[variable."7217173874749089767.LKOD"]
+slug = "lakarkod"
+[variable."7217173874749089767.LNGD"]
+slug = "langd"
+[variable."7217173874749089767.MASS"]
+slug = "kroppsvikt"
+[variable."7217173874749089767.MFAK"]
+slug = "muskelfaktor"
+[variable."7217173874749089767.MFKD"]
+slug = "monstringsforrattarkod"
+[variable."7217173874749089767.MORK"]
+slug = "morkerseende"
+[variable."7217173874749089767.MULT"]
+slug = "multipel-vardering"
+[variable."7217173874749089767.NHEM"]
+slug = "nara-hem"
+[variable."7217173874749089767.OGU1"]
+slug = "onskemal-gu-borjan-1"
+[variable."7217173874749089767.OGU2"]
+slug = "onskemal-gu-borjan-2"
+[variable."7217173874749089767.ORAH"]
+slug = "horsel-hoger-ora"
+[variable."7217173874749089767.ORAV"]
+slug = "horsel-vanster-ora"
+[variable."7217173874749089767.PKAT"]
+slug = "personalkategori"
+[variable."7217173874749089767.PLA1"]
+slug = "planerat-inryckningsar-1"
+[variable."7217173874749089767.PLA2"]
+slug = "planerat-inryckningsar-2"
+[variable."7217173874749089767.PPRF"]
+slug = "psykologisk-profil"
+[variable."7217173874749089767.PRVK"]
+slug = "provande-varnpliktskontor"
+[variable."7217173874749089767.REFH"]
+slug = "refraktion-hoger-oga"
+[variable."7217173874749089767.REFV"]
+slug = "refraktion-vanster-oga"
+[variable."7217173874749089767.RPGI"]
+slug = "rapoang-inskrivningsprov"
+[variable."7217173874749089767.RPGT"]
+slug = "rapoang-pt-prov"
+[variable."7217173874749089767.SAFH"]
+slug = "skattning-safhe"
+[variable."7217173874749089767.SAMF"]
+slug = "sammanfattningssiffra"
+[variable."7217173874749089767.SANS"]
+slug = "sarskild-ansokan"
+[variable."7217173874749089767.SIPE"]
+slug = "skattning-sipe"
+[variable."7217173874749089767.SJN1"]
+slug = "sjukdomsnummer-1"
+[variable."7217173874749089767.SJN2"]
+slug = "sjukdomsnummer-2"
+[variable."7217173874749089767.SJN3"]
+slug = "sjukdomsnummer-3"
+[variable."7217173874749089767.SJN4"]
+slug = "sjukdomsnummer-4"
+[variable."7217173874749089767.SJN5"]
+slug = "sjukdomsnummer-5"
+[variable."7217173874749089767.SJN6"]
+slug = "sjukdomsnummer-6"
+[variable."7217173874749089767.SKAT"]
+slug = "skattning-muskelkraft"
+[variable."7217173874749089767.SKO1"]
+slug = "skolutbildning-1"
+[variable."7217173874749089767.SKO2"]
+slug = "skolutbildning-2"
+[variable."7217173874749089767.SKYT"]
+slug = "skytt"
+[variable."7217173874749089767.SPUL"]
+slug = "slutpuls"
+[variable."7217173874749089767.STPI"]
+slug = "standardpoang"
+[variable."7217173874749089767.STPT"]
+slug = "standardpoang-pt-prov"
+[variable."7217173874749089767.SYKH"]
+slug = "syn-korrigerat-hoger-oga"
+[variable."7217173874749089767.SYKV"]
+slug = "syn-korrigerat-vanster-oga"
+[variable."7217173874749089767.SYOH"]
+slug = "syn-okorrigerat-hoger-oga"
+[variable."7217173874749089767.SYOV"]
+slug = "syn-okorrigerat-vanster-oga"
+[variable."7217173874749089767.SYRE"]
+slug = "syreupptagningsformaga"
+[variable."7217173874749089767.SYST"]
+slug = "viloblodtryck-systoliskt"
+[variable."7217173874749089767.TAVL"]
+slug = "fargsinne-tavelundersokning"
+[variable."7217173874749089767.TRE2"]
+slug = "truppregistreringsmyndighet-2"
+[variable."7217173874749089767.TREG"]
+slug = "truppregistreringsmyndighet"
+[variable."7217173874749089767.TYP1"]
+slug = "typhinder-1"
+[variable."7217173874749089767.TYP3"]
+slug = "typhinder-3"
+[variable."7217173874749089767.TYP5"]
+slug = "typhinder-5"
+[variable."7217173874749089767.TYP6"]
+slug = "typhinder-6"
+[variable."7217173874749089767.TYPI"]
+slug = "typhinder-inskrivning"
+[variable."7217173874749089767.UGLU"]
+slug = "uglukos"
+[variable."7217173874749089767.UPRO"]
+slug = "uprotein"
+[variable."7217173874749089767.UTPF"]
+slug = "utebliven-pf-skattning"
+[variable."7217173874749089767.VBSR"]
+slug = "venblod-sankningsreaktion"
+[variable."7217173874749089767.VEKG"]
+slug = "viloekg"
+[variable."7217173874749089767.VKNR"]
+slug = "tillhorande-varnpliktskontor"
+[variable."7217173874749089767.VPUL"]
+slug = "vilopuls"
+[variable."7217173874749089767.WMAX"]
+slug = "fysisk-arbetsformaga"
+[variable."7217173874749089767.YRK1"]
+slug = "yrkesutbildning-1"
+[variable."7217173874749089767.YRK2"]
+slug = "yrkesutbildning-2"
+
+# === END #760 non-SCB concept-slug curation ===

@@ -49,3 +49,26 @@ panel_time_grain = "row"
 [variable."7228002101699435108.SeqRpt"]  # biverkningar: panel_entity_key = 'seqrpt'
 slug = "seqrpt"
 
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 7 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 7228002101699435108
+[variable."7228002101699435108.DateOfBirth"]
+slug = "fodelsedatum"
+[variable."7228002101699435108.Hlgt"]
+slug = "meddra-hlgt"
+[variable."7228002101699435108.Hlt"]
+slug = "meddra-hlt"
+[variable."7228002101699435108.IdNumber"]
+slug = "lopnr-personnr"
+[variable."7228002101699435108.Pt"]
+slug = "meddra-pt"
+[variable."7228002101699435108.Soc"]
+slug = "meddra-soc"
+[variable."7228002101699435108.atc4pos"]
+slug = "atc-kod-4-pos"
+
+# === END #760 non-SCB concept-slug curation ===

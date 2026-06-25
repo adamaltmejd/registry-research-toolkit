@@ -41,7 +41,7 @@
 # catalog regeneration that re-infers it can't silently change the facet.
 [[accept]]
 register = "sos/dors"
-key = "morsak"
+key = "dodsorsak"
 axis = "ordinal"
 
 [[accept]]
@@ -51,38 +51,38 @@ axis = "ordinal"
 
 [[accept]]
 register = "sos/dors"
-key = "ro"
+key = "dodsorsak-position"
 label = "Position på intyget av dödsorsaken (per dödsorsak)"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/par"
-key = "opd"
+key = "atgardsdatum"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/par"
-key = "ekod"
+key = "yttre-orsakskod"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/par"
-key = "ane"
+key = "anestesikod"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/mfr"
-key = "bdiag-bk"
+key = "barnets-diagnoskod-bk"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/hsl"
-key = "yrkesbet"
+key = "yrkesbeteckning"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/lmed"
-key = "spkod"
+key = "specialistutbildningskod"
 axis = "ordinal"
 
 # Batch 2 (#496): more multi-instance families — a child's numbered diagnosis-code
@@ -91,7 +91,7 @@ axis = "ordinal"
 # numbered slot against the real corpus.
 [[accept]]
 register = "sos/mfr"
-key = "bdiag"
+key = "diagnoskod-barnet"
 label = "Diagnoskod, barnet"
 axis = "ordinal"
 
@@ -130,7 +130,7 @@ axis = "ordinal"
 # them for a later batch.)
 [[accept]]
 register = "sos/mfr"
-key = "bflop"
+key = "atgardskod-barnet"
 label = "Åtgärdskod, barnet"
 axis = "ordinal"
 
@@ -148,19 +148,19 @@ axis = "ordinal"
 # different facet — left for a later, separate consideration.)
 [[accept]]
 register = "sos/mfr"
-key = "flop"
+key = "atgardskod-forlosta"
 label = "Åtgärdskod, den förlösta"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/mfr"
-key = "mdiag"
+key = "diagnoskod-forlosta"
 label = "Diagnoskod, den förlösta"
 axis = "ordinal"
 
 [[accept]]
 register = "sos/mfr"
-key = "gdiag"
+key = "diagnoskod-graviditet"
 label = "Diagnoskod under graviditet"
 axis = "ordinal"
 
@@ -253,205 +253,205 @@ label = "tredje största förvärvskällan"
 
 [[variable_group]]
 register = "sos/lova"
-key = "invdatum"
+key = "invandringsdatum"
 label = "Invandringsdatum (per invandringstillfälle)"
 axis = "ordinal"
 
 [[variable_group.members]]
-variable = "invdatum1"
+variable = "invandringsdatum-1"
 value = "1"
 label = "1:a"
 
 [[variable_group.members]]
-variable = "invdatum2"
+variable = "invandringsdatum-2"
 value = "2"
 label = "2:a"
 
 [[variable_group.members]]
-variable = "invdatum3"
+variable = "invandringsdatum-3"
 value = "3"
 label = "3:e"
 
 [[variable_group.members]]
-variable = "invdatum4"
+variable = "invandringsdatum-4"
 value = "4"
 label = "4:e"
 
 [[variable_group.members]]
-variable = "invdatum5"
+variable = "invandringsdatum-5"
 value = "5"
 label = "5:e"
 
 [[variable_group.members]]
-variable = "invdatum6"
+variable = "invandringsdatum-6"
 value = "6"
 label = "6:e"
 
 [[variable_group.members]]
-variable = "invdatum7"
+variable = "invandringsdatum-7"
 value = "7"
 label = "7:e"
 
 [[variable_group.members]]
-variable = "invdatum8"
+variable = "invandringsdatum-8"
 value = "8"
 label = "8:e"
 
 [[variable_group.members]]
-variable = "invdatum9"
+variable = "invandringsdatum-9"
 value = "9"
 label = "9:e"
 
 [[variable_group]]
 register = "sos/lova"
-key = "invland"
+key = "invandringsland"
 label = "Invandringsland (per invandringstillfälle)"
 axis = "ordinal"
 
 [[variable_group.members]]
-variable = "invland1"
+variable = "invandringsland-1"
 value = "1"
 label = "1:a"
 
 [[variable_group.members]]
-variable = "invland2"
+variable = "invandringsland-2"
 value = "2"
 label = "2:a"
 
 [[variable_group.members]]
-variable = "invland3"
+variable = "invandringsland-3"
 value = "3"
 label = "3:e"
 
 [[variable_group.members]]
-variable = "invland4"
+variable = "invandringsland-4"
 value = "4"
 label = "4:e"
 
 [[variable_group.members]]
-variable = "invland5"
+variable = "invandringsland-5"
 value = "5"
 label = "5:e"
 
 [[variable_group.members]]
-variable = "invland6"
+variable = "invandringsland-6"
 value = "6"
 label = "6:e"
 
 [[variable_group.members]]
-variable = "invland7"
+variable = "invandringsland-7"
 value = "7"
 label = "7:e"
 
 [[variable_group.members]]
-variable = "invland8"
+variable = "invandringsland-8"
 value = "8"
 label = "8:e"
 
 [[variable_group.members]]
-variable = "invland9"
+variable = "invandringsland-9"
 value = "9"
 label = "9:e"
 
 [[variable_group]]
 register = "sos/lova"
-key = "utvdatum"
+key = "utvandringsdatum"
 label = "Utvandringsdatum (per utvandringstillfälle)"
 axis = "ordinal"
 
 [[variable_group.members]]
-variable = "utvdatum1"
+variable = "utvandringsdatum-1"
 value = "1"
 label = "1:a"
 
 [[variable_group.members]]
-variable = "utvdatum2"
+variable = "utvandringsdatum-2"
 value = "2"
 label = "2:a"
 
 [[variable_group.members]]
-variable = "utvdatum3"
+variable = "utvandringsdatum-3"
 value = "3"
 label = "3:e"
 
 [[variable_group.members]]
-variable = "utvdatum4"
+variable = "utvandringsdatum-4"
 value = "4"
 label = "4:e"
 
 [[variable_group.members]]
-variable = "utvdatum5"
+variable = "utvandringsdatum-5"
 value = "5"
 label = "5:e"
 
 [[variable_group.members]]
-variable = "utvdatum6"
+variable = "utvandringsdatum-6"
 value = "6"
 label = "6:e"
 
 [[variable_group.members]]
-variable = "utvdatum7"
+variable = "utvandringsdatum-7"
 value = "7"
 label = "7:e"
 
 [[variable_group.members]]
-variable = "utvdatum8"
+variable = "utvandringsdatum-8"
 value = "8"
 label = "8:e"
 
 [[variable_group.members]]
-variable = "utvdatum9"
+variable = "utvandringsdatum-9"
 value = "9"
 label = "9:e"
 
 [[variable_group]]
 register = "sos/lova"
-key = "utvland"
+key = "utvandringsland"
 label = "Utvandringsland (per utvandringstillfälle)"
 axis = "ordinal"
 
 [[variable_group.members]]
-variable = "utvland1"
+variable = "utvandringsland-1"
 value = "1"
 label = "1:a"
 
 [[variable_group.members]]
-variable = "utvland2"
+variable = "utvandringsland-2"
 value = "2"
 label = "2:a"
 
 [[variable_group.members]]
-variable = "utvland3"
+variable = "utvandringsland-3"
 value = "3"
 label = "3:e"
 
 [[variable_group.members]]
-variable = "utvland4"
+variable = "utvandringsland-4"
 value = "4"
 label = "4:e"
 
 [[variable_group.members]]
-variable = "utvland5"
+variable = "utvandringsland-5"
 value = "5"
 label = "5:e"
 
 [[variable_group.members]]
-variable = "utvland6"
+variable = "utvandringsland-6"
 value = "6"
 label = "6:e"
 
 [[variable_group.members]]
-variable = "utvland7"
+variable = "utvandringsland-7"
 value = "7"
 label = "7:e"
 
 [[variable_group.members]]
-variable = "utvland8"
+variable = "utvandringsland-8"
 value = "8"
 label = "8:e"
 
 [[variable_group.members]]
-variable = "utvland9"
+variable = "utvandringsland-9"
 value = "9"
 label = "9:e"
 
@@ -462,47 +462,47 @@ label = "Invandringsdatum, numerisk (per invandringstillfälle)"
 axis = "ordinal"
 
 [[variable_group.members]]
-variable = "invarn1"
+variable = "invandringsdatum-1-numerisk"
 value = "1"
 label = "1:a"
 
 [[variable_group.members]]
-variable = "invarn2"
+variable = "invandringsdatum-2-numerisk"
 value = "2"
 label = "2:a"
 
 [[variable_group.members]]
-variable = "invarn3"
+variable = "invandringsdatum-3-numerisk"
 value = "3"
 label = "3:e"
 
 [[variable_group.members]]
-variable = "invarn4"
+variable = "invandringsdatum-4-numerisk"
 value = "4"
 label = "4:e"
 
 [[variable_group.members]]
-variable = "invarn5"
+variable = "invandringsdatum-5-numerisk"
 value = "5"
 label = "5:e"
 
 [[variable_group.members]]
-variable = "invarn6"
+variable = "invandringsdatum-6-numerisk"
 value = "6"
 label = "6:e"
 
 [[variable_group.members]]
-variable = "invarn7"
+variable = "invandringsdatum-7-numerisk"
 value = "7"
 label = "7:e"
 
 [[variable_group.members]]
-variable = "invarn8"
+variable = "invandringsdatum-8-numerisk"
 value = "8"
 label = "8:e"
 
 [[variable_group.members]]
-variable = "invarn9"
+variable = "invandringsdatum-9-numerisk"
 value = "9"
 label = "9:e"
 
@@ -513,47 +513,47 @@ label = "Utvandringsdatum, numerisk (per utvandringstillfälle)"
 axis = "ordinal"
 
 [[variable_group.members]]
-variable = "utvarn1"
+variable = "utvandringsdatum-1-numerisk"
 value = "1"
 label = "1:a"
 
 [[variable_group.members]]
-variable = "utvarn2"
+variable = "utvandringsdatum-2-numerisk"
 value = "2"
 label = "2:a"
 
 [[variable_group.members]]
-variable = "utvarn3"
+variable = "utvandringsdatum-3-numerisk"
 value = "3"
 label = "3:e"
 
 [[variable_group.members]]
-variable = "utvarn4"
+variable = "utvandringsdatum-4-numerisk"
 value = "4"
 label = "4:e"
 
 [[variable_group.members]]
-variable = "utvarn5"
+variable = "utvandringsdatum-5-numerisk"
 value = "5"
 label = "5:e"
 
 [[variable_group.members]]
-variable = "utvarn6"
+variable = "utvandringsdatum-6-numerisk"
 value = "6"
 label = "6:e"
 
 [[variable_group.members]]
-variable = "utvarn7"
+variable = "utvandringsdatum-7-numerisk"
 value = "7"
 label = "7:e"
 
 [[variable_group.members]]
-variable = "utvarn8"
+variable = "utvandringsdatum-8-numerisk"
 value = "8"
 label = "8:e"
 
 [[variable_group.members]]
-variable = "utvarn9"
+variable = "utvandringsdatum-9-numerisk"
 value = "9"
 label = "9:e"
 
