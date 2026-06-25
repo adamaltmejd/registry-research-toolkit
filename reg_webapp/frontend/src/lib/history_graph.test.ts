@@ -548,6 +548,34 @@ describe("history graph prototype model", () => {
       ["class/sun1996", "class/sun2000-niva", "succession"],
       ["class/sun2000-niva", "class/sun2020-niva", "succession"],
     ]);
+    expect(graph.nodes.filter((node) => node.self)).toEqual([]);
+    expect(
+      historyGraphFromClassificationGroup(
+        group,
+        graph.nodes.map((graphNode) => ({
+          kind: "classification",
+          fqid: graphNode.id,
+          name: graphNode.label,
+          short_name: graphNode.label.toUpperCase(),
+          codes: [],
+          dimensions: [],
+          edition_chain: [
+            {
+              slug: graphNode.label,
+              fqid: graphNode.id,
+              name: graphNode.label,
+              effective_year: graphNode.from,
+              is_self: true,
+              is_current: graphNode.current ?? false,
+            },
+          ],
+          edition_edges: [],
+        })) as ClassificationNodeData[],
+        "class/sun2020-niva",
+      )
+        .nodes.filter((node) => node.self)
+        .map((node) => node.id),
+    ).toEqual(["class/sun2020-niva"]);
     expect(graph.warnings).toEqual([]);
   });
 
@@ -607,7 +635,7 @@ describe("history graph prototype model", () => {
     ]);
   });
 
-  it("adds concept-group siblings to classification leaf graphs", () => {
+  it("keeps plain classification leaf graphs to the leaf's own history", () => {
     const graph = historyGraphFromClassification({
       kind: "classification",
       fqid: "class/niva-grovv1",
@@ -651,21 +679,14 @@ describe("history graph prototype model", () => {
     } as ClassificationNodeData);
 
     expect(graph.nodes.map((node) => [node.id, node.kind, node.label])).toEqual(
-      [
-        ["class/niva-grovv1", "classification", "niva-grovv1"],
-        ["group:sun", "group", "sun"],
-        ["class/sun2020-inriktning", "classification", "sun2020-inriktning"],
-      ],
+      [["class/niva-grovv1", "classification", "niva-grovv1"]],
     );
     expect(
       graph.nodes.find((node) => node.id === "class/niva-grovv1"),
     ).toMatchObject({
       self: true,
     });
-    expect(graph.edges.map((edge) => [edge.from, edge.to, edge.kind])).toEqual([
-      ["group:sun", "class/sun2020-inriktning", "member"],
-      ["group:sun", "class/niva-grovv1", "member"],
-    ]);
+    expect(graph.edges).toEqual([]);
   });
 
   it("connects classification fan-out branches without treating them as a timeline", () => {

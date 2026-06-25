@@ -1,11 +1,19 @@
 <script lang="ts">
-import type { ClassificationNodeData } from "./api";
+import {
+  type ClassificationNodeData,
+  getCatalogNode,
+  isCatalogNode,
+} from "./api";
+import { asyncResource } from "./async.svelte";
 import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationDimensionsPanel from "./ClassificationDimensionsPanel.svelte";
 import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 import { nodeLabel } from "./catalog";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
-import { historyGraphFromClassification } from "./history_graph";
+import {
+  historyGraphFromClassification,
+  historyGraphFromClassificationGroup,
+} from "./history_graph";
 import SubjectView from "./SubjectView.svelte";
 
 // The classification LEAF — a standard ("Utbildningsnivå") rendered through the
@@ -16,7 +24,34 @@ import SubjectView from "./SubjectView.svelte";
 // is a later PR), and no docs surface (classifications carry no doc mentions), so
 // those two SubjectView sections are omitted.
 let { node }: { node: ClassificationNodeData } = $props();
-const historyGraph = $derived(historyGraphFromClassification(node));
+const graphGroup = $derived(
+  (node.dimensions ?? []).find((group) =>
+    group.members.some((member) => member.fqid === node.fqid),
+  ) ?? null,
+);
+const graphMembers = asyncResource<ClassificationNodeData[]>(async (signal) => {
+  if (!graphGroup) {
+    return [];
+  }
+  return Promise.all(
+    graphGroup.members.map(async (member) => {
+      const resolved = await getCatalogNode(member.fqid, undefined, { signal });
+      if (isCatalogNode(resolved) && resolved.kind === "classification") {
+        return resolved;
+      }
+      throw new Error(`Expected classification node for ${member.fqid}`);
+    }),
+  );
+});
+const historyGraph = $derived(
+  graphGroup && graphMembers.data
+    ? historyGraphFromClassificationGroup(
+        graphGroup,
+        graphMembers.data,
+        node.fqid,
+      )
+    : historyGraphFromClassification(node),
+);
 </script>
 
 {#snippet description()}
@@ -36,7 +71,13 @@ const historyGraph = $derived(historyGraphFromClassification(node));
      succession chain (#571, oldest → current). Each omits itself when empty / for a
      standalone classification with no succession. -->
 {#snippet relationships()}
-  <HistoryGraphPrototype graph={historyGraph} />
+  {#if graphGroup && graphMembers.loading}
+    <p class="muted" aria-busy="true">Loading group graph…</p>
+  {:else if graphGroup && graphMembers.error}
+    <p class="error" role="alert">{graphMembers.error}</p>
+  {:else}
+    <HistoryGraphPrototype graph={historyGraph} />
+  {/if}
   <ClassificationDimensionsPanel {node} />
   <ClassificationLineagePanels {node} />
 {/snippet}

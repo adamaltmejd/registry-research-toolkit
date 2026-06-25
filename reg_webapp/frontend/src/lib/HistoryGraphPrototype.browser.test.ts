@@ -186,5 +186,11 @@ describe("HistoryGraphPrototype", () => {
     expect(document.querySelector(".edition-svg")).toBeNull();
     expect(document.querySelector(".axis")).toBeNull();
     expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
+    expect(
+      document
+        .querySelector('a[href="/catalog/class/sun2000-inriktning"]')
+        ?.querySelector(".node-label")
+        ?.textContent?.trim(),
+    ).toBe("sun2000-inriktning");
   });
 });

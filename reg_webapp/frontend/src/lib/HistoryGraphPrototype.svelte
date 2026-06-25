@@ -1,4 +1,5 @@
 <script lang="ts">
+import { catalogHref } from "./catalog";
 import {
   type HistoryColumnSlice,
   type HistoryGraph,
@@ -87,9 +88,7 @@ const height = $derived(
     26,
 );
 const hasGraphContent = $derived(
-  graph.nodes.length > 1 ||
-    edgeRows.length > 0 ||
-    graph.nodes.some((node) => node.columns.length > 1),
+  edgeRows.length > 0 || graph.nodes.some((node) => node.columns.length > 1),
 );
 
 function xForYear(year: number | null): number {
@@ -218,54 +217,63 @@ function shortLabel(label: string, max = 29): string {
               node.label,
               graph.mode === "classification" ? 22 : 29,
             )}
-            <g class={`node ${node.kind}`} class:self={node.self} class:current={node.current}>
-              {#if label !== node.label || graph.mode === "classification"}
-                <title>{node.label}</title>
-              {/if}
-              <rect
-                class="bar"
-                x={bar.x}
-                y={bar.y}
-                width={bar.width}
-                height={bar.height}
-                rx="4"
-              />
-              {#if graph.mode === "classification"}
-                <text
-                  class="node-label in-bar"
-                  x={bar.x + bar.width / 2}
-                  y={bar.y + bar.height / 2 + 5}
-                  text-anchor="middle"
-                >
-                  {label}
-                </text>
-              {:else}
-                <text class="node-label" x="0" y={bar.y + 13}>
-                  {label}
-                </text>
-                {#if node.detail}
-                  <text class="detail" x="0" y={bar.y + 31}>{node.detail}</text>
+            {#snippet nodeGlyph()}
+              <g class={`node ${node.kind}`} class:self={node.self} class:current={node.current}>
+                {#if label !== node.label || graph.mode === "classification"}
+                  <title>{node.label}</title>
                 {/if}
-              {/if}
-              {#if graph.mode !== "classification" && node.columns.length > 0}
-                {#each node.columns as column, ci (column.id)}
-                  {@const col = columnBar(column)}
-                  <rect
-                    class="column-slice"
-                    x={col.x}
-                    y={bar.y + 24 + (ci % 3) * 9}
-                    width={col.width}
-                    height="6"
-                    rx="2"
-                  />
-                {/each}
-                {#if node.columns.length > 3}
-                  <text class="column-count" x={leftPad} y={bar.y + 58}>
-                    {node.columns.length} columns
+                <rect
+                  class="bar"
+                  x={bar.x}
+                  y={bar.y}
+                  width={bar.width}
+                  height={bar.height}
+                  rx="4"
+                />
+                {#if graph.mode === "classification"}
+                  <text
+                    class="node-label in-bar"
+                    x={bar.x + bar.width / 2}
+                    y={bar.y + bar.height / 2 + 5}
+                    text-anchor="middle"
+                  >
+                    {label}
                   </text>
+                {:else}
+                  <text class="node-label" x="0" y={bar.y + 13}>
+                    {label}
+                  </text>
+                  {#if node.detail}
+                    <text class="detail" x="0" y={bar.y + 31}>{node.detail}</text>
+                  {/if}
                 {/if}
-              {/if}
-            </g>
+                {#if graph.mode !== "classification" && node.columns.length > 0}
+                  {#each node.columns as column, ci (column.id)}
+                    {@const col = columnBar(column)}
+                    <rect
+                      class="column-slice"
+                      x={col.x}
+                      y={bar.y + 24 + (ci % 3) * 9}
+                      width={col.width}
+                      height="6"
+                      rx="2"
+                    />
+                  {/each}
+                  {#if node.columns.length > 3}
+                    <text class="column-count" x={leftPad} y={bar.y + 58}>
+                      {node.columns.length} columns
+                    </text>
+                  {/if}
+                {/if}
+              </g>
+            {/snippet}
+            {#if node.fqid}
+              <a href={catalogHref(node.fqid)} class="node-link" aria-label={`Open ${node.label}`}>
+                {@render nodeGlyph()}
+              </a>
+            {:else}
+              {@render nodeGlyph()}
+            {/if}
           {/each}
         </g>
       </svg>
@@ -361,6 +369,14 @@ function shortLabel(label: string, max = 29): string {
   }
   .current .bar {
     filter: saturate(1.2);
+  }
+  .node-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .node-link:hover .bar,
+  .node-link:focus-visible .bar {
+    stroke-width: 2.4;
   }
   .column-slice {
     fill: var(--accent);

@@ -321,12 +321,16 @@ describe("ConceptGroupView (#617)", () => {
     ).not.toContain("sun");
     expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
     expect(document.querySelectorAll(".edges .member")).toHaveLength(0);
-    await expect
-      .element(page.getByRole("link", { name: /sun2020-inriktning/ }))
-      .toHaveAttribute("href", "/catalog/class/sun2020-inriktning");
-    await expect
-      .element(page.getByRole("link", { name: /niva-grovv1/ }))
-      .toHaveAttribute("href", "/catalog/class/niva-grovv1");
+    expect(
+      document.querySelector(
+        '.member-selector a[href="/catalog/class/sun2020-inriktning"]',
+      ),
+    ).not.toBeNull();
+    expect(
+      document.querySelector(
+        '.member-selector a[href="/catalog/class/niva-grovv1"]',
+      ),
+    ).not.toBeNull();
   });
 });
 

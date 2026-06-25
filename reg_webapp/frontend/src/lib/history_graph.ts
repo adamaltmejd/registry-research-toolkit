@@ -72,6 +72,14 @@ type ClassificationEditionLike = {
   is_self?: boolean;
 };
 
+type ClassificationGraphGroup = {
+  members: readonly {
+    fqid: string;
+    name?: string | null;
+    facets: readonly { label: string }[];
+  }[];
+};
+
 const OPEN_END_YEAR = 9999;
 const YEARLESS_START = 1;
 
@@ -486,8 +494,9 @@ export function historyGraphFromGroup(
 }
 
 export function historyGraphFromClassificationGroup(
-  group: ConceptGroupNodeData,
+  group: ClassificationGraphGroup,
   classifications: ClassificationNodeData[],
+  focusedFqid: string | null = null,
 ): HistoryGraph {
   const nodesById = new Map<string, HistoryGraphNode>();
   const edgesById = new Map<string, HistoryGraphEdge>();
@@ -514,7 +523,9 @@ export function historyGraphFromClassificationGroup(
     mode: "classification",
     title: "Classification relationships",
     nodes: [...nodesById.values()].map((node) =>
-      memberFqids.has(node.id) ? { ...node, self: true } : node,
+      memberFqids.has(node.id)
+        ? { ...node, self: focusedFqid === node.id }
+        : { ...node, self: false },
     ),
     edges: [...edgesById.values()],
     warnings: [],
@@ -529,49 +540,6 @@ export function historyGraphFromClassification(
   const nodesById = new Map<string, HistoryGraphNode>();
   const edgesById = new Map<string, HistoryGraphEdge>();
   addClassificationHistory(nodesById, edgesById, node);
-  for (const group of node.dimensions ?? []) {
-    const groupId = `group:${group.key}`;
-    if (!nodesById.has(groupId)) {
-      nodesById.set(groupId, {
-        id: groupId,
-        kind: "group",
-        label: group.key,
-        fqid: null,
-        from: null,
-        to: null,
-        columns: [],
-        detail: group.label,
-      });
-    }
-    for (const member of group.members) {
-      const memberId = member.fqid;
-      const memberSlug = leafSlug(memberId);
-      if (!nodesById.has(memberId)) {
-        const year = classificationSlugYear(memberSlug);
-        nodesById.set(memberId, {
-          id: memberId,
-          kind: "classification",
-          label: memberSlug,
-          fqid: memberId,
-          from: year,
-          to: year,
-          self: memberId === node.fqid,
-          columns: [],
-          detail: member.name ?? member.facets.map((f) => f.label).join(" · "),
-        });
-      }
-      const edge = {
-        id: `member:${groupId}->${memberId}`,
-        kind: "member" as const,
-        from: groupId,
-        to: memberId,
-        fromYear: null,
-        toYear: null,
-        label: "member",
-      };
-      edgesById.set(edge.id, edge);
-    }
-  }
 
   return {
     mode: "classification",

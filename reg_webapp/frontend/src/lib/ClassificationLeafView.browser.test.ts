@@ -1,15 +1,25 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { ClassificationNodeData } from "./api";
+import { getCatalogNode } from "./api";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
 
 // The classification leaf rendered through the unified SubjectView shell (#638 PR1).
-// Everything is EMBEDDED on the node (codes / dimensions / edition_chain), so the
-// view + its panels render synchronously — no fetch, no mocking. This guards the
+// Most surfaces are EMBEDDED on the node (codes / dimensions / edition_chain). When a
+// classification belongs to a concept group, the view fetches the group members'
+// classification leaves so the graph matches the group page. This guards the
 // shell wiring: the title (nodeLabel = name), the short-name meta dl, and that the
 // embedded codes panel renders inside the shell. The panels' own behaviour is
 // covered by their dedicated suites.
+
+vi.mock("./api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./api")>();
+  return {
+    ...actual,
+    getCatalogNode: vi.fn(),
+  };
+});
 
 function node(
   overrides: Partial<ClassificationNodeData> = {},
@@ -28,6 +38,26 @@ function node(
     ...overrides,
   } as unknown as ClassificationNodeData;
 }
+
+function fetchedClassification(
+  overrides: Partial<ClassificationNodeData>,
+): ClassificationNodeData {
+  return {
+    kind: "classification",
+    fqid: "class/example",
+    name: "Example",
+    short_name: "EXAMPLE",
+    codes: [],
+    dimensions: [],
+    edition_chain: [],
+    edition_edges: [],
+    ...overrides,
+  } as unknown as ClassificationNodeData;
+}
+
+beforeEach(() => {
+  vi.mocked(getCatalogNode).mockReset();
+});
 
 describe("ClassificationLeafView (#638 shell)", () => {
   it("renders the title, short-name meta, and the embedded codes panel", async () => {
@@ -76,7 +106,70 @@ describe("ClassificationLeafView (#638 shell)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("shows concept-group sibling relationships for aggregate classifications", async () => {
+  it("renders the same concept-group graph as the group page, focused on the viewed member", async () => {
+    vi.mocked(getCatalogNode).mockImplementation((fqidPath) => {
+      if (fqidPath === "class/sun2020-inriktning") {
+        return Promise.resolve(
+          fetchedClassification({
+            fqid: "class/sun2020-inriktning",
+            name: "SUN 2020 — inriktning",
+            short_name: "SUN2020-INRIKTNING",
+            edition_chain: [
+              {
+                slug: "sun1996",
+                fqid: "class/sun1996",
+                name: "SUN 1996",
+                effective_year: 2000,
+                is_self: false,
+                is_current: false,
+              },
+              {
+                slug: "sun2000-inriktning",
+                fqid: "class/sun2000-inriktning",
+                name: "SUN 2000 — inriktning",
+                effective_year: 2020,
+                is_self: false,
+                is_current: false,
+              },
+              {
+                slug: "sun2020-inriktning",
+                fqid: "class/sun2020-inriktning",
+                name: "SUN 2020 — inriktning",
+                effective_year: null,
+                is_self: true,
+                is_current: true,
+              },
+            ],
+            edition_edges: [
+              {
+                predecessor_slug: "sun1996",
+                predecessor_fqid: "class/sun1996",
+                successor_slug: "sun2000-inriktning",
+                successor_fqid: "class/sun2000-inriktning",
+                effective_year: 2000,
+                note: null,
+              },
+              {
+                predecessor_slug: "sun2000-inriktning",
+                predecessor_fqid: "class/sun2000-inriktning",
+                successor_slug: "sun2020-inriktning",
+                successor_fqid: "class/sun2020-inriktning",
+                effective_year: 2020,
+                note: null,
+              },
+            ],
+          }),
+        );
+      }
+      return Promise.resolve(
+        fetchedClassification({
+          fqid: "class/niva-grovv1",
+          name: "Utbildningsnivå, grov",
+          short_name: "NIVA-GROV",
+        }),
+      );
+    });
+
     await render(ClassificationLeafView, {
       node: node({
         fqid: "class/niva-grovv1",
@@ -129,6 +222,21 @@ describe("ClassificationLeafView (#638 shell)", () => {
       [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
         (label) => label.textContent?.trim(),
       ),
-    ).toEqual(["niva-grovv1", "sun", "sun2020-inriktning"]);
+    ).toEqual([
+      "sun1996",
+      "sun2000-inriktning",
+      "sun2020-inriktning",
+      "niva-grovv1",
+    ]);
+    expect(
+      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+        (label) => label.textContent?.trim(),
+      ),
+    ).not.toContain("sun");
+    expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
+    expect(document.querySelectorAll(".edges .member")).toHaveLength(0);
+    expect(document.querySelector(".node.self title")?.textContent).toBe(
+      "niva-grovv1",
+    );
   });
 });
