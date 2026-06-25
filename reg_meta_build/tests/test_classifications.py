@@ -2123,7 +2123,7 @@ class TestCuratedClassificationLinks:
         expected = {
             ("scb", "ureg", "isced2011niva"): "ISCED2011",
             ("scb", "ureg", "isced-f-2013"): "ISCED-F2013",
-            ("scb", "arbetskraftsbarometern", "sektor"): "SEKTOR2000",
+            ("scb", "arbetskraftsbarometern", "sektorkod"): "SEKTOR2000",
             ("scb", "fortroendevalda", "sektor"): "SEKTOR2000",
             ("scb", "kommunalekonomisk-utjamning", "sektor"): "SEKTOR2000",
             ("scb", "lisa", "ast-sektorkod"): "SEKTOR2000",
@@ -2133,7 +2133,7 @@ class TestCuratedClassificationLinks:
             ("scb", "yrkesreg", "sektor-ku1"): "SEKTOR2000",
             ("scb", "yrkesreg", "sektorkod"): "SEKTOR2000",
             ("scb", "yrkesreg", "sektorkod-2"): "SEKTOR2000",
-            ("scb", "yrkesreg", "sektorkod-storsta"): "SEKTOR2000",
+            ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"): "SEKTOR2000",
         }
         links = load_classification_links(path)
         assert {

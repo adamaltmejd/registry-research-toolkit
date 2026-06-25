@@ -40,7 +40,7 @@
 # "Kommunal förvaltning", "Landsting"/"Region", "Aktiebolag …") coincide numerically
 # with SNI/SSYK/LKF division codes, but the labels are unambiguously sector.
 [[link]]
-variable       = "scb/arbetskraftsbarometern/sektor"
+variable       = "scb/arbetskraftsbarometern/sektorkod"
 classification = "SEKTOR2000"
 note           = "curated:#494 label-unambiguous sector codes (coincide cross-family by digits)"
 
@@ -90,7 +90,7 @@ classification = "SEKTOR2000"
 note           = "curated:#494 label-unambiguous sector codes"
 
 [[link]]
-variable       = "scb/yrkesreg/sektorkod-storsta"
+variable       = "scb/yrkesreg/sektorkod-storsta-forvarvskalla"
 classification = "SEKTOR2000"
 note           = "curated:#494 label-unambiguous sector codes"
 
