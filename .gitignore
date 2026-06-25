@@ -100,6 +100,16 @@ mdw_upload_probe_*.txt
 # `git add -f reg_meta_build/fqid_slugs/<provider>.auto.toml`, or add a
 # per-provider negation here: `!reg_meta_build/fqid_slugs/<provider>.auto.toml`.
 reg_meta_build/fqid_slugs/**/*.auto.toml
+# Pinned providers (#759, curating): the committed auto.toml IS the curating
+# baseline, so un-ignore exactly these. Steward/churning auto.toml stay ignored.
+!reg_meta_build/fqid_slugs/scb.auto.toml
+!reg_meta_build/fqid_slugs/sos.auto.toml
+!reg_meta_build/fqid_slugs/fk.auto.toml
+!reg_meta_build/fqid_slugs/fohm.auto.toml
+!reg_meta_build/fqid_slugs/lakemedelsverket.auto.toml
+!reg_meta_build/fqid_slugs/pliktverket.auto.toml
+!reg_meta_build/fqid_slugs/riksarkivet.auto.toml
+!reg_meta_build/fqid_slugs/umu.auto.toml
 
 # SCB source PDFs (binary, copyrighted, not committed)
 *.pdf
