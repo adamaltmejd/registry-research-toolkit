@@ -197,13 +197,17 @@ def test_untracked_pinned_auto_detected(tmp_path):
     subprocess.run(
         ["git", "init"], cwd=tmp_path, capture_output=True, check=True, env=_git_env()
     )
-    # `fk` is curating, `umu` is churning — both with a known provider stem so
-    # load_freeze_states accepts the zones (an unknown zone would raise).
+    # `fk` is curating, `scb` is frozen, `umu` is churning — all with a known
+    # provider stem so load_freeze_states accepts the zones (an unknown zone
+    # would raise). `frozen` is pinned exactly like `curating`.
     (tmp_path / "freeze.toml").write_text(
-        'fk = "curating"\numu = "churning"\n', encoding="utf-8"
+        'fk = "curating"\nscb = "frozen"\numu = "churning"\n', encoding="utf-8"
     )
     (tmp_path / "fk.toml").write_text(
         '[register."1"]\nslug = "fk-reg"\n', encoding="utf-8"
+    )
+    (tmp_path / "scb.toml").write_text(
+        '[register."1"]\nslug = "scb-reg"\n', encoding="utf-8"
     )
     (tmp_path / "umu.toml").write_text(
         '[register."1"]\nslug = "umu-reg"\n', encoding="utf-8"
@@ -213,15 +217,19 @@ def test_untracked_pinned_auto_detected(tmp_path):
         '[variable."1.x"]\nslug = "umu-x"\n', encoding="utf-8"
     )
 
-    # 1. Pinned auto on disk but untracked → flagged.
+    # 1. Both pinned autos on disk but untracked → flagged, sorted lexically
+    #    across both pinned providers ("fk" < "scb"); churning `umu` is absent.
     (tmp_path / "fk.auto.toml").write_text(
         '[variable."1.personnummer"]\nslug = "personnummer"\n', encoding="utf-8"
     )
-    assert _untracked_pinned_autos(tmp_path) == ["fk.auto.toml"]
+    (tmp_path / "scb.auto.toml").write_text(
+        '[variable."1.kon"]\nslug = "kon"\n', encoding="utf-8"
+    )
+    assert _untracked_pinned_autos(tmp_path) == ["fk.auto.toml", "scb.auto.toml"]
 
-    # 2. Stage it (no commit needed — git ls-files reads the index) → cleared.
+    # 2. Stage both (no commit needed — git ls-files reads the index) → cleared.
     subprocess.run(
-        ["git", "add", "fk.auto.toml"],
+        ["git", "add", "fk.auto.toml", "scb.auto.toml"],
         cwd=tmp_path,
         capture_output=True,
         check=True,

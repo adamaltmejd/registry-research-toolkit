@@ -34,6 +34,7 @@ from reg_meta_build.fqid_slugs import (
     load_freeze_states,
     load_provider_toml,
     load_slug_dir,
+    pinned_zones,
     populate_slugs,
     populate_variable_slugs,
     precheck_slugs,
@@ -3282,6 +3283,9 @@ class TestLoadFreezeStates:
         # An unlisted (but present) provider still defaults churning.
         assert freeze_state(states, "unlisted") == "churning"
         assert frozen_zones(states) == frozenset({"scb"})
+        # `pinned_zones` is the auto.toml-OWES set: both frozen AND curating are
+        # pinned (the non-obvious "frozen treated same as curating" branch).
+        assert pinned_zones(states) == frozenset({"scb", "sos"})
 
     def test_classifications_zone_allowed(self, tmp_path: Path) -> None:
         # The reserved CLASSIFICATIONS_ZONE is a valid key even though there's
@@ -3290,6 +3294,15 @@ class TestLoadFreezeStates:
         states = load_freeze_states(d)
         assert states == {CLASSIFICATIONS_ZONE: "frozen"}
         assert frozen_zones(states) == frozenset({CLASSIFICATIONS_ZONE})
+
+    def test_classifications_zone_not_pinned(self, tmp_path: Path) -> None:
+        # The CLASSIFICATIONS_ZONE is grow-only-frozen like any zone, but it
+        # carries no per-provider `<provider>.auto.toml`, so `pinned_zones`
+        # excludes it even when sealed `frozen` (the exclusion branch).
+        d = self._dir(tmp_path, freeze_body=f'{CLASSIFICATIONS_ZONE} = "frozen"\n')
+        states = load_freeze_states(d)
+        assert frozen_zones(states) == frozenset({CLASSIFICATIONS_ZONE})
+        assert pinned_zones(states) == frozenset()
 
     def test_unknown_state_value_rejected(self, tmp_path: Path) -> None:
         d = self._dir(tmp_path, freeze_body='scb = "thawing"\n')
