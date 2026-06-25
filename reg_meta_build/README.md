@@ -16,6 +16,8 @@ reg-meta-build parse-sos         # parse Socialstyrelsen register metadata xlsx
 reg-meta-build same-as-candidates   # generate variable_same_as candidate pairs
 reg-meta-build entity-key-pins      # generate panel entity-key slug pins (all providers)
 reg-meta-build concept-group-candidates  # generate concept-group fold candidates
+reg-meta-build classification-residue    # classification-linkage residue worklist
+reg-meta-build doc-coverage              # diff doc-documented columns vs built variable_alias
 ```
 
 See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in

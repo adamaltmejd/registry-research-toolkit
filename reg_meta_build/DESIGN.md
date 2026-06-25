@@ -178,6 +178,7 @@ reg-meta-build same-as-candidates [--max-signal-fanout N] ...
 reg-meta-build entity-key-pins [-o TOML] [--slug-dir DIR] [--flavored]
 reg-meta-build concept-group-candidates [-o TOML] ...
 reg-meta-build classification-residue [-o TOML]
+reg-meta-build doc-coverage [-o TOML]
 ```
 
 The matching `reg-meta maintain *` forms are removed. `reg-meta maintain update` /
