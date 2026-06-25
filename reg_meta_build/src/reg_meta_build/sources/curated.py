@@ -229,10 +229,10 @@ class CuratedAdapter:
             registers.append(reg)
 
         # Validate `classification` references against the seed manifest in a
-        # single pass once everything is parsed (PROVIDER-AGNOSTIC: a declared
-        # but provider-gated short_name passes even in a build that won't seed
-        # it — the link just drops at feed time; only an UNDECLARED short_name,
-        # i.e. a typo, fails). Resolve the seed only when something references a
+        # single pass once everything is parsed (PROVIDER-AGNOSTIC: any declared
+        # short_name passes regardless of its `provider` tag — every declared
+        # classification is seeded; only an UNDECLARED short_name, i.e. a typo,
+        # fails). Resolve the seed only when something references a
         # classification, so a curated TOML with no `classification` keys needs
         # neither the seed nor `declared_short_names()`.
         if any(

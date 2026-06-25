@@ -75,9 +75,10 @@ def repo_seed_path() -> Path | None:
 
 def declared_short_names(seed_path: Path | None = None) -> frozenset[str]:
     """Every classification ``short_name`` declared in the seed, provider-agnostic
-    — includes provider-gated entries (e.g. ``provider = "sos"``) that a given
-    build may not seed. For build-time validation of references to a
-    classification (e.g. a curated thin-provider's ``classification`` link).
+    — includes provider-tagged entries (e.g. ``provider = "sos"``), all of which
+    are seeded (the ``provider`` tag is only their label-source). For build-time
+    validation of references to a classification (e.g. a curated thin-provider's
+    ``classification`` link).
 
     ``seed_path`` defaults to the in-repo seed via ``repo_seed_path()``; pass the
     build's own seed (``build_db(seed_path=...)``) so validation matches what

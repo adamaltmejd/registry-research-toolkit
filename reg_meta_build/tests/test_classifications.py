@@ -1087,11 +1087,13 @@ class _Graph:
         valid_to: int | None = None,
         slug: str | None = None,
     ) -> None:
-        """Seed a classification with `is_valid=NULL` canonical rows — the no-CSV
-        shape (ICD-10-SE in production): its observed codes ARE its code set, so
-        the detector's `is_valid IS NOT 0` filter must keep them. Same level rule
-        and same `supersedes_id`/`valid_from`/`valid_to`/`slug` fields as
-        `add_classification`."""
+        """Seed a classification with `is_valid=NULL` canonical rows — a no-CSV
+        shape where observed codes ARE the code set, so the detector's
+        `is_valid IS NOT 0` filter must keep them. No classification ships this
+        shape today (every classification now has a CSV); this is a defensive
+        guard for the NULL-tolerant filter, which we deliberately keep. Same
+        level rule and same `supersedes_id`/`valid_from`/`valid_to`/`slug` fields
+        as `add_classification`."""
         self.conn.execute(
             "INSERT INTO classification "
             "(id, short_name, name, slug, supersedes_id, valid_from, valid_to) "
@@ -1424,9 +1426,11 @@ class TestLinkValueSetClassifications:
 
     def test_no_csv_null_is_valid_codes_still_link(self) -> None:
         """A no-CSV classification carries `is_valid=NULL` canonical rows (its
-        observed codes ARE its code set — the ICD-10-SE production case). The
-        detector's `is_valid IS NOT 0` filter must keep NULL rows so a value set
-        enumerating those codes links."""
+        observed codes ARE its code set). No classification ships this shape today
+        (every classification now has a CSV); this is a defensive-guard regression
+        test that the detector's NULL-tolerant `is_valid IS NOT 0` filter — which
+        we deliberately keep — still lets a value set enumerating those codes
+        link."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()

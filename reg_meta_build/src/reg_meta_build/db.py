@@ -2153,9 +2153,9 @@ def _feed_classification_candidates(
     `classification` table and INSERTs the same `(variable_id, value_set_id,
     classification_id)` shape the SCB feed produces, so
     `_backfill_state_classifications` stays provider-blind (it reads only the
-    candidate table). Candidates whose short_name is absent (e.g. a
-    provider-skipped classification in an SCB-only build, or a typo) are
-    dropped — no row, no error. Returns the number of candidate rows inserted.
+    candidate table). Candidates whose short_name is absent (e.g. a typo, since
+    every declared classification is seeded) are dropped — no row, no error.
+    Returns the number of candidate rows inserted.
     """
     if not candidates:
         return 0
