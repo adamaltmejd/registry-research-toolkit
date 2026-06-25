@@ -40,17 +40,21 @@ foretagsenhetsnummer / verksamhetsenhetsnummer.
 - [x] P1 pilot kon/kommun/person-orgnr/civilstand → RULES tightened (MINIMIZE CHURN: no
   demote prose→cryptic, no invented `<prose>-<columncode>`); re-piloted clean. RULES
   frozen.
-- \[\~\] P2 round-1 fan-out COMPLETE (2,776/2,776 proposals; runs wf_feb94680-d0c +
-  wf_41688b4a-da2 after weekly-limit recovery). Validation: 7,142 renames / 7,048 keeps;
-  HARD_FAIL — 282 intra-register collisions (many true-twins → need -N; some
-  cross-concept), 193 cross-concept over-merge bases (e.g. alder-31-12→alder, postnummer
-  roles→postnr), 2 over-40 grammar, 1 dup sid, 1 missing (26.16). 705 round-2-flagged.
-  NEXT: round-2 resolution (conservative: -N true twins; REVERT cross-concept
-  over-merges to keep-distinct per mission default-distinct; fix grammar/dup/missing) →
-  re-validate → apply.
-- [ ] P3 apply (pin all) + repoint refs + rebuild + dbdiff vs db_base + base→concept
-  audit → fixpoint (0 worklist mismatch / 0 unintended ripple / 0 collision);
-  refresh snapshot
+- [x] P2 round-1 fan-out (2,776 proposals) + round-2 collision resolution
+  (wf_044a6ca4-dfb: 213 derived true-twin -N + 55 distinct-collision groups) +
+  round-3 cross-register over-merge review (wf_590f6323-241: 120 exact-slug shares
+  reviewed → 90 splits / 62 concepts; caught misleading-column slugs
+  (landareal/bransleslag/byggnader), historical code spaces
+  (fastighetens-officiella-nr), specific-vs-generic (utbildningssektor),
+  role-distinct emails) + 11 manual fixes. reconcile.py merges all layers; derived
+  twin sweep runs LAST. RECONCILE CLEAN: 7,307 renames (16 canonical), 0 collisions,
+  0 grammar.
+- \[\~\] P3 apply (744 in-place + \~6,492 appended incl 16 canonical + 4 clean-pins) +
+  repoint refs (panel 36, relations 666, classification_links 2) + rebuild → dbdiff vs
+  db_base (22/32 tables match; only slug-downstream moves; variable_state_lineage
+  IMPROVES +4,597/−2,333) + ripple fixpoint (4 clean-stability pins) → refresh snapshot.
+  Two apply bugs fixed: FQID-ref \b partial-match → negative-lookahead; `period` panel
+  sentinel wrongly remapped → excluded.
 - [ ] P4 canonical-SCB seed fold-in (verify minted pins resolve in rebuild)
 - [ ] P5 gates: ruff/ty/pytest(Docker UP)/panache; real-seed build-db on PR head +
   dbdiff (attach); /code-review high until clean; gh pr ready; Codex poll;

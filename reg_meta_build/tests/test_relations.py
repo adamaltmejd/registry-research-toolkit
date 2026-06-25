@@ -958,7 +958,7 @@ class TestMovedEdges:
             for e in rel.replaced_by
             if str(e.predecessor) == "class/sun1996"
         )
-        assert ("scb", "ekonomiskt-bistand", "belopp") in {
+        assert ("scb", "ekonomiskt-bistand", "utbetalt-belopp-till-hushallet") in {
             (e.a_provider, e.a_register, e.a_variable) for e in rel.related_to
         }
 
