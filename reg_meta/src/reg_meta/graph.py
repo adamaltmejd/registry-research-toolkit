@@ -40,7 +40,12 @@ from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
 
-from .catalog import OPEN_ENDED_VALID_TO, ResolvedVariable, _CatalogModel
+from .catalog import (
+    OPEN_ENDED_VALID_TO,
+    UNKNOWN_VALID_FROM,
+    ResolvedVariable,
+    _CatalogModel,
+)
 from .errors import EXIT_NOT_FOUND, RegMetaError
 from .fqid import Fqid
 
@@ -74,9 +79,10 @@ class GraphState(_CatalogModel):
     value_set_id: int | None
     value_set_version_label: str
     classification_slug: str | None
-    # ISO 'YYYY-MM-DD'; None = unknown/open start. The open-ended `9999-12-31`
-    # sentinel is normalized to None here (an open END), so the renderer's time
-    # axis reads "ongoing" rather than a year-9999 tick.
+    # ISO 'YYYY-MM-DD'; None = unknown/open start. The unknown-start `0001-01-01`
+    # sentinel is normalized to None here (mirroring the open-END `9999-12-31` →
+    # None below), so the renderer's time axis reads "unknown start" rather than a
+    # year-1 tick.
     valid_from: str | None
     valid_to: str | None
 
@@ -213,7 +219,7 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
                 value_set_id=s.value_set_id,
                 value_set_version_label=s.value_set_version_label,
                 classification_slug=s.classification_slug,
-                valid_from=s.valid_from,
+                valid_from=None if s.valid_from == UNKNOWN_VALID_FROM else s.valid_from,
                 valid_to=None if s.valid_to == OPEN_ENDED_VALID_TO else s.valid_to,
             )
         )
@@ -269,6 +275,14 @@ class _GraphBuilder:
         self._catalog = catalog
         self._nodes: dict[str, GraphNode] = {}
         self._edges: dict[str, GraphEdge] = {}
+        # Node ids that carry a FULLY hydrated variable node (states + same_as +
+        # group_key), as opposed to a THIN placeholder minted by `_ensure_edition_node`
+        # for a succession-chain edition reached before its own `add_variable`. A LIVE
+        # edition reached thin-first (as another node's predecessor/successor) must be
+        # UPGRADABLE when later added as the focus or a group member — otherwise it
+        # stays thin and violates the variable-node contract (#761). A dead/unresolvable
+        # edition that `resolve` rejects never enters this set, so it stays thin.
+        self._hydrated: set[str] = set()
         # Node-build dedup and related-expansion are decoupled: a node first reached
         # as another node's one-hop related neighbor (follow_related=False) builds the
         # node but does NOT expand its related edges, so a later focus/group-member
@@ -276,6 +290,15 @@ class _GraphBuilder:
         # on the already-built node — otherwise a member's one-hop neighbors would be
         # dropped purely by traversal order (#761).
         self._related_expanded: set[str] = set()
+        # Classification slugs `add_classification` has WALKED a chain FROM (been the
+        # anchor of). The early-out gates on THIS — not node-presence — because at a
+        # #579 SPLIT, `classification_chain(leaf)` returns only that leaf's linear path
+        # (root spine + its own subtree), NOT sibling branches. So a split predecessor P
+        # whose node already exists (minted as a descendant D's ancestor) still needs
+        # its OWN walk to surface P's other branches. Keying on anchor-walked walks each
+        # distinct member-anchor once (correct for splits) while still deduping repeat
+        # references to the same slug; the node/edge `setdefault` absorbs spine overlap.
+        self._class_anchors_walked: set[str] = set()
 
     def add_variable(self, fqid: Fqid, *, follow_related: bool = True) -> str | None:
         """Build the variable node for ``fqid`` (resolving same_as to canonical) and
@@ -303,9 +326,16 @@ class _GraphBuilder:
         if not isinstance(resolved, ResolvedVariable):
             return None
         node_id = str(resolved.canonical_fqid)
-        # Build the node (+ its succession chain) exactly once.
-        if node_id not in self._nodes:
+        # Build/hydrate the node exactly once, but UPGRADE a thin placeholder: a node
+        # may already exist as a thin `_ensure_edition_node` stub (reached first via a
+        # chain walk). Resolving here proves it is LIVE, so replace the stub with the
+        # full node. Walk the succession chain only on first build (it is idempotent
+        # via edge/node `setdefault`, but re-walking is wasted SQL).
+        first_build = node_id not in self._nodes
+        if node_id not in self._hydrated:
             self._nodes[node_id] = self._variable_node(resolved)
+            self._hydrated.add(node_id)
+        if first_build:
             self._add_succession(resolved.canonical_fqid)
         # Related expansion is gated separately: a follow_related=True arrival
         # completes the one-hop neighbor walk even on an already-built node, but
@@ -318,7 +348,16 @@ class _GraphBuilder:
         return node_id
 
     def _variable_node(self, resolved: ResolvedVariable) -> VariableGraphNode:
-        group_key = resolved.group.key if resolved.group is not None else None
+        # Concept-group keys are only register-unique, so namespace by
+        # provider/register to make `group_key` globally unique — a graph spanning >1
+        # register (cross-register related/succession) must not cluster two unrelated
+        # same-keyed groups together. Still STABLE across members of one group (all
+        # share provider/register/key), so the renderer clusters a group correctly.
+        group_key = (
+            f"{resolved.group.provider}/{resolved.group.register_name}/{resolved.group.key}"
+            if resolved.group is not None
+            else None
+        )
         node_id = str(resolved.canonical_fqid)
         return VariableGraphNode(
             id=node_id,
@@ -394,15 +433,19 @@ class _GraphBuilder:
         of truth, branch-aware at #579 splits). Returns the queried (self) edition's
         node id, or None when it doesn't resolve.
 
-        Early-out: if the queried edition's node is already present, the whole chain
-        was walked by a prior member (a SUN-style umbrella's niva/inriktning/grupp
-        members share one chain), so we skip re-walking ``classification_chain`` +
-        the predecessor SQL — the same node-dedup short-circuit ``add_variable``
-        has."""
+        Early-out: gated on whether THIS slug has already ANCHORED a walk, NOT on
+        node-presence. A SUN-style umbrella's niva/inriktning/grupp members share one
+        chain, so re-walking a previously-anchored slug is wasted SQL. But at a #579
+        SPLIT, `classification_chain(leaf)` returns only that leaf's linear path, so a
+        split predecessor P whose node already exists (as a descendant's ancestor) must
+        STILL walk its own chain to surface its other branches — a node-presence early-
+        out would wrongly skip them. The chain walk is idempotent under node/edge
+        `setdefault`, so re-anchoring a shared spine just dedups."""
         self_fqid = Fqid.classification_fqid(slug)
         self_node_id = str(self_fqid)
-        if self_node_id in self._nodes:
+        if slug in self._class_anchors_walked:
             return self_node_id
+        self._class_anchors_walked.add(slug)
         try:
             chain = self._catalog.classification_chain(self_fqid)
         except RegMetaError:

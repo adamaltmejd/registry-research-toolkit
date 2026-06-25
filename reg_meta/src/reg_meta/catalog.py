@@ -133,6 +133,11 @@ class CatalogSizes(_CatalogModel):
 # default). A window ending here is "ongoing" — it has no finite upper bound.
 OPEN_ENDED_VALID_TO = "9999-12-31"
 
+# The unknown/open-START `variable_state.valid_from` sentinel (scb.py's final
+# fallback). A window starting here has no known finite lower bound — the mirror of
+# `OPEN_ENDED_VALID_TO` on the start side.
+UNKNOWN_VALID_FROM = "0001-01-01"
+
 
 class VariableCoverage(_CatalogModel):
     """Coverage aggregate for one variable over its `variable_state` windows

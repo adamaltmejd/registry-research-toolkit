@@ -810,11 +810,13 @@ edition dedup, and the representation-run computation.
 (`ClassificationGraphNode`), discriminated by `kind`. A variable node carries its full
 `variable_state` history as sub-structure (`GraphState`, ordered
 `(variant, valid_from)`), plus `same_as[]` (resolved-away aliases, metadata) and a
-shared `group_key` (clustering metadata — there is **no** `group:<key>` node). A
-classification node carries a **point** `version_year` (never an interval — an edition
-is not "dead" after its successor; the edition's OWN vintage from the `classification`
-row's `valid_from`, NOT the supersession year — so the terminal current edition keeps
-its own year, not None) + `is_current`. Time semantics live on the node, so there is no
+shared `group_key` (clustering metadata — there is **no** `group:<key>` node; namespaced
+`provider/register/key` so a cross-register graph never clusters two unrelated
+same-keyed groups, since concept-group keys are only register-unique). A classification
+node carries a **point** `version_year` (never an interval — an edition is not "dead"
+after its successor; the edition's OWN vintage from the `classification` row's
+`valid_from`, NOT the supersession year — so the terminal current edition keeps its own
+year, not None) + `is_current`. Time semantics live on the node, so there is no
 top-level `mode`: the renderer draws a time axis when interval (variable) nodes are
 present and a version ordering when point-year (classification) nodes are. **Two edge
 kinds only**: `succession` (directed, predecessor→successor) and `related` (undirected —

@@ -12,6 +12,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from _slugged_db import (
+    add_register,
     add_state,
     add_value_set,
     add_variable,
@@ -346,6 +347,43 @@ class TestRepresentationRuns:
         assert by_from["2018-01-01"] == "2018-12-31"
         assert by_from["2019-01-01"] is None
 
+    def test_unknown_start_valid_from_sentinel_is_none(self) -> None:
+        # The `0001-01-01` unknown-START sentinel normalizes to None on the wire
+        # (mirroring the `9999-12-31` open-END → None), so the renderer reads "unknown
+        # start", not a year-1 tick. Two value-set-distinct states keep the node
+        # renderable; the earlier state carries the unknown-start sentinel.
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+        conn.execute("DELETE FROM variable_state")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="0001-01-01",
+            valid_to="2018-12-31",
+            delivery_column_name="Kon",
+            value_set_id=1,
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2019-01-01",
+            valid_to="2019-12-31",
+            delivery_column_name="Kon",
+            value_set_id=2,
+        )
+        conn.commit()
+        node = Catalog(conn).graph_for_fqid(_KON).nodes[0]
+        assert isinstance(node, VariableGraphNode)
+        by_to = {s.valid_to: s.valid_from for s in node.states}
+        # The unknown-start state's valid_from is normalized to None.
+        assert by_to["2018-12-31"] is None
+        assert by_to["2019-12-31"] == "2019-01-01"
+
 
 # ── Edges ────────────────────────────────────────────────────────────────────
 
@@ -373,6 +411,44 @@ class TestEdges:
         assert succ[0].source == "scb/lisa/kon"
         assert succ[0].target == "scb/lisa/civilstand"
         assert succ[0].label == "renamed"
+
+    def test_thin_chain_node_hydrated_when_later_a_member(self) -> None:
+        # P2-1 regression: focus A (kon) succeeds-to a LIVE successor B (civilstand)
+        # that is ALSO a group member. Walking A's succession chain reaches B FIRST as
+        # a thin `_ensure_edition_node` placeholder (states=[], group_key=None). When B
+        # later arrives as a group member, the node-dedup early-out must NOT leave it
+        # thin — B is a live variable node and must carry its full state history + its
+        # group_key, regardless of A being processed first.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "civilstand"),
+            reason="renamed",
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        nodes = {n.id: n for n in g.nodes}
+        b = nodes["scb/lisa/civilstand"]
+        assert isinstance(b, VariableGraphNode)
+        # B is hydrated: it carries its own state history and its group_key, not the
+        # thin placeholder it was first reached as.
+        assert b.states != []
+        assert b.group_key == "scb/lisa/demog"
 
     def test_undirected_related_dedups_from_both_ends(self) -> None:
         # The same relation seen from kon's and kon-alt's side must collapse to ONE
@@ -533,7 +609,9 @@ class TestVariableGroups:
         ids = {n.id for n in g.nodes}
         assert ids == {"scb/lisa/kon", "scb/lisa/civilstand"}
         assert g.focus_id == _KON
-        assert all(n.group_key == "demog" for n in g.nodes)
+        # group_key is namespaced by provider/register (register-only-unique keys must
+        # not collide across registers in a cross-register graph).
+        assert all(n.group_key == "scb/lisa/demog" for n in g.nodes)
 
     def test_group_addressed_has_no_focus(self) -> None:
         conn = build_slugged_db()
@@ -560,6 +638,50 @@ class TestVariableGroups:
     def test_unknown_group_is_none(self) -> None:
         conn = build_slugged_db()
         assert Catalog(conn).graph_for_group("scb", "lisa", "nope") is None
+
+    def test_group_key_namespaced_by_register(self) -> None:
+        # P2-2 regression: concept-group keys are only register-unique, so a graph
+        # spanning >1 register (a cross-register related edge here) must NOT emit the
+        # same `group_key` for two unrelated groups that happen to share a bare key.
+        # Two registers (lisa, other) each carry a group with the SAME bare key
+        # "demog"; their members are joined into one graph by a related edge.
+        # Namespacing by provider/register keeps the two clusters distinct.
+        conn = build_slugged_db()
+        add_register(conn, register_id=2, slug="other", name="OTHER")
+        add_variant(
+            conn, register_variant_id=20, register_id=2, slug="v-other", name="V"
+        )
+        add_variable(conn, register_id=2, var_id=90, name="Ink", slug="inkomst")
+        add_state(
+            conn,
+            register_id=2,
+            variable_slug="inkomst",
+            register_variant_id=20,
+            valid_from="2018-01-01",
+            delivery_column_name="Ink",
+        )
+        # Cross-register related edge joins kon (lisa) and inkomst (other) into one
+        # graph.
+        _seed_related(conn, ("scb", "lisa", "kon"), ("scb", "other", "inkomst"))
+        # Both registers have a group with the SAME bare key "demog".
+        _add_concept_group(
+            conn, group_id=40, register_id=1, group_key="demog", member_slugs=["kon"]
+        )
+        _add_concept_group(
+            conn,
+            group_id=41,
+            register_id=2,
+            group_key="demog",
+            member_slugs=["inkomst"],
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        by_id = {n.id: n for n in g.nodes}
+        kon = by_id["scb/lisa/kon"]
+        inkomst = by_id["scb/other/inkomst"]
+        # Same bare key, but namespaced → DIFFERENT group_key values.
+        assert kon.group_key == "scb/lisa/demog"
+        assert inkomst.group_key == "scb/other/demog"
+        assert kon.group_key != inkomst.group_key
 
     def test_group_shared_succession_edge_deduped(self) -> None:
         # Two group members where A (kon) is the predecessor of B (civilstand): the
@@ -709,6 +831,53 @@ class TestClassificationChains:
             "class/sun1996",
             "class/sun2000-niva",
         )
+
+    def test_split_predecessor_branches_walked_when_descendant_first(self) -> None:
+        # P2-3 regression: a #579 SPLIT root P (sun1996) fans out into 3 branches
+        # (niva/inriktning/grupp); a descendant D (sun2020-niva) sits on ONE branch.
+        # A group contains BOTH P and D, with D ordered FIRST (lower facet_value). When
+        # D is processed first, `classification_chain(D)` returns only D's linear path
+        # (sun1996 → sun2000-niva → sun2020-niva), so P's node exists but P's OTHER
+        # branches were never walked. The early-out must gate on whether P ANCHORED a
+        # walk (not on P's node-presence), so P's own walk still surfaces its sibling
+        # branches' editions + edges.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2000-inriktning", valid_from=2000)
+        _add_classification(conn, cid=4, slug="sun2000-grupp", valid_from=2000)
+        _add_classification(conn, cid=5, slug="sun2020-niva", valid_from=2020)
+        # P splits into 3 branches.
+        for succ in ("sun2000-niva", "sun2000-inriktning", "sun2000-grupp"):
+            _add_class_succession(
+                conn, predecessor="sun1996", successor=succ, effective_year=2000
+            )
+        # D extends the niva branch.
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-niva",
+            successor="sun2020-niva",
+            effective_year=2020,
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
+        )
+        # facet_value orders members: D (1) precedes P (2), so D is processed first.
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 12, ?, ?)",
+            [(5, "1", "niva-2020"), (1, "2", "root-1996")],
+        )
+        conn.commit()
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        ids = {n.id for n in g.nodes}
+        # P's OTHER branches (reached only via P's own walk) are present.
+        assert {"class/sun2000-inriktning", "class/sun2000-grupp"} <= ids
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        assert ("class/sun1996", "class/sun2000-inriktning") in edges
+        assert ("class/sun1996", "class/sun2000-grupp") in edges
 
     def test_lone_classification_group_of_one_is_empty(self) -> None:
         # A classification umbrella whose single member has NO succession chain →
