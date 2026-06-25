@@ -1062,7 +1062,9 @@ valid_codes_file = "isced-f2013.csv"
 # `vardemangdsversion` instance labels, so they tag no variable instances —
 # they seed only the canonical codes. PR2 wires SOS variable → classification
 # linkage; the short_names below are stable identifiers that linkage depends on.
-# An SCB-only build skips every entry in this section (provider gate).
+# These are always seeded (their canonical codes from the CSVs above); the
+# `provider` tag is only their label-source, so in an SCB-only build they simply
+# tag no SCB value-set instances — it no longer gates whether they are seeded.
 
 [[classification]]
 short_name = "ATC"

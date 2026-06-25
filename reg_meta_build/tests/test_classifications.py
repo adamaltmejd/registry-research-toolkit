@@ -50,6 +50,7 @@ publisher = "TEST"
 version = "1"
 valid_from = 2000
 url = "https://example.com/"
+valid_codes_file = "testkon.csv"
 vardemangdsversion = ["Kön"]
 
 [[classification]]
@@ -58,8 +59,18 @@ name = "Successor"
 publisher = "TEST"
 version = "2"
 valid_from = 2022
+valid_codes_file = "testkon2.csv"
 vardemangdsversion = ["Kon-2"]
 """
+
+# CSVs for TEST_SEED_TOML, written alongside the seed by `_build_with_seed`.
+# Codes mirror EXACTLY the observed codes so no canonical-but-unobserved rows
+# are inserted (keeps `code_count` assertions stable while satisfying the
+# always-seed `valid_codes_file` requirement).
+TEST_SEED_CSVS = {
+    "testkon.csv": "vardekod,vardebenamning\n1,Man\n2,Kvinna\n",
+    "testkon2.csv": "vardekod,vardebenamning\n10,Female\n20,Male\n30,Other\n",
+}
 
 
 def _make_input_dir(tmp_path: Path) -> Path:
@@ -79,12 +90,27 @@ class TestLoadSeed:
         seed = tmp_path / "c.toml"
         seed.write_text(
             '[[classification]]\nshort_name = "A"\nname = "A"\n'
+            'valid_codes_file = "a.csv"\n'
             'vardemangdsversion = ["x"]\n',
             encoding="utf-8",
         )
         entries = load_seed(seed)
         assert len(entries) == 1
         assert entries[0]["short_name"] == "A"
+
+    def test_missing_valid_codes_file_rejected(self, tmp_path: Path):
+        # Every classification must carry a valid_codes_file — it is what makes
+        # always-seed safe on a thin --providers build (the CSV supplies codes
+        # so the empty guard never trips). Omitting it fails fast.
+        seed = tmp_path / "c.toml"
+        seed.write_text(
+            '[[classification]]\nshort_name = "A"\nname = "A"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as ei:
+            load_seed(seed)
+        assert ei.value.code == "classification_seed_invalid"
+        assert "valid_codes_file" in ei.value.message
+        assert "A" in ei.value.message
 
     def test_empty_seed_rejected(self, tmp_path: Path):
         seed = tmp_path / "c.toml"
@@ -103,11 +129,14 @@ class TestLoadSeed:
         assert ei.value.code == "classification_seed_invalid"
 
     def test_vardemangdsversion_optional(self, tmp_path: Path):
-        # An entry with no vardemangdsversion is valid (provider-seeded
-        # canonical-codes-only classification — tags no instances).
+        # An entry with no vardemangdsversion is valid (canonical-codes-only
+        # classification — tags no instances). valid_codes_file is still
+        # required.
         seed = tmp_path / "c.toml"
         seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n', encoding="utf-8"
+            '[[classification]]\nshort_name = "A"\nname = "A"\n'
+            'valid_codes_file = "a.csv"\n',
+            encoding="utf-8",
         )
         entries = load_seed(seed)
         assert len(entries) == 1
@@ -117,9 +146,9 @@ class TestLoadSeed:
         seed = tmp_path / "c.toml"
         seed.write_text(
             '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'vardemangdsversion = ["x"]\n'
+            'valid_codes_file = "a.csv"\nvardemangdsversion = ["x"]\n'
             '[[classification]]\nshort_name = "A"\nname = "Other"\n'
-            'vardemangdsversion = ["y"]\n',
+            'valid_codes_file = "a2.csv"\nvardemangdsversion = ["y"]\n',
             encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as ei:
@@ -131,9 +160,9 @@ class TestLoadSeed:
         seed = tmp_path / "c.toml"
         seed.write_text(
             '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'vardemangdsversion = ["x"]\n'
+            'valid_codes_file = "a.csv"\nvardemangdsversion = ["x"]\n'
             '[[classification]]\nshort_name = "B"\nname = "B"\n'
-            'vardemangdsversion = ["x"]\n',
+            'valid_codes_file = "b.csv"\nvardemangdsversion = ["x"]\n',
             encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as ei:
@@ -158,6 +187,7 @@ class TestLoadSeed:
         seed = tmp_path / "c.toml"
         seed.write_text(
             '[[classification]]\nshort_name = "A"\nname = "A"\n'
+            'valid_codes_file = "a.csv"\n'
             "provider = 99\n"
             'vardemangdsversion = ["x"]\n',
             encoding="utf-8",
@@ -223,8 +253,21 @@ class TestLoadValidCodes:
 
 
 class TestPopulateClassifications:
-    def _build_with_seed(self, tmp_path: Path, seed_toml: str) -> tuple[Path, Path]:
+    def _build_with_seed(
+        self,
+        tmp_path: Path,
+        seed_toml: str,
+        csvs: dict[str, str] = TEST_SEED_CSVS,
+    ) -> tuple[Path, Path]:
         input_dir = _make_input_dir(tmp_path)
+
+        # Every classification needs a valid_codes_file (always-seed guarantee).
+        # Write the canonical CSVs under <input_dir>/classifications/ where
+        # build_db resolves valid_codes_dir.
+        cls_dir = input_dir / "classifications"
+        cls_dir.mkdir(parents=True, exist_ok=True)
+        for name, body in csvs.items():
+            (cls_dir / name).write_text(body, encoding="utf-8")
 
         seed = tmp_path / "classifications.toml"
         seed.write_text(seed_toml, encoding="utf-8")
@@ -240,18 +283,17 @@ class TestPopulateClassifications:
         seed_toml: str,
         csvs: dict[str, str],
         *,
-        providers: frozenset[str] | None,
-        referenced_classifications: frozenset[str] = frozenset(),
+        built_providers: frozenset[str] | None,
         instance_labels: tuple[str, ...] = (),
-    ) -> tuple[sqlite3.Connection, tuple[int, frozenset[str]]]:
+    ) -> tuple[sqlite3.Connection, int]:
         """Call populate_classifications directly on an empty in-memory schema.
 
-        Lets us assert the (n_seeded, skipped) return tuple and the provider
-        gate without the full build_db machinery (which never surfaces the
-        return value or accepts providers=None). ``instance_labels`` seeds a
-        minimal ``variable_instance`` row per label so a seed
-        ``vardemangdsversion`` string can be made to MATCH (the drift check only
-        reads ``value_set_version_label``).
+        Lets us assert the n_seeded return and the #597 drift scoping without
+        the full build_db machinery (which never surfaces the return value or
+        accepts built_providers=None). ``instance_labels`` seeds a minimal
+        ``variable_instance`` row per label so a seed ``vardemangdsversion``
+        string can be made to MATCH (the drift check only reads
+        ``value_set_version_label``).
         """
         from reg_meta_build.classifications import populate_classifications
         from reg_meta_build.db import DDL
@@ -272,19 +314,20 @@ class TestPopulateClassifications:
             "regver_id, var_id, value_set_version_label) VALUES (?, 1, 1, 1, 1, ?)",
             [(i, label) for i, label in enumerate(instance_labels, start=1)],
         )
-        result = populate_classifications(
+        n_seeded = populate_classifications(
             conn,
             seed,
             valid_codes_dir=cls_dir,
-            providers=providers,
-            referenced_classifications=referenced_classifications,
+            built_providers=built_providers,
         )
-        return conn, result
+        return conn, n_seeded
 
-    def test_provider_gating_and_return_shape(self, tmp_path: Path):
-        """populate_classifications skips provider-tagged entries absent from the
-        active set, seeds no-provider entries always, and returns the
-        (n_seeded, skipped_short_names) tuple. providers=None seeds everything.
+    def test_every_classification_seeded_regardless_of_providers(self, tmp_path: Path):
+        """Every classification is seeded regardless of `built_providers` —
+        classifications are shared standards with git-tracked CSVs, so a
+        provider-tagged entry (e.g. a SOS-tagged one) is seeded even on a build
+        that excludes its provider AND references it nowhere. `built_providers`
+        no longer gates seeding; it only scopes the #597 drift demotion.
         """
         seed_toml = (
             '[[classification]]\nshort_name = "SCBONLY"\nname = "SCB only"\n'
@@ -294,20 +337,21 @@ class TestPopulateClassifications:
         )
         csvs = {"scb.csv": "code,label\nA,Alpha\n", "sos.csv": "code,label\nX,Xray\n"}
 
-        # providers={scb}: the sos entry is skipped, the no-provider entry seeded.
-        conn, (n_seeded, skipped) = self._populate_direct(
-            tmp_path / "a", seed_toml, csvs, providers=frozenset({"scb"})
+        # built_providers={scb} (sos excluded, nothing references SOSENT): both
+        # entries are still seeded.
+        conn, n_seeded = self._populate_direct(
+            tmp_path / "a", seed_toml, csvs, built_providers=frozenset({"scb"})
         )
-        assert (n_seeded, skipped) == (1, frozenset({"SOSENT"}))
+        assert n_seeded == 2
         assert {
             r[0] for r in conn.execute("SELECT short_name FROM classification")
-        } == {"SCBONLY"}
+        } == {"SCBONLY", "SOSENT"}
 
-        # providers=None: everything seeded, nothing skipped.
-        conn2, (n2, skipped2) = self._populate_direct(
-            tmp_path / "b", seed_toml, csvs, providers=None
+        # built_providers=None (full build): everything seeded too.
+        conn2, n2 = self._populate_direct(
+            tmp_path / "b", seed_toml, csvs, built_providers=None
         )
-        assert (n2, skipped2) == (2, frozenset())
+        assert n2 == 2
         assert {
             r[0] for r in conn2.execute("SELECT short_name FROM classification")
         } == {"SCBONLY", "SOSENT"}
@@ -326,8 +370,8 @@ class TestPopulateClassifications:
             'valid_codes_file = "b.csv"\n'
         )
         csvs = {"a.csv": "code,label\nA,Alpha\n", "b.csv": "code,label\nB,Bravo\n"}
-        conn, (n_seeded, _skipped) = self._populate_direct(
-            tmp_path, seed_toml, csvs, providers=None
+        conn, n_seeded = self._populate_direct(
+            tmp_path, seed_toml, csvs, built_providers=None
         )
         assert n_seeded == 2
         rows = conn.execute("SELECT supersedes_id FROM classification").fetchall()
@@ -344,13 +388,13 @@ class TestPopulateClassifications:
         )
         csvs = {"absent.csv": "code,label\nA,Alpha\n"}
         # scb (the untagged label-source) is absent → demote, don't raise.
-        conn, (n_seeded, skipped) = self._populate_direct(
+        conn, n_seeded = self._populate_direct(
             tmp_path,
             seed_toml,
             csvs,
-            providers=frozenset({"sos"}),
+            built_providers=frozenset({"sos"}),
         )
-        assert (n_seeded, skipped) == (1, frozenset())
+        assert n_seeded == 1
         assert {
             r[0] for r in conn.execute("SELECT short_name FROM classification")
         } == {"ABSENT"}
@@ -371,51 +415,31 @@ class TestPopulateClassifications:
                 tmp_path,
                 seed_toml,
                 csvs,
-                providers=frozenset({"scb"}),
+                built_providers=frozenset({"scb"}),
             )
         assert ei.value.code == "classification_seed_drift"
 
-    def test_tagged_shared_kept_when_referenced(self, tmp_path: Path):
-        """#597 P2 #1: a classification tagged provider="sos" is SEEDED on a
-        --providers fk build (sos not built) when a built provider references it
-        (referenced_classifications). Its unmatched sos labels are DEMOTED
-        (label-source sos ∉ {fk}) → no raise."""
+    def test_tagged_shared_seeded_and_demoted_when_source_unbuilt(self, tmp_path: Path):
+        """#597: a classification tagged provider="sos" is SEEDED on a
+        --providers fk build (sos not built), and its unmatched sos labels are
+        DEMOTED (label-source sos ∉ {fk}) → no raise. Seeding no longer depends
+        on a built provider referencing it."""
         seed_toml = (
             '[[classification]]\nshort_name = "ICD-10-SE"\nname = "ICD"\n'
             'provider = "sos"\nvalid_codes_file = "icd.csv"\n'
             'vardemangdsversion = ["sos-only-label"]\n'
         )
         csvs = {"icd.csv": "code,label\nA01,Alpha\n"}
-        conn, (n_seeded, skipped) = self._populate_direct(
+        conn, n_seeded = self._populate_direct(
             tmp_path,
             seed_toml,
             csvs,
-            providers=frozenset({"fk"}),
-            referenced_classifications=frozenset({"ICD-10-SE"}),
+            built_providers=frozenset({"fk"}),
         )
-        assert (n_seeded, skipped) == (1, frozenset())
+        assert n_seeded == 1
         assert {
             r[0] for r in conn.execute("SELECT short_name FROM classification")
         } == {"ICD-10-SE"}
-
-    def test_tagged_skipped_when_neither_built_nor_referenced(self, tmp_path: Path):
-        """#597 P2 #1 (negative): the same tagged entry is SKIPPED on a
-        --providers fk build when nothing references it — no row, in `skipped`."""
-        seed_toml = (
-            '[[classification]]\nshort_name = "ICD-10-SE"\nname = "ICD"\n'
-            'provider = "sos"\nvalid_codes_file = "icd.csv"\n'
-            'vardemangdsversion = ["sos-only-label"]\n'
-        )
-        csvs = {"icd.csv": "code,label\nA01,Alpha\n"}
-        conn, (n_seeded, skipped) = self._populate_direct(
-            tmp_path,
-            seed_toml,
-            csvs,
-            providers=frozenset({"fk"}),
-            referenced_classifications=frozenset(),
-        )
-        assert (n_seeded, skipped) == (0, frozenset({"ICD-10-SE"}))
-        assert conn.execute("SELECT COUNT(*) FROM classification").fetchone()[0] == 0
 
     def test_mixed_classification_hard_errors(self, tmp_path: Path):
         """#597: a classification with one MATCHED and one unmatched version
@@ -432,8 +456,7 @@ class TestPopulateClassifications:
                 tmp_path,
                 seed_toml,
                 csvs,
-                providers=frozenset({"fk"}),
-                referenced_classifications=frozenset({"MIXED"}),
+                built_providers=frozenset({"fk"}),
                 instance_labels=("present",),
             )
         assert ei.value.code == "classification_seed_drift"
@@ -442,7 +465,7 @@ class TestPopulateClassifications:
         assert "present" not in ei.value.message
 
     def test_full_build_still_strict_on_drift(self, tmp_path: Path):
-        """#597: an unmatched seed on a full build (providers=None) still
+        """#597: an unmatched seed on a full build (built_providers=None) still
         hard-errors classification_seed_drift — the label-source is always
         treated as built."""
         seed_toml = (
@@ -456,7 +479,7 @@ class TestPopulateClassifications:
                 tmp_path,
                 seed_toml,
                 csvs,
-                providers=None,
+                built_providers=None,
             )
         assert ei.value.code == "classification_seed_drift"
 
@@ -565,10 +588,13 @@ class TestPopulateClassifications:
         # source_built → HARD drift, so the build raises even on this subset.
         seed = (
             '[[classification]]\nshort_name = "GHOST"\nname = "No such label"\n'
+            'valid_codes_file = "ghost.csv"\n'
             'vardemangdsversion = ["this-string-never-appears"]\n'
         )
         with pytest.raises(RegMetaError) as ei:
-            self._build_with_seed(tmp_path, seed)
+            self._build_with_seed(
+                tmp_path, seed, {"ghost.csv": "vardekod,vardebenamning\nG,Ghost\n"}
+            )
         assert ei.value.code == "classification_seed_drift"
 
     def test_valid_codes_csv_marks_codes(self, tmp_path: Path):
@@ -711,20 +737,6 @@ class TestPopulateClassifications:
                 skip_slugs=True,
             )
         assert ei.value.code == "classification_csv_dir_missing"
-
-    def test_no_csv_keeps_is_valid_null(self, tmp_path: Path):
-        """Classifications without a CSV: every is_valid is NULL,
-        valid_code_count is NULL.
-        """
-        db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
-        conn = sqlite3.connect(db)
-        conn.row_factory = sqlite3.Row
-        rows = conn.execute("SELECT is_valid FROM classification_code").fetchall()
-        assert all(r["is_valid"] is None for r in rows)
-        vcc = conn.execute(
-            "SELECT valid_code_count FROM classification WHERE short_name='TESTKON'"
-        ).fetchone()[0]
-        assert vcc is None
 
     def test_shared_vardekod_binds_canonical_label(self, tmp_path: Path):
         """Two classifications can share a vardekod with different canonical
@@ -1075,11 +1087,13 @@ class _Graph:
         valid_to: int | None = None,
         slug: str | None = None,
     ) -> None:
-        """Seed a classification with `is_valid=NULL` canonical rows — the no-CSV
-        shape (ICD-10-SE in production): its observed codes ARE its code set, so
-        the detector's `is_valid IS NOT 0` filter must keep them. Same level rule
-        and same `supersedes_id`/`valid_from`/`valid_to`/`slug` fields as
-        `add_classification`."""
+        """Seed a classification with `is_valid=NULL` canonical rows — a no-CSV
+        shape where observed codes ARE the code set, so the detector's
+        `is_valid IS NOT 0` filter must keep them. No classification ships this
+        shape today (every classification now has a CSV); this is a defensive
+        guard for the NULL-tolerant filter, which we deliberately keep. Same
+        level rule and same `supersedes_id`/`valid_from`/`valid_to`/`slug` fields
+        as `add_classification`."""
         self.conn.execute(
             "INSERT INTO classification "
             "(id, short_name, name, slug, supersedes_id, valid_from, valid_to) "
@@ -1412,9 +1426,11 @@ class TestLinkValueSetClassifications:
 
     def test_no_csv_null_is_valid_codes_still_link(self) -> None:
         """A no-CSV classification carries `is_valid=NULL` canonical rows (its
-        observed codes ARE its code set — the ICD-10-SE production case). The
-        detector's `is_valid IS NOT 0` filter must keep NULL rows so a value set
-        enumerating those codes links."""
+        observed codes ARE its code set). No classification ships this shape today
+        (every classification now has a CSV); this is a defensive-guard regression
+        test that the detector's NULL-tolerant `is_valid IS NOT 0` filter — which
+        we deliberately keep — still lets a value set enumerating those codes
+        link."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
@@ -2689,10 +2705,10 @@ class TestKvaMergedCsv:
         conn = sqlite3.connect(":memory:")
         conn.executescript(DDL)
         # Does not raise classification_csv_invalid (duplicate vardekod).
-        n_seeded, skipped = populate_classifications(
-            conn, seed, valid_codes_dir=cls_dir, providers=frozenset({"sos"})
+        n_seeded = populate_classifications(
+            conn, seed, valid_codes_dir=cls_dir, built_providers=frozenset({"sos"})
         )
-        assert (n_seeded, skipped) == (1, frozenset())
+        assert n_seeded == 1
         row = conn.execute(
             "SELECT short_name, code_count FROM classification"
         ).fetchone()
@@ -2729,6 +2745,13 @@ def _run_json(db_dir: Path, args: list[str]) -> tuple[dict, int]:
 def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     tmp = tmp_path_factory.mktemp("cls")
     input_dir = _make_input_dir(tmp)
+
+    # TEST_SEED_TOML declares a valid_codes_file per entry (always-seed
+    # requirement); write the CSVs where build_db resolves valid_codes_dir.
+    cls_dir = input_dir / "classifications"
+    cls_dir.mkdir(parents=True, exist_ok=True)
+    for name, body in TEST_SEED_CSVS.items():
+        (cls_dir / name).write_text(body, encoding="utf-8")
 
     seed = tmp / "classifications.toml"
     seed.write_text(TEST_SEED_TOML, encoding="utf-8")
@@ -2779,15 +2802,15 @@ class TestCli:
         )
         assert code == 2  # EXIT_USAGE
 
-    def test_only_valid_empty_for_no_csv(self, classification_db: Path):
-        # The fixture seed has no valid_codes_file, so --only-valid returns []
-        # (is_valid is NULL everywhere → no rows match is_valid=1).
+    def test_only_valid_returns_canonical_codes(self, classification_db: Path):
+        # TESTKON's CSV declares codes 1 and 2 as canonical (is_valid=1), so
+        # --only-valid returns both.
         data, code = _run_json(
             classification_db,
             ["get", "classification", "TESTKON", "--codes", "--only-valid"],
         )
         assert code == 0
-        assert data["codes"] == []
+        assert [c["code"] for c in data["codes"]] == ["1", "2"]
 
     def test_codes_filtered_by_level(self, classification_db: Path):
         data, code = _run_json(

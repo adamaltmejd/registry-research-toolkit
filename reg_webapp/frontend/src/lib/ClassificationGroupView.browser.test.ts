@@ -24,19 +24,19 @@ function node(
     key: "sun",
     label: "Svensk utbildningsnomenklatur",
     source: "token",
-    axes: ["dimension"],
+    // Classification umbrellas are AXIS-LESS (`axes: []`, #516); each member
+    // carries a curated `{axis: null, label}` facet (its short label).
+    axes: [],
     members: [
       {
         fqid: "class/niva-test",
         name: "Utbildningsnivå – aggregat",
-        facets: [{ axis: "dimension", value: "aggregat", label: "Aggregat" }],
+        facets: [{ axis: null, value: "aggregat", label: "Aggregat" }],
       },
       {
         fqid: "class/sun2020",
         name: "Svensk utbildningsnomenklatur",
-        facets: [
-          { axis: "dimension", value: "niva", label: "Utbildningsnivå" },
-        ],
+        facets: [{ axis: null, value: "niva", label: "Utbildningsnivå" }],
       },
     ],
     ...overrides,
@@ -74,7 +74,7 @@ describe("ClassificationGroupView (#756)", () => {
       .toHaveAttribute("href", "/catalog/class/niva-test");
   });
 
-  it("demotes key, facets, and source into a 'Technical details' disclosure", async () => {
+  it("demotes key + source into a 'Technical details' disclosure, OMITTING the Facets row when axis-less", async () => {
     vi.mocked(getClassificationGroup).mockResolvedValue(node());
 
     await render(ClassificationGroupView, { key: "sun" });
@@ -85,7 +85,9 @@ describe("ClassificationGroupView (#756)", () => {
     );
     expect(disclosure).not.toBeNull();
     expect(disclosure?.textContent).toContain("sun");
-    expect(disclosure?.textContent).toContain("dimension");
+    // Axis-less umbrella (`axes: []`) → the "Facets" dt/dd is gated out
+    // (`{#if node.axes.length > 0}`), so the disclosure has no Facets row.
+    expect(disclosure?.textContent).not.toContain("Facets");
   });
 
   it("shows a 404 not-found message for an unknown umbrella key", async () => {

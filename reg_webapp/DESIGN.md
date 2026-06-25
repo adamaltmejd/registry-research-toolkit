@@ -278,15 +278,16 @@ reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` li
 grouped members appear in both, so the contract stays additive and group-unaware
 consumers keep working. The SPA folds client-side (`catalog.ts::foldGroupedRows`):
 grouped leaves hide under one expandable `ConceptGroupRow` (a month×rank value matrix
-for two facet axes, chips for one — months/vintages — and a plain member list for edge
-groups), ungrouped leaves render as before, and the type-to-filter matches a group on
-its label/key OR any member's name/FQID (`groupMatchesFilter`) so member searches still
-surface the folded group. The CatalogPicker's variable list folds the same way (#322):
-`ConceptGroupRow` takes an optional `onpick` that renders members as pick buttons
-instead of catalogHref links, and the picker's `rankFilter` ranks a group row on
-`groupFilterKeys` (the shared match set behind `groupMatchesFilter`); a picked member
-rides the same derive-on-pick path as a leaf row. `foldGroupedRows` tolerates a stale
-pre-`groups` edge-cached payload (#317) by degrading to the flat list.
+for two facet axes, chips for faceted members — months/vintages in single-axis variable
+groups, curated labels in axis-less classification umbrellas — and a plain member list
+for edge groups), ungrouped leaves render as before, and the type-to-filter matches a
+group on its label/key OR any member's name/FQID (`groupMatchesFilter`) so member
+searches still surface the folded group. The CatalogPicker's variable list folds the
+same way (#322): `ConceptGroupRow` takes an optional `onpick` that renders members as
+pick buttons instead of catalogHref links, and the picker's `rankFilter` ranks a group
+row on `groupFilterKeys` (the shared match set behind `groupMatchesFilter`); a picked
+member rides the same derive-on-pick path as a leaf row. `foldGroupedRows` tolerates a
+stale pre-`groups` edge-cached payload (#317) by degrading to the flat list.
 
 **`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries (`consumer_state_id`,
 `source_state_id`, the validity intersection, `source_fqid`). A richer per-source-state

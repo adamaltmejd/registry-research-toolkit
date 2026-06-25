@@ -287,11 +287,11 @@ export function nodeLabel(node: CatalogNode): string {
 }
 
 /** The plural noun for a concept group's member count, derived from its single
- * facet axis (e.g. "dimension" → "dimensions"). Classification umbrella groups
- * are single-axis (#516); we derive the noun from that axis rather than
- * hardcoding "vintages" (succession editions aren't groups, #571). Naive +"s"
- * is enough for the axis vocabulary (dimension, month, …); a group with no axis
- * falls back to "members". */
+ * facet axis (e.g. "dimension" → "dimensions"). Variable groups still derive the
+ * noun from their single axis; classification umbrella groups are axis-less (#516),
+ * so they hit the no-axis fallback and render as "members". Naive +"s" is enough
+ * for the axis vocabulary (dimension, month, …); a group with no axis falls back
+ * to "members". */
 export function axisNoun(axes: string[]): string {
   const axis = axes[0];
   return axis ? `${axis}s` : "members";

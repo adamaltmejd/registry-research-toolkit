@@ -970,14 +970,15 @@ CREATE TABLE concept_group (
     label       TEXT NOT NULL,
     source      TEXT NOT NULL CHECK (source IN ('edge', 'token', 'curated')),
     -- The group's SINGLE facet axis: 'month' for a token month group, the
-    -- curated `axis` for a curated variable/classification family (e.g.
-    -- 'rank' for the LISA agi rank facet, 'dimension' for the SUN umbrella —
-    -- niva/inriktning/grupp). Members carry their value/label on this one axis
-    -- inline (`concept_group_variable.facet_value`/`facet_label` for variables,
-    -- `concept_group_classification.facet_value`/`facet_label` for
-    -- classifications). NULL for edge groups (the member list IS the
-    -- presentation — no facet) and for the retained-but-empty derived
-    -- classification machinery. Single-axis is enforced by this one-column
+    -- curated `axis` for a curated variable family (e.g. 'rank' for the LISA agi
+    -- rank facet). NULL for: edge groups (the member list IS the presentation —
+    -- no facet), the retained-but-empty derived classification machinery, AND
+    -- curated `[[classification_group]]` umbrellas (SUN/ISCED/NordDRG) — those
+    -- are axis-less (members are distinct classifications, not points on a
+    -- scale), so the umbrella carries no axis while each member still keeps its
+    -- own `concept_group_classification.facet_value`/`facet_label` inline. A
+    -- curated variable family's members carry their value/label inline on
+    -- `concept_group_variable`. At most one axis is enforced by this one-column
     -- shape, not by convention. #516/#585.
     facet_axis  TEXT,
     CHECK ((kind = 'variable') = (register_id IS NOT NULL))
@@ -992,14 +993,18 @@ CREATE INDEX idx_concept_group_register ON concept_group(register_id);
 
 -- Membership, one table per kind (avoids nullable composite PKs). The
 -- single-column PK enforces the at-most-one-group invariant per member. Each
--- member carries its facet on the group's SINGLE axis (`concept_group.facet_axis`)
--- inline: `facet_value` sorts (zero-padded month '05', rank '1'), `facet_label`
--- displays ('maj', 'största förvärvskällan'). Both are NULL for edge-group
--- members (the member list IS the presentation — no facet). INVARIANT: a
--- member's `facet_value`/`facet_label` are non-NULL iff its group's
--- `facet_axis` is non-NULL (token/curated groups) and NULL for edge groups
--- (`facet_axis` NULL). #585 dropped the multi-axis `concept_group_variable_facet`
--- table — the corpus carries only single-axis groups, so the facet moves inline
+-- member carries its facet value/label inline: `facet_value` sorts (zero-padded
+-- month '05', rank '1'), `facet_label` displays ('maj', 'största
+-- förvärvskällan'). Both are NULL for edge-group members (the member list IS the
+-- presentation — no facet). VARIABLE-member INVARIANT (validated, #585): a
+-- `concept_group_variable` member's `facet_value`/`facet_label` are non-NULL iff
+-- its group's `facet_axis` is non-NULL (token/curated groups) and NULL for edge
+-- groups (`facet_axis` NULL). `concept_group_classification` members do NOT obey
+-- this coupling: curated `[[classification_group]]` umbrellas are AXIS-LESS
+-- (`facet_axis` NULL) yet each member keeps a non-NULL `facet_value`/`facet_label`
+-- (its own short picker label), so the iff invariant is variable-only. #585
+-- dropped the multi-axis `concept_group_variable_facet` table — the corpus
+-- carries only single-axis (or axis-less) groups, so the facet moves inline
 -- here, mirroring `concept_group_classification`, and multi-axis is now
 -- unrepresentable by schema shape.
 CREATE TABLE concept_group_variable (
@@ -2153,9 +2158,9 @@ def _feed_classification_candidates(
     `classification` table and INSERTs the same `(variable_id, value_set_id,
     classification_id)` shape the SCB feed produces, so
     `_backfill_state_classifications` stays provider-blind (it reads only the
-    candidate table). Candidates whose short_name is absent (e.g. a
-    provider-skipped classification in an SCB-only build, or a typo) are
-    dropped — no row, no error. Returns the number of candidate rows inserted.
+    candidate table). Candidates whose short_name is absent (e.g. a typo, since
+    every declared classification is seeded) are dropped — no row, no error.
+    Returns the number of candidate rows inserted.
     """
     if not candidates:
         return 0
@@ -3203,20 +3208,6 @@ def materialize(
     # concept-group families whose provider isn't in this build are skipped,
     # not errors (a `--providers=sos` build must not fail on an scb entry).
     active_providers = frozenset(a.provider for a, _ in adapters)
-    # #597 P2 #1: short_names a BUILT provider references via a curated
-    # `classification = "..."` link. Classifications are shared standards (e.g.
-    # FK references SOS-tagged ICD-10-SE), so a referenced classification must be
-    # SEEDED even when its label-source provider isn't built — otherwise the
-    # referencing variables go unclassified. The adapter loop above fully drained
-    # each adapter's emit() (populating `classification_candidates`), so the
-    # candidate side channel is complete here. SCB feeds candidates via SQL, not
-    # this attribute (getattr default []); only SOS + curated thin providers
-    # expose it.
-    referenced_classifications = frozenset(
-        short
-        for adapter, _src in adapters
-        for (_vid, _vsid, short) in getattr(adapter, "classification_candidates", [])
-    )
 
     # Curated pairwise relations (#522): one typed `[[edge]]` surface loaded
     # ONCE here, then materialized into its three table groups — `related_to`
@@ -3225,11 +3216,10 @@ def materialize(
     # installs).
     relations = load_relations(repo_relations_path())
 
-    # Classifications — maintainer-curated normalized code systems.
-    # Provider-skipped classifications (seed entries whose `provider` is set but
-    # absent from this build) are threaded into populate_slugs so their slug
-    # entries don't raise on the missing DB row.
-    skipped_classifications: frozenset[str] = frozenset()
+    # Classifications — maintainer-curated normalized code systems. Every
+    # classification is seeded regardless of `--providers` (shared standards with
+    # git-tracked canonical-code CSVs), so there are no provider-skipped entries
+    # to thread anywhere.
     if skip_classifications:
         _progress("Skipping classifications (skip_classifications=True)")
     else:
@@ -3250,17 +3240,14 @@ def materialize(
                 ),
             )
         valid_codes_dir = cls_dir if cls_dir.is_dir() else None
-        # Provider gate: seed only classifications whose provider is in this
-        # build (entries with no provider are always seeded).
-        # #597 P2s: `providers` gates seeding + per-classification label-source
-        # drift; `referenced_classifications` keeps a shared classification a
-        # built provider references even when its label-source isn't built.
-        n_classifications, skipped_classifications = populate_classifications(
+        # Every classification is seeded; `built_providers` only scopes the #597
+        # per-classification seed-drift demotion (a label-source provider that
+        # isn't built relaxes its classification's unmatched-string drift).
+        n_classifications = populate_classifications(
             conn,
             seed,
             valid_codes_dir=valid_codes_dir,
-            providers=active_providers,
-            referenced_classifications=referenced_classifications,
+            built_providers=active_providers,
         )
         row_counts["classifications.toml"] = n_classifications
 
@@ -3286,12 +3273,7 @@ def materialize(
                     "`reg-meta update` to fetch the prebuilt DB."
                 ),
             )
-        populate_slugs(
-            conn,
-            slug_root,
-            strict=True,
-            skipped_classifications=skipped_classifications,
-        )
+        populate_slugs(conn, slug_root, strict=True)
 
         # Period column-family merges (#319) — fold each curated family's period
         # (today, month) columns into ONE variable BEFORE variable slugs are

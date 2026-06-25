@@ -53,11 +53,12 @@ never claims an already-grouped member):
      attachments). An auto family folds ONLY when accepted; unaccepted ones
      never materialize.
    - ``[[classification_group]]`` (#516) — a curated ``kind='classification'``
-     umbrella over genuinely-DISTINCT classification dimensions (the SUN group
-     over niva/inriktning/grupp; NOT vintage editions, which are #571 succession
-     edges), single ``axis`` stored on ``concept_group.facet_axis``. Catalog-
-     scoped (classifications are global), materialized by
-     ``_apply_curated_classification_groups``.
+     umbrella over genuinely-DISTINCT classifications (the SUN group over
+     niva/inriktning/grupp; NOT vintage editions, which are #571 succession
+     edges). AXIS-LESS — ``concept_group.facet_axis`` stays NULL (members are
+     distinct classifications, not points on a scale); each member keeps its own
+     short ``value``/``label``. Catalog-scoped (classifications are global),
+     materialized by ``_apply_curated_classification_groups``.
    All kinds fail fast on unresolvable references (EXIT_CONFIG).
 
 When the interval-native model (#271) lands its column→variable merges, the
@@ -215,9 +216,10 @@ class Accept:
 @dataclass(frozen=True)
 class ClassificationGroupMember:
     """One member of a curated CLASSIFICATION umbrella group: the `classification`
-    slug (catalog-global, e.g. `sun2020-niva`) and its `value`/`label` on the
-    group's single `axis` (the SUN group's `dimension` axis → 'niva'/'inriktning'/
-    'grupp')."""
+    slug (catalog-global, e.g. `sun2020-niva`) and its curated short `value`/
+    `label` (the picker label, e.g. 'niva'/'Utbildningsnivå'). These stay
+    populated even though the umbrella is axis-less — they are the member's own
+    label, not a point on a shared group axis."""
 
     classification: str
     value: str
@@ -226,16 +228,19 @@ class ClassificationGroupMember:
 
 @dataclass(frozen=True)
 class ClassificationGroup:
-    """One curated `[[classification_group]]` umbrella (#516): a single-axis fold
-    over genuinely-DISTINCT classification dimensions (NOT vintage editions —
-    those are #571 succession edges). `axis` is the one shared facet axis stored
-    on `concept_group.facet_axis`; every member sits on it. Catalog-scoped
-    (classifications are global), so unlike `CuratedGroup` it carries no
+    """One curated `[[classification_group]]` umbrella (#516): a fold over
+    genuinely-DISTINCT classifications (NOT vintage editions — those are #571
+    succession edges). AXIS-LESS — the members are distinct classifications, not
+    points on a shared scale, so `axis` is optional and normally None
+    (`concept_group.facet_axis` stays NULL; the webapp renders the member-noun as
+    "members"). A provided `axis` is still accepted (the loader does not require
+    it). Each member keeps its own short `value`/`label` regardless. Catalog-
+    scoped (classifications are global), so unlike `CuratedGroup` it carries no
     provider/register."""
 
     key: str
     label: str
-    axis: str
+    axis: str | None
     members: tuple[ClassificationGroupMember, ...]
 
 
@@ -494,16 +499,18 @@ def resolve_accept(
 
 
 def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, ...]:
-    """Parse the curated `[[classification_group]]` umbrella tables (#516): a
-    single-axis fold over genuinely-distinct classification dimensions (the SUN
-    group over niva/inriktning/grupp). Empty when no file (synthetic builds,
-    wheel installs) or no `[[classification_group]]` tables.
+    """Parse the curated `[[classification_group]]` umbrella tables (#516): an
+    AXIS-LESS fold over genuinely-distinct classifications (the SUN group over
+    niva/inriktning/grupp). Empty when no file (synthetic builds, wheel installs)
+    or no `[[classification_group]]` tables.
 
-    Load-time validation (all EXIT_CONFIG, actionable): `key`/`label`/`axis`
-    non-empty strings; `members` a non-empty array of tables, each setting
-    non-empty `classification` (slug) / `value` / `label`; member slugs unique;
-    `key` unique; >= 2 members. Slug RESOLUTION (does the classification exist?)
-    happens at materialize time against the built DB."""
+    Load-time validation (all EXIT_CONFIG, actionable): `key`/`label` non-empty
+    strings; `axis` OPTIONAL (None when absent — the umbrella is axis-less; a
+    present-but-blank `axis` is still rejected via `_require_opt_str`); `members`
+    a non-empty array of tables, each setting non-empty `classification` (slug) /
+    `value` / `label`; member slugs unique; `key` unique; >= 2 members. Slug
+    RESOLUTION (does the classification exist?) happens at materialize time
+    against the built DB."""
     entries = load_curation_entries(
         path,
         entry_key="classification_group",
@@ -511,7 +518,7 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
         prefix="concept_groups",
         code_base="concept_groups",
         file_name="concept_groups.toml",
-        entry_fields="key / label / axis / members",
+        entry_fields="key / label / members (+ optional axis)",
         sibling_keys=frozenset({"variable_group", "accept"}),
     )
     out: list[ClassificationGroup] = []
@@ -519,7 +526,7 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
     for entry in entries:
         key = _require_str(entry, "key", "[[classification_group]]")
         label = _require_str(entry, "label", "[[classification_group]]")
-        axis = _require_str(entry, "axis", "[[classification_group]]")
+        axis = _require_opt_str(entry, "axis", "[[classification_group]]")
         if key in seen_keys:
             raise curation_error(
                 "concept_groups_invalid",
@@ -1143,9 +1150,11 @@ def _apply_curated_classification_groups(
     """Curated classification umbrella groups (#516): the `kind='classification'`
     dual of `_apply_curated_groups`. Each group inserts a `concept_group` row
     (register_id NULL — classifications are catalog-global; `facet_axis` = the
-    group's single axis), then resolves every member's `classification` slug
-    globally and wires it as a `concept_group_classification` row carrying the
-    member's facet `value`/`label`. Every dangling slug or already-grouped
+    group's axis, normally None since the umbrella is axis-less — `_insert_group`
+    stores NULL), then resolves every member's `classification` slug globally and
+    wires it as a `concept_group_classification` row carrying the member's
+    `value`/`label` (kept inline regardless of the absent group axis). Every
+    dangling slug or already-grouped
     classification fails the build (EXIT_CONFIG) — curation drift is fixed, not
     silently dropped. Mirrors `_apply_curated_groups`' error style."""
     n_groups = 0
@@ -1280,9 +1289,8 @@ def materialize_concept_groups(
     """Derive the concept-group tables (#303). Ordering contract: runs after
     `populate_variable_slugs` (the edge pass resolves slug-anchored siblings) and
     after `populate_slugs` / `populate_classifications` (classification slugs +
-    rows). `providers` gates curated/accept entries to the providers in this build
-    (mirrors `populate_classifications`' provider gate, so a `--providers=sos`
-    build doesn't fail on an scb family).
+    rows). `providers` gates curated/accept entries to the providers in this build,
+    so a `--providers=sos` build doesn't fail on an scb family.
 
     Dimension 0 (`edge`) folds the IN-BUILD `same_def` split-sibling pairs
     (`edge_siblings`, `(variable_id, variable_id)`), NOT a `variable_related_to`

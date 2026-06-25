@@ -179,10 +179,12 @@ def _coverage_bounds(
 # succession edges in `classification_replaced_by` (#571).
 class GroupFacet(_CatalogModel):
     """One facet assignment on a group member: `axis` names the dimension
-    ('month' / 'rank' / 'vintage'), `value` sorts (zero-padded where needed),
-    `label` displays."""
+    ('month' / 'rank') when the group has one, or None for an AXIS-LESS group —
+    a curated classification umbrella (SUN/ISCED/NordDRG), whose members are
+    distinct classifications carrying their own short label, not points on a
+    shared scale. `value` sorts (zero-padded where needed), `label` displays."""
 
-    axis: str
+    axis: str | None
     value: str
     label: str
 
@@ -1047,12 +1049,20 @@ class Catalog:
         groups), ordered by group key. `concept_group_classification` holds
         only CURATED umbrella entries — e.g. `group:sun`, which groups the
         three genuinely-distinct SUN dimensions (`sun2020-niva`,
-        `sun2020-inriktning`, `sun2020-grupp`) on a `dimension` axis (#516).
+        `sun2020-inriktning`, `sun2020-grupp`) plus its nivå aggregates (#516).
         Derived classification VINTAGE editions (lkf1980…lkf2026,
         ssyk1996→ssyk2012, sun2000-niva→sun2020-niva) are NOT here; they
         appear as succession edges in `classification_replaced_by` (#571).
-        Members carry the real `class/<slug>` FQIDs. The group's single facet
-        axis is read from `concept_group.facet_axis` — every member shares it."""
+        Members carry the real `class/<slug>` FQIDs.
+
+        These umbrellas are AXIS-LESS: the members are distinct classifications,
+        not points on a shared scale, so `concept_group.facet_axis` is NULL and
+        `axes` is the empty tuple (the webapp renders the member-noun as
+        "members"). Each member STILL carries its curated short facet
+        `value`/`label` (the picker label) — `concept_group_classification`'s
+        facet columns are non-NULL regardless of the absent group axis — so a
+        `GroupFacet` with `axis=None` is emitted per member. (A group that does
+        carry an axis is still read through unchanged.)"""
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
             "g.facet_axis AS axis, "
@@ -1063,7 +1073,7 @@ class Catalog:
             "WHERE g.kind = 'classification' AND c.slug IS NOT NULL "
             "ORDER BY g.group_key, m.facet_value, c.slug"
         ).fetchall()
-        acc2: dict[int, tuple[str, str, str, str, list[ConceptGroupMember]]] = {}
+        acc2: dict[int, tuple[str, str, str, str | None, list[ConceptGroupMember]]] = {}
         for r in rows:
             _, _, _, axis, members = acc2.setdefault(
                 r["group_id"],
@@ -1085,7 +1095,7 @@ class Catalog:
                 key=key,
                 label=label,
                 source=_group_source(source),
-                axes=(axis,),
+                axes=(axis,) if axis is not None else (),
                 members=tuple(members),
             )
             for key, label, source, axis, members in sorted(
@@ -2211,8 +2221,8 @@ class Catalog:
     def classification_dimensions(self, fqid: str | Fqid) -> list[ConceptGroupSummary]:
         """The curated classification umbrella group(s) this edition belongs to
         (#609) — the classification-grain dual of `dimensions` (#516). Surfaces the
-        niva ↔ aggregate granularity relationship that #585/#608 model as flat
-        `dimension`-axis members of `group:sun` (e.g. `sun2020-niva` alongside the
+        niva ↔ aggregate granularity relationship that #585/#608 model as
+        axis-less members of `group:sun` (e.g. `sun2020-niva` alongside the
         7-level `niva-old` and 5-level `niva-grov` aggregates): the leaf reads its
         sibling members from the EXISTING `concept_group_classification` table — no
         new query infra, no browse-fold/group-membership change.

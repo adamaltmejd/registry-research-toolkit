@@ -180,6 +180,29 @@ from = "class/sun1996"
 to = "class/sun2000-grupp"
 effective_year = 2000
 
+# ── ICD / KS disease-classification succession (#770) ──
+#    Sweden's disease classifications form a one-dimensional, linear succession:
+#      icd-8-ks68 (1969–1986) → icd-9-ks87 (1987–1996) → icd-10-se (1997–).
+#    Modeled as classification-grain `replaced_by` so the chain collapses to its
+#    terminal (icd-10-se) in the classification-root browse, like SSYK/LKF/SNI/SUN.
+#    The trunk is kept strictly linear (no split nodes): the read-side terminal
+#    walk stops at any split, so a fork would collapse the chain to the wrong head.
+#    Classification grain → `class/<slug>`; `effective_year` = the successor's
+#    valid_from. `note` is provenance-only (build stamps `curated:slug_toml`).
+#    ks87-p (the contemporaneous primary-care variant of KS87) is intentionally
+#    NOT modeled here — it needs a variant/derived-from edge type, deferred.
+[[edge]]
+type = "replaced_by"
+from = "class/icd-8-ks68"
+to = "class/icd-9-ks87"
+effective_year = 1987
+
+[[edge]]
+type = "replaced_by"
+from = "class/icd-9-ks87"
+to = "class/icd-10-se"
+effective_year = 1997
+
 # ── Curated "see also" edges (#403) ──
 # Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an
 # identity (identity is a `type = "same_as"` edge). Slugs verified against a real

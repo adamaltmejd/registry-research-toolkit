@@ -304,7 +304,8 @@ def test_classification_seed_path_is_honored(tmp_path: Path) -> None:
     # rejects it. This proves `classification_seed_path` is threaded and used.
     custom_seed = tmp_path / "classifications.toml"
     custom_seed.write_text(
-        '[[classification]]\nshort_name = "FAKE-CLASS-XYZ"\nname = "Fake Class"\n',
+        '[[classification]]\nshort_name = "FAKE-CLASS-XYZ"\nname = "Fake Class"\n'
+        'valid_codes_file = "fake.csv"\n',
         encoding="utf-8",
     )
     toml = """\

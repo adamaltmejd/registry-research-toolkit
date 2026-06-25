@@ -313,24 +313,26 @@ def test_group_route_matched_before_catch_all(client):
 # `/catalog/group/class/<key>` exposes a classification umbrella group as a
 # browsable subject (the classification sibling of the register-scoped group
 # route). The fixture seeds the `sun` umbrella (group_id 11, kind classification,
-# register_id NULL, axis dimension) over the terminal `sun2020` edition (facet
-# niva) + the standalone `niva-test` aggregate (facet aggregat) — see conftest
-# `_seed_concept_groups`.
+# register_id NULL, AXIS-LESS — facet_axis NULL) over the terminal `sun2020`
+# edition (facet niva) + the standalone `niva-test` aggregate (facet aggregat) —
+# see conftest `_seed_concept_groups`.
 
 
 def test_classification_group_route_returns_node(client):
     """#756: the route resolves a classification umbrella by key to a
     ClassificationGroupNode — NOT a catch-all FQID parse. `kind` is
     `classification-group`; identity + members + facets are carried, with members'
-    `class/<slug>` FQIDs passed straight through (no provider/register/coverage)."""
+    `class/<slug>` FQIDs passed straight through (no provider/register/coverage).
+    The umbrella is AXIS-LESS (`axes == []`); members still carry their short
+    facet value/label with `axis: null`."""
     resp = client.get("/api/catalog/group/class/sun")
     assert resp.status_code == 200
     body = resp.json()
     assert body["kind"] == "classification-group"
     assert body["key"] == "sun"
     assert body["label"] == "Svensk utbildningsnomenklatur"
-    assert body["source"] == "token"
-    assert body["axes"] == ["dimension"]
+    assert body["source"] == "curated"
+    assert body["axes"] == []
     # Members are ordered by facet value, then slug (list_classification_groups'
     # ORDER BY m.facet_value, c.slug): aggregat (niva-test) before niva (sun2020).
     assert [m["fqid"] for m in body["members"]] == [
@@ -339,10 +341,10 @@ def test_classification_group_route_returns_node(client):
     ]
     facets_by_fqid = {m["fqid"]: m["facets"] for m in body["members"]}
     assert facets_by_fqid["class/sun2020"] == [
-        {"axis": "dimension", "value": "niva", "label": "Utbildningsnivå"}
+        {"axis": None, "value": "niva", "label": "Utbildningsnivå"}
     ]
     assert facets_by_fqid["class/niva-test"] == [
-        {"axis": "dimension", "value": "aggregat", "label": "Aggregat"}
+        {"axis": None, "value": "aggregat", "label": "Aggregat"}
     ]
     # No coverage / member focus-hint surface — classification members carry
     # neither (distinct from the register-scoped ConceptGroupNode).
@@ -423,16 +425,17 @@ def test_same_as_alias_binding_leaf_reports_target_group(client):
 def test_classification_root_drops_superseded_and_folds_dimension_group(client):
     """#608: the classification root surfaces only TERMINAL editions as children
     (a row whose `superseded_by` is truthy — a successor exists — is dropped) and
-    carries the #516 umbrella `sun` group over its DIMENSIONS. The fixture seeds
+    carries the #516 umbrella `sun` group over its members. The fixture seeds
     sun1996 → sun2000 → sun2020 with `supersedes_id` projected from those edges
     (so the superseded-by filter is genuinely exercised, not a no-op on NULLs);
     the `sun` group members are the terminal sun2020 + the non-succession
-    `niva-test` aggregate, which therefore stay in `children` and fold."""
+    `niva-test` aggregate, which therefore stay in `children` and fold. The
+    umbrella is AXIS-LESS (`axes == []`)."""
     body = client.get("/api/catalog/class").json()
     assert len(body["groups"]) == 1
     group = body["groups"][0]
     assert group["key"] == "sun"
-    assert group["axes"] == ["dimension"]
+    assert group["axes"] == []
     assert {m["fqid"] for m in group["members"]} == {
         "class/sun2020",
         "class/niva-test",
@@ -501,12 +504,12 @@ def test_classification_leaf_embeds_value_set_codes(client):
 def test_classification_leaf_embeds_dimension_cross_reference(client):
     # #609: the leaf embeds the curated umbrella group(s) it belongs to (the niva ↔
     # aggregate granularity cross-reference). The fixture's `group:sun` umbrella
-    # (dimension axis) has sun2020 + the niva-test aggregate as members.
+    # (AXIS-LESS) has sun2020 + the niva-test aggregate as members.
     resp = client.get("/api/catalog/class/sun2020")
     assert resp.status_code == 200
     dimensions = resp.json()["dimensions"]
     assert [g["key"] for g in dimensions] == ["sun"]
-    assert dimensions[0]["axes"] == ["dimension"]
+    assert dimensions[0]["axes"] == []
     member_fqids = {m["fqid"] for m in dimensions[0]["members"]}
     assert {"class/sun2020", "class/niva-test"} <= member_fqids
 

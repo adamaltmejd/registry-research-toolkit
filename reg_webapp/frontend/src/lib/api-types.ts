@@ -1359,12 +1359,14 @@ export interface components {
         /**
          * GroupFacet
          * @description One facet assignment on a group member: `axis` names the dimension
-         *     ('month' / 'rank' / 'vintage'), `value` sorts (zero-padded where needed),
-         *     `label` displays.
+         *     ('month' / 'rank') when the group has one, or None for an AXIS-LESS group —
+         *     a curated classification umbrella (SUN/ISCED/NordDRG), whose members are
+         *     distinct classifications carrying their own short label, not points on a
+         *     shared scale. `value` sorts (zero-padded where needed), `label` displays.
          */
         GroupFacet: {
             /** Axis */
-            axis: string;
+            axis: string | null;
             /** Label */
             label: string;
             /** Value */
