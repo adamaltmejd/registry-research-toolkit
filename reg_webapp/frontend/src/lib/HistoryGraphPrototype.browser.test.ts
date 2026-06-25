@@ -106,6 +106,33 @@ const relatedColumnGraph: HistoryGraph = {
   ],
 };
 
+const repeatedStateGraph: HistoryGraph = {
+  ...graph,
+  nodes: [
+    {
+      ...graph.nodes[0],
+      columns: [
+        {
+          id: "individer-15plus:AktErs:54412",
+          label: "AktErs",
+          variant: "individer-15plus",
+          from: 2010,
+          to: 2015,
+          stateIds: [54412],
+        },
+        {
+          id: "individer-15plus:AktErs:54413",
+          label: "AktErs",
+          variant: "individer-15plus",
+          from: 2016,
+          to: 2023,
+          stateIds: [54413],
+        },
+      ],
+    },
+  ],
+};
+
 const standaloneClassificationGraph: HistoryGraph = {
   mode: "classification",
   title: "Classification relationships",
@@ -241,8 +268,18 @@ describe("HistoryGraphPrototype", () => {
     await expect.element(page.getByText("Contract gaps")).toBeVisible();
   });
 
-  it("omits a graph with one variable node even when it has column slices", async () => {
+  it("renders a single variable graph when delivery columns change", async () => {
     await render(HistoryGraphPrototype, { graph });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Variable relationships" }))
+      .toBeVisible();
+    await expect.element(page.getByText("4 columns")).toBeVisible();
+    expect(document.querySelector(".legend")).toBeNull();
+  });
+
+  it("omits a graph with one variable node when only states changed", async () => {
+    await render(HistoryGraphPrototype, { graph: repeatedStateGraph });
 
     expect(document.querySelector(".history-graph")).toBeNull();
   });

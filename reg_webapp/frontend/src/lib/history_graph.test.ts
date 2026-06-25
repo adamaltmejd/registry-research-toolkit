@@ -6,6 +6,7 @@ import type {
   VariableStateModel,
 } from "./api";
 import {
+  hasRenderableHistoryGraph,
   historyGraphFromBinding,
   historyGraphFromClassification,
   historyGraphFromClassificationGroup,
@@ -282,6 +283,99 @@ describe("history graph prototype model", () => {
       { label: "VALUE", from: 2000, to: 2005, stateIds: [1] },
       { label: "VALUE", from: 2010, to: 2015, stateIds: [2] },
     ]);
+  });
+
+  it("does not treat type-only state splits as renderable graph history", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        fqid: "scb/lisa/akters",
+        states: [
+          state({
+            state_id: 54412,
+            delivery_column_name: "AktErs",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+            data_type: "int",
+          }),
+          state({
+            state_id: 54413,
+            delivery_column_name: "AktErs",
+            valid_from: "2016-01-01",
+            valid_to: "2023-12-31",
+            data_type: "bigint",
+          }),
+        ],
+      }),
+    );
+
+    expect(graph.nodes[0].columns).toMatchObject([
+      { label: "AktErs", from: 2010, to: 2023, stateIds: [54412, 54413] },
+    ]);
+    expect(hasRenderableHistoryGraph(graph)).toBe(false);
+  });
+
+  it("treats sequential column renames as renderable single-variable history", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        states: [
+          state({
+            state_id: 1,
+            delivery_column_name: "OLD_VALUE",
+            valid_from: "2000-01-01",
+            valid_to: "2010-12-31",
+          }),
+          state({
+            state_id: 2,
+            delivery_column_name: "NEW_VALUE",
+            valid_from: "2011-01-01",
+            valid_to: "9999-12-31",
+          }),
+        ],
+      }),
+    );
+
+    expect(graph.nodes[0].columns.map((column) => column.label)).toEqual([
+      "OLD_VALUE",
+      "NEW_VALUE",
+    ]);
+    expect(hasRenderableHistoryGraph(graph)).toBe(true);
+  });
+
+  it("treats same-column value-set changes as renderable single-variable history", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        states: [
+          state({
+            state_id: 1,
+            delivery_column_name: "KOD",
+            valid_from: "2000-01-01",
+            valid_to: "2010-12-31",
+            value_set_id: 10,
+            value_set_version_label: "Old codes",
+          }),
+          state({
+            state_id: 2,
+            delivery_column_name: "KOD",
+            valid_from: "2011-01-01",
+            valid_to: "9999-12-31",
+            value_set_id: 20,
+            value_set_version_label: "New codes",
+          }),
+        ],
+      }),
+    );
+
+    expect(
+      graph.nodes[0].columns.map((column) => [
+        column.label,
+        column.valueSetKey,
+        column.valueSetLabel,
+      ]),
+    ).toEqual([
+      ["KOD", "id/10", "Old codes"],
+      ["KOD", "id/20", "New codes"],
+    ]);
+    expect(hasRenderableHistoryGraph(graph)).toBe(true);
   });
 
   it("extends open-ended variable domains through the current year", () => {

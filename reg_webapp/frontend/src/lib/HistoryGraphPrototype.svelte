@@ -7,6 +7,7 @@ import {
   type HistoryGraphEdge,
   type HistoryGraphEdgeKind,
   type HistoryGraphNode,
+  hasRenderableHistoryGraph,
   historyGraphYears,
 } from "./history_graph";
 
@@ -87,7 +88,7 @@ const height = $derived(
       rowHeight +
     26,
 );
-const hasGraphContent = $derived(graph.nodes.length > 1 || edgeRows.length > 0);
+const hasGraphContent = $derived(hasRenderableHistoryGraph(graph));
 
 function xForYear(year: number | null): number {
   const value = year ?? domain.max;
@@ -108,6 +109,47 @@ function clamp(value: number, min: number, max: number): number {
 
 function labelMinWidth(label: string): number {
   return Math.min(graphNodeWidth, Math.max(58, label.length * 7 + 22));
+}
+
+function distinctColumnLabels(node: HistoryGraphNode): string[] {
+  return [...new Set(node.columns.map((column) => column.label))];
+}
+
+function columnCaption(node: HistoryGraphNode): string | null {
+  const labels = distinctColumnLabels(node);
+  if (labels.length === 2) {
+    return labels.join(" -> ");
+  }
+  if (labels.length === 3) {
+    return labels.join(" · ");
+  }
+  if (labels.length > 3) {
+    return `${labels.length} columns`;
+  }
+  const valueLabels = [
+    ...new Set(
+      node.columns
+        .map((column) => column.valueSetLabel ?? null)
+        .filter((label): label is string => label !== null),
+    ),
+  ];
+  if (valueLabels.length === 2) {
+    return valueLabels.join(" -> ");
+  }
+  if (valueLabels.length === 3) {
+    return valueLabels.join(" · ");
+  }
+  if (valueLabels.length > 3) {
+    return `${valueLabels.length} value sets`;
+  }
+  return null;
+}
+
+function nodeTextWidthLabel(node: HistoryGraphNode): string {
+  return [shortLabel(node.label, 22), columnCaption(node) ?? ""].reduce(
+    (longest, value) => (value.length > longest.length ? value : longest),
+    "",
+  );
 }
 
 function nodeIndex(id: string): number {
@@ -140,7 +182,7 @@ function nodeBar(
   const timeWidth = Math.max(end - start, 10);
   const maxWidth = width - leftPad - rightPad;
   const displayWidth = Math.min(
-    Math.max(timeWidth, labelMinWidth(shortLabel(node.label, 22))),
+    Math.max(timeWidth, labelMinWidth(nodeTextWidthLabel(node))),
     maxWidth,
   );
   const center = start + timeWidth / 2;
@@ -243,6 +285,7 @@ function shortLabel(label: string, max = 29): string {
               node.label,
               22,
             )}
+            {@const caption = columnCaption(node)}
             {#snippet nodeGlyph()}
               <g class={`node ${node.kind}`} class:self={node.self} class:current={node.current}>
                 {#if label !== node.label || !hasTimeAxis}
@@ -276,14 +319,14 @@ function shortLabel(label: string, max = 29): string {
                       rx="2"
                     />
                   {/each}
-                  {#if node.columns.length > 3}
+                  {#if caption}
                     <text
                       class="column-count"
                       x={bar.x + bar.width - 8}
                       y={bar.y + bar.height - 4}
                       text-anchor="end"
                     >
-                      {node.columns.length} columns
+                      {shortLabel(caption, 26)}
                     </text>
                   {/if}
                 {/if}

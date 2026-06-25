@@ -24,6 +24,8 @@ export type HistoryGraphEdgeKind =
 export interface HistoryColumnSlice {
   id: string;
   label: string;
+  valueSetKey?: string | null;
+  valueSetLabel?: string | null;
   variant: string;
   from: number | null;
   to: number | null;
@@ -111,6 +113,28 @@ function columnLabel(state: VariableStateModel): string {
   return state.delivery_column_name ?? `state ${state.state_id}`;
 }
 
+function valueSetKey(state: VariableStateModel): string | null {
+  if (state.classification_slug) {
+    return `class/${state.classification_slug}`;
+  }
+  if (state.value_set_id !== null) {
+    return `id/${state.value_set_id}`;
+  }
+  const members =
+    state.value_set
+      ?.map((member) => `${member.code}=${member.label}`)
+      .sort()
+      .join(",") ?? "";
+  const label = state.value_set_version_label.trim();
+  return label || members ? `inline/${label}|${members}` : null;
+}
+
+function valueSetLabel(state: VariableStateModel): string | null {
+  return (
+    state.classification_slug ?? (state.value_set_version_label.trim() || null)
+  );
+}
+
 function columnSlices(states: VariableStateModel[]): HistoryColumnSlice[] {
   const byColumn = new Map<string, HistoryColumnSlice[]>();
   const sortedStates = [...states].sort((a, b) => {
@@ -126,7 +150,8 @@ function columnSlices(states: VariableStateModel[]): HistoryColumnSlice[] {
   });
   for (const state of sortedStates) {
     const label = columnLabel(state);
-    const key = `${state.variant}:${label}`;
+    const valueKey = valueSetKey(state);
+    const key = `${state.variant}:${label}:${valueKey ?? "no-values"}`;
     const bucket = byColumn.get(key) ?? [];
     const from = wireYear(state.valid_from);
     const to = wireYear(state.valid_to);
@@ -143,6 +168,8 @@ function columnSlices(states: VariableStateModel[]): HistoryColumnSlice[] {
       bucket.push({
         id: `${key}:${state.state_id}`,
         label,
+        valueSetKey: valueKey,
+        valueSetLabel: valueSetLabel(state),
         variant: state.variant,
         from,
         to,
@@ -155,9 +182,11 @@ function columnSlices(states: VariableStateModel[]): HistoryColumnSlice[] {
     .flat()
     .sort(
       (a, b) =>
+        compareYear(a.from, b.from) ||
+        compareYear(a.to, b.to) ||
         a.label.localeCompare(b.label, "sv") ||
         a.variant.localeCompare(b.variant, "sv") ||
-        compareYear(a.from, b.from),
+        (a.valueSetKey ?? "").localeCompare(b.valueSetKey ?? "no-values", "sv"),
     );
 }
 
@@ -598,6 +627,31 @@ export function historyGraphFromClassification(
     nodeGrain: "entity-with-column-slices",
     dataContract: "client-stitch-prototype",
   };
+}
+
+export function hasRenderableHistoryGraph(graph: HistoryGraph): boolean {
+  const nodeIds = new Set(graph.nodes.map((node) => node.id));
+  if (
+    graph.nodes.length > 1 ||
+    graph.edges.some((edge) => nodeIds.has(edge.from) && nodeIds.has(edge.to))
+  ) {
+    return true;
+  }
+  if (graph.mode !== "variable" || graph.nodes.length !== 1) {
+    return false;
+  }
+
+  const node = graph.nodes[0];
+  const columnLabels = new Set(node.columns.map((column) => column.label));
+  if (columnLabels.size > 1) {
+    return true;
+  }
+  const valueSetKeys = new Set(
+    node.columns
+      .map((column) => column.valueSetKey ?? null)
+      .filter((key): key is string => key !== null),
+  );
+  return valueSetKeys.size > 1;
 }
 
 export function historyGraphYears(
