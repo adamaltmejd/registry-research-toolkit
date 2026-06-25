@@ -52,6 +52,23 @@ with `2022` and clicks **Apply** (expects "narrowed to 2022"), then cold-reloads
 deep link. Screenshots land in `/tmp/reg-webapp-shots/` (`01-root` …
 `05-deep-link-reload`; `shot` writes `_<route>.png`) — **look at them**.
 
+**Verifying against unreleased DB content (custom DB).** `dev.sh` renders against
+whatever DB `reg_meta` resolves, and `$REG_META_DB` (a *directory*) wins over the
+installed default (see Prerequisites) — `dev.sh` never sets it, so it inherits the
+caller's env. So to verify a change whose rendering depends on DB content not yet in the
+installed/released DB — a `build-db` / curation change, e.g. an earlier PR in the same
+lane — build a scratch DB and point the dev server at it; **no release required**:
+
+```sh
+db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-verify.XXXXXX")"
+reg-meta-build --db "$db_dir" build-db --input-dir <seed>   # the merge gate builds this anyway
+REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>
+```
+
+(Verified: a non-default `REG_META_DB` directory renders correctly through `dev.sh`.)
+Don't assume the installed/last-released DB is the only one the dev server can serve —
+it's the default, not a constraint.
+
 **Interactive (humans).** `dev.sh` with no args starts the same auto-free-port servers
 and stays up until Ctrl-C (which tears both down). It prints the URLs — open the
 frontend in a browser, backend API docs at `<backend>/docs`. Ports are automatic, so

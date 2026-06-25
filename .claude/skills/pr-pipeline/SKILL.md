@@ -187,6 +187,10 @@ inspect the changed views. If the `/web-design-reviewer` skill is installed, use
 a structured design-quality pass (and `/frontend-design` when the PR *authors* new UI);
 if not, drive the manual run-reg-webapp visual workflow yourself — the gate is the
 looking, not the plugin. Route any findings the same way you route `/code-review`'s.
+When the rendered change depends on DB content not yet in the local/released DB (e.g. a
+build-curation PR earlier in the lane), don't wait for a release — point the dev server
+at a scratch `build-db` via `REG_META_DB=<db_dir> dev.sh shot <route>` (see
+run-reg-webapp → "Verifying against unreleased DB content (custom DB)").
 
 **D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
