@@ -5209,6 +5209,132 @@ slug = "org-sni2007g"
 slug = "org-sni2007u"
 
 
+# #400: canonical-attach LISA variable slugs. The 32 doc-coverage columns minted
+# onto register 34 (scb/lisa) by the #400 attach loader land with auto slugs derived
+# from the cryptic delivery column (`peorgnrsregj`, `astkommunj`, `aluamk`, …), which
+# violate the leaf-slug canonical-form rules (DESIGN.md "Leaf-slug curation
+# conventions"). Curate each to the NAME-derived canonical leaf, aligned to its
+# existing register-34 sibling — exactly as #471/#747 did for every other SCB slug.
+#
+# Most are "enligt justerad metod" (J): SCB's single 2003 RAMS-method backcast. Each
+# takes a `-justerad` role suffix off its sibling's base concept (AstKommun
+# `kommun-for-arbetsstalle` → `kommun-for-arbetsstalle-justerad`, …). The MiDAS
+# pension day-counts have no exact sibling (catalog siblings are MONTHS, `*-bman`/
+# `*-nman`) so they take the catalog day-count convention `*-bruttodagar`/
+# `*-nettodagar` on the established `fortpens-`/`sjukbidr-` stem; the MiDAS belopp
+# columns share a NAME with the existing `fortpens-belopp`/`sjukbidr-belopp` rows but
+# are a different measurement basis (MiDAS source/window) → default-to-distinct, a
+# `-midas` discriminator keeps the join keys from conflating. The three SSYK/YSEG J16
+# härledd columns keep their already-clean code-style J16-family slugs (matching the
+# successors `ssyk{3,4}-2012-j16` / `eseg-j16`): `ssyk3-j16`/`ssyk4-j16` are the
+# `from` endpoints of the relations.toml succession edges, so they are pinned here to
+# rest those refs on a curated (not auto) basis. Every value is collision-free within
+# register 34.
+
+# ── Yrke / socioekonomisk gruppering (J16 härledd; code-style J16 family) ──
+[variable."34.Ssyk3_J16"]  # Yrke SSYK 96 3-siffer J16; relations.toml succession `from`
+slug = "ssyk3-j16"
+
+[variable."34.Ssyk4_J16"]  # Yrke SSYK 96 4-siffer J16; relations.toml succession `from`
+slug = "ssyk4-j16"
+
+[variable."34.YSEG_J16"]  # Yrkesbaserad socioekon. gruppering J16; matches sibling eseg-j16
+slug = "yseg-j16"
+
+[variable."34.Nyk"]  # Yrke enligt Folk- och bostadsräkningen (NYK-kod)
+slug = "yrke-fob"
+
+# ── Justerad metod (RAMS 2004-metodbrott), backcast årgång 2003 ──
+[variable."34.YrkStallnJ"]  # sibling YrkStalln → yrkesstallning
+slug = "yrkesstallning-justerad"
+
+[variable."34.AstKommunJ"]  # sibling AstKommun → kommun-for-arbetsstalle
+slug = "kommun-for-arbetsstalle-justerad"
+
+[variable."34.AstLanJ"]  # sibling AstLan → lan-arbetsstalle
+slug = "lan-arbetsstalle-justerad"
+
+[variable."34.AstSNI2002J"]  # sibling AstSNI2002 → astsni
+slug = "astsni-justerad"
+
+[variable."34.AstSNI2002BJ"]  # sibling AstSNI2002B → astsni2002b
+slug = "astsni2002b-justerad"
+
+[variable."34.AstSNI2002GJ"]  # sibling AstSNI2002G → astsni2002g
+slug = "astsni2002g-justerad"
+
+[variable."34.SektorKodJ"]  # sibling SektorKod → sektorkod
+slug = "sektorkod-justerad"
+
+[variable."34.InstKod7J"]  # sibling InstKod7 → institutionell-sektorkod-foretag (dropped filler -foretag to fit ≤40)
+slug = "institutionell-sektorkod-justerad"
+
+[variable."34.CfarNrSregJ"]  # sibling CFARNrSreg → cfar-nummer-3 (base cfar-nummer)
+slug = "cfar-nummer-justerad"
+
+[variable."34.PeOrgNrSregJ"]  # sibling PeOrgNrSreg → person-orgnr-3; identifier-family base person-orgnr
+slug = "person-orgnr-justerad"
+
+[variable."34.ArbstIdJ"]  # sibling ArbstId → fad-arbetsstalle-id
+slug = "fad-arbetsstalle-id-justerad"
+
+[variable."34.LoneInkJ"]  # sibling LoneInk → loneink
+slug = "loneink-justerad"
+
+# ── Förtidspension / sjukbidrag (MiDAS), 1994–2002 ──
+[variable."34.FortPens_Bdag_MiDAS"]  # day-count: catalog convention -bruttodagar on fortpens- stem
+slug = "fortpens-bruttodagar"
+
+[variable."34.FortPens_Ndag_MiDAS"]  # day-count: catalog convention -nettodagar on fortpens- stem
+slug = "fortpens-nettodagar"
+
+[variable."34.FortPens_Belopp_MiDAS"]  # name shared with fortpens-belopp; -midas discriminates the MiDAS basis
+slug = "fortpens-belopp-midas"
+
+[variable."34.SjukBidr_Bdag_MiDAS"]  # day-count: catalog convention -bruttodagar on sjukbidr- stem
+slug = "sjukbidr-bruttodagar"
+
+[variable."34.SjukBidr_Ndag_MiDAS"]  # day-count: catalog convention -nettodagar on sjukbidr- stem
+slug = "sjukbidr-nettodagar"
+
+[variable."34.SjukBidr_Belopp_MiDAS"]  # name shared with sjukbidr-belopp; -midas discriminates the MiDAS basis
+slug = "sjukbidr-belopp-midas"
+
+# ── Efterlevandeförmånskoder (ATP / folkpension), 1990–2002 ──
+[variable."34.ATPFam"]  # ATP-kod för efterlevandeförmån
+slug = "atp-efterlevandeforman"
+
+[variable."34.FolkFam"]  # Folkpensionskod för efterlevandeförmån
+slug = "folkpension-efterlevandeforman"
+
+# ── Arbetsmarknadsersättningar / -åtgärder ──
+[variable."34.ALUAMK"]  # Arbetslivsutvecklingsbidrag (från AMK); mirrors sibling alu-fran-akassa
+slug = "alu-fran-amk"
+
+[variable."34.AMK"]  # Ersättning från statlig arbetsmarknadskassa
+slug = "arbetsmarknadskassa"
+
+[variable."34.OTA"]  # Offentligt Tillfälligt Arbete (OTA)
+slug = "offentligt-tillfalligt-arbete"
+
+# ── Sjukpenning / avgångsersättning ──
+[variable."34.SjukPA"]  # Sjukpenning, skattepliktig (arbetsgivarinträde)
+slug = "sjukpenning-arbetsgivarintrade"
+
+[variable."34.TAE"]  # Tillfällig avgångsersättning
+slug = "tillfallig-avgangsersattning"
+
+# ── Arbetad tid / demografi / identitet ──
+[variable."34.ArbTid"]  # Arbetad tid (FoB 90)
+slug = "arbetad-tid"
+
+[variable."34.FastBet"]  # Fastighetsbeteckning
+slug = "fastighetsbeteckning"
+
+[variable."34.MedbLandNamn"]  # Medborgarskap (medborgarskapsland)
+slug = "medborgarskap"
+
+
 # GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546).
 #
 # A panel_entity_key ref binds to a variable.slug, which CHURNS every build
