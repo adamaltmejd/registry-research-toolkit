@@ -692,7 +692,7 @@ const repSegment = $derived(
 {/snippet}
 
 {#snippet relationships()}
-  <HistoryGraphPrototype graph={historyGraph} />
+  <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
 
   <!-- #489/#670: the concept-group dimensions this variable belongs to (the "pick
        your variant" facet groups). PRESENTATIONAL since #670 — the `/dimensions`

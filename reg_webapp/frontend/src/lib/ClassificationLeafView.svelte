@@ -23,7 +23,10 @@ import SubjectView from "./SubjectView.svelte";
 // synchronously — this view owns no fetch. No period picker yet (an edition picker
 // is a later PR), and no docs surface (classifications carry no doc mentions), so
 // those two SubjectView sections are omitted.
-let { node }: { node: ClassificationNodeData } = $props();
+let {
+  node,
+  vintageYear,
+}: { node: ClassificationNodeData; vintageYear?: number } = $props();
 const graphGroup = $derived(
   (node.dimensions ?? []).find((group) =>
     group.members.some((member) => member.fqid === node.fqid),
@@ -76,7 +79,7 @@ const historyGraph = $derived(
   {:else if graphGroup && graphMembers.error}
     <p class="error" role="alert">{graphMembers.error}</p>
   {:else}
-    <HistoryGraphPrototype graph={historyGraph} />
+    <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
   {/if}
   <ClassificationDimensionsPanel {node} />
   <ClassificationLineagePanels {node} />

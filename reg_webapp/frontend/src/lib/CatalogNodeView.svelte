@@ -241,7 +241,7 @@ $effect(() => {
     {:else if node.kind === "classification"}
       <!-- #638 PR1: the classification leaf renders through the unified SubjectView
            shell, same as the binding leaf + concept group. -->
-      <ClassificationLeafView {node} />
+      <ClassificationLeafView {node} {vintageYear} />
     {/if}
   </article>
 {:else if notBrowsable}

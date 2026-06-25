@@ -608,54 +608,13 @@ def get_catalog_root(request: Request) -> RootResponse:
     children.append(ClassificationRootNode())
     return RootResponse(children=children)
 
-
-# The register-sub-resource variant browser. A FIXED 3-seg shape with a
-# literal `variants` tail — NOT an `{fqid:path}` suffix — so it's declared with
-# explicit `{provider}`/`{register}` segments, ABOVE the catch-all. The two
-# segments are guarded as slugs (reusing the path guard on the 2-seg register
-# FQID) before any connection opens.
-@router.get("/catalog/{provider}/{register}/variants", response_model=VariantsResponse)
-def get_register_variants(
-    request: Request, provider: str, register: str
-) -> VariantsResponse:
-    """List a register's variants (the `?variant=` browse axis). `_default`
-    is a real variant and IS returned (not filtered). 404 when the register
-    doesn't resolve (so a typo'd register isn't a silent empty list)."""
-    register_fqid = f"{provider}/{register}"
-    # Validate both segments BEFORE opening a connection — as a strict
-    # provider/register FQID, NOT the generic catalog path (which legitimately
-    # admits the `class/<slug>` classification prefix). `Fqid.register_fqid` runs
-    # reg_meta's authoritative `validate_slug` on both segments, rejecting
-    # `class`/`_default`/traversal/period-shaped tokens (FqidError → 422, zero SQL).
-    # `class` is NOT a valid provider, so `class/<x>/variants` is a clean 422 here,
-    # not a 500. The constructed fqid is reused for the resolve below.
-    try:
-        fqid = Fqid.register_fqid(provider, register)
-    except FqidError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-    with _catalog_conn(request) as conn:
-        catalog = Catalog(conn)
-        # Resolve the register first so a bad (provider, register) is a 404, not a
-        # 200 with an empty list (list_variants alone can't distinguish them).
-        try:
-            catalog.resolve(fqid)
-        except RegMetaError as exc:
-            _http_404_if_not_found(exc)
-        variants = catalog.list_variants(provider, register)
-    # Construct via the alias `register=` (the canonical init param; the Python
-    # attr is `register_name` to avoid the BaseModel.register method shadow).
-    # reg_meta's `VariantSummary` list passes straight through (#681 — the
-    # composite panel keys are tuples that serialize as JSON arrays directly).
-    return VariantsResponse(register=register_fqid, variants=variants)
-
-
 # ── Group `/graph` sub-resources (#761) ─────────────────────────────────────
 # Sub-resources of the #756 group subject routes. Declaration-order gotcha (greedy
 # `{key:path}`): each `…/{key:path}/graph` route MUST be declared ABOVE its
 # `…/{key:path}` subject route — otherwise `group/class/sun/graph` is captured as
-# `key="sun/graph"` by the subject route. And the literal-`class` graph route goes
+# `key="sun/graph"` by the subject route. The literal-`class` graph route goes
 # above the register `{provider}` graph route (mirroring #756's `class` beats
-# `{provider}` ordering), all above the catch-all. `test_boot.py` pins the order.
+# `{provider}` ordering). `test_boot.py` pins the order.
 
 
 @router.get("/catalog/group/class/{key:path}/graph", response_model=RelationshipGraph)
@@ -699,12 +658,9 @@ def get_concept_group_graph(
 
 
 # The classification-group SUBJECT route (#756) — the classification sibling of
-# the register-scoped `get_concept_group` below. Declared IMMEDIATELY ABOVE it (and
-# thus above the greedy catch-all) so the LITERAL `class` segment is matched before
-# the register route's `{provider}` param could capture it: `/catalog/group/class/sun`
-# resolves here, NOT as a register group with provider=`class`. The `class` literal
-# is fixed in the path (no provider/register to slug-validate), and `key` is the
-# group's derivation key (NOT slug-validated — an unknown key is a clean 404).
+# the register-scoped `get_concept_group` below. Declared before the register
+# `variants` route so `/catalog/group/class/variants` resolves as a classification
+# group key, not as provider=`group`, register=`class`, variants sub-resource.
 @router.get("/catalog/group/class/{key:path}", response_model=ClassificationGroupNode)
 def get_classification_group(request: Request, key: str) -> ClassificationGroupNode:
     """The classification umbrella group addressed by `key` (#756, e.g. the SUN
@@ -713,16 +669,11 @@ def get_classification_group(request: Request, key: str) -> ClassificationGroupN
     umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
     classification group has that key.
 
-    By-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped
-    the reg_meta accessor; #756 did this filter inline here to avoid a release). The
-    accessor is the single source of truth for the class-by-key filter — the route
-    no longer re-pastes the `list_classification_groups()` loop.
+    By-key resolution delegates to `Catalog.classification_group(key)` (#761). The
+    accessor is the single source of truth for the class-by-key filter.
 
     No provider/register/key is slug-validated: `class` is a fixed literal in the
-    path, and `key` is a derivation key (not a slug). So there is no
-    `Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)
-    — just open the connection (mirroring the register route's per-request model)
-    and resolve."""
+    path, and `key` is a derivation key (not a slug)."""
     with _catalog_conn(request) as conn:
         group = Catalog(conn).classification_group(key)
         if group is None:
@@ -730,6 +681,46 @@ def get_classification_group(request: Request, key: str) -> ClassificationGroupN
                 status_code=404, detail=f"no classification group {key!r}"
             )
         return _classification_group_node(group)
+
+
+# The register-sub-resource variant browser. A FIXED 3-seg shape with a
+# literal `variants` tail — NOT an `{fqid:path}` suffix — so it's declared with
+# explicit `{provider}`/`{register}` segments, ABOVE the catch-all. The two
+# segments are guarded as slugs (reusing the path guard on the 2-seg register
+# FQID) before any connection opens.
+@router.get("/catalog/{provider}/{register}/variants", response_model=VariantsResponse)
+def get_register_variants(
+    request: Request, provider: str, register: str
+) -> VariantsResponse:
+    """List a register's variants (the `?variant=` browse axis). `_default`
+    is a real variant and IS returned (not filtered). 404 when the register
+    doesn't resolve (so a typo'd register isn't a silent empty list)."""
+    register_fqid = f"{provider}/{register}"
+    # Validate both segments BEFORE opening a connection — as a strict
+    # provider/register FQID, NOT the generic catalog path (which legitimately
+    # admits the `class/<slug>` classification prefix). `Fqid.register_fqid` runs
+    # reg_meta's authoritative `validate_slug` on both segments, rejecting
+    # `class`/`_default`/traversal/period-shaped tokens (FqidError → 422, zero SQL).
+    # `class` is NOT a valid provider, so `class/<x>/variants` is a clean 422 here,
+    # not a 500. The constructed fqid is reused for the resolve below.
+    try:
+        fqid = Fqid.register_fqid(provider, register)
+    except FqidError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
+        # Resolve the register first so a bad (provider, register) is a 404, not a
+        # 200 with an empty list (list_variants alone can't distinguish them).
+        try:
+            catalog.resolve(fqid)
+        except RegMetaError as exc:
+            _http_404_if_not_found(exc)
+        variants = catalog.list_variants(provider, register)
+    # Construct via the alias `register=` (the canonical init param; the Python
+    # attr is `register_name` to avoid the BaseModel.register method shadow).
+    # reg_meta's `VariantSummary` list passes straight through (#681 — the
+    # composite panel keys are tuples that serialize as JSON arrays directly).
+    return VariantsResponse(register=register_fqid, variants=variants)
 
 
 # The concept-group SUBJECT route (#617). A FIXED 4-seg shape with a literal

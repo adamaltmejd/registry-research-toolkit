@@ -9,7 +9,8 @@ import {
   historyGraphYears,
 } from "./history_graph";
 
-let { graph }: { graph: HistoryGraph } = $props();
+let { graph, vintageYear }: { graph: HistoryGraph; vintageYear?: number } =
+  $props();
 
 const width = 760;
 const leftPad = 258;
@@ -20,7 +21,7 @@ const barHeight = 18;
 const graphNodeWidth = 164;
 const graphNodeHeight = 30;
 const graphSidePad = 28;
-const domain = $derived(historyGraphYears(graph));
+const domain = $derived(historyGraphYears(graph, vintageYear));
 const innerWidth = $derived(width - leftPad - rightPad);
 const span = $derived(domain.max - domain.min || 1);
 const nodeIds = $derived(new Set(graph.nodes.map((node) => node.id)));

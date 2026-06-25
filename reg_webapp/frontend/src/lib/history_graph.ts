@@ -552,7 +552,10 @@ export function historyGraphFromClassification(
   };
 }
 
-export function historyGraphYears(graph: HistoryGraph): {
+export function historyGraphYears(
+  graph: HistoryGraph,
+  openEndCeilingYear = new Date().getFullYear(),
+): {
   min: number;
   max: number;
 } {
@@ -586,12 +589,11 @@ export function historyGraphYears(graph: HistoryGraph): {
       years.push(edge.toYear);
     }
   }
-  const year = new Date().getFullYear();
   if (hasOpenEnd) {
-    years.push(year);
+    years.push(openEndCeilingYear);
   }
   if (years.length === 0) {
-    return { min: year - 2, max: year + 2 };
+    return { min: openEndCeilingYear - 2, max: openEndCeilingYear + 2 };
   }
   const min = Math.min(...years);
   const max = Math.max(...years);

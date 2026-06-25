@@ -396,6 +396,18 @@ def test_classification_group_route_accepts_slash_bearing_key(catalog_db):
     assert resp.json()["key"] == "a/b"
 
 
+def test_classification_group_variants_key_uses_group_route(client):
+    """#756: `variants` is a legal classification group key path segment.
+
+    This must be routed as `/catalog/group/class/{key}`, not intercepted by the
+    earlier-looking `/catalog/{provider}/{register}/variants` shape as
+    provider=group/register=class.
+    """
+    resp = client.get("/api/catalog/group/class/variants")
+    assert resp.status_code == 404
+    assert resp.json()["detail"] == "no classification group 'variants'"
+
+
 def test_grouped_binding_leaf_carries_group_ref(client):
     """#616/#617: a grouped binding's leaf carries its owning group as a
     `(provider, register, key)` ref, so a member page knows its home group without

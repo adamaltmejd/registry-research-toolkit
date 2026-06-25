@@ -270,6 +270,24 @@ describe("history graph prototype model", () => {
     expect(domain.max).toBeGreaterThanOrEqual(new Date().getFullYear());
   });
 
+  it("caps open-ended variable domains at the catalog vintage when provided", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        states: [
+          state({
+            state_id: 1,
+            valid_from: "2019-01-01",
+            valid_to: "9999-12-31",
+          }),
+        ],
+      }),
+    );
+
+    const domain = historyGraphYears(graph, 2024);
+
+    expect(domain).toEqual({ min: 2019, max: 2024 });
+  });
+
   it("shows group members without inventing a group entity node", () => {
     const graph = historyGraphFromGroup({
       kind: "concept-group",

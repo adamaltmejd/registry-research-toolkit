@@ -450,7 +450,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     {:else if isClassificationGroup && classificationGraphMembers.error}
       <p class="error" role="alert">{classificationGraphMembers.error}</p>
     {:else if historyGraph}
-      <HistoryGraphPrototype graph={historyGraph} />
+      <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
     {/if}
   {/snippet}
 

@@ -43,7 +43,6 @@ _CATCH_ALL = "/api/catalog/{fqid:path}"
 # succession is no longer a sub-resource — the full edition chain is embedded on
 # the classification node as `edition_chain`.)
 _ROUTES_BEFORE_CATCH_ALL = [
-    "/api/catalog/{provider}/{register}/variants",
     # #761: the group `/graph` sub-resources — each `…/{key:path}/graph` route is
     # declared ABOVE its `…/{key:path}` subject route (greedy `{key:path}` would
     # otherwise capture `…/graph` into the key), and the literal-`class` graph
@@ -52,13 +51,13 @@ _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/group/class/{key:path}/graph",
     "/api/catalog/group/{provider}/{register}/{key:path}/graph",
     # #756: the classification-group SUBJECT route — a fixed-shape route with a
-    # literal `group/class` PREFIX, declared above the register-group route (so the
-    # literal `class` is matched before the register route's `{provider}` param) and
-    # above the greedy catch-all.
+    # literal `group/class` PREFIX. It must be before the register `variants`
+    # route, otherwise a classification group key named `variants` is parsed as
+    # provider=group, register=class and 422s before the group resolver runs.
     "/api/catalog/group/class/{key:path}",
+    "/api/catalog/{provider}/{register}/variants",
     # #617: the concept-group SUBJECT route — a fixed-shape 4-seg route with a
     # `group` literal PREFIX, declared above the greedy catch-all.
-    "/api/catalog/group/class/{key:path}",
     "/api/catalog/group/{provider}/{register}/{key:path}",
     "/api/catalog/{fqid:path}/states",
     "/api/catalog/{fqid:path}/predecessors",
@@ -106,6 +105,21 @@ def test_suffixed_routes_declared_before_catch_all():
         assert declaration_order.index(path) < catch_all_index, (
             f"{path} is declared AFTER the catch-all {_CATCH_ALL!r} — the catch-all "
             f"would greedy-consume it; declaration order was {declaration_order}"
+        )
+
+
+def test_classification_group_route_declared_before_overlapping_routes():
+    app = create_app()
+    declaration_order = [r.path for r in flat_api_routes(app)]
+    class_group_index = declaration_order.index("/api/catalog/group/class/{key:path}")
+    for path in (
+        "/api/catalog/{provider}/{register}/variants",
+        "/api/catalog/group/{provider}/{register}/{key:path}",
+        _CATCH_ALL,
+    ):
+        assert class_group_index < declaration_order.index(path), (
+            "classification group route must be declared before overlapping catalog "
+            f"routes; declaration order was {declaration_order}"
         )
 
 
