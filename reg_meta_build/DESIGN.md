@@ -2611,7 +2611,12 @@ Note: `*.auto.toml` is gitignored by default, so advancing a provider to `curati
 committed `<provider>.auto.toml` fails fast with `slug_freeze_auto_missing` rather than
 silently re-deriving its slugs (which would defeat the pin). The per-provider
 `.gitignore` negation (or `git add -f`) is applied when a provider is actually pinned —
-this repo ships all-churning, so no `auto.toml` is committed yet.
+this repo ships all-churning, so no `auto.toml` is committed yet. A complementary
+test-layer guard (`test_pinned_providers_auto_toml_git_tracked`) closes the window
+between commit and clean checkout: it asserts that every `curating`/`frozen` provider's
+`<provider>.auto.toml` is git-tracked (not merely present on disk), so a
+force-added-but-never-committed baseline is caught at commit/CI time rather than only
+when the build-time guard fires on a fresh checkout.
 
 ## Doc-DB build
 
