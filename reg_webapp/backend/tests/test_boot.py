@@ -44,6 +44,13 @@ _CATCH_ALL = "/api/catalog/{fqid:path}"
 # the classification node as `edition_chain`.)
 _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{provider}/{register}/variants",
+    # #761: the group `/graph` sub-resources — each `…/{key:path}/graph` route is
+    # declared ABOVE its `…/{key:path}` subject route (greedy `{key:path}` would
+    # otherwise capture `…/graph` into the key), and the literal-`class` graph
+    # route above the register `{provider}` graph route (mirroring #756's `class`
+    # beats `{provider}` ordering).
+    "/api/catalog/group/class/{key:path}/graph",
+    "/api/catalog/group/{provider}/{register}/{key:path}/graph",
     # #756: the classification-group SUBJECT route — a fixed-shape route with a
     # literal `group/class` PREFIX, declared above the register-group route (so the
     # literal `class` is matched before the register route's `{provider}` param) and
@@ -55,6 +62,9 @@ _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{fqid:path}/states",
     "/api/catalog/{fqid:path}/predecessors",
     "/api/catalog/{fqid:path}/successors",
+    # #761: the variable relationship-graph sub-resource (a `{fqid:path}` binding
+    # suffix, reserved in RESERVED_HTTP_SUFFIX_SLUGS like the others).
+    "/api/catalog/{fqid:path}/graph",
     "/api/catalog/{fqid:path}/dimensions",
     "/api/catalog/{fqid:path}/related",
     "/api/catalog/{fqid:path}/lineage",
@@ -133,10 +143,18 @@ def test_reserved_slug_set_mirrors_catalog_routes():
     # subject route (#617) ends in the PARAMETER `{key}`, so it is NOT a tail
     # reservation — its reservation rides the `group` PREFIX (checked below).
     # Exclude parameterized tails so only literal sub-resource tails are checked.
+    # The #761 group `/graph` routes (`…/{key:path}/graph`) end in a LITERAL `graph`
+    # tail but ride a `{key:path}` key — their reservation is the same `graph` suffix
+    # that the `{fqid:path}/graph` binding route already pins in
+    # RESERVED_HTTP_SUFFIX_SLUGS (the suffix shadows the variable/register/class
+    # slots), so they're NOT a separate `variants`-style register-tail reservation;
+    # exclude any `{...:path}` parameterized route from this register-tail derivation.
     variants_tails = {
         tail
         for path in catalog_routes
-        if "{fqid:path}" not in path and path != "/api/catalog"
+        if "{fqid:path}" not in path
+        and "{key:path}" not in path
+        and path != "/api/catalog"
         for tail in [path.rsplit("/", 1)[1]]
         if "{" not in tail
     }

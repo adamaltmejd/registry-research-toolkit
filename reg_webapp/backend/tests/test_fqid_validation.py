@@ -215,6 +215,7 @@ _SUFFIXED_ROUTE_TEMPLATES = [
     "/api/catalog/{fqid}/states",
     "/api/catalog/{fqid}/predecessors",
     "/api/catalog/{fqid}/successors",
+    "/api/catalog/{fqid}/graph",
     "/api/catalog/{fqid}/related",
     "/api/catalog/{fqid}/lineage",
     "/api/catalog/{fqid}/lineage_warnings",

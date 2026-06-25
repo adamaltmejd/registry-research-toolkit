@@ -168,6 +168,90 @@ def test_clean_binding_has_empty_lineage_and_warnings(client):
     )
 
 
+# ── The relationship-graph sub-resource (#761) ───────────────────────────────
+
+
+def test_graph_endpoint_variable(client):
+    # kon has a succession edge to rams/syss and a related edge to it → a non-empty
+    # graph with both node kinds present and `focus_id` = the queried node.
+    resp = client.get(f"/api/catalog/{_KON}/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["focus_id"] == _KON
+    node_ids = {n["id"] for n in body["nodes"]}
+    assert _KON in node_ids
+    assert _SYSS in node_ids  # succession + related neighbor
+    kinds = {e["kind"] for e in body["edges"]}
+    assert kinds == {"succession", "related"}, body
+    # Undirected related dedup: exactly one related edge despite both stored directions.
+    related = [e for e in body["edges"] if e["kind"] == "related"]
+    assert len(related) == 1
+
+
+def test_graph_endpoint_variable_carries_same_as(client):
+    # The fixture seeds a curated same_as edge kon→syss; the kon graph node must
+    # carry the syss alias in its `same_as[]` (node metadata, not an edge — #761).
+    resp = client.get(f"/api/catalog/{_KON}/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    kon_node = next(n for n in body["nodes"] if n["id"] == _KON)
+    alias_fqids = {ref["fqid"] for ref in kon_node["same_as"]}
+    assert _SYSS in alias_fqids
+
+
+def test_graph_endpoint_dead_binding_301s_to_successor(client):
+    # A dead/renamed binding 301s to /graph on its terminal successor (#411).
+    resp = client.get(
+        "/api/catalog/scb/lisa/renamed-head/graph", follow_redirects=False
+    )
+    assert resp.status_code == 301
+    assert resp.headers["location"] == f"/api/catalog/{_SYSS}/graph"
+
+
+def test_graph_endpoint_on_register_fqid_is_422(client):
+    # The graph accessor is binding-only (like the other suffix endpoints).
+    resp = client.get("/api/catalog/scb/lisa/graph")
+    # `scb/lisa/graph` parses as a binding FQID (variable slug `graph` is reserved,
+    # so the leaf-slot reservation 422s it at parse, OR resolves to a 404). Either
+    # way it must NOT be a 500.
+    assert resp.status_code in (404, 422), resp.status_code
+
+
+def test_concept_group_graph_endpoint(client):
+    # The `ink` token group on scb/rams → a group-addressed graph (focus_id None)
+    # unioning its member variables.
+    resp = client.get("/api/catalog/group/scb/rams/ink/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["focus_id"] is None
+    node_ids = {n["id"] for n in body["nodes"]}
+    assert {_INKJAN, "scb/rams/inkfeb"} <= node_ids
+
+
+def test_concept_group_graph_unknown_key_404(client):
+    resp = client.get("/api/catalog/group/scb/rams/nope/graph")
+    assert resp.status_code == 404
+
+
+def test_classification_group_graph_endpoint(client):
+    # The `sun` umbrella group → a classification-graph union; sun2020 (terminal)
+    # is a member, deduped, with NO `group:sun` node.
+    resp = client.get("/api/catalog/group/class/sun/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["focus_id"] is None
+    node_ids = {n["id"] for n in body["nodes"]}
+    assert "class/sun2020" in node_ids
+    assert not any(nid.startswith("group:") for nid in node_ids)
+    # All nodes are classification-kind editions (point version_year, not interval).
+    assert all(n["kind"] == "classification" for n in body["nodes"])
+
+
+def test_classification_group_graph_unknown_key_404(client):
+    resp = client.get("/api/catalog/group/class/nope/graph")
+    assert resp.status_code == 404
+
+
 # ── The variant browser (register sub-resource) ─────────────────────────────
 
 

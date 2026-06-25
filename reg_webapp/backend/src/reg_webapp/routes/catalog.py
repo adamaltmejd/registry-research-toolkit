@@ -61,6 +61,7 @@ from reg_meta.fqid import (
     parse,
     validate_slug,
 )
+from reg_meta.graph import RelationshipGraph
 from reg_meta.queries import list_classifications
 
 from reg_webapp.catalog_fqid import (
@@ -623,6 +624,55 @@ def get_register_variants(
     return VariantsResponse(register=register_fqid, variants=variants)
 
 
+# ── Group `/graph` sub-resources (#761) ─────────────────────────────────────
+# Sub-resources of the #756 group subject routes. Declaration-order gotcha (greedy
+# `{key:path}`): each `…/{key:path}/graph` route MUST be declared ABOVE its
+# `…/{key:path}` subject route — otherwise `group/class/sun/graph` is captured as
+# `key="sun/graph"` by the subject route. And the literal-`class` graph route goes
+# above the register `{provider}` graph route (mirroring #756's `class` beats
+# `{provider}` ordering), all above the catch-all. `test_boot.py` pins the order.
+
+
+@router.get("/catalog/group/class/{key:path}/graph", response_model=RelationshipGraph)
+def get_classification_group_graph(request: Request, key: str) -> RelationshipGraph:
+    """The relationship graph for a classification umbrella group (#761) — the
+    union of its member editions' succession chains (`focus_id=None`). 404 when no
+    classification group has that key. Shares the `/api/catalog` cache. By-key
+    resolution lives in reg_meta (`Catalog.graph_for_classification_group` →
+    `classification_group(key)`)."""
+    with _catalog_conn(request) as conn:
+        graph = Catalog(conn).graph_for_classification_group(key)
+    if graph is None:
+        raise HTTPException(status_code=404, detail=f"no classification group {key!r}")
+    return graph
+
+
+@router.get(
+    "/catalog/group/{provider}/{register}/{key:path}/graph",
+    response_model=RelationshipGraph,
+)
+def get_concept_group_graph(
+    request: Request, provider: str, register: str, key: str
+) -> RelationshipGraph:
+    """The relationship graph for a register concept group (#761) — the union of
+    its member variables' graphs (`focus_id=None`). 404 when no group with that key
+    exists for the (provider, register) pair. `provider`/`register` are validated as
+    a register FQID before the connection opens (mirrors `get_concept_group`); `key`
+    is the derivation key (not slug-validated — an unknown key is a clean 404)."""
+    try:
+        Fqid.register_fqid(provider, register)
+    except FqidError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    with _catalog_conn(request) as conn:
+        graph = Catalog(conn).graph_for_group(provider, register, key)
+    if graph is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"no concept group {key!r} in {provider}/{register}",
+        )
+    return graph
+
+
 # The classification-group SUBJECT route (#756) — the classification sibling of
 # the register-scoped `get_concept_group` below. Declared IMMEDIATELY ABOVE it (and
 # thus above the greedy catch-all) so the LITERAL `class` segment is matched before
@@ -638,13 +688,10 @@ def get_classification_group(request: Request, key: str) -> ClassificationGroupN
     umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
     classification group has that key.
 
-    By-key resolution FILTERS `Catalog.list_classification_groups()` in the webapp
-    rather than adding a reg_meta `classification_group(key)` accessor: the curated
-    umbrella list is tiny + global (a handful of groups), the issue scopes this to
-    reg_webapp, and a new reg_meta accessor would force a query-side reg_meta
-    release for a trivial filter. `list_classification_groups()` is already the
-    reg_meta read surface the webapp consumes here — it's what
-    `_classification_root_response` reads for the classification-root's `groups`.
+    By-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped
+    the reg_meta accessor; #756 did this filter inline here to avoid a release). The
+    accessor is the single source of truth for the class-by-key filter — the route
+    no longer re-pastes the `list_classification_groups()` loop.
 
     No provider/register/key is slug-validated: `class` is a fixed literal in the
     path, and `key` is a derivation key (not a slug). So there is no
@@ -652,10 +699,12 @@ def get_classification_group(request: Request, key: str) -> ClassificationGroupN
     — just open the connection (mirroring the register route's per-request model)
     and resolve."""
     with _catalog_conn(request) as conn:
-        for group in Catalog(conn).list_classification_groups():
-            if group.key == key:
-                return _classification_group_node(group)
-    raise HTTPException(status_code=404, detail=f"no classification group {key!r}")
+        group = Catalog(conn).classification_group(key)
+        if group is None:
+            raise HTTPException(
+                status_code=404, detail=f"no classification group {key!r}"
+            )
+        return _classification_group_node(group)
 
 
 # The concept-group SUBJECT route (#617). A FIXED 4-seg shape with a literal
@@ -805,6 +854,26 @@ def get_binding_dimensions(
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/dimensions")
     return DimensionsResponse(binding=str(parsed), dimensions=groups)
+
+
+@router.get("/catalog/{fqid:path}/graph", response_model=RelationshipGraph)
+def get_binding_graph(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> RelationshipGraph | RedirectResponse:
+    """The relationship graph for a binding's variable (#761) — one node per
+    variable with its representation-run state history + succession/related edges +
+    same_as/group metadata, unioned over the variable's concept group (Fork B). An
+    empty graph (`nodes: []`) is the "don't render" signal. A dead/renamed binding
+    301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`
+    cache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`)."""
+    parsed = _parsed_binding(validated)
+    with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
+        try:
+            return catalog.graph_for_fqid(parsed)
+        except RegMetaError as exc:
+            return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/graph")
 
 
 @router.get("/catalog/{fqid:path}/related", response_model=RelatedResponse)

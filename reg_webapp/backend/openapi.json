@@ -393,6 +393,18 @@
             "description": "The edition's literal slug (e.g. 'sun2000').",
             "title": "Slug",
             "type": "string"
+          },
+          "version_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's OWN point-in-time vintage year, read off the `classification` row's `valid_from` (the vintage lives in slug + name + valid_from). UNLIKE `effective_year` (the supersession year), this is the edition's intrinsic year \u2014 sun1996\u21921996, sun2020\u21922020 regardless of whether it has a successor. None when the row carries no `valid_from`.",
+            "title": "Version Year"
           }
         },
         "required": [
@@ -400,10 +412,78 @@
           "fqid",
           "name",
           "effective_year",
+          "version_year",
           "is_current",
           "is_self"
         ],
         "title": "ClassificationEdition",
+        "type": "object"
+      },
+      "ClassificationGraphNode": {
+        "additionalProperties": false,
+        "description": "A classification-edition node: time is a POINT (``version_year``), never an\ninterval \u2014 an edition is not \"dead\" after its successor. ``is_current`` marks a\nterminal (head) edition.",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "group_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group Key"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "is_current": {
+            "title": "Is Current",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "classification",
+            "default": "classification",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "version_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Year"
+          }
+        },
+        "required": [
+          "id",
+          "fqid",
+          "label",
+          "group_key",
+          "version_year",
+          "is_current"
+        ],
+        "title": "ClassificationGraphNode",
         "type": "object"
       },
       "ClassificationGroupNode": {
@@ -1607,6 +1687,142 @@
         "title": "DocVariableMentions",
         "type": "object"
       },
+      "GraphEdge": {
+        "additionalProperties": false,
+        "description": "A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``\nis DIRECTED (predecessor \u2192 successor); ``related`` is UNDIRECTED \u2014 its\nendpoints are canonicalized (sorted by node id) so the same relation seen from\nboth ends during group expansion collapses to one edge. ``label`` is the\nsuccession reason / the related ``relation_kind``.",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "succession",
+              "related"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "source",
+          "target",
+          "label"
+        ],
+        "title": "GraphEdge",
+        "type": "object"
+      },
+      "GraphState": {
+        "additionalProperties": false,
+        "description": "One ``variable_state`` inside a variable node, emitted ordered by\n``(variant, valid_from)``. ``representation_run_id`` groups consecutive states\ninto rendered cells: states sharing it form ONE cell. The id increments at each\n#526 representation boundary and at every ``variant`` change (a run never spans\nvariants). Raw ``data_type`` / ``data_length`` are intentionally NOT on the wire\nAND are NOT boundary signals: SCB's per-delivery ``Datatyp`` / length is\nlow-trust passthrough (#526 blanks it), so a type/length wobble alone never\nopens a new run \u2014 the boundary is value-set identity (id + version label) /\nclassification / column identity only (see ``_is_representation_boundary``).",
+        "properties": {
+          "classification_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classification Slug"
+          },
+          "delivery_column_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Column Name"
+          },
+          "representation_run_id": {
+            "title": "Representation Run Id",
+            "type": "integer"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          },
+          "valid_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid From"
+          },
+          "valid_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid To"
+          },
+          "value_set_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Set Id"
+          },
+          "value_set_version_label": {
+            "title": "Value Set Version Label",
+            "type": "string"
+          },
+          "variant": {
+            "title": "Variant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state_id",
+          "variant",
+          "representation_run_id",
+          "delivery_column_name",
+          "value_set_id",
+          "value_set_version_label",
+          "classification_slug",
+          "valid_from",
+          "valid_to"
+        ],
+        "title": "GraphState",
+        "type": "object"
+      },
       "GroupFacet": {
         "additionalProperties": false,
         "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank') when the group has one, or None for an AXIS-LESS group \u2014\na curated classification umbrella (SUN/ISCED/NordDRG), whose members are\ndistinct classifications carrying their own short label, not points on a\nshared scale. `value` sorts (zero-padded where needed), `label` displays.",
@@ -2200,6 +2416,58 @@
         "title": "RelatedResponse",
         "type": "object"
       },
+      "RelationshipGraph": {
+        "additionalProperties": false,
+        "description": "The relationship graph for a subject. ``nodes: []`` is the \"don't render\"\nsignal (the frontend gate is ``nodes.length === 0``): a lone variable with no\nsuccession / related / group siblings / meaningful representation boundary, or\na lone classification edition with no succession chain and no group context.\n``focus_id`` is the node matching the requested FQID (post same_as); None for\ngroup-addressed calls.",
+        "properties": {
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/GraphEdge"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "focus_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Focus Id"
+          },
+          "nodes": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "classification": "#/components/schemas/ClassificationGraphNode",
+                  "variable": "#/components/schemas/VariableGraphNode"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/VariableGraphNode"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationGraphNode"
+                }
+              ]
+            },
+            "title": "Nodes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "nodes",
+          "edges",
+          "focus_id"
+        ],
+        "title": "RelationshipGraph",
+        "type": "object"
+      },
       "RootResponse": {
         "description": "`GET /api/catalog` \u2014 the catalog root: every provider plus the\nclassification-root sentinel.",
         "properties": {
@@ -2228,6 +2496,26 @@
           "children"
         ],
         "title": "RootResponse",
+        "type": "object"
+      },
+      "SameAsRef": {
+        "additionalProperties": false,
+        "description": "A ``same_as`` alias resolved away to the canonical node \u2014 node metadata, not\nan edge (the canonical IS the node; the aliases are the FQIDs that resolve to\nit). ``register`` is the wire/init name; the Python attr is ``register_name``\nto avoid the ``BaseModel.register`` shadow (#681).",
+        "properties": {
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "register": {
+            "title": "Register",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid",
+          "register"
+        ],
+        "title": "SameAsRef",
         "type": "object"
       },
       "SearchClassificationEdition": {
@@ -2650,6 +2938,72 @@
           "is_self"
         ],
         "title": "VariableEdition",
+        "type": "object"
+      },
+      "VariableGraphNode": {
+        "additionalProperties": false,
+        "description": "A variable node: ONE node per variable, its full ``variable_state`` history\nas sub-structure (ordered ``(variant, valid_from)``; the run ids drive cells).\nNodes are variables \u2014 not states \u2014 because succession / related / same_as /\ngroup are all variable-grain and the FQID must map to exactly one node.",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "group_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group Key"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "variable",
+            "default": "variable",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "same_as": {
+            "items": {
+              "$ref": "#/components/schemas/SameAsRef"
+            },
+            "title": "Same As",
+            "type": "array"
+          },
+          "states": {
+            "items": {
+              "$ref": "#/components/schemas/GraphState"
+            },
+            "title": "States",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "fqid",
+          "label",
+          "group_key",
+          "states",
+          "same_as"
+        ],
+        "title": "VariableGraphNode",
         "type": "object"
       },
       "VariableRef": {
@@ -3162,7 +3516,7 @@
     },
     "/api/catalog/group/class/{key}": {
       "get": {
-        "description": "The classification umbrella group addressed by `key` (#756, e.g. the SUN\numbrella `sun`) \u2014 a browsable subject (all members selected), mirroring the\nregister-scoped `get_concept_group` but for catalog-global classification\numbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no\nclassification group has that key.\n\nBy-key resolution FILTERS `Catalog.list_classification_groups()` in the webapp\nrather than adding a reg_meta `classification_group(key)` accessor: the curated\numbrella list is tiny + global (a handful of groups), the issue scopes this to\nreg_webapp, and a new reg_meta accessor would force a query-side reg_meta\nrelease for a trivial filter. `list_classification_groups()` is already the\nreg_meta read surface the webapp consumes here \u2014 it's what\n`_classification_root_response` reads for the classification-root's `groups`.\n\nNo provider/register/key is slug-validated: `class` is a fixed literal in the\npath, and `key` is a derivation key (not a slug). So there is no\n`Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)\n\u2014 just open the connection (mirroring the register route's per-request model)\nand resolve.",
+        "description": "The classification umbrella group addressed by `key` (#756, e.g. the SUN\numbrella `sun`) \u2014 a browsable subject (all members selected), mirroring the\nregister-scoped `get_concept_group` but for catalog-global classification\numbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no\nclassification group has that key.\n\nBy-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped\nthe reg_meta accessor; #756 did this filter inline here to avoid a release). The\naccessor is the single source of truth for the class-by-key filter \u2014 the route\nno longer re-pastes the `list_classification_groups()` loop.\n\nNo provider/register/key is slug-validated: `class` is a fixed literal in the\npath, and `key` is a derivation key (not a slug). So there is no\n`Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)\n\u2014 just open the connection (mirroring the register route's per-request model)\nand resolve.",
         "operationId": "get_classification_group_api_catalog_group_class__key__get",
         "parameters": [
           {
@@ -3198,6 +3552,46 @@
           }
         },
         "summary": "Get Classification Group"
+      }
+    },
+    "/api/catalog/group/class/{key}/graph": {
+      "get": {
+        "description": "The relationship graph for a classification umbrella group (#761) \u2014 the\nunion of its member editions' succession chains (`focus_id=None`). 404 when no\nclassification group has that key. Shares the `/api/catalog` cache. By-key\nresolution lives in reg_meta (`Catalog.graph_for_classification_group` \u2192\n`classification_group(key)`).",
+        "operationId": "get_classification_group_graph_api_catalog_group_class__key__graph_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipGraph"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Classification Group Graph"
       }
     },
     "/api/catalog/group/{provider}/{register}/{key}": {
@@ -3272,6 +3666,64 @@
           }
         },
         "summary": "Get Concept Group"
+      }
+    },
+    "/api/catalog/group/{provider}/{register}/{key}/graph": {
+      "get": {
+        "description": "The relationship graph for a register concept group (#761) \u2014 the union of\nits member variables' graphs (`focus_id=None`). 404 when no group with that key\nexists for the (provider, register) pair. `provider`/`register` are validated as\na register FQID before the connection opens (mirrors `get_concept_group`); `key`\nis the derivation key (not slug-validated \u2014 an unknown key is a clean 404).",
+        "operationId": "get_concept_group_graph_api_catalog_group__provider___register___key__graph_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "title": "Provider",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "register",
+            "required": true,
+            "schema": {
+              "title": "Register",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipGraph"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Concept Group Graph"
       }
     },
     "/api/catalog/{fqid}": {
@@ -3434,6 +3886,46 @@
           }
         },
         "summary": "Get Binding Dimensions"
+      }
+    },
+    "/api/catalog/{fqid}/graph": {
+      "get": {
+        "description": "The relationship graph for a binding's variable (#761) \u2014 one node per\nvariable with its representation-run state history + succession/related edges +\nsame_as/group metadata, unioned over the variable's concept group (Fork B). An\nempty graph (`nodes: []`) is the \"don't render\" signal. A dead/renamed binding\n301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`\ncache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`).",
+        "operationId": "get_binding_graph_api_catalog__fqid__graph_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipGraph"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding Graph"
       }
     },
     "/api/catalog/{fqid}/lineage": {

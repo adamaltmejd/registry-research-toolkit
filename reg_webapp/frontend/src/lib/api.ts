@@ -274,6 +274,20 @@ export type ClassificationGroupNodeData = Schemas["ClassificationGroupNode"];
  * links to its group subject without a second fetch. */
 export type BindingGroupRef = Schemas["BindingGroupRef"];
 
+/** The catalog relationship-graph contract (#761) — a typed graph object the
+ * renderer (#678) draws as-is: one node per variable (states as sub-structure,
+ * grouped into representation-run cells) or classification edition, plus
+ * `succession` / `related` edges. An empty graph (`nodes: []`) is the "don't
+ * render" signal (`nodes.length === 0`). `focus_id` is the requested node
+ * (post-same_as), null for a group-addressed call. reg_meta owns topology +
+ * predicates; this is just the wire shape. */
+export type RelationshipGraph = Schemas["RelationshipGraph"];
+export type GraphNode =
+  | Schemas["VariableGraphNode"]
+  | Schemas["ClassificationGraphNode"];
+export type GraphEdge = Schemas["GraphEdge"];
+export type GraphState = Schemas["GraphState"];
+
 // The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
 // binding leaf is queried with `?period` (the resolve_at subset), and a
 // SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
@@ -430,6 +444,38 @@ export function getBindingDimensions(
   return apiGet<DimensionsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/dimensions`,
   );
+}
+
+/** The relationship graph for a binding's variable (#761) — the typed graph the
+ * renderer (#678) draws. An empty graph (`nodes: []`) means "don't render". A
+ * dead/renamed binding 301s server-side to its terminal successor's `/graph`. */
+export function getBindingGraph(fqidPath: string): Promise<RelationshipGraph> {
+  return apiGet<RelationshipGraph>(`/catalog/${encodeFqid(fqidPath)}/graph`);
+}
+
+/** The relationship graph for a register concept group SUBJECT (#761) — the
+ * union of its member variables' graphs (`focus_id` null). A 404 (unknown key /
+ * register) surfaces as an `ApiError`. The group page (#757) renders this; a
+ * member page renders the SAME union via `getBindingGraph` with the member
+ * highlighted (Fork B). */
+export function getConceptGroupGraph(
+  provider: string,
+  register: string,
+  key: string,
+): Promise<RelationshipGraph> {
+  return apiGet<RelationshipGraph>(
+    `${conceptGroupPath(provider, register, key)}/graph`,
+  );
+}
+
+/** The relationship graph for a classification umbrella group SUBJECT (#761) —
+ * the union of its member editions' succession chains (`focus_id` null). The
+ * classification sibling of `getConceptGroupGraph`. A 404 (unknown key) surfaces
+ * as an `ApiError`. */
+export function getClassificationGroupGraph(
+  key: string,
+): Promise<RelationshipGraph> {
+  return apiGet<RelationshipGraph>(`${classificationGroupPath(key)}/graph`);
 }
 
 // ── Project write surface (A5.2b-ii) ────────────────────────────────────────
