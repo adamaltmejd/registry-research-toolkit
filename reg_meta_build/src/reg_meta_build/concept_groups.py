@@ -215,7 +215,7 @@ class Accept:
 @dataclass(frozen=True)
 class ClassificationGroupMember:
     """One member of a curated CLASSIFICATION umbrella group: the `classification`
-    slug (catalog-global, e.g. `sun-niva2020`) and its `value`/`label` on the
+    slug (catalog-global, e.g. `sun2020-niva`) and its `value`/`label` on the
     group's single `axis` (the SUN group's `dimension` axis → 'niva'/'inriktning'/
     'grupp')."""
 
@@ -904,36 +904,59 @@ def _derive_month_groups(
     return n_groups
 
 
+# SUN slugs bake the vintage MID-slug to mirror the short_name (`SUN2020-NIVA`
+# → `sun2020-niva`, #747), so the general trailing-year rule below can't see the
+# vintage. This SUN-scoped override maps `sun<year>-<dim>` to its vintage family
+# (stem `sun-<dim>` + year) so #494 value-set reclaim and #571 succession bucket
+# the editions together exactly as a trailing-year family would — WITHOUT
+# touching the general rule (every other family's vintage is genuinely trailing).
+_SUN_MID_VINTAGE_RE = re.compile(r"^sun(\d{4})-(niva|inriktning|grupp)\Z")
+
+
+def _classification_vintage(slug: str) -> tuple[str, int] | None:
+    """`(stem, year)` for a vintage EDITION slug, else `None` (a non-edition slug
+    has no vintage family). Single source of truth for the vintage rule, shared by
+    `classification_slug_stem`, `derive_classification_succession`'s family
+    bucketing, AND the #494 vintage-reclaim stem guard in
+    `classifications.link_value_set_classifications`.
+
+    General rule: a trailing 4-digit vintage year, stripped ONLY when the
+    remaining stem does not itself end in a digit (a digit-ending stem means the
+    tail splits a longer number, not a vintage year) and the year is in range —
+    `ssyk2012` → `('ssyk', 2012)`, `sni2007` → `('sni', 2007)`.
+    SUN override (#747): `sun2020-niva` → `('sun-niva', 2020)` (see above)."""
+    m = _SUN_MID_VINTAGE_RE.match(slug)
+    if m:
+        year = int(m.group(1))
+        return (f"sun-{m.group(2)}", year) if year in _VINTAGE_YEARS else None
+    tail = slug[-4:]
+    if len(slug) < 5 or not tail.isdigit():
+        return None
+    year = int(tail)
+    stem = slug[:-4]
+    if year not in _VINTAGE_YEARS or stem[-1].isdigit():
+        return None
+    return stem, year
+
+
 def classification_slug_stem(slug: str | None) -> str | None:
-    """The year-tail-stripped classification slug — the vintage-FAMILY key.
+    """The vintage-FAMILY key for a classification slug (the year stripped to its
+    stem), or the slug itself when it is not a vintage edition. Thin wrapper over
+    `_classification_vintage` (the canonical rule).
 
-    Canonical stem rule (single source of truth, mirrored by
-    `derive_classification_succession`'s family bucketing AND the #494
-    vintage-reclaim stem guard in `classifications.link_value_set_classifications`):
-    strip a trailing 4-digit vintage year ONLY when the remaining stem does not
-    itself end in a digit (a digit-ending stem means the tail splits a longer
-    number, not a vintage year). A non-vintage slug is its OWN stem.
-
-    Examples: `sun-niva2000`/`sun-niva2020` → `sun-niva`; `sni2002`/`sni2007` →
-    `sni`; `isced` → `isced` (no year tail); `sun1996` → `sun` (a curated split
-    root collapses to the bare stem — but its siblings `sun-niva*` etc. carry the
-    `-niva`/`-inriktning`/`-grupp` discriminator, so they get DISTINCT stems).
+    Examples: `sun2020-niva`/`sun2000-niva` → `sun-niva` (SUN override, #747);
+    `sni2002`/`sni2007` → `sni`; `isced` → `isced` (no year tail); `sun1996` →
+    `sun` (the curated split root collapses to the bare `sun` stem — distinct from
+    its `sun-niva`/`-inriktning`/`-grupp` dimension stems, so it stays its own
+    single-member family and the 1→many split to 2000 is curated, not auto).
 
     NULL-safe so it can be a SQLite UDF over `classification.slug` (NULL under
     `--skip-slugs`, where the reclaim is inert anyway): a NULL slug → NULL stem.
     """
     if slug is None:
         return None
-    tail = slug[-4:]
-    if len(slug) < 5 or not tail.isdigit():
-        return slug
-    year = int(tail)
-    stem = slug[:-4]
-    # A digit-ending stem means the tail splits a longer number — not a vintage
-    # year; an out-of-range year is likewise not a vintage tail.
-    if year not in _VINTAGE_YEARS or stem[-1].isdigit():
-        return slug
-    return stem
+    v = _classification_vintage(slug)
+    return v[0] if v is not None else slug
 
 
 def derive_classification_succession(conn: sqlite3.Connection) -> int:
@@ -962,12 +985,15 @@ def derive_classification_succession(conn: sqlite3.Connection) -> int:
     # stem → [(year, slug, name)]
     families: dict[str, list[tuple[int, str, str]]] = {}
     for slug, name in rows:
-        stem = classification_slug_stem(slug)
-        # `slug` is non-NULL (WHERE clause), so a None stem can't occur; the
-        # `stem == slug` case means no vintage tail was stripped → not an edition.
-        if stem is None or stem == slug:
+        # `_classification_vintage` returns (stem, year) for an edition or None
+        # for a non-edition — handles both the trailing-year families and the SUN
+        # mid-slug override, so the year is read from the rule, not `slug[-4:]`
+        # (which is `niva` for `sun2020-niva`).
+        vintage = _classification_vintage(slug)
+        if vintage is None:
             continue
-        families.setdefault(stem, []).append((int(slug[-4:]), slug, name))
+        stem, year = vintage
+        families.setdefault(stem, []).append((year, slug, name))
     n_edges = 0
     for stem in sorted(families):
         editions = sorted(families[stem])

@@ -540,7 +540,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Generate concept-group fold candidates (maintainer review worklist).",
         description=(
             "Scan a BUILT DB (the `--db` global) for ungrouped digit-suffixed slug\n"
-            "families (sun-niva2000…, morsak1/2/3, the fasit yearly series) and\n"
+            "families (morsak1/2/3, the fasit yearly series) and\n"
             "regenerate the committed, machine-owned candidate catalog\n"
             "reg_meta_build/concept_groups.auto.toml. NOTHING is materialized;\n"
             "concept groups are presentation-only and folding is OPT-IN: a maintainer\n"

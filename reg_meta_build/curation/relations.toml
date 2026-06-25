@@ -149,11 +149,15 @@ note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgif
 # ── SUN 1996 → 2000 nomenclature split (#579) ──
 #    The 1996 SUN (Svensk utbildningsnomenklatur) was restructured in 2000 into
 #    all three SUN 2000 dimensions (nivå / inriktning / grupp) — so the lone
-#    `sun1996` classification is succeeded by all three of `sun-niva2000`,
-#    `sun-inriktning2000`, and `sun-grupp2000`, giving `group:sun`'s three members
-#    a consistent lineage. This 1→many split across DIFFERENT stems is exactly
-#    what the #571 same-stem year-tail auto rule (sun-niva2000 → sun-niva2020)
-#    cannot produce, hence the curated set. Classification grain → `class/<slug>`.
+#    `sun1996` classification is succeeded by all three of `sun2000-niva`,
+#    `sun2000-inriktning`, and `sun2000-grupp`, giving `group:sun`'s three members
+#    a consistent lineage. This 1→many split across DIFFERENT dimensions is exactly
+#    what the #571 same-stem auto rule cannot produce, hence the curated set.
+#    (The within-dimension edition chain `sun2000-niva` → `sun2020-niva` etc. is
+#    still AUTO-derived: a SUN-scoped override in `classification_slug_stem` (#747)
+#    teaches the vintage rule that SUN bakes the year MID-slug — `sun2020-niva`
+#    mirrors the short_name `SUN2020-NIVA` — so the editions still bucket by stem.)
+#    Classification grain → `class/<slug>`.
 #
 #    Transition reason (no longer stored — `note` is provenance-only, the build
 #    stamps `curated:slug_toml`): "1996 nomenclature restructured into the
@@ -161,19 +165,19 @@ note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgif
 [[edge]]
 type = "replaced_by"
 from = "class/sun1996"
-to = "class/sun-niva2000"
+to = "class/sun2000-niva"
 effective_year = 2000
 
 [[edge]]
 type = "replaced_by"
 from = "class/sun1996"
-to = "class/sun-inriktning2000"
+to = "class/sun2000-inriktning"
 effective_year = 2000
 
 [[edge]]
 type = "replaced_by"
 from = "class/sun1996"
-to = "class/sun-grupp2000"
+to = "class/sun2000-grupp"
 effective_year = 2000
 
 # ── Curated "see also" edges (#403) ──

@@ -14,9 +14,16 @@
 #   `sun1996`        — monolithic, one nested code space (5-digit leaves,
 #                      3- and 2-char aggregations under the same hierarchy).
 #                      Pre-redesign delivery shape.
-#   `sun-niva{2000,2020}`        — 3-digit numeric levels (independent code space).
-#   `sun-grupp{2000,2020}`       — 3-char alphanumeric groups (independent code space).
-#   `sun-inriktning{2000,2020}`  — variable-length specialization codes (independent).
+#   `sun{2000,2020}-niva`        — 3-digit numeric levels (independent code space).
+#   `sun{2000,2020}-grupp`       — 3-char alphanumeric groups (independent code space).
+#   `sun{2000,2020}-inriktning`  — variable-length specialization codes (independent).
+# The slug mirrors the short_name component order (`SUN2020-NIVA` → `sun2020-niva`):
+# standard+vintage, then dimension. The vintage is NOT a trailing token, so a
+# SUN-scoped override in `classification_slug_stem` (#747) teaches the vintage rule
+# that `sun2020-niva` belongs to family stem `sun-niva` — the within-dimension
+# edition chain (`sun2000-niva` → `sun2020-niva`) is still AUTO-derived (#571) and
+# the #494 value-set reclaim still buckets the editions. Only the `sun1996` 1→many
+# split across dimensions is curated (`curation/relations.toml`).
 # The three 2000+ siblings are **parallel classifications**, not levels of
 # one hierarchy — `03A` (grupp) and `100` (niva) don't relate as parent/child.
 # `niva-oldv1` / `niva-grovv1` are SCB aggregations introduced alongside
@@ -242,19 +249,19 @@ slug = "ssyk1996"
 slug = "sun1996"
 
 [classification."SUN2000-GRUPP"]
-slug = "sun-grupp2000"
+slug = "sun2000-grupp"
 
 [classification."SUN2000-INRIKTNING"]
-slug = "sun-inriktning2000"
+slug = "sun2000-inriktning"
 
 [classification."SUN2000-NIVA"]
-slug = "sun-niva2000"
+slug = "sun2000-niva"
 
 [classification."SUN2020-GRUPP"]
-slug = "sun-grupp2020"
+slug = "sun2020-grupp"
 
 [classification."SUN2020-INRIKTNING"]
-slug = "sun-inriktning2020"
+slug = "sun2020-inriktning"
 
 [classification."SUN2020-NIVA"]
-slug = "sun-niva2020"
+slug = "sun2020-niva"

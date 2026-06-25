@@ -85,7 +85,7 @@ valid_codes_file = "sun1996.csv"
 # SUN1996 (a single combined 5-digit level+direction system) is succeeded by ALL
 # THREE 2000 dimensions — a 1→many cross-stem split the auto same-stem year-tail
 # rule can't produce. Those edges are CURATED in `curation/relations.toml`
-# (`class/sun1996 → class/sun-niva2000 / sun-inriktning2000 / sun-grupp2000`),
+# (`class/sun1996 → class/sun2000-niva / sun2000-inriktning / sun2000-grupp`),
 # land in `classification_replaced_by`, and the derived `supersedes_id` then
 # points every 2000 dimension back at sun1996. Succession is NOT declared here.
 

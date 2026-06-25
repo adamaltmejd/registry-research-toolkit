@@ -1504,7 +1504,7 @@ def _terminal_classification_slug(conn: sqlite3.Connection, slug: str) -> str:
     and return that slug. Returns the input unchanged when it's already terminal.
 
     STOP AT A SPLIT (#604): a 1→many split predecessor (e.g. `sun1996` →
-    {`sun-niva2000`, `sun-inriktning2000`, `sun-grupp2000`}) has NO single terminal
+    {`sun2000-niva`, `sun2000-inriktning`, `sun2000-grupp`}) has NO single terminal
     — the chain branches into several distinct current editions. The walk stops at
     such a node and returns IT as its own terminal, rather than arbitrarily
     following the lexicographically-first branch (which would mislabel a `sun1996`

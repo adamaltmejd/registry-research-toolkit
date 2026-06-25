@@ -113,7 +113,7 @@ _SAME_AS_MAX_COMPONENT = 32
 # grain is deliberately out of scope — a variant is a delivery coordinate, not a
 # curation surface for cross-provider succession. Classification grain (#579) is
 # the `class/<slug>` form (a 1→many edition split the #571 auto rule can't
-# produce, e.g. sun1996 → sun-niva2000 + sun-inriktning2000).
+# produce, e.g. sun1996 → sun2000-niva + sun2000-inriktning).
 _REPLACED_BY_GRAINS: frozenset[FqidKind] = frozenset(
     {FqidKind.REGISTER, FqidKind.VARIABLE_BINDING, FqidKind.CLASSIFICATION}
 )

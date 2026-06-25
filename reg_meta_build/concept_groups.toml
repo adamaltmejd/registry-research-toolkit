@@ -188,15 +188,15 @@ key = "sun"
 label = "Svensk utbildningsnomenklatur (SUN)"
 axis = "dimension"
 [[classification_group.members]]
-classification = "sun-niva2020"
+classification = "sun2020-niva"
 value = "niva"
 label = "Utbildningsnivå"
 [[classification_group.members]]
-classification = "sun-inriktning2020"
+classification = "sun2020-inriktning"
 value = "inriktning"
 label = "Utbildningsinriktning"
 [[classification_group.members]]
-classification = "sun-grupp2020"
+classification = "sun2020-grupp"
 value = "grupp"
 label = "Utbildningsgrupper"
 [[classification_group.members]]
