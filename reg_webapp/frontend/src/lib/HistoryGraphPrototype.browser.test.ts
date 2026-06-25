@@ -211,10 +211,12 @@ describe("HistoryGraphPrototype", () => {
       .element(page.getByRole("heading", { name: "Variable relationships" }))
       .toBeVisible();
     expect(
-      [...document.querySelectorAll(".node-label")].map((node) =>
+      [...document.querySelectorAll(".node-label.in-bar")].map((node) =>
         node.textContent?.trim(),
       ),
     ).toEqual(["agi1astsni2007g", "agi1astsni2007u"]);
+    expect(document.querySelector(".axis")).not.toBeNull();
+    expect(document.querySelector(".detail")).toBeNull();
     expect(document.querySelectorAll(".node.self")).toHaveLength(1);
     expect(
       document.querySelector(

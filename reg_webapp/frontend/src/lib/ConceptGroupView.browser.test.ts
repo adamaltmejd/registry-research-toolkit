@@ -109,10 +109,11 @@ describe("ConceptGroupView (#617)", () => {
       .element(page.getByRole("heading", { name: "Variable relationships" }))
       .toBeVisible();
     expect(
-      [...document.querySelectorAll(".history-graph .node-label")].map((item) =>
-        item.textContent?.trim(),
+      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+        (item) => item.textContent?.trim(),
       ),
     ).toEqual(["januari", "februari"]);
+    expect(document.querySelector(".history-graph .axis")).not.toBeNull();
     expect(document.querySelectorAll(".history-graph .detail")).toHaveLength(0);
     expect(document.querySelector(".history-graph .group")).toBeNull();
   });

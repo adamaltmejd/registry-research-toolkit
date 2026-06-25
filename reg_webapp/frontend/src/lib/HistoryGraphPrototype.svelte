@@ -13,11 +13,10 @@ let { graph, vintageYear }: { graph: HistoryGraph; vintageYear?: number } =
   $props();
 
 const width = 760;
-const leftPad = 258;
+const leftPad = 56;
 const rightPad = 34;
 const topPad = 44;
 const rowHeight = 68;
-const barHeight = 18;
 const graphNodeWidth = 164;
 const graphNodeHeight = 30;
 const graphSidePad = 28;
@@ -28,6 +27,7 @@ const nodeIds = $derived(new Set(graph.nodes.map((node) => node.id)));
 const edgeRows = $derived(
   graph.edges.filter((edge) => nodeIds.has(edge.from) && nodeIds.has(edge.to)),
 );
+const hasTimeAxis = $derived(graph.mode !== "classification");
 const edgeLegend = $derived.by(() => {
   const present = new Set(edgeRows.map((edge) => edge.kind));
   const entries: { kind: HistoryGraphEdgeKind; label: string }[] = [
@@ -38,7 +38,7 @@ const edgeLegend = $derived.by(() => {
   ];
   return entries.filter((entry) => present.has(entry.kind));
 });
-const classificationLayout = $derived.by(() => {
+const equalSpacingLayout = $derived.by(() => {
   const depthById = new Map(graph.nodes.map((node) => [node.id, 0]));
   for (let pass = 0; pass < graph.nodes.length; pass += 1) {
     let changed = false;
@@ -74,17 +74,12 @@ const classificationLayout = $derived.by(() => {
     };
   });
 });
-const classificationRowCount = $derived(
-  Math.max(...classificationLayout.map((item) => item.row), 0) + 1,
+const relationRowCount = $derived(
+  Math.max(...equalSpacingLayout.map((item) => item.row), 0) + 1,
 );
 const height = $derived(
   topPad +
-    Math.max(
-      graph.mode === "classification"
-        ? classificationRowCount
-        : graph.nodes.length,
-      1,
-    ) *
+    Math.max(hasTimeAxis ? graph.nodes.length : relationRowCount, 1) *
       rowHeight +
     26,
 );
@@ -107,6 +102,14 @@ function displayTo(to: number | null): number {
   return to ?? domain.max;
 }
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
+function labelMinWidth(label: string): number {
+  return Math.min(graphNodeWidth, Math.max(58, label.length * 7 + 22));
+}
+
 function nodeIndex(id: string): number {
   return graph.nodes.findIndex((node) => node.id === id);
 }
@@ -120,9 +123,9 @@ function nodeBar(
   width: number;
   height: number;
 } {
-  if (graph.mode === "classification") {
+  if (!hasTimeAxis) {
     return (
-      classificationLayout[index] ?? {
+      equalSpacingLayout[index] ?? {
         x: graphSidePad,
         y: rowY(index),
         width: graphNodeWidth,
@@ -133,12 +136,20 @@ function nodeBar(
   const from = node.from ?? domain.min;
   const to = displayTo(node.to);
   const start = xForYear(from);
-  const minimumWidth = node.from !== null && node.from === node.to ? 18 : 10;
+  const end = xForYear(to);
+  const timeWidth = Math.max(end - start, 10);
+  const maxWidth = width - leftPad - rightPad;
+  const displayWidth = Math.min(
+    Math.max(timeWidth, labelMinWidth(shortLabel(node.label, 22))),
+    maxWidth,
+  );
+  const center = start + timeWidth / 2;
+  const maxX = width - rightPad - displayWidth;
   return {
-    x: start,
+    x: clamp(center - displayWidth / 2, leftPad, Math.max(leftPad, maxX)),
     y: rowY(index),
-    width: Math.max(xForYear(to) - start, minimumWidth),
-    height: barHeight,
+    width: displayWidth,
+    height: graphNodeHeight,
   };
 }
 
@@ -161,17 +172,21 @@ function edgePath(edge: HistoryGraphEdge): string {
   const toBar = nodeBar(toNode, toIndex);
   const fromY = fromBar.y + fromBar.height / 2;
   const toY = toBar.y + toBar.height / 2;
-  if (graph.mode === "classification") {
+  if (!hasTimeAxis) {
     const fromX = fromBar.x + fromBar.width;
     const toX = toBar.x;
     const midX = fromX + (toX - fromX) / 2;
     return `M ${fromX} ${fromY} C ${midX} ${fromY}, ${midX} ${toY}, ${toX} ${toY}`;
   }
   const year = edge.fromYear ?? edge.toYear;
-  const x = xForYear(year);
-  const fromX = year === null ? fromBar.x : x;
-  const toX = year === null ? toBar.x : x;
-  const midX = year === null ? Math.min(fromX, toX) - 16 : x;
+  const yearX = year === null ? null : xForYear(year);
+  const fromX =
+    yearX === null
+      ? fromBar.x + fromBar.width
+      : clamp(yearX, fromBar.x, fromBar.x + fromBar.width);
+  const toX =
+    yearX === null ? toBar.x : clamp(yearX, toBar.x, toBar.x + toBar.width);
+  const midX = yearX === null ? fromX + (toX - fromX) / 2 : yearX;
   return `M ${fromX} ${fromY} C ${midX} ${fromY}, ${midX} ${toY}, ${toX} ${toY}`;
 }
 
@@ -193,7 +208,7 @@ function shortLabel(label: string, max = 29): string {
         role="img"
         aria-label={`${graph.mode} history graph prototype`}
       >
-        {#if graph.mode !== "classification"}
+        {#if hasTimeAxis}
           <g class="axis">
           <line
             x1={leftPad}
@@ -218,11 +233,11 @@ function shortLabel(label: string, max = 29): string {
             {@const bar = nodeBar(node, i)}
             {@const label = shortLabel(
               node.label,
-              graph.mode === "classification" ? 22 : 29,
+              22,
             )}
             {#snippet nodeGlyph()}
               <g class={`node ${node.kind}`} class:self={node.self} class:current={node.current}>
-                {#if label !== node.label || graph.mode === "classification"}
+                {#if label !== node.label || !hasTimeAxis}
                   <title>{node.label}</title>
                 {/if}
                 <rect
@@ -233,24 +248,15 @@ function shortLabel(label: string, max = 29): string {
                   height={bar.height}
                   rx="4"
                 />
-                {#if graph.mode === "classification"}
-                  <text
-                    class="node-label in-bar"
-                    x={bar.x + bar.width / 2}
-                    y={bar.y + bar.height / 2 + 5}
-                    text-anchor="middle"
-                  >
-                    {label}
-                  </text>
-                {:else}
-                  <text class="node-label" x="0" y={bar.y + 13}>
-                    {label}
-                  </text>
-                  {#if node.detail}
-                    <text class="detail" x="0" y={bar.y + 31}>{node.detail}</text>
-                  {/if}
-                {/if}
-                {#if graph.mode !== "classification" && node.columns.length > 0}
+                <text
+                  class="node-label in-bar"
+                  x={bar.x + bar.width / 2}
+                  y={bar.y + bar.height / 2 + 5}
+                  text-anchor="middle"
+                >
+                  {label}
+                </text>
+                {#if hasTimeAxis && node.columns.length > 0}
                   {#each node.columns as column, ci (column.id)}
                     {@const col = columnBar(column)}
                     <rect

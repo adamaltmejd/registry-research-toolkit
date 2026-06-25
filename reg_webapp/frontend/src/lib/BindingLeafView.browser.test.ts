@@ -878,10 +878,11 @@ describe("BindingLeafView member identity (#670)", () => {
       .toBeVisible();
     expect(getConceptGroup).toHaveBeenCalledWith("scb", "lisa", "naringsgren");
     expect(
-      [...document.querySelectorAll(".history-graph .node-label")].map((item) =>
-        item.textContent?.trim(),
+      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+        (item) => item.textContent?.trim(),
       ),
     ).toEqual(["agi1astsni2007g", "agi1astsni2007u"]);
+    expect(document.querySelector(".history-graph .axis")).not.toBeNull();
     expect(document.querySelectorAll(".history-graph .detail")).toHaveLength(0);
     expect(
       document.querySelector(".history-graph .node.self .node-label")
