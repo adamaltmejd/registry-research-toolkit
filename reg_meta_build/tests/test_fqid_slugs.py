@@ -14,7 +14,7 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.errors import RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import derive_variable_slug
 
 from reg_meta_build.fqid_slugs import (
@@ -1811,6 +1811,185 @@ class TestPopulateVariableSlugs:
         previous["variable"]["scb/1.44"] = "kon-old"
         diff = diff_snapshot(previous, payload)
         assert any("1.44" in r for r in diff["renamed"])
+
+    # --- #786: frozen-provider new-variable fragile-basis gate ------------
+
+    def _frozen_with_new_var(
+        self, tmp_path: Path, *, new_name: str, new_kol: str
+    ) -> tuple[sqlite3.Connection, Path]:
+        # Mirror test_existing_auto_not_recomputed_on_rename's setup: build once
+        # churning to generate (and commit) the auto.toml, then add a NEW variable
+        # and flip the zone to frozen. The existing var 44 (kol "Kon" → "kon") is
+        # pinned from the committed auto.toml; only the new variable is first-sight.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name=new_name, kol=new_kol)
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        return conn, d
+
+    def test_frozen_new_fallback_basis_rejected(self, tmp_path: Path) -> None:
+        # A NEW variable on a FROZEN provider whose slug derives from a fragile
+        # (name-fallback / last-resort) basis would lock that artifact in as an
+        # immutable slug — the gate fails the build so a curator pins it instead.
+        # kol "3DOMR" and name "3D-område" both lead with a digit ⇒ neither
+        # slugifies ⇒ last-resort v<key> arm (_DERIVATION_FALLBACK).
+        conn, d = self._frozen_with_new_var(
+            tmp_path, new_name="3D-område", new_kol="3DOMR"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "1.88" in exc.value.message
+
+    def test_frozen_new_clean_kolumnnamn_accepted(self, tmp_path: Path) -> None:
+        # A NEW variable on a frozen provider with a clean, register-unique
+        # kolumnnamn derives _DERIVATION_KOLUMNNAMN (not fragile) ⇒ no gate.
+        conn, d = self._frozen_with_new_var(
+            tmp_path, new_name="Civilstånd", new_kol="Civilstand"
+        )
+        populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 88) == "civilstand"
+
+    def test_new_fallback_basis_allowed_when_curating(self, tmp_path: Path) -> None:
+        # The SAME fragile new-variable scenario as the FAIL case is dormant on a
+        # non-frozen provider: curating still derives a fresh slug for the new
+        # variable, and the gate is gated strictly on state == "frozen".
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="3D-område", kol="3DOMR")
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
+        populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 88) == "v88"
+
+    def test_frozen_new_fallback_cleared_by_pin(self, tmp_path: Path) -> None:
+        # A curated [variable] pin for the offending new variable resolves it as
+        # `curated` (the deliberate review) ⇒ the fragile-basis gate doesn't fire.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="3D-område", kol="3DOMR")
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        # Pin the new variable — the curated override wins over the fragile arm.
+        (d / "scb.toml").write_text(
+            '[variable."1.88"]\nslug = "tredimensionellt-omrade"\n', encoding="utf-8"
+        )
+        counts = populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 88) == "tredimensionellt-omrade"
+        assert counts["curated"] == 1
+
+    def test_frozen_new_disambiguated_basis_rejected(self, tmp_path: Path) -> None:
+        # The OTHER way the gate fires (vs test_frozen_new_fallback_basis_rejected's
+        # pure last-resort arm): a NEW frozen-provider variable whose base is an
+        # otherwise CLEAN kolumnnamn but COLLIDES with an already-pinned slug, so
+        # `_uniquify` appends `-N` and the kind carries `+disambiguated`. The gate's
+        # `_is_name_fallback_derivation` is true via its `endswith("+disambiguated")`
+        # branch, not its name-fallback-class branch. The new var (kol "Kon") shares
+        # the existing pinned var 44's clean kolumnnamn → derives "kon", which is
+        # reserved → the kolumnnamn arm is collision-gated, so the name basis wins
+        # and gets `kon-2` tagged `name-fallback+disambiguated` (the `-N` suffix is
+        # what trips the gate, regardless of base class).
+        conn, d = self._frozen_with_new_var(tmp_path, new_name="Kon", new_kol="Kon")
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "1.88" in exc.value.message
+        # The trigger is specifically the disambiguator suffix, not a name/last-resort
+        # base class — assert the offending slug/kind surfaced in the message.
+        assert "kon-2" in exc.value.message
+        assert "+disambiguated" in exc.value.message
+
+    def test_frozen_new_fallback_aggregates_offenders(self, tmp_path: Path) -> None:
+        # Two NEW fragile-basis variables on the SAME frozen provider raise ONCE,
+        # listing both (mirrors the stale-override aggregation) so a curator pins
+        # them in a single pass. Both kol+name lead with a digit ⇒ neither
+        # slugifies ⇒ the `v<key>` last-resort arm for each.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="3D-område", kol="3DOMR")
+        self._add_variable(conn, var_id=99, name="4K-vy", kol="4KSKM")
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        assert exc.value.exit_code == EXIT_CONFIG
+        # One raise, both offenders, count of 2.
+        assert exc.value.message.startswith("2 NEW")
+        assert "1.88" in exc.value.message
+        assert "1.99" in exc.value.message
+
+    def test_frozen_new_fallback_not_persisted_refires_on_rerun(
+        self, tmp_path: Path
+    ) -> None:
+        # Codex P2: a frozen+fragile offender must NOT be written into the
+        # committed `<provider>.auto.toml` before the post-loop raise. If it were,
+        # a bare rerun (no curated pin added) would read it back as `auto_existing`
+        # in Pass 1, making the variable no longer first-sight ⇒ the gate would
+        # never re-fire and the fragile slug would silently ship — defeating the
+        # gate via a simple rerun. Prove the real property two ways: (1) the
+        # offending source_id is absent from the on-disk auto.toml, and (2) a
+        # SECOND populate on the same conn/slug_dir STILL raises.
+        conn, d = self._frozen_with_new_var(
+            tmp_path, new_name="3D-område", new_kol="3DOMR"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+
+        # (1) The offender was not persisted; the existing pinned slug still is.
+        # (Frozen first-sight is decided by auto.toml membership, NOT the DB
+        # `variable.slug` — Pass 1 keys off `auto.get(source_id)` — so no NULL
+        # reset is needed for the read-back path to be exercised.)
+        var_slugs = {
+            e.source_id: e.slug
+            for e in load_provider_toml(d / f"scb{AUTO_FILE_SUFFIX}")
+            if e.kind == "variable"
+        }
+        assert "1.88" not in var_slugs
+        assert var_slugs.get("1.44") == "kon"
+
+        # (2) Rerun re-derives the still-first-sight variable and re-fires.
+        with pytest.raises(RegMetaError) as exc2:
+            populate_variable_slugs(conn, d)
+        assert exc2.value.code == "slug_freeze_new_fallback"
+        assert "1.88" in exc2.value.message
+
+    def test_frozen_rejected_offender_does_not_overreport_clean_sibling(
+        self, tmp_path: Path
+    ) -> None:
+        # Codex P2: a REJECTED frozen offender must not reserve its slug — a
+        # rejected slug is never persisted, so it must not influence any sibling's
+        # derivation. Two NEW first-sight variables on the same frozen register
+        # whose bases COLLIDE on "vinst":
+        #   A (var 88): kol "3DOMR" (no slugify) → name-fallback "vinst" (fragile
+        #     ⇒ a real offender).
+        #   B (var 99): clean kolumnnamn "Vinst" → "vinst" — register-unique among
+        #     pending, so the non-fragile kolumnnamn arm wins.
+        # A is processed first (lower variable_id). If A reserved its slug before
+        # the `continue` (the pre-fix bug), "vinst" would be in `used`, the clean
+        # kolumnnamn arm would fail for B, and B would fall to the kolumnnamn-
+        # residual arm (also fragile) ⇒ B would be falsely flagged. B's name
+        # "4K-vy" doesn't name-slug, so the kolumnnamn arm is the ONLY thing
+        # keeping B clean — proving the over-report once A's phantom slug leaks.
+        # Post-fix A reserves nothing, so B derives clean "vinst" and is NOT
+        # reported. Only the real offender A (1.88) appears.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="Vinst", kol="3DOMR")
+        self._add_variable(conn, var_id=99, name="4K-vy", kol="Vinst")
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        # Only the genuine offender A is reported; the clean sibling B is not.
+        assert "1.88" in exc.value.message
+        assert "1.99" not in exc.value.message
+        assert exc.value.message.startswith("1 NEW")
 
     # --- #143: drift-stable slug basis (+ doable-now part of #141) --------
 

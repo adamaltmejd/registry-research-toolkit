@@ -1956,7 +1956,13 @@ def populate_variable_slugs(
     *,
     incremental: bool = False,
 ) -> dict[str, int]:
-    """Populate register-unique `variable.slug` (see DESIGN.md → Slug curation) — always succeeds.
+    """Populate register-unique `variable.slug` (see DESIGN.md → Slug curation).
+
+    Raises `EXIT_CONFIG` on a maintainer-fixable curation error: a missing
+    pinned `<provider>.auto.toml` (`slug_freeze_auto_missing`), a stale/conflicting
+    `[variable]` override (`slug_variable_override_stale` / `_conflict`), or a NEW
+    fragile-basis slug on a `frozen` provider (`slug_freeze_new_fallback`, #786).
+    Otherwise always derives a slug (the fallback chain never leaves one unset).
 
     `fold_slugs` maps a *folded* variable's `variable_id` to its
     shared-column-stem slug base. A fold keeps one variable whose states span
@@ -2068,6 +2074,17 @@ def populate_variable_slugs(
     # and never recomputed. Loaded once; the steward overlay (incremental=True)
     # uses the same gate — steward zones default churning.
     states = load_freeze_states(slug_dir)
+
+    # #786 frozen-fallback gate: a `frozen` provider's auto slugs are immutable,
+    # so a NEW (first-sight) variable whose slug derives from a fragile basis
+    # (name-fallback / last-resort / `+disambiguated`, per
+    # `_is_name_fallback_derivation`) would lock that artifact in. Accumulate every
+    # such offender across all providers and raise ONCE after the loop (mirroring
+    # `stale_overrides`) so the maintainer sees them all in one error and can pin a
+    # deliberate curated slug. Dormant unless a provider is actually `frozen` (none
+    # are today) — gated strictly on `state == "frozen"`, so the global build path
+    # for `curating`/`churning` providers stays byte-identical.
+    frozen_new_fallback: list[tuple[str, str, str, str]] = []
 
     for provider_slug in provider_slugs:
         auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
@@ -2370,16 +2387,30 @@ def populate_variable_slugs(
                 # tag it so the worklist surfaces it regardless of base class.
                 if slug != base:
                     kind = f"{kind}+disambiguated"
+                source_id = _source_id(register_id, provider_key, variable_id)
+                counts["auto_new"] += 1
+                # #786: a NEW variable on a `frozen` provider whose slug came
+                # from a fragile basis would become immutable — flag it for the
+                # post-loop gate (raised once, with every offender, below).
+                if state == "frozen" and _is_name_fallback_derivation(kind):
+                    # Rejected offender: record ONLY. Do not write the DB row,
+                    # reserve the slug, or persist to auto — a rejected slug must
+                    # not influence sibling derivation (a clean sibling that only
+                    # collides with this phantom slug would be falsely flagged,
+                    # the Codex P2) and must stay first-sight so a rerun re-derives
+                    # and the gate re-fires (a persisted entry would read back as
+                    # `auto_existing` in Pass 1, so the gate would never re-fire
+                    # and the fragile slug would silently ship).
+                    frozen_new_fallback.append((provider_slug, source_id, slug, kind))
+                    continue
                 conn.execute(
                     "UPDATE variable SET slug = ? WHERE variable_id = ?",
                     (slug, variable_id),
                 )
                 used.add(slug)
-                source_id = _source_id(register_id, provider_key, variable_id)
                 auto[source_id] = slug
                 auto_derivation[source_id] = kind
                 auto_dirty = True
-                counts["auto_new"] += 1
 
         if auto_dirty:
             write_auto_toml(auto_path, provider_slug, auto, auto_derivation)
@@ -2423,6 +2454,26 @@ def populate_variable_slugs(
             "Fix the source key, or mark the entry deprecated=true if the "
             "variable is retired (or a provider TOML misfiled under an unknown "
             "provider slug).",
+        )
+
+    # #786 frozen-fallback gate: a NEW variable on a `frozen` provider must not
+    # silently lock in a fragile (name-fallback / last-resort / disambiguated)
+    # slug. Accumulated across all providers above; raise ONCE with every offender
+    # (mirrors `stale_overrides`) so the maintainer pins them in one pass.
+    if frozen_new_fallback:
+        sample = ", ".join(
+            f"{prov}/{sid} = {slug} ({kind})"
+            for prov, sid, slug, kind in frozen_new_fallback[:10]
+        )
+        raise _err(
+            "slug_freeze_new_fallback",
+            f"{len(frozen_new_fallback)} NEW variable(s) on a frozen provider would "
+            "take a slug derived from a fragile (name-fallback/last-resort/"
+            f"disambiguated) basis and become immutable: {sample}.",
+            'Pin each with a [variable."<source-id>"] slug in the provider TOML, '
+            "using the EXACT source id shown in the sample (including any "
+            "split-discriminator suffix, e.g. <reg>.<var>.<disc>) — the curated "
+            "override wins and is the deliberate review, then rebuild.",
         )
 
     if skipped_overrides:
