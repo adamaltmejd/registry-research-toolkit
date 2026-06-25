@@ -200,9 +200,9 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
     run_id = 0
     prev: VariableState | None = None
     for s in ordered:
-        if prev is None:
-            run_id = 0
-        elif s.variant != prev.variant or _is_representation_boundary(prev, s):
+        if prev is not None and (
+            s.variant != prev.variant or _is_representation_boundary(prev, s)
+        ):
             run_id += 1
         out.append(
             GraphState(
@@ -399,16 +399,17 @@ class _GraphBuilder:
         members share one chain), so we skip re-walking ``classification_chain`` +
         the predecessor SQL — the same node-dedup short-circuit ``add_variable``
         has."""
-        self_id = str(Fqid.classification_fqid(slug))
-        if self_id in self._nodes:
-            return self_id
+        self_fqid = Fqid.classification_fqid(slug)
+        self_node_id = str(self_fqid)
+        if self_node_id in self._nodes:
+            return self_node_id
         try:
-            chain = self._catalog.classification_chain(Fqid.classification_fqid(slug))
+            chain = self._catalog.classification_chain(self_fqid)
         except RegMetaError:
             return None
         if not chain:
             return None
-        self_id = None
+        self_id: str | None = None
         slug_to_id: dict[str, str] = {}
         for edition in chain:
             # A chain edition's fqid is None only on a malformed slug (build-

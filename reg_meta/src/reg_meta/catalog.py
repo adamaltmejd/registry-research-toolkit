@@ -2204,18 +2204,23 @@ class Catalog:
             if not self._classification_successor_edges(slug)
         }
         row_by_slug = self._classification_chain_rows(s for s, _ in ordered)
-        return [
-            ClassificationEdition(
-                slug=slug,
-                fqid=self._class_ref_fqid(slug),
-                name=row["name"] if (row := row_by_slug.get(slug)) else None,
-                effective_year=year,
-                version_year=row["valid_from"] if row else None,
-                is_current=(slug in terminals),
-                is_self=(slug == canonical),
+        editions: list[ClassificationEdition] = []
+        for slug, year in ordered:
+            # The chain invariant is every slug is a live row (validate.py fails the
+            # build otherwise), so the None-guard rarely fires — kept for safety.
+            row = row_by_slug.get(slug)
+            editions.append(
+                ClassificationEdition(
+                    slug=slug,
+                    fqid=self._class_ref_fqid(slug),
+                    name=row["name"] if row else None,
+                    effective_year=year,
+                    version_year=row["valid_from"] if row else None,
+                    is_current=(slug in terminals),
+                    is_self=(slug == canonical),
+                )
             )
-            for slug, year in ordered
-        ]
+        return editions
 
     def classification_codes(self, fqid: str | Fqid) -> list[ClassificationCode]:
         """The value-set codes/labels of ONE classification edition (#609), code-
