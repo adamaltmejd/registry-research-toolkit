@@ -105,6 +105,11 @@ def compute_doc_coverage(
         WHERE r.slug IS NOT NULL
         """
     ).fetchall():
+        # Assumes a single-provider (SCB) doc library: register.slug is not
+        # globally unique, and the doc table has no provider column to
+        # disambiguate, so two providers reusing a slug would pool their columns
+        # under one key and understate the gap. Revisit if the doc library gains
+        # a second provider.
         catalog_cols_by_register.setdefault(slug, set()).add(column.lower())
 
     # Documented columns per doc register, with the evidence fields. DISTINCT on
