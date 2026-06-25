@@ -1,0 +1,361 @@
+# Curated LISA doc-coverage attachments (#400) — LISA columns documented in SCB's
+# doc library (lisa-bakgrundsfakta-1990-2017) but ABSENT from the machine-export
+# catalog. Read by the #400 attach loader and minted onto the EXISTING `lisa`
+# register (scb/lisa), attached to an existing `register_variant`.
+#
+# Provenance: each [[attach]] mirrors one column's doc at
+# reg_meta_build/docs/lisa/<Column>.md — name, definition, documented coverage
+# window, and (for categorical columns) the EXISTING catalog classification it
+# links. One entry per column; 32 columns total. This is a doc-coverage diagnostic
+# (classification-link-only where applicable), not a value-set source — no codes
+# are minted here.
+#
+# Curation notes:
+#  * variant = the existing lisa register_variant slug holding the column's closest
+#    catalog sibling. These are all individual-level attributes (the individual's
+#    yrke / workplace-SNI / pension / income / folkbokföring), so the default and
+#    confirmed-by-sibling variant is `individer-15plus`.
+#  * data_type uses the canonical seed vocabulary text|decimal|integer|date
+#    (codes/identifiers -> text; *_Belopp_*/lön/ersättning -> decimal;
+#    *_Bdag_*/*_Ndag_* day-counts -> integer), cross-checked against the sibling's
+#    catalog data_type where one exists.
+#  * classification linked ONLY where an existing catalog short_name matches the
+#    column's code system (verified present in the built catalog): Ssyk3/4_J16 ->
+#    SSYK96; AstSNI2002(B/G)J -> SNI2002; SektorKodJ -> SEKTOR2000. InstKod7J's
+#    10-position institutional sector code has no catalog classification (omitted);
+#    YSEG_J16/MedbLandNamn have no matching catalog classification (omitted).
+#  * "justerad metod" (J) columns are SCB's single backcast year 2003, produced to
+#    bridge the 2004 RAMS method change ("Uppgiften har tagits fram avseende årgång
+#    2003 för att underlätta jämförelser över tid") -> windowed 2003-01-01..2003-12-31.
+
+
+# ── Yrke / socioekonomisk gruppering (SSYK 96 era, J16 backcast 2010–2013) ──────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "Ssyk3_J16"
+name = "Yrke enligt SSYK 96, 3-siffernivå, inkl. härledda yrken för företagare"
+definition = "Yrke enligt SSYK 96 på 3-siffernivå, inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för Yrke enligt SSYK 96 sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn. De härledda yrkena identifieras via SSYKStatus_J16."
+data_type = "text"
+valid_from = "2010-01-01"
+valid_to = "2013-12-31"
+classification = "SSYK96"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "Ssyk4_J16"
+name = "Yrke enligt SSYK 96, 4-siffernivå, inkl. härledda yrken för företagare"
+definition = "Yrke enligt SSYK 96 på 4-siffernivå, inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för Yrke enligt SSYK 96 sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn. De härledda yrkena identifieras via SSYKStatus_J16."
+data_type = "text"
+valid_from = "2010-01-01"
+valid_to = "2013-12-31"
+classification = "SSYK96"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "YSEG_J16"
+name = "Yrkesbaserad socioekonomisk gruppering, inkl. härledda yrken för företagare"
+definition = "Yrkesbaserad socioekonomisk gruppering (YSEG), inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för YSEG sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn."
+data_type = "text"
+valid_from = "2010-01-01"
+valid_to = "2013-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "Nyk"
+name = "Yrke enligt Folk- och bostadsräkningen"
+definition = "Yrkeskod enligt Nordisk yrkesklassificering, FoB-85:s schema (NYK-kod). Yrkeskodningen bygger på den förvärvsarbetande befolkningens yrkesuppgift till Folk- och Bostadsräkningen 1990 (FoB 90) och avser i princip november månad 1990. Likartade yrken sammanförs utan hänsyn till utbildning, yrkesställning, tjänsteställning eller branschtillhörighet. I FoB 1990 kunde 8–9 procent av samtliga förvärvsarbetande inte kodas enligt NYK då yrkesuppgift saknas eller inte går att klassificera."
+data_type = "text"
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+
+# ── Justerad metod (RAMS 2004-metodbrott), backcast årgång 2003 ─────────────────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "YrkStallnJ"
+name = "Yrkesställning enligt justerad metod"
+definition = "Yrkesställning enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "AstKommunJ"
+name = "Arbetsställekommun enligt justerad metod"
+definition = "Arbetsställekommun enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "AstLanJ"
+name = "Arbetsställelän enligt justerad metod"
+definition = "Arbetsställelän enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "AstSNI2002J"
+name = "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod"
+definition = "Arbetsställets näringsgren enligt SNI2002, enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+classification = "SNI2002"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "AstSNI2002BJ"
+name = "Arbetsställets näringsgren, SNI2002, begränsad nivå (42 grupper), enligt justerad metod"
+definition = "Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002 (begränsad nivå, 42 grupper), enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+classification = "SNI2002"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "AstSNI2002GJ"
+name = "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod, grov nivå"
+definition = "Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002 (grov nivå, 10 grupper), enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+classification = "SNI2002"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "SektorKodJ"
+name = "Sektorstillhörighet (företag) enligt justerad metod"
+definition = "Sektorstillhörighet enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004')."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+classification = "SEKTOR2000"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "InstKod7J"
+name = "Institutionell sektorkod (företag) enligt justerad metod"
+definition = "Institutionell sektorkod enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Koden bildas utifrån företagets samhällssektor, ägare och juridiska form (tio positioner) och hämtas ur Företagsdatabasen (FDB)."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "CfarNrSregJ"
+name = "Arbetsställe (november) enligt justerad metod"
+definition = "Det huvudsakliga arbetsstället (CFAR-nummer) bestämt utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Vid utlämnande av data från LISA ersätts CFAR-numret av ett nytt löpnummer."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "PeOrgNrSregJ"
+name = "Företagets organisationsnummer, enligt justerad metod"
+definition = "Företagets person-/organisationsnummer enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "ArbstIdJ"
+name = "Kopplingsvariabel till arbetsställetabell (endast förvärvsarbetande vid faktiska arbetsställen), enligt justerad metod"
+definition = "Kopplingsvariabel (identifierare) till arbetsställetabellen för endast förvärvsarbetande vid faktiska arbetsställen, enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004."
+data_type = "text"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "LoneInkJ"
+name = "Kontant bruttolön enligt justerad metod"
+definition = "Kontant bruttolön utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Beloppet anges i hundratals kronor."
+data_type = "decimal"
+valid_from = "2003-01-01"
+valid_to = "2003-12-31"
+
+# ── Förtidspension / sjukbidrag (MiDAS), 1994–2002 ──────────────────────────────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "FortPens_Bdag_MiDAS"
+name = "Förtidspension, antal bruttodagar"
+definition = "Antal utbetalda bruttodagar under året med förtidspension. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning."
+data_type = "integer"
+valid_from = "1994-01-01"
+valid_to = "2002-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "FortPens_Ndag_MiDAS"
+name = "Förtidspension, antal nettodagar"
+definition = "Antal utbetalda nettodagar under året med förtidspension. Förtidspension kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året."
+data_type = "integer"
+valid_from = "1994-01-01"
+valid_to = "2002-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "FortPens_Belopp_MiDAS"
+name = "Förtidspension, ersättningsbelopp"
+definition = "Utbetalt belopp under året för förtidspension, i relation till utbetalda dagar med förtidspension. Beloppet avser ersättningsperioden och anges i hundratal kronor."
+data_type = "decimal"
+valid_from = "1994-01-01"
+valid_to = "2002-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "SjukBidr_Bdag_MiDAS"
+name = "Sjukbidrag, antal bruttodagar"
+definition = "Antal utbetalda bruttodagar under året med sjukbidrag. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning."
+data_type = "integer"
+valid_from = "1994-01-01"
+valid_to = "2002-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "SjukBidr_Ndag_MiDAS"
+name = "Sjukbidrag, antal nettodagar"
+definition = "Antal utbetalda nettodagar under året med sjukbidrag. Sjukbidrag kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året."
+data_type = "integer"
+valid_from = "1994-01-01"
+valid_to = "2002-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "SjukBidr_Belopp_MiDAS"
+name = "Sjukbidrag, ersättningsbelopp"
+definition = "Utbetalt belopp under året för sjukbidrag, i relation till utbetalda dagar med sjukbidrag. Beloppet avser ersättningsperioden och anges i hundratal kronor."
+data_type = "decimal"
+valid_from = "1994-01-01"
+valid_to = "2002-12-31"
+
+# ── Efterlevandeförmånskoder (ATP / folkpension), 1990–2002 ─────────────────────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "ATPFam"
+name = "ATP-kod för efterlevandeförmån"
+definition = "ATP-kod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
+data_type = "text"
+valid_from = "1990-01-01"
+valid_to = "2002-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "FolkFam"
+name = "Folkpensionskod för efterlevandeförmån"
+definition = "Folkpensionskod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension."
+data_type = "text"
+valid_from = "1990-01-01"
+valid_to = "2002-12-31"
+
+# ── Arbetsmarknadsersättningar / -åtgärder ──────────────────────────────────────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "ALUAMK"
+name = "Arbetslivsutvecklingsbidrag (från AMK)"
+definition = "Arbetslivsutvecklingsbidrag från statlig arbetsmarknadskassa (AMK). Beloppet anges i hundratal kronor."
+data_type = "decimal"
+valid_from = "1994-01-01"
+valid_to = "1996-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "AMK"
+name = "Ersättning från statlig arbetsmarknadskassa"
+definition = "Inkomstrelaterad dagpenning från statlig arbetsmarknadskassa till arbetslösa som inte tillhör en arbetslöshetskassa, införd 1/7 1994 och avskaffad 1/1 1995 med övergångsbestämmelser t.o.m. 30 juni 1996. Ersättningsnivån var 80 procent av tidigare inkomst. Beloppet anges i hundratals kronor."
+data_type = "decimal"
+valid_from = "1994-01-01"
+valid_to = "1997-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "OTA"
+name = "Offentligt Tillfälligt Arbete (OTA)"
+definition = "Ersättning i samband med Offentligt Tillfälligt Arbete (OTA), infört 1/11 1996 för arbetslösa som fyllt 55 år och varit anmälda som arbetssökande minst 24 månader. Endast de som fått sin OTA-ersättning utbetald från Försäkringskassan redovisas här; de som ersätts av arbetslöshetskassa redovisas under ALUKU (t.o.m. 1999) respektive AKassa-AmPol (fr.o.m. 2000). Beloppet anges i hundratal kronor."
+data_type = "decimal"
+valid_from = "1997-01-01"
+valid_to = "1997-12-31"
+
+# ── Sjukpenning / avgångsersättning ─────────────────────────────────────────────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "SjukPA"
+name = "Sjukpenning, skattepliktig (arbetsgivarinträde)"
+definition = "Skattepliktig sjukpenning vid arbetsgivarinträde: arbetsgivaren lämnar sjuklön och får sedan, från Försäkringskassan, den sjukpenning/arbetsskadesjukpenning som den anställde har rätt till. Arbetsgivarinträdet upphörde 1/7 1992. Sjukpenningen avser utbetalningsåret oavsett ersättningsperiod. Beloppet anges i hundratals kronor."
+data_type = "decimal"
+valid_from = "1990-01-01"
+valid_to = "1993-12-31"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "TAE"
+name = "Tillfällig avgångsersättning"
+definition = "Tillfällig avgångsersättning."
+data_type = "decimal"
+valid_from = "1990-01-01"
+
+# ── Arbetad tid (FoB 90) ────────────────────────────────────────────────────────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "ArbTid"
+name = "Arbetad tid"
+definition = "Överenskommen eller normal veckoarbetstid under oktober 1990 (vid tillfällig frånvaro avses senaste arbetade veckan); för personer med mer än ett förvärvsarbete redovisas den sammanlagda arbetstiden. Kodad i intervall: 1 = 0 tim, 2 = 1–15 tim, 3 = 16–19 tim, 4 = 20–34 tim, 5 = 35– tim, 9 = Uppgift saknas. Kodningen bygger på Folk- och Bostadsräkningen 1990 (FoB 90)."
+data_type = "text"
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+
+# ── Demografi / identitet ───────────────────────────────────────────────────────
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "FastBet"
+name = "Fastighetsbeteckning"
+definition = "Officiell fastighetsbeteckning som fastighetsidentitet, införd 1998 när SCB skapade det nya systemet för Registret över totalbefolkningen (RTB). Personer redovisas där de är folkbokförda. Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar (t.ex. för att skapa områden)."
+data_type = "text"
+valid_from = "1998-01-01"
+
+[[attach]]
+register = "scb/lisa"
+variant = "individer-15plus"
+column = "MedbLandNamn"
+name = "Medborgarskap"
+definition = "Medborgarskap (medborgarskapsland)."
+data_type = "text"
+valid_from = "1990-01-01"

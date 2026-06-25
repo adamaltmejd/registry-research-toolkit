@@ -20,6 +20,7 @@ from pathlib import Path
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
+from reg_meta_build.canonical_attach import load_canonical_attach
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
     load_classification_groups,
@@ -179,6 +180,22 @@ def test_repo_relations_parses() -> None:
         for e in relations.related_to
     )
     assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
+
+
+def test_repo_canonical_attach_parses() -> None:
+    # The #400 PR2 canonical-attach seed lives beside the other canonical-SCB
+    # seed (input_data/scb_canonical/). It is authored separately and may not
+    # ship yet — skip when absent; when present, the load-time shape (2-segment
+    # FQID, required keys, ISO dates, declared classifications) must hold. The
+    # loader tolerates a missing path (returns []), but here we want a real gate
+    # on the in-repo file, so resolve the direct path and skip if it's not there.
+    path = _ROOT / "input_data" / "scb_canonical" / "lisa_canonical.toml"
+    if not path.is_file():
+        pytest.skip("lisa_canonical.toml not present in this checkout")
+    entries = load_canonical_attach(path)
+    assert entries  # a present seed must carry at least one [[attach]]
+    assert all(e.provider == "scb" and e.register and e.variant for e in entries)
+    assert all(e.column and e.name and e.definition for e in entries)
 
 
 def test_repo_variable_grafts_parses() -> None:

@@ -3326,6 +3326,36 @@ def materialize(
             f"{graft_counts['unresolved']:,} unresolved)"
         )
 
+        # Canonical-SCB attach (#400 PR2) — the RICH analog of grafts: mint
+        # canonical-SCB variables (LISA columns absent from SCB's machine export)
+        # onto an existing (register, variant), with canonical-SCB-banded ids, a
+        # closed validity window, and an optional classification link. Same
+        # slug-guarded block + ordering rationale as grafts (after populate_slugs
+        # resolves the target, before populate_variable_slugs auto-derives the new
+        # slug). Its classification candidates join the SAME list fed to
+        # `_feed_classification_candidates` below, so the backfill tags them.
+        from .canonical_attach import (
+            load_canonical_attach,
+            materialize_canonical_attach,
+            repo_canonical_attach_path,
+        )
+
+        attach_counts = materialize_canonical_attach(
+            conn,
+            load_canonical_attach(
+                repo_canonical_attach_path(), classification_seed_path=seed_path
+            ),
+            providers=active_providers,
+            classification_candidates=classification_candidates,
+            warn=_progress,
+        )
+        row_counts["canonical_attach"] = attach_counts["minted"]
+        _progress(
+            f"  {attach_counts['minted']:,} canonical-SCB attaches "
+            f"({attach_counts['skipped']:,} already present, "
+            f"{attach_counts['unresolved']:,} unresolved)"
+        )
+
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
         # _coalesce_variable_states (reads variable_state.delivery_column_name),
