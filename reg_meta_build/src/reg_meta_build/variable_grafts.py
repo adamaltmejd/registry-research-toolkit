@@ -40,6 +40,7 @@ from ._curation import (
     fold_column,
     load_curation_entries,
     require_str,
+    resolve_register_variant_id,
 )
 
 if TYPE_CHECKING:
@@ -180,17 +181,11 @@ def materialize_grafts(
     )
 
     for g in active:
-        variant_row = conn.execute(
-            "SELECT rv.register_variant_id, r.register_id FROM register_variant rv "
-            "JOIN register r ON r.register_id = rv.register_id "
-            "JOIN provider p ON p.provider_id = r.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
-            (g.provider, g.register, g.variant),
-        ).fetchone()
-        if variant_row is None:
+        resolved = resolve_register_variant_id(conn, g.provider, g.register, g.variant)
+        if resolved is None:
             counts["unresolved"] += 1
             continue
-        register_variant_id, register_id = variant_row
+        register_variant_id, register_id = resolved
         # Gap-fill only: skip if the column is already a delivered state column in
         # this variant (case/diacritic-folded).
         exists = conn.execute(

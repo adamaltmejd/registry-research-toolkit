@@ -3335,15 +3335,24 @@ def materialize(
         # slug). Its classification candidates join the SAME list fed to
         # `_feed_classification_candidates` below, so the backfill tags them.
         from .canonical_attach import (
+            canonical_attach_path,
             load_canonical_attach,
             materialize_canonical_attach,
-            repo_canonical_attach_path,
         )
 
+        # The canonical-attach seed (`lisa_canonical.toml`) is read from the SAME
+        # `--input-dir/scb_canonical/` the `CanonicalScbAdapter` reads its
+        # `scb_canonical.toml` from — found here as that adapter's paired source
+        # dir (basename `scb_canonical`). None when this build has no such adapter
+        # (synthetic / SCB-only / SOS-only builds) → the load no-ops.
+        canonical_dir = next(
+            (d for _a, d in adapters if d.name == _CANONICAL_SCB_DIRNAME), None
+        )
         attach_counts = materialize_canonical_attach(
             conn,
             load_canonical_attach(
-                repo_canonical_attach_path(), classification_seed_path=seed_path
+                canonical_attach_path(canonical_dir),
+                classification_seed_path=seed_path,
             ),
             providers=active_providers,
             classification_candidates=classification_candidates,

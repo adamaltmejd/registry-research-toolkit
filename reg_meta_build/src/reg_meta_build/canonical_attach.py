@@ -11,8 +11,11 @@ RICHER shape a curated canonical-SCB row gets:
   puts every minted id in the reserved sub-band ``[2^61, 2^62)`` (deterministic,
   disjoint from real source-derived SCB ids and from the high minted band) — NOT
   the graft's MAX+1 sequential id. The same `mint_canonical_scb` the
-  `CanonicalScbAdapter` uses (#444), so an attach row is indistinguishable from a
-  full-adapter canonical row except that it lands on an existing register.
+  `CanonicalScbAdapter` uses (#444), so a minted id is in the same band a
+  full-adapter canonical row gets, on an existing register. (The columns the pass
+  SETS still mirror grafts — `variable.name` + `description`, `variable_state`
+  type/window — and leave `variable.definition` NULL; the full
+  `CanonicalScbAdapter` additionally populates `definition`.)
 * **Closed validity window.** `valid_from` / `valid_to` come from the seed entry
   (a closed era like 2010–2013); an omitted `valid_to` writes the open-ended
   `9999-12-31` sentinel.
@@ -42,19 +45,25 @@ Guards / discipline (mirrors `variable_grafts`):
 
 from __future__ import annotations
 
-import tomllib
+import functools
 from dataclasses import dataclass
 from datetime import date
-from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ._curation import curation_error
+from ._curation import (
+    curation_error,
+    fold_column,
+    load_curation_entries,
+    require_str,
+    resolve_register_variant_id,
+)
 from .classifications import declared_short_names
 from .id import mint_canonical_scb
 
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable
+    from pathlib import Path
 
 # The `variable.source_label` stamped on every attached row — the canonical
 # analog of `variable_grafts`' `swecov-graft`. Distinct from every existing
@@ -76,6 +85,15 @@ _REQUIRED_KEYS = frozenset(
 )
 _OPTIONAL_KEYS = frozenset({"valid_to", "classification"})
 _ALLOWED_KEYS = _REQUIRED_KEYS | _OPTIONAL_KEYS
+
+# Bind the shared non-empty-string leaf to this surface's code/path once (same
+# idiom as variable_grafts), so the per-field checks reuse the ONE repo rule.
+_require_str = functools.partial(
+    require_str,
+    code="canonical_attach_invalid",
+    prefix="canonical_attach",
+    file_name="input_data/scb_canonical/lisa_canonical.toml",
+)
 
 
 @dataclass(frozen=True)
@@ -99,17 +117,16 @@ class _CanonicalAttach:
     classification: str | None
 
 
-def repo_canonical_attach_path() -> Path | None:
-    """`input_data/scb_canonical/lisa_canonical.toml` from a repo checkout, or
-    None (wheel installs / synthetic builds don't ship the seed). Lives beside
-    the other canonical-SCB seed (`scb_canonical.toml`), NOT at the package root
-    like the graft/relation TOMLs — it's source-delivery seed data, not curation."""
-    candidate = (
-        Path(__file__).resolve().parent.parent.parent
-        / "input_data"
-        / "scb_canonical"
-        / "lisa_canonical.toml"
-    )
+def canonical_attach_path(canonical_dir: Path | None) -> Path | None:
+    """`<canonical_dir>/lisa_canonical.toml`, or None when the dir is None or the
+    file is absent (wheel installs / synthetic / SCB-only builds don't ship the
+    seed → no-op). `canonical_dir` is the build's `--input-dir/scb_canonical/`
+    (the directory the `CanonicalScbAdapter` reads `scb_canonical.toml` from), so
+    the two co-located canonical-SCB seeds resolve from the SAME root — NOT
+    package-relative like the graft/relation curation TOMLs."""
+    if canonical_dir is None:
+        return None
+    candidate = canonical_dir / "lisa_canonical.toml"
     return candidate if candidate.is_file() else None
 
 
@@ -125,32 +142,21 @@ def load_canonical_attach(
     `data_type` in the canonical vocabulary; `classification` (when present) a
     declared catalog short_name; each `(register, variant, column)` unique.
     """
-    if path is None or not path.is_file():
-        return []
-    try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
-        raise curation_error(
-            "canonical_attach_toml_unreadable",
-            f"Could not parse canonical-attach TOML {path}: {exc}",
-            "Fix the TOML syntax in input_data/scb_canonical/lisa_canonical.toml.",
-        ) from exc
-
-    unknown_top = set(data) - {"attach"}
-    if unknown_top:
-        raise curation_error(
-            "canonical_attach_invalid",
-            f"canonical_attach TOML has unknown top-level key(s): {sorted(unknown_top)}.",
-            "The only legal table is `[[attach]]` — check for a typo like `[[attaches]]`.",
-        )
-    entries = data.get("attach", [])
-    if not isinstance(entries, list):
-        raise curation_error(
-            "canonical_attach_invalid",
-            f"canonical_attach `attach` must be an array of tables (`[[attach]]`), "
-            f"got {type(entries).__name__}.",
-            "Use `[[attach]]` table entries, not `attach = …` or a single `[attach]`.",
-        )
+    # Shared read + strict top-level-key / array-of-tables / per-entry-table
+    # scaffold (same as variable_grafts), keeping the established
+    # `canonical_attach_{toml_unreadable,invalid}` codes. `file_name` carries the
+    # seed's repo-relative subpath since it lives under `input_data/`, not the
+    # package root like the curation TOMLs.
+    entries = load_curation_entries(
+        path,
+        entry_key="attach",
+        label="canonical-attach",
+        prefix="canonical_attach",
+        code_base="canonical_attach",
+        file_name="input_data/scb_canonical/lisa_canonical.toml",
+        entry_fields="register / variant / column / name / definition / "
+        "data_type / valid_from",
+    )
 
     out: list[_CanonicalAttach] = []
     seen: set[tuple[str, str, str]] = set()
@@ -176,14 +182,9 @@ def load_canonical_attach(
     return out
 
 
-def _load_one(entry: object, seen: set[tuple[str, str, str]]) -> _CanonicalAttach:
-    if not isinstance(entry, dict):
-        raise curation_error(
-            "canonical_attach_invalid",
-            f"canonical_attach entry {entry!r} must be an `[[attach]]` table.",
-            "Each entry is an `[[attach]]` table with register / variant / column / "
-            "name / definition / data_type / valid_from.",
-        )
+def _load_one(entry: dict, seen: set[tuple[str, str, str]]) -> _CanonicalAttach:
+    # `load_curation_entries` already guaranteed each entry is a `[[attach]]`
+    # table; only the per-FIELD validation remains here.
     unknown = sorted(set(entry) - _ALLOWED_KEYS)
     if unknown:
         raise curation_error(
@@ -199,7 +200,7 @@ def _load_one(entry: object, seen: set[tuple[str, str, str]]) -> _CanonicalAttac
             f"Required keys: {sorted(_REQUIRED_KEYS)}.",
         )
 
-    register_fqid = _req_str(entry, "register")
+    register_fqid = _require_str(entry, "register", "[[attach]]")
     parts = register_fqid.split("/")
     if len(parts) != 2 or not all(parts):
         raise curation_error(
@@ -208,12 +209,12 @@ def _load_one(entry: object, seen: set[tuple[str, str, str]]) -> _CanonicalAttac
             "`provider/register` FQID.",
             'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
         )
-    variant = _req_str(entry, "variant")
-    column = _req_str(entry, "column")
-    name = _req_str(entry, "name")
-    definition = _req_str(entry, "definition")
+    variant = _require_str(entry, "variant", "[[attach]]")
+    column = _require_str(entry, "column", "[[attach]]")
+    name = _require_str(entry, "name", "[[attach]]")
+    definition = _require_str(entry, "definition", "[[attach]]")
 
-    data_type = _req_str(entry, "data_type")
+    data_type = _require_str(entry, "data_type", "[[attach]]")
     if data_type not in _DATA_TYPES:
         raise curation_error(
             "canonical_attach_invalid",
@@ -222,7 +223,7 @@ def _load_one(entry: object, seen: set[tuple[str, str, str]]) -> _CanonicalAttac
             f"Use a canonical data_type: {sorted(_DATA_TYPES)}.",
         )
 
-    valid_from = _req_str(entry, "valid_from")
+    valid_from = _require_str(entry, "valid_from", "[[attach]]")
     _check_iso(valid_from, f"{register_fqid}/{variant}/{column} valid_from")
     valid_to = entry.get("valid_to")
     if valid_to is not None:
@@ -255,7 +256,10 @@ def _load_one(entry: object, seen: set[tuple[str, str, str]]) -> _CanonicalAttac
         )
     classification = classification.strip() if classification is not None else None
 
-    key = (parts[1], variant, column.casefold())
+    # Column identity uses the ONE repo normalization rule (NFKD + ASCII-strip +
+    # lower) so the dedup key folds EXACTLY like the SCB coalescer's node-col and
+    # the gap-fill LOWER() match downstream.
+    key = (parts[1], variant, fold_column(column))
     if key in seen:
         raise curation_error(
             "canonical_attach_invalid",
@@ -278,18 +282,11 @@ def _load_one(entry: object, seen: set[tuple[str, str, str]]) -> _CanonicalAttac
     )
 
 
-def _req_str(entry: dict, field: str) -> str:
-    value = entry.get(field)
-    if not isinstance(value, str) or not value.strip():
-        raise curation_error(
-            "canonical_attach_invalid",
-            f"canonical_attach `{field}` must be a non-empty string, got {value!r}.",
-            f'Give `{field} = "<value>"`.',
-        )
-    return value.strip()
-
-
 def _check_iso(value: str, ctx: str) -> None:
+    # Same two-step ISO check as `sources/curated.py`'s `_check_iso` (kept local
+    # here because that one is an adapter method raising `curated_toml_invalid`
+    # with a `path.name` prefix — not a clean drop-in for this surface's
+    # `canonical_attach_invalid` code/message).
     # `date.fromisoformat` accepts other ISO forms (e.g. `2010-01`), so length-pin
     # the exact YYYY-MM-DD shape first, then reject a calendar-impossible date.
     valid = len(value) == 10 and value[4] == "-" and value[7] == "-"
@@ -336,17 +333,11 @@ def materialize_canonical_attach(
         return counts
 
     for a in active:
-        variant_row = conn.execute(
-            "SELECT rv.register_variant_id, r.register_id FROM register_variant rv "
-            "JOIN register r ON r.register_id = rv.register_id "
-            "JOIN provider p ON p.provider_id = r.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
-            (a.provider, a.register, a.variant),
-        ).fetchone()
-        if variant_row is None:
+        resolved = resolve_register_variant_id(conn, a.provider, a.register, a.variant)
+        if resolved is None:
             counts["unresolved"] += 1
             continue
-        register_variant_id, register_id = variant_row
+        register_variant_id, register_id = resolved
         # Gap-fill only: skip if the column is already a delivered state column in
         # this variant (case/diacritic-folded — same LOWER() match as grafts).
         exists = conn.execute(

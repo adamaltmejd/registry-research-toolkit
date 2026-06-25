@@ -3,7 +3,8 @@
 The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `fold_column`) plus the per-entry leaf helpers below (`require_str`,
 `require_fqid`, `resolve_variable_id`, `resolve_register_id`,
-`load_column_groups`) serve the `[[entry]]` curation-TOML loaders —
+`resolve_register_variant_id`, `load_column_groups`) serve the `[[entry]]`
+curation-TOML loaders —
 `codelivery.py`, `source_column_repairs.py`, `concept_groups.py`, `tags.py`,
 `period_family_merges.py`, `delivery_enrichment.py`, `variable_grafts.py`,
 `classification_links.py`, and `relations.py` (the single typed `[[edge]]`
@@ -239,6 +240,24 @@ def resolve_register_id(
         (provider, register),
     ).fetchone()
     return row[0] if row is not None else None
+
+
+def resolve_register_variant_id(
+    conn: sqlite3.Connection, provider: str, register: str, variant: str
+) -> tuple[int, int] | None:
+    """`(provider, register, variant)` slugs → `(register_variant_id, register_id)`,
+    or None if the variant doesn't resolve (pure lookup, no raise — each caller
+    decides whether None is fatal). The shared target-resolution query for the
+    post-passes that mint rows onto an EXISTING `(register, variant)` —
+    `variable_grafts` and `canonical_attach`."""
+    row = conn.execute(
+        "SELECT rv.register_variant_id, r.register_id FROM register_variant rv "
+        "JOIN register r ON r.register_id = rv.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
+        (provider, register, variant),
+    ).fetchone()
+    return (row[0], row[1]) if row is not None else None
 
 
 def load_column_groups(
