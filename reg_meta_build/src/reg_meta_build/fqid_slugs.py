@@ -819,19 +819,35 @@ def pinned_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
 
 
 def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
-    """Load every TOML under ``slug_dir`` into a flat ``SlugEntry`` list."""
+    """Load every TOML under ``slug_dir`` into a flat ``SlugEntry`` list.
+
+    A ``churning`` zone's ``<provider>.auto.toml`` is SKIPPED: while churning the
+    auto file is gitignored/ephemeral (rewritten every build, not committed — see
+    DESIGN.md § "Slug immutability"), so a leftover untracked file from a prior
+    build is not part of the in-memory baseline. Loading it would inflate
+    ``snapshot_payload`` with phantom variable slugs and false-fail
+    ``test_snapshot_covers_committed_additions`` (the recurring ``git clean -fdX``
+    footgun). A pinned (curating/frozen) zone's committed ``<provider>.auto.toml``
+    IS the baseline and still loads. Mirrors the freeze gate in
+    ``populate_variable_slugs``. Non-auto provider TOMLs and ``classifications.toml``
+    are state-independent and always load.
+    """
     if not slug_dir.is_dir():
         raise _err(
             "slug_dir_not_found",
             f"Slug directory not found: {slug_dir}",
             "Create the directory or pass --slug-dir.",
         )
+    states = load_freeze_states(slug_dir)
     entries: list[SlugEntry] = []
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
         if path.name == FREEZE_STATE_FILE:
             continue  # #470 state map, not a curation TOML
         if path.name == CLASSIFICATIONS_FILE:
             entries.extend(load_classifications_toml(path))
+        elif path.name.endswith(AUTO_FILE_SUFFIX):
+            if freeze_state(states, _provider_from_path(path)) != "churning":
+                entries.extend(load_provider_toml(path))
         else:
             entries.extend(load_provider_toml(path))
     return entries

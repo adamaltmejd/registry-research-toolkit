@@ -409,6 +409,47 @@ def test_variable_less_pinned_provider_not_flagged(tmp_path):
     assert _untracked_pinned_autos(tmp_path) == []
 
 
+def _write_provider_with_auto(slug_dir: Path, provider: str, freeze: str | None) -> str:
+    """Lay down a self-contained slug dir for ``provider`` with a committed-style
+    ``<provider>.toml`` (one register) and a ``<provider>.auto.toml`` carrying one
+    variable slug; optionally a ``freeze.toml`` pinning the zone to ``freeze``
+    (omitted ⇒ the default churning state). Returns the variable's snapshot key
+    (``<provider>/<source_id>``) so callers can assert its presence/absence."""
+    if freeze is not None:
+        (slug_dir / "freeze.toml").write_text(
+            f'{provider} = "{freeze}"\n', encoding="utf-8"
+        )
+    (slug_dir / f"{provider}.toml").write_text(
+        f'[register."1"]\nslug = "{provider}-reg"\n', encoding="utf-8"
+    )
+    (slug_dir / f"{provider}.auto.toml").write_text(
+        '[variable."1.kon"]\nslug = "kon-auto"\n', encoding="utf-8"
+    )
+    return f"{provider}/1.kon"
+
+
+@pytest.mark.parametrize("freeze", [None, "churning"])
+def test_churning_auto_toml_not_loaded(tmp_path, freeze):
+    """A churning zone's ``<provider>.auto.toml`` is gitignored/ephemeral, so a
+    leftover untracked file from a prior build must NOT enter the in-memory slug
+    index — otherwise its phantom variable slugs inflate ``snapshot_payload`` and
+    false-fail ``test_snapshot_covers_committed_additions`` (the ``git clean -fdX``
+    footgun). Covers both the explicit ``churning`` state and the default
+    (no ``freeze.toml`` ⇒ churning)."""
+    key = _write_provider_with_auto(tmp_path, "umu", freeze)
+    payload = snapshot_payload(load_slug_dir(tmp_path))
+    assert key not in payload["variable"]
+
+
+@pytest.mark.parametrize("freeze", ["curating", "frozen"])
+def test_pinned_auto_toml_loaded(tmp_path, freeze):
+    """A pinned (curating/frozen) zone's committed ``<provider>.auto.toml`` IS the
+    baseline, so its variable slugs must still flow into the snapshot."""
+    key = _write_provider_with_auto(tmp_path, "fk", freeze)
+    payload = snapshot_payload(load_slug_dir(tmp_path))
+    assert payload["variable"][key] == "kon-auto"
+
+
 def test_guard_isolated_from_inherited_git_dir(tmp_path, monkeypatch):
     """The git calls must discover the repo from cwd, not an inherited GIT_DIR.
     Git hooks export GIT_DIR/GIT_INDEX_FILE; without env=_git_env() scrubbing
