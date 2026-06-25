@@ -51,6 +51,7 @@ from .concept_groups import (
     repo_concept_groups_path,
 )
 from .db import build_db
+from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import extend_db, resolve_steward_slug_dir
 from .fqid_slugs import (
@@ -647,6 +648,43 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Write the residue worklist TOML to this path. Without it the JSON counts "
             "summary still prints; the TOML is included in the payload."
+        ),
+    )
+
+    doc_coverage_p = sub.add_parser(
+        "doc-coverage",
+        help="Diff doc-documented columns vs the catalog (maintainer review, #400).",
+        description=(
+            "Per-register diff of doc-documented columns (the ingested SCB doc\n"
+            "library, reg_meta_docs.db) against the BUILT catalog's variable_alias\n"
+            "delivery columns. Lists, per register, the columns DOCUMENTED in the doc\n"
+            "library but ABSENT from the catalog — a maintainer-review candidate set\n"
+            "quantifying the metadata-coverage gap (#400 PR1).\n\n"
+            "The exact analog of `classification-residue`: it PRODUCTIZES the gap into\n"
+            "a worklist; it does NOT mint anything. Reads the built catalog DB and the\n"
+            "colocated doc DB (both from the `--db` dir); NEVER mutates either and\n"
+            "NOTHING is materialized. Minting the missing columns (via scb_canonical/)\n"
+            "is the separate, deferred curation step (#400 PR2).\n\n"
+            "The register join is `lower(register.name) == doc.register` (the SCB\n"
+            "literal name, not the churning slug). Columns match CASE-INSENSITIVELY\n"
+            "(SCB columns are case-variant). A doc register that maps to no catalog\n"
+            "register is reported, never silently dropped.\n\n"
+            "The JSON summary reports the total missing columns and per-register\n"
+            "counts. -o/--output-toml writes a comment-rich review worklist (a REVIEW\n"
+            "artifact — NOT a loadable file; the gaps are minted by hand in PR2).\n\n"
+            "Examples:\n"
+            "  reg-meta-build --db <built-db> doc-coverage -o /tmp/doc-coverage.toml\n"
+            "  reg-meta-build --db <built-db> doc-coverage  # counts only"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    doc_coverage_p.add_argument(
+        "-o",
+        "--output-toml",
+        default=None,
+        help=(
+            "Write the doc-coverage worklist TOML to this path. Without it the JSON "
+            "counts summary still prints; the TOML is included in the payload."
         ),
     )
 
@@ -1478,6 +1516,45 @@ def _cmd_classification_residue(
     ), 0
 
 
+def _cmd_doc_coverage(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    from reg_meta.doc_db import doc_db_path, open_doc_db
+
+    start = time.perf_counter()
+    # Schema-checked opens of BOTH the catalog DB and the colocated doc DB: the
+    # diagnostic reads current-schema tables (variable_alias.delivery_column_name,
+    # doc.variable), so a stale DB should fail fast with the standard actionable
+    # schema-mismatch error — same as the residue command.
+    catalog_conn = open_db(db_path_from_args(args.db))
+    try:
+        doc_conn = open_doc_db(doc_db_path(args.db))
+        try:
+            result = compute_doc_coverage(catalog_conn, doc_conn)
+        finally:
+            doc_conn.close()
+    finally:
+        catalog_conn.close()
+
+    toml = render_doc_coverage_toml(result)
+
+    data: dict[str, Any] = {
+        "total": result.total,
+        "per_register_counts": result.per_register_counts,
+        "unmapped_doc_registers": list(result.unmapped_doc_registers),
+    }
+    _emit_toml(args.output_toml, toml, data)
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="doc-coverage",
+        args_payload={"output_toml": args.output_toml},
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 # ---------------------------------------------------------------------------
 # Dispatch
 # ---------------------------------------------------------------------------
@@ -1496,6 +1573,7 @@ COMMAND_DISPATCH: dict[
     "entity-key-pins": _cmd_entity_key_pins,
     "concept-group-candidates": _cmd_concept_group_candidates,
     "classification-residue": _cmd_classification_residue,
+    "doc-coverage": _cmd_doc_coverage,
 }
 
 
@@ -1547,6 +1625,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "classification-residue [-o TOML]",
         "Emit the #416 classification-linkage residue worklist (maintainer review).",
+    ),
+    (
+        "doc-coverage [-o TOML]",
+        "Diff doc-documented columns vs the catalog; emit the gap (maintainer review).",
     ),
 ]
 
