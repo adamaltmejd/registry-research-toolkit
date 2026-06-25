@@ -14,7 +14,7 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.errors import RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import derive_variable_slug
 
 from reg_meta_build.fqid_slugs import (
@@ -1811,6 +1811,74 @@ class TestPopulateVariableSlugs:
         previous["variable"]["scb/1.44"] = "kon-old"
         diff = diff_snapshot(previous, payload)
         assert any("1.44" in r for r in diff["renamed"])
+
+    # --- #786: frozen-provider new-variable fragile-basis gate ------------
+
+    def _frozen_with_new_var(
+        self, tmp_path: Path, *, new_name: str, new_kol: str
+    ) -> tuple[sqlite3.Connection, Path]:
+        # Mirror test_existing_auto_not_recomputed_on_rename's setup: build once
+        # churning to generate (and commit) the auto.toml, then add a NEW variable
+        # and flip the zone to frozen. The existing var 44 (kol "Kon" → "kon") is
+        # pinned from the committed auto.toml; only the new variable is first-sight.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name=new_name, kol=new_kol)
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        return conn, d
+
+    def test_frozen_new_fallback_basis_rejected(self, tmp_path: Path) -> None:
+        # A NEW variable on a FROZEN provider whose slug derives from a fragile
+        # (name-fallback / last-resort) basis would lock that artifact in as an
+        # immutable slug — the gate fails the build so a curator pins it instead.
+        # kol "3DOMR" and name "3D-område" both lead with a digit ⇒ neither
+        # slugifies ⇒ last-resort v<key> arm (_DERIVATION_FALLBACK).
+        conn, d = self._frozen_with_new_var(
+            tmp_path, new_name="3D-område", new_kol="3DOMR"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "1.88" in exc.value.message
+
+    def test_frozen_new_clean_kolumnnamn_accepted(self, tmp_path: Path) -> None:
+        # A NEW variable on a frozen provider with a clean, register-unique
+        # kolumnnamn derives _DERIVATION_KOLUMNNAMN (not fragile) ⇒ no gate.
+        conn, d = self._frozen_with_new_var(
+            tmp_path, new_name="Civilstånd", new_kol="Civilstand"
+        )
+        populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 88) == "civilstand"
+
+    def test_new_fallback_basis_allowed_when_curating(self, tmp_path: Path) -> None:
+        # The SAME fragile new-variable scenario as the FAIL case is dormant on a
+        # non-frozen provider: curating still derives a fresh slug for the new
+        # variable, and the gate is gated strictly on state == "frozen".
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="3D-område", kol="3DOMR")
+        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
+        populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 88) == "v88"
+
+    def test_frozen_new_fallback_cleared_by_pin(self, tmp_path: Path) -> None:
+        # A curated [variable] pin for the offending new variable resolves it as
+        # `curated` (the deliberate review) ⇒ the fragile-basis gate doesn't fire.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)  # churning: writes scb.auto.toml
+        self._add_variable(conn, var_id=88, name="3D-område", kol="3DOMR")
+        (d / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        # Pin the new variable — the curated override wins over the fragile arm.
+        (d / "scb.toml").write_text(
+            '[variable."1.88"]\nslug = "tredimensionellt-omrade"\n', encoding="utf-8"
+        )
+        counts = populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 88) == "tredimensionellt-omrade"
+        assert counts["curated"] == 1
 
     # --- #143: drift-stable slug basis (+ doable-now part of #141) --------
 
