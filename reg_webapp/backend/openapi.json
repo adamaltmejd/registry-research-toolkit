@@ -406,6 +406,57 @@
         "title": "ClassificationEdition",
         "type": "object"
       },
+      "ClassificationGroupNode": {
+        "description": "The classification umbrella group as a browsable subject (#756) \u2014 the\nclassification SIBLING of `ConceptGroupNode`, served only by its own fixed\nroute `/catalog/group/class/{key}`. Distinct from `ConceptGroupNode` because\nclassification members carry NO provider/register/coverage: a classification\numbrella (e.g. the SUN umbrella, key `sun`) groups version-independent\nclassification editions across the whole catalog (`register_id NULL`), so\nthere is no register scope to key on and no per-member study-window coverage\nto zip \u2014 members are reg_meta's frozen browse `ConceptGroupMember` used\nDIRECTLY (fqid + name + facets), NOT subclassed.\n\nLike `ConceptGroupNode`, NOT a `CatalogNode` arm: a group is not\nFQID-addressable (its members carry the real `class/<slug>` leaf FQIDs), and\nit is served only by its fixed route, so the catch-all union never advertises\nit. There is no `member` focus-hint field \u2014 no consumer needs one (member\nhighlight is #757's surface), so this stays minimal.",
+        "properties": {
+          "axes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Axes",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "kind": {
+            "const": "classification-group",
+            "default": "classification-group",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupMember"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "source": {
+            "enum": [
+              "edge",
+              "token",
+              "curated"
+            ],
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "source",
+          "axes",
+          "members"
+        ],
+        "title": "ClassificationGroupNode",
+        "type": "object"
+      },
       "ClassificationNode": {
         "description": "A classification leaf (`class/<slug>`, 2 seg).",
         "properties": {
@@ -3100,6 +3151,46 @@
           }
         },
         "summary": "Get Catalog Root"
+      }
+    },
+    "/api/catalog/group/class/{key}": {
+      "get": {
+        "description": "The classification umbrella group addressed by `key` (#756, e.g. the SUN\numbrella `sun`) \u2014 a browsable subject (all members selected), mirroring the\nregister-scoped `get_concept_group` but for catalog-global classification\numbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no\nclassification group has that key.\n\nBy-key resolution FILTERS `Catalog.list_classification_groups()` in the webapp\nrather than adding a reg_meta `classification_group(key)` accessor: the curated\numbrella list is tiny + global (a handful of groups), the issue scopes this to\nreg_webapp, and a new reg_meta accessor would force a query-side reg_meta\nrelease for a trivial filter. `list_classification_groups()` is already the\nreg_meta read surface the webapp consumes here \u2014 it's what\n`_classification_root_response` reads for the classification-root's `groups`.\n\nNo provider/register/key is slug-validated: `class` is a fixed literal in the\npath, and `key` is a derivation key (not a slug). So there is no\n`Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)\n\u2014 just open the connection (mirroring the register route's per-request model)\nand resolve.",
+        "operationId": "get_classification_group_api_catalog_group_class__key__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationGroupNode"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Classification Group"
       }
     },
     "/api/catalog/group/{provider}/{register}/{key}": {

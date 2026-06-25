@@ -309,6 +309,91 @@ def test_group_route_matched_before_catch_all(client):
     assert body["kind"] == "concept-group"
 
 
+# ── Classification-group SUBJECT route (#756) ───────────────────────────────
+# `/catalog/group/class/<key>` exposes a classification umbrella group as a
+# browsable subject (the classification sibling of the register-scoped group
+# route). The fixture seeds the `sun` umbrella (group_id 11, kind classification,
+# register_id NULL, axis dimension) over the terminal `sun2020` edition (facet
+# niva) + the standalone `niva-test` aggregate (facet aggregat) — see conftest
+# `_seed_concept_groups`.
+
+
+def test_classification_group_route_returns_node(client):
+    """#756: the route resolves a classification umbrella by key to a
+    ClassificationGroupNode — NOT a catch-all FQID parse. `kind` is
+    `classification-group`; identity + members + facets are carried, with members'
+    `class/<slug>` FQIDs passed straight through (no provider/register/coverage)."""
+    resp = client.get("/api/catalog/group/class/sun")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["kind"] == "classification-group"
+    assert body["key"] == "sun"
+    assert body["label"] == "Svensk utbildningsnomenklatur"
+    assert body["source"] == "token"
+    assert body["axes"] == ["dimension"]
+    # Members are ordered by facet value, then slug (list_classification_groups'
+    # ORDER BY m.facet_value, c.slug): aggregat (niva-test) before niva (sun2020).
+    assert [m["fqid"] for m in body["members"]] == [
+        "class/niva-test",
+        "class/sun2020",
+    ]
+    facets_by_fqid = {m["fqid"]: m["facets"] for m in body["members"]}
+    assert facets_by_fqid["class/sun2020"] == [
+        {"axis": "dimension", "value": "niva", "label": "Utbildningsnivå"}
+    ]
+    assert facets_by_fqid["class/niva-test"] == [
+        {"axis": "dimension", "value": "aggregat", "label": "Aggregat"}
+    ]
+    # No coverage / member focus-hint surface — classification members carry
+    # neither (distinct from the register-scoped ConceptGroupNode).
+    assert all("coverage" not in m for m in body["members"])
+    assert "member" not in body
+
+
+def test_classification_group_route_unknown_key_404(client):
+    resp = client.get("/api/catalog/group/class/nosuchkey")
+    assert resp.status_code == 404
+
+
+def test_classification_group_route_matched_before_catch_all(client):
+    """#756 (the load-bearing route-ordering guard): `/catalog/group/class/sun`
+    must be matched by the FIXED classification-group route, NOT mis-parsed as a
+    register group with provider=`class` (the register route's `{provider}` slot
+    would otherwise capture the literal `class`), and NOT greedy-consumed by the
+    `{fqid:path}` catch-all. The `classification-group` kind proves the literal
+    `class` route fired first."""
+    body = client.get("/api/catalog/group/class/sun").json()
+    assert body["kind"] == "classification-group"
+
+
+def test_classification_group_route_accepts_slash_bearing_key(catalog_db):
+    """#756: a slash in a classification umbrella key survives the `{key:path}` route
+    (mirrors `test_group_route_accepts_slash_bearing_key` for the register-scoped
+    group). Seed a fresh classification + a classification umbrella with a slash-bearing
+    key over it (each classification can belong to only one group — the seeded
+    members are already taken), then request it `%2F`-encoded."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO classification (id, short_name, name, slug) "
+            "VALUES (60, 'SLASH', 'Slash member', 'slash-member')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source, facet_axis) "
+            "VALUES (99, 'classification', NULL, 'a/b', 'Slash key', 'token', "
+            "'dimension')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_classification "
+            "(classification_id, group_id, facet_value, facet_label) "
+            "VALUES (60, 99, 'aggregat', 'Aggregat')"
+        )
+    with TestClient(create_app()) as client:
+        resp = client.get("/api/catalog/group/class/a%2Fb")
+    assert resp.status_code == 200
+    assert resp.json()["key"] == "a/b"
+
+
 def test_grouped_binding_leaf_carries_group_ref(client):
     """#616/#617: a grouped binding's leaf carries its owning group as a
     `(provider, register, key)` ref, so a member page knows its home group without

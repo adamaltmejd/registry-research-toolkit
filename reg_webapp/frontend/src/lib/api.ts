@@ -262,6 +262,13 @@ export type ConceptGroupNodeData = Schemas["ConceptGroupNode"];
 /** A member on the group SUBJECT node — the browse member plus its per-variable
  * study-window `coverage` (null for a stateless member). */
 export type ConceptGroupNodeMember = Schemas["ConceptGroupNodeMember"];
+/** The classification umbrella as a browsable SUBJECT (#756), returned by the
+ * fixed `/catalog/group/class/<key>` route — the classification sibling of
+ * `ConceptGroupNodeData`. Catalog-global (no provider/register), and its members
+ * are plain `ConceptGroupMember`s (fqid + name + facets) with NO coverage:
+ * classification umbrellas have no register scope or study-window. Its OWN
+ * response type, NOT an arm of the catch-all `CatalogNode` union. */
+export type ClassificationGroupNodeData = Schemas["ClassificationGroupNode"];
 /** The concept group a binding belongs to (#616), as `(provider, register,
  * key)` — carried on `BindingNode.group` (null when ungrouped) so a member page
  * links to its group subject without a second fetch. */
@@ -326,6 +333,14 @@ export function conceptGroupPath(
   return `/catalog/group/${encodeURIComponent(provider)}/${encodeURIComponent(register)}/${encodeURIComponent(key)}`;
 }
 
+/** The classification-group subject route (#756), shared by SPA links and API
+ * fetches — the classification sibling of `conceptGroupPath`. The literal `class`
+ * segment routes to the fixed classification-group route (no provider/register);
+ * `key` rides the route tail, encoded directly. */
+export function classificationGroupPath(key: string): string {
+  return `/catalog/group/class/${encodeURIComponent(key)}`;
+}
+
 export function getContext(): Promise<Context> {
   return apiGet<Context>("/context");
 }
@@ -378,6 +393,16 @@ export function getConceptGroup(
   const path = conceptGroupPath(provider, register, key);
   const query = member ? `?member=${encodeURIComponent(member)}` : "";
   return apiGet<ConceptGroupNodeData>(`${path}${query}`);
+}
+
+/** Resolve a classification umbrella SUBJECT by `key` (#756) — the group with all
+ * members + facets. The classification sibling of `getConceptGroup`, but with no
+ * provider/register or `?member=` focus hint (classification umbrellas are
+ * catalog-global). A 404 (unknown key) surfaces as an `ApiError`. */
+export function getClassificationGroup(
+  key: string,
+): Promise<ClassificationGroupNodeData> {
+  return apiGet<ClassificationGroupNodeData>(classificationGroupPath(key));
 }
 
 // ── Binding sub-endpoints ───────────────────────────────────────────────────

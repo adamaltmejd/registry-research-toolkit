@@ -44,6 +44,11 @@ _CATCH_ALL = "/api/catalog/{fqid:path}"
 # the classification node as `edition_chain`.)
 _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{provider}/{register}/variants",
+    # #756: the classification-group SUBJECT route — a fixed-shape route with a
+    # literal `group/class` PREFIX, declared above the register-group route (so the
+    # literal `class` is matched before the register route's `{provider}` param) and
+    # above the greedy catch-all.
+    "/api/catalog/group/class/{key:path}",
     # #617: the concept-group SUBJECT route — a fixed-shape 4-seg route with a
     # `group` literal PREFIX, declared above the greedy catch-all.
     "/api/catalog/group/{provider}/{register}/{key:path}",

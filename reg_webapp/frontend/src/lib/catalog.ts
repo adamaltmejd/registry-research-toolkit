@@ -9,6 +9,7 @@ import {
   type BindingGroupRef,
   type CatalogNode,
   type ConceptGroup,
+  classificationGroupPath,
   conceptGroupPath,
   encodeFqid,
   type GroupFacetModel,
@@ -389,6 +390,16 @@ export function catalogHref(fqidPath: string): string {
 export function groupHref(registerFqid: string, key: string): string {
   const [provider, register] = fqidSegments(registerFqid);
   return conceptGroupPath(provider ?? "", register ?? "", key);
+}
+
+/** The href for a classification-umbrella SUBJECT page (#756): the fixed
+ * `/catalog/group/class/<key>` route — the classification sibling of `groupHref`.
+ * A classification umbrella is catalog-global (no provider/register), so it takes
+ * only the group's derivation `key`. The classification-root browse arm links to
+ * it so the umbrella group gets a first-class subject page like the register
+ * groups do (#673 left it inline; #756 gives it the route). */
+export function classGroupHref(key: string): string {
+  return classificationGroupPath(key);
 }
 
 /** Segments of an FQID path (`scb/lisa/kon` → `["scb", "lisa", "kon"]`).

@@ -6,6 +6,7 @@ import {
   breadcrumbs,
   buildAddPlan,
   catalogHref,
+  classGroupHref,
   coverageFromStates,
   deriveType,
   distinctValueSets,
@@ -254,6 +255,18 @@ describe("groupHref", () => {
     expect(groupHref("scb/lsön", "a/b")).toBe(
       "/catalog/group/scb/ls%C3%B6n/a%2Fb",
     );
+  });
+});
+
+describe("classGroupHref (#756)", () => {
+  it("builds the /catalog/group/class/<key> route from a bare key", () => {
+    // The classification sibling of groupHref: the literal `class` route, no
+    // provider/register — a classification umbrella is catalog-global.
+    expect(classGroupHref("sun")).toBe("/catalog/group/class/sun");
+  });
+
+  it("percent-encodes the key", () => {
+    expect(classGroupHref("a/b")).toBe("/catalog/group/class/a%2Fb");
   });
 });
 

@@ -9,6 +9,7 @@ import {
   bindingChildren,
   breadcrumbs,
   catalogHref,
+  classGroupHref,
   countFoldedMembers,
   DATA_BROWSER_LABEL,
   foldGroupedRows,
@@ -212,13 +213,16 @@ $effect(() => {
         <ul class="children table">
           {#each clsRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
             {#if row.kind === "group"}
-              <!-- #673: NO href — the classification-umbrella group has no
-                   register-only subject page, so it KEEPS the inline <details>.
-                   Spans the table columns + owns its layout (`.group-row`). -->
+              <!-- #756: the classification-umbrella group now LINKS to its own
+                   first-class subject page (`classGroupHref`), like the register
+                   groups link to theirs (#673) — the row renders as a link, not the
+                   inline <details>. Spans the table columns + owns its layout
+                   (`.group-row`). -->
               <li class="group-row">
                 <ConceptGroupRow
                   group={row.group}
                   noun={axisNoun(row.group.axes)}
+                  href={classGroupHref(row.group.key)}
                 />
               </li>
             {:else}

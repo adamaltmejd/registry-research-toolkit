@@ -12,12 +12,13 @@ import { axisValues, catalogHref, leafSlug, memberAt } from "./catalog";
 // list) renders them as buttons that emit the member FQID instead of
 // navigating. `disabled` greys the buttons while the picker resolves.
 //
-// `href` (#673): in the REGISTER-arm browse, the row LINKS to the group subject
-// page instead of expanding inline (the group has its own register-only subject
-// route). When `href` is set AND `onpick` is NOT, the summary line renders as a
-// link — no <details>, no matrix. Otherwise (no href, or pick mode) the inline
-// <details> stays: the classification-umbrella arm (no register-only subject
-// page) browses with no href, and pick mode keeps its member-pick buttons.
+// `href` (#673/#756): in the REGISTER-arm browse AND the classification-umbrella
+// arm, the row LINKS to the group's own subject page instead of expanding inline
+// (register groups → `/catalog/group/<p>/<r>/<key>`, #673; classification
+// umbrellas → `/catalog/group/class/<key>`, #756). When `href` is set AND `onpick`
+// is NOT, the summary line renders as a link — no <details>, no matrix. Otherwise
+// (no href, or pick mode) the inline <details> stays: pick mode keeps its
+// member-pick buttons, and any caller that passes no href still folds inline.
 let {
   group,
   noun = "variables",
