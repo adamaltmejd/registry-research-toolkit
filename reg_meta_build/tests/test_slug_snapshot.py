@@ -236,3 +236,48 @@ def test_untracked_pinned_auto_detected(tmp_path):
         env=_git_env(),
     )
     assert _untracked_pinned_autos(tmp_path) == []
+
+
+def test_guard_isolated_from_inherited_git_dir(tmp_path, monkeypatch):
+    """The git calls must discover the repo from cwd, not an inherited GIT_DIR.
+    Git hooks export GIT_DIR/GIT_INDEX_FILE; without env=_git_env() scrubbing
+    them, these cwd-scoped calls would retarget the hook's repo (and `git init`
+    can corrupt it — it once set core.bare=true on the shared config). Plain
+    pytest/CI have no GIT_DIR, so only this test makes the scrub CI-catchable."""
+    # A *different* repo, pointed at by an inherited GIT_DIR (the hook scenario).
+    outer = tmp_path / "outer"
+    outer.mkdir()
+    subprocess.run(
+        ["git", "init"], cwd=outer, capture_output=True, check=True, env=_git_env()
+    )
+    monkeypatch.setenv("GIT_DIR", str(outer / ".git"))
+    monkeypatch.setenv("GIT_INDEX_FILE", str(outer / ".git" / "index"))
+
+    # The guard, run against a SEPARATE inner repo, must read inner's OWN index.
+    # `fk` is pinned (curating) and its auto file is STAGED in inner, so a
+    # cwd-discovered git sees it as tracked → nothing owed → [].
+    inner = tmp_path / "inner"
+    inner.mkdir()
+    subprocess.run(
+        ["git", "init"], cwd=inner, capture_output=True, check=True, env=_git_env()
+    )
+    (inner / "freeze.toml").write_text('fk = "curating"\n', encoding="utf-8")
+    (inner / "fk.toml").write_text(
+        '[register."1"]\nslug = "fk-reg"\n', encoding="utf-8"
+    )
+    (inner / "fk.auto.toml").write_text(
+        '[variable."1.x"]\nslug = "x"\n', encoding="utf-8"
+    )
+    subprocess.run(
+        ["git", "add", "fk.auto.toml"],
+        cwd=inner,
+        capture_output=True,
+        check=True,
+        env=_git_env(),
+    )
+
+    # With the scrub: `git ls-files` reads inner's index, sees the staged
+    # fk.auto.toml as tracked → []. Without it (regression): inherited GIT_DIR
+    # points ls-files at outer's EMPTY index → fk.auto.toml reads as untracked
+    # → ["fk.auto.toml"]. The staged-but-cross-repo case is what the scrub fixes.
+    assert _untracked_pinned_autos(inner) == []
