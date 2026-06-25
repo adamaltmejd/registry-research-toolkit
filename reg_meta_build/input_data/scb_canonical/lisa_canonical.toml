@@ -24,6 +24,11 @@
 #    SSYK96; AstSNI2002(B/G)J -> SNI2002; SektorKodJ -> SEKTOR2000. InstKod7J's
 #    10-position institutional sector code has no catalog classification (omitted);
 #    YSEG_J16/MedbLandNamn have no matching catalog classification (omitted).
+#  * is_identifier = true ONLY where the column's catalog sibling carries it (so an
+#    identifier column is NOT published as ordinary text, weakening the PII guard):
+#    CfarNrSregJ (sibling CFARNrSreg), PeOrgNrSregJ (sibling PeOrgNrSreg), ArbstIdJ
+#    (linkage id; sibling ArbstId) -> is_identifier=1. None of the 32 has a sensitive
+#    sibling, so is_sensitive is left at the default (false) throughout.
 #  * "justerad metod" (J) columns are SCB's single backcast year 2003, produced to
 #    bridge the 2004 RAMS method change ("Uppgiften har tagits fram avseende årgång
 #    2003 för att underlätta jämförelser över tid") -> windowed 2003-01-01..2003-12-31.
@@ -166,6 +171,7 @@ definition = "Det huvudsakliga arbetsstället (CFAR-nummer) bestämt utifrån de
 data_type = "text"
 valid_from = "2003-01-01"
 valid_to = "2003-12-31"
+is_identifier = true  # matches sibling CFARNrSreg (is_identifier=1, is_sensitive=0)
 
 [[attach]]
 register = "scb/lisa"
@@ -176,6 +182,7 @@ definition = "Företagets person-/organisationsnummer enligt de förutsättninga
 data_type = "text"
 valid_from = "2003-01-01"
 valid_to = "2003-12-31"
+is_identifier = true  # matches sibling PeOrgNrSreg (is_identifier=1, is_sensitive=0)
 
 [[attach]]
 register = "scb/lisa"
@@ -186,6 +193,7 @@ definition = "Kopplingsvariabel (identifierare) till arbetsställetabellen för 
 data_type = "text"
 valid_from = "2003-01-01"
 valid_to = "2003-12-31"
+is_identifier = true  # linkage id; matches sibling ArbstId (is_identifier=1, is_sensitive=0)
 
 [[attach]]
 register = "scb/lisa"
@@ -328,7 +336,8 @@ column = "TAE"
 name = "Tillfällig avgångsersättning"
 definition = "Tillfällig avgångsersättning."
 data_type = "decimal"
-valid_from = "1990-01-01"
+valid_from = "1997-01-01"
+valid_to = "1997-12-31"
 
 # ── Arbetad tid (FoB 90) ────────────────────────────────────────────────────────
 [[attach]]

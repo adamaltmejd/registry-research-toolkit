@@ -83,7 +83,9 @@ _DATA_TYPES = frozenset({"text", "decimal", "integer", "date"})
 _REQUIRED_KEYS = frozenset(
     {"register", "variant", "column", "name", "definition", "data_type", "valid_from"}
 )
-_OPTIONAL_KEYS = frozenset({"valid_to", "classification"})
+_OPTIONAL_KEYS = frozenset(
+    {"valid_to", "classification", "is_identifier", "is_sensitive"}
+)
 _ALLOWED_KEYS = _REQUIRED_KEYS | _OPTIONAL_KEYS
 
 # Bind the shared non-empty-string leaf to this surface's code/path once (same
@@ -115,19 +117,44 @@ class _CanonicalAttach:
     valid_from: str
     valid_to: str | None  # None → open-ended (materializer writes the sentinel)
     classification: str | None
+    # PII / identifier guardrails — must survive onto the minted row exactly like
+    # the CanonicalScbAdapter sets them (`is_identifier`/`is_sensitive` on a
+    # curated [[register.variable]]). Omitting them would default to 0, publishing
+    # a person/org-number identifier column as ordinary text. Default False; set
+    # to match the column's existing catalog sibling.
+    is_identifier: bool
+    is_sensitive: bool
 
 
 def canonical_attach_path(canonical_dir: Path | None) -> Path | None:
-    """`<canonical_dir>/lisa_canonical.toml`, or None when the dir is None or the
-    file is absent (wheel installs / synthetic / SCB-only builds don't ship the
-    seed → no-op). `canonical_dir` is the build's `--input-dir/scb_canonical/`
-    (the directory the `CanonicalScbAdapter` reads `scb_canonical.toml` from), so
-    the two co-located canonical-SCB seeds resolve from the SAME root — NOT
-    package-relative like the graft/relation curation TOMLs."""
+    """`<canonical_dir>/lisa_canonical.toml`. `canonical_dir` is the active
+    `CanonicalScbAdapter`'s paired `--input-dir/scb_canonical/` (the directory it
+    reads `scb_canonical.toml` from), so the two co-located canonical-SCB seeds
+    resolve from the SAME root — NOT package-relative like the graft/relation
+    curation TOMLs.
+
+    `canonical_dir is None` ⇒ this build has no canonical-SCB adapter at all
+    (synthetic / SCB-only without the dir / SOS-only) → None (legitimately
+    no-op). But when `canonical_dir` IS present, `lisa_canonical.toml` is a
+    committed part of that seed (#400): a missing file then means a STALE
+    `--input-dir` checkout that predates this content, so we'd silently mint 0
+    attaches and omit the 32 documented LISA variables. Fail fast with the same
+    staleness discipline as the #556 `scb_canonical_seed_missing` preflight rather
+    than skip silently."""
     if canonical_dir is None:
         return None
     candidate = canonical_dir / "lisa_canonical.toml"
-    return candidate if candidate.is_file() else None
+    if not candidate.is_file():
+        raise curation_error(
+            "canonical_attach_seed_missing",
+            f"Canonical-attach seed not found: {candidate}. It is a committed part "
+            "of the scb_canonical seed (#400), but this build's scb_canonical/ "
+            "directory lacks it.",
+            "input_data/scb_canonical/lisa_canonical.toml is a small committed seed; "
+            "if --input-dir points at a separate seed checkout it likely predates "
+            "this content — update it (e.g. `git -C <seed-checkout> pull`).",
+        )
+    return candidate
 
 
 def load_canonical_attach(
@@ -140,7 +167,8 @@ def load_canonical_attach(
     unknown key; `register` a 2-segment `provider/register` FQID; ISO
     `valid_from` (and `valid_to` when present) with `valid_from <= valid_to`;
     `data_type` in the canonical vocabulary; `classification` (when present) a
-    declared catalog short_name; each `(register, variant, column)` unique.
+    declared catalog short_name; `is_identifier`/`is_sensitive` (when present)
+    real TOML booleans; each `(register, variant, column)` unique.
     """
     # Shared read + strict top-level-key / array-of-tables / per-entry-table
     # scaffold (same as variable_grafts), keeping the established
@@ -256,6 +284,10 @@ def _load_one(entry: dict, seen: set[tuple[str, str, str]]) -> _CanonicalAttach:
         )
     classification = classification.strip() if classification is not None else None
 
+    ctx = f"{register_fqid}/{variant}/{column}"
+    is_identifier = _opt_bool(entry, "is_identifier", ctx)
+    is_sensitive = _opt_bool(entry, "is_sensitive", ctx)
+
     # Column identity uses the ONE repo normalization rule (NFKD + ASCII-strip +
     # lower) so the dedup key folds EXACTLY like the SCB coalescer's node-col and
     # the gap-fill LOWER() match downstream.
@@ -279,7 +311,27 @@ def _load_one(entry: dict, seen: set[tuple[str, str, str]]) -> _CanonicalAttach:
         valid_from=valid_from,
         valid_to=valid_to,
         classification=classification,
+        is_identifier=is_identifier,
+        is_sensitive=is_sensitive,
     )
+
+
+def _opt_bool(entry: dict, field: str, ctx: str) -> bool:
+    # Mirror `CuratedAdapter._opt_bool`: `bool(...)` on a present non-bool is a
+    # footgun (`bool("false")` is True), and these are PII/identifier guardrails —
+    # silently flipping one is exactly the leak we're preventing. Demand a real
+    # TOML boolean; absent → False (DDL default).
+    value = entry.get(field)
+    if value is None:
+        return False
+    if not isinstance(value, bool):
+        raise curation_error(
+            "canonical_attach_invalid",
+            f"canonical_attach {ctx}: `{field}` must be a boolean when present, "
+            f"got {value!r}.",
+            f"Use a bare true/false for `{field}` (no quotes).",
+        )
+    return value
 
 
 def _check_iso(value: str, ctx: str) -> None:
@@ -355,7 +407,8 @@ def materialize_canonical_attach(
         state_id = mint_canonical_scb("scb", a.register, a.variant, a.column, "state")
         conn.execute(
             "INSERT INTO variable (variable_id, register_id, provider_key, name, "
-            "description, source_label) VALUES (?, ?, ?, ?, ?, ?)",
+            "description, source_label, is_identifier, is_sensitive) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 variable_id,
                 register_id,
@@ -363,6 +416,11 @@ def materialize_canonical_attach(
                 a.name,
                 a.definition,
                 CANONICAL_ATTACH_SOURCE_LABEL,
+                # PII/identifier guardrails — carry the seed flags onto the row so a
+                # minted identifier column (PeOrgNrSregJ, …) is NOT published as
+                # ordinary text. INTEGER columns; the seed carries bools.
+                int(a.is_identifier),
+                int(a.is_sensitive),
             ),
         )
         conn.execute(

@@ -18,6 +18,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.canonical_attach import (
     CANONICAL_ATTACH_SOURCE_LABEL,
     _CanonicalAttach,
+    canonical_attach_path,
     load_canonical_attach,
     materialize_canonical_attach,
 )
@@ -45,6 +46,8 @@ def _a(
     valid_from: str = "2010-01-01",
     valid_to: str | None = "2013-12-31",
     classification: str | None = None,
+    is_identifier: bool = False,
+    is_sensitive: bool = False,
 ) -> _CanonicalAttach:
     return _CanonicalAttach(
         provider="scb",
@@ -57,6 +60,8 @@ def _a(
         valid_from=valid_from,
         valid_to=valid_to,
         classification=classification,
+        is_identifier=is_identifier,
+        is_sensitive=is_sensitive,
     )
 
 
@@ -116,6 +121,34 @@ class TestLoader:
         )
         entries = load_canonical_attach(_write(tmp_path / "x.toml", body))
         assert entries[0].valid_to is None  # materializer writes the sentinel
+
+    def test_identifier_flags_default_false(self, tmp_path: Path) -> None:
+        # Omitted → False (DDL default 0). Guards against an attached row silently
+        # downgrading a sibling's identifier/sensitive flag.
+        entries = load_canonical_attach(_write(tmp_path / "x.toml", _FULL_ENTRY))
+        assert (entries[0].is_identifier, entries[0].is_sensitive) == (False, False)
+
+    def test_identifier_flags_parse(self, tmp_path: Path) -> None:
+        body = (
+            '[[attach]]\nregister = "scb/lisa"\nvariant = "v"\ncolumn = "PeOrgNrSregJ"\n'
+            'name = "Org.nr"\ndefinition = "D"\ndata_type = "text"\n'
+            'valid_from = "2003-01-01"\nis_identifier = true\nis_sensitive = false\n'
+        )
+        entries = load_canonical_attach(_write(tmp_path / "x.toml", body))
+        assert (entries[0].is_identifier, entries[0].is_sensitive) == (True, False)
+
+    @pytest.mark.parametrize("field", ["is_identifier", "is_sensitive"])
+    def test_non_bool_identifier_flag_fails(self, tmp_path: Path, field: str) -> None:
+        # A string ("true") must NOT silently coerce — bool("false") is True, which
+        # would flip a PII guardrail. Demand a real TOML boolean.
+        body = (
+            '[[attach]]\nregister = "scb/lisa"\nvariant = "v"\ncolumn = "C"\nname = "N"\n'
+            'definition = "D"\ndata_type = "text"\nvalid_from = "2010-01-01"\n'
+            f'{field} = "true"\n'
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_canonical_attach(_write(tmp_path / "x.toml", body))
+        assert exc.value.exit_code == EXIT_CONFIG
 
     def test_required_keys(self, tmp_path: Path) -> None:
         # Drop each required key in turn and assert the load fails EXIT_CONFIG.
@@ -197,6 +230,30 @@ class TestLoader:
         assert exc.value.exit_code == EXIT_CONFIG
 
 
+# ── seed-path resolution (stale-seed fail-loud) ──────────────────────────────────
+
+
+class TestSeedPath:
+    def test_none_dir_is_noop(self) -> None:
+        # No canonical-SCB adapter at all (synthetic / SCB-only / SOS-only build) →
+        # legitimately no canonical-attach seed; None, no error.
+        assert canonical_attach_path(None) is None
+
+    def test_present_seed_resolves(self, tmp_path: Path) -> None:
+        (tmp_path / "lisa_canonical.toml").write_text(_FULL_ENTRY, encoding="utf-8")
+        assert canonical_attach_path(tmp_path) == tmp_path / "lisa_canonical.toml"
+
+    def test_present_dir_missing_seed_fails_loud(self, tmp_path: Path) -> None:
+        # The canonical-SCB adapter IS active (dir present) but the committed
+        # lisa_canonical.toml is absent → a stale --input-dir checkout. Mirror the
+        # #556 scb_canonical_seed_missing discipline: fail EXIT_CONFIG, don't
+        # silently mint 0 attaches and omit the 32 documented LISA variables.
+        with pytest.raises(RegMetaError) as exc:
+            canonical_attach_path(tmp_path)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "canonical_attach_seed_missing"
+
+
 # ── materialize ────────────────────────────────────────────────────────────────
 
 
@@ -242,6 +299,36 @@ class TestMaterialize:
             (vid, "Ssyk4_J16"),
         ).fetchone()
         assert candidates == []  # no classification on this entry
+
+    def test_identifier_flags_propagate_to_variable(self) -> None:
+        # PII guard: an identifier attach (PeOrgNrSregJ analog) must land
+        # is_identifier=1 on the minted variable row — NOT the DDL default 0.
+        conn = build_slugged_db()
+        materialize_canonical_attach(
+            conn,
+            [_a("PeOrgNrSregJ", is_identifier=True, is_sensitive=False)],
+            providers=_SCB,
+            classification_candidates=[],
+        )
+        vid = _variable(conn, "PeOrgNrSregJ")[0]
+        ident, sens = conn.execute(
+            "SELECT is_identifier, is_sensitive FROM variable WHERE variable_id = ?",
+            (vid,),
+        ).fetchone()
+        assert (ident, sens) == (1, 0)
+
+    def test_default_flags_land_zero(self) -> None:
+        # A non-identifier attach (no flags) lands the DDL default 0/0.
+        conn = build_slugged_db()
+        materialize_canonical_attach(
+            conn, [_a("Ssyk4_J16")], providers=_SCB, classification_candidates=[]
+        )
+        vid = _variable(conn, "Ssyk4_J16")[0]
+        ident, sens = conn.execute(
+            "SELECT is_identifier, is_sensitive FROM variable WHERE variable_id = ?",
+            (vid,),
+        ).fetchone()
+        assert (ident, sens) == (0, 0)
 
     def test_open_ended_sentinel_when_valid_to_omitted(self) -> None:
         conn = build_slugged_db()

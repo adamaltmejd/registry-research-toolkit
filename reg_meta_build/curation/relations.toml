@@ -146,6 +146,27 @@ to = "scb/lisa/agi3astsni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
+# ── LISA yrke (SSYK): SSYK 96 → SSYK 2012 J16-frame succession (#400) ──
+#    The härledd J16-ram occupation columns recut from SSYK 96 to SSYK 2012 at
+#    årgång 2014: the SSYK 96 3-/4-siffer J16 columns (2010–2013, the canonical-
+#    attach variables this PR mints) are superseded by the SSYK 2012 J16 columns
+#    from 2014. A replaced_by succession per granularity (3-siffer / 4-siffer);
+#    the auto vintage rule can't fire here (different classification nomenclature,
+#    not a same-stem edition), hence the explicit curated edges.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ssyk3-j16"
+to = "scb/lisa/ssyk3-2012-j16"
+effective_year = 2014
+note = "Yrke SSYK 96 3-siffer (härledd, J16-ram, 2010–2013) superseded by the SSYK 2012 3-siffer J16 column from årgång 2014 (#400)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ssyk4-j16"
+to = "scb/lisa/ssyk4-2012-j16"
+effective_year = 2014
+note = "Yrke SSYK 96 4-siffer (härledd, J16-ram, 2010–2013) superseded by the SSYK 2012 4-siffer J16 column från årgång 2014 (#400)"
+
 # ── SUN 1996 → 2000 nomenclature split (#579) ──
 #    The 1996 SUN (Svensk utbildningsnomenklatur) was restructured in 2000 into
 #    all three SUN 2000 dimensions (nivå / inriktning / grupp) — so the lone
