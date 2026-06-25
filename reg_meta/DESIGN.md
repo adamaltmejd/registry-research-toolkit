@@ -697,14 +697,14 @@ derived at build time (`reg_meta_build/concept_groups.py` documents the derivati
 dimensions and their guards; see `reg_meta_build/DESIGN.md` → Concept-group derivation).
 
 **Classification vintage editions** (`lkf1980`…`lkf2026`, `ssyk1996`→`ssyk2012`,
-`sun-niva2000`→`sun-niva2020`) are **not** folded into concept groups (#571). Editions
+`sun2000-niva`→`sun2020-niva`) are **not** folded into concept groups (#571). Editions
 of one classification are a temporal succession, not a parallel browse facet. They
 materialize as adjacent-edition edges in `classification_replaced_by` (auto-derived from
 the same year-tail detection; cross-stem restructures the year-tail can't reach are
 curated, #579 — e.g. `sun1996` → the 2000 nivå/inriktning split).
 `concept_group_classification` holds CURATED umbrella groups: `group:sun` (#516) groups
-the three genuinely-distinct SUN 2020 dimensions (`sun-niva2020` Utbildningsnivå,
-`sun-inriktning2020` Utbildningsinriktning, `sun-grupp2020` Utbildningsgrupper) PLUS the
+the three genuinely-distinct SUN 2020 dimensions (`sun2020-niva` Utbildningsnivå,
+`sun2020-inriktning` Utbildningsinriktning, `sun2020-grupp` Utbildningsgrupper) PLUS the
 two nivå aggregates (`niva-oldv1` / `niva-grovv1` — version-independent coarsenings of
 the nivå dimension, 7-level and 5-level respectively) on a single `dimension` facet
 axis. The aggregates carry no succession edge (version-independent) and are terminal, so

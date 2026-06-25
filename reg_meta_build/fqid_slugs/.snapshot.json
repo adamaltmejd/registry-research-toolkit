@@ -73,12 +73,12 @@
     "SSYK2012": "ssyk2012",
     "SSYK96": "ssyk1996",
     "SUN1996": "sun1996",
-    "SUN2000-GRUPP": "sun-grupp2000",
-    "SUN2000-INRIKTNING": "sun-inriktning2000",
-    "SUN2000-NIVA": "sun-niva2000",
-    "SUN2020-GRUPP": "sun-grupp2020",
-    "SUN2020-INRIKTNING": "sun-inriktning2020",
-    "SUN2020-NIVA": "sun-niva2020"
+    "SUN2000-GRUPP": "sun2000-grupp",
+    "SUN2000-INRIKTNING": "sun2000-inriktning",
+    "SUN2000-NIVA": "sun2000-niva",
+    "SUN2020-GRUPP": "sun2020-grupp",
+    "SUN2020-INRIKTNING": "sun2020-inriktning",
+    "SUN2020-NIVA": "sun2020-niva"
   },
   "register": {
     "fk/4635732609514065093": "barnbidrag",

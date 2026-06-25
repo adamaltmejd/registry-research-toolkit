@@ -2138,8 +2138,8 @@ already-grouped member:
    in `classification_replaced_by` via `derive_classification_succession`.
    `classification_replaced_by` is the **single canonical succession surface** (#579):
    the auto year-tail edges above plus curated cross-stem edges from `relations.toml`
-   (`type = "replaced_by"`, `class/<slug>` — e.g. the `sun1996` → `sun-niva2000` /
-   `sun-inriktning2000` / `sun-grupp2000` 1→many split the same-stem rule can't
+   (`type = "replaced_by"`, `class/<slug>` — e.g. the `sun1996` → `sun2000-niva` /
+   `sun2000-inriktning` / `sun2000-grupp` 1→many split the same-stem rule can't
    produce). `classification.supersedes_id` is a DERIVED back-pointer projected from
    that edge table by `derive_supersedes_from_edges` (runs after the auto + curated
    edges land, before `link_value_set_classifications` reads it); the
@@ -2180,8 +2180,8 @@ already-grouped member:
      facet display label). This is the `kind='classification'` dual of
      `_apply_curated_groups` — it populates `concept_group_classification` rather than
      `concept_group_variable`. The SUN group is the worked example: `group:sun` with
-     `axis = "dimension"`, members `sun-niva2020` (Utbildningsnivå),
-     `sun-inriktning2020` (Utbildningsinriktning), `sun-grupp2020` (Utbildningsgrupper),
+     `axis = "dimension"`, members `sun2020-niva` (Utbildningsnivå),
+     `sun2020-inriktning` (Utbildningsinriktning), `sun2020-grupp` (Utbildningsgrupper),
      `niva-oldv1` (Nivå – aggregat, 7 nivåer), and `niva-grovv1` (Nivå – aggregat, 5
      nivåer). The two nivå aggregates are version-independent coarsenings (no succession
      edge) so they ride the single `dimension` axis; the proper granularity surface is

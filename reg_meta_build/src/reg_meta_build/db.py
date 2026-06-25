@@ -1153,8 +1153,8 @@ CREATE INDEX idx_variable_replaced_by_successor
     ON variable_replaced_by(successor_provider, successor_register, successor_variable);
 
 -- Classification EDITION succession (#571): a temporal chain over vintages of
--- ONE classification (ssyk1996→ssyk2012, lkf1980…lkf2026, sun-niva2000→
--- sun-niva2020). Auto-derived from the slug-tail vintage families by
+-- ONE classification (ssyk1996→ssyk2012, lkf1980…lkf2026, sun2000-niva→
+-- sun2020-niva). Auto-derived from the slug vintage families by
 -- `concept_groups.derive_classification_succession` — adjacent-edition edges
 -- (y0→y1, y1→y2, …), NOT a presentation facet-picker (editions are a
 -- succession, not parallel facets; see #571). A classification slug is GLOBALLY
@@ -1165,10 +1165,12 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- replaced X?" lookup; the reverse "what did X replace?" is served by the
 -- successor index below. `effective_year` is the successor edition's year.
 -- `note` is PROVENANCE-ONLY for every row: the auto #571 rows stamp
--- `derived:vintage_chain`, the CURATED #579 rows (e.g. the sun1996 → nivå /
--- inriktning / grupp 1→many split that the same-stem auto rule can't produce,
--- from `curation/relations.toml` `type = "replaced_by"` `class/<slug>` edges)
--- stamp `curated:slug_toml`. Unlike the entity tables there is NO `beskrivning`
+-- `derived:vintage_chain` (incl. the SUN within-dimension chains, whose mid-slug
+-- vintage `sun2020-niva` the #747 SUN-scoped stem override keeps bucketing as a
+-- family), the CURATED #579 rows (the sun1996 → nivå / inriktning / grupp 1→many
+-- split that the same-stem auto rule can't produce, from `curation/relations.toml`
+-- `type = "replaced_by"` `class/<slug>` edges) stamp `curated:slug_toml`. Unlike
+-- the entity tables there is NO `beskrivning`
 -- column, so a classification edge carries no human transition reason (it lives in
 -- a `#` comment in relations.toml). (A later PR #516 adds CURATED umbrella
 -- classification groups — e.g. SUN — via the retained

@@ -949,9 +949,9 @@ class TestMovedEdges:
             if str(e.predecessor) == "class/sun1996"
         }
         assert sun_succ == {
-            "class/sun-niva2000",
-            "class/sun-inriktning2000",
-            "class/sun-grupp2000",
+            "class/sun2000-niva",
+            "class/sun2000-inriktning",
+            "class/sun2000-grupp",
         }
         assert all(
             e.predecessor.kind is FqidKind.CLASSIFICATION

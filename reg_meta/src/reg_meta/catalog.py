@@ -1046,10 +1046,10 @@ class Catalog:
         """Curated classification umbrella groups (see DESIGN.md → Concept
         groups), ordered by group key. `concept_group_classification` holds
         only CURATED umbrella entries — e.g. `group:sun`, which groups the
-        three genuinely-distinct SUN dimensions (`sun-niva2020`,
-        `sun-inriktning2020`, `sun-grupp2020`) on a `dimension` axis (#516).
+        three genuinely-distinct SUN dimensions (`sun2020-niva`,
+        `sun2020-inriktning`, `sun2020-grupp`) on a `dimension` axis (#516).
         Derived classification VINTAGE editions (lkf1980…lkf2026,
-        ssyk1996→ssyk2012, sun-niva2000→sun-niva2020) are NOT here; they
+        ssyk1996→ssyk2012, sun2000-niva→sun2020-niva) are NOT here; they
         appear as succession edges in `classification_replaced_by` (#571).
         Members carry the real `class/<slug>` FQIDs. The group's single facet
         axis is read from `concept_group.facet_axis` — every member shares it."""
@@ -2073,7 +2073,7 @@ class Catalog:
         sort key (a NULL/undated edge no longer inverts the order).
 
         The forward walk is BRANCH-AWARE (#605): a 1→many succession SPLIT (e.g.
-        `sun1996 → {sun-niva2000, sun-inriktning2000, sun-grupp2000}`, #579) fans out
+        `sun1996 → {sun2000-niva, sun2000-inriktning, sun2000-grupp}`, #579) fans out
         into every branch, so querying the split ROOT surfaces ALL the downstream
         dimensions rather than only the deterministic-first one. A node with exactly
         ONE successor walks linearly as before; a node with >1 successor recurses into
@@ -2086,10 +2086,10 @@ class Catalog:
         The BACKWARD walk stays deterministic-first — each classification has ≤1
         predecessor (no merges exist in the corpus), so the `[0]` predecessor IS the
         only one. Anchoring on the queried path means: querying a LEAF (e.g.
-        `sun-niva2020`) walks back through its own branch to the split root and then
+        `sun2020-niva`) walks back through its own branch to the split root and then
         forward — but the forward closure FROM a leaf is just the leaf's own
         (childless) subtree, so a leaf's chain is its single linear path
-        (`[sun1996, sun-niva2000, sun-niva2020]`), NOT the sibling branches. Only the
+        (`[sun1996, sun2000-niva, sun2020-niva]`), NOT the sibling branches. Only the
         SPLIT NODE itself fans out, and a leaf reaches the split node only on the
         backward (single-predecessor) walk.
 
@@ -2212,7 +2212,7 @@ class Catalog:
         """The curated classification umbrella group(s) this edition belongs to
         (#609) — the classification-grain dual of `dimensions` (#516). Surfaces the
         niva ↔ aggregate granularity relationship that #585/#608 model as flat
-        `dimension`-axis members of `group:sun` (e.g. `sun-niva2020` alongside the
+        `dimension`-axis members of `group:sun` (e.g. `sun2020-niva` alongside the
         7-level `niva-old` and 5-level `niva-grov` aggregates): the leaf reads its
         sibling members from the EXISTING `concept_group_classification` table — no
         new query infra, no browse-fold/group-membership change.

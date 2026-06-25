@@ -929,7 +929,7 @@ export function distinctValueSets(
 /** Humanize a classification slug for the value-set label (#668): the clean
  * vintage form `<letters><4-digit-year>` (e.g. `lkf2007`) becomes
  * `"<LETTERS-UPPER> <year>"` (`"LKF 2007"`); anything else (suffixed/hyphenated
- * slugs like `sun-niva2000`, `icd-10-se`, or a non-vintage slug) falls back to
+ * slugs like `sun2000-niva`, `icd-10-se`, or a non-vintage slug) falls back to
  * the raw slug verbatim — a stable identifier beats a mangled guess. */
 export function humanizeClassificationSlug(slug: string): string {
   const m = /^([a-z]+)(\d{4})$/.exec(slug);

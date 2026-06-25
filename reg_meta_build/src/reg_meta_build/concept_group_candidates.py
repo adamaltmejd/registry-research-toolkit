@@ -4,7 +4,7 @@ The `concept_groups` derivation (#303) folds machine-stamped SCB column families
 into PRESENTATION-ONLY browse rows, but its automatic layer is patchy: the `edge`
 pass only fires on A2.2 sibling edges, and the `token` pass only recognises the
 exact curated month/vintage vocabularies. Everything else (digit-suffixed families
-like `sun-niva2000…`, `morsak1/2/3`, the `fasit` yearly series) sits unfolded
+like `morsak1/2/3`, the `fasit` yearly series) sits unfolded
 unless a maintainer opts it in via `concept_groups.toml`.
 
 This module is the GENERATOR half of the generate-then-accept split that
@@ -58,8 +58,8 @@ if TYPE_CHECKING:
     import sqlite3
 
 # A trailing run of digits splits a slug into (stem, suffix). The stem is
-# non-greedy so the digits are the MAXIMAL trailing run: `sun-niva2000` →
-# `('sun-niva', 2000)`, `morsak1` → `('morsak', 1)`. `agi1lonfink` has no
+# non-greedy so the digits are the MAXIMAL trailing run: `delkomp-ink2000` →
+# `('delkomp-ink', 2000)`, `morsak1` → `('morsak', 1)`. `agi1lonfink` has no
 # trailing digit, so it doesn't match (correctly — the digit is internal).
 _SUFFIX_RE = re.compile(r"^(.*?)(\d+)$")
 
@@ -319,9 +319,9 @@ def _load_accepted_group_members(
 
 
 def _split_stem_suffix(slug: str) -> tuple[str, str, int] | None:
-    """`('sun-niva', 'sun-niva', 2000)` for `sun-niva2000`, or None when the slug
-    has no trailing-digit run or an empty stem (a bare `2000` slug is not a family
-    member). Returns `(key_stem, raw_stem, suffix)`: `raw_stem` is the prefix
+    """`('delkomp-ink', 'delkomp-ink', 2000)` for `delkomp-ink2000`, or None when
+    the slug has no trailing-digit run or an empty stem (a bare `2000` slug is not a
+    family member). Returns `(key_stem, raw_stem, suffix)`: `raw_stem` is the prefix
     before the trailing digit run (verbatim); `key_stem` is `raw_stem` with any
     trailing hyphen(s) trimmed.
 
