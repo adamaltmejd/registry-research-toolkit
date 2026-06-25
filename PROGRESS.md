@@ -84,6 +84,9 @@ catalog-wide-by-reach:
   /tmp/scb-cur/n747/proposals/<bid>.json. Resume: Workflow({scriptPath:
   …scb-slug-consistency-fanout-wf_feb94680-d0c.js, resumeFromRunId: "wf_feb94680-d0c"})
   — agents idempotent (skip written proposals).
+- round-1 hit weekly rate-limit at \~199/310 chunks (1,791 valid proposals recovered).
+- round-1 RESUME (110 incomplete chunks, sonnet): `wf_41688b4a-da2` (task wp1khgw5e);
+  incomplete_chunks.json lists them; agents idempotent so partial chunks finish cleanly.
 - baseline DB: /tmp/scb-cur/n747/db_base; slug-dir copy: /tmp/scb-cur/n747/slugdir_base.
 
 ## Gotchas carried from #471 (do not relearn)
