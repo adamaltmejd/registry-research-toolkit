@@ -2598,8 +2598,15 @@ The three states advance deliberately; **`frozen` is a one-way seal**:
   curation window — pin the auto slugs, then iterate the curated names before sealing.
 - **`frozen`** — pinned **and** grow-only: `precheck-slugs --update-snapshot`
   **refuses** any rename or removal in a frozen zone (`diff_snapshot`'s `blocked` list),
-  and the snapshot CI test fails on it. Only additions are accepted; a typo is fixed by
-  adding a new entry plus a `replaced_by` pointer, never by editing in place.
+  and the snapshot CI test fails on it. New variables with a stable kolumnnamn/column
+  basis are still accepted (auto-appended), but a new variable whose slug falls back to
+  a fragile basis — name-fallback, `v<key>` last-resort, or `+disambiguated` suffix
+  (i.e. `_is_name_fallback_derivation`) — **fails the build** with
+  `slug_freeze_new_fallback` (#786): locking an unstable derivation in as immutable is a
+  curation hazard. The remedy is to pin a `[variable."<reg>.<var>"]` slug in the
+  provider TOML; `populate_variable_slugs` then uses the curated override instead. A
+  typo in an existing slug is fixed by adding a new entry plus a `replaced_by` pointer,
+  never by editing in place.
 
 The two gates are **decoupled**: `freeze_state(states, zone)` drives the
 auto-regeneration gate in `populate_variable_slugs` (churning re-derives;
