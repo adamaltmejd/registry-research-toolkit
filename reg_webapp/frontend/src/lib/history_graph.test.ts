@@ -597,6 +597,75 @@ describe("history graph prototype model", () => {
     expect(graph.warnings).toEqual([]);
   });
 
+  it("can focus a historical classification node inside the shared group graph", () => {
+    const group = {
+      kind: "concept-group",
+      key: "sun",
+      label: "Svensk utbildningsnomenklatur",
+      provider: "class",
+      register: null,
+      source: "curated",
+      axes: ["dimension"],
+      member: null,
+      members: [
+        {
+          fqid: "class/sun-inriktning2020",
+          name: "Utbildningsinriktning",
+          facets: [
+            { axis: "dimension", value: "inriktning", label: "Inriktning" },
+          ],
+          coverage: null,
+        },
+      ],
+    } as ConceptGroupNodeData;
+    const graph = historyGraphFromClassificationGroup(
+      group,
+      [
+        {
+          kind: "classification",
+          fqid: "class/sun-inriktning2020",
+          name: "SUN 2020 — inriktning",
+          short_name: "SUN2020-INRIKTNING",
+          codes: [],
+          dimensions: [],
+          edition_chain: [
+            {
+              slug: "sun-inriktning2000",
+              fqid: "class/sun-inriktning2000",
+              name: "SUN 2000 — inriktning",
+              effective_year: 2020,
+              is_self: false,
+              is_current: false,
+            },
+            {
+              slug: "sun-inriktning2020",
+              fqid: "class/sun-inriktning2020",
+              name: "SUN 2020 — inriktning",
+              effective_year: null,
+              is_self: true,
+              is_current: true,
+            },
+          ],
+          edition_edges: [
+            {
+              predecessor_slug: "sun-inriktning2000",
+              predecessor_fqid: "class/sun-inriktning2000",
+              successor_slug: "sun-inriktning2020",
+              successor_fqid: "class/sun-inriktning2020",
+              effective_year: 2020,
+              note: null,
+            },
+          ],
+        } as ClassificationNodeData,
+      ],
+      "class/sun-inriktning2000",
+    );
+
+    expect(
+      graph.nodes.filter((node) => node.self).map((node) => node.id),
+    ).toEqual(["class/sun-inriktning2000"]);
+  });
+
   it("turns classification editions into succession nodes", () => {
     const graph = historyGraphFromClassification({
       kind: "classification",

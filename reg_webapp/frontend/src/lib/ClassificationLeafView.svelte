@@ -1,6 +1,7 @@
 <script lang="ts">
 import {
   type ClassificationNodeData,
+  type ConceptGroup,
   getCatalogNode,
   isCatalogNode,
 } from "./api";
@@ -27,34 +28,78 @@ let {
   node,
   vintageYear,
 }: { node: ClassificationNodeData; vintageYear?: number } = $props();
-const graphGroup = $derived(
-  (node.dimensions ?? []).find((group) =>
-    group.members.some((member) => member.fqid === node.fqid),
-  ) ?? null,
-);
-const graphMembers = asyncResource<ClassificationNodeData[]>(async (signal) => {
-  if (!graphGroup) {
-    return [];
-  }
-  return Promise.all(
-    graphGroup.members.map(async (member) => {
-      const resolved = await getCatalogNode(member.fqid, undefined, { signal });
-      if (isCatalogNode(resolved) && resolved.kind === "classification") {
-        return resolved;
-      }
-      throw new Error(`Expected classification node for ${member.fqid}`);
-    }),
+
+function groupContaining(
+  groupNode: ClassificationNodeData,
+): ConceptGroup | null {
+  return (
+    (groupNode.dimensions ?? []).find((group) =>
+      group.members.some((member) => member.fqid === groupNode.fqid),
+    ) ?? null
   );
+}
+
+function editionGroupAnchors(groupNode: ClassificationNodeData): string[] {
+  const seen = new Set([groupNode.fqid]);
+  const ordered = [
+    ...(groupNode.edition_chain ?? []).filter((edition) => edition.is_current),
+    ...(groupNode.edition_chain ?? []).filter((edition) => !edition.is_current),
+  ];
+  const anchors: string[] = [];
+  for (const edition of ordered) {
+    if (!edition.fqid || seen.has(edition.fqid)) {
+      continue;
+    }
+    seen.add(edition.fqid);
+    anchors.push(edition.fqid);
+  }
+  return anchors;
+}
+
+async function fetchClassificationNode(
+  fqid: string,
+  signal: AbortSignal,
+): Promise<ClassificationNodeData> {
+  const resolved = await getCatalogNode(fqid, undefined, { signal });
+  if (isCatalogNode(resolved) && resolved.kind === "classification") {
+    return resolved;
+  }
+  throw new Error(`Expected classification node for ${fqid}`);
+}
+
+const directGraphGroup = $derived(groupContaining(node));
+const graphData = asyncResource<{
+  group: ConceptGroup | null;
+  members: ClassificationNodeData[];
+}>(async (signal) => {
+  let group = directGraphGroup;
+  for (const fqid of editionGroupAnchors(node)) {
+    if (group) {
+      break;
+    }
+    const resolved = await fetchClassificationNode(fqid, signal);
+    group = groupContaining(resolved);
+  }
+  if (!group) {
+    return { group: null, members: [] };
+  }
+  const members = await Promise.all(
+    group.members.map((member) => fetchClassificationNode(member.fqid, signal)),
+  );
+  return { group, members };
 });
+const graphGroup = $derived(graphData.data?.group ?? null);
 const historyGraph = $derived(
-  graphGroup && graphMembers.data
+  graphGroup && graphData.data
     ? historyGraphFromClassificationGroup(
         graphGroup,
-        graphMembers.data,
+        graphData.data.members,
         node.fqid,
       )
     : historyGraphFromClassification(node),
 );
+const graphLoading = $derived(graphData.loading);
+const graphError = $derived(graphData.error);
 </script>
 
 {#snippet description()}
@@ -74,10 +119,10 @@ const historyGraph = $derived(
      succession chain (#571, oldest → current). Each omits itself when empty / for a
      standalone classification with no succession. -->
 {#snippet relationships()}
-  {#if graphGroup && graphMembers.loading}
+  {#if graphLoading}
     <p class="muted" aria-busy="true">Loading group graph…</p>
-  {:else if graphGroup && graphMembers.error}
-    <p class="error" role="alert">{graphMembers.error}</p>
+  {:else if graphError}
+    <p class="error" role="alert">{graphError}</p>
   {:else}
     <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
   {/if}

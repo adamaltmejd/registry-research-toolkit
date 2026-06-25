@@ -503,7 +503,6 @@ export function historyGraphFromClassificationGroup(
   for (const classification of classifications) {
     addClassificationHistory(nodesById, edgesById, classification);
   }
-  const memberFqids = new Set(group.members.map((member) => member.fqid));
   for (const member of group.members) {
     const graphNode = nodesById.get(member.fqid);
     if (!graphNode) {
@@ -522,11 +521,10 @@ export function historyGraphFromClassificationGroup(
   return {
     mode: "classification",
     title: "Classification relationships",
-    nodes: [...nodesById.values()].map((node) =>
-      memberFqids.has(node.id)
-        ? { ...node, self: focusedFqid === node.id }
-        : { ...node, self: false },
-    ),
+    nodes: [...nodesById.values()].map((node) => ({
+      ...node,
+      self: focusedFqid === node.id,
+    })),
     edges: [...edgesById.values()],
     warnings: [],
     nodeGrain: "entity-with-column-slices",

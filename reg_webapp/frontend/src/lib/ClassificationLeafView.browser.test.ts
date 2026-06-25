@@ -239,4 +239,183 @@ describe("ClassificationLeafView (#638 shell)", () => {
       "niva-grovv1",
     );
   });
+
+  it("uses the current edition to find the group graph for a historical member", async () => {
+    const sunGroup: NonNullable<ClassificationNodeData["dimensions"]>[number] =
+      {
+        key: "sun",
+        label: "Svensk utbildningsnomenklatur (SUN)",
+        source: "curated",
+        axes: ["dimension"],
+        members: [
+          {
+            fqid: "class/sun-inriktning2020",
+            name: "Utbildningsinriktning",
+            facets: [
+              {
+                axis: "dimension",
+                value: "inriktning",
+                label: "Inriktning",
+              },
+            ],
+          },
+          {
+            fqid: "class/niva-grovv1",
+            name: "Utbildningsnivå, grov",
+            facets: [
+              {
+                axis: "dimension",
+                value: "niva-grov",
+                label: "Aggregat",
+              },
+            ],
+          },
+        ],
+      };
+    vi.mocked(getCatalogNode).mockImplementation((fqidPath) => {
+      if (fqidPath === "class/sun-inriktning2020") {
+        return Promise.resolve(
+          fetchedClassification({
+            fqid: "class/sun-inriktning2020",
+            name: "SUN 2020 — inriktning",
+            short_name: "SUN2020-INRIKTNING",
+            dimensions: [sunGroup],
+            edition_chain: [
+              {
+                slug: "sun1996",
+                fqid: "class/sun1996",
+                name: "SUN 1996",
+                effective_year: 2000,
+                is_self: false,
+                is_current: false,
+              },
+              {
+                slug: "sun-inriktning2000",
+                fqid: "class/sun-inriktning2000",
+                name: "SUN 2000 — inriktning",
+                effective_year: 2020,
+                is_self: false,
+                is_current: false,
+              },
+              {
+                slug: "sun-inriktning2020",
+                fqid: "class/sun-inriktning2020",
+                name: "SUN 2020 — inriktning",
+                effective_year: null,
+                is_self: true,
+                is_current: true,
+              },
+            ],
+            edition_edges: [
+              {
+                predecessor_slug: "sun1996",
+                predecessor_fqid: "class/sun1996",
+                successor_slug: "sun-inriktning2000",
+                successor_fqid: "class/sun-inriktning2000",
+                effective_year: 2000,
+                note: null,
+              },
+              {
+                predecessor_slug: "sun-inriktning2000",
+                predecessor_fqid: "class/sun-inriktning2000",
+                successor_slug: "sun-inriktning2020",
+                successor_fqid: "class/sun-inriktning2020",
+                effective_year: 2020,
+                note: null,
+              },
+            ],
+          }),
+        );
+      }
+      return Promise.resolve(
+        fetchedClassification({
+          fqid: "class/niva-grovv1",
+          name: "Utbildningsnivå, grov",
+          short_name: "NIVA-GROV",
+        }),
+      );
+    });
+
+    await render(ClassificationLeafView, {
+      node: node({
+        fqid: "class/sun-inriktning2000",
+        name: "SUN 2000 — inriktning",
+        short_name: "SUN2000-INRIKTNING",
+        codes: [],
+        dimensions: [],
+        edition_chain: [
+          {
+            slug: "sun1996",
+            fqid: "class/sun1996",
+            name: "SUN 1996",
+            effective_year: 2000,
+            is_self: false,
+            is_current: false,
+          },
+          {
+            slug: "sun-inriktning2000",
+            fqid: "class/sun-inriktning2000",
+            name: "SUN 2000 — inriktning",
+            effective_year: 2020,
+            is_self: true,
+            is_current: false,
+          },
+          {
+            slug: "sun-inriktning2020",
+            fqid: "class/sun-inriktning2020",
+            name: "SUN 2020 — inriktning",
+            effective_year: null,
+            is_self: false,
+            is_current: true,
+          },
+        ],
+        edition_edges: [
+          {
+            predecessor_slug: "sun1996",
+            predecessor_fqid: "class/sun1996",
+            successor_slug: "sun-inriktning2000",
+            successor_fqid: "class/sun-inriktning2000",
+            effective_year: 2000,
+            note: null,
+          },
+          {
+            predecessor_slug: "sun-inriktning2000",
+            predecessor_fqid: "class/sun-inriktning2000",
+            successor_slug: "sun-inriktning2020",
+            successor_fqid: "class/sun-inriktning2020",
+            effective_year: 2020,
+            note: null,
+          },
+        ],
+      } as unknown as Partial<ClassificationNodeData>),
+    });
+
+    await expect
+      .element(
+        page.getByRole("heading", { name: "Classification relationships" }),
+      )
+      .toBeVisible();
+    await vi.waitFor(() => {
+      expect(
+        [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+          (label) => label.textContent?.trim(),
+        ),
+      ).toContain("niva-grovv1");
+    });
+
+    expect(
+      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+        (label) => label.textContent?.trim(),
+      ),
+    ).toEqual([
+      "sun1996",
+      "sun-inriktning2000",
+      "sun-inriktning2020",
+      "niva-grovv1",
+    ]);
+    expect(document.querySelectorAll(".edges .succession")).toHaveLength(2);
+    expect(document.querySelector(".node.self title")?.textContent).toBe(
+      "sun-inriktning2000",
+    );
+  });
 });
