@@ -427,4 +427,96 @@ describe("ClassificationLeafView (#638 shell)", () => {
       "SUN2000-INRIKTNING",
     );
   });
+
+  it("focuses the resolved classification node when opened through an alias", async () => {
+    const sunGroup: NonNullable<ClassificationNodeData["dimensions"]>[number] =
+      {
+        key: "sun",
+        label: "Svensk utbildningsnomenklatur (SUN)",
+        source: "curated",
+        axes: ["dimension"],
+        members: [
+          {
+            fqid: "class/sun-inriktning2020",
+            name: "Utbildningsinriktning",
+            facets: [
+              {
+                axis: "dimension",
+                value: "inriktning",
+                label: "Inriktning",
+              },
+            ],
+          },
+          {
+            fqid: "class/niva-grovv1",
+            name: "Utbildningsnivå, grov",
+            facets: [
+              {
+                axis: "dimension",
+                value: "niva-grov",
+                label: "Aggregat",
+              },
+            ],
+          },
+        ],
+      };
+    vi.mocked(getCatalogNode).mockImplementation((fqidPath) => {
+      if (fqidPath === "class/sun-inriktning2020") {
+        return Promise.resolve(
+          fetchedClassification({
+            fqid: "class/sun-inriktning2020",
+            name: "SUN 2020 — inriktning",
+            short_name: "SUN2020-INRIKTNING",
+            dimensions: [sunGroup],
+            edition_chain: [
+              {
+                slug: "sun-inriktning2020",
+                fqid: "class/sun-inriktning2020",
+                name: "SUN 2020 — inriktning",
+                short_name: "SUN2020-INRIKTNING",
+                effective_year: null,
+                is_self: true,
+                is_current: true,
+              },
+            ],
+          }),
+        );
+      }
+      return Promise.resolve(
+        fetchedClassification({
+          fqid: "class/niva-grovv1",
+          name: "Utbildningsnivå, grov",
+          short_name: "NIVA-GROV",
+        }),
+      );
+    });
+
+    await render(ClassificationLeafView, {
+      node: node({
+        fqid: "class/sun-inriktning-alias",
+        via_same_as: ["class/sun-inriktning2020"],
+        name: "SUN alias",
+        short_name: "SUN-ALIAS",
+        codes: [],
+        dimensions: [],
+        edition_chain: [
+          {
+            slug: "sun-inriktning2020",
+            fqid: "class/sun-inriktning2020",
+            name: "SUN 2020 — inriktning",
+            short_name: "SUN2020-INRIKTNING",
+            effective_year: null,
+            is_self: true,
+            is_current: true,
+          },
+        ],
+      } as unknown as Partial<ClassificationNodeData>),
+    });
+
+    await vi.waitFor(() => {
+      expect(document.querySelector(".node.self title")?.textContent).toBe(
+        "SUN2020-INRIKTNING",
+      );
+    });
+  });
 });

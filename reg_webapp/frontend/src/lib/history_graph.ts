@@ -112,14 +112,26 @@ function columnLabel(state: VariableStateModel): string {
 }
 
 function columnSlices(states: VariableStateModel[]): HistoryColumnSlice[] {
-  const byColumn = new Map<string, HistoryColumnSlice>();
-  for (const state of states) {
+  const byColumn = new Map<string, HistoryColumnSlice[]>();
+  const sortedStates = [...states].sort((a, b) => {
+    const labelOrder = columnLabel(a).localeCompare(columnLabel(b), "sv");
+    if (labelOrder !== 0) {
+      return labelOrder;
+    }
+    const variantOrder = a.variant.localeCompare(b.variant, "sv");
+    if (variantOrder !== 0) {
+      return variantOrder;
+    }
+    return compareYear(wireYear(a.valid_from), wireYear(b.valid_from));
+  });
+  for (const state of sortedStates) {
     const label = columnLabel(state);
     const key = `${state.variant}:${label}`;
-    const existing = byColumn.get(key);
+    const bucket = byColumn.get(key) ?? [];
     const from = wireYear(state.valid_from);
     const to = wireYear(state.valid_to);
-    if (existing) {
+    const existing = bucket.at(-1);
+    if (existing && windowsConnect(existing, from)) {
       existing.from =
         existing.from === null || from === null
           ? null
@@ -128,19 +140,48 @@ function columnSlices(states: VariableStateModel[]): HistoryColumnSlice[] {
         existing.to === null || to === null ? null : Math.max(existing.to, to);
       existing.stateIds.push(state.state_id);
     } else {
-      byColumn.set(key, {
-        id: key,
+      bucket.push({
+        id: `${key}:${state.state_id}`,
         label,
         variant: state.variant,
         from,
         to,
         stateIds: [state.state_id],
       });
+      byColumn.set(key, bucket);
     }
   }
-  return [...byColumn.values()].sort((a, b) =>
-    a.label.localeCompare(b.label, "sv"),
-  );
+  return [...byColumn.values()]
+    .flat()
+    .sort(
+      (a, b) =>
+        a.label.localeCompare(b.label, "sv") ||
+        a.variant.localeCompare(b.variant, "sv") ||
+        compareYear(a.from, b.from),
+    );
+}
+
+function compareYear(a: number | null, b: number | null): number {
+  if (a === b) {
+    return 0;
+  }
+  if (a === null) {
+    return -1;
+  }
+  if (b === null) {
+    return 1;
+  }
+  return a - b;
+}
+
+function windowsConnect(
+  existing: Pick<HistoryColumnSlice, "to">,
+  nextFrom: number | null,
+): boolean {
+  if (existing.to === null || nextFrom === null) {
+    return true;
+  }
+  return nextFrom <= existing.to + 1;
 }
 
 function coverageFromStates(states: VariableStateModel[]): {

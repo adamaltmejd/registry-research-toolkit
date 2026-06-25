@@ -88,12 +88,13 @@ const graphData = asyncResource<{
   return { group, members };
 });
 const graphGroup = $derived(graphData.data?.group ?? null);
+const focusedFqid = $derived(node.via_same_as?.at(-1) ?? node.fqid);
 const historyGraph = $derived(
   graphGroup && graphData.data
     ? historyGraphFromClassificationGroup(
         graphGroup,
         graphData.data.members,
-        node.fqid,
+        focusedFqid,
       )
     : historyGraphFromClassification(node),
 );

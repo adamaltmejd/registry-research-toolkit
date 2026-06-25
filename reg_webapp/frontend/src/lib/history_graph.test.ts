@@ -258,6 +258,32 @@ describe("history graph prototype model", () => {
     ]);
   });
 
+  it("preserves gaps between reused delivery-column windows", () => {
+    const graph = historyGraphFromBinding(
+      binding({
+        states: [
+          state({
+            state_id: 1,
+            delivery_column_name: "VALUE",
+            valid_from: "2000-01-01",
+            valid_to: "2005-12-31",
+          }),
+          state({
+            state_id: 2,
+            delivery_column_name: "VALUE",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ],
+      }),
+    );
+
+    expect(graph.nodes[0].columns).toMatchObject([
+      { label: "VALUE", from: 2000, to: 2005, stateIds: [1] },
+      { label: "VALUE", from: 2010, to: 2015, stateIds: [2] },
+    ]);
+  });
+
   it("extends open-ended variable domains through the current year", () => {
     const graph = historyGraphFromBinding(
       binding({
