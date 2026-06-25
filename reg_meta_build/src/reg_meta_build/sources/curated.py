@@ -65,7 +65,7 @@ from dataclasses import dataclass
 from datetime import date
 from typing import TYPE_CHECKING
 
-from reg_meta_build._curation import curation_error
+from reg_meta_build._curation import curation_error, require_bool
 from reg_meta_build.classifications import declared_short_names
 from reg_meta_build.db import _file_sha256, _value_set_hash
 from reg_meta_build.id import mint, mint_canonical_scb
@@ -460,18 +460,18 @@ class CuratedAdapter:
         return value.strip() or None
 
     def _opt_bool(self, path: Path, entry: dict, field: str, ctx: str) -> bool:
-        # `bool(...)` on a present non-bool is a footgun — `bool("false")` is True,
-        # silently flipping a sensitivity flag. Demand a real TOML boolean.
-        value = entry.get(field)
-        if value is None:
-            return False
-        if not isinstance(value, bool):
-            raise curation_error(
-                "curated_toml_invalid",
-                f"{path.name}: {ctx}: `{field}` must be a boolean when present.",
-                f"Use a bare true/false for `{field}` (no quotes).",
-            )
-        return value
+        # Shared strict-bool leaf (`bool(...)` on a present non-bool is a footgun —
+        # `bool("false")` is True, silently flipping a sensitivity flag). This
+        # surface's `path.name` is the file context, so it's both `prefix` and
+        # `file_name`; the established `curated_toml_invalid` code is preserved.
+        return require_bool(
+            entry,
+            field,
+            ctx,
+            code="curated_toml_invalid",
+            prefix=path.name,
+            file_name=path.name,
+        )
 
     def _check_iso(self, path: Path, value: str, ctx: str) -> None:
         # Regex pins the exact YYYY-MM-DD shape; date.fromisoformat additionally

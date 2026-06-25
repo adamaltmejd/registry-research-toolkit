@@ -84492,6 +84492,102 @@ slug = "syssstatg"  # source: kolumnnamn
 [variable."34.63.syssstatj"]
 slug = "syssstatj"  # source: kolumnnamn
 
+[variable."34.ALUAMK"]
+slug = "aluamk"  # source: kolumnnamn
+
+[variable."34.AMK"]
+slug = "amk"  # source: kolumnnamn
+
+[variable."34.ATPFam"]
+slug = "atpfam"  # source: kolumnnamn
+
+[variable."34.ArbTid"]
+slug = "arbtid"  # source: kolumnnamn
+
+[variable."34.ArbstIdJ"]
+slug = "arbstidj"  # source: kolumnnamn
+
+[variable."34.AstKommunJ"]
+slug = "astkommunj"  # source: kolumnnamn
+
+[variable."34.AstLanJ"]
+slug = "astlanj"  # source: kolumnnamn
+
+[variable."34.AstSNI2002BJ"]
+slug = "astsni2002bj"  # source: kolumnnamn
+
+[variable."34.AstSNI2002GJ"]
+slug = "astsni2002gj"  # source: kolumnnamn
+
+[variable."34.AstSNI2002J"]
+slug = "astsni2002j"  # source: kolumnnamn
+
+[variable."34.CfarNrSregJ"]
+slug = "cfarnrsregj"  # source: kolumnnamn
+
+[variable."34.FastBet"]
+slug = "fastbet"  # source: kolumnnamn
+
+[variable."34.FolkFam"]
+slug = "folkfam"  # source: kolumnnamn
+
+[variable."34.FortPens_Bdag_MiDAS"]
+slug = "fortpens-bdag-midas"  # source: kolumnnamn
+
+[variable."34.FortPens_Belopp_MiDAS"]
+slug = "fortpens-belopp-midas"  # source: kolumnnamn
+
+[variable."34.FortPens_Ndag_MiDAS"]
+slug = "fortpens-ndag-midas"  # source: kolumnnamn
+
+[variable."34.InstKod7J"]
+slug = "instkod7j"  # source: kolumnnamn
+
+[variable."34.LoneInkJ"]
+slug = "loneinkj"  # source: kolumnnamn
+
+[variable."34.MedbLandNamn"]
+slug = "medblandnamn"  # source: kolumnnamn
+
+[variable."34.Nyk"]
+slug = "nyk"  # source: kolumnnamn
+
+[variable."34.OTA"]
+slug = "ota"  # source: kolumnnamn
+
+[variable."34.PeOrgNrSregJ"]
+slug = "peorgnrsregj"  # source: kolumnnamn
+
+[variable."34.SektorKodJ"]
+slug = "sektorkodj"  # source: kolumnnamn
+
+[variable."34.SjukBidr_Bdag_MiDAS"]
+slug = "sjukbidr-bdag-midas"  # source: kolumnnamn
+
+[variable."34.SjukBidr_Belopp_MiDAS"]
+slug = "sjukbidr-belopp-midas"  # source: kolumnnamn
+
+[variable."34.SjukBidr_Ndag_MiDAS"]
+slug = "sjukbidr-ndag-midas"  # source: kolumnnamn
+
+[variable."34.SjukPA"]
+slug = "sjukpa"  # source: kolumnnamn
+
+[variable."34.Ssyk3_J16"]
+slug = "ssyk3-j16"  # source: kolumnnamn
+
+[variable."34.Ssyk4_J16"]
+slug = "ssyk4-j16"  # source: kolumnnamn
+
+[variable."34.TAE"]
+slug = "tae"  # source: kolumnnamn
+
+[variable."34.YSEG_J16"]
+slug = "yseg-j16"  # source: kolumnnamn
+
+[variable."34.YrkStallnJ"]
+slug = "yrkstallnj"  # source: kolumnnamn
+
 [variable."340.25188.ml-betyg"]
 slug = "ml-betyg"  # source: kolumnnamn
 

@@ -56,13 +56,14 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import open_db
 
+from reg_meta_build.canonical_attach import CANONICAL_ATTACH_SOURCE_LABEL
 from reg_meta_build.db import (
     _PROVIDER_SEED,
     _VALID_TO_SENTINEL,
     PROVIDER_ID_SCB,
     PROVIDER_ID_SOS,
 )
-from reg_meta_build.id import _MINT_BIT
+from reg_meta_build.id import _MINT_BIT, is_canonical_scb
 from reg_meta_build.relations import _REPLACED_BY_NOTE_VINTAGE_LIFT
 
 # Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
@@ -204,6 +205,7 @@ def validate_built_db(
             conn, result, tables, slug_dir, flavored=flavored
         )
         _check_minted_id_bands(conn, result, tables, flavored=flavored)
+        _check_canonical_attach_band(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
         # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
         # writes variable_state directly (no scratch intermediary like SCB's
@@ -1092,6 +1094,48 @@ def _check_minted_id_bands(
             result.ok("no non-SCB rows — minted-id band check trivially holds")
         else:
             result.ok("all SCB ids < 2^62 and all non-SCB ids >= 2^62")
+
+
+def _check_canonical_attach_band(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """#400 PR2: every `source_label='canonical-scb'` variable (the
+    canonical-attach pass) holds an id in the reserved canonical-SCB sub-band
+    `[2^61, 2^62)`.
+
+    The canonical analog of `_check_minted_id_bands`' minted-band guard: an attach
+    row is minted with `mint_canonical_scb`, so its `variable_id` AND `state_id`
+    must land in that sub-band. (The generic band check already proves a
+    canonical-SCB id is `< 2^62` because the row is on the `scb` provider; this
+    additionally proves it is `>= 2^61`, i.e. it can't collide with a real
+    source-derived SCB id.) Self-skips when no attach rows are present (every
+    SCB-only / non-LISA build), so it only bites once the attach pass minted."""
+    result.section("[bands: canonical-attach sub-band]")
+    if "variable" not in tables:
+        result.ok("variable table absent — canonical-attach band check skipped")
+        return
+    rows = conn.execute(
+        "SELECT vs.variable_id, vs.state_id FROM variable_state vs "
+        "JOIN variable v USING (variable_id) WHERE v.source_label = ?",
+        (CANONICAL_ATTACH_SOURCE_LABEL,),
+    ).fetchall()
+    if not rows:
+        result.ok("no canonical-attach rows — band check trivially holds")
+        return
+    bad = sum(
+        1
+        for variable_id, state_id in rows
+        if not is_canonical_scb(variable_id) or not is_canonical_scb(state_id)
+    )
+    if bad:
+        result.fail(
+            f"{bad} canonical-attach state(s) with a variable_id/state_id outside "
+            "the canonical-SCB sub-band [2^61, 2^62) — un-minted?"
+        )
+    else:
+        result.ok(
+            f"all {len(rows)} canonical-attach id(s) in the sub-band [2^61, 2^62)"
+        )
 
 
 # A4.3b sanity bands for the combined build. The 13 SOS workbooks merge (by

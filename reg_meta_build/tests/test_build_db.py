@@ -29,6 +29,7 @@ from reg_meta_build.db import (
     _value_set_hash,
     build_db,
 )
+from reg_meta_build.id import mint_canonical_scb
 from reg_meta_build.sources.scb import _canon_data_type
 
 from reg_meta_build.fqid_slugs import slug_dir_curates_canonical_scb
@@ -3949,3 +3950,93 @@ class TestProvenanceDbRotation:
             assert conn.execute("SELECT COUNT(*) FROM register").fetchone()[0] >= 1
         finally:
             conn.close()
+
+
+class TestCanonicalAttachManifest:
+    """The canonical-attach seed (`lisa_canonical.toml`) is recorded in the build
+    manifest's `source_checksums` alongside the other canonical-SCB inputs (#400).
+    Without it a build audit sees `scb_canonical.toml` + its CSVs recorded but NOT
+    the seed that minted the 32 LISA rows."""
+
+    # A minimal valid `scb_canonical.toml`: one canonical register (its minted
+    # `[2^61, 2^62)` id pinned in the slug TOML below) so the CanonicalScbAdapter
+    # activates and the attach pass runs against the SAME `scb_canonical/` dir.
+    _CANON_REG_ID = mint_canonical_scb("scb", "tcanon")
+    _CANON_VARIANT_ID = mint_canonical_scb("scb", "tcanon", "_default")
+    _SCB_CANONICAL_TOML = (
+        '[[register]]\nkey = "tcanon"\nname = "Test canonical"\n'
+        'valid_from = "2020-01-01"\n'
+        '[[register.variable]]\nname = "Col"\ncolumn = "Col"\n'
+    )
+    # An attach onto the SYNTHETIC SCB register (testreg/individer, register 1
+    # variant 10 from `write_scb_input`), a gap-fill column → mints one row, so the
+    # pass does real work and the manifest entry is the proof it ran.
+    _LISA_CANONICAL_TOML = (
+        '[[attach]]\nregister = "scb/testreg"\nvariant = "individer"\n'
+        'column = "AttachedCol"\nname = "Attached column"\n'
+        'definition = "A canonical-attach-minted LISA column."\n'
+        'data_type = "text"\nvalid_from = "2010-01-01"\n'
+    )
+
+    def _build(self, tmp_path: Path) -> tuple[dict[str, str], dict[str, object]]:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        canonical_dir = input_dir / "scb_canonical"
+        canonical_dir.mkdir()
+        (canonical_dir / "scb_canonical.toml").write_text(
+            self._SCB_CANONICAL_TOML, encoding="utf-8"
+        )
+        (canonical_dir / "lisa_canonical.toml").write_text(
+            self._LISA_CANONICAL_TOML, encoding="utf-8"
+        )
+
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        # Standard synthetic register/variant slugs PLUS the canonical register pin
+        # (id-keyed) so populate_slugs + the #556 stale-seed preflight both pass.
+        (slug_dir / "scb.toml").write_text(
+            '[register."1"]\nslug = "testreg"\n'
+            '[register."2"]\nslug = "otherreg"\n'
+            '[register_variant."1.10"]\nslug = "individer"\n'
+            '[register_variant."2.20"]\nslug = "foretag"\n'
+            f'[register."{self._CANON_REG_ID}"]\nslug = "tcanon"\n'
+            f'[register_variant."{self._CANON_REG_ID}.{self._CANON_VARIANT_ID}"]\n'
+            'slug = "_default"\n',
+            encoding="utf-8",
+        )
+        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            providers=("scb",),
+            slug_dir=slug_dir,
+            skip_classifications=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            manifest = get_manifest(conn)
+            checksums = json.loads(manifest["source_checksums"])
+            # Confirm the attach pass actually ran (minted the gap-fill column) —
+            # so the recorded checksum is the seed that changed the catalog, not a
+            # no-op file that happened to sit in the dir.
+            minted = conn.execute(
+                "SELECT COUNT(*) FROM variable_state "
+                "WHERE delivery_column_name = 'AttachedCol'"
+            ).fetchone()[0]
+            row_counts = json.loads(manifest["row_counts"])
+        finally:
+            conn.close()
+        assert minted == 1, "canonical-attach pass did not mint its column"
+        assert row_counts.get("canonical_attach") == 1
+        return checksums, row_counts
+
+    def test_seed_checksum_recorded(self, tmp_path: Path) -> None:
+        checksums, _ = self._build(tmp_path)
+        # Keyed by basename, exactly like the sibling canonical-SCB inputs.
+        assert "lisa_canonical.toml" in checksums
+        assert "scb_canonical.toml" in checksums
+        # 64-hex sha256 digest (same `_file_sha256` the siblings use).
+        digest = checksums["lisa_canonical.toml"]
+        assert len(digest) == 64 and all(c in "0123456789abcdef" for c in digest)

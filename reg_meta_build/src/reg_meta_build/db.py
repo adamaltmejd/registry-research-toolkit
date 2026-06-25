@@ -3326,6 +3326,54 @@ def materialize(
             f"{graft_counts['unresolved']:,} unresolved)"
         )
 
+        # Canonical-SCB attach (#400 PR2) — the RICH analog of grafts: mint
+        # canonical-SCB variables (LISA columns absent from SCB's machine export)
+        # onto an existing (register, variant), with canonical-SCB-banded ids, a
+        # closed validity window, and an optional classification link. Same
+        # slug-guarded block + ordering rationale as grafts (after populate_slugs
+        # resolves the target, before populate_variable_slugs auto-derives the new
+        # slug). Its classification candidates join the SAME list fed to
+        # `_feed_classification_candidates` below, so the backfill tags them.
+        from .canonical_attach import (
+            canonical_attach_path,
+            load_canonical_attach,
+            materialize_canonical_attach,
+        )
+
+        # The canonical-attach seed (`lisa_canonical.toml`) is read from the SAME
+        # `--input-dir/scb_canonical/` the `CanonicalScbAdapter` reads its
+        # `scb_canonical.toml` from — found here as that adapter's paired source
+        # dir (basename `scb_canonical`). None when this build has no such adapter
+        # (synthetic / SCB-only / SOS-only builds) → the load no-ops.
+        canonical_dir = next(
+            (d for _a, d in adapters if d.name == _CANONICAL_SCB_DIRNAME), None
+        )
+        attach_seed_path = canonical_attach_path(canonical_dir)
+        # Provenance: record the attach seed alongside the other canonical-SCB
+        # inputs (scb_canonical.toml + CSVs, keyed by basename via `_file_sha256`).
+        # Only when the seed actually resolved (None ⇒ no canonical adapter, a
+        # legitimate no-op — matching the no-canonical-dir case; a stale-but-present
+        # dir already failed loud in `canonical_attach_path`). Without this, a build
+        # audit sees scb_canonical.toml recorded but NOT the seed that minted the
+        # LISA rows.
+        if attach_seed_path is not None:
+            source_checksums[attach_seed_path.name] = _file_sha256(attach_seed_path)
+        attach_counts = materialize_canonical_attach(
+            conn,
+            load_canonical_attach(
+                attach_seed_path,
+                classification_seed_path=seed_path,
+            ),
+            providers=active_providers,
+            classification_candidates=classification_candidates,
+            warn=_progress,
+        )
+        row_counts["canonical_attach"] = attach_counts["minted"]
+        _progress(
+            f"  {attach_counts['minted']:,} canonical-SCB attaches "
+            f"({attach_counts['unresolved']:,} unresolved)"
+        )
+
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
         # _coalesce_variable_states (reads variable_state.delivery_column_name),

@@ -2,8 +2,9 @@
 
 The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `fold_column`) plus the per-entry leaf helpers below (`require_str`,
-`require_fqid`, `resolve_variable_id`, `resolve_register_id`,
-`load_column_groups`) serve the `[[entry]]` curation-TOML loaders —
+`require_bool`, `require_fqid`, `resolve_variable_id`, `resolve_register_id`,
+`resolve_register_variant_id`, `load_column_groups`) serve the `[[entry]]`
+curation-TOML loaders —
 `codelivery.py`, `source_column_repairs.py`, `concept_groups.py`, `tags.py`,
 `period_family_merges.py`, `delivery_enrichment.py`, `variable_grafts.py`,
 `classification_links.py`, and `relations.py` (the single typed `[[edge]]`
@@ -178,6 +179,35 @@ def require_str(
     return value.strip()
 
 
+def require_bool(
+    entry: dict,
+    field: str,
+    context: str,
+    *,
+    code: str,
+    prefix: str,
+    file_name: str,
+) -> bool:
+    """Require an OPTIONAL `entry[field]` to be a real TOML boolean; absent → False
+    (the DDL default). A present non-bool is rejected — `bool(...)` coercion is a
+    footgun (`bool("false")` is True), and these fields back PII/identifier
+    guardrails (`is_identifier` / `is_sensitive`), so a silently flipped flag is
+    exactly the leak to prevent. The strict-bool semantics MUST stay byte-preserved
+    across every loader that binds this leaf."""
+    value = entry.get(field)
+    if value is None:
+        return False
+    if not isinstance(value, bool):
+        raise curation_error(
+            code,
+            f"{prefix} {context}: `{field}` must be a boolean when present, "
+            f"got {value!r}.",
+            f"Use a bare true/false for `{field}` (no quotes) in "
+            f"reg_meta_build/{file_name}.",
+        )
+    return value
+
+
 def require_fqid(
     entry: dict,
     field: str,
@@ -239,6 +269,24 @@ def resolve_register_id(
         (provider, register),
     ).fetchone()
     return row[0] if row is not None else None
+
+
+def resolve_register_variant_id(
+    conn: sqlite3.Connection, provider: str, register: str, variant: str
+) -> tuple[int, int] | None:
+    """`(provider, register, variant)` slugs → `(register_variant_id, register_id)`,
+    or None if the variant doesn't resolve (pure lookup, no raise — each caller
+    decides whether None is fatal). The shared target-resolution query for the
+    post-passes that mint rows onto an EXISTING `(register, variant)` —
+    `variable_grafts` and `canonical_attach`."""
+    row = conn.execute(
+        "SELECT rv.register_variant_id, r.register_id FROM register_variant rv "
+        "JOIN register r ON r.register_id = rv.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
+        (provider, register, variant),
+    ).fetchone()
+    return (row[0], row[1]) if row is not None else None
 
 
 def load_column_groups(
