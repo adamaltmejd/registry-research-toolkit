@@ -2387,15 +2387,23 @@ def populate_variable_slugs(
                 )
                 used.add(slug)
                 source_id = _source_id(register_id, provider_key, variable_id)
-                auto[source_id] = slug
-                auto_derivation[source_id] = kind
-                auto_dirty = True
                 counts["auto_new"] += 1
                 # #786: a NEW variable on a `frozen` provider whose slug came
                 # from a fragile basis would become immutable — flag it for the
                 # post-loop gate (raised once, with every offender, below).
                 if state == "frozen" and _is_name_fallback_derivation(kind):
                     frozen_new_fallback.append((provider_slug, source_id, slug, kind))
+                    # Do NOT persist this offender into the auto file. The build
+                    # fails on the post-loop raise, but if we wrote the entry it
+                    # would be read back as `auto_existing` on a bare rerun (Pass
+                    # 1), making the variable no longer first-sight — the gate
+                    # would never re-fire and the fragile slug would silently ship
+                    # (the Codex P2). Skipping the write keeps the variable
+                    # first-sight so a rerun re-derives it and the gate re-fires.
+                    continue
+                auto[source_id] = slug
+                auto_derivation[source_id] = kind
+                auto_dirty = True
 
         if auto_dirty:
             write_auto_toml(auto_path, provider_slug, auto, auto_derivation)

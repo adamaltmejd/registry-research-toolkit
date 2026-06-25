@@ -1922,6 +1922,42 @@ class TestPopulateVariableSlugs:
         assert "1.88" in exc.value.message
         assert "1.99" in exc.value.message
 
+    def test_frozen_new_fallback_not_persisted_refires_on_rerun(
+        self, tmp_path: Path
+    ) -> None:
+        # Codex P2: a frozen+fragile offender must NOT be written into the
+        # committed `<provider>.auto.toml` before the post-loop raise. If it were,
+        # a bare rerun (no curated pin added) would read it back as `auto_existing`
+        # in Pass 1, making the variable no longer first-sight ⇒ the gate would
+        # never re-fire and the fragile slug would silently ship — defeating the
+        # gate via a simple rerun. Prove the real property two ways: (1) the
+        # offending source_id is absent from the on-disk auto.toml, and (2) a
+        # SECOND populate on the same conn/slug_dir STILL raises.
+        conn, d = self._frozen_with_new_var(
+            tmp_path, new_name="3D-område", new_kol="3DOMR"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_freeze_new_fallback"
+
+        # (1) The offender was not persisted; the existing pinned slug still is.
+        # (Frozen first-sight is decided by auto.toml membership, NOT the DB
+        # `variable.slug` — Pass 1 keys off `auto.get(source_id)` — so no NULL
+        # reset is needed for the read-back path to be exercised.)
+        var_slugs = {
+            e.source_id: e.slug
+            for e in load_provider_toml(d / f"scb{AUTO_FILE_SUFFIX}")
+            if e.kind == "variable"
+        }
+        assert "1.88" not in var_slugs
+        assert var_slugs.get("1.44") == "kon"
+
+        # (2) Rerun re-derives the still-first-sight variable and re-fires.
+        with pytest.raises(RegMetaError) as exc2:
+            populate_variable_slugs(conn, d)
+        assert exc2.value.code == "slug_freeze_new_fallback"
+        assert "1.88" in exc2.value.message
+
     # --- #143: drift-stable slug basis (+ doable-now part of #141) --------
 
     @staticmethod
