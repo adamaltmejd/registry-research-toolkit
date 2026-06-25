@@ -6,7 +6,7 @@ import type { HistoryGraph } from "./history_graph";
 
 const graph: HistoryGraph = {
   mode: "variable",
-  title: "History graph prototype",
+  title: "Variable relationships",
   nodeGrain: "entity-with-column-slices",
   dataContract: "client-stitch-prototype",
   nodes: [
@@ -82,6 +82,38 @@ const standaloneClassificationGraph: HistoryGraph = {
   warnings: [],
 };
 
+const variableGroupGraph: HistoryGraph = {
+  mode: "group",
+  title: "Variable relationships",
+  nodeGrain: "entity-with-column-slices",
+  dataContract: "client-stitch-prototype",
+  nodes: [
+    {
+      id: "scb/lisa/agi1astsni2007g",
+      kind: "group-member",
+      label: "agi1astsni2007g",
+      detail: "Näringsgren",
+      fqid: "scb/lisa/agi1astsni2007g",
+      from: 2019,
+      to: 2023,
+      columns: [],
+    },
+    {
+      id: "scb/lisa/agi1astsni2007u",
+      kind: "group-member",
+      label: "agi1astsni2007u",
+      detail: "Näringsgren",
+      fqid: "scb/lisa/agi1astsni2007u",
+      from: 2019,
+      to: 2023,
+      self: true,
+      columns: [],
+    },
+  ],
+  edges: [],
+  warnings: ["group graph gap"],
+};
+
 const classificationGraph: HistoryGraph = {
   mode: "classification",
   title: "Classification relationships",
@@ -150,9 +182,11 @@ describe("HistoryGraphPrototype", () => {
     await render(HistoryGraphPrototype, { graph });
 
     await expect
-      .element(page.getByRole("heading", { name: "History graph prototype" }))
+      .element(page.getByRole("heading", { name: "Variable relationships" }))
       .toBeVisible();
-    await expect.element(page.getByText("variable")).toBeVisible();
+    await expect
+      .element(page.getByText("variable", { exact: true }))
+      .toBeVisible();
     await expect.element(page.getByText("Monthly income")).toBeVisible();
     await expect.element(page.getByText("4 columns")).toBeVisible();
     expect(document.querySelector(".legend")).toBeNull();
@@ -165,6 +199,32 @@ describe("HistoryGraphPrototype", () => {
     });
 
     expect(document.querySelector(".history-graph")).toBeNull();
+  });
+
+  it("renders coverage-only variable group graphs when they have multiple members", async () => {
+    await render(HistoryGraphPrototype, {
+      graph: variableGroupGraph,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Variable relationships" }))
+      .toBeVisible();
+    expect(
+      [...document.querySelectorAll(".node-label")].map((node) =>
+        node.textContent?.trim(),
+      ),
+    ).toEqual(["agi1astsni2007g", "agi1astsni2007u"]);
+    expect(document.querySelectorAll(".node.self")).toHaveLength(1);
+    expect(
+      document.querySelector(
+        'a[href="/catalog/scb/lisa/agi1astsni2007u"] .node.self',
+      ),
+    ).not.toBeNull();
+    expect(document.querySelector(".legend")).toBeNull();
+    expect(
+      document.querySelector<HTMLDetailsElement>("details.contract-gaps")?.open,
+    ).toBe(false);
   });
 
   it("renders classifications through the shared graph surface without a timeline axis", async () => {

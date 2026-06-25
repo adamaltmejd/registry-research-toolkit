@@ -289,44 +289,58 @@ describe("history graph prototype model", () => {
   });
 
   it("shows group members without inventing a group entity node", () => {
-    const graph = historyGraphFromGroup({
-      kind: "concept-group",
-      key: "agi-months",
-      label: "Monthly income",
-      provider: "scb",
-      register: "lisa",
-      source: "curated",
-      axes: ["month"],
-      member: null,
-      members: [
-        {
-          fqid: "scb/lisa/agi01",
-          name: "Income",
-          facets: [{ axis: "month", value: "01", label: "January" }],
-          coverage: {
-            coverage_from: "2019-01-01",
-            coverage_to: "9999-12-31",
-            open_ended: true,
-            state_count: 1,
+    const graph = historyGraphFromGroup(
+      {
+        kind: "concept-group",
+        key: "agi-months",
+        label: "Monthly income",
+        provider: "scb",
+        register: "lisa",
+        source: "curated",
+        axes: ["month"],
+        member: null,
+        members: [
+          {
+            fqid: "scb/lisa/agi01",
+            name: "Income",
+            facets: [{ axis: "month", value: "01", label: "January" }],
+            coverage: {
+              coverage_from: "2019-01-01",
+              coverage_to: "9999-12-31",
+              open_ended: true,
+              state_count: 1,
+            },
           },
-        },
-        {
-          fqid: "scb/lisa/agi02",
-          name: "Income",
-          facets: [{ axis: "month", value: "02", label: "February" }],
-          coverage: {
-            coverage_from: "2019-01-01",
-            coverage_to: "9999-12-31",
-            open_ended: true,
-            state_count: 1,
+          {
+            fqid: "scb/lisa/agi02",
+            name: "Income",
+            facets: [{ axis: "month", value: "02", label: "February" }],
+            coverage: {
+              coverage_from: "2019-01-01",
+              coverage_to: "9999-12-31",
+              open_ended: true,
+              state_count: 1,
+            },
           },
-        },
-      ],
-    } as ConceptGroupNodeData);
+        ],
+      } as ConceptGroupNodeData,
+      "scb/lisa/agi02",
+    );
 
     expect(graph.nodes.map((node) => node.kind)).toEqual([
       "group-member",
       "group-member",
+    ]);
+    expect(graph.title).toBe("Variable relationships");
+    expect(
+      graph.nodes.map((node) => [node.id, node.label, node.detail]),
+    ).toEqual([
+      ["scb/lisa/agi01", "January", "Income"],
+      ["scb/lisa/agi02", "February", "Income"],
+    ]);
+    expect(graph.nodes.map((node) => [node.id, node.self])).toEqual([
+      ["scb/lisa/agi01", false],
+      ["scb/lisa/agi02", true],
     ]);
     expect(graph.nodes.map((node) => node.id)).not.toContain(
       "group:agi-months",

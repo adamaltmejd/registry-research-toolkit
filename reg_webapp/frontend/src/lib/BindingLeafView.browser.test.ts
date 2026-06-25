@@ -1,11 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { BindingNodeData, VariableStateModel } from "./api";
+import type {
+  BindingNodeData,
+  ConceptGroupNodeData,
+  VariableStateModel,
+} from "./api";
 import {
   getBindingDimensions,
   getBindingLineageWarnings,
   getCatalogNode,
+  getConceptGroup,
   getDocsForVariable,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
@@ -32,6 +37,7 @@ vi.mock("./api", async (importOriginal) => {
     ...actual,
     getCatalogNode: vi.fn(),
     getBindingDimensions: vi.fn(),
+    getConceptGroup: vi.fn(),
     getBindingLineageWarnings: vi.fn(),
     getDocsForVariable: vi.fn(),
   };
@@ -164,6 +170,18 @@ beforeEach(() => {
     binding: "scb/lisa/kon",
     dimensions: [],
   } as never);
+  vi.mocked(getConceptGroup).mockReset();
+  vi.mocked(getConceptGroup).mockResolvedValue({
+    kind: "concept-group",
+    provider: "scb",
+    register: "lisa",
+    key: "naringsgren",
+    label: "Näringsgren, största förvärvskälla",
+    source: "edge",
+    axes: [],
+    member: null,
+    members: [],
+  } as unknown as ConceptGroupNodeData);
   vi.mocked(getBindingLineageWarnings).mockReset();
   vi.mocked(getBindingLineageWarnings).mockResolvedValue({
     binding: "scb/lisa/kon",
@@ -809,6 +827,70 @@ describe("BindingLeafView member identity (#670)", () => {
         page.getByRole("link", { name: "Näringsgren, största förvärvskälla" }),
       )
       .toBeVisible();
+  });
+
+  it("renders the full group graph for grouped members and highlights the viewed member", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue({
+      kind: "concept-group",
+      provider: "scb",
+      register: "lisa",
+      key: "naringsgren",
+      label: "Näringsgren, största förvärvskälla",
+      source: "edge",
+      axes: [],
+      member: null,
+      members: [
+        {
+          fqid: groupedFqid,
+          name: "Näringsgren, största förvärvskälla",
+          facets: [],
+          coverage: {
+            coverage_from: "2019-01-01",
+            coverage_to: "2023-12-31",
+            open_ended: false,
+            state_count: 1,
+          },
+        },
+        {
+          fqid: "scb/lisa/agi1astsni2007u",
+          name: "Näringsgren, största förvärvskälla",
+          facets: [],
+          coverage: {
+            coverage_from: "2019-01-01",
+            coverage_to: "2023-12-31",
+            open_ended: false,
+            state_count: 1,
+          },
+        },
+      ],
+    } as unknown as ConceptGroupNodeData);
+
+    render(BindingLeafView, {
+      fqidPath: groupedFqid,
+      node: groupedNode,
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Variable relationships" }))
+      .toBeVisible();
+    expect(getConceptGroup).toHaveBeenCalledWith("scb", "lisa", "naringsgren");
+    expect(
+      [...document.querySelectorAll(".history-graph .node-label")].map((item) =>
+        item.textContent?.trim(),
+      ),
+    ).toEqual(["agi1astsni2007g", "agi1astsni2007u"]);
+    expect(
+      document.querySelector(".history-graph .node.self .node-label")
+        ?.textContent,
+    ).toContain("agi1astsni2007g");
+    expect(
+      document.querySelector(
+        'a[href="/catalog/scb/lisa/agi1astsni2007g"] .node.self',
+      ),
+    ).not.toBeNull();
   });
 
   it("renders no identity row while /dimensions is loading (no transient slug flicker)", async () => {

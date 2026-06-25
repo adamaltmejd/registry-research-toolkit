@@ -62,6 +62,20 @@ beforeEach(() => {
   windowStore.set(null);
 });
 
+function memberSelector(): HTMLElement {
+  const selector = document.querySelector<HTMLElement>(".member-selector");
+  expect(selector).not.toBeNull();
+  return selector as HTMLElement;
+}
+
+function memberLink(name: RegExp): HTMLAnchorElement {
+  const link = [
+    ...memberSelector().querySelectorAll<HTMLAnchorElement>("a"),
+  ].find((item) => name.test(item.textContent ?? ""));
+  expect(link).toBeDefined();
+  return link as HTMLAnchorElement;
+}
+
 describe("ConceptGroupView (#617)", () => {
   it("renders the group label + members with facets and coverage", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
@@ -78,18 +92,28 @@ describe("ConceptGroupView (#617)", () => {
       .toBeVisible();
     // The single-axis selector labels members by their facet ("januari").
     await expect
-      .element(page.getByText("januari", { exact: true }))
+      .element(page.getByRole("heading", { name: "Members" }))
       .toBeVisible();
+    expect(memberSelector().textContent).toContain("januari");
     // Members link to their leaf FQIDs.
-    await expect
-      .element(page.getByRole("link", { name: /februari/ }))
-      .toHaveAttribute("href", "/catalog/scb/rams/inkfeb");
+    expect(memberLink(/februari/).getAttribute("href")).toBe(
+      "/catalog/scb/rams/inkfeb",
+    );
     // The member with coverage shows its study window (the year-collapsed span);
     // the stateless one omits it. Scoped to the member's own coverage span — the
     // PeriodPicker also renders the union coverage in its slider readout.
     await expect
       .element(page.getByText("2019 – 2021", { exact: true }))
       .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Variable relationships" }))
+      .toBeVisible();
+    expect(
+      [...document.querySelectorAll(".history-graph .node-label")].map((item) =>
+        item.textContent?.trim(),
+      ),
+    ).toEqual(["januari", "februari"]);
+    expect(document.querySelector(".history-graph .group")).toBeNull();
   });
 
   it("shows a one-sided 'until <year>' when the coverage start is unknown (#658)", async () => {
@@ -414,11 +438,10 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
 
     // Both same-named members render their distinct leaf slugs (the disambiguator).
     await expect
-      .element(page.getByText("astsni1", { exact: true }))
+      .element(page.getByRole("heading", { name: "Members" }))
       .toBeVisible();
-    await expect
-      .element(page.getByText("astsni2", { exact: true }))
-      .toBeVisible();
+    expect(memberSelector().textContent).toContain("astsni1");
+    expect(memberSelector().textContent).toContain("astsni2");
   });
 
   it("greys a member not delivered across the active window", async () => {
@@ -437,11 +460,9 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
     // The not-delivered note appears for the out-of-window member.
     await expect.element(page.getByText(/not delivered/)).toBeVisible();
     // The greyed member carries the `not-delivered` class on its link.
-    const febLink = page.getByRole("link", { name: /februari/ });
-    await expect.element(febLink).toBeVisible();
-    expect(
-      febLink.element().closest("a")?.classList.contains("not-delivered"),
-    ).toBe(true);
+    expect(memberLink(/februari/).classList.contains("not-delivered")).toBe(
+      true,
+    );
   });
 
   it("member links carry the active `?period` into the leaf", async () => {
@@ -458,9 +479,10 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
       key: "ink",
     });
 
-    const febLink = page.getByRole("link", { name: /februari/ });
-    await expect.element(febLink).toBeVisible();
-    const href = febLink.element().closest("a")?.getAttribute("href") ?? "";
+    await expect
+      .element(page.getByRole("heading", { name: "Members" }))
+      .toBeVisible();
+    const href = memberLink(/februari/).getAttribute("href") ?? "";
     expect(href).toContain("period=2019..2020");
     expect(href).not.toContain("member=");
   });
@@ -477,8 +499,11 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
     });
 
     await expect
-      .element(page.getByRole("link", { name: /februari/ }))
-      .toHaveAttribute("href", "/catalog/scb/rams/inkfeb");
+      .element(page.getByRole("heading", { name: "Members" }))
+      .toBeVisible();
+    expect(memberLink(/februari/).getAttribute("href")).toBe(
+      "/catalog/scb/rams/inkfeb",
+    );
   });
 
   it("a non-year `?period` suppresses greying even with a project window set", async () => {
@@ -499,11 +524,12 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
     });
 
     // The member renders, but ungreyed (no `not-delivered` class, no note).
-    const febLink = page.getByRole("link", { name: /februari/ });
-    await expect.element(febLink).toBeVisible();
-    expect(
-      febLink.element().closest("a")?.classList.contains("not-delivered"),
-    ).toBe(false);
+    await expect
+      .element(page.getByRole("heading", { name: "Members" }))
+      .toBeVisible();
+    expect(memberLink(/februari/).classList.contains("not-delivered")).toBe(
+      false,
+    );
     await expect
       .element(page.getByText(/not delivered/))
       .not.toBeInTheDocument();

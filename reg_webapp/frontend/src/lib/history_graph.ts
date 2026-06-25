@@ -437,7 +437,7 @@ export function historyGraphFromBinding(
 
   return {
     mode: "variable",
-    title: "History graph prototype",
+    title: "Variable relationships",
     nodes: [...nodes.values()],
     edges,
     warnings,
@@ -448,6 +448,7 @@ export function historyGraphFromBinding(
 
 export function historyGraphFromGroup(
   node: ConceptGroupNodeData,
+  focusedFqid: string | null = null,
 ): HistoryGraph {
   const classificationGroup = node.provider === "class";
   const nodes: HistoryGraphNode[] = [];
@@ -456,14 +457,19 @@ export function historyGraphFromGroup(
   for (const member of node.members) {
     const coverage = member.coverage;
     const memberSlug = leafSlug(member.fqid);
-    const detail =
+    const facetLabel = member.facets.map((f) => f.label).join(" · ");
+    const facetDetail =
       member.facets.length > 0
         ? member.facets.map((f) => `${f.axis}: ${f.label}`).join(" · ")
         : undefined;
+    const label = classificationGroup ? memberSlug : facetLabel || memberSlug;
+    const detail = classificationGroup
+      ? (member.name ?? facetDetail)
+      : (member.name ?? undefined);
     nodes.push({
       id: member.fqid,
       kind: classificationGroup ? "classification" : "group-member",
-      label: classificationGroup ? memberSlug : (member.name ?? memberSlug),
+      label,
       fqid: member.fqid,
       from: classificationGroup
         ? classificationSlugYear(memberSlug)
@@ -474,7 +480,8 @@ export function historyGraphFromGroup(
           ? null
           : wireYear(coverage?.coverage_to),
       columns: [],
-      detail: classificationGroup ? (member.name ?? detail) : detail,
+      detail,
+      self: focusedFqid === member.fqid,
     });
   }
 
@@ -482,7 +489,7 @@ export function historyGraphFromGroup(
     mode: classificationGroup ? "classification" : "group",
     title: classificationGroup
       ? "Classification relationships"
-      : "History graph prototype",
+      : "Variable relationships",
     nodes,
     edges,
     warnings: [

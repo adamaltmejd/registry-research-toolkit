@@ -4,6 +4,7 @@ import {
   type CatalogNode,
   getBindingDimensions,
   getCatalogNode,
+  getConceptGroup,
   isCatalogNode,
   type StatesResponse,
 } from "./api";
@@ -22,7 +23,10 @@ import {
 import DimensionsPanel from "./DimensionsPanel.svelte";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import HistoryGraphPrototype from "./HistoryGraphPrototype.svelte";
-import { historyGraphFromBinding } from "./history_graph";
+import {
+  historyGraphFromBinding,
+  historyGraphFromGroup,
+} from "./history_graph";
 import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
@@ -180,7 +184,6 @@ const dimResource = asyncResource(() => getBindingDimensions(fqidPath));
 const dimGroups = $derived(dimResource.data?.dimensions ?? []);
 const dimLoading = $derived(dimResource.loading);
 const dimError = $derived(dimResource.error);
-const historyGraph = $derived(historyGraphFromBinding(node, dimGroups));
 
 // The identity row (qualifier + group link) renders ONCE the /dimensions fetch
 // has RESOLVED — gated on `!dimLoading && !dimError`. During the sub-second load
@@ -200,6 +203,21 @@ const dimReady = $derived(!dimLoading && !dimError);
 // last `via_same_as` hop is the resolved target binding; with no alias it's
 // empty/absent and `lookupFqid === node.fqid` (unchanged behavior).
 const lookupFqid = $derived(node.via_same_as?.at(-1) ?? node.fqid);
+
+const groupGraphResource = asyncResource(() =>
+  node.group
+    ? getConceptGroup(node.group.provider, node.group.register, node.group.key)
+    : Promise.resolve(null),
+);
+const historyGraph = $derived(
+  groupGraphResource.data
+    ? historyGraphFromGroup(groupGraphResource.data, lookupFqid)
+    : historyGraphFromBinding(node, dimGroups),
+);
+const graphLoading = $derived(
+  Boolean(node.group && groupGraphResource.loading),
+);
+const graphError = $derived(node.group ? groupGraphResource.error : null);
 
 // The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — this
 // member's facet labels across its dimension groups (`kind: "facets"`), the
@@ -692,7 +710,13 @@ const repSegment = $derived(
 {/snippet}
 
 {#snippet relationships()}
-  <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
+  {#if graphLoading}
+    <p class="muted" aria-busy="true">Loading group graph…</p>
+  {:else if graphError}
+    <p class="error" role="alert">{graphError}</p>
+  {:else}
+    <HistoryGraphPrototype graph={historyGraph} {vintageYear} />
+  {/if}
 
   <!-- #489/#670: the concept-group dimensions this variable belongs to (the "pick
        your variant" facet groups). PRESENTATIONAL since #670 — the `/dimensions`

@@ -89,7 +89,9 @@ const height = $derived(
     26,
 );
 const hasGraphContent = $derived(
-  edgeRows.length > 0 || graph.nodes.some((node) => node.columns.length > 1),
+  graph.nodes.length > 1 ||
+    edgeRows.length > 0 ||
+    graph.nodes.some((node) => node.columns.length > 1),
 );
 
 function xForYear(year: number | null): number {
@@ -289,7 +291,7 @@ function shortLabel(label: string, max = 29): string {
     {/if}
 
     {#if graph.warnings.length > 0}
-      <details class="contract-gaps" open={edgeRows.length === 0}>
+      <details class="contract-gaps">
         <summary>Contract gaps</summary>
         <ul>
           {#each graph.warnings as warning (warning)}
@@ -358,6 +360,10 @@ function shortLabel(label: string, max = 29): string {
     fill: var(--surface-hover, #f5f5f5);
     stroke: var(--muted);
   }
+  .group-member .bar {
+    fill: var(--surface-hover, #f5f5f5);
+    stroke: var(--muted);
+  }
   .classification .bar {
     fill: #f0efe8;
     stroke: #8a6f2a;
@@ -366,6 +372,8 @@ function shortLabel(label: string, max = 29): string {
     fill: #eadfbd;
   }
   .self .bar {
+    fill: var(--surface-selected, #e6f0ff);
+    stroke: var(--accent);
     stroke-width: 2;
   }
   .current .bar {
