@@ -1888,6 +1888,35 @@ discriminator slug — so the build replays the right slug onto each sibling acr
 rebuilds instead of the last one overwriting the shared entry. Unsplit keys (\~96%) stay
 2-part.
 
+**Identifier-family canonical slugs (cross-provider locked forms).** Person- and
+organisation-number columns recur across every provider, so they are curated to ONE
+canonical leaf slug per identifier family — independent of each provider's delivery
+column name — so a researcher querying `personnr` finds the person key in SCB, SOS, FK,
+and the agencies alike. The locked forms (SCB #471/#747, extended to the non-SCB global
+providers in #760):
+
+  | concept                                                      | slug                                          |
+  | ------------------------------------------------------------ | --------------------------------------------- |
+  | subject person number (`personnummer` / `samordningsnummer`) | `personnr`                                    |
+  | person-or-organisation number                                | `person-orgnr`                                |
+  | organisation number                                          | `orgnr` (company-specific: `orgnr-foretaget`) |
+
+Role variants take a prose suffix off the base: `personnr-barn` (barnet), `personnr-mor`
+(the pregnant/delivered person), `personnr-far`, `personnr-aldsta-sokande`,
+`personnr-yngsta-sokande`, … — matching the role the column's *name* documents, not its
+code.
+
+*Pseudonymization.* When — and only when — a provider's **metadata spec explicitly
+documents the column as pseudonymized / de-identified** (the name or definition contains
+`pseudonymiser*` / `avidentifier*`), the identity slug takes a `lopnr-` **prefix**:
+`lopnr-personnr`, `lopnr-orgnr`, `lopnr-personnr-barn`. SCB's metadata describes the
+conceptual delivered column and never marks pseudonymization, so SCB stays plain
+`personnr`/`orgnr`; FK/Läkemedelsverket/UMU say "levereras pseudonymiserat" /
+"avidentifieras till löpnummer", so their person keys are `lopnr-personnr`. A column
+that is *named* a löpnummer or pseudonummer (rather than an identity number) is **not**
+forced into this family — it keeps its own descriptive slug (`lopnr`, `lopnr-barn`,
+`lopnr-arende-id`, …); default-to-distinct governs the ambiguous cases.
+
 **Edge field on `[variable]` rows.** The one surviving curatable edge field is
 `replaced_by` — a **single in-file key string** (a typo-correction pointer to another
 row's TOML key in the same file), validated for shape and cycle-freedom — *not* a

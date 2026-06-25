@@ -590,13 +590,13 @@ def test_real_fohm_catalog_builds(fohm_db: Path) -> None:
             "FROM register_variant rv JOIN register r USING (register_id) "
             "WHERE r.slug = 'sminet'"
         ).fetchone()
-        assert sminet_panel == ("personnummer", "diagnosdatum", "row")
+        assert sminet_panel == ("personnr", "diagnosdatum", "row")
 
         # Identifier + sensitivity flags survived.
         pnr = conn.execute(
             "SELECT is_identifier, is_sensitive FROM variable v "
             "JOIN register r USING (register_id) "
-            "WHERE r.slug = 'sminet' AND v.slug = 'personnummer'"
+            "WHERE r.slug = 'sminet' AND v.slug = 'personnr'"
         ).fetchone()
         assert pnr == (1, 1)
         diagnos = conn.execute(

@@ -24,7 +24,7 @@ slug = "sminet"
 [register_variant."9022860280161092196.5579831904407731840"]
 slug = "_default"
 display_group = "SmiNet"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "diagnosdatum"
 panel_time_grain = "row"
 
@@ -35,7 +35,7 @@ slug = "nvr"
 [register_variant."7553527605692442211.5026533077223577043"]
 slug = "_default"
 display_group = "NVR"
-panel_entity_key = "personnummer"
+panel_entity_key = "personnr"
 panel_time_key = "vaccinationsdatum"
 panel_time_grain = "row"
 
@@ -56,9 +56,8 @@ panel_time_grain = "row"
 # pins reproduce the slug the variable already carries).
 # 2 pin(s).
 
-[variable."7553527605692442211.personnummer"]  # nvr: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."7553527605692442211.personnummer"]  # nvr: panel_entity_key = 'personnr'
+slug = "personnr"
 
-[variable."9022860280161092196.personnummer"]  # sminet: panel_entity_key = 'personnummer'
-slug = "personnummer"
-
+[variable."9022860280161092196.personnummer"]  # sminet: panel_entity_key = 'personnr'
+slug = "personnr"

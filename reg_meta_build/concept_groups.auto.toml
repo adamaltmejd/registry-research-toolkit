@@ -28,398 +28,398 @@
 # axis=ordinal agreement=1.00 members=48  ICD-kod för multipel dödsorsak
 [[variable_group]]
 register = "sos/dors"
-key = "morsak"
+key = "dodsorsak"
 label = "ICD-kod för multipel dödsorsak"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "morsak1"
+variable = "dodsorsak-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "morsak2"
+variable = "dodsorsak-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "morsak3"
+variable = "dodsorsak-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "morsak4"
+variable = "dodsorsak-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "morsak5"
+variable = "dodsorsak-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "morsak6"
+variable = "dodsorsak-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "morsak7"
+variable = "dodsorsak-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "morsak8"
+variable = "dodsorsak-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "morsak9"
+variable = "dodsorsak-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "morsak10"
+variable = "dodsorsak-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "morsak11"
+variable = "dodsorsak-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "morsak12"
+variable = "dodsorsak-12"
 value = "12"
 label = "12"
 [[variable_group.members]]
-variable = "morsak13"
+variable = "dodsorsak-13"
 value = "13"
 label = "13"
 [[variable_group.members]]
-variable = "morsak14"
+variable = "dodsorsak-14"
 value = "14"
 label = "14"
 [[variable_group.members]]
-variable = "morsak15"
+variable = "dodsorsak-15"
 value = "15"
 label = "15"
 [[variable_group.members]]
-variable = "morsak16"
+variable = "dodsorsak-16"
 value = "16"
 label = "16"
 [[variable_group.members]]
-variable = "morsak17"
+variable = "dodsorsak-17"
 value = "17"
 label = "17"
 [[variable_group.members]]
-variable = "morsak18"
+variable = "dodsorsak-18"
 value = "18"
 label = "18"
 [[variable_group.members]]
-variable = "morsak19"
+variable = "dodsorsak-19"
 value = "19"
 label = "19"
 [[variable_group.members]]
-variable = "morsak20"
+variable = "dodsorsak-20"
 value = "20"
 label = "20"
 [[variable_group.members]]
-variable = "morsak21"
+variable = "dodsorsak-21"
 value = "21"
 label = "21"
 [[variable_group.members]]
-variable = "morsak22"
+variable = "dodsorsak-22"
 value = "22"
 label = "22"
 [[variable_group.members]]
-variable = "morsak23"
+variable = "dodsorsak-23"
 value = "23"
 label = "23"
 [[variable_group.members]]
-variable = "morsak24"
+variable = "dodsorsak-24"
 value = "24"
 label = "24"
 [[variable_group.members]]
-variable = "morsak25"
+variable = "dodsorsak-25"
 value = "25"
 label = "25"
 [[variable_group.members]]
-variable = "morsak26"
+variable = "dodsorsak-26"
 value = "26"
 label = "26"
 [[variable_group.members]]
-variable = "morsak27"
+variable = "dodsorsak-27"
 value = "27"
 label = "27"
 [[variable_group.members]]
-variable = "morsak28"
+variable = "dodsorsak-28"
 value = "28"
 label = "28"
 [[variable_group.members]]
-variable = "morsak29"
+variable = "dodsorsak-29"
 value = "29"
 label = "29"
 [[variable_group.members]]
-variable = "morsak30"
+variable = "dodsorsak-30"
 value = "30"
 label = "30"
 [[variable_group.members]]
-variable = "morsak31"
+variable = "dodsorsak-31"
 value = "31"
 label = "31"
 [[variable_group.members]]
-variable = "morsak32"
+variable = "dodsorsak-32"
 value = "32"
 label = "32"
 [[variable_group.members]]
-variable = "morsak33"
+variable = "dodsorsak-33"
 value = "33"
 label = "33"
 [[variable_group.members]]
-variable = "morsak34"
+variable = "dodsorsak-34"
 value = "34"
 label = "34"
 [[variable_group.members]]
-variable = "morsak35"
+variable = "dodsorsak-35"
 value = "35"
 label = "35"
 [[variable_group.members]]
-variable = "morsak36"
+variable = "dodsorsak-36"
 value = "36"
 label = "36"
 [[variable_group.members]]
-variable = "morsak37"
+variable = "dodsorsak-37"
 value = "37"
 label = "37"
 [[variable_group.members]]
-variable = "morsak38"
+variable = "dodsorsak-38"
 value = "38"
 label = "38"
 [[variable_group.members]]
-variable = "morsak39"
+variable = "dodsorsak-39"
 value = "39"
 label = "39"
 [[variable_group.members]]
-variable = "morsak40"
+variable = "dodsorsak-40"
 value = "40"
 label = "40"
 [[variable_group.members]]
-variable = "morsak41"
+variable = "dodsorsak-41"
 value = "41"
 label = "41"
 [[variable_group.members]]
-variable = "morsak42"
+variable = "dodsorsak-42"
 value = "42"
 label = "42"
 [[variable_group.members]]
-variable = "morsak43"
+variable = "dodsorsak-43"
 value = "43"
 label = "43"
 [[variable_group.members]]
-variable = "morsak44"
+variable = "dodsorsak-44"
 value = "44"
 label = "44"
 [[variable_group.members]]
-variable = "morsak45"
+variable = "dodsorsak-45"
 value = "45"
 label = "45"
 [[variable_group.members]]
-variable = "morsak46"
+variable = "dodsorsak-46"
 value = "46"
 label = "46"
 [[variable_group.members]]
-variable = "morsak47"
+variable = "dodsorsak-47"
 value = "47"
 label = "47"
 [[variable_group.members]]
-variable = "morsak48"
+variable = "dodsorsak-48"
 value = "48"
 label = "48"
 
 # axis=ordinal agreement=1.00 members=48  Position på intyget av dödsorsaken som finns sparad i variabel MORSAK
 [[variable_group]]
 register = "sos/dors"
-key = "ro"
+key = "dodsorsak-position"
 label = "Position på intyget av dödsorsaken som finns sparad i variabel MORSAK"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "ro1"
+variable = "dodsorsak-position-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "ro2"
+variable = "dodsorsak-position-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "ro3"
+variable = "dodsorsak-position-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "ro4"
+variable = "dodsorsak-position-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "ro5"
+variable = "dodsorsak-position-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "ro6"
+variable = "dodsorsak-position-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "ro7"
+variable = "dodsorsak-position-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "ro8"
+variable = "dodsorsak-position-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "ro9"
+variable = "dodsorsak-position-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "ro10"
+variable = "dodsorsak-position-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "ro11"
+variable = "dodsorsak-position-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "ro12"
+variable = "dodsorsak-position-12"
 value = "12"
 label = "12"
 [[variable_group.members]]
-variable = "ro13"
+variable = "dodsorsak-position-13"
 value = "13"
 label = "13"
 [[variable_group.members]]
-variable = "ro14"
+variable = "dodsorsak-position-14"
 value = "14"
 label = "14"
 [[variable_group.members]]
-variable = "ro15"
+variable = "dodsorsak-position-15"
 value = "15"
 label = "15"
 [[variable_group.members]]
-variable = "ro16"
+variable = "dodsorsak-position-16"
 value = "16"
 label = "16"
 [[variable_group.members]]
-variable = "ro17"
+variable = "dodsorsak-position-17"
 value = "17"
 label = "17"
 [[variable_group.members]]
-variable = "ro18"
+variable = "dodsorsak-position-18"
 value = "18"
 label = "18"
 [[variable_group.members]]
-variable = "ro19"
+variable = "dodsorsak-position-19"
 value = "19"
 label = "19"
 [[variable_group.members]]
-variable = "ro20"
+variable = "dodsorsak-position-20"
 value = "20"
 label = "20"
 [[variable_group.members]]
-variable = "ro21"
+variable = "dodsorsak-position-21"
 value = "21"
 label = "21"
 [[variable_group.members]]
-variable = "ro22"
+variable = "dodsorsak-position-22"
 value = "22"
 label = "22"
 [[variable_group.members]]
-variable = "ro23"
+variable = "dodsorsak-position-23"
 value = "23"
 label = "23"
 [[variable_group.members]]
-variable = "ro24"
+variable = "dodsorsak-position-24"
 value = "24"
 label = "24"
 [[variable_group.members]]
-variable = "ro25"
+variable = "dodsorsak-position-25"
 value = "25"
 label = "25"
 [[variable_group.members]]
-variable = "ro26"
+variable = "dodsorsak-position-26"
 value = "26"
 label = "26"
 [[variable_group.members]]
-variable = "ro27"
+variable = "dodsorsak-position-27"
 value = "27"
 label = "27"
 [[variable_group.members]]
-variable = "ro28"
+variable = "dodsorsak-position-28"
 value = "28"
 label = "28"
 [[variable_group.members]]
-variable = "ro29"
+variable = "dodsorsak-position-29"
 value = "29"
 label = "29"
 [[variable_group.members]]
-variable = "ro30"
+variable = "dodsorsak-position-30"
 value = "30"
 label = "30"
 [[variable_group.members]]
-variable = "ro31"
+variable = "dodsorsak-position-31"
 value = "31"
 label = "31"
 [[variable_group.members]]
-variable = "ro32"
+variable = "dodsorsak-position-32"
 value = "32"
 label = "32"
 [[variable_group.members]]
-variable = "ro33"
+variable = "dodsorsak-position-33"
 value = "33"
 label = "33"
 [[variable_group.members]]
-variable = "ro34"
+variable = "dodsorsak-position-34"
 value = "34"
 label = "34"
 [[variable_group.members]]
-variable = "ro35"
+variable = "dodsorsak-position-35"
 value = "35"
 label = "35"
 [[variable_group.members]]
-variable = "ro36"
+variable = "dodsorsak-position-36"
 value = "36"
 label = "36"
 [[variable_group.members]]
-variable = "ro37"
+variable = "dodsorsak-position-37"
 value = "37"
 label = "37"
 [[variable_group.members]]
-variable = "ro38"
+variable = "dodsorsak-position-38"
 value = "38"
 label = "38"
 [[variable_group.members]]
-variable = "ro39"
+variable = "dodsorsak-position-39"
 value = "39"
 label = "39"
 [[variable_group.members]]
-variable = "ro40"
+variable = "dodsorsak-position-40"
 value = "40"
 label = "40"
 [[variable_group.members]]
-variable = "ro41"
+variable = "dodsorsak-position-41"
 value = "41"
 label = "41"
 [[variable_group.members]]
-variable = "ro42"
+variable = "dodsorsak-position-42"
 value = "42"
 label = "42"
 [[variable_group.members]]
-variable = "ro43"
+variable = "dodsorsak-position-43"
 value = "43"
 label = "43"
 [[variable_group.members]]
-variable = "ro44"
+variable = "dodsorsak-position-44"
 value = "44"
 label = "44"
 [[variable_group.members]]
-variable = "ro45"
+variable = "dodsorsak-position-45"
 value = "45"
 label = "45"
 [[variable_group.members]]
-variable = "ro46"
+variable = "dodsorsak-position-46"
 value = "46"
 label = "46"
 [[variable_group.members]]
-variable = "ro47"
+variable = "dodsorsak-position-47"
 value = "47"
 label = "47"
 [[variable_group.members]]
-variable = "ro48"
+variable = "dodsorsak-position-48"
 value = "48"
 label = "48"
 
@@ -430,322 +430,322 @@ key = "substans"
 label = "Substans"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "substans1"
+variable = "substans-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "substans2"
+variable = "substans-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "substans3"
+variable = "substans-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "substans4"
+variable = "substans-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "substans5"
+variable = "substans-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "substans6"
+variable = "substans-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "substans7"
+variable = "substans-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "substans8"
+variable = "substans-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "substans9"
+variable = "substans-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "substans10"
+variable = "substans-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "substans11"
+variable = "substans-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "substans12"
+variable = "substans-12"
 value = "12"
 label = "12"
 [[variable_group.members]]
-variable = "substans13"
+variable = "substans-13"
 value = "13"
 label = "13"
 [[variable_group.members]]
-variable = "substans14"
+variable = "substans-14"
 value = "14"
 label = "14"
 [[variable_group.members]]
-variable = "substans15"
+variable = "substans-15"
 value = "15"
 label = "15"
 [[variable_group.members]]
-variable = "substans16"
+variable = "substans-16"
 value = "16"
 label = "16"
 [[variable_group.members]]
-variable = "substans17"
+variable = "substans-17"
 value = "17"
 label = "17"
 [[variable_group.members]]
-variable = "substans18"
+variable = "substans-18"
 value = "18"
 label = "18"
 [[variable_group.members]]
-variable = "substans19"
+variable = "substans-19"
 value = "19"
 label = "19"
 [[variable_group.members]]
-variable = "substans20"
+variable = "substans-20"
 value = "20"
 label = "20"
 [[variable_group.members]]
-variable = "substans21"
+variable = "substans-21"
 value = "21"
 label = "21"
 [[variable_group.members]]
-variable = "substans22"
+variable = "substans-22"
 value = "22"
 label = "22"
 [[variable_group.members]]
-variable = "substans23"
+variable = "substans-23"
 value = "23"
 label = "23"
 [[variable_group.members]]
-variable = "substans24"
+variable = "substans-24"
 value = "24"
 label = "24"
 [[variable_group.members]]
-variable = "substans25"
+variable = "substans-25"
 value = "25"
 label = "25"
 [[variable_group.members]]
-variable = "substans26"
+variable = "substans-26"
 value = "26"
 label = "26"
 [[variable_group.members]]
-variable = "substans27"
+variable = "substans-27"
 value = "27"
 label = "27"
 [[variable_group.members]]
-variable = "substans28"
+variable = "substans-28"
 value = "28"
 label = "28"
 [[variable_group.members]]
-variable = "substans29"
+variable = "substans-29"
 value = "29"
 label = "29"
 [[variable_group.members]]
-variable = "substans30"
+variable = "substans-30"
 value = "30"
 label = "30"
 [[variable_group.members]]
-variable = "substans31"
+variable = "substans-31"
 value = "31"
 label = "31"
 [[variable_group.members]]
-variable = "substans32"
+variable = "substans-32"
 value = "32"
 label = "32"
 [[variable_group.members]]
-variable = "substans33"
+variable = "substans-33"
 value = "33"
 label = "33"
 [[variable_group.members]]
-variable = "substans34"
+variable = "substans-34"
 value = "34"
 label = "34"
 [[variable_group.members]]
-variable = "substans35"
+variable = "substans-35"
 value = "35"
 label = "35"
 [[variable_group.members]]
-variable = "substans36"
+variable = "substans-36"
 value = "36"
 label = "36"
 [[variable_group.members]]
-variable = "substans37"
+variable = "substans-37"
 value = "37"
 label = "37"
 [[variable_group.members]]
-variable = "substans38"
+variable = "substans-38"
 value = "38"
 label = "38"
 [[variable_group.members]]
-variable = "substans39"
+variable = "substans-39"
 value = "39"
 label = "39"
 [[variable_group.members]]
-variable = "substans40"
+variable = "substans-40"
 value = "40"
 label = "40"
 [[variable_group.members]]
-variable = "substans41"
+variable = "substans-41"
 value = "41"
 label = "41"
 [[variable_group.members]]
-variable = "substans42"
+variable = "substans-42"
 value = "42"
 label = "42"
 [[variable_group.members]]
-variable = "substans43"
+variable = "substans-43"
 value = "43"
 label = "43"
 [[variable_group.members]]
-variable = "substans44"
+variable = "substans-44"
 value = "44"
 label = "44"
 [[variable_group.members]]
-variable = "substans45"
+variable = "substans-45"
 value = "45"
 label = "45"
 [[variable_group.members]]
-variable = "substans46"
+variable = "substans-46"
 value = "46"
 label = "46"
 [[variable_group.members]]
-variable = "substans47"
+variable = "substans-47"
 value = "47"
 label = "47"
 [[variable_group.members]]
-variable = "substans48"
+variable = "substans-48"
 value = "48"
 label = "48"
 
 # axis=ordinal agreement=1.00 members=30  Åtgärdsdatum
 [[variable_group]]
 register = "sos/par"
-key = "opd"
+key = "atgardsdatum"
 label = "Åtgärdsdatum"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "opd1"
+variable = "atgardsdatum-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "opd2"
+variable = "atgardsdatum-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "opd3"
+variable = "atgardsdatum-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "opd4"
+variable = "atgardsdatum-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "opd5"
+variable = "atgardsdatum-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "opd6"
+variable = "atgardsdatum-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "opd7"
+variable = "atgardsdatum-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "opd8"
+variable = "atgardsdatum-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "opd9"
+variable = "atgardsdatum-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "opd10"
+variable = "atgardsdatum-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "opd11"
+variable = "atgardsdatum-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "opd12"
+variable = "atgardsdatum-12"
 value = "12"
 label = "12"
 [[variable_group.members]]
-variable = "opd13"
+variable = "atgardsdatum-13"
 value = "13"
 label = "13"
 [[variable_group.members]]
-variable = "opd14"
+variable = "atgardsdatum-14"
 value = "14"
 label = "14"
 [[variable_group.members]]
-variable = "opd15"
+variable = "atgardsdatum-15"
 value = "15"
 label = "15"
 [[variable_group.members]]
-variable = "opd16"
+variable = "atgardsdatum-16"
 value = "16"
 label = "16"
 [[variable_group.members]]
-variable = "opd17"
+variable = "atgardsdatum-17"
 value = "17"
 label = "17"
 [[variable_group.members]]
-variable = "opd18"
+variable = "atgardsdatum-18"
 value = "18"
 label = "18"
 [[variable_group.members]]
-variable = "opd19"
+variable = "atgardsdatum-19"
 value = "19"
 label = "19"
 [[variable_group.members]]
-variable = "opd20"
+variable = "atgardsdatum-20"
 value = "20"
 label = "20"
 [[variable_group.members]]
-variable = "opd21"
+variable = "atgardsdatum-21"
 value = "21"
 label = "21"
 [[variable_group.members]]
-variable = "opd22"
+variable = "atgardsdatum-22"
 value = "22"
 label = "22"
 [[variable_group.members]]
-variable = "opd23"
+variable = "atgardsdatum-23"
 value = "23"
 label = "23"
 [[variable_group.members]]
-variable = "opd24"
+variable = "atgardsdatum-24"
 value = "24"
 label = "24"
 [[variable_group.members]]
-variable = "opd25"
+variable = "atgardsdatum-25"
 value = "25"
 label = "25"
 [[variable_group.members]]
-variable = "opd26"
+variable = "atgardsdatum-26"
 value = "26"
 label = "26"
 [[variable_group.members]]
-variable = "opd27"
+variable = "atgardsdatum-27"
 value = "27"
 label = "27"
 [[variable_group.members]]
-variable = "opd28"
+variable = "atgardsdatum-28"
 value = "28"
 label = "28"
 [[variable_group.members]]
-variable = "opd29"
+variable = "atgardsdatum-29"
 value = "29"
 label = "29"
 [[variable_group.members]]
-variable = "opd30"
+variable = "atgardsdatum-30"
 value = "30"
 label = "30"
 
@@ -1180,87 +1180,87 @@ label = "21"
 # axis=ordinal agreement=1.00 members=20  Diagnoskod
 [[variable_group]]
 register = "sos/mfr"
-key = "bdiag"
+key = "diagnoskod-barnet"
 label = "Diagnoskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "bdiag1"
+variable = "diagnoskod-barnet-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "bdiag2"
+variable = "diagnoskod-barnet-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "bdiag3"
+variable = "diagnoskod-barnet-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "bdiag4"
+variable = "diagnoskod-barnet-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "bdiag5"
+variable = "diagnoskod-barnet-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "bdiag6"
+variable = "diagnoskod-barnet-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "bdiag7"
+variable = "diagnoskod-barnet-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "bdiag8"
+variable = "diagnoskod-barnet-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "bdiag9"
+variable = "diagnoskod-barnet-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "bdiag10"
+variable = "diagnoskod-barnet-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "bdiag11"
+variable = "diagnoskod-barnet-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "bdiag12"
+variable = "diagnoskod-barnet-12"
 value = "12"
 label = "12"
 [[variable_group.members]]
-variable = "bdiag13"
+variable = "diagnoskod-barnet-13"
 value = "13"
 label = "13"
 [[variable_group.members]]
-variable = "bdiag14"
+variable = "diagnoskod-barnet-14"
 value = "14"
 label = "14"
 [[variable_group.members]]
-variable = "bdiag15"
+variable = "diagnoskod-barnet-15"
 value = "15"
 label = "15"
 [[variable_group.members]]
-variable = "bdiag16"
+variable = "diagnoskod-barnet-16"
 value = "16"
 label = "16"
 [[variable_group.members]]
-variable = "bdiag17"
+variable = "diagnoskod-barnet-17"
 value = "17"
 label = "17"
 [[variable_group.members]]
-variable = "bdiag18"
+variable = "diagnoskod-barnet-18"
 value = "18"
 label = "18"
 [[variable_group.members]]
-variable = "bdiag19"
+variable = "diagnoskod-barnet-19"
 value = "19"
 label = "19"
 [[variable_group.members]]
-variable = "bdiag20"
+variable = "diagnoskod-barnet-20"
 value = "20"
 label = "20"
 
@@ -1704,110 +1704,110 @@ label = "19"
 # axis=ordinal agreement=1.00 members=12  Åtgärdskod
 [[variable_group]]
 register = "sos/mfr"
-key = "bflop"
+key = "atgardskod-barnet"
 label = "Åtgärdskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "bflop1"
+variable = "atgardskod-barnet-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "bflop2"
+variable = "atgardskod-barnet-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "bflop3"
+variable = "atgardskod-barnet-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "bflop4"
+variable = "atgardskod-barnet-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "bflop5"
+variable = "atgardskod-barnet-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "bflop6"
+variable = "atgardskod-barnet-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "bflop7"
+variable = "atgardskod-barnet-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "bflop8"
+variable = "atgardskod-barnet-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "bflop9"
+variable = "atgardskod-barnet-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "bflop10"
+variable = "atgardskod-barnet-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "bflop11"
+variable = "atgardskod-barnet-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "bflop12"
+variable = "atgardskod-barnet-12"
 value = "12"
 label = "12"
 
 # axis=ordinal agreement=1.00 members=12  Åtgärdskod
 [[variable_group]]
 register = "sos/mfr"
-key = "flop"
+key = "atgardskod-forlosta"
 label = "Åtgärdskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "flop1"
+variable = "atgardskod-forlosta-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "flop2"
+variable = "atgardskod-forlosta-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "flop3"
+variable = "atgardskod-forlosta-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "flop4"
+variable = "atgardskod-forlosta-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "flop5"
+variable = "atgardskod-forlosta-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "flop6"
+variable = "atgardskod-forlosta-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "flop7"
+variable = "atgardskod-forlosta-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "flop8"
+variable = "atgardskod-forlosta-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "flop9"
+variable = "atgardskod-forlosta-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "flop10"
+variable = "atgardskod-forlosta-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "flop11"
+variable = "atgardskod-forlosta-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "flop12"
+variable = "atgardskod-forlosta-12"
 value = "12"
 label = "12"
 
@@ -2488,35 +2488,35 @@ key = "orh"
 label = "Mätfrekvens"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "orh1"
+variable = "matfrekvens-250hz-hoger-ora"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "orh2"
+variable = "matfrekvens-500hz-hoger-ora"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "orh3"
+variable = "matfrekvens-1000hz-hoger-ora"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "orh4"
+variable = "matfrekvens-2000hz-hoger-ora"
 value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "orh5"
+variable = "matfrekvens-3000hz-hoger-ora"
 value = "5"
 label = "5"
 [[variable_group.members]]
-variable = "orh6"
+variable = "matfrekvens-4000hz-hoger-ora"
 value = "6"
 label = "6"
 [[variable_group.members]]
-variable = "orh7"
+variable = "matfrekvens-6000hz-hoger-ora"
 value = "7"
 label = "7"
 [[variable_group.members]]
-variable = "orh8"
+variable = "matfrekvens-8000hz-hoger-ora"
 value = "8"
 label = "8"
 
@@ -2527,35 +2527,35 @@ key = "orv"
 label = "Mätfrekvens"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "orv1"
+variable = "matfrekvens-250hz-vanster-ora"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "orv2"
+variable = "matfrekvens-500hz-vanster-ora"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "orv3"
+variable = "matfrekvens-1000hz-vanster-ora"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "orv4"
+variable = "matfrekvens-2000hz-vanster-ora"
 value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "orv5"
+variable = "matfrekvens-3000hz-vanster-ora"
 value = "5"
 label = "5"
 [[variable_group.members]]
-variable = "orv6"
+variable = "matfrekvens-4000hz-vanster-ora"
 value = "6"
 label = "6"
 [[variable_group.members]]
-variable = "orv7"
+variable = "matfrekvens-6000hz-vanster-ora"
 value = "7"
 label = "7"
 [[variable_group.members]]
-variable = "orv8"
+variable = "matfrekvens-8000hz-vanster-ora"
 value = "8"
 label = "8"
 
@@ -3069,39 +3069,39 @@ label = "22"
 # axis=ordinal agreement=1.00 members=8  Barnets diagnoskod BK
 [[variable_group]]
 register = "sos/mfr"
-key = "bdiag-bk"
+key = "barnets-diagnoskod-bk"
 label = "Barnets diagnoskod BK"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "bdiag-bk1"
+variable = "barnets-diagnoskod-bk-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "bdiag-bk2"
+variable = "barnets-diagnoskod-bk-2"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "bdiag-bk3"
+variable = "barnets-diagnoskod-bk-3"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "bdiag-bk4"
+variable = "barnets-diagnoskod-bk-4"
 value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "bdiag-bk5"
+variable = "barnets-diagnoskod-bk-5"
 value = "5"
 label = "5"
 [[variable_group.members]]
-variable = "bdiag-bk6"
+variable = "barnets-diagnoskod-bk-6"
 value = "6"
 label = "6"
 [[variable_group.members]]
-variable = "bdiag-bk7"
+variable = "barnets-diagnoskod-bk-7"
 value = "7"
 label = "7"
 [[variable_group.members]]
-variable = "bdiag-bk8"
+variable = "barnets-diagnoskod-bk-8"
 value = "8"
 label = "8"
 
@@ -3528,35 +3528,35 @@ label = "99"
 # axis=ordinal agreement=1.00 members=7  Yttre orsakskod
 [[variable_group]]
 register = "sos/par"
-key = "ekod"
+key = "yttre-orsakskod"
 label = "Yttre orsakskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "ekod1"
+variable = "yttre-orsakskod-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "ekod2"
+variable = "yttre-orsakskod-2"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "ekod3"
+variable = "yttre-orsakskod-3"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "ekod4"
+variable = "yttre-orsakskod-4"
 value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "ekod5"
+variable = "yttre-orsakskod-5"
 value = "5"
 label = "5"
 [[variable_group.members]]
-variable = "ekod6"
+variable = "yttre-orsakskod-6"
 value = "6"
 label = "6"
 [[variable_group.members]]
-variable = "ekod7"
+variable = "yttre-orsakskod-7"
 value = "7"
 label = "7"
 
@@ -4942,27 +4942,27 @@ label = "2004"
 # axis=ordinal agreement=1.00 members=5  Kod för yrkesbeteckning
 [[variable_group]]
 register = "sos/hsl"
-key = "yrkesbet"
+key = "yrkesbeteckning"
 label = "Kod för yrkesbeteckning"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "yrkesbet1"
+variable = "yrkesbeteckning-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "yrkesbet2"
+variable = "yrkesbeteckning-2"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "yrkesbet3"
+variable = "yrkesbeteckning-3"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "yrkesbet4"
+variable = "yrkesbeteckning-4"
 value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "yrkesbet5"
+variable = "yrkesbeteckning-5"
 value = "5"
 label = "5"
 
@@ -5636,23 +5636,23 @@ label = "6"
 # axis=ordinal agreement=1.00 members=4  Diagnoskod
 [[variable_group]]
 register = "sos/mfr"
-key = "gdiag"
+key = "diagnoskod-graviditet"
 label = "Diagnoskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "gdiag1"
+variable = "diagnoskod-graviditet-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "gdiag2"
+variable = "diagnoskod-graviditet-2"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "gdiag3"
+variable = "diagnoskod-graviditet-3"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "gdiag4"
+variable = "diagnoskod-graviditet-4"
 value = "4"
 label = "4"
 
@@ -5663,15 +5663,15 @@ key = "hcp-intervall"
 label = "HCP_INTERVALL_"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "hcp-intervall-0"
+variable = "tandvard-ersattning-intervall-0"
 value = "0"
 label = "0"
 [[variable_group.members]]
-variable = "hcp-intervall-1"
+variable = "tandvard-ersattning-intervall-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "hcp-intervall-2"
+variable = "tandvardsersattning-intervall-2"
 value = "2"
 label = "2"
 
@@ -6647,19 +6647,19 @@ label = "6"
 # axis=ordinal agreement=1.00 members=3  Specialistutbildningskod
 [[variable_group]]
 register = "sos/lmed"
-key = "spkod"
+key = "specialistutbildningskod"
 label = "Specialistutbildningskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "spkod1"
+variable = "specialistutbildningskod-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "spkod2"
+variable = "specialistutbildningskod-2"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "spkod3"
+variable = "specialistutbildningskod-3"
 value = "3"
 label = "3"
 
@@ -6711,75 +6711,75 @@ label = "2"
 # axis=ordinal agreement=1.00 members=2  Befattning
 [[variable_group]]
 register = "riksarkivet/inskrivning"
-key = "bef"
+key = "befattning"
 label = "Befattning"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "bef1"
+variable = "befattning-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "bef2"
+variable = "befattning-2"
 value = "2"
 label = "2"
 
 # axis=ordinal agreement=1.00 members=2  Grundutbildningsmyndighet
 [[variable_group]]
 register = "riksarkivet/inskrivning"
-key = "gui"
+key = "grundutbildningsmyndighet"
 label = "Grundutbildningsmyndighet"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "gui1"
+variable = "grundutbildningsmyndighet-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "gui2"
+variable = "grundutbildningsmyndighet-2"
 value = "2"
 label = "2"
 
 # axis=ordinal agreement=1.00 members=2  Planerat inryckningsår
 [[variable_group]]
 register = "riksarkivet/inskrivning"
-key = "pla"
+key = "planerat-inryckningsar"
 label = "Planerat inryckningsår"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "pla1"
+variable = "planerat-inryckningsar-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "pla2"
+variable = "planerat-inryckningsar-2"
 value = "2"
 label = "2"
 
 # axis=ordinal agreement=1.00 members=2  Skolutbildning
 [[variable_group]]
 register = "riksarkivet/inskrivning"
-key = "sko"
+key = "skolutbildning"
 label = "Skolutbildning"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sko1"
+variable = "skolutbildning-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "sko2"
+variable = "skolutbildning-2"
 value = "2"
 label = "2"
 
 # axis=ordinal agreement=1.00 members=2  Yrkesutbildning
 [[variable_group]]
 register = "riksarkivet/inskrivning"
-key = "yrk"
+key = "yrkesutbildning"
 label = "Yrkesutbildning"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "yrk1"
+variable = "yrkesutbildning-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "yrk2"
+variable = "yrkesutbildning-2"
 value = "2"
 label = "2"
 
@@ -8556,45 +8556,45 @@ label = "5"
 # axis=ordinal agreement=1.00 members=2  Förpackningsmultipel
 [[variable_group]]
 register = "sos/lmed"
-key = "antal-multipel"
+key = "forpackningsmultipel"
 label = "Förpackningsmultipel"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "antal-multipel-1"
+variable = "forpackningsmultipel-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "antal-multipel-2"
+variable = "forpackningsmultipel-2"
 value = "2"
 label = "2"
 
 # axis=numeric agreement=1.00 members=2  Yrke enligt SSYK, klassad enligt SSYK96
 [[variable_group]]
 register = "sos/lova"
-key = "ssyk"
+key = "ssyk96"
 label = "Yrke enligt SSYK, klassad enligt SSYK96"
 axis = "numeric"
 [[variable_group.members]]
-variable = "ssyk3"
+variable = "ssyk96-3"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "ssyk4"
+variable = "ssyk96-4"
 value = "4"
 label = "4"
 
 # axis=ordinal agreement=1.00 members=2  Anestesikod
 [[variable_group]]
 register = "sos/par"
-key = "ane"
+key = "anestesikod"
 label = "Anestesikod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "ane1"
+variable = "anestesikod-1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "ane2"
+variable = "anestesikod-2"
 value = "2"
 label = "2"
 
@@ -8754,15 +8754,15 @@ key = "apgar"
 label = "Apgar vid"
 axis = "numeric"
 [[variable_group.members]]
-variable = "apgar1"
+variable = "apgar-1-minut"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "apgar5"
+variable = "apgar-5-minut"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "apgar10"
+variable = "apgar-10-minuter"
 value = "10"
 label = "10"
 
@@ -8943,51 +8943,51 @@ key = "hsind"
 label = "Utbetalning finns för livsföring i övrigt, kategorin hälso- och sjukvård"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "hsind01"
+variable = "ovrigt-halso-sjukvard-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "hsind02"
+variable = "ovrigt-halso-sjukvard-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "hsind03"
+variable = "ovrigt-halso-sjukvard-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "hsind04"
+variable = "ovrigt-halso-sjukvard-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "hsind05"
+variable = "ovrigt-halso-sjukvard-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "hsind06"
+variable = "ovrigt-halso-sjukvard-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "hsind07"
+variable = "ovrigt-halso-sjukvard-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "hsind08"
+variable = "ovrigt-halso-sjukvard-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "hsind09"
+variable = "ovrigt-halso-sjukvard-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "hsind10"
+variable = "ovrigt-halso-sjukvard-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "hsind11"
+variable = "ovrigt-halso-sjukvard-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "hsind12"
+variable = "ovrigt-halso-sjukvard-december"
 value = "12"
 label = "12"
 
@@ -9072,51 +9072,51 @@ key = "ovrigskuldind"
 label = "Utbetalning finns för livsföring i övrigt, kategorin övrig skuld"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "ovrigskuldind01"
+variable = "ovrig-skuld-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "ovrigskuldind02"
+variable = "ovrig-skuld-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "ovrigskuldind03"
+variable = "ovrig-skuld-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "ovrigskuldind04"
+variable = "ovrig-skuld-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "ovrigskuldind05"
+variable = "ovrig-skuld-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "ovrigskuldind06"
+variable = "ovrig-skuld-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "ovrigskuldind07"
+variable = "ovrig-skuld-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "ovrigskuldind08"
+variable = "ovrig-skuld-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "ovrigskuldind09"
+variable = "ovrig-skuld-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "ovrigskuldind10"
+variable = "ovrig-skuld-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "ovrigskuldind11"
+variable = "ovrig-skuld-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "ovrigskuldind12"
+variable = "ovrig-skuld-december"
 value = "12"
 label = "12"
 
@@ -9127,51 +9127,51 @@ key = "hyresskuldind"
 label = "Utbetalning finns för livsföring i övrigt, kategorin hyresskuld"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "hyresskuldind01"
+variable = "ovrigt-hyresskuld-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "hyresskuldind02"
+variable = "ovrigt-hyresskuld-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "hyresskuldind03"
+variable = "hyresskuld-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "hyresskuldind04"
+variable = "ovrigt-hyresskuld-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "hyresskuldind05"
+variable = "ovrigt-hyresskuld-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "hyresskuldind06"
+variable = "ovrigt-hyresskuld-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "hyresskuldind07"
+variable = "ovrigt-hyresskuld-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "hyresskuldind08"
+variable = "ovrigt-hyresskuld-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "hyresskuldind09"
+variable = "hyresskuld-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "hyresskuldind10"
+variable = "hyresskuld-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "hyresskuldind11"
+variable = "hyresskuld-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "hyresskuldind12"
+variable = "ovrigt-hyresskuld-december"
 value = "12"
 label = "12"
 
@@ -9237,51 +9237,51 @@ key = "hsbelopp"
 label = "Belopp för livsföring i övrigt, kategorin, hälso- och sjukvård"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "hsbelopp01"
+variable = "livsforing-halso-sjukvard-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "hsbelopp02"
+variable = "livsforing-halso-sjukvard-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "hsbelopp03"
+variable = "livsforing-halso-sjukvard-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "hsbelopp04"
+variable = "livsforing-halso-sjukvard-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "hsbelopp05"
+variable = "livsforing-halso-sjukvard-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "hsbelopp06"
+variable = "livsforing-halso-sjukvard-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "hsbelopp07"
+variable = "livsforing-halso-sjukvard-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "hsbelopp08"
+variable = "livsforing-halso-sjukvard-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "hsbelopp09"
+variable = "livsforing-halso-sjukvard-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "hsbelopp10"
+variable = "livsforing-halso-sjukvard-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "hsbelopp11"
+variable = "livsforing-halso-sjukvard-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "hsbelopp12"
+variable = "livsforing-halso-sjukvard-december"
 value = "12"
 label = "12"
 
@@ -9292,51 +9292,51 @@ key = "tandvind"
 label = "Utbetalning finns för livsföring i övrigt, kategorin tandvård"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "tandvind01"
+variable = "tandvard-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "tandvind02"
+variable = "tandvard-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "tandvind03"
+variable = "tandvard-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "tandvind04"
+variable = "tandvard-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "tandvind05"
+variable = "tandvard-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "tandvind06"
+variable = "tandvard-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "tandvind07"
+variable = "tandvard-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "tandvind08"
+variable = "tandvard-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "tandvind09"
+variable = "tandvard-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "tandvind10"
+variable = "tandvard-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "tandvind11"
+variable = "tandvard-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "tandvind12"
+variable = "tandvard-december"
 value = "12"
 label = "12"
 
@@ -9347,51 +9347,51 @@ key = "elskuldind"
 label = "Utbetalning finns för livsföring i övrigt, kategorin elskuld"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "elskuldind01"
+variable = "ovrigt-elskuld-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "elskuldind02"
+variable = "ovrigt-elskuld-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "elskuldind03"
+variable = "ovrigt-elskuld-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "elskuldind04"
+variable = "ovrigt-elskuld-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "elskuldind05"
+variable = "ovrigt-elskuld-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "elskuldind06"
+variable = "ovrigt-elskuld-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "elskuldind07"
+variable = "ovrigt-elskuld-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "elskuldind08"
+variable = "ovrigt-elskuld-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "elskuldind09"
+variable = "ovrigt-elskuld-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "elskuldind10"
+variable = "ovrigt-elskuld-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "elskuldind11"
+variable = "ovrigt-elskuld-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "elskuldind12"
+variable = "ovrigt-elskuld-december"
 value = "12"
 label = "12"
 
@@ -9457,51 +9457,51 @@ key = "ovrigskuldbelopp"
 label = "Belopp för livsföring i övrigt, kategorin, övrig skuld"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp01"
+variable = "livsforing-ovrig-skuld-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp02"
+variable = "livsforing-ovrig-skuld-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp03"
+variable = "livsforing-ovrig-skuld-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp04"
+variable = "livsforing-ovrig-skuld-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp05"
+variable = "livsforing-ovrig-skuld-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp06"
+variable = "livsforing-ovrig-skuld-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp07"
+variable = "livsforing-ovrig-skuld-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp08"
+variable = "livsforing-ovrig-skuld-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp09"
+variable = "livsforing-ovrig-skuld-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp10"
+variable = "livsforing-ovrig-skuld-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp11"
+variable = "livsforing-ovrig-skuld-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "ovrigskuldbelopp12"
+variable = "livsforing-ovrig-skuld-december"
 value = "12"
 label = "12"
 
@@ -9512,51 +9512,51 @@ key = "hyresskuldbelopp"
 label = "Belopp för livsföring i övrigt, kategorin hyresskuld"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "hyresskuldbelopp01"
+variable = "livsforing-hyresskuld-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "hyresskuldbelopp02"
+variable = "livsforing-hyresskuld-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "hyresskuldbelopp03"
+variable = "livsforing-hyresskuld-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "hyresskuldbelopp04"
+variable = "livsforing-hyresskuld-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "hyresskuldbelopp05"
+variable = "livsforing-hyresskuld-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "hyresskuldbelopp06"
+variable = "livsforing-hyresskuld-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "hyresskuldbelopp07"
+variable = "livsforing-hyresskuld-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "hyresskuldbelopp08"
+variable = "livsforing-hyresskuld-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "hyresskuldbelopp09"
+variable = "livsforing-hyresskuld-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "hyresskuldbelopp10"
+variable = "livsforing-hyresskuld-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "hyresskuldbelopp11"
+variable = "livsforing-hyresskuld-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "hyresskuldbelopp12"
+variable = "livsforing-hyresskuld-december"
 value = "12"
 label = "12"
 
@@ -9586,51 +9586,51 @@ key = "tandvbelopp"
 label = "Belopp för livsföring i övrigt, kategorin, tandvård"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "tandvbelopp01"
+variable = "tandvard-belopp-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "tandvbelopp02"
+variable = "livsforing-tandvard-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "tandvbelopp03"
+variable = "tandvard-belopp-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "tandvbelopp04"
+variable = "livsforing-tandvard-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "tandvbelopp05"
+variable = "tandvard-belopp-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "tandvbelopp06"
+variable = "tandvard-belopp-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "tandvbelopp07"
+variable = "tandvard-belopp-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "tandvbelopp08"
+variable = "livsforing-tandvard-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "tandvbelopp09"
+variable = "tandvard-belopp-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "tandvbelopp10"
+variable = "tandvard-belopp-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "tandvbelopp11"
+variable = "tandvard-belopp-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "tandvbelopp12"
+variable = "livsforing-tandvard-december"
 value = "12"
 label = "12"
 
@@ -9641,51 +9641,51 @@ key = "elskuldbelopp"
 label = "Belopp för livsföring i övrigt, kategorin Elskuld"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "elskuldbelopp01"
+variable = "livsforing-elskuld-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "elskuldbelopp02"
+variable = "livsforing-elskuld-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "elskuldbelopp03"
+variable = "livsforing-elskuld-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "elskuldbelopp04"
+variable = "livsforing-elskuld-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "elskuldbelopp05"
+variable = "livsforing-elskuld-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "elskuldbelopp06"
+variable = "livsforing-elskuld-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "elskuldbelopp07"
+variable = "livsforing-elskuld-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "elskuldbelopp08"
+variable = "livsforing-elskuld-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "elskuldbelopp09"
+variable = "livsforing-elskuld-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "elskuldbelopp10"
+variable = "livsforing-elskuld-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "elskuldbelopp11"
+variable = "livsforing-elskuld-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "elskuldbelopp12"
+variable = "livsforing-elskuld-december"
 value = "12"
 label = "12"
 
@@ -9774,51 +9774,51 @@ key = "sokins07"
 label = "Ej aktuellt med kommunala arbetsmarknadsinsatser"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokins07-01"
+variable = "ej-arbetsmarknadsinsatser-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokins07-02"
+variable = "ej-arbetsmarknadsinsatser-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokins07-03"
+variable = "ej-arbetsmarknadsinsatser-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokins07-04"
+variable = "ej-arbetsmarknadsinsatser-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokins07-05"
+variable = "ej-arbetsmarknadsinsatser-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokins07-06"
+variable = "ej-arbetsmarknadsinsatser-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokins07-07"
+variable = "ej-arbetsmarknadsinsatser-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokins07-08"
+variable = "ej-arbetsmarknadsinsatser-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokins07-09"
+variable = "ej-arbetsmarknadsinsatser-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokins07-10"
+variable = "ej-arbetsmarknadsinsatser-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokins07-11"
+variable = "ej-arbetsmarknadsinsatser-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokins07-12"
+variable = "ej-arbetsmarknadsinsatser-december"
 value = "12"
 label = "12"
 
@@ -9829,51 +9829,51 @@ key = "sok2hinder"
 label = "Den yngstes (om två sökande, annars tom) hinder"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sok2hinder01"
+variable = "sok2-hinder-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sok2hinder02"
+variable = "sok2-hinder-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sok2hinder03"
+variable = "sok2-hinder-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sok2hinder04"
+variable = "sok2-hinder-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sok2hinder05"
+variable = "sok2-hinder-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sok2hinder06"
+variable = "sok2-hinder-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sok2hinder07"
+variable = "sok2-hinder-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sok2hinder08"
+variable = "sok2-hinder-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sok2hinder09"
+variable = "sok2-hinder-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sok2hinder10"
+variable = "sok2-hinder-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sok2hinder11"
+variable = "sok2-hinder-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sok2hinder12"
+variable = "sok2-hinder-december"
 value = "12"
 label = "12"
 
@@ -9884,51 +9884,51 @@ key = "sokyngsthinder"
 label = "Den yngstes (om två sökade, annars tom) hinder"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokyngsthinder01"
+variable = "yngstes-hinder-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokyngsthinder02"
+variable = "yngstes-hinder-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokyngsthinder03"
+variable = "yngstes-hinder-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokyngsthinder04"
+variable = "yngstes-hinder-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokyngsthinder05"
+variable = "yngstes-hinder-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokyngsthinder06"
+variable = "yngstes-hinder-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokyngsthinder07"
+variable = "yngstes-hinder-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokyngsthinder08"
+variable = "yngstes-hinder-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokyngsthinder09"
+variable = "yngstes-hinder-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokyngsthinder10"
+variable = "yngstes-hinder-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokyngsthinder11"
+variable = "yngstes-hinder-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokyngsthinder12"
+variable = "yngstes-hinder-december"
 value = "12"
 label = "12"
 
@@ -9966,51 +9966,51 @@ key = "annatbelopp"
 label = "Belopp för livsföring i övrigt, kategorin Annat"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "annatbelopp01"
+variable = "belopp-annat-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "annatbelopp02"
+variable = "belopp-annat-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "annatbelopp03"
+variable = "belopp-annat-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "annatbelopp04"
+variable = "belopp-annat-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "annatbelopp05"
+variable = "belopp-annat-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "annatbelopp06"
+variable = "belopp-annat-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "annatbelopp07"
+variable = "belopp-annat-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "annatbelopp08"
+variable = "belopp-annat-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "annatbelopp09"
+variable = "livsforing-annat-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "annatbelopp10"
+variable = "livsforing-annat-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "annatbelopp11"
+variable = "livsforing-annat-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "annatbelopp12"
+variable = "belopp-annat-december"
 value = "12"
 label = "12"
 
@@ -10323,51 +10323,51 @@ key = "sokins06"
 label = "Övriga kommunala arbetsmarknadsinsatser"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokins06-01"
+variable = "arbetsmarknadsinsatser-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokins06-02"
+variable = "arbetsmarknadsinsatser-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokins06-03"
+variable = "arbetsmarknadsinsatser-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokins06-04"
+variable = "ovriga-arbetsmarknadsinsatser-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokins06-05"
+variable = "arbetsmarknadsinsatser-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokins06-06"
+variable = "arbetsmarknadsinsatser-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokins06-07"
+variable = "arbetsmarknadsinsatser-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokins06-08"
+variable = "arbetsmarknadsinsatser-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokins06-09"
+variable = "arbetsmarknadsinsatser-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokins06-10"
+variable = "arbetsmarknadsinsatser-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokins06-11"
+variable = "arbetsmarknadsinsatser-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokins06-12"
+variable = "arbetsmarknadsinsatser-december"
 value = "12"
 label = "12"
 
@@ -10632,51 +10632,51 @@ key = "fstodboendebelopp"
 label = "Försörjningstöd tillfälligt boende"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "fstodboendebelopp01"
+variable = "forsorjningsstod-boende-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "fstodboendebelopp02"
+variable = "forsorjningsstod-boende-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "fstodboendebelopp03"
+variable = "forsorjningsstod-boende-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "fstodboendebelopp04"
+variable = "forsorjningsstod-boende-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "fstodboendebelopp05"
+variable = "forsorjningsstod-boende-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "fstodboendebelopp06"
+variable = "forsorjningsstod-boende-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "fstodboendebelopp07"
+variable = "forsorjningsstod-boende-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "fstodboendebelopp08"
+variable = "forsorjningsstod-boende-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "fstodboendebelopp09"
+variable = "forsorjningsstod-boende-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "fstodboendebelopp10"
+variable = "forsorjningsstod-boende-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "fstodboendebelopp11"
+variable = "forsorjningsstod-boende-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "fstodboendebelopp12"
+variable = "forsorjningsstod-boende-december"
 value = "12"
 label = "12"
 
@@ -10962,51 +10962,51 @@ key = "sokins01"
 label = "Arbetsförberedande insatser"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokins01-01"
+variable = "arbetsforeberedande-insatser-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokins01-02"
+variable = "arbetsforeberedande-insatser-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokins01-03"
+variable = "arbetsforeberedande-insatser-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokins01-04"
+variable = "arbetsforberedande-insatser-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokins01-05"
+variable = "arbetsforeberedande-insatser-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokins01-06"
+variable = "arbetsforeberedande-insatser-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokins01-07"
+variable = "arbetsforeberedande-insatser-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokins01-08"
+variable = "arbetsforberedande-insatser-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokins01-09"
+variable = "arbetsforeberedande-insatser-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokins01-10"
+variable = "arbetsforeberedande-insatser-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokins01-11"
+variable = "arbetsforeberedande-insatser-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokins01-12"
+variable = "arbetsforeberedande-insatser-december"
 value = "12"
 label = "12"
 
@@ -11017,51 +11017,51 @@ key = "sokins05"
 label = "Studie- och yrkesvägledning"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokins05-01"
+variable = "studie-yrkesvagledning-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokins05-02"
+variable = "studie-yrkesvagledning-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokins05-03"
+variable = "studie-yrkesvagledning-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokins05-04"
+variable = "studie-yrkesvagledning-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokins05-05"
+variable = "studie-yrkesvagledning-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokins05-06"
+variable = "studie-yrkesvagledning-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokins05-07"
+variable = "studie-yrkesvagledning-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokins05-08"
+variable = "studie-yrkesvagledning-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokins05-09"
+variable = "studie-yrkesvagledning-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokins05-10"
+variable = "studie-yrkesvagledning-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokins05-11"
+variable = "studie-yrkesvagledning-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokins05-12"
+variable = "studie-yrkesvagledning-december"
 value = "12"
 label = "12"
 
@@ -11226,51 +11226,51 @@ key = "sokaldstavslut"
 label = "Avslutskod äldsta sökande"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokaldstavslut01"
+variable = "avslutskod-aldsta-sokande-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokaldstavslut02"
+variable = "avslutskod-aldsta-sokande-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokaldstavslut03"
+variable = "avslutskod-aldsta-sokande-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokaldstavslut04"
+variable = "avslutskod-aldsta-sokande-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokaldstavslut05"
+variable = "avslutskod-aldsta-sokande-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokaldstavslut06"
+variable = "avslutskod-aldsta-sokande-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokaldstavslut07"
+variable = "avslutskod-aldsta-sokande-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokaldstavslut08"
+variable = "avslutskod-aldsta-sokande-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokaldstavslut09"
+variable = "avslutskod-aldsta-sokande-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokaldstavslut10"
+variable = "avslutskod-aldsta-sokande-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokaldstavslut11"
+variable = "avslutskod-aldsta-sokande-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokaldstavslut12"
+variable = "avslutskod-aldsta-sokande-december"
 value = "12"
 label = "12"
 
@@ -11281,51 +11281,51 @@ key = "sokyngstavslut"
 label = "Avslutskod yngsta sökande"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokyngstavslut01"
+variable = "avslutskod-yngsta-sokande-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokyngstavslut02"
+variable = "avslutskod-yngsta-sokande-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokyngstavslut03"
+variable = "avslutskod-yngsta-sokande-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokyngstavslut04"
+variable = "avslutskod-yngsta-sokande-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokyngstavslut05"
+variable = "avslutskod-yngsta-sokande-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokyngstavslut06"
+variable = "avslutskod-yngsta-sokande-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokyngstavslut07"
+variable = "avslutskod-yngsta-sokande-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokyngstavslut08"
+variable = "avslutskod-yngsta-sokande-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokyngstavslut09"
+variable = "avslutskod-yngsta-sokande-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokyngstavslut10"
+variable = "avslutskod-yngsta-sokande-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokyngstavslut11"
+variable = "avslutskod-yngsta-sokande-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokyngstavslut12"
+variable = "avslutskod-yngsta-sokande-december"
 value = "12"
 label = "12"
 
@@ -11374,51 +11374,51 @@ key = "iebelopp"
 label = "Introduktionsersättning"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "iebelopp01"
+variable = "introduktionsersattning-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "iebelopp02"
+variable = "introduktionsersattning-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "iebelopp03"
+variable = "introduktionsersattning-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "iebelopp04"
+variable = "introduktionsersattning-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "iebelopp05"
+variable = "introduktionsersattning-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "iebelopp06"
+variable = "introduktionsersattning-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "iebelopp07"
+variable = "introduktionsersattning-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "iebelopp08"
+variable = "introduktionsersattning-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "iebelopp09"
+variable = "introduktionsersattning-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "iebelopp10"
+variable = "introduktionsersattning-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "iebelopp11"
+variable = "introduktionsersattning-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "iebelopp12"
+variable = "introduktionsersattning-december"
 value = "12"
 label = "12"
 
@@ -11519,51 +11519,51 @@ key = "annatind"
 label = "Utbetalning finns för livsföring i övrigt, kategorin"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "annatind01"
+variable = "ovrigt-annat-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "annatind02"
+variable = "ovrigt-annat-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "annatind03"
+variable = "ovrigt-annat-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "annatind04"
+variable = "ovrigt-annat-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "annatind05"
+variable = "ovrigt-annat-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "annatind06"
+variable = "ovrigt-annat-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "annatind07"
+variable = "ovrigt-annat-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "annatind08"
+variable = "ovrigt-annat-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "annatind09"
+variable = "ovrigt-annat-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "annatind10"
+variable = "ovrigt-annat-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "annatind11"
+variable = "ovrigt-annat-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "annatind12"
+variable = "ovrigt-annat-december"
 value = "12"
 label = "12"
 
@@ -11824,51 +11824,51 @@ key = "avsluthh"
 label = "Avslutskod hushållet"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "avsluthh01"
+variable = "avslutskod-hushallet-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "avsluthh02"
+variable = "avslutskod-hushallet-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "avsluthh03"
+variable = "avslutskod-hushallet-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "avsluthh04"
+variable = "avslutskod-hushallet-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "avsluthh05"
+variable = "avslutskod-hushallet-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "avsluthh06"
+variable = "avslutskod-hushallet-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "avsluthh07"
+variable = "avslutskod-hushallet-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "avsluthh08"
+variable = "avslutskod-hushallet-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "avsluthh09"
+variable = "avslutskod-hushallet-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "avsluthh10"
+variable = "avslutskod-hushallet-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "avsluthh11"
+variable = "avslutskod-hushallet-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "avsluthh12"
+variable = "avslutskod-hushallet-december"
 value = "12"
 label = "12"
 
@@ -12015,51 +12015,51 @@ key = "ekbbelopp"
 label = "Ekonomiskt bistånd"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "ekbbelopp01"
+variable = "ekonomiskt-bistand-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "ekbbelopp02"
+variable = "ekonomiskt-bistand-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "ekbbelopp03"
+variable = "ekonomiskt-bistand-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "ekbbelopp04"
+variable = "ekonomiskt-bistand-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "ekbbelopp05"
+variable = "ekonomiskt-bistand-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "ekbbelopp06"
+variable = "ekonomiskt-bistand-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "ekbbelopp07"
+variable = "ekonomiskt-bistand-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "ekbbelopp08"
+variable = "ekonomiskt-bistand-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "ekbbelopp09"
+variable = "ekonomiskt-bistand-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "ekbbelopp10"
+variable = "ekonomiskt-bistand-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "ekbbelopp11"
+variable = "ekonomiskt-bistand-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "ekbbelopp12"
+variable = "ekonomiskt-bistand-december"
 value = "12"
 label = "12"
 
@@ -12070,51 +12070,51 @@ key = "hinder"
 label = "Försörjningshinder"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "hinder01"
+variable = "forsorjningshinder-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "hinder02"
+variable = "forsorjningshinder-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "hinder03"
+variable = "forsorjningshinder-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "hinder04"
+variable = "forsorjningshinder-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "hinder05"
+variable = "forsorjningshinder-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "hinder06"
+variable = "forsorjningshinder-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "hinder07"
+variable = "forsorjningshinder-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "hinder08"
+variable = "forsorjningshinder-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "hinder09"
+variable = "forsorjningshinder-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "hinder10"
+variable = "forsorjningshinder-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "hinder11"
+variable = "forsorjningshinder-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "hinder12"
+variable = "forsorjningshinder-december"
 value = "12"
 label = "12"
 
@@ -12125,51 +12125,51 @@ key = "sok1hinder"
 label = "Den äldstes hinder"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sok1hinder01"
+variable = "aldstes-hinder-januari-sok1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sok1hinder02"
+variable = "aldstes-hinder-februari-sok1"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sok1hinder03"
+variable = "sok1-hinder-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sok1hinder04"
+variable = "aldstes-hinder-april-sok1"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sok1hinder05"
+variable = "sok1-hinder-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sok1hinder06"
+variable = "aldstes-hinder-juni-sok1"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sok1hinder07"
+variable = "aldstes-hinder-juli-sok1"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sok1hinder08"
+variable = "aldstes-hinder-augusti-sok1"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sok1hinder09"
+variable = "sok1-hinder-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sok1hinder10"
+variable = "sok1-hinder-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sok1hinder11"
+variable = "sok1-hinder-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sok1hinder12"
+variable = "aldstes-hinder-december-sok1"
 value = "12"
 label = "12"
 
@@ -12180,51 +12180,51 @@ key = "sokaldsthinder"
 label = "Den äldstes hinder"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokaldsthinder01"
+variable = "aldstes-hinder-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokaldsthinder02"
+variable = "aldstes-hinder-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokaldsthinder03"
+variable = "aldstes-hinder-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokaldsthinder04"
+variable = "aldstes-hinder-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokaldsthinder05"
+variable = "aldstes-hinder-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokaldsthinder06"
+variable = "aldstes-hinder-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokaldsthinder07"
+variable = "aldstes-hinder-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokaldsthinder08"
+variable = "aldstes-hinder-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokaldsthinder09"
+variable = "aldstes-hinder-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokaldsthinder10"
+variable = "aldstes-hinder-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokaldsthinder11"
+variable = "aldstes-hinder-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokaldsthinder12"
+variable = "aldstes-hinder-december"
 value = "12"
 label = "12"
 
@@ -12235,51 +12235,51 @@ key = "sokins03"
 label = "Jobbsökaraktivitet"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokins03-01"
+variable = "jobbsokaraktivitet-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokins03-02"
+variable = "jobbsokaraktivitet-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokins03-03"
+variable = "jobbsokaraktivitet-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokins03-04"
+variable = "jobbsokaraktivitet-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokins03-05"
+variable = "jobbsokaraktivitet-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokins03-06"
+variable = "jobbsokaraktivitet-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokins03-07"
+variable = "jobbsokaraktivitet-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokins03-08"
+variable = "jobbsokaraktivitet-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokins03-09"
+variable = "jobbsokaraktivitet-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokins03-10"
+variable = "jobbsokaraktivitet-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokins03-11"
+variable = "jobbsokaraktivitet-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokins03-12"
+variable = "jobbsokaraktivitet-december"
 value = "12"
 label = "12"
 
@@ -12362,51 +12362,51 @@ key = "fstodbelopp"
 label = "Försörjningsstöd"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "fstodbelopp01"
+variable = "forsorjningsstod-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "fstodbelopp02"
+variable = "forsorjningsstod-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "fstodbelopp03"
+variable = "forsorjningsstod-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "fstodbelopp04"
+variable = "forsorjningsstod-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "fstodbelopp05"
+variable = "forsorjningsstod-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "fstodbelopp06"
+variable = "forsorjningsstod-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "fstodbelopp07"
+variable = "forsorjningsstod-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "fstodbelopp08"
+variable = "forsorjningsstod-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "fstodbelopp09"
+variable = "forsorjningsstod-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "fstodbelopp10"
+variable = "forsorjningsstod-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "fstodbelopp11"
+variable = "forsorjningsstod-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "fstodbelopp12"
+variable = "forsorjningsstod-december"
 value = "12"
 label = "12"
 
@@ -13130,51 +13130,51 @@ key = "sokins02"
 label = "Arbetspraktik"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "sokins02-01"
+variable = "arbetspraktik-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "sokins02-02"
+variable = "arbetspraktik-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "sokins02-03"
+variable = "arbetspraktik-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "sokins02-04"
+variable = "arbetspraktik-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "sokins02-05"
+variable = "arbetspraktik-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "sokins02-06"
+variable = "arbetspraktik-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "sokins02-07"
+variable = "arbetspraktik-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "sokins02-08"
+variable = "arbetspraktik-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "sokins02-09"
+variable = "arbetspraktik-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "sokins02-10"
+variable = "arbetspraktik-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "sokins02-11"
+variable = "arbetspraktik-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "sokins02-12"
+variable = "arbetspraktik-december"
 value = "12"
 label = "12"
 
@@ -13388,51 +13388,51 @@ key = "ekbutb"
 label = "EKB utbetalt"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "ekbutb01"
+variable = "ekonomiskt-bistand-utbetalt-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "ekbutb02"
+variable = "ekonomiskt-bistand-utbetalt-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "ekbutb03"
+variable = "ekonomiskt-bistand-utbetalt-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "ekbutb04"
+variable = "ekonomiskt-bistand-utbetalt-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "ekbutb05"
+variable = "ekonomiskt-bistand-utbetalt-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "ekbutb06"
+variable = "ekonomiskt-bistand-utbetalt-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "ekbutb07"
+variable = "ekonomiskt-bistand-utbetalt-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "ekbutb08"
+variable = "ekonomiskt-bistand-utbetalt-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "ekbutb09"
+variable = "ekb-utbetalt-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "ekbutb10"
+variable = "ekb-utbetalt-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "ekbutb11"
+variable = "ekonomiskt-bistand-utbetalt-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "ekbutb12"
+variable = "ekonomiskt-bistand-utbetalt-december"
 value = "12"
 label = "12"
 
@@ -13611,127 +13611,127 @@ key = "antbarn"
 label = "Antal barn"
 axis = "numeric"
 [[variable_group.members]]
-variable = "antbarn0"
+variable = "antal-barn-0-ar"
 value = "0000"
 label = "0"
 [[variable_group.members]]
-variable = "antbarn00"
+variable = "antal-barn-00-ar"
 value = "0000"
 label = "0"
 [[variable_group.members]]
-variable = "antbarn01"
+variable = "antal-barn-01-ar"
 value = "0001"
 label = "1"
 [[variable_group.members]]
-variable = "antbarn1"
+variable = "antal-barn-1-ar"
 value = "0001"
 label = "1"
 [[variable_group.members]]
-variable = "antbarn02"
+variable = "antal-barn-02-ar"
 value = "0002"
 label = "2"
 [[variable_group.members]]
-variable = "antbarn2"
+variable = "antal-barn-2-ar"
 value = "0002"
 label = "2"
 [[variable_group.members]]
-variable = "antbarn03"
+variable = "antal-barn-03-ar"
 value = "0003"
 label = "3"
 [[variable_group.members]]
-variable = "antbarn3"
+variable = "antal-barn-3-ar"
 value = "0003"
 label = "3"
 [[variable_group.members]]
-variable = "antbarn04"
+variable = "antal-barn-04-ar"
 value = "0004"
 label = "4"
 [[variable_group.members]]
-variable = "antbarn4"
+variable = "antal-barn-4-ar"
 value = "0004"
 label = "4"
 [[variable_group.members]]
-variable = "antbarn05"
+variable = "antal-barn-05-ar"
 value = "0005"
 label = "5"
 [[variable_group.members]]
-variable = "antbarn5"
+variable = "antal-barn-5-ar"
 value = "0005"
 label = "5"
 [[variable_group.members]]
-variable = "antbarn06"
+variable = "antal-barn-06-ar"
 value = "0006"
 label = "6"
 [[variable_group.members]]
-variable = "antbarn6"
+variable = "antal-barn-6-ar"
 value = "0006"
 label = "6"
 [[variable_group.members]]
-variable = "antbarn07"
+variable = "antal-barn-07-ar"
 value = "0007"
 label = "7"
 [[variable_group.members]]
-variable = "antbarn7"
+variable = "antal-barn-7-ar"
 value = "0007"
 label = "7"
 [[variable_group.members]]
-variable = "antbarn08"
+variable = "antal-barn-08-ar"
 value = "0008"
 label = "8"
 [[variable_group.members]]
-variable = "antbarn8"
+variable = "antal-barn-8-ar"
 value = "0008"
 label = "8"
 [[variable_group.members]]
-variable = "antbarn09"
+variable = "antal-barn-09-ar"
 value = "0009"
 label = "9"
 [[variable_group.members]]
-variable = "antbarn9"
+variable = "antal-barn-9-ar"
 value = "0009"
 label = "9"
 [[variable_group.members]]
-variable = "antbarn10"
+variable = "antal-barn-10-ar"
 value = "0010"
 label = "10"
 [[variable_group.members]]
-variable = "antbarn11"
+variable = "antal-barn-11-ar"
 value = "0011"
 label = "11"
 [[variable_group.members]]
-variable = "antbarn12"
+variable = "antal-barn-12-ar"
 value = "0012"
 label = "12"
 [[variable_group.members]]
-variable = "antbarn13"
+variable = "antal-barn-13-ar"
 value = "0013"
 label = "13"
 [[variable_group.members]]
-variable = "antbarn14"
+variable = "antal-barn-14-ar"
 value = "0014"
 label = "14"
 [[variable_group.members]]
-variable = "antbarn0015"
+variable = "antal-barn-under-16-ar"
 value = "0015"
 label = "15"
 [[variable_group.members]]
-variable = "antbarn15"
+variable = "antal-barn-15-ar"
 value = "0015"
 label = "15"
 [[variable_group.members]]
-variable = "antbarn16"
+variable = "antal-barn-16-ar"
 value = "0016"
 label = "16"
 [[variable_group.members]]
-variable = "antbarn0017"
+variable = "antal-barn-under-18-ar"
 value = "0017"
 label = "17"
 [[variable_group.members]]
-variable = "antbarn17"
+variable = "antal-barn-17-ar"
 value = "0017"
 label = "17"
 [[variable_group.members]]
-variable = "antbarn1617"
+variable = "antal-barn-16-17-ar-v2"
 value = "1617"
 label = "1617"
 
@@ -14115,51 +14115,51 @@ key = "avslut"
 label = "Avslutskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "avslut01"
+variable = "avslutskod-januari"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "avslut02"
+variable = "avslutskod-februari"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "avslut03"
+variable = "avslutskod-mars"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "avslut04"
+variable = "avslutskod-april"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "avslut05"
+variable = "avslutskod-maj"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "avslut06"
+variable = "avslutskod-juni"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "avslut07"
+variable = "avslutskod-juli"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "avslut08"
+variable = "avslutskod-augusti"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "avslut09"
+variable = "avslutskod-september"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "avslut10"
+variable = "avslutskod-oktober"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "avslut11"
+variable = "avslutskod-november"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "avslut12"
+variable = "avslutskod-december"
 value = "12"
 label = "12"
 
@@ -14181,19 +14181,19 @@ label = "4"
 # axis=numeric agreement=0.64 members=3  Antal timmar/mån
 [[variable_group]]
 register = "sos/lss"
-key = "tim"
+key = "antal-timmar-man-lss"
 label = "Antal timmar/mån"
 axis = "numeric"
 [[variable_group.members]]
-variable = "tim2"
+variable = "antal-timmar-man-lss-2"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "tim3"
+variable = "antal-timmar-man-lss-3"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "tim5"
+variable = "antal-timmar-man-lss-5"
 value = "5"
 label = "5"
 
@@ -14533,31 +14533,31 @@ key = "insaldst"
 label = "Den äldste sökande/medsökandes insats"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "insaldst01"
+variable = "aldste-insats-arbetsforebredande"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "insaldst02"
+variable = "aldste-insats-arbetspraktik"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "insaldst03"
+variable = "aldste-insats-jobbsokaraktivitet"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "insaldst04"
+variable = "aldste-insats-kurs"
 value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "insaldst05"
+variable = "aldste-insats-studievagledning"
 value = "5"
 label = "5"
 [[variable_group.members]]
-variable = "insaldst06"
+variable = "aldste-insats-ovriga-arbetsmarknads"
 value = "6"
 label = "6"
 [[variable_group.members]]
-variable = "insaldst07"
+variable = "aldste-insats-ej-aktuellt-arbetsmarknads"
 value = "7"
 label = "7"
 
@@ -14568,31 +14568,31 @@ key = "insyngst"
 label = "Den yngste sökande/medsökandes insats"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "insyngst01"
+variable = "yngstes-insats-arbetsforeberedande"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "insyngst02"
+variable = "yngstes-insats-arbetspraktik"
 value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "insyngst03"
+variable = "yngstes-insats-jobbsokaraktivitet"
 value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "insyngst04"
+variable = "yngstes-insats-kurs"
 value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "insyngst05"
+variable = "yngstes-insats-studie-yrkesvagledning"
 value = "5"
 label = "5"
 [[variable_group.members]]
-variable = "insyngst06"
+variable = "yngstes-insats-ovriga-kommunala"
 value = "6"
 label = "6"
 [[variable_group.members]]
-variable = "insyngst07"
+variable = "yngstes-insats-ej-kommunala"
 value = "7"
 label = "7"
 
@@ -15877,51 +15877,51 @@ key = "uk"
 label = "Utförande kommun"
 axis = "numeric"
 [[variable_group.members]]
-variable = "uk2"
+variable = "utforande-kommun-lss-9-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "uk3"
+variable = "utforande-kommun-lss-9-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "uk4"
+variable = "utforande-kommun-lss-9-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "uk5"
+variable = "utforande-kommun-lss-9-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "uk6"
+variable = "utforande-kommun-lss-9-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "uk7"
+variable = "utforande-kommun-lss-9-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "uk9"
+variable = "utforande-kommun-lss-9-9-vuxna"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "uk10"
+variable = "utforande-kommun-lss-9-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "uk81"
+variable = "utforande-kommun-lss-9-8-familjehem"
 value = "81"
 label = "81"
 [[variable_group.members]]
-variable = "uk82"
+variable = "utforande-kommun-lss-9-8-sarskild"
 value = "82"
 label = "82"
 [[variable_group.members]]
-variable = "uk91"
+variable = "utforande-kommun-lss-9-9-sarskild"
 value = "91"
 label = "91"
 [[variable_group.members]]
-variable = "uk92"
+variable = "utforande-kommun-lss-9-9-bostad"
 value = "92"
 label = "92"
 
@@ -16099,55 +16099,55 @@ label = "14"
 # axis=ordinal agreement=0.52 members=12  Diagnoskod
 [[variable_group]]
 register = "sos/mfr"
-key = "mdiag"
+key = "diagnoskod-forlosta"
 label = "Diagnoskod"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "mdiag1"
+variable = "diagnoskod-forlosta-1"
 value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "mdiag2"
+variable = "diagnoskod-forlosta-2"
 value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "mdiag3"
+variable = "diagnoskod-forlosta-3"
 value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "mdiag4"
+variable = "diagnoskod-forlosta-4"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "mdiag5"
+variable = "diagnoskod-forlosta-5"
 value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "mdiag6"
+variable = "diagnoskod-forlosta-6"
 value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "mdiag7"
+variable = "diagnoskod-forlosta-7"
 value = "07"
 label = "7"
 [[variable_group.members]]
-variable = "mdiag8"
+variable = "diagnoskod-forlosta-8"
 value = "08"
 label = "8"
 [[variable_group.members]]
-variable = "mdiag9"
+variable = "diagnoskod-forlosta-9"
 value = "09"
 label = "9"
 [[variable_group.members]]
-variable = "mdiag10"
+variable = "diagnoskod-forlosta-10"
 value = "10"
 label = "10"
 [[variable_group.members]]
-variable = "mdiag11"
+variable = "diagnoskod-forlosta-11"
 value = "11"
 label = "11"
 [[variable_group.members]]
-variable = "mdiag12"
+variable = "diagnoskod-forlosta-12"
 value = "12"
 label = "12"
 

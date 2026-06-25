@@ -15,7 +15,7 @@ slug = "hogskoleprovet"
 [register_variant."5444831050852607094.5876203108261893022"]
 slug = "_default"
 display_group = "Högskoleprovet (provresultat)"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnr-personnr"
 panel_time_key = "tillfalle"
 panel_time_grain = "row"
 
@@ -36,6 +36,41 @@ panel_time_grain = "row"
 # pins reproduce the slug the variable already carries).
 # 1 pin(s).
 
-[variable."5444831050852607094.Personnummer"]  # hogskoleprovet: panel_entity_key = 'personnummer'
-slug = "personnummer"
+[variable."5444831050852607094.Personnummer"]  # hogskoleprovet: panel_entity_key = 'lopnr-personnr'
+slug = "lopnr-personnr"
 
+# === BEGIN #760 non-SCB concept-slug curation (generated) ===
+# 13 curated overrides: cryptic delivery-column slugs replaced
+# with canonical Swedish-prose slugs derived from the variable name, plus
+# cross-register/cross-provider concept consistency and person/org identifier
+# alignment to the SCB locked forms (#760). Keyed by source_id.
+
+# register 5444831050852607094
+[variable."5444831050852607094.AO"]
+slug = "allman-orientering"
+[variable."5444831050852607094.DTK"]
+slug = "diagram-tabeller-kartor"
+[variable."5444831050852607094.ELF"]
+slug = "engelsk-lasforstelse"
+[variable."5444831050852607094.KVA"]
+slug = "kvantitativa-jamforelser"
+[variable."5444831050852607094.Kvant"]
+slug = "kvantitativ-delsumma"
+[variable."5444831050852607094.LÄS"]
+slug = "lasforstelse"
+[variable."5444831050852607094.MEK"]
+slug = "meningskomplettering"
+[variable."5444831050852607094.NOG"]
+slug = "kvantitativa-resonemang"
+[variable."5444831050852607094.Norm"]
+slug = "normerat-resultat"
+[variable."5444831050852607094.ORD"]
+slug = "ordforstelse"
+[variable."5444831050852607094.STUF"]
+slug = "studietekniska-fardigheter"
+[variable."5444831050852607094.Verb"]
+slug = "verbal-delsumma"
+[variable."5444831050852607094.XYZ"]
+slug = "matematisk-problemlosning"
+
+# === END #760 non-SCB concept-slug curation ===
