@@ -423,3 +423,85 @@ def test_head_push_ts_empty_commits_exits_with_tool_error() -> None:
     with pytest.raises(SystemExit) as exc:
         prs._head_push_ts({"headRefOid": "x", "commits": []})
     assert exc.value.code == 2
+
+
+# --- should_bail_no_engagement / poll start-wait ------------------------------------
+
+
+def test_bail_when_none_past_grace() -> None:
+    assert prs.should_bail_no_engagement(
+        "none", engaged=False, elapsed_sec=90, grace_sec=90
+    )
+
+
+def test_no_bail_before_grace() -> None:
+    assert not prs.should_bail_no_engagement(
+        "none", engaged=False, elapsed_sec=60, grace_sec=90
+    )
+
+
+def test_no_bail_once_engaged() -> None:
+    # A 👀 was seen earlier (engaged latched True) — never bail even if it's somehow `none`
+    # now; the wait is the verdict wait.
+    assert not prs.should_bail_no_engagement(
+        "none", engaged=True, elapsed_sec=999, grace_sec=90
+    )
+
+
+def test_no_bail_while_reviewing() -> None:
+    assert not prs.should_bail_no_engagement(
+        "reviewing", engaged=True, elapsed_sec=999, grace_sec=90
+    )
+
+
+def test_grace_zero_disables_bail() -> None:
+    assert not prs.should_bail_no_engagement(
+        "none", engaged=False, elapsed_sec=10_000, grace_sec=0
+    )
+
+
+def _clock(monkeypatch) -> list[float]:
+    """Drive `time` deterministically: monotonic reads a shared clock; sleep advances it
+    (so simulated time moves only when the poll loop sleeps an interval)."""
+    clk = [0.0]
+    monkeypatch.setattr(prs.time, "monotonic", lambda: clk[0])
+    monkeypatch.setattr(prs.time, "sleep", lambda s: clk.__setitem__(0, clk[0] + s))
+    return clk
+
+
+def test_poll_bails_on_persistent_no_engagement(monkeypatch) -> None:
+    _clock(monkeypatch)
+    calls = [0]
+
+    def fake_eval(*_a, **_k):
+        calls[0] += 1
+        return {"signal": "none", "settled": False}
+
+    monkeypatch.setattr(prs, "evaluate", fake_eval)
+    out = prs.poll(
+        "o", "n", 1, bot="b", timeout_min=15.0, interval_sec=30.0, engage_grace_sec=90.0
+    )
+    assert out["no_engagement"] is True
+    assert out["settled"] is False
+    # NOT timed_out: the ceiling wasn't reached, so a caller can't mistake the early bail
+    # for an exhausted (proceed-anyway) window — it must post `@codex review` instead.
+    assert out["timed_out"] is False
+    assert "recommendation" in out and "@codex review" in out["recommendation"]
+    # bailed at the grace (~4 evals), not the 15-min / 30-eval ceiling
+    assert calls[0] <= 5
+
+
+def test_poll_does_not_bail_once_reviewing(monkeypatch) -> None:
+    _clock(monkeypatch)
+
+    def fake_eval(*_a, **_k):
+        return {"signal": "reviewing", "settled": False}
+
+    monkeypatch.setattr(prs, "evaluate", fake_eval)
+    # short ceiling so the verdict-wait terminates the test; the 👀 must suppress the bail.
+    out = prs.poll(
+        "o", "n", 1, bot="b", timeout_min=0.5, interval_sec=30.0, engage_grace_sec=10.0
+    )
+    assert out.get("no_engagement") is None
+    assert out["signal"] == "reviewing"
+    assert out["timed_out"] is True
