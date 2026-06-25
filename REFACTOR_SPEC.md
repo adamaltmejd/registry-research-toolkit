@@ -136,17 +136,17 @@ The grow-only slug-immutability gate is **per-provider**, not global. There is n
 `UNFROZEN` sentinel file; freeze state lives in
 `reg_meta_build/fqid_slugs/<slug-dir>/freeze.toml` as a flat TOML map
 `<zone> = "<state>"` (absent file or unlisted zone ⇒ `churning`). The three states
-advance one-way: `churning` → `curating` → `frozen`. The repo ships all-churning — no
-`freeze.toml` is committed — so slugs regenerate freely until each provider is
-deliberately advanced.
+advance one-way: `churning` → `curating` → `frozen`. All 8 global providers are now at
+`curating` (#759): `freeze.toml` is committed and their `<provider>.auto.toml` slugs are
+pinned. Steward dirs (e.g. `swecov/`) remain churning. The remaining advance is the
+per-provider `frozen` seal (#472).
 
-At the v1 release: curate the SCB name-fallback auto-slugs (\~325 pairs — the long-pole
-human task; safe to chip at in parallel with steps 8–12), then advance each provider by (1)
-force-committing its generated file
-(`git add -f reg_meta_build/fqid_slugs/<provider>.auto.toml`) and (2) setting its zone
-to `curating` then `frozen` in `freeze.toml`. There is no single global delete to arm
-the gate — immutability is per-provider and per-zone. See #470 (machinery), #471
-(curation), #472 (seal).
+At the v1 release: curation (#471) and the churning→curating advance (#759) have
+shipped. What remains is to seal each provider — (1) verify no identity-churn issues are
+open for it (the #418 pre-seal re-verify), and (2) set its zone to `frozen` in
+`freeze.toml`, which arms the rename-refusal gate. There is no single global step to arm
+the gate — the seal is per-provider and per-zone. See #470 (machinery), #471 (curation),
+#472 (seal).
 
 **Preconditions — the hard identity-churn blockers are resolved.** #196 (curated
 column-merge primitive + auto case-fold + panel-key re-curation) and #197 (the FRIDA

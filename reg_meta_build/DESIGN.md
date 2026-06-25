@@ -2599,9 +2599,12 @@ rename/removal refusal in `diff_snapshot` / `precheck-slugs`. So a `curating` zo
 its auto slugs *without* yet arming the rename refusal. Renames are always *reported* in
 the CLI envelope regardless of state — freeze gates the *refusal*, not the *visibility*.
 
-The repo ships **all-churning**: no `freeze.toml` is committed (absence ⇒ every zone
-churning ⇒ today's behavior). Arming immutability at v1 is a deliberate per-provider
-advance to `frozen` (commit the pinned `<provider>.auto.toml`, then seal) — see
+All 8 global providers (scb, sos, fk, fohm, lakemedelsverket, pliktverket, riksarkivet,
+umu) are now at **`curating`** (#759): `freeze.toml` is committed and each provider's
+`<provider>.auto.toml` is committed, so slugs are pinned and auto-regeneration is
+suppressed. Renames are still allowed — the `frozen` seal (#472) is the remaining
+per-provider advance that will arm the rename-refusal gate. Steward dirs (e.g.
+`fqid_slugs/swecov/`) have no `freeze.toml` entry and remain `churning`. See
 REFACTOR_SPEC.md / #209 (machinery #470 / curation #471 / seal #472).
 
 Note: `*.auto.toml` is gitignored by default, so advancing a provider to `curating` or
@@ -2611,11 +2614,13 @@ Note: `*.auto.toml` is gitignored by default, so advancing a provider to `curati
 committed `<provider>.auto.toml` fails fast with `slug_freeze_auto_missing` rather than
 silently re-deriving its slugs (which would defeat the pin). The per-provider
 `.gitignore` negation (or `git add -f`) is applied when a provider is actually pinned —
-this repo ships all-churning, so no `auto.toml` is committed yet. A complementary
-test-layer guard (`test_pinned_providers_auto_toml_git_tracked`) closes the window
-between commit and clean checkout: it asserts a present-on-disk `<provider>.auto.toml`
-is in the **committed tree** (it reads HEAD via `git ls-tree`, not the staging index, so
-a `git add -f`'d-but-uncommitted file is still caught — which matters because this guard
+the 8 global providers are pinned (#759), so their `<provider>.auto.toml` files and
+per-provider `.gitignore` negations are already committed; only steward/churning
+providers' `auto.toml` files remain gitignored. A complementary test-layer guard
+(`test_pinned_providers_auto_toml_git_tracked`) closes the window between commit and
+clean checkout: it asserts a present-on-disk `<provider>.auto.toml` is in the
+**committed tree** (it reads HEAD via `git ls-tree`, not the staging index, so a
+`git add -f`'d-but-uncommitted file is still caught — which matters because this guard
 runs as a pre-push hook, where a staged-but-unpushed file would otherwise read as fine).
 It flags a present-but-uncommitted file (a leftover from a prior `churning` build, or a
 staged-but-uncommitted `git add -f`, which `is_file()` reports as present locally yet
