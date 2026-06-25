@@ -208,6 +208,42 @@ classification = "niva-grovv1"
 value = "niva-grov"
 label = "Nivå – aggregat, 5 nivåer"
 
+# ISCED — International Standard Classification of Education. Two ORTHOGONAL
+# axes of one international education classification (the parallel to SUN's
+# nivå/inriktning split), NOT vintages: isced2011 is the Level dimension,
+# isced-f2013 the Fields-of-Education-and-Training dimension. Both fold under a
+# single `dimension` axis.
+[[classification_group]]
+key = "isced"
+label = "International Standard Classification of Education (ISCED)"
+axis = "dimension"
+[[classification_group.members]]
+classification = "isced2011"
+value = "niva"
+label = "Nivå (ISCED 2011)"
+[[classification_group.members]]
+classification = "isced-f2013"
+value = "inriktning"
+label = "Inriktning (ISCED-F 2013)"
+
+# NordDRG — diagnosis-related groups. `mdc` (Major Diagnostic Categories) is the
+# COARSE partition above `drg` — an aggregate fold of the same concept, the same
+# posture as SUN's nivå aggregates riding the single axis. Both fold under one
+# `dimension` axis (the aggregate is a granularity of the grouping, not a
+# separate axis — multi-axis groups were removed in #585).
+[[classification_group]]
+key = "norddrg"
+label = "NordDRG"
+axis = "dimension"
+[[classification_group.members]]
+classification = "drg"
+value = "grupp"
+label = "Diagnosrelaterade grupper (DRG)"
+[[classification_group.members]]
+classification = "mdc"
+value = "aggregat"
+label = "Större diagnosgrupper (MDC)"
+
 # LISA's AGI monthly-income family: one concept ("Löne- eller
 # företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
 # största / tredje största förvärvskälla). #319 merged each rank's 12 month

@@ -180,6 +180,39 @@ from = "class/sun1996"
 to = "class/sun2000-grupp"
 effective_year = 2000
 
+# ── ICD / KS disease-classification succession (#770) ──
+#    Sweden's disease classifications form a one-dimensional succession:
+#      icd-8-ks68 (1969–1986) → icd-9-ks87 (1987–1996) → icd-10-se (1997–).
+#    Modeled as classification-grain `replaced_by` so the chain collapses to its
+#    terminal (icd-10-se) in the classification-root browse, like SSYK/LKF/SNI/SUN.
+#    Classification grain → `class/<slug>`; `effective_year` = the successor's
+#    valid_from. `note` is provenance-only (build stamps `curated:slug_toml`).
+[[edge]]
+type = "replaced_by"
+from = "class/icd-8-ks68"
+to = "class/icd-9-ks87"
+effective_year = 1987
+
+[[edge]]
+type = "replaced_by"
+from = "class/icd-9-ks87"
+to = "class/icd-10-se"
+effective_year = 1997
+
+#    Fork: ks87-p is the PRIMARY-CARE cut of KS87 (#605 split-root fan-out), a
+#    1→many split off icd-9-ks87 drawn distinctly from the trunk. It is a
+#    contemporaneous setting-variant, NOT a temporal successor — KS87 kept
+#    running in hospitals while KS87-P ran in primary care, both 1987–1996. It is
+#    really a derived-from/variant-of edge, which classifications don't have
+#    (only replaced_by + same_as); replaced_by is overloaded as the
+#    edition-lineage graph here. A dedicated variant edge is deferred — KS87-P is
+#    the only setting-variant in the catalog today.
+[[edge]]
+type = "replaced_by"
+from = "class/icd-9-ks87"
+to = "class/ks87-p"
+effective_year = 1987
+
 # ── Curated "see also" edges (#403) ──
 # Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an
 # identity (identity is a `type = "same_as"` edge). Slugs verified against a real
