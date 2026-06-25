@@ -54,10 +54,12 @@ from ._curation import (
     curation_error,
     fold_column,
     load_curation_entries,
+    require_bool,
     require_str,
     resolve_register_variant_id,
 )
 from .classifications import declared_short_names
+from .db import _VALID_TO_SENTINEL
 from .id import mint_canonical_scb
 
 if TYPE_CHECKING:
@@ -71,9 +73,10 @@ if TYPE_CHECKING:
 # invariant (every `canonical-scb` row is `is_canonical_scb`) is unambiguous.
 CANONICAL_ATTACH_SOURCE_LABEL = "canonical-scb"
 
-# Open-ended validity sentinel — same exact string the materializer / validator
-# (_check_open_ended_sentinel) demand for an omitted upper bound.
-_VALID_TO_SENTINEL = "9999-12-31"
+# Open-ended validity sentinel (`_VALID_TO_SENTINEL`, imported from `db.py`) — the
+# same exact string the materializer / validator (_check_open_ended_sentinel)
+# demand for an omitted upper bound; `db.py` imports this module function-locally,
+# so a top-level import here is cycle-free.
 
 # data_type vocabulary shared with scb_canonical.toml (CanonicalScbAdapter). The
 # attach only stores the string verbatim on the state; this gate keeps a typo
@@ -92,6 +95,16 @@ _ALLOWED_KEYS = _REQUIRED_KEYS | _OPTIONAL_KEYS
 # idiom as variable_grafts), so the per-field checks reuse the ONE repo rule.
 _require_str = functools.partial(
     require_str,
+    code="canonical_attach_invalid",
+    prefix="canonical_attach",
+    file_name="input_data/scb_canonical/lisa_canonical.toml",
+)
+
+# Strict-bool leaf for the PII/identifier guardrail flags — same shared rule as
+# `sources/curated.py`'s `is_identifier`/`is_sensitive`, bound to this surface's
+# code/path. Absent → False (DDL default); a present non-bool is rejected.
+_require_bool = functools.partial(
+    require_bool,
     code="canonical_attach_invalid",
     prefix="canonical_attach",
     file_name="input_data/scb_canonical/lisa_canonical.toml",
@@ -237,6 +250,20 @@ def _load_one(entry: dict, seen: set[tuple[str, str, str]]) -> _CanonicalAttach:
             "`provider/register` FQID.",
             'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
         )
+    # Canonical-SCB-only: the materializer mints every id via
+    # `mint_canonical_scb("scb", …)` (the reserved SCB sub-band) and stamps
+    # `source_label = "canonical-scb"` unconditionally. A non-scb provider here
+    # would mint into the SCB namespace and mislabel the row, breaking the
+    # id-disjointness/band rationale — reject it at load time.
+    if parts[0] != "scb":
+        raise curation_error(
+            "canonical_attach_invalid",
+            f"canonical_attach register {register_fqid!r} has provider "
+            f"{parts[0]!r}: the canonical-attach seed only supports `scb/...` "
+            "registers.",
+            'Give an `scb/<register>` FQID (e.g. `register = "scb/lisa"`); the '
+            "canonical-attach pass is canonical-SCB-only.",
+        )
     variant = _require_str(entry, "variant", "[[attach]]")
     column = _require_str(entry, "column", "[[attach]]")
     name = _require_str(entry, "name", "[[attach]]")
@@ -285,8 +312,8 @@ def _load_one(entry: dict, seen: set[tuple[str, str, str]]) -> _CanonicalAttach:
     classification = classification.strip() if classification is not None else None
 
     ctx = f"{register_fqid}/{variant}/{column}"
-    is_identifier = _opt_bool(entry, "is_identifier", ctx)
-    is_sensitive = _opt_bool(entry, "is_sensitive", ctx)
+    is_identifier = _require_bool(entry, "is_identifier", ctx)
+    is_sensitive = _require_bool(entry, "is_sensitive", ctx)
 
     # Column identity uses the ONE repo normalization rule (NFKD + ASCII-strip +
     # lower) so the dedup key folds EXACTLY like the SCB coalescer's node-col and
@@ -314,24 +341,6 @@ def _load_one(entry: dict, seen: set[tuple[str, str, str]]) -> _CanonicalAttach:
         is_identifier=is_identifier,
         is_sensitive=is_sensitive,
     )
-
-
-def _opt_bool(entry: dict, field: str, ctx: str) -> bool:
-    # Mirror `CuratedAdapter._opt_bool`: `bool(...)` on a present non-bool is a
-    # footgun (`bool("false")` is True), and these are PII/identifier guardrails —
-    # silently flipping one is exactly the leak we're preventing. Demand a real
-    # TOML boolean; absent → False (DDL default).
-    value = entry.get(field)
-    if value is None:
-        return False
-    if not isinstance(value, bool):
-        raise curation_error(
-            "canonical_attach_invalid",
-            f"canonical_attach {ctx}: `{field}` must be a boolean when present, "
-            f"got {value!r}.",
-            f"Use a bare true/false for `{field}` (no quotes).",
-        )
-    return value
 
 
 def _check_iso(value: str, ctx: str) -> None:

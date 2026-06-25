@@ -201,6 +201,22 @@ class TestLoader:
             load_canonical_attach(toml)
         assert exc.value.exit_code == EXIT_CONFIG
 
+    def test_non_scb_register_fails(self, tmp_path: Path) -> None:
+        # The pass is canonical-SCB-only: the materializer mints every id via
+        # mint_canonical_scb("scb", …) and stamps source_label="canonical-scb"
+        # unconditionally, so a non-scb provider would mint into the SCB namespace
+        # and mislabel the row. Reject it at load time.
+        body = (
+            '[[attach]]\nregister = "fohm/sminet"\nvariant = "v"\ncolumn = "C"\n'
+            'name = "N"\ndefinition = "D"\ndata_type = "text"\n'
+            'valid_from = "2010-01-01"\n'
+        )
+        toml = _write(tmp_path / "lisa_canonical.toml", body)
+        with pytest.raises(RegMetaError) as exc:
+            load_canonical_attach(toml)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "scb/..." in exc.value.message
+
     def test_undeclared_classification_fails(self, tmp_path: Path) -> None:
         body = (
             '[[attach]]\nregister = "scb/lisa"\nvariant = "v"\ncolumn = "C"\nname = "N"\n'

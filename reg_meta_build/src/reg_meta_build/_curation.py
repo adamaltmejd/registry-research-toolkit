@@ -2,7 +2,7 @@
 
 The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `fold_column`) plus the per-entry leaf helpers below (`require_str`,
-`require_fqid`, `resolve_variable_id`, `resolve_register_id`,
+`require_bool`, `require_fqid`, `resolve_variable_id`, `resolve_register_id`,
 `resolve_register_variant_id`, `load_column_groups`) serve the `[[entry]]`
 curation-TOML loaders —
 `codelivery.py`, `source_column_repairs.py`, `concept_groups.py`, `tags.py`,
@@ -177,6 +177,35 @@ def require_str(
             f'Give `{field} = "<value>"` in reg_meta_build/{file_name}.',
         )
     return value.strip()
+
+
+def require_bool(
+    entry: dict,
+    field: str,
+    context: str,
+    *,
+    code: str,
+    prefix: str,
+    file_name: str,
+) -> bool:
+    """Require an OPTIONAL `entry[field]` to be a real TOML boolean; absent → False
+    (the DDL default). A present non-bool is rejected — `bool(...)` coercion is a
+    footgun (`bool("false")` is True), and these fields back PII/identifier
+    guardrails (`is_identifier` / `is_sensitive`), so a silently flipped flag is
+    exactly the leak to prevent. The strict-bool semantics MUST stay byte-preserved
+    across every loader that binds this leaf."""
+    value = entry.get(field)
+    if value is None:
+        return False
+    if not isinstance(value, bool):
+        raise curation_error(
+            code,
+            f"{prefix} {context}: `{field}` must be a boolean when present, "
+            f"got {value!r}.",
+            f"Use a bare true/false for `{field}` (no quotes) in "
+            f"reg_meta_build/{file_name}.",
+        )
+    return value
 
 
 def require_fqid(
