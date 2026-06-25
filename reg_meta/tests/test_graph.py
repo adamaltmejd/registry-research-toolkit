@@ -450,6 +450,69 @@ class TestEdges:
         assert b.states != []
         assert b.group_key == "scb/lisa/demog"
 
+    def test_live_chain_only_successor_carries_states(self) -> None:
+        # F1 regression: focus A (kon) succeeds-to a LIVE successor B (civilstand)
+        # that is NOT a group member and is NOT separately added — B is reached ONLY
+        # via A's succession chain. Every LIVE variable node must carry its full
+        # `variable_state` history (the #678 timeline renders states as cells), so B
+        # must NOT stay the thin `_ensure_edition_node` placeholder. Its group_key (B
+        # is grouped here, A is not) must also be carried.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "civilstand"),
+            reason="renamed",
+        )
+        # B (civilstand) is grouped; A (kon) is NOT in the group and NOT a member of
+        # the chain-only successor's group — B is reached purely via A's chain.
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="civ-only",
+            member_slugs=["civilstand"],
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        b = {n.id: n for n in g.nodes}["scb/lisa/civilstand"]
+        assert isinstance(b, VariableGraphNode)
+        # B is live → hydrated with its own states + group_key, despite being reached
+        # only through the succession chain.
+        assert b.states != []
+        assert b.group_key == "scb/lisa/civ-only"
+
+    def test_dead_predecessor_stays_thin(self) -> None:
+        # F1 boundary: a genuinely DEAD/renamed predecessor (no live `variable` row,
+        # #355/#411) must STILL render as a THIN node (states=[]) — hydration is
+        # gated on liveness (`resolve` raising fqid_not_found / name None), so it must
+        # NOT accidentally try to hydrate an unresolvable edition. The dead edition
+        # keeps its 301-redirecting fqid + label but carries no states.
+        conn = build_slugged_db()  # live scb/lisa/kon
+        # dead-old is NOT add_variable'd — only the succession edge exists.
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "dead-old"),
+            successor=("scb", "lisa", "kon"),
+            reason="2015 omdöpt",
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        nodes = {n.id: n for n in g.nodes}
+        dead = nodes["scb/lisa/dead-old"]
+        assert isinstance(dead, VariableGraphNode)
+        assert dead.states == []  # thin — no live row to hydrate
+        assert dead.group_key is None
+        # The succession edge still connects the dead predecessor to the live current.
+        succ = [e for e in g.edges if e.kind == "succession"]
+        assert (succ[0].source, succ[0].target) == ("scb/lisa/dead-old", "scb/lisa/kon")
+
     def test_undirected_related_dedups_from_both_ends(self) -> None:
         # The same relation seen from kon's and kon-alt's side must collapse to ONE
         # edge (canonicalized endpoints). Both members are reached (kon-alt via the
@@ -878,6 +941,95 @@ class TestClassificationChains:
         edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
         assert ("class/sun1996", "class/sun2000-inriktning") in edges
         assert ("class/sun1996", "class/sun2000-grupp") in edges
+
+    def test_umbrella_members_carry_group_key(self) -> None:
+        # F2 regression: a classification umbrella's curated MEMBER editions must carry
+        # `group_key = "class/<key>"` so the renderer can cluster umbrella membership
+        # (the contract models classification group membership as shared group_key
+        # metadata + clustering, NO `group:<key>` node). A non-member edition surfaced
+        # by the chain walk keeps `group_key=None` (mirrors the variable side: only the
+        # node's OWN membership sets its key).
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996")
+        _add_classification(conn, cid=2, slug="sun2000-niva")
+        _add_classification(conn, cid=3, slug="sun2020-niva")
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
+        )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-niva",
+            successor="sun2020-niva",
+            effective_year=2020,
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
+        )
+        # The curated members are the two ENDPOINT editions; sun2000-niva is a mid-
+        # chain edition surfaced by the walk but NOT a curated member.
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 12, ?, ?)",
+            [(1, "1996", "1996"), (3, "2020", "2020")],
+        )
+        conn.commit()
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        nodes = {n.id: n for n in g.nodes}
+        # Curated members carry the umbrella key.
+        assert nodes["class/sun1996"].group_key == "class/sun"
+        assert nodes["class/sun2020-niva"].group_key == "class/sun"
+        # The non-member mid-chain ancestor keeps group_key None.
+        assert nodes["class/sun2000-niva"].group_key is None
+
+    def test_split_non_member_ancestor_group_key_none(self) -> None:
+        # F2 boundary at a #579 split: a curated member D (sun2020-niva) and the split
+        # ROOT P (sun1996, also a curated member) share a chain, but P's OTHER branches
+        # (sun2000-inriktning / sun2000-grupp) are surfaced by P's walk and are NOT
+        # curated members → they must carry group_key None, while the curated members
+        # carry "class/sun". Confirms only the node's OWN membership sets the key, even
+        # when a member is first built by a non-member-anchored walk.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2000-inriktning", valid_from=2000)
+        _add_classification(conn, cid=4, slug="sun2000-grupp", valid_from=2000)
+        _add_classification(conn, cid=5, slug="sun2020-niva", valid_from=2020)
+        for succ in ("sun2000-niva", "sun2000-inriktning", "sun2000-grupp"):
+            _add_class_succession(
+                conn, predecessor="sun1996", successor=succ, effective_year=2000
+            )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-niva",
+            successor="sun2020-niva",
+            effective_year=2020,
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (12, 'classification', NULL, 'sun', 'SUN', 'curated')"
+        )
+        # D (facet 1) precedes P (facet 2) → D processed first; P built as D's
+        # ancestor (non-member-anchored) BEFORE P's own member-anchored walk upgrades
+        # it. Both D and P are curated members.
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 12, ?, ?)",
+            [(5, "1", "niva-2020"), (1, "2", "root-1996")],
+        )
+        conn.commit()
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        nodes = {n.id: n for n in g.nodes}
+        # Curated members carry the umbrella key (P even though built first as an
+        # ancestor, then upgraded).
+        assert nodes["class/sun1996"].group_key == "class/sun"
+        assert nodes["class/sun2020-niva"].group_key == "class/sun"
+        # Non-member editions surfaced by the walk stay ungrouped.
+        assert nodes["class/sun2000-niva"].group_key is None
+        assert nodes["class/sun2000-inriktning"].group_key is None
+        assert nodes["class/sun2000-grupp"].group_key is None
 
     def test_lone_classification_group_of_one_is_empty(self) -> None:
         # A classification umbrella whose single member has NO succession chain →

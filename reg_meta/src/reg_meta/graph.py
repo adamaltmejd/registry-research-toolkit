@@ -299,6 +299,12 @@ class _GraphBuilder:
         # distinct member-anchor once (correct for splits) while still deduping repeat
         # references to the same slug; the node/edge `setdefault` absorbs spine overlap.
         self._class_anchors_walked: set[str] = set()
+        # Classification nodes already carrying their umbrella `class/<key>` group_key.
+        # A curated member can be built FIRST by a non-member-anchored walk (a #579
+        # split where a member is also another member's ancestor) → built ungrouped,
+        # then upgraded once when its own (member-anchored) walk reaches it. Keying on
+        # this makes the upgrade idempotent (no repeated model_copy).
+        self._class_grouped: set[str] = set()
 
     def add_variable(self, fqid: Fqid, *, follow_related: bool = True) -> str | None:
         """Build the variable node for ``fqid`` (resolving same_as to canonical) and
@@ -388,24 +394,58 @@ class _GraphBuilder:
             self._edges.setdefault(edge.id, edge)
 
     def _ensure_edition_node(self, edition: VariableEdition) -> str | None:
-        """A succession-chain edition's node id, building a node for it if absent. A
-        chain edition may be a DEAD/renamed predecessor (no live row, #355/#411): it
-        still carries a binding ``fqid`` (301-redirects) so it IS a node, just a
-        thin one (no states/edges — it's not live to resolve). The ``is_self``
-        edition is the queried variable, already a full node from ``add_variable``.
-        ``fqid`` is None only on a malformed triple — then it can't be a node."""
+        """A succession-chain edition's node id, building a node for it if absent.
+
+        A LIVE edition (one that ``resolve`` accepts) gets the SAME full node
+        ``add_variable`` would build — states + same_as + group_key — no matter that
+        the succession walk is what first reached it: the #761 contract says every
+        live variable node carries its full ``variable_state`` history (the #678
+        timeline renders each node's states as cells, so a stateless live node would
+        render empty). It is marked ``_hydrated`` so a later focus/group-member
+        arrival skips the rebuild but still gets related-expansion if it seeds it.
+
+        A DEAD/renamed predecessor (no live row, #355/#411) instead gets a THIN
+        placeholder (no states/edges): it still carries a binding ``fqid`` so a
+        citation 301-redirects and the chain has a node + label, but it is not live to
+        resolve (``name is None`` per ``VariableEdition``; ``resolve`` raises
+        ``fqid_not_found``). It never enters ``_hydrated``, so it stays thin.
+
+        This only BUILDS the node — it never recurses into ``_add_succession`` /
+        ``_add_related``; the succession EDGES are still added by the caller's
+        ``_add_succession`` loop, and related/group expansion stays seeded by
+        focus/members. ``fqid`` is None only on a malformed triple — then it can't be
+        a node."""
         if edition.fqid is None:
             return None
         node_id = str(edition.fqid)
-        if node_id not in self._nodes:
-            self._nodes[node_id] = VariableGraphNode(
+        # Already fully hydrated (via add_variable or a prior live walk) — done.
+        if node_id in self._hydrated:
+            return node_id
+        try:
+            resolved = self._catalog.resolve(edition.fqid)
+        except RegMetaError as exc:
+            # A dead/renamed predecessor (not_found) keeps its thin placeholder; any
+            # other RegMetaError is a real fault and must not vanish silently.
+            if exc.exit_code != EXIT_NOT_FOUND:
+                raise
+            resolved = None
+        if isinstance(resolved, ResolvedVariable):
+            # Live edition: full node, upgradable to seed related-expansion later.
+            self._nodes[node_id] = self._variable_node(resolved)
+            self._hydrated.add(node_id)
+            return node_id
+        # Dead/renamed (or non-variable resolution): thin placeholder, built once.
+        self._nodes.setdefault(
+            node_id,
+            VariableGraphNode(
                 id=node_id,
                 fqid=edition.fqid,
                 label=edition.name or node_id,
                 group_key=None,
                 states=[],
                 same_as=[],
-            )
+            ),
+        )
         return node_id
 
     def _add_related(self, fqid: Fqid) -> None:
@@ -427,11 +467,26 @@ class _GraphBuilder:
             edge = _related_edge(source_id, target_id, ref.relation_kind)
             self._edges.setdefault(edge.id, edge)
 
-    def add_classification(self, slug: str) -> str | None:
+    def add_classification(
+        self,
+        slug: str,
+        *,
+        group_key: str | None = None,
+        member_slugs: frozenset[str] = frozenset(),
+    ) -> str | None:
         """Build the classification-edition nodes + succession edges for the chain
         the edition ``slug`` sits on (``classification_chain`` — the single source
         of truth, branch-aware at #579 splits). Returns the queried (self) edition's
         node id, or None when it doesn't resolve.
+
+        ``group_key`` / ``member_slugs`` carry the classification-umbrella membership
+        (``class/<key>``): a node whose slug ∈ ``member_slugs`` is a CURATED umbrella
+        member and carries ``group_key`` (shared clustering, mirroring the variable
+        side's own-membership rule); editions surfaced by the chain walk that are NOT
+        curated members (a shared ancestor pulled in by the #579 split walk) keep
+        ``group_key=None``. Nodes are frozen, so the key is applied at build time
+        (not mutated post-build); a member node first built by a non-member-anchored
+        walk is upgraded once via ``_class_grouped``.
 
         Early-out: gated on whether THIS slug has already ANCHORED a walk, NOT on
         node-presence. A SUN-style umbrella's niva/inriktning/grupp members share one
@@ -461,15 +516,30 @@ class _GraphBuilder:
                 continue
             node_id = str(edition.fqid)
             slug_to_id[edition.slug] = node_id
+            is_member = edition.slug in member_slugs
             if node_id not in self._nodes:
                 self._nodes[node_id] = ClassificationGraphNode(
                     id=node_id,
                     fqid=edition.fqid,
                     label=edition.name or node_id,
-                    group_key=None,
+                    group_key=group_key if is_member else None,
                     version_year=edition.version_year,
                     is_current=edition.is_current,
                 )
+                if is_member and group_key is not None:
+                    self._class_grouped.add(node_id)
+            elif (
+                is_member
+                and group_key is not None
+                and node_id not in self._class_grouped
+            ):
+                # A curated member first built by a non-member-anchored walk (frozen
+                # node) — rebuild once with its umbrella key.
+                existing = self._nodes[node_id]
+                self._nodes[node_id] = existing.model_copy(
+                    update={"group_key": group_key}
+                )
+                self._class_grouped.add(node_id)
             if edition.is_self:
                 self_id = node_id
         self._add_classification_edges(slug_to_id)
@@ -499,7 +569,7 @@ class _GraphBuilder:
         keeps its node — it renders as ≥2 cells."""
         if len(self._nodes) == 1 and not self._edges:
             (only,) = self._nodes.values()
-            if only.group_key is None and _is_empty_solo(only):
+            if _is_empty_solo(only):
                 return RelationshipGraph(nodes=[], edges=[], focus_id=None)
         return RelationshipGraph(
             nodes=list(self._nodes.values()),
@@ -509,12 +579,15 @@ class _GraphBuilder:
 
 
 def _is_empty_solo(node: GraphNode) -> bool:
-    """A solo, edgeless, ungrouped node that should NOT render. A variable renders
-    only when it spans ≥2 representation runs; a classification edition alone (no
-    chain) never renders."""
+    """Whether the graph's ONLY node, with no edges, should NOT render. A lone
+    classification edition (no chain) never renders — even when it carries an
+    umbrella ``group_key`` (a group of one has nobody to cluster WITH, so the key is
+    degenerate on a solo node). A variable renders only when it spans ≥2
+    representation runs AND is ungrouped — a grouped variable keeps its node (a
+    one-member variable group still renders that member as its group view)."""
     if isinstance(node, ClassificationGraphNode):
         return True
-    return not _has_meaningful_runs(node.states)
+    return node.group_key is None and not _has_meaningful_runs(node.states)
 
 
 # ── The two accessors (delegated to by Catalog) ──────────────────────────────
@@ -567,10 +640,20 @@ def graph_for_classification_group(
     if group is None:
         return None
     builder = _GraphBuilder(catalog)
+    group_key = f"class/{key}"
+    member_slugs = frozenset(
+        member.fqid.classification
+        for member in group.members
+        if member.fqid is not None and member.fqid.classification is not None
+    )
     for member in group.members:
         if member.fqid is None or member.fqid.classification is None:
             continue
-        builder.add_classification(member.fqid.classification)
+        builder.add_classification(
+            member.fqid.classification,
+            group_key=group_key,
+            member_slugs=member_slugs,
+        )
     return builder.build(focus_id=None)
 
 
