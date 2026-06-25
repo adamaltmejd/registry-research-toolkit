@@ -58,6 +58,7 @@ _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/group/class/{key:path}",
     # #617: the concept-group SUBJECT route — a fixed-shape 4-seg route with a
     # `group` literal PREFIX, declared above the greedy catch-all.
+    "/api/catalog/group/class/{key:path}",
     "/api/catalog/group/{provider}/{register}/{key:path}",
     "/api/catalog/{fqid:path}/states",
     "/api/catalog/{fqid:path}/predecessors",

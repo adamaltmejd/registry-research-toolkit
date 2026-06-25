@@ -314,6 +314,60 @@ describe("history graph prototype model", () => {
     expect(graph.warnings.join("\n")).toContain("N+1 leaf fetches");
   });
 
+  it("shows classification group members as slug-labelled membership graph nodes", () => {
+    const graph = historyGraphFromGroup({
+      kind: "concept-group",
+      key: "sun",
+      label: "Svensk utbildningsnomenklatur (SUN)",
+      provider: "class",
+      register: null,
+      source: "curated",
+      axes: ["dimension"],
+      member: null,
+      members: [
+        {
+          fqid: "class/sun2020-inriktning",
+          name: "Utbildningsinriktning",
+          facets: [
+            {
+              axis: "dimension",
+              value: "inriktning",
+              label: "Inriktning",
+            },
+          ],
+          coverage: null,
+        },
+        {
+          fqid: "class/niva-grovv1",
+          name: "Utbildningsnivå, grov",
+          facets: [
+            {
+              axis: "dimension",
+              value: "niva-grov",
+              label: "Aggregat",
+            },
+          ],
+          coverage: null,
+        },
+      ],
+    } as ConceptGroupNodeData);
+
+    expect(graph.mode).toBe("classification");
+    expect(graph.title).toBe("Classification relationships");
+    expect(graph.nodes.map((node) => [node.id, node.kind, node.label])).toEqual(
+      [
+        ["group:sun", "group", "sun"],
+        ["class/sun2020-inriktning", "classification", "sun2020-inriktning"],
+        ["class/niva-grovv1", "classification", "niva-grovv1"],
+      ],
+    );
+    expect(graph.edges.map((edge) => [edge.from, edge.to, edge.kind])).toEqual([
+      ["group:sun", "class/sun2020-inriktning", "member"],
+      ["group:sun", "class/niva-grovv1", "member"],
+    ]);
+    expect(graph.warnings).toEqual([]);
+  });
+
   it("turns classification editions into succession nodes", () => {
     const graph = historyGraphFromClassification({
       kind: "classification",
@@ -367,6 +421,67 @@ describe("history graph prototype model", () => {
         to: "class/sun2020",
         fromYear: 2020,
       },
+    ]);
+  });
+
+  it("adds concept-group siblings to classification leaf graphs", () => {
+    const graph = historyGraphFromClassification({
+      kind: "classification",
+      fqid: "class/niva-grovv1",
+      name: "Utbildningsnivå, grov",
+      short_name: "NIVA-GROV",
+      codes: [],
+      dimensions: [
+        {
+          key: "sun",
+          label: "Svensk utbildningsnomenklatur (SUN)",
+          source: "curated",
+          axes: ["dimension"],
+          members: [
+            {
+              fqid: "class/sun2020-inriktning",
+              name: "Utbildningsinriktning",
+              facets: [
+                {
+                  axis: "dimension",
+                  value: "inriktning",
+                  label: "Inriktning",
+                },
+              ],
+            },
+            {
+              fqid: "class/niva-grovv1",
+              name: "Utbildningsnivå, grov",
+              facets: [
+                {
+                  axis: "dimension",
+                  value: "niva-grov",
+                  label: "Aggregat",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      edition_chain: [],
+      edition_edges: [],
+    } as ClassificationNodeData);
+
+    expect(graph.nodes.map((node) => [node.id, node.kind, node.label])).toEqual(
+      [
+        ["class/niva-grovv1", "classification", "niva-grovv1"],
+        ["group:sun", "group", "sun"],
+        ["class/sun2020-inriktning", "classification", "sun2020-inriktning"],
+      ],
+    );
+    expect(
+      graph.nodes.find((node) => node.id === "class/niva-grovv1"),
+    ).toMatchObject({
+      self: true,
+    });
+    expect(graph.edges.map((edge) => [edge.from, edge.to, edge.kind])).toEqual([
+      ["group:sun", "class/sun2020-inriktning", "member"],
+      ["group:sun", "class/niva-grovv1", "member"],
     ]);
   });
 

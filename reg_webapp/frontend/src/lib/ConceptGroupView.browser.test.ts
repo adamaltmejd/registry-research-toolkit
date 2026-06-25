@@ -177,6 +177,78 @@ describe("ConceptGroupView (#617)", () => {
     );
     expect(promptMeta).toHaveLength(0);
   });
+
+  it("renders classification groups as first-class member graph pages", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        provider: "class",
+        register: null,
+        key: "sun",
+        label: "Svensk utbildningsnomenklatur (SUN)",
+        source: "curated",
+        axes: ["dimension"],
+        members: [
+          {
+            fqid: "class/sun2020-inriktning",
+            name: "Utbildningsinriktning",
+            facets: [
+              {
+                axis: "dimension",
+                value: "inriktning",
+                label: "Inriktning",
+              },
+            ],
+            coverage: null,
+          },
+          {
+            fqid: "class/niva-grovv1",
+            name: "Utbildningsnivå, grov",
+            facets: [
+              {
+                axis: "dimension",
+                value: "niva-grov",
+                label: "Aggregat",
+              },
+            ],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+
+    await render(ConceptGroupView, {
+      provider: "class",
+      register: null,
+      key: "sun",
+    });
+
+    await expect
+      .element(
+        page.getByRole("heading", {
+          name: "Svensk utbildningsnomenklatur (SUN)",
+          level: 2,
+        }),
+      )
+      .toBeVisible();
+    expect(getConceptGroup).toHaveBeenCalledWith(
+      "class",
+      null,
+      "sun",
+      undefined,
+    );
+    expect(document.querySelector(".period-picker")).toBeNull();
+    await expect
+      .element(
+        page.getByRole("heading", { name: "Classification relationships" }),
+      )
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /sun2020-inriktning/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020-inriktning");
+    await expect
+      .element(page.getByRole("link", { name: /niva-grovv1/ }))
+      .toHaveAttribute("href", "/catalog/class/niva-grovv1");
+  });
 });
 
 describe("ConceptGroupView member selector (#638 PR2a)", () => {

@@ -25,10 +25,11 @@ import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 import { windowStore } from "./window.svelte";
 
-// The concept-group SUBJECT page (#617): fetches a group by (provider, register,
-// key) and renders its members + facets + per-member coverage. A group's default
-// selection is "all members", which a member FQID can't express — so the group
-// has its own address (`/catalog/group/<p>/<r>/<key>`), distinct from the FQID
+// The concept-group SUBJECT page (#617/#667): fetches a group by scope/key and
+// renders its members + facets + per-member coverage where applicable. A group's
+// default selection is "all members", which a member FQID can't express — so the
+// group has its own address (`/catalog/group/<p>/<r>/<key>` for variable groups,
+// `/catalog/group/class/<key>` for classification groups), distinct from the FQID
 // browse path that CatalogNodeView serves.
 //
 // Renders through the unified SubjectView shell (#638 PR1), same as the binding +
@@ -49,7 +50,7 @@ let {
   vintageYear,
 }: {
   provider: string;
-  register: string;
+  register: string | null;
   key: string;
   vintageYear?: number;
 } = $props();
@@ -63,10 +64,13 @@ const resource = asyncResource(() =>
 );
 const node = $derived(resource.data);
 const historyGraph = $derived(node ? historyGraphFromGroup(node) : null);
+const isClassificationGroup = $derived(register === null);
 
-// The register the group lives under — the breadcrumb target and a member's
-// shared ancestor (a group is always register-scoped).
-const registerFqid = $derived(`${provider}/${register}`);
+// The parent the group lives under — a register for variable groups, the
+// classification root for classification groups.
+const parentFqid = $derived(
+  register === null ? "class" : `${provider}/${register}`,
+);
 
 function leafSlug(fqid: string): string {
   return fqid.split("/").at(-1) ?? fqid;
@@ -245,8 +249,10 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   <a href="/catalog">{DATA_BROWSER_LABEL}</a>
   <span class="sep" aria-hidden="true">/</span>
   <a href={catalogHref(provider)}>{provider}</a>
-  <span class="sep" aria-hidden="true">/</span>
-  <a href={catalogHref(registerFqid)}>{register}</a>
+  {#if register !== null}
+    <span class="sep" aria-hidden="true">/</span>
+    <a href={catalogHref(parentFqid)}>{register}</a>
+  {/if}
   <span class="sep" aria-hidden="true">/</span>
   <span class="current">group/{key}</span>
 </nav>
@@ -256,7 +262,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
 {:else if resource.error}
   <p class="error" role="alert">
     {#if resource.status === 404}
-      Not found: concept group <code>{key}</code> in <code>{registerFqid}</code>
+      Not found: concept group <code>{key}</code> in <code>{parentFqid}</code>
     {:else}
       {resource.error}
     {/if}
@@ -387,15 +393,17 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
          members above whose coverage doesn't span the chosen window. The period
          writes to `?period` only (never the global window), mirroring the leaf
          page; `getConceptGroup` ignores it, so the lens is purely client-side. -->
-    <PeriodPicker
-      {period}
-      {grains}
-      window={windowStore.value}
-      coverage={unionCoverage}
-      {vintageYear}
-      onsubmit={(p) => writePeriod(p)}
-      onclear={() => writePeriod(null)}
-    />
+    {#if !isClassificationGroup}
+      <PeriodPicker
+        {period}
+        {grains}
+        window={windowStore.value}
+        coverage={unionCoverage}
+        {vintageYear}
+        onsubmit={(p) => writePeriod(p)}
+        onclear={() => writePeriod(null)}
+      />
+    {/if}
   {/snippet}
 
   {#snippet relationships()}

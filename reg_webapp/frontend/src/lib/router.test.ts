@@ -67,6 +67,17 @@ describe("parseRoute", () => {
     });
   });
 
+  it("parses the classification concept-group SUBJECT route (#667)", () => {
+    // Classification groups live directly under the reserved class root, not
+    // under a provider/register pair.
+    expect(parseRoute("/catalog/group/class/sun")).toEqual({
+      name: "group",
+      provider: "class",
+      register: null,
+      key: "sun",
+    });
+  });
+
   it("parses slash-bearing concept-group keys as the group route", () => {
     expect(parseRoute("/catalog/group/scb/rams/a%2Fb")).toEqual({
       name: "group",
@@ -78,6 +89,21 @@ describe("parseRoute", () => {
       name: "group",
       provider: "scb",
       register: "rams",
+      key: "a/b",
+    });
+  });
+
+  it("parses slash-bearing classification group keys as the group route", () => {
+    expect(parseRoute("/catalog/group/class/a%2Fb")).toEqual({
+      name: "group",
+      provider: "class",
+      register: null,
+      key: "a/b",
+    });
+    expect(parseRoute("/catalog/group/class/a/b")).toEqual({
+      name: "group",
+      provider: "class",
+      register: null,
       key: "a/b",
     });
   });
@@ -238,6 +264,10 @@ describe("onNavClick", () => {
     expect(clickAnchor("/catalog/group/scb/rams/ink").defaultPrevented).toBe(
       true,
     );
+  });
+
+  it("intercepts the classification concept-group SUBJECT route (#667)", () => {
+    expect(clickAnchor("/catalog/group/class/sun").defaultPrevented).toBe(true);
   });
 
   it("intercepts the /project authoring route (A5.3c)", () => {

@@ -62,7 +62,7 @@ const graph: HistoryGraph = {
 
 const standaloneClassificationGraph: HistoryGraph = {
   mode: "classification",
-  title: "Classification editions",
+  title: "Classification relationships",
   nodeGrain: "entity-with-column-slices",
   dataContract: "client-stitch-prototype",
   nodes: [
@@ -84,7 +84,7 @@ const standaloneClassificationGraph: HistoryGraph = {
 
 const classificationGraph: HistoryGraph = {
   mode: "classification",
-  title: "Classification editions",
+  title: "Classification relationships",
   nodeGrain: "entity-with-column-slices",
   dataContract: "client-stitch-prototype",
   nodes: [
@@ -146,7 +146,7 @@ const classificationGraph: HistoryGraph = {
 };
 
 describe("HistoryGraphPrototype", () => {
-  it("renders the graph, column count, legend, and contract gaps", async () => {
+  it("renders the graph, column count, and contract gaps", async () => {
     await render(HistoryGraphPrototype, { graph });
 
     await expect
@@ -155,7 +155,7 @@ describe("HistoryGraphPrototype", () => {
     await expect.element(page.getByText("variable")).toBeVisible();
     await expect.element(page.getByText("Monthly income")).toBeVisible();
     await expect.element(page.getByText("4 columns")).toBeVisible();
-    await expect.element(page.getByText("succession")).toBeVisible();
+    expect(document.querySelector(".legend")).toBeNull();
     await expect.element(page.getByText("Contract gaps")).toBeVisible();
   });
 
@@ -173,7 +173,9 @@ describe("HistoryGraphPrototype", () => {
     });
 
     await expect
-      .element(page.getByRole("heading", { name: "Classification editions" }))
+      .element(
+        page.getByRole("heading", { name: "Classification relationships" }),
+      )
       .toBeVisible();
     expect(
       [...document.querySelectorAll(".node-label.in-bar")].map((node) =>

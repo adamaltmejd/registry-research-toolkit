@@ -75,4 +75,60 @@ describe("ClassificationLeafView (#638 shell)", () => {
       .element(page.getByRole("heading", { name: "Codes" }))
       .not.toBeInTheDocument();
   });
+
+  it("shows concept-group sibling relationships for aggregate classifications", async () => {
+    await render(ClassificationLeafView, {
+      node: node({
+        fqid: "class/niva-grovv1",
+        name: "Utbildningsnivå, grov",
+        short_name: "NIVA-GROV",
+        codes: [],
+        edition_chain: [],
+        edition_edges: [],
+        dimensions: [
+          {
+            key: "sun",
+            label: "Svensk utbildningsnomenklatur (SUN)",
+            source: "curated",
+            axes: ["dimension"],
+            members: [
+              {
+                fqid: "class/sun2020-inriktning",
+                name: "Utbildningsinriktning",
+                facets: [
+                  {
+                    axis: "dimension",
+                    value: "inriktning",
+                    label: "Inriktning",
+                  },
+                ],
+              },
+              {
+                fqid: "class/niva-grovv1",
+                name: "Utbildningsnivå, grov",
+                facets: [
+                  {
+                    axis: "dimension",
+                    value: "niva-grov",
+                    label: "Aggregat",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      } as unknown as Partial<ClassificationNodeData>),
+    });
+
+    await expect
+      .element(
+        page.getByRole("heading", { name: "Classification relationships" }),
+      )
+      .toBeVisible();
+    expect(
+      [...document.querySelectorAll(".history-graph .node-label.in-bar")].map(
+        (label) => label.textContent?.trim(),
+      ),
+    ).toEqual(["niva-grovv1", "sun", "sun2020-inriktning"]);
+  });
 });

@@ -158,10 +158,10 @@ const windowMaxYear = $derived(
         />
       {/key}
     {:else if route.name === "group"}
-      <!-- #617: the concept-group SUBJECT page. Keyed on the (provider, register,
-           key) triple so navigating between groups remounts; the `?member=` focus
-           hint is read off the query INSIDE the view (no remount on refine). -->
-      {#key `${route.provider}/${route.register}/${route.key}`}
+      <!-- #617/#667: the concept-group SUBJECT page. Keyed on the scope/key so
+           navigating between groups remounts; the `?member=` focus hint is read
+           off the query INSIDE the view (no remount on refine). -->
+      {#key `${route.provider}/${route.register ?? ""}/${route.key}`}
         <ConceptGroupView
           provider={route.provider}
           register={route.register}

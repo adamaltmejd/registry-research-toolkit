@@ -348,56 +348,75 @@ export function historyGraphFromGroup(
   node: ConceptGroupNodeData,
 ): HistoryGraph {
   const groupId = `group:${node.key}`;
+  const classificationGroup = node.provider === "class";
   const nodes: HistoryGraphNode[] = [
     {
       id: groupId,
       kind: "group",
-      label: node.label,
+      label: classificationGroup ? node.key : node.label,
       fqid: null,
       from: null,
       to: null,
       columns: [],
-      detail:
-        node.axes.length > 0 ? `facets: ${node.axes.join(", ")}` : undefined,
+      detail: classificationGroup
+        ? node.label
+        : node.axes.length > 0
+          ? `facets: ${node.axes.join(", ")}`
+          : undefined,
     },
   ];
   const edges: HistoryGraphEdge[] = [];
 
   for (const member of node.members) {
     const coverage = member.coverage;
+    const memberSlug = leafSlug(member.fqid);
     const detail =
       member.facets.length > 0
         ? member.facets.map((f) => `${f.axis}: ${f.label}`).join(" · ")
         : undefined;
     nodes.push({
       id: member.fqid,
-      kind: "group-member",
-      label: member.name ?? leafSlug(member.fqid),
+      kind: classificationGroup ? "classification" : "group-member",
+      label: classificationGroup ? memberSlug : (member.name ?? memberSlug),
       fqid: member.fqid,
-      from: wireYear(coverage?.coverage_from),
-      to: coverage?.open_ended ? null : wireYear(coverage?.coverage_to),
+      from: classificationGroup
+        ? classificationSlugYear(memberSlug)
+        : wireYear(coverage?.coverage_from),
+      to: classificationGroup
+        ? classificationSlugYear(memberSlug)
+        : coverage?.open_ended
+          ? null
+          : wireYear(coverage?.coverage_to),
       columns: [],
-      detail,
+      detail: classificationGroup ? (member.name ?? detail) : detail,
     });
     edges.push({
       id: `member:${groupId}->${member.fqid}`,
       kind: "member",
       from: groupId,
       to: member.fqid,
-      fromYear: wireYear(coverage?.coverage_from),
-      toYear: coverage?.open_ended ? null : wireYear(coverage?.coverage_to),
+      fromYear: classificationGroup ? null : wireYear(coverage?.coverage_from),
+      toYear: classificationGroup
+        ? null
+        : coverage?.open_ended
+          ? null
+          : wireYear(coverage?.coverage_to),
       label: "member",
     });
   }
 
   return {
-    mode: "group",
-    title: "History graph prototype",
+    mode: classificationGroup ? "classification" : "group",
+    title: classificationGroup
+      ? "Classification relationships"
+      : "History graph prototype",
     nodes,
     edges,
-    warnings: [
-      "Group pages only carry members and coverage today; all-member succession, related, and lineage edges would require N+1 leaf fetches without a backend graph payload.",
-    ],
+    warnings: classificationGroup
+      ? []
+      : [
+          "Group pages only carry members and coverage today; all-member succession, related, and lineage edges would require N+1 leaf fetches without a backend graph payload.",
+        ],
     nodeGrain: "entity-with-column-slices",
     dataContract: "client-stitch-prototype",
   };
@@ -425,14 +444,16 @@ export function historyGraphFromClassification(
     .filter((year): year is number => year !== null);
   const latestKnownYear =
     knownYears.length > 0 ? Math.max(...knownYears) : null;
-  const nodes: HistoryGraphNode[] = editions.map((edition, i) => {
+  const nodesById = new Map<string, HistoryGraphNode>();
+  for (let i = 0; i < editions.length; i += 1) {
+    const edition = editions[i];
     const previousCut = i > 0 ? editions[i - 1].effective_year : null;
     const fallbackYear =
       classificationSlugYear(edition.slug) ??
       edition.effective_year ??
       previousCut ??
       latestKnownYear;
-    return {
+    nodesById.set(edition.fqid ?? `class/${edition.slug}`, {
       id: edition.fqid ?? `class/${edition.slug}`,
       kind: "classification",
       label: edition.slug,
@@ -443,8 +464,8 @@ export function historyGraphFromClassification(
       self: edition.is_self,
       columns: [],
       detail: edition.name ?? classificationLabel(edition),
-    };
-  });
+    });
+  }
   const edges: HistoryGraphEdge[] = [];
   for (const edge of node.edition_edges ?? []) {
     const effectiveYear = edge.effective_year ?? null;
@@ -458,11 +479,53 @@ export function historyGraphFromClassification(
       label: null,
     });
   }
+  for (const group of node.dimensions ?? []) {
+    const groupId = `group:${group.key}`;
+    if (!nodesById.has(groupId)) {
+      nodesById.set(groupId, {
+        id: groupId,
+        kind: "group",
+        label: group.key,
+        fqid: null,
+        from: null,
+        to: null,
+        columns: [],
+        detail: group.label,
+      });
+    }
+    for (const member of group.members) {
+      const memberId = member.fqid;
+      const memberSlug = leafSlug(memberId);
+      if (!nodesById.has(memberId)) {
+        const year = classificationSlugYear(memberSlug);
+        nodesById.set(memberId, {
+          id: memberId,
+          kind: "classification",
+          label: memberSlug,
+          fqid: memberId,
+          from: year,
+          to: year,
+          self: memberId === node.fqid,
+          columns: [],
+          detail: member.name ?? member.facets.map((f) => f.label).join(" · "),
+        });
+      }
+      edges.push({
+        id: `member:${groupId}->${memberId}`,
+        kind: "member",
+        from: groupId,
+        to: memberId,
+        fromYear: null,
+        toYear: null,
+        label: "member",
+      });
+    }
+  }
 
   return {
     mode: "classification",
-    title: "Classification editions",
-    nodes,
+    title: "Classification relationships",
+    nodes: [...nodesById.values()],
     edges,
     warnings: [],
     nodeGrain: "entity-with-column-slices",

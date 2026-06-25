@@ -3,6 +3,7 @@ import {
   type HistoryColumnSlice,
   type HistoryGraph,
   type HistoryGraphEdge,
+  type HistoryGraphEdgeKind,
   type HistoryGraphNode,
   historyGraphYears,
 } from "./history_graph";
@@ -25,6 +26,16 @@ const nodeIds = $derived(new Set(graph.nodes.map((node) => node.id)));
 const edgeRows = $derived(
   graph.edges.filter((edge) => nodeIds.has(edge.from) && nodeIds.has(edge.to)),
 );
+const edgeLegend = $derived.by(() => {
+  const present = new Set(edgeRows.map((edge) => edge.kind));
+  const entries: { kind: HistoryGraphEdgeKind; label: string }[] = [
+    { kind: "succession", label: "succession" },
+    { kind: "related", label: "related" },
+    { kind: "lineage", label: "lineage" },
+    { kind: "member", label: "member" },
+  ];
+  return entries.filter((entry) => present.has(entry.kind));
+});
 const classificationLayout = $derived.by(() => {
   const depthById = new Map(graph.nodes.map((node) => [node.id, 0]));
   for (let pass = 0; pass < graph.nodes.length; pass += 1) {
@@ -260,12 +271,13 @@ function shortLabel(label: string, max = 29): string {
       </svg>
     </div>
 
-    <div class="legend" aria-label="Graph edge legend">
-      <span><i class="succession"></i>succession</span>
-      <span><i class="related"></i>related</span>
-      <span><i class="lineage"></i>lineage</span>
-      <span><i class="member"></i>member</span>
-    </div>
+    {#if edgeLegend.length > 0}
+      <div class="legend" aria-label="Graph edge legend">
+        {#each edgeLegend as entry (entry.kind)}
+          <span><i class={entry.kind}></i>{entry.label}</span>
+        {/each}
+      </div>
+    {/if}
 
     {#if graph.warnings.length > 0}
       <details class="contract-gaps" open={edgeRows.length === 0}>

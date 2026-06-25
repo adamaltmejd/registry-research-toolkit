@@ -148,6 +148,16 @@ describe("getConceptGroup", () => {
       "/api/catalog/group/scb/ls%C3%B6n/a%2Fb?member=member%20x%2Fy",
     );
   });
+
+  it("uses the classification group route when register is null", async () => {
+    let seen = "";
+    stubFetch(async (url) => {
+      seen = url;
+      return { ok: true, status: 200, json: async () => ({}) };
+    });
+    await getConceptGroup("class", null, "sun", "niva-grovv1");
+    expect(seen).toBe("/api/catalog/group/class/sun?member=niva-grovv1");
+  });
 });
 
 describe("classificationGroupPath / getClassificationGroup (#756)", () => {

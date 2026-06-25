@@ -333,33 +333,33 @@ class RootResponse(BaseModel):
 
 
 # ── Concept-group SUBJECT node (#616/#617) ──────────────────────────────────
-# A concept group addressed by `/catalog/group/<provider>/<register>/<key>` — a
-# browsable subject in its own right (a group's default selection is "all
-# members", which a single member FQID can't express, so it needs its own
-# address). DISTINCT from the presentation-only `ConceptGroupSummary` folded into
-# a register/classification listing: this is the resolved group as a first-class
-# node, carrying per-member coverage so the page renders without a second fetch.
+# A concept group addressed by `/catalog/group/<provider>/<register>/<key>` for
+# variable groups or `/catalog/group/class/<key>` for classification groups — a
+# browsable subject in its own right (a group's default selection is "all members",
+# which a single member FQID can't express, so it needs its own address). DISTINCT
+# from the presentation-only `ConceptGroupSummary` folded into a register /
+# classification listing: this is the resolved group as a first-class node.
 
 
 class ConceptGroupNodeMember(ConceptGroupMember):
     """A concept-group member on the group SUBJECT node — reg_meta's browse
-    `ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window
-    `coverage` (#351; reg_meta's `VariableCoverage`, zipped on by the group route
-    from `register_variable_coverage`). `coverage` is None for a member with no
-    coverage row (a stateless variable, or a member whose leaf slug didn't match
-    the register's coverage map — defensive). Subclassing the frozen,
-    `extra="forbid"` reg_meta model to declare one new field is supported in
-    Pydantic v2 — the subclass owns `coverage`."""
+    `ConceptGroupMember` (fqid + name + facets) PLUS optional per-member
+    study-window `coverage` (#351). Variable groups zip this on from
+    `register_variable_coverage`; classification groups have no delivery coverage
+    and leave it None. Subclassing the frozen, `extra="forbid"` reg_meta model to
+    declare one new field is supported in Pydantic v2 — the subclass owns
+    `coverage`."""
 
     coverage: VariableCoverage | None = None
 
 
 class ConceptGroupNode(BaseModel):
     """The concept group as a browsable subject (#617): the group identity
-    (provider/register/key + label/source/axes) and its members WITH per-member
-    coverage. Returned by `/catalog/group/{provider}/{register}/{key}` — a
-    fixed-shape route, NOT an FQID kind (a group is not FQID-addressable; its
-    members carry the real leaf FQIDs).
+    (scope/key + label/source/axes) and its members. Returned by
+    `/catalog/group/{provider}/{register}/{key}` for variable groups and
+    `/catalog/group/class/{key}` for classification groups — fixed-shape routes,
+    NOT FQID kinds (a group is not FQID-addressable; its members carry the real
+    leaf FQIDs).
 
     `member` echoes a validated `?member=<slug>` focus hint (a member leaf slug to
     highlight), or None when absent / unrecognized — the page stays first-class
@@ -367,10 +367,12 @@ class ConceptGroupNode(BaseModel):
 
     kind: Literal["concept-group"] = "concept-group"
     provider: str
-    register_name: str = Field(
+    register_name: str | None = Field(
+        default=None,
         alias="register",
-        description="The group's register slug. The Python attr is `register_name` "
-        "to avoid the BaseModel.register method shadow (see reg_meta's VariableRef); "
+        description="The group's register slug for register-scoped variable groups; "
+        "None for classification groups. The Python attr is `register_name` to "
+        "avoid the BaseModel.register method shadow (see reg_meta's VariableRef); "
         "the wire key is `register` via the alias.",
     )
     key: str

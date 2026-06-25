@@ -70,7 +70,7 @@ describe("ConceptGroupRow (#673 M6)", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("no-href + no-onpick keeps the inline <details> (browse, classification arm)", async () => {
+  it("no-href + no-onpick keeps the inline <details>", async () => {
     const { container } = render(ConceptGroupRow, { group: group() });
 
     // Neither href nor onpick → the existing inline <details> browse, no link.
