@@ -116,7 +116,8 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 - **Library packages** (`reg_meta`, `reg_meta_build`):
   - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base) so FastAPI can
     consume its catalog models directly (adopted #681, 2026-06-22); `reg_meta_build`
-    uses `@dataclass` for its build-time IR.
+    uses Pydantic v2 `_IRBase` models for the build-time IR core and
+    `@dataclass(frozen=True)` for local value types in feature modules.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.
@@ -346,8 +347,13 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   requested by commenting `@codex review`). Absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
-  fixture tests. The untracked seed lives only in the main checkout — from a worktree,
-  point at it with an absolute `--input-dir <main-checkout>/reg_meta_build/input_data/`.
+  fixture tests. The untracked seed lives only in the main checkout. From a worktree,
+  use an absolute input root; if the PR changes any tracked
+  `reg_meta_build/input_data/**` file, make that root an overlay: main checkout
+  untracked seed plus the PR-head tracked inputs copied on top, with PR deletions /
+  renames mirrored. A direct
+  `--input-dir <main-checkout>/reg_meta_build/input_data/` validates main's tracked
+  inputs, not yours.
 - **Visual verification** when the PR changes rendered output (`reg_webapp/frontend/**`,
   or any view / component / style the SPA renders). This is the UI analog of real-data
   validation — **required, not optional**, for rendered changes. Headless checks

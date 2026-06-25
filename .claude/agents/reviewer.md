@@ -47,8 +47,8 @@ Hunt for:
   tautological / asserting the bug?
 
 You MAY run tests to confirm a suspicion (`uv run python -m pytest <pkg>/`,
-`uvx ty check`, or `bun run check`) — these read/execute only. (The real `build-db` is a
-\~20-min lead-only merge-gate check; don't run it as a reviewer.)
+`uvx --from ty==0.0.49 ty check`, or `bun run check`) — these read/execute only. (The
+real `build-db` is a \~20-min lead-only merge-gate check; don't run it as a reviewer.)
 
 Also weigh CLAUDE.md/DESIGN.md adherence, historical context (`git log` / `git blame`
 the touched lines), prior-PR review feedback on the same files, and nearby code-comment

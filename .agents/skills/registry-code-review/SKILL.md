@@ -29,15 +29,18 @@ by itself.
 Accept a PR number, branch/range, or current working-tree diff. For GitHub PRs, gather:
 
 ```sh
-gh pr view <pr> --json number,title,body,headRefOid,baseRefName,headRefName,closingIssuesReferences
+gh pr view <pr> --json number,title,body,headRefOid,baseRefName,headRefName,closingIssuesReferences,files,reviews,statusCheckRollup
 gh pr diff <pr>
 gh pr view <pr> --comments
-gh api "repos/<owner>/<repo>/pulls/<pr>/comments"
+gh pr checks <pr>
+gh api --paginate --slurp "repos/<owner>/<repo>/pulls/<pr>/comments"
 ```
 
 Read linked issues, comments, repository guidance (`AGENTS.md`; `CLAUDE.md` is
 intentionally equivalent for agent surfaces that use it), relevant
-`<package>/DESIGN.md`, `ARCHITECTURE.md` for cross-package work, and touched code.
+`<package>/DESIGN.md`, `ARCHITECTURE.md` for cross-package work, and touched code. For
+branch/range or working-tree reviews, gather the diff, `git status --short`, and enough
+surrounding call sites to evaluate the same risks.
 
 ## Review Method
 
@@ -45,7 +48,9 @@ intentionally equivalent for agent surfaces that use it), relevant
    - identify the intended behavior from the issue/PR body and linked comments;
    - note PR size, touched packages, generated files, and CI/check status;
    - decide whether the diff needs package design docs, workflow graph inspection,
-     frontend smoke testing, or real-data validation evidence.
+     frontend smoke testing, or real-data validation evidence; if required evidence is
+     missing, report it under Test gaps / residual risk, and make it blocking only when
+     the caller asked for a merge/final gate decision.
 2. Do a high-level pass:
    - compare the implementation shape to the issue scope and repo architecture;
    - inspect changed public contracts, schemas, CLIs, API responses, workflows, and
@@ -71,8 +76,10 @@ Look for material problems in the changed behavior:
 - determinism and regeneration risks: ordering, seeds, DDL changes requiring schema
   version bumps, stale generated assets;
 - tests that are tautological, too broad, or fail to assert the regression;
-- repo convention drift: Pydantic only on `reg_schema` and FastAPI surfaces, stdlib
-  sqlite for library DBs, argparse CLIs, no shims/migrations/dead code pre-v1.
+- repo convention drift: Pydantic use must match the current stack (`reg_meta` frozen
+  catalog models, `reg_schema` project models, FastAPI response models, and
+  `reg_meta_build` build-time IR are allowed); stdlib sqlite for library DBs; argparse
+  CLIs; no SQLAlchemy/Alembic; no shims/migrations/dead code pre-v1.
 
 Run tests only to confirm a concrete suspicion or verify risk; do not report
 linter/type/format nits that existing checks already catch.
@@ -102,7 +109,7 @@ Open questions:
 Test gaps / residual risk:
 - ...
 
-blocking findings remain
+<one of: blocking findings remain | non-blocking findings only | converged - no further findings>
 ```
 
 If there are no issues, say that clearly and include any tests you did or did not run.

@@ -88,7 +88,7 @@ JSON-contract validation, or anything requested.
 Run focused verification as the work evolves:
 
 - Python: `uv run ruff check`, `uv run ruff format --check`,
-  `uvx --from ty==0.0.44 ty check`, and targeted `uv run python -m pytest <pkg>/`.
+  `uvx --from ty==0.0.49 ty check`, and targeted `uv run python -m pytest <pkg>/`.
 - Frontend: from `reg_webapp/frontend/`, use `bun run lint`, `bun run check`,
   `bun run test`, `bun run build`, and regenerate API types only after backend contract
   changes.
@@ -158,20 +158,28 @@ the built providers, so a thin provider's entity-key pins (#554) no longer crash
 restricted build. Pick the providers your PR affects, or omit `--providers` for the full
 global set (release asset / cross-provider PRs). If the PR changes any tracked
 `reg_meta_build/input_data/**` file (provider `*.toml`,
-`classifications/`/`scb_canonical/` CSV, or an add/delete/rename), the absolute
-`--input-dir` below reads the main checkout's copy, so the gate validates main's data
-not yours and can miss a DB-content regression. Point `--input-dir` at an overlay root
-that presents the PR-HEAD tracked `input_data` over the main checkout's untracked seed —
-copy the changed tracked files in (never write back through a symlink into the main
-checkout) and mirror deletions/renames:
+`classifications/`/`scb_canonical/` CSV, or an add/delete/rename), do not point
+`--input-dir` directly at the main checkout: that validates main's tracked inputs, not
+the PR head. Instead build an overlay input root that starts from the main checkout's
+untracked seed and then copies the PR-head tracked `input_data` tree on top. Mirror any
+PR deletion/rename in the overlay; never write back through a symlink into the main
+checkout.
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"
+input_dir="<main-checkout>/reg_meta_build/input_data"
+# If this PR changes tracked reg_meta_build/input_data/**, first build an
+# overlay input root and set input_dir to that overlay.
 uv run reg-meta-build --db "$db_dir" build-db \
-  --input-dir <main-checkout>/reg_meta_build/input_data
+  --input-dir "$input_dir"
 ```
 
-Clean scratch outputs afterward: `rm -r "$db_dir"`.
+Clean scratch outputs afterward:
+
+```sh
+git clean -fdX reg_meta_build/fqid_slugs/
+rm -rf "$db_dir"
+```
 
 ## Closeout
 
