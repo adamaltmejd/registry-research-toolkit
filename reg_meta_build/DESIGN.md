@@ -2604,7 +2604,9 @@ umu) are now at **`curating`** (#759): `freeze.toml` is committed and each provi
 `<provider>.auto.toml` is committed, so slugs are pinned and auto-regeneration is
 suppressed. Renames are still allowed — the `frozen` seal (#472) is the remaining
 per-provider advance that will arm the rename-refusal gate. Steward dirs (e.g.
-`fqid_slugs/swecov/`) have no `freeze.toml` entry and remain `churning`. See
+`fqid_slugs/swecov/`) have no `freeze.toml` entry and remain `churning`. The reserved
+`classifications` zone likewise has no `freeze.toml` entry and remains `churning` — its
+79 hand-curated slugs in `.snapshot.json` are not yet rename-guarded. See
 REFACTOR_SPEC.md / #209 (machinery #470 / curation #471 / seal #472).
 
 Note: `*.auto.toml` is gitignored by default, so advancing a provider to `curating` or
