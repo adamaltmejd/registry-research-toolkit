@@ -116,7 +116,8 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 - **Library packages** (`reg_meta`, `reg_meta_build`):
   - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base) so FastAPI can
     consume its catalog models directly (adopted #681, 2026-06-22); `reg_meta_build`
-    uses `@dataclass` for its build-time IR.
+    uses Pydantic v2 `_IRBase` models for the build-time IR core and
+    `@dataclass(frozen=True)` for local value types in feature modules.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.
