@@ -46,7 +46,10 @@ Agent-surface notes:
    extending existing architecture to adding a module. Sequence by dependency. For
    multi-PR or ambiguous work, show the breakdown before editing.
 4. Decide whether behavior changed enough to need a dedicated test-gap pass and whether
-   authored docs can drift.
+   authored docs can drift. "Authored docs" includes the design-spec files
+   (`<package>/DESIGN.md`, `ARCHITECTURE.md`, `REFACTOR_SPEC.md`) and the factual
+   references inside them — a token/symbol/flag/file name a section names drifts the
+   moment the diff deletes or renames it, even in a historical "what shipped" note.
 
 ## Claim
 
@@ -135,9 +138,12 @@ Run focused verification as the work evolves:
    checks as a substitute. Route design findings through the same fix / dismiss /
    re-review loop as code-review findings.
 5. Re-review substantial fixes until the review converges.
-6. Update authored docs only where the diff made them stale: package `DESIGN.md`,
-   README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
-   validation-code docs. Never edit generated `reg_meta_build/docs/lisa/*.md`.
+6. Update authored docs wherever the diff made them stale — including the design-spec
+   prose and any token/symbol it names: package `DESIGN.md`, README/CLI examples,
+   docstrings, `ARCHITECTURE.md`, repository guidance files, validation-code docs. Fix a
+   one-line drift in place; don't defer a one-liner you already touched to a follow-up
+   (and don't falsify a historical note — add a "superseded by …" pointer instead).
+   Never edit generated `reg_meta_build/docs/lisa/*.md`.
 7. Commit and push any review/doc fixes. Never use `--no-verify` or `-n`; fix hook
    failures.
 
@@ -204,6 +210,8 @@ rm -rf "$db_dir"
 ## Closeout
 
 Report what changed, PR number/status, verification commands, review findings fixed or
-dismissed, docs/test decisions, and any follow-up issues worth filing. Before proposing
-a new issue, search open and closed issues with
+dismissed, docs/test decisions, and any follow-up issues worth filing. Default to fixing
+doc drift inline — it's part of this PR; record a follow-up only when the fix needs its
+own scoped change, never as an escape hatch for a one-liner. Before proposing a new
+issue, search open and closed issues with
 `gh issue list --state all --search "<keywords>"`.

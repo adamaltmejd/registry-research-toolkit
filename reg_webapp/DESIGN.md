@@ -788,7 +788,10 @@ was never MONA-constrained — the adoption gap was purely historical.
   `--surface-hover`, `--surface-selected` — alongside the pre-existing palette
   (`--border`, `--muted`, `--accent`, `--accent-bg`, `--surface`). These are the
   geometry, type, and interaction-state tokens the bare palette lacked; the existing
-  color palette stays the source of truth.
+  color palette stays the source of truth. (Historical: this #689 stub was wholesale
+  superseded by #802's two-layer role system — see § Token architecture below — so
+  `--muted`/`--text-base` are no longer current token names; the alias bridge that
+  carried them onto the new roles was deleted in #827.)
 - `SearchOmnibox.svelte` was rebuilt by #689 as a **Bits UI `Combobox`** with live
   `/api/search` suggestions. **Superseded by #808**: the suggestion dropdown was removed
   — it duplicated the `/search` results page, and the omnibox auto-routes every query to

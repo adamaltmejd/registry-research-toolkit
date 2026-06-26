@@ -87,8 +87,14 @@ Run the PRs themselves **strictly serially** — one merged before the next star
    are conditional — a role you won't use is one you must NOT dispatch:
    - **tester** — only if behaviour changes (existing snapshot/idempotence tests already
      cover it → skip).
-   - **docs-updater** — only if code/contract drifts from AUTHORED docs (a change that
-     edits docs directly, or touches no documented surface, has no drift).
+   - **docs-updater** — only if the diff drifts AUTHORED docs (a change that edits docs
+     directly, or touches no documented surface, has no drift). "Authored docs" is
+     BROADER than the API contract: it includes the design-spec files
+     (`<package>/DESIGN.md`, `ARCHITECTURE.md`, `REFACTOR_SPEC.md`) and incidental
+     factual references inside them. A token / symbol / flag / file name that a section
+     *names* becomes drift the moment your diff deletes or renames it — even in a
+     historical "what shipped" note (fix it in place or add a "superseded by …" pointer;
+     don't falsify the record).
    - **visual verification** — NOT a role you may skip when the PR changes rendered
      output (`reg_webapp/frontend/**`, or any view the SPA renders). It's woven through
      the pipeline, not a one-shot subagent: the implementer eyeballs its change in Step
@@ -196,10 +202,11 @@ release — point the dev server at a scratch `build-db` via
 `REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp → "Verifying against
 unreleased DB content (custom DB)").
 
-**D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
-docs-updater on the final code → commit its result. Do this AFTER review converges and
-BEFORE the merge-gate hold, so the bot-review window runs against the true final HEAD (a
-docs push after the hold starts restarts it).
+**D · Docs.** Only if the diff drifted authored docs (Step 0.3 — which includes the
+design-spec files and the factual references inside them). Dispatch the docs-updater on
+the final code → commit its result. Do this AFTER review converges and BEFORE the
+merge-gate hold, so the bot-review window runs against the true final HEAD (a docs push
+after the hold starts restarts it).
 
 **E · Merge.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full — independent review
 converged (your `/code-review` loop is the independent Claude pass) · CI green ·
@@ -305,10 +312,14 @@ steps on trust:
 - **Merged & on main** — each planned PR shows `MERGED` and its changes are present on
   `origin/main` (the stale-head check), and branches are cleaned up.
 - **Docs current** — the change doesn't leave authored docs stale anywhere: the touched
-  `<package>/DESIGN.md`, README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`,
-  `ARCHITECTURE.md`. Step D fixes per-PR drift; this is a final sweep across the WHOLE
-  change (e.g. a cross-PR rename or a new contract no single PR's docs-updater owned).
-  Fix any drift now, or record it as a follow-up below.
+  `<package>/DESIGN.md` (including its design-spec prose and any token/symbol it names),
+  README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`, `ARCHITECTURE.md`. Step D
+  fixes per-PR drift; this is a final sweep across the WHOLE change (e.g. a cross-PR
+  rename or a new contract no single PR's docs-updater owned). **Default to fixing drift
+  inline** — it's part of this PR, and a one-line doc fix in a file you already touched
+  is never a follow-up. Record a follow-up ONLY when the fix needs its own scoped change
+  (its own diff, review, or decision) — not as an escape hatch for a one-liner you'd
+  rather defer.
 - **Nothing half-done** — every review finding was fixed or dismissed-with-reason, no
   role was silently skipped, no scope was quietly cut.
 
