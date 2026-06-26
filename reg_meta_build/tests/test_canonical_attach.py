@@ -14,7 +14,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import build_slugged_db
+from _slugged_db import add_state, build_slugged_db
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.canonical_attach import (
     CANONICAL_ATTACH_SOURCE_LABEL,
@@ -407,6 +407,30 @@ class TestMaterialize:
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "canonical_attach_now_present"
         assert _variable(conn, "Kon") is None  # no duplicate minted
+
+    def test_null_delivery_column_skipped_not_crashed(self) -> None:
+        # Regression (#820): variable_state.delivery_column_name is nullable (a
+        # cvid with a blank Kolumnnamn lands a NULL-column state). The presence
+        # check folds each delivered column; without the NULL guard
+        # `fold_column(None)` raises TypeError and hard-crashes the real-corpus
+        # build. A NULL column can never equal the (non-null) attach column, so
+        # it must be skipped and the attach mints normally.
+        conn = build_slugged_db()  # variant 10, var Kön (col 'Kon')
+        add_state(  # extra era on the existing variable with a NULL column name
+            conn,
+            register_id=1,
+            var_id=44,
+            register_variant_id=10,
+            delivery_column_name=None,
+        )
+        counts = materialize_canonical_attach(
+            conn,
+            [_a("Ssyk4_J16")],
+            providers=_SCB,
+            classification_candidates=[],
+        )
+        assert counts == {"minted": 1, "unresolved": 0}
+        assert _variable(conn, "Ssyk4_J16") is not None
 
     def test_unresolved_variant_counted(self) -> None:
         conn = build_slugged_db()
