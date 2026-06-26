@@ -3062,3 +3062,151 @@ class TestEmitVariableAliases:
         # Every alias rides the delivering variant (FK target for variable_alias).
         assert {a.register_variant_id for a in aliases} == {10}
         conn.close()
+
+
+class TestCloselessCodebearingCloseOut:
+    """`_close_codeless_codebearing_overlaps` (#858): a code-bearing state wins
+    its window; the overlapping code-less state on the same key is trimmed to the
+    complement (capped) or deleted when fully covered. Interior splits fail fast.
+
+    States are inserted directly into `variable_state` over the bare DDL (FKs off,
+    so no value_set / register parents are needed; a non-NULL `value_set_id` is an
+    arbitrary integer — only NULL vs NOT-NULL matters to the close-out)."""
+
+    @staticmethod
+    def _conn() -> sqlite3.Connection:
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        return conn
+
+    @staticmethod
+    def _variable(conn: sqlite3.Connection) -> int:
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Diagnos')"
+        ).lastrowid
+        assert vid is not None
+        return vid
+
+    @staticmethod
+    def _state(
+        conn: sqlite3.Connection,
+        variable_id: int,
+        valid_from: str,
+        valid_to: str,
+        value_set_id: int | None,
+        version_label: str = "",
+        column: str = "Hdia",
+    ) -> int:
+        sid = conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, value_set_id, value_set_version_label) "
+            "VALUES (?, 10, ?, ?, ?, ?, ?)",
+            (variable_id, valid_from, valid_to, column, value_set_id, version_label),
+        ).lastrowid
+        assert sid is not None
+        return sid
+
+    def test_cap_from_right_open_ended_codeless(self) -> None:
+        """HDIA/ATCO shape: code-less '1997-9999' overlaps code-bearing
+        '2015-9999' → code-less valid_to capped to 2014-12-31; guard passes."""
+        from reg_meta_build.db import _close_codeless_codebearing_overlaps
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_no_codeless_codebearing_overlap,
+        )
+
+        conn = self._conn()
+        vid = self._variable(conn)
+        cl = self._state(conn, vid, "1997-01-01", "9999-12-31", None)
+        self._state(conn, vid, "2015-01-01", "9999-12-31", 7, "v2015")
+
+        _close_codeless_codebearing_overlaps(conn)
+
+        row = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state WHERE state_id = ?",
+            (cl,),
+        ).fetchone()
+        assert (row["valid_from"], row["valid_to"]) == ("1997-01-01", "2014-12-31")
+
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, {"variable_state"})
+        assert result.passed, result.failures
+        conn.close()
+
+    def test_cap_from_left(self) -> None:
+        """Symmetric: code-bearing '2011-2014' covers the code-less window's
+        start, so the code-less '2012-2020' floor lifts to 2015-01-01."""
+        from reg_meta_build.db import _close_codeless_codebearing_overlaps
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_no_codeless_codebearing_overlap,
+        )
+
+        conn = self._conn()
+        vid = self._variable(conn)
+        self._state(conn, vid, "2011-01-01", "2014-12-31", 7, "v2011")
+        cl = self._state(conn, vid, "2012-01-01", "2020-12-31", None)
+
+        _close_codeless_codebearing_overlaps(conn)
+
+        row = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state WHERE state_id = ?",
+            (cl,),
+        ).fetchone()
+        assert (row["valid_from"], row["valid_to"]) == ("2015-01-01", "2020-12-31")
+
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, {"variable_state"})
+        assert result.passed, result.failures
+        conn.close()
+
+    def test_fully_covered_codeless_is_deleted(self) -> None:
+        """Omb10b shape: code-less '2012' fully inside code-bearing '2011-2020'
+        → the code-less row is deleted; the code-bearing state survives; guard
+        passes."""
+        from reg_meta_build.db import _close_codeless_codebearing_overlaps
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_no_codeless_codebearing_overlap,
+        )
+
+        conn = self._conn()
+        vid = self._variable(conn)
+        cl = self._state(conn, vid, "2012-01-01", "2012-12-31", None)
+        cb = self._state(conn, vid, "2011-01-01", "2020-12-31", 7, "v2011")
+
+        _close_codeless_codebearing_overlaps(conn)
+
+        remaining = {
+            r["state_id"]
+            for r in conn.execute("SELECT state_id FROM variable_state").fetchall()
+        }
+        assert remaining == {cb}
+        assert cl not in remaining
+
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, {"variable_state"})
+        assert result.passed, result.failures
+        conn.close()
+
+    def test_interior_split_fails_fast(self) -> None:
+        """A code-bearing window strictly INSIDE the code-less window would split
+        it in two — out of scope (needs minting a state_id) → EXIT_CONFIG."""
+        from reg_meta.errors import EXIT_CONFIG
+        from reg_meta_build.db import _close_codeless_codebearing_overlaps
+
+        conn = self._conn()
+        vid = self._variable(conn)
+        self._state(conn, vid, "2000-01-01", "2020-12-31", None)
+        self._state(conn, vid, "2008-01-01", "2012-12-31", 7, "v2008")
+
+        with pytest.raises(RegMetaError) as exc:
+            _close_codeless_codebearing_overlaps(conn)
+        assert exc.value.code == "codeless_close_out_interior_split"
+        assert exc.value.exit_code == EXIT_CONFIG
+        conn.close()

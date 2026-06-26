@@ -17,6 +17,7 @@ import struct
 import sys
 import time
 from contextlib import contextmanager
+from datetime import date, timedelta
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.db import (
@@ -3043,6 +3044,183 @@ def _reinsert_core_graph_from_ir(
     )
 
 
+def _day_before(iso_date: str) -> str:
+    """The ISO date immediately before `iso_date` (inclusive-window arithmetic).
+
+    Stdlib date math, not string slicing: '2015-01-01' → '2014-12-31' must roll
+    the month and year correctly. Both tables store full `YYYY-MM-DD` strings, so
+    `date.fromisoformat` round-trips losslessly.
+    """
+    return (date.fromisoformat(iso_date) - timedelta(days=1)).isoformat()
+
+
+def _day_after(iso_date: str) -> str:
+    """The ISO date immediately after `iso_date` (symmetric to `_day_before`)."""
+    return (date.fromisoformat(iso_date) + timedelta(days=1)).isoformat()
+
+
+def _close_codeless_codebearing_overlaps(conn: sqlite3.Connection) -> None:
+    """Deterministically resolve code-less ↔ code-bearing window overlaps.
+
+    A code-less `variable_state` (`value_set_id IS NULL`) whose validity window
+    overlaps a code-bearing state (`value_set_id IS NOT NULL`) on the SAME
+    `(variable_id, register_variant_id, delivery_column_name)` makes the column
+    un-authorable: reg_webapp's `_has_codelivered_versions` (semantic.py) reads
+    `NULL != <id>` as two distinct value sets and fires the hard
+    `binding_value_set_version_ambiguous`. The build invariant
+    `_check_one_value_set_per_period` is blind to this class — it only compares
+    distinct NON-NULL value sets. A code-less state carries no codes, so the
+    code-bearing state legitimately owns the overlapping window; trimming the
+    code-less state to the complement of the union of overlapping code-bearing
+    windows is lossless.
+
+    Provider-blind, deterministic, run inside the materialize transaction
+    immediately after the core graph is re-inserted and before any downstream
+    state consumer (lineage, code_variable_map, slugs, classification backfill).
+
+    Per overlapping code-less state, against the union of the code-bearing
+    windows on its key:
+      - covered on both ends (fully inside the union) → DELETE the row;
+      - covered only on the right (a code-bearing window runs to its `valid_to`)
+        → cap `valid_to` to the day before that window's `valid_from`;
+      - covered only on the left → raise `valid_from` to the day after the
+        window's `valid_to`;
+      - a code-bearing window strictly INTERIOR to the code-less window would
+        split it in two → FAIL fast (minting new state_ids for a split is out of
+        scope; see the simplify ceiling below).
+
+    Never deletes the last remaining state of a variable: in the real cases the
+    code-bearing state always survives on the same key, but a delete that would
+    orphan a variable fails fast rather than silently dropping it.
+    """
+    # Code-less states that overlap ≥1 code-bearing state on the same key. `IS`
+    # is SQLite's null-safe equality so two NULL delivery columns still match
+    # column-wise; closed-interval intersection mirrors
+    # `_check_one_value_set_per_period`. One row per overlapping (code-less,
+    # code-bearing) pair — grouped in Python into per-code-less-state windows.
+    rows = conn.execute(
+        "SELECT cl.state_id, cl.variable_id, cl.valid_from, cl.valid_to, "
+        "       cb.valid_from, cb.valid_to "
+        "FROM variable_state cl "
+        "JOIN variable_state cb "
+        "  ON cl.variable_id = cb.variable_id "
+        " AND cl.register_variant_id = cb.register_variant_id "
+        " AND cl.delivery_column_name IS cb.delivery_column_name "
+        " AND cl.value_set_id IS NULL "
+        " AND cb.value_set_id IS NOT NULL "
+        " AND cl.valid_from <= cb.valid_to AND cb.valid_from <= cl.valid_to "
+        "ORDER BY cl.state_id"
+    ).fetchall()
+    if not rows:
+        return
+
+    # Group the overlapping code-bearing windows per code-less state.
+    by_state: dict[int, dict[str, Any]] = {}
+    for state_id, variable_id, cl_from, cl_to, cb_from, cb_to in rows:
+        entry = by_state.setdefault(
+            state_id,
+            {"variable_id": variable_id, "from": cl_from, "to": cl_to, "cb": []},
+        )
+        entry["cb"].append((cb_from, cb_to))
+
+    capped = 0
+    deleted = 0
+    for state_id, entry in by_state.items():
+        cl_from = entry["from"]
+        cl_to = entry["to"]
+        # Coverage of [cl_from, cl_to] by the union of overlapping code-bearing
+        # windows, clamped to the code-less window. covers_left / covers_right:
+        # some code-bearing window reaches the code-less window's start / end.
+        covers_left = any(cb_from <= cl_from for cb_from, _ in entry["cb"])
+        covers_right = any(cb_to >= cl_to for _, cb_to in entry["cb"])
+
+        if covers_left and covers_right:
+            # Fully covered → the code-less state is subsumed; delete it.
+            # Defensive orphan tripwire: the covering code-bearing state shares
+            # this `variable_id` (the overlap JOIN keys on it), so it is always a
+            # surviving sibling and `survivors >= 1` holds by construction. The
+            # assert exists so a future change to the overlap key (e.g. a
+            # cross-variable match) can't silently delete a variable's last state.
+            survivors = conn.execute(
+                "SELECT COUNT(*) FROM variable_state "
+                "WHERE variable_id = ? AND state_id <> ?",
+                (entry["variable_id"], state_id),
+            ).fetchone()[0]
+            if survivors == 0:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="codeless_close_out_would_orphan_variable",
+                    error_class="configuration",
+                    message=(
+                        "Closing a code-less↔code-bearing overlap would delete the "
+                        f"LAST remaining state of variable_id={entry['variable_id']} "
+                        f"(state_id={state_id}). The code-bearing state should survive "
+                        "on the same key; an orphaning delete signals a coalescer/IR bug."
+                    ),
+                    remediation=(
+                        "Inspect the variable's states; the code-bearing state that "
+                        "covers this window must be present on the same "
+                        "(variable, variant, delivery_column)."
+                    ),
+                )
+            conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
+            deleted += 1
+            continue
+
+        if covers_right and not covers_left:
+            # Cap from the right: trim valid_to to the day before the earliest
+            # overlapping code-bearing window that reaches the code-less end.
+            cap_from = min(cb_from for cb_from, cb_to in entry["cb"] if cb_to >= cl_to)
+            new_to = _day_before(cap_from)
+            conn.execute(
+                "UPDATE variable_state SET valid_to = ? WHERE state_id = ?",
+                (new_to, state_id),
+            )
+            capped += 1
+            continue
+
+        if covers_left and not covers_right:
+            # Cap from the left: raise valid_from to the day after the latest
+            # overlapping code-bearing window that reaches the code-less start.
+            cap_to = max(cb_to for cb_from, cb_to in entry["cb"] if cb_from <= cl_from)
+            new_from = _day_after(cap_to)
+            conn.execute(
+                "UPDATE variable_state SET valid_from = ? WHERE state_id = ?",
+                (new_from, state_id),
+            )
+            capped += 1
+            continue
+
+        # Neither end covered, yet the windows overlap → a code-bearing window
+        # sits strictly INTERIOR to the code-less window, which would split it
+        # into two disjoint code-less spans.
+        # simplify: an interior split needs minting a new state_id (and a unique
+        # value_set_version_label so the state-uniqueness index doesn't collide).
+        # No real column hits this in the three known cases (HDIA/ATCO cap-right,
+        # Omb10b delete); fail fast and revisit only if a real column does.
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="codeless_close_out_interior_split",
+            error_class="configuration",
+            message=(
+                "A code-bearing state's window lies strictly inside a code-less "
+                f"state's window (variable_id={entry['variable_id']}, "
+                f"state_id={state_id}, [{cl_from}..{cl_to}]). Closing it would "
+                "split the code-less state into two spans, which requires minting "
+                "a new state_id — not supported by the deterministic close-out."
+            ),
+            remediation=(
+                "Curate this column's states directly so the code-less state no "
+                "longer straddles a code-bearing window (e.g. split or retire it)."
+            ),
+        )
+
+    _progress(
+        f"  closed code-less↔code-bearing overlaps: {capped:,} capped, "
+        f"{deleted:,} deleted"
+    )
+
+
 def _provider_id_for(provider: str) -> int:
     """Map an IR provider slug to its stable `provider.provider_id` seed value."""
     for pid, slug, _name in _PROVIDER_SEED:
@@ -3293,6 +3471,15 @@ def materialize(
         aliases=aliases,
     )
     _emit_timing("reinsert_core_graph", _t)
+
+    # Deterministic close-out of code-less↔code-bearing window overlaps (#858):
+    # a code-bearing state owns its window; the overlapping code-less state on
+    # the same key is trimmed to the complement (lossless — it carries no codes).
+    # MUST run before any downstream state consumer (lineage, code_variable_map,
+    # slugs, classification backfill) reads `variable_state`.
+    _t = time.perf_counter()
+    _close_codeless_codebearing_overlaps(conn)
+    _emit_timing("close_codeless_overlaps", _t)
 
     # Provider gate shared by the curated passes below: classifications and
     # concept-group families whose provider isn't in this build are skipped,

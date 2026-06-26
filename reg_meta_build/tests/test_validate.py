@@ -589,6 +589,53 @@ class TestValidateModule:
         assert result.passed, result.failures
         assert "[window: open-ended valid_to sentinel]" in result.format_report()
 
+    def test_codeless_codebearing_overlap_section_passes_on_fixture(
+        self, fixture_db: Path
+    ):
+        """The code-less↔code-bearing overlap guard (#858) runs on the fixture and
+        emits its section, so a regression can't silently drop it; the close-out
+        keeps the fixture clean so it reports OK."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        assert (
+            "[invariant: no code-less ↔ code-bearing window overlap]"
+            in result.format_report()
+        )
+
+    def test_codeless_codebearing_overlap_fails(self, fixture_db: Path, tmp_path: Path):
+        """The #858 backstop: a code-less state (`value_set_id IS NULL`)
+        overlapping a code-bearing state on the same
+        `(variable, variant, delivery_column)` must FAIL. Injected directly into
+        `variable_state` (bypassing the build close-out), proving the guard is a
+        real regression backstop — not a no-op that only the close-out satisfies."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # Take an existing code-bearing state and clone a code-less twin onto the
+        # same key with an overlapping window (a NULL value_set_id, a distinct
+        # valid_from / version_label so the uniqueness index doesn't collide).
+        cb = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name, "
+            "       valid_from, valid_to "
+            "FROM variable_state WHERE value_set_id IS NOT NULL LIMIT 1"
+        ).fetchone()
+        assert cb is not None, "fixture has no code-bearing state to clone"
+        variable_id, register_variant_id, column, valid_from, valid_to = cb
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, value_set_id, value_set_version_label) "
+            "VALUES (?, ?, '0001-01-01', ?, ?, NULL, 'codeless-twin')",
+            (variable_id, register_variant_id, valid_to, column),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("code-less" in f and "code-bearing" in f for f in result.failures), (
+            result.failures
+        )
+
     def test_near_sentinel_state_valid_to_fails(self, fixture_db: Path, tmp_path: Path):
         """A 9999-prefixed `variable_state.valid_to` that is not exactly
         '9999-12-31' must FAIL: downstream display (reg_webapp catalog routes

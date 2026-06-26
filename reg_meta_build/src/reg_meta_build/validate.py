@@ -195,6 +195,7 @@ def validate_built_db(
         _check_state_projection_integrity(conn, result, has_projection)
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_one_value_set_per_period(conn, result, tables)
+        _check_no_codeless_codebearing_overlap(conn, result, tables)
         _check_open_ended_sentinel(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
@@ -551,6 +552,64 @@ def _check_one_value_set_per_period(
         f"{len(rows)} overlapping distinct-value_set state pair(s) on one column "
         f"across {len(affected)} (variable, column) — a period resolves to >1 "
         f"value set: {sample}"
+    )
+
+
+def _check_no_codeless_codebearing_overlap(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """No code-less state may overlap a code-bearing state on the same column.
+
+    Sibling to `_check_one_value_set_per_period` (kept separate on purpose: that
+    check's "distinct value sets" semantics are precise — a NULL `value_set_id`
+    is absence, not a distinct set — and conflating the two would blur both).
+
+    A code-less `variable_state` (`value_set_id IS NULL`) whose validity window
+    overlaps a code-bearing state (`value_set_id IS NOT NULL`) on the same
+    `(variable_id, register_variant_id, delivery_column_name)` makes the column
+    un-authorable downstream: reg_webapp's `_has_codelivered_versions`
+    (semantic.py) reads `NULL != <id>` as two distinct value sets and fires the
+    hard `binding_value_set_version_ambiguous`. The build's
+    `_close_codeless_codebearing_overlaps` (db.py) resolves these by construction
+    (a code-bearing state wins its window; the code-less state is trimmed to the
+    complement), so this guard reports OK on a clean build and is the backstop
+    that FAILS a future regression that reintroduces the overlap.
+    """
+    result.section("[invariant: no code-less ↔ code-bearing window overlap]")
+    if "variable_state" not in tables:
+        result.ok("variable_state absent — invariant skipped")
+        return
+    # Mirrors `_check_one_value_set_per_period`'s overlap SQL: closed-interval
+    # intersection, `IS` null-safe column match, `a.state_id < b.state_id` dedup.
+    # Here the pair is asymmetric (one NULL, one non-NULL value set), so the
+    # state_id ordering is purely the symmetric-pair dedup, not a side selector.
+    rows = conn.execute(
+        "SELECT v.register_id, v.slug, a.delivery_column_name, "
+        "       a.valid_from, a.valid_to, b.valid_from, b.valid_to "
+        "FROM variable_state a "
+        "JOIN variable_state b "
+        "  ON a.variable_id = b.variable_id "
+        " AND a.register_variant_id = b.register_variant_id "
+        " AND a.delivery_column_name IS b.delivery_column_name "
+        " AND a.state_id < b.state_id "
+        " AND ((a.value_set_id IS NULL AND b.value_set_id IS NOT NULL) "
+        "      OR (a.value_set_id IS NOT NULL AND b.value_set_id IS NULL)) "
+        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        "JOIN variable v ON v.variable_id = a.variable_id "
+        "ORDER BY v.register_id, v.slug"
+    ).fetchall()
+    if not rows:
+        result.ok("no code-less state overlaps a code-bearing state on one column")
+        return
+    affected = {(r[1], r[2]) for r in rows}
+    sample = "; ".join(
+        f"{r[1]}/{r[2]} [{r[3][:4]}-{r[4][:4]}] ∩ [{r[5][:4]}-{r[6][:4]}]"
+        for r in rows[:5]
+    )
+    result.fail(
+        f"{len(rows)} code-less ↔ code-bearing overlapping state pair(s) on one "
+        f"column across {len(affected)} (variable, column) — a code-less window "
+        f"overlaps a code-bearing window: {sample}"
     )
 
 
