@@ -935,11 +935,12 @@ sub-system — never reuse the brand accent or the status colors for type identi
 
 The recurring visual units live in `frontend/src/lib/ui/` (shipped in #804, exported via
 `index.ts`): `Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `Button`, `KeyValue`,
-`Skeleton`, and `EmptyState`. `AppShell` and the `⌘K` command palette are still to come
-(#803). Behavior comes from Bits UI (`Command`, `Dialog`, `Combobox`, etc.); styling is
-scoped CSS reading **only** semantic tokens. The #689 `CatalogPicker` `Command`
-keyboard-split caveat (folded `ConceptGroupRow` → `role="presentation"`) still stands
-and is relevant where these primitives meet grouped lists.
+`Skeleton`, and `EmptyState`. `AppShell` shipped in #803 (rail + topbar command bar —
+see § Surface & layout language). Behavior comes from Bits UI (`Command`, `Dialog`,
+`Combobox`, etc.); styling is scoped CSS reading **only** semantic tokens. The #689
+`CatalogPicker` `Command` keyboard-split caveat (folded `ConceptGroupRow` →
+`role="presentation"`) still stands and is relevant where these primitives meet grouped
+lists.
 
 Load-bearing decisions downstream children (#806–#809) must not re-litigate:
 
@@ -983,11 +984,12 @@ timestamp string (`"2026-06-12T08:30:00Z"`); the footer displays only the leadin
 `YYYY-MM-DD` (split on `"T"`). The intent is citation stability: a reader quoting any
 catalog node can see which reg_meta build it reflects without navigating away.
 
-`App.svelte`'s header also carries a `YearWindowSlider` dual-thumb year slider
-(#614/#611) that sets the active project window (1960 floor → the catalog vintage year
-from `context.reg_meta.import_date`; current year as the pre-context fallback). It
-writes through `windowStore` (`src/lib/window.svelte.ts`) — see the store description
-below.
+`AppShell`'s rail carries a `YearWindowSlider` dual-thumb year slider (#614/#611) as the
+"Study window" control — a global control reachable on every route and inside the mobile
+drawer. It sets the active project window (1960 floor → the catalog vintage year from
+`context.reg_meta.import_date`; current year as the pre-context fallback), with bounds
+threaded down from `App.svelte`. It writes through `windowStore`
+(`src/lib/window.svelte.ts`) — see the store description below.
 
 ## SPA routing + production fallback
 
@@ -1514,37 +1516,37 @@ list — opening a file replaces the current draft.
 `windowStore` (`src/lib/window.svelte.ts`) is a module-singleton Svelte 5 rune store — a
 peer of `router.svelte.ts` and `project_store.svelte.ts` — that is the **single
 read/write path** for the active study window (`{from, to}` int years, or `null` = full
-history). The header `YearWindowSlider` and each page's period picker go through it
-rather than touching the project store or `localStorage` directly. The per-page
-`PeriodPicker` now defaults to `PeriodWindowSlider` (#615/#671): it seeds the local
-dual-thumb slider with coverage-aware precedence — explicit year `?period` >
-intersection(coverage, window) when a window is set > the coverage span when none is >
-the bare window when there is no coverage > full bounds when neither — so a variable's
-true data coverage shows up front instead of the full 1960–vintage track reading as
-available (M11). The out-of-coverage track renders immediately as a greyed
-**non-selectable** band (no drag needed), and the thumbs are hard-clamped to coverage
-via `DualThumbTrack`'s opt-in `selectableMin/Max` (the header `YearWindowSlider` passes
-neither and is unchanged). A local change writes `?period` only (never the global
-window). The user-deviation hint (`?period`/drag ≠ window) fires only on an explicit
-`?period` or a live thumb drag — not on the untouched coverage-clamped default seed
-(`userChosen`); the data narrowing the window is not a user deviation. This supersedes
-the #615/#639 "grey only after drag" posture for this slider: #639's anti-alarm intent
-is preserved (the up-front band is a passive "no data here", not a selection warning),
-while an explicit out-of-coverage `?period` still renders honestly with its
-not-delivered gap. Open-ended coverage additionally surfaces a **"coverage through
-\<vintage\>"** note (M21). The per-page picker shares the header slider's vintage
-ceiling (#631): `App.svelte` threads the ceiling (`context.reg_meta.import_date`'s year)
-down through `CatalogNodeView` → `BindingLeafView` → `PeriodPicker`, and also through
-`ConceptGroupView` → `PeriodPicker` (#638). On the concept-group subject page the picker
-is a **client-side availability lens** over the union of member coverage spans — it
-greys members not delivered in the active window but drives no refetch
-(`getConceptGroup` takes no period parameter). The vintage is the ceiling an OPEN-ENDED
-coverage (`coverage.to === null`, "still delivered") projects to — the catalog only
-knows delivery up to its vintage — so the coverage band ends at the vintage and a
-selection past it reads as "not delivered after `<vintage>`". It is NOT a floor on the
-slider bounds: a FINITE coverage keeps its real end (never extended to the vintage), and
-a window/selection past the vintage still widens the bounds (the thumb renders the real
-value) without extending coverage. Wall-clock is the pre-context fallback only.
+history). The rail `YearWindowSlider` and each page's period picker go through it rather
+than touching the project store or `localStorage` directly. The per-page `PeriodPicker`
+now defaults to `PeriodWindowSlider` (#615/#671): it seeds the local dual-thumb slider
+with coverage-aware precedence — explicit year `?period` > intersection(coverage,
+window) when a window is set > the coverage span when none is > the bare window when
+there is no coverage > full bounds when neither — so a variable's true data coverage
+shows up front instead of the full 1960–vintage track reading as available (M11). The
+out-of-coverage track renders immediately as a greyed **non-selectable** band (no drag
+needed), and the thumbs are hard-clamped to coverage via `DualThumbTrack`'s opt-in
+`selectableMin/Max` (the rail `YearWindowSlider` passes neither and is unchanged). A
+local change writes `?period` only (never the global window). The user-deviation hint
+(`?period`/drag ≠ window) fires only on an explicit `?period` or a live thumb drag — not
+on the untouched coverage-clamped default seed (`userChosen`); the data narrowing the
+window is not a user deviation. This supersedes the #615/#639 "grey only after drag"
+posture for this slider: #639's anti-alarm intent is preserved (the up-front band is a
+passive "no data here", not a selection warning), while an explicit out-of-coverage
+`?period` still renders honestly with its not-delivered gap. Open-ended coverage
+additionally surfaces a **"coverage through \<vintage\>"** note (M21). The per-page
+picker shares the rail slider's vintage ceiling (#631): `App.svelte` threads the ceiling
+(`context.reg_meta.import_date`'s year) down through `CatalogNodeView` →
+`BindingLeafView` → `PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker`
+(#638). On the concept-group subject page the picker is a **client-side availability
+lens** over the union of member coverage spans — it greys members not delivered in the
+active window but drives no refetch (`getConceptGroup` takes no period parameter). The
+vintage is the ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still
+delivered") projects to — the catalog only knows delivery up to its vintage — so the
+coverage band ends at the vintage and a selection past it reads as "not delivered after
+`<vintage>`". It is NOT a floor on the slider bounds: a FINITE coverage keeps its real
+end (never extended to the vintage), and a window/selection past the vintage still
+widens the bounds (the thumb renders the real value) without extending coverage.
+Wall-clock is the pre-context fallback only.
 
 Precedence — two backing stores, one source of truth:
 
@@ -1568,7 +1570,7 @@ invoked while a draft is already active (the "New" button inside a project) does
 seed: the fallback is the stale no-draft value (active-draft window writes/clears don't
 update it), so the new project starts windowless (full history) unless the user sets
 one. An opened project (`openFromFile` / restore) keeps its own `window` unchanged. The
-header slider also exposes an explicit ✕ clear control that writes `null` back to the
+rail slider also exposes an explicit ✕ clear control that writes `null` back to the
 store, making full history reachable at any time after the first interaction.
 Catalog-derived slider bounds (from the API rather than the fixed 1960 floor) are a
 possible follow-up.

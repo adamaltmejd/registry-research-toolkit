@@ -3,6 +3,7 @@ import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { SearchResponse } from "./api";
 import { search } from "./api";
+import { isMacPlatform } from "./platform";
 import { router } from "./router.svelte";
 import SearchOmnibox from "./SearchOmnibox.svelte";
 
@@ -765,5 +766,35 @@ describe("SearchOmnibox — live suggestions (#689 Arm A)", () => {
     await expect
       .element(page.getByRole("option", { name: /Kön/ }))
       .toBeVisible();
+  });
+});
+
+describe("⌘K shortcut (#803)", () => {
+  it("focuses the omnibox input on the platform chord", async () => {
+    // The global keydown listener (onMount) focuses + selects the box. The
+    // component keys the chord off the SAME `isMacPlatform()` decision the badge
+    // does (Meta+K on mac, Ctrl+K elsewhere), so dispatch the modifier the live
+    // host resolves to — the test-runner host (real Chromium) reports macOS here,
+    // so the live branch is Meta+K, not Ctrl. The mac/non-mac DECISION itself is
+    // unit-tested in platform.test.ts; this exercises the focus wiring on one
+    // (host-correct) path.
+    const mac = isMacPlatform();
+    await render(SearchOmnibox);
+    const input = page.getByRole("combobox").element() as HTMLInputElement;
+
+    // Start unfocused so the focus is observably the shortcut's doing.
+    input.blur();
+    expect(document.activeElement).not.toBe(input);
+
+    window.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "k",
+        ctrlKey: !mac,
+        metaKey: mac,
+        bubbles: true,
+      }),
+    );
+
+    await vi.waitFor(() => expect(document.activeElement).toBe(input));
   });
 });

@@ -1,8 +1,9 @@
 <script lang="ts">
 import { Combobox } from "bits-ui";
-import { untrack } from "svelte";
+import { onMount, untrack } from "svelte";
 import { SEARCH_MIN_QUERY_LENGTH, type SearchResponse, search } from "./api";
 import { catalogHref } from "./catalog";
+import { commandShortcutHint, isMacPlatform } from "./platform";
 import { router } from "./router.svelte";
 
 // The global header search box (#379), rebuilt as an accessible COMBOBOX on Bits
@@ -64,6 +65,40 @@ let dismissed = $state(false);
 // pointerdown (select.svelte item `onpointerdown` → `preventDefault`), so `focused`
 // stays true through an option click and selection still fires (#689 review).
 let focused = $state(false);
+
+// The command-bar shortcut (#803): Cmd+K on macOS, Ctrl+K elsewhere, FOCUSES
+// this input from anywhere. Platform is read once (it doesn't change mid-session)
+// so the badge + the modifier check agree; `isMacPlatform()` reads navigator
+// (UA-Client-Hints first, see platform.ts). The badge glyph is platform-adaptive.
+const mac = isMacPlatform();
+const shortcutHint = commandShortcutHint(mac);
+// The live <input> (Bits UI renders it via our `child` snippet); bound so the
+// global shortcut can focus + select it without reaching across components.
+let inputEl = $state<HTMLInputElement | null>(null);
+
+// Register the global shortcut on the window: the listener lives in onMount so it
+// tears down on unmount (the omnibox is persistent in the topbar, but a clean
+// teardown keeps it test-safe). `(meta && mac) || (ctrl && !mac)` so the badge,
+// the docs, and the actual chord all use the same platform decision — never
+// Mac-only. preventDefault stops the browser's own Ctrl/Cmd+K (search-bar focus
+// in some browsers) from also firing.
+onMount(() => {
+  const onKey = (e: KeyboardEvent) => {
+    // Case-insensitive on the key: with CapsLock on, `e.key` is "K", so an exact
+    // "k" compare would silently drop the shortcut. Shift+⌘K must still NOT
+    // trigger (it's a distinct chord), so the altKey/shiftKey early-return stays.
+    if (e.key.toLowerCase() !== "k" || e.altKey || e.shiftKey) {
+      return;
+    }
+    if ((e.metaKey && mac) || (e.ctrlKey && !mac)) {
+      e.preventDefault();
+      inputEl?.focus();
+      inputEl?.select();
+    }
+  };
+  window.addEventListener("keydown", onKey);
+  return () => window.removeEventListener("keydown", onKey);
+});
 
 /** One popup option: the suggestion's display label + the catalog route to
  * navigate to on selection. `value` is the Combobox item value — we use the href
@@ -399,6 +434,7 @@ function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
           | undefined}
         <input
           {...props}
+          bind:this={inputEl}
           type="text"
           aria-label="Search the catalog"
           autocomplete="off"
@@ -440,6 +476,15 @@ function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
       {/snippet}
     </Combobox.Input>
 
+    <!-- Platform-adaptive shortcut hint (#803): ⌘K / Ctrl+K, shown only while
+         the input is UNFOCUSED (focusing it via the shortcut hides the redundant
+         badge). aria-hidden — the input's accessible name already says "Search the
+         catalog"; the badge is a sighted affordance, and screen-reader users get
+         the shortcut from the input, not a decorative kbd glyph. -->
+    {#if !focused}
+      <kbd class="omnibox-hint" aria-hidden="true">{shortcutHint}</kbd>
+    {/if}
+
     {#if suggestions.length > 0}
       <Combobox.Portal>
         <Combobox.Content class="omnibox-popup" sideOffset={4}>
@@ -465,23 +510,52 @@ function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
 
 <style>
   .omnibox {
-    /* Own row in the wrapping header (flex-basis 100% forces the wrap). */
-    flex: 1 1 100%;
+    /* The command bar in the topbar (#803): grows to fill the available row,
+       capped so it doesn't sprawl on a wide canvas. `min-width: 0` lets it shrink
+       inside the topbar flex row without forcing horizontal overflow at 375px.
+       (It previously forced its own header row with `flex: 1 1 100%`; the topbar
+       no longer wraps it onto a separate line.) */
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 32rem;
     margin: 0;
   }
   .omnibox :global(input) {
     width: 100%;
     box-sizing: border-box;
+    /* Right padding leaves room for the absolutely-positioned shortcut badge. */
     padding: var(--space-2) var(--space-3);
+    padding-right: 3.5rem;
     font: inherit;
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: var(--radius-sm);
     background: var(--surface);
   }
   .omnibox :global(input:focus) {
     outline: none;
     border-color: var(--accent);
     box-shadow: var(--focus-ring);
+  }
+
+  /* The ⌘K / Ctrl+K hint badge, pinned to the right inside the input. Hidden
+     while focused (rendered only when `!focused`). Pointer-events off so a click
+     on the glyph still lands on the input beneath. */
+  .omnibox-hint {
+    position: absolute;
+    top: 50%;
+    right: var(--space-2);
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--text-faint);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.1rem 0.35rem;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   /* The popup listbox. Bits UI renders Content into a Portal (outside this
@@ -520,5 +594,20 @@ function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
     margin-left: auto;
     color: var(--muted);
     font-size: var(--text-sm);
+  }
+
+  /* Mobile (matches the AppShell drawer breakpoint): hide the ⌘K / Ctrl+K hint
+     badge — it's misleading on a touch device with no physical keyboard, and it
+     overlapped the placeholder when the bar was narrow. The global Cmd/Ctrl+K
+     listener stays (harmless); only the visible badge is hidden. With the badge
+     gone, drop the badge-clearing right padding so the placeholder uses the full
+     width. */
+  @media (max-width: 48rem) {
+    .omnibox-hint {
+      display: none;
+    }
+    .omnibox :global(input) {
+      padding-right: var(--space-3);
+    }
   }
 </style>

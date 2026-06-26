@@ -8,6 +8,7 @@ import {
   catalogHref,
   classGroupHref,
   coverageFromStates,
+  DATA_BROWSER_LABEL,
   deriveType,
   distinctValueSets,
   foldText,
@@ -29,10 +30,12 @@ import {
   registerPrefixOf,
   representationsCollapse,
   representationsFromStates,
+  routeBreadcrumbs,
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
 } from "./catalog";
+import type { Route } from "./router.svelte";
 
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
 function state(over: Partial<VariableStateModel>): VariableStateModel {
@@ -283,6 +286,114 @@ describe("fqidSegments / breadcrumbs", () => {
       { label: "lisa", fqidPath: "scb/lisa" },
       { label: "kon", fqidPath: "scb/lisa/kon" },
     ]);
+  });
+});
+
+describe("routeBreadcrumbs", () => {
+  // The topbar trail is STRUCTURAL (raw segments + the data-browser root); the
+  // routed page owns its rich header. The LAST crumb is always the current page
+  // (no href — Breadcrumbs renders it as aria-current="page").
+  const browserRoot = { label: DATA_BROWSER_LABEL, href: catalogHref("") };
+
+  it("home → a single un-linked Home crumb", () => {
+    expect(routeBreadcrumbs({ name: "home" })).toEqual([{ label: "Home" }]);
+  });
+
+  it("root → a single un-linked data-browser crumb (it IS the current page)", () => {
+    expect(routeBreadcrumbs({ name: "root" })).toEqual([
+      { label: DATA_BROWSER_LABEL },
+    ]);
+  });
+
+  it("catalog-node → browser root + cumulative ancestor links, leaf un-linked", () => {
+    const trail = routeBreadcrumbs({
+      name: "catalog-node",
+      fqidPath: "scb/lisa/kon",
+    });
+    expect(trail).toHaveLength(4);
+    expect(trail[0]).toEqual(browserRoot);
+    expect(trail[1]).toEqual({ label: "scb", href: catalogHref("scb") });
+    expect(trail[2]).toEqual({
+      label: "lisa",
+      href: catalogHref("scb/lisa"),
+    });
+    expect(trail[3]).toEqual({ label: "kon", href: undefined });
+    // Spelled-out hrefs match the documented contract.
+    expect(trail[1].href).toBe("/catalog/scb");
+    expect(trail[2].href).toBe("/catalog/scb/lisa");
+  });
+
+  it("catalog-node single-segment → browser root + the un-linked leaf", () => {
+    const trail = routeBreadcrumbs({ name: "catalog-node", fqidPath: "scb" });
+    expect(trail).toHaveLength(2);
+    expect(trail[0]).toEqual(browserRoot);
+    expect(trail[1]).toEqual({ label: "scb", href: undefined });
+  });
+
+  it("group → browser root + register hop + the un-linked key", () => {
+    const trail = routeBreadcrumbs({
+      name: "group",
+      provider: "scb",
+      register: "lisa",
+      key: "ink",
+    });
+    expect(trail).toHaveLength(3);
+    expect(trail[0]).toEqual(browserRoot);
+    expect(trail[1]).toEqual({
+      label: "scb/lisa",
+      href: catalogHref("scb/lisa"),
+    });
+    expect(trail[2]).toEqual({ label: "ink" });
+  });
+
+  it("class-group → browser root + a class hop + the un-linked key", () => {
+    const trail = routeBreadcrumbs({ name: "class-group", key: "sun" });
+    expect(trail).toHaveLength(3);
+    expect(trail[0]).toEqual(browserRoot);
+    expect(trail[1]).toEqual({ label: "class" });
+    expect(trail[2]).toEqual({ label: "sun" });
+  });
+
+  it("search / project → a single un-linked crumb rooted where they sit", () => {
+    expect(routeBreadcrumbs({ name: "search" })).toEqual([{ label: "Search" }]);
+    expect(routeBreadcrumbs({ name: "project" })).toEqual([
+      { label: "Project" },
+    ]);
+  });
+
+  it("doc → a Docs hop + the un-linked identifier", () => {
+    const trail = routeBreadcrumbs({ name: "doc", identifier: "x" });
+    expect(trail).toHaveLength(2);
+    expect(trail[1]).toEqual({ label: "x" });
+  });
+
+  it("not-found → just the browser root", () => {
+    expect(routeBreadcrumbs({ name: "not-found", path: "/x" })).toEqual([
+      browserRoot,
+    ]);
+  });
+
+  it("invariant: the LAST crumb is the current page (href === undefined)", () => {
+    // Breadcrumbs renders the final item as aria-current="page" with no link, so
+    // every PAGE variant's trail ends on an href-less crumb. `not-found` is the
+    // documented exception: it returns the bare `browserRoot` (a recovery LINK
+    // back to the data browser, not a current-page crumb), so it's excluded here
+    // and covered by its own assertion above.
+    const variants: Route[] = [
+      { name: "home" },
+      { name: "root" },
+      { name: "catalog-node", fqidPath: "scb/lisa/kon" },
+      { name: "catalog-node", fqidPath: "scb" },
+      { name: "group", provider: "scb", register: "lisa", key: "ink" },
+      { name: "class-group", key: "sun" },
+      { name: "search" },
+      { name: "project" },
+      { name: "doc", identifier: "x" },
+    ];
+    for (const route of variants) {
+      const trail = routeBreadcrumbs(route);
+      expect(trail.at(-1)?.href).toBeUndefined();
+    }
   });
 });
 
