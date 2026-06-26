@@ -183,14 +183,18 @@ trivial diff (name the skip in closeout).
 pass alongside `/code-review`, against the running app — a text-diff review can't catch
 a broken layout, overflow, or contrast regression. The mandatory part is *looking*:
 render the assembled tree (`/run-reg-webapp` + `preview_*`, always available) and
-inspect the changed views. If the `/web-design-reviewer` skill is installed, use it for
-a structured design-quality pass (and `/frontend-design` when the PR *authors* new UI);
-if not, drive the manual run-reg-webapp visual workflow yourself — the gate is the
-looking, not the plugin. Route any findings the same way you route `/code-review`'s.
-When the rendered change depends on DB content not yet in the local/released DB (e.g. a
-build-curation PR earlier in the lane), don't wait for a release — point the dev server
-at a scratch `build-db` via `REG_META_DB=<db_dir> dev.sh shot <route>` (see
-run-reg-webapp → "Verifying against unreleased DB content (custom DB)").
+inspect the changed views. **Run `/web-design-reviewer`** for the structured
+design-quality pass — it catches consistency / spacing / accessibility regressions the
+naked eye skims past; the manual `run-reg-webapp` render is how you *see* the change,
+and `/web-design-reviewer` is how you review it well. (Authoring new UI is the
+*implementer's* job, and its prompt already routes new-UI work through
+`frontend-design:frontend-design` — so you review with `/web-design-reviewer` rather
+than author with `/frontend-design` at this step.) Route any findings the same way you
+route `/code-review`'s. When the rendered change depends on DB content not yet in the
+local/released DB (e.g. a build-curation PR earlier in the lane), don't wait for a
+release — point the dev server at a scratch `build-db` via
+`REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp → "Verifying against
+unreleased DB content (custom DB)").
 
 **D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
