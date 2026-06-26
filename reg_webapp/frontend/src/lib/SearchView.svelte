@@ -747,7 +747,14 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   .children.table {
     display: grid;
     column-gap: var(--space-3);
-    align-items: baseline;
+    /* STRETCH (not baseline): a leaf row's cells differ in height (a variable's
+       definition sub-line / a classification's full-name cell make the name cell
+       taller than its siblings). With baseline, each cell's own bottom border lands
+       at a different vertical position, so the row separator splits into staggered
+       hairline segments. Stretch sizes every cell to the row's full height so their
+       bottom borders align into ONE continuous rule; cell CONTENT is top-aligned
+       (below) so multi-line cells grow downward and still read top-down. */
+    align-items: stretch;
   }
   .children.table.cols-3 {
     /* Variable · Register · Column(slug) */

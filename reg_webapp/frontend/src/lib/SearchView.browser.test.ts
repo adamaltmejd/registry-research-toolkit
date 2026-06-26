@@ -3,6 +3,7 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { DocSearchResponse, SearchResponse } from "./api";
 import { docSearch, search } from "./api";
+import { catalogHref } from "./catalog";
 import { router } from "./router.svelte";
 import SearchView from "./SearchView.svelte";
 
@@ -823,6 +824,27 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(gridTables.length).toBeGreaterThanOrEqual(2);
   });
 
+  it("navigates to the register's catalog node when its DataTable ROW is activated", async () => {
+    // The registers group keeps DataTable selection-as-navigation
+    // (`onselect={(r) => navigateTo(r.fqid)}` → `router.navigate(catalogHref(fqid))`).
+    // Activate the ROW itself (the `tr.selectable`, NOT the inner name link, whose
+    // own `use:link`-style nav DataTable's fromInteractiveChild guards) and assert
+    // the router pushed the register's catalog path.
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    const row = document.querySelector<HTMLElement>(
+      ".search-view tr.selectable",
+    );
+    expect(row).not.toBeNull();
+    row?.click();
+
+    await expect
+      .poll(() => window.location.pathname)
+      .toBe(catalogHref("scb/lisa"));
+  });
+
   it("hides the raw FQID and shows the leaf SLUG as the variable's Column", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
@@ -855,8 +877,11 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // the variable grid rendered with its three columns.
     await expect.element(page.getByText("Column")).toBeVisible();
     // The variable's Register renders in its OWN prominent column (the `.register`
-    // span), not as a muted trailing label.
-    const register = document.querySelector(".search-view .register");
+    // span), not as a muted trailing label. Scope to the variable leaf row (an
+    // unscoped `.search-view .register` can match a codes "Used in" `.register.muted`
+    // if render order / fixtures change — mirror the whole-row-nav test's scoping).
+    const row = document.querySelector(".search-view .cols-3 a.leaf-row");
+    const register = row?.querySelector(".register");
     expect(register?.textContent?.trim()).toBe("LISA");
   });
 
