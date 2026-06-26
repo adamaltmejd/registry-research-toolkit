@@ -1670,6 +1670,24 @@ coding's open span beside its column's year-bearing states), which a DB-level ch
 cannot tell apart from a sweep bug. Genuine-conflict diagnostics
 (`coalesce_unresolved_codelivery`) switch from bare years to period descriptors.
 
+**Code-less ↔ code-bearing close-out (#858).** The one-value-set-per-period invariant
+compares *distinct non-NULL* value sets — a `NULL` (`value_set_id IS NULL`) is absence,
+not a distinct set, so a code-less state overlapping a versioned state on the same
+`(variable_id, register_variant_id, delivery_column_name)` slips through it. This
+produced `binding_value_set_version_ambiguous` failures in the webapp for three columns
+that carried an open-ended code-less era beside a versioned state. A separate
+`_close_codeless_codebearing_overlaps` pass in `db.py` runs during `materialize()` —
+after the IR core-graph reinsert, before any downstream state consumer — and trims each
+code-less state to the interval-complement of overlapping code-bearing windows: zero
+residual → the code-less state is deleted; one residual span → it is retrimmed; a
+strictly-interior code-bearing window that would split it → `EXIT_CONFIG`
+(`codeless_close_out_interior_split`; minting a new `state_id` for the split is out of
+scope). The trim is lossless because a code-less state carries no codes. This pass is
+distinct from the SCB coalescer's same-column de-overlap, which operates earlier on
+co-delivered versioned states. `_check_no_codeless_codebearing_overlap` in `validate.py`
+is the build backstop: it fails the build if any such overlap survives into the shipped
+DB.
+
 **Period-token formatter.** Diagnostics and display need the inverse of
 `period_token_to_bounds`: `bounds → coarsest period token` (`2009-01-01..2009-06-30` →
 `VT2009`; `2009-07-01..2009-09-30` → `2009-Q3`; non-grammar windows render as an
