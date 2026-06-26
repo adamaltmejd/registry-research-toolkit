@@ -1027,6 +1027,11 @@ CREATE UNIQUE INDEX idx_concept_group_variable_member
     ON concept_group_variable(group_id, variable_id, COALESCE(delivery_column_name, ''));
 CREATE INDEX idx_concept_group_variable_group
     ON concept_group_variable(group_id);
+-- #819: both indexes above lead with `group_id`, so a probe by `variable_id`
+-- ALONE (Catalog._group_ref_for_variable, search member→group folding,
+-- _derive_month_groups' per-variable NOT EXISTS) would full-scan without this.
+CREATE INDEX idx_concept_group_variable_variable
+    ON concept_group_variable(variable_id);
 
 -- Per-member-per-axis facet coordinate (#819, the #585 reversal that restores a
 -- `concept_group_variable_facet` table). A whole-variable member on an axis-less
