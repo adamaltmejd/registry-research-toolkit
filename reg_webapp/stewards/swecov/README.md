@@ -39,7 +39,7 @@ Output is deterministic (sources sorted by coordinate, bindings by variable+colu
 Coverage is bounded by what reg_meta currently mints, and **rises automatically** as the
 residue below lands upstream — just regenerate against a fresh flavored DB. The current
 breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.23.0
-the catalog admits **66.9%** of physical columns. The residue is, by disposition:
+the catalog admits **66.7%** of physical columns. The residue is, by disposition:
 
 - **survey-wave items (FOU/CIS/IT, \~2,000)** — documented in SWECOV's delivery lists
   but absent from reg_meta machine metadata; a follow-up **global graft** effort, not

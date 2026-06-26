@@ -8480,11 +8480,6 @@
           "representation": "v0200"
         },
         {
-          "variable": "scb/fou/bransch",
-          "type": "opaque",
-          "representation": "NgS"
-        },
-        {
           "variable": "scb/fou/driftkostnader-forskning",
           "type": "numeric",
           "representation": "v0401"
@@ -9942,7 +9937,7 @@
         },
         {
           "variable": "scb/grundskola-ak9/antal-amnen-godkand",
-          "type": "opaque",
+          "type": "numeric",
           "representation": "Antal_Betyg"
         },
         {
@@ -10586,7 +10581,7 @@
         },
         {
           "variable": "scb/grundskola-elever/huvudman",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "Hman"
         },
         {
@@ -20278,7 +20273,7 @@
         },
         {
           "variable": "scb/rams/valtast",
-          "type": "opaque",
+          "type": "numeric",
           "representation": "ValtAst"
         },
         {
