@@ -728,7 +728,7 @@ function emitVariant(slug: string): void {
     box-shadow: var(--focus-ring);
   }
   .cmd-count {
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: var(--text-sm);
     white-space: nowrap;
   }
@@ -737,7 +737,7 @@ function emitVariant(slug: string): void {
     overflow-y: auto;
   }
   :global(.cmd-empty) {
-    color: var(--muted);
+    color: var(--text-muted);
     padding: var(--space-2);
   }
 
@@ -789,7 +789,7 @@ function emitVariant(slug: string): void {
   .leaf-fqid,
   .name,
   .classification {
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: var(--text-sm);
   }
   .hint {
