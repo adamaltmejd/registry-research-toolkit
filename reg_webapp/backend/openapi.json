@@ -491,7 +491,7 @@
         "properties": {
           "axes": {
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/GroupAxis"
             },
             "title": "Axes",
             "type": "array"
@@ -1108,7 +1108,7 @@
         "properties": {
           "axes": {
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/GroupAxis"
             },
             "title": "Axes",
             "type": "array"
@@ -1319,11 +1319,11 @@
       },
       "ConceptGroupSummary": {
         "additionalProperties": false,
-        "description": "One derived concept group. `key` is the scope-unique derivation key\n(slug stem / min member slug / curated key) \u2014 a stable anchor for UI\nstate, not an FQID. `axes` holds the group's ordered facet axes (#819): empty\nfor edge / axis-less umbrella groups, one for token/single-axis-curated groups,\nN for a multi-axis curated family (the iot disposable-income group). Members are\nordered by their first facet value, then slug.",
+        "description": "One derived concept group. `key` is the scope-unique derivation key\n(slug stem / min member slug / curated key) \u2014 a stable anchor for UI\nstate, not an FQID. `axes` holds the group's ordered facet axes (#819) as\n`GroupAxis(name, label)` \u2014 empty for edge / axis-less umbrella groups, one for\ntoken/single-axis-curated groups, N for a multi-axis curated family (the iot\ndisposable-income group). Each axis carries its stable match `name` and its\ncurator-authored display `label` (consumers match on `name`, display `label`).\nMembers are ordered by their first facet value, then slug.",
         "properties": {
           "axes": {
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/GroupAxis"
             },
             "title": "Axes",
             "type": "array"
@@ -1843,6 +1843,26 @@
           "valid_to"
         ],
         "title": "GraphState",
+        "type": "object"
+      },
+      "GroupAxis": {
+        "additionalProperties": false,
+        "description": "One declared facet axis of a concept group (#819): the stable `name` (the\nderivation/match key \u2014 `concept_group_axis.axis`, the same string a member's\n`GroupFacet.axis` carries) and its curator-authored display `label`\n(`concept_group_axis.label`, e.g. \"Hush\u00e5llsbegrepp\"). Consumers MATCH on `name`\n(it keys `GroupFacet.axis`) and DISPLAY `label` \u2014 the label is presentation\nonly, never an identity. `ConceptGroupSummary.axes` is a tuple of these, ordered\nby the axis's `ordinal`; empty for edge / axis-less umbrella groups.",
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "label"
+        ],
+        "title": "GroupAxis",
         "type": "object"
       },
       "GroupFacet": {

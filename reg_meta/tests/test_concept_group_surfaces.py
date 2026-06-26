@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _shared_fixtures import _build_stub_doc_db
 from _slugged_db import add_state, add_variable, build_slugged_db
-from reg_meta.catalog import Catalog
+from reg_meta.catalog import Catalog, GroupAxis
 from reg_meta.db import SCHEMA_VERSION
 from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from reg_meta.queries import (
@@ -642,7 +642,9 @@ class TestGetConceptGroups:
         (group,) = reg["groups"]
         assert group["key"] == "agiink"
         assert group["source"] == "curated"
-        assert group["axes"] == ["month"]
+        # #819: axes serialize as {name, label} — the authored label ('månad') is
+        # exposed distinct from the stable match name.
+        assert group["axes"] == [{"name": "month", "label": "månad"}]
         assert group["member_count"] == 3
         jan = group["members"][0]
         assert jan["fqid"] == "scb/lisa/agiinkjan"
@@ -685,7 +687,12 @@ class TestGetConceptGroups:
         conn.commit()
         groups = Catalog(conn).list_concept_groups("scb", "lisa")
         (group,) = [g for g in groups if g.key == "disp"]
-        assert group.axes == ("enhet", "kapitalvinst")
+        # The authored labels ride each axis (title-cased here), keyed on the stable
+        # axis name (#819).
+        assert group.axes == (
+            GroupAxis(name="enhet", label="Enhet"),
+            GroupAxis(name="kapitalvinst", label="Kapitalvinst"),
+        )
         assert len(group.members) == 2
         # Both members share the fqid but differ by delivery_column.
         assert {str(m.fqid) for m in group.members} == {"scb/lisa/cdisp"}
@@ -715,7 +722,7 @@ class TestGetConceptGroups:
         data = get_classification_concept_groups(conn)
         (group,) = data["groups"]
         assert group["key"] == "sun"
-        assert group["axes"] == ["vintage"]
+        assert group["axes"] == [{"name": "vintage", "label": "vintage"}]
         assert [m["fqid"] for m in group["members"]] == [
             "class/sun2000",
             "class/sun2020",
@@ -927,4 +934,6 @@ class TestSearchTableDisplay:
         text = out.read_text(encoding="utf-8")
         assert "agiink" in text
         assert "Lönesumma per månad" in text
-        assert "month" in text
+        # #819: the axes column shows the authored axis LABEL ('månad'), not the
+        # stable match key ('month').
+        assert "månad" in text

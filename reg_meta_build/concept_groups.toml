@@ -725,3 +725,498 @@ label = "SNI2007 (g)"
 variable = "org-sni2007u"
 value = "2007u"
 label = "SNI2007 (u)"
+
+# iot disposable-income family — the channel-2 multi-axis worked example for
+# the concept-group navigator (#805/#819). Unlike the single-axis families above,
+# this group declares ordered named `axes` and attaches (variable, delivery_column)
+# REPRESENTATIONS, each carrying a coord on every axis: one variable can hold two
+# kapitalvinst coordinates via two delivery columns (e.g. var 1304's CDISP/CDISP5),
+# so members are representation-grained, not whole-variable. The disposable-income
+# vintage is NOT a facet — it rides the period slider / `replaced_by` succession;
+# only enhet × hushållsbegrepp × kapitalvinst are orthogonal picker axes.
+[[variable_group]]
+register = "scb/iot"
+key = "disponibel-inkomst"
+label = "Disponibel inkomst"
+axes = [
+  { axis = "enhet", label = "Enhet" },
+  { axis = "hushallsbegrepp", label = "Hushållsbegrepp" },
+  { axis = "kapitalvinst", label = "Kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "delkomponent-disponibel-inkomst"
+delivery_column = "CDISP"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "delkomponent-disponibel-inkomst"
+delivery_column = "CDISP5"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "din8"
+delivery_column = "DIN83"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "din8"
+delivery_column = "DIN84"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "din8"
+delivery_column = "DIN86"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "din88k"
+delivery_column = "DIN88K"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "din91"
+delivery_column = "DIN91"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dind"
+delivery_column = "DIND"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinkd"
+delivery_column = "DINKD"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinu82"
+delivery_column = "DINU82"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj"
+delivery_column = "CDISPH"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-2"
+delivery_column = "DINF"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-2"
+delivery_column = "DINF83"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-2"
+delivery_column = "DINF84"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-2"
+delivery_column = "DINF86"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-3"
+delivery_column = "DINF88K"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-4"
+delivery_column = "DINF91"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-5"
+delivery_column = "DINFU82"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-6"
+delivery_column = "DINKF"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "delkomponent-disponibel-inkomst-2004"
+delivery_column = "CDISP04"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "delkomponent-disponibel-inkomst-2004"
+delivery_column = "CDISP504"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-per-ke-familj-2004"
+delivery_column = "CDISPKE04H"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-familj-2004"
+delivery_column = "CDISP04H"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst"
+delivery_column = "CDISP04HB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-2"
+delivery_column = "CDISP04VXHB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-3"
+delivery_column = "CDISPHB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-4"
+delivery_column = "CDISPVXHB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-kosthushall-2004"
+delivery_column = "CDISP04HB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-exkl-kapvinst-2004"
+delivery_column = "CDISP504"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-exkl-kapvinst-2004"
+delivery_column = "CDISP504HB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-exkl-kapvinst-2004"
+delivery_column = "CDISP504VXHB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-exkl-kapitalvinst"
+delivery_column = "CDISP5"
+coords = [
+  { axis = "enhet", value = "individ", label = "Individ" },
+  { axis = "hushallsbegrepp", value = "na", label = "—" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-exkl-kapitalvinst"
+delivery_column = "CDISP5HB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-exkl-kapitalvinst"
+delivery_column = "CDISP5VXHB"
+coords = [
+  { axis = "enhet", value = "hushall", label = "Hushåll" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-per-ke-familj"
+delivery_column = "CDISPKEH"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "disponibel-inkomst-per-ke-familj"
+delivery_column = "DINFKE"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "cdispp"
+delivery_column = "CDISPP"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinkpp"
+delivery_column = "DINKPP"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp"
+delivery_column = "DINPP"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp"
+delivery_column = "DINPP81"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp"
+delivery_column = "DINPP82"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp"
+delivery_column = "DINPP83"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp"
+delivery_column = "DINPP84"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp"
+delivery_column = "DINPP86"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp88k"
+delivery_column = "DINPP88K"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinpp91"
+delivery_column = "DINPP91"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "dinupp"
+delivery_column = "DINUPP"
+coords = [
+  { axis = "enhet", value = "per-vuxen", label = "Per vuxen" },
+  { axis = "hushallsbegrepp", value = "familj", label = "Familj" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "cdisp04kehb"
+delivery_column = "CDISP04KEHB"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "cdispkehb"
+delivery_column = "CDISPKEHB"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "kosthushall", label = "Kosthushåll" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "cdispkevx"
+delivery_column = "CDISPKEVX"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "cdisp04kevx"
+delivery_column = "CDISP04KEVX"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "inkl", label = "Inkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "cdisp5kevx"
+delivery_column = "CDISP5KEVX"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]
+
+[[variable_group.members]]
+variable = "cdisp504kevx"
+delivery_column = "CDISP504KEVX"
+coords = [
+  { axis = "enhet", value = "per-ke", label = "Per konsumtionsenhet" },
+  { axis = "hushallsbegrepp", value = "vaxelvist", label = "Växelvist boende" },
+  { axis = "kapitalvinst", value = "exkl", label = "Exkl. kapitalvinst" },
+]

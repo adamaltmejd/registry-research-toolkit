@@ -22,6 +22,7 @@ from reg_meta.catalog import (
     ClassificationCode,
     ClassificationEdition,
     ClassificationRef,
+    GroupAxis,
     RelatedRef,
     ResolvedClassification,
     ResolvedProvider,
@@ -2158,7 +2159,7 @@ class TestClassificationDimensions:
         self._seed_sun_umbrella(conn)
         groups = Catalog(conn).classification_dimensions("class/sun2020")
         assert [g.key for g in groups] == ["sun"]
-        assert groups[0].axes == ("dimension",)
+        assert groups[0].axes == (GroupAxis(name="dimension", label="dimension"),)
         assert {str(m.fqid) for m in groups[0].members} == {
             "class/sun2020",
             "class/niva-oldv1",

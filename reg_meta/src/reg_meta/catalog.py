@@ -198,6 +198,19 @@ class GroupFacet(_CatalogModel):
     label: str
 
 
+class GroupAxis(_CatalogModel):
+    """One declared facet axis of a concept group (#819): the stable `name` (the
+    derivation/match key — `concept_group_axis.axis`, the same string a member's
+    `GroupFacet.axis` carries) and its curator-authored display `label`
+    (`concept_group_axis.label`, e.g. "Hushållsbegrepp"). Consumers MATCH on `name`
+    (it keys `GroupFacet.axis`) and DISPLAY `label` — the label is presentation
+    only, never an identity. `ConceptGroupSummary.axes` is a tuple of these, ordered
+    by the axis's `ordinal`; empty for edge / axis-less umbrella groups."""
+
+    name: str
+    label: str
+
+
 class ConceptGroupMember(_CatalogModel):
     """A group member: the leaf's FQID (binding or classification), its display
     name, and its facet assignments (empty on edge-group members). `delivery_column`
@@ -216,10 +229,12 @@ class ConceptGroupMember(_CatalogModel):
 class ConceptGroupSummary(_CatalogModel):
     """One derived concept group. `key` is the scope-unique derivation key
     (slug stem / min member slug / curated key) — a stable anchor for UI
-    state, not an FQID. `axes` holds the group's ordered facet axes (#819): empty
-    for edge / axis-less umbrella groups, one for token/single-axis-curated groups,
-    N for a multi-axis curated family (the iot disposable-income group). Members are
-    ordered by their first facet value, then slug."""
+    state, not an FQID. `axes` holds the group's ordered facet axes (#819) as
+    `GroupAxis(name, label)` — empty for edge / axis-less umbrella groups, one for
+    token/single-axis-curated groups, N for a multi-axis curated family (the iot
+    disposable-income group). Each axis carries its stable match `name` and its
+    curator-authored display `label` (consumers match on `name`, display `label`).
+    Members are ordered by their first facet value, then slug."""
 
     key: str
     label: str
@@ -228,7 +243,7 @@ class ConceptGroupSummary(_CatalogModel):
     # Literal (#681) so it is the tight API contract the webapp consumes directly
     # (the prior `str` was looser than the webapp wrapper, now collapsed).
     source: Literal["edge", "token", "curated"]
-    axes: tuple[str, ...]
+    axes: tuple[GroupAxis, ...]
     members: tuple[ConceptGroupMember, ...]
 
 
@@ -928,6 +943,45 @@ class Catalog:
             )
         return out
 
+    def register_column_coverage(
+        self, provider_slug: str, register_slug: str
+    ) -> dict[tuple[str, str], VariableCoverage]:
+        """Per-DELIVERY-COLUMN coverage for a register's bindings (#819), keyed by
+        `(variable slug, delivery_column_name)`. The sibling of
+        `register_variable_coverage`, but the GROUP BY also splits on
+        `vs.delivery_column_name`, so each representation of a variable (e.g. CDISP
+        vs CDISP5 on one `disponibel-inkomst` member, or DIN83/DIN84/DIN86 on `din8`)
+        gets its OWN window — not the variable's union span. The webapp zips this
+        onto a representation member (`delivery_column` non-None); whole-variable
+        members keep falling back to `register_variable_coverage`. Rows whose
+        `delivery_column_name` is NULL (a stateless variable, or a state with no
+        per-column name) are skipped — they have no per-column key and are served by
+        the variable-level fallback. Same query shape/cost as
+        `register_variable_coverage`."""
+        rows = self._conn.execute(
+            "SELECT v.slug AS slug, vs.delivery_column_name AS col, "
+            "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to, "
+            "COUNT(vs.state_id) AS nstates "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "  AND vs.delivery_column_name IS NOT NULL "
+            "GROUP BY v.variable_id, vs.delivery_column_name",
+            (provider_slug, register_slug),
+        ).fetchall()
+        out: dict[tuple[str, str], VariableCoverage] = {}
+        for r in rows:
+            cov_from, cov_to, open_ended = _coverage_bounds(r["cov_from"], r["cov_to"])
+            out[(r["slug"], r["col"])] = VariableCoverage(
+                coverage_from=cov_from,
+                coverage_to=cov_to,
+                open_ended=open_ended,
+                state_count=r["nstates"],
+            )
+        return out
+
     def provider_register_coverage(
         self, provider_slug: str
     ) -> dict[str, RegisterCoverage]:
@@ -1017,7 +1071,7 @@ class Catalog:
             "m.member_id, m.delivery_column_name, "
             "v.slug AS variable_slug, v.name AS variable_name, "
             "f.axis AS facet_axis, f.value AS facet_value, f.label AS facet_label, "
-            "a.ordinal AS axis_ordinal "
+            "a.ordinal AS axis_ordinal, a.label AS axis_label "
             "FROM concept_group g "
             "JOIN register r ON g.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1049,7 +1103,7 @@ class Catalog:
         `(ordinal, axis)` pairs reproduce `concept_group_axis ORDER BY ordinal`
         without a per-group query."""
         # group_id → (key, label, source, members-by-id, axes-by-ordinal)
-        acc: dict[int, tuple[str, str, str, dict[int, dict], dict[int, str]]] = {}
+        acc: dict[int, tuple[str, str, str, dict[int, dict], dict[int, GroupAxis]]] = {}
         for r in rows:
             _, _, _, members, group_axes = acc.setdefault(
                 r["group_id"],
@@ -1074,7 +1128,9 @@ class Catalog:
                         label=r["facet_label"],
                     )
                 )
-                group_axes[r["axis_ordinal"]] = r["facet_axis"]
+                group_axes[r["axis_ordinal"]] = GroupAxis(
+                    name=r["facet_axis"], label=r["axis_label"]
+                )
         out: list[ConceptGroupSummary] = []
         for key, label, source, members, group_axes in acc.values():
             axes = tuple(group_axes[ordinal] for ordinal in sorted(group_axes))
@@ -1151,7 +1207,7 @@ class Catalog:
         # at most one axis row, so a LEFT JOIN yields the axis name or NULL.
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
-            "a.axis AS axis, "
+            "a.axis AS axis, a.label AS axis_label, "
             "c.slug AS cls_slug, c.name AS cls_name, m.facet_value, m.facet_label "
             "FROM concept_group g "
             "LEFT JOIN concept_group_axis a ON a.group_id = g.group_id "
@@ -1160,11 +1216,21 @@ class Catalog:
             "WHERE g.kind = 'classification' AND c.slug IS NOT NULL "
             "ORDER BY g.group_key, m.facet_value, c.slug"
         ).fetchall()
-        acc2: dict[int, tuple[str, str, str, str | None, list[ConceptGroupMember]]] = {}
+        # A declared axis (NULL on the axis-less umbrellas) becomes the group's
+        # single `GroupAxis(name, label)`; the per-member facet still keys on the
+        # axis NAME (None when axis-less).
+        acc2: dict[
+            int, tuple[str, str, str, GroupAxis | None, list[ConceptGroupMember]]
+        ] = {}
         for r in rows:
+            axis = (
+                GroupAxis(name=r["axis"], label=r["axis_label"])
+                if r["axis"] is not None
+                else None
+            )
             _, _, _, axis, members = acc2.setdefault(
                 r["group_id"],
-                (r["group_key"], r["group_label"], r["source"], r["axis"], []),
+                (r["group_key"], r["group_label"], r["source"], axis, []),
             )
             members.append(
                 ConceptGroupMember(
@@ -1172,7 +1238,9 @@ class Catalog:
                     name=r["cls_name"],
                     facets=(
                         GroupFacet(
-                            axis=axis, value=r["facet_value"], label=r["facet_label"]
+                            axis=axis.name if axis is not None else None,
+                            value=r["facet_value"],
+                            label=r["facet_label"],
                         ),
                     ),
                 )

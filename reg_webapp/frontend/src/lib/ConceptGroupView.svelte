@@ -1,6 +1,7 @@
 <script lang="ts">
 import { type ConceptGroupNodeMember, getConceptGroup } from "./api";
 import { asyncResource } from "./async.svelte";
+import ConceptGroupNavigator from "./ConceptGroupNavigator.svelte";
 import {
   axisValues,
   catalogHref,
@@ -8,6 +9,8 @@ import {
   formatWindow,
   memberAt,
   memberCoverageUnion,
+  memberKey,
+  membersHaveUniqueCoords,
   OPEN_ENDED_VALID_TO,
   YEARLESS_VALID_FROM,
 } from "./catalog";
@@ -110,25 +113,57 @@ function coverageText(member: ConceptGroupNodeMember): string {
 //     span the active window.
 
 const axes = $derived(node?.axes ?? []);
+// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
+// disposable-income family) renders through the facet navigator (below) instead,
+// so the matrix/chips/list path and its `ungridded` fallback are gated off this.
+//
+// #819 FIX C: a 2-axis group can ALSO collide — two members on the SAME (row, col)
+// coordinate, distinguished only by `delivery_column` (representation members).
+// The matrix renders only the FIRST per cell (`memberAt`) and DROPS the rest (they
+// escape `ungridded`, covering every axis), so route through the navigator when a
+// 2-axis group has NON-UNIQUE coordinates too. Gated to `axes.length === 2`: only
+// the 2D matrix loses colliding members; a ≤1-axis group renders chips/list (every
+// member shown) and an axis-less umbrella collides trivially (all map to the empty
+// coord) but must keep its list, not the navigator.
+const useNavigator = $derived(
+  node
+    ? axes.length > 2 ||
+        (axes.length === 2 && !membersHaveUniqueCoords(node, axes))
+    : false,
+);
 // Matrix orientation: first axis → rows, second axis → columns (mirrors
 // ConceptGroupRow). `node` is always present inside the success arm where the
 // snippet renders, but guard so the top-level deriveds stay total.
 const matrixRows = $derived(
-  node && axes.length > 0 ? axisValues(node, axes[0]) : [],
+  node && axes.length > 0 ? axisValues(node, axes[0].name) : [],
 );
 const matrixCols = $derived(
-  node && axes.length > 1 ? axisValues(node, axes[1]) : [],
+  node && axes.length > 1 ? axisValues(node, axes[1].name) : [],
 );
 // `axes` is the UNION across members; a member missing a facet on any axis never
 // matches a matrix cell, so it would silently vanish from the grid — render those
 // below as a plain list (mirrors ConceptGroupRow's `ungridded`).
 const ungridded = $derived(
-  node && axes.length >= 2
+  node && axes.length >= 2 && !useNavigator
     ? node.members.filter(
-        (m) => !axes.every((axis) => m.facets.some((f) => f.axis === axis)),
+        (m) =>
+          !axes.every((axis) => m.facets.some((f) => f.axis === axis.name)),
       )
     : [],
 );
+
+// ── The N-axis facet navigator (#819) ────────────────────────────────────────
+// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
+// disposable-income family: enhet × hushållsbegrepp × kapitalvinst) can't be a
+// grid without collapsing members that share the first two coords and DROPPING
+// the rest (they also escape `ungridded`, which only catches members MISSING an
+// axis — a 3-axis member covers all declared axes). So >2-axis groups render
+// through the shared ConceptGroupNavigator instead (per-axis filters + a member
+// list that drops NO member), used by the register-browse row too. The matrix
+// path stays for ≤2 axes (no regression). The navigator's member list reuses
+// THIS view's `memberLink` snippet, so it keeps the per-member coverage line +
+// the availability-lens greying the matrix/≤2-axis paths carry, and is keyed on
+// the group so its filter state resets across navigations.
 
 // ── The time axis: `?period` (client-side lens, no refetch) ──────────────────
 const period = $derived(router.getQueryParam("period"));
@@ -270,7 +305,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         <dd><code>{node.key}</code></dd>
         {#if node.axes.length > 0}
           <dt>Facets</dt>
-          <dd>{node.axes.join(", ")}</dd>
+          <dd>{node.axes.map((a) => a.label).join(", ")}</dd>
         {/if}
         <dt>Source</dt>
         <dd>{node.source}</dd>
@@ -312,7 +347,20 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     <!-- The MEMBER SELECTOR (slice axis): the group's facet grid, expanded. -->
     <section class="member-selector" aria-labelledby="members-heading">
       <h3 id="members-heading">Members</h3>
-      {#if axes.length >= 2}
+      {#if useNavigator}
+        <!-- The N-axis facet navigator (#819): the shared component owns the
+             per-axis filters + the no-member-dropped list; this view supplies the
+             per-member action via `memberLink` (a leaf link carrying the
+             per-member coverage + the availability-lens greying). Keyed on the
+             group key so the navigator's filter state recreates on navigation. -->
+        {#key node.key}
+          <ConceptGroupNavigator members={node.members} {axes}>
+            {#snippet member(m)}
+              {@render memberLink(m, m.name ?? leafSlug(m.fqid))}
+            {/snippet}
+          </ConceptGroupNavigator>
+        {/key}
+      {:else if axes.length >= 2}
         <table class="facet-matrix">
           <thead>
             <tr>
@@ -328,8 +376,8 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
                 <th scope="row">{row.label}</th>
                 {#each matrixCols as col (col.value)}
                   {@const member = memberAt(node, [
-                    { axis: axes[0], value: row.value },
-                    { axis: axes[1], value: col.value },
+                    { axis: axes[0].name, value: row.value },
+                    { axis: axes[1].name, value: col.value },
                   ])}
                   <td>
                     {#if member}
@@ -346,7 +394,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         </table>
         {#if ungridded.length > 0}
           <ul class="members">
-            {#each ungridded as member (member.fqid)}
+            {#each ungridded as member (memberKey(member))}
               <li>
                 {@render memberLink(
                   member,
@@ -358,8 +406,8 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         {/if}
       {:else if axes.length === 1}
         <ul class="facet-chips">
-          {#each node.members as member (member.fqid)}
-            {@const facet = member.facets.find((f) => f.axis === axes[0])}
+          {#each node.members as member (memberKey(member))}
+            {@const facet = member.facets.find((f) => f.axis === axes[0].name)}
             <li>
               {@render memberLink(
                 member,
@@ -370,7 +418,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         </ul>
       {:else}
         <ul class="members">
-          {#each node.members as member (member.fqid)}
+          {#each node.members as member (memberKey(member))}
             <li>
               {@render memberLink(member, member.name ?? leafSlug(member.fqid))}
             </li>

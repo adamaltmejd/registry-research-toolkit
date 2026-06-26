@@ -12,6 +12,7 @@ import {
   classificationGroupPath,
   conceptGroupPath,
   encodeFqid,
+  type GroupAxisModel,
   type GroupFacetModel,
   getCatalogNode,
   isCatalogNode,
@@ -112,15 +113,29 @@ export function foldGroupedRows<T extends { fqid: string }>(
   return rows;
 }
 
-/** The member count a folded row list represents — group rows count their
- * members, leaves count 1. Keeps the "N variables" readout in VARIABLE units
- * after folding (a register whose 36 variables fold into one matrix row still
- * reports 36, not 1). */
+/** The DISTINCT-variable count a folded row list represents — group rows count
+ * their distinct member FQIDs, leaves count 1. Keeps the "N variables" readout in
+ * VARIABLE units after folding (a register whose 36 variables fold into one matrix
+ * row still reports 36, not 1). #819: a representation group can carry several
+ * members on ONE variable (one `fqid`, distinct `delivery_column`s — e.g. CDISP +
+ * CDISP5), so the variable count dedups by `fqid` rather than counting raw member
+ * rows (53 representation rows over ~36 variables must read as 36 variables). */
 export function countFoldedMembers<T>(rows: GroupedRow<T>[]): number {
   return rows.reduce(
-    (n, row) => n + (row.kind === "group" ? row.group.members.length : 1),
+    (n, row) =>
+      n + (row.kind === "group" ? distinctMemberCount(row.group.members) : 1),
     0,
   );
+}
+
+/** The number of DISTINCT variables a group's members address — its members
+ * deduped by `fqid` (the variable identity). #819: representation members share
+ * one `fqid` across delivery columns, so raw `members.length` overstates the
+ * variable count; this is the variable-unit count for the "N variables" readouts. */
+export function distinctMemberCount(
+  members: readonly { fqid: string }[],
+): number {
+  return new Set(members.map((m) => m.fqid)).size;
 }
 
 /** The filterable text of a group row: its own label/key plus every member's
@@ -138,7 +153,17 @@ export function groupFilterKeys(
   return [
     group.label,
     group.key,
-    ...group.members.flatMap((m) => [m.name, m.fqid, leafSlug(m.fqid)]),
+    ...group.members.flatMap((m) => [
+      m.name,
+      m.fqid,
+      leafSlug(m.fqid),
+      // #819 FIX D: representation members are distinguished by their delivery
+      // column + facet labels/values (e.g. `CDISP5`, "Exkl. kapitalvinst"), not by
+      // name/fqid (which they SHARE across the variable). Index those too so a
+      // target-hunt for a column or a facet label surfaces the folding group.
+      m.delivery_column,
+      ...m.facets.flatMap((f) => [f.label, f.value]),
+    ]),
   ];
 }
 
@@ -152,6 +177,22 @@ export function groupFilterKeys(
 
 /** A group member as far as the facet-grid helpers care: just its facets. */
 type FacetedMember = { facets: GroupFacetModel[] };
+
+/** The stable `{#each}` key for a group member (#819). An FQID is NO LONGER
+ * unique within a group: a multi-axis family can carry two members on ONE
+ * variable (two delivery columns), so keying `{#each ... (m.fqid)}` would throw a
+ * duplicate-key error / drop the second representation. The composite
+ * `(fqid, delivery_column)` is unique — `delivery_column` is null for a
+ * whole-variable member and the SCB column for a representation member, so the
+ * pair distinguishes the two columns of one variable. The `::` separator can't
+ * collide: an FQID is slash-separated and a delivery column is a bare SQL
+ * identifier, neither contains `::`. */
+export function memberKey(m: {
+  fqid: string;
+  delivery_column?: string | null;
+}): string {
+  return `${m.fqid}::${m.delivery_column ?? ""}`;
+}
 
 /** The distinct (value, label) pairs a group's members carry on `axis`,
  * value-sorted — the rows/columns of the facet picker. */
@@ -184,6 +225,51 @@ export function memberAt<M extends FacetedMember>(
       m.facets.some((f) => f.axis === c.axis && f.value === c.value),
     ),
   );
+}
+
+/** A member's facet on `axis` — the (value, label) the N-axis navigator pill
+ * renders (#819), or undefined when the member carries no facet there (a partial
+ * family; the pill is then omitted for that axis). Hoisted here (out of
+ * ConceptGroupView) so the shared ConceptGroupNavigator reuses it. */
+export function memberFacet(
+  member: FacetedMember,
+  axis: string,
+): GroupFacetModel | undefined {
+  return member.facets.find((f) => f.axis === axis);
+}
+
+/** Whether every member of a group occupies a DISTINCT facet-coordinate tuple
+ * (one value per axis, in `axes` order; a missing facet is its own slot). #819:
+ * the 2D matrix renders only ONE member per (row, col) cell — `memberAt` returns
+ * the first match — so two members sharing a full coordinate vector silently DROP
+ * one (and they escape `ungridded`, which catches only members MISSING an axis,
+ * not collisions on present ones). The schema permits representation members
+ * (`delivery_column`-distinguished, same coords) for ANY axes length > 1, so a
+ * 2-axis group can collide too. The host uses this to route a colliding group
+ * through the no-member-dropped navigator instead of the matrix. Coordinate-only
+ * (NOT delivery-column): the navigator lists every member regardless, so the test
+ * is purely "would the matrix lose a member". */
+export function membersHaveUniqueCoords(
+  group: { members: readonly FacetedMember[] },
+  axes: readonly GroupAxisModel[],
+): boolean {
+  const seen = new Set<string>();
+  for (const m of group.members) {
+    // Join the per-axis values with a control-char separator (and a distinct
+    // control-char marker for an absent facet) so two DIFFERENT coordinate
+    // vectors can never alias by concatenation — facet values are SCB
+    // codes/tokens, never control characters.
+    const coords = axes
+      .map(
+        (axis) => m.facets.find((f) => f.axis === axis.name)?.value ?? "\u0000",
+      )
+      .join("\u0001");
+    if (seen.has(coords)) {
+      return false;
+    }
+    seen.add(coords);
+  }
+  return true;
 }
 
 // ── Member-distinguishing qualifier (#670) ──────────────────────────────────
@@ -219,6 +305,7 @@ export function memberQualifier(
   groups: readonly ConceptGroup[],
   fqid: string,
   canonicalKey?: string | null,
+  deliveryColumn?: string | null,
 ): MemberQualifier | null {
   // Canonical group first so its facets lead when the member is in several
   // groups; the rest follow in their incoming order. /dimensions can return
@@ -234,7 +321,18 @@ export function memberQualifier(
         });
   let grouped = canonicalKey != null;
   for (const group of ordered) {
-    const member = group.members.find((m) => m.fqid === fqid);
+    // #819: an `fqid` can name TWO members of one group (two delivery columns of
+    // one variable). When the caller knows the member's `deliveryColumn`, match
+    // BOTH so the right representation's facets win; otherwise match by fqid
+    // alone and take the FIRST representation — the documented default (a binding
+    // leaf page addresses a whole variable, not a single delivery column, so it
+    // has no column to disambiguate by and the first member's facets are the
+    // representative qualifier).
+    const member = group.members.find(
+      (m) =>
+        m.fqid === fqid &&
+        (deliveryColumn == null || m.delivery_column === deliveryColumn),
+    );
     if (member) {
       grouped = true;
     }
@@ -254,7 +352,12 @@ export function memberQualifier(
  * dimension group containing the member — its `{ label, href }` for the
  * "member of ⟨label⟩" context link. `null` when ungrouped, or when no fetched
  * group matches (loading / error / a stale skew between `node.group` and
- * /dimensions). The href targets the group SUBJECT route via `groupHref`. */
+ * /dimensions). The href targets the group SUBJECT route via `groupHref`.
+ *
+ * #819: an `fqid` can name two members (two delivery columns) of one variable,
+ * but they always live in the SAME group (a representation split is intra-group),
+ * so the containing-group lookup is column-agnostic — it matches by `fqid` alone
+ * (any representation of the variable yields the same group link). */
 export function memberGroupLink(
   groups: readonly ConceptGroup[],
   ref: BindingGroupRef | null | undefined,
@@ -294,8 +397,10 @@ export function nodeLabel(node: CatalogNode): string {
  * so they hit the no-axis fallback and render as "members". Naive +"s" is enough
  * for the axis vocabulary (dimension, month, …); a group with no axis falls back
  * to "members". */
-export function axisNoun(axes: string[]): string {
-  const axis = axes[0];
+export function axisNoun(axes: readonly GroupAxisModel[]): string {
+  // The noun stem is the stable axis NAME ("dimension"/"month"), not the display
+  // label — the +"s" plural rule is tuned to the name vocabulary (#819).
+  const axis = axes[0]?.name;
   return axis ? `${axis}s` : "members";
 }
 

@@ -1688,7 +1688,7 @@ def _write_payload(
                             "group_key": g.get("key", ""),
                             "label": g.get("label", ""),
                             "source": g.get("source", ""),
-                            "axes": ", ".join(g.get("axes", [])),
+                            "axes": ", ".join(a["label"] for a in g.get("axes", [])),
                             "members": g.get("member_count", 0),
                         }
                     )
@@ -1700,7 +1700,7 @@ def _write_payload(
                         "group_key": g.get("key", ""),
                         "label": g.get("label", ""),
                         "source": g.get("source", ""),
-                        "axes": ", ".join(g.get("axes", [])),
+                        "axes": ", ".join(a["label"] for a in g.get("axes", [])),
                         "members": g.get("member_count", 0),
                     }
                 )

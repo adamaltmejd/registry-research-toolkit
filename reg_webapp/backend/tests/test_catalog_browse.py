@@ -195,7 +195,8 @@ def test_register_node_carries_concept_groups(client):
     group = body["groups"][0]
     assert group["key"] == "ink"
     assert group["source"] == "token"
-    assert group["axes"] == ["month"]
+    # #819: axes carry the stable name + authored label ('månad'), not a bare key.
+    assert group["axes"] == [{"name": "month", "label": "månad"}]
     assert [m["fqid"] for m in group["members"]] == [
         "scb/rams/inkjan",
         "scb/rams/inkfeb",
@@ -233,7 +234,7 @@ def test_group_route_returns_concept_group_node(client):
     assert body["register"] == "rams"
     assert body["key"] == "ink"
     assert body["source"] == "token"
-    assert body["axes"] == ["month"]
+    assert body["axes"] == [{"name": "month", "label": "månad"}]
     assert [m["fqid"] for m in body["members"]] == [
         "scb/rams/inkjan",
         "scb/rams/inkfeb",
@@ -272,6 +273,109 @@ def test_group_route_carries_per_member_coverage(client):
     body = client.get("/api/catalog/group/scb/rams/ink").json()
     for member in body["members"]:
         assert "coverage" in member
+
+
+def test_group_route_representation_members_per_column_coverage(catalog_db):
+    """#819: two representation members sharing ONE variable (e.g. CDISP 1968– vs
+    CDISP5 2020–) must show DIFFERENT coverage — each its per-column window, not the
+    variable's union span. Seeds a `disp` variable on scb/rams with two delivery
+    columns (CDISP wide, CDISP5 narrow), then a representation group whose members
+    both point at that variable but carry distinct `delivery_column_name`s."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (950, 2, '950', 'Disponibel inkomst', 'disp')"
+        )
+        # Two per-column windows on the SAME variable: CDISP 1968–2024 (wide),
+        # CDISP5 2020–2024 (narrow). register_variant 20 ('standard') exists on rams.
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name) "
+            "VALUES (950, 20, '1968-01-01', '2024-12-31', 'int', 'CDISP')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name) "
+            "VALUES (950, 20, '2020-01-01', '2024-12-31', 'int', 'CDISP5')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (97, 'variable', 2, 'disprep', 'Disp', 'edge')"
+        )
+        # Every faceted axis is declared in concept_group_axis (#819, build invariant).
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (97, 'rep', 0, 'Representation')"
+        )
+        for col in ("CDISP", "CDISP5"):
+            cur = conn.execute(
+                "INSERT INTO concept_group_variable "
+                "(group_id, variable_id, delivery_column_name) VALUES (97, 950, ?)",
+                (col,),
+            )
+            conn.execute(
+                "INSERT INTO concept_group_variable_facet "
+                "(member_id, axis, value, label) VALUES (?, 'rep', ?, ?)",
+                (cur.lastrowid, col, col),
+            )
+    with TestClient(create_app()) as client:
+        body = client.get("/api/catalog/group/scb/rams/disprep").json()
+    by_col = {m["delivery_column"]: m["coverage"] for m in body["members"]}
+    # CDISP keeps the wide window; CDISP5 its OWN narrow 2020– window — NOT the
+    # variable's 1968– union (the bug this fix closes).
+    assert by_col["CDISP"]["coverage_from"] == "1968-01-01"
+    assert by_col["CDISP5"]["coverage_from"] == "2020-01-01"
+    assert by_col["CDISP5"]["coverage_to"] == "2024-12-31"
+
+
+def test_group_route_representation_member_without_state_row_has_no_coverage(
+    catalog_db,
+):
+    """#819: a representation member whose delivery column has NO `variable_state`
+    row gets `coverage = None`, NOT the variable's union — SCB keeps the full
+    `variable_alias` set apart from `variable_state`, so an alias-only column must
+    NOT borrow its sibling column's years (which would grey the slider wrongly).
+    Seeds one variable with a single CDISP state row (1968–2024), then a group whose
+    members are CDISP (delivered) and CDISP5 (alias-only, no state row)."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (951, 2, '951', 'Disponibel inkomst', 'disp')"
+        )
+        # Only CDISP has a state row; CDISP5 exists as a member but no per-column
+        # coverage window (the alias-without-state case the fix guards against).
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name) "
+            "VALUES (951, 20, '1968-01-01', '2024-12-31', 'int', 'CDISP')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (96, 'variable', 2, 'disprep2', 'Disp', 'edge')"
+        )
+        # Every faceted axis is declared in concept_group_axis (#819, build invariant).
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (96, 'rep', 0, 'Representation')"
+        )
+        for col in ("CDISP", "CDISP5"):
+            cur = conn.execute(
+                "INSERT INTO concept_group_variable "
+                "(group_id, variable_id, delivery_column_name) VALUES (96, 951, ?)",
+                (col,),
+            )
+            conn.execute(
+                "INSERT INTO concept_group_variable_facet "
+                "(member_id, axis, value, label) VALUES (?, 'rep', ?, ?)",
+                (cur.lastrowid, col, col),
+            )
+    with TestClient(create_app()) as client:
+        body = client.get("/api/catalog/group/scb/rams/disprep2").json()
+    by_col = {m["delivery_column"]: m["coverage"] for m in body["members"]}
+    # CDISP shows its window; CDISP5 (no state row) greys — coverage None, NOT the
+    # variable union (which would falsely deliver CDISP5 across 1968–2024).
+    assert by_col["CDISP"]["coverage_from"] == "1968-01-01"
+    assert by_col["CDISP5"] is None
 
 
 def test_group_route_unknown_key_404(client):

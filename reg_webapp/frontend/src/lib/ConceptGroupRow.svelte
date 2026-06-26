@@ -1,6 +1,15 @@
 <script lang="ts">
 import type { ConceptGroup } from "./api";
-import { axisValues, catalogHref, leafSlug, memberAt } from "./catalog";
+import ConceptGroupNavigator from "./ConceptGroupNavigator.svelte";
+import {
+  axisValues,
+  catalogHref,
+  distinctMemberCount,
+  leafSlug,
+  memberAt,
+  memberKey,
+  membersHaveUniqueCoords,
+} from "./catalog";
 import { Tag } from "./ui";
 
 // One folded concept-group row (#303): a <details> that expands to the facet
@@ -41,18 +50,45 @@ let {
 const asLink = $derived(href !== undefined && onpick === undefined);
 
 const axes = $derived(group.axes);
+// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
+// disposable-income family) renders through the shared ConceptGroupNavigator
+// instead — a matrix would collapse members that share the first two coords and
+// DROP the rest (e.g. the kapitalvinst incl/excl pair on one variable), which
+// also escape `ungridded` (they cover every declared axis). The navigator drops
+// NO member, in BOTH browse (links) and pick (`onpick` buttons) modes. The
+// matrix/chips/list path stays for ≤2 axes (no regression).
+//
+// #819 FIX C: >2 axes is not the only matrix-lossy shape. A 2-axis group can ALSO
+// carry two members on the SAME (row, col) coordinate — representation members
+// distinguished by `delivery_column` (e.g. `din8` = DIN83/DIN84/DIN86). The matrix
+// renders only the FIRST per cell (`memberAt`) and DROPS the rest, and they escape
+// `ungridded` (they cover every axis). So route through the navigator when a 2-axis
+// group has NON-UNIQUE coordinates too. The coordinate test is gated to
+// `axes.length === 2`: only the 2D matrix loses colliding members; a ≤1-axis group
+// renders a chip/list (every member shown) and an axis-less umbrella collides
+// trivially (all members map to the empty coord) but must keep its chips, not the
+// navigator.
+const useNavigator = $derived(
+  axes.length > 2 ||
+    (axes.length === 2 && !membersHaveUniqueCoords(group, axes)),
+);
 // Matrix orientation: first axis → rows, second axis → columns.
-const matrixRows = $derived(axes.length > 0 ? axisValues(group, axes[0]) : []);
-const matrixCols = $derived(axes.length > 1 ? axisValues(group, axes[1]) : []);
+const matrixRows = $derived(
+  axes.length > 0 ? axisValues(group, axes[0].name) : [],
+);
+const matrixCols = $derived(
+  axes.length > 1 ? axisValues(group, axes[1].name) : [],
+);
 // `axes` is the UNION across members — a curated family can mix absorbed
 // token-group members (month + rank) with single-variable members (rank
 // only). A member missing a facet on any axis never matches a matrix cell, so
 // it would silently vanish from the grid; render those below as a plain list
 // (keeps the rendered set == the "N {noun}" summary count).
 const ungridded = $derived(
-  axes.length >= 2
+  axes.length >= 2 && !useNavigator
     ? group.members.filter(
-        (m) => !axes.every((axis) => m.facets.some((f) => f.axis === axis)),
+        (m) =>
+          !axes.every((axis) => m.facets.some((f) => f.axis === axis.name)),
       )
     : [],
 );
@@ -92,10 +128,15 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
 
 {#snippet summaryLine()}
   <span class="label">{group.label}</span>
-  <!-- The count is a neutral chrome pill (Tag tone="neutral"): it's a quantity,
-       not a TYPE, so it must not borrow the categorical group hue (that's the
-       group-key badge's job below). -->
-  <span class="count"><Tag tone="neutral">{group.members.length} {noun}</Tag></span>
+  <!-- #819: count DISTINCT member FQIDs (the variable identity), not raw member
+       rows — a representation group carries several members on one variable (one
+       `fqid`, distinct delivery columns), so `members.length` overstates the
+       "N variables" readout. Distinct-by-fqid is a no-op for axis groups (each
+       facet value is its own variable) and umbrellas (distinct classifications).
+       The count is a neutral chrome pill (Tag tone="neutral"): a quantity, not a
+       TYPE, so it must not borrow the categorical group hue (the group-key badge
+       below owns that). -->
+  <span class="count"><Tag tone="neutral">{distinctMemberCount(group.members)} {noun}</Tag></span>
   <!-- The group key is a presentation anchor (slug stem / min-member slug /
        curated key per ConceptGroupSummary), NOT an addressable variable
        (#498). Deliberately NOT a <code>/.child-fqid: monospace + that class
@@ -116,7 +157,20 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
   <summary>
     {@render summaryLine()}
   </summary>
-  {#if axes.length >= 2}
+  {#if useNavigator}
+    <!-- #819: the >2-axis navigator (per-axis filters + a no-member-dropped list)
+         replaces the 2D matrix, which would collapse + drop members differing only
+         on a 3rd axis. The per-member action is `memberItem` (a browse link or a
+         pick button), so every visible member stays reachable / pickable. Keyed on
+         the group key so the navigator's filter state recreates per group row. -->
+    {#key group.key}
+      <ConceptGroupNavigator members={group.members} {axes}>
+        {#snippet member(m)}
+          {@render memberItem(m)}
+        {/snippet}
+      </ConceptGroupNavigator>
+    {/key}
+  {:else if axes.length >= 2}
     <table class="facet-matrix">
       <thead>
         <tr>
@@ -132,8 +186,8 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
             <th scope="row">{row.label}</th>
             {#each matrixCols as col (col.value)}
               {@const member = memberAt(group, [
-                { axis: axes[0], value: row.value },
-                { axis: axes[1], value: col.value },
+                { axis: axes[0].name, value: row.value },
+                { axis: axes[1].name, value: col.value },
               ])}
               <td>
                 {#if member && onpick}
@@ -162,14 +216,14 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
     </table>
     {#if ungridded.length > 0}
       <ul class="members">
-        {#each ungridded as member (member.fqid)}
+        {#each ungridded as member (memberKey(member))}
           <li>{@render memberItem(member)}</li>
         {/each}
       </ul>
     {/if}
   {:else if faceted}
     <ul class="facet-chips">
-      {#each group.members as member (member.fqid)}
+      {#each group.members as member (memberKey(member))}
         {@const facet = member.facets[0]}
         <li>
           {#if onpick}
@@ -196,7 +250,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
     </ul>
   {:else}
     <ul class="members">
-      {#each group.members as member (member.fqid)}
+      {#each group.members as member (memberKey(member))}
         <li>{@render memberItem(member)}</li>
       {/each}
     </ul>

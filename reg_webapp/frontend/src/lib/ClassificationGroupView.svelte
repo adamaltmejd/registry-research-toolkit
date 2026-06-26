@@ -4,7 +4,12 @@ import {
   getClassificationGroup,
 } from "./api";
 import { asyncResource } from "./async.svelte";
-import { catalogHref, DATA_BROWSER_LABEL, leafSlug } from "./catalog";
+import {
+  catalogHref,
+  DATA_BROWSER_LABEL,
+  leafSlug,
+  memberKey,
+} from "./catalog";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 
@@ -68,7 +73,7 @@ function memberLabel(
         <dd><code>{node.key}</code></dd>
         {#if node.axes.length > 0}
           <dt>Facets</dt>
-          <dd>{node.axes.join(", ")}</dd>
+          <dd>{node.axes.map((a) => a.label).join(", ")}</dd>
         {/if}
         <dt>Source</dt>
         <dd>{node.source}</dd>
@@ -84,7 +89,7 @@ function memberLabel(
     <section class="member-selector" aria-labelledby="members-heading">
       <h3 id="members-heading">Members</h3>
       <ul class="facet-chips">
-        {#each node.members as member (member.fqid)}
+        {#each node.members as member (memberKey(member))}
           <li>
             <a class="chip" href={catalogHref(member.fqid)} title={member.fqid}>
               {memberLabel(member)}

@@ -515,7 +515,7 @@ describe("CatalogPicker", () => {
         key: "ink",
         label: "Inkomst per månad",
         source: "token",
-        axes: ["month"],
+        axes: [{ name: "month", label: "month" }],
         members: [
           {
             fqid: "scb/lisa/inkjan",
@@ -603,7 +603,7 @@ describe("CatalogPicker", () => {
         key: "ink",
         label: "Inkomst per månad",
         source: "token",
-        axes: ["month"],
+        axes: [{ name: "month", label: "month" }],
         members: [
           {
             fqid: "scb/lisa/inkjan",

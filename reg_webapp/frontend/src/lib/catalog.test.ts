@@ -23,6 +23,7 @@ import {
   matchesFilter,
   memberCoverageUnion,
   memberGroupLink,
+  memberKey,
   memberQualifier,
   narrowCatalogNode,
   nodeLabel,
@@ -36,6 +37,13 @@ import {
   YEARLESS_VALID_FROM,
 } from "./catalog";
 import type { Route } from "./router.svelte";
+
+// #819: a group's axis is now `{name, label}`. Tests key on the stable name and
+// don't assert the label here, so default the label to the name. Wraps the bare
+// axis-name lists the helper tests build.
+function ax(...names: string[]): { name: string; label: string }[] {
+  return names.map((name) => ({ name, label: name }));
+}
 
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
 function state(over: Partial<VariableStateModel>): VariableStateModel {
@@ -195,8 +203,8 @@ describe("axisNoun", () => {
     // Single-axis token groups pluralize their axis (never a re-hardcoded
     // "vintages"). Classification umbrellas are now AXIS-LESS (`axes: []`, #516)
     // → the empty-axis fallback "members" is the umbrella's member noun.
-    expect(axisNoun(["dimension"])).toBe("dimensions");
-    expect(axisNoun(["vintage"])).toBe("vintages");
+    expect(axisNoun(ax("dimension"))).toBe("dimensions");
+    expect(axisNoun(ax("vintage"))).toBe("vintages");
     expect(axisNoun([])).toBe("members"); // no axis (umbrella) → generic fallback
   });
 });
@@ -723,9 +731,11 @@ import type { BindingGroupRef, ConceptGroup } from "./api";
 import {
   axisValues,
   countFoldedMembers,
+  distinctMemberCount,
   foldGroupedRows,
   groupFilterKeys,
   memberAt,
+  membersHaveUniqueCoords,
 } from "./catalog";
 
 function group(over: Partial<ConceptGroup>): ConceptGroup {
@@ -733,7 +743,7 @@ function group(over: Partial<ConceptGroup>): ConceptGroup {
     key: "ink",
     label: "Inkomst",
     source: "token",
-    axes: ["month"],
+    axes: ax("month"),
     members: [
       {
         fqid: "scb/lisa/inkjan",
@@ -773,17 +783,74 @@ describe("foldGroupedRows", () => {
 });
 
 describe("groupFilterKeys", () => {
-  it("carries the label/key plus every member's name, FQID, and leaf slug (#322, #674)", () => {
+  it("carries the label/key plus every member's name, FQID, leaf slug, delivery column, and facet label/value (#322, #674, #819)", () => {
     expect(groupFilterKeys(group({}))).toEqual([
       "Inkomst",
       "ink",
+      // januari member: name, fqid, leaf slug, (no delivery column), facet label+value
       "Inkomst i januari",
       "scb/lisa/inkjan",
       "inkjan",
+      undefined,
+      "januari",
+      "01",
+      // februari member
       "Inkomst i februari",
       "scb/lisa/inkfeb",
       "inkfeb",
+      undefined,
+      "februari",
+      "02",
     ]);
+  });
+
+  it("indexes a representation member's delivery column + facet label so a column/label hunt surfaces the folded group (#819 FIX D)", () => {
+    // The iot disponibel-inkomst case: two members on ONE variable distinguished
+    // by delivery_column, each carrying a curated kapitalvinst facet. A
+    // target-hunt for the column `CDISP5` OR the human label "Exkl. kapitalvinst"
+    // must match the group (neither is in the shared name/fqid).
+    const repGroup = group({
+      key: "disp",
+      label: "Disponibel inkomst",
+      axes: ax("kapitalvinst"),
+      members: [
+        {
+          fqid: "scb/iot/disp",
+          name: "Disponibel inkomst",
+          delivery_column: "CDISP",
+          facets: [
+            {
+              axis: "kapitalvinst",
+              value: "inkl",
+              label: "Inkl. kapitalvinst",
+            },
+          ],
+        },
+        {
+          fqid: "scb/iot/disp",
+          name: "Disponibel inkomst",
+          delivery_column: "CDISP5",
+          facets: [
+            {
+              axis: "kapitalvinst",
+              value: "exkl",
+              label: "Exkl. kapitalvinst",
+            },
+          ],
+        },
+      ],
+    } as unknown as Partial<ConceptGroup>);
+    const keys = groupFilterKeys(repGroup);
+    expect(keys).toContain("CDISP5");
+    expect(keys).toContain("Exkl. kapitalvinst");
+    // And rankFilter actually surfaces the group on those needles.
+    const rows = [{ id: "other" }, { id: "disp-group", group: repGroup }];
+    const keysOf = (r: (typeof rows)[number]): (string | null | undefined)[] =>
+      "group" in r && r.group ? groupFilterKeys(r.group) : ["unrelated"];
+    expect(rankFilter(rows, "CDISP5", keysOf)[0].id).toBe("disp-group");
+    expect(rankFilter(rows, "exkl. kapitalvinst", keysOf)[0].id).toBe(
+      "disp-group",
+    );
   });
 
   it("ranks the folding group at exact/prefix tier on a member-slug needle (#674)", () => {
@@ -805,7 +872,7 @@ describe("groupFilterKeys", () => {
 
 describe("axisValues / memberAt", () => {
   const matrix = group({
-    axes: ["month", "rank"],
+    axes: ax("month", "rank"),
     members: [
       {
         fqid: "scb/lisa/agi1inkjan",
@@ -862,11 +929,91 @@ describe("axisValues / memberAt", () => {
   });
 });
 
+describe("membersHaveUniqueCoords (#819 FIX C)", () => {
+  it("is true when every member occupies a distinct coordinate (the matrix is lossless)", () => {
+    const matrix = group({
+      axes: ax("month", "rank"),
+      members: [
+        {
+          fqid: "scb/lisa/a",
+          name: null,
+          facets: [
+            { axis: "month", value: "01", label: "jan" },
+            { axis: "rank", value: "1", label: "1" },
+          ],
+        },
+        {
+          fqid: "scb/lisa/b",
+          name: null,
+          facets: [
+            { axis: "month", value: "01", label: "jan" },
+            { axis: "rank", value: "2", label: "2" },
+          ],
+        },
+      ],
+    });
+    expect(membersHaveUniqueCoords(matrix, ax("month", "rank"))).toBe(true);
+  });
+
+  it("is false when two members share a full 2-axis coordinate (the matrix would drop one)", () => {
+    // Representation members: same (month, rank) coords, distinguished only by
+    // delivery_column — the exact shape FIX C must route through the navigator.
+    const collide = group({
+      axes: ax("month", "rank"),
+      members: [
+        {
+          fqid: "scb/iot/din8",
+          name: null,
+          delivery_column: "DIN83",
+          facets: [
+            { axis: "month", value: "01", label: "jan" },
+            { axis: "rank", value: "1", label: "1" },
+          ],
+        },
+        {
+          fqid: "scb/iot/din8",
+          name: null,
+          delivery_column: "DIN84",
+          facets: [
+            { axis: "month", value: "01", label: "jan" },
+            { axis: "rank", value: "1", label: "1" },
+          ],
+        },
+      ],
+    } as unknown as Partial<ConceptGroup>);
+    expect(membersHaveUniqueCoords(collide, ax("month", "rank"))).toBe(false);
+  });
+
+  it("does not alias distinct vectors by concatenation (separator safety)", () => {
+    // ["ab",""] vs ["a","b"] both concatenate to "ab" without a separator — must
+    // stay distinct so a real collision isn't masked / a non-collision isn't faked.
+    const g = group({
+      axes: ax("x", "y"),
+      members: [
+        {
+          fqid: "scb/a/1",
+          name: null,
+          facets: [{ axis: "x", value: "ab", label: "ab" }],
+        },
+        {
+          fqid: "scb/a/2",
+          name: null,
+          facets: [
+            { axis: "x", value: "a", label: "a" },
+            { axis: "y", value: "b", label: "b" },
+          ],
+        },
+      ],
+    } as unknown as Partial<ConceptGroup>);
+    expect(membersHaveUniqueCoords(g, ax("x", "y"))).toBe(true);
+  });
+});
+
 describe("memberQualifier (#670)", () => {
   const naringsgren = group({
     key: "naringsgren",
     label: "Näringsgren, största förvärvskälla",
-    axes: ["source", "edition"],
+    axes: ax("source", "edition"),
     members: [
       {
         fqid: "scb/lisa/agi1astsni2007g",
@@ -948,7 +1095,7 @@ describe("memberQualifier (#670)", () => {
     // group's facets lead.
     const other = group({
       key: "other",
-      axes: ["level"],
+      axes: ax("level"),
       members: [
         {
           fqid: "scb/lisa/agi1astsni2007g",
@@ -973,6 +1120,65 @@ describe("memberQualifier (#670)", () => {
         "other",
       ),
     ).toEqual({ text: "5-digit", kind: "facets" });
+  });
+});
+
+describe("memberKey (#819 composite member key)", () => {
+  it("composes (fqid, delivery_column) so two reps of one variable differ", () => {
+    // Two members on one variable (two delivery columns) must yield DISTINCT keys
+    // — a fqid-only key would collide and Svelte would drop the second.
+    const a = { fqid: "scb/iot/dispink", delivery_column: "dispink_inkl" };
+    const b = { fqid: "scb/iot/dispink", delivery_column: "dispink_exkl" };
+    expect(memberKey(a)).not.toBe(memberKey(b));
+    expect(memberKey(a)).toBe("scb/iot/dispink::dispink_inkl");
+  });
+
+  it("treats a null/absent delivery_column as the empty discriminator", () => {
+    // A whole-variable member (delivery_column null) keys stably on its fqid;
+    // null and undefined map to the same empty discriminator.
+    expect(memberKey({ fqid: "scb/lisa/kon", delivery_column: null })).toBe(
+      "scb/lisa/kon::",
+    );
+    expect(memberKey({ fqid: "scb/lisa/kon" })).toBe("scb/lisa/kon::");
+  });
+});
+
+describe("memberQualifier delivery_column disambiguation (#819)", () => {
+  // One variable, two delivery columns (two representations) in one group — the
+  // qualifier must resolve to the column the caller names, and default to the
+  // FIRST representation when the caller knows no column (the binding-leaf case).
+  const twoReps = group({
+    key: "disponibel-inkomst",
+    axes: ax("kapitalvinst"),
+    members: [
+      {
+        fqid: "scb/iot/dispink",
+        name: "Disponibel inkomst",
+        delivery_column: "dispink_inkl",
+        facets: [{ axis: "kapitalvinst", value: "inkl", label: "Inkl. kv" }],
+      },
+      {
+        fqid: "scb/iot/dispink",
+        name: "Disponibel inkomst",
+        delivery_column: "dispink_exkl",
+        facets: [{ axis: "kapitalvinst", value: "exkl", label: "Exkl. kv" }],
+      },
+    ],
+  } as unknown as Partial<ConceptGroup>);
+
+  it("resolves the named delivery_column's facets", () => {
+    expect(
+      memberQualifier([twoReps], "scb/iot/dispink", null, "dispink_exkl"),
+    ).toEqual({ text: "Exkl. kv", kind: "facets" });
+  });
+
+  it("defaults to the first representation when no delivery_column is given", () => {
+    // The documented default: a binding-leaf page addresses a whole variable, so
+    // it knows no column — the first member's facets are the representative.
+    expect(memberQualifier([twoReps], "scb/iot/dispink")).toEqual({
+      text: "Inkl. kv",
+      kind: "facets",
+    });
   });
 });
 
@@ -1037,7 +1243,7 @@ describe("foldGroupedRows order + countFoldedMembers", () => {
     const lkf = group({
       key: "lkf",
       label: "LKF",
-      axes: ["vintage"],
+      axes: ax("vintage"),
       members: [
         { fqid: "class/lkf1980", name: null, facets: [] },
         { fqid: "class/lkf2020", name: null, facets: [] },
@@ -1066,6 +1272,32 @@ describe("foldGroupedRows order + countFoldedMembers", () => {
       [group({})],
     );
     expect(countFoldedMembers(rows)).toBe(3); // 1 leaf + 2 grouped members
+  });
+
+  it("counts a representation group's members in DISTINCT-variable units (#819)", () => {
+    // Two representation members on ONE variable (one fqid, distinct delivery
+    // columns) — the group must count as 1 variable, not 2 rows.
+    const rep = group({
+      key: "disprep",
+      members: [
+        {
+          fqid: "scb/iot/disponibel-inkomst",
+          name: "Disp. inkomst (CDISP)",
+          facets: [{ axis: "rep", value: "CDISP", label: "CDISP" }],
+        },
+        {
+          fqid: "scb/iot/disponibel-inkomst",
+          name: "Disp. inkomst (CDISP5)",
+          facets: [{ axis: "rep", value: "CDISP5", label: "CDISP5" }],
+        },
+      ],
+    });
+    expect(distinctMemberCount(rep.members)).toBe(1);
+    const rows = foldGroupedRows(
+      [{ fqid: "scb/iot/disponibel-inkomst" }],
+      [rep],
+    );
+    expect(countFoldedMembers(rows)).toBe(1); // 2 representation rows = 1 variable
   });
 });
 
