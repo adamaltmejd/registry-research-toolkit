@@ -62,4 +62,30 @@ describe("Button", () => {
     btn?.click();
     expect(clicked).toBe(0);
   });
+
+  it("forwards native attributes onto the element (Fix 3)", async () => {
+    // Migrated callers need aria-label (icon buttons), title, etc. — `...rest`
+    // spreads them onto Bits UI's Button.Root.
+    const { container } = render(Button, {
+      "aria-label": "Close panel",
+      title: "Close",
+      children: label("×"),
+    });
+    const btn = container.querySelector("button");
+    expect(btn).toHaveAttribute("aria-label", "Close panel");
+    expect(btn).toHaveAttribute("title", "Close");
+  });
+
+  it("merges a caller class with the variant/size hook (Fix 3)", async () => {
+    const { container } = render(Button, {
+      variant: "ghost",
+      class: "my-layout",
+      children: label("Go"),
+    });
+    const btn = container.querySelector("button");
+    // Both the caller class AND the foundational ui-btn hook survive.
+    expect(btn).toHaveClass("my-layout");
+    expect(btn).toHaveClass("ui-btn");
+    expect(btn).toHaveClass("variant-ghost");
+  });
 });

@@ -19,5 +19,7 @@ export type {
   ButtonVariant,
   Column,
   KeyValueRow,
+  PlainTone,
+  StatusTone,
   TagTone,
 } from "./types";

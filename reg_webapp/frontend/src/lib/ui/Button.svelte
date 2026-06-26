@@ -1,6 +1,10 @@
 <script lang="ts">
 import { Button } from "bits-ui";
 import type { Snippet } from "svelte";
+import type {
+  HTMLAnchorAttributes,
+  HTMLButtonAttributes,
+} from "svelte/elements";
 import type { ButtonSize, ButtonVariant } from "./types";
 
 // The shared button (#804). Behavior + polymorphism come from Bits UI's
@@ -13,14 +17,30 @@ import type { ButtonSize, ButtonVariant } from "./types";
 // button branch. The brand accent paints `primary` ONLY (DESIGN.md accent-vs-
 // status: accent is interactive chrome, never status — there's no "success"
 // button variant; `danger` is its own cool error stop).
+//
+// `...rest` threads any native HTML attribute through to the rendered element:
+// icon-button `aria-label`, `title`, form `form`/`name`, link-only `target`/
+// `rel`/`download`, etc. A caller `class` merges WITH the variant/size hook
+// (doesn't clobber it). The explicit `href`/`type`/`disabled`/`onclick` stay
+// first-class so Bits UI's anchor-vs-button union narrows on `href`/`type`.
 
-interface Props {
+// HTMLAnchorAttributes ∪ HTMLButtonAttributes covers both branches; the explicit
+// props are stripped so a caller can't pass them twice (and `class` is merged via
+// `className`, not spread raw).
+type RestProps = Omit<
+  HTMLAnchorAttributes & HTMLButtonAttributes,
+  "href" | "type" | "disabled" | "onclick" | "class"
+>;
+
+interface Props extends RestProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   href?: string;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   onclick?: (event: MouseEvent) => void;
+  /** Merged with the variant/size hook, not clobbering it. */
+  class?: string;
   children: Snippet;
 }
 
@@ -31,23 +51,34 @@ let {
   type,
   disabled,
   onclick,
+  class: className,
   children,
+  ...rest
 }: Props = $props();
 
 // The variant/size formula in one place — shared by both the anchor and button
 // branches. `ui-btn` (not a generic `.btn`) namespaces the global style hook so a
 // stray `class="btn"` elsewhere can't inherit this foundational primitive's CSS.
-const className = $derived(`ui-btn variant-${variant} size-${size}`);
+// A caller `class` is appended so call sites can add layout/spacing hooks.
+const classes = $derived(
+  `ui-btn variant-${variant} size-${size}${className ? ` ${className}` : ""}`,
+);
 </script>
 
 <!-- Bits UI narrows on the presence of `href` (anchor) vs `type` (button); pass
      only the one that applies so its union type resolves. -->
 {#if href}
-  <Button.Root {href} {disabled} class={className}>
+  <Button.Root {href} {disabled} class={classes} {...rest}>
     {@render children()}
   </Button.Root>
 {:else}
-  <Button.Root type={type ?? "button"} {disabled} {onclick} class={className}>
+  <Button.Root
+    type={type ?? "button"}
+    {disabled}
+    {onclick}
+    class={classes}
+    {...rest}
+  >
     {@render children()}
   </Button.Root>
 {/if}

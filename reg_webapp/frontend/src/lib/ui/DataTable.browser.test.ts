@@ -1,8 +1,10 @@
+import type { Component, Snippet } from "svelte";
 import { createRawSnippet } from "svelte";
 import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import DataTable from "./DataTable.svelte";
+import DataTableInterfaceRowHarness from "./DataTableInterfaceRowHarness.svelte";
 import type { Column } from "./types";
 
 // DataTable: the load-bearing hooks are (1) micro-label scope="col" headers,
@@ -11,13 +13,29 @@ import type { Column } from "./types";
 // selectable rows with aria-selected + the selected style — vs a plain static
 // table (no grid role, no row tabindex) when selection props are absent.
 
-// Fixtures are typed against the component's DEFAULT generic instantiation
-// (`Record<string, unknown>`): vitest-browser-svelte's `render(Component, props)`
-// can't infer the `Row` generic from the props (unlike `<DataTable .. />` in a
-// .svelte file, where Svelte infers it), so the props must match the constraint
-// default exactly. A concrete row interface would force unsound variance casts
-// on the `cell`/`getRowId`/`onselect` positions; the base type assigns cleanly.
-type Row = Record<string, unknown>;
+// Row fixtures are typed concretely. vitest-browser-svelte's `render(Component,
+// props)` can't infer the `Row` generic from the props (unlike `<DataTable .. />`
+// in a .svelte file, where Svelte infers it) — `render` fixes `Row` to the
+// component's DEFAULT instantiation (`object`, whose `keyof & string` is `never`),
+// so typed props can't satisfy it. `renderTable` localizes the one unavoidable
+// component cast to instantiate `Row` per call; the `props` argument stays fully
+// typed against the concrete row. The `<DataTable .. />`-shape callsites the
+// downstream children use ARE inferred + type-checked — the proof is
+// DataTableInterfaceRowHarness.svelte, a real interface-row callsite (Fix 1).
+type Row = { code: string; label: string; count?: number };
+
+interface TableProps<R extends object> {
+  columns: Column<R>[];
+  rows: R[];
+  cell?: Snippet<[R, Column<R>]>;
+  getRowId?: (row: R) => string;
+  selectedId?: string;
+  onselect?: (row: R) => void;
+}
+
+function renderTable<R extends object>(props: TableProps<R>) {
+  return render(DataTable as unknown as Component<TableProps<R>>, props);
+}
 
 const columns: Column<Row>[] = [
   { key: "code", label: "Code", mono: true },
@@ -32,7 +50,7 @@ const rows: Row[] = [
 
 describe("DataTable", () => {
   it("renders micro-label column headers with scope", async () => {
-    const { container } = render(DataTable, { columns, rows });
+    const { container } = renderTable({ columns, rows });
     const headers = container.querySelectorAll("thead th");
     expect(headers).toHaveLength(3);
     for (const th of headers) {
@@ -44,7 +62,7 @@ describe("DataTable", () => {
   });
 
   it("right-aligns + mono-faces a numeric column", async () => {
-    const { container } = render(DataTable, { columns, rows });
+    const { container } = renderTable({ columns, rows });
     // The numeric "Count" cell (3rd col) of the first data row.
     const firstRowCells = container.querySelectorAll("tbody tr:first-child td");
     const countCell = firstRowCells[2];
@@ -53,7 +71,7 @@ describe("DataTable", () => {
   });
 
   it("renders cell values by column key by default", async () => {
-    await render(DataTable, { columns, rows });
+    await renderTable({ columns, rows });
     // exact: "Man" is a substring of "Woman".
     await expect.element(page.getByText("Man", { exact: true })).toBeVisible();
     await expect.element(page.getByText("120")).toBeVisible();
@@ -63,14 +81,14 @@ describe("DataTable", () => {
     const cell = createRawSnippet(() => ({
       render: () => "<span>custom</span>",
     }));
-    const { container } = render(DataTable, { columns, rows, cell });
+    const { container } = renderTable({ columns, rows, cell });
     // Every cell routes through the snippet → no raw value text.
     expect(container.querySelectorAll("tbody td").length).toBeGreaterThan(0);
     await expect.element(page.getByText("custom").first()).toBeVisible();
   });
 
   it("renders a plain static table without selection props", async () => {
-    const { container } = render(DataTable, { columns, rows });
+    const { container } = renderTable({ columns, rows });
     const table = container.querySelector("table");
     expect(table).not.toHaveAttribute("role");
     const tr = container.querySelector("tbody tr");
@@ -81,7 +99,7 @@ describe("DataTable", () => {
 
   it("makes rows selectable grid-rows when selection props are passed", async () => {
     let selected = "";
-    const { container } = render(DataTable, {
+    const { container } = renderTable({
       columns,
       rows,
       getRowId: (r: Row) => String(r.code),
@@ -104,5 +122,51 @@ describe("DataTable", () => {
     // Click activates onselect.
     (trs[1] as HTMLElement).click();
     expect(selected).toBe("2");
+  });
+
+  it("compiles + renders interface-typed rows (Fix 1: Row extends object)", async () => {
+    // The harness is a real `<DataTable .. />` callsite whose `Row` is a named
+    // `interface` (no implicit string index signature). svelte-check enforces the
+    // component's `Row extends object` constraint on that callsite — which an
+    // interface satisfies but `Row extends Record<string, unknown>` did NOT, so
+    // this whole suite would fail `bun run check` if Fix 1 regressed. (renderTable
+    // can't carry that proof: it casts the component, bypassing the constraint.)
+    render(DataTableInterfaceRowHarness, {});
+    await expect.element(page.getByText("Stockholm")).toBeVisible();
+    await expect.element(page.getByText("01")).toBeVisible();
+  });
+
+  it("does not hijack selection from an interactive cell control (Fix 2)", async () => {
+    // A `cell` snippet that renders a <button>: a click on the button must NOT
+    // bubble into the row's onselect — the nested control owns its own activation.
+    const cell = createRawSnippet<[Row, Column<Row>]>((_getRow, getCol) => ({
+      render: () => {
+        const col = getCol();
+        // Render a real <button> in the label column, plain text elsewhere.
+        return col.key === "label"
+          ? '<button type="button">open</button>'
+          : "<span>plain</span>";
+      },
+    }));
+    let selected = "";
+    const { container } = renderTable({
+      columns,
+      rows,
+      cell,
+      getRowId: (r: Row) => String(r.code),
+      selectedId: "1",
+      onselect: (r: Row) => {
+        selected = String(r.code);
+      },
+    });
+    const firstRow = container.querySelector("tbody tr") as HTMLElement;
+    // Click the nested button → no row selection.
+    const btn = firstRow.querySelector("button") as HTMLButtonElement;
+    btn.click();
+    expect(selected).toBe("");
+    // Click a plain (non-interactive) cell → row selection still fires.
+    const plainCell = firstRow.querySelector("td:last-child") as HTMLElement;
+    plainCell.click();
+    expect(selected).toBe("1");
   });
 });

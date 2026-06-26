@@ -22,11 +22,17 @@ let { items }: Props = $props();
 <nav aria-label="Breadcrumb" class="breadcrumbs">
   <ol>
     {#each items as item, i (i)}
+      {@const isLast = i === items.length - 1}
       <li>
-        {#if item.href && i < items.length - 1}
+        {#if item.href && !isLast}
           <a href={item.href}>{item.label}</a>
         {:else}
-          <span aria-current="page" class="current">{item.label}</span>
+          <!-- Only the LAST item is the current page. An intentionally-plain
+               non-final item (no href) is a plain span with NO aria-current, so a
+               second "current page" can't leak into the a11y tree. -->
+          <span aria-current={isLast ? "page" : undefined} class:current={isLast}>
+            {item.label}
+          </span>
         {/if}
       </li>
     {/each}

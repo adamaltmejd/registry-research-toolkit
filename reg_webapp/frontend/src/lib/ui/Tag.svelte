@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
-import type { TagTone } from "./types";
+import type { PlainTone, StatusTone } from "./types";
 
 // A small inline label (#804). One component, `tone`-driven, covering the three
 // disjoint color sub-systems (DESIGN.md → Color): brand chrome (neutral/accent),
@@ -10,7 +10,9 @@ import type { TagTone } from "./types";
 // Status tones pair with a GLYPH, never hue alone (the accent-vs-status rule):
 // status callers MUST pass a leading-glyph snippet (✕ ▲ i ✓ — see DESIGN.md).
 // The component can't synthesize one (the glyph is caller-domain), so it just
-// renders the slot ahead of the label; categorical/chrome tones omit it.
+// renders the slot ahead of the label; categorical/chrome tones omit it. The
+// `Props` union makes `glyph` REQUIRED at the type level for a status `tone` and
+// optional otherwise, so a color-only status tag won't compile.
 //
 // a11y: status meaning must ALSO be carried by the label text or surrounding
 // context — the tone (color) and the glyph (`aria-hidden`) are visual-only, so an
@@ -20,13 +22,12 @@ import type { TagTone } from "./types";
 // A single component (not a separate Badge): a count/status pill and a type tag
 // differ only by tone + glyph, so a `tone` prop spans both with no semantic split.
 
-interface Props {
-  tone?: TagTone;
-  mono?: boolean;
-  /** Leading glyph (required for status tones; ignored visually otherwise). */
-  glyph?: Snippet;
-  children: Snippet;
-}
+// Discriminated on `tone`: a status tone REQUIRES `glyph`, a plain tone makes it
+// optional. `tone` defaults to "neutral" (a plain tone) when omitted.
+type Props = { mono?: boolean; children: Snippet } & (
+  | { tone?: PlainTone; glyph?: Snippet }
+  | { tone: StatusTone; glyph: Snippet }
+);
 
 let { tone = "neutral", mono = false, glyph, children }: Props = $props();
 </script>

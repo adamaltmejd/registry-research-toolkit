@@ -1,4 +1,4 @@
-<script lang="ts" generics="Row extends Record<string, unknown>">
+<script lang="ts" generics="Row extends object">
 import type { Snippet } from "svelte";
 import type { Column } from "./types";
 
@@ -37,13 +37,38 @@ function alignOf(col: Column<Row>): "start" | "end" {
   return col.align ?? (col.numeric ? "end" : "start");
 }
 
+// A `cell` snippet can render its own link/button. A click (or Enter/Space) on
+// that nested control bubbles to the row, so bail when the event originated from
+// an interactive descendant rather than the row itself — otherwise selecting the
+// row would hijack the control's own activation.
+const INTERACTIVE =
+  'a[href], button, input, select, textarea, label, [role="button"], [tabindex]';
+
+function fromInteractiveChild(
+  event: Event,
+  rowEl: EventTarget | null,
+): boolean {
+  const target = event.target;
+  if (!(target instanceof Element)) return false;
+  const hit = target.closest(INTERACTIVE);
+  // The row itself is a tabindex element; only a DESCENDANT control should bail.
+  return hit !== null && hit !== rowEl;
+}
+
+function onrowclick(event: MouseEvent, row: Row): void {
+  if (fromInteractiveChild(event, event.currentTarget)) return;
+  onselect?.(row);
+}
+
 function onkeydown(event: KeyboardEvent, row: Row): void {
   // Enter / Space activate the selected-row; other keys fall through (no roving
   // tabindex — see the component note).
-  if (event.key === "Enter" || event.key === " ") {
-    event.preventDefault();
-    onselect?.(row);
-  }
+  if (event.key !== "Enter" && event.key !== " ") return;
+  // Don't hijack a nested control's own keyboard activation (e.g. focus on a cell
+  // <button>); only activate when the row element itself is the event source.
+  if (fromInteractiveChild(event, event.currentTarget)) return;
+  event.preventDefault();
+  onselect?.(row);
 }
 </script>
 
@@ -76,7 +101,7 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
         class:selected={isSelected}
         tabindex={selectable ? 0 : undefined}
         aria-selected={selectable ? isSelected : undefined}
-        onclick={selectable ? () => onselect?.(row) : undefined}
+        onclick={selectable ? (e) => onrowclick(e, row) : undefined}
         onkeydown={selectable ? (e) => onkeydown(e, row) : undefined}
       >
         {#each columns as col (col.key)}

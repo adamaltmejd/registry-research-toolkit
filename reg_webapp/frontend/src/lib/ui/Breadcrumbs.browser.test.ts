@@ -36,4 +36,24 @@ describe("Breadcrumbs", () => {
     expect(current).not.toBeNull();
     expect(current?.textContent).toBe("LISA");
   });
+
+  it("treats only the last item as current — a plain non-final item is not (Fix 6)", async () => {
+    // A middle item without href is an intentionally-plain span; it must NOT also
+    // expose aria-current="page", or two "current page" nodes leak into a11y.
+    const withPlainMiddle = [
+      { label: "Catalog", href: "/catalog" },
+      { label: "SCB" }, // no href, non-final → plain span, no aria-current
+      { label: "LISA", href: "/catalog/scb/lisa" },
+    ];
+    const { container } = render(Breadcrumbs, { items: withPlainMiddle });
+    // Exactly one current node, and it's the last item.
+    const currents = container.querySelectorAll('[aria-current="page"]');
+    expect(currents).toHaveLength(1);
+    expect(currents[0]?.textContent?.trim()).toBe("LISA");
+    // The non-final no-href item rendered as a plain span without aria-current.
+    const spans = container.querySelectorAll("li span");
+    const scb = Array.from(spans).find((s) => s.textContent?.trim() === "SCB");
+    expect(scb).not.toBeUndefined();
+    expect(scb).not.toHaveAttribute("aria-current");
+  });
 });

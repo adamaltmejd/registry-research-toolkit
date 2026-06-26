@@ -5,8 +5,9 @@ import { render } from "vitest-browser-svelte";
 import KeyValue from "./KeyValue.svelte";
 
 // KeyValue: the contract is (1) a <dl> of term/description rows, (2) the per-row
-// mono flag mono-faces an identifier value, (3) a snippet overrides the rows
-// form for richer values.
+// mono flag mono-faces an identifier value, (3) the per-row `value` snippet
+// renders rich content INSIDE the component-owned `.kv-row dd` (so it stays
+// structurally owned/styled, unlike a caller-authored whole-row escape hatch).
 describe("KeyValue", () => {
   it("renders label/value rows as a description list", async () => {
     await render(KeyValue, {
@@ -44,13 +45,25 @@ describe("KeyValue", () => {
     await expect.element(page.getByText("string")).toBeVisible();
   });
 
-  it("renders a children snippet instead of rows when provided", async () => {
-    const children = createRawSnippet(() => ({
-      render: () => '<div class="kv-row">custom</div>',
+  it("renders rich content via the value snippet inside the component-owned dd (Fix 4)", async () => {
+    // The per-row `value` snippet replaces only the <dd> content; KeyValue keeps
+    // owning the `.kv-row`/<dt>/<dd> structure, so a rich value (a Tag, a link)
+    // stays inside the scoped layout instead of an unstyled caller-authored row.
+    const value = createRawSnippet<[{ label: string }]>((getRow) => ({
+      render: () => `<span class="rich">${getRow().label}-tag</span>`,
     }));
-    await render(KeyValue, { rows: [{ label: "x", value: "y" }], children });
-    await expect.element(page.getByText("custom")).toBeVisible();
-    // rows are ignored when a snippet is passed.
-    expect(page.getByText("x").query()).toBeNull();
+    const { container } = render(KeyValue, {
+      rows: [{ label: "Status" }],
+      value,
+    });
+    // The rich span is structurally owned: it lives inside `.kv-row dd`.
+    const rich = container.querySelector(".kv-row dd .rich");
+    expect(rich).not.toBeNull();
+    expect(rich?.textContent).toBe("Status-tag");
+    // The component still owns the term (exact: "Status" is a substring of the
+    // rich value "Status-tag").
+    await expect
+      .element(page.getByText("Status", { exact: true }))
+      .toBeVisible();
   });
 });
