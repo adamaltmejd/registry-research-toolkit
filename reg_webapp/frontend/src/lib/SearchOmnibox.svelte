@@ -84,7 +84,10 @@ let inputEl = $state<HTMLInputElement | null>(null);
 // in some browsers) from also firing.
 onMount(() => {
   const onKey = (e: KeyboardEvent) => {
-    if (e.key !== "k" || e.altKey || e.shiftKey) {
+    // Case-insensitive on the key: with CapsLock on, `e.key` is "K", so an exact
+    // "k" compare would silently drop the shortcut. Shift+⌘K must still NOT
+    // trigger (it's a distinct chord), so the altKey/shiftKey early-return stays.
+    if (e.key.toLowerCase() !== "k" || e.altKey || e.shiftKey) {
       return;
     }
     if ((e.metaKey && mac) || (e.ctrlKey && !mac)) {

@@ -298,6 +298,10 @@
   /* One soft shadow for raised panels/cards/popovers. No heavy drop shadows. */
   --elevation-raised:
     0 1px 2px rgba(26, 26, 24, 0.06), 0 2px 8px rgba(26, 26, 24, 0.08);
+  /* Modal/drawer backdrop overlay (the mobile drawer scrim). Mixed from the
+     darkest graphite stop so a later dark-mode remap can re-tint it via the
+     ramp, not a literal. */
+  --scrim: color-mix(in srgb, var(--gray-1) 40%, transparent);
 
   /* ── Interaction states ──────────────────────────────────────────────── */
   /* Accessible keyboard focus outline, retinted to the brand: a 2px accent

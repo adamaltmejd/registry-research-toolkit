@@ -68,9 +68,20 @@ afterEach(() => {
   window.history.pushState({}, "", "/");
 });
 
+// The browser-test viewport is 414px — below the 48rem drawer breakpoint — so the
+// rail renders as the CLOSED off-canvas drawer, whose links are `visibility:
+// hidden` (out of the tab order + a11y tree until opened). So any test asserting
+// rail content (facets / primary nav) must OPEN the drawer first, exercising the
+// only state where the rail is reachable on mobile. Desktop keeps the rail always
+// visible (the media query doesn't apply there).
+async function openDrawer(): Promise<void> {
+  await page.getByRole("button", { name: "Open menu" }).click();
+}
+
 describe("AppShell — provider facets", () => {
   it("renders each provider as a link inside the Providers nav", async () => {
     await render(AppShell, minimalProps());
+    await openDrawer();
 
     const facets = page.getByRole("navigation", { name: "Providers" });
     await expect
@@ -86,6 +97,7 @@ describe("AppShell — active nav (aria-current)", () => {
   it("marks the data-browser link current on a catalog route", async () => {
     setUrl("/catalog");
     await render(AppShell, minimalProps());
+    await openDrawer();
 
     await expect
       .element(page.getByRole("link", { name: DATA_BROWSER_LABEL }))
@@ -99,6 +111,7 @@ describe("AppShell — active nav (aria-current)", () => {
   it("marks the Project link current on the project route (inverse)", async () => {
     setUrl("/project");
     await render(AppShell, minimalProps());
+    await openDrawer();
 
     await expect
       .element(page.getByRole("link", { name: "Project" }))

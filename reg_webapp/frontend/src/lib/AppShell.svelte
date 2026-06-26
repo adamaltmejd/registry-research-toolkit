@@ -453,14 +453,21 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
       width: min(20rem, 85vw);
       max-width: 85vw;
       overflow-y: auto;
-      /* Off-canvas by default; `.drawer-open` slides it in. The transform keeps
-         it out of the layout (and out of the tab order it can't reach behind the
-         hidden state is acceptable for this pre-v1 shell). */
+      /* Off-canvas by default; `.drawer-open` slides it in. `visibility: hidden`
+         on the closed rail removes its links from the tab order and the a11y
+         tree (a translateX-only off-canvas element stays focusable, so a keyboard
+         user would tab into invisible off-screen links). `visibility` still
+         allows the transform transition — unlike `display: none`, which would
+         kill the slide — so we transition it alongside the transform. */
+      visibility: hidden;
       transform: translateX(-100%);
-      transition: transform var(--motion-fast) ease-out;
+      transition:
+        transform var(--motion-fast) ease-out,
+        visibility var(--motion-fast) ease-out;
       box-shadow: var(--elevation-raised);
     }
     .drawer-open .rail {
+      visibility: visible;
       transform: translateX(0);
     }
     .scrim {
@@ -470,7 +477,7 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
       z-index: 55;
       border: 0;
       padding: 0;
-      background: rgba(26, 26, 24, 0.4);
+      background: var(--scrim);
       cursor: pointer;
     }
   }
