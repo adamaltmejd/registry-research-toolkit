@@ -172,7 +172,7 @@ async function onFilePicked(event: Event): Promise<void> {
          serialized draft. Each SourceEditor re-renders on every edit (the whole
          draft swaps), acceptable at expected sizes. `issues` is the LAST /validate
          result, echoed inline. -->
-    <section class="sources" aria-label="Sources">
+    <section aria-label="Sources">
       <Panel title="Sources ({sources.length})">
         {#snippet meta()}
           <Button variant="default" size="sm" onclick={() => projectStore.addSource()}>

@@ -7,7 +7,7 @@ import PeriodEditor from "./PeriodEditor.svelte";
 import { periodToWire } from "./period";
 import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { Button, Tag } from "./ui";
+import { Button, EmptyState, Tag } from "./ui";
 import {
   issuesForPointer,
   issuesUnderPointer,
@@ -159,7 +159,7 @@ function onPickVariant(registerVariant: string): void {
         This source's <code>bindings</code> are malformed — fix via re-download or hand-edit.
       </p>
     {:else if bindings.length === 0}
-      <p class="muted">No bindings yet.</p>
+      <EmptyState title="No bindings yet." />
     {:else}
       <ul class="binding-list">
         <!-- Keyed by the store-owned STABLE client id (issue #200), not the index,
