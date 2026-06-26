@@ -713,84 +713,198 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 });
 
-describe("SearchView — categorical type badges (#808)", () => {
-  it("badges each result row with its categorical tone (reg/var/class/code)", async () => {
+describe("SearchView — compact per-type tables (#808)", () => {
+  // The #808 round-2 redesign: each leaf group renders a compact DataTable (the
+  // #806 pattern) — categorical type identity moves to the GROUP HEADING (a single
+  // Tag), the raw FQID is hidden everywhere (the leaf SLUG is the only identifier
+  // shown), the Register column is prominent for variables, and the whole row is
+  // navigable to the hit. Folded families stay <details>; codes stay a list.
+  const FOUR_GROUPS = {
+    kind: "search",
+    query: "kon",
+    groups: [
+      {
+        group: "registers",
+        total_count: 1,
+        results: [
+          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+        ],
+      },
+      {
+        group: "variables",
+        total_count: 1,
+        results: [
+          {
+            type: "variable",
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            register: "LISA",
+            definition: null,
+          },
+        ],
+      },
+      {
+        group: "classifications",
+        total_count: 1,
+        results: [
+          {
+            type: "classification",
+            fqid: "class/sun2020",
+            short_name: "SUN",
+            name: "Svensk utbildningsnomenklatur",
+          },
+        ],
+      },
+      {
+        group: "codes",
+        total_count: 1,
+        results: [
+          {
+            type: "code",
+            code: "1",
+            label: "Man",
+            variables: [
+              { fqid: "scb/saga/sex", name: "Sex", register: "SAGA" },
+            ],
+            variable_count: 1,
+            classifications: [],
+            classification_count: 0,
+          },
+        ],
+      },
+    ],
+  } as unknown as SearchResponse;
+
+  it("renders the leaf groups as DataTables (grid roles + rows)", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The three leaf groups (registers / variables / classifications) each render
+    // a selectable DataTable — a role=grid with selectable rows (gridcell remap).
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
+    const grids = document.querySelectorAll(".search-view table[role='grid']");
+    expect(grids.length).toBe(3);
+    // The rows are keyboard-activatable (DataTable selection: tabindex + grid row).
+    const selectableRows = document.querySelectorAll(
+      ".search-view tr.selectable[tabindex='0']",
+    );
+    expect(selectableRows.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("hides the raw FQID and shows the leaf SLUG as the variable's Column", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The variable's Column cell shows the LEAF SLUG ("kon"), never the full
+    // FQID path ("scb/lisa/kon").
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
+    // No leaf row renders the full FQID with slashes (the old <code class=
+    // "hit-fqid">scb/lisa/kon</code> is gone). The member-slug <code> in folded
+    // families never carries slashes either.
+    for (const code of document.querySelectorAll(".search-view code")) {
+      expect(code.textContent ?? "").not.toContain("/");
+    }
+    // The mono Column cell carries the bare leaf slug.
+    const monoCells = Array.from(
+      document.querySelectorAll<HTMLElement>(".search-view td.mono"),
+    ).map((c) => c.textContent?.trim());
+    expect(monoCells).toContain("kon");
+  });
+
+  it("renders a prominent Register column for variable hits", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The variables table carries a "Column" header (the leaf-slug column) that
+    // disambiguates it from the registers table — assert its presence so we know
+    // the variable DataTable rendered with its three columns.
+    await expect
+      .element(page.getByRole("columnheader", { name: "Column" }))
+      .toBeVisible();
+    // The variable's Register renders in its OWN prominent column (the `.register`
+    // span), not as a muted trailing label.
+    const register = document.querySelector(".search-view .register");
+    expect(register?.textContent?.trim()).toBe("LISA");
+  });
+
+  it("makes the name cell a real catalog link (open-in-new-tab safe)", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // Each leaf's name cell is a real <a href> to its catalog node (so middle-
+    // click / open-in-new-tab / screen readers get a link), independent of the
+    // whole-row navigation.
+    await expect
+      .element(page.getByRole("link", { name: /LISA/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/kon");
+    await expect
+      .element(page.getByRole("link", { name: /SUN/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+  });
+
+  it("marks the group identity via a heading Tag, not per-row badges", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    // The categorical tone lives on the heading Tag (one per leaf group), NOT a
+    // per-row badge. The codes heading carries no single tone.
+    for (const tone of ["reg", "var", "class"] as const) {
+      const tag = document.querySelector(
+        `.search-view h3 .heading-tag .tag.tone-${tone}`,
+      );
+      expect(tag, `expected a heading Tag on tone ${tone}`).not.toBeNull();
+    }
+    // Exactly the three leaf-group headings carry a categorical Tag (no per-row
+    // badge proliferation).
+    const headingTags = document.querySelectorAll(".search-view h3 .tag");
+    expect(headingTags.length).toBe(3);
+  });
+
+  it("renders a null-fqid leaf as plain text and never navigates on its row", async () => {
+    // A null-fqid leaf can't navigate: its name is plain text (no link), and the
+    // row's onselect no-ops (navigateTo bails on a falsy fqid). The row still
+    // renders (no each_key_duplicate crash on the synthetic rowId key).
     vi.mocked(search).mockResolvedValue({
       kind: "search",
-      query: "kon",
+      query: "orphan",
       groups: [
         {
           group: "registers",
           total_count: 1,
           results: [
-            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-          ],
-        },
-        {
-          group: "variables",
-          total_count: 1,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/lisa/kon",
-              name: "Kön",
-              register: "LISA",
-              definition: null,
-            },
-          ],
-        },
-        {
-          group: "classifications",
-          total_count: 1,
-          results: [
-            {
-              type: "classification",
-              fqid: "class/sun2020",
-              short_name: "SUN",
-              name: "Svensk utbildningsnomenklatur",
-            },
-          ],
-        },
-        {
-          group: "codes",
-          total_count: 1,
-          results: [
-            {
-              type: "code",
-              code: "1",
-              label: "Man",
-              variables: [
-                { fqid: "scb/saga/sex", name: "Sex", register: "SAGA" },
-              ],
-              variable_count: 1,
-              classifications: [],
-              classification_count: 0,
-            },
+            { type: "register", fqid: null, name: "Orphan", purpose: null },
           ],
         },
       ],
     } as unknown as SearchResponse);
-    setQuery("kon");
+    setQuery("orphan");
     await render(SearchView);
 
-    // Each group's row carries a leading Tag on the matching categorical tone —
-    // assert the tone class the `Tag` primitive renders plus its short type label.
+    await expect.element(page.getByText("Orphan")).toBeVisible();
     await expect
-      .element(page.getByRole("heading", { name: "Registers" }))
-      .toBeVisible();
-    for (const [tone, label] of [
-      ["reg", "REG"],
-      ["var", "VAR"],
-      ["class", "CLASS"],
-      ["code", "CODE"],
-    ] as const) {
-      const badge = document.querySelector(`.search-view .tag.tone-${tone}`);
-      expect(badge, `expected a .tone-${tone} badge`).not.toBeNull();
-      expect(badge?.textContent?.trim()).toBe(label);
-    }
+      .element(page.getByRole("link", { name: "Orphan" }))
+      .not.toBeInTheDocument();
+    // Clicking the row doesn't crash / navigate away (the URL keeps its query).
+    await page.getByText("Orphan").click();
+    await expect.poll(() => router.getQueryParam("q")).toBe("orphan");
   });
 
-  it("badges a folded concept-group result with the group tone", async () => {
+  it("keeps folded families as <details> with leaf-slug members (no full FQID)", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "ink",
@@ -824,9 +938,16 @@ describe("SearchView — categorical type badges (#808)", () => {
     setQuery("ink");
     await render(SearchView);
 
-    const badge = document.querySelector(".search-view .tag.tone-group");
-    expect(badge).not.toBeNull();
-    expect(badge?.textContent?.trim()).toBe("GROUP");
+    // The fold stays a <details> disclosure (no DataTable for it).
+    await expect.element(page.getByText("matched 2 of 3")).toBeVisible();
+    await page.getByText("Disponibel inkomst").click();
+    // Members are real leaf links…
+    await expect
+      .element(page.getByRole("link", { name: /Disp 2019/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/dispink-2019");
+    // …and the member identifier is the leaf SLUG, never the full FQID path.
+    const memberSlug = document.querySelector(".search-view .member-slug");
+    expect(memberSlug?.textContent?.trim()).toBe("dispink-2019");
   });
 });
 

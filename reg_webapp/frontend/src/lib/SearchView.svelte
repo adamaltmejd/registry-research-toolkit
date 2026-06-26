@@ -6,21 +6,31 @@ import type {
   ConceptGroupSearchResult,
   DocResult,
   DocSearchResponse,
+  RegisterSearchResult,
   SearchResponse,
   SearchType,
   VariableSearchResult,
 } from "./api";
 import { docSearch, SEARCH_MIN_QUERY_LENGTH, search } from "./api";
 import { asyncResource } from "./async.svelte";
-import { catalogHref, showingOf } from "./catalog";
+import { catalogHref, leafSlug, showingOf } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
-import { Tag } from "./ui";
+import { type Column, DataTable, Tag } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
 // the four ORDERED, typed groups GET /api/search returns (registers / variables /
 // classifications / codes). Every leaf navigates via a plain internal <a> the
 // shell's `use:link` intercepts — never `router.navigate` from here.
+//
+// #808 (round 2): the leaf groups render as compact DataTables (the #806 pattern,
+// matching CatalogNodeView's provider arm) — categorical type identity moves to
+// the GROUP HEADING (a single Tag), the raw FQID is hidden everywhere (the leaf
+// SLUG is the only identifier shown), and the whole row is click/keyboard-
+// navigable to the hit via DataTable selection-as-navigation. Folded families
+// (concept groups, classification succession) stay expandable <details> — they
+// have no flat one-row-one-target model — and codes stay a compact list (a code
+// fans out to multiple owners).
 
 const q = $derived((router.getQueryParam("q") ?? "").trim());
 
@@ -125,11 +135,15 @@ const noMatches = $derived(
     !docsHasHits,
 );
 
+// Per-group heading + its categorical type tone (#808): the tone marks the group
+// identity ONCE in the heading (a single Tag), replacing the old per-row badges.
+// The codes heading carries no single tone (a code fans out to mixed owners), so
+// it has none.
 const GROUP_HEADINGS = {
-  registers: "Registers",
-  variables: "Variables",
-  classifications: "Classifications",
-  codes: "Codes / values",
+  registers: { label: "Registers", tone: "reg" },
+  variables: { label: "Variables", tone: "var" },
+  classifications: { label: "Classifications", tone: "class" },
+  codes: { label: "Codes / values", tone: null },
 } as const;
 
 // Discriminate a variable/classification group's mixed results on `type`.
@@ -143,6 +157,89 @@ function isClassificationSuccession(r: {
   type: string;
 }): r is ClassificationSuccessionSearchResult {
   return r.type === "classification_succession";
+}
+
+// ── Leaf-table row shapes (#808) ─────────────────────────────────────────────
+// Each leaf table is a DataTable over a thin row type that carries a STABLE
+// synthetic `rowId` (the array index) AND the per-column display fields. The
+// `rowId` is DataTable's `getRowId` key — crash-proof even when several rows
+// share a null `fqid` and the same name (the #379/#391 each_key_duplicate lesson
+// — a natural `fqid` key collides). The cell snippet keys off `column.key`; the
+// row's `result` drives the navigation target. DataTable keys its column-each on
+// `col.key`, so every column needs a DISTINCT key — hence the dedicated display
+// fields (the slug column gets its own `slug` key, not a second `result`).
+type RegisterRow = {
+  rowId: string;
+  name: string | null | undefined;
+  fqid: string | null;
+  purpose: string | null | undefined;
+};
+type VariableRow = {
+  rowId: string;
+  name: string | null | undefined;
+  fqid: string | null;
+  register: string | null | undefined;
+  slug: string;
+  definition: string | null | undefined;
+};
+type ClassificationRow = {
+  rowId: string;
+  short: string | null | undefined;
+  name: string | null | undefined;
+  fqid: string | null;
+  terminalFqid: string | null | undefined;
+};
+
+const registerColumns: Column<RegisterRow>[] = [
+  { key: "name", label: "Register" },
+  { key: "purpose", label: "Description" },
+];
+const variableColumns: Column<VariableRow>[] = [
+  { key: "name", label: "Variable" },
+  { key: "register", label: "Register" },
+  { key: "slug", label: "Column", mono: true },
+];
+const classificationColumns: Column<ClassificationRow>[] = [
+  { key: "short", label: "Classification" },
+  { key: "name", label: "Name" },
+];
+
+/** Navigate to a leaf hit on row-select — a null `fqid` row can't navigate, so
+ * bail (its name renders as plain text, the click no-ops). The shell's router
+ * owns history; `catalogHref` mirrors the API path. */
+function navigateTo(fqid: string | null | undefined): void {
+  if (!fqid) return;
+  router.navigate(catalogHref(fqid));
+}
+
+function registerRows(results: RegisterSearchResult[]): RegisterRow[] {
+  return results.map((r, i) => ({
+    rowId: String(i),
+    name: r.name,
+    fqid: r.fqid,
+    purpose: r.purpose,
+  }));
+}
+function variableRows(results: VariableSearchResult[]): VariableRow[] {
+  return results.map((r, i) => ({
+    rowId: String(i),
+    name: r.name,
+    fqid: r.fqid,
+    register: r.register,
+    slug: r.fqid ? leafSlug(r.fqid) : "",
+    definition: r.definition,
+  }));
+}
+function classificationRows(
+  results: ClassificationSearchResult[],
+): ClassificationRow[] {
+  return results.map((r, i) => ({
+    rowId: String(i),
+    short: r.short_name ?? r.name,
+    name: r.name,
+    fqid: r.fqid,
+    terminalFqid: r.terminal_fqid,
+  }));
 }
 
 // The codes group, bucketed by code system (#393 item 3). STABLE group-by on
@@ -171,6 +268,37 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     bucket.codes.push(code);
   }
   return [...buckets.values()];
+}
+
+// Split a variable/classification group's mixed results into leaf hits (flat
+// table rows) and folded families (<details>) — the two render as distinct
+// sub-blocks: the leaf DataTable first, the folds after under a muted sub-label.
+function splitVariableResults(results: VariableSearchResult[] | unknown[]): {
+  leaves: VariableSearchResult[];
+  folds: ConceptGroupSearchResult[];
+} {
+  const leaves: VariableSearchResult[] = [];
+  const folds: ConceptGroupSearchResult[] = [];
+  for (const r of results as { type: string }[]) {
+    if (isConceptGroup(r)) folds.push(r);
+    else leaves.push(r as VariableSearchResult);
+  }
+  return { leaves, folds };
+}
+function splitClassificationResults(results: unknown[]): {
+  leaves: ClassificationSearchResult[];
+  folds: (ConceptGroupSearchResult | ClassificationSuccessionSearchResult)[];
+} {
+  const leaves: ClassificationSearchResult[] = [];
+  const folds: (
+    | ConceptGroupSearchResult
+    | ClassificationSuccessionSearchResult
+  )[] = [];
+  for (const r of results as { type: string }[]) {
+    if (isConceptGroup(r) || isClassificationSuccession(r)) folds.push(r);
+    else leaves.push(r as ClassificationSearchResult);
+  }
+  return { leaves, folds };
 }
 </script>
 
@@ -215,70 +343,105 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   {:else}
     {#each groups as group (group.group)}
       {#if group.results.length > 0}
+        {@const heading = GROUP_HEADINGS[group.group]}
         {@const caption = showingOf(group.results.length, group.total_count)}
         <section class="group">
           <h3>
-            {GROUP_HEADINGS[group.group]}
+            {#if heading.tone}<span class="heading-tag"
+                ><Tag tone={heading.tone}>{heading.label}</Tag></span
+              >{:else}{heading.label}{/if}
             {#if caption}<span class="count">{caption}</span>{/if}
           </h3>
 
           {#if group.group === "registers"}
-            <ul class="results">
-              <!-- Key by array INDEX: result lists are replaced wholesale per
-                   query (never incrementally mutated), so the index is stable
-                   within a render and guaranteed unique. Natural keys collide —
-                   `fqid` can be null and a folded group_key is only register-scoped
-                   unique (#322) — and a SINGLE duplicate key crashes the whole
-                   keyed each (Svelte each_key_duplicate). See #379 omnibox-dup-key. -->
-              {#each group.results as result, i (i)}
-                <li>
-                  {@render typeBadge("reg", "REG")}
-                  {@render fqidLeaf(result.fqid, result.name)}
-                  {#if result.purpose}
-                    <span class="hit-detail muted">{result.purpose}</span>
-                  {/if}
-                </li>
-              {/each}
-            </ul>
+            <!-- Registers → a 2-column DataTable: Register (name → catalog link)
+                 + Description (purpose, 2-line clamp). The whole row navigates to
+                 the hit (selection-as-navigation); the name stays a real <a> so
+                 middle-click / open-in-new-tab / screen readers keep a link. -->
+            <DataTable
+              columns={registerColumns}
+              rows={registerRows(group.results as RegisterSearchResult[])}
+              getRowId={(r) => r.rowId}
+              onselect={(r) => navigateTo(r.fqid)}
+            >
+              {#snippet cell(row, column)}
+                {#if column.key === "name"}
+                  {@render leafName(row.fqid, row.name)}
+                {:else if row.purpose}
+                  <span class="clamp-2">{row.purpose}</span>
+                {/if}
+              {/snippet}
+            </DataTable>
           {:else if group.group === "variables"}
-            <ul class="results">
-              {#each group.results as result, i (i)}
-                <li>
-                  {#if isConceptGroup(result)}
-                    {@render typeBadge("group", "GROUP")}
-                    {@render conceptGroup(result)}
+            {@const split = splitVariableResults(group.results)}
+            {#if split.leaves.length > 0}
+              <DataTable
+                columns={variableColumns}
+                rows={variableRows(split.leaves)}
+                getRowId={(r) => r.rowId}
+                onselect={(r) => navigateTo(r.fqid)}
+              >
+                {#snippet cell(row, column)}
+                  {#if column.key === "name"}
+                    {@render leafName(row.fqid, row.name)}
+                    {#if row.definition}
+                      <span class="sub muted">{row.definition}</span>
+                    {/if}
+                  {:else if column.key === "register"}
+                    <!-- Register is PROMINENT (#808 round 2): a display-name
+                         string (no fqid), its own normal-weight column. -->
+                    {#if row.register}
+                      <span class="register">{row.register}</span>
+                    {/if}
                   {:else}
-                    {@render typeBadge("var", "VAR")}
-                    {@render variableLeaf(result as VariableSearchResult)}
+                    <!-- The catalog's canonical column/binding identifier: the
+                         leaf slug (NOT the full FQID path). -->
+                    {row.slug}
                   {/if}
-                </li>
-              {/each}
-            </ul>
+                {/snippet}
+              </DataTable>
+            {/if}
+            {@render foldedFamilies(split.folds)}
           {:else if group.group === "classifications"}
-            <ul class="results">
-              {#each group.results as result, i (i)}
-                <li>
-                  {#if isConceptGroup(result)}
-                    {@render typeBadge("group", "GROUP")}
-                    {@render conceptGroup(result)}
-                  {:else if isClassificationSuccession(result)}
-                    {@render typeBadge("class", "CLASS")}
-                    {@render classificationSuccession(result)}
-                  {:else}
-                    {@render typeBadge("class", "CLASS")}
-                    {@render classificationLeaf(result as ClassificationSearchResult)}
+            {@const split = splitClassificationResults(group.results)}
+            {#if split.leaves.length > 0}
+              <DataTable
+                columns={classificationColumns}
+                rows={classificationRows(split.leaves)}
+                getRowId={(r) => r.rowId}
+                onselect={(r) => navigateTo(r.fqid)}
+              >
+                {#snippet cell(row, column)}
+                  {#if column.key === "short"}
+                    {@render leafName(row.fqid, row.short)}
+                    <!-- A lone non-current edition hit (#571): link to the
+                         current/terminal edition so the user can jump forward.
+                         Rendered inside the row so it still navigates to
+                         `terminal_fqid` (a nested link DataTable's
+                         fromInteractiveChild guard leaves alone). -->
+                    {#if row.terminalFqid}
+                      <a
+                        class="terminal-link"
+                        href={catalogHref(row.terminalFqid)}
+                      >
+                        → current edition
+                      </a>
+                    {/if}
+                  {:else if row.name && row.name !== row.short}
+                    <span class="sub muted">{row.name}</span>
                   {/if}
-                </li>
-              {/each}
-            </ul>
+                {/snippet}
+              </DataTable>
+            {/if}
+            {@render foldedFamilies(split.folds)}
           {:else if group.group === "codes"}
-            <!-- Per-code-system subsections (#393 item 3). The codes are already
-                 item-2-ordered (classification-backed first), and groupCodesBySystem
-                 preserves first-appearance order, so curated systems lead;
-                 null/empty code_system folds into a trailing "Register-local"
-                 subsection. Each row keeps the codeHit snippet; the per-subsection
-                 `{#each}` keys stay INDEX-based (the #379/#391 each_key_duplicate
-                 lesson — natural keys can collide and crash the keyed each). -->
+            <!-- Per-code-system subsections (#393 item 3). A code fans out to
+                 multiple owner targets, so it is NOT one-row-one-target — it
+                 stays a compact list, not a DataTable. The codes are already
+                 item-2-ordered (classification-backed first), and
+                 groupCodesBySystem preserves first-appearance order, so curated
+                 systems lead; null/empty code_system folds into a trailing
+                 "Register-local" subsection. -->
             {#each groupCodesBySystem(group.results) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">{system.label}</h4>
@@ -327,59 +490,47 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   {/if}
 </article>
 
-<!-- A leading categorical TYPE badge (#808): a scannable type marker preceding
-     each row's label, using the #804 `Tag` primitive on the categorical palette
-     (reg/var/code/class/group → --cat-*). The label is the short uppercase type
-     code; `Tag` carries the AA-cleared tint + ink. The Documentation group is
-     additive (not one of the categorical node types) and is intentionally left
-     un-badged. -->
-{#snippet typeBadge(tone: "reg" | "var" | "code" | "class" | "group", label: string)}
-  <span class="type-badge"><Tag {tone}>{label}</Tag></span>
-{/snippet}
-
-<!-- The shared leaf shape across register / variable / classification / member
-     hits: a `label + <code>fqid</code>` link when FQID-addressable, else plain
-     text (the hit has no catalog node). `label` is the per-type display name
-     (the FQID is the fallback when linking, "—" when not). -->
-{#snippet fqidLeaf(fqid: string | null | undefined, label: string | null | undefined)}
+<!-- A leaf hit's NAME cell: a catalog link when FQID-addressable, else plain text
+     (the hit has no catalog node). The raw FQID is NEVER shown (#808 round 2) —
+     the per-type slug/register columns carry the compact identifier. The link is
+     kept REAL (a real <a href>) so middle-click / open-in-new-tab / screen-reader
+     users get a link even though the whole row also navigates via DataTable
+     selection (the nested link + row-nav don't double-fire — DataTable's
+     fromInteractiveChild guards it). -->
+{#snippet leafName(fqid: string | null | undefined, label: string | null | undefined)}
   {#if fqid}
-    <a href={catalogHref(fqid)}>
-      <span class="label">{label ?? fqid}</span>
-      <code class="hit-fqid">{fqid}</code>
-    </a>
+    <a class="row-link" href={catalogHref(fqid)}>{label ?? leafSlug(fqid)}</a>
   {:else}
-    <span class="label">{label ?? "—"}</span>
+    <span class="row-link plain">{label ?? "—"}</span>
   {/if}
 {/snippet}
 
-{#snippet variableLeaf(result: VariableSearchResult)}
-  {@render fqidLeaf(result.fqid, result.name)}
-  {#if result.register}
-    <span class="hit-context muted">{result.register}</span>
-  {/if}
-  {#if result.definition}
-    <span class="hit-detail muted">{result.definition}</span>
-  {/if}
-{/snippet}
-
-{#snippet classificationLeaf(result: ClassificationSearchResult)}
-  {@render fqidLeaf(result.fqid, result.short_name ?? result.name)}
-  {#if result.name && result.name !== result.short_name}
-    <span class="hit-detail muted">{result.name}</span>
-  {/if}
-  <!-- A lone non-current edition hit (#571): link to the current/terminal edition
-       so the user can jump forward. Only present when this is an old edition the
-       query matched alone (absent for current/non-edition classifications). -->
-  {#if result.terminal_fqid}
-    <a class="terminal-link" href={catalogHref(result.terminal_fqid)}>
-      → current edition
-    </a>
+<!-- The folded-family sub-block for the variables / classifications groups (#322
+     concept groups + #571 classification succession). They don't fit a flat table
+     row (no colspan model — same limitation #806 documented for grouped lists), so
+     they stay expandable <details> in their OWN sub-block after the leaf table,
+     under a muted sub-label so they read as a distinct treatment. -->
+{#snippet foldedFamilies(
+  folds: (ConceptGroupSearchResult | ClassificationSuccessionSearchResult)[],
+)}
+  {#if folds.length > 0}
+    <div class="folds">
+      <p class="folds-label muted">Grouped families</p>
+      {#each folds as fold, i (i)}
+        {#if isConceptGroup(fold)}
+          {@render conceptGroup(fold)}
+        {:else}
+          {@render classificationSuccession(fold)}
+        {/if}
+      {/each}
+    </div>
   {/if}
 {/snippet}
 
 <!-- A folded concept-group family (#322): the group itself is NOT FQID-addressable,
      so it expands to its member leaves' links. The family hint reads "matched M of
-     N" (matched_count of member_count). -->
+     N" (matched_count of member_count). Member rows show the leaf SLUG (not the
+     full FQID) as the compact identifier (#808 round 2). -->
 {#snippet conceptGroup(result: ConceptGroupSearchResult)}
   <details class="concept-group">
     <summary>
@@ -388,15 +539,15 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
         matched {result.matched_count} of {result.member_count}
       </span>
       {#if result.register}
-        <span class="hit-context muted">{result.register}</span>
+        <span class="register muted">{result.register}</span>
       {/if}
     </summary>
     <ul class="members">
       {#each result.members as member, i (i)}
         <li>
           <a href={catalogHref(member.fqid)}>
-            <span class="label">{member.name ?? member.fqid}</span>
-            <code class="hit-fqid">{member.fqid}</code>
+            <span class="label">{member.name ?? leafSlug(member.fqid)}</span>
+            <code class="member-slug">{leafSlug(member.fqid)}</code>
           </a>
         </li>
       {/each}
@@ -408,15 +559,17 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
      terminal (current) edition IS navigable — so its `fqid` link is the always-
      visible header. A <details> discloses the full edition chain (terminal-first,
      descending year); each edition with a live `fqid` is itself a link. The
-     family hint reads "matched M of N editions". -->
+     family hint reads "matched M of N editions". Member rows show the leaf SLUG
+     (not the full FQID), #808 round 2. -->
 {#snippet classificationSuccession(result: ClassificationSuccessionSearchResult)}
   {@const editions = result.editions ?? []}
   <details class="concept-group">
     <summary>
       {#if result.fqid}
         <a href={catalogHref(result.fqid)}>
-          <span class="label">{result.short_name ?? result.name ?? result.fqid}</span>
-          <code class="hit-fqid">{result.fqid}</code>
+          <span class="label"
+            >{result.short_name ?? result.name ?? leafSlug(result.fqid)}</span
+          >
         </a>
       {:else}
         <span class="label">{result.short_name ?? result.name ?? "—"}</span>
@@ -431,13 +584,13 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
           {#if edition.fqid}
             <a href={catalogHref(edition.fqid)}>
               <span class="label">{edition.name ?? edition.slug}</span>
-              <code class="hit-fqid">{edition.fqid}</code>
+              <code class="member-slug">{edition.slug}</code>
             </a>
           {:else}
             <span class="label">{edition.name ?? edition.slug}</span>
           {/if}
           {#if edition.effective_year != null}
-            <span class="hit-context muted">{edition.effective_year}</span>
+            <span class="register muted">{edition.effective_year}</span>
           {/if}
         </li>
       {/each}
@@ -452,7 +605,6 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
 {#snippet codeHit(result: CodeSearchResult)}
   <div class="code-hit">
     <div class="code-header">
-      {@render typeBadge("code", "CODE")}
       <code class="code">{result.code}</code>
       <span class="label">{result.label}</span>
     </div>
@@ -468,7 +620,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
               <span class="label">{owner.name ?? "—"}</span>
             {/if}
             {#if owner.register}
-              <span class="hit-context muted">{owner.register}</span>
+              <span class="register muted">{owner.register}</span>
             {/if}
           </li>
         {/each}
@@ -515,7 +667,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     <span class="label">{result.display_name ?? result.filename}</span>
   </a>
   {#if result.register}
-    <span class="hit-context muted">{result.register}</span>
+    <span class="register muted">{result.register}</span>
   {/if}
   {#if result.snippet}
     <span class="hit-detail muted"
@@ -579,55 +731,60 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     margin: 0 0 0.5rem;
     font-size: 1rem;
   }
+  /* The categorical group-type Tag sits on the heading baseline (replacing the
+     old per-row badges, #808 round 2). */
+  .heading-tag {
+    align-self: center;
+    line-height: 1;
+  }
   .count {
     color: var(--text-muted);
     font-size: 0.85em;
     font-weight: 400;
     white-space: nowrap;
   }
-  .results {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .results > li {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.5rem 0.75rem;
-    padding: 0.25rem 0.4rem;
-    margin: 0 -0.4rem;
-    border-radius: var(--radius-sm);
-  }
-  /* A subtle dashboard-scan hover affordance on each result row (the row, not the
-     link) — keeps the link's own focus/hover intact. */
-  .results > li:hover {
-    background: var(--surface-hover);
-  }
-  /* The leading categorical type badge: a small inline marker that doesn't push
-     the baseline of the row's text. The Tag itself carries tint + ink. */
-  .type-badge {
-    align-self: center;
-    line-height: 1;
-  }
-  .label {
+  /* A leaf-table NAME link / plain-text fallback — the NAME is primary. Long
+     Swedish compound words otherwise force a min-content width past the 375px
+     mobile canvas (#806); break them only when they can't fit. */
+  .row-link {
     font-weight: 600;
+    overflow-wrap: anywhere;
   }
-  .hit-fqid {
+  .row-link.plain {
+    color: var(--text);
+  }
+  /* The prominent Register column on a variable hit (#808 round 2): normal text
+     weight, NOT muted trailing text — register must be far more visible. */
+  .register {
+    overflow-wrap: anywhere;
+  }
+  .register.muted {
+    font-size: 0.85em;
+  }
+  /* A muted secondary line under a leaf name (a variable definition, a
+     classification's full name) — sits below the name in the same cell. */
+  .sub {
+    display: block;
+    font-size: 0.9em;
+  }
+  /* Clamp a register's description to ~2 lines in the DataTable cell; the full
+     text lives on the register's own subject page (the #806 treatment). */
+  .clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     color: var(--text-muted);
-    font-size: 0.85em;
-  }
-  .hit-context {
-    font-size: 0.85em;
+    overflow-wrap: anywhere;
   }
   .terminal-link {
+    margin-left: 0.5rem;
     font-size: 0.85em;
+    font-weight: 400;
   }
   .hit-detail {
-    flex-basis: 100%;
+    display: block;
     font-size: 0.9em;
   }
   .hit-detail mark {
@@ -636,11 +793,34 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     border-radius: var(--radius);
     padding: 0 0.1em;
   }
+  /* The folded-families sub-block under a leaf table. */
+  .folds {
+    margin-top: 0.75rem;
+  }
+  .folds-label {
+    margin: 0 0 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .concept-group {
+    margin-bottom: 0.35rem;
+  }
   .concept-group summary {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: 0.5rem 0.75rem;
     cursor: pointer;
+  }
+  .concept-group .label {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .member-slug {
+    color: var(--text-muted);
+    font-size: 0.85em;
+    font-family: var(--font-mono);
   }
   .members {
     list-style: none;
@@ -654,6 +834,14 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     display: flex;
     align-items: baseline;
     gap: 0.75rem;
+  }
+  .results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   .code-hit {
     display: flex;
