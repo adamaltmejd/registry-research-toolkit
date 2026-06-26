@@ -4,6 +4,7 @@ import type { PickedVariable } from "./catalog";
 import FieldIssues from "./FieldIssues.svelte";
 import { type Binding, COLUMN_TYPES } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { Button } from "./ui";
 import {
   bindingAnchorId,
   issuesForPointer,
@@ -149,9 +150,9 @@ const derivationMarker = $derived.by(() => {
       <span class="field-label">Variable</span>
       <div class="variable-row">
         <code class="variable-value">{binding.variable || "(no variable)"}</code>
-        <button type="button" class="small" onclick={() => (picking = !picking)}>
+        <Button variant="default" size="sm" onclick={() => (picking = !picking)}>
           {picking ? "Close" : "Pick variable"}
-        </button>
+        </Button>
       </div>
       <FieldIssues issues={issuesForPointer(issues, ptr("variable"))} />
       {#if derivationMarker}
@@ -283,98 +284,93 @@ const derivationMarker = $derived.by(() => {
     </div>
   </details>
 
-  <button type="button" class="small remove" onclick={() => projectStore.removeBinding(sourceIndex, bindingIndex)}>
-    Remove binding
-  </button>
+  <div class="remove-row">
+    <Button
+      variant="danger"
+      size="sm"
+      onclick={() => projectStore.removeBinding(sourceIndex, bindingIndex)}
+    >
+      Remove binding
+    </Button>
+  </div>
 </div>
 
 <style>
   .binding {
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    scroll-margin-top: 1rem;
+    gap: var(--space-2);
+    scroll-margin-top: var(--space-4);
   }
   .binding-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem 1.25rem;
+    gap: var(--space-3) 1.25rem;
   }
   .field {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-1);
   }
   .field.variable {
     flex: 1 1 18rem;
   }
   .field-label {
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: var(--text-micro);
   }
   .variable-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
+  /* The variable is a machine FQID — mono, like every code/identifier. */
   .variable-value {
-    font-size: 0.9em;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
   }
   select,
   input {
     font: inherit;
-    padding: 0.3rem 0.5rem;
+    padding: var(--space-1) var(--space-2);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
-  .small {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    cursor: pointer;
-  }
-  .small:hover {
-    border-color: var(--accent);
-  }
-  .remove {
+  .remove-row {
     align-self: flex-start;
-    color: var(--level-error);
   }
   .advanced summary {
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: var(--text-micro);
     font-weight: 600;
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .advanced-fields {
-    margin-top: 0.5rem;
+    margin-top: var(--space-2);
   }
   .advanced-fields label {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-1);
     max-width: 18rem;
-    font-size: 0.8rem;
+    font-size: var(--text-micro);
   }
   /* B2 markers. `unresolved` is the stronger cue (the type isn't real yet) —
      amber, like the period-incomplete hint; `mismatch` is a quieter advisory
      (the value is the user's choice, we just note reg_meta disagrees). Neither is
      red: red is reserved for the backend's validation errors (<FieldIssues>). */
   .derive-marker {
-    font-size: 0.75rem;
+    font-size: var(--text-micro);
     margin: 0.1rem 0 0;
   }
   .derive-marker.unresolved {
-    color: var(--level-warning);
+    color: var(--warn);
     font-weight: 600;
   }
   .derive-marker.mismatch {
-    color: var(--muted);
+    color: var(--text-muted);
   }
 </style>
