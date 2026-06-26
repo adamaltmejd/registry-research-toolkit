@@ -50,7 +50,7 @@ const entries = [
     </h1>
     <p class="tagline">Browse and search Swedish register metadata.</p>
     {#if stats.data}
-      <p class="stats muted">
+      <p class="stats">
         {stats.data.providers.toLocaleString()} providers ·
         {stats.data.registers.toLocaleString()} registers ·
         {stats.data.variables.toLocaleString()} variables
@@ -58,7 +58,7 @@ const entries = [
     {:else if stats.loading}
       <!-- A subtle placeholder so the hero block doesn't reflow when the
            stats line arrives; an error simply omits the line. -->
-      <p class="stats muted placeholder" aria-hidden="true">&nbsp;</p>
+      <p class="stats placeholder" aria-hidden="true">&nbsp;</p>
     {/if}
   </header>
 
@@ -96,7 +96,8 @@ const entries = [
   .stats {
     margin: 0;
     font-size: var(--text-sm);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
   }
   .placeholder {
     /* Reserve the line's height without showing text while loading. */
@@ -127,10 +128,12 @@ const entries = [
   }
   .card-title {
     font-weight: 700;
-    color: var(--accent);
+    /* Accent-COLORED text on a surface needs the darker ink role: --accent
+       (#B8552A) is only ~4.0:1 on white, below WCAG AA for normal bold text. */
+    color: var(--accent-ink);
   }
   .card-blurb {
     font-size: var(--text-sm);
-    color: var(--muted);
+    color: var(--text-muted);
   }
 </style>

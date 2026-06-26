@@ -54,20 +54,26 @@ const filtering = $derived(value.trim().length > 0);
   .filter {
     display: flex;
     align-items: baseline;
-    gap: 0.6rem;
-    margin-bottom: 0.6rem;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
   }
   .filter-input {
     flex: 1;
     font: inherit;
-    padding: 0.35rem 0.5rem;
+    font-size: var(--text-sm);
+    padding: var(--space-1) var(--space-2);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: var(--surface);
   }
+  .filter-input:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+  }
   .filter-count {
-    color: var(--muted);
-    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
     white-space: nowrap;
   }
 </style>
