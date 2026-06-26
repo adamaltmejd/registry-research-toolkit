@@ -412,6 +412,10 @@ def materialize_canonical_attach(
         # and a duplicate variable/state would mint). SQLite has no fold_column, so
         # fetch the variant's delivered columns and compare folded in Python.
         folded_attach = fold_column(a.column)
+        # `delivery_column_name` is nullable (a state from a cvid with a blank
+        # `Kolumnnamn` lands a NULL column); a NULL column can never equal a
+        # real (non-null) attach column, so skip it before folding (fold_column
+        # would TypeError on None).
         present = any(
             fold_column(row[0]) == folded_attach
             for row in conn.execute(
@@ -420,6 +424,7 @@ def materialize_canonical_attach(
                 "WHERE v.register_id = ? AND vs.register_variant_id = ?",
                 (register_id, register_variant_id),
             )
+            if row[0] is not None
         )
         if present:
             # The seed documents a column expected to be MISSING from the SCB
