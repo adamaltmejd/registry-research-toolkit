@@ -875,6 +875,40 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(headingTags.length).toBe(3);
   });
 
+  it("navigates to the hit when the whole leaf row is activated (not the name link)", async () => {
+    // The headline redesign: a leaf row is itself navigable (DataTable
+    // selection-as-navigation). SearchView wires `onselect={(r) =>
+    // navigateTo(r.fqid)}`, and `navigateTo` routes to `catalogHref(fqid)`.
+    // Click the ROW at a NON-link point (the plain `.register` cell, not the
+    // inner name <a>) so this fails if the `onselect` wiring is dropped — the
+    // name-link href is asserted separately by the "open-in-new-tab safe" test.
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The variable leaf row carries a plain Register cell ("LISA") with no
+    // interactive descendant; clicking it bubbles to the selectable row and
+    // fires onselect (mirrors DataTable.browser.test.ts's plain-cell click).
+    const register = document.querySelector<HTMLElement>(
+      ".search-view .register",
+    );
+    expect(register?.textContent?.trim()).toBe("LISA");
+    register?.click();
+
+    // The row click navigated to the variable's catalog node (slashes preserved
+    // by catalogHref), and the query URL is gone — so this can't pass on the
+    // no-op path the null-fqid sibling test guards.
+    await expect
+      .poll(() => window.location.pathname)
+      .toBe("/catalog/scb/lisa/kon");
+    // The router parsed the new path into the catalog-node route (proves a real
+    // navigation, not just a URL-string mutation).
+    expect(router.route).toEqual({
+      name: "catalog-node",
+      fqidPath: "scb/lisa/kon",
+    });
+  });
+
   it("renders a null-fqid leaf as plain text and never navigates on its row", async () => {
     // A null-fqid leaf can't navigate: its name is plain text (no link), and the
     // row's onselect no-ops (navigateTo bails on a falsy fqid). The row still
