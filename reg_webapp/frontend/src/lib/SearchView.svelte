@@ -524,7 +524,7 @@ function usageSummary(result: CodeSearchResult): string {
      correct for free), expanding an indented owner SUB-TABLE — one row per owner
      MATCH (variable owners first with their muted register, then classification
      owners as a `class`-tone Tag), each a whole-row link to the owner's catalog
-     node (display:contents idiom; a null-fqid owner → a non-link row), capped per
+     node (the row IS a flex `<a>`; a null-fqid owner → a non-link row), capped per
      side with a muted "+N more" from the count vs the returned slice length. A
      code with ZERO owners (the common classification value-set code) is a plain,
      NON-expandable Code · Label row with no count and no disclosure. -->
@@ -891,7 +891,7 @@ function usageSummary(result: CodeSearchResult): string {
     background: var(--surface-hover);
   }
   /* The owner SUB-TABLE under an expanded disclosure: indented, one row per owner
-     match, each a whole-row link (display:contents idiom) or a non-link row. */
+     match, each a flex whole-row `<a>` link or a non-link row. */
   .owner-table {
     display: flex;
     flex-direction: column;
