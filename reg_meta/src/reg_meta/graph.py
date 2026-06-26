@@ -317,16 +317,6 @@ class _GraphBuilder:
         # then upgraded once when its own (member-anchored) walk reaches it. Keying on
         # this makes the upgrade idempotent (no repeated model_copy).
         self._class_grouped: set[str] = set()
-        # Classification slugs whose `classification_predecessors` have already been
-        # read (across ALL member walks). An umbrella whose members share an ancestor
-        # spine (the SUN niva/inriktning/grupp case) re-walks that spine once per
-        # member, and `_add_classification_edges` would re-query each spine slug's
-        # inbound edge every time — the edges dedup via `setdefault`, but the SQL
-        # repeats. Gating on this reads each distinct slug's predecessors at most
-        # once. Behavior-preserving: a slug whose predecessors were read under one
-        # member walk already has its edges in `_edges` (added there via
-        # `setdefault`), so skipping the re-read drops no edge.
-        self._pred_walked: set[str] = set()
         # Concept-group cache, keyed by the member's `(provider, register, key)`
         # triple — the group's address (#616). A variable node's facets/group_label
         # come from its canonical group's member list, so a grouped variable needs
@@ -637,13 +627,16 @@ class _GraphBuilder:
         split: the flat ``classification_chain`` interleaves branches, so adjacent
         list entries are not always a real edge — but each edition's predecessor
         IS."""
+        # Read each chain edition's inbound predecessors on EVERY walk — no memo on
+        # the successor slug. A succession edge needs BOTH endpoints in THIS walk's
+        # `slug_to_id`; at a classification MERGE (a successor C with predecessors A
+        # and B on different branches), the walk that reaches C via A has A+C but not
+        # B, so it can only add A→C — B→C is added by B's own later walk. Memoizing
+        # on the successor slug would mark C read after the A-walk and drop B→C
+        # forever. `_edges.setdefault` already dedups shared spine edges, so the
+        # repeat reads are free of duplicates; the perf cost is marginal indexed
+        # lookups, not worth the merge-shape correctness risk.
         for slug, node_id in slug_to_id.items():
-            # Each distinct slug's inbound edges are read at most once across the
-            # whole build — a spine slug shared by several member walks is queried
-            # one time; its edges are already in `_edges` for subsequent walks.
-            if slug in self._pred_walked:
-                continue
-            self._pred_walked.add(slug)
             for pred in self._catalog.classification_predecessors(
                 Fqid.classification_fqid(slug)
             ):

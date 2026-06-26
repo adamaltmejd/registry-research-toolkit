@@ -1095,14 +1095,15 @@ class TestClassificationChains:
         assert ("class/sun1996", "class/sun2000-inriktning") in edges
         assert ("class/sun1996", "class/sun2000-grupp") in edges
 
-    def test_shared_spine_pred_memo_preserves_all_edges(self) -> None:
-        # Fix-3 behavior-preservation: an umbrella whose members share an ancestor
-        # spine (the SUN niva/inriktning/grupp case) re-walks the spine once per
-        # member. The `_pred_walked` memo reads each spine slug's inbound edges only
-        # once across the build, but must not drop any succession edge — a spine
-        # slug's edges, added under the first member walk, stay in `_edges` for the
-        # others. Two members (the two leaf branches) share the root P (sun1996) and
-        # the mid spine; every split edge must still be present and deduped.
+    def test_shared_spine_split_preserves_all_edges_deduped(self) -> None:
+        # An umbrella whose members share an ancestor spine (the SUN
+        # niva/inriktning/grupp case) re-walks the spine once per member. Every split
+        # + extension edge must be present and deduped: a spine slug's edges, added
+        # under the first member walk, stay in `_edges` (dedup by id) for the others.
+        # Two members (the two leaf branches) share the root P (sun1996) and the mid
+        # spine. (This is a SPLIT shape, not a merge — see
+        # `test_classification_merge_preserves_both_predecessor_edges` for the
+        # convergent case the per-successor re-read protects.)
         conn = build_slugged_db(classification=None)
         _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
         _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
@@ -1138,7 +1139,46 @@ class TestClassificationChains:
             ("class/sun2000-niva", "class/sun2020-niva"),
             ("class/sun2000-inriktning", "class/sun2020-inriktning"),
         }
-        # No duplicate edges (dedup by id holds under the memo).
+        # No duplicate edges (dedup by id holds across the per-walk re-reads).
+        succ_ids = [e.id for e in g.edges if e.kind == "succession"]
+        assert len(succ_ids) == len(set(succ_ids))
+
+    def test_classification_merge_preserves_both_predecessor_edges(self) -> None:
+        # A classification MERGE: successor C (sun-cc) has TWO predecessors A (sun-aa)
+        # and B (sun-bb) on different branches — edges A→C and B→C. C and B are both
+        # curated umbrella members; C is anchored FIRST (lower facet_value). The
+        # C-anchored walk's `classification_chain(C)` walks backward via the
+        # deterministic-first predecessor only (`pred[0]` = sun-aa, alphabetically
+        # first), so its `slug_to_id` holds A and C but NOT B — that walk can add A→C
+        # but not B→C (B absent). B→C must come from B's OWN later walk, whose
+        # `slug_to_id` holds B and C.
+        #
+        # This is the regression for a successor-keyed predecessor memo: memoizing on
+        # the successor slug marks C "read" after the A-branch walk, so B's later walk
+        # skips reading C's predecessors and B→C is dropped FOREVER. The per-walk
+        # re-read (each walk re-attempts edges with its own `slug_to_id`; `_edges`
+        # dedups) is what keeps both edges. FAILS against a `_pred_walked` memo; PASSES
+        # after the revert.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun-aa", valid_from=1996)  # A
+        _add_classification(conn, cid=2, slug="sun-bb", valid_from=1996)  # B
+        _add_classification(conn, cid=3, slug="sun-cc", valid_from=2000)  # C (merge)
+        _add_class_succession(
+            conn, predecessor="sun-aa", successor="sun-cc", effective_year=2000
+        )
+        _add_class_succession(
+            conn, predecessor="sun-bb", successor="sun-cc", effective_year=2000
+        )
+        # C (facet 1) is anchored before B (facet 2); A is pulled in only as C's
+        # deterministic-first ancestor, so B is absent from C's walk.
+        _add_class_umbrella_group(conn, members=[(3, "1"), (2, "2")])
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        # BOTH inbound merge edges must be present.
+        assert ("class/sun-aa", "class/sun-cc") in edges
+        assert ("class/sun-bb", "class/sun-cc") in edges
+        # No duplicate succession edges (dedup by id holds across re-reads).
         succ_ids = [e.id for e in g.edges if e.kind == "succession"]
         assert len(succ_ids) == len(set(succ_ids))
 
