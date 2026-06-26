@@ -57,7 +57,7 @@ const columns: Column<Child>[] = [{ key: "name", label: "Provider" }];
 <style>
   .row-link {
     font-weight: 600;
-    /* Break long provider names rather than overflow the mobile canvas (#806). */
-    overflow-wrap: anywhere;
+    /* Long-name breaking now comes from DataTable's cell-level
+       `overflow-wrap: anywhere`, which inherits into this link (#832). */
   }
 </style>

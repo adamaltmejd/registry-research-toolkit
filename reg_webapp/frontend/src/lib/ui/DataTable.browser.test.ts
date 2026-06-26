@@ -11,7 +11,9 @@ import type { Column } from "./types";
 // (2) right-aligned + mono numeric/mono cells, (3) the custom-cell escape hatch,
 // (4) OPTIONAL selection — ARIA grid semantics (role=grid) + keyboard-focusable
 // selectable rows with aria-selected + the selected style — vs a plain static
-// table (no grid role, no row tabindex) when selection props are absent.
+// table (role=table, no row tabindex) when selection props are absent,
+// (5) responsive stacking hooks — explicit ARIA roles (kept across the CSS
+// display change) + per-cell `data-label` + the `.first` primary-column marker.
 
 // Row fixtures are typed concretely. vitest-browser-svelte's `render(Component,
 // props)` can't infer the `Row` generic from the props (unlike `<DataTable .. />`
@@ -87,14 +89,51 @@ describe("DataTable", () => {
     await expect.element(page.getByText("custom").first()).toBeVisible();
   });
 
-  it("renders a plain static table without selection props", async () => {
+  it("renders a plain static table with explicit (non-grid) ARIA roles", async () => {
+    // Explicit roles are set UNCONDITIONALLY so the stacked responsive form (a CSS
+    // `display:block` change that strips native table roles in Firefox/Safari)
+    // keeps valid table semantics. Without selection props the table is a plain
+    // `role="table"` (not grid); rows are `role="row"`; cells are `role="cell"`
+    // (not gridcell); and rows are NOT a tab stop / not aria-selected.
     const { container } = renderTable({ columns, rows });
     const table = container.querySelector("table");
-    expect(table).not.toHaveAttribute("role");
+    expect(table).toHaveAttribute("role", "table");
     const tr = container.querySelector("tbody tr");
+    expect(tr).toHaveAttribute("role", "row");
     expect(tr).not.toHaveAttribute("tabindex");
-    expect(tr).not.toHaveAttribute("role");
     expect(tr).not.toHaveAttribute("aria-selected");
+    const td = container.querySelector("tbody td");
+    expect(td).toHaveAttribute("role", "cell");
+    // thead/tbody are rowgroups; the header row + cells carry their roles too.
+    expect(container.querySelector("thead")).toHaveAttribute(
+      "role",
+      "rowgroup",
+    );
+    expect(container.querySelector("tbody")).toHaveAttribute(
+      "role",
+      "rowgroup",
+    );
+    expect(container.querySelector("thead th")).toHaveAttribute(
+      "role",
+      "columnheader",
+    );
+  });
+
+  it("labels each cell with its column for the stacked-card prefix", async () => {
+    // The responsive stacked form renders each non-primary cell's column label as
+    // a `::before` prefix sourced from `data-label`; the primary (first) column is
+    // the card title, marked `.first` with no prefix. Assert the DOM hooks the CSS
+    // relies on (the `@media` rendering itself is environment-CSS, not asserted).
+    const { container } = renderTable({ columns, rows });
+    const firstRowCells = container.querySelectorAll("tbody tr:first-child td");
+    expect(firstRowCells[0]).toHaveAttribute("data-label", "Code");
+    expect(firstRowCells[0]).toHaveClass("first");
+    expect(firstRowCells[1]).toHaveAttribute("data-label", "Label");
+    expect(firstRowCells[1]).not.toHaveClass("first");
+    expect(firstRowCells[2]).toHaveAttribute("data-label", "Count");
+    // The first header cell is also marked primary (drives the wide-screen
+    // min-width floor).
+    expect(container.querySelector("thead th")).toHaveClass("first");
   });
 
   it("makes rows selectable grid-rows when selection props are passed", async () => {
@@ -118,6 +157,8 @@ describe("DataTable", () => {
     expect(trs[0]).not.toHaveAttribute("role", "button");
     expect(trs[0]).toHaveAttribute("tabindex", "0");
     expect(trs[1]).toHaveAttribute("aria-selected", "false");
+    // Cells are gridcells under selection (vs `cell` in the plain table above).
+    expect(trs[0].querySelector("td")).toHaveAttribute("role", "gridcell");
 
     // Click activates onselect.
     (trs[1] as HTMLElement).click();
