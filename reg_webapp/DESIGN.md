@@ -816,6 +816,129 @@ Incremental — no big-bang rewrite. New redesign UI (#664/#665/#666) builds on 
 the token set; high-risk existing hand-rolled widgets migrate opportunistically as the
 redesign is the natural migration window.
 
+## Visual language (design system)
+
+#689 chose the **foundation** (Bits UI behavior + Svelte scoped CSS +
+CSS-custom-property tokens, no Tailwind). This section defines the **language** that
+foundation expresses — so every migrated page and every new redesign-wave component
+converges on one look instead of re-deciding type, color, and density per `<style>`
+block. It is the source of truth the token file and the primitive set implement.
+
+**Committed direction (decided 2026-06-26).** A *modern data-tool / dashboard* aesthetic
+— the Linear/Observable lineage: an app shell, dense legible tables, keyboard-first
+interaction, subtle surfaces, one confident accent. *Confidently branded* (a clear point
+of view in service of the researcher's task, not maximalist decoration) and
+*light-first, dark-ready* (tokens authored as semantic roles so dark mode is a later
+additive theme, never a retrofit). The audience is academic researchers and data
+stewards working dense Swedish register metadata; the design optimizes for clarity and
+information density over editorial flourish.
+
+This supersedes the MVP look: `system-ui` everywhere, a single `#2563eb` accent on flat
+white, a 56rem centered ribbon, and 35 components each hand-styling cards/panels/tables
+in private `<style>` blocks off a \~6-color token stub.
+
+### Token architecture
+
+Two layers, semantic roles only consumed by components:
+
+- **Primitive ramps** — raw scales: `--gray-1..12` (graphite neutrals), `--rost-1..12`
+  (brand), and the categorical/semantic hues. Components **never** reference these
+  directly.
+- **Semantic roles** — what components use: `--bg`, `--surface`, `--surface-raised`,
+  `--surface-sunken`, `--text`, `--text-muted`, `--text-faint`, `--border`,
+  `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, plus the status roles
+  below. Dark mode is a single `[data-theme="dark"]` block that remaps these roles to
+  dark primitive stops — no component CSS changes.
+
+The tokens move out of `App.svelte`'s `:global(:root)` (the #689 spike stub) into a
+global `frontend/src/tokens.css` imported once in `main.ts`. The stub's
+geometry/interaction tokens (`--space-*`, `--radius`, `--focus-ring`,
+`--surface-hover`/`-selected`) fold into the role set; the bare palette
+(`--border`/`--accent`/`--surface`) is replaced, not kept in parallel.
+
+### Typography
+
+Self-hosted (woff2 in the bundle — no third-party CDN dependency in a research tool;
+both faces are OFL):
+
+- **Schibsted Grotesk** — UI + display. A Scandinavian media-house grotesque:
+  domain-authentic, characterful, and distinct from the `Inter`/`Roboto`/`Space Grotesk`
+  defaults the frontend-design guidance and #689 both warn against.
+- **IBM Plex Mono** — every code, FQID, slug, year, and value-set code. The catalog is
+  full of machine identifiers; they get a mono face consistently (the MVP already
+  half-did this).
+
+Type scale as roles (`--text-display`, `--text-h1..h3`, `--text-body`, `--text-sm`,
+`--text-micro`) with a tracked, uppercase **micro-label** style for table headers and
+section eyebrows — the device that gives the dashboard look its hierarchy without heavy
+headings.
+
+### Color
+
+Graphite ink on a warm off-white (`--bg` \~`#fafaf8`, surfaces toward white). Brand
+accent is **Rost `#B8552A`** (a Falu-red-adjacent warm rust).
+
+**The accent-vs-status rule (load-bearing — a warm brand forces it):** the brand accent
+paints **only interactive chrome** — links, primary buttons, selection, focus ring,
+active nav. It is **never** a status color. Every validation/status state is (a)
+chromatically *cooler* than the brand so it can't be mistaken for it, and (b) paired
+with a **glyph**, never hue alone:
+
+- error → cherry red `--err` `#C42B2B` (✕)
+- warning → cool ochre `--warn` `#9A7400` (▲) — deliberately yellower/cooler than rost
+- info → slate `--info` `#3A6B8C` (i)
+- success → green `--ok` `#2F8F4E`
+
+A separate small **categorical** palette tags result/node *type* (`REG` teal, `VAR`
+indigo, `CODE` gold, classification, group) in search and listings. It is its own
+sub-system — never reuse the brand accent or the status colors for type identity, or
+"this is a variable" and "this is selected/an error" collide.
+
+### Geometry, elevation, motion
+
+- `--space-*` rhythm (0.25rem base), `--radius` (`--radius-sm` \~5px controls, \~8px
+  panels).
+- A small **elevation** scale: flat sunken surfaces, a hairline `--border`, and a single
+  soft shadow token for raised panels/cards/popovers. No heavy drop shadows.
+- `--focus-ring` keeps the #689 accessible-outline intent, retinted to the brand.
+- Motion budget is small and functional (popover/disclosure transitions, \~120–180ms),
+  not decorative — consistent with the data-tool restraint.
+
+### Surface & layout language
+
+- **App shell** replaces the centered 56rem ribbon: a persistent left **rail** (brand,
+  primary nav, contextual facets — keeps all 8 providers reachable), a **topbar**
+  (breadcrumb + a ⌘K command bar promoting the existing `SearchOmnibox`), and a wide
+  content canvas. This fixes the "cramped *and* empty" failure mode of the narrow column
+  on dense pages.
+- **Panels** are the unit of grouping: a header (micro-label title + optional
+  meta/badge) over a body. **DataTable** is the workhorse — uppercase micro-label
+  headers, right-aligned mono numerics, zebra-free hairline rows, hover +
+  keyboard-selected states.
+- Density is tuned for scanning long lists (registers, variables, value-set codes,
+  search results), not for marketing whitespace.
+
+### Shared primitives (Bits UI behavior + scoped CSS)
+
+Pay down the leaf-duplication the root `CLAUDE.md` warns about: extract the recurring
+visual units instead of re-styling per component — `AppShell`, `Panel`, `DataTable`,
+`Breadcrumbs`, `Tag`/`Badge`, `Button`, `KeyValue`, and the `⌘K` command palette.
+Behavior comes from Bits UI (`Command`, `Dialog`, `Combobox`, etc.); the styling is
+scoped CSS reading **only** semantic tokens. The #689 `CatalogPicker` `Command`
+keyboard-split caveat (folded `ConceptGroupRow` → `role="presentation"`) still stands
+and is relevant where these primitives meet grouped lists.
+
+### Migration discipline
+
+No big-bang. Land the foundation first (tokens → type → shell), then migrate
+page-by-page, ordered by traffic and by what the redesign wave is already rewriting:
+browse/landing → subject page (with #664) → search → project editor → history/graph
+(with #666/#678). Hard rules: components consume **semantic roles only** (so dark mode
+and re-tints are free); each migrated page keeps its `*.browser.test.ts` green and ships
+a `dev.sh shot` before/after as visual proof (the merge-gate UI requirement). The
+foundation should land **before** #664/#666 bake in new screens, or we pay to migrate
+them twice.
+
 ## Site-wide catalog vintage footer (#355 decision 2)
 
 `App.svelte` renders a `<footer class="vintage">` on every route showing the reg_meta
