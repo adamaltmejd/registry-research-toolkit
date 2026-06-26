@@ -862,6 +862,83 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("No matches for “zzz”.")).toBeVisible();
   });
 
+  it("shows 'No matches' when the ONLY group is a non-empty UNKNOWN group (no blank body)", async () => {
+    // A response carrying ONLY an unknown/future group with non-empty results: the
+    // render loop SKIPS it (no GROUP_HEADINGS entry), so nothing renders — but
+    // `noMatches` must still fire so the body isn't blank. The skipped group's
+    // non-empty `results` must NOT count as a match.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "zzz",
+      groups: [
+        {
+          group: "future_widgets",
+          total_count: 1,
+          results: [
+            { type: "future_widget", fqid: "scb/lisa/x", name: "Widget" },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("zzz");
+    await render(SearchView);
+
+    // The unknown group renders nothing…
+    await expect.element(page.getByText("Widget")).not.toBeInTheDocument();
+    // …and the "No matches" message shows instead of a blank body.
+    await expect.element(page.getByText("No matches for “zzz”.")).toBeVisible();
+  });
+
+  it("does NOT show 'No matches' when a known group renders a folded succession (guard for the skip exclusion)", async () => {
+    // Guards Fix B's caveat: successions ride INSIDE the classifications group (a
+    // `classification_succession` row, NOT a top-level group), so the classifications
+    // group IS in GROUP_HEADINGS and is NOT skipped. The skip-exclusion in `noMatches`
+    // must not wrongly mark a rendered group empty — "No matches" must stay hidden
+    // while a succession is on screen.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "sun",
+      groups: [
+        {
+          group: "classifications",
+          total_count: 1,
+          results: [
+            {
+              type: "classification_succession",
+              fqid: "class/sun2020",
+              short_name: "SUN",
+              name: "SUN 2020",
+              matched_count: 2,
+              editions: [
+                {
+                  slug: "sun2020",
+                  fqid: "class/sun2020",
+                  name: "SUN 2020",
+                  effective_year: 2020,
+                },
+                {
+                  slug: "sun2000",
+                  fqid: "class/sun2000",
+                  name: "SUN 2000",
+                  effective_year: 2000,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("sun");
+    await render(SearchView);
+
+    // The succession renders…
+    await expect
+      .element(page.getByText("matched 2 of 2 editions"))
+      .toBeVisible();
+    // …and "No matches" stays hidden (the rendered group is not wrongly excluded).
+    await expect.element(page.getByText(/No matches/)).not.toBeInTheDocument();
+  });
+
   it("surfaces a fetch error as an alert", async () => {
     vi.mocked(search).mockRejectedValue(new Error("backend down"));
     setQuery("kon");
@@ -1315,6 +1392,129 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("link", { name: /ATC code list/ }))
       .toHaveAttribute("href", "/catalog/class/atc");
+  });
+
+  // Fix A keys the disclosure each-blocks by CONTENT identity + index (`code|i` for
+  // codes; `group_key|i` / `fqid|i` for the variables-/classifications-grid folds),
+  // not the bare index. A bare-index key makes Svelte REUSE a <details> element for
+  // whatever NEW row lands at that position on a reactive list update, carrying its
+  // `open` state over (a freshly-fetched row renders expanded though the user never
+  // opened it). NOTE: the end-to-end "expand then refine the query" leak is NOT
+  // observable through this view, because `asyncResource` flips `loading=true` +
+  // `data=null` on every refetch, so the whole results `{#each}` is torn down and
+  // rebuilt between queries (fresh closed <details> regardless of key) — verified by
+  // a negative-control probe. So these guard the OBSERVABLE half of the fix: the
+  // index component keeps the key UNIQUE under content collisions (duplicate `code`
+  // in a bucket; the same register-scoped `group_key` recurring across registers),
+  // which a content-ONLY key (`code` / `group_key` alone) would crash on with
+  // Svelte's each_key_duplicate — the same lesson the leaf groups already encode.
+
+  it("renders DUPLICATE codes in one bucket without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
+    // The same `code` value recurs within one code-system bucket (distinct labels /
+    // owners), so a `code`-ONLY key would collide and crash the whole render. The
+    // `code|index` key tolerates it — both disclosure rows must render.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "dup",
+      groups: [
+        {
+          group: "codes",
+          total_count: 2,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "First meaning",
+              variables: [{ fqid: "scb/a/x", name: "X", register: "A" }],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+              code_system: "SUN2020",
+            },
+            {
+              type: "code",
+              code: "1",
+              label: "Second meaning",
+              variables: [{ fqid: "scb/b/y", name: "Y", register: "B" }],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+              code_system: "SUN2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("dup");
+    await render(SearchView);
+
+    // Both duplicate-code rows render (no crash / stuck "Searching…").
+    await expect.element(page.getByText("First meaning")).toBeVisible();
+    await expect.element(page.getByText("Second meaning")).toBeVisible();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+    expect(
+      document.querySelectorAll(".search-view details.code-row").length,
+    ).toBe(2);
+  });
+
+  it("renders two folds sharing a group_key across registers without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
+    // A concept_group's `group_key` is only register-scoped-unique (#322), so the
+    // same key legitimately recurs across registers in one variables group. A
+    // `group_key`-ONLY each key would crash; `group_key|index` tolerates it — both
+    // fold disclosures must render.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "ink",
+      groups: [
+        {
+          group: "variables",
+          total_count: 2,
+          results: [
+            {
+              type: "group",
+              group_key: "tfoab",
+              group_label: "Inkomst IoT",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 1,
+              member_count: 1,
+              register: "IoT",
+              source: "token",
+              members: [
+                { fqid: "scb/iot/tfoab-2019", name: "IoT 2019", facets: [] },
+              ],
+            },
+            {
+              type: "group",
+              group_key: "tfoab",
+              group_label: "Inkomst LINDA",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 1,
+              member_count: 1,
+              register: "LINDA",
+              source: "token",
+              members: [
+                {
+                  fqid: "scb/linda/tfoab-2019",
+                  name: "LINDA 2019",
+                  facets: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("ink");
+    await render(SearchView);
+
+    await expect.element(page.getByText("Inkomst IoT")).toBeVisible();
+    await expect.element(page.getByText("Inkomst LINDA")).toBeVisible();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+    expect(
+      document.querySelectorAll(".search-view details.concept-group").length,
+    ).toBe(2);
   });
 });
 

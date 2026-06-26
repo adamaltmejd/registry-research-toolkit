@@ -130,11 +130,21 @@ const groups = $derived(results.data?.groups ?? []);
 // The docs group participates in "any results at all" so we never show "No
 // matches" above a rendered docs group; gated on `!docs.loading && !docsHasHits`
 // so a docs failure/empty/absent-index still lets the main "No matches" show.
+// A group the render loop SKIPS (an unknown/future `group` value with no
+// GROUP_HEADINGS entry — see the render guard below) must NOT count as a match:
+// its non-empty `results` render nothing, so without this a response carrying ONLY
+// an unknown group would blank the body (neither a group NOR "No matches"). Every
+// group the loop actually renders (registers/variables/classifications/codes) is a
+// GROUP_HEADINGS key, and successions ride INSIDE the classifications group's
+// results (a `classification_succession` row, not a top-level group), so this
+// exclusion can never suppress "No matches" above rendered content.
 const noMatches = $derived(
   q.length >= SEARCH_MIN_QUERY_LENGTH &&
     !results.loading &&
     !results.error &&
-    groups.every((g) => g.results.length === 0) &&
+    groups.every(
+      (g) => g.results.length === 0 || !(g.group in GROUP_HEADINGS),
+    ) &&
     !docs.loading &&
     !docsHasHits,
 );
@@ -161,6 +171,29 @@ function isClassificationSuccession(r: {
   type: string;
 }): r is ClassificationSuccessionSearchResult {
   return r.type === "classification_succession";
+}
+
+// The keyed-each key for a variables / classifications grid row. Folds the row's
+// CONTENT identity (a concept group's `group_key`, else the leaf/succession `fqid`)
+// into the key, NOT the bare index — because a fold row renders a native <details>
+// disclosure, and a bare-index key makes Svelte REUSE the existing <details> for
+// whatever NEW result lands at position `i` on a query refine, carrying the prior
+// row's `open` state over (a freshly-fetched fold would render expanded though the
+// user never opened it). Identity changes → new key → fresh CLOSED <details>; an
+// unchanged row keeps its state. The index stays in the key for UNIQUENESS: a
+// concept_group's `group_key` is only register-scoped-unique (the same key recurs
+// across registers, #322) and a null/duplicate `fqid` recurs too, so identity alone
+// could collide and crash the render (the #379/#391 each_key_duplicate lesson).
+function resultKey(
+  r:
+    | VariableSearchResult
+    | ClassificationSearchResult
+    | ClassificationSuccessionSearchResult
+    | ConceptGroupSearchResult,
+  i: number,
+): string {
+  const identity = isConceptGroup(r) ? r.group_key : r.fqid;
+  return `${identity}|${i}`;
 }
 
 // ── Registers leaf-table row shape (#808) ────────────────────────────────────
@@ -339,7 +372,7 @@ function usageSummary(result: CodeSearchResult): string {
                 <span class="col-head">Register</span>
                 <span class="col-head">Column</span>
               </div>
-              {#each group.results as result, i (i)}
+              {#each group.results as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   <div class="span-row">{@render conceptGroup(result)}</div>
                 {:else}
@@ -360,7 +393,7 @@ function usageSummary(result: CodeSearchResult): string {
                 <span class="col-head">Classification</span>
                 <span class="col-head">Name</span>
               </div>
-              {#each group.results as result, i (i)}
+              {#each group.results as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   <div class="span-row">{@render conceptGroup(result)}</div>
                 {:else if isClassificationSuccession(result)}
@@ -398,7 +431,18 @@ function usageSummary(result: CodeSearchResult): string {
                     <span class="col-head">Label</span>
                     <span class="col-head">Used in</span>
                   </div>
-                  {#each system.codes as result, i (i)}
+                  <!-- Key by `code|index`, NOT the bare index: each code is a
+                       native <details> disclosure, and a bare-index key makes
+                       Svelte REUSE the existing <details> element for whatever NEW
+                       code lands at position `i` on a query refine, carrying the
+                       prior code's `open` state over (a freshly-fetched code would
+                       render expanded though the user never opened it). Folding the
+                       `code` into the key means a different code at `i` → new key →
+                       fresh CLOSED <details>; an unchanged code keeps its state. The
+                       index stays in the key for uniqueness — duplicate `code`
+                       values DO recur within one bucket (the each_key_duplicate
+                       lesson), so `code` alone could collide and crash the render. -->
+                  {#each system.codes as result, i (`${result.code}|${i}`)}
                     {@render codeRow(result)}
                   {/each}
                 </div>
