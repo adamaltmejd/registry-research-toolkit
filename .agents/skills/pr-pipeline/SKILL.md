@@ -4,7 +4,7 @@ description: >-
   Registry Research Toolkit PR development pipeline. Use when asked to run the PR
   pipeline workflow, including prompts like "$pr-pipeline issue 510"; develop issue(s),
   take a ranked lane through implementation, open draft PRs with closing keywords, run
-  review/test/docs gates, mark PRs ready, or continue toward merge when the user
+  review/test/docs/visual gates, mark PRs ready, or continue toward merge when the user
   explicitly asks for merge.
 ---
 
@@ -27,6 +27,10 @@ Agent-surface notes:
   fresh subagent. If the review can only run in the authoring session, treat it as a
   diagnostic checklist, not as independent review evidence. The GitHub bot-review window
   described by the repository guidance still applies.
+- Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
+  new UI authoring, use `frontend-design` before building when that skill is exposed in
+  the active Codex setup. If it is not exposed, report that setup gap before authoring
+  substantial new UI instead of silently substituting generic design prose.
 - Do not merge unless the user explicitly asked for merge/full pipeline or confirms at
   the merge gate. Otherwise finish by marking the PR ready and reporting the gate state.
 
@@ -91,7 +95,11 @@ Run focused verification as the work evolves:
   `uvx --from ty==0.0.49 ty check`, and targeted `uv run python -m pytest <pkg>/`.
 - Frontend: from `reg_webapp/frontend/`, use `bun run lint`, `bun run check`,
   `bun run test`, `bun run build`, and regenerate API types only after backend contract
-  changes.
+  changes. Headless checks never render a pixel. If the change alters rendered output
+  (`reg_webapp/frontend/**`, or any view / component / style the SPA renders), render it
+  with `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
+  `dev.sh smoke`, inspect `/tmp/reg-webapp-shots/`, and keep the screenshot path for
+  closeout / PR proof.
 - Build-affecting DB changes: fast tests first; real `reg-meta-build build-db` is a
   final gate on the truly final head.
 
@@ -119,11 +127,16 @@ Run focused verification as the work evolves:
    duplicating a subsystem elsewhere, a library that subsumes the approach — and route
    those cuts like any finding. (There is no `/simplify` on this surface; it is a Claude
    Code skill only.)
-4. Re-review substantial fixes until the review converges.
-5. Update authored docs only where the diff made them stale: package `DESIGN.md`,
+4. For rendered-output changes, run `web-design-reviewer` against the rendered app as
+   the structured design-quality pass. The manual `run-reg-webapp` render is how you see
+   the change; `web-design-reviewer` is how you review layout, spacing, responsiveness,
+   contrast, and accessibility regressions systematically. Route its findings through
+   the same fix / dismiss / re-review loop as code-review findings.
+5. Re-review substantial fixes until the review converges.
+6. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
    validation-code docs. Never edit generated `reg_meta_build/docs/lisa/*.md`.
-6. Commit and push any review/doc fixes. Never use `--no-verify` or `-n`; fix hook
+7. Commit and push any review/doc fixes. Never use `--no-verify` or `-n`; fix hook
    failures.
 
 ## Ready Or Merge Gate
@@ -148,6 +161,9 @@ For merge, satisfy the repo gate:
   conclude while it reports `reviewing`; after a new push, re-trigger with
   `@codex review` and launch a fresh background poll;
 - real-data validation when build pipeline or DB content changed;
+- visual verification when rendered output changed: run `dev.sh smoke` or
+  `dev.sh shot <route>` on the assembled tree, inspect the screenshot, and run
+  `web-design-reviewer` for the structured design pass;
 - stale-head check before and after merge.
 
 Run the real `build-db` last and once for build-affecting work, using the main
