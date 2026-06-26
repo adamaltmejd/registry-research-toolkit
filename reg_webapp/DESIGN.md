@@ -789,12 +789,14 @@ was never MONA-constrained — the adoption gap was purely historical.
   (`--border`, `--muted`, `--accent`, `--accent-bg`, `--surface`). These are the
   geometry, type, and interaction-state tokens the bare palette lacked; the existing
   color palette stays the source of truth.
-- `SearchOmnibox.svelte` rebuilt as a **Bits UI `Combobox`**: accessible combobox with
-  live `/api/search` suggestions (selecting one navigates to the catalog node; the
-  routing-search `/search?q=` behavior + URL↔box sync are preserved). Behavior nuance to
-  know: Bits UI auto-highlights the first suggestion, so Enter-with-popup-open jumps to
-  the top suggestion (command-palette semantics); Enter routes to `/search` only when no
-  suggestion is highlighted.
+- `SearchOmnibox.svelte` was rebuilt by #689 as a **Bits UI `Combobox`** with live
+  `/api/search` suggestions. **Superseded by #808**: the suggestion dropdown was removed
+  — it duplicated the `/search` results page, and the omnibox auto-routes every query to
+  `/search` anyway, so the popup only ever flashed. `SearchOmnibox` is now a plain
+  routing input and the `/search` results page is the single search surface. The
+  `/search?q=` routing + URL↔box sync it established are preserved: Enter routes to
+  `/search` from other pages, and typing live-refines in place while already on
+  `/search` (no debounced navigation off-route).
 - `CatalogPicker.svelte` filtered lists (variant / provider / register / leaf variables)
   migrated to **Bits UI `Command`**: single tab-stop, arrow-key nav, `role="listbox"` /
   `role="option"` ARIA. `rankFilter` stays the single source of truth (`Command`'s own
