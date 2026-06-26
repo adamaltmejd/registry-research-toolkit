@@ -291,8 +291,13 @@ function usageSummary(result: CodeSearchResult): string {
     <p class="muted">No matches for “{q}”.</p>
   {:else}
     {#each groups as group (group.group)}
-      {#if group.results.length > 0}
-        {@const heading = GROUP_HEADINGS[group.group]}
+      <!-- Look the heading up ABOVE the render guard so an unknown / future `group`
+           value (the backend documents `group` as an extension point) is SKIPPED,
+           not crashed: `heading` is undefined for it, the `&& heading` guard fails,
+           and we render nothing for that group instead of dereferencing
+           `heading.tone` on undefined and crashing the whole search page. -->
+      {@const heading = GROUP_HEADINGS[group.group]}
+      {#if group.results.length > 0 && heading}
         {@const caption = showingOf(group.results.length, group.total_count)}
         <section class="group">
           <h3>
@@ -910,6 +915,14 @@ function usageSummary(result: CodeSearchResult): string {
   .owner-row:hover .row-link {
     text-decoration: underline;
   }
+  /* Keyboard focus on a whole-row owner link. Unlike `.leaf-row`, an owner row IS a
+     flex `<a>` with its own box, so a normal box-shadow focus ring draws fine (the
+     shared `--focus-ring` token, matching DataTable's selectable rows). */
+  .owner-row:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
   .owner-kind {
     line-height: 1;
   }
@@ -943,6 +956,14 @@ function usageSummary(result: CodeSearchResult): string {
   .leaf-row:hover > * {
     background: var(--surface-hover);
   }
+  /* NOTE (#808 a11y fork): a `display: contents` <a> is NOT keyboard-focusable in
+     Chromium — it's dropped from sequential tab navigation entirely (verified: Tab
+     skips straight past it), so a `.leaf-row:focus-visible` rule could never fire.
+     The real defect is that the whole-row leaf link is unreachable by keyboard at
+     all; a CSS focus indicator can't fix that. The same pattern (and gap) lives in
+     CatalogNodeView's `.children.table` leaf rows. Surfaced to the lead — fixing it
+     needs a focusability change (tabindex / not using display:contents for the
+     link), which is a larger re-architecture than #808's scope. */
   /* A FOLD row (concept group / succession <details>) spans all columns and owns
      its own internal layout, sitting inline at its rank position. */
   .span-row {

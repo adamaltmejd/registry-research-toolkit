@@ -262,6 +262,48 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("+5 more")).toBeVisible();
   });
 
+  it("makes an expanded owner-row link keyboard-focusable (#808 a11y)", async () => {
+    // Fix 2 (#808 a11y): the owner sub-rows are whole-row FLEX `<a>`s (NOT
+    // display:contents), so — unlike the leaf rows — they ARE in the keyboard tab
+    // order and a `:focus-visible` ring draws on the anchor's own box. The visible
+    // ring is a pure CSS hook (verified via screenshot in the dev-shot tool); here we
+    // guard the prerequisite: an expanded owner row is a real, focusable <a>.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "11",
+      groups: [
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [
+                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+              ],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("11");
+    await render(SearchView);
+
+    // Expand the disclosure to reveal the owner sub-rows.
+    await page.getByText("Man").click();
+    const owner = document.querySelector<HTMLAnchorElement>(
+      ".search-view a.owner-row",
+    );
+    expect(owner).not.toBeNull();
+    owner?.focus();
+    expect(document.activeElement).toBe(owner);
+  });
+
   it("renders an OWNERLESS code as a plain Code · Label row — no count, no disclosure (#808 round 5)", async () => {
     // The common classification value-set code (e.g. an ATC code) has NO owner
     // variables AND no owner classifications, so it shows NO usage count and is
@@ -707,6 +749,48 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByRole("link", { name: "Orphan" }))
       .not.toBeInTheDocument();
+  });
+
+  it("tolerates an UNKNOWN/future group by SKIPPING it (no crash) while rendering known groups", async () => {
+    // The backend documents `group` as an extension point and requires the SPA to
+    // tolerate unknown/future `group` values by SKIPPING them. An unknown group has
+    // no GROUP_HEADINGS entry, so the heading lookup is `undefined`; dereferencing
+    // `heading.tone` on it would throw and crash the WHOLE search page. The view must
+    // render the known groups and silently omit the unknown one instead.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "kon",
+      groups: [
+        {
+          group: "registers",
+          total_count: 1,
+          results: [
+            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+          ],
+        },
+        {
+          // A group literal the SPA has never heard of, carrying NON-EMPTY results.
+          group: "future_widgets",
+          total_count: 1,
+          results: [
+            { type: "future_widget", fqid: "scb/lisa/x", name: "Widget" },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The known group renders (the page did NOT crash on the unknown group)…
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "LISA", exact: true }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
+    // …and the unknown group is silently omitted (no heading, no row).
+    await expect.element(page.getByText("Widget")).not.toBeInTheDocument();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
   });
 
   it("shows the empty-query hint and never fetches", async () => {
