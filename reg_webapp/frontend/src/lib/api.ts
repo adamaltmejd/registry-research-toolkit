@@ -600,9 +600,8 @@ function searchGet<T>(
 
 /** The minimum query length that's worth a GET /api/search round-trip: a single
  * char is the most expensive query server-side (the codes/value sub-query) and
- * the least useful. The single source of truth for this threshold — both
- * SearchView (the results page) and SearchOmnibox (the header suggestions) gate
- * their fetches on it. */
+ * the least useful. The single source of truth for this threshold — SearchView
+ * (the results page) gates its fetch on it. */
 export const SEARCH_MIN_QUERY_LENGTH = 2;
 
 /** Search the catalog. `q` is the raw user query (encoded); `limit` is the

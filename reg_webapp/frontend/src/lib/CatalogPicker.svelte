@@ -42,7 +42,7 @@ import {
 // the picker feeds it the pre-ranked `filtered*` arrays so `rankFilter` (exact →
 // prefix → other, alphabetical within tier — the target-hunt UX) stays the single
 // source of truth. The "N of M" count is a sibling aria-live element, not a
-// Command feature. See SearchOmnibox.svelte for the sibling Combobox migration.
+// Command feature.
 //
 // Two modes (the picker mounts once per open with a FIXED mode):
 //  - "variant": pick a 3-seg register_variant, emitted WHOLE via
