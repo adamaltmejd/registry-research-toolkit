@@ -49,7 +49,12 @@ describe("ConceptGroupRow (#673 M6)", () => {
     // The shared summary content still renders inside the link: the count and the
     // group-key badge.
     await expect.element(page.getByText("2 variables")).toBeVisible();
-    expect(container.querySelector(".group-key")?.textContent).toBe("ink");
+    // The group-key badge renders the key via the shared `Tag` primitive (#828),
+    // whose internal label markup adds surrounding whitespace — trim before the
+    // text assertion (the key STRING is what matters, not the Tag's layout nodes).
+    expect(container.querySelector(".group-key")?.textContent?.trim()).toBe(
+      "ink",
+    );
   });
 
   it("pick-mode keeps the inline <details> + member buttons even when href is also passed", async () => {

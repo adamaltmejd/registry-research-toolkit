@@ -488,8 +488,11 @@ const MODE_LABELS: Record<PickerMode, string> = {
       <code>_default</code>. Leave blank for full history.
     </p>
     {#if advisoryInvalid}
-      <!-- ADVISORY: the server validates; this never blocks Apply. -->
+      <!-- ADVISORY: the server validates; this never blocks Apply. A caution
+           state — cooler ochre --warn + a ▲ glyph (accent-vs-status: never the
+           brand hue, never hue alone); the meaning also rides the label text. -->
       <p id="period-advisory" class="advisory" role="status">
+        <span class="advisory-glyph" aria-hidden="true">▲</span>
         This doesn't look like a period — you can still apply it; the server
         will confirm.
       </p>
@@ -546,25 +549,30 @@ const MODE_LABELS: Record<PickerMode, string> = {
 <style>
   .period-picker {
     margin: 1.25rem 0;
-    padding: 0.75rem 0.9rem;
+    padding: var(--space-3) 0.9rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     background: var(--surface);
   }
   .head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.75rem;
+    gap: var(--space-3);
     margin-bottom: 0.45rem;
   }
+  /* Tracked uppercase micro-label eyebrow for the "Period" control title. */
   .title {
+    font-size: var(--micro-label-size);
+    letter-spacing: var(--micro-label-tracking);
+    text-transform: uppercase;
     font-weight: 600;
+    color: var(--text-muted);
   }
   .more-toggle {
     font: inherit;
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
+    font-size: var(--text-micro);
+    padding: 0.15rem var(--space-2);
     border: 1px solid var(--border);
     border-radius: 999px;
     background: var(--surface);
@@ -579,11 +587,11 @@ const MODE_LABELS: Record<PickerMode, string> = {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
   /* The "more" expander panel — a separated block below the slider. */
   .more {
-    margin-top: 0.75rem;
+    margin-top: var(--space-3);
     padding-top: 0.6rem;
     border-top: 1px solid var(--border);
   }
@@ -594,8 +602,8 @@ const MODE_LABELS: Record<PickerMode, string> = {
   }
   .mode-toggle {
     font: inherit;
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
+    font-size: var(--text-micro);
+    padding: 0.15rem var(--space-2);
     border: 1px solid var(--border);
     border-radius: 999px;
     background: var(--surface);
@@ -608,12 +616,12 @@ const MODE_LABELS: Record<PickerMode, string> = {
   .mode-toggle[aria-pressed="true"] {
     border-color: var(--accent);
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-fg);
   }
   .row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-2);
     align-items: center;
   }
   .range-row {
@@ -622,23 +630,23 @@ const MODE_LABELS: Record<PickerMode, string> = {
   }
   .actions {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
   input[type="text"] {
     flex: 1 1 16rem;
     min-width: 0;
     padding: 0.4rem 0.55rem;
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font: inherit;
   }
   button[type="submit"],
   button.clear {
     padding: 0.4rem 0.9rem;
     border: 1px solid var(--accent);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-fg);
     font: inherit;
     cursor: pointer;
   }
@@ -651,15 +659,21 @@ const MODE_LABELS: Record<PickerMode, string> = {
     filter: brightness(0.95);
   }
   .help {
-    margin: 0.5rem 0 0;
-    font-size: 0.85rem;
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
   }
   .help code {
+    font-family: var(--font-mono);
     font-size: 0.95em;
   }
+  /* Caution advisory — cool ochre --warn (never the brand hue) paired with the ▲
+     glyph in markup (accent-vs-status). */
   .advisory {
     margin: 0.35rem 0 0;
-    font-size: 0.85rem;
-    color: #92600a;
+    font-size: var(--text-sm);
+    color: var(--warn);
+  }
+  .advisory-glyph {
+    font-size: 0.9em;
   }
 </style>

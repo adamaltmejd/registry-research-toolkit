@@ -1,76 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { SearchResponse } from "./api";
-import { search } from "./api";
 import { isMacPlatform } from "./platform";
 import { router } from "./router.svelte";
 import SearchOmnibox from "./SearchOmnibox.svelte";
 
-// Stub ONLY the `search` GET (the omnibox's suggestion fetch); keep the rest of
-// api.ts real (types, the other helpers) — mirrors CatalogPicker's mock pattern.
-// The default is an empty four-group response so the URL↔box-sync block above
-// (which doesn't drive suggestions) never opens a popup; the suggestion-block
-// tests below override per-case with `vi.mocked(search).mockResolvedValue(...)`.
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, search: vi.fn() };
-});
+// The omnibox is a plain routing search box: typing ROUTES the (debounced) query
+// to `/search?q=…` (the SearchView results page is the single search surface — the
+// #689 live-suggestion popup was removed). These tests exercise the URL↔box sync,
+// Escape-clear, ?type= preservation, and the ⌘K focus shortcut. The box is a plain
+// `<input aria-label="Search the catalog">` — queried by its textbox role.
 
-/** Build a real-shaped `SearchResponse` from per-group result arrays. The four
- * groups are ALWAYS present (the backend always returns the ordered quartet); a
- * `total_count` defaults to the rendered slice length. This matches exactly what
- * `flatten()` reads — `resp.groups[].group` + each group's `results[]`. */
-function searchResponse(groups: {
-  registers?: unknown[];
-  variables?: unknown[];
-  classifications?: unknown[];
-  codes?: unknown[];
-}): SearchResponse {
-  return {
-    kind: "search",
-    query: "q",
-    groups: [
-      {
-        group: "registers",
-        total_count: (groups.registers ?? []).length,
-        results: groups.registers ?? [],
-      },
-      {
-        group: "variables",
-        total_count: (groups.variables ?? []).length,
-        results: groups.variables ?? [],
-      },
-      {
-        group: "classifications",
-        total_count: (groups.classifications ?? []).length,
-        results: groups.classifications ?? [],
-      },
-      {
-        group: "codes",
-        total_count: (groups.codes ?? []).length,
-        results: groups.codes ?? [],
-      },
-    ],
-  } as unknown as SearchResponse;
+// The box is queried by its accessible name (a plain textbox, no longer a
+// combobox). The debounce is ~300ms; the assertions poll, so they ride past it.
+function box() {
+  return page.getByRole("textbox", { name: "Search the catalog" });
 }
-
-/** The default empty response shared by the sync block + as a per-test reset. */
-function emptyResponse(): SearchResponse {
-  return searchResponse({});
-}
-
-// The omnibox routes through the real `router` singleton (only the `search` GET
-// is mocked, above). Each case resets the URL and re-syncs the singleton before
-// rendering. The debounce is ~300ms; the assertions poll, so they ride past it.
-//
-// Two typing idioms (see the suggestion-block note below for why): the URL↔box
-// sync tests use the locator's atomic `.fill()` (one `input` event — enough to
-// drive the routing effect, which reads `query` regardless of the popup); the
-// suggestion tests use `userEvent.type()` (real keystrokes) because that is what
-// actually trips Bits UI's Combobox open-on-input. Enter/Escape/ArrowDown are
-// dispatched as real KeyboardEvents on the focused input (the component's handlers
-// — and Bits UI's composed onkeydown — key off `event.key`).
 
 function press(input: HTMLInputElement, key: string): void {
   input.focus();
@@ -91,10 +36,6 @@ function setUrl(path: string): void {
 
 beforeEach(() => {
   setUrl("/");
-  // Reset to a benign empty response so the URL↔box-sync tests (which don't care
-  // about suggestions) never open a popup off a stray prior mock.
-  vi.mocked(search).mockReset();
-  vi.mocked(search).mockResolvedValue(emptyResponse());
 });
 
 afterEach(() => {
@@ -106,15 +47,27 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     setUrl("/search?q=lisa");
     await render(SearchOmnibox);
 
-    await expect.element(page.getByRole("combobox")).toHaveValue("lisa");
+    await expect.element(box()).toHaveValue("lisa");
   });
 
-  it("routes to /search?q=… (pushState) when typing from another route", async () => {
+  it("does NOT navigate when typing from another route — only Enter routes to /search", async () => {
+    // New behavior (maintainer direction): a plain search box must not yank you
+    // onto /search mid-word. From a non-search route the debounce is inert; typing
+    // leaves you put, and Enter is the sole path to the results page.
     await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await box.fill("kon");
+    await box().fill("kon");
 
-    // The debounced commit enters the search route via pushState (one entry).
+    // Wait out the debounce window (300ms) plus margin, then assert we're STILL on
+    // the home route — typing did not navigate.
+    await new Promise((r) => setTimeout(r, 450));
+    expect(router.route.name).toBe("home");
+    expect(router.getQueryParam("q")).toBeNull();
+
+    // Enter (form submit) commits immediately — NOW we route to /search?q=kon via
+    // pushState. (This assertion still fails if Enter-navigation breaks.)
+    const form = (box().element() as HTMLInputElement).form;
+    form?.requestSubmit();
+
     await expect.poll(() => router.route.name).toBe("search");
     await expect.poll(() => router.getQueryParam("q")).toBe("kon");
   });
@@ -122,9 +75,8 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
   it("refines in place (replaceState) while already on /search — no back-stack spam", async () => {
     setUrl("/search?q=ko");
     await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
     const lenBefore = window.history.length;
-    await box.fill("kon");
+    await box().fill("kon");
 
     await expect.poll(() => router.getQueryParam("q")).toBe("kon");
     // Refinement replaces the current entry — the history stack doesn't grow.
@@ -133,12 +85,11 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
 
   it("commits immediately on Enter (does not full-reload the page)", async () => {
     await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await box.fill("kon");
+    await box().fill("kon");
     // Enter submits the single-input form; the handler preventDefaults the reload
     // and flushes the commit. `requestSubmit()` runs the form's onsubmit (a bare
     // dispatch of a non-cancelable submit wouldn't).
-    const form = (box.element() as HTMLInputElement).form;
+    const form = (box().element() as HTMLInputElement).form;
     form?.requestSubmit();
 
     await expect.poll(() => router.getQueryParam("q")).toBe("kon");
@@ -147,23 +98,21 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
   it("clears the box on Escape", async () => {
     setUrl("/search?q=kon");
     await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await expect.element(box).toHaveValue("kon");
+    await expect.element(box()).toHaveValue("kon");
 
-    press(box.element() as HTMLInputElement, "Escape");
-    await expect.element(box).toHaveValue("");
+    press(box().element() as HTMLInputElement, "Escape");
+    await expect.element(box()).toHaveValue("");
   });
 
   it("does not navigate when Enter follows an Escape-cleared box (blank commit is a no-op)", async () => {
     // From a non-search route: type, clear via Escape, then submit. `commit`'s
     // blank-trimmed early return must keep us off /search (no stray pushState).
     await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await box.fill("kon");
-    press(box.element() as HTMLInputElement, "Escape");
-    await expect.element(box).toHaveValue("");
+    await box().fill("kon");
+    press(box().element() as HTMLInputElement, "Escape");
+    await expect.element(box()).toHaveValue("");
 
-    const form = (box.element() as HTMLInputElement).form;
+    const form = (box().element() as HTMLInputElement).form;
     form?.requestSubmit();
 
     // The route stays at home (the beforeEach base, #675) — a blank query never
@@ -177,8 +126,7 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     // back to "all" — the committed URL carries the existing ?type= forward.
     setUrl("/search?q=ko&type=value");
     await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await box.fill("kon");
+    await box().fill("kon");
 
     await expect.poll(() => router.getQueryParam("q")).toBe("kon");
     await expect.poll(() => router.getQueryParam("type")).toBe("value");
@@ -187,8 +135,7 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
   it("does not add a ?type= when none is present (default scope stays clean)", async () => {
     setUrl("/search?q=ko");
     await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await box.fill("kon");
+    await box().fill("kon");
 
     await expect.poll(() => router.getQueryParam("q")).toBe("kon");
     await expect.poll(() => router.getQueryParam("type")).toBeNull();
@@ -197,575 +144,16 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
   it("adopts the URL's ?q on a back/forward (popstate) without ping-pong", async () => {
     setUrl("/search?q=first");
     await render(SearchOmnibox);
-    await expect.element(page.getByRole("combobox")).toHaveValue("first");
+    await expect.element(box()).toHaveValue("first");
 
     // Simulate a back/forward landing on a different ?q (jsdom-style: change the
     // location, then fire popstate so the singleton re-reads it).
     window.history.pushState({}, "", "/search?q=second");
     window.dispatchEvent(new PopStateEvent("popstate"));
 
-    await expect.element(page.getByRole("combobox")).toHaveValue("second");
+    await expect.element(box()).toHaveValue("second");
     // And it stays put — the URL→box effect doesn't fight the box→URL effect.
     await expect.poll(() => router.getQueryParam("q")).toBe("second");
-  });
-});
-
-// The suggestion popup is the headless Bits UI `Combobox`. Its open-on-input is
-// driven by the per-keystroke `input` events Bits UI listens to — the atomic
-// `.fill()` the sync-block tests use does NOT trip it (verified empirically: the
-// popup stays closed and renders no options). So a test that needs the popup OPEN
-// types via `userEvent.type()` (real keystrokes); a test that only exercises the
-// routing effect (which reads `query` regardless of popup state) keeps `.fill()`.
-// ArrowDown/Enter/Escape are dispatched as raw KeyboardEvents via `press()` (the
-// component keys off `event.key`, and Bits UI's composed `onkeydown` runs first).
-describe("SearchOmnibox — live suggestions (#689 Arm A)", () => {
-  // ── 1. Suggestions render as options ────────────────────────────────────────
-  it("fetches and renders the search hits as listbox options on a ≥2-char query", async () => {
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        registers: [
-          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-        ],
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    await userEvent.type(page.getByRole("combobox").element(), "ko");
-
-    // The fetch fired with the trimmed query + the suggestion limit.
-    await vi.waitFor(() =>
-      expect(search).toHaveBeenCalledWith(
-        "ko",
-        expect.objectContaining({ limit: 8 }),
-      ),
-    );
-    // Both hits surface as listbox options. The accessible name concatenates the
-    // label + the muted context span, so the register row reads "LISA register"
-    // and the variable row "Kön LISA" (its register shown as context) — match each
-    // unambiguously (a bare /LISA/ would hit both rows).
-    await expect
-      .element(page.getByRole("option", { name: "LISA register" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .toBeVisible();
-  });
-
-  // ── 2. Picking a suggestion navigates to its catalog node, not /search ──────
-  it("navigates to the suggestion's catalog href on selection (not the /search page)", async () => {
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    await userEvent.type(page.getByRole("combobox").element(), "kon");
-
-    const option = page.getByRole("option", { name: /Kön/ });
-    await expect.element(option).toBeVisible();
-    await option.click();
-
-    // Routes straight to the catalog node (catalogHref("scb/lisa/kon")), NOT to a
-    // /search results page. The router's catalog route is named "catalog-node".
-    await expect.poll(() => router.route.name).toBe("catalog-node");
-    expect(window.location.pathname).toBe("/catalog/scb/lisa/kon");
-    expect(router.getQueryParam("q")).toBeNull();
-  });
-
-  // ── 2b. The pending routing-commit timer can't fire AFTER a select ──────────
-  it("does NOT redirect to /search after a select once the debounce window elapses", async () => {
-    // REGRESSION (#689 review #1): selecting a suggestion navigates to the catalog
-    // node, but the debounced routing-commit timer (keyed on `query`) was still
-    // armed from the typing that produced the suggestions — ~300ms later it would
-    // fire and clobber the node with `/search?q=…`. The existing selection tests
-    // poll (and exit) BEFORE the timer fires, so the bug was invisible. Here we
-    // wait PAST DEBOUNCE_MS and assert the route is STILL the catalog node.
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    await userEvent.type(page.getByRole("combobox").element(), "kon");
-
-    const option = page.getByRole("option", { name: /Kön/ });
-    await expect.element(option).toBeVisible();
-    await option.click();
-
-    await expect.poll(() => router.route.name).toBe("catalog-node");
-
-    // Wait well past the 300ms debounce — the pending commit must NOT fire.
-    await new Promise((r) => setTimeout(r, 400));
-    expect(router.route.name).toBe("catalog-node");
-    expect(window.location.pathname).toBe("/catalog/scb/lisa/kon");
-    expect(router.getQueryParam("q")).toBeNull();
-  });
-
-  // ── 3. A code suggestion routes to the OWNING variable, not the bare code ───
-  it("routes a code hit to its owning variable's catalog node", async () => {
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        codes: [
-          {
-            type: "code",
-            code: "1",
-            label: "Man",
-            code_system: null,
-            variable_count: 1,
-            classification_count: 0,
-            variables: [
-              { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
-            ],
-            classifications: [],
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    await userEvent.type(page.getByRole("combobox").element(), "man");
-
-    // The option is labelled by the OWNER (the variable name), and selecting it
-    // jumps to the owner's node — the bare (code,label) is not FQID-addressable.
-    const option = page.getByRole("option", { name: /Kön/ });
-    await expect.element(option).toBeVisible();
-    await option.click();
-
-    await expect.poll(() => router.route.name).toBe("catalog-node");
-    expect(window.location.pathname).toBe("/catalog/scb/lisa/kon");
-  });
-
-  it("falls back to the owning classification when a code has no owning variable", async () => {
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        codes: [
-          {
-            type: "code",
-            code: "A01",
-            label: "Cholera",
-            code_system: "icd10",
-            variable_count: 0,
-            classification_count: 1,
-            variables: [],
-            classifications: [
-              { fqid: "class/icd10se", short_name: "ICD-10-SE", name: "ICD" },
-            ],
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    await userEvent.type(page.getByRole("combobox").element(), "cho");
-
-    const option = page.getByRole("option", { name: /ICD-10-SE/ });
-    await expect.element(option).toBeVisible();
-    await option.click();
-
-    await expect.poll(() => router.route.name).toBe("catalog-node");
-    expect(window.location.pathname).toBe("/catalog/class/icd10se");
-  });
-
-  // ── 4. Enter route-vs-select guard ──────────────────────────────────────────
-  it("Enter routes to /search when no suggestion is highlighted", async () => {
-    // No suggestions (empty response) → Enter falls through to the routing commit.
-    vi.mocked(search).mockResolvedValue(emptyResponse());
-    await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await box.fill("kon");
-    // No popup options.
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-
-    press(box.element() as HTMLInputElement, "Enter");
-
-    await expect.poll(() => router.route.name).toBe("search");
-    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
-  });
-
-  it("Enter SELECTS the highlighted suggestion (and does NOT route to /search)", async () => {
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    const input = box.element() as HTMLInputElement;
-    await userEvent.type(input, "kon");
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .toBeVisible();
-
-    // ArrowDown highlights the first option (Bits UI sets aria-activedescendant),
-    // then Enter selects it — the guard sees a highlight and DOES NOT route.
-    press(input, "ArrowDown");
-    await vi.waitFor(() =>
-      expect(input.getAttribute("aria-activedescendant")).toBeTruthy(),
-    );
-    press(input, "Enter");
-
-    // Selecting navigates to the node — NOT to /search.
-    await expect.poll(() => router.route.name).toBe("catalog-node");
-    expect(window.location.pathname).toBe("/catalog/scb/lisa/kon");
-    expect(router.getQueryParam("q")).toBeNull();
-  });
-
-  // ── 5. Fetch-failure resilience ─────────────────────────────────────────────
-  it("keeps routing working when the suggestion fetch rejects (no options, still routes)", async () => {
-    vi.mocked(search).mockRejectedValue(new Error("network down"));
-    await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    await box.fill("kon");
-
-    // The rejection degrades to no suggestions — never a popup, never a throw.
-    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
-    await expect.poll(() => router.route.name).toBe("search");
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-  });
-
-  // ── 6. Escape split (open vs closed popup) ──────────────────────────────────
-  it("Escape closes an OPEN popup and preserves the query (does not clear)", async () => {
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    const input = box.element() as HTMLInputElement;
-    await userEvent.type(input, "kon");
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .toBeVisible();
-
-    press(input, "Escape");
-
-    // Bits UI dismisses the popup; the component leaves the query intact (the
-    // closed-popup Escape-clears path is the existing sync-block test).
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-    await expect.element(box).toHaveValue("kon");
-  });
-
-  // ── 7. Single-char skip ─────────────────────────────────────────────────────
-  it("does not fetch (or open a popup) for a query shorter than MIN_QUERY_LENGTH", async () => {
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    await userEvent.type(page.getByRole("combobox").element(), "k");
-
-    // One char is below MIN_QUERY_LENGTH (2): no fetch, no popup. Give the debounce
-    // window time to NOT fire.
-    await new Promise((r) => setTimeout(r, 400));
-    expect(search).not.toHaveBeenCalled();
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-  });
-
-  // ── 8. Async open: a non-empty fetch OPENS the popup on its own ──────────────
-  it("opens the popup when async suggestions arrive (no second input event)", async () => {
-    // REGRESSION (#689 review #2): typing opens Bits UI's combobox before the
-    // fetch resolves, but the reconcile effect closed it again while the list was
-    // empty (pending), and NOTHING reopened it when the first batch returned — so
-    // the suggestions stayed hidden until the user typed another character. Here
-    // the mock resolves only after a tick, so the options must appear off the
-    // FETCH RESOLUTION alone (no further keystroke).
-    let resolveSearch: ((resp: SearchResponse) => void) | undefined;
-    vi.mocked(search).mockReturnValue(
-      new Promise<SearchResponse>((resolve) => {
-        resolveSearch = resolve;
-      }),
-    );
-    await render(SearchOmnibox);
-    await userEvent.type(page.getByRole("combobox").element(), "kon");
-
-    // While the fetch is pending there are no options.
-    await vi.waitFor(() => expect(search).toHaveBeenCalled());
-    expect(page.getByRole("option").query()).toBeNull();
-
-    // Resolve the fetch — the options must surface WITHOUT another input event.
-    resolveSearch?.(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .toBeVisible();
-  });
-
-  // ── 9. Stale options are hidden the instant the query is edited ──────────────
-  it("hides the prior query's options immediately when the query changes (before the new fetch resolves)", async () => {
-    // REGRESSION (#689 review #1): on a query edit the prior list lingered until
-    // the new (slow) fetch resolved, so a stale option stayed clickable under the
-    // new text and would navigate to an unrelated node. The fix clears
-    // `suggestions` synchronously on every query change. First fetch resolves
-    // immediately (options show); the second is held pending — the old options
-    // must vanish BEFORE it resolves.
-    let resolveSecond: ((resp: SearchResponse) => void) | undefined;
-    vi.mocked(search)
-      .mockResolvedValueOnce(
-        searchResponse({
-          variables: [
-            {
-              type: "variable",
-              fqid: "scb/lisa/kon",
-              name: "Kön",
-              register: "LISA",
-            },
-          ],
-        }),
-      )
-      .mockReturnValueOnce(
-        new Promise<SearchResponse>((resolve) => {
-          resolveSecond = resolve;
-        }),
-      );
-    await render(SearchOmnibox);
-    const input = page.getByRole("combobox").element() as HTMLInputElement;
-    await userEvent.type(input, "ko");
-
-    // First query's option is rendered.
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .toBeVisible();
-
-    // Extend the query — the second fetch is still pending. The stale "Kön" option
-    // must be gone (cleared on the query change), not merely re-ordered.
-    await userEvent.type(input, "n");
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .not.toBeInTheDocument();
-    // It only resolves after we assert the gap — proving the clear is synchronous
-    // with the edit, not a side effect of the new response.
-    resolveSecond?.(emptyResponse());
-  });
-
-  // ── 10. Re-selecting the SAME href navigates again ──────────────────────────
-  it("navigates again when the same suggestion is selected a second time", async () => {
-    // REGRESSION (#689 review #3): Bits UI keeps the chosen `value` selected after
-    // a pick, so re-selecting the same href was a no-op (no onValueChange) and the
-    // suggestion silently stopped navigating. The fix resets the Combobox `value`
-    // to "" on each selection. Select "Kön", land on the node, then bring the same
-    // suggestion up again and select it — it must navigate a SECOND time.
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    const input = page.getByRole("combobox").element() as HTMLInputElement;
-
-    await userEvent.type(input, "kon");
-    await page.getByRole("option", { name: /Kön/ }).click();
-    await expect.poll(() => router.route.name).toBe("catalog-node");
-    expect(window.location.pathname).toBe("/catalog/scb/lisa/kon");
-
-    // Move off the node so a re-navigation is observable, then bring the same
-    // suggestion back up (onSelect cleared the box, so retype) and select it again.
-    setUrl("/");
-    await expect.poll(() => router.route.name).toBe("home");
-    await userEvent.type(input, "kon");
-    await page.getByRole("option", { name: /Kön/ }).click();
-
-    // The second selection fires onValueChange again → navigates anew.
-    await expect.poll(() => router.route.name).toBe("catalog-node");
-    expect(window.location.pathname).toBe("/catalog/scb/lisa/kon");
-  });
-
-  // ── 11. Escape on a CLOSED popup clears the box ──────────────────────────────
-  it("Escape clears the query when the popup is closed (no suggestions)", async () => {
-    // The closed-popup half of the Escape split (#689 review #4): with no popup
-    // open, Escape clears the box (the original behavior). The OPEN half — Escape
-    // dismisses the popup and PRESERVES the text — is test #6 above.
-    vi.mocked(search).mockResolvedValue(emptyResponse());
-    await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    const input = box.element() as HTMLInputElement;
-    await userEvent.type(input, "kon");
-
-    // No options → popup closed. Give the debounce a beat so any popup would show.
-    await new Promise((r) => setTimeout(r, 400));
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-
-    press(input, "Escape");
-    await expect.element(box).toHaveValue("");
-  });
-
-  // ── 12. Blur / click-away closes the popup (focus-gated open-invariant) ───────
-  it("closes the popup on blur and keeps it closed (click-away dismiss)", async () => {
-    // REGRESSION (#689 review): the open-invariant reconcile effect had no focus
-    // gate, so when Bits UI closed `open` on an outside-click/blur, the effect
-    // immediately reopened it (suggestions still non-empty, `dismissed` only set by
-    // Escape) — a combobox you couldn't dismiss by clicking away. The fix gates the
-    // invariant on `focused`: blurring the input closes the popup and it STAYS
-    // closed (suggestions are unchanged, so it's purely the focus loss).
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    await render(SearchOmnibox);
-    const box = page.getByRole("combobox");
-    const input = box.element() as HTMLInputElement;
-    await userEvent.type(input, "kon");
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .toBeVisible();
-
-    // Blur the input (click-away analog) — the focus gate closes the popup.
-    input.blur();
-
-    // Popup gone and it stays gone: the query (and thus `suggestions`) is intact,
-    // so only the focus loss could have closed it, and the reconcile effect must
-    // not reopen it on the next tick.
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-    await expect.element(box).toHaveAttribute("aria-expanded", "false");
-    await new Promise((r) => setTimeout(r, 50));
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-    // The text is preserved (blur is not a clear) — only the popup closed.
-    await expect.element(box).toHaveValue("kon");
-  });
-
-  // ── 13. A deep-link does not pop the popup OR fetch without focus ─────────────
-  it("does not fetch or open the popup on a /search?q deep-link when the box isn't focused", async () => {
-    // REGRESSION (#689 review): on a cold deep-link to /search?q=foo the URL→box
-    // effect seeds the box and the suggestion fetch resolves with hits, but the
-    // input was never focused — without the focus gate the reconcile effect opened
-    // the popup unbidden in the header on the results page. The box may show "foo",
-    // but the suggestions popup must stay CLOSED until the user focuses + types.
-    // The focus gate ALSO suppresses the fetch itself (#689 review, P2): a hidden
-    // `search()` while unfocused renders nothing AND doubles the prod-slow
-    // `/api/search` traffic (SearchView's results resource fetches the same `q`).
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    setUrl("/search?q=foo");
-    await render(SearchOmnibox);
-    // The box is seeded from ?q (write-down side), but nothing focused it.
-    await expect.element(page.getByRole("combobox")).toHaveValue("foo");
-
-    // Ride past the debounce + fetch resolution: the unfocused box neither fires
-    // the suggestion fetch nor opens the popup.
-    await new Promise((r) => setTimeout(r, 400));
-    expect(search).not.toHaveBeenCalled();
-    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
-    await expect
-      .element(page.getByRole("combobox"))
-      .toHaveAttribute("aria-expanded", "false");
-  });
-
-  // ── 14. Focusing a pre-seeded box fetches its suggestions + opens the popup ───
-  it("fetches suggestions and opens the popup when a pre-seeded box is focused", async () => {
-    // The complement of #13: the deep-link seeds the box unfocused (no fetch),
-    // then the user focuses it — reading `focused` in the suggestion effect makes
-    // it re-run on the focus change, so the seeded query NOW fetches and the popup
-    // opens. (Faithful to real behavior: focus alone is what flips the gate; the
-    // `query` is already seeded from the URL.)
-    vi.mocked(search).mockResolvedValue(
-      searchResponse({
-        variables: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-          },
-        ],
-      }),
-    );
-    setUrl("/search?q=foo");
-    await render(SearchOmnibox);
-    await expect.element(page.getByRole("combobox")).toHaveValue("foo");
-
-    // Unfocused: no fetch yet (the #13 invariant).
-    await new Promise((r) => setTimeout(r, 400));
-    expect(search).not.toHaveBeenCalled();
-
-    // Focus the seeded box — the effect re-runs and fires the (debounced) fetch
-    // for the seeded query, and the resolved hits open the popup.
-    (page.getByRole("combobox").element() as HTMLInputElement).focus();
-
-    await vi.waitFor(() =>
-      expect(search).toHaveBeenCalledWith(
-        "foo",
-        expect.objectContaining({ limit: 8 }),
-      ),
-    );
-    await expect
-      .element(page.getByRole("option", { name: /Kön/ }))
-      .toBeVisible();
   });
 });
 
@@ -780,7 +168,7 @@ describe("⌘K shortcut (#803)", () => {
     // (host-correct) path.
     const mac = isMacPlatform();
     await render(SearchOmnibox);
-    const input = page.getByRole("combobox").element() as HTMLInputElement;
+    const input = box().element() as HTMLInputElement;
 
     // Start unfocused so the focus is observably the shortcut's doing.
     input.blur();

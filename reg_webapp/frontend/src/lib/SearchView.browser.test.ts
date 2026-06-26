@@ -3,6 +3,7 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { DocSearchResponse, SearchResponse } from "./api";
 import { docSearch, search } from "./api";
+import { catalogHref } from "./catalog";
 import { router } from "./router.svelte";
 import SearchView from "./SearchView.svelte";
 
@@ -125,9 +126,12 @@ describe("SearchView — typed result groups (#379)", () => {
         .element(page.getByRole("heading", { name: heading }))
         .toBeVisible();
     }
-    // A register/variable/classification leaf links to its catalog node.
+    // A register/variable/classification leaf links to its catalog node. The
+    // register leaf is the registers-DataTable name link (exact "LISA"); the
+    // variable leaf is the whole-row grid link whose accessible name folds in the
+    // register cell ("Kön LISA kon"), so match the variable by its /Kön/ name.
     await expect
-      .element(page.getByRole("link", { name: /LISA/ }))
+      .element(page.getByRole("link", { name: "LISA", exact: true }))
       .toHaveAttribute("href", "/catalog/scb/lisa");
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
@@ -211,7 +215,7 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText(/showing/)).not.toBeInTheDocument();
   });
 
-  it("links code-hit owners and shows a muted '+N more' for the slice cap", async () => {
+  it("collapses a code's owners behind a disclosure; expanding reveals owner variable links + a muted '+N more' (#808 round 5)", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "11",
@@ -239,7 +243,18 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("11");
     await render(SearchView);
 
-    // The owning variable is the link target (not the bare code).
+    // The collapsed row shows the MUTED owner-count summary…
+    await expect.element(page.getByText("6 variables")).toBeVisible();
+    // …and the owner sub-rows are NOT rendered until expanded (the disclosure is
+    // collapsed by default, so the owner link is absent).
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }))
+      .not.toBeInTheDocument();
+
+    // Expand the disclosure (the <summary> carries the code/label).
+    await page.getByText("Man").click();
+
+    // The owning variable is now a navigable link (its register shown muted).
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
@@ -247,9 +262,52 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("+5 more")).toBeVisible();
   });
 
-  it("omits '+N more' for a code hit's classification owners when the slice is complete", async () => {
-    // Symmetric to the variable-owner "+N more" test, but for the classification
-    // branch: classifications.length === classification_count → no overflow line.
+  it("makes an expanded owner-row link keyboard-focusable (#808 a11y)", async () => {
+    // Fix 2 (#808 a11y): the owner sub-rows are whole-row FLEX `<a>`s (NOT
+    // display:contents), so — unlike the leaf rows — they ARE in the keyboard tab
+    // order and a `:focus-visible` ring draws on the anchor's own box. The visible
+    // ring is a pure CSS hook (verified via screenshot in the dev-shot tool); here we
+    // guard the prerequisite: an expanded owner row is a real, focusable <a>.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "11",
+      groups: [
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [
+                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+              ],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("11");
+    await render(SearchView);
+
+    // Expand the disclosure to reveal the owner sub-rows.
+    await page.getByText("Man").click();
+    const owner = document.querySelector<HTMLAnchorElement>(
+      ".search-view a.owner-row",
+    );
+    expect(owner).not.toBeNull();
+    owner?.focus();
+    expect(document.activeElement).toBe(owner);
+  });
+
+  it("renders an OWNERLESS code as a plain Code · Label row — no count, no disclosure (#808 round 5)", async () => {
+    // The common classification value-set code (e.g. an ATC code) has NO owner
+    // variables AND no owner classifications, so it shows NO usage count and is
+    // NOT a disclosure — just a clean Code · Label row.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "sun",
@@ -264,10 +322,9 @@ describe("SearchView — typed result groups (#379)", () => {
               label: "Primary education",
               variables: [],
               variable_count: 0,
-              classifications: [
-                { fqid: "class/sun2020", short_name: "SUN", name: null },
-              ],
-              classification_count: 1,
+              classifications: [],
+              classification_count: 0,
+              code_system: "SUN2020",
             },
           ],
         },
@@ -276,19 +333,30 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("sun");
     await render(SearchView);
 
-    // The owning classification is the link target…
+    // The bucket heading names the classification (SUN2020) the codes come from.
     await expect
-      .element(page.getByRole("link", { name: /SUN/ }))
-      .toHaveAttribute("href", "/catalog/class/sun2020");
-    // …and no overflow line, since the slice is complete.
-    await expect.element(page.getByText(/more/)).not.toBeInTheDocument();
+      .element(page.getByRole("heading", { name: "SUN2020" }))
+      .toBeVisible();
+    // The compact Code · Label row renders…
+    await expect.element(page.getByText("Primary education")).toBeVisible();
+    // …with no count (zero owners) and no disclosure (<details>/<summary>).
+    await expect
+      .element(page.getByText(/variable|classification/))
+      .not.toBeInTheDocument();
+    expect(
+      document.querySelector(".search-view .usage-count")?.textContent?.trim(),
+    ).toBe("");
+    expect(
+      document.querySelector(".search-view details.code-disclosure"),
+    ).toBeNull();
   });
 
-  it("renders BOTH owner lists for a code hit carrying variables and classifications", async () => {
-    // The two `<ul class="owners">` lists are independently gated — a regression
-    // coupling the classification list to the variable list being empty (or vice
-    // versa) would still pass the single-owner tests above, so exercise both at
-    // once and assert each link renders.
+  it("expands a code's CLASSIFICATION owners as a sub-table (distinguishable from variable owners) (#808 round 5)", async () => {
+    // A code carrying BOTH variable + classification owners: the collapsed row
+    // summarizes both counts; expanding reveals the variable owner (name + muted
+    // register) AND the classification owner (short_name, tagged "classification"
+    // so the two owner kinds are distinguishable). No owner classification is
+    // exploded inline on the collapsed row.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "11",
@@ -309,6 +377,7 @@ describe("SearchView — typed result groups (#379)", () => {
                 { fqid: "class/sun2020", short_name: "SUN", name: null },
               ],
               classification_count: 1,
+              code_system: "SUN2020",
             },
           ],
         },
@@ -318,12 +387,27 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("11");
     await render(SearchView);
 
+    // The collapsed row summarizes BOTH owner kinds; no owner is rendered yet.
+    await expect
+      .element(page.getByText("1 variable · 1 classification"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }))
+      .not.toBeInTheDocument();
+
+    // Expand: both owners become navigable sub-rows.
+    await page.getByText("Man").click();
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
+    // The classification owner links to its catalog node (short_name as the label,
+    // tagged "classification" to distinguish it from the variable owner).
     await expect
       .element(page.getByRole("link", { name: /SUN/ }))
       .toHaveAttribute("href", "/catalog/class/sun2020");
+    expect(
+      document.querySelector(".search-view .owner-row .tag.tone-class"),
+    ).not.toBeNull();
   });
 
   it("expands a folded concept-group result to its member links", async () => {
@@ -515,6 +599,44 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/class/sun2020");
   });
 
+  it("keeps the 'current edition' link on a null-fqid classification leaf with a terminal_fqid (#808)", async () => {
+    // Regression: the backend allows a malformed/unresolvable vintage (fqid: null)
+    // that still carries a valid terminal_fqid. The terminal "→ current edition"
+    // link is the row's ONLY navigable target, so it must still render; the name
+    // degrades to plain text (no broken self-link).
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "sun1996",
+      groups: [
+        {
+          group: "classifications",
+          total_count: 1,
+          results: [
+            {
+              type: "classification",
+              fqid: null,
+              short_name: "SUN1996",
+              name: "Svensk utbildningsnomenklatur",
+              terminal_fqid: "class/sun2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("sun1996");
+    await render(SearchView);
+
+    // The current-edition affordance still links to the terminal edition…
+    await expect
+      .element(page.getByRole("link", { name: /current edition/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+    // …and the name is plain text, NOT a (broken) link.
+    await expect.element(page.getByText("SUN1996")).toBeInTheDocument();
+    await expect
+      .element(page.getByRole("link", { name: /SUN1996/ }))
+      .not.toBeInTheDocument();
+  });
+
   it("omits the 'current edition' link on a classification leaf with no terminal_fqid (#571)", async () => {
     // A current edition (or a non-edition classification) carries no terminal_fqid,
     // so the forward-link affordance must NOT render.
@@ -667,6 +789,48 @@ describe("SearchView — typed result groups (#379)", () => {
       .not.toBeInTheDocument();
   });
 
+  it("tolerates an UNKNOWN/future group by SKIPPING it (no crash) while rendering known groups", async () => {
+    // The backend documents `group` as an extension point and requires the SPA to
+    // tolerate unknown/future `group` values by SKIPPING them. An unknown group has
+    // no GROUP_HEADINGS entry, so the heading lookup is `undefined`; dereferencing
+    // `heading.tone` on it would throw and crash the WHOLE search page. The view must
+    // render the known groups and silently omit the unknown one instead.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "kon",
+      groups: [
+        {
+          group: "registers",
+          total_count: 1,
+          results: [
+            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+          ],
+        },
+        {
+          // A group literal the SPA has never heard of, carrying NON-EMPTY results.
+          group: "future_widgets",
+          total_count: 1,
+          results: [
+            { type: "future_widget", fqid: "scb/lisa/x", name: "Widget" },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The known group renders (the page did NOT crash on the unknown group)…
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "LISA", exact: true }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
+    // …and the unknown group is silently omitted (no heading, no row).
+    await expect.element(page.getByText("Widget")).not.toBeInTheDocument();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+  });
+
   it("shows the empty-query hint and never fetches", async () => {
     setQuery("");
     await render(SearchView);
@@ -698,6 +862,83 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("No matches for “zzz”.")).toBeVisible();
   });
 
+  it("shows 'No matches' when the ONLY group is a non-empty UNKNOWN group (no blank body)", async () => {
+    // A response carrying ONLY an unknown/future group with non-empty results: the
+    // render loop SKIPS it (no GROUP_HEADINGS entry), so nothing renders — but
+    // `noMatches` must still fire so the body isn't blank. The skipped group's
+    // non-empty `results` must NOT count as a match.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "zzz",
+      groups: [
+        {
+          group: "future_widgets",
+          total_count: 1,
+          results: [
+            { type: "future_widget", fqid: "scb/lisa/x", name: "Widget" },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("zzz");
+    await render(SearchView);
+
+    // The unknown group renders nothing…
+    await expect.element(page.getByText("Widget")).not.toBeInTheDocument();
+    // …and the "No matches" message shows instead of a blank body.
+    await expect.element(page.getByText("No matches for “zzz”.")).toBeVisible();
+  });
+
+  it("does NOT show 'No matches' when a known group renders a folded succession (guard for the skip exclusion)", async () => {
+    // Guards Fix B's caveat: successions ride INSIDE the classifications group (a
+    // `classification_succession` row, NOT a top-level group), so the classifications
+    // group IS in GROUP_HEADINGS and is NOT skipped. The skip-exclusion in `noMatches`
+    // must not wrongly mark a rendered group empty — "No matches" must stay hidden
+    // while a succession is on screen.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "sun",
+      groups: [
+        {
+          group: "classifications",
+          total_count: 1,
+          results: [
+            {
+              type: "classification_succession",
+              fqid: "class/sun2020",
+              short_name: "SUN",
+              name: "SUN 2020",
+              matched_count: 2,
+              editions: [
+                {
+                  slug: "sun2020",
+                  fqid: "class/sun2020",
+                  name: "SUN 2020",
+                  effective_year: 2020,
+                },
+                {
+                  slug: "sun2000",
+                  fqid: "class/sun2000",
+                  name: "SUN 2000",
+                  effective_year: 2000,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("sun");
+    await render(SearchView);
+
+    // The succession renders…
+    await expect
+      .element(page.getByText("matched 2 of 2 editions"))
+      .toBeVisible();
+    // …and "No matches" stays hidden (the rendered group is not wrongly excluded).
+    await expect.element(page.getByText(/No matches/)).not.toBeInTheDocument();
+  });
+
   it("surfaces a fetch error as an alert", async () => {
     vi.mocked(search).mockRejectedValue(new Error("backend down"));
     setQuery("kon");
@@ -710,6 +951,706 @@ describe("SearchView — typed result groups (#379)", () => {
     // A generic error must NOT trip the timeout branch — pins the `startsWith`
     // discriminator against accidental broadening (e.g. `includes`).
     await expect.element(page.getByText(/timed out/)).not.toBeInTheDocument();
+  });
+});
+
+describe("SearchView — compact per-type tables (#808)", () => {
+  // The #808 round-3 redesign: registers stay a DataTable; the variables /
+  // classifications groups render ONE CSS-grid `.children.table` over their results
+  // IN RANK ORDER — a leaf is a whole-row `display:contents` <a> (one real link),
+  // and a fold (concept group / succession) is a column-spanning row with its
+  // <details> INLINE at its rank position (NO "Grouped families" block). Categorical
+  // type identity lives on the GROUP HEADING (a single Tag); the raw FQID is hidden
+  // (the leaf SLUG is the only identifier). Codes render a compact, code-FIRST grid
+  // table per code-system bucket.
+  const FOUR_GROUPS = {
+    kind: "search",
+    query: "kon",
+    groups: [
+      {
+        group: "registers",
+        total_count: 1,
+        results: [
+          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+        ],
+      },
+      {
+        group: "variables",
+        total_count: 1,
+        results: [
+          {
+            type: "variable",
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            register: "LISA",
+            definition: null,
+          },
+        ],
+      },
+      {
+        group: "classifications",
+        total_count: 1,
+        results: [
+          {
+            type: "classification",
+            fqid: "class/sun2020",
+            short_name: "SUN",
+            name: "Svensk utbildningsnomenklatur",
+          },
+        ],
+      },
+      {
+        group: "codes",
+        total_count: 1,
+        results: [
+          {
+            type: "code",
+            code: "1",
+            label: "Man",
+            variables: [
+              { fqid: "scb/saga/sex", name: "Sex", register: "SAGA" },
+            ],
+            variable_count: 1,
+            classifications: [],
+            classification_count: 0,
+          },
+        ],
+      },
+    ],
+  } as unknown as SearchResponse;
+
+  it("renders all four leaf groups as grid tables (no DataTable / no role=grid) (#808 a11y)", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
+    // L319 / a11y: registers no longer use a DataTable (selection-as-navigation made
+    // a null-fqid row an interactive dead row). ALL four result types now render the
+    // accessible `.children.table` subgrid pattern, so NO role=grid table remains and
+    // there are no selectable <tr> tab stops.
+    expect(
+      document.querySelectorAll(".search-view table[role='grid']").length,
+    ).toBe(0);
+    expect(document.querySelectorAll(".search-view tr.selectable").length).toBe(
+      0,
+    );
+    // Registers + variables + classifications + each codes bucket render a
+    // `.children.table` grid.
+    const gridTables = document.querySelectorAll(
+      ".search-view .children.table",
+    );
+    expect(gridTables.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("makes the register's whole-row link target its catalog node (href, not DataTable selection)", async () => {
+    // L319 / a11y: the register row is a real whole-row <a> (subgrid), so navigation
+    // is the anchor's OWN href (the shell's `use:link` intercepts it at runtime) —
+    // no DataTable selection-as-navigation. Assert the row link's href, the same
+    // open-in-new-tab-safe contract the variable/classification leaves use.
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.getAttribute("href")).toBe(catalogHref("scb/lisa"));
+  });
+
+  it("hides the raw FQID and shows the leaf SLUG as the variable's Column", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The variable's Column cell shows the LEAF SLUG ("kon"), never the full
+    // FQID path ("scb/lisa/kon").
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
+    // No leaf row renders the full FQID with slashes (the slug <code> + the
+    // member-slug <code> in folded families never carry slashes).
+    for (const code of document.querySelectorAll(".search-view code")) {
+      expect(code.textContent ?? "").not.toContain("/");
+    }
+    // The mono slug cell carries the bare leaf slug.
+    const slugCells = Array.from(
+      document.querySelectorAll<HTMLElement>(".search-view .slug-cell"),
+    ).map((c) => c.textContent?.trim());
+    expect(slugCells).toContain("kon");
+  });
+
+  it("renders a prominent Register column for variable hits", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The variables grid carries a "Column" header (the leaf-slug column) that
+    // disambiguates it from the registers table — assert its presence so we know
+    // the variable grid rendered with its three columns.
+    await expect.element(page.getByText("Column")).toBeVisible();
+    // The variable's Register renders in its OWN prominent column (the `.register`
+    // span), not as a muted trailing label. Scope to the variable leaf row (an
+    // unscoped `.search-view .register` can match a codes "Used in" `.register.muted`
+    // if render order / fixtures change — mirror the whole-row-nav test's scoping).
+    const row = document.querySelector(".search-view .cols-3 a.leaf-row");
+    const register = row?.querySelector(".register");
+    expect(register?.textContent?.trim()).toBe("LISA");
+  });
+
+  it("makes each leaf a real catalog link (open-in-new-tab safe)", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // Each leaf is a real <a href> to its catalog node (so middle-click /
+    // open-in-new-tab / screen readers get a link). The register leaf is the
+    // DataTable name link (exact "LISA"); the variable + classification leaves are
+    // whole-row grid links matched by their /Kön/ + /SUN/ names.
+    await expect
+      .element(page.getByRole("link", { name: "LISA", exact: true }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/kon");
+    await expect
+      .element(page.getByRole("link", { name: /SUN/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+  });
+
+  it("marks the group identity via a heading Tag, not per-row badges", async () => {
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    // The categorical tone lives on the heading Tag (one per leaf group), NOT a
+    // per-row badge. The codes heading carries no single tone.
+    for (const tone of ["reg", "var", "class"] as const) {
+      const tag = document.querySelector(
+        `.search-view h3 .heading-tag .tag.tone-${tone}`,
+      );
+      expect(tag, `expected a heading Tag on tone ${tone}`).not.toBeNull();
+    }
+    // Exactly the three leaf-group headings carry a categorical Tag (no per-row
+    // badge proliferation).
+    const headingTags = document.querySelectorAll(".search-view h3 .tag");
+    expect(headingTags.length).toBe(3);
+  });
+
+  it("makes a variable leaf row a whole-row subgrid link carrying register + slug cells, keyboard-focusable (#808 a11y)", async () => {
+    // The headline redesign + a11y fix: a variable leaf row is ONE real link — a
+    // SUBGRID box (`display:grid` + `grid-template-columns: subgrid`, NOT
+    // `display:contents`) so its child cells align to the parent grid's tracks while
+    // the <a> stays a real, keyboard-focusable element. Clicking anywhere on the row
+    // = clicking the link. Assert the <a> targets the catalog node, carries the
+    // prominent register + mono slug cells, resolves its columns to `subgrid`, AND is
+    // keyboard-focusable (the display:contents version was dropped from the tab order).
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The variable leaf row is an <a.leaf-row> to the variable's catalog node.
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .cols-3 a.leaf-row",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
+    // It is a subgrid GRID box (the whole row is the link, no role=grid): its cells
+    // align to the parent grid's tracks via subgrid.
+    const style = getComputedStyle(row as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    // KEYBOARD FOCUSABLE: focusing the anchor moves activeElement to it — the load-
+    // bearing proof (a `display:contents` <a> fails this, dropped from the tab order).
+    row?.focus();
+    expect(document.activeElement).toBe(row);
+    // The row carries the prominent register cell AND the mono leaf-slug cell —
+    // so clicking the register/slug area is clicking the same single row link.
+    const register = row?.querySelector(".register");
+    expect(register?.textContent?.trim()).toBe("LISA");
+    const slug = row?.querySelector(".slug-cell");
+    expect(slug?.textContent?.trim()).toBe("kon");
+  });
+
+  it("makes a classification leaf row a keyboard-focusable whole-row link (#808 a11y)", async () => {
+    // The classification leaf (no terminal link) is also a subgrid whole-row <a>;
+    // assert it is keyboard-focusable — the display:contents version was not.
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // Scope by the classification href — the registers group is ALSO a `.cols-2`
+    // grid now, so a bare `.cols-2 a.leaf-row` would match the register row first.
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .cols-2 a.leaf-row[href='/catalog/class/sun2020']",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.getAttribute("href")).toBe("/catalog/class/sun2020");
+    const style = getComputedStyle(row as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    row?.focus();
+    expect(document.activeElement).toBe(row);
+  });
+
+  it("makes a register leaf row a keyboard-focusable whole-row subgrid link (#808 a11y, replaces DataTable)", async () => {
+    // L319 / a11y: registers no longer use DataTable selection-as-navigation (which
+    // made a null-fqid row an interactive dead row). They render the SAME subgrid
+    // whole-row-link pattern as variables/classifications — a real, keyboard-
+    // focusable <a> per FQID-addressable register.
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The registers group renders the grid table, NOT a DataTable (no role=grid).
+    const grid = document.querySelector(".search-view section.group");
+    expect(grid).not.toBeNull();
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
+    );
+    expect(row).not.toBeNull();
+    const style = getComputedStyle(row as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    row?.focus();
+    expect(document.activeElement).toBe(row);
+  });
+
+  it("renders a null-fqid variable leaf as a non-link row (plain text, no navigation target)", async () => {
+    // A null-fqid leaf can't navigate: it renders as a non-link <div.leaf-row>
+    // (no <a>), its name is plain text. The row still renders (no crash).
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "orphan",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              fqid: null,
+              name: "Orphan",
+              register: "LISA",
+              definition: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("orphan");
+    await render(SearchView);
+
+    await expect.element(page.getByText("Orphan")).toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Orphan/ }))
+      .not.toBeInTheDocument();
+    // The row is a non-link <div>, not an <a> (no navigation target on a null fqid).
+    expect(
+      document.querySelector(".search-view .cols-3 a.leaf-row"),
+    ).toBeNull();
+    expect(
+      document.querySelector(".search-view .cols-3 div.leaf-row"),
+    ).not.toBeNull();
+  });
+
+  it("bounds a long unbroken variable slug's Column track on the mobile canvas so the Variable column keeps its share (#808/#806)", async () => {
+    // Regression for the variables-grid third-column blowout at the 375px canvas.
+    // The Column track is `minmax(0, max-content)`: max-content sizes to the slug's
+    // UNWRAPPED intrinsic width (soft-wrap opportunities — incl. `.slug-cell`'s
+    // overflow-wrap — are NOT taken when MEASURING a max-content track). With the grid
+    // pinned to the canvas the `minmax(0, …)` floor still lets the track SHRINK, so it
+    // doesn't push the grid past 375px — but it greedily claims ~286px of the 375,
+    // STARVING the Variable + Register columns to ~44px / ~22px (the name unreadable,
+    // the slug over-wrapped to ~200px tall). The earlier "overflow-wrap on .slug-cell"
+    // fix could never help: the grid never overflowed; the defect is column STARVATION.
+    // The fix caps the track with `fit-content(7rem)` on the ≤48rem mobile breakpoint
+    // (the browser-test viewport is 414px, BELOW 48rem, so the media query is ACTIVE —
+    // the precedent AppShell's drawer test relies on; asserted below). Desktop keeps
+    // the content-sized `max-content` track (short slugs stay narrow there).
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "for",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              // A long (35-char leaf) unbroken slug — the shape that drove the track
+              // to its full intrinsic width and starved the other columns.
+              fqid: "scb/lisa/foervaervsarbetandebefolkningstatus",
+              name: "Förvärvsarbetande befolkningsstatus",
+              register: "LISA",
+              definition: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("for");
+    const view = await render(SearchView);
+
+    // The mobile breakpoint must be active for the bounded track to apply — pin the
+    // precondition so a viewport-config change can't silently no-op this regression.
+    expect(window.matchMedia("(max-width: 48rem)").matches).toBe(true);
+
+    // Pin the rendered panel to the 375px canvas (the narrowest mobile target) so the
+    // grid resolves its tracks against the real constraint. border-box keeps the 375
+    // inclusive of padding.
+    const root = document.querySelector<HTMLElement>(".search-view");
+    expect(root).not.toBeNull();
+    if (root) {
+      root.style.boxSizing = "border-box";
+      root.style.width = "375px";
+    }
+
+    const grid = document.querySelector<HTMLElement>(".search-view .cols-3");
+    expect(grid).not.toBeNull();
+    // The mono slug rendered (the third column is genuinely populated with the long
+    // content under test, not silently empty).
+    const slug = grid?.querySelector<HTMLElement>(".slug-cell");
+    expect(slug?.textContent?.trim()).toBe(
+      "foervaervsarbetandebefolkningstatus",
+    );
+
+    // The three resolved grid tracks. With the fix the slug (3rd) track is capped at
+    // fit-content(7rem) = 112px; without it, max-content claims ~286px and the others
+    // collapse to ~44 / ~22.
+    const cols = grid ? getComputedStyle(grid).gridTemplateColumns : "";
+    const trackPx = cols.split(/\s+/).map((t) => Number.parseFloat(t));
+    expect(trackPx).toHaveLength(3);
+    const [nameTrack, registerTrack, slugTrack] = trackPx;
+
+    // The slug track is bounded by the 7rem cap (112px), NOT the slug's ~286px
+    // intrinsic width — the load-bearing assertion. (Small slack for sub-pixel
+    // rounding / a fractional root font-size.)
+    expect(slugTrack).toBeLessThanOrEqual(112 + 1);
+    // …and the Variable column keeps a usable share instead of being starved to ~44px.
+    // It must be the WIDEST track (the 2fr primary column), and comfortably so.
+    expect(nameTrack).toBeGreaterThan(slugTrack);
+    expect(nameTrack).toBeGreaterThan(120);
+    // The Register column is no longer crushed to a couple of glyphs either.
+    expect(registerTrack).toBeGreaterThan(40);
+
+    // Belt-and-suspenders: the grid still fits the canvas (no horizontal overflow).
+    expect(grid?.scrollWidth ?? 0).toBeLessThanOrEqual(
+      (grid?.clientWidth ?? 0) + 1,
+    );
+
+    view.unmount();
+  });
+
+  it("interleaves a folded family inline in rank order (no 'Grouped families' block)", async () => {
+    // #808 round 3: a fold sits inline at its rank position among the leaf rows —
+    // it is NOT pulled out into a separate "Grouped families" sub-block. Assert a
+    // leaf row, a fold <details>, and another leaf row all render in the SAME grid
+    // table, and that the old "Grouped families" label is gone.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "ink",
+      groups: [
+        {
+          group: "variables",
+          total_count: 3,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/lisa/before",
+              name: "Before fold",
+              register: "LISA",
+              definition: null,
+            },
+            {
+              type: "group",
+              group_key: "scb/lisa/dispink",
+              group_label: "Disponibel inkomst",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 2,
+              member_count: 3,
+              register: "LISA",
+              source: "token",
+              members: [
+                {
+                  fqid: "scb/lisa/dispink-2019",
+                  name: "Disp 2019",
+                  facets: [],
+                },
+              ],
+            },
+            {
+              type: "variable",
+              fqid: "scb/lisa/after",
+              name: "After fold",
+              register: "LISA",
+              definition: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("ink");
+    await render(SearchView);
+
+    // Both leaf rows AND the fold render.
+    await expect
+      .element(page.getByRole("link", { name: /Before fold/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/before");
+    await expect
+      .element(page.getByRole("link", { name: /After fold/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/after");
+    // The fold is a <details> sitting INLINE in the same grid table (a span-row),
+    // interleaved between the two leaf rows.
+    await expect.element(page.getByText("matched 2 of 3")).toBeVisible();
+    const grid = document.querySelector(".search-view .cols-3");
+    const fold = grid?.querySelector(".span-row details.concept-group");
+    expect(
+      fold,
+      "fold <details> renders inline in the variables grid",
+    ).not.toBeNull();
+    // The old "Grouped families" pulled-out block is GONE.
+    expect(document.querySelector(".search-view .folds-label")).toBeNull();
+    await expect
+      .element(page.getByText("Grouped families"))
+      .not.toBeInTheDocument();
+  });
+
+  it("keeps folded families as <details> with leaf-slug members (no full FQID)", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "ink",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "group",
+              group_key: "scb/lisa/dispink",
+              group_label: "Disponibel inkomst",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 2,
+              member_count: 3,
+              register: "LISA",
+              source: "token",
+              members: [
+                {
+                  fqid: "scb/lisa/dispink-2019",
+                  name: "Disp 2019",
+                  facets: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("ink");
+    await render(SearchView);
+
+    // The fold stays a <details> disclosure (no DataTable for it).
+    await expect.element(page.getByText("matched 2 of 3")).toBeVisible();
+    await page.getByText("Disponibel inkomst").click();
+    // Members are real leaf links…
+    await expect
+      .element(page.getByRole("link", { name: /Disp 2019/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/dispink-2019");
+    // …and the member identifier is the leaf SLUG, never the full FQID path.
+    const memberSlug = document.querySelector(".search-view .member-slug");
+    expect(memberSlug?.textContent?.trim()).toBe("dispink-2019");
+  });
+
+  it("renders codes as a code-first disclosure: highlighted code cell, muted owner count, owners revealed on expand (#808 round 5)", async () => {
+    // #808 round 5: each code-system bucket is a compact code-FIRST table — one row
+    // per code, the CODE the highlighted primary cell, then the Label and a muted
+    // owner-count summary. A code WITH owners is a disclosure that expands an owner
+    // sub-table; the owner VARIABLES are the navigable targets and the owner
+    // CLASSIFICATION owners appear too (tagged), but only AFTER expansion.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "man",
+      groups: [
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "A10",
+              label: "Diabetes drugs",
+              variables: [
+                { fqid: "scb/lmed/atc", name: "ATC-kod", register: "LMED" },
+              ],
+              variable_count: 1,
+              classifications: [
+                { fqid: "class/atc", short_name: "ATC code list", name: null },
+              ],
+              classification_count: 1,
+              code_system: "ATC",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("man");
+    await render(SearchView);
+
+    // The bucket heading names the classification/value-set the codes come from.
+    await expect
+      .element(page.getByRole("heading", { name: "ATC" }))
+      .toBeVisible();
+    // One code row, with the highlighted primary CODE cell.
+    const codeCell = document.querySelector(".search-view .code-cell");
+    expect(codeCell?.textContent?.trim()).toBe("A10");
+    // The collapsed row shows the muted owner-count summary; owners are hidden.
+    await expect
+      .element(page.getByText("1 variable · 1 classification"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /ATC-kod/ }))
+      .not.toBeInTheDocument();
+
+    // Expand the disclosure — the owner variable is the navigable target.
+    await page.getByText("Diabetes drugs").click();
+    await expect
+      .element(page.getByRole("link", { name: /ATC-kod/ }))
+      .toHaveAttribute("href", "/catalog/scb/lmed/atc");
+    // The owner classification surfaces in the sub-table (tagged "classification").
+    await expect
+      .element(page.getByRole("link", { name: /ATC code list/ }))
+      .toHaveAttribute("href", "/catalog/class/atc");
+  });
+
+  // Fix A keys the disclosure each-blocks by CONTENT identity + index (`code|i` for
+  // codes; `group_key|i` / `fqid|i` for the variables-/classifications-grid folds),
+  // not the bare index. A bare-index key makes Svelte REUSE a <details> element for
+  // whatever NEW row lands at that position on a reactive list update, carrying its
+  // `open` state over (a freshly-fetched row renders expanded though the user never
+  // opened it). NOTE: the end-to-end "expand then refine the query" leak is NOT
+  // observable through this view, because `asyncResource` flips `loading=true` +
+  // `data=null` on every refetch, so the whole results `{#each}` is torn down and
+  // rebuilt between queries (fresh closed <details> regardless of key) — verified by
+  // a negative-control probe. So these guard the OBSERVABLE half of the fix: the
+  // index component keeps the key UNIQUE under content collisions (duplicate `code`
+  // in a bucket; the same register-scoped `group_key` recurring across registers),
+  // which a content-ONLY key (`code` / `group_key` alone) would crash on with
+  // Svelte's each_key_duplicate — the same lesson the leaf groups already encode.
+
+  it("renders DUPLICATE codes in one bucket without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
+    // The same `code` value recurs within one code-system bucket (distinct labels /
+    // owners), so a `code`-ONLY key would collide and crash the whole render. The
+    // `code|index` key tolerates it — both disclosure rows must render.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "dup",
+      groups: [
+        {
+          group: "codes",
+          total_count: 2,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "First meaning",
+              variables: [{ fqid: "scb/a/x", name: "X", register: "A" }],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+              code_system: "SUN2020",
+            },
+            {
+              type: "code",
+              code: "1",
+              label: "Second meaning",
+              variables: [{ fqid: "scb/b/y", name: "Y", register: "B" }],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+              code_system: "SUN2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("dup");
+    await render(SearchView);
+
+    // Both duplicate-code rows render (no crash / stuck "Searching…").
+    await expect.element(page.getByText("First meaning")).toBeVisible();
+    await expect.element(page.getByText("Second meaning")).toBeVisible();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+    expect(
+      document.querySelectorAll(".search-view details.code-row").length,
+    ).toBe(2);
+  });
+
+  it("renders two folds sharing a group_key across registers without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
+    // A concept_group's `group_key` is only register-scoped-unique (#322), so the
+    // same key legitimately recurs across registers in one variables group. A
+    // `group_key`-ONLY each key would crash; `group_key|index` tolerates it — both
+    // fold disclosures must render.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "ink",
+      groups: [
+        {
+          group: "variables",
+          total_count: 2,
+          results: [
+            {
+              type: "group",
+              group_key: "tfoab",
+              group_label: "Inkomst IoT",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 1,
+              member_count: 1,
+              register: "IoT",
+              source: "token",
+              members: [
+                { fqid: "scb/iot/tfoab-2019", name: "IoT 2019", facets: [] },
+              ],
+            },
+            {
+              type: "group",
+              group_key: "tfoab",
+              group_label: "Inkomst LINDA",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 1,
+              member_count: 1,
+              register: "LINDA",
+              source: "token",
+              members: [
+                {
+                  fqid: "scb/linda/tfoab-2019",
+                  name: "LINDA 2019",
+                  facets: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("ink");
+    await render(SearchView);
+
+    await expect.element(page.getByText("Inkomst IoT")).toBeVisible();
+    await expect.element(page.getByText("Inkomst LINDA")).toBeVisible();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+    expect(
+      document.querySelectorAll(".search-view details.concept-group").length,
+    ).toBe(2);
   });
 });
 
