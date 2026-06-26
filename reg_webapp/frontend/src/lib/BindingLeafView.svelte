@@ -741,7 +741,7 @@ const repSegment = $derived(
   /* #670: the slug-fallback qualifier reads as a technical identifier, not a
      human label — mono, lighter weight, in a subtle code chip. */
   .member-identity .qualifier.slug {
-    font-family: var(--mono, monospace);
+    font-family: var(--font-mono);
     font-weight: 500;
     font-size: 0.85em;
   }
@@ -865,7 +865,7 @@ const repSegment = $derived(
     color: var(--accent-ink);
   }
   .pick .slug {
-    font-family: var(--mono, monospace);
+    font-family: var(--font-mono);
     font-weight: 600;
   }
   .pick .name {
