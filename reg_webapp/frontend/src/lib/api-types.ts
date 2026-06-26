@@ -868,7 +868,7 @@ export interface components {
          */
         ClassificationGroupNode: {
             /** Axes */
-            axes: string[];
+            axes: components["schemas"]["GroupAxis"][];
             /** Key */
             key: string;
             /**
@@ -1183,7 +1183,7 @@ export interface components {
          */
         ConceptGroupNode: {
             /** Axes */
-            axes: string[];
+            axes: components["schemas"]["GroupAxis"][];
             /** Key */
             key: string;
             /**
@@ -1289,14 +1289,16 @@ export interface components {
          * ConceptGroupSummary
          * @description One derived concept group. `key` is the scope-unique derivation key
          *     (slug stem / min member slug / curated key) — a stable anchor for UI
-         *     state, not an FQID. `axes` holds the group's ordered facet axes (#819): empty
-         *     for edge / axis-less umbrella groups, one for token/single-axis-curated groups,
-         *     N for a multi-axis curated family (the iot disposable-income group). Members are
-         *     ordered by their first facet value, then slug.
+         *     state, not an FQID. `axes` holds the group's ordered facet axes (#819) as
+         *     `GroupAxis(name, label)` — empty for edge / axis-less umbrella groups, one for
+         *     token/single-axis-curated groups, N for a multi-axis curated family (the iot
+         *     disposable-income group). Each axis carries its stable match `name` and its
+         *     curator-authored display `label` (consumers match on `name`, display `label`).
+         *     Members are ordered by their first facet value, then slug.
          */
         ConceptGroupSummary: {
             /** Axes */
-            axes: string[];
+            axes: components["schemas"]["GroupAxis"][];
             /** Key */
             key: string;
             /** Label */
@@ -1520,6 +1522,22 @@ export interface components {
             value_set_version_label: string;
             /** Variant */
             variant: string;
+        };
+        /**
+         * GroupAxis
+         * @description One declared facet axis of a concept group (#819): the stable `name` (the
+         *     derivation/match key — `concept_group_axis.axis`, the same string a member's
+         *     `GroupFacet.axis` carries) and its curator-authored display `label`
+         *     (`concept_group_axis.label`, e.g. "Hushållsbegrepp"). Consumers MATCH on `name`
+         *     (it keys `GroupFacet.axis`) and DISPLAY `label` — the label is presentation
+         *     only, never an identity. `ConceptGroupSummary.axes` is a tuple of these, ordered
+         *     by the axis's `ordinal`; empty for edge / axis-less umbrella groups.
+         */
+        GroupAxis: {
+            /** Label */
+            label: string;
+            /** Name */
+            name: string;
         };
         /**
          * GroupFacet

@@ -16,7 +16,7 @@ function group(overrides: Partial<ConceptGroup> = {}): ConceptGroup {
     key: "ink",
     label: "Inkomst",
     source: "token",
-    axes: ["month"],
+    axes: [{ name: "month", label: "month" }],
     members: [
       {
         fqid: "scb/rams/inkjan",
@@ -132,7 +132,11 @@ function threeAxisGroup(): ConceptGroup {
     key: "disponibel-inkomst",
     label: "Disponibel inkomst",
     source: "curated",
-    axes: ["enhet", "hushallsbegrepp", "kapitalvinst"],
+    axes: [
+      { name: "enhet", label: "Enhet" },
+      { name: "hushallsbegrepp", label: "Hushållsbegrepp" },
+      { name: "kapitalvinst", label: "Kapitalvinst" },
+    ],
     members: [
       // Two members on the SAME variable (two delivery columns), differing ONLY
       // on kapitalvinst — the exact pair the 2D matrix collapses + drops.
@@ -304,7 +308,10 @@ function twoAxisCollidingGroup(): ConceptGroup {
     key: "din8",
     label: "Disponibel inkomst (DIN8)",
     source: "curated",
-    axes: ["enhet", "hushallsbegrepp"],
+    axes: [
+      { name: "enhet", label: "Enhet" },
+      { name: "hushallsbegrepp", label: "Hushållsbegrepp" },
+    ],
     members: [
       // THREE members on one variable sharing the SAME (enhet, hushallsbegrepp)
       // cell, distinguished only by delivery_column — the DIN83/84/86 case.
@@ -376,7 +383,10 @@ describe("ConceptGroupRow ≤2-axis colliding-coord navigator (#819 FIX C)", () 
       group: group({
         key: "agi",
         label: "AGI",
-        axes: ["month", "rank"],
+        axes: [
+          { name: "month", label: "month" },
+          { name: "rank", label: "rank" },
+        ],
         members: [
           {
             fqid: "scb/lisa/a",

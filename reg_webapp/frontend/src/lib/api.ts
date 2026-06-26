@@ -251,6 +251,10 @@ export type ConceptGroupMember = Schemas["ConceptGroupMember"];
  * so the facet-grid helpers (`axisValues`/`memberAt`) can be generic over the
  * member type. */
 export type GroupFacetModel = Schemas["GroupFacet"];
+/** One declared facet axis of a concept group (#819): the stable `name` (the
+ * MATCH key — equal to a member's `GroupFacet.axis`) and its curator-authored
+ * display `label`. Consumers match on `name`, render `label`. */
+export type GroupAxisModel = Schemas["GroupAxis"];
 
 /** The concept group as a browsable SUBJECT (#617), returned by the fixed
  * `/catalog/group/<provider>/<register>/<key>` route — group identity +

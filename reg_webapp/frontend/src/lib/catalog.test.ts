@@ -38,6 +38,13 @@ import {
 } from "./catalog";
 import type { Route } from "./router.svelte";
 
+// #819: a group's axis is now `{name, label}`. Tests key on the stable name and
+// don't assert the label here, so default the label to the name. Wraps the bare
+// axis-name lists the helper tests build.
+function ax(...names: string[]): { name: string; label: string }[] {
+  return names.map((name) => ({ name, label: name }));
+}
+
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
@@ -196,8 +203,8 @@ describe("axisNoun", () => {
     // Single-axis token groups pluralize their axis (never a re-hardcoded
     // "vintages"). Classification umbrellas are now AXIS-LESS (`axes: []`, #516)
     // → the empty-axis fallback "members" is the umbrella's member noun.
-    expect(axisNoun(["dimension"])).toBe("dimensions");
-    expect(axisNoun(["vintage"])).toBe("vintages");
+    expect(axisNoun(ax("dimension"))).toBe("dimensions");
+    expect(axisNoun(ax("vintage"))).toBe("vintages");
     expect(axisNoun([])).toBe("members"); // no axis (umbrella) → generic fallback
   });
 });
@@ -736,7 +743,7 @@ function group(over: Partial<ConceptGroup>): ConceptGroup {
     key: "ink",
     label: "Inkomst",
     source: "token",
-    axes: ["month"],
+    axes: ax("month"),
     members: [
       {
         fqid: "scb/lisa/inkjan",
@@ -805,7 +812,7 @@ describe("groupFilterKeys", () => {
     const repGroup = group({
       key: "disp",
       label: "Disponibel inkomst",
-      axes: ["kapitalvinst"],
+      axes: ax("kapitalvinst"),
       members: [
         {
           fqid: "scb/iot/disp",
@@ -865,7 +872,7 @@ describe("groupFilterKeys", () => {
 
 describe("axisValues / memberAt", () => {
   const matrix = group({
-    axes: ["month", "rank"],
+    axes: ax("month", "rank"),
     members: [
       {
         fqid: "scb/lisa/agi1inkjan",
@@ -925,7 +932,7 @@ describe("axisValues / memberAt", () => {
 describe("membersHaveUniqueCoords (#819 FIX C)", () => {
   it("is true when every member occupies a distinct coordinate (the matrix is lossless)", () => {
     const matrix = group({
-      axes: ["month", "rank"],
+      axes: ax("month", "rank"),
       members: [
         {
           fqid: "scb/lisa/a",
@@ -945,14 +952,14 @@ describe("membersHaveUniqueCoords (#819 FIX C)", () => {
         },
       ],
     });
-    expect(membersHaveUniqueCoords(matrix, ["month", "rank"])).toBe(true);
+    expect(membersHaveUniqueCoords(matrix, ax("month", "rank"))).toBe(true);
   });
 
   it("is false when two members share a full 2-axis coordinate (the matrix would drop one)", () => {
     // Representation members: same (month, rank) coords, distinguished only by
     // delivery_column — the exact shape FIX C must route through the navigator.
     const collide = group({
-      axes: ["month", "rank"],
+      axes: ax("month", "rank"),
       members: [
         {
           fqid: "scb/iot/din8",
@@ -974,14 +981,14 @@ describe("membersHaveUniqueCoords (#819 FIX C)", () => {
         },
       ],
     } as unknown as Partial<ConceptGroup>);
-    expect(membersHaveUniqueCoords(collide, ["month", "rank"])).toBe(false);
+    expect(membersHaveUniqueCoords(collide, ax("month", "rank"))).toBe(false);
   });
 
   it("does not alias distinct vectors by concatenation (separator safety)", () => {
     // ["ab",""] vs ["a","b"] both concatenate to "ab" without a separator — must
     // stay distinct so a real collision isn't masked / a non-collision isn't faked.
     const g = group({
-      axes: ["x", "y"],
+      axes: ax("x", "y"),
       members: [
         {
           fqid: "scb/a/1",
@@ -998,7 +1005,7 @@ describe("membersHaveUniqueCoords (#819 FIX C)", () => {
         },
       ],
     } as unknown as Partial<ConceptGroup>);
-    expect(membersHaveUniqueCoords(g, ["x", "y"])).toBe(true);
+    expect(membersHaveUniqueCoords(g, ax("x", "y"))).toBe(true);
   });
 });
 
@@ -1006,7 +1013,7 @@ describe("memberQualifier (#670)", () => {
   const naringsgren = group({
     key: "naringsgren",
     label: "Näringsgren, största förvärvskälla",
-    axes: ["source", "edition"],
+    axes: ax("source", "edition"),
     members: [
       {
         fqid: "scb/lisa/agi1astsni2007g",
@@ -1088,7 +1095,7 @@ describe("memberQualifier (#670)", () => {
     // group's facets lead.
     const other = group({
       key: "other",
-      axes: ["level"],
+      axes: ax("level"),
       members: [
         {
           fqid: "scb/lisa/agi1astsni2007g",
@@ -1142,7 +1149,7 @@ describe("memberQualifier delivery_column disambiguation (#819)", () => {
   // FIRST representation when the caller knows no column (the binding-leaf case).
   const twoReps = group({
     key: "disponibel-inkomst",
-    axes: ["kapitalvinst"],
+    axes: ax("kapitalvinst"),
     members: [
       {
         fqid: "scb/iot/dispink",
@@ -1236,7 +1243,7 @@ describe("foldGroupedRows order + countFoldedMembers", () => {
     const lkf = group({
       key: "lkf",
       label: "LKF",
-      axes: ["vintage"],
+      axes: ax("vintage"),
       members: [
         { fqid: "class/lkf1980", name: null, facets: [] },
         { fqid: "class/lkf2020", name: null, facets: [] },

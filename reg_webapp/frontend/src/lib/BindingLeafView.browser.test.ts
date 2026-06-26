@@ -643,7 +643,10 @@ describe("BindingLeafView member identity (#670)", () => {
         key: "naringsgren",
         label: "Näringsgren, största förvärvskälla",
         source: "edge",
-        axes: ["source", "edition"],
+        axes: [
+          { name: "source", label: "source" },
+          { name: "edition", label: "edition" },
+        ],
         members: [
           {
             fqid: groupedFqid,
@@ -715,7 +718,10 @@ describe("BindingLeafView member identity (#670)", () => {
           key: "naringsgren",
           label: "Näringsgren, största förvärvskälla",
           source: "edge",
-          axes: ["source", "edition"],
+          axes: [
+            { name: "source", label: "source" },
+            { name: "edition", label: "edition" },
+          ],
           members: [
             {
               // Keyed on the RESOLVED target, NOT the requested alias.

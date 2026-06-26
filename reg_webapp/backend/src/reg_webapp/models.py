@@ -20,6 +20,7 @@ from reg_meta.catalog import (
     ClassificationEdition,
     ConceptGroupMember,
     ConceptGroupSummary,
+    GroupAxis,
     LineageEdge,
     LineageWarning,
     RegisterCoverage,
@@ -358,7 +359,9 @@ class ConceptGroupNode(BaseModel):
     key: str
     label: str
     source: Literal["edge", "token", "curated"]
-    axes: list[str]
+    # #819: reg_meta's `GroupAxis(name, label)` embedded directly (like
+    # `ConceptGroupMember`) — the SPA matches on `name`, displays `label`.
+    axes: list[GroupAxis]
     members: list[ConceptGroupNodeMember]
     # The validated `?member=` focus hint (a member's leaf slug), echoed so the SPA
     # highlights it; None when absent or not a member of this group.
@@ -386,7 +389,9 @@ class ClassificationGroupNode(BaseModel):
     key: str
     label: str
     source: Literal["edge", "token", "curated"]
-    axes: list[str]
+    # #819: reg_meta's `GroupAxis(name, label)` embedded directly (like
+    # `ConceptGroupMember`) — the SPA matches on `name`, displays `label`.
+    axes: list[GroupAxis]
     members: list[ConceptGroupMember]
 
 

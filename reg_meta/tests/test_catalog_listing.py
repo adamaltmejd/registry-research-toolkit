@@ -15,6 +15,7 @@ from reg_meta.catalog import (
     BindingSummary,
     Catalog,
     CatalogSizes,
+    GroupAxis,
     ProviderSummary,
     RegisterSummary,
     VariantSummary,
@@ -430,8 +431,9 @@ class TestListConceptGroups:
         assert [g.key for g in groups] == ["agiink", "sun2000"]
         ranked, edge = groups
         assert ranked.source == "curated"
-        # Single-axis group: the `axes` tuple holds exactly the one axis (#585).
-        assert ranked.axes == ("rank",)
+        # Single-axis group: the `axes` tuple holds exactly the one axis (#585),
+        # carrying its stable name + authored label (#819).
+        assert ranked.axes == (GroupAxis(name="rank", label="rank"),)
         assert edge.source == "edge"
         assert edge.axes == ()
         assert edge.label == "Utbildning"
@@ -474,7 +476,7 @@ class TestListClassificationGroups:
         assert len(groups) == 1
         (group,) = groups
         assert group.key == "sun"
-        assert group.axes == ("vintage",)
+        assert group.axes == (GroupAxis(name="vintage", label="vintage"),)
         assert [str(m.fqid) for m in group.members] == [
             "class/sun2000",
             "class/sun2020",
@@ -515,7 +517,7 @@ class TestListClassificationGroups:
         )
         conn.commit()
         (group,) = Catalog(conn).list_classification_groups()
-        assert group.axes == ("dimension",)
+        assert group.axes == (GroupAxis(name="dimension", label="dimension"),)
         assert [f.axis for m in group.members for f in m.facets] == [
             "dimension",
             "dimension",

@@ -27,7 +27,7 @@ function node(
     key: "ink",
     label: "Inkomst",
     source: "token",
-    axes: ["month"],
+    axes: [{ name: "month", label: "month" }],
     member: null,
     members: [
       {
@@ -183,7 +183,10 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
   // A 2-axis (month × rank) group → the matrix selector.
   function matrixNode(): ConceptGroupNodeData {
     return node({
-      axes: ["month", "rank"],
+      axes: [
+        { name: "month", label: "month" },
+        { name: "rank", label: "rank" },
+      ],
       members: [
         {
           fqid: "scb/lisa/agi1inkjan",
@@ -338,7 +341,13 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
       key: "disponibel-inkomst",
       label: "Disponibel inkomst",
       source: "curated",
-      axes: ["enhet", "hushallsbegrepp", "kapitalvinst"],
+      // #819: axes carry the curator-authored display label distinct from the
+      // stable match name (e.g. "Hushållsbegrepp" for `hushallsbegrepp`).
+      axes: [
+        { name: "enhet", label: "Enhet" },
+        { name: "hushallsbegrepp", label: "Hushållsbegrepp" },
+        { name: "kapitalvinst", label: "Kapitalvinst" },
+      ],
       members: [
         // Two members on the SAME variable + same (enhet, hushållsbegrepp),
         // differing ONLY on kapitalvinst (incl/excl) via distinct delivery
@@ -450,12 +459,12 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
       .element(page.getByText("Showing 3 of 3 members", { exact: true }))
       .toBeVisible();
     // One filter <fieldset> per declared axis (3 axes → 3 fieldsets), each
-    // legended by its axis name.
+    // legended by its curator-authored axis LABEL (#819, not the raw match key).
     const fieldsets = [...document.querySelectorAll("fieldset.axis-filter")];
     expect(fieldsets).toHaveLength(3);
     expect(
-      fieldsets.map((f) => f.querySelector("legend")?.textContent),
-    ).toEqual(["enhet", "hushallsbegrepp", "kapitalvinst"]);
+      fieldsets.map((f) => f.querySelector("legend")?.textContent?.trim()),
+    ).toEqual(["Enhet", "Hushållsbegrepp", "Kapitalvinst"]);
     // The kapitalvinst axis exposes a checkbox per distinct value (inkl / exkl).
     const kvFieldset = fieldsets[2];
     const boxes = kvFieldset.querySelectorAll('input[type="checkbox"]');

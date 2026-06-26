@@ -39,7 +39,7 @@ function classificationRoot(): CatalogNode {
         key: "sun",
         label: "SUN",
         source: "token",
-        axes: ["dimension"],
+        axes: [{ name: "dimension", label: "dimension" }],
         members: [
           {
             fqid: "class/sun2020",

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-import type { GroupFacetModel } from "./api";
+import type { GroupAxisModel, GroupFacetModel } from "./api";
 
 /** The minimal member shape the navigator reads: the facet-grid fields plus the
  * components of a stable composite key (`fqid` + `delivery_column`). The host's
@@ -47,17 +47,23 @@ let {
   member: memberSnippet,
 }: {
   members: readonly M[];
-  axes: readonly string[];
+  /** The group's declared axes (#819): match on `axis.name`, display `axis.label`. */
+  axes: readonly GroupAxisModel[];
   /** The per-member action element (link / pick button + any coverage/greying),
    * rendered after the shared facet tags inside each list row. */
   member: Snippet<[M]>;
 } = $props();
 
 // One filter group per axis: the distinct (value, label) pairs members carry on
-// it (value-sorted, via `axisValues`). The navigator renders one filter
-// fieldset per entry; axis identity is the fieldset's <legend> TEXT (never hue).
+// it (value-sorted, via `axisValues`). The navigator renders one filter fieldset
+// per entry; axis identity is the fieldset's <legend> TEXT (never hue) — the
+// curator-authored `axis.label`, keyed/filtered on the stable `axis.name`.
 const axisFilters = $derived(
-  axes.map((axis) => ({ axis, values: axisValues({ members }, axis) })),
+  axes.map((axis) => ({
+    axis: axis.name,
+    label: axis.label,
+    values: axisValues({ members }, axis.name),
+  })),
 );
 
 // The active filter selection: axis → set of selected facet VALUES. An axis with
@@ -103,11 +109,11 @@ function isSelected(axis: string, value: string): boolean {
 const visibleMembers = $derived(
   members.filter((m) =>
     axes.every((axis) => {
-      const sel = selected[axis];
+      const sel = selected[axis.name];
       if (!sel || sel.size === 0) {
         return true;
       }
-      return m.facets.some((f) => f.axis === axis && sel.has(f.value));
+      return m.facets.some((f) => f.axis === axis.name && sel.has(f.value));
     }),
   ),
 );
@@ -116,9 +122,9 @@ const visibleMembers = $derived(
 <!-- Per-axis filter controls + the filtered member list. Filter-only — narrows
      the list, never the project. -->
 <div class="facet-filters" role="group" aria-label="Filter members by facet">
-  {#each axisFilters as { axis, values } (axis)}
+  {#each axisFilters as { axis, label, values } (axis)}
     <fieldset class="axis-filter">
-      <legend>{axis}</legend>
+      <legend>{label}</legend>
       <div class="filter-options">
         {#each values as v (v.value)}
           <label class="filter-pill" class:on={isSelected(axis, v.value)}>
@@ -157,11 +163,13 @@ const visibleMembers = $derived(
              and the axis is legible to an assistive-tech user (not color-only).
              An axis the member lacks a facet on is omitted (a partial family). -->
         <span class="facet-tags">
-          {#each axes as axis (axis)}
-            {@const facet = memberFacet(m, axis)}
+          {#each axes as axis (axis.name)}
+            {@const facet = memberFacet(m, axis.name)}
             {#if facet}
               <Tag tone="neutral">
-                <span class="axis-name">{axis}:</span>
+                <!-- #819: the authored axis LABEL (e.g. "Hushållsbegrepp"), not the
+                     uppercased match key — keyed on the stable `axis.name`. -->
+                <span class="axis-name">{axis.label}:</span>
                 {facet.label}
               </Tag>
             {/if}
@@ -209,7 +217,7 @@ const visibleMembers = $derived(
     font-weight: 600;
     font-size: var(--text-sm);
     padding: 0 var(--space-1);
-    text-transform: capitalize;
+    /* #819: render the curator-authored axis label as-authored (no capitalize). */
   }
   .filter-options {
     display: flex;
@@ -308,10 +316,11 @@ const visibleMembers = $derived(
     color: var(--text-muted);
     font-size: var(--text-sm);
   }
-  /* The per-axis micro-label inside a neutral tag: the axis name in caps, so the
-     axis identity is read as TEXT (not color). Dimmed so the value label leads. */
+  /* The per-axis micro-label inside a neutral tag: the curator-authored axis
+     label (#819) — rendered AS AUTHORED (no uppercase transform, so "Hushållsbegrepp"
+     keeps its casing), so the axis identity is read as TEXT (not color). Dimmed so
+     the value label leads. */
   .axis-name {
-    text-transform: uppercase;
     font-size: 0.8em;
     letter-spacing: 0.02em;
     opacity: 0.7;

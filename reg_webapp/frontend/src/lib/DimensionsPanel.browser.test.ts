@@ -12,7 +12,7 @@ const inkomst: ConceptGroup = {
   key: "ink",
   label: "Inkomst",
   source: "token",
-  axes: ["month"],
+  axes: [{ name: "month", label: "month" }],
   members: [
     {
       fqid: "scb/rams/inkjan",

@@ -73,7 +73,7 @@ function memberLabel(
         <dd><code>{node.key}</code></dd>
         {#if node.axes.length > 0}
           <dt>Facets</dt>
-          <dd>{node.axes.join(", ")}</dd>
+          <dd>{node.axes.map((a) => a.label).join(", ")}</dd>
         {/if}
         <dt>Source</dt>
         <dd>{node.source}</dd>

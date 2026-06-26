@@ -12,6 +12,7 @@ import {
   classificationGroupPath,
   conceptGroupPath,
   encodeFqid,
+  type GroupAxisModel,
   type GroupFacetModel,
   getCatalogNode,
   isCatalogNode,
@@ -250,7 +251,7 @@ export function memberFacet(
  * is purely "would the matrix lose a member". */
 export function membersHaveUniqueCoords(
   group: { members: readonly FacetedMember[] },
-  axes: readonly string[],
+  axes: readonly GroupAxisModel[],
 ): boolean {
   const seen = new Set<string>();
   for (const m of group.members) {
@@ -259,7 +260,9 @@ export function membersHaveUniqueCoords(
     // vectors can never alias by concatenation — facet values are SCB
     // codes/tokens, never control characters.
     const coords = axes
-      .map((axis) => m.facets.find((f) => f.axis === axis)?.value ?? "\u0000")
+      .map(
+        (axis) => m.facets.find((f) => f.axis === axis.name)?.value ?? "\u0000",
+      )
       .join("\u0001");
     if (seen.has(coords)) {
       return false;
@@ -394,8 +397,10 @@ export function nodeLabel(node: CatalogNode): string {
  * so they hit the no-axis fallback and render as "members". Naive +"s" is enough
  * for the axis vocabulary (dimension, month, …); a group with no axis falls back
  * to "members". */
-export function axisNoun(axes: string[]): string {
-  const axis = axes[0];
+export function axisNoun(axes: readonly GroupAxisModel[]): string {
+  // The noun stem is the stable axis NAME ("dimension"/"month"), not the display
+  // label — the +"s" plural rule is tuned to the name vocabulary (#819).
+  const axis = axes[0]?.name;
   return axis ? `${axis}s` : "members";
 }
 

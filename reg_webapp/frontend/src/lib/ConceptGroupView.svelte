@@ -135,10 +135,10 @@ const useNavigator = $derived(
 // ConceptGroupRow). `node` is always present inside the success arm where the
 // snippet renders, but guard so the top-level deriveds stay total.
 const matrixRows = $derived(
-  node && axes.length > 0 ? axisValues(node, axes[0]) : [],
+  node && axes.length > 0 ? axisValues(node, axes[0].name) : [],
 );
 const matrixCols = $derived(
-  node && axes.length > 1 ? axisValues(node, axes[1]) : [],
+  node && axes.length > 1 ? axisValues(node, axes[1].name) : [],
 );
 // `axes` is the UNION across members; a member missing a facet on any axis never
 // matches a matrix cell, so it would silently vanish from the grid — render those
@@ -146,7 +146,8 @@ const matrixCols = $derived(
 const ungridded = $derived(
   node && axes.length >= 2 && !useNavigator
     ? node.members.filter(
-        (m) => !axes.every((axis) => m.facets.some((f) => f.axis === axis)),
+        (m) =>
+          !axes.every((axis) => m.facets.some((f) => f.axis === axis.name)),
       )
     : [],
 );
@@ -304,7 +305,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         <dd><code>{node.key}</code></dd>
         {#if node.axes.length > 0}
           <dt>Facets</dt>
-          <dd>{node.axes.join(", ")}</dd>
+          <dd>{node.axes.map((a) => a.label).join(", ")}</dd>
         {/if}
         <dt>Source</dt>
         <dd>{node.source}</dd>
@@ -375,8 +376,8 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
                 <th scope="row">{row.label}</th>
                 {#each matrixCols as col (col.value)}
                   {@const member = memberAt(node, [
-                    { axis: axes[0], value: row.value },
-                    { axis: axes[1], value: col.value },
+                    { axis: axes[0].name, value: row.value },
+                    { axis: axes[1].name, value: col.value },
                   ])}
                   <td>
                     {#if member}
@@ -406,7 +407,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
       {:else if axes.length === 1}
         <ul class="facet-chips">
           {#each node.members as member (memberKey(member))}
-            {@const facet = member.facets.find((f) => f.axis === axes[0])}
+            {@const facet = member.facets.find((f) => f.axis === axes[0].name)}
             <li>
               {@render memberLink(
                 member,

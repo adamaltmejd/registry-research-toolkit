@@ -1357,7 +1357,7 @@ def _group_summary_to_dict(summary: ConceptGroupSummary) -> dict[str, Any]:
         "key": summary.key,
         "label": summary.label,
         "source": summary.source,
-        "axes": list(summary.axes),
+        "axes": [{"name": a.name, "label": a.label} for a in summary.axes],
         "member_count": len(summary.members),
         "members": [
             {

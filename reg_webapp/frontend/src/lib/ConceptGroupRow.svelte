@@ -72,8 +72,12 @@ const useNavigator = $derived(
     (axes.length === 2 && !membersHaveUniqueCoords(group, axes)),
 );
 // Matrix orientation: first axis → rows, second axis → columns.
-const matrixRows = $derived(axes.length > 0 ? axisValues(group, axes[0]) : []);
-const matrixCols = $derived(axes.length > 1 ? axisValues(group, axes[1]) : []);
+const matrixRows = $derived(
+  axes.length > 0 ? axisValues(group, axes[0].name) : [],
+);
+const matrixCols = $derived(
+  axes.length > 1 ? axisValues(group, axes[1].name) : [],
+);
 // `axes` is the UNION across members — a curated family can mix absorbed
 // token-group members (month + rank) with single-variable members (rank
 // only). A member missing a facet on any axis never matches a matrix cell, so
@@ -82,7 +86,8 @@ const matrixCols = $derived(axes.length > 1 ? axisValues(group, axes[1]) : []);
 const ungridded = $derived(
   axes.length >= 2 && !useNavigator
     ? group.members.filter(
-        (m) => !axes.every((axis) => m.facets.some((f) => f.axis === axis)),
+        (m) =>
+          !axes.every((axis) => m.facets.some((f) => f.axis === axis.name)),
       )
     : [],
 );
@@ -176,8 +181,8 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
             <th scope="row">{row.label}</th>
             {#each matrixCols as col (col.value)}
               {@const member = memberAt(group, [
-                { axis: axes[0], value: row.value },
-                { axis: axes[1], value: col.value },
+                { axis: axes[0].name, value: row.value },
+                { axis: axes[1].name, value: col.value },
               ])}
               <td>
                 {#if member && onpick}
