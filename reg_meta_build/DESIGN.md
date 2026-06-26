@@ -1404,20 +1404,23 @@ representations; the entity-key pin → resolve over that succession/concept, no
 variable slug. **Migration preconditions (this is the higher-risk candidate, ahead of
 `fold_override`):** two, both column-merge-specific.
 
-First, a **representation-grain successor-edge design** is required: `replaced_by`
-(`relations.py::_parse_replaced_by_fqid`, \~line 428) restricts its endpoints to
-register / variable / classification grains — the variant grain is explicitly out of
-scope — so the current surface CANNOT encode a column-level era-rename succession; a
-twin-unification edge would collapse to a variable-grain edge that loses *which
-representation* was replaced. Second, the entity-key-pin surface must FIRST be able to
-resolve over that succession chain rather than a single variable slug: the curation
-TOML's own comment (`curation/scb/source_column_repairs.toml`, the RTB `pnr`→`personnr`
-note) records that WITHOUT the merge the A4.4d panel keys / `panel_entity_key` pins
-(#546/#554) pin to the sparse `pnr` fragment. Because the default is a variable
-**slug**, re-sharding identifier twins into two sibling variables pins it to the sparse
-fragment's slug — so the pins strand on the sparse fragment, reproducing exactly the
-pre-#196 failure. Sequence both channel-1 designs — representation-grain succession AND
-succession-aware entity-key resolution — before pulling the merge.
+First, **representation-grain successor edges** are required: `replaced_by` endpoints
+must reach down to a `(variable_fqid, delivery_column)` pair, not just a 3-part variable
+FQID, so the build can record *which representation* was replaced without collapsing two
+columns onto one variable. **This shipped as #843** (`representation_replaced_by` table,
+`SCHEMA_VERSION` 5.9.0): a variable-grain `replaced_by` edge in
+`curation/relations.toml` carrying `from_column` / `to_column` TOML fields is now a
+representation-grain succession edge (see *Curated pairwise-relation surface* below).
+Precondition #1 is **met**. Second — still open (#844) — the entity-key-pin surface must
+be able to resolve over that succession chain rather than a single variable slug: the
+curation TOML's own comment (`curation/scb/source_column_repairs.toml`, the RTB
+`pnr`→`personnr` note) records that WITHOUT the merge the A4.4d panel keys /
+`panel_entity_key` pins (#546/#554) pin to the sparse `pnr` fragment. Because the
+default is a variable **slug**, re-sharding identifier twins into two sibling variables
+pins it to the sparse fragment's slug — so the pins strand on the sparse fragment,
+reproducing exactly the pre-#196 failure. Both preconditions — representation-grain
+succession (#843, done) AND succession-aware entity-key resolution (#844, open) — must
+land before pulling the merge. The actual retirement PR is #846.
 
 **`fold_override` (#261) — retire-after-migration (channel-2).** Pure variable grouping
 (mechanics in the *fold-override* note above): writes NO
@@ -2114,7 +2117,7 @@ a = "scb/lisa/csfvi"
 b = "scb/rams/arbink"
 
 [[edge]]
-type = "replaced_by"    # directional; from/to same grain (2-seg register OR 3-seg variable)
+type = "replaced_by"    # directional; from/to same grain (register, variable, classification, OR representation)
 from = "scb/lisa/anninkf"
 to   = "scb/lisa/anninkf04"
 effective_year = 2004
@@ -2147,23 +2150,57 @@ consolidated:
   non-zero.
 
 - **`replaced_by`** — directional succession (predecessor superseded by successor). NOT
-  identity. Register grain (2-seg) OR variable grain (3-seg); both ends must be the same
-  grain. Resolution is asymmetric: the **successor MUST resolve** to a live, slugged DB
-  entity (`EXIT_CONFIG` on failure), while the **predecessor MAY be dead** (a retired /
-  renamed / cross-provider FQID inserted verbatim). This carries the two moves that the
-  `timeseries_event`-derived path cannot express: **cross-provider** succession (e.g.
-  SOS→SCB) and **dead-predecessor** edges. Curated edges dedup against event-derived
-  ones via the shared `seen_*` PK sets, so a curated row duplicating an event edge
-  collapses (counted as a curated skip). The **classification** grain is the exception
-  to the dead-predecessor allowance: both endpoints must be live (classification
-  succession is all-live — the reg_meta read side `classification_chain` depends on it),
-  so a curated `class/<slug>` edge with a dead predecessor fails the build. Combined
-  acyclicity is checked over both event and curated edges before any INSERT. Provenance
-  is `note = 'curated:slug_toml'` (distinct from `'auto:timeseries_event'`). This is a
-  **DIFFERENT relation** from the per-entry `replaced_by` key-string field in slug TOMLs
-  — that field is a *within-file slug-typo rename pointer* (one TOML key → another in
-  the same file, validated for cycle-freedom); a `replaced_by` edge is a *succession
-  edge* between two full FQIDs. It is also distinct from `variable_state_lineage`
+  identity. Four grains, each with its own endpoint shape and resolution rule:
+
+  - **Register** (2-seg `<provider>/<register>`): entity-grain; predecessor MAY be dead.
+  - **Variable** (3-seg `<provider>/<register>/<variable>`): entity-grain; predecessor
+    MAY be dead. Curated edges dedup against event-derived ones via the shared `seen_*`
+    PK sets, so a curated row duplicating an event edge collapses (counted as a curated
+    skip).
+  - **Classification** (`class/<slug>`): global (no provider gate); **both** endpoints
+    must be live (classification succession is all-live — the reg_meta read side
+    `classification_chain` depends on it). A dead predecessor fails the build.
+  - **Representation** (#843): a variable-grain edge in `curation/relations.toml` that
+    also carries `from_column` and `to_column` TOML fields is a representation-grain
+    edge — the `(variable_fqid, delivery_column)` pair the variable grain alone cannot
+    express (two representations of one variable both collapsing to the same 3-seg
+    FQID). Lands in `representation_replaced_by` (SCHEMA\_VERSION 5.9.0). Rules:
+    curated-only (no auto/event source); **both** endpoints must be live (a within-build
+    column rename observes both columns — stricter than the register/variable "dead
+    predecessor allowed" rule); intra-register (both endpoints must share `provider` AND
+    `register`; a cross-register column rename is handled by the variable grain);
+    columns are matched **case-insensitively** (SCB delivery headers drift in case —
+    `LOWER()` throughout the build) but **stored verbatim** (the curator's spelling is
+    preserved; downstream reads compare with `LOWER()`); the 8-part PK dedup covers the
+    full
+    `(pred\_provider, pred\_register, pred\_variable, pred\_column, succ\_provider,     succ\_register, succ\_variable, succ\_column)`
+    tuple. No successor index yet — added when a consumer exists (#846/#838). No auto
+    representation grain (SCB's `timeseries_event` succession is entity-grained), so
+    every row carries `note = 'curated:slug_toml'`.
+
+  TOML shape for the representation grain:
+
+  ```toml
+  [[edge]]
+  type = "replaced_by"          # still "replaced_by" — the column fields mark the grain
+  from = "scb/lisa/dispink"     # variable-grain FQID (must be variable-grain on both ends)
+  to   = "scb/lisa/dispink"     # MAY be the same FQID — same variable, column renamed
+  from_column = "DispInk04"     # predecessor delivery-column header (verbatim; matched lower)
+  to_column   = "DispInk"       # successor delivery-column header
+  effective_year = 2004
+  ```
+
+  Both endpoints are required; a one-sided `from_column`-only or `to_column`-only edge
+  fails the build. Both ends must share `provider` and `register`.
+
+  For all grains: the **successor MUST resolve** to a live, slugged DB entity
+  (`EXIT_CONFIG` on failure). Combined acyclicity is checked over event + curated edges
+  before any INSERT. Provenance is `note = 'curated:slug_toml'` (distinct from
+  `'auto:timeseries_event'`). This is a **DIFFERENT relation** from the per-entry
+  `replaced_by` key-string field in slug TOMLs — that field is a *within-file slug-typo
+  rename pointer* (one TOML key → another in the same file, validated for
+  cycle-freedom); a `replaced_by` edge is a *succession edge* between two full FQIDs (or
+  `(FQID, column)` pairs). It is also distinct from `variable_state_lineage`
   (consumer↔source binding overlap; see below).
 
 - **`related_to`** — weak "see also" discovery link between distinct variable concepts.

@@ -708,6 +708,145 @@ class TestReplacedByLoad:
             )
         assert exc.value.code == "relations_invalid"
 
+    # #843 representation grain: variable-grain edge + `from_column`/`to_column`.
+
+    def test_parses_representation_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/dispink"\n'
+            'to = "scb/lisa/dispink"\nfrom_column = "DispInk04"\n'
+            'to_column = "DispInk10"\neffective_year = 2010\nnote = "recut"\n',
+        )
+        assert len(rel.replaced_by) == 1
+        e = rel.replaced_by[0]
+        # Same variable FQID, two columns — LEGAL for a representation edge.
+        assert str(e.predecessor) == "scb/lisa/dispink"
+        assert str(e.successor) == "scb/lisa/dispink"
+        assert e.predecessor_column == "DispInk04"
+        assert e.successor_column == "DispInk10"
+        assert e.effective_year == 2010
+        assert e.note == "recut"
+
+    def test_both_or_neither_column_required(self, tmp_path: Path) -> None:
+        # Exactly one of from_column/to_column → rejected (a representation edge
+        # names BOTH endpoints' columns).
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/a"\n'
+                'to = "scb/lisa/b"\nfrom_column = "A"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+
+    def test_column_on_register_grain_rejected(self, tmp_path: Path) -> None:
+        # Columns require both endpoints variable-grain (column-within-variable).
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "sos/old"\n'
+                'to = "scb/new"\nfrom_column = "A"\nto_column = "B"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_representation_self_loop_same_column_rejected(
+        self, tmp_path: Path
+    ) -> None:
+        # Same variable AND same column = a genuine self-loop → rejected.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/x"\nfrom_column = "Col"\nto_column = "Col"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_representation_case_only_self_loop_rejected(self, tmp_path: Path) -> None:
+        # Same variable, columns differing ONLY in case (`Col` / `col`) — the build
+        # matches columns case-insensitively, so this is a case-only self-loop and
+        # is rejected (not a legitimate column rename).
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/x"\nfrom_column = "Col"\nto_column = "col"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+
+    def test_representation_same_variable_different_column_allowed(
+        self, tmp_path: Path
+    ) -> None:
+        # Same variable FQID, DIFFERENT columns — the common column rename, LEGAL.
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+            'to = "scb/lisa/x"\nfrom_column = "Old"\nto_column = "New"\n',
+        )
+        assert len(rel.replaced_by) == 1
+
+    def test_empty_column_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/y"\nfrom_column = ""\nto_column = "New"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_non_string_column_rejected(self, tmp_path: Path) -> None:
+        # A non-string `from_column` (here a TOML integer) is not a delivery column
+        # name → rejected at load.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/y"\nfrom_column = 123\nto_column = "New"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_from_column_on_same_as_rejected(self, tmp_path: Path) -> None:
+        # `from_column` is foreign to a same_as edge — rejected by the per-type
+        # field map (a mis-typed edge: representation field, wrong `type`).
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\n'
+                'b = "scb/lisa/y"\nfrom_column = "A"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_representation_cross_register_rejected(self, tmp_path: Path) -> None:
+        # A representation (column-rename) edge is INTRA-register; endpoints in
+        # different registers (same provider) are rejected. Cross-register
+        # succession uses the entity (variable) grain, not column fields.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/rams/x"\nfrom_column = "A"\nto_column = "B"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+
+    def test_representation_same_register_different_variable_allowed(
+        self, tmp_path: Path
+    ) -> None:
+        # Two sibling variables of ONE register, column moved across the variable
+        # boundary — LEGAL (intra-register). End-to-end coverage is in the
+        # cross-variable materialize test; this asserts the loader accepts it.
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/a"\n'
+            'to = "scb/lisa/b"\nfrom_column = "A"\nto_column = "B"\n',
+        )
+        assert len(rel.replaced_by) == 1
+        e = rel.replaced_by[0]
+        assert str(e.predecessor) == "scb/lisa/a"
+        assert str(e.successor) == "scb/lisa/b"
+        assert e.predecessor_column == "A"
+        assert e.successor_column == "B"
+
 
 # ---------------------------------------------------------------------------
 # replaced_by — classification-grain materialize (#579)
@@ -911,6 +1050,340 @@ class TestClassificationReplacedByMaterialize:
         assert _class_succession_rows(conn) == [
             ("sun-niva2000", "sun1996", 1996, "derived:vintage_chain"),
         ]
+
+
+# ---------------------------------------------------------------------------
+# replaced_by — representation-grain materialize (#843)
+# ---------------------------------------------------------------------------
+
+
+def _representation_edge(
+    frm: str,
+    to: str,
+    from_column: str,
+    to_column: str,
+    *,
+    year: int | None = None,
+    note: str | None = None,
+) -> CuratedReplacedBy:
+    """A representation `CuratedReplacedBy` (variable-grain FQID + column pair),
+    bypassing the TOML round-trip — the loader's output shape."""
+    return CuratedReplacedBy(
+        predecessor=parse_fqid(frm),
+        successor=parse_fqid(to),
+        note=note,
+        effective_year=year,
+        predecessor_column=from_column,
+        successor_column=to_column,
+    )
+
+
+def _add_alias(
+    conn: sqlite3.Connection, variable_slug: str, delivery_column_name: str
+) -> None:
+    """Add an extra observed delivery column to a live variable (so one variable
+    can carry several representations). Resolves the variable by its register-unique
+    slug under register_id=1 + the default variant (10) from `build_slugged_db`."""
+    vid = conn.execute(
+        "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+        (variable_slug,),
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, 10, ?)",
+        (vid, delivery_column_name),
+    )
+    conn.commit()
+
+
+def _representation_rows(conn: sqlite3.Connection) -> list[tuple]:
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT predecessor_variable, predecessor_column, successor_variable, "
+            "successor_column, effective_year, note, beskrivning "
+            "FROM representation_replaced_by "
+            "ORDER BY predecessor_column, successor_column"
+        )
+    ]
+
+
+def _representation_db() -> sqlite3.Connection:
+    """scb/lisa with one variable `dispink` (delivery column `Kon` from the
+    default fixture, renamed to a `dispink`-shaped slug) carrying TWO observed
+    delivery columns `DispInk04` + `DispInk10` — the within-variable column rename
+    a representation edge expresses."""
+    conn = build_slugged_db(
+        classification=None,
+        variable=("Disponibel inkomst", 70, 1070, "DispInk04"),
+        variable_slug="dispink",
+    )
+    _add_alias(conn, "dispink", "DispInk10")
+    return conn
+
+
+def _representation_db_two_variables() -> sqlite3.Connection:
+    """`_representation_db()` plus a SECOND live scb/lisa variable `sysink`
+    carrying its own observed delivery column `SysInk10` — so a representation
+    edge can succeed BETWEEN two different variables (a column moved across the
+    variable boundary), not only within one."""
+    conn = _representation_db()
+    add_variable(conn, register_id=1, var_id=71, name="System inkomst", slug="sysink")
+    _add_alias(conn, "sysink", "SysInk10")
+    return conn
+
+
+class TestRepresentationReplacedByMaterialize:
+    """#843: curated representation-grain `replaced_by` edges land in
+    `representation_replaced_by` — a `(variable, delivery_column)`-pair succession
+    (a column-level era rename the variable grain can't express). Curated-only,
+    ALL-LIVE (both endpoints' observed columns must exist)."""
+
+    def test_one_edge_writes_with_provenance(self) -> None:
+        conn = _representation_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "DispInk04",
+                    "DispInk10",
+                    year=2010,
+                    note="recut to net-of-tax",
+                )
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 1
+        # The row's own `note` lands in `beskrivning`; `note` carries the fixed
+        # provenance marker (mirrors the register/variable arms).
+        assert _representation_rows(conn) == [
+            (
+                "dispink",
+                "DispInk04",
+                "dispink",
+                "DispInk10",
+                2010,
+                "curated:slug_toml",
+                "recut to net-of-tax",
+            ),
+        ]
+
+    def test_empty_returns_full_dict_shape(self) -> None:
+        # No edges → the early-return dict carries every key (incl. representation).
+        out = materialize_curated_replaced_by(
+            _representation_db(),
+            [],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out == {
+            "register": 0,
+            "variable": 0,
+            "classification": 0,
+            "representation": 0,
+            "skipped_duplicate": 0,
+            "skipped_inactive_provider": 0,
+        }
+
+    def test_unknown_column_fails_fast(self) -> None:
+        conn = _representation_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk04",
+                        "Ghost",  # not an observed delivery column
+                    )
+                ],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_unresolved_representation"
+        assert _representation_rows(conn) == []  # nothing written
+
+    def test_unknown_variable_fails_fast(self) -> None:
+        conn = _representation_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [
+                    _representation_edge(
+                        "scb/lisa/ghostvar",
+                        "scb/lisa/dispink",
+                        "DispInk04",
+                        "DispInk10",
+                    )
+                ],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.code == "replaced_by_unresolved_representation"
+        assert _representation_rows(conn) == []
+
+    def test_inactive_provider_skipped(self) -> None:
+        # Successor provider not in the (partial) build → SKIPPED, not failed.
+        conn = _representation_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "DispInk04",
+                    "DispInk10",
+                )
+            ],
+            set(),
+            set(),
+            providers=frozenset({"sos"}),  # scb not present
+            progress=_noop,
+        )
+        assert out["representation"] == 0
+        assert out["skipped_inactive_provider"] == 1
+        assert _representation_rows(conn) == []
+
+    def test_cycle_rejected(self) -> None:
+        # A→B plus B→A on the representation graph close a 2-cycle (both endpoints
+        # resolve, so it's the cycle check, not the unresolved guard).
+        conn = _representation_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk04",
+                        "DispInk10",
+                    ),
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk10",
+                        "DispInk04",
+                    ),
+                ],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.code == "replaced_by_cycle"
+        assert _representation_rows(conn) == []  # aborts before INSERT
+
+    def test_duplicate_pending_deduped(self) -> None:
+        # Two identical representation edges → one row, one skip.
+        conn = _representation_db()
+        edge = _representation_edge(
+            "scb/lisa/dispink", "scb/lisa/dispink", "DispInk04", "DispInk10"
+        )
+        out = materialize_curated_replaced_by(
+            conn, [edge, edge], set(), set(), providers=_SCB, progress=_noop
+        )
+        assert out["representation"] == 1
+        assert out["skipped_duplicate"] == 1
+        assert len(_representation_rows(conn)) == 1
+
+    def test_cross_variable_edge_writes(self) -> None:
+        # A column moved across the VARIABLE boundary: both endpoints are distinct
+        # live variables each observing the named delivery column. The row records
+        # different predecessor/successor variables.
+        conn = _representation_db_two_variables()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/sysink",
+                    "DispInk10",
+                    "SysInk10",
+                    year=2010,
+                )
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 1
+        rows = _representation_rows(conn)
+        assert len(rows) == 1
+        pred_var, _pred_col, succ_var, _succ_col = rows[0][:4]
+        assert pred_var == "dispink"
+        assert succ_var == "sysink"
+        assert pred_var != succ_var
+
+    def test_representation_column_case_insensitive_resolves(self) -> None:
+        # The observed headers are `DispInk04`/`DispInk10`, but the edge is authored
+        # with lowercased columns `dispink04`/`dispink10` (SCB headers drift in
+        # case). Matching is case-INSENSITIVE so the edge still resolves; the STORED
+        # columns are the curator's VERBATIM TOML values (match-lower, store-verbatim).
+        conn = _representation_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "dispink04",
+                    "dispink10",
+                )
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 1
+        rows = _representation_rows(conn)
+        assert len(rows) == 1
+        _pred_var, pred_col, _succ_var, succ_col = rows[0][:4]
+        assert pred_col == "dispink04"  # verbatim TOML value, not the header case
+        assert succ_col == "dispink10"
+
+    def test_representation_non_ascii_column_resolves(self) -> None:
+        # #843 regression: a Swedish-header column with an uppercase åäö (e.g.
+        # `Ägare`, common in SCB headers). The live set must fold the observed
+        # column the SAME way as the materializer's edge keys — Python `str.lower`
+        # (Unicode-aware), NOT SQLite `LOWER()` (ASCII-only, leaves `Ä` unchanged).
+        # With the ASCII fold the edge column `ägare` would never match the observed
+        # `Ägare` and the edge would falsely raise unresolved_representation.
+        conn = _representation_db()
+        _add_alias(conn, "dispink", "Ägare")
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "ägare",  # Unicode-lowercased; observed header is `Ägare`
+                    "DispInk10",
+                )
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 1
+        rows = _representation_rows(conn)
+        assert len(rows) == 1
+        assert rows[0][1] == "ägare"  # verbatim TOML value
 
 
 # ---------------------------------------------------------------------------

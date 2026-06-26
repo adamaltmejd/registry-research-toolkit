@@ -3361,10 +3361,15 @@ class TestReplacedByEdges:
                 "n_curated_variable_replaced_by",
                 # #579 curated classification succession (sun1996 split)
                 "n_curated_classification_replaced_by",
+                # #843 curated representation succession (column-level era rename)
+                "n_curated_representation_replaced_by",
                 "n_curated_skipped_duplicate",
                 "n_curated_skipped_inactive_provider",
             }
             assert stats["n_register_replaced_by"] == 1
+            # #843: no real representation edges are authored yet (those land with
+            # the column_merge removal in #846), so a no-edge build reports 0.
+            assert stats["n_curated_representation_replaced_by"] == 0
             # Scanned counts only Ersatt av/Ersätter rows on the four target
             # entitets — the single Register row in this fixture matches.
             assert stats["n_timeseries_event_rows_scanned"] == 1

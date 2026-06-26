@@ -43,6 +43,15 @@ class TestValidateModule:
         assert result.passed, result.failures
         assert "[classification succession]" in result.format_report()
 
+    def test_representation_succession_section_renders(self, fixture_db: Path):
+        """#843: the representation-succession structural section runs on a fresh
+        synthetic build (corpus=False). The grain ships empty (curated-only, no
+        edges until #846/#838), so the section reports 0 edges (info) and passes —
+        a regression can't drop the section silently."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        assert "[representation succession]" in result.format_report()
+
     def test_variable_vintage_lift_section_renders(self, fixture_db: Path):
         """#584: the variable vintage-lift structural section runs on a fresh
         synthetic build (corpus=False) — the synthetic corpus carries no vintage
@@ -311,6 +320,62 @@ class TestValidateModule:
         result = validate_built_db(broken)
         assert not result.passed
         assert any("unknown classification slug" in f for f in result.failures)
+
+    def test_representation_succession_self_loop_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#843: a representation succession edge whose full
+        `(provider, register, variable, column)` endpoint is identical on both
+        sides is a self-loop and fails the structural check (same variable /
+        DIFFERENT column would be legal)."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # scb/testreg/kon carries the observed delivery column `Kon` — a real,
+        # otherwise-resolvable endpoint, repeated on both sides → self-loop.
+        conn.execute(
+            "INSERT INTO representation_replaced_by "
+            "(predecessor_provider, predecessor_register, predecessor_variable, "
+            "predecessor_column, successor_provider, successor_register, "
+            "successor_variable, successor_column, effective_year, note) "
+            "VALUES ('scb', 'testreg', 'kon', 'Kon', "
+            "'scb', 'testreg', 'kon', 'Kon', 2010, 'curated:slug_toml')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "self-loop representation succession edge" in f for f in result.failures
+        )
+
+    def test_representation_succession_dangling_endpoint_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#843: a representation succession edge whose `predecessor_column` is not
+        an OBSERVED `variable_alias.delivery_column_name` for that variable fails the
+        structural endpoint-resolution check."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # scb/testreg/testcol observes `TestCol` + `TestKolumn`; `NoSuchColumn` is
+        # not an observed delivery column → the predecessor endpoint is unknown.
+        conn.execute(
+            "INSERT INTO representation_replaced_by "
+            "(predecessor_provider, predecessor_register, predecessor_variable, "
+            "predecessor_column, successor_provider, successor_register, "
+            "successor_variable, successor_column, effective_year, note) "
+            "VALUES ('scb', 'testreg', 'testcol', 'NoSuchColumn', "
+            "'scb', 'testreg', 'testcol', 'TestKolumn', 2010, 'curated:slug_toml')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "representation succession edge(s) reference an unknown" in f
+            for f in result.failures
+        )
 
     def test_dead_predecessor_edge_keeps_supersedes_null_without_missing_ptr(
         self, fixture_db: Path, tmp_path: Path
