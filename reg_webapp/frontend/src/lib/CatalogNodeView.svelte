@@ -296,11 +296,14 @@ $effect(() => {
   /* #673 (M5): a compact, column-aligned, scannable list. Rows are tight (one
      text line each); the name forms a scannable left column, a secondary label
      (a classification's short_name) aligns in its own column. A CSS grid on the
-     <ul> aligns columns ACROSS rows without per-row width guessing — one link
-     per row (the <li>/<a> are display:contents so the grid tracks the <a>'s
-     cells, keeping exactly one interactive element per row, no nested links).
-     The variable list (register arm) has only the name column; the
-     classification list adds the short_name column. */
+     <ul> aligns columns ACROSS rows without per-row width guessing — one link per
+     row. The <li> is `display:contents` (a non-interactive wrapper) and the <a> is
+     a SUBGRID box (`display:grid` spanning `1 / -1` with `grid-template-columns:
+     subgrid`) so the <a>'s children land in the <ul>'s tracks while the <a> stays
+     a real, keyboard-FOCUSABLE element. (A `display:contents` <a> is dropped from
+     Chromium's sequential tab order — the #808 a11y defect this fixes.) The
+     variable list (register arm) has only the name column; the classification list
+     adds the short_name column. */
   .children.table {
     display: grid;
     grid-template-columns: minmax(auto, max-content) auto;
@@ -314,15 +317,30 @@ $effect(() => {
   .children.table.single {
     grid-template-columns: minmax(0, 1fr);
   }
-  /* A LEAF row's <li>/<a> dissolve into the grid (display:contents) so the <a>'s
-     children become the row's grid cells — one link per row, no nesting. */
-  .children.table li:not(.group-row),
-  .children.table li:not(.group-row) > a {
+  /* A LEAF row's <li> dissolves into the grid (display:contents); its <a> is the
+     subgrid row spanning all columns, so the <a>'s children become the row's grid
+     cells — one focusable link per row, no nesting. */
+  .children.table li:not(.group-row) {
     display: contents;
+  }
+  .children.table li:not(.group-row) > a {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    column-gap: var(--space-3);
+    align-items: baseline;
   }
   .children.table li:not(.group-row) > a > * {
     min-width: 0;
     padding: var(--space-1) 0;
+  }
+  /* #808 a11y: the leaf link is now a real focusable box (subgrid), so a visible
+     keyboard focus ring draws on it — the shared `--focus-ring` token, matching
+     DataTable's selectable rows. */
+  .children.table li:not(.group-row) > a:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
   }
   /* A GROUP row is a self-contained widget (ConceptGroupRow: link or <details>):
      span the full list width and let it own its internal layout. */

@@ -846,7 +846,9 @@ Two layers, semantic roles only consumed by components:
   directly.
 - **Semantic roles** — what components use: `--bg`, `--surface`, `--surface-raised`,
   `--surface-sunken`, `--text`, `--text-muted`, `--text-faint`, `--border`,
-  `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`, plus the
+  `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`, the
+  categorical-ink family `--cat-reg-ink` / `--cat-var-ink` / `--cat-code-ink` /
+  `--cat-class-ink` / `--cat-group-ink` (AA-cleared text stops — see § Color), plus the
   status roles below. Dark mode is a single `[data-theme="dark"]` block that remaps
   these roles to dark primitive stops — no component CSS changes.
 
@@ -904,7 +906,13 @@ these foregrounds — never use a fill tint as text color.
 A separate small **categorical** palette tags result/node *type* (`REG` teal, `VAR`
 indigo, `CODE` gold, classification, group) in search and listings. It is its own
 sub-system — never reuse the brand accent or the status colors for type identity, or
-"this is a variable" and "this is selected/an error" collide.
+"this is a variable" and "this is selected/an error" collide. The raw `--cat-*` hues are
+the **fill and border** values (the 10 % tint backgrounds). For TEXT, each hue has a
+corresponding `--cat-*-ink` stop — `color-mix(in srgb, var(--cat-*) 85%, black)` — that
+darkens it enough to clear WCAG AA on those tint backgrounds (teal and gold fall just
+under 4.5:1 as plain text on their own tint). This mirrors `--accent-ink` for the brand.
+Components always use the ink stop for any categorical label text; fill/border use the
+raw hue.
 
 ### Geometry, elevation, motion
 
@@ -951,10 +959,12 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
   table.
 - **`Tag` `tone` spans three disjoint sub-systems.** Chrome tones (`neutral`/`accent`),
-  categorical TYPE tones (`reg`/`var`/`code`/`class`/`group` → `--cat-*`), and status
-  tones (`error`/`warn`/`info`/`ok`). Status tones **require** a leading `glyph` snippet
-  (the accent-vs-status rule: hue alone is never sufficient); the glyph is
-  `aria-hidden`, so status meaning must also appear in the label text.
+  categorical TYPE tones (`reg`/`var`/`code`/`class`/`group`), and status tones
+  (`error`/`warn`/`info`/`ok`). Categorical TYPE tags use the raw `--cat-*` hue as the
+  fill/border and `--cat-*-ink` (the 85 % dark mix) as the label text, so every type
+  label clears AA without per-component overrides. Status tones **require** a leading
+  `glyph` snippet (the accent-vs-status rule: hue alone is never sufficient); the glyph
+  is `aria-hidden`, so status meaning must also appear in the label text.
 - **Focus-ring convention.** Every interactive primitive applies
   `:focus-visible { box-shadow: var(--focus-ring) }` in its own scoped CSS — no global
   stylesheet owns this.

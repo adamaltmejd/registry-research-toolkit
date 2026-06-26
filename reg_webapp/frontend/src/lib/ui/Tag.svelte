@@ -70,33 +70,39 @@ let { tone = "neutral", mono = false, glyph, children }: Props = $props();
   }
 
   /* Categorical TYPE tones — soft tint of the cat hue (color-mix keeps one ramp
-     stop as both border ink and fill, so no second token per hue). Each tone only
-     selects its hue into `--tone-hue`; one shared rule paints all five.
-     The TEXT darkens the hue 15% toward black (mirrors --accent-ink): the raw
-     cat hues are tuned as fills, and teal/gold fall just under WCAG AA (4.1–4.5:1)
-     as text on their own 10% tint — the 15% darkening clears AA (≥5.3:1) for all
-     five while the border + fill keep the full hue, so type identity is intact. */
+     stop as both border ink and fill, so no second token per hue). Each tone
+     selects its FILL hue into `--tone-hue` AND its AA-cleared TEXT stop into
+     `--tone-ink`; one shared rule paints all five. The `--cat-*-ink` roles
+     (tokens.css, mirroring --accent-ink) carry the 15%-toward-black darkening
+     that clears WCAG AA — the raw --cat-* hues are tuned as fills and teal/gold
+     fall just under AA as text on their own 10% tint. The border + fill keep the
+     full hue (`--tone-hue`), so type identity is intact. */
   .tone-reg {
     --tone-hue: var(--cat-reg);
+    --tone-ink: var(--cat-reg-ink);
   }
   .tone-var {
     --tone-hue: var(--cat-var);
+    --tone-ink: var(--cat-var-ink);
   }
   .tone-code {
     --tone-hue: var(--cat-code);
+    --tone-ink: var(--cat-code-ink);
   }
   .tone-class {
     --tone-hue: var(--cat-class);
+    --tone-ink: var(--cat-class-ink);
   }
   .tone-group {
     --tone-hue: var(--cat-group);
+    --tone-ink: var(--cat-group-ink);
   }
   .tone-reg,
   .tone-var,
   .tone-code,
   .tone-class,
   .tone-group {
-    color: color-mix(in srgb, var(--tone-hue) 85%, black);
+    color: var(--tone-ink);
     border-color: color-mix(in srgb, var(--tone-hue) 35%, transparent);
     background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
   }
