@@ -592,7 +592,7 @@ function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
   }
   :global(.omnibox-option .opt-context) {
     margin-left: auto;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: var(--text-sm);
   }
 

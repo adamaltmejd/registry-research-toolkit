@@ -713,6 +713,123 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 });
 
+describe("SearchView — categorical type badges (#808)", () => {
+  it("badges each result row with its categorical tone (reg/var/class/code)", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "kon",
+      groups: [
+        {
+          group: "registers",
+          total_count: 1,
+          results: [
+            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+          ],
+        },
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/lisa/kon",
+              name: "Kön",
+              register: "LISA",
+              definition: null,
+            },
+          ],
+        },
+        {
+          group: "classifications",
+          total_count: 1,
+          results: [
+            {
+              type: "classification",
+              fqid: "class/sun2020",
+              short_name: "SUN",
+              name: "Svensk utbildningsnomenklatur",
+            },
+          ],
+        },
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [
+                { fqid: "scb/saga/sex", name: "Sex", register: "SAGA" },
+              ],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("kon");
+    await render(SearchView);
+
+    // Each group's row carries a leading Tag on the matching categorical tone —
+    // assert the tone class the `Tag` primitive renders plus its short type label.
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    for (const [tone, label] of [
+      ["reg", "REG"],
+      ["var", "VAR"],
+      ["class", "CLASS"],
+      ["code", "CODE"],
+    ] as const) {
+      const badge = document.querySelector(`.search-view .tag.tone-${tone}`);
+      expect(badge, `expected a .tone-${tone} badge`).not.toBeNull();
+      expect(badge?.textContent?.trim()).toBe(label);
+    }
+  });
+
+  it("badges a folded concept-group result with the group tone", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "ink",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "group",
+              group_key: "scb/lisa/dispink",
+              group_label: "Disponibel inkomst",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 2,
+              member_count: 3,
+              register: "LISA",
+              source: "token",
+              members: [
+                {
+                  fqid: "scb/lisa/dispink-2019",
+                  name: "Disp 2019",
+                  facets: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("ink");
+    await render(SearchView);
+
+    const badge = document.querySelector(".search-view .tag.tone-group");
+    expect(badge).not.toBeNull();
+    expect(badge?.textContent?.trim()).toBe("GROUP");
+  });
+});
+
 describe("SearchView — docs group (#394)", () => {
   // A one-register main-search response so the main groups have a visible heading
   // (lets the failure-isolation cases assert the main groups are unaffected).

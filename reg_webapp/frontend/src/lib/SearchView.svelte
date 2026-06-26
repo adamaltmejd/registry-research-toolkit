@@ -15,6 +15,7 @@ import { asyncResource } from "./async.svelte";
 import { catalogHref, showingOf } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
+import { Tag } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
 // the four ORDERED, typed groups GET /api/search returns (registers / variables /
@@ -231,6 +232,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
                    keyed each (Svelte each_key_duplicate). See #379 omnibox-dup-key. -->
               {#each group.results as result, i (i)}
                 <li>
+                  {@render typeBadge("reg", "REG")}
                   {@render fqidLeaf(result.fqid, result.name)}
                   {#if result.purpose}
                     <span class="hit-detail muted">{result.purpose}</span>
@@ -243,8 +245,10 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
               {#each group.results as result, i (i)}
                 <li>
                   {#if isConceptGroup(result)}
+                    {@render typeBadge("group", "GROUP")}
                     {@render conceptGroup(result)}
                   {:else}
+                    {@render typeBadge("var", "VAR")}
                     {@render variableLeaf(result as VariableSearchResult)}
                   {/if}
                 </li>
@@ -255,10 +259,13 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
               {#each group.results as result, i (i)}
                 <li>
                   {#if isConceptGroup(result)}
+                    {@render typeBadge("group", "GROUP")}
                     {@render conceptGroup(result)}
                   {:else if isClassificationSuccession(result)}
+                    {@render typeBadge("class", "CLASS")}
                     {@render classificationSuccession(result)}
                   {:else}
+                    {@render typeBadge("class", "CLASS")}
                     {@render classificationLeaf(result as ClassificationSearchResult)}
                   {/if}
                 </li>
@@ -319,6 +326,16 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     </section>
   {/if}
 </article>
+
+<!-- A leading categorical TYPE badge (#808): a scannable type marker preceding
+     each row's label, using the #804 `Tag` primitive on the categorical palette
+     (reg/var/code/class/group → --cat-*). The label is the short uppercase type
+     code; `Tag` carries the AA-cleared tint + ink. The Documentation group is
+     additive (not one of the categorical node types) and is intentionally left
+     un-badged. -->
+{#snippet typeBadge(tone: "reg" | "var" | "code" | "class" | "group", label: string)}
+  <span class="type-badge"><Tag {tone}>{label}</Tag></span>
+{/snippet}
 
 <!-- The shared leaf shape across register / variable / classification / member
      hits: a `label + <code>fqid</code>` link when FQID-addressable, else plain
@@ -435,6 +452,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
 {#snippet codeHit(result: CodeSearchResult)}
   <div class="code-hit">
     <div class="code-header">
+      {@render typeBadge("code", "CODE")}
       <code class="code">{result.code}</code>
       <span class="label">{result.label}</span>
     </div>
@@ -522,20 +540,24 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   .type-button {
     padding: 0.3rem 0.7rem;
     font: inherit;
-    font-size: 0.85rem;
-    color: inherit;
+    font-size: var(--text-sm);
+    color: var(--text);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
   }
   .type-button:hover {
     border-color: var(--accent);
   }
+  .type-button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
   .type-button[aria-pressed="true"] {
     background: var(--accent);
     border-color: var(--accent);
-    color: var(--surface);
+    color: var(--accent-fg);
     font-weight: 600;
   }
   .group {
@@ -548,7 +570,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     margin: 0 0 0.4rem;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .group h3 {
     display: flex;
@@ -558,7 +580,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     font-size: 1rem;
   }
   .count {
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.85em;
     font-weight: 400;
     white-space: nowrap;
@@ -576,12 +598,26 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     flex-wrap: wrap;
     align-items: baseline;
     gap: 0.5rem 0.75rem;
+    padding: 0.25rem 0.4rem;
+    margin: 0 -0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  /* A subtle dashboard-scan hover affordance on each result row (the row, not the
+     link) — keeps the link's own focus/hover intact. */
+  .results > li:hover {
+    background: var(--surface-hover);
+  }
+  /* The leading categorical type badge: a small inline marker that doesn't push
+     the baseline of the row's text. The Tag itself carries tint + ink. */
+  .type-badge {
+    align-self: center;
+    line-height: 1;
   }
   .label {
     font-weight: 600;
   }
   .hit-fqid {
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.85em;
   }
   .hit-context {
@@ -631,7 +667,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   }
   .code {
     font-size: 0.85em;
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .owners {
     list-style: none;

@@ -251,6 +251,19 @@
      stays the chrome/fill brand; this role is text-only. */
   --accent-ink: var(--rost-5); /* #a44b29 */
 
+  /* Categorical TEXT stops — the AA-cleared text ink per categorical hue,
+     mirroring --accent-ink. The raw --cat-* hues (Layer 1) are tuned as FILLS;
+     as badge text on their own 10% tint teal (--cat-reg) and gold (--cat-code)
+     fall just under WCAG AA (4.1–4.5:1). Darkening the hue 15% toward black
+     clears AA for all five while the border + fill keep the full hue (so type
+     identity is intact). Tag reads these for its categorical `color`; the fill
+     + border still color-mix the raw --cat-* hue. */
+  --cat-reg-ink: color-mix(in srgb, var(--cat-reg) 85%, black);
+  --cat-var-ink: color-mix(in srgb, var(--cat-var) 85%, black);
+  --cat-code-ink: color-mix(in srgb, var(--cat-code) 85%, black);
+  --cat-class-ink: color-mix(in srgb, var(--cat-class) 85%, black);
+  --cat-group-ink: color-mix(in srgb, var(--cat-group) 85%, black);
+
   /* Status roles — AA-cleared FOREGROUND values (text/glyph). Each is paired
      with a glyph in the UI, never hue alone. The *-bg roles are SEPARATE fill
      tints for badges/rows — never use a fill tint as a text color. */
