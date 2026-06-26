@@ -954,12 +954,27 @@ lists.
 
 Load-bearing decisions downstream children (#806–#809) must not re-litigate:
 
+- **`DataTable` ARIA roles — explicit and unconditional.** Every table element carries
+  its ARIA role explicitly (`table`/`grid`, `rowgroup`, `row`, `columnheader`,
+  `cell`/`gridcell`) regardless of the selectable variant. This is required because the
+  responsive stacked form switches `display` to `block`, which strips native table roles
+  in Firefox/Safari — explicit roles keep the semantics intact across that change.
 - **`DataTable` selection — ARIA grid, not roving tabindex.** The selectable variant
   sets `role="grid"` on the table; each selectable row carries `aria-selected` and
   `tabindex=0` (its own tab stop). This is deliberately **not** a single-tab-stop
   roving-tabindex grid — list keyboard navigation belongs to Bits UI `Command`
   elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
-  table.
+  table (`role="table"`).
+- **`DataTable` responsive stacking (≤48 rem).** At narrow widths each `<tr>` becomes a
+  bordered card; cells stack vertically. The first column is the primary title (no
+  micro-label prefix); non-primary cells show their column label as a CSS `::before`
+  prefix via `data-label`. Empty cells suppress the prefix via `td:empty::before`. The
+  visual-header row is visually hidden (clip, not `display:none`) so `columnheader`
+  roles stay in the accessibility tree. Consumers drop per-call
+  `overflow-wrap`/`hyphens` — the primitive owns graceful long-word breaking (excluded
+  for mono/numeric cells). The primary column gets a `min-width: 12rem` floor on the
+  `<th>` (under `table-layout:auto` this sizes the whole column track); an explicit
+  `Column.width` override wins via `th.first:not([style*="width"])`.
 - **`Tag` `tone` spans three disjoint sub-systems.** Chrome tones (`neutral`/`accent`),
   categorical TYPE tones (`reg`/`var`/`code`/`class`/`group`), and status tones
   (`error`/`warn`/`info`/`ok`). Categorical TYPE tags use the raw `--cat-*` hue as the

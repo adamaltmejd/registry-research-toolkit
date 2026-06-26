@@ -270,15 +270,15 @@ $effect(() => {
     color: var(--text-muted);
     font-size: var(--text-sm);
   }
-  /* A register-list / provider-list name link — the NAME is primary. */
+  /* A register-list name link (inside a DataTable cell) — the NAME is primary.
+     Long-name breaking now comes from DataTable's cell-level
+     `overflow-wrap: anywhere`, which inherits into this link (#832). */
   .row-link {
     font-weight: 600;
-    /* Long Swedish compound words otherwise force a min-content width past the
-       375px mobile canvas (#806); break them only when they can't fit. */
-    overflow-wrap: anywhere;
   }
   /* Clamp a register's description to ~2 lines in the DataTable cell; the full
-     text lives on the register's own subject page. */
+     text lives on the register's own subject page. (Breaking inherits from the
+     DataTable cell's `overflow-wrap: anywhere`, #832.) */
   .clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -286,7 +286,6 @@ $effect(() => {
     -webkit-box-orient: vertical;
     overflow: hidden;
     color: var(--text-muted);
-    overflow-wrap: anywhere;
   }
   .children {
     list-style: none;

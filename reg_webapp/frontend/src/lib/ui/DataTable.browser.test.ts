@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import DataTable from "./DataTable.svelte";
+import DataTableEmptyCellHarness from "./DataTableEmptyCellHarness.svelte";
 import DataTableInterfaceRowHarness from "./DataTableInterfaceRowHarness.svelte";
 import type { Column } from "./types";
 
@@ -11,7 +12,9 @@ import type { Column } from "./types";
 // (2) right-aligned + mono numeric/mono cells, (3) the custom-cell escape hatch,
 // (4) OPTIONAL selection — ARIA grid semantics (role=grid) + keyboard-focusable
 // selectable rows with aria-selected + the selected style — vs a plain static
-// table (no grid role, no row tabindex) when selection props are absent.
+// table (role=table, no row tabindex) when selection props are absent,
+// (5) responsive stacking hooks — explicit ARIA roles (kept across the CSS
+// display change) + per-cell `data-label` + the `.first` primary-column marker.
 
 // Row fixtures are typed concretely. vitest-browser-svelte's `render(Component,
 // props)` can't infer the `Row` generic from the props (unlike `<DataTable .. />`
@@ -87,14 +90,102 @@ describe("DataTable", () => {
     await expect.element(page.getByText("custom").first()).toBeVisible();
   });
 
-  it("renders a plain static table without selection props", async () => {
+  it("renders a plain static table with explicit (non-grid) ARIA roles", async () => {
+    // Explicit roles are set UNCONDITIONALLY so the stacked responsive form (a CSS
+    // `display:block` change that strips native table roles in Firefox/Safari)
+    // keeps valid table semantics. Without selection props the table is a plain
+    // `role="table"` (not grid); rows are `role="row"`; cells are `role="cell"`
+    // (not gridcell); and rows are NOT a tab stop / not aria-selected.
     const { container } = renderTable({ columns, rows });
     const table = container.querySelector("table");
-    expect(table).not.toHaveAttribute("role");
+    expect(table).toHaveAttribute("role", "table");
     const tr = container.querySelector("tbody tr");
+    expect(tr).toHaveAttribute("role", "row");
     expect(tr).not.toHaveAttribute("tabindex");
-    expect(tr).not.toHaveAttribute("role");
     expect(tr).not.toHaveAttribute("aria-selected");
+    const td = container.querySelector("tbody td");
+    expect(td).toHaveAttribute("role", "cell");
+    // thead/tbody are rowgroups; the header row + cells carry their roles too.
+    expect(container.querySelector("thead")).toHaveAttribute(
+      "role",
+      "rowgroup",
+    );
+    expect(container.querySelector("tbody")).toHaveAttribute(
+      "role",
+      "rowgroup",
+    );
+    expect(container.querySelector("thead th")).toHaveAttribute(
+      "role",
+      "columnheader",
+    );
+  });
+
+  it("labels each cell with its column for the stacked-card prefix", async () => {
+    // The responsive stacked form renders each non-primary cell's column label as
+    // a `::before` prefix sourced from `data-label`; the primary (first) column is
+    // the card title, marked `.first` with no prefix. Assert the DOM hooks the CSS
+    // relies on (the `@media` rendering itself is environment-CSS, not asserted).
+    const { container } = renderTable({ columns, rows });
+    const firstRowCells = container.querySelectorAll("tbody tr:first-child td");
+    expect(firstRowCells[0]).toHaveAttribute("data-label", "Code");
+    expect(firstRowCells[0]).toHaveClass("first");
+    expect(firstRowCells[1]).toHaveAttribute("data-label", "Label");
+    expect(firstRowCells[1]).not.toHaveClass("first");
+    expect(firstRowCells[2]).toHaveAttribute("data-label", "Count");
+    // The first header cell is also marked primary (drives the wide-screen
+    // min-width floor).
+    expect(container.querySelector("thead th")).toHaveClass("first");
+  });
+
+  it("left-aligns a numeric cell in the stacked (narrow) layout", async () => {
+    // Regression guard for the stacked-card alignment reset. The non-media
+    // `.align-end { text-align: right }` rule out-specifies a bare `td`, so the
+    // `@media (max-width: 48rem)` block's general `td { text-align: left }` can't
+    // override a numeric column on its own — it needs the explicit
+    // `td.align-end { text-align: left }`. Once stacked, every cell reads left.
+    //
+    // The suite otherwise avoids asserting `@media` CSS, but real Chromium lets us
+    // drive the viewport under the 48rem (768px @16px root) breakpoint and read
+    // the COMPUTED alignment, which exercises exactly the reset rule. Restore the
+    // viewport afterward so the narrow size doesn't leak into sibling tests.
+    await page.viewport(600, 800);
+    try {
+      const { container } = renderTable({ columns, rows });
+      const countCell = container.querySelector<HTMLElement>(
+        "tbody tr:first-child td.align-end",
+      );
+      if (!countCell) throw new Error("numeric (.align-end) cell not found");
+      // jsdom-free: a real engine resolves `start`/`left` per the LTR doc dir.
+      const align = getComputedStyle(countCell).textAlign;
+      expect(["left", "start"]).toContain(align);
+    } finally {
+      await page.viewport(1280, 800);
+    }
+  });
+
+  it("renders an explicit Column.width as an inline style on the header cell", async () => {
+    // The wide-screen 12rem min-width floor (`th.first:not([style*="width"])`)
+    // backs off ONLY when the consumer pins an explicit width — which the CSS
+    // detects via the inline `style="width: …"` attribute. So the override hinges
+    // on presence (width set) vs absence (no width) of that attribute; lock both.
+    const widthColumns: Column<Row>[] = [
+      { key: "code", label: "Code", mono: true, width: "8rem" },
+      { key: "label", label: "Label" },
+      { key: "count", label: "Count", numeric: true },
+    ];
+    const withWidth = renderTable({ columns: widthColumns, rows });
+    expect(withWidth.container.querySelector("thead th")).toHaveAttribute(
+      "style",
+      expect.stringContaining("width: 8rem"),
+    );
+    // The standard fixture pins no width, so the floor stays in force. The CSS
+    // guard keys off `width` appearing in the style attribute, not the attribute
+    // being absent — so assert the style carries no `width`, not that it's empty.
+    const noWidth = renderTable({ columns, rows });
+    const noWidthStyle = noWidth.container
+      .querySelector("thead th")
+      ?.getAttribute("style");
+    expect(noWidthStyle == null || !noWidthStyle.includes("width")).toBe(true);
   });
 
   it("makes rows selectable grid-rows when selection props are passed", async () => {
@@ -118,10 +209,45 @@ describe("DataTable", () => {
     expect(trs[0]).not.toHaveAttribute("role", "button");
     expect(trs[0]).toHaveAttribute("tabindex", "0");
     expect(trs[1]).toHaveAttribute("aria-selected", "false");
+    // Cells are gridcells under selection (vs `cell` in the plain table above).
+    expect(trs[0].querySelector("td")).toHaveAttribute("role", "gridcell");
 
     // Click activates onselect.
     (trs[1] as HTMLElement).click();
     expect(selected).toBe("2");
+  });
+
+  it("leaves a snippet-empty cell matching :empty so the stacked label is suppressed (#832)", async () => {
+    // The stacked-card form prefixes each non-primary cell with its column
+    // micro-label via `td:not(.first)::before { content: attr(data-label) }`. A
+    // register with no `purpose` makes the consumer's `cell` snippet render
+    // NOTHING into the Description cell, which would otherwise show a dangling
+    // "DESCRIPTION" label over empty space. The fix suppresses it with
+    // `td:empty::before { content: none }` — which only works if Svelte's {#if}
+    // anchor comments inside the empty <td> don't defeat CSS `:empty`. This
+    // renders the real CatalogNodeView snippet shape through the Svelte compiler
+    // and asserts the empty cell genuinely matches `:empty` (the crux), while a
+    // populated cell does not.
+    const { container } = render(DataTableEmptyCellHarness, {});
+    const noPurposeRow = container.querySelectorAll(
+      "tbody tr",
+    )[1] as HTMLElement;
+    const descCell = noPurposeRow.querySelectorAll("td")[1] as HTMLElement;
+    // The non-primary Description cell carries the data-label that drives the
+    // ::before prefix — confirm we're testing the right cell.
+    expect(descCell).toHaveAttribute("data-label", "Description");
+    expect(descCell).not.toHaveClass("first");
+    // Crux: Svelte's {#if} anchor comments do NOT defeat `:empty`, so the empty
+    // cell matches and `td:empty::before { content: none }` fires.
+    expect(descCell.matches(":empty")).toBe(true);
+    // A populated Description cell must NOT match :empty (label still shows).
+    const withPurposeRow = container.querySelectorAll(
+      "tbody tr",
+    )[0] as HTMLElement;
+    const populatedCell = withPurposeRow.querySelectorAll(
+      "td",
+    )[1] as HTMLElement;
+    expect(populatedCell.matches(":empty")).toBe(false);
   });
 
   it("compiles + renders interface-typed rows (Fix 1: Row extends object)", async () => {

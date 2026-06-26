@@ -37,7 +37,10 @@ export type ButtonSize = "sm" | "md";
 /** A `DataTable` column definition. `key` indexes into the row object;
  *  `numeric` right-aligns + mono-faces a measure; `mono` mono-faces an
  *  identifier without forcing alignment; `align` overrides; `width` is a CSS
- *  track size (e.g. `"8rem"`). */
+ *  track size (e.g. `"8rem"`). The FIRST column is the primary/title column by
+ *  position (no API flag): it gets a min-width floor on wide screens and, when
+ *  the table stacks on narrow canvases, becomes the card title with no
+ *  micro-label prefix. Order columns so the title is first. */
 export interface Column<Row = object> {
   key: keyof Row & string;
   label: string;
