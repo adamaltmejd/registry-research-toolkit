@@ -152,7 +152,17 @@ export function groupFilterKeys(
   return [
     group.label,
     group.key,
-    ...group.members.flatMap((m) => [m.name, m.fqid, leafSlug(m.fqid)]),
+    ...group.members.flatMap((m) => [
+      m.name,
+      m.fqid,
+      leafSlug(m.fqid),
+      // #819 FIX D: representation members are distinguished by their delivery
+      // column + facet labels/values (e.g. `CDISP5`, "Exkl. kapitalvinst"), not by
+      // name/fqid (which they SHARE across the variable). Index those too so a
+      // target-hunt for a column or a facet label surfaces the folding group.
+      m.delivery_column,
+      ...m.facets.flatMap((f) => [f.label, f.value]),
+    ]),
   ];
 }
 
@@ -225,6 +235,38 @@ export function memberFacet(
   axis: string,
 ): GroupFacetModel | undefined {
   return member.facets.find((f) => f.axis === axis);
+}
+
+/** Whether every member of a group occupies a DISTINCT facet-coordinate tuple
+ * (one value per axis, in `axes` order; a missing facet is its own slot). #819:
+ * the 2D matrix renders only ONE member per (row, col) cell — `memberAt` returns
+ * the first match — so two members sharing a full coordinate vector silently DROP
+ * one (and they escape `ungridded`, which catches only members MISSING an axis,
+ * not collisions on present ones). The schema permits representation members
+ * (`delivery_column`-distinguished, same coords) for ANY axes length > 1, so a
+ * 2-axis group can collide too. The host uses this to route a colliding group
+ * through the no-member-dropped navigator instead of the matrix. Coordinate-only
+ * (NOT delivery-column): the navigator lists every member regardless, so the test
+ * is purely "would the matrix lose a member". */
+export function membersHaveUniqueCoords(
+  group: { members: readonly FacetedMember[] },
+  axes: readonly string[],
+): boolean {
+  const seen = new Set<string>();
+  for (const m of group.members) {
+    // Join the per-axis values with a control-char separator (and a distinct
+    // control-char marker for an absent facet) so two DIFFERENT coordinate
+    // vectors can never alias by concatenation — facet values are SCB
+    // codes/tokens, never control characters.
+    const coords = axes
+      .map((axis) => m.facets.find((f) => f.axis === axis)?.value ?? "\u0000")
+      .join("\u0001");
+    if (seen.has(coords)) {
+      return false;
+    }
+    seen.add(coords);
+  }
+  return true;
 }
 
 // ── Member-distinguishing qualifier (#670) ──────────────────────────────────

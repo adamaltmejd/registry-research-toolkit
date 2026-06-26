@@ -10,6 +10,7 @@ import {
   memberAt,
   memberCoverageUnion,
   memberKey,
+  membersHaveUniqueCoords,
   OPEN_ENDED_VALID_TO,
   YEARLESS_VALID_FROM,
 } from "./catalog";
@@ -115,7 +116,21 @@ const axes = $derived(node?.axes ?? []);
 // A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
 // disposable-income family) renders through the facet navigator (below) instead,
 // so the matrix/chips/list path and its `ungridded` fallback are gated off this.
-const useNavigator = $derived(axes.length > 2);
+//
+// #819 FIX C: a 2-axis group can ALSO collide — two members on the SAME (row, col)
+// coordinate, distinguished only by `delivery_column` (representation members).
+// The matrix renders only the FIRST per cell (`memberAt`) and DROPS the rest (they
+// escape `ungridded`, covering every axis), so route through the navigator when a
+// 2-axis group has NON-UNIQUE coordinates too. Gated to `axes.length === 2`: only
+// the 2D matrix loses colliding members; a ≤1-axis group renders chips/list (every
+// member shown) and an axis-less umbrella collides trivially (all map to the empty
+// coord) but must keep its list, not the navigator.
+const useNavigator = $derived(
+  node
+    ? axes.length > 2 ||
+        (axes.length === 2 && !membersHaveUniqueCoords(node, axes))
+    : false,
+);
 // Matrix orientation: first axis → rows, second axis → columns (mirrors
 // ConceptGroupRow). `node` is always present inside the success arm where the
 // snippet renders, but guard so the top-level deriveds stay total.

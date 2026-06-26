@@ -166,6 +166,16 @@ const visibleMembers = $derived(
               </Tag>
             {/if}
           {/each}
+          <!-- #819 FIX B: two members sharing one fqid AND identical facet coords
+               differ ONLY by `delivery_column` (e.g. `din8` = DIN83/DIN84/DIN86) —
+               their facet tags render IDENTICALLY, so without the column a picker
+               user can't tell which they're choosing. Show it as a subtle technical
+               discriminator when present (whole-variable members carry none → it's
+               omitted). Rendered HERE (the shared navigator) so it shows in BOTH
+               browse and pick modes. -->
+          {#if m.delivery_column}
+            <code class="delivery-column">{m.delivery_column}</code>
+          {/if}
         </span>
         {@render memberSnippet(m)}
       </li>
@@ -288,7 +298,15 @@ const visibleMembers = $derived(
   .facet-tags {
     display: inline-flex;
     flex-wrap: wrap;
+    align-items: baseline;
     gap: var(--space-1);
+  }
+  /* #819 FIX B: the delivery-column discriminator on duplicate-coordinate members
+     — a muted monospace code so it reads as a technical identifier, secondary to
+     the facet tags (it only matters when two members would otherwise look alike). */
+  .delivery-column {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
   }
   /* The per-axis micro-label inside a neutral tag: the axis name in caps, so the
      axis identity is read as TEXT (not color). Dimmed so the value label leads. */

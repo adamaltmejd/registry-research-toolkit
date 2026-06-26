@@ -276,4 +276,135 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
       container.querySelectorAll("ul.members.navigator > li"),
     ).toHaveLength(1);
   });
+
+  it("shows each member's delivery column so duplicate-coord members are distinguishable (#819 FIX B)", async () => {
+    // The two scb/iot/dispink reps share fqid AND name; in pick mode (where the
+    // user is CHOOSING a column) they must be told apart by their delivery column.
+    const { container } = render(ConceptGroupRow, {
+      group: threeAxisGroup(),
+      onpick: vi.fn(),
+    });
+    await page.getByText("2 variables").click();
+
+    // Each navigator member row carries its delivery column as a subtle code.
+    const cols = [
+      ...container.querySelectorAll(
+        "ul.members.navigator > li code.delivery-column",
+      ),
+    ].map((c) => c.textContent?.trim());
+    expect(cols).toContain("dispink_inkl");
+    expect(cols).toContain("dispink_exkl");
+    // The two same-fqid rep rows are now distinguishable by their column.
+    expect(new Set(cols).size).toBe(cols.length);
+  });
+});
+
+// ── A ≤2-axis group with COLLIDING coordinates (#819 FIX C) ───────────────────
+// The matrix renders only the FIRST member per (row, col) cell, so two members
+// sharing a full 2-axis coordinate (representation members distinguished by
+// delivery_column) silently DROP one. FIX C routes such a group through the
+// navigator instead — keyed on coordinate-uniqueness, not just axes.length > 2.
+function twoAxisCollidingGroup(): ConceptGroup {
+  return {
+    key: "din8",
+    label: "Disponibel inkomst (DIN8)",
+    source: "curated",
+    axes: ["enhet", "hushallsbegrepp"],
+    members: [
+      // THREE members on one variable sharing the SAME (enhet, hushallsbegrepp)
+      // cell, distinguished only by delivery_column — the DIN83/84/86 case.
+      {
+        fqid: "scb/iot/din8",
+        name: "DIN8",
+        delivery_column: "DIN83",
+        facets: [
+          { axis: "enhet", value: "individ", label: "Individ" },
+          { axis: "hushallsbegrepp", value: "vx", label: "Vuxen" },
+        ],
+      },
+      {
+        fqid: "scb/iot/din8",
+        name: "DIN8",
+        delivery_column: "DIN84",
+        facets: [
+          { axis: "enhet", value: "individ", label: "Individ" },
+          { axis: "hushallsbegrepp", value: "vx", label: "Vuxen" },
+        ],
+      },
+      {
+        fqid: "scb/iot/din8",
+        name: "DIN8",
+        delivery_column: "DIN86",
+        facets: [
+          { axis: "enhet", value: "individ", label: "Individ" },
+          { axis: "hushallsbegrepp", value: "vx", label: "Vuxen" },
+        ],
+      },
+    ],
+  } as unknown as ConceptGroup;
+}
+
+describe("ConceptGroupRow ≤2-axis colliding-coord navigator (#819 FIX C)", () => {
+  it("routes a 2-axis group with shared-coordinate members through the navigator, dropping none", async () => {
+    const onpick = vi.fn();
+    const { container } = render(ConceptGroupRow, {
+      group: twoAxisCollidingGroup(),
+      onpick,
+    });
+
+    // The matrix (which would render only the FIRST of the three colliding members)
+    // must NOT be used; the navigator renders all three instead.
+    expect(container.querySelector("table.facet-matrix")).toBeNull();
+    // One DISTINCT variable (all share fqid scb/iot/din8).
+    await page.getByText("1 variables").click();
+
+    const buttons = container.querySelectorAll(
+      "ul.members.navigator button.member-pick",
+    );
+    expect(buttons).toHaveLength(3);
+    await expect
+      .element(page.getByText("Showing 3 of 3 members", { exact: true }))
+      .toBeVisible();
+
+    // All three columns are pickable (the matrix would have dropped two of them),
+    // each distinguishable by its delivery column (FIX B).
+    const cols = [
+      ...container.querySelectorAll(
+        "ul.members.navigator > li code.delivery-column",
+      ),
+    ].map((c) => c.textContent?.trim());
+    expect(cols.sort()).toEqual(["DIN83", "DIN84", "DIN86"]);
+  });
+
+  it("keeps the matrix for a genuinely unique-coordinate 2-axis group (no regression)", async () => {
+    const { container } = render(ConceptGroupRow, {
+      group: group({
+        key: "agi",
+        label: "AGI",
+        axes: ["month", "rank"],
+        members: [
+          {
+            fqid: "scb/lisa/a",
+            name: null,
+            facets: [
+              { axis: "month", value: "01", label: "jan" },
+              { axis: "rank", value: "1", label: "1" },
+            ],
+          },
+          {
+            fqid: "scb/lisa/b",
+            name: null,
+            facets: [
+              { axis: "month", value: "01", label: "jan" },
+              { axis: "rank", value: "2", label: "2" },
+            ],
+          },
+        ],
+      } as unknown as Partial<ConceptGroup>),
+    });
+    await page.getByText("2 variables").click();
+    // Unique coords → the matrix stays (no navigator).
+    expect(container.querySelector("table.facet-matrix")).not.toBeNull();
+    expect(container.querySelector("ul.members.navigator")).toBeNull();
+  });
 });

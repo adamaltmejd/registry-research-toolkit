@@ -494,6 +494,94 @@ describe("CatalogPicker", () => {
     );
   });
 
+  it("an explicit representation pick binds THAT column even when the period resolves only a DIFFERENT one (#819 FIX A)", async () => {
+    // The correctness trap: the user clicks the CDISP5 (exkl-kapitalvinst) member,
+    // but at the source's period (2018, pre-coverage) ONLY CDISP has states. The
+    // resolve is then NON-ambiguous (one column) — the old code skipped the
+    // preselect and emitted CDISP with representation:null, silently binding the
+    // WRONG representation. The fix HONORS the clicked column: the binding carries
+    // representation=CDISP5 regardless of what the period resolves, never a
+    // different column with a null representation.
+    const onpickVariable = vi.fn();
+    const repNode = registerNode("scb/iot", {
+      fqid: "scb/iot/disp",
+      name: "Disponibel inkomst",
+    }) as unknown as Record<string, unknown>;
+    repNode.groups = [
+      {
+        key: "disprep",
+        label: "Disponibel inkomst",
+        source: "edge",
+        axes: ["rep"],
+        members: [
+          {
+            fqid: "scb/iot/disp",
+            name: "Disp (CDISP)",
+            delivery_column: "CDISP",
+            facets: [{ axis: "rep", value: "CDISP", label: "CDISP" }],
+          },
+          {
+            fqid: "scb/iot/disp",
+            name: "Disp (CDISP5)",
+            delivery_column: "CDISP5",
+            facets: [{ axis: "rep", value: "CDISP5", label: "CDISP5" }],
+          },
+        ],
+      },
+    ];
+    // At 2018 the variable resolves to a SINGLE column — CDISP only (CDISP5 has no
+    // covering state yet). A non-preselect resolve would be `derived` on CDISP.
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) =>
+      params
+        ? statesResponse([
+            {
+              delivery_column_name: "CDISP",
+              data_type: "int",
+              value_set_id: null,
+              value_set: null,
+              value_set_version_label: "",
+              valid_from: "1968-01-01",
+              valid_to: "2024-12-31",
+            },
+          ])
+        : (repNode as unknown as CatalogNode),
+    );
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/iot",
+      period: "2018",
+      variant: "v1",
+      onpickVariable,
+      oncancel: vi.fn(),
+    });
+
+    // Expand the family, click the CDISP5 chip — the column NOT covered at 2018.
+    await page.getByText("Disponibel inkomst").click();
+    await page.getByRole("button", { name: "CDISP5" }).click();
+
+    // The chooser is NOT shown (an explicit pick never re-asks), and the emitted
+    // binding carries representation=CDISP5 — NEVER CDISP, and NEVER null.
+    await expect
+      .element(page.getByRole("group", { name: "Pick a representation" }))
+      .not.toBeInTheDocument();
+    await vi.waitFor(() =>
+      expect(onpickVariable).toHaveBeenCalledWith({
+        variable: "scb/iot/disp",
+        type: "opaque", // CDISP5 has no covering state at 2018 → no derived type…
+        displayNameDefault: "CDISP5",
+        representation: "CDISP5", // …but the author's chosen column is honored.
+        resolution: "derived",
+      }),
+    );
+    // Crucially: it never emitted the period's resolved column with a null rep.
+    expect(onpickVariable).not.toHaveBeenCalledWith(
+      expect.objectContaining({ representation: null }),
+    );
+    expect(onpickVariable).not.toHaveBeenCalledWith(
+      expect.objectContaining({ displayNameDefault: "CDISP" }),
+    );
+  });
+
   // ── Scenario 3: type-to-filter the variable list ───────────────────────────
   it("autofocuses the filter and narrows the variable list (name + fqid, folded)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(

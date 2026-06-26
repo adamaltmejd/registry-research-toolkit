@@ -5,6 +5,7 @@ import {
   getCatalogNode,
   getCatalogRoot,
   getRegisterVariants,
+  isCatalogNode,
   type RootResponse,
   type StatesResponse,
   type VariableStateModel,
@@ -272,25 +273,23 @@ async function pickVariable(
   resolving = true;
   resolveError = null;
   try {
+    // #819 FIX A: a representation member row carries which delivery column it IS
+    // (`preselectColumn`). The author EXPLICITLY chose that column, so the binding
+    // MUST carry it as its representation — independent of what the source's
+    // current period happens to resolve. The collapsed `resolveBindingAt` arms
+    // can't express this: a pre-coverage period (only a DIFFERENT column has
+    // states) resolves to a non-ambiguous `derived` whose single column is NOT the
+    // one clicked, and emitting that would silently bind the wrong representation.
+    // So an explicit pick honors the column directly off the resolved states.
+    if (preselectColumn != null) {
+      await pickPreselected(p, fqid, preselectColumn);
+      return;
+    }
     const result = await resolveBindingAt(fqid, p.period, p.variant);
     if (result.kind === "ambiguous") {
       // >1 distinct delivery column → defer to the representation chooser below.
       showAlternates = false;
       pending = { fqid: result.fqid, states: result.states };
-      // #819 FIX 1: a representation member row carries which column it IS, so the
-      // chooser is redundant — PRESELECT that column with the existing chooser
-      // machinery (`chooseRepresentation`) instead of re-asking. Only when the
-      // preselected column actually matches a resolved representation; otherwise
-      // fall through to the manual chooser (defensive — a stale column drift can't
-      // silently mis-pick).
-      if (preselectColumn != null) {
-        const match = representationsFromStates(result.states).find(
-          (r) => r.column === preselectColumn,
-        );
-        if (match) {
-          chooseRepresentation(match);
-        }
-      }
       return;
     }
     if (result.kind === "unresolved") {
@@ -318,6 +317,71 @@ async function pickVariable(
   } finally {
     resolving = false;
   }
+}
+
+/** #819 FIX A: emit a binding that HONORS an explicitly-clicked delivery column
+ * (`column`), never substituting a different one. The column is the user's choice
+ * (it comes from a representation group member), so it becomes the binding's
+ * `representation` regardless of the period's resolution. When the column has a
+ * covering state at the source's (period, variant), its type/display default are
+ * derived from THAT state; when it has none (a pre-coverage period — the column is
+ * real but not delivered yet at this period), the column is still carried and the
+ * backend's `binding_representation_unknown` warning flags the coverage gap, NOT a
+ * silent swap to whatever column the period does resolve. The column is only
+ * treated as unavailable when the variable resolves to NO states at all (genuinely
+ * no such delivery) — then we fall back to the unresolved path rather than minting
+ * a representation for a column that doesn't exist. */
+async function pickPreselected(
+  p: VariableProps,
+  fqid: string,
+  column: string,
+): Promise<void> {
+  // The period-unset short-circuit mirrors resolveBindingAt: no period → no
+  // resolve, but the author's explicit column still rides the binding.
+  if (!p.period) {
+    p.onpickVariable({
+      variable: fqid,
+      type: "opaque",
+      displayNameDefault: column,
+      representation: column,
+      resolution: "unresolved",
+      unresolvedReason: "period-unset",
+    });
+    return;
+  }
+  const resolved = await getCatalogNode(fqid, {
+    period: p.period,
+    variant: p.variant || undefined,
+  });
+  // A non-leaf payload (shouldn't happen with ?period) or a variable with NO
+  // covering state at all → the column can't be a real delivery here; emit the
+  // honest unresolved fallback (still carrying the chosen column) rather than
+  // inventing a representation.
+  if (isCatalogNode(resolved) || resolved.states.length === 0) {
+    p.onpickVariable({
+      variable: fqid,
+      type: "opaque",
+      displayNameDefault: column,
+      representation: column,
+      resolution: "unresolved",
+      unresolvedReason: isCatalogNode(resolved) ? "not-a-leaf" : "no-states",
+    });
+    return;
+  }
+  // Honor the clicked column. Its type/display default come from a covering state
+  // of THAT column when present; if the column has no state at THIS period (only a
+  // different column does), it's still the author's choice — carry it as a derived
+  // representation and let the backend's coverage warning surface the period gap.
+  const columnState = resolved.states.find(
+    (s) => s.delivery_column_name === column,
+  );
+  p.onpickVariable({
+    variable: fqid,
+    type: deriveType(columnState),
+    displayNameDefault: column,
+    representation: column,
+    resolution: "derived",
+  });
 }
 
 function chooseRepresentation(rep: Representation): void {

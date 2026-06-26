@@ -8,6 +8,7 @@ import {
   leafSlug,
   memberAt,
   memberKey,
+  membersHaveUniqueCoords,
 } from "./catalog";
 
 // One folded concept-group row (#303): a <details> that expands to the facet
@@ -58,7 +59,21 @@ const axes = $derived(group.axes);
 // also escape `ungridded` (they cover every declared axis). The navigator drops
 // NO member, in BOTH browse (links) and pick (`onpick` buttons) modes. The
 // matrix/chips/list path stays for ≤2 axes (no regression).
-const useNavigator = $derived(axes.length > 2);
+//
+// #819 FIX C: >2 axes is not the only matrix-lossy shape. A 2-axis group can ALSO
+// carry two members on the SAME (row, col) coordinate — representation members
+// distinguished by `delivery_column` (e.g. `din8` = DIN83/DIN84/DIN86). The matrix
+// renders only the FIRST per cell (`memberAt`) and DROPS the rest, and they escape
+// `ungridded` (they cover every axis). So route through the navigator when a 2-axis
+// group has NON-UNIQUE coordinates too. The coordinate test is gated to
+// `axes.length === 2`: only the 2D matrix loses colliding members; a ≤1-axis group
+// renders a chip/list (every member shown) and an axis-less umbrella collides
+// trivially (all members map to the empty coord) but must keep its chips, not the
+// navigator.
+const useNavigator = $derived(
+  axes.length > 2 ||
+    (axes.length === 2 && !membersHaveUniqueCoords(group, axes)),
+);
 // Matrix orientation: first axis → rows, second axis → columns.
 const matrixRows = $derived(axes.length > 0 ? axisValues(group, axes[0]) : []);
 const matrixCols = $derived(axes.length > 1 ? axisValues(group, axes[1]) : []);
