@@ -214,7 +214,18 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   DB cannot represent multi-axis. Regenerate-not-migrate; a 5.6.0 DB still has
 #   the dropped table and lacks the inline columns, so it's rejected via the
 #   minor gate.
-SCHEMA_VERSION = "5.7.0"
+# - 5.8.0 (#819): variable concept groups go MULTI-AXIS over REPRESENTATIONS,
+#   reversing 5.7.0's single-axis collapse. `concept_group.facet_axis` is DROPPED;
+#   each group's ordered named axes live in a new `concept_group_axis` table.
+#   `concept_group_variable` is re-keyed to a surrogate `member_id` and gains a
+#   nullable `delivery_column_name`, so one variable can be several
+#   `(variable_id, delivery_column)` members (the iot disposable-income family);
+#   its `facet_value`/`facet_label` columns are dropped, the per-member-per-axis
+#   facets moving to a re-introduced `concept_group_variable_facet`
+#   (`member_id, axis, value, label`). A 5.7.0 DB still has `facet_axis` + the
+#   inline member facets and lacks both new tables, so it's rejected via the minor
+#   gate.
+SCHEMA_VERSION = "5.8.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -614,10 +614,12 @@ export interface components {
          * BindingGroupRef
          * @description The concept group a binding belongs to, as the group's addressable
          *     `(provider, register, key)` (#616). Carried by `ResolvedVariable.group` so a
-         *     member URL renders group-aware without a second fetch. Membership is
-         *     register-scoped and 1:1 (the `concept_group_variable.variable_id` PK enforces
-         *     at most one home group per variable), so this is a singular ref — the full
-         *     member list lives behind `Catalog.concept_group(provider, register, key)`.
+         *     member URL renders group-aware without a second fetch. A variable belongs to at
+         *     most one group (validated, #819) — even a multi-axis family that carries the
+         *     variable under several REPRESENTATION members keeps them in one group — so this
+         *     stays a singular ref (the read uses `SELECT DISTINCT` since a representation
+         *     variable now yields several member rows). The full member list lives behind
+         *     `Catalog.concept_group(provider, register, key)`.
          *     `key` is `ConceptGroupSummary.key` (the scope-unique derivation key), not an
          *     FQID segment.
          *
@@ -1149,10 +1151,17 @@ export interface components {
         };
         /**
          * ConceptGroupMember
-         * @description A group member: the leaf's FQID (binding or classification), its
-         *     display name, and its facet assignments (empty on edge-group members).
+         * @description A group member: the leaf's FQID (binding or classification), its display
+         *     name, and its facet assignments (empty on edge-group members). `delivery_column`
+         *     is None for a whole-variable member and the SCB delivery column for a
+         *     REPRESENTATION member (#819) — a multi-axis family can carry two members on one
+         *     variable (two delivery columns), so two members may share an `fqid` and are then
+         *     distinguished by `delivery_column`. Additive + defaulted so existing callers /
+         *     the webapp TS stay valid.
          */
         ConceptGroupMember: {
+            /** Delivery Column */
+            delivery_column?: string | null;
             /** Facets */
             facets: components["schemas"]["GroupFacet"][];
             /** Fqid */
@@ -1215,6 +1224,8 @@ export interface components {
          */
         ConceptGroupNodeMember: {
             coverage?: components["schemas"]["VariableCoverage"] | null;
+            /** Delivery Column */
+            delivery_column?: string | null;
             /** Facets */
             facets: components["schemas"]["GroupFacet"][];
             /** Fqid */
@@ -1278,11 +1289,10 @@ export interface components {
          * ConceptGroupSummary
          * @description One derived concept group. `key` is the scope-unique derivation key
          *     (slug stem / min member slug / curated key) — a stable anchor for UI
-         *     state, not an FQID. `axes` holds the group's single facet axis (a 0-or-1
-         *     element tuple: empty for edge groups, one axis for token/curated groups);
-         *     members are ordered by their facet value along that axis, then slug. The
-         *     tuple shape is retained for the response contract — the DB is single-axis
-         *     (#585).
+         *     state, not an FQID. `axes` holds the group's ordered facet axes (#819): empty
+         *     for edge / axis-less umbrella groups, one for token/single-axis-curated groups,
+         *     N for a multi-axis curated family (the iot disposable-income group). Members are
+         *     ordered by their first facet value, then slug.
          */
         ConceptGroupSummary: {
             /** Axes */
@@ -1514,10 +1524,12 @@ export interface components {
         /**
          * GroupFacet
          * @description One facet assignment on a group member: `axis` names the dimension
-         *     ('month' / 'rank') when the group has one, or None for an AXIS-LESS group —
-         *     a curated classification umbrella (SUN/ISCED/NordDRG), whose members are
-         *     distinct classifications carrying their own short label, not points on a
-         *     shared scale. `value` sorts (zero-padded where needed), `label` displays.
+         *     ('month' / 'rank' / 'enhet' …) when the group declares one, or None for an
+         *     AXIS-LESS group — a curated classification umbrella (SUN/ISCED/NordDRG), whose
+         *     members are distinct classifications carrying their own short label, not points
+         *     on a shared scale. A multi-axis member (#819) carries one `GroupFacet` per
+         *     declared axis, ordered by the axis's ordinal. `value` sorts (zero-padded where
+         *     needed), `label` displays.
          */
         GroupFacet: {
             /** Axis */

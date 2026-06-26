@@ -953,8 +953,11 @@ CREATE TABLE variable_related_to (
 --               slug tails for classifications (lkf1980…, sni2007).
 --   'curated' — maintainer TOML (`reg_meta_build/concept_groups.toml`), e.g.
 --               the LISA agi{1,2,3} rank facet over the month groups.
--- A variable/classification belongs to AT MOST ONE group (single-column member
--- PKs below). Derived every build from edges/slugs/TOML; regenerate-not-migrate.
+-- A variable/classification belongs to AT MOST ONE group. For classifications
+-- the single-column member PK enforces it; for variables the surrogate-keyed
+-- member table no longer can, so the validator re-enforces "one group per
+-- variable_id" (#819). Derived every build from edges/slugs/TOML;
+-- regenerate-not-migrate.
 CREATE TABLE concept_group (
     group_id    INTEGER PRIMARY KEY AUTOINCREMENT,
     kind        TEXT NOT NULL CHECK (kind IN ('variable', 'classification')),
@@ -969,18 +972,6 @@ CREATE TABLE concept_group (
     group_key   TEXT NOT NULL,
     label       TEXT NOT NULL,
     source      TEXT NOT NULL CHECK (source IN ('edge', 'token', 'curated')),
-    -- The group's SINGLE facet axis: 'month' for a token month group, the
-    -- curated `axis` for a curated variable family (e.g. 'rank' for the LISA agi
-    -- rank facet). NULL for: edge groups (the member list IS the presentation —
-    -- no facet), the retained-but-empty derived classification machinery, AND
-    -- curated `[[classification_group]]` umbrellas (SUN/ISCED/NordDRG) — those
-    -- are axis-less (members are distinct classifications, not points on a
-    -- scale), so the umbrella carries no axis while each member still keeps its
-    -- own `concept_group_classification.facet_value`/`facet_label` inline. A
-    -- curated variable family's members carry their value/label inline on
-    -- `concept_group_variable`. At most one axis is enforced by this one-column
-    -- shape, not by convention. #516/#585.
-    facet_axis  TEXT,
     CHECK ((kind = 'variable') = (register_id IS NOT NULL))
 );
 CREATE UNIQUE INDEX idx_concept_group_key
@@ -991,33 +982,71 @@ CREATE UNIQUE INDEX idx_concept_group_key
 -- load full-scans the ~2,200 groups.
 CREATE INDEX idx_concept_group_register ON concept_group(register_id);
 
--- Membership, one table per kind (avoids nullable composite PKs). The
--- single-column PK enforces the at-most-one-group invariant per member. Each
--- member carries its facet value/label inline: `facet_value` sorts (zero-padded
--- month '05', rank '1'), `facet_label` displays ('maj', 'största
--- förvärvskällan'). Both are NULL for edge-group members (the member list IS the
--- presentation — no facet). VARIABLE-member INVARIANT (validated, #585): a
--- `concept_group_variable` member's `facet_value`/`facet_label` are non-NULL iff
--- its group's `facet_axis` is non-NULL (token/curated groups) and NULL for edge
--- groups (`facet_axis` NULL). `concept_group_classification` members do NOT obey
--- this coupling: curated `[[classification_group]]` umbrellas are AXIS-LESS
--- (`facet_axis` NULL) yet each member keeps a non-NULL `facet_value`/`facet_label`
--- (its own short picker label), so the iff invariant is variable-only. #585
--- dropped the multi-axis `concept_group_variable_facet` table — the corpus
--- carries only single-axis (or axis-less) groups, so the facet moves inline
--- here, mirroring `concept_group_classification`, and multi-axis is now
--- unrepresentable by schema shape.
-CREATE TABLE concept_group_variable (
-    variable_id INTEGER PRIMARY KEY REFERENCES variable(variable_id),
-    group_id    INTEGER NOT NULL REFERENCES concept_group(group_id),
-    facet_value TEXT,
-    facet_label TEXT
+-- A group's ordered NAMED facet axes (#819, reversing #585's single-axis
+-- collapse). Zero rows for an axis-less group (edge group, or an axis-less
+-- curated `[[classification_group]]` umbrella); ONE row for a single-axis group
+-- (token 'month', the LISA curated rank facet, a classification umbrella that
+-- declares an axis); N rows for a multi-axis curated variable family (the iot
+-- disposable-income group: enhet × hushållsbegrepp × kapitalvinst). `ordinal`
+-- orders the axes for display; `label` is the axis's human name (e.g. 'månad',
+-- 'Enhet'). The classification member facet stays inline on
+-- `concept_group_classification`, but its single axis DECLARATION moves here too,
+-- so there is ONE read shape for axes across both kinds.
+CREATE TABLE concept_group_axis (
+    group_id INTEGER NOT NULL REFERENCES concept_group(group_id),
+    axis     TEXT NOT NULL,
+    ordinal  INTEGER NOT NULL,
+    label    TEXT NOT NULL,
+    PRIMARY KEY (group_id, axis)
 );
+
+-- Variable membership at REPRESENTATION grain (#819): a member is a
+-- `(variable_id, delivery_column_name)` point, NOT a whole variable. The
+-- representation grain is load-bearing — one variable can hold two coordinates
+-- (iot's `delkomponent-disponibel-inkomst` delivers both `CDISP` (incl. capital
+-- gains) and `CDISP5` (excl.) under one variable), which a variable-grained
+-- member can't express. `delivery_column_name` NULL = a whole-variable member
+-- (edge / month / single-axis curated families: the variable IS the member);
+-- non-NULL = one representation of the variable (multi-axis curated families).
+-- Surrogate `member_id` PK (a plain rowid alias, NOT AUTOINCREMENT — the table is
+-- regenerated every build, so no sqlite_sequence gap-freeness is needed) so a
+-- variable can appear under several coordinates; the per-member facet coordinates
+-- live on `concept_group_variable_facet`. The "at most one group per variable"
+-- invariant the old single-column PK enforced is now a validator check (#819).
+CREATE TABLE concept_group_variable (
+    member_id   INTEGER PRIMARY KEY,
+    group_id    INTEGER NOT NULL REFERENCES concept_group(group_id),
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    delivery_column_name TEXT
+);
+-- COALESCE expression index (mirrors `idx_concept_group_key`): a bare composite
+-- UNIQUE over a nullable `delivery_column_name` lets SQLite treat every NULL as
+-- distinct, silently admitting duplicate whole-variable members. Folding NULL to
+-- '' closes that footgun so `(group_id, variable_id, NULL)` is unique.
+CREATE UNIQUE INDEX idx_concept_group_variable_member
+    ON concept_group_variable(group_id, variable_id, COALESCE(delivery_column_name, ''));
 CREATE INDEX idx_concept_group_variable_group
     ON concept_group_variable(group_id);
 
--- Classification members carry exactly one facet (the group's single axis), so
--- it lives inline — mirroring `concept_group_variable`.
+-- Per-member-per-axis facet coordinate (#819, the #585 reversal that restores a
+-- `concept_group_variable_facet` table). A whole-variable member on an axis-less
+-- group carries ZERO rows; a single-axis member ONE; a multi-axis member ONE per
+-- declared axis (the iot members carry 3). `axis` must be one of the member's
+-- group's `concept_group_axis` axes (validated). `value` sorts (zero-padded month
+-- '05', rank '1', 'individ'); `label` displays.
+CREATE TABLE concept_group_variable_facet (
+    member_id INTEGER NOT NULL REFERENCES concept_group_variable(member_id),
+    axis      TEXT NOT NULL,
+    value     TEXT NOT NULL,
+    label     TEXT NOT NULL,
+    PRIMARY KEY (member_id, axis)
+);
+
+-- Classification members carry their facet value/label INLINE (unchanged from
+-- #585) — the umbrella members are distinct classifications, one facet each. The
+-- group's single axis DECLARATION lives on `concept_group_axis` now (#819), not
+-- a `facet_axis` column; an axis-less umbrella (SUN/ISCED/NordDRG) has zero axis
+-- rows while members still keep their own short `facet_value`/`facet_label`.
 CREATE TABLE concept_group_classification (
     classification_id INTEGER PRIMARY KEY REFERENCES classification(id),
     group_id          INTEGER NOT NULL REFERENCES concept_group(group_id),

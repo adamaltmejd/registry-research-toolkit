@@ -79,13 +79,15 @@ def db_with_cls_group() -> sqlite3.Connection:
         "VALUES (50, 'SUN2000', 'Svensk utbildningsnomenklatur', 'sun2000')"
     )
     conn.execute(
-        # A curated classification umbrella group always carries a non-NULL
-        # `facet_axis` (the `token`/`curated` group axis; edge groups — variable
-        # grain only — are the NULL-axis case). `GroupFacet.axis` is a non-optional
-        # str, so the fixture must set it like real data.
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) VALUES (11, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
+        "label, source) VALUES (11, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token')"
+    )
+    # The group's single 'vintage' axis declaration lives in concept_group_axis
+    # (#819, replacing the dropped facet_axis column).
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (11, 'vintage', 0, 'vintage')"
     )
     sun2020_id = conn.execute(
         "SELECT id FROM classification WHERE slug = 'sun2020'"
@@ -152,10 +154,14 @@ def db_with_class_code_group() -> sqlite3.Connection:
         "VALUES (50, 'SUN2000', 'Svensk utbildningsnomenklatur', 'sun2000')"
     )
     conn.execute(
-        # Curated umbrella group → non-NULL `facet_axis` (see the sibling fixture).
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) VALUES (11, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
+        "label, source) VALUES (11, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token')"
+    )
+    # Single 'vintage' axis declaration in concept_group_axis (#819).
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (11, 'vintage', 0, 'vintage')"
     )
     sun2020_id = conn.execute(
         "SELECT id FROM classification WHERE slug = 'sun2020'"

@@ -66,6 +66,39 @@ def _add_classification(
     )
 
 
+def _add_alias(
+    conn: sqlite3.Connection,
+    slug: str,
+    delivery_column_name: str,
+    register_variant_id: int = 10,
+) -> None:
+    """Add a `variable_alias` row for the variable with this slug — so a
+    representation member's `delivery_column` resolves at materialize time (#819).
+    The default variant id matches `build_slugged_db`'s `_DEFAULT_VARIANT`."""
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = ?", (slug,)
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",
+        (variable_id, register_variant_id, delivery_column_name),
+    )
+
+
+def _member(variable: str, axis: str, value: str, label: str) -> CuratedMember:
+    """A single-axis whole-variable `CuratedMember` (#819): one coord on the
+    family's single `axis`, `delivery_column = None`. The coord axis MUST match the
+    group's declared axis (the materializer inserts coords verbatim)."""
+    return CuratedMember(
+        variable=variable, delivery_column=None, coords=((axis, value, label),)
+    )
+
+
+def _axis1(name: str) -> tuple[tuple[str, str], ...]:
+    """A single-axis group's `axes` (legacy shape: label == axis name)."""
+    return ((name, name),)
+
+
 def _groups(conn: sqlite3.Connection) -> dict[str, dict]:
     out: dict[str, dict] = {}
     for g in conn.execute("SELECT * FROM concept_group"):
@@ -93,27 +126,69 @@ def _groups(conn: sqlite3.Connection) -> dict[str, dict]:
             "register_id": g["register_id"],
             "label": g["label"],
             "source": g["source"],
-            "facet_axis": g["facet_axis"],
+            "axes": _group_axes(conn, g["group_id"]),
             "members": members,
             "cls_members": cls_members,
         }
     return out
 
 
-def _facets(conn: sqlite3.Connection, slug: str) -> list[tuple[str, str, str]]:
-    """The member's inline single facet as (axis, value, label) — (#585) the
-    axis lives on `concept_group`, the value/label inline on
-    `concept_group_variable`. Empty when the member carries no facet (edge
-    group: NULL facet_value)."""
+def _group_id(conn: sqlite3.Connection, group_key: str) -> int:
+    """The `group_id` of the concept group with this key."""
+    return conn.execute(
+        "SELECT group_id FROM concept_group WHERE group_key = ?", (group_key,)
+    ).fetchone()[0]
+
+
+def _group_axes(conn: sqlite3.Connection, group_id: int) -> list[tuple[str, str]]:
+    """A group's ordered `(axis, label)` declarations from `concept_group_axis`
+    (#819). Empty for an axis-less group (edge / classification umbrella)."""
     return [
-        (r["facet_axis"], r["facet_value"], r["facet_label"])
+        (r["axis"], r["label"])
         for r in conn.execute(
-            "SELECT g.facet_axis, m.facet_value, m.facet_label "
-            "FROM concept_group_variable m "
+            "SELECT axis, label FROM concept_group_axis "
+            "WHERE group_id = ? ORDER BY ordinal",
+            (group_id,),
+        )
+    ]
+
+
+def _facets(conn: sqlite3.Connection, slug: str) -> list[tuple[str, str, str]]:
+    """A variable member's per-axis facets as (axis, value, label) (#819): the
+    member is keyed on `concept_group_variable`, its coords on
+    `concept_group_variable_facet`. Ordered by the axis's ordinal. Empty when the
+    member carries no facet (edge group). NOTE: a representation-grained family can
+    carry two members on one slug — use `_facets_for` to disambiguate by delivery
+    column."""
+    return [
+        (r["axis"], r["value"], r["label"])
+        for r in conn.execute(
+            "SELECT f.axis, f.value, f.label "
+            "FROM concept_group_variable_facet f "
+            "JOIN concept_group_variable m ON m.member_id = f.member_id "
             "JOIN variable v ON v.variable_id = m.variable_id "
-            "JOIN concept_group g ON g.group_id = m.group_id "
-            "WHERE v.slug = ? AND m.facet_value IS NOT NULL",
+            "JOIN concept_group_axis a ON a.group_id = m.group_id AND a.axis = f.axis "
+            "WHERE v.slug = ? ORDER BY a.ordinal",
             (slug,),
+        )
+    ]
+
+
+def _facets_for(
+    conn: sqlite3.Connection, slug: str, delivery_column: str
+) -> list[tuple[str, str, str]]:
+    """The per-axis facets of the `(slug, delivery_column)` representation member
+    (#819), ordered by axis ordinal."""
+    return [
+        (r["axis"], r["value"], r["label"])
+        for r in conn.execute(
+            "SELECT f.axis, f.value, f.label "
+            "FROM concept_group_variable_facet f "
+            "JOIN concept_group_variable m ON m.member_id = f.member_id "
+            "JOIN variable v ON v.variable_id = m.variable_id "
+            "JOIN concept_group_axis a ON a.group_id = m.group_id AND a.axis = f.axis "
+            "WHERE v.slug = ? AND m.delivery_column_name = ? ORDER BY a.ordinal",
+            (slug, delivery_column),
         )
     ]
 
@@ -139,7 +214,7 @@ class TestEdgeGroups:
             "register_id": 1,
             "label": "Utbildning",  # the shared name
             "source": "edge",
-            "facet_axis": None,  # edge groups have no axis
+            "axes": [],  # edge groups have no axis
             "members": ["sun2000", "sun2020", "sunx"],
             "cls_members": [],
         }
@@ -183,10 +258,10 @@ class TestEdgeGroups:
             register="lisa",
             key="fam",
             label="Familj",
-            axis="part",
+            axes=_axis1("part"),
             members=(
-                CuratedMember(variable="vara", value="1", label="A"),
-                CuratedMember(variable="varc", value="2", label="C"),
+                _member("vara", "part", "1", "A"),
+                _member("varc", "part", "2", "C"),
             ),
         )
         counts = materialize_concept_groups(
@@ -211,10 +286,10 @@ class TestEdgeGroups:
             register="lisa",
             key="fam",
             label="Familj",
-            axis="part",
+            axes=_axis1("part"),
             members=(
-                CuratedMember(variable="sunx", value="1", label="x"),
-                CuratedMember(variable="other", value="2", label="o"),
+                _member("sunx", "part", "1", "x"),
+                _member("other", "part", "2", "o"),
             ),
         )
         counts = materialize_concept_groups(
@@ -248,10 +323,10 @@ class TestEdgeGroups:
             register="lisa",
             key="fam",
             label="Familj",
-            axis="part",
+            axes=_axis1("part"),
             members=(
-                CuratedMember(variable="varx", value="1", label="x"),
-                CuratedMember(variable="other", value="2", label="o"),
+                _member("varx", "part", "1", "x"),
+                _member("other", "part", "2", "o"),
             ),
         )
         counts = materialize_concept_groups(
@@ -503,10 +578,10 @@ class TestMonthGroups:
             register="lisa",
             key="ink",  # collides with the month family's trimmed key
             label="Inkomst",
-            axis="part",
+            axes=_axis1("part"),
             members=(
-                CuratedMember(variable="vara", value="1", label="A"),
-                CuratedMember(variable="varb", value="2", label="B"),
+                _member("vara", "part", "1", "A"),
+                _member("varb", "part", "2", "B"),
             ),
         )
         warnings: list[str] = []
@@ -535,10 +610,10 @@ class TestMonthGroups:
             register="lisa",
             key="other",  # distinct from the month key `ink`
             label="Annan",
-            axis="part",
+            axes=_axis1("part"),
             members=(
-                CuratedMember(variable="vara", value="1", label="A"),
-                CuratedMember(variable="varb", value="2", label="B"),
+                _member("vara", "part", "1", "A"),
+                _member("varb", "part", "2", "B"),
             ),
         )
         warnings: list[str] = []
@@ -655,7 +730,7 @@ def _curated(members: tuple[CuratedMember, ...], **overrides) -> CuratedGroup:
         "register": "lisa",
         "key": "agiink",
         "label": "Inkomst per månad",
-        "axis": "rank",
+        "axes": _axis1("rank"),
         "members": members,
     }
     kwargs.update(overrides)
@@ -669,8 +744,8 @@ class TestCuratedGroups:
         add_variable(conn, register_id=1, var_id=701, name="B", slug="varb")
         curated = _curated(
             (
-                CuratedMember(variable="vara", value="1", label="största"),
-                CuratedMember(variable="varb", value="2", label="näst"),
+                _member("vara", "rank", "1", "största"),
+                _member("varb", "rank", "2", "näst"),
             )
         )
         counts = materialize_concept_groups(conn, (curated,), providers=_SCB)
@@ -678,8 +753,8 @@ class TestCuratedGroups:
         group = _groups(conn)["agiink"]
         assert group["source"] == "curated"
         assert group["members"] == ["vara", "varb"]
-        # The group carries its single axis; each member its inline facet.
-        assert group["facet_axis"] == "rank"
+        # The group declares its single axis; each member carries one facet on it.
+        assert group["axes"] == [("rank", "rank")]
         assert _facets(conn, "vara") == [("rank", "1", "största")]
         assert _facets(conn, "varb") == [("rank", "2", "näst")]
 
@@ -689,8 +764,8 @@ class TestCuratedGroups:
         add_variable(conn, register_id=1, var_id=731, name="B", slug="varb")
         curated = _curated(
             (
-                CuratedMember(variable="vara", value="1", label="x"),
-                CuratedMember(variable="varb", value="2", label="y"),
+                _member("vara", "rank", "1", "x"),
+                _member("varb", "rank", "2", "y"),
             ),
         )
         counts = materialize_concept_groups(
@@ -705,16 +780,16 @@ class TestCuratedGroups:
             # dangling variable reference
             (
                 (
-                    CuratedMember(variable="nope", value="1", label="x"),
-                    CuratedMember(variable="nope2", value="2", label="y"),
+                    _member("nope", "rank", "1", "x"),
+                    _member("nope2", "rank", "2", "y"),
                 ),
                 "lisa",
             ),
             # dangling register
             (
                 (
-                    CuratedMember(variable="vara", value="1", label="x"),
-                    CuratedMember(variable="varb", value="2", label="y"),
+                    _member("vara", "rank", "1", "x"),
+                    _member("varb", "rank", "2", "y"),
                 ),
                 "no",
             ),
@@ -750,8 +825,8 @@ class TestCuratedGroups:
         add_variable(conn, register_id=1, var_id=713, name="C", slug="varc")
         curated = _curated(
             (
-                CuratedMember(variable="inkjan", value="1", label="A"),
-                CuratedMember(variable="varc", value="2", label="C"),
+                _member("inkjan", "rank", "1", "A"),
+                _member("varc", "rank", "2", "C"),
             ),
             key="fam",
         )
@@ -763,26 +838,160 @@ class TestCuratedGroups:
         conn = build_slugged_db(classification=None)
         add_variable(conn, register_id=1, var_id=720, name="A", slug="vara")
         curated = _curated(
-            (CuratedMember(variable="vara", value="1", label="A"),),
+            (_member("vara", "rank", "1", "A"),),
             key="fam",
         )
         with pytest.raises(RegMetaError) as exc:
             materialize_concept_groups(conn, (curated,), providers=_SCB)
         assert exc.value.code == "concept_groups_unresolved"
 
-    def test_db_cannot_represent_multi_axis(self) -> None:
-        """#585: the multi-axis machinery is gone — `concept_group_variable_facet`
-        no longer exists, so a member can carry at most ONE facet (inline on
-        `concept_group_variable`). Single-axis is enforced by schema shape."""
+
+class TestMultiAxisGroups:
+    """#819: curated families can declare N named axes over REPRESENTATION members
+    (`(variable, delivery_column)`), so one variable can carry two coordinates."""
+
+    @staticmethod
+    def _iot_db() -> sqlite3.Connection:
+        """scb/lisa with a one-variable-two-representation family + a hushåll
+        variable, each delivery column registered in `variable_alias`."""
         conn = build_slugged_db(classification=None)
-        tables = {
-            r[0]
-            for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+        add_variable(conn, register_id=1, var_id=900, name="Disp ink", slug="cdisp")
+        _add_alias(conn, "cdisp", "CDISP")
+        _add_alias(conn, "cdisp", "CDISP5")  # second representation of one variable
+        add_variable(conn, register_id=1, var_id=901, name="Disp fam", slug="cdisph")
+        _add_alias(conn, "cdisph", "CDISPH")
+        return conn
+
+    @staticmethod
+    def _group(**overrides) -> CuratedGroup:
+        kwargs: dict = {
+            "provider": "scb",
+            "register": "lisa",
+            "key": "disp",
+            "label": "Disponibel inkomst",
+            "axes": (
+                ("enhet", "Enhet"),
+                ("hushallsbegrepp", "Hushållsbegrepp"),
+                ("kapitalvinst", "Kapitalvinst"),
+            ),
+            "members": (
+                CuratedMember(
+                    variable="cdisp",
+                    delivery_column="CDISP",
+                    coords=(
+                        ("enhet", "individ", "Individ"),
+                        ("hushallsbegrepp", "na", "—"),
+                        ("kapitalvinst", "inkl", "Inkl. kapitalvinst"),
+                    ),
+                ),
+                CuratedMember(
+                    variable="cdisp",
+                    delivery_column="CDISP5",
+                    coords=(
+                        ("enhet", "individ", "Individ"),
+                        ("hushallsbegrepp", "na", "—"),
+                        ("kapitalvinst", "exkl", "Exkl. kapitalvinst"),
+                    ),
+                ),
+                CuratedMember(
+                    variable="cdisph",
+                    delivery_column="CDISPH",
+                    coords=(
+                        ("enhet", "hushall", "Hushåll"),
+                        ("hushallsbegrepp", "familj", "Familj"),
+                        ("kapitalvinst", "inkl", "Inkl. kapitalvinst"),
+                    ),
+                ),
+            ),
         }
-        assert "concept_group_variable_facet" not in tables
-        # The variable member table carries exactly the single inline facet pair.
-        cols = {r[1] for r in conn.execute("PRAGMA table_info(concept_group_variable)")}
-        assert {"facet_value", "facet_label"} <= cols
+        kwargs.update(overrides)
+        return CuratedGroup(**kwargs)
+
+    def test_materializes_n_axes_and_n_facets_per_member(self) -> None:
+        conn = self._iot_db()
+        counts = materialize_concept_groups(conn, (self._group(),), providers=_SCB)
+        assert counts["curated_groups"] == 1
+        group = _groups(conn)["disp"]
+        assert group["axes"] == [
+            ("enhet", "Enhet"),
+            ("hushallsbegrepp", "Hushållsbegrepp"),
+            ("kapitalvinst", "Kapitalvinst"),
+        ]
+        # Each member carries one facet per axis, ordered by axis ordinal.
+        assert _facets_for(conn, "cdisp", "CDISP") == [
+            ("enhet", "individ", "Individ"),
+            ("hushallsbegrepp", "na", "—"),
+            ("kapitalvinst", "inkl", "Inkl. kapitalvinst"),
+        ]
+
+    def test_two_representations_of_one_variable_coexist(self) -> None:
+        # The load-bearing case: `cdisp` is one variable with two coordinates
+        # (CDISP incl., CDISP5 excl.). The surrogate PK + COALESCE unique index let
+        # both members coexist under one group.
+        conn = self._iot_db()
+        materialize_concept_groups(conn, (self._group(),), providers=_SCB)
+        cdisp_members = conn.execute(
+            "SELECT m.delivery_column_name FROM concept_group_variable m "
+            "JOIN variable v ON v.variable_id = m.variable_id "
+            "WHERE v.slug = 'cdisp' ORDER BY m.delivery_column_name"
+        ).fetchall()
+        assert [r[0] for r in cdisp_members] == ["CDISP", "CDISP5"]
+        assert _facets_for(conn, "cdisp", "CDISP5") == [
+            ("enhet", "individ", "Individ"),
+            ("hushallsbegrepp", "na", "—"),
+            ("kapitalvinst", "exkl", "Exkl. kapitalvinst"),
+        ]
+
+    def test_bad_delivery_column_fails_fast(self) -> None:
+        # A delivery column not in `variable_alias` is a curation typo → EXIT_CONFIG.
+        conn = self._iot_db()
+        bad = self._group(
+            members=(
+                CuratedMember(
+                    variable="cdisp",
+                    delivery_column="NOPE",
+                    coords=(
+                        ("enhet", "individ", "Individ"),
+                        ("hushallsbegrepp", "na", "—"),
+                        ("kapitalvinst", "inkl", "Inkl. kapitalvinst"),
+                    ),
+                ),
+                CuratedMember(
+                    variable="cdisph",
+                    delivery_column="CDISPH",
+                    coords=(
+                        ("enhet", "hushall", "Hushåll"),
+                        ("hushallsbegrepp", "familj", "Familj"),
+                        ("kapitalvinst", "inkl", "Inkl. kapitalvinst"),
+                    ),
+                ),
+            ),
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(conn, (bad,), providers=_SCB)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "concept_groups_unresolved"
+
+    def test_representation_member_spanning_two_groups_fails(self) -> None:
+        # The one-group-per-variable guard: a variable used as a representation
+        # member in one group can't also be claimed by a second group.
+        conn = self._iot_db()
+        add_variable(conn, register_id=1, var_id=902, name="Other", slug="vother")
+        _add_alias(conn, "vother", "VOTHER")
+        second = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="disp2",
+            label="Other",
+            axes=_axis1("enhet"),
+            members=(
+                _member("cdisp", "enhet", "individ", "Individ"),
+                _member("vother", "enhet", "hushall", "Hushåll"),
+            ),
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(conn, (self._group(), second), providers=_SCB)
+        assert exc.value.code == "concept_groups_unresolved"
 
 
 def _sun_group(**overrides) -> ClassificationGroup:
@@ -840,24 +1049,19 @@ class TestClassificationGroups:
             ("sun-inriktning2020", "inriktning", "Utbildningsinriktning"),
             ("sun-niva2020", "niva", "Utbildningsnivå"),
         ]
-        axis = conn.execute(
-            "SELECT facet_axis FROM concept_group WHERE group_key = 'sun'"
-        ).fetchone()[0]
-        assert axis is None
+        # Axis-less: zero `concept_group_axis` rows (#819).
+        assert _group_axes(conn, _group_id(conn, "sun")) == []
 
     def test_explicit_axis_still_stored(self) -> None:
-        # A provided axis is still accepted and stored (the loader/materializer
-        # do not force axis-less); members still carry their inline value/label.
+        # A provided axis is still accepted and stored as ONE `concept_group_axis`
+        # row (#819); members still carry their inline value/label.
         conn = self._db()
         materialize_concept_groups(
             conn,
             classification_groups=(_sun_group(axis="dimension"),),
             providers=_SCB,
         )
-        axis = conn.execute(
-            "SELECT facet_axis FROM concept_group WHERE group_key = 'sun'"
-        ).fetchone()[0]
-        assert axis == "dimension"
+        assert _group_axes(conn, _group_id(conn, "sun")) == [("dimension", "dimension")]
 
     def test_not_provider_gated(self) -> None:
         # Classifications are catalog-global — the umbrella materializes even when
@@ -1325,7 +1529,7 @@ def _auto_family(
         register=register,
         key=key,
         label=label,
-        axis=axis,
+        axes=_axis1(axis),
         members=members,
     )
 
@@ -1346,10 +1550,7 @@ def _morsak_db() -> sqlite3.Connection:
 
 
 def _morsak_members() -> tuple[CuratedMember, ...]:
-    return tuple(
-        CuratedMember(variable=f"morsak{i}", value=str(i), label=str(i))
-        for i in (1, 2, 3)
-    )
+    return tuple(_member(f"morsak{i}", "ordinal", str(i), str(i)) for i in (1, 2, 3))
 
 
 class TestAcceptList:
@@ -1429,10 +1630,10 @@ class TestAcceptList:
             register="lisa",
             key="fam",
             label="Familj",
-            axis="part",
+            axes=_axis1("part"),
             members=(
-                CuratedMember(variable="vara", value="1", label="A"),
-                CuratedMember(variable="varb", value="2", label="B"),
+                _member("vara", "part", "1", "A"),
+                _member("varb", "part", "2", "B"),
             ),
         )
         auto = (_auto_family(_morsak_members()),)
@@ -1480,8 +1681,8 @@ class TestAcceptList:
         auto = (
             _auto_family(
                 (
-                    CuratedMember(variable="inkjan", value="1", label="jan"),
-                    CuratedMember(variable="inkextra", value="2", label="extra"),
+                    _member("inkjan", "ordinal", "1", "jan"),
+                    _member("inkextra", "ordinal", "2", "extra"),
                 ),
                 key="alt",
             ),

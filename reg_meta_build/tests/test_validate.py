@@ -1506,43 +1506,75 @@ class TestConceptGroupChecks:
             if ln.kind == "ok"
         ), [ln.text for ln in result.lines]
 
-    # #585 inline-facet NULLability invariant. `_grouped_db` seeds an EDGE group
-    # (group 10, facet_axis NULL) whose members carry NULL facet_value/label — the
-    # valid edge shape. Each test corrupts that shape one way and asserts the gate
-    # bites with the facet/axis NULLability message.
+    # #819 multi-axis facet invariants. `_grouped_db` seeds an EDGE group (group 10,
+    # zero axes) whose members carry no facets — the valid edge shape. Each test
+    # corrupts the new tables one way and asserts the gate bites.
 
-    def test_edge_member_with_facet_value_fails(self):
-        # An edge group's member (group facet_axis NULL) must NOT carry facets;
-        # stamping a non-NULL value/label on it violates the invariant.
+    @staticmethod
+    def _member_id(conn, slug: str) -> int:
+        return conn.execute(
+            "SELECT m.member_id FROM concept_group_variable m "
+            "JOIN variable v ON v.variable_id = m.variable_id WHERE v.slug = ?",
+            (slug,),
+        ).fetchone()[0]
+
+    def test_facet_naming_undeclared_axis_fails(self):
+        # A member facet whose axis is NOT one of its group's `concept_group_axis`
+        # axes violates the invariant. The edge group has zero axes, so any facet is
+        # undeclared.
         conn = self._grouped_db()
         conn.execute(
-            "UPDATE concept_group_variable "
-            "SET facet_value = '1', facet_label = 'källa 1' WHERE group_id = 10"
+            "INSERT INTO concept_group_variable_facet (member_id, axis, value, label) "
+            "VALUES (?, 'rank', '1', 'A')",
+            (self._member_id(conn, "vara"),),
         )
         result = self._run(conn)
-        assert any("NULLability" in f for f in result.failures), result.failures
+        assert any("name an axis not declared" in f for f in result.failures), (
+            result.failures
+        )
 
-    def test_axed_member_with_null_facet_value_fails(self):
-        # A token/curated group (facet_axis non-NULL) requires non-NULL member
-        # facets; promoting group 10 to a 'rank' axis while leaving its members'
-        # facets NULL violates the invariant.
+    def test_member_missing_a_facet_per_axis_fails(self):
+        # A group with one declared axis whose member carries zero facets violates
+        # the one-facet-per-axis coverage invariant.
         conn = self._grouped_db()
-        conn.execute("UPDATE concept_group SET facet_axis = 'rank' WHERE group_id = 10")
-        result = self._run(conn)
-        assert any("NULLability" in f for f in result.failures), result.failures
-
-    def test_half_set_member_fails(self):
-        # facet_value and facet_label must be set together; a member with one set
-        # and the other NULL is a half-set violation. Promote the group to a
-        # non-NULL axis so ONLY the value-xor-label clause can fire.
-        conn = self._grouped_db()
-        conn.execute("UPDATE concept_group SET facet_axis = 'rank' WHERE group_id = 10")
         conn.execute(
-            "UPDATE concept_group_variable "
-            "SET facet_value = '1', facet_label = NULL WHERE group_id = 10"
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (10, 'rank', 0, 'Rank')"
         )
         result = self._run(conn)
-        assert any("NULLability" in f for f in result.failures), result.failures
+        assert any("one facet per declared group axis" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_variable_spanning_two_groups_fails(self):
+        # The one-group-per-variable invariant the surrogate PK no longer enforces:
+        # add a second group claiming `vara`, which already belongs to group 10.
+        conn = self._grouped_db()
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (11, 'variable', 1, 'other', 'B', 'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable (group_id, variable_id, "
+            "delivery_column_name) SELECT 11, variable_id, NULL FROM variable "
+            "WHERE slug = 'vara'"
+        )
+        result = self._run(conn)
+        assert any("one-group-per-variable" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_duplicate_whole_variable_member_rejected_by_index(self):
+        # The COALESCE unique index closes the NULL-distinctness footgun: a second
+        # whole-variable (NULL delivery_column) member of `vara` in group 10 — which
+        # a bare composite UNIQUE would silently admit — is rejected at insert time.
+        conn = self._grouped_db()
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute(
+                "INSERT INTO concept_group_variable (group_id, variable_id, "
+                "delivery_column_name) SELECT 10, variable_id, NULL FROM variable "
+                "WHERE slug = 'vara'"
+            )
 
     @staticmethod
     def _add_classification_group(conn, *, source: str):

@@ -402,7 +402,7 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     exercise the `groups` surface (grouped members ALSO stay in `children`):
 
     - a token month group `ink` on scb/rams over two added variables; and
-    - a #516 classification umbrella group `sun` (AXIS-LESS — `facet_axis` NULL,
+    - a #516 classification umbrella group `sun` (AXIS-LESS — zero concept_group_axis rows,
       mirroring the real group:sun shape) over the terminal `sun2020` edition plus
       a standalone non-succession `niva-test` aggregate — both TERMINAL members so
       the classification-root's superseded-by drop keeps them. The members keep
@@ -416,8 +416,11 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     therefore actually exercised (a NULL `supersedes_id` would make it a no-op)."""
     src.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) "
-        "VALUES (10, 'variable', 2, 'ink', 'Inkomst', 'token', 'month')"
+        "label, source) VALUES (10, 'variable', 2, 'ink', 'Inkomst', 'token')"
+    )
+    src.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (10, 'month', 0, 'månad')"
     )
     for i, (slug, month, month_label) in enumerate(
         [("inkjan", "01", "januari"), ("inkfeb", "02", "februari")]
@@ -427,10 +430,15 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
             "SELECT variable_id FROM variable WHERE register_id = 2 AND slug = ?",
             (slug,),
         ).fetchone()[0]
-        src.execute(
+        cur = src.execute(
             "INSERT INTO concept_group_variable "
-            "(variable_id, group_id, facet_value, facet_label) VALUES (?, 10, ?, ?)",
-            (vid, month, month_label),
+            "(group_id, variable_id, delivery_column_name) VALUES (10, ?, NULL)",
+            (vid,),
+        )
+        src.execute(
+            "INSERT INTO concept_group_variable_facet "
+            "(member_id, axis, value, label) VALUES (?, 'month', ?, ?)",
+            (cur.lastrowid, month, month_label),
         )
     src.execute(
         "INSERT INTO classification (id, short_name, name, slug) "
@@ -453,8 +461,8 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     # keeps its own short facet value/label despite the absent group axis.
     src.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) VALUES (11, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'curated', NULL)"
+        "label, source) VALUES (11, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'curated')"
     )
     src.executemany(
         "INSERT INTO concept_group_classification (classification_id, group_id, "

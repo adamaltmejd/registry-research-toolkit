@@ -43,21 +43,28 @@ never claims an already-grouped member):
    derived rows) for the curated umbrella groups #516 adds later.
 2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), three
    opt-in entry kinds:
-   - ``[[variable_group]]`` — a hand-authored family with an exact member list:
-     attaches single variables under the family's single facet ``axis`` (e.g.
-     the LISA agi{1,2,3} rank facet, or the LOVA invdatum/invland ordinal facet).
+   - ``[[variable_group]]`` — a hand-authored family with an exact member list.
+     A SINGLE-axis family (the legacy shape) declares one ``axis`` and attaches
+     whole variables under it (e.g. the LISA agi{1,2,3} rank facet, or the LOVA
+     invdatum/invland ordinal facet). A MULTI-axis family (#819) declares ordered
+     named ``axes`` and attaches ``(variable, delivery_column)`` REPRESENTATIONS,
+     each carrying a ``coords`` coordinate on every axis (the iot disposable-income
+     group over enhet × hushållsbegrepp × kapitalvinst, where one variable can hold
+     two coordinates via two delivery columns). The group's axes land in
+     ``concept_group_axis``; each member's per-axis coords in
+     ``concept_group_variable_facet``.
    - ``[[accept]]`` (#496) — folds a candidate family from the generated,
      machine-owned ``concept_groups.auto.toml`` BY REFERENCE, located by
      ``(register, key)``, with optional ``label``/``axis``/``exclude`` overrides
-     (``resolve_accept`` turns it into a ``CuratedGroup`` of ``variable=``
-     attachments). An auto family folds ONLY when accepted; unaccepted ones
-     never materialize.
+     (``resolve_accept`` turns it into a single-axis ``CuratedGroup`` of
+     whole-variable attachments). An auto family folds ONLY when accepted;
+     unaccepted ones never materialize.
    - ``[[classification_group]]`` (#516) — a curated ``kind='classification'``
      umbrella over genuinely-DISTINCT classifications (the SUN group over
      niva/inriktning/grupp; NOT vintage editions, which are #571 succession
-     edges). AXIS-LESS — ``concept_group.facet_axis`` stays NULL (members are
-     distinct classifications, not points on a scale); each member keeps its own
-     short ``value``/``label``. Catalog-scoped (classifications are global),
+     edges). AXIS-LESS — zero ``concept_group_axis`` rows (members are distinct
+     classifications, not points on a scale); each member keeps its own short
+     ``value``/``label`` inline. Catalog-scoped (classifications are global),
      materialized by ``_apply_curated_classification_groups``.
    All kinds fail fast on unresolvable references (EXIT_CONFIG).
 
@@ -169,29 +176,37 @@ EDGE_RELATION_KIND = "same_definition_different_column"
 
 @dataclass(frozen=True)
 class CuratedMember:
-    """One member of a curated family: a single variable slug. `value`/`label`
-    are this member's facet on the family's single `axis`."""
+    """One member of a curated family at REPRESENTATION grain (#819).
+    `delivery_column` is None for a whole-variable member (single-axis families:
+    the variable IS the member) and the exact SCB delivery column for a
+    representation member (multi-axis families, where one variable holds several
+    coordinates). `coords` is this member's per-axis facet assignments as ordered
+    `(axis, value, label)` triples — one entry per declared group axis. A
+    single-axis member carries one coord (mapped from the legacy `value`/`label`
+    TOML); a multi-axis member carries one per axis."""
 
     variable: str
-    value: str
-    label: str
+    delivery_column: str | None
+    coords: tuple[tuple[str, str, str], ...]
 
 
 @dataclass(frozen=True)
 class CuratedGroup:
-    """One curated family the materializer applies. `origin` records how it was
-    authored so `_apply_curated_groups` can tailor its EXIT_CONFIG remediations:
-    a hand-authored `[[variable_group]]` (the default) points the maintainer at
-    `concept_groups.toml`; an `[[accept]]`-resolved family (`resolve_accept` sets
-    `origin="accept"`) points at the `[[accept]]` / `concept_groups.auto.toml`
-    instead, since its key/register/members come from the generated catalog, not
-    a hand-picked curated key."""
+    """One curated family the materializer applies. `axes` is the group's ordered
+    named facet axes as `(axis, axis_label)` pairs (ordinal = index); a single-axis
+    family carries one, a multi-axis family (the iot disposable-income group) N.
+    `origin` records how it was authored so `_apply_curated_groups` can tailor its
+    EXIT_CONFIG remediations: a hand-authored `[[variable_group]]` (the default)
+    points the maintainer at `concept_groups.toml`; an `[[accept]]`-resolved family
+    (`resolve_accept` sets `origin="accept"`) points at the `[[accept]]` /
+    `concept_groups.auto.toml` instead, since its key/register/members come from the
+    generated catalog, not a hand-picked curated key."""
 
     provider: str
     register: str
     key: str
     label: str
-    axis: str
+    axes: tuple[tuple[str, str], ...]
     members: tuple[CuratedMember, ...]
     origin: Literal["variable_group", "accept"] = "variable_group"
 
@@ -231,12 +246,12 @@ class ClassificationGroup:
     """One curated `[[classification_group]]` umbrella (#516): a fold over
     genuinely-DISTINCT classifications (NOT vintage editions — those are #571
     succession edges). AXIS-LESS — the members are distinct classifications, not
-    points on a shared scale, so `axis` is optional and normally None
-    (`concept_group.facet_axis` stays NULL; the webapp renders the member-noun as
+    points on a shared scale, so `axis` is optional and normally None (zero
+    `concept_group_axis` rows, #819; the webapp renders the member-noun as
     "members"). A provided `axis` is still accepted (the loader does not require
-    it). Each member keeps its own short `value`/`label` regardless. Catalog-
-    scoped (classifications are global), so unlike `CuratedGroup` it carries no
-    provider/register."""
+    it) and becomes one `concept_group_axis` row. Each member keeps its own short
+    `value`/`label` inline regardless. Catalog-scoped (classifications are global),
+    so unlike `CuratedGroup` it carries no provider/register."""
 
     key: str
     label: str
@@ -275,16 +290,175 @@ _require_str = functools.partial(
 )
 
 
+def _parse_group_axes(
+    entry: dict, key: str
+) -> tuple[tuple[tuple[str, str], ...], set[str]]:
+    """The group's ordered `(axis, axis_label)` pairs + the axis-name set, from
+    EITHER the legacy single-axis shape (`axis = "..."` on the group) OR the
+    multi-axis shape (`axes = [{ axis, label }, …]`). Exactly one shape may be
+    present (a group with both is curation drift). The single-axis legacy form maps
+    to one axis whose label IS the axis name (`axes = ((axis, axis),)`), so every
+    existing `[[variable_group]]` and the whole `concept_groups.auto.toml`
+    round-trip unchanged."""
+    has_axes = entry.get("axes") is not None
+    has_axis = entry.get("axis") is not None
+    if has_axes and has_axis:
+        raise curation_error(
+            "concept_groups_invalid",
+            f"concept_groups group {key!r} sets both `axis` and `axes`.",
+            "Use `axis` for a single-axis family OR `axes` for a multi-axis one, "
+            "not both.",
+        )
+    if not has_axes:
+        # Legacy single-axis shape: the axis label is the axis name itself.
+        axis = _require_str(entry, "axis", f"group {key!r}")
+        return ((axis, axis),), {axis}
+    raw_axes = entry["axes"]
+    if not isinstance(raw_axes, list) or not raw_axes:
+        raise curation_error(
+            "concept_groups_invalid",
+            f"concept_groups group {key!r} `axes` must be a non-empty array of "
+            "`{ axis, label }` tables.",
+            'List the axes as `axes = [{ axis = "enhet", label = "Enhet" }, …]`.',
+        )
+    axes: list[tuple[str, str]] = []
+    axis_names: set[str] = set()
+    for raw in raw_axes:
+        if not isinstance(raw, dict):
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} axis {raw!r} must be a table.",
+                "Each axis is a `{ axis = …, label = … }` table.",
+            )
+        axis = _require_str(raw, "axis", f"group {key!r} axis")
+        axis_label = _require_str(raw, "label", f"group {key!r} axis")
+        if axis in axis_names:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} declares axis {axis!r} twice.",
+                "List each axis once.",
+            )
+        axis_names.add(axis)
+        axes.append((axis, axis_label))
+    return tuple(axes), axis_names
+
+
+def _parse_member(
+    raw: dict, key: str, axes: tuple[tuple[str, str], ...], axis_names: set[str]
+) -> CuratedMember:
+    """One `[[variable_group.members]]` table → a `CuratedMember`, in EITHER shape:
+
+    - Legacy single-axis: `variable` + flat `value`/`label` → one coord on the
+      group's single axis, `delivery_column = None` (a whole-variable member).
+    - Multi-axis: `variable` + `delivery_column` + `coords = [{ axis, value, label
+      }, …]` → one coord per declared axis.
+
+    Validation (EXIT_CONFIG): every coord's `axis` is a declared group axis; every
+    declared axis has exactly one coord; a multi-axis member (>1 declared axis)
+    REQUIRES `delivery_column`."""
+    if not isinstance(raw, dict):
+        raise curation_error(
+            "concept_groups_invalid",
+            f"concept_groups group {key!r} member {raw!r} must be a table.",
+            "Each member is a `[[variable_group.members]]` table.",
+        )
+    ref = _require_str(raw, "variable", f"group {key!r} member")
+    multi_axis = len(axes) > 1 or raw.get("coords") is not None
+    if not multi_axis:
+        # Legacy single-axis member: flat value/label on the single axis.
+        (axis, _axis_label) = axes[0]
+        return CuratedMember(
+            variable=ref,
+            delivery_column=None,
+            coords=(
+                (
+                    axis,
+                    _require_str(raw, "value", f"group {key!r} member"),
+                    _require_str(raw, "label", f"group {key!r} member"),
+                ),
+            ),
+        )
+    delivery_column = raw.get("delivery_column")
+    if not isinstance(delivery_column, str) or not delivery_column.strip():
+        raise curation_error(
+            "concept_groups_invalid",
+            f"concept_groups group {key!r} member {ref!r} needs a non-empty "
+            "`delivery_column` (multi-axis members are representation-grained).",
+            'Give `delivery_column = "CDISP"`.',
+        )
+    raw_coords = raw.get("coords")
+    if not isinstance(raw_coords, list) or not raw_coords:
+        raise curation_error(
+            "concept_groups_invalid",
+            f"concept_groups group {key!r} member {ref!r} needs a non-empty "
+            "`coords` array.",
+            "List the member's per-axis coordinates as "
+            "`coords = [{ axis, value, label }, …]`.",
+        )
+    coords: list[tuple[str, str, str]] = []
+    seen_axes: set[str] = set()
+    for rc in raw_coords:
+        if not isinstance(rc, dict):
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} member {ref!r} coord {rc!r} must be "
+                "a table.",
+                "Each coord is a `{ axis, value, label }` table.",
+            )
+        axis = _require_str(rc, "axis", f"group {key!r} member {ref!r} coord")
+        if axis not in axis_names:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} member {ref!r} coord names axis "
+                f"{axis!r}, not a declared group axis.",
+                "Every coord's `axis` must be one of the group's declared `axes`.",
+            )
+        if axis in seen_axes:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} member {ref!r} sets axis {axis!r} "
+                "twice.",
+                "Give each axis exactly one coord per member.",
+            )
+        seen_axes.add(axis)
+        coords.append(
+            (
+                axis,
+                _require_str(rc, "value", f"group {key!r} member {ref!r} coord"),
+                _require_str(rc, "label", f"group {key!r} member {ref!r} coord"),
+            )
+        )
+    if seen_axes != axis_names:
+        missing = sorted(axis_names - seen_axes)
+        raise curation_error(
+            "concept_groups_invalid",
+            f"concept_groups group {key!r} member {ref!r} is missing a coord for "
+            f"axis/axes {missing}.",
+            "Every member must declare a coord on every group axis.",
+        )
+    return CuratedMember(
+        variable=ref, delivery_column=delivery_column.strip(), coords=tuple(coords)
+    )
+
+
 def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     """Parse the curated-family TOML. Empty when no file (synthetic test
     builds, wheel installs).
 
-    Load-time validation (all EXIT_CONFIG, actionable): only
-    `[[variable_group]]` top-level; `register` is a 2-segment
-    `provider/register` FQID string; `key`/`label`/`axis` non-empty strings;
-    each member sets `variable` plus `value`/`label`; keys are unique.
-    Reference RESOLUTION (register/variable exist) happens at materialize time
-    against the built DB, not here."""
+    Two member shapes are accepted (#819). The LEGACY single-axis shape — `axis =
+    "..."` on the group, flat `value`/`label` per member — is what the candidate
+    generator emits and the whole `concept_groups.auto.toml` uses; it maps to a
+    one-axis group with whole-variable (`delivery_column = None`) members. The new
+    MULTI-AXIS shape — `axes = [{ axis, label }, …]` on the group, `delivery_column`
+    + `coords = [{ axis, value, label }, …]` per member — is hand-authored for
+    representation-grained families (the iot disposable-income group).
+
+    Load-time validation (all EXIT_CONFIG, actionable): only `[[variable_group]]`
+    top-level; `register` is a 2-segment `provider/register` FQID; `key`/`label`
+    non-empty; exactly one of `axis`/`axes`; each member sets `variable`; coords
+    cover every declared axis; `(variable, delivery_column)` unique within the
+    group; keys are unique. Reference RESOLUTION (register/variable/column exist)
+    happens at materialize time against the built DB, not here."""
     # Shared scaffold (parse + top-level typo guard + array-of-tables +
     # per-entry table check) — see `_curation.load_curation_entries`.
     entries = load_curation_entries(
@@ -294,7 +468,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         prefix="concept_groups",
         code_base="concept_groups",
         file_name="concept_groups.toml",
-        entry_fields="register / key / label / axis / members",
+        entry_fields="register / key / label / axis|axes / members",
         # `concept_groups.toml` carries two other entry kinds — `[[accept]]`
         # (folds an auto family by reference, `load_concept_group_accepts`) and
         # `[[classification_group]]` (curated umbrella, `load_classification_groups`)
@@ -316,7 +490,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
             )
         key = _require_str(entry, "key", "[[variable_group]]")
         label = _require_str(entry, "label", "[[variable_group]]")
-        axis = _require_str(entry, "axis", "[[variable_group]]")
+        axes, axis_names = _parse_group_axes(entry, key)
         scope_key = (parts[0], parts[1], key)
         if scope_key in seen_keys:
             raise curation_error(
@@ -334,36 +508,26 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                 "List the family's members as `[[variable_group.members]]` tables.",
             )
         members: list[CuratedMember] = []
-        seen_refs: set[str] = set()
+        seen_refs: set[tuple[str, str | None]] = set()
         for raw in raw_members:
-            if not isinstance(raw, dict):
-                raise curation_error(
-                    "concept_groups_invalid",
-                    f"concept_groups group {key!r} member {raw!r} must be a table.",
-                    "Each member is a `[[variable_group.members]]` table.",
-                )
-            ref = _require_str(raw, "variable", f"group {key!r} member")
+            member = _parse_member(raw, key, axes, axis_names)
+            ref = (member.variable, member.delivery_column)
             if ref in seen_refs:
                 raise curation_error(
                     "concept_groups_invalid",
-                    f"concept_groups group {key!r} references variable {ref!r} twice.",
-                    "List each member variable once.",
+                    f"concept_groups group {key!r} references "
+                    f"{ref[0]!r}/{ref[1]!r} twice.",
+                    "List each (variable, delivery_column) member once.",
                 )
             seen_refs.add(ref)
-            members.append(
-                CuratedMember(
-                    variable=ref,
-                    value=_require_str(raw, "value", f"group {key!r} member"),
-                    label=_require_str(raw, "label", f"group {key!r} member"),
-                )
-            )
+            members.append(member)
         out.append(
             CuratedGroup(
                 provider=parts[0],
                 register=parts[1],
                 key=key,
                 label=label,
-                axis=axis,
+                axes=axes,
                 members=tuple(members),
             )
         )
@@ -487,13 +651,30 @@ def resolve_accept(
             "member(s) after `exclude`; a group needs >= 2.",
             "Exclude fewer members, or remove the accept entirely.",
         )
+    # An auto family is always single-axis (the candidate generator emits the
+    # legacy single-axis shape), so it carries exactly one axis pair and each member
+    # one coord on it. An `axis` override renames that axis on the group AND on every
+    # member coord, keeping the group/coord axis names in sync (the validator
+    # requires each coord's axis to be a declared group axis). Legacy single-axis
+    # label == axis name, so the override sets both.
+    (auto_axis, _auto_axis_label) = auto.axes[0]
+    new_axis = accept.axis or auto_axis
     return CuratedGroup(
         provider=auto.provider,
         register=auto.register,
         key=auto.key,
         label=accept.label or auto.label,
-        axis=accept.axis or auto.axis,
-        members=members,
+        axes=((new_axis, new_axis),),
+        members=tuple(
+            CuratedMember(
+                variable=m.variable,
+                delivery_column=m.delivery_column,
+                coords=tuple(
+                    (new_axis, value, label) for _axis, value, label in m.coords
+                ),
+            )
+            for m in members
+        ),
         origin="accept",
     )
 
@@ -599,7 +780,6 @@ def _insert_group(
     group_key: str,
     label: str,
     source: str,
-    facet_axis: str | None = None,
 ) -> int:
     # By-key route contract (#640): every group_key — curated / token / edge for
     # `variable`, plus curated `classification` umbrellas — addresses its group via
@@ -622,14 +802,65 @@ def _insert_group(
             "path-safe key.",
         )
     cur = conn.execute(
-        "INSERT INTO concept_group "
-        "(kind, register_id, group_key, label, source, facet_axis) "
-        "VALUES (?, ?, ?, ?, ?, ?)",
-        (kind, register_id, group_key, label, source, facet_axis),
+        "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (kind, register_id, group_key, label, source),
     )
     group_id = cur.lastrowid
     assert group_id is not None
     return group_id
+
+
+def _insert_group_axes(
+    conn: sqlite3.Connection,
+    group_id: int,
+    axes: tuple[tuple[str, str], ...],
+) -> None:
+    """Write a group's ordered named axes to `concept_group_axis` (#819): one row
+    per `(axis, axis_label)`, `ordinal` = array index. Zero axes (edge / axis-less
+    umbrella) writes nothing."""
+    conn.executemany(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (?, ?, ?, ?)",
+        [
+            (group_id, axis, ordinal, axis_label)
+            for ordinal, (axis, axis_label) in enumerate(axes)
+        ],
+    )
+
+
+def _insert_member(
+    conn: sqlite3.Connection,
+    group_id: int,
+    variable_id: int,
+    delivery_column_name: str | None,
+) -> int:
+    """Insert one representation member into `concept_group_variable` and return its
+    surrogate `member_id` (#819). `delivery_column_name` NULL = a whole-variable
+    member."""
+    cur = conn.execute(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) VALUES (?, ?, ?)",
+        (group_id, variable_id, delivery_column_name),
+    )
+    member_id = cur.lastrowid
+    assert member_id is not None
+    return member_id
+
+
+def _insert_member_facets(
+    conn: sqlite3.Connection,
+    member_id: int,
+    coords: tuple[tuple[str, str, str], ...],
+) -> None:
+    """Write a member's per-axis facet coordinates to
+    `concept_group_variable_facet` (#819): one row per `(axis, value, label)`. Zero
+    coords (a whole-variable member on an axis-less edge group) writes nothing."""
+    conn.executemany(
+        "INSERT INTO concept_group_variable_facet (member_id, axis, value, label) "
+        "VALUES (?, ?, ?, ?)",
+        [(member_id, axis, value, label) for axis, value, label in coords],
+    )
 
 
 def _derive_edge_groups(
@@ -714,10 +945,10 @@ def _derive_edge_groups(
             label=label,
             source="edge",
         )
-        conn.executemany(
-            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, ?)",
-            [(vid, group_id) for vid in members],
-        )
+        # Edge groups are axis-less: whole-variable members (delivery_column NULL),
+        # zero axis rows, zero facets — the member list IS the presentation.
+        for vid in members:
+            _insert_member(conn, group_id, vid, None)
     return len(prepared)
 
 
@@ -896,17 +1127,18 @@ def _derive_month_groups(
             group_key=stem,
             label=label,
             source="token",
-            facet_axis="month",
         )
+        # Single 'month' axis (label "månad"); each member is a whole-variable
+        # member (delivery_column NULL) carrying one coord on that axis.
+        _insert_group_axes(conn, group_id, (("month", "månad"),))
         ordered = sorted(members)
-        conn.executemany(
-            "INSERT INTO concept_group_variable "
-            "(variable_id, group_id, facet_value, facet_label) VALUES (?, ?, ?, ?)",
-            [
-                (vid, group_id, f"{month:02d}", _MONTH_LABELS[month])
-                for month, _, vid, _, _ in ordered
-            ],
-        )
+        for month, _, vid, _, _ in ordered:
+            member_id = _insert_member(conn, group_id, vid, None)
+            _insert_member_facets(
+                conn,
+                member_id,
+                (("month", f"{month:02d}", _MONTH_LABELS[month]),),
+            )
         n_groups += 1
     return n_groups
 
@@ -1033,11 +1265,20 @@ def _apply_curated_groups(
     conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
 ) -> int:
     """Dimension 2: curated families (`[[variable_group]]`) and `[[accept]]`-resolved
-    auto families (`origin="accept"`). Each `variable` member attaches one
-    ungrouped variable under the family's single `axis` (stored on
-    `concept_group.facet_axis`), carrying its `value`/`label` inline on
-    `concept_group_variable`. Every dangling reference fails the build
-    (EXIT_CONFIG) — curation drift must be fixed, not silently dropped.
+    auto families (`origin="accept"`). The group's ordered named `axes` are written
+    to `concept_group_axis`; each member is a `(variable, delivery_column)`
+    representation (`delivery_column=None` = whole-variable) carrying one facet coord
+    per axis on `concept_group_variable_facet` (#819). Every dangling reference fails
+    the build (EXIT_CONFIG) — curation drift must be fixed, not silently dropped.
+
+    A non-NULL `delivery_column` is VERIFIED against `variable_alias` (the column was
+    actually delivered for that variable) — a curation typo fails fast. Two
+    representation members of one variable coexist (the surrogate PK + COALESCE unique
+    index over `(group_id, variable_id, delivery_column)`); a variable already claimed
+    by an EARLIER group (edge/token, or a prior curated family) fails fast via an
+    explicit cross-group membership check — the surrogate PK no longer enforces
+    "one group per variable", so this guard re-creates the old behavior at the build
+    seam (the catalog-wide invariant is also re-asserted in the validator, #819).
 
     Remediations branch on `g.origin`: a hand-authored family points the
     maintainer at `concept_groups.toml`; an accepted one points at the `[[accept]]`
@@ -1078,7 +1319,6 @@ def _apply_curated_groups(
                 group_key=g.key,
                 label=g.label,
                 source="curated",
-                facet_axis=g.axis,
             )
         except sqlite3.IntegrityError as exc:
             raise curation_error(
@@ -1093,6 +1333,7 @@ def _apply_curated_groups(
                 if is_accept
                 else "Pick a curated `key` that no edge/token group already uses.",
             ) from exc
+        _insert_group_axes(conn, group_id, g.axes)
         n_members = 0
         for m in g.members:
             var = conn.execute(
@@ -1110,14 +1351,39 @@ def _apply_curated_groups(
                     else "Fix the member's `variable` slug in "
                     "reg_meta_build/concept_groups.toml.",
                 )
-            try:
-                conn.execute(
-                    "INSERT INTO concept_group_variable "
-                    "(variable_id, group_id, facet_value, facet_label) "
-                    "VALUES (?, ?, ?, ?)",
-                    (var[0], group_id, m.value, m.label),
-                )
-            except sqlite3.IntegrityError as exc:
+            variable_id = var[0]
+            # Verify a representation member's delivery column was actually
+            # delivered for this variable (`variable_alias`), matched EXACTLY (case
+            # as delivered, no normalization) — a curation typo fails fast.
+            if m.delivery_column is not None:
+                alias = conn.execute(
+                    "SELECT 1 FROM variable_alias "
+                    "WHERE variable_id = ? AND delivery_column_name = ?",
+                    (variable_id, m.delivery_column),
+                ).fetchone()
+                if alias is None:
+                    raise curation_error(
+                        "concept_groups_unresolved",
+                        f"{ctx}: member {m.variable!r} delivery column "
+                        f"{m.delivery_column!r} is not a delivered column of that "
+                        "variable.",
+                        f"Regenerate concept_groups.auto.toml (`{regen}`) or fix "
+                        "the `delivery_column`."
+                        if is_accept
+                        else "Fix the member's `delivery_column` in "
+                        "reg_meta_build/concept_groups.toml (match the exact "
+                        "delivered column name).",
+                    )
+            # Cross-group membership guard: the surrogate PK no longer catches a
+            # variable already in another group, so check explicitly. (The
+            # COALESCE unique index only catches a duplicate member WITHIN this
+            # group.)
+            claimed = conn.execute(
+                "SELECT 1 FROM concept_group_variable "
+                "WHERE variable_id = ? AND group_id != ?",
+                (variable_id, group_id),
+            ).fetchone()
+            if claimed is not None:
                 raise curation_error(
                     "concept_groups_unresolved",
                     f"{ctx}: member variable {m.variable!r} already belongs "
@@ -1131,7 +1397,21 @@ def _apply_curated_groups(
                     if is_accept
                     else "`exclude` the conflicting member or pick a different "
                     "variable in reg_meta_build/concept_groups.toml.",
+                )
+            try:
+                member_id = _insert_member(
+                    conn, group_id, variable_id, m.delivery_column
+                )
+            except sqlite3.IntegrityError as exc:
+                # A duplicate (variable, delivery_column) WITHIN this group — the
+                # loader already rejects exact dups, so this is a defensive seam.
+                raise curation_error(
+                    "concept_groups_unresolved",
+                    f"{ctx}: member {m.variable!r}/{m.delivery_column!r} is a "
+                    "duplicate within this group.",
+                    "List each (variable, delivery_column) member once.",
                 ) from exc
+            _insert_member_facets(conn, member_id, m.coords)
             n_members += 1
         if n_members < 2:
             raise curation_error(
@@ -1167,8 +1447,13 @@ def _apply_curated_classification_groups(
             group_key=g.key,
             label=g.label,
             source="curated",
-            facet_axis=g.axis,
         )
+        # The umbrella's single axis DECLARATION moves to `concept_group_axis`
+        # (#819): one row when an axis is set, zero for the axis-less default. The
+        # member facets stay INLINE on `concept_group_classification` below. Legacy
+        # axis-label == axis name (the classification TOML has no separate label).
+        if g.axis is not None:
+            _insert_group_axes(conn, group_id, ((g.axis, g.axis),))
         n_members = 0
         for m in g.members:
             row = conn.execute(

@@ -848,7 +848,11 @@ class TestGenerator:
         by_key = {g.key: g for g in groups}
         morsak = by_key["morsak"]
         assert all(m.variable is not None for m in morsak.members)
-        assert [m.value for m in morsak.members] == ["1", "2", "3"]
+        # The generator emits the legacy single-axis shape; the loader maps it to
+        # whole-variable members (delivery_column None) with one coord each (#819).
+        assert morsak.axes == (("ordinal", "ordinal"),)
+        assert all(m.delivery_column is None for m in morsak.members)
+        assert [m.coords[0][1] for m in morsak.members] == ["1", "2", "3"]
 
 
 class TestSplitStemSuffix:

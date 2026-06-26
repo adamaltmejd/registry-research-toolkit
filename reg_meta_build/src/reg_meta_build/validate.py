@@ -1555,13 +1555,15 @@ def _check_concept_groups(
     result.section("[concept groups]")
     required = {
         "concept_group",
+        "concept_group_axis",
         "concept_group_variable",
+        "concept_group_variable_facet",
         "concept_group_classification",
     }
     missing_tables = required - tables
     if missing_tables:
         for name in sorted(missing_tables):
-            result.fail(f"{name} missing (schema 5.3.0 concept-group layer)")
+            result.fail(f"{name} missing (schema 5.8.0 concept-group layer)")
         return
 
     undersized = conn.execute(
@@ -1604,26 +1606,68 @@ def _check_concept_groups(
     else:
         result.ok("variable members stay in their group's register")
 
-    # #585 inline-facet invariant: a variable member's facet_value/facet_label
-    # are non-NULL iff its group has a non-NULL facet_axis (token/curated), and
-    # NULL for edge groups (facet_axis NULL). A member half-set (one of
-    # value/label NULL) or set against a NULL-axis group (or vice versa) is a
-    # materializer bug — single-axis is schema-shaped now, but the NULLability
-    # contract still needs asserting.
-    facet_mismatch = conn.execute(
-        "SELECT COUNT(*) FROM concept_group_variable m "
-        "JOIN concept_group g ON g.group_id = m.group_id "
-        "WHERE (g.facet_axis IS NULL) != "
-        "      (m.facet_value IS NULL AND m.facet_label IS NULL) "
-        "   OR (m.facet_value IS NULL) != (m.facet_label IS NULL)"
+    # #819 multi-axis facet invariants (replacing the #585 single-axis inline
+    # check). The schema now carries `concept_group_axis` (a group's ordered named
+    # axes) + a surrogate-keyed `concept_group_variable` member + a
+    # per-member-per-axis `concept_group_variable_facet`.
+    #
+    # (1) every member facet's `axis` is one of its group's declared axes.
+    facet_axis_unknown = conn.execute(
+        "SELECT COUNT(*) FROM concept_group_variable_facet f "
+        "JOIN concept_group_variable m ON m.member_id = f.member_id "
+        "WHERE NOT EXISTS ("
+        "  SELECT 1 FROM concept_group_axis a "
+        "  WHERE a.group_id = m.group_id AND a.axis = f.axis)"
     ).fetchone()[0]
-    if facet_mismatch:
+    if facet_axis_unknown:
         result.fail(
-            f"{facet_mismatch} variable member(s) violate the facet/axis "
-            "NULLability invariant (#585)"
+            f"{facet_axis_unknown} variable member facet(s) name an axis not "
+            "declared on their group (#819)"
         )
     else:
-        result.ok("variable member facets agree with their group's facet_axis")
+        result.ok("variable member facets name a declared group axis")
+
+    # (2) every member carries exactly one facet per declared group axis: a member
+    # has as many facets as its group has axes, and they cover every axis (no
+    # missing/extra/duplicate). Edge members (0 axes, 0 facets) satisfy this
+    # trivially.
+    facet_coverage_mismatch = conn.execute(
+        "SELECT COUNT(*) FROM concept_group_variable m "
+        "WHERE (SELECT COUNT(*) FROM concept_group_variable_facet f "
+        "       WHERE f.member_id = m.member_id) != "
+        "      (SELECT COUNT(*) FROM concept_group_axis a "
+        "       WHERE a.group_id = m.group_id)"
+    ).fetchone()[0]
+    if facet_coverage_mismatch:
+        result.fail(
+            f"{facet_coverage_mismatch} variable member(s) do not carry exactly "
+            "one facet per declared group axis (#819)"
+        )
+    else:
+        result.ok("variable members carry one facet per declared group axis")
+
+    # (3) "one group per variable" — the invariant the OLD single-column member PK
+    # enforced and the surrogate PK no longer can (#819). A whole-variable member
+    # (delivery_column_name IS NULL) is unique per variable_id catalog-wide; and a
+    # variable_id appears in AT MOST ONE group (a variable may have several
+    # REPRESENTATION members within one group, but never spans two groups).
+    dup_whole_variable = conn.execute(
+        "SELECT COUNT(*) FROM (SELECT variable_id FROM concept_group_variable "
+        "WHERE delivery_column_name IS NULL "
+        "GROUP BY variable_id HAVING COUNT(*) > 1)"
+    ).fetchone()[0]
+    multi_group_variable = conn.execute(
+        "SELECT COUNT(*) FROM (SELECT variable_id FROM concept_group_variable "
+        "GROUP BY variable_id HAVING COUNT(DISTINCT group_id) > 1)"
+    ).fetchone()[0]
+    if dup_whole_variable or multi_group_variable:
+        result.fail(
+            f"{dup_whole_variable} duplicate whole-variable member(s) + "
+            f"{multi_group_variable} variable(s) spanning >1 group — the "
+            "one-group-per-variable invariant is broken (#819)"
+        )
+    else:
+        result.ok("each variable belongs to exactly one concept group")
 
     if not corpus:
         return

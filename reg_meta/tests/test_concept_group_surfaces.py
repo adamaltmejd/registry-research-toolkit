@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _shared_fixtures import _build_stub_doc_db
 from _slugged_db import add_state, add_variable, build_slugged_db
+from reg_meta.catalog import Catalog
 from reg_meta.db import SCHEMA_VERSION
 from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from reg_meta.queries import (
@@ -47,8 +48,13 @@ def _seeded_conn() -> sqlite3.Connection:
     conn = build_slugged_db()
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) VALUES (10, 'variable', 1, 'agiink', "
-        "'Lönesumma per månad', 'curated', 'month')"
+        "label, source) VALUES (10, 'variable', 1, 'agiink', "
+        "'Lönesumma per månad', 'curated')"
+    )
+    # The group's single 'month' axis lives in concept_group_axis (#819).
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (10, 'month', 0, 'månad')"
     )
     for i, (slug, month, month_label) in enumerate(_MONTH_MEMBERS):
         add_variable(
@@ -62,10 +68,16 @@ def _seeded_conn() -> sqlite3.Connection:
             "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
             (slug,),
         ).fetchone()[0]
-        conn.execute(
+        # Whole-variable member (delivery_column NULL) + one facet on the month axis.
+        cur = conn.execute(
             "INSERT INTO concept_group_variable "
-            "(variable_id, group_id, facet_value, facet_label) VALUES (?, 10, ?, ?)",
-            (vid, month, month_label),
+            "(group_id, variable_id, delivery_column_name) VALUES (10, ?, NULL)",
+            (vid,),
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable_facet "
+            "(member_id, axis, value, label) VALUES (?, 'month', ?, ?)",
+            (cur.lastrowid, month, month_label),
         )
     # One member delivers under variant 10 so `get schema` has a grouped column.
     add_state(
@@ -84,8 +96,12 @@ def _seeded_conn() -> sqlite3.Connection:
     )
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) VALUES (12, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
+        "label, source) VALUES (12, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (12, 'vintage', 0, 'vintage')"
     )
     sun2020_id = conn.execute(
         "SELECT id FROM classification WHERE slug = 'sun2020'"
@@ -417,8 +433,12 @@ class TestClassificationSuccessionFold:
         # Curated umbrella over the two TERMINAL editions (sun2000 + sun2020).
         conn.execute(
             "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source, facet_axis) VALUES (90, 'classification', NULL, 'sun', "
-            "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
+            "label, source) VALUES (90, 'classification', NULL, 'sun', "
+            "'Svensk utbildningsnomenklatur', 'token')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (90, 'vintage', 0, 'vintage')"
         )
         sun2020_id = conn.execute(
             "SELECT id FROM classification WHERE slug = 'sun2020'"
@@ -628,6 +648,51 @@ class TestGetConceptGroups:
         assert jan["fqid"] == "scb/lisa/agiinkjan"
         assert jan["name"] == "Lönesumma januari"
         assert jan["facets"] == [{"axis": "month", "value": "01", "label": "januari"}]
+
+    def test_multi_axis_representation_members(self) -> None:
+        # #819: a multi-axis group declares N axes; members are
+        # (variable, delivery_column) representations carrying one facet per axis,
+        # and two members can share an fqid (one variable, two delivery columns).
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (30, 'variable', 1, 'disp', 'Disp', 'curated')"
+        )
+        for ordinal, axis in enumerate(("enhet", "kapitalvinst")):
+            conn.execute(
+                "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+                "VALUES (30, ?, ?, ?)",
+                (axis, ordinal, axis.title()),
+            )
+        add_variable(conn, register_id=1, var_id=950, name="Disp ink", slug="cdisp")
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE slug = 'cdisp'"
+        ).fetchone()[0]
+        for dcn, kap in (("CDISP", ("inkl", "Inkl")), ("CDISP5", ("exkl", "Exkl"))):
+            cur = conn.execute(
+                "INSERT INTO concept_group_variable "
+                "(group_id, variable_id, delivery_column_name) VALUES (30, ?, ?)",
+                (vid, dcn),
+            )
+            conn.executemany(
+                "INSERT INTO concept_group_variable_facet "
+                "(member_id, axis, value, label) VALUES (?, ?, ?, ?)",
+                [
+                    (cur.lastrowid, "enhet", "individ", "Individ"),
+                    (cur.lastrowid, "kapitalvinst", kap[0], kap[1]),
+                ],
+            )
+        conn.commit()
+        groups = Catalog(conn).list_concept_groups("scb", "lisa")
+        (group,) = [g for g in groups if g.key == "disp"]
+        assert group.axes == ("enhet", "kapitalvinst")
+        assert len(group.members) == 2
+        # Both members share the fqid but differ by delivery_column.
+        assert {str(m.fqid) for m in group.members} == {"scb/lisa/cdisp"}
+        assert {m.delivery_column for m in group.members} == {"CDISP", "CDISP5"}
+        # Each member carries one facet per declared axis, ordered by axis ordinal.
+        for m in group.members:
+            assert [f.axis for f in m.facets] == ["enhet", "kapitalvinst"]
 
     def test_resolves_register_by_numeric_id(self) -> None:
         conn = _seeded_conn()

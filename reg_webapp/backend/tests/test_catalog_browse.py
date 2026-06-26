@@ -249,12 +249,13 @@ def test_group_route_accepts_slash_bearing_key(catalog_db):
     with sqlite3.connect(catalog_db) as conn:
         conn.execute(
             "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source, facet_axis) "
-            "VALUES (98, 'variable', 2, 'slash/key', 'Slash key', 'edge', NULL)"
+            "label, source) "
+            "VALUES (98, 'variable', 2, 'slash/key', 'Slash key', 'edge')"
         )
         conn.execute(
-            "INSERT INTO concept_group_variable (variable_id, group_id) "
-            "SELECT variable_id, 98 FROM variable "
+            "INSERT INTO concept_group_variable (group_id, variable_id, "
+            "delivery_column_name) "
+            "SELECT 98, variable_id, NULL FROM variable "
             "WHERE register_id = 2 AND slug = 'syss'"
         )
     with TestClient(create_app()) as client:
@@ -381,9 +382,12 @@ def test_classification_group_route_accepts_slash_bearing_key(catalog_db):
         )
         conn.execute(
             "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source, facet_axis) "
-            "VALUES (99, 'classification', NULL, 'a/b', 'Slash key', 'token', "
-            "'dimension')"
+            "label, source) "
+            "VALUES (99, 'classification', NULL, 'a/b', 'Slash key', 'token')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (99, 'dimension', 0, 'dimension')"
         )
         conn.execute(
             "INSERT INTO concept_group_classification "

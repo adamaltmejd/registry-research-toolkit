@@ -186,10 +186,12 @@ def _coverage_bounds(
 # succession edges in `classification_replaced_by` (#571).
 class GroupFacet(_CatalogModel):
     """One facet assignment on a group member: `axis` names the dimension
-    ('month' / 'rank') when the group has one, or None for an AXIS-LESS group —
-    a curated classification umbrella (SUN/ISCED/NordDRG), whose members are
-    distinct classifications carrying their own short label, not points on a
-    shared scale. `value` sorts (zero-padded where needed), `label` displays."""
+    ('month' / 'rank' / 'enhet' …) when the group declares one, or None for an
+    AXIS-LESS group — a curated classification umbrella (SUN/ISCED/NordDRG), whose
+    members are distinct classifications carrying their own short label, not points
+    on a shared scale. A multi-axis member (#819) carries one `GroupFacet` per
+    declared axis, ordered by the axis's ordinal. `value` sorts (zero-padded where
+    needed), `label` displays."""
 
     axis: str | None
     value: str
@@ -197,22 +199,27 @@ class GroupFacet(_CatalogModel):
 
 
 class ConceptGroupMember(_CatalogModel):
-    """A group member: the leaf's FQID (binding or classification), its
-    display name, and its facet assignments (empty on edge-group members)."""
+    """A group member: the leaf's FQID (binding or classification), its display
+    name, and its facet assignments (empty on edge-group members). `delivery_column`
+    is None for a whole-variable member and the SCB delivery column for a
+    REPRESENTATION member (#819) — a multi-axis family can carry two members on one
+    variable (two delivery columns), so two members may share an `fqid` and are then
+    distinguished by `delivery_column`. Additive + defaulted so existing callers /
+    the webapp TS stay valid."""
 
     fqid: Fqid
     name: str | None
     facets: tuple[GroupFacet, ...]
+    delivery_column: str | None = None
 
 
 class ConceptGroupSummary(_CatalogModel):
     """One derived concept group. `key` is the scope-unique derivation key
     (slug stem / min member slug / curated key) — a stable anchor for UI
-    state, not an FQID. `axes` holds the group's single facet axis (a 0-or-1
-    element tuple: empty for edge groups, one axis for token/curated groups);
-    members are ordered by their facet value along that axis, then slug. The
-    tuple shape is retained for the response contract — the DB is single-axis
-    (#585)."""
+    state, not an FQID. `axes` holds the group's ordered facet axes (#819): empty
+    for edge / axis-less umbrella groups, one for token/single-axis-curated groups,
+    N for a multi-axis curated family (the iot disposable-income group). Members are
+    ordered by their first facet value, then slug."""
 
     key: str
     label: str
@@ -249,10 +256,12 @@ def _group_source(raw: str) -> Literal["edge", "token", "curated"]:
 class BindingGroupRef(_CatalogModel):
     """The concept group a binding belongs to, as the group's addressable
     `(provider, register, key)` (#616). Carried by `ResolvedVariable.group` so a
-    member URL renders group-aware without a second fetch. Membership is
-    register-scoped and 1:1 (the `concept_group_variable.variable_id` PK enforces
-    at most one home group per variable), so this is a singular ref — the full
-    member list lives behind `Catalog.concept_group(provider, register, key)`.
+    member URL renders group-aware without a second fetch. A variable belongs to at
+    most one group (validated, #819) — even a multi-axis family that carries the
+    variable under several REPRESENTATION members keeps them in one group — so this
+    stays a singular ref (the read uses `SELECT DISTINCT` since a representation
+    variable now yields several member rows). The full member list lives behind
+    `Catalog.concept_group(provider, register, key)`.
     `key` is `ConceptGroupSummary.key` (the scope-unique derivation key), not an
     FQID segment.
 
@@ -992,59 +1001,113 @@ class Catalog:
         carry the real binding FQIDs; browse surfaces collapse member rows
         under the group and expand to a facet picker. Empty when the
         (provider, register) pair names no register OR it has no groups."""
-        # Single facet axis on the group (`facet_axis`); the member's value/label
-        # inline on `concept_group_variable` (#585). NULL axis = edge group →
-        # facet-less members. Mirrors `list_classification_groups`. The external
-        # shape is unchanged: `axes` is the group's 0-or-1-element axis tuple and
-        # each member carries a 0-or-1-element `facets` tuple.
+        # Multi-axis read (#819): a group's ordered named axes live in
+        # `concept_group_axis`; a REPRESENTATION member (`concept_group_variable`,
+        # surrogate `member_id` + nullable `delivery_column_name`) carries one facet
+        # per axis on `concept_group_variable_facet`. A member therefore spans
+        # several rows (one per facet) — the accumulator groups by member_id, orders
+        # facets by axis ordinal, and carries `delivery_column_name`. LEFT JOIN so a
+        # facet-less edge member (zero axes) still yields its member row. Two members
+        # can share an `fqid` (one variable, two delivery columns) — they stay
+        # distinct member entries, distinguished by `delivery_column`.
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
-            "g.facet_axis AS axis, "
+            "m.member_id, m.delivery_column_name, "
             "v.slug AS variable_slug, v.name AS variable_name, "
-            "m.facet_value, m.facet_label "
+            "f.axis AS facet_axis, f.value AS facet_value, f.label AS facet_label, "
+            "a.ordinal AS axis_ordinal "
             "FROM concept_group g "
             "JOIN register r ON g.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "JOIN concept_group_variable m ON m.group_id = g.group_id "
             "JOIN variable v ON v.variable_id = m.variable_id "
+            "LEFT JOIN concept_group_variable_facet f ON f.member_id = m.member_id "
+            "LEFT JOIN concept_group_axis a "
+            "  ON a.group_id = g.group_id AND a.axis = f.axis "
             "WHERE p.slug = ? AND r.slug = ? AND g.kind = 'variable' "
             "  AND v.slug IS NOT NULL "
-            "ORDER BY g.group_key, m.facet_value, v.slug",
+            "ORDER BY g.group_key, m.member_id, a.ordinal",
             (provider_slug, register_slug),
         ).fetchall()
-        # group_id → (key, label, source, axis, [member, ...])
-        acc: dict[int, tuple[str, str, str, str | None, list[ConceptGroupMember]]] = {}
+        groups = self._assemble_variable_groups(provider_slug, register_slug, rows)
+        return sorted(groups, key=lambda g: g.key)
+
+    def _assemble_variable_groups(
+        self,
+        provider_slug: str,
+        register_slug: str,
+        rows: list[sqlite3.Row],
+    ) -> list[ConceptGroupSummary]:
+        """Fold the flat member×facet rows of `list_concept_groups` into
+        `ConceptGroupSummary` objects (#819). One member spans N facet rows (one per
+        axis, plus a single NULL-facet row for a facet-less edge member); the axes
+        are read separately and ordered by ordinal."""
+        # group_id → (key, label, source, members-by-id)
+        acc: dict[int, tuple[str, str, str, dict[int, dict]]] = {}
         for r in rows:
-            _, _, _, axis, members = acc.setdefault(
+            _, _, _, members = acc.setdefault(
                 r["group_id"],
-                (r["group_key"], r["group_label"], r["source"], r["axis"], []),
+                (r["group_key"], r["group_label"], r["source"], {}),
             )
-            facets = (
-                (GroupFacet(axis=axis, value=r["facet_value"], label=r["facet_label"]),)
-                if axis is not None
-                else ()
-            )
-            members.append(
-                ConceptGroupMember(
-                    fqid=Fqid.binding_fqid(
+            member = members.setdefault(
+                r["member_id"],
+                {
+                    "fqid": Fqid.binding_fqid(
                         provider_slug, register_slug, r["variable_slug"]
                     ),
-                    name=r["variable_name"],
-                    facets=facets,
+                    "name": r["variable_name"],
+                    "delivery_column": r["delivery_column_name"],
+                    "facets": [],
+                },
+            )
+            if r["facet_axis"] is not None:
+                member["facets"].append(
+                    GroupFacet(
+                        axis=r["facet_axis"],
+                        value=r["facet_value"],
+                        label=r["facet_label"],
+                    )
+                )
+        out: list[ConceptGroupSummary] = []
+        for group_id, (key, label, source, members) in acc.items():
+            axes = tuple(
+                row["axis"]
+                for row in self._conn.execute(
+                    "SELECT axis FROM concept_group_axis WHERE group_id = ? "
+                    "ORDER BY ordinal",
+                    (group_id,),
                 )
             )
-        return [
-            ConceptGroupSummary(
-                key=key,
-                label=label,
-                source=_group_source(source),
-                axes=(axis,) if axis is not None else (),
-                members=tuple(members),
+            # Order members by their first-axis facet value, then slug, then
+            # delivery column — preserving the old single-axis ordering (month 01,
+            # 02 …) and giving multi-axis members a deterministic order. A facet-less
+            # edge member sorts on its slug alone.
+            ordered_members = sorted(
+                members.values(),
+                key=lambda m: (
+                    m["facets"][0].value if m["facets"] else "",
+                    str(m["fqid"]),
+                    m["delivery_column"] or "",
+                ),
             )
-            for key, label, source, axis, members in sorted(
-                acc.values(), key=lambda g: g[0]
+            out.append(
+                ConceptGroupSummary(
+                    key=key,
+                    label=label,
+                    source=_group_source(source),
+                    axes=axes,
+                    members=tuple(
+                        ConceptGroupMember(
+                            fqid=m["fqid"],
+                            name=m["name"],
+                            facets=tuple(m["facets"]),
+                            delivery_column=m["delivery_column"],
+                        )
+                        for m in ordered_members
+                    ),
+                )
             )
-        ]
+        return out
 
     def concept_group(
         self, provider_slug: str, register_slug: str, key: str
@@ -1076,18 +1139,22 @@ class Catalog:
         Members carry the real `class/<slug>` FQIDs.
 
         These umbrellas are AXIS-LESS: the members are distinct classifications,
-        not points on a shared scale, so `concept_group.facet_axis` is NULL and
-        `axes` is the empty tuple (the webapp renders the member-noun as
-        "members"). Each member STILL carries its curated short facet
-        `value`/`label` (the picker label) — `concept_group_classification`'s
-        facet columns are non-NULL regardless of the absent group axis — so a
-        `GroupFacet` with `axis=None` is emitted per member. (A group that does
-        carry an axis is still read through unchanged.)"""
+        not points on a shared scale, so the group has zero `concept_group_axis`
+        rows (#819) and `axes` is the empty tuple (the webapp renders the
+        member-noun as "members"). Each member STILL carries its curated short facet
+        `value`/`label` (the picker label) INLINE on `concept_group_classification`
+        regardless of the absent group axis — so a `GroupFacet` with `axis=None` is
+        emitted per member. (A group that DOES declare an axis — one
+        `concept_group_axis` row — is read through with that axis name.)"""
+        # The single axis declaration now lives in `concept_group_axis` (#819,
+        # replacing the dropped `concept_group.facet_axis`). These umbrellas carry
+        # at most one axis row, so a LEFT JOIN yields the axis name or NULL.
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
-            "g.facet_axis AS axis, "
+            "a.axis AS axis, "
             "c.slug AS cls_slug, c.name AS cls_name, m.facet_value, m.facet_label "
             "FROM concept_group g "
+            "LEFT JOIN concept_group_axis a ON a.group_id = g.group_id "
             "JOIN concept_group_classification m ON m.group_id = g.group_id "
             "JOIN classification c ON c.id = m.classification_id "
             "WHERE g.kind = 'classification' AND c.slug IS NOT NULL "
@@ -1359,12 +1426,15 @@ class Catalog:
         self, variable_id: int, provider_slug: str, register_slug: str
     ) -> BindingGroupRef | None:
         """The binding's owning concept group as a `(provider, register, key)`
-        ref, or None when it is not a group member (#616). `kind='variable'`
-        membership is 1:1 (the `concept_group_variable.variable_id` PK), so this
-        is at most one row — the singular `ResolvedVariable.group`. The full
-        member list lives behind `concept_group()`."""
+        ref, or None when it is not a group member (#616). A variable belongs to at
+        most one group (validated, #819), but a multi-axis family can carry it under
+        several REPRESENTATION members, so the surrogate-keyed
+        `concept_group_variable` returns N rows for one variable — `SELECT DISTINCT`
+        collapses them to the single owning group_key (the singular
+        `ResolvedVariable.group`). The full member list lives behind
+        `concept_group()`."""
         row = self._conn.execute(
-            "SELECT g.group_key FROM concept_group_variable m "
+            "SELECT DISTINCT g.group_key FROM concept_group_variable m "
             "JOIN concept_group g ON g.group_id = m.group_id "
             "WHERE m.variable_id = ? AND g.kind = 'variable'",
             (variable_id,),
