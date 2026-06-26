@@ -128,8 +128,10 @@ const entries = [
   }
   .card-title {
     font-weight: 700;
-    /* Accent-COLORED text on a surface needs the darker ink role: --accent
-       (#B8552A) is only ~4.0:1 on white, below WCAG AA for normal bold text. */
+    /* Accent-colored TEXT on a surface uses the dedicated ink role: --accent is
+       reserved for interactive chrome (links, focus, fills), while --accent-ink
+       (#a44b29) is the design-system role for accent text — and reads stronger
+       (5.8:1 vs 4.8:1 on --surface, both AA). */
     color: var(--accent-ink);
   }
   .card-blurb {
