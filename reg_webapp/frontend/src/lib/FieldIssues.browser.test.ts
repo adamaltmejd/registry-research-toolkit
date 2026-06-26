@@ -32,5 +32,33 @@ describe("FieldIssues", () => {
     // The issue's level drives the styling hook (`li.issue.<level>`). Only the
     // level class is meaningful — `issue` is hardcoded on every <li>.
     await expect.element(page.getByRole("listitem")).toHaveClass(/\berror\b/);
+    // The redundant, NON-COLOR severity cue (WCAG 1.4.1): a visible level word —
+    // it's what carries severity to AT since the glyph is aria-hidden.
+    await expect.element(page.getByText("Error")).toBeVisible();
+  });
+
+  it("renders the matching non-color severity word for each level", async () => {
+    // The visible level word is the load-bearing WCAG 1.4.1 cue (the glyph is
+    // aria-hidden), so pin it per level — and confirm an unknown level degrades to
+    // the "Info" cue (forward-compat), never the brand accent. The last case uses a
+    // level outside the typed union (which the server could add), so it's cast: the
+    // forward-compat degrade is a runtime guard the static type can't reach.
+    const cases: { level: string; word: string }[] = [
+      { level: "error", word: "Error" },
+      { level: "warning", word: "Warning" },
+      { level: "info", word: "Info" },
+      { level: "totally_new_level", word: "Info" },
+    ];
+    for (const { level, word } of cases) {
+      const issue = {
+        code: "invalid_period",
+        level,
+        message: "An issue.",
+        path: "/sources/0/period",
+      } as ValidationIssue;
+      const { unmount } = render(FieldIssues, { issues: [issue] });
+      await expect.element(page.getByText(word, { exact: true })).toBeVisible();
+      unmount();
+    }
   });
 });
