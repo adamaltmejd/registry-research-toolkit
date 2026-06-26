@@ -3361,6 +3361,8 @@ class TestReplacedByEdges:
                 "n_curated_variable_replaced_by",
                 # #579 curated classification succession (sun1996 split)
                 "n_curated_classification_replaced_by",
+                # #843 curated representation succession (column-level era rename)
+                "n_curated_representation_replaced_by",
                 "n_curated_skipped_duplicate",
                 "n_curated_skipped_inactive_provider",
             }

@@ -223,6 +223,7 @@ def validate_built_db(
         _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_classification_replaced_by(conn, result, tables, corpus=corpus)
         _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
+        _check_representation_replaced_by(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -1982,6 +1983,83 @@ def _check_variable_replaced_by_vintage_lift(
             f"(< {_MIN_VARIABLE_VINTAGE_LIFT_EDGES}) — vintage-lift derivation "
             "regression?"
         )
+
+
+def _check_representation_replaced_by(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    corpus: bool,
+) -> None:
+    """#843 representation-grain succession invariants — curated column-level era
+    renames in `representation_replaced_by` (the `(variable, delivery_column)`-pair
+    edge the variable grain can't express).
+
+    Structural (always): every edge is directional and non-self (the full
+    `(provider, register, variable, column)` endpoint differs — same variable /
+    different column is legal), and BOTH endpoints resolve to a live, slugged
+    variable WITH an OBSERVED delivery column in `variable_alias` (the
+    representation grain is all-live by design — a within-build column rename
+    observes both columns, unlike a curated entity succession whose predecessor
+    may be dead). No corpus floor: the grain is curated-only and ships empty until
+    curation lands (#846/#838), so a count gate would false-fail every build."""
+    result.section("[representation succession]")
+    if "representation_replaced_by" not in tables:
+        result.fail("representation_replaced_by missing (schema 5.9.0 #843 table)")
+        return
+
+    self_loops = conn.execute(
+        "SELECT COUNT(*) FROM representation_replaced_by "
+        "WHERE predecessor_provider = successor_provider "
+        "  AND predecessor_register = successor_register "
+        "  AND predecessor_variable = successor_variable "
+        "  AND predecessor_column = successor_column"
+    ).fetchone()[0]
+    if self_loops:
+        result.fail(f"{self_loops} self-loop representation succession edge(s)")
+    else:
+        result.ok("no self-loop representation succession edges")
+
+    # Both endpoints must resolve to a live, slugged variable carrying the named
+    # delivery column (an observed `variable_alias` row).
+    dangling = conn.execute(
+        "SELECT COUNT(*) FROM representation_replaced_by e "
+        "WHERE NOT EXISTS ("
+        "    SELECT 1 FROM variable_alias a "
+        "    JOIN variable v ON a.variable_id = v.variable_id "
+        "    JOIN register r ON v.register_id = r.register_id "
+        "    JOIN provider p ON r.provider_id = p.provider_id "
+        "    WHERE p.slug = e.predecessor_provider "
+        "      AND r.slug = e.predecessor_register "
+        "      AND v.slug = e.predecessor_variable "
+        "      AND a.delivery_column_name = e.predecessor_column"
+        "  ) OR NOT EXISTS ("
+        "    SELECT 1 FROM variable_alias a "
+        "    JOIN variable v ON a.variable_id = v.variable_id "
+        "    JOIN register r ON v.register_id = r.register_id "
+        "    JOIN provider p ON r.provider_id = p.provider_id "
+        "    WHERE p.slug = e.successor_provider "
+        "      AND r.slug = e.successor_register "
+        "      AND v.slug = e.successor_variable "
+        "      AND a.delivery_column_name = e.successor_column"
+        "  )"
+    ).fetchone()[0]
+    if dangling:
+        result.fail(
+            f"{dangling} representation succession edge(s) reference an unknown "
+            "variable/column"
+        )
+    else:
+        result.ok(
+            "representation succession edges resolve to live variable+column "
+            "representations"
+        )
+
+    n_edges = conn.execute(
+        "SELECT COUNT(*) FROM representation_replaced_by"
+    ).fetchone()[0]
+    result.info(f"{n_edges} representation succession edge(s)")
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

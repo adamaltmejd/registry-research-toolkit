@@ -1191,6 +1191,55 @@ CREATE TABLE variable_replaced_by (
 CREATE INDEX idx_variable_replaced_by_successor
     ON variable_replaced_by(successor_provider, successor_register, successor_variable);
 
+-- Representation-grain succession (#843, feeds #846/#838). The representation
+-- grain = a `(variable, delivery_column)` PAIR: a single variable can deliver
+-- several columns (parallel representations of one concept — e.g. the iot
+-- disposable-income family, the monthly column families), and a column-level era
+-- rename ("the disposable-income concept moved from delivery column X to column
+-- Y") is a fact the 3-part `variable_replaced_by` grain CANNOT express — both
+-- endpoints there collapse to the same variable FQID, so the within-variable
+-- column move is invisible. This table records that move. It is the build-side
+-- precondition for retiring `column_merge` (#805/#825): a column-merge unifies
+-- never-co-occurring era-rename column twins into one variable; expressing that
+-- rename as a succession edge between two representations is the navigation-grade
+-- replacement for the order-bearing merge.
+--
+-- An endpoint is a variable-grain FQID `(provider, register, variable)` PLUS a
+-- `*_column` segment — NO new FQID grammar (#843 keeps `reg_meta/fqid.py` and the
+-- `replaced_by` grain set untouched); the column-ness rides these sibling fields,
+-- exactly like #819's `concept_group_variable.delivery_column_name`.
+--
+-- CURATED-ONLY: there is no auto/event-derived representation grain (SCB's
+-- `timeseries_event` succession is entity-grained, never column-level), so every
+-- row carries `note = 'curated:slug_toml'` provenance and the human transition
+-- reason lands in `beskrivning` (same convention as the register/variable arms).
+-- BOTH endpoints must be live (a within-build column rename observes both
+-- columns) — stricter than the register/variable "dead predecessor allowed" rule,
+-- and intentionally so.
+--
+-- NO successor index: there is no reader/accessor yet (a consumer in #846/#838
+-- adds one when it needs the successor-keyed reverse lookup), matching the
+-- register/variant precedent — only the variable grain carries an index, for the
+-- A2.5 `.predecessors()` accessor that actually exists (see the
+-- `idx_variable_replaced_by_successor` comment above).
+CREATE TABLE representation_replaced_by (
+    predecessor_provider TEXT NOT NULL,
+    predecessor_register TEXT NOT NULL,
+    predecessor_variable TEXT NOT NULL,
+    predecessor_column   TEXT NOT NULL,
+    successor_provider   TEXT NOT NULL,
+    successor_register   TEXT NOT NULL,
+    successor_variable   TEXT NOT NULL,
+    successor_column     TEXT NOT NULL,
+    effective_year       INTEGER,
+    note                 TEXT,
+    beskrivning          TEXT,
+    PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variable,
+                 predecessor_column,
+                 successor_provider, successor_register, successor_variable,
+                 successor_column)
+) WITHOUT ROWID;
+
 -- Classification EDITION succession (#571): a temporal chain over vintages of
 -- ONE classification (ssyk1996→ssyk2012, lkf1980…lkf2026, sun2000-niva→
 -- sun2020-niva). Auto-derived from the slug vintage families by
@@ -1667,6 +1716,11 @@ _REPLACED_BY_STAT_KEYS = (
     "n_curated_register_replaced_by",
     "n_curated_variable_replaced_by",
     "n_curated_classification_replaced_by",
+    # #843 representation-grain curated edges inserted into
+    # `representation_replaced_by` (the column-level era rename the variable grain
+    # can't express). Curated-only — there is no auto representation grain — so
+    # this count is the whole table.
+    "n_curated_representation_replaced_by",
     "n_curated_skipped_duplicate",
     # A curated edge whose SUCCESSOR's provider isn't in this (partial) build is
     # SKIPPED, not failed — a `--providers=sos` build must not crash on an scb
@@ -2107,6 +2161,7 @@ def _materialize_replaced_by_edges(
         n_curated_register_replaced_by=curated["register"],
         n_curated_variable_replaced_by=curated["variable"],
         n_curated_classification_replaced_by=curated["classification"],
+        n_curated_representation_replaced_by=curated["representation"],
         n_curated_skipped_duplicate=curated["skipped_duplicate"],
         n_curated_skipped_inactive_provider=curated["skipped_inactive_provider"],
     )

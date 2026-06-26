@@ -225,7 +225,15 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   (`member_id, axis, value, label`). A 5.7.0 DB still has `facet_axis` + the
 #   inline member facets and lacks both new tables, so it's rejected via the minor
 #   gate.
-SCHEMA_VERSION = "5.8.0"
+# - 5.9.0 (#843): additive `representation_replaced_by` succession table — a
+#   directional column-level era rename keyed on `(variable, delivery_column)`
+#   PAIR endpoints (the `*_column` segment beside each variable-grain FQID), the
+#   fact the 3-part `variable_replaced_by` grain can't express (both endpoints
+#   collapse to one variable FQID). CURATED-ONLY (no auto representation grain);
+#   the build-side precondition for retiring `column_merge` (#805/#825). No FQID
+#   grammar change — the column rides sibling fields, like #819. A 5.8.0 DB lacks
+#   the table, so it's rejected via the minor gate.
+SCHEMA_VERSION = "5.9.0"
 DB_FILENAME = "reg_meta.db"
 
 
