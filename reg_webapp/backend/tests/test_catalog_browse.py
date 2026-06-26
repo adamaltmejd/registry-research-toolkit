@@ -209,9 +209,14 @@ def test_register_node_carries_concept_groups(client):
     assert {"scb/rams/inkjan", "scb/rams/inkfeb"} <= child_fqids
 
 
-def test_register_without_groups_has_empty_list(client):
+def test_register_groups_list_serializes(client):
+    # scb/lisa carries the `lonefink-rep` representation group (#819, two members on
+    # one FQID distinguished by delivery_column) — added for the steward column-grain
+    # test. The register's `groups` list serializes it (empty-groups branch is covered
+    # by the steward suite's drop-to-empty assertion).
     body = client.get("/api/catalog/scb/lisa").json()
-    assert body["groups"] == []
+    keys = {g["key"] for g in body["groups"]}
+    assert keys == {"lonefink-rep"}
 
 
 # ── Concept-group SUBJECT route (#617) ──────────────────────────────────────

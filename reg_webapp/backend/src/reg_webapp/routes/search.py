@@ -34,8 +34,13 @@ from reg_webapp.models import (
 from reg_webapp.query_input import validate_text_query
 
 if TYPE_CHECKING:
-    from reg_meta.search import CodeSearchResult, RegisterSearchResult, SearchResult
+    from reg_meta.search import (
+        CodeSearchResult,
+        RegisterSearchResult,
+        SearchResult,
+    )
 
+    from reg_webapp.catalog_index import CatalogIndex
     from reg_webapp.models import ClassificationSearchItem, VariableSearchItem
 
 router = APIRouter(prefix="/api")
@@ -107,17 +112,82 @@ def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
 def _scope_to_fqids(
     results: list[SearchResult], fqids: frozenset[str] | None
 ) -> list[SearchResult]:
-    """Drop register/variable results whose navigable `fqid` is not in the
-    steward's held set (#859). A no-op when `fqids` is None (the `global`
-    deployment — byte-identical to pre-#859). The reg_meta hits are already
-    `fqids`-scoped query-time; this re-applies the same gate to the golden boost,
-    which prepends pins from a separate source. Compares the SERIALIZED fqid string
-    (the model's `fqid` is an `Fqid | None`; the held set holds canonical strings),
-    mirroring `golden.apply_golden_boost`'s dedup; a result with `fqid is None` is
-    unaddressable, so it can be in no steward catalog and drops."""
+    """Re-filter the golden-boost set to drop unheld register/VARIABLE LEAF pins
+    (#859). A no-op when `fqids` is None (the `global` deployment — byte-identical to
+    pre-#859). The reg_meta hits are ALREADY `fqids`-scoped query-time; this re-filter
+    exists ONLY to drop unheld LEAF pins the golden boost prepended from a separate
+    source.
+
+    A row is KEPT when it has NO `fqid` attribute (or `fqid is None`) OR its serialized
+    `fqid` is in the held set. The fqid-less pass-through is load-bearing: the variable
+    arm can carry `ConceptGroupSearchResult` rows (folded groups / label matches) which
+    have no `fqid` — those are already query-time scoped by reg_meta (`_group_result_row`'s
+    `allow` narrows members to held), so they must NOT be dropped here, or a filtered
+    steward stops seeing held concept groups and `total_count` shrinks. Compares the
+    SERIALIZED fqid string (the model's `fqid` is an `Fqid | None`; the held set holds
+    canonical strings), mirroring `golden.apply_golden_boost`'s dedup."""
     if fqids is None:
         return results
-    return [r for r in results if (f := getattr(r, "fqid", None)) and str(f) in fqids]
+    return [
+        r for r in results if (f := getattr(r, "fqid", None)) is None or str(f) in fqids
+    ]
+
+
+def _narrow_search_groups(
+    results: list[SearchResult], index: CatalogIndex
+) -> tuple[list[SearchResult], int]:
+    """Narrow each `ConceptGroupSearchResult` row's `members` to the steward's
+    COLUMN-grain holdings (#859), mirroring browse's `_narrow_group_members`.
+
+    reg_meta already narrowed group members at FQID grain (`_group_result_row`'s
+    `allow` set), but a #819 representation member shares one FQID across different
+    `delivery_column`s — a steward holding only SOME columns of an FQID still sees the
+    unheld representations. This refines on top: a representation member
+    (`delivery_column` set) is kept iff `index.admits(str(m.fqid), m.delivery_column)`;
+    a whole-variable member (`delivery_column` None) iff its bare FQID is in
+    `admitted_variable_fqids`. `member_count` is reset to the narrowed length.
+
+    A group left with NO surviving member is DROPPED, and the returned `dropped` count
+    lets the caller decrement `total_count` for it.
+
+    simplify: best-effort total_count — the webapp only sees the displayed PAGE, so a
+    group whose only members are unheld representations of an otherwise-held FQID and
+    that falls BEYOND the page can't be adjusted (it never reaches here). The common
+    case keeps the group and only refines `members`, leaving `total_count` exact; the
+    drop-and-decrement only fires for a fully-unheld group ON the page.
+
+    Browse's `_narrow_group_members` operates on a DIFFERENT model
+    (`ConceptGroupSummary` vs `ConceptGroupSearchResult`), so a thin search-local helper
+    is the right reuse boundary — not a forced shared abstraction."""
+    admitted = index.admitted_variable_fqids
+    kept_rows: list[SearchResult] = []
+    dropped = 0
+    for r in results:
+        # The `.type` discriminator narrows `r` to `ConceptGroupSearchResult` here.
+        if r.type != "group":
+            kept_rows.append(r)
+            continue
+        kept_members = [
+            m
+            for m in r.members
+            if (
+                index.admits(str(m.fqid), m.delivery_column)
+                if m.delivery_column is not None
+                else str(m.fqid) in admitted
+            )
+        ]
+        if not kept_members:
+            dropped += 1
+            continue
+        kept_rows.append(
+            r.model_copy(
+                update={
+                    "members": tuple(kept_members),
+                    "member_count": len(kept_members),
+                }
+            )
+        )
+    return kept_rows, dropped
 
 
 @router.get("/search", response_model=SearchResponse)
@@ -233,11 +303,25 @@ def get_search(
                 limit=limit,
             )
             var_results = golden.apply_golden_boost(conn, q, "variable", var.results)
-            # #859: same boost re-filter as the register arm.
+            # #859: same boost re-filter as the register arm (drops unheld LEAF pins;
+            # group/fqid-less rows pass through).
             var_results = _scope_to_fqids(var_results, fqids)
+            # total_count already counts the boosted delta over reg_meta's
+            # `fqids`-scoped hits; computed BEFORE column-grain narrowing so the
+            # group-drop decrement is layered on the same base.
+            var_total = var.total_count + (len(var_results) - len(var.results))
+            # #859: reg_meta narrowed group members at FQID grain, but #819
+            # representation members share one FQID across `delivery_column`s — a steward
+            # holding only some columns still sees the unheld representations. Refine each
+            # group row's `members` at COLUMN grain (browse's `_narrow_group_members`
+            # equivalent for the search model), dropping a group with no held member and
+            # decrementing total_count for it (best-effort — see `_narrow_search_groups`).
+            if index is not None:
+                var_results, dropped = _narrow_search_groups(var_results, index)
+                var_total -= dropped
             groups.append(
                 VariableSearchGroup(
-                    total_count=var.total_count + (len(var_results) - len(var.results)),
+                    total_count=var_total,
                     results=cast("list[VariableSearchItem]", list(var_results[:limit])),
                 )
             )

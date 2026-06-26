@@ -408,12 +408,35 @@ def _binding_node(
     `/successors` sub-resources are unaffected — they back the #411 redirect rails.
 
     #859: for a filtered steward the embedded `states` are narrowed to the delivery
-    columns the steward holds for this binding (column-grain faithful). Admission of
-    the binding itself is gated by the caller (`_require_admitted`) before
-    this is reached, so a kept binding always has ≥1 held column."""
+    columns the steward holds for this binding (column-grain faithful), AND the embedded
+    edge collections (`same_as` / `related_to` / `succession_chain` / `lineage`) are
+    narrowed to held neighbors — otherwise a held binding's leaf would leak unheld
+    neighbors, inconsistent with the already-narrowed `/predecessors` / `/successors` /
+    `/related` sub-endpoints. Admission of the binding ITSELF is gated by the caller
+    (`_require_admitted`) before this is reached, so a kept binding always has ≥1 held
+    column. NOTE: the binding `/graph` node-set narrowing remains a tracked deferral —
+    this covers only the leaf-EMBEDDED edge collections."""
     states = list(resolved.states)
+    same_as = list(resolved.same_as)
+    related_to = list(resolved.related_to)
+    succession_chain = catalog.variable_chain(resolved.fqid)
+    lineage = list(resolved.lineage)
     if index is not None:
         states = _filter_states_to_held(states, index, str(resolved.fqid))
+        # `same_as` / `related_to` carry `.fqid`; succession-chain editions carry a
+        # navigable `.fqid` too, so the same held-FQID narrower applies to all three.
+        same_as = _narrow_refs_to_held(same_as, index)
+        related_to = _narrow_refs_to_held(related_to, index)
+        succession_chain = _narrow_refs_to_held(succession_chain, index)
+        # `LineageEdge` references its source by `source_fqid` (not `fqid`), so it
+        # narrows on that field; an edge with `source_fqid is None` (unaddressable
+        # source) drops, mirroring `_narrow_refs_to_held`.
+        admitted = index.admitted_variable_fqids
+        lineage = [
+            e
+            for e in lineage
+            if e.source_fqid is not None and str(e.source_fqid) in admitted
+        ]
     return BindingNode(
         fqid=str(resolved.fqid),
         variable_id=resolved.variable_id,
@@ -429,10 +452,10 @@ def _binding_node(
         # `ResolvedVariable`'s edge collections are tuples (frozen model); the
         # response model fields are `list`, so coerce — wire-identical (#681).
         states=states,
-        same_as=list(resolved.same_as),
-        succession_chain=catalog.variable_chain(resolved.fqid),
-        related_to=list(resolved.related_to),
-        lineage=list(resolved.lineage),
+        same_as=same_as,
+        succession_chain=succession_chain,
+        related_to=related_to,
+        lineage=lineage,
         # #616/#617: the binding's owning group as `(provider, register, key)` so a
         # member page links to the group subject without a second fetch; None when
         # ungrouped. Keyed on the RESOLVED variable's triple, so a same_as alias
@@ -950,11 +973,27 @@ def get_concept_group_graph(
     a register FQID before the connection opens (mirrors `get_concept_group`); `key`
     is the derivation key (not slug-validated — an unknown key is a clean 404)."""
     try:
-        Fqid.register_fqid(provider, register)
+        register_fqid = str(Fqid.register_fqid(provider, register))
     except FqidError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    index = _index(request)
     with _catalog_conn(request) as conn:
-        graph = Catalog(conn).graph_for_group(provider, register, key)
+        catalog = Catalog(conn)
+        # #859: a filtered steward must NOT reach an unheld group's (or unheld
+        # register's) graph — that would bypass the scoping the subject route
+        # `get_concept_group` applies. Gate it the SAME way: 404 the register if
+        # unheld, then resolve the group and narrow its members with
+        # `_narrow_group_members`; a group with no held member 404s. The graph's
+        # internal NODE-SET narrowing for a held group stays DEFERRED (same as the
+        # binding `/graph` deferral) — this gate only keeps an UNHELD group/register
+        # out, mirroring the subject route.
+        if index is not None:
+            if not index.admits_register(register_fqid):
+                raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
+            group = catalog.concept_group(provider, register, key)
+            if group is None or _narrow_group_members(group, index) is None:
+                raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
+        graph = catalog.graph_for_group(provider, register, key)
     if graph is None:
         raise HTTPException(
             status_code=404,

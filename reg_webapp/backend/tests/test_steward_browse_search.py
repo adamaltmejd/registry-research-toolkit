@@ -166,6 +166,79 @@ def lonfink_jan_client(
 
 
 @pytest.fixture
+def lonfink_rep_both_client(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> Iterator[TestClient]:
+    """A steward holding BOTH the LonFinkJan and LonFinkFeb columns of
+    `scb/lisa/lonfink` — i.e. BOTH representation members of the `lonefink-rep`
+    concept group (#819). Backs the Fix-1 test: a label-matched variable search folds
+    into the HELD group, whose (fqid-less) group row must SURVIVE `_scope_to_fqids`
+    (not be dropped) and be counted in `total_count`, with both held members intact."""
+    stewards = tmp_path / "stewards"
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [
+                    {
+                        "variable": "scb/lisa/lonfink",
+                        "type": "numeric",
+                        "representation": "LonFinkJan",
+                    },
+                    {
+                        "variable": "scb/lisa/lonfink",
+                        "type": "numeric",
+                        "representation": "LonFinkFeb",
+                    },
+                ],
+            }
+        ],
+    ) as client:
+        assert client.app.state.catalog_index is not None
+        yield client
+
+
+@pytest.fixture
+def lonfink_rep_jan_client(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> Iterator[TestClient]:
+    """A steward holding ONLY the `LonFinkJan` column of `scb/lisa/lonfink` — one of
+    the TWO representation members (LonFinkJan / LonFinkFeb, same FQID) of the
+    `lonefink-rep` concept group (#819). Backs the Fix-2 test: reg_meta narrows group
+    members at FQID grain (so it keeps BOTH representations — the FQID is held), and
+    only the webapp's column-grain refinement drops the unheld LonFinkFeb."""
+    stewards = tmp_path / "stewards"
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [
+                    {
+                        "variable": "scb/lisa/lonfink",
+                        "type": "numeric",
+                        "representation": "LonFinkJan",
+                    }
+                ],
+            }
+        ],
+    ) as client:
+        assert client.app.state.catalog_index is not None
+        yield client
+
+
+@pytest.fixture
 def global_client(catalog_db: Path) -> Iterator[TestClient]:
     """The `global` deployment (no steward env → no index): the full universe, so
     the unheld-provider / unheld-register paths still serve 200. Asserts the Fix 1
@@ -310,6 +383,61 @@ def test_search_register_arm_scoped_to_held(steward_client):
     assert unheld_grp["total_count"] == 0  # exact, not the pre-filter universe count
 
 
+def test_search_held_concept_group_row_survives_scope(lonfink_rep_both_client):
+    # Fix 1: a variable search that FOLDS (by label match) into the held `lonefink-rep`
+    # group must return the GROUP row — not drop it. The group row has NO `fqid`, so the
+    # old golden-boost re-filter (`... and str(f) in fqids`) wrongly dropped it and
+    # shrank total_count. The fqid-less pass-through keeps it. The steward holds BOTH
+    # representation members (LonFinkJan + LonFinkFeb), so both survive.
+    body = lonfink_rep_both_client.get("/api/search?q=Lönefink&type=variable").json()
+    grp = {g["group"]: g for g in body["groups"]}["variables"]
+    group_rows = [r for r in grp["results"] if r["type"] == "group"]
+    rep = next(r for r in group_rows if r["group_key"] == "lonefink-rep")
+    # Both held representation columns survive the column-grain narrow.
+    assert {m["delivery_column"] for m in rep["members"]} == {
+        "LonFinkJan",
+        "LonFinkFeb",
+    }
+    # total_count counts the surviving group row (it is NOT dropped).
+    assert grp["total_count"] == len(grp["results"])
+    assert grp["total_count"] >= 1
+
+
+def test_search_group_members_narrowed_to_held_column(lonfink_rep_jan_client):
+    # Fix 2: the `lonefink-rep` group has two REPRESENTATION members sharing one FQID
+    # (scb/lisa/lonfink) but different delivery columns (LonFinkJan / LonFinkFeb). The
+    # steward holds ONLY LonFinkJan — reg_meta's FQID-grain narrow keeps BOTH (the FQID
+    # is held), so the webapp must refine at COLUMN grain and drop the unheld LonFinkFeb.
+    body = lonfink_rep_jan_client.get("/api/search?q=Lönefink&type=variable").json()
+    grp = {g["group"]: g for g in body["groups"]}["variables"]
+    rep = next(
+        r
+        for r in grp["results"]
+        if r["type"] == "group" and r["group_key"] == "lonefink-rep"
+    )
+    cols = {m["delivery_column"] for m in rep["members"]}
+    assert cols == {"LonFinkJan"}  # the unheld LonFinkFeb representation is excluded
+    assert rep["member_count"] == 1  # member_count reset to the narrowed length
+    # The group is KEPT (it has a surviving member), so total_count stays exact.
+    assert grp["total_count"] == len(grp["results"])
+
+
+def test_search_group_column_grain_passthrough_global(global_client):
+    # Fix 2 is index-gated: the global deployment (no index) shows BOTH representation
+    # members of the `lonefink-rep` group — the column-grain narrow must not fire.
+    body = global_client.get("/api/search?q=Lönefink&type=variable").json()
+    grp = {g["group"]: g for g in body["groups"]}["variables"]
+    rep = next(
+        r
+        for r in grp["results"]
+        if r["type"] == "group" and r["group_key"] == "lonefink-rep"
+    )
+    assert {m["delivery_column"] for m in rep["members"]} == {
+        "LonFinkJan",
+        "LonFinkFeb",
+    }
+
+
 # ── NEW-BEHAVIOR regressions (Fix 1 / Fix 2) ─────────────────────────────────
 
 
@@ -399,6 +527,76 @@ def test_all_unheld_concept_group_404s(steward_client):
     resp = steward_client.get("/api/catalog/group/scb/rams/ink")
     assert resp.status_code == 404
     assert "catalog" in resp.json()["detail"].lower()
+
+
+# ── Fix 3: held binding leaf narrows embedded edges ──────────────────────────
+
+
+def test_held_binding_leaf_narrows_embedded_edges(steward_client):
+    # Fix 3: the kon-only steward holds scb/lisa/kon; its embedded same_as / related_to
+    # / succession_chain / lineage all point at scb/rams/syss (UNHELD). The leaf must
+    # narrow them to held — consistent with the already-narrowed sub-endpoints — so it
+    # does NOT leak the unheld neighbor.
+    body = steward_client.get("/api/catalog/scb/lisa/kon").json()
+    assert body["kind"] == "binding"
+    # same_as / related_to / lineage point only at the unheld syss → empty.
+    assert body["same_as"] == []
+    assert body["related_to"] == []
+    assert body["lineage"] == []
+    # succession_chain keeps the held self-edition (kon), drops the unheld successor.
+    assert {e["fqid"] for e in body["succession_chain"]} == {"scb/lisa/kon"}
+
+
+def test_global_binding_leaf_shows_full_embedded_edges(global_client):
+    # Fix 3 is index-gated: the global deployment (no index) still embeds the full
+    # neighbor set on the kon leaf — the narrowing must not fire unconditionally.
+    body = global_client.get("/api/catalog/scb/lisa/kon").json()
+    assert {r["fqid"] for r in body["same_as"]} == {"scb/rams/syss"}
+    assert {r["fqid"] for r in body["related_to"]} == {"scb/rams/syss"}
+    assert {e["source_fqid"] for e in body["lineage"]} == {"scb/rams/syss"}
+    assert {e["fqid"] for e in body["succession_chain"]} == {
+        "scb/lisa/kon",
+        "scb/rams/syss",
+    }
+
+
+# ── Fix 4: concept-group graph route is gated ────────────────────────────────
+
+
+def test_unheld_concept_group_graph_404s(steward_client):
+    # Fix 4: the `ink` group lives on scb/rams (members inkjan/inkfeb), none held by
+    # the kon-only steward → the group's /graph route 404s (mirrors the subject route
+    # `get_concept_group`), not a leaked graph.
+    resp = steward_client.get("/api/catalog/group/scb/rams/ink/graph")
+    assert resp.status_code == 404
+    assert "catalog" in resp.json()["detail"].lower()
+
+
+def test_unheld_register_concept_group_graph_404s(steward_client):
+    # Fix 4: an unheld REGISTER's group graph 404s too (scb/rams is unheld).
+    resp = steward_client.get("/api/catalog/group/scb/rams/nonexistent/graph")
+    assert resp.status_code == 404
+
+
+def test_held_concept_group_graph_200s(lonfink_rep_both_client):
+    # Fix 4: a steward holding the `lonefink-rep` group's members reaches the group's
+    # /graph (200) — the gate only blocks UNHELD groups/registers, mirroring the
+    # subject route.
+    resp = lonfink_rep_both_client.get("/api/catalog/group/scb/lisa/lonefink-rep/graph")
+    assert resp.status_code == 200
+
+
+def test_global_concept_group_graph_200s(global_client):
+    # Fix 4 is index-gated: the global deployment serves the group graph unconditionally.
+    resp = global_client.get("/api/catalog/group/scb/rams/ink/graph")
+    assert resp.status_code == 200
+
+
+def test_classification_group_graph_passthrough(steward_client):
+    # Fix 4: classification group graphs are catalog-global (decision 2) — they pass
+    # through unchanged for a filtered steward (the `sun` umbrella graph still serves).
+    resp = steward_client.get("/api/catalog/group/class/sun/graph")
+    assert resp.status_code == 200
 
 
 # ── Unit: edge-ref narrowing ─────────────────────────────────────────────────

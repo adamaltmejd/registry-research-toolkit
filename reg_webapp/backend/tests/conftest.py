@@ -177,6 +177,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     _seed_same_as_alias_to_grouped(src)
     _seed_code_variable_map(src)
     _seed_merged_family(src, add_variable, add_state)
+    _seed_representation_group(src)
     _rebuild_fts(src)
     _stamp_manifest(src)
 
@@ -312,6 +313,48 @@ def _seed_merged_family(src: sqlite3.Connection, add_variable, add_state) -> Non
             "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
             "delivery_column_name, valid_from, valid_to) VALUES (?, 10, ?, ?, ?)",
             (vid, col, lo, hi),
+        )
+
+
+def _seed_representation_group(src: sqlite3.Connection) -> None:
+    """Seed a #819 REPRESENTATION-member concept group over the merged-family
+    `scb/lisa/lonfink` variable: ONE variable, TWO members distinguished by
+    `delivery_column_name` (LonFinkJan / LonFinkFeb) — i.e. two members sharing one
+    FQID. Backs the search column-grain narrowing test (Fix 2): a steward holding only
+    the LonFinkJan column still admits the `scb/lisa/lonfink` FQID, so the FQID-grain
+    narrow keeps BOTH representation members; only the webapp's column-grain refinement
+    drops the unheld LonFinkFeb representation.
+
+    The group carries a distinctive label (`Lönefink månadsfamilj`) so a search on the
+    LABEL folds it: two representation members share one variable, so they are NOT ≥2
+    DISTINCT member variables (the member-hit fold trigger) — the label match is the
+    reliable fold path for a single-variable representation family. Runs AFTER
+    `_seed_merged_family` (which mints `lonfink` + its Jan/Feb/Mars alias columns)."""
+    vid = src.execute(
+        "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'lonfink'"
+    ).fetchone()[0]
+    src.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (12, 'variable', 1, 'lonefink-rep', "
+        "'Lönefink månadsfamilj', 'curated')"
+    )
+    src.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (12, 'month', 0, 'månad')"
+    )
+    for col, value, label in (
+        ("LonFinkJan", "01", "januari"),
+        ("LonFinkFeb", "02", "februari"),
+    ):
+        cur = src.execute(
+            "INSERT INTO concept_group_variable "
+            "(group_id, variable_id, delivery_column_name) VALUES (12, ?, ?)",
+            (vid, col),
+        )
+        src.execute(
+            "INSERT INTO concept_group_variable_facet "
+            "(member_id, axis, value, label) VALUES (?, 'month', ?, ?)",
+            (cur.lastrowid, value, label),
         )
 
 
