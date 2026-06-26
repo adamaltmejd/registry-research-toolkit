@@ -1576,6 +1576,25 @@ class TestConceptGroupChecks:
                 "WHERE slug = 'vara'"
             )
 
+    def test_variable_mixed_grain_within_group_fails(self):
+        # `vara` is already a WHOLE-variable member of group 10 (NULL
+        # delivery_column). Add a SECOND, REPRESENTATION member for the same
+        # variable_id in the same group — the two grains for one variable trip the
+        # mixed-grain check. The edge group has zero axes and the new member carries
+        # zero facets, so the coverage check is trivially satisfied (0 == 0) and the
+        # mixed-grain failure is what bites, isolated.
+        conn = self._grouped_db()
+        conn.execute(
+            "INSERT INTO concept_group_variable (group_id, variable_id, "
+            "delivery_column_name) SELECT 10, variable_id, 'CDISP' FROM variable "
+            "WHERE slug = 'vara'"
+        )
+        result = self._run(conn)
+        assert any(
+            "mixing whole-variable and representation members" in f
+            for f in result.failures
+        ), result.failures
+
     @staticmethod
     def _add_classification_group(conn, *, source: str):
         """Seed a 2-member `kind='classification'` group with the given source.
@@ -1631,6 +1650,22 @@ class TestConceptGroupChecks:
         result = self._run_corpus(conn)
         assert any(
             "derived (token) classification concept group" in f for f in result.failures
+        ), result.failures
+
+    def test_classification_group_with_two_axes_fails(self):
+        # The #819 "classification umbrellas carry at most one axis" check: a
+        # classification group with two `concept_group_axis` rows would fan out its
+        # members on the LEFT-JOIN read path. Always-run (not corpus-gated).
+        conn = self._grouped_db()
+        self._add_classification_group(conn, source="curated")
+        conn.executemany(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (20, ?, ?, ?)",
+            [("vintage", 0, "Vintage"), ("region", 1, "Region")],
+        )
+        result = self._run(conn)
+        assert any(
+            "classification group(s) declare >1 axis" in f for f in result.failures
         ), result.failures
 
     @staticmethod

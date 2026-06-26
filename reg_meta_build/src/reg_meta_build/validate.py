@@ -1688,6 +1688,30 @@ def _check_concept_groups(
     else:
         result.ok("classification groups carry at most one axis")
 
+    # (5) no MIXED-GRAIN variable within a group (#819). A `(group_id,
+    # variable_id)` is EITHER a whole-variable member (delivery_column_name NULL)
+    # OR one-or-more representation members (non-NULL) — never both grains at once
+    # (a variable is grouped as a whole, or by its columns, not both). The COALESCE
+    # unique index + the loader's `multi_axis ⇒ delivery_column required` rule close
+    # the realistic path; a contrived single-axis group authored with one member in
+    # the legacy whole-variable shape and another in the representation shape for the
+    # same variable would otherwise slip through unnoticed.
+    mixed_grain = conn.execute(
+        "SELECT COUNT(*) FROM ("
+        "  SELECT group_id, variable_id FROM concept_group_variable "
+        "  GROUP BY group_id, variable_id HAVING "
+        "    SUM(CASE WHEN delivery_column_name IS NULL THEN 1 ELSE 0 END) > 0 "
+        "    AND SUM(CASE WHEN delivery_column_name IS NOT NULL THEN 1 ELSE 0 END) > 0)"
+    ).fetchone()[0]
+    if mixed_grain:
+        result.fail(
+            f"{mixed_grain} variable(s) mixing whole-variable and representation "
+            "members within one group — a variable is grouped as a whole or by its "
+            "columns, never both (#819)"
+        )
+    else:
+        result.ok("no variable mixes whole-variable and representation grain")
+
     if not corpus:
         return
     by_source = {
