@@ -1,6 +1,7 @@
 <script lang="ts">
 import { matchesFilter } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
+import { Tag } from "./ui";
 
 // The UNIFIED value-set / code viewer (#638 PR3). A variable's value set and a
 // classification's code list are the same thing — a code→label set (a value set
@@ -76,9 +77,15 @@ const shown = $derived(
             <code class="code-key">{code.code}</code>
             <span class="code-label">{code.label}</span>
             {#if code.is_valid === false}
-              <!-- Observed-only: seen in data but not in the canonical list. -->
-              <span class="muted tag" title="Observed in data, not in the canonical list">
-                observed
+              <!-- Observed-only: seen in data but not in the canonical list. An
+                   informational qualifier (cooler than the brand, glyphed per the
+                   accent-vs-status rule) — meaning carried by the "observed" label,
+                   not hue alone. -->
+              <span title="Observed in data, not in the canonical list">
+                <Tag tone="info">
+                  {#snippet glyph()}i{/snippet}
+                  observed
+                </Tag>
               </span>
             {/if}
           </li>
@@ -92,7 +99,7 @@ const shown = $derived(
 
 <style>
   .muted {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   /* Height-constrained so large lists (LISA value sets run to hundreds of codes)
      stay bounded — the variable table's former `.value-set-scroll` idiom, now the
@@ -118,7 +125,9 @@ const shown = $derived(
   .code-key {
     flex: 0 0 auto;
     min-width: 3.5rem;
-    color: var(--muted);
+    /* A value-set code — a machine identifier, so mono-faced (DESIGN.md). */
+    font-family: var(--font-mono);
+    color: var(--text-muted);
     font-size: 0.9em;
   }
   .code-label {
@@ -127,10 +136,6 @@ const shown = $derived(
   /* Observed-only codes are de-emphasised — the canonical list is the primary
      signal; observed codes are supplementary. */
   .code-row.observed .code-label {
-    color: var(--muted);
-  }
-  .tag {
-    font-size: 0.8em;
-    font-style: italic;
+    color: var(--text-muted);
   }
 </style>

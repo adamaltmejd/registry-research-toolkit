@@ -39,10 +39,12 @@ let {
 </script>
 
 <article>
-  <h2>{title}</h2>
-  {#if fqid && showFqid}
-    <p class="fqid"><code>{fqid}</code></p>
-  {/if}
+  <header class="subject-header">
+    <h2>{title}</h2>
+    {#if fqid && showFqid}
+      <p class="fqid"><code>{fqid}</code></p>
+    {/if}
+  </header>
   {@render description?.()}
   {@render picker?.()}
   {@render valueSet?.()}
@@ -51,8 +53,21 @@ let {
 </article>
 
 <style>
+  .subject-header {
+    margin-bottom: var(--space-4);
+  }
+  .subject-header h2 {
+    margin: 0;
+    font-size: var(--text-h1);
+    line-height: 1.2;
+  }
+  /* The fqid identifier line under the title — a mono machine identifier, muted. */
   .fqid {
-    margin-top: -0.25rem;
-    color: var(--muted);
+    margin: var(--space-1) 0 0;
+    color: var(--text-muted);
+  }
+  .fqid code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
   }
 </style>

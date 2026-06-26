@@ -16,6 +16,7 @@ import {
 import FilterInput from "./FilterInput.svelte";
 import { VALUE_SET_VERSION_NONE } from "./period";
 import TechnicalDetails from "./TechnicalDetails.svelte";
+import { Tag } from "./ui";
 
 // Presentational view of a variable's `variable_state` rows (from the full
 // node's embedded `states` OR a `?period`-narrowed StatesResponse). Pure
@@ -542,23 +543,33 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   .meta {
     display: grid;
     grid-template-columns: max-content 1fr;
-    gap: 0.3rem 1rem;
-    margin: 0.5rem 0 1rem;
+    gap: 0.3rem var(--space-4);
+    margin: var(--space-2) 0 var(--space-4);
   }
+  /* Tracked uppercase micro-label for the term — the design-system meta-label
+     convention (matches KeyValue / Panel headers). */
   .meta dt {
+    font-size: var(--micro-label-size);
+    letter-spacing: var(--micro-label-tracking);
+    text-transform: uppercase;
     font-weight: 600;
+    color: var(--text-muted);
   }
   .vs-heading {
-    margin: 0.5rem 0 0.4rem;
+    margin: var(--space-2) 0 0.4rem;
   }
   .picker {
     border: 1px solid var(--border);
-    border-radius: 6px;
-    margin: 0.5rem 0;
-    padding: 0.5rem 0.75rem 0.75rem;
+    border-radius: var(--radius-sm);
+    margin: var(--space-2) 0;
+    padding: var(--space-2) var(--space-3) var(--space-3);
   }
   .picker legend {
+    font-size: var(--micro-label-size);
+    letter-spacing: var(--micro-label-tracking);
+    text-transform: uppercase;
     font-weight: 600;
+    color: var(--text-muted);
     padding: 0 0.3rem;
   }
   .chips {
@@ -567,26 +578,27 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     gap: 0.4rem;
   }
   .chip {
-    padding: 0.25rem 0.7rem;
+    padding: var(--space-1) 0.7rem;
     border: 1px solid var(--accent);
     border-radius: 999px;
     background: var(--surface);
     color: var(--accent);
     font: inherit;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     cursor: pointer;
   }
   .chip.active {
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-fg);
   }
   .chip:hover {
     background: var(--accent-bg);
   }
-  /* Scope the hover ink to non-active chips: an active chip keeps its #fff on the
-     accent fill. Without :not(.active), this rule and .chip.active{color:#fff} are
-     equal specificity (0,2,0) and source order would let --accent-ink (dark rust)
-     clobber the white, giving dark-on-dark accent fill (~1.2:1, illegible). */
+  /* Scope the hover ink to non-active chips: an active chip keeps its accent-fg on
+     the accent fill. Without :not(.active), this rule and
+     .chip.active{color:var(--accent-fg)} are equal specificity (0,2,0) and source
+     order would let --accent-ink (dark rust) clobber the white, giving dark-on-dark
+     accent fill (~1.2:1, illegible). */
   .chip:not(.active):hover {
     color: var(--accent-ink);
   }
@@ -597,9 +609,9 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   /* #668: the "← All value sets" reset on the isolated detail — a one-click
      return to the union (replaces the old all-chips strip). */
   .vs-reset {
-    font-size: 0.75rem;
+    font-size: var(--text-micro);
     padding: 0.1rem 0.6rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-2);
   }
   .vs-list {
     list-style: none;
@@ -613,9 +625,9 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    padding: 0.4rem 0.5rem;
+    padding: 0.4rem var(--space-2);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .vs-list li.out-of-scope {
     opacity: 0.55;
@@ -624,7 +636,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
   .vs-label {
     font-weight: 600;
@@ -634,7 +646,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   }
   .vs-isolate {
     margin-left: auto;
-    font-size: 0.75rem;
+    font-size: var(--text-micro);
     padding: 0.1rem 0.6rem;
   }
   /* Per-variant usage lines — compact, monospace variant + muted spans. */
@@ -645,15 +657,17 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
   }
   .vs-usage li {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
+  /* The variant slug is a machine identifier → mono (DESIGN.md). */
   .vs-usage-variant {
+    font-family: var(--font-mono);
     font-size: 0.9em;
   }
   .vs-change-list {
@@ -661,7 +675,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .vs-change {
     font-size: 0.9em;
@@ -671,26 +685,31 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   }
   .vs-codes summary {
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     color: var(--accent);
   }
   .vs-detail {
-    margin-top: 0.25rem;
+    margin-top: var(--space-1);
   }
   .vs-classification {
-    margin: 0.25rem 0;
+    margin: var(--space-1) 0;
   }
+  /* Tracked uppercase micro-label eyebrow for the "Used by" sub-heading. */
   .vs-usage-heading {
-    margin: 0.75rem 0 0.3rem;
-    font-size: 0.85rem;
+    margin: var(--space-3) 0 0.3rem;
+    font-size: var(--micro-label-size);
+    letter-spacing: var(--micro-label-tracking);
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
   }
   .out-of-period {
-    margin-top: 0.5rem;
+    margin-top: var(--space-2);
   }
   .out-of-period summary {
     cursor: pointer;
     color: var(--accent);
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
   }
   .out-of-period-list {
     margin-top: 0.4rem;
