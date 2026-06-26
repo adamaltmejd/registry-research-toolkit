@@ -803,6 +803,37 @@ class TestReplacedByLoad:
             )
         assert exc.value.code == "relations_invalid"
 
+    def test_representation_cross_register_rejected(self, tmp_path: Path) -> None:
+        # A representation (column-rename) edge is INTRA-register; endpoints in
+        # different registers (same provider) are rejected. Cross-register
+        # succession uses the entity (variable) grain, not column fields.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/rams/x"\nfrom_column = "A"\nto_column = "B"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+
+    def test_representation_same_register_different_variable_allowed(
+        self, tmp_path: Path
+    ) -> None:
+        # Two sibling variables of ONE register, column moved across the variable
+        # boundary — LEGAL (intra-register). End-to-end coverage is in the
+        # cross-variable materialize test; this asserts the loader accepts it.
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/a"\n'
+            'to = "scb/lisa/b"\nfrom_column = "A"\nto_column = "B"\n',
+        )
+        assert len(rel.replaced_by) == 1
+        e = rel.replaced_by[0]
+        assert str(e.predecessor) == "scb/lisa/a"
+        assert str(e.successor) == "scb/lisa/b"
+        assert e.predecessor_column == "A"
+        assert e.successor_column == "B"
+
 
 # ---------------------------------------------------------------------------
 # replaced_by — classification-grain materialize (#579)

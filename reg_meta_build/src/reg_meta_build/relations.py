@@ -184,12 +184,14 @@ class CuratedReplacedBy:
     column-level era rename the variable grain can't express, both endpoints
     collapsing to one variable FQID). Both columns are set together or both None;
     a register/variable/classification edge leaves both None. When columns are
-    present BOTH endpoints are variable-grain (the loader enforces it), and — note
-    — the two endpoint FQIDs MAY be equal (same variable, two columns); only the
-    full `(fqid, column)` tuple must differ (no self-loop). Both endpoints'
-    `(variable, delivery_column)` must be live/observed downstream — stricter than
-    the register/variable dead-predecessor rule (a within-build column rename
-    observes both columns)."""
+    present BOTH endpoints are variable-grain AND share `(provider, register)` —
+    a representation rename is INTRA-register (the loader enforces both); the
+    variable slug MAY differ (two sibling variables of one register) and MAY be
+    equal (same variable, two columns); only the full `(fqid, column)` tuple must
+    differ (no self-loop). Both endpoints' `(variable, delivery_column)` must be
+    live/observed downstream — the successor-provider skip is total (both
+    endpoints share one provider, so no dead-predecessor case arises): a
+    within-build column rename observes both columns."""
 
     predecessor: Fqid
     successor: Fqid
@@ -427,6 +429,30 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "Representation succession is column-within-variable; column fields "
             "require both endpoints to be variable (provider/register/variable) "
             "FQIDs.",
+        )
+    # A representation succession is an INTRA-register column rename: the
+    # `column_merge` cases it expresses (#846/#196) are all keyed
+    # `(register_id, var_id)`, so both endpoints must share `provider` AND
+    # `register` (the variable slug MAY differ — two sibling variables of one
+    # register — and MAY be equal — same variable, two columns). A cross-register
+    # column rename is not a real concept; that's what the variable grain is for.
+    # This also makes the materializer's all-live rule safe in partial builds:
+    # both endpoints share one provider, so its `if succ.provider not in
+    # providers` skip covers the WHOLE edge (no predecessor-provider asymmetry).
+    if pred_column is not None and (predecessor.provider, predecessor.register) != (
+        successor.provider,
+        successor.register,
+    ):
+        raise curation_error(
+            "relations_invalid",
+            f"relations [[edge]] type='replaced_by' representation edge "
+            f"{str(predecessor)!r} -> {str(successor)!r} crosses registers "
+            f"({predecessor.provider}/{predecessor.register} -> "
+            f"{successor.provider}/{successor.register}).",
+            "A representation (column-rename) edge is intra-register: both "
+            "endpoints must share provider and register (the variable may "
+            "differ). For cross-register succession use the entity (variable) "
+            "grain — drop `from_column` / `to_column`.",
         )
     if (str(predecessor), pred_column) == (str(successor), succ_column):
         raise curation_error(
@@ -1030,24 +1056,6 @@ def _existing_classification_succession(
     }
 
 
-def _existing_representation_succession(
-    conn: sqlite3.Connection,
-) -> set[tuple[str, str, str, str, str, str, str, str]]:
-    """#843: the 8-segment endpoint PKs already in `representation_replaced_by`.
-    The grain is curated-only (no prior auto source), so this is empty in a normal
-    build; the read mirrors the classification-arm dedup pattern for safety /
-    consistency — a re-run or a defensive double-INSERT dedups against it."""
-    return {
-        (pp, pr, pv, pc, sp, sr, sv, sc)
-        for pp, pr, pv, pc, sp, sr, sv, sc in conn.execute(
-            "SELECT predecessor_provider, predecessor_register, "
-            "predecessor_variable, predecessor_column, "
-            "successor_provider, successor_register, successor_variable, "
-            "successor_column FROM representation_replaced_by"
-        )
-    }
-
-
 def _unresolved_curated_successor(successor: Fqid, grain_noun: str) -> Exception:
     return curation_error(
         "replaced_by_unresolved_successor",
@@ -1143,11 +1151,14 @@ def materialize_curated_replaced_by(
     express). Curated-only (no auto representation grain), so the cycle graph is
     built from the curated representation edges alone, keyed on the full
     `(provider, register, variable, column)` tuple, and dedup is against the
-    pending set + (defensively) the table. BOTH endpoints must resolve to a live
-    variable WITH the named observed delivery column — stricter than the
-    register/variable dead-predecessor rule, since a within-build column rename
-    observes both columns; an unresolved endpoint fails fast. The inactive-provider
-    skip still applies (successor provider not in this partial build). Edges land
+    pending set alone (no auto source pre-populates the table — `seen_representation`
+    starts empty). BOTH endpoints must resolve to a live variable WITH the named
+    observed delivery column; an unresolved endpoint fails fast. Because the loader
+    pins both endpoints to the SAME `(provider, register)`, the successor-provider
+    skip is total — it covers the whole edge, so no dead-predecessor case arises
+    (unlike the register/variable grain, where a cross-provider predecessor may be
+    dead). The inactive-provider skip still applies (successor provider not in this
+    partial build, which now also means the predecessor's). Edges land
     in `representation_replaced_by` with `note = 'curated:slug_toml'` and the row's
     own `note` in `beskrivning` (same convention as the register/variable arms).
 
@@ -1172,9 +1183,13 @@ def materialize_curated_replaced_by(
     live_classifications: set[str] | None = None
     classification_cycle_edges: list[tuple[str, str]] | None = None
     seen_classification: set[tuple[str, str]] | None = None
-    # #843 representation universe + curated-only cycle graph — built lazily (most
-    # builds carry no representation edge). Node key is the full
-    # `(provider, register, variable, column)` tuple.
+    # #843 representation universe — built lazily (most builds carry no
+    # representation edge). Node key is the full `(provider, register, variable,
+    # column)` tuple. UNLIKE the classification arm, there is NO table read to
+    # seed `seen_representation`: `representation_replaced_by` has no auto/event
+    # source — this pass is its sole writer, run once per build — so it is always
+    # empty at entry. The within-batch dedup below (add `rpk` to the pending set)
+    # is sufficient.
     live_representations: set[tuple[str, str, str, str]] | None = None
     representation_cycle_edges: list[
         tuple[tuple[str, str, str, str], tuple[str, str, str, str]]
@@ -1207,9 +1222,17 @@ def materialize_curated_replaced_by(
         # gate beyond the standard successor-provider check below — and ALL-LIVE
         # (both endpoints' observed delivery columns must exist). Handle it before
         # the entity arms (it's a variable-grain FQID, but the column fields make
-        # it a distinct grain).
-        if edge.predecessor_column is not None:
-            assert edge.successor_column is not None  # both-or-neither (loader)
+        # it a distinct grain). Enter on EITHER column set, not only the
+        # predecessor's: a malformed internal edge with one column would otherwise
+        # fall through to the variable arm and silently drop it; the both-set
+        # assertion below then fails LOUDLY on a one-sided edge instead of
+        # mis-routing (the loader's both-or-neither rule already bars this from
+        # TOML — this guards internally-constructed edges).
+        if edge.predecessor_column is not None or edge.successor_column is not None:
+            assert (
+                edge.predecessor_column is not None
+                and edge.successor_column is not None
+            )  # both-or-neither
             assert (
                 succ.provider is not None
                 and succ.register is not None
@@ -1223,7 +1246,6 @@ def materialize_curated_replaced_by(
                 continue
             if live_representations is None:
                 live_representations = _slugged_representation_keys(conn)
-                seen_representation = _existing_representation_succession(conn)
             pred_key = (
                 pred.provider,
                 pred.register,
