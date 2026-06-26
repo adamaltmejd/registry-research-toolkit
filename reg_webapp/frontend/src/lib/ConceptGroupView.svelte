@@ -2,12 +2,14 @@
 import { type ConceptGroupNodeMember, getConceptGroup } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
+  axisHueVar,
   axisValues,
   catalogHref,
   DATA_BROWSER_LABEL,
   formatWindow,
   memberAt,
   memberCoverageUnion,
+  memberKey,
   OPEN_ENDED_VALID_TO,
   YEARLESS_VALID_FROM,
 } from "./catalog";
@@ -110,6 +112,10 @@ function coverageText(member: ConceptGroupNodeMember): string {
 //     span the active window.
 
 const axes = $derived(node?.axes ?? []);
+// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
+// disposable-income family) renders through the facet navigator (below) instead,
+// so the matrix/chips/list path and its `ungridded` fallback are gated off this.
+const useNavigator = $derived(axes.length > 2);
 // Matrix orientation: first axis → rows, second axis → columns (mirrors
 // ConceptGroupRow). `node` is always present inside the success arm where the
 // snippet renders, but guard so the top-level deriveds stay total.
@@ -123,12 +129,110 @@ const matrixCols = $derived(
 // matches a matrix cell, so it would silently vanish from the grid — render those
 // below as a plain list (mirrors ConceptGroupRow's `ungridded`).
 const ungridded = $derived(
-  node && axes.length >= 2
+  node && axes.length >= 2 && !useNavigator
     ? node.members.filter(
         (m) => !axes.every((axis) => m.facets.some((f) => f.axis === axis)),
       )
     : [],
 );
+
+// ── The N-axis facet navigator (#819) ────────────────────────────────────────
+// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
+// disposable-income family: enhet × hushållsbegrepp × kapitalvinst) can't be a
+// grid without collapsing members that share the first two coords and DROPPING
+// the rest (they also escape `ungridded`, which only catches members MISSING an
+// axis — a 3-axis member covers all declared axes). So >2-axis groups render
+// through a facet navigator instead: every member is a row carrying one
+// hue-tinted facet pill per axis, and per-axis filter controls narrow the visible
+// set. The matrix path stays for ≤2 axes (no regression). The navigator is a
+// CLIENT-SIDE LENS — like the period slider, a filter only narrows what's shown;
+// it NEVER mutates the project/selection.
+
+// One filter group per axis: the distinct (value, label) pairs members carry on
+// it (value-sorted, via `axisValues`), each with the axis's display hue. The
+// navigator renders one filter block per entry.
+const axisFilters = $derived(
+  node && useNavigator
+    ? axes.map((axis, i) => ({
+        axis,
+        hue: axisHueVar(i),
+        values: axisValues(node, axis),
+      }))
+    : [],
+);
+
+// The active filter selection: axis → set of selected facet VALUES. An axis with
+// an empty/absent set imposes no constraint (shows all its values) — so the
+// initial all-empty state shows every member. Cleared whenever the loaded group's
+// member set changes (navigated to a different group) so filters don't carry
+// across groups.
+let selected = $state<Record<string, Set<string>>>({});
+const memberSig = $derived(
+  node ? node.members.map((m) => memberKey(m)).join("|") : "",
+);
+let lastSig = "";
+$effect(() => {
+  if (memberSig !== lastSig) {
+    lastSig = memberSig;
+    selected = {};
+  }
+});
+
+/** Toggle a facet value in an axis's filter set (multi-select within an axis). */
+function toggleFilter(axis: string, value: string): void {
+  const current = selected[axis] ?? new Set<string>();
+  const next = new Set(current);
+  if (next.has(value)) {
+    next.delete(value);
+  } else {
+    next.add(value);
+  }
+  // Reassign the whole record so the `$state` proxy tracks the change.
+  selected = { ...selected, [axis]: next };
+}
+
+/** Clear every axis filter (back to "show all members"). */
+function clearFilters(): void {
+  selected = {};
+}
+
+const anyFilterActive = $derived(
+  Object.values(selected).some((s) => s.size > 0),
+);
+
+// The visible member set under the active filters: a member passes when, for
+// EVERY axis with a non-empty selection, it carries a facet on that axis whose
+// value is selected (AND across axes, OR within an axis). An axis with no
+// selection imposes no constraint. Filter-only: this narrows the rendered list,
+// never the project.
+const visibleMembers = $derived(
+  node && useNavigator
+    ? node.members.filter((m) =>
+        axes.every((axis) => {
+          const sel = selected[axis];
+          if (!sel || sel.size === 0) {
+            return true;
+          }
+          return m.facets.some((f) => f.axis === axis && sel.has(f.value));
+        }),
+      )
+    : [],
+);
+
+/** Whether a facet value is currently selected in its axis's filter. */
+function isSelected(axis: string, value: string): boolean {
+  return selected[axis]?.has(value) ?? false;
+}
+
+/** A member's facet on `axis` — the (value, label) the navigator pill renders,
+ * or undefined when the member carries no facet there (a partial family member;
+ * the pill is then omitted for that axis). */
+function memberFacet(
+  member: ConceptGroupNodeMember,
+  axis: string,
+): { value: string; label: string } | undefined {
+  return member.facets.find((f) => f.axis === axis);
+}
 
 // ── The time axis: `?period` (client-side lens, no refetch) ──────────────────
 const period = $derived(router.getQueryParam("period"));
@@ -308,11 +412,73 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     </a>
   {/snippet}
 
+  <!-- A member's per-axis facet pills (#819 navigator): one hue-tinted pill per
+       axis carrying the member's value label, so a multi-axis member reads as
+       "one value per axis" at a glance. The hue is set per-axis off the
+       categorical palette (axisHueVar); the shared `.facet-pill` rule mixes its
+       tint/border/ink off `--axis-hue` (mirrors the Tag primitive). An axis the
+       member lacks a facet on is omitted (a partial family). -->
+  {#snippet memberPills(member: ConceptGroupNodeMember)}
+    <span class="facet-pills">
+      {#each axisFilters as { axis, hue } (axis)}
+        {@const facet = memberFacet(member, axis)}
+        {#if facet}
+          <span class="facet-pill" style="--axis-hue: {hue};" title={axis}>
+            {facet.label}
+          </span>
+        {/if}
+      {/each}
+    </span>
+  {/snippet}
+
   {#snippet picker()}
     <!-- The MEMBER SELECTOR (slice axis): the group's facet grid, expanded. -->
     <section class="member-selector" aria-labelledby="members-heading">
       <h3 id="members-heading">Members</h3>
-      {#if axes.length >= 2}
+      {#if useNavigator}
+        <!-- The N-axis facet navigator (#819): per-axis filter controls + a
+             filtered member list, each member carrying its per-axis hue pills.
+             Filter-only — narrows the list, never the project. -->
+        <div class="facet-filters" role="group" aria-label="Filter members by facet">
+          {#each axisFilters as { axis, hue, values } (axis)}
+            <fieldset class="axis-filter" style="--axis-hue: {hue};">
+              <legend>{axis}</legend>
+              <div class="filter-options">
+                {#each values as v (v.value)}
+                  <label class="filter-pill" class:on={isSelected(axis, v.value)}>
+                    <input
+                      type="checkbox"
+                      checked={isSelected(axis, v.value)}
+                      onchange={() => toggleFilter(axis, v.value)}
+                    />
+                    <span>{v.label}</span>
+                  </label>
+                {/each}
+              </div>
+            </fieldset>
+          {/each}
+          {#if anyFilterActive}
+            <button type="button" class="clear-filters" onclick={clearFilters}>
+              Clear filters
+            </button>
+          {/if}
+        </div>
+        <p class="member-count muted" aria-live="polite">
+          Showing {visibleMembers.length} of {node.members.length} members
+        </p>
+        {#if visibleMembers.length === 0}
+          <p class="muted no-members">No members match the active filters.</p>
+        {:else}
+          <ul class="members navigator">
+            {#each visibleMembers as member (memberKey(member))}
+              <li>
+                {@render memberPills(member)}
+                {@render memberLink(member, member.name ?? leafSlug(member.fqid))}
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      {:else if axes.length >= 2}
         <table class="facet-matrix">
           <thead>
             <tr>
@@ -346,7 +512,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         </table>
         {#if ungridded.length > 0}
           <ul class="members">
-            {#each ungridded as member (member.fqid)}
+            {#each ungridded as member (memberKey(member))}
               <li>
                 {@render memberLink(
                   member,
@@ -358,7 +524,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         {/if}
       {:else if axes.length === 1}
         <ul class="facet-chips">
-          {#each node.members as member (member.fqid)}
+          {#each node.members as member (memberKey(member))}
             {@const facet = member.facets.find((f) => f.axis === axes[0])}
             <li>
               {@render memberLink(
@@ -370,7 +536,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
         </ul>
       {:else}
         <ul class="members">
-          {#each node.members as member (member.fqid)}
+          {#each node.members as member (memberKey(member))}
             <li>
               {@render memberLink(member, member.name ?? leafSlug(member.fqid))}
             </li>
@@ -494,5 +660,122 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
      muted monospace code that tells same-named edge-group members apart. */
   .member-slug {
     font-size: 0.85em;
+  }
+
+  /* ── The N-axis facet navigator (#819) ──────────────────────────────────────
+     Per-axis filter blocks + a filtered member list. Each axis is tinted a
+     distinct categorical hue (set per-fieldset / per-pill as `--axis-hue` off the
+     `--cat-*` palette); the shared rules below mix that hue into the
+     border/fill/ink (mirrors the Tag primitive's `--tone-hue` mechanism), so no
+     new color tokens are introduced. */
+  .facet-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: flex-start;
+    margin: var(--space-2) 0;
+  }
+  .axis-filter {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-2) var(--space-3) var(--space-3);
+    margin: 0;
+    min-inline-size: 0;
+  }
+  .axis-filter legend {
+    color: color-mix(in srgb, var(--axis-hue) 85%, black);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    padding: 0 var(--space-1);
+    text-transform: capitalize;
+  }
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  /* A filter pill: a checkbox styled as a selectable hue chip. The native input
+     is visually hidden but kept in the DOM (a11y / keyboard / labelled), and the
+     `.on` class paints the selected state off `--axis-hue`. */
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0.1rem 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--axis-hue) 35%, transparent);
+    border-radius: 1rem;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+    color: var(--text);
+  }
+  .filter-pill input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .filter-pill.on {
+    background: color-mix(in srgb, var(--axis-hue) 18%, var(--surface));
+    border-color: color-mix(in srgb, var(--axis-hue) 55%, transparent);
+    color: color-mix(in srgb, var(--axis-hue) 85%, black);
+    font-weight: 600;
+  }
+  /* Keyboard focus ring on the (hidden) input projects onto its pill label. */
+  .filter-pill:focus-within {
+    box-shadow: var(--focus-ring);
+  }
+  .clear-filters {
+    align-self: center;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.2rem 0.6rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .clear-filters:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .member-count {
+    font-size: var(--text-sm);
+    margin: var(--space-2) 0 var(--space-1);
+  }
+  .no-members {
+    margin: var(--space-2) 0;
+  }
+  /* A navigator member row: its per-axis hue pills, then the member link. */
+  .members.navigator > li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.6rem;
+  }
+  .facet-pills {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  /* A read-only member facet pill (one per axis): the value label tinted by the
+     axis hue — same mix recipe as the Tag primitive's categorical tones. */
+  .facet-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.05rem 0.45rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: color-mix(in srgb, var(--axis-hue) 85%, black);
+    border: 1px solid color-mix(in srgb, var(--axis-hue) 35%, transparent);
+    background: color-mix(in srgb, var(--axis-hue) 10%, var(--surface));
+    white-space: nowrap;
   }
 </style>

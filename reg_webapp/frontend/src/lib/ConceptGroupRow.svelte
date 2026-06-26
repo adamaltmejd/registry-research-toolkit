@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { ConceptGroup } from "./api";
-import { axisValues, catalogHref, leafSlug, memberAt } from "./catalog";
+import {
+  axisValues,
+  catalogHref,
+  leafSlug,
+  memberAt,
+  memberKey,
+} from "./catalog";
 
 // One folded concept-group row (#303): a <details> that expands to the facet
 // picker — a value matrix for two axes (month × rank), chips for FACETED members
@@ -157,14 +163,14 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
     </table>
     {#if ungridded.length > 0}
       <ul class="members">
-        {#each ungridded as member (member.fqid)}
+        {#each ungridded as member (memberKey(member))}
           <li>{@render memberItem(member)}</li>
         {/each}
       </ul>
     {/if}
   {:else if faceted}
     <ul class="facet-chips">
-      {#each group.members as member (member.fqid)}
+      {#each group.members as member (memberKey(member))}
         {@const facet = member.facets[0]}
         <li>
           {#if onpick}
@@ -191,7 +197,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
     </ul>
   {:else}
     <ul class="members">
-      {#each group.members as member (member.fqid)}
+      {#each group.members as member (memberKey(member))}
         <li>{@render memberItem(member)}</li>
       {/each}
     </ul>

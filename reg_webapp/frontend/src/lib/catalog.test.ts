@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
 import {
+  axisHueVar,
   axisNoun,
   bindingChildren,
   breadcrumbs,
@@ -23,6 +24,7 @@ import {
   matchesFilter,
   memberCoverageUnion,
   memberGroupLink,
+  memberKey,
   memberQualifier,
   narrowCatalogNode,
   nodeLabel,
@@ -973,6 +975,80 @@ describe("memberQualifier (#670)", () => {
         "other",
       ),
     ).toEqual({ text: "5-digit", kind: "facets" });
+  });
+});
+
+describe("memberKey (#819 composite member key)", () => {
+  it("composes (fqid, delivery_column) so two reps of one variable differ", () => {
+    // Two members on one variable (two delivery columns) must yield DISTINCT keys
+    // — a fqid-only key would collide and Svelte would drop the second.
+    const a = { fqid: "scb/iot/dispink", delivery_column: "dispink_inkl" };
+    const b = { fqid: "scb/iot/dispink", delivery_column: "dispink_exkl" };
+    expect(memberKey(a)).not.toBe(memberKey(b));
+    expect(memberKey(a)).toBe("scb/iot/dispink::dispink_inkl");
+  });
+
+  it("treats a null/absent delivery_column as the empty discriminator", () => {
+    // A whole-variable member (delivery_column null) keys stably on its fqid;
+    // null and undefined map to the same empty discriminator.
+    expect(memberKey({ fqid: "scb/lisa/kon", delivery_column: null })).toBe(
+      "scb/lisa/kon::",
+    );
+    expect(memberKey({ fqid: "scb/lisa/kon" })).toBe("scb/lisa/kon::");
+  });
+});
+
+describe("axisHueVar (#819 per-axis hue)", () => {
+  it("selects a distinct categorical palette hue per axis ordinal", () => {
+    expect(axisHueVar(0)).toBe("var(--cat-reg)");
+    expect(axisHueVar(1)).toBe("var(--cat-var)");
+    expect(axisHueVar(2)).toBe("var(--cat-code)");
+  });
+
+  it("wraps past the five palette stops (modulo)", () => {
+    // 5 hues; a 6th axis wraps to the first — fine, since the value label also
+    // carries axis identity (hue is a secondary cue).
+    expect(axisHueVar(5)).toBe(axisHueVar(0));
+    expect(axisHueVar(6)).toBe(axisHueVar(1));
+  });
+});
+
+describe("memberQualifier delivery_column disambiguation (#819)", () => {
+  // One variable, two delivery columns (two representations) in one group — the
+  // qualifier must resolve to the column the caller names, and default to the
+  // FIRST representation when the caller knows no column (the binding-leaf case).
+  const twoReps = group({
+    key: "disponibel-inkomst",
+    axes: ["kapitalvinst"],
+    members: [
+      {
+        fqid: "scb/iot/dispink",
+        name: "Disponibel inkomst",
+        delivery_column: "dispink_inkl",
+        facets: [{ axis: "kapitalvinst", value: "inkl", label: "Inkl. kv" }],
+      },
+      {
+        fqid: "scb/iot/dispink",
+        name: "Disponibel inkomst",
+        delivery_column: "dispink_exkl",
+        facets: [{ axis: "kapitalvinst", value: "exkl", label: "Exkl. kv" }],
+      },
+    ],
+  } as unknown as Partial<ConceptGroup>);
+
+  it("resolves the named delivery_column's facets", () => {
+    expect(
+      memberQualifier([twoReps], "scb/iot/dispink", null, "dispink_exkl"),
+    ).toEqual({ text: "Exkl. kv", kind: "facets" });
+  });
+
+  it("defaults to the first representation when no delivery_column is given", () => {
+    // The documented default: a binding-leaf page addresses a whole variable, so
+    // it knows no column — the first member's facets are the representative.
+    expect(memberQualifier([twoReps], "scb/iot/dispink")).toEqual({
+      text: "Inkl. kv",
+      kind: "facets",
+    });
   });
 });
 

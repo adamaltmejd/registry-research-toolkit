@@ -326,6 +326,210 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
       .toHaveAttribute("href", "/catalog/scb/rams/inkfeb");
   });
 
+  // ── The N-axis facet navigator (#819) ──────────────────────────────────────
+  // A >2-axis group can't be a 2D matrix; the iot disposable-income family is
+  // enhet × hushållsbegrepp × kapitalvinst. The critical regression the matrix
+  // hits: two members on ONE variable (two delivery columns) that share the first
+  // two coords and differ only on the third — they collapse into a single 2D cell
+  // AND escape the `ungridded` fallback (they cover all declared axes), so the
+  // grid DROPS the second. The navigator must reach every member.
+  function threeAxisNode(): ConceptGroupNodeData {
+    return node({
+      key: "disponibel-inkomst",
+      label: "Disponibel inkomst",
+      source: "curated",
+      axes: ["enhet", "hushallsbegrepp", "kapitalvinst"],
+      members: [
+        // Two members on the SAME variable + same (enhet, hushållsbegrepp),
+        // differing ONLY on kapitalvinst (incl/excl) via distinct delivery
+        // columns — the matrix-collapse trap. Both must remain reachable.
+        {
+          fqid: "scb/iot/dispink",
+          name: "Disponibel inkomst",
+          delivery_column: "dispink_inkl",
+          facets: [
+            { axis: "enhet", value: "individ", label: "Individ" },
+            { axis: "hushallsbegrepp", value: "vx", label: "Vuxen" },
+            {
+              axis: "kapitalvinst",
+              value: "inkl",
+              label: "Inkl. kapitalvinst",
+            },
+          ],
+          coverage: null,
+        },
+        {
+          fqid: "scb/iot/dispink",
+          name: "Disponibel inkomst",
+          delivery_column: "dispink_exkl",
+          facets: [
+            { axis: "enhet", value: "individ", label: "Individ" },
+            { axis: "hushallsbegrepp", value: "vx", label: "Vuxen" },
+            {
+              axis: "kapitalvinst",
+              value: "exkl",
+              label: "Exkl. kapitalvinst",
+            },
+          ],
+          coverage: null,
+        },
+        // A third member on a different hushållsbegrepp (so a filter can narrow).
+        {
+          fqid: "scb/iot/dispinkhb",
+          name: "Disponibel inkomst hushåll",
+          delivery_column: "dispinkhb_inkl",
+          facets: [
+            { axis: "enhet", value: "hushall", label: "Hushåll" },
+            {
+              axis: "hushallsbegrepp",
+              value: "vxhb",
+              label: "Vuxna i hushåll",
+            },
+            {
+              axis: "kapitalvinst",
+              value: "inkl",
+              label: "Inkl. kapitalvinst",
+            },
+          ],
+          coverage: null,
+        },
+      ],
+    } as unknown as Partial<ConceptGroupNodeData>);
+  }
+
+  it("renders the facet navigator for a >2-axis group, reaching every member (no drop)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(threeAxisNode());
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // No 2D matrix for a >2-axis group — the navigator replaces it.
+    expect(document.querySelector("table.facet-matrix")).toBeNull();
+    // The count readout reflects the FULL member set (the matrix would have
+    // collapsed the two shared-fqid reps into one cell and dropped the second).
+    await expect
+      .element(page.getByText("Showing 3 of 3 members", { exact: true }))
+      .toBeVisible();
+    // Three member rows render in the navigator list — none dropped.
+    const rows = document.querySelectorAll("ul.members.navigator > li");
+    expect(rows).toHaveLength(3);
+    // BOTH representations of the shared-fqid variable are present, told apart by
+    // their distinct kapitalvinst pills (the matrix-collapse trap). The member
+    // pills carry the value labels (the filter fieldsets carry them too, so scope
+    // the assertion to the navigator list's pills).
+    const pillText = [
+      ...document.querySelectorAll("ul.members.navigator .facet-pill"),
+    ].map((p) => p.textContent?.trim());
+    expect(pillText).toContain("Inkl. kapitalvinst");
+    expect(pillText).toContain("Exkl. kapitalvinst");
+    expect(pillText).toContain("Vuxna i hushåll");
+  });
+
+  it("renders one filter fieldset per axis with a pill per value", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(threeAxisNode());
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // Wait for the navigator to render (the fetch resolves async).
+    await expect
+      .element(page.getByText("Showing 3 of 3 members", { exact: true }))
+      .toBeVisible();
+    // One filter <fieldset> per declared axis (3 axes → 3 fieldsets), each
+    // legended by its axis name.
+    const fieldsets = [...document.querySelectorAll("fieldset.axis-filter")];
+    expect(fieldsets).toHaveLength(3);
+    expect(
+      fieldsets.map((f) => f.querySelector("legend")?.textContent),
+    ).toEqual(["enhet", "hushallsbegrepp", "kapitalvinst"]);
+    // The kapitalvinst axis exposes a checkbox per distinct value (inkl / exkl).
+    const kvFieldset = fieldsets[2];
+    const boxes = kvFieldset.querySelectorAll('input[type="checkbox"]');
+    expect(boxes).toHaveLength(2);
+    const kvLabels = [...kvFieldset.querySelectorAll("label.filter-pill")].map(
+      (l) => l.textContent?.trim(),
+    );
+    // `axisValues` value-sorts (exkl < inkl), so the pills come exkl-first.
+    expect(kvLabels).toEqual(["Exkl. kapitalvinst", "Inkl. kapitalvinst"]);
+  });
+
+  it("a filter narrows the visible member set without mutating anything", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(threeAxisNode());
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // All 3 members visible initially.
+    await expect
+      .element(page.getByText("Showing 3 of 3 members", { exact: true }))
+      .toBeVisible();
+
+    // Filter to kapitalvinst = exkl: click that axis-filter's "Exkl." pill (the
+    // visible <label> wrapping the hidden checkbox). Scoped to the filter
+    // fieldsets so it doesn't collide with the member-row pills of the same text.
+    const exklLabel = [
+      ...document.querySelectorAll("fieldset.axis-filter label.filter-pill"),
+    ].find((l) => l.textContent?.trim() === "Exkl. kapitalvinst") as
+      | HTMLLabelElement
+      | undefined;
+    expect(exklLabel).not.toBeUndefined();
+    exklLabel?.click();
+
+    // Only the single exkl member survives (AND across axes; the two inkl members
+    // drop out) — the filter NARROWS, it never selects/mutates.
+    await expect
+      .element(page.getByText("Showing 1 of 3 members", { exact: true }))
+      .toBeVisible();
+    const survivors = [
+      ...document.querySelectorAll("ul.members.navigator .facet-pill"),
+    ].map((p) => p.textContent?.trim());
+    expect(survivors).toContain("Exkl. kapitalvinst");
+    expect(survivors).not.toContain("Inkl. kapitalvinst");
+
+    // Clearing the filter restores the full set (filter is a narrow-only lens).
+    await page.getByRole("button", { name: "Clear filters" }).click();
+    await expect
+      .element(page.getByText("Showing 3 of 3 members", { exact: true }))
+      .toBeVisible();
+  });
+
+  it("renders the >2-axis navigator without a duplicate-key error on shared fqids", async () => {
+    // The shared-fqid pair (scb/iot/dispink × 2 delivery columns) keyed on fqid
+    // alone would throw Svelte's duplicate-key error and drop a member. Keying on
+    // (fqid, delivery_column) renders both. A console error would fail-loud here.
+    const errors: unknown[] = [];
+    const spy = vi.spyOn(console, "error").mockImplementation((...args) => {
+      errors.push(args);
+    });
+    vi.mocked(getConceptGroup).mockResolvedValue(threeAxisNode());
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    await expect
+      .element(page.getByText("Showing 3 of 3 members", { exact: true }))
+      .toBeVisible();
+    // Both reps of the shared-fqid variable rendered → no member dropped.
+    const links = document.querySelectorAll(
+      'a[href="/catalog/scb/iot/dispink"]',
+    );
+    expect(links.length).toBe(2);
+    expect(errors).toEqual([]);
+    spy.mockRestore();
+  });
+
   it("a non-year `?period` suppresses greying even with a project window set", async () => {
     // An explicit non-year `?period` (e.g. `HT2020`) is authoritative: the
     // year-grain lens can't represent it, so it suppresses greying rather than

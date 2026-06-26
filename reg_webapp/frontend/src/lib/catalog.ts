@@ -153,6 +153,47 @@ export function groupFilterKeys(
 /** A group member as far as the facet-grid helpers care: just its facets. */
 type FacetedMember = { facets: GroupFacetModel[] };
 
+/** The stable `{#each}` key for a group member (#819). An FQID is NO LONGER
+ * unique within a group: a multi-axis family can carry two members on ONE
+ * variable (two delivery columns), so keying `{#each ... (m.fqid)}` would throw a
+ * duplicate-key error / drop the second representation. The composite
+ * `(fqid, delivery_column)` is unique — `delivery_column` is null for a
+ * whole-variable member and the SCB column for a representation member, so the
+ * pair distinguishes the two columns of one variable. The `::` separator can't
+ * collide: an FQID is slash-separated and a delivery column is a bare SQL
+ * identifier, neither contains `::`. */
+export function memberKey(m: {
+  fqid: string;
+  delivery_column?: string | null;
+}): string {
+  return `${m.fqid}::${m.delivery_column ?? ""}`;
+}
+
+// ── Per-axis hue (#819 N-axis navigator) ─────────────────────────────────────
+// The facet navigator tints each axis a distinct hue so a member's facet pills
+// read as "one value per axis" at a glance. Hues are SELECTED from the fixed
+// categorical palette (tokens.css `--cat-*`, #802) by the axis's position in the
+// group's `axes` order — no new color system, just a reuse of the existing 5-hue
+// ramp. The palette has 5 stops; an unlikely 6th+ axis wraps (modulo), which is
+// fine — axis identity is also carried by the pill's value label, hue is only a
+// secondary cue.
+
+/** The categorical-hue CSS variable for the axis at ordinal `i` in a group's
+ * `axes` order (#819) — one of the five `--cat-*` palette stops, wrapping past
+ * the fifth. Returned as a `var(--cat-…)` reference so the caller sets it as the
+ * pill's `--axis-hue` and the shared pill rule mixes its tint/border/ink off it
+ * (mirrors Tag's categorical `--tone-hue` mechanism). */
+export function axisHueVar(i: number): string {
+  const HUES = [
+    "--cat-reg",
+    "--cat-var",
+    "--cat-code",
+    "--cat-class",
+    "--cat-group",
+  ];
+  return `var(${HUES[((i % HUES.length) + HUES.length) % HUES.length]})`;
+}
+
 /** The distinct (value, label) pairs a group's members carry on `axis`,
  * value-sorted — the rows/columns of the facet picker. */
 export function axisValues(
@@ -219,6 +260,7 @@ export function memberQualifier(
   groups: readonly ConceptGroup[],
   fqid: string,
   canonicalKey?: string | null,
+  deliveryColumn?: string | null,
 ): MemberQualifier | null {
   // Canonical group first so its facets lead when the member is in several
   // groups; the rest follow in their incoming order. /dimensions can return
@@ -234,7 +276,18 @@ export function memberQualifier(
         });
   let grouped = canonicalKey != null;
   for (const group of ordered) {
-    const member = group.members.find((m) => m.fqid === fqid);
+    // #819: an `fqid` can name TWO members of one group (two delivery columns of
+    // one variable). When the caller knows the member's `deliveryColumn`, match
+    // BOTH so the right representation's facets win; otherwise match by fqid
+    // alone and take the FIRST representation — the documented default (a binding
+    // leaf page addresses a whole variable, not a single delivery column, so it
+    // has no column to disambiguate by and the first member's facets are the
+    // representative qualifier).
+    const member = group.members.find(
+      (m) =>
+        m.fqid === fqid &&
+        (deliveryColumn == null || m.delivery_column === deliveryColumn),
+    );
     if (member) {
       grouped = true;
     }
@@ -254,7 +307,12 @@ export function memberQualifier(
  * dimension group containing the member — its `{ label, href }` for the
  * "member of ⟨label⟩" context link. `null` when ungrouped, or when no fetched
  * group matches (loading / error / a stale skew between `node.group` and
- * /dimensions). The href targets the group SUBJECT route via `groupHref`. */
+ * /dimensions). The href targets the group SUBJECT route via `groupHref`.
+ *
+ * #819: an `fqid` can name two members (two delivery columns) of one variable,
+ * but they always live in the SAME group (a representation split is intra-group),
+ * so the containing-group lookup is column-agnostic — it matches by `fqid` alone
+ * (any representation of the variable yields the same group link). */
 export function memberGroupLink(
   groups: readonly ConceptGroup[],
   ref: BindingGroupRef | null | undefined,
