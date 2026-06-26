@@ -1356,6 +1356,35 @@ class TestRepresentationReplacedByMaterialize:
         assert pred_col == "dispink04"  # verbatim TOML value, not the header case
         assert succ_col == "dispink10"
 
+    def test_representation_non_ascii_column_resolves(self) -> None:
+        # #843 regression: a Swedish-header column with an uppercase åäö (e.g.
+        # `Ägare`, common in SCB headers). The live set must fold the observed
+        # column the SAME way as the materializer's edge keys — Python `str.lower`
+        # (Unicode-aware), NOT SQLite `LOWER()` (ASCII-only, leaves `Ä` unchanged).
+        # With the ASCII fold the edge column `ägare` would never match the observed
+        # `Ägare` and the edge would falsely raise unresolved_representation.
+        conn = _representation_db()
+        _add_alias(conn, "dispink", "Ägare")
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "ägare",  # Unicode-lowercased; observed header is `Ägare`
+                    "DispInk10",
+                )
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 1
+        rows = _representation_rows(conn)
+        assert len(rows) == 1
+        assert rows[0][1] == "ägare"  # verbatim TOML value
+
 
 # ---------------------------------------------------------------------------
 # The three real edges moved into the repo file

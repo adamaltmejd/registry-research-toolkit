@@ -1023,15 +1023,17 @@ def _slugged_representation_keys(
     columns).
 
     The column is LOWERCASED in the returned set so the membership check is
-    case-INSENSITIVE — SCB delivery headers drift in case across deliveries, so the
-    build matches `delivery_column_name` with `LOWER()` throughout (see e.g.
-    `validate.py:628`), and the predecessor `column_merge` surface this replaces
-    case-folds its TOML columns at load. The caller lowercases the curator's column
-    before the membership check while STORING the verbatim TOML value."""
+    case-INSENSITIVE — SCB delivery headers drift in case across deliveries. The
+    fold is done in PYTHON (`str.lower`, Unicode-aware) so it agrees with the
+    materializer's `edge.*_column.lower()` lookup keys: SQLite `LOWER()` is
+    ASCII-only (`LOWER('Ägare')` == `'Ägare'`), so folding the column SQL-side here
+    would mismatch the materializer on Swedish åäö headers and falsely flag the
+    edge. The caller lowercases the curator's column before the membership check
+    while STORING the verbatim TOML value."""
     return {
-        (p_slug, r_slug, v_slug, col)
+        (p_slug, r_slug, v_slug, col.lower())
         for v_slug, r_slug, p_slug, col in conn.execute(
-            "SELECT v.slug, r.slug, p.slug, LOWER(a.delivery_column_name) "
+            "SELECT v.slug, r.slug, p.slug, a.delivery_column_name "
             "FROM variable_alias a "
             "JOIN variable v ON a.variable_id = v.variable_id "
             "JOIN register r ON v.register_id = r.register_id "
@@ -1260,12 +1262,14 @@ def materialize_curated_replaced_by(
                 live_representations = _slugged_representation_keys(conn)
             # Match the column case-INSENSITIVELY (SCB headers drift in case; the
             # `column_merge` surface this replaces case-folds its TOML columns), but
-            # STORE the curator's VERBATIM column value (the build matches with
-            # LOWER() downstream — see validate.py — so storing verbatim is safe and
-            # mirrors how the rest of the build stores raw + LOWER-compares). The
-            # lowercased keys drive membership, dedup (`rpk`), and the cycle-graph
-            # nodes, so case-variant duplicates collapse and case-only cycles are
-            # caught; the pending row keeps the verbatim columns.
+            # STORE the curator's VERBATIM column value (the build folds with Python
+            # `str.lower` downstream — the live set above and validate.py's
+            # `py_lower` UDF — so storing verbatim is safe). Folding is Python-side,
+            # Unicode-aware, so Swedish åäö headers match (SQLite `LOWER()` is
+            # ASCII-only). The lowercased keys drive membership, dedup (`rpk`), and
+            # the cycle-graph nodes, so case-variant duplicates collapse and
+            # case-only cycles are caught; the pending row keeps the verbatim
+            # columns.
             pred_key = (
                 pred.provider,
                 pred.register,

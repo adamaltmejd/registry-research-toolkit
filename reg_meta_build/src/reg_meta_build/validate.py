@@ -2009,15 +2009,27 @@ def _check_representation_replaced_by(
         result.fail("representation_replaced_by missing (schema 5.9.0 #843 table)")
         return
 
-    # Columns compare case-INSENSITIVELY (SCB delivery headers drift in case; the
-    # build matches `delivery_column_name` with LOWER() throughout — see line 628),
-    # so a case-only same-column pair on one variable is still a self-loop.
+    # Columns compare case-INSENSITIVELY (SCB delivery headers drift in case). Fold
+    # column comparisons Python-side via a UDF to MATCH the materializer's
+    # `str.lower` keys (relations.py): SQLite `LOWER()` is ASCII-only, so a Swedish
+    # åäö header (e.g. `Ägare`) would compare unequal here yet resolve in the
+    # materializer, falsely flagging the edge. The UDF is scoped to the column
+    # comparisons in this function only; other validators keep the ASCII LOWER()
+    # convention.
+    conn.create_function(
+        "py_lower",
+        1,
+        lambda s: s.lower() if s is not None else None,
+        deterministic=True,
+    )
+
+    # A case-only same-column pair on one variable is still a self-loop.
     self_loops = conn.execute(
         "SELECT COUNT(*) FROM representation_replaced_by "
         "WHERE predecessor_provider = successor_provider "
         "  AND predecessor_register = successor_register "
         "  AND predecessor_variable = successor_variable "
-        "  AND LOWER(predecessor_column) = LOWER(successor_column)"
+        "  AND py_lower(predecessor_column) = py_lower(successor_column)"
     ).fetchone()[0]
     if self_loops:
         result.fail(f"{self_loops} self-loop representation succession edge(s)")
@@ -2036,7 +2048,7 @@ def _check_representation_replaced_by(
         "    WHERE p.slug = e.predecessor_provider "
         "      AND r.slug = e.predecessor_register "
         "      AND v.slug = e.predecessor_variable "
-        "      AND LOWER(a.delivery_column_name) = LOWER(e.predecessor_column)"
+        "      AND py_lower(a.delivery_column_name) = py_lower(e.predecessor_column)"
         "  ) OR NOT EXISTS ("
         "    SELECT 1 FROM variable_alias a "
         "    JOIN variable v ON a.variable_id = v.variable_id "
@@ -2045,7 +2057,7 @@ def _check_representation_replaced_by(
         "    WHERE p.slug = e.successor_provider "
         "      AND r.slug = e.successor_register "
         "      AND v.slug = e.successor_variable "
-        "      AND LOWER(a.delivery_column_name) = LOWER(e.successor_column)"
+        "      AND py_lower(a.delivery_column_name) = py_lower(e.successor_column)"
         "  )"
     ).fetchone()[0]
     if dangling:
