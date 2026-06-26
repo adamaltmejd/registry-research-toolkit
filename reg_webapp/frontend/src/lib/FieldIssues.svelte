@@ -13,7 +13,7 @@ import { codeLabel, type ValidationIssue } from "./validation";
 // (forward-compat) — never the brand accent (DESIGN.md accent-vs-status).
 //
 // Each issue ALSO leads with a redundant, non-color severity cue — an
-// `aria-hidden` glyph (✕ ▲ ⓘ — the canonical status glyphs, DESIGN.md
+// `aria-hidden` glyph (✕ ▲ i — the canonical status glyphs, DESIGN.md
 // accent-vs-status) PLUS a visible level word ("Error" / "Warning" / "Info").
 // Color alone would trip WCAG 1.4.1 (Use of Color); the glyph is decorative so the
 // VISIBLE WORD is what carries the severity to assistive tech. The word mirrors
@@ -24,7 +24,7 @@ type Level = (typeof LEVELS)[number];
 const LEVEL_CUE: Record<Level, { glyph: string; word: string }> = {
   error: { glyph: "✕", word: "Error" },
   warning: { glyph: "▲", word: "Warning" },
-  info: { glyph: "ⓘ", word: "Info" },
+  info: { glyph: "i", word: "Info" },
 };
 
 // An unknown/unset level degrades to the `info` cue (forward-compat), matching the
@@ -105,10 +105,6 @@ const { issues } = $props<{ issues: ValidationIssue[] }>();
   .issue.warning .level-cue,
   .issue.warning .label {
     color: var(--warn);
-  }
-  .issue.info .level-cue,
-  .issue.info .label {
-    color: var(--info);
   }
   .message {
     color: var(--text-muted);
