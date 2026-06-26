@@ -25,7 +25,10 @@ let { rows = [], children }: Props = $props();
   {#if children}
     {@render children()}
   {:else}
-    {#each rows as row (row.label)}
+    <!-- Keyed by index, not label: labels can repeat (e.g. two "Type" rows) and a
+         duplicate keyed-each key throws. A static metadata list replaced wholesale
+         makes index keys correct here (matches Breadcrumbs.svelte). -->
+    {#each rows as row, i (i)}
       <div class="kv-row">
         <dt>{row.label}</dt>
         <dd class:mono={row.mono}>{row.value}</dd>

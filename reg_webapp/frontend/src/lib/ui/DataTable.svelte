@@ -11,12 +11,12 @@ import type { Column } from "./types";
 // `cell` snippet is the escape hatch for custom cell content — default renders
 // `row[column.key]`.
 //
-// OPTIONAL selection: pass `getRowId` + `selectedId` (+ `onselect`) and rows
-// become keyboard-focusable button-rows (tabindex, Enter/Space activate),
-// carrying `aria-selected` + the selected style + the focus ring. Omit them and
-// it's a plain static table (no row tabindex, no button semantics). List
-// keyboard NAV is owned by Bits UI `Command` elsewhere — this is selectable
-// rows + visual states only, NOT a roving-tabindex grid.
+// OPTIONAL selection: pass `getRowId` + `selectedId` (+ `onselect`) and the
+// table adopts ARIA grid semantics (role=grid) with keyboard-focusable selectable
+// rows (tabindex, Enter/Space activate), carrying `aria-selected` + the selected
+// style + the focus ring. Omit them and it's a plain static table (no grid role,
+// no row tabindex). List keyboard NAV is owned by Bits UI `Command` elsewhere —
+// this is selectable rows + visual states only, NOT a roving-tabindex grid.
 
 interface Props {
   columns: Column<Row>[];
@@ -38,8 +38,8 @@ function alignOf(col: Column<Row>): "start" | "end" {
 }
 
 function onkeydown(event: KeyboardEvent, row: Row): void {
-  // Enter / Space activate the row (the row is a button via role=button); other
-  // keys fall through (no roving tabindex — see the component note).
+  // Enter / Space activate the selected-row; other keys fall through (no roving
+  // tabindex — see the component note).
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
     onselect?.(row);
@@ -47,7 +47,13 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
 }
 </script>
 
-<table class="data-table">
+<!-- simplify: selection uses ARIA grid semantics (role=grid on the table; native
+     <th>/<td> remap to columnheader/gridcell via HTML-AAM) so each row is a valid
+     selectable `aria-selected` row. Every selectable row is its OWN tab stop
+     (tabindex=0), NOT a single-tab-stop roving-tabindex grid: list keyboard NAV is
+     owned by Bits UI `Command` elsewhere — this primitive provides selectable rows
+     + visual states only. -->
+<table class="data-table" role={selectable ? "grid" : undefined}>
   <thead>
     <tr>
       {#each columns as col (col.key)}
@@ -68,7 +74,6 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
       <tr
         class:selectable
         class:selected={isSelected}
-        role={selectable ? "button" : undefined}
         tabindex={selectable ? 0 : undefined}
         aria-selected={selectable ? isSelected : undefined}
         onclick={selectable ? () => onselect?.(row) : undefined}

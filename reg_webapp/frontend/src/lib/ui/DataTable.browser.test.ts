@@ -7,8 +7,9 @@ import type { Column } from "./types";
 
 // DataTable: the load-bearing hooks are (1) micro-label scope="col" headers,
 // (2) right-aligned + mono numeric/mono cells, (3) the custom-cell escape hatch,
-// (4) OPTIONAL selection — keyboard-focusable button-rows with aria-selected +
-// the selected style — vs a plain static table when selection props are absent.
+// (4) OPTIONAL selection — ARIA grid semantics (role=grid) + keyboard-focusable
+// selectable rows with aria-selected + the selected style — vs a plain static
+// table (no grid role, no row tabindex) when selection props are absent.
 
 // Fixtures are typed against the component's DEFAULT generic instantiation
 // (`Record<string, unknown>`): vitest-browser-svelte's `render(Component, props)`
@@ -70,12 +71,15 @@ describe("DataTable", () => {
 
   it("renders a plain static table without selection props", async () => {
     const { container } = render(DataTable, { columns, rows });
+    const table = container.querySelector("table");
+    expect(table).not.toHaveAttribute("role");
     const tr = container.querySelector("tbody tr");
     expect(tr).not.toHaveAttribute("tabindex");
-    expect(tr).not.toHaveAttribute("role", "button");
+    expect(tr).not.toHaveAttribute("role");
+    expect(tr).not.toHaveAttribute("aria-selected");
   });
 
-  it("makes rows selectable button-rows when selection props are passed", async () => {
+  it("makes rows selectable grid-rows when selection props are passed", async () => {
     let selected = "";
     const { container } = render(DataTable, {
       columns,
@@ -86,11 +90,14 @@ describe("DataTable", () => {
         selected = String(r.code);
       },
     });
+    // The table adopts ARIA grid semantics so the rows can carry aria-selected.
+    expect(container.querySelector("table")).toHaveAttribute("role", "grid");
     const trs = container.querySelectorAll("tbody tr");
-    // Selected row carries the class + aria-selected; rows are button + tabbable.
+    // Selected row carries the class + aria-selected; rows are tabbable (each its
+    // own tab stop) with NO button role overriding the implicit grid row role.
     expect(trs[0]).toHaveClass("selected");
     expect(trs[0]).toHaveAttribute("aria-selected", "true");
-    expect(trs[0]).toHaveAttribute("role", "button");
+    expect(trs[0]).not.toHaveAttribute("role", "button");
     expect(trs[0]).toHaveAttribute("tabindex", "0");
     expect(trs[1]).toHaveAttribute("aria-selected", "false");
 

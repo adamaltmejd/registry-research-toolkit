@@ -12,6 +12,10 @@ import type { TagTone } from "./types";
 // The component can't synthesize one (the glyph is caller-domain), so it just
 // renders the slot ahead of the label; categorical/chrome tones omit it.
 //
+// a11y: status meaning must ALSO be carried by the label text or surrounding
+// context — the tone (color) and the glyph (`aria-hidden`) are visual-only, so an
+// assistive-tech user gets only the label.
+//
 // `mono` faces code-like tags (a value-set code shown as a tag) in --font-mono.
 // A single component (not a separate Badge): a count/status pill and a type tag
 // differ only by tone + glyph, so a `tone` prop spans both with no semantic split.
@@ -65,31 +69,31 @@ let { tone = "neutral", mono = false, glyph, children }: Props = $props();
   }
 
   /* Categorical TYPE tones — soft tint of the cat hue (color-mix keeps one ramp
-     stop as both border ink and fill, so no second token per hue). */
+     stop as both border ink and fill, so no second token per hue). Each tone only
+     selects its hue into `--tone-hue`; one shared rule paints all five. */
   .tone-reg {
-    color: var(--cat-reg);
-    border-color: color-mix(in srgb, var(--cat-reg) 35%, transparent);
-    background: color-mix(in srgb, var(--cat-reg) 10%, var(--surface));
+    --tone-hue: var(--cat-reg);
   }
   .tone-var {
-    color: var(--cat-var);
-    border-color: color-mix(in srgb, var(--cat-var) 35%, transparent);
-    background: color-mix(in srgb, var(--cat-var) 10%, var(--surface));
+    --tone-hue: var(--cat-var);
   }
   .tone-code {
-    color: var(--cat-code);
-    border-color: color-mix(in srgb, var(--cat-code) 35%, transparent);
-    background: color-mix(in srgb, var(--cat-code) 10%, var(--surface));
+    --tone-hue: var(--cat-code);
   }
   .tone-class {
-    color: var(--cat-class);
-    border-color: color-mix(in srgb, var(--cat-class) 35%, transparent);
-    background: color-mix(in srgb, var(--cat-class) 10%, var(--surface));
+    --tone-hue: var(--cat-class);
   }
   .tone-group {
-    color: var(--cat-group);
-    border-color: color-mix(in srgb, var(--cat-group) 35%, transparent);
-    background: color-mix(in srgb, var(--cat-group) 10%, var(--surface));
+    --tone-hue: var(--cat-group);
+  }
+  .tone-reg,
+  .tone-var,
+  .tone-code,
+  .tone-class,
+  .tone-group {
+    color: var(--tone-hue);
+    border-color: color-mix(in srgb, var(--tone-hue) 35%, transparent);
+    background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
   }
 
   /* Status tones — status fg over its fill tint (the *-bg roles). */

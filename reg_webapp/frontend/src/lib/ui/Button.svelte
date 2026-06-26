@@ -33,29 +33,29 @@ let {
   onclick,
   children,
 }: Props = $props();
+
+// The variant/size formula in one place — shared by both the anchor and button
+// branches. `ui-btn` (not a generic `.btn`) namespaces the global style hook so a
+// stray `class="btn"` elsewhere can't inherit this foundational primitive's CSS.
+const className = $derived(`ui-btn variant-${variant} size-${size}`);
 </script>
 
 <!-- Bits UI narrows on the presence of `href` (anchor) vs `type` (button); pass
      only the one that applies so its union type resolves. -->
 {#if href}
-  <Button.Root {href} {disabled} class="btn variant-{variant} size-{size}">
+  <Button.Root {href} {disabled} class={className}>
     {@render children()}
   </Button.Root>
 {:else}
-  <Button.Root
-    type={type ?? "button"}
-    {disabled}
-    {onclick}
-    class="btn variant-{variant} size-{size}"
-  >
+  <Button.Root type={type ?? "button"} {disabled} {onclick} class={className}>
     {@render children()}
   </Button.Root>
 {/if}
 
 <style>
   /* Bits UI renders the element; `class` lands on it, so target globally but
-     scope through the `.btn` hook this component owns. */
-  :global(.btn) {
+     scope through the `.ui-btn` hook this component owns. */
+  :global(.ui-btn) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -68,56 +68,56 @@ let {
     text-decoration: none;
     transition: background var(--motion-fast), border-color var(--motion-fast);
   }
-  :global(.btn:focus-visible) {
+  :global(.ui-btn:focus-visible) {
     outline: none;
     box-shadow: var(--focus-ring);
   }
-  :global(.btn:disabled),
-  :global(.btn[aria-disabled="true"]) {
+  :global(.ui-btn:disabled),
+  :global(.ui-btn[aria-disabled="true"]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  :global(.btn.size-md) {
+  :global(.ui-btn.size-md) {
     padding: var(--space-2) var(--space-3);
     font-size: var(--text-sm);
   }
-  :global(.btn.size-sm) {
+  :global(.ui-btn.size-sm) {
     padding: var(--space-1) var(--space-2);
     font-size: var(--text-micro);
   }
 
-  :global(.btn.variant-primary) {
+  :global(.ui-btn.variant-primary) {
     background: var(--accent);
     color: var(--accent-fg);
   }
-  :global(.btn.variant-primary:hover:not(:disabled)) {
+  :global(.ui-btn.variant-primary:hover:not(:disabled)) {
     background: var(--accent-ink);
   }
 
-  :global(.btn.variant-default) {
+  :global(.ui-btn.variant-default) {
     background: var(--surface);
     color: var(--text);
     border-color: var(--border);
   }
-  :global(.btn.variant-default:hover:not(:disabled)) {
+  :global(.ui-btn.variant-default:hover:not(:disabled)) {
     background: var(--surface-hover);
     border-color: var(--border-strong);
   }
 
-  :global(.btn.variant-ghost) {
+  :global(.ui-btn.variant-ghost) {
     background: transparent;
     color: var(--text);
   }
-  :global(.btn.variant-ghost:hover:not(:disabled)) {
+  :global(.ui-btn.variant-ghost:hover:not(:disabled)) {
     background: var(--surface-hover);
   }
 
-  :global(.btn.variant-danger) {
+  :global(.ui-btn.variant-danger) {
     background: var(--err);
     color: #ffffff;
   }
-  :global(.btn.variant-danger:hover:not(:disabled)) {
+  :global(.ui-btn.variant-danger:hover:not(:disabled)) {
     background: color-mix(in srgb, var(--err) 85%, black);
   }
 </style>

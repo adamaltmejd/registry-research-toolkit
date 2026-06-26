@@ -30,6 +30,20 @@ describe("KeyValue", () => {
     expect(monoDd?.textContent).toBe("kon");
   });
 
+  it("renders duplicate-label rows without crashing", async () => {
+    // Keyed-each by index (not label) — two rows sharing a label must both render
+    // rather than throw "Cannot have duplicate keys".
+    const { container } = render(KeyValue, {
+      rows: [
+        { label: "Type", value: "integer" },
+        { label: "Type", value: "string" },
+      ],
+    });
+    expect(container.querySelectorAll(".kv-row")).toHaveLength(2);
+    await expect.element(page.getByText("integer")).toBeVisible();
+    await expect.element(page.getByText("string")).toBeVisible();
+  });
+
   it("renders a children snippet instead of rows when provided", async () => {
     const children = createRawSnippet(() => ({
       render: () => '<div class="kv-row">custom</div>',
