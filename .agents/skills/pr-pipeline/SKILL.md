@@ -190,9 +190,9 @@ For merge, satisfy the repo gate:
 Run the real `build-db` last and once for build-affecting work, using the main
 checkout's untracked seed if working from a worktree. Narrowing with `--providers` is
 fine for a scoped dbdiff (e.g. `--providers scb,sos` for an SCB/SOS-only change is
-faster than the full global build) — #563 gates the curated-override staleness check to
-the built providers, so a thin provider's entity-key pins (#554) no longer crash a
-restricted build. Pick the providers your PR affects, or omit `--providers` for the full
+faster than the full global build); a thin / non-SCB subset builds and validates green
+end-to-end (the staleness, corpus-volume, and seed-drift gates are scoped to the built
+providers). Pick the providers your PR affects, or omit `--providers` for the full
 global set (release asset / cross-provider PRs). If the PR changes any tracked
 `reg_meta_build/input_data/**` file (provider `*.toml`,
 `classifications/`/`scb_canonical/` CSV, or an add/delete/rename), do not point
