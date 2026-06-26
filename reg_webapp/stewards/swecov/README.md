@@ -1,0 +1,61 @@
+# SWECOV steward catalog
+
+`steward.toml` + `steward.project_data.json` scope a SWECOV deployment to the columns
+SWECOV physically holds. Both files are **generated** — do not hand-edit. See
+`reg_webapp/DESIGN.md` → *Steward layering* for how the webapp consumes them and
+`reg_meta_build/DESIGN.md` → *Steward-flavored DB — extend-db* for the build side.
+
+## What this is
+
+A `project_data.json` (many `sources`, no `panels`) whose bindings admit SWECOV's
+holdings. Admission is **column-based** (#206): each binding pins the resolved
+`delivery_column_name` of a held column, at `period: "_default"` (the whole-history,
+no-period-filter sentinel — a steward catalog is a statement of *holdings*, not a time
+window). The catalog is validated against a **flavored** reg_meta DB (the released
+global DB + SWECOV's flavor providers, built by `reg-meta-build extend-db`).
+
+## How it is generated
+
+The generator is the `steward` subcommand of the untracked, maintainer-local
+`reg_meta_build/input_data/swecov/build_catalog.py` (it lives next to its confidential
+SWECOV inputs; only this output is committed — same pattern as the `flavor` subcommand,
+#421). To regenerate after a reg_meta release or a flavor change:
+
+```sh
+# 1. build the flavored DB (released global + SWECOV flavor providers)
+reg-meta-build --db "$db_dir" extend-db \
+    --base-db ~/.local/share/reg_meta/reg_meta.db \
+    --inventory reg_meta_build/input_data/swecov/derived/flavor_inventory.json \
+    --slug-dir reg_meta_build/fqid_slugs/swecov
+# 2. emit this catalog against it (also writes derived/steward_coverage.json)
+python3 reg_meta_build/input_data/swecov/build_catalog.py \
+    --db "$db_dir/reg_meta.db" steward
+```
+
+Output is deterministic (sources sorted by coordinate, bindings by variable+column).
+
+## Coverage
+
+Coverage is bounded by what reg_meta currently mints, and **rises automatically** as the
+residue below lands upstream — just regenerate against a fresh flavored DB. The current
+breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.23.0
+the catalog admits **66.9%** of physical columns. The residue is, by disposition:
+
+- **survey-wave items (FOU/CIS/IT, \~2,000)** — documented in SWECOV's delivery lists
+  but absent from reg_meta machine metadata; a follow-up **global graft** effort, not
+  steward flavor.
+- **canonical-SCB gap (AGI-Huvud, UHT-Tjänster)** + **FK onboarding** + **FOHM aliases**
+  — these have a **global** home (#444/#422); scope follows what a fact is *about*
+  (#365), so they are *not* flavor-routed and the catalog picks them up once they land
+  globally.
+- **excluded** — pure lookup crosswalks and the public-agency deliveries left out of
+  both the global build and the flavor (#443): no minted FQID anywhere, a documented
+  permanent exclusion rather than a gap.
+- **pruned** — a handful of reg_meta columns with co-delivered value sets (SOS-PAR
+  `HDIA`/ `ATCO`, AKU `Omb10b`): un-authorable by anyone (the value-set-version pin is
+  retired), pending reg_meta co-delivery curation.
+
+Near-duplicate physical columns (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`,
+`Covid-19 antikroppar`/`Covid_19_antikroppar`) are kept **1:1, never merged** — each is
+a literal delivery column, and admission is column-based, so collapsing one would make
+the other un-orderable.
