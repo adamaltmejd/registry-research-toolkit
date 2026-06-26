@@ -3210,3 +3210,145 @@ class TestCloselessCodebearingCloseOut:
         assert exc.value.code == "codeless_close_out_interior_split"
         assert exc.value.exit_code == EXIT_CONFIG
         conn.close()
+
+    def test_gap_between_two_windows_caps_to_gap_not_deleted(self) -> None:
+        """Regression for the silent-data-loss bug (#858): a code-less window
+        '2000-2020' overlapping TWO disjoint code-bearing windows '1995-2008' and
+        '2012-2030' is "covered" at both ends by the old end-test heuristic, which
+        DELETEs the row and loses the genuine uncovered gap span between them.
+
+        Both code-bearing windows extend PAST the code-less bounds, so the residual
+        complement is exactly the single gap [2009-01-01..2011-12-31] → the
+        code-less row is retrimmed to that gap (NOT deleted, NOT mis-resolved). The
+        validate guard then passes — the bug was the silent delete, and capping to
+        the gap is the correct loss-free resolution."""
+        from reg_meta_build.db import _close_codeless_codebearing_overlaps
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_no_codeless_codebearing_overlap,
+        )
+
+        conn = self._conn()
+        vid = self._variable(conn)
+        cl = self._state(conn, vid, "2000-01-01", "2020-12-31", None)
+        self._state(conn, vid, "1995-01-01", "2008-12-31", 7, "v1995")
+        self._state(conn, vid, "2012-01-01", "2030-12-31", 8, "v2012")
+
+        _close_codeless_codebearing_overlaps(conn)
+
+        # The code-less row survives, trimmed to the genuine gap (NOT deleted).
+        row = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state WHERE state_id = ?",
+            (cl,),
+        ).fetchone()
+        assert row is not None
+        assert (row["valid_from"], row["valid_to"]) == ("2009-01-01", "2011-12-31")
+
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, {"variable_state"})
+        assert result.passed, result.failures
+        conn.close()
+
+    def test_three_windows_strict_interior_gap_fails_fast(self) -> None:
+        """When a code-bearing window sits STRICTLY interior (does not reach either
+        code-less bound), the complement leaves ≥2 disjoint code-less spans, which
+        the deterministic close-out cannot resolve without minting a state_id →
+        FAIL fast rather than silently mis-resolving. Code-less '2000-2020' with
+        code-bearing '1995-2005' (covers head), '2008-2011' (strict interior), and
+        '2018-2030' (covers tail) → residual [2006..2007] + [2012..2017]."""
+        from reg_meta.errors import EXIT_CONFIG
+        from reg_meta_build.db import (
+            _close_codeless_codebearing_overlaps,
+            _residual_intervals,
+        )
+
+        residual = _residual_intervals(
+            "2000-01-01",
+            "2020-12-31",
+            [
+                ("1995-01-01", "2005-12-31"),
+                ("2008-01-01", "2011-12-31"),
+                ("2018-01-01", "2030-12-31"),
+            ],
+        )
+        assert residual == [
+            ("2006-01-01", "2007-12-31"),
+            ("2012-01-01", "2017-12-31"),
+        ]
+
+        conn = self._conn()
+        vid = self._variable(conn)
+        cl = self._state(conn, vid, "2000-01-01", "2020-12-31", None)
+        self._state(conn, vid, "1995-01-01", "2005-12-31", 7, "v1995")
+        self._state(conn, vid, "2008-01-01", "2011-12-31", 8, "v2008")
+        self._state(conn, vid, "2018-01-01", "2030-12-31", 9, "v2018")
+
+        with pytest.raises(RegMetaError) as exc:
+            _close_codeless_codebearing_overlaps(conn)
+        assert exc.value.code == "codeless_close_out_interior_split"
+        assert exc.value.exit_code == EXIT_CONFIG
+
+        # The code-less row must still be present (NOT deleted).
+        remaining = {
+            r["state_id"]
+            for r in conn.execute("SELECT state_id FROM variable_state").fetchall()
+        }
+        assert cl in remaining
+        conn.close()
+
+    def test_end_plus_interior_window_fails_fast(self) -> None:
+        """Code-less '2000-2020' with code-bearing '2015-2020' (covers the tail)
+        and '2005-2008' (interior). The old heuristic would cap the right end to
+        2014-12-31 but leave '2005-2008' overlapping, so the validate guard would
+        hard-fail late. The residual is the kept head [2000-01-01..2004-12-31] and
+        the gap [2009-01-01..2014-12-31] → 2 spans → fail fast, no mis-resolve."""
+        from reg_meta.errors import EXIT_CONFIG
+        from reg_meta_build.db import (
+            _close_codeless_codebearing_overlaps,
+            _residual_intervals,
+        )
+
+        # Confirm the complement count the close-out branches on.
+        residual = _residual_intervals(
+            "2000-01-01",
+            "2020-12-31",
+            [("2015-01-01", "2020-12-31"), ("2005-01-01", "2008-12-31")],
+        )
+        assert residual == [
+            ("2000-01-01", "2004-12-31"),
+            ("2009-01-01", "2014-12-31"),
+        ]
+
+        conn = self._conn()
+        vid = self._variable(conn)
+        self._state(conn, vid, "2000-01-01", "2020-12-31", None)
+        self._state(conn, vid, "2015-01-01", "2020-12-31", 7, "v2015")
+        self._state(conn, vid, "2005-01-01", "2008-12-31", 8, "v2005")
+
+        with pytest.raises(RegMetaError) as exc:
+            _close_codeless_codebearing_overlaps(conn)
+        assert exc.value.code == "codeless_close_out_interior_split"
+        assert exc.value.exit_code == EXIT_CONFIG
+        conn.close()
+
+    def test_residual_sentinel_tail_not_overflowed(self) -> None:
+        """A code-bearing window reaching the open '9999-12-31' sentinel must mark
+        the tail covered and stop — never call `_day_after` on the sentinel (which
+        would overflow `date.max`)."""
+        from reg_meta_build.db import _residual_intervals
+
+        # Cap-right shape: single residual head, tail owned by the code-bearing
+        # window that runs to the sentinel.
+        residual = _residual_intervals(
+            "1997-01-01", "9999-12-31", [("2015-01-01", "9999-12-31")]
+        )
+        assert residual == [("1997-01-01", "2014-12-31")]
+
+        # Window starting exactly at cl_from and running to the sentinel → fully
+        # covered, empty residual, no overflow.
+        assert (
+            _residual_intervals(
+                "1997-01-01", "9999-12-31", [("1997-01-01", "9999-12-31")]
+            )
+            == []
+        )

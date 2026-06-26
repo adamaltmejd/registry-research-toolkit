@@ -3050,13 +3050,57 @@ def _day_before(iso_date: str) -> str:
     Stdlib date math, not string slicing: '2015-01-01' → '2014-12-31' must roll
     the month and year correctly. Both tables store full `YYYY-MM-DD` strings, so
     `date.fromisoformat` round-trips losslessly.
+
+    simplify: assumes `iso_date` is a real calendar date — a window start or a
+    quarter/half/term end (months 03/06/09/12), never a synthesized `YYYY-02-29`.
+    `reg_meta.fqid` can synthesize `-02-29` as a bare `YYYY-02` month upper bound
+    (`_MONTH_LAST_DAY["02"]="29"`), which `date.fromisoformat` rejects; no current
+    sub-annual end reaches variable_state, so it's latent. Revisit if a `YYYY-02`
+    month bound ever flows into `variable_state.valid_from`/`valid_to`.
     """
     return (date.fromisoformat(iso_date) - timedelta(days=1)).isoformat()
 
 
 def _day_after(iso_date: str) -> str:
-    """The ISO date immediately after `iso_date` (symmetric to `_day_before`)."""
+    """The ISO date immediately after `iso_date` (symmetric to `_day_before`).
+
+    Same `-02-29` synthesis caveat as `_day_before` — see its note.
+    """
     return (date.fromisoformat(iso_date) + timedelta(days=1)).isoformat()
+
+
+def _residual_intervals(
+    cl_from: str, cl_to: str, windows: list[tuple[str, str]]
+) -> list[tuple[str, str]]:
+    """`[cl_from, cl_to]` (closed, inclusive) MINUS the union of `windows`.
+
+    Standard interval-complement. `windows` are the overlapping code-bearing
+    windows; they are mutually disjoint on one key (guaranteed by
+    `_check_one_value_set_per_period`), so no merge step is needed — but each is
+    clipped to `[cl_from, cl_to]` and the set re-sorted so a window that starts
+    before `cl_from` or ends after `cl_to` is still handled. Returns the gap
+    intervals in order; an empty list means fully covered.
+
+    Sentinel-safe: never calls `_day_after` on `cl_to` (the open-ended
+    '9999-12-31' sentinel would overflow `date.max`). A clipped window whose end
+    reaches `cl_to` covers the tail, so the walk stops there.
+    """
+    clipped = sorted(
+        (max(w_from, cl_from), min(w_to, cl_to)) for w_from, w_to in windows
+    )
+    residual: list[tuple[str, str]] = []
+    cursor = cl_from
+    for w_from, w_to in clipped:
+        if w_from > cursor:
+            residual.append((cursor, _day_before(w_from)))
+        if w_to >= cl_to:
+            # Window covers the code-less tail → nothing past it; stop before
+            # `_day_after(cl_to)` (which would overflow on the '9999-12-31' end).
+            return residual
+        cursor = _day_after(w_to)
+    if cursor <= cl_to:
+        residual.append((cursor, cl_to))
+    return residual
 
 
 def _close_codeless_codebearing_overlaps(conn: sqlite3.Connection) -> None:
@@ -3078,16 +3122,23 @@ def _close_codeless_codebearing_overlaps(conn: sqlite3.Connection) -> None:
     immediately after the core graph is re-inserted and before any downstream
     state consumer (lineage, code_variable_map, slugs, classification backfill).
 
-    Per overlapping code-less state, against the union of the code-bearing
-    windows on its key:
-      - covered on both ends (fully inside the union) → DELETE the row;
-      - covered only on the right (a code-bearing window runs to its `valid_to`)
-        → cap `valid_to` to the day before that window's `valid_from`;
-      - covered only on the left → raise `valid_from` to the day after the
-        window's `valid_to`;
-      - a code-bearing window strictly INTERIOR to the code-less window would
-        split it in two → FAIL fast (minting new state_ids for a split is out of
-        scope; see the simplify ceiling below).
+    Per overlapping code-less state, compute the RESIDUAL — `[valid_from,
+    valid_to]` minus the union of the overlapping code-bearing windows (the
+    code-bearing windows on one key are mutually disjoint, guaranteed by
+    `_check_one_value_set_per_period`) — then:
+      - 0 residual intervals (fully covered) → DELETE the row;
+      - exactly 1 residual interval → UPDATE `valid_from`/`valid_to` to its bounds
+        (subsumes cap-left/cap-right; either or both ends may move);
+      - ≥2 residual intervals → a code-bearing window strictly INTERIOR to the
+        code-less window splits it → FAIL fast (minting new state_ids for a split
+        is out of scope; see the simplify ceiling below).
+
+    Computing the residual rather than testing the ends independently is load-
+    bearing: a code-less window overlapping ≥2 disjoint code-bearing windows can
+    be "covered" at both ends yet leave a genuine uncovered gap between them. The
+    end-test heuristic would silently DELETE that row (losing the gap span) or cap
+    one end while a second code-bearing window stays overlapping (the validate
+    guard then hard-fails the build with a confusing late error).
 
     Never deletes the last remaining state of a variable: in the real cases the
     code-bearing state always survives on the same key, but a delete that would
@@ -3128,13 +3179,9 @@ def _close_codeless_codebearing_overlaps(conn: sqlite3.Connection) -> None:
     for state_id, entry in by_state.items():
         cl_from = entry["from"]
         cl_to = entry["to"]
-        # Coverage of [cl_from, cl_to] by the union of overlapping code-bearing
-        # windows, clamped to the code-less window. covers_left / covers_right:
-        # some code-bearing window reaches the code-less window's start / end.
-        covers_left = any(cb_from <= cl_from for cb_from, _ in entry["cb"])
-        covers_right = any(cb_to >= cl_to for _, cb_to in entry["cb"])
+        residual = _residual_intervals(cl_from, cl_to, entry["cb"])
 
-        if covers_left and covers_right:
+        if not residual:
             # Fully covered → the code-less state is subsumed; delete it.
             # Defensive orphan tripwire: the covering code-bearing state shares
             # this `variable_id` (the overlap JOIN keys on it), so it is always a
@@ -3167,33 +3214,45 @@ def _close_codeless_codebearing_overlaps(conn: sqlite3.Connection) -> None:
             deleted += 1
             continue
 
-        if covers_right and not covers_left:
-            # Cap from the right: trim valid_to to the day before the earliest
-            # overlapping code-bearing window that reaches the code-less end.
-            cap_from = min(cb_from for cb_from, cb_to in entry["cb"] if cb_to >= cl_to)
-            new_to = _day_before(cap_from)
-            conn.execute(
-                "UPDATE variable_state SET valid_to = ? WHERE state_id = ?",
-                (new_to, state_id),
-            )
+        if len(residual) == 1:
+            # Exactly one uncovered span survives → retrim the code-less state to
+            # it. Either or both ends may move (subsumes the old cap-left /
+            # cap-right). Raising `valid_from` onto a code-less sibling's
+            # `valid_from` would collide with `idx_variable_state_unique`
+            # (both siblings carry value_set_version_label = '') — re-raise the
+            # bare IntegrityError as the pass's stable-exit RegMetaError.
+            new_from, new_to = residual[0]
+            try:
+                conn.execute(
+                    "UPDATE variable_state SET valid_from = ?, valid_to = ? "
+                    "WHERE state_id = ?",
+                    (new_from, new_to, state_id),
+                )
+            except sqlite3.IntegrityError as exc:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="codeless_close_out_state_collision",
+                    error_class="configuration",
+                    message=(
+                        "Retrimming a code-less state to the complement of its "
+                        "overlapping code-bearing windows collided with the state-"
+                        f"uniqueness index (variable_id={entry['variable_id']}, "
+                        f"state_id={state_id}, new valid_from={new_from}). Two "
+                        "code-less states on the same key both carry an empty "
+                        "value_set_version_label, so the retrimmed valid_from "
+                        "duplicates a sibling's key."
+                    ),
+                    remediation=(
+                        "Curate this column's code-less states directly so they no "
+                        "longer overlap after the code-bearing windows are removed "
+                        "(merge or retire the redundant code-less span)."
+                    ),
+                ) from exc
             capped += 1
             continue
 
-        if covers_left and not covers_right:
-            # Cap from the left: raise valid_from to the day after the latest
-            # overlapping code-bearing window that reaches the code-less start.
-            cap_to = max(cb_to for cb_from, cb_to in entry["cb"] if cb_from <= cl_from)
-            new_from = _day_after(cap_to)
-            conn.execute(
-                "UPDATE variable_state SET valid_from = ? WHERE state_id = ?",
-                (new_from, state_id),
-            )
-            capped += 1
-            continue
-
-        # Neither end covered, yet the windows overlap → a code-bearing window
-        # sits strictly INTERIOR to the code-less window, which would split it
-        # into two disjoint code-less spans.
+        # ≥2 residual spans → a code-bearing window sits strictly INTERIOR to the
+        # code-less window, splitting it into disjoint code-less spans.
         # simplify: an interior split needs minting a new state_id (and a unique
         # value_set_version_label so the state-uniqueness index doesn't collide).
         # No real column hits this in the three known cases (HDIA/ATCO cap-right,
