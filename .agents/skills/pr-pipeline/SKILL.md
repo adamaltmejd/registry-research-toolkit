@@ -96,8 +96,9 @@ Run focused verification as the work evolves:
 - Frontend: from `reg_webapp/frontend/`, use `bun run lint`, `bun run check`,
   `bun run test`, `bun run build`, and regenerate API types only after backend contract
   changes. Headless checks never render a pixel. If the change alters rendered output
-  (`reg_webapp/frontend/**`, or any view / component / style the SPA renders), render it
-  with `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
+  (`reg_webapp/frontend/**`, or any view / component / style the SPA renders), return to
+  the repo root and run
+  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot   <changed-route>` or
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`, inspect
   `/tmp/reg-webapp-shots/`, and keep the screenshot path for closeout / PR proof.
 - Build-affecting DB changes: fast tests first; real `reg-meta-build build-db` is a
