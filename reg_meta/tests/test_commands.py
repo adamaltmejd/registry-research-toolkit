@@ -513,6 +513,19 @@ class TestSplitSiblingIsolation:
         b_cols = sorted(c for inst in b["instances"] for c in inst["aliases"])
         assert b_cols == ["Ssyk5"]
 
+    def test_varinfo_resolves_swedish_delivery_column(self):
+        """The alias-column fallback in get_varinfo folds the queried column
+        against the stored delivery column via py_lower. A variable delivered as
+        "Ägare" must resolve when queried by "ägare" (lowercase Swedish Ä). ASCII
+        LOWER() leaves Ä/ä distinct, so this returns not-found there (refs #853)."""
+        from _slugged_db import build_slugged_db
+        from reg_meta.queries import get_varinfo
+
+        conn = build_slugged_db(delivery_column_name="Ägare", variable_slug="agare")
+        result = get_varinfo(conn, "ägare")
+        assert len(result) == 1
+        assert result[0]["name"] == "Kön"
+
     def test_values_returns_only_matched_sibling_codes(self):
         from reg_meta.queries import get_values_by_variable
 

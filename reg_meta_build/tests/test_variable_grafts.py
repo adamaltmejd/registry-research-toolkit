@@ -148,6 +148,15 @@ class TestMaterialize:
         counts = materialize_grafts(conn, (_g("kON"),), providers=_SCB)
         assert counts["skipped"] == 1 and counts["minted"] == 0
 
+    def test_gap_fill_skip_folds_swedish_case(self) -> None:
+        # The existing state delivers column "Ägare" (uppercase Swedish Ä); a graft
+        # for "ägare" must fold to the same column and be SKIPPED, not minted as a
+        # duplicate. ASCII LOWER() leaves Ä/ä distinct, so it would MINT here —
+        # this asserts the Unicode-aware py_lower fold (refs #853).
+        conn = build_slugged_db(delivery_column_name="Ägare")
+        counts = materialize_grafts(conn, (_g("ägare"),), providers=_SCB)
+        assert counts["skipped"] == 1 and counts["minted"] == 0
+
     def test_unresolved_variant_counted(self) -> None:
         conn = build_slugged_db()
         warnings: list[str] = []
