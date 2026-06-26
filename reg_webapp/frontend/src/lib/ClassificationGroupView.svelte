@@ -109,11 +109,11 @@ function memberLabel(
     margin-bottom: 1rem;
   }
   .breadcrumbs .sep {
-    color: var(--muted);
+    color: var(--text-muted);
     margin: 0 0.25rem;
   }
   .breadcrumbs .current {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   /* #638 PR4: row spacing standardized to 0.3rem across the subject kinds. */
   .meta {
@@ -138,7 +138,7 @@ function memberLabel(
   }
   .chip {
     display: inline-block;
-    border: 1px solid var(--muted);
+    border: 1px solid var(--text-muted);
     border-radius: 1rem;
     padding: 0.1rem 0.6rem;
     text-decoration: none;

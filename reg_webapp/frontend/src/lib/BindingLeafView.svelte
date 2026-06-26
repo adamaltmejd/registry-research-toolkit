@@ -746,7 +746,7 @@ const repSegment = $derived(
     font-size: 0.85em;
   }
   .member-identity .group-context {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   /* #638 PR4: row spacing standardized to 0.3rem across the three subject kinds. */
   .meta {
@@ -820,7 +820,7 @@ const repSegment = $derived(
     color: var(--accent);
   }
   .add-confirm.already {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   /* The genuine-choice prompts (variant / representation) — same visual
      vocabulary as the CatalogPicker chooser. */
@@ -869,7 +869,7 @@ const repSegment = $derived(
     font-weight: 600;
   }
   .pick .name {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .pick .classification {
     font-size: 0.85em;

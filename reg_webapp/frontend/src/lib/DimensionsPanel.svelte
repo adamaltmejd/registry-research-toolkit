@@ -70,6 +70,6 @@ const show = $derived(loading || !!error || groups.length > 0);
     gap: 0.5rem;
   }
   .muted {
-    color: var(--muted);
+    color: var(--text-muted);
   }
 </style>

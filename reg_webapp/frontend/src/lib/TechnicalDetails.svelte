@@ -26,7 +26,7 @@ let { children }: { children: Snippet } = $props();
   }
   .tech-details summary {
     cursor: pointer;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.9em;
   }
 </style>

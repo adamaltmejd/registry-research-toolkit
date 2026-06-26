@@ -447,8 +447,8 @@ const coverageThrough = $derived(
     border-radius: 2px;
     background: repeating-linear-gradient(
       45deg,
-      var(--muted) 0,
-      var(--muted) 2px,
+      var(--text-muted) 0,
+      var(--text-muted) 2px,
       transparent 2px,
       transparent 5px
     );
@@ -493,8 +493,8 @@ const coverageThrough = $derived(
   .gap.soft {
     background: repeating-linear-gradient(
       45deg,
-      var(--muted) 0,
-      var(--muted) 3px,
+      var(--text-muted) 0,
+      var(--text-muted) 3px,
       transparent 3px,
       transparent 6px
     );
@@ -517,7 +517,7 @@ const coverageThrough = $derived(
     font-size: 0.95em;
   }
   .deviation.availability.soft {
-    color: var(--muted); /* softened: advisory FYI, not amber */
+    color: var(--text-muted); /* softened: advisory FYI, not amber */
   }
   .reset {
     font: inherit;
