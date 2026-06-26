@@ -2140,10 +2140,14 @@ export interface components {
          *     group are all variable-grain and the FQID must map to exactly one node.
          */
         VariableGraphNode: {
+            /** Facets */
+            facets: components["schemas"]["GroupFacet"][];
             /** Fqid */
             fqid: string | null;
             /** Group Key */
             group_key: string | null;
+            /** Group Label */
+            group_label: string | null;
             /** Id */
             id: string;
             /**

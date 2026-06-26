@@ -19,8 +19,13 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.catalog import Catalog
-from reg_meta.graph import ClassificationGraphNode, VariableGraphNode
+from reg_meta.catalog import BindingGroupRef, Catalog, ResolvedVariable
+from reg_meta.fqid import Fqid
+from reg_meta.graph import (
+    ClassificationGraphNode,
+    VariableGraphNode,
+    _GraphBuilder,
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -85,20 +90,28 @@ def _add_concept_group(
     register_id: int,
     group_key: str,
     member_slugs: list[str],
+    facet_axis: str | None = None,
+    facets: dict[str, tuple[str, str]] | None = None,
 ) -> None:
+    # `facet_axis` is the group's single axis (None = edge group, facet-less
+    # members). `facets` maps a member slug → (facet_value, facet_label); members
+    # absent from it get NULL facet columns.
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (?, 'variable', ?, ?, ?, 'curated')",
-        (group_id, register_id, group_key, f"Group {group_key}"),
+        "label, source, facet_axis) VALUES (?, 'variable', ?, ?, ?, 'curated', ?)",
+        (group_id, register_id, group_key, f"Group {group_key}", facet_axis),
     )
+    facets = facets or {}
     for slug in member_slugs:
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
             (register_id, slug),
         ).fetchone()[0]
+        value, label = facets.get(slug, (None, None))
         conn.execute(
-            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, ?)",
-            (vid, group_id),
+            "INSERT INTO concept_group_variable "
+            "(variable_id, group_id, facet_value, facet_label) VALUES (?, ?, ?, ?)",
+            (vid, group_id, value, label),
         )
     conn.commit()
 
@@ -808,6 +821,143 @@ class TestVariableGroups:
         assert g_kon.focus_id == _KON
         assert g_civ.focus_id == "scb/lisa/civilstand"
         assert g_kon.focus_id != g_civ.focus_id
+
+
+# ── Variable-node facets / group_label (#792, #670 header identity) ──────────
+
+
+class TestVariableNodeFacets:
+    def test_grouped_variable_carries_facets_and_label(self) -> None:
+        # A grouped variable's node carries its own member facets (axis + label) from
+        # the canonical group, plus the group's display label — the #670 header
+        # identity, derivable from the graph alone (no /dimensions fetch).
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+            facet_axis="rank",
+            facets={"kon": ("1", "primary"), "civilstand": ("2", "secondary")},
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        nodes = {n.id: n for n in g.nodes}
+        kon = nodes["scb/lisa/kon"]
+        civ = nodes["scb/lisa/civilstand"]
+        assert isinstance(kon, VariableGraphNode)
+        assert isinstance(civ, VariableGraphNode)
+        # Each member carries its OWN facet (not the whole group's), with the group's
+        # axis and the member's label.
+        assert [(f.axis, f.value, f.label) for f in kon.facets] == [
+            ("rank", "1", "primary")
+        ]
+        assert [(f.axis, f.value, f.label) for f in civ.facets] == [
+            ("rank", "2", "secondary")
+        ]
+        # group_label is the group's display label on both members.
+        assert kon.group_label == "Group demog"
+        assert civ.group_label == "Group demog"
+
+    def test_edge_group_member_has_empty_facets_but_label(self) -> None:
+        # An axis-less (edge) group: members carry NO facets (facet-less), but the
+        # node still gets the group's label so the renderer can link the group.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+            facet_axis=None,
+        )
+        kon = {n.id: n for n in Catalog(conn).graph_for_fqid(_KON).nodes}[
+            "scb/lisa/kon"
+        ]
+        assert isinstance(kon, VariableGraphNode)
+        assert kon.facets == []
+        assert kon.group_label == "Group demog"
+
+    def test_ungrouped_variable_has_no_facets_or_label(self) -> None:
+        # An ungrouped variable: facets == [] and group_label is None. Use a node that
+        # renders (≥2 representation runs) so the empty-graph gate doesn't drop it.
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+        conn.execute("DELETE FROM variable_state")
+        for vf, vsid in (("2018-01-01", 1), ("2019-01-01", 2)):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=10,
+                valid_from=vf,
+                delivery_column_name="Kon",
+                value_set_id=vsid,
+            )
+        conn.commit()
+        (node,) = Catalog(conn).graph_for_fqid(_KON).nodes
+        assert isinstance(node, VariableGraphNode)
+        assert node.group_key is None
+        assert node.facets == []
+        assert node.group_label is None
+
+    def test_facet_skew_degrades_gracefully(self) -> None:
+        # Skew: a `resolved.group` ref whose group/member the summary can't surface
+        # must degrade to facets == [] and group_label None — never crash. Exercised
+        # at the builder helper boundary directly (a DB-level skew is unreachable:
+        # `ResolvedVariable.group` and the group member list read the same
+        # `concept_group_variable` row, so they can't disagree there). Two misses:
+        # (a) a stale group ADDRESS `concept_group` returns None for; (b) a real group
+        # whose member list omits the canonical FQID.
+        conn = build_slugged_db()
+        catalog = Catalog(conn)
+        builder = _GraphBuilder(catalog)
+        kon_resolved = catalog.resolve(_KON)
+        assert isinstance(kon_resolved, ResolvedVariable)
+
+        # (a) stale group ADDRESS — no such group → concept_group None.
+        stale = kon_resolved.model_copy(
+            update={
+                "group": BindingGroupRef(provider="scb", register="lisa", key="nope")
+            }
+        )
+        assert builder._group_facets(stale) == ([], None)
+
+        # (b) real group, but its member list omits this canonical FQID (the member
+        # whose fqid == canonical_fqid isn't found → fall through).
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon"],
+            facet_axis="rank",
+            facets={"kon": ("1", "primary")},
+        )
+        mismatched = kon_resolved.model_copy(
+            update={
+                "group": BindingGroupRef(provider="scb", register="lisa", key="demog"),
+                "canonical_fqid": Fqid.binding_fqid("scb", "lisa", "ghost"),
+            }
+        )
+        assert _GraphBuilder(catalog)._group_facets(mismatched) == ([], None)
 
 
 # ── Classification chains + SUN-style groups ─────────────────────────────────

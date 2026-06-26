@@ -43,6 +43,7 @@ from pydantic import Field
 from .catalog import (
     OPEN_ENDED_VALID_TO,
     UNKNOWN_VALID_FROM,
+    GroupFacet,
     ResolvedVariable,
     _CatalogModel,
 )
@@ -113,6 +114,17 @@ class VariableGraphNode(_GraphNodeBase):
     kind: Literal["variable"] = "variable"
     states: list[GraphState]
     same_as: list[SameAsRef]
+    # The resolved variable's facet assignments WITHIN its canonical concept group
+    # (`resolved.group`), in the group's member order — the canonical-group member's
+    # own `GroupFacet`s (reused directly as the wire type, #681). Empty when the
+    # variable is ungrouped, or when the group/member can't be located (skew). Lets
+    # the #678 binding-leaf header derive its #670 facet identity from the graph
+    # alone, without a separate `/dimensions` fetch.
+    facets: list[GroupFacet]
+    # The canonical concept group's display label (`ConceptGroupSummary.label`);
+    # None when the variable is ungrouped (or on group/member skew). The renderer's
+    # group-link text.
+    group_label: str | None
 
 
 class ClassificationGraphNode(_GraphNodeBase):
@@ -305,6 +317,36 @@ class _GraphBuilder:
         # then upgraded once when its own (member-anchored) walk reaches it. Keying on
         # this makes the upgrade idempotent (no repeated model_copy).
         self._class_grouped: set[str] = set()
+        # Concept-group cache, keyed by the member's `(provider, register, key)`
+        # triple — the group's address (#616). A variable node's facets/group_label
+        # come from its canonical group's member list, so a grouped variable needs
+        # ONE `concept_group` fetch per DISTINCT group, not one per node (every
+        # member of one group shares the same fetch). Honors graph.py's "compose,
+        # don't re-query" — the SQL is `Catalog`'s, memoized here. `None` is a
+        # cached miss (a stale `group` ref with no live group). `graph_for_fqid`
+        # seeds this with the fetch it already does (see `seed_group`).
+        self._group_cache: dict[tuple[str, str, str], ConceptGroupSummary | None] = {}
+
+    def seed_group(
+        self, group: ConceptGroupSummary, provider: str, register: str
+    ) -> None:
+        """Prime the concept-group cache with a summary the caller already fetched,
+        so `_variable_node` doesn't re-fetch it. The key mirrors the
+        `(provider, register, key)` address `_concept_group` looks up."""
+        self._group_cache[provider, register, group.key] = group
+
+    def _concept_group(
+        self, provider: str, register: str, key: str
+    ) -> ConceptGroupSummary | None:
+        """The cached `concept_group(provider, register, key)` — one fetch per
+        distinct group across the whole build (memoized), `None` for a missing
+        group. Compose, don't re-query."""
+        cache_key = (provider, register, key)
+        if cache_key not in self._group_cache:
+            self._group_cache[cache_key] = self._catalog.concept_group(
+                provider, register, key
+            )
+        return self._group_cache[cache_key]
 
     def add_variable(self, fqid: Fqid, *, follow_related: bool = True) -> str | None:
         """Build the variable node for ``fqid`` (resolving same_as to canonical) and
@@ -364,6 +406,7 @@ class _GraphBuilder:
             if resolved.group is not None
             else None
         )
+        facets, group_label = self._group_facets(resolved)
         node_id = str(resolved.canonical_fqid)
         return VariableGraphNode(
             id=node_id,
@@ -376,7 +419,31 @@ class _GraphBuilder:
                 for ref in resolved.same_as
                 if ref.fqid is not None
             ],
+            facets=facets,
+            group_label=group_label,
         )
+
+    def _group_facets(
+        self, resolved: ResolvedVariable
+    ) -> tuple[list[GroupFacet], str | None]:
+        """The resolved variable's facets within its canonical concept group plus
+        that group's display label (#670 header identity). Empty/`None` when the
+        variable is ungrouped, or when the group/member can't be located — a stale
+        `group` ref or member skew degrades gracefully, never crashes. The group is
+        fetched through the builder's memoized `_concept_group` (one fetch per
+        distinct group), and the member is matched on `canonical_fqid` — the node's
+        identity, which the group member's binding FQID equals."""
+        if resolved.group is None:
+            return [], None
+        group = self._concept_group(
+            resolved.group.provider, resolved.group.register_name, resolved.group.key
+        )
+        if group is None:
+            return [], None
+        for member in group.members:
+            if member.fqid == resolved.canonical_fqid:
+                return list(member.facets), group.label
+        return [], None
 
     def _add_succession(self, fqid: Fqid) -> None:
         """Walk the variable succession chain (``variable_chain`` — the single
@@ -444,6 +511,8 @@ class _GraphBuilder:
                 group_key=None,
                 states=[],
                 same_as=[],
+                facets=[],
+                group_label=None,
             ),
         )
         return node_id
@@ -602,14 +671,22 @@ def graph_for_fqid(catalog: Catalog, resolved: ResolvedVariable) -> Relationship
     renders the SAME group union as the group page (Fork B), with the current node
     highlighted client-side via ``focus_id``."""
     builder = _GraphBuilder(catalog)
-    focus_id = builder.add_variable(resolved.fqid)
-
-    if resolved.group is not None:
-        group = catalog.concept_group(
+    # Fetch + seed the focus's group BEFORE building any node, so the focus node and
+    # every member read their facets from the one cached summary (no node re-fetches
+    # the group it's a member of). The focus's own group is `resolved.group`.
+    group = (
+        catalog.concept_group(
             resolved.group.provider, resolved.group.register_name, resolved.group.key
         )
-        if group is not None:
-            _add_group_members(builder, group)
+        if resolved.group is not None
+        else None
+    )
+    if group is not None and resolved.group is not None:
+        builder.seed_group(group, resolved.group.provider, resolved.group.register_name)
+
+    focus_id = builder.add_variable(resolved.fqid)
+    if group is not None:
+        _add_group_members(builder, group)
 
     return builder.build(focus_id)
 

@@ -831,21 +831,30 @@ edition dedup, and the representation-run computation.
 `(variant, valid_from)`), plus `same_as[]` (resolved-away aliases, metadata) and a
 shared `group_key` (clustering metadata — there is **no** `group:<key>` node; namespaced
 `provider/register/key` so a cross-register graph never clusters two unrelated
-same-keyed groups, since concept-group keys are only register-unique). A classification
-node carries a **point** `version_year` (never an interval — an edition is not "dead"
-after its successor; the edition's OWN vintage from the `classification` row's
-`valid_from`, NOT the supersession year — so the terminal current edition keeps its own
-year, not None) + `is_current`. Time semantics live on the node, so there is no
-top-level `mode`: the renderer draws a time axis when interval (variable) nodes are
-present and a version ordering when point-year (classification) nodes are. **Two edge
-kinds only**: `succession` (directed, predecessor→successor) and `related` (undirected —
-endpoints canonicalized by sorted node id so the same relation seen from both ends
-collapses). Everything else is metadata/affordance: `lineage` / `source_register` are
-#678's provenance affordance (not edges); `same_as` is resolved away to the canonical
-node; representation / value-set transitions are states-within-a-node (the run ids), not
-edges. Every edge carries a stable `id` that doubles as its dedup key, so a shared
-succession edge or an undirected related edge surfaced from two members during a group
-union collapses.
+same-keyed groups, since concept-group keys are only register-unique). A variable node
+also carries its facet identity **within its canonical group** (#792, for #678's
+binding-leaf header): `facets` is the variable's own member `GroupFacet`s (the
+`catalog.GroupFacet` model reused directly as the wire type, per #681 — not a parallel
+model), and `group_label` is the canonical group's display label. Both mirror the
+canonical group's member entry, so the leaf can derive its #670 header identity (group +
+facet label) from the graph alone without a second `/dimensions` fetch; both are
+empty/None when the variable is ungrouped or on group/member skew (it degrades, never
+crashes). The group is fetched once per distinct group (builder-memoized, honoring
+"compose, don't re-query"). The classification node does **not** carry facets yet — that
+increment is co-designed later with #757. A classification node carries a **point**
+`version_year` (never an interval — an edition is not "dead" after its successor; the
+edition's OWN vintage from the `classification` row's `valid_from`, NOT the supersession
+year — so the terminal current edition keeps its own year, not None) + `is_current`.
+Time semantics live on the node, so there is no top-level `mode`: the renderer draws a
+time axis when interval (variable) nodes are present and a version ordering when
+point-year (classification) nodes are. **Two edge kinds only**: `succession` (directed,
+predecessor→successor) and `related` (undirected — endpoints canonicalized by sorted
+node id so the same relation seen from both ends collapses). Everything else is
+metadata/affordance: `lineage` / `source_register` are #678's provenance affordance (not
+edges); `same_as` is resolved away to the canonical node; representation / value-set
+transitions are states-within-a-node (the run ids), not edges. Every edge carries a
+stable `id` that doubles as its dedup key, so a shared succession edge or an undirected
+related edge surfaced from two members during a group union collapses.
 
 **Representation runs (the #526 fold, query-side mirror).** Each `GraphState` carries a
 `representation_run_id` (int, unique within the node): consecutive states sharing it
