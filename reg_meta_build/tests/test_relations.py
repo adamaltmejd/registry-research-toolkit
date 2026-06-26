@@ -761,6 +761,19 @@ class TestReplacedByLoad:
             )
         assert exc.value.code == "relations_invalid"
 
+    def test_representation_case_only_self_loop_rejected(self, tmp_path: Path) -> None:
+        # Same variable, columns differing ONLY in case (`Col` / `col`) — the build
+        # matches columns case-insensitively, so this is a case-only self-loop and
+        # is rejected (not a legitimate column rename).
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/x"\nfrom_column = "Col"\nto_column = "col"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+
     def test_representation_same_variable_different_column_allowed(
         self, tmp_path: Path
     ) -> None:
@@ -1314,6 +1327,34 @@ class TestRepresentationReplacedByMaterialize:
         assert pred_var == "dispink"
         assert succ_var == "sysink"
         assert pred_var != succ_var
+
+    def test_representation_column_case_insensitive_resolves(self) -> None:
+        # The observed headers are `DispInk04`/`DispInk10`, but the edge is authored
+        # with lowercased columns `dispink04`/`dispink10` (SCB headers drift in
+        # case). Matching is case-INSENSITIVE so the edge still resolves; the STORED
+        # columns are the curator's VERBATIM TOML values (match-lower, store-verbatim).
+        conn = _representation_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "dispink04",
+                    "dispink10",
+                )
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 1
+        rows = _representation_rows(conn)
+        assert len(rows) == 1
+        _pred_var, pred_col, _succ_var, succ_col = rows[0][:4]
+        assert pred_col == "dispink04"  # verbatim TOML value, not the header case
+        assert succ_col == "dispink10"
 
 
 # ---------------------------------------------------------------------------

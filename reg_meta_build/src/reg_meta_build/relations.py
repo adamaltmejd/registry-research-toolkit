@@ -454,7 +454,12 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "differ). For cross-register succession use the entity (variable) "
             "grain — drop `from_column` / `to_column`.",
         )
-    if (str(predecessor), pred_column) == (str(successor), succ_column):
+    # Case-fold the column in the self-loop check — `from_column = "Col"` /
+    # `to_column = "col"` on one variable is a case-only self-loop (the build
+    # matches columns case-insensitively), so it must be rejected too.
+    pred_col_fold = pred_column.lower() if pred_column is not None else None
+    succ_col_fold = succ_column.lower() if succ_column is not None else None
+    if (str(predecessor), pred_col_fold) == (str(successor), succ_col_fold):
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' self-loop on "
@@ -1015,11 +1020,18 @@ def _slugged_representation_keys(
     endpoint resolves iff its variable is live AND it names an OBSERVED column of
     that variable. Unlike the register/variable grain (dead predecessor allowed),
     BOTH endpoints must be live (a within-build column rename observes both
-    columns)."""
+    columns).
+
+    The column is LOWERCASED in the returned set so the membership check is
+    case-INSENSITIVE — SCB delivery headers drift in case across deliveries, so the
+    build matches `delivery_column_name` with `LOWER()` throughout (see e.g.
+    `validate.py:628`), and the predecessor `column_merge` surface this replaces
+    case-folds its TOML columns at load. The caller lowercases the curator's column
+    before the membership check while STORING the verbatim TOML value."""
     return {
         (p_slug, r_slug, v_slug, col)
         for v_slug, r_slug, p_slug, col in conn.execute(
-            "SELECT v.slug, r.slug, p.slug, a.delivery_column_name "
+            "SELECT v.slug, r.slug, p.slug, LOWER(a.delivery_column_name) "
             "FROM variable_alias a "
             "JOIN variable v ON a.variable_id = v.variable_id "
             "JOIN register r ON v.register_id = r.register_id "
@@ -1246,17 +1258,25 @@ def materialize_curated_replaced_by(
                 continue
             if live_representations is None:
                 live_representations = _slugged_representation_keys(conn)
+            # Match the column case-INSENSITIVELY (SCB headers drift in case; the
+            # `column_merge` surface this replaces case-folds its TOML columns), but
+            # STORE the curator's VERBATIM column value (the build matches with
+            # LOWER() downstream — see validate.py — so storing verbatim is safe and
+            # mirrors how the rest of the build stores raw + LOWER-compares). The
+            # lowercased keys drive membership, dedup (`rpk`), and the cycle-graph
+            # nodes, so case-variant duplicates collapse and case-only cycles are
+            # caught; the pending row keeps the verbatim columns.
             pred_key = (
                 pred.provider,
                 pred.register,
                 pred.variable,
-                edge.predecessor_column,
+                edge.predecessor_column.lower(),
             )
             succ_key = (
                 succ.provider,
                 succ.register,
                 succ.variable,
-                edge.successor_column,
+                edge.successor_column.lower(),
             )
             if pred_key not in live_representations:
                 raise _unresolved_curated_representation(
@@ -1273,7 +1293,19 @@ def materialize_curated_replaced_by(
             seen_representation.add(rpk)
             representation_cycle_edges.append((pred_key, succ_key))
             pending_representation.append(
-                (*rpk, edge.effective_year, _REPLACED_BY_NOTE_CURATED, edge.note)
+                (
+                    pred.provider,
+                    pred.register,
+                    pred.variable,
+                    edge.predecessor_column,  # verbatim — match-lower, store-verbatim
+                    succ.provider,
+                    succ.register,
+                    succ.variable,
+                    edge.successor_column,  # verbatim
+                    edge.effective_year,
+                    _REPLACED_BY_NOTE_CURATED,
+                    edge.note,
+                )
             )
             continue
         # Classification grain (#579) is GLOBAL — `class/<slug>` has no provider,

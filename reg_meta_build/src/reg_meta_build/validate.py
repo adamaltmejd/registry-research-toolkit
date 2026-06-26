@@ -2009,12 +2009,15 @@ def _check_representation_replaced_by(
         result.fail("representation_replaced_by missing (schema 5.9.0 #843 table)")
         return
 
+    # Columns compare case-INSENSITIVELY (SCB delivery headers drift in case; the
+    # build matches `delivery_column_name` with LOWER() throughout — see line 628),
+    # so a case-only same-column pair on one variable is still a self-loop.
     self_loops = conn.execute(
         "SELECT COUNT(*) FROM representation_replaced_by "
         "WHERE predecessor_provider = successor_provider "
         "  AND predecessor_register = successor_register "
         "  AND predecessor_variable = successor_variable "
-        "  AND predecessor_column = successor_column"
+        "  AND LOWER(predecessor_column) = LOWER(successor_column)"
     ).fetchone()[0]
     if self_loops:
         result.fail(f"{self_loops} self-loop representation succession edge(s)")
@@ -2033,7 +2036,7 @@ def _check_representation_replaced_by(
         "    WHERE p.slug = e.predecessor_provider "
         "      AND r.slug = e.predecessor_register "
         "      AND v.slug = e.predecessor_variable "
-        "      AND a.delivery_column_name = e.predecessor_column"
+        "      AND LOWER(a.delivery_column_name) = LOWER(e.predecessor_column)"
         "  ) OR NOT EXISTS ("
         "    SELECT 1 FROM variable_alias a "
         "    JOIN variable v ON a.variable_id = v.variable_id "
@@ -2042,7 +2045,7 @@ def _check_representation_replaced_by(
         "    WHERE p.slug = e.successor_provider "
         "      AND r.slug = e.successor_register "
         "      AND v.slug = e.successor_variable "
-        "      AND a.delivery_column_name = e.successor_column"
+        "      AND LOWER(a.delivery_column_name) = LOWER(e.successor_column)"
         "  )"
     ).fetchone()[0]
     if dangling:
