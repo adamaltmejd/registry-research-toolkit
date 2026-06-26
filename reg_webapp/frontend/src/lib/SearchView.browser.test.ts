@@ -215,7 +215,7 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText(/showing/)).not.toBeInTheDocument();
   });
 
-  it("links code-hit owners and shows a muted '+N more' for the slice cap", async () => {
+  it("collapses a code's owners behind a disclosure; expanding reveals owner variable links + a muted '+N more' (#808 round 5)", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "11",
@@ -243,24 +243,29 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("11");
     await render(SearchView);
 
-    // The owning variable is the link target (not the bare code).
+    // The collapsed row shows the MUTED owner-count summary…
+    await expect.element(page.getByText("6 variables")).toBeVisible();
+    // …and the owner sub-rows are NOT rendered until expanded (the disclosure is
+    // collapsed by default, so the owner link is absent).
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }))
+      .not.toBeInTheDocument();
+
+    // Expand the disclosure (the <summary> carries the code/label).
+    await page.getByText("Man").click();
+
+    // The owning variable is now a navigable link (its register shown muted).
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
-    // The owner sub-line (rendered only when the code HAS owner variables) is
-    // introduced by a "Used in:" label.
-    await expect.element(page.getByText("Used in:")).toBeVisible();
     // The slice cap surfaces as a muted, non-interactive "+5 more".
     await expect.element(page.getByText("+5 more")).toBeVisible();
   });
 
-  it("does NOT render a code hit's owner classifications, and renders NO 'Used in' sub-line when there are zero owner variables (#808 round 4)", async () => {
-    // #808 round 3: the code row's owner CLASSIFICATIONS are no longer rendered
-    // per row — the code-system bucket heading already names the classification /
-    // value-set, so repeating it per row is the redundancy the maintainer flagged.
-    // #808 round 4: the owner VARIABLES are a CONDITIONAL sub-line, not a fixed
-    // column — a classification value-set code with NO owner variables (the common
-    // case) is just a compact Code · Label row with no "Used in" text at all.
+  it("renders an OWNERLESS code as a plain Code · Label row — no count, no disclosure (#808 round 5)", async () => {
+    // The common classification value-set code (e.g. an ATC code) has NO owner
+    // variables AND no owner classifications, so it shows NO usage count and is
+    // NOT a disclosure — just a clean Code · Label row.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "sun",
@@ -275,10 +280,8 @@ describe("SearchView — typed result groups (#379)", () => {
               label: "Primary education",
               variables: [],
               variable_count: 0,
-              classifications: [
-                { fqid: "class/sun2020", short_name: "SUN", name: null },
-              ],
-              classification_count: 1,
+              classifications: [],
+              classification_count: 0,
               code_system: "SUN2020",
             },
           ],
@@ -292,20 +295,26 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByRole("heading", { name: "SUN2020" }))
       .toBeVisible();
-    // The owner classification link is NOT rendered per row.
+    // The compact Code · Label row renders…
+    await expect.element(page.getByText("Primary education")).toBeVisible();
+    // …with no count (zero owners) and no disclosure (<details>/<summary>).
     await expect
-      .element(page.getByRole("link", { name: /SUN/ }))
+      .element(page.getByText(/variable|classification/))
       .not.toBeInTheDocument();
-    // With zero owner variables, NO "Used in" sub-line renders at all (no empty
-    // label, no empty column) — just the compact Code · Label row.
-    await expect.element(page.getByText("Used in:")).not.toBeInTheDocument();
-    // No "+N more" overflow line for an empty variable owner slice.
-    await expect.element(page.getByText(/more/)).not.toBeInTheDocument();
+    expect(
+      document.querySelector(".search-view .usage-count")?.textContent?.trim(),
+    ).toBe("");
+    expect(
+      document.querySelector(".search-view details.code-disclosure"),
+    ).toBeNull();
   });
 
-  it("renders only the owner VARIABLE link in 'Used in', not the owner classification (#808 round 3)", async () => {
-    // A code carrying BOTH variable + classification owners renders only the
-    // variable (the navigable "Used in" target); the classification is dropped.
+  it("expands a code's CLASSIFICATION owners as a sub-table (distinguishable from variable owners) (#808 round 5)", async () => {
+    // A code carrying BOTH variable + classification owners: the collapsed row
+    // summarizes both counts; expanding reveals the variable owner (name + muted
+    // register) AND the classification owner (short_name, tagged "classification"
+    // so the two owner kinds are distinguishable). No owner classification is
+    // exploded inline on the collapsed row.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "11",
@@ -336,14 +345,27 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("11");
     await render(SearchView);
 
-    // The owner VARIABLE is the navigable "Used in" link.
+    // The collapsed row summarizes BOTH owner kinds; no owner is rendered yet.
+    await expect
+      .element(page.getByText("1 variable · 1 classification"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }))
+      .not.toBeInTheDocument();
+
+    // Expand: both owners become navigable sub-rows.
+    await page.getByText("Man").click();
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
-    // The owner CLASSIFICATION is NOT rendered (only the bucket heading names it).
+    // The classification owner links to its catalog node (short_name as the label,
+    // tagged "classification" to distinguish it from the variable owner).
     await expect
       .element(page.getByRole("link", { name: /SUN/ }))
-      .not.toBeInTheDocument();
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+    expect(
+      document.querySelector(".search-view .owner-row .tag.tone-class"),
+    ).not.toBeNull();
   });
 
   it("expands a folded concept-group result to its member links", async () => {
@@ -1112,11 +1134,12 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(memberSlug?.textContent?.trim()).toBe("dispink-2019");
   });
 
-  it("renders codes as a code-first table: highlighted code cell, 'Used in' owner variable link, no owner-classification list", async () => {
-    // #808 round 3: each code-system bucket is a compact code-FIRST grid table —
-    // one row per code, the CODE the highlighted primary cell, "Used in" = the
-    // owner VARIABLES (the navigable targets). The owner CLASSIFICATIONS are NOT
-    // rendered per row (the bucket heading already names the classification).
+  it("renders codes as a code-first disclosure: highlighted code cell, muted owner count, owners revealed on expand (#808 round 5)", async () => {
+    // #808 round 5: each code-system bucket is a compact code-FIRST table — one row
+    // per code, the CODE the highlighted primary cell, then the Label and a muted
+    // owner-count summary. A code WITH owners is a disclosure that expands an owner
+    // sub-table; the owner VARIABLES are the navigable targets and the owner
+    // CLASSIFICATION owners appear too (tagged), but only AFTER expansion.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "man",
@@ -1134,7 +1157,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
               ],
               variable_count: 1,
               classifications: [
-                { fqid: "class/atc", short_name: "ATC", name: "ATC owner" },
+                { fqid: "class/atc", short_name: "ATC code list", name: null },
               ],
               classification_count: 1,
               code_system: "ATC",
@@ -1153,15 +1176,23 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // One code row, with the highlighted primary CODE cell.
     const codeCell = document.querySelector(".search-view .code-cell");
     expect(codeCell?.textContent?.trim()).toBe("A10");
-    // "Used in" links the OWNER VARIABLE (the navigable target).
+    // The collapsed row shows the muted owner-count summary; owners are hidden.
+    await expect
+      .element(page.getByText("1 variable · 1 classification"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /ATC-kod/ }))
+      .not.toBeInTheDocument();
+
+    // Expand the disclosure — the owner variable is the navigable target.
+    await page.getByText("Diabetes drugs").click();
     await expect
       .element(page.getByRole("link", { name: /ATC-kod/ }))
       .toHaveAttribute("href", "/catalog/scb/lmed/atc");
-    // The owner CLASSIFICATION ("ATC owner") is NOT rendered per row (the bucket
-    // heading "ATC" is the only place the classification is named).
+    // The owner classification surfaces in the sub-table (tagged "classification").
     await expect
-      .element(page.getByRole("link", { name: /ATC owner/ }))
-      .not.toBeInTheDocument();
+      .element(page.getByRole("link", { name: /ATC code list/ }))
+      .toHaveAttribute("href", "/catalog/class/atc");
   });
 });
 

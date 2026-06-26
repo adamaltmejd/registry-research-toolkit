@@ -227,6 +227,28 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   }
   return [...buckets.values()];
 }
+
+// The collapsed code row's MUTED owner-count summary (#808 round 5): the full
+// owner totals (`variable_count` / `classification_count`, before the slice cap),
+// pluralized, joined with " · ", omitting a zero side — e.g. "11 variables",
+// "2 classifications", "11 variables · 2 classifications". An all-zero code shows
+// no summary (it's not a disclosure at all — see codeRow).
+function usageSummary(result: CodeSearchResult): string {
+  const parts: string[] = [];
+  if (result.variable_count > 0) {
+    parts.push(
+      `${result.variable_count} variable${result.variable_count === 1 ? "" : "s"}`,
+    );
+  }
+  if (result.classification_count > 0) {
+    parts.push(
+      `${result.classification_count} classification${
+        result.classification_count === 1 ? "" : "s"
+      }`,
+    );
+  }
+  return parts.join(" · ");
+}
 </script>
 
 <article class="search-view">
@@ -347,7 +369,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
               {/each}
             </div>
           {:else if group.group === "codes"}
-            <!-- Per-code-system buckets (#393 item 3, #808 round 3). The bucket
+            <!-- Per-code-system buckets (#393 item 3, #808 round 5). The bucket
                  heading NAMES the classification / value-set the codes come from
                  (the null bucket → "Register-local"), so each code row need NOT
                  repeat its owner classification. The codes are already
@@ -355,18 +377,21 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
                  groupCodesBySystem preserves first-appearance order, so curated
                  systems lead; null/empty code_system folds into the trailing
                  "Register-local" bucket. Each bucket is a compact, code-FIRST grid
-                 table — the CODE is the highlighted primary column; the Label is
-                 the second column. A code's owner VARIABLES (when present) render
-                 as a column-spanning muted "Used in" sub-line UNDER the row, so a
-                 classification value-set code with NO owners is just a compact
-                 Code · Label row (no empty third column). -->
+                 table — the CODE is the highlighted primary column, the Label the
+                 second, and a MUTED owner-count summary the third. A code WITH
+                 owners is a native <details> DISCLOSURE (the <summary> is the
+                 aligned collapsed row, keyboard- + `aria-expanded`-correct for
+                 free) that expands an indented owner sub-table; an OWNERLESS code
+                 (the common value-set code) is a plain, non-expandable Code · Label
+                 row with no count. -->
             {#each groupCodesBySystem(group.results) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">{system.label}</h4>
                 <div class="children table codes" role="presentation">
-                  <div class="head-row" aria-hidden="true">
+                  <div class="head-row code-cells" aria-hidden="true">
                     <span class="col-head">Code</span>
                     <span class="col-head">Label</span>
+                    <span class="col-head">Used in</span>
                   </div>
                   {#each system.codes as result, i (i)}
                     {@render codeRow(result)}
@@ -488,43 +513,78 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   {/if}
 {/snippet}
 
-<!-- A compact, code-FIRST code row (#808 round 4). TWO columns — the highlighted
-     primary CODE (mono + strong + a code-tint ink) and its Label; the owner
-     classification is NOT repeated per row (the bucket heading already names it).
-     A code has no own page and most classification value-set codes have NO owner
-     variables, so the third column is dropped: the owner VARIABLES render ONLY
-     when present, as a column-spanning muted "Used in" sub-line UNDER the row
-     (like the variable-definition sub-line), each owner a navigable link, capped
-     with a muted "+N more" from `variable_count`. A code with zero owners is just
-     a compact Code · Label row (nothing extra). -->
-{#snippet codeRow(result: CodeSearchResult)}
-  <div class="leaf-row code-row">
+<!-- A compact, code-FIRST code row (#808 round 5) — a master-detail disclosure.
+     THREE collapsed columns: the highlighted primary CODE (mono + strong + a
+     code-tint ink), its Label, and a MUTED owner-COUNT summary ("11 variables" /
+     "2 classifications" / "11 variables · 2 classifications", omitting a zero
+     side). The owner classification is NOT named per row (the bucket heading
+     already names the value-set). A code's owners are no longer exploded inline:
+     a code WITH owners (variable_count or classification_count > 0) is a native
+     <details>, its <summary> the collapsed grid row (keyboard- + aria-expanded-
+     correct for free), expanding an indented owner SUB-TABLE — one row per owner
+     MATCH (variable owners first with their muted register, then classification
+     owners as a `class`-tone Tag), each a whole-row link to the owner's catalog
+     node (display:contents idiom; a null-fqid owner → a non-link row), capped per
+     side with a muted "+N more" from the count vs the returned slice length. A
+     code with ZERO owners (the common classification value-set code) is a plain,
+     NON-expandable Code · Label row with no count and no disclosure. -->
+{#snippet ownerSubRows(result: CodeSearchResult)}
+  {#each result.variables as owner, i (i)}
+    {#if owner.fqid}
+      <a class="owner-row" href={catalogHref(owner.fqid)}>
+        <span class="row-link">{owner.name ?? leafSlug(owner.fqid)}</span>
+        {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
+      </a>
+    {:else}
+      <div class="owner-row plain">
+        <span class="row-link plain">{owner.name ?? "—"}</span>
+        {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
+      </div>
+    {/if}
+  {/each}
+  {#if result.variable_count > result.variables.length}
+    <div class="owner-row more-row">
+      <span class="more muted">
+        +{result.variable_count - result.variables.length} more
+      </span>
+    </div>
+  {/if}
+  {#each result.classifications as owner, i (i)}
+    {#if owner.fqid}
+      <a class="owner-row" href={catalogHref(owner.fqid)}>
+        <span class="row-link">{owner.short_name ?? owner.name ?? leafSlug(owner.fqid)}</span>
+        <span class="owner-kind"><Tag tone="class">classification</Tag></span>
+      </a>
+    {:else}
+      <div class="owner-row plain">
+        <span class="row-link plain">{owner.short_name ?? owner.name ?? "—"}</span>
+        <span class="owner-kind"><Tag tone="class">classification</Tag></span>
+      </div>
+    {/if}
+  {/each}
+  {#if result.classification_count > result.classifications.length}
+    <div class="owner-row more-row">
+      <span class="more muted">
+        +{result.classification_count - result.classifications.length} more
+      </span>
+    </div>
+  {/if}
+{/snippet}
+{#snippet codeCells(result: CodeSearchResult)}
+  <span class="code-cells">
     <code class="code-cell mono">{result.code}</code>
     <span class="code-label">{result.label}</span>
-  </div>
-  {#if result.variables.length > 0}
-    <div class="span-row used-in-row">
-      <span class="used-in-label muted">Used in:</span>
-      {#each result.variables as owner, i (i)}
-        {#if owner.fqid}
-          <a class="owner" href={catalogHref(owner.fqid)}>
-            <span class="row-link">{owner.name ?? leafSlug(owner.fqid)}</span>
-            {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
-          </a>
-        {:else}
-          <span class="owner"
-            ><span class="row-link plain">{owner.name ?? "—"}</span>
-            {#if owner.register}<span class="register muted">{owner.register}</span
-              >{/if}</span
-          >
-        {/if}
-      {/each}
-      {#if result.variable_count > result.variables.length}
-        <span class="more muted">
-          +{result.variable_count - result.variables.length} more
-        </span>
-      {/if}
-    </div>
+    <span class="usage-count muted">{usageSummary(result)}</span>
+  </span>
+{/snippet}
+{#snippet codeRow(result: CodeSearchResult)}
+  {#if result.variable_count > 0 || result.classification_count > 0}
+    <details class="code-row code-disclosure">
+      <summary>{@render codeCells(result)}</summary>
+      <div class="owner-table">{@render ownerSubRows(result)}</div>
+    </details>
+  {:else}
+    <div class="code-row">{@render codeCells(result)}</div>
   {/if}
 {/snippet}
 
@@ -764,9 +824,94 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     /* Classification · Name */
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
+  /* The codes bucket is a master-detail disclosure list (#808 round 5), NOT a flat
+     grid: a `<details>` row must STACK its collapsed <summary> over its expanded
+     owner sub-table, which a `display:contents` grid leaf can't do. So the bucket
+     is a FLEX COLUMN of rows; column alignment lives on an inner `.code-cells`
+     grid that the head row AND every collapsed row (a <summary> or the ownerless
+     <div>) share with the SAME template. A leading fixed-width MARKER column holds
+     the disclosure triangle (a custom rotating glyph — the native list marker is
+     suppressed so the cells don't wrap below it); the head row + ownerless rows
+     reserve the same marker column (empty) so every collapsed row lines up as one
+     aligned table regardless of which rows are disclosures. Overrides the shared
+     `.children.table` grid. */
   .children.table.codes {
-    /* Code(highlighted) · Label — owners render as a spanning sub-line below. */
-    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
+  }
+  .children.table.codes > .head-row {
+    display: grid;
+  }
+  .code-cells {
+    display: grid;
+    /* marker · Code(highlighted) · Label · usage-count. */
+    grid-template-columns:
+      1rem minmax(0, max-content) minmax(0, 1fr) minmax(0, max-content);
+    column-gap: var(--space-3);
+    align-items: baseline;
+  }
+  .code-cells > * {
+    min-width: 0;
+  }
+  /* Every `.code-cells` reserves the leading marker column with an empty `::before`
+     so the head row, ownerless rows, and disclosure summaries all align. Only a
+     disclosure summary's marker carries the triangle glyph (the native list marker
+     is suppressed below so the cells don't wrap onto a second line); it rotates
+     down when the <details> is open. */
+  .code-cells::before {
+    content: "";
+  }
+  .code-row > summary > .code-cells::before {
+    content: "▸";
+    color: var(--text-muted);
+    font-size: 0.8em;
+    transition: transform 0.12s ease;
+  }
+  .code-row[open] > summary > .code-cells::before {
+    transform: rotate(90deg);
+  }
+  /* A code DISCLOSURE row: <details>; its <summary> carries the collapsed cells. A
+     non-disclosure (ownerless) code row carries its `.code-cells` directly. Both
+     get the same row padding + hairline so all collapsed rows align as one table.
+     The native disclosure marker is suppressed (the custom ::before is the glyph). */
+  .code-row > summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  .code-row > summary::-webkit-details-marker {
+    display: none;
+  }
+  .code-row > summary,
+  .code-row:not(.code-disclosure) {
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-row > summary:hover,
+  .code-row:not(.code-disclosure):hover {
+    background: var(--surface-hover);
+  }
+  /* The owner SUB-TABLE under an expanded disclosure: indented, one row per owner
+     match, each a whole-row link (display:contents idiom) or a non-link row. */
+  .owner-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0.4rem 0 0.6rem 1.25rem;
+  }
+  .owner-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    font-size: 0.9em;
+  }
+  .owner-row:hover .row-link {
+    text-decoration: underline;
+  }
+  .owner-kind {
+    line-height: 1;
   }
   /* The uppercase micro-label header row (matches DataTable's <th> treatment). */
   .head-row {
@@ -829,36 +974,12 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   .code-label {
     overflow-wrap: anywhere;
   }
-  /* A code's owner sub-line spans both columns UNDER the Code · Label row (only
-     rendered when the code HAS owner variables). It and the Code/Label row read
-     as ONE unit: the Code/Label cells drop their hairline (the sub-line's border
-     closes the unit), and the sub-line de-indents its top padding to sit tight
-     under the row. */
-  .code-row:has(+ .used-in-row) > * {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .used-in-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.15rem 0.5rem;
-    padding-top: 0.1rem;
-  }
-  .used-in-label {
+  /* The MUTED owner-count summary in the collapsed code row's third column —
+     right-aligned to read as a trailing tally, mirroring the variable slug cell. */
+  .usage-count {
     font-size: 0.85em;
-  }
-  .owner {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    color: inherit;
-    text-decoration: none;
-    overflow-wrap: anywhere;
-    font-size: 0.9em;
-  }
-  .owner:hover .row-link {
-    text-decoration: underline;
+    text-align: right;
+    white-space: nowrap;
   }
 
   .concept-group {
