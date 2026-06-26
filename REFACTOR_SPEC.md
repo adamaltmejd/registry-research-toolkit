@@ -105,16 +105,21 @@ unchanged.
 
 ## 11 — Steward catalogs
 
-Only `stewards/global/` exists. Author the two real steward catalogs: each steward's
-`steward.project_data.json` is built against the `global` deployment and committed to
-`reg_webapp/stewards/<id>/`. The Docker image rebuild picks them up; new hostnames are
-wired at Cloudflare. Order export exists in CSV form (default template) for all three.
-The SOS classification data path this step depended on shipped (#210, closed via PRs
-#273/#274). Remaining sub-concern: steward-catalog admission keying (#206) — resolvable
-at step-11 kickoff, when it becomes observable whether IFAU/SWECOV actually restrict at
-representation level, but it must close before the first non-global catalog is committed
-and its hostname goes live. The LOVA/LVM curation (#211) that was originally batched
-into this step shipped early (PR #359, 2026-06-12) — no longer a step-11 concern.
+**Partially shipped.** The `swecov` steward catalog shipped in #365 PR3:
+`reg_webapp/stewards/swecov/steward.project_data.json` is committed (column-based
+admission, 67.0% physical-column coverage; see `reg_webapp/stewards/swecov/README.md`).
+The `steward` subcommand of the untracked `input_data/swecov/build_catalog.py` generates
+it against the flavored reg_meta DB. Admission keying (#206) closed with that PR.
+
+Remaining (#365 PR4): deploy wiring for the swecov deployment — a hostname registered at
+Cloudflare (`steward.toml` currently carries a `swecov.example.org` placeholder), and a
+Docker image that bundles BOTH the committed catalog AND the **flavored** `extend-db` DB
+(`REG_META_DB` pointed at it). The catalog binds steward-only providers (`swedbank`,
+`region-*`, `swecov`, …) that the *global* release DB does not contain, so booting
+`REG_WEBAPP_STEWARD=swecov` against the plain global asset would drop every steward-only
+binding as drift — the flavored DB must ship as the deployment's reg_meta asset. The
+`ifau` steward catalog has not been authored yet. Order export exists in CSV form
+(default template) for all three.
 
 The SPA catalog-authoring mode (distinct from project authoring) and a `reg-meta-build`
 steward-diff CLI are **deferred post-v1**: steward catalogs are plain `ProjectData`

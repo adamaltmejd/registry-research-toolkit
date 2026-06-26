@@ -661,7 +661,10 @@ broken binding to the index and never surface it.
 Adding a steward is a monorepo PR (drop a directory, register the hostname, rebuild).
 `REG_WEBAPP_STEWARD` selects which steward a process serves; `REG_WEBAPP_STEWARDS_DIR`
 overrides the on-disk root for a packaged wheel/Docker image (the `stewards/` sibling
-doesn't exist there). Remaining: the SPA catalog-authoring mode, a
+doesn't exist there). A real filtered steward catalog now ships:
+`stewards/swecov/steward.project_data.json` (column-based admission against the flavored
+reg_meta DB; see `stewards/swecov/README.md` for provenance and coverage). Remaining:
+deploy wiring for the swecov hostname, the SPA catalog-authoring mode, a
 `reg-meta-build steward-diff` CLI, and per-steward `extensions` — see
 `REFACTOR_SPEC.md`.
 
