@@ -596,7 +596,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   }
   .hit-detail mark {
     background: var(--accent-bg);
-    color: var(--accent);
+    color: var(--accent-ink);
     border-radius: var(--radius);
     padding: 0 0.1em;
   }

@@ -583,6 +583,13 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   .chip:hover {
     background: var(--accent-bg);
   }
+  /* Scope the hover ink to non-active chips: an active chip keeps its #fff on the
+     accent fill. Without :not(.active), this rule and .chip.active{color:#fff} are
+     equal specificity (0,2,0) and source order would let --accent-ink (dark rust)
+     clobber the white, giving dark-on-dark accent fill (~1.2:1, illegible). */
+  .chip:not(.active):hover {
+    color: var(--accent-ink);
+  }
   .chip.active:hover {
     background: var(--accent);
     filter: brightness(0.95);

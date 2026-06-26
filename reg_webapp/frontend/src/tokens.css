@@ -1,0 +1,347 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   reg_webapp design tokens — the canonical design-system layer (#801 / #802).
+
+   Two-layer architecture (see reg_webapp/DESIGN.md → "Visual language"):
+     1. PRIMITIVE RAMPS  (--gray-*, --rost-*, status/categorical hues) — raw
+        scales. Components must NEVER reference a primitive directly.
+     2. SEMANTIC ROLES   (--bg, --surface, --text, --accent, --err, …) — the
+        ONLY layer components read. Dark mode is a pure remap of these roles
+        (see the [data-theme="dark"] seam at the bottom), so authoring against
+        roles makes a re-tint or a dark theme free.
+
+   Imported once in main.ts (before mount) and once from the Vitest browser
+   setup (src/test-setup.browser.ts) so component tests render with the same
+   tokens + fonts the app does.
+
+   ── Legacy alias bridge ──────────────────────────────────────────────────
+   Live components (App.svelte + src/lib/*.svelte) reference a handful of
+   pre-#802 token names (--muted, --level-error/-warning/-info, --text-base,
+   --banner-error-*). Restyling those pages is the work of the later design-
+   system children (#806–#809), NOT this foundation PR. So every currently
+   consumed name is RETAINED below, mapped onto the new roles, and removed as
+   those children migrate the pages off it. This is the deliberate phased-
+   migration seam the epic mandates — not a pre-v1 compat shim.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* ── Webfonts (self-hosted woff2, OFL; no runtime CDN) ────────────────────
+   latin covers Swedish å/ä/ö (U+00E5/E4/F6 ∈ U+0000–00FF); latin-ext carries
+   the wider Latin range. Unicode-ranges are the canonical fontsource values so
+   the browser fetches only the subset a glyph needs.
+   Licensed under SIL OFL 1.1 — see src/fonts/*-LICENSE.txt (and src/fonts/README.md). */
+
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-400.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-ext-400.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-500.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-ext-500.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-600.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-ext-600.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-700.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/schibsted-grotesk-latin-ext-700.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-latin-400.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-latin-ext-400.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-latin-500.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-latin-ext-500.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* ════════════════════════════════════════════════════════════════════════
+     LAYER 1 — PRIMITIVE RAMPS (never referenced by components)
+     ════════════════════════════════════════════════════════════════════════ */
+
+  /* Warm graphite neutrals: ink (1) → off-white (12). */
+  --gray-1: #1a1a18;
+  --gray-2: #2b2b28;
+  --gray-3: #3d3d39;
+  --gray-4: #51514c;
+  --gray-5: #6b6b64;
+  --gray-6: #71716a;
+  --gray-7: #a09f96;
+  --gray-8: #c0bfb6;
+  --gray-9: #d7d6cd;
+  --gray-10: #e7e6de;
+  --gray-11: #f2f1ea;
+  --gray-12: #fafaf8;
+
+  /* Brand rust ramp around Rost #B8552A (dark → light tint). */
+  --rost-1: #3a190c;
+  --rost-2: #532413;
+  --rost-3: #6e311b;
+  --rost-4: #8a3f22;
+  --rost-5: #a44b29;
+  --rost-6: #b8552a;
+  --rost-7: #c66c44;
+  --rost-8: #d4886a;
+  --rost-9: #e3aa93;
+  --rost-10: #efccbd;
+  --rost-11: #f7e5dc;
+  --rost-12: #fcf3ee;
+
+  /* Status hues — a dark AA-cleared foreground stop + a light fill stop each.
+     Status is chromatically COOLER than the warm brand (DESIGN.md accent-vs-
+     status rule) so it can never read as brand chrome. */
+  --red-fg: #c42b2b;
+  --red-bg: #fdecec;
+  --red-border: #f0a8a8; /* cool red hairline for error banners/badges */
+  --ochre-fg: #7a5c00;
+  --ochre-bg: #f7f0d8;
+  --slate-fg: #3a6b8c;
+  --slate-bg: #e6eef4;
+  --green-fg: #1e7a3c;
+  --green-bg: #e3f3e8;
+
+  /* Categorical palette — tags result/node TYPE (REG/VAR/CODE/classification/
+     group). Its own sub-system: never reuse the brand accent or status hues
+     for type identity, or "is a variable" and "is selected/an error" collide. */
+  --cat-reg: #1f7a7a; /* teal — registers */
+  --cat-var: #4b4b9e; /* indigo — variables */
+  --cat-code: #9a6b1a; /* gold — value-set codes */
+  --cat-class: #7a3f8c; /* plum — classifications */
+  --cat-group: #2f6b3f; /* moss — concept groups */
+
+  /* ════════════════════════════════════════════════════════════════════════
+     LAYER 2 — SEMANTIC ROLES (the layer components consume)
+     ════════════════════════════════════════════════════════════════════════ */
+
+  /* Backgrounds & surfaces. */
+  --bg: var(--gray-12); /* warm off-white page (~#fafaf8) */
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: var(--gray-11);
+
+  /* Text. */
+  --text: var(--gray-1);
+  --text-muted: var(--gray-5);
+  --text-faint: var(--gray-6);
+
+  /* Borders. */
+  --border: var(--gray-9);
+  --border-strong: var(--gray-8);
+
+  /* Brand accent — interactive chrome ONLY (links, primary buttons, selection,
+     focus, active nav). NEVER a status color (DESIGN.md accent-vs-status). */
+  /* The #801-locked brand: fills, borders, links-on-surface, focus, active
+     chrome. NOT for accent-colored text on a soft tint — use --accent-ink. */
+  --accent: var(--rost-6); /* #B8552A */
+  --accent-fg: #ffffff; /* text/icon on an accent fill */
+  --accent-bg: var(--rost-12); /* soft rost tint (replaces old blue #eff4ff) */
+  /* Accent-COLORED TEXT on a soft tint/surface. The warm brand (#B8552A) lacks
+     contrast headroom — it's only 4.39:1 on --accent-bg, below WCAG AA (4.5:1)
+     for normal text — so accent text on a tint needs a darker ink. rost-5
+     (#a44b29) clears AA on the tint (≈5.3:1) and on white (≈5.8:1). --accent
+     stays the chrome/fill brand; this role is text-only. */
+  --accent-ink: var(--rost-5); /* #a44b29 */
+
+  /* Status roles — AA-cleared FOREGROUND values (text/glyph). Each is paired
+     with a glyph in the UI, never hue alone. The *-bg roles are SEPARATE fill
+     tints for badges/rows — never use a fill tint as a text color. */
+  --err: var(--red-fg);
+  --err-bg: var(--red-bg);
+  --warn: var(--ochre-fg);
+  --warn-bg: var(--ochre-bg);
+  --info: var(--slate-fg);
+  --info-bg: var(--slate-bg);
+  --ok: var(--green-fg);
+  --ok-bg: var(--green-bg);
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --font-ui:
+    "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+
+  /* Type scale (roles components read). */
+  --text-display: 2.25rem;
+  --text-h1: 1.75rem;
+  --text-h2: 1.375rem;
+  --text-h3: 1.125rem;
+  --text-body: 1rem;
+  --text-sm: 0.85rem;
+  --text-micro: 0.72rem;
+
+  /* Tracked uppercase micro-label convention (table headers / section eyebrows
+     — the device that gives the dashboard look its hierarchy). The utility
+     class itself is later children's work; these are the size+tracking tokens
+     it composes. */
+  --micro-label-size: var(--text-micro);
+  --micro-label-tracking: 0.06em;
+
+  /* ── Geometry ────────────────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --radius-sm: 5px; /* controls (inputs, buttons, chips) */
+  --radius: 8px; /* panels/cards */
+
+  /* ── Elevation ───────────────────────────────────────────────────────── */
+  /* One soft shadow for raised panels/cards/popovers. No heavy drop shadows. */
+  --elevation-raised:
+    0 1px 2px rgba(26, 26, 24, 0.06), 0 2px 8px rgba(26, 26, 24, 0.08);
+
+  /* ── Interaction states ──────────────────────────────────────────────── */
+  /* Accessible keyboard focus outline, retinted to the brand: a 2px accent
+     ring over an accent-tint offset (an outline, not a color-only shift). */
+  --focus-ring: 0 0 0 2px var(--accent-bg), 0 0 0 3px var(--accent);
+  --surface-hover: var(--gray-11);
+  --surface-selected: var(--accent-bg);
+
+  /* ── Motion ──────────────────────────────────────────────────────────── */
+  /* Small + functional (popover/disclosure transitions), not decorative. */
+  --motion-fast: 140ms;
+
+  /* ════════════════════════════════════════════════════════════════════════
+     LEGACY ALIAS BRIDGE — currently-consumed names mapped onto the new roles.
+     Retained ONLY for not-yet-migrated pages; removed as children #806–#809
+     restyle each page off them. Do NOT add new consumers of these.
+     ════════════════════════════════════════════════════════════════════════ */
+  --muted: var(--text-muted);
+  --mono: var(--font-mono);
+  --text-base: var(--text-body);
+  --level-error: var(--err);
+  --level-warning: var(--warn);
+  --level-info: var(--info);
+  --banner-error-bg: var(--err-bg);
+  --banner-error-border: var(--red-border);
+}
+
+/* Base typography + the explicit light-theme pin. Every role above assumes a
+   light page, so we pin --bg/--text on the body — without it an OS dark-mode
+   default paints dark behind light-assuming tokens (unreadable). The dark seam
+   below is the deliberate opt-in remap. */
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ── Dark-ready seam ───────────────────────────────────────────────────────
+   Authored as a pure role remap: a later child (#810) fills these by pointing
+   the roles at dark primitive stops. No dark values and no toggle land here —
+   this is the seam only, so components (which read roles only) need no change. */
+[data-theme="dark"] {
+  /* roles remapped to dark primitive stops — values land in a later child */
+}

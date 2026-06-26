@@ -167,7 +167,7 @@ const show = $derived(
      rest of the app. */
   .hit-detail mark {
     background: var(--accent-bg);
-    color: var(--accent);
+    color: var(--accent-ink);
     border-radius: var(--radius);
     padding: 0 0.1em;
   }

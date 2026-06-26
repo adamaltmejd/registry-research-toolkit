@@ -1,3 +1,4 @@
+import "./tokens.css";
 import { mount } from "svelte";
 import App from "./App.svelte";
 import { IndexedDBPersistence } from "./lib/indexeddb_persistence";
