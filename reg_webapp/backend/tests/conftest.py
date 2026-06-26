@@ -369,7 +369,8 @@ def _seed_succession_chain(src: sqlite3.Connection) -> None:
         scb/lisa/renamed-head → scb/lisa/renamed-mid → scb/rams/syss
 
     Register grain (#412):
-        scb/oldreg → scb/lisa
+        scb/oldreg → scb/lisa   (dead predecessor — the renamed-register 301 case)
+        scb/rams   → scb/lisa   (LIVE predecessor — the #859 CHANGE-1 404-not-301 lock)
 
     The dead predecessors carry NO live row (no ``variable`` / ``register`` — exactly
     the renamed-slug case: citing them 404s). Each chain terminates at a LIVE,
@@ -389,11 +390,22 @@ def _seed_succession_chain(src: sqlite3.Connection) -> None:
             ("scb", "lisa", "renamed-mid", "scb", "rams", "syss"),
         ],
     )
-    src.execute(
+    src.executemany(
         "INSERT INTO register_replaced_by "
         "(predecessor_provider, predecessor_register, "
         "successor_provider, successor_register, note) "
-        "VALUES ('scb','oldreg','scb','lisa','auto:test')"
+        "VALUES (?,?,?,?,'auto:test')",
+        [
+            # Dead register → live `scb/lisa` (the #412 dead-register 301 case).
+            ("scb", "oldreg", "scb", "lisa"),
+            # LIVE register `scb/rams` → live `scb/lisa`: a succession edge between
+            # two LIVE registers, mirroring the live-binding `kon → syss` edge. Lets
+            # the steward test pin the CHANGE-1 fix — a LIVE unheld register with a
+            # `register_replaced_by` edge to a HELD successor must 404, NOT 301.
+            # `scb/lisa` has no outbound edge, so `scb/oldreg`'s terminal walk is
+            # unaffected (still ends at `scb/lisa`).
+            ("scb", "rams", "scb", "lisa"),
+        ],
     )
 
 

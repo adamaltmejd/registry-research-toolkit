@@ -321,6 +321,21 @@ def test_unheld_live_register_404s(steward_client):
     assert "catalog" in resp.json()["detail"].lower()
 
 
+def test_live_unheld_register_with_held_successor_404s_not_301(steward_client):
+    # CHANGE-1 (register-grain mirror of the binding-grain
+    # test_live_unheld_binding_with_held_successor_404s_not_301): scb/rams is a LIVE
+    # register the steward (holds only scb/lisa) does NOT hold, AND it carries a
+    # `register_replaced_by` edge to the HELD scb/lisa. It must 404 — NOT 301 to the
+    # held successor. This pins the closed leak: the old post-resolve admits_register
+    # 404 inside _resolve_to_node was caught by get_catalog_node's generic
+    # `except HTTPException → resolve_terminal_successor → 301` branch (no
+    # live-vs-dead, no held check), wrongly redirecting a live unheld register. The
+    # pre-resolve _require_admitted gate now 404s it before that branch is reached.
+    resp = steward_client.get("/api/catalog/scb/rams", follow_redirects=False)
+    assert resp.status_code == 404
+    assert "catalog" in resp.json()["detail"].lower()
+
+
 def test_unheld_live_provider_404s(steward_client):
     # Fix 1: `sos` is a seeded provider (resolves LIVE) the steward does not hold.
     resp = steward_client.get("/api/catalog/sos")

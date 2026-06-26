@@ -157,7 +157,7 @@ def get_search(
     # its 2-seg FQID, a variable hit on its 3-seg binding FQID.
     index = request.app.state.catalog_index
     fqids = (
-        index.held_register_fqids() | index.admitted_variable_fqids()
+        index.held_register_fqids | index.admitted_variable_fqids
         if index is not None
         else None
     )
