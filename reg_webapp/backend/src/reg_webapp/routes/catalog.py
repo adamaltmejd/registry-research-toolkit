@@ -1192,11 +1192,7 @@ def get_binding_dimensions(
         # held (same rule as `_register_response`), dropping a group with no held
         # member, so a steward sees only its own holdings in the facet groups.
         if index is not None:
-            groups = [
-                narrowed
-                for g in groups
-                if (narrowed := _narrow_group_members(g, index)) is not None
-            ]
+            groups = _narrow_groups(groups, index)
     return DimensionsResponse(binding=str(parsed), dimensions=groups)
 
 
