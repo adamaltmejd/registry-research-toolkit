@@ -44,6 +44,12 @@ the lead runs the authoritative union Verify on the assembled result.
    shared module), or — under parallel fan-out — touching a helper outside your assigned
    file set, is an altitude fork to surface (below), not to do silently. Keep the diff
    tight and idiomatic to the surrounding code.
+   - **Authoring NEW UI** (a new component, page, or view under `reg_webapp/frontend/`,
+     or a substantial visual rework — not a copy/logic tweak): invoke the
+     `frontend-design:frontend-design` skill for design guidance **before** building,
+     and apply it. It is not advertised in your startup context, so call it by that
+     exact id via the `Skill` tool. This is how the design system stays out of
+     generic-AI aesthetics; skip it only for non-visual or trivial frontend edits.
 3. Run the plan's Verify (or the touched package's standard checks) until green:
    - Python: `uv run ruff check`, `uv run ruff format --check`,
      `uvx --from ty==0.0.49 ty check`, `uv run python -m pytest <pkg>/`.

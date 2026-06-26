@@ -368,9 +368,8 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   `preview_start` + `preview_snapshot` / `preview_click` / `preview_resize` (now
   `autoPort` + `dev.sh preview`-backed, so it's collision-free across sessions and
   serves the worktree's own code). Attach a screenshot as the proof, the same way a
-  build PR attaches its `build-db`. If the `/web-design-reviewer` skill is installed,
-  also use it for a structured design-quality pass (and `/frontend-design` when
-  authoring new UI).
+  build PR attaches its `build-db`. Also run `/web-design-reviewer` for a structured
+  design-quality pass, and `/frontend-design` when authoring new UI.
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip; after merging, confirm the PR's changes are actually present on main — the
   GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing
