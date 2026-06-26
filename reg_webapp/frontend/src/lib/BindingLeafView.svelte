@@ -782,7 +782,7 @@ const repSegment = $derived(
     border: 1px solid var(--accent);
     border-radius: 999px;
     background: var(--accent-bg);
-    color: var(--accent);
+    color: var(--accent-ink);
     font: inherit;
     font-size: 0.85rem;
     cursor: pointer;
@@ -805,7 +805,7 @@ const repSegment = $derived(
     border: 1px solid var(--accent);
     border-radius: 4px;
     background: var(--accent-bg);
-    color: var(--accent);
+    color: var(--accent-ink);
     cursor: pointer;
   }
   .add-to-project:hover:enabled {
@@ -862,7 +862,7 @@ const repSegment = $derived(
   .pick.selected {
     border-color: var(--accent);
     background: var(--accent-bg);
-    color: var(--accent);
+    color: var(--accent-ink);
   }
   .pick .slug {
     font-family: var(--mono, monospace);

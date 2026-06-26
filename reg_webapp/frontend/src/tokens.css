@@ -26,7 +26,8 @@
 /* ── Webfonts (self-hosted woff2, OFL; no runtime CDN) ────────────────────
    latin covers Swedish å/ä/ö (U+00E5/E4/F6 ∈ U+0000–00FF); latin-ext carries
    the wider Latin range. Unicode-ranges are the canonical fontsource values so
-   the browser fetches only the subset a glyph needs. */
+   the browser fetches only the subset a glyph needs.
+   Licensed under SIL OFL 1.1 — see src/fonts/*-LICENSE.txt (and src/fonts/README.md). */
 
 @font-face {
   font-family: "Schibsted Grotesk";
@@ -238,9 +239,17 @@
 
   /* Brand accent — interactive chrome ONLY (links, primary buttons, selection,
      focus, active nav). NEVER a status color (DESIGN.md accent-vs-status). */
+  /* The #801-locked brand: fills, borders, links-on-surface, focus, active
+     chrome. NOT for accent-colored text on a soft tint — use --accent-ink. */
   --accent: var(--rost-6); /* #B8552A */
   --accent-fg: #ffffff; /* text/icon on an accent fill */
   --accent-bg: var(--rost-12); /* soft rost tint (replaces old blue #eff4ff) */
+  /* Accent-COLORED TEXT on a soft tint/surface. The warm brand (#B8552A) lacks
+     contrast headroom — it's only 4.39:1 on --accent-bg, below WCAG AA (4.5:1)
+     for normal text — so accent text on a tint needs a darker ink. rost-5
+     (#a44b29) clears AA on the tint (≈5.3:1) and on white (≈5.8:1). --accent
+     stays the chrome/fill brand; this role is text-only. */
+  --accent-ink: var(--rost-5); /* #a44b29 */
 
   /* Status roles — AA-cleared FOREGROUND values (text/glyph). Each is paired
      with a glyph in the UI, never hue alone. The *-bg roles are SEPARATE fill

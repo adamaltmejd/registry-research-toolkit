@@ -846,9 +846,9 @@ Two layers, semantic roles only consumed by components:
   directly.
 - **Semantic roles** — what components use: `--bg`, `--surface`, `--surface-raised`,
   `--surface-sunken`, `--text`, `--text-muted`, `--text-faint`, `--border`,
-  `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, plus the status roles
-  below. Dark mode is a single `[data-theme="dark"]` block that remaps these roles to
-  dark primitive stops — no component CSS changes.
+  `--border-strong`, `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`, plus the
+  status roles below. Dark mode is a single `[data-theme="dark"]` block that remaps
+  these roles to dark primitive stops — no component CSS changes.
 
 The tokens move out of `App.svelte`'s `:global(:root)` (the #689 spike stub) into a
 global `frontend/src/tokens.css` imported once in `main.ts`. The stub's
