@@ -856,6 +856,13 @@ geometry/interaction tokens (`--space-*`, `--radius`, `--focus-ring`,
 `--surface-hover`/`-selected`) fold into the role set; the bare palette
 (`--border`/`--accent`/`--surface`) is replaced, not kept in parallel.
 
+`main.ts` is the SPA entrypoint, but the `*.browser.test.ts` suite renders components
+directly via `vitest-browser-svelte` and does **not** evaluate `main.ts` — so
+`tokens.css` must **also** be imported from the Vitest browser setup (the `setupFiles`
+path in `vite.config.ts`'s `browser` project). Otherwise token-dependent component
+styling runs without the design-system variables/fonts and either breaks or silently
+skips visual regressions.
+
 ### Typography
 
 Self-hosted (woff2 in the bundle — no third-party CDN dependency in a research tool;
@@ -885,9 +892,14 @@ chromatically *cooler* than the brand so it can't be mistaken for it, and (b) pa
 with a **glyph**, never hue alone:
 
 - error → cherry red `--err` `#C42B2B` (✕)
-- warning → cool ochre `--warn` `#9A7400` (▲) — deliberately yellower/cooler than rost
+- warning → cool ochre `--warn` `#7A5C00` (▲) — deliberately yellower/cooler than rost
 - info → slate `--info` `#3A6B8C` (i)
-- success → green `--ok` `#2F8F4E`
+- success → green `--ok` `#1E7A3C`
+
+These are the **text/glyph foreground** values: each clears WCAG AA (≥4.5:1) on the
+off-white/white surfaces, since status appears as small labels and glyphs. The lighter
+fill/badge tints (the soft backgrounds behind a status row) are separate ramp stops, not
+these foregrounds — never use a fill tint as text color.
 
 A separate small **categorical** palette tags result/node *type* (`REG` teal, `VAR`
 indigo, `CODE` gold, classification, group) in search and listings. It is its own
@@ -908,9 +920,10 @@ sub-system — never reuse the brand accent or the status colors for type identi
 
 - **App shell** replaces the centered 56rem ribbon: a persistent left **rail** (brand,
   primary nav, contextual facets — keeps all 8 providers reachable), a **topbar**
-  (breadcrumb + a ⌘K command bar promoting the existing `SearchOmnibox`), and a wide
-  content canvas. This fixes the "cramped *and* empty" failure mode of the narrow column
-  on dense pages.
+  (breadcrumb + a command bar promoting the existing `SearchOmnibox`), and a wide
+  content canvas. The command-bar shortcut is platform-adaptive — `Meta/Ctrl+K`,
+  displayed as `⌘K` on macOS and `Ctrl+K` elsewhere (never bind/label Mac-only). This
+  fixes the "cramped *and* empty" failure mode of the narrow column on dense pages.
 - **Panels** are the unit of grouping: a header (micro-label title + optional
   meta/badge) over a body. **DataTable** is the workhorse — uppercase micro-label
   headers, right-aligned mono numerics, zebra-free hairline rows, hover +
