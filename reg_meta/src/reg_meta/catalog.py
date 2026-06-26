@@ -928,6 +928,45 @@ class Catalog:
             )
         return out
 
+    def register_column_coverage(
+        self, provider_slug: str, register_slug: str
+    ) -> dict[tuple[str, str], VariableCoverage]:
+        """Per-DELIVERY-COLUMN coverage for a register's bindings (#819), keyed by
+        `(variable slug, delivery_column_name)`. The sibling of
+        `register_variable_coverage`, but the GROUP BY also splits on
+        `vs.delivery_column_name`, so each representation of a variable (e.g. CDISP
+        vs CDISP5 on one `disponibel-inkomst` member, or DIN83/DIN84/DIN86 on `din8`)
+        gets its OWN window — not the variable's union span. The webapp zips this
+        onto a representation member (`delivery_column` non-None); whole-variable
+        members keep falling back to `register_variable_coverage`. Rows whose
+        `delivery_column_name` is NULL (a stateless variable, or a state with no
+        per-column name) are skipped — they have no per-column key and are served by
+        the variable-level fallback. Same query shape/cost as
+        `register_variable_coverage`."""
+        rows = self._conn.execute(
+            "SELECT v.slug AS slug, vs.delivery_column_name AS col, "
+            "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to, "
+            "COUNT(vs.state_id) AS nstates "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "  AND vs.delivery_column_name IS NOT NULL "
+            "GROUP BY v.variable_id, vs.delivery_column_name",
+            (provider_slug, register_slug),
+        ).fetchall()
+        out: dict[tuple[str, str], VariableCoverage] = {}
+        for r in rows:
+            cov_from, cov_to, open_ended = _coverage_bounds(r["cov_from"], r["cov_to"])
+            out[(r["slug"], r["col"])] = VariableCoverage(
+                coverage_from=cov_from,
+                coverage_to=cov_to,
+                open_ended=open_ended,
+                state_count=r["nstates"],
+            )
+        return out
+
     def provider_register_coverage(
         self, provider_slug: str
     ) -> dict[str, RegisterCoverage]:

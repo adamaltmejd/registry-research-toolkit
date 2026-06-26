@@ -409,6 +409,91 @@ describe("CatalogPicker", () => {
     });
   });
 
+  it("preselects a representation member's column, skipping the chooser (#819 FIX 1)", async () => {
+    // A representation group: two members on ONE variable (one fqid), distinct
+    // delivery columns. Picking the CDISP5 chip must PRESELECT that column — the
+    // resolve is still ambiguous (>1 co-existing column), but the chosen column is
+    // auto-resolved instead of re-opening the chooser.
+    const onpickVariable = vi.fn();
+    const repNode = registerNode("scb/iot", {
+      fqid: "scb/iot/disp",
+      name: "Disponibel inkomst",
+    }) as unknown as Record<string, unknown>;
+    repNode.groups = [
+      {
+        key: "disprep",
+        label: "Disponibel inkomst",
+        source: "edge",
+        axes: ["rep"],
+        members: [
+          {
+            fqid: "scb/iot/disp",
+            name: "Disp (CDISP)",
+            delivery_column: "CDISP",
+            facets: [{ axis: "rep", value: "CDISP", label: "CDISP" }],
+          },
+          {
+            fqid: "scb/iot/disp",
+            name: "Disp (CDISP5)",
+            delivery_column: "CDISP5",
+            facets: [{ axis: "rep", value: "CDISP5", label: "CDISP5" }],
+          },
+        ],
+      },
+    ];
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) =>
+      params
+        ? statesResponse([
+            {
+              delivery_column_name: "CDISP",
+              data_type: "",
+              value_set_id: 1,
+              value_set: [{}, {}, {}],
+              value_set_version_label: "wide",
+              valid_from: "1968-01-01",
+              valid_to: "2024-12-31",
+            },
+            {
+              delivery_column_name: "CDISP5",
+              data_type: "",
+              value_set_id: 2,
+              value_set: [{}, {}, {}, {}],
+              value_set_version_label: "narrow",
+              valid_from: "2020-01-01",
+              valid_to: "2024-12-31",
+            },
+          ])
+        : (repNode as unknown as CatalogNode),
+    );
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/iot",
+      period: "2024",
+      variant: "v1",
+      onpickVariable,
+      oncancel: vi.fn(),
+    });
+
+    // Expand the folded group (its summary counts 1 DISTINCT variable — both reps
+    // share one fqid), then pick the CDISP5 facet chip (plain <button>).
+    await page.getByText("Disponibel inkomst").click();
+    await page.getByRole("button", { name: "CDISP5" }).click();
+
+    // The chooser is SKIPPED — the column was preselected, emitted directly.
+    await expect
+      .element(page.getByRole("group", { name: "Pick a representation" }))
+      .not.toBeInTheDocument();
+    await vi.waitFor(() =>
+      expect(onpickVariable).toHaveBeenCalledWith({
+        variable: "scb/iot/disp",
+        type: "categorical",
+        displayNameDefault: "CDISP5",
+        representation: "CDISP5",
+        resolution: "derived",
+      }),
+    );
+  });
+
   // ── Scenario 3: type-to-filter the variable list ───────────────────────────
   it("autofocuses the filter and narrows the variable list (name + fqid, folded)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(

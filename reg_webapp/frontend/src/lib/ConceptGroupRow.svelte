@@ -4,6 +4,7 @@ import ConceptGroupNavigator from "./ConceptGroupNavigator.svelte";
 import {
   axisValues,
   catalogHref,
+  distinctMemberCount,
   leafSlug,
   memberAt,
   memberKey,
@@ -37,7 +38,10 @@ let {
   group: ConceptGroup;
   noun?: string;
   href?: string;
-  onpick?: (fqid: string) => void;
+  // #819 FIX 1: `deliveryColumn` is the picked member's representation column
+  // (None for a whole-variable member). The picker preselects that representation
+  // instead of re-opening its chooser — see CatalogPicker.pickVariable.
+  onpick?: (fqid: string, deliveryColumn?: string | null) => void;
   disabled?: boolean;
 } = $props();
 
@@ -87,7 +91,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
       type="button"
       class="member-pick"
       {disabled}
-      onclick={() => onpick?.(member.fqid)}
+      onclick={() => onpick?.(member.fqid, member.delivery_column)}
     >
       <code class="member-slug">{leafSlug(member.fqid)}</code>
       {#if member.name && member.name !== group.label}
@@ -106,7 +110,12 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
 
 {#snippet summaryLine()}
   <span class="label">{group.label}</span>
-  <span class="count">{group.members.length} {noun}</span>
+  <!-- #819: count DISTINCT member FQIDs (the variable identity), not raw member
+       rows — a representation group carries several members on one variable (one
+       `fqid`, distinct delivery columns), so `members.length` overstates the
+       "N variables" readout. Distinct-by-fqid is a no-op for axis groups (each
+       facet value is its own variable) and umbrellas (distinct classifications). -->
+  <span class="count">{distinctMemberCount(group.members)} {noun}</span>
   <!-- The group key is a presentation anchor (slug stem / min-member slug /
        curated key per ConceptGroupSummary), NOT an addressable variable
        (#498). Deliberately NOT a <code>/.child-fqid: monospace + that class
@@ -165,7 +174,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
                     class="member-pick"
                     {disabled}
                     title={member.name ?? member.fqid}
-                    onclick={() => onpick?.(member.fqid)}
+                    onclick={() => onpick?.(member.fqid, member.delivery_column)}
                   >
                     <code>{leafSlug(member.fqid)}</code>
                   </button>
@@ -201,7 +210,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
               class="chip member-pick"
               {disabled}
               title={member.name ?? member.fqid}
-              onclick={() => onpick?.(member.fqid)}
+              onclick={() => onpick?.(member.fqid, member.delivery_column)}
             >
               {facet?.label ?? leafSlug(member.fqid)}
             </button>

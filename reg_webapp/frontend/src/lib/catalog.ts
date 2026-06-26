@@ -112,15 +112,29 @@ export function foldGroupedRows<T extends { fqid: string }>(
   return rows;
 }
 
-/** The member count a folded row list represents — group rows count their
- * members, leaves count 1. Keeps the "N variables" readout in VARIABLE units
- * after folding (a register whose 36 variables fold into one matrix row still
- * reports 36, not 1). */
+/** The DISTINCT-variable count a folded row list represents — group rows count
+ * their distinct member FQIDs, leaves count 1. Keeps the "N variables" readout in
+ * VARIABLE units after folding (a register whose 36 variables fold into one matrix
+ * row still reports 36, not 1). #819: a representation group can carry several
+ * members on ONE variable (one `fqid`, distinct `delivery_column`s — e.g. CDISP +
+ * CDISP5), so the variable count dedups by `fqid` rather than counting raw member
+ * rows (53 representation rows over ~36 variables must read as 36 variables). */
 export function countFoldedMembers<T>(rows: GroupedRow<T>[]): number {
   return rows.reduce(
-    (n, row) => n + (row.kind === "group" ? row.group.members.length : 1),
+    (n, row) =>
+      n + (row.kind === "group" ? distinctMemberCount(row.group.members) : 1),
     0,
   );
+}
+
+/** The number of DISTINCT variables a group's members address — its members
+ * deduped by `fqid` (the variable identity). #819: representation members share
+ * one `fqid` across delivery columns, so raw `members.length` overstates the
+ * variable count; this is the variable-unit count for the "N variables" readouts. */
+export function distinctMemberCount(
+  members: readonly { fqid: string }[],
+): number {
+  return new Set(members.map((m) => m.fqid)).size;
 }
 
 /** The filterable text of a group row: its own label/key plus every member's

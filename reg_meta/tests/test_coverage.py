@@ -109,6 +109,60 @@ def test_multistate_fan_out() -> None:
     assert reg.variable_count == 2  # kon + multi, NOT fanned out by 3 states
 
 
+def test_register_column_coverage_distinct_windows() -> None:
+    """A variable with two delivery columns (#819) — e.g. CDISP 1968– vs CDISP5
+    2020– on one `disponibel-inkomst` variable — gets a DISTINCT per-column window
+    from `register_column_coverage`, not the variable's union span. States with a
+    NULL `delivery_column_name` are skipped (no per-column key)."""
+    conn = build_slugged_db()  # scb/lisa/kon, one state with NULL delivery_column
+    add_variable(conn, register_id=1, var_id=400, name="DispInk", slug="disp")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="disp",
+        register_variant_id=10,
+        valid_from="1968-01-01",
+        valid_to="2024-12-31",
+        delivery_column_name="CDISP",
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="disp",
+        register_variant_id=10,
+        valid_from="2020-01-01",
+        valid_to="2024-12-31",
+        delivery_column_name="CDISP5",
+    )
+    # A state with NO delivery column — no per-column key, served by the fallback.
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="disp",
+        register_variant_id=10,
+        valid_from="1900-01-01",
+        valid_to="1967-12-31",
+        delivery_column_name=None,
+    )
+
+    col_cov = Catalog(conn).register_column_coverage("scb", "lisa")
+    # Each representation gets its OWN window — NOT the variable's 1900–2024 union.
+    assert col_cov[("disp", "CDISP")].coverage_from == "1968-01-01"
+    assert col_cov[("disp", "CDISP")].coverage_to == "2024-12-31"
+    assert col_cov[("disp", "CDISP5")].coverage_from == "2020-01-01"
+    assert col_cov[("disp", "CDISP5")].coverage_to == "2024-12-31"
+
+    # The NULL-delivery_column state contributes no per-column key for `disp`.
+    assert ("disp", None) not in col_cov
+    assert all(col is not None for _, col in col_cov)
+
+    # The variable-level union still spans every representation + the NULL state
+    # (the fallback path for whole-variable / column-less members).
+    var_cov = Catalog(conn).register_variable_coverage("scb", "lisa")
+    assert var_cov["disp"].coverage_from == "1900-01-01"
+    assert var_cov["disp"].coverage_to == "2024-12-31"
+
+
 def test_coverage_bounds_mapping() -> None:
     # (coverage_from, coverage_to, open_ended).
     assert _coverage_bounds("2010-01-01", "9999-12-31") == ("2010-01-01", None, True)

@@ -181,7 +181,9 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
     // Pick mode keeps the inline <details>; the >2-axis branch renders the shared
     // navigator, NOT a 2D matrix (which would drop the second shared-fqid rep).
     expect(container.querySelector("table.facet-matrix")).toBeNull();
-    await page.getByText("3 variables").click();
+    // #819 FIX 3: the summary counts DISTINCT variables (2 fqids: dispink ×2 reps
+    // + dispinkhb), NOT the 3 representation rows — `members.length` overstated it.
+    await page.getByText("2 variables").click();
 
     // All 3 members render in the navigator list as pick BUTTONS — none dropped.
     const buttons = container.querySelectorAll(
@@ -199,11 +201,16 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
       (b as HTMLButtonElement).click();
     }
     expect(onpick).toHaveBeenCalledTimes(3);
-    // BOTH delivery columns of scb/iot/dispink were reachable (the dropped rep).
+    // BOTH delivery columns of scb/iot/dispink were reachable (the dropped rep) —
+    // and #819 FIX 1: each emits its representation's `delivery_column` as the 2nd
+    // arg so the picker preselects it instead of re-asking which column.
     expect(onpick.mock.calls.filter((c) => c[0] === "scb/iot/dispink")).toEqual(
-      [["scb/iot/dispink"], ["scb/iot/dispink"]],
+      [
+        ["scb/iot/dispink", "dispink_inkl"],
+        ["scb/iot/dispink", "dispink_exkl"],
+      ],
     );
-    expect(onpick).toHaveBeenCalledWith("scb/iot/dispinkhb");
+    expect(onpick).toHaveBeenCalledWith("scb/iot/dispinkhb", "dispinkhb_inkl");
   });
 
   it("axis identity on member tags is carried by TEXT, not color-only", async () => {
@@ -211,7 +218,7 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
       group: threeAxisGroup(),
       onpick: vi.fn(),
     });
-    await page.getByText("3 variables").click();
+    await page.getByText("2 variables").click();
 
     // Member facet tags are neutral `Tag` primitives (`.tag`), NOT the `--cat-*`
     // type palette, and each names its axis as visible TEXT (the a11y + DESIGN
@@ -230,7 +237,7 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
   it("BROWSE mode (no href, no onpick) renders every member as a leaf link", async () => {
     const { container } = render(ConceptGroupRow, { group: threeAxisGroup() });
     expect(container.querySelector("table.facet-matrix")).toBeNull();
-    await page.getByText("3 variables").click();
+    await page.getByText("2 variables").click();
 
     // Every member is a browse link — the two shared-fqid reps both render (the
     // matrix would have dropped one), so the variable stays reachable in browse.
@@ -246,7 +253,7 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
       group: threeAxisGroup(),
       onpick: vi.fn(),
     });
-    await page.getByText("3 variables").click();
+    await page.getByText("2 variables").click();
     await expect
       .element(page.getByText("Showing 3 of 3 members", { exact: true }))
       .toBeVisible();

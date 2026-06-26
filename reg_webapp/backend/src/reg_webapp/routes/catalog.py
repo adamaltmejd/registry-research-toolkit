@@ -310,19 +310,36 @@ def _concept_group_node(
     `delivery_column` representation discriminator pass straight through; only
     `coverage` is added (#681).
 
-    Coverage reuses the SAME `register_variable_coverage` map the register
-    listing uses (keyed by variable SLUG — the binding-FQID leaf segment), so no
-    new reg_meta accessor is needed: a member's coverage is its leaf-slug lookup
-    in that map (None for a stateless member or a leaf that isn't in the map —
-    defensive). `member_hint` is the validated `?member=` focus slug, echoed for
-    the SPA to highlight (None when absent/unrecognized — a bad hint is ignored,
-    keeping the group page first-class)."""
+    Coverage is sourced PER REPRESENTATION (#819): a whole-variable member
+    (`delivery_column` None) gets its variable-level coverage from
+    `register_variable_coverage` (keyed by variable SLUG — the binding-FQID leaf
+    segment, mirroring the register listing); a representation member
+    (`delivery_column` set) gets its OWN per-column window from
+    `register_column_coverage` (keyed by `(slug, delivery_column)`), so two
+    representations sharing one variable (e.g. CDISP 1968– vs CDISP5 2020– on one
+    `disponibel-inkomst` member) show DIFFERENT spans instead of both inheriting the
+    variable's union. A representation whose column has no per-column window falls
+    back to the variable-level coverage (defensive — keeps the row non-blank rather
+    than greying it wrongly). `member_hint` is the validated `?member=` focus slug,
+    echoed for the SPA to highlight (None when absent/unrecognized — a bad hint is
+    ignored, keeping the group page first-class)."""
     coverage = catalog.register_variable_coverage(provider_slug, register_slug)
+    column_coverage = catalog.register_column_coverage(provider_slug, register_slug)
     members: list[ConceptGroupNodeMember] = []
     for m in group.members:
         # The member FQID's leaf segment IS its variable slug — the key
         # `register_variable_coverage` returns (mirrors `_register_response`).
         leaf_slug = str(m.fqid).rsplit("/", 1)[-1]
+        variable_cov = coverage.get(leaf_slug)
+        # #819: a representation member (delivery_column set) gets its per-column
+        # window; fall back to the variable-level span when that column has no
+        # per-column coverage row (stateless / unnamed column).
+        if m.delivery_column is not None:
+            member_cov = column_coverage.get(
+                (leaf_slug, m.delivery_column), variable_cov
+            )
+        else:
+            member_cov = variable_cov
         members.append(
             ConceptGroupNodeMember(
                 fqid=m.fqid,
@@ -332,7 +349,7 @@ def _concept_group_node(
                 # whole-variable member, the SCB delivery column for a
                 # representation member (two members can share an `fqid`).
                 delivery_column=m.delivery_column,
-                coverage=coverage.get(leaf_slug),
+                coverage=member_cov,
             )
         )
     return ConceptGroupNode(

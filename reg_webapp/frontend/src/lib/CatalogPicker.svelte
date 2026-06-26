@@ -255,7 +255,10 @@ const pendingReps = $derived<Representation[]>(
 const collapse = $derived(representationsCollapse(pendingReps));
 let showAlternates = $state(false);
 
-async function pickVariable(fqid: string): Promise<void> {
+async function pickVariable(
+  fqid: string,
+  preselectColumn?: string | null,
+): Promise<void> {
   if (props.mode !== "variable") {
     return;
   }
@@ -274,6 +277,20 @@ async function pickVariable(fqid: string): Promise<void> {
       // >1 distinct delivery column → defer to the representation chooser below.
       showAlternates = false;
       pending = { fqid: result.fqid, states: result.states };
+      // #819 FIX 1: a representation member row carries which column it IS, so the
+      // chooser is redundant — PRESELECT that column with the existing chooser
+      // machinery (`chooseRepresentation`) instead of re-asking. Only when the
+      // preselected column actually matches a resolved representation; otherwise
+      // fall through to the manual chooser (defensive — a stale column drift can't
+      // silently mis-pick).
+      if (preselectColumn != null) {
+        const match = representationsFromStates(result.states).find(
+          (r) => r.column === preselectColumn,
+        );
+        if (match) {
+          chooseRepresentation(match);
+        }
+      }
       return;
     }
     if (result.kind === "unresolved") {
@@ -645,7 +662,8 @@ function emitVariant(slug: string): void {
         <ConceptGroupRow
           group={row.group}
           disabled={resolving}
-          onpick={(fqid) => void pickVariable(fqid)}
+          onpick={(fqid, deliveryColumn) =>
+            void pickVariable(fqid, deliveryColumn)}
         />
       </div>
     {:else}

@@ -724,6 +724,7 @@ import type { BindingGroupRef, ConceptGroup } from "./api";
 import {
   axisValues,
   countFoldedMembers,
+  distinctMemberCount,
   foldGroupedRows,
   groupFilterKeys,
   memberAt,
@@ -1126,6 +1127,32 @@ describe("foldGroupedRows order + countFoldedMembers", () => {
       [group({})],
     );
     expect(countFoldedMembers(rows)).toBe(3); // 1 leaf + 2 grouped members
+  });
+
+  it("counts a representation group's members in DISTINCT-variable units (#819)", () => {
+    // Two representation members on ONE variable (one fqid, distinct delivery
+    // columns) — the group must count as 1 variable, not 2 rows.
+    const rep = group({
+      key: "disprep",
+      members: [
+        {
+          fqid: "scb/iot/disponibel-inkomst",
+          name: "Disp. inkomst (CDISP)",
+          facets: [{ axis: "rep", value: "CDISP", label: "CDISP" }],
+        },
+        {
+          fqid: "scb/iot/disponibel-inkomst",
+          name: "Disp. inkomst (CDISP5)",
+          facets: [{ axis: "rep", value: "CDISP5", label: "CDISP5" }],
+        },
+      ],
+    });
+    expect(distinctMemberCount(rep.members)).toBe(1);
+    const rows = foldGroupedRows(
+      [{ fqid: "scb/iot/disponibel-inkomst" }],
+      [rep],
+    );
+    expect(countFoldedMembers(rows)).toBe(1); // 2 representation rows = 1 variable
   });
 });
 
