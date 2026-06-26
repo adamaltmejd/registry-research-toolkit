@@ -98,8 +98,8 @@ Run focused verification as the work evolves:
   changes. Headless checks never render a pixel. If the change alters rendered output
   (`reg_webapp/frontend/**`, or any view / component / style the SPA renders), render it
   with `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
-  `dev.sh smoke`, inspect `/tmp/reg-webapp-shots/`, and keep the screenshot path for
-  closeout / PR proof.
+  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`, inspect
+  `/tmp/reg-webapp-shots/`, and keep the screenshot path for closeout / PR proof.
 - Build-affecting DB changes: fast tests first; real `reg-meta-build build-db` is a
   final gate on the truly final head.
 
@@ -128,10 +128,11 @@ Run focused verification as the work evolves:
    those cuts like any finding. (There is no `/simplify` on this surface; it is a Claude
    Code skill only.)
 4. For rendered-output changes, run `web-design-reviewer` against the rendered app as
-   the structured design-quality pass. The manual `run-reg-webapp` render is how you see
-   the change; `web-design-reviewer` is how you review layout, spacing, responsiveness,
-   contrast, and accessibility regressions systematically. Route its findings through
-   the same fix / dismiss / re-review loop as code-review findings.
+   the structured design-quality pass when the skill is exposed in the active Codex
+   setup. If it is not exposed, report that setup gap and still complete the mandatory
+   manual visual review with the `run-reg-webapp` render; do not treat headless `bun`
+   checks as a substitute. Route design findings through the same fix / dismiss /
+   re-review loop as code-review findings.
 5. Re-review substantial fixes until the review converges.
 6. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
@@ -161,9 +162,11 @@ For merge, satisfy the repo gate:
   conclude while it reports `reviewing`; after a new push, re-trigger with
   `@codex review` and launch a fresh background poll;
 - real-data validation when build pipeline or DB content changed;
-- visual verification when rendered output changed: run `dev.sh smoke` or
-  `dev.sh shot <route>` on the assembled tree, inspect the screenshot, and run
-  `web-design-reviewer` for the structured design pass;
+- visual verification when rendered output changed: run
+  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` or
+  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>` on the assembled tree,
+  inspect the screenshot, and run `web-design-reviewer` for the structured design pass
+  when the active Codex setup exposes it;
 - stale-head check before and after merge.
 
 Run the real `build-db` last and once for build-affecting work, using the main
