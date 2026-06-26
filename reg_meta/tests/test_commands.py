@@ -830,12 +830,16 @@ class TestGetValues:
         """
         import sqlite3
 
+        from reg_meta.db import register_py_lower
         from reg_meta.queries import get_values_by_variable
         from reg_meta_build.db import DDL, seed_providers
 
         db = tmp_path / "amb.db"
         conn = sqlite3.connect(str(db))
         conn.row_factory = sqlite3.Row
+        # Production runs `get_values_by_variable` on an `open_db` conn, which
+        # registers the `py_lower` UDF its delivery_column_name fallback needs.
+        register_py_lower(conn)
         conn.executescript(DDL)
         seed_providers(conn)
         conn.execute(
@@ -1189,6 +1193,20 @@ class TestResolve:
         """Resolve v2 should not return 'ambiguous' status."""
         data, _ = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
         assert data["data"]["columns"][0]["status"] in ("matched", "no_match")
+
+    def test_swedish_uppercase_column_folds(self):
+        """#853 regression: a delivery column stored with an uppercase Swedish
+        letter (`Ägare`) must resolve case-insensitively. SQLite `LOWER()` is
+        ASCII-only (`LOWER('Ägare')` == `'Ägare'`), so the column-side fold must
+        go through the Unicode-aware `py_lower` UDF — otherwise the Python-lowered
+        query value `'ägare'` never matches and the column reports `no_match`."""
+        from _slugged_db import build_slugged_db
+        from reg_meta.queries import resolve
+
+        conn = build_slugged_db(delivery_column_name="Ägare", variable_slug="agare")
+        results = resolve(conn, ["ägare"])
+        assert results[0]["status"] == "matched"
+        assert results[0]["matches"][0]["matched_column"] == "Ägare"
 
 
 # ---------------------------------------------------------------------------

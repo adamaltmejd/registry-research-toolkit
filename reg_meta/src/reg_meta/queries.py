@@ -2250,7 +2250,7 @@ def get_varinfo(
             + ", r.name AS register_name FROM variable_alias a "
             "JOIN variable v ON a.variable_id = v.variable_id "
             "JOIN register r ON v.register_id = r.register_id "
-            "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
+            "WHERE py_lower(a.delivery_column_name) = py_lower(?)"
         )
         if reg_ids:
             ph = _in_placeholders(reg_ids)
@@ -2652,7 +2652,7 @@ def get_values_by_variable(
             "SELECT DISTINCT v.variable_id, v.register_id, " + _VAR_ID_V + ", v.name "
             "FROM variable_alias a "
             "JOIN variable v ON a.variable_id = v.variable_id "
-            "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
+            "WHERE py_lower(a.delivery_column_name) = py_lower(?)"
         )
         if reg_ids:
             ph = _in_placeholders(reg_ids)
@@ -2989,7 +2989,7 @@ def get_diff(
                     "SELECT DISTINCT var.variable_id, " + _VAR_ID_VAR + ", var.name "
                     f"FROM variable_alias va "
                     f"JOIN variable var ON va.variable_id = var.variable_id "
-                    f"WHERE LOWER(va.delivery_column_name) = LOWER(?) AND var.register_id IN ({ph})",
+                    f"WHERE py_lower(va.delivery_column_name) = py_lower(?) AND var.register_id IN ({ph})",
                     [v, *reg_ids],
                 ).fetchall()
             for r in rows:
@@ -3333,7 +3333,7 @@ def resolve(
                 "" + _VAR_ID_V + ", v.name AS variable_name "
                 f"FROM variable_alias va "
                 f"JOIN variable v ON va.variable_id = v.variable_id "
-                f"WHERE LOWER(va.delivery_column_name) = ? AND v.register_id IN ({ph}) "
+                f"WHERE py_lower(va.delivery_column_name) = ? AND v.register_id IN ({ph}) "
                 f"GROUP BY v.register_id, v.provider_key "
                 f"ORDER BY v.register_id, v.provider_key",
                 [col_lower, *reg_ids],
@@ -3344,7 +3344,7 @@ def resolve(
                 "" + _VAR_ID_V + ", v.name AS variable_name "
                 "FROM variable_alias va "
                 "JOIN variable v ON va.variable_id = v.variable_id "
-                "WHERE LOWER(va.delivery_column_name) = ? "
+                "WHERE py_lower(va.delivery_column_name) = ? "
                 "GROUP BY v.register_id, v.provider_key "
                 "ORDER BY v.register_id, v.provider_key",
                 (col_lower,),

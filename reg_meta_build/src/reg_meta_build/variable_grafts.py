@@ -187,12 +187,12 @@ def materialize_grafts(
             continue
         register_variant_id, register_id = resolved
         # Gap-fill only: skip if the column is already a delivered state column in
-        # this variant (case/diacritic-folded).
+        # this variant (case-folded, Unicode-aware via py_lower).
         exists = conn.execute(
             "SELECT 1 FROM variable_state vs JOIN variable v "
             "ON vs.variable_id = v.variable_id "
             "WHERE v.register_id = ? AND vs.register_variant_id = ? "
-            "AND LOWER(vs.delivery_column_name) = LOWER(?) LIMIT 1",
+            "AND py_lower(vs.delivery_column_name) = py_lower(?) LIMIT 1",
             (register_id, register_variant_id, g.column),
         ).fetchone()
         if exists:

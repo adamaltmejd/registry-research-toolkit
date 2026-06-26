@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import sqlite3
 
+from reg_meta.db import register_py_lower
 from reg_meta.fqid import derive_variable_slug
 from reg_meta_build.db import DDL, seed_providers
 
@@ -59,6 +60,10 @@ def build_slugged_db(
     conn.row_factory = sqlite3.Row
     conn.executescript(DDL)
     seed_providers(conn)
+    # Production runs delivery_column_name queries on an `open_db` conn, which
+    # registers the `py_lower` UDF; mirror that here so this hand-built conn
+    # resolves the same way (refs #853).
+    register_py_lower(conn)
 
     if register is not None:
         name, slug, register_id, provider_id = register

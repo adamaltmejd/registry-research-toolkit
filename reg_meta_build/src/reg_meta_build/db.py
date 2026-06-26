@@ -22,6 +22,7 @@ from typing import TYPE_CHECKING, Any
 from reg_meta.db import (
     DB_FILENAME,
     SCHEMA_VERSION,
+    register_py_lower,
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -4143,6 +4144,9 @@ def build_db(
     conn.execute(f"PRAGMA cache_size={_BUILD_PAGE_CACHE_KIB}")  # ~2 GiB main page cache
     conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
+    # Unicode-aware LOWER() for delivery_column_name folding (variable_grafts runs
+    # on this write conn, which isn't created via `open_db`). See reg_meta.db. (#853)
+    register_py_lower(conn)
     build_failed = True
     try:
         conn.executescript(DDL)

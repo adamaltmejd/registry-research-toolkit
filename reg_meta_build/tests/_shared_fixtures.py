@@ -9,11 +9,24 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import write_scb_input
+from reg_meta.db import register_py_lower
 from reg_meta_build.db import build_db
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
     from pathlib import Path
+
+
+def connect_built_db(db: Path | str) -> sqlite3.Connection:
+    """Open a writable connection to a built fixture DB the way production
+    validation does: a raw connect plus the `py_lower` UDF that
+    `reg_meta.db.open_db` (and thus `validate_built_db`) registers. Tests that
+    drive `_check_*` validators or `queries.*` against a built DB and then mutate
+    it can't use the read-only `open_db` path, so they go through here to get the
+    same UDF surface (refs #853)."""
+    conn = sqlite3.connect(str(db))
+    register_py_lower(conn)
+    return conn
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -223,4 +236,4 @@ def build_with_rows(
     build_db(
         input_dir=input_dir, db_dir=db_dir, skip_classifications=True, slug_dir=slug_dir
     )
-    return sqlite3.connect(db_dir / "reg_meta.db")
+    return connect_built_db(db_dir / "reg_meta.db")
