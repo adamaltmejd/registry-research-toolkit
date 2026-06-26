@@ -54,8 +54,83 @@ function classificationRoot(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// A provider node (`scb`) with two register children: `scb/lisa` (named, with a
+// purpose blurb) and `scb/lev` (named, null purpose). Shaped like ProviderResponse
+// → RegisterNode children — the #806 provider arm renders these as DataTable links
+// (name → catalog link) with the FQID code element dropped.
+function providerNode(): CatalogNode {
+  return {
+    kind: "provider",
+    fqid: "scb",
+    name: "SCB",
+    children: [
+      {
+        kind: "register",
+        fqid: "scb/lisa",
+        name: "LISA",
+        purpose: "Longitudinal integration database",
+      },
+      {
+        kind: "register",
+        fqid: "scb/lev",
+        name: "LEV",
+        purpose: null,
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
+});
+
+describe("CatalogNodeView provider arm", () => {
+  it("renders registers as DataTable links with no FQID code element", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(providerNode());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    // #806: each register is a name link to its catalog page…
+    await expect
+      .element(page.getByRole("link", { name: "LISA" }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
+    await expect
+      .element(page.getByRole("link", { name: "LEV" }))
+      .toHaveAttribute("href", "/catalog/scb/lev");
+    // …with the purpose blurb shown as the description column.
+    await expect
+      .element(page.getByText("Longitudinal integration database"))
+      .toBeVisible();
+
+    // #806: the raw FQID <code> element is dropped — the link's name is identity.
+    expect(container.querySelector("code")).toBeNull();
+
+    // #806: the in-page Breadcrumb nav was removed from every browse arm (the rail
+    // owns navigation now). Any arm proves it; assert it here.
+    expect(document.querySelector('nav[aria-label="Breadcrumb"]')).toBeNull();
+  });
+
+  it("shows EmptyState when the filter matches nothing", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(providerNode());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    const filterBox = page.getByRole("textbox", { name: /Filter registers/i });
+    await filterBox.fill("zzznomatch");
+
+    await expect.element(page.getByText(/No registers match/)).toBeVisible();
+    expect(container.querySelector('a[href*="scb/lisa"]')).toBeNull();
+  });
 });
 
 describe("CatalogNodeView classification-root arm (#756)", () => {
