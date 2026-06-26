@@ -137,7 +137,7 @@ const fillWidth = $derived(((to - from) / span) * 100);
   .readout {
     font-variant-numeric: tabular-nums;
     font-size: 0.8rem;
-    color: var(--muted);
+    color: var(--text-muted);
     white-space: nowrap;
   }
   .clear {
@@ -157,7 +157,7 @@ const fillWidth = $derived(((to - from) / span) * 100);
     border: 1px solid var(--border);
     border-radius: 4px;
     background: none;
-    color: var(--muted);
+    color: var(--text-muted);
     cursor: pointer;
   }
   .clear:hover {

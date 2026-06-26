@@ -48,7 +48,7 @@ const dimensions = $derived(node.dimensions ?? []);
     font-size: 0.85em;
   }
   .muted {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .dimension-groups {
     display: flex;

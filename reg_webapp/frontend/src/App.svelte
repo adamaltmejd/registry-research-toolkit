@@ -184,8 +184,8 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
   /* The design-token layer (palette, type, geometry, fonts) + base body
      typography live in src/tokens.css (imported in main.ts), NOT here. This
      block holds only App-shell layout. Token references below (--accent,
-     --muted, --level-*, --border, --banner-*, …) resolve from tokens.css,
-     including the legacy alias bridge for not-yet-migrated pages. */
+     --text-muted, --err, --border, --err-bg, …) resolve from tokens.css's
+     canonical semantic roles. */
   :global(a) {
     color: var(--accent);
     text-decoration: none;
@@ -194,10 +194,10 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
     text-decoration: underline;
   }
   :global(.muted) {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   :global(.error) {
-    color: var(--level-error);
+    color: var(--err);
   }
   /* The app root is a bare wrapper now — AppShell owns the rail/topbar/canvas
      layout (the old centered 56rem ribbon is gone, #803). */
@@ -207,15 +207,15 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
     margin-bottom: 1rem;
   }
   .banner.drift {
-    background: #fff7ed;
-    border: 1px solid #fdba74;
+    background: var(--warn-bg);
+    border: 1px solid var(--warn);
   }
   .banner.drift ul {
     margin: 0.5rem 0 0;
   }
   .banner.error {
-    background: var(--banner-error-bg);
-    border: 1px solid var(--banner-error-border);
+    background: var(--err-bg);
+    border: 1px solid var(--red-border);
   }
   .vintage {
     font-size: 0.8rem;

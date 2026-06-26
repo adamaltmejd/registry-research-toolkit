@@ -11,17 +11,7 @@
 
    Imported once in main.ts (before mount) and once from the Vitest browser
    setup (src/test-setup.browser.ts) so component tests render with the same
-   tokens + fonts the app does.
-
-   ── Legacy alias bridge ──────────────────────────────────────────────────
-   Live components (App.svelte + src/lib/*.svelte) reference a handful of
-   pre-#802 token names (--muted, --level-error/-warning/-info, --text-base,
-   --banner-error-*). Restyling those pages is the work of the later design-
-   system children (#806–#809), NOT this foundation PR. So every currently
-   consumed name is RETAINED below, mapped onto the new roles, and removed as
-   those children migrate the pages off it. This is the deliberate phased-
-   migration seam the epic mandates — not a pre-v1 compat shim.
-   ─────────────────────────────────────────────────────────────────────── */
+   tokens + fonts the app does. */
 
 /* ── Webfonts (self-hosted woff2, OFL; no runtime CDN) ────────────────────
    latin covers Swedish å/ä/ö (U+00E5/E4/F6 ∈ U+0000–00FF); latin-ext carries
@@ -326,20 +316,6 @@
   /* ── Motion ──────────────────────────────────────────────────────────── */
   /* Small + functional (popover/disclosure transitions), not decorative. */
   --motion-fast: 140ms;
-
-  /* ════════════════════════════════════════════════════════════════════════
-     LEGACY ALIAS BRIDGE — currently-consumed names mapped onto the new roles.
-     Retained ONLY for not-yet-migrated pages; removed as children #806–#809
-     restyle each page off them. Do NOT add new consumers of these.
-     ════════════════════════════════════════════════════════════════════════ */
-  --muted: var(--text-muted);
-  --mono: var(--font-mono);
-  --text-base: var(--text-body);
-  --level-error: var(--err);
-  --level-warning: var(--warn);
-  --level-info: var(--info);
-  --banner-error-bg: var(--err-bg);
-  --banner-error-border: var(--red-border);
 }
 
 /* Base typography + the explicit light-theme pin. Every role above assumes a

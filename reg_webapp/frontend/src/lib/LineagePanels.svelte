@@ -349,7 +349,7 @@ const currentEdition = $derived(
   }
   .ref-fqid {
     font-size: 0.85em;
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .ann {
     font-size: 0.85em;
@@ -376,7 +376,7 @@ const currentEdition = $derived(
   }
   .chain-node .marker {
     margin-left: -1.3rem;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.7em;
   }
   .chain-node.marked {
@@ -404,7 +404,7 @@ const currentEdition = $derived(
   }
   .chain-history summary {
     cursor: pointer;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.9em;
   }
   .chain-history summary .marker {

@@ -175,7 +175,7 @@ const currentEdition = $derived(
     border-bottom: 1px solid var(--border);
   }
   .muted {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .year {
     font-size: 0.85em;
@@ -205,7 +205,7 @@ const currentEdition = $derived(
   }
   .chain-node .marker {
     margin-left: -1.3rem;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.7em;
   }
   .chain-node.marked {
@@ -226,7 +226,7 @@ const currentEdition = $derived(
     gap: 0.6rem;
   }
   .no-link-edition {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   /* The collapsible edition runs — sit on the same rail. */
   .chain-history {
@@ -236,7 +236,7 @@ const currentEdition = $derived(
   }
   .chain-history summary {
     cursor: pointer;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.9em;
   }
   .chain-history summary .marker {

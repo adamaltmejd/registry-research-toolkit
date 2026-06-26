@@ -93,7 +93,7 @@ function showsDistinctGroup(
   }
   .group {
     margin-left: auto;
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.85em;
   }
   .desc {
