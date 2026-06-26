@@ -16,7 +16,6 @@ import {
 import FilterInput from "./FilterInput.svelte";
 import { VALUE_SET_VERSION_NONE } from "./period";
 import TechnicalDetails from "./TechnicalDetails.svelte";
-import { Tag } from "./ui";
 
 // Presentational view of a variable's `variable_state` rows (from the full
 // node's embedded `states` OR a `?period`-narrowed StatesResponse). Pure
