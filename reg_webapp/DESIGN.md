@@ -933,13 +933,33 @@ sub-system — never reuse the brand accent or the status colors for type identi
 
 ### Shared primitives (Bits UI behavior + scoped CSS)
 
-Pay down the leaf-duplication the root `CLAUDE.md` warns about: extract the recurring
-visual units instead of re-styling per component — `AppShell`, `Panel`, `DataTable`,
-`Breadcrumbs`, `Tag`/`Badge`, `Button`, `KeyValue`, and the `⌘K` command palette.
-Behavior comes from Bits UI (`Command`, `Dialog`, `Combobox`, etc.); the styling is
+The recurring visual units live in `frontend/src/lib/ui/` (shipped in #804, exported via
+`index.ts`): `Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `Button`, `KeyValue`,
+`Skeleton`, and `EmptyState`. `AppShell` and the `⌘K` command palette are still to come
+(#803). Behavior comes from Bits UI (`Command`, `Dialog`, `Combobox`, etc.); styling is
 scoped CSS reading **only** semantic tokens. The #689 `CatalogPicker` `Command`
 keyboard-split caveat (folded `ConceptGroupRow` → `role="presentation"`) still stands
 and is relevant where these primitives meet grouped lists.
+
+Load-bearing decisions downstream children (#806–#809) must not re-litigate:
+
+- **`DataTable` selection — ARIA grid, not roving tabindex.** The selectable variant
+  sets `role="grid"` on the table; each selectable row carries `aria-selected` and
+  `tabindex=0` (its own tab stop). This is deliberately **not** a single-tab-stop
+  roving-tabindex grid — list keyboard navigation belongs to Bits UI `Command`
+  elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
+  table.
+- **`Tag` `tone` spans three disjoint sub-systems.** Chrome tones (`neutral`/`accent`),
+  categorical TYPE tones (`reg`/`var`/`code`/`class`/`group` → `--cat-*`), and status
+  tones (`error`/`warn`/`info`/`ok`). Status tones **require** a leading `glyph` snippet
+  (the accent-vs-status rule: hue alone is never sufficient); the glyph is
+  `aria-hidden`, so status meaning must also appear in the label text.
+- **Focus-ring convention.** Every interactive primitive applies
+  `:focus-visible { box-shadow: var(--focus-ring) }` in its own scoped CSS — no global
+  stylesheet owns this.
+- **`.ui-btn` global hook.** `Button` delegates element rendering to Bits UI, so its
+  variant/size styles are `:global(.ui-btn …)` — scoped through the `ui-btn` namespace
+  this component owns, not a generic `.btn` that stray usage could inherit.
 
 ### Migration discipline
 
