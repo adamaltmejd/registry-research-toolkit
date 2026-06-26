@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import DataTable from "./DataTable.svelte";
+import DataTableEmptyCellHarness from "./DataTableEmptyCellHarness.svelte";
 import DataTableInterfaceRowHarness from "./DataTableInterfaceRowHarness.svelte";
 import type { Column } from "./types";
 
@@ -185,6 +186,39 @@ describe("DataTable", () => {
     // Click activates onselect.
     (trs[1] as HTMLElement).click();
     expect(selected).toBe("2");
+  });
+
+  it("leaves a snippet-empty cell matching :empty so the stacked label is suppressed (#832)", async () => {
+    // The stacked-card form prefixes each non-primary cell with its column
+    // micro-label via `td:not(.first)::before { content: attr(data-label) }`. A
+    // register with no `purpose` makes the consumer's `cell` snippet render
+    // NOTHING into the Description cell, which would otherwise show a dangling
+    // "DESCRIPTION" label over empty space. The fix suppresses it with
+    // `td:empty::before { content: none }` — which only works if Svelte's {#if}
+    // anchor comments inside the empty <td> don't defeat CSS `:empty`. This
+    // renders the real CatalogNodeView snippet shape through the Svelte compiler
+    // and asserts the empty cell genuinely matches `:empty` (the crux), while a
+    // populated cell does not.
+    const { container } = render(DataTableEmptyCellHarness, {});
+    const noPurposeRow = container.querySelectorAll(
+      "tbody tr",
+    )[1] as HTMLElement;
+    const descCell = noPurposeRow.querySelectorAll("td")[1] as HTMLElement;
+    // The non-primary Description cell carries the data-label that drives the
+    // ::before prefix — confirm we're testing the right cell.
+    expect(descCell).toHaveAttribute("data-label", "Description");
+    expect(descCell).not.toHaveClass("first");
+    // Crux: Svelte's {#if} anchor comments do NOT defeat `:empty`, so the empty
+    // cell matches and `td:empty::before { content: none }` fires.
+    expect(descCell.matches(":empty")).toBe(true);
+    // A populated Description cell must NOT match :empty (label still shows).
+    const withPurposeRow = container.querySelectorAll(
+      "tbody tr",
+    )[0] as HTMLElement;
+    const populatedCell = withPurposeRow.querySelectorAll(
+      "td",
+    )[1] as HTMLElement;
+    expect(populatedCell.matches(":empty")).toBe(false);
   });
 
   it("compiles + renders interface-typed rows (Fix 1: Row extends object)", async () => {

@@ -269,6 +269,13 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
       font-weight: 600;
       color: var(--text-muted);
     }
+    /* An empty cell (e.g. a register with no Description/purpose — the consumer's
+       `cell` snippet renders nothing) must not show a dangling micro-label. CSS
+       `:empty` ignores comment nodes, so Svelte's {#if} anchor comments inside an
+       otherwise-empty <td> don't defeat the match. */
+    td:empty::before {
+      content: none;
+    }
     /* The card keeps ONE focus/hover/selected target (the selectable <tr>). */
     tbody tr.selectable:focus-visible {
       outline: none;
