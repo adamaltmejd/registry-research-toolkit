@@ -50,11 +50,24 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     await expect.element(box()).toHaveValue("lisa");
   });
 
-  it("routes to /search?q=… (pushState) when typing from another route", async () => {
+  it("does NOT navigate when typing from another route — only Enter routes to /search", async () => {
+    // New behavior (maintainer direction): a plain search box must not yank you
+    // onto /search mid-word. From a non-search route the debounce is inert; typing
+    // leaves you put, and Enter is the sole path to the results page.
     await render(SearchOmnibox);
     await box().fill("kon");
 
-    // The debounced commit enters the search route via pushState (one entry).
+    // Wait out the debounce window (300ms) plus margin, then assert we're STILL on
+    // the home route — typing did not navigate.
+    await new Promise((r) => setTimeout(r, 450));
+    expect(router.route.name).toBe("home");
+    expect(router.getQueryParam("q")).toBeNull();
+
+    // Enter (form submit) commits immediately — NOW we route to /search?q=kon via
+    // pushState. (This assertion still fails if Enter-navigation breaks.)
+    const form = (box().element() as HTMLInputElement).form;
+    form?.requestSubmit();
+
     await expect.poll(() => router.route.name).toBe("search");
     await expect.poll(() => router.getQueryParam("q")).toBe("kon");
   });

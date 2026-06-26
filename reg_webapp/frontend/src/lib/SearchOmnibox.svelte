@@ -3,20 +3,28 @@ import { onMount, untrack } from "svelte";
 import { commandShortcutHint, isMacPlatform } from "./platform";
 import { router } from "./router.svelte";
 
-// The global header search box (#379): a plain routing input. Typing ROUTES the
-// (debounced) query to the shareable `/search?q=<query>` results page (SearchView)
-// — the URL is the single source of truth, mirroring the `?period` pattern:
-// deep-linkable, shareable, back/forward-correct. The results page (SearchView) is
+// The global header search box (#379): a plain routing input. The routing rule
+// splits on whether you're already on the results page (SearchView):
+//   - From any OTHER route, typing does NOT navigate — you stay put and the box
+//     just holds text. Only Enter / form-submit routes you to the shareable
+//     `/search?q=<query>` page. (A plain search box shouldn't yank you onto the
+//     results page mid-word.)
+//   - When ALREADY on `/search`, typing LIVE-REFINES in place: a debounced
+//     replaceState updates `?q=` (and preserves `?type=`) without a new history
+//     entry. You're already on the results page, so this isn't "being taken"
+//     anywhere — it's the live-search we keep.
+// The URL is the single source of truth for the results page, mirroring the
+// `?period` pattern: deep-linkable, shareable, back/forward-correct. SearchView is
 // the single search surface; the live-suggestion popup (the #689 Arm A Combobox
 // spike) was removed — there is no in-box dropdown.
 //
-// Bidirectional URL↔box sync (the one subtle bit): typing writes the URL
-// (debounced) and an $effect mirrors the URL's `?q=` back into the box (so a
-// deep-link / back-forward updates the input). Both sides assign `query` only
-// when the value actually DIFFERS, so they can't ping-pong: typing → URL changes
-// → the effect reads the SAME value it just wrote → no-op; back/forward → URL
-// changes → the effect writes the box, but the debounced router write is a no-op
-// (already at that URL). Convergent in one tick.
+// Bidirectional URL↔box sync (the one subtle bit, on the `/search` route): the
+// debounced effect writes the URL and an $effect mirrors the URL's `?q=` back into
+// the box (so a deep-link / back-forward updates the input). Both sides assign
+// `query` only when the value actually DIFFERS, so they can't ping-pong: typing →
+// URL changes → the effect reads the SAME value it just wrote → no-op;
+// back/forward → URL changes → the effect writes the box, but the debounced router
+// write is a no-op (already at that URL). Convergent in one tick.
 
 // 300ms (not 200) to cut request volume on the prod-slow GET /api/search that the
 // routed results page fires: a longer settle keeps superseded queries from piling
@@ -85,15 +93,22 @@ function commit(raw: string): void {
   }
 }
 
-// Debounced commit on input: a burst of keystrokes routes once. Reading `query`
-// registers it as the effect dependency; the teardown clears the pending timer.
-// Skip the commit when the trimmed box already matches the URL's `q` — that
-// covers the mount-time seed AND a value just adopted FROM the URL (deep-link /
-// back-forward), so neither re-commits and re-enters the navigate path. It also
-// closes the one race the bidirectional sync could have: a stale debounce from an
-// adopted value firing after fresh typing.
+// Debounced LIVE-REFINE on input — ONLY while already on `/search`. A burst of
+// keystrokes refines once; off the search route the debounce does nothing, so the
+// box never navigates on its own (Enter is the sole path to /search from
+// elsewhere). Reading `query` AND `router.route.name` registers both as effect
+// dependencies, so it re-evaluates on type and on route change. The teardown
+// clears the pending timer. Skip the commit when the trimmed box already matches
+// the URL's `q` — that covers the mount-time seed AND a value just adopted FROM
+// the URL (deep-link / back-forward), so neither re-commits and re-enters the
+// navigate path. It also closes the one race the bidirectional sync could have: a
+// stale debounce from an adopted value firing after fresh typing.
 $effect(() => {
   const raw = query;
+  const onSearch = router.route.name === "search";
+  if (!onSearch) {
+    return;
+  }
   const timer = setTimeout(() => {
     if (raw.trim() === (router.getQueryParam("q") ?? "").trim()) {
       return;
