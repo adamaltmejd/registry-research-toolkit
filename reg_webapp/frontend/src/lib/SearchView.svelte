@@ -963,6 +963,9 @@ function usageSummary(result: CodeSearchResult): string {
   .slug-cell {
     font-size: 0.85em;
     text-align: right;
+    /* A long unbroken mono slug must break to fit the narrow (375px) canvas
+       instead of spilling past its minmax(0, max-content) track (#806). */
+    overflow-wrap: anywhere;
   }
   /* The CODE is the highlighted primary column: mono + strong + a code-tint ink
      so it reads as the main thing in the row (#808 round 3). */
@@ -970,6 +973,7 @@ function usageSummary(result: CodeSearchResult): string {
     font-family: var(--font-mono);
     font-weight: 700;
     color: var(--cat-code-ink);
+    overflow-wrap: anywhere;
   }
   .code-label {
     overflow-wrap: anywhere;
