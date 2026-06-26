@@ -23,14 +23,18 @@ import { type Column, DataTable, Tag } from "./ui";
 // classifications / codes). Every leaf navigates via a plain internal <a> the
 // shell's `use:link` intercepts — never `router.navigate` from here.
 //
-// #808 (round 2): the leaf groups render as compact DataTables (the #806 pattern,
-// matching CatalogNodeView's provider arm) — categorical type identity moves to
-// the GROUP HEADING (a single Tag), the raw FQID is hidden everywhere (the leaf
-// SLUG is the only identifier shown), and the whole row is click/keyboard-
-// navigable to the hit via DataTable selection-as-navigation. Folded families
-// (concept groups, classification succession) stay expandable <details> — they
-// have no flat one-row-one-target model — and codes stay a compact list (a code
-// fans out to multiple owners).
+// #808 (round 3): the variables / classifications groups render as a SINGLE
+// CSS-grid "table" (CatalogNodeView's `.children.table` pattern) iterating the
+// group's results in their ORIGINAL rank order — a leaf is a whole-row link
+// (`display: contents` on an `<a>`, so the row is ONE real link, no role=grid),
+// and a fold (concept group / classification succession) is a column-spanning
+// row rendering its existing expandable <details> INLINE at its rank position (no
+// pulled-out "Grouped families" block). Registers stay a DataTable (the #806
+// provider-arm shape). Codes render a compact, code-FIRST grid table per
+// code-system bucket (the bucket heading names the classification / value-set);
+// each row's owner VARIABLES are the navigable targets (a code has no own page).
+// Categorical type identity lives on the GROUP HEADING (a single Tag); the raw
+// FQID is hidden everywhere (the leaf SLUG is the only identifier shown).
 
 const q = $derived((router.getQueryParam("q") ?? "").trim());
 
@@ -159,53 +163,28 @@ function isClassificationSuccession(r: {
   return r.type === "classification_succession";
 }
 
-// ── Leaf-table row shapes (#808) ─────────────────────────────────────────────
-// Each leaf table is a DataTable over a thin row type that carries a STABLE
-// synthetic `rowId` (the array index) AND the per-column display fields. The
-// `rowId` is DataTable's `getRowId` key — crash-proof even when several rows
-// share a null `fqid` and the same name (the #379/#391 each_key_duplicate lesson
-// — a natural `fqid` key collides). The cell snippet keys off `column.key`; the
-// row's `result` drives the navigation target. DataTable keys its column-each on
-// `col.key`, so every column needs a DISTINCT key — hence the dedicated display
-// fields (the slug column gets its own `slug` key, not a second `result`).
+// ── Registers leaf-table row shape (#808) ────────────────────────────────────
+// The registers group keeps its DataTable (the #806 provider-arm shape). Its rows
+// carry a STABLE synthetic `rowId` (the array index) so the keyed each is crash-
+// proof even when several rows share a null `fqid` and the same name (the
+// #379/#391 each_key_duplicate lesson — a natural `fqid` key collides). The
+// variables / classifications groups are NOT DataTables — they render the
+// `.children.table` CSS grid directly over their raw results (see template), so
+// they need no row-shape mapping.
 type RegisterRow = {
   rowId: string;
   name: string | null | undefined;
   fqid: string | null;
   purpose: string | null | undefined;
 };
-type VariableRow = {
-  rowId: string;
-  name: string | null | undefined;
-  fqid: string | null;
-  register: string | null | undefined;
-  slug: string;
-  definition: string | null | undefined;
-};
-type ClassificationRow = {
-  rowId: string;
-  short: string | null | undefined;
-  name: string | null | undefined;
-  fqid: string | null;
-  terminalFqid: string | null | undefined;
-};
 
 const registerColumns: Column<RegisterRow>[] = [
   { key: "name", label: "Register" },
   { key: "purpose", label: "Description" },
 ];
-const variableColumns: Column<VariableRow>[] = [
-  { key: "name", label: "Variable" },
-  { key: "register", label: "Register" },
-  { key: "slug", label: "Column", mono: true },
-];
-const classificationColumns: Column<ClassificationRow>[] = [
-  { key: "short", label: "Classification" },
-  { key: "name", label: "Name" },
-];
 
-/** Navigate to a leaf hit on row-select — a null `fqid` row can't navigate, so
- * bail (its name renders as plain text, the click no-ops). The shell's router
+/** Navigate to a register hit on row-select — a null `fqid` row can't navigate,
+ * so bail (its name renders as plain text, the click no-ops). The shell's router
  * owns history; `catalogHref` mirrors the API path. */
 function navigateTo(fqid: string | null | undefined): void {
   if (!fqid) return;
@@ -218,27 +197,6 @@ function registerRows(results: RegisterSearchResult[]): RegisterRow[] {
     name: r.name,
     fqid: r.fqid,
     purpose: r.purpose,
-  }));
-}
-function variableRows(results: VariableSearchResult[]): VariableRow[] {
-  return results.map((r, i) => ({
-    rowId: String(i),
-    name: r.name,
-    fqid: r.fqid,
-    register: r.register,
-    slug: r.fqid ? leafSlug(r.fqid) : "",
-    definition: r.definition,
-  }));
-}
-function classificationRows(
-  results: ClassificationSearchResult[],
-): ClassificationRow[] {
-  return results.map((r, i) => ({
-    rowId: String(i),
-    short: r.short_name ?? r.name,
-    name: r.name,
-    fqid: r.fqid,
-    terminalFqid: r.terminal_fqid,
   }));
 }
 
@@ -268,37 +226,6 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     bucket.codes.push(code);
   }
   return [...buckets.values()];
-}
-
-// Split a variable/classification group's mixed results into leaf hits (flat
-// table rows) and folded families (<details>) — the two render as distinct
-// sub-blocks: the leaf DataTable first, the folds after under a muted sub-label.
-function splitVariableResults(results: VariableSearchResult[] | unknown[]): {
-  leaves: VariableSearchResult[];
-  folds: ConceptGroupSearchResult[];
-} {
-  const leaves: VariableSearchResult[] = [];
-  const folds: ConceptGroupSearchResult[] = [];
-  for (const r of results as { type: string }[]) {
-    if (isConceptGroup(r)) folds.push(r);
-    else leaves.push(r as VariableSearchResult);
-  }
-  return { leaves, folds };
-}
-function splitClassificationResults(results: unknown[]): {
-  leaves: ClassificationSearchResult[];
-  folds: (ConceptGroupSearchResult | ClassificationSuccessionSearchResult)[];
-} {
-  const leaves: ClassificationSearchResult[] = [];
-  const folds: (
-    | ConceptGroupSearchResult
-    | ClassificationSuccessionSearchResult
-  )[] = [];
-  for (const r of results as { type: string }[]) {
-    if (isConceptGroup(r) || isClassificationSuccession(r)) folds.push(r);
-    else leaves.push(r as ClassificationSearchResult);
-  }
-  return { leaves, folds };
 }
 </script>
 
@@ -373,83 +300,78 @@ function splitClassificationResults(results: unknown[]): {
               {/snippet}
             </DataTable>
           {:else if group.group === "variables"}
-            {@const split = splitVariableResults(group.results)}
-            {#if split.leaves.length > 0}
-              <DataTable
-                columns={variableColumns}
-                rows={variableRows(split.leaves)}
-                getRowId={(r) => r.rowId}
-                onselect={(r) => navigateTo(r.fqid)}
-              >
-                {#snippet cell(row, column)}
-                  {#if column.key === "name"}
-                    {@render leafName(row.fqid, row.name)}
-                    {#if row.definition}
-                      <span class="sub muted">{row.definition}</span>
-                    {/if}
-                  {:else if column.key === "register"}
-                    <!-- Register is PROMINENT (#808 round 2): a display-name
-                         string (no fqid), its own normal-weight column. -->
-                    {#if row.register}
-                      <span class="register">{row.register}</span>
-                    {/if}
-                  {:else}
-                    <!-- The catalog's canonical column/binding identifier: the
-                         leaf slug (NOT the full FQID path). -->
-                    {row.slug}
-                  {/if}
-                {/snippet}
-              </DataTable>
-            {/if}
-            {@render foldedFamilies(split.folds)}
+            <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
+                 ORDER (CatalogNodeView's `.children.table`). A leaf variable is a
+                 whole-row link (`display: contents` on the <a>); a concept-group
+                 fold is a column-spanning row rendering its <details> INLINE at
+                 its rank position. Columns: Variable (name + muted definition) ·
+                 Register (PROMINENT, own column) · Column (leaf slug, mono). -->
+            <div class="children table cols-3" role="presentation">
+              <div class="head-row" aria-hidden="true">
+                <span class="col-head">Variable</span>
+                <span class="col-head">Register</span>
+                <span class="col-head">Column</span>
+              </div>
+              {#each group.results as result, i (i)}
+                {#if isConceptGroup(result)}
+                  <div class="span-row">{@render conceptGroup(result)}</div>
+                {:else}
+                  {@const v = result as VariableSearchResult}
+                  {@render variableLeafRow(v)}
+                {/if}
+              {/each}
+            </div>
           {:else if group.group === "classifications"}
-            {@const split = splitClassificationResults(group.results)}
-            {#if split.leaves.length > 0}
-              <DataTable
-                columns={classificationColumns}
-                rows={classificationRows(split.leaves)}
-                getRowId={(r) => r.rowId}
-                onselect={(r) => navigateTo(r.fqid)}
-              >
-                {#snippet cell(row, column)}
-                  {#if column.key === "short"}
-                    {@render leafName(row.fqid, row.short)}
-                    <!-- A lone non-current edition hit (#571): link to the
-                         current/terminal edition so the user can jump forward.
-                         Rendered inside the row so it still navigates to
-                         `terminal_fqid` (a nested link DataTable's
-                         fromInteractiveChild guard leaves alone). -->
-                    {#if row.terminalFqid}
-                      <a
-                        class="terminal-link"
-                        href={catalogHref(row.terminalFqid)}
-                      >
-                        → current edition
-                      </a>
-                    {/if}
-                  {:else if row.name && row.name !== row.short}
-                    <span class="sub muted">{row.name}</span>
-                  {/if}
-                {/snippet}
-              </DataTable>
-            {/if}
-            {@render foldedFamilies(split.folds)}
+            <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
+                 ORDER. A leaf classification is a whole-row link; a concept-group
+                 or classification-succession fold is a column-spanning row with
+                 its <details> INLINE. Columns: Classification (short_name ?? name,
+                 + the "→ current edition" terminal link) · Name (full name when it
+                 differs from the short name). -->
+            <div class="children table cols-2" role="presentation">
+              <div class="head-row" aria-hidden="true">
+                <span class="col-head">Classification</span>
+                <span class="col-head">Name</span>
+              </div>
+              {#each group.results as result, i (i)}
+                {#if isConceptGroup(result)}
+                  <div class="span-row">{@render conceptGroup(result)}</div>
+                {:else if isClassificationSuccession(result)}
+                  <div class="span-row">
+                    {@render classificationSuccession(result)}
+                  </div>
+                {:else}
+                  {@const c = result as ClassificationSearchResult}
+                  {@render classificationLeafRow(c)}
+                {/if}
+              {/each}
+            </div>
           {:else if group.group === "codes"}
-            <!-- Per-code-system subsections (#393 item 3). A code fans out to
-                 multiple owner targets, so it is NOT one-row-one-target — it
-                 stays a compact list, not a DataTable. The codes are already
+            <!-- Per-code-system buckets (#393 item 3, #808 round 3). The bucket
+                 heading NAMES the classification / value-set the codes come from
+                 (the null bucket → "Register-local"), so each code row need NOT
+                 repeat its owner classification. The codes are already
                  item-2-ordered (classification-backed first), and
                  groupCodesBySystem preserves first-appearance order, so curated
-                 systems lead; null/empty code_system folds into a trailing
-                 "Register-local" subsection. -->
+                 systems lead; null/empty code_system folds into the trailing
+                 "Register-local" bucket. Each bucket is a compact, code-FIRST grid
+                 table — the CODE is the highlighted primary column; the Label is
+                 the second column. A code's owner VARIABLES (when present) render
+                 as a column-spanning muted "Used in" sub-line UNDER the row, so a
+                 classification value-set code with NO owners is just a compact
+                 Code · Label row (no empty third column). -->
             {#each groupCodesBySystem(group.results) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">{system.label}</h4>
-                <ul class="results">
+                <div class="children table codes" role="presentation">
+                  <div class="head-row" aria-hidden="true">
+                    <span class="col-head">Code</span>
+                    <span class="col-head">Label</span>
+                  </div>
                   {#each system.codes as result, i (i)}
-                    <li>{@render codeHit(result)}</li>
+                    {@render codeRow(result)}
                   {/each}
-                </ul>
+                </div>
               </div>
             {/each}
           {/if}
@@ -490,13 +412,10 @@ function splitClassificationResults(results: unknown[]): {
   {/if}
 </article>
 
-<!-- A leaf hit's NAME cell: a catalog link when FQID-addressable, else plain text
-     (the hit has no catalog node). The raw FQID is NEVER shown (#808 round 2) —
-     the per-type slug/register columns carry the compact identifier. The link is
-     kept REAL (a real <a href>) so middle-click / open-in-new-tab / screen-reader
-     users get a link even though the whole row also navigates via DataTable
-     selection (the nested link + row-nav don't double-fire — DataTable's
-     fromInteractiveChild guards it). -->
+<!-- The registers DataTable's NAME cell: a real catalog link when FQID-addressable,
+     else plain text. The raw FQID is never shown — the name is the only label, and
+     the whole row navigates via DataTable selection (the nested link + row-nav
+     don't double-fire — DataTable's fromInteractiveChild guards it). -->
 {#snippet leafName(fqid: string | null | undefined, label: string | null | undefined)}
   {#if fqid}
     <a class="row-link" href={catalogHref(fqid)}>{label ?? leafSlug(fqid)}</a>
@@ -505,24 +424,106 @@ function splitClassificationResults(results: unknown[]): {
   {/if}
 {/snippet}
 
-<!-- The folded-family sub-block for the variables / classifications groups (#322
-     concept groups + #571 classification succession). They don't fit a flat table
-     row (no colspan model — same limitation #806 documented for grouped lists), so
-     they stay expandable <details> in their OWN sub-block after the leaf table,
-     under a muted sub-label so they read as a distinct treatment. -->
-{#snippet foldedFamilies(
-  folds: (ConceptGroupSearchResult | ClassificationSuccessionSearchResult)[],
-)}
-  {#if folds.length > 0}
-    <div class="folds">
-      <p class="folds-label muted">Grouped families</p>
-      {#each folds as fold, i (i)}
-        {#if isConceptGroup(fold)}
-          {@render conceptGroup(fold)}
+<!-- A LEAF variable row (#808 round 3): a whole-row link via `display: contents`
+     on the <a> — its child <span>s become the grid cells, so the WHOLE row is one
+     real link (middle-click / open-in-new-tab / screen-reader friendly), no
+     role=grid, no nested interactive elements. A null-fqid leaf can't navigate, so
+     it renders as a non-link row. The raw FQID is never shown — the Column cell
+     carries the leaf SLUG only. -->
+{#snippet variableLeafRow(v: VariableSearchResult)}
+  {#if v.fqid}
+    <a class="leaf-row" href={catalogHref(v.fqid)}>
+      <span class="name-cell">
+        <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
+        {#if v.definition}<span class="sub muted">{v.definition}</span>{/if}
+      </span>
+      <!-- Register is PROMINENT: a display-name string, its own normal-weight
+           column (NOT a muted trailing label). -->
+      <span class="register">{v.register ?? ""}</span>
+      <!-- The catalog's canonical column/binding identifier: the leaf slug. -->
+      <code class="slug-cell mono muted">{leafSlug(v.fqid)}</code>
+    </a>
+  {:else}
+    <div class="leaf-row plain">
+      <span class="name-cell"><span class="row-link plain">{v.name ?? "—"}</span>
+        {#if v.definition}<span class="sub muted">{v.definition}</span>{/if}
+      </span>
+      <span class="register">{v.register ?? ""}</span>
+      <span class="slug-cell"></span>
+    </div>
+  {/if}
+{/snippet}
+
+<!-- A LEAF classification row (#808 round 3): whole-row link (display:contents),
+     short_name ?? name as the primary cell + the "→ current edition" terminal link
+     when set; the full name fills the second column when it differs. The terminal
+     link is a SECOND interactive target, so a leaf carrying one can't be a single
+     whole-row link — render that case as a non-link row whose name is its own
+     <a> (one link per nav target, no nesting). -->
+{#snippet classificationLeafRow(c: ClassificationSearchResult)}
+  {@const short = c.short_name ?? c.name}
+  {@const showName = c.name && c.name !== short}
+  {#if c.fqid && c.terminal_fqid}
+    <div class="leaf-row">
+      <span class="name-cell">
+        <a class="row-link" href={catalogHref(c.fqid)}>{short ?? leafSlug(c.fqid)}</a>
+        <a class="terminal-link" href={catalogHref(c.terminal_fqid)}>
+          → current edition
+        </a>
+      </span>
+      <span class="name-full muted">{showName ? c.name : ""}</span>
+    </div>
+  {:else if c.fqid}
+    <a class="leaf-row" href={catalogHref(c.fqid)}>
+      <span class="name-cell"
+        ><span class="row-link">{short ?? leafSlug(c.fqid)}</span></span
+      >
+      <span class="name-full muted">{showName ? c.name : ""}</span>
+    </a>
+  {:else}
+    <div class="leaf-row plain">
+      <span class="name-cell"><span class="row-link plain">{short ?? "—"}</span></span>
+      <span class="name-full muted">{showName ? c.name : ""}</span>
+    </div>
+  {/if}
+{/snippet}
+
+<!-- A compact, code-FIRST code row (#808 round 4). TWO columns — the highlighted
+     primary CODE (mono + strong + a code-tint ink) and its Label; the owner
+     classification is NOT repeated per row (the bucket heading already names it).
+     A code has no own page and most classification value-set codes have NO owner
+     variables, so the third column is dropped: the owner VARIABLES render ONLY
+     when present, as a column-spanning muted "Used in" sub-line UNDER the row
+     (like the variable-definition sub-line), each owner a navigable link, capped
+     with a muted "+N more" from `variable_count`. A code with zero owners is just
+     a compact Code · Label row (nothing extra). -->
+{#snippet codeRow(result: CodeSearchResult)}
+  <div class="leaf-row code-row">
+    <code class="code-cell mono">{result.code}</code>
+    <span class="code-label">{result.label}</span>
+  </div>
+  {#if result.variables.length > 0}
+    <div class="span-row used-in-row">
+      <span class="used-in-label muted">Used in:</span>
+      {#each result.variables as owner, i (i)}
+        {#if owner.fqid}
+          <a class="owner" href={catalogHref(owner.fqid)}>
+            <span class="row-link">{owner.name ?? leafSlug(owner.fqid)}</span>
+            {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
+          </a>
         {:else}
-          {@render classificationSuccession(fold)}
+          <span class="owner"
+            ><span class="row-link plain">{owner.name ?? "—"}</span>
+            {#if owner.register}<span class="register muted">{owner.register}</span
+              >{/if}</span
+          >
         {/if}
       {/each}
+      {#if result.variable_count > result.variables.length}
+        <span class="more muted">
+          +{result.variable_count - result.variables.length} more
+        </span>
+      {/if}
     </div>
   {/if}
 {/snippet}
@@ -596,64 +597,6 @@ function splitClassificationResults(results: unknown[]): {
       {/each}
     </ul>
   </details>
-{/snippet}
-
-<!-- A code/value hit (#352): the actionable target is the OWNING variable /
-     classification, NOT the bare (code, label) pair (which is just the hit header).
-     The bounded `variables`/`classifications` slices each link their owner; a
-     muted, non-interactive "+N more" surfaces the slice cap from the counts. -->
-{#snippet codeHit(result: CodeSearchResult)}
-  <div class="code-hit">
-    <div class="code-header">
-      <code class="code">{result.code}</code>
-      <span class="label">{result.label}</span>
-    </div>
-    {#if result.variables.length > 0 || result.variable_count > 0}
-      <ul class="owners">
-        {#each result.variables as owner, i (i)}
-          <li>
-            {#if owner.fqid}
-              <a href={catalogHref(owner.fqid)}>
-                <span class="label">{owner.name ?? owner.fqid}</span>
-              </a>
-            {:else}
-              <span class="label">{owner.name ?? "—"}</span>
-            {/if}
-            {#if owner.register}
-              <span class="register muted">{owner.register}</span>
-            {/if}
-          </li>
-        {/each}
-        {#if result.variable_count > result.variables.length}
-          <li class="more muted">
-            +{result.variable_count - result.variables.length} more
-          </li>
-        {/if}
-      </ul>
-    {/if}
-    {#if result.classifications.length > 0 || result.classification_count > 0}
-      <ul class="owners">
-        {#each result.classifications as owner, i (i)}
-          <li>
-            {#if owner.fqid}
-              <a href={catalogHref(owner.fqid)}>
-                <span class="label">
-                  {owner.short_name ?? owner.name ?? owner.fqid}
-                </span>
-              </a>
-            {:else}
-              <span class="label">{owner.short_name ?? owner.name ?? "—"}</span>
-            {/if}
-          </li>
-        {/each}
-        {#if result.classification_count > result.classifications.length}
-          <li class="more muted">
-            +{result.classification_count - result.classifications.length} more
-          </li>
-        {/if}
-      </ul>
-    {/if}
-  </div>
 {/snippet}
 
 <!-- A documentation hit (#394): links to the minimal /doc viewer (the shell's
@@ -793,16 +736,124 @@ function splitClassificationResults(results: unknown[]): {
     border-radius: var(--radius);
     padding: 0 0.1em;
   }
-  /* The folded-families sub-block under a leaf table. */
-  .folds {
-    margin-top: 0.75rem;
+
+  /* ── CSS-grid result table (#808 round 3) ─────────────────────────────────
+     Mirrors CatalogNodeView's `.children.table`: one grid on the container
+     aligns columns ACROSS rows; a LEAF row's <a> is `display: contents` so the
+     <a>'s children become the grid cells — the WHOLE row is one real link, no
+     nesting / no role=grid. A FOLD or HEADER row spans all columns. Columns are
+     `minmax(0, …)` so long Swedish compounds shrink instead of overflowing the
+     375px canvas (#806). */
+  .children.table {
+    display: grid;
+    column-gap: var(--space-3);
+    align-items: baseline;
   }
-  .folds-label {
-    margin: 0 0 0.4rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+  .children.table.cols-3 {
+    /* Variable · Register · Column(slug) */
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, max-content);
+  }
+  .children.table.cols-2 {
+    /* Classification · Name */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .children.table.codes {
+    /* Code(highlighted) · Label — owners render as a spanning sub-line below. */
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  }
+  /* The uppercase micro-label header row (matches DataTable's <th> treatment). */
+  .head-row {
+    display: contents;
+  }
+  .col-head {
+    font-size: var(--micro-label-size);
+    letter-spacing: var(--micro-label-tracking);
+    text-transform: uppercase;
     color: var(--text-muted);
+    padding-bottom: var(--space-1);
+    border-bottom: 1px solid var(--border);
   }
+  /* A LEAF row dissolves into the grid so its cells land in the columns; a
+     hairline separator + a hover affordance read the row as a unit. The row is a
+     real <a> (whole-row link) OR a <div> (null-fqid / second-link cases). */
+  .leaf-row {
+    display: contents;
+    color: inherit;
+    text-decoration: none;
+  }
+  .leaf-row > * {
+    min-width: 0;
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  /* Hover the whole row (every cell tints) — the grid has no row element, so key
+     off the contents-link's hover via :hover on the <a>. */
+  .leaf-row:hover > * {
+    background: var(--surface-hover);
+  }
+  /* A FOLD row (concept group / succession <details>) spans all columns and owns
+     its own internal layout, sitting inline at its rank position. */
+  .span-row {
+    grid-column: 1 / -1;
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  /* The name cell stacks the primary name over an optional muted sub-line. */
+  .name-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .name-full {
+    font-size: 0.9em;
+    overflow-wrap: anywhere;
+  }
+  .slug-cell {
+    font-size: 0.85em;
+    text-align: right;
+  }
+  /* The CODE is the highlighted primary column: mono + strong + a code-tint ink
+     so it reads as the main thing in the row (#808 round 3). */
+  .code-cell {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--cat-code-ink);
+  }
+  .code-label {
+    overflow-wrap: anywhere;
+  }
+  /* A code's owner sub-line spans both columns UNDER the Code · Label row (only
+     rendered when the code HAS owner variables). It and the Code/Label row read
+     as ONE unit: the Code/Label cells drop their hairline (the sub-line's border
+     closes the unit), and the sub-line de-indents its top padding to sit tight
+     under the row. */
+  .code-row:has(+ .used-in-row) > * {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .used-in-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem 0.5rem;
+    padding-top: 0.1rem;
+  }
+  .used-in-label {
+    font-size: 0.85em;
+  }
+  .owner {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    font-size: 0.9em;
+  }
+  .owner:hover .row-link {
+    text-decoration: underline;
+  }
+
   .concept-group {
     margin-bottom: 0.35rem;
   }
@@ -835,39 +886,13 @@ function splitClassificationResults(results: unknown[]): {
     align-items: baseline;
     gap: 0.75rem;
   }
+  /* The docs group (#394) stays a simple vertical list. */
   .results {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-  }
-  .code-hit {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  .code-header {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
-  .code {
-    font-size: 0.85em;
-    color: var(--text-muted);
-  }
-  .owners {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 0 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  .owners li {
-    display: flex;
-    align-items: baseline;
     gap: 0.5rem;
   }
   .more {
