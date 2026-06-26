@@ -80,6 +80,23 @@ function providerNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+// A register node (`scb/lisa`) with three ungrouped binding-variable children and
+// NO `groups` (so `foldGroupedRows` — which tolerates absent groups — yields three
+// all-leaf rows). Shaped like RegisterResponse → BindingChild children; the #806
+// register arm renders these leaf names in a single-column list.
+function registerNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children: [
+      { kind: "binding", fqid: "scb/lisa/v1", name: "Alpha" },
+      { kind: "binding", fqid: "scb/lisa/v2", name: "Beta" },
+      { kind: "binding", fqid: "scb/lisa/v3", name: "Gamma" },
+    ],
+  } as unknown as CatalogNode;
+}
+
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
 });
@@ -130,6 +147,42 @@ describe("CatalogNodeView provider arm", () => {
 
     await expect.element(page.getByText(/No registers match/)).toBeVisible();
     expect(container.querySelector('a[href*="scb/lisa"]')).toBeNull();
+  });
+});
+
+describe("CatalogNodeView register arm", () => {
+  it("renders each ungrouped variable on its own row (one per row)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    // Wait for the leaf rows to render.
+    await expect
+      .element(page.getByRole("link", { name: "Alpha" }))
+      .toBeVisible();
+
+    // The variable list is single-column: forcing the grid to one track stops CSS
+    // auto-placement from packing two consecutive ungrouped variables into one
+    // visual row (Codex P2). Assert the leaf `.label` spans each occupy a distinct
+    // row by their layout top.
+    const labels = Array.from(
+      container.querySelectorAll<HTMLElement>(".children .label"),
+    );
+    expect(labels.map((l) => l.textContent)).toEqual([
+      "Alpha",
+      "Beta",
+      "Gamma",
+    ]);
+    const tops = labels.map((l) => Math.round(l.getBoundingClientRect().top));
+    expect(new Set(tops).size).toBe(tops.length);
+
+    // The single-column marker class drives the one-track grid.
+    expect(container.querySelector("ul.children.table.single")).not.toBeNull();
   });
 });
 

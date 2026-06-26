@@ -162,7 +162,7 @@ $effect(() => {
           label="Filter variables"
         />
         {#if filteredRows.length > 0}
-          <ul class="children table">
+          <ul class="children table single">
             {#each filteredRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
               {#if row.kind === "group"}
                 <!-- #673 (M6): a group row in the register arm LINKS to its
@@ -273,6 +273,9 @@ $effect(() => {
   /* A register-list / provider-list name link — the NAME is primary. */
   .row-link {
     font-weight: 600;
+    /* Long Swedish compound words otherwise force a min-content width past the
+       375px mobile canvas (#806); break them only when they can't fit. */
+    overflow-wrap: anywhere;
   }
   /* Clamp a register's description to ~2 lines in the DataTable cell; the full
      text lives on the register's own subject page. */
@@ -283,6 +286,7 @@ $effect(() => {
     -webkit-box-orient: vertical;
     overflow: hidden;
     color: var(--text-muted);
+    overflow-wrap: anywhere;
   }
   .children {
     list-style: none;
@@ -304,6 +308,12 @@ $effect(() => {
     column-gap: var(--space-3);
     align-items: baseline;
   }
+  /* The variable arm (register) has only a name column, so a leaf contributes a
+     single grid item. Force one column — otherwise CSS auto-placement packs two
+     consecutive ungrouped variables into one row's two tracks. */
+  .children.table.single {
+    grid-template-columns: minmax(0, 1fr);
+  }
   /* A LEAF row's <li>/<a> dissolve into the grid (display:contents) so the <a>'s
      children become the row's grid cells — one link per row, no nesting. */
   .children.table li:not(.group-row),
@@ -322,6 +332,9 @@ $effect(() => {
   }
   .children .label {
     font-weight: 600;
+    /* Break long compound variable/classification names rather than overflow the
+       mobile canvas (#806). */
+    overflow-wrap: anywhere;
   }
   /* A classification's short_name is a meaningful human classification code (not
      a raw FQID), so it stays VISIBLE as a muted secondary label in column 2. */
