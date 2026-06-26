@@ -2544,8 +2544,12 @@ Discipline:
 
 `extend_db.py` builds a **steward-flavored** `reg_meta.db` by overlaying steward-only
 content onto a *released global* DB. This is the build-side architecture piece for the
-steward track; steward catalogs (`stewards/swecov/`) and deploy are later (#365 PR3/PR4,
-see REFACTOR_SPEC.md §11).
+steward track. The committed steward catalog (`stewards/swecov/`) shipped in #365 PR3:
+the untracked generator (`input_data/swecov/build_catalog.py`) has a `steward`
+subcommand that runs against a flavored reg_meta DB and emits
+`reg_webapp/stewards/swecov/steward.project_data.json` (see
+`reg_webapp/stewards/swecov/README.md` for provenance and coverage). Only deploy wiring
+(#365 PR4, see REFACTOR_SPEC.md §11) remains.
 
 ### Scope model
 
