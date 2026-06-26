@@ -26,6 +26,8 @@ import {
   periodRangeEndpoints,
   periodTokenBounds,
 } from "./period";
+import type { Route } from "./router.svelte";
+import type { BreadcrumbItem } from "./ui/types";
 
 /** The user-facing label for the data-browser root (the `/catalog` URL is
  * unchanged — this is the LABEL only, #675). Shared by the App nav link and the
@@ -430,6 +432,60 @@ export function breadcrumbs(
     label,
     fqidPath: segs.slice(0, i + 1).join("/"),
   }));
+}
+
+/** The topbar breadcrumb trail for a route (#803), as `Breadcrumbs` items (the
+ * last item is the current page — no `href`). STRUCTURAL only: labels are the
+ * raw slug segments (the routed page owns its rich, display-name header) and the
+ * data-browser root leads every catalog trail. `home` is a single un-linked
+ * "Home"; the non-catalog routes get a one- or two-crumb trail rooted where they
+ * sit. A `catalog-node` splits its FQID path into cumulative `/catalog/...`
+ * crumbs; the group routes prepend the browser root + a "Groups" hop so the trail
+ * still descends from the data browser. */
+export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
+  const browserRoot: BreadcrumbItem = {
+    label: DATA_BROWSER_LABEL,
+    href: catalogHref(""),
+  };
+  switch (route.name) {
+    case "home":
+      return [{ label: "Home" }];
+    case "root":
+      // The data browser IS the current page — a single un-linked crumb.
+      return [{ label: DATA_BROWSER_LABEL }];
+    case "catalog-node": {
+      // Each ancestor segment is a link to its cumulative `/catalog/...` path;
+      // the leaf segment is the current page (no href).
+      const trail = breadcrumbs(route.fqidPath);
+      return [
+        browserRoot,
+        ...trail.map((c, i) => ({
+          label: c.label,
+          href: i < trail.length - 1 ? catalogHref(c.fqidPath) : undefined,
+        })),
+      ];
+    }
+    case "group":
+      return [
+        browserRoot,
+        {
+          label: `${route.provider}/${route.register}`,
+          href: catalogHref(`${route.provider}/${route.register}`),
+        },
+        { label: route.key },
+      ];
+    case "class-group":
+      return [browserRoot, { label: "class" }, { label: route.key }];
+    case "search":
+      return [{ label: "Search" }];
+    case "project":
+      return [{ label: "Project" }];
+    case "doc":
+      return [{ label: "Docs" }, { label: route.identifier }];
+    default:
+      // not-found
+      return [browserRoot];
+  }
 }
 
 // ── register_variant coordinate helpers ──────────────────────────────────────
