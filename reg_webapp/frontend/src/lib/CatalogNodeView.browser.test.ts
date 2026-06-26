@@ -184,6 +184,36 @@ describe("CatalogNodeView register arm", () => {
     // The single-column marker class drives the one-track grid.
     expect(container.querySelector("ul.children.table.single")).not.toBeNull();
   });
+
+  it("makes a variable leaf-row link keyboard-focusable, columns aligned via subgrid (#808 a11y)", async () => {
+    // The #808 a11y fix: a leaf row's <a> is a SUBGRID box (NOT display:contents),
+    // so it is a real, keyboard-focusable element while its cells still align to the
+    // <ul>'s grid tracks. Assert the anchor takes focus (the display:contents version
+    // was dropped from Chromium's tab order) AND its columns resolve to `subgrid`.
+    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("link", { name: "Alpha" }))
+      .toBeVisible();
+
+    const link = container.querySelector<HTMLAnchorElement>(
+      ".children.table li:not(.group-row) > a",
+    );
+    expect(link).not.toBeNull();
+    const style = getComputedStyle(link as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    // Load-bearing proof: focusing the anchor moves activeElement to it.
+    link?.focus();
+    expect(document.activeElement).toBe(link);
+  });
 });
 
 describe("CatalogNodeView classification-root arm (#756)", () => {
@@ -206,5 +236,57 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
 
     // It must NOT fall back to the old inline disclosure (the pre-#756 behavior).
     expect(document.querySelector("details.group")).toBeNull();
+  });
+
+  it("makes a classification leaf-row link keyboard-focusable with name + short_name aligned via subgrid (#808 a11y)", async () => {
+    // The two-column classification leaf row: the <a> is a subgrid box spanning both
+    // tracks (name in col 1, short_name in col 2), so it's keyboard-focusable AND
+    // its cells stay column-aligned. Use a root with an UNGROUPED classification leaf
+    // (the grouped one folds into the umbrella group row, which is a separate widget).
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      kind: "classification-root",
+      fqid: "class",
+      name: "Classifications",
+      children: [
+        {
+          kind: "classification",
+          fqid: "class/atc",
+          name: "Anatomical Therapeutic Chemical",
+          short_name: "ATC",
+        },
+      ],
+      groups: [],
+    } as unknown as CatalogNode);
+
+    await render(CatalogNodeView, {
+      fqidPath: "class",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("link", { name: /Anatomical/ }))
+      .toBeVisible();
+
+    const link = document.querySelector<HTMLAnchorElement>(
+      ".children.table li:not(.group-row) > a",
+    );
+    expect(link).not.toBeNull();
+    const style = getComputedStyle(link as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    // The short_name cell lands in column 2 (distinct column), not stacked under the
+    // name — assert the two cells occupy different horizontal positions.
+    const label = link?.querySelector<HTMLElement>(".label");
+    const shortName = link?.querySelector<HTMLElement>(".short-name");
+    expect(label).not.toBeNull();
+    expect(shortName).not.toBeNull();
+    const labelLeft = label?.getBoundingClientRect().left ?? 0;
+    const shortLeft = shortName?.getBoundingClientRect().left ?? 0;
+    expect(shortLeft).toBeGreaterThan(labelLeft);
+    // Load-bearing proof: focusing the anchor moves activeElement to it.
+    link?.focus();
+    expect(document.activeElement).toBe(link);
   });
 });

@@ -16,25 +16,34 @@ import { asyncResource } from "./async.svelte";
 import { catalogHref, leafSlug, showingOf } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
-import { type Column, DataTable, Tag } from "./ui";
+import { Tag } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
 // the four ORDERED, typed groups GET /api/search returns (registers / variables /
 // classifications / codes). Every leaf navigates via a plain internal <a> the
 // shell's `use:link` intercepts — never `router.navigate` from here.
 //
-// #808 (round 3): the variables / classifications groups render as a SINGLE
-// CSS-grid "table" (CatalogNodeView's `.children.table` pattern) iterating the
-// group's results in their ORIGINAL rank order — a leaf is a whole-row link
-// (`display: contents` on an `<a>`, so the row is ONE real link, no role=grid),
-// and a fold (concept group / classification succession) is a column-spanning
-// row rendering its existing expandable <details> INLINE at its rank position (no
-// pulled-out "Grouped families" block). Registers stay a DataTable (the #806
-// provider-arm shape). Codes render a compact, code-FIRST grid table per
+// #808 (round 3): the registers / variables / classifications groups render as a
+// SINGLE CSS-grid "table" (CatalogNodeView's `.children.table` pattern) iterating
+// the group's results in their ORIGINAL rank order — a leaf is a whole-row link
+// (an `<a>` that is `display: grid` + `grid-template-columns: subgrid` spanning
+// `1 / -1`, so the row is ONE real, KEYBOARD-FOCUSABLE link whose cells align to
+// the parent grid's tracks — NOT `display: contents`, which drops the anchor from
+// Chromium's sequential tab order entirely, #808 a11y fork), and a fold (concept
+// group / classification succession) is a column-spanning row rendering its
+// existing expandable <details> INLINE at its rank position (no pulled-out
+// "Grouped families" block). Codes render a compact, code-FIRST grid table per
 // code-system bucket (the bucket heading names the classification / value-set);
 // each row's owner VARIABLES are the navigable targets (a code has no own page).
 // Categorical type identity lives on the GROUP HEADING (a single Tag); the raw
 // FQID is hidden everywhere (the leaf SLUG is the only identifier shown).
+//
+// The registers group previously used a DataTable with selection-as-navigation,
+// but a null-fqid register made the row focusable/clickable while `navigateTo`
+// no-opped — an interactive-looking dead row (L319). DataTable has no per-row
+// opt-out of selection (selectable is table-wide), so registers now share the
+// SAME subgrid whole-row-link pattern: a null-fqid register renders as a plain,
+// non-interactive `<div>` row, never a dead tab stop.
 
 const q = $derived((router.getQueryParam("q") ?? "").trim());
 
@@ -196,42 +205,11 @@ function resultKey(
   return `${identity}|${i}`;
 }
 
-// ── Registers leaf-table row shape (#808) ────────────────────────────────────
-// The registers group keeps its DataTable (the #806 provider-arm shape). Its rows
-// carry a STABLE synthetic `rowId` (the array index) so the keyed each is crash-
-// proof even when several rows share a null `fqid` and the same name (the
-// #379/#391 each_key_duplicate lesson — a natural `fqid` key collides). The
-// variables / classifications groups are NOT DataTables — they render the
-// `.children.table` CSS grid directly over their raw results (see template), so
-// they need no row-shape mapping.
-type RegisterRow = {
-  rowId: string;
-  name: string | null | undefined;
-  fqid: string | null;
-  purpose: string | null | undefined;
-};
-
-const registerColumns: Column<RegisterRow>[] = [
-  { key: "name", label: "Register" },
-  { key: "purpose", label: "Description" },
-];
-
-/** Navigate to a register hit on row-select — a null `fqid` row can't navigate,
- * so bail (its name renders as plain text, the click no-ops). The shell's router
- * owns history; `catalogHref` mirrors the API path. */
-function navigateTo(fqid: string | null | undefined): void {
-  if (!fqid) return;
-  router.navigate(catalogHref(fqid));
-}
-
-function registerRows(results: RegisterSearchResult[]): RegisterRow[] {
-  return results.map((r, i) => ({
-    rowId: String(i),
-    name: r.name,
-    fqid: r.fqid,
-    purpose: r.purpose,
-  }));
-}
+// The registers / variables / classifications groups render the `.children.table`
+// CSS grid directly over their raw results (see template), so they need no
+// row-shape mapping. The keyed each folds the array INDEX into the key (alongside
+// `fqid` / `group_key`) so a null/duplicate `fqid` can't collide and crash the
+// render (the #379/#391 each_key_duplicate lesson).
 
 // The codes group, bucketed by code system (#393 item 3). STABLE group-by on
 // `code_system`, preserving FIRST-APPEARANCE order — so the item-2 ranking (which
@@ -341,24 +319,22 @@ function usageSummary(result: CodeSearchResult): string {
           </h3>
 
           {#if group.group === "registers"}
-            <!-- Registers → a 2-column DataTable: Register (name → catalog link)
-                 + Description (purpose, 2-line clamp). The whole row navigates to
-                 the hit (selection-as-navigation); the name stays a real <a> so
-                 middle-click / open-in-new-tab / screen readers keep a link. -->
-            <DataTable
-              columns={registerColumns}
-              rows={registerRows(group.results as RegisterSearchResult[])}
-              getRowId={(r) => r.rowId}
-              onselect={(r) => navigateTo(r.fqid)}
-            >
-              {#snippet cell(row, column)}
-                {#if column.key === "name"}
-                  {@render leafName(row.fqid, row.name)}
-                {:else if row.purpose}
-                  <span class="clamp-2">{row.purpose}</span>
-                {/if}
-              {/snippet}
-            </DataTable>
+            <!-- #808 a11y: registers render the SAME subgrid `.children.table` as
+                 variables / classifications — a whole-row, KEYBOARD-FOCUSABLE link
+                 (or a plain non-link <div> for a null-fqid register, never a dead
+                 tab stop). Columns: Register (name → catalog link) · Description
+                 (purpose, 2-line clamp). Replaces the prior DataTable + selection-
+                 as-navigation (which made a null-fqid row an interactive dead row,
+                 L319). -->
+            <div class="children table cols-2" role="presentation">
+              <div class="head-row" aria-hidden="true">
+                <span class="col-head">Register</span>
+                <span class="col-head">Description</span>
+              </div>
+              {#each group.results as result, i (`${result.fqid}|${i}`)}
+                {@render registerLeafRow(result as RegisterSearchResult)}
+              {/each}
+            </div>
           {:else if group.group === "variables"}
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
                  ORDER (CatalogNodeView's `.children.table`). A leaf variable is a
@@ -486,24 +462,37 @@ function usageSummary(result: CodeSearchResult): string {
   {/if}
 </article>
 
-<!-- The registers DataTable's NAME cell: a real catalog link when FQID-addressable,
-     else plain text. The raw FQID is never shown — the name is the only label, and
-     the whole row navigates via DataTable selection (the nested link + row-nav
-     don't double-fire — DataTable's fromInteractiveChild guards it). -->
-{#snippet leafName(fqid: string | null | undefined, label: string | null | undefined)}
-  {#if fqid}
-    <a class="row-link" href={catalogHref(fqid)}>{label ?? leafSlug(fqid)}</a>
+<!-- A LEAF register row (#808 a11y): a whole-row, keyboard-focusable link via the
+     subgrid `.leaf-row` <a> — its child cells (the Register name + the clamped
+     Description) land in the parent grid's two tracks. A null-fqid register can't
+     navigate, so it renders as a non-link <div> row (plain text name, no dead tab
+     stop). The raw FQID is never shown — the name is the only label. -->
+{#snippet registerLeafRow(r: RegisterSearchResult)}
+  {#if r.fqid}
+    <a class="leaf-row" href={catalogHref(r.fqid)}>
+      <span class="name-cell"
+        ><span class="row-link">{r.name ?? leafSlug(r.fqid)}</span></span
+      >
+      {#if r.purpose}<span class="clamp-2">{r.purpose}</span>{:else}<span></span
+        >{/if}
+    </a>
   {:else}
-    <span class="row-link plain">{label ?? "—"}</span>
+    <div class="leaf-row plain">
+      <span class="name-cell"><span class="row-link plain">{r.name ?? "—"}</span></span>
+      {#if r.purpose}<span class="clamp-2">{r.purpose}</span>{:else}<span></span
+        >{/if}
+    </div>
   {/if}
 {/snippet}
 
-<!-- A LEAF variable row (#808 round 3): a whole-row link via `display: contents`
-     on the <a> — its child <span>s become the grid cells, so the WHOLE row is one
-     real link (middle-click / open-in-new-tab / screen-reader friendly), no
-     role=grid, no nested interactive elements. A null-fqid leaf can't navigate, so
-     it renders as a non-link row. The raw FQID is never shown — the Column cell
-     carries the leaf SLUG only. -->
+<!-- A LEAF variable row (#808 round 3 / a11y): a whole-row, KEYBOARD-FOCUSABLE
+     link — the <a> is a subgrid grid (`display:grid` spanning `1 / -1` with
+     `grid-template-columns: subgrid`) so its child <span>s land in the parent
+     grid's tracks while the anchor stays a real focusable box (middle-click /
+     open-in-new-tab / screen-reader / Tab friendly), no role=grid, no nested
+     interactive elements. A null-fqid leaf can't navigate, so it renders as a
+     non-link <div> row (no focus ring). The raw FQID is never shown — the Column
+     cell carries the leaf SLUG only. -->
 {#snippet variableLeafRow(v: VariableSearchResult)}
   {#if v.fqid}
     <a class="leaf-row" href={catalogHref(v.fqid)}>
@@ -528,15 +517,17 @@ function usageSummary(result: CodeSearchResult): string {
   {/if}
 {/snippet}
 
-<!-- A LEAF classification row (#808 round 3): whole-row link (display:contents),
-     short_name ?? name as the primary cell + the "→ current edition" terminal link
-     when set; the full name fills the second column when it differs. The terminal
-     link is a SECOND interactive target, so a leaf carrying one can't be a single
-     whole-row link — that case renders as a non-link row whose name is its own
-     <a> when its own fqid resolves, else plain text (one link per nav target, no
-     nesting). The terminal link renders INDEPENDENTLY of own-fqid resolvability: a
-     malformed vintage (fqid: null) that still carries a terminal_fqid must keep its
-     "→ current edition" target — that's the only navigable hit for the row. -->
+<!-- A LEAF classification row (#808 round 3 / a11y): whole-row, keyboard-focusable
+     subgrid link, short_name ?? name as the primary cell + the "→ current edition"
+     terminal link when set; the full name fills the second column when it differs.
+     The terminal link is a SECOND interactive target, so a leaf carrying one can't
+     be a single whole-row link — that case renders as a non-link <div> row whose
+     name is its own <a> when its own fqid resolves, else plain text (one link per
+     nav target, no nesting; the nested name + terminal <a>s stay normal focusable
+     inline links). The terminal link renders INDEPENDENTLY of own-fqid
+     resolvability: a malformed vintage (fqid: null) that still carries a
+     terminal_fqid must keep its "→ current edition" target — the only navigable
+     hit for the row. -->
 {#snippet classificationLeafRow(c: ClassificationSearchResult)}
   {@const short = c.short_name ?? c.name}
   {@const showName = c.name && c.name !== short}
@@ -853,13 +844,15 @@ function usageSummary(result: CodeSearchResult): string {
     padding: 0 0.1em;
   }
 
-  /* ── CSS-grid result table (#808 round 3) ─────────────────────────────────
+  /* ── CSS-grid result table (#808 round 3 / a11y) ──────────────────────────
      Mirrors CatalogNodeView's `.children.table`: one grid on the container
-     aligns columns ACROSS rows; a LEAF row's <a> is `display: contents` so the
-     <a>'s children become the grid cells — the WHOLE row is one real link, no
-     nesting / no role=grid. A FOLD or HEADER row spans all columns. Columns are
-     `minmax(0, …)` so long Swedish compounds shrink instead of overflowing the
-     375px canvas (#806). */
+     aligns columns ACROSS rows; a LEAF row's <a> is a SUBGRID box (`display:grid`
+     spanning `1 / -1` with `grid-template-columns: subgrid`) so the <a>'s children
+     land in the PARENT grid's tracks while the anchor itself stays a real,
+     keyboard-FOCUSABLE element (a `display:contents` <a> is dropped from Chromium's
+     sequential tab order — the #808 a11y defect this round fixes). A FOLD or HEADER
+     row spans all columns. Columns are `minmax(0, …)` so long Swedish compounds
+     shrink instead of overflowing the 375px canvas (#806). */
   .children.table {
     display: grid;
     column-gap: var(--space-3);
@@ -1006,11 +999,17 @@ function usageSummary(result: CodeSearchResult): string {
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--border);
   }
-  /* A LEAF row dissolves into the grid so its cells land in the columns; a
-     hairline separator + a hover affordance read the row as a unit. The row is a
-     real <a> (whole-row link) OR a <div> (null-fqid / second-link cases). */
+  /* A LEAF row is a real, keyboard-focusable box (an <a> whole-row link OR a <div>
+     for the null-fqid / second-link cases) that spans every column and aligns its
+     own cells to the PARENT grid's tracks via `subgrid` — so the whole row is one
+     interactive element AND a focus ring can draw on its box. A hairline separator
+     + a hover affordance read the row as a unit. */
   .leaf-row {
-    display: contents;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    column-gap: var(--space-3);
+    align-items: stretch;
     color: inherit;
     text-decoration: none;
   }
@@ -1019,19 +1018,20 @@ function usageSummary(result: CodeSearchResult): string {
     padding: var(--space-1) 0;
     border-bottom: 1px solid var(--border);
   }
-  /* Hover the whole row (every cell tints) — the grid has no row element, so key
-     off the contents-link's hover via :hover on the <a>. */
+  /* Hover the whole row (every cell tints). */
   .leaf-row:hover > * {
     background: var(--surface-hover);
   }
-  /* NOTE (#808 a11y fork): a `display: contents` <a> is NOT keyboard-focusable in
-     Chromium — it's dropped from sequential tab navigation entirely (verified: Tab
-     skips straight past it), so a `.leaf-row:focus-visible` rule could never fire.
-     The real defect is that the whole-row leaf link is unreachable by keyboard at
-     all; a CSS focus indicator can't fix that. The same pattern (and gap) lives in
-     CatalogNodeView's `.children.table` leaf rows. Surfaced to the lead — fixing it
-     needs a focusability change (tabindex / not using display:contents for the
-     link), which is a larger re-architecture than #808's scope. */
+  /* #808 a11y: now the leaf link is a real focusable box (subgrid, NOT
+     display:contents), a visible keyboard focus ring draws on it — the shared
+     `--focus-ring` token, matching DataTable's selectable rows + the codes
+     `.owner-row`. Only the link (<a>) gets the ring; a non-link `.plain` <div> row
+     is not focusable and gets none. */
+  a.leaf-row:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
   /* A FOLD row (concept group / succession <details>) spans all columns and owns
      its own internal layout, sitting inline at its rank position. */
   .span-row {

@@ -1019,7 +1019,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     ],
   } as unknown as SearchResponse;
 
-  it("renders registers as a DataTable and variables/classifications as grid tables", async () => {
+  it("renders all four leaf groups as grid tables (no DataTable / no role=grid) (#808 a11y)", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
@@ -1027,43 +1027,38 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Variables" }))
       .toBeVisible();
-    // Registers keep the DataTable (a single role=grid). Variables/classifications
-    // are NOT DataTables — they render the `.children.table` CSS grid directly, so
-    // exactly ONE role=grid remains in the leaf groups.
-    const grids = document.querySelectorAll(".search-view table[role='grid']");
-    expect(grids.length).toBe(1);
-    // The registers DataTable still navigates the whole row (selectable + tabindex).
-    const selectableRows = document.querySelectorAll(
-      ".search-view tr.selectable[tabindex='0']",
+    // L319 / a11y: registers no longer use a DataTable (selection-as-navigation made
+    // a null-fqid row an interactive dead row). ALL four result types now render the
+    // accessible `.children.table` subgrid pattern, so NO role=grid table remains and
+    // there are no selectable <tr> tab stops.
+    expect(
+      document.querySelectorAll(".search-view table[role='grid']").length,
+    ).toBe(0);
+    expect(document.querySelectorAll(".search-view tr.selectable").length).toBe(
+      0,
     );
-    expect(selectableRows.length).toBeGreaterThanOrEqual(1);
-    // Variables + classifications each render a `.children.table` grid with leaf
-    // rows that are whole-row `display:contents` links.
+    // Registers + variables + classifications + each codes bucket render a
+    // `.children.table` grid.
     const gridTables = document.querySelectorAll(
       ".search-view .children.table",
     );
-    expect(gridTables.length).toBeGreaterThanOrEqual(2);
+    expect(gridTables.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("navigates to the register's catalog node when its DataTable ROW is activated", async () => {
-    // The registers group keeps DataTable selection-as-navigation
-    // (`onselect={(r) => navigateTo(r.fqid)}` → `router.navigate(catalogHref(fqid))`).
-    // Activate the ROW itself (the `tr.selectable`, NOT the inner name link, whose
-    // own `use:link`-style nav DataTable's fromInteractiveChild guards) and assert
-    // the router pushed the register's catalog path.
+  it("makes the register's whole-row link target its catalog node (href, not DataTable selection)", async () => {
+    // L319 / a11y: the register row is a real whole-row <a> (subgrid), so navigation
+    // is the anchor's OWN href (the shell's `use:link` intercepts it at runtime) —
+    // no DataTable selection-as-navigation. Assert the row link's href, the same
+    // open-in-new-tab-safe contract the variable/classification leaves use.
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
-    const row = document.querySelector<HTMLElement>(
-      ".search-view tr.selectable",
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
     );
     expect(row).not.toBeNull();
-    row?.click();
-
-    await expect
-      .poll(() => window.location.pathname)
-      .toBe(catalogHref("scb/lisa"));
+    expect(row?.getAttribute("href")).toBe(catalogHref("scb/lisa"));
   });
 
   it("hides the raw FQID and shows the leaf SLUG as the variable's Column", async () => {
@@ -1148,11 +1143,14 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(headingTags.length).toBe(3);
   });
 
-  it("makes a variable leaf row a whole-row display:contents link carrying register + slug cells", async () => {
-    // The headline redesign: a variable leaf row is ONE real link (`display:
-    // contents` on the <a> so its child cells become the grid cells) — clicking
-    // anywhere on the row = clicking the link. Assert the row's <a> targets the
-    // catalog node and visually carries the prominent register + mono slug cells.
+  it("makes a variable leaf row a whole-row subgrid link carrying register + slug cells, keyboard-focusable (#808 a11y)", async () => {
+    // The headline redesign + a11y fix: a variable leaf row is ONE real link — a
+    // SUBGRID box (`display:grid` + `grid-template-columns: subgrid`, NOT
+    // `display:contents`) so its child cells align to the parent grid's tracks while
+    // the <a> stays a real, keyboard-focusable element. Clicking anywhere on the row
+    // = clicking the link. Assert the <a> targets the catalog node, carries the
+    // prominent register + mono slug cells, resolves its columns to `subgrid`, AND is
+    // keyboard-focusable (the display:contents version was dropped from the tab order).
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
@@ -1163,15 +1161,65 @@ describe("SearchView — compact per-type tables (#808)", () => {
     );
     expect(row).not.toBeNull();
     expect(row?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
-    // It is a contents-link (the whole row is the link, no role=grid): its cells
-    // become the grid cells.
-    expect(getComputedStyle(row as Element).display).toBe("contents");
+    // It is a subgrid GRID box (the whole row is the link, no role=grid): its cells
+    // align to the parent grid's tracks via subgrid.
+    const style = getComputedStyle(row as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    // KEYBOARD FOCUSABLE: focusing the anchor moves activeElement to it — the load-
+    // bearing proof (a `display:contents` <a> fails this, dropped from the tab order).
+    row?.focus();
+    expect(document.activeElement).toBe(row);
     // The row carries the prominent register cell AND the mono leaf-slug cell —
     // so clicking the register/slug area is clicking the same single row link.
     const register = row?.querySelector(".register");
     expect(register?.textContent?.trim()).toBe("LISA");
     const slug = row?.querySelector(".slug-cell");
     expect(slug?.textContent?.trim()).toBe("kon");
+  });
+
+  it("makes a classification leaf row a keyboard-focusable whole-row link (#808 a11y)", async () => {
+    // The classification leaf (no terminal link) is also a subgrid whole-row <a>;
+    // assert it is keyboard-focusable — the display:contents version was not.
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // Scope by the classification href — the registers group is ALSO a `.cols-2`
+    // grid now, so a bare `.cols-2 a.leaf-row` would match the register row first.
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .cols-2 a.leaf-row[href='/catalog/class/sun2020']",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.getAttribute("href")).toBe("/catalog/class/sun2020");
+    const style = getComputedStyle(row as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    row?.focus();
+    expect(document.activeElement).toBe(row);
+  });
+
+  it("makes a register leaf row a keyboard-focusable whole-row subgrid link (#808 a11y, replaces DataTable)", async () => {
+    // L319 / a11y: registers no longer use DataTable selection-as-navigation (which
+    // made a null-fqid row an interactive dead row). They render the SAME subgrid
+    // whole-row-link pattern as variables/classifications — a real, keyboard-
+    // focusable <a> per FQID-addressable register.
+    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    setQuery("kon");
+    await render(SearchView);
+
+    // The registers group renders the grid table, NOT a DataTable (no role=grid).
+    const grid = document.querySelector(".search-view section.group");
+    expect(grid).not.toBeNull();
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
+    );
+    expect(row).not.toBeNull();
+    const style = getComputedStyle(row as Element);
+    expect(style.display).toBe("grid");
+    expect(style.gridTemplateColumns).toContain("subgrid");
+    row?.focus();
+    expect(document.activeElement).toBe(row);
   });
 
   it("renders a null-fqid variable leaf as a non-link row (plain text, no navigation target)", async () => {
