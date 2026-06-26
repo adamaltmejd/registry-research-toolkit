@@ -28,16 +28,46 @@ const BASE = process.env.REG_WEBAPP_DEV_URL ?? "http://localhost:5173";
 const SHOTS = "/tmp/reg-webapp-shots";
 mkdirSync(SHOTS, { recursive: true });
 
+// Screenshot viewport. Default `desktop` (the historical 1280x900). Override via
+// REG_WEBAPP_VIEWPORT: a named preset (mobile/tablet/desktop) or raw "WxH" (e.g.
+// "414x896"). dev.sh's `shot --mobile/--tablet/--all/--viewport` sets this per run
+// so the free-port path can capture responsive breakpoints without the fixed-port
+// preview server. The label is suffixed onto non-desktop screenshot names so a
+// multi-viewport run doesn't clobber the desktop shot.
+const VIEWPORTS = {
+  mobile: { width: 375, height: 812 },
+  tablet: { width: 768, height: 1024 },
+  desktop: { width: 1280, height: 900 },
+};
+function resolveViewport(spec) {
+  if (!spec) return { ...VIEWPORTS.desktop, label: "desktop" };
+  if (spec in VIEWPORTS) return { ...VIEWPORTS[spec], label: spec };
+  const m = /^(\d+)x(\d+)$/.exec(spec);
+  if (!m) {
+    throw new Error(
+      `bad REG_WEBAPP_VIEWPORT "${spec}" — use mobile|tablet|desktop or WxH`,
+    );
+  }
+  return { width: Number(m[1]), height: Number(m[2]), label: spec };
+}
+const viewport = resolveViewport(process.env.REG_WEBAPP_VIEWPORT);
+
 const [cmd = "smoke", ...rest] = process.argv.slice(2);
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+const page = await browser.newPage({
+  viewport: { width: viewport.width, height: viewport.height },
+});
 page.on("console", (m) => {
   if (m.type() === "error") console.log(`[console.error] ${m.text()}`);
 });
 page.on("pageerror", (e) => console.log(`[pageerror] ${e.message}`));
 
 async function shot(name) {
-  const file = `${SHOTS}/${name}.png`;
+  // Desktop keeps the historical bare filename (SKILL.md references `01-root` …
+  // `05-deep-link-reload`); other viewports get a `-<label>` suffix so a
+  // multi-viewport run captures each breakpoint instead of overwriting.
+  const suffix = viewport.label === "desktop" ? "" : `-${viewport.label}`;
+  const file = `${SHOTS}/${name}${suffix}.png`;
   await page.screenshot({ path: file });
   console.log(`shot: ${file}`);
 }

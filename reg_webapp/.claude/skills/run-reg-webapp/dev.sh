@@ -11,7 +11,17 @@
 #                          down, exit with the driver's status. For agent visual
 #                          verification: random ports + guaranteed cleanup, so it
 #                          never collides and never leaks a server.
-#   dev.sh shot <route>... ONE-SHOT — screenshot each route, tear down, exit.
+#   dev.sh shot [viewport...] <route>...
+#                          ONE-SHOT — screenshot each route, tear down, exit.
+#                          Viewport flags before the routes capture responsive
+#                          breakpoints (default desktop): --mobile (375x812),
+#                          --tablet (768x1024), --desktop (1280x900), --all (the
+#                          three), or --viewport WxH (repeatable). Each viewport ×
+#                          route is shot; non-desktop shots get a `-<label>` suffix.
+#   dev.sh preview         preview_start entry point (.claude/launch.json) — like
+#                          interactive serve, but the frontend binds the MCP-assigned
+#                          $PORT so preview_start attaches to OUR vite and parallel
+#                          sessions don't collide. Not meant to be run by hand.
 #
 # Ports are automatic (two of these never collide); pin with BACKEND_PORT /
 # FRONTEND_PORT if you need to know them up front.
@@ -31,12 +41,60 @@ shot)
 	mode=shot
 	shift
 	;;
+preview)
+	# preview_start (.claude/launch.json) entry point: same blocking servers as
+	# `serve`, but the frontend binds the MCP-assigned $PORT (see port selection
+	# below) so preview_start attaches to OUR vite — collision-free across sessions.
+	mode=preview
+	shift
+	;;
 "") mode=serve ;;
 *)
-	echo "usage: dev.sh [smoke | shot <route>...]" >&2
+	echo "usage: dev.sh [smoke | shot [--mobile|--tablet|--desktop|--all|--viewport WxH]... <route>... | preview]" >&2
 	exit 2
 	;;
 esac
+
+# Viewport flags precede the routes in `shot` mode; consume them here so what's
+# left in "$@" is the route list. Each viewport is passed to the driver via
+# REG_WEBAPP_VIEWPORT (a preset name or raw WxH).
+viewports=()
+if [ "$mode" = shot ]; then
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		--mobile | --tablet | --desktop)
+			viewports+=("${1#--}")
+			shift
+			;;
+		--all)
+			viewports+=(mobile tablet desktop)
+			shift
+			;;
+		--viewport)
+			[ "$#" -ge 2 ] || {
+				echo "dev: --viewport needs a WxH argument, e.g. --viewport 414x896" >&2
+				exit 2
+			}
+			viewports+=("$2")
+			shift 2
+			;;
+		--viewport=*)
+			viewports+=("${1#*=}")
+			shift
+			;;
+		--)
+			shift
+			break
+			;;
+		-*)
+			echo "dev: unknown shot flag '$1'" >&2
+			exit 2
+			;;
+		*) break ;;
+		esac
+	done
+	[ ${#viewports[@]} -gt 0 ] || viewports=(desktop)
+fi
 
 if [ "$mode" = shot ] && [ "$#" -eq 0 ]; then
 	echo "dev: 'shot' needs at least one route, e.g. dev.sh shot /catalog/scb/lisa" >&2
@@ -59,7 +117,16 @@ fi
 
 freeport() { python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
 backend_port=${BACKEND_PORT:-$(freeport)}
-frontend_port=${FRONTEND_PORT:-$(freeport)}
+if [ "$mode" = preview ]; then
+	# preview_start assigns the frontend port via $PORT (autoPort always exports it,
+	# even when it keeps the configured 5173). Bind exactly that so the MCP attaches
+	# to OUR vite; the backend stays a private free port, wired to the /api proxy
+	# below. The :-5173 fallback only matters if `dev.sh preview` is run by hand
+	# outside preview_start.
+	frontend_port=${PORT:-${FRONTEND_PORT:-5173}}
+else
+	frontend_port=${FRONTEND_PORT:-$(freeport)}
+fi
 
 pids=()
 cleanup() {
@@ -121,16 +188,21 @@ smoke)
 	exit $?
 	;;
 shot)
-	echo "dev: shot $* on $dev_url (auto-teardown on exit)" >&2
+	echo "dev: shot $* on $dev_url viewports=${viewports[*]} (auto-teardown on exit)" >&2
 	rc=0
-	for route in "$@"; do
-		(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-			bun ../.claude/skills/run-reg-webapp/driver.mjs shot "$route") || rc=$?
+	for vp in "${viewports[@]}"; do
+		for route in "$@"; do
+			(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" REG_WEBAPP_VIEWPORT="$vp" \
+				bun ../.claude/skills/run-reg-webapp/driver.mjs shot "$route") || rc=$?
+		done
 	done
 	exit "$rc"
 	;;
-serve)
-	printf 'reg_webapp dev (Ctrl-C to stop):\n  backend : http://localhost:%s\n  frontend: %s\n  driver  : REG_WEBAPP_DEV_URL=%s\n' \
+serve | preview)
+	# `serve` is interactive (Ctrl-C stops); `preview` is the preview_start entry
+	# (the MCP stops it via preview_stop). Both just block on the running servers.
+	printf 'reg_webapp dev (%s):\n  backend : http://localhost:%s\n  frontend: %s\n  driver  : REG_WEBAPP_DEV_URL=%s\n' \
+		"$([ "$mode" = preview ] && echo 'preview_start' || echo 'Ctrl-C to stop')" \
 		"$backend_port" "$dev_url" "$dev_url"
 	# Steady state: block until Ctrl-C (INT trap -> nonzero) or a server exits. A
 	# bare `wait` is fine — startup already succeeded; a later single-server crash

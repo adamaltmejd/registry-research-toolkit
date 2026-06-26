@@ -52,6 +52,24 @@ with `2022` and clicks **Apply** (expects "narrowed to 2022"), then cold-reloads
 deep link. Screenshots land in `/tmp/reg-webapp-shots/` (`01-root` …
 `05-deep-link-reload`; `shot` writes `_<route>.png`) — **look at them**.
 
+**Responsive screenshots (`shot` viewports).** `shot` defaults to a 1280×900 desktop
+viewport, but viewport flags before the routes capture other breakpoints — this is how
+the free-port path does responsive/mobile visual checks (no fixed-port preview server
+needed):
+
+```sh
+# one route, three breakpoints (375 / 768 / 1280)
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all /catalog/scb/lisa
+# just mobile + tablet, or an exact size
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --mobile --tablet /catalog
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --viewport 414x896 /catalog
+```
+
+Presets: `--mobile` (375×812), `--tablet` (768×1024), `--desktop` (1280×900), `--all`
+(the three), `--viewport WxH` (repeatable). Each viewport × route is shot; non-desktop
+shots get a `-<label>` suffix (e.g. `_catalog_scb_lisa-mobile.png`, `…-414x896.png`) so
+they don't clobber the desktop shot.
+
 **Verifying against unreleased DB content (custom DB).** `dev.sh` renders against
 whatever DB `reg_meta` resolves, and `$REG_META_DB` (a *directory*) wins over the
 installed default (see Prerequisites) — `dev.sh` never sets it, so it inherits the
@@ -93,10 +111,27 @@ lsof -ti :8000 -ti :5173 | xargs kill   # don't forget this
 
 ## Parallel instances (concurrent worktrees / PR lanes)
 
-`dev.sh` already picks free ports, so just run it in each checkout — two instances never
-collide, no manual port juggling. (`preview_start` / `.claude/launch.json` are
-fixed-port single-host: the static config can't inject the backend's chosen port into
-the frontend config, so use `dev.sh` for concurrency.)
+Both runners are now collision-free across parallel sessions — pick by need:
+
+- **`preview_start` (interactive poking).** `.claude/launch.json` has a single
+  `reg-webapp` config with `autoPort: true` whose entry point is `dev.sh preview`. The
+  preview MCP picks a free frontend port (exported as `$PORT`; it does this even when it
+  keeps the configured 5173) and `dev.sh preview` binds exactly that, then starts the
+  backend on its own private free port and points the Vite `/api` proxy at it via
+  `REG_WEBAPP_BACKEND_URL`. So two sessions each get a distinct frontend **and** backend
+  port and a correctly-wired proxy — no `:8000`/`:5173` collision, no cross-talk. (This
+  replaced the old two-config `autoPort: false` setup, which collided because a static
+  launch config can't inject the backend's chosen port into the frontend.)
+  `preview_start` starts both servers under one `serverId`; the browser attaches to the
+  frontend, and the backend is reached through the `/api` proxy (it has no standalone
+  preview entry — for raw backend/`/docs` poking use the manual escape hatch above).
+- **`dev.sh smoke` / `dev.sh shot` (visual verification / screenshots).** Free ports,
+  guaranteed teardown, `shot --all` for responsive breakpoints — the PR-pipeline path.
+
+In a worktree both run from the checkout's own `.venv` (the `preview` entry routes
+through `dev.sh`, which `cd`s to `git rev-parse --show-toplevel` and launches from
+`.venv/bin/uvicorn`), so a worktree serves ITS code, not main's — the historical
+"`preview_start` serves main" footgun is gone now that the entry point is `dev.sh`.
 
 ## Direct invocation (backend-only PRs)
 
@@ -133,8 +168,11 @@ the Playwright browser project).
   own `.venv`, so a worktree serves ITS code. (Deliberately NOT a `WorktreeCreate` hook:
   that event *replaces* git's worktree creation — a provisioner there would abort it.)
   The historical footgun — a `uv run` / `preview_start` started with the **main**
-  checkout as cwd served main's source (bit an agent 2026-06-11) — is why `dev.sh` is
-  preferred in a worktree; raw `preview_start` there still serves main.
+  checkout as cwd served main's source (bit an agent 2026-06-11) — is closed now that
+  `preview_start` routes through `dev.sh preview`, which `cd`s to its own toplevel and
+  launches from that checkout's `.venv` (verified: the preview ran with cwd = the
+  worktree and served the worktree's `.venv`). `dev.sh` is still the right tool for any
+  one-shot/screenshot work.
 
 ## Troubleshooting
 
