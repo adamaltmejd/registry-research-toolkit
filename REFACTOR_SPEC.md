@@ -107,15 +107,19 @@ unchanged.
 
 **Partially shipped.** The `swecov` steward catalog shipped in #365 PR3:
 `reg_webapp/stewards/swecov/steward.project_data.json` is committed (column-based
-admission, 66.7% physical-column coverage; see `reg_webapp/stewards/swecov/README.md`).
+admission, 67.0% physical-column coverage; see `reg_webapp/stewards/swecov/README.md`).
 The `steward` subcommand of the untracked `input_data/swecov/build_catalog.py` generates
 it against the flavored reg_meta DB. Admission keying (#206) closed with that PR.
 
-Remaining: deploy wiring for the swecov deployment (a hostname registered at Cloudflare
-— `steward.toml` currently carries a `swecov.example.org` placeholder — plus a Docker
-image rebuild picking up the committed catalog, #365 PR4). The `ifau` steward catalog
-has not been authored yet. Order export exists in CSV form (default template) for all
-three.
+Remaining (#365 PR4): deploy wiring for the swecov deployment — a hostname registered at
+Cloudflare (`steward.toml` currently carries a `swecov.example.org` placeholder), and a
+Docker image that bundles BOTH the committed catalog AND the **flavored** `extend-db` DB
+(`REG_META_DB` pointed at it). The catalog binds steward-only providers (`swedbank`,
+`region-*`, `swecov`, …) that the *global* release DB does not contain, so booting
+`REG_WEBAPP_STEWARD=swecov` against the plain global asset would drop every steward-only
+binding as drift — the flavored DB must ship as the deployment's reg_meta asset. The
+`ifau` steward catalog has not been authored yet. Order export exists in CSV form
+(default template) for all three.
 
 The SPA catalog-authoring mode (distinct from project authoring) and a `reg-meta-build`
 steward-diff CLI are **deferred post-v1**: steward catalogs are plain `ProjectData`
