@@ -810,8 +810,9 @@ The webapp's subject-page graph view (#666 epic, renderer #678) consumes a singl
 single-variable graph meaningful? how does a group expand? which editions dedup? where
 does a representation run break?) — so the SPA renders a graph as-is and never assembles
 graph *semantics*. The model + builders live in **`graph.py`** (off the \~2.6k-line
-`catalog.py`); `Catalog` exposes three thin accessors that delegate there:
-`graph_for_fqid(fqid)`, `graph_for_group(provider, register, key)`,
+`catalog.py`); `Catalog` exposes four thin accessors that delegate there:
+`graph_for_fqid(fqid)`, `graph_for_classification_fqid(fqid)` (#792, the classification
+analog of `graph_for_fqid`), `graph_for_group(provider, register, key)`,
 `graph_for_classification_group(key)`. `graph.py` imports from `catalog.py`;
 `catalog.py` imports `graph` lazily inside those methods, so the dependency stays
 one-directional. The graph models are frozen `_CatalogModel`s used **directly** as the
@@ -887,15 +888,29 @@ renders (as ≥2 cells).
 
 **Fork B (group ⇄ member).** `graph_for_fqid` roots the union on the resolved variable's
 `.group` members (or itself when ungrouped) and sets `focus_id` to the resolved node;
-`graph_for_group` / `graph_for_classification_group` root on the members directly with
-`focus_id=None`. A member page therefore renders the **same** group union as the group
-page, with the current node highlighted client-side (highlight is the renderer's, driven
-by `focus_id`); the union is entry-independent and cacheable by group key. Group keys
-are `(provider, register, key)` and `class/<key>`, **not** FQIDs: register groups
-resolve via `concept_group`, classification umbrellas via the new thin
+`graph_for_classification_fqid` (#792) is its classification analog — it resolves the
+edition to its canonical live slug and roots the union on the edition's curated umbrella
+group(s) (`classification_dimensions`, empty for the common ungrouped case → just the
+edition's own succession chain), with `focus_id` on the resolved edition. The umbrella
+member-union step is shared with `graph_for_classification_group` (one
+`_add_classification_group_members` helper, not re-pasted). `graph_for_group` /
+`graph_for_classification_group` root on the members directly with `focus_id=None`. A
+member page therefore renders the **same** group union as the group page, with the
+current node highlighted client-side (highlight is the renderer's, driven by
+`focus_id`); the union is entry-independent and cacheable by group key. Group keys are
+`(provider, register, key)` and `class/<key>`, **not** FQIDs: register groups resolve
+via `concept_group`, classification umbrellas via the new thin
 `classification_group(key)` accessor (a filter over `list_classification_groups()`). The
 `graph` suffix is reserved in `RESERVED_HTTP_SUFFIX_SLUGS` (it shadows a variable leaf,
 a register, and a classification slot, like `states`/`lineage`).
+
+**Leaf `/graph` route dispatches both leaf kinds.** The webapp's
+`GET /catalog/{fqid}/graph` serves **both** leaf kinds, dispatched on FQID kind (#792):
+a binding (3-seg) → `graph_for_fqid` (incl. the #411 301-redirect for a dead/renamed
+binding); a classification edition (2-seg) → `graph_for_classification_fqid`. This is
+what lets #678 render the classification leaf through the same unified graph component
+(the edition chain + umbrella cross-reference both arrive as graph content), retiring
+the separate lineage / dimensions panels.
 
 ## Thematic tags (discovery overlay, #311)
 

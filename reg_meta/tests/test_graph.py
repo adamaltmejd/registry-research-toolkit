@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import pytest
 from _slugged_db import (
     add_register,
     add_state,
@@ -20,6 +21,7 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.catalog import BindingGroupRef, Catalog, ResolvedVariable
+from reg_meta.errors import RegMetaError
 from reg_meta.fqid import Fqid
 from reg_meta.graph import (
     ClassificationGraphNode,
@@ -1200,3 +1202,126 @@ class TestClassificationChains:
         assert g is not None
         assert g.nodes == []
         assert g.edges == []
+
+
+def _add_class_umbrella_group(
+    conn: sqlite3.Connection,
+    *,
+    group_id: int = 12,
+    members: list[tuple[int, str]],
+) -> None:
+    """A curated classification umbrella group (`group:sun`) with the given
+    `(classification_id, facet_value)` members — the fixture shape the umbrella
+    tests share (mirrors the inline INSERTs in `TestClassificationChains`)."""
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (?, 'classification', NULL, 'sun', 'SUN', 'curated')",
+        (group_id,),
+    )
+    conn.executemany(
+        "INSERT INTO concept_group_classification (classification_id, group_id, "
+        "facet_value, facet_label) VALUES (?, ?, ?, ?)",
+        [(cid, group_id, fv, fv) for cid, fv in members],
+    )
+    conn.commit()
+
+
+class TestClassificationLeafGraph:
+    """`graph_for_classification_fqid` (#792) — the classification analog of
+    `graph_for_fqid`: a leaf edition's own chain unioned with its umbrella group(s),
+    `focus_id` on the canonical edition."""
+
+    def test_leaf_in_umbrella_carries_chain_and_co_members(self) -> None:
+        # An umbrella where each curated member sits on a SEPARATE chain: querying
+        # one member's leaf graph must pull in BOTH the member's own edition chain
+        # AND its umbrella co-members' chains (Fork B, deduped), `focus_id` = the
+        # queried edition.
+        conn = build_slugged_db(classification=None)
+        # Member A's chain: sun1996 → sun2000-niva.
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
+        )
+        # Member B's chain: ssyk1996 → ssyk2012 (disjoint from A).
+        _add_classification(conn, cid=3, slug="ssyk1996", valid_from=1996)
+        _add_classification(conn, cid=4, slug="ssyk2012", valid_from=2012)
+        _add_class_succession(
+            conn, predecessor="ssyk1996", successor="ssyk2012", effective_year=2012
+        )
+        # Curated members = the two terminal editions (one per chain).
+        _add_class_umbrella_group(conn, members=[(2, "niva"), (4, "ssyk")])
+        g = Catalog(conn).graph_for_classification_fqid("class/sun2000-niva")
+        ids = {n.id for n in g.nodes}
+        # The queried edition's chain AND the co-member's chain are both present,
+        # deduped.
+        assert ids == {
+            "class/sun1996",
+            "class/sun2000-niva",
+            "class/ssyk1996",
+            "class/ssyk2012",
+        }
+        assert len([n.id for n in g.nodes]) == len(ids)  # no double nodes
+        assert g.focus_id == "class/sun2000-niva"
+        # The curated members carry the umbrella key; the non-member predecessors
+        # surfaced by the chain walk stay ungrouped (own-membership rule).
+        nodes = {n.id: n for n in g.nodes}
+        assert nodes["class/sun2000-niva"].group_key == "class/sun"
+        assert nodes["class/ssyk2012"].group_key == "class/sun"
+        assert nodes["class/sun1996"].group_key is None
+        # The chains' succession edges are present.
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        assert ("class/sun1996", "class/sun2000-niva") in edges
+        assert ("class/ssyk1996", "class/ssyk2012") in edges
+
+    def test_leaf_chain_no_umbrella_is_chain_only_with_focus(self) -> None:
+        # A classification with a succession chain but NO umbrella group → just its
+        # own edition chain, `focus_id` on the queried edition, all ungrouped.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000", effective_year=2000
+        )
+        _add_class_succession(
+            conn, predecessor="sun2000", successor="sun2020", effective_year=2020
+        )
+        g = Catalog(conn).graph_for_classification_fqid("class/sun2000")
+        assert {n.id for n in g.nodes} == {
+            "class/sun1996",
+            "class/sun2000",
+            "class/sun2020",
+        }
+        assert g.focus_id == "class/sun2000"
+        assert all(n.group_key is None for n in g.nodes)
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        assert edges == {
+            ("class/sun1996", "class/sun2000"),
+            ("class/sun2000", "class/sun2020"),
+        }
+
+    def test_standalone_classification_is_empty(self) -> None:
+        # A classification with no chain and no umbrella → the empty (don't-render)
+        # graph (`_is_empty_solo` for a solo classification), parity with today's
+        # panels showing nothing for a 1-element chain / no dimensions.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun2020", valid_from=2020)
+        g = Catalog(conn).graph_for_classification_fqid("class/sun2020")
+        assert g.nodes == []
+        assert g.edges == []
+        assert g.focus_id is None
+
+    def test_non_classification_fqid_raises(self) -> None:
+        # A binding FQID handed to the classification accessor raises the standard
+        # usage error (the route's 4xx path) — parity with the sibling accessors.
+        conn = build_slugged_db(classification=None)
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).graph_for_classification_fqid("p/r/v")
+        assert exc.value.code == "not_a_classification_fqid"
+
+    def test_unknown_classification_raises_not_found(self) -> None:
+        conn = build_slugged_db(classification=None)
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).graph_for_classification_fqid("class/nope")
+        assert exc.value.code == "fqid_not_found"

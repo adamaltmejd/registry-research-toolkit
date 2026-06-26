@@ -209,12 +209,37 @@ def test_graph_endpoint_dead_binding_301s_to_successor(client):
 
 
 def test_graph_endpoint_on_register_fqid_is_422(client):
-    # The graph accessor is binding-only (like the other suffix endpoints).
+    # The leaf `/graph` route serves binding + classification leaves (#792), but NOT
+    # a register (2-seg register, not `class/<slug>`): `scb/lisa/graph` parses as a
+    # binding FQID and must 4xx, never 500.
     resp = client.get("/api/catalog/scb/lisa/graph")
     # `scb/lisa/graph` parses as a binding FQID (variable slug `graph` is reserved,
     # so the leaf-slot reservation 422s it at parse, OR resolves to a 404). Either
     # way it must NOT be a 500.
     assert resp.status_code in (404, 422), resp.status_code
+
+
+def test_graph_endpoint_classification_leaf(client):
+    # #792: the leaf `/graph` route now serves a CLASSIFICATION edition too (it 4xx'd
+    # before). `class/sun2020` is a terminal in the sun1996 → sun2000 → sun2020 chain
+    # AND a member of the `sun` umbrella (co-member `niva-test`) → its leaf graph
+    # carries its own edition chain + the umbrella co-member, `focus_id` on itself.
+    resp = client.get("/api/catalog/class/sun2020/graph")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["focus_id"] == "class/sun2020"
+    node_ids = {n["id"] for n in body["nodes"]}
+    # Own edition chain present...
+    assert {"class/sun1996", "class/sun2000", "class/sun2020"} <= node_ids
+    # ...plus the umbrella co-member (Fork B union).
+    assert "class/niva-test" in node_ids
+    assert all(n["kind"] == "classification" for n in body["nodes"])
+
+
+def test_graph_endpoint_unknown_classification_404(client):
+    # An unknown classification leaf 404s (parity with a not-found binding), not 500.
+    resp = client.get("/api/catalog/class/nope/graph")
+    assert resp.status_code == 404
 
 
 def test_concept_group_graph_endpoint(client):

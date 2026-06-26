@@ -1317,12 +1317,20 @@ def get_binding_graph(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
 ) -> RelationshipGraph | RedirectResponse:
-    """The relationship graph for a binding's variable (#761) — one node per
-    variable with its representation-run state history + succession/related edges +
-    same_as/group metadata, unioned over the variable's concept group (Fork B). An
-    empty graph (`nodes: []`) is the "don't render" signal. A dead/renamed binding
-    301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`
-    cache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`)."""
+    # Name kept `get_binding_graph` (not `get_leaf_graph`) on purpose: FastAPI
+    # derives the operationId from it, and that id is baked into the frontend's
+    # generated `api-types.ts` — renaming would churn the codegen for no behavioral
+    # gain. The route now serves both leaf kinds (see below); the name is historical.
+    """The relationship graph for a catalog LEAF — a binding (3-seg) OR a
+    classification edition (2-seg) — dispatched on FQID kind (#761/#792). A binding:
+    one node per variable with its representation-run state history +
+    succession/related edges + same_as/group metadata, unioned over the variable's
+    concept group (Fork B). A classification: the edition's succession chain unioned
+    with its curated umbrella group(s) (the #678 unified-graph payload that retires
+    the lineage/dimensions panels). An empty graph (`nodes: []`) is the "don't
+    render" signal. A dead/renamed binding 301s to `/graph` on its terminal
+    successor (#411); shares the `/api/catalog` cache. Topology + predicates live in
+    reg_meta (`Catalog.graph_for_fqid` / `graph_for_classification_fqid`)."""
     parsed = _parsed_binding(validated)
     index = _index(request)
     with _catalog_conn(request) as conn:
@@ -1340,6 +1348,8 @@ def get_binding_graph(
             if redirect is not None:
                 return redirect
         try:
+            if parsed.kind is FqidKind.CLASSIFICATION:
+                return catalog.graph_for_classification_fqid(parsed)
             return catalog.graph_for_fqid(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/graph")

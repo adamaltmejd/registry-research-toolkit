@@ -2417,21 +2417,34 @@ class Catalog:
         # dead slugs for the succession chain walk, which would swallow not-found
         # here and make a missing classification look like an ungrouped one.)
         resolved = self._resolve_classification(self._coerce_classification_fqid(fqid))
-        # Group members carry the CANONICAL `class/<slug>`, never a same_as alias —
-        # so match on the resolved LIVE edition's own slug (re-read from its id),
-        # not the (possibly aliased) queried FQID.
+        _, groups = self._resolved_classification_umbrella(resolved)
+        return groups
+
+    def _resolved_classification_umbrella(
+        self, resolved: ResolvedClassification
+    ) -> tuple[str | None, list[ConceptGroupSummary]]:
+        """The resolved edition's CANONICAL live slug + the curated umbrella group(s)
+        it belongs to. Group members carry the canonical `class/<slug>`, never a
+        same_as alias — so the slug is re-read from the resolved row's id (not the
+        possibly-aliased queried FQID), and the umbrella is filtered off
+        `list_classification_groups()` by that slug. Slug is None only on a live row
+        with a NULL slug (build-prevented) → empty groups. Shared by
+        `classification_dimensions` (#609) and `graph_for_classification_fqid`
+        (#792)."""
         row = self._conn.execute(
             "SELECT slug FROM classification WHERE id = ?",
             (resolved.classification_id,),
         ).fetchone()
         if row is None or row["slug"] is None:
-            return []
-        target = str(Fqid.classification_fqid(row["slug"]))
-        return [
+            return None, []
+        slug = row["slug"]
+        target = str(Fqid.classification_fqid(slug))
+        groups = [
             g
             for g in self.list_classification_groups()
             if any(str(m.fqid) == target for m in g.members)
         ]
+        return slug, groups
 
     @staticmethod
     def _coerce_classification_fqid(fqid: str | Fqid) -> Fqid:
@@ -2531,6 +2544,27 @@ class Catalog:
         parsed = self._parse_binding(fqid)
         resolved = self._resolve_binding(parsed)
         return graph.graph_for_fqid(self, resolved)
+
+    def graph_for_classification_fqid(self, fqid: str | Fqid) -> RelationshipGraph:
+        """The relationship-graph contract for a classification leaf (#792) — the
+        classification analog of `graph_for_fqid`. Resolves the FQID to its canonical
+        live edition (raising `not_a_classification_fqid` / `fqid_not_found` like the
+        sibling classification accessors, the webapp's 4xx path), then unions the
+        edition's curated umbrella group(s) — the niva↔aggregate cross-reference plus
+        the edition chain (#678 retires `ClassificationDimensionsPanel` /
+        `ClassificationLineagePanels` into this one payload). `focus_id` is the
+        canonical edition; the union is empty (don't-render) for a lone edition with
+        no chain and no umbrella. The topology lives in `graph.py`; this is the thin
+        entry point that owns the resolve (mirroring `graph_for_fqid`)."""
+        from . import graph  # local: graph.py imports catalog (one-directional)
+
+        resolved = self._resolve_classification(self._coerce_classification_fqid(fqid))
+        # Canonical live slug (for `focus_id` + the ungrouped chain walk) + the
+        # edition's umbrella group(s) — shared with `classification_dimensions`.
+        canonical_slug, groups = self._resolved_classification_umbrella(resolved)
+        if canonical_slug is None:
+            raise _not_found(resolved.fqid)  # live row with NULL slug (build-prevented)
+        return graph.graph_for_classification_fqid(self, canonical_slug, groups)
 
     def graph_for_group(
         self, provider_slug: str, register_slug: str, key: str

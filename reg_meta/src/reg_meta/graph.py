@@ -717,7 +717,52 @@ def graph_for_classification_group(
     if group is None:
         return None
     builder = _GraphBuilder(catalog)
-    group_key = f"class/{key}"
+    _add_classification_group_members(builder, group)
+    return builder.build(focus_id=None)
+
+
+def graph_for_classification_fqid(
+    catalog: Catalog,
+    canonical_slug: str,
+    groups: list[ConceptGroupSummary],
+) -> RelationshipGraph:
+    """The classification-leaf subject graph (#792) — the classification analog of
+    ``graph_for_fqid``. The ``Catalog`` method resolves the FQID to its canonical
+    live edition (raising the standard ``not_a_classification_fqid`` /
+    ``fqid_not_found`` like the sibling classification accessors, the webapp's 4xx
+    path) and hands in the canonical slug + the edition's curated umbrella group(s),
+    mirroring how ``graph_for_fqid`` receives an already-resolved ``ResolvedVariable``
+    (the private resolvers stay in ``catalog.py``).
+
+    Root set (Fork B): when grouped, every umbrella group is unioned exactly as
+    ``graph_for_classification_group`` does (each member's full edition chain +
+    succession edges, deduped), so the leaf renders the SAME umbrella union as the
+    group page (the niva↔aggregate cross-reference #678 retires
+    ``ClassificationDimensionsPanel`` for). When ungrouped (the common case), just
+    the canonical edition's OWN succession chain (``ClassificationLineagePanels``).
+    ``focus_id`` is the canonical edition. The empty-graph gate makes a lone edition
+    with no chain and no group render nothing (parity with today's panels)."""
+    builder = _GraphBuilder(catalog)
+    focus_id = str(Fqid.classification_fqid(canonical_slug))
+    if groups:
+        for group in groups:
+            _add_classification_group_members(builder, group)
+    else:
+        builder.add_classification(canonical_slug)
+    return builder.build(focus_id)
+
+
+def _add_classification_group_members(
+    builder: _GraphBuilder, group: ConceptGroupSummary
+) -> None:
+    """Union every member of a classification umbrella group into the builder. Each
+    member is a ``class/<slug>`` edition; ``add_classification`` walks its full
+    succession chain + co-members and dedups shared nodes/edges. Members carry the
+    shared ``class/<key>`` ``group_key`` so the renderer clusters the umbrella;
+    non-member spine editions surfaced by a #579 split walk stay ungrouped. Shared
+    by ``graph_for_classification_group`` (group page) and
+    ``graph_for_classification_fqid`` (leaf, Fork B)."""
+    group_key = f"class/{group.key}"
     member_slugs = frozenset(
         member.fqid.classification
         for member in group.members
@@ -731,7 +776,6 @@ def graph_for_classification_group(
             group_key=group_key,
             member_slugs=member_slugs,
         )
-    return builder.build(focus_id=None)
 
 
 def _add_group_members(builder: _GraphBuilder, group: ConceptGroupSummary) -> None:
