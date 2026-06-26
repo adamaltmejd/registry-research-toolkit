@@ -39,20 +39,21 @@ Output is deterministic (sources sorted by coordinate, bindings by variable+colu
 Coverage is bounded by what reg_meta currently mints, and **rises automatically** as the
 residue below lands upstream — just regenerate against a fresh flavored DB. The current
 breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.23.0
-the catalog admits **66.7%** of physical columns. The residue is, by disposition:
+the catalog admits **67.0%** of physical columns. The residue is, by disposition:
 
 - **survey-wave items (FOU/CIS/IT, \~2,000)** — documented in SWECOV's delivery lists
   but absent from reg_meta machine metadata; a follow-up **global graft** effort, not
   steward flavor.
-- **canonical-SCB gap (AGI-Huvud, UHT-Tjänster)** + **FK onboarding** + **FOHM aliases**
-  — these have a **global** home (#444/#422); scope follows what a fact is *about*
-  (#365), so they are *not* flavor-routed and the catalog picks them up once they land
-  globally.
-- **excluded** — pure lookup crosswalks and the public-agency deliveries left out of
-  both the global build and the flavor (#443): no minted FQID anywhere, a documented
-  permanent exclusion rather than a gap.
+- **global-provider alias gaps** — holdings routed to a global provider/register
+  (FOHM/FK #422, the Umeå/Läkemedelsverket/Pliktverket/Riksarkivet agencies #443, AGI
+  employer-header and utrikeshandel-tjänster #444) where some delivery column names
+  don't yet match reg_meta's — a global alias/onboarding follow-up, *not* flavor-routed
+  (scope follows what a fact is *about*, #365). The catalog picks them up as those
+  aliases land.
+- **excluded** — pure lookup / key-crosswalk tables with no catalogable variables: a
+  documented non-gap, kept out of the coverage denominator.
 - **pruned** — a handful of reg_meta columns with co-delivered value sets (SOS-PAR
-  `HDIA`/ `ATCO`, AKU `Omb10b`): un-authorable by anyone (the value-set-version pin is
+  `HDIA`/`ATCO`, AKU `Omb10b`): un-authorable by anyone (the value-set-version pin is
   retired), pending reg_meta co-delivery curation.
 
 Near-duplicate physical columns (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`,

@@ -3482,6 +3482,70 @@
       ]
     },
     {
+      "name": "lakemedelsverket.biverkningar.arbetsflode",
+      "register_variant": "lakemedelsverket/biverkningar/arbetsflode",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-hlgt",
+          "type": "opaque",
+          "representation": "Hlgt"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-hlt",
+          "type": "opaque",
+          "representation": "Hlt"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-pt",
+          "type": "opaque",
+          "representation": "Pt"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-soc",
+          "type": "opaque",
+          "representation": "Soc"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/outcome",
+          "type": "opaque",
+          "representation": "Outcome"
+        }
+      ]
+    },
+    {
+      "name": "lakemedelsverket.biverkningar.handlagda",
+      "register_variant": "lakemedelsverket/biverkningar/handlagda",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-hlgt",
+          "type": "opaque",
+          "representation": "Hlgt"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-hlt",
+          "type": "opaque",
+          "representation": "Hlt"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-pt",
+          "type": "opaque",
+          "representation": "Pt"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/meddra-soc",
+          "type": "opaque",
+          "representation": "Soc"
+        },
+        {
+          "variable": "lakemedelsverket/biverkningar/outcome",
+          "type": "opaque",
+          "representation": "Outcome"
+        }
+      ]
+    },
+    {
       "name": "ndr.nationella-diabetesregistret._default",
       "register_variant": "ndr/nationella-diabetesregistret/_default",
       "period": "_default",
@@ -3970,6 +4034,90 @@
           "variable": "ndr/nationella-diabetesregistret/subjectid",
           "type": "opaque",
           "representation": "SubjectID"
+        }
+      ]
+    },
+    {
+      "name": "pliktverket.insark._default",
+      "register_variant": "pliktverket/insark/_default",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "pliktverket/insark/avslut",
+          "type": "opaque",
+          "representation": "avslut"
+        },
+        {
+          "variable": "pliktverket/insark/befalslamplighet",
+          "type": "opaque",
+          "representation": "befl"
+        },
+        {
+          "variable": "pliktverket/insark/inskdat",
+          "type": "date",
+          "representation": "inskdat"
+        },
+        {
+          "variable": "pliktverket/insark/kroppsvikt",
+          "type": "opaque",
+          "representation": "mass"
+        },
+        {
+          "variable": "pliktverket/insark/langd",
+          "type": "opaque",
+          "representation": "lngd"
+        },
+        {
+          "variable": "pliktverket/insark/mofdag",
+          "type": "date",
+          "representation": "mofdag"
+        },
+        {
+          "variable": "pliktverket/insark/monstringstatus",
+          "type": "opaque",
+          "representation": "statu"
+        },
+        {
+          "variable": "pliktverket/insark/psykisk-funktionsformaga",
+          "type": "opaque",
+          "representation": "psyf"
+        },
+        {
+          "variable": "pliktverket/insark/rokvan",
+          "type": "opaque",
+          "representation": "rokvan"
+        },
+        {
+          "variable": "pliktverket/insark/vilja-varnplikt",
+          "type": "opaque",
+          "representation": "vilja"
+        }
+      ]
+    },
+    {
+      "name": "pliktverket.insiprov._default",
+      "register_variant": "pliktverket/insiprov/_default",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "pliktverket/insiprov/g-faktor",
+          "type": "opaque",
+          "representation": "gkap"
+        },
+        {
+          "variable": "pliktverket/insiprov/pkapdat",
+          "type": "date",
+          "representation": "pkapdat"
+        },
+        {
+          "variable": "pliktverket/insiprov/spatial-formaga",
+          "type": "opaque",
+          "representation": "gvkap"
+        },
+        {
+          "variable": "pliktverket/insiprov/verbal-formaga",
+          "type": "opaque",
+          "representation": "gckap"
         }
       ]
     },
@@ -4703,6 +4851,68 @@
       ]
     },
     {
+      "name": "riksarkivet.inskrivning._default",
+      "register_variant": "riksarkivet/inskrivning/_default",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "riksarkivet/inskrivning/ar-for-inskrivning",
+          "type": "opaque",
+          "representation": "BARI"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/i-provbedomning",
+          "type": "opaque",
+          "representation": "IPRV"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/installelsedatum-omgang",
+          "type": "opaque",
+          "representation": "INST"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/lakarkod",
+          "type": "opaque",
+          "representation": "LKOD"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/personalkategori",
+          "type": "opaque",
+          "representation": "PKAT"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/psykologkod",
+          "type": "opaque",
+          "representation": "EKOD"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/rapoang-pt-prov",
+          "type": "opaque",
+          "representation": "RPGT"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/skattning-safhe",
+          "type": "opaque",
+          "representation": "SAFH"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/skattning-sipe",
+          "type": "opaque",
+          "representation": "SIPE"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/standardpoang-pt-prov",
+          "type": "opaque",
+          "representation": "STPT"
+        },
+        {
+          "variable": "riksarkivet/inskrivning/utebliven-pf-skattning",
+          "type": "opaque",
+          "representation": "UTPF"
+        }
+      ]
+    },
+    {
       "name": "sabo.adresser._default",
       "register_variant": "sabo/adresser/_default",
       "period": "_default",
@@ -5178,6 +5388,113 @@
           "variable": "sabo/patienter/year",
           "type": "opaque",
           "representation": "year"
+        }
+      ]
+    },
+    {
+      "name": "scb.agi-huvud._default",
+      "register_variant": "scb/agi-huvud/_default",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "scb/agi-huvud/arbetsgivaravgifter-och-slf",
+          "type": "numeric",
+          "representation": "SUMMA_ARB_AVG_SLF"
+        },
+        {
+          "variable": "scb/agi-huvud/avdrag-fo-u",
+          "type": "numeric",
+          "representation": "AVDRAG_FO_U"
+        },
+        {
+          "variable": "scb/agi-huvud/avdrag-rederi-regress",
+          "type": "numeric",
+          "representation": "AVDRAG_REDERI_REGRESS"
+        },
+        {
+          "variable": "scb/agi-huvud/avdrag-regionalt-stod",
+          "type": "numeric",
+          "representation": "AVDRAG_REGIONALT_STOD"
+        },
+        {
+          "variable": "scb/agi-huvud/ej-fast-driftstalle-i-sv",
+          "type": "opaque",
+          "representation": "EJ_FAST_DRIFTSTALLE_I_SV"
+        },
+        {
+          "variable": "scb/agi-huvud/period",
+          "type": "opaque",
+          "representation": "PERIOD"
+        },
+        {
+          "variable": "scb/agi-huvud/person-orgnr-arbetsgivare",
+          "type": "id",
+          "representation": "PeOrgNr"
+        },
+        {
+          "variable": "scb/agi-huvud/skatteavdr-pens-fors",
+          "type": "numeric",
+          "representation": "SKATTEAVDR_PENS_FORS"
+        },
+        {
+          "variable": "scb/agi-huvud/skatteavdr-ranta-utd",
+          "type": "numeric",
+          "representation": "SKATTEAVDR_RANTA_UTD"
+        },
+        {
+          "variable": "scb/agi-huvud/slf-vinstandel",
+          "type": "numeric",
+          "representation": "SLF_VINSTANDEL_FK486"
+        },
+        {
+          "variable": "scb/agi-huvud/stod-av-mindre-betydelse",
+          "type": "numeric",
+          "representation": "DE_MINIMIS_STOD"
+        },
+        {
+          "variable": "scb/agi-huvud/summa-skatteavdrag",
+          "type": "numeric",
+          "representation": "SUMMA_SKATTEAVDR"
+        },
+        {
+          "variable": "scb/agi-huvud/total-sjuklonekostnad",
+          "type": "numeric",
+          "representation": "TOTAL_SJUKLONEKOSTNAD"
+        },
+        {
+          "variable": "scb/agi-huvud/underlag-arbetsgivaravgift",
+          "type": "numeric",
+          "representation": "ULAG_ARB_AVG_SOC_AVT"
+        },
+        {
+          "variable": "scb/agi-huvud/underlag-avdrag-fou",
+          "type": "numeric",
+          "representation": "ULAG_FO_U"
+        },
+        {
+          "variable": "scb/agi-huvud/underlag-rederi-regress",
+          "type": "numeric",
+          "representation": "ULAG_REDERI_REGRESS"
+        },
+        {
+          "variable": "scb/agi-huvud/underlag-regionalt-stod",
+          "type": "numeric",
+          "representation": "ULAG_REGIONALT_STOD"
+        },
+        {
+          "variable": "scb/agi-huvud/underlag-skatteavdr-pensforsakring",
+          "type": "numeric",
+          "representation": "ULAG_SKATTEAVDR_PENS_FORS"
+        },
+        {
+          "variable": "scb/agi-huvud/underlag-skatteavdr-ranta-utdelning",
+          "type": "numeric",
+          "representation": "ULAG_SKATTEAVDR_RANTA_UTD"
+        },
+        {
+          "variable": "scb/agi-huvud/underlag-slf-vinstandel",
+          "type": "numeric",
+          "representation": "ULAG_SLF_VINSTANDEL"
         }
       ]
     },
@@ -24997,6 +25314,53 @@
       ]
     },
     {
+      "name": "scb.utrikeshandel-tjanster._default",
+      "register_variant": "scb/utrikeshandel-tjanster/_default",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "scb/utrikeshandel-tjanster/intakt-export",
+          "type": "numeric",
+          "representation": "Intakt"
+        },
+        {
+          "variable": "scb/utrikeshandel-tjanster/kostnad-import",
+          "type": "numeric",
+          "representation": "Kostnad"
+        },
+        {
+          "variable": "scb/utrikeshandel-tjanster/kvartal",
+          "type": "opaque",
+          "representation": "Kvartal"
+        },
+        {
+          "variable": "scb/utrikeshandel-tjanster/landkod",
+          "type": "opaque",
+          "representation": "Landkod"
+        },
+        {
+          "variable": "scb/utrikeshandel-tjanster/person-orgnr",
+          "type": "id",
+          "representation": "Peorgnr"
+        },
+        {
+          "variable": "scb/utrikeshandel-tjanster/riktning",
+          "type": "opaque",
+          "representation": "Riktning"
+        },
+        {
+          "variable": "scb/utrikeshandel-tjanster/scbkod",
+          "type": "opaque",
+          "representation": "Scbkod"
+        },
+        {
+          "variable": "scb/utrikeshandel-tjanster/varde",
+          "type": "numeric",
+          "representation": "Varde"
+        }
+      ]
+    },
+    {
       "name": "scb.utrikeshandel.landfordelad-extrastat",
       "register_variant": "scb/utrikeshandel/landfordelad-extrastat",
       "period": "_default",
@@ -29900,6 +30264,113 @@
           "variable": "tillvaxtverket/korttidsarbete/utbetalt-belopp-sek",
           "type": "opaque",
           "representation": "Utbetalt_belopp_SEK"
+        }
+      ]
+    },
+    {
+      "name": "umu.hogskoleprovet._default",
+      "register_variant": "umu/hogskoleprovet/_default",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "umu/hogskoleprovet/allman-orientering",
+          "type": "opaque",
+          "representation": "AO"
+        },
+        {
+          "variable": "umu/hogskoleprovet/ar",
+          "type": "opaque",
+          "representation": "År"
+        },
+        {
+          "variable": "umu/hogskoleprovet/diagram-tabeller-kartor",
+          "type": "opaque",
+          "representation": "DTK"
+        },
+        {
+          "variable": "umu/hogskoleprovet/engelsk-lasforstelse",
+          "type": "opaque",
+          "representation": "ELF"
+        },
+        {
+          "variable": "umu/hogskoleprovet/kvantitativ-delsumma",
+          "type": "opaque",
+          "representation": "Kvant"
+        },
+        {
+          "variable": "umu/hogskoleprovet/kvantitativa-jamforelser",
+          "type": "opaque",
+          "representation": "KVA"
+        },
+        {
+          "variable": "umu/hogskoleprovet/kvantitativa-resonemang",
+          "type": "opaque",
+          "representation": "NOG"
+        },
+        {
+          "variable": "umu/hogskoleprovet/kvnorm",
+          "type": "numeric",
+          "representation": "KvNorm"
+        },
+        {
+          "variable": "umu/hogskoleprovet/lan",
+          "type": "opaque",
+          "representation": "Län"
+        },
+        {
+          "variable": "umu/hogskoleprovet/larosate",
+          "type": "opaque",
+          "representation": "Lärosäte"
+        },
+        {
+          "variable": "umu/hogskoleprovet/lasforstelse",
+          "type": "opaque",
+          "representation": "LÄS"
+        },
+        {
+          "variable": "umu/hogskoleprovet/matematisk-problemlosning",
+          "type": "opaque",
+          "representation": "XYZ"
+        },
+        {
+          "variable": "umu/hogskoleprovet/meningskomplettering",
+          "type": "opaque",
+          "representation": "MEK"
+        },
+        {
+          "variable": "umu/hogskoleprovet/normerat-resultat",
+          "type": "numeric",
+          "representation": "Norm"
+        },
+        {
+          "variable": "umu/hogskoleprovet/ordforstelse",
+          "type": "opaque",
+          "representation": "ORD"
+        },
+        {
+          "variable": "umu/hogskoleprovet/studietekniska-fardigheter",
+          "type": "opaque",
+          "representation": "STUF"
+        },
+        {
+          "variable": "umu/hogskoleprovet/tillfalle",
+          "type": "opaque",
+          "representation": "Tillfälle"
+        },
+        {
+          "variable": "umu/hogskoleprovet/total",
+          "type": "opaque",
+          "representation": "Total"
+        },
+        {
+          "variable": "umu/hogskoleprovet/venorm",
+          "type": "numeric",
+          "representation": "VeNorm"
+        },
+        {
+          "variable": "umu/hogskoleprovet/verbal-delsumma",
+          "type": "opaque",
+          "representation": "Verb"
         }
       ]
     },
