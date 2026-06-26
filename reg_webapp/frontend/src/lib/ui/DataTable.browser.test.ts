@@ -152,11 +152,14 @@ describe("DataTable", () => {
       "style",
       expect.stringContaining("width: 8rem"),
     );
-    // The standard fixture pins no width, so the floor stays in force.
+    // The standard fixture pins no width, so the floor stays in force. The CSS
+    // guard keys off `width` appearing in the style attribute, not the attribute
+    // being absent — so assert the style carries no `width`, not that it's empty.
     const noWidth = renderTable({ columns, rows });
-    expect(noWidth.container.querySelector("thead th")).not.toHaveAttribute(
-      "style",
-    );
+    const noWidthStyle = noWidth.container
+      .querySelector("thead th")
+      ?.getAttribute("style");
+    expect(noWidthStyle == null || !noWidthStyle.includes("width")).toBe(true);
   });
 
   it("makes rows selectable grid-rows when selection props are passed", async () => {
