@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { ConceptGroup } from "./api";
 import { axisValues, catalogHref, leafSlug, memberAt } from "./catalog";
+import { Tag } from "./ui";
 
 // One folded concept-group row (#303): a <details> that expands to the facet
 // picker — a value matrix for two axes (month × rank), chips for FACETED members
@@ -91,14 +92,18 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
 
 {#snippet summaryLine()}
   <span class="label">{group.label}</span>
-  <span class="count">{group.members.length} {noun}</span>
+  <!-- The count is a neutral chrome pill (Tag tone="neutral"): it's a quantity,
+       not a TYPE, so it must not borrow the categorical group hue (that's the
+       group-key badge's job below). -->
+  <span class="count"><Tag tone="neutral">{group.members.length} {noun}</Tag></span>
   <!-- The group key is a presentation anchor (slug stem / min-member slug /
        curated key per ConceptGroupSummary), NOT an addressable variable
        (#498). Deliberately NOT a <code>/.child-fqid: monospace + that class
-       read as a pickable leaf FQID and confused a maintainer. Render it as a
-       muted non-monospace group-id badge so it reads as a grouping anchor —
-       don't "restore" the code look. -->
-  <span class="group-key">{group.key}</span>
+       read as a pickable leaf FQID and confused a maintainer. The categorical
+       `group` Tag tone (moss — concept groups) is exactly this anchor's
+       identity: it reads as a grouping label, non-monospace, distinct from the
+       monospace leaf <code>s. Do NOT "restore" the code look. -->
+  <span class="group-key"><Tag tone="group">{group.key}</Tag></span>
 {/snippet}
 
 {#if asLink}
@@ -204,8 +209,17 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
   .group-link {
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: var(--space-3);
     cursor: pointer;
+  }
+  /* Keyboard focus on the disclosure summary / the link variant: the shared
+     --focus-ring (matching DataTable's selectable rows, the search owner/leaf
+     rows, #808), replacing the hand-rolled / UA default outline. */
+  summary:focus-visible,
+  .group-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
   }
   /* #673: the register-arm link variant carries the row's own accent color (it
      navigates), but the summary content styling (label/count/badge) is shared. */
@@ -216,71 +230,62 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
   .group-link .label {
     font-weight: 600;
   }
+  /* The count/group-key Tags don't shrink the summary row on wrap. */
   summary .count,
-  .group-link .count {
-    color: var(--muted);
-    font-size: 0.85em;
-    white-space: nowrap;
-  }
-  /* Group-id badge (#498): the folded-group key is a presentation anchor, not
-     a pickable variable FQID. Non-monospace + a faint pill keeps it visible as
-     a disambiguator while reading as a grouping label, distinct from the
-     monospace leaf <code>s and the bordered member .chips. Do NOT make this
-     look like a code/FQID. */
-  .group-key {
-    color: var(--muted);
-    font-size: 0.8em;
-    padding: 0.05rem 0.4rem;
-    border-radius: 0.75rem;
-    background: var(--accent-bg);
+  .group-link .count,
+  summary .group-key,
+  .group-link .group-key {
     white-space: nowrap;
   }
   .facet-matrix {
-    margin: 0.5rem 0 0.5rem 1rem;
+    margin: var(--space-2) 0 var(--space-2) var(--space-4);
     border-collapse: collapse;
-    font-size: 0.85em;
+    font-size: var(--text-sm);
   }
   .facet-matrix th,
   .facet-matrix td {
-    padding: 0.15rem 0.5rem;
+    padding: var(--space-1) var(--space-2);
     text-align: left;
   }
   .facet-matrix thead th {
-    color: var(--muted);
+    color: var(--text-muted);
     font-weight: 600;
   }
   .facet-matrix tbody th {
-    color: var(--muted);
+    color: var(--text-muted);
     font-weight: 400;
   }
   .facet-chips {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem;
+    gap: var(--space-1);
     padding: 0;
-    margin: 0.5rem 0 0.5rem 1rem;
+    margin: var(--space-2) 0 var(--space-2) var(--space-4);
   }
+  /* The facet/member chips are interactive (link/button) pills, not the static
+     `Tag` primitive — but they borrow Tag's pill geometry (em-based padding +
+     --radius-sm) so they sit visually with the count/group Tags above. */
   .chip {
     display: inline-block;
-    padding: 0.1rem 0.55rem;
-    border: 1px solid var(--muted);
-    border-radius: 1rem;
-    font-size: 0.85em;
+    padding: 0.1em 0.5em;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
     text-decoration: none;
   }
   .members {
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0 0.5rem 1rem;
+    margin: var(--space-2) 0 var(--space-2) var(--space-4);
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: var(--space-1);
   }
   .members a {
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
   /* Pick-mode members (#322): link-look buttons so the picker's group rows
      read like the browse ones, just emitting instead of navigating. */
@@ -293,23 +298,23 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
     cursor: pointer;
   }
   .member-pick:disabled {
-    color: var(--muted);
+    color: var(--text-muted);
     cursor: default;
   }
   .members .member-pick {
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
   .member-pick.chip {
-    border: 1px solid var(--muted);
-    padding: 0.1rem 0.55rem;
+    border: 1px solid var(--border);
+    padding: 0.1em 0.5em;
   }
   .member-name {
-    color: var(--muted);
+    color: var(--text-muted);
     font-size: 0.9em;
   }
   .muted {
-    color: var(--muted);
+    color: var(--text-muted);
   }
 </style>
