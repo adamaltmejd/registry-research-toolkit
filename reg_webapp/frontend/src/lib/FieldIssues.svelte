@@ -8,9 +8,9 @@ import { codeLabel, type ValidationIssue } from "./validation";
 // boundary) — these echo the LAST /validate click
 // and vanish on the next edit (the store nulls `validation` on every mutation).
 //
-// Color follows ValidationPanel's convention via the shared --level-* vars
-// (error / warning / info). An unknown level degrades to the info color
-// (forward-compat).
+// Color follows ValidationPanel's convention via the status roles
+// (--err / --warn / --info). An unknown/unset level degrades to the info color
+// (forward-compat) — never the brand accent (DESIGN.md accent-vs-status).
 const { issues } = $props<{ issues: ValidationIssue[] }>();
 </script>
 
@@ -35,30 +35,32 @@ const { issues } = $props<{ issues: ValidationIssue[] }>();
     gap: 0.2rem;
   }
   .issue {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     line-height: 1.3;
-    padding-left: 0.5rem;
-    border-left: 2px solid var(--accent);
+    padding-left: var(--space-2);
+    /* Default/unknown level degrades to --info, NOT the brand accent
+       (accent-as-status would violate DESIGN.md accent-vs-status). */
+    border-left: 2px solid var(--info);
   }
   .issue.error {
-    border-left-color: var(--level-error);
+    border-left-color: var(--err);
   }
   .issue.warning {
-    border-left-color: var(--level-warning);
+    border-left-color: var(--warn);
   }
   .issue.info {
-    border-left-color: var(--level-info);
+    border-left-color: var(--info);
   }
   .label {
     font-weight: 600;
   }
   .issue.error .label {
-    color: var(--level-error);
+    color: var(--err);
   }
   .issue.warning .label {
-    color: var(--level-warning);
+    color: var(--warn);
   }
   .message {
-    color: var(--muted);
+    color: var(--text-muted);
   }
 </style>

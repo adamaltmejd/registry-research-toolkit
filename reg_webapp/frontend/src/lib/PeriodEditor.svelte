@@ -302,47 +302,47 @@ function onModeChange(next: Mode): void {
   .period-editor {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: var(--space-2);
   }
   .mode-row {
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: var(--space-3);
     flex-wrap: wrap;
   }
   .mode-label {
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
   }
   .modes {
     display: flex;
-    gap: 0.75rem;
-    font-size: 0.85rem;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
   }
   .modes label {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--space-1);
   }
   .range {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: var(--space-1);
   }
   .token input {
     font: inherit;
-    padding: 0.3rem 0.5rem;
+    padding: var(--space-1) var(--space-2);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     min-width: 16rem;
   }
   .hint {
-    font-size: 0.75rem;
+    font-size: var(--text-micro);
     margin: 0.2rem 0 0;
   }
   /* B1: the "period incomplete" cue — amber (advisory), not the red error level.
      An empty period is a normal mid-authoring state, not a validation failure. */
   .hint.incomplete {
-    color: var(--level-warning);
+    color: var(--warn);
   }
 </style>

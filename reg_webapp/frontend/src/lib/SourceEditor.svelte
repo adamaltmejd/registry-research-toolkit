@@ -7,6 +7,7 @@ import PeriodEditor from "./PeriodEditor.svelte";
 import { periodToWire } from "./period";
 import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { Button, Tag } from "./ui";
 import {
   issuesForPointer,
   issuesUnderPointer,
@@ -75,14 +76,17 @@ function onPickVariant(registerVariant: string): void {
     <h3>
       {source.name || "(unnamed source)"}
       {#if errorCount > 0}
-        <span class="error-badge" title="{errorCount} error{errorCount === 1 ? '' : 's'} in this source">
+        <!-- Status badge: cool error tone + ✕ glyph (aria-hidden); the count text
+             carries the meaning for assistive tech (DESIGN.md accent-vs-status). -->
+        <Tag tone="error">
+          {#snippet glyph()}✕{/snippet}
           {errorCount} error{errorCount === 1 ? "" : "s"}
-        </span>
+        </Tag>
       {/if}
     </h3>
-    <button type="button" class="small remove" onclick={() => projectStore.removeSource(sourceIndex)}>
+    <Button variant="danger" size="sm" onclick={() => projectStore.removeSource(sourceIndex)}>
       Remove source
-    </button>
+    </Button>
   </header>
 
   <div class="fields">
@@ -113,9 +117,9 @@ function onPickVariant(registerVariant: string): void {
               register_variant: e.currentTarget.value,
             })}
         />
-        <button type="button" class="small" onclick={() => (pickingVariant = !pickingVariant)}>
+        <Button variant="default" size="sm" onclick={() => (pickingVariant = !pickingVariant)}>
           {pickingVariant ? "Close" : "Pick variant"}
-        </button>
+        </Button>
       </div>
       <FieldIssues issues={issuesForPointer(issues, ptr("register_variant"))} />
       {#if pickingVariant}
@@ -143,9 +147,9 @@ function onPickVariant(registerVariant: string): void {
   <div class="bindings" aria-label="Bindings">
     <div class="bindings-head">
       <h4>Bindings ({bindings.length})</h4>
-      <button type="button" class="small" onclick={() => projectStore.addBinding(sourceIndex)}>
+      <Button variant="default" size="sm" onclick={() => projectStore.addBinding(sourceIndex)}>
         Add binding
-      </button>
+      </Button>
     </div>
     <!-- empty_bindings is surfaced on the /sources/{i}/bindings pointer. -->
     <FieldIssues issues={issuesForPointer(issues, ptr("bindings"))} />
@@ -183,13 +187,13 @@ function onPickVariant(registerVariant: string): void {
 <style>
   .source {
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    scroll-margin-top: 1rem;
+    gap: var(--space-4);
+    scroll-margin-top: var(--space-4);
   }
   /* Briefly highlights a card when the findings panel locates it. `:global` because
      the class is toggled imperatively on the DOM node by ValidationPanel, not bound
@@ -210,73 +214,51 @@ function onPickVariant(registerVariant: string): void {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
   .source-head h3 {
     margin: 0;
     display: flex;
     align-items: baseline;
-    gap: 0.6rem;
-  }
-  .error-badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--level-error);
-    background: var(--banner-error-bg);
-    border: 1px solid var(--banner-error-border);
-    border-radius: 999px;
-    padding: 0.05rem 0.5rem;
+    gap: var(--space-2);
   }
   .fields {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
   }
   .field {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-1);
     max-width: 32rem;
   }
   .field-label {
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
   }
   .field input {
     font: inherit;
-    padding: 0.4rem 0.6rem;
+    padding: var(--space-2) var(--space-3);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
   .rv-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
+  /* The register_variant is a machine FQID — mono, like every code/identifier. */
   .rv-input {
     flex: 1;
-  }
-  .small {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    cursor: pointer;
-  }
-  .small:hover {
-    border-color: var(--accent);
-  }
-  .remove {
-    color: var(--level-error);
+    font-family: var(--font-mono);
   }
   .bindings-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
   }
   .bindings-head h4 {
     margin: 0;
@@ -287,6 +269,6 @@ function onPickVariant(registerVariant: string): void {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 </style>

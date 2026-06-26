@@ -2,6 +2,7 @@
 import { regMetaReleaseTag } from "./project_data";
 import { initPersistence, projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
+import { Button, EmptyState, KeyValue, type KeyValueRow, Panel } from "./ui";
 import ValidationPanel from "./ValidationPanel.svelte";
 
 // The authoring surface. c-i shipped the minimal shell (home/new screen, top-level
@@ -63,10 +64,10 @@ async function onFilePicked(event: Event): Promise<void> {
 
   {#if projectStore.openError}
     <p class="banner error" role="alert">
-      {projectStore.openError}
-      <button type="button" class="dismiss" onclick={() => projectStore.clearOpenError()}>
+      <span class="banner-text">{projectStore.openError}</span>
+      <Button variant="ghost" size="sm" onclick={() => projectStore.clearOpenError()}>
         Dismiss
-      </button>
+      </Button>
     </p>
   {/if}
 
@@ -78,10 +79,11 @@ async function onFilePicked(event: Event): Promise<void> {
       live in your browser; download the file to keep the durable copy.
     </p>
     <div class="toolbar">
-      <button type="button" class="primary" onclick={onNew}>New project</button>
-      <button type="button" onclick={() => fileInput.click()}>
+      <!-- The single accent CTA for this view (the one brand-filled control). -->
+      <Button variant="primary" onclick={onNew}>New project</Button>
+      <Button variant="default" onclick={() => fileInput.click()}>
         Open project_data.json…
-      </button>
+      </Button>
     </div>
   {:else}
     <!-- ── Loaded draft ───────────────────────────────────────────────────── -->
@@ -93,6 +95,22 @@ async function onFilePicked(event: Event): Promise<void> {
          the page still renders and the user can reach Validate. The draft itself
          stays verbatim for serialize/validate. -->
     {@const sources = Array.isArray(draft.sources) ? draft.sources : []}
+    <!-- The read-only deployment-seed identifiers (steward / reg_meta / schema
+         version) as labelled mono rows. Coerced to a string so a malformed opened
+         spec (non-string field) still renders rather than crashing. -->
+    {@const roRows = [
+      { label: "Steward", value: String(draft.steward ?? ""), mono: true },
+      {
+        label: "reg_meta version",
+        value: String(draft.reg_meta_version ?? ""),
+        mono: true,
+      },
+      {
+        label: "schema version",
+        value: String(draft.schema_version ?? ""),
+        mono: true,
+      },
+    ] satisfies KeyValueRow[]}
     <header class="editor-head">
       <h2>
         {draft.name || "Untitled project"}
@@ -103,24 +121,24 @@ async function onFilePicked(event: Event): Promise<void> {
     </header>
 
     <div class="toolbar">
-      <button type="button" onclick={onNew}>New</button>
-      <button type="button" onclick={() => fileInput.click()}>Open…</button>
-      <button type="button" onclick={() => projectStore.downloadProject()}>
+      <Button variant="default" onclick={onNew}>New</Button>
+      <Button variant="default" onclick={() => fileInput.click()}>Open…</Button>
+      <Button variant="default" onclick={() => projectStore.downloadProject()}>
         Download project_data.json
-      </button>
-      <button
-        type="button"
-        class="primary"
+      </Button>
+      <!-- The single accent CTA for the loaded-draft view (one brand-filled control). -->
+      <Button
+        variant="primary"
         disabled={projectStore.busy}
         onclick={() => projectStore.validate()}
       >
         {projectStore.busy ? "Validating…" : "Validate"}
-      </button>
+      </Button>
       <!-- The order CSV download is gated behind a clean /validate: the backend
            rejects a structurally invalid spec with a 422, so requiring a green
            validation first is the clearest UX (no surprise error banner). -->
-      <button
-        type="button"
+      <Button
+        variant="default"
         disabled={!projectStore.validatedClean || projectStore.busy}
         title={projectStore.validatedClean
           ? "Download the order-export CSV"
@@ -128,7 +146,7 @@ async function onFilePicked(event: Event): Promise<void> {
         onclick={() => projectStore.downloadOrder()}
       >
         Download order CSV
-      </button>
+      </Button>
     </div>
 
     <!-- Top-level fields. `name` is editable (the one field a researcher always
@@ -144,20 +162,7 @@ async function onFilePicked(event: Event): Promise<void> {
           oninput={(e) => projectStore.updateField("name", e.currentTarget.value)}
         />
       </label>
-      <div class="field-row">
-        <div class="ro-field">
-          <span class="ro-label">Steward</span>
-          <code>{draft.steward}</code>
-        </div>
-        <div class="ro-field">
-          <span class="ro-label">reg_meta version</span>
-          <code>{draft.reg_meta_version}</code>
-        </div>
-        <div class="ro-field">
-          <span class="ro-label">schema version</span>
-          <code>{draft.schema_version}</code>
-        </div>
-      </div>
+      <KeyValue rows={roRows} />
     </div>
 
     <!-- Editable sources/bindings list (c-ii). Keyed by the store-owned STABLE
@@ -168,23 +173,26 @@ async function onFilePicked(event: Event): Promise<void> {
          draft swaps), acceptable at expected sizes. `issues` is the LAST /validate
          result, echoed inline. -->
     <section class="sources" aria-label="Sources">
-      <div class="sources-head">
-        <h3>Sources ({sources.length})</h3>
-        <button type="button" class="add" onclick={() => projectStore.addSource()}>
-          Add source
-        </button>
-      </div>
-      {#if sources.length === 0}
-        <p class="muted">No sources yet. Add one to begin authoring.</p>
-      {:else}
-        {#each sources as source, i (projectStore.sourceId(i))}
-          <SourceEditor
-            sourceIndex={i}
-            source={source}
-            issues={projectStore.validation?.issues ?? []}
-          />
-        {/each}
-      {/if}
+      <Panel title="Sources ({sources.length})">
+        {#snippet meta()}
+          <Button variant="default" size="sm" onclick={() => projectStore.addSource()}>
+            Add source
+          </Button>
+        {/snippet}
+        {#if sources.length === 0}
+          <EmptyState title="No sources yet. Add one to begin authoring." />
+        {:else}
+          <div class="source-list">
+            {#each sources as source, i (projectStore.sourceId(i))}
+              <SourceEditor
+                sourceIndex={i}
+                source={source}
+                issues={projectStore.validation?.issues ?? []}
+              />
+            {/each}
+          </div>
+        {/if}
+      </Panel>
     </section>
 
     <ValidationPanel
@@ -208,103 +216,61 @@ async function onFilePicked(event: Event): Promise<void> {
   .editor-head h2 {
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
+  /* The "unsaved" cue — warning tone (advisory), never the brand accent. */
   .dirty {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     font-weight: 600;
-    color: var(--level-warning);
+    color: var(--warn);
   }
   .toolbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-  button {
-    font: inherit;
-    padding: 0.4rem 0.8rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    color: inherit;
-    cursor: pointer;
-  }
-  button:hover:not(:disabled) {
-    border-color: var(--accent);
-  }
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  button.primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-  button.dismiss {
-    margin-left: 0.75rem;
-    padding: 0.1rem 0.5rem;
-    font-size: 0.8rem;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
   }
   .banner {
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+  }
+  .banner-text {
+    flex: 1;
   }
   .banner.error {
-    background: var(--banner-error-bg);
-    border: 1px solid var(--banner-error-border);
+    background: var(--err-bg);
+    border: 1px solid var(--red-border);
   }
   .fields {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
   }
   .fields label {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-1);
     max-width: 28rem;
   }
   .fields label span {
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
   }
   .fields input {
     font: inherit;
-    padding: 0.4rem 0.6rem;
+    padding: var(--space-2) var(--space-3);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
-  .field-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-  .ro-field {
+  .source-list {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-  }
-  .ro-label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-  .sources-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
-  .sources-head h3 {
-    margin: 0;
-  }
-  .add {
-    background: var(--surface);
+    gap: var(--space-4);
   }
 </style>

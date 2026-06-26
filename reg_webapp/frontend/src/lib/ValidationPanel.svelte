@@ -124,35 +124,46 @@ const LEVEL_LABEL: Record<Level, string> = {
 
 <style>
   .validation {
-    margin-top: 1.5rem;
+    margin-top: var(--space-4);
   }
   .banner {
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
   }
   .request-error {
-    background: var(--banner-error-bg);
-    border: 1px solid var(--banner-error-border);
+    background: var(--err-bg);
+    border: 1px solid var(--red-border);
   }
   .summary {
     font-weight: 600;
-    padding: 0.5rem 0.75rem;
-    border-radius: 4px;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
   }
+  /* Status fills use the cooler status roles, never the brand accent
+     (DESIGN.md accent-vs-status). */
   .summary.ok {
-    background: #f0fdf4;
-    border: 1px solid #86efac;
+    background: var(--ok-bg);
+    border: 1px solid var(--ok);
+    color: var(--ok);
   }
   .summary.fail {
-    background: var(--banner-error-bg);
-    border: 1px solid var(--banner-error-border);
+    background: var(--err-bg);
+    border: 1px solid var(--red-border);
+    color: var(--err);
   }
   .group {
-    margin-top: 1rem;
+    margin-top: var(--space-4);
   }
+  /* Tracked uppercase eyebrow — the micro-label hierarchy device the design
+     system uses for section/table headers. */
   .group h4 {
-    margin: 0 0 0.5rem;
+    margin: 0 0 var(--space-2);
+    font-size: var(--micro-label-size);
+    letter-spacing: var(--micro-label-tracking);
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
   }
   .group ul {
     list-style: none;
@@ -160,46 +171,54 @@ const LEVEL_LABEL: Record<Level, string> = {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
   .group li {
-    padding: 0.5rem 0.75rem;
+    padding: var(--space-2) var(--space-3);
     border-left: 3px solid var(--border);
-    border-radius: 0 4px 4px 0;
-    background: #fafafa;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--surface-sunken);
   }
   .group.error li {
-    border-left-color: var(--level-error);
+    border-left-color: var(--err);
   }
   .group.warning li {
-    border-left-color: var(--level-warning);
+    border-left-color: var(--warn);
   }
   .group.info li {
-    border-left-color: var(--level-info);
+    border-left-color: var(--info);
   }
   .issue-head {
     display: flex;
     align-items: baseline;
-    gap: 0.5rem;
+    gap: var(--space-2);
     flex-wrap: wrap;
   }
   .code {
-    font-size: 0.8rem;
-    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
   }
   .label {
     font-weight: 600;
   }
   .message {
-    margin: 0.25rem 0;
+    margin: var(--space-1) 0;
   }
   .path {
-    font-size: 0.8rem;
-    color: var(--muted);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
   }
+  /* The raw JSON pointer is a machine identifier → mono; the "(whole document)"
+     fallback is prose (a <span>) and stays in the UI face. */
+  code.path {
+    font-family: var(--font-mono);
+  }
+  /* The locate trigger is interactive chrome → brand accent is correct here
+     (links/click-to-locate), not a status color. */
   .locate {
     font: inherit;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     padding: 0;
     border: none;
     background: none;
