@@ -739,6 +739,69 @@ class TestSchemaAnnotation:
         assert ungrouped["concept_group"] is None
         assert ungrouped["concept_group_label"] is None
 
+    def test_multi_representation_member_yields_one_schema_column(self) -> None:
+        # #819 regression: a grouped variable with N representation members (one
+        # `concept_group_variable` row per delivery column, the multi-axis shape)
+        # must surface as ONE schema column, not N. The plain
+        # `LEFT JOIN concept_group_variable` fanned each `variable_state` out into
+        # one column per member row; the `SELECT DISTINCT variable_id, group_id`
+        # subquery collapses it. The single NULL-member fixture in the test above
+        # can't catch this — it needs two member rows on one variable.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (30, 'variable', 1, 'disp', "
+            "'Disponibel inkomst', 'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (30, 'kapitalvinst', 0, 'Kapitalvinst')"
+        )
+        add_variable(conn, register_id=1, var_id=950, name="Disp ink", slug="cdisp")
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'cdisp'"
+        ).fetchone()[0]
+        # Two representation members: same variable_id, two delivery columns →
+        # two `concept_group_variable` rows in the one group.
+        for dcn, (value, label) in (
+            ("CDISP", ("inkl", "Inkl")),
+            ("CDISP5", ("exkl", "Exkl")),
+        ):
+            cur = conn.execute(
+                "INSERT INTO concept_group_variable "
+                "(group_id, variable_id, delivery_column_name) VALUES (30, ?, ?)",
+                (vid, dcn),
+            )
+            conn.execute(
+                "INSERT INTO concept_group_variable_facet "
+                "(member_id, axis, value, label) VALUES (?, 'kapitalvinst', ?, ?)",
+                (cur.lastrowid, value, label),
+            )
+        # One `variable_state` for the variable under variant 10.
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="cdisp",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            valid_to="9999-12-31",
+            delivery_column_name="CDISP",
+        )
+        conn.commit()
+
+        data = get_schema(conn, register="LISA")
+        disp_cols = [
+            c
+            for v in data["variants"]
+            for ver in v["versions"]
+            for c in ver["columns"]
+            if c["variable_id"] == vid
+        ]
+        # Exactly ONE column for the variable — not one per member row.
+        assert len(disp_cols) == 1
+        assert disp_cols[0]["concept_group"] == "disp"
+        assert disp_cols[0]["concept_group_label"] == "Disponibel inkomst"
+
 
 # ── CLI surface (envelope + flags); doc DB stub required by the query guard ──
 
