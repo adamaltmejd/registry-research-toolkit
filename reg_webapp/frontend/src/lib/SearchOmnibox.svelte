@@ -592,4 +592,19 @@ function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
     color: var(--muted);
     font-size: var(--text-sm);
   }
+
+  /* Mobile (matches the AppShell drawer breakpoint): hide the ⌘K / Ctrl+K hint
+     badge — it's misleading on a touch device with no physical keyboard, and it
+     overlapped the placeholder when the bar was narrow. The global Cmd/Ctrl+K
+     listener stays (harmless); only the visible badge is hidden. With the badge
+     gone, drop the badge-clearing right padding so the placeholder uses the full
+     width. */
+  @media (max-width: 48rem) {
+    .omnibox-hint {
+      display: none;
+    }
+    .omnibox :global(input) {
+      padding-right: var(--space-3);
+    }
+  }
 </style>

@@ -10,11 +10,18 @@ import SearchOmnibox from "./SearchOmnibox.svelte";
 import { type BreadcrumbItem, Breadcrumbs } from "./ui";
 import YearWindowSlider from "./YearWindowSlider.svelte";
 
-// The app shell (#803): a persistent left RAIL (brand + primary nav + the full
-// provider facet list) and a TOPBAR (breadcrumb + the promoted SearchOmnibox
-// command bar + the project-window slider), wrapping a wide content canvas. On
+// The app shell (#803): a persistent left RAIL (brand + primary nav + the
+// project-window slider + the full provider facet list) and a TOPBAR (breadcrumb
+// + the promoted SearchOmnibox command bar), wrapping a wide content canvas. On
 // mobile the rail collapses to an overlay DRAWER toggled from the topbar, so all
-// providers stay reachable without scrolling past the fold.
+// providers — and the window slider — stay reachable without scrolling past the
+// fold.
+//
+// The project-window slider is a GLOBAL control (like the provider facets and
+// primary nav), so it lives in the rail, reachable on every route and inside the
+// drawer on mobile. Keeping it OUT of the topbar matches the design-system spec
+// (topbar = breadcrumb + command bar only) and removes the 375px overflow its
+// track caused when crammed into the topbar row.
 //
 // App.svelte stays the owner of the deployment context, banners, footer, and the
 // routed <main> switch; it passes the context-derived chrome props down and the
@@ -123,6 +130,20 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
       </a>
     </nav>
 
+    <!-- The project-window slider: a global control, rendered ONCE here in the
+         rail (so it's reachable on every route, and inside the drawer on mobile).
+         A `--micro-label` eyebrow matches the "Providers" facets-label style. -->
+    <div class="rail-window">
+      <p class="rail-window-label">Study window</p>
+      <YearWindowSlider
+        min={windowMin}
+        max={windowMax}
+        window={windowValue}
+        onchange={onWindowChange}
+        onclear={onWindowClear}
+      />
+    </div>
+
     <!-- Contextual facets: the full provider list, reachable on every route.
          Inside the shell's `use:link` ancestor (App's root), so these route via
          pushState like any internal link. -->
@@ -178,19 +199,16 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
         <span class="menu-glyph" aria-hidden="true">☰</span>
       </button>
 
-      <Breadcrumbs items={breadcrumbs} />
+      <!-- Wrapper we control so we can hide the breadcrumb on mobile (it crowds
+           the 375px topbar row; the rail + routed page header carry context
+           there). Don't restyle the shared Breadcrumbs primitive for this. -->
+      <div class="topbar-crumbs">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
 
       <div class="command">
         <SearchOmnibox />
       </div>
-
-      <YearWindowSlider
-        min={windowMin}
-        max={windowMax}
-        window={windowValue}
-        onchange={onWindowChange}
-        onclear={onWindowClear}
-      />
     </header>
 
     <main class="canvas">
@@ -290,12 +308,22 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
     vertical-align: super;
   }
 
+  /* The window-slider control block in the rail. The eyebrow reuses the
+     facets-label micro-label treatment so the rail's two global controls (window
+     + providers) read as a consistent pair. */
+  .rail-window {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
   .facets {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
     min-width: 0;
   }
+  .rail-window-label,
   .facets-label {
     margin: 0 0 var(--space-1);
     padding: 0 var(--space-2);
@@ -345,6 +373,12 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
     border-bottom: 1px solid var(--border);
     background: var(--surface);
   }
+  /* Breadcrumb wrapper — shrinks before the command bar and is hidden on mobile
+     (see the media query). `min-width: 0` lets it ellipsize rather than push the
+     row wide. */
+  .topbar-crumbs {
+    min-width: 0;
+  }
   .command {
     display: flex;
     flex: 1 1 auto;
@@ -380,7 +414,11 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
     /* A wide, comfortable measure — no 56rem cap — but not full-bleed: dense
        pages breathe while a max-width keeps line lengths legible. `min-width: 0`
        lets wide tables / long FQIDs inside contain rather than push the canvas
-       past the viewport (the 375px overflow fix, criterion #1). */
+       past the viewport (the 375px overflow fix, criterion #1). `box-sizing:
+       border-box` folds the padding INTO `width: 100%` — without it (there's no
+       global border-box reset in this app) the canvas was 100% + 32px wide,
+       overflowing the viewport by exactly its horizontal padding on every route. */
+    box-sizing: border-box;
     width: 100%;
     max-width: 80rem;
     min-width: 0;
@@ -401,6 +439,12 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
     }
     .menu-toggle {
       display: inline-flex;
+    }
+    /* Hide the breadcrumb on mobile so the topbar is a clean [hamburger][command
+       bar] row — the rail + routed page header already carry context here, and
+       the crumb crowded the 375px row. */
+    .topbar-crumbs {
+      display: none;
     }
     .rail {
       position: fixed;
