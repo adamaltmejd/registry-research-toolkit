@@ -27,6 +27,7 @@ from reg_meta.graph import (
     ClassificationGraphNode,
     VariableGraphNode,
     _GraphBuilder,
+    graph_for_classification_fqid,
 )
 
 if TYPE_CHECKING:
@@ -1094,6 +1095,53 @@ class TestClassificationChains:
         assert ("class/sun1996", "class/sun2000-inriktning") in edges
         assert ("class/sun1996", "class/sun2000-grupp") in edges
 
+    def test_shared_spine_pred_memo_preserves_all_edges(self) -> None:
+        # Fix-3 behavior-preservation: an umbrella whose members share an ancestor
+        # spine (the SUN niva/inriktning/grupp case) re-walks the spine once per
+        # member. The `_pred_walked` memo reads each spine slug's inbound edges only
+        # once across the build, but must not drop any succession edge — a spine
+        # slug's edges, added under the first member walk, stay in `_edges` for the
+        # others. Two members (the two leaf branches) share the root P (sun1996) and
+        # the mid spine; every split edge must still be present and deduped.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2000-inriktning", valid_from=2000)
+        _add_classification(conn, cid=4, slug="sun2020-niva", valid_from=2020)
+        _add_classification(conn, cid=5, slug="sun2020-inriktning", valid_from=2020)
+        # P splits into two branches; each branch extends to a 2020 leaf.
+        for succ in ("sun2000-niva", "sun2000-inriktning"):
+            _add_class_succession(
+                conn, predecessor="sun1996", successor=succ, effective_year=2000
+            )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-niva",
+            successor="sun2020-niva",
+            effective_year=2020,
+        )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-inriktning",
+            successor="sun2020-inriktning",
+            effective_year=2020,
+        )
+        # Curated members = both 2020 leaves; both walks traverse the shared root P.
+        _add_class_umbrella_group(conn, members=[(4, "niva"), (5, "inriktning")])
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        # Every split + extension edge is present despite the shared-spine memo.
+        assert edges == {
+            ("class/sun1996", "class/sun2000-niva"),
+            ("class/sun1996", "class/sun2000-inriktning"),
+            ("class/sun2000-niva", "class/sun2020-niva"),
+            ("class/sun2000-inriktning", "class/sun2020-inriktning"),
+        }
+        # No duplicate edges (dedup by id holds under the memo).
+        succ_ids = [e.id for e in g.edges if e.kind == "succession"]
+        assert len(succ_ids) == len(set(succ_ids))
+
     def test_umbrella_members_carry_group_key(self) -> None:
         # F2 regression: a classification umbrella's curated MEMBER editions must carry
         # `group_key = "class/<key>"` so the renderer can cluster umbrella membership
@@ -1300,6 +1348,39 @@ class TestClassificationLeafGraph:
             ("class/sun1996", "class/sun2000"),
             ("class/sun2000", "class/sun2020"),
         }
+
+    def test_focus_node_present_when_not_a_walked_umbrella_member(self) -> None:
+        # Fix-1 regression: the canonical focus edition references an umbrella but is
+        # NOT itself a walked member of any group (a curation skew / #579 spine
+        # edition). The umbrella's curated members sit on a DISJOINT chain, so unioning
+        # only the members never reaches the focus — its `focus_id` would point at a
+        # missing node. Adding the focus's OWN chain FIRST (mirroring `graph_for_fqid`)
+        # guarantees the focus node exists. Driven at the module-function boundary
+        # (`graph_for_classification_fqid`) with a hand-built `groups` list that omits
+        # the focus, the exact skew the catalog resolver can't normally produce.
+        conn = build_slugged_db(classification=None)
+        # The umbrella members (a disjoint chain that does NOT include the focus).
+        _add_classification(conn, cid=1, slug="ssyk1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="ssyk2012", valid_from=2012)
+        _add_class_succession(
+            conn, predecessor="ssyk1996", successor="ssyk2012", effective_year=2012
+        )
+        # The focus edition — live, with NO succession chain and NOT in the umbrella.
+        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
+        _add_class_umbrella_group(conn, members=[(2, "ssyk")])
+        catalog = Catalog(conn)
+        group = catalog.classification_group("sun")
+        assert group is not None  # umbrella of the disjoint members
+
+        g = graph_for_classification_fqid(catalog, "sun2020", [group])
+        ids = {n.id for n in g.nodes}
+        # The focus node is present even though it isn't a walked umbrella member.
+        assert "class/sun2020" in ids
+        assert g.focus_id == "class/sun2020"
+        # The focus node really exists for that id (not a dangling focus_id).
+        assert g.focus_id in ids
+        # The disjoint umbrella members are still unioned in.
+        assert {"class/ssyk1996", "class/ssyk2012"} <= ids
 
     def test_standalone_classification_is_empty(self) -> None:
         # A classification with no chain and no umbrella → the empty (don't-render)
