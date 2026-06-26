@@ -2256,19 +2256,25 @@ already-grouped member:
 2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
    `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
    Two entry kinds, both **opt-in** (a family folds only when explicitly present):
-   - `[[variable_group]]` — a hand-authored family with an exact member list: each
-     `variable = "<slug>"` member attaches one ungrouped variable, carrying its
-     `value`/`label` on the family's single `axis` (e.g. the LISA `agi{1,2,3}` rank
-     facet). Concept groups are single-axis (#585) — the member's facet lives inline on
-     `concept_group_variable`, mirroring `concept_group_classification`.
+   - `[[variable_group]]` — a hand-authored family with an exact member list. The
+     **single-axis shape** (legacy, what the candidate generator emits) declares one
+     `axis` and attaches whole variables under it, each carrying `value`/`label` (e.g.
+     the LISA `agi{1,2,3}` rank facet). The **multi-axis shape** (#819) declares ordered
+     named `axes = [{ axis, label }, …]` and attaches `(variable, delivery_column)`
+     REPRESENTATIONS, each carrying one `coords` coordinate per declared axis (e.g. the
+     iot disposable-income group over `enhet × hushållsbegrepp × kapitalvinst`, where
+     one variable holds two coordinates via two delivery columns). The group's axes land
+     in `concept_group_axis`; per-member-per-axis coordinates in
+     `concept_group_variable_facet`.
    - `[[accept]]` (#496) — fold a candidate family from the committed, **generated**
      `reg_meta_build/concept_groups.auto.toml` BY REFERENCE (`register` + `key`,
      optional `label`/`axis` overrides and an `exclude` member-slug list).
      `concept_groups.auto.toml` is the **machine-owned** ranked catalog the
      `concept-group-candidates` generator (#496 PR1) emits over a built DB — committed
      but never hand-edited; an auto family folds ONLY when an accept names it (an
-     unaccepted candidate stays unfolded). Accepted families resolve through the same
-     `[[variable_group]]` apply path (their members are all ungrouped `variable=`
+     unaccepted candidate stays unfolded). Auto families are always single-axis (the
+     generator emits the legacy shape); accepted families resolve through the same
+     `[[variable_group]]` apply path (their members are whole-variable `variable=`
      attachments the generator guaranteed non-colliding). Dangling references — a
      missing register/variable, an accept of a family absent from
      `concept_groups.auto.toml`, or a stale `exclude` — FAIL the build (EXIT_CONFIG);
@@ -2282,17 +2288,18 @@ already-grouped member:
      `concept_group_classification` rather than `concept_group_variable`. The umbrella
      `axis` is **optional**: the shipped umbrellas (SUN `group:sun`, ISCED
      `isced2011`+`isced-f2013`, NordDRG `drg`+`mdc`) are **axis-less** — their members
-     are distinct classifications, not points on a shared scale, so `facet_axis` is NULL
-     at the group level. Each member still carries its curated short `value`/`label`
-     (the picker label); `concept_group_classification`'s per-member facet columns are
-     non-NULL regardless of the absent group axis. The webapp renders the member-noun as
-     "members". The SUN group has members `sun2020-niva` (Utbildningsnivå),
-     `sun2020-inriktning` (Utbildningsinriktning), `sun2020-grupp` (Utbildningsgrupper),
-     `niva-oldv1` (Nivå – aggregat, 7 nivåer), and `niva-grovv1` (Nivå – aggregat, 5
-     nivåer); the proper granularity surface is deferred to the value-set viewer (#609).
-     Prior editions (`sun1996`, 2000 editions) are intentionally excluded — they are
-     temporal predecessors and belong in `classification_replaced_by` (#571), not in the
-     umbrella group.
+     are distinct classifications, not points on a shared scale, so zero
+     `concept_group_axis` rows are written for them (#819). Each member still carries
+     its curated short `value`/`label` (the picker label) INLINE on
+     `concept_group_classification`, regardless of the absent group axis. A provided
+     `axis` is still accepted and becomes one `concept_group_axis` row. The webapp
+     renders the member-noun as "members". The SUN group has members `sun2020-niva`
+     (Utbildningsnivå), `sun2020-inriktning` (Utbildningsinriktning), `sun2020-grupp`
+     (Utbildningsgrupper), `niva-oldv1` (Nivå – aggregat, 7 nivåer), and `niva-grovv1`
+     (Nivå – aggregat, 5 nivåer); the proper granularity surface is deferred to the
+     value-set viewer (#609). Prior editions (`sun1996`, 2000 editions) are
+     intentionally excluded — they are temporal predecessors and belong in
+     `classification_replaced_by` (#571), not in the umbrella group.
 
 Every `group_key` — whether derived (edge: min member slug; token: stem) or curated — is
 validated URL-path-safe at the single `_insert_group` seam that writes all
@@ -2310,22 +2317,26 @@ by-key addressing contract holds by construction.
 
 Unlike the slug TOMLs there is **no immutability/snapshot machinery**: groups are
 derived fresh every build (regenerate-not-migrate) and carry no identity. The structural
-validator (`validate.py::_check_concept_groups`) checks member-kind/register wiring and
-the ≥2-member floor always, plus per-source volume floors (edge/month/curated) on
-`corpus=True` builds so a derivation pass that silently stops matching fails the
-maintainer gate. The former `lkf` classification volume floor is gone — vintage families
-are now succession edges, not groups, so their volume is checked separately by
-`_check_classification_replaced_by`. The SCB-sourced corpus volume floors — the
-edge-group floor here, the succession floor in `_check_classification_replaced_by`, the
-vintage-lift floor in `_check_variable_replaced_by_vintage_lift`, and the
-merged-monthly-families floor in `_check_variable_alias_window` (whose
-`period_family_merges.toml` is entirely `scb/...`) — are additionally gated on SCB being
-in the build (#595), mirroring the #563 precedent: a non-SCB `--providers` real build
-skips rather than false-fails them. The curated `n_curated >= 1` floor is gated on
-scb-OR-sos register presence (`_curated_source_in_build`, #600) — not on `_scb_in_build`
-alone, because curated groups span scb and sos: a thin-provider-only build (e.g.
-`--providers fk`) including neither legitimately has no curated groups and skips the
-floor, while any scb or sos build still floors it.
+validator (`validate.py::_check_concept_groups`) checks member-kind/register wiring, the
+multi-axis facet invariants (every member facet names a declared axis; every member
+carries exactly one facet per declared axis; the one-group-per-variable invariant that
+the old single-column PK enforced and the surrogate PK no longer can; and classification
+groups carry at most one axis), and the ≥2-member floor always, plus per-source volume
+floors (edge/month/curated) on `corpus=True` builds so a derivation pass that silently
+stops matching fails the maintainer gate. The former `lkf` classification volume floor
+is gone — vintage families are now succession edges, not groups, so their volume is
+checked separately by `_check_classification_replaced_by`. The SCB-sourced corpus volume
+floors — the edge-group floor here, the succession floor in
+`_check_classification_replaced_by`, the vintage-lift floor in
+`_check_variable_replaced_by_vintage_lift`, and the merged-monthly-families floor in
+`_check_variable_alias_window` (whose `period_family_merges.toml` is entirely `scb/...`)
+— are additionally gated on SCB being in the build (#595), mirroring the #563 precedent:
+a non-SCB `--providers` real build skips rather than false-fails them. The curated
+`n_curated >= 1` floor is gated on scb-OR-sos register presence
+(`_curated_source_in_build`, #600) — not on `_scb_in_build` alone, because curated
+groups span scb and sos: a thin-provider-only build (e.g. `--providers fk`) including
+neither legitimately has no curated groups and skips the floor, while any scb or sos
+build still floors it.
 
 ## Delivery-list enrichment (#365)
 

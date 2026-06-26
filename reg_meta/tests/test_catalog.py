@@ -2135,9 +2135,12 @@ class TestClassificationDimensions:
         ).fetchone()[0]
         conn.execute(
             "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source, facet_axis) VALUES "
-            "(40, 'classification', NULL, 'sun', 'Utbildningsnivå', 'curated', "
-            "'dimension')"
+            "label, source) VALUES "
+            "(40, 'classification', NULL, 'sun', 'Utbildningsnivå', 'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (40, 'dimension', 0, 'dimension')"
         )
         conn.executemany(
             "INSERT INTO concept_group_classification (classification_id, group_id, "

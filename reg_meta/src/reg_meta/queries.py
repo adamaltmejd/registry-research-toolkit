@@ -564,6 +564,7 @@ def _member_models(row: dict[str, Any]) -> tuple[ConceptGroupMember, ...]:
             fqid=m["fqid"],
             name=m.get("name"),
             facets=tuple(GroupFacet(**f) for f in m.get("facets", [])),
+            delivery_column=m.get("delivery_column"),
         )
         for m in row.get("members", [])
     )
@@ -1362,6 +1363,7 @@ def _group_summary_to_dict(summary: ConceptGroupSummary) -> dict[str, Any]:
             {
                 "fqid": str(m.fqid),
                 "name": m.name,
+                "delivery_column": m.delivery_column,
                 "facets": [
                     {"axis": f.axis, "value": f.value, "label": f.label}
                     for f in m.facets
@@ -2068,9 +2070,14 @@ def get_schema(
         # ordinary columns carry ''), so it must NOT be part of the edition key —
         # keying by it would shard one delivered schema into partial pseudo-
         # versions. The binding FQID is 3-seg (provider/register/variable_slug).
-        # #325: LEFT JOIN the concept-group membership (at most one group per
-        # variable — single-column member PK) so the fold is visible inline on
-        # schema listings. NULL `concept_group` means "not in any group".
+        # #325: LEFT JOIN the concept-group membership so the fold is visible
+        # inline on schema listings. NULL `concept_group` means "not in any
+        # group". A variable belongs to exactly ONE group (validator-enforced),
+        # but with representation-grained membership it now has N member rows
+        # (one per delivery column) within that one group — so we collapse the
+        # membership to one (variable_id, group_id) row via DISTINCT before the
+        # join, else each `variable_state` row would fan out into N duplicate
+        # columns. Only `group_key`/`label` are read here, so DISTINCT is exact.
         state_rows = conn.execute(
             "SELECT vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.data_type, vs.data_length, vs.delivery_column_name, "
@@ -2079,7 +2086,8 @@ def get_schema(
             "cg.group_key AS concept_group, cg.label AS concept_group_label "
             "FROM variable_state vs "
             "JOIN variable v ON vs.variable_id = v.variable_id "
-            "LEFT JOIN concept_group_variable cgv ON cgv.variable_id = v.variable_id "
+            "LEFT JOIN (SELECT DISTINCT variable_id, group_id "
+            "FROM concept_group_variable) cgv ON cgv.variable_id = v.variable_id "
             "LEFT JOIN concept_group cg ON cg.group_id = cgv.group_id "
             "WHERE vs.register_variant_id = ? "
             "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, v.slug",

@@ -44,7 +44,7 @@
       },
       "BindingGroupRef": {
         "additionalProperties": false,
-        "description": "The concept group a binding belongs to, as the group's addressable\n`(provider, register, key)` (#616). Carried by `ResolvedVariable.group` so a\nmember URL renders group-aware without a second fetch. Membership is\nregister-scoped and 1:1 (the `concept_group_variable.variable_id` PK enforces\nat most one home group per variable), so this is a singular ref \u2014 the full\nmember list lives behind `Catalog.concept_group(provider, register, key)`.\n`key` is `ConceptGroupSummary.key` (the scope-unique derivation key), not an\nFQID segment.\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\naliased to the `register` wire/init name (#681); construct/serialize as\n`register`, read as `.register_name`.",
+        "description": "The concept group a binding belongs to, as the group's addressable\n`(provider, register, key)` (#616). Carried by `ResolvedVariable.group` so a\nmember URL renders group-aware without a second fetch. A variable belongs to at\nmost one group (validated, #819) \u2014 even a multi-axis family that carries the\nvariable under several REPRESENTATION members keeps them in one group \u2014 so this\nstays a singular ref (the read uses `SELECT DISTINCT` since a representation\nvariable now yields several member rows). The full member list lives behind\n`Catalog.concept_group(provider, register, key)`.\n`key` is `ConceptGroupSummary.key` (the scope-unique derivation key), not an\nFQID segment.\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\naliased to the `register` wire/init name (#681); construct/serialize as\n`register`, read as `.register_name`.",
         "properties": {
           "key": {
             "title": "Key",
@@ -1059,8 +1059,19 @@
       },
       "ConceptGroupMember": {
         "additionalProperties": false,
-        "description": "A group member: the leaf's FQID (binding or classification), its\ndisplay name, and its facet assignments (empty on edge-group members).",
+        "description": "A group member: the leaf's FQID (binding or classification), its display\nname, and its facet assignments (empty on edge-group members). `delivery_column`\nis None for a whole-variable member and the SCB delivery column for a\nREPRESENTATION member (#819) \u2014 a multi-axis family can carry two members on one\nvariable (two delivery columns), so two members may share an `fqid` and are then\ndistinguished by `delivery_column`. Additive + defaulted so existing callers /\nthe webapp TS stay valid.",
         "properties": {
+          "delivery_column": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Column"
+          },
           "facets": {
             "items": {
               "$ref": "#/components/schemas/GroupFacet"
@@ -1178,6 +1189,17 @@
                 "type": "null"
               }
             ]
+          },
+          "delivery_column": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Column"
           },
           "facets": {
             "items": {
@@ -1297,7 +1319,7 @@
       },
       "ConceptGroupSummary": {
         "additionalProperties": false,
-        "description": "One derived concept group. `key` is the scope-unique derivation key\n(slug stem / min member slug / curated key) \u2014 a stable anchor for UI\nstate, not an FQID. `axes` holds the group's single facet axis (a 0-or-1\nelement tuple: empty for edge groups, one axis for token/curated groups);\nmembers are ordered by their facet value along that axis, then slug. The\ntuple shape is retained for the response contract \u2014 the DB is single-axis\n(#585).",
+        "description": "One derived concept group. `key` is the scope-unique derivation key\n(slug stem / min member slug / curated key) \u2014 a stable anchor for UI\nstate, not an FQID. `axes` holds the group's ordered facet axes (#819): empty\nfor edge / axis-less umbrella groups, one for token/single-axis-curated groups,\nN for a multi-axis curated family (the iot disposable-income group). Members are\nordered by their first facet value, then slug.",
         "properties": {
           "axes": {
             "items": {
@@ -1825,7 +1847,7 @@
       },
       "GroupFacet": {
         "additionalProperties": false,
-        "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank') when the group has one, or None for an AXIS-LESS group \u2014\na curated classification umbrella (SUN/ISCED/NordDRG), whose members are\ndistinct classifications carrying their own short label, not points on a\nshared scale. `value` sorts (zero-padded where needed), `label` displays.",
+        "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank' / 'enhet' \u2026) when the group declares one, or None for an\nAXIS-LESS group \u2014 a curated classification umbrella (SUN/ISCED/NordDRG), whose\nmembers are distinct classifications carrying their own short label, not points\non a shared scale. A multi-axis member (#819) carries one `GroupFacet` per\ndeclared axis, ordered by the axis's ordinal. `value` sorts (zero-padded where\nneeded), `label` displays.",
         "properties": {
           "axis": {
             "anyOf": [

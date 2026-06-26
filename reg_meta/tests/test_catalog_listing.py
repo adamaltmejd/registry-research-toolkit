@@ -339,11 +339,14 @@ def _groups_catalog() -> Catalog:
     classification vintage group — seeded directly (the derivation passes are
     reg_meta_build territory; this exercises the READ surface)."""
     conn = build_slugged_db()  # scb/lisa + variable `kon`; classification sun2020
-    # Curated single-axis (rank) group: 3 members on one axis.
+    # Curated single-axis (rank) group: 3 members on one axis (#819 shape).
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) "
-        "VALUES (10, 'variable', 1, 'agiink', 'Inkomst', 'curated', 'rank')"
+        "label, source) VALUES (10, 'variable', 1, 'agiink', 'Inkomst', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (10, 'rank', 0, 'rank')"
     )
     for i, (slug, rank) in enumerate(
         [
@@ -359,10 +362,15 @@ def _groups_catalog() -> Catalog:
             "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
             (slug,),
         ).fetchone()[0]
-        conn.execute(
+        cur = conn.execute(
             "INSERT INTO concept_group_variable "
-            "(variable_id, group_id, facet_value, facet_label) VALUES (?, 10, ?, ?)",
-            (vid, rank, f"källa {rank}"),
+            "(group_id, variable_id, delivery_column_name) VALUES (10, ?, NULL)",
+            (vid,),
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable_facet "
+            "(member_id, axis, value, label) VALUES (?, 'rank', ?, ?)",
+            (cur.lastrowid, rank, f"källa {rank}"),
         )
     # Edge group (no facets): two split siblings. Inserted in REVERSE slug order
     # (sun2020 before sun2000) so `test_edge_members_carry_no_facets`'s slug-order
@@ -390,9 +398,13 @@ def _groups_catalog() -> Catalog:
     )
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) VALUES "
+        "label, source) VALUES "
         "(12, 'classification', NULL, 'sun', 'Svensk utbildningsnomenklatur', "
-        "'token', 'vintage')"
+        "'token')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (12, 'vintage', 0, 'vintage')"
     )
     conn.executemany(
         "INSERT INTO concept_group_classification (classification_id, group_id, "
@@ -473,9 +485,10 @@ class TestListClassificationGroups:
         assert _catalog().list_classification_groups() == []
 
     def test_axis_honors_stored_facet_axis(self) -> None:
-        """#516: the read surface reads `concept_group.facet_axis` for the group's
-        axis — NOT the old hardcoded 'vintage'. Seed a curated SUN umbrella with a
-        'dimension' axis over distinct classification dimensions."""
+        """#819: the read surface reads the group's axis from `concept_group_axis`
+        — NOT the old hardcoded 'vintage' or the dropped `facet_axis` column. Seed a
+        curated SUN umbrella with a 'dimension' axis over distinct classification
+        dimensions."""
         conn = build_slugged_db()  # ships sun2020
         for cid, short, slug in (
             (60, "SUN2020-NIVA", "sun-niva2020"),
@@ -488,8 +501,12 @@ class TestListClassificationGroups:
             )
         conn.execute(
             "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source, facet_axis) VALUES "
-            "(20, 'classification', NULL, 'sun', 'SUN', 'curated', 'dimension')"
+            "label, source) VALUES (20, 'classification', NULL, 'sun', 'SUN', "
+            "'curated')"
+        )
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (20, 'dimension', 0, 'dimension')"
         )
         conn.executemany(
             "INSERT INTO concept_group_classification (classification_id, group_id, "
@@ -505,8 +522,8 @@ class TestListClassificationGroups:
         ]
 
     def test_axis_less_umbrella(self) -> None:
-        """The curated classification umbrellas are AXIS-LESS (#516 stage 1):
-        `concept_group.facet_axis` is NULL, so `axes` is the empty tuple and each
+        """The curated classification umbrellas are AXIS-LESS (#516 stage 1): zero
+        `concept_group_axis` rows (#819), so `axes` is the empty tuple and each
         member's `GroupFacet.axis` is None — yet the members still carry their
         own short facet `value`/`label` (the picker label)."""
         conn = build_slugged_db()  # ships sun2020
@@ -521,8 +538,8 @@ class TestListClassificationGroups:
             )
         conn.execute(
             "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-            "label, source, facet_axis) VALUES "
-            "(21, 'classification', NULL, 'sun', 'SUN', 'curated', NULL)"
+            "label, source) VALUES (21, 'classification', NULL, 'sun', 'SUN', "
+            "'curated')"
         )
         conn.executemany(
             "INSERT INTO concept_group_classification (classification_id, group_id, "

@@ -306,8 +306,9 @@ def _concept_group_node(
     """Map a reg_meta `ConceptGroupSummary` (#303) onto the group SUBJECT node
     (#617), zipping per-member study-window `coverage` (#351) onto each member.
     `ConceptGroupNodeMember` extends reg_meta's `ConceptGroupMember` with `coverage`,
-    so the member's `fqid` / `name` / `facets` (reg_meta `GroupFacet`s) pass straight
-    through and only `coverage` is added (#681).
+    so the member's `fqid` / `name` / `facets` (reg_meta `GroupFacet`s) and the #819
+    `delivery_column` representation discriminator pass straight through; only
+    `coverage` is added (#681).
 
     Coverage reuses the SAME `register_variable_coverage` map the register
     listing uses (keyed by variable SLUG — the binding-FQID leaf segment), so no
@@ -327,6 +328,10 @@ def _concept_group_node(
                 fqid=m.fqid,
                 name=m.name,
                 facets=m.facets,
+                # #819: the per-representation discriminator — None for a
+                # whole-variable member, the SCB delivery column for a
+                # representation member (two members can share an `fqid`).
+                delivery_column=m.delivery_column,
                 coverage=coverage.get(leaf_slug),
             )
         )
