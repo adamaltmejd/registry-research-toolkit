@@ -149,7 +149,18 @@ Run focused verification as the work evolves:
 
 ## Ready Or Merge Gate
 
-Mark the PR ready when the code is near-final:
+Mark the PR ready when the code is near-final — "ready" is what starts the Codex/Copilot
+auto-review, and it fires ONCE on the open→ready transition, NOT on later pushes (a new
+HEAD needs an explicit `@codex review`). The draft already holds the in-flight claim and
+CI runs on drafts, so time "ready" so the bot reviews code you won't churn:
+
+- trivial / mechanical / low-risk PR (you expect a clean review): mark ready early so
+  the bot reviews in parallel with your review pass — if both stay clean and HEAD
+  doesn't move, that one bot verdict also clears the gate;
+- substantive PR (you expect review/doc fixes to push commits): stay draft through
+  review
+  + docs, then mark ready once on the converged HEAD — an early ready only strands the
+    bot verdict on a stale HEAD (it won't re-review) and burns a Codex run.
 
 ```sh
 gh pr ready <pr>

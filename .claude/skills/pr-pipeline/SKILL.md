@@ -153,8 +153,23 @@ denied, surface it to the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
-implementer to add them → commit. Then, whether or not the tester ran, mark the PR
-**ready** — auto-review (Codex/Copilot) and CI-on-ready fire once, on near-final code.
+implementer to add them → commit.
+
+**When to mark the PR ready.** Marking **ready** is what starts the Codex/Copilot
+auto-review — it fires ONCE on the open→ready transition and **not on later pushes** (a
+new HEAD needs an explicit `@codex review`; see Step E). The draft already holds the
+in-flight claim and CI runs on drafts, so "ready" buys nothing but the bot review — time
+it so the bot reviews code you won't churn:
+
+- **Trivial / mechanical / low-risk PR** (you expect a clean `/code-review`): mark ready
+  **now**, before Step C, so Codex reviews in parallel with your pass. If both come back
+  clean and HEAD doesn't move, that one Codex verdict also clears the Step E gate — the
+  overlap is free speed, and you fold any Codex findings into the same fix pass as
+  `/code-review`'s.
+- **Substantive PR** (you expect `/code-review` / `/simplify` / docs to push fixes):
+  stay **draft** through Step C–D, then mark ready **once** on the converged HEAD. An
+  early ready only strands Codex's verdict on a stale HEAD (it won't re-review) and
+  burns a Codex run — Step E must re-trigger on the final HEAD regardless.
 
 **C · Review loop.** Run **`/code-review <effort>`** on the PR — it fans out lenses
 (bugs, CLAUDE.md/DESIGN adherence, git history, prior-PR comments, code comments, plus
