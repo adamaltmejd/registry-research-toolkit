@@ -1212,6 +1212,94 @@ describe("SearchView — compact per-type tables (#808)", () => {
     ).not.toBeNull();
   });
 
+  it("bounds a long unbroken variable slug's Column track on the mobile canvas so the Variable column keeps its share (#808/#806)", async () => {
+    // Regression for the variables-grid third-column blowout at the 375px canvas.
+    // The Column track is `minmax(0, max-content)`: max-content sizes to the slug's
+    // UNWRAPPED intrinsic width (soft-wrap opportunities — incl. `.slug-cell`'s
+    // overflow-wrap — are NOT taken when MEASURING a max-content track). With the grid
+    // pinned to the canvas the `minmax(0, …)` floor still lets the track SHRINK, so it
+    // doesn't push the grid past 375px — but it greedily claims ~286px of the 375,
+    // STARVING the Variable + Register columns to ~44px / ~22px (the name unreadable,
+    // the slug over-wrapped to ~200px tall). The earlier "overflow-wrap on .slug-cell"
+    // fix could never help: the grid never overflowed; the defect is column STARVATION.
+    // The fix caps the track with `fit-content(7rem)` on the ≤48rem mobile breakpoint
+    // (the browser-test viewport is 414px, BELOW 48rem, so the media query is ACTIVE —
+    // the precedent AppShell's drawer test relies on; asserted below). Desktop keeps
+    // the content-sized `max-content` track (short slugs stay narrow there).
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "for",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              // A long (35-char leaf) unbroken slug — the shape that drove the track
+              // to its full intrinsic width and starved the other columns.
+              fqid: "scb/lisa/foervaervsarbetandebefolkningstatus",
+              name: "Förvärvsarbetande befolkningsstatus",
+              register: "LISA",
+              definition: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("for");
+    const view = await render(SearchView);
+
+    // The mobile breakpoint must be active for the bounded track to apply — pin the
+    // precondition so a viewport-config change can't silently no-op this regression.
+    expect(window.matchMedia("(max-width: 48rem)").matches).toBe(true);
+
+    // Pin the rendered panel to the 375px canvas (the narrowest mobile target) so the
+    // grid resolves its tracks against the real constraint. border-box keeps the 375
+    // inclusive of padding.
+    const root = document.querySelector<HTMLElement>(".search-view");
+    expect(root).not.toBeNull();
+    if (root) {
+      root.style.boxSizing = "border-box";
+      root.style.width = "375px";
+    }
+
+    const grid = document.querySelector<HTMLElement>(".search-view .cols-3");
+    expect(grid).not.toBeNull();
+    // The mono slug rendered (the third column is genuinely populated with the long
+    // content under test, not silently empty).
+    const slug = grid?.querySelector<HTMLElement>(".slug-cell");
+    expect(slug?.textContent?.trim()).toBe(
+      "foervaervsarbetandebefolkningstatus",
+    );
+
+    // The three resolved grid tracks. With the fix the slug (3rd) track is capped at
+    // fit-content(7rem) = 112px; without it, max-content claims ~286px and the others
+    // collapse to ~44 / ~22.
+    const cols = grid ? getComputedStyle(grid).gridTemplateColumns : "";
+    const trackPx = cols.split(/\s+/).map((t) => Number.parseFloat(t));
+    expect(trackPx).toHaveLength(3);
+    const [nameTrack, registerTrack, slugTrack] = trackPx;
+
+    // The slug track is bounded by the 7rem cap (112px), NOT the slug's ~286px
+    // intrinsic width — the load-bearing assertion. (Small slack for sub-pixel
+    // rounding / a fractional root font-size.)
+    expect(slugTrack).toBeLessThanOrEqual(112 + 1);
+    // …and the Variable column keeps a usable share instead of being starved to ~44px.
+    // It must be the WIDEST track (the 2fr primary column), and comfortably so.
+    expect(nameTrack).toBeGreaterThan(slugTrack);
+    expect(nameTrack).toBeGreaterThan(120);
+    // The Register column is no longer crushed to a couple of glyphs either.
+    expect(registerTrack).toBeGreaterThan(40);
+
+    // Belt-and-suspenders: the grid still fits the canvas (no horizontal overflow).
+    expect(grid?.scrollWidth ?? 0).toBeLessThanOrEqual(
+      (grid?.clientWidth ?? 0) + 1,
+    );
+
+    view.unmount();
+  });
+
   it("interleaves a folded family inline in rank order (no 'Grouped families' block)", async () => {
     // #808 round 3: a fold sits inline at its rank position among the leaf rows —
     // it is NOT pulled out into a separate "Grouped families" sub-block. Assert a

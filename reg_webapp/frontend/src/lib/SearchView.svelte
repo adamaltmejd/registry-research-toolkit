@@ -876,6 +876,23 @@ function usageSummary(result: CodeSearchResult): string {
     /* Variable · Register · Column(slug) */
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, max-content);
   }
+  /* On the narrow (≤375px) mobile canvas, a long unbroken leaf slug sizes the
+     `max-content` Column track to its FULL intrinsic width (soft-wrap opportunities,
+     incl. the `.slug-cell` overflow-wrap, are NOT taken when MEASURING a max-content
+     track). The `minmax(0, …)` floor still lets the track shrink, so the grid itself
+     doesn't overflow the canvas — but the slug track greedily claims ~286 of the 375
+     px, STARVING the 2fr/1fr Variable + Register columns down to ~44px / ~22px (name
+     unreadable, slug over-wrapped). `overflow-wrap` on `.slug-cell` can't help — the
+     grid never overflowed; the defect is column starvation. Cap the track with
+     `fit-content(7rem)` so a long slug is bounded at 7rem (and wraps via the
+     `.slug-cell` overflow-wrap) while the other columns keep their share; a short
+     slug still sizes to content. Desktop keeps the content-sized `max-content` track
+     (above) — slugs are short there and shouldn't wrap. Matches AppShell's 48rem. */
+  @media (max-width: 48rem) {
+    .children.table.cols-3 {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) fit-content(7rem);
+    }
+  }
   .children.table.cols-2 {
     /* Classification · Name */
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
