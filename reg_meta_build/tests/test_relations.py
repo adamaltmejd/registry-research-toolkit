@@ -924,9 +924,10 @@ class TestMovedEdges:
         # 11 variable replaced_by (the #375 LISA succession chain) + 2 variable
         # replaced_by (the #400 SSYK 96 → SSYK 2012 J16 succession) + 3
         # classification replaced_by (the #579 sun1996 → niva/inriktning/grupp
-        # split) + 2 #770 ICD/KS disease-classification succession edges + 3
+        # split) + 2 #770 ICD/KS disease-classification succession edges + 7
+        # #814 iot disponibel-inkomst 2004-års-definition succession edges + 3
         # related_to (#403).
-        assert len(rel.replaced_by) == 18
+        assert len(rel.replaced_by) == 25
         assert len(rel.related_to) == 3
         # The #508 tier-1 batch: 615 curated same_as identity edges (62 connected
         # components, each ≤32 FQIDs). All variable-grain with a non-empty note.
