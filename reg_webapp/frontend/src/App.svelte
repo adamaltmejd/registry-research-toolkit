@@ -204,56 +204,11 @@ const windowMaxYear = $derived(
 </div>
 
 <style>
-  :global(:root) {
-    --border: #d4d4d4;
-    --muted: #666;
-    --accent: #2563eb;
-    --accent-bg: #eff4ff;
-    --surface: #fff;
-    /* Validation-level palette (error / warning / info), shared by every editor
-       and the validation panels. Info reuses the accent. */
-    --level-error: #b00020;
-    --level-warning: #d97706;
-    --level-info: var(--accent);
-    /* The error-banner / error-badge fill + border pair. */
-    --banner-error-bg: #fef2f2;
-    --banner-error-border: #fca5a5;
-
-    /* ── Design tokens (UI-foundation spike, Arm A — #689) ──────────────────
-       A SMALL, purposeful token set: the formal scales the spike widgets
-       actually consume (the combobox + its popup), not a speculative design
-       system. The existing palette above stays the source of truth for colors;
-       these add the geometry/type/interaction-state tokens the bare palette
-       lacked. Migrate the wider app onto these incrementally — out of scope for
-       the spike (the verdict on Arm A vs the other arms gates that). */
-    --space-1: 0.25rem;
-    --space-2: 0.5rem;
-    --space-3: 0.75rem;
-    --space-4: 1rem;
-    --text-sm: 0.85rem;
-    --text-base: 1rem;
-    /* The 4px corner the existing inputs/buttons/banners already hard-code. */
-    --radius: 4px;
-    /* Accessible keyboard focus outline (the combobox + its options). A 2px
-       accent ring with an offset — visible against the surface, not reliant on
-       color alone (it's an outline, not just a border-color shift). */
-    --focus-ring: 0 0 0 2px var(--accent-bg), 0 0 0 3px var(--accent);
-    /* Listbox interaction-state surfaces. Hover is a light neutral; the
-       keyboard/selected highlight reuses the accent tint already in the palette
-       so the popup reads as one family with the rest of the app. */
-    --surface-hover: #f3f4f6;
-    --surface-selected: var(--accent-bg);
-  }
-  :global(body) {
-    margin: 0;
-    font-family: system-ui, sans-serif;
-    /* Explicit light theme: every palette token (borders, surfaces, text)
-       assumes a light page, so pin the background — without it an OS dark-mode
-       default paints dark behind the dark `#1a1a1a` text (unreadable). */
-    background-color: #fff;
-    color: #1a1a1a;
-    line-height: 1.5;
-  }
+  /* The design-token layer (palette, type, geometry, fonts) + base body
+     typography live in src/tokens.css (imported in main.ts), NOT here. This
+     block holds only App-shell layout. Token references below (--accent,
+     --muted, --level-*, --border, --banner-*, …) resolve from tokens.css,
+     including the legacy alias bridge for not-yet-migrated pages. */
   :global(a) {
     color: var(--accent);
     text-decoration: none;

@@ -52,8 +52,11 @@ export default defineConfig({
           name: "browser",
           include: ["src/**/*.browser.test.ts"],
           // vitest-browser-svelte injects `render`/`cleanup` (it auto-cleans
-          // BEFORE each test) and its locator types via this setup entry.
-          setupFiles: ["vitest-browser-svelte"],
+          // BEFORE each test) and its locator types via this setup entry. The
+          // second entry loads the global design tokens + fonts into the test
+          // document (this suite never evaluates main.ts) so component styling
+          // matches the app — see src/test-setup.browser.ts.
+          setupFiles: ["vitest-browser-svelte", "./src/test-setup.browser.ts"],
           browser: {
             enabled: true,
             // Vitest 4.1 takes a provider FACTORY, not the old "playwright" string.
