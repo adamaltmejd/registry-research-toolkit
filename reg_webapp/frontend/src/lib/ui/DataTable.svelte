@@ -249,7 +249,13 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
     td {
       padding: var(--space-1) 0;
       border-bottom: none;
-      /* Alignment is meaningless once stacked — measures read left like the rest. */
+      /* Alignment is meaningless once stacked — measures read left like the rest.
+         `.align-end` (numeric/end columns) is reset explicitly because its
+         non-media rule out-specifies a bare `td`, so the general rule alone
+         can't override it. */
+      text-align: left;
+    }
+    td.align-end {
       text-align: left;
     }
     /* The primary cell stays the prominent title (its link/weight is unchanged);

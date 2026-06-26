@@ -137,6 +137,32 @@ describe("DataTable", () => {
     expect(container.querySelector("thead th")).toHaveClass("first");
   });
 
+  it("left-aligns a numeric cell in the stacked (narrow) layout", async () => {
+    // Regression guard for the stacked-card alignment reset. The non-media
+    // `.align-end { text-align: right }` rule out-specifies a bare `td`, so the
+    // `@media (max-width: 48rem)` block's general `td { text-align: left }` can't
+    // override a numeric column on its own — it needs the explicit
+    // `td.align-end { text-align: left }`. Once stacked, every cell reads left.
+    //
+    // The suite otherwise avoids asserting `@media` CSS, but real Chromium lets us
+    // drive the viewport under the 48rem (768px @16px root) breakpoint and read
+    // the COMPUTED alignment, which exercises exactly the reset rule. Restore the
+    // viewport afterward so the narrow size doesn't leak into sibling tests.
+    await page.viewport(600, 800);
+    try {
+      const { container } = renderTable({ columns, rows });
+      const countCell = container.querySelector<HTMLElement>(
+        "tbody tr:first-child td.align-end",
+      );
+      if (!countCell) throw new Error("numeric (.align-end) cell not found");
+      // jsdom-free: a real engine resolves `start`/`left` per the LTR doc dir.
+      const align = getComputedStyle(countCell).textAlign;
+      expect(["left", "start"]).toContain(align);
+    } finally {
+      await page.viewport(1280, 800);
+    }
+  });
+
   it("renders an explicit Column.width as an inline style on the header cell", async () => {
     // The wide-screen 12rem min-width floor (`th.first:not([style*="width"])`)
     // backs off ONLY when the consumer pins an explicit width — which the CSS
