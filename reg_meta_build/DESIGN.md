@@ -1345,6 +1345,74 @@ remaining open item is cross-column identical-parallel-column dedup (two deliver
 columns carrying exactly the same concept at the same period), which is a separate rule
 outside this collapse path.
 
+### Identity-patching surface audit (#825): order-bearing vs navigation
+
+#805 reframed the build's key unit as the **representation**
+(`column × register × (variant, if exists) × period`); orders/bindings resolve to it via
+`reg_schema.Binding`, whose `representation` disambiguates the column. Variables and
+concept_groups are a curated **navigation** surface — they never touch orders, bindings,
+or stats. #825 audits the four build-time "identity-patching" surfaces against that line
+and classifies each. **This is an audit + plan, not a removal: all four surfaces are
+still live and load exactly as documented above.** Retiring a `retire-after-migration`
+candidate is a follow-on once the named migration-target layer absorbs its intent; both
+targets have now shipped — channel-1 = `replaced_by` succession edges (#814/#817),
+channel-2 = multi-axis concept_group over representations (#819).
+
+The keep/retire split follows one cross-cutting principle: a **retire** candidate's
+effect stops at variable GROUPING, which is just a *default* grouping of representations
+— over-split is harmless (the concept group re-unites the columns) and over-merge
+doesn't break orders (the binding's `representation` still picks the right column); a
+**keep** surface's effect reaches the representation's value-set / codes or mints real
+representations, so it is order- or data-bearing and cannot be expressed as a grouping
+nudge.
+
+  | Surface            | Source                                           | Effect                                                            | Verdict                           |
+  | ------------------ | ------------------------------------------------ | ----------------------------------------------------------------- | --------------------------------- |
+  | `column_merge`     | `[[column_merge]]` / `source_column_repairs.py`  | unifies never-co-occurring era-rename twins into one variable     | **retire-after-migration (ch-1)** |
+  | `fold_override`    | `[[fold_override]]` / `source_column_repairs.py` | folds disjoint-stem contested columns of one concept into one var | **retire-after-migration (ch-2)** |
+  | `codelivery`       | `codelivery.toml` / `codelivery.py`              | pins which coding a column KEEPS when it carries two in a period  | **keep (confirm-only)**           |
+  | `canonical_attach` | `lisa_canonical.toml` / `canonical_attach.py`    | mints canonical-SCB variable/state rows + classification links    | **keep (confirm-only)**           |
+
+**`column_merge` (#196) — retire-after-migration (channel-1).** Navigation-only: it
+writes NO `value_set`/`value_code` rows and NO lineage/succession edges (the mechanics
+are in *Curated column-merge* above) — it only changes which `variable` a
+`variable_state` hangs off. The longitudinal join resolves the entity key
+per-representation-per-period via `Binding.representation` /
+`variable_alias.delivery_column_name`, not via the unified variable, and `is_identifier`
+is set pre-triage (`_populate_sensitivity_flags`) independent of the merge. **Migration
+map:** the twin-unification intent → a curated `replaced_by` succession between the two
+sharded representations; the entity-key pin → resolve over that succession/concept, not
+one variable slug. **Migration precondition (this is the higher-risk candidate, ahead of
+`fold_override`):** the curation TOML's own comment
+(`curation/scb/source_column_repairs.toml`, the RTB `pnr`→`personnr` note) records that
+WITHOUT the merge the A4.4d panel keys / `panel_entity_key` pins (#546/#554) pin to the
+sparse `pnr` fragment. So retiring `column_merge` re-shards identifier twins into two
+sibling variables, and the entity-key-pin surface must FIRST be able to resolve over a
+`replaced_by` succession chain rather than a single variable slug — otherwise the pins
+strand on the sparse fragment, reproducing exactly the pre-#196 failure. Sequence
+channel-1 entity-key resolution before pulling the merge.
+
+**`fold_override` (#261) — retire-after-migration (channel-2).** Pure variable grouping
+(mechanics in the *fold-override* note above): writes NO
+`value_set`/`value_code`/lineage — it only routes which variable the contested
+disjoint-stem columns land under, plus label tokens. **Migration map:** its intent lands
+cleanly on channel-2 multi-axis concept_group OVER representations (#819) — the
+co-delivered columns become parallel representations grouped by a concept-group facet
+axis, with no variable merge, no identity surgery, and no entity-key entanglement. This
+is the cleaner / lower-risk of the two retire candidates: unlike `column_merge` it has
+no pin-resolution precondition.
+
+**`codelivery` — keep (confirm-only).** Order-bearing: it pins which
+`value_set_version_label` (coding) a single delivery column KEEPS when it carries two
+codings in one period — it decides the codes the data actually carries. Representation-
+level, not navigation; nothing to migrate.
+
+**`canonical_attach` (#444/#400) — keep (confirm-only).** Catalog completeness over real
+provider data: it mints CANONICAL-SCB `variable`/`variable_state` rows for columns SCB
+documents but omits from the machine export (the LISA hand-documented SSYK/SNI columns,
+…) plus their classification links. Real provider content, not a grouping nudge —
+nothing to migrate.
+
 ### Sub-annual boundary clamp
 
 A state's validity window is otherwise year-granular: `valid_from`/`valid_to` expand
