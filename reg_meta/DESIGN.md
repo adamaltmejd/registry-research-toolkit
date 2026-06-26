@@ -692,9 +692,10 @@ The catalog renders machine-stamped SCB column *families* as flat lists of
 near-identical rows (issue #303): month-suffixed variable families
 (`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
 (`sun2000inr`/`sun2020inr`). The **concept-group layer** folds these for browse:
-`concept_group` + `concept_group_variable`(+`_facet`) + `concept_group_classification`,
-derived at build time (`reg_meta_build/concept_groups.py` documents the derivation
-dimensions and their guards; see `reg_meta_build/DESIGN.md` → Concept-group derivation).
+`concept_group` + `concept_group_axis` + `concept_group_variable` +
+`concept_group_variable_facet` + `concept_group_classification`, derived at build time
+(`reg_meta_build/concept_groups.py` documents the derivation dimensions and their
+guards; see `reg_meta_build/DESIGN.md` → Concept-group derivation).
 
 **Classification vintage editions** (`lkf1980`…`lkf2026`, `ssyk1996`→`ssyk2012`,
 `sun2000-niva`→`sun2020-niva`) are **not** folded into concept groups (#571). Editions
@@ -709,12 +710,12 @@ two nivå aggregates (`niva-oldv1` / `niva-grovv1` — version-independent coars
 the nivå dimension, 7-level and 5-level respectively). The aggregates carry no
 succession edge (version-independent) and are terminal, so they survive the
 classification-root's terminal-only filter and fold under the group. Classification
-umbrellas are **axis-less** — there is no shared group facet axis (`facet_axis` is NULL
-for them); the members are distinct classifications, each carrying its own curated short
-label, and the webapp renders the member-noun as "members". The granularity relationship
-is surfaced at the classification leaf via `Catalog.classification_dimensions`, which
-reads `concept_group_classification` membership and returns the group(s) the edition
-belongs to as `ConceptGroupSummary` objects — the same type returned by
+umbrellas are **axis-less** — zero `concept_group_axis` rows (#819); the members are
+distinct classifications, each carrying its own curated short label, and the webapp
+renders the member-noun as "members". The granularity relationship is surfaced at the
+classification leaf via `Catalog.classification_dimensions`, which reads
+`concept_group_classification` membership and returns the group(s) the edition belongs
+to as `ConceptGroupSummary` objects — the same type returned by
 `list_classification_groups()`. The value-set viewer (#609) renders this alongside
 `Catalog.classification_codes` (the resolved edition's `classification_code` rows,
 `is_valid` = canonical/observed/unknown). Prior editions (`sun1996`, 2000 editions) are
@@ -727,23 +728,29 @@ becomes a binding/order/stats key — members keep their leaf FQIDs, and a bindi
 `value_set: "class/lkf2020"` keeps referencing the exact vintage. Identity-level folding
 by classification family was tried and dropped (#223 part 2, 195 measured over-folds);
 because grouping is presentation, a wrong group is a cosmetic curation bug, not identity
-corruption. A variable/classification belongs to **at most one** group (member-table
-PKs). When the interval-native model (#271) merges month columns into single variables,
-the month groups dissolve into real variables and the layer shrinks to edge/rank/vintage
-duty.
+corruption. A variable/classification belongs to **at most one** group (for
+classifications: the single-column member PK; for variables: the surrogate-keyed
+`concept_group_variable` no longer enforces it directly, so the build validator
+re-asserts "one group per variable\_id" (#819)). When the interval-native model (#271)
+merges month columns into single variables, the month groups dissolve into real
+variables and the layer shrinks to edge/rank/vintage duty.
 
 **API**: `Catalog.list_concept_groups(provider, register)` (variable groups, register
 scope) and `Catalog.list_classification_groups()` (classification umbrella groups,
 catalog scope) return `ConceptGroupSummary` — `key` (scope-unique derivation key, a UI
-anchor), `label`, `source` (`edge`/`token`/`curated`), `axes` (sorted facet axes; empty
-for edge groups), and members ordered by facet values then slug. Each
-`ConceptGroupMember` carries the leaf `Fqid`, display name, and `GroupFacet` assignments
-(`month`/`rank`/`vintage` — sortable `value`, display `label`). The webapp's register /
-classification-root responses embed these alongside the complete flat children list, and
-the SPA folds (`reg_webapp/DESIGN.md`). `list_classification_groups()` returns the
-curated umbrella groups: currently `group:sun` (#516) — axis-less, so its members are
-distinct classifications carrying their own curated short label, with no shared facet
-axis. Derived vintage editions live in `classification_replaced_by`, not here.
+anchor), `label`, `source` (`edge`/`token`/`curated`), `axes` (the group's ordered named
+facet axes from `concept_group_axis`, #819: empty for edge/axis-less umbrella groups,
+one element for single-axis groups, N for multi-axis curated families), and members
+ordered by first-axis facet value then slug. Each `ConceptGroupMember` carries the leaf
+`Fqid`, display name, optional `delivery_column` (None for a whole-variable member, the
+SCB delivery column for a representation member), and per-axis `GroupFacet` assignments
+(`month`/`rank`/`vintage`/`enhet` — sortable `value`, display `label`). The webapp's
+register / classification-root responses embed these alongside the complete flat
+children list, and the SPA folds (`reg_webapp/DESIGN.md`).
+`list_classification_groups()` returns the curated umbrella groups: currently
+`group:sun` (#516) — axis-less, so its members are distinct classifications carrying
+their own curated short label, with no shared facet axis. Derived vintage editions live
+in `classification_replaced_by`, not here.
 `Catalog.concept_group(provider, register, key) -> ConceptGroupSummary | None` fetches a
 single group by its scope-unique key (#616); returns None for an unknown key or unknown
 pair (mirrors `list_concept_groups` tolerance). A group needs its own accessor because
