@@ -201,16 +201,11 @@ describe("ConceptGroupRow >2-axis navigator (#819 PR2)", () => {
       (b as HTMLButtonElement).click();
     }
     expect(onpick).toHaveBeenCalledTimes(3);
-    // BOTH delivery columns of scb/iot/dispink were reachable (the dropped rep) —
-    // and #819 FIX 1: each emits its representation's `delivery_column` as the 2nd
-    // arg so the picker preselects it instead of re-asking which column.
+    // BOTH delivery columns of scb/iot/dispink were reachable (the dropped rep).
     expect(onpick.mock.calls.filter((c) => c[0] === "scb/iot/dispink")).toEqual(
-      [
-        ["scb/iot/dispink", "dispink_inkl"],
-        ["scb/iot/dispink", "dispink_exkl"],
-      ],
+      [["scb/iot/dispink"], ["scb/iot/dispink"]],
     );
-    expect(onpick).toHaveBeenCalledWith("scb/iot/dispinkhb", "dispinkhb_inkl");
+    expect(onpick).toHaveBeenCalledWith("scb/iot/dispinkhb");
   });
 
   it("axis identity on member tags is carried by TEXT, not color-only", async () => {

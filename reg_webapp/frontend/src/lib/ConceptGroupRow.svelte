@@ -39,10 +39,7 @@ let {
   group: ConceptGroup;
   noun?: string;
   href?: string;
-  // #819 FIX 1: `deliveryColumn` is the picked member's representation column
-  // (None for a whole-variable member). The picker preselects that representation
-  // instead of re-opening its chooser — see CatalogPicker.pickVariable.
-  onpick?: (fqid: string, deliveryColumn?: string | null) => void;
+  onpick?: (fqid: string) => void;
   disabled?: boolean;
 } = $props();
 
@@ -106,7 +103,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
       type="button"
       class="member-pick"
       {disabled}
-      onclick={() => onpick?.(member.fqid, member.delivery_column)}
+      onclick={() => onpick?.(member.fqid)}
     >
       <code class="member-slug">{leafSlug(member.fqid)}</code>
       {#if member.name && member.name !== group.label}
@@ -189,7 +186,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
                     class="member-pick"
                     {disabled}
                     title={member.name ?? member.fqid}
-                    onclick={() => onpick?.(member.fqid, member.delivery_column)}
+                    onclick={() => onpick?.(member.fqid)}
                   >
                     <code>{leafSlug(member.fqid)}</code>
                   </button>
@@ -225,7 +222,7 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
               class="chip member-pick"
               {disabled}
               title={member.name ?? member.fqid}
-              onclick={() => onpick?.(member.fqid, member.delivery_column)}
+              onclick={() => onpick?.(member.fqid)}
             >
               {facet?.label ?? leafSlug(member.fqid)}
             </button>
