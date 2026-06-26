@@ -78,40 +78,60 @@ const fillWidth = $derived(((to - from) / span) * 100);
 </script>
 
 <div class="year-window" role="group" aria-label="Project window (years)">
-  <span class="readout" aria-live="polite">
-    {#if isFullHistory}
-      full history
-    {:else}
-      {from}–{to}
+  <!-- Readout row: the readout left, the clear control right. Kept on its own row
+       ABOVE the full-width track so a narrow rail (16rem ≈ 14.5rem content) fits
+       the control with no horizontal overflow — the track no longer competes with
+       the readout + clear button for one row's width. -->
+  <div class="readout-row">
+    <span class="readout" aria-live="polite">
+      {#if isFullHistory}
+        full history
+      {:else}
+        {from}–{to}
+      {/if}
+    </span>
+    <!-- Clear control (#629 item 1): an explicit reset to full history — the only
+         way back to a `null` window once dragged (a moved slider always expresses
+         an explicit span). Hidden when already at full history so it's not a no-op. -->
+    {#if active !== null}
+      <button
+        type="button"
+        class="clear"
+        aria-label="Clear project window (full history)"
+        title="Clear — full history"
+        onclick={() => onclear()}
+      >
+        ✕
+      </button>
     {/if}
-  </span>
-  <!-- The shared dual-thumb track (#632). `onCommit` (native `change`) is the
-       COMMIT (#629 item 2) — no `onLiveInput`, so a drag updates only the bound
-       `from`/`to` (live readout/fill) and commits once on release. The `.fill`
-       is this slider's own decoration, drawn inside the track behind the thumbs. -->
+  </div>
+  <!-- The shared dual-thumb track (#632), on its own full-width row. `onCommit`
+       (native `change`) is the COMMIT (#629 item 2) — no `onLiveInput`, so a drag
+       updates only the bound `from`/`to` (live readout/fill) and commits once on
+       release. The `.fill` is this slider's own decoration, drawn inside the track
+       behind the thumbs. -->
   <DualThumbTrack {min} {max} {selection} bind:from bind:to {onCommit}>
     <div class="fill" style="left: {fillLeft}%; width: {fillWidth}%;"></div>
   </DualThumbTrack>
-  <!-- Clear control (#629 item 1): an explicit reset to full history — the only
-       way back to a `null` window once dragged (a moved slider always expresses
-       an explicit span). Hidden when already at full history so it's not a no-op. -->
-  {#if active !== null}
-    <button
-      type="button"
-      class="clear"
-      aria-label="Clear project window (full history)"
-      title="Clear — full history"
-      onclick={() => onclear()}
-    >
-      ✕
-    </button>
-  {/if}
 </div>
 
 <style>
+  /* Container-fluid / stacked: the readout (+ clear) row on top, the full-width
+     track below. This fits a narrow rail (16rem ≈ 14.5rem content) AND the wider
+     ~320px mobile drawer, rather than the old horizontal row whose fixed 9rem
+     track + readout + clear button overflowed the rail. */
   .year-window {
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+  /* Readout left, clear button right — space-between so the clear button no longer
+     adds its width to the control's total (it shares the readout's row). */
+  .readout-row {
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.6rem;
   }
   .readout {
@@ -119,13 +139,11 @@ const fillWidth = $derived(((to - from) / span) * 100);
     font-size: 0.8rem;
     color: var(--muted);
     white-space: nowrap;
-    min-width: 5.5rem;
-    text-align: right;
   }
   .clear {
-    /* A small, low-emphasis reset glyph next to the track. Sized to a >=24px
-       hit target (WCAG 2.5.8) while staying visually compact via an inline-flex
-       box that centers the glyph; the readout · slider · ✕ row stays aligned. */
+    /* A small, low-emphasis reset glyph at the right end of the readout row.
+       Sized to a >=24px hit target (WCAG 2.5.8) while staying visually compact
+       via an inline-flex box that centers the glyph. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -150,13 +168,13 @@ const fillWidth = $derived(((to - from) / span) * 100);
     outline: 2px solid var(--accent);
     outline-offset: 1px;
   }
-  /* The dual-thumb track is the shared DualThumbTrack primitive; this slider only
-     fixes its WIDTH (the header chip is a fixed 9rem) — track height, rail, and
-     thumb size keep the primitive's defaults (1.25rem / 3px / 0.85rem). The var
-     inherits into the primitive's `.track`. */
-  .year-window :global(.track) {
-    --track-width: 9rem;
-  }
+  /* The dual-thumb track is the shared DualThumbTrack primitive, drawn FLUID here:
+     no `--track-width` override, so it falls back to the primitive's `width: 100%`
+     and fills its own row in the rail/drawer (the fixed 9rem chip overflowed the
+     16rem rail). Track height, rail, and thumb size keep the primitive's defaults
+     (1.25rem / 3px / 0.85rem) — only the horizontal sizing is fluid. The thumb +
+     fill geometry is value-driven (% of [min, max]), so a fluid width doesn't
+     disturb DualThumbTrack's percentage positioning. */
   /* The selected-span fill — this slider's own in-track decoration (plain max−min
      geometry), drawn behind the primitive's thumbs. The native rail is hidden by
      the primitive, so the `.track::before` rail + this fill show through. */

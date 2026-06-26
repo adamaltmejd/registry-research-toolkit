@@ -412,19 +412,25 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
 
   .canvas {
     /* A wide, comfortable measure — no 56rem cap — but not full-bleed: dense
-       pages breathe while a max-width keeps line lengths legible. `min-width: 0`
-       lets wide tables / long FQIDs inside contain rather than push the canvas
-       past the viewport (the 375px overflow fix, criterion #1). `box-sizing:
-       border-box` folds the padding INTO `width: 100%` — without it (there's no
-       global border-box reset in this app) the canvas was 100% + 32px wide,
-       overflowing the viewport by exactly its horizontal padding on every route. */
+       pages breathe while a max-width keeps line lengths legible. The 375px
+       no-overflow fix (criterion #1) is the `box-sizing: border-box` + `width:
+       100%` + `max-width` + `min-width: 0`: the canvas element itself never
+       exceeds the viewport (border-box folds the padding INTO `width: 100%` —
+       without it, there being no global border-box reset in this app, the canvas
+       was 100% + 32px wide, overflowing by exactly its horizontal padding). With
+       the canvas bounded, `overflow-x: auto` lets content WIDER than the canvas
+       (ConceptGroupView's facet-matrix, dense tables) scroll horizontally INSIDE
+       the canvas instead of being clipped (a `hidden` clip made the rightmost
+       columns unreachable). Only the overflowing children scroll; the document
+       does not — so this stays within criterion #1, it's a reachability fix, not
+       a clip-bandaid. */
     box-sizing: border-box;
     width: 100%;
     max-width: 80rem;
     min-width: 0;
     margin: 0 auto;
     padding: var(--space-4);
-    overflow-x: hidden;
+    overflow-x: auto;
   }
 
   .scrim {
@@ -471,9 +477,15 @@ function facetLabel(child: { name?: string | null; fqid: string }): string {
       transform: translateX(0);
     }
     .scrim {
+      /* The click-out dimmer covers only the content EXPOSED beside the open
+         drawer (its left edge starts at the rail's right edge), not the whole
+         viewport. The opaque rail (z-60) already hides what's under it, so a
+         full-bleed scrim there would only add a dead zone where the rail
+         intercepts a click meant to dismiss — leaving the scrim's own hit-area
+         (and its center) reliably on top of the exposed canvas. */
       display: block;
       position: fixed;
-      inset: 0;
+      inset: 0 0 0 min(20rem, 85vw);
       z-index: 55;
       border: 0;
       padding: 0;
