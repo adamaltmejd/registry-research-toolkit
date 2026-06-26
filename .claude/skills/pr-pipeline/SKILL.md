@@ -87,15 +87,19 @@ Run the PRs themselves **strictly serially** — one merged before the next star
    are conditional — a role you won't use is one you must NOT dispatch:
    - **tester** — only if behaviour changes (existing snapshot/idempotence tests already
      cover it → skip).
-   - **docs-updater** — only if code/contract drifts from AUTHORED docs (a change that
-     edits docs directly, or touches no documented surface, has no drift).
-   - **visual verification** — NOT a role you may skip when the PR changes rendered
-     output (`reg_webapp/frontend/**`, or any view the SPA renders). It's woven through
-     the pipeline, not a one-shot subagent: the implementer eyeballs its change in Step
-     A, you run a design pass in Step C, and you own the authoritative rendered proof (a
-     single render on the assembled tree) at merge in Step E. Headless `bun` checks
-     never render a pixel, so they do NOT satisfy it. This is the UI analog of the
-     `build-db` real-data gate (CLAUDE.md "PR merge gate" → Visual verification).
+   - **docs-updater** — only if the diff drifts AUTHORED docs (a change that edits docs
+     directly, or touches no documented surface, has no drift). "Authored docs" is
+     BROADER than the API contract: it includes the design-spec files
+     (`<package>/DESIGN.md`, `ARCHITECTURE.md`, `REFACTOR_SPEC.md`) and incidental
+     factual references inside them. A token / symbol / flag / file name that a section
+     *names* becomes drift the moment your diff deletes or renames it — even in a
+     historical "what shipped" note (add a "superseded by …" pointer rather than
+     falsifying the record).
+   - **visual verification** — required, not skippable, when the PR changes rendered
+     output (`reg_webapp/frontend/**`, or any SPA-rendered view): headless `bun` checks
+     never render a pixel. Woven through the pipeline (implementer renders in Step A,
+     you review in Step C, you own the authoritative render at the Step E gate), not a
+     one-shot subagent — the how-to lives in those steps.
 
    Skipping a role is a decision you NAME in your closeout report, never a silent
    omission. A large *mechanical* change (even 100+ files) is still implementer +
@@ -127,12 +131,13 @@ PR first**, before any code lands: an empty WIP commit
 `Closes #<each issue this PR resolves>`. This marks the issue(s) **in-flight**
 (`running` in the sequencing projection) immediately, so a concurrent dispatch skips
 them and anything touching their files — it's how lanes stay non-colliding without a
-separate claim. Draft also keeps review bots off until near-final, and an inline
-`--body` heredoc can trip the permission classifier, so use `--body-file`. Then dispatch
-the implementer(s) with the scope + the FAST Verify only (lint / format / `ty` /
-`pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min
-merge-gate check (Step E). For a **frontend PR**, rendering is part of the loop too —
-cheap, unlike `build-db`: the implementer renders its change with the one-shot driver,
+separate claim. Draft also holds bot review until you start it (Step B → "When to mark
+the PR ready"), and an inline `--body` heredoc can trip the permission classifier, so
+use `--body-file`. Then dispatch the implementer(s) with the scope + the FAST Verify
+only (lint / format / `ty` / `pytest`); the real `reg-meta-build build-db` is NOT in
+their loop — it's your \~20-min merge-gate check (Step E). For a **frontend PR**,
+rendering is part of the loop too — cheap, unlike `build-db`: the implementer renders
+its change with the one-shot driver,
 `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` (or
 `dev.sh smoke` for the catalog flow). That mode picks free ports, renders from the
 **worktree's own `.venv`**, and **tears the servers down on exit** — so it's
@@ -147,8 +152,15 @@ denied, surface it to the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
-implementer to add them → commit. Then, whether or not the tester ran, mark the PR
-**ready** — auto-review (Codex/Copilot) and CI-on-ready fire once, on near-final code.
+implementer to add them → commit.
+
+**When to mark the PR ready.** Marking **ready** starts the one-shot Codex/Copilot
+auto-review (mechanics + re-trigger in Step E). Time it to the HEAD you won't churn: a
+**trivial / low-risk PR** you expect to pass clean → mark ready **now**, so Codex runs
+in parallel with your `/code-review` (one clean verdict on an unmoved HEAD also clears
+the Step E gate, and you fold any Codex findings into the same fix pass); a
+**substantive PR** → stay **draft** through Steps C–D and mark ready **once** on the
+converged HEAD, so you don't strand Codex's verdict on a stale HEAD.
 
 **C · Review loop.** Run **`/code-review <effort>`** on the PR — it fans out lenses
 (bugs, CLAUDE.md/DESIGN adherence, git history, prior-PR comments, code comments, plus
@@ -163,40 +175,30 @@ on the fix delta. Repeat until a pass reports no further material findings. Safe
 valve: if it won't settle after a few rounds or keeps re-raising the same point, STOP
 and surface it via `AskUserQuestion` — never loop forever.
 
-Then run **`/simplify`** (a Claude Code skill, the companion to `/code-review` — not a
-repo skill, and Claude-Code-only; if it isn't available in this install, do the same
-reuse/simplification/altitude pass by hand — never block on a missing command) on any
-non-trivial code diff — the dedicated reuse/simplification/altitude pass, deeper than
-the cleanup lens `/code-review` already folds in. The implementer self-simplified at the
-leaf level (`implementer.md`); `/simplify` is where you catch what needs the whole-diff
-/ cross-codebase view — a one-caller abstraction, a module duplicating a subsystem
-elsewhere, a library that subsumes the approach. Run it **report-only** (no `--fix`,
-same one-writer rule as `/code-review`) and route its cuts through a fresh implementer →
-re-verify → commit, deduping any overlap with `/code-review`'s cleanup findings. Because
-`/simplify` runs *after* the `/code-review` loop converged, **re-run `/code-review` on
-the simplify-fix range** (`git diff <pre-simplify>..HEAD`) before merge — a
-simplification can still touch a safety guard, and Step E's independent review must
-cover the final HEAD. A clean pass returns "lean already". Skip only a docs-only or
-trivial diff (name the skip in closeout).
+Then run **`/simplify`** (a Claude-Code-only skill; if unavailable, do the same pass by
+hand — never block on a missing command) on any non-trivial code diff — the dedicated
+reuse/simplification/altitude pass, deeper than the cleanup lens `/code-review` already
+folds in (a one-caller abstraction, a module duplicating a subsystem elsewhere, a
+library that subsumes the approach). Run it **report-only** and route its cuts through a
+fresh implementer → re-verify → commit, deduping overlap with `/code-review`'s findings.
+Then **re-run `/code-review` on the simplify-fix range**
+(`git diff <pre-simplify>..HEAD`) — a simplification can touch a safety guard, and Step
+E's review must cover the final HEAD. A clean pass returns "lean already"; skip only a
+docs-only or trivial diff (name the skip).
 
 **Frontend addendum.** For a PR that changes rendered output, run a **visual review**
-pass alongside `/code-review`, against the running app — a text-diff review can't catch
-a broken layout, overflow, or contrast regression. The mandatory part is *looking*:
-render the assembled tree (`/run-reg-webapp` + `preview_*`, always available) and
-inspect the changed views. **Run `/web-design-reviewer`** for the structured
-design-quality pass — it catches consistency / spacing / accessibility regressions the
-naked eye skims past; the manual `run-reg-webapp` render is how you *see* the change,
-and `/web-design-reviewer` is how you review it well. (Authoring new UI is the
-*implementer's* job, and its prompt already routes new-UI work through
-`frontend-design:frontend-design` — so you review with `/web-design-reviewer` rather
-than author with `/frontend-design` at this step.) Route any findings the same way you
-route `/code-review`'s. When the rendered change depends on DB content not yet in the
-local/released DB (e.g. a build-curation PR earlier in the lane), don't wait for a
-release — point the dev server at a scratch `build-db` via
+alongside `/code-review`: render the assembled tree (`/run-reg-webapp` + `preview_*`)
+and inspect the changed views, then run **`/web-design-reviewer`** for the structured
+design-quality pass (consistency / spacing / accessibility regressions the naked eye
+skims past). Authoring new UI is the *implementer's* job (its prompt routes new-UI work
+through `frontend-design`), so here you review with `/web-design-reviewer`, not
+`/frontend-design`. Route findings like `/code-review`'s. When the rendered change
+depends on DB content not yet released (e.g. a build-curation PR earlier in the lane),
+point the dev server at a scratch `build-db` via
 `REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp → "Verifying against
 unreleased DB content (custom DB)").
 
-**D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
+**D · Docs.** Only if the diff drifted authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
 BEFORE the merge-gate hold, so the bot-review window runs against the true final HEAD (a
 docs push after the hold starts restarts it).
@@ -245,17 +247,12 @@ Pipeline-specific operational notes the gate doesn't carry:
   ```
 
   **Narrowing with `--providers` is fine for a scoped dbdiff** — e.g.
-  `--providers   scb,sos` for an SCB/SOS-only change is faster than the full global
-  build. #563 gates the curated-override staleness check to the providers actually
-  built, so a thin provider's mandatory entity-key `[variable]` pins (#554) no longer
-  crash a restricted build. #595/#597/#600 extend this to the validation layer — the
-  SCB-assuming corpus volume floors and the classification seed-drift / curated-group
-  gates are scoped to the providers actually built — so a **non-SCB /
-  thin-provider-only** subset (e.g. `--providers fk`) now builds and validates green
-  end-to-end, letting you dbdiff a thin provider's change in isolation. Pick the
-  providers your PR actually affects; build the **full** default set (omit
-  `--providers`) for the release asset or a cross-provider change (`input_data/` must
-  then carry every global provider's seed dir).
+  `--providers scb,sos` for an SCB/SOS-only change is faster than the full global build,
+  and a thin / non-SCB subset (e.g. `--providers fk`) builds and validates green
+  end-to-end (the staleness, corpus-volume, and seed-drift gates are scoped to the
+  providers actually built). Pick the providers your PR affects; build the **full**
+  default set (omit `--providers`) for the release asset or a cross-provider change
+  (`input_data/` must then carry every global provider's seed dir).
 
   If the PR changes **any tracked** `reg_meta_build/input_data/**` file (a provider's
   `*.toml`, a `classifications/` or `scb_canonical/` CSV, an add / delete / rename), a
@@ -305,10 +302,14 @@ steps on trust:
 - **Merged & on main** — each planned PR shows `MERGED` and its changes are present on
   `origin/main` (the stale-head check), and branches are cleaned up.
 - **Docs current** — the change doesn't leave authored docs stale anywhere: the touched
-  `<package>/DESIGN.md`, README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`,
-  `ARCHITECTURE.md`. Step D fixes per-PR drift; this is a final sweep across the WHOLE
-  change (e.g. a cross-PR rename or a new contract no single PR's docs-updater owned).
-  Fix any drift now, or record it as a follow-up below.
+  `<package>/DESIGN.md` (including its design-spec prose and any token/symbol it names),
+  README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`, `ARCHITECTURE.md`. Step D
+  fixes per-PR drift; this is a final sweep across the WHOLE change (e.g. a cross-PR
+  rename or a new contract no single PR's docs-updater owned). **Default to fixing drift
+  inline** — it's part of this PR, and a one-line doc fix in a file you already touched
+  is never a follow-up. Record a follow-up ONLY when the fix needs its own scoped change
+  (its own diff, review, or decision) — not as an escape hatch for a one-liner you'd
+  rather defer.
 - **Nothing half-done** — every review finding was fixed or dismissed-with-reason, no
   role was silently skipped, no scope was quietly cut.
 

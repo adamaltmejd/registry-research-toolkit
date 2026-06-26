@@ -46,7 +46,10 @@ Agent-surface notes:
    extending existing architecture to adding a module. Sequence by dependency. For
    multi-PR or ambiguous work, show the breakdown before editing.
 4. Decide whether behavior changed enough to need a dedicated test-gap pass and whether
-   authored docs can drift.
+   authored docs can drift. "Authored docs" includes the design-spec files
+   (`<package>/DESIGN.md`, `ARCHITECTURE.md`, `REFACTOR_SPEC.md`) and the factual
+   references inside them — a token/symbol/flag/file name a section names drifts the
+   moment the diff deletes or renames it, even in a historical "what shipped" note.
 
 ## Claim
 
@@ -135,15 +138,29 @@ Run focused verification as the work evolves:
    checks as a substitute. Route design findings through the same fix / dismiss /
    re-review loop as code-review findings.
 5. Re-review substantial fixes until the review converges.
-6. Update authored docs only where the diff made them stale: package `DESIGN.md`,
-   README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
-   validation-code docs. Never edit generated `reg_meta_build/docs/lisa/*.md`.
+6. Update authored docs wherever the diff made them stale — including the design-spec
+   prose and any token/symbol it names: package `DESIGN.md`, README/CLI examples,
+   docstrings, `ARCHITECTURE.md`, repository guidance files, validation-code docs. Fix a
+   one-line drift in place; don't defer a one-liner you already touched to a follow-up
+   (and don't falsify a historical note — add a "superseded by …" pointer instead).
+   Never edit generated `reg_meta_build/docs/lisa/*.md`.
 7. Commit and push any review/doc fixes. Never use `--no-verify` or `-n`; fix hook
    failures.
 
 ## Ready Or Merge Gate
 
-Mark the PR ready when the code is near-final:
+Mark the PR ready when the code is near-final — "ready" is what starts the Codex/Copilot
+auto-review, and it fires ONCE on the open→ready transition, NOT on later pushes (a new
+HEAD needs an explicit `@codex review`). The draft already holds the in-flight claim and
+CI runs on drafts, so time "ready" so the bot reviews code you won't churn:
+
+- trivial / mechanical / low-risk PR (you expect a clean review): mark ready early so
+  the bot reviews in parallel with your review pass — if both stay clean and HEAD
+  doesn't move, that one bot verdict also clears the gate;
+- substantive PR (you expect review/doc fixes to push commits): stay draft through
+  review
+  + docs, then mark ready once on the converged HEAD — an early ready only strands the
+    bot verdict on a stale HEAD (it won't re-review) and burns a Codex run.
 
 ```sh
 gh pr ready <pr>
@@ -173,9 +190,9 @@ For merge, satisfy the repo gate:
 Run the real `build-db` last and once for build-affecting work, using the main
 checkout's untracked seed if working from a worktree. Narrowing with `--providers` is
 fine for a scoped dbdiff (e.g. `--providers scb,sos` for an SCB/SOS-only change is
-faster than the full global build) — #563 gates the curated-override staleness check to
-the built providers, so a thin provider's entity-key pins (#554) no longer crash a
-restricted build. Pick the providers your PR affects, or omit `--providers` for the full
+faster than the full global build); a thin / non-SCB subset builds and validates green
+end-to-end (the staleness, corpus-volume, and seed-drift gates are scoped to the built
+providers). Pick the providers your PR affects, or omit `--providers` for the full
 global set (release asset / cross-provider PRs). If the PR changes any tracked
 `reg_meta_build/input_data/**` file (provider `*.toml`,
 `classifications/`/`scb_canonical/` CSV, or an add/delete/rename), do not point
@@ -204,6 +221,8 @@ rm -rf "$db_dir"
 ## Closeout
 
 Report what changed, PR number/status, verification commands, review findings fixed or
-dismissed, docs/test decisions, and any follow-up issues worth filing. Before proposing
-a new issue, search open and closed issues with
+dismissed, docs/test decisions, and any follow-up issues worth filing. Default to fixing
+doc drift inline — it's part of this PR; record a follow-up only when the fix needs its
+own scoped change, never as an escape hatch for a one-liner. Before proposing a new
+issue, search open and closed issues with
 `gh issue list --state all --search "<keywords>"`.
