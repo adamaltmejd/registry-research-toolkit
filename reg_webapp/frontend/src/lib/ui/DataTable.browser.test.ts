@@ -136,6 +136,28 @@ describe("DataTable", () => {
     expect(container.querySelector("thead th")).toHaveClass("first");
   });
 
+  it("renders an explicit Column.width as an inline style on the header cell", async () => {
+    // The wide-screen 12rem min-width floor (`th.first:not([style*="width"])`)
+    // backs off ONLY when the consumer pins an explicit width — which the CSS
+    // detects via the inline `style="width: …"` attribute. So the override hinges
+    // on presence (width set) vs absence (no width) of that attribute; lock both.
+    const widthColumns: Column<Row>[] = [
+      { key: "code", label: "Code", mono: true, width: "8rem" },
+      { key: "label", label: "Label" },
+      { key: "count", label: "Count", numeric: true },
+    ];
+    const withWidth = renderTable({ columns: widthColumns, rows });
+    expect(withWidth.container.querySelector("thead th")).toHaveAttribute(
+      "style",
+      expect.stringContaining("width: 8rem"),
+    );
+    // The standard fixture pins no width, so the floor stays in force.
+    const noWidth = renderTable({ columns, rows });
+    expect(noWidth.container.querySelector("thead th")).not.toHaveAttribute(
+      "style",
+    );
+  });
+
   it("makes rows selectable grid-rows when selection props are passed", async () => {
     let selected = "";
     const { container } = renderTable({
