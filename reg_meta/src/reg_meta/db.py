@@ -318,6 +318,19 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
         )
 
 
+def register_py_lower(conn: sqlite3.Connection) -> None:
+    """Register ``py_lower``, a Unicode-aware ``LOWER()`` (SQLite's is ASCII-only,
+    so Swedish ``åäö`` headers like ``Ägare``/``Kön`` don't fold). Used for
+    case-insensitive ``delivery_column_name`` matching across reg_meta queries and
+    the build validator/grafts (refs #843, #853)."""
+    conn.create_function(
+        "py_lower",
+        1,
+        lambda s: s.lower() if s is not None else None,
+        deterministic=True,
+    )
+
+
 def open_db(
     db_path: Path,
     *,
@@ -356,6 +369,7 @@ def open_db(
     # mutates the live inode under a reader, so the immutability contract holds.
     conn = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
     conn.row_factory = sqlite3.Row
+    register_py_lower(conn)
     if check_schema:
         try:
             _check_schema_compat(conn, db_path)

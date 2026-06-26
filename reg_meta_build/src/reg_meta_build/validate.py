@@ -625,7 +625,7 @@ def _check_variable_alias_covers_state_columns(
         "  AND NOT EXISTS (SELECT 1 FROM variable_alias va "
         "    WHERE va.variable_id = vs.variable_id "
         "    AND va.register_variant_id = vs.register_variant_id "
-        "    AND LOWER(va.delivery_column_name) = LOWER(vs.delivery_column_name)))"
+        "    AND py_lower(va.delivery_column_name) = py_lower(vs.delivery_column_name)))"
     ).fetchone()[0]
     if missing:
         result.fail(
@@ -1308,7 +1308,7 @@ def _check_variable_alias_window(
             "(SELECT 1 FROM variable_alias va "
             "  WHERE va.variable_id = w.variable_id "
             "  AND va.register_variant_id = w.register_variant_id "
-            "  AND LOWER(va.delivery_column_name) = LOWER(w.delivery_column_name))"
+            "  AND py_lower(va.delivery_column_name) = py_lower(w.delivery_column_name))"
         ).fetchone()[0]
         if uncovered == 0:
             result.ok("every window column present in variable_alias")
@@ -2010,18 +2010,12 @@ def _check_representation_replaced_by(
         return
 
     # Columns compare case-INSENSITIVELY (SCB delivery headers drift in case). Fold
-    # column comparisons Python-side via a UDF to MATCH the materializer's
+    # column comparisons Python-side via `py_lower` to MATCH the materializer's
     # `str.lower` keys (relations.py): SQLite `LOWER()` is ASCII-only, so a Swedish
     # åäö header (e.g. `Ägare`) would compare unequal here yet resolve in the
-    # materializer, falsely flagging the edge. The UDF is scoped to the column
-    # comparisons in this function only; other validators keep the ASCII LOWER()
-    # convention.
-    conn.create_function(
-        "py_lower",
-        1,
-        lambda s: s.lower() if s is not None else None,
-        deterministic=True,
-    )
+    # materializer, falsely flagging the edge. `py_lower` is the shared
+    # delivery_column_name folding convention, registered in `reg_meta.db.open_db`
+    # (the conn factory this validator runs on), so no local registration is needed.
 
     # A case-only same-column pair on one variable is still a self-loop.
     self_loops = conn.execute(

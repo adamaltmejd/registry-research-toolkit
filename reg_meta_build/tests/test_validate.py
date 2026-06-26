@@ -15,6 +15,7 @@ import sqlite3
 from pathlib import Path
 
 import pytest
+from _shared_fixtures import connect_built_db
 from reg_meta_build.validate import validate_built_db
 
 
@@ -85,7 +86,7 @@ class TestValidateModule:
 
         broken = tmp_path / "noscb.db"
         broken.write_bytes(fixture_db.read_bytes())
-        conn = sqlite3.connect(broken)
+        conn = connect_built_db(broken)
         conn.row_factory = sqlite3.Row
         # Precondition: the fixture IS an SCB build.
         assert _scb_in_build(conn)
@@ -196,7 +197,7 @@ class TestValidateModule:
             _check_variable_alias_window,
         )
 
-        conn = sqlite3.connect(fixture_db)
+        conn = connect_built_db(fixture_db)
         tables = {
             r[0]
             for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")

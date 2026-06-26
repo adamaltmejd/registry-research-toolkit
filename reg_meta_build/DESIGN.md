@@ -2169,10 +2169,11 @@ consolidated:
     column rename observes both columns — stricter than the register/variable "dead
     predecessor allowed" rule); intra-register (both endpoints must share `provider` AND
     `register`; a cross-register column rename is handled by the variable grain);
-    columns are matched **case-insensitively** (SCB delivery headers drift in case —
-    `LOWER()` throughout the build) but **stored verbatim** (the curator's spelling is
-    preserved; downstream reads compare with `LOWER()`); the 8-part PK dedup covers the
-    full
+    columns are matched **case-insensitively** (SCB delivery headers drift in case,
+    including Swedish letters like `Ägare` that ASCII `LOWER()` can't fold — the
+    Unicode-aware `py_lower` UDF is used in both the build/validator and downstream
+    reg_meta reads; #853) but **stored verbatim** (the curator's spelling is preserved;
+    reads fold via `py_lower` before comparing); the 8-part PK dedup covers the full
     `(pred\_provider, pred\_register, pred\_variable, pred\_column, succ\_provider,     succ\_register, succ\_variable, succ\_column)`
     tuple. No successor index yet — added when a consumer exists (#846/#838). No auto
     representation grain (SCB's `timeseries_event` succession is entity-grained), so
