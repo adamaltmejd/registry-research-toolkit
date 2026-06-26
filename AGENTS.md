@@ -21,7 +21,8 @@ pending a from-scratch MONA rebuild. See `REFACTOR_SPEC.md` and tracking issue #
 
 [MONA](https://www.scb.se/mona) is Statistics Sweden's microdata platform. Agents are
 not allowed on MONA. **PII must never leave MONA — only aggregate statistics are
-exported.** This is a domain invariant that remains true regardless of the tooling state.
+exported.** This is a domain invariant that remains true regardless of the tooling
+state.
 
 # Governance
 
@@ -152,10 +153,12 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 # Run (dev servers)
 
-- `reg_webapp` local dev (FastAPI :8000 + Vite :5173): the `/run-reg-webapp` skill
-  (`reg_webapp/.claude/skills/run-reg-webapp/`) has the verified launch steps + a
-  Playwright driver for smoke/screenshots; `.claude/launch.json` registers both servers
-  for `preview_start` (names `reg-webapp-backend` / `reg-webapp-frontend`).
+- `reg_webapp` local dev (FastAPI + Vite with an `/api` proxy): the `/run-reg-webapp`
+  skill (`reg_webapp/.claude/skills/run-reg-webapp/`) has the verified launch steps + a
+  Playwright driver for smoke/screenshots. `.claude/launch.json` registers a single
+  `reg-webapp` config for `preview_start` (its entry point is `dev.sh preview`, so
+  `autoPort` makes parallel sessions collision-free and the proxy is auto-wired); for
+  one-shot screenshots use `dev.sh smoke` / `dev.sh shot`.
 
 # Lint and test
 
@@ -351,9 +354,8 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   use an absolute input root; if the PR changes any tracked
   `reg_meta_build/input_data/**` file, make that root an overlay: main checkout
   untracked seed plus the PR-head tracked inputs copied on top, with PR deletions /
-  renames mirrored. A direct
-  `--input-dir <main-checkout>/reg_meta_build/input_data/` validates main's tracked
-  inputs, not yours.
+  renames mirrored. A direct `--input-dir <main-checkout>/reg_meta_build/input_data/`
+  validates main's tracked inputs, not yours.
 - **Visual verification** when the PR changes rendered output (`reg_webapp/frontend/**`,
   or any view / component / style the SPA renders). This is the UI analog of real-data
   validation — **required, not optional**, for rendered changes. Headless checks
@@ -363,11 +365,12 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   the changed views): it picks free ports, renders from THIS checkout's `.venv`
   (worktree-correct), screenshots to `/tmp/reg-webapp-shots/`, and **tears the servers
   down on exit** — no port collisions, no leaked servers. For interactive poking use
-  `preview_start` + `preview_snapshot` / `preview_click` / `preview_resize` (single-host
-  fixed-port; in a worktree it serves *main's* code, so prefer `dev.sh` there). Attach a
-  screenshot as the proof, the same way a build PR attaches its `build-db`. If the
-  `/web-design-reviewer` skill is installed, also use it for a structured design-quality
-  pass (and `/frontend-design` when authoring new UI).
+  `preview_start` + `preview_snapshot` / `preview_click` / `preview_resize` (now
+  `autoPort` + `dev.sh preview`-backed, so it's collision-free across sessions and
+  serves the worktree's own code). Attach a screenshot as the proof, the same way a
+  build PR attaches its `build-db`. If the `/web-design-reviewer` skill is installed,
+  also use it for a structured design-quality pass (and `/frontend-design` when
+  authoring new UI).
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip; after merging, confirm the PR's changes are actually present on main — the
   GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing
