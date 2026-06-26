@@ -290,6 +290,13 @@ _require_str = functools.partial(
 )
 
 
+def _single_axis(axis: str) -> tuple[tuple[str, str], ...]:
+    """The `axes` tuple for a single-axis group whose label IS the axis name
+    (#819): the legacy single-axis shape and curated classification umbrellas have
+    no separate axis label, so the pair is `(axis, axis)`."""
+    return ((axis, axis),)
+
+
 def _parse_group_axes(
     entry: dict, key: str
 ) -> tuple[tuple[tuple[str, str], ...], set[str]]:
@@ -312,7 +319,7 @@ def _parse_group_axes(
     if not has_axes:
         # Legacy single-axis shape: the axis label is the axis name itself.
         axis = _require_str(entry, "axis", f"group {key!r}")
-        return ((axis, axis),), {axis}
+        return _single_axis(axis), {axis}
     raw_axes = entry["axes"]
     if not isinstance(raw_axes, list) or not raw_axes:
         raise curation_error(
@@ -664,7 +671,7 @@ def resolve_accept(
         register=auto.register,
         key=auto.key,
         label=accept.label or auto.label,
-        axes=((new_axis, new_axis),),
+        axes=_single_axis(new_axis),
         members=tuple(
             CuratedMember(
                 variable=m.variable,
@@ -1453,7 +1460,7 @@ def _apply_curated_classification_groups(
         # member facets stay INLINE on `concept_group_classification` below. Legacy
         # axis-label == axis name (the classification TOML has no separate label).
         if g.axis is not None:
-            _insert_group_axes(conn, group_id, ((g.axis, g.axis),))
+            _insert_group_axes(conn, group_id, _single_axis(g.axis))
         n_members = 0
         for m in g.members:
             row = conn.execute(

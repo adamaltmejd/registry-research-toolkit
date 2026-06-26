@@ -1669,6 +1669,25 @@ def _check_concept_groups(
     else:
         result.ok("each variable belongs to exactly one concept group")
 
+    # (4) classification groups carry AT MOST ONE axis (#819). The writer inserts
+    # 0/1 axis rows for an umbrella today, but `list_classification_groups` reads
+    # axes via a LEFT JOIN with no axis predicate — a second axis row would fan out
+    # every member. This structural invariant closes that unguarded read-path
+    # fanout (variable groups are multi-axis by design; classifications are not).
+    multi_axis_cls = conn.execute(
+        "SELECT COUNT(*) FROM (SELECT g.group_id FROM concept_group g "
+        "JOIN concept_group_axis a ON a.group_id = g.group_id "
+        "WHERE g.kind = 'classification' "
+        "GROUP BY g.group_id HAVING COUNT(*) > 1)"
+    ).fetchone()[0]
+    if multi_axis_cls:
+        result.fail(
+            f"{multi_axis_cls} classification group(s) declare >1 axis — "
+            "classification umbrellas carry at most one axis (#819)"
+        )
+    else:
+        result.ok("classification groups carry at most one axis")
+
     if not corpus:
         return
     by_source = {

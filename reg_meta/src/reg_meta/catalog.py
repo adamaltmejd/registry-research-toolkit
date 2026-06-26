@@ -1009,7 +1009,9 @@ class Catalog:
         # facets by axis ordinal, and carries `delivery_column_name`. LEFT JOIN so a
         # facet-less edge member (zero axes) still yields its member row. Two members
         # can share an `fqid` (one variable, two delivery columns) — they stay
-        # distinct member entries, distinguished by `delivery_column`.
+        # distinct member entries, distinguished by `delivery_column`. `axis_ordinal`
+        # rides each facet row (joined from `concept_group_axis`) so the assembler
+        # reconstructs the group's ordered axes from these rows — no per-group query.
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
             "m.member_id, m.delivery_column_name, "
@@ -1040,14 +1042,18 @@ class Catalog:
     ) -> list[ConceptGroupSummary]:
         """Fold the flat member×facet rows of `list_concept_groups` into
         `ConceptGroupSummary` objects (#819). One member spans N facet rows (one per
-        axis, plus a single NULL-facet row for a facet-less edge member); the axes
-        are read separately and ordered by ordinal."""
-        # group_id → (key, label, source, members-by-id)
-        acc: dict[int, tuple[str, str, str, dict[int, dict]]] = {}
+        axis, plus a single NULL-facet row for a facet-less edge member). A group's
+        ordered axes are folded out of the same rows: each facet row carries its
+        axis's `axis_ordinal`, and the validator guarantees every declared axis is
+        covered by every member's facets (one facet per axis), so the in-row
+        `(ordinal, axis)` pairs reproduce `concept_group_axis ORDER BY ordinal`
+        without a per-group query."""
+        # group_id → (key, label, source, members-by-id, axes-by-ordinal)
+        acc: dict[int, tuple[str, str, str, dict[int, dict], dict[int, str]]] = {}
         for r in rows:
-            _, _, _, members = acc.setdefault(
+            _, _, _, members, group_axes = acc.setdefault(
                 r["group_id"],
-                (r["group_key"], r["group_label"], r["source"], {}),
+                (r["group_key"], r["group_label"], r["source"], {}, {}),
             )
             member = members.setdefault(
                 r["member_id"],
@@ -1068,16 +1074,10 @@ class Catalog:
                         label=r["facet_label"],
                     )
                 )
+                group_axes[r["axis_ordinal"]] = r["facet_axis"]
         out: list[ConceptGroupSummary] = []
-        for group_id, (key, label, source, members) in acc.items():
-            axes = tuple(
-                row["axis"]
-                for row in self._conn.execute(
-                    "SELECT axis FROM concept_group_axis WHERE group_id = ? "
-                    "ORDER BY ordinal",
-                    (group_id,),
-                )
-            )
+        for key, label, source, members, group_axes in acc.values():
+            axes = tuple(group_axes[ordinal] for ordinal in sorted(group_axes))
             # Order members by their first-axis facet value, then slug, then
             # delivery column — preserving the old single-axis ordering (month 01,
             # 02 …) and giving multi-axis members a deterministic order. A facet-less
