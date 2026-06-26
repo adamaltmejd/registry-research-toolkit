@@ -169,31 +169,6 @@ export function memberKey(m: {
   return `${m.fqid}::${m.delivery_column ?? ""}`;
 }
 
-// ── Per-axis hue (#819 N-axis navigator) ─────────────────────────────────────
-// The facet navigator tints each axis a distinct hue so a member's facet pills
-// read as "one value per axis" at a glance. Hues are SELECTED from the fixed
-// categorical palette (tokens.css `--cat-*`, #802) by the axis's position in the
-// group's `axes` order — no new color system, just a reuse of the existing 5-hue
-// ramp. The palette has 5 stops; an unlikely 6th+ axis wraps (modulo), which is
-// fine — axis identity is also carried by the pill's value label, hue is only a
-// secondary cue.
-
-/** The categorical-hue CSS variable for the axis at ordinal `i` in a group's
- * `axes` order (#819) — one of the five `--cat-*` palette stops, wrapping past
- * the fifth. Returned as a `var(--cat-…)` reference so the caller sets it as the
- * pill's `--axis-hue` and the shared pill rule mixes its tint/border/ink off it
- * (mirrors Tag's categorical `--tone-hue` mechanism). */
-export function axisHueVar(i: number): string {
-  const HUES = [
-    "--cat-reg",
-    "--cat-var",
-    "--cat-code",
-    "--cat-class",
-    "--cat-group",
-  ];
-  return `var(${HUES[((i % HUES.length) + HUES.length) % HUES.length]})`;
-}
-
 /** The distinct (value, label) pairs a group's members carry on `axis`,
  * value-sorted — the rows/columns of the facet picker. */
 export function axisValues(
@@ -225,6 +200,17 @@ export function memberAt<M extends FacetedMember>(
       m.facets.some((f) => f.axis === c.axis && f.value === c.value),
     ),
   );
+}
+
+/** A member's facet on `axis` — the (value, label) the N-axis navigator pill
+ * renders (#819), or undefined when the member carries no facet there (a partial
+ * family; the pill is then omitted for that axis). Hoisted here (out of
+ * ConceptGroupView) so the shared ConceptGroupNavigator reuses it. */
+export function memberFacet(
+  member: FacetedMember,
+  axis: string,
+): GroupFacetModel | undefined {
+  return member.facets.find((f) => f.axis === axis);
 }
 
 // ── Member-distinguishing qualifier (#670) ──────────────────────────────────

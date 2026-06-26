@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { ConceptGroup } from "./api";
+import ConceptGroupNavigator from "./ConceptGroupNavigator.svelte";
 import {
   axisValues,
   catalogHref,
@@ -46,6 +47,14 @@ let {
 const asLink = $derived(href !== undefined && onpick === undefined);
 
 const axes = $derived(group.axes);
+// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
+// disposable-income family) renders through the shared ConceptGroupNavigator
+// instead — a matrix would collapse members that share the first two coords and
+// DROP the rest (e.g. the kapitalvinst incl/excl pair on one variable), which
+// also escape `ungridded` (they cover every declared axis). The navigator drops
+// NO member, in BOTH browse (links) and pick (`onpick` buttons) modes. The
+// matrix/chips/list path stays for ≤2 axes (no regression).
+const useNavigator = $derived(axes.length > 2);
 // Matrix orientation: first axis → rows, second axis → columns.
 const matrixRows = $derived(axes.length > 0 ? axisValues(group, axes[0]) : []);
 const matrixCols = $derived(axes.length > 1 ? axisValues(group, axes[1]) : []);
@@ -55,7 +64,7 @@ const matrixCols = $derived(axes.length > 1 ? axisValues(group, axes[1]) : []);
 // it would silently vanish from the grid; render those below as a plain list
 // (keeps the rendered set == the "N {noun}" summary count).
 const ungridded = $derived(
-  axes.length >= 2
+  axes.length >= 2 && !useNavigator
     ? group.members.filter(
         (m) => !axes.every((axis) => m.facets.some((f) => f.axis === axis)),
       )
@@ -117,7 +126,20 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
   <summary>
     {@render summaryLine()}
   </summary>
-  {#if axes.length >= 2}
+  {#if useNavigator}
+    <!-- #819: the >2-axis navigator (per-axis filters + a no-member-dropped list)
+         replaces the 2D matrix, which would collapse + drop members differing only
+         on a 3rd axis. The per-member action is `memberItem` (a browse link or a
+         pick button), so every visible member stays reachable / pickable. Keyed on
+         the group key so the navigator's filter state recreates per group row. -->
+    {#key group.key}
+      <ConceptGroupNavigator members={group.members} {axes}>
+        {#snippet member(m)}
+          {@render memberItem(m)}
+        {/snippet}
+      </ConceptGroupNavigator>
+    {/key}
+  {:else if axes.length >= 2}
     <table class="facet-matrix">
       <thead>
         <tr>

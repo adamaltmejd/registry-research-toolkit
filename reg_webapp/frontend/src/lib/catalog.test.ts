@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
 import {
-  axisHueVar,
   axisNoun,
   bindingChildren,
   breadcrumbs,
@@ -995,21 +994,6 @@ describe("memberKey (#819 composite member key)", () => {
       "scb/lisa/kon::",
     );
     expect(memberKey({ fqid: "scb/lisa/kon" })).toBe("scb/lisa/kon::");
-  });
-});
-
-describe("axisHueVar (#819 per-axis hue)", () => {
-  it("selects a distinct categorical palette hue per axis ordinal", () => {
-    expect(axisHueVar(0)).toBe("var(--cat-reg)");
-    expect(axisHueVar(1)).toBe("var(--cat-var)");
-    expect(axisHueVar(2)).toBe("var(--cat-code)");
-  });
-
-  it("wraps past the five palette stops (modulo)", () => {
-    // 5 hues; a 6th axis wraps to the first — fine, since the value label also
-    // carries axis identity (hue is a secondary cue).
-    expect(axisHueVar(5)).toBe(axisHueVar(0));
-    expect(axisHueVar(6)).toBe(axisHueVar(1));
   });
 });
 

@@ -417,15 +417,23 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
     const rows = document.querySelectorAll("ul.members.navigator > li");
     expect(rows).toHaveLength(3);
     // BOTH representations of the shared-fqid variable are present, told apart by
-    // their distinct kapitalvinst pills (the matrix-collapse trap). The member
-    // pills carry the value labels (the filter fieldsets carry them too, so scope
-    // the assertion to the navigator list's pills).
-    const pillText = [
-      ...document.querySelectorAll("ul.members.navigator .facet-pill"),
-    ].map((p) => p.textContent?.trim());
-    expect(pillText).toContain("Inkl. kapitalvinst");
-    expect(pillText).toContain("Exkl. kapitalvinst");
-    expect(pillText).toContain("Vuxna i hushåll");
+    // their distinct kapitalvinst tags (the matrix-collapse trap). The member
+    // facet tags are neutral `Tag` primitives (`.tag`, NOT the `--cat-*` type
+    // palette) carrying the value label; scope to the navigator list's tags (the
+    // filter fieldsets carry the same labels). The collapsed text includes the
+    // axis micro-label prefix (axis identity is TEXT, not hue), so match the
+    // value label as a SUBSTRING of each tag.
+    const tagText = [
+      ...document.querySelectorAll("ul.members.navigator .facet-tags .tag"),
+    ].map((p) => p.textContent?.replace(/\s+/g, " ").trim() ?? "");
+    expect(tagText.some((t) => t.includes("Inkl. kapitalvinst"))).toBe(true);
+    expect(tagText.some((t) => t.includes("Exkl. kapitalvinst"))).toBe(true);
+    expect(tagText.some((t) => t.includes("Vuxna i hushåll"))).toBe(true);
+    // Axis identity is carried by TEXT, not color-only: each kapitalvinst tag's
+    // text names its axis (the a11y + DESIGN-palette fix).
+    expect(
+      tagText.some((t) => /kapitalvinst/i.test(t) && t.includes("Inkl.")),
+    ).toBe(true);
   });
 
   it("renders one filter fieldset per axis with a pill per value", async () => {
@@ -490,16 +498,62 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
       .element(page.getByText("Showing 1 of 3 members", { exact: true }))
       .toBeVisible();
     const survivors = [
-      ...document.querySelectorAll("ul.members.navigator .facet-pill"),
-    ].map((p) => p.textContent?.trim());
-    expect(survivors).toContain("Exkl. kapitalvinst");
-    expect(survivors).not.toContain("Inkl. kapitalvinst");
+      ...document.querySelectorAll("ul.members.navigator .facet-tags .tag"),
+    ].map((p) => p.textContent?.replace(/\s+/g, " ").trim() ?? "");
+    expect(survivors.some((t) => t.includes("Exkl. kapitalvinst"))).toBe(true);
+    expect(survivors.some((t) => t.includes("Inkl. kapitalvinst"))).toBe(false);
 
     // Clearing the filter restores the full set (filter is a narrow-only lens).
     await page.getByRole("button", { name: "Clear filters" }).click();
     await expect
       .element(page.getByText("Showing 3 of 3 members", { exact: true }))
       .toBeVisible();
+  });
+
+  it("navigator members carry per-member coverage + out-of-window greying", async () => {
+    // The navigator member list (the shared component, fed `memberLink`) must keep
+    // the per-member coverage line + the availability-lens greying the matrix /
+    // ≤2-axis paths carry — so legacy vintage editions sharing coords are legible
+    // by their period, not rendered as identical rows.
+    const withCoverage = threeAxisNode();
+    // Give one rep a 2019–2021 window and another a 2010–2012 window so a
+    // 2019-onward project window greys exactly one.
+    withCoverage.members[0].coverage = {
+      coverage_from: "2019-01-01",
+      coverage_to: "2021-12-31",
+      open_ended: false,
+      state_count: 1,
+    } as ConceptGroupNodeData["members"][number]["coverage"];
+    withCoverage.members[2].coverage = {
+      coverage_from: "2010-01-01",
+      coverage_to: "2012-12-31",
+      open_ended: false,
+      state_count: 1,
+    } as ConceptGroupNodeData["members"][number]["coverage"];
+    vi.mocked(getConceptGroup).mockResolvedValue(withCoverage);
+    windowStore.set({ from: 2019, to: 2021 });
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    await expect
+      .element(page.getByText("Showing 3 of 3 members", { exact: true }))
+      .toBeVisible();
+    // The per-member coverage line renders inside the navigator list (the
+    // year-collapsed span), not only in the matrix path.
+    await expect
+      .element(page.getByText("2019 – 2021", { exact: true }))
+      .toBeVisible();
+    // The 2010–2012 member does NOT span the 2019–2021 window → greyed with the
+    // "not delivered" note (the availability lens, preserved in the navigator).
+    const greyed = document.querySelector(
+      "ul.members.navigator a.not-delivered",
+    );
+    expect(greyed).not.toBeNull();
+    await expect.element(page.getByText(/not delivered/)).toBeVisible();
   });
 
   it("renders the >2-axis navigator without a duplicate-key error on shared fqids", async () => {
