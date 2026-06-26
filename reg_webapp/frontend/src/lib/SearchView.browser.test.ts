@@ -599,6 +599,44 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/class/sun2020");
   });
 
+  it("keeps the 'current edition' link on a null-fqid classification leaf with a terminal_fqid (#808)", async () => {
+    // Regression: the backend allows a malformed/unresolvable vintage (fqid: null)
+    // that still carries a valid terminal_fqid. The terminal "→ current edition"
+    // link is the row's ONLY navigable target, so it must still render; the name
+    // degrades to plain text (no broken self-link).
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "sun1996",
+      groups: [
+        {
+          group: "classifications",
+          total_count: 1,
+          results: [
+            {
+              type: "classification",
+              fqid: null,
+              short_name: "SUN1996",
+              name: "Svensk utbildningsnomenklatur",
+              terminal_fqid: "class/sun2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("sun1996");
+    await render(SearchView);
+
+    // The current-edition affordance still links to the terminal edition…
+    await expect
+      .element(page.getByRole("link", { name: /current edition/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+    // …and the name is plain text, NOT a (broken) link.
+    await expect.element(page.getByText("SUN1996")).toBeInTheDocument();
+    await expect
+      .element(page.getByRole("link", { name: /SUN1996/ }))
+      .not.toBeInTheDocument();
+  });
+
   it("omits the 'current edition' link on a classification leaf with no terminal_fqid (#571)", async () => {
     // A current edition (or a non-edition classification) carries no terminal_fqid,
     // so the forward-link affordance must NOT render.

@@ -488,15 +488,22 @@ function usageSummary(result: CodeSearchResult): string {
      short_name ?? name as the primary cell + the "→ current edition" terminal link
      when set; the full name fills the second column when it differs. The terminal
      link is a SECOND interactive target, so a leaf carrying one can't be a single
-     whole-row link — render that case as a non-link row whose name is its own
-     <a> (one link per nav target, no nesting). -->
+     whole-row link — that case renders as a non-link row whose name is its own
+     <a> when its own fqid resolves, else plain text (one link per nav target, no
+     nesting). The terminal link renders INDEPENDENTLY of own-fqid resolvability: a
+     malformed vintage (fqid: null) that still carries a terminal_fqid must keep its
+     "→ current edition" target — that's the only navigable hit for the row. -->
 {#snippet classificationLeafRow(c: ClassificationSearchResult)}
   {@const short = c.short_name ?? c.name}
   {@const showName = c.name && c.name !== short}
-  {#if c.fqid && c.terminal_fqid}
-    <div class="leaf-row">
+  {#if c.terminal_fqid}
+    <div class="leaf-row{c.fqid ? '' : ' plain'}">
       <span class="name-cell">
-        <a class="row-link" href={catalogHref(c.fqid)}>{short ?? leafSlug(c.fqid)}</a>
+        {#if c.fqid}
+          <a class="row-link" href={catalogHref(c.fqid)}>{short ?? leafSlug(c.fqid)}</a>
+        {:else}
+          <span class="row-link plain">{short ?? "—"}</span>
+        {/if}
         <a class="terminal-link" href={catalogHref(c.terminal_fqid)}>
           → current edition
         </a>
