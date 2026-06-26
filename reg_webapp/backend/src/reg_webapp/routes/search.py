@@ -34,7 +34,7 @@ from reg_webapp.models import (
 from reg_webapp.query_input import validate_text_query
 
 if TYPE_CHECKING:
-    from reg_meta.search import CodeSearchResult, RegisterSearchResult
+    from reg_meta.search import CodeSearchResult, RegisterSearchResult, SearchResult
 
     from reg_webapp.models import ClassificationSearchItem, VariableSearchItem
 
@@ -104,6 +104,22 @@ def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
     )
 
 
+def _scope_to_fqids(
+    results: list[SearchResult], fqids: frozenset[str] | None
+) -> list[SearchResult]:
+    """Drop register/variable results whose navigable `fqid` is not in the
+    steward's held set (#859). A no-op when `fqids` is None (the `global`
+    deployment — byte-identical to pre-#859). The reg_meta hits are already
+    `fqids`-scoped query-time; this re-applies the same gate to the golden boost,
+    which prepends pins from a separate source. Compares the SERIALIZED fqid string
+    (the model's `fqid` is an `Fqid | None`; the held set holds canonical strings),
+    mirroring `golden.apply_golden_boost`'s dedup; a result with `fqid is None` is
+    unaddressable, so it can be in no steward catalog and drops."""
+    if fqids is None:
+        return results
+    return [r for r in results if (f := getattr(r, "fqid", None)) and str(f) in fqids]
+
+
 @router.get("/search", response_model=SearchResponse)
 def get_search(
     request: Request,
@@ -120,13 +136,31 @@ def get_search(
 
     ``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the
     four-group register→variable→classification→code behavior; any single type runs
-    AND emits only that one group. Group ORDER is fixed for the ``all`` case."""
+    AND emits only that one group. Group ORDER is fixed for the ``all`` case.
+
+    A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
+    REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
+    query (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)
+    and the golden boost (a boosted pin the steward does not hold is dropped). The
+    CLASSIFICATION and VALUE/code surfaces are catalog-global and pass through
+    unscoped. The ``global`` deployment (no index) is byte-for-byte unchanged."""
     # Per-type gates: each arm runs (and its group is emitted) only when the
     # requested type selects it. `all` selects every arm.
     want_register = req_type in ("all", "register")
     want_variable = req_type in ("all", "variable")
     want_classification = req_type in ("all", "classification")
     want_value = req_type in ("all", "value")
+
+    # #859: a filtered steward's held-FQID allow-list scopes the register/variable
+    # surfaces (None for the `global` deployment → no restriction). The set is the
+    # held registers UNIONED with the held binding FQIDs — a register hit matches on
+    # its 2-seg FQID, a variable hit on its 3-seg binding FQID.
+    index = request.app.state.catalog_index
+    fqids = (
+        index.held_register_fqids() | index.admitted_variable_fqids()
+        if index is not None
+        else None
+    )
 
     # Groups are appended in the fixed register→variable→classification→code order
     # so the `all` case keeps today's exact 4-group shape; a single-type scope emits
@@ -163,16 +197,24 @@ def get_search(
                 q,
                 field="description",
                 type="register",
+                fqids=fqids,
                 limit=limit,
                 fold_groups=False,
             )
             reg_results = golden.apply_golden_boost(conn, q, "register", reg.results)
+            # #859: drop boosted pins the steward does not hold (the reg_meta hits
+            # are already `fqids`-scoped; the boost prepends pins from a separate
+            # source, so re-apply the same filter to them). No-op when `fqids` is
+            # None (the `global` deployment).
+            reg_results = _scope_to_fqids(reg_results, fqids)
             # `search(type="register")` yields only register rows, but the static
             # element type is the broad `SearchResult` union — narrow to what the
             # group declares (the `type=` param is the runtime guarantee).
             # total_count counts the full boosted set (incl. a net-new pin), but the
             # displayed page is capped at `limit` — a pin prepended onto an already-full
             # FTS page must not push the group past the requested cap (#393 item 2).
+            # `reg.total_count` is now query-time-exact (already `fqids`-scoped), so
+            # the delta counts only net-new HELD pins.
             groups.append(
                 RegisterSearchGroup(
                     total_count=reg.total_count + (len(reg_results) - len(reg.results)),
@@ -187,9 +229,12 @@ def get_search(
                 q,
                 field="description",
                 type="variable",
+                fqids=fqids,
                 limit=limit,
             )
             var_results = golden.apply_golden_boost(conn, q, "variable", var.results)
+            # #859: same boost re-filter as the register arm.
+            var_results = _scope_to_fqids(var_results, fqids)
             groups.append(
                 VariableSearchGroup(
                     total_count=var.total_count + (len(var_results) - len(var.results)),

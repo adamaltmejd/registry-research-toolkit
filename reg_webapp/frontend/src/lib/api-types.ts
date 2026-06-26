@@ -14,6 +14,10 @@ export interface paths {
         /**
          * Get Catalog Root
          * @description The catalog root: every provider plus the classification-root sentinel.
+         *
+         *     #859: a filtered steward keeps only providers it holds (`held_provider_slugs`);
+         *     the classification-root sentinel is ALWAYS appended (classifications pass through
+         *     — decision 2). The `global` deployment lists every provider (index None).
          */
         get: operations["get_catalog_root_api_catalog_get"];
         put?: never;
@@ -556,6 +560,13 @@ export interface paths {
          *     ``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the
          *     four-group register→variable→classification→code behavior; any single type runs
          *     AND emits only that one group. Group ORDER is fixed for the ``all`` case.
+         *
+         *     A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
+         *     REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
+         *     query (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)
+         *     and the golden boost (a boosted pin the steward does not hold is dropped). The
+         *     CLASSIFICATION and VALUE/code surfaces are catalog-global and pass through
+         *     unscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.
          */
         get: operations["get_search_api_search_get"];
         put?: never;

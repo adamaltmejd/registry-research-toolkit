@@ -109,6 +109,8 @@ from reg_webapp.period_param import (
 if TYPE_CHECKING:
     import sqlite3
 
+    from reg_webapp.catalog_index import CatalogIndex
+
 router = APIRouter(prefix="/api")
 
 # `_catalog_conn` (the per-request read-only connection seam) now lives in
@@ -209,6 +211,91 @@ def _http_404_if_not_found(exc: RegMetaError) -> None:
     raise exc
 
 
+# ── Steward catalog-index filtering (#859) ──────────────────────────────────
+# Every handler gates on `request.app.state.catalog_index`: None for the `global`
+# deployment (full universe, byte-for-byte unchanged), a `CatalogIndex` for a
+# filtered steward (scope to its held holdings). The helpers below keep the
+# filtering DRY at the handler boundary — the pure mapper functions
+# (`_register_response`, `_concept_group_node`, …) are NOT threaded with the
+# index; a thin wrapper narrows their output instead.
+
+_NOT_IN_CATALOG_DETAIL = "not in this steward's catalog"
+
+
+def _index(request: Request) -> CatalogIndex | None:
+    """The boot-time steward `CatalogIndex`, or None for the `global` deployment."""
+    return request.app.state.catalog_index
+
+
+def _filter_states_to_held(
+    states: list[VariableState], index: CatalogIndex, fqid: str
+) -> list[VariableState]:
+    """Narrow a binding's states to the delivery columns the steward holds for
+    `fqid` (#859, browse = column-grain faithful). A kept binding has a non-empty
+    held-column set; the filter compares each state's RESOLVED `delivery_column_name`
+    against it, mirroring the index's `(fqid, resolved column)` admission (#206). The
+    `held_columns` set is reused, never re-derived."""
+    held = index.held_columns(fqid)
+    return [s for s in states if s.delivery_column_name in held]
+
+
+def _narrow_group_members(group, index: CatalogIndex):  # noqa: ANN001 — reg_meta ConceptGroupSummary
+    """Return `group` with its `members` narrowed to the steward's holdings (#859),
+    or None if no member survives. A representation member (`delivery_column` set) is
+    kept iff `index.admits(str(member.fqid), member.delivery_column)`; a whole-variable
+    member (`delivery_column` None) iff its bare FQID is in `admitted_variable_fqids()`.
+    Reuses the existing `admits` / `admitted_variable_fqids` probes (no re-derivation).
+    A frozen Pydantic model, so the narrowed copy is via `model_copy`."""
+    admitted = index.admitted_variable_fqids()
+    kept = [
+        m
+        for m in group.members
+        if (
+            index.admits(str(m.fqid), m.delivery_column)
+            if m.delivery_column is not None
+            else str(m.fqid) in admitted
+        )
+    ]
+    if not kept:
+        return None
+    return group.model_copy(update={"members": tuple(kept)})
+
+
+def _require_admitted_binding(
+    catalog: Catalog, parsed: Fqid, index: CatalogIndex, request: Request, suffix: str
+) -> RedirectResponse | None:
+    """Admission gate for a binding subject (#859). Returns a 301 RedirectResponse
+    when `parsed` is a renamed/dead binding whose TERMINAL successor IS held (the
+    citation stays alive, query + `suffix` preserved — uniform with `_redirect_or_4xx`);
+    returns None when `parsed` itself is admitted (the caller proceeds). Raises 404
+    otherwise — an unheld live binding, or a dead binding whose successor the steward
+    also does not hold.
+
+    The renamed/dead-slug 301 is preserved FIRST (a held successor must stay
+    reachable), then admission is enforced; a non-binding/non-existent FQID is handled
+    by the caller's normal reg_meta error path, not here."""
+    admitted = index.admitted_variable_fqids()
+    if str(parsed) in admitted:
+        return None
+    # Not admitted as-is: a renamed/dead binding may resolve to a held successor.
+    terminal = catalog.resolve_terminal_successor(parsed)
+    if terminal is not None and str(terminal) in admitted:
+        target = f"{_catalog_url(terminal)}{suffix}"
+        if request.url.query:
+            target = f"{target}?{request.url.query}"
+        return RedirectResponse(target, status_code=301)
+    raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
+
+
+def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN001 — VariableRef/RelatedRef list
+    """Narrow a list of variable-grain edge refs (predecessors/successors/related)
+    to those whose `fqid` is a held binding (#859). A ref with `fqid is None`
+    (unaddressable) can be in no steward catalog, so it drops. Reuses
+    `admitted_variable_fqids`."""
+    admitted = index.admitted_variable_fqids()
+    return [r for r in refs if r.fqid is not None and str(r.fqid) in admitted]
+
+
 # ── reg_meta model → catalog node mappers (see DESIGN.md → Pydantic boundary) ──
 # The per-leaf 1:1 wrappers are gone (#681): reg_meta now returns frozen Pydantic
 # models whose `Fqid` fields serialize to the canonical string and whose
@@ -218,7 +305,9 @@ def _http_404_if_not_found(exc: RegMetaError) -> None:
 # server-side resolution, the coverage zip, the `via_same_as` stringify).
 
 
-def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
+def _binding_node(
+    catalog: Catalog, resolved: ResolvedVariable, index: CatalogIndex | None
+) -> BindingNode:
     """Map a `ResolvedVariable` to the embedded-record leaf. Embeds the
     full wire-relevant record; the internal `provider_key` (SCB build-time join
     key, redundant with the FQID) is intentionally not exposed, and
@@ -231,7 +320,15 @@ def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
     (`Catalog.variable_chain`, same_as-canonicalized + walked
     terminal→predecessors) so the SPA renders the whole timeline synchronously,
     superseding the immediate-neighbor `replaced_by` embed. The `/predecessors` /
-    `/successors` sub-resources are unaffected — they back the #411 redirect rails."""
+    `/successors` sub-resources are unaffected — they back the #411 redirect rails.
+
+    #859: for a filtered steward the embedded `states` are narrowed to the delivery
+    columns the steward holds for this binding (column-grain faithful). Admission of
+    the binding itself is gated by the caller (`_require_admitted_binding`) before
+    this is reached, so a kept binding always has ≥1 held column."""
+    states = list(resolved.states)
+    if index is not None:
+        states = _filter_states_to_held(states, index, str(resolved.fqid))
     return BindingNode(
         fqid=str(resolved.fqid),
         variable_id=resolved.variable_id,
@@ -246,7 +343,7 @@ def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
         source_register_text=resolved.source_register_text,
         # `ResolvedVariable`'s edge collections are tuples (frozen model); the
         # response model fields are `list`, so coerce — wire-identical (#681).
-        states=list(resolved.states),
+        states=states,
         same_as=list(resolved.same_as),
         succession_chain=catalog.variable_chain(resolved.fqid),
         related_to=list(resolved.related_to),
@@ -381,11 +478,15 @@ def _classification_group_node(group) -> ClassificationGroupNode:
 
 
 def _provider_response(
-    catalog: Catalog, resolved: ResolvedProvider
+    catalog: Catalog, resolved: ResolvedProvider, index: CatalogIndex | None
 ) -> ProviderResponse:
     provider_slug = resolved.fqid.provider
     assert provider_slug is not None
     registers = catalog.list_registers(provider_slug)
+    # #859: a filtered steward keeps only the registers it holds (`admits_register`
+    # on the 2-seg register FQID). The `global` deployment (index None) keeps all.
+    if index is not None:
+        registers = [r for r in registers if index.admits_register(str(r.fqid))]
     # #351 per-register coverage, keyed by register slug — one GROUP BY (~40 ms
     # for scb's 238 registers), query-time behind the ETag/edge cache.
     coverage = catalog.provider_register_coverage(provider_slug)
@@ -408,12 +509,25 @@ def _provider_response(
 
 
 def _register_response(
-    catalog: Catalog, resolved: ResolvedRegister
+    catalog: Catalog, resolved: ResolvedRegister, index: CatalogIndex | None
 ) -> RegisterResponse:
     provider_slug = resolved.fqid.provider
     register_slug = resolved.fqid.register
     assert provider_slug is not None and register_slug is not None
     bindings = catalog.list_bindings(provider_slug, register_slug)
+    groups = catalog.list_concept_groups(provider_slug, register_slug)
+    # #859: a filtered steward keeps only the bindings it admits (by bare binding
+    # FQID) and narrows each concept group's members to held; a group with no held
+    # member is dropped. `children` and `groups` stay consistent — the SPA folds the
+    # surviving group members under the surviving flat children.
+    if index is not None:
+        admitted = index.admitted_variable_fqids()
+        bindings = [b for b in bindings if str(b.fqid) in admitted]
+        groups = [
+            narrowed
+            for g in groups
+            if (narrowed := _narrow_group_members(g, index)) is not None
+        ]
     # #351 per-variable coverage, keyed by variable slug — one GROUP BY (~9 ms on
     # the worst real register, scb/ulf 7.3k vars), query-time behind ETag.
     coverage = catalog.register_variable_coverage(provider_slug, register_slug)
@@ -439,7 +553,7 @@ def _register_response(
         # #303 concept groups: grouped bindings ALSO stay in `children` (the flat
         # list is complete); the SPA folds members under the group rows. reg_meta's
         # `ConceptGroupSummary` passes straight through (#681).
-        groups=catalog.list_concept_groups(provider_slug, register_slug),
+        groups=groups,
     )
 
 
@@ -502,20 +616,28 @@ def _catalog_url(fqid: Fqid) -> str:
     return f"/api/catalog/{path}"
 
 
-def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
+def _resolve_to_node(
+    catalog: Catalog, fqid: Fqid, index: CatalogIndex | None
+) -> CatalogNode:
     """Dispatch a parsed FQID to its Catalog resolver and map to a Pydantic node.
-    Raises 404 (via `_http_404_if_not_found`) when the FQID resolves to nothing."""
+    Raises 404 (via `_http_404_if_not_found`) when the FQID resolves to nothing.
+
+    #859: `index` (a filtered steward's `CatalogIndex`, else None) scopes each arm —
+    provider/register listings narrow their children, the binding leaf narrows its
+    states. The binding-leaf ADMISSION gate (404 / held-successor 301) is enforced by
+    the caller (`get_catalog_node`) BEFORE this is reached, since it owns the
+    renamed-slug redirect; classifications pass through (decision 2)."""
     try:
         resolved = catalog.resolve(fqid)
     except RegMetaError as exc:
         _http_404_if_not_found(exc)
         raise  # unreachable; _http_404_if_not_found re-raises non-404s
     if isinstance(resolved, ResolvedProvider):
-        return _provider_response(catalog, resolved)
+        return _provider_response(catalog, resolved, index)
     if isinstance(resolved, ResolvedRegister):
-        return _register_response(catalog, resolved)
+        return _register_response(catalog, resolved, index)
     if isinstance(resolved, ResolvedVariable):
-        return _binding_node(catalog, resolved)
+        return _binding_node(catalog, resolved, index)
     if isinstance(resolved, ResolvedClassification):
         return _classification_node(catalog, resolved)
     # Unreachable: resolve() returns only the four ResolvedEntity arms.
@@ -597,12 +719,20 @@ def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
 
 @router.get("/catalog", response_model=RootResponse)
 def get_catalog_root(request: Request) -> RootResponse:
-    """The catalog root: every provider plus the classification-root sentinel."""
+    """The catalog root: every provider plus the classification-root sentinel.
+
+    #859: a filtered steward keeps only providers it holds (`held_provider_slugs`);
+    the classification-root sentinel is ALWAYS appended (classifications pass through
+    — decision 2). The `global` deployment lists every provider (index None)."""
+    index = _index(request)
     with _catalog_conn(request) as conn:
-        children: list[ProviderNode | ClassificationRootNode] = [
-            ProviderNode(fqid=str(p.fqid), name=p.name)
-            for p in Catalog(conn).list_providers()
-        ]
+        providers = Catalog(conn).list_providers()
+    if index is not None:
+        held = index.held_provider_slugs()
+        providers = [p for p in providers if p.fqid.provider in held]
+    children: list[ProviderNode | ClassificationRootNode] = [
+        ProviderNode(fqid=str(p.fqid), name=p.name) for p in providers
+    ]
     children.append(ClassificationRootNode())
     return RootResponse(children=children)
 
@@ -631,6 +761,11 @@ def get_register_variants(
         fqid = Fqid.register_fqid(provider, register)
     except FqidError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    index = _index(request)
+    # #859: a filtered steward 404s a register it doesn't hold (before any resolve)
+    # — uniform with the binding leaf's "not in this steward's catalog".
+    if index is not None and not index.admits_register(register_fqid):
+        raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
         # Resolve the register first so a bad (provider, register) is a 404, not a
@@ -640,6 +775,15 @@ def get_register_variants(
         except RegMetaError as exc:
             _http_404_if_not_found(exc)
         variants = catalog.list_variants(provider, register)
+        # #859: filter to the variant coords the steward actually holds data under
+        # (a drift-emptied variant slot admits nothing → excluded). Match on the
+        # variant slug (the coord's 3rd segment).
+        if index is not None:
+            held_slugs = {
+                coord.split("/")[2]
+                for coord in index.held_variant_coords_for_register(register_fqid)
+            }
+            variants = [v for v in variants if v.slug in held_slugs]
     # Construct via the alias `register=` (the canonical init param; the Python
     # attr is `register_name` to avoid the BaseModel.register method shadow).
     # reg_meta's `VariantSummary` list passes straight through (#681 — the
@@ -775,6 +919,7 @@ def get_concept_group(
         Fqid.register_fqid(provider, register)
     except FqidError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
         group = catalog.concept_group(provider, register, key)
@@ -783,6 +928,13 @@ def get_concept_group(
                 status_code=404,
                 detail=f"no concept group {key!r} in {provider}/{register}",
             )
+        # #859: a filtered steward narrows the group's members to held; a group with
+        # no held member is a 404 (not in this steward's catalog). The `?member`
+        # hint is then matched against the NARROWED member set.
+        if index is not None:
+            group = _narrow_group_members(group, index)
+            if group is None:
+                raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
         # The `?member` hint is admitted onto the node only when it names a real
         # member (matched on the member FQID's leaf slug); else ignored (None).
         member_hint = (
@@ -813,12 +965,22 @@ def get_binding_states(
     state-list type). A dead/renamed binding 301s to `/states` on its terminal
     successor (#411)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        # #859: gate admission (held-successor 301 / 404) before resolving.
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/states"
+            )
+            if redirect is not None:
+                return redirect
         try:
             states = catalog.states(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/states")
+        if index is not None:
+            states = _filter_states_to_held(states, index, str(parsed))
     return StatesResponse(binding=str(parsed), states=states)
 
 
@@ -830,14 +992,24 @@ def get_binding_predecessors(
     """Variables this binding's variable replaced (inbound succession). A
     dead/renamed binding 301s to `/predecessors` on its terminal successor (#411)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/predecessors"
+            )
+            if redirect is not None:
+                return redirect
         try:
             refs = catalog.predecessors(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(
                 catalog, parsed, exc, request, suffix="/predecessors"
             )
+        # #859: narrow the returned refs to held variable FQIDs.
+        if index is not None:
+            refs = _narrow_refs_to_held(refs, index)
     return PredecessorsResponse(binding=str(parsed), predecessors=refs)
 
 
@@ -849,12 +1021,22 @@ def get_binding_successors(
     """Variables that replaced this binding's variable (outbound succession). A
     dead/renamed binding 301s to `/successors` on its terminal successor (#411)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/successors"
+            )
+            if redirect is not None:
+                return redirect
         try:
             refs = catalog.successors(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/successors")
+        # #859: narrow the returned refs to held variable FQIDs.
+        if index is not None:
+            refs = _narrow_refs_to_held(refs, index)
     return SuccessorsResponse(binding=str(parsed), successors=refs)
 
 
@@ -870,12 +1052,28 @@ def get_binding_dimensions(
     the requested register's. Binding-only (a non-binding kind 422s); a
     dead/renamed binding 301s to `/dimensions` on its terminal successor (#411)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/dimensions"
+            )
+            if redirect is not None:
+                return redirect
         try:
             groups = catalog.dimensions(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/dimensions")
+        # #859: `dimensions` returns concept GROUPS — narrow each group's members to
+        # held (same rule as `_register_response`), dropping a group with no held
+        # member, so a steward sees only its own holdings in the facet groups.
+        if index is not None:
+            groups = [
+                narrowed
+                for g in groups
+                if (narrowed := _narrow_group_members(g, index)) is not None
+            ]
     return DimensionsResponse(binding=str(parsed), dimensions=groups)
 
 
@@ -891,8 +1089,21 @@ def get_binding_graph(
     301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`
     cache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        # #859: gate the SUBJECT binding (held-successor 301 / 404). DEFERRAL: the
+        # graph's NODE set (the variable's same_as/related/group union) is NOT
+        # narrowed to held — that traversal-narrowing is non-trivial and would
+        # balloon this diff, so a held steward subject renders its full reg_meta
+        # neighborhood. Tracked as a follow-up (see report); the subject gate alone
+        # already keeps an unheld binding's graph out of the steward.
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/graph"
+            )
+            if redirect is not None:
+                return redirect
         try:
             return catalog.graph_for_fqid(parsed)
         except RegMetaError as exc:
@@ -908,12 +1119,22 @@ def get_binding_related(
     Build-time triage (SCB)). A dead/renamed binding 301s to `/related` on its
     terminal successor (#411)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/related"
+            )
+            if redirect is not None:
+                return redirect
         try:
             refs = catalog.related(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/related")
+        # #859: narrow the returned refs to held variable FQIDs.
+        if index is not None:
+            refs = _narrow_refs_to_held(refs, index)
     return RelatedResponse(binding=str(parsed), related=refs)
 
 
@@ -928,8 +1149,15 @@ def get_binding_lineage(
     possible reg_meta enhancement (not blocked on here — see DESIGN.md). A
     dead/renamed binding 301s to `/lineage` on its terminal successor (#411)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/lineage"
+            )
+            if redirect is not None:
+                return redirect
         try:
             edges = catalog.lineage(parsed)
         except RegMetaError as exc:
@@ -949,8 +1177,15 @@ def get_binding_lineage_warnings(
     dead/renamed binding 301s to `/lineage_warnings` on its terminal successor
     (#411)."""
     parsed = _parsed_binding(validated)
+    index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        if index is not None:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix="/lineage_warnings"
+            )
+            if redirect is not None:
+                return redirect
         try:
             warnings = catalog.lineage_warnings(parsed)
         except RegMetaError as exc:
@@ -1013,6 +1248,11 @@ def get_catalog_node(
     # `@version` pin — retired). Used directly as the resolve_at version filter.
     vsv = value_set_version
 
+    # #859: the filtered-steward index (None for `global`). Threaded into the node
+    # mappers (provider/register children + binding states narrowing) and gating the
+    # binding-leaf admission (404 / held-successor 301) below.
+    index = _index(request)
+
     # A `?period` query on a binding leaf returns the resolve_at state subset
     # (uniform with `/states`), narrowed by `?variant` / `vsv`. On any other kind
     # `?period` is IGNORED.
@@ -1037,6 +1277,15 @@ def get_catalog_node(
             resolved_vsv = "" if vsv == VALUE_SET_VERSION_NONE else vsv
             with _catalog_conn(request) as conn:
                 catalog = Catalog(conn)
+                # #859: gate admission FIRST (preserving the renamed/dead-slug 301 to
+                # a HELD successor); a held binding then narrows its resolved states
+                # to held columns. None index = `global`, no gate, no narrowing.
+                if index is not None:
+                    redirect = _require_admitted_binding(
+                        catalog, parsed, index, request, suffix=""
+                    )
+                    if redirect is not None:
+                        return redirect
                 # Resolve PER SEGMENT (#340) — `resolve_at` never sees the #307
                 # list form (mirrors `semantic._check_binding_period`). The union
                 # dedupes by the COMPOUND (state_id, delivery_column_name,
@@ -1063,15 +1312,31 @@ def get_catalog_node(
                     # terminal successor, query string preserved (so `?period=2019` /
                     # `?variant` ride along), uniform with the no-period node path.
                     return _redirect_or_4xx(catalog, parsed, exc, request)
-            return StatesResponse(
-                binding=str(parsed),
-                states=list(states_by_id.values()),
-            )
+            states = list(states_by_id.values())
+            # #859: narrow the resolve_at subset to held columns (the binding is
+            # already admitted by the gate above).
+            if index is not None:
+                states = _filter_states_to_held(states, index, str(parsed))
+            return StatesResponse(binding=str(parsed), states=states)
 
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
+        # #859: a filtered steward gates binding-leaf admission HERE (before the
+        # resolve), preserving the renamed/dead-slug 301 to a HELD successor and
+        # 404ing an unheld binding ("not in this steward's catalog"). This preempts
+        # the generic renamed-slug redirect below for the binding grain (a steward
+        # must not 301 to an UNHELD successor). Non-binding kinds (provider/register/
+        # classification) fall through to the unchanged path — they narrow their
+        # children (provider/register) or pass through (classification), and the
+        # generic redirect below still serves their renamed-slug citations.
+        if index is not None and parsed.kind is FqidKind.VARIABLE_BINDING:
+            redirect = _require_admitted_binding(
+                catalog, parsed, index, request, suffix=""
+            )
+            if redirect is not None:
+                return redirect
         try:
-            return _resolve_to_node(catalog, parsed)
+            return _resolve_to_node(catalog, parsed, index)
         except HTTPException as exc:
             # #355 PART 2 / #412: a renamed/dead slug 404s (its `variable` or
             # `register` row is gone). Before surfacing that 404, walk to the

@@ -32,7 +32,7 @@ from .search import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
 
     from .catalog import ConceptGroupSummary
 
@@ -353,6 +353,7 @@ def search(
     type: str = "all",
     register: str | None = None,
     years: str | None = None,
+    fqids: Collection[str] | None = None,
     limit: int = 50,
     offset: int = 0,
     fold_groups: bool = True,
@@ -388,6 +389,16 @@ def search(
     label/key emits the group row even when no leaf row matches. Result-shaping
     only; folding happens before pagination, so a group row counts as one result.
 
+    fqids (#859): restrict the **register** and **variable** result surfaces to
+    entities whose navigable `fqid` is in this set — including concept-group
+    folding (a group surfaces only if ≥1 member is held, and its member list is
+    narrowed to held members). Classification and value/code surfaces are
+    catalog-global and unaffected. `None` = no restriction. The restriction is
+    applied to leaf rows BEFORE folding and BEFORE the `total_count`/slice, so the
+    count is exact and paging is correct. reg_meta stays steward-agnostic: the
+    caller (the webapp's filtered-steward `/api/search`) passes the allow-list; the
+    set's provenance is opaque here.
+
     Returns a `SearchResults` (`total_count` + the sliced, folded `results` tuple
     of typed result models, discriminated on `type`). Doc results are NOT included
     here — the CLI layer merges them separately.
@@ -420,6 +431,11 @@ def search(
     _VARIABLE_TYPES = {"variable", "varname", "datacolumn"}
     _CLASSIFICATION_TYPES = {"classification"}
     _VALUE_TYPES = {"code"}
+    # #859: the leaf row types carrying a navigable `fqid` an `fqids` allow-list can
+    # restrict against. `datacolumn`/`varname` (LIKE arms) carry NO `fqid` key — they
+    # never run on the webapp's `field="description"` steward path — so excluding them
+    # avoids dropping an fqid-less row that has no membership to test.
+    _RESTRICTABLE_LEAF_TYPES = {"register", "variable"}
 
     all_results: list[dict[str, Any]] = []
     like_pattern = f"%{_escape_like(query)}%"
@@ -491,6 +507,20 @@ def search(
     if years:
         all_results = _filter_search_by_years(conn, all_results, years)
 
+    # #859: a filtered-steward allow-list restricts the REGISTER and VARIABLE leaf
+    # surfaces to held navigable FQIDs, BEFORE folding and BEFORE the total/slice
+    # (so the count is exact). Classification / value / group-label rows pass
+    # through — they are catalog-global (the group-LABEL path is narrowed at the
+    # fold, where its members are known). An unslugged leaf (`fqid` None) can be in
+    # no steward catalog, so it drops under any restriction.
+    if fqids is not None:
+        allow = frozenset(fqids)
+        all_results = [
+            r
+            for r in all_results
+            if r["type"] not in _RESTRICTABLE_LEAF_TYPES or r.get("fqid") in allow
+        ]
+
     if fold_groups:
         # Label hits ride the NAME surface (a group label is a concept name).
         # `varname`/`all` search names directly; `description` (#350, the
@@ -522,7 +552,12 @@ def search(
         # their terminal, the curated SUN-style umbrella group (#516) then folds
         # the terminals into `group:sun` cleanly below.
         all_results = _fold_classification_succession(conn, all_results)
-        all_results = _fold_concept_groups(conn, all_results, label_hits)
+        all_results = _fold_concept_groups(
+            conn,
+            all_results,
+            label_hits,
+            allow=frozenset(fqids) if fqids is not None else None,
+        )
 
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
@@ -1728,6 +1763,8 @@ def _fold_concept_groups(
     conn: sqlite3.Connection,
     results: list[dict[str, Any]],
     label_hits: list[sqlite3.Row],
+    *,
+    allow: frozenset[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Collapse sibling search hits under their concept group (#322).
 
@@ -1744,7 +1781,14 @@ def _fold_concept_groups(
     classification arm handles curated umbrella groups (#516); derived vintage
     edition families are no longer in `concept_group_classification` (#571 moved
     them to `classification_replaced_by` succession edges), so it produces no
-    hits until curated umbrella content ships."""
+    hits until curated umbrella content ships.
+
+    `allow` (#859): a filtered-steward FQID allow-list. When set, a VARIABLE-kind
+    group's `members` list is narrowed to members whose `fqid` is held, and a group
+    that ends up with NO held member is dropped (the label-only path can surface a
+    group none of whose members the steward holds). CLASSIFICATION-kind groups are
+    catalog-global (decision 2) and pass through unnarrowed. `None` = no
+    restriction (the `global` path is byte-identical to pre-#859)."""
     membership = _member_group_index(conn, results)
 
     buckets: dict[int, list[dict[str, Any]]] = {}
@@ -1781,18 +1825,23 @@ def _fold_concept_groups(
             out.append(r)
         elif gid not in emitted:
             emitted.add(gid)
-            out.append(
-                _group_result_row(
-                    group_meta[gid],
-                    buckets[gid],
-                    summaries,
-                    label_matched=gid in label_ids,
-                )
+            group_row = _group_result_row(
+                group_meta[gid],
+                buckets[gid],
+                summaries,
+                label_matched=gid in label_ids,
+                allow=allow,
             )
+            if group_row is not None:
+                out.append(group_row)
     for row in label_hits:
         if row["group_id"] not in emitted:
             emitted.add(row["group_id"])
-            out.append(_group_result_row(row, [], summaries, label_matched=True))
+            group_row = _group_result_row(
+                row, [], summaries, label_matched=True, allow=allow
+            )
+            if group_row is not None:
+                out.append(group_row)
     return out
 
 
@@ -1893,16 +1942,28 @@ def _group_result_row(
     summaries: _GroupSummaryLookup,
     *,
     label_matched: bool,
-) -> dict[str, Any]:
+    allow: frozenset[str] | None = None,
+) -> dict[str, Any] | None:
     """One `type: "group"` search result row: group identity + the full
     member list + the leaf hits it folded (`matched`). `fts_rank` is the best
-    (lowest) member rank so the group sorts where its members would have."""
+    (lowest) member rank so the group sorts where its members would have.
+
+    `allow` (#859): a filtered-steward FQID allow-list. When set, a VARIABLE-kind
+    group's `members`/`member_count` are narrowed to held members; a group left
+    with NO held member returns `None` (drop the group). CLASSIFICATION-kind groups
+    are catalog-global (decision 2) and pass through unnarrowed. `None` (unfiltered
+    `global` path) returns the full row unchanged — byte-identical to pre-#859."""
     summary = summaries.get(meta)
     payload = (
         _group_summary_to_dict(summary)
         if summary is not None
         else {"axes": [], "member_count": 0, "members": []}
     )
+    members = payload["members"]
+    if allow is not None and meta["kind"] != "classification":
+        members = [m for m in members if m.get("fqid") in allow]
+        if not members:
+            return None
     return {
         "type": "group",
         "kind": meta["kind"],
@@ -1912,8 +1973,8 @@ def _group_result_row(
         "register_id": meta["register_id"],
         "register_name": meta["register_name"],
         "axes": payload["axes"],
-        "member_count": payload["member_count"],
-        "members": payload["members"],
+        "member_count": len(members),
+        "members": members,
         "matched": matched,
         "label_matched": label_matched,
         "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),

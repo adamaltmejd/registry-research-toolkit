@@ -310,6 +310,64 @@ class TestSearchFolding:
         assert kept[0].label_matched is True
 
 
+class TestSearchFqidsFilter:
+    """#859: the `fqids` allow-list restricts the register/variable result
+    surfaces (and narrows concept-group folding) to held FQIDs, query-time, BEFORE
+    the total/slice. Classification surfaces are catalog-global and unaffected.
+    The webapp's filtered-steward `/api/search` passes this set; reg_meta stays
+    steward-agnostic."""
+
+    def test_none_is_no_restriction(self) -> None:
+        # The default (no `fqids`) folds all three members into the group.
+        conn = _seeded_conn()
+        (group,) = search(conn, "Lönesumma", field="description").results
+        assert group.member_count == 3
+
+    def test_narrows_group_members_to_held(self) -> None:
+        # Hold only two of the three members → the folded group keeps just those,
+        # with `member_count` reflecting the narrowing.
+        conn = _seeded_conn()
+        held = {"scb/lisa/agiinkjan", "scb/lisa/agiinkfeb"}
+        (group,) = search(conn, "Lönesumma", field="description", fqids=held).results
+        assert group.type == "group"
+        assert {str(m.fqid) for m in group.members} == held
+        assert group.member_count == 2
+
+    def test_label_only_group_dropped_when_no_member_held(self) -> None:
+        # 'per månad' matches only the group LABEL (no member FTS hit). With an
+        # allow-list holding none of its members, the group is dropped entirely.
+        conn = _seeded_conn()
+        assert (
+            search(
+                conn, "per månad", field="description", fqids={"scb/other/nope"}
+            ).results
+            == ()
+        )
+
+    def test_unheld_variable_leaf_excluded_with_exact_count(self) -> None:
+        # A lone-member FTS query ('januari') is a leaf row; restricting to a
+        # DIFFERENT held FQID drops it, and total_count is exact (0), not a
+        # pre-filter count. FTS rebuilt so the description arm (the webapp path)
+        # actually returns the member leaf.
+        conn = _seeded_conn()
+        _rebuild_fts(conn)
+        data = search(
+            conn, "januari", field="description", fqids={"scb/lisa/agiinkfeb"}
+        )
+        assert data.results == ()
+        assert data.total_count == 0
+
+    def test_held_variable_leaf_kept(self) -> None:
+        conn = _seeded_conn()
+        _rebuild_fts(conn)
+        data = search(
+            conn, "januari", field="description", fqids={"scb/lisa/agiinkjan"}
+        )
+        # The held member surfaces (lone hit → leaf row), exact count.
+        assert {str(r.fqid) for r in data.results} == {"scb/lisa/agiinkjan"}
+        assert data.total_count == 1
+
+
 class TestClassificationSuccessionFold:
     """#571: classification EDITION chains (`classification_replaced_by`) collapse
     to ONE row for the terminal (current) edition in search, carrying the

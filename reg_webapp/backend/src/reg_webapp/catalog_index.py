@@ -116,6 +116,57 @@ class CatalogIndex:
             if f == fqid
         )
 
+    def admitted_variable_fqids(self) -> frozenset[str]:
+        """The bare binding FQIDs the steward holds, across all variants — the
+        ``fqid`` side of every ``(fqid, column)`` pair. Browse-grain (column
+        de-duped): the discovery surfaces (#859 browse + search) narrow their
+        variable rows against this set. Column-grain admission for a known FQID
+        is the separate ``admits`` / ``held_columns`` probe."""
+        return frozenset(
+            fqid
+            for bindings in self.bindings_by_variant.values()
+            for fqid, _column in bindings
+        )
+
+    def held_register_fqids(self) -> frozenset[str]:
+        """The 2-segment register FQIDs the steward holds: the source registers
+        in ``period_range_by_register`` UNIONED with the parent register of every
+        admitted binding. Mirrors ``catalog_sizes``'s register derivation EXACTLY
+        (keep the two consistent) — a drift-emptied variant still contributes its
+        register's period span, and a kept binding contributes its parent register
+        even if that register had no surviving source span."""
+        registers = set(self.period_range_by_register)
+        registers.update(
+            "/".join(fqid.split("/")[:2]) for fqid in self.admitted_variable_fqids()
+        )
+        return frozenset(registers)
+
+    def held_provider_slugs(self) -> frozenset[str]:
+        """The provider slugs the steward holds — the first segment of each held
+        register FQID. Backs the browse-root provider filter (#859)."""
+        return frozenset(fqid.split("/", 1)[0] for fqid in self.held_register_fqids())
+
+    def admits_register(self, register_fqid: str) -> bool:
+        """True iff the steward holds the 2-segment ``register_fqid``."""
+        return register_fqid in self.held_register_fqids()
+
+    def admits_provider(self, provider_slug: str) -> bool:
+        """True iff the steward holds any register under ``provider_slug``."""
+        return provider_slug in self.held_provider_slugs()
+
+    def held_variant_coords_for_register(self, register_fqid: str) -> frozenset[str]:
+        """The variant coordinates (``provider/register/variant``) under
+        ``register_fqid`` that admit ≥1 binding. A drift-emptied variant slot
+        (declared but admitting nothing — see ``build_catalog_index``) is
+        EXCLUDED, so the variants endpoint (#859) lists only variants the steward
+        actually holds data under."""
+        prefix = f"{register_fqid}/"
+        return frozenset(
+            coord
+            for coord, bindings in self.bindings_by_variant.items()
+            if coord.startswith(prefix) and bindings
+        )
+
     def catalog_sizes(self) -> CatalogSizes:
         """Headline catalog counts for a filtered steward deployment.
 
@@ -124,14 +175,9 @@ class CatalogIndex:
         variable count is browse-grain, not column-grain, so it de-dupes by FQID.
         ``period_range_by_register`` contributes valid source registers even if
         every binding under one drift-dropped from the authorable set."""
-        variable_fqids = {
-            fqid
-            for bindings in self.bindings_by_variant.values()
-            for fqid, _column in bindings
-        }
-        register_fqids = set(self.period_range_by_register)
-        register_fqids.update("/".join(fqid.split("/")[:2]) for fqid in variable_fqids)
-        provider_slugs = {fqid.split("/", 1)[0] for fqid in register_fqids}
+        variable_fqids = self.admitted_variable_fqids()
+        register_fqids = self.held_register_fqids()
+        provider_slugs = self.held_provider_slugs()
         return CatalogSizes(
             providers=len(provider_slugs),
             registers=len(register_fqids),

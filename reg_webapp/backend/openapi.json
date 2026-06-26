@@ -3539,7 +3539,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "The catalog root: every provider plus the classification-root sentinel.",
+        "description": "The catalog root: every provider plus the classification-root sentinel.\n\n#859: a filtered steward keeps only providers it holds (`held_provider_slugs`);\nthe classification-root sentinel is ALWAYS appended (classifications pass through\n\u2014 decision 2). The `global` deployment lists every provider (index None).",
         "operationId": "get_catalog_root_api_catalog_get",
         "responses": {
           "200": {
@@ -4517,7 +4517,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each group is an independent\nreg_meta `search()` call (register/variable/classification via the FTS\n`field=\"description\"` path; codes via the `field=\"value\"` path) so each carries\nits own `total_count` and per-group `limit`. A query with no usable token\nreturns the selected group(s) empty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\nfour-group register\u2192variable\u2192classification\u2192code behavior; any single type runs\nAND emits only that one group. Group ORDER is fixed for the ``all`` case.",
+        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each group is an independent\nreg_meta `search()` call (register/variable/classification via the FTS\n`field=\"description\"` path; codes via the `field=\"value\"` path) so each carries\nits own `total_count` and per-group `limit`. A query with no usable token\nreturns the selected group(s) empty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\nfour-group register\u2192variable\u2192classification\u2192code behavior; any single type runs\nAND emits only that one group. Group ORDER is fixed for the ``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.",
         "operationId": "get_search_api_search_get",
         "parameters": [
           {
