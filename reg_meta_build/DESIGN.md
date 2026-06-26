@@ -1345,6 +1345,106 @@ remaining open item is cross-column identical-parallel-column dedup (two deliver
 columns carrying exactly the same concept at the same period), which is a separate rule
 outside this collapse path.
 
+### Identity-patching surface audit (#825): order-bearing vs navigation
+
+#805 reframed the build's key unit as the **representation**
+(`column × register × (variant, if exists) × period`); orders/bindings resolve to it via
+`reg_schema.Binding`, whose `representation` disambiguates the column. Variables and
+concept_groups are a curated **navigation** surface — they never touch orders, bindings,
+or stats. #825 audits the four build-time "identity-patching" surfaces against that line
+and classifies each. **This is an audit + plan, not a removal: all four surfaces are
+still live and load exactly as documented above.** Retiring a `retire-after-migration`
+candidate is a follow-on once the named migration-target layer absorbs its intent; both
+targets have now shipped — channel-1 = `replaced_by` succession edges (#814/#817),
+channel-2 = multi-axis concept_group over representations (#819).
+
+The keep/retire split follows one cross-cutting principle, with one nuance the early
+framing got wrong: a **retire** candidate's effect stops at variable GROUPING, which is
+just a *default* grouping of representations. For the **data/stats an order resolves
+to** this is navigation-only — an order's values are column/representation-resolved per
+period (a `Binding`'s `representation` picks the actual delivery column), so over-split
+(the concept group re-unites the columns) and over-merge alike leave the resolved values
+unchanged. BUT the **variable FQID is the order contract's addressable handle**:
+`reg_schema.project_data.Binding.variable` (`project_data.py:136`, the binding FQID
+`<provider>/<register>/<slug>`) is what a `project_data.json` binding addresses and what
+the order export emits (`reg_webapp/backend/.../order_export.py`); concept_groups are
+NOT FQID-addressable, so `representation` only disambiguates the column *within* a
+variable — it does not make the variable set itself invisible to bindings. Any
+retirement that changes the leaf variable set therefore carries a **binding /
+default-selection migration precondition** — existing bindings to the affected FQIDs
+must be remapped and the default-representation chooser updated — and this applies to
+BOTH retire candidates, since splitting a merged or folded variable changes the leaf
+set. A **keep** surface's effect instead reaches the representation's value-set / codes
+or mints real representations, so it is order- or data-bearing and cannot be expressed
+as a grouping nudge.
+
+  | Surface            | Source                                           | Effect                                                            | Verdict                           |
+  | ------------------ | ------------------------------------------------ | ----------------------------------------------------------------- | --------------------------------- |
+  | `column_merge`     | `[[column_merge]]` / `source_column_repairs.py`  | unifies never-co-occurring era-rename twins into one variable     | **retire-after-migration (ch-1)** |
+  | `fold_override`    | `[[fold_override]]` / `source_column_repairs.py` | folds disjoint-stem contested columns of one concept into one var | **retire-after-migration (ch-2)** |
+  | `codelivery`       | `codelivery.toml` / `codelivery.py`              | pins which coding a column KEEPS when it carries two in a period  | **keep (confirm-only)**           |
+  | `canonical_attach` | `lisa_canonical.toml` / `canonical_attach.py`    | mints canonical-SCB variable/state rows + classification links    | **keep (confirm-only)**           |
+
+**`column_merge` (#196) — retire-after-migration (channel-1).** Navigation-only for the
+data/stats an order resolves to: it writes NO `value_set`/`value_code` rows and NO
+lineage/succession edges (the mechanics are in *Curated column-merge* above) — it only
+changes which `variable` a `variable_state` hangs off. Two distinct join mechanisms,
+neither of which routes through the unified variable: the per-period **data-value join**
+is column-resolved (a `Binding`'s `representation` /
+`variable_alias.delivery_column_name` picks the actual delivery column), but the **panel
+entity-key default** is a variable-**slug** pointer
+(`register_variant.panel_entity_key`, decoded as `str | tuple[str, ...]` in
+`reg_meta/.../catalog.py:341`) and `PanelMember` panel keys join on delivered-data
+**headers** (`reg_schema.project_data.PanelMember.display_name`, `project_data.py:138` —
+bare strings are column refs against a source's binding `display_name` values), NOT via
+`Binding.representation`. `is_identifier` is set pre-triage
+(`_populate_sensitivity_flags`) independent of the merge. **Migration map:** the
+twin-unification intent → a curated `replaced_by` succession between the two sharded
+representations; the entity-key pin → resolve over that succession/concept, not one
+variable slug. **Migration preconditions (this is the higher-risk candidate, ahead of
+`fold_override`):** two, both column-merge-specific.
+
+First, a **representation-grain successor-edge design** is required: `replaced_by`
+(`relations.py::_parse_replaced_by_fqid`, \~line 428) restricts its endpoints to
+register / variable / classification grains — the variant grain is explicitly out of
+scope — so the current surface CANNOT encode a column-level era-rename succession; a
+twin-unification edge would collapse to a variable-grain edge that loses *which
+representation* was replaced. Second, the entity-key-pin surface must FIRST be able to
+resolve over that succession chain rather than a single variable slug: the curation
+TOML's own comment (`curation/scb/source_column_repairs.toml`, the RTB `pnr`→`personnr`
+note) records that WITHOUT the merge the A4.4d panel keys / `panel_entity_key` pins
+(#546/#554) pin to the sparse `pnr` fragment. Because the default is a variable
+**slug**, re-sharding identifier twins into two sibling variables pins it to the sparse
+fragment's slug — so the pins strand on the sparse fragment, reproducing exactly the
+pre-#196 failure. Sequence both channel-1 designs — representation-grain succession AND
+succession-aware entity-key resolution — before pulling the merge.
+
+**`fold_override` (#261) — retire-after-migration (channel-2).** Pure variable grouping
+(mechanics in the *fold-override* note above): writes NO
+`value_set`/`value_code`/lineage — it only routes which variable the contested
+disjoint-stem columns land under, plus label tokens. **Migration map:** its intent lands
+cleanly on channel-2 multi-axis concept_group OVER representations (#819) — the
+co-delivered columns become parallel representations grouped by a concept-group facet
+axis, with no variable merge, no identity surgery, and no entity-key entanglement. This
+is the cleaner / lower-risk of the two retire candidates: unlike `column_merge` it
+carries no *entity-key / representation-grain-succession* precondition (those are
+`column_merge`-specific). It is NOT precondition-free, though — splitting a folded
+variable into siblings changes the leaf variable set, so it still shares the binding /
+default-selection remap precondition from the cross-cutting principle (existing bindings
+to the folded FQID need remapping, the default-representation chooser updating).
+Lower-risk, not zero-precondition.
+
+**`codelivery` — keep (confirm-only).** Order-bearing: it pins which
+`value_set_version_label` (coding) a single delivery column KEEPS when it carries two
+codings in one period — it decides the codes the data actually carries. Representation-
+level, not navigation; nothing to migrate.
+
+**`canonical_attach` (#444/#400) — keep (confirm-only).** Catalog completeness over real
+provider data: it mints CANONICAL-SCB `variable`/`variable_state` rows for columns SCB
+documents but omits from the machine export (the LISA hand-documented SSYK/SNI columns,
+…) plus their classification links. Real provider content, not a grouping nudge —
+nothing to migrate.
+
 ### Sub-annual boundary clamp
 
 A state's validity window is otherwise year-granular: `valid_from`/`valid_to` expand
