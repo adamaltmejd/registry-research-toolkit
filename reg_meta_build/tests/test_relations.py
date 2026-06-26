@@ -781,6 +781,17 @@ class TestReplacedByLoad:
             )
         assert exc.value.code == "relations_invalid"
 
+    def test_non_string_column_rejected(self, tmp_path: Path) -> None:
+        # A non-string `from_column` (here a TOML integer) is not a delivery column
+        # name → rejected at load.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/y"\nfrom_column = 123\nto_column = "New"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
     def test_from_column_on_same_as_rejected(self, tmp_path: Path) -> None:
         # `from_column` is foreign to a same_as edge — rejected by the per-type
         # field map (a mis-typed edge: representation field, wrong `type`).
@@ -1067,6 +1078,17 @@ def _representation_db() -> sqlite3.Connection:
     return conn
 
 
+def _representation_db_two_variables() -> sqlite3.Connection:
+    """`_representation_db()` plus a SECOND live scb/lisa variable `sysink`
+    carrying its own observed delivery column `SysInk10` — so a representation
+    edge can succeed BETWEEN two different variables (a column moved across the
+    variable boundary), not only within one."""
+    conn = _representation_db()
+    add_variable(conn, register_id=1, var_id=71, name="System inkomst", slug="sysink")
+    _add_alias(conn, "sysink", "SysInk10")
+    return conn
+
+
 class TestRepresentationReplacedByMaterialize:
     """#843: curated representation-grain `replaced_by` edges land in
     `representation_replaced_by` — a `(variable, delivery_column)`-pair succession
@@ -1232,6 +1254,35 @@ class TestRepresentationReplacedByMaterialize:
         assert out["representation"] == 1
         assert out["skipped_duplicate"] == 1
         assert len(_representation_rows(conn)) == 1
+
+    def test_cross_variable_edge_writes(self) -> None:
+        # A column moved across the VARIABLE boundary: both endpoints are distinct
+        # live variables each observing the named delivery column. The row records
+        # different predecessor/successor variables.
+        conn = _representation_db_two_variables()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/sysink",
+                    "DispInk10",
+                    "SysInk10",
+                    year=2010,
+                )
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 1
+        rows = _representation_rows(conn)
+        assert len(rows) == 1
+        pred_var, _pred_col, succ_var, _succ_col = rows[0][:4]
+        assert pred_var == "dispink"
+        assert succ_var == "sysink"
+        assert pred_var != succ_var
 
 
 # ---------------------------------------------------------------------------
