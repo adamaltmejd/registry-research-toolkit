@@ -389,15 +389,19 @@ def search(
     label/key emits the group row even when no leaf row matches. Result-shaping
     only; folding happens before pagination, so a group row counts as one result.
 
-    fqids (#859): restrict the **register** and **variable** result surfaces to
-    entities whose navigable `fqid` is in this set — including concept-group
-    folding (a group surfaces only if ≥1 member is held, and its member list is
-    narrowed to held members). Classification and value/code surfaces are
-    catalog-global and unaffected. `None` = no restriction. The restriction is
-    applied to leaf rows BEFORE folding and BEFORE the `total_count`/slice, so the
-    count is exact and paging is correct. reg_meta stays steward-agnostic: the
-    caller (the webapp's filtered-steward `/api/search`) passes the allow-list; the
-    set's provenance is opaque here.
+    fqids (#859): restrict the register and variable rows of the
+    **description-FTS / register / variable** surfaces to entities whose navigable
+    `fqid` is in this set — including concept-group folding (a group surfaces only
+    if ≥1 member is held, and its member list is narrowed to held members). The
+    `varname` / `datacolumn` LIKE arms carry no `fqid` (`_RESTRICTABLE_LEAF_TYPES`
+    excludes them) and are pass-through, so `fqids` is meaningful only with
+    `field="description"` (or `field="all"` on the description path) — the webapp's
+    filtered-steward `/api/search` only ever passes `field="description"`.
+    Classification and value/code surfaces are catalog-global and unaffected.
+    `None` = no restriction. The restriction is applied to leaf rows BEFORE folding
+    and BEFORE the `total_count`/slice, so the count is exact and paging is correct.
+    reg_meta stays steward-agnostic: the caller passes the allow-list; the set's
+    provenance is opaque here.
 
     Returns a `SearchResults` (`total_count` + the sliced, folded `results` tuple
     of typed result models, discriminated on `type`). Doc results are NOT included
@@ -513,8 +517,10 @@ def search(
     # through — they are catalog-global (the group-LABEL path is narrowed at the
     # fold, where its members are known). An unslugged leaf (`fqid` None) can be in
     # no steward catalog, so it drops under any restriction.
-    if fqids is not None:
-        allow = frozenset(fqids)
+    # #859: frozen ONCE here and reused for both the leaf filter and the
+    # `_fold_concept_groups` member-narrowing below (the same allow-list).
+    allow = frozenset(fqids) if fqids is not None else None
+    if allow is not None:
         all_results = [
             r
             for r in all_results
@@ -556,7 +562,7 @@ def search(
             conn,
             all_results,
             label_hits,
-            allow=frozenset(fqids) if fqids is not None else None,
+            allow=allow,
         )
 
     all_results.sort(key=lambda x: x.get("fts_rank", 0))

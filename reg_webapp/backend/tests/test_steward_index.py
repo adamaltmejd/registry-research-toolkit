@@ -126,6 +126,24 @@ def test_catalog_sizes_de_dupes_binding_columns():
     assert index.catalog_sizes() == CatalogSizes(providers=2, registers=2, variables=2)
 
 
+def test_held_variant_coords_excludes_drift_emptied_slot():
+    # gap 4: a declared-but-empty variant slot (drift dropped all its bindings → it
+    # maps to frozenset()) must NOT count as a held coord — the variants endpoint
+    # lists only variants the steward actually holds data under.
+    index = CatalogIndex(
+        bindings_by_variant={
+            "scb/lisa/individer-15plus": frozenset({("scb/lisa/kon", "Kon")}),
+            # A drift-emptied slot under the SAME register: declared, admits nothing.
+            "scb/lisa/drifted": frozenset(),
+        },
+        period_range_by_register={"scb/lisa": ("2018", "2018")},
+        drift_warnings=(),
+    )
+    assert index.held_variant_coords_for_register("scb/lisa") == frozenset(
+        {"scb/lisa/individer-15plus"}
+    )
+
+
 # ── drift drops a binding from the index (unit) ────────────────────────────
 
 

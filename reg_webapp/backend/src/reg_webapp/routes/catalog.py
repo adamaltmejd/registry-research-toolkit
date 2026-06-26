@@ -264,20 +264,32 @@ def _narrow_group_members(group, index: CatalogIndex):  # noqa: ANN001 — reg_m
 def _require_admitted_binding(
     catalog: Catalog, parsed: Fqid, index: CatalogIndex, request: Request, suffix: str
 ) -> RedirectResponse | None:
-    """Admission gate for a binding subject (#859). Returns a 301 RedirectResponse
-    when `parsed` is a renamed/dead binding whose TERMINAL successor IS held (the
-    citation stays alive, query + `suffix` preserved — uniform with `_redirect_or_4xx`);
-    returns None when `parsed` itself is admitted (the caller proceeds). Raises 404
-    otherwise — an unheld live binding, or a dead binding whose successor the steward
-    also does not hold.
+    """Admission gate for a binding subject (#859). Returns None when `parsed` is
+    admitted (the caller proceeds). Otherwise distinguishes a LIVE-but-unheld binding
+    from a DEAD/renamed slug:
 
-    The renamed/dead-slug 301 is preserved FIRST (a held successor must stay
-    reachable), then admission is enforced; a non-binding/non-existent FQID is handled
-    by the caller's normal reg_meta error path, not here."""
+    - `parsed` resolves to a LIVE binding the steward does not hold → 404 ("not in
+      this steward's catalog"). A LIVE binding is NEVER 301'd: `variable_replaced_by`
+      carries succession edges BETWEEN live bindings too, so walking the terminal
+      successor of a live binding would wrongly redirect a simply-unheld binding to a
+      held successor — diverging from the global deployment, which only redirects DEAD
+      slugs.
+    - `parsed` does NOT resolve (a DEAD/renamed slug) → walk to its TERMINAL successor
+      and 301 if that successor IS held (citation stays alive, query + `suffix`
+      preserved — uniform with `_redirect_or_4xx`); else 404.
+
+    The extra `catalog.resolve` is paid ONLY on the unadmitted path — a held binding
+    early-outs before it, so the common case incurs no redundant resolve. A
+    non-binding/non-existent kind is handled by the caller's normal reg_meta error
+    path, not here."""
     admitted = index.admitted_variable_fqids()
     if str(parsed) in admitted:
         return None
-    # Not admitted as-is: a renamed/dead binding may resolve to a held successor.
+    # Not admitted. A LIVE binding the steward simply doesn't hold must 404 (NOT 301):
+    # succession edges exist between live bindings, so a terminal-successor walk here
+    # would mis-redirect. Only a DEAD/renamed slug (does not resolve) is a 301 candidate.
+    if _resolves_live(catalog, parsed):
+        raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
     terminal = catalog.resolve_terminal_successor(parsed)
     if terminal is not None and str(terminal) in admitted:
         target = f"{_catalog_url(terminal)}{suffix}"
@@ -285,6 +297,21 @@ def _require_admitted_binding(
             target = f"{target}?{request.url.query}"
         return RedirectResponse(target, status_code=301)
     raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
+
+
+def _resolves_live(catalog: Catalog, parsed: Fqid) -> bool:
+    """True iff `parsed` resolves to a LIVE entity; False when it is a dead/renamed
+    slug (reg_meta raises `fqid_not_found`). Any OTHER `RegMetaError` (a corrupt-DB /
+    build-invariant break) re-raises — it is a server fault, not a "dead slug" signal.
+    Used by `_require_admitted_binding` to keep a live-but-unheld binding (404) from
+    being 301'd as if it were a renamed slug."""
+    try:
+        catalog.resolve(parsed)
+    except RegMetaError as exc:
+        if exc.exit_code == EXIT_NOT_FOUND and exc.code == _FQID_NOT_FOUND_CODE:
+            return False
+        raise
+    return True
 
 
 def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN001 — VariableRef/RelatedRef list
@@ -483,10 +510,14 @@ def _provider_response(
     provider_slug = resolved.fqid.provider
     assert provider_slug is not None
     registers = catalog.list_registers(provider_slug)
-    # #859: a filtered steward keeps only the registers it holds (`admits_register`
-    # on the 2-seg register FQID). The `global` deployment (index None) keeps all.
+    # #859: a filtered steward keeps only the registers it holds. Hoist the held set
+    # ONCE (it's a full index scan) and test membership directly — `admits_register`
+    # would rebuild it per register (O(registers × index)); mirrors how
+    # `get_catalog_root` / `_register_response` hoist. The `global` deployment (index
+    # None) keeps all.
     if index is not None:
-        registers = [r for r in registers if index.admits_register(str(r.fqid))]
+        held = index.held_register_fqids()
+        registers = [r for r in registers if str(r.fqid) in held]
     # #351 per-register coverage, keyed by register slug — one GROUP BY (~40 ms
     # for scb's 238 registers), query-time behind the ETag/edge cache.
     coverage = catalog.provider_register_coverage(provider_slug)
@@ -624,17 +655,30 @@ def _resolve_to_node(
 
     #859: `index` (a filtered steward's `CatalogIndex`, else None) scopes each arm —
     provider/register listings narrow their children, the binding leaf narrows its
-    states. The binding-leaf ADMISSION gate (404 / held-successor 301) is enforced by
-    the caller (`get_catalog_node`) BEFORE this is reached, since it owns the
-    renamed-slug redirect; classifications pass through (decision 2)."""
+    states. A filtered steward also ADMISSION-gates the LIVE provider/register arms
+    here: a successfully-resolved provider/register the steward does not hold 404s
+    ("not in this steward's catalog"), so an unheld register can't return a 200 with
+    a dead-end `variants-ref` child. This fires only for a live (resolved) FQID — a
+    DEAD/renamed register slug still raises `fqid_not_found` from `catalog.resolve`,
+    caught by the caller's existing 404→301 redirect branch (unchanged). The
+    binding-leaf ADMISSION gate (404 / held-successor 301) is enforced by the caller
+    (`get_catalog_node`) BEFORE this is reached, since it owns the renamed-slug
+    redirect, so the binding arm is NOT double-gated here; classifications pass
+    through (decision 2)."""
     try:
         resolved = catalog.resolve(fqid)
     except RegMetaError as exc:
         _http_404_if_not_found(exc)
         raise  # unreachable; _http_404_if_not_found re-raises non-404s
     if isinstance(resolved, ResolvedProvider):
+        provider_slug = resolved.fqid.provider
+        assert provider_slug is not None  # a resolved provider always has a slug
+        if index is not None and not index.admits_provider(provider_slug):
+            raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
         return _provider_response(catalog, resolved, index)
     if isinstance(resolved, ResolvedRegister):
+        if index is not None and not index.admits_register(str(resolved.fqid)):
+            raise HTTPException(status_code=404, detail=_NOT_IN_CATALOG_DETAIL)
         return _register_response(catalog, resolved, index)
     if isinstance(resolved, ResolvedVariable):
         return _binding_node(catalog, resolved, index)
