@@ -70,7 +70,11 @@ let { tone = "neutral", mono = false, glyph, children }: Props = $props();
 
   /* Categorical TYPE tones — soft tint of the cat hue (color-mix keeps one ramp
      stop as both border ink and fill, so no second token per hue). Each tone only
-     selects its hue into `--tone-hue`; one shared rule paints all five. */
+     selects its hue into `--tone-hue`; one shared rule paints all five.
+     The TEXT darkens the hue 15% toward black (mirrors --accent-ink): the raw
+     cat hues are tuned as fills, and teal/gold fall just under WCAG AA (4.1–4.5:1)
+     as text on their own 10% tint — the 15% darkening clears AA (≥5.3:1) for all
+     five while the border + fill keep the full hue, so type identity is intact. */
   .tone-reg {
     --tone-hue: var(--cat-reg);
   }
@@ -91,7 +95,7 @@ let { tone = "neutral", mono = false, glyph, children }: Props = $props();
   .tone-code,
   .tone-class,
   .tone-group {
-    color: var(--tone-hue);
+    color: color-mix(in srgb, var(--tone-hue) 85%, black);
     border-color: color-mix(in srgb, var(--tone-hue) 35%, transparent);
     background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
   }
