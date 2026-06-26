@@ -224,6 +224,69 @@ from = "class/icd-9-ks87"
 to = "class/icd-10-se"
 effective_year = 1997
 
+# ── IoT disponibel inkomst: 2004 års definition redefinitions (#814, Part of #805) ──
+#    Channel-1 worked example. SCB recut "disponibel inkomst" to a 2004 base-year
+#    definition with a genuinely different computation formula
+#    (VariabelExtern_kommentar: e.g. CDISP = "CBRUTTO - SSLUTEX + …" vs CDISP04 =
+#    "CFAKT04 + CTRAP – CTRAN04"). Modeled as `replaced_by`, NOT a variable-grain
+#    fold, precisely so each era keeps its own formula/definition — same rationale
+#    as the LISA anninkf succession above. `from` = the pre-2004 (continued) series,
+#    `to` = the 2004-definition series; `effective_year` = the successor's first year.
+#    Overlapping lifetimes are accepted (the old-def series is retained for
+#    comparability). NOT modeled here: the parallel facet axes (unit, capital-gains
+#    incl/excl, household-concept HB/VXHB) — those are dimensional grouping for the
+#    channel-2 concept-group follow-up, not succession edges. The legacy DIN*/`-N`
+#    within-var_id vintage fragments and the household (HB/VXHB) `-N` slugs are a
+#    separate fold/slug-cleanup follow-up.
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/delkomponent-disponibel-inkomst"
+to = "scb/iot/delkomponent-disponibel-inkomst-2004"
+effective_year = 2005
+note = "Delkomponent till disponibel inkomst recut to 2004 års definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/disponibel-inkomst-familj"
+to = "scb/iot/disponibel-inkomst-familj-2004"
+effective_year = 2005
+note = "Disponibel inkomst, familj recut to 2004 års definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/disponibel-inkomst-per-ke-familj"
+to = "scb/iot/disponibel-inkomst-per-ke-familj-2004"
+effective_year = 2006
+note = "Disponibel inkomst per konsumtionsenhet, familj recut to 2004 års definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/disponibel-inkomst-exkl-kapitalvinst"
+to = "scb/iot/disponibel-inkomst-exkl-kapvinst-2004"
+effective_year = 2011
+note = "Disponibel inkomst exkl. kapitalvinst recut to 2004 års definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/cdispkehb"
+to = "scb/iot/cdisp04kehb"
+effective_year = 2011
+note = "Disponibel inkomst per konsumtionsenhet, kosthushåll recut to 2004 års definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/cdispkevx"
+to = "scb/iot/cdisp04kevx"
+effective_year = 2021
+note = "Individbaserad ekvivalerad disponibel inkomst (växelvist) recut to 2004 års definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/cdisp5kevx"
+to = "scb/iot/cdisp504kevx"
+effective_year = 2021
+note = "Individbaserad ekvivalerad disponibel inkomst exkl. kapitalvinst (växelvist) recut to 2004 års definition"
+
 # ── Curated "see also" edges (#403) ──
 # Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an
 # identity (identity is a `type = "same_as"` edge). Slugs verified against a real
