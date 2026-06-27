@@ -491,16 +491,21 @@ const footerLabel = $derived(
               onmouseenter={() => (hoveredBandKey = band.key)}
               onmouseleave={() => (hoveredBandKey = null)}
             >
-              <div class="subhead-row">
-                <input
-                  type="checkbox"
-                  class="cbox"
-                  checked={allOfBandSelected(band)}
-                  indeterminate={someOfBandSelected(band) &&
-                    !allOfBandSelected(band)}
-                  aria-label={`Select all columns of ${v.primary.text}`}
-                  onchange={() => toggleBand(band)}
-                />
+              <input
+                type="checkbox"
+                class="cbox"
+                checked={allOfBandSelected(band)}
+                indeterminate={someOfBandSelected(band) &&
+                  !allOfBandSelected(band)}
+                aria-label={`Select all columns of ${v.primary.text}`}
+                onchange={() => toggleBand(band)}
+              />
+              <!-- The title + description share ONE wrapping line: when they fit they
+                   sit on one row (a dot separates them); when they don't, the
+                   description wraps WHOLE to its own row so the heading stays intact
+                   (the description is a single flex item — it never breaks mid-line
+                   beside the heading). Keeps the table compact. -->
+              <span class="subhead-body">
                 {#if v.primaryIsColumn}
                   <!-- Single-column member: the column chip-LINK IS the identity (the
                        chip navigates; its color-deepen hover is the affordance). No
@@ -520,8 +525,8 @@ const footerLabel = $derived(
                 {:else}
                   <span class="subhead-title">{@render identityInner()}</span>
                 {/if}
-              </div>
-              {@render subheadContext()}
+                {@render subheadContext()}
+              </span>
             </label>
           {/if}
         </li>
@@ -666,10 +671,12 @@ const footerLabel = $derived(
   .subhead:not(.empty):hover {
     background: var(--accent-bg);
   }
-  /* The whole non-empty subheading is one <label> (the hover-all + click-all surface,
-     including the context line below the title row). Block so the row + context stack. */
+  /* The whole non-empty subheading is one <label> (the hover-all + click-all surface):
+     the checkbox beside a wrapping body holding the title + description. */
   .subhead-label {
-    display: block;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
     cursor: pointer;
     /* Fill the whole subheading: pull the label out to the `.subhead` content edges
        (cancel its padding) then re-pad inside, so the hover/click surface covers the
@@ -679,15 +686,27 @@ const footerLabel = $derived(
     margin: -0.4rem -0.75rem -0.3rem;
     padding: 0.4rem 0.75rem 0.3rem;
   }
-  /* The checkbox + identity sit on one baseline row; the checkbox stays vertically
-     centered against the (possibly wrapping) title. */
+  /* The checkbox stays vertically centered against the (possibly wrapping) body. */
+  .subhead-label > .cbox {
+    align-self: center;
+  }
+  /* The title + description flow on ONE wrapping line: both fit → one row (a dot
+     separates); the description (a single flex item) drops WHOLE to its own row when
+     it can't fit beside the heading, so the heading never shares a line with a
+     fragment of the description. */
+  .subhead-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.1rem 0.5rem;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  /* The empty-band header keeps the simple one-row layout (no description to wrap). */
   .subhead-row {
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
-  }
-  .subhead-row .cbox {
-    align-self: center;
   }
   .subhead-title {
     display: inline-flex;
@@ -718,15 +737,26 @@ const footerLabel = $derived(
     font-size: 0.8em;
     color: var(--text-muted);
   }
+  /* The description rides inline after the title (one flex item in `.subhead-body`),
+     so it sits on the same row when it fits and wraps WHOLE to its own row otherwise.
+     Its OWN content flows as inline text (not an inner flex) so the leading dot glues
+     to the text and never strands on a line by itself; `min-width: 0` lets the text
+     wrap once the description is on its own row. */
   .subhead-context {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.3rem 0.5rem;
-    margin-top: 0.15rem;
-    padding-left: 1.5rem;
+    min-width: 0;
     font-size: 0.78rem;
     color: var(--text-muted);
+  }
+  /* The dot that separates the heading from the description when they share a row.
+     (It leads the description's own row after a wrap — a quiet continuation cue,
+     glued to the first word so it can't sit alone.) */
+  .subhead-context::before {
+    content: "·";
+    margin-right: 0.3rem;
+  }
+  /* A multi-column member's context column chip sits before the text. */
+  .subhead-context .col-chip {
+    margin-right: 0.3rem;
   }
   .subhead-context .ctx-text {
     overflow-wrap: anywhere;
