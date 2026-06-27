@@ -129,6 +129,7 @@ const visibleMembers = $derived(
         {#each values as v (v.value)}
           <label class="filter-pill" class:on={isSelected(axis, v.value)}>
             <input
+              class="visually-hidden"
               type="checkbox"
               checked={isSelected(axis, v.value)}
               onchange={() => toggleFilter(axis, v.value)}
@@ -225,9 +226,10 @@ const visibleMembers = $derived(
     gap: var(--space-1);
   }
   /* A filter pill: a checkbox styled as a selectable neutral chip. The native
-     input is visually hidden but kept in the DOM (a11y / keyboard / labelled),
-     and the `.on` class paints the selected state with the brand accent (the
-     selection cue, distinct from the neutral resting chip). */
+     input is visually hidden (the `.visually-hidden` utility in lib/ui/utilities.css)
+     but kept in the DOM (a11y / keyboard / labelled), and the `.on` class paints the
+     selected state with the brand accent (the selection cue, distinct from the
+     neutral resting chip). */
   .filter-pill {
     display: inline-flex;
     align-items: center;
@@ -240,17 +242,6 @@ const visibleMembers = $derived(
     user-select: none;
     background: var(--surface);
     color: var(--text);
-  }
-  .filter-pill input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
   }
   .filter-pill.on {
     background: var(--accent-bg);

@@ -224,13 +224,24 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
     }
     /* Keep the headers in the a11y tree (columnheader semantics survive for
        screen readers) but visually hidden — NOT display:none, which would drop
-       the roles. Standard visually-hidden clip. */
+       the roles. This is the MEDIA-CONDITIONAL sibling of the `.visually-hidden`
+       utility in lib/ui/utilities.css: it can't use that class because the hiding
+       is media-query-scoped (the thead is a VISIBLE header at desktop widths, an
+       unconditional markup class can't express "hidden only when narrow"), so the
+       recipe is kept inline — held textually IDENTICAL to `.visually-hidden` so the
+       two can't drift (the extra props are harmless on a clipped, absolutely-
+       positioned thead). Keep it in sync with `.visually-hidden`. (Mirrors the
+       `td::before` micro-label exception below — same can't-take-a-class pattern.) */
     thead {
       position: absolute;
       width: 1px;
       height: 1px;
+      padding: 0;
+      margin: -1px;
       overflow: hidden;
       clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
     }
     /* Each row becomes a card: the card border replaces the per-cell rules. */
     tbody tr {
