@@ -66,28 +66,28 @@ and helpers both packages agree on — lives in `reg_meta`.
 The build assembles the catalog from two kinds of inputs: machine-delivered source data
 (SCB CSVs, SOS workbooks, thin-provider TOMLs) and a set of maintainer-curated overlay
 files that repair, extend, and annotate what the source delivers. The curated files fall
-into seven families:
+into six families:
 
-  | Family                   | Files                                                                                                                                                                                                                                                                        | Role                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-  | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | **identifier**           | `fqid_slugs/<provider>.toml`, `fqid_slugs/<provider>.auto.toml`, `fqid_slugs/freeze.toml`, `fqid_slugs/classifications.toml` (loaded by `load_classifications_toml` in `fqid_slugs.py`); steward shards in `fqid_slugs/<steward>/`                                           | Canonical register/variant/classification/variable slugs; panel-shape metadata on variants; per-provider freeze state. `fqid_slugs/classifications.toml` is the provider-independent classification slug surface (loaded separately from provider TOMLs). `[lineage_defaults]` / `[lineage.*]` blocks in the same TOMLs pin source-variant choices for `variable_state_lineage`.                                                                                                                                                                                                                                                                                                |
-  | **relation**             | `curation/relations.toml` (loaded by `relations.py`)                                                                                                                                                                                                                         | All curated pairwise graph facts: `same_as` identity edges, `replaced_by` succession edges, `related_to` see-also edges. One typed `[[edge]]` array; `type` selects the DB target and validation rules.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-  | **set**                  | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                                                                     | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-  | **source/gap-fill**      | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `variable_grafts.toml` (loaded by `variable_grafts.py`), `input_data/scb_canonical/lisa_canonical.toml` (loaded by `canonical_attach.py`) | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions backfilled from steward delivery lists; variables present in steward docs but absent from machine metadata; canonical-SCB columns attached onto an existing register — `canonical_attach.py`, the rich analog of grafts).                                                                                                                                                                                                                                                                                                             |
-  | **value/coding**         | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)                                                       | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | **SCB pre-state repair** | `curation/scb/source_column_repairs.toml` (loaded by `source_column_repairs.py`)                                                                                                                                                                                             | Pre-state SCB structural repair: `[[column_merge]]` unifies gap-fill column pairs that never co-occur before union-find connectivity runs, so each pair becomes one union-find node rather than two sibling variables. Currently covers only FRIDA's firm-key gap-fill (`borgnr`/`persorgnr`, reg 121 var 56); pure era-renames are instead modeled as representation-grain `replaced_by` succession edges in `curation/relations.toml` (RTB retired in #846). Genuinely-same-concept disjoint-stem columns are handled by letting the stem rule split them and then grouping the resulting siblings via a `[[variable_group]]` facet axis in `concept_groups.toml` (see #845). |
-  | **period family merge**  | `curation/period_family_merges.toml` (loaded by `period_family_merges.py`)                                                                                                                                                                                                   | Identity-mutating post-triage pass: merges N period-named physical columns (today the 12 months, e.g. `lonfinkjan`…`lonfinkdec`) into ONE variable with per-period alias windows. Runs after triage (`variable_state` exists) but before slug population. 8 entries covering 8 bounded monthly families (4 LISA + 4 non-LISA). Retained per #523 under epic #518 R4; see the "Decision (#518/#523): retain the merge" section for rationale.                                                                                                                                                                                                                                    |
+  | Family                  | Files                                                                                                                                                                                                                                                                        | Role                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+  | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | **identifier**          | `fqid_slugs/<provider>.toml`, `fqid_slugs/<provider>.auto.toml`, `fqid_slugs/freeze.toml`, `fqid_slugs/classifications.toml` (loaded by `load_classifications_toml` in `fqid_slugs.py`); steward shards in `fqid_slugs/<steward>/`                                           | Canonical register/variant/classification/variable slugs; panel-shape metadata on variants; per-provider freeze state. `fqid_slugs/classifications.toml` is the provider-independent classification slug surface (loaded separately from provider TOMLs). `[lineage_defaults]` / `[lineage.*]` blocks in the same TOMLs pin source-variant choices for `variable_state_lineage`.                                                             |
+  | **relation**            | `curation/relations.toml` (loaded by `relations.py`)                                                                                                                                                                                                                         | All curated pairwise graph facts: `same_as` identity edges, `replaced_by` succession edges, `related_to` see-also edges. One typed `[[edge]]` array; `type` selects the DB target and validation rules.                                                                                                                                                                                                                                      |
+  | **set**                 | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                                                                     | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                |
+  | **source/gap-fill**     | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `variable_grafts.toml` (loaded by `variable_grafts.py`), `input_data/scb_canonical/lisa_canonical.toml` (loaded by `canonical_attach.py`) | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions backfilled from steward delivery lists; variables present in steward docs but absent from machine metadata; canonical-SCB columns attached onto an existing register — `canonical_attach.py`, the rich analog of grafts).                                                                          |
+  | **value/coding**        | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)                                                       | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                          |
+  | **period family merge** | `curation/period_family_merges.toml` (loaded by `period_family_merges.py`)                                                                                                                                                                                                   | Identity-mutating post-triage pass: merges N period-named physical columns (today the 12 months, e.g. `lonfinkjan`…`lonfinkdec`) into ONE variable with per-period alias windows. Runs after triage (`variable_state` exists) but before slug population. 8 entries covering 8 bounded monthly families (4 LISA + 4 non-LISA). Retained per #523 under epic #518 R4; see the "Decision (#518/#523): retain the merge" section for rationale. |
 
 **Boundary rules (anti-patterns):**
 
-- **Source-column repair is not `same_as`.** `[[column_merge]]` acts BEFORE variables
-  and states exist; `same_as` acts AFTER. Using `same_as` to fix a gap-fill split would
-  first build the wrong variables, slugs, aliases, and state history, then collapse
-  them. Gap-fill entries (never-co-occurring columns that partition disjoint year ranges
-  of one concept) belong in `curation/scb/source_column_repairs.toml`. Pure era-renames
-  (one delivery column renamed across eras, never co-occurring) belong in
-  `curation/relations.toml` as `replaced_by` succession edges with `from_column` /
-  `to_column` — NOT in `source_column_repairs.toml` and NOT as `same_as`.
+- **Succession edges are not `same_as`.** `same_as` declares identity (two FQIDs are the
+  same concept). `replaced_by` declares directional succession (predecessor superseded
+  by successor). Gap-fill twins (never-co-occurring columns that partition disjoint year
+  ranges of one concept) and era-renames (one delivery column renamed across eras) both
+  belong in `curation/relations.toml` as representation-grain `replaced_by` succession
+  edges with `from_column` / `to_column` — NOT as `same_as`. The `column_merge` surface
+  that used to handle gap-fills at the column-identity level (upstream of triage) was
+  retired in #846 after FRIDA's gap-fill was re-expressed as variant-scoped
+  representation succession (see *Curated column-merge* below).
 - **Classification links are typed, not generic state overrides.**
   `classification_links.toml` targets the `classification_candidate` pipeline and then
   `variable_state.classification_id`. It is NOT a generic
@@ -1238,10 +1238,9 @@ case-/diacritic-only header twins delivered under *separate* cvids
 columns. Without the fold, a split-container var sharded each casing into its own
 sibling fragment (\~543 fragments across the corpus). Raw casing still surfaces where it
 should: `delivery_column_name` is the latest-era alias verbatim, and the unika lookups
-stay raw. Consequently every curated column key (`source_column_repairs.toml`
-(`[[column_merge]]`), `codelivery.toml`) is case-folded at load by the shared
-`_curation.fold_column` — TOML casing is cosmetic, and the single shared definition
-keeps loader keys and coalescer components from drifting.
+stay raw. Consequently every curated column key (`codelivery.toml`) is case-folded at
+load by the shared `_curation.fold_column` — TOML casing is cosmetic, and the single
+shared definition keeps loader keys and coalescer components from drifting.
 
 **Co-delivery guard on the fold.** The fold targets era-rename twins that never
 co-occur. When two distinct spellings of one folded header share an edition of a variant
@@ -1252,43 +1251,27 @@ Those groups keep their raw node-cols; the triage still folds them into one vari
 (identical folded stems) with label-discriminated states, the pre-#196 handling. Because
 a guarded component can be raw-cased, every consumer compares on the folded form: the
 `_cluster_contested` stem-fold and the codelivery pin lookups fold `gkey[8]` (a folded
-pin key thereby pins ALL spellings of the header, by design). A curated column-merge
-outranks the guard — maintainer fiat can force a co-delivered pair onto one node.
+pin key thereby pins ALL spellings of the header, by design). **Curated column-merge —
+RETIRED (#846).** *(Historical note; the surface no longer exists.)* The
+`[[column_merge]]` section of `curation/scb/source_column_repairs.toml` (and the file
+itself) was the curated counterpart of the auto case-fold, for gap-fill twins where a
+clean era-rename was absent. It normalised the named columns to ONE union-find node-col
+upstream of triage. Two entries were retired in separate PRs:
 
-**Curated column-merge** (#196; `[[column_merge]]` section of
-`curation/scb/source_column_repairs.toml`, loaded by `source_column_repairs.py`) — the
-curated counterpart of the auto case-fold, for **gap-fill twins** (never-co-occurring
-delivery columns that partition disjoint year ranges of ONE concept, where a clean
-era-rename is absent — e.g. FRIDA's `borgnr` / `persorgnr` cycle, reg 121 var 56). The
-two headers never co-occur in one edition, so rule-2 sees two components; once the
-var_id is a split container (other columns DO co-deliver), each component becomes its
-own sibling variable and one identity's history shards across fragments. The merge
-normalizes the named columns to ONE union-find node-col (the lex-min folded member)
-*upstream* of triage.
+- **RTB** (`PNR` → `PersonNr`, reg 2 var 57): a pure era-rename — re-expressed as a
+  representation-grain `replaced_by` edge in `curation/relations.toml` (#846, PR A).
+- **FRIDA** (reg 121 var 56: `borgnr` / `persorgnr` / `borgnr` cycle): a true gap-fill
+  spanning disjoint year ranges within ONE register variant — re-expressed as two
+  variant-scoped representation succession edges (`borgnr→persorgnr` @2014,
+  `persorgnr→borgnr` @2018) in `curation/relations.toml` (#846, this PR). The
+  `panel_entity_key` pin for FRIDA's firm-key lands on the dense `person-orgnr` variable
+  directly; `persorgnr` becomes its own curated sibling. See *variant-scoped
+  representation succession* below for the mechanism.
 
-This surface is now reserved for the gap-fill shape. A pure era **rename** with no gap
-to fill (the retired RTB `PNR` → `PersonNr` twin, #846) is instead modeled as a
-representation-grain `replaced_by` succession edge in `curation/relations.toml` (with
-`from_column` / `to_column`), leaving the two sibling variables split and recording the
-rename as overlay navigation rather than unifying them by fiat. Keyed
-`(register_id, var_id)` with maintainer-artifact semantics (absent in wheel/synthetic
-builds; empty ⇒ connectivity unchanged) and strict validation: a named column never
-observed as a delivery column of the var FAILS the build (`EXIT_CONFIG`,
-`column_merge_unknown_column`), scoped to the registers present in the build (the
-partial-/synthetic-build escape). Only `[[column_merge]]` is a legal top-level table in
-`source_column_repairs.toml`; `register_id` / `var_id` must be canonical integers (no
-leading zeros); `columns` requires ≥ 2 non-empty strings with no repeats within or
-across groups for the same key, and no column may fold to `""`. All violations are
-`EXIT_CONFIG`. A merge spanning multiple var_ids is unrepresentable by construction —
-cross-var_id column *sharing* (#197) is a different shape and intentionally not
-curatable here.
-
-**Pre-v1 churn** — the curation content in `source_column_repairs.toml` churns freely
-pre-v1; no freeze or immutability is in effect for this surface yet. Arming
-snapshot-style immutability (analogous to the `fqid_slugs/` per-provider freeze model,
-#470) is tracked as #209 and explicitly out of scope here.
-`curation/scb/source_column_repairs.toml` sits under the `curation/` directory — it is
-not under the `fqid_slugs/` snapshot machinery.
+The file `source_column_repairs.py`, the TOML, and the `load_column_groups` loader were
+deleted when the last entry was retired. The never-co-occurring connectivity property
+that the merge enforced is now verified at build time by `test_coalesce_connectivity.py`
+— the coalescer's own union-find guarantees it once triage runs.
 
 Two notes on the triage signals:
 
@@ -1348,19 +1331,14 @@ variables.
 are computed by resolving *over* the overlay at read time. They are never stored as base
 truth.
 
-**`[[column_merge]]` is the anti-pattern under this lens.** It pushed a presentation
+**`[[column_merge]]` was the anti-pattern under this lens.** It pushed a presentation
 concern (a contiguous entity-key column across eras) DOWN into the base grain, fusing
-two raw sibling variables into one by fiat upstream of triage. Retiring the RTB case
-(#846) moves that concern UP into the overlay: a representation-grain `replaced_by` edge
-records the `PNR` → `PersonNr` rename, and the entity-key pin lands on the dense
-`personnr` sibling that already carries the canonical slug — no fiat fusion required.
-
-**The remaining `column_merge` case (FRIDA).** FRIDA's `borgnr` / `persorgnr` / `borgnr`
-cycle is a true gap-fill, not a clean rename. Retiring it under the overlay model
-requires a **time-disjoint** invariant (within an entity-key concept, at most one
-representation live per period) and a time-aware succession chain so that the
-`borgnr→persorgnr→borgnr` sequence reads as monotone-in-time, not a cycle. That
-extension is why it is deferred to its own PR rather than retired alongside RTB.
+two raw sibling variables into one by fiat upstream of triage. Both entries have since
+been retired (#846): the RTB case via a representation-grain `replaced_by` edge
+recording the `PNR` → `PersonNr` rename; the FRIDA gap-fill case via two variant-scoped
+representation succession edges (`borgnr→persorgnr→borgnr`) in
+`curation/relations.toml`. The surface is deleted — the overlay model now handles both
+shapes without base-grain fiat fusion.
 
 ### Identity-patching surface audit (#825): order-bearing vs navigation
 
@@ -1371,11 +1349,10 @@ concept_groups are a curated **navigation** surface — they never touch orders,
 or stats. #825 audits the four build-time "identity-patching" surfaces against that line
 and classifies each. **Update (#845):** `fold_override` (channel-2 retire candidate) has
 since been retired — its one entry was re-expressed as SPLIT + concept-group faceting
-(see below). **Update (#846):** the RTB half of `column_merge` has since been retired —
-the `PNR` → `PersonNr` era-rename is now a representation-grain `replaced_by` succession
-edge (see below); the FRIDA gap-fill half remains. The remaining three surfaces are
-live. Migration-target channels: channel-1 = `replaced_by` succession edges (#814/#817),
-channel-2 = multi-axis concept_group over representations (#819).
+(see below). **Update (#846):** `column_merge` is now fully retired — the RTB half via a
+representation-grain `replaced_by` succession edge (PR A), the FRIDA gap-fill half via
+variant-scoped representation succession (this PR); the surface and its loader are
+deleted. The remaining two surfaces are live.
 
 The keep/retire split follows one cross-cutting principle, with one nuance the early
 framing got wrong: a **retire** candidate's effect stops at variable GROUPING, which is
@@ -1394,71 +1371,50 @@ default-selection migration precondition** — existing bindings to the affected
 must be remapped and the default-representation chooser updated. The `fold_override`
 retire candidate (channel-2) inherited this precondition and addressed it pre-#845 by
 SPLIT + concept-group faceting (the leaf variables are visible to bindings from day one,
-so no FQID remapping is needed). The RTB half of the `column_merge` retire candidate
-(channel-1) addressed it in #846 differently: since `PNR` and `PersonNr` never
-co-occurred and the `personnr` sibling already carries the canonical slug, removing the
-merge leaves the dense sibling's FQID unchanged — no existing binding is invalidated.
-The remaining FRIDA gap-fill half of `column_merge` still carries the precondition —
-splitting a merged variable changes its leaf set. A **keep** surface's effect instead
-reaches the representation's value-set / codes or mints real representations, so it is
-order- or data-bearing and cannot be expressed as a grouping nudge.
+so no FQID remapping is needed). The `column_merge` retire candidate (channel-1) was
+addressed across two PRs: the RTB half (#846 PR A) left the dense `personnr` sibling's
+FQID unchanged; the FRIDA gap-fill half (#846 this PR) split `borgnr`/`persorgnr` into
+separate variables but landed the `panel_entity_key` pin on the dense `person-orgnr`
+variable, so no existing binding was invalidated (pre-v1 seeded bindings are re-curated
+in-PR). A **keep** surface's effect instead reaches the representation's value-set /
+codes or mints real representations, so it is order- or data-bearing and cannot be
+expressed as a grouping nudge.
 
-  | Surface            | Source                                               | Effect                                                                | Verdict                                                         |
-  | ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------- |
-  | `column_merge`     | `[[column_merge]]` / `source_column_repairs.py`      | unifies never-co-occurring gap-fill twins into one variable           | **RTB half retired (#846)**; FRIDA gap-fill half remains (ch-1) |
-  | `fold_override`    | ~~`[[fold_override]]` / `source_column_repairs.py`~~ | ~~folds disjoint-stem contested columns of one concept into one var~~ | **retired (#845)** — replaced by SPLIT + concept-group faceting |
-  | `codelivery`       | `codelivery.toml` / `codelivery.py`                  | pins which coding a column KEEPS when it carries two in a period      | **keep (confirm-only)**                                         |
-  | `canonical_attach` | `lisa_canonical.toml` / `canonical_attach.py`        | mints canonical-SCB variable/state rows + classification links        | **keep (confirm-only)**                                         |
+  | Surface            | Source                                               | Effect                                                                | Verdict                                                                                  |
+  | ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+  | `column_merge`     | ~~`[[column_merge]]` / `source_column_repairs.py`~~  | ~~unifies never-co-occurring gap-fill twins into one variable~~       | **retired (#846)** — RTB: representation `replaced_by`; FRIDA: variant-scoped succession |
+  | `fold_override`    | ~~`[[fold_override]]` / `source_column_repairs.py`~~ | ~~folds disjoint-stem contested columns of one concept into one var~~ | **retired (#845)** — replaced by SPLIT + concept-group faceting                          |
+  | `codelivery`       | `codelivery.toml` / `codelivery.py`                  | pins which coding a column KEEPS when it carries two in a period      | **keep (confirm-only)**                                                                  |
+  | `canonical_attach` | `lisa_canonical.toml` / `canonical_attach.py`        | mints canonical-SCB variable/state rows + classification links        | **keep (confirm-only)**                                                                  |
 
-**`column_merge` (#196) — RTB half retired (#846); FRIDA gap-fill remains (channel-1).**
-Navigation-only for the data/stats an order resolves to: it writes NO
-`value_set`/`value_code` rows and NO lineage/succession edges (the mechanics are in
-*Curated column-merge* above) — it only changes which `variable` a `variable_state`
-hangs off. Two distinct join mechanisms, neither of which routes through the unified
-variable: the per-period **data-value join** is column-resolved (a `Binding`'s
-`representation` / `variable_alias.delivery_column_name` picks the actual delivery
-column), but the **panel entity-key default** is a variable-**slug** pointer
-(`register_variant.panel_entity_key`, decoded as `str | tuple[str, ...]` in
-`reg_meta/.../catalog.py:341`) and `PanelMember` panel keys join on delivered-data
-**headers** (`reg_schema.project_data.PanelMember.display_name`, `project_data.py:138` —
-bare strings are column refs against a source's binding `display_name` values), NOT via
-`Binding.representation`. `is_identifier` is set pre-triage
-(`_populate_sensitivity_flags`) independent of the merge.
+**`column_merge` (#196) — FULLY RETIRED (#846).** *(Historical tracker note; the surface
+no longer exists in the build.)* The `[[column_merge]]` / `source_column_repairs.py`
+surface was navigation-only: it wrote NO `value_set`/`value_code` rows and NO
+lineage/succession edges — it only changed which `variable` a `variable_state` hung off.
+Two entries were retired across two PRs in #846:
 
-**RTB retirement (#846).** The `PNR` → `PersonNr` RTB era-rename (reg 2 var 57) was the
-#196 canonical example. It was a pure rename with no gap to fill: the two delivery
-columns never co-occurred, and the dense `personnr` sibling already carried the
+**RTB retirement (#846, PR A).** The `PNR` → `PersonNr` RTB era-rename (reg 2 var 57)
+was the #196 canonical example. It was a pure rename with no gap to fill: the two
+delivery columns never co-occurred, and the dense `personnr` sibling already carried the
 canonical slug that every RTB `panel_entity_key` pin referenced. Removing the
-`column_merge` entry splits the unified variable into a sparse `pnr` sibling and the
-dense `personnr` sibling. **Migration map:** the rename intent → a curated
+`column_merge` entry split the unified variable into a sparse `pnr` sibling and the
+dense `personnr` sibling. **Resolution:** the rename intent → a curated
 representation-grain `replaced_by` edge (`from_column = "PNR"` /
 `to_column = "PersonNr"`, #846) in `curation/relations.toml`; the entity-key pin lands
-on the dense `personnr` sibling directly — no resolver walk needed, because the pin slug
-(`personnr`) already matches the dense sibling post-split. No binding or FQID remapping
-required.
+on the dense `personnr` sibling directly — no resolver walk needed. No binding or FQID
+remapping required.
 
-**FRIDA remains.** The surviving `column_merge` entry (FRIDA, reg 121 var 56: `borgnr` /
-`persorgnr` / `borgnr` cycle, see *Curated column-merge* above) is a **gap-fill**, not a
-rename: the two headers partition disjoint year ranges of ONE firm key and FRIDA's
-`panel_entity_key` pins currently point at the merged variable. Its migration map is the
-same in shape — representation-grain `replaced_by` succession + pin landing on the dense
-sibling — but needs the overlay model extended with a **time-disjoint** invariant and a
-time-aware succession chain (`borgnr→persorgnr→borgnr` is monotone in time, not a real
-cycle) before the `column_merge` entry can be pulled. That extension is deferred to its
-own PR. **Migration preconditions** (`fold_override` was retired in #845; RTB was
-retired in #846):
-
-- **Representation-grain successor edges** (#843, **done**): `replaced_by` endpoints now
-  reach down to a `(variable_fqid, delivery_column)` pair via `from_column` /
-  `to_column` TOML fields — so the build can record which representation was replaced
-  without collapsing two columns onto one variable.
-- **Succession-aware entity-key resolution** (FRIDA PR, open): the `panel_entity_key`
-  pin surface must resolve over a succession chain rather than a single variable slug.
-  For RTB this was a non-issue — the dense sibling kept the slug, so no resolver was
-  needed; for FRIDA's gap-fill it is the blocking open item, to be built alongside the
-  time-disjoint / time-aware-succession model in its own PR. (Distinct from #844, the
-  binding/default-selection migration question, which closed no-op for pre-v1: seeded
-  bindings are re-curated in-PR, not migrated.)
+**FRIDA retirement (#846, this PR).** FRIDA's firm-key gap-fill (reg 121 var 56:
+`borgnr` / `persorgnr` / `borgnr` cycle) is a **variant-local** pattern: in the
+`punktskatter-for-energi` variant only, the firm-key column cycles `borgnr` (2007–13) →
+`persorgnr` (2014–17) → `borgnr` (2018–23), while 15 other variants deliver `borgnr`
+continuously. **Resolution:** two variant-scoped representation succession edges in
+`curation/relations.toml` (`borgnr→persorgnr` @2014, `persorgnr→borgnr` @2018, both
+scoped to `punktskatter-for-energi`) model the round-trip as time-monotone rather than a
+cycle (see *Variant-scoped representation succession* below). The `panel_entity_key` pin
+lands on the dense `person-orgnr` variable (the firm-key variable carrying continuous
+`borgnr` delivery across 15 variants); `persorgnr` becomes its own curated sibling.
+Pre-v1 seeded bindings were re-curated in-PR — no FQID remapping required.
 
 **`fold_override` (#261) — RETIRED (#845).** *(Historical tracker note; the surface no
 longer exists in the build.)* The channel-2 retire candidate audited here was pure
@@ -1779,12 +1735,12 @@ subset deliberately excludes month-named editions). #319 adds the **adapter-leve
 curated family merge** (`period_family_merges.py`, driven by
 `curation/period_family_merges.toml`): 12 columns → ONE variable, each column carrying a
 per-month alias window (`variable_alias_window`) derived from its name's month suffix ×
-delivered years (`YYYY-MM`). The `[[column_merge]]` section of
-`source_column_repairs.toml` is **not** the vehicle — it asserts gap-fill twins that
-never co-occur, the opposite of 12 deliberately-parallel columns. The AGI variant's
-`cadence = month` (*Cadence policy* above) is orthogonal: cadence scopes *edition*
-conflation on the AGI register, while these monthly *columns* ride annual LISA editions
-and get their windows from the merge.
+delivered years (`YYYY-MM`). The retired `[[column_merge]]` surface
+(`source_column_repairs.toml`, deleted in #846) was not the vehicle either — it asserted
+gap-fill twins that never co-occur, the opposite of 12 deliberately-parallel columns.
+The AGI variant's `cadence = month` (*Cadence policy* above) is orthogonal: cadence
+scopes *edition* conflation on the AGI register, while these monthly *columns* ride
+annual LISA editions and get their windows from the merge.
 
 **Mechanics.** `materialize_period_family_merges` runs POST-triage (so `variable_state`
 / `variable_alias` exist) but BEFORE `populate_variable_slugs`. Members are identified
@@ -1922,10 +1878,11 @@ Every implementation PR gates on:
 `codelivery.toml` (package root, like `concept_groups.toml` — NOT under `fqid_slugs/`)
 is an **SCB-only** curated overlay that tells the co-delivery resolver how to handle
 delivery columns that carry **multiple distinct codings in the same period**: 19 rules
-today. It is the `value/coding` family counterpart to `source_column_repairs.toml` — but
-where `[[column_merge]]` acts on column IDENTITY before states exist, `codelivery.toml`
-acts on VALUE-SET SELECTION for a column that is already a single identity with
-competing codings.
+today. It is the `value/coding` family SCB column-repair surface — acting on VALUE-SET
+SELECTION for a column that is already a single identity with competing codings. (The
+companion surface `source_column_repairs.toml` that formerly acted on column IDENTITY
+before states exist was retired in #846; see *Curated column-merge* in the triage
+section above.)
 
 Each entry is a **source-id-keyed pin** — `(register_id, var_id, column)` — resolved one
 of two ways: `keep = "<emitted label>"` pins one value-set version label (matched
@@ -1961,25 +1918,16 @@ column correctly; there is no stale-pin build failure for this case. The build o
 fails (`EXIT_CONFIG`, `coalesce_unresolved_codelivery`) when a column **still resolves
 to >1 value set after the entire cascade** — a genuinely ambiguous same-column
 co-delivery the pin failed to resolve. A pin for a register absent from the build is
-inert (the partial-build escape). `source_column_repairs.toml`'s `[[column_merge]]`
-surface has the same partial-build escape but is STRICTER for present registers: a named
-column never observed as a delivery column of the var fails `EXIT_CONFIG`
-(`column_merge_unknown_column`), so the two files do not share the same stale-entry
-behavior.
+inert (the partial-build escape).
 
-**Relationship to `source_column_repairs.toml`.** These two files are the curation pair
-for SCB column-level repair:
-
-- `[[column_merge]]` — gap-fill identity unification (upstream of triage; one column
-  from two); era-renames use `replaced_by` succession in `curation/relations.toml`
-  instead (#846)
-- `codelivery.toml` — same-column multi-coding resolution (inside co-delivery
-  resolution; one winner from competing value sets)
-
-No entry belongs in both files; their repair phases are disjoint. (A third surface,
-`[[fold_override]]`, formerly lived alongside `[[column_merge]]` and handled contested
-disjoint-stem columns. It was retired in #845 — its intent is now expressed via SPLIT +
-concept-group faceting.)
+**Historical note — `source_column_repairs.toml`.** The retired `[[column_merge]]`
+surface (deleted in #846) also had a partial-build escape but was stricter for present
+registers: a named column never observed as a delivery column of the var failed
+`EXIT_CONFIG` (`column_merge_unknown_column`). That stricter validation no longer
+exists; gap-fills and era-renames are now represented as representation-grain
+`replaced_by` edges in `curation/relations.toml`. A second companion surface,
+`[[fold_override]]` (also retired, in #845), handled contested disjoint-stem columns —
+its intent is now expressed via SPLIT + concept-group faceting.
 
 ## Slug curation
 
@@ -2207,22 +2155,25 @@ consolidated:
   - **Classification** (`class/<slug>`): global (no provider gate); **both** endpoints
     must be live (classification succession is all-live — the reg_meta read side
     `classification_chain` depends on it). A dead predecessor fails the build.
-  - **Representation** (#843): a variable-grain edge in `curation/relations.toml` that
-    also carries `from_column` and `to_column` TOML fields is a representation-grain
-    edge — the `(variable_fqid, delivery_column)` pair the variable grain alone cannot
-    express (two representations of one variable both collapsing to the same 3-seg
-    FQID). Lands in `representation_replaced_by` (SCHEMA\_VERSION 5.9.0). Rules:
-    curated-only (no auto/event source); **both** endpoints must be live (a within-build
-    column rename observes both columns — stricter than the register/variable "dead
-    predecessor allowed" rule); intra-register (both endpoints must share `provider` AND
-    `register`; a cross-register column rename is handled by the variable grain);
-    columns are matched **case-insensitively** (SCB delivery headers drift in case,
-    including Swedish letters like `Ägare` that ASCII `LOWER()` can't fold — the
-    Unicode-aware `py_lower` UDF is used in both the build/validator and downstream
-    reg_meta reads; #853) but **stored verbatim** (the curator's spelling is preserved;
-    reads fold via `py_lower` before comparing); the 8-part PK dedup covers the full
+  - **Representation** (#843, extended in #846): a variable-grain edge in
+    `curation/relations.toml` that also carries `from_column` and `to_column` TOML
+    fields is a representation-grain edge — the `(variable_fqid, delivery_column)` pair
+    the variable grain alone cannot express (two representations of one variable both
+    collapsing to the same 3-seg FQID). Lands in `representation_replaced_by`
+    (SCHEMA\_VERSION 5.9.0; `variant` column added 5.10.0). Rules: curated-only (no
+    auto/event source); **both** endpoints must be live (a within-build column rename
+    observes both columns — stricter than the register/variable "dead predecessor
+    allowed" rule); intra-register (both endpoints must share `provider` AND `register`;
+    a cross-register column rename is handled by the variable grain); columns are
+    matched **case-insensitively** (SCB delivery headers drift in case, including
+    Swedish letters like `Ägare` that ASCII `LOWER()` can't fold — the Unicode-aware
+    `py_lower` UDF is used in both the build/validator and downstream reg_meta reads;
+    #853) but **stored verbatim** (the curator's spelling is preserved; reads fold via
+    `py_lower` before comparing); the 8-part PK dedup covers the full
     `(pred\_provider, pred\_register, pred\_variable, pred\_column, succ\_provider,     succ\_register, succ\_variable, succ\_column)`
-    tuple. No successor index yet — added when a consumer exists (#846/#838). No auto
+    tuple. An optional `variant` field scopes the edge to one register-variant slug
+    (`''` / absent = variable-level default); variant-scoped edges permit time-monotone
+    round-trips — see *Variant-scoped representation succession* above. No auto
     representation grain (SCB's `timeseries_event` succession is entity-grained), so
     every row carries `note = 'curated:slug_toml'`.
 
@@ -2250,6 +2201,44 @@ consolidated:
   cycle-freedom); a `replaced_by` edge is a *succession edge* between two full FQIDs (or
   `(FQID, column)` pairs). It is also distinct from `variable_state_lineage`
   (consumer↔source binding overlap; see below).
+
+### Variant-scoped representation succession (schema 5.10.0, #846)
+
+A representation-grain `replaced_by` edge can optionally be scoped to a single
+register-variant via a `variant` field (a register_variant slug). When absent or `""`,
+the edge applies at the variable level — the default behaviour from #843. When present,
+the edge applies **only within that variant** and lands in `representation_replaced_by`
+with the variant slug populated.
+
+**Why variant scope.** A column rename can hold in one variant but not others. FRIDA
+delivers `borgnr` continuously across 15 variants; only `punktskatter-for-energi` (reg
+121, 1 of 16 variants) cycles through `persorgnr` for 2014–17 as a gap-fill. A
+variable-level succession edge would assert the rename for ALL variants and break the 15
+where `borgnr` delivered continuously. Variant scope confines the edge to the one
+variant where the gap-fill occurred.
+
+**Time-aware cycle check.** The representation-arm acyclicity check became time-aware
+with this schema version. A succession cycle keyed on `(variable, column, variant)` is
+permitted if and only if every edge in the cycle carries a **distinct** `effective_year`
+AND the cycle forms a **single monotone round-trip** (the effective years are strictly
+increasing in the forward direction and the sequence reverses exactly once). This makes
+`borgnr→persorgnr @2014, persorgnr→borgnr @2018` legal: two distinct years, one reversal
+— it reads as "renamed away, then renamed back" rather than a logical contradiction.
+Same-year cycles and multi-reversal cycles are rejected as `EXIT_CONFIG`. Variable-level
+edges (empty/absent `variant`) retain the strict acyclic guarantee from #843.
+
+TOML shape for a variant-scoped edge:
+
+```toml
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/person-orgnr"   # the same variable for a within-variable gap-fill
+to   = "scb/frida/persorgnr"
+from_column = "borgnr"
+to_column   = "persorgnr"
+variant = "punktskatter-for-energi"   # variant slug; omit for variable-level (default)
+effective_year = 2014
+```
 
 - **`related_to`** — weak "see also" discovery link between distinct variable concepts.
   Variables only (3-seg FQIDs). The curated relation-kind vocabulary
