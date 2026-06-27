@@ -4,12 +4,7 @@ import {
   getClassificationGroup,
 } from "./api";
 import { asyncResource } from "./async.svelte";
-import {
-  catalogHref,
-  DATA_BROWSER_LABEL,
-  leafSlug,
-  memberKey,
-} from "./catalog";
+import { catalogHref, leafSlug, memberKey } from "./catalog";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 
@@ -26,8 +21,9 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 // group + the leaves: a `description` (a Technical details disclosure holding
 // key/axes/source) and a `picker` (the member selector — member chips, each
 // labelled by the member's own curated short facet label; classification umbrellas
-// are axis-less, so there is no shared group facet axis). The breadcrumbs
-// + loading / error arms stay OUTSIDE the shell (the shell is the success body).
+// are axis-less, so there is no shared group facet axis). The loading / error arms
+// stay OUTSIDE the shell (the shell is the success body). Identity is carried by the
+// #803 topbar trail + the page <h2> (SubjectView title), not an in-page breadcrumb.
 let { key }: { key: string } = $props();
 
 const resource = asyncResource(() => getClassificationGroup(key));
@@ -42,14 +38,6 @@ function memberLabel(
   return member.facets[0]?.label ?? member.name ?? leafSlug(member.fqid);
 }
 </script>
-
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <a href="/catalog">{DATA_BROWSER_LABEL}</a>
-  <span class="sep" aria-hidden="true">/</span>
-  <a href={catalogHref("class")}>class</a>
-  <span class="sep" aria-hidden="true">/</span>
-  <span class="current">group/{key}</span>
-</nav>
 
 {#if resource.loading}
   <p class="muted" aria-busy="true">Loading…</p>
@@ -104,23 +92,12 @@ function memberLabel(
 {/if}
 
 <style>
-  .breadcrumbs {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-  .breadcrumbs .sep {
-    color: var(--text-muted);
-    margin: 0 0.25rem;
-  }
-  .breadcrumbs .current {
-    color: var(--text-muted);
-  }
-  /* #638 PR4: row spacing standardized to 0.3rem across the subject kinds. */
+  /* #638 PR4: row spacing standardized across the subject kinds. */
   .meta {
     display: grid;
     grid-template-columns: max-content 1fr;
-    gap: 0.3rem 1rem;
-    margin: 1rem 0;
+    gap: var(--space-1) var(--space-4);
+    margin: var(--space-4) 0;
   }
   .meta dt {
     font-weight: 600;
@@ -132,15 +109,22 @@ function memberLabel(
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-2);
     padding: 0;
-    margin: 0.5rem 0;
+    margin: var(--space-2) 0;
   }
+  /* The chip pill borrows ConceptGroupRow's `.chip` geometry (--border, em-based
+     padding); it keeps the rounded 1rem radius the chips already had. */
   .chip {
     display: inline-block;
-    border: 1px solid var(--text-muted);
+    border: 1px solid var(--border);
     border-radius: 1rem;
-    padding: 0.1rem 0.6rem;
+    padding: 0.1em 0.5em;
     text-decoration: none;
+  }
+  /* Keyboard focus on a member chip link: the shared --focus-ring (#808/#828). */
+  .chip:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
 </style>

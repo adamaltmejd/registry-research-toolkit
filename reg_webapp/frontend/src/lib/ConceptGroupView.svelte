@@ -5,7 +5,6 @@ import ConceptGroupNavigator from "./ConceptGroupNavigator.svelte";
 import {
   axisValues,
   catalogHref,
-  DATA_BROWSER_LABEL,
   formatWindow,
   memberAt,
   memberCoverageUnion,
@@ -38,8 +37,9 @@ import { windowStore } from "./window.svelte";
 // a `picker` (#638 PR2a, below). It has no single fqid (its key shows inside the
 // disclosure), no value set, no docs, and (post
 // PR2a) no `relationships` — its members live IN the picker's selector now — so
-// those sections are omitted. The breadcrumbs + loading / error arms stay OUTSIDE
-// the shell (the shell is the success-arm body only).
+// those sections are omitted. Identity is carried by the #803 topbar trail + the
+// page <h2> (SubjectView title); the loading / error arms stay OUTSIDE the shell
+// (the shell is the success-arm body only).
 let {
   provider,
   register,
@@ -273,16 +273,6 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
 }
 </script>
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <a href="/catalog">{DATA_BROWSER_LABEL}</a>
-  <span class="sep" aria-hidden="true">/</span>
-  <a href={catalogHref(provider)}>{provider}</a>
-  <span class="sep" aria-hidden="true">/</span>
-  <a href={catalogHref(registerFqid)}>{register}</a>
-  <span class="sep" aria-hidden="true">/</span>
-  <span class="current">group/{key}</span>
-</nav>
-
 {#if resource.loading}
   <p class="muted" aria-busy="true">Loading…</p>
 {:else if resource.error}
@@ -447,23 +437,12 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
 {/if}
 
 <style>
-  .breadcrumbs {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-  .breadcrumbs .sep {
-    color: var(--text-muted);
-    margin: 0 0.25rem;
-  }
-  .breadcrumbs .current {
-    color: var(--text-muted);
-  }
-  /* #638 PR4: row spacing standardized to 0.3rem across the three subject kinds. */
+  /* #638 PR4: row spacing standardized across the three subject kinds. */
   .meta {
     display: grid;
     grid-template-columns: max-content 1fr;
-    gap: 0.3rem 1rem;
-    margin: 1rem 0;
+    gap: var(--space-1) var(--space-4);
+    margin: var(--space-4) 0;
   }
   .meta dt {
     font-weight: 600;
@@ -474,19 +453,19 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   .members {
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0;
+    margin: var(--space-2) 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
   .facet-matrix {
-    margin: 0.5rem 0;
+    margin: var(--space-2) 0;
     border-collapse: collapse;
-    font-size: 0.9em;
+    font-size: var(--text-sm);
   }
   .facet-matrix th,
   .facet-matrix td {
-    padding: 0.25rem 0.6rem;
+    padding: var(--space-1) var(--space-3);
     text-align: left;
     vertical-align: baseline;
   }
@@ -502,9 +481,9 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-2);
     padding: 0;
-    margin: 0.5rem 0;
+    margin: var(--space-2) 0;
   }
   /* A member link: name/label + coverage + availability note. In the chips row
      each becomes a bordered pill; in the matrix/list it's an inline-flex link. */
@@ -512,13 +491,22 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     display: inline-flex;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 0.25rem 0.6rem;
+    gap: var(--space-1) var(--space-3);
     text-decoration: none;
   }
+  /* The chip pill borrows ConceptGroupRow's `.chip` geometry (--border, em-based
+     padding); it keeps the rounded 1rem radius the chips-row pills already had. */
   .facet-chips a {
-    border: 1px solid var(--text-muted);
+    border: 1px solid var(--border);
     border-radius: 1rem;
-    padding: 0.1rem 0.6rem;
+    padding: 0.1em 0.5em;
+  }
+  /* Keyboard focus on a member link: the shared --focus-ring (matching the row /
+     DataTable selectable rows, #808/#828). */
+  .member-selector a:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
   }
   .member-selector a .label {
     font-weight: 600;
@@ -527,7 +515,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
      reads as highlighted without a heavy box. */
   .member-selector a.focused {
     border-left: 3px solid var(--accent);
-    padding-left: 0.5rem;
+    padding-left: var(--space-2);
   }
   /* The availability lens: a member whose coverage doesn't span the active
      window is muted + carries a "not delivered <window>" note. */
@@ -536,11 +524,11 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   }
   .coverage,
   .availability {
-    font-size: 0.85em;
+    font-size: var(--text-sm);
   }
   /* The disambiguating leaf slug (mirrors ConceptGroupRow's `.member-slug`): a
      muted monospace code that tells same-named edge-group members apart. */
   .member-slug {
-    font-size: 0.85em;
+    font-size: var(--text-sm);
   }
 </style>

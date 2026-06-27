@@ -234,7 +234,7 @@ const visibleMembers = $derived(
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    padding: 0.1rem 0.55rem;
+    padding: 0.1em 0.5em;
     border: 1px solid var(--border);
     border-radius: 1rem;
     font-size: var(--text-sm);
@@ -258,7 +258,7 @@ const visibleMembers = $derived(
     background: none;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 0.2rem 0.6rem;
+    padding: var(--space-1) var(--space-3);
     font: inherit;
     font-size: var(--text-sm);
     color: var(--text-muted);
@@ -267,6 +267,12 @@ const visibleMembers = $derived(
   .clear-filters:hover {
     color: var(--text);
     border-color: var(--border-strong);
+  }
+  /* Keyboard focus on the clear-filters button: the shared --focus-ring, matching
+     the other focusable controls in the catalog (#808/#828). */
+  .clear-filters:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .member-count {
     font-size: var(--text-sm);
@@ -281,10 +287,10 @@ const visibleMembers = $derived(
   .members {
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0;
+    margin: var(--space-2) 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
   /* A navigator member row: its per-axis neutral tags, then the host's member
      action (a link, or a pick button + coverage/greying). */
@@ -292,7 +298,7 @@ const visibleMembers = $derived(
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.25rem 0.6rem;
+    gap: var(--space-1) var(--space-3);
   }
   .facet-tags {
     display: inline-flex;
