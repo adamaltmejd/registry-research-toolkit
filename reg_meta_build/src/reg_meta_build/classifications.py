@@ -925,8 +925,9 @@ def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
 
 
 def _build_containment_temp_tables(conn: sqlite3.Connection) -> None:
-    """Build the shared `_canon_codes` / `_vs_codes` / `_vs_stats` / `_vs_cls`
-    temp tables (steps 1-3 of the #416 code-set-containment detector) on `conn`.
+    """Build the shared `_canon_codes` / `_vs_codes` / `_vs_stats` / `_vs_cls` /
+    `_vs_label_agree` temp tables (steps 1-3 of the #416 code-set-containment
+    detector, plus the shared label_agree projection) on `conn`.
 
     READ-ONLY against the persistent schema: it only CREATEs TEMP tables and their
     indexes, never touching `classification_candidate` / `variable_state`. Both
@@ -938,13 +939,18 @@ def _build_containment_temp_tables(conn: sqlite3.Connection) -> None:
     detector reuses them through step 7; the diagnostic drops them once it has read
     `_vs_cls`).
 
+    `_vs_label_agree(value_set_id, cls_id, label_agree)` is the shared exact-(kod,
+    label) agreement projection over the `_vs_cls` pairs, read by BOTH step 5's
+    confident-link filter and the #513 residue diagnostic so the formula has ONE
+    home (it was duplicated verbatim in both callers — #738).
+
     Behaviour-preserving: the SQL here is moved verbatim from the detector, so the
     linkage output is byte-identical. Do NOT change the thresholds or grain logic.
 
     Steps 4+ (`_vs_single` / `_vs_confident` / the vintage reclaim) stay in
     `link_value_set_classifications` — they are the WRITE side; the residue
     diagnostic recomputes multi-family from `_vs_cls` directly."""
-    for tmp in ("_canon_codes", "_vs_codes", "_vs_stats", "_vs_cls"):
+    for tmp in ("_canon_codes", "_vs_codes", "_vs_stats", "_vs_cls", "_vs_label_agree"):
         conn.execute(f"DROP TABLE IF EXISTS {tmp}")
 
     # 1. Canonical (cls_id, kod, level, label). is_valid IS NOT 0 keeps both the
@@ -1039,6 +1045,49 @@ def _build_containment_temp_tables(conn: sqlite3.Connection) -> None:
         """
     )
     conn.execute("CREATE INDEX _vs_cls_vs ON _vs_cls(value_set_id)")
+
+    # Shared exact-(kod, label) label_agree per (value_set_id, cls_id), over the
+    # `_vs_cls` pairs (#738 — was duplicated verbatim in step 5 and the #513
+    # diagnostic). label_agree = the number of DISTINCT value-set codes (kods) that
+    # have at least one exact (kod, label) match against the candidate cls's
+    # canonical (kod, label) pairs, divided by n_codes. The numerator is
+    # COUNT(DISTINCT v.kod) — not COUNT(*) — because `_vs_codes` holds distinct
+    # (kod, label) rows, so a single code carried under two matching labels would
+    # otherwise count twice against a DISTINCT-kod denominator and let label_agree
+    # exceed 1.0. Distinct-kod keeps it bounded ≤ 1.0 and matches the issue's
+    # intended "exact code+label ≥0.90" metric.
+    #
+    # Byte-identity: `vc.n_codes` here is `_vs_stats.n_codes` joined into `_vs_cls`
+    # (see the `_vs_cls` CREATE: `s.n_codes`), so dividing by `vc.n_codes` equals
+    # step 5's old `/ st.n_codes` and the diagnostic's old `/ vc.n_codes` — same
+    # denominator. The numerator subquery is identical to both old inline copies.
+    # Coverage is identical: step 5's cls always comes from `_vs_single` ⊆ `_vs_cls`,
+    # and the diagnostic's candidates ARE `_vs_cls` rows — both only ever need
+    # label_agree for `_vs_cls` pairs.
+    conn.execute(
+        """
+        CREATE TEMP TABLE _vs_label_agree AS
+        SELECT
+            vc.value_set_id,
+            vc.cls_id,
+            (CAST((
+                SELECT COUNT(DISTINCT v.kod)
+                FROM _vs_codes v
+                WHERE v.value_set_id = vc.value_set_id
+                  AND EXISTS (
+                      SELECT 1 FROM _canon_codes c
+                      WHERE c.cls_id = vc.cls_id
+                        AND c.kod = v.kod
+                        AND c.label = v.label
+                  )
+            ) AS REAL) / vc.n_codes) AS label_agree
+        FROM _vs_cls vc
+        """
+    )
+    conn.execute(
+        "CREATE UNIQUE INDEX _vs_label_agree_pk "
+        "ON _vs_label_agree(value_set_id, cls_id)"
+    )
 
 
 def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
@@ -1140,34 +1189,22 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     conn.execute("CREATE UNIQUE INDEX _vs_single_pk ON _vs_single(value_set_id)")
 
     # 5. Confident auto-link: single-family AND (n_codes >= _CONFIDENT_MIN_CODES OR
-    # label_agree >= _CONFIDENT_LABEL_AGREE). label_agree = the number of DISTINCT
-    # value-set codes (kods) that have at least one exact (kod, label) match against
-    # the candidate cls's canonical (kod, label) pairs, divided by n_codes. The
-    # numerator is COUNT(DISTINCT v.kod) — not COUNT(*) — because `_vs_codes` holds
-    # distinct (kod, label) rows, so a single code carried under two matching labels
-    # would otherwise count twice against a DISTINCT-kod denominator and let
-    # label_agree exceed 1.0. Distinct-kod keeps it bounded ≤ 1.0 and matches the
-    # issue's intended "exact code+label ≥0.90" metric.
+    # label_agree >= _CONFIDENT_LABEL_AGREE). label_agree comes from the shared
+    # `_vs_label_agree` projection (built in `_build_containment_temp_tables`,
+    # alongside the diagnostic's reader — the formula and its distinct-kod rationale
+    # live at that table's definition). The single-family set has exactly one
+    # `_vs_cls` row, so the join to `_vs_label_agree` is 1:1.
     conn.execute(
         f"""
         CREATE TEMP TABLE _vs_confident AS
         SELECT sg.value_set_id, sg.cls_id
         FROM _vs_single sg
         JOIN _vs_stats st ON st.value_set_id = sg.value_set_id
+        JOIN _vs_label_agree la
+          ON la.value_set_id = sg.value_set_id
+         AND la.cls_id = sg.cls_id
         WHERE st.n_codes >= {_CONFIDENT_MIN_CODES}
-           OR (
-               CAST((
-                   SELECT COUNT(DISTINCT v.kod)
-                   FROM _vs_codes v
-                   WHERE v.value_set_id = sg.value_set_id
-                     AND EXISTS (
-                         SELECT 1 FROM _canon_codes c
-                         WHERE c.cls_id = sg.cls_id
-                           AND c.kod = v.kod
-                           AND c.label = v.label
-                     )
-               ) AS REAL) / st.n_codes
-           ) >= {_CONFIDENT_LABEL_AGREE}
+           OR la.label_agree >= {_CONFIDENT_LABEL_AGREE}
         """
     )
     conn.execute("CREATE UNIQUE INDEX _vs_confident_pk ON _vs_confident(value_set_id)")
@@ -1436,6 +1473,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         "_chain_root",
         "_vs_confident",
         "_vs_single",
+        "_vs_label_agree",
         "_vs_cls",
         "_vs_stats",
         "_vs_codes",
@@ -1625,7 +1663,9 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
         # standalone flag (no supersedes_id chain neighbour — neither a predecessor
         # nor a successor), and the exact-(kod,label) label_agree (step 5's metric:
         # COUNT(DISTINCT v.kod matching a canonical (kod,label) of THIS cls) /
-        # n_codes). `standalone` = supersedes_id IS NULL (no predecessor) AND no
+        # n_codes), read from the shared `_vs_label_agree` projection built in
+        # `_build_containment_temp_tables` (same formula step 5 uses — #738).
+        # `standalone` = supersedes_id IS NULL (no predecessor) AND no
         # other classification supersedes it (no successor). `vc.n_codes` is the
         # per-value-set distinct-code count (constant across a value set's candidate
         # rows — it comes from `_vs_stats`), so we capture it once per value set here
@@ -1644,21 +1684,12 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
                         SELECT 1 FROM classification s WHERE s.supersedes_id = cl.id
                     )
                 ) AS standalone,
-                (
-                    CAST((
-                        SELECT COUNT(DISTINCT v.kod)
-                        FROM _vs_codes v
-                        WHERE v.value_set_id = vc.value_set_id
-                          AND EXISTS (
-                              SELECT 1 FROM _canon_codes c
-                              WHERE c.cls_id = vc.cls_id
-                                AND c.kod = v.kod
-                                AND c.label = v.label
-                          )
-                    ) AS REAL) / vc.n_codes
-                ) AS label_agree
+                la.label_agree AS label_agree
             FROM _vs_cls vc
             JOIN _residue_vs rv ON rv.value_set_id = vc.value_set_id
+            JOIN _vs_label_agree la
+              ON la.value_set_id = vc.value_set_id
+             AND la.cls_id = vc.cls_id
             JOIN classification cl ON cl.id = vc.cls_id
             ORDER BY vc.value_set_id, cl.short_name
             """
@@ -1765,7 +1796,14 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
             conn, value_sets, safe_target_cls_id_by_vs
         )
     finally:
-        for tmp in ("_residue_vs", "_vs_cls", "_vs_stats", "_vs_codes", "_canon_codes"):
+        for tmp in (
+            "_residue_vs",
+            "_vs_label_agree",
+            "_vs_cls",
+            "_vs_stats",
+            "_vs_codes",
+            "_canon_codes",
+        ):
             conn.execute(f"DROP TABLE IF EXISTS {tmp}")
 
     safe_count = sum(1 for vs in value_sets if vs.safe)
