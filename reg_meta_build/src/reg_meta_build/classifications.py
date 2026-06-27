@@ -1126,24 +1126,32 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
       5. `_vs_confident`: single-family AND (`n_codes >= 15` OR `label_agree >=
          0.90`).
       6. Emit the confident map into `classification_candidate`, additively.
-      7. Vintage-period reclaim (#494 PART 1): much of the multi-family residue is
-         ONE family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
-         editions) — distinct `classification` rows on one `supersedes_id` chain.
-         Resolve a multi-family value set ONLY when its candidate cls share ONE
-         vintage family, keyed on BOTH the supersedes-chain root (`_chain_root`)
-         AND the slug STEM (`classification_stem`, the year-tail-stripped slug). The
-         chain root alone is NOT enough: the #579 sun1996 → {niva, inriktning, grupp}
-         curated split puts three ORTHOGONAL SUN dimensions under one chain root, so
-         a code-ambiguous label-less value set spanning e.g. SUN nivå + inriktning
-         would collapse to one dimension on the root guard alone — the shared-stem
-         requirement (sun-niva* vs sun-inriktning* are different stems) keeps it in
-         the residue. If even one candidate is off-chain (a genuine cross-family
-         coincidence, e.g. SNI vs SSYK), or the candidates span two stems, leave the
-         whole set in the residue for curation. For each reclaimed (variable_id,
-         value_set_id), pick the LATEST candidate vintage whose [valid_from,valid_to]
-         overlaps AT LEAST ONE of the pair's real state windows (per-state, NOT the
-         aggregate MIN/MAX span — a disjoint-states span would falsely "overlap" a
-         gap vintage) — then emit it additively too.
+      7. Vintage-period reclaim (#494 PART 1, dominant-chain #514): much of the
+         multi-family residue is ONE family across vintages (SNI2002↔SNI2007,
+         SSYK96↔SSYK2012, SUN/LKF editions) — distinct `classification` rows on one
+         `supersedes_id` chain. Group a value set's candidate cls (those in `_vs_cls`)
+         into "vintage families" keyed on BOTH the supersedes-chain root
+         (`_chain_root`) AND the slug STEM (`classification_stem`, the
+         year-tail-stripped slug). The chain root alone is NOT enough: the #579
+         sun1996 → {niva, inriktning, grupp} curated split puts three ORTHOGONAL SUN
+         dimensions under one chain root, so the shared-stem requirement keeps two
+         dimensions apart (sun-niva* vs sun-inriktning* are different stems). A family
+         is a MULTI-VINTAGE CHAIN when the value set matches ≥2 of its editions.
+         Reclaim a multi-family value set when (1) EXACTLY ONE family is a
+         multi-vintage chain — the DOMINANT chain — so a single off-chain stray that
+         only coincidentally matches one edition (the LKF county residue: ≥2 LKF
+         year-editions PLUS a stray SNI2007/MDC) no longer blocks the collapse; and
+         (2) the dominant family's label agreement is ≥ that of EVERY off-chain
+         candidate (the label lever, #514) — a coincidental dominant chain can't beat
+         a stray that actually matches labels (county labels match LKF, not SNI).
+         If ≥2 distinct families are multi-vintage chains it is a genuine cross-family
+         span → stays in the residue for curation. The OLD all-on-chain rule is the
+         zero-stray special case (one family, all candidates). For each reclaimed
+         (variable_id, value_set_id), pick the LATEST DOMINANT-family vintage whose
+         [valid_from,valid_to] overlaps AT LEAST ONE of the pair's real state windows
+         (per-state, NOT the aggregate MIN/MAX span — a disjoint-states span would
+         falsely "overlap" a gap vintage) — the off-chain strays are never emitted —
+         then emit it additively too.
 
     Returns counts (also logged) — value sets / variables auto-linked, the
     single-family-below-threshold and multi-family (ambiguous) populations, plus the
@@ -1163,7 +1171,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         "_vs_single",
         "_vs_confident",
         "_chain_root",
-        "_vs_multi_onechain",
+        "_vs_dominant_chain",
         "_vs_vintage",
         "_vs_vintage_emit",
     ):
@@ -1272,33 +1280,79 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     )
     conn.execute("CREATE UNIQUE INDEX _chain_root_pk ON _chain_root(cls_id)")
 
-    # 7b. Multi-family value sets whose candidate cls (those in `_vs_cls` — i.e.
-    # whose codes the value set actually matches) ALL share one chain root AND one
-    # slug stem. The family key is (chain root AND shared stem): the chain root
-    # gates off-chain cross-family coincidences (SNI vs SSYK), and the stem gates
-    # cross-DIMENSION splits that share a root but are NOT one vintage family — the
-    # #579 sun1996 split chains sun-niva* / sun-inriktning* / sun-grupp* under one
-    # root, but a code-ambiguous label-less value set spanning two of those
-    # dimensions must stay in the residue, not collapse to one. The LEFT JOIN +
-    # `COUNT(*) = COUNT(cr.root)` guard defensively requires every candidate to have
-    # resolved a root (stem is non-NULL whenever root is, both derived from the same
-    # row), so a hypothetical root-less classification can't make a multi-family set
-    # look single-chain.
+    # 7b. Dominant-chain gate (#514). Group each value set's candidate cls (those in
+    # `_vs_cls` — i.e. whose codes the value set actually matches) into VINTAGE
+    # FAMILIES keyed on (chain root AND slug stem). The chain root gates off-chain
+    # cross-family coincidences (SNI vs SSYK); the stem gates cross-DIMENSION splits
+    # that share a root but are NOT one vintage family — the #579 sun1996 split
+    # chains sun-niva* / sun-inriktning* / sun-grupp* under one root, so their
+    # differing stems keep two dimensions apart (a code-ambiguous label-less value
+    # set spanning two of them must stay in the residue, not collapse to one).
+    #
+    # A family is a MULTI-VINTAGE CHAIN when the value set matches >=2 of its
+    # editions (`n_matched >= 2`). We reclaim a value set when EXACTLY ONE family is
+    # a multi-vintage chain — the DOMINANT chain — and carry that family's (root,
+    # stem) so 7c restricts the latest-vintage pick to it. Single-edition off-chain
+    # families (any number) are the permitted STRAYS: this is what unblocks the large
+    # county/län (LKF) residue, where a county code set matches >=2 LKF year-editions
+    # (one multi-vintage chain) plus a STRAY off-chain coincidence (the 2-digit codes
+    # also hit one SNI2007 division + one MDC) that the OLD all-on-chain rule treated
+    # as a disqualifying cross-family candidate. If >=2 distinct families are
+    # multi-vintage chains it is a genuine cross-family span → not reclaimed.
+    #
+    # Label lever (#514, "structural + label-agreement lever now"): the dominant
+    # family's best label_agree (`fam_max_la`, from the shared `_vs_label_agree`
+    # projection) must be >= the best label_agree of every OFF-chain candidate, so a
+    # coincidental dominant chain can't beat a stray that actually label-agrees
+    # (county labels match LKF, not SNI). The `COALESCE(..., 0)` makes a value set
+    # with NO off-chain stray, or a wholly label-less set (all label_agree 0), pass
+    # on structure alone — preserving the OLD all-on-chain behaviour as the zero-stray
+    # special case.
+    #
+    # The `rootless` guard defensively refuses any value set with a candidate that
+    # resolved no chain root (stem is non-NULL whenever root is, both from the same
+    # `_chain_root` row), so a hypothetical root-less classification can't slip a
+    # value set through. `dominant` guarantees exactly one multi-vintage family per
+    # value set, so `multi m JOIN dominant d` yields exactly one (dom_root, dom_stem)
+    # row per value set (asserted by the UNIQUE index).
     conn.execute(
         """
-        CREATE TEMP TABLE _vs_multi_onechain AS
-        SELECT vc.value_set_id
-        FROM _vs_cls vc
-        LEFT JOIN _chain_root cr ON cr.cls_id = vc.cls_id
-        GROUP BY vc.value_set_id
-        HAVING COUNT(*) > 1
-           AND COUNT(*) = COUNT(cr.root)
-           AND COUNT(DISTINCT cr.root) = 1
-           AND COUNT(DISTINCT cr.stem) = 1
+        CREATE TEMP TABLE _vs_dominant_chain AS
+        WITH fam AS (                  -- per value set, per (root,stem): matched count + best label_agree
+            SELECT vc.value_set_id, cr.root, cr.stem,
+                   COUNT(*) AS n_matched,
+                   MAX(la.label_agree) AS fam_max_la
+            FROM _vs_cls vc
+            JOIN _chain_root cr ON cr.cls_id = vc.cls_id
+            JOIN _vs_label_agree la
+              ON la.value_set_id = vc.value_set_id AND la.cls_id = vc.cls_id
+            GROUP BY vc.value_set_id, cr.root, cr.stem
+        ),
+        rootless AS (                  -- DEFENSIVE: any candidate with no resolved chain root
+            SELECT DISTINCT vc.value_set_id
+            FROM _vs_cls vc
+            LEFT JOIN _chain_root cr ON cr.cls_id = vc.cls_id
+            WHERE cr.root IS NULL
+        ),
+        multi AS (                     -- multi-vintage chains: >=2 matched editions
+            SELECT value_set_id, root, stem, fam_max_la FROM fam WHERE n_matched >= 2
+        ),
+        dominant AS (                  -- value sets with EXACTLY ONE such chain
+            SELECT value_set_id FROM multi GROUP BY value_set_id HAVING COUNT(*) = 1
+        )
+        SELECT m.value_set_id, m.root AS dom_root, m.stem AS dom_stem
+        FROM multi m
+        JOIN dominant d ON d.value_set_id = m.value_set_id
+        WHERE m.value_set_id NOT IN (SELECT value_set_id FROM rootless)
+          AND m.fam_max_la >= COALESCE(   -- label lever: dominant >= every off-chain candidate
+                (SELECT MAX(f2.fam_max_la) FROM fam f2
+                 WHERE f2.value_set_id = m.value_set_id
+                   AND (f2.root <> m.root OR f2.stem <> m.stem)),
+                0)
         """
     )
     conn.execute(
-        "CREATE UNIQUE INDEX _vs_multi_onechain_pk ON _vs_multi_onechain(value_set_id)"
+        "CREATE UNIQUE INDEX _vs_dominant_chain_pk ON _vs_dominant_chain(value_set_id)"
     )
 
     # 7c. For each (variable_id, value_set_id) pair of those value sets, pick the
@@ -1320,9 +1374,12 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # resolve to one vintage per pair — the latest among those overlapping a real
     # state — and emit exactly one row; do not "fix" this to per-state.
     #
-    # JOIN `variable_state vs` (restricted to the one-chain value sets) to `_vs_cls
-    # vc` (the candidate vintages the value set actually matches) to `classification
-    # cl`, keeping rows where cl overlaps THAT state's year range. vs.valid_from /
+    # JOIN `variable_state vs` (restricted to the dominant-chain value sets) to
+    # `_vs_cls vc` (the candidate vintages the value set actually matches), then to
+    # `_chain_root cr` filtered to the DOMINANT family (cr.root = dom_root AND
+    # cr.stem = dom_stem) so ONLY the dominant chain's editions are eligible — the
+    # off-chain strays (#514) are never emitted — to `classification cl`, keeping
+    # rows where cl overlaps THAT state's year range. vs.valid_from /
     # vs.valid_to are TEXT NOT NULL 'YYYY-MM-DD' (open-ended uses the '9999-12-31'
     # sentinel → year 9999); extract the year with substr+CAST.
     # classification.valid_from/valid_to are INTEGER years, NULLABLE (NULL =
@@ -1354,8 +1411,12 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
                     cl.id AS cls_id,
                     cl.valid_from AS valid_from
                 FROM variable_state vs
-                JOIN _vs_multi_onechain mo ON mo.value_set_id = vs.value_set_id
+                JOIN _vs_dominant_chain mo ON mo.value_set_id = vs.value_set_id
                 JOIN _vs_cls vc ON vc.value_set_id = vs.value_set_id
+                JOIN _chain_root cr
+                  ON cr.cls_id = vc.cls_id
+                 AND cr.root = mo.dom_root
+                 AND cr.stem = mo.dom_stem
                 JOIN classification cl ON cl.id = vc.cls_id
                 WHERE (
                         cl.valid_from IS NULL
@@ -1469,7 +1530,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     for tmp in (
         "_vs_vintage_emit",
         "_vs_vintage",
-        "_vs_multi_onechain",
+        "_vs_dominant_chain",
         "_chain_root",
         "_vs_confident",
         "_vs_single",
