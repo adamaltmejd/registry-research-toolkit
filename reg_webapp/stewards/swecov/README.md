@@ -27,9 +27,16 @@ reg-meta-build --db "$db_dir" extend-db \
     --base-db ~/.local/share/reg_meta/reg_meta.db \
     --inventory reg_meta_build/input_data/swecov/derived/flavor_inventory.json \
     --slug-dir reg_meta_build/fqid_slugs/swecov
-# 2. emit this catalog against it (also writes derived/steward_coverage.json)
+# 2. emit this catalog against it (also writes derived/steward_coverage.json).
+#    --reg-meta-version is REQUIRED: it stamps the catalog's reg_meta_version
+#    field, and must name the release `--base-db` was built from. (The generator
+#    rejects an omitted flag rather than defaulting to a fixed tag, which would
+#    silently downgrade the stamp on a later release — caught in the 0.25.0
+#    release.) Add `--out <checkout>/reg_webapp/stewards/swecov` when running from
+#    a git worktree: the default writes to the generator's own repo root.
 python3 reg_meta_build/input_data/swecov/build_catalog.py \
-    --db "$db_dir/reg_meta.db" steward
+    --db "$db_dir/reg_meta.db" steward \
+    --reg-meta-version reg_meta/vX.Y.Z
 ```
 
 Output is deterministic (sources sorted by coordinate, bindings by variable+column).
@@ -38,7 +45,7 @@ Output is deterministic (sources sorted by coordinate, bindings by variable+colu
 
 Coverage is bounded by what reg_meta currently mints, and **rises automatically** as the
 residue below lands upstream — just regenerate against a fresh flavored DB. The current
-breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.23.0
+breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.25.0
 the catalog admits **67.0%** of physical columns. The residue is, by disposition:
 
 - **survey-wave items (FOU/CIS/IT, \~2,000)** — documented in SWECOV's delivery lists
