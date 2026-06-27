@@ -285,7 +285,8 @@ const footerLabel = $derived(
       class="col-chip link"
       {href}
       title={`Open ${text}`}
-      onclick={(e) => e.stopPropagation()}>{text}</a
+      onclick={(e) => e.stopPropagation()}
+      >{text}<span class="chip-arrow" aria-hidden="true">↗</span></a
     >
   {:else}
     <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
@@ -887,6 +888,13 @@ const footerLabel = $derived(
   a.col-chip.link {
     text-decoration: none;
     cursor: pointer;
+  }
+  /* The link-out affordance: a small ↗ inside the chip pill (the whole chip is the
+     link). Kept lighter than the mono column name so the column reads first. */
+  .col-chip.link .chip-arrow {
+    margin-left: 0.2rem;
+    font-size: 0.85em;
+    opacity: 0.75;
   }
   a.col-chip.link:hover,
   a.col-chip.link:focus-visible {
