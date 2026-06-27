@@ -3088,6 +3088,34 @@ def _next_day(iso_date: str, *, column: str | None) -> str:
         ) from exc
 
 
+# The directional code-less ↔ code-bearing overlap JOIN, shared by the three
+# code-less overlap SELECTs in this module (`_drop_fullcover_codeless_states`'
+# main overlap query and `_resolve_curated_codeless_overlaps`' main overlap query
+# + its post-resolution mandatory-curation gate). Centralizes the overlap
+# semantics so they can't drift apart: null-safe `delivery_column_name IS` column
+# match (two NULL delivery columns still pair); code-less (`cl.value_set_id IS
+# NULL`) ↔ code-bearing (`cb.value_set_id IS NOT NULL`) direction; closed-interval
+# intersection. The ON clause references only `cl`/`cb`, so it is valid in any of
+# the three SELECTs regardless of the slug JOINs (`variable`/`register`/`provider`)
+# that #2/#3 prepend. Leading/trailing spaces keep the assembled SQL valid when
+# concatenated.
+#
+# MUST stay in sync with validate.py's `_check_one_value_set_per_period` /
+# `_check_no_codeless_codebearing_overlap`, which assert the same overlap class
+# with a structurally DIFFERENT *symmetric* `a`/`b` form (not this directional
+# `cl`/`cb` form) — so they are NOT folded into this constant; a change here must
+# be mirrored there by hand.
+_CODELESS_OVERLAP_CB_JOIN = (
+    "JOIN variable_state cb "
+    "  ON cl.variable_id = cb.variable_id "
+    " AND cl.register_variant_id = cb.register_variant_id "
+    " AND cl.delivery_column_name IS cb.delivery_column_name "
+    " AND cl.value_set_id IS NULL "
+    " AND cb.value_set_id IS NOT NULL "
+    " AND cl.valid_from <= cb.valid_to AND cb.valid_from <= cl.valid_to "
+)
+
+
 def _drop_fullcover_codeless_states(conn: sqlite3.Connection) -> None:
     """Delete code-less `variable_state` rows fully covered by code-bearing siblings.
 
@@ -3120,15 +3148,7 @@ def _drop_fullcover_codeless_states(conn: sqlite3.Connection) -> None:
     rows = conn.execute(
         "SELECT cl.state_id, cl.variable_id, cl.delivery_column_name, "
         "       cl.valid_from, cl.valid_to, cb.valid_from, cb.valid_to "
-        "FROM variable_state cl "
-        "JOIN variable_state cb "
-        "  ON cl.variable_id = cb.variable_id "
-        " AND cl.register_variant_id = cb.register_variant_id "
-        " AND cl.delivery_column_name IS cb.delivery_column_name "
-        " AND cl.value_set_id IS NULL "
-        " AND cb.value_set_id IS NOT NULL "
-        " AND cl.valid_from <= cb.valid_to AND cb.valid_from <= cl.valid_to "
-        "ORDER BY cl.state_id"
+        "FROM variable_state cl " + _CODELESS_OVERLAP_CB_JOIN + "ORDER BY cl.state_id"
     ).fetchall()
     if not rows:
         return
@@ -3157,34 +3177,27 @@ def _drop_fullcover_codeless_states(conn: sqlite3.Connection) -> None:
             continue
 
         # Fully covered → the code-less state is a redundant shadow; delete it.
-        # Orphan tripwire: the covering code-bearing state shares this
-        # `variable_id` (the overlap JOIN keys on it), so a surviving sibling
-        # always exists and `survivors >= 1` holds by construction. The guard
-        # exists so a future change to the overlap key (e.g. a cross-variable
-        # match) can't silently delete a variable's last state.
-        survivors = conn.execute(
-            "SELECT COUNT(*) FROM variable_state "
-            "WHERE variable_id = ? AND state_id <> ?",
-            (entry["variable_id"], state_id),
-        ).fetchone()[0]
-        if survivors == 0:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="codeless_fullcover_would_orphan_variable",
-                error_class="configuration",
-                message=(
-                    "Deleting a fully-covered code-less state would remove the "
-                    f"LAST remaining state of variable_id={entry['variable_id']} "
-                    f"(state_id={state_id}). The covering code-bearing state should "
-                    "survive on the same key; an orphaning delete signals a "
-                    "coalescer/IR bug."
-                ),
-                remediation=(
-                    "Inspect the variable's states; the code-bearing state that "
-                    "covers this window must be present on the same "
-                    "(variable, variant, delivery_column)."
-                ),
-            )
+        # Orphan tripwire (rationale in `_guard_not_last_state`'s docstring): the
+        # covering code-bearing state shares this `variable_id`, so a sibling
+        # always survives by construction.
+        _guard_not_last_state(
+            conn,
+            entry["variable_id"],
+            state_id,
+            code="codeless_fullcover_would_orphan_variable",
+            message=(
+                "Deleting a fully-covered code-less state would remove the "
+                f"LAST remaining state of variable_id={entry['variable_id']} "
+                f"(state_id={state_id}). The covering code-bearing state should "
+                "survive on the same key; an orphaning delete signals a "
+                "coalescer/IR bug."
+            ),
+            remediation=(
+                "Inspect the variable's states; the code-bearing state that "
+                "covers this window must be present on the same "
+                "(variable, variant, delivery_column)."
+            ),
+        )
         conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
         deleted += 1
 
@@ -3383,14 +3396,8 @@ def _resolve_curated_codeless_overlaps(
         "JOIN variable v ON v.variable_id = cl.variable_id "
         "JOIN register r ON r.register_id = v.register_id "
         "JOIN provider p ON p.provider_id = r.provider_id "
-        "JOIN variable_state cb "
-        "  ON cl.variable_id = cb.variable_id "
-        " AND cl.register_variant_id = cb.register_variant_id "
-        " AND cl.delivery_column_name IS cb.delivery_column_name "
-        " AND cl.value_set_id IS NULL "
-        " AND cb.value_set_id IS NOT NULL "
-        " AND cl.valid_from <= cb.valid_to AND cb.valid_from <= cl.valid_to "
-        "ORDER BY cl.state_id"
+        + _CODELESS_OVERLAP_CB_JOIN
+        + "ORDER BY cl.state_id"
     ).fetchall()
     if not rows and not curated:
         _progress("  curated code-less overlap resolution: no residual overlaps")
@@ -3492,7 +3499,21 @@ def _resolve_curated_codeless_overlaps(
         resolution, extend_label = rule
 
         if resolution == "drop":
-            _guard_not_last_state(conn, entry["variable_id"], state_id)
+            _guard_not_last_state(
+                conn,
+                entry["variable_id"],
+                state_id,
+                code="codeless_overlap_would_orphan_variable",
+                message=(
+                    "Resolving a code-less overlap would delete the LAST remaining "
+                    f"state of variable_id={entry['variable_id']} (state_id={state_id}). An "
+                    "overlapping code-bearing state should survive on the same key."
+                ),
+                remediation=(
+                    "Inspect the variable's states; the code-bearing state that overlaps "
+                    "this window must be present on the same (variable, variant, column)."
+                ),
+            )
             conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
             n_dropped += 1
             continue
@@ -3658,7 +3679,21 @@ def _resolve_curated_codeless_overlaps(
         if not spans:
             # Fully covered after all (a curated `cap` on a now-full-cover key, or a
             # key #867 didn't reach) → nothing code-less remains → delete.
-            _guard_not_last_state(conn, entry["variable_id"], state_id)
+            _guard_not_last_state(
+                conn,
+                entry["variable_id"],
+                state_id,
+                code="codeless_overlap_would_orphan_variable",
+                message=(
+                    "Resolving a code-less overlap would delete the LAST remaining "
+                    f"state of variable_id={entry['variable_id']} (state_id={state_id}). An "
+                    "overlapping code-bearing state should survive on the same key."
+                ),
+                remediation=(
+                    "Inspect the variable's states; the code-bearing state that overlaps "
+                    "this window must be present on the same (variable, variant, column)."
+                ),
+            )
             conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
             n_capped += 1
             continue
@@ -3759,14 +3794,8 @@ def _resolve_curated_codeless_overlaps(
         "JOIN variable v ON v.variable_id = cl.variable_id "
         "JOIN register r ON r.register_id = v.register_id "
         "JOIN provider p ON p.provider_id = r.provider_id "
-        "JOIN variable_state cb "
-        "  ON cl.variable_id = cb.variable_id "
-        " AND cl.register_variant_id = cb.register_variant_id "
-        " AND cl.delivery_column_name IS cb.delivery_column_name "
-        " AND cl.value_set_id IS NULL "
-        " AND cb.value_set_id IS NOT NULL "
-        " AND cl.valid_from <= cb.valid_to AND cb.valid_from <= cl.valid_to "
-        "ORDER BY p.slug, r.slug, v.slug"
+        + _CODELESS_OVERLAP_CB_JOIN
+        + "ORDER BY p.slug, r.slug, v.slug"
     ).fetchall()
     if residual_keys:
         # Fold each surviving overlap to its curated key (None-sentinel column for a
@@ -3827,13 +3856,22 @@ def _resolve_curated_codeless_overlaps(
 
 
 def _guard_not_last_state(
-    conn: sqlite3.Connection, variable_id: int, state_id: int
+    conn: sqlite3.Connection,
+    variable_id: int,
+    state_id: int,
+    *,
+    code: str,
+    message: str,
+    remediation: str,
 ) -> None:
-    """Orphan tripwire shared by the code-less resolution deletes (#868, mirroring
-    #867's `_drop_fullcover_codeless_states` guard): never delete a variable's LAST
-    remaining state. A code-bearing overlap sharing this `variable_id` always
-    survives by construction, so this holds; the guard defends against a future
-    key change that could silently orphan a variable."""
+    """Shared parameterized orphan tripwire: never delete a variable's LAST remaining
+    state. Used by BOTH #867's full-cover delete (`_drop_fullcover_codeless_states`)
+    and #868's cap/drop branches (`_resolve_curated_codeless_overlaps`). In every
+    case a code-bearing overlap sharing this `variable_id` survives by construction,
+    so `survivors >= 1` holds; the guard defends against a future key change that
+    could silently orphan a variable. The caller passes the site-specific `code` /
+    `message` / `remediation` (the error `code` is the stable contract); the
+    `exit_code` and `error_class` are constant across both sites."""
     survivors = conn.execute(
         "SELECT COUNT(*) FROM variable_state WHERE variable_id = ? AND state_id <> ?",
         (variable_id, state_id),
@@ -3841,17 +3879,10 @@ def _guard_not_last_state(
     if survivors == 0:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="codeless_overlap_would_orphan_variable",
+            code=code,
             error_class="configuration",
-            message=(
-                "Resolving a code-less overlap would delete the LAST remaining "
-                f"state of variable_id={variable_id} (state_id={state_id}). An "
-                "overlapping code-bearing state should survive on the same key."
-            ),
-            remediation=(
-                "Inspect the variable's states; the code-bearing state that overlaps "
-                "this window must be present on the same (variable, variant, column)."
-            ),
+            message=message,
+            remediation=remediation,
         )
 
 
