@@ -305,6 +305,41 @@ describe("BindingLeafView representation picker (#678)", () => {
     spy.mockRestore();
   });
 
+  // #678 finding 3: an active ?period is HONORED on add — the committed period is
+  // the row span INTERSECTED with the window, not the row's full span.
+  it("commits the row span intersected with the active ?period (not the full span)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: pickerStates,
+    } as never);
+    // Kon spans 2010–2015; narrow to 2012..2014.
+    router.navigate("/catalog/scb/lisa/kon?period=2012..2014");
+    const spy = vi.spyOn(projectStore, "addFromCatalog");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    const kon = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(kon).toBeVisible();
+    await kon.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        variable: "scb/lisa/kon",
+        representation: "Kon",
+        // The intersection 2012..2014, NOT the row's full 2010..2015 span.
+        resolvedPeriod: "2012..2014",
+      }),
+    );
+    spy.mockRestore();
+  });
+
   it("dims rows whose span does not overlap the active period window", async () => {
     // Narrow to 2018..2020 — the Sni row (2018–2020) overlaps, the Kon row
     // (2010–2015) does not, so Kon's row is dimmed (but still selectable).

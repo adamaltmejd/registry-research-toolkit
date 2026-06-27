@@ -266,6 +266,34 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     spy.mockRestore();
   });
 
+  // #678 finding 3: an active ?period is HONORED on add (the committed source carries
+  // the user's narrowed window, not the row's full span).
+  it("commits the row span INTERSECTED with the active ?period, not the full span", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    // inkjan spans 2010–2015; narrow the group to 2012..2014.
+    router.navigate("/catalog/group/scb/rams/ink?period=2012..2014");
+    const spy = vi.spyOn(projectStore, "addFromCatalog");
+
+    renderGroup();
+
+    const jan = page.getByRole("checkbox", { name: /Inkomst januari/ });
+    await expect.element(jan).toBeVisible();
+    await jan.click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        variable: "scb/rams/inkjan",
+        // The committed period is the intersection 2012..2014, NOT the row's full
+        // 2010..2015 span.
+        resolvedPeriod: "2012..2014",
+      }),
+    );
+    spy.mockRestore();
+  });
+
   it("a MULTI-column member renders a thin subheading over its column rows (all visible)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
@@ -1322,5 +1350,222 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       (dl) => !dl.closest("details.tech-details"),
     );
     expect(sharedMeta).toHaveLength(0);
+  });
+
+  // ── #678 finding 1: a representation group exposes only its MEMBER columns ────
+  it("a representation group exposes only its member delivery columns, not the variable's full column set", async () => {
+    // The group's members address ONE variable (scb/rams/ink) but only the `IncA`
+    // column; the graph node now carries BOTH `IncA` and a NON-member `IncExtra`
+    // (the variable's full set). The band must restrict to the member column so the
+    // non-member column is never selectable.
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        members: [
+          {
+            fqid: "scb/rams/ink",
+            name: "Inkomst",
+            delivery_column: "IncA",
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/ink", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncA",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncExtra",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+      ]),
+    );
+
+    renderGroup();
+
+    // The member column renders; the non-member one does NOT.
+    await expect
+      .element(page.getByRole("checkbox", { name: /IncA/ }))
+      .toBeVisible();
+    await vi.waitFor(() => {
+      const labels = [...document.querySelectorAll(".col-chip")].map((e) =>
+        e.textContent?.trim(),
+      );
+      if (!labels.some((l) => l?.startsWith("IncA"))) {
+        throw new Error("IncA not yet rendered");
+      }
+    });
+    const chipTexts = [...document.querySelectorAll(".col-chip")].map((e) =>
+      e.textContent?.trim(),
+    );
+    expect(chipTexts.some((t) => t?.includes("IncExtra"))).toBe(false);
+    // Exactly one selectable row (the member column).
+    expect(
+      document.querySelectorAll('.col-list input[type="checkbox"]'),
+    ).toHaveLength(1);
+  });
+
+  it("a WHOLE-VARIABLE member (null delivery_column) exposes ALL the variable's columns", async () => {
+    // When the member is the whole variable, every column is legitimately
+    // selectable → no filter.
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        members: [
+          {
+            fqid: "scb/rams/ink",
+            name: "Inkomst",
+            delivery_column: null,
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/ink", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncA",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+          gstate({
+            variant: "individer",
+            delivery_column_name: "IncExtra",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+      ]),
+    );
+
+    renderGroup();
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /IncA/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /IncExtra/ }))
+      .toBeVisible();
+  });
+
+  // ── #678 finding 5: the member link carries the active group ?period ─────────
+  it("a member nav link carries the active group ?period", async () => {
+    router.navigate("/catalog/group/scb/rams/ink?period=2018..2020");
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    renderGroup();
+
+    // The chip link keeps the window the user narrowed the group to.
+    const janLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.col-chip.link[href*="/catalog/scb/rams/inkjan"]',
+      );
+      if (!el) {
+        throw new Error("inkjan chip link not yet rendered");
+      }
+      return el;
+    });
+    expect(janLink.getAttribute("href")).toBe(
+      "/catalog/scb/rams/inkjan?period=2018..2020",
+    );
+  });
+
+  it("a member nav link has NO ?period when the group is not narrowed", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    renderGroup();
+
+    const janLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.col-chip.link[href*="/catalog/scb/rams/inkjan"]',
+      );
+      if (!el) {
+        throw new Error("inkjan chip link not yet rendered");
+      }
+      return el;
+    });
+    expect(janLink.getAttribute("href")).toBe("/catalog/scb/rams/inkjan");
+  });
+
+  // ── #678 finding 6: chip nav goes through the SPA router (no full reload) ─────
+  it("clicking a member chip routes through the SPA router (preventDefault, no toggle)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    const navSpy = vi.spyOn(router, "navigate");
+
+    renderGroup();
+
+    const janLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.col-chip.link[href="/catalog/scb/rams/inkjan"]',
+      );
+      if (!el) {
+        throw new Error("inkjan chip link not yet rendered");
+      }
+      return el;
+    });
+    navSpy.mockClear();
+
+    // A plain left click. The handler must preventDefault (so the browser does NOT
+    // full-reload) AND navigate via the router — never stopPropagation (which would
+    // strand the app-level use:link delegated interception and force a full reload).
+    const evt = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    janLink.dispatchEvent(evt);
+
+    expect(evt.defaultPrevented).toBe(true);
+    expect(navSpy).toHaveBeenCalledWith("/catalog/scb/rams/inkjan");
+    // The click did NOT toggle the row's selection.
+    await expect.element(page.getByText("0 columns selected")).toBeVisible();
+
+    navSpy.mockRestore();
+  });
+
+  it("a MODIFIER (cmd) click on a member chip is left to the browser (no router nav, no preventDefault)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    const navSpy = vi.spyOn(router, "navigate");
+
+    renderGroup();
+
+    const janLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.col-chip.link[href="/catalog/scb/rams/inkjan"]',
+      );
+      if (!el) {
+        throw new Error("inkjan chip link not yet rendered");
+      }
+      return el;
+    });
+    navSpy.mockClear();
+
+    const evt = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+      metaKey: true,
+    });
+    janLink.dispatchEvent(evt);
+
+    // Open-in-new-tab intent: fall through to the browser.
+    expect(evt.defaultPrevented).toBe(false);
+    expect(navSpy).not.toHaveBeenCalled();
+    navSpy.mockRestore();
   });
 });

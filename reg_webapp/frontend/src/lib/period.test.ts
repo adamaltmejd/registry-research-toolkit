@@ -11,6 +11,7 @@ import {
   periodQueryFromField,
   periodRangeEndpoints,
   periodTokenBounds,
+  periodTokenForBounds,
   periodToWire,
   queryFromParams,
   rangeRepresentable,
@@ -413,6 +414,58 @@ describe("periodTokenBounds (#306 advisory window math)", () => {
     expect(periodTokenBounds("_default")).toBeNull();
     expect(periodTokenBounds("banana")).toBeNull();
     expect(periodTokenBounds("2019-02-29")).toBeNull();
+  });
+});
+
+describe("periodTokenForBounds (#271 inverse — coarsest exact token)", () => {
+  it("a full-year window → the bare year", () => {
+    expect(periodTokenForBounds("2020-01-01", "2020-12-31")).toBe("2020");
+  });
+
+  it("a single month → the month token (not the year)", () => {
+    expect(periodTokenForBounds("2020-01-01", "2020-01-31")).toBe("2020-01");
+    expect(periodTokenForBounds("2020-02-01", "2020-02-29")).toBe("2020-02");
+  });
+
+  it("the four quarters → their tokens", () => {
+    expect(periodTokenForBounds("2020-01-01", "2020-03-31")).toBe("2020-Q1");
+    expect(periodTokenForBounds("2020-04-01", "2020-06-30")).toBe("2020-Q2");
+    expect(periodTokenForBounds("2020-07-01", "2020-09-30")).toBe("2020-Q3");
+    expect(periodTokenForBounds("2020-10-01", "2020-12-31")).toBe("2020-Q4");
+  });
+
+  it("term-spelling wins the H1/H2 tie-break (VT/HT, never -H)", () => {
+    expect(periodTokenForBounds("2009-01-01", "2009-06-30")).toBe("VT2009");
+    expect(periodTokenForBounds("2009-07-01", "2009-12-31")).toBe("HT2009");
+  });
+
+  it("a single day → the bare day token", () => {
+    expect(periodTokenForBounds("2020-08-15", "2020-08-15")).toBe("2020-08-15");
+  });
+
+  it("a window no token covers → the explicit ISO range (NEVER year-rounded)", () => {
+    // Feb–Jun has no single token; the range preserves the exact span rather than
+    // collapsing to a containing year (which would re-introduce the ambiguity the
+    // interval resolver removes).
+    expect(periodTokenForBounds("2020-02-01", "2020-06-30")).toBe(
+      "2020-02-01..2020-06-30",
+    );
+    expect(periodTokenForBounds("2010-01-01", "2020-12-31")).toBe(
+      "2010-01-01..2020-12-31",
+    );
+  });
+
+  it("round-trips through periodTokenBounds for every emitted token", () => {
+    for (const [lo, hi] of [
+      ["2020-01-01", "2020-12-31"],
+      ["2020-03-01", "2020-03-31"],
+      ["2020-07-01", "2020-09-30"],
+      ["2009-01-01", "2009-06-30"],
+      ["2020-08-15", "2020-08-15"],
+    ] as const) {
+      const token = periodTokenForBounds(lo, hi);
+      expect(periodTokenBounds(token)).toEqual({ from: lo, to: hi });
+    }
   });
 });
 

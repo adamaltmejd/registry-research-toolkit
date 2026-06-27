@@ -12,6 +12,7 @@ import {
   pickerRepresentations,
   pickerWindowYears,
   registerPrefixOf,
+  rowAddPeriod,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
 import type { PeriodGrain } from "./period";
@@ -138,9 +139,51 @@ function memberFacetLabel(member: ConceptGroupNodeMember): string | null {
   return member.facets.length > 0 ? facetLabelJoin(member.facets) : null;
 }
 
+/** The member's leaf-page href, carrying the active group `?period` when set (#678):
+ * narrowing the group with the PeriodPicker then opening a member keeps that same
+ * window on the leaf, rather than opening it at full history. A null period (no
+ * narrowing) yields the bare catalog href. `period` is read reactively so the bands
+ * recompute when the window changes. (A hoisted function so the `bands` derive, above
+ * the `period` declaration, can call it — `period` is read at call time, not bind
+ * time.) */
+function memberHref(fqid: string): string {
+  const base = catalogHref(fqid);
+  return period ? `${base}?period=${encodeURIComponent(period)}` : base;
+}
+
+/** The DELIVERY-COLUMN filter per fqid (#678): the set of `delivery_column`s the
+ * GROUP's members for that fqid actually address, or `null` (no filter — expose
+ * every column) when ANY such member is a WHOLE-VARIABLE member
+ * (`delivery_column == null`). The graph node now carries the variable's FULL column
+ * set (every distinct delivery column — backend `_graph_states` fix), so a
+ * representation group whose members are only a SUBSET of those columns would
+ * otherwise expose NON-member columns as selectable rows — letting a user add a
+ * column OUTSIDE the concept being browsed. Restricting the band's input states to
+ * the group's member columns closes that. A whole-variable member means the concept
+ * IS the whole variable, so all columns are legitimately selectable → no filter. */
+const memberColumnsByFqid = $derived.by(() => {
+  const map = new Map<string, Set<string> | null>();
+  for (const member of node?.members ?? []) {
+    const existing = map.get(member.fqid);
+    if (existing === null) {
+      continue; // already whole-variable (no filter) — stays no-filter
+    }
+    if (member.delivery_column == null) {
+      map.set(member.fqid, null); // whole-variable member → expose all columns
+    } else {
+      const set = existing ?? new Set<string>();
+      set.add(member.delivery_column);
+      map.set(member.fqid, set);
+    }
+  }
+  return map;
+});
+
 /** The picker bands — one per DISTINCT member variable (by fqid), in the group's
  * member order. Each band pulls its representation rows from the matching graph
- * node's states; a member with no graph node (graph error / partial union) still
+ * node's states, RESTRICTED to the group's member delivery columns for that fqid
+ * (`memberColumnsByFqid`) so a column outside the browsed concept is never
+ * selectable; a member with no graph node (graph error / partial union) still
  * renders a band with EMPTY rows (the band shows a quiet "no representations" rather
  * than dropping the member). The facet label distinguishes representation members
  * collapsed onto one fqid; the band's adaptive rows surface the delivery-column
@@ -156,15 +199,30 @@ const bands = $derived.by((): PickerBand[] => {
       continue;
     }
     seen.add(member.fqid);
-    const states = nodesByFqid.get(member.fqid)?.states ?? [];
+    const allStates = nodesByFqid.get(member.fqid)?.states ?? [];
+    // null filter = whole-variable member → every column; a Set = only the group's
+    // member columns for this variable (a state with no column is always dropped by
+    // pickerRepresentations, so the filter never needs to admit null).
+    const cols = memberColumnsByFqid.get(member.fqid) ?? null;
+    const states =
+      cols === null
+        ? allStates
+        : allStates.filter(
+            (s) =>
+              s.delivery_column_name != null &&
+              cols.has(s.delivery_column_name),
+          );
     out.push({
       key: member.fqid,
       name: member.name ?? leafSlug(member.fqid),
       registerPrefix: registerPrefixOf(member.fqid),
       facetLabel: memberFacetLabel(member),
       // The member's own leaf page — the picker renders the identity as a nav link
-      // (the binding leaf passes no href; it's already that page).
-      href: catalogHref(member.fqid),
+      // (the binding leaf passes no href; it's already that page). Carry the active
+      // group `?period` onto the link (#678) so opening a member from the picker
+      // keeps the window the user narrowed the group to, instead of resetting the
+      // leaf to full history.
+      href: memberHref(member.fqid),
       rows: pickerRepresentations(states),
     });
   }
@@ -254,7 +312,12 @@ $effect(() => {
 
 /** Commit each selected representation across all bands through the store, one
  * `addFromCatalog` per picked row. Each selection's `band.key` is the member fqid
- * (the variable); each row's own period span is the wire period for its source.
+ * (the variable). The committed period is the row's span INTERSECTED with the active
+ * period window (`rowAddPeriod`) — so a `?period` the user narrowed to is honored
+ * (not widened to the row's full history) and an open-ended row lands a finite,
+ * resolvable period rather than period-unset (#678). The period also keys
+ * `addFromCatalog`'s find-or-create, so two rows of the SAME register variant with
+ * DIFFERENT spans each land in their OWN correctly-periodized source (#678).
  * Aggregates into the existing `addOutcome` confirmation. */
 function commitSelected(selected: PickerSelection[]): void {
   if (selected.length === 0) {
@@ -263,17 +326,18 @@ function commitSelected(selected: PickerSelection[]): void {
   const added: { name: string; period: string | null }[] = [];
   let already = 0;
   for (const { band, row } of selected) {
+    const addPeriod = rowAddPeriod(row, pickerWindow);
     const result = projectStore.addFromCatalog(
       {
         registerVariant: `${registerPrefixOf(band.key)}/${row.variant}`,
         variable: band.key,
         representation: row.column,
-        resolvedPeriod: row.wirePeriod,
+        resolvedPeriod: addPeriod,
       },
       { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
     );
     if (result.status === "added") {
-      added.push({ name: result.sourceName, period: row.wirePeriod });
+      added.push({ name: result.sourceName, period: addPeriod });
     } else {
       already += 1;
     }

@@ -27,6 +27,7 @@ import {
   type PeriodGrain,
   periodRangeEndpoints,
   periodTokenBounds,
+  periodTokenForBounds,
 } from "./period";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
@@ -866,21 +867,87 @@ export interface PickerRepresentation {
   codingsVary: boolean;
 }
 
-/** A year-grain WIRE period for a representation row's ISO span, or null when a
- * bound is a sentinel (open-ended `9999-12-31` / unknown-start `0001-01-01`) —
- * an unbounded side has no in-grammar token, so the source's period is left
- * unset (covers the rep's whole span) rather than leaking the sentinel year. A
- * same-year span is the bare year; a multi-year span is a `lo..hi` range. */
+/** The WIRE period for a representation row's ISO span, or null when a bound is a
+ * sentinel (open-ended `9999-12-31` / unknown-start `0001-01-01`) — an unbounded
+ * side has no in-grammar token, so the source's period is left unset (covers the
+ * rep's whole span) rather than leaking the sentinel year. Emits the EXACT span,
+ * not a year-rounded one: `periodTokenForBounds` renders the coarsest token that
+ * round-trips to these exact bounds — a full year → the bare year, but a SUB-ANNUAL
+ * span (`2020-01-01`..`2020-01-31` → `2020-01`, a quarter → `YYYY-Q[1-4]`, a single
+ * day → the day) keeps its grain so the committed source covers only the column's
+ * real window, not the whole year (which would pull in sibling columns for the rest
+ * of the year — #678 fix). A window no single token covers is the explicit `lo..hi`
+ * range. */
 function rowWirePeriod(from: string, to: string): string | null {
   if (from === YEARLESS_VALID_FROM || to === OPEN_ENDED_VALID_TO) {
     return null;
   }
-  const lo = yearOf(from);
-  const hi = yearOf(to);
-  if (lo === null || hi === null) {
-    return null;
+  const token = periodTokenForBounds(from, to);
+  // A multi-year span comes back as the explicit ISO range `lo..hi`; collapse
+  // YEAR-ALIGNED endpoints to bare years (`2010-01-01..2020-12-31` → `2010..2020`)
+  // so a whole-year multi-year span stays a clean year range. A sub-annual endpoint
+  // (not Jan-1 / Dec-31 aligned) is preserved exactly — never widened to its year.
+  const range = periodRangeEndpoints(token);
+  if (range) {
+    const [lo, hi] = range;
+    const loYear = lo.endsWith("-01-01") ? lo.slice(0, 4) : lo;
+    const hiYear = hi.endsWith("-12-31") ? hi.slice(0, 4) : hi;
+    return `${loYear}..${hiYear}`;
   }
-  return lo === hi ? String(lo) : `${lo}..${hi}`;
+  return token;
+}
+
+/** The wire period to COMMIT for a selected picker row, given the active period
+ * window (#678). The picker DIMS by the window but every row stays selectable over
+ * its FULL span; on Add, though, the user means the period they narrowed to — so
+ * intersect the row's span with the active window and commit THAT, not the row's
+ * whole history. Two failures this fixes (#678):
+ *   - an OPEN-ENDED row (`wirePeriod` null) would otherwise add a period-UNSET
+ *     source the derive leaves unresolved — clamped to the finite window, it
+ *     resolves;
+ *   - a FINITE multi-year row would otherwise widen the source to its whole history,
+ *     ignoring the `?period=2020` the user picked.
+ * `window` is the active inclusive year pair (`pickerWindowYears` — `?period` wins,
+ * else the study window), or null. With NO window the row's own `wirePeriod` is
+ * committed unchanged (full-span add, the prior behavior). The intersection clamps
+ * the row's ISO span (its sentinels treated as unbounded) to the window's
+ * `[lo-01-01, hi-12-31]`, then renders the coarsest exact token via the same
+ * `rowWirePeriod` path; an empty intersection (the row lies wholly outside the
+ * window — only reachable for an explicitly-selected dimmed row) falls back to the
+ * row's own `wirePeriod` so the add is never dropped. Pure — unit-tested. */
+export function rowAddPeriod(
+  row: PickerRepresentation,
+  window: [number, number] | null,
+): string | null {
+  if (!window) {
+    return row.wirePeriod;
+  }
+  const [winLo, winHi] = window;
+  // The window as ISO bounds; clamp the row's span into it. A sentinel row bound is
+  // unbounded on that side, so the window edge wins there.
+  const lo =
+    row.from === YEARLESS_VALID_FROM
+      ? `${winLo}-01-01`
+      : maxIso(row.from, `${winLo}-01-01`);
+  const hi =
+    row.to === OPEN_ENDED_VALID_TO
+      ? `${winHi}-12-31`
+      : minIso(row.to, `${winHi}-12-31`);
+  // Empty intersection (row wholly outside the window): keep the row's own span so
+  // an explicitly-selected dimmed row still adds something sensible.
+  if (lo > hi) {
+    return row.wirePeriod;
+  }
+  return rowWirePeriod(lo, hi);
+}
+
+/** The later / earlier of two ISO `YYYY-MM-DD` bounds (lexicographic order is
+ * chronological for zero-padded ISO dates). */
+function maxIso(a: string, b: string): string {
+  return a > b ? a : b;
+}
+function minIso(a: string, b: string): string {
+  return a < b ? a : b;
 }
 
 /** The state shape `pickerRepresentations` reads — the fields shared by the

@@ -17,6 +17,7 @@ import {
   pickerWindowYears,
   qualifierFromFocus,
   registerPrefixOf,
+  rowAddPeriod,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import HistoryGraph from "./HistoryGraph.svelte";
@@ -291,8 +292,13 @@ $effect(() => {
 /** Commit each selected representation through the store (synchronous appends;
  * the guarded derive lands per binding afterwards) and record the aggregate
  * outcome for the inline confirmation. The leaf passes a SINGLE band, so every
- * selection's `band.key` is this variable's fqid; each row's own period span is the
- * wire period for its source (mirroring the row the user saw). */
+ * selection's `band.key` is this variable's fqid. The committed period is the row's
+ * span INTERSECTED with the active period window (`rowAddPeriod`) — so a `?period`
+ * the user narrowed to is honored (not widened to the row's full history) and an
+ * open-ended row lands a finite, resolvable period rather than period-unset (#678).
+ * The period also keys `addFromCatalog`'s find-or-create, so two rows of the SAME
+ * register variant with DIFFERENT spans each land in their OWN correctly-periodized
+ * source (#678). */
 function commitSelected(selected: PickerSelection[]): void {
   if (selected.length === 0) {
     return;
@@ -300,17 +306,18 @@ function commitSelected(selected: PickerSelection[]): void {
   const added: { name: string; period: string | null }[] = [];
   let already = 0;
   for (const { row } of selected) {
+    const addPeriod = rowAddPeriod(row, pickerWindow);
     const result = projectStore.addFromCatalog(
       {
         registerVariant: `${registerPrefix}/${row.variant}`,
         variable: node.fqid,
         representation: row.column,
-        resolvedPeriod: row.wirePeriod,
+        resolvedPeriod: addPeriod,
       },
       { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
     );
     if (result.status === "added") {
-      added.push({ name: result.sourceName, period: row.wirePeriod });
+      added.push({ name: result.sourceName, period: addPeriod });
     } else {
       already += 1;
     }

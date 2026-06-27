@@ -45,6 +45,7 @@ import {
   representationsCollapse,
   representationsFromStates,
   routeBreadcrumbs,
+  rowAddPeriod,
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
@@ -1402,6 +1403,71 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     expect(row.wirePeriod).toBe("2018");
   });
 
+  // #678 finding 4: a SUB-ANNUAL span keeps its exact grain on the wire — it must
+  // NOT widen to the whole year (which would pull in sibling columns for the rest
+  // of the year on resolve).
+  it("a single-month span emits the EXACT month token, not the year", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2020-01-01",
+        valid_to: "2020-01-31",
+      }),
+    ]);
+    expect(row.wirePeriod).toBe("2020-01");
+  });
+
+  it("a quarter span emits the EXACT quarter token", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2020-07-01",
+        valid_to: "2020-09-30",
+      }),
+    ]);
+    expect(row.wirePeriod).toBe("2020-Q3");
+  });
+
+  it("a single-day span emits the exact day token", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2020-03-15",
+        valid_to: "2020-03-15",
+      }),
+    ]);
+    expect(row.wirePeriod).toBe("2020-03-15");
+  });
+
+  it("a whole-year multi-year span stays a bare-year range (not ISO dates)", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+      }),
+    ]);
+    expect(row.wirePeriod).toBe("2010..2015");
+  });
+
+  it("a sub-annual multi-month span emits an exact ISO range (not year-rounded)", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2020-02-01",
+        valid_to: "2020-06-30",
+      }),
+    ]);
+    // No single token covers Feb–Jun; the explicit range preserves the exact span,
+    // and the year-aligned collapse does NOT apply (sub-annual endpoints).
+    expect(row.wirePeriod).toBe("2020-02-01..2020-06-30");
+  });
+
   // #678 inc 2: the widened param accepts the group graph's `GraphState[]` too —
   // same `(variant, delivery_column)` enumeration, but its bounds are nullable.
   it("accepts graph states and normalizes a null end to an open-ended span", () => {
@@ -1578,6 +1644,61 @@ describe("pickerRepresentations (#678 direct picker)", () => {
       }),
     ]);
     expect(row.variantLabel).toBe("ovriga-fordonsslag");
+  });
+});
+
+describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => {
+  // A picker row with explicit ISO bounds + its own full-span wire period.
+  const row = (
+    over: Partial<PickerRepresentation> = {},
+  ): PickerRepresentation => ({
+    key: "v1::Col",
+    variant: "v1",
+    variantLabel: "v1",
+    column: "Col",
+    from: "2010-01-01",
+    to: "2020-12-31",
+    period: "2010 – 2020",
+    wirePeriod: "2010..2020",
+    valueSetLabel: "",
+    codingsVary: false,
+    ...over,
+  });
+
+  it("no active window → commits the row's own full-span wire period unchanged", () => {
+    expect(rowAddPeriod(row(), null)).toBe("2010..2020");
+  });
+
+  it("intersects a finite multi-year row with the active window (the user's narrowing wins)", () => {
+    // The row spans 2010–2020; the user narrowed to 2015 → add ONLY 2015, not the
+    // full history.
+    expect(rowAddPeriod(row(), [2015, 2015])).toBe("2015");
+  });
+
+  it("clamps both sides to a window narrower than the row span", () => {
+    expect(rowAddPeriod(row(), [2012, 2018])).toBe("2012..2018");
+  });
+
+  it("an OPEN-ENDED row (null wirePeriod) clamps to the window → a finite, resolvable period", () => {
+    // wirePeriod null would otherwise add a period-unset, unresolved source. With an
+    // active window the add lands the window instead.
+    const open = row({ to: "9999-12-31", wirePeriod: null });
+    expect(rowAddPeriod(open, [2020, 2020])).toBe("2020");
+  });
+
+  it("an unknown-START row clamps its start to the window", () => {
+    const unknownStart = row({ from: "0001-01-01", wirePeriod: null });
+    expect(rowAddPeriod(unknownStart, [2018, 2019])).toBe("2018..2019");
+  });
+
+  it("a window wider than the row span yields the row's own (finite) span", () => {
+    expect(rowAddPeriod(row(), [2000, 2030])).toBe("2010..2020");
+  });
+
+  it("a window wholly OUTSIDE the row span falls back to the row's own wire period", () => {
+    // An explicitly-selected dimmed row (out of window) still adds something sensible
+    // rather than an empty/inverted intersection.
+    expect(rowAddPeriod(row(), [2030, 2031])).toBe("2010..2020");
   });
 });
 

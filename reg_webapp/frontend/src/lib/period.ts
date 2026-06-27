@@ -204,6 +204,59 @@ export function periodTokenBounds(token: string): PeriodBounds | null {
   return { from: `${value}-01-01`, to: `${value}-12-31` };
 }
 
+/** Render an inclusive ISO interval `[lo, hi]` as the COARSEST period token that
+ * `periodTokenBounds` expands back to EXACTLY `(lo, hi)` — the display/diagnostic
+ * inverse, mirroring reg_meta's `period_token_for_bounds` (#271). A window that no
+ * single token covers exactly renders as the explicit `"lo..hi"` range, NEVER
+ * rounded to a containing year: two sub-annual sibling spans both reading "2009"
+ * would re-create the very ambiguity the interval resolver removes. Month windows
+ * use the same `lastDayOfMonth` end as the forward expansion so the two directions
+ * stay agreed. Tie-break: VT/HT share bounds with `YYYY-H1`/`-H2`; the term form
+ * wins (these windows come from SCB's term registers, and the curated grammar
+ * prefers the term spelling) — the `-H` forms are accepted on input but never
+ * emitted here. Both `lo`/`hi` must be full ISO `YYYY-MM-DD` (the catalog states'
+ * bounds are); a non-ISO/sentinel bound is the caller's concern. */
+export function periodTokenForBounds(lo: string, hi: string): string {
+  const year = lo.slice(0, 4);
+  const loMonth = lo.slice(5, 7);
+  if (hi.slice(0, 4) === year) {
+    if (lo === `${year}-01-01` && hi === `${year}-12-31`) {
+      return year;
+    }
+    if (lo === `${year}-${loMonth}-01`) {
+      if (loMonth === "01" && hi === `${year}-06-30`) {
+        return `VT${year}`;
+      }
+      if (loMonth === "07" && hi === `${year}-12-31`) {
+        return `HT${year}`;
+      }
+      // Quarter: lo is the quarter's first month, hi the quarter's last day.
+      for (const q of ["1", "2", "3", "4"] as const) {
+        const bounds = periodTokenBounds(`${year}-Q${q}`);
+        if (bounds && bounds.from === lo && bounds.to === hi) {
+          return `${year}-Q${q}`;
+        }
+      }
+      // Single month: lo on the 1st, hi on the month's last day.
+      const yNum = Number(year);
+      const mNum = Number(loMonth);
+      if (
+        Number.isFinite(yNum) &&
+        Number.isFinite(mNum) &&
+        hi === `${year}-${loMonth}-${lastDayOfMonth(yNum, mNum)}`
+      ) {
+        return `${year}-${loMonth}`;
+      }
+    }
+  }
+  // A single day, or any window no coarser token covers exactly → the explicit
+  // range (a single day collapses to the bare day token).
+  if (lo === hi && isPeriodToken(lo)) {
+    return lo;
+  }
+  return `${lo}..${hi}`;
+}
+
 /** Split a wire period into its two RANGE endpoints (`"2010..2020"` →
  * `["2010", "2020"]`), or `null` when it isn't a 2-endpoint range. */
 export function periodRangeEndpoints(wire: string): [string, string] | null {

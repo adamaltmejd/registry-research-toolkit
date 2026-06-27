@@ -8,6 +8,7 @@ import {
   representationInWindow,
   yearOf,
 } from "./catalog";
+import { router } from "./router.svelte";
 
 // The direct COLUMN picker (#678 redesign): ONE compact, integrated list of a
 // concept's delivery columns with a shared selection basket and a single "Add"
@@ -271,21 +272,45 @@ const view = $derived(
 const footerLabel = $derived(
   `${selectedCount} ${selectedCount === 1 ? "column" : "columns"} selected`,
 );
+
+/** Navigate an in-picker identity link (the column chip / subhead title) through
+ * the SPA ROUTER. The link sits inside a <label> wrapping the row's checkbox, so a
+ * plain click would (a) toggle the checkbox and (b) — because we must keep it from
+ * toggling — previously `stopPropagation`'d, which ALSO stopped the app-level
+ * `use:link` delegated handler from intercepting the bubbled click → a full page
+ * reload (losing app state, tripping the dirty-project beforeunload). Instead:
+ * `preventDefault()` (kills the label toggle) + navigate via the router directly.
+ * The bubbled click still reaches `use:link`'s `onNavClick`, but it early-returns on
+ * `defaultPrevented`, so there's no double navigation. Modifier / non-primary
+ * clicks (open-in-new-tab etc.) fall through to the browser, matching `onNavClick`. */
+function navigateChip(event: MouseEvent, href: string): void {
+  if (
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return;
+  }
+  event.preventDefault();
+  router.navigate(href);
+}
 </script>
 
 <!-- The delivery COLUMN chip (#678): the main selection signal, rendered as a small
      categorical pill (mono text + a subtle --cat-var tint, distinct from the rost
      selection accent) wherever a delivery column shows. When `href` is set (a single-
      column variable's IDENTITY chip in the group view), the chip is a NAVIGATION LINK
-     to that variable's leaf page — clicking it navigates and must NOT toggle the row
-     selection (stopPropagation). Otherwise a plain <code>. -->
+     to that variable's leaf page — clicking it navigates (via the SPA router, see
+     `navigateChip`) and must NOT toggle the row selection. Otherwise a plain <code>. -->
 {#snippet colChip(text: string, href?: string)}
   {#if href}
     <a
       class="col-chip link"
       {href}
       title={`Open ${text}`}
-      onclick={(e) => e.stopPropagation()}
+      onclick={(e) => navigateChip(e, href)}
       >{text}<span class="chip-arrow" aria-hidden="true">↗</span></a
     >
   {:else}
@@ -338,12 +363,14 @@ const footerLabel = $derived(
              distinguishing identity (the leaf ≈ one-variable group case). The row is a
              click-anywhere container (mouse toggles selection); a real checkbox owns
              keyboard. When the variable has an `href` (group view) the COLUMN CHIP is
-             itself the navigation link to its leaf — clicking the chip navigates, not
-             toggles (it stops propagation); there's no separate "View" link. -->
+             itself the navigation link to its leaf — clicking the chip navigates
+             (via the SPA router, `navigateChip`), not toggles; there's no separate
+             "View" link. -->
         <li class="col-row single">
           <!-- The whole row is a <label> wrapping the checkbox: clicking ANYWHERE in
                it toggles selection natively (no JS, keyboard via the input). The chip-
-               link inside stops propagation so a nav click never also toggles. -->
+               link inside `preventDefault`s + router-navigates so a nav click neither
+               toggles the row NOR full-reloads the app. -->
           <label class="row-btn" class:selected={checked} class:dimmed={!inWindow}>
             <!-- No aria-label: the wrapping <label>'s text content (the column chip +
                  population + value set + period) names the checkbox for AT. -->
@@ -408,7 +435,8 @@ const footerLabel = $derived(
              a hairline separates the group from the rest of the list. HOVERING the
              subheading highlights ALL its column rows (they move together); CLICKING
              anywhere on it toggles ALL its columns (mirrors the select-all checkbox),
-             except the title nav link + the checkbox, which stop propagation. -->
+             except the title nav link (which `preventDefault`s + router-navigates) +
+             the checkbox. -->
         {@const empty = band.rows.length === 0}
         <!-- Grey the whole subheading when EVERY column is out of the active window —
              the variable reads as out-of-scope at the variable level, not just per
@@ -483,8 +511,9 @@ const footerLabel = $derived(
           {:else}
             <!-- The WHOLE subheading is one <label> wrapping the select-all checkbox:
                  a click ANYWHERE on it — the title, the column chip, OR the description
-                 line — toggles all columns natively (the title nav link inside stops
-                 propagation so a nav click never toggles). Hovering anywhere sets the
+                 line — toggles all columns natively (the title nav link inside
+                 `preventDefault`s + router-navigates so a nav click never toggles).
+                 Hovering anywhere sets the
                  band-hover key → all this variable's column rows highlight together. -->
             <label
               class="subhead-label"
@@ -513,11 +542,12 @@ const footerLabel = $derived(
                        single-row identity. -->
                   <span class="subhead-title">{@render identityInner()}</span>
                 {:else if band.href}
+                  {@const href = band.href}
                   <a
                     class="subhead-title link"
-                    href={band.href}
+                    {href}
                     title={`Open ${v.primary.text}`}
-                    onclick={(e) => e.stopPropagation()}
+                    onclick={(e) => navigateChip(e, href)}
                   >
                     {@render identityInner()}
                     <span class="open-marker" aria-hidden="true">↗</span>

@@ -269,30 +269,75 @@ describe("addFromCatalog (C1)", () => {
     expect(getCatalogNode).not.toHaveBeenCalled();
   });
 
-  it("re-derives at the SOURCE's period, not the page's, when an existing source has a different period", async () => {
+  it("a DIFFERENT page period (same variant) lands in its OWN periodized source, not an existing differing-period source (#678 finding 2)", async () => {
     projectStore.newProject(SEED);
     projectStore.addSource();
     projectStore.updateSource(0, {
       register_variant: "scb/lisa/v1",
-      period: 2010, // the source lives at 2010
+      period: 2010, // an existing source at 2010
     });
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
     );
 
-    // The catalog page resolved the variable at 2018, but the source is at 2010.
-    projectStore.addFromCatalog(
+    // The add carries period 2018. The source identity is (register_variant,
+    // period), so 2018 ≠ the existing source's 2010 → a NEW source is created at
+    // 2018 (matching on register_variant alone would have wrongly attached + derived
+    // it against 2010).
+    const result = projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/lon", resolvedPeriod: "2018" }),
       SEED,
     );
-    await vi.waitFor(() =>
-      expect(projectStore.draft?.sources[0].bindings[0]?.type).toBe("numeric"),
+    expect(result.createdSource).toBe(true);
+    expect(projectStore.draft?.sources).toHaveLength(2);
+    expect(projectStore.draft?.sources[1]?.register_variant).toBe(
+      "scb/lisa/v1",
     );
-    // The resolve used the SOURCE's period (2010), not the page's (2018).
+    expect(projectStore.draft?.sources[1]?.period).toBe(2018);
+    await vi.waitFor(() =>
+      expect(projectStore.draft?.sources[1].bindings[0]?.type).toBe("numeric"),
+    );
+    // The new source's binding derives against its OWN period (2018).
     expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa/lon", {
-      period: "2010",
+      period: "2018",
       variant: "v1",
     });
+  });
+
+  it("two same-variant rows with DIFFERENT spans each land in their own correctly-periodized source (#678 finding 2)", async () => {
+    projectStore.newProject(SEED);
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResp([vstate({ delivery_column_name: "Col", data_type: "int" })]),
+    );
+
+    // Two columns of the SAME register variant, different spans (a 2002–2006 column
+    // and its 2007–2015 successor). Each is its own representation → its own source.
+    const a = projectStore.addFromCatalog(
+      konPayload({
+        variable: "scb/lisa/lon",
+        representation: "ColA",
+        resolvedPeriod: "2002..2006",
+      }),
+      SEED,
+    );
+    const b = projectStore.addFromCatalog(
+      konPayload({
+        variable: "scb/lisa/lon",
+        representation: "ColB",
+        resolvedPeriod: "2007..2015",
+      }),
+      SEED,
+    );
+    expect(a.status).toBe("added");
+    expect(b.status).toBe("added");
+    // TWO sources, each carrying its own span — NOT both bindings on one source
+    // derived against the first row's period.
+    expect(projectStore.draft?.sources).toHaveLength(2);
+    const periods = projectStore.draft?.sources.map((s) => s.period);
+    expect(periods).toEqual([
+      { from: 2002, to: 2006 },
+      { from: 2007, to: 2015 },
+    ]);
   });
 
   it("collapse case: page pins a column but the SOURCE period is single-rep → re-add is a duplicate (MAJOR 2)", async () => {

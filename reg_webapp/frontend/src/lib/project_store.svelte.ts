@@ -893,11 +893,22 @@ export const projectStore = {
       return typeof name === "string" ? name : "";
     };
 
+    // A source is identified by its FULL extraction coordinate `(register_variant,
+    // period)`, NOT register_variant alone: two picker rows of the SAME variant with
+    // DIFFERENT spans (a 2002–2006 column and its 2007–2015 successor) must land in
+    // their OWN periodized sources — matching on register_variant alone would attach
+    // the second to the first's source and derive it against the FIRST row's period
+    // (#678). Compare via the WIRE form so the structured `Source.period` and the
+    // payload's wire string agree (`null`/unset both normalize to ""). A found
+    // source therefore already carries the add's period, so its derive resolves
+    // against the right span.
     const sources = Array.isArray(draft.sources) ? draft.sources : [];
+    const wantPeriod = payload.resolvedPeriod ?? "";
     let sourceIndex = sources.findIndex(
       (s) =>
         (typeof s.register_variant === "string" ? s.register_variant : "") ===
-        payload.registerVariant,
+          payload.registerVariant &&
+        (periodToWire(s.period as Period) ?? "") === wantPeriod,
     );
     let createdSource = false;
 
