@@ -1506,6 +1506,62 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
   };
 }
 
+/** One name-cluster of member bands (#901): the bands sharing a `name`, plus the
+ * per-cluster `bandLabeling` output for THOSE bands (so each leads with what varies
+ * WITHIN the cluster — its facet → column/slug — the name now constant and hoisted
+ * off). `bands` carries the original `T` items in first-appearance order; `labeling`
+ * is index-aligned with them. */
+export interface BandCluster<T> {
+  name: string;
+  bands: T[];
+  labeling: ReturnType<typeof bandLabeling>;
+}
+
+/** Cluster member bands by `name` and label each cluster independently (#901).
+ *
+ * `bandLabeling` decides the leading identity GLOBALLY — `nameVaries` is true as soon
+ * as TWO distinct names appear, which makes every band in a heterogeneous group lead
+ * with its (often repeated) name and bury the real distinguisher (facet/column). The
+ * fix is to group by name FIRST, then run the existing per-band labeling per cluster:
+ * inside a cluster the name is constant, so `bandLabeling` falls through to leading
+ * each band with its facet → column/slug exactly as it already does for a homogeneous
+ * group — no parallel labeling path.
+ *
+ * `showClusterHeadings` is true iff there is more than one cluster: a single cluster
+ * (every member shares the name — the homogeneous group, or the one-member leaf) keeps
+ * today's chromeless rendering (the name is already the page title), while a
+ * heterogeneous group renders each name ONCE as a group heading over its
+ * distinguisher-led bands. A singleton cluster (a name with one band) still earns its
+ * one heading, uniformly.
+ *
+ * Order is preserved on both axes: clusters appear in the order their name is first
+ * seen, and bands within a cluster keep their input order. `name` is taken via the
+ * caller's `nameOf` (the same value `BandIdentity.name` carries) so the heading text
+ * matches the hoisted-off identity. */
+export function clusterBands<T>(
+  bands: readonly T[],
+  identityOf: (band: T) => BandIdentity,
+): { clusters: BandCluster<T>[]; showClusterHeadings: boolean } {
+  const byName = new Map<string, T[]>();
+  for (const band of bands) {
+    const name = identityOf(band).name;
+    const existing = byName.get(name);
+    if (existing) {
+      existing.push(band);
+    } else {
+      byName.set(name, [band]);
+    }
+  }
+  const clusters = [...byName].map(
+    ([name, members]): BandCluster<T> => ({
+      name,
+      bands: members,
+      labeling: bandLabeling(members.map(identityOf)),
+    }),
+  );
+  return { clusters, showClusterHeadings: clusters.length > 1 };
+}
+
 /** The active period window the picker DIMS against, as an inclusive year pair
  * `[lo, hi]`, or `null` when there is no active window (every row reads as
  * in-window). Precedence mirrors the leaf's resolution: an active `?period` wire

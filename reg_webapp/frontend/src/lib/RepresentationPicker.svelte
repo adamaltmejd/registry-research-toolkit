@@ -1,7 +1,8 @@
 <script lang="ts">
 import {
   type BandIdentity,
-  bandLabeling,
+  type BandLabel,
+  clusterBands,
   leafSlug,
   type PickerRepresentation,
   pickerLabeling,
@@ -207,23 +208,27 @@ function distinguisherOf(band: PickerBand): string {
   return cols.length === 1 ? cols[0] : leafSlug(band.key);
 }
 
-/** The adaptive variable-IDENTITY labeling across the members (#678): hoist constant
- * dimensions (the name → the page <h2>; the prefix → the breadcrumb) and lead each
- * variable with its first VARYING identity (name → facet → column/slug). A single
- * variable (the leaf) lands on the name fallback — so the leaf leads with its name. */
-const identity = $derived(
-  bandLabeling(
-    bands.map(
-      (b): BandIdentity => ({
-        name: b.name,
-        registerPrefix: b.registerPrefix,
-        facetLabel: b.facetLabel ?? null,
-        distinguisher: distinguisherOf(b),
-        distinguisherIsColumn: distinguisherIsColumn(b),
-      }),
-    ),
-  ),
-);
+/** A band's identity dimensions for `bandLabeling`/`clusterBands` (#678). */
+function bandIdentity(b: PickerBand): BandIdentity {
+  return {
+    name: b.name,
+    registerPrefix: b.registerPrefix,
+    facetLabel: b.facetLabel ?? null,
+    distinguisher: distinguisherOf(b),
+    distinguisherIsColumn: distinguisherIsColumn(b),
+  };
+}
+
+/** Group the bands into name-CLUSTERS, each labeled independently (#901): a
+ * heterogeneous group (several distinct concept names) used to make `bandLabeling`'s
+ * GLOBAL `nameVaries` true, so every band led with its (repeated) name and buried the
+ * real distinguisher. Clustering by name first lets the existing per-band labeling run
+ * per cluster — inside a cluster the name is constant, so each band leads with its
+ * facet → column/slug exactly as it already does for a homogeneous group. With one
+ * cluster (all members share the name, or the lone leaf) `showClusterHeadings` is
+ * false → render as today (the name is already the page title); with several, each
+ * name renders ONCE as a group heading over its distinguisher-led bands. */
+const clustered = $derived(clusterBands(bands, bandIdentity));
 
 /** Per-variable adaptive COLUMN labels (#678 1b) — show only what varies within the
  * variable, constants hoisted to a thin context line. Keyed by variable key. */
@@ -251,39 +256,65 @@ function dataStartsLate(
   return { dataStart: start, windowStart: window[0] };
 }
 
-/** The render model per variable: its leading identity, whether it is a single
- * column (→ one merged row, no subheading), the hoisted COLUMN chip + the quiet
- * value-set context, the adaptive per-row column labels, and whether EVERY one of its
- * rows is out of the active window (→ dim the subheading too). */
+/** The render model for ONE variable within its cluster: its leading identity
+ * (`id`, from the cluster's `bandLabeling`), whether it is a single column (→ one
+ * merged row, no subheading), the hoisted COLUMN chip + the quiet value-set context,
+ * the adaptive per-row column labels, and whether EVERY one of its rows is out of the
+ * active window (→ dim the subheading too). `showName`/`showPrefix` are the cluster's
+ * hoist flags. */
+function bandView(
+  band: PickerBand,
+  id: BandLabel,
+  showName: boolean,
+  showPrefix: boolean,
+) {
+  const labeling = labelingByBand.get(band.key);
+  const single = band.rows.length === 1;
+  // The hoisted constant delivery column → a prominent chip in the context. But when
+  // the variable's IDENTITY already IS that column (a single-column member — its
+  // primary is the column chip-link, whether single-row or a multi-population
+  // subheading), it's shown once as that identity, so suppress the duplicate context
+  // chip here.
+  const column = id.primaryIsColumn ? null : (labeling?.column ?? null);
+  // ALL-OUT: every row out of the active window → the (multi-column) subheading
+  // greys at the variable level too. A 0-row band is NOT all-out (nothing to scope).
+  const allOut =
+    band.rows.length > 0 &&
+    band.rows.every((r) => !representationInWindow(r, window));
+  return {
+    band,
+    primary: id.primary,
+    primaryIsColumn: id.primaryIsColumn,
+    showName,
+    showPrefix,
+    single,
+    column,
+    allOut,
+    // The deep-link `?member=` focus (#678): mark this band when its key matches.
+    focused: focusKey != null && band.key === focusKey,
+    context: labeling?.headerContext ?? [],
+    rowLabels: new Map((labeling?.rows ?? []).map((r) => [r.key, r])),
+  };
+}
+
+/** The render model per NAME-CLUSTER (#901): the cluster's heading name + whether to
+ * show cluster headings at all (more than one cluster), and each member band's view
+ * labeled by THAT cluster's `bandLabeling` (so each leads with its within-cluster
+ * distinguisher, the name hoisted to the heading). One cluster → no headings, rendered
+ * exactly as today. */
 const view = $derived(
-  bands.map((band, i) => {
-    const id = identity.bands[i];
-    const labeling = labelingByBand.get(band.key);
-    const single = band.rows.length === 1;
-    // The hoisted constant delivery column → a prominent chip in the context. But when
-    // the variable's IDENTITY already IS that column (a single-column member — its
-    // primary is the column chip-link, whether single-row or a multi-population
-    // subheading), it's shown once as that identity, so suppress the duplicate context
-    // chip here.
-    const column = id.primaryIsColumn ? null : (labeling?.column ?? null);
-    // ALL-OUT: every row out of the active window → the (multi-column) subheading
-    // greys at the variable level too. A 0-row band is NOT all-out (nothing to scope).
-    const allOut =
-      band.rows.length > 0 &&
-      band.rows.every((r) => !representationInWindow(r, window));
-    return {
-      band,
-      primary: id.primary,
-      primaryIsColumn: id.primaryIsColumn,
-      single,
-      column,
-      allOut,
-      // The deep-link `?member=` focus (#678): mark this band when its key matches.
-      focused: focusKey != null && band.key === focusKey,
-      context: labeling?.headerContext ?? [],
-      rowLabels: new Map((labeling?.rows ?? []).map((r) => [r.key, r])),
-    };
-  }),
+  clustered.clusters.map((cluster) => ({
+    name: cluster.name,
+    showHeading: clustered.showClusterHeadings,
+    bands: cluster.bands.map((band, i) =>
+      bandView(
+        band,
+        cluster.labeling.bands[i],
+        cluster.labeling.showName,
+        cluster.labeling.showPrefix,
+      ),
+    ),
+  })),
 );
 
 const footerLabel = $derived(
@@ -370,9 +401,21 @@ function navigateChip(event: MouseEvent, href: string): void {
   {/if}
 
   <ul class="col-list">
-    {#each view as v (v.band.key)}
-      {@const band = v.band}
-      {#if v.single}
+    {#each view as cluster (cluster.name)}
+      {#if cluster.showHeading}
+        <!-- The name-CLUSTER heading (#901): a heterogeneous group renders each
+             distinct concept name ONCE as a group label over its
+             distinguisher-led bands, de-duplicating the repeated names that used to
+             lead every band. PRESENTATIONAL only — not a selection unit and not a
+             leaf link (a concept name spans variables). A heading element gives it the
+             group-label semantics over the rows that follow. -->
+        <li class="cluster-head">
+          <h3>{cluster.name}</h3>
+        </li>
+      {/if}
+      {#each cluster.bands as v (v.band.key)}
+        {@const band = v.band}
+        {#if v.single}
         {@const row = band.rows[0]}
         {@const checked = selectedKeys.has(selKey(band.key, row.key))}
         {@const inWindow = representationInWindow(row, window)}
@@ -412,7 +455,7 @@ function navigateChip(event: MouseEvent, href: string): void {
                        primary (e.g. a name-led row) → the column chip (nav link). -->
                   {@render colChip(v.column, band.href)}
                 {/if}
-                {#if identity.showPrefix}
+                {#if v.showPrefix}
                   <code class="register-prefix">{band.registerPrefix}</code>
                 {/if}
                 {#if band.isIdentifier}
@@ -492,10 +535,10 @@ function navigateChip(event: MouseEvent, href: string): void {
             {/if}
           {/snippet}
           {#snippet identityMeta()}
-            {#if identity.showName && band.name !== v.primary.text}
+            {#if v.showName && band.name !== v.primary.text}
               <span class="var-name">{band.name}</span>
             {/if}
-            {#if identity.showPrefix}
+            {#if v.showPrefix}
               <code class="register-prefix">{band.registerPrefix}</code>
             {/if}
             {#if band.isIdentifier}
@@ -652,7 +695,8 @@ function navigateChip(event: MouseEvent, href: string): void {
             </label>
           </li>
         {/each}
-      {/if}
+        {/if}
+      {/each}
     {/each}
   </ul>
 
@@ -701,6 +745,23 @@ function navigateChip(event: MouseEvent, href: string): void {
   }
   .col-list > li + li {
     border-top: 1px solid var(--border);
+  }
+
+  /* The name-CLUSTER heading (#901): a quiet group label over the bands of one
+     concept name in a heterogeneous group, de-duplicating the name that used to lead
+     every band. A small, muted, uppercase-ish label — NOT the bold band identity and
+     NOT a link (a concept name spans variables). It sits a touch tinted so the eye
+     reads it as a section divider above its distinguisher-led rows. */
+  .cluster-head {
+    padding: 0.5rem 0.75rem 0.3rem;
+    background: var(--surface-sunken);
+  }
+  .cluster-head h3 {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.01em;
   }
 
   /* A thin, quiet variable subheading — the distinguishing identity + select-all.

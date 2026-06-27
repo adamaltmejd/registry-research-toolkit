@@ -14,6 +14,7 @@ import {
   breadcrumbs,
   catalogHref,
   classGroupHref,
+  clusterBands,
   commonLabelStem,
   coverageFromStates,
   DATA_BROWSER_LABEL,
@@ -2339,6 +2340,109 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(showName).toBe(true);
     expect(showPrefix).toBe(false);
+  });
+});
+
+describe("clusterBands (#901 de-duplicate member presentation)", () => {
+  const band = (
+    over: Partial<{
+      name: string;
+      registerPrefix: string;
+      facetLabel: string | null;
+      distinguisher: string;
+      distinguisherIsColumn: boolean;
+    }> = {},
+  ) => ({
+    name: "Disponibel inkomst",
+    registerPrefix: "scb/iot",
+    facetLabel: null,
+    distinguisher: "CDISP",
+    distinguisherIsColumn: true,
+    ...over,
+  });
+  const id = (b: ReturnType<typeof band>) => b;
+
+  it("a name-CONSTANT group is ONE cluster with no headings (today's behavior)", () => {
+    // The homogeneous moms/naringsgren shape: every member shares the name → one
+    // cluster, so `showClusterHeadings` is false (the name is already the page <h2>)
+    // and the cluster's own labeling leads each band with its column distinguisher.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [band({ distinguisher: "Ng0" }), band({ distinguisher: "Ng1" })],
+      id,
+    );
+    expect(showClusterHeadings).toBe(false);
+    expect(clusters).toHaveLength(1);
+    expect(clusters[0].name).toBe("Disponibel inkomst");
+    // Inside the cluster the name is constant → bands lead with the column.
+    expect(clusters[0].labeling.bands.map((b) => b.primary.text)).toEqual([
+      "Ng0",
+      "Ng1",
+    ]);
+    expect(clusters[0].labeling.showName).toBe(false);
+  });
+
+  it("a single band is ONE cluster with no heading (the leaf)", () => {
+    const { clusters, showClusterHeadings } = clusterBands([band()], id);
+    expect(showClusterHeadings).toBe(false);
+    expect(clusters).toHaveLength(1);
+  });
+
+  it("a heterogeneous group clusters by name and shows headings", () => {
+    // The #901 disponibel-inkomst shape: several distinct names, each repeated. Group
+    // by name → one cluster per distinct name (headings shown), and WITHIN each
+    // cluster the (now constant) name is hoisted so the band leads with its column.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [
+        band({ name: "Disponibel inkomst", distinguisher: "CDISP04HB" }),
+        band({ name: "Disponibel inkomst, familj", distinguisher: "DINF" }),
+        band({ name: "Disponibel inkomst", distinguisher: "CDISPHB" }),
+        band({ name: "Disponibel inkomst, familj", distinguisher: "DINKF" }),
+      ],
+      id,
+    );
+    expect(showClusterHeadings).toBe(true);
+    // Clusters appear in first-seen name order; bands keep input order within.
+    expect(clusters.map((c) => c.name)).toEqual([
+      "Disponibel inkomst",
+      "Disponibel inkomst, familj",
+    ]);
+    expect(clusters[0].bands.map((b) => b.distinguisher)).toEqual([
+      "CDISP04HB",
+      "CDISPHB",
+    ]);
+    expect(clusters[1].bands.map((b) => b.distinguisher)).toEqual([
+      "DINF",
+      "DINKF",
+    ]);
+    // Each cluster's name is constant → its bands lead with their distinguishing
+    // COLUMN, the name hoisted off (showName false) to the heading.
+    expect(clusters[0].labeling.showName).toBe(false);
+    expect(clusters[0].labeling.bands.map((b) => b.primary.text)).toEqual([
+      "CDISP04HB",
+      "CDISPHB",
+    ]);
+    expect(clusters[1].labeling.bands.map((b) => b.primary.text)).toEqual([
+      "DINF",
+      "DINKF",
+    ]);
+  });
+
+  it("a singleton-name member still earns its own heading", () => {
+    // A name that appears once is its own cluster — with several distinct names the
+    // group still shows headings, so that singleton renders its name once uniformly.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [
+        band({ name: "Disponibel inkomst", distinguisher: "CDISP" }),
+        band({ name: "Delkomponent", distinguisher: "DIND" }),
+      ],
+      id,
+    );
+    expect(showClusterHeadings).toBe(true);
+    expect(clusters.map((c) => c.name)).toEqual([
+      "Disponibel inkomst",
+      "Delkomponent",
+    ]);
+    expect(clusters.every((c) => c.bands.length === 1)).toBe(true);
   });
 });
 
