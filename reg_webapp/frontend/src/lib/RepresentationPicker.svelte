@@ -290,9 +290,11 @@ const footerLabel = $derived(
 {/snippet}
 
 <div class="rep-picker">
-  {#if allKeys.length > 1}
+  {#if bands.length > 1 && allKeys.length > 1}
     <!-- Global select-all: grab every column of the concept (for the active period)
-         in one move. A header strip, not card chrome. -->
+         in one move. A header strip, not card chrome. Omitted when there's only ONE
+         variable — that variable's own select-all IS "select all columns", so a
+         global one would just duplicate it. -->
     <div class="picker-head">
       <label class="select-all">
         <input
