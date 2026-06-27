@@ -1254,6 +1254,29 @@ server-side before the graph is returned) or kept in the non-graph residue:
 edges + `/lineage_warnings`) and is simply not mounted on the classification leaf, which
 has neither.
 
+### Rejected alternatives + the viz-dependency trigger (#667 spike)
+
+The model is **entity nodes with column/representation slices** — *not* top-level column
+nodes, *not* variable-only nodes that hide the columns. A top-level column-node graph
+would explode dense monthly families (e.g. `agi1lonfink`'s 12 delivery columns) and the
+group pages into unreadable node clouds; a variable-only graph would lose the
+same-column-versus-different-variable distinction that motivated the view in the first
+place. Keeping one node per variable with its representation-run cells in-node preserves
+both: the family reads as one entity over time, and the columns stay visible as slices.
+Classifications reuse the same owned primitive but *not* timeline semantics — editions
+are standards/versions (a 2024 study may still code against SUN 2000), so they render as
+a version-ordered edition graph, never validity intervals.
+
+The primitive is deliberately **hand-built SVG + scoped CSS, not a graph library** (#667
+spike conclusion). Lanes/columns, node markers, edge arcs, labels, the keyboard/ARIA
+wrapper, and responsive overflow are each small enough to own locally against the design
+tokens, and both views are deterministic layouts (a time axis or an edition ordering),
+so a force-directed/auto-layout engine buys nothing. **Revisit a dedicated viz
+dependency only if** production requirements add pan/zoom, collision-avoidance,
+large-graph virtualization, or interactive graph editing — work that materially exceeds
+this custom primitive. Short of one of those four triggers, a library is net complexity,
+not net simplicity.
+
 ## Deployment (`global` on Fly.io, Cloudflare edge in front)
 
 §6.5's origin-platform decision (2026-06-11): the container runs on **Fly.io**, with a

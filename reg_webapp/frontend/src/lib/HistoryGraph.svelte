@@ -541,7 +541,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     margin: 0 0 var(--space-2, 0.5rem);
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--muted);
+    color: var(--text-muted);
   }
 
   /* The timeline scrolls horizontally inside the 56rem column; the gutter stays
@@ -587,7 +587,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     transform: translateX(-50%);
     font-size: 0.68rem;
     font-variant-numeric: tabular-nums;
-    color: var(--muted);
+    color: var(--text-muted);
     white-space: nowrap;
   }
 
@@ -684,7 +684,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     height: 9px;
     border-radius: 50%;
     background: var(--surface);
-    border: 1.5px solid var(--muted);
+    border: 1.5px solid var(--text-muted);
     transform: translateY(-50%);
     z-index: 2;
   }
@@ -705,7 +705,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     font-size: 0.82rem;
     font-weight: 600;
     line-height: 1.2;
-    color: #1a1a1a;
+    color: var(--text);
     /* Clamp to 2 lines so a long classification name keeps its distinguishing
        tail (…— Utbildningsnivå) instead of a 1-line ellipsis that makes every
        edition read identically. */
@@ -719,18 +719,18 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     color: var(--accent);
   }
   .renamed .name {
-    color: var(--muted);
+    color: var(--text-muted);
     font-weight: 500;
   }
   .hint {
-    color: var(--muted);
+    color: var(--text-muted);
     font-weight: 400;
     font-style: italic;
   }
   .slug {
-    font-family: var(--mono, monospace);
+    font-family: var(--font-mono);
     font-size: 0.68rem;
-    color: var(--muted);
+    color: var(--text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -756,11 +756,11 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
   }
   .sa-prefix {
     font-size: 0.62rem;
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .sa-chip {
     font-size: 0.62rem;
-    font-family: var(--mono, monospace);
+    font-family: var(--font-mono);
     color: var(--accent);
     background: var(--accent-bg);
     border-radius: 3px;
@@ -820,14 +820,14 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     font-size: 0.72rem;
     font-weight: 600;
     line-height: 1.15;
-    color: #1a1a1a;
+    color: var(--text);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .cell-window {
     font-size: 0.64rem;
-    color: var(--muted);
+    color: var(--text-muted);
     font-variant-numeric: tabular-nums;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -836,7 +836,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
   .variant-tag {
     margin-left: 4px;
     padding: 0 3px;
-    font-family: var(--mono, monospace);
+    font-family: var(--font-mono);
     background: color-mix(in srgb, var(--border) 35%, transparent);
     border-radius: 2px;
   }
@@ -856,7 +856,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     height: 10px;
     border-radius: 50%;
     background: var(--surface);
-    border: 1.5px solid var(--muted);
+    border: 1.5px solid var(--text-muted);
   }
   .point.current .dot {
     background: var(--accent);
@@ -869,7 +869,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     font-size: 0.7rem;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
-    color: #1a1a1a;
+    color: var(--text);
     white-space: nowrap;
   }
   .point.current .point-label {
@@ -884,19 +884,22 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     color: var(--accent);
   }
 
-  /* Connectors. */
+  /* Connectors — graph EDGES are DATA, so they read viz tokens (#810), never the
+     brand --accent: a succession/related edge must not collide with the
+     accent-tinted focus/selection chrome. Succession is the directed flow (solid
+     + arrowed); related is the undirected "see also" bow (dashed, low-opacity). */
   .edge.succession {
-    stroke: color-mix(in srgb, var(--accent) 70%, var(--border));
+    stroke: var(--viz-edge-succession);
     stroke-width: 1.5;
   }
   .edge.related {
-    stroke: var(--muted);
+    stroke: var(--viz-edge-related);
     stroke-width: 1.2;
     stroke-dasharray: 4 3;
     opacity: 0.7;
   }
   .arrow-head {
-    fill: color-mix(in srgb, var(--accent) 70%, var(--border));
+    fill: var(--viz-edge-succession);
   }
   /* Succession reason chip: small, muted, truncated; haloed so it reads over a
      gridline. Non-interactive (cell hover passes through). */
@@ -908,7 +911,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     padding: 0 5px;
     font-size: 0.62rem;
     line-height: 1.5;
-    color: var(--muted);
+    color: var(--text-muted);
     background: color-mix(in srgb, var(--surface) 88%, transparent);
     border-radius: 3px;
     overflow: hidden;
@@ -931,7 +934,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     border: 0;
   }
   .muted {
-    color: var(--muted);
+    color: var(--text-muted);
   }
   .tag {
     font-size: 0.85em;

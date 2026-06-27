@@ -156,10 +156,13 @@ const anySection = $derived(showProvenance || showWarnings);
     gap: 0.6rem;
   }
   .warn-kind {
-    color: #92600a;
+    color: var(--warn);
     font-size: 0.85em;
   }
+  .error {
+    color: var(--err);
+  }
   .muted {
-    color: var(--muted);
+    color: var(--text-muted);
   }
 </style>
