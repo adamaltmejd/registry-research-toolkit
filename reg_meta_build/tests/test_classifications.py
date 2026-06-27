@@ -1589,7 +1589,7 @@ class TestLinkValueSetClassifications:
         the new vintage step. A ≥15-code single-family set on a classification that
         IS on a supersedes chain (valid_from set) still links to that exact cls via
         the confident emit — the vintage step only touches MULTI-family sets, and
-        this set never enters `_vs_multi_onechain` (single candidate)."""
+        this set never enters `_vs_dominant_chain` (single candidate)."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
@@ -1767,7 +1767,8 @@ class TestLinkValueSetClassifications:
 
         counts = link_value_set_classifications(g.conn)
         assert counts["multi_family"] == 1
-        # Same root but two stems → the stem guard keeps it out of _vs_multi_onechain.
+        # Same root but two stems → two single-edition families, no multi-vintage
+        # chain → it never qualifies as a dominant chain in _vs_dominant_chain.
         assert counts["vintage_value_sets_linked"] == 0
         assert counts["multi_family_after"] == 1
         assert g.candidates() == []
@@ -2019,6 +2020,734 @@ class TestLinkValueSetClassifications:
         assert counts["multi_family_after"] == 1
         # Only A got a candidate; B has none.
         assert g.candidates() == [(982, 182, 86)]
+
+    def test_dominant_chain_reclaims_past_single_off_chain_stray(self) -> None:
+        """Dominant-chain rule (#514): the real LABELED LKF county residue. A county
+        code set matches >=2 editions of an LKF-like chain (one multi-vintage chain)
+        PLUS a SINGLE off-chain stray (an SNI2007 division that HAS a DB predecessor
+        SNI2002 which does NOT match the codes, so only SNI2007 is a candidate →
+        single-edition stray). The OLD all-on-chain rule blocked on that one off-chain
+        candidate; the dominant-chain rule reclaims, because EXACTLY ONE family is a
+        multi-vintage chain.
+
+        Labels now MATTER (the conditional absolute floor): with an off-chain stray
+        present the dominant family must label-agree at the confident bar. This is the
+        REAL labeled-LKF case — the value set's (code,label) pairs equal the LKF
+        editions' canonical pairs (both built from the same `LKF` prefix via
+        `_numeric_codes`, so label_agree = 1.0 >= 0.90), while the SNI stray carries
+        DIFFERENT labels (label_agree 0). So the dominant clears the floor AND beats the
+        stray. The emitted candidate is the LATEST LKF edition overlapping the state,
+        NOT the off-chain stray. (Contrast the label-LESS SSYK shape, which now stays
+        ambiguous: `test_dominant_chain_labelless_with_stray_stays_ambiguous`.)"""
+        from reg_meta_build.classifications import link_value_set_classifications
+        from reg_meta_build.db import _backfill_state_classifications
+
+        g = _Graph()
+        # The value set's (code,label) pairs EQUAL the LKF editions' pairs (same `LKF`
+        # prefix → identical labels) → label_agree 1.0 against LKF, clearing the floor.
+        county_lkf = _numeric_codes("LKF", 10, 4)
+        # Multi-vintage LKF chain: two year-editions, both >=0.90-containing the set.
+        g.add_classification(
+            200,
+            "LKF2015",
+            county_lkf + [("9001", "lkf2015 only")],
+            slug="lkf2015",
+            valid_from=2015,
+            valid_to=2017,
+        )
+        g.add_classification(
+            201,
+            "LKF2018",
+            county_lkf + [("9002", "lkf2018 only")],
+            slug="lkf2018",
+            supersedes_id=200,
+            valid_from=2018,
+            valid_to=None,
+        )
+        # Off-chain stray: SNI2007 (own chain root, distinct stem) ALSO contains the
+        # 10 codes (>=0.90 → a real candidate the OLD rule blocked on) but carries
+        # DIFFERENT labels (label_agree 0). Its DB predecessor SNI2002 has DISJOINT
+        # codes → NOT a candidate, so only ONE SNI edition is a candidate → a permitted
+        # single-edition stray (NOT a DB-standalone test: SNI2007 has a predecessor).
+        sni_codes = [
+            (str(i).zfill(4), f"SNI {i}") for i in range(1, 11)
+        ]  # SAME kods, SNI labels
+        sni_disjoint = [(str(i).zfill(4), f"SNI {i}") for i in range(5000, 5010)]
+        g.add_classification(
+            210,
+            "SNI2002",
+            sni_disjoint,
+            slug="sni2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            211,
+            "SNI2007",
+            sni_codes + [("9003", "sni only")],  # same county kods, SNI labels → la 0
+            slug="sni2007",
+            supersedes_id=210,
+            valid_from=2008,
+            valid_to=None,
+        )
+        g.add_value_set(200, county_lkf)  # labels EQUAL LKF → label_agree 1.0 vs LKF
+        g.add_variable_state(920, 200)  # open-ended → overlaps both LKF editions
+
+        counts = link_value_set_classifications(g.conn)
+        # 3 candidates (2 LKF + 1 SNI) → multi-family, not confident.
+        assert counts["value_sets_linked"] == 0
+        assert counts["multi_family"] == 1
+        # One multi-vintage chain (LKF, label_agree 1.0 >= 0.90 floor) + a single-edition
+        # SNI stray (label_agree 0) → dominant clears the floor AND beats the stray → reclaim.
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        # LATEST dominant-chain (LKF) edition overlapping the open state — NOT the
+        # off-chain SNI2007 stray.
+        assert g.candidates() == [(920, 200, 201)]
+
+        _backfill_state_classifications(g.conn)
+        assert g.tagged_classification(920) == 201
+
+    def test_dominant_chain_labelless_with_stray_stays_ambiguous(self) -> None:
+        """THE KEY PRECISION TEST (#514 conditional absolute floor — the SSYK shape).
+        A LABEL-LESS dominant chain (>=2 editions whose codes the value set matches, but
+        the value set carries its OWN labels → label_agree 0 against every edition) PLUS
+        a single off-chain stray (different root, single edition). The real-data failure
+        this guards: short generic code sets (1–9 response scales) coincidentally match
+        BOTH SSYK editions (here ssyk2008/ssyk2012, stem `ssyk`), so SSYK looks
+        "dominant", and being label-less they sailed
+        through the old COALESCE-0 relative lever and got reclaimed to the OCCUPATIONAL
+        SSYK. With an off-chain stray present the absolute floor now REQUIRES the
+        dominant family to label-agree >= _CONFIDENT_LABEL_AGREE; label_agree 0 cannot
+        clear it → stays ambiguous. Mirrors `test_dominant_chain_reclaims_past_single_off
+        _chain_stray` (the LABELED LKF case) which DOES clear the floor."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # The classifications carry the `SSYK` codes; the value set matches the SAME
+        # kods but under its OWN labels (`SCALE` prefix) → label_agree 0 everywhere.
+        ssyk_codes = _numeric_codes("SSYK", 10, 4)
+        vs_codes = _numeric_codes("SCALE", 10, 4)  # SAME kods, DIFFERENT labels
+        # DOMINANT (label-less) chain: two SSYK editions sharing the `ssyk` stem (both
+        # 4-digit-year slugs, so `classification_slug_stem` strips the year-tail and they
+        # bucket as ONE vintage family), both >=0.90-containing the set.
+        g.add_classification(
+            500,
+            "SSYK2008",
+            ssyk_codes + [("9001", "ssyk2008 only")],
+            slug="ssyk2008",
+            valid_from=2008,
+            valid_to=2013,
+        )
+        g.add_classification(
+            501,
+            "SSYK2012",
+            ssyk_codes + [("9002", "ssyk2012 only")],
+            slug="ssyk2012",
+            supersedes_id=500,
+            valid_from=2014,
+            valid_to=None,
+        )
+        # Off-chain stray: own root + stem, single edition, also contains the codes.
+        g.add_classification(
+            502,
+            "SNI2007",
+            ssyk_codes + [("9003", "sni only")],
+            slug="sni2007",
+            valid_from=2008,
+            valid_to=None,
+        )
+        g.add_value_set(
+            500, vs_codes
+        )  # same kods, value-set-only labels → label_agree 0
+        g.add_variable_state(940, 500)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Label-less dominant chain + off-chain stray → absolute floor blocks the
+        # coincidence (label_agree 0 < 0.90).
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
+    def test_allonchain_labelless_still_reclaims(self) -> None:
+        """Regression guard that the conditional floor is CONDITIONAL on off-chain
+        strays — it must NOT over-reach into #494's label-free all-on-chain behavior.
+        Pure all-on-chain: >=2 editions of ONE chain, NO off-chain stray, LABEL-LESS
+        (the value set's labels differ from the editions' → label_agree 0). With no
+        off-chain stray the floor stays on its NOT-EXISTS branch (codes alone are
+        decisive), so it STILL reclaims. If the floor over-reached to require a positive
+        label bar unconditionally, this label-less all-on-chain set would wrongly stay
+        ambiguous — so this pins #494's label-free behavior."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # One chain, two editions; the value set matches the codes but under its OWN
+        # labels → label_agree 0. NO off-chain family exists.
+        chain_codes = _numeric_codes("SNI", 10, 4)
+        vs_codes = _numeric_codes("VSLBL", 10, 4)  # SAME kods, DIFFERENT labels
+        g.add_classification(
+            520,
+            "SNI2002",
+            chain_codes + [("9001", "2002 only")],
+            slug="sni2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            521,
+            "SNI2007",
+            chain_codes + [("9002", "2007 only")],
+            slug="sni2007",
+            supersedes_id=520,
+            valid_from=2008,
+            valid_to=None,
+        )
+        g.add_value_set(
+            520, vs_codes
+        )  # same kods, value-set-only labels → label_agree 0
+        g.add_variable_state(950, 520)  # open-ended → overlaps both editions
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # No off-chain stray → all-on-chain branch → label-free reclaim (#494 preserved).
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        assert g.candidates() == [(950, 520, 521)]
+
+    def test_two_multi_vintage_chains_stay_ambiguous(self) -> None:
+        """Two distinct families are EACH a multi-vintage chain (>=2 matched editions
+        each) → a genuine cross-family span, NOT a dominant chain → stays in the
+        residue. `dominant` requires EXACTLY ONE multi-vintage family, so two such
+        families disqualify the value set."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # Shared codes both families contain (label-less value set, so label lever is
+        # not the gate here — the structural exactly-one rule is).
+        shared = _numeric_codes("CODE", 10, 4)
+        # Chain A: two editions, both contain the set.
+        g.add_classification(
+            220,
+            "ACHAIN2002",
+            shared + [("9001", "a2002")],
+            slug="achain2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            221,
+            "ACHAIN2008",
+            shared + [("9002", "a2008")],
+            slug="achain2008",
+            supersedes_id=220,
+            valid_from=2008,
+            valid_to=None,
+        )
+        # Chain B: a DIFFERENT root + stem, also two editions both containing the set.
+        g.add_classification(
+            230,
+            "BCHAIN2002",
+            shared + [("9003", "b2002")],
+            slug="bchain2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            231,
+            "BCHAIN2008",
+            shared + [("9004", "b2008")],
+            slug="bchain2008",
+            supersedes_id=230,
+            valid_from=2008,
+            valid_to=None,
+        )
+        g.add_value_set(210, shared)
+        g.add_variable_state(930, 210)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Two multi-vintage chains → NOT exactly one → no reclaim.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
+    def test_label_lever_blocks_when_off_chain_stray_label_agrees_better(self) -> None:
+        """Label lever (#514, precision): the dominant chain is structurally dominant
+        (>=2 editions) but its codes carry MISMATCHED labels (label_agree 0), while a
+        single off-chain stray has EXACTLY matching (code,label) pairs (label_agree
+        1.0). Because the stray label-agrees strictly better than the dominant family,
+        the lever BLOCKS the reclaim — a coincidental dominant chain must not beat a
+        stray that actually matches labels."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # The value set's (code, label) pairs are the TRUTH the label lever compares to.
+        truth = _numeric_codes("TRUE", 10, 4)
+        # Dominant chain: SAME codes but DIFFERENT labels → label_agree 0 on both.
+        mislabeled = [(code, f"WRONG {i}") for i, (code, _) in enumerate(truth, 1)]
+        g.add_classification(
+            240,
+            "CHAIN2002",
+            mislabeled + [("9001", "c2002")],
+            slug="chain2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            241,
+            "CHAIN2008",
+            mislabeled + [("9002", "c2008")],
+            slug="chain2008",
+            supersedes_id=240,
+            valid_from=2008,
+            valid_to=None,
+        )
+        # Off-chain stray: own root + stem, EXACT (code,label) match → label_agree 1.0.
+        g.add_classification(
+            250,
+            "STRAY2010",
+            truth + [("9003", "stray only")],
+            slug="stray2010",
+            valid_from=2010,
+            valid_to=None,
+        )
+        g.add_value_set(220, truth)
+        g.add_variable_state(940, 220)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Dominant chain by structure, but the stray label-agrees better → blocked.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
+    def test_same_root_multi_vintage_subdimension_stays_ambiguous(self) -> None:
+        """#514 off-chain precision (Fix 1): a permitted stray must be OFF-CHAIN — a
+        DIFFERENT chain root than the dominant family. Here a LABEL-LESS value set
+        (its codes carry value-set-only labels, so its label_agree against every
+        candidate is 0) matches a 2-edition `sun-niva` chain (the DOMINANT
+        multi-vintage chain) PLUS a single `sun-inriktning` edition that shares the
+        SAME sun1996 chain root but a DIFFERENT slug stem. That stray is NOT off-chain
+        — it is the #579 orthogonal SUN dimension — so the `NOT EXISTS` guard
+        disqualifies the set: it stays ambiguous rather than collapsing the orthogonal
+        dimension onto sun-niva. With every label_agree at 0, the label lever is on the
+        COALESCE-0 path and cannot move the outcome, so the STRUCTURAL same-root guard
+        is provably the SOLE gate keeping the set ambiguous.
+
+        Regression test for Fix 1: WITHOUT the `NOT EXISTS` guard, the 2-edition
+        sun-niva chain would be the sole multi-vintage family (the lone sun-inriktning
+        edition is single-edition) → it would wrongly reclaim."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # Codes the classifications carry. The value set matches the SAME codes but
+        # under its OWN labels (`vs_codes`, distinct "SUNVS" prefix → same kods,
+        # DIFFERENT labels), so every candidate's label_agree is 0 → the label lever
+        # stays on the COALESCE-0 path and only the STRUCTURAL same-root guard can
+        # keep the set ambiguous.
+        shared = _numeric_codes("SUN", 10, 4)
+        vs_codes = _numeric_codes("SUNVS", 10, 4)  # SAME codes, DIFFERENT labels
+        # Umbrella root of the curated #579 split; its own codes are disjoint so it is
+        # not itself a candidate — the value set matches the two dimensions, not the root.
+        g.add_classification(
+            300,
+            "SUN1996",
+            _numeric_codes("ROOT", 10, 4),
+            slug="sun1996",
+            valid_from=1996,
+            valid_to=None,
+        )
+        # DOMINANT dimension: a 2-edition sun-niva chain, both >=0.90-containing the set
+        # (same sun1996 root, stem `sun-niva`).
+        g.add_classification(
+            301,
+            "SUN-niva2000",
+            shared + [("9101", "niva2000 only")],
+            slug="sun-niva2000",
+            supersedes_id=300,
+            valid_from=2000,
+            valid_to=2009,
+        )
+        g.add_classification(
+            302,
+            "SUN-niva2010",
+            shared + [("9102", "niva2010 only")],
+            slug="sun-niva2010",
+            supersedes_id=301,
+            valid_from=2010,
+            valid_to=None,
+        )
+        # Orthogonal sub-dimension: a SINGLE sun-inriktning edition, same sun1996 root,
+        # DIFFERENT stem `sun-inriktning`. Shares the dominant's root → disqualifies.
+        g.add_classification(
+            303,
+            "SUN-inriktning2000",
+            shared + [("9103", "inriktning only")],
+            slug="sun-inriktning2000",
+            supersedes_id=300,
+            valid_from=2000,
+            valid_to=None,
+        )
+        g.add_value_set(
+            300, vs_codes
+        )  # same kods, value-set-only labels → label_agree 0
+        g.add_variable_state(950, 300)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Same-root sun-inriktning stray → dominant is NOT unique on its root → no reclaim.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
+    def test_relative_lever_above_floor(self) -> None:
+        """The RELATIVE label lever still bites ABOVE the conditional absolute floor.
+        With an off-chain stray present, BOTH gates apply: the dominant family must
+        clear the absolute floor (`>= _CONFIDENT_LABEL_AGREE`) AND label-agree at least
+        as well as every off-chain stray.
+
+        Case A (reclaims): the dominant chain label-agrees at 1.0 (clears the floor) and
+        the off-chain stray at a LOWER 0.8 → dominant beats the stray → reclaim to the
+        latest chain edition.
+
+        Case B (blocked above the floor): the dominant chain label-agrees at exactly the
+        floor (0.9 — it DOES clear the absolute bar) but the off-chain stray label-agrees
+        HIGHER (1.0) → the relative lever blocks it even though the floor is met. A
+        coincidental dominant chain must never beat a stray that matches labels better.
+        """
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        # --- Case A: dominant 1.0, stray 0.8 → reclaim ---
+        g = _Graph()
+        # 10-code value set whose (code,label) pairs the dominant chain reproduces
+        # EXACTLY (label_agree 1.0). The off-chain stray reproduces only 8 of the 10
+        # labels (codes 9..10 relabeled) → label_agree 0.8.
+        value_codes = _numeric_codes("VS", 10, 4)
+        stray_tail = value_codes[:8] + [
+            (str(i).zfill(4), f"STRAYLBL {i}") for i in range(9, 11)
+        ]
+        # DOMINANT chain: 2 editions, exact (code,label) match → label_agree 1.0.
+        g.add_classification(
+            310,
+            "CHAIN2002",
+            value_codes + [("9201", "c2002 only")],
+            slug="chain2002",
+            valid_from=2002,
+            valid_to=2009,
+        )
+        g.add_classification(
+            311,
+            "CHAIN2010",
+            value_codes + [("9202", "c2010 only")],
+            slug="chain2010",
+            supersedes_id=310,
+            valid_from=2010,
+            valid_to=None,
+        )
+        # Off-chain stray: DIFFERENT root + stem, 0.8 label_agree (< dominant's 1.0).
+        g.add_classification(
+            312,
+            "STRAY2005",
+            stray_tail + [("9203", "stray only")],
+            slug="stray2005",
+            valid_from=2005,
+            valid_to=None,
+        )
+        g.add_value_set(310, value_codes)
+        g.add_variable_state(960, 310)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Dominant 1.0 clears the floor AND beats the stray's 0.8 → reclaim to latest edition.
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        assert g.candidates() == [(960, 310, 311)]
+
+        # --- Case B: dominant at floor (0.9), stray higher (1.0) → blocked ---
+        g2 = _Graph()
+        # Dominant reproduces 9 of 10 labels (code 10 relabeled) → label_agree 0.9 (==
+        # the floor, so it CLEARS the absolute bar). The off-chain stray reproduces all
+        # 10 → label_agree 1.0 (> dominant) → the relative lever blocks.
+        value_codes2 = _numeric_codes("VS", 10, 4)
+        dom_tail = value_codes2[:9] + [("0010", "DOMLBL 10")]
+        g2.add_classification(
+            410,
+            "CHAIN2002",
+            dom_tail + [("9201", "c2002 only")],
+            slug="chain2002",
+            valid_from=2002,
+            valid_to=2009,
+        )
+        g2.add_classification(
+            411,
+            "CHAIN2010",
+            dom_tail + [("9202", "c2010 only")],
+            slug="chain2010",
+            supersedes_id=410,
+            valid_from=2010,
+            valid_to=None,
+        )
+        g2.add_classification(
+            412,
+            "STRAY2005",
+            value_codes2 + [("9203", "stray only")],  # exact match → label_agree 1.0
+            slug="stray2005",
+            valid_from=2005,
+            valid_to=None,
+        )
+        g2.add_value_set(310, value_codes2)
+        g2.add_variable_state(960, 310)
+
+        counts2 = link_value_set_classifications(g2.conn)
+        assert counts2["multi_family"] == 1
+        # Dominant 0.9 meets the floor but the stray's 1.0 beats it → relative lever blocks.
+        assert counts2["vintage_value_sets_linked"] == 0
+        assert counts2["multi_family_after"] == 1
+        assert g2.candidates() == []
+
+    def test_dominant_chain_reclaims_past_multiple_off_chain_strays(self) -> None:
+        """The "any number of off-chain strays" clause: a dominant chain (2 editions)
+        plus TWO distinct single-edition off-chain strays, each a DIFFERENT root from
+        the dominant AND from each other, still reclaims to the latest dominant edition.
+        Every family shares the `shared` codes verbatim with the value set, so the
+        dominant chain and both strays all label_agree at 1.0 — the label lever passes
+        by TIE, not by margin. The pinned behavior is the STRUCTURAL exactly-one-chain
+        rule reclaiming past MULTIPLE distinct-root strays: neither stray shares the
+        dominant's root, so the dominant chain is the sole multi-vintage family."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("CODE", 10, 4)
+        # DOMINANT chain: 2 editions, both >=0.90-containing the set.
+        g.add_classification(
+            320,
+            "LKF2015",
+            shared + [("9301", "lkf2015 only")],
+            slug="lkf2015",
+            valid_from=2015,
+            valid_to=2017,
+        )
+        g.add_classification(
+            321,
+            "LKF2018",
+            shared + [("9302", "lkf2018 only")],
+            slug="lkf2018",
+            supersedes_id=320,
+            valid_from=2018,
+            valid_to=None,
+        )
+        # Stray A: own root + stem, single edition, also contains the codes.
+        g.add_classification(
+            322,
+            "SNI2007",
+            shared + [("9303", "sni only")],
+            slug="sni2007",
+            valid_from=2008,
+            valid_to=None,
+        )
+        # Stray B: a DIFFERENT root + stem from both the dominant and stray A.
+        g.add_classification(
+            323,
+            "MDC2012",
+            shared + [("9304", "mdc only")],
+            slug="mdc2012",
+            valid_from=2012,
+            valid_to=None,
+        )
+        g.add_value_set(320, shared)
+        g.add_variable_state(970, 320)  # open-ended → overlaps both LKF editions
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # One multi-vintage chain + two off-chain strays (distinct roots) → reclaim.
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        # LATEST dominant-chain edition, NOT either off-chain stray.
+        assert g.candidates() == [(970, 320, 321)]
+
+    def test_dominant_chain_period_picks_label_matching_edition(self) -> None:
+        """#513 county-reform period nuance: the codes match EVERY edition of an LKF
+        chain, but the LABELS changed at the 1997 reform, so per-state period-overlap
+        (7c) + the absolute label floor together must land the label-CORRECT edition.
+
+        Swedish county (LKF) names changed at the 1997 reform: pre-1997 editions carry
+        OLD names (Malmohus, Goteborgs och Bohus, Kopparberg); post-1997 editions carry
+        NEW names (Skane, Vastra Gotaland, Dalarna). The CODES (01..25) are stable
+        across all editions, so a county value set is code-contained by EVERY LKF
+        edition - but its labels match only the period-appropriate ones. Modeled here as
+        a 2-edition LKF chain with the SAME codes but DIFFERENT labels per era:
+        LKF1996 [1996,1997] with OLD labels, LKF1998 [1998,unbounded] with NEW labels.
+        The value set carries the NEW (post-reform) labels -> label_agree 1.0 vs
+        LKF1998, 0.0 vs LKF1996; both code-contain it (multi-vintage chain,
+        n_matched=2). One off-chain single-edition SNI stray (different root, DIFFERENT
+        labels) puts this on the #514 stray-present path where the conditional absolute
+        label floor applies.
+
+        The point: 7c picks the edition by per-state PERIOD-OVERLAP, not naive
+        latest-on-chain. The state window is POST-1997 ([2000,9999]), which LKF1996
+        [1996,1997] does NOT overlap -> LKF1996 is ineligible; only LKF1998 overlaps, so
+        the period-overlap pick coincides with the label-matching edition. The floor
+        passes because `fam_max_la` = MAX over the LKF family = 1.0 (from LKF1998's NEW
+        labels) >= 0.90, even though LKF1996's label_agree is 0."""
+        from reg_meta_build.classifications import link_value_set_classifications
+        from reg_meta_build.db import _backfill_state_classifications
+
+        g = _Graph()
+        # SAME stable county codes on both editions; DIFFERENT labels per era.
+        old_county = _numeric_codes("OLD", 10, 4)  # pre-reform names
+        new_county = _numeric_codes("NEW", 10, 4)  # post-reform names (same codes)
+        g.add_classification(
+            220,
+            "LKF1996",
+            old_county + [("9001", "lkf1996 only")],
+            slug="lkf1996",
+            valid_from=1996,
+            valid_to=1997,
+        )
+        g.add_classification(
+            221,
+            "LKF1998",
+            new_county + [("9002", "lkf1998 only")],
+            slug="lkf1998",
+            supersedes_id=220,
+            valid_from=1998,
+            valid_to=None,
+        )
+        # Off-chain single-edition stray: SNI2007 (own root, distinct stem) ALSO
+        # code-contains the 10 county codes but carries DIFFERENT (SNI) labels
+        # (label_agree 0). Its DB predecessor SNI2002 has DISJOINT codes -> NOT a
+        # candidate, so only ONE SNI edition is a candidate -> a permitted single-edition
+        # stray. This activates the #514 conditional absolute floor.
+        sni_match = [(str(i).zfill(4), f"SNI {i}") for i in range(1, 11)]  # same kods
+        sni_disjoint = [(str(i).zfill(4), f"SNI {i}") for i in range(5000, 5010)]
+        g.add_classification(
+            230,
+            "SNI2002",
+            sni_disjoint,
+            slug="sni2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            231,
+            "SNI2007",
+            sni_match + [("9003", "sni only")],
+            slug="sni2007",
+            supersedes_id=230,
+            valid_from=2008,
+            valid_to=None,
+        )
+        # The value set carries the NEW (post-reform) labels -> label_agree 1.0 vs
+        # LKF1998, 0.0 vs LKF1996; code-contained by BOTH LKF editions (n_matched=2).
+        g.add_value_set(240, new_county)
+        # POST-1997 state window: overlaps LKF1998 [1998,unbounded] but NOT
+        # LKF1996 [1996,1997].
+        g.add_variable_state(940, 240, valid_from="2000-01-01", valid_to="9999-12-31")
+
+        counts = link_value_set_classifications(g.conn)
+        # 3 candidates (2 LKF + 1 SNI) -> multi-family, not confident.
+        assert counts["value_sets_linked"] == 0
+        assert counts["multi_family"] == 1
+        # Reclaims: fam_max_la = MAX over the LKF family = 1.0 (LKF1998's NEW labels)
+        # >= 0.90 floor, even though LKF1996's label_agree is 0.
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        # Per-state period-overlap picks LKF1998 (post-reform, label-matching,
+        # period-overlapping) - LKF1996 [1996,1997] does NOT overlap the post-2000
+        # state, so it is ineligible - and NOT the off-chain SNI stray.
+        emitted = g.candidates()
+        assert emitted == [(940, 240, 221)]
+        assert 221 in {c for _, _, c in emitted}  # LKF1998 chosen
+        assert 220 not in {c for _, _, c in emitted}  # LKF1996 ineligible (no overlap)
+
+        _backfill_state_classifications(g.conn)
+        assert g.tagged_classification(940) == 221
+
+    def test_period_eligible_edition_must_clear_floor(self) -> None:
+        """#514 Codex P2: the per-edition label gate (7c) blocks a false reclaim when
+        7b's value-set-level floor passes via a LATER edition but per-state period-
+        overlap picks an EARLIER, label-DISAGREEING edition.
+
+        This is the inverse of `test_dominant_chain_period_picks_label_matching_edition`:
+        same county-reform shape (post-reform labels: label_agree 1.0 vs LKF1998, 0.0 vs
+        LKF1996; code-contained by BOTH editions -> multi-vintage chain n_matched=2; one
+        off-chain single-edition SNI stray puts it on the #514 stray-present path). 7b's
+        floor passes because `fam_max_la` = MAX over the LKF family = 1.0 (LKF1998) >=
+        0.90. But here the state window is PRE-1998 ([1990,1996]), which overlaps LKF1996
+        [1996,1997] but NOT LKF1998 [1998,unbounded] -> 7c's period pick is LKF1996,
+        whose OWN label_agree is 0. 7b's family-max floor decouples from that chosen
+        edition, so the OLD code would emit LKF1996 (a false reclaim). The new per-edition
+        gate re-applies the floor on the PERIOD-CHOSEN edition's own label_agree: LKF1996
+        (0.0) fails `>= _CONFIDENT_LABEL_AGREE`, so it is ineligible, no other edition
+        overlaps the pre-1998 state, and the pair emits NOTHING -> stays residual."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # SAME stable county codes on both editions; DIFFERENT labels per era.
+        old_county = _numeric_codes("OLD", 10, 4)  # pre-reform names
+        new_county = _numeric_codes("NEW", 10, 4)  # post-reform names (same codes)
+        g.add_classification(
+            220,
+            "LKF1996",
+            old_county + [("9001", "lkf1996 only")],
+            slug="lkf1996",
+            valid_from=1996,
+            valid_to=1997,
+        )
+        g.add_classification(
+            221,
+            "LKF1998",
+            new_county + [("9002", "lkf1998 only")],
+            slug="lkf1998",
+            supersedes_id=220,
+            valid_from=1998,
+            valid_to=None,
+        )
+        # Off-chain single-edition stray (SNI2007, own root/stem; DB predecessor
+        # SNI2002 has DISJOINT codes -> single candidate edition). Activates the #514
+        # conditional floor path.
+        sni_match = [(str(i).zfill(4), f"SNI {i}") for i in range(1, 11)]  # same kods
+        sni_disjoint = [(str(i).zfill(4), f"SNI {i}") for i in range(5000, 5010)]
+        g.add_classification(
+            230,
+            "SNI2002",
+            sni_disjoint,
+            slug="sni2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            231,
+            "SNI2007",
+            sni_match + [("9003", "sni only")],
+            slug="sni2007",
+            supersedes_id=230,
+            valid_from=2008,
+            valid_to=None,
+        )
+        # The value set carries the NEW (post-reform) labels -> label_agree 1.0 vs
+        # LKF1998, 0.0 vs LKF1996; code-contained by BOTH LKF editions (n_matched=2).
+        g.add_value_set(240, new_county)
+        # PRE-1998 state window: overlaps LKF1996 [1996,1997] but NOT LKF1998
+        # [1998,unbounded], so per-state period-overlap (7c) picks LKF1996 (label_agree
+        # 0) - the label-DISAGREEING edition.
+        g.add_variable_state(940, 240, valid_from="1990-01-01", valid_to="1996-12-31")
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 0
+        assert counts["multi_family"] == 1
+        # No reclaim: the period-eligible edition (LKF1996) fails the per-edition floor
+        # (own label_agree 0 < 0.90), so the false reclaim is BLOCKED; no other LKF
+        # edition overlaps the pre-1998 state -> the pair emits nothing, stays residual.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
 
 
 class TestCuratedClassificationLinks:

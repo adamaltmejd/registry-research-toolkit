@@ -1032,41 +1032,67 @@ or re-pointed — linkage is additive.
 1. Build `_canon_codes` from `classification_code WHERE is_valid IS NOT 0` (covers both
    CSV-canonical rows (`is_valid=1`) and no-CSV classifications whose observed codes are
    their only code set (`is_valid NULL`)).
+
 2. Build `_vs_stats` per value set: distinct-code count `n_codes` and `dom_level` — the
    single digit-length when EVERY code is an all-digit string of that length, else NULL.
+
 3. `_vs_cls` — containment per `(value_set_id, cls_id)` under a grain filter: when
    `dom_level` is set, a value-set code matches a canonical row only at the same `level`
    (a 4-digit set matches the classification's 4-digit codes, not its 2-digit chapter
    codes). Kept when `n_codes >= 8` AND `matched/n_codes >= 0.90`.
+
 4. `_vs_single` — value sets with EXACTLY one surviving candidate.
+
 5. `_vs_confident` — single-family AND (`n_codes >= 15` OR label agreement `>= 0.90`).
    Label agreement: the fraction of distinct value-set codes that have an exact
    `(code, label)` match against the candidate classification's canonical pairs. This is
    a precision lever, not a recall one — relabeled SCB code lists share no labels, so
    label agreement distinguishes a short genuine match from ambiguity, never boosts an
    unrelated set.
+
 6. Emit confident candidates into `classification_candidate` additively.
-7. **Vintage-period reclaim** (#494): much of the multi-family residue from step 3 is
-   one classification family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
-   editions) — distinct `classification` rows linked by `supersedes_id` (the derived
-   back-pointer onto `classification_replaced_by`; #579). For each remaining
-   multi-family value set, compute every candidate classification's chain root via a
-   recursive CTE over `supersedes_id`. If ALL candidates share one chain root (i.e.
-   every candidate sits on the same supersedes chain), resolve by period: for each
-   `(variable_id, value_set_id)` pair, pick the LATEST candidate vintage (max
-   `valid_from`) whose `[valid_from, valid_to]` (INTEGER years, NULL = unbounded)
-   overlaps AT LEAST ONE of the pair's REAL state windows, then emit it additively.
-   Overlap is anchored to a real state window, NOT the pair's aggregate MIN/MAX span — a
-   disjoint-states span (e.g. 2003–2006 + 2018–2020) would falsely overlap a gap vintage
-   (a closed 2008–2015 edition) that no actual state touches. If even one candidate is
-   off-chain (a genuine cross-family coincidence, e.g. SNI vs SSYK), the whole set stays
-   in the residue for curation. The emit is additive (NOT EXISTS guard), and the reclaim
-   count is measured off the emitted set — a one-chain pair the SCB/SOS feed already
-   classified is skipped and NOT counted as reclaimed. Real-corpus result: 224 value
-   sets / 235 variables newly reclaimed (most one-chain picks were already
-   feed-classified). The precise post-linkage curation residue — multi-family value sets
-   with a still-unclassified state — is 994 (of 2,215 multi-family-by-codes; the rest
-   are fully classified by the feeds, confident tier, vintage reclaim, or curation).
+
+7. **Vintage-period reclaim** (#494, relaxed to dominant-chain in #514): much of the
+   multi-family residue from step 3 is one classification family across vintages
+   (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF editions) — distinct `classification` rows
+   linked by `supersedes_id` (the derived back-pointer onto
+   `classification_replaced_by`; #579). For each remaining multi-family value set, group
+   candidates into vintage families keyed on `(chain root, slug stem)` (recursive CTE
+   over `supersedes_id`). A family is a **multi-vintage chain** when the value set
+   matches ≥2 of its editions. Reclaim when EXACTLY ONE family is a multi-vintage chain
+   (the **dominant chain**), subject to two conditions:
+
+   - **Relative lever (kept from #494):** the dominant family's best `label_agree` ≥
+     every off-chain candidate's.
+   - **Conditional absolute floor (#514):** when an off-chain stray (a family on a
+     DIFFERENT chain root) is present, the dominant family must clear
+     `_CONFIDENT_LABEL_AGREE` (0.90) — the same bar as the single-family confident tier.
+     When NO off-chain stray is present (pure all-on-chain), the original #494
+     label-free behavior is preserved. The floor is necessary because label-less short
+     code sets (e.g. 1–9 response scales) coincidentally match multiple SSYK editions by
+     containment alone; requiring ≥0.90 label agreement drops those false reclaims while
+     keeping genuinely labeled sets such as LKF county vintages (which match at ≥0.90).
+
+   A same-root/different-stem family (e.g. orthogonal SUN dimensions, #579) disqualifies
+   the value set — the dominant must be the unique family on its root. If ≥2 distinct
+   families are multi-vintage chains, the cross-family ambiguity is genuine and the set
+   stays in the residue.
+
+   Step 7c resolves by period: for each `(variable_id, value_set_id)` pair, pick the
+   LATEST dominant-family edition (max `valid_from`) whose `[valid_from, valid_to]`
+   (INTEGER years, NULL = unbounded) overlaps AT LEAST ONE of the pair's REAL state
+   windows, then emit it additively. Overlap is anchored to a real state window, NOT the
+   pair's aggregate MIN/MAX span — a disjoint-states span (e.g. 2003–2006 + 2018–2020)
+   would falsely overlap a gap vintage (a closed 2008–2015 edition) that no actual state
+   touches. Off-chain strays are never emitted. The emit is additive (NOT EXISTS guard),
+   and the reclaim count is measured off the emitted set — a one-chain pair the SCB/SOS
+   feed already classified is skipped and NOT counted as reclaimed. Real-corpus result:
+   **235 value sets / 245 variables** newly reclaimed (+11 value sets / +10 variables
+   over the #494 all-on-chain baseline, almost entirely LKF county sets plus a few
+   genuine 1-digit occupation sets). The precise post-linkage curation residue —
+   multi-family value sets with a still-unclassified state — is **985** (of 2,215
+   multi-family-by-codes; the rest are fully classified by the feeds, confident tier,
+   vintage reclaim, or curation).
 
 Steps 1-3 (canonical codes → per-value-set `n_codes`/`dom_level` → grain-filtered
 `_vs_cls` containment) live in a shared `_build_containment_temp_tables` helper so the
@@ -1121,10 +1147,12 @@ must triage them.
   `_backfill_state_classifications` folds candidates to `min(classification_id)` per
   `(variable_id, value_set_id)` and applies ONE classification to ALL that pair's
   states. The vintage emit therefore resolves to one vintage per pair over its aggregate
-  span — do not attempt per-state-period resolution; the backfill grain forbids it.
-  County/LKF per-year vintages remain in the residue when an off-chain coincidence (SNI, MDC)
-  is present among their candidates, because the conservative all-on-one-chain rule
-  requires every candidate to share the chain root.
+  span — do not attempt per-state-period resolution; the backfill grain forbids it. The
+  dominant-chain rule (#514) now reclaims labeled LKF county sets past single off-chain
+  strays (SNI, MDC) — the county labels match LKF at ≥0.90, clearing the conditional
+  absolute floor. County sets that remain in the residue are those that ALSO match ≥2
+  SNI editions (a second multi-vintage chain → genuine cross-family ambiguity, left for
+  curation).
 
 ### Curated classification links (`classification_links.toml`, #416 tail)
 
