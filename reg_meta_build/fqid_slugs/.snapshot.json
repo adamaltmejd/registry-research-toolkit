@@ -15524,6 +15524,8 @@
     "scb/195.36024": "lopnummer-sjukfall",
     "scb/195.36623": "godkanda-manader",
     "scb/195.38495": "fallgrp",
+    "scb/195.4027.bransch": "naringsgren-bransch",
+    "scb/195.4027.ksjusni": "naringsgren-ksjusni",
     "scb/195.4027.lgrp": "naringsgren-lgrp",
     "scb/195.4027.ng1-2007": "naringsgren",
     "scb/195.44": "kon",

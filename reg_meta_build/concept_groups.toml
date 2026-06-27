@@ -726,6 +726,39 @@ variable = "org-sni2007u"
 value = "2007u"
 label = "SNI2007 (u)"
 
+# KSju (reg 195) näringsgren (#845): retiring the #261 fold_override let the stem
+# rule split the one fiat-folded näringsgren variable into siblings — the
+# NG1/NgGr1/NGS1 alias-chain (`naringsgren`) plus `Ksjusni`, `bransch`, and the
+# 2009-only `lgrp` predecessor. All four are the SAME SNI näringsgren concept under
+# different KSju delivery columns/codings; group them so a browsing user sees one
+# näringsgren family (single `leverans` axis carries the delivery variant; cf. the
+# LISA näringsgren grouping, #488).
+[[variable_group]]
+register = "scb/ksju"
+key = "naringsgren"
+label = "Näringsgren"
+axis = "leverans"
+
+[[variable_group.members]]
+variable = "naringsgren"
+value = "ng1"
+label = "NG1-serien (2006–2023)"
+
+[[variable_group.members]]
+variable = "naringsgren-ksjusni"
+value = "ksjusni"
+label = "Ksjusni (2011–2023)"
+
+[[variable_group.members]]
+variable = "naringsgren-bransch"
+value = "bransch"
+label = "Bransch (2011)"
+
+[[variable_group.members]]
+variable = "naringsgren-lgrp"
+value = "lgrp"
+label = "Lgrp (2009)"
+
 # iot disposable-income family — the channel-2 multi-axis worked example for
 # the concept-group navigator (#805/#819). Unlike the single-axis families above,
 # this group declares ordered named `axes` and attaches (variable, delivery_column)

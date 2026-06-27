@@ -1,11 +1,11 @@
 # SCB pre-state source-column repairs (see reg_meta_build/DESIGN.md →
 # Build-time triage (SCB)) — see reg_meta_build/source_column_repairs.py.
 #
-# Two maintainer surfaces that repair a var_id's SCB delivery columns BEFORE the
-# coalescer/triage emits states. Both are keyed on (register_id, var_id) — the
-# stable SCB source ids (RegisterId + VarId == variable.provider_key) — and both
-# case-fold their columns to the rule-2 connectivity key at load, so TOML casing
-# is cosmetic. They differ in WHICH stage they act on:
+# The [[column_merge]] maintainer surface repairs a var_id's SCB delivery columns
+# BEFORE the coalescer/triage emits states. It is keyed on (register_id, var_id)
+# — the stable SCB source ids (RegisterId + VarId == variable.provider_key) — and
+# case-folds its columns to the rule-2 connectivity key at load, so TOML casing
+# is cosmetic.
 #
 #   [[column_merge]] — assert that NEVER-co-occurring delivery columns of one
 #     var_id are the SAME concept, so the coalescer's rule-2 union-find treats
@@ -15,45 +15,28 @@
 #     container (other columns DO co-deliver), each component shards into its own
 #     sibling variable, splitting one identity's history across fragments.
 #
-#   [[fold_override]] — force same-concept CONTESTED (same-edition co-delivered)
-#     columns that share NO stem to FOLD into one variable. The triage clusters a
-#     split container's contested columns PURELY on the column stem (a shared
-#     stem + representation-only suffix folds, `Ssyk3`/`Ssyk5`; a disjoint stem
-#     splits). When a register delivers ONE concept under columns that share no
-#     stem (`Ksjusni`/`NG1`/`bransch`), the stem rule can't see it — the
-#     maintainer asserts the equivalence and the build folds those columns by
-#     fiat.
-#
-# The distinction is exactly co-occurrence: a column_merge acts on columns that
-# NEVER share an edition (so they are not contested and the fold-override would
-# reject them); a fold_override acts on CONTESTED same-edition columns (which a
-# column_merge would not normalize, because they already co-occur). They are
-# complementary, not interchangeable.
-#
-# NOT these surfaces:
+# NOT this surface:
 #   - case/diacritic twins (`PersonNr`/`Personnr`, `Kon`/`Kön`) — collapsed
 #     automatically (the connectivity key is case-folded);
 #   - two value-set codings on ONE column in one period — codelivery.toml;
 #   - the same column attributed to SEVERAL var_ids (#197) — cross-var_id
 #     sharing is unrepresentable here by construction (the key is per-var).
 #
-# One [[column_merge]] / [[fold_override]] is ONE group for one (register, var);
-# a var with two independent groups gets two entries with that same key. A group
-# spanning MULTIPLE var_ids is unrepresentable by construction (good — the key is
-# per-var).
+# One [[column_merge]] is ONE group for one (register, var); a var with two
+# independent groups gets two entries with that same key. A group spanning
+# MULTIPLE var_ids is unrepresentable by construction (good — the key is per-var).
 #
 # The build FAILS (EXIT_CONFIG) on bad curation: a named column never observed as
-# a delivery column of the var (column_merge) / not a contested column of the var
-# (fold_override), a typo, a stale entry, or a duplicate / overlapping group. An
-# empty file is a no-op — connectivity / triage stays exactly as the case-folded
-# rule-2 intersection and the stem rule decide.
+# a delivery column of the var, a typo, a stale entry, or a duplicate /
+# overlapping group. An empty file is a no-op — connectivity stays exactly as the
+# case-folded rule-2 intersection decides.
 
 # ── [[column_merge]] entries ────────────────────────────────────────────────
 # Every entry below is verified against the raw SCB Registerinformation source:
-# the named columns NEVER share a (variant, edition) bucket (so they are not
-# fold_override material) and carry the SAME role (never merge a subject key with
-# a relation column — RTB's personnrmor/personnrsamh CO-occur with personnr and
-# correctly stay split siblings).
+# the named columns NEVER share a (variant, edition) bucket and carry the SAME
+# role (never merge a subject key with a relation column — RTB's
+# personnrmor/personnrsamh CO-occur with personnr and correctly stay split
+# siblings).
 
 # ── RTB (reg 2) subject personnummer: era rename `pnr` → `personnr` ──
 #    The #196 canonical case: var 57 ("Personnummer") delivered as the legacy
@@ -78,30 +61,3 @@ columns = ["pnr", "personnr"]
 register_id = 121
 var_id = 56
 columns = ["borgnr", "persorgnr"]
-
-# ── [[fold_override]] entries ───────────────────────────────────────────────
-# A listed column names a contested COMPONENT of the var — the case-folded
-# lex-min member of its rule-2 connectivity component (#196), which is how the
-# triage identifies columns. A component grown by the case-fold can change its
-# root name; the build's `fold_override_unknown_column` error lists the current
-# contested roots when that happens.
-
-# ── näringsgren (industry): one concept delivered under DISJOINT stems ──
-#    reg 195 (KSju) / var 4027 ("Näringsgren") co-delivers the same näringsgren
-#    concept under SAME-EDITION columns that share no stem, so the stem rule
-#    would split them into sibling variables. They ARE one concept; fold them.
-#    `bgr98` is the root of the rule-2 component carrying the whole
-#    NG1/sni1/sni2/NgGr1/Bgr98 alias chain (one variable already — the #196
-#    case-fold united the case-twin bridges that used to leave `NG1` and `sni2`
-#    as separate contested roots); `bransch` and `ksjusni` are the other two
-#    same-edition deliveries of the concept.
-#    NOT listed: `lgrp`. It carries the same näringsgren coding (the 821-code
-#    value set 2340, shared with the in-cluster `NgGr1` column), but it is the
-#    2009 predecessor delivered ALONE — it never co-occurs in one edition with
-#    the others, so it is NOT a contested column and the fold-override would
-#    (correctly) reject it. It stays a separate longitudinal variable; its slug
-#    is curated in scb.toml.
-[[fold_override]]
-register_id = 195
-var_id = 4027
-columns = ["bgr98", "bransch", "ksjusni"]

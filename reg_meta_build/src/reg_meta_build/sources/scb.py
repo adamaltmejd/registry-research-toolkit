@@ -85,7 +85,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from reg_meta_build.codelivery import CodeliveryMap
-    from reg_meta_build.source_column_repairs import ColumnMergeMap, FoldOverrideMap
+    from reg_meta_build.source_column_repairs import ColumnMergeMap
     from reg_meta_build.sources import IRObject
 
 
@@ -1027,8 +1027,8 @@ def _fold_token_from_grain(grain: str | None) -> str | None:
 
 def _ascii_fold_lower(s: str | None) -> str:
     # Delegates to the shared curation fold so the curated column keys
-    # (fold_overrides / column_merges / codelivery) canonicalize EXACTLY like
-    # the coalescer's rule-2 node-col — one definition, no drift.
+    # (column_merges / codelivery) canonicalize EXACTLY like the coalescer's
+    # rule-2 node-col — one definition, no drift.
     return fold_column(s) if s else ""
 
 
@@ -1116,11 +1116,7 @@ def _decide_fold_or_split(folded_cols: list[str]) -> str:
     return "split"
 
 
-def _cluster_contested(
-    contested_cols: list[str],
-    *,
-    forced_same: list[frozenset[str]] | None = None,
-) -> list[list[str]]:
+def _cluster_contested(contested_cols: list[str]) -> list[list[str]]:
     """Partition one split container's contested columns into fold-clusters
     (#223). Each returned cluster is the column set that folds into ONE variable;
     a singleton cluster is a column that splits into its own variable.
@@ -1132,27 +1128,11 @@ def _cluster_contested(
     unit degrades to singletons, so the partition NEVER folds a set the stem rule
     wouldn't. The classification family is intentionally NOT consulted — the
     column stem is the concept boundary (the family signal over-folds distinct
-    concepts sharing a code system).
-
-    `forced_same` pre-seeds the union-find with curator-asserted equivalences
-    (columns that ARE one concept regardless of stem); those components fold by
-    fiat, bypassing the stem verify. It is populated by the curated fold-override
-    surface (#261), threaded in from `_triage_groups`."""
+    concepts sharing a code system)."""
     folded = {c: _ascii_fold_lower(c) for c in contested_cols}
     ds: DisjointSet[str] = DisjointSet()  # deterministic lex-min roots
     for c in contested_cols:
         ds.add(c)
-
-    # Curator fiat first: a forced group is one concept regardless of stem.
-    # Membership is probed on the folded form — `forced_same` groups are
-    # case-folded at load, while a contested component can be raw when the #196
-    # co-delivery guard kept its case-twin spellings apart.
-    forced_cols: set[str] = set()
-    for group in forced_same or ():
-        members = [c for c in contested_cols if _ascii_fold_lower(c) in group]
-        for a, b in combinations(members, 2):
-            ds.union(a, b)
-        forced_cols.update(members)
 
     # Stem-foldable pairwise unions (sorted for deterministic component roots).
     for a, b in combinations(sorted(contested_cols), 2):
@@ -1166,11 +1146,10 @@ def _cluster_contested(
     clusters: list[list[str]] = []
     for members in comps.values():
         members_sorted = sorted(members)
-        forced = any(c in forced_cols for c in members_sorted)
         whole_folds = (
             _decide_fold_or_split([folded[c] for c in members_sorted]) == "fold"
         )
-        if len(members_sorted) > 1 and (forced or whole_folds):
+        if len(members_sorted) > 1 and whole_folds:
             clusters.append(members_sorted)  # fold cluster
         else:
             clusters.extend([c] for c in members_sorted)  # singletons → split
@@ -1181,21 +1160,11 @@ def _triage_groups(
     conn: sqlite3.Connection,
     groups: dict[tuple, _StateGroup],
     vid_map: dict[tuple[int, int], int],
-    fold_overrides: FoldOverrideMap | None = None,
 ) -> _TriageResult:
     """Resolve pre-triage state collisions. Mutates the DB (mints
     split-sibling `variable` rows) and returns the per-gkey routing the
-    coalescer applies when it materializes `variable_state`.
-
-    `fold_overrides` (#261) is the curated `(register_id, var_id) → fold groups`
-    surface: maintainer-asserted equivalences that fold disjoint-stem columns the
-    stem rule would split. EMPTY MAP ⇒ byte-identical to the pre-#261 path —
-    `forced_same` stays `[]` for every var, so no non-curated var changes."""
+    coalescer applies when it materializes `variable_state`."""
     res = _TriageResult({}, {}, set(), {}, {}, [], Counter())
-    fold_overrides = fold_overrides or {}
-    # Every fold-override key must match a real split container; track which do so
-    # an unknown/stale entry fails the build after the loop (not a silent no-op).
-    consumed: set[tuple[int, int]] = set()
 
     by_var: dict[tuple[int, int], list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
@@ -1259,42 +1228,6 @@ def _triage_groups(
         contested_cols = sorted(contested)
         non_contested_cols = [c for c in all_cols if c not in contested]
 
-        # Curated fold-override (#261): validate + mark consumed HERE, at the
-        # container gate, so it's branch-INDEPENDENT — every column a maintainer
-        # named must be a contested column of THIS var (a non-contested column
-        # can't be force-folded). The `forced_same` groups are only FED into
-        # `_cluster_contested` in the split branch below (the one place they
-        # change the partition); a var whose whole contested set already folds is
-        # still "consumed" here (its columns ARE contested) — redundant, not an
-        # error. An unconsumed key (unknown var / never-co-occurring columns) is
-        # caught after the loop.
-        override_groups = fold_overrides.get((register_id, var_id))
-        if override_groups is not None:
-            override_cols = set().union(*override_groups)
-            # Override columns are case-folded at load; contested components are
-            # folded too EXCEPT a co-delivered case-twin group the #196 guard
-            # left raw — compare on the folded form.
-            unknown_cols = override_cols - {_ascii_fold_lower(c) for c in contested}
-            if unknown_cols:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="fold_override_unknown_column",
-                    error_class="configuration",
-                    message=(
-                        f"fold-override for register_id={register_id} "
-                        f"var_id={var_id} names column(s) {sorted(unknown_cols)} "
-                        f"that are not contested columns of this variable "
-                        f"(contested: {sorted(contested)})."
-                    ),
-                    remediation=(
-                        "Only contested (same-edition co-delivered) columns can "
-                        "be folded. Fix the column name(s) in "
-                        "reg_meta_build/curation/scb/source_column_repairs.toml "
-                        "or drop the entry."
-                    ),
-                )
-            consumed.add((register_id, var_id))
-
         # The fold/split DECISION is made on the *contested* columns only (the
         # real collision); the assignment then covers all columns.
         folded = [_ascii_fold_lower(c) for c in contested_cols]
@@ -1320,11 +1253,7 @@ def _triage_groups(
             # instead of over-splitting all of them (#223). Non-contested columns
             # never co-occur, so they're always singletons (own variable), as the
             # legacy `_apply_split(all_cols)` already gave them.
-            # Curated fold-overrides (#261) resolve here, keyed by
-            # (register_id, var_id): they fold disjoint-stem columns the stem rule
-            # would split. Empty (the common case) ⇒ byte-identical to pre-#261.
-            forced_same = fold_overrides.get((register_id, var_id), [])
-            clusters = _cluster_contested(contested_cols, forced_same=forced_same)
+            clusters = _cluster_contested(contested_cols)
             clusters += [[c] for c in non_contested_cols]
             if any(len(c) > 1 for c in clusters):
                 _apply_clustered(
@@ -1357,38 +1286,6 @@ def _triage_groups(
                     res,
                 )
                 res.stats["splits"] += 1
-
-    # Every fold-override whose REGISTER is present in this build must have matched
-    # a real split container (#261). Scoping to the live registers (not just the
-    # exact var) is the synthetic-/partial-build escape, mirroring a codelivery pin
-    # for an absent register: a `--providers=sos` or fixture build that never loads
-    # register 195 must not fail on its override. But once the register IS built,
-    # the override must bind — an unconsumed key then names a typo'd var, or a var
-    # whose named columns never co-occur in one edition (so it is not a contested
-    # split container). The maintainer's full-corpus build validates every shipped
-    # override this way; the column-contested check at the gate caught the rest.
-    live_registers = {reg for reg, _ in vid_map}
-    unconsumed = {key for key in fold_overrides if key[0] in live_registers} - consumed
-    if unconsumed:
-        keys = ", ".join(
-            f"(register_id={r}, var_id={v})" for r, v in sorted(unconsumed)
-        )
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="fold_override_unused",
-            error_class="configuration",
-            message=(
-                f"{len(unconsumed)} fold-override(s) name a variable that is not a "
-                f"contested split container in this build: {keys}. The variable's "
-                f"named columns never co-occur in one edition, so there is nothing "
-                f"to fold."
-            ),
-            remediation=(
-                "Remove the stale entry from "
-                "reg_meta_build/curation/scb/source_column_repairs.toml, "
-                "or correct its register_id / var_id / columns."
-            ),
-        )
 
     # Universal residual collapse: after fold/split assigned variable_ids and
     # fold labels, guarantee the state-uniqueness invariant holds by making
@@ -2371,7 +2268,6 @@ def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tup
 def _coalesce_variable_states(
     conn: sqlite3.Connection,
     codelivery: CodeliveryMap | None = None,
-    fold_overrides: FoldOverrideMap | None = None,
     column_merges: ColumnMergeMap | None = None,
 ) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` (see reg_meta/DESIGN.md → Two-level variable model).
@@ -2899,10 +2795,10 @@ def _coalesce_variable_states(
     # Curated column-merge build-time validation (#196): every column a
     # maintainer named must be an OBSERVED delivery column of its
     # (register, var). Scoping to the registers present in this build is the
-    # synthetic-/partial-build escape, mirroring fold_overrides: a
-    # `--providers=sos` or fixture build that never loads the register must not
-    # fail on its merge. Once the register IS built, a stale/typo'd entry FAILS
-    # the build — never a silent never-matching no-op.
+    # synthetic-/partial-build escape: a `--providers=sos` or fixture build that
+    # never loads the register must not fail on its merge. Once the register IS
+    # built, a stale/typo'd entry FAILS the build — never a silent
+    # never-matching no-op.
     live_registers = {reg for reg, _ in vid_map}
     for (m_reg, m_var), m_groups in sorted(column_merges.items()):
         if m_reg not in live_registers:
@@ -2932,7 +2828,7 @@ def _coalesce_variable_states(
     # materializing. Mints split-sibling `variable` rows (so vid_map above is
     # stale for them — triage.assignments carries the per-gkey target) and
     # routes each group to its variable_id + (folded) value_set_version_label.
-    triage = _triage_groups(conn, groups, vid_map, fold_overrides)
+    triage = _triage_groups(conn, groups, vid_map)
 
     # Stamp each cvid's OWNING `variable_id` now that triage has assigned every
     # group (including the split siblings it just minted). This is the GROUND
@@ -4009,7 +3905,6 @@ class SCBAdapter:
         self,
         conn: sqlite3.Connection,
         codelivery: CodeliveryMap | None = None,
-        fold_overrides: FoldOverrideMap | None = None,
         column_merges: ColumnMergeMap | None = None,
     ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
@@ -4018,9 +3913,6 @@ class SCBAdapter:
         # Co-delivery curation (register_id, var_id, column) → kept label,
         # consulted by the coalescer for genuine one-off same-column conflicts.
         self.codelivery = codelivery or {}
-        # Fold-override curation (register_id, var_id) → fold groups, consulted by
-        # the triage to fold disjoint-stem columns the stem rule would split.
-        self.fold_overrides = fold_overrides or {}
         # Column-merge curation (register_id, var_id) → merge groups, consulted by
         # the coalescer's rule-2 union-find to unify never-co-occurring
         # era-rename column twins (#196).
@@ -4162,7 +4054,7 @@ class SCBAdapter:
         # unika_summary DROP below.
         with _stage_timer("scb:coalesce_variable_states"):
             self.coalesce_stats = _coalesce_variable_states(
-                conn, self.codelivery, self.fold_overrides, self.column_merges
+                conn, self.codelivery, self.column_merges
             )
         self.row_counts["variable_state"] = self.coalesce_stats["n_variable_states"]
         # R8 side channels (NOT manifest values): consumed by the materializer's

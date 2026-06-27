@@ -75,17 +75,16 @@ into seven families:
   | **set**                  | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                                                                     | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                |
   | **source/gap-fill**      | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `variable_grafts.toml` (loaded by `variable_grafts.py`), `input_data/scb_canonical/lisa_canonical.toml` (loaded by `canonical_attach.py`) | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions backfilled from steward delivery lists; variables present in steward docs but absent from machine metadata; canonical-SCB columns attached onto an existing register — `canonical_attach.py`, the rich analog of grafts).                                                                          |
   | **value/coding**         | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)                                                       | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                          |
-  | **SCB pre-state repair** | `curation/scb/source_column_repairs.toml` (loaded by `source_column_repairs.py`)                                                                                                                                                                                             | Pre-state SCB structural repair: `[[column_merge]]` unifies era-rename column pairs that never co-occur before union-find connectivity runs; `[[fold_override]]` forces disjoint-stem columns that are genuinely one concept into one fold cluster before states are final.                                                                                                                                                                  |
+  | **SCB pre-state repair** | `curation/scb/source_column_repairs.toml` (loaded by `source_column_repairs.py`)                                                                                                                                                                                             | Pre-state SCB structural repair: `[[column_merge]]` unifies era-rename column pairs that never co-occur before union-find connectivity runs, so each pair becomes one union-find node rather than two sibling variables. Genuinely-same-concept disjoint-stem columns are handled by letting the stem rule split them and then grouping the resulting siblings via a `[[variable_group]]` facet axis in `concept_groups.toml` (see #845).    |
   | **period family merge**  | `curation/period_family_merges.toml` (loaded by `period_family_merges.py`)                                                                                                                                                                                                   | Identity-mutating post-triage pass: merges N period-named physical columns (today the 12 months, e.g. `lonfinkjan`…`lonfinkdec`) into ONE variable with per-period alias windows. Runs after triage (`variable_state` exists) but before slug population. 8 entries covering 8 bounded monthly families (4 LISA + 4 non-LISA). Retained per #523 under epic #518 R4; see the "Decision (#518/#523): retain the merge" section for rationale. |
 
 **Boundary rules (anti-patterns):**
 
-- **Source-column repair is not `same_as`.** `[[column_merge]]` and `[[fold_override]]`
-  act BEFORE variables and states exist; `same_as` acts AFTER. Using `same_as` to fix an
-  era-rename split would first build the wrong variables, slugs, aliases, and state
-  history, then collapse them. These entries belong in
-  `curation/scb/source_column_repairs.toml`, never in `input_data/SCB/` source data and
-  never as a post-build relation.
+- **Source-column repair is not `same_as`.** `[[column_merge]]` acts BEFORE variables
+  and states exist; `same_as` acts AFTER. Using `same_as` to fix an era-rename split
+  would first build the wrong variables, slugs, aliases, and state history, then
+  collapse them. These entries belong in `curation/scb/source_column_repairs.toml`,
+  never in `input_data/SCB/` source data and never as a post-build relation.
 - **Classification links are typed, not generic state overrides.**
   `classification_links.toml` targets the `classification_candidate` pipeline and then
   `variable_state.classification_id`. It is NOT a generic
@@ -1237,9 +1236,9 @@ columns. Without the fold, a split-container var sharded each casing into its ow
 sibling fragment (\~543 fragments across the corpus). Raw casing still surfaces where it
 should: `delivery_column_name` is the latest-era alias verbatim, and the unika lookups
 stay raw. Consequently every curated column key (`source_column_repairs.toml`
-(`[[column_merge]]` + `[[fold_override]]`), `codelivery.toml`) is case-folded at load by
-the shared `_curation.fold_column` — TOML casing is cosmetic, and the single shared
-definition keeps loader keys and coalescer components from drifting.
+(`[[column_merge]]`), `codelivery.toml`) is case-folded at load by the shared
+`_curation.fold_column` — TOML casing is cosmetic, and the single shared definition
+keeps loader keys and coalescer components from drifting.
 
 **Co-delivery guard on the fold.** The fold targets era-rename twins that never
 co-occur. When two distinct spellings of one folded header share an edition of a variant
@@ -1249,10 +1248,9 @@ them would put two codings on ONE column, forcing the co-delivery invariant to d
 Those groups keep their raw node-cols; the triage still folds them into one variable
 (identical folded stems) with label-discriminated states, the pre-#196 handling. Because
 a guarded component can be raw-cased, every consumer compares on the folded form: the
-fold-override gate and `_cluster_contested`'s `forced_same` membership fold the
-contested side, and the codelivery pin lookups fold `gkey[8]` (a folded pin key thereby
-pins ALL spellings of the header, by design). A curated column-merge outranks the guard
-— maintainer fiat can force a co-delivered pair onto one node.
+`_cluster_contested` stem-fold and the codelivery pin lookups fold `gkey[8]` (a folded
+pin key thereby pins ALL spellings of the header, by design). A curated column-merge
+outranks the guard — maintainer fiat can force a co-delivered pair onto one node.
 
 **Curated column-merge** (#196; `[[column_merge]]` section of
 `curation/scb/source_column_repairs.toml`, loaded by `source_column_repairs.py`) — the
@@ -1260,17 +1258,25 @@ curated counterpart of the auto case-fold, for era-RENAME twins (`PNR` ≡ `Pers
 that share no case identity. The two headers never co-occur in one edition, so rule-2
 sees two components; once the var_id is a split container (other columns DO co-deliver),
 each component becomes its own sibling variable and one identity's history shards across
-fragments. The triage fold-override below cannot express this — it acts on CONTESTED
-(same-edition co-delivered) columns only, and the gate rejects a non-contested column by
-design. The merge instead normalizes the named columns to ONE union-find node-col (the
-lex-min folded member) *upstream* of triage. Keyed `(register_id, var_id)` like the
-fold-override, with the same maintainer-artifact semantics (absent in wheel/synthetic
-builds; empty ⇒ connectivity unchanged) and the same strictness: a named column never
-observed as a delivery column of the var FAILS the build (`EXIT_CONFIG`,
-`column_merge_unknown_column`), scoped to the registers present in the build (the
-partial-/synthetic-build escape). A merge spanning multiple var_ids is unrepresentable
-by construction — cross- var_id column *sharing* (#197) is a different shape and
-intentionally not curatable here.
+fragments. The merge normalizes the named columns to ONE union-find node-col (the
+lex-min folded member) *upstream* of triage. Keyed `(register_id, var_id)` with
+maintainer-artifact semantics (absent in wheel/synthetic builds; empty ⇒ connectivity
+unchanged) and strict validation: a named column never observed as a delivery column of
+the var FAILS the build (`EXIT_CONFIG`, `column_merge_unknown_column`), scoped to the
+registers present in the build (the partial-/synthetic-build escape). Only
+`[[column_merge]]` is a legal top-level table in `source_column_repairs.toml`;
+`register_id` / `var_id` must be canonical integers (no leading zeros); `columns`
+requires ≥ 2 non-empty strings with no repeats within or across groups for the same key,
+and no column may fold to `""`. All violations are `EXIT_CONFIG`. A merge spanning
+multiple var_ids is unrepresentable by construction — cross-var_id column *sharing*
+(#197) is a different shape and intentionally not curatable here.
+
+**Pre-v1 churn** — the curation content in `source_column_repairs.toml` churns freely
+pre-v1; no freeze or immutability is in effect for this surface yet. Arming
+snapshot-style immutability (analogous to the `fqid_slugs/` per-provider freeze model,
+#470) is tracked as #209 and explicitly out of scope here.
+`curation/scb/source_column_repairs.toml` sits under the `curation/` directory — it is
+not under the `fqid_slugs/` snapshot machinery.
 
 Two notes on the triage signals:
 
@@ -1279,47 +1285,13 @@ Two notes on the triage signals:
   triage after `populate_classifications`) and measured **195 over-folds** — it merges
   distinct concepts that merely share a code system (`Hemkommun`/`Skolkommun`,
   SSYK-primary/SSYK-secondary), so it was dropped. When a register genuinely delivers
-  ONE concept under DISJOINT-stem columns (näringsgren as
-  `Ksjusni`/`NG1`/`bransch`/`sni2`), the stem rule can't see it; a **curated
-  fold-override** (`[[fold_override]]` section of
-  `curation/scb/source_column_repairs.toml`, loaded by `source_column_repairs.py`)
-  forces those columns to one cluster via the `_cluster_contested(forced_same=…)` seam
-  (#261). An entry is keyed `(register_id, var_id)` — the same SCB ids the triage
-  carries, so a fold group spanning multiple variables is unrepresentable by
-  construction. It is the curation twin of `codelivery.toml` (which resolves two codings
-  on ONE column), and like it a maintainer artifact absent from wheel/synthetic builds
-  (empty map ⇒ byte-identical to the stem-only partition). It is **not a silent no-op**:
-  a named column that isn't contested for the var, or an override whose register is
-  built but whose var is not a contested split container, FAILS the build
-  (`EXIT_CONFIG`); an override for a register absent from the build is inert (the
-  partial-/synthetic-build escape, like a codelivery pin for an absent register).
-
-  **Format** — each `[[fold_override]]` entry is one fold group for one
-  `(register_id, var_id)`; a var needing two independent groups gets two
-  `[[fold_override]]` entries with the same key:
-
-  ```toml
-  [[fold_override]]
-  register_id = 195
-  var_id = 4027
-  columns = ["bgr98", "bransch", "ksjusni"]
-  ```
-
-  Only `[[column_merge]]` and `[[fold_override]]` are legal top-level tables in
-  `source_column_repairs.toml`; `register_id` / `var_id` must be canonical integers (no
-  leading zeros); `columns` requires ≥ 2 non-empty strings with no repeats within or
-  across groups for the same key, and no column may fold to `""`. All violations are
-  `EXIT_CONFIG`. A listed column names a contested **component** — the case-folded
-  lex-min member of its rule-2 connectivity component (#196), which is the form the
-  triage carries; the `fold_override_unknown_column` error lists the var's current
-  contested roots when an entry goes stale.
-
-  **Pre-v1 churn** — the curation content in `source_column_repairs.toml` churns freely
-  pre-v1; no freeze or immutability is in effect for this surface yet. Arming
-  snapshot-style immutability (analogous to the `fqid_slugs/` per-provider freeze model,
-  #470) is tracked as #209 and explicitly out of scope here.
-  `curation/scb/source_column_repairs.toml` sits under the `curation/` directory — it is
-  not under the `fqid_slugs/` snapshot machinery.
+  ONE concept under DISJOINT-stem columns (e.g. KSju näringsgren as `NG1`/`Ksjusni`/
+  `bransch`), the stem rule SPLITS them into sibling variables; those siblings are then
+  re-united as one browseable family via a `[[variable_group]]` facet axis in
+  `concept_groups.toml` (#845; cf. #488 for the LISA pattern). This is the current
+  approach after the `[[fold_override]]` build-time surface (#261) was retired in #845:
+  split + concept-group faceting is lower-risk than build-time fiat-folding because it
+  leaves the leaf variable set visible to bindings and avoids entity-key entanglement.
 
 - **Split `relation_kind` is decided PER CO-DELIVERED PAIR** (`_apply_split`), from the
   pair's two delivery columns, most specific first: `code_vs_label_pair` (name-based — a
@@ -1352,11 +1324,11 @@ outside this collapse path.
 `reg_schema.Binding`, whose `representation` disambiguates the column. Variables and
 concept_groups are a curated **navigation** surface — they never touch orders, bindings,
 or stats. #825 audits the four build-time "identity-patching" surfaces against that line
-and classifies each. **This is an audit + plan, not a removal: all four surfaces are
-still live and load exactly as documented above.** Retiring a `retire-after-migration`
-candidate is a follow-on once the named migration-target layer absorbs its intent; both
-targets have now shipped — channel-1 = `replaced_by` succession edges (#814/#817),
-channel-2 = multi-axis concept_group over representations (#819).
+and classifies each. **Update (#845):** `fold_override` (channel-2 retire candidate) has
+since been retired — its one entry was re-expressed as SPLIT + concept-group faceting
+(see below). The remaining three surfaces are live. Migration-target channels: channel-1
+= `replaced_by` succession edges (#814/#817), channel-2 = multi-axis concept_group over
+representations (#819).
 
 The keep/retire split follows one cross-cutting principle, with one nuance the early
 framing got wrong: a **retire** candidate's effect stops at variable GROUPING, which is
@@ -1372,18 +1344,21 @@ NOT FQID-addressable, so `representation` only disambiguates the column *within*
 variable — it does not make the variable set itself invisible to bindings. Any
 retirement that changes the leaf variable set therefore carries a **binding /
 default-selection migration precondition** — existing bindings to the affected FQIDs
-must be remapped and the default-representation chooser updated — and this applies to
-BOTH retire candidates, since splitting a merged or folded variable changes the leaf
-set. A **keep** surface's effect instead reaches the representation's value-set / codes
-or mints real representations, so it is order- or data-bearing and cannot be expressed
-as a grouping nudge.
+must be remapped and the default-representation chooser updated. The `fold_override`
+retire candidate (channel-2) inherited this precondition and addressed it pre-#845 by
+SPLIT + concept-group faceting (the leaf variables are visible to bindings from day one,
+so no FQID remapping is needed). The surviving `column_merge` retire candidate
+(channel-1) still carries this precondition — splitting a merged variable changes its
+leaf set. A **keep** surface's effect instead reaches the representation's value-set /
+codes or mints real representations, so it is order- or data-bearing and cannot be
+expressed as a grouping nudge.
 
-  | Surface            | Source                                           | Effect                                                            | Verdict                           |
-  | ------------------ | ------------------------------------------------ | ----------------------------------------------------------------- | --------------------------------- |
-  | `column_merge`     | `[[column_merge]]` / `source_column_repairs.py`  | unifies never-co-occurring era-rename twins into one variable     | **retire-after-migration (ch-1)** |
-  | `fold_override`    | `[[fold_override]]` / `source_column_repairs.py` | folds disjoint-stem contested columns of one concept into one var | **retire-after-migration (ch-2)** |
-  | `codelivery`       | `codelivery.toml` / `codelivery.py`              | pins which coding a column KEEPS when it carries two in a period  | **keep (confirm-only)**           |
-  | `canonical_attach` | `lisa_canonical.toml` / `canonical_attach.py`    | mints canonical-SCB variable/state rows + classification links    | **keep (confirm-only)**           |
+  | Surface            | Source                                               | Effect                                                                | Verdict                                                         |
+  | ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------- |
+  | `column_merge`     | `[[column_merge]]` / `source_column_repairs.py`      | unifies never-co-occurring era-rename twins into one variable         | **retire-after-migration (ch-1)**                               |
+  | `fold_override`    | ~~`[[fold_override]]` / `source_column_repairs.py`~~ | ~~folds disjoint-stem contested columns of one concept into one var~~ | **retired (#845)** — replaced by SPLIT + concept-group faceting |
+  | `codelivery`       | `codelivery.toml` / `codelivery.py`                  | pins which coding a column KEEPS when it carries two in a period      | **keep (confirm-only)**                                         |
+  | `canonical_attach` | `lisa_canonical.toml` / `canonical_attach.py`        | mints canonical-SCB variable/state rows + classification links        | **keep (confirm-only)**                                         |
 
 **`column_merge` (#196) — retire-after-migration (channel-1).** Navigation-only for the
 data/stats an order resolves to: it writes NO `value_set`/`value_code` rows and NO
@@ -1401,8 +1376,8 @@ bare strings are column refs against a source's binding `display_name` values), 
 (`_populate_sensitivity_flags`) independent of the merge. **Migration map:** the
 twin-unification intent → a curated `replaced_by` succession between the two sharded
 representations; the entity-key pin → resolve over that succession/concept, not one
-variable slug. **Migration preconditions (this is the higher-risk candidate, ahead of
-`fold_override`):** two, both column-merge-specific.
+variable slug. **Migration preconditions** (the sole remaining retire candidate;
+`fold_override` was retired in #845): two, both column-merge-specific.
 
 First, **representation-grain successor edges** are required: `replaced_by` endpoints
 must reach down to a `(variable_fqid, delivery_column)` pair, not just a 3-part variable
@@ -1422,20 +1397,19 @@ reproducing exactly the pre-#196 failure. Both preconditions — representation-
 succession (#843, done) AND succession-aware entity-key resolution (#844, open) — must
 land before pulling the merge. The actual retirement PR is #846.
 
-**`fold_override` (#261) — retire-after-migration (channel-2).** Pure variable grouping
-(mechanics in the *fold-override* note above): writes NO
-`value_set`/`value_code`/lineage — it only routes which variable the contested
-disjoint-stem columns land under, plus label tokens. **Migration map:** its intent lands
-cleanly on channel-2 multi-axis concept_group OVER representations (#819) — the
-co-delivered columns become parallel representations grouped by a concept-group facet
-axis, with no variable merge, no identity surgery, and no entity-key entanglement. This
-is the cleaner / lower-risk of the two retire candidates: unlike `column_merge` it
-carries no *entity-key / representation-grain-succession* precondition (those are
-`column_merge`-specific). It is NOT precondition-free, though — splitting a folded
-variable into siblings changes the leaf variable set, so it still shares the binding /
-default-selection remap precondition from the cross-cutting principle (existing bindings
-to the folded FQID need remapping, the default-representation chooser updating).
-Lower-risk, not zero-precondition.
+**`fold_override` (#261) — RETIRED (#845).** *(Historical tracker note; the surface no
+longer exists in the build.)* The channel-2 retire candidate audited here was pure
+variable grouping: it wrote NO `value_set`/`value_code`/lineage — only routing which
+variable the contested disjoint-stem columns landed under. **Retirement approach:** its
+sole entry (KSju reg 195 var 4027 näringsgren) was re-expressed by removing the override
+and letting the stem rule SPLIT the var into four sibling variables
+(`naringsgren`/`naringsgren-ksjusni`/`naringsgren-bransch`/`naringsgren-lgrp`), which
+are then grouped as one browse family via a `[[variable_group]]` facet axis in
+`concept_groups.toml` (group key `naringsgren`, register `scb/ksju`). This resolved the
+binding / default-selection precondition without a remapping step: since the sibling
+FQIDs never existed as a fiat-folded FQID, there were no existing bindings to remap and
+no default-representation chooser to update. Lower-risk than `column_merge`, and now
+done.
 
 **`codelivery` — keep (confirm-only).** Order-bearing: it pins which
 `value_set_version_label` (coding) a single delivery column KEEPS when it carries two
@@ -1878,9 +1852,9 @@ Every implementation PR gates on:
 is an **SCB-only** curated overlay that tells the co-delivery resolver how to handle
 delivery columns that carry **multiple distinct codings in the same period**: 19 rules
 today. It is the `value/coding` family counterpart to `source_column_repairs.toml` — but
-where `[[column_merge]]` / `[[fold_override]]` act on column IDENTITY before states
-exist, `codelivery.toml` acts on VALUE-SET SELECTION for a column that is already a
-single identity with competing codings.
+where `[[column_merge]]` acts on column IDENTITY before states exist, `codelivery.toml`
+acts on VALUE-SET SELECTION for a column that is already a single identity with
+competing codings.
 
 Each entry is a **source-id-keyed pin** — `(register_id, var_id, column)` — resolved one
 of two ways: `keep = "<emitted label>"` pins one value-set version label (matched
@@ -1916,23 +1890,24 @@ column correctly; there is no stale-pin build failure for this case. The build o
 fails (`EXIT_CONFIG`, `coalesce_unresolved_codelivery`) when a column **still resolves
 to >1 value set after the entire cascade** — a genuinely ambiguous same-column
 co-delivery the pin failed to resolve. A pin for a register absent from the build is
-inert (the partial-build escape). This differs from `source_column_repairs.toml`: its
-`fold_override_unused` check DOES fail the build on a stale present-register entry (an
-unconsumed fold-override for a live register fails `EXIT_CONFIG`), so the two files in
-the twin pair do not share the same stale-pin behavior.
+inert (the partial-build escape). `source_column_repairs.toml`'s `[[column_merge]]`
+surface has the same partial-build escape but is STRICTER for present registers: a named
+column never observed as a delivery column of the var fails `EXIT_CONFIG`
+(`column_merge_unknown_column`), so the two files do not share the same stale-entry
+behavior.
 
-**Relationship to `source_column_repairs.toml`.** These two files are the curation twin
-pair for SCB column-level repair:
+**Relationship to `source_column_repairs.toml`.** These two files are the curation pair
+for SCB column-level repair:
 
 - `[[column_merge]]` — era-rename identity unification (upstream of triage; one column
   from two)
-- `[[fold_override]]` — contested-column fold forcing (inside triage; one variable from
-  co-delivering columns)
 - `codelivery.toml` — same-column multi-coding resolution (inside co-delivery
   resolution; one winner from competing value sets)
 
-No entry belongs in more than one of these three files; their repair phases are
-disjoint.
+No entry belongs in both files; their repair phases are disjoint. (A third surface,
+`[[fold_override]]`, formerly lived alongside `[[column_merge]]` and handled contested
+disjoint-stem columns. It was retired in #845 — its intent is now expressed via SPLIT +
+concept-group faceting.)
 
 ## Slug curation
 
