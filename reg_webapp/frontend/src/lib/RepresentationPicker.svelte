@@ -495,15 +495,15 @@ const footerLabel = $derived(
     font-weight: 600;
   }
   /* The identity-as-navigation link (group view): inherits the text color so it
-     reads as the heading, gaining an underline only on hover/focus — the `↗` marks
-     it as a link. Distinct from the select-all checkbox beside it. */
+     reads as the heading, shifting to the accent color on hover (no underline —
+     matching the app's other links) — the `↗` marks it as a link. Distinct from
+     the select-all checkbox beside it. */
   .subhead-title.link {
     text-decoration: none;
     color: inherit;
   }
-  .subhead-title.link:hover,
-  .subhead-title.link:focus-visible {
-    text-decoration: underline;
+  .subhead-title.link:hover {
+    color: var(--accent);
   }
   .subhead-title.link:focus-visible {
     outline: none;
@@ -569,7 +569,6 @@ const footerLabel = $derived(
   .open-link:hover,
   .open-link:focus-visible {
     color: var(--accent);
-    text-decoration: underline;
   }
   .open-link:focus-visible {
     outline: none;

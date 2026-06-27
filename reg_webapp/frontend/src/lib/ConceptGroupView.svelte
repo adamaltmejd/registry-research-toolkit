@@ -331,6 +331,20 @@ function commitSelected(selected: PickerSelection[]): void {
   {/snippet}
 
   {#snippet picker()}
+    <!-- The period availability lens sits ABOVE the column picker (both group + leaf):
+         pick the period first, then the columns. Seeds from the project window, draws
+         the members' union coverage span, and dims rows whose span doesn't overlap;
+         writes `?period` only (never the global window); `getConceptGroup` ignores it. -->
+    <PeriodPicker
+      {period}
+      {grains}
+      window={windowStore.value}
+      coverage={unionCoverage}
+      {vintageYear}
+      onsubmit={(p) => writePeriod(p)}
+      onclear={() => writePeriod(null)}
+    />
+
     <!-- The nested REPRESENTATION PICKER (#678 inc 2): one band per member variable,
          each with its own adaptive representation rows, under ONE shared selection
          basket and ONE "Add" footer. The period window only DIMS out-of-window rows
@@ -368,20 +382,6 @@ function commitSelected(selected: PickerSelection[]): void {
         {/if}
       </p>
     {/if}
-
-    <!-- The TIME axis: a client-side availability LENS (no refetch). Seeds from the
-         project window, draws the members' union coverage span, and dims the rows
-         whose span doesn't overlap the chosen window. Writes `?period` only (never
-         the global window), mirroring the leaf; `getConceptGroup` ignores it. -->
-    <PeriodPicker
-      {period}
-      {grains}
-      window={windowStore.value}
-      coverage={unionCoverage}
-      {vintageYear}
-      onsubmit={(p) => writePeriod(p)}
-      onclear={() => writePeriod(null)}
-    />
   {/snippet}
 
   <SubjectView title={node.label} {description} {picker} />
