@@ -180,7 +180,9 @@ in each owning DESIGN.md):
    **Remaining** (see REFACTOR_SPEC.md).
 4. **Steward catalog filtering** — `fqid_outside_steward_catalog` /
    `representation_outside_steward_catalog` semantics. Shipped: boot-time catalog drop +
-   wiring into `/validate` (issue #227); column-based admission (issue #206).
+   wiring into `/validate` (issue #227); column-based admission (issue #206); browse +
+   search scoping (issue #859) — catalog root/provider/register/binding narrowed to held
+   holdings, search register/variable surfaces scoped via `fqids` allow-list.
 5. **Per-deploy smoke tests** — golden `/api/context` + shallow `/api/catalog` walk on
    container start. **Remaining** (no deployment yet).
 6. **Server-side input-validation gates** — period canonicalization and FQID

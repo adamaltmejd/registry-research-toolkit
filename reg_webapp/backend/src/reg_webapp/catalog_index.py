@@ -54,6 +54,7 @@ drift" banner.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 from reg_meta.catalog import CatalogSizes
@@ -84,11 +85,53 @@ class DriftWarning:
 
 @dataclass(frozen=True)
 class CatalogIndex:
-    """The in-memory steward catalog filter. Internal — never serialized."""
+    """The in-memory steward catalog filter. Internal — never serialized.
+
+    Built ONCE at boot and never mutated, so the derived projections (the held
+    FQID / provider sets, the flattened admission pairs, the per-FQID held-column
+    map) are ``functools.cached_property``: each rescans ``bindings_by_variant``
+    only on first access, then the result is memoized. A register page probes
+    ``admits`` once per concept-group member — hundreds of full ~5.7k-pair scans
+    on the un-memoized class — so the flattened ``_admitted_pairs`` /
+    ``_held_columns_by_fqid`` indexes turn those into O(1) lookups. ``cached_property``
+    coexists with ``@dataclass(frozen=True)``: the cached value is written into
+    ``__dict__`` (this class has NO ``__slots__``), bypassing the frozen
+    ``__setattr__``; the generated ``__hash__`` / ``__eq__`` read the declared
+    fields only, never the cached attributes, so neither is perturbed."""
 
     bindings_by_variant: dict[str, frozenset[tuple[str, str | None]]]
     period_range_by_register: dict[str, tuple[str, str]]
     drift_warnings: tuple[DriftWarning, ...]
+
+    @cached_property
+    def _admitted_pairs(self) -> frozenset[tuple[str, str | None]]:
+        """Every admitted ``(fqid, resolved delivery column)`` pair, flattened
+        across variants ONCE. Backs the O(1) ``admits`` membership probe (the hot
+        per-member path on a register page)."""
+        return frozenset(
+            pair for bindings in self.bindings_by_variant.values() for pair in bindings
+        )
+
+    @cached_property
+    def _held_columns_by_fqid(self) -> dict[str, frozenset[str | None]]:
+        """The held delivery columns grouped by binding FQID, built ONCE. Backs the
+        O(1) ``held_columns`` lookup."""
+        by_fqid: dict[str, set[str | None]] = {}
+        for fqid, column in self._admitted_pairs:
+            by_fqid.setdefault(fqid, set()).add(column)
+        return {fqid: frozenset(cols) for fqid, cols in by_fqid.items()}
+
+    @cached_property
+    def _variant_coords_by_register(self) -> dict[str, frozenset[str]]:
+        """The non-empty variant coordinates grouped by their 2-segment register
+        FQID, built ONCE. A drift-emptied variant slot (admitting nothing) is
+        EXCLUDED, mirroring ``held_variant_coords_for_register``'s contract."""
+        by_register: dict[str, set[str]] = {}
+        for coord, bindings in self.bindings_by_variant.items():
+            if bindings:
+                register_fqid = "/".join(coord.split("/")[:2])
+                by_register.setdefault(register_fqid, set()).add(coord)
+        return {reg: frozenset(coords) for reg, coords in by_register.items()}
 
     def admits(self, fqid: str, column: str | None) -> bool:
         """True iff the ``(fqid, resolved delivery column)`` pair is admitted by
@@ -98,9 +141,7 @@ class CatalogIndex:
         RESOLVED ``delivery_column_name`` on the caller's side, never the raw
         ``representation`` string. Backs ``fqid_outside_steward_catalog`` /
         ``representation_outside_steward_catalog`` (semantic.py)."""
-        return any(
-            (fqid, column) in bindings for bindings in self.bindings_by_variant.values()
-        )
+        return (fqid, column) in self._admitted_pairs
 
     def held_columns(self, fqid: str) -> frozenset[str | None]:
         """The delivery columns this steward holds for ``fqid``, across all
@@ -109,12 +150,52 @@ class CatalogIndex:
         researcher's resolved column is the ``representation_outside_steward_
         catalog`` case, and this set is what its message enumerates ("available
         from this steward as … only")."""
-        return frozenset(
-            column
-            for bindings in self.bindings_by_variant.values()
-            for f, column in bindings
-            if f == fqid
+        return self._held_columns_by_fqid.get(fqid, frozenset())
+
+    @cached_property
+    def admitted_variable_fqids(self) -> frozenset[str]:
+        """The bare binding FQIDs the steward holds, across all variants — the
+        ``fqid`` side of every ``(fqid, column)`` pair. Browse-grain (column
+        de-duped): the discovery surfaces (#859 browse + search) narrow their
+        variable rows against this set. Column-grain admission for a known FQID
+        is the separate ``admits`` / ``held_columns`` probe."""
+        return frozenset(fqid for fqid, _column in self._admitted_pairs)
+
+    @cached_property
+    def held_register_fqids(self) -> frozenset[str]:
+        """The 2-segment register FQIDs the steward holds: the source registers
+        in ``period_range_by_register`` UNIONED with the parent register of every
+        admitted binding. Mirrors ``catalog_sizes``'s register derivation EXACTLY
+        (keep the two consistent) — a drift-emptied variant still contributes its
+        register's period span, and a kept binding contributes its parent register
+        even if that register had no surviving source span."""
+        registers = set(self.period_range_by_register)
+        registers.update(
+            "/".join(fqid.split("/")[:2]) for fqid in self.admitted_variable_fqids
         )
+        return frozenset(registers)
+
+    @cached_property
+    def held_provider_slugs(self) -> frozenset[str]:
+        """The provider slugs the steward holds — the first segment of each held
+        register FQID. Backs the browse-root provider filter (#859)."""
+        return frozenset(fqid.split("/", 1)[0] for fqid in self.held_register_fqids)
+
+    def admits_register(self, register_fqid: str) -> bool:
+        """True iff the steward holds the 2-segment ``register_fqid``."""
+        return register_fqid in self.held_register_fqids
+
+    def admits_provider(self, provider_slug: str) -> bool:
+        """True iff the steward holds any register under ``provider_slug``."""
+        return provider_slug in self.held_provider_slugs
+
+    def held_variant_coords_for_register(self, register_fqid: str) -> frozenset[str]:
+        """The variant coordinates (``provider/register/variant``) under
+        ``register_fqid`` that admit ≥1 binding. A drift-emptied variant slot
+        (declared but admitting nothing — see ``build_catalog_index``) is
+        EXCLUDED, so the variants endpoint (#859) lists only variants the steward
+        actually holds data under."""
+        return self._variant_coords_by_register.get(register_fqid, frozenset())
 
     def catalog_sizes(self) -> CatalogSizes:
         """Headline catalog counts for a filtered steward deployment.
@@ -124,18 +205,10 @@ class CatalogIndex:
         variable count is browse-grain, not column-grain, so it de-dupes by FQID.
         ``period_range_by_register`` contributes valid source registers even if
         every binding under one drift-dropped from the authorable set."""
-        variable_fqids = {
-            fqid
-            for bindings in self.bindings_by_variant.values()
-            for fqid, _column in bindings
-        }
-        register_fqids = set(self.period_range_by_register)
-        register_fqids.update("/".join(fqid.split("/")[:2]) for fqid in variable_fqids)
-        provider_slugs = {fqid.split("/", 1)[0] for fqid in register_fqids}
         return CatalogSizes(
-            providers=len(provider_slugs),
-            registers=len(register_fqids),
-            variables=len(variable_fqids),
+            providers=len(self.held_provider_slugs),
+            registers=len(self.held_register_fqids),
+            variables=len(self.admitted_variable_fqids),
         )
 
 

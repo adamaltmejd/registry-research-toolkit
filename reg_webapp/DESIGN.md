@@ -340,7 +340,10 @@ groups** over the shipped FTS5 indexes, reusing reg_meta's concept-group-folded 
 `?type=` (#393) scopes the search to ONE group: `all` (the default, or omitted)
 preserves the fixed-order four-group response; any single type (`register` / `variable`
 / `classification` / `value`) runs AND emits only that one group. An unknown value 422s
-at the boundary (the valid set mirrors reg_meta's `SEARCH_TYPES`).
+at the boundary (the valid set mirrors reg_meta's `SEARCH_TYPES`). For a FILTERED
+steward, the register and variable surfaces are further scoped to the steward's held
+FQIDs — see § Steward layering → Browse and search scoping (#859) above; classification
+and code surfaces are catalog-global and unaffected.
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
 `/search?q=` results page (`SearchView.svelte`) that renders the four typed groups with
@@ -641,6 +644,57 @@ see column resolution below):
 
 The `global` deployment (`has_catalog_filter=False`) has **no** index (`None`); the
 catalog endpoints pass through to reg_meta's full universe.
+
+**Browse and search scoping (#859).** The `CatalogIndex` now also scopes the **catalog
+browse** (`/api/catalog/*`) and **search** (`/api/search`) discovery surfaces for a
+filtered steward — previously it gated only validate/authoring/stats/context.
+
+*Browse — column-grain faithful (#206).* The catalog root shows only held providers; a
+provider node shows only held registers; a register node shows only held bindings
+(filtered by `admitted_variable_fqids`) with concept-group members narrowed to held
+(representation members via column-grain `admits`; whole-variable members via bare-FQID
+membership in `admitted_variable_fqids`; a group with no surviving member is dropped). A
+held binding leaf narrows its embedded `states` to held delivery columns
+(`held_columns`), and the `?period` / `/states` resolve_at subset is narrowed the same
+way. The `/variants` sub-resource filters to variant coordinates with ≥1 held binding
+(`held_variant_coords_for_register`). All eight binding-suffix sub-endpoints (`/states`,
+`/predecessors`, `/successors`, `/related`, `/dimensions`, `/graph`, `/lineage`,
+`/lineage_warnings`) apply the ONE pre-resolve admission gate (`_require_admitted`) that
+covers binding, register, and provider grains uniformly:
+
+- a LIVE entity the steward does not hold → **404** ("not in this steward's catalog");
+- an UNADMITTED but dead/renamed slug whose terminal successor IS held → **301** to that
+  terminal (query string and sub-endpoint suffix preserved, mirroring the global
+  dead-slug redirect — a live unheld entity NEVER redirects, because succession edges
+  exist between live entities and a blind terminal walk would mis-redirect to an unheld
+  successor);
+- a dead slug whose terminal successor is UNHELD or has no successor → **404**.
+
+The `/graph` sub-endpoint gates the subject binding but does NOT narrow the graph's node
+set (same_as/related/group neighborhood) to held — that traversal-narrowing is deferred
+as a follow-up.
+
+*Classification pass-through (decision 2).* Classifications and codes are
+catalog-global. A steward `project_data` holds only variable bindings, so there is no
+holdings basis to scope reference data. Classification routes (`class/…`) and the codes
+arm of search pass through unfiltered for all steward deployments.
+
+*Search.* `/api/search` passes `admitted_variable_fqids | held_register_fqids` as the
+`fqids` allow-list to `reg_meta.queries.search`. This restricts register and variable
+rows query-time (so `total_count` and paging are exact, including concept-group folding
+— a group surfaces only if ≥1 member is held, and its member list is narrowed to held
+members). Classification and value/code surfaces are unaffected. The golden-boost
+injection (`golden.apply_golden_boost`) is re-filtered for the same set after boost so a
+curated pin the steward does not hold is dropped. The `global` deployment (no index) is
+byte-for-byte unchanged.
+
+*Performance.* The derived projections (`admitted_variable_fqids`,
+`held_register_fqids`, `held_provider_slugs`, `_admitted_pairs`,
+`_held_columns_by_fqid`, `_variant_coords_by_register`) are `functools.cached_property`:
+each is computed from `bindings_by_variant` on first access and memoized for the process
+lifetime. `cached_property` coexists with `@dataclass(frozen=True)` because the value is
+written into `__dict__` (no `__slots__`), bypassing the frozen `__setattr__`; the
+generated `__hash__` / `__eq__` read declared fields only.
 
 **Steward-load drift downgrade.** Loading a steward catalog runs the same
 `validate_semantic` (below) in **steward-caller** mode. A reg_meta-drift resolution

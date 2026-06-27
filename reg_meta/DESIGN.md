@@ -432,6 +432,18 @@ is what callers receive. This is the search-surface analog of the catalog-typing
 (#681): the webapp's per-result mapper functions and `models.py` search wrappers are
 deleted; the FastAPI response models embed reg_meta's search types directly.
 
+`search` accepts an optional `fqids: Collection[str] | None` allow-list (#859) that
+restricts the **register and variable** leaf rows (and concept-group folding) to
+entities whose navigable `fqid` is in the set. A group surfaces only if ≥1 of its
+members is held, and its `members` list is narrowed to held members. Classification and
+value/code surfaces are catalog-global and pass through unaffected. `None` means no
+restriction — the pre-#859 behavior is byte-identical. The restriction is applied BEFORE
+folding and BEFORE the `total_count`/slice, so both are exact. reg_meta stays
+steward-agnostic: the caller supplies the allow-list; the set's provenance is opaque
+here. The webapp's filtered-steward `/api/search` passes
+`admitted_variable_fqids | held_register_fqids` (see `reg_webapp/DESIGN.md`); the CLI
+never passes `fqids`.
+
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
 uniformly. The longitudinal `resolve(fqid).replaced_by` attribute carries the
