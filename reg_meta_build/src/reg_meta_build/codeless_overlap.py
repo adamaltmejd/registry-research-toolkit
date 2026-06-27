@@ -28,9 +28,16 @@ residual one of three ways:
   - `resolution = "extend"` — absorb the code-less span into the named coded
     vintage's window: the coded state on the SAME key whose
     `value_set_version_label` matches `extend = "<value_set_version_label>"` grows
-    to cover the code-less span, and the code-less state is deleted.
+    to cover the code-less span, and the code-less state is deleted. A coded vintage
+    can carry an EMPTY/whitespace `value_set_version_label` (e.g. a binary `[0,1]`
+    flag SCB delivered without a named value set — `par/typ-av-diagnos` HDIA,
+    `par/atc-komplement-atgardskod` ATCO); target it with `extend = ""`, which
+    matches the (necessarily unique) empty-label coded vintage on the key.
 
-`extend` is required iff `resolution == "extend"`, forbidden otherwise.
+The `extend` KEY is required iff `resolution == "extend"` (a missing `extend` on an
+`extend` entry stays an error — the typo guard), forbidden otherwise. Its VALUE may
+be the empty string `""` (explicitly targeting the empty-label coded vintage); a
+non-empty value names that label.
 """
 
 from __future__ import annotations
@@ -60,7 +67,9 @@ _require_str = functools.partial(
 # (not `""`) when the entry OMITS `column`, matching a state whose
 # `delivery_column_name IS NULL`.
 CodelessOverlapKey = tuple[str, str, str | None]
-# (resolution, extend_label) — `extend_label` is non-None iff resolution=="extend".
+# (resolution, extend_label) — `extend_label` is non-None iff resolution=="extend"
+# (it can be `""`, explicitly targeting the empty-label coded vintage; None still
+# means "no extend", used by cap/drop).
 CodelessOverlapRule = tuple[str, str | None]
 CodelessOverlapMap = dict[CodelessOverlapKey, CodelessOverlapRule]
 
@@ -91,9 +100,14 @@ def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
         (a `column = ""` is rejected — absent means NULL, not empty-string).
       - `resolution` is one of `cap` / `drop` / `extend` (an unknown directive is
         rejected, not silently ignored — every residual must be decided).
-      - `extend` present (non-empty string) iff `resolution == "extend"`,
-        forbidden otherwise — a `cap`/`drop` carrying a stray `extend`, or an
-        `extend` missing its target label, is a malformed entry, not a no-op."""
+      - The `extend` KEY is present iff `resolution == "extend"`, forbidden
+        otherwise — a `cap`/`drop` carrying a stray `extend`, or an `extend` entry
+        with no `extend` key at all, is a malformed entry, not a no-op. The value
+        must be a string but MAY be the empty string `""`: `extend = ""` explicitly
+        targets the (unique) empty/whitespace-labelled coded vintage on the key (a
+        binary flag SCB delivered without a named value set). Distinguish ABSENT
+        (`entry.get("extend")` is None → error on an `extend` entry) from
+        PRESENT-EMPTY (`""` → valid, empty-label target)."""
     entries = load_curation_entries(
         path,
         entry_key="resolve",
@@ -139,19 +153,35 @@ def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
                 f"{resolution!r} (known: {sorted(_RESOLUTIONS)}).",
                 f"Use a supported resolution: {sorted(_RESOLUTIONS)}.",
             )
+        # `entry.get("extend")` returns None for an ABSENT key and `""` for a
+        # PRESENT-but-empty `extend = ""` — the distinction the empty-label target
+        # turns on. The KEY must be present iff resolution == "extend"; its VALUE may
+        # be `""` (explicitly targets the unique empty-label coded vintage).
+        extend_present = "extend" in entry
         extend = entry.get("extend")
         if resolution == "extend":
-            if not isinstance(extend, str) or not extend.strip():
+            if not extend_present:
                 raise curation_error(
                     "codeless_overlap_invalid",
                     f'codeless_overlap entry {key} has `resolution = "extend"` but '
-                    f"no `extend` value-set label, got {extend!r}.",
+                    "no `extend` key.",
                     'Give `extend = "<value_set_version_label>"` naming a coded '
-                    "vintage on the same key.",
+                    'vintage on the same key (use `extend = ""` to target the '
+                    "empty-label coded vintage).",
                 )
+            if not isinstance(extend, str):
+                raise curation_error(
+                    "codeless_overlap_invalid",
+                    f"codeless_overlap entry {key} has a non-string `extend`, got "
+                    f"{extend!r}.",
+                    'Give `extend = "<value_set_version_label>"` (a string; `""` '
+                    "targets the empty-label coded vintage).",
+                )
+            # `extend = ""` keeps `extend_label == ""` (empty-label target); a
+            # non-empty value is stripped to match the coded label modulo whitespace.
             extend_label: str | None = extend.strip()
         else:
-            if extend is not None:
+            if extend_present:
                 raise curation_error(
                     "codeless_overlap_invalid",
                     f"codeless_overlap entry {key} sets `extend` but its resolution "

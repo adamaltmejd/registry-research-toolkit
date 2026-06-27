@@ -95,6 +95,8 @@ class TestLoadCodelessOverlap:
         assert "unknown resolution" in exc.value.message
 
     def test_extend_missing_label_rejected(self, tmp_path: Path) -> None:
+        # An `extend` entry with NO `extend` key at all stays an error (the typo
+        # guard) — distinct from a present-but-empty `extend = ""`, which is valid.
         toml = tmp_path / "x.toml"
         toml.write_text(
             '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="c"\n'
@@ -104,7 +106,35 @@ class TestLoadCodelessOverlap:
         with pytest.raises(RegMetaError) as exc:
             load_codeless_overlap(toml)
         assert exc.value.exit_code == EXIT_CONFIG
-        assert "no `extend`" in exc.value.message
+        assert "no `extend` key" in exc.value.message
+
+    def test_extend_empty_label_loads(self, tmp_path: Path) -> None:
+        # `extend = ""` is the empty-label target: the KEY is present (so the typo
+        # guard passes) and the stored `extend_label` is `""` (NOT None — None means
+        # "no extend", reserved for cap/drop). It names the unique empty/whitespace-
+        # labelled coded vintage on the key (HDIA/ATCO shape).
+        toml = tmp_path / "x.toml"
+        toml.write_text(
+            '[[resolve]]\nregister="par"\nvariable="typ-av-diagnos"\ncolumn="HDIA"\n'
+            'resolution="extend"\nextend=""\n',
+            encoding="utf-8",
+        )
+        cmap = load_codeless_overlap(toml)
+        assert cmap[("par", "typ-av-diagnos", "hdia")] == ("extend", "")
+
+    def test_extend_empty_forbidden_on_cap(self, tmp_path: Path) -> None:
+        # `extend = ""` on a `cap` entry is still a forbidden stray `extend` — the
+        # present-empty key is detected by membership, not truthiness.
+        toml = tmp_path / "x.toml"
+        toml.write_text(
+            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="c"\n'
+            'resolution="cap"\nextend=""\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codeless_overlap(toml)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "sets `extend`" in exc.value.message
 
     def test_extend_forbidden_on_cap(self, tmp_path: Path) -> None:
         toml = tmp_path / "x.toml"
@@ -631,6 +661,121 @@ class TestResolveCuratedCodelessOverlaps:
             )
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "codeless_overlap_extend_unresolved"
+        conn.close()
+
+    def test_extend_empty_label_absorbs_single_empty_vintage(self) -> None:
+        # HDIA/ATCO shape: a single coded vintage with an EMPTY value_set_version_label
+        # (`''`) overlaps the code-less span. `extend = ""` (stored extend_label "")
+        # keys to the stripped-empty `""` bucket with no special-casing and absorbs
+        # the code-less span into that coded vintage's window; the code-less state is
+        # deleted, the coded vintage grown.
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="1997-01-01", valid_to="2014-12-31", value_set_id=None
+        )
+        coded = self._state(
+            conn,
+            valid_from="2010-01-01",
+            valid_to="2020-12-31",
+            value_set_id=13569,
+            label="",  # empty label — the unnamed binary flag
+        )
+        _resolve_curated_codeless_overlaps(conn, {self._key(): ("extend", "")})
+        assert self._live(conn) == {coded}
+        assert codeless not in self._live(conn)
+        row = self._row(conn, coded)
+        assert row["value_set_id"] == 13569
+        assert (row["valid_from"], row["valid_to"]) == ("1997-01-01", "2020-12-31")
+        conn.close()
+
+    def test_extend_empty_label_whitespace_coded_label_absorbs(self) -> None:
+        # The coded vintage's label is WHITESPACE-only ('  '); it strips to `""` and is
+        # still reached by `extend = ""` (the loader stores `""`, the matcher keys on
+        # the stripped label). Confirms the empty-label match is whitespace-tolerant,
+        # not exact-empty-only.
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="1997-01-01", valid_to="2014-12-31", value_set_id=None
+        )
+        coded = self._state(
+            conn,
+            valid_from="2010-01-01",
+            valid_to="2020-12-31",
+            value_set_id=13565,
+            label="  ",  # whitespace-only → strips to ""
+        )
+        _resolve_curated_codeless_overlaps(conn, {self._key(): ("extend", "")})
+        assert self._live(conn) == {coded}
+        assert codeless not in self._live(conn)
+        conn.close()
+
+    def test_extend_empty_label_ambiguous_distinct_value_sets_fails(self) -> None:
+        # Two DISTINCT empty-label value sets overlap the code-less span. An empty
+        # label is not a stable vintage identity, so `extend = ""` cannot pick one →
+        # fail fast (EXIT_CONFIG), pointing the maintainer at `cap`. (Contrast the
+        # single empty-label vintage above, which is unambiguous.)
+        conn = self._conn()
+        self._state(
+            conn, valid_from="2000-01-01", valid_to="2018-12-31", value_set_id=None
+        )
+        # Two coded windows, SAME empty label, DIFFERENT value sets.
+        self._state(
+            conn,
+            valid_from="2005-01-01",
+            valid_to="2008-12-31",
+            value_set_id=100,
+            label="",
+        )
+        self._state(
+            conn,
+            valid_from="2012-01-01",
+            valid_to="2015-12-31",
+            value_set_id=200,
+            label="",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            _resolve_curated_codeless_overlaps(conn, {self._key(): ("extend", "")})
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codeless_overlap_extend_ambiguous_empty_label"
+        assert self.VAR_SLUG in exc.value.message
+        conn.close()
+
+    def test_extend_empty_label_one_value_set_two_windows_absorbs(self) -> None:
+        # A SINGLE empty-label value set delivered in TWO overlapping windows is NOT
+        # ambiguous (one distinct value_set_id) — the earliest-valid_from window grows
+        # to absorb the span, the later one keeps its bounds (multi-window deterministic
+        # tie-break, unchanged for the empty-label case).
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="2000-01-01", valid_to="2018-12-31", value_set_id=None
+        )
+        early = self._state(
+            conn,
+            valid_from="2005-01-01",
+            valid_to="2008-12-31",
+            value_set_id=13569,
+            label="",
+        )
+        late = self._state(
+            conn,
+            valid_from="2012-01-01",
+            valid_to="2015-12-31",
+            value_set_id=13569,
+            label="",
+        )
+        _resolve_curated_codeless_overlaps(conn, {self._key(): ("extend", "")})
+        assert self._live(conn) == {early, late}
+        assert codeless not in self._live(conn)
+        early_row = self._row(conn, early)
+        assert (early_row["valid_from"], early_row["valid_to"]) == (
+            "2000-01-01",
+            "2018-12-31",
+        )
+        late_row = self._row(conn, late)
+        assert (late_row["valid_from"], late_row["valid_to"]) == (
+            "2012-01-01",
+            "2015-12-31",
+        )
         conn.close()
 
     def test_uncurated_residual_fails_build(self) -> None:

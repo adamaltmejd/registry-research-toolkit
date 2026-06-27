@@ -20,7 +20,9 @@
 #                                      # OMIT this field to match a state whose
 #                                      # delivery column is NULL (no delivery alias)
 #   resolution = "cap" | "drop" | "extend"
-#   # extend = "<value_set_version_label>"   # REQUIRED iff resolution == "extend"
+#   # extend = "<value_set_version_label>"   # REQUIRED iff resolution == "extend";
+#   #                                        # extend = "" targets the (unique)
+#   #                                        # empty-label coded vintage
 #
 #   - cap    — trim the code-less span to the interval-complement of the union of
 #              overlapping coded windows (delete if nothing residual; split into a
@@ -29,11 +31,16 @@
 #   - extend — absorb the code-less span into the named coded vintage's window: the
 #              coded state on the same key whose `value_set_version_label` matches
 #              `extend` grows to cover the code-less span, and the code-less state
-#              is deleted. CAUTION: extend grows the coded window over the WHOLE
-#              code-less span — only use it when the named vintage is the nearest
-#              coded window to the gap; if a different value set sits between the
-#              target and the span, use `cap` instead (the grow would swallow it into
-#              a distinct-value_set overlap, caught only by validate).
+#              is deleted. `extend = ""` targets the (necessarily unique) empty- or
+#              whitespace-labelled coded vintage — a binary flag SCB delivered with
+#              no named value set (e.g. par/typ-av-diagnos HDIA,
+#              par/atc-komplement-atgardskod ATCO). If several DISTINCT value sets
+#              share an empty label on the key the target is ambiguous and the build
+#              fails — use `cap` there. CAUTION: extend grows the coded window over
+#              the WHOLE code-less span — only use it when the named vintage is the
+#              nearest coded window to the gap; if a different value set sits between
+#              the target and the span, use `cap` instead (the grow would swallow it
+#              into a distinct-value_set overlap, caught only by validate).
 #
 # Slugs are register-scoped-unique and human-readable; `column` matches a state's
 # `delivery_column_name` after case-folding, so casing is cosmetic. Omit `column`
@@ -319,19 +326,21 @@ variable = "stratum"
 column = "STRATUM"
 resolution = "cap"
 
-# par/atc-komplement-atgardskod col=ATCO  ::  vs13565 ''
+# par/atc-komplement-atgardskod col=ATCO  ::  vs13565 '' (binary [0,1] flag, time-stable)
 [[resolve]]
 register = "par"
 variable = "atc-komplement-atgardskod"
 column = "ATCO"
-resolution = "cap"
+resolution = "extend"
+extend = ""
 
-# par/typ-av-diagnos col=HDIA  ::  vs13569 ''
+# par/typ-av-diagnos col=HDIA  ::  vs13569 '' (binary [0,1] flag, time-stable)
 [[resolve]]
 register = "par"
 variable = "typ-av-diagnos"
 column = "HDIA"
-resolution = "cap"
+resolution = "extend"
+extend = ""
 
 # prisindex/kn8beskrivning col=KN8Kod  ::  vs10638 'Kombinerade nomenklaturen 20'; vs11488 'KN 8 PPI'; vs11538 'KN 8 PPI'; vs12561 'KN 8 PPI'; vs12928 'KN 8 PPI'; vs13450 'KN 8 PPI'
 [[resolve]]

@@ -3338,8 +3338,13 @@ def _resolve_curated_codeless_overlaps(
         surrounding whitespace) to cover the code-less span (valid_from = min,
         valid_to = max), then delete the code-less state. When the label is
         delivered in several overlapping windows, the earliest-`valid_from` one is
-        grown (deterministic); the others keep their windows. An unresolvable label
-        → fail fast (EXIT_CONFIG); a residual unique-index collision from the grow →
+        grown (deterministic); the others keep their windows. `extend = ""` targets
+        the empty/whitespace-labelled coded vintage (an unnamed binary flag —
+        HDIA/ATCO): the stripped-label key maps an empty coded label to `""`, so it
+        resolves with no special-casing; but if `""` covers MORE THAN ONE distinct
+        `value_set_id` the target is ambiguous → `codeless_overlap_extend_ambiguous_`
+        `empty_label` (EXIT_CONFIG, use `cap`). An unresolvable label → fail fast
+        (EXIT_CONFIG); a residual unique-index collision from the grow →
         `codeless_overlap_extend_collision` (EXIT_CONFIG).
 
     Mandatory-curation gate: after applying every entry, the DB is RE-QUERIED for
@@ -3417,20 +3422,25 @@ def _resolve_curated_codeless_overlaps(
                 ),
                 "windows": [],
                 # STRIPPED value_set_version_label → list of overlapping coded
-                # states `(state_id, valid_from, valid_to)` carrying that label, for
-                # `extend` (absorb the code-less span into the named coded vintage's
-                # window). Keyed on the stripped label because SCB labels carry
-                # surrounding whitespace (e.g. 'Påverkar arbetsförmåga ') while the
-                # curated TOML's `extend` value is stripped by the loader — match
-                # them modulo surrounding whitespace. A vintage delivered in several
-                # windows yields multiple entries under one label; extend grows the
+                # states `(state_id, valid_from, valid_to, value_set_id)` carrying
+                # that label, for `extend` (absorb the code-less span into the named
+                # coded vintage's window). Keyed on the stripped label because SCB
+                # labels carry surrounding whitespace (e.g. 'Påverkar arbetsförmåga ')
+                # while the curated TOML's `extend` value is stripped by the loader —
+                # match them modulo surrounding whitespace. This also maps an
+                # EMPTY/whitespace label to the `""` key, so `extend = ""` (the
+                # empty-label target, stored as `""` by the loader) looks it up with
+                # no special-casing. A vintage delivered in several windows yields
+                # multiple entries under one label; extend grows the
                 # earliest-`valid_from` overlapping one (deterministic tie-break).
+                # The `value_set_id` rides along so an `extend = ""` resolving to
+                # several DISTINCT empty-label vintages can be rejected as ambiguous.
                 "coded_by_label": {},
             },
         )
         entry["windows"].append((cb_from, cb_to))
         entry["coded_by_label"].setdefault((cb_label or "").strip(), []).append(
-            (cb_state_id, cb_from, cb_to)
+            (cb_state_id, cb_from, cb_to, cb_vsid)
         )
 
     n_capped = n_split = n_dropped = n_extended = 0
@@ -3493,6 +3503,30 @@ def _resolve_curated_codeless_overlaps(
                         f"labels are {sorted(entry['coded_by_label'])}."
                     ),
                 )
+            # `extend = ""` targets the empty/whitespace-labelled coded vintage (a
+            # binary flag SCB delivered with no named value set — HDIA/ATCO). The
+            # stripped-label key maps it to `""` with no special-casing; but an empty
+            # label is not a stable vintage identity, so if it resolves to MORE THAN
+            # ONE distinct value set among the overlapping coded states the target is
+            # ambiguous — fail fast and tell the maintainer to use `cap`. (A single
+            # empty-label vintage — HDIA/ATCO — is unambiguous.)
+            if extend_label == "" and len({c[3] for c in coded}) > 1:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="codeless_overlap_extend_ambiguous_empty_label",
+                    error_class="configuration",
+                    message=(
+                        f'codeless_overlap `extend = ""` for key {key} targets the '
+                        "empty-label coded vintage, but several DISTINCT empty-label "
+                        f"value sets {sorted({c[3] for c in coded})} overlap this "
+                        "code-less state — the absorb target is ambiguous."
+                    ),
+                    remediation=(
+                        "An empty `value_set_version_label` is shared by several "
+                        'distinct value sets here, so `extend = ""` cannot pick one. '
+                        'Use `resolution = "cap"` for this residual instead.'
+                    ),
+                )
             # ABSORB the code-less span into the named coded vintage's window:
             # DELETE the code-less state FIRST, then grow the target coded state to
             # cover the code-less span. CAUTION: `extend` grows the coded window over
@@ -3513,7 +3547,7 @@ def _resolve_curated_codeless_overlaps(
             # sat there. Deleting it first frees the tuple; the IntegrityError wrap
             # on the grow stays as a backstop for a genuinely different colliding
             # state.
-            target_state_id, target_from, target_to = min(coded, key=lambda c: c[1])
+            target_state_id, target_from, target_to, _ = min(coded, key=lambda c: c[1])
             grown_from = min(target_from, entry["from"])
             grown_to = max(target_to, entry["to"])
             try:
