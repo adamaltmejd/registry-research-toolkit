@@ -1153,6 +1153,33 @@ class TestClassificationChains:
             "class/sun2000-niva",
         )
 
+    def test_umbrella_members_carry_group_label_heading(self) -> None:
+        # #794 P3: a curated umbrella member carries the group's display `label` as
+        # `group_label` so the renderer can title the classification cluster (its
+        # `group_key` is the bare `class/sun` slug, no display string). A non-member
+        # spine edition pulled in by the chain walk stays headless.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
+        )
+        # Only the 2000-niva edition is a curated member; sun1996 is its (non-member)
+        # spine predecessor.
+        _add_class_umbrella_group(conn, members=[(2, "niva")])
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        nodes = {n.id: n for n in g.nodes}
+        member = nodes["class/sun2000-niva"]
+        assert isinstance(member, ClassificationGraphNode)
+        assert member.group_key == "class/sun"
+        assert member.group_label == "SUN"  # the curated group's display label
+        # The non-member spine edition is headless (and ungrouped).
+        spine = nodes["class/sun1996"]
+        assert isinstance(spine, ClassificationGraphNode)
+        assert spine.group_key is None
+        assert spine.group_label is None
+
     def test_split_predecessor_branches_walked_when_descendant_first(self) -> None:
         # P2-3 regression: a #579 SPLIT root P (sun1996) fans out into 3 branches
         # (niva/inriktning/grupp); a descendant D (sun2020-niva) sits on ONE branch.

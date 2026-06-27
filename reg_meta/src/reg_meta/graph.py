@@ -135,6 +135,15 @@ class ClassificationGraphNode(_GraphNodeBase):
     kind: Literal["classification"] = "classification"
     version_year: int | None
     is_current: bool
+    # The umbrella group's display label (the ``ConceptGroupSummary.label``, e.g.
+    # "SUN — Svensk utbildningsnomenklatur"); None when the edition is not a curated
+    # umbrella member. The classification analog of `VariableGraphNode.group_label`:
+    # it gives a SUN/related-granularities umbrella cluster a heading (the renderer
+    # has no other label for a classification cluster, whose `group_key` is the bare
+    # `class/<key>` slug, not a display string). Carried only on curated members
+    # (mirrors `group_key`), so a non-member spine edition pulled in by a #579 split
+    # walk stays headless.
+    group_label: str | None = None
 
 
 GraphNode = Annotated[
@@ -564,6 +573,7 @@ class _GraphBuilder:
         slug: str,
         *,
         group_key: str | None = None,
+        group_label: str | None = None,
         member_slugs: frozenset[str] = frozenset(),
     ) -> str | None:
         """Build the classification-edition nodes + succession edges for the chain
@@ -571,14 +581,16 @@ class _GraphBuilder:
         of truth, branch-aware at #579 splits). Returns the queried (self) edition's
         node id, or None when it doesn't resolve.
 
-        ``group_key`` / ``member_slugs`` carry the classification-umbrella membership
-        (``class/<key>``): a node whose slug ∈ ``member_slugs`` is a CURATED umbrella
-        member and carries ``group_key`` (shared clustering, mirroring the variable
-        side's own-membership rule); editions surfaced by the chain walk that are NOT
-        curated members (a shared ancestor pulled in by the #579 split walk) keep
-        ``group_key=None``. Nodes are frozen, so the key is applied at build time
-        (not mutated post-build); a member node first built by a non-member-anchored
-        walk is upgraded once via ``_class_grouped``.
+        ``group_key`` / ``group_label`` / ``member_slugs`` carry the
+        classification-umbrella membership (``class/<key>``): a node whose slug ∈
+        ``member_slugs`` is a CURATED umbrella member and carries ``group_key`` (shared
+        clustering, mirroring the variable side's own-membership rule) plus
+        ``group_label`` (the umbrella's display heading — #794 P3); editions surfaced
+        by the chain walk that are NOT curated members (a shared ancestor pulled in by
+        the #579 split walk) keep ``group_key=None`` and no label. Nodes are frozen, so
+        the key/label are applied at build time (not mutated post-build); a member node
+        first built by a non-member-anchored walk is upgraded once via
+        ``_class_grouped``.
 
         Early-out: gated on whether THIS slug has already ANCHORED a walk, NOT on
         node-presence. A SUN-style umbrella's niva/inriktning/grupp members share one
@@ -596,7 +608,7 @@ class _GraphBuilder:
             # `graph_for_classification_fqid` walks the focus's chain WITHOUT the
             # umbrella key before the member union does — must still get its own
             # umbrella `group_key`. Mirrors the in-loop `_class_grouped` upgrade.
-            self._apply_class_group_key(self_node_id, group_key)
+            self._apply_class_group_key(self_node_id, group_key, group_label)
             return self_node_id
         self._class_anchors_walked.add(slug)
         try:
@@ -621,6 +633,7 @@ class _GraphBuilder:
                     fqid=edition.fqid,
                     label=edition.name or node_id,
                     group_key=group_key if is_member else None,
+                    group_label=group_label if is_member else None,
                     version_year=edition.version_year,
                     is_current=edition.is_current,
                 )
@@ -628,19 +641,22 @@ class _GraphBuilder:
                     self._class_grouped.add(node_id)
             elif is_member:
                 # A curated member first built by a non-member-anchored walk (frozen
-                # node) — upgrade once with its umbrella key.
-                self._apply_class_group_key(node_id, group_key)
+                # node) — upgrade once with its umbrella key + heading.
+                self._apply_class_group_key(node_id, group_key, group_label)
             if edition.is_self:
                 self_id = node_id
         self._add_classification_edges(slug_to_id)
         return self_id
 
-    def _apply_class_group_key(self, node_id: str, group_key: str | None) -> None:
-        """Stamp a built classification node with its umbrella ``group_key`` once.
-        Idempotent via ``_class_grouped``: a member node built ungrouped first (as a
-        non-member-anchored walk's ancestor, or as the focus's own pre-union chain
-        walk) is upgraded exactly once; a no-key call or a re-stamp is a no-op. Nodes
-        are frozen, so this is a ``model_copy`` replace, not a mutation."""
+    def _apply_class_group_key(
+        self, node_id: str, group_key: str | None, group_label: str | None = None
+    ) -> None:
+        """Stamp a built classification node with its umbrella ``group_key`` (and
+        display ``group_label`` heading — #794 P3) once. Idempotent via
+        ``_class_grouped``: a member node built ungrouped first (as a non-member-
+        anchored walk's ancestor, or as the focus's own pre-union chain walk) is
+        upgraded exactly once; a no-key call or a re-stamp is a no-op. Nodes are
+        frozen, so this is a ``model_copy`` replace, not a mutation."""
         if (
             group_key is None
             or node_id in self._class_grouped
@@ -648,7 +664,7 @@ class _GraphBuilder:
         ):
             return
         self._nodes[node_id] = self._nodes[node_id].model_copy(
-            update={"group_key": group_key}
+            update={"group_key": group_key, "group_label": group_label}
         )
         self._class_grouped.add(node_id)
 
@@ -805,8 +821,10 @@ def _add_classification_group_members(
     """Union every member of a classification umbrella group into the builder. Each
     member is a ``class/<slug>`` edition; ``add_classification`` walks its full
     succession chain + co-members and dedups shared nodes/edges. Members carry the
-    shared ``class/<key>`` ``group_key`` so the renderer clusters the umbrella;
-    non-member spine editions surfaced by a #579 split walk stay ungrouped. Shared
+    shared ``class/<key>`` ``group_key`` (clustering) AND the group's display
+    ``label`` as ``group_label`` (the umbrella heading — #794 P3) so the renderer
+    clusters the umbrella under a real title; non-member spine editions surfaced by a
+    #579 split walk stay ungrouped + headless. Shared
     by ``graph_for_classification_group`` (group page) and
     ``graph_for_classification_fqid`` (leaf, Fork B)."""
     group_key = f"class/{group.key}"
@@ -821,6 +839,7 @@ def _add_classification_group_members(
         builder.add_classification(
             member.fqid.classification,
             group_key=group_key,
+            group_label=group.label,
             member_slugs=member_slugs,
         )
 

@@ -3,9 +3,11 @@ import type { RelationshipGraph } from "./api";
 import { catalogHref, facetLabelJoin, leafSlug } from "./catalog";
 import {
   axisTicks,
+  CELL_MIN_W,
   type ClassificationPoint,
   clustersOf,
   type NodeCluster,
+  PX_PER_YEAR,
   type RenderNode,
   type ResolvedEdge,
   resolveEdges,
@@ -48,13 +50,14 @@ let { graph, vintageYear }: { graph: RelationshipGraph; vintageYear?: number } =
 // each year enough room that a multi-decade span reads without crushing; the
 // track scrolls horizontally inside the 56rem column when it overflows.
 const GUTTER_W = 188; // sticky left gutter (name + qualifier)
-const PX_PER_YEAR = 19; // horizontal density of the year scale
 const TRACK_MIN = 360; // floor track width so a 1–2 year graph still reads
 const TRACK_PAD = 14; // inner left/right padding so end cells don't touch edges
 const LANE_BASE_H = 56; // a single-row lane's height
 const ROW_H = 44; // each extra packed sub-row adds this much
 const CELL_H = 38; // a cell's height (centred within its sub-row)
-const CELL_MIN_W = 64; // a single-year cell still shows its label
+// PX_PER_YEAR (year-scale density) + CELL_MIN_W (a single-year cell still shows its
+// label) are the shared geometry — imported from history_graph.ts so the pure
+// sub-row packing and this renderer agree on a cell's rendered footprint (#794 P3).
 
 /** The shared year axis across the WHOLE graph (all clusters), or null when no
  * node is datable (→ the renderer omits the axis and just stacks lanes). */
@@ -151,10 +154,32 @@ function isFocus(rn: RenderNode): boolean {
   return rn.node.id === graph.focus_id;
 }
 
-/** A variable lane is a DEAD/renamed predecessor (a thin node) when it carries no
- * states — render it muted with a "(renamed)" hint, labelled by its leaf slug. */
+/** Node ids that are an endpoint of a SUCCESSION edge. A thin dead/renamed
+ * predecessor (no live row, #355/#411) is minted ONLY by the succession walk
+ * (`_ensure_edition_node`), so it is always a succession endpoint — whereas a LIVE
+ * stateless variable (a supported catalog/group case) is reached as the focus / a
+ * group member and is NOT one. This is the contract signal that distinguishes the
+ * two, since both carry `states: []`. (Membership in this set, not empty states
+ * alone, gates the "(renamed)" relabel — see `isRenamed`.) */
+const successionEndpointIds = $derived.by((): Set<string> => {
+  const ids = new Set<string>();
+  for (const edge of graph.edges) {
+    if (edge.kind === "succession") {
+      ids.add(edge.source);
+      ids.add(edge.target);
+    }
+  }
+  return ids;
+});
+
+/** A variable lane is a DEAD/renamed predecessor (a thin placeholder) when it
+ * carries no states AND is a succession-chain endpoint — render it muted with a
+ * "(renamed)" hint, labelled by its leaf slug. The succession-endpoint guard is
+ * what separates it from a LIVE stateless variable (also `states: []`, but never a
+ * succession placeholder), which must keep its real label, not a "(renamed)" tag.
+ */
 function isRenamed(rn: VariableLane): boolean {
-  return rn.node.states.length === 0;
+  return rn.node.states.length === 0 && successionEndpointIds.has(rn.node.id);
 }
 
 /** The gutter label for a variable lane:
@@ -269,12 +294,19 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
           <h4 class="cluster-heading">{cluster.label}</h4>
         {/if}
 
-        <!-- The drawn timeline: role="img" with a text summary; the structured
-             fallback below is the real a11y surface (sr-only). The visual track is
-             decorative to AT beyond the summary. -->
+        <!-- The drawn timeline is a labelled GROUP (NOT role="img"): an image role
+             is a single opaque object, so the gutter's nav <a>s — the REAL
+             navigation (#794 P2) — wouldn't be reliably exposed inside it. As a
+             group its children stay in the a11y tree, so the links are reachable.
+             The purely-decorative visuals (axis, gridlines, connectors, the cell /
+             point bars) are each `aria-hidden` so AT isn't read the pixel layout;
+             the structured `.graph-fallback` list below mirrors that layout as text
+             (cells, editions, edges) — a NON-interactive description (its links were
+             removed so they don't duplicate the gutter's nav as invisible tab
+             stops). -->
         <div
           class="timeline"
-          role="img"
+          role="group"
           aria-label={cluster.label
             ? `History timeline for ${cluster.label}: ${cluster.nodes.length} nodes`
             : `History timeline: ${cluster.nodes.length} nodes`}
@@ -375,6 +407,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                     class:related={re.edge.kind === "related"}
                     style={`top:${(s.center + t.center) / 2}px; left:${GUTTER_W + 6}px`}
                     title={edgeLabelText(re)}
+                    aria-hidden="true"
                   >
                     {#if re.edge.kind === "related"}<span
                         class="rel-mark"
@@ -448,8 +481,10 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                     {/if}
                   </div>
 
-                  <!-- Track: cells (variable) or one point (classification). -->
-                  <div class="track" style={`width:${trackW}px`}>
+                  <!-- Track: cells (variable) or one point (classification). The
+                       drawn bars are a pixel layout — `aria-hidden`; the
+                       `.graph-fallback` list re-states each cell / edition as text. -->
+                  <div class="track" style={`width:${trackW}px`} aria-hidden="true">
                     {#if rn.kind === "variable"}
                       {#each rn.cells as cell, i (cell.runId)}
                         <!-- On the scale: position by year span. Without a scale
@@ -502,7 +537,12 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
 
         <!-- The structured, screen-reader-legible mirror of the same graph: every
              node (focus marker, member label, same_as affordances), its cells /
-             edition, and the cluster's edges — as real text the visual can't be. -->
+             edition, and the cluster's edges — as real text the visual can't be.
+             NON-interactive by design: the visible gutter already carries the nav
+             <a>s (the real, focusable navigation), so this mirror uses plain TEXT
+             for the same labels — an <a> here would be a clipped, invisible
+             DUPLICATE tab stop (incl. a focus self-link), which is the #794 P1
+             keyboard-trap this avoids. -->
         <ul class="graph-fallback">
           {#each cluster.nodes as rn (rn.node.id)}
             <li class:focus={isFocus(rn)}>
@@ -511,11 +551,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
               >
               <span class="fb-node">
                 {#if rn.kind === "variable"}
-                  {#if rn.node.fqid}
-                    <a href={catalogHref(rn.node.fqid)}>{memberLabel(rn)}</a>
-                  {:else}
-                    {memberLabel(rn)}
-                  {/if}
+                  {memberLabel(rn)}
                   {#if isRenamed(rn)}
                     <span class="muted tag">(renamed)</span>
                   {/if}
@@ -537,18 +573,12 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                     <p class="fb-same-as muted">
                       also delivered in
                       {#each rn.node.same_as as sa, i (sa.fqid)}
-                        {#if i > 0}, {/if}<a href={catalogHref(sa.fqid)}
-                          >{sa.register}</a
-                        >
+                        {#if i > 0}, {/if}{sa.register}
                       {/each}
                     </p>
                   {/if}
                 {:else}
-                  {#if rn.node.fqid}
-                    <a href={catalogHref(rn.node.fqid)}>{rn.node.label}</a>
-                  {:else}
-                    {rn.node.label}
-                  {/if}
+                  {rn.node.label}
                   {#if yearTag(rn)}
                     <span class="muted">({yearTag(rn)})</span>
                   {/if}
@@ -893,6 +923,18 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     border-left-color: transparent;
     -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 22px), transparent);
     mask-image: linear-gradient(to left, #000 calc(100% - 22px), transparent);
+  }
+  /* BOTH ends open: compose the two gradients (mask-image layers intersect via
+     mask-composite) so the left AND right fade — the single-axis rules above each
+     set one `mask-image` and the later one would otherwise win, leaving the right
+     edge a hard wall (#794 P3). */
+  .cell.open-start.open-end {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent),
+      linear-gradient(to left, #000 calc(100% - 22px), transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent),
+      linear-gradient(to left, #000 calc(100% - 22px), transparent);
+    mask-composite: intersect;
   }
   .cell-label {
     font-size: 0.72rem;

@@ -342,6 +342,75 @@ describe("clustersOf — sub-row packing on the shared axis", () => {
     }
   });
 
+  it("packs cells whose RENDERED widths overlap to separate rows (min-width footprint)", () => {
+    // #794 P3: two SHORT runs only ~1 raw year apart (one ending 2010, the next
+    // starting 2011) don't overlap in raw years — but the renderer floors each cell
+    // to CELL_MIN_W (~3.4 years wide at PX_PER_YEAR), so they paint overlapping.
+    // Packing must respect the rendered footprint and push them to distinct rows.
+    const node = variableNode({
+      id: "v",
+      states: [
+        state({
+          representation_run_id: 1,
+          value_set_version_label: "a",
+          valid_from: "2009-01-01",
+          valid_to: "2010-12-31",
+        }),
+        state({
+          representation_run_id: 2,
+          value_set_version_label: "b",
+          valid_from: "2011-01-01",
+          valid_to: "2012-12-31",
+        }),
+      ],
+    });
+    const scale = yearScaleOf({ nodes: [node], edges: [], focus_id: null });
+    const lane = clustersOf(
+      { nodes: [node], edges: [], focus_id: null },
+      scale,
+    )[0].nodes[0];
+    expect(lane.kind).toBe("variable");
+    if (lane.kind === "variable") {
+      // The first cell's padded footprint (2009 + ~3.4 ≈ 2012.4) covers 2011, so the
+      // second can't share row 0.
+      expect(lane.rowCount).toBe(2);
+      expect(lane.cells.map((c) => c.row)).toEqual([0, 1]);
+    }
+  });
+
+  it("does NOT over-split a short cell whose footprint clears the next cell's start", () => {
+    // Guard against the min-width fix splitting genuinely non-overlapping cells: a
+    // single-year run at 2000 (footprint ends ~2003.4) and the next starting 2005
+    // clear each other → one row. (The first cell ends 2000 but its ~3.4-year
+    // footprint still ends before 2005.)
+    const node = variableNode({
+      id: "v",
+      states: [
+        state({
+          representation_run_id: 1,
+          value_set_version_label: "a",
+          valid_from: "2000-01-01",
+          valid_to: "2000-12-31",
+        }),
+        state({
+          representation_run_id: 2,
+          value_set_version_label: "b",
+          valid_from: "2005-01-01",
+          valid_to: "2005-12-31",
+        }),
+      ],
+    });
+    const scale = yearScaleOf({ nodes: [node], edges: [], focus_id: null });
+    const lane = clustersOf(
+      { nodes: [node], edges: [], focus_id: null },
+      scale,
+    )[0].nodes[0];
+    if (lane.kind === "variable") {
+      expect(lane.rowCount).toBe(1);
+      expect(lane.cells.every((c) => c.row === 0)).toBe(true);
+    }
+  });
+
   it("keeps non-overlapping cells on one row (rowCount === 1)", () => {
     const node = variableNode({
       id: "v",
@@ -382,6 +451,40 @@ describe("clustersOf — group_key clustering (Fork B)", () => {
     expect(clusters).toHaveLength(1);
     expect(clusters[0].label).toBe("Group G");
     expect(clusters[0].nodes.map((n) => n.node.id)).toEqual(["a", "b"]);
+  });
+
+  it("titles a classification umbrella cluster by its group_label heading (#794 P3)", () => {
+    // Classification umbrella members now carry `group_label` (the curated group's
+    // display label) — the cluster heading must use it (not stay null), so a
+    // SUN/related-granularities umbrella reads under a real title.
+    const a = classificationNode({
+      id: "c1",
+      group_key: "class/sun",
+      group_label: "SUN — Svensk utbildningsnomenklatur",
+      version_year: 2000,
+    });
+    const b = classificationNode({
+      id: "c2",
+      group_key: "class/sun",
+      group_label: "SUN — Svensk utbildningsnomenklatur",
+      version_year: 2020,
+    });
+    const clusters = clustersOf({ nodes: [a, b], edges: [], focus_id: null });
+    expect(clusters).toHaveLength(1);
+    expect(clusters[0].label).toBe("SUN — Svensk utbildningsnomenklatur");
+  });
+
+  it("leaves a headless classification cluster (member carries no group_label) null", () => {
+    // A non-member spine edition pulled in by the chain walk carries no group_label
+    // → the cluster heading stays null (no spurious title).
+    const a = classificationNode({
+      id: "c1",
+      group_key: null,
+      group_label: null,
+      version_year: 2000,
+    });
+    const clusters = clustersOf({ nodes: [a], edges: [], focus_id: null });
+    expect(clusters[0].label).toBeNull();
   });
 
   it("gives each null-group_key node its OWN singleton cluster (no heading)", () => {

@@ -313,11 +313,11 @@ describe("HistoryGraph (#678)", () => {
     });
     render(HistoryGraph, { graph: graph({ nodes: [node], focus_id: "v1" }) });
 
-    // The sr-only fallback carries the full "also delivered in" prose; the gutter
-    // shows a compact "also in" chip set. Assert the VISIBLE chip affordance — a
+    // The sr-only fallback carries the full "also delivered in" prose as plain text
+    // (register names, no links — #794 P1); the gutter shows a compact "also in"
+    // chip set whose chips ARE the links. Assert the VISIBLE chip affordance — a
     // link labelled by the register, NOT an edge (the timeline draws no same_as
-    // connector). Scope to the gutter `.sa-chip` so it doesn't collide with the
-    // fallback's plain alias link (the register name appears in both surfaces).
+    // connector). The gutter `.sa-chip` is the only `rams` LINK.
     await expect.element(page.getByText("also in")).toBeVisible();
     const ramsChip = page.getByRole("link", { name: "rams" }).first();
     await expect.element(ramsChip).toHaveClass(/sa-chip/);
@@ -387,13 +387,22 @@ describe("HistoryGraph (#678)", () => {
     });
 
     // Each member lane reads by its distinct leaf slug, not the shared `label`.
-    // `a` is the focus node (plain label in the gutter), so only its sr-only
-    // fallback `<a>` carries the slug; `b` is navigable, so its VISIBLE gutter
-    // name-link does (and its fallback `<a>` too — scope to the gutter to avoid the
-    // strict-mode multi-match). Both surfaces label by the distinct leaf slug.
-    await expect
-      .element(page.getByRole("link", { name: "agi1astsni2007" }))
-      .toBeVisible();
+    // `a` is the focus node (plain label in the gutter, not a link) — its slug
+    // shows as gutter TEXT; `b` is navigable, so its VISIBLE gutter name-link
+    // carries the slug. The sr-only fallback carries the labels as plain text only
+    // (no <a>) — #794 P1 removed the duplicate fallback links — so the ONLY link
+    // here is `b`'s gutter name-link (the focus self-link is gone).
+    const aGutter = await vi.waitFor(() => {
+      const el = [...document.querySelectorAll(".gutter .name")].find((n) =>
+        n.textContent?.trim().startsWith("agi1astsni2007"),
+      );
+      if (!el) {
+        throw new Error("focus gutter name not yet rendered");
+      }
+      return el as HTMLElement;
+    });
+    // The focus node's slug is plain text, NOT a link.
+    expect(aGutter.tagName).toBe("SPAN");
     const bGutter = await vi.waitFor(() => {
       const el = [...document.querySelectorAll("a.name-link")].find(
         (a) => a.textContent?.trim() === "ku1astsni2002",
@@ -406,6 +415,11 @@ describe("HistoryGraph (#678)", () => {
     expect(bGutter.getAttribute("href")).toBe(
       "/catalog/scb/lisa/ku1astsni2002",
     );
+    // The non-focus member's slug is reachable as a link; the focus self-link is
+    // gone, so exactly one slug link exists.
+    await expect
+      .element(page.getByRole("link", { name: "ku1astsni2002" }))
+      .toBeVisible();
   });
 
   it("suppresses the internal curation tag on classification succession edges", async () => {
@@ -503,6 +517,99 @@ describe("HistoryGraph (#678)", () => {
     const linkText = gutterLink.textContent?.replace(/\s+/g, " ").trim() ?? "";
     expect(linkText).toContain("sni92");
     expect(linkText).toContain("(renamed)");
+  });
+
+  it("does NOT mark a LIVE stateless variable as renamed (#794 P1: states:[] is not the renamed signal)", async () => {
+    // A live stateless variable (a supported catalog/group case — e.g. a member with
+    // no coverage row) also has `states: []`, but it is NOT a succession-chain
+    // placeholder. The view must keep its real concept label, never relabel it to a
+    // leaf slug + "(renamed)". Two LIVE group members, one stateless, NO succession.
+    const withStates = variableNode({
+      id: "a",
+      fqid: "scb/lisa/kon",
+      label: "Kön",
+      group_key: "g",
+      group_label: "Demografi",
+      states: [state({ representation_run_id: 1 })],
+    });
+    const stateless = variableNode({
+      id: "b",
+      fqid: "scb/lisa/alder",
+      label: "Ålder",
+      group_key: "g",
+      group_label: "Demografi",
+      states: [], // live but stateless — NOT a renamed placeholder
+    });
+    render(HistoryGraph, {
+      graph: graph({
+        nodes: [withStates, stateless],
+        edges: [],
+        focus_id: "a",
+      }),
+    });
+
+    // No "(renamed)" hint anywhere (the stateless live member is not a placeholder).
+    await expect.element(page.getByText("(renamed)")).not.toBeInTheDocument();
+    // The stateless member keeps its real concept label (its own slug, since the
+    // group members share a label) — it renders as a gutter name, not muted.
+    const statelessName = await vi.waitFor(() => {
+      const el = [...document.querySelectorAll(".gutter .name")].find((n) =>
+        n.textContent?.includes("alder"),
+      );
+      if (!el) {
+        throw new Error("stateless member gutter name not yet rendered");
+      }
+      return el as HTMLElement;
+    });
+    // Its lane is NOT marked .renamed (no muted/dashed treatment).
+    expect(statelessName.closest(".lane.renamed")).toBeNull();
+  });
+
+  it("fades BOTH ends of a both-ends-unbounded cell (#794 P3: combined open-start/open-end mask)", async () => {
+    // A cell open on BOTH sides gets both `.open-start` and `.open-end`. The
+    // single-axis rules each set one `mask-image`; without a combined rule the later
+    // one wins and the right edge is a hard wall. A node with one both-open cell PLUS
+    // a finite cell so the graph is datable (an axis exists; the open cell clamps to
+    // the scale ends while keeping both open flags).
+    const node = variableNode({
+      id: "v1",
+      fqid: "scb/lisa/kon",
+      label: "Kön",
+      states: [
+        state({
+          representation_run_id: 1,
+          value_set_version_label: "a",
+          valid_from: "2000-01-01",
+          valid_to: "2004-12-31",
+        }),
+        state({
+          representation_run_id: 2,
+          value_set_version_label: "b",
+          valid_from: null, // open start
+          valid_to: null, // open end
+        }),
+      ],
+    });
+    render(HistoryGraph, { graph: graph({ nodes: [node], focus_id: "v1" }) });
+
+    const bothOpen = await vi.waitFor(() => {
+      const el = document.querySelector(".cell.open-start.open-end");
+      if (!el) {
+        throw new Error("both-ends-open cell not yet rendered");
+      }
+      return el as HTMLElement;
+    });
+    // Both open classes present (the renderer applies both).
+    expect(bothOpen.classList.contains("open-start")).toBe(true);
+    expect(bothOpen.classList.contains("open-end")).toBe(true);
+    // The computed mask composes TWO gradients (one per side) — the combined rule
+    // intersects them, so neither single-axis rule overwrites the other. (A single
+    // gradient = only one side faded = the bug.)
+    const mask =
+      getComputedStyle(bothOpen).maskImage ||
+      getComputedStyle(bothOpen).webkitMaskImage ||
+      "";
+    expect(mask.match(/gradient/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
   });
 
   it("makes a navigable node's VISIBLE gutter name a catalog link; the focus node stays a plain label (#794 P2)", async () => {
@@ -636,5 +743,91 @@ describe("HistoryGraph (#678)", () => {
     await expect
       .element(page.getByText("this variable"))
       .not.toBeInTheDocument();
+  });
+
+  it("exposes ONE coherent set of nav links: visible gutter links in the a11y tree, NO duplicate hidden fallback links (#794 P1)", async () => {
+    // The a11y restructure: the timeline is a labelled GROUP (not role="img", which
+    // would hide the descendant gutter links); the visible gutter <a>s are the real
+    // navigation; the visually-hidden fallback is NON-interactive text (no <a>), so
+    // keyboard users get exactly one set of focusable links (no invisible duplicate
+    // tab stops, no focus self-link).
+    const focus = variableNode({
+      id: "v1",
+      fqid: "scb/lisa/kon",
+      label: "Kön",
+    });
+    const succ = variableNode({
+      id: "v2",
+      fqid: "scb/lisa/civilstand",
+      label: "Civilstånd",
+    });
+    const edges: GraphEdge[] = [
+      { id: "e1", kind: "succession", source: "v1", target: "v2", label: null },
+    ];
+    render(HistoryGraph, {
+      graph: graph({ nodes: [focus, succ], edges, focus_id: "v1" }),
+    });
+    await expect
+      .element(page.getByRole("heading", { name: "History" }))
+      .toBeVisible();
+
+    // The timeline container is a labelled GROUP, NOT role="img".
+    const timeline = await vi.waitFor(() => {
+      const el = document.querySelector(".timeline");
+      if (!el) {
+        throw new Error("timeline not yet rendered");
+      }
+      return el as HTMLElement;
+    });
+    expect(timeline.getAttribute("role")).toBe("group");
+    expect(timeline.getAttribute("aria-label")).toMatch(/History timeline/);
+
+    // The visually-hidden fallback exists (the SR description) but holds NO links.
+    const fallback = document.querySelector(".graph-fallback");
+    expect(fallback).not.toBeNull();
+    expect(fallback?.querySelectorAll("a").length).toBe(0);
+
+    // EVERY link in the component lives in the visible gutter (none clipped in the
+    // fallback) — exactly one nav surface. The focus self-link is gone, so the only
+    // link is the navigable successor.
+    const links = [...document.querySelectorAll("a")];
+    expect(links.length).toBeGreaterThan(0);
+    expect(links.every((a) => a.closest(".graph-fallback") === null)).toBe(
+      true,
+    );
+    const hrefs = links.map((a) => a.getAttribute("href"));
+    expect(hrefs).toContain("/catalog/scb/lisa/civilstand"); // the successor link
+    expect(hrefs).not.toContain("/catalog/scb/lisa/kon"); // no focus self-link
+  });
+
+  it("hides the decorative track/connectors from AT while keeping the gutter exposed (#794 P1)", async () => {
+    // The drawn pixel layout (cell/point bars, connectors, axis) is aria-hidden so
+    // AT isn't read the geometry; the fallback list mirrors it as text. The gutter
+    // (names + nav links) stays in the a11y tree.
+    const node = variableNode({
+      id: "v1",
+      fqid: "scb/lisa/kon",
+      label: "Kön",
+      states: [
+        state({ representation_run_id: 1, value_set_version_label: "a" }),
+        state({ representation_run_id: 2, value_set_version_label: "b" }),
+      ],
+    });
+    render(HistoryGraph, { graph: graph({ nodes: [node], focus_id: "v1" }) });
+
+    const track = await vi.waitFor(() => {
+      const el = document.querySelector(".track");
+      if (!el) {
+        throw new Error("track not yet rendered");
+      }
+      return el as HTMLElement;
+    });
+    expect(track.getAttribute("aria-hidden")).toBe("true");
+    // The connectors SVG is decorative too.
+    const svg = document.querySelector("svg.connectors");
+    expect(svg?.getAttribute("aria-hidden")).toBe("true");
+    // The gutter is NOT inside an aria-hidden subtree (its name stays exposed).
+    const gutterName = document.querySelector(".gutter .name");
+    expect(gutterName?.closest("[aria-hidden='true']")).toBeNull();
   });
 });

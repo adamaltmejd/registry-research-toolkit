@@ -445,6 +445,17 @@
             ],
             "title": "Group Key"
           },
+          "group_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group Label"
+          },
           "id": {
             "title": "Id",
             "type": "string"

@@ -11,7 +11,9 @@
  *  - a CLASSIFICATION node → a POINT at `version_year` (an edition is not "dead"
  *    after its successor), ordered into an edition sequence.
  *
- * Clusters group nodes sharing `group_key` under a `group_label` heading (Fork B).
+ * Clusters group nodes sharing `group_key` under a `group_label` heading (Fork B);
+ * both node kinds carry a `group_label` (a variable's concept-group label, a
+ * classification umbrella member's curated label — #794 P3).
  */
 import type {
   ClassificationGraphNode,
@@ -27,6 +29,22 @@ import {
   YEARLESS_VALID_FROM,
   yearOf,
 } from "./catalog";
+
+// ── Track geometry (shared with the renderer) ───────────────────────────────
+// The single source for the year→px scale density and a cell's minimum rendered
+// width. Both the pure layout (sub-row packing must respect the rendered width,
+// not raw year span — #794 P3) and `HistoryGraph.svelte` (positioning cells) read
+// these, so they live here and the component imports them.
+
+/** Horizontal density of the year scale (px per year). */
+export const PX_PER_YEAR = 19;
+/** A cell's minimum rendered width (px) — a sub-year run still shows its label, so
+ * it occupies this even when its year span is ~0. */
+export const CELL_MIN_W = 64;
+/** A cell's minimum footprint expressed in YEARS (its px floor ÷ the year scale).
+ * Two cells closer than this in year-space render overlapping even when their raw
+ * year windows don't, so packing treats this as the effective span. */
+const CELL_MIN_YEARS = CELL_MIN_W / PX_PER_YEAR;
 
 /** One rendered cell of a variable node — a representation run collapsed across
  * its consecutive same-`representation_run_id` states. `window` is the
@@ -81,7 +99,8 @@ export type RenderNode = VariableLane | ClassificationPoint;
 
 /** A cluster of nodes sharing one `group_key` (Fork B) — `null` group_key nodes
  * each get their own singleton cluster. `label` is the `group_label` (when any
- * member carries one), else null (no heading). */
+ * member carries one — a variable's concept-group label OR a classification
+ * umbrella member's curated label, #794 P3), else null (no heading). */
 export interface NodeCluster {
   groupKey: string | null;
   label: string | null;
@@ -262,31 +281,40 @@ export function clampCellsToScale(
   }));
 }
 
+/** A cell's RENDERED end on the year axis: the later of its `toYear` and its start
+ * plus the minimum-width footprint (`CELL_MIN_YEARS`). The renderer floors every
+ * cell to `CELL_MIN_W` px, so a short run (e.g. one year) actually paints ~3.4
+ * years wide — packing must reserve that footprint or two visually-overlapping
+ * runs (one ending 2010, the next starting 2011) wrongly share a row (#794 P3). */
+function renderedEnd(cell: RunCell): number {
+  return Math.max(cell.toYear, cell.fromYear + CELL_MIN_YEARS);
+}
+
 /** Pack a lane's cells into sub-rows so time-overlapping cells (co-existing
  * variants / parallel deliveries — the multi-variant case) never render on top of
  * one another. Greedy interval packing: cells in wire order, each placed on the
- * first row whose last-placed cell ends strictly before this cell begins; a new
- * row opens when none fits. Mutates `row` on each cell and returns the row count
- * (≥1). Non-overlapping cells all land on row 0 (`rowCount === 1`), the common
- * single-track lane. A cell needs a small visual minimum width even when its year
- * span is ~0, so two same-year cells are treated as overlapping (`<=`). */
+ * first row whose last-placed cell's RENDERED end is strictly before this cell
+ * begins; a new row opens when none fits. Mutates `row` on each cell and returns
+ * the row count (≥1). Non-overlapping cells all land on row 0 (`rowCount === 1`),
+ * the common single-track lane. Packing uses the rendered footprint (not the raw
+ * year span) so the min-width floor can't make two adjacent short runs abut. */
 function packCells(cells: RunCell[]): number {
-  const rowEnds: number[] = []; // the max toYear placed on each row so far
+  const rowEnds: number[] = []; // the max RENDERED end placed on each row so far
   for (const cell of cells) {
     let placed = false;
     for (let r = 0; r < rowEnds.length; r++) {
-      // Strictly-after to avoid two adjacent-but-touching cells sharing a row and
-      // visually abutting; the min-width render would make them overlap.
+      // Strictly-after the row's rendered end so two adjacent cells whose padded
+      // widths would visually overlap go to separate rows.
       if (cell.fromYear > rowEnds[r]) {
         cell.row = r;
-        rowEnds[r] = cell.toYear;
+        rowEnds[r] = renderedEnd(cell);
         placed = true;
         break;
       }
     }
     if (!placed) {
       cell.row = rowEnds.length;
-      rowEnds.push(cell.toYear);
+      rowEnds.push(renderedEnd(cell));
     }
   }
   return Math.max(1, rowEnds.length);
@@ -437,13 +465,11 @@ export function clustersOf(
     } else if (cluster.groupKey == null && node.group_key != null) {
       cluster.groupKey = node.group_key;
     }
-    // The cluster heading is any member's group_label (group members share it;
-    // classification nodes carry none).
-    if (
-      cluster.label == null &&
-      node.kind === "variable" &&
-      node.group_label != null
-    ) {
+    // The cluster heading is any member's group_label — BOTH kinds carry one now:
+    // a variable from its canonical concept group, a classification umbrella member
+    // from its curated group's display label (#794 P3). A non-member spine edition
+    // (or an ungrouped node) carries none and never sets the heading.
+    if (cluster.label == null && node.group_label != null) {
       cluster.label = node.group_label;
     }
     cluster.nodes.push(renderNodeOf(node, scale));

@@ -849,6 +849,8 @@ export interface components {
             fqid: string | null;
             /** Group Key */
             group_key: string | null;
+            /** Group Label */
+            group_label?: string | null;
             /** Id */
             id: string;
             /** Is Current */
