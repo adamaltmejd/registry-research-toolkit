@@ -1282,6 +1282,108 @@ class TestLinkValueSetClassifications:
         assert counts["single_below_threshold"] == 1
         assert g.candidates() == []
 
+    def test_label_agree_projection_shared_by_step5_and_residue(self) -> None:
+        """#738 cross-caller invariant: step 5's confident-link query and the #513
+        residue diagnostic read the SAME `_vs_label_agree` projection, so the
+        `label_agree` they compute for one (value_set, cls) shape must agree. Step 5
+        only acts on SINGLE-family sets and the diagnostic only surfaces MULTI-family
+        sets, so the same set can't be in both paths; instead this builds, for each
+        of two label_agree regimes, a single-family peer (step 5) and a multi-family
+        peer (diagnostic) carrying the SAME label_agree shape against FAM_A — one
+        code group fully labelled by FAM_A and a peer group with the same agreement
+        ratio shared with FAM_B. It then asserts step 5's link/no-link decision is
+        consistent with the label_agree the diagnostic reports for FAM_A. Fails if
+        either caller re-inlines a divergent label_agree formula.
+
+        Both regimes use n_codes = 10 (in [_MIN_CODES=8, _CONFIDENT_MIN_CODES=15) so
+        containment passes AND the code-count floor doesn't bypass the label gate),
+        and label_agree values are CLEARLY off the 0.90 threshold (1.0 / 0.8) to
+        avoid float-boundary fragility:
+          - ABOVE (1.0, all labels match): single-family peer is confidently linked
+            and the diagnostic reports label_agree 1.0 for FAM_A.
+          - BELOW (0.8, 8/10 labels match): single-family peer is NOT linked and the
+            diagnostic reports label_agree 0.8 for FAM_A.
+
+        The single-family and multi-family peers use DISJOINT code ranges so the
+        single peer stays single-family (only FAM_A contains its codes) while the
+        multi peer is multi-family (FAM_A AND FAM_B contain its codes); both code
+        groups carry matching labels under FAM_A so the label_agree shape is shared.
+        """
+        from reg_meta_build.classifications import (
+            dump_classification_residue,
+            link_value_set_classifications,
+        )
+
+        def labelled(rng: range, prefix: str) -> list[tuple[str, str]]:
+            return [(str(i).zfill(4), f"{prefix} {i}") for i in rng]
+
+        g = _Graph()
+
+        # --- ABOVE regime (label_agree 1.0) -------------------------------------
+        # `hi_single` (0001..0010) is the single-family group; `hi_multi`
+        # (0011..0020) is the multi-family group. FAM_A_HI canonically carries BOTH
+        # under matching labels (label_agree 1.0 for either group); FAM_B_HI carries
+        # ONLY the multi group, so only the multi peer is contained in two families.
+        hi_single = labelled(range(1, 11), "HI")
+        hi_multi = labelled(range(11, 21), "HI")
+        g.add_classification(70, "FAM_A_HI", hi_single + hi_multi)
+        g.add_classification(71, "FAM_B_HI", hi_multi)
+        # Single-family peer: only FAM_A_HI contains these codes → label_agree 1.0
+        # and step 5 must confidently link.
+        g.add_value_set(170, hi_single)
+        g.add_variable_state(970, 170)
+        # Multi-family peer (FAM_A_HI + FAM_B_HI): same label_agree 1.0 shape against
+        # FAM_A → diagnostic residue, reporting FAM_A_HI label_agree 1.0.
+        g.add_value_set(171, hi_multi)
+        g.add_variable_state(971, 171)
+
+        # --- BELOW regime (label_agree 0.8) -------------------------------------
+        # `lo_single` (0021..0030) and `lo_multi` (0031..0040) groups; FAM_A_LO
+        # carries both under matching labels. Each peer relabels 2 of its 10 codes →
+        # label_agree 8/10 = 0.8 against FAM_A_LO. FAM_B_LO carries ONLY the multi
+        # group's codes, so only the multi peer is multi-family.
+        lo_single = labelled(range(21, 31), "LO")
+        lo_multi = labelled(range(31, 41), "LO")
+        g.add_classification(72, "FAM_A_LO", lo_single + lo_multi)
+        g.add_classification(73, "FAM_B_LO", lo_multi)
+
+        def relabel_tail(codes: list[tuple[str, str]]) -> list[tuple[str, str]]:
+            # 8 matching labels + 2 relabeled (codes unchanged → containment 1.0).
+            return codes[:8] + [(c, f"renamed {c}") for c, _ in codes[8:]]
+
+        # Single-family peer: only FAM_A_LO contains these codes → label_agree 0.8 <
+        # 0.90 AND n_codes 10 < 15 → step 5 must NOT link.
+        g.add_value_set(172, relabel_tail(lo_single))
+        g.add_variable_state(972, 172)
+        # Multi-family peer (FAM_A_LO + FAM_B_LO): same 0.8 shape against FAM_A →
+        # diagnostic residue, reporting FAM_A_LO label_agree 0.8.
+        g.add_value_set(173, relabel_tail(lo_multi))
+        g.add_variable_state(973, 173)
+
+        # Step 5: only the ABOVE single-family peer links (label_agree 1.0); the BELOW
+        # one declines (label_agree 0.8). The multi-family peers are ambiguous → never
+        # linked. So exactly one value set is confidently linked.
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(970, 170, 70)]
+
+        # Diagnostic: the multi-family peers are residue; read back FAM_A's reported
+        # label_agree for each and assert it matches the regime step 5 decided on.
+        result = dump_classification_residue(g.conn)
+        residue_by_vs = {rvs.value_set_id: rvs for rvs in result.value_sets}
+
+        def fam_a_label_agree(value_set_id: int, short_name: str) -> float:
+            rvs = residue_by_vs[value_set_id]
+            (cand,) = [c for c in rvs.candidates if c.short_name == short_name]
+            return cand.label_agree
+
+        # ABOVE: FAM_A_HI label_agree 1.0 — the value step 5 confidently linked on.
+        assert fam_a_label_agree(171, "FAM_A_HI") == pytest.approx(1.0)
+        # BELOW: FAM_A_LO label_agree 0.8 — the value step 5 declined on. Both callers
+        # see 0.8: step 5 declines AND the diagnostic reports 0.8 (a re-inlined
+        # divergent formula would break one of these).
+        assert fam_a_label_agree(173, "FAM_A_LO") == pytest.approx(0.8)
+
     def test_multi_family_ambiguous_not_linked(self) -> None:
         from reg_meta_build.classifications import link_value_set_classifications
 
