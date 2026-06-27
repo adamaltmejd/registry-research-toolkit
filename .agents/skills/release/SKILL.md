@@ -357,26 +357,36 @@ reg_meta only. Steward catalogs are built against the reg_meta DB, so a new reg_
 release can drift any committed `reg_webapp/stewards/<id>/steward.project_data.json`
 whose `reg_meta_version` predates the new tag (slug churn, new content, overlap fixes).
 The webapp boots through the drift, so this is coverage hygiene — regenerate the stale
-catalogs into this release rather than leaving them lagging.
+catalogs so they track the just-published release.
+
+**Ordering (important):** a steward catalog is a `reg_webapp` **deploy** artifact — it
+ships in the webapp image built from `main`, NOT in the tagged PyPI / DB-asset release
+the publish workflow ships, so it must **not** go into the `reg_meta/vX.Y.Z` tag (the
+tag was already cut from `origin/main` in step 7, and the asset is the only release
+payload). Land the regen as its **own commit pushed to `origin/main`** — separate from
+the version-bump commit. `origin/main` advancing past the tag is expected and harmless;
+the catalog ships on the next webapp deploy, and the staleness alert
+(`scripts/check_issue_hygiene.py`) clears once the commit is on `main`.
 
 Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
 special-case any one steward); for each whose `reg_meta_version` is older than the new
 `reg_meta/vX.Y.Z`:
 
-- build a flavored DB overlaying the steward providers on the new release's
-  **uncompressed** `reg_meta.db` — decompress the published `reg_meta.db.zst` asset
-  first (step 8a's temp `$db_dir/reg_meta.db` is already deleted), then
-  `reg-meta-build extend-db --base-db <reg_meta.db> …` (extend-db opens the base with
-  sqlite, so it must be the decompressed DB, never the `.zst`);
-- regenerate the catalog per `reg_webapp/stewards/<id>/README.md`;
+- build the new **uncompressed** `reg_meta.db` locally to overlay onto — reuse step 8a's
+  `$db_dir/reg_meta.db` if you kept it, otherwise rebuild it (the published
+  `reg_meta.db.zst` isn't downloadable until step 10; either way `extend-db` opens the
+  base with sqlite, so it must be the decompressed DB, never the `.zst`);
+- `reg-meta-build extend-db --base-db <reg_meta.db> …` to overlay the steward providers,
+  then regenerate the catalog per `reg_webapp/stewards/<id>/README.md` (its
+  `reg_meta_version` now records the planned `reg_meta/vX.Y.Z`);
 - review the coverage/binding diff (catalog size, representation pins, co-delivery
   prune) before accepting it;
-- commit the regenerated catalog into this release.
+- commit the regenerated catalog(s) as their own commit, `git push origin HEAD:main`,
+  and verify it landed on `origin/main`.
 
 The catalog generator and its confidential inputs are untracked/maintainer-local, so in
 a non-maintainer or CI environment they are absent — **skip with a note** when they are.
-The `scripts/check_issue_hygiene.py` steward-staleness alert tracks the residual drift
-until a maintainer regenerates.
+The staleness alert then tracks the residual drift until a maintainer regenerates.
 
 ### 10. Publish the draft release
 
