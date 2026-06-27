@@ -18,8 +18,10 @@ import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 
 // Two surfaces under test:
-//   1. the add gate (#638 PR2b) — a node with ≥2 co-existing variants renders the
-//      proactive selector + gates Add until picked; a single-variant node doesn't.
+//   1. the direct representation picker (#678) — the variable's representations
+//      list as selectable rows; selecting rows + Add commits the right
+//      `addFromCatalog` payloads; out-of-window rows dim; empty selection / no
+//      seed disables Add.
 //   2. the #670 member identity, now derived from the relationship-graph FOCUS node
 //      (#678) — the leaf's single `/graph` fetch feeds both the HistoryGraph
 //      renderer AND the header qualifier + "member of ⟨group⟩" link.
@@ -111,15 +113,30 @@ function graph(
   return { nodes: [focus], edges: [], focus_id: focusId };
 }
 
-/** Two register variants co-existing over the same window — `choose-variant` when
- * no period bounds them (the gate path). */
-const coexisting = [
-  state({ state_id: 1, variant: "individer" }),
-  state({ state_id: 2, variant: "arbetsstallen" }),
-];
-
-/** One variant → `segments` (no population choice). */
+/** One variant, no delivery column → the picker enumerates zero rows. */
 const single = [state({ state_id: 1, variant: "individer" })];
+
+/** Picker rows: two distinct (variant, delivery column) representations, each
+ * with a finite window. `Kon` (individer, 2010–2015) and `Sni` (arbetsstallen,
+ * 2018–2020) — two selectable rows over the full history. */
+const pickerStates = [
+  state({
+    state_id: 1,
+    variant: "individer",
+    delivery_column_name: "Kon",
+    valid_from: "2010-01-01",
+    valid_to: "2015-12-31",
+    value_set_version_label: "1-siffrig",
+  }),
+  state({
+    state_id: 2,
+    variant: "arbetsstallen",
+    delivery_column_name: "Sni",
+    valid_from: "2018-01-01",
+    valid_to: "2020-12-31",
+    value_set_version_label: "SNI 2007",
+  }),
+];
 
 const singleWithStructural = [
   state({
@@ -129,34 +146,6 @@ const singleWithStructural = [
     data_length: "1",
     delivery_column_name: "Kon",
   }),
-];
-
-const coexistingB = [
-  state({ state_id: 3, variant: "foretag" }),
-  state({ state_id: 4, variant: "regioner" }),
-];
-
-const coexistingSharingVariant = [
-  state({ state_id: 5, variant: "individer" }),
-  state({ state_id: 6, variant: "regioner" }),
-];
-
-const coexistingWithRepChoice = [
-  state({
-    state_id: 1,
-    variant: "individer",
-    delivery_column_name: "Kon",
-    value_set_version_label: "1-siffrig",
-    value_set: [{ code: "1", label: "Man" }],
-  }),
-  state({
-    state_id: 2,
-    variant: "individer",
-    delivery_column_name: "KonDetalj",
-    value_set_version_label: "2-siffrig",
-    value_set: [{ code: "01", label: "Man" }],
-  }),
-  state({ state_id: 3, variant: "arbetsstallen", delivery_column_name: "Sni" }),
 ];
 
 beforeEach(() => {
@@ -190,100 +179,186 @@ beforeEach(() => {
 
 const SEED = { regMetaVersion: "reg_meta/v1.0.0", steward: "global" } as const;
 
-describe("BindingLeafView add gate (#638 PR2b)", () => {
-  it("≥2 co-existing variants render the population selector and gate Add until picked", async () => {
+describe("BindingLeafView representation picker (#678)", () => {
+  it("lists each representation row with its delivery column + period span", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(coexisting),
+      node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       vintageYear: 2024,
     });
 
-    await expect.element(page.getByText(/pick one to add/i)).toBeVisible();
-    const individer = page.getByRole("button", { name: /individer/ });
-    const arbetsstallen = page.getByRole("button", { name: /arbetsstallen/ });
-    await expect.element(individer).toBeVisible();
-    await expect.element(arbetsstallen).toBeVisible();
-
-    const add = page.getByRole("button", { name: "Add to project" });
-    await expect.element(add).toBeDisabled();
-
-    await individer.click();
-    await expect.element(individer).toHaveAttribute("aria-pressed", "true");
-    await expect.element(add).toBeEnabled();
+    // One row per (variant, delivery column), keyed checkbox per column.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Kon/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /Sni/ }))
+      .toBeVisible();
+    // The row's full-history period span is shown (scoped to the picker band —
+    // the same span text also appears in the StatesView usage list).
+    const spans = await vi.waitFor(() => {
+      const els = [...document.querySelectorAll(".rep-band .period")].map(
+        (el) => el.textContent?.trim(),
+      );
+      if (els.length < 2) {
+        throw new Error("picker period spans not yet rendered");
+      }
+      return els;
+    });
+    expect(spans).toEqual(["2010 – 2015", "2018 – 2020"]);
   });
 
-  it("a stale pick is non-member of the new plan's options → Add re-gated until a current option is picked", async () => {
-    const { rerender } = render(BindingLeafView, {
-      fqidPath: "scb/lisa/kon",
-      node: node(coexisting),
-      regMetaVersion: SEED.regMetaVersion,
-      steward: SEED.steward,
-      vintageYear: 2024,
-    });
-
-    const add = page.getByRole("button", { name: "Add to project" });
-
-    await page.getByRole("button", { name: /individer/ }).click();
-    await expect.element(add).toBeEnabled();
-
-    await rerender({ node: node(coexistingB) });
-
-    await expect.element(add).toBeDisabled();
-    const foretag = page.getByRole("button", { name: /foretag/ });
-    await expect.element(foretag).toBeVisible();
-
-    await foretag.click();
-    await expect.element(add).toBeEnabled();
-  });
-
-  it("a leaf-identity change re-gates Add even when the new plan shares the picked variant", async () => {
-    const { rerender } = render(BindingLeafView, {
-      fqidPath: "scb/lisa/kon",
-      node: node(coexisting),
-      regMetaVersion: SEED.regMetaVersion,
-      steward: SEED.steward,
-      vintageYear: 2024,
-    });
-
-    const add = page.getByRole("button", { name: "Add to project" });
-
-    await page.getByRole("button", { name: /individer/ }).click();
-    await expect.element(add).toBeEnabled();
-
-    await rerender({
-      fqidPath: "scb/lisa/sysstatus",
-      node: node(coexistingSharingVariant),
-    });
-
-    await expect.element(add).toBeDisabled();
-    await page.getByRole("button", { name: /individer/ }).click();
-    await expect.element(add).toBeEnabled();
-  });
-
-  it("switching population invalidates an in-flight rep prompt (no stale-variant commit)", async () => {
+  it("Add is disabled with no selection, enabled once a row is selected", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(coexistingWithRepChoice),
+      node: node(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       vintageYear: 2024,
     });
 
-    await page.getByRole("button", { name: /individer/ }).click();
+    const add = page.getByRole("button", { name: "Add to project" });
+    await expect.element(add).toBeDisabled();
+
+    const konRow = page.getByRole("checkbox", { name: /Kon/ });
+    await konRow.click();
+    await expect.element(konRow).toHaveAttribute("aria-checked", "true");
+    await expect.element(add).toBeEnabled();
+    await expect
+      .element(page.getByText("1 representation selected"))
+      .toBeVisible();
+  });
+
+  it("selecting rows + Add commits the right addFromCatalog payloads", async () => {
+    const spy = vi.spyOn(projectStore, "addFromCatalog");
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page.getByRole("checkbox", { name: /Sni/ }).click();
+    await expect
+      .element(page.getByText("2 representations selected"))
+      .toBeVisible();
     await page.getByRole("button", { name: "Add to project" }).click();
 
-    const repChooser = page.getByRole("group", {
-      name: "Pick a representation",
-    });
-    await expect.element(repChooser).toBeVisible();
-
-    await page.getByRole("button", { name: /arbetsstallen/ }).click();
-    await expect.element(repChooser).not.toBeInTheDocument();
+    expect(spy).toHaveBeenCalledTimes(2);
+    const payloads = spy.mock.calls.map((c) => c[0]);
+    expect(payloads).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          registerVariant: "scb/lisa/individer",
+          variable: "scb/lisa/kon",
+          representation: "Kon",
+          resolvedPeriod: "2010..2015",
+        }),
+        expect.objectContaining({
+          registerVariant: "scb/lisa/arbetsstallen",
+          variable: "scb/lisa/kon",
+          representation: "Sni",
+          resolvedPeriod: "2018..2020",
+        }),
+      ]),
+    );
+    spy.mockRestore();
   });
 
-  it("a single-variant node shows no selector and Add is enabled", async () => {
+  it("dims rows whose span does not overlap the active period window", async () => {
+    // Narrow to 2018..2020 — the Sni row (2018–2020) overlaps, the Kon row
+    // (2010–2015) does not, so Kon's row is dimmed (but still selectable).
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: pickerStates,
+    } as never);
+    router.navigate("/catalog/scb/lisa/kon?period=2018..2020");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    const konRow = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(konRow).toBeVisible();
+    await vi.waitFor(() => {
+      const el = konRow.element() as HTMLElement;
+      if (!el.classList.contains("dimmed")) {
+        throw new Error("Kon row not yet dimmed");
+      }
+    });
+    // The in-window Sni row is NOT dimmed.
+    const sniEl = page.getByRole("checkbox", { name: /Sni/ }).element();
+    expect((sniEl as HTMLElement).classList.contains("dimmed")).toBe(false);
+    // A dimmed row stays selectable.
+    await konRow.click();
+    await expect.element(konRow).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("hoists a constant column to the band context and shows the varying population per row (fordonsreg shape)", async () => {
+    // Every representation delivers the CONSTANT column "Sni2002" over the SAME
+    // span; only the population (lastbilar/bussar) varies — so the column is
+    // hoisted once and the rows show the population.
+    const fordonsreg = [
+      state({
+        state_id: 1,
+        variant: "lastbilar",
+        delivery_column_name: "Sni2002",
+        value_set_version_label: "SNI 2002",
+        valid_from: "2003-01-01",
+        valid_to: "2015-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "bussar",
+        delivery_column_name: "Sni2002",
+        value_set_version_label: "SNI 2002",
+        valid_from: "2003-01-01",
+        valid_to: "2015-12-31",
+      }),
+    ];
+    render(BindingLeafView, {
+      fqidPath: "scb/fordonsreg/naringsgren",
+      node: node(fordonsreg, { fqid: "scb/fordonsreg/naringsgren" }),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The constant column + value set + period are hoisted to the band context.
+    const ctx = await vi.waitFor(() => {
+      const el = document.querySelector(".rep-band .band-context");
+      if (!el) {
+        throw new Error("band context not yet rendered");
+      }
+      return el.textContent ?? "";
+    });
+    expect(ctx).toContain("column Sni2002");
+    expect(ctx).toContain("SNI 2002");
+    expect(ctx).toContain("2003 – 2015");
+
+    // Each row shows the varying POPULATION (not the repeated column).
+    await expect
+      .element(page.getByRole("checkbox", { name: /lastbilar/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /bussar/ }))
+      .toBeVisible();
+    // The constant column is NOT repeated as a per-row label.
+    expect(
+      [...document.querySelectorAll(".rep-row .primary")].some(
+        (el) => el.textContent === "Sni2002",
+      ),
+    ).toBe(false);
+  });
+
+  it("renders no picker when no state carries a delivery column", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(single),
@@ -292,11 +367,10 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
       vintageYear: 2024,
     });
 
-    const add = page.getByRole("button", { name: "Add to project" });
-    await expect.element(add).toBeEnabled();
-    expect(
-      document.body.querySelector('[aria-label="Pick a register variant"]'),
-    ).toBeNull();
+    await expect
+      .element(page.getByRole("heading", { name: "Kön", level: 2 }))
+      .toBeVisible();
+    expect(document.body.querySelector('[role="checkbox"]')).toBeNull();
   });
 
   it("demotes Sensitive / Identifier into a 'Technical details' disclosure (#638 PR4)", async () => {
@@ -358,17 +432,19 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
     expect(stateTech?.textContent).not.toContain("Value-set version");
   });
 
-  it("Add stays seed-gated (disabled) until the deployment seed is present", async () => {
+  it("Add stays seed-gated (disabled) even when a row is selected, until the seed is present", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(single),
+      node: node(pickerStates),
       regMetaVersion: "",
       steward: "",
       vintageYear: 2024,
     });
-    await expect
-      .element(page.getByRole("button", { name: "Add to project" }))
-      .toBeDisabled();
+    const add = page.getByRole("button", { name: "Add to project" });
+    await expect.element(add).toBeDisabled();
+    // Selecting a row must NOT enable Add while the seed is absent.
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expect.element(add).toBeDisabled();
   });
 });
 
@@ -379,6 +455,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       variant: "individer",
       value_set_id: 10,
       value_set_version_label: "In-period A",
+      delivery_column_name: "Kon",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
@@ -387,6 +464,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       variant: "individer",
       value_set_id: 11,
       value_set_version_label: "In-period B",
+      delivery_column_name: "Kon",
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
@@ -414,9 +492,11 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     await expect
       .element(page.getByText("1 value set outside this period"))
       .toBeVisible();
-    await expect
-      .element(page.getByText(/pick one to add/i))
-      .not.toBeInTheDocument();
+    // The picker lists representations over the FULL history (the period window
+    // only dims), so the Kon row is present and Add is enabled once selected.
+    const konRow = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(konRow).toBeVisible();
+    await konRow.click();
     await expect
       .element(page.getByRole("button", { name: "Add to project" }))
       .toBeEnabled();
@@ -530,6 +610,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       variant: "individer",
       value_set_id: 40,
       value_set_version_label: "Picked",
+      delivery_column_name: "Kon",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
@@ -538,6 +619,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       variant: "other-population",
       value_set_id: 41,
       value_set_version_label: "Other",
+      delivery_column_name: "Sni",
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
@@ -560,6 +642,9 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     await expect
       .element(page.getByText(/Could not load full period value-set context/))
       .toBeVisible();
+    // The picker is independent of the scope-fetch failure: its rows come from
+    // `node.states`, so selecting one still enables Add.
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
     await expect
       .element(page.getByRole("button", { name: "Add to project" }))
       .toBeEnabled();

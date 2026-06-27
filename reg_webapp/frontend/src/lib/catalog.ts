@@ -819,6 +819,284 @@ export function representationsCollapse(reps: Representation[]): boolean {
   return reps.every((r) => r.codingKey === reps[0]?.codingKey);
 }
 
+// ── Direct representation picker (#678 redesign) ─────────────────────────────
+// The redesigned add-to-project surface lists a variable's representations as
+// selectable rows and commits the user's multi-selection directly — replacing
+// the auto-planning `choose-variant` + post-click rep chooser. A "representation
+// row" is one distinct `(variant, delivery_column_name)` over the leaf's FULL
+// `node.states` history (NOT the period-narrowed subset — the period window only
+// DIMS out-of-window rows). This is DISTINCT from `representationsFromStates`
+// (which detects co-existing columns AT a period for the editor's chooser, a
+// different shape): here every distinct column is its own selectable row, span
+// is the column's full history, and there is no co-existence/collapse logic.
+
+/** One selectable representation row in the picker — a distinct
+ * `(variant, delivery_column_name)` over a variable's full state history.
+ * `key` is the stable `{#each}` / selection identity `${variant}::${column}`
+ * (a variant slug and a delivery column are both bare identifiers, neither
+ * contains `::`, so the pair can't alias). `from`/`to` are the row's outer ISO
+ * span (min `valid_from` … max `valid_to`, the open-ended `9999-12-31` /
+ * unknown `0001-01-01` sentinels preserved for `formatWindow`); `period` is the
+ * pre-formatted display span. `wirePeriod` is the span as a year-grain WIRE
+ * period for the committed source (null when a bound is a sentinel — then the
+ * source's period is left unset, the honest "covers the rep's whole span"
+ * default, rather than emitting an out-of-grammar `0001`/`9999` token).
+ * `valueSetLabel` is the value-set version label of the LATEST-era state (max
+ * `valid_to`) — the row's representative coding. */
+export interface PickerRepresentation {
+  key: string;
+  variant: string;
+  column: string;
+  from: string;
+  to: string;
+  period: string;
+  wirePeriod: string | null;
+  valueSetLabel: string;
+}
+
+/** A year-grain WIRE period for a representation row's ISO span, or null when a
+ * bound is a sentinel (open-ended `9999-12-31` / unknown-start `0001-01-01`) —
+ * an unbounded side has no in-grammar token, so the source's period is left
+ * unset (covers the rep's whole span) rather than leaking the sentinel year. A
+ * same-year span is the bare year; a multi-year span is a `lo..hi` range. */
+function rowWirePeriod(from: string, to: string): string | null {
+  if (from === YEARLESS_VALID_FROM || to === OPEN_ENDED_VALID_TO) {
+    return null;
+  }
+  const lo = yearOf(from);
+  const hi = yearOf(to);
+  if (lo === null || hi === null) {
+    return null;
+  }
+  return lo === hi ? String(lo) : `${lo}..${hi}`;
+}
+
+/** Enumerate a variable's representation rows from its `node.states` (#678): one
+ * row per distinct `(variant, delivery_column_name)`, states with a null
+ * `delivery_column_name` skipped (no column = nothing to deliver/select). For
+ * each group the span is `formatWindow(min valid_from, max valid_to)` across its
+ * states and the value-set label is the LATEST-era state's
+ * `value_set_version_label`. First-seen order is preserved so the list is
+ * stable. Pure — unit-tested in catalog.test.ts. */
+export function pickerRepresentations(
+  states: VariableStateModel[],
+): PickerRepresentation[] {
+  const byKey = new Map<string, VariableStateModel[]>();
+  for (const s of states) {
+    if (!s.delivery_column_name) {
+      continue;
+    }
+    const key = `${s.variant}::${s.delivery_column_name}`;
+    const group = byKey.get(key);
+    if (group) {
+      group.push(s);
+    } else {
+      byKey.set(key, [s]);
+    }
+  }
+  return [...byKey.entries()].map(([key, group]) => {
+    const from = group.reduce(
+      (m, s) => (s.valid_from < m ? s.valid_from : m),
+      group[0].valid_from,
+    );
+    const to = group.reduce(
+      (m, s) => (s.valid_to > m ? s.valid_to : m),
+      group[0].valid_to,
+    );
+    // The latest-era state (max valid_to, column tie-break is moot within one
+    // group) supplies the representative value-set label — the current coding.
+    const latest = group.reduce((a, b) => (b.valid_to > a.valid_to ? b : a));
+    return {
+      key,
+      variant: group[0].variant,
+      column: group[0].delivery_column_name as string,
+      from,
+      to,
+      period: formatWindow(from, to),
+      wirePeriod: rowWirePeriod(from, to),
+      valueSetLabel: latest.value_set_version_label,
+    };
+  });
+}
+
+// ── Adaptive row labeling (#678 1b) ─────────────────────────────────────────
+// A variable's representation rows differ along up to four dimensions: `column`
+// (delivery column), `variant` (population), `valueSet` (value-set version
+// label), and `period` (the row's span). A naive "show the column" row label
+// fails two real shapes:
+//   - fordonsreg/naringsgren: the column is CONSTANT ("SNI2002") across rows and
+//     the POPULATION varies (lastbilar/bussar/…) → every row reads identically;
+//   - yrkesreg/sun2020niva: rows visibly DUPLICATE because the distinguishing
+//     population isn't shown.
+// The fix is adaptive: classify each dimension as CONSTANT (1 distinct value) or
+// VARYING (>1), HOIST the constants to the band header (rendered once as quiet
+// context), and show only the VARYING dimensions on each row. Rows within one
+// variable share the same dim SET (consistent); the shape may differ across
+// variables (intended). Pure — unit-tested in catalog.test.ts. The selection key
+// and commit payload are unchanged: this is DISPLAY only.
+
+/** A row's adaptive display projection: the prominent `primary` label (mono when
+ * it is the delivery column), the muted `qualifiers` (the remaining varying
+ * dimensions), and `period` ONLY when the span varies across rows (else it is
+ * hoisted to the header, so it is null here). `key` is the row's selection key
+ * (unchanged — `${variant}::${column}`). */
+export interface PickerRowLabel {
+  key: string;
+  primary: { text: string; mono: boolean };
+  qualifiers: string[];
+  period: string | null;
+}
+
+/** The adaptive labeling of a variable's rows (#678 1b): `headerContext` is the
+ * hoisted CONSTANT dimensions, each a ready-to-render quiet-context string (the
+ * delivery column prefixed "column …" so a bare SCB token reads as one; the
+ * value-set label, the variant, and the period verbatim), in the fixed order
+ * column · period · variant · valueSet. `rows` carries each row's display
+ * projection. */
+export interface PickerLabeling {
+  headerContext: string[];
+  rows: PickerRowLabel[];
+}
+
+/** The distinct count of a dimension across rows (via a projector). */
+function distinctCount(
+  rows: readonly PickerRepresentation[],
+  pick: (r: PickerRepresentation) => string,
+): number {
+  return new Set(rows.map(pick)).size;
+}
+
+/** Compute the adaptive labeling for a variable's representation rows (#678 1b):
+ * hoist the dimensions that are CONSTANT across the rows to `headerContext`, and
+ * project each row onto only its VARYING dimensions. Row label priority among the
+ * varying dims is `column` (mono) → `variant` → `valueSet`; the first varying one
+ * is the prominent `primary`, the rest are muted `qualifiers`; `period` rides on
+ * the right only when the span varies. When NOTHING varies (a single
+ * representation), the row falls back to the column (mono), then the variant,
+ * then "—" — never a blank or all-constant row. */
+export function pickerLabeling(
+  rows: readonly PickerRepresentation[],
+): PickerLabeling {
+  const columnVaries = distinctCount(rows, (r) => r.column) > 1;
+  const variantVaries = distinctCount(rows, (r) => r.variant) > 1;
+  const valueSetVaries = distinctCount(rows, (r) => r.valueSetLabel) > 1;
+  const periodVaries = distinctCount(rows, (r) => r.period) > 1;
+
+  // A representative row supplies the constant values to hoist (every row shares
+  // them by definition). Empty rows → empty labeling.
+  const sample = rows[0];
+  const headerContext: string[] = [];
+  if (sample) {
+    // Fixed order: column · period · variant · valueSet.
+    if (!columnVaries && sample.column) {
+      headerContext.push(`column ${sample.column}`);
+    }
+    if (!periodVaries && sample.period) {
+      headerContext.push(sample.period);
+    }
+    if (!variantVaries && sample.variant) {
+      headerContext.push(sample.variant);
+    }
+    if (!valueSetVaries && sample.valueSetLabel) {
+      headerContext.push(sample.valueSetLabel);
+    }
+  }
+
+  const labelRows = rows.map((r): PickerRowLabel => {
+    // The varying dimensions, in display priority. Each is a candidate label.
+    const varying: { text: string; mono: boolean }[] = [];
+    if (columnVaries) {
+      varying.push({ text: r.column, mono: true });
+    }
+    if (variantVaries) {
+      varying.push({ text: r.variant, mono: false });
+    }
+    if (valueSetVaries && r.valueSetLabel) {
+      varying.push({ text: r.valueSetLabel, mono: false });
+    }
+    // Fallback when nothing varies (a single representation, or rows that differ
+    // only by period): show the column, then the variant, then a dash — never a
+    // blank row.
+    const primary =
+      varying[0] ??
+      (r.column
+        ? { text: r.column, mono: true }
+        : r.variant
+          ? { text: r.variant, mono: false }
+          : { text: "—", mono: false });
+    return {
+      key: r.key,
+      primary,
+      qualifiers: varying.slice(1).map((d) => d.text),
+      period: periodVaries ? r.period : null,
+    };
+  });
+
+  return { headerContext, rows: labelRows };
+}
+
+/** The active period window the picker DIMS against, as an inclusive year pair
+ * `[lo, hi]`, or `null` when there is no active window (every row reads as
+ * in-window). Precedence mirrors the leaf's resolution: an active `?period` wire
+ * wins (parsed to its outer year span — a single token via `periodTokenBounds`,
+ * a `lo..hi` range via its endpoints, a `a,b` comma-union via the min/max of its
+ * parts); else the global `StudyWindow` (already year ints). A `?period` that
+ * doesn't parse to any bound (e.g. `_default`) falls back to the window, then to
+ * null. simplify: year-grain overlap is deliberate — the dim is an at-a-glance
+ * relevance cue, not the hard period gate (selection works on any row). */
+export function pickerWindowYears(
+  periodWire: string | null | undefined,
+  window: { from: number; to: number } | null,
+): [number, number] | null {
+  if (periodWire) {
+    let lo: number | null = null;
+    let hi: number | null = null;
+    for (const part of periodWire.split(",")) {
+      const endpoints = periodRangeEndpoints(part) ?? [
+        part.trim(),
+        part.trim(),
+      ];
+      const loBounds = periodTokenBounds(endpoints[0]);
+      const hiBounds = periodTokenBounds(endpoints[1]);
+      const partLo = loBounds ? yearOf(loBounds.from) : null;
+      const partHi = hiBounds ? yearOf(hiBounds.to) : null;
+      if (partLo !== null) {
+        lo = lo === null ? partLo : Math.min(lo, partLo);
+      }
+      if (partHi !== null) {
+        hi = hi === null ? partHi : Math.max(hi, partHi);
+      }
+    }
+    if (lo !== null && hi !== null) {
+      return [lo, hi];
+    }
+  }
+  return window ? [window.from, window.to] : null;
+}
+
+/** Whether a representation row's span overlaps an active year window (inclusive),
+ * for the picker's out-of-window DIMMING. A null window (no active narrowing)
+ * overlaps everything. The row's bounds carry the `9999-12-31` (open-ended) /
+ * `0001-01-01` (unknown-start) sentinels — `yearOf` reads them as 9999 / 1, the
+ * right unbounded ends for an overlap test (an open-ended row reaches past any
+ * finite `hi`; an unknown-start row reaches before any finite `lo`). A row with
+ * an unparseable bound (neither year resolves) is treated as in-window — never
+ * dim a row we can't place. */
+export function representationInWindow(
+  row: { from: string; to: string },
+  window: [number, number] | null,
+): boolean {
+  if (!window) {
+    return true;
+  }
+  const rowFrom = yearOf(row.from);
+  const rowTo = yearOf(row.to);
+  if (rowFrom === null || rowTo === null) {
+    return true;
+  }
+  return rowFrom <= window[1] && window[0] <= rowTo;
+}
+
 // ── Value-set-centric state fold (#668 — dogfooding M13/M18/M20) ──────────────
 // A binding leaf's `variable_state` rows blow up by VINTAGE: `scb/rtb/kommun` has
 // 415 states but only ~28 distinct value-set ids — which themselves collapse to
@@ -1083,51 +1361,6 @@ export function humanizeClassificationSlug(slug: string): string {
   return m ? `${m[1].toUpperCase()} ${m[2]}` : slug;
 }
 
-// ── One-click add plan (#306) ────────────────────────────────────────────────
-// The variable page's page-level "Add to project" auto-picks everything that
-// isn't a GENUINE choice: time-sequential register-variant succession within
-// the chosen range auto-splits into one source per variant segment (succession
-// is not a user choice — decided in #306), and coding-identical parallel
-// columns auto-pick the primary (#266 latest-era ranking). Only CO-EXISTING
-// variants (a population choice) and genuinely distinct codings prompt. Pure —
-// unit-tested in catalog.test.ts; the page (BindingLeafView) renders prompts
-// and commits segments through `addFromCatalog`.
-
-/** One register variant's overall validity window across a state set. */
-export interface VariantWindow {
-  variant: string;
-  from: string;
-  to: string;
-}
-
-/** One per-variant add: the (clipped) wire period for the source and the
- * representation outcome for the binding. `representation` is pre-set to the
- * PRIMARY column whenever >1 column co-exists (the #266 default — final when
- * the columns are coding-identical, the prompt's preselect when
- * `needsRepChoice`); null for a single/absent column (matching the
- * pin-only-when-genuinely-multi rule the store's single-rep derive expects). */
-export interface AddSegment {
-  variant: string;
-  /** Wire period for this segment's source (the user's period, or the clipped
-   * sub-range for a succession segment); null when no period is chosen. */
-  period: string | null;
-  reps: Representation[];
-  /** True when the segment's columns are a GENUINE coding choice (>1
-   * co-existing, not coding-identical) — the page must prompt. */
-  needsRepChoice: boolean;
-  representation: string | null;
-}
-
-/** The page-level add decision:
- *  - `segments`: proceed (after any rep prompts) — 1 segment, or several for a
- *    range spanning a variant succession.
- *  - `choose-variant`: ≥2 variants CO-EXIST inside the chosen period (or the
- *    period is point/absent/unparseable with ≥2 variants present) — a genuine
- *    population choice the user must make. */
-export type AddPlan =
-  | { kind: "segments"; segments: AddSegment[] }
-  | { kind: "choose-variant"; options: VariantWindow[] };
-
 // ── State-window display (#309 + #321) ──────────────────────────────────────
 
 /** The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
@@ -1375,125 +1608,6 @@ export function memberCoverageUnion(
     return null;
   }
   return { from, to: unionTo };
-}
-
-/** Render a clipped ISO bound as a period-range ENDPOINT token, collapsing
- * year-aligned bounds to the bare year (`2010-01-01` → `2010` as a start,
- * `2009-12-31` → `2009` as an end) so the common year-grain succession yields
- * year ranges; a mid-year bound stays an exact date token (valid grammar). */
-function boundToken(iso: string, edge: "from" | "to"): string {
-  if (edge === "from" && iso.endsWith("-01-01")) {
-    return iso.slice(0, 4);
-  }
-  if (edge === "to" && iso.endsWith("-12-31")) {
-    return iso.slice(0, 4);
-  }
-  return iso;
-}
-
-function segmentFor(
-  variant: string,
-  states: VariableStateModel[],
-  period: string | null,
-): AddSegment {
-  const reps = representationsFromStates(states);
-  const multi = reps.length > 1;
-  return {
-    variant,
-    period,
-    reps,
-    needsRepChoice: multi && !representationsCollapse(reps),
-    representation: multi ? reps[0].column : null,
-  };
-}
-
-/**
- * Build the add plan for the VISIBLE states (the `?period`-narrowed subset when
- * a period is active — already only the states overlapping it — else the full
- * history) at the page's wire period. Splitting needs a parseable RANGE: a
- * point/absent/unparseable period with ≥2 variants is a `choose-variant` (at a
- * single window ≥2 remaining variants co-exist; with no time bound "all of
- * them" isn't well-defined), which also covers the rare mid-year succession a
- * point period straddles — one extra question, never a wrong auto-pick.
- */
-export function buildAddPlan(
-  states: VariableStateModel[],
-  periodWire: string | null,
-): AddPlan {
-  const byVariant = statesByVariant(states);
-  const windows: VariantWindow[] = [...byVariant.entries()].map(
-    ([variant, ss]) => ({
-      variant,
-      from: ss.reduce(
-        (m, s) => (s.valid_from < m ? s.valid_from : m),
-        ss[0].valid_from,
-      ),
-      to: ss.reduce(
-        (m, s) => (s.valid_to > m ? s.valid_to : m),
-        ss[0].valid_to,
-      ),
-    }),
-  );
-  if (windows.length === 0) {
-    return { kind: "segments", segments: [] };
-  }
-  if (windows.length === 1) {
-    const w = windows[0];
-    return {
-      kind: "segments",
-      segments: [
-        segmentFor(w.variant, byVariant.get(w.variant) ?? [], periodWire),
-      ],
-    };
-  }
-
-  // ≥2 variants: only a parseable token range can prove succession.
-  const endpoints = periodWire ? periodRangeEndpoints(periodWire) : null;
-  const loBounds = endpoints ? periodTokenBounds(endpoints[0]) : null;
-  const hiBounds = endpoints ? periodTokenBounds(endpoints[1]) : null;
-  const byFrom = [...windows].sort(
-    (a, b) =>
-      a.from.localeCompare(b.from) || a.variant.localeCompare(b.variant),
-  );
-  if (!endpoints || !loBounds || !hiBounds) {
-    return { kind: "choose-variant", options: byFrom };
-  }
-
-  // Clip each variant window to the range (ISO strings compare chronologically),
-  // then test pairwise overlap INSIDE the range: any overlap → co-existing.
-  const lo = loBounds.from;
-  const hi = hiBounds.to;
-  // The visible states are period-narrowed, so every window intersects the
-  // range; the inverted-clip filter is defensive (a non-covering variant must
-  // never yield an inverted segment period).
-  const clipped = byFrom
-    .map((w) => ({
-      ...w,
-      from: w.from > lo ? w.from : lo,
-      to: w.to < hi ? w.to : hi,
-    }))
-    .filter((w) => w.from <= w.to);
-  for (let i = 0; i < clipped.length; i++) {
-    for (let j = i + 1; j < clipped.length; j++) {
-      if (
-        clipped[i].from <= clipped[j].to &&
-        clipped[j].from <= clipped[i].to
-      ) {
-        return { kind: "choose-variant", options: byFrom };
-      }
-    }
-  }
-
-  // Pure succession: one segment per variant, period clipped to its window —
-  // the user's own endpoint tokens survive verbatim at the range edges.
-  const segments = clipped.map((w, i) => {
-    const fromTok = i === 0 ? endpoints[0] : boundToken(w.from, "from");
-    const toTok =
-      i === clipped.length - 1 ? endpoints[1] : boundToken(w.to, "to");
-    const period = fromTok === toTok ? fromTok : `${fromTok}..${toTok}`;
-    return segmentFor(w.variant, byVariant.get(w.variant) ?? [], period);
-  });
-  return { kind: "segments", segments };
 }
 
 // ── Shared binding resolution (picker derive-on-pick + store re-derive) ──────

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
+import type { PickerRepresentation } from "./catalog";
 import {
   axisNoun,
   bindingChildren,
   breadcrumbs,
-  buildAddPlan,
   catalogHref,
   classGroupHref,
   coverageFromStates,
@@ -27,9 +27,13 @@ import {
   memberKey,
   narrowCatalogNode,
   nodeLabel,
+  pickerLabeling,
+  pickerRepresentations,
+  pickerWindowYears,
   qualifierFromFocus,
   rankFilter,
   registerPrefixOf,
+  representationInWindow,
   representationsCollapse,
   representationsFromStates,
   routeBreadcrumbs,
@@ -1281,204 +1285,275 @@ describe("foldGroupedRows stale-cache tolerance", () => {
   });
 });
 
-describe("buildAddPlan (#306 one-click add)", () => {
-  // Two-variant succession shaped like LISA adeldag: "16plus" 1992–2009,
-  // "15plus" 2010–open. Distinct columns per era (a sequential rename, NOT a
-  // representation choice — representationsFromStates treats non-overlapping
-  // columns as drift).
-  const succession = [
-    state({
-      state_id: 1,
-      variant: "individer-16plus",
-      valid_from: "1992-01-01",
-      valid_to: "2009-12-31",
-      delivery_column_name: "ADelDag",
-    }),
-    state({
-      state_id: 2,
-      variant: "individer-15plus",
-      valid_from: "2010-01-01",
-      valid_to: "9999-12-31",
-      delivery_column_name: "ADelDag",
-    }),
-  ];
-
-  it("no states → an empty segments plan", () => {
-    expect(buildAddPlan([], "2018")).toEqual({
-      kind: "segments",
-      segments: [],
-    });
-  });
-
-  it("a single variant → one segment with the period verbatim", () => {
-    const plan = buildAddPlan(
-      [
-        state({
-          variant: "v1",
-          valid_from: "2010-01-01",
-          valid_to: "2020-12-31",
-        }),
-      ],
-      "2012..2014",
-    );
-    expect(plan.kind).toBe("segments");
-    if (plan.kind === "segments") {
-      expect(plan.segments).toHaveLength(1);
-      expect(plan.segments[0].variant).toBe("v1");
-      expect(plan.segments[0].period).toBe("2012..2014");
-      expect(plan.segments[0].needsRepChoice).toBe(false);
-      expect(plan.segments[0].representation).toBeNull();
-    }
-  });
-
-  it("a range spanning a variant succession auto-splits, clipping each segment", () => {
-    const plan = buildAddPlan(succession, "1992..2023");
-    expect(plan.kind).toBe("segments");
-    if (plan.kind === "segments") {
-      expect(plan.segments.map((s) => [s.variant, s.period])).toEqual([
-        ["individer-16plus", "1992..2009"],
-        ["individer-15plus", "2010..2023"],
-      ]);
-    }
-  });
-
-  it("the user's endpoint tokens survive verbatim at the range edges", () => {
-    const plan = buildAddPlan(succession, "VT1992..HT2023");
-    expect(plan.kind).toBe("segments");
-    if (plan.kind === "segments") {
-      expect(plan.segments.map((s) => s.period)).toEqual([
-        "VT1992..2009",
-        "2010..HT2023",
-      ]);
-    }
-  });
-
-  it("a mid-year succession boundary stays an exact date token", () => {
-    const midYear = [
-      state({
-        state_id: 1,
-        variant: "a",
-        valid_from: "1992-01-01",
-        valid_to: "2009-06-30",
-      }),
-      state({
-        state_id: 2,
-        variant: "b",
-        valid_from: "2009-07-01",
-        valid_to: "9999-12-31",
-      }),
-    ];
-    const plan = buildAddPlan(midYear, "1992..2023");
-    expect(plan.kind).toBe("segments");
-    if (plan.kind === "segments") {
-      expect(plan.segments.map((s) => s.period)).toEqual([
-        "1992..2009-06-30",
-        "2009-07-01..2023",
-      ]);
-    }
-  });
-
-  it("a single-year clip collapses to one token (no degenerate range)", () => {
-    const plan = buildAddPlan(succession, "2009..2010");
-    expect(plan.kind).toBe("segments");
-    if (plan.kind === "segments") {
-      expect(plan.segments.map((s) => s.period)).toEqual(["2009", "2010"]);
-    }
-  });
-
-  it("co-existing variants inside the range → choose-variant", () => {
-    const coexisting = [
+describe("pickerRepresentations (#678 direct picker)", () => {
+  it("one row per distinct (variant, delivery column), period spanning its states", () => {
+    const states = [
       state({
         state_id: 1,
         variant: "individer",
-        valid_from: "1992-01-01",
-        valid_to: "9999-12-31",
+        delivery_column_name: "Kon",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+        value_set_version_label: "1-siffrig",
       }),
       state({
         state_id: 2,
-        variant: "arbetsstallen",
-        valid_from: "1992-01-01",
-        valid_to: "9999-12-31",
-      }),
-    ];
-    const plan = buildAddPlan(coexisting, "2010..2020");
-    expect(plan.kind).toBe("choose-variant");
-    if (plan.kind === "choose-variant") {
-      expect(plan.options.map((o) => o.variant)).toEqual([
-        "arbetsstallen",
-        "individer",
-      ]);
-    }
-  });
-
-  it("≥2 variants with a point period (or none) → choose-variant", () => {
-    // A point period can't span a succession; ≥2 remaining variants co-exist.
-    expect(buildAddPlan(succession, "2009").kind).toBe("choose-variant");
-    expect(buildAddPlan(succession, null).kind).toBe("choose-variant");
-    expect(buildAddPlan(succession, "_default").kind).toBe("choose-variant");
-  });
-
-  it("genuinely distinct co-existing codings flag a rep choice, primary preselected", () => {
-    const multiRep = [
-      state({
-        state_id: 1,
-        variant: "v1",
-        valid_from: "2010-01-01",
+        variant: "individer",
+        delivery_column_name: "Kon",
+        valid_from: "2016-01-01",
         valid_to: "2020-12-31",
-        delivery_column_name: "Ssyk3",
-        value_set: [{ code: "1", label: "a" }],
-        value_set_version_label: "3-digit",
+        value_set_version_label: "1-siffrig",
       }),
       state({
-        state_id: 2,
-        variant: "v1",
-        valid_from: "2010-01-01",
-        valid_to: "2023-12-31",
-        delivery_column_name: "Ssyk4",
-        value_set: [{ code: "11", label: "b" }],
-        value_set_version_label: "4-digit",
+        state_id: 3,
+        variant: "individer",
+        delivery_column_name: "KonDetalj",
+        valid_from: "2018-01-01",
+        valid_to: "2020-12-31",
+        value_set_version_label: "2-siffrig",
       }),
     ];
-    const plan = buildAddPlan(multiRep, "2018");
-    expect(plan.kind).toBe("segments");
-    if (plan.kind === "segments") {
-      expect(plan.segments[0].needsRepChoice).toBe(true);
-      // Primary = latest-era (Ssyk4, valid_to 2023) per #266.
-      expect(plan.segments[0].representation).toBe("Ssyk4");
-      expect(plan.segments[0].reps.map((r) => r.column)).toEqual([
-        "Ssyk4",
-        "Ssyk3",
-      ]);
-    }
+    const rows = pickerRepresentations(states);
+    expect(rows.map((r) => r.key)).toEqual([
+      "individer::Kon",
+      "individer::KonDetalj",
+    ]);
+    // The Kon row's span fuses its two states: 2010 – 2020.
+    expect(rows[0].column).toBe("Kon");
+    expect(rows[0].from).toBe("2010-01-01");
+    expect(rows[0].to).toBe("2020-12-31");
+    expect(rows[0].period).toBe("2010 – 2020");
+    expect(rows[0].wirePeriod).toBe("2010..2020");
   });
 
-  it("coding-identical parallel columns auto-pick the primary (no prompt)", () => {
-    const identical = [
+  it("the value-set label comes from the latest-era state of the column", () => {
+    const states = [
       state({
         state_id: 1,
         variant: "v1",
-        valid_from: "1980-01-01",
-        valid_to: "1987-12-31",
-        delivery_column_name: "UT0290",
-        value_set: [{ code: "1", label: "Ja" }],
-        value_set_version_label: "Ja nej 1",
+        delivery_column_name: "Sni",
+        valid_from: "2002-01-01",
+        valid_to: "2006-12-31",
+        value_set_version_label: "SNI 2002",
       }),
       state({
         state_id: 2,
         variant: "v1",
-        valid_from: "1982-01-01",
-        valid_to: "1983-12-31",
-        delivery_column_name: "UT0280",
-        value_set: [{ code: "1", label: "Ja" }],
-        value_set_version_label: "Ja nej 1",
+        delivery_column_name: "Sni",
+        valid_from: "2007-01-01",
+        valid_to: "2020-12-31",
+        value_set_version_label: "SNI 2007",
       }),
     ];
-    const plan = buildAddPlan(identical, "1982");
-    expect(plan.kind).toBe("segments");
-    if (plan.kind === "segments") {
-      expect(plan.segments[0].needsRepChoice).toBe(false);
-      expect(plan.segments[0].representation).toBe("UT0290");
-    }
+    const [row] = pickerRepresentations(states);
+    // Latest era (valid_to 2020) → SNI 2007.
+    expect(row.valueSetLabel).toBe("SNI 2007");
+  });
+
+  it("skips states with a null delivery column (nothing to select)", () => {
+    const states = [
+      state({ variant: "v1", delivery_column_name: null }),
+      state({
+        variant: "v1",
+        delivery_column_name: "Real",
+        valid_from: "2010-01-01",
+        valid_to: "2010-12-31",
+      }),
+    ];
+    const rows = pickerRepresentations(states);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].column).toBe("Real");
+  });
+
+  it("an open-ended span renders 'since' and leaves the wire period unset", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2010-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ]);
+    expect(row.period).toBe("since 2010");
+    // No in-grammar token for an unbounded end → source period left unset.
+    expect(row.wirePeriod).toBeNull();
+  });
+
+  it("a same-year span yields a bare-year wire period", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2018-01-01",
+        valid_to: "2018-12-31",
+      }),
+    ]);
+    expect(row.wirePeriod).toBe("2018");
+  });
+});
+
+describe("pickerLabeling (#678 1b adaptive labels)", () => {
+  // A representation row, in the shape pickerLabeling consumes (only the four
+  // labeled dimensions + the selection key matter).
+  function rep(over: Partial<PickerRepresentation>): PickerRepresentation {
+    return {
+      key: `${over.variant ?? "v"}::${over.column ?? "Col"}`,
+      variant: "v",
+      column: "Col",
+      from: "2000-01-01",
+      to: "2010-12-31",
+      period: "2000 – 2010",
+      wirePeriod: "2000..2010",
+      valueSetLabel: "",
+      ...over,
+    };
+  }
+
+  it("column varies → column is the mono primary, no header hoist of it", () => {
+    const { headerContext, rows } = pickerLabeling([
+      rep({ variant: "v1", column: "Ssyk3", valueSetLabel: "SSYK 3" }),
+      rep({ variant: "v1", column: "Ssyk4", valueSetLabel: "SSYK 4" }),
+    ]);
+    // Variant is constant ("v1") → hoisted; column varies → on the rows.
+    expect(headerContext).toContain("v1");
+    expect(headerContext).not.toContain("column Ssyk3");
+    expect(rows[0].primary).toEqual({ text: "Ssyk3", mono: true });
+    expect(rows[1].primary).toEqual({ text: "Ssyk4", mono: true });
+  });
+
+  it("fordonsreg shape: only the population varies → population primary, constant column hoisted", () => {
+    // Every row delivers the constant column "Sni2002"; the POPULATION
+    // (lastbilar/bussar) is what distinguishes them.
+    const { headerContext, rows } = pickerLabeling([
+      rep({
+        variant: "lastbilar",
+        column: "Sni2002",
+        valueSetLabel: "SNI 2002",
+      }),
+      rep({ variant: "bussar", column: "Sni2002", valueSetLabel: "SNI 2002" }),
+    ]);
+    // The constant column + value set + period are hoisted to the header.
+    expect(headerContext).toEqual([
+      "column Sni2002",
+      "2000 – 2010",
+      "SNI 2002",
+    ]);
+    // Each row shows the varying population as the (non-mono) primary.
+    expect(rows.map((r) => r.primary)).toEqual([
+      { text: "lastbilar", mono: false },
+      { text: "bussar", mono: false },
+    ]);
+    expect(rows.every((r) => r.qualifiers.length === 0)).toBe(true);
+  });
+
+  it("yrkesreg shape: column + population + value set vary, period constant → period not on rows", () => {
+    const { headerContext, rows } = pickerLabeling([
+      rep({
+        variant: "anställda",
+        column: "Sun2020Niva",
+        valueSetLabel: "SUN 2020 nivå",
+        period: "2020 – 2023",
+      }),
+      rep({
+        variant: "egenföretagare",
+        column: "Sun2020Inr",
+        valueSetLabel: "SUN 2020 inriktning",
+        period: "2020 – 2023",
+      }),
+    ]);
+    // Period is the only constant → hoisted; the three varying dims stay on rows.
+    expect(headerContext).toEqual(["2020 – 2023"]);
+    // Priority: column (mono) is primary, then variant + value set as qualifiers.
+    expect(rows[0].primary).toEqual({ text: "Sun2020Niva", mono: true });
+    expect(rows[0].qualifiers).toEqual(["anställda", "SUN 2020 nivå"]);
+    // Period is hoisted, so it is NOT repeated on each row.
+    expect(rows.every((r) => r.period === null)).toBe(true);
+  });
+
+  it("period varies → it rides on the row, not the header", () => {
+    const { headerContext, rows } = pickerLabeling([
+      rep({ variant: "v1", column: "A", period: "2000 – 2005" }),
+      rep({ variant: "v1", column: "B", period: "2006 – 2010" }),
+    ]);
+    expect(headerContext).not.toContain("2000 – 2005");
+    expect(rows.map((r) => r.period)).toEqual(["2000 – 2005", "2006 – 2010"]);
+  });
+
+  it("a single representation (nothing varies) → the column is the mono primary", () => {
+    const { headerContext, rows } = pickerLabeling([
+      rep({ variant: "v1", column: "Kon", valueSetLabel: "1-siffrig" }),
+    ]);
+    // The lone row never renders blank: its column is the identifier.
+    expect(rows[0].primary).toEqual({ text: "Kon", mono: true });
+    expect(rows[0].qualifiers).toEqual([]);
+    // Its constants are still available as header context (variant, value set).
+    expect(headerContext).toContain("v1");
+    expect(headerContext).toContain("1-siffrig");
+  });
+
+  it("falls back to the variant, then a dash, when no column is present", () => {
+    // A degenerate single row with no column (shouldn't occur — enumeration skips
+    // null columns — but the fallback must never render blank).
+    const [withVariant] = pickerLabeling([
+      rep({ variant: "only-pop", column: "" }),
+    ]).rows;
+    expect(withVariant.primary).toEqual({ text: "only-pop", mono: false });
+    const [bare] = pickerLabeling([rep({ variant: "", column: "" })]).rows;
+    expect(bare.primary).toEqual({ text: "—", mono: false });
+  });
+});
+
+describe("pickerWindowYears + representationInWindow (#678 dimming)", () => {
+  const row = (from: string, to: string) => ({ from, to });
+
+  it("a wire range resolves to its outer year span", () => {
+    expect(pickerWindowYears("2010..2015", null)).toEqual([2010, 2015]);
+  });
+
+  it("a single token resolves to that token's year span", () => {
+    expect(pickerWindowYears("VT2009", null)).toEqual([2009, 2009]);
+  });
+
+  it("a comma list unions its parts", () => {
+    expect(pickerWindowYears("2005..2008,2012", null)).toEqual([2005, 2012]);
+  });
+
+  it("falls back to the study window when no period is active", () => {
+    expect(pickerWindowYears(null, { from: 2000, to: 2004 })).toEqual([
+      2000, 2004,
+    ]);
+    // A period that parses to no bound (e.g. _default) also falls back.
+    expect(pickerWindowYears("_default", { from: 2000, to: 2004 })).toEqual([
+      2000, 2004,
+    ]);
+  });
+
+  it("is null with neither a parseable period nor a window", () => {
+    expect(pickerWindowYears(null, null)).toBeNull();
+    expect(pickerWindowYears("_default", null)).toBeNull();
+  });
+
+  it("overlap is inclusive; a null window includes everything", () => {
+    expect(representationInWindow(row("2010-01-01", "2015-12-31"), null)).toBe(
+      true,
+    );
+    expect(
+      representationInWindow(row("2010-01-01", "2015-12-31"), [2012, 2013]),
+    ).toBe(true);
+    // Touches the boundary year → still overlaps.
+    expect(
+      representationInWindow(row("2010-01-01", "2012-12-31"), [2012, 2020]),
+    ).toBe(true);
+    // Entirely before the window → no overlap (dimmed).
+    expect(
+      representationInWindow(row("2000-01-01", "2005-12-31"), [2012, 2020]),
+    ).toBe(false);
+  });
+
+  it("an open-ended row reaches past any finite window end", () => {
+    expect(
+      representationInWindow(row("2010-01-01", "9999-12-31"), [2030, 2040]),
+    ).toBe(true);
   });
 });
 
