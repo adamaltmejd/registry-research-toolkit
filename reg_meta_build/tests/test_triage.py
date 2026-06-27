@@ -28,7 +28,7 @@ from _csv_fixtures import (
 from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import period_token_to_bounds
-from reg_meta_build.db import build_db
+from reg_meta_build.db import _drop_fullcover_codeless_states, build_db
 from reg_meta_build.resolution import Claim, assemble_runs
 from reg_meta_build.sources.scb import (
     _AUTH_FINAL,
@@ -3061,4 +3061,204 @@ class TestEmitVariableAliases:
         }
         # Every alias rides the delivering variant (FK target for variable_alias).
         assert {a.register_variant_id for a in aliases} == {10}
+        conn.close()
+
+
+class TestDropFullcoverCodelessStates:
+    """`_drop_fullcover_codeless_states` (#867): a code-less `variable_state`
+    (`value_set_id IS NULL`) whose window is FULLY covered by the union of
+    overlapping code-bearing states on the same key is a redundant shadow → delete
+    it (lossless). PARTIAL coverage (a residual span into uncoded years) is curation
+    (#868) → left untouched. In-memory DDL with FKs off (no provider/register
+    parents needed); states inserted directly."""
+
+    @staticmethod
+    def _conn() -> sqlite3.Connection:
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)  # FKs off → no provider/register parent rows needed
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
+            "VALUES (920, 1, '920', 'Var')"
+        )
+        return conn
+
+    @staticmethod
+    def _state(
+        conn: sqlite3.Connection,
+        *,
+        valid_from: str,
+        valid_to: str,
+        value_set_id: int | None,
+        column: str = "Col",
+        variant: int = 10,
+        variable_id: int = 920,
+        label: str = "",
+    ) -> int:
+        # `label` is `value_set_version_label`; the state-uniqueness index keys on
+        # (variable_id, register_variant_id, valid_from, value_set_version_label),
+        # so code-bearing states sharing a `valid_from` with the code-less state (or
+        # each other) need a distinct label — code-bearing states carry value sets
+        # and so legitimately carry a version label, while the code-less shadow
+        # keeps the default ''. The close-out keys on value_set_id / windows, not
+        # the label, so this is incidental to the behavior under test.
+        cur = conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, delivery_column_name, value_set_id, "
+            "value_set_version_label) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                variable_id,
+                variant,
+                valid_from,
+                valid_to,
+                column,
+                value_set_id,
+                label,
+            ),
+        )
+        assert cur.lastrowid is not None
+        return cur.lastrowid
+
+    @staticmethod
+    def _live_state_ids(conn: sqlite3.Connection) -> set[int]:
+        return {r[0] for r in conn.execute("SELECT state_id FROM variable_state")}
+
+    def test_single_window_full_cover_deletes_codeless(self) -> None:
+        # Omb10b shape: code-less [2012..2012] strictly inside code-bearing
+        # [2011..2020] → the single covering window subsumes it (pure string
+        # comparison, no day math) → delete the code-less state, keep code-bearing.
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="2012-01-01", valid_to="2012-12-31", value_set_id=None
+        )
+        coded = self._state(
+            conn, valid_from="2011-01-01", valid_to="2020-12-31", value_set_id=7
+        )
+        _drop_fullcover_codeless_states(conn)
+        assert self._live_state_ids(conn) == {coded}, "code-less shadow not deleted"
+        assert codeless not in self._live_state_ids(conn)
+        conn.close()
+
+    def test_multi_window_adjacent_full_cover_deletes(self) -> None:
+        # Code-less [2005..2015] covered by two ADJACENT code-bearing windows
+        # [2005..2009] + [2010..2015] (no gap: 2010-01-01 == day after
+        # 2009-12-31) → fully covered → delete. Exercises the adjacency day-step.
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="2005-01-01", valid_to="2015-12-31", value_set_id=None
+        )
+        cb1 = self._state(
+            conn,
+            valid_from="2005-01-01",
+            valid_to="2009-12-31",
+            value_set_id=7,
+            label="v7",  # shares valid_from with the code-less state
+        )
+        cb2 = self._state(
+            conn, valid_from="2010-01-01", valid_to="2015-12-31", value_set_id=8
+        )
+        _drop_fullcover_codeless_states(conn)
+        assert self._live_state_ids(conn) == {cb1, cb2}
+        assert codeless not in self._live_state_ids(conn)
+        conn.close()
+
+    def test_edge_uncovered_prefix_left_untouched(self) -> None:
+        # Code-less [1997..2014] extends BEFORE the coded start [2015..2020] →
+        # a residual prefix span into uncoded years → NOT fully covered → leave it.
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="1997-01-01", valid_to="2014-12-31", value_set_id=None
+        )
+        coded = self._state(
+            conn, valid_from="2015-01-01", valid_to="2020-12-31", value_set_id=7
+        )
+        _drop_fullcover_codeless_states(conn)
+        assert self._live_state_ids(conn) == {codeless, coded}, "edge state deleted"
+        conn.close()
+
+    def test_interior_gap_left_untouched(self) -> None:
+        # Code-bearing [2008..2010] strictly interior to code-less [2005..2015]
+        # leaves gaps [2005..2007] and [2011..2015] → NOT fully covered → leave it.
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="2005-01-01", valid_to="2015-12-31", value_set_id=None
+        )
+        coded = self._state(
+            conn, valid_from="2008-01-01", valid_to="2010-12-31", value_set_id=7
+        )
+        _drop_fullcover_codeless_states(conn)
+        assert self._live_state_ids(conn) == {codeless, coded}
+        conn.close()
+
+    def test_nested_same_value_set_full_cover_still_deletes(self) -> None:
+        # Codex P2 #1 regression. Code-bearing windows on one key are NOT
+        # guaranteed disjoint — `_check_one_value_set_per_period` only forbids
+        # *distinct*-value_set overlaps, so two SAME-value_set_id windows may nest.
+        # A non-monotonic cursor ("cursor = window_end") moves BACKWARD when a
+        # nested (shorter) window sorts between two longer ones, fabricating a gap
+        # that isn't there — and then WRONGLY KEEPS a genuinely fully-covered
+        # state. (Brute force over year windows confirms the disagreement is
+        # one-directional: non-monotonic only ever *under*-reports coverage, never
+        # over-reports — so the bug manifests as a missed delete, not a wrong one.)
+        #
+        # Here code-less [2005..2020] IS fully covered by [2005..2007] +
+        # [2008..2020], but a NESTED [2006..2006] (same value_set_id=7) sorts
+        # between them. With the monotonic walk (`cursor = max(cursor, end)`) the
+        # cursor never retreats past 2007-12-31, so [2008..2020] stays adjacent and
+        # the state is deleted. With a non-monotonic cursor the nested window drops
+        # the cursor to 2006-12-31, [2008..2020] then looks like it starts after a
+        # gap, and the state is wrongly kept — so this test FAILS against a
+        # non-monotonic cursor.
+        conn = self._conn()
+        codeless = self._state(
+            conn, valid_from="2005-01-01", valid_to="2020-12-31", value_set_id=None
+        )
+        cb_early = self._state(
+            conn,
+            valid_from="2005-01-01",
+            valid_to="2007-12-31",
+            value_set_id=7,
+            label="early",  # shares valid_from with the code-less state
+        )
+        cb_nested = self._state(
+            conn,
+            valid_from="2006-01-01",
+            valid_to="2006-12-31",
+            value_set_id=7,  # SAME value_set_id → allowed to nest inside cb_early
+            label="nested",
+        )
+        cb_late = self._state(
+            conn,
+            valid_from="2008-01-01",  # adjacent to cb_early's 2007-12-31
+            valid_to="2020-12-31",
+            value_set_id=7,
+            label="late",
+        )
+        _drop_fullcover_codeless_states(conn)
+        # code-less deleted (fully covered); all three code-bearing states survive.
+        assert self._live_state_ids(conn) == {cb_early, cb_nested, cb_late}
+        assert codeless not in self._live_state_ids(conn)
+        conn.close()
+
+    def test_orphan_tripwire_guards_last_state(self) -> None:
+        # The orphan tripwire is structurally UNREACHABLE through the public path:
+        # the covering code-bearing state shares the code-less state's variable_id
+        # (the overlap JOIN keys on it), so a surviving sibling always exists. To
+        # exercise the guard at all, the covering code-bearing state must belong to
+        # a DIFFERENT variable than the code-less one — which the overlap JOIN's
+        # `cl.variable_id = cb.variable_id` predicate excludes, so the JOIN never
+        # pairs them and the full-cover branch is never entered. The guard is kept
+        # as defense against a future overlap-key change (e.g. a cross-variable
+        # match) that could otherwise silently delete a variable's last state; with
+        # the current same-variable key it cannot fire, so we assert the
+        # well-behaved single-state-variable case is simply left alone (no overlap,
+        # no delete, no raise).
+        conn = self._conn()
+        lone = self._state(
+            conn, valid_from="2010-01-01", valid_to="2010-12-31", value_set_id=None
+        )
+        _drop_fullcover_codeless_states(conn)  # no code-bearing overlap → no-op
+        assert self._live_state_ids(conn) == {lone}
         conn.close()
