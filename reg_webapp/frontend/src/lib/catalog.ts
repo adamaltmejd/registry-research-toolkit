@@ -580,7 +580,11 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
         { label: route.key },
       ];
     case "class-group":
-      return [browserRoot, { label: "class" }, { label: route.key }];
+      return [
+        browserRoot,
+        { label: "class", href: catalogHref("class") },
+        { label: route.key },
+      ];
     case "search":
       return [{ label: "Search" }];
     case "project":

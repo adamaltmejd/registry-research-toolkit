@@ -354,11 +354,11 @@ describe("routeBreadcrumbs", () => {
     expect(trail[2]).toEqual({ label: "ink" });
   });
 
-  it("class-group → browser root + a class hop + the un-linked key", () => {
+  it("class-group → browser root + a linked class hop + the un-linked key", () => {
     const trail = routeBreadcrumbs({ name: "class-group", key: "sun" });
     expect(trail).toHaveLength(3);
     expect(trail[0]).toEqual(browserRoot);
-    expect(trail[1]).toEqual({ label: "class" });
+    expect(trail[1]).toEqual({ label: "class", href: catalogHref("class") });
     expect(trail[2]).toEqual({ label: "sun" });
   });
 
