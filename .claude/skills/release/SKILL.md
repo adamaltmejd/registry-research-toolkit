@@ -443,8 +443,14 @@ special-case any one steward); for each whose `reg_meta_version` is older than t
   ```
 
 - `reg-meta-build extend-db --base-db "$base_dir/reg_meta.db" …` to overlay the steward
-  providers, then regenerate the catalog per `reg_webapp/stewards/<id>/README.md` (its
-  `reg_meta_version` now records the published `reg_meta/vX.Y.Z`);
+  providers, then regenerate the catalog per `reg_webapp/stewards/<id>/README.md` so its
+  `reg_meta_version` records the published `reg_meta/vX.Y.Z`. **Pass the release tag to
+  the generator explicitly** — swecov's `build_catalog.py steward` takes a required
+  `--reg-meta-version reg_meta/vX.Y.Z` that stamps that field; older copies defaulted it
+  to a fixed tag and **silently downgraded** the stamp (caught in 0.25.0). And when you
+  run from a worktree, pass `--out <this-checkout>/reg_webapp/stewards/<id>` — the
+  generator's default output dir is its own repo root (the main checkout), not the
+  worktree, so the regen would otherwise land outside your release branch;
 
 - review the coverage/binding diff (catalog size, representation pins, co-delivery
   prune) before accepting it;
