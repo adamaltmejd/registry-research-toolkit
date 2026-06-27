@@ -308,7 +308,7 @@ wheels = [
 
 [[package]]
 name = "reg-meta"
-version = "0.24.0"
+version = "0.25.0"
 source = { editable = "reg_meta" }
 dependencies = [
     { name = "pydantic" },
