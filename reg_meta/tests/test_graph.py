@@ -97,25 +97,40 @@ def _add_concept_group(
     facets: dict[str, tuple[str, str]] | None = None,
 ) -> None:
     # `facet_axis` is the group's single axis (None = edge group, facet-less
-    # members). `facets` maps a member slug → (facet_value, facet_label); members
-    # absent from it get NULL facet columns.
+    # members); when set it lands as the group's one `concept_group_axis` row
+    # (#819, multi-axis shape — the inline `concept_group.facet_axis` column is
+    # gone). `facets` maps a member slug → (value, label) on that axis; members
+    # absent from it (and every member of an axis-less group) get no facet row, so
+    # the accessor surfaces empty `member.facets`.
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source, facet_axis) VALUES (?, 'variable', ?, ?, ?, 'curated', ?)",
-        (group_id, register_id, group_key, f"Group {group_key}", facet_axis),
+        "label, source) VALUES (?, 'variable', ?, ?, ?, 'curated')",
+        (group_id, register_id, group_key, f"Group {group_key}"),
     )
+    if facet_axis is not None:
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (?, ?, 0, ?)",
+            (group_id, facet_axis, facet_axis),
+        )
     facets = facets or {}
     for slug in member_slugs:
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
             (register_id, slug),
         ).fetchone()[0]
-        value, label = facets.get(slug, (None, None))
-        conn.execute(
+        cur = conn.execute(
             "INSERT INTO concept_group_variable "
-            "(variable_id, group_id, facet_value, facet_label) VALUES (?, ?, ?, ?)",
-            (vid, group_id, value, label),
+            "(group_id, variable_id, delivery_column_name) VALUES (?, ?, NULL)",
+            (group_id, vid),
         )
+        if facet_axis is not None and (facet := facets.get(slug)) is not None:
+            value, label = facet
+            conn.execute(
+                "INSERT INTO concept_group_variable_facet "
+                "(member_id, axis, value, label) VALUES (?, ?, ?, ?)",
+                (cur.lastrowid, facet_axis, value, label),
+            )
     conn.commit()
 
 
