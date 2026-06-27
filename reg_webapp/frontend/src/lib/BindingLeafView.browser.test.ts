@@ -610,74 +610,12 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Kön/ }))
       .toBeVisible();
-    // The column "Kon" ≈ the slug "kon" (normalized: lowercase, `_`/`-` equal) → the
-    // redundant column chip is OMITTED. And the leaf passes no href → no nav link.
-    expect(document.querySelector(".col-row.single .col-chip")).toBeNull();
+    // The LEAF passes no `href` → the column chip is a PLAIN <code>, NOT a navigation
+    // link (the leaf is already its own page; nav is a group-view affordance only).
+    const chip = document.querySelector(".col-row.single .col-chip");
+    expect(chip?.tagName).toBe("CODE");
+    expect(document.querySelector(".col-row.single a.col-chip")).toBeNull();
     expect(document.querySelector("a.open-link")).toBeNull();
-  });
-
-  it("a single-column member shows the column chip ONLY when the column differs from the slug (#678 normalization)", async () => {
-    // The leaf slug is "kon". Two cases over the same picker: a column that normalizes
-    // EQUAL to the slug (`KON` / `k-o-n` style) hides the chip; a genuinely different
-    // column ("SNI2002") shows it. Here the slug is `kon` and the column is `SNI2002`
-    // → differ → the chip renders (a plain <code>).
-    const differs = [
-      state({
-        state_id: 1,
-        variant: "individer",
-        delivery_column_name: "SNI2002",
-        valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
-      }),
-    ];
-    render(BindingLeafView, {
-      fqidPath: "scb/lisa/kon",
-      node: node(differs, { fqid: "scb/lisa/kon", name: "Kön" }),
-      regMetaVersion: SEED.regMetaVersion,
-      steward: SEED.steward,
-      vintageYear: 2024,
-    });
-
-    const chip = await vi.waitFor(() => {
-      const el = document.querySelector(".col-row.single .col-chip");
-      if (!el) {
-        throw new Error("column chip not yet rendered");
-      }
-      return el;
-    });
-    // Column ≠ slug → the chip is shown, as a PLAIN <code> (never a link).
-    expect(chip.textContent?.trim()).toBe("SNI2002");
-    expect(chip.tagName).toBe("CODE");
-    expect(document.querySelector("a.col-chip")).toBeNull();
-  });
-
-  it("normalizes `_` and `-` and case when comparing column to slug (#678)", async () => {
-    // The slug "kon-ag" vs the column "KON_AG" normalize EQUAL (lowercase, `_`↔`-`),
-    // so the redundant chip is omitted even though the raw strings differ.
-    const norm = [
-      state({
-        state_id: 1,
-        variant: "individer",
-        delivery_column_name: "KON_AG",
-        valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
-      }),
-    ];
-    render(BindingLeafView, {
-      fqidPath: "scb/lisa/kon-ag",
-      node: node(norm, { fqid: "scb/lisa/kon-ag", name: "Kön AG" }),
-      regMetaVersion: SEED.regMetaVersion,
-      steward: SEED.steward,
-      vintageYear: 2024,
-    });
-
-    // Wait for the single row, then confirm KON_AG ≈ kon-ag → no chip.
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-row.single .row-btn")) {
-        throw new Error("single row not yet rendered");
-      }
-    });
-    expect(document.querySelector(".col-row.single .col-chip")).toBeNull();
   });
 
   it("renders no picker when no state carries a delivery column", async () => {
