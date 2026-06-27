@@ -12,10 +12,14 @@ Checks (per open issue):
   - `touches` globs resolve to real paths (a zero-match glob is a warning, not an
     error — new-file paths are legitimate).
 
-Plus two corpus-wide drift alerts (`--all` only):
+Plus three corpus-wide drift alerts (`--all` only):
   - merged-but-still-open: a merged PR closed #N (via closing keyword) yet #N is open;
   - merged-but-unreleased: reg_meta_build DB content changed since the latest
-    `reg_meta_build/v*` tag, so a rebuild+release is pending (the #373-class debt).
+    `reg_meta_build/v*` tag, so a rebuild+release is pending (the #373-class debt);
+  - stale-steward-catalog: a `reg_webapp/stewards/<id>/steward.project_data.json` was
+    generated against a reg_meta release older than the latest *published* `reg_meta/v*`
+    release, so it may have drifted and should be regenerated (coverage hygiene, not a
+    hard gate).
 
 Modes:
   --issue N   validate one issue; exit non-zero on any ERROR (the write-time nudge,
@@ -332,6 +336,79 @@ def check_unreleased_build_debt(repo_root: Path, out: Findings) -> None:
                        f"is pending")  # fmt: skip
 
 
+# The reg_meta release a steward catalog was generated against, as `reg_meta/vX.Y.Z`.
+# Parse the X.Y.Z into an int tuple so comparison is numeric, not lexical (v0.10 > v0.9).
+_REG_META_TAG_RE = re.compile(r"^reg_meta/v(\d+)\.(\d+)\.(\d+)$")
+
+
+def _reg_meta_version_tuple(value: str) -> tuple[int, int, int] | None:
+    m = _REG_META_TAG_RE.match(value.strip())
+    return (int(m[1]), int(m[2]), int(m[3])) if m else None
+
+
+def latest_published_reg_meta_tag() -> str | None:
+    """The newest *published* (non-draft) `reg_meta/v*` release tag, else None.
+
+    Mirrors `.github/workflows/container-build.yml`'s resolution: the webapp container
+    bakes the newest published `reg_meta/v*` release's DB asset, so the steward catalog
+    must be keyed on the *published* release — not the git tag. A git tag exists for a
+    draft/failed release the deploy can't resolve, so a tag-based lookup would false-warn
+    during the draft window between cutting the tag and publishing the release.
+    """
+    releases = gh_json(["release", "list", "--limit", "100",
+                        "--json", "tagName,isDraft"])  # fmt: skip
+    candidates = [
+        _reg_meta_version_tuple(r["tagName"])
+        for r in releases
+        if not r.get("isDraft") and r.get("tagName", "").startswith("reg_meta/v")
+    ]
+    parsed = [v for v in candidates if v is not None]
+    if not parsed:
+        return None
+    major, minor, patch = max(parsed)
+    return f"reg_meta/v{major}.{minor}.{patch}"
+
+
+def check_steward_catalog_staleness(repo_root: Path, out: Findings) -> None:
+    """Warn when a committed steward catalog lags the latest published `reg_meta/v*` release.
+
+    A `reg_webapp/stewards/<id>/steward.project_data.json` records the reg_meta release it
+    was generated against (`reg_meta_version`). A newer release can drift it (slug churn,
+    new content, overlap fixes); the webapp still boots through the drift, so this is
+    coverage hygiene, not a hard gate. Regenerate per `stewards/<id>/README.md`.
+
+    Keyed on the latest *published* release (not the git tag) so it mirrors what the
+    webapp container actually bakes — see `latest_published_reg_meta_tag`.
+    """
+    tag = latest_published_reg_meta_tag()
+    if tag is None:  # no published reg_meta release yet (or no gh) → nothing to compare
+        return
+    latest = _reg_meta_version_tuple(tag)
+    if latest is None:  # unexpected tag shape — don't crash, just skip
+        return
+    catalogs = (repo_root / "reg_webapp").glob("stewards/*/steward.project_data.json")
+    for catalog in sorted(catalogs):
+        steward = catalog.parent.name
+        try:
+            data = json.loads(catalog.read_text(encoding="utf-8"))
+        except OSError, ValueError:
+            out.warn(None, f"steward '{steward}' catalog {catalog.name} is unreadable "
+                           f"or not valid JSON — cannot check reg_meta_version")  # fmt: skip
+            continue
+        recorded = data.get("reg_meta_version")
+        version = (
+            _reg_meta_version_tuple(recorded) if isinstance(recorded, str) else None
+        )
+        if version is None:
+            out.warn(None, f"steward '{steward}' catalog has a missing or malformed "
+                           f"reg_meta_version ({recorded!r}) — expected 'reg_meta/vX.Y.Z'")  # fmt: skip
+            continue
+        if version < latest:  # strictly behind; equal or (defensively) ahead → silent
+            out.warn(None, f"steward '{steward}' catalog was generated against {recorded} "
+                           f"but the latest reg_meta release is {tag} — regenerate per "
+                           f"reg_webapp/stewards/{steward}/README.md")  # fmt: skip
+
+
 def emit(out: Findings, scope: str) -> None:
     lines = [f"## Issue hygiene — {scope}", ""]
     if not out.items:
@@ -386,6 +463,7 @@ def main() -> int:
         check_issue(issue, known, open_numbers, parent_of, repo_root, out)
     check_done_but_open(issue_state, out)
     check_unreleased_build_debt(repo_root, out)
+    check_steward_catalog_staleness(repo_root, out)
     emit(out, "all open issues")
     return 0
 
