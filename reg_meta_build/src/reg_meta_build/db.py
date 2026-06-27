@@ -3495,7 +3495,14 @@ def _resolve_curated_codeless_overlaps(
                 )
             # ABSORB the code-less span into the named coded vintage's window:
             # DELETE the code-less state FIRST, then grow the target coded state to
-            # cover the code-less span. The target is the overlapping coded state
+            # cover the code-less span. CAUTION: `extend` grows the coded window over
+            # the WHOLE code-less span — only use it when the named vintage is the
+            # nearest coded window to the gap; if a DIFFERENT value set sits between
+            # the target and the span, use `cap` instead (the grow would swallow it
+            # into a distinct-value_set coded↔coded overlap, which the post-resolution
+            # gate here — code-less↔code-bearing only — does NOT catch; only
+            # _check_one_value_set_per_period catches it at validate time, so
+            # `--no-validate` would ship it). The target is the overlapping coded state
             # with the EARLIEST valid_from (deterministic when one vintage is
             # delivered in several windows; the others keep their windows — same
             # value set, no conflict). Order matters: the code-less state can carry a
@@ -3550,61 +3557,87 @@ def _resolve_curated_codeless_overlaps(
             conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
             n_capped += 1
             continue
-        # First span stays on the existing state_id.
-        first_from, first_to = spans[0]
-        conn.execute(
-            "UPDATE variable_state SET valid_from = ?, valid_to = ? WHERE state_id = ?",
-            (first_from, first_to, state_id),
-        )
-        n_capped += 1
-        # ≥2 spans (interior gap): mint a code-less twin per extra span. Distinct
-        # `valid_from` per span keeps `idx_variable_state_unique` (variable_id,
-        # register_variant_id, valid_from, value_set_version_label) collision-free.
-        # The twin copies the ORIGINAL code-less state's value_set_version_label
-        # (kept code-less via value_set_id NULL) — a code-less state can carry a
-        # non-empty label (the coalescer propagates the column label onto it), and
-        # each twin faithfully represents the same code-less span; uniqueness still
-        # holds via the distinct valid_from above. The twin's state_id is minted in
-        # the SAME band as the original (`state_id`): a low-band SCB original keeps
-        # its twin SCB-side (`< _MINT_BIT`, satisfying the band check); a high-band
-        # minted-provider original gets a high-band twin.
-        low_band = state_id < _MINT_BIT
-        for span_from, span_to in spans[1:]:
-            if low_band:
-                if next_low_state_id >= _MINT_BIT:
-                    # Pathological: the SCB low band is exhausted, so a low-band twin
-                    # would land in the minted band and fail the band check.
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="codeless_overlap_twin_band_overflow",
-                        error_class="configuration",
-                        message=(
-                            "minting a code-less twin would overflow the SCB low id "
-                            f"band (>= _MINT_BIT={_MINT_BIT}) for SCB state_id="
-                            f"{state_id}."
-                        ),
-                        remediation=(
-                            "Too many SCB variable_state ids to mint twins below "
-                            "2^62 — investigate the corpus size."
-                        ),
-                    )
-                twin_id = next_low_state_id
-                next_low_state_id += 1
-            else:
-                twin_id = next_high_state_id
-                next_high_state_id += 1
+        # First span stays on the existing state_id; ≥2 spans (interior gap) mint a
+        # code-less twin per extra span. Both writes can in principle trip
+        # idx_variable_state_unique on a messy multi-state key (two overlapping
+        # code-less states with matching labels at a residual boundary), so wrap them
+        # symmetrically with the `extend` grow — re-raise as an actionable
+        # `codeless_overlap_cap_collision` instead of a raw sqlite3.IntegrityError.
+        try:
+            first_from, first_to = spans[0]
             conn.execute(
-                "INSERT INTO variable_state (state_id, variable_id, "
-                "register_variant_id, valid_from, valid_to, data_type, "
-                "data_length, delivery_column_name, value_set_id, "
-                "value_set_version_label, classification_id) "
-                "SELECT ?, variable_id, register_variant_id, ?, ?, data_type, "
-                "data_length, delivery_column_name, NULL, value_set_version_label, "
-                "classification_id "
-                "FROM variable_state WHERE state_id = ?",
-                (twin_id, span_from, span_to, state_id),
+                "UPDATE variable_state SET valid_from = ?, valid_to = ? "
+                "WHERE state_id = ?",
+                (first_from, first_to, state_id),
             )
-            n_split += 1
+            n_capped += 1
+            # ≥2 spans (interior gap): mint a code-less twin per extra span. Distinct
+            # `valid_from` per span keeps `idx_variable_state_unique` (variable_id,
+            # register_variant_id, valid_from, value_set_version_label) collision-free.
+            # The twin copies the ORIGINAL code-less state's value_set_version_label
+            # (kept code-less via value_set_id NULL) — a code-less state can carry a
+            # non-empty label (the coalescer propagates the column label onto it), and
+            # each twin faithfully represents the same code-less span; uniqueness still
+            # holds via the distinct valid_from above. The twin's state_id is minted in
+            # the SAME band as the original (`state_id`): a low-band SCB original keeps
+            # its twin SCB-side (`< _MINT_BIT`, satisfying the band check); a high-band
+            # minted-provider original gets a high-band twin.
+            low_band = state_id < _MINT_BIT
+            for span_from, span_to in spans[1:]:
+                if low_band:
+                    if next_low_state_id >= _MINT_BIT:
+                        # Pathological: the SCB low band is exhausted, so a low-band
+                        # twin would land in the minted band and fail the band check.
+                        raise RegMetaError(
+                            exit_code=EXIT_CONFIG,
+                            code="codeless_overlap_twin_band_overflow",
+                            error_class="configuration",
+                            message=(
+                                "minting a code-less twin would overflow the SCB low "
+                                f"id band (>= _MINT_BIT={_MINT_BIT}) for SCB state_id="
+                                f"{state_id}."
+                            ),
+                            remediation=(
+                                "Too many SCB variable_state ids to mint twins below "
+                                "2^62 — investigate the corpus size."
+                            ),
+                        )
+                    twin_id = next_low_state_id
+                    next_low_state_id += 1
+                else:
+                    twin_id = next_high_state_id
+                    next_high_state_id += 1
+                conn.execute(
+                    "INSERT INTO variable_state (state_id, variable_id, "
+                    "register_variant_id, valid_from, valid_to, data_type, "
+                    "data_length, delivery_column_name, value_set_id, "
+                    "value_set_version_label, classification_id) "
+                    "SELECT ?, variable_id, register_variant_id, ?, ?, data_type, "
+                    "data_length, delivery_column_name, NULL, "
+                    "value_set_version_label, classification_id "
+                    "FROM variable_state WHERE state_id = ?",
+                    (twin_id, span_from, span_to, state_id),
+                )
+                n_split += 1
+        except sqlite3.IntegrityError as exc:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="codeless_overlap_cap_collision",
+                error_class="configuration",
+                message=(
+                    f"codeless_overlap `cap` for key {key} trimmed/split the code-less "
+                    f"state to residual spans {spans}, but a single-span valid_from "
+                    "update or an interior-split twin INSERT collided with an existing "
+                    "state at the same valid_from with the same value_set_version_label, "
+                    "violating idx_variable_state_unique."
+                ),
+                remediation=(
+                    "Inspect the variable's states on this (register, variable, "
+                    "column) — likely two overlapping code-less states with matching "
+                    "labels at a residual boundary. Resolve the duplicate code-less "
+                    "state (e.g. `drop` one) before capping."
+                ),
+            ) from exc
 
     # Mandatory-curation gate: RE-QUERY the post-resolution DB for ANY surviving
     # code-less ↔ code-bearing overlap (the authoritative invariant), not the

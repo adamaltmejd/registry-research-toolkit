@@ -29,7 +29,11 @@
 #   - extend — absorb the code-less span into the named coded vintage's window: the
 #              coded state on the same key whose `value_set_version_label` matches
 #              `extend` grows to cover the code-less span, and the code-less state
-#              is deleted.
+#              is deleted. CAUTION: extend grows the coded window over the WHOLE
+#              code-less span — only use it when the named vintage is the nearest
+#              coded window to the gap; if a different value set sits between the
+#              target and the span, use `cap` instead (the grow would swallow it into
+#              a distinct-value_set overlap, caught only by validate).
 #
 # Slugs are register-scoped-unique and human-readable; `column` matches a state's
 # `delivery_column_name` after case-folding, so casing is cosmetic. Omit `column`

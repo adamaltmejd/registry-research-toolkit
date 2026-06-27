@@ -370,6 +370,53 @@ class TestResolveCuratedCodelessOverlaps:
         assert twin_id != decoy + 1
         conn.close()
 
+    def test_cap_interior_twin_collision_raises_actionable(self) -> None:
+        # Contrived multi-state messy key (the cap analog of the `extend` collision
+        # wrap): a code-less twin INSERT collides with a pre-existing code-less state
+        # at the same (variable, variant, valid_from, label) → the raw
+        # sqlite3.IntegrityError is re-raised as an ACTIONABLE
+        # `codeless_overlap_cap_collision` (EXIT_CONFIG), symmetric with the extend
+        # grow's wrap.
+        #
+        # Shape: code-less A [2005..2015] (label L) with coded interior [2008..2010]
+        # caps into [2005..2007] (stays) + [2011..2015] (twin minted at
+        # valid_from=2011-01-01, copying label L). A second code-less state B already
+        # sits at valid_from=2011-01-01 with the SAME label L but does NOT overlap the
+        # coded window ([2011..2011] starts after [2008..2010] ends) → B is not a
+        # residual, never resolved, and survives to occupy the (valid_from, label)
+        # tuple the twin INSERT targets → idx_variable_state_unique collision.
+        conn = self._conn()
+        label = "Civilstånd i folkpensionshänseende"
+        self._state(
+            conn,
+            valid_from="2005-01-01",
+            valid_to="2015-12-31",
+            value_set_id=None,
+            label=label,
+        )
+        self._state(
+            conn,
+            valid_from="2008-01-01",
+            valid_to="2010-12-31",
+            value_set_id=7,
+            label="v7",
+        )
+        # B: pre-existing code-less state at the twin's target valid_from + label, NOT
+        # overlapping the coded window → not a residual, left in place to collide.
+        self._state(
+            conn,
+            valid_from="2011-01-01",
+            valid_to="2011-12-31",
+            value_set_id=None,
+            label=label,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            _resolve_curated_codeless_overlaps(conn, {self._key(): ("cap", None)})
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codeless_overlap_cap_collision"
+        assert self.VAR_SLUG in exc.value.message
+        conn.close()
+
     def test_drop_deletes_codeless(self) -> None:
         conn = self._conn()
         self._state(
