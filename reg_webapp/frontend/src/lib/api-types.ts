@@ -219,12 +219,16 @@ export interface paths {
         };
         /**
          * Get Binding Graph
-         * @description The relationship graph for a binding's variable (#761) — one node per
-         *     variable with its representation-run state history + succession/related edges +
-         *     same_as/group metadata, unioned over the variable's concept group (Fork B). An
-         *     empty graph (`nodes: []`) is the "don't render" signal. A dead/renamed binding
-         *     301s to `/graph` on its terminal successor (#411); shares the `/api/catalog`
-         *     cache. The topology + predicates live in reg_meta (`Catalog.graph_for_fqid`).
+         * @description The relationship graph for a catalog LEAF — a binding (3-seg) OR a
+         *     classification edition (2-seg) — dispatched on FQID kind (#761/#792). A binding:
+         *     one node per variable with its representation-run state history +
+         *     succession/related edges + same_as/group metadata, unioned over the variable's
+         *     concept group (Fork B). A classification: the edition's succession chain unioned
+         *     with its curated umbrella group(s) (the #678 unified-graph payload that retires
+         *     the lineage/dimensions panels). An empty graph (`nodes: []`) is the "don't
+         *     render" signal. A dead/renamed binding 301s to `/graph` on its terminal
+         *     successor (#411); shares the `/api/catalog` cache. Topology + predicates live in
+         *     reg_meta (`Catalog.graph_for_fqid` / `graph_for_classification_fqid`).
          */
         get: operations["get_binding_graph_api_catalog__fqid__graph_get"];
         put?: never;
@@ -2140,10 +2144,14 @@ export interface components {
          *     group are all variable-grain and the FQID must map to exactly one node.
          */
         VariableGraphNode: {
+            /** Facets */
+            facets: components["schemas"]["GroupFacet"][];
             /** Fqid */
             fqid: string | null;
             /** Group Key */
             group_key: string | null;
+            /** Group Label */
+            group_label: string | null;
             /** Id */
             id: string;
             /**

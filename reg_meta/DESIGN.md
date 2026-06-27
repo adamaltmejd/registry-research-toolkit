@@ -810,8 +810,9 @@ The webapp's subject-page graph view (#666 epic, renderer #678) consumes a singl
 single-variable graph meaningful? how does a group expand? which editions dedup? where
 does a representation run break?) — so the SPA renders a graph as-is and never assembles
 graph *semantics*. The model + builders live in **`graph.py`** (off the \~2.6k-line
-`catalog.py`); `Catalog` exposes three thin accessors that delegate there:
-`graph_for_fqid(fqid)`, `graph_for_group(provider, register, key)`,
+`catalog.py`); `Catalog` exposes four thin accessors that delegate there:
+`graph_for_fqid(fqid)`, `graph_for_classification_fqid(fqid)` (#792, the classification
+analog of `graph_for_fqid`), `graph_for_group(provider, register, key)`,
 `graph_for_classification_group(key)`. `graph.py` imports from `catalog.py`;
 `catalog.py` imports `graph` lazily inside those methods, so the dependency stays
 one-directional. The graph models are frozen `_CatalogModel`s used **directly** as the
@@ -831,21 +832,34 @@ edition dedup, and the representation-run computation.
 `(variant, valid_from)`), plus `same_as[]` (resolved-away aliases, metadata) and a
 shared `group_key` (clustering metadata — there is **no** `group:<key>` node; namespaced
 `provider/register/key` so a cross-register graph never clusters two unrelated
-same-keyed groups, since concept-group keys are only register-unique). A classification
-node carries a **point** `version_year` (never an interval — an edition is not "dead"
-after its successor; the edition's OWN vintage from the `classification` row's
-`valid_from`, NOT the supersession year — so the terminal current edition keeps its own
-year, not None) + `is_current`. Time semantics live on the node, so there is no
-top-level `mode`: the renderer draws a time axis when interval (variable) nodes are
-present and a version ordering when point-year (classification) nodes are. **Two edge
-kinds only**: `succession` (directed, predecessor→successor) and `related` (undirected —
-endpoints canonicalized by sorted node id so the same relation seen from both ends
-collapses). Everything else is metadata/affordance: `lineage` / `source_register` are
-#678's provenance affordance (not edges); `same_as` is resolved away to the canonical
-node; representation / value-set transitions are states-within-a-node (the run ids), not
-edges. Every edge carries a stable `id` that doubles as its dedup key, so a shared
-succession edge or an undirected related edge surfaced from two members during a group
-union collapses.
+same-keyed groups, since concept-group keys are only register-unique). A variable node
+also carries its facet identity **within its canonical group** (#792, for #678's
+binding-leaf header): `facets` is the variable's own member `GroupFacet`s (the
+`catalog.GroupFacet` model reused directly as the wire type, per #681 — not a parallel
+model), and `group_label` is the canonical group's display label. Post-#819 a variable
+can be SEVERAL members of one group (one per `delivery_column`), so the variable-grain
+`facets` is the deduped UNION across all of the variable's member entries
+(deterministic: group-member then axis-ordinal order); the per-representation split is
+the renderer's job once representations are first-class (#757). The leaf derives its
+#670 header identity (group + facet label) from the graph alone without a second
+`/dimensions` fetch; both `facets` and `group_label` are empty/None when the variable is
+ungrouped or on group/member skew (it degrades, never crashes). The group is fetched
+once per distinct group (builder-memoized, honoring "compose, don't re-query"). The
+classification node does **not** carry facets yet — that increment is co-designed later
+with #757. A classification node carries a **point** `version_year` (never an interval —
+an edition is not "dead" after its successor; the edition's OWN vintage from the
+`classification` row's `valid_from`, NOT the supersession year — so the terminal current
+edition keeps its own year, not None) + `is_current`. Time semantics live on the node,
+so there is no top-level `mode`: the renderer draws a time axis when interval (variable)
+nodes are present and a version ordering when point-year (classification) nodes are.
+**Two edge kinds only**: `succession` (directed, predecessor→successor) and `related`
+(undirected — endpoints canonicalized by sorted node id so the same relation seen from
+both ends collapses). Everything else is metadata/affordance: `lineage` /
+`source_register` are #678's provenance affordance (not edges); `same_as` is resolved
+away to the canonical node; representation / value-set transitions are
+states-within-a-node (the run ids), not edges. Every edge carries a stable `id` that
+doubles as its dedup key, so a shared succession edge or an undirected related edge
+surfaced from two members during a group union collapses.
 
 **Representation runs (the #526 fold, query-side mirror).** Each `GraphState` carries a
 `representation_run_id` (int, unique within the node): consecutive states sharing it
@@ -878,15 +892,29 @@ renders (as ≥2 cells).
 
 **Fork B (group ⇄ member).** `graph_for_fqid` roots the union on the resolved variable's
 `.group` members (or itself when ungrouped) and sets `focus_id` to the resolved node;
-`graph_for_group` / `graph_for_classification_group` root on the members directly with
-`focus_id=None`. A member page therefore renders the **same** group union as the group
-page, with the current node highlighted client-side (highlight is the renderer's, driven
-by `focus_id`); the union is entry-independent and cacheable by group key. Group keys
-are `(provider, register, key)` and `class/<key>`, **not** FQIDs: register groups
-resolve via `concept_group`, classification umbrellas via the new thin
+`graph_for_classification_fqid` (#792) is its classification analog — it resolves the
+edition to its canonical live slug and roots the union on the edition's curated umbrella
+group(s) (`classification_dimensions`, empty for the common ungrouped case → just the
+edition's own succession chain), with `focus_id` on the resolved edition. The umbrella
+member-union step is shared with `graph_for_classification_group` (one
+`_add_classification_group_members` helper, not re-pasted). `graph_for_group` /
+`graph_for_classification_group` root on the members directly with `focus_id=None`. A
+member page therefore renders the **same** group union as the group page, with the
+current node highlighted client-side (highlight is the renderer's, driven by
+`focus_id`); the union is entry-independent and cacheable by group key. Group keys are
+`(provider, register, key)` and `class/<key>`, **not** FQIDs: register groups resolve
+via `concept_group`, classification umbrellas via the new thin
 `classification_group(key)` accessor (a filter over `list_classification_groups()`). The
 `graph` suffix is reserved in `RESERVED_HTTP_SUFFIX_SLUGS` (it shadows a variable leaf,
 a register, and a classification slot, like `states`/`lineage`).
+
+**Leaf `/graph` route dispatches both leaf kinds.** The webapp's
+`GET /catalog/{fqid}/graph` serves **both** leaf kinds, dispatched on FQID kind (#792):
+a binding (3-seg) → `graph_for_fqid` (incl. the #411 301-redirect for a dead/renamed
+binding); a classification edition (2-seg) → `graph_for_classification_fqid`. This is
+what lets #678 render the classification leaf through the same unified graph component
+(the edition chain + umbrella cross-reference both arrive as graph content), retiring
+the separate lineage / dimensions panels.
 
 ## Thematic tags (discovery overlay, #311)
 

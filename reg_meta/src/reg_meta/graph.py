@@ -43,6 +43,7 @@ from pydantic import Field
 from .catalog import (
     OPEN_ENDED_VALID_TO,
     UNKNOWN_VALID_FROM,
+    GroupFacet,
     ResolvedVariable,
     _CatalogModel,
 )
@@ -113,6 +114,17 @@ class VariableGraphNode(_GraphNodeBase):
     kind: Literal["variable"] = "variable"
     states: list[GraphState]
     same_as: list[SameAsRef]
+    # The resolved variable's facet assignments WITHIN its canonical concept group
+    # (`resolved.group`), in the group's member order — the canonical-group member's
+    # own `GroupFacet`s (reused directly as the wire type, #681). Empty when the
+    # variable is ungrouped, or when the group/member can't be located (skew). Lets
+    # the #678 binding-leaf header derive its #670 facet identity from the graph
+    # alone, without a separate `/dimensions` fetch.
+    facets: list[GroupFacet]
+    # The canonical concept group's display label (`ConceptGroupSummary.label`);
+    # None when the variable is ungrouped (or on group/member skew). The renderer's
+    # group-link text.
+    group_label: str | None
 
 
 class ClassificationGraphNode(_GraphNodeBase):
@@ -305,6 +317,27 @@ class _GraphBuilder:
         # then upgraded once when its own (member-anchored) walk reaches it. Keying on
         # this makes the upgrade idempotent (no repeated model_copy).
         self._class_grouped: set[str] = set()
+        # Concept-group cache, keyed by the member's `(provider, register, key)`
+        # triple — the group's address (#616). A variable node's facets/group_label
+        # come from its canonical group's member list, so a grouped variable needs
+        # ONE `concept_group` fetch per DISTINCT group, not one per node (every
+        # member of one group shares the same fetch). Honors graph.py's "compose,
+        # don't re-query" — the SQL is `Catalog`'s, memoized here. `None` is a
+        # cached miss (a stale `group` ref with no live group).
+        self._group_cache: dict[tuple[str, str, str], ConceptGroupSummary | None] = {}
+
+    def _concept_group(
+        self, provider: str, register: str, key: str
+    ) -> ConceptGroupSummary | None:
+        """The cached `concept_group(provider, register, key)` — one fetch per
+        distinct group across the whole build (memoized), `None` for a missing
+        group. Compose, don't re-query."""
+        cache_key = (provider, register, key)
+        if cache_key not in self._group_cache:
+            self._group_cache[cache_key] = self._catalog.concept_group(
+                provider, register, key
+            )
+        return self._group_cache[cache_key]
 
     def add_variable(self, fqid: Fqid, *, follow_related: bool = True) -> str | None:
         """Build the variable node for ``fqid`` (resolving same_as to canonical) and
@@ -364,6 +397,7 @@ class _GraphBuilder:
             if resolved.group is not None
             else None
         )
+        facets, group_label = self._group_facets(resolved)
         node_id = str(resolved.canonical_fqid)
         return VariableGraphNode(
             id=node_id,
@@ -376,7 +410,47 @@ class _GraphBuilder:
                 for ref in resolved.same_as
                 if ref.fqid is not None
             ],
+            facets=facets,
+            group_label=group_label,
         )
+
+    def _group_facets(
+        self, resolved: ResolvedVariable
+    ) -> tuple[list[GroupFacet], str | None]:
+        """The resolved variable's facets within its canonical concept group plus
+        that group's display label (#670 header identity). Empty/`None` when the
+        variable is ungrouped, or when the group/member can't be located — a stale
+        `group` ref or member skew degrades gracefully, never crashes. The group is
+        fetched through the builder's memoized `_concept_group` (one fetch per
+        distinct group), and members are matched on `canonical_fqid` — the node's
+        identity, which the group member's binding FQID equals.
+
+        Post-#819 a single variable can be carried as SEVERAL members of one group
+        (one per `delivery_column` — the iot disposable-income family), each with its
+        own facets. The node is variable-grain, so its facet identity is the
+        deduped UNION of every matching member's facets, in group-member then
+        axis-ordinal order (deterministic). The per-representation split is the
+        renderer's job once representations are first-class (#757), not this
+        variable-grain field's."""
+        if resolved.group is None:
+            return [], None
+        group = self._concept_group(
+            resolved.group.provider, resolved.group.register_name, resolved.group.key
+        )
+        if group is None:
+            return [], None
+        matched = [m for m in group.members if m.fqid == resolved.canonical_fqid]
+        if not matched:
+            return [], None
+        facets: list[GroupFacet] = []
+        seen: set[tuple[str | None, str, str]] = set()
+        for member in matched:
+            for facet in member.facets:
+                key = (facet.axis, facet.value, facet.label)
+                if key not in seen:
+                    seen.add(key)
+                    facets.append(facet)
+        return facets, group.label
 
     def _add_succession(self, fqid: Fqid) -> None:
         """Walk the variable succession chain (``variable_chain`` — the single
@@ -444,6 +518,8 @@ class _GraphBuilder:
                 group_key=None,
                 states=[],
                 same_as=[],
+                facets=[],
+                group_label=None,
             ),
         )
         return node_id
@@ -499,6 +575,12 @@ class _GraphBuilder:
         self_fqid = Fqid.classification_fqid(slug)
         self_node_id = str(self_fqid)
         if slug in self._class_anchors_walked:
+            # Re-anchor: the chain SQL is skipped (idempotent), but a member arriving
+            # AFTER its node was anchored ungrouped — the focus add in
+            # `graph_for_classification_fqid` walks the focus's chain WITHOUT the
+            # umbrella key before the member union does — must still get its own
+            # umbrella `group_key`. Mirrors the in-loop `_class_grouped` upgrade.
+            self._apply_class_group_key(self_node_id, group_key)
             return self_node_id
         self._class_anchors_walked.add(slug)
         try:
@@ -528,22 +610,31 @@ class _GraphBuilder:
                 )
                 if is_member and group_key is not None:
                     self._class_grouped.add(node_id)
-            elif (
-                is_member
-                and group_key is not None
-                and node_id not in self._class_grouped
-            ):
+            elif is_member:
                 # A curated member first built by a non-member-anchored walk (frozen
-                # node) — rebuild once with its umbrella key.
-                existing = self._nodes[node_id]
-                self._nodes[node_id] = existing.model_copy(
-                    update={"group_key": group_key}
-                )
-                self._class_grouped.add(node_id)
+                # node) — upgrade once with its umbrella key.
+                self._apply_class_group_key(node_id, group_key)
             if edition.is_self:
                 self_id = node_id
         self._add_classification_edges(slug_to_id)
         return self_id
+
+    def _apply_class_group_key(self, node_id: str, group_key: str | None) -> None:
+        """Stamp a built classification node with its umbrella ``group_key`` once.
+        Idempotent via ``_class_grouped``: a member node built ungrouped first (as a
+        non-member-anchored walk's ancestor, or as the focus's own pre-union chain
+        walk) is upgraded exactly once; a no-key call or a re-stamp is a no-op. Nodes
+        are frozen, so this is a ``model_copy`` replace, not a mutation."""
+        if (
+            group_key is None
+            or node_id in self._class_grouped
+            or node_id not in self._nodes
+        ):
+            return
+        self._nodes[node_id] = self._nodes[node_id].model_copy(
+            update={"group_key": group_key}
+        )
+        self._class_grouped.add(node_id)
 
     def _add_classification_edges(self, slug_to_id: dict[str, str]) -> None:
         """Add the directed succession edges among the chain editions, read off the
@@ -552,6 +643,15 @@ class _GraphBuilder:
         split: the flat ``classification_chain`` interleaves branches, so adjacent
         list entries are not always a real edge — but each edition's predecessor
         IS."""
+        # Read each chain edition's inbound predecessors on EVERY walk — no memo on
+        # the successor slug. A succession edge needs BOTH endpoints in THIS walk's
+        # `slug_to_id`; at a classification MERGE (a successor C with predecessors A
+        # and B on different branches), the walk that reaches C via A has A+C but not
+        # B, so it can only add A→C — B→C is added by B's own later walk. Memoizing
+        # on the successor slug would mark C read after the A-walk and drop B→C
+        # forever. `_edges.setdefault` already dedups shared spine edges, so the
+        # repeat reads are free of duplicates; the perf cost is marginal indexed
+        # lookups, not worth the merge-shape correctness risk.
         for slug, node_id in slug_to_id.items():
             for pred in self._catalog.classification_predecessors(
                 Fqid.classification_fqid(slug)
@@ -603,14 +703,16 @@ def graph_for_fqid(catalog: Catalog, resolved: ResolvedVariable) -> Relationship
     highlighted client-side via ``focus_id``."""
     builder = _GraphBuilder(catalog)
     focus_id = builder.add_variable(resolved.fqid)
-
+    # Build the focus node first; it fetches its own concept group once (via
+    # `_group_facets` → the memoized `_concept_group`). The member union reads the
+    # same group through the builder's memo, so it hits that cache — the group is
+    # fetched exactly once, with no separate priming contract.
     if resolved.group is not None:
-        group = catalog.concept_group(
+        group = builder._concept_group(
             resolved.group.provider, resolved.group.register_name, resolved.group.key
         )
         if group is not None:
             _add_group_members(builder, group)
-
     return builder.build(focus_id)
 
 
@@ -640,7 +742,56 @@ def graph_for_classification_group(
     if group is None:
         return None
     builder = _GraphBuilder(catalog)
-    group_key = f"class/{key}"
+    _add_classification_group_members(builder, group)
+    return builder.build(focus_id=None)
+
+
+def graph_for_classification_fqid(
+    catalog: Catalog,
+    canonical_slug: str,
+    groups: list[ConceptGroupSummary],
+) -> RelationshipGraph:
+    """The classification-leaf subject graph (#792) — the classification analog of
+    ``graph_for_fqid``. The ``Catalog`` method resolves the FQID to its canonical
+    live edition (raising the standard ``not_a_classification_fqid`` /
+    ``fqid_not_found`` like the sibling classification accessors, the webapp's 4xx
+    path) and hands in the canonical slug + the edition's curated umbrella group(s),
+    mirroring how ``graph_for_fqid`` receives an already-resolved ``ResolvedVariable``
+    (the private resolvers stay in ``catalog.py``).
+
+    Root set (Fork B): when grouped, every umbrella group is unioned exactly as
+    ``graph_for_classification_group`` does (each member's full edition chain +
+    succession edges, deduped), so the leaf renders the SAME umbrella union as the
+    group page (the niva↔aggregate cross-reference #678 retires
+    ``ClassificationDimensionsPanel`` for). When ungrouped (the common case), just
+    the canonical edition's OWN succession chain (``ClassificationLineagePanels``).
+    ``focus_id`` is the canonical edition. The empty-graph gate makes a lone edition
+    with no chain and no group render nothing (parity with today's panels)."""
+    builder = _GraphBuilder(catalog)
+    # Add the focus edition's own chain FIRST (mirroring how `graph_for_fqid` adds
+    # the focus binding before unioning group members), so `focus_id` always points
+    # to a node that exists — even when the canonical edition references the umbrella
+    # but isn't itself a walked member of any group (a curation skew / #579 spine
+    # edition). `add_classification` is idempotent (`_class_anchors_walked` +
+    # node/edge `setdefault`), so when the focus IS a walked member this adds no real
+    # work; the member-anchored walk just re-applies the umbrella `group_key`.
+    focus_id = builder.add_classification(canonical_slug)
+    for group in groups:
+        _add_classification_group_members(builder, group)
+    return builder.build(focus_id)
+
+
+def _add_classification_group_members(
+    builder: _GraphBuilder, group: ConceptGroupSummary
+) -> None:
+    """Union every member of a classification umbrella group into the builder. Each
+    member is a ``class/<slug>`` edition; ``add_classification`` walks its full
+    succession chain + co-members and dedups shared nodes/edges. Members carry the
+    shared ``class/<key>`` ``group_key`` so the renderer clusters the umbrella;
+    non-member spine editions surfaced by a #579 split walk stay ungrouped. Shared
+    by ``graph_for_classification_group`` (group page) and
+    ``graph_for_classification_fqid`` (leaf, Fork B)."""
+    group_key = f"class/{group.key}"
     member_slugs = frozenset(
         member.fqid.classification
         for member in group.members
@@ -654,7 +805,6 @@ def graph_for_classification_group(
             group_key=group_key,
             member_slugs=member_slugs,
         )
-    return builder.build(focus_id=None)
 
 
 def _add_group_members(builder: _GraphBuilder, group: ConceptGroupSummary) -> None:

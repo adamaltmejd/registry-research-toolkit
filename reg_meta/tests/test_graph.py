@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import pytest
 from _slugged_db import (
     add_register,
     add_state,
@@ -19,8 +20,15 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.catalog import Catalog
-from reg_meta.graph import ClassificationGraphNode, VariableGraphNode
+from reg_meta.catalog import BindingGroupRef, Catalog, ResolvedVariable
+from reg_meta.errors import RegMetaError
+from reg_meta.fqid import Fqid
+from reg_meta.graph import (
+    ClassificationGraphNode,
+    VariableGraphNode,
+    _GraphBuilder,
+    graph_for_classification_fqid,
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -85,21 +93,44 @@ def _add_concept_group(
     register_id: int,
     group_key: str,
     member_slugs: list[str],
+    facet_axis: str | None = None,
+    facets: dict[str, tuple[str, str]] | None = None,
 ) -> None:
+    # `facet_axis` is the group's single axis (None = edge group, facet-less
+    # members); when set it lands as the group's one `concept_group_axis` row
+    # (#819, multi-axis shape — the inline `concept_group.facet_axis` column is
+    # gone). `facets` maps a member slug → (value, label) on that axis; members
+    # absent from it (and every member of an axis-less group) get no facet row, so
+    # the accessor surfaces empty `member.facets`.
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
         "label, source) VALUES (?, 'variable', ?, ?, ?, 'curated')",
         (group_id, register_id, group_key, f"Group {group_key}"),
     )
+    if facet_axis is not None:
+        conn.execute(
+            "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+            "VALUES (?, ?, 0, ?)",
+            (group_id, facet_axis, facet_axis),
+        )
+    facets = facets or {}
     for slug in member_slugs:
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
             (register_id, slug),
         ).fetchone()[0]
-        conn.execute(
-            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, ?)",
-            (vid, group_id),
+        cur = conn.execute(
+            "INSERT INTO concept_group_variable "
+            "(group_id, variable_id, delivery_column_name) VALUES (?, ?, NULL)",
+            (group_id, vid),
         )
+        if facet_axis is not None and (facet := facets.get(slug)) is not None:
+            value, label = facet
+            conn.execute(
+                "INSERT INTO concept_group_variable_facet "
+                "(member_id, axis, value, label) VALUES (?, ?, ?, ?)",
+                (cur.lastrowid, facet_axis, value, label),
+            )
     conn.commit()
 
 
@@ -810,6 +841,196 @@ class TestVariableGroups:
         assert g_kon.focus_id != g_civ.focus_id
 
 
+# ── Variable-node facets / group_label (#792, #670 header identity) ──────────
+
+
+class TestVariableNodeFacets:
+    def test_grouped_variable_carries_facets_and_label(self) -> None:
+        # A grouped variable's node carries its own member facets (axis + label) from
+        # the canonical group, plus the group's display label — the #670 header
+        # identity, derivable from the graph alone (no /dimensions fetch).
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+            facet_axis="rank",
+            facets={"kon": ("1", "primary"), "civilstand": ("2", "secondary")},
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        nodes = {n.id: n for n in g.nodes}
+        kon = nodes["scb/lisa/kon"]
+        civ = nodes["scb/lisa/civilstand"]
+        assert isinstance(kon, VariableGraphNode)
+        assert isinstance(civ, VariableGraphNode)
+        # Each member carries its OWN facet (not the whole group's), with the group's
+        # axis and the member's label.
+        assert [(f.axis, f.value, f.label) for f in kon.facets] == [
+            ("rank", "1", "primary")
+        ]
+        assert [(f.axis, f.value, f.label) for f in civ.facets] == [
+            ("rank", "2", "secondary")
+        ]
+        # group_label is the group's display label on both members.
+        assert kon.group_label == "Group demog"
+        assert civ.group_label == "Group demog"
+
+    def test_multi_representation_member_unions_facets(self) -> None:
+        # #819: one variable can be SEVERAL members of a group (one per
+        # delivery_column), each carrying its own facet. The variable-grain node
+        # unions all of them — deduped, deterministically ordered — rather than
+        # silently surfacing only the first member's facets (the rebase seam).
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        # Base group: kon (whole-variable member, rank '1') + civilstand (so the
+        # graph is multi-node and renders).
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+            facet_axis="rank",
+            facets={"kon": ("1", "first"), "civilstand": ("3", "other")},
+        )
+        # Second representation member for kon: same variable, different delivery
+        # column + facet ('2', 'second') — must union with the first, not replace it.
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'kon'"
+        ).fetchone()[0]
+        cur = conn.execute(
+            "INSERT INTO concept_group_variable "
+            "(group_id, variable_id, delivery_column_name) VALUES (40, ?, 'KonB')",
+            (vid,),
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable_facet "
+            "(member_id, axis, value, label) VALUES (?, 'rank', '2', 'second')",
+            (cur.lastrowid,),
+        )
+        conn.commit()
+        kon = {n.id: n for n in Catalog(conn).graph_for_fqid(_KON).nodes}[
+            "scb/lisa/kon"
+        ]
+        assert isinstance(kon, VariableGraphNode)
+        # BOTH of kon's member facets, ordered by first facet value (members sort
+        # '1' before '2'); the second member is NOT dropped.
+        assert [(f.axis, f.value, f.label) for f in kon.facets] == [
+            ("rank", "1", "first"),
+            ("rank", "2", "second"),
+        ]
+        assert kon.group_label == "Group demog"
+
+    def test_edge_group_member_has_empty_facets_but_label(self) -> None:
+        # An axis-less (edge) group: members carry NO facets (facet-less), but the
+        # node still gets the group's label so the renderer can link the group.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+            facet_axis=None,
+        )
+        kon = {n.id: n for n in Catalog(conn).graph_for_fqid(_KON).nodes}[
+            "scb/lisa/kon"
+        ]
+        assert isinstance(kon, VariableGraphNode)
+        assert kon.facets == []
+        assert kon.group_label == "Group demog"
+
+    def test_ungrouped_variable_has_no_facets_or_label(self) -> None:
+        # An ungrouped variable: facets == [] and group_label is None. Use a node that
+        # renders (≥2 representation runs) so the empty-graph gate doesn't drop it.
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+        conn.execute("DELETE FROM variable_state")
+        for vf, vsid in (("2018-01-01", 1), ("2019-01-01", 2)):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=10,
+                valid_from=vf,
+                delivery_column_name="Kon",
+                value_set_id=vsid,
+            )
+        conn.commit()
+        (node,) = Catalog(conn).graph_for_fqid(_KON).nodes
+        assert isinstance(node, VariableGraphNode)
+        assert node.group_key is None
+        assert node.facets == []
+        assert node.group_label is None
+
+    def test_facet_skew_degrades_gracefully(self) -> None:
+        # Skew: a `resolved.group` ref whose group/member the summary can't surface
+        # must degrade to facets == [] and group_label None — never crash. Exercised
+        # at the builder helper boundary directly (a DB-level skew is unreachable:
+        # `ResolvedVariable.group` and the group member list read the same
+        # `concept_group_variable` row, so they can't disagree there). Two misses:
+        # (a) a stale group ADDRESS `concept_group` returns None for; (b) a real group
+        # whose member list omits the canonical FQID.
+        conn = build_slugged_db()
+        catalog = Catalog(conn)
+        builder = _GraphBuilder(catalog)
+        kon_resolved = catalog.resolve(_KON)
+        assert isinstance(kon_resolved, ResolvedVariable)
+
+        # (a) stale group ADDRESS — no such group → concept_group None.
+        stale = kon_resolved.model_copy(
+            update={
+                "group": BindingGroupRef(provider="scb", register="lisa", key="nope")
+            }
+        )
+        assert builder._group_facets(stale) == ([], None)
+
+        # (b) real group, but its member list omits this canonical FQID (the member
+        # whose fqid == canonical_fqid isn't found → fall through).
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon"],
+            facet_axis="rank",
+            facets={"kon": ("1", "primary")},
+        )
+        mismatched = kon_resolved.model_copy(
+            update={
+                "group": BindingGroupRef(provider="scb", register="lisa", key="demog"),
+                "canonical_fqid": Fqid.binding_fqid("scb", "lisa", "ghost"),
+            }
+        )
+        assert _GraphBuilder(catalog)._group_facets(mismatched) == ([], None)
+
+
 # ── Classification chains + SUN-style groups ─────────────────────────────────
 
 
@@ -942,6 +1163,93 @@ class TestClassificationChains:
         assert ("class/sun1996", "class/sun2000-inriktning") in edges
         assert ("class/sun1996", "class/sun2000-grupp") in edges
 
+    def test_shared_spine_split_preserves_all_edges_deduped(self) -> None:
+        # An umbrella whose members share an ancestor spine (the SUN
+        # niva/inriktning/grupp case) re-walks the spine once per member. Every split
+        # + extension edge must be present and deduped: a spine slug's edges, added
+        # under the first member walk, stay in `_edges` (dedup by id) for the others.
+        # Two members (the two leaf branches) share the root P (sun1996) and the mid
+        # spine. (This is a SPLIT shape, not a merge — see
+        # `test_classification_merge_preserves_both_predecessor_edges` for the
+        # convergent case the per-successor re-read protects.)
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2000-inriktning", valid_from=2000)
+        _add_classification(conn, cid=4, slug="sun2020-niva", valid_from=2020)
+        _add_classification(conn, cid=5, slug="sun2020-inriktning", valid_from=2020)
+        # P splits into two branches; each branch extends to a 2020 leaf.
+        for succ in ("sun2000-niva", "sun2000-inriktning"):
+            _add_class_succession(
+                conn, predecessor="sun1996", successor=succ, effective_year=2000
+            )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-niva",
+            successor="sun2020-niva",
+            effective_year=2020,
+        )
+        _add_class_succession(
+            conn,
+            predecessor="sun2000-inriktning",
+            successor="sun2020-inriktning",
+            effective_year=2020,
+        )
+        # Curated members = both 2020 leaves; both walks traverse the shared root P.
+        _add_class_umbrella_group(conn, members=[(4, "niva"), (5, "inriktning")])
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        # Every split + extension edge is present despite the shared-spine memo.
+        assert edges == {
+            ("class/sun1996", "class/sun2000-niva"),
+            ("class/sun1996", "class/sun2000-inriktning"),
+            ("class/sun2000-niva", "class/sun2020-niva"),
+            ("class/sun2000-inriktning", "class/sun2020-inriktning"),
+        }
+        # No duplicate edges (dedup by id holds across the per-walk re-reads).
+        succ_ids = [e.id for e in g.edges if e.kind == "succession"]
+        assert len(succ_ids) == len(set(succ_ids))
+
+    def test_classification_merge_preserves_both_predecessor_edges(self) -> None:
+        # A classification MERGE: successor C (sun-cc) has TWO predecessors A (sun-aa)
+        # and B (sun-bb) on different branches — edges A→C and B→C. C and B are both
+        # curated umbrella members; C is anchored FIRST (lower facet_value). The
+        # C-anchored walk's `classification_chain(C)` walks backward via the
+        # deterministic-first predecessor only (`pred[0]` = sun-aa, alphabetically
+        # first), so its `slug_to_id` holds A and C but NOT B — that walk can add A→C
+        # but not B→C (B absent). B→C must come from B's OWN later walk, whose
+        # `slug_to_id` holds B and C.
+        #
+        # This is the regression for a successor-keyed predecessor memo: memoizing on
+        # the successor slug marks C "read" after the A-branch walk, so B's later walk
+        # skips reading C's predecessors and B→C is dropped FOREVER. The per-walk
+        # re-read (each walk re-attempts edges with its own `slug_to_id`; `_edges`
+        # dedups) is what keeps both edges. FAILS against a `_pred_walked` memo; PASSES
+        # after the revert.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun-aa", valid_from=1996)  # A
+        _add_classification(conn, cid=2, slug="sun-bb", valid_from=1996)  # B
+        _add_classification(conn, cid=3, slug="sun-cc", valid_from=2000)  # C (merge)
+        _add_class_succession(
+            conn, predecessor="sun-aa", successor="sun-cc", effective_year=2000
+        )
+        _add_class_succession(
+            conn, predecessor="sun-bb", successor="sun-cc", effective_year=2000
+        )
+        # C (facet 1) is anchored before B (facet 2); A is pulled in only as C's
+        # deterministic-first ancestor, so B is absent from C's walk.
+        _add_class_umbrella_group(conn, members=[(3, "1"), (2, "2")])
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        # BOTH inbound merge edges must be present.
+        assert ("class/sun-aa", "class/sun-cc") in edges
+        assert ("class/sun-bb", "class/sun-cc") in edges
+        # No duplicate succession edges (dedup by id holds across re-reads).
+        succ_ids = [e.id for e in g.edges if e.kind == "succession"]
+        assert len(succ_ids) == len(set(succ_ids))
+
     def test_umbrella_members_carry_group_key(self) -> None:
         # F2 regression: a classification umbrella's curated MEMBER editions must carry
         # `group_key = "class/<key>"` so the renderer can cluster umbrella membership
@@ -1050,3 +1358,159 @@ class TestClassificationChains:
         assert g is not None
         assert g.nodes == []
         assert g.edges == []
+
+
+def _add_class_umbrella_group(
+    conn: sqlite3.Connection,
+    *,
+    group_id: int = 12,
+    members: list[tuple[int, str]],
+) -> None:
+    """A curated classification umbrella group (`group:sun`) with the given
+    `(classification_id, facet_value)` members — the fixture shape the umbrella
+    tests share (mirrors the inline INSERTs in `TestClassificationChains`)."""
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (?, 'classification', NULL, 'sun', 'SUN', 'curated')",
+        (group_id,),
+    )
+    conn.executemany(
+        "INSERT INTO concept_group_classification (classification_id, group_id, "
+        "facet_value, facet_label) VALUES (?, ?, ?, ?)",
+        [(cid, group_id, fv, fv) for cid, fv in members],
+    )
+    conn.commit()
+
+
+class TestClassificationLeafGraph:
+    """`graph_for_classification_fqid` (#792) — the classification analog of
+    `graph_for_fqid`: a leaf edition's own chain unioned with its umbrella group(s),
+    `focus_id` on the canonical edition."""
+
+    def test_leaf_in_umbrella_carries_chain_and_co_members(self) -> None:
+        # An umbrella where each curated member sits on a SEPARATE chain: querying
+        # one member's leaf graph must pull in BOTH the member's own edition chain
+        # AND its umbrella co-members' chains (Fork B, deduped), `focus_id` = the
+        # queried edition.
+        conn = build_slugged_db(classification=None)
+        # Member A's chain: sun1996 → sun2000-niva.
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
+        )
+        # Member B's chain: ssyk1996 → ssyk2012 (disjoint from A).
+        _add_classification(conn, cid=3, slug="ssyk1996", valid_from=1996)
+        _add_classification(conn, cid=4, slug="ssyk2012", valid_from=2012)
+        _add_class_succession(
+            conn, predecessor="ssyk1996", successor="ssyk2012", effective_year=2012
+        )
+        # Curated members = the two terminal editions (one per chain).
+        _add_class_umbrella_group(conn, members=[(2, "niva"), (4, "ssyk")])
+        g = Catalog(conn).graph_for_classification_fqid("class/sun2000-niva")
+        ids = {n.id for n in g.nodes}
+        # The queried edition's chain AND the co-member's chain are both present,
+        # deduped.
+        assert ids == {
+            "class/sun1996",
+            "class/sun2000-niva",
+            "class/ssyk1996",
+            "class/ssyk2012",
+        }
+        assert len([n.id for n in g.nodes]) == len(ids)  # no double nodes
+        assert g.focus_id == "class/sun2000-niva"
+        # The curated members carry the umbrella key; the non-member predecessors
+        # surfaced by the chain walk stay ungrouped (own-membership rule).
+        nodes = {n.id: n for n in g.nodes}
+        assert nodes["class/sun2000-niva"].group_key == "class/sun"
+        assert nodes["class/ssyk2012"].group_key == "class/sun"
+        assert nodes["class/sun1996"].group_key is None
+        # The chains' succession edges are present.
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        assert ("class/sun1996", "class/sun2000-niva") in edges
+        assert ("class/ssyk1996", "class/ssyk2012") in edges
+
+    def test_leaf_chain_no_umbrella_is_chain_only_with_focus(self) -> None:
+        # A classification with a succession chain but NO umbrella group → just its
+        # own edition chain, `focus_id` on the queried edition, all ungrouped.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000", valid_from=2000)
+        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000", effective_year=2000
+        )
+        _add_class_succession(
+            conn, predecessor="sun2000", successor="sun2020", effective_year=2020
+        )
+        g = Catalog(conn).graph_for_classification_fqid("class/sun2000")
+        assert {n.id for n in g.nodes} == {
+            "class/sun1996",
+            "class/sun2000",
+            "class/sun2020",
+        }
+        assert g.focus_id == "class/sun2000"
+        assert all(n.group_key is None for n in g.nodes)
+        edges = {(e.source, e.target) for e in g.edges if e.kind == "succession"}
+        assert edges == {
+            ("class/sun1996", "class/sun2000"),
+            ("class/sun2000", "class/sun2020"),
+        }
+
+    def test_focus_node_present_when_not_a_walked_umbrella_member(self) -> None:
+        # Fix-1 regression: the canonical focus edition references an umbrella but is
+        # NOT itself a walked member of any group (a curation skew / #579 spine
+        # edition). The umbrella's curated members sit on a DISJOINT chain, so unioning
+        # only the members never reaches the focus — its `focus_id` would point at a
+        # missing node. Adding the focus's OWN chain FIRST (mirroring `graph_for_fqid`)
+        # guarantees the focus node exists. Driven at the module-function boundary
+        # (`graph_for_classification_fqid`) with a hand-built `groups` list that omits
+        # the focus, the exact skew the catalog resolver can't normally produce.
+        conn = build_slugged_db(classification=None)
+        # The umbrella members (a disjoint chain that does NOT include the focus).
+        _add_classification(conn, cid=1, slug="ssyk1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="ssyk2012", valid_from=2012)
+        _add_class_succession(
+            conn, predecessor="ssyk1996", successor="ssyk2012", effective_year=2012
+        )
+        # The focus edition — live, with NO succession chain and NOT in the umbrella.
+        _add_classification(conn, cid=3, slug="sun2020", valid_from=2020)
+        _add_class_umbrella_group(conn, members=[(2, "ssyk")])
+        catalog = Catalog(conn)
+        group = catalog.classification_group("sun")
+        assert group is not None  # umbrella of the disjoint members
+
+        g = graph_for_classification_fqid(catalog, "sun2020", [group])
+        ids = {n.id for n in g.nodes}
+        # The focus node is present even though it isn't a walked umbrella member.
+        assert "class/sun2020" in ids
+        assert g.focus_id == "class/sun2020"
+        # The focus node really exists for that id (not a dangling focus_id).
+        assert g.focus_id in ids
+        # The disjoint umbrella members are still unioned in.
+        assert {"class/ssyk1996", "class/ssyk2012"} <= ids
+
+    def test_standalone_classification_is_empty(self) -> None:
+        # A classification with no chain and no umbrella → the empty (don't-render)
+        # graph (`_is_empty_solo` for a solo classification), parity with today's
+        # panels showing nothing for a 1-element chain / no dimensions.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun2020", valid_from=2020)
+        g = Catalog(conn).graph_for_classification_fqid("class/sun2020")
+        assert g.nodes == []
+        assert g.edges == []
+        assert g.focus_id is None
+
+    def test_non_classification_fqid_raises(self) -> None:
+        # A binding FQID handed to the classification accessor raises the standard
+        # usage error (the route's 4xx path) — parity with the sibling accessors.
+        conn = build_slugged_db(classification=None)
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).graph_for_classification_fqid("p/r/v")
+        assert exc.value.code == "not_a_classification_fqid"
+
+    def test_unknown_classification_raises_not_found(self) -> None:
+        conn = build_slugged_db(classification=None)
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).graph_for_classification_fqid("class/nope")
+        assert exc.value.code == "fqid_not_found"

@@ -450,9 +450,11 @@ export function getBindingDimensions(
   );
 }
 
-/** The relationship graph for a binding's variable (#761) — the typed graph the
- * renderer (#678) draws. An empty graph (`nodes: []`) means "don't render". A
- * dead/renamed binding 301s server-side to its terminal successor's `/graph`. */
+/** The relationship graph for a catalog LEAF — a binding's variable OR a
+ * classification edition (#761/#792); the server dispatches on FQID kind. The
+ * typed graph the renderer (#678) draws over both leaf kinds. An empty graph
+ * (`nodes: []`) means "don't render". A dead/renamed binding 301s server-side to
+ * its terminal successor's `/graph`. */
 export function getBindingGraph(fqidPath: string): Promise<RelationshipGraph> {
   return apiGet<RelationshipGraph>(`/catalog/${encodeFqid(fqidPath)}/graph`);
 }
