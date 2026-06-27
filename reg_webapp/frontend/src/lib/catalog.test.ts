@@ -1,8 +1,14 @@
 import { describe, expect, it } from "vitest";
-import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
+import type {
+  CatalogNode,
+  GraphState,
+  StatesResponse,
+  VariableStateModel,
+} from "./api";
 import type { PickerRepresentation } from "./catalog";
 import {
   axisNoun,
+  bandLabeling,
   bindingChildren,
   breadcrumbs,
   catalogHref,
@@ -1390,6 +1396,62 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     ]);
     expect(row.wirePeriod).toBe("2018");
   });
+
+  // #678 inc 2: the widened param accepts the group graph's `GraphState[]` too —
+  // same `(variant, delivery_column)` enumeration, but its bounds are nullable.
+  it("accepts graph states and normalizes a null end to an open-ended span", () => {
+    // A minimal GraphState — null `valid_to` = still delivered. The function must
+    // map it to the open-ended `9999-12-31` sentinel so the span renders "since
+    // 2010" and the wire period stays unset (no in-grammar token for the end).
+    const gstate = (over: Partial<GraphState>): GraphState =>
+      ({
+        state_id: 1,
+        representation_run_id: 1,
+        variant: "individer",
+        delivery_column_name: null,
+        value_set_version_label: "1-siffrig",
+        value_set_id: null,
+        valid_from: null,
+        valid_to: null,
+        classification_slug: null,
+        ...over,
+      }) as GraphState;
+
+    const [row] = pickerRepresentations([
+      gstate({
+        delivery_column_name: "Kon",
+        valid_from: "2010-01-01",
+        valid_to: null, // unbounded end → open-ended
+      }),
+    ]);
+    expect(row.key).toBe("individer::Kon");
+    expect(row.column).toBe("Kon");
+    expect(row.from).toBe("2010-01-01");
+    expect(row.to).toBe("9999-12-31");
+    expect(row.period).toBe("since 2010");
+    expect(row.wirePeriod).toBeNull();
+    expect(row.valueSetLabel).toBe("1-siffrig");
+  });
+
+  it("normalizes a null graph-state start to the yearless floor (until <year>)", () => {
+    const [row] = pickerRepresentations([
+      {
+        state_id: 2,
+        representation_run_id: 1,
+        variant: "v1",
+        delivery_column_name: "Col",
+        value_set_version_label: "",
+        value_set_id: null,
+        valid_from: null, // unknown start
+        valid_to: "2008-12-31",
+        classification_slug: null,
+      } as GraphState,
+    ]);
+    expect(row.from).toBe("0001-01-01");
+    expect(row.to).toBe("2008-12-31");
+    // The one-sided "until <year>" form, never the leaked sentinel year.
+    expect(row.period).toBe("until 2008");
+  });
 });
 
 describe("pickerLabeling (#678 1b adaptive labels)", () => {
@@ -1409,19 +1471,20 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     };
   }
 
-  it("column varies → column is the mono primary, no header hoist of it", () => {
+  it("column varies → column is the mono primary; a constant variant is NOT hoisted", () => {
     const { headerContext, rows } = pickerLabeling([
       rep({ variant: "v1", column: "Ssyk3", valueSetLabel: "SSYK 3" }),
       rep({ variant: "v1", column: "Ssyk4", valueSetLabel: "SSYK 4" }),
     ]);
-    // Variant is constant ("v1") → hoisted; column varies → on the rows.
-    expect(headerContext).toContain("v1");
+    // A constant variant ("v1") is dropped as noise (#678: single-register default,
+    // already in the add coordinate); column varies → on the rows.
+    expect(headerContext).not.toContain("v1");
     expect(headerContext).not.toContain("column Ssyk3");
     expect(rows[0].primary).toEqual({ text: "Ssyk3", mono: true });
     expect(rows[1].primary).toEqual({ text: "Ssyk4", mono: true });
   });
 
-  it("fordonsreg shape: only the population varies → population primary, constant column hoisted", () => {
+  it("fordonsreg shape: only the population varies → population primary, constant column + value set hoisted (no period, no variant)", () => {
     // Every row delivers the constant column "Sni2002"; the POPULATION
     // (lastbilar/bussar) is what distinguishes them.
     const { headerContext, rows } = pickerLabeling([
@@ -1432,12 +1495,9 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       }),
       rep({ variant: "bussar", column: "Sni2002", valueSetLabel: "SNI 2002" }),
     ]);
-    // The constant column + value set + period are hoisted to the header.
-    expect(headerContext).toEqual([
-      "column Sni2002",
-      "2000 – 2010",
-      "SNI 2002",
-    ]);
+    // The constant column + value set hoist; the period is NEVER hoisted (the row's
+    // right-side period column covers it), and the (varying) variant stays on rows.
+    expect(headerContext).toEqual(["column Sni2002", "SNI 2002"]);
     // Each row shows the varying population as the (non-mono) primary.
     expect(rows.map((r) => r.primary)).toEqual([
       { text: "lastbilar", mono: false },
@@ -1446,7 +1506,35 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(rows.every((r) => r.qualifiers.length === 0)).toBe(true);
   });
 
-  it("yrkesreg shape: column + population + value set vary, period constant → period not on rows", () => {
+  it("fordonsreg empty-label shape: a value-set label constant except on empty rows still hoists (#678 fix 3)", () => {
+    // One population delivers no value set (empty label). The single real label must
+    // read as CONSTANT and hoist — not show per-row — and the empty row shows nothing.
+    const { headerContext, rows } = pickerLabeling([
+      rep({
+        variant: "lastbilar",
+        column: "Sni2002",
+        valueSetLabel: "",
+      }),
+      rep({
+        variant: "bussar",
+        column: "Sni2002",
+        valueSetLabel:
+          "Standard för svensk näringsgrensindelning, 2002 Branscher",
+      }),
+    ]);
+    expect(headerContext).toEqual([
+      "column Sni2002",
+      "Standard för svensk näringsgrensindelning, 2002 Branscher",
+    ]);
+    // The value set is treated as constant → it is NOT a per-row varying qualifier.
+    expect(rows.every((r) => r.qualifiers.length === 0)).toBe(true);
+    expect(rows.map((r) => r.primary)).toEqual([
+      { text: "lastbilar", mono: false },
+      { text: "bussar", mono: false },
+    ]);
+  });
+
+  it("yrkesreg shape: column + population + value set vary, nothing constant hoists (period never, variant varies)", () => {
     const { headerContext, rows } = pickerLabeling([
       rep({
         variant: "anställda",
@@ -1461,12 +1549,14 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
         period: "2020 – 2023",
       }),
     ]);
-    // Period is the only constant → hoisted; the three varying dims stay on rows.
-    expect(headerContext).toEqual(["2020 – 2023"]);
+    // The constant period is NEVER hoisted; the three varying dims stay on rows → no
+    // header context at all.
+    expect(headerContext).toEqual([]);
     // Priority: column (mono) is primary, then variant + value set as qualifiers.
     expect(rows[0].primary).toEqual({ text: "Sun2020Niva", mono: true });
     expect(rows[0].qualifiers).toEqual(["anställda", "SUN 2020 nivå"]);
-    // Period is hoisted, so it is NOT repeated on each row.
+    // The period is not on the rows here (it's constant; the picker's right-side
+    // period column shows it from `row.period` directly, not this label).
     expect(rows.every((r) => r.period === null)).toBe(true);
   });
 
@@ -1479,16 +1569,18 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(rows.map((r) => r.period)).toEqual(["2000 – 2005", "2006 – 2010"]);
   });
 
-  it("a single representation (nothing varies) → the column is the mono primary", () => {
+  it("a single representation (nothing varies) → the column is the mono primary; column + value set hoist, no variant/period", () => {
     const { headerContext, rows } = pickerLabeling([
       rep({ variant: "v1", column: "Kon", valueSetLabel: "1-siffrig" }),
     ]);
     // The lone row never renders blank: its column is the identifier.
     expect(rows[0].primary).toEqual({ text: "Kon", mono: true });
     expect(rows[0].qualifiers).toEqual([]);
-    // Its constants are still available as header context (variant, value set).
-    expect(headerContext).toContain("v1");
-    expect(headerContext).toContain("1-siffrig");
+    // The constant column + value set hoist; the constant variant is NOT hoisted
+    // (noise), and the period is never hoisted. (In the PICKER, a single-column
+    // variable's "column …" is then dropped from context since the column becomes
+    // the row's primary identity — but that's the picker's `view`, not this pure fn.)
+    expect(headerContext).toEqual(["column Kon", "1-siffrig"]);
   });
 
   it("falls back to the variant, then a dash, when no column is present", () => {
@@ -1500,6 +1592,87 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(withVariant.primary).toEqual({ text: "only-pop", mono: false });
     const [bare] = pickerLabeling([rep({ variant: "", column: "" })]).rows;
     expect(bare.primary).toEqual({ text: "—", mono: false });
+  });
+});
+
+describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
+  const band = (
+    over: Partial<{
+      name: string;
+      registerPrefix: string;
+      facetLabel: string | null;
+      distinguisher: string;
+    }> = {},
+  ) => ({
+    name: "Näringsgren",
+    registerPrefix: "scb/moms",
+    facetLabel: null,
+    distinguisher: "Ng0",
+    ...over,
+  });
+
+  it("a single-band leaf leads with the variable NAME, hoists nothing", () => {
+    const { showName, showPrefix, bands } = bandLabeling([
+      band({ name: "Kön", registerPrefix: "scb/lisa", distinguisher: "Kon" }),
+    ]);
+    // Name doesn't "vary" with one band → the fallback chain lands on name, not the
+    // column. Both constant dims are hoisted off (the title / breadcrumb carry them).
+    expect(bands[0].primary).toEqual({ text: "Kön", mono: false });
+    expect(bands[0].primaryIsColumn).toBe(false);
+    expect(showName).toBe(false);
+    expect(showPrefix).toBe(false);
+  });
+
+  it("a name-constant group leads each band with its distinguishing COLUMN (mono)", () => {
+    // The moms/naringsgren shape: every member is "Näringsgren" on `scb/moms`, only
+    // the delivery column varies → drop the repeated name + prefix, lead with Ng0/…
+    const { showName, showPrefix, bands } = bandLabeling([
+      band({ distinguisher: "Ng0" }),
+      band({ distinguisher: "Ng1" }),
+      band({ distinguisher: "Sni" }),
+    ]);
+    expect(bands.map((b) => b.primary.text)).toEqual(["Ng0", "Ng1", "Sni"]);
+    expect(bands.every((b) => b.primary.mono)).toBe(true);
+    expect(bands.every((b) => b.primaryIsColumn)).toBe(true);
+    // Name + prefix are constant → hoisted off every band.
+    expect(showName).toBe(false);
+    expect(showPrefix).toBe(false);
+  });
+
+  it("a facet group leads each band with its FACET label (normal weight)", () => {
+    // The moderns-utbildningsniva shape: name constant, a facet axis varies → the
+    // facet (e.g. specialskola) leads, NOT the column.
+    const { bands } = bandLabeling([
+      band({ facetLabel: "specialskola", distinguisher: "Ng0" }),
+      band({ facetLabel: "grundskola", distinguisher: "Ng1" }),
+    ]);
+    expect(bands.map((b) => b.primary.text)).toEqual([
+      "specialskola",
+      "grundskola",
+    ]);
+    expect(bands.every((b) => b.primary.mono)).toBe(false);
+    expect(bands.every((b) => b.primaryIsColumn)).toBe(false);
+  });
+
+  it("genuinely different concepts lead with the NAME and keep it visible", () => {
+    const { showName, bands } = bandLabeling([
+      band({ name: "Inkomst", distinguisher: "Ink" }),
+      band({ name: "Ålder", distinguisher: "Age" }),
+    ]);
+    expect(bands.map((b) => b.primary.text)).toEqual(["Inkomst", "Ålder"]);
+    expect(bands.every((b) => b.primary.mono)).toBe(false);
+    // The name varies → it IS the distinguisher, so it stays as the primary (not
+    // double-shown as secondary; `showNameSecondary` in the band guards the echo).
+    expect(showName).toBe(true);
+  });
+
+  it("hoists only the constant dimension when name varies but prefix is constant", () => {
+    const { showName, showPrefix } = bandLabeling([
+      band({ name: "Inkomst", registerPrefix: "scb/lisa" }),
+      band({ name: "Ålder", registerPrefix: "scb/lisa" }),
+    ]);
+    expect(showName).toBe(true);
+    expect(showPrefix).toBe(false);
   });
 });
 

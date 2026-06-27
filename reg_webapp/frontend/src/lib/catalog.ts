@@ -871,17 +871,38 @@ function rowWirePeriod(from: string, to: string): string | null {
   return lo === hi ? String(lo) : `${lo}..${hi}`;
 }
 
-/** Enumerate a variable's representation rows from its `node.states` (#678): one
- * row per distinct `(variant, delivery_column_name)`, states with a null
+/** The state shape `pickerRepresentations` reads — the fields shared by the
+ * binding leaf's `VariableStateModel` and the group graph's `GraphState` (#678 inc
+ * 2). The leaf states carry non-null ISO bounds; the graph states carry `null` on
+ * an unbounded/unknown side (so this widens both to `string | null`), normalized to
+ * the `0001`/`9999` sentinels below so the rest of the pipeline is bound-uniform.
+ * `VariableStateModel` is structurally assignable here (non-null is a subtype of
+ * nullable), so the leaf call needs no cast — this widens the param, it doesn't
+ * fork the function. */
+export interface PickerStateInput {
+  variant: string;
+  delivery_column_name: string | null;
+  value_set_version_label: string;
+  valid_from: string | null;
+  valid_to: string | null;
+}
+
+/** Enumerate a variable's representation rows from its states (#678): one row per
+ * distinct `(variant, delivery_column_name)`, states with a null
  * `delivery_column_name` skipped (no column = nothing to deliver/select). For
  * each group the span is `formatWindow(min valid_from, max valid_to)` across its
  * states and the value-set label is the LATEST-era state's
  * `value_set_version_label`. First-seen order is preserved so the list is
- * stable. Pure — unit-tested in catalog.test.ts. */
+ * stable. Accepts both the binding leaf's `VariableStateModel[]` AND the group
+ * graph's `GraphState[]` (#678 inc 2) via the shared `PickerStateInput` shape — a
+ * null bound (the graph's unbounded side) is normalized to the `0001`/`9999`
+ * sentinel `formatWindow`/`rowWirePeriod` already understand, so a graph-sourced
+ * row renders identically to a leaf-sourced one. Pure — unit-tested in
+ * catalog.test.ts. */
 export function pickerRepresentations(
-  states: VariableStateModel[],
+  states: readonly PickerStateInput[],
 ): PickerRepresentation[] {
-  const byKey = new Map<string, VariableStateModel[]>();
+  const byKey = new Map<string, PickerStateInput[]>();
   for (const s of states) {
     if (!s.delivery_column_name) {
       continue;
@@ -894,18 +915,25 @@ export function pickerRepresentations(
       byKey.set(key, [s]);
     }
   }
+  // Normalize a state's nullable bounds to the catalog sentinels: a null start is
+  // the yearless floor, a null end the open-ended ceiling — the same forms the leaf
+  // states already carry, so the span/wire-period logic below stays bound-uniform.
+  const validFrom = (s: PickerStateInput): string =>
+    s.valid_from ?? YEARLESS_VALID_FROM;
+  const validTo = (s: PickerStateInput): string =>
+    s.valid_to ?? OPEN_ENDED_VALID_TO;
   return [...byKey.entries()].map(([key, group]) => {
     const from = group.reduce(
-      (m, s) => (s.valid_from < m ? s.valid_from : m),
-      group[0].valid_from,
+      (m, s) => (validFrom(s) < m ? validFrom(s) : m),
+      validFrom(group[0]),
     );
     const to = group.reduce(
-      (m, s) => (s.valid_to > m ? s.valid_to : m),
-      group[0].valid_to,
+      (m, s) => (validTo(s) > m ? validTo(s) : m),
+      validTo(group[0]),
     );
     // The latest-era state (max valid_to, column tie-break is moot within one
     // group) supplies the representative value-set label — the current coding.
-    const latest = group.reduce((a, b) => (b.valid_to > a.valid_to ? b : a));
+    const latest = group.reduce((a, b) => (validTo(b) > validTo(a) ? b : a));
     return {
       key,
       variant: group[0].variant,
@@ -949,10 +977,13 @@ export interface PickerRowLabel {
 
 /** The adaptive labeling of a variable's rows (#678 1b): `headerContext` is the
  * hoisted CONSTANT dimensions, each a ready-to-render quiet-context string (the
- * delivery column prefixed "column …" so a bare SCB token reads as one; the
- * value-set label, the variant, and the period verbatim), in the fixed order
- * column · period · variant · valueSet. `rows` carries each row's display
- * projection. */
+ * delivery column prefixed "column …" so a bare SCB token reads as one; the single
+ * value-set label), in the fixed order column · valueSet. `rows` carries each row's
+ * display projection. The period is NEVER in `headerContext` — every row renders its
+ * own `period` on the right (the picker's period column), so hoisting it would
+ * double-show it. The variant, when constant, is NOT hoisted either — a single-
+ * variant register's whole-population default is noise and is already in the add
+ * coordinate; it only appears when it VARIES (as the row identity). */
 export interface PickerLabeling {
   headerContext: string[];
   rows: PickerRowLabel[];
@@ -979,26 +1010,33 @@ export function pickerLabeling(
 ): PickerLabeling {
   const columnVaries = distinctCount(rows, (r) => r.column) > 1;
   const variantVaries = distinctCount(rows, (r) => r.variant) > 1;
-  const valueSetVaries = distinctCount(rows, (r) => r.valueSetLabel) > 1;
   const periodVaries = distinctCount(rows, (r) => r.period) > 1;
 
-  // A representative row supplies the constant values to hoist (every row shares
-  // them by definition). Empty rows → empty labeling.
+  // Value-set distinctness is over NON-EMPTY labels only: a label that is constant
+  // except on rows with no value set (e.g. fordonsreg — one population delivers no
+  // value set) must read as CONSTANT, so the one real label hoists to the context
+  // instead of showing per-row. ≤1 distinct non-empty label ⇒ constant; empty rows
+  // simply contribute no value-set label.
+  const valueSetLabels = new Set(
+    rows.map((r) => r.valueSetLabel).filter((l) => l !== ""),
+  );
+  const valueSetVaries = valueSetLabels.size > 1;
+  // The single constant label to hoist (the lone non-empty one), or "" when none.
+  const constantValueSet =
+    valueSetLabels.size === 1 ? [...valueSetLabels][0] : "";
+
+  // A representative row supplies the constant column to hoist (every row shares it
+  // by definition). Empty rows → empty labeling.
   const sample = rows[0];
   const headerContext: string[] = [];
   if (sample) {
-    // Fixed order: column · period · variant · valueSet.
+    // Fixed order: column · valueSet. (Period is never hoisted — the right-side
+    // period column always shows it. A constant variant is dropped as noise.)
     if (!columnVaries && sample.column) {
       headerContext.push(`column ${sample.column}`);
     }
-    if (!periodVaries && sample.period) {
-      headerContext.push(sample.period);
-    }
-    if (!variantVaries && sample.variant) {
-      headerContext.push(sample.variant);
-    }
-    if (!valueSetVaries && sample.valueSetLabel) {
-      headerContext.push(sample.valueSetLabel);
+    if (!valueSetVaries && constantValueSet) {
+      headerContext.push(constantValueSet);
     }
   }
 
@@ -1033,6 +1071,107 @@ export function pickerLabeling(
   });
 
   return { headerContext, rows: labelRows };
+}
+
+// ── Adaptive band IDENTITY labeling (#678 inc 2) ─────────────────────────────
+// One level UP from `pickerLabeling` (which adapts ROWS within one variable): a
+// group's member BANDS differ along up to four identity dimensions — the variable
+// NAME, the register prefix, the member's FACET label, and a distinguishing column
+// /slug. A naive "show the name" band header fails the common group shape: all 8
+// members of a representation group are named "Näringsgren" / share `scb/moms`, so
+// every header reads identically and the thing that tells them apart (`Ng0`/`Ng1`,
+// or the facet `specialskola`) is buried in the row context. The fix mirrors the
+// row adaptiveness: classify each identity dimension as CONSTANT (≤1 distinct
+// value) or VARYING, HOIST the constants (the name is already the page <h2>; the
+// prefix is in the breadcrumb), and lead each band with its DISTINGUISHING
+// identity. Pure — unit-tested in catalog.test.ts.
+
+/** The identity dimensions of ONE member band — the inputs to `bandLabeling`. The
+ * `distinguisher` is the band's natural technical differentiator (a single-rep
+ * band's delivery column, else the member leaf slug), rendered mono when it leads. */
+export interface BandIdentity {
+  name: string;
+  registerPrefix: string;
+  facetLabel: string | null;
+  distinguisher: string;
+}
+
+/** One band's adaptive header projection: the leading `primary` identity (mono for
+ * a column/slug, normal weight for a name/facet) and whether its single-rep column
+ * is now the primary (so the band can suppress repeating that column in its row
+ * context). */
+export interface BandLabel {
+  primary: { text: string; mono: boolean };
+  /** True when the primary IS this band's distinguisher AND that distinguisher is a
+   * single-rep column — the band drops the redundant "column …" from its context. */
+  primaryIsColumn: boolean;
+}
+
+/** The adaptive labeling across a group's member bands (#678 inc 2): `showName` /
+ * `showPrefix` say whether the (constant-hoisted) variable name / register prefix
+ * should still render on each band — false when constant across all bands (already
+ * the page title / breadcrumb), true when they genuinely vary. `bands` carries each
+ * band's leading identity, in input order.
+ *
+ * Per-band primary priority — the first VARYING identity dimension:
+ *   NAME (genuinely different concepts) → FACET label (a facet axis, e.g.
+ *   `specialskola`) → distinguisher (delivery column / member slug, e.g. `Ng0`).
+ * When NOTHING varies (a single band — the leaf) the primary falls back to the
+ * name, then the facet, then the distinguisher — so a 1-band leaf still leads with
+ * the variable name, never an empty/column primary. */
+export function bandLabeling(bands: readonly BandIdentity[]): {
+  showName: boolean;
+  showPrefix: boolean;
+  bands: BandLabel[];
+} {
+  const distinct = (pick: (b: BandIdentity) => string | null): number =>
+    new Set(bands.map(pick)).size;
+  const nameVaries = distinct((b) => b.name) > 1;
+  const prefixVaries = distinct((b) => b.registerPrefix) > 1;
+  const facetVaries = distinct((b) => b.facetLabel) > 1;
+
+  const labels = bands.map((b): BandLabel => {
+    // The leading identity: first varying dimension, then a single-band fallback
+    // chain (name → facet → distinguisher) so the leaf leads with its name.
+    if (nameVaries) {
+      return { primary: { text: b.name, mono: false }, primaryIsColumn: false };
+    }
+    if (facetVaries && b.facetLabel) {
+      return {
+        primary: { text: b.facetLabel, mono: false },
+        primaryIsColumn: false,
+      };
+    }
+    // Name + facet constant across bands → lead with the distinguisher (the column
+    // /slug that actually varies, e.g. `Ng0`/`Ng1`/`Sni`), rendered mono. Single
+    // band (leaf) or a degenerate all-constant group falls back to name → facet →
+    // distinguisher so the header is never empty.
+    if (bands.length > 1 && b.distinguisher) {
+      return {
+        primary: { text: b.distinguisher, mono: true },
+        primaryIsColumn: true,
+      };
+    }
+    if (b.name) {
+      return { primary: { text: b.name, mono: false }, primaryIsColumn: false };
+    }
+    if (b.facetLabel) {
+      return {
+        primary: { text: b.facetLabel, mono: false },
+        primaryIsColumn: false,
+      };
+    }
+    return {
+      primary: { text: b.distinguisher || "—", mono: true },
+      primaryIsColumn: !!b.distinguisher,
+    };
+  });
+
+  return {
+    showName: nameVaries,
+    showPrefix: prefixVaries,
+    bands: labels,
+  };
 }
 
 /** The active period window the picker DIMS against, as an inclusive year pair

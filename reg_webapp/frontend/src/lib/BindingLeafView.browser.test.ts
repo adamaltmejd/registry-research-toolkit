@@ -196,10 +196,10 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Sni/ }))
       .toBeVisible();
-    // The row's full-history period span is shown (scoped to the picker band —
-    // the same span text also appears in the StatesView usage list).
+    // The column's full-history period span is shown (scoped to the picker — the
+    // same span text also appears in the StatesView usage list).
     const spans = await vi.waitFor(() => {
-      const els = [...document.querySelectorAll(".rep-band .period")].map(
+      const els = [...document.querySelectorAll(".rep-picker .period")].map(
         (el) => el.textContent?.trim(),
       );
       if (els.length < 2) {
@@ -226,9 +226,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await konRow.click();
     await expect.element(konRow).toHaveAttribute("aria-checked", "true");
     await expect.element(add).toBeEnabled();
-    await expect
-      .element(page.getByText("1 representation selected"))
-      .toBeVisible();
+    await expect.element(page.getByText("1 column selected")).toBeVisible();
   });
 
   it("selecting rows + Add commits the right addFromCatalog payloads", async () => {
@@ -243,9 +241,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     await page.getByRole("checkbox", { name: /Sni/ }).click();
-    await expect
-      .element(page.getByText("2 representations selected"))
-      .toBeVisible();
+    await expect.element(page.getByText("2 columns selected")).toBeVisible();
     await page.getByRole("button", { name: "Add to project" }).click();
 
     expect(spy).toHaveBeenCalledTimes(2);
@@ -331,17 +327,25 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    // The constant column + value set + period are hoisted to the band context.
+    // The constant column + value set hoist to the variable's subheading context
+    // (the rows then show only the varying population). The period is NOT in the
+    // context (#678 fix 5) — it shows per-row on the right instead.
     const ctx = await vi.waitFor(() => {
-      const el = document.querySelector(".rep-band .band-context");
+      const el = document.querySelector(".subhead-context");
       if (!el) {
-        throw new Error("band context not yet rendered");
+        throw new Error("subhead context not yet rendered");
       }
       return el.textContent ?? "";
     });
     expect(ctx).toContain("column Sni2002");
     expect(ctx).toContain("SNI 2002");
-    expect(ctx).toContain("2003 – 2015");
+    // The period is NOT duplicated into the context line.
+    expect(ctx).not.toContain("2003 – 2015");
+    // Each row still shows its own period on the right-side column.
+    const periods = [
+      ...document.querySelectorAll(".col-row.nested .period"),
+    ].map((el) => el.textContent?.trim());
+    expect(periods).toEqual(["2003 – 2015", "2003 – 2015"]);
 
     // Each row shows the varying POPULATION (not the repeated column).
     await expect
@@ -352,10 +356,50 @@ describe("BindingLeafView representation picker (#678)", () => {
       .toBeVisible();
     // The constant column is NOT repeated as a per-row label.
     expect(
-      [...document.querySelectorAll(".rep-row .primary")].some(
+      [...document.querySelectorAll(".col-row.nested .primary")].some(
         (el) => el.textContent === "Sni2002",
       ),
     ).toBe(false);
+  });
+
+  it("the single-COLUMN leaf renders ONE compact row led by the variable NAME (#678)", async () => {
+    // A single-column leaf has nothing varying, so it merges to ONE compact row led
+    // by the variable name (the leaf ≈ one-variable group). (The row reads "Kön",
+    // not "Kon".) The constant register prefix is hoisted off (it's the breadcrumb).
+    const oneColumn = [
+      state({
+        state_id: 1,
+        variant: "individer",
+        delivery_column_name: "Kon",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+        value_set_version_label: "1-siffrig",
+      }),
+    ];
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(oneColumn),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // ONE compact single-column row, no subheading.
+    const primary = await vi.waitFor(() => {
+      const el = document.querySelector(".col-row.single .primary");
+      if (!el) {
+        throw new Error("single-column row not yet rendered");
+      }
+      return el;
+    });
+    expect(document.querySelectorAll("li.subhead")).toHaveLength(0);
+    // The leaf leads with its variable name, normal weight (a <span>, not mono).
+    expect(primary.textContent?.trim()).toBe("Kön");
+    expect(primary.tagName).toBe("SPAN");
+    // The merged row is itself a selectable checkbox.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Kön/ }))
+      .toBeVisible();
   });
 
   it("renders no picker when no state carries a delivery column", async () => {
@@ -493,8 +537,9 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .element(page.getByText("1 value set outside this period"))
       .toBeVisible();
     // The picker lists representations over the FULL history (the period window
-    // only dims), so the Kon row is present and Add is enabled once selected.
-    const konRow = page.getByRole("checkbox", { name: /Kon/ });
+    // only dims). inA/inB share (individer, Kon) → ONE representation → a single-rep
+    // leaf renders FLAT, led by the variable NAME ("Kön"). Selecting it enables Add.
+    const konRow = page.getByRole("checkbox", { name: /Kön/ });
     await expect.element(konRow).toBeVisible();
     await konRow.click();
     await expect

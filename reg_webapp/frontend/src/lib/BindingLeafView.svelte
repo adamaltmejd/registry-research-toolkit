@@ -13,7 +13,6 @@ import {
   coverageFromStates,
   grainsFromStates,
   groupLinkFromFocus,
-  type PickerRepresentation,
   pickerRepresentations,
   pickerWindowYears,
   qualifierFromFocus,
@@ -26,7 +25,9 @@ import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import RepresentationPicker from "./RepresentationPicker.svelte";
+import RepresentationPicker, {
+  type PickerSelection,
+} from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
 import StatesView from "./StatesView.svelte";
 import SubjectView from "./SubjectView.svelte";
@@ -289,15 +290,16 @@ $effect(() => {
 
 /** Commit each selected representation through the store (synchronous appends;
  * the guarded derive lands per binding afterwards) and record the aggregate
- * outcome for the inline confirmation. Each row's own period span is the wire
- * period for its source (mirroring the row the user saw). */
-function commitSelected(selected: PickerRepresentation[]): void {
+ * outcome for the inline confirmation. The leaf passes a SINGLE band, so every
+ * selection's `band.key` is this variable's fqid; each row's own period span is the
+ * wire period for its source (mirroring the row the user saw). */
+function commitSelected(selected: PickerSelection[]): void {
   if (selected.length === 0) {
     return;
   }
   const added: { name: string; period: string | null }[] = [];
   let already = 0;
-  for (const row of selected) {
+  for (const { row } of selected) {
     const result = projectStore.addFromCatalog(
       {
         registerVariant: `${registerPrefix}/${row.variant}`,
@@ -408,12 +410,17 @@ function commitSelected(selected: PickerRepresentation[]): void {
        on any row. `seedReady` still gates the commit. -->
   {#if pickerRows.length > 0}
     <RepresentationPicker
-      name={node.name ?? node.fqid}
-      {registerPrefix}
-      rows={pickerRows}
+      bands={[
+        {
+          key: node.fqid,
+          name: node.name ?? node.fqid,
+          registerPrefix,
+          isSensitive: node.is_sensitive,
+          isIdentifier: node.is_identifier,
+          rows: pickerRows,
+        },
+      ]}
       window={pickerWindow}
-      isSensitive={node.is_sensitive}
-      isIdentifier={node.is_identifier}
       canAdd={seedReady}
       onadd={commitSelected}
     />
@@ -428,7 +435,7 @@ function commitSelected(selected: PickerRepresentation[]): void {
           {#if addOutcome.added.length === 1}
             Added to project ({addOutcome.added[0].name})
           {:else}
-            Added {addOutcome.added.length} representations:
+            Added {addOutcome.added.length} columns:
             {addOutcome.added
               .map((a) => (a.period ? `${a.name} (${a.period})` : a.name))
               .join(", ")}

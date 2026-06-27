@@ -142,6 +142,8 @@ const breadcrumbItems = $derived(routeBreadcrumbs(route));
             provider={route.provider}
             register={route.register}
             key={route.key}
+            {regMetaVersion}
+            {steward}
             vintageYear={windowMaxYear}
           />
         {/key}
