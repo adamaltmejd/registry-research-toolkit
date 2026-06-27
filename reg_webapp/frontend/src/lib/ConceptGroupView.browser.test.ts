@@ -421,6 +421,170 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect.element(jan).toBeChecked();
   });
 
+  it("dims the SUBHEADING when ALL its columns are out of the active window (#678)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    // inkjan: both columns 2010–2020 (fully out of 1980..2004). inkfeb: one column
+    // 2000–2004 (IN window), one 2016–2020 (out) → at least one in.
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/inkjan", [
+          gstate({
+            variant: "v",
+            delivery_column_name: "InkjanA",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+          gstate({
+            variant: "v",
+            delivery_column_name: "InkjanB",
+            valid_from: "2016-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+        vnode("scb/rams/inkfeb", [
+          gstate({
+            variant: "v",
+            delivery_column_name: "InkfebA",
+            valid_from: "2000-01-01",
+            valid_to: "2004-12-31",
+          }),
+          gstate({
+            variant: "v",
+            delivery_column_name: "InkfebB",
+            valid_from: "2016-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ]),
+    );
+    router.navigate("/catalog/group/scb/rams/ink?period=1980..2004");
+
+    renderGroup();
+
+    // Wait for both subheadings to render, then check their dim state.
+    await vi.waitFor(() => {
+      if (document.querySelectorAll("li.subhead").length < 2) {
+        throw new Error("subheadings not yet rendered");
+      }
+    });
+    // The members have distinct NAMES → name-led subheading, so the select-all aria
+    // label is keyed on the member name.
+    const inkjanSub = document
+      .querySelector(
+        'input[aria-label="Select all columns of Inkomst januari"]',
+      )
+      ?.closest("li.subhead");
+    const inkfebSub = document
+      .querySelector(
+        'input[aria-label="Select all columns of Inkomst februari"]',
+      )
+      ?.closest("li.subhead");
+    // inkjan: all columns out → the subheading greys.
+    expect(inkjanSub?.classList.contains("dimmed")).toBe(true);
+    // inkfeb: one column in window → the subheading stays full-strength.
+    expect(inkfebSub?.classList.contains("dimmed")).toBe(false);
+  });
+
+  it("shows a data-starts-late warning when the window starts before a column's data (#678)", async () => {
+    // fordonsreg ?period=1980..2004: data starts 2003, so each in-window row gets a
+    // warning by its start year; a column covering the window start does NOT.
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        // inkjan: data starts 2003 (after the 1980 window start) but is IN window →
+        // the warning fires.
+        vnode("scb/rams/inkjan", [
+          gstate({
+            variant: "v",
+            delivery_column_name: "Late",
+            valid_from: "2003-01-01",
+            valid_to: "2004-12-31",
+          }),
+        ]),
+        // inkfeb: data starts 1975 (covers the window start) → no warning.
+        vnode("scb/rams/inkfeb", [
+          gstate({
+            variant: "v",
+            delivery_column_name: "Early",
+            valid_from: "1975-01-01",
+            valid_to: "2004-12-31",
+          }),
+        ]),
+      ]),
+    );
+    router.navigate("/catalog/group/scb/rams/ink?period=1980..2004");
+
+    renderGroup();
+
+    // The late-start row (inkjan/Late, single column) carries the warning marker.
+    const lateRow = await vi.waitFor(() => {
+      const cb = page.getByRole("checkbox", { name: /Late/ }).element();
+      const row = cb.closest(".row-btn");
+      if (!row) {
+        throw new Error("Late row not yet rendered");
+      }
+      return row;
+    });
+    const warn = lateRow.querySelector(".late-warn");
+    expect(warn).not.toBeNull();
+    expect(warn?.getAttribute("aria-label")).toBe(
+      "Data starts 2003 — your selected period begins 1980",
+    );
+    // The early-start row (covers the window start) gets NO warning.
+    const earlyRow = page
+      .getByRole("checkbox", { name: /Early/ })
+      .element()
+      .closest(".row-btn");
+    expect(earlyRow?.querySelector(".late-warn")).toBeNull();
+  });
+
+  it("shows NO data-starts-late warning on a FULLY-out-of-window row (it's already dimmed) (#678)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    // inkjan's only column is 2010–2015 — entirely AFTER the 1980..2004 window. Its
+    // start (2010) is > the window start (1980), but the row is fully out → dimmed,
+    // and the warning is suppressed (it's for IN-window rows only).
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/inkjan", [
+          gstate({
+            variant: "v",
+            delivery_column_name: "Out",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+      ]),
+    );
+    router.navigate("/catalog/group/scb/rams/ink?period=1980..2004");
+
+    renderGroup();
+
+    const outRow = await vi.waitFor(() => {
+      const cb = page.getByRole("checkbox", { name: /Out/ }).element();
+      const row = cb.closest(".row-btn");
+      if (!row) {
+        throw new Error("Out row not yet rendered");
+      }
+      return row;
+    });
+    // Dimmed (fully out) and NO late-warn marker.
+    expect(outRow.classList.contains("dimmed")).toBe(true);
+    expect(outRow.querySelector(".late-warn")).toBeNull();
+  });
+
+  it("shows NO data-starts-late warning when no period window is set (#678)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    // No ?period and no project window → no window → no warnings anywhere.
+
+    renderGroup();
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /Inkomst januari/ }))
+      .toBeVisible();
+    expect(document.querySelector(".late-warn")).toBeNull();
+  });
+
   it("keeps Add seed-gated (disabled) until a column is selected", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
@@ -777,13 +941,13 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    // The subhead-row is a <label> wrapping the select-all checkbox: clicking it (off
-    // the title link) toggles every column of that variable.
+    // The WHOLE subheading is a <label> wrapping the select-all checkbox: clicking it
+    // (off the title link) toggles every column of that variable.
     const inkjanRow = await vi.waitFor(() => {
       const cb = document.querySelector<HTMLInputElement>(
         'input[aria-label="Select all columns of Inkomst januari"]',
       );
-      const label = cb?.closest("label.subhead-row");
+      const label = cb?.closest("label.subhead-label");
       if (!label) {
         throw new Error("inkjan subhead label not yet rendered");
       }
@@ -803,6 +967,125 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /InkfebA/ }))
       .not.toBeChecked();
+  });
+
+  it("a FULLY-selected variable carries the rust left bar on its subheading; partial does NOT (#678)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
+
+    renderGroup();
+
+    const inkjanSub = await vi.waitFor(() => {
+      const li = document
+        .querySelector(
+          'input[aria-label="Select all columns of Inkomst januari"]',
+        )
+        ?.closest("li.subhead");
+      if (!li) {
+        throw new Error("inkjan subhead not yet rendered");
+      }
+      return li;
+    });
+    // Nothing selected → no rust bar.
+    expect(inkjanSub.classList.contains("selected")).toBe(false);
+
+    // Select ONE of inkjan's two columns → PARTIAL: still no full rust bar.
+    await page.getByRole("checkbox", { name: /InkjanA/ }).click();
+    await vi.waitFor(() => {
+      if (inkjanSub.classList.contains("selected")) {
+        throw new Error("partial selection should NOT show the full rust bar");
+      }
+    });
+
+    // Select the OTHER → FULLY selected → the rust left bar appears.
+    await page.getByRole("checkbox", { name: /InkjanB/ }).click();
+    await vi.waitFor(() => {
+      if (!inkjanSub.classList.contains("selected")) {
+        throw new Error("fully-selected variable should show the rust bar");
+      }
+    });
+  });
+
+  it("the subheading CONTEXT line (column chip + description) is inside the click/hover surface (#678)", async () => {
+    // The fordonsreg shape: a member whose constant column ("SNI2002") hoists to the
+    // subhead-context chip and whose value-set description hoists there too. Both must
+    // sit INSIDE the click-all + hover-all <label>, so clicking/hovering the chip or
+    // description also toggles/highlights all the variable's columns.
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        provider: "scb",
+        register: "fordonsreg",
+        key: "naringsgren",
+        label: "Näringsgren",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/fordonsreg/naringsgren",
+            name: "Näringsgren",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    // Two columns? No — constant column "SNI2002" across two VARIANTS → multi-row,
+    // column-constant variable: the column hoists to the context chip, populations
+    // vary per row. A value-set label gives the description text.
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/fordonsreg/naringsgren", [
+          gstate({
+            variant: "lastbilar",
+            delivery_column_name: "SNI2002",
+            value_set_version_label:
+              "Standard för svensk näringsgrensindelning",
+            valid_from: "2003-01-01",
+            valid_to: "2015-12-31",
+          }),
+          gstate({
+            variant: "bussar",
+            delivery_column_name: "SNI2002",
+            value_set_version_label:
+              "Standard för svensk näringsgrensindelning",
+            valid_from: "2003-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+      ]),
+    );
+
+    renderGroup({
+      provider: "scb",
+      register: "fordonsreg",
+      key: "naringsgren",
+    });
+
+    // The subhead-context renders the column chip + description, INSIDE the label.
+    const context = await vi.waitFor(() => {
+      const el = document.querySelector(".subhead-context");
+      if (!el) {
+        throw new Error("subhead context not yet rendered");
+      }
+      return el;
+    });
+    expect(context.querySelector(".col-chip")?.textContent).toBe("SNI2002");
+    // The context line is a descendant of the hover/click <label>.
+    expect(context.closest("label.subhead-label")).not.toBeNull();
+
+    // Clicking the column chip in the context toggles ALL the variable's columns
+    // (the chip is part of the select-all surface for a multi-column member).
+    const chip = context.querySelector<HTMLElement>(".col-chip");
+    if (!chip) {
+      throw new Error("context column chip missing");
+    }
+    chip.click();
+    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /lastbilar/ }))
+      .toBeChecked();
+    await expect
+      .element(page.getByRole("checkbox", { name: /bussar/ }))
+      .toBeChecked();
   });
 
   it("hovering a subheading highlights ALL its column rows (band-hover)", async () => {
@@ -832,7 +1115,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .querySelector(
         'input[aria-label="Select all columns of Inkomst januari"]',
       )
-      ?.closest("label.subhead-row") as HTMLLabelElement;
+      ?.closest("label.subhead-label") as HTMLLabelElement;
 
     // Normalize first (the real Chromium cursor may already sit over a row from a
     // prior test's click, firing a genuine mouseenter), then test the enter→leave

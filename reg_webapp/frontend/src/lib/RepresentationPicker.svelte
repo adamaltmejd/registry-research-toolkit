@@ -6,6 +6,7 @@ import {
   type PickerRepresentation,
   pickerLabeling,
   representationInWindow,
+  yearOf,
 } from "./catalog";
 
 // The direct COLUMN picker (#678 redesign): ONE compact, integrated list of a
@@ -200,9 +201,30 @@ const labelingByBand = $derived(
   new Map(bands.map((b) => [b.key, pickerLabeling(b.rows)])),
 );
 
+/** Whether the active window starts BEFORE a row's data actually begins — the
+ * "data starts late" warning trigger (#678). Only when a window is set, the row's
+ * start year resolves (skip the open/unknown-start `0001-01-01` sentinel → `yearOf`
+ * null or 1), and that start year is STRICTLY after the window's start. The data
+ * start year, or null when no warning applies. */
+function dataStartsLate(
+  row: PickerRepresentation,
+): { dataStart: number; windowStart: number } | null {
+  if (!window) {
+    return null;
+  }
+  const start = yearOf(row.from);
+  // Skip unknown/open starts (the yearless sentinel reads as year 1): no real
+  // "data begins later" claim there.
+  if (start === null || row.from === "0001-01-01" || start <= window[0]) {
+    return null;
+  }
+  return { dataStart: start, windowStart: window[0] };
+}
+
 /** The render model per variable: its leading identity, whether it is a single
  * column (→ one merged row, no subheading), the hoisted COLUMN chip + the quiet
- * value-set context, and the adaptive per-row column labels. */
+ * value-set context, the adaptive per-row column labels, and whether EVERY one of its
+ * rows is out of the active window (→ dim the subheading too). */
 const view = $derived(
   bands.map((band, i) => {
     const id = identity.bands[i];
@@ -213,11 +235,17 @@ const view = $derived(
     // (as the primary chip), so suppress the duplicate context chip there.
     const column =
       single && id.primaryIsColumn ? null : (labeling?.column ?? null);
+    // ALL-OUT: every row out of the active window → the (multi-column) subheading
+    // greys at the variable level too. A 0-row band is NOT all-out (nothing to scope).
+    const allOut =
+      band.rows.length > 0 &&
+      band.rows.every((r) => !representationInWindow(r, window));
     return {
       band,
       primary: id.primary,
       single,
       column,
+      allOut,
       context: labeling?.headerContext ?? [],
       rowLabels: new Map((labeling?.rows ?? []).map((r) => [r.key, r])),
     };
@@ -245,6 +273,19 @@ const footerLabel = $derived(
     >
   {:else}
     <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
+  {/if}
+{/snippet}
+
+<!-- The DATA-STARTS-LATE warning (#678): a quiet --warn marker shown immediately
+     before the period when the active window starts BEFORE this column's data begins
+     (the user asked from <windowStart> but data only starts <dataStart>). A text glyph
+     (no icon webfont); kept outside the right-aligned year text so it never breaks the
+     tabular-nums alignment. Only on IN-window rows — a fully-out row is already dimmed. -->
+{#snippet lateWarn(row: PickerRepresentation)}
+  {@const late = dataStartsLate(row)}
+  {#if late}
+    {@const msg = `Data starts ${late.dataStart} — your selected period begins ${late.windowStart}`}
+    <span class="late-warn" title={msg} aria-label={msg}>⚠</span>
   {/if}
 {/snippet}
 
@@ -334,6 +375,9 @@ const footerLabel = $derived(
                 >codings vary</span
               >
             {/if}
+            {#if inWindow}
+              {@render lateWarn(row)}
+            {/if}
             {#if row.period}
               <span class="period">{row.period}</span>
             {/if}
@@ -347,7 +391,17 @@ const footerLabel = $derived(
              anywhere on it toggles ALL its columns (mirrors the select-all checkbox),
              except the title nav link + the checkbox, which stop propagation. -->
         {@const empty = band.rows.length === 0}
-        <li class="subhead" class:empty>
+        <!-- Grey the whole subheading when EVERY column is out of the active window —
+             the variable reads as out-of-scope at the variable level, not just per
+             row (#678). A FULLY-selected variable carries the same rust left bar the
+             selected rows do (only full selection — not partial — mirrors the fill). -->
+        {@const fullySelected = allOfBandSelected(band)}
+        <li
+          class="subhead"
+          class:empty
+          class:dimmed={v.allOut}
+          class:selected={fullySelected}
+        >
           <!-- The identity chrome (primary + name/prefix/badges). When the variable
                has an `href` (group view) the title is a navigation LINK; otherwise
                plain text. The select-all checkbox is the control; the title link is
@@ -374,56 +428,63 @@ const footerLabel = $derived(
               <span class="empty-note">No columns</span>
             {/if}
           {/snippet}
+          {#snippet subheadContext()}
+            {#if v.column || v.context.length > 0}
+              <span class="subhead-context">
+                {#if v.column}
+                  <!-- The constant delivery column (when it doesn't vary across this
+                       variable's rows) → the prominent column chip (NOT a nav link for
+                       a multi-column member, so it is part of the select-all surface). -->
+                  {@render colChip(v.column)}
+                {/if}
+                {#if v.context.length > 0}
+                  <span class="ctx-text">{v.context.join(" · ")}</span>
+                {/if}
+              </span>
+            {/if}
+          {/snippet}
           {#if empty}
             <div class="subhead-row">
               <span class="subhead-title">{@render identityInner()}</span>
             </div>
+            {@render subheadContext()}
           {:else}
-            <!-- The subhead-row is a <label> wrapping the select-all checkbox: a click
-                 ANYWHERE on it toggles all columns natively (the title nav link inside
-                 stops propagation so a nav click never toggles). Hovering it sets the
+            <!-- The WHOLE subheading is one <label> wrapping the select-all checkbox:
+                 a click ANYWHERE on it — the title, the column chip, OR the description
+                 line — toggles all columns natively (the title nav link inside stops
+                 propagation so a nav click never toggles). Hovering anywhere sets the
                  band-hover key → all this variable's column rows highlight together. -->
             <label
-              class="subhead-row"
+              class="subhead-label"
               onmouseenter={() => (hoveredBandKey = band.key)}
               onmouseleave={() => (hoveredBandKey = null)}
             >
-              <input
-                type="checkbox"
-                class="cbox"
-                checked={allOfBandSelected(band)}
-                indeterminate={someOfBandSelected(band) &&
-                  !allOfBandSelected(band)}
-                aria-label={`Select all columns of ${v.primary.text}`}
-                onchange={() => toggleBand(band)}
-              />
-              {#if band.href}
-                <a
-                  class="subhead-title link"
-                  href={band.href}
-                  title={`Open ${v.primary.text}`}
-                  onclick={(e) => e.stopPropagation()}
-                >
-                  {@render identityInner()}
-                  <span class="open-marker" aria-hidden="true">↗</span>
-                </a>
-              {:else}
-                <span class="subhead-title">{@render identityInner()}</span>
-              {/if}
+              <div class="subhead-row">
+                <input
+                  type="checkbox"
+                  class="cbox"
+                  checked={allOfBandSelected(band)}
+                  indeterminate={someOfBandSelected(band) &&
+                    !allOfBandSelected(band)}
+                  aria-label={`Select all columns of ${v.primary.text}`}
+                  onchange={() => toggleBand(band)}
+                />
+                {#if band.href}
+                  <a
+                    class="subhead-title link"
+                    href={band.href}
+                    title={`Open ${v.primary.text}`}
+                    onclick={(e) => e.stopPropagation()}
+                  >
+                    {@render identityInner()}
+                    <span class="open-marker" aria-hidden="true">↗</span>
+                  </a>
+                {:else}
+                  <span class="subhead-title">{@render identityInner()}</span>
+                {/if}
+              </div>
+              {@render subheadContext()}
             </label>
-          {/if}
-          {#if v.column || v.context.length > 0}
-            <span class="subhead-context">
-              {#if v.column}
-                <!-- The constant delivery column (when it doesn't vary across this
-                     variable's rows) → the prominent column chip (not a link — these
-                     are not separate variables). -->
-                {@render colChip(v.column)}
-              {/if}
-              {#if v.context.length > 0}
-                <span class="ctx-text">{v.context.join(" · ")}</span>
-              {/if}
-            </span>
           {/if}
         </li>
         {#each band.rows as row (row.key)}
@@ -471,6 +532,9 @@ const footerLabel = $derived(
                   aria-label="Coding changes over time — see the value sets"
                   >codings vary</span
                 >
+              {/if}
+              {#if inWindow}
+                {@render lateWarn(row)}
               {/if}
               <!-- Every row shows its own period on the right (the period is never in
                    the hoisted context now — #678 fix 5). Use the raw `row.period` so
@@ -539,13 +603,36 @@ const footerLabel = $derived(
      highlight on the rows below. */
   .subhead {
     padding: 0.4rem 0.75rem 0.3rem;
+    /* The same 3px transparent left bar the rows carry — lines up with `.row-btn`'s
+       border-left so a fully-selected variable's rust bar is continuous down the
+       variable. Turns rust only on FULL selection (below), mirroring the fill rule. */
+    border-left: 3px solid transparent;
     cursor: pointer;
   }
   .subhead.empty {
     cursor: default;
   }
+  /* Fully-selected variable → the rust left bar, matching the selected rows below. A
+     partial (indeterminate) selection deliberately does NOT get the bar. */
+  .subhead.selected {
+    border-left-color: var(--accent);
+  }
+  /* All columns out of the active window → the subheading greys at the variable level
+     (same muted treatment as a dimmed row; un-dims a touch on hover). */
+  .subhead.dimmed {
+    opacity: 0.45;
+  }
+  .subhead.dimmed:hover {
+    opacity: 0.7;
+  }
   .subhead:not(.empty):hover {
     background: var(--accent-bg);
+  }
+  /* The whole non-empty subheading is one <label> (the hover-all + click-all surface,
+     including the context line below the title row). Block so the row + context stack. */
+  .subhead-label {
+    display: block;
+    cursor: pointer;
   }
   /* The checkbox + identity sit on one baseline row; the checkbox stays vertically
      centered against the (possibly wrapping) title. */
@@ -795,6 +882,10 @@ const footerLabel = $derived(
     color: var(--text-muted);
     text-align: right;
     white-space: nowrap;
+    /* Tabular numerals so every same-format year string is identical width and the
+       right-aligned year column lines up cleanly (#678 — the proportional font's
+       digits otherwise differ in width). */
+    font-variant-numeric: tabular-nums;
   }
   /* A quiet nudge for a column whose CODING changed over time (#678): a tiny muted
      pill after the period, pointing the eye to the value-set / States detail. A hint,
@@ -808,6 +899,16 @@ const footerLabel = $derived(
     border-radius: 999px;
     color: var(--text-muted);
     white-space: nowrap;
+  }
+  /* The data-starts-late warning marker (#678): a quiet --warn glyph just before the
+     period. Sized so it sits in the row gap and never shifts the right-aligned period
+     column. May appear on many rows, so it stays small + low-key (no fill). */
+  .late-warn {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--warn);
+    cursor: help;
   }
 
   /* ONE footer spanning the whole list: the selected count + the single Add. */
