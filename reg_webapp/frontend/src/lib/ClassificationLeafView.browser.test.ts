@@ -1,15 +1,21 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { ClassificationNodeData } from "./api";
+import { getBindingGraph } from "./api";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
 
 // The classification leaf rendered through the unified SubjectView shell (#638 PR1).
-// Everything is EMBEDDED on the node (codes / dimensions / edition_chain), so the
-// view + its panels render synchronously — no fetch, no mocking. This guards the
-// shell wiring: the title (nodeLabel = name), the short-name meta dl, and that the
-// embedded codes panel renders inside the shell. The panels' own behaviour is
-// covered by their dedicated suites.
+// The codes are EMBEDDED on the node (render synchronously); the relationships
+// surface is the #678 history graph, fetched via `getBindingGraph(node.fqid)` —
+// stubbed empty here so it omits itself (its own failure domain; the leaf renders
+// regardless). This guards the shell wiring: the title (nodeLabel = name), the
+// short-name meta dl, and the embedded codes panel.
+
+vi.mock("./api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./api")>();
+  return { ...actual, getBindingGraph: vi.fn() };
+});
 
 function node(
   overrides: Partial<ClassificationNodeData> = {},
@@ -28,6 +34,15 @@ function node(
     ...overrides,
   } as unknown as ClassificationNodeData;
 }
+
+beforeEach(() => {
+  vi.mocked(getBindingGraph).mockReset();
+  vi.mocked(getBindingGraph).mockResolvedValue({
+    nodes: [],
+    edges: [],
+    focus_id: null,
+  } as never);
+});
 
 describe("ClassificationLeafView (#638 shell)", () => {
   it("renders the title, short-name meta, and the embedded codes panel", async () => {

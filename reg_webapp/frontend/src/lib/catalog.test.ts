@@ -11,6 +11,7 @@ import {
   DATA_BROWSER_LABEL,
   deriveType,
   distinctValueSets,
+  facetLabelJoin,
   foldText,
   formatDataType,
   formatStateWindow,
@@ -18,15 +19,15 @@ import {
   fqidSegments,
   grainsFromStates,
   groupHref,
+  groupLinkFromFocus,
   humanizeClassificationSlug,
   leafSlug,
   matchesFilter,
   memberCoverageUnion,
-  memberGroupLink,
   memberKey,
-  memberQualifier,
   narrowCatalogNode,
   nodeLabel,
+  qualifierFromFocus,
   rankFilter,
   registerPrefixOf,
   representationsCollapse,
@@ -35,6 +36,7 @@ import {
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
+  yearOf,
 } from "./catalog";
 import type { Route } from "./router.svelte";
 
@@ -727,7 +729,7 @@ describe("representationsCollapse", () => {
 
 // ── Concept-group folding (#303) ─────────────────────────────────────────────
 
-import type { BindingGroupRef, ConceptGroup } from "./api";
+import type { BindingGroupRef, ConceptGroup, VariableGraphNode } from "./api";
 import {
   axisValues,
   countFoldedMembers,
@@ -737,6 +739,23 @@ import {
   memberAt,
   membersHaveUniqueCoords,
 } from "./catalog";
+
+/** A minimal `VariableGraphNode` — only the fields the #670 focus-node header
+ * helpers read (`facets` / `group_label` / `fqid`). */
+function focusNode(over: Partial<VariableGraphNode> = {}): VariableGraphNode {
+  return {
+    kind: "variable",
+    id: "v1",
+    fqid: "scb/lisa/agi1astsni2007g",
+    label: "Näringsgren, största förvärvskälla",
+    group_key: null,
+    group_label: null,
+    facets: [],
+    states: [],
+    same_as: [],
+    ...over,
+  };
+}
 
 function group(over: Partial<ConceptGroup>): ConceptGroup {
   return {
@@ -1009,117 +1028,94 @@ describe("membersHaveUniqueCoords (#819 FIX C)", () => {
   });
 });
 
-describe("memberQualifier (#670)", () => {
-  const naringsgren = group({
-    key: "naringsgren",
-    label: "Näringsgren, största förvärvskälla",
-    axes: ax("source", "edition"),
-    members: [
-      {
-        fqid: "scb/lisa/agi1astsni2007g",
-        name: "Näringsgren",
-        facets: [
-          { axis: "source", value: "agi", label: "AGI" },
-          { axis: "edition", value: "sni2007", label: "2007 SNI edition" },
-        ],
-      },
-      {
-        fqid: "scb/lisa/ku1astsni2002g",
-        name: "Näringsgren",
-        facets: [{ axis: "source", value: "ku", label: "KU" }],
-      },
-    ],
-  });
-
-  it("joins a member's facet labels (multiple facets)", () => {
-    expect(memberQualifier([naringsgren], "scb/lisa/agi1astsni2007g")).toEqual({
+describe("qualifierFromFocus (#670, graph-sourced #678)", () => {
+  it("joins the focus node's facet labels (multiple facets)", () => {
+    const focus = focusNode({
+      facets: [
+        { axis: "source", value: "agi", label: "AGI" },
+        { axis: "edition", value: "sni2007", label: "2007 SNI edition" },
+      ],
+      group_label: "Näringsgren, största förvärvskälla",
+    });
+    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
       text: "AGI · 2007 SNI edition",
       kind: "facets",
     });
   });
 
   it("handles a single facet", () => {
-    expect(memberQualifier([naringsgren], "scb/lisa/ku1astsni2002g")).toEqual({
+    const focus = focusNode({
+      facets: [{ axis: "source", value: "ku", label: "KU" }],
+      group_label: "Näringsgren",
+    });
+    expect(qualifierFromFocus(focus, "scb/lisa/ku1astsni2002g")).toEqual({
       text: "KU",
       kind: "facets",
     });
   });
 
-  it("returns null for an UNGROUPED member (in no group, no canonical key)", () => {
-    expect(memberQualifier([naringsgren], "scb/lisa/notamember")).toBeNull();
+  it("returns null for an UNGROUPED focus (no facets, no group_label)", () => {
+    expect(qualifierFromFocus(focusNode(), "scb/lisa/notamember")).toBeNull();
   });
 
-  it("falls back to the member slug for a GROUPED facet-less member (edge group split sibling)", () => {
-    // M10's exact case: an edge group (`axes: []`) whose members carry no
-    // facets, so the slug is the only differentiator between the siblings.
-    const facetless = group({
-      key: "edge",
-      axes: [],
-      members: [
-        { fqid: "scb/lisa/agi1astsni2007g", name: "Näringsgren", facets: [] },
-        { fqid: "scb/lisa/ku1astsni", name: "Näringsgren", facets: [] },
-      ],
+  it("falls back to the CANONICAL focus slug for a GROUPED facet-less focus (edge group split sibling)", () => {
+    // M10's exact case: an edge group whose focus carries a `group_label` but no
+    // facets, so the slug is the only differentiator between the siblings. The
+    // focus node's own fqid IS the canonical identity, so the slug reads it; the
+    // leaf arg is only the fallback when the focus carries no fqid.
+    const focus = focusNode({
+      fqid: "scb/lisa/agi1astsni2007g",
+      facets: [],
+      group_label: "Näringsgren",
     });
-    expect(memberQualifier([facetless], "scb/lisa/agi1astsni2007g")).toEqual({
+    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
       text: "agi1astsni2007g",
       kind: "slug",
     });
-    expect(memberQualifier([facetless], "scb/lisa/ku1astsni")).toEqual({
+    const focusB = focusNode({
+      fqid: "scb/lisa/ku1astsni",
+      facets: [],
+      group_label: "Näringsgren",
+    });
+    expect(qualifierFromFocus(focusB, "scb/lisa/ku1astsni")).toEqual({
       text: "ku1astsni",
       kind: "slug",
     });
   });
 
-  it("falls back to the slug when the member is grouped only via its canonical key", () => {
-    // The member isn't found in the passed `groups` (e.g. a /dimensions skew),
-    // but `node.group` (canonicalKey) marks it grouped → still distinguish it.
-    expect(
-      memberQualifier([], "scb/lisa/agi1astsni2007g", "naringsgren"),
-    ).toEqual({ text: "agi1astsni2007g", kind: "slug" });
-  });
-
-  it("yields a safe slug result for a grouped member whose fqid has no 3rd segment", () => {
-    // Defensive: a malformed/2-seg fqid on a grouped member (via the canonical
-    // key) must NOT masquerade as a facet qualifier. `leafSlug` yields the last
-    // segment (here "lisa"), and the result is the slug kind — a `<code>`
-    // identifier, never a human facet label. The point is the DISCRIMINANT
-    // (`kind: "slug"`), so the styling can't mis-render it.
-    expect(memberQualifier([], "scb/lisa", "naringsgren")).toEqual({
-      text: "lisa",
+  it("uses the CANONICAL focus slug for the fallback, not the leaf alias (same_as)", () => {
+    // The focus node is keyed on the RESOLVED (canonical) target; opened via a
+    // same_as alias, the slug fallback must show the CANONICAL sibling slug
+    // (focus.fqid), so the alias page and the canonical page read the SAME
+    // technical identifier (#670 Codex-P2 parity) — NOT the alias leaf slug.
+    const focus = focusNode({
+      fqid: "scb/rams/inkjan",
+      facets: [],
+      group_label: "Näringsgren",
+    });
+    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
+      text: "inkjan",
       kind: "slug",
     });
   });
 
-  it("prefers the canonical group's facets when the member is in several groups", () => {
-    // The same member appears in two groups; the canonical key selects which
-    // group's facets lead.
-    const other = group({
-      key: "other",
-      axes: ax("level"),
-      members: [
-        {
-          fqid: "scb/lisa/agi1astsni2007g",
-          name: "Näringsgren",
-          facets: [{ axis: "level", value: "5", label: "5-digit" }],
-        },
-      ],
+  it("falls back to the LEAF fqid for the slug when the focus carries no fqid", () => {
+    // A focus node's fqid can be null (it isn't the navigation key); the leaf arg
+    // then supplies the slug.
+    const focus = focusNode({
+      fqid: null,
+      facets: [],
+      group_label: "Näringsgren",
     });
-    // canonical = "naringsgren" → its facets win even though `other` is first.
-    expect(
-      memberQualifier(
-        [other, naringsgren],
-        "scb/lisa/agi1astsni2007g",
-        "naringsgren",
-      ),
-    ).toEqual({ text: "AGI · 2007 SNI edition", kind: "facets" });
-    // canonical = "other" → the level facet wins instead.
-    expect(
-      memberQualifier(
-        [other, naringsgren],
-        "scb/lisa/agi1astsni2007g",
-        "other",
-      ),
-    ).toEqual({ text: "5-digit", kind: "facets" });
+    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
+      text: "agi1astsni2007g",
+      kind: "slug",
+    });
+  });
+
+  it("returns null for a null/absent focus (graph unresolved)", () => {
+    expect(qualifierFromFocus(null, "scb/lisa/kon")).toBeNull();
+    expect(qualifierFromFocus(undefined, "scb/lisa/kon")).toBeNull();
   });
 });
 
@@ -1143,88 +1139,59 @@ describe("memberKey (#819 composite member key)", () => {
   });
 });
 
-describe("memberQualifier delivery_column disambiguation (#819)", () => {
-  // One variable, two delivery columns (two representations) in one group — the
-  // qualifier must resolve to the column the caller names, and default to the
-  // FIRST representation when the caller knows no column (the binding-leaf case).
-  const twoReps = group({
-    key: "disponibel-inkomst",
-    axes: ax("kapitalvinst"),
-    members: [
-      {
-        fqid: "scb/iot/dispink",
-        name: "Disponibel inkomst",
-        delivery_column: "dispink_inkl",
-        facets: [{ axis: "kapitalvinst", value: "inkl", label: "Inkl. kv" }],
-      },
-      {
-        fqid: "scb/iot/dispink",
-        name: "Disponibel inkomst",
-        delivery_column: "dispink_exkl",
-        facets: [{ axis: "kapitalvinst", value: "exkl", label: "Exkl. kv" }],
-      },
-    ],
-  } as unknown as Partial<ConceptGroup>);
-
-  it("resolves the named delivery_column's facets", () => {
+describe("facetLabelJoin", () => {
+  it("joins facet labels with ' · '", () => {
     expect(
-      memberQualifier([twoReps], "scb/iot/dispink", null, "dispink_exkl"),
-    ).toEqual({ text: "Exkl. kv", kind: "facets" });
+      facetLabelJoin([{ label: "AGI" }, { label: "2007 SNI edition" }]),
+    ).toBe("AGI · 2007 SNI edition");
   });
 
-  it("defaults to the first representation when no delivery_column is given", () => {
-    // The documented default: a binding-leaf page addresses a whole variable, so
-    // it knows no column — the first member's facets are the representative.
-    expect(memberQualifier([twoReps], "scb/iot/dispink")).toEqual({
-      text: "Inkl. kv",
-      kind: "facets",
-    });
+  it("returns a single facet's label unchanged and '' for none", () => {
+    expect(facetLabelJoin([{ label: "KU" }])).toBe("KU");
+    expect(facetLabelJoin([])).toBe("");
   });
 });
 
-describe("memberGroupLink (#670)", () => {
+describe("yearOf", () => {
+  it("extracts the leading 4-digit year of an ISO bound", () => {
+    expect(yearOf("2010-01-01")).toBe(2010);
+    expect(yearOf("9999-12-31")).toBe(9999);
+  });
+
+  it("returns null for a blank/non-leading-4-digit bound", () => {
+    expect(yearOf("")).toBeNull();
+    expect(yearOf("not-a-date")).toBeNull();
+  });
+});
+
+describe("groupLinkFromFocus (#670, graph-sourced #678)", () => {
   const ref: BindingGroupRef = {
     provider: "scb",
     register: "lisa",
     key: "naringsgren",
   };
-  const naringsgren = group({
-    key: "naringsgren",
-    label: "Näringsgren, största förvärvskälla",
-    members: [{ fqid: "scb/lisa/agi1astsni2007g", name: "N", facets: [] }],
+  const grouped = focusNode({
+    group_label: "Näringsgren, största förvärvskälla",
+    group_key: "naringsgren",
   });
 
-  it("returns the matching group's label + the group-subject href", () => {
-    expect(
-      memberGroupLink([naringsgren], ref, "scb/lisa/agi1astsni2007g"),
-    ).toEqual({
+  it("returns the focus group_label + the group-subject href from the leaf ref", () => {
+    expect(groupLinkFromFocus(grouped, ref)).toEqual({
       label: "Näringsgren, största förvärvskälla",
       href: "/catalog/group/scb/lisa/naringsgren",
     });
   });
 
-  it("returns null when the binding is ungrouped (no ref)", () => {
-    expect(
-      memberGroupLink([naringsgren], null, "scb/lisa/agi1astsni2007g"),
-    ).toBeNull();
+  it("returns null when the focus is ungrouped (no group_label)", () => {
+    expect(groupLinkFromFocus(focusNode(), ref)).toBeNull();
   });
 
-  it("returns null when no fetched group matches (key + member miss)", () => {
-    expect(memberGroupLink([], ref, "scb/lisa/agi1astsni2007g")).toBeNull();
+  it("returns null when the leaf carries no group ref", () => {
+    expect(groupLinkFromFocus(grouped, null)).toBeNull();
   });
 
-  it("falls back to the group containing the member when the key doesn't match", () => {
-    // Defensive: a skew between node.group.key and /dimensions still links if the
-    // member is found in some fetched group (uses the ref's href, that group's label).
-    const skewed = group({
-      key: "different-key",
-      label: "Näringsgren (skewed)",
-      members: [{ fqid: "scb/lisa/agi1astsni2007g", name: "N", facets: [] }],
-    });
-    expect(memberGroupLink([skewed], ref, "scb/lisa/agi1astsni2007g")).toEqual({
-      label: "Näringsgren (skewed)",
-      href: "/catalog/group/scb/lisa/naringsgren",
-    });
+  it("returns null for a null focus (graph unresolved)", () => {
+    expect(groupLinkFromFocus(null, ref)).toBeNull();
   });
 });
 
