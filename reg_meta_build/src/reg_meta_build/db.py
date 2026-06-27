@@ -1231,6 +1231,21 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- register/variant precedent — only the variable grain carries an index, for the
 -- A2.5 `.predecessors()` accessor that actually exists (see the
 -- `idx_variable_replaced_by_successor` comment above).
+--
+-- #846 OPTIONAL VARIANT SCOPE: a representation rename usually holds for the
+-- WHOLE variable (the default — e.g. RTB `PNR -> PersonNr` across every variant),
+-- but some hold only within ONE register-variant. FRIDA's firm key is delivered
+-- as `borgnr` (2007-13, 2018-23) and `persorgnr` (2014-17) ONLY in the
+-- `punktskatter-for-energi` variant, while 15 sibling variants deliver `borgnr`
+-- continuously. Modeled at variable grain that is a false GLOBAL succession + an
+-- illegal cycle; scoped to the one variant it is a faithful time-monotone
+-- round-trip `borgnr -> persorgnr -> borgnr`. `variant` is a `register_variant`
+-- slug (resolved within the edge's register); the default `''` = UNSCOPED, i.e.
+-- variable-level (the existing whole-variable semantics). It is in the PK so a
+-- variant-scoped edge is DISTINCT from the variable-level one on the same column
+-- pair. WITHOUT ROWID forbids a NULL PK column, hence the `''` sentinel rather
+-- than a nullable column. A variant-scoped edge always carries `effective_year`
+-- (the materializer's time-monotone cycle check needs the ordering).
 CREATE TABLE representation_replaced_by (
     predecessor_provider TEXT NOT NULL,
     predecessor_register TEXT NOT NULL,
@@ -1240,13 +1255,17 @@ CREATE TABLE representation_replaced_by (
     successor_register   TEXT NOT NULL,
     successor_variable   TEXT NOT NULL,
     successor_column     TEXT NOT NULL,
+    -- #846: register_variant slug scoping the succession; '' = unscoped
+    -- (variable-level, the default). NOT NULL (WITHOUT ROWID PK column).
+    variant              TEXT NOT NULL DEFAULT '',
     effective_year       INTEGER,
     note                 TEXT,
     beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variable,
                  predecessor_column,
                  successor_provider, successor_register, successor_variable,
-                 successor_column)
+                 successor_column,
+                 variant)
 ) WITHOUT ROWID;
 
 -- Classification EDITION succession (#571): a temporal chain over vintages of

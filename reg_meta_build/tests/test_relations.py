@@ -43,6 +43,7 @@ from reg_meta_build.relations import (
     materialize_curated_replaced_by,
     materialize_related_to,
     materialize_same_as,
+    reject_nonmonotone_representation_cycles,
 )
 
 if TYPE_CHECKING:
@@ -847,6 +848,81 @@ class TestReplacedByLoad:
         assert e.predecessor_column == "A"
         assert e.successor_column == "B"
 
+    # #846 variant scope: an optional `variant` register_variant slug on a
+    # representation edge, defaulting to `''` (variable-level).
+
+    def test_representation_no_variant_defaults_empty(self, tmp_path: Path) -> None:
+        # A #843 representation edge with no `variant` parses to the `''` default.
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+            'to = "scb/lisa/x"\nfrom_column = "Old"\nto_column = "New"\n',
+        )
+        assert rel.replaced_by[0].variant == ""
+
+    def test_representation_variant_parses(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/frida/firmkey"\n'
+            'to = "scb/frida/firmkey"\nfrom_column = "borgnr"\n'
+            'to_column = "persorgnr"\neffective_year = 2014\n'
+            'variant = "punktskatter-for-energi"\n',
+        )
+        assert len(rel.replaced_by) == 1
+        e = rel.replaced_by[0]
+        assert e.variant == "punktskatter-for-energi"
+        assert e.effective_year == 2014
+
+    def test_variant_on_non_representation_edge_rejected(self, tmp_path: Path) -> None:
+        # `variant` scopes a column-level rename; on a plain variable-grain edge
+        # (no columns) it is a mis-modeled succession → rejected.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/old"\n'
+                'to = "scb/lisa/new"\neffective_year = 2019\n'
+                'variant = "individer"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+        assert "variant" in exc.value.message
+
+    def test_variant_requires_effective_year(self, tmp_path: Path) -> None:
+        # A variant-scoped succession may be a time-monotone cycle; the cycle check
+        # orders it by year, so `effective_year` is mandatory.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/frida/firmkey"\n'
+                'to = "scb/frida/firmkey"\nfrom_column = "borgnr"\n'
+                'to_column = "persorgnr"\nvariant = "punktskatter-for-energi"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+        assert "effective_year" in exc.value.message
+
+    def test_empty_variant_rejected(self, tmp_path: Path) -> None:
+        # An explicit empty `variant = ""` is rejected — drop the field for the
+        # variable-level default rather than spell the sentinel.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/x"\nfrom_column = "Old"\nto_column = "New"\n'
+                'effective_year = 2010\nvariant = ""\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_variant_on_same_as_rejected(self, tmp_path: Path) -> None:
+        # `variant` is foreign to a same_as edge — the per-type field map rejects it.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\n'
+                'b = "scb/lisa/y"\nvariant = "individer"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
 
 # ---------------------------------------------------------------------------
 # replaced_by — classification-grain materialize (#579)
@@ -1065,9 +1141,11 @@ def _representation_edge(
     *,
     year: int | None = None,
     note: str | None = None,
+    variant: str = "",
 ) -> CuratedReplacedBy:
     """A representation `CuratedReplacedBy` (variable-grain FQID + column pair),
-    bypassing the TOML round-trip — the loader's output shape."""
+    bypassing the TOML round-trip — the loader's output shape. `variant` (#846)
+    scopes the succession to one register_variant; `''` = variable-level."""
     return CuratedReplacedBy(
         predecessor=parse_fqid(frm),
         successor=parse_fqid(to),
@@ -1075,6 +1153,7 @@ def _representation_edge(
         effective_year=year,
         predecessor_column=from_column,
         successor_column=to_column,
+        variant=variant,
     )
 
 
@@ -1108,6 +1187,19 @@ def _representation_rows(conn: sqlite3.Connection) -> list[tuple]:
     ]
 
 
+def _representation_variant_rows(conn: sqlite3.Connection) -> list[tuple]:
+    """#846: like `_representation_rows` but surfacing the `variant` scope +
+    `effective_year`, for the variant-scoped succession tests."""
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT predecessor_column, successor_column, variant, effective_year "
+            "FROM representation_replaced_by "
+            "ORDER BY effective_year, predecessor_column"
+        )
+    ]
+
+
 def _representation_db() -> sqlite3.Connection:
     """scb/lisa with one variable `dispink` (delivery column `Kon` from the
     default fixture, renamed to a `dispink`-shaped slug) carrying TWO observed
@@ -1131,6 +1223,52 @@ def _representation_db_two_variables() -> sqlite3.Connection:
     add_variable(conn, register_id=1, var_id=71, name="System inkomst", slug="sysink")
     _add_alias(conn, "sysink", "SysInk10")
     return conn
+
+
+class TestRejectNonmonotoneRepresentationCycles:
+    """#846: the pure, DB-free year-aware cycle checker. A representation cycle is
+    permitted iff it is a single time-monotone round-trip (distinct, present years,
+    one wrap); a non-cycle graph passes; a missing-year / same-year / multi-wrap
+    cycle is rejected (EXIT_CONFIG, `replaced_by_cycle`)."""
+
+    def test_empty_and_acyclic_pass(self) -> None:
+        # No edges, and a plain chain A→B→C, both pass.
+        reject_nonmonotone_representation_cycles([])
+        reject_nonmonotone_representation_cycles([("A", "B", 2010), ("B", "C", 2014)])
+
+    def test_distinct_year_two_cycle_allowed(self) -> None:
+        reject_nonmonotone_representation_cycles([("A", "B", 2014), ("B", "A", 2018)])
+
+    def test_missing_year_cycle_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            reject_nonmonotone_representation_cycles(
+                [("A", "B", None), ("B", "A", 2018)]
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_same_year_cycle_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            reject_nonmonotone_representation_cycles(
+                [("A", "B", 2014), ("B", "A", 2014)]
+            )
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_monotone_three_cycle_allowed(self) -> None:
+        # A→B→C→A with strictly increasing years (one wrap at the close) is a
+        # faithful round-trip.
+        reject_nonmonotone_representation_cycles(
+            [("A", "B", 2010), ("B", "C", 2014), ("C", "A", 2018)]
+        )
+
+    def test_nonmonotone_three_cycle_rejected(self) -> None:
+        # Distinct years that do NOT form a single monotone wrap (rotating to the
+        # min year still has a mid-cycle descent) → an impossible multi-wrap order.
+        with pytest.raises(RegMetaError) as exc:
+            reject_nonmonotone_representation_cycles(
+                [("A", "B", 2010), ("B", "C", 2018), ("C", "A", 2014)]
+            )
+        assert exc.value.code == "replaced_by_cycle"
 
 
 class TestRepresentationReplacedByMaterialize:
@@ -1257,9 +1395,11 @@ class TestRepresentationReplacedByMaterialize:
         assert out["skipped_inactive_provider"] == 1
         assert _representation_rows(conn) == []
 
-    def test_cycle_rejected(self) -> None:
-        # A→B plus B→A on the representation graph close a 2-cycle (both endpoints
-        # resolve, so it's the cycle check, not the unresolved guard).
+    def test_missing_year_cycle_rejected(self) -> None:
+        # #846: A→B plus B→A on a VARIABLE-level (variant='') representation graph
+        # close a 2-cycle. With NO `effective_year` the round-trip ordering is
+        # undefined, so the time-aware checker rejects it (both endpoints resolve,
+        # so it's the cycle check, not the unresolved guard).
         conn = _representation_db()
         with pytest.raises(RegMetaError) as exc:
             materialize_curated_replaced_by(
@@ -1283,8 +1423,136 @@ class TestRepresentationReplacedByMaterialize:
                 providers=_SCB,
                 progress=_noop,
             )
+        assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "replaced_by_cycle"
         assert _representation_rows(conn) == []  # aborts before INSERT
+
+    def test_same_year_cycle_rejected(self) -> None:
+        # #846: a variant-scoped 2-cycle whose edges SHARE an effective_year is an
+        # ambiguous / impossible round-trip → rejected even with the year-aware
+        # checker.
+        conn = _representation_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk04",
+                        "DispInk10",
+                        year=2014,
+                        variant="individer-15plus",
+                    ),
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk10",
+                        "DispInk04",
+                        year=2014,
+                        variant="individer-15plus",
+                    ),
+                ],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_cycle"
+        assert _representation_rows(conn) == []
+
+    def test_variant_distinct_year_round_trip_allowed(self) -> None:
+        # #846: the FRIDA shape — a variant-scoped 2-cycle with DISTINCT years is a
+        # faithful time-monotone round-trip (a column left and later returned within
+        # one variant). It is PERMITTED and both edges land.
+        conn = _representation_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "DispInk04",
+                    "DispInk10",
+                    year=2014,
+                    variant="individer-15plus",
+                ),
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "DispInk10",
+                    "DispInk04",
+                    year=2018,
+                    variant="individer-15plus",
+                ),
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 2
+        assert _representation_variant_rows(conn) == [
+            ("DispInk04", "DispInk10", "individer-15plus", 2014),
+            ("DispInk10", "DispInk04", "individer-15plus", 2018),
+        ]
+
+    def test_variant_scope_distinguishes_node_from_variable_level(self) -> None:
+        # #846: a variant-scoped node `(...,'individer-15plus')` is DISTINCT from the
+        # variable-level node `(...,'')`, so a variable-level A→B PLUS a
+        # variant-scoped B→A do NOT close a cycle (different node spaces). Both land.
+        conn = _representation_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "DispInk04",
+                    "DispInk10",
+                ),  # variable-level (variant='')
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "DispInk10",
+                    "DispInk04",
+                    year=2018,
+                    variant="individer-15plus",
+                ),
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 2
+
+    def test_variant_unresolved_fails_fast(self) -> None:
+        # #846: a `variant` slug that names no live register_variant of the edge's
+        # register fails fast (EXIT_CONFIG), mirroring an unresolved endpoint.
+        conn = _representation_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk04",
+                        "DispInk10",
+                        year=2014,
+                        variant="ghost-variant",
+                    )
+                ],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_unresolved_variant"
+        assert _representation_rows(conn) == []
 
     def test_duplicate_pending_deduped(self) -> None:
         # Two identical representation edges → one row, one skip.
