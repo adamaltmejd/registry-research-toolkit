@@ -18,7 +18,7 @@ import sys
 import time
 from contextlib import contextmanager
 from datetime import date, timedelta
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 from reg_meta.db import (
     DB_FILENAME,
@@ -3180,24 +3180,7 @@ def _drop_fullcover_codeless_states(conn: sqlite3.Connection) -> None:
         # Orphan tripwire (rationale in `_guard_not_last_state`'s docstring): the
         # covering code-bearing state shares this `variable_id`, so a sibling
         # always survives by construction.
-        _guard_not_last_state(
-            conn,
-            entry["variable_id"],
-            state_id,
-            code="codeless_fullcover_would_orphan_variable",
-            message=(
-                "Deleting a fully-covered code-less state would remove the "
-                f"LAST remaining state of variable_id={entry['variable_id']} "
-                f"(state_id={state_id}). The covering code-bearing state should "
-                "survive on the same key; an orphaning delete signals a "
-                "coalescer/IR bug."
-            ),
-            remediation=(
-                "Inspect the variable's states; the code-bearing state that "
-                "covers this window must be present on the same "
-                "(variable, variant, delivery_column)."
-            ),
-        )
+        _guard_not_last_state(conn, entry["variable_id"], state_id, error="fullcover")
         conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
         deleted += 1
 
@@ -3499,21 +3482,7 @@ def _resolve_curated_codeless_overlaps(
         resolution, extend_label = rule
 
         if resolution == "drop":
-            _guard_not_last_state(
-                conn,
-                entry["variable_id"],
-                state_id,
-                code="codeless_overlap_would_orphan_variable",
-                message=(
-                    "Resolving a code-less overlap would delete the LAST remaining "
-                    f"state of variable_id={entry['variable_id']} (state_id={state_id}). An "
-                    "overlapping code-bearing state should survive on the same key."
-                ),
-                remediation=(
-                    "Inspect the variable's states; the code-bearing state that overlaps "
-                    "this window must be present on the same (variable, variant, column)."
-                ),
-            )
+            _guard_not_last_state(conn, entry["variable_id"], state_id, error="overlap")
             conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
             n_dropped += 1
             continue
@@ -3679,21 +3648,7 @@ def _resolve_curated_codeless_overlaps(
         if not spans:
             # Fully covered after all (a curated `cap` on a now-full-cover key, or a
             # key #867 didn't reach) → nothing code-less remains → delete.
-            _guard_not_last_state(
-                conn,
-                entry["variable_id"],
-                state_id,
-                code="codeless_overlap_would_orphan_variable",
-                message=(
-                    "Resolving a code-less overlap would delete the LAST remaining "
-                    f"state of variable_id={entry['variable_id']} (state_id={state_id}). An "
-                    "overlapping code-bearing state should survive on the same key."
-                ),
-                remediation=(
-                    "Inspect the variable's states; the code-bearing state that overlaps "
-                    "this window must be present on the same (variable, variant, column)."
-                ),
-            )
+            _guard_not_last_state(conn, entry["variable_id"], state_id, error="overlap")
             conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
             n_capped += 1
             continue
@@ -3860,23 +3815,47 @@ def _guard_not_last_state(
     variable_id: int,
     state_id: int,
     *,
-    code: str,
-    message: str,
-    remediation: str,
+    error: Literal["fullcover", "overlap"],
 ) -> None:
-    """Shared parameterized orphan tripwire: never delete a variable's LAST remaining
-    state. Used by BOTH #867's full-cover delete (`_drop_fullcover_codeless_states`)
-    and #868's cap/drop branches (`_resolve_curated_codeless_overlaps`). In every
-    case a code-bearing overlap sharing this `variable_id` survives by construction,
-    so `survivors >= 1` holds; the guard defends against a future key change that
-    could silently orphan a variable. The caller passes the site-specific `code` /
-    `message` / `remediation` (the error `code` is the stable contract); the
-    `exit_code` and `error_class` are constant across both sites."""
+    """Shared orphan tripwire: never delete a variable's LAST remaining state. Used by
+    BOTH #867's full-cover delete (`_drop_fullcover_codeless_states`) and #868's
+    cap/drop branches (`_resolve_curated_codeless_overlaps`). In every case a
+    code-bearing overlap sharing this `variable_id` survives by construction, so
+    `survivors >= 1` holds; the guard defends against a future key change that could
+    silently orphan a variable. The `error` discriminator selects the error identity
+    (`code` / `message` / `remediation`) — `"fullcover"` for #867's full-cover delete,
+    `"overlap"` for #868's cap/drop branches — closing the contract to the two real
+    cases; the `exit_code` and `error_class` are constant across both."""
     survivors = conn.execute(
         "SELECT COUNT(*) FROM variable_state WHERE variable_id = ? AND state_id <> ?",
         (variable_id, state_id),
     ).fetchone()[0]
     if survivors == 0:
+        if error == "fullcover":
+            code = "codeless_fullcover_would_orphan_variable"
+            message = (
+                "Deleting a fully-covered code-less state would remove the "
+                f"LAST remaining state of variable_id={variable_id} "
+                f"(state_id={state_id}). The covering code-bearing state should "
+                "survive on the same key; an orphaning delete signals a "
+                "coalescer/IR bug."
+            )
+            remediation = (
+                "Inspect the variable's states; the code-bearing state that "
+                "covers this window must be present on the same "
+                "(variable, variant, delivery_column)."
+            )
+        else:
+            code = "codeless_overlap_would_orphan_variable"
+            message = (
+                "Resolving a code-less overlap would delete the LAST remaining "
+                f"state of variable_id={variable_id} (state_id={state_id}). An "
+                "overlapping code-bearing state should survive on the same key."
+            )
+            remediation = (
+                "Inspect the variable's states; the code-bearing state that overlaps "
+                "this window must be present on the same (variable, variant, column)."
+            )
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code=code,
