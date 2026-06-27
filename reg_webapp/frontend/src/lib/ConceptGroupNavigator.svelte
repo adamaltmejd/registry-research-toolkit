@@ -288,41 +288,17 @@ const visibleMembers = $derived(
     list-style: none;
     padding: 0;
     margin: var(--space-2) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
-  /* The navigator member list is a TWO-COLUMN grid OWNED BY THE <ul> (not per-row):
-     a facet-tags column (the per-axis neutral tags + optional delivery-column
-     discriminator) and a member-identity column (the host's member action — a link,
-     or a pick button + coverage/greying). The track sizing lives on the CONTAINER,
-     so `max-content` measures the WIDEST facet stack across ALL rows — the identity
-     column then starts at the SAME x on every row (the #808 aligned-rows pattern). A
-     per-<li> grid would size `max-content` per row and the identity column would
-     jitter row to row; the container grid + `subgrid` rows is what aligns the column
-     across all ~53 rows. */
-  .members.navigator {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: var(--space-2) var(--space-3);
-    align-items: baseline;
-  }
-  /* Each row spans both container tracks and inherits them via `subgrid`, so its
-     two regions land in the shared columns. */
+  /* A navigator member row: its per-axis neutral tags, then the host's member
+     action (a link, or a pick button + coverage/greying). */
   .members.navigator > li {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid;
+    display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-  }
-  /* Narrow widths: collapse to a single stacked column (the facet tags above the
-     identity) — the wide two-column grid doesn't fit at 375px. */
-  @media (max-width: 40rem) {
-    .members.navigator {
-      grid-template-columns: 1fr;
-      gap: var(--space-2) 0;
-    }
-    .members.navigator > li {
-      grid-template-columns: 1fr;
-      gap: var(--space-1) 0;
-    }
+    gap: var(--space-1) var(--space-3);
   }
   .facet-tags {
     display: inline-flex;
