@@ -6,9 +6,10 @@ cvids fold to one rule-2 node-col with no curation — and its co-delivery guard
 a never-co-occurring era-rename twin that is NOT a case/diacritic variant
 (`PNR` → `PersonNr`) forms its OWN component and SPLITS a split-container var into
 sibling variables. That split is intentional — the retired `column_merge` surface
-used to unify the twins by fiat; the cross-era continuity now lives in a
-representation-grain `replaced_by` succession edge (`curation/relations.toml`) and
-the entity-key resolver follows it to the dense successor (#846).
+used to unify the twins by fiat; the cross-era continuity now rides a
+representation-grain `replaced_by` succession edge (`curation/relations.toml`) as
+navigation, and the dense `personnr` sibling keeps the pinned slug — so no resolver
+is involved (#846).
 
 Fully synthetic (CLAUDE.md): builds from in-memory CSV rows; the surviving
 auto-fold connectivity is a pure build mechanic, no curation file involved."""
@@ -183,11 +184,11 @@ class TestAutoCaseFoldBuild:
 class TestEraRenameTwinSplits:
     """#846: a never-co-occurring era-rename twin that shares no case identity
     (`PNR` → `PersonNr`) gets NO by-fiat unification anymore — the `column_merge`
-    surface that did that is retired. The twin forms its own rule-2 component and a
-    split-container var shards it into a sibling variable. The cross-era continuity
-    is recorded out-of-band as a representation `replaced_by` succession edge, and
-    the entity-key resolver follows that edge to the dense successor (covered in
-    `test_entity_key_pins`)."""
+    surface that did that is retired. This test covers that split: the coalescer
+    forms the twin into its own rule-2 component and shards a split-container var
+    into sibling variables, with no `column_merge` involved. (Cross-era continuity
+    itself is recorded out-of-band as a representation `replaced_by` succession edge
+    in `curation/relations.toml`, exercised by the relations tests.)"""
 
     def test_rename_twin_splits_into_siblings(self, tmp_path: Path) -> None:
         # PNR (2020, co-delivered with Kommun) and PersonNr (2021, alone) never

@@ -296,8 +296,10 @@ note = "Individbaserad ekvivalerad disponibel inkomst exkl. kapitalvinst (växel
 #    the 1990–1997 family variant, `PersonNr` in every other RTB variant). With the
 #    RTB `column_merge` entry retired (#846), removing the by-fiat union splits
 #    the subject key into the sparse legacy `pnr` sibling + the dense `personnr`;
-#    this edge records the rename so the cross-era continuity survives as navigation
-#    (and the entity-key resolver follows it to the dense successor). The
+#    this edge records the rename as overlay navigation. The `panel_entity_key`
+#    pin needs no edge-walk: the dense `personnr` sibling keeps the `personnr` slug
+#    every RTB variant already pins, so the pin lands on the materialized successor
+#    directly. The
 #    co-delivered relation columns of var 57 (`PersonNrMor`/`PersonNrAnkn`/
 #    `PersonNrSamh`) are different ROLES and correctly stay split, untouched here.
 [[edge]]
