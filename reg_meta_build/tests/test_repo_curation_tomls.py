@@ -21,6 +21,7 @@ import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
 from reg_meta_build.canonical_attach import load_canonical_attach
+from reg_meta_build.codeless_overlap import load_codeless_overlap
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
     load_classification_groups,
@@ -40,6 +41,13 @@ _ROOT = Path(__file__).resolve().parent.parent
 
 def test_repo_codelivery_parses() -> None:
     assert load_codelivery(_ROOT / "codelivery.toml")
+
+
+def test_repo_codeless_overlap_parses() -> None:
+    # #868: the residual worklist is curated in-repo — the loader must accept it as
+    # well-formed (a malformed entry or header would raise here). It loads to a
+    # non-empty map of (register, variable, column) → (resolution, extend_label).
+    assert load_codeless_overlap(_ROOT / "codeless_overlap.toml")
 
 
 def test_repo_column_merges_parses() -> None:
