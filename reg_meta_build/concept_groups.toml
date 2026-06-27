@@ -726,6 +726,55 @@ variable = "org-sni2007u"
 value = "2007u"
 label = "SNI2007 (u)"
 
+# KSju (reg 195) näringsgren (#845): KSju has ONE register variant whose unit of
+# observation is the PERSON (population: sick employees), so every näringsgren
+# column is the SAME concept — the employee's workplace SNI. SCB ships several of
+# these columns IN PARALLEL in the same edition (e.g. 2019–2023: Ksjusni + NGS1
+# together), which the `variable_state` uniqueness index (one delivery column per
+# variable × variant × period) cannot hold in one variable, so the build splits
+# them into siblings. This group is the single addressable näringsgren; the
+# co-delivered columns are its parallel REPRESENTATIONS, faceted only by detail
+# level (`nivo`). There is NO entity axis (all are the person's workplace SNI), and
+# vintage spellings ride each variable's own state timeline / `replaced_by`
+# succession rather than a facet. Representation-grained (one member per live
+# delivery column), like the IoT family below. Retires #261 fold_override, which
+# could only "fold" by dropping all-but-one co-delivered column per period (lossy).
+[[variable_group]]
+register = "scb/ksju"
+key = "naringsgren"
+label = "Näringsgren"
+axes = [{ axis = "nivo", label = "Detaljnivå" }]
+
+# 5-siffrig SNI — two parallel current deliveries (FDB- vs RAMS-derived); the
+# `naringsgren` variable's earlier `NG1_2007` (2006–08) rides its own timeline.
+[[variable_group.members]]
+variable = "naringsgren"
+delivery_column = "NGS1"
+coords = [{ axis = "nivo", value = "5-siffer", label = "5-siffrig SNI (FDB)" }]
+
+[[variable_group.members]]
+variable = "naringsgren-ksjusni"
+delivery_column = "Ksjusni"
+coords = [{ axis = "nivo", value = "5-siffer", label = "5-siffrig SNI (RAMS)" }]
+
+# Grupperad SNI — NgGr1 (2010–11); lgrp (2009) is its predecessor (cross-variable
+# `replaced_by` succession is a follow-up; here both stand as grouped reps).
+[[variable_group.members]]
+variable = "naringsgren"
+delivery_column = "NgGr1"
+coords = [{ axis = "nivo", value = "grupperad", label = "Grupperad SNI" }]
+
+[[variable_group.members]]
+variable = "naringsgren-lgrp"
+delivery_column = "lgrp"
+coords = [{ axis = "nivo", value = "grupperad", label = "Grupperad SNI (2009)" }]
+
+# 2-siffrig SNI
+[[variable_group.members]]
+variable = "naringsgren-bransch"
+delivery_column = "bransch"
+coords = [{ axis = "nivo", value = "2-siffer", label = "2-siffrig SNI" }]
+
 # iot disposable-income family — the channel-2 multi-axis worked example for
 # the concept-group navigator (#805/#819). Unlike the single-axis families above,
 # this group declares ordered named `axes` and attaches (variable, delivery_column)

@@ -298,8 +298,8 @@ def load_column_groups(
     noun: str,
 ) -> dict[tuple[int, int], list[frozenset[str]]]:
     """Validate `[[entry]]` tables that name CASE-FOLDED column groups keyed on
-    `(register_id, var_id)` — the shared shape of the two SCB source-column-repair
-    surfaces (column-merge + fold-override). Returns
+    `(register_id, var_id)` — the shape of the SCB column-merge source-column-repair
+    surface. Returns
     `{(register_id, var_id): [frozenset(cols), …]}` with each column folded to the
     rule-2 connectivity key (`fold_column`), so TOML casing is cosmetic.
 
@@ -314,10 +314,9 @@ def load_column_groups(
         `(register_id, var_id)` — compared on the folded form.
 
     `entry_key` / `noun` tailor the remediation text to the calling surface
-    (`[[column_merge]]` / "merge" vs `[[fold_override]]` / "fold"); `code` keeps
-    each surface's established error code. The build-time half (every named column
-    must actually be observed / contested for the var) lives in `sources/scb.py`,
-    where the observed/contested column set is known."""
+    (`[[column_merge]]` / "merge"); `code` keeps the surface's established error
+    code. The build-time half (every named column must actually be observed for
+    the var) lives in `sources/scb.py`, where the observed column set is known."""
     out: dict[tuple[int, int], list[frozenset[str]]] = {}
     seen_cols: dict[tuple[int, int], set[str]] = {}
     for entry in entries:

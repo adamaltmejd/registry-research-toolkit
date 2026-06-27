@@ -4376,7 +4376,6 @@ def build_db(
         from .codelivery import load_codelivery, repo_codelivery_path
         from .source_column_repairs import (
             load_column_merges,
-            load_fold_overrides,
             repo_source_column_repairs_path,
         )
         from .sources.curated import CanonicalScbAdapter, CuratedAdapter
@@ -4391,19 +4390,14 @@ def build_db(
             # codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
             codelivery = load_codelivery(repo_codelivery_path())
-            # SCB source-column repairs (#196 / #261), same maintainer-artifact
-            # shape — two sibling sections in ONE SCB-scoped file
-            # (`curation/scb/source_column_repairs.toml`), loaded once and read
-            # twice. Fold-overrides fold disjoint-stem CONTESTED columns the
-            # triage stem rule would split; column-merges unify never-co-occurring
-            # era-rename column twins in the coalescer's rule-2 union-find. Empty
-            # file ⇒ no behavioral change (triage/connectivity unchanged).
+            # SCB source-column repairs (#196), same maintainer-artifact shape in
+            # one SCB-scoped file (`curation/scb/source_column_repairs.toml`):
+            # column-merges unify never-co-occurring era-rename column twins in the
+            # coalescer's rule-2 union-find. Empty file ⇒ no behavioral change
+            # (connectivity unchanged).
             repairs_path = repo_source_column_repairs_path()
-            fold_overrides = load_fold_overrides(repairs_path)
             column_merges = load_column_merges(repairs_path)
-            adapters.append(
-                (SCBAdapter(conn, codelivery, fold_overrides, column_merges), scb_dir)
-            )
+            adapters.append((SCBAdapter(conn, codelivery, column_merges), scb_dir))
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))
         # Thin curated providers (#422): one shared adapter per agency, each

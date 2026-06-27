@@ -31,10 +31,7 @@ from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
 from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
-from reg_meta_build.source_column_repairs import (
-    load_column_merges,
-    load_fold_overrides,
-)
+from reg_meta_build.source_column_repairs import load_column_merges
 from reg_meta_build.variable_grafts import load_variable_grafts
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
@@ -43,12 +40,6 @@ _ROOT = Path(__file__).resolve().parent.parent
 
 def test_repo_codelivery_parses() -> None:
     assert load_codelivery(_ROOT / "codelivery.toml")
-
-
-def test_repo_fold_overrides_parses() -> None:
-    assert load_fold_overrides(
-        _ROOT / "curation" / "scb" / "source_column_repairs.toml"
-    )
 
 
 def test_repo_column_merges_parses() -> None:

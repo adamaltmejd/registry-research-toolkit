@@ -872,9 +872,9 @@ class TestClusterContested:
     classification family is NOT consulted — the column stem is the boundary."""
 
     @staticmethod
-    def _clusters(cols: list[str], **kw: object) -> list[list[str]]:
+    def _clusters(cols: list[str]) -> list[list[str]]:
         # Normalize to sorted-list-of-sorted-lists for order-independent asserts.
-        return sorted(sorted(c) for c in _cluster_contested(cols, **kw))  # type: ignore[arg-type]
+        return sorted(sorted(c) for c in _cluster_contested(cols))
 
     def test_shared_stem_rep_suffix_one_cluster(self) -> None:
         assert self._clusters(["Ssyk3", "Ssyk5"]) == [["Ssyk3", "Ssyk5"]]
@@ -902,19 +902,6 @@ class TestClusterContested:
             ["LNamn"],
             ["Lid"],
             ["Ssyk3", "Ssyk5"],
-        ]
-
-    def test_forced_same_folds_by_fiat(self) -> None:
-        # The curated-override seam (#261): force-merge disjoint stems into one
-        # cluster, bypassing the stem rule. Default (no override) keeps them split.
-        # forced_same groups are case-folded at load; membership probes fold.
-        forced = [frozenset({"hemkommun", "skolkommun"})]
-        assert self._clusters(["Hemkommun", "Skolkommun"], forced_same=forced) == [
-            ["Hemkommun", "Skolkommun"]
-        ]
-        assert self._clusters(["Hemkommun", "Skolkommun"]) == [
-            ["Hemkommun"],
-            ["Skolkommun"],
         ]
 
 
