@@ -1039,6 +1039,66 @@ def reject_replaced_by_cycles(edges: list[tuple[Any, Any]]) -> None:
             visit(start)
 
 
+def _strongly_connected_components(
+    adj: dict[Any, list[tuple[Any, int | None]]],
+) -> list[set[Any]]:
+    """Tarjan's strongly-connected-components over a year-annotated adjacency map
+    (the year on each edge is ignored here — only reachability matters). Returns one
+    `set` per SCC. Pure + DB-free.
+
+    Iterative (explicit stack) so a deep succession chain can't blow Python's
+    recursion limit. Every node a cycle passes through lands in an SCC of size ≥2;
+    a self-loop lands in a size-1 SCC (the caller then inspects its in-component
+    edges). A node on no cycle is its own singleton SCC."""
+    index_of: dict[Any, int] = {}
+    low: dict[Any, int] = {}
+    on_stack: set[Any] = set()
+    stack: list[Any] = []
+    components: list[set[Any]] = []
+    counter = 0
+
+    for root in adj:
+        if root in index_of:
+            continue
+        # work stack of (node, iterator over its successors)
+        work: list[tuple[Any, Any]] = [(root, iter(adj[root]))]
+        index_of[root] = low[root] = counter
+        counter += 1
+        stack.append(root)
+        on_stack.add(root)
+        while work:
+            node, it = work[-1]
+            descended = False
+            for nxt, _year in it:
+                if nxt not in index_of:
+                    index_of[nxt] = low[nxt] = counter
+                    counter += 1
+                    stack.append(nxt)
+                    on_stack.add(nxt)
+                    work.append((nxt, iter(adj[nxt])))
+                    descended = True
+                    break
+                if nxt in on_stack:
+                    low[node] = min(low[node], index_of[nxt])
+            if descended:
+                continue
+            # node fully explored: if it's a root of an SCC, pop the component.
+            if low[node] == index_of[node]:
+                comp: set[Any] = set()
+                while True:
+                    w = stack.pop()
+                    on_stack.discard(w)
+                    comp.add(w)
+                    if w == node:
+                        break
+                components.append(comp)
+            work.pop()
+            if work:
+                parent_node = work[-1][0]
+                low[parent_node] = min(low[parent_node], low[node])
+    return components
+
+
 def reject_nonmonotone_representation_cycles(
     edges: list[tuple[Any, Any, int | None]],
 ) -> None:
@@ -1053,20 +1113,33 @@ def reject_nonmonotone_representation_cycles(
     round-trip: a column left and LATER returned (FRIDA's firm key
     `borgnr -(2014)-> persorgnr -(2018)-> borgnr` within `punktskatter-for-energi`).
 
-    A cycle is PERMITTED iff its edges' `effective_year`s are all present and all
-    DISTINCT and admit a single consistent forward ordering — rotating the cycle so
-    it starts at its earliest-year edge yields strictly increasing years (one wrap
-    at the close). For the 2-cycle (the only real case today) this reduces to
-    "two distinct present years". REJECTED, both EXIT_CONFIG with actionable
-    messages:
-      - any edge in the cycle lacks `effective_year` (ordering undefined), or
-      - two edges in the cycle share an `effective_year` (ambiguous / impossible
-        round-trip).
-    An n-cycle whose distinct years don't form a single monotone wrap (an
-    impossible multi-wrap order) is likewise rejected.
+    A cycle is PERMITTED iff it is a SINGLE simple time-monotone round-trip: the
+    nodes/edges in the cyclic region form exactly one elementary cycle whose edges'
+    `effective_year`s are all present and all DISTINCT and admit a single consistent
+    forward ordering — rotating the cycle so it starts at its earliest-year edge
+    yields strictly increasing years (one wrap at the close). For the 2-cycle (the
+    only real case today) this reduces to "two distinct present years". REJECTED,
+    all EXIT_CONFIG with actionable messages:
+      - any edge in the cyclic region lacks `effective_year` (ordering undefined),
+      - two edges in the cyclic region share an `effective_year` (ambiguous /
+        impossible round-trip),
+      - the distinct years don't form a single monotone wrap (impossible multi-wrap
+        order), or
+      - the cyclic region is more tangled than one elementary cycle (multiple
+        interleaved cycles, or a node with two intra-region successors — can't be a
+        clean round-trip).
 
-    A NON-cyclic graph (e.g. RTB's single variable-level edge) passes unchanged.
-    Pure + DB-free so it's testable in isolation, like `reject_replaced_by_cycles`."""
+    Completeness: the cyclic region is found via strongly-connected components
+    (Tarjan). EVERY non-trivial SCC (≥2 nodes, or a self-loop) is validated — there
+    is no DFS short-circuit that lets a later, more complex cycle slip past once an
+    earlier monotone cycle has finished a shared node (the white/gray/black DFS this
+    replaced had exactly that gap: an edge into a finished node fell through
+    unchecked). A self-loop (`A -> A`) is a 1-node SCC with an in-component edge, so
+    it is caught and rejected.
+
+    A NON-cyclic graph (e.g. RTB's single variable-level edge) has only trivial SCCs
+    and passes unchanged. Pure + DB-free so it's testable in isolation, like
+    `reject_replaced_by_cycles`."""
     if not edges:
         return
     # adjacency keeps the year on each forward edge so a detected cycle can be
@@ -1076,67 +1149,84 @@ def reject_nonmonotone_representation_cycles(
         adj.setdefault(a, []).append((b, year))
         adj.setdefault(b, [])
 
-    color: dict[Any, int] = dict.fromkeys(adj, 0)
-    parent: dict[Any, Any] = {}
-    # The year of the edge that REACHED a node (parent -> node), so a reconstructed
-    # cycle can recover every constituent edge's year.
-    in_year: dict[Any, int | None] = {}
-
-    def _reject_cycle(nodes: list[Any], years: list[int | None], reason: str) -> None:
+    def _reject(nodes: list[Any], years: list[int | None], reason: str) -> None:
         path = " -> ".join(repr(n) for n in nodes)
         raise curation_error(
             "replaced_by_cycle",
             f"relations replaced_by forms a NON-monotone representation "
             f"succession cycle ({reason}): {path} (years {years}).",
-            "A variant-scoped representation cycle is permitted only as a "
-            "time-monotone round-trip — every edge needs a DISTINCT "
-            "`effective_year` ordering the return. Give each edge a distinct year, "
-            "or remove the edge that closes the loop.",
+            "A variant-scoped representation cycle is permitted only as a SINGLE "
+            "time-monotone round-trip — every edge needs a DISTINCT `effective_year` "
+            "ordering the return, and the cyclic columns must form exactly one loop. "
+            "Give each edge a distinct year, untangle multiple loops, or remove the "
+            "edge that closes the loop.",
         )
 
-    def _validate_cycle(cycle_nodes: list[Any], cycle_years: list[int | None]) -> None:
+    def _validate_component(nodes: set[Any]) -> None:
+        # `nodes` is one strongly-connected component (≥2 nodes, or a 1-node SCC
+        # with a self-loop) — it contains at least one cycle. The ONLY permitted
+        # shape is a single elementary cycle: every node has exactly one successor
+        # INSIDE the component (in-degree/out-degree 1), so the in-component edges
+        # form one simple loop visiting all `nodes` once. Anything else (a node with
+        # two in-component successors → interleaved cycles, or a self-loop) is
+        # rejected before the year check.
+        in_edges: list[tuple[Any, Any, int | None]] = [
+            (a, b, year) for a in nodes for b, year in adj[a] if b in nodes
+        ]
+        ordered = sorted(nodes, key=repr)
+        # A self-loop is an in-component edge a -> a; reject it explicitly (it can't
+        # be a temporal round-trip — a column can't succeed itself).
+        if any(a == b for a, b, _ in in_edges):
+            _reject(ordered, [], "a column succeeds itself (self-loop)")
+        succ_in: dict[Any, list[tuple[Any, int | None]]] = {n: [] for n in nodes}
+        for a, b, year in in_edges:
+            succ_in[a].append((b, year))
+        if any(len(s) != 1 for s in succ_in.values()):
+            _reject(
+                ordered,
+                [],
+                "the cyclic columns don't form a single loop (a column has "
+                "multiple in-cycle successors — interleaved round-trips)",
+            )
+        # Out-degree 1 for every node in a strongly-connected set ⇒ exactly one
+        # elementary cycle covering all nodes. Walk it from an arbitrary start to
+        # recover the ordered nodes + their edge-years.
+        start = ordered[0]
+        cycle_nodes = [start]
+        cycle_years: list[int | None] = []
+        cur = start
+        while True:
+            nxt, year = succ_in[cur][0]
+            cycle_years.append(year)
+            if nxt == start:
+                cycle_nodes.append(nxt)
+                break
+            cycle_nodes.append(nxt)
+            cur = nxt
         # `cycle_nodes` = [start, ..., start] (closed); `cycle_years[i]` is the year
         # of the edge cycle_nodes[i] -> cycle_nodes[i+1].
         if any(y is None for y in cycle_years):
-            _reject_cycle(cycle_nodes, cycle_years, "an edge lacks effective_year")
+            _reject(cycle_nodes, cycle_years, "an edge lacks effective_year")
         if len(set(cycle_years)) != len(cycle_years):
-            _reject_cycle(cycle_nodes, cycle_years, "two edges share an effective_year")
+            _reject(cycle_nodes, cycle_years, "two edges share an effective_year")
         # Rotate to start at the minimum-year edge; a faithful round-trip is then
         # strictly increasing (one wrap, already cut at the min). `cycle_years` has
         # no None/dups past the guards above.
         years = [y for y in cycle_years if y is not None]
-        start = years.index(min(years))
-        rotated = years[start:] + years[:start]
+        rot = years.index(min(years))
+        rotated = years[rot:] + years[:rot]
         if any(rotated[i] >= rotated[i + 1] for i in range(len(rotated) - 1)):
-            _reject_cycle(
+            _reject(
                 cycle_nodes, cycle_years, "years are not a single monotone round-trip"
             )
 
-    def visit(node: Any) -> None:
-        color[node] = 1
-        for nxt, year in adj[node]:
-            if color[nxt] == 1:
-                # Reconstruct the cycle nxt -> ... -> node -> nxt and its edge-years.
-                back_nodes = [node]
-                cur = node
-                while cur != nxt and parent.get(cur) is not None:
-                    cur = parent[cur]
-                    back_nodes.append(cur)
-                cycle_nodes = list(reversed(back_nodes)) + [nxt]
-                cycle_years = [in_year[n] for n in cycle_nodes[1:-1]] + [year]
-                _validate_cycle(cycle_nodes, cycle_years)
-                # A permitted (time-monotone) cycle: do NOT recurse through the
-                # back-edge, but keep walking the rest of the graph.
-                continue
-            if color[nxt] == 0:
-                parent[nxt] = node
-                in_year[nxt] = year
-                visit(nxt)
-        color[node] = 2
-
-    for start in list(adj):
-        if color[start] == 0:
-            visit(start)
+    for component in _strongly_connected_components(adj):
+        # Trivial SCC (1 node, no self-loop) has no cycle; a self-loop's SCC is a
+        # single node WITH an in-component edge, caught inside _validate_component.
+        if len(component) > 1 or any(
+            b in component for b, _ in adj[next(iter(component))]
+        ):
+            _validate_component(component)
 
 
 def _slugged_register_fqids(conn: sqlite3.Connection) -> set[tuple[str, str]]:
@@ -1214,6 +1304,41 @@ def _slugged_representation_keys(
     }
 
 
+def _slugged_representation_variant_keys(
+    conn: sqlite3.Connection,
+) -> set[tuple[str, str, str, str, str]]:
+    """#846: live `(provider_slug, register_slug, variable_slug, delivery_column,
+    variant_slug)` quintuples — the variant-AWARE liveness universe a variant-scoped
+    representation endpoint must resolve into.
+
+    `variable_alias` is keyed by `register_variant_id`, so the SAME variable can
+    observe different columns in different delivering variants. The variable-level
+    `_slugged_representation_keys` collapses that — it only proves a column is
+    observed SOMEWHERE in the register. A variant-scoped edge must additionally
+    prove the endpoint is observed IN THE NAMED variant, else a mistyped `variant`
+    whose columns happen to live in a SIBLING variant would write a false
+    variant-local edge. This set carries the variant slug so the scoped check can
+    require the column live in THAT register_variant.
+
+    The column is Unicode-lowercased Python-side (same rationale as
+    `_slugged_representation_keys` — agree with the materializer's `.lower()` keys,
+    NOT SQLite's ASCII-only `LOWER()`); the variant slug is kept verbatim (a curated
+    canonical slug, not a drifting header)."""
+    return {
+        (p_slug, r_slug, v_slug, col.lower(), rv_slug)
+        for v_slug, r_slug, p_slug, col, rv_slug in conn.execute(
+            "SELECT v.slug, r.slug, p.slug, a.delivery_column_name, rv.slug "
+            "FROM variable_alias a "
+            "JOIN variable v ON a.variable_id = v.variable_id "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "JOIN register_variant rv "
+            "ON a.register_variant_id = rv.register_variant_id "
+            "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND rv.slug IS NOT NULL"
+        )
+    }
+
+
 def _slugged_classification_slugs(conn: sqlite3.Connection) -> set[str]:
     """Live `classification.slug` values — the universe a curated classification
     successor must resolve into (#579). A classification slug is GLOBALLY unique
@@ -1260,19 +1385,29 @@ def _unresolved_curated_predecessor(predecessor: Fqid, grain_noun: str) -> Excep
     )
 
 
-def _unresolved_curated_representation(fqid: Fqid, column: str, side: str) -> Exception:
+def _unresolved_curated_representation(
+    fqid: Fqid, column: str, side: str, variant: str = ""
+) -> Exception:
     """#843: a representation endpoint `(variable_fqid, delivery_column)` whose
     variable isn't live OR whose column isn't an observed delivery column of that
     live variable in this build. Both endpoints must be live (within-build column
-    rename), so this fires for either side."""
+    rename), so this fires for either side.
+
+    #846: for a variant-scoped edge, liveness is checked IN the named `variant` (the
+    column must be observed in THAT register_variant, not merely register-wide); the
+    message names the variant so a column live only in a sibling variant is
+    diagnosable."""
+    scope = f" in variant {variant!r}" if variant else ""
     return curation_error(
         "replaced_by_unresolved_representation",
         f"Curated replaced_by {side} representation "
         f"{str(fqid)!r} column {column!r} does not resolve to a live variable "
-        "with that observed delivery column in this build.",
+        f"with that observed delivery column{scope} in this build.",
         "A representation succession edge is all-live (both columns are observed "
-        "within the build). Fix the FQID / column, or drop the edge in "
-        "reg_meta_build/curation/relations.toml.",
+        "within the build" + (", in the named variant" if variant else "") + "). "
+        "Fix the FQID / column"
+        + (" / variant" if variant else "")
+        + ", or drop the edge in reg_meta_build/curation/relations.toml.",
     )
 
 
@@ -1367,13 +1502,19 @@ def materialize_curated_replaced_by(
     threaded into the cycle node key (so a variant-scoped node is DISTINCT from the
     variable-level one on the same column) and stored in the new `variant` column.
     The slug must resolve to a live register_variant of the edge's register
-    (fail-fast, like the column endpoints). The variant grain swaps the
-    representation cycle check from the strictly-acyclic
-    `reject_replaced_by_cycles` to the year-aware
-    `reject_nonmonotone_representation_cycles`, which PERMITS a time-monotone
-    round-trip (a column left and later returned within the variant, e.g. FRIDA's
-    `borgnr -> persorgnr -> borgnr`) while still rejecting a same-year / missing-year
-    cycle.
+    (fail-fast, like the column endpoints). A variant-scoped edge's ENDPOINTS are
+    further checked variant-aware: each column must be observed IN the named variant
+    (`_slugged_representation_variant_keys`), not merely register-wide — else a
+    mistyped variant whose columns live in a sibling variant would write a false
+    edge. Unscoped (`''`) endpoints keep the register-wide check.
+
+    The cycle check is PARTITIONED by scope: variant-scoped edges go through the
+    year-aware `reject_nonmonotone_representation_cycles`, which PERMITS a single
+    time-monotone round-trip (a column left and later returned within the variant,
+    e.g. FRIDA's `borgnr -> persorgnr -> borgnr`) while rejecting a same-year /
+    missing-year / tangled cycle; unscoped (variable-level) edges go through the
+    strictly-acyclic `reject_replaced_by_cycles` (a variable-level round-trip is a
+    hard curation error, never a permitted return).
 
     Returns `{"register", "variable", "classification", "representation",
     "skipped_duplicate", "skipped_inactive_provider"}`."""
@@ -1408,6 +1549,11 @@ def materialize_curated_replaced_by(
     # #846 variant universe — `(provider, register, variant_slug)` of live
     # register_variants — built lazily, only when a variant-scoped edge appears.
     live_variants: set[tuple[str, str, str]] | None = None
+    # #846 variant-AWARE endpoint liveness — `(provider, register, variable, column,
+    # variant_slug)` of observed columns PER delivering variant. A variant-scoped
+    # edge's endpoints must be live in the NAMED variant, not just register-wide
+    # (`live_representations`); built lazily alongside `live_variants`.
+    live_representation_variants: set[tuple[str, str, str, str, str]] | None = None
     # #846: the node key gains a trailing `variant` segment (`''` = variable-level),
     # so a variant-scoped node is DISTINCT from the variable-level one on the same
     # column. The cycle edges carry `effective_year` for the time-monotone check.
@@ -1487,6 +1633,10 @@ def materialize_curated_replaced_by(
                     live_variants = _slugged_register_variant_keys(conn)
                 if (pred.provider, pred.register, edge.variant) not in live_variants:
                     raise _unresolved_curated_variant(pred, edge.variant)
+                if live_representation_variants is None:
+                    live_representation_variants = _slugged_representation_variant_keys(
+                        conn
+                    )
             # Match the column case-INSENSITIVELY (SCB headers drift in case; the
             # retired `column_merge` surface this replaced also case-folded its TOML
             # columns), but
@@ -1512,14 +1662,31 @@ def materialize_curated_replaced_by(
                 edge.successor_column.lower(),
                 edge.variant,
             )
-            if pred_key[:4] not in live_representations:
-                raise _unresolved_curated_representation(
-                    pred, edge.predecessor_column, "predecessor"
-                )
-            if succ_key[:4] not in live_representations:
-                raise _unresolved_curated_representation(
-                    succ, edge.successor_column, "successor"
-                )
+            # Endpoint liveness. For an UNSCOPED edge (`variant=''`, a variable-level
+            # rename that needn't be in any one variant) the register-wide
+            # `live_representations` 4-tuple is correct. For a VARIANT-scoped edge the
+            # endpoints must be observed IN THAT variant — checking only the 4-tuple
+            # would pass an endpoint live only in a SIBLING variant (a mistyped
+            # `variant`), so check the variant-aware 5-tuple instead.
+            if edge.variant:
+                assert live_representation_variants is not None  # built above
+                if (*pred_key[:4], edge.variant) not in live_representation_variants:
+                    raise _unresolved_curated_representation(
+                        pred, edge.predecessor_column, "predecessor", edge.variant
+                    )
+                if (*succ_key[:4], edge.variant) not in live_representation_variants:
+                    raise _unresolved_curated_representation(
+                        succ, edge.successor_column, "successor", edge.variant
+                    )
+            else:
+                if pred_key[:4] not in live_representations:
+                    raise _unresolved_curated_representation(
+                        pred, edge.predecessor_column, "predecessor"
+                    )
+                if succ_key[:4] not in live_representations:
+                    raise _unresolved_curated_representation(
+                        succ, edge.successor_column, "successor"
+                    )
             rpk = (*pred_key, *succ_key)
             if rpk in seen_representation:
                 n_skipped_duplicate += 1
@@ -1645,15 +1812,32 @@ def materialize_curated_replaced_by(
         reject_replaced_by_cycles(classification_cycle_edges)
     # #843/#846 representation: curated-only, so the cycle graph is just the
     # pending representation edges (no event/auto source to combine with), keyed on
-    # the full `(provider, register, variable, column, variant)` node. UNLIKE the
-    # entity grains (strictly acyclic via `reject_replaced_by_cycles`), a
-    # variant-scoped representation cycle is PERMITTED when it is a time-monotone
-    # round-trip (FRIDA's `borgnr -> persorgnr -> borgnr` within one variant), so
-    # this arm uses the year-aware checker. The variable-level grain (`variant =
-    # ''`) is a distinct node space, so it stays effectively acyclic — a
-    # variable-level cycle would need distinct years too, but none is curated. Empty
-    # list is a no-op.
-    reject_nonmonotone_representation_cycles(representation_cycle_edges)
+    # the full `(provider, register, variable, column, variant)` node.
+    #
+    # PARTITION by scope before checking. A cycle's nodes always share one variant
+    # scope (each edge stamps one `variant` on BOTH its endpoints — index 4 of the
+    # node key — so a cycle can't mix scopes). The two scopes get DIFFERENT rules:
+    #   - UNSCOPED (`variant=''`, the variable-level grain) must be STRICTLY ACYCLIC
+    #     like the entity grains — a variable-level `A->B (2014)` + `B->A (2018)` is
+    #     a hard curation error, NOT a permitted round-trip — so it goes through the
+    #     topological `reject_replaced_by_cycles`. (The year is dropped; acyclicity
+    #     is year-independent.)
+    #   - VARIANT-scoped may be a faithful time-monotone round-trip (FRIDA's
+    #     `borgnr -> persorgnr -> borgnr` within one variant), so it goes through the
+    #     year-aware `reject_nonmonotone_representation_cycles`.
+    # Both checkers no-op on an empty list.
+    unscoped_representation_edges = [
+        (pred_key, succ_key)
+        for pred_key, succ_key, _year in representation_cycle_edges
+        if pred_key[4] == ""
+    ]
+    variant_representation_edges = [
+        (pred_key, succ_key, year)
+        for pred_key, succ_key, year in representation_cycle_edges
+        if pred_key[4] != ""
+    ]
+    reject_replaced_by_cycles(unscoped_representation_edges)
+    reject_nonmonotone_representation_cycles(variant_representation_edges)
 
     conn.executemany(
         "INSERT INTO register_replaced_by ("
