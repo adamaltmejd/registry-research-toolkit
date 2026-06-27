@@ -378,6 +378,37 @@ class TestValidateModule:
             for f in result.failures
         )
 
+    def test_representation_succession_dangling_variant_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#846: a representation succession edge whose endpoints resolve but whose
+        non-empty `variant` slug does not name a live register_variant of the edge's
+        register fails the structural variant-resolution check (the post-build
+        analog of the build-time `replaced_by_unresolved_variant` fail-fast)."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # scb/testreg/testcol observes both `TestCol` and `TestKolumn` (a resolvable
+        # within-build rename), so only the bogus `variant` trips: testreg's live
+        # variant slug is `individer`, not `no-such-variant`.
+        conn.execute(
+            "INSERT INTO representation_replaced_by "
+            "(predecessor_provider, predecessor_register, predecessor_variable, "
+            "predecessor_column, successor_provider, successor_register, "
+            "successor_variable, successor_column, variant, effective_year, note) "
+            "VALUES ('scb', 'testreg', 'testcol', 'TestCol', "
+            "'scb', 'testreg', 'testcol', 'TestKolumn', "
+            "'no-such-variant', 2010, 'curated:slug_toml')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "scope to a `variant` that is not a live register_variant" in f
+            for f in result.failures
+        )
+
     def test_dead_predecessor_edge_keeps_supersedes_null_without_missing_ptr(
         self, fixture_db: Path, tmp_path: Path
     ):

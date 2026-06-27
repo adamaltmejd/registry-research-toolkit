@@ -311,6 +311,36 @@ to_column = "PersonNr"
 effective_year = 1998
 note = "RTB subject personnummer delivery column renamed PNR → PersonNr (era rename, never co-occurring; replaces the retired column_merge entry, #846)"
 
+# ── FRIDA firm key: variant-local gap-fill borgnr → persorgnr → borgnr (#846) ──
+#    Reg 121 var 56 ("Person-/organisationsnummer"). In the punktskatter-for-energi
+#    variant ONLY, the firm key is delivered as `borgnr` (2007–13), `PERSORGNR`
+#    (2014–17), then `borgnr` again (2018–23) — verified one-column-per-year disjoint
+#    against the raw Registerinformation. 15 other variants deliver `borgnr`
+#    continuously, so the succession is VARIANT-SCOPED (`variant = ...`); modeled at
+#    variable grain it would be a false global rename + an illegal cycle. The two
+#    edges form a time-monotone round-trip (2014 < 2018), permitted by the
+#    variant-scoped time-aware cycle check (#846 mechanism). Replaces the retired
+#    `column_merge` fiat union (which fused persorgnr into the firm-key variable).
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/person-orgnr"
+to = "scb/frida/persorgnr"
+from_column = "borgnr"
+to_column = "PERSORGNR"
+variant = "punktskatter-for-energi"
+effective_year = 2014
+note = "FRIDA firm key delivered as PERSORGNR for 2014–2017 in the punktskatter-for-energi variant (gap-fill; borgnr resumes 2018)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/persorgnr"
+to = "scb/frida/person-orgnr"
+from_column = "PERSORGNR"
+to_column = "borgnr"
+variant = "punktskatter-for-energi"
+effective_year = 2018
+note = "FRIDA firm key resumes delivery as borgnr from 2018 in the punktskatter-for-energi variant (end of the 2014–2017 PERSORGNR gap-fill)"
+
 # ── Curated "see also" edges (#403) ──
 # Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an
 # identity (identity is a `type = "same_as"` edge). Slugs verified against a real

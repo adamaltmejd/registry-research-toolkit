@@ -6027,6 +6027,18 @@ slug = "person-orgnr"
 [variable."121.56.bpnr"]  # frida: panel_entity_key = 'person-organisationsnummer-2'
 slug = "person-orgnr-2"
 
+# FRIDA firm key (reg 121 var 56) variant-local gap-fill sibling (#846): in the
+# punktskatter-for-energi variant ONLY, the firm key is delivered as `PERSORGNR`
+# for 2014–2017 (`borgnr` otherwise). With the column_merge fiat union retired,
+# the coalescer splits this never-co-occurring column into its own sibling
+# variable. The dense `borgnr` firm key keeps the `person-orgnr` slug + the
+# panel_entity_key pin above (pin lands on the materialized successor directly,
+# no edge-walk); this sparse sibling pins to `persorgnr`. Cross-era continuity is
+# recorded via the variant-scoped representation `replaced_by` edges in
+# curation/relations.toml (borgnr → PERSORGNR → borgnr round-trip).
+[variable."121.56.persorgnr"]  # frida: punktskatter-for-energi gap-fill sibling
+slug = "persorgnr"
+
 [variable."2.29828.rnplgh-ridlgh"]  # rtb: panel_entity_key = 'rnplgh-ridlgh'
 slug = "lagenhetsnyckel"
 

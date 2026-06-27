@@ -56,9 +56,9 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         tables (a scalar / single `[resolve]` table is rejected before the loop,
         not a raw uncaught crash).
       - `register_id` / `var_id` present and canonical int (no leading zeros,
-        no bool/float — shared `_curation.canonical_int`, identical to
-        source_column_repairs), and `column` a string (or absent → ""); a leniently
-        coerced id or a str()-coerced column would produce an inert
+        no bool/float — shared `_curation.canonical_int`, the same convention every
+        id-keyed curation loader uses), and `column` a string (or absent → ""); a
+        leniently coerced id or a str()-coerced column would produce an inert
         never-matching pin instead of a load-time error.
       - Exactly one of `keep` / `keep_rule`, each a string (`keep_rule` from a
         known set); a non-string rule — including an unhashable list/dict — is
@@ -76,8 +76,8 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
     )
     out: CodeliveryMap = {}
     for entry in entries:
-        # Canonicalize ids identically to source_column_repairs (shared `canonical_int`):
-        # `int(...)` would silently accept `1.5` (→1), `true` (→1), `"01"` (→1),
+        # Canonicalize ids via the shared `canonical_int` (every id-keyed curation
+        # loader uses it): `int(...)` would silently accept `1.5` (→1), `true` (→1), `"01"` (→1),
         # and negatives, producing an inert never-matching pin instead of a
         # load-time error.
         reg = canonical_int(entry.get("register_id"))

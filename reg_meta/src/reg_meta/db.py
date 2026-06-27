@@ -233,7 +233,9 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   the build-side precondition for retiring `column_merge` (#805/#825). No FQID
 #   grammar change — the column rides sibling fields, like #819. A 5.8.0 DB lacks
 #   the table, so it's rejected via the minor gate.
-SCHEMA_VERSION = "5.9.0"
+# - 5.10.0 (#846): additive optional variant scope on representation_replaced_by
+#   (variant-local succession; '' = variable-level)
+SCHEMA_VERSION = "5.10.0"
 DB_FILENAME = "reg_meta.db"
 
 

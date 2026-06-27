@@ -32,7 +32,6 @@ from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
 from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
-from reg_meta_build.source_column_repairs import load_column_merges
 from reg_meta_build.variable_grafts import load_variable_grafts
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
@@ -48,10 +47,6 @@ def test_repo_codeless_overlap_parses() -> None:
     # well-formed (a malformed entry or header would raise here). It loads to a
     # non-empty map of (register, variable, column) → (resolution, extend_label).
     assert load_codeless_overlap(_ROOT / "codeless_overlap.toml")
-
-
-def test_repo_column_merges_parses() -> None:
-    assert load_column_merges(_ROOT / "curation" / "scb" / "source_column_repairs.toml")
 
 
 def test_repo_concept_groups_parses() -> None:
@@ -168,8 +163,9 @@ def test_repo_relations_parses() -> None:
     # + 3 #579 classification split edges
     # + 2 #770 ICD/KS disease-classification succession edges
     # + 7 #814 iot disponibel-inkomst 2004-års-definition succession edges
-    # + 1 #846 RTB PNR → PersonNr representation-grain rename edge.
-    assert len(relations.replaced_by) == 26
+    # + 1 #846 RTB PNR → PersonNr representation-grain rename edge
+    # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges.
+    assert len(relations.replaced_by) == 28
     assert len(relations.related_to) == 3  # the moved #403 see-also edges
     assert all(
         e.a_provider

@@ -3,9 +3,9 @@
 The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `fold_column`) plus the per-entry leaf helpers below (`require_str`,
 `require_bool`, `require_fqid`, `resolve_variable_id`, `resolve_register_id`,
-`resolve_register_variant_id`, `load_column_groups`) serve the `[[entry]]`
+`resolve_register_variant_id`) serve the `[[entry]]`
 curation-TOML loaders —
-`codelivery.py`, `source_column_repairs.py`, `concept_groups.py`, `tags.py`,
+`codelivery.py`, `concept_groups.py`, `tags.py`,
 `period_family_merges.py`, `delivery_enrichment.py`, `variable_grafts.py`,
 `classification_links.py`, and `relations.py` (the single typed `[[edge]]`
 surface for the curated pairwise relations — same_as / replaced_by / related_to,
@@ -287,90 +287,3 @@ def resolve_register_variant_id(
         (provider, register, variant),
     ).fetchone()
     return (row[0], row[1]) if row is not None else None
-
-
-def load_column_groups(
-    entries: list[dict],
-    *,
-    code: str,
-    prefix: str,
-    entry_key: str,
-    noun: str,
-) -> dict[tuple[int, int], list[frozenset[str]]]:
-    """Validate `[[entry]]` tables that name CASE-FOLDED column groups keyed on
-    `(register_id, var_id)` — the shape of the SCB column-merge source-column-repair
-    surface. Returns
-    `{(register_id, var_id): [frozenset(cols), …]}` with each column folded to the
-    rule-2 connectivity key (`fold_column`), so TOML casing is cosmetic.
-
-    Per entry (all raise `{code}` EXIT_CONFIG, actionable):
-      - `register_id` / `var_id` present and canonical int (no leading zeros);
-      - `columns` is a list of ≥2 non-empty strings that stay ≥2 DISTINCT after
-        case-folding (case twins collapse automatically — a group surviving only
-        on case spelling is a no-op the auto case-fold already covers);
-      - NO column folds to `""` (a column of only non-ASCII characters folds to ""
-        and can never match a rule-2 node-col, which the coalescer keeps raw);
-      - no column repeats within a group, or across groups of the SAME
-        `(register_id, var_id)` — compared on the folded form.
-
-    `entry_key` / `noun` tailor the remediation text to the calling surface
-    (`[[column_merge]]` / "merge"); `code` keeps the surface's established error
-    code. The build-time half (every named column must actually be observed for
-    the var) lives in `sources/scb.py`, where the observed column set is known."""
-    out: dict[tuple[int, int], list[frozenset[str]]] = {}
-    seen_cols: dict[tuple[int, int], set[str]] = {}
-    for entry in entries:
-        reg = canonical_int(entry.get("register_id"))
-        var = canonical_int(entry.get("var_id"))
-        if reg is None or var is None:
-            raise curation_error(
-                code,
-                f"{prefix} entry {entry!r} needs `register_id` and `var_id` "
-                f"as canonical integers (no leading zeros).",
-                f"Each [[{entry_key}]] entry needs integer `register_id` and `var_id`.",
-            )
-        key = (reg, var)
-        columns = entry.get("columns")
-        if (
-            not isinstance(columns, list)
-            or len(columns) < 2
-            or not all(isinstance(c, str) and c for c in columns)
-        ):
-            raise curation_error(
-                code,
-                f"{prefix} entry {key} `columns` must be a list of ≥2 "
-                f"non-empty strings (a singleton {noun} is a no-op).",
-                'Give `columns = ["ColA", "ColB", …]` with at least two columns.',
-            )
-        group: frozenset[str] = frozenset(fold_column(c) for c in columns)
-        if "" in group:
-            # A column of only non-ASCII characters folds to "" — that can never
-            # match a rule-2 node-col (the coalescer keeps such a column raw).
-            raise curation_error(
-                code,
-                f"{prefix} entry {key} has a column that case-folds to an "
-                f"empty string: {columns}.",
-                f"Name real ASCII-foldable delivery columns in each "
-                f"[[{entry_key}]] group.",
-            )
-        if len(group) != len(columns):
-            raise curation_error(
-                code,
-                f"{prefix} entry {key} repeats a column within its group "
-                f"(after case-folding): {columns}.",
-                f"List each column once per [[{entry_key}]] group; case/diacritic "
-                "twins collapse automatically and must not be spelled out.",
-            )
-        prior = seen_cols.setdefault(key, set())
-        overlap = group & prior
-        if overlap:
-            raise curation_error(
-                code,
-                f"{prefix} key {key} has column(s) {sorted(overlap)} in more "
-                f"than one [[{entry_key}]] group.",
-                f"Each column belongs to exactly one {noun} group per "
-                "(register, var); merge the groups or remove the duplicate.",
-            )
-        prior |= group
-        out.setdefault(key, []).append(group)
-    return out

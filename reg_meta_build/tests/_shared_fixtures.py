@@ -32,10 +32,10 @@ def connect_built_db(db: Path | str) -> sqlite3.Connection:
 @pytest.fixture(scope="session", autouse=True)
 def _no_repo_curation() -> Iterator[None]:
     """Synthetic test builds run with EMPTY curation maps — the documented
-    contract for the maintainer TOMLs (codelivery / source_column_repairs).
+    contract for the maintainer TOMLs (codelivery, etc.).
     A checkout-run `build_db` would otherwise load the REPO TOMLs, which are keyed
     on real SCB source ids that can collide with the fixture register ids (e.g. a
-    real `[[column_merge]]` entry on a low register id binds the fixture's OTHERREG
+    real codelivery entry on a low register id binds the fixture's OTHERREG
     and fails every build). Session-scoped + autouse so it lands before
     the session-scoped `fixture_db` build; tests that exercise a curation surface
     monkeypatch their own file path on top (function-scoped, applied after, undone
@@ -46,13 +46,10 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.delivery_enrichment as _de
     import reg_meta_build.period_family_merges as _fm
     import reg_meta_build.relations as _rel
-    import reg_meta_build.source_column_repairs as _scr
     import reg_meta_build.tags as _tg
 
     mp = pytest.MonkeyPatch()
     mp.setattr(_cd, "repo_codelivery_path", lambda: None)
-    # Both column-merge + fold-override sections share one file/path helper now.
-    mp.setattr(_scr, "repo_source_column_repairs_path", lambda: None)
     # concept_groups.toml references real registers (scb/lisa) by SLUG, and the
     # materializer fails fast on a dangling reference — which every synthetic
     # fixture build would be. `db.materialize` imported the symbol directly, so
@@ -190,7 +187,7 @@ def db_path(fixture_db: Path) -> str:
 
 
 # ── build-driven test helpers (test_codelivery_build /
-#    test_source_column_repairs) — one definition, shared across suites ───────
+#    test_coalesce_connectivity) — one definition, shared across suites ───────
 
 # Clearly-distinct codings for one column: pairwise-disjoint codes (symmetric
 # diff 6 > _COSMETIC_MAX_SYM=2 → not cosmetic) and DIFFERENT version labels

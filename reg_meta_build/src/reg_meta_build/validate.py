@@ -2090,7 +2090,9 @@ def _check_representation_replaced_by(
     curation lands (#846/#838), so a count gate would false-fail every build."""
     result.section("[representation succession]")
     if "representation_replaced_by" not in tables:
-        result.fail("representation_replaced_by missing (schema 5.9.0 #843 table)")
+        result.fail(
+            "representation_replaced_by missing (schema 5.10.0 #843/#846 table)"
+        )
         return
 
     # Columns compare case-INSENSITIVELY (SCB delivery headers drift in case). Fold
@@ -2148,6 +2150,33 @@ def _check_representation_replaced_by(
             "representation succession edges resolve to live variable+column "
             "representations"
         )
+
+    # #846: a non-empty `variant` scopes the rename to one register_variant. The
+    # slug is register-scoped — it must name a live register_variant OF the edge's
+    # (predecessor) register. `''` (the default, variable-level) is unscoped and
+    # skipped. Variant slugs are curated canonical slugs, NOT drifting SCB headers,
+    # so they compare case-SENSITIVELY (unlike the columns above). This mirrors the
+    # build-time `replaced_by_unresolved_variant` fail-fast (relations.py), re-checked
+    # here so a tampered / externally-built DB can't smuggle a dangling variant scope.
+    dangling_variant = conn.execute(
+        "SELECT COUNT(*) FROM representation_replaced_by e "
+        "WHERE e.variant != '' "
+        "  AND NOT EXISTS ("
+        "    SELECT 1 FROM register_variant rv "
+        "    JOIN register r ON rv.register_id = r.register_id "
+        "    JOIN provider p ON r.provider_id = p.provider_id "
+        "    WHERE p.slug = e.predecessor_provider "
+        "      AND r.slug = e.predecessor_register "
+        "      AND rv.slug = e.variant"
+        "  )"
+    ).fetchone()[0]
+    if dangling_variant:
+        result.fail(
+            f"{dangling_variant} representation succession edge(s) scope to a "
+            "`variant` that is not a live register_variant of the edge's register"
+        )
+    else:
+        result.ok("representation succession variant scopes resolve to live variants")
 
     n_edges = conn.execute(
         "SELECT COUNT(*) FROM representation_replaced_by"

@@ -10,9 +10,10 @@ per-period dimension is a representation/alias concern, NOT a coding boundary �
 DESIGN.md → Consumers: monthly column families), and records each column's validity
 window in `variable_alias_window` so `resolve_at("2024-03")` picks the `mar` column.
 
-NOT the `[[column_merge]]` surface (`curation/scb/source_column_repairs.toml`):
-that asserts era-RENAMES that never co-occur — the exact opposite of deliberately-
-parallel period columns.
+This is NOT an era-RENAME of never-co-occurring columns (the retired
+`[[column_merge]]` surface, #846): a period family is deliberately PARALLEL
+columns, the exact opposite. Era renames are now recorded as representation-grain
+`replaced_by` succession edges (#843/#846).
 
 Member resolution is by `delivery_column_name`, not slug: the merge runs BEFORE
 `populate_variable_slugs`, so the period columns are identified by their delivery
