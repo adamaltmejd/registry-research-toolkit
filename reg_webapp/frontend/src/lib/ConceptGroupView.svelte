@@ -106,32 +106,37 @@ const nodesByFqid = $derived.by(() => {
   return map;
 });
 
-// ── Shared concept definition / description (#678) ───────────────────────────
+// ── Shared concept definition / description (#678, #900) ─────────────────────
 // The group page's missing descriptive context: each MEMBER variable node carries
 // its own `definition`/`description` (the variable-level concept text). Most
 // parallel-column siblings carry null — that's expected — but the canonical member
 // usually carries the one definition the whole group shares. Collect the DISTINCT
 // non-empty values across the MEMBER nodes (scoped to `node.members`, so a
-// succession/related neighbour the graph union pulls in never leaks its text here):
-// typically exactly one (rendered once at the group level); zero → render nothing;
-// several distinct → render each (rare today).
-function distinctMemberMeta(field: "definition" | "description"): string[] {
+// succession/related neighbour the graph union pulls in never leaks its text here),
+// then return the LONE shared value, or null.
+//
+// #900: a group-level definition is only honest when members genuinely AGREE — one
+// shared value. Zero non-empty values → render nothing. MORE than one distinct value
+// means the members DISAGREE (heterogeneous curated groups carry near-duplicate
+// per-member text), so rendering each at the group level misrepresents member text as
+// concept text — instead render NOTHING and rely on the per-member leaf pages (the
+// picker bands link to them). Surfacing distinct per-column text on the bands is gated
+// on build #892.
+function sharedMemberMeta(field: "definition" | "description"): string | null {
   if (!node) {
-    return [];
+    return null;
   }
   const seen = new Set<string>();
-  const out: string[] = [];
   for (const member of node.members) {
     const value = nodesByFqid.get(member.fqid)?.[field]?.trim();
-    if (value && !seen.has(value)) {
+    if (value) {
       seen.add(value);
-      out.push(value);
     }
   }
-  return out;
+  return seen.size === 1 ? [...seen][0] : null;
 }
-const sharedDefinitions = $derived(distinctMemberMeta("definition"));
-const sharedDescriptions = $derived(distinctMemberMeta("description"));
+const sharedDefinition = $derived(sharedMemberMeta("definition"));
+const sharedDescription = $derived(sharedMemberMeta("description"));
 
 /** The in-this-group facet label for a member (e.g. "AGI · 2007 SNI edition"),
  * joined from its facets, or null when the member carries none (an ungrouped /
@@ -404,22 +409,24 @@ function commitSelected(selected: PickerSelection[]): void {
   </p>
 {:else if node}
   {#snippet description()}
-    <!-- #678: the SHARED concept definition/description, deduplicated across the
-         member variable nodes (most siblings carry null; the canonical member
-         carries the one the group shares). Rendered as a clean labelled block at the
-         TOP of the page — mirroring the binding leaf's Definition/Description
-         presentation — ABOVE the Technical details disclosure, giving the group its
-         missing descriptive context. Hidden entirely when no member carries either. -->
-    {#if sharedDefinitions.length > 0 || sharedDescriptions.length > 0}
+    <!-- #678/#900: the SHARED concept definition/description — rendered ONLY when the
+         members genuinely AGREE on a single value (most siblings carry null; the
+         canonical member carries the one the group shares). Rendered as a clean
+         labelled block at the TOP of the page — mirroring the binding leaf's
+         Definition/Description presentation — ABOVE the Technical details disclosure,
+         giving the group its missing descriptive context. When members DISAGREE (more
+         than one distinct value) or none carry text, the block (or the row) is hidden
+         and the per-member text stays reachable on each member's leaf page (#900). -->
+    {#if sharedDefinition || sharedDescription}
       <dl class="meta">
-        {#each sharedDefinitions as definition}
+        {#if sharedDefinition}
           <dt>Definition</dt>
-          <dd>{definition}</dd>
-        {/each}
-        {#each sharedDescriptions as description}
+          <dd>{sharedDefinition}</dd>
+        {/if}
+        {#if sharedDescription}
           <dt>Description</dt>
-          <dd>{description}</dd>
-        {/each}
+          <dd>{sharedDescription}</dd>
+        {/if}
       </dl>
     {/if}
 

@@ -1505,6 +1505,69 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(sharedMeta).toHaveLength(0);
   });
 
+  // #900: when members carry MULTIPLE distinct non-empty definitions/descriptions they
+  // DISAGREE — that per-member text must NOT be rendered at the group level (it would
+  // misrepresent member text as concept text). The whole shared block is dropped; the
+  // per-member text remains reachable on each member's leaf page.
+  it("renders NO group-level def/desc when members carry MULTIPLE distinct values (#900)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    // The two members carry DIFFERENT definitions AND descriptions — the heterogeneous
+    // curated-group shape (#900: disponibel-inkomst's ~14 near-duplicate per-member
+    // rows). Members disagree → no single shared value → render nothing.
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode(
+          "scb/rams/inkjan",
+          [
+            gstate({
+              variant: "individer",
+              delivery_column_name: "Inkjan",
+              valid_from: "2010-01-01",
+              valid_to: "2015-12-31",
+            }),
+          ],
+          {
+            definition: "Disposable income, January variant.",
+            description: "Member-specific January description.",
+          },
+        ),
+        vnode(
+          "scb/rams/inkfeb",
+          [
+            gstate({
+              variant: "individer",
+              delivery_column_name: "Inkfeb",
+              valid_from: "2018-01-01",
+              valid_to: "2020-12-31",
+            }),
+          ],
+          {
+            definition: "Disposable income, February variant.",
+            description: "Member-specific February description.",
+          },
+        ),
+      ]),
+    );
+
+    renderGroup();
+
+    // The page renders (picker rows present), but there is NO group-level shared block.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
+      .toBeVisible();
+    const sharedMeta = [...document.querySelectorAll("dl.meta")].filter(
+      (dl) => !dl.closest("details.tech-details"),
+    );
+    expect(sharedMeta).toHaveLength(0);
+    // Neither member's divergent text leaked to the group header.
+    expect(document.body.textContent).not.toContain(
+      "Disposable income, January variant.",
+    );
+    expect(document.body.textContent).not.toContain(
+      "Member-specific February description.",
+    );
+  });
+
   // ── #678 finding 1: a representation group exposes only its MEMBER columns ────
   it("a representation group exposes only its member delivery columns, not the variable's full column set", async () => {
     // The group's members address ONE variable (scb/rams/ink) but only the `IncA`
