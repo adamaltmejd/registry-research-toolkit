@@ -2206,6 +2206,191 @@ class TestLinkValueSetClassifications:
         assert counts["multi_family_after"] == 1
         assert g.candidates() == []
 
+    def test_same_root_multi_vintage_subdimension_stays_ambiguous(self) -> None:
+        """#514 off-chain precision (Fix 1): a permitted stray must be OFF-CHAIN — a
+        DIFFERENT chain root than the dominant family. Here a LABEL-LESS value set
+        matches a 2-edition `sun-niva` chain (the DOMINANT multi-vintage chain) PLUS a
+        single `sun-inriktning` edition that shares the SAME sun1996 chain root but a
+        DIFFERENT slug stem. That stray is NOT off-chain — it is the #579 orthogonal
+        SUN dimension — so the `NOT EXISTS` guard disqualifies the set: it stays
+        ambiguous rather than collapsing the orthogonal dimension onto sun-niva. The
+        label lever cannot save this for a label-less set (COALESCE-0 path passes on
+        structure alone), so the structural same-root guard is the gate.
+
+        Regression test for Fix 1: WITHOUT the `NOT EXISTS` guard, the 2-edition
+        sun-niva chain would be the sole multi-vintage family (the lone sun-inriktning
+        edition is single-edition) → it would wrongly reclaim."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # Codes the value set matches — its OWN labels (label-less w.r.t. every
+        # classification) so the label lever stays on the COALESCE-0 path.
+        shared = _numeric_codes("SUN", 10, 4)
+        # Umbrella root of the curated #579 split; its own codes are disjoint so it is
+        # not itself a candidate — the value set matches the two dimensions, not the root.
+        g.add_classification(
+            300,
+            "SUN1996",
+            _numeric_codes("ROOT", 10, 4),
+            slug="sun1996",
+            valid_from=1996,
+            valid_to=None,
+        )
+        # DOMINANT dimension: a 2-edition sun-niva chain, both >=0.90-containing the set
+        # (same sun1996 root, stem `sun-niva`).
+        g.add_classification(
+            301,
+            "SUN-niva2000",
+            shared + [("9101", "niva2000 only")],
+            slug="sun-niva2000",
+            supersedes_id=300,
+            valid_from=2000,
+            valid_to=2009,
+        )
+        g.add_classification(
+            302,
+            "SUN-niva2010",
+            shared + [("9102", "niva2010 only")],
+            slug="sun-niva2010",
+            supersedes_id=301,
+            valid_from=2010,
+            valid_to=None,
+        )
+        # Orthogonal sub-dimension: a SINGLE sun-inriktning edition, same sun1996 root,
+        # DIFFERENT stem `sun-inriktning`. Shares the dominant's root → disqualifies.
+        g.add_classification(
+            303,
+            "SUN-inriktning2000",
+            shared + [("9103", "inriktning only")],
+            slug="sun-inriktning2000",
+            supersedes_id=300,
+            valid_from=2000,
+            valid_to=None,
+        )
+        g.add_value_set(300, shared)
+        g.add_variable_state(950, 300)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Same-root sun-inriktning stray → dominant is NOT unique on its root → no reclaim.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
+    def test_label_lever_reclaims_on_nonzero_tie(self) -> None:
+        """Label lever uses `>=`, not `>`: a dominant chain whose best label_agree
+        TIES a single off-chain stray's at the SAME non-zero value still reclaims. Half
+        the codes are relabeled identically in the chain editions and the stray, so each
+        family's best label_agree is 0.5 — the dominant ties, not beats, the stray. A
+        future flip of the lever to `>` would block this reclaim, so this pins `>=`."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # 10-code value set. Codes 1..5 carry a SHARED label both the chain and the
+        # stray reproduce (→ label_agree 0.5 on each); codes 6..10 carry value-set-only
+        # labels nobody matches.
+        agreed = [(str(i).zfill(4), f"AGREE {i}") for i in range(1, 6)]
+        disagreed_vs = [(str(i).zfill(4), f"VSONLY {i}") for i in range(6, 11)]
+        value_codes = agreed + disagreed_vs
+        # The chain/stray carry the 5 agreed labels verbatim + their OWN labels on 6..10
+        # → 5/10 = 0.5 label_agree for each family.
+        cls_tail = agreed + [(str(i).zfill(4), f"CLS {i}") for i in range(6, 11)]
+        # DOMINANT chain: 2 editions, both >=0.90-containing the set, both 0.5 agree.
+        g.add_classification(
+            310,
+            "CHAIN2002",
+            cls_tail + [("9201", "c2002 only")],
+            slug="chain2002",
+            valid_from=2002,
+            valid_to=2009,
+        )
+        g.add_classification(
+            311,
+            "CHAIN2010",
+            cls_tail + [("9202", "c2010 only")],
+            slug="chain2010",
+            supersedes_id=310,
+            valid_from=2010,
+            valid_to=None,
+        )
+        # Off-chain stray: DIFFERENT root + stem, same 0.5 label_agree.
+        g.add_classification(
+            312,
+            "STRAY2005",
+            cls_tail + [("9203", "stray only")],
+            slug="stray2005",
+            valid_from=2005,
+            valid_to=None,
+        )
+        g.add_value_set(310, value_codes)
+        g.add_variable_state(960, 310)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Dominant's 0.5 ties the stray's 0.5 → `>=` admits → reclaim to latest chain edition.
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        assert g.candidates() == [(960, 310, 311)]
+
+    def test_dominant_chain_reclaims_past_multiple_off_chain_strays(self) -> None:
+        """The "any number of off-chain strays" clause: a dominant chain (2 editions)
+        plus TWO distinct single-edition off-chain strays, each a DIFFERENT root from
+        the dominant AND from each other, still reclaims to the latest dominant edition.
+        Label-less throughout (COALESCE-0 path), so the structural exactly-one-chain
+        rule is the gate, and neither stray shares the dominant's root."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("CODE", 10, 4)
+        # DOMINANT chain: 2 editions, both >=0.90-containing the set.
+        g.add_classification(
+            320,
+            "LKF2015",
+            shared + [("9301", "lkf2015 only")],
+            slug="lkf2015",
+            valid_from=2015,
+            valid_to=2017,
+        )
+        g.add_classification(
+            321,
+            "LKF2018",
+            shared + [("9302", "lkf2018 only")],
+            slug="lkf2018",
+            supersedes_id=320,
+            valid_from=2018,
+            valid_to=None,
+        )
+        # Stray A: own root + stem, single edition, also contains the codes.
+        g.add_classification(
+            322,
+            "SNI2007",
+            shared + [("9303", "sni only")],
+            slug="sni2007",
+            valid_from=2008,
+            valid_to=None,
+        )
+        # Stray B: a DIFFERENT root + stem from both the dominant and stray A.
+        g.add_classification(
+            323,
+            "MDC2012",
+            shared + [("9304", "mdc only")],
+            slug="mdc2012",
+            valid_from=2012,
+            valid_to=None,
+        )
+        g.add_value_set(320, shared)
+        g.add_variable_state(970, 320)  # open-ended → overlaps both LKF editions
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # One multi-vintage chain + two off-chain strays (distinct roots) → reclaim.
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        # LATEST dominant-chain edition, NOT either off-chain stray.
+        assert g.candidates() == [(970, 320, 321)]
+
 
 class TestCuratedClassificationLinks:
     """The curated tail loader (#416): load-time validation + delete-then-insert

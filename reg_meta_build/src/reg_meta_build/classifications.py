@@ -1292,13 +1292,30 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # A family is a MULTI-VINTAGE CHAIN when the value set matches >=2 of its
     # editions (`n_matched >= 2`). We reclaim a value set when EXACTLY ONE family is
     # a multi-vintage chain — the DOMINANT chain — and carry that family's (root,
-    # stem) so 7c restricts the latest-vintage pick to it. Single-edition off-chain
-    # families (any number) are the permitted STRAYS: this is what unblocks the large
-    # county/län (LKF) residue, where a county code set matches >=2 LKF year-editions
-    # (one multi-vintage chain) plus a STRAY off-chain coincidence (the 2-digit codes
-    # also hit one SNI2007 division + one MDC) that the OLD all-on-chain rule treated
-    # as a disqualifying cross-family candidate. If >=2 distinct families are
-    # multi-vintage chains it is a genuine cross-family span → not reclaimed.
+    # stem) so 7c restricts the latest-vintage pick to it.
+    #
+    # Permitted strays must be OFF-CHAIN — a DIFFERENT chain ROOT than the dominant
+    # family. Any number of single-edition off-chain families pass: this is what
+    # unblocks the large county/län (LKF) residue, where a county code set matches
+    # >=2 LKF year-editions (one multi-vintage chain) plus STRAY off-chain
+    # coincidences (the 2-digit codes also hit one SNI2007 division + one MDC, both a
+    # DIFFERENT root than LKF) that the OLD all-on-chain rule treated as disqualifying
+    # cross-family candidates. If >=2 distinct families are multi-vintage chains it is
+    # a genuine cross-family span → not reclaimed.
+    #
+    # But a family that shares the dominant's chain root and differs only in slug STEM
+    # is NOT an off-chain coincidence — it is a curated ORTHOGONAL dimension (the #579
+    # sun1996 → {sun-niva, sun-inriktning, sun-grupp} split: three SUN dimensions under
+    # one chain root, distinguished by stem). The final-SELECT `NOT EXISTS` guard
+    # disqualifies the value set whenever ANY other family shares the dominant family's
+    # root with a different stem, so the dominant family must be the UNIQUE family on
+    # its root. This keeps orthogonal SUN dimensions apart even when one is ITSELF a
+    # multi-vintage chain — a label-less set matching 2 sun-niva editions (dominant) +
+    # 1 sun-inriktning edition stays ambiguous, where the label lever could not save it
+    # (the COALESCE-0 path passes a label-less set on structure alone). The off-chain
+    # strays (different root) are unaffected: LKF's root differs from SNI's and MDC's,
+    # so no same-root family exists and the LKF case still passes, as does the OLD
+    # all-on-chain case (one family, no others on its root).
     #
     # Label lever (#514, "structural + label-agreement lever now"): the dominant
     # family's best label_agree (`fam_max_la`, from the shared `_vs_label_agree`
@@ -1310,11 +1327,14 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # special case.
     #
     # The `rootless` guard defensively refuses any value set with a candidate that
-    # resolved no chain root (stem is non-NULL whenever root is, both from the same
-    # `_chain_root` row), so a hypothetical root-less classification can't slip a
-    # value set through. `dominant` guarantees exactly one multi-vintage family per
-    # value set, so `multi m JOIN dominant d` yields exactly one (dom_root, dom_stem)
-    # row per value set (asserted by the UNIQUE index).
+    # resolved no chain root, so a hypothetical root-less classification can't slip a
+    # value set through. (In a `--skip-slugs` build a slug-less classification has a
+    # NULL stem while its root = its own cls id is non-NULL; such builds make the
+    # whole reclaim inert anyway — 7c's `cr.stem = dom_stem` matches nothing when
+    # dom_stem is NULL — and don't ship, so the NULL stem is harmless here.)
+    # `dominant` guarantees exactly one multi-vintage family per value set, so
+    # `multi m JOIN dominant d` yields exactly one (dom_root, dom_stem) row per value
+    # set (asserted by the UNIQUE index).
     conn.execute(
         """
         CREATE TEMP TABLE _vs_dominant_chain AS
@@ -1344,6 +1364,14 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         FROM multi m
         JOIN dominant d ON d.value_set_id = m.value_set_id
         WHERE m.value_set_id NOT IN (SELECT value_set_id FROM rootless)
+          -- off-chain only: the dominant must be the UNIQUE family on its root, so a
+          -- same-root different-stem orthogonal dimension (#579) keeps the set ambiguous
+          AND NOT EXISTS (
+                SELECT 1 FROM fam f3
+                WHERE f3.value_set_id = m.value_set_id
+                  AND f3.root = m.root
+                  AND f3.stem <> m.stem
+          )
           AND m.fam_max_la >= COALESCE(   -- label lever: dominant >= every off-chain candidate
                 (SELECT MAX(f2.fam_max_la) FROM fam f2
                  WHERE f2.value_set_id = m.value_set_id
