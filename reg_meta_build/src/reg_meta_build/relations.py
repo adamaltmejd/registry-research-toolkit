@@ -43,7 +43,7 @@ loader accepts — so a confirmed candidate copies across into
 `curation/relations.toml` verbatim. The boundary is text, not symbols: the
 generator imports nothing from here, and the round-trip is the TOML grammar.
 
-Like the other curation TOMLs (`concept_groups.toml`, `curation/scb/`) the file
+Like the other curation TOMLs (`concept_groups.toml`, `codelivery.toml`) the file
 is a maintainer artifact — absent in wheel installs and synthetic test builds.
 """
 
@@ -258,8 +258,8 @@ def _join_fqid(provider: str, register: str, variable: str | None) -> str:
 def repo_relations_path() -> Path | None:
     """`reg_meta_build/curation/relations.toml` from a repo checkout, or None
     (wheel installs don't ship curation — it's a maintainer artifact like the
-    slug TOMLs). Lives under `curation/` (cross-provider), parallel to
-    `curation/scb/`."""
+    slug TOMLs). Lives under `curation/` (cross-provider), beside
+    `period_family_merges.toml`."""
     candidate = (
         Path(__file__).resolve().parent.parent.parent / "curation" / "relations.toml"
     )
@@ -1488,7 +1488,8 @@ def materialize_curated_replaced_by(
                 if (pred.provider, pred.register, edge.variant) not in live_variants:
                     raise _unresolved_curated_variant(pred, edge.variant)
             # Match the column case-INSENSITIVELY (SCB headers drift in case; the
-            # `column_merge` surface this replaces case-folds its TOML columns), but
+            # retired `column_merge` surface this replaced also case-folded its TOML
+            # columns), but
             # STORE the curator's VERBATIM column value (the build folds with Python
             # `str.lower` downstream — the live set above and validate.py's
             # `py_lower` UDF — so storing verbatim is safe). Folding is Python-side,

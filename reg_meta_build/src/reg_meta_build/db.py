@@ -1207,11 +1207,11 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- rename ("the disposable-income concept moved from delivery column X to column
 -- Y") is a fact the 3-part `variable_replaced_by` grain CANNOT express — both
 -- endpoints there collapse to the same variable FQID, so the within-variable
--- column move is invisible. This table records that move. It is the build-side
--- precondition for retiring `column_merge` (#805/#825): a column-merge unifies
--- never-co-occurring era-rename column twins into one variable; expressing that
--- rename as a succession edge between two representations is the navigation-grade
--- replacement for the order-bearing merge.
+-- column move is invisible. This table records that move. It was the build-side
+-- precondition for retiring `column_merge` (#805/#825/#846, now removed): the old
+-- column-merge surface unified never-co-occurring era-rename column twins into one
+-- variable; expressing that rename as a succession edge between two representations
+-- is the navigation-grade replacement for the order-bearing merge.
 --
 -- An endpoint is a variable-grain FQID `(provider, register, variable)` PLUS a
 -- `*_column` segment — NO new FQID grammar (#843 keeps `reg_meta/fqid.py` and the
@@ -5033,10 +5033,6 @@ def build_db(
         # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
         # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
         from .codelivery import load_codelivery, repo_codelivery_path
-        from .source_column_repairs import (
-            load_column_merges,
-            repo_source_column_repairs_path,
-        )
         from .sources.curated import CanonicalScbAdapter, CuratedAdapter
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
@@ -5049,14 +5045,7 @@ def build_db(
             # codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
             codelivery = load_codelivery(repo_codelivery_path())
-            # SCB source-column repairs (#196), same maintainer-artifact shape in
-            # one SCB-scoped file (`curation/scb/source_column_repairs.toml`):
-            # column-merges unify never-co-occurring era-rename column twins in the
-            # coalescer's rule-2 union-find. Empty file ⇒ no behavioral change
-            # (connectivity unchanged).
-            repairs_path = repo_source_column_repairs_path()
-            column_merges = load_column_merges(repairs_path)
-            adapters.append((SCBAdapter(conn, codelivery, column_merges), scb_dir))
+            adapters.append((SCBAdapter(conn, codelivery), scb_dir))
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))
         # Thin curated providers (#422): one shared adapter per agency, each

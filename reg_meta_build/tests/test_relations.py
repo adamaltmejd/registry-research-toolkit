@@ -1667,9 +1667,9 @@ class TestMovedEdges:
         # classification replaced_by (the #579 sun1996 → niva/inriktning/grupp
         # split) + 2 #770 ICD/KS disease-classification succession edges + 7
         # #814 iot disponibel-inkomst 2004-års-definition succession edges + 1
-        # #846 RTB PNR → PersonNr representation-grain rename edge + 3
-        # related_to (#403).
-        assert len(rel.replaced_by) == 26
+        # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
+        # firm-key variant-scoped gap-fill round-trip edges + 3 related_to (#403).
+        assert len(rel.replaced_by) == 28
         assert len(rel.related_to) == 3
         # The #508 tier-1 batch: 615 curated same_as identity edges (62 connected
         # components, each ≤32 FQIDs). All variable-grain with a non-empty note.
@@ -1716,6 +1716,21 @@ class TestMovedEdges:
             == ("scb/rtb/pnr", "scb/rtb/personnr")
         )
         assert (rtb.predecessor_column, rtb.successor_column) == ("PNR", "PersonNr")
+        # The #846 FRIDA firm-key gap-fill: a variant-SCOPED representation
+        # round-trip (`borgnr` → `PERSORGNR` → `borgnr`) on the
+        # punktskatter-for-energi variant, time-ordered 2014 < 2018. Verifies the
+        # variant arm of `replaced_by` parses end-to-end from the repo file.
+        frida = [
+            e
+            for e in rel.replaced_by
+            if e.predecessor.register == "frida" and e.variant
+        ]
+        assert {(e.predecessor_column, e.successor_column) for e in frida} == {
+            ("borgnr", "PERSORGNR"),
+            ("PERSORGNR", "borgnr"),
+        }
+        assert all(e.variant == "punktskatter-for-energi" for e in frida)
+        assert {e.effective_year for e in frida} == {2014, 2018}
 
 
 # ---------------------------------------------------------------------------

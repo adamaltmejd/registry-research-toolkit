@@ -85,7 +85,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from reg_meta_build.codelivery import CodeliveryMap
-    from reg_meta_build.source_column_repairs import ColumnMergeMap
     from reg_meta_build.sources import IRObject
 
 
@@ -1027,8 +1026,8 @@ def _fold_token_from_grain(grain: str | None) -> str | None:
 
 def _ascii_fold_lower(s: str | None) -> str:
     # Delegates to the shared curation fold so the curated column keys
-    # (column_merges / codelivery) canonicalize EXACTLY like the coalescer's
-    # rule-2 node-col — one definition, no drift.
+    # (codelivery) canonicalize EXACTLY like the coalescer's rule-2 node-col —
+    # one definition, no drift.
     return fold_column(s) if s else ""
 
 
@@ -2268,7 +2267,6 @@ def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tup
 def _coalesce_variable_states(
     conn: sqlite3.Connection,
     codelivery: CodeliveryMap | None = None,
-    column_merges: ColumnMergeMap | None = None,
 ) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` (see reg_meta/DESIGN.md → Two-level variable model).
 
@@ -2372,26 +2370,12 @@ def _coalesce_variable_states(
     #     invariant would have to drop one. Those keep their raw node-cols; the
     #     triage still folds them into one variable (identical folded stems)
     #     with label-discriminated states — the pre-#196 handling.
-    #   - CURATED COLUMN-MERGE (#196, `curation/scb/source_column_repairs.toml`
-    #     `[[column_merge]]`): a maintainer-
-    #     asserted era-rename twin set (`PNR` ≡ `PersonNr`) normalizes to one
-    #     node-col (the lex-min folded member) by fiat. The triage's
-    #     fold-override surface cannot express this — it acts on CONTESTED
-    #     (same-edition co-delivered) columns only, which an era-rename twin
-    #     never is. Validated after the sweep: every named column must be
-    #     observed for its (register, var), scoped to built registers.
-    column_merges = column_merges or {}
-    merge_canon: dict[tuple[int, int, str], str] = {
-        (reg, var, member): min(group)
-        for (reg, var), groups_list in column_merges.items()
-        for group in groups_list
-        for member in group
-    }
-    # Folded delivery columns actually seen per curated key, for the build-time
-    # stale-entry check (only curated keys are tracked — the dict stays tiny).
-    # Populated in the pre-pass below, the one place the row sweep records
-    # observations; `_node_col` stays a pure lookup.
-    merge_observed: dict[tuple[int, int], set[str]] = {}
+    #
+    # Era-rename twins that NEVER co-occur (e.g. FRIDA's firm key `borgnr` ↔
+    # `PERSORGNR`, RTB's subject key `PNR` ↔ `PersonNr`) are no longer fused by
+    # fiat — the old `[[column_merge]]` surface was retired in #846. They now split
+    # into sibling variables naturally; cross-era continuity is recorded as a
+    # representation-grain `replaced_by` succession edge (#843/#846) instead.
 
     # Co-delivered case-twin guard: per (register, variant, var, folded-col),
     # the raw spellings and the editions each was seen in. A folded group whose
@@ -2405,10 +2389,6 @@ def _coalesce_variable_states(
         # A column that folds to "" (no ASCII content) keeps its raw spelling —
         # "" is the no-alias stub component and must not absorb a real column.
         fcol = _ascii_fold_lower(col) or col
-        if (row["register_id"], row["var_id"]) in column_merges:
-            merge_observed.setdefault((row["register_id"], row["var_id"]), set()).add(
-                fcol
-            )
         spells = spell_eds.setdefault(
             (row["register_id"], row["register_variant_id"], row["var_id"], fcol), {}
         )
@@ -2425,9 +2405,6 @@ def _coalesce_variable_states(
 
     def _node_col(register_id: int, variant_id: int, var_id: int, col: str) -> str:
         fcol = _ascii_fold_lower(col) or col
-        canon = merge_canon.get((register_id, var_id, fcol))
-        if canon is not None:
-            return canon  # curated fiat outranks the co-delivery guard
         if (register_id, variant_id, var_id, fcol) in guarded:
             return col
         return fcol
@@ -2791,38 +2768,6 @@ def _coalesce_variable_states(
             "SELECT register_id, CAST(provider_key AS INTEGER), variable_id FROM variable"
         )
     }
-
-    # Curated column-merge build-time validation (#196): every column a
-    # maintainer named must be an OBSERVED delivery column of its
-    # (register, var). Scoping to the registers present in this build is the
-    # synthetic-/partial-build escape: a `--providers=sos` or fixture build that
-    # never loads the register must not fail on its merge. Once the register IS
-    # built, a stale/typo'd entry FAILS the build — never a silent
-    # never-matching no-op.
-    live_registers = {reg for reg, _ in vid_map}
-    for (m_reg, m_var), m_groups in sorted(column_merges.items()):
-        if m_reg not in live_registers:
-            continue
-        observed = merge_observed.get((m_reg, m_var), set())
-        missing = sorted(set().union(*m_groups) - observed)
-        if missing:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="column_merge_unknown_column",
-                error_class="configuration",
-                message=(
-                    f"column-merge for register_id={m_reg} var_id={m_var} names "
-                    f"column(s) {missing} never observed as delivery columns of "
-                    f"this variable in this build "
-                    f"(observed, case-folded: {sorted(observed)})."
-                ),
-                remediation=(
-                    "Fix the column name(s) in "
-                    "reg_meta_build/curation/scb/source_column_repairs.toml "
-                    "or drop the entry. Columns are matched case-folded "
-                    "(lowercase, diacritics stripped)."
-                ),
-            )
 
     # Triage: resolve pre-triage collisions (fold/split/collapse) before
     # materializing. Mints split-sibling `variable` rows (so vid_map above is
@@ -3905,7 +3850,6 @@ class SCBAdapter:
         self,
         conn: sqlite3.Connection,
         codelivery: CodeliveryMap | None = None,
-        column_merges: ColumnMergeMap | None = None,
     ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
         # and reads the universal rows back to emit IR (strategy B).
@@ -3913,10 +3857,6 @@ class SCBAdapter:
         # Co-delivery curation (register_id, var_id, column) → kept label,
         # consulted by the coalescer for genuine one-off same-column conflicts.
         self.codelivery = codelivery or {}
-        # Column-merge curation (register_id, var_id) → merge groups, consulted by
-        # the coalescer's rule-2 union-find to unify never-co-occurring
-        # era-rename column twins (#196).
-        self.column_merges = column_merges or {}
         self.source_checksums: dict[str, str] = {}
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
@@ -4053,9 +3993,7 @@ class SCBAdapter:
         # `unika_summary` and `register_version`; must run before the
         # unika_summary DROP below.
         with _stage_timer("scb:coalesce_variable_states"):
-            self.coalesce_stats = _coalesce_variable_states(
-                conn, self.codelivery, self.column_merges
-            )
+            self.coalesce_stats = _coalesce_variable_states(conn, self.codelivery)
         self.row_counts["variable_state"] = self.coalesce_stats["n_variable_states"]
         # R8 side channels (NOT manifest values): consumed by the materializer's
         # slug + related-to post-passes.

@@ -10,9 +10,10 @@
 # in a period token); a stem that resolves to no coherent period family FAILS the
 # build (EXIT_CONFIG).
 #
-# NOT the [[column_merge]] surface (curation/scb/source_column_repairs.toml):
-# that asserts era-RENAMES that never co-occur — the opposite of deliberately-
-# parallel period columns.
+# This is NOT an era-RENAME of never-co-occurring columns (the retired
+# [[column_merge]] surface, #846): a period family is deliberately PARALLEL
+# columns, the opposite. Era renames are now representation-grain replaced_by
+# succession edges (curation/relations.toml).
 #
 # Scope (#383, follow-up to #319): the 4 LISA families plus the 4 non-LISA
 # monthly families the corpus actually carries (scb bas/jobbink,
