@@ -42,13 +42,12 @@ from ._curation import (
     require_str,
     resolve_register_variant_id,
 )
+from .id import _MINT_BIT
 
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable
 
-# SCB ids live below this bit, SOS at/above it (see validate._check_minted_id_bands).
-_MINT_BIT = 1 << 62
 _GRAFT_SOURCE_LABEL = "swecov-graft"
 
 
