@@ -719,9 +719,13 @@ function navigateChip(event: MouseEvent, href: string): void {
   .subhead.empty {
     cursor: default;
   }
-  /* Fully-selected variable → the rust left bar, matching the selected rows below. A
-     partial (indeterminate) selection deliberately does NOT get the bar. */
+  /* Fully-selected variable → the rust left bar + accent fill, matching the selected
+     rows below (`.row-btn.selected`) so the variable's own row reads as selected too. A
+     partial (indeterminate) selection deliberately does NOT get the bar. The left
+     BORDER is the selected distinguisher; `.focused` below shares the same fill but is
+     marked by an inset box-shadow instead, so the two stay distinct even when combined. */
   .subhead.selected {
+    background: var(--accent-bg);
     border-left-color: var(--accent);
   }
   /* All columns out of the active window → the subheading greys at the variable level
