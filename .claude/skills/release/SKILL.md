@@ -361,8 +361,11 @@ Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
 special-case any one steward); for each whose `reg_meta_version` is older than the new
 `reg_meta/vX.Y.Z`:
 
-- build a flavored DB on the new main DB asset (`reg-meta-build extend-db …`, the
-  steward overlay over the just-built `reg_meta.db.zst`);
+- build a flavored DB overlaying the steward providers on the new release's
+  **uncompressed** `reg_meta.db` — decompress the published `reg_meta.db.zst` asset
+  first (step 8a's temp `$db_dir/reg_meta.db` is already deleted), then
+  `reg-meta-build extend-db --base-db <reg_meta.db> …` (extend-db opens the base with
+  sqlite, so it must be the decompressed DB, never the `.zst`);
 - regenerate the catalog per `reg_webapp/stewards/<id>/README.md`;
 - review the coverage/binding diff (catalog size, representation pins, co-delivery
   prune) before accepting it;
