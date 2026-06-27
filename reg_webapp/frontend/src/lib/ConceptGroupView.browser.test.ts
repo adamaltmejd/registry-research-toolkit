@@ -1555,18 +1555,35 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     });
     navSpy.mockClear();
 
-    const evt = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      button: 0,
-      metaKey: true,
-    });
-    janLink.dispatchEvent(evt);
-
-    // Open-in-new-tab intent: fall through to the browser.
-    expect(evt.defaultPrevented).toBe(false);
-    expect(navSpy).not.toHaveBeenCalled();
-    navSpy.mockRestore();
+    // A modifier click is deliberately NOT prevented by the component (open-in-new-tab
+    // intent → fall through to the browser). But an un-prevented click on a real <a
+    // href> would actually navigate the test iframe and disconnect it (flaky CI
+    // failure). A document-level bubble probe — registered AFTER Svelte's delegated
+    // handler, so it observes the component's (non-)preventDefault — records whether
+    // the component prevented it, then prevents the REAL navigation so the iframe
+    // survives.
+    let componentPrevented = true;
+    const probe = (e: Event) => {
+      componentPrevented = e.defaultPrevented;
+      e.preventDefault();
+    };
+    document.addEventListener("click", probe);
+    try {
+      const evt = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        metaKey: true,
+      });
+      janLink.dispatchEvent(evt);
+      // The component left the modifier click to the browser (didn't preventDefault)
+      // and did NOT router-navigate.
+      expect(componentPrevented).toBe(false);
+      expect(navSpy).not.toHaveBeenCalled();
+    } finally {
+      document.removeEventListener("click", probe);
+      navSpy.mockRestore();
+    }
   });
 });
 
