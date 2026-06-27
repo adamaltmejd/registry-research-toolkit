@@ -126,6 +126,11 @@ function toggleBand(band: PickerBand): void {
   selectedKeys = next;
 }
 
+/** The variable currently hovered at the SUBHEADING level — its column rows get the
+ * row-hover highlight (signalling they move together). Set on subhead enter/leave;
+ * the rows are sibling `<li>`s, so a JS `$state` flag scopes the highlight. */
+let hoveredBandKey = $state<string | null>(null);
+
 /** Every column key across all variables — the global select-all target. */
 const allKeys = $derived(
   bands.flatMap((b) => b.rows.map((r) => selKey(b.key, r.key))),
@@ -226,10 +231,21 @@ const footerLabel = $derived(
 
 <!-- The delivery COLUMN chip (#678): the main selection signal, rendered as a small
      categorical pill (mono text + a subtle --cat-var tint, distinct from the rost
-     selection accent) wherever a delivery column shows — the hoisted "column" context
-     AND a row whose primary IS the column. -->
-{#snippet colChip(text: string)}
-  <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
+     selection accent) wherever a delivery column shows. When `href` is set (a single-
+     column variable's IDENTITY chip in the group view), the chip is a NAVIGATION LINK
+     to that variable's leaf page — clicking it navigates and must NOT toggle the row
+     selection (stopPropagation). Otherwise a plain <code>. -->
+{#snippet colChip(text: string, href?: string)}
+  {#if href}
+    <a
+      class="col-chip link"
+      {href}
+      title={`Open ${text}`}
+      onclick={(e) => e.stopPropagation()}>{text}</a
+    >
+  {:else}
+    <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
+  {/if}
 {/snippet}
 
 <div class="rep-picker">
@@ -259,33 +275,37 @@ const footerLabel = $derived(
         {@const checked = selectedKeys.has(selKey(band.key, row.key))}
         {@const inWindow = representationInWindow(row, window)}
         <!-- A single-column variable = ONE selectable row, led by the variable's
-             distinguishing identity (the leaf ≈ one-variable group case). The row's
-             click toggles selection; when the variable has an `href` (group view), a
-             SEPARATE "open" link navigates to its leaf — selection and navigation are
-             distinct controls. -->
+             distinguishing identity (the leaf ≈ one-variable group case). The row is a
+             click-anywhere container (mouse toggles selection); a real checkbox owns
+             keyboard. When the variable has an `href` (group view) the COLUMN CHIP is
+             itself the navigation link to its leaf — clicking the chip navigates, not
+             toggles (it stops propagation); there's no separate "View" link. -->
         <li class="col-row single">
-          <button
-            type="button"
-            class="row-btn"
-            role="checkbox"
-            aria-checked={checked}
-            class:selected={checked}
-            class:dimmed={!inWindow}
-            onclick={() => toggleRow(band.key, row.key)}
-          >
-            <span class="check cbox" aria-hidden="true"></span>
+          <!-- The whole row is a <label> wrapping the checkbox: clicking ANYWHERE in
+               it toggles selection natively (no JS, keyboard via the input). The chip-
+               link inside stops propagation so a nav click never also toggles. -->
+          <label class="row-btn" class:selected={checked} class:dimmed={!inWindow}>
+            <!-- No aria-label: the wrapping <label>'s text content (the column chip +
+                 population + value set + period) names the checkbox for AT. -->
+            <input
+              type="checkbox"
+              class="cbox"
+              checked={checked}
+              onchange={() => toggleRow(band.key, row.key)}
+            />
             <span class="row-main">
               <span class="primary-line">
                 {#if v.primary.mono}
-                  <!-- The primary IS the delivery column → the prominent column chip. -->
-                  {@render colChip(v.primary.text)}
+                  <!-- The primary IS the delivery column → the prominent column chip,
+                       a nav LINK when the variable has its own leaf page (group). -->
+                  {@render colChip(v.primary.text, band.href)}
                 {:else}
                   <span class="primary">{v.primary.text}</span>
                 {/if}
                 {#if v.column}
                   <!-- A constant delivery column hoisted alongside a non-column
-                       primary (e.g. a name-led row) → the column chip. -->
-                  {@render colChip(v.column)}
+                       primary (e.g. a name-led row) → the column chip (nav link). -->
+                  {@render colChip(v.column, band.href)}
                 {/if}
                 {#if identity.showPrefix}
                   <code class="register-prefix">{band.registerPrefix}</code>
@@ -317,23 +337,21 @@ const footerLabel = $derived(
             {#if row.period}
               <span class="period">{row.period}</span>
             {/if}
-          </button>
-          {#if band.href}
-            <a class="open-link" href={band.href} title={`Open ${v.primary.text}`}>
-              View <span aria-hidden="true">↗</span>
-            </a>
-          {/if}
+          </label>
         </li>
       {:else}
         <!-- A multi-column variable: a thin, quiet subheading (its distinguishing
              identity + a "select all" toggle) over its column rows. No card chrome —
-             a hairline separates the group from the rest of the list. -->
+             a hairline separates the group from the rest of the list. HOVERING the
+             subheading highlights ALL its column rows (they move together); CLICKING
+             anywhere on it toggles ALL its columns (mirrors the select-all checkbox),
+             except the title nav link + the checkbox, which stop propagation. -->
         {@const empty = band.rows.length === 0}
         <li class="subhead" class:empty>
           <!-- The identity chrome (primary + name/prefix/badges). When the variable
                has an `href` (group view) the title is a navigation LINK; otherwise
-               plain text. The select-all checkbox is a SEPARATE control beside it, so
-               navigation and selection never share a target. -->
+               plain text. The select-all checkbox is the control; the title link is
+               separate, so navigation and selection never share a target. -->
           {#snippet identityInner()}
             {#if v.primary.mono}
               <code class="primary mono">{v.primary.text}</code>
@@ -356,8 +374,20 @@ const footerLabel = $derived(
               <span class="empty-note">No columns</span>
             {/if}
           {/snippet}
-          <div class="subhead-row">
-            {#if !empty}
+          {#if empty}
+            <div class="subhead-row">
+              <span class="subhead-title">{@render identityInner()}</span>
+            </div>
+          {:else}
+            <!-- The subhead-row is a <label> wrapping the select-all checkbox: a click
+                 ANYWHERE on it toggles all columns natively (the title nav link inside
+                 stops propagation so a nav click never toggles). Hovering it sets the
+                 band-hover key → all this variable's column rows highlight together. -->
+            <label
+              class="subhead-row"
+              onmouseenter={() => (hoveredBandKey = band.key)}
+              onmouseleave={() => (hoveredBandKey = null)}
+            >
               <input
                 type="checkbox"
                 class="cbox"
@@ -367,25 +397,27 @@ const footerLabel = $derived(
                 aria-label={`Select all columns of ${v.primary.text}`}
                 onchange={() => toggleBand(band)}
               />
-            {/if}
-            {#if band.href}
-              <a
-                class="subhead-title link"
-                href={band.href}
-                title={`Open ${v.primary.text}`}
-              >
-                {@render identityInner()}
-                <span class="open-marker" aria-hidden="true">↗</span>
-              </a>
-            {:else}
-              <span class="subhead-title">{@render identityInner()}</span>
-            {/if}
-          </div>
+              {#if band.href}
+                <a
+                  class="subhead-title link"
+                  href={band.href}
+                  title={`Open ${v.primary.text}`}
+                  onclick={(e) => e.stopPropagation()}
+                >
+                  {@render identityInner()}
+                  <span class="open-marker" aria-hidden="true">↗</span>
+                </a>
+              {:else}
+                <span class="subhead-title">{@render identityInner()}</span>
+              {/if}
+            </label>
+          {/if}
           {#if v.column || v.context.length > 0}
             <span class="subhead-context">
               {#if v.column}
                 <!-- The constant delivery column (when it doesn't vary across this
-                     variable's rows) → the prominent column chip. -->
+                     variable's rows) → the prominent column chip (not a link — these
+                     are not separate variables). -->
                 {@render colChip(v.column)}
               {/if}
               {#if v.context.length > 0}
@@ -398,20 +430,29 @@ const footerLabel = $derived(
           {@const checked = selectedKeys.has(selKey(band.key, row.key))}
           {@const inWindow = representationInWindow(row, window)}
           {@const label = v.rowLabels.get(row.key)}
+          <!-- A nested column row: the SAME <label>-wraps-checkbox click-anywhere
+               pattern as the single row, minus the nav link (a nested column is not
+               its own variable). Gets the band-hover highlight when its subheading is
+               hovered. -->
           <li class="col-row nested">
-            <button
-              type="button"
+            <label
               class="row-btn"
-              role="checkbox"
-              aria-checked={checked}
               class:selected={checked}
               class:dimmed={!inWindow}
-              onclick={() => toggleRow(band.key, row.key)}
+              class:band-hover={hoveredBandKey === band.key}
             >
-              <span class="check cbox" aria-hidden="true"></span>
+              <!-- No aria-label: the <label> text (column chip + value-set + period)
+                   names the checkbox for AT. -->
+              <input
+                type="checkbox"
+                class="cbox"
+                checked={checked}
+                onchange={() => toggleRow(band.key, row.key)}
+              />
               <span class="row-main">
                 {#if label?.primary.mono}
-                  <!-- A mono primary here is the varying DELIVERY COLUMN → chip. -->
+                  <!-- A mono primary here is the varying DELIVERY COLUMN → chip (NOT a
+                       link — these columns aren't separate variables). -->
                   {@render colChip(label.primary.text)}
                 {:else}
                   <span class="primary">{label?.primary.text}</span>
@@ -437,7 +478,7 @@ const footerLabel = $derived(
               {#if row.period}
                 <span class="period">{row.period}</span>
               {/if}
-            </button>
+            </label>
           </li>
         {/each}
       {/if}
@@ -493,9 +534,18 @@ const footerLabel = $derived(
 
   /* A thin, quiet variable subheading — the distinguishing identity + select-all.
      NOT a card and NO fill: the `.col-list` hairline top divider alone separates it,
-     so several stacked subheadings read flat and integrated. */
+     so several stacked subheadings read flat and integrated. Click-anywhere toggles
+     all its columns (cursor: pointer); its own hover tint reinforces the band-hover
+     highlight on the rows below. */
   .subhead {
     padding: 0.4rem 0.75rem 0.3rem;
+    cursor: pointer;
+  }
+  .subhead.empty {
+    cursor: default;
+  }
+  .subhead:not(.empty):hover {
+    background: var(--accent-bg);
   }
   /* The checkbox + identity sit on one baseline row; the checkbox stays vertically
      centered against the (possibly wrapping) title. */
@@ -558,6 +608,8 @@ const footerLabel = $derived(
 
   /* A column row: a click-anywhere checkbox. The whole row toggles (real <button> +
      role=checkbox for keyboard/AT). Nested rows indent under their subheading. */
+  /* A column row: a click-anywhere container (a <div> — the real checkbox inside owns
+     keyboard). Hovering OR band-hovering it highlights; clicking it toggles. */
   .row-btn {
     display: flex;
     align-items: center;
@@ -574,35 +626,10 @@ const footerLabel = $derived(
   .col-row.nested .row-btn {
     padding-left: 1.6rem;
   }
-  /* A single-column row that also carries a navigation link: the row's button grows,
-     the "View ↗" link sits at the end — selection (button) and navigation (link) are
-     separate controls on one line. */
-  .col-row.single {
-    display: flex;
-    align-items: center;
-  }
-  .col-row.single .row-btn {
-    flex: 1 1 auto;
-  }
-  .open-link {
-    flex: 0 0 auto;
-    margin-right: 0.75rem;
-    padding: 0.1rem 0.4rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    color: var(--text-muted);
-    text-decoration: none;
-    border-radius: var(--radius-sm);
-  }
-  .open-link:hover,
-  .open-link:focus-visible {
-    color: var(--accent);
-  }
-  .open-link:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-  }
-  .row-btn:hover {
+  /* Hover (the row itself) AND band-hover (its subheading is hovered → all rows
+     highlight together) share one highlight. */
+  .row-btn:hover,
+  .row-btn.band-hover {
     background: var(--accent-bg);
   }
   .row-btn.selected {
@@ -615,16 +642,12 @@ const footerLabel = $derived(
   .row-btn.dimmed:hover {
     opacity: 0.7;
   }
-  .row-btn:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-  }
 
-  /* The shared checkbox visual — one box used by BOTH the row check (a <span>,
-     driven by `.row-btn.selected`) and the select-all native <input> (driven by its
-     :checked / :indeterminate). Same size / border / radius / accent fill so they're
-     visually identical. The check itself is a single CENTERED pseudo-element (a
-     rotated stub with a right + bottom border), never the old crossing-gradient X. */
+  /* The shared checkbox visual — every box is now a real native <input> (the row's
+     keyboard control AND the select-all), styled identically: same size / border /
+     radius. OS chrome is stripped so the shared box + pseudo-element show through. The
+     check itself is a single CENTERED pseudo-element (a rotated stub with a right +
+     bottom border), never the old crossing-gradient X. */
   .cbox {
     position: relative;
     flex: 0 0 auto;
@@ -634,26 +657,23 @@ const footerLabel = $derived(
     border: 1px solid var(--border);
     border-radius: 3px;
     background: var(--surface);
-  }
-  /* The native select-all input needs its OS chrome stripped so the shared box +
-     pseudo-element show through. */
-  input.cbox {
     appearance: none;
     -webkit-appearance: none;
     cursor: pointer;
   }
-  /* Filled (accent) when checked — the row's `.selected` parent or the input's own
-     :checked. */
-  .row-btn.selected .check.cbox,
-  input.cbox:checked,
-  input.cbox:indeterminate {
+  .cbox:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  /* FULL selection → the accent fill + the centered check. Indeterminate is NOT here:
+     a partial box keeps the default surface bg + border, with only a visible dash. */
+  input.cbox:checked {
     border-color: var(--accent);
     background: var(--accent);
   }
   /* The CENTERED checkmark: a short rotated stub (border-right + border-bottom)
-     positioned at the box centre and nudged so the corner sits centred. Drawn for a
-     selected row check and a :checked input. */
-  .row-btn.selected .check.cbox::after,
+     positioned at the box centre and nudged so the corner sits centred. Drawn only on
+     a :checked input (full selection). */
   input.cbox:checked::after {
     content: "";
     position: absolute;
@@ -661,24 +681,22 @@ const footerLabel = $derived(
     top: 48%;
     width: 0.25rem;
     height: 0.5rem;
-    border: solid var(--accent-ink);
+    border: solid var(--accent-fg);
     border-width: 0 2px 2px 0;
     transform: translate(-50%, -55%) rotate(45deg);
   }
-  /* The indeterminate (partial-selection) visual: a centred dash, not a check. Only
-     the native input carries an indeterminate state; :indeterminate beats :checked
-     so a partial box never also draws the check. */
+  /* The indeterminate (partial-selection) visual: NO accent fill — the box keeps its
+     surface bg + border — with a clearly visible centred --accent dash drawn ON that
+     unfilled box. :indeterminate beats :checked so a partial box never draws a check. */
   input.cbox:indeterminate::after {
     content: "";
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 0.5rem;
+    width: 0.55rem;
     height: 2px;
-    /* Reset the check rule's border (an input can't be both here given the bound
-       props, but keep the dash unambiguous if it ever is). */
     border: none;
-    background: var(--accent-ink);
+    background: var(--accent);
     transform: translate(-50%, -50%);
   }
 
@@ -727,6 +745,22 @@ const footerLabel = $derived(
     align-self: flex-start;
     width: fit-content;
     max-width: 100%;
+  }
+  /* The navigable column chip (single-column identity in the group view): a real <a>
+     to the variable's leaf. Reads as the column chip, gaining a stronger border +
+     underline on hover/focus so it's discoverable as a link, distinct from selection. */
+  a.col-chip.link {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  a.col-chip.link:hover,
+  a.col-chip.link:focus-visible {
+    border-color: color-mix(in srgb, var(--cat-var) 60%, transparent);
+    text-decoration: underline;
+  }
+  a.col-chip.link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .var-name {
     font-size: 0.85rem;

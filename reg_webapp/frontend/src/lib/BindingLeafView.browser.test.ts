@@ -227,9 +227,46 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     const konRow = page.getByRole("checkbox", { name: /Kon/ });
     await konRow.click();
-    await expect.element(konRow).toHaveAttribute("aria-checked", "true");
+    await expect.element(konRow).toBeChecked();
     await expect.element(add).toBeEnabled();
     await expect.element(page.getByText("1 column selected")).toBeVisible();
+  });
+
+  it("a partially-selected variable's select-all is INDETERMINATE with no accent fill (#678)", async () => {
+    // pickerStates is a 2-column variable (Kon/Sni → a subheading). Selecting ONE
+    // column makes the variable's select-all indeterminate: native :indeterminate
+    // (the dash), NOT :checked (so the accent-fill rule never applies).
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+
+    const selectAll = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLInputElement>(
+        'input[aria-label^="Select all columns of"]',
+      );
+      if (!el) {
+        throw new Error("variable select-all not yet rendered");
+      }
+      return el;
+    });
+    // Partial → indeterminate, NOT checked (the accent fill is :checked-only, so the
+    // box keeps its surface bg + border with only the visible dash).
+    expect(selectAll.indeterminate).toBe(true);
+    expect(selectAll.checked).toBe(false);
+
+    // Selecting the OTHER column flips it to fully checked (accent fill returns).
+    await page.getByRole("checkbox", { name: /Sni/ }).click();
+    await vi.waitFor(() => {
+      if (!selectAll.checked || selectAll.indeterminate) {
+        throw new Error("select-all not yet fully checked");
+      }
+    });
   });
 
   it("selecting rows + Add commits the right addFromCatalog payloads", async () => {
@@ -286,18 +323,22 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     const konRow = page.getByRole("checkbox", { name: /Kon/ });
     await expect.element(konRow).toBeVisible();
+    // The `dimmed` class is on the row container (.row-btn label), not the checkbox.
     await vi.waitFor(() => {
-      const el = konRow.element() as HTMLElement;
-      if (!el.classList.contains("dimmed")) {
+      const rowBtn = konRow.element().closest(".row-btn");
+      if (!rowBtn?.classList.contains("dimmed")) {
         throw new Error("Kon row not yet dimmed");
       }
     });
     // The in-window Sni row is NOT dimmed.
-    const sniEl = page.getByRole("checkbox", { name: /Sni/ }).element();
-    expect((sniEl as HTMLElement).classList.contains("dimmed")).toBe(false);
+    const sniRow = page
+      .getByRole("checkbox", { name: /Sni/ })
+      .element()
+      .closest(".row-btn");
+    expect(sniRow?.classList.contains("dimmed")).toBe(false);
     // A dimmed row stays selectable.
     await konRow.click();
-    await expect.element(konRow).toHaveAttribute("aria-checked", "true");
+    await expect.element(konRow).toBeChecked();
   });
 
   it("hoists a constant column to the band context and shows the varying population per row (fordonsreg shape)", async () => {
@@ -569,8 +610,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Kön/ }))
       .toBeVisible();
-    // The LEAF passes no `href` → no member-navigation link (it's already its own
-    // page; navigation is a group-view affordance only).
+    // The LEAF passes no `href` → the column chip is a PLAIN <code>, NOT a navigation
+    // link (the leaf is already its own page; nav is a group-view affordance only).
+    const chip = document.querySelector(".col-row.single .col-chip");
+    expect(chip?.tagName).toBe("CODE");
+    expect(document.querySelector(".col-row.single a.col-chip")).toBeNull();
     expect(document.querySelector("a.open-link")).toBeNull();
   });
 

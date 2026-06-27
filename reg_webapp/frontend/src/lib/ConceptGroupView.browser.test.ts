@@ -325,10 +325,10 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect.element(page.getByText("2 columns selected")).toBeVisible();
     await expect
       .element(page.getByRole("checkbox", { name: /InkjanA/ }))
-      .toHaveAttribute("aria-checked", "true");
+      .toBeChecked();
     await expect
       .element(page.getByRole("checkbox", { name: /InkfebA/ }))
-      .toHaveAttribute("aria-checked", "false");
+      .not.toBeChecked();
 
     await page.getByRole("button", { name: "Add to project" }).click();
     expect(spy).toHaveBeenCalledTimes(2);
@@ -358,9 +358,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // Every column across both variables is selected.
     await expect.element(page.getByText("4 columns selected")).toBeVisible();
     for (const name of [/InkjanA/, /InkjanB/, /InkfebA/, /InkfebB/]) {
-      await expect
-        .element(page.getByRole("checkbox", { name }))
-        .toHaveAttribute("aria-checked", "true");
+      await expect.element(page.getByRole("checkbox", { name })).toBeChecked();
     }
   });
 
@@ -406,18 +404,21 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     const jan = page.getByRole("checkbox", { name: /Inkomst januari/ });
     await expect.element(jan).toBeVisible();
+    // The `dimmed` class is on the row container (.row-btn label), not the checkbox.
     await vi.waitFor(() => {
-      if (!(jan.element() as HTMLElement).classList.contains("dimmed")) {
+      const rowBtn = jan.element().closest(".row-btn");
+      if (!rowBtn?.classList.contains("dimmed")) {
         throw new Error("inkjan row not yet dimmed");
       }
     });
-    const feb = page
+    const febRow = page
       .getByRole("checkbox", { name: /Inkomst februari/ })
-      .element();
-    expect((feb as HTMLElement).classList.contains("dimmed")).toBe(false);
+      .element()
+      .closest(".row-btn");
+    expect(febRow?.classList.contains("dimmed")).toBe(false);
     // A dimmed row stays selectable.
     await jan.click();
-    await expect.element(jan).toHaveAttribute("aria-checked", "true");
+    await expect.element(jan).toBeChecked();
   });
 
   it("keeps Add seed-gated (disabled) until a column is selected", async () => {
@@ -600,7 +601,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     // Ng0 / Ng1 are single-column compact rows led by the column rendered as a
     // COLUMN CHIP (the prominent selection signal); the constant concept name is NOT
-    // repeated on them.
+    // repeated on them. In the GROUP view the identity chip is a NAVIGATION LINK to
+    // the member's leaf page (band.href set), so it's an <a class="col-chip link">.
     const singleTitles = await vi.waitFor(() => {
       const els = document.querySelectorAll(".col-row.single .col-chip");
       if (els.length < 2) {
@@ -609,12 +611,13 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       return [...els].map((e) => e.textContent?.trim());
     });
     expect(singleTitles).toEqual(["Ng0", "Ng1"]);
-    // The column chip is a mono <code> styled as a pill.
-    expect(
-      [...document.querySelectorAll(".col-row.single .col-chip")].every(
-        (e) => e.tagName === "CODE",
-      ),
-    ).toBe(true);
+    // The identity column chip is a navigable link (an <a>), not a plain <code>.
+    const chips = [...document.querySelectorAll(".col-row.single .col-chip")];
+    expect(chips.every((e) => e.tagName === "A")).toBe(true);
+    expect(chips.map((e) => e.getAttribute("href"))).toEqual([
+      "/catalog/scb/moms/naringsgren_ng0",
+      "/catalog/scb/moms/naringsgren_ng1",
+    ]);
 
     // The sni member is a subheading (2 columns) led by its slug; its rows are below.
     expect(document.querySelectorAll("li.subhead")).toHaveLength(1);
@@ -628,6 +631,15 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Sni2007/ }))
       .toBeVisible();
+    // The NESTED column chips (sni's two columns) are PLAIN <code>, NOT links — a
+    // nested column isn't its own variable, so only the single-column identity chip
+    // navigates.
+    const nestedChips = [
+      ...document.querySelectorAll(".col-row.nested .col-chip"),
+    ];
+    expect(nestedChips.length).toBe(2);
+    expect(nestedChips.every((e) => e.tagName === "CODE")).toBe(true);
+    expect(document.querySelector(".col-row.nested a.col-chip")).toBeNull();
   });
 
   it("a facet group of single-column members leads each compact row with its FACET label (normal weight)", async () => {
@@ -702,31 +714,37 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   // ── Member → leaf navigation (#678) ─────────────────────────────────────────
-  it("a single-column member renders a 'View' link to its leaf page, distinct from the checkbox", async () => {
+  it("a single-column member's COLUMN CHIP is the leaf-navigation link (no separate 'View' link)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
     renderGroup();
 
-    // Each member's single-column row carries a separate navigation link to its leaf
-    // FQID — NOT the selection checkbox.
+    // The column chip ITSELF is the navigation link to the member's leaf FQID — there
+    // is no separate "View ↗" link anymore.
     const janLink = await vi.waitFor(() => {
-      const els = [...document.querySelectorAll("a.open-link")];
+      const els = [...document.querySelectorAll("a.col-chip.link")];
       const jan = els.find(
         (a) => a.getAttribute("href") === "/catalog/scb/rams/inkjan",
       );
       if (!jan) {
-        throw new Error("inkjan leaf link not yet rendered");
+        throw new Error("inkjan column-chip link not yet rendered");
       }
       return jan;
     });
     expect(janLink.tagName).toBe("A");
-    // The leaf link is a real <a> (keyboard-navigable), separate from the row button.
-    expect(janLink.closest("button")).toBeNull();
-    // The other member links too.
+    // The chip-link is inside the row label (the click-anywhere selection target) but
+    // is itself a real <a> (keyboard-navigable; it stops propagation so a nav click
+    // never toggles).
+    expect(janLink.closest("label.row-btn")).not.toBeNull();
+    // The other member's chip links too.
     expect(
-      document.querySelector('a.open-link[href="/catalog/scb/rams/inkfeb"]'),
+      document.querySelector(
+        'a.col-chip.link[href="/catalog/scb/rams/inkfeb"]',
+      ),
     ).not.toBeNull();
+    // No legacy "View ↗" link survives.
+    expect(document.querySelector("a.open-link")).toBeNull();
   });
 
   it("a multi-column member renders its subheading title as a leaf link", async () => {
@@ -751,6 +769,129 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       ?.querySelector('input[type="checkbox"]');
     expect(checkbox).not.toBeNull();
     expect(checkbox?.closest("a")).toBeNull();
+  });
+
+  it("clicking a subheading (not the title link) toggles ALL its columns", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
+
+    renderGroup();
+
+    // The subhead-row is a <label> wrapping the select-all checkbox: clicking it (off
+    // the title link) toggles every column of that variable.
+    const inkjanRow = await vi.waitFor(() => {
+      const cb = document.querySelector<HTMLInputElement>(
+        'input[aria-label="Select all columns of Inkomst januari"]',
+      );
+      const label = cb?.closest("label.subhead-row");
+      if (!label) {
+        throw new Error("inkjan subhead label not yet rendered");
+      }
+      return label as HTMLLabelElement;
+    });
+    // Click the label itself (not the title link inside it).
+    inkjanRow.click();
+
+    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /InkjanA/ }))
+      .toBeChecked();
+    await expect
+      .element(page.getByRole("checkbox", { name: /InkjanB/ }))
+      .toBeChecked();
+    // The other variable's columns are untouched.
+    await expect
+      .element(page.getByRole("checkbox", { name: /InkfebA/ }))
+      .not.toBeChecked();
+  });
+
+  it("hovering a subheading highlights ALL its column rows (band-hover)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
+
+    renderGroup();
+
+    // The inkjan column rows (by their column checkboxes) and the inkjan subhead label.
+    const janA = await vi.waitFor(() => {
+      const cb = page.getByRole("checkbox", { name: /InkjanA/ }).element();
+      const rowBtn = cb.closest(".row-btn");
+      if (!rowBtn) {
+        throw new Error("InkjanA row not yet rendered");
+      }
+      return rowBtn;
+    });
+    const janB = page
+      .getByRole("checkbox", { name: /InkjanB/ })
+      .element()
+      .closest(".row-btn") as Element;
+    const febA = page
+      .getByRole("checkbox", { name: /InkfebA/ })
+      .element()
+      .closest(".row-btn") as Element;
+    const inkjanLabel = document
+      .querySelector(
+        'input[aria-label="Select all columns of Inkomst januari"]',
+      )
+      ?.closest("label.subhead-row") as HTMLLabelElement;
+
+    // Normalize first (the real Chromium cursor may already sit over a row from a
+    // prior test's click, firing a genuine mouseenter), then test the enter→leave
+    // transition deterministically.
+    inkjanLabel.dispatchEvent(new MouseEvent("mouseleave", { bubbles: false }));
+    await vi.waitFor(() => {
+      if (janA.classList.contains("band-hover")) {
+        throw new Error("baseline not yet cleared");
+      }
+    });
+
+    inkjanLabel.dispatchEvent(new MouseEvent("mouseenter", { bubbles: false }));
+    await vi.waitFor(() => {
+      if (
+        !janA.classList.contains("band-hover") ||
+        !janB.classList.contains("band-hover")
+      ) {
+        throw new Error("inkjan rows not yet band-hovered");
+      }
+    });
+    // Only inkjan's rows highlight — NOT the other variable's.
+    expect(febA.classList.contains("band-hover")).toBe(false);
+
+    inkjanLabel.dispatchEvent(new MouseEvent("mouseleave", { bubbles: false }));
+    await vi.waitFor(() => {
+      if (janA.classList.contains("band-hover")) {
+        throw new Error("band-hover not cleared on leave");
+      }
+    });
+  });
+
+  it("clicking the subheading TITLE link navigates without toggling selection", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
+
+    renderGroup();
+
+    const titleLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.subhead-title[href="/catalog/scb/rams/inkjan"]',
+      );
+      if (!el) {
+        throw new Error("inkjan title link not yet rendered");
+      }
+      return el;
+    });
+    // Dispatch a cancelable click on the title link (prevent actual navigation in the
+    // test). It stops propagation, so the wrapping label's select-all never fires.
+    const evt = new MouseEvent("click", { bubbles: true, cancelable: true });
+    evt.preventDefault();
+    titleLink.dispatchEvent(evt);
+
+    // No column got selected — the nav link did not toggle the band.
+    await expect.element(page.getByText("0 columns selected")).toBeVisible();
+    expect(
+      document.querySelector<HTMLInputElement>(
+        'input[aria-label="Select all columns of Inkomst januari"]',
+      )?.checked,
+    ).toBe(false);
   });
 
   it("verifies the fordonsreg/naringsgren shape: the Näringsgren member links to its leaf", async () => {
@@ -793,9 +934,18 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       key: "naringsgren",
     });
 
-    await expect
-      .element(page.getByRole("link", { name: /View/ }))
-      .toHaveAttribute("href", "/catalog/scb/fordonsreg/naringsgren");
+    // The Näringsgren member's column chip is the leaf link (no "View" link).
+    const link = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.col-chip.link[href="/catalog/scb/fordonsreg/naringsgren"]',
+      );
+      if (!el) {
+        throw new Error("naringsgren chip link not yet rendered");
+      }
+      return el;
+    });
+    expect(link.tagName).toBe("A");
+    expect(document.querySelector("a.open-link")).toBeNull();
   });
 
   // ── Shared concept definition / description (#678) ───────────────────────────
