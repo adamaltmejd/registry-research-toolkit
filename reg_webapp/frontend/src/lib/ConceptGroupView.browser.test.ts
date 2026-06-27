@@ -772,7 +772,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       if (els.length < 2) {
         throw new Error("single-column chips not yet rendered");
       }
-      return [...els].map((e) => e.textContent?.trim());
+      // The chip's leading text node is the column name (a trailing ↗ link marker
+      // follows it inside the navigable chip).
+      return [...els].map((e) => e.firstChild?.textContent?.trim());
     });
     expect(singleTitles).toEqual(["Ng0", "Ng1"]);
     // The identity column chip is a navigable link (an <a>), not a plain <code>.
@@ -929,7 +931,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(titleLink.tagName).toBe("A");
     // The select-all checkbox is a SEPARATE control (not inside the link).
     const checkbox = titleLink
-      .closest(".subhead-row")
+      .closest(".subhead-label")
       ?.querySelector('input[type="checkbox"]');
     expect(checkbox).not.toBeNull();
     expect(checkbox?.closest("a")).toBeNull();
@@ -1006,11 +1008,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     });
   });
 
-  it("the subheading CONTEXT line (column chip + description) is inside the click/hover surface (#678)", async () => {
-    // The fordonsreg shape: a member whose constant column ("SNI2002") hoists to the
-    // subhead-context chip and whose value-set description hoists there too. Both must
-    // sit INSIDE the click-all + hover-all <label>, so clicking/hovering the chip or
-    // description also toggles/highlights all the variable's columns.
+  it("a single-column member: the column chip is the title-link; the description toggles all (#678)", async () => {
+    // The fordonsreg shape: a single-column member ("SNI2002") with two populations.
+    // It leads with its column as the subheading TITLE chip-LINK; the value-set
+    // description rides in the context, INSIDE the click-all + hover-all <label>, so
+    // clicking the description toggles all the variable's columns (the chip-link itself
+    // navigates instead, stopping propagation).
     vi.mocked(getConceptGroup).mockResolvedValue(
       node({
         provider: "scb",
@@ -1060,25 +1063,31 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       key: "naringsgren",
     });
 
-    // The subhead-context renders the column chip + description, INSIDE the label.
-    const context = await vi.waitFor(() => {
-      const el = document.querySelector(".subhead-context");
+    // The column is the subheading TITLE — a chip-LINK to the member's leaf.
+    const titleChip = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        ".subhead-title a.col-chip.link",
+      );
       if (!el) {
-        throw new Error("subhead context not yet rendered");
+        throw new Error("subhead title chip-link not yet rendered");
       }
       return el;
     });
-    expect(context.querySelector(".col-chip")?.textContent).toBe("SNI2002");
-    // The context line is a descendant of the hover/click <label>.
-    expect(context.closest("label.subhead-label")).not.toBeNull();
+    expect(titleChip.firstChild?.textContent?.trim()).toBe("SNI2002");
+    expect(titleChip.getAttribute("href")).toBe(
+      "/catalog/scb/fordonsreg/naringsgren",
+    );
 
-    // Clicking the column chip in the context toggles ALL the variable's columns
-    // (the chip is part of the select-all surface for a multi-column member).
-    const chip = context.querySelector<HTMLElement>(".col-chip");
-    if (!chip) {
-      throw new Error("context column chip missing");
-    }
-    chip.click();
+    // The description rides in the context, INSIDE the hover/click <label>.
+    const context = document.querySelector(".subhead-context");
+    expect(context?.textContent).toContain(
+      "Standard för svensk näringsgrensindelning",
+    );
+    expect(context?.closest("label.subhead-label")).not.toBeNull();
+
+    // Clicking the DESCRIPTION (part of the select-all label, not the chip-link)
+    // toggles ALL the variable's columns.
+    (context as HTMLElement).click();
     await expect.element(page.getByText("2 columns selected")).toBeVisible();
     await expect
       .element(page.getByRole("checkbox", { name: /lastbilar/ }))

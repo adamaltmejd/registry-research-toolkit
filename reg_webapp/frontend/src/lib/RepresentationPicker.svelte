@@ -919,12 +919,14 @@ const footerLabel = $derived(
     text-decoration: none;
     cursor: pointer;
   }
-  /* The link-out affordance: a small ↗ inside the chip pill (the whole chip is the
-     link). Kept lighter than the mono column name so the column reads first. */
+  /* The link-out affordance: a ↗ inside the chip pill (the whole chip is the link).
+     Sized up from the mono text (the glyph reads small at text size) and kept a touch
+     lighter so the column name still leads. */
   .col-chip.link .chip-arrow {
     margin-left: 0.2rem;
-    font-size: 0.85em;
-    opacity: 0.75;
+    font-size: 1.15em;
+    line-height: 1;
+    opacity: 0.85;
   }
   a.col-chip.link:hover,
   a.col-chip.link:focus-visible {

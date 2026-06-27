@@ -1265,16 +1265,19 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
     }
     // Name + facet constant across bands → lead with the distinguisher (the column
     // /slug that actually varies, e.g. `SNI2002`/`SNI2007_Ag`), rendered mono. It is
-    // the column chip-LINK identity for a single-column member (`distinguisherIsColumn`)
-    // and a plain mono slug for a multi-column one. Single band (leaf) or a degenerate
-    // all-constant group falls back to name → facet → distinguisher so the header is
-    // never empty.
-    if (bands.length > 1 && b.distinguisher) {
+    // the column chip identity for a single-column member (`distinguisherIsColumn`) and
+    // a plain mono slug for a multi-column one. A SINGLE-COLUMN member leads with its
+    // column even when it is the lone band (the leaf): the variable name is already the
+    // page <h2>, so a one-column leaf shows just its column, not a repeated name. A
+    // multi-BAND group always leads with the distinguisher (column or slug).
+    if (b.distinguisher && (b.distinguisherIsColumn || bands.length > 1)) {
       return {
         primary: { text: b.distinguisher, mono: true },
         primaryIsColumn: b.distinguisherIsColumn,
       };
     }
+    // A lone MULTI-column leaf has no single column to lead with → the variable name
+    // (its columns are the rows beneath). Then facet, then the distinguisher fallback.
     if (b.name) {
       return { primary: { text: b.name, mono: false }, primaryIsColumn: false };
     }

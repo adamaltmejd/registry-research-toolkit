@@ -371,22 +371,23 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    // The constant column hoists to the subheading context as a prominent COLUMN
-    // CHIP; the value set hoists as quiet text. The period is NOT in the context
-    // (#678 fix 5) — it shows per-row on the right instead.
-    const ctx = await vi.waitFor(() => {
-      const el = document.querySelector(".subhead-context");
+    // The single-column member leads with its column as the subheading TITLE (a chip);
+    // on the LEAF it's a plain <code> (no self-link). The value set hoists as quiet
+    // context text. The period is NOT in the context — it shows per-row on the right.
+    const titleChip = await vi.waitFor(() => {
+      const el = document.querySelector(".subhead-title .col-chip");
       if (!el) {
-        throw new Error("subhead context not yet rendered");
+        throw new Error("subhead title chip not yet rendered");
       }
       return el;
     });
-    // The column is a chip (not the literal "column Sni2002" text).
-    const chip = ctx.querySelector(".col-chip");
-    expect(chip?.textContent).toBe("Sni2002");
-    expect(ctx.textContent).toContain("SNI 2002");
+    // The chip's leading text node is the column (a trailing ↗ marker only on links).
+    expect(titleChip.firstChild?.textContent?.trim()).toBe("Sni2002");
+    expect(titleChip.tagName).toBe("CODE");
+    const ctx = document.querySelector(".subhead-context");
+    expect(ctx?.textContent).toContain("SNI 2002");
     // The period is NOT duplicated into the context line.
-    expect(ctx.textContent).not.toContain("2003 – 2015");
+    expect(ctx?.textContent).not.toContain("2003 – 2015");
     // Each row still shows its own period on the right-side column.
     const periods = [
       ...document.querySelectorAll(".col-row.nested .period"),
@@ -572,10 +573,10 @@ describe("BindingLeafView representation picker (#678)", () => {
     );
   });
 
-  it("the single-COLUMN leaf renders ONE compact row led by the variable NAME (#678)", async () => {
-    // A single-column leaf has nothing varying, so it merges to ONE compact row led
-    // by the variable name (the leaf ≈ one-variable group). (The row reads "Kön",
-    // not "Kon".) The constant register prefix is hoisted off (it's the breadcrumb).
+  it("the single-COLUMN leaf renders ONE compact row led by its COLUMN (#678)", async () => {
+    // A single-column leaf has nothing varying, so it merges to ONE compact row. The
+    // variable name is already the page <h2>, so the row leads with just its COLUMN
+    // chip ("Kon"), NOT a repeated "Kön". The constant register prefix is hoisted off.
     const oneColumn = [
       state({
         state_id: 1,
@@ -595,25 +596,27 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     // ONE compact single-column row, no subheading.
-    const primary = await vi.waitFor(() => {
-      const el = document.querySelector(".col-row.single .primary");
+    const chip = await vi.waitFor(() => {
+      const el = document.querySelector(".col-row.single .col-chip");
       if (!el) {
         throw new Error("single-column row not yet rendered");
       }
       return el;
     });
     expect(document.querySelectorAll("li.subhead")).toHaveLength(0);
-    // The leaf leads with its variable name, normal weight (a <span>, not mono).
-    expect(primary.textContent?.trim()).toBe("Kön");
-    expect(primary.tagName).toBe("SPAN");
-    // The merged row is itself a selectable checkbox.
+    // The leaf leads with its COLUMN chip ("Kon"), not the variable name ("Kön").
+    expect(chip.firstChild?.textContent?.trim()).toBe("Kon");
+    expect(document.querySelector(".col-row.single .primary")).toBeNull();
+    expect(
+      document.querySelector(".col-row.single")?.textContent,
+    ).not.toContain("Kön");
+    // The merged row is itself a selectable checkbox (named by its column).
     await expect
-      .element(page.getByRole("checkbox", { name: /Kön/ }))
+      .element(page.getByRole("checkbox", { name: /Kon/ }))
       .toBeVisible();
     // The LEAF passes no `href` → the column chip is a PLAIN <code>, NOT a navigation
     // link (the leaf is already its own page; nav is a group-view affordance only).
-    const chip = document.querySelector(".col-row.single .col-chip");
-    expect(chip?.tagName).toBe("CODE");
+    expect(chip.tagName).toBe("CODE");
     expect(document.querySelector(".col-row.single a.col-chip")).toBeNull();
     expect(document.querySelector("a.open-link")).toBeNull();
   });
@@ -754,8 +757,8 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .toBeVisible();
     // The picker lists representations over the FULL history (the period window
     // only dims). inA/inB share (individer, Kon) → ONE representation → a single-rep
-    // leaf renders FLAT, led by the variable NAME ("Kön"). Selecting it enables Add.
-    const konRow = page.getByRole("checkbox", { name: /Kön/ });
+    // leaf renders FLAT, led by its COLUMN ("Kon"). Selecting it enables Add.
+    const konRow = page.getByRole("checkbox", { name: /Kon/ });
     await expect.element(konRow).toBeVisible();
     await konRow.click();
     await expect

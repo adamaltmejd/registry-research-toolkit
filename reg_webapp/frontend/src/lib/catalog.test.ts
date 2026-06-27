@@ -1888,16 +1888,31 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ...over,
   });
 
-  it("a single-band leaf leads with the variable NAME, hoists nothing", () => {
+  it("a single-COLUMN leaf leads with its COLUMN, not the (repeated) name", () => {
     const { showName, showPrefix, bands } = bandLabeling([
       band({ name: "Kön", registerPrefix: "scb/lisa", distinguisher: "Kon" }),
     ]);
-    // Name doesn't "vary" with one band → the fallback chain lands on name, not the
-    // column. Both constant dims are hoisted off (the title / breadcrumb carry them).
-    expect(bands[0].primary).toEqual({ text: "Kön", mono: false });
-    expect(bands[0].primaryIsColumn).toBe(false);
+    // One band, one column → the variable name is already the page <h2>, so the leaf
+    // leads with just its column chip (`Kon`), not a repeated `Kön`. Both constant dims
+    // are hoisted off (the title / breadcrumb carry them).
+    expect(bands[0].primary).toEqual({ text: "Kon", mono: true });
+    expect(bands[0].primaryIsColumn).toBe(true);
     expect(showName).toBe(false);
     expect(showPrefix).toBe(false);
+  });
+
+  it("a single-band MULTI-column leaf leads with the variable NAME", () => {
+    // A lone band whose columns are the rows beneath has no single column to lead
+    // with → the variable name is the right umbrella identity.
+    const { bands } = bandLabeling([
+      band({
+        name: "Yrke",
+        distinguisher: "yrkesreg",
+        distinguisherIsColumn: false,
+      }),
+    ]);
+    expect(bands[0].primary).toEqual({ text: "Yrke", mono: false });
+    expect(bands[0].primaryIsColumn).toBe(false);
   });
 
   it("a name-constant group leads each band with its distinguishing COLUMN (mono)", () => {
