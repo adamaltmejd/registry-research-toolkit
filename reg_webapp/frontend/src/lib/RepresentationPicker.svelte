@@ -168,14 +168,27 @@ function commit(): void {
   onadd(selected);
 }
 
-/** A variable's distinguishing technical differentiator: a single-column variable's
- * delivery column (so a column-led group reads `Ng0`/`Ng1`/`Sni`), else the member
- * leaf slug — the fallback for a multi-column variable. */
+/** The DISTINCT delivery columns a variable's rows address. A member whose rows all
+ * deliver the SAME one column is a single-column member — its several rows are
+ * POPULATIONS of that column, not distinct columns. */
+function distinctColumns(band: PickerBand): string[] {
+  return [...new Set(band.rows.map((r) => r.column).filter(Boolean))];
+}
+
+/** Whether the band is a SINGLE-COLUMN member — every row delivers one and the same
+ * delivery column. Its identity is then that column (rendered as the chip-LINK); only
+ * a genuinely multi-column member falls back to the leaf slug. */
+function distinguisherIsColumn(band: PickerBand): boolean {
+  return distinctColumns(band).length === 1;
+}
+
+/** A variable's distinguishing technical differentiator: its sole delivery column when
+ * every row delivers the same one (a column-led group reads `SNI2002`/`SNI2007_Ag` —
+ * the several rows are populations), else the member leaf slug — the fallback for a
+ * genuinely multi-column variable. */
 function distinguisherOf(band: PickerBand): string {
-  if (band.rows.length === 1 && band.rows[0].column) {
-    return band.rows[0].column;
-  }
-  return leafSlug(band.key);
+  const cols = distinctColumns(band);
+  return cols.length === 1 ? cols[0] : leafSlug(band.key);
 }
 
 /** The adaptive variable-IDENTITY labeling across the members (#678): hoist constant
@@ -190,6 +203,7 @@ const identity = $derived(
         registerPrefix: b.registerPrefix,
         facetLabel: b.facetLabel ?? null,
         distinguisher: distinguisherOf(b),
+        distinguisherIsColumn: distinguisherIsColumn(b),
       }),
     ),
   ),
@@ -230,11 +244,12 @@ const view = $derived(
     const id = identity.bands[i];
     const labeling = labelingByBand.get(band.key);
     const single = band.rows.length === 1;
-    // The hoisted constant delivery column → a prominent chip in the context. But a
-    // single-column variable whose ROW PRIMARY already IS that column shows it once
-    // (as the primary chip), so suppress the duplicate context chip there.
-    const column =
-      single && id.primaryIsColumn ? null : (labeling?.column ?? null);
+    // The hoisted constant delivery column → a prominent chip in the context. But when
+    // the variable's IDENTITY already IS that column (a single-column member — its
+    // primary is the column chip-link, whether single-row or a multi-population
+    // subheading), it's shown once as that identity, so suppress the duplicate context
+    // chip here.
+    const column = id.primaryIsColumn ? null : (labeling?.column ?? null);
     // ALL-OUT: every row out of the active window → the (multi-column) subheading
     // greys at the variable level too. A 0-row band is NOT all-out (nothing to scope).
     const allOut =
@@ -243,6 +258,7 @@ const view = $derived(
     return {
       band,
       primary: id.primary,
+      primaryIsColumn: id.primaryIsColumn,
       single,
       column,
       allOut,
@@ -408,12 +424,21 @@ const footerLabel = $derived(
                has an `href` (group view) the title is a navigation LINK; otherwise
                plain text. The select-all checkbox is the control; the title link is
                separate, so navigation and selection never share a target. -->
-          {#snippet identityInner()}
-            {#if v.primary.mono}
+          <!-- The leading identity. A SINGLE-COLUMN member (`primaryIsColumn`) leads
+               with its delivery column as the prominent chip-LINK (the chip itself
+               navigates to the member's leaf — no outer link/↗, like the single-row
+               identity); a multi-column member leads with its mono slug (wrapped in
+               the subhead-title nav link below). -->
+          {#snippet identityPrimary()}
+            {#if v.primaryIsColumn}
+              {@render colChip(v.primary.text, band.href)}
+            {:else if v.primary.mono}
               <code class="primary mono">{v.primary.text}</code>
             {:else}
               <span class="primary">{v.primary.text}</span>
             {/if}
+          {/snippet}
+          {#snippet identityMeta()}
             {#if identity.showName && band.name !== v.primary.text}
               <span class="var-name">{band.name}</span>
             {/if}
@@ -429,6 +454,10 @@ const footerLabel = $derived(
             {#if empty}
               <span class="empty-note">No columns</span>
             {/if}
+          {/snippet}
+          {#snippet identityInner()}
+            {@render identityPrimary()}
+            {@render identityMeta()}
           {/snippet}
           {#snippet subheadContext()}
             {#if v.column || v.context.length > 0}
@@ -471,7 +500,13 @@ const footerLabel = $derived(
                   aria-label={`Select all columns of ${v.primary.text}`}
                   onchange={() => toggleBand(band)}
                 />
-                {#if band.href}
+                {#if v.primaryIsColumn}
+                  <!-- Single-column member: the column chip-LINK IS the identity (the
+                       chip navigates; its color-deepen hover is the affordance). No
+                       outer nav link / ↗ — the chip itself is the link, mirroring the
+                       single-row identity. -->
+                  <span class="subhead-title">{@render identityInner()}</span>
+                {:else if band.href}
                   <a
                     class="subhead-title link"
                     href={band.href}

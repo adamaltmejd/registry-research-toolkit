@@ -1876,12 +1876,15 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
       registerPrefix: string;
       facetLabel: string | null;
       distinguisher: string;
+      distinguisherIsColumn: boolean;
     }> = {},
   ) => ({
     name: "Näringsgren",
     registerPrefix: "scb/moms",
     facetLabel: null,
     distinguisher: "Ng0",
+    // The default distinguisher is a delivery column (a single-column member).
+    distinguisherIsColumn: true,
     ...over,
   });
 
@@ -1911,6 +1914,21 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     // Name + prefix are constant → hoisted off every band.
     expect(showName).toBe(false);
     expect(showPrefix).toBe(false);
+  });
+
+  it("a multi-column member leads with its SLUG (mono), NOT marked a column", () => {
+    // A genuinely multi-column member has no single delivery column to lead with, so
+    // the distinguisher is its leaf slug (`distinguisherIsColumn: false`). It still
+    // leads mono (a technical identifier) but is NOT the column chip-link identity —
+    // the band renders a plain slug + per-row column chips.
+    const { bands } = bandLabeling([
+      band({ distinguisher: "sun2020niva", distinguisherIsColumn: false }),
+      band({ distinguisher: "Ng1" }),
+    ]);
+    expect(bands[0].primary).toEqual({ text: "sun2020niva", mono: true });
+    expect(bands[0].primaryIsColumn).toBe(false);
+    // Its single-column sibling still leads with its column chip identity.
+    expect(bands[1].primaryIsColumn).toBe(true);
   });
 
   it("a facet group leads each band with its FACET label (normal weight)", () => {

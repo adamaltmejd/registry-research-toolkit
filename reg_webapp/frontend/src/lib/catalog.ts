@@ -1201,23 +1201,30 @@ export function pickerLabeling(
 // identity. Pure — unit-tested in catalog.test.ts.
 
 /** The identity dimensions of ONE member band — the inputs to `bandLabeling`. The
- * `distinguisher` is the band's natural technical differentiator (a single-rep
- * band's delivery column, else the member leaf slug), rendered mono when it leads. */
+ * `distinguisher` is the band's natural technical differentiator (a SINGLE-COLUMN
+ * band's sole delivery column — its several rows are populations — else the member
+ * leaf slug), rendered mono when it leads. `distinguisherIsColumn` says which of the
+ * two it is: a real delivery column (→ the picker renders it as the column chip-LINK
+ * identity) or the slug fallback (→ a plain mono code, for a genuinely multi-column
+ * member). */
 export interface BandIdentity {
   name: string;
   registerPrefix: string;
   facetLabel: string | null;
   distinguisher: string;
+  distinguisherIsColumn: boolean;
 }
 
 /** One band's adaptive header projection: the leading `primary` identity (mono for
- * a column/slug, normal weight for a name/facet) and whether its single-rep column
- * is now the primary (so the band can suppress repeating that column in its row
- * context). */
+ * a column/slug, normal weight for a name/facet) and whether that primary IS the
+ * band's delivery column (so the band renders it as the column chip-LINK identity
+ * and suppresses repeating that column in its row context). */
 export interface BandLabel {
   primary: { text: string; mono: boolean };
   /** True when the primary IS this band's distinguisher AND that distinguisher is a
-   * single-rep column — the band drops the redundant "column …" from its context. */
+   * real delivery column (a SINGLE-COLUMN member) — the band leads with the column
+   * chip-link and drops the redundant "column …" from its context. False for the
+   * slug fallback (a genuinely multi-column member leads with a plain mono slug). */
   primaryIsColumn: boolean;
 }
 
@@ -1257,13 +1264,15 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
       };
     }
     // Name + facet constant across bands → lead with the distinguisher (the column
-    // /slug that actually varies, e.g. `Ng0`/`Ng1`/`Sni`), rendered mono. Single
-    // band (leaf) or a degenerate all-constant group falls back to name → facet →
-    // distinguisher so the header is never empty.
+    // /slug that actually varies, e.g. `SNI2002`/`SNI2007_Ag`), rendered mono. It is
+    // the column chip-LINK identity for a single-column member (`distinguisherIsColumn`)
+    // and a plain mono slug for a multi-column one. Single band (leaf) or a degenerate
+    // all-constant group falls back to name → facet → distinguisher so the header is
+    // never empty.
     if (bands.length > 1 && b.distinguisher) {
       return {
         primary: { text: b.distinguisher, mono: true },
-        primaryIsColumn: true,
+        primaryIsColumn: b.distinguisherIsColumn,
       };
     }
     if (b.name) {
@@ -1277,7 +1286,7 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
     }
     return {
       primary: { text: b.distinguisher || "—", mono: true },
-      primaryIsColumn: !!b.distinguisher,
+      primaryIsColumn: b.distinguisherIsColumn && !!b.distinguisher,
     };
   });
 
