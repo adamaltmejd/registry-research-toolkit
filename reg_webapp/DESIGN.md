@@ -1054,10 +1054,18 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   imported in `main.ts` after `tokens.css`. It composes the `--micro-label-*` tokens —
   tokens remain the source of truth; the class de-duplicates the composed rule that was
   re-typed across seven components. A cross-component eyebrow can't be owned by one
-  component, so it gets a shared global stylesheet (the same home a future `sr-only`
-  utility would share). The one consumer that keeps an inline copy is `DataTable`'s
-  `td:not(.first)::before` stacked-card column-label: a CSS-generated pseudo-element
-  can't take a class, and plain CSS has no mixin — that copy is kept in sync by comment.
+  component, so it gets a shared global stylesheet (`lib/ui/utilities.css`). The one
+  consumer that keeps an inline copy is `DataTable`'s `td:not(.first)::before`
+  stacked-card column-label: a CSS-generated pseudo-element can't take a class, and
+  plain CSS has no mixin — that copy is kept in sync by comment.
+- **`.visually-hidden` global utility.** The canonical sr-only recipe (modern
+  `clip-path: inset(50%)`, not the legacy `clip` property) is the second cross-component
+  utility in `lib/ui/utilities.css`. It removes content from the visual layout while
+  keeping it in the accessibility tree — unlike `display:none`, which severs both. Used
+  by `ConceptGroupNavigator`'s filter-pill checkboxes. `DataTable`'s stacked `<thead>`
+  is sr-only only under `@media (max-width: 48rem)`, so it cannot apply the
+  (unconditional) class and keeps a media-scoped inline copy held identical to the
+  utility — the sr-only analog of the `td::before` micro-label exception.
 
 ### Migration discipline
 
