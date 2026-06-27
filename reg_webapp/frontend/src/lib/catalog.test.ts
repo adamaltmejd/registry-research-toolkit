@@ -69,7 +69,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
 const provider = {
   kind: "provider",
   fqid: "scb",
-  name: "Statistics Sweden",
+  name: "Statistiska Centralbyrån",
 } as CatalogNode;
 const register = {
   kind: "register",
@@ -192,7 +192,7 @@ describe("rankFilter", () => {
 
 describe("nodeLabel", () => {
   it("uses name when present, else falls back to fqid", () => {
-    expect(nodeLabel(provider)).toBe("Statistics Sweden");
+    expect(nodeLabel(provider)).toBe("Statistiska Centralbyrån");
     expect(nodeLabel(register)).toBe("scb/lisa"); // name is null → fqid
     expect(nodeLabel(classification)).toBe("Education");
   });

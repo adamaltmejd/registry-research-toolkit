@@ -55,7 +55,7 @@ class TestListProviders:
         scb = next(p for p in _catalog().list_providers() if p.fqid.provider == "scb")
         assert scb.fqid.kind is FqidKind.PROVIDER
         assert str(scb.fqid) == "scb"
-        assert scb.name == "Statistics Sweden"
+        assert scb.name == "Statistiska Centralbyrån"
 
 
 class TestListRegisters:

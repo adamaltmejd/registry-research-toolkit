@@ -39,7 +39,7 @@ function body(text: string) {
  * the steward/window wiring is inert chrome for the nav-focused tests below. */
 function minimalProps() {
   return {
-    steward: { long_name: "Statistics Sweden", id: "scb" },
+    steward: { long_name: "Statistiska Centralbyrån", id: "scb" },
     windowMin: 1960,
     windowMax: 2026,
     windowValue: null,

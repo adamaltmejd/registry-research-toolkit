@@ -47,7 +47,7 @@ class TestResolveProvider:
     def test_resolves_known_provider(self, slugged_conn: sqlite3.Connection) -> None:
         r = Catalog(slugged_conn).resolve("scb")
         assert isinstance(r, ResolvedProvider)
-        assert r.name == "Statistics Sweden"
+        assert r.name == "Statistiska Centralbyrån"
         assert r.fqid.provider == "scb"
         assert str(r.fqid) == "scb"
 
