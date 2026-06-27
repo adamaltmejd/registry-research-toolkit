@@ -46,10 +46,12 @@ from fastapi.responses import RedirectResponse
 from reg_meta.catalog import (
     Catalog,
     Period,
+    RegisterCoverage,
     ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
+    VariableCoverage,
     VariableState,
 )
 from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
@@ -381,6 +383,19 @@ def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN0
     return [r for r in refs if r.fqid is not None and str(r.fqid) in admitted]
 
 
+def _narrow_lineage_to_held(edges: list, index: CatalogIndex) -> list:  # noqa: ANN001 — LineageEdge list
+    """Narrow a list of `LineageEdge`s to those whose SOURCE is a held binding
+    (#859). A `LineageEdge` references its source by `source_fqid` (not `fqid`),
+    so it narrows on that field; an edge with `source_fqid is None` (unaddressable
+    source) drops, mirroring `_narrow_refs_to_held`. Shared by the binding leaf
+    embed (`_binding_node`) and the standalone `/lineage` sub-endpoint
+    (`get_binding_lineage`) so the two narrowings can't drift."""
+    admitted = index.admitted_variable_fqids
+    return [
+        e for e in edges if e.source_fqid is not None and str(e.source_fqid) in admitted
+    ]
+
+
 # ── reg_meta model → catalog node mappers (see DESIGN.md → Pydantic boundary) ──
 # The per-leaf 1:1 wrappers are gone (#681): reg_meta now returns frozen Pydantic
 # models whose `Fqid` fields serialize to the canonical string and whose
@@ -428,15 +443,9 @@ def _binding_node(
         same_as = _narrow_refs_to_held(same_as, index)
         related_to = _narrow_refs_to_held(related_to, index)
         succession_chain = _narrow_refs_to_held(succession_chain, index)
-        # `LineageEdge` references its source by `source_fqid` (not `fqid`), so it
-        # narrows on that field; an edge with `source_fqid is None` (unaddressable
-        # source) drops, mirroring `_narrow_refs_to_held`.
-        admitted = index.admitted_variable_fqids
-        lineage = [
-            e
-            for e in lineage
-            if e.source_fqid is not None and str(e.source_fqid) in admitted
-        ]
+        # `LineageEdge` narrows on `source_fqid` (not `fqid`) — factored into the
+        # shared `_narrow_lineage_to_held` so the leaf embed and `/lineage` agree.
+        lineage = _narrow_lineage_to_held(lineage, index)
     return BindingNode(
         fqid=str(resolved.fqid),
         variable_id=resolved.variable_id,
@@ -585,6 +594,44 @@ def _classification_group_node(group) -> ClassificationGroupNode:
     )
 
 
+def _held_register_coverage(
+    per_variable: dict[str, VariableCoverage], held_slugs: set[str]
+) -> RegisterCoverage | None:
+    """Recompute a register's `RegisterCoverage` from ONLY the steward's held
+    variables (#859), so a filtered steward's provider page doesn't overstate the
+    per-register `variable_count` / date span by aggregating over variables it
+    doesn't hold. `per_variable` is reg_meta's `register_variable_coverage` (keyed
+    by variable slug — a row per slugged variable, stateless ones at `state_count`
+    0); `held_slugs` are the leaf slugs of this register's held FQIDs.
+
+    Mirrors `provider_register_coverage`'s semantics exactly so the held-only number
+    is the same KIND of number, just over a subset:
+    - `variable_count` = held variables WITH a coverage row (≡ slugged variables —
+      the full aggregate's `COUNT(DISTINCT v.variable_id)` over slugged variables,
+      not variables-with-states: stateless variables still carry a row at count 0).
+    - the span = min `coverage_from` / max `coverage_to` over the held variables,
+      `open_ended` if ANY held variable is open-ended (its `coverage_to` is None +
+      `open_ended` True, the open-ended sentinel reg_meta already mapped per row).
+
+    Returns None when NO held variable has a coverage row — a held register with no
+    held-variable coverage greys the hint (matching `_provider_response`'s `None`
+    for a missing register), NOT a fabricated zero."""
+    rows = [per_variable[s] for s in held_slugs if s in per_variable]
+    if not rows:
+        return None
+    froms = [r.coverage_from for r in rows if r.coverage_from is not None]
+    open_ended = any(r.open_ended for r in rows)
+    tos = [r.coverage_to for r in rows if r.coverage_to is not None]
+    return RegisterCoverage(
+        variable_count=len(rows),
+        coverage_from=min(froms) if froms else None,
+        # An open-ended span has no finite upper bound (None + `open_ended` True),
+        # mirroring reg_meta's `_coverage_bounds`.
+        coverage_to=(max(tos) if tos else None) if not open_ended else None,
+        open_ended=open_ended,
+    )
+
+
 def _provider_response(
     catalog: Catalog, resolved: ResolvedProvider, index: CatalogIndex | None
 ) -> ProviderResponse:
@@ -599,9 +646,39 @@ def _provider_response(
     if index is not None:
         held = index.held_register_fqids
         registers = [r for r in registers if str(r.fqid) in held]
-    # #351 per-register coverage, keyed by register slug — one GROUP BY (~40 ms
-    # for scb's 238 registers), query-time behind the ETag/edge cache.
-    coverage = catalog.provider_register_coverage(provider_slug)
+
+    if index is None:
+        # `global`: ONE GROUP BY over the full provider, keyed by register slug
+        # (~40 ms for scb's 238 registers), query-time behind the ETag/edge cache.
+        # Held-only recompute below would change this path's numbers — keep it exact.
+        coverage = catalog.provider_register_coverage(provider_slug)
+
+        def coverage_for(register_slug: str) -> RegisterCoverage | None:
+            return coverage.get(register_slug)
+    else:
+        # #859: a filtered steward must NOT inherit the full-register aggregate —
+        # `provider_register_coverage` counts EVERY variable in each register, so a
+        # held register would overstate `variable_count` (and possibly the span) by
+        # counting unheld variables. Recompute each held register's coverage from its
+        # HELD variables only (`register_variable_coverage`, keyed by variable slug,
+        # restricted to this register's held leaf slugs). The held FQIDs per register
+        # are derived ONCE from `admitted_variable_fqids`.
+        held_slugs_by_register: dict[str, set[str]] = {}
+        for fqid in index.admitted_variable_fqids:
+            provider, register, variable = fqid.split("/")
+            held_slugs_by_register.setdefault(f"{provider}/{register}", set()).add(
+                variable
+            )
+
+        def coverage_for(register_slug: str) -> RegisterCoverage | None:
+            held_slugs = held_slugs_by_register.get(f"{provider_slug}/{register_slug}")
+            if not held_slugs:
+                return None
+            per_variable = catalog.register_variable_coverage(
+                provider_slug, register_slug
+            )
+            return _held_register_coverage(per_variable, held_slugs)
+
     return ProviderResponse(
         fqid=str(resolved.fqid),
         name=resolved.name,
@@ -613,7 +690,7 @@ def _provider_response(
                 # r.fqid.register is always set for a register summary; the guard
                 # keeps the dict key str-typed. reg_meta's `RegisterCoverage` passes
                 # straight through (#681).
-                coverage=coverage.get(r.fqid.register) if r.fqid.register else None,
+                coverage=coverage_for(r.fqid.register) if r.fqid.register else None,
             )
             for r in registers
         ],
@@ -1320,6 +1397,11 @@ def get_binding_lineage(
             edges = catalog.lineage(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/lineage")
+        # #859: narrow the returned edges to held SOURCES — the SAME narrowing the
+        # leaf embed applies in `_binding_node` (shared helper), so a held binding's
+        # `/lineage` doesn't leak an unheld source the leaf already drops.
+        if index is not None:
+            edges = _narrow_lineage_to_held(edges, index)
     return LineageResponse(binding=str(parsed), lineage_edges=edges)
 
 

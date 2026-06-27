@@ -560,6 +560,52 @@ def test_global_binding_leaf_shows_full_embedded_edges(global_client):
     }
 
 
+# ── Codex round 2 — Fix A: /lineage narrows source edges to held ─────────────
+
+
+def test_lineage_subendpoint_narrows_source_edges_to_held(steward_client):
+    # Fix A: kon's lineage consumes scb/rams/syss's state (a `source_fqid` the
+    # kon-only steward does NOT hold). The standalone `/lineage` must narrow that
+    # edge out — consistent with the leaf embed (Fix 3) and the other ref
+    # sub-endpoints — so it does not leak the unheld source.
+    body = steward_client.get("/api/catalog/scb/lisa/kon/lineage").json()
+    assert body["lineage_edges"] == []
+
+
+def test_global_lineage_subendpoint_shows_source_edge(global_client):
+    # Fix A is index-gated: the global deployment (no index) still returns kon's
+    # lineage edge with its real scb/rams/syss source — the narrow must not fire
+    # unconditionally.
+    body = global_client.get("/api/catalog/scb/lisa/kon/lineage").json()
+    assert {e["source_fqid"] for e in body["lineage_edges"]} == {"scb/rams/syss"}
+
+
+# ── Codex round 2 — Fix B: provider-page coverage scoped to held variables ────
+
+
+def test_provider_register_coverage_scoped_to_held_variables(steward_client):
+    # Fix B: the kon-only steward sees scb/lisa with a per-register `coverage` that
+    # counts ONLY the held kon variable — NOT the full-register aggregate (which
+    # would also count the unheld lonfink → variable_count 2). The span is held-only
+    # too: kon's single state is 2018-01-01 → open-ended.
+    body = steward_client.get("/api/catalog/scb").json()
+    lisa = next(c for c in body["children"] if c["fqid"] == "scb/lisa")
+    cov = lisa["coverage"]
+    assert cov["variable_count"] == 1  # kon only — lonfink (unheld) excluded
+    assert cov["coverage_from"] == "2018-01-01"
+    assert cov["open_ended"] is True  # kon's state is open-ended
+    assert cov["coverage_to"] is None
+
+
+def test_global_provider_register_coverage_counts_full_register(global_client):
+    # Fix B is index-gated: the global deployment (no index) keeps the full-register
+    # aggregate — scb/lisa counts BOTH kon and lonfink (and any other slugged var).
+    body = global_client.get("/api/catalog/scb").json()
+    lisa = next(c for c in body["children"] if c["fqid"] == "scb/lisa")
+    # The full register holds more variables than the kon-only steward's 1.
+    assert lisa["coverage"]["variable_count"] >= 2
+
+
 # ── Fix 4: concept-group graph route is gated ────────────────────────────────
 
 
