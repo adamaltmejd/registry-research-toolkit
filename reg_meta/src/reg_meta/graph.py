@@ -422,8 +422,16 @@ class _GraphBuilder:
         variable is ungrouped, or when the group/member can't be located — a stale
         `group` ref or member skew degrades gracefully, never crashes. The group is
         fetched through the builder's memoized `_concept_group` (one fetch per
-        distinct group), and the member is matched on `canonical_fqid` — the node's
-        identity, which the group member's binding FQID equals."""
+        distinct group), and members are matched on `canonical_fqid` — the node's
+        identity, which the group member's binding FQID equals.
+
+        Post-#819 a single variable can be carried as SEVERAL members of one group
+        (one per `delivery_column` — the iot disposable-income family), each with its
+        own facets. The node is variable-grain, so its facet identity is the
+        deduped UNION of every matching member's facets, in group-member then
+        axis-ordinal order (deterministic). The per-representation split is the
+        renderer's job once representations are first-class (#757), not this
+        variable-grain field's."""
         if resolved.group is None:
             return [], None
         group = self._concept_group(
@@ -431,10 +439,18 @@ class _GraphBuilder:
         )
         if group is None:
             return [], None
-        for member in group.members:
-            if member.fqid == resolved.canonical_fqid:
-                return list(member.facets), group.label
-        return [], None
+        matched = [m for m in group.members if m.fqid == resolved.canonical_fqid]
+        if not matched:
+            return [], None
+        facets: list[GroupFacet] = []
+        seen: set[tuple[str | None, str, str]] = set()
+        for member in matched:
+            for facet in member.facets:
+                key = (facet.axis, facet.value, facet.label)
+                if key not in seen:
+                    seen.add(key)
+                    facets.append(facet)
+        return facets, group.label
 
     def _add_succession(self, fqid: Fqid) -> None:
         """Walk the variable succession chain (``variable_chain`` — the single

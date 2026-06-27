@@ -885,6 +885,59 @@ class TestVariableNodeFacets:
         assert kon.group_label == "Group demog"
         assert civ.group_label == "Group demog"
 
+    def test_multi_representation_member_unions_facets(self) -> None:
+        # #819: one variable can be SEVERAL members of a group (one per
+        # delivery_column), each carrying its own facet. The variable-grain node
+        # unions all of them — deduped, deterministically ordered — rather than
+        # silently surfacing only the first member's facets (the rebase seam).
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        # Base group: kon (whole-variable member, rank '1') + civilstand (so the
+        # graph is multi-node and renders).
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+            facet_axis="rank",
+            facets={"kon": ("1", "first"), "civilstand": ("3", "other")},
+        )
+        # Second representation member for kon: same variable, different delivery
+        # column + facet ('2', 'second') — must union with the first, not replace it.
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'kon'"
+        ).fetchone()[0]
+        cur = conn.execute(
+            "INSERT INTO concept_group_variable "
+            "(group_id, variable_id, delivery_column_name) VALUES (40, ?, 'KonB')",
+            (vid,),
+        )
+        conn.execute(
+            "INSERT INTO concept_group_variable_facet "
+            "(member_id, axis, value, label) VALUES (?, 'rank', '2', 'second')",
+            (cur.lastrowid,),
+        )
+        conn.commit()
+        kon = {n.id: n for n in Catalog(conn).graph_for_fqid(_KON).nodes}[
+            "scb/lisa/kon"
+        ]
+        assert isinstance(kon, VariableGraphNode)
+        # BOTH of kon's member facets, ordered by first facet value (members sort
+        # '1' before '2'); the second member is NOT dropped.
+        assert [(f.axis, f.value, f.label) for f in kon.facets] == [
+            ("rank", "1", "first"),
+            ("rank", "2", "second"),
+        ]
+        assert kon.group_label == "Group demog"
+
     def test_edge_group_member_has_empty_facets_but_label(self) -> None:
         # An axis-less (edge) group: members carry NO facets (facet-less), but the
         # node still gets the group's label so the renderer can link the group.
