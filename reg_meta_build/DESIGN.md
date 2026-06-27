@@ -1071,7 +1071,9 @@ or re-pointed — linkage is additive.
 Steps 1-3 (canonical codes → per-value-set `n_codes`/`dom_level` → grain-filtered
 `_vs_cls` containment) live in a shared `_build_containment_temp_tables` helper so the
 read-only **residue diagnostic** (below) recomputes `_vs_cls` byte-identically; the
-detector owns steps 4+ (its write side).
+detector owns steps 4+ (its write side). The helper also builds a `_vs_label_agree`
+projection (exact-(code,label) `label_agree` per `_vs_cls` pair, #738) so the formula
+has one home and is read by both step 5's confident filter and the residue diagnostic.
 
 **Residue diagnostic (`classification-residue`, #513).**
 `reg-meta-build classification-residue` (`dump_classification_residue`) productizes the
