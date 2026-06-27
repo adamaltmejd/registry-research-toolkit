@@ -1356,6 +1356,17 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # Net gate, strays present: dominant `fam_max_la >= _CONFIDENT_LABEL_AGREE` (b) AND
     # `>=` every off-chain stray (a). No strays: label-free (#494 preserved).
     #
+    # NB (#514 Codex P2): both levers here gate on `fam_max_la` = MAX(label_agree) over
+    # the WHOLE dominant family, so this step is only a COARSE value-set PRE-FILTER. The
+    # family max can decouple from the EDITION 7c picks (latest overlapping a real
+    # state): a value set whose labels match a LATER edition (lifting `fam_max_la` over
+    # the floor) but whose state window overlaps only an EARLIER, label-DISAGREEING
+    # edition would pass here yet emit the earlier edition with label_agree 0 — a false
+    # reclaim (county reform: post-1998 labels agree 1.0 vs LKF1998, 0 vs LKF1996; a
+    # pre-1998 state picks LKF1996). So 7c re-applies the floor + relative lever per
+    # candidate edition on the PERIOD-CHOSEN edition's own label_agree (the
+    # authoritative gate), carrying `has_offchain_stray` / `max_stray_la` from here.
+    #
     # The `rootless` guard defensively refuses any value set with a candidate that
     # resolved no chain root, so a hypothetical root-less classification can't slip a
     # value set through. (In a `--skip-slugs` build a slug-less classification has a
@@ -1390,7 +1401,26 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         dominant AS (                  -- value sets with EXACTLY ONE such chain
             SELECT value_set_id FROM multi GROUP BY value_set_id HAVING COUNT(*) = 1
         )
-        SELECT m.value_set_id, m.root AS dom_root, m.stem AS dom_stem
+        SELECT m.value_set_id, m.root AS dom_root, m.stem AS dom_stem,
+               -- carried to 7c so the AUTHORITATIVE per-edition label gate runs on the
+               -- PERIOD-CHOSEN edition, not this value-set-level family max. `fam_max_la`
+               -- here is MAX over the WHOLE dominant family, but 7c picks the latest
+               -- edition overlapping a real state — a DIFFERENT edition whose own
+               -- label_agree may be 0 (county-reform: post-1998 labels agree 1.0 vs
+               -- LKF1998 but 0 vs LKF1996, yet a pre-1998 state window picks LKF1996).
+               -- These two columns let 7c re-apply the floor/relative levers on the
+               -- chosen edition (Codex P2): `has_offchain_stray` mirrors the floor's
+               -- off-chain EXISTS, `max_stray_la` is the relative lever's stray max.
+               CASE WHEN EXISTS (
+                   SELECT 1 FROM fam f4
+                   WHERE f4.value_set_id = m.value_set_id
+                     AND f4.root <> m.root
+               ) THEN 1 ELSE 0 END AS has_offchain_stray,
+               COALESCE(
+                   (SELECT MAX(f2.fam_max_la) FROM fam f2
+                    WHERE f2.value_set_id = m.value_set_id
+                      AND (f2.root <> m.root OR f2.stem <> m.stem)),
+                   0) AS max_stray_la
         FROM multi m
         JOIN dominant d ON d.value_set_id = m.value_set_id
         WHERE m.value_set_id NOT IN (SELECT value_set_id FROM rootless)
@@ -1468,8 +1498,25 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # several overlapping states; ROW_NUMBER then picks rank 1 (latest) per pair. If
     # NO candidate vintage overlaps any real state, the pair emits nothing — it stays
     # in the residue (safe by omission).
+    #
+    # PER-EDITION label gate (#514 Codex P2). 7b's conditional floor gates on
+    # `fam_max_la` = MAX(label_agree) over the WHOLE dominant family, but that family
+    # max DECOUPLES from the edition 7c actually picks: the "latest overlapping a real
+    # state" edition can be an EARLIER, label-DISAGREEING vintage even when a LATER
+    # edition pushed `fam_max_la` over the floor. County-reform scenario: post-1998
+    # county labels agree 1.0 vs LKF1998 but 0 vs LKF1996, so `fam_max_la` >= 0.90 (via
+    # LKF1998) clears 7b's floor; but a pre-1998 state window makes 7c pick LKF1996
+    # (label_agree 0) — a FALSE reclaim with an off-chain SNI stray present. 7b's floor
+    # therefore stays as a COARSE value-set pre-filter; the AUTHORITATIVE gate is here,
+    # re-applied per candidate edition on the period-chosen edition's OWN label_agree.
+    # When an off-chain stray is present (`has_offchain_stray = 1`), only editions whose
+    # own `label_agree` clears the absolute floor (>= _CONFIDENT_LABEL_AGREE) AND beats
+    # every off-chain stray (`>= max_stray_la`) are eligible for the latest-overlapping
+    # pick. With NO stray (all-on-chain), no label filter applies — the #494 label-free
+    # behavior is preserved. If no eligible edition overlaps a real state, the pair
+    # emits nothing and stays residual (safe by omission).
     conn.execute(
-        """
+        f"""
         CREATE TEMP TABLE _vs_vintage AS
         SELECT variable_id, value_set_id, cls_id
         FROM (
@@ -1495,6 +1542,9 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
                  AND cr.root = mo.dom_root
                  AND cr.stem = mo.dom_stem
                 JOIN classification cl ON cl.id = vc.cls_id
+                JOIN _vs_label_agree la_e
+                  ON la_e.value_set_id = vc.value_set_id
+                 AND la_e.cls_id = vc.cls_id
                 WHERE (
                         cl.valid_from IS NULL
                         OR cl.valid_from <= CAST(substr(vs.valid_to, 1, 4) AS INTEGER)
@@ -1502,6 +1552,13 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
                   AND (
                         cl.valid_to IS NULL
                         OR cl.valid_to >= CAST(substr(vs.valid_from, 1, 4) AS INTEGER)
+                      )
+                  AND (
+                        mo.has_offchain_stray = 0
+                        OR (
+                              la_e.label_agree >= {_CONFIDENT_LABEL_AGREE}
+                              AND la_e.label_agree >= mo.max_stray_la
+                           )
                       )
             ) pc
         )

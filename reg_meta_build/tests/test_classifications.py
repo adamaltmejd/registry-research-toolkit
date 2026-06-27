@@ -2669,6 +2669,86 @@ class TestLinkValueSetClassifications:
         _backfill_state_classifications(g.conn)
         assert g.tagged_classification(940) == 221
 
+    def test_period_eligible_edition_must_clear_floor(self) -> None:
+        """#514 Codex P2: the per-edition label gate (7c) blocks a false reclaim when
+        7b's value-set-level floor passes via a LATER edition but per-state period-
+        overlap picks an EARLIER, label-DISAGREEING edition.
+
+        This is the inverse of `test_dominant_chain_period_picks_label_matching_edition`:
+        same county-reform shape (post-reform labels: label_agree 1.0 vs LKF1998, 0.0 vs
+        LKF1996; code-contained by BOTH editions -> multi-vintage chain n_matched=2; one
+        off-chain single-edition SNI stray puts it on the #514 stray-present path). 7b's
+        floor passes because `fam_max_la` = MAX over the LKF family = 1.0 (LKF1998) >=
+        0.90. But here the state window is PRE-1998 ([1990,1996]), which overlaps LKF1996
+        [1996,1997] but NOT LKF1998 [1998,unbounded] -> 7c's period pick is LKF1996,
+        whose OWN label_agree is 0. 7b's family-max floor decouples from that chosen
+        edition, so the OLD code would emit LKF1996 (a false reclaim). The new per-edition
+        gate re-applies the floor on the PERIOD-CHOSEN edition's own label_agree: LKF1996
+        (0.0) fails `>= _CONFIDENT_LABEL_AGREE`, so it is ineligible, no other edition
+        overlaps the pre-1998 state, and the pair emits NOTHING -> stays residual."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # SAME stable county codes on both editions; DIFFERENT labels per era.
+        old_county = _numeric_codes("OLD", 10, 4)  # pre-reform names
+        new_county = _numeric_codes("NEW", 10, 4)  # post-reform names (same codes)
+        g.add_classification(
+            220,
+            "LKF1996",
+            old_county + [("9001", "lkf1996 only")],
+            slug="lkf1996",
+            valid_from=1996,
+            valid_to=1997,
+        )
+        g.add_classification(
+            221,
+            "LKF1998",
+            new_county + [("9002", "lkf1998 only")],
+            slug="lkf1998",
+            supersedes_id=220,
+            valid_from=1998,
+            valid_to=None,
+        )
+        # Off-chain single-edition stray (SNI2007, own root/stem; DB predecessor
+        # SNI2002 has DISJOINT codes -> single candidate edition). Activates the #514
+        # conditional floor path.
+        sni_match = [(str(i).zfill(4), f"SNI {i}") for i in range(1, 11)]  # same kods
+        sni_disjoint = [(str(i).zfill(4), f"SNI {i}") for i in range(5000, 5010)]
+        g.add_classification(
+            230,
+            "SNI2002",
+            sni_disjoint,
+            slug="sni2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            231,
+            "SNI2007",
+            sni_match + [("9003", "sni only")],
+            slug="sni2007",
+            supersedes_id=230,
+            valid_from=2008,
+            valid_to=None,
+        )
+        # The value set carries the NEW (post-reform) labels -> label_agree 1.0 vs
+        # LKF1998, 0.0 vs LKF1996; code-contained by BOTH LKF editions (n_matched=2).
+        g.add_value_set(240, new_county)
+        # PRE-1998 state window: overlaps LKF1996 [1996,1997] but NOT LKF1998
+        # [1998,unbounded], so per-state period-overlap (7c) picks LKF1996 (label_agree
+        # 0) - the label-DISAGREEING edition.
+        g.add_variable_state(940, 240, valid_from="1990-01-01", valid_to="1996-12-31")
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 0
+        assert counts["multi_family"] == 1
+        # No reclaim: the period-eligible edition (LKF1996) fails the per-edition floor
+        # (own label_agree 0 < 0.90), so the false reclaim is BLOCKED; no other LKF
+        # edition overlaps the pre-1998 state -> the pair emits nothing, stays residual.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
 
 class TestCuratedClassificationLinks:
     """The curated tail loader (#416): load-time validation + delete-then-insert
