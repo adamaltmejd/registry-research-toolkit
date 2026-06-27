@@ -20,12 +20,18 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.catalog import BindingGroupRef, Catalog, ResolvedVariable
+from reg_meta.catalog import (
+    BindingGroupRef,
+    Catalog,
+    ResolvedVariable,
+    VariableState,
+)
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import Fqid
 from reg_meta.graph import (
     ClassificationGraphNode,
     VariableGraphNode,
+    _graph_states,
     _GraphBuilder,
     graph_for_classification_fqid,
 )
@@ -369,6 +375,51 @@ class TestRepresentationRuns:
         node = Catalog(conn).graph_for_fqid(_KON).nodes[0]
         assert isinstance(node, VariableGraphNode)
         assert [s.representation_run_id for s in node.states] == [0, 1]
+
+    def test_monthly_family_columns_survive_in_one_run(self) -> None:
+        # A merged monthly family expands ONE annual state into N windows that SHARE a
+        # `state_id` but carry DISTINCT delivery columns (LonFinkJan/Feb/Mar…). Those
+        # columns are genuinely selectable (the group picker enumerates them), so they
+        # must all SURVIVE `_graph_states` — but fold into ONE representation run (the
+        # column multiplex is alias, not a coding boundary), so the family mints no
+        # phantom runs. Regression for the group picker dropping member columns (#678).
+        def vs(col: str, vf: str, vt: str) -> VariableState:
+            return VariableState(
+                state_id=7,  # SHARED across the monthly windows (alias multiplex)
+                variant="individer",
+                variant_label=None,
+                register_variant_id=10,
+                valid_from=vf,
+                valid_to=vt,
+                data_type=None,
+                data_length=None,
+                delivery_column_name=col,
+                value_set_version_label="",
+                value_set_id=99,
+                value_set=None,
+                is_identifier=False,
+                classification_slug=None,
+            )
+
+        states = (
+            vs("LonFinkJan", "2010-01-01", "2010-01-31"),
+            vs("LonFinkFeb", "2010-02-01", "2010-02-28"),
+            vs("LonFinkMar", "2010-03-01", "2010-03-31"),
+        )
+        graph_states = _graph_states(states)
+        # All three distinct columns survive the dedup (none dropped by the shared id).
+        assert [g.delivery_column_name for g in graph_states] == [
+            "LonFinkJan",
+            "LonFinkFeb",
+            "LonFinkMar",
+        ]
+        # …but they fold into ONE run — the column multiplex mints no phantom runs.
+        assert {g.representation_run_id for g in graph_states} == {0}
+        # A TRUE duplicate (same state_id AND column) still collapses.
+        assert (
+            len(_graph_states((*states, vs("LonFinkJan", "2010-01-01", "2010-01-31"))))
+            == 3
+        )
 
     def test_run_never_spans_variants(self) -> None:
         # Two variants delivering identical-shaped states must still break the run at

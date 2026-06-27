@@ -234,21 +234,30 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
     """Fold a variable's ``variable_state`` history into ``GraphState`` rows with
     ``representation_run_id`` assigned. Ordered by ``(variant, valid_from)``; the
     run id increments at each #526 representation boundary AND at every variant
-    change (a run never spans variants). States are first deduped by ``state_id``
-    (a monthly-family annual state expands READ-TIME into N per-month windows
-    sharing one ``state_id`` — alias multiplexing, not a coding boundary; we fold
-    those back to the single claim so a family doesn't mint phantom runs)."""
-    by_state: dict[int, VariableState] = {}
+    change (a run never spans variants). States are first deduped by
+    ``(state_id, delivery_column_name)`` — a monthly-family annual state expands
+    READ-TIME into N per-month windows that SHARE one ``state_id`` but carry
+    DISTINCT delivery columns. Those columns are genuinely selectable (the group
+    picker enumerates them), so they must SURVIVE the fold; only a true duplicate
+    (same state_id AND same column) collapses. The run-id logic below still folds
+    them into ONE run (a same-state_id column change is alias multiplexing, not a
+    coding boundary) so a family doesn't mint phantom runs."""
+    by_key: dict[tuple[int, str | None], VariableState] = {}
     for s in states:
-        by_state.setdefault(s.state_id, s)
-    ordered = sorted(by_state.values(), key=lambda s: (s.variant, s.valid_from))
+        by_key.setdefault((s.state_id, s.delivery_column_name), s)
+    ordered = sorted(by_key.values(), key=lambda s: (s.variant, s.valid_from))
 
     out: list[GraphState] = []
     run_id = 0
     prev: VariableState | None = None
     for s in ordered:
         if prev is not None and (
-            s.variant != prev.variant or _is_representation_boundary(prev, s)
+            s.variant != prev.variant
+            # A pure delivery-column change among windows SHARING a state_id is alias
+            # multiplexing (one annual claim delivered as N month-columns), NOT a
+            # representation boundary — fold them into one run so the monthly family
+            # mints no phantom runs while its columns still survive the dedup above.
+            or (s.state_id != prev.state_id and _is_representation_boundary(prev, s))
         ):
             run_id += 1
         out.append(
