@@ -426,12 +426,17 @@ class _GraphBuilder:
         identity, which the group member's binding FQID equals.
 
         Post-#819 a single variable can be carried as SEVERAL members of one group
-        (one per `delivery_column` — the iot disposable-income family), each with its
-        own facets. The node is variable-grain, so its facet identity is the
-        deduped UNION of every matching member's facets, in group-member then
-        axis-ordinal order (deterministic). The per-representation split is the
-        renderer's job once representations are first-class (#757), not this
-        variable-grain field's."""
+        (one per `delivery_column` — the iot disposable-income family), each with
+        its own facets. These per-`delivery_column` representations are MUTUALLY
+        EXCLUSIVE (an inclusive vs. an exclusive variant of the same concept), so
+        their facets must NOT be unioned onto the one variable-grain node — that
+        produced an incoherent qualifier mixing both variants in the #678 leaf
+        header (P2). The node is variable-grain, so it carries ONE REPRESENTATIVE
+        member's facets: the first matching member in the group's member order
+        (deterministic — members are ordered by first facet value, then slug). The
+        per-representation split is the renderer's job once representations are
+        first-class (#757); until then a single coherent member is the honest
+        variable-grain identity."""
         if resolved.group is None:
             return [], None
         group = self._concept_group(
@@ -439,18 +444,14 @@ class _GraphBuilder:
         )
         if group is None:
             return [], None
-        matched = [m for m in group.members if m.fqid == resolved.canonical_fqid]
-        if not matched:
+        # First matching member only: a representative, never the union of
+        # mutually-exclusive representation-member facets (#678 P2).
+        representative = next(
+            (m for m in group.members if m.fqid == resolved.canonical_fqid), None
+        )
+        if representative is None:
             return [], None
-        facets: list[GroupFacet] = []
-        seen: set[tuple[str | None, str, str]] = set()
-        for member in matched:
-            for facet in member.facets:
-                key = (facet.axis, facet.value, facet.label)
-                if key not in seen:
-                    seen.add(key)
-                    facets.append(facet)
-        return facets, group.label
+        return list(representative.facets), group.label
 
     def _add_succession(self, fqid: Fqid) -> None:
         """Walk the variable succession chain (``variable_chain`` — the single

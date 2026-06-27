@@ -326,21 +326,29 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                 {/each}
               </svg>
 
-              <!-- Succession reason annotations: a small truncated chip at the rail
-                   midpoint between predecessor and successor (HTML so it ellipsizes
-                   + carries a full-text title; the sr-only fallback has the full
-                   reason). Only variable→variable successions carry a human reason
-                   (edgeLabelText suppresses the internal classification tag). -->
+              <!-- Edge label annotations: a small truncated chip at the rail
+                   midpoint between source and target (HTML so it ellipsizes +
+                   carries a full-text title; the sr-only fallback has the full
+                   text). Succession shows its human reason (variable→variable
+                   only — edgeLabelText suppresses the internal classification
+                   tag); a `related` edge shows its `relation_kind` (#678 P2: the
+                   retired Related section showed this to sighted users, so the
+                   dashed bow can't be the only visible carrier) prefixed `↔` to
+                   read as the undirected see-also affordance, not a flow reason. -->
               {#each cEdges as re (re.edge.id)}
                 {@const s = byId.get(re.source.id)}
                 {@const t = byId.get(re.target.id)}
-                {#if re.edge.kind === "succession" && edgeLabelText(re) && s && t}
+                {#if edgeLabelText(re) && s && t}
                   <div
                     class="reason"
+                    class:related={re.edge.kind === "related"}
                     style={`top:${(s.center + t.center) / 2}px; left:${GUTTER_W + 6}px`}
                     title={edgeLabelText(re)}
                   >
-                    {edgeLabelText(re)}
+                    {#if re.edge.kind === "related"}<span
+                        class="rel-mark"
+                        aria-hidden="true">↔ </span
+                      >{/if}{edgeLabelText(re)}
                   </div>
                 {/if}
               {/each}
@@ -918,6 +926,16 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     text-overflow: ellipsis;
     white-space: nowrap;
     pointer-events: none;
+  }
+  /* A `related` edge's relation_kind chip reads as the see-also affordance, not a
+     succession reason: it carries the related-edge viz token (matching its dashed
+     bow) so the kind is legible to sighted users (#678 P2), distinct from the
+     muted succession reason above. */
+  .reason.related {
+    color: var(--viz-edge-related);
+  }
+  .reason .rel-mark {
+    font-weight: 600;
   }
 
   /* The screen-reader / no-visual structured fallback — visually hidden but

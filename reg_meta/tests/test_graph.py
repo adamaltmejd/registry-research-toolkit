@@ -885,11 +885,13 @@ class TestVariableNodeFacets:
         assert kon.group_label == "Group demog"
         assert civ.group_label == "Group demog"
 
-    def test_multi_representation_member_unions_facets(self) -> None:
+    def test_multi_representation_member_picks_representative_not_union(self) -> None:
         # #819: one variable can be SEVERAL members of a group (one per
-        # delivery_column), each carrying its own facet. The variable-grain node
-        # unions all of them — deduped, deterministically ordered — rather than
-        # silently surfacing only the first member's facets (the rebase seam).
+        # delivery_column), each carrying its own facet. These per-column
+        # representations are MUTUALLY EXCLUSIVE, so the variable-grain node must NOT
+        # union them (that produced an incoherent #678 leaf header mixing both
+        # variants — P2) — it carries ONE REPRESENTATIVE member's facets: the first
+        # matching member in group-member order.
         conn = build_slugged_db()
         add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
         add_state(
@@ -911,7 +913,8 @@ class TestVariableNodeFacets:
             facets={"kon": ("1", "first"), "civilstand": ("3", "other")},
         )
         # Second representation member for kon: same variable, different delivery
-        # column + facet ('2', 'second') — must union with the first, not replace it.
+        # column + facet ('2', 'second') — must NOT be unioned onto the first; the
+        # node keeps the representative (first member) facet only.
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'kon'"
         ).fetchone()[0]
@@ -930,11 +933,10 @@ class TestVariableNodeFacets:
             "scb/lisa/kon"
         ]
         assert isinstance(kon, VariableGraphNode)
-        # BOTH of kon's member facets, ordered by first facet value (members sort
-        # '1' before '2'); the second member is NOT dropped.
+        # ONLY the representative (first) member's facet — the mutually-exclusive
+        # 'second' representation is NOT mixed in.
         assert [(f.axis, f.value, f.label) for f in kon.facets] == [
             ("rank", "1", "first"),
-            ("rank", "2", "second"),
         ]
         assert kon.group_label == "Group demog"
 

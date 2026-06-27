@@ -245,6 +245,41 @@ describe("HistoryGraph (#678)", () => {
     ).toBe(true);
   });
 
+  it("shows a related edge's relation_kind in a VISIBLE chip, not only the a11y fallback (#678 P2)", async () => {
+    // The retired Related section showed `relation_kind` to sighted users; the new
+    // dashed bow must not bury it in the sr-only fallback. A visible `.reason.related`
+    // chip (outside the visually-hidden `.graph-fallback`) carries it.
+    const a = variableNode({ id: "a", fqid: "scb/lisa/a", label: "A" });
+    const b = variableNode({ id: "b", fqid: "scb/lisa/b", label: "B" });
+    render(HistoryGraph, {
+      graph: graph({
+        nodes: [a, b],
+        edges: [
+          {
+            id: "e1",
+            kind: "related",
+            source: "a",
+            target: "b",
+            label: "code_vs_label_pair",
+          },
+        ],
+        focus_id: "a",
+      }),
+    });
+    const chip = await vi.waitFor(() => {
+      const el = document.querySelector(".reason.related");
+      if (!el) {
+        throw new Error("related reason chip not yet rendered");
+      }
+      return el;
+    });
+    // The chip carries the relation_kind text and is NOT inside the sr-only fallback.
+    expect(chip.textContent?.replace(/\s+/g, " ").trim()).toContain(
+      "code_vs_label_pair",
+    );
+    expect(chip.closest(".graph-fallback")).toBeNull();
+  });
+
   it("highlights the focus node ('this variable')", async () => {
     const focus = variableNode({
       id: "v1",
