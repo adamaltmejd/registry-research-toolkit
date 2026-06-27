@@ -168,14 +168,24 @@ function commit(): void {
   onadd(selected);
 }
 
-/** A variable's distinguishing technical differentiator: a single-column variable's
- * delivery column (so a column-led group reads `Ng0`/`Ng1`/`Sni`), else the member
- * leaf slug — the fallback for a multi-column variable. */
+/** A variable's distinguishing technical identifier — ALWAYS the member leaf SLUG
+ * (the black mono identity), never the delivery column (#678 identity rule). The
+ * colored `--cat-var` chip is reserved for actual COLUMNS; the slug is the member
+ * identity + nav target. So a single- and a multi-column member lead identically
+ * (`sni2007-ag ↗` like `naringsgren ↗`). */
 function distinguisherOf(band: PickerBand): string {
-  if (band.rows.length === 1 && band.rows[0].column) {
-    return band.rows[0].column;
-  }
   return leafSlug(band.key);
+}
+
+/** Normalize a slug/column token for the "column ≈ slug" comparison (#678): lowercase
+ * and treat `_` and `-` as equal, so `sni2007-ag` and `SNI2007_Ag` compare equal. */
+function normToken(s: string): string {
+  return s.toLowerCase().replace(/_/g, "-");
+}
+/** Whether a delivery column is effectively the same token as the member slug — then
+ * the column chip is REDUNDANT next to the slug identity and is omitted. */
+function columnIsSlug(column: string, slug: string): boolean {
+  return normToken(column) === normToken(slug);
 }
 
 /** The adaptive variable-IDENTITY labeling across the members (#678): hoist constant
@@ -221,20 +231,41 @@ function dataStartsLate(
   return { dataStart: start, windowStart: window[0] };
 }
 
+/** The render model for ONE variable in the picker — consumed by the identity
+ * snippets and the row/subhead markup. */
+interface BandView {
+  band: PickerBand;
+  primary: { text: string; mono: boolean };
+  slug: string;
+  single: boolean;
+  /** The constant delivery column to chip, or null (when it varies, or ≈ the slug). */
+  column: string | null;
+  allOut: boolean;
+  context: string[];
+  rowLabels: Map<string, ReturnType<typeof pickerLabeling>["rows"][number]>;
+}
+
 /** The render model per variable: its leading identity, whether it is a single
  * column (→ one merged row, no subheading), the hoisted COLUMN chip + the quiet
  * value-set context, the adaptive per-row column labels, and whether EVERY one of its
  * rows is out of the active window (→ dim the subheading too). */
-const view = $derived(
+const view: BandView[] = $derived(
   bands.map((band, i) => {
     const id = identity.bands[i];
     const labeling = labelingByBand.get(band.key);
     const single = band.rows.length === 1;
-    // The hoisted constant delivery column → a prominent chip in the context. But a
-    // single-column variable whose ROW PRIMARY already IS that column shows it once
-    // (as the primary chip), so suppress the duplicate context chip there.
+    const slug = leafSlug(band.key);
+    // The hoisted CONSTANT delivery column → a colored chip next to the slug identity.
+    // The colored chip is reserved for COLUMNS, so it's shown only when the column
+    // GENUINELY DIFFERS from the slug (a single-column member's `sni2007-ag` ≈
+    // `SNI2007_Ag` → redundant, omitted; `naringsgren` vs `SNI2002` → differ, shown).
+    // A single-column member's column lives on its one row; a multi-column member's
+    // constant column comes from `labeling.column`.
+    const constColumn = single
+      ? band.rows[0].column
+      : (labeling?.column ?? null);
     const column =
-      single && id.primaryIsColumn ? null : (labeling?.column ?? null);
+      constColumn && !columnIsSlug(constColumn, slug) ? constColumn : null;
     // ALL-OUT: every row out of the active window → the (multi-column) subheading
     // greys at the variable level too. A 0-row band is NOT all-out (nothing to scope).
     const allOut =
@@ -242,7 +273,10 @@ const view = $derived(
       band.rows.every((r) => !representationInWindow(r, window));
     return {
       band,
+      // The member identity is ALWAYS the SLUG (or name/facet via bandLabeling) — the
+      // black mono/regular text + ↗ nav; never the column. `primary` carries it.
       primary: id.primary,
+      slug,
       single,
       column,
       allOut,
@@ -257,22 +291,57 @@ const footerLabel = $derived(
 );
 </script>
 
-<!-- The delivery COLUMN chip (#678): the main selection signal, rendered as a small
-     categorical pill (mono text + a subtle --cat-var tint, distinct from the rost
-     selection accent) wherever a delivery column shows. When `href` is set (a single-
-     column variable's IDENTITY chip in the group view), the chip is a NAVIGATION LINK
-     to that variable's leaf page — clicking it navigates and must NOT toggle the row
-     selection (stopPropagation). Otherwise a plain <code>. -->
-{#snippet colChip(text: string, href?: string)}
-  {#if href}
-    <a
-      class="col-chip link"
-      {href}
-      title={`Open ${text}`}
-      onclick={(e) => e.stopPropagation()}>{text}</a
-    >
+<!-- The delivery COLUMN chip (#678): a small categorical pill (mono text + a subtle
+     --cat-var tint, distinct from the rost selection accent) marking an actual delivery
+     COLUMN — the per-column rows of a multi-column member, and a multi-column member's
+     constant-column context when that column differs from the slug. It is NEVER a nav
+     link (the member SLUG is the identity + nav target); always a plain <code>. -->
+{#snippet colChip(text: string)}
+  <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
+{/snippet}
+
+<!-- The member IDENTITY chrome (#678): the black SLUG (mono) — or the name/facet when
+     bandLabeling leads with those — plus the secondary name/prefix/badges. The SAME
+     for single- AND multi-column members, so every member reads `sni2007-ag ↗` /
+     `naringsgren ↗` consistently. -->
+{#snippet identityChrome(v: BandView)}
+  {#if v.primary.mono}
+    <code class="primary mono">{v.primary.text}</code>
   {:else}
-    <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
+    <span class="primary">{v.primary.text}</span>
+  {/if}
+  {#if identity.showName && v.band.name !== v.primary.text}
+    <span class="var-name">{v.band.name}</span>
+  {/if}
+  {#if identity.showPrefix}
+    <code class="register-prefix">{v.band.registerPrefix}</code>
+  {/if}
+  {#if v.band.isIdentifier}
+    <span class="badge" title="Identifier">id</span>
+  {/if}
+  {#if v.band.isSensitive}
+    <span class="badge sensitive" title="Sensitive">sensitive</span>
+  {/if}
+{/snippet}
+
+<!-- The member identity as a NAV LINK to its leaf (group view: `band.href` set) — the
+     `.subhead-title.link` treatment (black text, color-shift on hover, NO underline) +
+     the popout `↗`. Clicking it navigates and stops propagation so a nav click never
+     toggles the row/band selection. Plain text when there's no href (the leaf). The
+     SAME for single rows and subheadings. -->
+{#snippet identityTitle(v: BandView)}
+  {#if v.band.href}
+    <a
+      class="subhead-title link"
+      href={v.band.href}
+      title={`Open ${v.primary.text}`}
+      onclick={(e) => e.stopPropagation()}
+    >
+      {@render identityChrome(v)}
+      <span class="open-marker" aria-hidden="true">↗</span>
+    </a>
+  {:else}
+    <span class="subhead-title">{@render identityChrome(v)}</span>
   {/if}
 {/snippet}
 
@@ -317,19 +386,19 @@ const footerLabel = $derived(
         {@const row = band.rows[0]}
         {@const checked = selectedKeys.has(selKey(band.key, row.key))}
         {@const inWindow = representationInWindow(row, window)}
-        <!-- A single-column variable = ONE selectable row, led by the variable's
-             distinguishing identity (the leaf ≈ one-variable group case). The row is a
-             click-anywhere container (mouse toggles selection); a real checkbox owns
-             keyboard. When the variable has an `href` (group view) the COLUMN CHIP is
-             itself the navigation link to its leaf — clicking the chip navigates, not
-             toggles (it stops propagation); there's no separate "View" link. -->
+        <!-- A single-column variable = ONE selectable row, led by the member SLUG
+             identity (black mono + ↗ nav), IDENTICAL to a multi-column subheading. Its
+             one column is implicit (the checkbox selects it); the colored column chip
+             only appears when the column genuinely differs from the slug. The row is a
+             click-anywhere <label> (mouse toggles); the slug link navigates and stops
+             propagation; a real checkbox owns keyboard. -->
         <li class="col-row single">
           <!-- The whole row is a <label> wrapping the checkbox: clicking ANYWHERE in
-               it toggles selection natively (no JS, keyboard via the input). The chip-
+               it toggles selection natively (no JS, keyboard via the input). The slug
                link inside stops propagation so a nav click never also toggles. -->
           <label class="row-btn" class:selected={checked} class:dimmed={!inWindow}>
-            <!-- No aria-label: the wrapping <label>'s text content (the column chip +
-                 population + value set + period) names the checkbox for AT. -->
+            <!-- No aria-label: the wrapping <label>'s text content (the slug + column +
+                 value set + period) names the checkbox for AT. -->
             <input
               type="checkbox"
               class="cbox"
@@ -338,27 +407,12 @@ const footerLabel = $derived(
             />
             <span class="row-main">
               <span class="primary-line">
-                {#if v.primary.mono}
-                  <!-- The primary IS the delivery column → the prominent column chip,
-                       a nav LINK when the variable has its own leaf page (group). -->
-                  {@render colChip(v.primary.text, band.href)}
-                {:else}
-                  <span class="primary">{v.primary.text}</span>
-                {/if}
+                <!-- The member SLUG identity + ↗ nav (NOT a column chip). -->
+                {@render identityTitle(v)}
                 {#if v.column}
-                  <!-- A constant delivery column hoisted alongside a non-column
-                       primary (e.g. a name-led row) → the column chip (nav link). -->
-                  {@render colChip(v.column, band.href)}
-                {/if}
-                {#if identity.showPrefix}
-                  <code class="register-prefix">{band.registerPrefix}</code>
-                {/if}
-                {#if band.isIdentifier}
-                  <span class="badge" title="Identifier">id</span>
-                {/if}
-                {#if band.isSensitive}
-                  <span class="badge sensitive" title="Sensitive">sensitive</span
-                  >
+                  <!-- The column chip ONLY when the delivery column genuinely differs
+                       from the slug (else it's redundant next to the slug). -->
+                  {@render colChip(v.column)}
                 {/if}
               </span>
               {#if v.context.length > 0}
@@ -404,39 +458,13 @@ const footerLabel = $derived(
           class:dimmed={v.allOut}
           class:selected={fullySelected}
         >
-          <!-- The identity chrome (primary + name/prefix/badges). When the variable
-               has an `href` (group view) the title is a navigation LINK; otherwise
-               plain text. The select-all checkbox is the control; the title link is
-               separate, so navigation and selection never share a target. -->
-          {#snippet identityInner()}
-            {#if v.primary.mono}
-              <code class="primary mono">{v.primary.text}</code>
-            {:else}
-              <span class="primary">{v.primary.text}</span>
-            {/if}
-            {#if identity.showName && band.name !== v.primary.text}
-              <span class="var-name">{band.name}</span>
-            {/if}
-            {#if identity.showPrefix}
-              <code class="register-prefix">{band.registerPrefix}</code>
-            {/if}
-            {#if band.isIdentifier}
-              <span class="badge" title="Identifier">id</span>
-            {/if}
-            {#if band.isSensitive}
-              <span class="badge sensitive" title="Sensitive">sensitive</span>
-            {/if}
-            {#if empty}
-              <span class="empty-note">No columns</span>
-            {/if}
-          {/snippet}
           {#snippet subheadContext()}
             {#if v.column || v.context.length > 0}
               <span class="subhead-context">
                 {#if v.column}
-                  <!-- The constant delivery column (when it doesn't vary across this
-                       variable's rows) → the prominent column chip (NOT a nav link for
-                       a multi-column member, so it is part of the select-all surface). -->
+                  <!-- The constant delivery column when it differs from the slug → the
+                       colored column chip (NOT a nav link for a multi-column member, so
+                       it is part of the select-all surface). -->
                   {@render colChip(v.column)}
                 {/if}
                 {#if v.context.length > 0}
@@ -446,8 +474,11 @@ const footerLabel = $derived(
             {/if}
           {/snippet}
           {#if empty}
+            <!-- A 0-column member: the slug identity + a quiet "No columns" marker, no
+                 select-all (nothing to select). -->
             <div class="subhead-row">
-              <span class="subhead-title">{@render identityInner()}</span>
+              {@render identityTitle(v)}
+              <span class="empty-note">No columns</span>
             </div>
             {@render subheadContext()}
           {:else}
@@ -471,19 +502,9 @@ const footerLabel = $derived(
                   aria-label={`Select all columns of ${v.primary.text}`}
                   onchange={() => toggleBand(band)}
                 />
-                {#if band.href}
-                  <a
-                    class="subhead-title link"
-                    href={band.href}
-                    title={`Open ${v.primary.text}`}
-                    onclick={(e) => e.stopPropagation()}
-                  >
-                    {@render identityInner()}
-                    <span class="open-marker" aria-hidden="true">↗</span>
-                  </a>
-                {:else}
-                  <span class="subhead-title">{@render identityInner()}</span>
-                {/if}
+                <!-- The member SLUG identity + ↗ nav — IDENTICAL to a single-column
+                     row's identity. -->
+                {@render identityTitle(v)}
               </div>
               {@render subheadContext()}
             </label>
@@ -845,22 +866,6 @@ const footerLabel = $derived(
     align-self: flex-start;
     width: fit-content;
     max-width: 100%;
-  }
-  /* The navigable column chip (single-column identity in the group view): a real <a>
-     to the variable's leaf. Reads as the column chip, gaining a stronger border +
-     underline on hover/focus so it's discoverable as a link, distinct from selection. */
-  a.col-chip.link {
-    text-decoration: none;
-    cursor: pointer;
-  }
-  a.col-chip.link:hover,
-  a.col-chip.link:focus-visible {
-    border-color: color-mix(in srgb, var(--cat-var) 60%, transparent);
-    text-decoration: underline;
-  }
-  a.col-chip.link:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
   }
   .var-name {
     font-size: 0.85rem;

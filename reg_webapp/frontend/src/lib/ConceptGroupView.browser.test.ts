@@ -692,10 +692,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   // ── Adaptive variable identity (#678) ───────────────────────────────────────
-  it("a name-constant MIXED group: single-column members are column-led rows, the multi-column member is a column-led subheading", async () => {
+  it("a name-constant MIXED group: EVERY member leads with its black SLUG identity (single + multi-column alike)", async () => {
     // The moms/naringsgren shape: all members are "Näringsgren" on `scb/moms`. Ng0
-    // and Ng1 deliver ONE column each → compact rows led by the column (mono); the
-    // sni member delivers TWO columns → a subheading led by its slug.
+    // and Ng1 deliver ONE column each → a compact row led by the member SLUG (black
+    // mono + ↗ nav), with the column chip shown because the column ("Ng0") differs
+    // from the slug ("naringsgren_ng0"). The sni member delivers TWO columns → a
+    // subheading led by the SAME slug identity. No member is led by a colored chip.
     const members = [
       {
         fqid: "scb/moms/naringsgren_ng0",
@@ -763,30 +765,47 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup({ provider: "scb", register: "moms", key: "naringsgren" });
 
-    // Ng0 / Ng1 are single-column compact rows led by the column rendered as a
-    // COLUMN CHIP (the prominent selection signal); the constant concept name is NOT
-    // repeated on them. In the GROUP view the identity chip is a NAVIGATION LINK to
-    // the member's leaf page (band.href set), so it's an <a class="col-chip link">.
+    // Ng0 / Ng1 are single-column rows led by the member SLUG as a black mono nav link
+    // (`.subhead-title.link` → an <a> to the leaf), NOT a colored chip.
     const singleTitles = await vi.waitFor(() => {
-      const els = document.querySelectorAll(".col-row.single .col-chip");
+      const els = document.querySelectorAll(
+        ".col-row.single .subhead-title.link .primary",
+      );
       if (els.length < 2) {
-        throw new Error("single-column chips not yet rendered");
+        throw new Error("single-column slug titles not yet rendered");
       }
       return [...els].map((e) => e.textContent?.trim());
     });
-    expect(singleTitles).toEqual(["Ng0", "Ng1"]);
-    // The identity column chip is a navigable link (an <a>), not a plain <code>.
-    const chips = [...document.querySelectorAll(".col-row.single .col-chip")];
-    expect(chips.every((e) => e.tagName === "A")).toBe(true);
-    expect(chips.map((e) => e.getAttribute("href"))).toEqual([
+    expect(singleTitles).toEqual(["naringsgren_ng0", "naringsgren_ng1"]);
+    // The slug identity is a navigable link (an <a class="subhead-title link">), mono.
+    const slugLinks = [
+      ...document.querySelectorAll<HTMLAnchorElement>(
+        ".col-row.single a.subhead-title.link",
+      ),
+    ];
+    expect(slugLinks.map((e) => e.getAttribute("href"))).toEqual([
       "/catalog/scb/moms/naringsgren_ng0",
       "/catalog/scb/moms/naringsgren_ng1",
     ]);
+    expect(
+      slugLinks.every((e) => e.querySelector("code.primary.mono") !== null),
+    ).toBe(true);
+    // The column chip IS shown on each (column "Ng0" ≠ slug "naringsgren_ng0"), and it
+    // is a PLAIN <code> — never a link (the colored chip marks a column, not nav).
+    const singleChips = [
+      ...document.querySelectorAll(".col-row.single .col-chip"),
+    ];
+    expect(singleChips.map((e) => e.textContent?.trim())).toEqual([
+      "Ng0",
+      "Ng1",
+    ]);
+    expect(singleChips.every((e) => e.tagName === "CODE")).toBe(true);
+    expect(document.querySelector(".col-row.single a.col-chip")).toBeNull();
 
-    // The sni member is a subheading (2 columns) led by its slug; its rows are below.
+    // The sni member is a subheading (2 columns) led by the SAME slug identity.
     expect(document.querySelectorAll("li.subhead")).toHaveLength(1);
     const subheadPrimary = document
-      .querySelector(".subhead-title .primary")
+      .querySelector("li.subhead .subhead-title .primary")
       ?.textContent?.trim();
     expect(subheadPrimary).toBe("naringsgren_sni");
     await expect
@@ -795,15 +814,13 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Sni2007/ }))
       .toBeVisible();
-    // The NESTED column chips (sni's two columns) are PLAIN <code>, NOT links — a
-    // nested column isn't its own variable, so only the single-column identity chip
-    // navigates.
+    // The NESTED column chips (sni's two columns) are PLAIN <code>, never links.
     const nestedChips = [
       ...document.querySelectorAll(".col-row.nested .col-chip"),
     ];
     expect(nestedChips.length).toBe(2);
     expect(nestedChips.every((e) => e.tagName === "CODE")).toBe(true);
-    expect(document.querySelector(".col-row.nested a.col-chip")).toBeNull();
+    expect(document.querySelector("a.col-chip")).toBeNull();
   });
 
   it("a facet group of single-column members leads each compact row with its FACET label (normal weight)", async () => {
@@ -878,36 +895,41 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   // ── Member → leaf navigation (#678) ─────────────────────────────────────────
-  it("a single-column member's COLUMN CHIP is the leaf-navigation link (no separate 'View' link)", async () => {
+  it("a single-column member's IDENTITY (slug/name) is the leaf-navigation link; the column chip is NOT a link (#678)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
     renderGroup();
 
-    // The column chip ITSELF is the navigation link to the member's leaf FQID — there
-    // is no separate "View ↗" link anymore.
+    // The member IDENTITY (here the distinct member NAME) is the nav link to the leaf
+    // FQID — an <a class="subhead-title link"> inside the row label. NO colored chip
+    // is ever a link.
     const janLink = await vi.waitFor(() => {
-      const els = [...document.querySelectorAll("a.col-chip.link")];
+      const els = [
+        ...document.querySelectorAll<HTMLAnchorElement>(
+          ".col-row.single a.subhead-title.link",
+        ),
+      ];
       const jan = els.find(
         (a) => a.getAttribute("href") === "/catalog/scb/rams/inkjan",
       );
       if (!jan) {
-        throw new Error("inkjan column-chip link not yet rendered");
+        throw new Error("inkjan identity link not yet rendered");
       }
       return jan;
     });
     expect(janLink.tagName).toBe("A");
-    // The chip-link is inside the row label (the click-anywhere selection target) but
-    // is itself a real <a> (keyboard-navigable; it stops propagation so a nav click
-    // never toggles).
+    // The identity link is inside the row label (the click-anywhere selection target)
+    // but is itself a real <a> (keyboard-navigable; stops propagation, no toggle).
     expect(janLink.closest("label.row-btn")).not.toBeNull();
-    // The other member's chip links too.
+    // The other member's identity links too.
     expect(
       document.querySelector(
-        'a.col-chip.link[href="/catalog/scb/rams/inkfeb"]',
+        '.col-row.single a.subhead-title.link[href="/catalog/scb/rams/inkfeb"]',
       ),
     ).not.toBeNull();
-    // No legacy "View ↗" link survives.
+    // No nav link is ever a colored chip; no legacy "View ↗" link survives.
+    expect(document.querySelector("a.col-chip")).toBeNull();
     expect(document.querySelector("a.open-link")).toBeNull();
   });
 
@@ -1177,9 +1199,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     ).toBe(false);
   });
 
-  it("verifies the fordonsreg/naringsgren shape: the Näringsgren member links to its leaf", async () => {
-    // The reported case: /catalog/group/scb/fordonsreg/naringsgren → the Näringsgren
-    // member (single column here) links to /catalog/scb/fordonsreg/naringsgren.
+  it("verifies the fordonsreg/naringsgren shape: each member leads with its black SLUG ↗ (no colored chip identity) (#678)", async () => {
+    // The reported case: /catalog/group/scb/fordonsreg/naringsgren — all members named
+    // "Näringsgren", so each is led by its SLUG (black mono + ↗ nav), consistently,
+    // NOT a colored column chip. sni2007-ag (single column SNI2007_Ag ≈ slug → no
+    // chip) reads `sni2007-ag ↗`; naringsgren (column SNI2002 ≠ slug → chip shown)
+    // reads `naringsgren ↗ SNI2002`.
     vi.mocked(getConceptGroup).mockResolvedValue(
       node({
         provider: "scb",
@@ -1194,16 +1219,33 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             facets: [],
             coverage: null,
           },
+          {
+            fqid: "scb/fordonsreg/sni2007-ag",
+            name: "Näringsgren",
+            facets: [],
+            coverage: null,
+          },
         ],
       } as unknown as Partial<ConceptGroupNodeData>),
     );
     vi.mocked(getConceptGroupGraph).mockResolvedValue(
       graph([
+        // naringsgren: single column "SNI2002" ≠ slug → the chip is shown.
         vnode("scb/fordonsreg/naringsgren", [
           gstate({
             variant: "snoskotrar",
             variant_label: "Snöskotrar",
-            delivery_column_name: "Sni",
+            delivery_column_name: "SNI2002",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+        // sni2007-ag: single column "SNI2007_Ag" ≈ slug (normalized) → NO chip.
+        vnode("scb/fordonsreg/sni2007-ag", [
+          gstate({
+            variant: "snoskotrar",
+            variant_label: "Snöskotrar",
+            delivery_column_name: "SNI2007_Ag",
             valid_from: "2010-01-01",
             valid_to: "2015-12-31",
           }),
@@ -1217,17 +1259,40 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       key: "naringsgren",
     });
 
-    // The Näringsgren member's column chip is the leaf link (no "View" link).
-    const link = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLAnchorElement>(
-        'a.col-chip.link[href="/catalog/scb/fordonsreg/naringsgren"]',
+    // Each member leads with its SLUG as a black mono nav link (NOT a colored chip).
+    const slugs = await vi.waitFor(() => {
+      const els = document.querySelectorAll(
+        ".col-row.single a.subhead-title.link .primary",
       );
-      if (!el) {
-        throw new Error("naringsgren chip link not yet rendered");
+      if (els.length < 2) {
+        throw new Error("slug identity links not yet rendered");
       }
-      return el;
+      return [...els].map((e) => e.textContent?.trim());
     });
-    expect(link.tagName).toBe("A");
+    expect(slugs.sort()).toEqual(["naringsgren", "sni2007-ag"]);
+    // naringsgren links to its leaf; sni2007-ag links to its leaf.
+    expect(
+      document.querySelector(
+        '.col-row.single a.subhead-title.link[href="/catalog/scb/fordonsreg/naringsgren"]',
+      ),
+    ).not.toBeNull();
+    const sniLink = document.querySelector<HTMLAnchorElement>(
+      '.col-row.single a.subhead-title.link[href="/catalog/scb/fordonsreg/sni2007-ag"]',
+    );
+    expect(sniLink).not.toBeNull();
+    // sni2007-ag's column (SNI2007_Ag) ≈ its slug → NO redundant column chip on it.
+    const sniRow = sniLink?.closest("li.col-row");
+    expect(sniRow?.querySelector(".col-chip")).toBeNull();
+    // naringsgren's column (SNI2002) ≠ slug → the column chip IS shown (a plain <code>).
+    const narRow = document
+      .querySelector(
+        '.col-row.single a.subhead-title.link[href="/catalog/scb/fordonsreg/naringsgren"]',
+      )
+      ?.closest("li.col-row");
+    expect(narRow?.querySelector(".col-chip")?.textContent).toBe("SNI2002");
+    expect(narRow?.querySelector("a.col-chip")).toBeNull();
+    // No nav link is ever a colored chip.
+    expect(document.querySelector("a.col-chip")).toBeNull();
     expect(document.querySelector("a.open-link")).toBeNull();
   });
 
