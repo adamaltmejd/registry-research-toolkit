@@ -2570,6 +2570,105 @@ class TestLinkValueSetClassifications:
         # LATEST dominant-chain edition, NOT either off-chain stray.
         assert g.candidates() == [(970, 320, 321)]
 
+    def test_dominant_chain_period_picks_label_matching_edition(self) -> None:
+        """#513 county-reform period nuance: the codes match EVERY edition of an LKF
+        chain, but the LABELS changed at the 1997 reform, so per-state period-overlap
+        (7c) + the absolute label floor together must land the label-CORRECT edition.
+
+        Swedish county (LKF) names changed at the 1997 reform: pre-1997 editions carry
+        OLD names (Malmohus, Goteborgs och Bohus, Kopparberg); post-1997 editions carry
+        NEW names (Skane, Vastra Gotaland, Dalarna). The CODES (01..25) are stable
+        across all editions, so a county value set is code-contained by EVERY LKF
+        edition - but its labels match only the period-appropriate ones. Modeled here as
+        a 2-edition LKF chain with the SAME codes but DIFFERENT labels per era:
+        LKF1996 [1996,1997] with OLD labels, LKF1998 [1998,unbounded] with NEW labels.
+        The value set carries the NEW (post-reform) labels -> label_agree 1.0 vs
+        LKF1998, 0.0 vs LKF1996; both code-contain it (multi-vintage chain,
+        n_matched=2). One off-chain single-edition SNI stray (different root, DIFFERENT
+        labels) puts this on the #514 stray-present path where the conditional absolute
+        label floor applies.
+
+        The point: 7c picks the edition by per-state PERIOD-OVERLAP, not naive
+        latest-on-chain. The state window is POST-1997 ([2000,9999]), which LKF1996
+        [1996,1997] does NOT overlap -> LKF1996 is ineligible; only LKF1998 overlaps, so
+        the period-overlap pick coincides with the label-matching edition. The floor
+        passes because `fam_max_la` = MAX over the LKF family = 1.0 (from LKF1998's NEW
+        labels) >= 0.90, even though LKF1996's label_agree is 0."""
+        from reg_meta_build.classifications import link_value_set_classifications
+        from reg_meta_build.db import _backfill_state_classifications
+
+        g = _Graph()
+        # SAME stable county codes on both editions; DIFFERENT labels per era.
+        old_county = _numeric_codes("OLD", 10, 4)  # pre-reform names
+        new_county = _numeric_codes("NEW", 10, 4)  # post-reform names (same codes)
+        g.add_classification(
+            220,
+            "LKF1996",
+            old_county + [("9001", "lkf1996 only")],
+            slug="lkf1996",
+            valid_from=1996,
+            valid_to=1997,
+        )
+        g.add_classification(
+            221,
+            "LKF1998",
+            new_county + [("9002", "lkf1998 only")],
+            slug="lkf1998",
+            supersedes_id=220,
+            valid_from=1998,
+            valid_to=None,
+        )
+        # Off-chain single-edition stray: SNI2007 (own root, distinct stem) ALSO
+        # code-contains the 10 county codes but carries DIFFERENT (SNI) labels
+        # (label_agree 0). Its DB predecessor SNI2002 has DISJOINT codes -> NOT a
+        # candidate, so only ONE SNI edition is a candidate -> a permitted single-edition
+        # stray. This activates the #514 conditional absolute floor.
+        sni_match = [(str(i).zfill(4), f"SNI {i}") for i in range(1, 11)]  # same kods
+        sni_disjoint = [(str(i).zfill(4), f"SNI {i}") for i in range(5000, 5010)]
+        g.add_classification(
+            230,
+            "SNI2002",
+            sni_disjoint,
+            slug="sni2002",
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            231,
+            "SNI2007",
+            sni_match + [("9003", "sni only")],
+            slug="sni2007",
+            supersedes_id=230,
+            valid_from=2008,
+            valid_to=None,
+        )
+        # The value set carries the NEW (post-reform) labels -> label_agree 1.0 vs
+        # LKF1998, 0.0 vs LKF1996; code-contained by BOTH LKF editions (n_matched=2).
+        g.add_value_set(240, new_county)
+        # POST-1997 state window: overlaps LKF1998 [1998,unbounded] but NOT
+        # LKF1996 [1996,1997].
+        g.add_variable_state(940, 240, valid_from="2000-01-01", valid_to="9999-12-31")
+
+        counts = link_value_set_classifications(g.conn)
+        # 3 candidates (2 LKF + 1 SNI) -> multi-family, not confident.
+        assert counts["value_sets_linked"] == 0
+        assert counts["multi_family"] == 1
+        # Reclaims: fam_max_la = MAX over the LKF family = 1.0 (LKF1998's NEW labels)
+        # >= 0.90 floor, even though LKF1996's label_agree is 0.
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        # Per-state period-overlap picks LKF1998 (post-reform, label-matching,
+        # period-overlapping) - LKF1996 [1996,1997] does NOT overlap the post-2000
+        # state, so it is ineligible - and NOT the off-chain SNI stray.
+        emitted = g.candidates()
+        assert emitted == [(940, 240, 221)]
+        assert 221 in {c for _, _, c in emitted}  # LKF1998 chosen
+        assert 220 not in {c for _, _, c in emitted}  # LKF1996 ineligible (no overlap)
+
+        _backfill_state_classifications(g.conn)
+        assert g.tagged_classification(940) == 221
+
 
 class TestCuratedClassificationLinks:
     """The curated tail loader (#416): load-time validation + delete-then-insert
