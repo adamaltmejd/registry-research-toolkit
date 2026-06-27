@@ -39,6 +39,7 @@ function gstate(over: Partial<GraphState>): GraphState {
     state_id: 1,
     representation_run_id: 1,
     variant: "v",
+    variant_label: null,
     delivery_column_name: null,
     value_set_version_label: "",
     value_set_id: null,
@@ -689,5 +690,102 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         (e) => e.tagName === "SPAN",
       ),
     ).toBe(true);
+  });
+
+  // ── Member → leaf navigation (#678) ─────────────────────────────────────────
+  it("a single-column member renders a 'View' link to its leaf page, distinct from the checkbox", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    renderGroup();
+
+    // Each member's single-column row carries a separate navigation link to its leaf
+    // FQID — NOT the selection checkbox.
+    const janLink = await vi.waitFor(() => {
+      const els = [...document.querySelectorAll("a.open-link")];
+      const jan = els.find(
+        (a) => a.getAttribute("href") === "/catalog/scb/rams/inkjan",
+      );
+      if (!jan) {
+        throw new Error("inkjan leaf link not yet rendered");
+      }
+      return jan;
+    });
+    expect(janLink.tagName).toBe("A");
+    // The leaf link is a real <a> (keyboard-navigable), separate from the row button.
+    expect(janLink.closest("button")).toBeNull();
+    // The other member links too.
+    expect(
+      document.querySelector('a.open-link[href="/catalog/scb/rams/inkfeb"]'),
+    ).not.toBeNull();
+  });
+
+  it("a multi-column member renders its subheading title as a leaf link", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
+
+    renderGroup();
+
+    const titleLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        'a.subhead-title[href="/catalog/scb/rams/inkjan"]',
+      );
+      if (!el) {
+        throw new Error("inkjan subheading link not yet rendered");
+      }
+      return el;
+    });
+    expect(titleLink.tagName).toBe("A");
+    // The select-all checkbox is a SEPARATE control (not inside the link).
+    const checkbox = titleLink
+      .closest(".subhead-row")
+      ?.querySelector('input[type="checkbox"]');
+    expect(checkbox).not.toBeNull();
+    expect(checkbox?.closest("a")).toBeNull();
+  });
+
+  it("verifies the fordonsreg/naringsgren shape: the Näringsgren member links to its leaf", async () => {
+    // The reported case: /catalog/group/scb/fordonsreg/naringsgren → the Näringsgren
+    // member (single column here) links to /catalog/scb/fordonsreg/naringsgren.
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        provider: "scb",
+        register: "fordonsreg",
+        key: "naringsgren",
+        label: "Näringsgren",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/fordonsreg/naringsgren",
+            name: "Näringsgren",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/fordonsreg/naringsgren", [
+          gstate({
+            variant: "snoskotrar",
+            variant_label: "Snöskotrar",
+            delivery_column_name: "Sni",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+      ]),
+    );
+
+    renderGroup({
+      provider: "scb",
+      register: "fordonsreg",
+      key: "naringsgren",
+    });
+
+    await expect
+      .element(page.getByRole("link", { name: /View/ }))
+      .toHaveAttribute("href", "/catalog/scb/fordonsreg/naringsgren");
   });
 });

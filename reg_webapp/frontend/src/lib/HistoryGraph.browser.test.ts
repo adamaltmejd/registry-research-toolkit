@@ -22,6 +22,7 @@ function state(over: Partial<GraphState> = {}): GraphState {
   return {
     state_id: 1,
     variant: "v",
+    variant_label: null,
     representation_run_id: 1,
     valid_from: "2010-01-01",
     valid_to: "2010-12-31",

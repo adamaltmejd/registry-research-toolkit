@@ -842,16 +842,28 @@ export function representationsCollapse(reps: Representation[]): boolean {
  * source's period is left unset, the honest "covers the rep's whole span"
  * default, rather than emitting an out-of-grammar `0001`/`9999` token).
  * `valueSetLabel` is the value-set version label of the LATEST-era state (max
- * `valid_to`) — the row's representative coding. */
+ * `valid_to`) — the row's representative coding. `codingsVary` is true when this one
+ * column carried MORE THAN ONE distinct `value_set_id` across its states (a coding
+ * change over time, e.g. yrkesreg's SUN2020Niva_Old going value-set 303 → 249); the
+ * picker shows a quiet "codings vary" nudge then, pointing the user to the States /
+ * value-set detail. Keyed on the reliable `value_set_id`, NOT the low-trust
+ * per-delivery `value_set_version_label` (the same id is labelled inconsistently
+ * across populations/years). */
 export interface PickerRepresentation {
   key: string;
   variant: string;
+  /** The variant's DISPLAY label — `register_variant.name` when present, else the
+   * `variant` slug (a NULL-named variant falls back to the slug). The picker shows
+   * THIS wherever the variant is the row identity; `variant` (the slug) stays the
+   * selection key and the add coordinate. */
+  variantLabel: string;
   column: string;
   from: string;
   to: string;
   period: string;
   wirePeriod: string | null;
   valueSetLabel: string;
+  codingsVary: boolean;
 }
 
 /** A year-grain WIRE period for a representation row's ISO span, or null when a
@@ -881,8 +893,20 @@ function rowWirePeriod(from: string, to: string): string | null {
  * fork the function. */
 export interface PickerStateInput {
   variant: string;
+  /** The variant's curator DISPLAY name (`register_variant.name`), or null for a
+   * NULL-named variant. Display-only — `variant` (the slug) stays the selection key /
+   * add coordinate. Both sources carry it (`VariableStateModel.variant_label` / the
+   * graph `GraphState.variant_label`). */
+  variant_label: string | null;
   delivery_column_name: string | null;
   value_set_version_label: string;
+  /** The RELIABLE value-set identity — the coding-change signal (`codingsVary`).
+   * Both sources carry it (`VariableStateModel.value_set_id` / the graph
+   * `GraphState.value_set_id`). NOT the low-trust `value_set_version_label`, which
+   * SCB labels inconsistently for the same id across populations/years. `null` for a
+   * code-less state — its own distinct value, so a null↔id transition counts as a
+   * coding change. */
+  value_set_id: number | null;
   valid_from: string | null;
   valid_to: string | null;
 }
@@ -934,15 +958,24 @@ export function pickerRepresentations(
     // The latest-era state (max valid_to, column tie-break is moot within one
     // group) supplies the representative value-set label — the current coding.
     const latest = group.reduce((a, b) => (validTo(b) > validTo(a) ? b : a));
+    // Coding change over time: >1 DISTINCT value_set_id across this column's states.
+    // Keyed on the reliable id (not the label, which SCB labels inconsistently for
+    // one id); `null` (code-less) is its own value, so a null↔id transition counts.
+    const codingsVary = new Set(group.map((s) => s.value_set_id)).size > 1;
+    // The variant display label — the curator `variant_label`, falling back to the
+    // slug for a NULL-named variant. Display-only; the slug stays the key/coordinate.
+    const variantLabel = group[0].variant_label ?? group[0].variant;
     return {
       key,
       variant: group[0].variant,
+      variantLabel,
       column: group[0].delivery_column_name as string,
       from,
       to,
       period: formatWindow(from, to),
       wirePeriod: rowWirePeriod(from, to),
       valueSetLabel: latest.value_set_version_label,
+      codingsVary,
     };
   });
 }
@@ -1042,25 +1075,27 @@ export function pickerLabeling(
 
   const labelRows = rows.map((r): PickerRowLabel => {
     // The varying dimensions, in display priority. Each is a candidate label.
+    // Variance is keyed on the slug (`variant`, the identity), but the DISPLAYED
+    // text is the variant's `variantLabel` (the curator name, slug-fallback).
     const varying: { text: string; mono: boolean }[] = [];
     if (columnVaries) {
       varying.push({ text: r.column, mono: true });
     }
     if (variantVaries) {
-      varying.push({ text: r.variant, mono: false });
+      varying.push({ text: r.variantLabel, mono: false });
     }
     if (valueSetVaries && r.valueSetLabel) {
       varying.push({ text: r.valueSetLabel, mono: false });
     }
     // Fallback when nothing varies (a single representation, or rows that differ
-    // only by period): show the column, then the variant, then a dash — never a
-    // blank row.
+    // only by period): show the column, then the variant label, then a dash — never
+    // a blank row.
     const primary =
       varying[0] ??
       (r.column
         ? { text: r.column, mono: true }
         : r.variant
-          ? { text: r.variant, mono: false }
+          ? { text: r.variantLabel, mono: false }
           : { text: "—", mono: false });
     return {
       key: r.key,

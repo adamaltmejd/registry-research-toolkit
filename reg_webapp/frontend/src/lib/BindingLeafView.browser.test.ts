@@ -46,6 +46,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
     variant: "v",
+    variant_label: null,
     register_variant_id: 1,
     valid_from: "1992-01-01",
     valid_to: "9999-12-31",
@@ -362,6 +363,70 @@ describe("BindingLeafView representation picker (#678)", () => {
     ).toBe(false);
   });
 
+  it("renders a 'codings vary' nudge only on a column whose value_set_id changed over time (#678)", async () => {
+    // Two columns on one variable: ColA carried value-set 303 then 249 (a coding
+    // change → the nudge); ColB carried 100 throughout (stable → no nudge). Keyed on
+    // the reliable value_set_id, NOT the label.
+    const states = [
+      state({
+        state_id: 1,
+        variant: "v",
+        delivery_column_name: "ColA",
+        value_set_id: 303,
+        value_set_version_label: "MiS 1996:1",
+        valid_from: "2019-01-01",
+        valid_to: "2019-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "v",
+        delivery_column_name: "ColA",
+        value_set_id: 249,
+        value_set_version_label: "SUN",
+        valid_from: "2020-01-01",
+        valid_to: "2022-12-31",
+      }),
+      state({
+        state_id: 3,
+        variant: "v",
+        delivery_column_name: "ColB",
+        value_set_id: 100,
+        value_set_version_label: "Stable",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(states),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The ColA row carries the nudge; the ColB row does not. Match each row by its
+    // column checkbox, then check for a sibling `.codings-vary` inside the same row.
+    const colA = page.getByRole("checkbox", { name: /ColA/ });
+    await expect.element(colA).toBeVisible();
+    await vi.waitFor(() => {
+      const aRow = colA.element().closest("li");
+      if (!aRow?.querySelector(".codings-vary")) {
+        throw new Error("codings-vary nudge not yet on ColA");
+      }
+    });
+    // Exactly one nudge in the whole picker (ColA only).
+    expect(document.querySelectorAll(".rep-picker .codings-vary")).toHaveLength(
+      1,
+    );
+    const colB = page.getByRole("checkbox", { name: /ColB/ }).element();
+    expect(colB.closest("li")?.querySelector(".codings-vary")).toBeNull();
+    // The nudge carries the accessible pointer-to-detail label.
+    const nudge = document.querySelector(".codings-vary");
+    expect(nudge?.getAttribute("aria-label")).toBe(
+      "Coding changes over time — see the value sets",
+    );
+  });
+
   it("the single-COLUMN leaf renders ONE compact row led by the variable NAME (#678)", async () => {
     // A single-column leaf has nothing varying, so it merges to ONE compact row led
     // by the variable name (the leaf ≈ one-variable group). (The row reads "Kön",
@@ -400,6 +465,9 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /Kön/ }))
       .toBeVisible();
+    // The LEAF passes no `href` → no member-navigation link (it's already its own
+    // page; navigation is a group-view affordance only).
+    expect(document.querySelector("a.open-link")).toBeNull();
   });
 
   it("renders no picker when no state carries a delivery column", async () => {

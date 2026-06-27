@@ -1548,6 +1548,8 @@ export interface components {
             value_set_version_label: string;
             /** Variant */
             variant: string;
+            /** Variant Label */
+            variant_label: string | null;
         };
         /**
          * GroupAxis
@@ -2286,6 +2288,8 @@ export interface components {
             value_set_version_label: string;
             /** Variant */
             variant: string;
+            /** Variant Label */
+            variant_label: string | null;
         };
         /** VariantSummary */
         VariantSummary: {

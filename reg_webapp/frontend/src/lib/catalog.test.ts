@@ -62,6 +62,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
     variant: "v",
+    variant_label: null,
     register_variant_id: 1,
     valid_from: "",
     valid_to: "",
@@ -1408,6 +1409,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         state_id: 1,
         representation_run_id: 1,
         variant: "individer",
+        variant_label: null,
         delivery_column_name: null,
         value_set_version_label: "1-siffrig",
         value_set_id: null,
@@ -1439,6 +1441,7 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         state_id: 2,
         representation_run_id: 1,
         variant: "v1",
+        variant_label: null,
         delivery_column_name: "Col",
         value_set_version_label: "",
         value_set_id: null,
@@ -1452,21 +1455,145 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     // The one-sided "until <year>" form, never the leaked sentinel year.
     expect(row.period).toBe("until 2008");
   });
+
+  // ── codingsVary: a coding change over time on ONE column (#678) ─────────────
+  it("flags codingsVary when a column carried two distinct value_set_ids over time (303→249)", () => {
+    // yrkesreg's SUN2020Niva_Old: value-set 303 in 2019, then 249 from 2020 — one
+    // column, two distinct codings → the nudge fires.
+    const [row] = pickerRepresentations([
+      state({
+        variant: "forvärvsarbetande",
+        delivery_column_name: "SUN2020Niva_Old",
+        value_set_id: 303,
+        value_set_version_label: "MiS 1996:1",
+        valid_from: "2019-01-01",
+        valid_to: "2019-12-31",
+      }),
+      state({
+        variant: "forvärvsarbetande",
+        delivery_column_name: "SUN2020Niva_Old",
+        value_set_id: 249,
+        value_set_version_label: "SUN",
+        valid_from: "2020-01-01",
+        valid_to: "2023-12-31",
+      }),
+    ]);
+    expect(row.codingsVary).toBe(true);
+  });
+
+  it("does NOT flag codingsVary when one value_set_id has inconsistent LABELS (the SUN case)", () => {
+    // The same id 249 is labelled inconsistently across years/populations ('old' /
+    // 'SUN 2020 NivaOld'). Keyed on the reliable id, this is ONE coding → no nudge.
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Sun",
+        value_set_id: 249,
+        value_set_version_label: "SUN 2020 NivaOld",
+        valid_from: "2020-01-01",
+        valid_to: "2020-12-31",
+      }),
+      state({
+        variant: "v1",
+        delivery_column_name: "Sun",
+        value_set_id: 249,
+        value_set_version_label: "SUN 2000 NivaOld",
+        valid_from: "2021-01-01",
+        valid_to: "2021-12-31",
+      }),
+    ]);
+    expect(row.codingsVary).toBe(false);
+  });
+
+  it("flags codingsVary on a null↔id transition (code-less → coded)", () => {
+    // A null value_set_id is its own distinct value, so gaining (or losing) a coding
+    // counts as a change.
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        value_set_id: null,
+        valid_from: "2018-01-01",
+        valid_to: "2018-12-31",
+      }),
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        value_set_id: 42,
+        valid_from: "2019-01-01",
+        valid_to: "2019-12-31",
+      }),
+    ]);
+    expect(row.codingsVary).toBe(true);
+  });
+
+  it("does NOT flag codingsVary for a single-coding column (one id across years)", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        value_set_id: 100,
+        valid_from: "2018-01-01",
+        valid_to: "2018-12-31",
+      }),
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        value_set_id: 100,
+        valid_from: "2019-01-01",
+        valid_to: "2019-12-31",
+      }),
+    ]);
+    expect(row.codingsVary).toBe(false);
+  });
+
+  // ── variantLabel: the variant display name, slug fallback (#793 contract) ────
+  it("carries variantLabel = the variant's name (display), keeping variant = the slug", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "snoskotrar",
+        variant_label: "Snöskotrar",
+        delivery_column_name: "Sni",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+      }),
+    ]);
+    // The slug stays the identity / add coordinate; the label is the display name.
+    expect(row.variant).toBe("snoskotrar");
+    expect(row.variantLabel).toBe("Snöskotrar");
+  });
+
+  it("falls back variantLabel to the slug when variant_label is null", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "ovriga-fordonsslag",
+        variant_label: null,
+        delivery_column_name: "Sni",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+      }),
+    ]);
+    expect(row.variantLabel).toBe("ovriga-fordonsslag");
+  });
 });
 
 describe("pickerLabeling (#678 1b adaptive labels)", () => {
   // A representation row, in the shape pickerLabeling consumes (only the four
   // labeled dimensions + the selection key matter).
   function rep(over: Partial<PickerRepresentation>): PickerRepresentation {
+    // variantLabel defaults to the slug (the NULL-named fallback), so a test that
+    // overrides only `variant` still labels by that slug unless it sets variantLabel.
     return {
       key: `${over.variant ?? "v"}::${over.column ?? "Col"}`,
       variant: "v",
+      variantLabel: over.variant ?? "v",
       column: "Col",
       from: "2000-01-01",
       to: "2010-12-31",
       period: "2000 – 2010",
       wirePeriod: "2000..2010",
       valueSetLabel: "",
+      codingsVary: false,
       ...over,
     };
   }
@@ -1504,6 +1631,29 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       { text: "bussar", mono: false },
     ]);
     expect(rows.every((r) => r.qualifiers.length === 0)).toBe(true);
+  });
+
+  it("displays the variant LABEL (name), not the slug, when the variant is the primary (#793)", () => {
+    // The variant varies → it's the row primary. The DISPLAYED text is variantLabel
+    // (the curator name), even though variance is keyed on the slug.
+    const { rows } = pickerLabeling([
+      rep({
+        variant: "snoskotrar",
+        variantLabel: "Snöskotrar",
+        column: "Sni",
+        valueSetLabel: "SNI 2002",
+      }),
+      rep({
+        variant: "slapvagnar",
+        variantLabel: "Släpvagnar",
+        column: "Sni",
+        valueSetLabel: "SNI 2002",
+      }),
+    ]);
+    expect(rows.map((r) => r.primary.text)).toEqual([
+      "Snöskotrar",
+      "Släpvagnar",
+    ]);
   });
 
   it("fordonsreg empty-label shape: a value-set label constant except on empty rows still hoists (#678 fix 3)", () => {

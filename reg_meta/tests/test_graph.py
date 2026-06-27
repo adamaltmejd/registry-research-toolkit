@@ -256,6 +256,11 @@ class TestEmptyGraph:
         runs = [s.representation_run_id for s in node.states]
         assert runs == [0, 1]  # two cells
         assert g.focus_id == _KON
+        # The variant DISPLAY name flows onto every graph state (the contract field
+        # the picker shows instead of the slug). `_DEFAULT_VARIANT` names variant 10
+        # "Individer 15+"; the slug stays the add coordinate.
+        assert all(s.variant == "individer-15plus" for s in node.states)
+        assert all(s.variant_label == "Individer 15+" for s in node.states)
 
 
 # ── Representation runs ──────────────────────────────────────────────────────

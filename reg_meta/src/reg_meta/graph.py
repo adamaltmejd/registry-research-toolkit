@@ -75,6 +75,11 @@ class GraphState(_CatalogModel):
 
     state_id: int
     variant: str
+    # `register_variant.name` — the variant's curator display name (e.g. "Snöskotrar"
+    # for slug `snoskotrar`), surfaced for DISPLAY (the picker shows it instead of the
+    # ASCII-folded slug). None for a NULL-named variant → the consumer falls back to
+    # the `variant` slug. Display-only; `variant` stays the add coordinate.
+    variant_label: str | None
     representation_run_id: int
     delivery_column_name: str | None
     value_set_id: int | None
@@ -243,6 +248,7 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
             GraphState(
                 state_id=s.state_id,
                 variant=s.variant,
+                variant_label=s.variant_label,
                 representation_run_id=run_id,
                 delivery_column_name=s.delivery_column_name,
                 value_set_id=s.value_set_id,

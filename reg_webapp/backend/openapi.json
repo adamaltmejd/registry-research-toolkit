@@ -1851,11 +1851,23 @@
           "variant": {
             "title": "Variant",
             "type": "string"
+          },
+          "variant_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Label"
           }
         },
         "required": [
           "state_id",
           "variant",
+          "variant_label",
           "representation_run_id",
           "delivery_column_name",
           "value_set_id",
@@ -3390,11 +3402,23 @@
           "variant": {
             "title": "Variant",
             "type": "string"
+          },
+          "variant_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Label"
           }
         },
         "required": [
           "state_id",
           "variant",
+          "variant_label",
           "register_variant_id",
           "valid_from",
           "valid_to",

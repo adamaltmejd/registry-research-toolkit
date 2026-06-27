@@ -386,6 +386,12 @@ class VariableState(_CatalogModel):
     # resolved slug, never the synth `_default` placeholder (that fiction exists
     # only at variant-slot resolve time, not on a stored state).
     variant: str
+    # `register_variant.name` — the variant's curator display name (e.g. "Snöskotrar"
+    # for the slug `snoskotrar`), surfaced for DISPLAY so the picker shows the proper
+    # name instead of the lowercase/ASCII-folded slug. None for a NULL-named variant
+    # (the consumer falls back to the slug). `variant` (the slug) stays the add
+    # coordinate; this is display-only and never an identity.
+    variant_label: str | None
     register_variant_id: int
     valid_from: str  # ISO 8601 'YYYY-MM-DD', inclusive
     valid_to: str  # ISO 8601 'YYYY-MM-DD', inclusive ('9999-12-31' open-ended)
@@ -1575,9 +1581,12 @@ class Catalog:
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
-                "v.is_identifier, c.slug AS classification_slug "
+                "v.is_identifier, c.slug AS classification_slug, "
+                "rv.name AS variant_label "
                 "FROM variable_state vs "
                 "JOIN variable v ON vs.variable_id = v.variable_id "
+                "JOIN register_variant rv "
+                "ON vs.register_variant_id = rv.register_variant_id "
                 "LEFT JOIN classification c ON vs.classification_id = c.id "
                 "WHERE vs.variable_id = ? AND vs.register_variant_id = ? "
                 "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
@@ -1589,9 +1598,12 @@ class Catalog:
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
-                "v.is_identifier, c.slug AS classification_slug "
+                "v.is_identifier, c.slug AS classification_slug, "
+                "rv.name AS variant_label "
                 "FROM variable_state vs "
                 "JOIN variable v ON vs.variable_id = v.variable_id "
+                "JOIN register_variant rv "
+                "ON vs.register_variant_id = rv.register_variant_id "
                 "LEFT JOIN classification c ON vs.classification_id = c.id "
                 "WHERE vs.variable_id = ? "
                 "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
@@ -1651,6 +1663,7 @@ class Catalog:
         return VariableState(
             state_id=row["state_id"],
             variant=variant,
+            variant_label=row["variant_label"],
             register_variant_id=rvid,
             valid_from=row["valid_from"],
             valid_to=row["valid_to"],

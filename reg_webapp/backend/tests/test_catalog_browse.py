@@ -854,6 +854,7 @@ def test_state_period_token_passes_through_reg_meta():
         return VariableState(
             state_id=1,
             variant="v",
+            variant_label=None,
             register_variant_id=1,
             valid_from="2018-01-01",
             valid_to="2018-12-31",

@@ -7,6 +7,7 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
+  catalogHref,
   facetLabelJoin,
   pickerRepresentations,
   pickerWindowYears,
@@ -134,6 +135,9 @@ const bands = $derived.by((): PickerBand[] => {
       name: member.name ?? leafSlug(member.fqid),
       registerPrefix: registerPrefixOf(member.fqid),
       facetLabel: memberFacetLabel(member),
+      // The member's own leaf page — the picker renders the identity as a nav link
+      // (the binding leaf passes no href; it's already that page).
+      href: catalogHref(member.fqid),
       rows: pickerRepresentations(states),
     });
   }

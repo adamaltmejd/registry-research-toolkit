@@ -32,6 +32,12 @@ export interface PickerBand {
   isSensitive?: boolean;
   isIdentifier?: boolean;
   rows: PickerRepresentation[];
+  /** The variable's leaf page href (the GROUP view sets it per member —
+   * `catalogHref(member.fqid)` — so the picker can link to each member's own page).
+   * Undefined for the binding LEAF (it's already that page — no self-link). When set,
+   * the variable IDENTITY becomes a navigation link, kept DISTINCT from the selection
+   * checkbox. */
+  href?: string;
 }
 
 /** A committed selection — the variable it belongs to plus the picked column, so the
@@ -247,7 +253,10 @@ const footerLabel = $derived(
         {@const checked = selectedKeys.has(selKey(band.key, row.key))}
         {@const inWindow = representationInWindow(row, window)}
         <!-- A single-column variable = ONE selectable row, led by the variable's
-             distinguishing identity (the leaf ≈ one-variable group case). -->
+             distinguishing identity (the leaf ≈ one-variable group case). The row's
+             click toggles selection; when the variable has an `href` (group view), a
+             SEPARATE "open" link navigates to its leaf — selection and navigation are
+             distinct controls. -->
         <li class="col-row single">
           <button
             type="button"
@@ -281,10 +290,27 @@ const footerLabel = $derived(
                 <span class="sub">{v.context.join(" · ")}</span>
               {/if}
             </span>
+            {#if row.codingsVary}
+              <!-- A coding change over time on this ONE column (distinct value_set_id
+                   across years). A quiet nudge to the value-set / States detail —
+                   not a control. Placed BEFORE the period so the period stays the
+                   last, right-aligned element on every row (aligned column). -->
+              <span
+                class="codings-vary"
+                title="Coding changes over time — see the value sets"
+                aria-label="Coding changes over time — see the value sets"
+                >codings vary</span
+              >
+            {/if}
             {#if row.period}
               <span class="period">{row.period}</span>
             {/if}
           </button>
+          {#if band.href}
+            <a class="open-link" href={band.href} title={`Open ${v.primary.text}`}>
+              View <span aria-hidden="true">↗</span>
+            </a>
+          {/if}
         </li>
       {:else}
         <!-- A multi-column variable: a thin, quiet subheading (its distinguishing
@@ -292,36 +318,34 @@ const footerLabel = $derived(
              a hairline separates the group from the rest of the list. -->
         {@const empty = band.rows.length === 0}
         <li class="subhead" class:empty>
-          <!-- The select-all toggle only exists when there ARE columns; a 0-column
-               variable (absent from the graph union) renders a plain subheading. -->
-          {#snippet subheadTitle()}
-            <span class="subhead-title">
-              {#if v.primary.mono}
-                <code class="primary mono">{v.primary.text}</code>
-              {:else}
-                <span class="primary">{v.primary.text}</span>
-              {/if}
-              {#if identity.showName && band.name !== v.primary.text}
-                <span class="var-name">{band.name}</span>
-              {/if}
-              {#if identity.showPrefix}
-                <code class="register-prefix">{band.registerPrefix}</code>
-              {/if}
-              {#if band.isIdentifier}
-                <span class="badge" title="Identifier">id</span>
-              {/if}
-              {#if band.isSensitive}
-                <span class="badge sensitive" title="Sensitive">sensitive</span>
-              {/if}
-              {#if empty}
-                <span class="empty-note">No columns</span>
-              {/if}
-            </span>
+          <!-- The identity chrome (primary + name/prefix/badges). When the variable
+               has an `href` (group view) the title is a navigation LINK; otherwise
+               plain text. The select-all checkbox is a SEPARATE control beside it, so
+               navigation and selection never share a target. -->
+          {#snippet identityInner()}
+            {#if v.primary.mono}
+              <code class="primary mono">{v.primary.text}</code>
+            {:else}
+              <span class="primary">{v.primary.text}</span>
+            {/if}
+            {#if identity.showName && band.name !== v.primary.text}
+              <span class="var-name">{band.name}</span>
+            {/if}
+            {#if identity.showPrefix}
+              <code class="register-prefix">{band.registerPrefix}</code>
+            {/if}
+            {#if band.isIdentifier}
+              <span class="badge" title="Identifier">id</span>
+            {/if}
+            {#if band.isSensitive}
+              <span class="badge sensitive" title="Sensitive">sensitive</span>
+            {/if}
+            {#if empty}
+              <span class="empty-note">No columns</span>
+            {/if}
           {/snippet}
-          {#if empty}
-            {@render subheadTitle()}
-          {:else}
-            <label class="subhead-select">
+          <div class="subhead-row">
+            {#if !empty}
               <input
                 type="checkbox"
                 class="cbox"
@@ -331,9 +355,20 @@ const footerLabel = $derived(
                 aria-label={`Select all columns of ${v.primary.text}`}
                 onchange={() => toggleBand(band)}
               />
-              {@render subheadTitle()}
-            </label>
-          {/if}
+            {/if}
+            {#if band.href}
+              <a
+                class="subhead-title link"
+                href={band.href}
+                title={`Open ${v.primary.text}`}
+              >
+                {@render identityInner()}
+                <span class="open-marker" aria-hidden="true">↗</span>
+              </a>
+            {:else}
+              <span class="subhead-title">{@render identityInner()}</span>
+            {/if}
+          </div>
           {#if v.context.length > 0}
             <span class="subhead-context">{v.context.join(" · ")}</span>
           {/if}
@@ -363,6 +398,17 @@ const footerLabel = $derived(
                   <span class="sub">{label.qualifiers.join(" · ")}</span>
                 {/if}
               </span>
+              <!-- The codings-vary nudge sits BEFORE the period so the period is the
+                   last, right-aligned element on every row (a clean aligned column
+                   whether or not a row carries the nudge — #678 fix). -->
+              {#if row.codingsVary}
+                <span
+                  class="codings-vary"
+                  title="Coding changes over time — see the value sets"
+                  aria-label="Coding changes over time — see the value sets"
+                  >codings vary</span
+                >
+              {/if}
               <!-- Every row shows its own period on the right (the period is never in
                    the hoisted context now — #678 fix 5). Use the raw `row.period` so
                    a constant-period band still shows each row's span. -->
@@ -429,11 +475,15 @@ const footerLabel = $derived(
   .subhead {
     padding: 0.4rem 0.75rem 0.3rem;
   }
-  .subhead-select {
-    display: inline-flex;
-    align-items: center;
+  /* The checkbox + identity sit on one baseline row; the checkbox stays vertically
+     centered against the (possibly wrapping) title. */
+  .subhead-row {
+    display: flex;
+    align-items: baseline;
     gap: 0.5rem;
-    cursor: pointer;
+  }
+  .subhead-row .cbox {
+    align-self: center;
   }
   .subhead-title {
     display: inline-flex;
@@ -443,6 +493,26 @@ const footerLabel = $derived(
   }
   .subhead-title .primary {
     font-weight: 600;
+  }
+  /* The identity-as-navigation link (group view): inherits the text color so it
+     reads as the heading, gaining an underline only on hover/focus — the `↗` marks
+     it as a link. Distinct from the select-all checkbox beside it. */
+  .subhead-title.link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .subhead-title.link:hover,
+  .subhead-title.link:focus-visible {
+    text-decoration: underline;
+  }
+  .subhead-title.link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
+  .open-marker {
+    font-size: 0.8em;
+    color: var(--text-muted);
   }
   .subhead-context {
     display: block;
@@ -475,6 +545,35 @@ const footerLabel = $derived(
   }
   .col-row.nested .row-btn {
     padding-left: 1.6rem;
+  }
+  /* A single-column row that also carries a navigation link: the row's button grows,
+     the "View ↗" link sits at the end — selection (button) and navigation (link) are
+     separate controls on one line. */
+  .col-row.single {
+    display: flex;
+    align-items: center;
+  }
+  .col-row.single .row-btn {
+    flex: 1 1 auto;
+  }
+  .open-link {
+    flex: 0 0 auto;
+    margin-right: 0.75rem;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+  }
+  .open-link:hover,
+  .open-link:focus-visible {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .open-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .row-btn:hover {
     background: var(--accent-bg);
@@ -613,6 +712,19 @@ const footerLabel = $derived(
     font-size: 0.8rem;
     color: var(--text-muted);
     text-align: right;
+    white-space: nowrap;
+  }
+  /* A quiet nudge for a column whose CODING changed over time (#678): a tiny muted
+     pill after the period, pointing the eye to the value-set / States detail. A hint,
+     not a control — token-styled, must not dominate the row. */
+  .codings-vary {
+    flex: 0 0 auto;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-muted);
     white-space: nowrap;
   }
 
