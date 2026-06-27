@@ -195,6 +195,7 @@ def validate_built_db(
         _check_state_projection_integrity(conn, result, has_projection)
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_one_value_set_per_period(conn, result, tables)
+        _check_no_codeless_codebearing_overlap(conn, result, tables, flavored=flavored)
         _check_open_ended_sentinel(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
@@ -551,6 +552,89 @@ def _check_one_value_set_per_period(
         f"{len(rows)} overlapping distinct-value_set state pair(s) on one column "
         f"across {len(affected)} (variable, column) — a period resolves to >1 "
         f"value set: {sample}"
+    )
+
+
+def _check_no_codeless_codebearing_overlap(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    flavored: bool = False,
+) -> None:
+    """The code-less ↔ code-bearing backstop (epic #858): no code-less
+    (``value_set_id IS NULL``) ``variable_state`` window may overlap a
+    code-bearing (``value_set_id IS NOT NULL``) window for the same
+    ``(variable_id, register_variant_id, delivery_column_name)``.
+
+    A single physical column either carries a code list in a period or it
+    doesn't; a NULL-vs-non-NULL overlap means the catalog resolver can land a
+    period on both a code-less and a code-bearing state for one column — an
+    unresolvable representation conflict (a vintage that gained/lost a code list
+    without the windows being trimmed to meet).
+
+    The build already drives these to zero BY CONSTRUCTION, so on a clean build
+    this guard reports OK; it is the backstop that FAILs a future regression in
+    those resolvers. Two passes resolve the class on the real build:
+      - ``_drop_fullcover_codeless_states`` (#867): the automatic delete of a
+        code-less state fully covered by a code-bearing one on the same column.
+      - ``_resolve_curated_codeless_overlaps`` (#868): the curated
+        ``codeless_overlap.toml``, which trims/splits the partial-overlap
+        survivors the automatic delete can't safely touch.
+
+    Sibling to ``_check_one_value_set_per_period``, deliberately NOT folded into
+    it: that check is the code-bearing-vs-code-bearing conflict (two DISTINCT
+    non-null value sets on one column-period). Here NULL is the ABSENCE of a
+    value set, not a distinct one — conflating the two would blur both signals
+    (a code-less overlap is a windowing bug; a two-value-set overlap is a
+    triage/coalescer bug), so they stay separate guards with separate messages.
+
+    ``flavored=True`` (#365 PR2) SKIPs the check. A flavored DB is an
+    ``extend-db`` overlay on the *released* global DB, which is pre-#867/#868
+    until a new ``reg_meta_build`` release ships those resolvers — so any
+    surviving overlap there comes from the un-rebuilt global base, not the
+    steward overlay (which is insert-only and adds no global-register states).
+    The global build's own run of this guard covers the base; re-asserting it on
+    the flavored overlay would only re-flag base debt the steward can't fix.
+    Mirrors how ``_check_minted_id_bands`` takes and threads ``flavored``.
+    """
+    result.section("[invariant: no code-less ↔ code-bearing window overlap]")
+    if flavored:
+        result.ok(
+            "flavored build — code-less↔code-bearing guard skipped "
+            "(base validated at global build)"
+        )
+        return
+    if "variable_state" not in tables:
+        result.ok("variable_state absent — invariant skipped")
+        return
+    rows = conn.execute(
+        "SELECT v.register_id, v.slug, a.delivery_column_name, "
+        "       a.valid_from, a.valid_to, b.valid_from, b.valid_to "
+        "FROM variable_state a "
+        "JOIN variable_state b "
+        "  ON a.variable_id = b.variable_id "
+        " AND a.register_variant_id = b.register_variant_id "
+        " AND a.delivery_column_name IS b.delivery_column_name "
+        " AND a.state_id < b.state_id "
+        " AND ((a.value_set_id IS NULL AND b.value_set_id IS NOT NULL) "
+        "      OR (a.value_set_id IS NOT NULL AND b.value_set_id IS NULL)) "
+        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        "JOIN variable v ON v.variable_id = a.variable_id "
+        "ORDER BY v.register_id, v.slug"
+    ).fetchall()
+    if not rows:
+        result.ok("no code-less state overlaps a code-bearing state on one column")
+        return
+    affected = {(r[1], r[2]) for r in rows}
+    sample = "; ".join(
+        f"{r[1]}/{r[2]} [{r[3][:4]}-{r[4][:4]}] ∩ [{r[5][:4]}-{r[6][:4]}]"
+        for r in rows[:5]
+    )
+    result.fail(
+        f"{len(rows)} code-less ↔ code-bearing overlapping state pair(s) on one "
+        f"column across {len(affected)} (variable, column) — a code-less window "
+        f"overlaps a code-bearing window: {sample}"
     )
 
 

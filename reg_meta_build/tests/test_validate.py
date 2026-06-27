@@ -642,6 +642,164 @@ class TestValidateModule:
             "variable_state_lineage" in f and "9999-00-00" in f for f in result.failures
         ), result.failures
 
+    # ── code-less ↔ code-bearing overlap backstop (epic #858) ─────────────────
+
+    def test_codeless_codebearing_overlap_passes_on_fixture(self, fixture_db: Path):
+        """Clean build: the backstop emits its section and reports OK — the
+        synthetic fixture (like a real #867/#868-resolved build) has no code-less
+        window overlapping a code-bearing window on one column."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[invariant: no code-less ↔ code-bearing window overlap]" in report, (
+            report
+        )
+        assert "no code-less state overlaps a code-bearing state" in report, report
+
+    @staticmethod
+    def _inject_codeless_overlap(src: Path, dst: Path) -> None:
+        """Clone ``src`` and add a code-less (``value_set_id IS NULL``) state
+        whose window overlaps an existing code-bearing state on the SAME
+        ``(variable_id, register_variant_id, delivery_column_name)`` — the exact
+        regression the backstop guards. Returns nothing; mutates ``dst``."""
+        dst.write_bytes(src.read_bytes())
+        conn = sqlite3.connect(dst)
+        # An existing code-bearing state to overlap (named column, real value
+        # set). Its window is the one the injected code-less state will straddle.
+        vid, rvid, col, vf, vt = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name, "
+            "       valid_from, valid_to "
+            "FROM variable_state "
+            "WHERE value_set_id IS NOT NULL AND delivery_column_name IS NOT NULL "
+            "LIMIT 1"
+        ).fetchone()
+        # Identical window (true overlap) but a distinct value_set_version_label
+        # so the injected row clears the (variable, variant, valid_from, label)
+        # uniqueness index — the test targets the overlap guard, not that index.
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            " delivery_column_name, value_set_id, value_set_version_label) "
+            "VALUES (?, ?, ?, ?, ?, NULL, 'codeless-inject')",
+            (vid, rvid, vf, vt, col),
+        )
+        conn.commit()
+        conn.close()
+
+    def test_codeless_codebearing_overlap_fails(self, fixture_db: Path, tmp_path: Path):
+        """The regression backstop: a code-less state overlapping a code-bearing
+        state on one ``(variable, variant, column)`` must FAIL the build — this
+        is the future-regression guard for the #867/#868 resolvers."""
+        broken = tmp_path / "broken.db"
+        self._inject_codeless_overlap(fixture_db, broken)
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "code-less ↔ code-bearing overlapping state pair" in f
+            for f in result.failures
+        ), result.failures
+
+    def test_codeless_codebearing_overlap_skipped_when_flavored(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Flavored gating: with the SAME injected overlap, ``flavored=True``
+        SKIPs the guard (reports OK, does not fail) — a flavored DB extends the
+        released global base (pre-#867/#868), so any such overlap is base debt
+        the global build's guard owns, not the insert-only steward overlay's."""
+        broken = tmp_path / "broken_flavored.db"
+        self._inject_codeless_overlap(fixture_db, broken)
+        # Sanity: the non-flavored path DOES fail on this DB (proves the overlap
+        # is really present, so the flavored OK is a true skip, not a no-op).
+        assert not validate_built_db(broken).passed
+
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_no_codeless_codebearing_overlap,
+        )
+
+        conn = sqlite3.connect(broken)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, tables, flavored=True)
+        conn.close()
+        assert result.passed, result.failures
+        assert "flavored build" in result.format_report(), result.format_report()
+
+    def test_codeless_codebearing_overlap_ignores_symmetric_pairs(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Only the ASYMMETRIC NULL-vs-non-NULL overlap is flagged: a both-NULL
+        pair and a both-non-NULL pair overlapping on one column do NOT fire this
+        guard (both-non-NULL is ``_check_one_value_set_per_period``'s job; this
+        check is solely about code-less absence meeting a code list)."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_no_codeless_codebearing_overlap,
+        )
+
+        # Inject onto a SYNTHETIC delivery column so the pair under test is the
+        # only state group on that column — no pre-existing fixture state of the
+        # opposite kind can sneak in and turn a symmetric pair asymmetric.
+        # both-NULL overlap: two code-less states on one (synthetic) column-window.
+        both_null = tmp_path / "both_null.db"
+        both_null.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(both_null)
+        vid, rvid = conn.execute(
+            "SELECT variable_id, register_variant_id FROM variable_state LIMIT 1"
+        ).fetchone()
+        for i in range(2):
+            conn.execute(
+                "INSERT INTO variable_state "
+                "(variable_id, register_variant_id, valid_from, valid_to, "
+                " delivery_column_name, value_set_id, value_set_version_label) "
+                "VALUES (?, ?, '2020-01-01', '2021-12-31', 'SYNTH_NULL_COL', "
+                " NULL, ?)",
+                (vid, rvid, f"null-inject-{i}"),
+            )
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        conn.commit()
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, tables)
+        conn.close()
+        assert result.passed, ("both-NULL overlap wrongly flagged", result.failures)
+
+        # both-non-NULL overlap: two states sharing the SAME real value_set_id on
+        # one (synthetic) column-window — identical value set, so not even a
+        # per-period conflict, and certainly not a code-less overlap.
+        both_set = tmp_path / "both_set.db"
+        both_set.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(both_set)
+        vid, rvid = conn.execute(
+            "SELECT variable_id, register_variant_id FROM variable_state LIMIT 1"
+        ).fetchone()
+        vsid = conn.execute(
+            "SELECT value_set_id FROM variable_state WHERE value_set_id IS NOT NULL "
+            "LIMIT 1"
+        ).fetchone()[0]
+        for i in range(2):
+            conn.execute(
+                "INSERT INTO variable_state "
+                "(variable_id, register_variant_id, valid_from, valid_to, "
+                " delivery_column_name, value_set_id, value_set_version_label) "
+                "VALUES (?, ?, '2020-01-01', '2021-12-31', 'SYNTH_SET_COL', ?, ?)",
+                (vid, rvid, vsid, f"set-inject-{i}"),
+            )
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        conn.commit()
+        result = ValidationResult()
+        _check_no_codeless_codebearing_overlap(conn, result, tables)
+        conn.close()
+        assert result.passed, ("both-non-NULL overlap wrongly flagged", result.failures)
+
     def test_var_year_codes_anchor_self_skips_on_fixture(self, fixture_db: Path):
         """A2.7: the var_id-24193 code-membership anchor self-skips cleanly when
         the var_id is absent (the synthetic fixture has no var_id 24193), so it
