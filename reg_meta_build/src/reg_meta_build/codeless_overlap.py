@@ -11,10 +11,13 @@ cannot decide whether to extend the coding across the gap, accept the code-less
 span, or close it at a coded boundary — it's a per-column maintainer call landed
 here. See `db.py:_resolve_curated_codeless_overlaps` for the materialization.
 
-A curation entry is keyed on `(register_slug, variable_slug, column)` — the same
-human-readable coordinates the #866 worklist names (`naringsgren`/`SNI`,
-`skollan`/`SkolLan`). Slugs are register-scoped-unique and resolvable at the pass
-site (it runs after `populate_variable_slugs`); `column` matches a state's
+A curation entry is keyed on `(provider_slug, register_slug, variable_slug, column)`
+— the same human-readable coordinates the #866 worklist names (`scb`/`naringsgren`/
+`SNI`, `scb`/`skollan`/`SkolLan`). The `provider` is part of the key because
+`register.slug` is NOT globally unique across providers (two providers can ship a
+same-slug register), so a provider-blind key could land an entry on the wrong
+provider's column. Slugs are register-scoped-unique (per provider) and resolvable at
+the pass site (it runs after `populate_variable_slugs`); `column` matches a state's
 `delivery_column_name` after case-folding (`fold_column`), so TOML casing is
 cosmetic. A state can have `delivery_column_name IS NULL` (no delivery alias);
 to curate such a residual, OMIT the `column` field — its key column component is
@@ -60,13 +63,15 @@ _require_str = functools.partial(
     file_name="codeless_overlap.toml",
 )
 
-# (register_slug, variable_slug, folded-delivery-column) — the human-authorable
-# worklist coordinates. The column is folded to the same rule-2 connectivity key
-# the SCB coalescer uses (`fold_column`), so a raw-cased pin still matches the
-# stored `variable_state.delivery_column_name`. The column component is `None`
-# (not `""`) when the entry OMITS `column`, matching a state whose
-# `delivery_column_name IS NULL`.
-CodelessOverlapKey = tuple[str, str, str | None]
+# (provider_slug, register_slug, variable_slug, folded-delivery-column) — the
+# human-authorable worklist coordinates. The provider is part of the key because
+# `register.slug` is not globally unique across providers; without it an entry could
+# match a same-slug register/variable/column under the WRONG provider. The column is
+# folded to the same rule-2 connectivity key the SCB coalescer uses (`fold_column`),
+# so a raw-cased pin still matches the stored `variable_state.delivery_column_name`.
+# The column component is `None` (not `""`) when the entry OMITS `column`, matching a
+# state whose `delivery_column_name IS NULL`.
+CodelessOverlapKey = tuple[str, str, str, str | None]
 # (resolution, extend_label) — `extend_label` is non-None iff resolution=="extend"
 # (it can be `""`, explicitly targeting the empty-label coded vintage; None still
 # means "no extend", used by cap/drop).
@@ -85,16 +90,18 @@ def repo_codeless_overlap_path() -> Path | None:
 
 
 def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
-    """Parse the curation TOML into `{(register_slug, variable_slug, column):
-    (resolution, extend_label)}`. Empty when no file (synthetic test builds, wheel
-    installs).
+    """Parse the curation TOML into `{(provider_slug, register_slug, variable_slug,
+    column): (resolution, extend_label)}`. Empty when no file (synthetic test builds,
+    wheel installs).
 
     Load-time validation (all EXIT_CONFIG, actionable — mirrors `codelivery.py`):
       - Only `[[resolve]]` top-level (a misspelled `[[resolves]]` is a loud error,
         not a silent no-op that disables ALL curation); `resolve` is an array of
         tables (a scalar / single `[resolve]` table is rejected before the loop).
-      - `register` / `variable` present non-empty strings; a missing/blank/
-        non-string key part is curation drift, not a silent default. `column` is
+      - `provider` / `register` / `variable` present non-empty strings; a missing/
+        blank/non-string key part is curation drift, not a silent default. The
+        `provider` disambiguates a same-slug register/variable across providers (the
+        register slug is register-scoped-unique only PER PROVIDER). `column` is
         OPTIONAL: omit it to match a state with `delivery_column_name IS NULL`
         (key column component `None`); when present it must be a non-empty string
         (a `column = ""` is rejected — absent means NULL, not empty-string).
@@ -123,6 +130,7 @@ def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
         # blank value is curation drift → load-time error, not an inert pin
         # (shared `require_str` returns the narrowed, stripped string).
         ctx = "[[resolve]] entry"
+        provider = _require_str(entry, "provider", ctx)
         register = _require_str(entry, "register", ctx)
         variable = _require_str(entry, "variable", ctx)
         # `column` is OPTIONAL: ABSENT → `None` sentinel (matches a state with
@@ -137,13 +145,13 @@ def load_codeless_overlap(path: Path | None) -> CodelessOverlapMap:
             column = None
         else:
             column = fold_column(_require_str(entry, "column", ctx))
-        key: CodelessOverlapKey = (register, variable, column)
+        key: CodelessOverlapKey = (provider, register, variable, column)
         if key in out:
             raise curation_error(
                 "codeless_overlap_invalid",
                 f"codeless_overlap has duplicate [[resolve]] entries for key {key}.",
-                "Give exactly one [[resolve]] entry per (register, variable, column) "
-                "in reg_meta_build/codeless_overlap.toml.",
+                "Give exactly one [[resolve]] entry per (provider, register, variable, "
+                "column) in reg_meta_build/codeless_overlap.toml.",
             )
         resolution = entry.get("resolution")
         if not isinstance(resolution, str) or resolution not in _RESOLUTIONS:

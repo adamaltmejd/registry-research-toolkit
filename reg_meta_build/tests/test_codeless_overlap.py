@@ -35,19 +35,20 @@ class TestLoadCodelessOverlap:
     def test_parses_each_resolution(self, tmp_path: Path) -> None:
         toml = tmp_path / "codeless_overlap.toml"
         toml.write_text(
-            '[[resolve]]\nregister="naringsgren"\nvariable="sni"\ncolumn="SNI"\n'
-            'resolution="cap"\n\n'
-            '[[resolve]]\nregister="skollan"\nvariable="skollan"\ncolumn="SkolLan"\n'
-            'resolution="drop"\n\n'
-            '[[resolve]]\nregister="bef"\nvariable="fodelseland"\n'
+            '[[resolve]]\nprovider="scb"\nregister="naringsgren"\nvariable="sni"\n'
+            'column="SNI"\nresolution="cap"\n\n'
+            '[[resolve]]\nprovider="scb"\nregister="skollan"\nvariable="skollan"\n'
+            'column="SkolLan"\nresolution="drop"\n\n'
+            '[[resolve]]\nprovider="scb"\nregister="bef"\nvariable="fodelseland"\n'
             'column="FodelseLand"\nresolution="extend"\nextend="2010 coding"\n',
             encoding="utf-8",
         )
         cmap = load_codeless_overlap(toml)
         # Column folded to the rule-2 connectivity key (#196) — casing is cosmetic.
-        assert cmap[("naringsgren", "sni", "sni")] == ("cap", None)
-        assert cmap[("skollan", "skollan", "skollan")] == ("drop", None)
-        assert cmap[("bef", "fodelseland", "fodelseland")] == (
+        # Key is provider-scoped: (provider, register, variable, folded-column).
+        assert cmap[("scb", "naringsgren", "sni", "sni")] == ("cap", None)
+        assert cmap[("scb", "skollan", "skollan", "skollan")] == ("drop", None)
+        assert cmap[("scb", "bef", "fodelseland", "fodelseland")] == (
             "extend",
             "2010 coding",
         )
@@ -58,22 +59,39 @@ class TestLoadCodelessOverlap:
         # `""`), so it matches the NULL row at materialization time.
         toml = tmp_path / "codeless_overlap.toml"
         toml.write_text(
-            '[[resolve]]\nregister="skyddad-natur"\n'
+            '[[resolve]]\nprovider="scb"\nregister="skyddad-natur"\n'
             'variable="naturtyp-skyddade-omraden-areal"\nresolution="cap"\n',
             encoding="utf-8",
         )
         cmap = load_codeless_overlap(toml)
-        assert cmap[("skyddad-natur", "naturtyp-skyddade-omraden-areal", None)] == (
+        assert cmap[
+            ("scb", "skyddad-natur", "naturtyp-skyddade-omraden-areal", None)
+        ] == (
             "cap",
             None,
         )
+
+    def test_missing_provider_rejected(self, tmp_path: Path) -> None:
+        # `provider` is a required key part (the register slug is unique only per
+        # provider) — a missing one is curation drift, not a silent default.
+        toml = tmp_path / "x.toml"
+        toml.write_text(
+            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="c"\nresolution="drop"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codeless_overlap(toml)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codeless_overlap_invalid"
+        assert "`provider`" in exc.value.message
 
     def test_empty_column_rejected(self, tmp_path: Path) -> None:
         # A present-but-empty `column = ""` is ambiguous (absent already means NULL)
         # → rejected, not folded to "".
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn=""\nresolution="drop"\n',
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable="v"\ncolumn=""\n'
+            'resolution="drop"\n',
             encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as exc:
@@ -85,7 +103,8 @@ class TestLoadCodelessOverlap:
     def test_unknown_resolution_rejected(self, tmp_path: Path) -> None:
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="c"\nresolution="trim"\n',
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable="v"\ncolumn="c"\n'
+            'resolution="trim"\n',
             encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as exc:
@@ -99,7 +118,7 @@ class TestLoadCodelessOverlap:
         # guard) — distinct from a present-but-empty `extend = ""`, which is valid.
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="c"\n'
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable="v"\ncolumn="c"\n'
             'resolution="extend"\n',
             encoding="utf-8",
         )
@@ -115,19 +134,19 @@ class TestLoadCodelessOverlap:
         # labelled coded vintage on the key (HDIA/ATCO shape).
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="par"\nvariable="typ-av-diagnos"\ncolumn="HDIA"\n'
-            'resolution="extend"\nextend=""\n',
+            '[[resolve]]\nprovider="scb"\nregister="par"\nvariable="typ-av-diagnos"\n'
+            'column="HDIA"\nresolution="extend"\nextend=""\n',
             encoding="utf-8",
         )
         cmap = load_codeless_overlap(toml)
-        assert cmap[("par", "typ-av-diagnos", "hdia")] == ("extend", "")
+        assert cmap[("scb", "par", "typ-av-diagnos", "hdia")] == ("extend", "")
 
     def test_extend_empty_forbidden_on_cap(self, tmp_path: Path) -> None:
         # `extend = ""` on a `cap` entry is still a forbidden stray `extend` — the
         # present-empty key is detected by membership, not truthiness.
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="c"\n'
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable="v"\ncolumn="c"\n'
             'resolution="cap"\nextend=""\n',
             encoding="utf-8",
         )
@@ -139,7 +158,7 @@ class TestLoadCodelessOverlap:
     def test_extend_forbidden_on_cap(self, tmp_path: Path) -> None:
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="c"\n'
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable="v"\ncolumn="c"\n'
             'resolution="cap"\nextend="2010"\n',
             encoding="utf-8",
         )
@@ -151,7 +170,8 @@ class TestLoadCodelessOverlap:
     def test_blank_key_part_rejected(self, tmp_path: Path) -> None:
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="r"\nvariable=""\ncolumn="c"\nresolution="drop"\n',
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable=""\ncolumn="c"\n'
+            'resolution="drop"\n',
             encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as exc:
@@ -163,8 +183,10 @@ class TestLoadCodelessOverlap:
         # Two entries that fold to the same (register, variable, column) key.
         toml = tmp_path / "x.toml"
         toml.write_text(
-            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="Col"\nresolution="drop"\n'
-            '[[resolve]]\nregister="r"\nvariable="v"\ncolumn="COL"\nresolution="cap"\n',
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable="v"\ncolumn="Col"\n'
+            'resolution="drop"\n'
+            '[[resolve]]\nprovider="scb"\nregister="r"\nvariable="v"\ncolumn="COL"\n'
+            'resolution="cap"\n',
             encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as exc:
@@ -207,6 +229,7 @@ class TestResolveCuratedCodelessOverlaps:
     (FKs off), with the `register` + `variable` parents present so the slug JOIN in
     the pass resolves the curated `(register_slug, variable_slug, column)` key."""
 
+    PROVIDER_SLUG = "p"
     REG_SLUG = "reg"
     VAR_SLUG = "var"
     COLUMN = "Col"
@@ -218,9 +241,11 @@ class TestResolveCuratedCodelessOverlaps:
         conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
         conn.executescript(DDL)  # FKs off → minimal parents
-        # provider/register/variable parents carry the slugs the pass joins on.
+        # provider/register/variable parents carry the slugs the pass joins on; the
+        # provider slug is part of the curated key (provider-scoped register slugs).
         conn.execute(
-            "INSERT INTO provider (provider_id, slug, name) VALUES (1, 'p', 'P')"
+            "INSERT INTO provider (provider_id, slug, name) VALUES (1, ?, 'P')",
+            (cls.PROVIDER_SLUG,),
         )
         conn.execute(
             "INSERT INTO register (register_id, provider_id, name, slug) "
@@ -256,8 +281,9 @@ class TestResolveCuratedCodelessOverlaps:
         return cur.lastrowid
 
     @classmethod
-    def _key(cls) -> tuple[str, str, str]:
-        return (cls.REG_SLUG, cls.VAR_SLUG, "col")  # folded column
+    def _key(cls) -> tuple[str, str, str, str | None]:
+        # (provider, register, variable, folded-column)
+        return (cls.PROVIDER_SLUG, cls.REG_SLUG, cls.VAR_SLUG, "col")
 
     @staticmethod
     def _live(conn: sqlite3.Connection) -> set[int]:
@@ -883,7 +909,7 @@ class TestResolveCuratedCodelessOverlaps:
             conn,
             {
                 self._key(): ("drop", None),
-                (self.REG_SLUG, "var2", "col2"): ("drop", None),
+                (self.PROVIDER_SLUG, self.REG_SLUG, "var2", "col2"): ("drop", None),
             },
         )
         # Both code-less states dropped; both coded survive.
@@ -912,7 +938,7 @@ class TestResolveCuratedCodelessOverlaps:
             column=None,
         )
         # Key with the `None` column sentinel — the omit-`column` curated entry.
-        null_key = (self.REG_SLUG, self.VAR_SLUG, None)
+        null_key = (self.PROVIDER_SLUG, self.REG_SLUG, self.VAR_SLUG, None)
         _resolve_curated_codeless_overlaps(conn, {null_key: ("cap", None)})
         assert self._live(conn) == {codeless, coded}
         row = self._row(conn, codeless)
@@ -957,3 +983,116 @@ class TestResolveCuratedCodelessOverlaps:
         _resolve_curated_codeless_overlaps(conn, {})
         assert self._live(conn) == {lone}
         conn.close()
+
+    def test_extend_two_codeless_states_grow_to_union(self) -> None:
+        # Fix 1 (#878 review): the HDIA/ATCO shape — the SAME coded vintage absorbs
+        # TWO code-less states on one key. Each grow must re-read the target's CURRENT
+        # bounds so the window accumulates the UNION of both spans; a stale pre-loop
+        # snapshot would recompute from the original window on the second absorb and
+        # could shrink the first growth (silent, since both code-less rows are
+        # deleted).
+        #
+        # Coded "X" [2005..2012]; code-less A [1997..2006] (overlaps X's start, extends
+        # BEFORE it) and code-less B [2011..2018] (overlaps X's end, extends AFTER it)
+        # BOTH overlap X and are extended into it. Each must accumulate onto the live
+        # window: final X must span [1997..2018] — the union — not just one absorb.
+        conn = self._conn()
+        # A: overlaps X's start, extends BEFORE the coded window.
+        self._state(
+            conn, valid_from="1997-01-01", valid_to="2006-12-31", value_set_id=None
+        )
+        # B: overlaps X's end, extends AFTER it. Distinct valid_from from A.
+        self._state(
+            conn, valid_from="2011-01-01", valid_to="2018-12-31", value_set_id=None
+        )
+        coded = self._state(
+            conn,
+            valid_from="2005-01-01",
+            valid_to="2012-12-31",
+            value_set_id=7,
+            label="X",
+        )
+        _resolve_curated_codeless_overlaps(conn, {self._key(): ("extend", "X")})
+        # Both code-less states absorbed; only the grown coded state remains.
+        assert self._live(conn) == {coded}
+        row = self._row(conn, coded)
+        # The window grew to the UNION of both code-less spans — neither growth lost.
+        assert (row["valid_from"], row["valid_to"]) == ("1997-01-01", "2018-12-31")
+        assert row["value_set_id"] == 7
+        conn.close()
+
+    def test_extend_swallowing_different_vintage_fails(self) -> None:
+        # Fix 2 (#878 review): an `extend` whose grown span would CONTAIN a coded
+        # window with a DIFFERENT value_set_id → fail fast (the grow would fabricate a
+        # distinct-value_set coded↔coded overlap on one column, which only validate
+        # catches — `--no-validate` would ship it).
+        #
+        # Code-less [1997..2014] overlaps target "X" [2010..2020] (vs 7); a DIFFERENT
+        # vintage "Y" [2000..2005] (vs 9) sits inside the [1997..2020] grown span.
+        conn = self._conn()
+        self._state(
+            conn, valid_from="1997-01-01", valid_to="2014-12-31", value_set_id=None
+        )
+        self._state(
+            conn,
+            valid_from="2010-01-01",
+            valid_to="2020-12-31",
+            value_set_id=7,
+            label="X",
+        )
+        # Different-value_set coded window inside the grow span.
+        self._state(
+            conn,
+            valid_from="2000-01-01",
+            valid_to="2005-12-31",
+            value_set_id=9,
+            label="Y",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            _resolve_curated_codeless_overlaps(conn, {self._key(): ("extend", "X")})
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codeless_overlap_extend_swallows_vintage"
+        assert self.VAR_SLUG in exc.value.message
+        conn.close()
+
+    def test_provider_mismatch_treated_as_uncurated(self) -> None:
+        # Fix 3 (#878 review): the curated key includes the PROVIDER. An entry under
+        # the WRONG provider must NOT match the residual (so the mandatory-curation
+        # gate still fires); the SAME entry under the right provider DOES match.
+        conn = self._conn()
+        self._state(
+            conn, valid_from="1997-01-01", valid_to="2018-12-31", value_set_id=None
+        )
+        self._state(
+            conn,
+            valid_from="2015-01-01",
+            valid_to="2020-12-31",
+            value_set_id=7,
+            label="v7",
+        )
+        # Same register/variable/column slug, but a DIFFERENT provider slug → the
+        # entry does not cross providers, so the residual stays uncurated.
+        wrong_provider_key = ("other", self.REG_SLUG, self.VAR_SLUG, "col")
+        with pytest.raises(RegMetaError) as exc:
+            _resolve_curated_codeless_overlaps(
+                conn, {wrong_provider_key: ("drop", None)}
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codeless_overlap_uncurated_residual"
+        conn.close()
+
+        # The SAME entry under the CORRECT provider resolves it (no gate failure).
+        conn2 = self._conn()
+        self._state(
+            conn2, valid_from="1997-01-01", valid_to="2018-12-31", value_set_id=None
+        )
+        coded = self._state(
+            conn2,
+            valid_from="2015-01-01",
+            valid_to="2020-12-31",
+            value_set_id=7,
+            label="v7",
+        )
+        _resolve_curated_codeless_overlaps(conn2, {self._key(): ("drop", None)})
+        assert self._live(conn2) == {coded}
+        conn2.close()

@@ -3314,10 +3314,12 @@ def _resolve_curated_codeless_overlaps(
     conn: sqlite3.Connection, curated: CodelessOverlapMap
 ) -> None:
     """Apply the curated resolution for the residual code-less ↔ code-bearing
-    overlap class (#868). Provider-blind; runs after `populate_variable_slugs` (the
-    curated key is `(register_slug, variable_slug, folded-column)`) and after the
+    overlap class (#868). Runs after `populate_variable_slugs` (the curated key is
+    `(provider_slug, register_slug, variable_slug, folded-column)`) and after the
     automatic full-cover removal (#867), inside the materialize transaction, before
-    validate.
+    validate. The provider is part of the key because `register.slug` is not globally
+    unique across providers — a provider-blind key could land a curated entry on a
+    same-slug register/variable/column under the wrong provider.
 
     The curated key's column component is `None` (not `""`) when the state's
     `delivery_column_name IS NULL`, matching an entry that omits `column`.
@@ -3345,7 +3347,13 @@ def _resolve_curated_codeless_overlaps(
         `value_set_id` the target is ambiguous → `codeless_overlap_extend_ambiguous_`
         `empty_label` (EXIT_CONFIG, use `cap`). An unresolvable label → fail fast
         (EXIT_CONFIG); a residual unique-index collision from the grow →
-        `codeless_overlap_extend_collision` (EXIT_CONFIG).
+        `codeless_overlap_extend_collision` (EXIT_CONFIG). If the grown span would
+        contain a DIFFERENT-`value_set_id` coded window (the grow swallowing a distinct
+        vintage into a coded↔coded overlap on one column) → fail fast
+        `codeless_overlap_extend_swallows_vintage` (EXIT_CONFIG, use `cap`) — a HARD
+        guard so `--no-validate` can't ship it. When one vintage absorbs SEVERAL
+        code-less states on the key, each grow re-reads the target's CURRENT bounds so
+        the window accumulates the union across all of them.
 
     Mandatory-curation gate: after applying every entry, the DB is RE-QUERIED for
     any remaining code-less ↔ code-bearing overlap (the same overlap predicate the
@@ -3368,12 +3376,13 @@ def _resolve_curated_codeless_overlaps(
     rows = conn.execute(
         "SELECT cl.state_id, cl.variable_id, cl.register_variant_id, "
         "       cl.delivery_column_name, cl.valid_from, cl.valid_to, "
-        "       r.slug, v.slug, "
+        "       p.slug, r.slug, v.slug, "
         "       cb.state_id, cb.valid_from, cb.valid_to, cb.value_set_id, "
         "       cb.value_set_version_label "
         "FROM variable_state cl "
         "JOIN variable v ON v.variable_id = cl.variable_id "
         "JOIN register r ON r.register_id = v.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN variable_state cb "
         "  ON cl.variable_id = cb.variable_id "
         " AND cl.register_variant_id = cb.register_variant_id "
@@ -3396,6 +3405,7 @@ def _resolve_curated_codeless_overlaps(
         column,
         cl_from,
         cl_to,
+        prov_slug,
         reg_slug,
         var_slug,
         cb_state_id,
@@ -3412,10 +3422,12 @@ def _resolve_curated_codeless_overlaps(
                 "column": column,
                 "from": cl_from,
                 "to": cl_to,
-                # The curated key: slug parts + folded column, or `None` for a
-                # state with `delivery_column_name IS NULL` (matches an entry that
-                # OMITS `column`) — NOT `fold_column("")`, which would be `""`.
+                # The curated key: provider + slug parts + folded column, or `None`
+                # for a state with `delivery_column_name IS NULL` (matches an entry
+                # that OMITS `column`) — NOT `fold_column("")`, which would be `""`.
+                # The provider scopes the (non-globally-unique) register slug.
                 "key": (
+                    prov_slug,
                     reg_slug,
                     var_slug,
                     None if column is None else fold_column(column),
@@ -3529,14 +3541,7 @@ def _resolve_curated_codeless_overlaps(
                 )
             # ABSORB the code-less span into the named coded vintage's window:
             # DELETE the code-less state FIRST, then grow the target coded state to
-            # cover the code-less span. CAUTION: `extend` grows the coded window over
-            # the WHOLE code-less span — only use it when the named vintage is the
-            # nearest coded window to the gap; if a DIFFERENT value set sits between
-            # the target and the span, use `cap` instead (the grow would swallow it
-            # into a distinct-value_set coded↔coded overlap, which the post-resolution
-            # gate here — code-less↔code-bearing only — does NOT catch; only
-            # _check_one_value_set_per_period catches it at validate time, so
-            # `--no-validate` would ship it). The target is the overlapping coded state
+            # cover the code-less span. The target is the overlapping coded state
             # with the EARLIEST valid_from (deterministic when one vintage is
             # delivered in several windows; the others keep their windows — same
             # value set, no conflict). Order matters: the code-less state can carry a
@@ -3547,9 +3552,75 @@ def _resolve_curated_codeless_overlaps(
             # sat there. Deleting it first frees the tuple; the IntegrityError wrap
             # on the grow stays as a backstop for a genuinely different colliding
             # state.
-            target_state_id, target_from, target_to, _ = min(coded, key=lambda c: c[1])
-            grown_from = min(target_from, entry["from"])
-            grown_to = max(target_to, entry["to"])
+            target_state_id, _, _, target_vsid = min(coded, key=lambda c: c[1])
+            # Re-read the target's CURRENT bounds from the DB rather than the
+            # pre-loop snapshot (`coded`): when the SAME coded vintage absorbs MORE
+            # THAN ONE code-less state on this key (e.g. par/typ-av-diagnos HDIA,
+            # par/atc-komplement-atgardskod ATCO each extend two code-less states
+            # into one vintage), the first absorb already grew the target row. Using
+            # the stale snapshot bounds would recompute grown_from/grown_to from the
+            # ORIGINAL window and could shrink the just-grown row — and since both
+            # code-less rows are deleted, the post-resolution gate (code-less ↔
+            # code-bearing only) can't detect the lost interval. Reading the live
+            # bounds makes min/max accumulate correctly across N code-less states.
+            current_from, current_to = conn.execute(
+                "SELECT valid_from, valid_to FROM variable_state WHERE state_id = ?",
+                (target_state_id,),
+            ).fetchone()
+            grown_from = min(current_from, entry["from"])
+            grown_to = max(current_to, entry["to"])
+            # HARD guard against swallowing a DIFFERENT coded vintage. `extend` grows
+            # the target over the whole [grown_from, grown_to] span; if a coded state
+            # with a DISTINCT value_set_id on this key lies inside that span, the grow
+            # would create a distinct-value_set coded↔coded overlap on one column.
+            # _check_one_value_set_per_period catches it at validate, but
+            # `build-db --no-validate` would ship it — so fail fast HERE instead. The
+            # check excludes the target and any same-value_set_id states (a vintage
+            # delivered in several windows is one value set, no conflict); closed
+            # interval intersection, matching the overlap predicate.
+            swallowed = conn.execute(
+                "SELECT cb.value_set_id, cb.valid_from, cb.valid_to "
+                "FROM variable_state cb "
+                "WHERE cb.variable_id = ? "
+                "  AND cb.register_variant_id = ? "
+                "  AND cb.delivery_column_name IS ? "
+                "  AND cb.value_set_id IS NOT NULL "
+                "  AND cb.value_set_id IS NOT ? "
+                "  AND cb.state_id <> ? "
+                "  AND cb.valid_from <= ? AND ? <= cb.valid_to "
+                "ORDER BY cb.valid_from "
+                "LIMIT 1",
+                (
+                    entry["variable_id"],
+                    entry["variant_id"],
+                    entry["column"],
+                    target_vsid,
+                    target_state_id,
+                    grown_to,
+                    grown_from,
+                ),
+            ).fetchone()
+            if swallowed is not None:
+                swallowed_vsid, swallowed_from, swallowed_to = swallowed
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="codeless_overlap_extend_swallows_vintage",
+                    error_class="configuration",
+                    message=(
+                        f"codeless_overlap `extend` for key {key} would grow the "
+                        f"coded vintage {extend_label!r} to cover "
+                        f"[{grown_from}..{grown_to}], swallowing a DIFFERENT coded "
+                        f"vintage (value_set_id={swallowed_vsid}, "
+                        f"[{swallowed_from}..{swallowed_to}]) into a distinct-value_set "
+                        "overlap on this (register, variable, column)."
+                    ),
+                    remediation=(
+                        "A coded vintage with a different value set sits inside the "
+                        "span the grow would cover, so `extend` would fabricate a "
+                        "distinct-value_set coded↔coded overlap. Use `resolution = "
+                        '"cap"` for this residual instead.'
+                    ),
+                )
             try:
                 conn.execute(
                     "DELETE FROM variable_state WHERE state_id = ?", (state_id,)
@@ -3683,10 +3754,11 @@ def _resolve_curated_codeless_overlaps(
     # match, closed-interval intersection), DISTINCT-keyed via the slug JOIN so each
     # human key is reported once.
     residual_keys = conn.execute(
-        "SELECT DISTINCT r.slug, v.slug, cl.delivery_column_name "
+        "SELECT DISTINCT p.slug, r.slug, v.slug, cl.delivery_column_name "
         "FROM variable_state cl "
         "JOIN variable v ON v.variable_id = cl.variable_id "
         "JOIN register r ON r.register_id = v.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN variable_state cb "
         "  ON cl.variable_id = cb.variable_id "
         " AND cl.register_variant_id = cb.register_variant_id "
@@ -3694,7 +3766,7 @@ def _resolve_curated_codeless_overlaps(
         " AND cl.value_set_id IS NULL "
         " AND cb.value_set_id IS NOT NULL "
         " AND cl.valid_from <= cb.valid_to AND cb.valid_from <= cl.valid_to "
-        "ORDER BY r.slug, v.slug"
+        "ORDER BY p.slug, r.slug, v.slug"
     ).fetchall()
     if residual_keys:
         # Fold each surviving overlap to its curated key (None-sentinel column for a
@@ -3703,8 +3775,9 @@ def _resolve_curated_codeless_overlaps(
         # exists but its resolution failed to clear the overlap.
         uncurated: list[CodelessOverlapKey] = []
         unresolved: list[CodelessOverlapKey] = []
-        for reg_slug, var_slug, column in residual_keys:
+        for prov_slug, reg_slug, var_slug, column in residual_keys:
             key: CodelessOverlapKey = (
+                prov_slug,
                 reg_slug,
                 var_slug,
                 None if column is None else fold_column(column),

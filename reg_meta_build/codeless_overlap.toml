@@ -11,9 +11,13 @@
 # A maintainer artifact like `codelivery.toml` / the slug TOMLs: it is NOT shipped
 # in wheels (build-db is maintainer-only).
 #
-# Format — one table per residual `(register, variable, column)`:
+# Format — one table per residual `(provider, register, variable, column)`:
 #
 #   [[resolve]]
+#   provider   = "<provider-slug>"     # e.g. "scb" (REQUIRED: the register slug is
+#                                      # register-scoped-unique only PER PROVIDER, so
+#                                      # the provider disambiguates a same-slug
+#                                      # register/variable/column across providers)
 #   register   = "<register-slug>"     # e.g. "naringsgren"
 #   variable   = "<variable-slug>"     # e.g. "sni"
 #   column     = "<delivery-column>"   # e.g. "SNI" (case-folded for matching);
@@ -42,9 +46,9 @@
 #              the target and the span, use `cap` instead (the grow would swallow it
 #              into a distinct-value_set overlap, caught only by validate).
 #
-# Slugs are register-scoped-unique and human-readable; `column` matches a state's
-# `delivery_column_name` after case-folding, so casing is cosmetic. Omit `column`
-# to match a state whose `delivery_column_name` is NULL.
+# Slugs are register-scoped-unique (per provider) and human-readable; `column`
+# matches a state's `delivery_column_name` after case-folding, so casing is cosmetic.
+# Omit `column` to match a state whose `delivery_column_name` is NULL.
 #
 # Policy (epic #858): a code-less gap beside a VINTAGED classification (LKF
 # geography, country lists, survey strata, year/week enumerations) is `cap` — the
@@ -56,6 +60,7 @@
 
 # aku/arsektor col=ArSektor  ::  vs3338 'Sektor2001'
 [[resolve]]
+provider = "scb"
 register = "aku"
 variable = "arsektor"
 column = "ArSektor"
@@ -63,6 +68,7 @@ resolution = "cap"
 
 # allmanna-val-nominerade/ripartikod col=Ripartikod  ::  vs2958 'Riksdagsparti'; vs4132 'Parti 2002'; vs5085 'Riksdagsparti'
 [[resolve]]
+provider = "scb"
 register = "allmanna-val-nominerade"
 variable = "ripartikod"
 column = "Ripartikod"
@@ -70,6 +76,7 @@ resolution = "cap"
 
 # allmanna-val-valresultat/valdistriktsnamn-2 col=vdnamn  ::  vs2888 'Valdistrikt 2006 inkl poströ'
 [[resolve]]
+provider = "scb"
 register = "allmanna-val-valresultat"
 variable = "valdistriktsnamn-2"
 column = "vdnamn"
@@ -77,6 +84,7 @@ resolution = "cap"
 
 # arlig-energistatistik/bransleforbrukning-transporter-kvant col=kvant  ::  vs7331 'Bränslen för egna transporte'
 [[resolve]]
+provider = "scb"
 register = "arlig-energistatistik"
 variable = "bransleforbrukning-transporter-kvant"
 column = "kvant"
@@ -85,6 +93,7 @@ extend = "Bränslen för egna transporter"
 
 # branslestatistik/fid col=Fid  ::  vs2399 'Värmeproduktion, användning '
 [[resolve]]
+provider = "scb"
 register = "branslestatistik"
 variable = "fid"
 column = "Fid"
@@ -92,6 +101,7 @@ resolution = "cap"
 
 # cfl/skollan col=SkolLan  ::  vs8 'LKF 2002-01-01/ Län, kommune'; vs8 'LKF 2003-01-01/ Län, kommune'; vs8 'LKF 2004-01-01/ Län, kommune'; vs8 'LKF 2005-01-01/ Län, kommune'
 [[resolve]]
+provider = "scb"
 register = "cfl"
 variable = "skollan"
 column = "SkolLan"
@@ -99,6 +109,7 @@ resolution = "cap"
 
 # ep-val-resultat/riksdagsvalkrets-kod col=RI_valkretskod  ::  vs2848 'Riksdagsvalkrets 1998'; vs2849 'Riksdagsvalkrets 1994'
 [[resolve]]
+provider = "scb"
 register = "ep-val-resultat"
 variable = "riksdagsvalkrets-kod"
 column = "RI_valkretskod"
@@ -106,6 +117,7 @@ resolution = "cap"
 
 # fasit/baeers col=BAEERS  ::  vs7124 'Typ av ersättningsnivå för a'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "baeers"
 column = "BAEERS"
@@ -114,6 +126,7 @@ extend = "Typ av ersättningsnivå för arbetslöshet"
 
 # fasit/baeersniv col=BAEERSNIV  ::  vs7125 'Typ av ersättning för arbets'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "baeersniv"
 column = "BAEERSNIV"
@@ -122,6 +135,7 @@ extend = "Typ av ersättning för arbetslöshet"
 
 # fasit/bbabo col=BBABO  ::  vs7146 'Barnet ingår i förälderns bo'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bbabo"
 column = "BBABO"
@@ -130,6 +144,7 @@ extend = "Barnet ingår i förälderns bostadshushåll"
 
 # fasit/bcivpen col=BCIVPEN  ::  vs6710 'Civilstånd i folkpensionshän'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bcivpen"
 column = "BCIVPEN"
@@ -138,6 +153,7 @@ extend = "Civilstånd i folkpensionshänseende"
 
 # fasit/bfpkod col=BFPKOD  ::  vs7145 'Typ av föräldrapenning'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bfpkod"
 column = "BFPKOD"
@@ -146,6 +162,7 @@ extend = "Typ av föräldrapenning"
 
 # fasit/bhdi col=BHDI  ::  vs6713 'Human development index'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bhdi"
 column = "BHDI"
@@ -154,6 +171,7 @@ extend = "Human development index"
 
 # fasit/bhdi12 col=BHDI12  ::  vs6713 'Human development index'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bhdi12"
 column = "BHDI12"
@@ -162,6 +180,7 @@ extend = "Human development index"
 
 # fasit/bspt col=BSPT  ::  vs3595 'Andel/grad'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bspt"
 column = "BSPT"
@@ -170,6 +189,7 @@ extend = "Andel/grad"
 
 # fasit/bvarldfar col=BVARLDFAR  ::  vs4285 'Länder och världsdelar enlig'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bvarldfar"
 column = "BVARLDFAR"
@@ -178,6 +198,7 @@ extend = "Länder och världsdelar enligt RTB 2015"
 
 # fasit/bvarldmor col=BVARLDMOR  ::  vs4285 'Länder och världsdelar enlig'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bvarldmor"
 column = "BVARLDMOR"
@@ -186,6 +207,7 @@ extend = "Länder och världsdelar enligt RTB 2015"
 
 # fasit/bvxbarn col=BVXBARN  ::  vs7188 'Barn/Vuxen, bostadshushåll'; vs7492 'Barn/Vuxen, bostadshushåll'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "bvxbarn"
 column = "BVXBARN"
@@ -193,6 +215,7 @@ resolution = "cap"
 
 # fasit/fodelseland-varldsdel col=BVARLD  ::  vs4285 'Länder och världsdelar enlig'
 [[resolve]]
+provider = "scb"
 register = "fasit"
 variable = "fodelseland-varldsdel"
 column = "BVARLD"
@@ -201,6 +224,7 @@ extend = "Länder och världsdelar enligt RTB 2015"
 
 # fortroendevalda/fodelseland-rtb col=Fodelselandnamn  ::  vs3778 'Länder och världsdelar enlig'; vs3811 'Länder och världsdelar enlig'; vs4248 'Länder och världsdelar enlig'
 [[resolve]]
+provider = "scb"
 register = "fortroendevalda"
 variable = "fodelseland-rtb"
 column = "Fodelselandnamn"
@@ -208,6 +232,7 @@ resolution = "cap"
 
 # fortroendevalda/medborgarskapsland col=Medblandnamn  ::  vs3778 'Länder och världsdelar enlig'; vs3811 'Länder och världsdelar enlig'; vs4248 'Länder och världsdelar enlig'
 [[resolve]]
+provider = "scb"
 register = "fortroendevalda"
 variable = "medborgarskapsland"
 column = "Medblandnamn"
@@ -220,6 +245,7 @@ resolution = "cap"
 # code-less twin. The code-less states are redundant artifacts of a numeric column —
 # drop them; the continuous-value coded state stands. (Verify under #876.)
 [[resolve]]
+provider = "scb"
 register = "fou"
 variable = "utgifter-fou-kommande-ar"
 column = "FoUUtgKomAr"
@@ -227,6 +253,7 @@ resolution = "drop"
 
 # frida/bbvbr col=bbvbr  ::  vs5865 'Värmevärde 2009'
 [[resolve]]
+provider = "scb"
 register = "frida"
 variable = "bbvbr"
 column = "bbvbr"
@@ -234,6 +261,7 @@ resolution = "cap"
 
 # frida/bel col=BEL  ::  vs5377 'Elström'
 [[resolve]]
+provider = "scb"
 register = "frida"
 variable = "bel"
 column = "BEL"
@@ -242,6 +270,7 @@ extend = "Elström"
 
 # grundskola-ak9/fodelseland-mor col=fodelselandnamnmor  ::  vs4534 'Land 1992'; vs4534 'Land 1993'
 [[resolve]]
+provider = "scb"
 register = "grundskola-ak9"
 variable = "fodelseland-mor"
 column = "fodelselandnamnmor"
@@ -249,6 +278,7 @@ resolution = "cap"
 
 # grundskola-ak9/fodelselandnamn col=fodelselandnamn  ::  vs4534 'Land 1992'; vs4534 'Land 1993'
 [[resolve]]
+provider = "scb"
 register = "grundskola-ak9"
 variable = "fodelselandnamn"
 column = "fodelselandnamn"
@@ -256,6 +286,7 @@ resolution = "cap"
 
 # grundskola-ak9/fodelselandnamnfar col=fodelselandnamnfar  ::  vs4534 'Land 1992'; vs4534 'Land 1993'
 [[resolve]]
+provider = "scb"
 register = "grundskola-ak9"
 variable = "fodelselandnamnfar"
 column = "fodelselandnamnfar"
@@ -263,6 +294,7 @@ resolution = "cap"
 
 # gymnasieskola-betyg/an col=An  ::  vs2080 'Förekomst'; vs8797 'Förekomst'; vs8802 'Förekomst'
 [[resolve]]
+provider = "scb"
 register = "gymnasieskola-betyg"
 variable = "an"
 column = "An"
@@ -270,6 +302,7 @@ resolution = "cap"
 
 # gymnasieskola-betyg/ap col=Äp  ::  vs2080 'Förekomst'; vs8797 'Förekomst'
 [[resolve]]
+provider = "scb"
 register = "gymnasieskola-betyg"
 variable = "ap"
 column = "Äp"
@@ -277,6 +310,7 @@ resolution = "cap"
 
 # ireg/blankettyp col=svalt  ::  vs7079 'Blankettvarian, lager'
 [[resolve]]
+provider = "scb"
 register = "ireg"
 variable = "blankettyp"
 column = "svalt"
@@ -285,6 +319,7 @@ extend = "Blankettvarian, lager"
 
 # klp/reaktu col=REAktu  ::  vs2307 'Aktualitet för redovisningse'
 [[resolve]]
+provider = "scb"
 register = "klp"
 variable = "reaktu"
 column = "REAktu"
@@ -293,6 +328,7 @@ extend = "Aktualitet för redovisningsenhet"
 
 # komvux/skollan col=SkolLan  ::  vs2435 'LKF 1998-01-01/ Län, kommune'; vs683 'LKF 1997-01-01/ Län, kommune'; vs780 '2018-01-01/ Län, kommuner oc'; vs780 '2019-01-01/ Län, kommuner oc'; vs780 '2020-01-01/ Län, kommuner oc'; vs780 '2021-01-01/ Län, kommuner oc'; vs780 '2022-01-01/ Län, kommuner oc'; vs780 '2023-01-01 /Län, kommuner oc'; vs780 '2024-01-01 /Län, kommuner oc'; vs780 'LKF 2009-01-01/ Län, kommune'; vs780 'LKF 2010-01-01/ Län, kommune'; vs780 'LKF 2011-01-01/ Län, kommune'; vs780 'LKF 2012-01-01/ Län, kommune'; vs780 'LKF 2013-01-01/ Län, kommune'; vs780 'LKF 2014-01-01/ Län, kommune'; vs780 'LKF 2015-01-01/ Län, kommune'; vs780 'LKF 2016-01-01/ Län, kommune'; vs780 'LKF 2017-01-01/ Län, kommune'; vs8 'LKF 1998-01-01/ Län, kommune'; vs8 'LKF 1999-01-01/ Län, kommune'; vs8 'LKF 2000-01-01/ Län, kommune'; vs8 'LKF 2001-01-01/ Län, kommune'; vs8 'LKF 2002-01-01/ Län, kommune'; vs8 'LKF 2003-01-01/ Län, kommune'; vs8 'LKF 2004-01-01/ Län, kommune'; vs8 'LKF 2005-01-01/ Län, kommune'; vs8 'LKF 2008-01-01/ Län, kommune'
 [[resolve]]
+provider = "scb"
 register = "komvux"
 variable = "skollan"
 column = "SkolLan"
@@ -300,6 +336,7 @@ resolution = "cap"
 
 # lastbilstrafik/naringsgren col=SNI  ::  vs178 'Svensk standard för näringsg'; vs699 'Standard för svensk näringsg'
 [[resolve]]
+provider = "scb"
 register = "lastbilstrafik"
 variable = "naringsgren"
 column = "SNI"
@@ -307,6 +344,7 @@ resolution = "cap"
 
 # linda/hogsta-utbildning-avslutningsar col=BSUNAR  ::  vs27 'År'
 [[resolve]]
+provider = "scb"
 register = "linda"
 variable = "hogsta-utbildning-avslutningsar"
 column = "BSUNAR"
@@ -314,6 +352,7 @@ resolution = "cap"
 
 # linda/senaste-invandringsar col=BINVAR  ::  vs10887 'År'; vs11003 'År'; vs27 'År'
 [[resolve]]
+provider = "scb"
 register = "linda"
 variable = "senaste-invandringsar"
 column = "BINVAR"
@@ -321,6 +360,7 @@ resolution = "cap"
 
 # linda/stratum col=STRATUM  ::  vs6521 'Stratum SLP05'
 [[resolve]]
+provider = "scb"
 register = "linda"
 variable = "stratum"
 column = "STRATUM"
@@ -328,6 +368,7 @@ resolution = "cap"
 
 # par/atc-komplement-atgardskod col=ATCO  ::  vs13565 '' (binary [0,1] flag, time-stable)
 [[resolve]]
+provider = "sos"
 register = "par"
 variable = "atc-komplement-atgardskod"
 column = "ATCO"
@@ -336,6 +377,7 @@ extend = ""
 
 # par/typ-av-diagnos col=HDIA  ::  vs13569 '' (binary [0,1] flag, time-stable)
 [[resolve]]
+provider = "sos"
 register = "par"
 variable = "typ-av-diagnos"
 column = "HDIA"
@@ -344,6 +386,7 @@ extend = ""
 
 # prisindex/kn8beskrivning col=KN8Kod  ::  vs10638 'Kombinerade nomenklaturen 20'; vs11488 'KN 8 PPI'; vs11538 'KN 8 PPI'; vs12561 'KN 8 PPI'; vs12928 'KN 8 PPI'; vs13450 'KN 8 PPI'
 [[resolve]]
+provider = "scb"
 register = "prisindex"
 variable = "kn8beskrivning"
 column = "KN8Kod"
@@ -351,18 +394,21 @@ resolution = "cap"
 
 # skyddad-natur/naturtyp-skyddade-omraden-areal col=None  ::  vs3582 'Naturtyp'
 [[resolve]]
+provider = "scb"
 register = "skyddad-natur"
 variable = "naturtyp-skyddade-omraden-areal"
 resolution = "cap"
 
 # skyddad-natur/typ-av-skyddad-kulturmiljo col=None  ::  vs4010 'Kulturreservat, Typ av miljö'; vs5760 'Kulturreservat, Typ av miljö'
 [[resolve]]
+provider = "scb"
 register = "skyddad-natur"
 variable = "typ-av-skyddad-kulturmiljo"
 resolution = "cap"
 
 # slp/stratum col=Stratum  ::  vs1851 'Stratum SLP05'; vs2358 'Stratum SLP08'; vs527 'Stratum SLP05'
 [[resolve]]
+provider = "scb"
 register = "slp"
 variable = "stratum"
 column = "Stratum"
@@ -370,6 +416,7 @@ resolution = "cap"
 
 # ssv/utbildningsatgard-vux col=UtbAtgard  ::  vs6925 'Utbildningsåtgärd'
 [[resolve]]
+provider = "scb"
 register = "ssv"
 variable = "utbildningsatgard-vux"
 column = "UtbAtgard"
@@ -378,6 +425,7 @@ extend = "Utbildningsåtgärd"
 
 # ulf/at0101 col=AT0101  ::  vs1077 'Veckonummer'
 [[resolve]]
+provider = "scb"
 register = "ulf"
 variable = "at0101"
 column = "AT0101"
@@ -385,6 +433,7 @@ resolution = "cap"
 
 # ulf/fodelseland-alfabetiskt col=BA0310  ::  vs11057 'Landskoder, RSVKodG'
 [[resolve]]
+provider = "scb"
 register = "ulf"
 variable = "fodelseland-alfabetiskt"
 column = "BA0310"
@@ -392,6 +441,7 @@ resolution = "cap"
 
 # ulf/ha0162 col=HA0162  ::  vs1222 'Påverkar arbetsförmåga'
 [[resolve]]
+provider = "scb"
 register = "ulf"
 variable = "ha0162"
 column = "HA0162"
@@ -400,6 +450,7 @@ extend = "Påverkar arbetsförmåga"
 
 # ulf/kommunstorlek-ulf col=BA0082  ::  vs1267 'Kommunstorlek'
 [[resolve]]
+provider = "scb"
 register = "ulf"
 variable = "kommunstorlek-ulf"
 column = "BA0082"
@@ -407,6 +458,7 @@ resolution = "cap"
 
 # utrikeshandel/kvartal-period col=Period  ::  vs691 'Period kvartal'
 [[resolve]]
+provider = "scb"
 register = "utrikeshandel"
 variable = "kvartal-period"
 column = "Period"
@@ -415,6 +467,7 @@ extend = "Period kvartal"
 
 # yrkesreg/yrkesverksam-under-aret col=YrkVerksStat  ::  vs2770 'Status för yrkesverksamma'; vs821 'Sysselsättningsstatus'
 [[resolve]]
+provider = "scb"
 register = "yrkesreg"
 variable = "yrkesverksam-under-aret"
 column = "YrkVerksStat"
