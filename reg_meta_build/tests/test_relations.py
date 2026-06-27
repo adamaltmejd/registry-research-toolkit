@@ -1175,6 +1175,42 @@ def _add_alias(
     conn.commit()
 
 
+def _add_alias_in_variant(
+    conn: sqlite3.Connection,
+    variable_slug: str,
+    delivery_column_name: str,
+    register_variant_id: int,
+) -> None:
+    """Like `_add_alias` but binds the observed column to an EXPLICIT delivering
+    variant (#846) — so a variable can observe different columns in different
+    variants and the variant-aware endpoint-liveness check can be exercised."""
+    vid = conn.execute(
+        "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+        (variable_slug,),
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",
+        (vid, register_variant_id, delivery_column_name),
+    )
+    conn.commit()
+
+
+def _representation_db_two_variants() -> sqlite3.Connection:
+    """`_representation_db()` (variant 10 `individer-15plus` observing
+    `DispInk04`/`DispInk10`) plus a SIBLING variant 20 `foretag` of the SAME
+    register where `dispink` observes a DIFFERENT column `OrgInk20`. Lets a
+    variant-scoped edge's endpoint liveness be checked PER variant: a `foretag`-
+    scoped edge on `OrgInk20` is live, but one on `DispInk04` (live only in the
+    sibling `individer-15plus`) is not."""
+    conn = _representation_db()
+    add_variant(
+        conn, register_variant_id=20, register_id=1, slug="foretag", name="Företag"
+    )
+    _add_alias_in_variant(conn, "dispink", "OrgInk20", 20)
+    return conn
+
+
 def _representation_rows(conn: sqlite3.Connection) -> list[tuple]:
     return [
         tuple(r)
@@ -1269,6 +1305,62 @@ class TestRejectNonmonotoneRepresentationCycles:
                 [("A", "B", 2010), ("B", "C", 2018), ("C", "A", 2014)]
             )
         assert exc.value.code == "replaced_by_cycle"
+
+    def test_self_loop_rejected(self) -> None:
+        # A column can't succeed itself: a self-loop A→A is a cycle and must be
+        # rejected even with a present year.
+        with pytest.raises(RegMetaError) as exc:
+            reject_nonmonotone_representation_cycles([("A", "A", 2010)])
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_cycle_into_finished_node_rejected(self) -> None:
+        # Codex's regression (#846): the white/gray/black DFS this replaced only
+        # validated a cycle on a GRAY (on-stack) back-edge, so a NON-monotone cycle
+        # reaching an already-FINISHED node fell through unchecked. Here a permitted
+        # monotone 2-cycle A↔C (2010/2020) and a non-monotone 3-cycle A→B→C→A share
+        # the node C; once the short cycle finishes C, the DFS would never validate
+        # the long one. SCC validation sees ONE tangled component {A,B,C} and
+        # rejects it (more than a single elementary loop), so the gap is closed.
+        with pytest.raises(RegMetaError) as exc:
+            reject_nonmonotone_representation_cycles(
+                [
+                    ("A", "C", 2010),
+                    ("C", "A", 2020),
+                    ("A", "B", 2010),
+                    ("B", "C", 2005),
+                    ("C", "A", 2020),
+                ]
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_two_interleaved_cycles_rejected(self) -> None:
+        # Two simple monotone cycles sharing nodes form one SCC that is NOT a single
+        # elementary loop (a node has two in-component successors) → rejected, even
+        # though each cycle in isolation would be a clean round-trip.
+        with pytest.raises(RegMetaError) as exc:
+            reject_nonmonotone_representation_cycles(
+                [
+                    ("A", "B", 2010),
+                    ("B", "A", 2012),
+                    ("B", "C", 2014),
+                    ("C", "B", 2016),
+                ]
+            )
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_two_disjoint_monotone_cycles_allowed(self) -> None:
+        # Two INDEPENDENT variant-scoped round-trips (disjoint node sets) are each a
+        # single elementary monotone loop → both permitted. Confirms SCC validation
+        # is per-component, not global.
+        reject_nonmonotone_representation_cycles(
+            [
+                ("A", "B", 2010),
+                ("B", "A", 2014),
+                ("C", "D", 2011),
+                ("D", "C", 2015),
+            ]
+        )
 
 
 class TestRepresentationReplacedByMaterialize:
@@ -1553,6 +1645,104 @@ class TestRepresentationReplacedByMaterialize:
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "replaced_by_unresolved_variant"
         assert _representation_rows(conn) == []
+
+    def test_variant_endpoint_live_in_scoped_variant_passes(self) -> None:
+        # #846 FIX 1: a `foretag`-scoped 2-cycle whose endpoints (`OrgInk20`) ARE
+        # observed in that variant is the genuine shape — it resolves and lands. The
+        # variant slug also resolves (a live register_variant). Distinct years keep
+        # it a permitted round-trip.
+        conn = _representation_db_two_variants()
+        _add_alias_in_variant(conn, "dispink", "OrgInk25", 20)
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "OrgInk20",
+                    "OrgInk25",
+                    year=2020,
+                    variant="foretag",
+                ),
+                _representation_edge(
+                    "scb/lisa/dispink",
+                    "scb/lisa/dispink",
+                    "OrgInk25",
+                    "OrgInk20",
+                    year=2025,
+                    variant="foretag",
+                ),
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["representation"] == 2
+
+    def test_variant_endpoint_live_only_in_sibling_variant_fails(self) -> None:
+        # #846 FIX 1: a `foretag`-scoped edge whose endpoint column `DispInk04` is
+        # live ONLY in the SIBLING variant `individer-15plus` (not in `foretag`)
+        # fails fast. Register-wide liveness alone would WRONGLY pass it — the
+        # variant-aware check is what catches the mistyped variant.
+        conn = _representation_db_two_variants()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk04",  # observed only in individer-15plus, not foretag
+                        "OrgInk20",
+                        year=2020,
+                        variant="foretag",
+                    )
+                ],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_unresolved_representation"
+        assert "foretag" in exc.value.message  # the message names the scoped variant
+        assert _representation_rows(conn) == []
+
+    def test_unscoped_round_trip_rejected(self) -> None:
+        # #846 FIX 2: an UNSCOPED (variant='') A→B (2014) + B→A (2018) round-trip is
+        # the VARIABLE-level grain, which must be strictly ACYCLIC — distinct years
+        # do NOT make it a permitted round-trip (only a variant-scoped cycle may be).
+        # Both endpoints resolve, so this is the cycle partition, not the unresolved
+        # guard.
+        conn = _representation_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk04",
+                        "DispInk10",
+                        year=2014,  # distinct years, but variable-level
+                    ),
+                    _representation_edge(
+                        "scb/lisa/dispink",
+                        "scb/lisa/dispink",
+                        "DispInk10",
+                        "DispInk04",
+                        year=2018,
+                    ),
+                ],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_cycle"
+        assert _representation_rows(conn) == []  # aborts before INSERT
 
     def test_duplicate_pending_deduped(self) -> None:
         # Two identical representation edges → one row, one skip.
