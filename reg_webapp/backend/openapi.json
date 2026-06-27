@@ -3020,6 +3020,28 @@
         "additionalProperties": false,
         "description": "A variable node: ONE node per variable, its full ``variable_state`` history\nas sub-structure (ordered ``(variant, valid_from)``; the run ids drive cells).\nNodes are variables \u2014 not states \u2014 because succession / related / same_as /\ngroup are all variable-grain and the FQID must map to exactly one node.",
         "properties": {
+          "definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Definition"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
           "facets": {
             "items": {
               "$ref": "#/components/schemas/GroupFacet"
@@ -3094,6 +3116,8 @@
           "fqid",
           "label",
           "group_key",
+          "definition",
+          "description",
           "states",
           "same_as",
           "facets",

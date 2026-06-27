@@ -117,6 +117,13 @@ class VariableGraphNode(_GraphNodeBase):
     group are all variable-grain and the FQID must map to exactly one node."""
 
     kind: Literal["variable"] = "variable"
+    # The variable's shared metadata (`ResolvedVariable.definition`/`description`) —
+    # the human-readable concept text. Carried on the node so a group page can surface
+    # its shared concept definition/description from the member union alone (#678),
+    # without a separate per-member resolve. None on a succession-chain edition node
+    # minted thin (no full resolve) — fine; those carry no metadata.
+    definition: str | None
+    description: str | None
     states: list[GraphState]
     same_as: list[SameAsRef]
     # The resolved variable's facet assignments WITHIN its canonical concept group
@@ -434,6 +441,8 @@ class _GraphBuilder:
             fqid=resolved.canonical_fqid,
             label=resolved.name or node_id,
             group_key=group_key,
+            definition=resolved.definition,
+            description=resolved.description,
             states=_graph_states(resolved.states),
             same_as=[
                 SameAsRef(fqid=ref.fqid, register=ref.register_name)
@@ -547,6 +556,8 @@ class _GraphBuilder:
                 fqid=edition.fqid,
                 label=edition.name or node_id,
                 group_key=None,
+                definition=None,
+                description=None,
                 states=[],
                 same_as=[],
                 facets=[],

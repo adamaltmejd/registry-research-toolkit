@@ -44,6 +44,8 @@ function variableNode(
     label: "Kön",
     group_key: null,
     group_label: null,
+    definition: null,
+    description: null,
     facets: [],
     states: [state()],
     same_as: [],

@@ -106,6 +106,8 @@ function graph(
     label: "Kön",
     group_key: null,
     group_label: null,
+    definition: null,
+    description: null,
     facets: [],
     states: [],
     same_as: [],

@@ -263,6 +263,64 @@ class TestEmptyGraph:
         assert all(s.variant_label == "Individer 15+" for s in node.states)
 
 
+# ── Node metadata (definition / description) ─────────────────────────────────
+
+
+class TestNodeMetadata:
+    def test_definition_description_flow_onto_variable_node(self) -> None:
+        # #678: the variable's shared concept text (`ResolvedVariable.definition` /
+        # `description`) is carried on its graph node so the group page can surface
+        # the shared concept definition/description from the member union alone. Seed
+        # them on the resolving variable + a meaningful representation change so the
+        # node renders.
+        conn = build_slugged_db()
+        conn.execute(
+            "UPDATE variable SET definition = ?, description = ? WHERE slug = 'kon'",
+            ("The legal sex of the individual.", "Coded one digit, SCB standard."),
+        )
+        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K")])
+        conn.execute("DELETE FROM variable_state")
+        for vf, vsid in (("2018-01-01", 1), ("2019-01-01", 2)):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=10,
+                valid_from=vf,
+                delivery_column_name="Kon",
+                value_set_id=vsid,
+            )
+        conn.commit()
+        (node,) = Catalog(conn).graph_for_fqid(_KON).nodes
+        assert isinstance(node, VariableGraphNode)
+        assert node.definition == "The legal sex of the individual."
+        assert node.description == "Coded one digit, SCB standard."
+
+    def test_metadata_absent_is_none(self) -> None:
+        # The seed leaves definition/description NULL → the node carries None (the
+        # common parallel-column-sibling case, which the group page dedups away).
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+        add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K")])
+        conn.execute("DELETE FROM variable_state")
+        for vf, vsid in (("2018-01-01", 1), ("2019-01-01", 2)):
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug="kon",
+                register_variant_id=10,
+                valid_from=vf,
+                delivery_column_name="Kon",
+                value_set_id=vsid,
+            )
+        conn.commit()
+        (node,) = Catalog(conn).graph_for_fqid(_KON).nodes
+        assert isinstance(node, VariableGraphNode)
+        assert node.definition is None
+        assert node.description is None
+
+
 # ── Representation runs ──────────────────────────────────────────────────────
 
 

@@ -51,8 +51,13 @@ function gstate(over: Partial<GraphState>): GraphState {
 }
 
 /** A variable graph node carrying the given fqid + states — a variable's column
- * source. */
-function vnode(fqid: string, states: GraphState[]): VariableGraphNode {
+ * source. `definition`/`description` default null (the common parallel-column
+ * sibling shape); pass them to seed the shared-concept-text dedup. */
+function vnode(
+  fqid: string,
+  states: GraphState[],
+  meta: { definition?: string | null; description?: string | null } = {},
+): VariableGraphNode {
   return {
     kind: "variable",
     id: fqid,
@@ -63,6 +68,8 @@ function vnode(fqid: string, states: GraphState[]): VariableGraphNode {
     facets: [],
     states,
     same_as: [],
+    definition: meta.definition ?? null,
+    description: meta.description ?? null,
   };
 }
 
@@ -787,5 +794,89 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect
       .element(page.getByRole("link", { name: /View/ }))
       .toHaveAttribute("href", "/catalog/scb/fordonsreg/naringsgren");
+  });
+
+  // ── Shared concept definition / description (#678) ───────────────────────────
+  it("renders the shared definition/description ONCE at the group level, even though a sibling carries null", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    // The canonical member (inkjan) carries the shared concept text; the parallel
+    // sibling (inkfeb) carries null — the dedup must NOT blank the block, and the
+    // single distinct value renders exactly once at the group level.
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode(
+          "scb/rams/inkjan",
+          [
+            gstate({
+              variant: "individer",
+              delivery_column_name: "Inkjan",
+              valid_from: "2010-01-01",
+              valid_to: "2015-12-31",
+            }),
+          ],
+          {
+            definition: "Annual disposable income of the individual.",
+            description: "Summed across all income sources, SCB standard.",
+          },
+        ),
+        vnode("scb/rams/inkfeb", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "Inkfeb",
+            valid_from: "2018-01-01",
+            valid_to: "2020-12-31",
+          }),
+        ]),
+      ]),
+    );
+
+    renderGroup();
+
+    // The shared block renders ABOVE the Technical details disclosure (not inside it).
+    const sharedMeta = await vi.waitFor(() => {
+      const els = [...document.querySelectorAll("dl.meta")].filter(
+        (dl) => !dl.closest("details.tech-details"),
+      );
+      if (els.length === 0) {
+        throw new Error("shared meta block not yet rendered");
+      }
+      return els;
+    });
+    expect(sharedMeta).toHaveLength(1);
+    const block = sharedMeta[0];
+    // Each label appears exactly once — the null sibling did not add or blank it.
+    expect(block.querySelectorAll("dt")).toHaveLength(2);
+    const dts = [...block.querySelectorAll("dt")].map((dt) => dt.textContent);
+    expect(dts).toEqual(["Definition", "Description"]);
+    await expect
+      .element(
+        page.getByText("Annual disposable income of the individual.", {
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByText("Summed across all income sources, SCB standard.", {
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+  });
+
+  it("renders no shared-meta block when every member's definition/description is null", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    renderGroup();
+
+    // Wait for the page to render (the picker rows), then assert no shared block.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Inkomst januari/ }))
+      .toBeVisible();
+    const sharedMeta = [...document.querySelectorAll("dl.meta")].filter(
+      (dl) => !dl.closest("details.tech-details"),
+    );
+    expect(sharedMeta).toHaveLength(0);
   });
 });

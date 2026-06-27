@@ -104,6 +104,33 @@ const nodesByFqid = $derived.by(() => {
   return map;
 });
 
+// ── Shared concept definition / description (#678) ───────────────────────────
+// The group page's missing descriptive context: each MEMBER variable node carries
+// its own `definition`/`description` (the variable-level concept text). Most
+// parallel-column siblings carry null — that's expected — but the canonical member
+// usually carries the one definition the whole group shares. Collect the DISTINCT
+// non-empty values across the MEMBER nodes (scoped to `node.members`, so a
+// succession/related neighbour the graph union pulls in never leaks its text here):
+// typically exactly one (rendered once at the group level); zero → render nothing;
+// several distinct → render each (rare today).
+function distinctMemberMeta(field: "definition" | "description"): string[] {
+  if (!node) {
+    return [];
+  }
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const member of node.members) {
+    const value = nodesByFqid.get(member.fqid)?.[field]?.trim();
+    if (value && !seen.has(value)) {
+      seen.add(value);
+      out.push(value);
+    }
+  }
+  return out;
+}
+const sharedDefinitions = $derived(distinctMemberMeta("definition"));
+const sharedDescriptions = $derived(distinctMemberMeta("description"));
+
 /** The in-this-group facet label for a member (e.g. "AGI · 2007 SNI edition"),
  * joined from its facets, or null when the member carries none (an ungrouped /
  * axis-less member — its name suffices). */
@@ -267,6 +294,25 @@ function commitSelected(selected: PickerSelection[]): void {
   </p>
 {:else if node}
   {#snippet description()}
+    <!-- #678: the SHARED concept definition/description, deduplicated across the
+         member variable nodes (most siblings carry null; the canonical member
+         carries the one the group shares). Rendered as a clean labelled block at the
+         TOP of the page — mirroring the binding leaf's Definition/Description
+         presentation — ABOVE the Technical details disclosure, giving the group its
+         missing descriptive context. Hidden entirely when no member carries either. -->
+    {#if sharedDefinitions.length > 0 || sharedDescriptions.length > 0}
+      <dl class="meta">
+        {#each sharedDefinitions as definition}
+          <dt>Definition</dt>
+          <dd>{definition}</dd>
+        {/each}
+        {#each sharedDescriptions as description}
+          <dt>Description</dt>
+          <dd>{description}</dd>
+        {/each}
+      </dl>
+    {/if}
+
     <!-- The group's key, facets, and source are all build-derivation metadata, not
          researcher-facing — so all three are demoted together behind the "Technical
          details" disclosure. The page then leads with the title + member bands. -->

@@ -761,6 +761,8 @@ function focusNode(over: Partial<VariableGraphNode> = {}): VariableGraphNode {
     label: "Näringsgren, största förvärvskälla",
     group_key: null,
     group_label: null,
+    definition: null,
+    description: null,
     facets: [],
     states: [],
     same_as: [],
