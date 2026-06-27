@@ -1048,6 +1048,16 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
 - **`.ui-btn` global hook.** `Button` delegates element rendering to Bits UI, so its
   variant/size styles are `:global(.ui-btn …)` — scoped through the `ui-btn` namespace
   this component owns, not a generic `.btn` that stray usage could inherit.
+- **`.micro-label` global utility.** The tracked-uppercase eyebrow (font-size,
+  letter-spacing, text-transform, font-weight 600, muted color) is the design system's
+  first cross-component global utility class, defined in `lib/ui/utilities.css` and
+  imported in `main.ts` after `tokens.css`. It composes the `--micro-label-*` tokens —
+  tokens remain the source of truth; the class de-duplicates the composed rule that was
+  re-typed across seven components. A cross-component eyebrow can't be owned by one
+  component, so it gets a shared global stylesheet (the same home a future `sr-only`
+  utility would share). The one consumer that keeps an inline copy is `DataTable`'s
+  `td:not(.first)::before` stacked-card column-label: a CSS-generated pseudo-element
+  can't take a class, and plain CSS has no mixin — that copy is kept in sync by comment.
 
 ### Migration discipline
 

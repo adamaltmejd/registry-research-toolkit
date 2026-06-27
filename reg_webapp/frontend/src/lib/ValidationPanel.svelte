@@ -90,7 +90,7 @@ const LEVEL_LABEL: Record<Level, string> = {
     {#each LEVELS as level (level)}
       {#if grouped[level].length > 0}
         <div class="group {level}">
-          <h4>{LEVEL_LABEL[level]} ({grouped[level].length})</h4>
+          <h4 class="micro-label">{LEVEL_LABEL[level]} ({grouped[level].length})</h4>
           <ul>
             {#each grouped[level] as issue, i (`${issue.code}|${issue.path}|${i}`)}
               {@const loc = findingLocation(issue.path, sources)}
@@ -155,15 +155,8 @@ const LEVEL_LABEL: Record<Level, string> = {
   .group {
     margin-top: var(--space-4);
   }
-  /* Tracked uppercase eyebrow — the micro-label hierarchy device the design
-     system uses for section/table headers. */
   .group h4 {
     margin: 0 0 var(--space-2);
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
   }
   .group ul {
     list-style: none;

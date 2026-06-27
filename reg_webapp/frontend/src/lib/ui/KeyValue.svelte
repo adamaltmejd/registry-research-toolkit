@@ -29,7 +29,7 @@ let { rows = [], value }: Props = $props();
        makes index keys correct here (matches Breadcrumbs.svelte). -->
   {#each rows as row, i (i)}
     <div class="kv-row">
-      <dt>{row.label}</dt>
+      <dt class="micro-label">{row.label}</dt>
       <dd class:mono={row.mono}>
         {#if value}{@render value(row)}{:else}{row.value ?? ""}{/if}
       </dd>
@@ -48,13 +48,6 @@ let { rows = [], value }: Props = $props();
     grid-template-columns: minmax(8rem, max-content) 1fr;
     gap: var(--space-3);
     align-items: baseline;
-  }
-  dt {
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
   }
   dd {
     margin: 0;

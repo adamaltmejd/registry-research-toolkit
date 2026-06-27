@@ -109,7 +109,7 @@ $effect(() => {
         r.purpose,
       ])}
       <h2>{nodeLabel(node)}</h2>
-      <h3 class="section-eyebrow">Registers</h3>
+      <h3 class="section-eyebrow micro-label">Registers</h3>
       {#if node.children.length > 0}
         <FilterInput
           bind:value={filter}
@@ -150,7 +150,7 @@ $effect(() => {
       {#if node.purpose}<p class="purpose-text">{node.purpose}</p>{/if}
       <!-- "Variables" is the researcher-facing label for this list; the code/API
            term is "binding" (the addressable variable leaf) — display copy only. -->
-      <h3 class="section-eyebrow">Variables</h3>
+      <h3 class="section-eyebrow micro-label">Variables</h3>
       {#if rows.length > 0}
         <!-- Counts stay in VARIABLE units after folding (a group row counts its
              members), so the "x of y" readout still reflects register size. -->
@@ -207,7 +207,7 @@ $effect(() => {
            edition-chain panel. -->
       {@const clsRows = foldGroupedRows(node.children, node.groups)}
       <h2>{nodeLabel(node)}</h2>
-      <h3 class="section-eyebrow">Classifications</h3>
+      <h3 class="section-eyebrow micro-label">Classifications</h3>
       {#if clsRows.length > 0}
         <ul class="children table">
           {#each clsRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
@@ -254,15 +254,11 @@ $effect(() => {
 {/if}
 
 <style>
-  /* Tracked uppercase section eyebrow — the same micro-label hierarchy device
-     Panel/DataTable headers use. It differentiates the list LEVEL (registers
-     under a provider vs variables under a register vs classifications). */
+  /* The section eyebrow carries the shared `.micro-label` utility for its
+     tracked-uppercase styling; only its list-level spacing is local. It
+     differentiates the list LEVEL (registers under a provider vs variables under
+     a register vs classifications). */
   .section-eyebrow {
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
     margin: var(--space-4) 0 var(--space-2);
   }
   /* The register's own subject text (register arm). */

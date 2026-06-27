@@ -22,7 +22,7 @@ let { title, meta, children }: Props = $props();
 
 <section class="panel">
   <header class="panel-header">
-    <h2 class="panel-title">
+    <h2 class="panel-title micro-label">
       {#if typeof title === "string"}{title}{:else}{@render title()}{/if}
     </h2>
     {#if meta}<div class="panel-meta">{@render meta()}</div>{/if}
@@ -48,11 +48,6 @@ let { title, meta, children }: Props = $props();
   }
   .panel-title {
     margin: 0;
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
   }
   .panel-meta {
     display: flex;
