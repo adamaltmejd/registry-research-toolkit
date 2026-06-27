@@ -17,6 +17,7 @@ import struct
 import sys
 import time
 from contextlib import contextmanager
+from datetime import date, timedelta
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.db import (
@@ -3043,6 +3044,191 @@ def _reinsert_core_graph_from_ir(
     )
 
 
+def _next_day(iso_date: str, *, column: str | None) -> str:
+    """The ISO date immediately after `iso_date` (closed-window adjacency).
+
+    Stdlib date math, not string slicing: '2009-12-31' → '2010-01-01' must roll
+    the month and year correctly. `variable_state` stores full `YYYY-MM-DD`
+    strings, so `date.fromisoformat` round-trips losslessly.
+
+    The period grammar can synthesize a non-leap `YYYY-02-29` upper bound
+    (`reg_meta.fqid._MONTH_LAST_DAY["02"] = "29"` for a bare `YYYY-02` month),
+    which `date.fromisoformat` rejects with a raw `ValueError`. No current
+    sub-annual end reaches `variable_state.valid_to`, so it is latent — but guard
+    it: a bare `ValueError` escaping the build is unactionable, so re-raise it as a
+    stable-exit `RegMetaError` naming the column and the grammar-aware-dates
+    follow-up (#868).
+    """
+    try:
+        return (date.fromisoformat(iso_date) + timedelta(days=1)).isoformat()
+    except ValueError as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="codeless_fullcover_invalid_date",
+            error_class="configuration",
+            message=(
+                "A code-bearing window bound is not a real calendar date "
+                f"({iso_date!r}"
+                + (f" on delivery column {column!r}" if column else "")
+                + "). The period grammar can synthesize a non-leap "
+                "'YYYY-02-29' upper bound, which date arithmetic rejects."
+            ),
+            remediation=(
+                "Resolve the grammar-aware sub-annual date bounds (#868) so "
+                "synthesized '-02-29' ends don't reach variable_state, or curate "
+                "this column's windows to real calendar dates."
+            ),
+        ) from exc
+
+
+def _drop_fullcover_codeless_states(conn: sqlite3.Connection) -> None:
+    """Delete code-less `variable_state` rows fully covered by code-bearing siblings.
+
+    The automatic subset of the code-less ↔ code-bearing overlap class (epic #858,
+    characterized in #866). A code-less state (`value_set_id IS NULL`) whose
+    validity window is FULLY COVERED by the union of overlapping code-bearing
+    states (`value_set_id IS NOT NULL`) on the SAME `(variable_id,
+    register_variant_id, delivery_column_name)` is a redundant shadow: the window
+    stays coded either way, the code-less state carries no codes, so deleting it is
+    lossless. PARTIAL coverage (a residual span extending into uncoded years — an
+    "edge" or "interior" gap) is curation (#868), left untouched here — this pass
+    never caps, splits, or retrims.
+
+    Provider-blind, deterministic, run inside the materialize transaction
+    immediately after the core graph is re-inserted and before any downstream state
+    consumer (lineage, code_variable_map, slugs, classification backfill).
+
+    The coverage test is a MONOTONIC walk, not an end-test: code-bearing windows on
+    one key are NOT guaranteed disjoint — `_check_one_value_set_per_period` only
+    forbids *distinct*-value_set overlaps, so two *same*-`value_set_id` code-bearing
+    windows can overlap or nest. A nested window must not move the coverage cursor
+    backward and fake a gap, so the cursor only ever advances
+    (`cursor = max(cursor, window_end)`); see `_codeless_window_fully_covered`.
+    """
+    # Code-less states paired with each overlapping code-bearing state on the same
+    # key. `IS` is SQLite's null-safe equality so two NULL delivery columns still
+    # match column-wise; closed-interval intersection mirrors
+    # `_check_one_value_set_per_period` in validate.py. One row per overlapping
+    # (code-less, code-bearing) pair — grouped in Python per code-less state.
+    rows = conn.execute(
+        "SELECT cl.state_id, cl.variable_id, cl.delivery_column_name, "
+        "       cl.valid_from, cl.valid_to, cb.valid_from, cb.valid_to "
+        "FROM variable_state cl "
+        "JOIN variable_state cb "
+        "  ON cl.variable_id = cb.variable_id "
+        " AND cl.register_variant_id = cb.register_variant_id "
+        " AND cl.delivery_column_name IS cb.delivery_column_name "
+        " AND cl.value_set_id IS NULL "
+        " AND cb.value_set_id IS NOT NULL "
+        " AND cl.valid_from <= cb.valid_to AND cb.valid_from <= cl.valid_to "
+        "ORDER BY cl.state_id"
+    ).fetchall()
+    if not rows:
+        return
+
+    by_state: dict[int, dict[str, Any]] = {}
+    for state_id, variable_id, column, cl_from, cl_to, cb_from, cb_to in rows:
+        entry = by_state.setdefault(
+            state_id,
+            {
+                "variable_id": variable_id,
+                "column": column,
+                "from": cl_from,
+                "to": cl_to,
+                "cb": [],
+            },
+        )
+        entry["cb"].append((cb_from, cb_to))
+
+    deleted = 0
+    for state_id, entry in by_state.items():
+        if not _codeless_window_fully_covered(
+            entry["from"], entry["to"], entry["cb"], column=entry["column"]
+        ):
+            # Partially covered → a residual span extends into uncoded years.
+            # That is curation (#868); leave the state untouched.
+            continue
+
+        # Fully covered → the code-less state is a redundant shadow; delete it.
+        # Orphan tripwire: the covering code-bearing state shares this
+        # `variable_id` (the overlap JOIN keys on it), so a surviving sibling
+        # always exists and `survivors >= 1` holds by construction. The guard
+        # exists so a future change to the overlap key (e.g. a cross-variable
+        # match) can't silently delete a variable's last state.
+        survivors = conn.execute(
+            "SELECT COUNT(*) FROM variable_state "
+            "WHERE variable_id = ? AND state_id <> ?",
+            (entry["variable_id"], state_id),
+        ).fetchone()[0]
+        if survivors == 0:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="codeless_fullcover_would_orphan_variable",
+                error_class="configuration",
+                message=(
+                    "Deleting a fully-covered code-less state would remove the "
+                    f"LAST remaining state of variable_id={entry['variable_id']} "
+                    f"(state_id={state_id}). The covering code-bearing state should "
+                    "survive on the same key; an orphaning delete signals a "
+                    "coalescer/IR bug."
+                ),
+                remediation=(
+                    "Inspect the variable's states; the code-bearing state that "
+                    "covers this window must be present on the same "
+                    "(variable, variant, delivery_column)."
+                ),
+            )
+        conn.execute("DELETE FROM variable_state WHERE state_id = ?", (state_id,))
+        deleted += 1
+
+    _progress(f"  dropped fully-covered code-less states: {deleted:,} deleted")
+
+
+def _codeless_window_fully_covered(
+    cl_from: str,
+    cl_to: str,
+    windows: list[tuple[str, str]],
+    *,
+    column: str | None,
+) -> bool:
+    """Is `[cl_from, cl_to]` (closed) fully covered by the union of `windows`?
+
+    Monotonic coverage walk. The code-bearing `windows` are clipped to
+    `[cl_from, cl_to]` and sorted by start; a cursor advances from `cl_from`:
+
+      - a window starting after the day AFTER `cursor` leaves an uncovered gap →
+        NOT fully covered;
+      - otherwise the window is adjacent or overlapping; extend the cursor with
+        `max(cursor, window_end)` so a nested or out-of-order same-value_set window
+        (allowed — see `_drop_fullcover_codeless_states`) can never move it
+        backward and fake a gap.
+
+    Fully covered iff the cursor reaches `cl_to`.
+
+    Fast path: when a single clipped window already spans `[cl_from, cl_to]` the
+    answer is a pure string comparison with no date math — `_next_day`'s
+    `date.fromisoformat` (and its `-02-29` guard) is only reached when adjacency
+    between two consecutive windows actually has to be tested.
+    """
+    if not windows:
+        return False
+    clipped = sorted(
+        (max(w_from, cl_from), min(w_to, cl_to)) for w_from, w_to in windows
+    )
+    cursor = ""  # sentinel: nothing covered yet (every real ISO date sorts after)
+    for w_from, w_to in clipped:
+        if cursor == "":
+            if w_from > cl_from:
+                return False  # gap before the first window's start
+        elif w_from > _next_day(cursor, column=column):
+            return False  # gap between this window and the covered prefix
+        if w_to > cursor:
+            cursor = w_to
+        if cursor >= cl_to:
+            return True
+    return cursor >= cl_to
+
+
 def _provider_id_for(provider: str) -> int:
     """Map an IR provider slug to its stable `provider.provider_id` seed value."""
     for pid, slug, _name in _PROVIDER_SEED:
@@ -3293,6 +3479,16 @@ def materialize(
         aliases=aliases,
     )
     _emit_timing("reinsert_core_graph", _t)
+
+    # Drop redundant code-less shadows (#867): a code-less state whose window is
+    # fully covered by overlapping code-bearing states on the same key carries no
+    # codes and the window stays coded — deleting it is lossless. MUST run before
+    # any downstream state consumer (lineage, code_variable_map, slugs,
+    # classification backfill) reads `variable_state`. Partial coverage is left for
+    # curation (#868).
+    _t = time.perf_counter()
+    _drop_fullcover_codeless_states(conn)
+    _emit_timing("drop_fullcover_codeless", _t)
 
     # Provider gate shared by the curated passes below: classifications and
     # concept-group families whose provider isn't in this build are skipped,
