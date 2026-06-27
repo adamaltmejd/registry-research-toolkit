@@ -14,6 +14,7 @@ import {
   breadcrumbs,
   catalogHref,
   classGroupHref,
+  clusterBands,
   commonLabelStem,
   coverageFromStates,
   DATA_BROWSER_LABEL,
@@ -2256,6 +2257,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     // are hoisted off (the title / breadcrumb carry them).
     expect(bands[0].primary).toEqual({ text: "Kon", mono: true });
     expect(bands[0].primaryIsColumn).toBe(true);
+    expect(bands[0].primaryIsFacet).toBe(false);
     expect(showName).toBe(false);
     expect(showPrefix).toBe(false);
   });
@@ -2272,6 +2274,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands[0].primary).toEqual({ text: "Yrke", mono: false });
     expect(bands[0].primaryIsColumn).toBe(false);
+    expect(bands[0].primaryIsFacet).toBe(false);
   });
 
   it("a name-constant group leads each band with its distinguishing COLUMN (mono)", () => {
@@ -2285,6 +2288,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     expect(bands.map((b) => b.primary.text)).toEqual(["Ng0", "Ng1", "Sni"]);
     expect(bands.every((b) => b.primary.mono)).toBe(true);
     expect(bands.every((b) => b.primaryIsColumn)).toBe(true);
+    expect(bands.every((b) => b.primaryIsFacet)).toBe(false);
     // Name + prefix are constant → hoisted off every band.
     expect(showName).toBe(false);
     expect(showPrefix).toBe(false);
@@ -2301,8 +2305,10 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands[0].primary).toEqual({ text: "sun2020niva", mono: true });
     expect(bands[0].primaryIsColumn).toBe(false);
+    expect(bands[0].primaryIsFacet).toBe(false);
     // Its single-column sibling still leads with its column chip identity.
     expect(bands[1].primaryIsColumn).toBe(true);
+    expect(bands[1].primaryIsFacet).toBe(false);
   });
 
   it("a facet group leads each band with its FACET label (normal weight)", () => {
@@ -2318,6 +2324,9 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands.every((b) => b.primary.mono)).toBe(false);
     expect(bands.every((b) => b.primaryIsColumn)).toBe(false);
+    // The primary IS the facet → `primaryIsFacet` true, so the row suppresses the
+    // redundant facet repeat in its `.sub` context (#901).
+    expect(bands.every((b) => b.primaryIsFacet)).toBe(true);
   });
 
   it("genuinely different concepts lead with the NAME and keep it visible", () => {
@@ -2327,6 +2336,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands.map((b) => b.primary.text)).toEqual(["Inkomst", "Ålder"]);
     expect(bands.every((b) => b.primary.mono)).toBe(false);
+    expect(bands.every((b) => b.primaryIsFacet)).toBe(false);
     // The name varies → it IS the distinguisher, so it stays as the primary (not
     // double-shown as secondary; `showNameSecondary` in the band guards the echo).
     expect(showName).toBe(true);
@@ -2339,6 +2349,166 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(showName).toBe(true);
     expect(showPrefix).toBe(false);
+  });
+});
+
+describe("clusterBands (#901 de-duplicate member presentation)", () => {
+  const band = (
+    over: Partial<{
+      name: string;
+      registerPrefix: string;
+      facetLabel: string | null;
+      distinguisher: string;
+      distinguisherIsColumn: boolean;
+    }> = {},
+  ) => ({
+    name: "Disponibel inkomst",
+    registerPrefix: "scb/iot",
+    facetLabel: null,
+    distinguisher: "CDISP",
+    distinguisherIsColumn: true,
+    ...over,
+  });
+  const id = (b: ReturnType<typeof band>) => b;
+
+  it("a name-CONSTANT group is ONE cluster with no headings (today's behavior)", () => {
+    // The homogeneous moms/naringsgren shape: every member shares the name → one
+    // cluster, so `showClusterHeadings` is false (the name is already the page <h2>)
+    // and the cluster's own labeling leads each band with its column distinguisher.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [band({ distinguisher: "Ng0" }), band({ distinguisher: "Ng1" })],
+      id,
+    );
+    expect(showClusterHeadings).toBe(false);
+    expect(clusters).toHaveLength(1);
+    expect(clusters[0].name).toBe("Disponibel inkomst");
+    // Inside the cluster the name is constant → bands lead with the column.
+    expect(clusters[0].labeling.bands.map((b) => b.primary.text)).toEqual([
+      "Ng0",
+      "Ng1",
+    ]);
+    expect(clusters[0].labeling.showName).toBe(false);
+  });
+
+  it("a single band is ONE cluster with no heading (the leaf)", () => {
+    const { clusters, showClusterHeadings } = clusterBands([band()], id);
+    expect(showClusterHeadings).toBe(false);
+    expect(clusters).toHaveLength(1);
+  });
+
+  it("a heterogeneous group clusters by name and shows headings", () => {
+    // The #901 disponibel-inkomst shape: several distinct names, each repeated. Group
+    // by name → one cluster per distinct name (headings shown), and WITHIN each
+    // cluster the (now constant) name is hoisted so the band leads with its column.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [
+        band({ name: "Disponibel inkomst", distinguisher: "CDISP04HB" }),
+        band({ name: "Disponibel inkomst, familj", distinguisher: "DINF" }),
+        band({ name: "Disponibel inkomst", distinguisher: "CDISPHB" }),
+        band({ name: "Disponibel inkomst, familj", distinguisher: "DINKF" }),
+      ],
+      id,
+    );
+    expect(showClusterHeadings).toBe(true);
+    // Clusters appear in first-seen name order; bands keep input order within.
+    expect(clusters.map((c) => c.name)).toEqual([
+      "Disponibel inkomst",
+      "Disponibel inkomst, familj",
+    ]);
+    expect(clusters[0].bands.map((b) => b.distinguisher)).toEqual([
+      "CDISP04HB",
+      "CDISPHB",
+    ]);
+    expect(clusters[1].bands.map((b) => b.distinguisher)).toEqual([
+      "DINF",
+      "DINKF",
+    ]);
+    // Each cluster's name is constant → its bands lead with their distinguishing
+    // COLUMN, the name hoisted off (showName false) to the heading.
+    expect(clusters[0].labeling.showName).toBe(false);
+    expect(clusters[0].labeling.bands.map((b) => b.primary.text)).toEqual([
+      "CDISP04HB",
+      "CDISPHB",
+    ]);
+    expect(clusters[1].labeling.bands.map((b) => b.primary.text)).toEqual([
+      "DINF",
+      "DINKF",
+    ]);
+  });
+
+  it("a singleton-name member still earns its own heading", () => {
+    // A name that appears once is its own cluster — with several distinct names the
+    // group still shows headings, so that singleton renders its name once uniformly.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [
+        band({ name: "Disponibel inkomst", distinguisher: "CDISP" }),
+        band({ name: "Delkomponent", distinguisher: "DIND" }),
+      ],
+      id,
+    );
+    expect(showClusterHeadings).toBe(true);
+    expect(clusters.map((c) => c.name)).toEqual([
+      "Disponibel inkomst",
+      "Delkomponent",
+    ]);
+    expect(clusters.every((c) => c.bands.length === 1)).toBe(true);
+  });
+
+  it("a lone multi-column band in a heading group leads with its distinguisher, not the (heading) name (#901)", () => {
+    // The disponibel-inkomst regression: a heterogeneous group (headings shown) where
+    // one name maps to a SINGLE multi-column band (`distinguisherIsColumn: false`).
+    // `bandLabeling([band])` falls through to the lone-band name fallback and would lead
+    // it with `band.name` — but that name is ALSO the cluster heading, so it would show
+    // twice. clusterBands re-leads that band with its slug distinguisher (mono, not a
+    // column), so the name appears ONLY in the heading.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [
+        band({
+          name: "Delkomponent, 2004 års definition",
+          distinguisher: "delkomponent-2004",
+          distinguisherIsColumn: false,
+        }),
+        band({ name: "Disponibel inkomst", distinguisher: "CDISP" }),
+      ],
+      id,
+    );
+    expect(showClusterHeadings).toBe(true);
+    const lone = clusters[0];
+    expect(lone.name).toBe("Delkomponent, 2004 års definition");
+    expect(lone.bands).toHaveLength(1);
+    // Leads with the slug distinguisher (NOT the name), as a mono non-column primary.
+    expect(lone.labeling.bands[0].primary.text).toBe("delkomponent-2004");
+    expect(lone.labeling.bands[0].primary.mono).toBe(true);
+    expect(lone.labeling.bands[0].primaryIsColumn).toBe(false);
+    // The re-led primary is the slug distinguisher, not a facet.
+    expect(lone.labeling.bands[0].primaryIsFacet).toBe(false);
+  });
+
+  it("a single-CLUSTER group does NOT re-lead a lone band (the name/column still leads)", () => {
+    // Guard the regression: with ONE cluster (no headings) the lone leaf must still lead
+    // exactly as before — a single-column leaf leads with its COLUMN, a multi-column leaf
+    // with its NAME — never re-led by the heading-only fix.
+    const single = clusterBands([band({ distinguisher: "CDISP" })], id);
+    expect(single.showClusterHeadings).toBe(false);
+    // Single-column leaf → leads with its column (today's behavior, unchanged).
+    expect(single.clusters[0].labeling.bands[0].primary.text).toBe("CDISP");
+    expect(single.clusters[0].labeling.bands[0].primaryIsColumn).toBe(true);
+
+    const multi = clusterBands(
+      [
+        band({
+          distinguisher: "agi-multi",
+          distinguisherIsColumn: false,
+        }),
+      ],
+      id,
+    );
+    expect(multi.showClusterHeadings).toBe(false);
+    // Lone multi-column leaf → leads with its NAME (no heading to dedup against).
+    expect(multi.clusters[0].labeling.bands[0].primary.text).toBe(
+      "Disponibel inkomst",
+    );
+    expect(multi.clusters[0].labeling.bands[0].primary.mono).toBe(false);
   });
 });
 

@@ -1432,6 +1432,11 @@ export interface BandLabel {
    * chip-link and drops the redundant "column …" from its context. False for the
    * slug fallback (a genuinely multi-column member leads with a plain mono slug). */
   primaryIsColumn: boolean;
+  /** True when the primary IS this band's `facetLabel` (the facet-varies branch, or
+   * the lone-band facet fallback) — the band leads with the facet, so a SINGLE-column
+   * band drops the redundant repeat of that same facet from its row context. False for
+   * every other primary (name / column / slug / "—"). */
+  primaryIsFacet: boolean;
 }
 
 /** The adaptive labeling across a group's member bands (#678 inc 2): `showName` /
@@ -1461,12 +1466,17 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
     // The leading identity: first varying dimension, then a single-band fallback
     // chain (name → facet → distinguisher) so the leaf leads with its name.
     if (nameVaries) {
-      return { primary: { text: b.name, mono: false }, primaryIsColumn: false };
+      return {
+        primary: { text: b.name, mono: false },
+        primaryIsColumn: false,
+        primaryIsFacet: false,
+      };
     }
     if (facetVaries && b.facetLabel) {
       return {
         primary: { text: b.facetLabel, mono: false },
         primaryIsColumn: false,
+        primaryIsFacet: true,
       };
     }
     // Name + facet constant across bands → lead with the distinguisher (the column
@@ -1480,22 +1490,29 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
       return {
         primary: { text: b.distinguisher, mono: true },
         primaryIsColumn: b.distinguisherIsColumn,
+        primaryIsFacet: false,
       };
     }
     // A lone MULTI-column leaf has no single column to lead with → the variable name
     // (its columns are the rows beneath). Then facet, then the distinguisher fallback.
     if (b.name) {
-      return { primary: { text: b.name, mono: false }, primaryIsColumn: false };
+      return {
+        primary: { text: b.name, mono: false },
+        primaryIsColumn: false,
+        primaryIsFacet: false,
+      };
     }
     if (b.facetLabel) {
       return {
         primary: { text: b.facetLabel, mono: false },
         primaryIsColumn: false,
+        primaryIsFacet: true,
       };
     }
     return {
       primary: { text: b.distinguisher || "—", mono: true },
       primaryIsColumn: b.distinguisherIsColumn && !!b.distinguisher,
+      primaryIsFacet: false,
     };
   });
 
@@ -1504,6 +1521,90 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
     showPrefix: prefixVaries,
     bands: labels,
   };
+}
+
+/** One name-cluster of member bands (#901): the bands sharing a `name`, plus the
+ * per-cluster `bandLabeling` output for THOSE bands (so each leads with what varies
+ * WITHIN the cluster — its facet → column/slug — the name now constant and hoisted
+ * off). `bands` carries the original `T` items in first-appearance order; `labeling`
+ * is index-aligned with them. */
+export interface BandCluster<T> {
+  name: string;
+  bands: T[];
+  labeling: ReturnType<typeof bandLabeling>;
+}
+
+/** Cluster member bands by `name` and label each cluster independently (#901).
+ *
+ * `bandLabeling` decides the leading identity GLOBALLY — `nameVaries` is true as soon
+ * as TWO distinct names appear, which makes every band in a heterogeneous group lead
+ * with its (often repeated) name and bury the real distinguisher (facet/column). The
+ * fix is to group by name FIRST, then run the existing per-band labeling per cluster:
+ * inside a cluster the name is constant, so `bandLabeling` falls through to leading
+ * each band with its facet → column/slug exactly as it already does for a homogeneous
+ * group — no parallel labeling path.
+ *
+ * `showClusterHeadings` is true iff there is more than one cluster: a single cluster
+ * (every member shares the name — the homogeneous group, or the one-member leaf) keeps
+ * today's chromeless rendering (the name is already the page title), while a
+ * heterogeneous group renders each name ONCE as a group heading over its
+ * distinguisher-led bands. A singleton cluster (a name with one band) still earns its
+ * one heading, uniformly.
+ *
+ * Order is preserved on both axes: clusters appear in the order their name is first
+ * seen, and bands within a cluster keep their input order. `name` is read as
+ * `identityOf(band).name` (the same value `BandIdentity.name` carries) so the heading
+ * text matches the hoisted-off identity.
+ *
+ * When headings ARE shown, a cluster holding a SINGLE multi-column band would have its
+ * `bandLabeling([band])` fall through to the lone-band name fallback and lead that band
+ * with `band.name` — which is ALSO the cluster heading, so the name would render twice
+ * (#901 fix). In that case the band's label is re-led with its `distinguisher` (the
+ * member slug, mono) so the name appears only in the heading — consistent with how a
+ * multi-column member in a MULTI-band cluster already leads with its slug. */
+export function clusterBands<T>(
+  bands: readonly T[],
+  identityOf: (band: T) => BandIdentity,
+): { clusters: BandCluster<T>[]; showClusterHeadings: boolean } {
+  const byName = new Map<string, T[]>();
+  for (const band of bands) {
+    const name = identityOf(band).name;
+    const existing = byName.get(name);
+    if (existing) {
+      existing.push(band);
+    } else {
+      byName.set(name, [band]);
+    }
+  }
+  const showClusterHeadings = byName.size > 1;
+  const clusters = [...byName].map(([name, members]): BandCluster<T> => {
+    const labeling = bandLabeling(members.map(identityOf));
+    // With a heading shown, a lone multi-column band falls through to the name
+    // fallback and leads with `band.name` — the SAME text as the cluster heading, so
+    // it would render twice (#901). Re-lead that band with its distinguisher (the
+    // member slug, mono) so the name shows only in the heading. Skip any band with no
+    // distinguisher (no slug to lead with → keep the name fallback). A multi-band
+    // cluster already leads with the distinguisher, so this only ever rewrites the
+    // lone-band fallback case.
+    if (showClusterHeadings) {
+      labeling.bands = labeling.bands.map((label, i) => {
+        if (label.primary.text !== name) {
+          return label;
+        }
+        const identity = identityOf(members[i]);
+        if (identity.distinguisher === "") {
+          return label;
+        }
+        return {
+          primary: { text: identity.distinguisher, mono: true },
+          primaryIsColumn: identity.distinguisherIsColumn,
+          primaryIsFacet: false,
+        };
+      });
+    }
+    return { name, bands: members, labeling };
+  });
+  return { clusters, showClusterHeadings };
 }
 
 /** The active period window the picker DIMS against, as an inclusive year pair

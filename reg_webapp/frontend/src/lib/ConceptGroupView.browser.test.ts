@@ -217,12 +217,20 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(rows).toHaveLength(2);
     expect(document.querySelectorAll("li.subhead")).toHaveLength(0);
 
-    // Each row is a selectable checkbox carrying the member's column.
+    // The two members carry DISTINCT names → one name-CLUSTER each (#901), so each
+    // name renders ONCE as a group heading and its band leads with its delivery
+    // COLUMN (the name hoisted to the heading), not the repeated name.
+    const headings = [...document.querySelectorAll(".cluster-head h3")].map(
+      (h) => h.textContent?.trim(),
+    );
+    expect(headings).toEqual(["Inkomst januari", "Inkomst februari"]);
+
+    // Each row is a selectable checkbox named by the member's delivery COLUMN.
     await expect
-      .element(page.getByRole("checkbox", { name: /Inkomst januari/ }))
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("checkbox", { name: /Inkomst februari/ }))
+      .element(page.getByRole("checkbox", { name: /Inkfeb/ }))
       .toBeVisible();
   });
 
@@ -233,8 +241,10 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    const jan = page.getByRole("checkbox", { name: /Inkomst januari/ });
-    const feb = page.getByRole("checkbox", { name: /Inkomst februari/ });
+    // Distinct names → name-cluster headings (#901); each single-column row's checkbox
+    // is named by its delivery COLUMN (the leading identity), not the repeated name.
+    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
+    const feb = page.getByRole("checkbox", { name: /Inkfeb/ });
     await expect.element(jan).toBeVisible();
     await jan.click();
     await feb.click();
@@ -277,7 +287,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    const jan = page.getByRole("checkbox", { name: /Inkomst januari/ });
+    // The single-column row's checkbox is named by its delivery COLUMN (#901).
+    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
     await expect.element(jan).toBeVisible();
     await jan.click();
     await page.getByRole("button", { name: "Add to project" }).click();
@@ -336,11 +347,13 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     renderGroup();
 
     // The inkjan subheading's select-all toggle selects BOTH its columns at once.
-    // Members have distinct NAMES here, so the subheading is name-led → the aria
-    // label is keyed on the member name.
+    // Members have distinct NAMES here → one name-CLUSTER each (#901), and a lone
+    // multi-column band in a heading cluster leads with its SLUG distinguisher (the
+    // name is hoisted to the heading, not repeated on the subheading), so the aria
+    // label is keyed on the member slug.
     const janSelectAll = await vi.waitFor(() => {
       const el = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
+        'input[aria-label="Select all columns of inkjan"]',
       );
       if (!el) {
         throw new Error("inkjan select-all not yet rendered");
@@ -409,13 +422,18 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
+    // inkjan's single-column row checkbox is named by its delivery COLUMN (#901),
+    // its name now leading the cluster heading instead.
     await expect
-      .element(page.getByRole("checkbox", { name: /Inkomst januari/ }))
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
       .toBeVisible();
-    // inkfeb's quiet "No columns" marker renders (not dropped, no checkbox).
-    await expect
-      .element(page.getByText("Inkomst februari", { exact: true }))
-      .toBeVisible();
+    // Both members carry distinct names → a heading each (#901).
+    const headings = [...document.querySelectorAll(".cluster-head h3")].map(
+      (h) => h.textContent?.trim(),
+    );
+    expect(headings).toEqual(["Inkomst januari", "Inkomst februari"]);
+    // inkfeb is not dropped: it renders its (graph-node-less) band with the quiet
+    // "No columns" marker and no checkbox.
     await expect
       .element(page.getByText("No columns", { exact: true }))
       .toBeVisible();
@@ -430,7 +448,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    const jan = page.getByRole("checkbox", { name: /Inkomst januari/ });
+    // Single-column rows are named by their delivery COLUMN (#901).
+    const jan = page.getByRole("checkbox", { name: /Inkjan/ });
     await expect.element(jan).toBeVisible();
     // The `dimmed` class is on the row container (.row-btn label), not the checkbox.
     await vi.waitFor(() => {
@@ -440,7 +459,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       }
     });
     const febRow = page
-      .getByRole("checkbox", { name: /Inkomst februari/ })
+      .getByRole("checkbox", { name: /Inkfeb/ })
       .element()
       .closest(".row-btn");
     expect(febRow?.classList.contains("dimmed")).toBe(false);
@@ -495,17 +514,14 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         throw new Error("subheadings not yet rendered");
       }
     });
-    // The members have distinct NAMES → name-led subheading, so the select-all aria
-    // label is keyed on the member name.
+    // The members have distinct NAMES → one name-CLUSTER each (#901); a lone
+    // multi-column band in a heading cluster is slug-led (the name is in the heading),
+    // so the select-all aria label is keyed on the member slug.
     const inkjanSub = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      )
+      .querySelector('input[aria-label="Select all columns of inkjan"]')
       ?.closest("li.subhead");
     const inkfebSub = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst februari"]',
-      )
+      .querySelector('input[aria-label="Select all columns of inkfeb"]')
       ?.closest("li.subhead");
     // inkjan: all columns out → the subheading greys.
     expect(inkjanSub?.classList.contains("dimmed")).toBe(true);
@@ -608,7 +624,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     renderGroup();
 
     await expect
-      .element(page.getByRole("checkbox", { name: /Inkomst januari/ }))
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
       .toBeVisible();
     expect(document.querySelector(".late-warn")).toBeNull();
   });
@@ -621,7 +637,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     const add = page.getByRole("button", { name: "Add to project" });
     await expect.element(add).toBeVisible();
     await expect.element(add).toBeDisabled();
-    await page.getByRole("checkbox", { name: /Inkomst januari/ }).click();
+    await page.getByRole("checkbox", { name: /Inkjan/ }).click();
     await expect.element(add).toBeEnabled();
   });
 
@@ -836,6 +852,133 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(document.querySelector(".col-row.nested a.col-chip")).toBeNull();
   });
 
+  // ── Name-cluster de-duplication (#901) ──────────────────────────────────────
+  it("a HETEROGENEOUS group shows ONE heading per distinct name, bands led by column", async () => {
+    // The #901 disponibel-inkomst shape: several members share each of two distinct
+    // concept names. Instead of leading every band with the (repeated) name, cluster
+    // by name → render each name ONCE as a group heading, and beneath it each band
+    // leads with its distinguishing delivery column.
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        provider: "scb",
+        register: "iot",
+        key: "disponibel-inkomst",
+        label: "Disponibel inkomst",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/iot/dispink_cdisphb",
+            name: "Disponibel inkomst",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink_dinf",
+            name: "Disponibel inkomst, familj",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink_cdisp04hb",
+            name: "Disponibel inkomst",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/iot/dispink_cdisphb", [
+          gstate({ variant: "individer", delivery_column_name: "CDISPHB" }),
+        ]),
+        vnode("scb/iot/dispink_dinf", [
+          gstate({ variant: "familj", delivery_column_name: "DINF" }),
+        ]),
+        vnode("scb/iot/dispink_cdisp04hb", [
+          gstate({ variant: "individer", delivery_column_name: "CDISP04HB" }),
+        ]),
+      ]),
+    );
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // ONE heading per distinct name (first-seen order), the repeated "Disponibel
+    // inkomst" collapsed to a single heading.
+    const headings = await vi.waitFor(() => {
+      const els = document.querySelectorAll(".cluster-head h3");
+      if (els.length < 2) {
+        throw new Error("cluster headings not yet rendered");
+      }
+      return [...els].map((h) => h.textContent?.trim());
+    });
+    expect(headings).toEqual([
+      "Disponibel inkomst",
+      "Disponibel inkomst, familj",
+    ]);
+
+    // Each band leads with its delivery COLUMN chip (the name is hoisted to the
+    // heading), so the columns are the visible row identities + checkbox names.
+    const chips = [
+      ...document.querySelectorAll(".col-row.single .col-chip"),
+    ].map((e) => e.firstChild?.textContent?.trim());
+    expect(chips).toEqual(["CDISPHB", "CDISP04HB", "DINF"]);
+    await expect
+      .element(page.getByRole("checkbox", { name: /CDISPHB/ }))
+      .toBeVisible();
+  });
+
+  it("a HOMOGENEOUS group (all one name) shows NO cluster heading", async () => {
+    // The moms/naringsgren shape: every member shares the name → ONE cluster, so no
+    // heading is rendered (the name is already the page title) and bands lead with
+    // their column — exactly today's behavior, unchanged.
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        provider: "scb",
+        register: "moms",
+        key: "naringsgren",
+        label: "Näringsgren",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/moms/naringsgren_ng0",
+            name: "Näringsgren",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/moms/naringsgren_ng1",
+            name: "Näringsgren",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/moms/naringsgren_ng0", [
+          gstate({ variant: "individer", delivery_column_name: "Ng0" }),
+        ]),
+        vnode("scb/moms/naringsgren_ng1", [
+          gstate({ variant: "individer", delivery_column_name: "Ng1" }),
+        ]),
+      ]),
+    );
+
+    renderGroup({ provider: "scb", register: "moms", key: "naringsgren" });
+
+    // Bands render, led by their columns; NO cluster heading at all.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Ng0/ }))
+      .toBeVisible();
+    expect(document.querySelectorAll(".cluster-head")).toHaveLength(0);
+  });
+
   it("a facet group of single-column members leads each compact row with its FACET label (normal weight)", async () => {
     // The moderns-utbildningsniva shape: name constant, a facet axis varies → the
     // facet (specialskola / grundskola) leads each row, not the column.
@@ -905,6 +1048,19 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         (e) => e.tagName === "SPAN",
       ),
     ).toBe(true);
+    // #901: the leading facet must NOT be repeated in the quiet `.sub` line. With the
+    // facet as the band PRIMARY and no value-set context here, every facet-led single
+    // row drops its `.sub` entirely (the `{#if facet || v.context.length}` guard hides
+    // the now-empty sub). No `.sub` text may echo a `.primary`.
+    const rows = [...document.querySelectorAll(".col-row.single")];
+    expect(rows).toHaveLength(2);
+    for (const r of rows) {
+      const primary = r.querySelector(".primary")?.textContent?.trim();
+      const sub = r.querySelector(".sub")?.textContent?.trim();
+      expect(sub).not.toBe(primary);
+    }
+    // Concretely: no `.sub` survives at all in this facet-led, context-free case.
+    expect(document.querySelectorAll(".col-row.single .sub")).toHaveLength(0);
   });
 
   // ── Member → leaf navigation (#678) ─────────────────────────────────────────
@@ -975,7 +1131,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // (off the title link) toggles every column of that variable.
     const inkjanRow = await vi.waitFor(() => {
       const cb = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
+        'input[aria-label="Select all columns of inkjan"]',
       );
       const label = cb?.closest("label.subhead-label");
       if (!label) {
@@ -1007,9 +1163,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     const inkjanSub = await vi.waitFor(() => {
       const li = document
-        .querySelector(
-          'input[aria-label="Select all columns of Inkomst januari"]',
-        )
+        .querySelector('input[aria-label="Select all columns of inkjan"]')
         ?.closest("li.subhead");
       if (!li) {
         throw new Error("inkjan subhead not yet rendered");
@@ -1149,9 +1303,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .element()
       .closest(".row-btn") as Element;
     const inkjanLabel = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      )
+      .querySelector('input[aria-label="Select all columns of inkjan"]')
       ?.closest("label.subhead-label") as HTMLLabelElement;
 
     // Normalize first (the real Chromium cursor may already sit over a row from a
@@ -1209,7 +1361,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect.element(page.getByText("0 columns selected")).toBeVisible();
     expect(
       document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
+        'input[aria-label="Select all columns of inkjan"]',
       )?.checked,
     ).toBe(false);
   });
@@ -1342,9 +1494,10 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    // Wait for the page to render (the picker rows), then assert no shared block.
+    // Wait for the page to render (the picker rows, named by their delivery COLUMN
+    // post-#901), then assert no shared block.
     await expect
-      .element(page.getByRole("checkbox", { name: /Inkomst januari/ }))
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
       .toBeVisible();
     const sharedMeta = [...document.querySelectorAll("dl.meta")].filter(
       (dl) => !dl.closest("details.tech-details"),
