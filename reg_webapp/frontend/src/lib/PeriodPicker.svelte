@@ -388,7 +388,7 @@ const MODE_LABELS: Record<PickerMode, string> = {
 
 <form class="period-picker" onsubmit={submit}>
   <div class="head">
-    <span class="title" id="period-label">Period</span>
+    <span class="title micro-label" id="period-label">Period</span>
     <!-- The "more" expander (#615): the rich grammar (range/list/text) lives
          behind it; the year slider is the default. -->
     <button
@@ -560,14 +560,6 @@ const MODE_LABELS: Record<PickerMode, string> = {
     justify-content: space-between;
     gap: var(--space-3);
     margin-bottom: 0.45rem;
-  }
-  /* Tracked uppercase micro-label eyebrow for the "Period" control title. */
-  .title {
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
   }
   .more-toggle {
     font: inherit;

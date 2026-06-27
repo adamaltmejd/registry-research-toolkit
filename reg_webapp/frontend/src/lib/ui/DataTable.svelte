@@ -101,7 +101,7 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
         <th
           scope="col"
           role="columnheader"
-          class="align-{alignOf(col)}"
+          class="micro-label align-{alignOf(col)}"
           class:first={i === 0}
           style={col.width ? `width: ${col.width}` : undefined}
         >
@@ -153,11 +153,6 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
   }
   th {
     text-align: left;
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
     padding: var(--space-2) var(--space-3);
     border-bottom: 1px solid var(--border);
     white-space: nowrap;
@@ -265,7 +260,11 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
     }
     /* Non-primary cells show their column micro-label, styled like the <th> the
        card hides. Decorative (aria-hidden via being CSS-generated content): the
-       columnheader still reaches screen readers from the visually-hidden thead. */
+       columnheader still reaches screen readers from the visually-hidden thead.
+       The eyebrow props are duplicated from the `.micro-label` utility (#836)
+       rather than shared: a CSS-generated `::before` pseudo-element can't take a
+       class, and plain CSS has no mixin — so this is the one eyebrow that keeps
+       its own copy. Keep it in sync with `.micro-label` in lib/ui/utilities.css. */
     td:not(.first)::before {
       content: attr(data-label);
       display: block;

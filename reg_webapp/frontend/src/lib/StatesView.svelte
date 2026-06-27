@@ -345,13 +345,13 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   {@const s = single}
   <div class="state-detail">
     <dl class="meta">
-      <dt>Variant</dt>
+      <dt class="micro-label">Variant</dt>
       <dd><code>{s.variant}</code></dd>
-      <dt>Valid</dt>
+      <dt class="micro-label">Valid</dt>
       <!-- #309/#321: sentinel-free, coarsest-exact window ("since 2016",
            "VT2009"); the raw ISO window stays on the tooltip. -->
       <dd title={windowTitle(s.valid_from, s.valid_to)}>{formatStateWindow(s)}</dd>
-      <dt>Value-set version</dt>
+      <dt class="micro-label">Value-set version</dt>
       <dd>{s.value_set_version_label || "(no version)"}</dd>
     </dl>
 
@@ -363,13 +363,13 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
       <TechnicalDetails>
         <dl class="meta">
           {#if s.data_type}
-            <dt>Data type</dt>
+            <dt class="micro-label">Data type</dt>
             <!-- formatDataType drops a meaningless "(0)"/empty length parenthetical
                  (the "bigint(0)" artifact) while keeping real ones like "char(25)". -->
             <dd>{formatDataType(s.data_type, s.data_length)}</dd>
           {/if}
           {#if s.delivery_column_name}
-            <dt>Delivery column</dt>
+            <dt class="micro-label">Delivery column</dt>
             <dd><code>{s.delivery_column_name}</code></dd>
           {/if}
         </dl>
@@ -405,7 +405,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     </p>
     {#if variants.length > 1}
       <fieldset class="picker">
-        <legend>Variant</legend>
+        <legend class="micro-label">Variant</legend>
         <div class="chips">
           {#each variants as variant (variant)}
             <button
@@ -423,7 +423,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     {/if}
     {#if versionsAll.length > 1}
       <fieldset class="picker">
-        <legend>Value-set version</legend>
+        <legend class="micro-label">Value-set version</legend>
         <div class="chips">
           {#each versionChips as version (version)}
             <button
@@ -494,7 +494,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
         {/if}
       </h4>
       {@render valueSetBody(vs)}
-      <h5 class="vs-usage-heading">Used by</h5>
+      <h5 class="vs-usage-heading micro-label">Used by</h5>
       {@render usage(vs)}
     </div>
   {:else}
@@ -545,15 +545,6 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     gap: 0.3rem var(--space-4);
     margin: var(--space-2) 0 var(--space-4);
   }
-  /* Tracked uppercase micro-label for the term — the design-system meta-label
-     convention (matches KeyValue / Panel headers). */
-  .meta dt {
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
   .vs-heading {
     margin: var(--space-2) 0 0.4rem;
   }
@@ -564,11 +555,6 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     padding: var(--space-2) var(--space-3) var(--space-3);
   }
   .picker legend {
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
     padding: 0 0.3rem;
   }
   .chips {
@@ -693,14 +679,8 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   .vs-classification {
     margin: var(--space-1) 0;
   }
-  /* Tracked uppercase micro-label eyebrow for the "Used by" sub-heading. */
   .vs-usage-heading {
     margin: var(--space-3) 0 0.3rem;
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text-muted);
   }
   .out-of-period {
     margin-top: var(--space-2);
