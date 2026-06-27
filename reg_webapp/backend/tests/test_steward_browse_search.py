@@ -638,6 +638,42 @@ def test_global_concept_group_graph_200s(global_client):
     assert resp.status_code == 200
 
 
+def _graph_columns(graph: dict, fqid: str) -> set[str | None]:
+    """The distinct `delivery_column_name`s a variable node's states carry."""
+    node = next(
+        n for n in graph["nodes"] if n["kind"] == "variable" and n.get("fqid") == fqid
+    )
+    return {s["delivery_column_name"] for s in node["states"]}
+
+
+def test_held_concept_group_graph_narrows_states_to_held_columns(
+    lonfink_rep_jan_client,
+):
+    # #678 finding 2: a steward holding ONLY LonFinkJan of the multi-column
+    # `scb/lisa/lonfink` reaches the `lonefink-rep` group graph (the FQID is held), but
+    # the graph node's states must be NARROWED to the held column — otherwise the
+    # picker would surface the unheld LonFinkFeb as an addable column (the leaf path
+    # already narrows; this mirrors it on the graph the group picker consumes).
+    body = lonfink_rep_jan_client.get(
+        "/api/catalog/group/scb/lisa/lonefink-rep/graph"
+    ).json()
+    assert _graph_columns(body, "scb/lisa/lonfink") == {"LonFinkJan"}
+
+
+def test_global_concept_group_graph_keeps_all_columns(global_client):
+    # #678 finding 2 is index-gated: the global deployment narrows nothing, so the
+    # group graph node still carries EVERY delivery column of the variable — all three
+    # month columns of `lonfink` (Jan/Feb/Mars), even though the `lonefink-rep` group
+    # only has Jan/Feb members (member-scoping is the frontend picker's job, #678
+    # round-2 finding 1; the variable-grain graph itself is un-narrowed when global).
+    body = global_client.get("/api/catalog/group/scb/lisa/lonefink-rep/graph").json()
+    assert _graph_columns(body, "scb/lisa/lonfink") == {
+        "LonFinkJan",
+        "LonFinkFeb",
+        "LonFinkMars",
+    }
+
+
 def test_classification_group_graph_passthrough(steward_client):
     # Fix 4: classification group graphs are catalog-global (decision 2) — they pass
     # through unchanged for a filtered steward (the `sun` umbrella graph still serves).

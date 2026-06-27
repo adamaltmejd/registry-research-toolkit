@@ -7,6 +7,7 @@ import type {
 } from "./api";
 import type { PickerRepresentation } from "./catalog";
 import {
+  addWindowBounds,
   axisNoun,
   bandLabeling,
   bindingChildren,
@@ -1468,6 +1469,54 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     expect(row.wirePeriod).toBe("2020-02-01..2020-06-30");
   });
 
+  // #678 finding 3: a column delivered in DISJOINT windows commits the comma-union
+  // (the interrupted-series wire), never one continuous range over the gap years.
+  it("a DISJOINT-delivery column emits a comma-list wire (gap years excluded)", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2005-01-01",
+        valid_to: "2010-12-31",
+      }),
+      // A real 2011–2014 gap, then a second era.
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2015-01-01",
+        valid_to: "2020-12-31",
+      }),
+    ]);
+    expect(row.windows).toEqual([
+      { from: "2005-01-01", to: "2010-12-31" },
+      { from: "2015-01-01", to: "2020-12-31" },
+    ]);
+    expect(row.wirePeriod).toBe("2005..2010,2015..2020");
+    // The outer span still spans both eras (the display "from..to").
+    expect(row.from).toBe("2005-01-01");
+    expect(row.to).toBe("2020-12-31");
+  });
+
+  it("fuses ADJACENT annual states into ONE window (no spurious comma split)", () => {
+    const [row] = pickerRepresentations([
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2018-01-01",
+        valid_to: "2018-12-31",
+      }),
+      // Back-to-back: 2019-01-01 is the day after 2018-12-31 → one continuous window.
+      state({
+        variant: "v1",
+        delivery_column_name: "Col",
+        valid_from: "2019-01-01",
+        valid_to: "2019-12-31",
+      }),
+    ]);
+    expect(row.windows).toEqual([{ from: "2018-01-01", to: "2019-12-31" }]);
+    expect(row.wirePeriod).toBe("2018..2019");
+  });
+
   // #678 inc 2: the widened param accepts the group graph's `GraphState[]` too —
   // same `(variant, delivery_column)` enumeration, but its bounds are nullable.
   it("accepts graph states and normalizes a null end to an open-ended span", () => {
@@ -1648,21 +1697,34 @@ describe("pickerRepresentations (#678 direct picker)", () => {
 });
 
 describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => {
-  // A picker row with explicit ISO bounds + its own full-span wire period.
+  // A picker row with explicit ISO bounds + its own full-span wire period. `windows`
+  // defaults to ONE continuous window spanning from..to (the common case); disjoint
+  // tests override it.
   const row = (
     over: Partial<PickerRepresentation> = {},
-  ): PickerRepresentation => ({
-    key: "v1::Col",
-    variant: "v1",
-    variantLabel: "v1",
-    column: "Col",
-    from: "2010-01-01",
-    to: "2020-12-31",
-    period: "2010 – 2020",
-    wirePeriod: "2010..2020",
-    valueSetLabel: "",
-    codingsVary: false,
-    ...over,
+  ): PickerRepresentation => {
+    const from = over.from ?? "2010-01-01";
+    const to = over.to ?? "2020-12-31";
+    return {
+      key: "v1::Col",
+      variant: "v1",
+      variantLabel: "v1",
+      column: "Col",
+      from,
+      to,
+      windows: [{ from, to }],
+      period: "2010 – 2020",
+      wirePeriod: "2010..2020",
+      valueSetLabel: "",
+      codingsVary: false,
+      ...over,
+    };
+  };
+  // A year window expressed as inclusive ISO bounds (what `addWindowBounds` produces
+  // from a year-grain window).
+  const yr = (lo: number, hi: number) => ({
+    from: `${lo}-01-01`,
+    to: `${hi}-12-31`,
   });
 
   it("no active window → commits the row's own full-span wire period unchanged", () => {
@@ -1672,33 +1734,135 @@ describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => 
   it("intersects a finite multi-year row with the active window (the user's narrowing wins)", () => {
     // The row spans 2010–2020; the user narrowed to 2015 → add ONLY 2015, not the
     // full history.
-    expect(rowAddPeriod(row(), [2015, 2015])).toBe("2015");
+    expect(rowAddPeriod(row(), yr(2015, 2015))).toBe("2015");
   });
 
   it("clamps both sides to a window narrower than the row span", () => {
-    expect(rowAddPeriod(row(), [2012, 2018])).toBe("2012..2018");
+    expect(rowAddPeriod(row(), yr(2012, 2018))).toBe("2012..2018");
   });
 
   it("an OPEN-ENDED row (null wirePeriod) clamps to the window → a finite, resolvable period", () => {
     // wirePeriod null would otherwise add a period-unset, unresolved source. With an
     // active window the add lands the window instead.
     const open = row({ to: "9999-12-31", wirePeriod: null });
-    expect(rowAddPeriod(open, [2020, 2020])).toBe("2020");
+    expect(rowAddPeriod(open, yr(2020, 2020))).toBe("2020");
   });
 
   it("an unknown-START row clamps its start to the window", () => {
     const unknownStart = row({ from: "0001-01-01", wirePeriod: null });
-    expect(rowAddPeriod(unknownStart, [2018, 2019])).toBe("2018..2019");
+    expect(rowAddPeriod(unknownStart, yr(2018, 2019))).toBe("2018..2019");
   });
 
   it("a window wider than the row span yields the row's own (finite) span", () => {
-    expect(rowAddPeriod(row(), [2000, 2030])).toBe("2010..2020");
+    expect(rowAddPeriod(row(), yr(2000, 2030))).toBe("2010..2020");
   });
 
   it("a window wholly OUTSIDE the row span falls back to the row's own wire period", () => {
     // An explicitly-selected dimmed row (out of window) still adds something sensible
     // rather than an empty/inverted intersection.
-    expect(rowAddPeriod(row(), [2030, 2031])).toBe("2010..2020");
+    expect(rowAddPeriod(row(), yr(2030, 2031))).toBe("2010..2020");
+  });
+
+  // #678 finding 1: a SUB-ANNUAL `?period` must commit at its real grain, NOT the
+  // collapsed outer year. `addWindowBounds` produces the exact ISO bounds of the
+  // selected quarter/term/month, so `rowAddPeriod` honors it.
+  it("honors a sub-annual window at its true grain (a quarter stays a quarter, not its year)", () => {
+    // The user picked 2020-Q1; the open-ended row clamps to exactly that quarter.
+    const open = row({
+      from: "2010-01-01",
+      to: "9999-12-31",
+      wirePeriod: null,
+    });
+    expect(rowAddPeriod(open, { from: "2020-01-01", to: "2020-03-31" })).toBe(
+      "2020-Q1",
+    );
+  });
+
+  it("honors a sub-annual month window (a long row clamped to a single month)", () => {
+    expect(rowAddPeriod(row(), { from: "2015-03-01", to: "2015-03-31" })).toBe(
+      "2015-03",
+    );
+  });
+
+  // #678 finding 3: a row with DISJOINT delivery windows clamped against the active
+  // window emits the comma-union (the interrupted-series wire), never a continuous
+  // range that would cover the gap years.
+  it("emits the comma-list for a DISJOINT-window row (the gap years are not covered)", () => {
+    // Delivered 2005–2010 then 2015–2020 (a real 2011–2014 gap). With no narrowing the
+    // commit is the comma-union over the two eras, NOT a continuous 2005..2020.
+    const disjoint = row({
+      from: "2005-01-01",
+      to: "2020-12-31",
+      windows: [
+        { from: "2005-01-01", to: "2010-12-31" },
+        { from: "2015-01-01", to: "2020-12-31" },
+      ],
+      wirePeriod: "2005..2010,2015..2020",
+    });
+    expect(rowAddPeriod(disjoint, null)).toBe("2005..2010,2015..2020");
+  });
+
+  it("clamps each disjoint window into the active window, dropping a window that falls outside", () => {
+    const disjoint = row({
+      from: "2005-01-01",
+      to: "2020-12-31",
+      windows: [
+        { from: "2005-01-01", to: "2010-12-31" },
+        { from: "2015-01-01", to: "2020-12-31" },
+      ],
+      wirePeriod: "2005..2010,2015..2020",
+    });
+    // A window over 2008–2017 keeps both eras but clamps each to the window edges:
+    // 2008..2010 + 2015..2017.
+    expect(rowAddPeriod(disjoint, yr(2008, 2017))).toBe(
+      "2008..2010,2015..2017",
+    );
+    // A window inside the GAP keeps neither era → fall back to the row's own wire.
+    expect(rowAddPeriod(disjoint, yr(2012, 2013))).toBe(
+      "2005..2010,2015..2020",
+    );
+    // A window over only the first era keeps just it.
+    expect(rowAddPeriod(disjoint, yr(2006, 2009))).toBe("2006..2009");
+  });
+});
+
+describe("addWindowBounds (#678 finding 1: sub-annual period honored on add)", () => {
+  it("a sub-annual ?period resolves to its EXACT ISO bounds (not the outer year)", () => {
+    // The whole point of the finding: 2020-Q1 must NOT collapse to 2020.
+    expect(addWindowBounds("2020-Q1", [2020, 2020])).toEqual({
+      from: "2020-01-01",
+      to: "2020-03-31",
+    });
+    expect(addWindowBounds("HT2020", [2020, 2020])).toEqual({
+      from: "2020-07-01",
+      to: "2020-12-31",
+    });
+    expect(addWindowBounds("2020-03", [2020, 2020])).toEqual({
+      from: "2020-03-01",
+      to: "2020-03-31",
+    });
+  });
+
+  it("a year ?period resolves to the whole-year ISO bounds", () => {
+    expect(addWindowBounds("2018", [2018, 2018])).toEqual({
+      from: "2018-01-01",
+      to: "2018-12-31",
+    });
+  });
+
+  it("a ?period that parses to no bound (_default) falls back to the year window", () => {
+    expect(addWindowBounds("_default", [2000, 2004])).toEqual({
+      from: "2000-01-01",
+      to: "2004-12-31",
+    });
+  });
+
+  it("with no ?period it expands the year window to ISO bounds; null with neither", () => {
+    expect(addWindowBounds(null, [2010, 2015])).toEqual({
+      from: "2010-01-01",
+      to: "2015-12-31",
+    });
+    expect(addWindowBounds(null, null)).toBeNull();
   });
 });
 
@@ -1769,6 +1933,7 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       column: "Col",
       from: "2000-01-01",
       to: "2010-12-31",
+      windows: [{ from: "2000-01-01", to: "2010-12-31" }],
       period: "2000 – 2010",
       wirePeriod: "2000..2010",
       valueSetLabel: "",

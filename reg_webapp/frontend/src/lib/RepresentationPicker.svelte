@@ -31,6 +31,15 @@ export interface PickerBand {
   name: string;
   registerPrefix: string;
   facetLabel?: string | null;
+  /** Per-DELIVERY-COLUMN human facet label (#678): a representation group can carry
+   * several members on ONE variable, each a distinct `delivery_column` with its own
+   * facet (e.g. CDISP "Inkl. kapitalvinst" vs CDISP5 "Exkl. kapitalvinst"). The band
+   * is built per DISTINCT fqid, so without this the later members' facet labels never
+   * reach their rows. Keyed by `delivery_column`, it lets the picker show the human
+   * facet label per column rather than only the technical column name. The GROUP view
+   * sets it; the binding LEAF leaves it undefined (its single member has no per-column
+   * facet split). */
+  facetByColumn?: Record<string, string>;
   isSensitive?: boolean;
   isIdentifier?: boolean;
   rows: PickerRepresentation[];
@@ -53,6 +62,7 @@ let {
   bands,
   window,
   canAdd,
+  focusKey = null,
   onadd,
 }: {
   /** The variables, in render order. One element for the leaf; one per member for
@@ -64,6 +74,11 @@ let {
   /** Whether the Add action is permitted (the deployment seed is ready). When false
    * the button stays disabled regardless of selection. */
   canAdd: boolean;
+  /** The `band.key` of a band to visually MARK as the deep-link focus (#678): the
+   * group page passes the `?member=` hint's band so a `?member=<slug>` deep link
+   * renders with that member highlighted, restoring the focus affordance. Null (the
+   * leaf, or no hint) marks nothing. */
+  focusKey?: string | null;
   /** Commit the selected columns across all variables. The parent maps each
    * `{ band, row }` to an `addFromCatalog` call and renders the confirmation. */
   onadd: (selected: PickerSelection[]) => void;
@@ -263,6 +278,8 @@ const view = $derived(
       single,
       column,
       allOut,
+      // The deep-link `?member=` focus (#678): mark this band when its key matches.
+      focused: focusKey != null && band.key === focusKey,
       context: labeling?.headerContext ?? [],
       rowLabels: new Map((labeling?.rows ?? []).map((r) => [r.key, r])),
     };
@@ -359,6 +376,7 @@ function navigateChip(event: MouseEvent, href: string): void {
         {@const row = band.rows[0]}
         {@const checked = selectedKeys.has(selKey(band.key, row.key))}
         {@const inWindow = representationInWindow(row, window)}
+        {@const facet = band.facetByColumn?.[row.column]}
         <!-- A single-column variable = ONE selectable row, led by the variable's
              distinguishing identity (the leaf ≈ one-variable group case). The row is a
              click-anywhere container (mouse toggles selection); a real checkbox owns
@@ -366,7 +384,7 @@ function navigateChip(event: MouseEvent, href: string): void {
              itself the navigation link to its leaf — clicking the chip navigates
              (via the SPA router, `navigateChip`), not toggles; there's no separate
              "View" link. -->
-        <li class="col-row single">
+        <li class="col-row single" class:focused={v.focused}>
           <!-- The whole row is a <label> wrapping the checkbox: clicking ANYWHERE in
                it toggles selection natively (no JS, keyboard via the input). The chip-
                link inside `preventDefault`s + router-navigates so a nav click neither
@@ -405,8 +423,13 @@ function navigateChip(event: MouseEvent, href: string): void {
                   >
                 {/if}
               </span>
-              {#if v.context.length > 0}
-                <span class="sub">{v.context.join(" · ")}</span>
+              <!-- The column's human facet label (#678) leads the quiet context for a
+                   single-column representation member (e.g. CDISP "Inkl. kapitalvinst")
+                   so the row shows the human distinction, not only the column name. -->
+              {#if facet || v.context.length > 0}
+                <span class="sub"
+                  >{[facet, ...v.context].filter(Boolean).join(" · ")}</span
+                >
               {/if}
             </span>
             {#if row.codingsVary}
@@ -448,6 +471,7 @@ function navigateChip(event: MouseEvent, href: string): void {
           class:empty
           class:dimmed={v.allOut}
           class:selected={fullySelected}
+          class:focused={v.focused}
         >
           <!-- The identity chrome (primary + name/prefix/badges). When the variable
                has an `href` (group view) the title is a navigation LINK; otherwise
@@ -564,6 +588,7 @@ function navigateChip(event: MouseEvent, href: string): void {
           {@const checked = selectedKeys.has(selKey(band.key, row.key))}
           {@const inWindow = representationInWindow(row, window)}
           {@const label = v.rowLabels.get(row.key)}
+          {@const facet = band.facetByColumn?.[row.column]}
           <!-- A nested column row: the SAME <label>-wraps-checkbox click-anywhere
                pattern as the single row, minus the nav link (a nested column is not
                its own variable). Gets the band-hover highlight when its subheading is
@@ -591,8 +616,17 @@ function navigateChip(event: MouseEvent, href: string): void {
                 {:else}
                   <span class="primary">{label?.primary.text}</span>
                 {/if}
-                {#if label && label.qualifiers.length > 0}
-                  <span class="sub">{label.qualifiers.join(" · ")}</span>
+                <!-- The human FACET label for this column (#678): a representation
+                     group with several members on one variable distinguishes its
+                     columns by facet ("Inkl./Exkl. kapitalvinst"), not just the
+                     technical column name. Shown as the leading qualifier so the row
+                     reads as the human distinction, not only `CDISP`/`CDISP5`. -->
+                {#if facet || (label && label.qualifiers.length > 0)}
+                  <span class="sub"
+                    >{[facet, ...(label?.qualifiers ?? [])]
+                      .filter(Boolean)
+                      .join(" · ")}</span
+                  >
                 {/if}
               </span>
               <!-- The codings-vary nudge sits BEFORE the period so the period is the
@@ -796,6 +830,17 @@ function navigateChip(event: MouseEvent, href: string): void {
     font-size: 0.8rem;
     font-style: italic;
     color: var(--text-muted);
+  }
+
+  /* The deep-link `?member=` FOCUS marker (#678): the band the link named is marked
+     with a subtle accent tint + a left accent rule so a `?member=<slug>` deep link
+     lands with that member visibly highlighted. Distinct from `.selected` (a rust
+     fill on the rows) — focus is a softer attention cue on the band itself, and the
+     `box-shadow` inset rule reads even alongside the selected left border. */
+  .subhead.focused,
+  .col-row.single.focused {
+    background: var(--accent-bg);
+    box-shadow: inset 3px 0 0 0 var(--accent);
   }
 
   /* A column row: a click-anywhere checkbox. The whole row toggles (real <button> +

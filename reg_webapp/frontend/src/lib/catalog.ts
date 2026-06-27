@@ -28,6 +28,7 @@ import {
   periodRangeEndpoints,
   periodTokenBounds,
   periodTokenForBounds,
+  periodWireBounds,
 } from "./period";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
@@ -861,24 +862,31 @@ export interface PickerRepresentation {
   column: string;
   from: string;
   to: string;
+  /** The column's DISJOINT delivery windows (#678 finding: an interrupted series),
+   * each an inclusive ISO span, in chronological order. A continuously-delivered
+   * column has exactly one window spanning `from`..`to`; a column delivered in
+   * separate eras (e.g. 2005–2010 then 2015–2020, a real gap between) has one window
+   * per era. `rowWirePeriod`/`rowAddPeriod` emit the comma-union over these (the #307
+   * interrupted-series wire form) so the committed source never covers the gap years
+   * the representation wasn't delivered. */
+  windows: { from: string; to: string }[];
   period: string;
   wirePeriod: string | null;
   valueSetLabel: string;
   codingsVary: boolean;
 }
 
-/** The WIRE period for a representation row's ISO span, or null when a bound is a
- * sentinel (open-ended `9999-12-31` / unknown-start `0001-01-01`) — an unbounded
- * side has no in-grammar token, so the source's period is left unset (covers the
- * rep's whole span) rather than leaking the sentinel year. Emits the EXACT span,
- * not a year-rounded one: `periodTokenForBounds` renders the coarsest token that
- * round-trips to these exact bounds — a full year → the bare year, but a SUB-ANNUAL
- * span (`2020-01-01`..`2020-01-31` → `2020-01`, a quarter → `YYYY-Q[1-4]`, a single
- * day → the day) keeps its grain so the committed source covers only the column's
- * real window, not the whole year (which would pull in sibling columns for the rest
- * of the year — #678 fix). A window no single token covers is the explicit `lo..hi`
+/** The WIRE segment for ONE inclusive ISO window, or null when a bound is a sentinel
+ * (open-ended `9999-12-31` / unknown-start `0001-01-01`) — an unbounded side has no
+ * in-grammar token. Emits the EXACT span, not a year-rounded one:
+ * `periodTokenForBounds` renders the coarsest token that round-trips to these exact
+ * bounds — a full year → the bare year, but a SUB-ANNUAL span
+ * (`2020-01-01`..`2020-01-31` → `2020-01`, a quarter → `YYYY-Q[1-4]`, a single day →
+ * the day) keeps its grain so the committed source covers only the column's real
+ * window, not the whole year (which would pull in sibling columns for the rest of
+ * the year — #678 fix). A window no single token covers is the explicit `lo..hi`
  * range. */
-function rowWirePeriod(from: string, to: string): string | null {
+function windowWireSegment(from: string, to: string): string | null {
   if (from === YEARLESS_VALID_FROM || to === OPEN_ENDED_VALID_TO) {
     return null;
   }
@@ -897,48 +905,137 @@ function rowWirePeriod(from: string, to: string): string | null {
   return token;
 }
 
+/** The WIRE period for a representation row's DISJOINT delivery windows, or null
+ * when any contributing window has a sentinel bound (an unbounded side has no
+ * in-grammar token, so the source's period is left unset — covers the rep's whole
+ * span — rather than leaking a sentinel). A single window emits one segment; several
+ * DISJOINT windows emit the comma-union (`2005..2010,2015..2020`, the #307
+ * interrupted-series wire form the catalog `?period=` resolves segment-wise since
+ * #340) so the committed source covers only the eras the column was delivered, never
+ * the gap years between them (#678 finding). */
+function rowWirePeriod(
+  windows: readonly { from: string; to: string }[],
+): string | null {
+  if (windows.length === 0) {
+    return null;
+  }
+  const segments: string[] = [];
+  for (const w of windows) {
+    const seg = windowWireSegment(w.from, w.to);
+    // A sentinel-bounded window has no in-grammar token; once ANY window is
+    // unbounded the whole comma-union can't be expressed, so leave the period unset.
+    if (seg === null) {
+      return null;
+    }
+    segments.push(seg);
+  }
+  return segments.join(",");
+}
+
+/** Merge a column's states into DISJOINT inclusive ISO windows (#678 finding): order
+ * by start, then fuse a state into the open window when it is contiguous/overlapping
+ * with it (its start is at or before the day after the running end), else start a
+ * NEW window (a real delivery gap). Open-ended windows (the `9999-12-31` ceiling)
+ * swallow everything after them — like `collapseSpans`, but column-scoped and
+ * returning only the spans (no technical-change notes). A continuously-delivered
+ * column yields ONE window; an interrupted one yields a window per era. */
+function deliveryWindows(
+  bounds: readonly { from: string; to: string }[],
+): { from: string; to: string }[] {
+  const ordered = [...bounds].sort(
+    (a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to),
+  );
+  const windows: { from: string; to: string }[] = [];
+  for (const b of ordered) {
+    const open = windows.at(-1);
+    if (!open) {
+      windows.push({ from: b.from, to: b.to });
+      continue;
+    }
+    // An open-ended window already reaches "still delivered"; everything later is
+    // contiguous with it (and `dayAfter("9999-12-31")` would overflow — see
+    // `collapseSpans`). Contiguous/overlapping otherwise → extend; a real gap → split.
+    if (open.to === OPEN_ENDED_VALID_TO || b.from <= dayAfter(open.to)) {
+      if (b.to > open.to) {
+        open.to = b.to;
+      }
+    } else {
+      windows.push({ from: b.from, to: b.to });
+    }
+  }
+  return windows;
+}
+
+/** The inclusive ISO bounds to clamp a picker row's span to on Add, given the active
+ * `?period` wire and the year-grain dim window (#678). The `?period` wins at its REAL
+ * grain (`periodWireBounds` — so a sub-annual `2020-Q1` stays `2020-01-01..2020-03-31`
+ * rather than collapsing to the outer year, the #678 finding); else the year-grain
+ * dim window expanded to `[lo-01-01, hi-12-31]`; else null (no clamp — full-span add).
+ * Pure — unit-tested. */
+export function addWindowBounds(
+  period: string | null | undefined,
+  window: [number, number] | null,
+): { from: string; to: string } | null {
+  if (period) {
+    const bounds = periodWireBounds(period);
+    if (bounds) {
+      return bounds;
+    }
+  }
+  return window
+    ? { from: `${window[0]}-01-01`, to: `${window[1]}-12-31` }
+    : null;
+}
+
 /** The wire period to COMMIT for a selected picker row, given the active period
- * window (#678). The picker DIMS by the window but every row stays selectable over
- * its FULL span; on Add, though, the user means the period they narrowed to — so
- * intersect the row's span with the active window and commit THAT, not the row's
- * whole history. Two failures this fixes (#678):
+ * window as inclusive ISO bounds (#678). The picker DIMS by the window but every row
+ * stays selectable over its FULL span; on Add, though, the user means the period they
+ * narrowed to — so intersect the row's DELIVERY WINDOWS with the active window and
+ * commit THAT, not the row's whole history. Three failures this fixes (#678):
  *   - an OPEN-ENDED row (`wirePeriod` null) would otherwise add a period-UNSET
  *     source the derive leaves unresolved — clamped to the finite window, it
  *     resolves;
  *   - a FINITE multi-year row would otherwise widen the source to its whole history,
- *     ignoring the `?period=2020` the user picked.
- * `window` is the active inclusive year pair (`pickerWindowYears` — `?period` wins,
- * else the study window), or null. With NO window the row's own `wirePeriod` is
- * committed unchanged (full-span add, the prior behavior). The intersection clamps
- * the row's ISO span (its sentinels treated as unbounded) to the window's
- * `[lo-01-01, hi-12-31]`, then renders the coarsest exact token via the same
- * `rowWirePeriod` path; an empty intersection (the row lies wholly outside the
- * window — only reachable for an explicitly-selected dimmed row) falls back to the
- * row's own `wirePeriod` so the add is never dropped. Pure — unit-tested. */
+ *     ignoring the `?period` the user picked;
+ *   - a SUB-ANNUAL `?period` (`2020-Q1`) is honored at its real grain — `window`
+ *     carries the exact ISO bounds (see `addWindowBounds`), so the commit is the
+ *     quarter, never the collapsed outer year.
+ * `window` is the active inclusive ISO bounds (`addWindowBounds`), or null. With NO
+ * window the row's own `wirePeriod` is committed unchanged (full-span add). Each of
+ * the row's DISJOINT delivery windows is clamped into the active window (its sentinel
+ * bounds treated as unbounded); the surviving windows render as the comma-union via
+ * the same `rowWirePeriod` path (so an interrupted series stays interrupted, #678).
+ * An empty intersection (the row lies wholly outside the window — only reachable for
+ * an explicitly-selected dimmed row) falls back to the row's own `wirePeriod` so the
+ * add is never dropped. Pure — unit-tested. */
 export function rowAddPeriod(
   row: PickerRepresentation,
-  window: [number, number] | null,
+  window: { from: string; to: string } | null,
 ): string | null {
   if (!window) {
     return row.wirePeriod;
   }
-  const [winLo, winHi] = window;
-  // The window as ISO bounds; clamp the row's span into it. A sentinel row bound is
-  // unbounded on that side, so the window edge wins there.
-  const lo =
-    row.from === YEARLESS_VALID_FROM
-      ? `${winLo}-01-01`
-      : maxIso(row.from, `${winLo}-01-01`);
-  const hi =
-    row.to === OPEN_ENDED_VALID_TO
-      ? `${winHi}-12-31`
-      : minIso(row.to, `${winHi}-12-31`);
-  // Empty intersection (row wholly outside the window): keep the row's own span so
-  // an explicitly-selected dimmed row still adds something sensible.
-  if (lo > hi) {
+  // Clamp each delivery window into the active window; a sentinel bound is unbounded
+  // on that side, so the active-window edge wins there. Drop windows that fall wholly
+  // outside (empty intersection) — only the surviving, in-window spans commit.
+  const clamped: { from: string; to: string }[] = [];
+  for (const w of row.windows) {
+    const lo =
+      w.from === YEARLESS_VALID_FROM
+        ? window.from
+        : maxIso(w.from, window.from);
+    const hi =
+      w.to === OPEN_ENDED_VALID_TO ? window.to : minIso(w.to, window.to);
+    if (lo <= hi) {
+      clamped.push({ from: lo, to: hi });
+    }
+  }
+  // Wholly outside the window (no surviving window): keep the row's own span so an
+  // explicitly-selected dimmed row still adds something sensible.
+  if (clamped.length === 0) {
     return row.wirePeriod;
   }
-  return rowWirePeriod(lo, hi);
+  return rowWirePeriod(clamped);
 }
 
 /** The later / earlier of two ISO `YYYY-MM-DD` bounds (lexicographic order is
@@ -1022,6 +1119,13 @@ export function pickerRepresentations(
       (m, s) => (validTo(s) > m ? validTo(s) : m),
       validTo(group[0]),
     );
+    // The column's DISJOINT delivery windows (an interrupted series fuses adjacent
+    // states but leaves a real gap as its own window) — the wire period commits the
+    // comma-union over these so a gap year is never covered (#678 finding). A
+    // continuously-delivered column yields one window spanning from..to.
+    const windows = deliveryWindows(
+      group.map((s) => ({ from: validFrom(s), to: validTo(s) })),
+    );
     // The latest-era state (max valid_to, column tie-break is moot within one
     // group) supplies the representative value-set label — the current coding.
     const latest = group.reduce((a, b) => (validTo(b) > validTo(a) ? b : a));
@@ -1039,8 +1143,9 @@ export function pickerRepresentations(
       column: group[0].delivery_column_name as string,
       from,
       to,
+      windows,
       period: formatWindow(from, to),
-      wirePeriod: rowWirePeriod(from, to),
+      wirePeriod: rowWirePeriod(windows),
       valueSetLabel: latest.value_set_version_label,
       codingsVary,
     };

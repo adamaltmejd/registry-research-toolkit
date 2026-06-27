@@ -1569,3 +1569,124 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     navSpy.mockRestore();
   });
 });
+
+describe("ConceptGroupView per-column facet labels (#678 finding 4)", () => {
+  // A representation group with TWO members on ONE fqid, distinct delivery columns +
+  // facets (the inclusive/exclusive disposable-income case): CDISP "Inkl.
+  // kapitalvinst", CDISP5 "Exkl. kapitalvinst". The band is built per DISTINCT fqid,
+  // so without the facet-per-column map the SECOND member's facet label is lost.
+  function twoFacetMembersOneFqid(): ConceptGroupNodeData {
+    return node({
+      members: [
+        {
+          fqid: "scb/iot/dispink",
+          name: "Disponibel inkomst",
+          delivery_column: "CDISP",
+          facets: [
+            {
+              axis: "kapitalvinst",
+              value: "inkl",
+              label: "Inkl. kapitalvinst",
+            },
+          ],
+          coverage: null,
+        },
+        {
+          fqid: "scb/iot/dispink",
+          name: "Disponibel inkomst",
+          delivery_column: "CDISP5",
+          facets: [
+            {
+              axis: "kapitalvinst",
+              value: "exkl",
+              label: "Exkl. kapitalvinst",
+            },
+          ],
+          coverage: null,
+        },
+      ],
+    } as unknown as Partial<ConceptGroupNodeData>);
+  }
+
+  function dispinkGraph(): RelationshipGraph {
+    // ONE variable node carrying BOTH delivery columns' states (the graph node spans
+    // every column of the variable — the deduped-fqid band enumerates them all).
+    return graph([
+      vnode("scb/iot/dispink", [
+        gstate({
+          variant: "individer",
+          delivery_column_name: "CDISP",
+          valid_from: "2010-01-01",
+          valid_to: "2020-12-31",
+        }),
+        gstate({
+          variant: "individer",
+          delivery_column_name: "CDISP5",
+          valid_from: "2010-01-01",
+          valid_to: "2020-12-31",
+        }),
+      ]),
+    ]);
+  }
+
+  it("shows EACH column's human facet label, not just the technical column name", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(twoFacetMembersOneFqid());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(dispinkGraph());
+
+    renderGroup();
+
+    // Both columns render as picker rows (a multi-column member → a subheading over
+    // two column rows).
+    await vi.waitFor(() => {
+      const cols = [...document.querySelectorAll(".col-chip")].map(
+        (e) => e.textContent ?? "",
+      );
+      if (!cols.some((c) => c.includes("CDISP5"))) {
+        throw new Error("CDISP5 column not yet rendered");
+      }
+    });
+
+    // The LATER member's facet label (CDISP5 → "Exkl. kapitalvinst") reaches its row —
+    // the regression dropped it, leaving only the technical column name.
+    await expect.element(page.getByText("Exkl. kapitalvinst")).toBeVisible();
+    // The first member's facet shows too.
+    await expect.element(page.getByText("Inkl. kapitalvinst")).toBeVisible();
+  });
+});
+
+describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
+  it("marks the band the validated ?member= hint names", async () => {
+    // The backend echoes the validated focus slug on `node.member`; the band keyed by
+    // the member fqid whose leaf slug is that slug gets the focus marker.
+    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
+
+    renderGroup();
+
+    const focused = await vi.waitFor(() => {
+      const el = document.querySelector(".col-row.single.focused");
+      if (!el) {
+        throw new Error("focused band not yet rendered");
+      }
+      return el;
+    });
+    // Exactly the inkfeb band is focused (not inkjan).
+    expect(document.querySelectorAll(".focused")).toHaveLength(1);
+    expect(focused.textContent).toContain("Inkfeb");
+  });
+
+  it("marks nothing when there is no ?member= hint", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    renderGroup();
+
+    await vi.waitFor(() => {
+      if (document.querySelectorAll(".col-row.single").length < 2) {
+        throw new Error("rows not yet rendered");
+      }
+    });
+    expect(document.querySelectorAll(".focused")).toHaveLength(0);
+  });
+});

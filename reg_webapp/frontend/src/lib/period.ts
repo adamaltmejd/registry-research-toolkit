@@ -257,6 +257,31 @@ export function periodTokenForBounds(lo: string, hi: string): string {
   return `${lo}..${hi}`;
 }
 
+/** The OUTER inclusive ISO date bounds of a whole wire `?period` — a single token,
+ * a `lo..hi` range, or a comma-union LIST (the #307 interrupted form) — at its REAL
+ * grain (NOT year-collapsed), or `null` when no part parses to a bound (`_default`,
+ * junk). The union of every part's bounds: `from` = earliest part start, `to` =
+ * latest part end. Used to intersect a picker row's span with the active period on
+ * Add so a SUB-ANNUAL `?period` (`2020-Q1`) commits at its true grain instead of
+ * widening to the outer year (#678 finding). ADVISORY mirror of the wire grammar —
+ * the backend stays the canonical period authority. */
+export function periodWireBounds(wire: string): PeriodBounds | null {
+  let from: string | null = null;
+  let to: string | null = null;
+  for (const part of wire.split(LIST_SEP)) {
+    const endpoints = periodRangeEndpoints(part) ?? [part.trim(), part.trim()];
+    const loBounds = periodTokenBounds(endpoints[0]);
+    const hiBounds = periodTokenBounds(endpoints[1]);
+    if (loBounds && (from === null || loBounds.from < from)) {
+      from = loBounds.from;
+    }
+    if (hiBounds && (to === null || hiBounds.to > to)) {
+      to = hiBounds.to;
+    }
+  }
+  return from !== null && to !== null ? { from, to } : null;
+}
+
 /** Split a wire period into its two RANGE endpoints (`"2010..2020"` →
  * `["2010", "2020"]`), or `null` when it isn't a 2-endpoint range. */
 export function periodRangeEndpoints(wire: string): [string, string] | null {

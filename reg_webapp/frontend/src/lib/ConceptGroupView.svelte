@@ -7,6 +7,7 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
+  addWindowBounds,
   catalogHref,
   facetLabelJoin,
   pickerRepresentations,
@@ -160,7 +161,11 @@ function memberHref(fqid: string): string {
  * otherwise expose NON-member columns as selectable rows — letting a user add a
  * column OUTSIDE the concept being browsed. Restricting the band's input states to
  * the group's member columns closes that. A whole-variable member means the concept
- * IS the whole variable, so all columns are legitimately selectable → no filter. */
+ * IS the whole variable, so all columns are legitimately selectable → no filter. In a
+ * filtered-STEWARD catalog "all columns" is already the steward's HELD columns: the
+ * group `/graph` route narrows each member variable's states to the held set (backend
+ * `_narrow_graph_to_held`, #678), so a whole-variable member admitted only because the
+ * steward holds SOME of its columns no longer leaks the non-held ones here. */
 const memberColumnsByFqid = $derived.by(() => {
   const map = new Map<string, Set<string> | null>();
   for (const member of node?.members ?? []) {
@@ -192,6 +197,27 @@ const bands = $derived.by((): PickerBand[] => {
   if (!node) {
     return [];
   }
+  // delivery_column → human facet label, across ALL members of each fqid (#678): a
+  // representation group carries several members on one variable, each a distinct
+  // delivery_column with its own facet (CDISP "Inkl. kapitalvinst" / CDISP5 "Exkl.
+  // kapitalvinst"). The band is built per DISTINCT fqid (first member wins below), so
+  // the later members' facet labels would otherwise never reach their rows — collect
+  // them here so the picker can show the human facet per column.
+  const facetByColumnByFqid = new Map<string, Record<string, string>>();
+  for (const member of node.members) {
+    if (member.delivery_column == null) {
+      continue;
+    }
+    const facet = memberFacetLabel(member);
+    if (facet == null) {
+      continue;
+    }
+    const map = facetByColumnByFqid.get(member.fqid) ?? {};
+    // First non-null facet per (fqid, column) wins — a column's facet is stable across
+    // the group's members; later duplicates (shouldn't occur) don't override.
+    map[member.delivery_column] ??= facet;
+    facetByColumnByFqid.set(member.fqid, map);
+  }
   const seen = new Set<string>();
   const out: PickerBand[] = [];
   for (const member of node.members) {
@@ -217,6 +243,9 @@ const bands = $derived.by((): PickerBand[] => {
       name: member.name ?? leafSlug(member.fqid),
       registerPrefix: registerPrefixOf(member.fqid),
       facetLabel: memberFacetLabel(member),
+      // Per-column facet labels across ALL the fqid's members (#678) — so a
+      // multi-member-on-one-fqid representation group shows each column's human facet.
+      facetByColumn: facetByColumnByFqid.get(member.fqid),
       // The member's own leaf page — the picker renders the identity as a nav link
       // (the binding leaf passes no href; it's already that page). Carry the active
       // group `?period` onto the link (#678) so opening a member from the picker
@@ -227,6 +256,20 @@ const bands = $derived.by((): PickerBand[] => {
     });
   }
   return out;
+});
+
+/** The `band.key` (member fqid) the `?member=` focus hint names, for the picker's
+ * deep-link highlight (#678). The backend echoes the VALIDATED member slug on
+ * `node.member` (null when absent / unrecognized); the band key is the member fqid,
+ * whose leaf slug is that slug — so match a band by `leafSlug(key) === node.member`.
+ * Null when there's no (valid) hint, so the picker marks nothing. */
+const focusKey = $derived.by((): string | null => {
+  const hint = node?.member;
+  if (hint == null) {
+    return null;
+  }
+  const band = bands.find((b) => leafSlug(b.key) === hint);
+  return band?.key ?? null;
 });
 
 // ── The time axis: `?period` (client-side lens, no refetch) ──────────────────
@@ -325,8 +368,11 @@ function commitSelected(selected: PickerSelection[]): void {
   }
   const added: { name: string; period: string | null }[] = [];
   let already = 0;
+  // The active window as EXACT ISO bounds — a sub-annual `?period` (`2020-Q1`) is
+  // honored at its real grain on Add, not collapsed to the outer year (#678 finding).
+  const addWindow = addWindowBounds(period ?? null, pickerWindow);
   for (const { band, row } of selected) {
-    const addPeriod = rowAddPeriod(row, pickerWindow);
+    const addPeriod = rowAddPeriod(row, addWindow);
     const result = projectStore.addFromCatalog(
       {
         registerVariant: `${registerPrefixOf(band.key)}/${row.variant}`,
@@ -418,6 +464,7 @@ function commitSelected(selected: PickerSelection[]): void {
         {bands}
         window={pickerWindow}
         canAdd={seedReady}
+        {focusKey}
         onadd={commitSelected}
       />
     {/if}

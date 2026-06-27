@@ -10,6 +10,7 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
+  addWindowBounds,
   coverageFromStates,
   grainsFromStates,
   groupLinkFromFocus,
@@ -305,8 +306,11 @@ function commitSelected(selected: PickerSelection[]): void {
   }
   const added: { name: string; period: string | null }[] = [];
   let already = 0;
+  // The active window as EXACT ISO bounds — a sub-annual `?period` (`2020-Q1`) is
+  // honored at its real grain on Add, not collapsed to the outer year (#678 finding).
+  const addWindow = addWindowBounds(params.period ?? null, pickerWindow);
   for (const { row } of selected) {
-    const addPeriod = rowAddPeriod(row, pickerWindow);
+    const addPeriod = rowAddPeriod(row, addWindow);
     const result = projectStore.addFromCatalog(
       {
         registerVariant: `${registerPrefix}/${row.variant}`,

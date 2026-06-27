@@ -13,6 +13,7 @@ import {
   periodTokenBounds,
   periodTokenForBounds,
   periodToWire,
+  periodWireBounds,
   queryFromParams,
   rangeRepresentable,
   sameYearWindow,
@@ -481,6 +482,54 @@ describe("periodRangeEndpoints", () => {
   it("returns null for non-ranges and malformed ranges", () => {
     expect(periodRangeEndpoints("2020")).toBeNull();
     expect(periodRangeEndpoints("2018..2019..2020")).toBeNull();
+  });
+});
+
+describe("periodWireBounds (#678: exact ISO bounds of a whole ?period)", () => {
+  it("a single SUB-ANNUAL token resolves to its true grain (NOT the outer year)", () => {
+    expect(periodWireBounds("2020-Q1")).toEqual({
+      from: "2020-01-01",
+      to: "2020-03-31",
+    });
+    expect(periodWireBounds("HT2020")).toEqual({
+      from: "2020-07-01",
+      to: "2020-12-31",
+    });
+    expect(periodWireBounds("2020-03")).toEqual({
+      from: "2020-03-01",
+      to: "2020-03-31",
+    });
+  });
+
+  it("a bare year resolves to the whole-year ISO bounds", () => {
+    expect(periodWireBounds("2018")).toEqual({
+      from: "2018-01-01",
+      to: "2018-12-31",
+    });
+  });
+
+  it("a range resolves to its outer endpoints' bounds", () => {
+    expect(periodWireBounds("2010..2015")).toEqual({
+      from: "2010-01-01",
+      to: "2015-12-31",
+    });
+    // A sub-annual endpoint keeps its grain on the outer side.
+    expect(periodWireBounds("2010-Q2..2015-03")).toEqual({
+      from: "2010-04-01",
+      to: "2015-03-31",
+    });
+  });
+
+  it("a comma list unions every part's bounds (outer min start, max end)", () => {
+    expect(periodWireBounds("2005..2010,2015..2020")).toEqual({
+      from: "2005-01-01",
+      to: "2020-12-31",
+    });
+  });
+
+  it("null when no part parses to a bound (_default / junk)", () => {
+    expect(periodWireBounds("_default")).toBeNull();
+    expect(periodWireBounds("junk")).toBeNull();
   });
 });
 
