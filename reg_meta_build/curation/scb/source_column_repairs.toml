@@ -37,18 +37,16 @@
 # role (never merge a subject key with a relation column — RTB's
 # personnrmor/personnrsamh CO-occur with personnr and correctly stay split
 # siblings).
-
-# ── RTB (reg 2) subject personnummer: era rename `pnr` → `personnr` ──
-#    The #196 canonical case: var 57 ("Personnummer") delivered as the legacy
-#    `pnr` header in early editions and `personnr` later, never co-occurring.
-#    Without the merge the var (a split container via the co-delivered
-#    relation-pnr columns) shards the subject key into a sparse legacy `pnr`
-#    fragment + the well-materialized `personnr` — and the A4.4d panel keys
-#    ended up pinned to the sparse fragment.
-[[column_merge]]
-register_id = 2
-var_id = 57
-columns = ["pnr", "personnr"]
+#
+# The RTB (reg 2 var 57) `pnr` → `personnr` subject-key rename — once the #196
+# canonical example here — was RETIRED from this surface (#846): a pure era
+# rename with no gap to fill is modeled as a representation-grain `replaced_by`
+# succession (`from_column`/`to_column`) in curation/relations.toml, not unified
+# by fiat. The split-sibling sparse `pnr` fragment + dense `personnr` now coexist
+# and the cross-era continuity rides the succession edge. The remaining
+# `column_merge` example below is FRIDA, whose case is a true GAP-FILL (the two
+# headers partition disjoint year ranges of ONE key) — that gap-fill still awaits
+# its own succession model and is documented as the canonical example for now.
 
 # ── FRIDA (reg 121) firm key: era rename `borgnr` → `persorgnr` → `borgnr` ──
 #    var 56 ("Person-/organisationsnummer"): the Punktskatter variant delivers

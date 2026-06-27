@@ -8,13 +8,20 @@ key at load (`_curation.fold_column`), so TOML casing is cosmetic.
 
 * `[[column_merge]]` (#196) — assert that NEVER-co-occurring delivery columns of
   one var_id are the SAME concept, so the coalescer's rule-2 union-find treats
-  them as ONE node-col from the start, UPSTREAM of triage. An era-rename twin
-  pair (`PNR` → `PersonNr`) never co-occurs, so the two columns form separate
-  union-find components — and once the var_id is a split container (some OTHER
-  columns co-deliver), each component shards into its own sibling variable,
-  splitting one identity's history across fragments. The maintainer asserts the
-  equivalence here and the coalescer normalizes the twins to one union-find
-  node-col by fiat.
+  them as ONE node-col from the start, UPSTREAM of triage. A gap-fill twin pair
+  (FRIDA's `borgnr` / `persorgnr`, partitioning disjoint year ranges of one firm
+  key) never co-occurs, so the two columns form separate union-find components —
+  and once the var_id is a split container (some OTHER columns co-deliver), each
+  component shards into its own sibling variable, splitting one identity's history
+  across fragments. The maintainer asserts the equivalence here and the coalescer
+  normalizes the twins to one union-find node-col by fiat.
+
+  This surface is now reserved for that GAP-FILL shape. A pure era RENAME with no
+  gap to fill (the retired RTB `PNR` → `PersonNr` twin, #846) is instead modeled
+  as a representation-grain `replaced_by` succession in `curation/relations.toml`,
+  leaving the two siblings split and recording the rename as navigation rather
+  than unifying them by fiat. FRIDA's gap-fill still awaits its own succession
+  model, so it remains the lone curated `column_merge` example.
 
 Each `[[entry]]` is ONE group for one `(register_id, var_id)`; a var with two
 independent groups gets two entries with that same key. Keying per-(register, var)

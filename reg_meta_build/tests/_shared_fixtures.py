@@ -34,9 +34,9 @@ def _no_repo_curation() -> Iterator[None]:
     """Synthetic test builds run with EMPTY curation maps — the documented
     contract for the maintainer TOMLs (codelivery / source_column_repairs).
     A checkout-run `build_db` would otherwise load the REPO TOMLs, which are keyed
-    on real SCB source ids that can collide with the fixture register ids (RTB IS
-    register 2 — a real `[[column_merge]]` entry for it binds the fixture's
-    OTHERREG and fails every build). Session-scoped + autouse so it lands before
+    on real SCB source ids that can collide with the fixture register ids (e.g. a
+    real `[[column_merge]]` entry on a low register id binds the fixture's OTHERREG
+    and fails every build). Session-scoped + autouse so it lands before
     the session-scoped `fixture_db` build; tests that exercise a curation surface
     monkeypatch their own file path on top (function-scoped, applied after, undone
     per test)."""
