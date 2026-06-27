@@ -168,7 +168,7 @@ commit touches `pyproject.toml` and `__init__.py`, which the gate's
 `files: \.(py|toml|json)$` filter matches, so the suite **will** run on this push.
 **Docker must be running** or the push is blocked — start it and push again, never
 bypass with `--no-verify`. (The release-marked `test_update_and_query`, which downloads
-the published asset, is carved off pre-push and runs only post-publish — see step 10.)
+the published asset, is carved off pre-push and runs only post-publish — see step 11.)
 
 ### 7. Create draft GitHub release
 
@@ -349,7 +349,31 @@ Verify **both** assets are present on the draft release — do not publish witho
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
 ```
 
-### 9. Publish the draft release
+### 9. Refresh steward catalogs (reg_meta releases)
+
+reg_meta only. Steward catalogs are built against the reg_meta DB, so a new reg_meta
+release can drift any committed `reg_webapp/stewards/<id>/steward.project_data.json`
+whose `reg_meta_version` predates the new tag (slug churn, new content, overlap fixes).
+The webapp boots through the drift, so this is coverage hygiene — regenerate the stale
+catalogs into this release rather than leaving them lagging.
+
+Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
+special-case any one steward); for each whose `reg_meta_version` is older than the new
+`reg_meta/vX.Y.Z`:
+
+- build a flavored DB on the new main DB asset (`reg-meta-build extend-db …`, the
+  steward overlay over the just-built `reg_meta.db.zst`);
+- regenerate the catalog per `reg_webapp/stewards/<id>/README.md`;
+- review the coverage/binding diff (catalog size, representation pins, co-delivery
+  prune) before accepting it;
+- commit the regenerated catalog into this release.
+
+The catalog generator and its confidential inputs are untracked/maintainer-local, so in
+a non-maintainer or CI environment they are absent — **skip with a note** when they are.
+The `scripts/check_issue_hygiene.py` steward-staleness alert tracks the residual drift
+until a maintainer regenerates.
+
+### 10. Publish the draft release
 
 This is what fires the publish workflow.
 
@@ -357,7 +381,7 @@ This is what fires the publish workflow.
 gh release edit <package>/vX.Y.Z --draft=false
 ```
 
-### 10. Monitor deployment
+### 11. Monitor deployment
 
 If the package has a publish workflow (see table above), find the triggered run, watch
 it, and verify PyPI. **Scope the run lookup to this release** — fetch tags first, then
