@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0.0",
   "steward": "swecov",
-  "reg_meta_version": "reg_meta/v0.23.0",
+  "reg_meta_version": "reg_meta/v0.24.0",
   "name": "SWECOV holdings catalog",
   "sources": [
     {
@@ -6871,6 +6871,11 @@
           "variable": "scb/aku/mveckman",
           "type": "numeric",
           "representation": "MVeckMan"
+        },
+        {
+          "variable": "scb/aku/omb10b",
+          "type": "numeric",
+          "representation": "Omb10b"
         },
         {
           "variable": "scb/aku/omgnr",
@@ -17366,12 +17371,12 @@
         {
           "variable": "scb/ksju/naringsgren",
           "type": "opaque",
-          "representation": "Ksjusni"
+          "representation": "NGS1"
         },
         {
-          "variable": "scb/ksju/naringsgren",
+          "variable": "scb/ksju/naringsgren-ksjusni",
           "type": "opaque",
-          "representation": "NGS1"
+          "representation": "Ksjusni"
         },
         {
           "variable": "scb/ksju/naringsgrupp",
@@ -29244,6 +29249,11 @@
           "representation": "AR"
         },
         {
+          "variable": "sos/par/atc-komplement-atgardskod",
+          "type": "numeric",
+          "representation": "ATCO"
+        },
+        {
           "variable": "sos/par/atc-komplement-diagnos",
           "type": "opaque",
           "representation": "ATC"
@@ -29309,6 +29319,11 @@
           "representation": "SLUTRAPPORTERAD"
         },
         {
+          "variable": "sos/par/typ-av-diagnos",
+          "type": "opaque",
+          "representation": "HDIA"
+        },
+        {
           "variable": "sos/par/ut-akut-tidpunkt",
           "type": "opaque",
           "representation": "UT_AKUT_TIDPUNKT"
@@ -29364,6 +29379,11 @@
           "variable": "sos/par/ar",
           "type": "numeric",
           "representation": "AR"
+        },
+        {
+          "variable": "sos/par/atc-komplement-atgardskod",
+          "type": "numeric",
+          "representation": "ATCO"
         },
         {
           "variable": "sos/par/atc-komplement-diagnos",
@@ -29574,6 +29594,11 @@
           "variable": "sos/par/slutrapporterad",
           "type": "numeric",
           "representation": "SLUTRAPPORTERAD"
+        },
+        {
+          "variable": "sos/par/typ-av-diagnos",
+          "type": "opaque",
+          "representation": "HDIA"
         },
         {
           "variable": "sos/par/utdatum",
