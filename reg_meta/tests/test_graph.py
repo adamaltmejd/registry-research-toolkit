@@ -443,6 +443,33 @@ class TestEdges:
         assert succ[0].target == "scb/lisa/civilstand"
         assert succ[0].label == "renamed"
 
+    def test_variable_succession_edge_carries_effective_year(self) -> None:
+        # #794 P2: the `variable_replaced_by.effective_year` (the transition year the
+        # retired LineagePanels showed) must ride on the succession edge so the #678
+        # timeline can annotate the transition with its year — independently of the
+        # human reason (a year-only edge would otherwise render as an unlabelled
+        # arrow). Here the edge has BOTH a reason and an effective_year.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "civilstand"),
+            reason="renamed",
+            effective_year=2009,
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        (succ,) = [e for e in g.edges if e.kind == "succession"]
+        assert succ.effective_year == 2009
+        assert succ.label == "renamed"  # year is carried ALONGSIDE the reason
+
     def test_thin_chain_node_hydrated_when_later_a_member(self) -> None:
         # P2-1 regression: focus A (kon) succeeds-to a LIVE successor B (civilstand)
         # that is ALSO a group member. Walking A's succession chain reaches B FIRST as
@@ -885,11 +912,13 @@ class TestVariableNodeFacets:
         assert kon.group_label == "Group demog"
         assert civ.group_label == "Group demog"
 
-    def test_multi_representation_member_unions_facets(self) -> None:
+    def test_multi_representation_member_picks_representative_not_union(self) -> None:
         # #819: one variable can be SEVERAL members of a group (one per
-        # delivery_column), each carrying its own facet. The variable-grain node
-        # unions all of them — deduped, deterministically ordered — rather than
-        # silently surfacing only the first member's facets (the rebase seam).
+        # delivery_column), each carrying its own facet. These per-column
+        # representations are MUTUALLY EXCLUSIVE, so the variable-grain node must NOT
+        # union them (that produced an incoherent #678 leaf header mixing both
+        # variants — P2) — it carries ONE REPRESENTATIVE member's facets: the first
+        # matching member in group-member order.
         conn = build_slugged_db()
         add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
         add_state(
@@ -911,7 +940,8 @@ class TestVariableNodeFacets:
             facets={"kon": ("1", "first"), "civilstand": ("3", "other")},
         )
         # Second representation member for kon: same variable, different delivery
-        # column + facet ('2', 'second') — must union with the first, not replace it.
+        # column + facet ('2', 'second') — must NOT be unioned onto the first; the
+        # node keeps the representative (first member) facet only.
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'kon'"
         ).fetchone()[0]
@@ -930,11 +960,10 @@ class TestVariableNodeFacets:
             "scb/lisa/kon"
         ]
         assert isinstance(kon, VariableGraphNode)
-        # BOTH of kon's member facets, ordered by first facet value (members sort
-        # '1' before '2'); the second member is NOT dropped.
+        # ONLY the representative (first) member's facet — the mutually-exclusive
+        # 'second' representation is NOT mixed in.
         assert [(f.axis, f.value, f.label) for f in kon.facets] == [
             ("rank", "1", "first"),
-            ("rank", "2", "second"),
         ]
         assert kon.group_label == "Group demog"
 
@@ -1081,6 +1110,14 @@ class TestClassificationChains:
             ("class/sun1996", "class/sun2000"),
             ("class/sun2000", "class/sun2020"),
         }
+        # #794 P2: each succession edge carries its `classification_replaced_by`
+        # effective_year (the supersession year), so the #678 timeline can annotate
+        # the transition even though the edition succession reason is suppressed (the
+        # internal `note` tag is never shown). The year rides on the edge, NOT on the
+        # node's `version_year` (the edition's own vintage).
+        by_pair = {(e.source, e.target): e for e in succ}
+        assert by_pair[("class/sun1996", "class/sun2000")].effective_year == 2000
+        assert by_pair[("class/sun2000", "class/sun2020")].effective_year == 2020
 
     def test_sun_umbrella_members_present_and_deduped(self) -> None:
         # A SUN-style umbrella with two members sharing a chain: editions present,
@@ -1115,6 +1152,33 @@ class TestClassificationChains:
             "class/sun1996",
             "class/sun2000-niva",
         )
+
+    def test_umbrella_members_carry_group_label_heading(self) -> None:
+        # #794 P3: a curated umbrella member carries the group's display `label` as
+        # `group_label` so the renderer can title the classification cluster (its
+        # `group_key` is the bare `class/sun` slug, no display string). A non-member
+        # spine edition pulled in by the chain walk stays headless.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, cid=1, slug="sun1996", valid_from=1996)
+        _add_classification(conn, cid=2, slug="sun2000-niva", valid_from=2000)
+        _add_class_succession(
+            conn, predecessor="sun1996", successor="sun2000-niva", effective_year=2000
+        )
+        # Only the 2000-niva edition is a curated member; sun1996 is its (non-member)
+        # spine predecessor.
+        _add_class_umbrella_group(conn, members=[(2, "niva")])
+        g = Catalog(conn).graph_for_classification_group("sun")
+        assert g is not None
+        nodes = {n.id: n for n in g.nodes}
+        member = nodes["class/sun2000-niva"]
+        assert isinstance(member, ClassificationGraphNode)
+        assert member.group_key == "class/sun"
+        assert member.group_label == "SUN"  # the curated group's display label
+        # The non-member spine edition is headless (and ungrouped).
+        spine = nodes["class/sun1996"]
+        assert isinstance(spine, ClassificationGraphNode)
+        assert spine.group_key is None
+        assert spine.group_label is None
 
     def test_split_predecessor_branches_walked_when_descendant_first(self) -> None:
         # P2-3 regression: a #579 SPLIT root P (sun1996) fans out into 3 branches

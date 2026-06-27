@@ -17,6 +17,7 @@ import {
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
+  type VariableGraphNode,
   type VariableStateModel,
 } from "./api";
 import {
@@ -272,108 +273,78 @@ export function membersHaveUniqueCoords(
   return true;
 }
 
-// ── Member-distinguishing qualifier (#670) ──────────────────────────────────
+// ── Member-distinguishing qualifier (#670, graph-sourced #678) ───────────────
 // A grouped binding leaf (`scb/lisa/agi1astsni2007g`) shares its concept
 // `node.name` with ~31 siblings, so the header alone can't tell members apart.
-// The /dimensions groups carry per-member `facets` (axis:value:label) that
-// LOCATE each member in its group — the qualifier is THIS member's facet labels
-// (e.g. "AGI · 2007 SNI edition"). Derived from the SAME /dimensions data
-// DimensionsPanel renders (lifted into BindingLeafView; no extra fetch).
+// The #670 header qualifier + "member of ⟨group⟩" link now derive from the
+// relationship-graph FOCUS node (the `VariableGraphNode` whose `id === focus_id`)
+// instead of the retired `/dimensions` fetch (#678): the focus node already
+// carries the member's `facets` (axis:value:label) and `group_label`, so the
+// leaf's single graph fetch feeds both the renderer AND the header — no second
+// request. Unlike the old `/dimensions` form there is no MULTI-group canonical
+// ordering: the graph focus carries ONE group membership (the member's own
+// register group), so the facets are unambiguous.
 
 /** A member-distinguishing qualifier and whether it is the facet-label form or
  * the slug fallback — the discriminant the caller styles on (`facets` → a human
  * label `<span>`, `slug` → a technical-identifier `<code>`). */
 export type MemberQualifier = { text: string; kind: "facets" | "slug" };
 
-/** The member-distinguishing qualifier for `fqid` across its dimension `groups`
- * — the facet labels (axis:value pairs) that locate THIS member in its group,
- * joined with " · ". A variable can be in MULTIPLE groups; the CANONICAL group
- * (`canonicalKey` = `BindingNode.group.key`, the member's own register group)
- * leads, so its facets win when several groups carry the member.
- *
- * A GROUPED member ALWAYS gets a qualifier: when no group yields facets (an edge
- * group's split siblings — e.g. `agi1astsni2007g` vs `ku1astsni`, `axes: []`,
- * empty facets), the member's leaf slug is the fallback (`kind: "slug"`), since
- * the slug is the only thing that distinguishes those siblings (it encodes the
- * edition/vintage/variant) — without it the sibling pages render IDENTICAL
- * headers (the shared concept name; #670 / dogfooding M10). "Grouped" = a
- * canonical `canonicalKey`, or the member appears in some group. Returns `null`
- * ONLY for an UNGROUPED member (a normal variable whose `node.name` already
- * suffices). The discriminated `kind` lets the caller pick a presentation
- * (facet label vs. mono code) without re-scanning the groups. */
-export function memberQualifier(
-  groups: readonly ConceptGroup[],
-  fqid: string,
-  canonicalKey?: string | null,
-  deliveryColumn?: string | null,
-): MemberQualifier | null {
-  // Canonical group first so its facets lead when the member is in several
-  // groups; the rest follow in their incoming order. /dimensions can return
-  // MULTIPLE dimension groups for one member (level / population / rank
-  // memberships — DimensionsPanel/#489), hence canonical-first.
-  const ordered =
-    canonicalKey == null
-      ? groups
-      : [...groups].sort((a, b) => {
-          const aCanon = a.key === canonicalKey ? 0 : 1;
-          const bCanon = b.key === canonicalKey ? 0 : 1;
-          return aCanon - bCanon;
-        });
-  let grouped = canonicalKey != null;
-  for (const group of ordered) {
-    // #819: an `fqid` can name TWO members of one group (two delivery columns of
-    // one variable). When the caller knows the member's `deliveryColumn`, match
-    // BOTH so the right representation's facets win; otherwise match by fqid
-    // alone and take the FIRST representation — the documented default (a binding
-    // leaf page addresses a whole variable, not a single delivery column, so it
-    // has no column to disambiguate by and the first member's facets are the
-    // representative qualifier).
-    const member = group.members.find(
-      (m) =>
-        m.fqid === fqid &&
-        (deliveryColumn == null || m.delivery_column === deliveryColumn),
-    );
-    if (member) {
-      grouped = true;
-    }
-    const facets = member?.facets ?? [];
-    if (facets.length > 0) {
-      return { text: facets.map((f) => f.label).join(" · "), kind: "facets" };
-    }
-  }
-  // Grouped but no group yields facets → fall back to the member's leaf slug so
-  // the edge-group split siblings still get a distinguishing header element. An
-  // ungrouped member returns null (its `node.name` already distinguishes it).
-  return grouped ? { text: leafSlug(fqid), kind: "slug" } : null;
+/** Join a faceted member's facet labels into one display string (" · "-
+ * separated) — the single home for the separator/ordering, shared by the header
+ * qualifier (`qualifierFromFocus`) and the HistoryGraph member-lane label. */
+export function facetLabelJoin(facets: { label: string }[]): string {
+  return facets.map((f) => f.label).join(" · ");
 }
 
-/** The group a binding leaf links back to (#670): the dimension group matching
- * the member's canonical `node.group.key`, else (defensively) the first
- * dimension group containing the member — its `{ label, href }` for the
- * "member of ⟨label⟩" context link. `null` when ungrouped, or when no fetched
- * group matches (loading / error / a stale skew between `node.group` and
- * /dimensions). The href targets the group SUBJECT route via `groupHref`.
+/** The member-distinguishing qualifier from the graph FOCUS node (#678): the
+ * focus's facet labels joined with " · " (e.g. "AGI · 2007 SNI edition") when it
+ * carries facets; else, for a GROUPED member with no facets (an edge group's
+ * split siblings — `group_label` set, `facets: []`), the leaf slug fallback
+ * (`kind: "slug"`), since the slug is the only differentiator between those
+ * siblings; else `null` for an UNGROUPED variable (its `node.name` suffices).
  *
- * #819: an `fqid` can name two members (two delivery columns) of one variable,
- * but they always live in the SAME group (a representation split is intra-group),
- * so the containing-group lookup is column-agnostic — it matches by `fqid` alone
- * (any representation of the variable yields the same group link). */
-export function memberGroupLink(
-  groups: readonly ConceptGroup[],
-  ref: BindingGroupRef | null | undefined,
+ * `fqid` is the LEAF's own fqid — only a fallback for the focus node's `fqid`,
+ * which is itself the slug-fallback source. The focus node's `fqid` is the
+ * member's CANONICAL identity (post-same_as), so the slug fallback prefers it
+ * (`focus.fqid ?? fqid`) — the alias page and the canonical page then show the
+ * SAME technical identifier (#670 Codex-P2 parity, preserved from the retired
+ * `memberQualifier`). The discriminated `kind` lets the caller pick a
+ * presentation (facet label vs. mono code) without re-scanning. */
+export function qualifierFromFocus(
+  focus: VariableGraphNode | null | undefined,
   fqid: string,
-): { label: string; href: string } | null {
-  if (!ref) {
+): MemberQualifier | null {
+  if (!focus) {
     return null;
   }
-  const byKey = groups.find((g) => g.key === ref.key);
-  const containing =
-    byKey ?? groups.find((g) => g.members.some((m) => m.fqid === fqid));
-  if (!containing) {
+  if (focus.facets.length > 0) {
+    return { text: facetLabelJoin(focus.facets), kind: "facets" };
+  }
+  // Grouped (a group label) but facet-less → the CANONICAL leaf slug distinguishes
+  // the edge-group split siblings. Prefer the focus node's own (canonical) fqid so
+  // an alias page shows the canonical sibling slug, not its alias; fall back to the
+  // leaf arg when the focus carries no fqid. Ungrouped (no group label) → null.
+  return focus.group_label != null
+    ? { text: leafSlug(focus.fqid ?? fqid), kind: "slug" }
+    : null;
+}
+
+/** The "member of ⟨group label⟩" context link from the graph FOCUS node + the
+ * leaf's `node.group` ref (#678). The label comes from the focus node's
+ * `group_label`; the HREF still comes from the leaf `BindingGroupRef`
+ * (provider/register/key) — that's the authoritative group-subject coordinate,
+ * already resolved server-side. `null` when ungrouped (no `group_label`) or when
+ * the leaf carries no group ref. */
+export function groupLinkFromFocus(
+  focus: VariableGraphNode | null | undefined,
+  ref: BindingGroupRef | null | undefined,
+): { label: string; href: string } | null {
+  if (!focus || focus.group_label == null || !ref) {
     return null;
   }
   return {
-    label: containing.label,
+    label: focus.group_label,
     href: groupHref(`${ref.provider}/${ref.register}`, ref.key),
   };
 }
@@ -1330,8 +1301,9 @@ export function coverageFromStates(
 }
 
 /** The 4-digit year of an ISO `YYYY-MM-DD` bound as an int, or null when it
- * isn't a leading-4-digit string (a blank/edge bound on a stale payload). */
-function yearOf(iso: string): number | null {
+ * isn't a leading-4-digit string (a blank/edge bound on a stale payload). Shared
+ * with `history_graph.ts`'s `orderKey` (one home for the leading-year regex). */
+export function yearOf(iso: string): number | null {
   const m = /^(\d{4})/.exec(iso ?? "");
   return m ? Number.parseInt(m[1], 10) : null;
 }

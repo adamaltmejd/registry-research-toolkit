@@ -485,13 +485,13 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   `asyncResource` at `/api/docs/for-variable` — a distinct failure domain (a docs error,
   timeout, or absent index never blanks the leaf). The panel omits the entire section
   when the response is empty in any sense (`ingested:false`, `register_ingested:false`,
-  or zero results), mirroring the omit-when-empty behaviour of `LineagePanels` and
-  `DimensionsPanel` (#612); loading and error states still render inline, so an
-  in-flight or errored fetch never reads as a confirmed absence. When results are
-  present, fuzzy hits are labelled as such; each hit links to the `/doc/<filename>`
-  viewer and renders the FTS snippet via a safe inline-emphasis subset (`**…**` →
-  `<mark>` for matched-term highlight, `*…*`/`_…_` → `<em>`) through auto-escaped Svelte
-  interpolation — never `{@html}`, still excerpt-only.
+  or zero results), mirroring the omit-when-empty behaviour of `HistoryGraph` and
+  `LineageDetails` (#612); loading and error states still render inline, so an in-flight
+  or errored fetch never reads as a confirmed absence. When results are present, fuzzy
+  hits are labelled as such; each hit links to the `/doc/<filename>` viewer and renders
+  the FTS snippet via a safe inline-emphasis subset (`**…**` → `<mark>` for matched-term
+  highlight, `*…*`/`_…_` → `<em>`) through auto-escaped Svelte interpolation — never
+  `{@html}`, still excerpt-only.
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
@@ -1160,24 +1160,24 @@ that fills the shell: `binding` → `BindingLeafView`, `classification` →
 
 Per-kind mapping into the five sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)                                       | Concept group (`ConceptGroupView`)                           |
-  | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                                               | Technical details only (key / facets / source)               |
-  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via the succession panel)                                    | member selector (slice) + `PeriodPicker` (availability lens) |
-  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                                         | —                                                            |
-  | relationships | `DimensionsPanel` + `LineagePanels`                                                                      | `ClassificationDimensionsPanel` + `ClassificationLineagePanels` (edition chain) | — (members live in the picker)                               |
-  | docs          | `DocMentionsPanel`                                                                                       | —                                                                               | —                                                            |
+  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)                   | Concept group (`ConceptGroupView`)                           |
+  | ------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                           | Technical details only (key / facets / source)               |
+  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via `HistoryGraph` succession edges)     | member selector (slice) + `PeriodPicker` (availability lens) |
+  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                     | —                                                            |
+  | relationships | `HistoryGraph` (over `/graph` payload) + `LineageDetails` (provenance/warnings)                          | `HistoryGraph` (edition points, succession + related edges) | — (members live in the picker)                               |
+  | docs          | `DocMentionsPanel`                                                                                       | —                                                           | —                                                            |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
 2007 SNI edition", falling back to the slug for edge-group split siblings) and a "member
 of ⟨group⟩" context link directly under the header — both additive and gated on a
-resolved `/dimensions` fetch. The fetch itself is owned by `BindingLeafView` (lifted
-from `DimensionsPanel`), which derives the qualifier and link from it and passes the
-resolved `groups`/`loading`/`error` down to `DimensionsPanel` as props;
-`DimensionsPanel` is now purely presentational. One shared fetch serves the header and
-the panel; failure domain is unchanged — a dimensions error renders the panel's inline
-alert without affecting the rest of the leaf.
+resolved `/graph` fetch. The fetch itself is owned by `BindingLeafView`, which derives
+the qualifier (`qualifierFromFocus`) and group link (`groupLinkFromFocus`) from the
+graph focus node's `facets` / `group_label` — no separate `/dimensions` request. The
+same `/graph` fetch feeds `HistoryGraph`; failure domain is unchanged — a graph error
+omits both the header qualifier and the graph panel without affecting the rest of the
+leaf.
 
 ### The picker — slice axis × time axis
 
@@ -1194,10 +1194,9 @@ kind:
   unambiguous variable. (The *representation* / delivery-column choice stays a
   post-click chooser; it is per-segment and a succession split can carry several.)
 - **Classification** — editions (`sun1996` → `sun2000` → …) are the slice, but there is
-  **deliberately no picker**. Editions switch via the embedded **succession panel**
-  (`edition_chain`, rendered in `ClassificationLineagePanels` under relationships): each
-  edition is its own `class/<slug>` URL, so navigating the chain *is* the edition
-  switch. Adding a picker would duplicate that chain.
+  **deliberately no picker**. Editions switch via the succession edges in `HistoryGraph`
+  (rendered under relationships): each edition is its own `class/<slug>` URL, so
+  navigating the graph *is* the edition switch. Adding a picker would duplicate that.
 - **Concept group** — the **member selector**: the group's facet grid rendered expanded
   (a 2-axis matrix / 1-axis chips / 0-axis list, mirroring the register-browse
   `ConceptGroupRow` shapes but richer — per-member coverage + availability greying).
@@ -1239,20 +1238,44 @@ form when the start is unknown (#658).
   styling consistent across the three call sites; callers omit it entirely when there's
   nothing to demote.
 
-### Why the variable and classification lineage panels stay separate
+### Why the unified `HistoryGraph` can cover both leaf kinds (#678)
 
-`LineagePanels` (variable) and `ClassificationLineagePanels` (classification) are
-**deliberately distinct components over distinct embedded payloads**, not one
-parameterized panel. The grains differ in ways a shared panel would have to special-case
-on every row: the variable succession chain tolerates **dead/renamed predecessors** (the
-#355/#411 model — a chain edition may have no live row but still 301-redirects) and
-carries a per-transition **reason**; the classification chain is **all-live** (the build
-validator forbids a dead edition) and has **no reason column**. The variable side also
-pairs succession with `variable_state_lineage` source → consumer edges and a
-`DimensionsPanel` (the variant facet groups), while the classification side pairs its
-edition chain with a granularity cross-reference (`ClassificationDimensionsPanel`).
-Keeping them separate means each renders exactly its own embedded shape (see Catalog
-router structure → variable / classification chains) with no kind-branching.
+`HistoryGraph` (#678) renders **both** variable and classification leaves over the same
+`RelationshipGraph` wire shape — the kind-branching lives in the backend
+(`Catalog.graph_for_binding` vs `graph_for_classification`) and in the pure projection
+(`history_graph.ts`), not in the renderer. Variable nodes lay out as horizontal
+representation-run cells along the time axis; classification nodes lay out as
+version-ordered edition points. Succession and related edges draw the same way in both
+cases — directed arcs between node markers. The remaining per-kind differences that the
+old separate panels had to special-case are either absent from the graph contract (the
+classification chain carries no per-transition reason; dead predecessors are resolved
+server-side before the graph is returned) or kept in the non-graph residue:
+`LineageDetails` carries the variable-only surfaces (`variable_state_lineage` provenance
+edges + `/lineage_warnings`) and is simply not mounted on the classification leaf, which
+has neither.
+
+### Rejected alternatives + the viz-dependency trigger (#667 spike)
+
+The model is **entity nodes with column/representation slices** — *not* top-level column
+nodes, *not* variable-only nodes that hide the columns. A top-level column-node graph
+would explode dense monthly families (e.g. `agi1lonfink`'s 12 delivery columns) and the
+group pages into unreadable node clouds; a variable-only graph would lose the
+same-column-versus-different-variable distinction that motivated the view in the first
+place. Keeping one node per variable with its representation-run cells in-node preserves
+both: the family reads as one entity over time, and the columns stay visible as slices.
+Classifications reuse the same owned primitive but *not* timeline semantics — editions
+are standards/versions (a 2024 study may still code against SUN 2000), so they render as
+a version-ordered edition graph, never validity intervals.
+
+The primitive is deliberately **hand-built SVG + scoped CSS, not a graph library** (#667
+spike conclusion). Lanes/columns, node markers, edge arcs, labels, the keyboard/ARIA
+wrapper, and responsive overflow are each small enough to own locally against the design
+tokens, and both views are deterministic layouts (a time axis or an edition ordering),
+so a force-directed/auto-layout engine buys nothing. **Revisit a dedicated viz
+dependency only if** production requirements add pan/zoom, collision-avoidance,
+large-graph virtualization, or interactive graph editing — work that materially exceeds
+this custom primitive. Short of one of those four triggers, a library is net complexity,
+not net simplicity.
 
 ## Deployment (`global` on Fly.io, Cloudflare edge in front)
 

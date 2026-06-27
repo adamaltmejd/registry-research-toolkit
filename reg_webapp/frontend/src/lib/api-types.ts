@@ -849,6 +849,8 @@ export interface components {
             fqid: string | null;
             /** Group Key */
             group_key: string | null;
+            /** Group Label */
+            group_label?: string | null;
             /** Id */
             id: string;
             /** Is Current */
@@ -1490,8 +1492,17 @@ export interface components {
          *     endpoints are canonicalized (sorted by node id) so the same relation seen from
          *     both ends during group expansion collapses to one edge. ``label`` is the
          *     succession reason / the related ``relation_kind``.
+         *
+         *     ``effective_year`` is the supersession year of a SUCCESSION edge — the year the
+         *     source edition was replaced by the target (the ``*_replaced_by`` row's
+         *     ``effective_year``). It is carried independently of ``label`` so the #678
+         *     timeline can annotate the transition with its year even when there is no human
+         *     reason (a year-only edge would otherwise render as an unlabelled arrow). Always
+         *     None on a ``related`` edge.
          */
         GraphEdge: {
+            /** Effective Year */
+            effective_year?: number | null;
             /** Id */
             id: string;
             /**

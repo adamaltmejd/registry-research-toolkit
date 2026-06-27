@@ -286,9 +286,14 @@ export type BindingGroupRef = Schemas["BindingGroupRef"];
  * (post-same_as), null for a group-addressed call. reg_meta owns topology +
  * predicates; this is just the wire shape. */
 export type RelationshipGraph = Schemas["RelationshipGraph"];
-export type GraphNode =
-  | Schemas["VariableGraphNode"]
-  | Schemas["ClassificationGraphNode"];
+/** A variable node in the relationship graph (#761/#678) — one per variable, its
+ * `states` grouped into representation-run cells by the renderer; carries the
+ * group facets + `same_as` aliases the renderer surfaces as per-node affordances. */
+export type VariableGraphNode = Schemas["VariableGraphNode"];
+/** A classification-edition node in the relationship graph (#761/#678) — a POINT
+ * at `version_year` (not a validity interval); `is_current` marks the head edition. */
+export type ClassificationGraphNode = Schemas["ClassificationGraphNode"];
+export type GraphNode = VariableGraphNode | ClassificationGraphNode;
 export type GraphEdge = Schemas["GraphEdge"];
 export type GraphState = Schemas["GraphState"];
 
@@ -297,7 +302,6 @@ export type GraphState = Schemas["GraphState"];
 // SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
 // from a browsable node by `isCatalogNode` at the fetch boundary.
 export type StatesResponse = Schemas["StatesResponse"];
-export type DimensionsResponse = Schemas["DimensionsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
 /** One edition in a classification's embedded succession timeline (#571) — the
@@ -436,17 +440,6 @@ export function getBindingLineageWarnings(
 ): Promise<LineageWarningsResponse> {
   return apiGet<LineageWarningsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/lineage_warnings`,
-  );
-}
-
-/** The concept-group dimension memberships for this binding's variable (#489) —
- * the "pick your variant" facet groups (level / population / rank / …) that
- * contain it. Empty `dimensions` when the variable is in no group. */
-export function getBindingDimensions(
-  fqidPath: string,
-): Promise<DimensionsResponse> {
-  return apiGet<DimensionsResponse>(
-    `/catalog/${encodeFqid(fqidPath)}/dimensions`,
   );
 }
 

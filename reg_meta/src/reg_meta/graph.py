@@ -135,6 +135,15 @@ class ClassificationGraphNode(_GraphNodeBase):
     kind: Literal["classification"] = "classification"
     version_year: int | None
     is_current: bool
+    # The umbrella group's display label (the ``ConceptGroupSummary.label``, e.g.
+    # "SUN — Svensk utbildningsnomenklatur"); None when the edition is not a curated
+    # umbrella member. The classification analog of `VariableGraphNode.group_label`:
+    # it gives a SUN/related-granularities umbrella cluster a heading (the renderer
+    # has no other label for a classification cluster, whose `group_key` is the bare
+    # `class/<key>` slug, not a display string). Carried only on curated members
+    # (mirrors `group_key`), so a non-member spine edition pulled in by a #579 split
+    # walk stays headless.
+    group_label: str | None = None
 
 
 GraphNode = Annotated[
@@ -147,13 +156,21 @@ class GraphEdge(_CatalogModel):
     is DIRECTED (predecessor → successor); ``related`` is UNDIRECTED — its
     endpoints are canonicalized (sorted by node id) so the same relation seen from
     both ends during group expansion collapses to one edge. ``label`` is the
-    succession reason / the related ``relation_kind``."""
+    succession reason / the related ``relation_kind``.
+
+    ``effective_year`` is the supersession year of a SUCCESSION edge — the year the
+    source edition was replaced by the target (the ``*_replaced_by`` row's
+    ``effective_year``). It is carried independently of ``label`` so the #678
+    timeline can annotate the transition with its year even when there is no human
+    reason (a year-only edge would otherwise render as an unlabelled arrow). Always
+    None on a ``related`` edge."""
 
     id: str
     kind: Literal["succession", "related"]
     source: str  # node id (canonicalized order for related)
     target: str  # node id
     label: str | None
+    effective_year: int | None = None
 
 
 class RelationshipGraph(_CatalogModel):
@@ -251,16 +268,23 @@ def _has_meaningful_runs(states: list[GraphState]) -> bool:
 # ── Edge dedup helpers ───────────────────────────────────────────────────────
 
 
-def _succession_edge(source: str, target: str, label: str | None) -> GraphEdge:
+def _succession_edge(
+    source: str,
+    target: str,
+    label: str | None,
+    effective_year: int | None = None,
+) -> GraphEdge:
     """A DIRECTED succession edge (predecessor → successor). The id encodes the
     direction so two members surfacing the SAME succession edge during group
-    expansion dedup by id."""
+    expansion dedup by id. ``effective_year`` is the year the source edition was
+    superseded by the target (surfaced on the #678 timeline annotation)."""
     return GraphEdge(
         id=f"succession:{source}->{target}",
         kind="succession",
         source=source,
         target=target,
         label=label,
+        effective_year=effective_year,
     )
 
 
@@ -426,12 +450,17 @@ class _GraphBuilder:
         identity, which the group member's binding FQID equals.
 
         Post-#819 a single variable can be carried as SEVERAL members of one group
-        (one per `delivery_column` — the iot disposable-income family), each with its
-        own facets. The node is variable-grain, so its facet identity is the
-        deduped UNION of every matching member's facets, in group-member then
-        axis-ordinal order (deterministic). The per-representation split is the
-        renderer's job once representations are first-class (#757), not this
-        variable-grain field's."""
+        (one per `delivery_column` — the iot disposable-income family), each with
+        its own facets. These per-`delivery_column` representations are MUTUALLY
+        EXCLUSIVE (an inclusive vs. an exclusive variant of the same concept), so
+        their facets must NOT be unioned onto the one variable-grain node — that
+        produced an incoherent qualifier mixing both variants in the #678 leaf
+        header (P2). The node is variable-grain, so it carries ONE REPRESENTATIVE
+        member's facets: the first matching member in the group's member order
+        (deterministic — members are ordered by first facet value, then slug). The
+        per-representation split is the renderer's job once representations are
+        first-class (#757); until then a single coherent member is the honest
+        variable-grain identity."""
         if resolved.group is None:
             return [], None
         group = self._concept_group(
@@ -439,18 +468,14 @@ class _GraphBuilder:
         )
         if group is None:
             return [], None
-        matched = [m for m in group.members if m.fqid == resolved.canonical_fqid]
-        if not matched:
+        # First matching member only: a representative, never the union of
+        # mutually-exclusive representation-member facets (#678 P2).
+        representative = next(
+            (m for m in group.members if m.fqid == resolved.canonical_fqid), None
+        )
+        if representative is None:
             return [], None
-        facets: list[GroupFacet] = []
-        seen: set[tuple[str | None, str, str]] = set()
-        for member in matched:
-            for facet in member.facets:
-                key = (facet.axis, facet.value, facet.label)
-                if key not in seen:
-                    seen.add(key)
-                    facets.append(facet)
-        return facets, group.label
+        return list(representative.facets), group.label
 
     def _add_succession(self, fqid: Fqid) -> None:
         """Walk the variable succession chain (``variable_chain`` — the single
@@ -464,7 +489,7 @@ class _GraphBuilder:
             cur_id = self._ensure_edition_node(cur)
             if prev_id is None or cur_id is None:
                 continue
-            edge = _succession_edge(prev_id, cur_id, prev.reason)
+            edge = _succession_edge(prev_id, cur_id, prev.reason, prev.effective_year)
             self._edges.setdefault(edge.id, edge)
 
     def _ensure_edition_node(self, edition: VariableEdition) -> str | None:
@@ -548,6 +573,7 @@ class _GraphBuilder:
         slug: str,
         *,
         group_key: str | None = None,
+        group_label: str | None = None,
         member_slugs: frozenset[str] = frozenset(),
     ) -> str | None:
         """Build the classification-edition nodes + succession edges for the chain
@@ -555,14 +581,16 @@ class _GraphBuilder:
         of truth, branch-aware at #579 splits). Returns the queried (self) edition's
         node id, or None when it doesn't resolve.
 
-        ``group_key`` / ``member_slugs`` carry the classification-umbrella membership
-        (``class/<key>``): a node whose slug ∈ ``member_slugs`` is a CURATED umbrella
-        member and carries ``group_key`` (shared clustering, mirroring the variable
-        side's own-membership rule); editions surfaced by the chain walk that are NOT
-        curated members (a shared ancestor pulled in by the #579 split walk) keep
-        ``group_key=None``. Nodes are frozen, so the key is applied at build time
-        (not mutated post-build); a member node first built by a non-member-anchored
-        walk is upgraded once via ``_class_grouped``.
+        ``group_key`` / ``group_label`` / ``member_slugs`` carry the
+        classification-umbrella membership (``class/<key>``): a node whose slug ∈
+        ``member_slugs`` is a CURATED umbrella member and carries ``group_key`` (shared
+        clustering, mirroring the variable side's own-membership rule) plus
+        ``group_label`` (the umbrella's display heading — #794 P3); editions surfaced
+        by the chain walk that are NOT curated members (a shared ancestor pulled in by
+        the #579 split walk) keep ``group_key=None`` and no label. Nodes are frozen, so
+        the key/label are applied at build time (not mutated post-build); a member node
+        first built by a non-member-anchored walk is upgraded once via
+        ``_class_grouped``.
 
         Early-out: gated on whether THIS slug has already ANCHORED a walk, NOT on
         node-presence. A SUN-style umbrella's niva/inriktning/grupp members share one
@@ -580,7 +608,7 @@ class _GraphBuilder:
             # `graph_for_classification_fqid` walks the focus's chain WITHOUT the
             # umbrella key before the member union does — must still get its own
             # umbrella `group_key`. Mirrors the in-loop `_class_grouped` upgrade.
-            self._apply_class_group_key(self_node_id, group_key)
+            self._apply_class_group_key(self_node_id, group_key, group_label)
             return self_node_id
         self._class_anchors_walked.add(slug)
         try:
@@ -605,6 +633,7 @@ class _GraphBuilder:
                     fqid=edition.fqid,
                     label=edition.name or node_id,
                     group_key=group_key if is_member else None,
+                    group_label=group_label if is_member else None,
                     version_year=edition.version_year,
                     is_current=edition.is_current,
                 )
@@ -612,19 +641,22 @@ class _GraphBuilder:
                     self._class_grouped.add(node_id)
             elif is_member:
                 # A curated member first built by a non-member-anchored walk (frozen
-                # node) — upgrade once with its umbrella key.
-                self._apply_class_group_key(node_id, group_key)
+                # node) — upgrade once with its umbrella key + heading.
+                self._apply_class_group_key(node_id, group_key, group_label)
             if edition.is_self:
                 self_id = node_id
         self._add_classification_edges(slug_to_id)
         return self_id
 
-    def _apply_class_group_key(self, node_id: str, group_key: str | None) -> None:
-        """Stamp a built classification node with its umbrella ``group_key`` once.
-        Idempotent via ``_class_grouped``: a member node built ungrouped first (as a
-        non-member-anchored walk's ancestor, or as the focus's own pre-union chain
-        walk) is upgraded exactly once; a no-key call or a re-stamp is a no-op. Nodes
-        are frozen, so this is a ``model_copy`` replace, not a mutation."""
+    def _apply_class_group_key(
+        self, node_id: str, group_key: str | None, group_label: str | None = None
+    ) -> None:
+        """Stamp a built classification node with its umbrella ``group_key`` (and
+        display ``group_label`` heading — #794 P3) once. Idempotent via
+        ``_class_grouped``: a member node built ungrouped first (as a non-member-
+        anchored walk's ancestor, or as the focus's own pre-union chain walk) is
+        upgraded exactly once; a no-key call or a re-stamp is a no-op. Nodes are
+        frozen, so this is a ``model_copy`` replace, not a mutation."""
         if (
             group_key is None
             or node_id in self._class_grouped
@@ -632,7 +664,7 @@ class _GraphBuilder:
         ):
             return
         self._nodes[node_id] = self._nodes[node_id].model_copy(
-            update={"group_key": group_key}
+            update={"group_key": group_key, "group_label": group_label}
         )
         self._class_grouped.add(node_id)
 
@@ -659,7 +691,9 @@ class _GraphBuilder:
                 pred_id = slug_to_id.get(pred.slug)
                 if pred_id is None:
                     continue
-                edge = _succession_edge(pred_id, node_id, pred.note)
+                edge = _succession_edge(
+                    pred_id, node_id, pred.note, pred.effective_year
+                )
                 self._edges.setdefault(edge.id, edge)
 
     def build(self, focus_id: str | None) -> RelationshipGraph:
@@ -787,8 +821,10 @@ def _add_classification_group_members(
     """Union every member of a classification umbrella group into the builder. Each
     member is a ``class/<slug>`` edition; ``add_classification`` walks its full
     succession chain + co-members and dedups shared nodes/edges. Members carry the
-    shared ``class/<key>`` ``group_key`` so the renderer clusters the umbrella;
-    non-member spine editions surfaced by a #579 split walk stay ungrouped. Shared
+    shared ``class/<key>`` ``group_key`` (clustering) AND the group's display
+    ``label`` as ``group_label`` (the umbrella heading — #794 P3) so the renderer
+    clusters the umbrella under a real title; non-member spine editions surfaced by a
+    #579 split walk stay ungrouped + headless. Shared
     by ``graph_for_classification_group`` (group page) and
     ``graph_for_classification_fqid`` (leaf, Fork B)."""
     group_key = f"class/{group.key}"
@@ -803,6 +839,7 @@ def _add_classification_group_members(
         builder.add_classification(
             member.fqid.classification,
             group_key=group_key,
+            group_label=group.label,
             member_slugs=member_slugs,
         )
 

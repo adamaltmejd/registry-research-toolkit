@@ -2,10 +2,11 @@
 import {
   type BindingNodeData,
   type CatalogNode,
-  getBindingDimensions,
+  getBindingGraph,
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
+  type VariableGraphNode,
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
@@ -14,14 +15,14 @@ import {
   coverageFromStates,
   formatWindow,
   grainsFromStates,
-  memberGroupLink,
-  memberQualifier,
+  groupLinkFromFocus,
+  qualifierFromFocus,
   registerPrefixOf,
   type VariantWindow,
 } from "./catalog";
-import DimensionsPanel from "./DimensionsPanel.svelte";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
-import LineagePanels from "./LineagePanels.svelte";
+import HistoryGraph from "./HistoryGraph.svelte";
+import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
 import { regMetaReleaseTag } from "./project_data";
@@ -162,59 +163,51 @@ const stateScope = $derived(
     : null,
 );
 
-// ── #670: member identity from the concept-group dimensions ─────────────────
-// LIFTED from DimensionsPanel: the leaf now owns the ONE `/dimensions` fetch and
-// derives the header qualifier + group context link from it, then passes the
-// resolved groups (+ loading/error) DOWN to DimensionsPanel as props — so the
-// page makes a single `/dimensions` request, shared. Read `fqidPath`
+// ── The relationship-graph fetch (#678) ─────────────────────────────────────
+// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the HistoryGraph
+// renderer AND the #670 header identity (qualifier + group link), derived from
+// the graph FOCUS node — no separate `/dimensions` request. Read `fqidPath`
 // synchronously inside `fn` so the resource refetches when the leaf changes (same
 // pattern as `periodResource`).
 //
-// FAILURE-DOMAIN isolation is preserved: this resource is independent of `node`,
-// so a dimensions error/timeout never blanks the leaf — the header just omits the
-// qualifier/link (both gate on a RESOLVED fetch, additive), and DimensionsPanel
-// renders its own inline loading/error from the same resource.
-const dimResource = asyncResource(() => getBindingDimensions(fqidPath));
-const dimGroups = $derived(dimResource.data?.dimensions ?? []);
-const dimLoading = $derived(dimResource.loading);
-const dimError = $derived(dimResource.error);
-
-// The identity row (qualifier + group link) renders ONCE the /dimensions fetch
-// has RESOLVED — gated on `!dimLoading && !dimError`. During the sub-second load
-// `dimGroups` is still [], so deriving the qualifier then would hit the slug
-// fallback (a grouped member has no facets yet) and the row would flash the slug,
-// then flip to the facet label once loaded — a visible content flicker. Gating on
-// resolved instead means the header shows just `node.name` while loading, then
-// the correct qualifier appears once — the leaf is never blanked (failure domain
-// preserved; an error keeps it omitted, DimensionsPanel surfaces the error).
-const dimReady = $derived(!dimLoading && !dimError);
-
-// The fqid to match a member by in the /dimensions groups. When the leaf is
-// opened through a `same_as` ALIAS, the backend resolves to the target variable
-// but keeps `node.fqid` as the REQUESTED alias, while the /dimensions members
-// are keyed on the RESOLVED target — so matching on `node.fqid` would never find
-// the faceted member and wrongly fall back to the alias slug (#670 Codex P2). The
-// last `via_same_as` hop is the resolved target binding; with no alias it's
-// empty/absent and `lookupFqid === node.fqid` (unchanged behavior).
-const lookupFqid = $derived(node.via_same_as?.at(-1) ?? node.fqid);
-
-// The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — this
-// member's facet labels across its dimension groups (`kind: "facets"`), the
-// canonical `node.group` group leading. For a GROUPED member with no facets (an
-// edge group's split siblings) it falls back to the member's slug
-// (`kind: "slug"`) so those siblings never share an identical header (#670).
-// `null` for an ungrouped variable (its `node.name` suffices), or until resolved.
-const qualifier = $derived(
-  dimReady ? memberQualifier(dimGroups, lookupFqid, node.group?.key) : null,
+// FAILURE-DOMAIN isolation: this resource is independent of `node`, so a graph
+// error / empty / timeout NEVER blanks the leaf — the HistoryGraph section omits
+// the graph, and the header just omits the qualifier/link (both gate on a
+// RESOLVED, non-empty graph; additive).
+const graphResource = asyncResource(() => getBindingGraph(fqidPath));
+const graph = $derived(graphResource.data);
+// The graph has RESOLVED (a settled fetch with a payload) — the gate the header
+// identity derivations wait on, mirroring the old `dimReady`. While in flight
+// (or on error) the header shows just `node.name`, then the qualifier appears
+// once — no flicker, never blanked.
+const graphReady = $derived(
+  !graphResource.loading && !graphResource.error && graph != null,
 );
+
+// The FOCUS variable node — the node whose `id === focus_id` (the requested
+// binding, post-same_as). The #670 header qualifier + group link read its
+// `facets` / `group_label`. A binding `/graph` always carries a variable focus;
+// the `kind` guard keeps TS sound (and tolerates a focus-less group payload).
+// `graphReady` (above) is the one render gate; this trusts the qualifier/link
+// helpers' null-tolerance (they accept a null focus), so it just reads from
+// `graph?.…` — a loading/errored/empty graph yields a null focus, never blanks.
+const focusNode = $derived.by((): VariableGraphNode | null => {
+  const f = graph?.nodes.find((n) => n.id === graph.focus_id);
+  return f?.kind === "variable" ? f : null;
+});
+
+// The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — the
+// focus node's facet labels (`kind: "facets"`); for a GROUPED member with no
+// facets (an edge group's split siblings) the leaf slug fallback
+// (`kind: "slug"`); `null` for an ungrouped variable (its `node.name` suffices),
+// or until the graph resolves. `node.fqid` is the leaf's own fqid (the
+// slug-fallback source — the focus node's fqid can be null).
+const qualifier = $derived(qualifierFromFocus(focusNode, node.fqid));
 
 // The "member of ⟨group label⟩" context link to the group subject page (#670) —
-// null when ungrouped, or until the fetch resolves (additive; never blanks).
-// `node.group` stays the link's provider/register/key source (already the
-// resolved group ref); only the member-matching fqid uses the resolved target.
-const groupLink = $derived(
-  dimReady ? memberGroupLink(dimGroups, node.group, lookupFqid) : null,
-);
+// the focus node's `group_label` + the leaf `node.group` ref's href. Null when
+// ungrouped, or until the graph resolves (additive; never blanks).
+const groupLink = $derived(groupLinkFromFocus(focusNode, node.group));
 
 /** Write the resolution params to the URL (preserving the pathname), which the
  * reactive query picks up → refetch. An empty `period` clears the narrowing
@@ -689,16 +682,22 @@ const repSegment = $derived(
 {/snippet}
 
 {#snippet relationships()}
-  <!-- #489/#670: the concept-group dimensions this variable belongs to (the "pick
-       your variant" facet groups). PRESENTATIONAL since #670 — the `/dimensions`
-       fetch is owned by THIS view (it also feeds the header qualifier + group
-       link), so the panel receives the resolved groups + loading/error as props
-       (one shared fetch). Its failure domain is unchanged: the dimensions resource
-       is independent of `node`, so an error renders the panel's inline alert
-       without blanking the leaf. Omits itself entirely when in no group. -->
-  <DimensionsPanel groups={dimGroups} loading={dimLoading} error={dimError} />
+  <!-- #678: the unified history-graph view over the relationship-graph contract
+       (#761/#792) — succession / related / groups (Fork B) / same_as / focus
+       highlight, drawn as SVG. Omits itself on an empty graph (`nodes: []`) or
+       while the fetch is unresolved/errored (its own failure domain — never
+       blanks the leaf). It REPLACES the retired Dimensions + Lineage panels. -->
+  {#if graphReady && graph}
+    <!-- vintageYear is the open-ended ceiling for the shared time axis: an
+         open-ended cell ("still delivered") extends to the catalog vintage rather
+         than ballooning the scale (#678 rework). -->
+    <HistoryGraph {graph} {vintageYear} />
+  {/if}
 
-  <LineagePanels {fqidPath} {node} />
+  <!-- The two NON-graph affordances the #761 payload doesn't carry — provenance
+       (lineage edges + source register) and the fetched lineage warnings — live
+       here on the binding leaf (succession/related are graph edges now). -->
+  <LineageDetails {fqidPath} {node} />
 {/snippet}
 
 {#snippet docs()}

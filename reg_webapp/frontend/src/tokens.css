@@ -254,6 +254,23 @@
   --cat-class-ink: color-mix(in srgb, var(--cat-class) 85%, black);
   --cat-group-ink: color-mix(in srgb, var(--cat-group) 85%, black);
 
+  /* Data-viz EDGE encoding (#810) — graph-relation marks, NOT chrome. The
+     history graph draws relationship edges between nodes; an edge is DATA, so
+     (like --cat-*) it gets its own viz sub-system and must never borrow the
+     brand accent (then "is selected" and "is a succession edge" collide) or a
+     status hue (an edge isn't an error/warning). Two relation kinds:
+       - succession (DIRECTED, the chronological predecessor→successor flow): a
+         desaturated steel that reads as a connective flow line, cooler/quieter
+         than the warm Rost brand and darker than the cat-var indigo so the two
+         never read as the same mark. ≈4.6:1 on --surface — an AA-legible
+         hairline/arrow.
+       - related (UNDIRECTED, a subtle "see also" bow): a warm graphite that
+         stays a quiet neutral hairline (drawn dashed + low-opacity at the call
+         site), one notch above --border so it reads as a deliberate mark, not
+         chrome. */
+  --viz-edge-succession: #4a6b86; /* desaturated steel — directed flow */
+  --viz-edge-related: var(--gray-6); /* warm graphite — undirected hairline */
+
   /* Status roles — AA-cleared FOREGROUND values (text/glyph). Each is paired
      with a glyph in the UI, never hue alone. The *-bg roles are SEPARATE fill
      tints for badges/rows — never use a fill tint as a text color. */
@@ -337,4 +354,12 @@ body {
    this is the seam only, so components (which read roles only) need no change. */
 [data-theme="dark"] {
   /* roles remapped to dark primitive stops — values land in a later child */
+
+  /* Data-viz edge tokens lightened for a dark canvas (the role remap above is
+     still deferred, but the viz sub-system ships its own dark stops now so the
+     history graph's edges stay legible the moment the dark seam fills in). The
+     succession steel lifts toward a brighter sky tone; the related hairline
+     lifts to a light graphite so a dashed bow still reads on a dark surface. */
+  --viz-edge-succession: #7ba3c4;
+  --viz-edge-related: var(--gray-7);
 }
