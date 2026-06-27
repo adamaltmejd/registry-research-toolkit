@@ -280,6 +280,7 @@ function bandView(band: PickerBand, id: BandLabel, showPrefix: boolean) {
     band,
     primary: id.primary,
     primaryIsColumn: id.primaryIsColumn,
+    primaryIsFacet: id.primaryIsFacet,
     showPrefix,
     single,
     column,
@@ -408,7 +409,13 @@ function navigateChip(event: MouseEvent, href: string): void {
           {@const row = band.rows[0]}
           {@const checked = selectedKeys.has(selKey(band.key, row.key))}
           {@const inWindow = representationInWindow(row, window)}
-          {@const facet = band.facetByColumn?.[row.column]}
+          <!-- The column's facet leads the quiet `.sub` context (#678) — but when the
+               band's PRIMARY already IS that facet (#901 facet-led single-column band,
+               `primaryIsFacet`), drop it from the sub so the same facet text isn't
+               rendered twice (bold primary AND quiet sub). Value-set context still shows. -->
+          {@const facet = v.primaryIsFacet
+            ? undefined
+            : band.facetByColumn?.[row.column]}
           <!-- A single-column variable = ONE selectable row, led by the variable's
                distinguishing identity (the leaf ≈ one-variable group case). The row is a
                click-anywhere container (mouse toggles selection); a real checkbox owns

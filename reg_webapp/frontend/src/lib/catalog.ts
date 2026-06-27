@@ -1432,6 +1432,11 @@ export interface BandLabel {
    * chip-link and drops the redundant "column …" from its context. False for the
    * slug fallback (a genuinely multi-column member leads with a plain mono slug). */
   primaryIsColumn: boolean;
+  /** True when the primary IS this band's `facetLabel` (the facet-varies branch, or
+   * the lone-band facet fallback) — the band leads with the facet, so a SINGLE-column
+   * band drops the redundant repeat of that same facet from its row context. False for
+   * every other primary (name / column / slug / "—"). */
+  primaryIsFacet: boolean;
 }
 
 /** The adaptive labeling across a group's member bands (#678 inc 2): `showName` /
@@ -1461,12 +1466,17 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
     // The leading identity: first varying dimension, then a single-band fallback
     // chain (name → facet → distinguisher) so the leaf leads with its name.
     if (nameVaries) {
-      return { primary: { text: b.name, mono: false }, primaryIsColumn: false };
+      return {
+        primary: { text: b.name, mono: false },
+        primaryIsColumn: false,
+        primaryIsFacet: false,
+      };
     }
     if (facetVaries && b.facetLabel) {
       return {
         primary: { text: b.facetLabel, mono: false },
         primaryIsColumn: false,
+        primaryIsFacet: true,
       };
     }
     // Name + facet constant across bands → lead with the distinguisher (the column
@@ -1480,22 +1490,29 @@ export function bandLabeling(bands: readonly BandIdentity[]): {
       return {
         primary: { text: b.distinguisher, mono: true },
         primaryIsColumn: b.distinguisherIsColumn,
+        primaryIsFacet: false,
       };
     }
     // A lone MULTI-column leaf has no single column to lead with → the variable name
     // (its columns are the rows beneath). Then facet, then the distinguisher fallback.
     if (b.name) {
-      return { primary: { text: b.name, mono: false }, primaryIsColumn: false };
+      return {
+        primary: { text: b.name, mono: false },
+        primaryIsColumn: false,
+        primaryIsFacet: false,
+      };
     }
     if (b.facetLabel) {
       return {
         primary: { text: b.facetLabel, mono: false },
         primaryIsColumn: false,
+        primaryIsFacet: true,
       };
     }
     return {
       primary: { text: b.distinguisher || "—", mono: true },
       primaryIsColumn: b.distinguisherIsColumn && !!b.distinguisher,
+      primaryIsFacet: false,
     };
   });
 
@@ -1581,6 +1598,7 @@ export function clusterBands<T>(
         return {
           primary: { text: identity.distinguisher, mono: true },
           primaryIsColumn: identity.distinguisherIsColumn,
+          primaryIsFacet: false,
         };
       });
     }

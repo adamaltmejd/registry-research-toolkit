@@ -2257,6 +2257,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     // are hoisted off (the title / breadcrumb carry them).
     expect(bands[0].primary).toEqual({ text: "Kon", mono: true });
     expect(bands[0].primaryIsColumn).toBe(true);
+    expect(bands[0].primaryIsFacet).toBe(false);
     expect(showName).toBe(false);
     expect(showPrefix).toBe(false);
   });
@@ -2273,6 +2274,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands[0].primary).toEqual({ text: "Yrke", mono: false });
     expect(bands[0].primaryIsColumn).toBe(false);
+    expect(bands[0].primaryIsFacet).toBe(false);
   });
 
   it("a name-constant group leads each band with its distinguishing COLUMN (mono)", () => {
@@ -2286,6 +2288,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     expect(bands.map((b) => b.primary.text)).toEqual(["Ng0", "Ng1", "Sni"]);
     expect(bands.every((b) => b.primary.mono)).toBe(true);
     expect(bands.every((b) => b.primaryIsColumn)).toBe(true);
+    expect(bands.every((b) => b.primaryIsFacet)).toBe(false);
     // Name + prefix are constant → hoisted off every band.
     expect(showName).toBe(false);
     expect(showPrefix).toBe(false);
@@ -2302,8 +2305,10 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands[0].primary).toEqual({ text: "sun2020niva", mono: true });
     expect(bands[0].primaryIsColumn).toBe(false);
+    expect(bands[0].primaryIsFacet).toBe(false);
     // Its single-column sibling still leads with its column chip identity.
     expect(bands[1].primaryIsColumn).toBe(true);
+    expect(bands[1].primaryIsFacet).toBe(false);
   });
 
   it("a facet group leads each band with its FACET label (normal weight)", () => {
@@ -2319,6 +2324,9 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands.every((b) => b.primary.mono)).toBe(false);
     expect(bands.every((b) => b.primaryIsColumn)).toBe(false);
+    // The primary IS the facet → `primaryIsFacet` true, so the row suppresses the
+    // redundant facet repeat in its `.sub` context (#901).
+    expect(bands.every((b) => b.primaryIsFacet)).toBe(true);
   });
 
   it("genuinely different concepts lead with the NAME and keep it visible", () => {
@@ -2328,6 +2336,7 @@ describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {
     ]);
     expect(bands.map((b) => b.primary.text)).toEqual(["Inkomst", "Ålder"]);
     expect(bands.every((b) => b.primary.mono)).toBe(false);
+    expect(bands.every((b) => b.primaryIsFacet)).toBe(false);
     // The name varies → it IS the distinguisher, so it stays as the primary (not
     // double-shown as secondary; `showNameSecondary` in the band guards the echo).
     expect(showName).toBe(true);
@@ -2471,6 +2480,8 @@ describe("clusterBands (#901 de-duplicate member presentation)", () => {
     expect(lone.labeling.bands[0].primary.text).toBe("delkomponent-2004");
     expect(lone.labeling.bands[0].primary.mono).toBe(true);
     expect(lone.labeling.bands[0].primaryIsColumn).toBe(false);
+    // The re-led primary is the slug distinguisher, not a facet.
+    expect(lone.labeling.bands[0].primaryIsFacet).toBe(false);
   });
 
   it("a single-CLUSTER group does NOT re-lead a lone band (the name/column still leads)", () => {

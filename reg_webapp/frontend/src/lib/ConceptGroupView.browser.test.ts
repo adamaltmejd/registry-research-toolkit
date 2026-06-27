@@ -1048,6 +1048,19 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         (e) => e.tagName === "SPAN",
       ),
     ).toBe(true);
+    // #901: the leading facet must NOT be repeated in the quiet `.sub` line. With the
+    // facet as the band PRIMARY and no value-set context here, every facet-led single
+    // row drops its `.sub` entirely (the `{#if facet || v.context.length}` guard hides
+    // the now-empty sub). No `.sub` text may echo a `.primary`.
+    const rows = [...document.querySelectorAll(".col-row.single")];
+    expect(rows).toHaveLength(2);
+    for (const r of rows) {
+      const primary = r.querySelector(".primary")?.textContent?.trim();
+      const sub = r.querySelector(".sub")?.textContent?.trim();
+      expect(sub).not.toBe(primary);
+    }
+    // Concretely: no `.sub` survives at all in this facet-led, context-free case.
+    expect(document.querySelectorAll(".col-row.single .sub")).toHaveLength(0);
   });
 
   // ── Member → leaf navigation (#678) ─────────────────────────────────────────
