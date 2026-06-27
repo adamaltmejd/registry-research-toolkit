@@ -3056,8 +3056,8 @@ def _next_day(iso_date: str, *, column: str | None) -> str:
     which `date.fromisoformat` rejects with a raw `ValueError`. No current
     sub-annual end reaches `variable_state.valid_to`, so it is latent — but guard
     it: a bare `ValueError` escaping the build is unactionable, so re-raise it as a
-    stable-exit `RegMetaError` naming the column and the grammar-aware-dates
-    follow-up (#868).
+    stable-exit `RegMetaError` naming the column so the grammar-aware-dates gap is
+    actionable (no current input reaches it).
     """
     try:
         return (date.fromisoformat(iso_date) + timedelta(days=1)).isoformat()
@@ -3074,9 +3074,9 @@ def _next_day(iso_date: str, *, column: str | None) -> str:
                 "'YYYY-02-29' upper bound, which date arithmetic rejects."
             ),
             remediation=(
-                "Resolve the grammar-aware sub-annual date bounds (#868) so "
-                "synthesized '-02-29' ends don't reach variable_state, or curate "
-                "this column's windows to real calendar dates."
+                "Make the sub-annual date bounds grammar-aware so synthesized "
+                "'-02-29' ends don't reach variable_state, or curate this "
+                "column's windows to real calendar dates."
             ),
         ) from exc
 
