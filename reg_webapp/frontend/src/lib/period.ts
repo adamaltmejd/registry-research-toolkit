@@ -259,9 +259,12 @@ export function periodTokenForBounds(lo: string, hi: string): string {
 
 /** The OUTER inclusive ISO date bounds of a whole wire `?period` — a single token,
  * a `lo..hi` range, or a comma-union LIST (the #307 interrupted form) — at its REAL
- * grain (NOT year-collapsed), or `null` when no part parses to a bound (`_default`,
- * junk). The union of every part's bounds: `from` = earliest part start, `to` =
- * latest part end. Used to intersect a picker row's span with the active period on
+ * grain (NOT year-collapsed), or `null` when ANY part fails to parse to a bound
+ * (`_default`, junk, OR a partially-invalid wire like `2018,junk` — a single bad
+ * segment poisons the whole wire so a partial clamp can't silently invent a valid
+ * source period from the good fragments). The union of every part's bounds:
+ * `from` = earliest part start, `to` = latest part end. Used to intersect a
+ * picker row's span with the active period on
  * Add so a SUB-ANNUAL `?period` (`2020-Q1`) commits at its true grain instead of
  * widening to the outer year (#678 finding). ADVISORY mirror of the wire grammar —
  * the backend stays the canonical period authority. */
@@ -272,10 +275,18 @@ export function periodWireBounds(wire: string): PeriodBounds | null {
     const endpoints = periodRangeEndpoints(part) ?? [part.trim(), part.trim()];
     const loBounds = periodTokenBounds(endpoints[0]);
     const hiBounds = periodTokenBounds(endpoints[1]);
-    if (loBounds && (from === null || loBounds.from < from)) {
+    // ALL-or-nothing: a single unparseable segment (`2018,junk`,
+    // `2010..junk,2015..2020`) makes the WHOLE wire ambiguous. Returning the
+    // valid fragments' clamp would silently turn an invalid user period into a
+    // DIFFERENT valid source period on Add, so refuse the whole wire instead —
+    // the caller falls back to its safe default (the row's own span / window).
+    if (!loBounds || !hiBounds) {
+      return null;
+    }
+    if (from === null || loBounds.from < from) {
       from = loBounds.from;
     }
-    if (hiBounds && (to === null || hiBounds.to > to)) {
+    if (to === null || hiBounds.to > to) {
       to = hiBounds.to;
     }
   }

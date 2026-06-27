@@ -29,6 +29,7 @@ import {
   periodTokenBounds,
   periodTokenForBounds,
   periodWireBounds,
+  VALUE_SET_VERSION_NONE,
 } from "./period";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
@@ -1150,6 +1151,39 @@ export function pickerRepresentations(
       codingsVary,
     };
   });
+}
+
+/** Narrow `pickerRepresentations`' input states to the SAME subset an active
+ * StatesView narrowing modifier scopes to (#678 finding): when the leaf is opened
+ * with a `?variant` and/or `?value_set_version` modifier (the "Narrowed by" chip),
+ * the picker rows must be built only from states consistent with that narrowing —
+ * else "select all" would add rows for variants / value-set versions OUTSIDE the
+ * active narrowing. Mirrors StatesView's `inScope` matching exactly:
+ *   - `variant` matches `state.variant`;
+ *   - `valueSetVersion` matches `state.value_set_version_label`, with the
+ *     `_none` sentinel (`VALUE_SET_VERSION_NONE`) meaning the empty/default label
+ *     (an empty `?value_set_version=` can't ride in the URL).
+ * Either modifier `null` is a no-op on that axis; BOTH null returns the states
+ * unchanged (the full-history default — behavior is unchanged when no modifier is
+ * active). Pure — unit-tested in catalog.test.ts. Generic over the shared
+ * `PickerStateInput` shape so it composes directly before `pickerRepresentations`. */
+export function narrowStatesByModifier<
+  S extends Pick<PickerStateInput, "variant" | "value_set_version_label">,
+>(
+  states: readonly S[],
+  variant: string | null,
+  valueSetVersion: string | null,
+): readonly S[] {
+  if (variant === null && valueSetVersion === null) {
+    return states;
+  }
+  const version =
+    valueSetVersion === VALUE_SET_VERSION_NONE ? "" : valueSetVersion;
+  return states.filter(
+    (s) =>
+      (variant === null || s.variant === variant) &&
+      (version === null || s.value_set_version_label === version),
+  );
 }
 
 // ── Adaptive row labeling (#678 1b) ─────────────────────────────────────────

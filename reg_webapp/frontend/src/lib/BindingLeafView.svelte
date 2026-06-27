@@ -14,6 +14,7 @@ import {
   coverageFromStates,
   grainsFromStates,
   groupLinkFromFocus,
+  narrowStatesByModifier,
   pickerRepresentations,
   pickerWindowYears,
   qualifierFromFocus,
@@ -260,10 +261,26 @@ const coverage = $derived(coverageFromStates(node.states));
 // period-narrowed subset: the period window only DIMS out-of-window rows
 // (`pickerWindow`), every row stays selectable. `pickerRepresentations` is pure +
 // unit-tested.
+//
+// A `?variant` / `?value_set_version` MODIFIER (the "Narrowed by" chip) is the
+// exception: it scopes the StatesView to one axis, so the picker must offer ONLY
+// the rows consistent with that narrowing (`narrowStatesByModifier`, the same
+// match as StatesView's `inScope`) — otherwise "select all" would add rows for
+// variants / versions OUTSIDE the active narrowing. With NO modifier active the
+// states pass through unchanged (full history, behavior unchanged).
 
 /** The selectable representation rows — one per distinct (variant, delivery
- * column) over the full state history. */
-const pickerRows = $derived(pickerRepresentations(node.states));
+ * column) over the active state history (the full history, or the
+ * variant/version-narrowed subset when a modifier is active). */
+const pickerRows = $derived(
+  pickerRepresentations(
+    narrowStatesByModifier(
+      node.states,
+      params.variant ?? null,
+      params.value_set_version ?? null,
+    ),
+  ),
+);
 
 /** The active period window to DIM against, as an inclusive year pair (a
  * `?period` wire wins, else the global study window), or null (no dimming). */

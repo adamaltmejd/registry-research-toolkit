@@ -531,6 +531,23 @@ describe("periodWireBounds (#678: exact ISO bounds of a whole ?period)", () => {
     expect(periodWireBounds("_default")).toBeNull();
     expect(periodWireBounds("junk")).toBeNull();
   });
+
+  it("null when ANY segment is invalid (no partial clamp from the valid fragments)", () => {
+    // A mixed valid+invalid wire must NOT yield the valid pieces' bounds — that
+    // would silently turn an invalid user period into a DIFFERENT valid source
+    // period on Add. The whole wire is refused; the caller falls back safely.
+    expect(periodWireBounds("2018,junk")).toBeNull();
+    expect(periodWireBounds("junk,2018")).toBeNull();
+    expect(periodWireBounds("2010..junk,2015..2020")).toBeNull();
+    expect(periodWireBounds("2010..2020,nope")).toBeNull();
+  });
+
+  it("a fully-valid comma list still parses to its outer bounds (valid case unbroken)", () => {
+    expect(periodWireBounds("2018,2020")).toEqual({
+      from: "2018-01-01",
+      to: "2020-12-31",
+    });
+  });
 });
 
 describe("grainOfToken / rangeRepresentable (#308)", () => {

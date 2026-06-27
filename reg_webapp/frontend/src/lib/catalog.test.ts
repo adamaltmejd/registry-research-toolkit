@@ -35,6 +35,7 @@ import {
   memberCoverageUnion,
   memberKey,
   narrowCatalogNode,
+  narrowStatesByModifier,
   nodeLabel,
   pickerLabeling,
   pickerRepresentations,
@@ -52,6 +53,7 @@ import {
   YEARLESS_VALID_FROM,
   yearOf,
 } from "./catalog";
+import { VALUE_SET_VERSION_NONE } from "./period";
 import type { Route } from "./router.svelte";
 
 // #819: a group's axis is now `{name, label}`. Tests key on the stable name and
@@ -1295,6 +1297,77 @@ describe("foldGroupedRows stale-cache tolerance", () => {
       { kind: "leaf", item: { fqid: "scb/lisa/kon" } },
       { kind: "leaf", item: { fqid: "scb/lisa/alder" } },
     ]);
+  });
+});
+
+describe("narrowStatesByModifier (#678: picker honors the active narrowing)", () => {
+  // A variable with two variants and two value-set versions — the picker should
+  // offer only the rows consistent with whichever modifier is active.
+  const states = [
+    state({
+      variant: "lastbilar",
+      delivery_column_name: "SNI2002",
+      value_set_version_label: "SNI 2002",
+    }),
+    state({
+      variant: "bussar",
+      delivery_column_name: "SNI2002",
+      value_set_version_label: "SNI 2002",
+    }),
+    state({
+      variant: "lastbilar",
+      delivery_column_name: "SNI2007",
+      value_set_version_label: "SNI 2007",
+    }),
+    state({
+      variant: "personbilar",
+      delivery_column_name: "SNI2002",
+      value_set_version_label: "",
+    }),
+  ];
+
+  it("no modifier active → states pass through unchanged (full history)", () => {
+    expect(narrowStatesByModifier(states, null, null)).toBe(states);
+  });
+
+  it("an active ?variant keeps only that variant's states", () => {
+    const narrowed = narrowStatesByModifier(states, "lastbilar", null);
+    expect(narrowed.map((s) => s.variant)).toEqual(["lastbilar", "lastbilar"]);
+    // …so "select all" over the picker rows only adds rows for the narrowed
+    // variant (lastbilar carries two columns → two rows, both lastbilar; the
+    // bussar / personbilar rows are gone).
+    const rows = pickerRepresentations(narrowed);
+    expect(rows.every((r) => r.variant === "lastbilar")).toBe(true);
+    expect(rows.map((r) => r.key)).toEqual([
+      "lastbilar::SNI2002",
+      "lastbilar::SNI2007",
+    ]);
+  });
+
+  it("an active ?value_set_version keeps only that version's states", () => {
+    const narrowed = narrowStatesByModifier(states, null, "SNI 2007");
+    expect(narrowed.map((s) => s.value_set_version_label)).toEqual([
+      "SNI 2007",
+    ]);
+    expect(pickerRepresentations(narrowed).map((r) => r.key)).toEqual([
+      "lastbilar::SNI2007",
+    ]);
+  });
+
+  it("variant AND version both narrow (intersection)", () => {
+    const narrowed = narrowStatesByModifier(states, "lastbilar", "SNI 2002");
+    expect(narrowed).toHaveLength(1);
+    expect(narrowed[0].variant).toBe("lastbilar");
+    expect(narrowed[0].value_set_version_label).toBe("SNI 2002");
+  });
+
+  it("the _none version sentinel matches the empty/default label", () => {
+    const narrowed = narrowStatesByModifier(
+      states,
+      null,
+      VALUE_SET_VERSION_NONE,
+    );
+    expect(narrowed.map((s) => s.variant)).toEqual(["personbilar"]);
   });
 });
 
