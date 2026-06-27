@@ -1087,10 +1087,10 @@ or re-pointed — linkage is additive.
    touches. Off-chain strays are never emitted. The emit is additive (NOT EXISTS guard),
    and the reclaim count is measured off the emitted set — a one-chain pair the SCB/SOS
    feed already classified is skipped and NOT counted as reclaimed. Real-corpus result:
-   **240 value sets / 257 variables** newly reclaimed (+16 value sets / +22 variables
+   **235 value sets / 245 variables** newly reclaimed (+11 value sets / +10 variables
    over the #494 all-on-chain baseline, almost entirely LKF county sets plus a few
    genuine 1-digit occupation sets). The precise post-linkage curation residue —
-   multi-family value sets with a still-unclassified state — is **980** (of 2,215
+   multi-family value sets with a still-unclassified state — is **985** (of 2,215
    multi-family-by-codes; the rest are fully classified by the feeds, confident tier,
    vintage reclaim, or curation).
 
