@@ -1141,10 +1141,15 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
          multi-vintage chain — the DOMINANT chain — so a single off-chain stray that
          only coincidentally matches one edition (the LKF county residue: ≥2 LKF
          year-editions PLUS a stray SNI2007/MDC) no longer blocks the collapse; and
-         (2) the dominant family's label agreement is ≥ that of EVERY off-chain
-         candidate (the label lever, #514) — a coincidental dominant chain can't beat
-         a stray that actually matches labels (county labels match LKF, not SNI).
-         If ≥2 distinct families are multi-vintage chains it is a genuine cross-family
+         (2) the label levers pass (#514): the dominant family's label agreement is
+         ≥ that of EVERY off-chain candidate (RELATIVE lever — a coincidental dominant
+         chain can't beat a stray that matches labels: county labels match LKF, not
+         SNI) AND, WHEN an off-chain stray is present, the dominant family clears the
+         CONDITIONAL ABSOLUTE floor (`>= _CONFIDENT_LABEL_AGREE`). The floor drops the
+         label-less SSYK coincidences (short 1–9 code sets that match both SSYK
+         editions) the relative lever's COALESCE-0 path let through; an all-on-chain
+         set with no stray stays label-FREE (#494 preserved). See 7b for the real-data
+         evidence. If ≥2 distinct families are multi-vintage chains it is a genuine cross-family
          span → stays in the residue for curation. The OLD all-on-chain rule is the
          zero-stray special case (one family, all candidates). For each reclaimed
          (variable_id, value_set_id), pick the LATEST DOMINANT-family vintage whose
@@ -1311,20 +1316,45 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # root with a different stem, so the dominant family must be the UNIQUE family on
     # its root. This keeps orthogonal SUN dimensions apart even when one is ITSELF a
     # multi-vintage chain — a label-less set matching 2 sun-niva editions (dominant) +
-    # 1 sun-inriktning edition stays ambiguous, where the label lever could not save it
-    # (the COALESCE-0 path passes a label-less set on structure alone). The off-chain
-    # strays (different root) are unaffected: LKF's root differs from SNI's and MDC's,
-    # so no same-root family exists and the LKF case still passes, as does the OLD
-    # all-on-chain case (one family, no others on its root).
+    # 1 sun-inriktning edition stays ambiguous. The same-root stray is NOT off-chain,
+    # so the conditional label floor below stays on its all-on-chain branch and cannot
+    # block this case; the STRUCTURAL same-root guard is provably the sole gate here.
+    # The off-chain strays (different root) are unaffected by THIS guard: LKF's root
+    # differs from SNI's and MDC's, so no same-root family exists and the LKF case
+    # passes it, as does the OLD all-on-chain case (one family, no others on its root).
     #
-    # Label lever (#514, "structural + label-agreement lever now"): the dominant
-    # family's best label_agree (`fam_max_la`, from the shared `_vs_label_agree`
-    # projection) must be >= the best label_agree of every OFF-chain candidate, so a
-    # coincidental dominant chain can't beat a stray that actually label-agrees
-    # (county labels match LKF, not SNI). The `COALESCE(..., 0)` makes a value set
-    # with NO off-chain stray, or a wholly label-less set (all label_agree 0), pass
-    # on structure alone — preserving the OLD all-on-chain behaviour as the zero-stray
-    # special case.
+    # Label levers (#514). TWO gates, both on the dominant family's best label_agree
+    # (`fam_max_la`, from the shared `_vs_label_agree` projection):
+    #
+    #   (a) RELATIVE lever: `fam_max_la >= COALESCE(MAX off-chain fam_max_la, 0)` — a
+    #       coincidental dominant chain can't beat a stray that label-agrees BETTER
+    #       (county labels match LKF, not SNI). The `COALESCE(..., 0)` neutralizes it
+    #       when there is no off-chain stray.
+    #
+    #   (b) CONDITIONAL ABSOLUTE floor: the final `OR` gate. This is the real-data fix
+    #       to #514. The relative lever alone is defeated by LABEL-LESS value sets: a
+    #       real full build showed ~734 of #514's 795 reclaims were SPURIOUS — short
+    #       generic code sets (1–9 response scales) coincidentally match BOTH SSYK
+    #       editions (SSYK96 + SSYK2012), so SSYK looks "dominant"; being label-less
+    #       (every fam_max_la 0) they sailed through the COALESCE-0 path and reclaimed
+    #       label-less codes ("Bmi-klass", "alcohol frequency") to the OCCUPATIONAL
+    #       SSYK. An investigation by family × label_agree band confirmed the clean
+    #       separation: real LKF county sets label-agree ≥0.90 (822 of 883), while the
+    #       SSYK coincidences are label-less (481 of 514 at exactly 0). So the floor is
+    #       CONDITIONAL on whether an off-chain stray is present:
+    #         - NO off-chain stray (a family on a DIFFERENT chain root) → all-on-chain;
+    #           keep the original #494 label-FREE behavior — codes alone are decisive
+    #           when the whole candidate set is one vintage family.
+    #         - an off-chain stray IS present → REQUIRE `fam_max_la >=
+    #           _CONFIDENT_LABEL_AGREE`, the same confident bar as the single-family
+    #           tier. A label-less short code set that only coincidentally matches an
+    #           unrelated multi-vintage chain can't clear a POSITIVE label bar, so the
+    #           SSYK coincidences drop while the labeled LKF county reclaims (≥0.90)
+    #           stay. (Note: with a stray present this floor SUBSUMES the COALESCE-0
+    #           degenerate of (a) — every label-less set is now blocked, not passed.)
+    #
+    # Net gate, strays present: dominant `fam_max_la >= _CONFIDENT_LABEL_AGREE` (b) AND
+    # `>=` every off-chain stray (a). No strays: label-free (#494 preserved).
     #
     # The `rootless` guard defensively refuses any value set with a candidate that
     # resolved no chain root, so a hypothetical root-less classification can't slip a
@@ -1336,7 +1366,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # `multi m JOIN dominant d` yields exactly one (dom_root, dom_stem) row per value
     # set (asserted by the UNIQUE index).
     conn.execute(
-        """
+        f"""
         CREATE TEMP TABLE _vs_dominant_chain AS
         WITH fam AS (                  -- per value set, per (root,stem): matched count + best label_agree
             SELECT vc.value_set_id, cr.root, cr.stem,
@@ -1377,6 +1407,25 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
                  WHERE f2.value_set_id = m.value_set_id
                    AND (f2.root <> m.root OR f2.stem <> m.stem)),
                 0)
+          AND (
+                -- #494 all-on-chain: NO off-chain stray (a family on a DIFFERENT chain
+                -- root) → keep the original label-FREE behavior (codes alone are
+                -- decisive when the value set's whole candidate set is one vintage
+                -- family).
+                NOT EXISTS (
+                    SELECT 1 FROM fam f4
+                    WHERE f4.value_set_id = m.value_set_id
+                      AND f4.root <> m.root
+                )
+                -- #514 relaxation: an off-chain stray IS present. A label-less short
+                -- code set coincidentally matches an unrelated multi-vintage chain (1–9
+                -- scales hit SSYK major groups), so REQUIRE the dominant family to
+                -- positively label-agree at the confident bar — same precision lever as
+                -- the single-family confident tier. Real-data: this keeps 822/883
+                -- labeled LKF county reclaims and drops ~505 label-less SSYK
+                -- coincidences.
+                OR m.fam_max_la >= {_CONFIDENT_LABEL_AGREE}
+          )
         """
     )
     conn.execute(
