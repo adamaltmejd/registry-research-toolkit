@@ -17,8 +17,9 @@ Plus three corpus-wide drift alerts (`--all` only):
   - merged-but-unreleased: reg_meta_build DB content changed since the latest
     `reg_meta_build/v*` tag, so a rebuild+release is pending (the #373-class debt);
   - stale-steward-catalog: a `reg_webapp/stewards/<id>/steward.project_data.json` was
-    generated against a reg_meta release older than the latest `reg_meta/v*` tag, so it
-    may have drifted and should be regenerated (coverage hygiene, not a hard gate).
+    generated against a reg_meta release older than the latest *published* `reg_meta/v*`
+    release, so it may have drifted and should be regenerated (coverage hygiene, not a
+    hard gate).
 
 Modes:
   --issue N   validate one issue; exit non-zero on any ERROR (the write-time nudge,
@@ -345,19 +346,43 @@ def _reg_meta_version_tuple(value: str) -> tuple[int, int, int] | None:
     return (int(m[1]), int(m[2]), int(m[3])) if m else None
 
 
+def latest_published_reg_meta_tag() -> str | None:
+    """The newest *published* (non-draft) `reg_meta/v*` release tag, else None.
+
+    Mirrors `.github/workflows/container-build.yml`'s resolution: the webapp container
+    bakes the newest published `reg_meta/v*` release's DB asset, so the steward catalog
+    must be keyed on the *published* release — not the git tag. A git tag exists for a
+    draft/failed release the deploy can't resolve, so a tag-based lookup would false-warn
+    during the draft window between cutting the tag and publishing the release.
+    """
+    releases = gh_json(["release", "list", "--limit", "100",
+                        "--json", "tagName,isDraft"])  # fmt: skip
+    candidates = [
+        _reg_meta_version_tuple(r["tagName"])
+        for r in releases
+        if not r.get("isDraft") and r.get("tagName", "").startswith("reg_meta/v")
+    ]
+    parsed = [v for v in candidates if v is not None]
+    if not parsed:
+        return None
+    major, minor, patch = max(parsed)
+    return f"reg_meta/v{major}.{minor}.{patch}"
+
+
 def check_steward_catalog_staleness(repo_root: Path, out: Findings) -> None:
-    """Warn when a committed steward catalog lags the latest `reg_meta/v*` release.
+    """Warn when a committed steward catalog lags the latest published `reg_meta/v*` release.
 
     A `reg_webapp/stewards/<id>/steward.project_data.json` records the reg_meta release it
     was generated against (`reg_meta_version`). A newer release can drift it (slug churn,
     new content, overlap fixes); the webapp still boots through the drift, so this is
     coverage hygiene, not a hard gate. Regenerate per `stewards/<id>/README.md`.
+
+    Keyed on the latest *published* release (not the git tag) so it mirrors what the
+    webapp container actually bakes — see `latest_published_reg_meta_tag`.
     """
-    tags = run(["git", "-C", str(repo_root), "tag", "--list", "reg_meta/v*",
-                "--sort=-version:refname"]).split()  # fmt: skip
-    if not tags:
+    tag = latest_published_reg_meta_tag()
+    if tag is None:  # no published reg_meta release yet (or no gh) → nothing to compare
         return
-    tag = tags[0]
     latest = _reg_meta_version_tuple(tag)
     if latest is None:  # unexpected tag shape — don't crash, just skip
         return

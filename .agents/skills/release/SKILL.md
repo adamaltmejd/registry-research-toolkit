@@ -170,7 +170,7 @@ commit touches `pyproject.toml` and `__init__.py`, which the gate's
 `files: \.(py|toml|json)$` filter matches, so the suite **will** run on this push.
 **Docker must be running** or the push is blocked — start it and push again, never
 bypass with `--no-verify`. (The release-marked `test_update_and_query`, which downloads
-the published asset, is carved off pre-push and runs only post-publish — see step 11.)
+the published asset, is carved off pre-push and runs only post-publish — see step 10.)
 
 ### 7. Create draft GitHub release
 
@@ -351,44 +351,7 @@ Verify **both** assets are present on the draft release — do not publish witho
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
 ```
 
-### 9. Refresh steward catalogs (reg_meta releases)
-
-reg_meta only. Steward catalogs are built against the reg_meta DB, so a new reg_meta
-release can drift any committed `reg_webapp/stewards/<id>/steward.project_data.json`
-whose `reg_meta_version` predates the new tag (slug churn, new content, overlap fixes).
-The webapp boots through the drift, so this is coverage hygiene — regenerate the stale
-catalogs so they track the just-published release.
-
-**Ordering (important):** a steward catalog is a `reg_webapp` **deploy** artifact — it
-ships in the webapp image built from `main`, NOT in the tagged PyPI / DB-asset release
-the publish workflow ships, so it must **not** go into the `reg_meta/vX.Y.Z` tag (the
-tag was already cut from `origin/main` in step 7, and the asset is the only release
-payload). Land the regen as its **own commit pushed to `origin/main`** — separate from
-the version-bump commit. `origin/main` advancing past the tag is expected and harmless;
-the catalog ships on the next webapp deploy, and the staleness alert
-(`scripts/check_issue_hygiene.py`) clears once the commit is on `main`.
-
-Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
-special-case any one steward); for each whose `reg_meta_version` is older than the new
-`reg_meta/vX.Y.Z`:
-
-- build the new **uncompressed** `reg_meta.db` locally to overlay onto — reuse step 8a's
-  `$db_dir/reg_meta.db` if you kept it, otherwise rebuild it (the published
-  `reg_meta.db.zst` isn't downloadable until step 10; either way `extend-db` opens the
-  base with sqlite, so it must be the decompressed DB, never the `.zst`);
-- `reg-meta-build extend-db --base-db <reg_meta.db> …` to overlay the steward providers,
-  then regenerate the catalog per `reg_webapp/stewards/<id>/README.md` (its
-  `reg_meta_version` now records the planned `reg_meta/vX.Y.Z`);
-- review the coverage/binding diff (catalog size, representation pins, co-delivery
-  prune) before accepting it;
-- commit the regenerated catalog(s) as their own commit, `git push origin HEAD:main`,
-  and verify it landed on `origin/main`.
-
-The catalog generator and its confidential inputs are untracked/maintainer-local, so in
-a non-maintainer or CI environment they are absent — **skip with a note** when they are.
-The staleness alert then tracks the residual drift until a maintainer regenerates.
-
-### 10. Publish the draft release
+### 9. Publish the draft release
 
 This is what fires the publish workflow.
 
@@ -396,7 +359,7 @@ This is what fires the publish workflow.
 gh release edit <package>/vX.Y.Z --draft=false
 ```
 
-### 11. Monitor deployment
+### 10. Monitor deployment
 
 If the package has a publish workflow (see table above), find the triggered run, watch
 it, and verify PyPI. **Scope the run lookup to this release** — fetch tags first, then
@@ -437,6 +400,63 @@ change can strand it silently until this gate. Fix the test on main and re-valid
 
 If the package has no publish workflow, report the release is done after the tag is
 created.
+
+### 11. Refresh steward catalogs (reg_meta releases)
+
+reg_meta only, and **after** the release is published and deployment is monitored.
+Steward catalogs are built against the reg_meta DB, so a new reg_meta release can drift
+any committed `reg_webapp/stewards/<id>/steward.project_data.json` whose
+`reg_meta_version` predates the new tag (slug churn, new content, overlap fixes). The
+webapp boots through the drift, so this is coverage hygiene — regenerate the stale
+catalogs so they track the just-published release.
+
+**Why after publish (not before):** a steward catalog is a `reg_webapp` **deploy**
+artifact, not part of the tagged PyPI / DB-asset release. It is **image-affecting** —
+`.github/workflows/container-build.yml` watches `reg_webapp/stewards/**`, and the
+container bakes the DB asset of the **newest *published*** `reg_meta/v*` release (it
+resolves `gh release list … reg_meta/v*`, asset-blind by newest tag). So the catalog
+must be generated against the **published** release's shipped asset. Pushing the
+regenerated catalog *before* the new release is published would deploy the new catalog
+against the **old** baked DB — inconsistent prod (catalog references content the baked
+DB lacks) until a later dispatch rebuilds against the new asset. Publishing first, then
+refreshing, keeps the deployed catalog and baked DB in lockstep.
+
+Land the regen as its **own commit pushed to `origin/main`** — separate from the
+version-bump commit, which was already tagged in step 7. `origin/main` advancing past
+the tag is expected and harmless; the catalog ships on the next webapp deploy, and the
+staleness alert (`scripts/check_issue_hygiene.py`, keyed on the latest *published*
+release) clears once the commit is on `main`.
+
+Loop over **every** `reg_webapp/stewards/*/steward.project_data.json` (do not
+special-case any one steward); for each whose `reg_meta_version` is older than the new
+`reg_meta/vX.Y.Z`:
+
+- **download the just-published asset** (not a local rebuild) so the catalog matches
+  exactly what the container bakes — this is critical for copy-forward releases (8c),
+  where a local rebuild could admit FQIDs absent from the shipped DB. Decompress it to
+  an uncompressed `reg_meta.db` (`extend-db` opens the base with sqlite, never the
+  `.zst`):
+
+  ```sh
+  set -euo pipefail
+  base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_base.XXXXXX")"
+  gh release download reg_meta/vX.Y.Z --pattern reg_meta.db.zst --dir "$base_dir"
+  zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
+  ```
+
+- `reg-meta-build extend-db --base-db "$base_dir/reg_meta.db" …` to overlay the steward
+  providers, then regenerate the catalog per `reg_webapp/stewards/<id>/README.md` (its
+  `reg_meta_version` now records the published `reg_meta/vX.Y.Z`);
+
+- review the coverage/binding diff (catalog size, representation pins, co-delivery
+  prune) before accepting it;
+
+- commit the regenerated catalog(s) as their own commit, `git push origin HEAD:main`,
+  and verify it landed on `origin/main`.
+
+The catalog generator and its confidential inputs are untracked/maintainer-local, so in
+a non-maintainer or CI environment they are absent — **skip with a note** when they are.
+The staleness alert then tracks the residual drift until a maintainer regenerates.
 
 ## Error recovery
 

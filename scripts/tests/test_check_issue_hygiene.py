@@ -276,10 +276,22 @@ def _steward_repo(tmp_path: Path, version: str | None) -> Path:
     return tmp_path
 
 
+def _stub_releases(
+    monkeypatch: pytest.MonkeyPatch, releases: list[dict[str, object]]
+) -> None:
+    """Stub the `gh release list --json tagName,isDraft` resolution.
+
+    `check_steward_catalog_staleness` resolves the latest *published* release via
+    `gh_json` (mirroring container-build.yml), so the staleness tests stub that call's
+    JSON payload rather than the old git-tag `run`.
+    """
+    monkeypatch.setattr(h, "gh_json", lambda *_args, **_kw: releases)
+
+
 def _staleness(
     repo_root: Path, tag: str, monkeypatch: pytest.MonkeyPatch
 ) -> h.Findings:
-    monkeypatch.setattr(h, "run", lambda *_args, **_kw: f"{tag}\n")
+    _stub_releases(monkeypatch, [{"tagName": tag, "isDraft": False}])
     out = h.Findings()
     h.check_steward_catalog_staleness(repo_root, out)
     return out
@@ -328,14 +340,52 @@ def test_steward_catalog_missing_version_warns(
     assert _has(out.items, "WARN", "malformed")
 
 
-def test_steward_staleness_no_tag_silent(
+def test_steward_staleness_no_release_silent(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo = _steward_repo(tmp_path, "reg_meta/v0.1.0")
-    monkeypatch.setattr(h, "run", lambda *_args, **_kw: "\n")  # no reg_meta tags yet
+    _stub_releases(monkeypatch, [])  # no published reg_meta release yet
     out = h.Findings()
     h.check_steward_catalog_staleness(repo, out)
     assert out.items == []
+
+
+def test_steward_staleness_draft_only_not_compared(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The newest release is a DRAFT (cut but not published) — the container can't bake it,
+    # so it must NOT drive the comparison. The catalog matches the published v0.22.0, so
+    # the draft v0.23.0 must stay silent (no false warn during the draft window).
+    repo = _steward_repo(tmp_path, "reg_meta/v0.22.0")
+    _stub_releases(
+        monkeypatch,
+        [
+            {"tagName": "reg_meta/v0.23.0", "isDraft": True},
+            {"tagName": "reg_meta/v0.22.0", "isDraft": False},
+        ],
+    )
+    out = h.Findings()
+    h.check_steward_catalog_staleness(repo, out)
+    assert out.items == []
+
+
+def test_steward_staleness_picks_newest_published_not_first(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Resolution is max-by-version over the published set, not list order — a draft newest
+    # plus an out-of-order published list still resolves the true newest published release.
+    repo = _steward_repo(tmp_path, "reg_meta/v0.22.0")
+    _stub_releases(
+        monkeypatch,
+        [
+            {"tagName": "reg_meta/v0.24.0", "isDraft": True},
+            {"tagName": "reg_meta/v0.21.0", "isDraft": False},
+            {"tagName": "reg_meta/v0.23.0", "isDraft": False},
+        ],
+    )
+    out = h.Findings()
+    h.check_steward_catalog_staleness(repo, out)
+    assert _has(out.items, "WARN", "reg_meta/v0.23.0")
 
 
 # --- emit ordering -------------------------------------------------------------------
