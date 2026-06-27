@@ -633,6 +633,13 @@ const footerLabel = $derived(
   .subhead-label {
     display: block;
     cursor: pointer;
+    /* Fill the whole subheading: pull the label out to the `.subhead` content edges
+       (cancel its padding) then re-pad inside, so the hover/click surface covers the
+       entire item — no dead padding ring at the top/sides that highlights the subhead
+       but not its rows. */
+    box-sizing: border-box;
+    margin: -0.4rem -0.75rem -0.3rem;
+    padding: 0.4rem 0.75rem 0.3rem;
   }
   /* The checkbox + identity sit on one baseline row; the checkbox stays vertically
      centered against the (possibly wrapping) title. */
@@ -702,6 +709,10 @@ const footerLabel = $derived(
     align-items: center;
     gap: 0.6rem;
     width: 100%;
+    /* A <label> defaults to content-box (unlike the <button> this replaced), so
+       width:100% + padding would overflow the row to the right — clip the years.
+       Border-box folds the padding back in. */
+    box-sizing: border-box;
     padding: 0.4rem 0.75rem;
     font: inherit;
     text-align: left;
