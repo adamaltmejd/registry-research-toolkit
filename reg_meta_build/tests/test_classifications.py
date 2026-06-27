@@ -2209,13 +2209,15 @@ class TestLinkValueSetClassifications:
     def test_same_root_multi_vintage_subdimension_stays_ambiguous(self) -> None:
         """#514 off-chain precision (Fix 1): a permitted stray must be OFF-CHAIN — a
         DIFFERENT chain root than the dominant family. Here a LABEL-LESS value set
-        matches a 2-edition `sun-niva` chain (the DOMINANT multi-vintage chain) PLUS a
-        single `sun-inriktning` edition that shares the SAME sun1996 chain root but a
-        DIFFERENT slug stem. That stray is NOT off-chain — it is the #579 orthogonal
-        SUN dimension — so the `NOT EXISTS` guard disqualifies the set: it stays
-        ambiguous rather than collapsing the orthogonal dimension onto sun-niva. The
-        label lever cannot save this for a label-less set (COALESCE-0 path passes on
-        structure alone), so the structural same-root guard is the gate.
+        (its codes carry value-set-only labels, so its label_agree against every
+        candidate is 0) matches a 2-edition `sun-niva` chain (the DOMINANT
+        multi-vintage chain) PLUS a single `sun-inriktning` edition that shares the
+        SAME sun1996 chain root but a DIFFERENT slug stem. That stray is NOT off-chain
+        — it is the #579 orthogonal SUN dimension — so the `NOT EXISTS` guard
+        disqualifies the set: it stays ambiguous rather than collapsing the orthogonal
+        dimension onto sun-niva. With every label_agree at 0, the label lever is on the
+        COALESCE-0 path and cannot move the outcome, so the STRUCTURAL same-root guard
+        is provably the SOLE gate keeping the set ambiguous.
 
         Regression test for Fix 1: WITHOUT the `NOT EXISTS` guard, the 2-edition
         sun-niva chain would be the sole multi-vintage family (the lone sun-inriktning
@@ -2223,9 +2225,13 @@ class TestLinkValueSetClassifications:
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
-        # Codes the value set matches — its OWN labels (label-less w.r.t. every
-        # classification) so the label lever stays on the COALESCE-0 path.
+        # Codes the classifications carry. The value set matches the SAME codes but
+        # under its OWN labels (`vs_codes`, distinct "SUNVS" prefix → same kods,
+        # DIFFERENT labels), so every candidate's label_agree is 0 → the label lever
+        # stays on the COALESCE-0 path and only the STRUCTURAL same-root guard can
+        # keep the set ambiguous.
         shared = _numeric_codes("SUN", 10, 4)
+        vs_codes = _numeric_codes("SUNVS", 10, 4)  # SAME codes, DIFFERENT labels
         # Umbrella root of the curated #579 split; its own codes are disjoint so it is
         # not itself a candidate — the value set matches the two dimensions, not the root.
         g.add_classification(
@@ -2267,7 +2273,9 @@ class TestLinkValueSetClassifications:
             valid_from=2000,
             valid_to=None,
         )
-        g.add_value_set(300, shared)
+        g.add_value_set(
+            300, vs_codes
+        )  # same kods, value-set-only labels → label_agree 0
         g.add_variable_state(950, 300)
 
         counts = link_value_set_classifications(g.conn)
@@ -2337,8 +2345,11 @@ class TestLinkValueSetClassifications:
         """The "any number of off-chain strays" clause: a dominant chain (2 editions)
         plus TWO distinct single-edition off-chain strays, each a DIFFERENT root from
         the dominant AND from each other, still reclaims to the latest dominant edition.
-        Label-less throughout (COALESCE-0 path), so the structural exactly-one-chain
-        rule is the gate, and neither stray shares the dominant's root."""
+        Every family shares the `shared` codes verbatim with the value set, so the
+        dominant chain and both strays all label_agree at 1.0 — the label lever passes
+        by TIE, not by margin. The pinned behavior is the STRUCTURAL exactly-one-chain
+        rule reclaiming past MULTIPLE distinct-root strays: neither stray shares the
+        dominant's root, so the dominant chain is the sole multi-vintage family."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
