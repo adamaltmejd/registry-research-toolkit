@@ -174,6 +174,20 @@ function memberLabel(rn: VariableLane): string {
   return rn.node.label;
 }
 
+/** The catalog href to open a NAVIGABLE node from the visible gutter, or null when
+ * the node is not a link target. A node is navigable iff it has a binding `fqid`
+ * AND is not the focus node (the current page — kept a plain label, not a self
+ * link). This makes predecessors/successors/related variables and non-focus
+ * classification editions clickable for sighted mouse + keyboard users (#794 P2),
+ * restoring the open-affordance the retired panels had; the sr-only fallback's own
+ * `<a>`s stay as the screen-reader surface. */
+function nodeHref(rn: RenderNode): string | null {
+  if (isFocus(rn) || !rn.node.fqid) {
+    return null;
+  }
+  return catalogHref(rn.node.fqid);
+}
+
 /** Whether the gutter shows a secondary (mono slug) line under the primary name —
  * for a faceted/grouped member whose primary label isn't already the slug. The
  * slug disambiguates members that share a concept name. */
@@ -184,23 +198,40 @@ function gutterSlug(rn: VariableLane): string | null {
   return null;
 }
 
-/** The display label for an edge, or null to render none. A `related` edge keeps
- * its `relation_kind` label. A `succession` edge shows its `label` ONLY between
+/** The human reason carried by a succession edge's `label`, surfaced ONLY between
  * VARIABLE nodes: a classification-edition succession carries an internal curation
  * provenance tag (the predecessor `note`) as its label, never a human reason — the
  * retired ClassificationLineagePanels showed no edition succession reason, so
- * suppress it for parity AND to avoid leaking the internal tag (SVG + fallback). */
-function edgeLabelText(re: ResolvedEdge): string | null {
+ * suppress it for parity AND to avoid leaking the internal tag. (`related` reasons
+ * — the `relation_kind` — are handled by `edgeLabelText` directly.) */
+function successionReason(re: ResolvedEdge): string | null {
   if (!re.edge.label) {
     return null;
   }
-  if (
-    re.edge.kind === "succession" &&
-    !(re.source.kind === "variable" && re.target.kind === "variable")
-  ) {
+  if (!(re.source.kind === "variable" && re.target.kind === "variable")) {
     return null;
   }
   return re.edge.label;
+}
+
+/** The display label for an edge, or null to render none.
+ *  - a `related` edge keeps its `relation_kind` label;
+ *  - a `succession` edge folds its (surfaced) human reason with its
+ *    `effective_year` — the transition year the retired LineagePanels showed
+ *    (`variable_replaced_by.effective_year`). A year-only edge (no reason, or a
+ *    classification edge whose internal tag is suppressed) thus still annotates as
+ *    "→ 2009" instead of rendering an unlabelled arrow; a reason-with-year reads
+ *    "renamed → 2009". Null only when neither a surfaced reason nor a year exists. */
+function edgeLabelText(re: ResolvedEdge): string | null {
+  if (re.edge.kind === "related") {
+    return re.edge.label || null;
+  }
+  const reason = successionReason(re);
+  const year = re.edge.effective_year;
+  if (year != null) {
+    return reason ? `${reason} → ${year}` : `→ ${year}`;
+  }
+  return reason;
 }
 
 /** A classification point's year tag (the version_year), or "" when unknown. */
@@ -355,29 +386,48 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
 
               {#each lanes as { rn, top, height } (rn.node.id)}
                 {@const renamed = rn.kind === "variable" && isRenamed(rn)}
+                {@const href = nodeHref(rn)}
                 <div
                   class="lane"
                   class:focus={isFocus(rn)}
                   class:renamed
                   style={`top:${top}px; height:${height}px; animation-delay:${Math.min(top / LANE_BASE_H, 12) * 35}ms`}
                 >
-                  <!-- Gutter: primary name (+ qualifier/slug), sticky on scroll. -->
+                  <!-- Gutter: primary name (+ qualifier/slug), sticky on scroll.
+                       The name is a real catalog link for a NAVIGABLE node (#794
+                       P2) — a non-focus node with a binding fqid — so sighted mouse
+                       + keyboard users can open it; the focus node (current page)
+                       stays a plain label. -->
                   <div class="gutter">
                     <span class="marker" class:focus={isFocus(rn)}></span>
                     <div class="gutter-text">
                       {#if rn.kind === "variable"}
-                        <span class="name" title={rn.node.label}
-                          >{memberLabel(rn)}{#if renamed}<span class="hint"
-                              > (renamed)</span
-                            >{/if}</span
-                        >
+                        {#if href}
+                          <a class="name name-link" {href} title={rn.node.label}
+                            >{memberLabel(rn)}{#if renamed}<span class="hint"
+                                > (renamed)</span
+                              >{/if}</a
+                          >
+                        {:else}
+                          <span class="name" title={rn.node.label}
+                            >{memberLabel(rn)}{#if renamed}<span class="hint"
+                                > (renamed)</span
+                              >{/if}</span
+                          >
+                        {/if}
                         {#if gutterSlug(rn)}
                           <span class="slug">{gutterSlug(rn)}</span>
                         {/if}
                       {:else}
-                        <span class="name" title={rn.node.label}
-                          >{rn.node.label}</span
-                        >
+                        {#if href}
+                          <a class="name name-link" {href} title={rn.node.label}
+                            >{rn.node.label}</a
+                          >
+                        {:else}
+                          <span class="name" title={rn.node.label}
+                            >{rn.node.label}</span
+                          >
+                        {/if}
                         {#if yearTag(rn)}
                           <span class="slug">{yearTag(rn)}</span>
                         {/if}
@@ -729,6 +779,26 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
   .renamed .name {
     color: var(--text-muted);
     font-weight: 500;
+  }
+  /* The gutter name as a catalog link (#794 P2): it INHERITS its per-state name
+     color (the global `a { color: --accent }` would otherwise flatten the
+     focus/renamed coloring) and signals affordance with a color-shift hover (the
+     picker convention) + a focus-visible ring for keyboard users — NOT an
+     underline, which the multi-line clamp would render raggedly. */
+  a.name-link {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: color 0.12s ease;
+  }
+  a.name-link:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a.name-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
   .hint {
     color: var(--text-muted);

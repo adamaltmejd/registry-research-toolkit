@@ -443,6 +443,33 @@ class TestEdges:
         assert succ[0].target == "scb/lisa/civilstand"
         assert succ[0].label == "renamed"
 
+    def test_variable_succession_edge_carries_effective_year(self) -> None:
+        # #794 P2: the `variable_replaced_by.effective_year` (the transition year the
+        # retired LineagePanels showed) must ride on the succession edge so the #678
+        # timeline can annotate the transition with its year — independently of the
+        # human reason (a year-only edge would otherwise render as an unlabelled
+        # arrow). Here the edge has BOTH a reason and an effective_year.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="civilstand",
+            register_variant_id=10,
+            delivery_column_name="Civ",
+        )
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "civilstand"),
+            reason="renamed",
+            effective_year=2009,
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        (succ,) = [e for e in g.edges if e.kind == "succession"]
+        assert succ.effective_year == 2009
+        assert succ.label == "renamed"  # year is carried ALONGSIDE the reason
+
     def test_thin_chain_node_hydrated_when_later_a_member(self) -> None:
         # P2-1 regression: focus A (kon) succeeds-to a LIVE successor B (civilstand)
         # that is ALSO a group member. Walking A's succession chain reaches B FIRST as
@@ -1083,6 +1110,14 @@ class TestClassificationChains:
             ("class/sun1996", "class/sun2000"),
             ("class/sun2000", "class/sun2020"),
         }
+        # #794 P2: each succession edge carries its `classification_replaced_by`
+        # effective_year (the supersession year), so the #678 timeline can annotate
+        # the transition even though the edition succession reason is suppressed (the
+        # internal `note` tag is never shown). The year rides on the edge, NOT on the
+        # node's `version_year` (the edition's own vintage).
+        by_pair = {(e.source, e.target): e for e in succ}
+        assert by_pair[("class/sun1996", "class/sun2000")].effective_year == 2000
+        assert by_pair[("class/sun2000", "class/sun2020")].effective_year == 2020
 
     def test_sun_umbrella_members_present_and_deduped(self) -> None:
         # A SUN-style umbrella with two members sharing a chain: editions present,

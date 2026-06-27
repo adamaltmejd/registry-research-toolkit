@@ -147,13 +147,21 @@ class GraphEdge(_CatalogModel):
     is DIRECTED (predecessor → successor); ``related`` is UNDIRECTED — its
     endpoints are canonicalized (sorted by node id) so the same relation seen from
     both ends during group expansion collapses to one edge. ``label`` is the
-    succession reason / the related ``relation_kind``."""
+    succession reason / the related ``relation_kind``.
+
+    ``effective_year`` is the supersession year of a SUCCESSION edge — the year the
+    source edition was replaced by the target (the ``*_replaced_by`` row's
+    ``effective_year``). It is carried independently of ``label`` so the #678
+    timeline can annotate the transition with its year even when there is no human
+    reason (a year-only edge would otherwise render as an unlabelled arrow). Always
+    None on a ``related`` edge."""
 
     id: str
     kind: Literal["succession", "related"]
     source: str  # node id (canonicalized order for related)
     target: str  # node id
     label: str | None
+    effective_year: int | None = None
 
 
 class RelationshipGraph(_CatalogModel):
@@ -251,16 +259,23 @@ def _has_meaningful_runs(states: list[GraphState]) -> bool:
 # ── Edge dedup helpers ───────────────────────────────────────────────────────
 
 
-def _succession_edge(source: str, target: str, label: str | None) -> GraphEdge:
+def _succession_edge(
+    source: str,
+    target: str,
+    label: str | None,
+    effective_year: int | None = None,
+) -> GraphEdge:
     """A DIRECTED succession edge (predecessor → successor). The id encodes the
     direction so two members surfacing the SAME succession edge during group
-    expansion dedup by id."""
+    expansion dedup by id. ``effective_year`` is the year the source edition was
+    superseded by the target (surfaced on the #678 timeline annotation)."""
     return GraphEdge(
         id=f"succession:{source}->{target}",
         kind="succession",
         source=source,
         target=target,
         label=label,
+        effective_year=effective_year,
     )
 
 
@@ -465,7 +480,7 @@ class _GraphBuilder:
             cur_id = self._ensure_edition_node(cur)
             if prev_id is None or cur_id is None:
                 continue
-            edge = _succession_edge(prev_id, cur_id, prev.reason)
+            edge = _succession_edge(prev_id, cur_id, prev.reason, prev.effective_year)
             self._edges.setdefault(edge.id, edge)
 
     def _ensure_edition_node(self, edition: VariableEdition) -> str | None:
@@ -660,7 +675,9 @@ class _GraphBuilder:
                 pred_id = slug_to_id.get(pred.slug)
                 if pred_id is None:
                     continue
-                edge = _succession_edge(pred_id, node_id, pred.note)
+                edge = _succession_edge(
+                    pred_id, node_id, pred.note, pred.effective_year
+                )
                 self._edges.setdefault(edge.id, edge)
 
     def build(self, focus_id: str | None) -> RelationshipGraph:

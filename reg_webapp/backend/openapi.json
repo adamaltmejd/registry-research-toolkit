@@ -1711,8 +1711,19 @@
       },
       "GraphEdge": {
         "additionalProperties": false,
-        "description": "A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``\nis DIRECTED (predecessor \u2192 successor); ``related`` is UNDIRECTED \u2014 its\nendpoints are canonicalized (sorted by node id) so the same relation seen from\nboth ends during group expansion collapses to one edge. ``label`` is the\nsuccession reason / the related ``relation_kind``.",
+        "description": "A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``\nis DIRECTED (predecessor \u2192 successor); ``related`` is UNDIRECTED \u2014 its\nendpoints are canonicalized (sorted by node id) so the same relation seen from\nboth ends during group expansion collapses to one edge. ``label`` is the\nsuccession reason / the related ``relation_kind``.\n\n``effective_year`` is the supersession year of a SUCCESSION edge \u2014 the year the\nsource edition was replaced by the target (the ``*_replaced_by`` row's\n``effective_year``). It is carried independently of ``label`` so the #678\ntimeline can annotate the transition with its year even when there is no human\nreason (a year-only edge would otherwise render as an unlabelled arrow). Always\nNone on a ``related`` edge.",
         "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective Year"
+          },
           "id": {
             "title": "Id",
             "type": "string"

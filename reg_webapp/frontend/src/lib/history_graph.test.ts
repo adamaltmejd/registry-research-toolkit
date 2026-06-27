@@ -11,6 +11,7 @@ import {
   clampCellsToScale,
   clustersOf,
   resolveEdges,
+  type YearScale,
   yearScaleOf,
 } from "./history_graph";
 
@@ -222,6 +223,54 @@ describe("yearScaleOf — shared time axis (#678 rework)", () => {
     expect(
       yearScaleOf({ nodes: [v, undated], edges: [], focus_id: null }),
     ).toBeNull();
+  });
+
+  it("renders an axis for a one-sided finite window: unknown start, finite end", () => {
+    // Every cell is `valid_from: null` (unknown start) but ends at a known year. A
+    // single finite bound seeds BOTH ends of `noteYear`, so the graph is datable
+    // (NOT the axis-less fallback): the degenerate widening gives it scale width
+    // and the finite year is anchored. (Regression guard for #794 P2's concern —
+    // the one-sided finite case already yields a usable axis.)
+    const v = variableNode({
+      id: "v",
+      states: [state({ valid_from: null, valid_to: "2008-12-31" })],
+    });
+    const scale = yearScaleOf({ nodes: [v], edges: [], focus_id: null });
+    expect(scale).not.toBeNull();
+    expect(scale?.ceilingFromVintage).toBe(false);
+    expect(Number.isFinite(scale?.minYear)).toBe(true);
+    expect(Number.isFinite(scale?.maxYear)).toBe(true);
+    // The finite endpoint (2008) is on the axis, and there ARE year ticks.
+    const ticks = axisTicks(scale as YearScale);
+    expect(ticks.length).toBeGreaterThan(0);
+    expect(ticks.some((t) => t.year === 2008)).toBe(true);
+  });
+
+  it("renders an axis for a multi-cell one-sided finite window (all unknown starts)", () => {
+    // Two cells, both unknown-start but finite-end (2005, 2008). The finite ends
+    // span the scale — still datable, still an axis.
+    const v = variableNode({
+      id: "v",
+      states: [
+        state({
+          representation_run_id: 0,
+          valid_from: null,
+          valid_to: "2005-12-31",
+        }),
+        state({
+          representation_run_id: 1,
+          value_set_version_label: "next",
+          valid_from: null,
+          valid_to: "2008-12-31",
+        }),
+      ],
+    });
+    const scale = yearScaleOf({ nodes: [v], edges: [], focus_id: null });
+    expect(scale).toMatchObject({
+      minYear: 2005,
+      maxYear: 2008,
+      ceilingFromVintage: false,
+    });
   });
 });
 

@@ -387,12 +387,25 @@ describe("HistoryGraph (#678)", () => {
     });
 
     // Each member lane reads by its distinct leaf slug, not the shared `label`.
+    // `a` is the focus node (plain label in the gutter), so only its sr-only
+    // fallback `<a>` carries the slug; `b` is navigable, so its VISIBLE gutter
+    // name-link does (and its fallback `<a>` too — scope to the gutter to avoid the
+    // strict-mode multi-match). Both surfaces label by the distinct leaf slug.
     await expect
       .element(page.getByRole("link", { name: "agi1astsni2007" }))
       .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "ku1astsni2002" }))
-      .toBeVisible();
+    const bGutter = await vi.waitFor(() => {
+      const el = [...document.querySelectorAll("a.name-link")].find(
+        (a) => a.textContent?.trim() === "ku1astsni2002",
+      );
+      if (!el) {
+        throw new Error("member gutter link not yet rendered");
+      }
+      return el as HTMLAnchorElement;
+    });
+    expect(bGutter.getAttribute("href")).toBe(
+      "/catalog/scb/lisa/ku1astsni2002",
+    );
   });
 
   it("suppresses the internal curation tag on classification succession edges", async () => {
@@ -473,12 +486,144 @@ describe("HistoryGraph (#678)", () => {
 
     // The renamed hint is present.
     await expect.element(page.getByText("(renamed)").first()).toBeVisible();
-    // The dead node is labelled by its leaf slug and still linked (301-redirect).
-    const link = page.getByRole("link", { name: "sni92" });
-    await expect.element(link).toBeVisible();
-    await expect
-      .element(link)
-      .toHaveAttribute("href", "/catalog/scb/lisa/sni92");
+    // The dead node is labelled by its leaf slug and still linked (301-redirect) —
+    // now from the VISIBLE gutter too (#794 P2), not only the sr-only fallback.
+    const gutterLink = await vi.waitFor(() => {
+      const el = [...document.querySelectorAll("a.name-link")].find(
+        (a) =>
+          (a as HTMLAnchorElement).getAttribute("href") ===
+          "/catalog/scb/lisa/sni92",
+      );
+      if (!el) {
+        throw new Error("dead-node gutter link not yet rendered");
+      }
+      return el as HTMLAnchorElement;
+    });
+    expect(gutterLink.closest(".graph-fallback")).toBeNull();
+    const linkText = gutterLink.textContent?.replace(/\s+/g, " ").trim() ?? "";
+    expect(linkText).toContain("sni92");
+    expect(linkText).toContain("(renamed)");
+  });
+
+  it("makes a navigable node's VISIBLE gutter name a catalog link; the focus node stays a plain label (#794 P2)", async () => {
+    // A non-focus node with an fqid must be openable from the visible gutter (the
+    // retired panels had visible links). The focus node (current page) is NOT a
+    // self link. Scope to the gutter `.name-link` so this is the VISIBLE surface,
+    // not the sr-only fallback's own `<a>`.
+    const focus = variableNode({
+      id: "v1",
+      fqid: "scb/lisa/kon",
+      label: "Kön",
+    });
+    const succ = variableNode({
+      id: "v2",
+      fqid: "scb/lisa/civilstand",
+      label: "Civilstånd",
+    });
+    const edges: GraphEdge[] = [
+      { id: "e1", kind: "succession", source: "v1", target: "v2", label: null },
+    ];
+    render(HistoryGraph, {
+      graph: graph({ nodes: [focus, succ], edges, focus_id: "v1" }),
+    });
+
+    // The successor's gutter name is a VISIBLE link to its fqid.
+    const link = await vi.waitFor(() => {
+      const el = document.querySelector("a.name-link");
+      if (!el) {
+        throw new Error("gutter name link not yet rendered");
+      }
+      return el as HTMLAnchorElement;
+    });
+    expect(link.closest(".graph-fallback")).toBeNull(); // visible, not sr-only
+    expect(link.getAttribute("href")).toBe("/catalog/scb/lisa/civilstand");
+    expect(link.textContent?.trim()).toBe("Civilstånd");
+    // The focus node's gutter name is NOT a link (no self-link).
+    const focusLinks = [...document.querySelectorAll("a.name-link")].filter(
+      (a) =>
+        (a as HTMLAnchorElement).getAttribute("href") ===
+        "/catalog/scb/lisa/kon",
+    );
+    expect(focusLinks).toHaveLength(0);
+  });
+
+  it("makes a non-focus classification edition's gutter name a catalog link (#794 P2)", async () => {
+    const older = classificationNode({
+      id: "c1",
+      fqid: "class/sun2000",
+      label: "SUN 2000",
+      version_year: 2000,
+      is_current: false,
+    });
+    const newer = classificationNode({
+      id: "c2",
+      fqid: "class/sun2020",
+      label: "SUN 2020",
+      version_year: 2020,
+      is_current: true,
+    });
+    render(HistoryGraph, {
+      graph: graph({ nodes: [older, newer], focus_id: "c2" }),
+    });
+    // The non-focus older edition's gutter name links to its fqid.
+    const link = await vi.waitFor(() => {
+      const el = [...document.querySelectorAll("a.name-link")].find(
+        (a) =>
+          (a as HTMLAnchorElement).getAttribute("href") ===
+          "/catalog/class/sun2000",
+      );
+      if (!el) {
+        throw new Error("classification gutter link not yet rendered");
+      }
+      return el as HTMLAnchorElement;
+    });
+    expect(link.closest(".graph-fallback")).toBeNull();
+    expect(link.textContent?.trim()).toContain("SUN 2000");
+  });
+
+  it("surfaces a succession edge's effective_year on the VISIBLE annotation, even with no reason (#794 P2)", async () => {
+    // A replacement edge with an effective year but no human reason previously
+    // rendered as an unlabelled arrow. The transition year must be visible again
+    // ("→ 2009"); a reason-with-year reads "renamed → 2009".
+    const a = variableNode({ id: "a", fqid: "scb/lisa/a", label: "A" });
+    const b = variableNode({ id: "b", fqid: "scb/lisa/b", label: "B" });
+    const c = variableNode({ id: "c", fqid: "scb/lisa/c", label: "C" });
+    const edges: GraphEdge[] = [
+      // Year only, no reason.
+      {
+        id: "e1",
+        kind: "succession",
+        source: "a",
+        target: "b",
+        label: null,
+        effective_year: 2009,
+      },
+      // Reason + year.
+      {
+        id: "e2",
+        kind: "succession",
+        source: "b",
+        target: "c",
+        label: "renamed",
+        effective_year: 2015,
+      },
+    ];
+    render(HistoryGraph, {
+      graph: graph({ nodes: [a, b, c], edges, focus_id: "a" }),
+    });
+
+    // VISIBLE reason chips (outside the sr-only fallback) carry the year.
+    const chips = await vi.waitFor(() => {
+      const els = [
+        ...document.querySelectorAll(".reason:not(.related)"),
+      ].filter((el) => el.closest(".graph-fallback") === null);
+      if (els.length < 2) {
+        throw new Error("succession reason chips not yet rendered");
+      }
+      return els.map((el) => el.textContent?.replace(/\s+/g, " ").trim() ?? "");
+    });
+    expect(chips).toContain("→ 2009");
+    expect(chips).toContain("renamed → 2015");
   });
 
   it("renders fine with a null focus_id (group payload — no highlight)", async () => {
