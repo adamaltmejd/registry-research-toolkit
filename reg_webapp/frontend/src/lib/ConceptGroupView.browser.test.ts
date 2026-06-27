@@ -347,11 +347,13 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     renderGroup();
 
     // The inkjan subheading's select-all toggle selects BOTH its columns at once.
-    // Members have distinct NAMES here, so the subheading is name-led → the aria
-    // label is keyed on the member name.
+    // Members have distinct NAMES here → one name-CLUSTER each (#901), and a lone
+    // multi-column band in a heading cluster leads with its SLUG distinguisher (the
+    // name is hoisted to the heading, not repeated on the subheading), so the aria
+    // label is keyed on the member slug.
     const janSelectAll = await vi.waitFor(() => {
       const el = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
+        'input[aria-label="Select all columns of inkjan"]',
       );
       if (!el) {
         throw new Error("inkjan select-all not yet rendered");
@@ -512,17 +514,14 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         throw new Error("subheadings not yet rendered");
       }
     });
-    // The members have distinct NAMES → name-led subheading, so the select-all aria
-    // label is keyed on the member name.
+    // The members have distinct NAMES → one name-CLUSTER each (#901); a lone
+    // multi-column band in a heading cluster is slug-led (the name is in the heading),
+    // so the select-all aria label is keyed on the member slug.
     const inkjanSub = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      )
+      .querySelector('input[aria-label="Select all columns of inkjan"]')
       ?.closest("li.subhead");
     const inkfebSub = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst februari"]',
-      )
+      .querySelector('input[aria-label="Select all columns of inkfeb"]')
       ?.closest("li.subhead");
     // inkjan: all columns out → the subheading greys.
     expect(inkjanSub?.classList.contains("dimmed")).toBe(true);
@@ -1119,7 +1118,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // (off the title link) toggles every column of that variable.
     const inkjanRow = await vi.waitFor(() => {
       const cb = document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
+        'input[aria-label="Select all columns of inkjan"]',
       );
       const label = cb?.closest("label.subhead-label");
       if (!label) {
@@ -1151,9 +1150,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     const inkjanSub = await vi.waitFor(() => {
       const li = document
-        .querySelector(
-          'input[aria-label="Select all columns of Inkomst januari"]',
-        )
+        .querySelector('input[aria-label="Select all columns of inkjan"]')
         ?.closest("li.subhead");
       if (!li) {
         throw new Error("inkjan subhead not yet rendered");
@@ -1293,9 +1290,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .element()
       .closest(".row-btn") as Element;
     const inkjanLabel = document
-      .querySelector(
-        'input[aria-label="Select all columns of Inkomst januari"]',
-      )
+      .querySelector('input[aria-label="Select all columns of inkjan"]')
       ?.closest("label.subhead-label") as HTMLLabelElement;
 
     // Normalize first (the real Chromium cursor may already sit over a row from a
@@ -1353,7 +1348,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     await expect.element(page.getByText("0 columns selected")).toBeVisible();
     expect(
       document.querySelector<HTMLInputElement>(
-        'input[aria-label="Select all columns of Inkomst januari"]',
+        'input[aria-label="Select all columns of inkjan"]',
       )?.checked,
     ).toBe(false);
   });

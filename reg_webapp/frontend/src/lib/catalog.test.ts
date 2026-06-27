@@ -2444,6 +2444,61 @@ describe("clusterBands (#901 de-duplicate member presentation)", () => {
     ]);
     expect(clusters.every((c) => c.bands.length === 1)).toBe(true);
   });
+
+  it("a lone multi-column band in a heading group leads with its distinguisher, not the (heading) name (#901)", () => {
+    // The disponibel-inkomst regression: a heterogeneous group (headings shown) where
+    // one name maps to a SINGLE multi-column band (`distinguisherIsColumn: false`).
+    // `bandLabeling([band])` falls through to the lone-band name fallback and would lead
+    // it with `band.name` — but that name is ALSO the cluster heading, so it would show
+    // twice. clusterBands re-leads that band with its slug distinguisher (mono, not a
+    // column), so the name appears ONLY in the heading.
+    const { clusters, showClusterHeadings } = clusterBands(
+      [
+        band({
+          name: "Delkomponent, 2004 års definition",
+          distinguisher: "delkomponent-2004",
+          distinguisherIsColumn: false,
+        }),
+        band({ name: "Disponibel inkomst", distinguisher: "CDISP" }),
+      ],
+      id,
+    );
+    expect(showClusterHeadings).toBe(true);
+    const lone = clusters[0];
+    expect(lone.name).toBe("Delkomponent, 2004 års definition");
+    expect(lone.bands).toHaveLength(1);
+    // Leads with the slug distinguisher (NOT the name), as a mono non-column primary.
+    expect(lone.labeling.bands[0].primary.text).toBe("delkomponent-2004");
+    expect(lone.labeling.bands[0].primary.mono).toBe(true);
+    expect(lone.labeling.bands[0].primaryIsColumn).toBe(false);
+  });
+
+  it("a single-CLUSTER group does NOT re-lead a lone band (the name/column still leads)", () => {
+    // Guard the regression: with ONE cluster (no headings) the lone leaf must still lead
+    // exactly as before — a single-column leaf leads with its COLUMN, a multi-column leaf
+    // with its NAME — never re-led by the heading-only fix.
+    const single = clusterBands([band({ distinguisher: "CDISP" })], id);
+    expect(single.showClusterHeadings).toBe(false);
+    // Single-column leaf → leads with its column (today's behavior, unchanged).
+    expect(single.clusters[0].labeling.bands[0].primary.text).toBe("CDISP");
+    expect(single.clusters[0].labeling.bands[0].primaryIsColumn).toBe(true);
+
+    const multi = clusterBands(
+      [
+        band({
+          distinguisher: "agi-multi",
+          distinguisherIsColumn: false,
+        }),
+      ],
+      id,
+    );
+    expect(multi.showClusterHeadings).toBe(false);
+    // Lone multi-column leaf → leads with its NAME (no heading to dedup against).
+    expect(multi.clusters[0].labeling.bands[0].primary.text).toBe(
+      "Disponibel inkomst",
+    );
+    expect(multi.clusters[0].labeling.bands[0].primary.mono).toBe(false);
+  });
 });
 
 describe("pickerWindowYears + representationInWindow (#678 dimming)", () => {

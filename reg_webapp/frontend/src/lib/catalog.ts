@@ -1535,9 +1535,16 @@ export interface BandCluster<T> {
  * one heading, uniformly.
  *
  * Order is preserved on both axes: clusters appear in the order their name is first
- * seen, and bands within a cluster keep their input order. `name` is taken via the
- * caller's `nameOf` (the same value `BandIdentity.name` carries) so the heading text
- * matches the hoisted-off identity. */
+ * seen, and bands within a cluster keep their input order. `name` is read as
+ * `identityOf(band).name` (the same value `BandIdentity.name` carries) so the heading
+ * text matches the hoisted-off identity.
+ *
+ * When headings ARE shown, a cluster holding a SINGLE multi-column band would have its
+ * `bandLabeling([band])` fall through to the lone-band name fallback and lead that band
+ * with `band.name` — which is ALSO the cluster heading, so the name would render twice
+ * (#901 fix). In that case the band's label is re-led with its `distinguisher` (the
+ * member slug, mono) so the name appears only in the heading — consistent with how a
+ * multi-column member in a MULTI-band cluster already leads with its slug. */
 export function clusterBands<T>(
   bands: readonly T[],
   identityOf: (band: T) => BandIdentity,
@@ -1552,14 +1559,34 @@ export function clusterBands<T>(
       byName.set(name, [band]);
     }
   }
-  const clusters = [...byName].map(
-    ([name, members]): BandCluster<T> => ({
-      name,
-      bands: members,
-      labeling: bandLabeling(members.map(identityOf)),
-    }),
-  );
-  return { clusters, showClusterHeadings: clusters.length > 1 };
+  const showClusterHeadings = byName.size > 1;
+  const clusters = [...byName].map(([name, members]): BandCluster<T> => {
+    const labeling = bandLabeling(members.map(identityOf));
+    // With a heading shown, a lone multi-column band falls through to the name
+    // fallback and leads with `band.name` — the SAME text as the cluster heading, so
+    // it would render twice (#901). Re-lead that band with its distinguisher (the
+    // member slug, mono) so the name shows only in the heading. Skip any band with no
+    // distinguisher (no slug to lead with → keep the name fallback). A multi-band
+    // cluster already leads with the distinguisher, so this only ever rewrites the
+    // lone-band fallback case.
+    if (showClusterHeadings) {
+      labeling.bands = labeling.bands.map((label, i) => {
+        if (label.primary.text !== name) {
+          return label;
+        }
+        const identity = identityOf(members[i]);
+        if (identity.distinguisher === "") {
+          return label;
+        }
+        return {
+          primary: { text: identity.distinguisher, mono: true },
+          primaryIsColumn: identity.distinguisherIsColumn,
+        };
+      });
+    }
+    return { name, bands: members, labeling };
+  });
+  return { clusters, showClusterHeadings };
 }
 
 /** The active period window the picker DIMS against, as an inclusive year pair
