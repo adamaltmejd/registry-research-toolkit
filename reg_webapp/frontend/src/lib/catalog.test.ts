@@ -13,6 +13,7 @@ import {
   breadcrumbs,
   catalogHref,
   classGroupHref,
+  commonLabelStem,
   coverageFromStates,
   DATA_BROWSER_LABEL,
   deriveType,
@@ -27,6 +28,7 @@ import {
   groupHref,
   groupLinkFromFocus,
   humanizeClassificationSlug,
+  labelSuffix,
   leafSlug,
   matchesFilter,
   memberCoverageUnion,
@@ -1579,6 +1581,60 @@ describe("pickerRepresentations (#678 direct picker)", () => {
   });
 });
 
+describe("commonLabelStem + labelSuffix (#678 value-set stem dedup)", () => {
+  it("hoists the majority word-stem when most labels share a long leading sequence", () => {
+    // sni92: most rows repeat "Svensk standard för näringsgrensindelning," and differ
+    // only in the suffix; a couple of outliers vary. The shared stem is hoisted.
+    const stem = commonLabelStem([
+      "Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter",
+      "Svensk standard för näringsgrensindelning, brancher SNI 92",
+      "Svensk standard för näringsgrensindelning, SNI 92 detaljgrupp",
+      "SNI, 92, detaljgrupp", // outlier — does not share the stem
+    ]);
+    expect(stem).toBe("Svensk standard för näringsgrensindelning,");
+  });
+
+  it("tolerates a single outlier (majority, not all)", () => {
+    const stem = commonLabelStem([
+      "Standard för svensk näringsgren Branscher",
+      "Standard för svensk näringsgren Aktiviteter",
+      "Helt annan etikett här borta", // 1 of 3 — majority is 2
+    ]);
+    expect(stem).toBe("Standard för svensk näringsgren");
+  });
+
+  it("returns '' when no substantial majority stem exists (< 2 words or < 10 chars)", () => {
+    // "SNI 92" is a 2-word shared lead but only 6 chars → not substantial.
+    expect(commonLabelStem(["SNI 92 A", "SNI 92 B"])).toBe("");
+    // No shared leading word at all.
+    expect(commonLabelStem(["Alpha beta gamma", "Zeta eta theta"])).toBe("");
+    // A single shared word is < 2 words.
+    expect(
+      commonLabelStem(["Inkomst total brutto", "Inkomst netto skatt"]),
+    ).toBe("");
+  });
+
+  it("empty input / all-empty labels → ''", () => {
+    expect(commonLabelStem([])).toBe("");
+    expect(commonLabelStem(["", ""])).toBe("");
+  });
+
+  it("labelSuffix strips the stem + leading separators, keeps outliers full", () => {
+    const stem = "Svensk standard för näringsgrensindelning,";
+    expect(
+      labelSuffix("Svensk standard för näringsgrensindelning, SNI 92", stem),
+    ).toBe("SNI 92");
+    // An outlier (doesn't start with the stem) keeps its full label.
+    expect(labelSuffix("SNI, 92, detaljgrupp", stem)).toBe(
+      "SNI, 92, detaljgrupp",
+    );
+    // A label that IS exactly the stem → "" (nothing left for the row).
+    expect(labelSuffix(stem, stem)).toBe("");
+    // No stem → unchanged.
+    expect(labelSuffix("anything", "")).toBe("anything");
+  });
+});
+
 describe("pickerLabeling (#678 1b adaptive labels)", () => {
   // A representation row, in the shape pickerLabeling consumes (only the four
   // labeled dimensions + the selection key matter).
@@ -1616,7 +1672,7 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
   it("fordonsreg shape: only the population varies → population primary, constant column + value set hoisted (no period, no variant)", () => {
     // Every row delivers the constant column "Sni2002"; the POPULATION
     // (lastbilar/bussar) is what distinguishes them.
-    const { headerContext, rows } = pickerLabeling([
+    const { column, headerContext, rows } = pickerLabeling([
       rep({
         variant: "lastbilar",
         column: "Sni2002",
@@ -1624,9 +1680,11 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       }),
       rep({ variant: "bussar", column: "Sni2002", valueSetLabel: "SNI 2002" }),
     ]);
-    // The constant column + value set hoist; the period is NEVER hoisted (the row's
-    // right-side period column covers it), and the (varying) variant stays on rows.
-    expect(headerContext).toEqual(["column Sni2002", "SNI 2002"]);
+    // The constant column hoists to the dedicated `column` chip field; the constant
+    // value set hoists to the quiet context; the period is NEVER hoisted and the
+    // (varying) variant stays on rows.
+    expect(column).toBe("Sni2002");
+    expect(headerContext).toEqual(["SNI 2002"]);
     // Each row shows the varying population as the (non-mono) primary.
     expect(rows.map((r) => r.primary)).toEqual([
       { text: "lastbilar", mono: false },
@@ -1661,7 +1719,7 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
   it("fordonsreg empty-label shape: a value-set label constant except on empty rows still hoists (#678 fix 3)", () => {
     // One population delivers no value set (empty label). The single real label must
     // read as CONSTANT and hoist — not show per-row — and the empty row shows nothing.
-    const { headerContext, rows } = pickerLabeling([
+    const { column, headerContext, rows } = pickerLabeling([
       rep({
         variant: "lastbilar",
         column: "Sni2002",
@@ -1674,8 +1732,8 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
           "Standard för svensk näringsgrensindelning, 2002 Branscher",
       }),
     ]);
+    expect(column).toBe("Sni2002");
     expect(headerContext).toEqual([
-      "column Sni2002",
       "Standard för svensk näringsgrensindelning, 2002 Branscher",
     ]);
     // The value set is treated as constant → it is NOT a per-row varying qualifier.
@@ -1712,6 +1770,69 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(rows.every((r) => r.period === null)).toBe(true);
   });
 
+  it("sni92 stem dedup: value-set labels share a long stem → hoist it, rows show suffixes, outlier full (#678)", () => {
+    // Labels VARY (so no identical-all collapse) but share a long majority stem. The
+    // stem hoists to the context once; each sharing row shows only its suffix; the
+    // outlier (no shared stem) keeps its full label. The varying COLUMN is the primary.
+    const { headerContext, rows } = pickerLabeling([
+      rep({
+        variant: "v",
+        column: "Sni92A",
+        valueSetLabel: "Svensk standard för näringsgrensindelning, Aktiviteter",
+      }),
+      rep({
+        variant: "v",
+        column: "Sni92B",
+        valueSetLabel: "Svensk standard för näringsgrensindelning, Branscher",
+      }),
+      rep({
+        variant: "v",
+        column: "Sni92C",
+        valueSetLabel: "SNI 92 detaljgrupp", // outlier — no shared stem
+      }),
+    ]);
+    // The stem hoists to the quiet context (column is the primary, not hoisted).
+    expect(headerContext).toEqual([
+      "Svensk standard för näringsgrensindelning,",
+    ]);
+    // Sharing rows show only their suffix as the qualifier; the outlier keeps full.
+    expect(rows.map((r) => r.qualifiers)).toEqual([
+      ["Aktiviteter"],
+      ["Branscher"],
+      ["SNI 92 detaljgrupp"],
+    ]);
+    // The column is each row's mono primary.
+    expect(rows.map((r) => r.primary.text)).toEqual([
+      "Sni92A",
+      "Sni92B",
+      "Sni92C",
+    ]);
+  });
+
+  it("identical-all value-set labels still collapse (the stem covers the whole label)", () => {
+    // When every label is identical, the identical-all hoist still applies (no stem
+    // path needed) — the label hoists to context, rows carry no value-set qualifier.
+    const { headerContext, rows } = pickerLabeling([
+      rep({ variant: "v", column: "A", valueSetLabel: "SUN 2020" }),
+      rep({ variant: "v", column: "B", valueSetLabel: "SUN 2020" }),
+    ]);
+    expect(headerContext).toEqual(["SUN 2020"]);
+    expect(rows.every((r) => r.qualifiers.length === 0)).toBe(true);
+  });
+
+  it("no substantial stem → full value-set labels per row (no hoist)", () => {
+    const { headerContext, rows } = pickerLabeling([
+      rep({ variant: "v", column: "A", valueSetLabel: "Alpha one" }),
+      rep({ variant: "v", column: "B", valueSetLabel: "Beta two" }),
+    ]);
+    // No shared stem → nothing hoisted; each row shows its full label.
+    expect(headerContext).toEqual([]);
+    expect(rows.map((r) => r.qualifiers)).toEqual([
+      ["Alpha one"],
+      ["Beta two"],
+    ]);
+  });
+
   it("period varies → it rides on the row, not the header", () => {
     const { headerContext, rows } = pickerLabeling([
       rep({ variant: "v1", column: "A", period: "2000 – 2005" }),
@@ -1721,18 +1842,19 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(rows.map((r) => r.period)).toEqual(["2000 – 2005", "2006 – 2010"]);
   });
 
-  it("a single representation (nothing varies) → the column is the mono primary; column + value set hoist, no variant/period", () => {
-    const { headerContext, rows } = pickerLabeling([
+  it("a single representation (nothing varies) → the column is the mono primary; column field + value set hoist, no variant/period", () => {
+    const { column, headerContext, rows } = pickerLabeling([
       rep({ variant: "v1", column: "Kon", valueSetLabel: "1-siffrig" }),
     ]);
     // The lone row never renders blank: its column is the identifier.
     expect(rows[0].primary).toEqual({ text: "Kon", mono: true });
     expect(rows[0].qualifiers).toEqual([]);
-    // The constant column + value set hoist; the constant variant is NOT hoisted
-    // (noise), and the period is never hoisted. (In the PICKER, a single-column
-    // variable's "column …" is then dropped from context since the column becomes
-    // the row's primary identity — but that's the picker's `view`, not this pure fn.)
-    expect(headerContext).toEqual(["column Kon", "1-siffrig"]);
+    // The constant column hoists to the `column` field; the value set to the quiet
+    // context; the constant variant is NOT hoisted (noise) and the period never is.
+    // (In the PICKER, a single-column variable's `column` is suppressed from context
+    // since the column becomes the row's primary chip — that's the picker's `view`.)
+    expect(column).toBe("Kon");
+    expect(headerContext).toEqual(["1-siffrig"]);
   });
 
   it("falls back to the variant, then a dash, when no column is present", () => {

@@ -997,10 +997,10 @@ export function pickerRepresentations(
 // and commit payload are unchanged: this is DISPLAY only.
 
 /** A row's adaptive display projection: the prominent `primary` label (mono when
- * it is the delivery column), the muted `qualifiers` (the remaining varying
- * dimensions), and `period` ONLY when the span varies across rows (else it is
- * hoisted to the header, so it is null here). `key` is the row's selection key
- * (unchanged — `${variant}::${column}`). */
+ * it is the delivery column — the picker renders a mono primary as a COLUMN CHIP),
+ * the muted `qualifiers` (the remaining varying dimensions), and `period` ONLY when
+ * the span varies across rows (else it is hoisted to the header, so it is null here).
+ * `key` is the row's selection key (unchanged — `${variant}::${column}`). */
 export interface PickerRowLabel {
   key: string;
   primary: { text: string; mono: boolean };
@@ -1008,16 +1008,18 @@ export interface PickerRowLabel {
   period: string | null;
 }
 
-/** The adaptive labeling of a variable's rows (#678 1b): `headerContext` is the
- * hoisted CONSTANT dimensions, each a ready-to-render quiet-context string (the
- * delivery column prefixed "column …" so a bare SCB token reads as one; the single
- * value-set label), in the fixed order column · valueSet. `rows` carries each row's
- * display projection. The period is NEVER in `headerContext` — every row renders its
- * own `period` on the right (the picker's period column), so hoisting it would
- * double-show it. The variant, when constant, is NOT hoisted either — a single-
- * variant register's whole-population default is noise and is already in the add
- * coordinate; it only appears when it VARIES (as the row identity). */
+/** The adaptive labeling of a variable's rows (#678 1b): `column` is the hoisted
+ * CONSTANT delivery column (the picker renders it as a prominent COLUMN CHIP), or
+ * null when the column varies (it's then each row's primary). `headerContext` is the
+ * remaining quiet context — the constant value-set label, OR (when value-set labels
+ * vary but share a long leading stem, #678) that COMMON STEM, hoisted once so the
+ * rows show only their suffix. The period is NEVER in `headerContext` — every row
+ * renders its own `period` on the right (the picker's period column), so hoisting it
+ * would double-show it. The variant, when constant, is NOT hoisted either — a
+ * single-variant register's whole-population default is noise and is already in the
+ * add coordinate; it only appears when it VARIES (as the row identity). */
 export interface PickerLabeling {
+  column: string | null;
   headerContext: string[];
   rows: PickerRowLabel[];
 }
@@ -1028,6 +1030,74 @@ function distinctCount(
   pick: (r: PickerRepresentation) => string,
 ): number {
   return new Set(rows.map(pick)).size;
+}
+
+/** The longest leading WORD-SEQUENCE (whitespace-split) shared by a MAJORITY
+ * (> half) of `labels`, or "" when no such stem is SUBSTANTIAL (≥ 2 words AND ≥ 10
+ * chars). The hoist target for repetitive value-set labels (#678): SCB labels like
+ * "Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter" share a long
+ * leading stem and differ only in the suffix — hoisting the stem once and showing
+ * each row's suffix kills the repetition. MAJORITY (not all) so a lone outlier
+ * (a differently-worded label) doesn't defeat the stem; rows whose label doesn't
+ * start with the stem keep their full label (the caller's job). Pure — unit-tested.
+ *
+ * Word boundary, not character: the stem ends on a whole word so a suffix never
+ * starts mid-word. Length floor (chars over the joined stem) avoids hoisting a
+ * trivial shared lead like "SNI 92". */
+export function commonLabelStem(labels: readonly string[]): string {
+  const wordLists = labels
+    .filter((l) => l !== "")
+    .map((l) => l.split(/\s+/).filter((w) => w !== ""));
+  if (wordLists.length === 0) {
+    return "";
+  }
+  const majority = Math.floor(wordLists.length / 2) + 1;
+  // Grow the candidate stem word by word: at each length, the most common leading
+  // word-sequence of that length must still be shared by ≥ majority lists. Stop when
+  // no length-k prefix reaches the majority.
+  let best: string[] = [];
+  const maxLen = Math.max(...wordLists.map((w) => w.length));
+  for (let k = 1; k <= maxLen; k++) {
+    // Tally each list's first-k-word prefix (lists shorter than k can't contribute).
+    const counts = new Map<string, number>();
+    for (const words of wordLists) {
+      if (words.length < k) {
+        continue;
+      }
+      const prefix = words.slice(0, k).join(" ");
+      counts.set(prefix, (counts.get(prefix) ?? 0) + 1);
+    }
+    // The best length-k prefix and whether it still clears the majority.
+    let topPrefix = "";
+    let topCount = 0;
+    for (const [prefix, count] of counts) {
+      if (count > topCount) {
+        topCount = count;
+        topPrefix = prefix;
+      }
+    }
+    if (topCount >= majority && topPrefix !== "") {
+      best = topPrefix.split(" ");
+    } else {
+      break;
+    }
+  }
+  const stem = best.join(" ");
+  // Substantial only: ≥ 2 words AND ≥ 10 chars, else the hoist isn't worth it.
+  return best.length >= 2 && stem.length >= 10 ? stem : "";
+}
+
+/** A value-set label projected against a hoisted `stem`: the SUFFIX (the label with
+ * the stem removed and leading separators/space trimmed) when the label starts with
+ * the stem; the FULL label otherwise (an outlier that doesn't share the stem). An
+ * empty stem (no hoist) returns the label unchanged. A label that IS exactly the stem
+ * yields "" (the identical-all case — nothing left to show per row). */
+export function labelSuffix(label: string, stem: string): string {
+  if (stem === "" || !label.startsWith(stem)) {
+    return label;
+  }
+  // Trim the stem, then any leading separator punctuation + whitespace ("," ":" "-"…).
+  return label.slice(stem.length).replace(/^[\s,;:.\-–—/]+/, "");
 }
 
 /** Compute the adaptive labeling for a variable's representation rows (#678 1b):
@@ -1050,27 +1120,30 @@ export function pickerLabeling(
   // value set) must read as CONSTANT, so the one real label hoists to the context
   // instead of showing per-row. ≤1 distinct non-empty label ⇒ constant; empty rows
   // simply contribute no value-set label.
-  const valueSetLabels = new Set(
-    rows.map((r) => r.valueSetLabel).filter((l) => l !== ""),
-  );
+  const nonEmptyLabels = rows
+    .map((r) => r.valueSetLabel)
+    .filter((l) => l !== "");
+  const valueSetLabels = new Set(nonEmptyLabels);
   const valueSetVaries = valueSetLabels.size > 1;
   // The single constant label to hoist (the lone non-empty one), or "" when none.
   const constantValueSet =
     valueSetLabels.size === 1 ? [...valueSetLabels][0] : "";
+  // When the labels VARY, hoist their longest majority WORD-STEM (#678): the long
+  // repeated lead (e.g. "Svensk standard för näringsgrensindelning,") goes to the
+  // context once and each row shows only its suffix. "" when no substantial stem.
+  const stem = valueSetVaries ? commonLabelStem(nonEmptyLabels) : "";
 
-  // A representative row supplies the constant column to hoist (every row shares it
-  // by definition). Empty rows → empty labeling.
+  // The constant column hoists to the prominent COLUMN CHIP (the picker styles it);
+  // a varying column is each row's primary instead. Empty rows → null/empty labeling.
   const sample = rows[0];
+  const column =
+    sample && !columnVaries && sample.column ? sample.column : null;
   const headerContext: string[] = [];
-  if (sample) {
-    // Fixed order: column · valueSet. (Period is never hoisted — the right-side
-    // period column always shows it. A constant variant is dropped as noise.)
-    if (!columnVaries && sample.column) {
-      headerContext.push(`column ${sample.column}`);
-    }
-    if (!valueSetVaries && constantValueSet) {
-      headerContext.push(constantValueSet);
-    }
+  // The value-set quiet context: the single constant label, else the hoisted stem.
+  if (!valueSetVaries && constantValueSet) {
+    headerContext.push(constantValueSet);
+  } else if (stem) {
+    headerContext.push(stem);
   }
 
   const labelRows = rows.map((r): PickerRowLabel => {
@@ -1085,7 +1158,13 @@ export function pickerLabeling(
       varying.push({ text: r.variantLabel, mono: false });
     }
     if (valueSetVaries && r.valueSetLabel) {
-      varying.push({ text: r.valueSetLabel, mono: false });
+      // With a hoisted stem, show only this row's SUFFIX (full label for an outlier
+      // that doesn't share the stem; "" for a label that IS exactly the stem — then
+      // it contributes no qualifier). No stem → the full label as before.
+      const text = labelSuffix(r.valueSetLabel, stem);
+      if (text !== "") {
+        varying.push({ text, mono: false });
+      }
     }
     // Fallback when nothing varies (a single representation, or rows that differ
     // only by period): show the column, then the variant label, then a dash — never
@@ -1105,7 +1184,7 @@ export function pickerLabeling(
     };
   });
 
-  return { headerContext, rows: labelRows };
+  return { column, headerContext, rows: labelRows };
 }
 
 // ── Adaptive band IDENTITY labeling (#678 inc 2) ─────────────────────────────

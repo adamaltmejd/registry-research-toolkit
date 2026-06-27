@@ -598,18 +598,20 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup({ provider: "scb", register: "moms", key: "naringsgren" });
 
-    // Ng0 / Ng1 are single-column compact rows led by the column (mono <code>); the
-    // constant concept name is NOT repeated on them.
+    // Ng0 / Ng1 are single-column compact rows led by the column rendered as a
+    // COLUMN CHIP (the prominent selection signal); the constant concept name is NOT
+    // repeated on them.
     const singleTitles = await vi.waitFor(() => {
-      const els = document.querySelectorAll(".col-row.single .primary");
+      const els = document.querySelectorAll(".col-row.single .col-chip");
       if (els.length < 2) {
-        throw new Error("single-column rows not yet rendered");
+        throw new Error("single-column chips not yet rendered");
       }
       return [...els].map((e) => e.textContent?.trim());
     });
     expect(singleTitles).toEqual(["Ng0", "Ng1"]);
+    // The column chip is a mono <code> styled as a pill.
     expect(
-      [...document.querySelectorAll(".col-row.single .primary")].every(
+      [...document.querySelectorAll(".col-row.single .col-chip")].every(
         (e) => e.tagName === "CODE",
       ),
     ).toBe(true);

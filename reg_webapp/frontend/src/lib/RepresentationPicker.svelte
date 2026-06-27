@@ -196,26 +196,24 @@ const labelingByBand = $derived(
 );
 
 /** The render model per variable: its leading identity, whether it is a single
- * column (→ one merged row, no subheading), the adaptive column labels, and the
- * hoisted row-context line (the column dropped when it's the single-column primary). */
+ * column (→ one merged row, no subheading), the hoisted COLUMN chip + the quiet
+ * value-set context, and the adaptive per-row column labels. */
 const view = $derived(
   bands.map((band, i) => {
     const id = identity.bands[i];
     const labeling = labelingByBand.get(band.key);
     const single = band.rows.length === 1;
-    // A single-column variable merges its identity into the one row: the row's
-    // primary IS the variable identity. Drop the redundant "column …" context entry.
-    const context =
-      single && id.primaryIsColumn
-        ? (labeling?.headerContext ?? []).filter(
-            (c) => !c.startsWith("column "),
-          )
-        : (labeling?.headerContext ?? []);
+    // The hoisted constant delivery column → a prominent chip in the context. But a
+    // single-column variable whose ROW PRIMARY already IS that column shows it once
+    // (as the primary chip), so suppress the duplicate context chip there.
+    const column =
+      single && id.primaryIsColumn ? null : (labeling?.column ?? null);
     return {
       band,
       primary: id.primary,
       single,
-      context,
+      column,
+      context: labeling?.headerContext ?? [],
       rowLabels: new Map((labeling?.rows ?? []).map((r) => [r.key, r])),
     };
   }),
@@ -225,6 +223,14 @@ const footerLabel = $derived(
   `${selectedCount} ${selectedCount === 1 ? "column" : "columns"} selected`,
 );
 </script>
+
+<!-- The delivery COLUMN chip (#678): the main selection signal, rendered as a small
+     categorical pill (mono text + a subtle --cat-var tint, distinct from the rost
+     selection accent) wherever a delivery column shows — the hoisted "column" context
+     AND a row whose primary IS the column. -->
+{#snippet colChip(text: string)}
+  <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
+{/snippet}
 
 <div class="rep-picker">
   {#if allKeys.length > 1}
@@ -271,9 +277,15 @@ const footerLabel = $derived(
             <span class="row-main">
               <span class="primary-line">
                 {#if v.primary.mono}
-                  <code class="primary mono">{v.primary.text}</code>
+                  <!-- The primary IS the delivery column → the prominent column chip. -->
+                  {@render colChip(v.primary.text)}
                 {:else}
                   <span class="primary">{v.primary.text}</span>
+                {/if}
+                {#if v.column}
+                  <!-- A constant delivery column hoisted alongside a non-column
+                       primary (e.g. a name-led row) → the column chip. -->
+                  {@render colChip(v.column)}
                 {/if}
                 {#if identity.showPrefix}
                   <code class="register-prefix">{band.registerPrefix}</code>
@@ -369,8 +381,17 @@ const footerLabel = $derived(
               <span class="subhead-title">{@render identityInner()}</span>
             {/if}
           </div>
-          {#if v.context.length > 0}
-            <span class="subhead-context">{v.context.join(" · ")}</span>
+          {#if v.column || v.context.length > 0}
+            <span class="subhead-context">
+              {#if v.column}
+                <!-- The constant delivery column (when it doesn't vary across this
+                     variable's rows) → the prominent column chip. -->
+                {@render colChip(v.column)}
+              {/if}
+              {#if v.context.length > 0}
+                <span class="ctx-text">{v.context.join(" · ")}</span>
+              {/if}
+            </span>
           {/if}
         </li>
         {#each band.rows as row (row.key)}
@@ -390,7 +411,8 @@ const footerLabel = $derived(
               <span class="check cbox" aria-hidden="true"></span>
               <span class="row-main">
                 {#if label?.primary.mono}
-                  <code class="primary mono">{label.primary.text}</code>
+                  <!-- A mono primary here is the varying DELIVERY COLUMN → chip. -->
+                  {@render colChip(label.primary.text)}
                 {:else}
                   <span class="primary">{label?.primary.text}</span>
                 {/if}
@@ -515,11 +537,17 @@ const footerLabel = $derived(
     color: var(--text-muted);
   }
   .subhead-context {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.3rem 0.5rem;
     margin-top: 0.15rem;
     padding-left: 1.5rem;
     font-size: 0.78rem;
     color: var(--text-muted);
+  }
+  .subhead-context .ctx-text {
+    overflow-wrap: anywhere;
   }
   /* A 0-column variable: a plain subheading with a quiet "No columns" marker. */
   .empty-note {
@@ -678,6 +706,27 @@ const footerLabel = $derived(
   }
   .primary.mono {
     font-family: var(--font-mono);
+  }
+  /* The DELIVERY COLUMN chip (#678): the main selection signal, a small categorical
+     pill in the --cat-var hue (the "variable"/column dimension tint), tuned like the
+     Tag primitive — 10% fill + 35% border + the AA-cleared --cat-var-ink text. A
+     DISTINCT, recognizable "column" mark, deliberately NOT the rost --accent/-bg
+     (which mean "selected"). Light/dark-safe via color-mix. */
+  .col-chip {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.3;
+    padding: 0.05rem 0.4rem;
+    border-radius: var(--radius-sm);
+    color: var(--cat-var-ink);
+    border: 1px solid color-mix(in srgb, var(--cat-var) 35%, transparent);
+    background: color-mix(in srgb, var(--cat-var) 10%, var(--surface));
+    overflow-wrap: anywhere;
+    /* Hug the column text — never stretch to fill the row's flex column. */
+    align-self: flex-start;
+    width: fit-content;
+    max-width: 100%;
   }
   .var-name {
     font-size: 0.85rem;

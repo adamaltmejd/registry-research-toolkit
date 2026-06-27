@@ -330,20 +330,22 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    // The constant column + value set hoist to the variable's subheading context
-    // (the rows then show only the varying population). The period is NOT in the
-    // context (#678 fix 5) — it shows per-row on the right instead.
+    // The constant column hoists to the subheading context as a prominent COLUMN
+    // CHIP; the value set hoists as quiet text. The period is NOT in the context
+    // (#678 fix 5) — it shows per-row on the right instead.
     const ctx = await vi.waitFor(() => {
       const el = document.querySelector(".subhead-context");
       if (!el) {
         throw new Error("subhead context not yet rendered");
       }
-      return el.textContent ?? "";
+      return el;
     });
-    expect(ctx).toContain("column Sni2002");
-    expect(ctx).toContain("SNI 2002");
+    // The column is a chip (not the literal "column Sni2002" text).
+    const chip = ctx.querySelector(".col-chip");
+    expect(chip?.textContent).toBe("Sni2002");
+    expect(ctx.textContent).toContain("SNI 2002");
     // The period is NOT duplicated into the context line.
-    expect(ctx).not.toContain("2003 – 2015");
+    expect(ctx.textContent).not.toContain("2003 – 2015");
     // Each row still shows its own period on the right-side column.
     const periods = [
       ...document.querySelectorAll(".col-row.nested .period"),
@@ -357,12 +359,112 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /bussar/ }))
       .toBeVisible();
-    // The constant column is NOT repeated as a per-row label.
+    // The constant column is NOT repeated as a per-row label (the populations are the
+    // row primaries; no nested row's primary/chip is the column).
     expect(
       [...document.querySelectorAll(".col-row.nested .primary")].some(
         (el) => el.textContent === "Sni2002",
       ),
     ).toBe(false);
+  });
+
+  it("renders the delivery column as a prominent CHIP in a column-varies row; the variant primary stays plain (#678)", async () => {
+    // Two distinct columns on one variable (column VARIES) → each nested row leads
+    // with its column rendered as a .col-chip (the selection signal); the value-set
+    // qualifier (which varies too) stays plain text, NOT a chip.
+    const colVaries = [
+      state({
+        state_id: 1,
+        variant: "individer",
+        delivery_column_name: "Ssyk3",
+        value_set_version_label: "SSYK 3-siffrig",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "individer",
+        delivery_column_name: "Ssyk5",
+        value_set_version_label: "SSYK 5-siffrig",
+        valid_from: "2016-01-01",
+        valid_to: "2020-12-31",
+      }),
+    ];
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/yrke",
+      node: node(colVaries, { fqid: "scb/lisa/yrke", name: "Yrke" }),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // Each nested row leads with its column as a chip (mono <code class="col-chip">).
+    const chips = await vi.waitFor(() => {
+      const els = document.querySelectorAll(".col-row.nested .col-chip");
+      if (els.length < 2) {
+        throw new Error("column chips not yet rendered");
+      }
+      return [...els].map((e) => e.textContent?.trim());
+    });
+    expect(chips).toEqual(["Ssyk3", "Ssyk5"]);
+    expect(
+      [...document.querySelectorAll(".col-row.nested .col-chip")].every(
+        (e) => e.tagName === "CODE",
+      ),
+    ).toBe(true);
+    // The varying value-set qualifier is plain muted text (.sub), NOT a chip.
+    const subs = [...document.querySelectorAll(".col-row.nested .sub")].map(
+      (e) => e.textContent?.trim(),
+    );
+    expect(subs).toEqual(["SSYK 3-siffrig", "SSYK 5-siffrig"]);
+    expect(document.querySelector(".col-row.nested .sub .col-chip")).toBeNull();
+  });
+
+  it("hoists a common value-set STEM to the context and shows per-row suffixes (sni92 shape, #678)", async () => {
+    // sni92: the long "Svensk standard för näringsgrensindelning," stem repeats; the
+    // picker hoists it once to the subhead context and each row shows only its suffix.
+    const sni92 = [
+      state({
+        state_id: 1,
+        variant: "individer",
+        delivery_column_name: "Sni92A",
+        value_set_version_label:
+          "Svensk standard för näringsgrensindelning, Aktiviteter",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "individer",
+        delivery_column_name: "Sni92B",
+        value_set_version_label:
+          "Svensk standard för näringsgrensindelning, Branscher",
+        valid_from: "2016-01-01",
+        valid_to: "2020-12-31",
+      }),
+    ];
+    render(BindingLeafView, {
+      fqidPath: "scb/fordonsreg/sni92",
+      node: node(sni92, { fqid: "scb/fordonsreg/sni92", name: "Näringsgren" }),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The shared stem hoists to the subhead context (quiet text).
+    const ctx = await vi.waitFor(() => {
+      const el = document.querySelector(".subhead-context .ctx-text");
+      if (!el) {
+        throw new Error("subhead context not yet rendered");
+      }
+      return el.textContent ?? "";
+    });
+    expect(ctx).toContain("Svensk standard för näringsgrensindelning,");
+    // Each row shows only its SUFFIX, not the repeated stem.
+    const subs = [...document.querySelectorAll(".col-row.nested .sub")].map(
+      (e) => e.textContent?.trim(),
+    );
+    expect(subs).toEqual(["Aktiviteter", "Branscher"]);
   });
 
   it("renders a 'codings vary' nudge only on a column whose value_set_id changed over time (#678)", async () => {
