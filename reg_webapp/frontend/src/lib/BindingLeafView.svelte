@@ -10,15 +10,16 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
-  type AddSegment,
-  buildAddPlan,
+  addWindowBounds,
   coverageFromStates,
-  formatWindow,
   grainsFromStates,
   groupLinkFromFocus,
+  narrowStatesByModifier,
+  pickerRepresentations,
+  pickerWindowYears,
   qualifierFromFocus,
   registerPrefixOf,
-  type VariantWindow,
+  rowAddPeriod,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import HistoryGraph from "./HistoryGraph.svelte";
@@ -27,6 +28,9 @@ import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import RepresentationPicker, {
+  type PickerSelection,
+} from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
 import StatesView from "./StatesView.svelte";
 import SubjectView from "./SubjectView.svelte";
@@ -246,33 +250,43 @@ const grains = $derived(grainsFromStates(node.states));
 // data (no backend coverage field on the leaf node).
 const coverage = $derived(coverageFromStates(node.states));
 
-// ── #306/#638 PR2b one-click add: plan → (genuine choices) → commit ─────────
-// The page-level "Add to project" runs `buildAddPlan` over the VISIBLE states
-// (period-narrowed when a `?period` is active; further narrowed by any
-// `?variant`/`?value_set_version` chips). Succession auto-splits into one
-// source per variant segment (informing afterward); coding-identical parallel
-// columns auto-pick the #266 primary. Two genuine choices remain, but they live
-// at DIFFERENT points in the flow:
-//  - the VARIANT (population) choice — when ≥2 register variants co-exist for the
-//    period — is surfaced PROACTIVELY in the picker (the `choose-variant`
-//    selector below) and GATES the Add button (#638 PR2b): the user resolves the
-//    population BEFORE clicking, not in a post-click modal;
-//  - the REPRESENTATION (delivery-column) choice stays a POST-click chooser
-//    (`addPrompt.stage === "rep"`) — it's per-segment and a succession split can
-//    carry several, so it's an informed-after queue, not a pre-commit gate.
-// Commits go one-segment-at-a-time through `addFromCatalog` — the store's guarded
-// path (stable ids + gen counter) owns every async write.
+// ── #678 redesign: direct representation picker ─────────────────────────────
+// The add-to-project surface lists the variable's representations (one row per
+// distinct variant + delivery column) over the FULL state history and commits
+// the user's multi-selection directly — one `addFromCatalog` per picked row.
+// The picker (RepresentationPicker) owns the row layout + selection; THIS host
+// owns the data (enumeration) and the store wiring (commit + confirmation).
+//
+// The rows enumerate over `node.states` (the full history) — NOT the
+// period-narrowed subset: the period window only DIMS out-of-window rows
+// (`pickerWindow`), every row stays selectable. `pickerRepresentations` is pure +
+// unit-tested.
+//
+// A `?variant` / `?value_set_version` MODIFIER (the "Narrowed by" chip) is the
+// exception: it scopes the StatesView to one axis, so the picker must offer ONLY
+// the rows consistent with that narrowing (`narrowStatesByModifier`, the same
+// match as StatesView's `inScope`) — otherwise "select all" would add rows for
+// variants / versions OUTSIDE the active narrowing. With NO modifier active the
+// states pass through unchanged (full history, behavior unchanged).
 
-/** The pending POST-click representation prompt: pick the delivery column for
- * `segments[queue[current]]` (a queue — a multi-segment succession split can
- * carry several ambiguous segments). The variant choice is no longer a prompt —
- * it's the proactive `choose-variant` selector in the picker (gates Add). */
-let addPrompt = $state<{
-  stage: "rep";
-  segments: AddSegment[];
-  queue: number[];
-  current: number;
-} | null>(null);
+/** The selectable representation rows — one per distinct (variant, delivery
+ * column) over the active state history (the full history, or the
+ * variant/version-narrowed subset when a modifier is active). */
+const pickerRows = $derived(
+  pickerRepresentations(
+    narrowStatesByModifier(
+      node.states,
+      params.variant ?? null,
+      params.value_set_version ?? null,
+    ),
+  ),
+);
+
+/** The active period window to DIM against, as an inclusive year pair (a
+ * `?period` wire wins, else the global study window), or null (no dimming). */
+const pickerWindow = $derived(
+  pickerWindowYears(params.period ?? null, windowStore.value),
+);
 
 /** The committed outcome (drives the inline confirmation): the sources bindings
  * landed in (created or found) and how many were already present. */
@@ -281,147 +295,56 @@ let addOutcome = $state<{
   already: number;
 } | null>(null);
 
-// The reactive add plan over the RESOLVED (period-narrowed) states at the page's
-// wire period — recomputed whenever the resolution or period changes. Drives BOTH the
-// proactive `choose-variant` selector (rendered only when ≥2 variants co-exist
-// for the period) and the Add gate. `buildAddPlan` is pure + unit-tested.
-const addStates = $derived(resolvedStates ?? []);
-const addPlan = $derived(buildAddPlan(addStates, params.period ?? null));
-
-// #638 PR2b: the picker's chosen population, when the plan is `choose-variant`.
-// INVISIBLE unless ≥2 variants co-exist for the period; defaults to NONE (so a
-// fresh plan starts unresolved) and GATES the Add button. The gate is
-// MEMBERSHIP-based (correct-by-construction): Add is enabled only when the pick
-// is one of the CURRENT plan's options (`addPlan.options`). So a null pick OR a
-// stale pick naming a now-absent variant (e.g. after the plan changes
-// underneath) can never gate-pass — the gate doesn't lean on the reset timing or
-// the remount. The `addVariant = null` reset in the param-change effect still
-// cleanly clears the VISUAL pick when the period changes.
-let addVariant = $state<string | null>(null);
-
-// A fresh resolution clears the in-flight prompt + stale confirmation AND the
-// proactive variant pick (the visible states changed underneath the plan, so a
-// prior population choice may name a now-absent variant). Resetting `addVariant`
-// here cleanly clears the VISUAL pick when the period changes; gate CORRECTNESS
-// no longer depends on it (the gate is membership-based — see `addVariant`), but
-// the reset keeps the selector from showing a now-irrelevant highlight.
-//
-// Also tracks the LEAF IDENTITY (`fqidPath`, the navigation key) so a leaf change
-// re-invalidates the add state independent of the parent's `{#key route.fqidPath}`
-// remount. Today the remount supplies fresh state, but leaning on that is a
-// fragile cross-component coupling: if a future leaf were reused (no remount) with
-// a different `node` sharing a variant slug, a stale `addVariant` could satisfy the
-// membership gate and open an ambiguous leaf with Add enabled on the old
-// population. Invalidating on leaf identity here keeps the gate robust on its own.
+// A fresh resolution / leaf change clears the stale confirmation. Tracking
+// `fqidPath` (the navigation key) re-invalidates on a leaf change independent of
+// the parent's `{#key route.fqidPath}` remount, so a stale confirmation can never
+// survive onto a different variable.
 $effect(() => {
   void params.period;
   void params.variant;
   void params.value_set_version;
   void fqidPath;
-  addPrompt = null;
   addOutcome = null;
-  addVariant = null;
 });
 
-/** Pick the population in the proactive selector. Changing it must invalidate any
- * in-flight rep prompt — that prompt holds the PRIOR variant's segments, so
- * committing it after switching population would write the wrong variant's data
- * (the UI shows the new pick) — and any stale add confirmation. The rep flow
- * restarts cleanly on the next Add. */
-function selectPopulation(variant: string): void {
-  addVariant = variant;
-  addPrompt = null;
-  addOutcome = null;
-}
-
-function startAdd(): void {
-  addOutcome = null;
-  if (addPlan.kind === "choose-variant") {
-    // The gate — Add disabled unless `addVariant` is one of the current plan's
-    // options — guarantees a valid pick here. Re-plan against ONLY that
-    // variant's states — a single variant can't
-    // be `choose-variant` again, so the result is always `segments` (at most a
-    // rep prompt remains); the defensive `kind` guard keeps TS sound.
-    const subset = addStates.filter((s) => s.variant === addVariant);
-    const plan = buildAddPlan(subset, params.period ?? null);
-    if (plan.kind === "segments") {
-      continueWithSegments(plan.segments);
-    }
-    return;
-  }
-  continueWithSegments(addPlan.segments);
-}
-
-function continueWithSegments(segments: AddSegment[]): void {
-  const queue = segments.flatMap((s, i) => (s.needsRepChoice ? [i] : []));
-  if (queue.length > 0) {
-    addPrompt = { stage: "rep", segments, queue, current: 0 };
-    return;
-  }
-  commit(segments);
-}
-
-function chooseRep(column: string): void {
-  if (addPrompt?.stage !== "rep") {
-    return;
-  }
-  // Capture the narrowed prompt — TS can't keep the union narrowed inside the
-  // map callback over the reactive `addPrompt`.
-  const prompt = addPrompt;
-  const target = prompt.queue[prompt.current];
-  const segments = prompt.segments.map((s, i) =>
-    i === target ? { ...s, representation: column } : s,
-  );
-  if (prompt.current + 1 < prompt.queue.length) {
-    addPrompt = { ...prompt, segments, current: prompt.current + 1 };
-  } else {
-    addPrompt = null;
-    commit(segments);
-  }
-}
-
-/** Commit every segment through the store (synchronous appends; the guarded
- * derive lands per binding afterwards) and record the aggregate outcome. */
-function commit(segments: AddSegment[]): void {
-  if (segments.length === 0) {
-    // Defensive: an empty plan must not render a confirmation ("Already in
-    // project" would be a lie). Unreachable via the UI (the button is disabled
-    // without states; prompts re-plan over the same states).
+/** Commit each selected representation through the store (synchronous appends;
+ * the guarded derive lands per binding afterwards) and record the aggregate
+ * outcome for the inline confirmation. The leaf passes a SINGLE band, so every
+ * selection's `band.key` is this variable's fqid. The committed period is the row's
+ * span INTERSECTED with the active period window (`rowAddPeriod`) — so a `?period`
+ * the user narrowed to is honored (not widened to the row's full history) and an
+ * open-ended row lands a finite, resolvable period rather than period-unset (#678).
+ * The period also keys `addFromCatalog`'s find-or-create, so two rows of the SAME
+ * register variant with DIFFERENT spans each land in their OWN correctly-periodized
+ * source (#678). */
+function commitSelected(selected: PickerSelection[]): void {
+  if (selected.length === 0) {
     return;
   }
   const added: { name: string; period: string | null }[] = [];
   let already = 0;
-  for (const seg of segments) {
+  // The active window as EXACT ISO bounds — a sub-annual `?period` (`2020-Q1`) is
+  // honored at its real grain on Add, not collapsed to the outer year (#678 finding).
+  const addWindow = addWindowBounds(params.period ?? null, pickerWindow);
+  for (const { row } of selected) {
+    const addPeriod = rowAddPeriod(row, addWindow);
     const result = projectStore.addFromCatalog(
       {
-        registerVariant: `${registerPrefix}/${seg.variant}`,
+        registerVariant: `${registerPrefix}/${row.variant}`,
         variable: node.fqid,
-        representation: seg.representation,
-        resolvedPeriod: seg.period,
+        representation: row.column,
+        resolvedPeriod: addPeriod,
       },
       { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
     );
     if (result.status === "added") {
-      added.push({ name: result.sourceName, period: seg.period });
+      added.push({ name: result.sourceName, period: addPeriod });
     } else {
       already += 1;
     }
   }
   addOutcome = { added, already };
 }
-
-/** Human form of a variant's validity window for the population selector — the
- * shared #309 window display. */
-function windowLabel(w: VariantWindow): string {
-  return formatWindow(w.from, w.to);
-}
-
-/** The rep prompt's subject segment (null outside the rep stage). */
-const repSegment = $derived(
-  addPrompt?.stage === "rep"
-    ? addPrompt.segments[addPrompt.queue[addPrompt.current]]
-    : null,
-);
 </script>
 
 <!-- #638 PR1: the binding leaf renders through the unified SubjectView shell. The
@@ -506,56 +429,33 @@ const repSegment = $derived(
     onclear={() => setResolution({ period: null })}
   />
 
-  <!-- #638 PR2b: the proactive population selector — rendered ONLY when ≥2
-       register variants co-exist for the period (`buildAddPlan` →
-       `choose-variant`). The variant is INVISIBLE for an unambiguous variable
-       (1 variant, or a pure succession that auto-splits); when it shows it GATES
-       the Add button (see `disabled` below) so the user resolves the population
-       BEFORE committing, not in a post-click modal. Same `.add-chooser` /
-       `.pick-list` / `.pick` vocabulary as the rep chooser for visual
-       consistency. -->
-  {#if addPlan.kind === "choose-variant"}
-    <div class="add-chooser" role="group" aria-label="Pick a register variant">
-      <p class="chooser-title">
-        This variable has several populations for this period — pick one to add:
-      </p>
-      <ul class="pick-list">
-        {#each addPlan.options as w (w.variant)}
-          <li>
-            <button
-              type="button"
-              class="pick"
-              aria-pressed={addVariant === w.variant}
-              class:selected={addVariant === w.variant}
-              onclick={() => selectPopulation(w.variant)}
-            >
-              <span class="slug">{w.variant}</span>
-              <span class="name">{windowLabel(w)}</span>
-            </button>
-          </li>
-        {/each}
-      </ul>
-    </div>
+  <!-- #678 redesign: the direct representation picker. The variable's
+       representations (one row per distinct variant + delivery column over the
+       FULL state history) are listed as selectable rows; the user picks several
+       and commits with one "Add to project". Replaces the auto-planning
+       population selector + post-click rep chooser. The period window only DIMS
+       out-of-window rows (`pickerWindow`), never filters them — selection works
+       on any row. `seedReady` still gates the commit. -->
+  {#if pickerRows.length > 0}
+    <RepresentationPicker
+      bands={[
+        {
+          key: node.fqid,
+          name: node.name ?? node.fqid,
+          registerPrefix,
+          isSensitive: node.is_sensitive,
+          isIdentifier: node.is_identifier,
+          rows: pickerRows,
+        },
+      ]}
+      window={pickerWindow}
+      canAdd={seedReady}
+      onadd={commitSelected}
+    />
   {/if}
 
-  <!-- #306: ONE page-level add for the variable at the chosen period. Disabled
-       until the deployment seed is ready and the visible states are loaded
-       (nothing to add when none cover the period), and — when ≥2 variants
-       co-exist (`choose-variant`) — until the user has picked the population
-       above (the gate; #638 PR2b). -->
-  <div class="page-add">
-    <button
-      type="button"
-      class="add-to-project"
-      disabled={!seedReady ||
-        addStates.length === 0 ||
-        (addPlan.kind === "choose-variant" &&
-          !addPlan.options.some((o) => o.variant === addVariant))}
-      onclick={startAdd}
-    >
-      Add to project
-    </button>
-    {#if addOutcome}
+  {#if addOutcome}
+    <p class="page-add">
       {#if addOutcome.added.length === 0}
         <span class="add-confirm already" role="status">Already in project</span>
       {:else}
@@ -563,8 +463,7 @@ const repSegment = $derived(
           {#if addOutcome.added.length === 1}
             Added to project ({addOutcome.added[0].name})
           {:else}
-            <!-- The succession split's "inform afterward" (#306). -->
-            Added as {addOutcome.added.length} sources:
+            Added {addOutcome.added.length} columns:
             {addOutcome.added
               .map((a) => (a.period ? `${a.name} (${a.period})` : a.name))
               .join(", ")}
@@ -575,37 +474,7 @@ const repSegment = $derived(
           — <a href="/project">view</a>
         </span>
       {/if}
-    {/if}
-  </div>
-
-  {#if addPrompt?.stage === "rep" && repSegment}
-    <div class="add-chooser" role="group" aria-label="Pick a representation">
-      <!-- Genuinely distinct codings: an explicit pick, ranked latest-era first
-           so the primary leads (#266) — same semantics as the picker chooser. -->
-      <p class="chooser-title">
-        <code>{node.fqid}</code> has several representations at this period
-        {#if addPrompt.queue.length > 1}
-          (variant <code>{repSegment.variant}</code>)
-        {/if}
-        — pick one:
-      </p>
-      <ul class="pick-list">
-        {#each repSegment.reps as rep, i (rep.column)}
-          <li>
-            <button type="button" class="pick" onclick={() => chooseRep(rep.column)}>
-              <span class="slug">{rep.column}</span>
-              {#if i === 0}<span class="name">(primary)</span>{/if}
-              {#if rep.label}<span class="name">{rep.label}</span>{/if}
-              {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
-              {#if rep.classificationSlug}<code class="classification">{rep.classificationSlug}</code>{/if}
-            </button>
-          </li>
-        {/each}
-      </ul>
-      <button type="button" class="cancel" onclick={() => (addPrompt = null)}>
-        Cancel
-      </button>
-    </div>
+    </p>
   {/if}
 
   {#if params.period && (params.variant || params.value_set_version)}
@@ -789,7 +658,7 @@ const repSegment = $derived(
   .modifier-chip:hover {
     background: var(--surface);
   }
-  /* #306: the page-level add + its confirmation line. */
+  /* #678: the add-confirmation line (the picker owns the Add button now). */
   .page-add {
     display: flex;
     flex-wrap: wrap;
@@ -797,89 +666,11 @@ const repSegment = $derived(
     gap: 0.6rem;
     margin: 0.75rem 0;
   }
-  .add-to-project {
-    font: inherit;
-    font-size: 0.9rem;
-    padding: 0.35rem 0.9rem;
-    border: 1px solid var(--accent);
-    border-radius: 4px;
-    background: var(--accent-bg);
-    color: var(--accent-ink);
-    cursor: pointer;
-  }
-  .add-to-project:hover:enabled {
-    background: var(--surface);
-  }
-  .add-to-project:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
   .add-confirm {
     font-size: 0.85rem;
     color: var(--accent);
   }
   .add-confirm.already {
     color: var(--text-muted);
-  }
-  /* The genuine-choice prompts (variant / representation) — same visual
-     vocabulary as the CatalogPicker chooser. */
-  .add-chooser {
-    border: 1px dashed var(--accent);
-    border-radius: 6px;
-    padding: 0.6rem 0.75rem;
-    margin: 0.5rem 0;
-  }
-  .chooser-title {
-    font-size: 0.85rem;
-    margin: 0 0 0.4rem;
-  }
-  .pick-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 0.4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-  .pick {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    font: inherit;
-    font-size: 0.85rem;
-    padding: 0.3rem 0.6rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    cursor: pointer;
-    text-align: left;
-  }
-  .pick:hover {
-    border-color: var(--accent);
-  }
-  /* #638 PR2b: the currently-picked population in the proactive selector. */
-  .pick.selected {
-    border-color: var(--accent);
-    background: var(--accent-bg);
-    color: var(--accent-ink);
-  }
-  .pick .slug {
-    font-family: var(--font-mono);
-    font-weight: 600;
-  }
-  .pick .name {
-    color: var(--text-muted);
-  }
-  .pick .classification {
-    font-size: 0.85em;
-  }
-  .cancel {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    cursor: pointer;
   }
 </style>

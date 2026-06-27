@@ -16,6 +16,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
     variant: "v",
+    variant_label: null,
     register_variant_id: 1,
     valid_from: "2000-01-01",
     valid_to: "2000-12-31",

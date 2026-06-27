@@ -1,49 +1,54 @@
 <script lang="ts">
-import { type ConceptGroupNodeMember, getConceptGroup } from "./api";
-import { asyncResource } from "./async.svelte";
-import ConceptGroupNavigator from "./ConceptGroupNavigator.svelte";
 import {
-  axisValues,
+  type ConceptGroupNodeMember,
+  getConceptGroup,
+  getConceptGroupGraph,
+  type VariableGraphNode,
+} from "./api";
+import { asyncResource } from "./async.svelte";
+import {
+  addWindowBounds,
   catalogHref,
-  formatWindow,
-  memberAt,
-  memberCoverageUnion,
-  memberKey,
-  membersHaveUniqueCoords,
-  OPEN_ENDED_VALID_TO,
-  YEARLESS_VALID_FROM,
+  facetLabelJoin,
+  pickerRepresentations,
+  pickerWindowYears,
+  registerPrefixOf,
+  rowAddPeriod,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
-import {
-  type Coverage,
-  notDeliveredGaps,
-  type PeriodGrain,
-  yearWindowFromWire,
-} from "./period";
+import type { PeriodGrain } from "./period";
+import { regMetaReleaseTag } from "./project_data";
+import { projectStore } from "./project_store.svelte";
+import RepresentationPicker, {
+  type PickerBand,
+  type PickerSelection,
+} from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 import { windowStore } from "./window.svelte";
 
-// The concept-group SUBJECT page (#617): fetches a group by (provider, register,
-// key) and renders its members + facets + per-member coverage. A group's default
-// selection is "all members", which a member FQID can't express — so the group
-// has its own address (`/catalog/group/<p>/<r>/<key>`), distinct from the FQID
-// browse path that CatalogNodeView serves.
+// The concept-group SUBJECT page (#617, #678 inc 2): fetches a group by (provider,
+// register, key) — its members + facets — AND the group's relationship graph (the
+// union of its members' variable nodes, each carrying that variable's states). It
+// renders the members as a vertical stack of REPRESENTATION BANDS (one per member
+// variable, each its own adaptive representation rows) under ONE shared selection
+// basket and ONE "Add" footer — the group→variable→representation nesting (#678).
 //
 // Renders through the unified SubjectView shell (#638 PR1), same as the binding +
 // classification leaves. A group fills two of the shell's sections — the
-// `description` (just a Technical details disclosure holding key/facets/source) and
-// a `picker` (#638 PR2a, below). It has no single fqid (its key shows inside the
-// disclosure), no value set, no docs, and (post
-// PR2a) no `relationships` — its members live IN the picker's selector now — so
-// those sections are omitted. Identity is carried by the #803 topbar trail + the
-// page <h2> (SubjectView title); the loading / error arms stay OUTSIDE the shell
-// (the shell is the success-arm body only).
+// `description` (a Technical details disclosure holding key/facets/source) and the
+// `picker` (the nested RepresentationPicker + the PeriodPicker availability lens).
 let {
   provider,
   register,
   key,
+  // The deployment seed (App → here, mirroring CatalogNodeView/BindingLeafView): the
+  // reg_meta package version + steward id stamped onto a created project. Empty
+  // until /api/context resolves — an implicit project created with an empty seed is
+  // never re-seeded, so Add stays disabled until both are present (sub-second).
+  regMetaVersion,
+  steward,
   // #631: the catalog VINTAGE year (App → here, mirroring CatalogNodeView), the
   // period picker's open-ended slider ceiling. undefined only before
   // /api/context resolves (the picker falls back to wall-clock then).
@@ -52,6 +57,8 @@ let {
   provider: string;
   register: string;
   key: string;
+  regMetaVersion: string;
+  steward: string;
   vintageYear?: number;
 } = $props();
 
@@ -64,6 +71,16 @@ const resource = asyncResource(() =>
 );
 const node = $derived(resource.data);
 
+// The group's relationship graph (#761/#678) — the union of its member variables'
+// nodes, each carrying that variable's states. Its OWN failure domain: a graph
+// error / empty leaves a member's band with no rows (the band shows a quiet "no
+// representations") rather than blanking the page. `focus_id` is null (a
+// group-addressed call).
+const graphResource = asyncResource(() =>
+  getConceptGroupGraph(provider, register, key),
+);
+const graph = $derived(graphResource.data);
+
 // The register the group lives under — the breadcrumb target and a member's
 // shared ancestor (a group is always register-scoped).
 const registerFqid = $derived(`${provider}/${register}`);
@@ -72,132 +89,239 @@ function leafSlug(fqid: string): string {
   return fqid.split("/").at(-1) ?? fqid;
 }
 
-/** A minimal study-window line for a member's coverage (#351), or "" when the
- * member carries no finite bound (a stateless member, or one unbounded on both
- * sides). Delegates to `formatWindow` so the display matches the rest of the
- * catalog (year-collapsed bounds; the open-ended sentinel renders "since <year>",
- * never the raw 9999). */
-function coverageText(member: ConceptGroupNodeMember): string {
-  const cov = member.coverage;
-  if (!cov) {
-    return "";
+// ── The variable nodes by fqid (the band → states match) ─────────────────────
+// Each group member is a real leaf FQID; the graph carries one variable node per
+// member variable (keyed by its own `fqid`). Index the variable nodes by fqid so a
+// member's band pulls its states by FQID match. A representation-member group can
+// carry several members on ONE fqid (distinct delivery columns) — they share the
+// single graph node, whose states already span every column, so the band's rows
+// enumerate them all; building bands per DISTINCT fqid avoids duplicating those rows.
+const nodesByFqid = $derived.by(() => {
+  const map = new Map<string, VariableGraphNode>();
+  for (const n of graph?.nodes ?? []) {
+    if (n.kind === "variable" && n.fqid != null) {
+      map.set(n.fqid, n);
+    }
   }
-  // `_coverage_bounds` contract: a finite window carries a non-null `coverage_to`;
-  // open-ended maps to the sentinel. A null `to` here is a stateless member —
-  // nothing to show.
-  const to = cov.open_ended ? OPEN_ENDED_VALID_TO : cov.coverage_to;
-  if (to == null) {
-    return "";
+  return map;
+});
+
+// ── Shared concept definition / description (#678) ───────────────────────────
+// The group page's missing descriptive context: each MEMBER variable node carries
+// its own `definition`/`description` (the variable-level concept text). Most
+// parallel-column siblings carry null — that's expected — but the canonical member
+// usually carries the one definition the whole group shares. Collect the DISTINCT
+// non-empty values across the MEMBER nodes (scoped to `node.members`, so a
+// succession/related neighbour the graph union pulls in never leaks its text here):
+// typically exactly one (rendered once at the group level); zero → render nothing;
+// several distinct → render each (rare today).
+function distinctMemberMeta(field: "definition" | "description"): string[] {
+  if (!node) {
+    return [];
   }
-  // The start may be unknown — null (no finite start) or the yearless-fallback
-  // floor (`0001-01-01`). Pass the sentinel through so `formatWindow` renders the
-  // one-sided "until <end>" form (#658) and a known end year is shown rather than
-  // hidden. An unknown start with an open-ended end has no finite bound → "".
-  const from = cov.coverage_from ?? YEARLESS_VALID_FROM;
-  if (from === YEARLESS_VALID_FROM && to === OPEN_ENDED_VALID_TO) {
-    return "";
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const member of node.members) {
+    const value = nodesByFqid.get(member.fqid)?.[field]?.trim();
+    if (value && !seen.has(value)) {
+      seen.add(value);
+      out.push(value);
+    }
   }
-  return formatWindow(from, to);
+  return out;
+}
+const sharedDefinitions = $derived(distinctMemberMeta("definition"));
+const sharedDescriptions = $derived(distinctMemberMeta("description"));
+
+/** The in-this-group facet label for a member (e.g. "AGI · 2007 SNI edition"),
+ * joined from its facets, or null when the member carries none (an ungrouped /
+ * axis-less member — its name suffices). */
+function memberFacetLabel(member: ConceptGroupNodeMember): string | null {
+  return member.facets.length > 0 ? facetLabelJoin(member.facets) : null;
 }
 
-// ── #638 PR2a: the picker — a slice axis (member selector) × a time axis ──────
-// The picker section gives the group page two orthogonal controls:
-//   • the MEMBER SELECTOR (slice axis) — the group's facet grid, rendered
-//     expanded (a 2-axis matrix / 1-axis chips / 0-axis list), mirroring the
-//     register-browse ConceptGroupRow's shapes but richer (per-member coverage +
-//     availability greying). Each member is a link to its leaf FQID; focusing a
-//     member in place would need its value set (out of scope), so we navigate.
-//   • the PERIOD PICKER (time axis) — the reusable window/coverage control. It is
-//     a CLIENT-SIDE AVAILABILITY LENS only: `getConceptGroup` takes no period, so
-//     the period drives NO refetch — it only greys members whose coverage doesn't
-//     span the active window.
+/** The member's leaf-page href, carrying the active group `?period` when set (#678):
+ * narrowing the group with the PeriodPicker then opening a member keeps that same
+ * window on the leaf, rather than opening it at full history. A null period (no
+ * narrowing) yields the bare catalog href. `period` is read reactively so the bands
+ * recompute when the window changes. (A hoisted function so the `bands` derive, above
+ * the `period` declaration, can call it — `period` is read at call time, not bind
+ * time.) */
+function memberHref(fqid: string): string {
+  const base = catalogHref(fqid);
+  return period ? `${base}?period=${encodeURIComponent(period)}` : base;
+}
 
-const axes = $derived(node?.axes ?? []);
-// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
-// disposable-income family) renders through the facet navigator (below) instead,
-// so the matrix/chips/list path and its `ungridded` fallback are gated off this.
-//
-// #819 FIX C: a 2-axis group can ALSO collide — two members on the SAME (row, col)
-// coordinate, distinguished only by `delivery_column` (representation members).
-// The matrix renders only the FIRST per cell (`memberAt`) and DROPS the rest (they
-// escape `ungridded`, covering every axis), so route through the navigator when a
-// 2-axis group has NON-UNIQUE coordinates too. Gated to `axes.length === 2`: only
-// the 2D matrix loses colliding members; a ≤1-axis group renders chips/list (every
-// member shown) and an axis-less umbrella collides trivially (all map to the empty
-// coord) but must keep its list, not the navigator.
-const useNavigator = $derived(
-  node
-    ? axes.length > 2 ||
-        (axes.length === 2 && !membersHaveUniqueCoords(node, axes))
-    : false,
-);
-// Matrix orientation: first axis → rows, second axis → columns (mirrors
-// ConceptGroupRow). `node` is always present inside the success arm where the
-// snippet renders, but guard so the top-level deriveds stay total.
-const matrixRows = $derived(
-  node && axes.length > 0 ? axisValues(node, axes[0].name) : [],
-);
-const matrixCols = $derived(
-  node && axes.length > 1 ? axisValues(node, axes[1].name) : [],
-);
-// `axes` is the UNION across members; a member missing a facet on any axis never
-// matches a matrix cell, so it would silently vanish from the grid — render those
-// below as a plain list (mirrors ConceptGroupRow's `ungridded`).
-const ungridded = $derived(
-  node && axes.length >= 2 && !useNavigator
-    ? node.members.filter(
-        (m) =>
-          !axes.every((axis) => m.facets.some((f) => f.axis === axis.name)),
-      )
-    : [],
-);
+/** The DELIVERY-COLUMN filter per fqid (#678): the set of `delivery_column`s the
+ * GROUP's members for that fqid actually address, or `null` (no filter — expose
+ * every column) when ANY such member is a WHOLE-VARIABLE member
+ * (`delivery_column == null`). The graph node now carries the variable's FULL column
+ * set (every distinct delivery column — backend `_graph_states` fix), so a
+ * representation group whose members are only a SUBSET of those columns would
+ * otherwise expose NON-member columns as selectable rows — letting a user add a
+ * column OUTSIDE the concept being browsed. Restricting the band's input states to
+ * the group's member columns closes that. A whole-variable member means the concept
+ * IS the whole variable, so all columns are legitimately selectable → no filter. In a
+ * filtered-STEWARD catalog "all columns" is already the steward's HELD columns: the
+ * group `/graph` route narrows each member variable's states to the held set (backend
+ * `_narrow_graph_to_held`, #678), so a whole-variable member admitted only because the
+ * steward holds SOME of its columns no longer leaks the non-held ones here. */
+const memberColumnsByFqid = $derived.by(() => {
+  const map = new Map<string, Set<string> | null>();
+  for (const member of node?.members ?? []) {
+    const existing = map.get(member.fqid);
+    if (existing === null) {
+      continue; // already whole-variable (no filter) — stays no-filter
+    }
+    if (member.delivery_column == null) {
+      map.set(member.fqid, null); // whole-variable member → expose all columns
+    } else {
+      const set = existing ?? new Set<string>();
+      set.add(member.delivery_column);
+      map.set(member.fqid, set);
+    }
+  }
+  return map;
+});
 
-// ── The N-axis facet navigator (#819) ────────────────────────────────────────
-// A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
-// disposable-income family: enhet × hushållsbegrepp × kapitalvinst) can't be a
-// grid without collapsing members that share the first two coords and DROPPING
-// the rest (they also escape `ungridded`, which only catches members MISSING an
-// axis — a 3-axis member covers all declared axes). So >2-axis groups render
-// through the shared ConceptGroupNavigator instead (per-axis filters + a member
-// list that drops NO member), used by the register-browse row too. The matrix
-// path stays for ≤2 axes (no regression). The navigator's member list reuses
-// THIS view's `memberLink` snippet, so it keeps the per-member coverage line +
-// the availability-lens greying the matrix/≤2-axis paths carry, and is keyed on
-// the group so its filter state resets across navigations.
+/** The picker bands — one per DISTINCT member variable (by fqid), in the group's
+ * member order. Each band pulls its representation rows from the matching graph
+ * node's states, RESTRICTED to the group's member delivery columns for that fqid
+ * (`memberColumnsByFqid`) so a column outside the browsed concept is never
+ * selectable; a member with no graph node (graph error / partial union) still
+ * renders a band with EMPTY rows (the band shows a quiet "no representations" rather
+ * than dropping the member). The facet label distinguishes representation members
+ * collapsed onto one fqid; the band's adaptive rows surface the delivery-column
+ * split. */
+const bands = $derived.by((): PickerBand[] => {
+  if (!node) {
+    return [];
+  }
+  // delivery_column → human facet label, across ALL members of each fqid (#678): a
+  // representation group carries several members on one variable, each a distinct
+  // delivery_column with its own facet (CDISP "Inkl. kapitalvinst" / CDISP5 "Exkl.
+  // kapitalvinst"). The band is built per DISTINCT fqid (first member wins below), so
+  // the later members' facet labels would otherwise never reach their rows — collect
+  // them here so the picker can show the human facet per column.
+  const facetByColumnByFqid = new Map<string, Record<string, string>>();
+  for (const member of node.members) {
+    if (member.delivery_column == null) {
+      continue;
+    }
+    const facet = memberFacetLabel(member);
+    if (facet == null) {
+      continue;
+    }
+    const map = facetByColumnByFqid.get(member.fqid) ?? {};
+    // First non-null facet per (fqid, column) wins — a column's facet is stable across
+    // the group's members; later duplicates (shouldn't occur) don't override.
+    map[member.delivery_column] ??= facet;
+    facetByColumnByFqid.set(member.fqid, map);
+  }
+  const seen = new Set<string>();
+  const out: PickerBand[] = [];
+  for (const member of node.members) {
+    if (seen.has(member.fqid)) {
+      continue;
+    }
+    seen.add(member.fqid);
+    const allStates = nodesByFqid.get(member.fqid)?.states ?? [];
+    // null filter = whole-variable member → every column; a Set = only the group's
+    // member columns for this variable (a state with no column is always dropped by
+    // pickerRepresentations, so the filter never needs to admit null).
+    const cols = memberColumnsByFqid.get(member.fqid) ?? null;
+    const states =
+      cols === null
+        ? allStates
+        : allStates.filter(
+            (s) =>
+              s.delivery_column_name != null &&
+              cols.has(s.delivery_column_name),
+          );
+    out.push({
+      key: member.fqid,
+      name: member.name ?? leafSlug(member.fqid),
+      registerPrefix: registerPrefixOf(member.fqid),
+      facetLabel: memberFacetLabel(member),
+      // Per-column facet labels across ALL the fqid's members (#678) — so a
+      // multi-member-on-one-fqid representation group shows each column's human facet.
+      facetByColumn: facetByColumnByFqid.get(member.fqid),
+      // The member's own leaf page — the picker renders the identity as a nav link
+      // (the binding leaf passes no href; it's already that page). Carry the active
+      // group `?period` onto the link (#678) so opening a member from the picker
+      // keeps the window the user narrowed the group to, instead of resetting the
+      // leaf to full history.
+      href: memberHref(member.fqid),
+      rows: pickerRepresentations(states),
+    });
+  }
+  return out;
+});
+
+/** The `band.key` (member fqid) the `?member=` focus hint names, for the picker's
+ * deep-link highlight (#678). The backend echoes the VALIDATED member slug on
+ * `node.member` (null when absent / unrecognized); the band key is the member fqid,
+ * whose leaf slug is that slug — so match a band by `leafSlug(key) === node.member`.
+ * Null when there's no (valid) hint, so the picker marks nothing. */
+const focusKey = $derived.by((): string | null => {
+  const hint = node?.member;
+  if (hint == null) {
+    return null;
+  }
+  const band = bands.find((b) => leafSlug(b.key) === hint);
+  return band?.key ?? null;
+});
 
 // ── The time axis: `?period` (client-side lens, no refetch) ──────────────────
+// The PeriodPicker drives per-row DIMMING only — `getConceptGroup` takes no period,
+// so the value triggers NO refetch; it just narrows the dim window (mirrors the
+// binding leaf's `pickerWindow`).
 const period = $derived(router.getQueryParam("period"));
 
-/** A member's leaf URL, carrying the group page's active `?period` (when set) so
- * the member's leaf page opens narrowed to the SAME window — continuity into the
- * leaf, including its add-to-project plan (which keys off `?period`). Without
- * this, narrowing the group's availability lens then clicking a member would drop
- * the period and open the leaf at full history. Carries ONLY `?period` — the
- * group-page-specific `?member` focus hint is not consumed by the binding leaf.
- * `catalogHref` returns a query-less `/catalog/<path>`, so appending is safe. */
-function memberHref(fqid: string): string {
-  const href = catalogHref(fqid);
-  if (!period) {
-    return href;
-  }
-  const qs = new URLSearchParams();
-  qs.set("period", period);
-  return `${href}?${qs.toString()}`;
-}
 // Members are year-grain coverage, so the picker offers only the year grain.
 const grains: PeriodGrain[] = ["year"];
-// The picker's coverage track = the UNION span over all members (open-ended on
-// the end when any member is still delivered) — so the slider shows where the
-// group as a whole has data.
-const unionCoverage = $derived<Coverage | null>(
-  node ? memberCoverageUnion(node.members.map((m) => m.coverage)) : null,
+
+// The picker's coverage track = the union span over all member variables' rows.
+// Derived from the bands' representation spans (year-grain): the slider shows where
+// the group as a whole has data. simplify: an inline min/max over the bands' rows is
+// enough here — the union is presentational track context, not a gate.
+const unionCoverage = $derived.by(() => {
+  let from: number | null = null;
+  let to: number | null = null;
+  let openEnded = false;
+  for (const band of bands) {
+    for (const row of band.rows) {
+      const lo = Number(row.from.slice(0, 4));
+      if (Number.isFinite(lo) && row.from !== "0001-01-01") {
+        from = from === null ? lo : Math.min(from, lo);
+      }
+      if (row.to === "9999-12-31") {
+        openEnded = true;
+      } else {
+        const hi = Number(row.to.slice(0, 4));
+        if (Number.isFinite(hi)) {
+          to = to === null ? hi : Math.max(to, hi);
+        }
+      }
+    }
+  }
+  if (from === null && to === null) {
+    return null;
+  }
+  return { from, to: openEnded ? null : to };
+});
+
+/** The active period window to DIM against, as an inclusive year pair (a `?period`
+ * wire wins, else the global study window), or null (no dimming). Mirrors the
+ * binding leaf's `pickerWindow`. */
+const pickerWindow = $derived(
+  pickerWindowYears(period ?? null, windowStore.value),
 );
 
-/** Write `?period` to the group URL (preserving the pathname + any `?member=`
- * focus hint), which the reactive query picks up. A null period drops `?period`.
- * NO refetch — `getConceptGroup` takes no period; the value only drives the
- * client-side availability lens below (mirrors BindingLeafView's `?period` write,
- * but with only `period` + `member` to merge). */
+/** Write `?period` to the group URL (preserving the pathname + any `?member=` focus
+ * hint), which the reactive query picks up. A null period drops `?period`. NO
+ * refetch — `getConceptGroup` takes no period; the value only drives the per-row
+ * dimming. */
 function writePeriod(next: string | null): void {
   const qs = new URLSearchParams();
   if (next) {
@@ -210,66 +334,61 @@ function writePeriod(next: string | null): void {
   router.navigate(window.location.pathname + (query ? `?${query}` : ""));
 }
 
-// ── The availability lens (greying) ──────────────────────────────────────────
-// The active window for greying, by precedence:
-//   • an explicit `?period` (ANY form) is authoritative — a year `?period` →
-//     that window; a NON-year `?period` (e.g. `HT2020`, a comma list, a deep
-//     link) → `yearWindowFromWire` null → no greying. The year-grain lens can't
-//     represent a sub-annual selection, so it suppresses greying rather than
-//     silently falling back to the project window and greying against a window
-//     the user isn't actually on (mirrors PeriodPicker treating such values as
-//     `subAnnualPeriod` and suppressing slider availability gaps).
-//   • no `?period` → the project window.
-//   • neither → none (browsing the full group is not a deviation).
-const activeWindow = $derived(
-  period != null ? yearWindowFromWire(period) : windowStore.value,
-);
+// ── Add to project ───────────────────────────────────────────────────────────
+// The deployment seed is ready once /api/context has populated BOTH fields.
+const seedReady = $derived(regMetaVersion !== "" && steward !== "");
 
-// The open-ended coverage ceiling (#631): an open-ended member end projects to
-// the catalog vintage year for the gap computation (the catalog only knows
-// delivery up to its vintage), mirroring PeriodPicker's `ceilingYear` fallback
-// and PeriodWindowSlider's `effectiveCoverage` projection.
-const ceilingYear = $derived(vintageYear ?? new Date().getFullYear());
+/** The committed outcome (drives the inline confirmation): the sources bindings
+ * landed in (created or found) and how many were already present. */
+let addOutcome = $state<{
+  added: { name: string; period: string | null }[];
+  already: number;
+} | null>(null);
 
-/** A member's coverage as a year-grain `Coverage` (open-ended end → null = "still
- * delivered"), or null when the member is stateless — reused for the per-member
- * availability gap. */
-function memberCoverage(member: ConceptGroupNodeMember): Coverage | null {
-  return memberCoverageUnion([member.coverage]);
-}
+// A fresh period / member refine or a group change clears the stale confirmation.
+$effect(() => {
+  void period;
+  void memberHint;
+  void key;
+  addOutcome = null;
+});
 
-/** Whether a member is NOT fully delivered across the active window — the
- * availability deviation (same rule as PeriodWindowSlider: a not-delivered gap
- * exists when the window extends before a finite coverage start or after the
- * coverage end, where an open-ended end is first projected to the catalog
- * vintage). False when no window is active, or the member is stateless (nothing
- * to gap against — don't grey a member whose coverage is simply unknown). */
-function notDelivered(member: ConceptGroupNodeMember): boolean {
-  if (activeWindow === null) {
-    return false;
+/** Commit each selected representation across all bands through the store, one
+ * `addFromCatalog` per picked row. Each selection's `band.key` is the member fqid
+ * (the variable). The committed period is the row's span INTERSECTED with the active
+ * period window (`rowAddPeriod`) — so a `?period` the user narrowed to is honored
+ * (not widened to the row's full history) and an open-ended row lands a finite,
+ * resolvable period rather than period-unset (#678). The period also keys
+ * `addFromCatalog`'s find-or-create, so two rows of the SAME register variant with
+ * DIFFERENT spans each land in their OWN correctly-periodized source (#678).
+ * Aggregates into the existing `addOutcome` confirmation. */
+function commitSelected(selected: PickerSelection[]): void {
+  if (selected.length === 0) {
+    return;
   }
-  const cov = memberCoverage(member);
-  if (cov === null) {
-    return false;
+  const added: { name: string; period: string | null }[] = [];
+  let already = 0;
+  // The active window as EXACT ISO bounds — a sub-annual `?period` (`2020-Q1`) is
+  // honored at its real grain on Add, not collapsed to the outer year (#678 finding).
+  const addWindow = addWindowBounds(period ?? null, pickerWindow);
+  for (const { band, row } of selected) {
+    const addPeriod = rowAddPeriod(row, addWindow);
+    const result = projectStore.addFromCatalog(
+      {
+        registerVariant: `${registerPrefixOf(band.key)}/${row.variant}`,
+        variable: band.key,
+        representation: row.column,
+        resolvedPeriod: addPeriod,
+      },
+      { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
+    );
+    if (result.status === "added") {
+      added.push({ name: result.sourceName, period: addPeriod });
+    } else {
+      already += 1;
+    }
   }
-  // Project an open-ended member end (`to === null` = "still delivered") to the
-  // catalog vintage ceiling for the gap test — the catalog only knows delivery
-  // up to its vintage, so a window beyond it reads as "not delivered after
-  // <vintage>" (mirrors PeriodWindowSlider's `effectiveCoverage`). Without this,
-  // a null `to` never trailing-gaps and the member is wrongly never greyed for a
-  // window past the vintage. The DISPLAYED coverage text stays open-ended ("since
-  // <year>") — this projection feeds only the gap/greying computation.
-  const projected = cov.to === null ? { from: cov.from, to: ceilingYear } : cov;
-  return notDeliveredGaps(activeWindow, projected).length > 0;
-}
-
-/** The "not delivered <window>" note for a greyed member, or "" when delivered /
- * no active window. */
-function notDeliveredNote(member: ConceptGroupNodeMember): string {
-  if (!notDelivered(member) || activeWindow === null) {
-    return "";
-  }
-  return `not delivered ${formatWindow(`${activeWindow.from}-01-01`, `${activeWindow.to}-12-31`)}`;
+  addOutcome = { added, already };
 }
 </script>
 
@@ -285,10 +404,28 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   </p>
 {:else if node}
   {#snippet description()}
+    <!-- #678: the SHARED concept definition/description, deduplicated across the
+         member variable nodes (most siblings carry null; the canonical member
+         carries the one the group shares). Rendered as a clean labelled block at the
+         TOP of the page — mirroring the binding leaf's Definition/Description
+         presentation — ABOVE the Technical details disclosure, giving the group its
+         missing descriptive context. Hidden entirely when no member carries either. -->
+    {#if sharedDefinitions.length > 0 || sharedDescriptions.length > 0}
+      <dl class="meta">
+        {#each sharedDefinitions as definition}
+          <dt>Definition</dt>
+          <dd>{definition}</dd>
+        {/each}
+        {#each sharedDescriptions as description}
+          <dt>Description</dt>
+          <dd>{description}</dd>
+        {/each}
+      </dl>
+    {/if}
+
     <!-- The group's key, facets, and source are all build-derivation metadata, not
          researcher-facing — so all three are demoted together behind the "Technical
-         details" disclosure. The page then leads with the title + member selector
-         (mirrors the variable page, whose Technical details also lives here). -->
+         details" disclosure. The page then leads with the title + member bands. -->
     <TechnicalDetails>
       <dl class="meta">
         <dt>Group</dt>
@@ -303,125 +440,11 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     </TechnicalDetails>
   {/snippet}
 
-  <!-- One snippet per member, used by every selector shape. Renders the member as
-       a link to its leaf FQID, with the `?member=` focus accent, per-member
-       coverage, and the availability-lens greying + note. -->
-  {#snippet memberLink(member: ConceptGroupNodeMember, label: string)}
-    {@const slug = leafSlug(member.fqid)}
-    {@const focused = node?.member === slug}
-    {@const muted = notDelivered(member)}
-    <a
-      href={memberHref(member.fqid)}
-      class:focused
-      class:not-delivered={muted}
-      title={member.fqid}
-    >
-      <span class="label">{label}</span>
-      <!-- Show the leaf slug as a muted secondary code ONLY when it disambiguates
-           — i.e. the label isn't already the slug (the matrix shape passes the
-           slug as the label). For edge groups all members share one name, so the
-           slug is the only thing that tells two rows apart (#638 PR2a regression). -->
-      {#if label !== slug}
-        <code class="member-slug muted">{slug}</code>
-      {/if}
-      {#if coverageText(member)}
-        <span class="coverage muted">{coverageText(member)}</span>
-      {/if}
-      {#if notDeliveredNote(member)}
-        <span class="availability muted">{notDeliveredNote(member)}</span>
-      {/if}
-    </a>
-  {/snippet}
-
   {#snippet picker()}
-    <!-- The MEMBER SELECTOR (slice axis): the group's facet grid, expanded. -->
-    <section class="member-selector" aria-labelledby="members-heading">
-      <h3 id="members-heading">Members</h3>
-      {#if useNavigator}
-        <!-- The N-axis facet navigator (#819): the shared component owns the
-             per-axis filters + the no-member-dropped list; this view supplies the
-             per-member action via `memberLink` (a leaf link carrying the
-             per-member coverage + the availability-lens greying). Keyed on the
-             group key so the navigator's filter state recreates on navigation. -->
-        {#key node.key}
-          <ConceptGroupNavigator members={node.members} {axes}>
-            {#snippet member(m)}
-              {@render memberLink(m, m.name ?? leafSlug(m.fqid))}
-            {/snippet}
-          </ConceptGroupNavigator>
-        {/key}
-      {:else if axes.length >= 2}
-        <table class="facet-matrix">
-          <thead>
-            <tr>
-              <th></th>
-              {#each matrixCols as col (col.value)}
-                <th scope="col">{col.label}</th>
-              {/each}
-            </tr>
-          </thead>
-          <tbody>
-            {#each matrixRows as row (row.value)}
-              <tr>
-                <th scope="row">{row.label}</th>
-                {#each matrixCols as col (col.value)}
-                  {@const member = memberAt(node, [
-                    { axis: axes[0].name, value: row.value },
-                    { axis: axes[1].name, value: col.value },
-                  ])}
-                  <td>
-                    {#if member}
-                      {@render memberLink(member, leafSlug(member.fqid))}
-                    {:else}
-                      <!-- partial family (e.g. a month SCB never delivered) -->
-                      <span class="muted" aria-hidden="true">–</span>
-                    {/if}
-                  </td>
-                {/each}
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-        {#if ungridded.length > 0}
-          <ul class="members">
-            {#each ungridded as member (memberKey(member))}
-              <li>
-                {@render memberLink(
-                  member,
-                  member.name ?? leafSlug(member.fqid),
-                )}
-              </li>
-            {/each}
-          </ul>
-        {/if}
-      {:else if axes.length === 1}
-        <ul class="facet-chips">
-          {#each node.members as member (memberKey(member))}
-            {@const facet = member.facets.find((f) => f.axis === axes[0].name)}
-            <li>
-              {@render memberLink(
-                member,
-                facet?.label ?? leafSlug(member.fqid),
-              )}
-            </li>
-          {/each}
-        </ul>
-      {:else}
-        <ul class="members">
-          {#each node.members as member (memberKey(member))}
-            <li>
-              {@render memberLink(member, member.name ?? leafSlug(member.fqid))}
-            </li>
-          {/each}
-        </ul>
-      {/if}
-    </section>
-
-    <!-- The TIME axis: a client-side availability LENS (no refetch). Seeds from
-         the project window, draws the members' union coverage span, and greys the
-         members above whose coverage doesn't span the chosen window. The period
-         writes to `?period` only (never the global window), mirroring the leaf
-         page; `getConceptGroup` ignores it, so the lens is purely client-side. -->
+    <!-- The period availability lens sits ABOVE the column picker (both group + leaf):
+         pick the period first, then the columns. Seeds from the project window, draws
+         the members' union coverage span, and dims rows whose span doesn't overlap;
+         writes `?period` only (never the global window); `getConceptGroup` ignores it. -->
     <PeriodPicker
       {period}
       {grains}
@@ -431,6 +454,45 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
       onsubmit={(p) => writePeriod(p)}
       onclear={() => writePeriod(null)}
     />
+
+    <!-- The nested REPRESENTATION PICKER (#678 inc 2): one band per member variable,
+         each with its own adaptive representation rows, under ONE shared selection
+         basket and ONE "Add" footer. The period window only DIMS out-of-window rows
+         (`pickerWindow`); `seedReady` gates the commit. -->
+    {#if bands.length > 0}
+      <RepresentationPicker
+        {bands}
+        window={pickerWindow}
+        canAdd={seedReady}
+        {focusKey}
+        onadd={commitSelected}
+      />
+    {/if}
+
+    {#if addOutcome}
+      <p class="page-add">
+        {#if addOutcome.added.length === 0}
+          <span class="add-confirm already" role="status"
+            >Already in project</span
+          >
+        {:else}
+          <span class="add-confirm" role="status">
+            {#if addOutcome.added.length === 1}
+              Added to project ({addOutcome.added[0].name})
+            {:else}
+              Added {addOutcome.added.length} columns:
+              {addOutcome.added
+                .map((a) => (a.period ? `${a.name} (${a.period})` : a.name))
+                .join(", ")}
+            {/if}
+            {#if addOutcome.already > 0}
+              · {addOutcome.already} already in project
+            {/if}
+            — <a href="/project">view</a>
+          </span>
+        {/if}
+      </p>
+    {/if}
   {/snippet}
 
   <SubjectView title={node.label} {description} {picker} />
@@ -447,88 +509,19 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   .meta dt {
     font-weight: 600;
   }
-  /* The member selector shapes mirror ConceptGroupRow's matrix / chips / list
-     vocabulary (copied, not imported — scoped styles don't cross components),
-     rendered expanded (no <details>) and richer (coverage + availability). */
-  .members {
-    list-style: none;
-    padding: 0;
-    margin: var(--space-2) 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-  .facet-matrix {
-    margin: var(--space-2) 0;
-    border-collapse: collapse;
-    font-size: var(--text-sm);
-  }
-  .facet-matrix th,
-  .facet-matrix td {
-    padding: var(--space-1) var(--space-3);
-    text-align: left;
-    vertical-align: baseline;
-  }
-  .facet-matrix thead th {
-    color: var(--text-muted);
-    font-weight: 600;
-  }
-  .facet-matrix tbody th {
-    color: var(--text-muted);
-    font-weight: 400;
-  }
-  .facet-chips {
-    list-style: none;
+  /* The add-confirmation line (the picker owns the Add button). */
+  .page-add {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2);
-    padding: 0;
-    margin: var(--space-2) 0;
-  }
-  /* A member link: name/label + coverage + availability note. In the chips row
-     each becomes a bordered pill; in the matrix/list it's an inline-flex link. */
-  .member-selector a {
-    display: inline-flex;
     align-items: baseline;
-    flex-wrap: wrap;
-    gap: var(--space-1) var(--space-3);
-    text-decoration: none;
+    gap: var(--space-3);
+    margin: var(--space-4) 0;
   }
-  /* The chip pill borrows ConceptGroupRow's `.chip` geometry (--border, em-based
-     padding); it keeps the rounded 1rem radius the chips-row pills already had. */
-  .facet-chips a {
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    padding: 0.1em 0.5em;
-  }
-  /* Keyboard focus on a member link: the shared --focus-ring (matching the row /
-     DataTable selectable rows, #808/#828). */
-  .member-selector a:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-    border-radius: var(--radius-sm);
-  }
-  .member-selector a .label {
-    font-weight: 600;
-  }
-  /* The `?member=` focus hint: a faint left accent rule so a deep-linked member
-     reads as highlighted without a heavy box. */
-  .member-selector a.focused {
-    border-left: 3px solid var(--accent);
-    padding-left: var(--space-2);
-  }
-  /* The availability lens: a member whose coverage doesn't span the active
-     window is muted + carries a "not delivered <window>" note. */
-  .member-selector a.not-delivered {
-    opacity: 0.5;
-  }
-  .coverage,
-  .availability {
+  .add-confirm {
     font-size: var(--text-sm);
+    color: var(--accent);
   }
-  /* The disambiguating leaf slug (mirrors ConceptGroupRow's `.member-slug`): a
-     muted monospace code that tells same-named edge-group members apart. */
-  .member-slug {
-    font-size: var(--text-sm);
+  .add-confirm.already {
+    color: var(--text-muted);
   }
 </style>

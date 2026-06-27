@@ -63,7 +63,7 @@ from reg_meta.fqid import (
     parse,
     validate_slug,
 )
-from reg_meta.graph import RelationshipGraph
+from reg_meta.graph import RelationshipGraph, VariableGraphNode
 from reg_meta.queries import list_classifications
 
 from reg_webapp.catalog_fqid import (
@@ -249,6 +249,39 @@ def _filter_states_to_held(
     `held_columns` set is reused, never re-derived."""
     held = index.held_columns(fqid)
     return [s for s in states if s.delivery_column_name in held]
+
+
+def _narrow_graph_to_held(
+    graph: RelationshipGraph, index: CatalogIndex
+) -> RelationshipGraph:
+    """Narrow a concept-group graph's VARIABLE-node states to the steward's held
+    delivery columns (#678 picker fix), mirroring `_filter_states_to_held` on the
+    leaf/browse path. The group `/graph` route otherwise emits each member variable's
+    FULL, unfiltered state set (the node-set narrowing was deliberately deferred), so a
+    whole-variable group member — held only because the steward holds AT LEAST ONE of
+    its columns — would surface its NON-held columns as addable picker rows, regressing
+    the leaf path's column-grain scoping.
+
+    Per variable node: keep a state iff its resolved `delivery_column_name` is in the
+    steward's `held_columns` for that node's FQID (the same `(fqid, resolved column)`
+    admission, #206). A node emptied of all states is DROPPED (the steward holds none
+    of its columns under this group). Classification nodes and edges pass through
+    unchanged (classifications are catalog-global, never steward-gated). Only invoked
+    for a FILTERED steward (`index is not None`); the `global` deployment never calls
+    it, so its graph is untouched. The `representation_run_id`s on surviving states may
+    skip values (a dropped run leaves a gap) — harmless: the run id groups ADJACENT
+    surviving states into render cells; it is not a dense sequence the consumers rely
+    on."""
+    kept_nodes: list = []
+    for node in graph.nodes:
+        if not isinstance(node, VariableGraphNode) or node.fqid is None:
+            kept_nodes.append(node)
+            continue
+        held = index.held_columns(str(node.fqid))
+        states = [s for s in node.states if s.delivery_column_name in held]
+        if states:
+            kept_nodes.append(node.model_copy(update={"states": states}))
+    return graph.model_copy(update={"nodes": kept_nodes})
 
 
 def _narrow_group_members(group, index: CatalogIndex):  # noqa: ANN001 — reg_meta ConceptGroupSummary
@@ -1076,6 +1109,12 @@ def get_concept_group_graph(
             status_code=404,
             detail=f"no concept group {key!r} in {provider}/{register}",
         )
+    # #678 picker fix: scope each member variable's states to the steward's held
+    # columns (the leaf path's column-grain narrowing, here applied to the graph the
+    # group picker consumes) so a whole-variable member never exposes NON-held columns
+    # as addable. Global (`index is None`) passes the full graph through unchanged.
+    if index is not None:
+        graph = _narrow_graph_to_held(graph, index)
     return graph
 
 

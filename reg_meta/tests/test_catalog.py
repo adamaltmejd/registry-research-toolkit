@@ -118,6 +118,19 @@ class TestResolveBinding:
         assert len(r.states) == 1
         assert r.states[0].delivery_column_name == "Kon"
         assert r.states[0].variant == "individer-15plus"
+        # The variant DISPLAY name is surfaced on the state (the contract field the
+        # picker shows in place of the slug). `_DEFAULT_VARIANT` names it "Individer
+        # 15+"; the slug remains the add coordinate above.
+        assert r.states[0].variant_label == "Individer 15+"
+
+    def test_variant_label_is_none_for_a_null_named_variant(self) -> None:
+        # A NULL-named variant → variant_label None (the consumer falls back to the
+        # slug for display). The slug stays present as the add coordinate.
+        conn = build_slugged_db(variant=(None, "snoskotrar", 10))
+        r = Catalog(conn).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert r.states[0].variant == "snoskotrar"
+        assert r.states[0].variant_label is None
 
     def test_swedish_kolumnnamn_folds_to_ascii_slug(self) -> None:
         # "Kön" → "kon" via NFKD ASCII fold; binding FQIDs are ASCII (see DESIGN.md → FQID grammar).

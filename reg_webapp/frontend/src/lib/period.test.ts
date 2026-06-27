@@ -11,7 +11,9 @@ import {
   periodQueryFromField,
   periodRangeEndpoints,
   periodTokenBounds,
+  periodTokenForBounds,
   periodToWire,
+  periodWireBounds,
   queryFromParams,
   rangeRepresentable,
   sameYearWindow,
@@ -416,6 +418,58 @@ describe("periodTokenBounds (#306 advisory window math)", () => {
   });
 });
 
+describe("periodTokenForBounds (#271 inverse — coarsest exact token)", () => {
+  it("a full-year window → the bare year", () => {
+    expect(periodTokenForBounds("2020-01-01", "2020-12-31")).toBe("2020");
+  });
+
+  it("a single month → the month token (not the year)", () => {
+    expect(periodTokenForBounds("2020-01-01", "2020-01-31")).toBe("2020-01");
+    expect(periodTokenForBounds("2020-02-01", "2020-02-29")).toBe("2020-02");
+  });
+
+  it("the four quarters → their tokens", () => {
+    expect(periodTokenForBounds("2020-01-01", "2020-03-31")).toBe("2020-Q1");
+    expect(periodTokenForBounds("2020-04-01", "2020-06-30")).toBe("2020-Q2");
+    expect(periodTokenForBounds("2020-07-01", "2020-09-30")).toBe("2020-Q3");
+    expect(periodTokenForBounds("2020-10-01", "2020-12-31")).toBe("2020-Q4");
+  });
+
+  it("term-spelling wins the H1/H2 tie-break (VT/HT, never -H)", () => {
+    expect(periodTokenForBounds("2009-01-01", "2009-06-30")).toBe("VT2009");
+    expect(periodTokenForBounds("2009-07-01", "2009-12-31")).toBe("HT2009");
+  });
+
+  it("a single day → the bare day token", () => {
+    expect(periodTokenForBounds("2020-08-15", "2020-08-15")).toBe("2020-08-15");
+  });
+
+  it("a window no token covers → the explicit ISO range (NEVER year-rounded)", () => {
+    // Feb–Jun has no single token; the range preserves the exact span rather than
+    // collapsing to a containing year (which would re-introduce the ambiguity the
+    // interval resolver removes).
+    expect(periodTokenForBounds("2020-02-01", "2020-06-30")).toBe(
+      "2020-02-01..2020-06-30",
+    );
+    expect(periodTokenForBounds("2010-01-01", "2020-12-31")).toBe(
+      "2010-01-01..2020-12-31",
+    );
+  });
+
+  it("round-trips through periodTokenBounds for every emitted token", () => {
+    for (const [lo, hi] of [
+      ["2020-01-01", "2020-12-31"],
+      ["2020-03-01", "2020-03-31"],
+      ["2020-07-01", "2020-09-30"],
+      ["2009-01-01", "2009-06-30"],
+      ["2020-08-15", "2020-08-15"],
+    ] as const) {
+      const token = periodTokenForBounds(lo, hi);
+      expect(periodTokenBounds(token)).toEqual({ from: lo, to: hi });
+    }
+  });
+});
+
 describe("periodRangeEndpoints", () => {
   it("splits a 2-endpoint range", () => {
     expect(periodRangeEndpoints("2018..2020")).toEqual(["2018", "2020"]);
@@ -428,6 +482,71 @@ describe("periodRangeEndpoints", () => {
   it("returns null for non-ranges and malformed ranges", () => {
     expect(periodRangeEndpoints("2020")).toBeNull();
     expect(periodRangeEndpoints("2018..2019..2020")).toBeNull();
+  });
+});
+
+describe("periodWireBounds (#678: exact ISO bounds of a whole ?period)", () => {
+  it("a single SUB-ANNUAL token resolves to its true grain (NOT the outer year)", () => {
+    expect(periodWireBounds("2020-Q1")).toEqual({
+      from: "2020-01-01",
+      to: "2020-03-31",
+    });
+    expect(periodWireBounds("HT2020")).toEqual({
+      from: "2020-07-01",
+      to: "2020-12-31",
+    });
+    expect(periodWireBounds("2020-03")).toEqual({
+      from: "2020-03-01",
+      to: "2020-03-31",
+    });
+  });
+
+  it("a bare year resolves to the whole-year ISO bounds", () => {
+    expect(periodWireBounds("2018")).toEqual({
+      from: "2018-01-01",
+      to: "2018-12-31",
+    });
+  });
+
+  it("a range resolves to its outer endpoints' bounds", () => {
+    expect(periodWireBounds("2010..2015")).toEqual({
+      from: "2010-01-01",
+      to: "2015-12-31",
+    });
+    // A sub-annual endpoint keeps its grain on the outer side.
+    expect(periodWireBounds("2010-Q2..2015-03")).toEqual({
+      from: "2010-04-01",
+      to: "2015-03-31",
+    });
+  });
+
+  it("a comma list unions every part's bounds (outer min start, max end)", () => {
+    expect(periodWireBounds("2005..2010,2015..2020")).toEqual({
+      from: "2005-01-01",
+      to: "2020-12-31",
+    });
+  });
+
+  it("null when no part parses to a bound (_default / junk)", () => {
+    expect(periodWireBounds("_default")).toBeNull();
+    expect(periodWireBounds("junk")).toBeNull();
+  });
+
+  it("null when ANY segment is invalid (no partial clamp from the valid fragments)", () => {
+    // A mixed valid+invalid wire must NOT yield the valid pieces' bounds — that
+    // would silently turn an invalid user period into a DIFFERENT valid source
+    // period on Add. The whole wire is refused; the caller falls back safely.
+    expect(periodWireBounds("2018,junk")).toBeNull();
+    expect(periodWireBounds("junk,2018")).toBeNull();
+    expect(periodWireBounds("2010..junk,2015..2020")).toBeNull();
+    expect(periodWireBounds("2010..2020,nope")).toBeNull();
+  });
+
+  it("a fully-valid comma list still parses to its outer bounds (valid case unbroken)", () => {
+    expect(periodWireBounds("2018,2020")).toEqual({
+      from: "2018-01-01",
+      to: "2020-12-31",
+    });
   });
 });
 

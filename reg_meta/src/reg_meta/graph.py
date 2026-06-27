@@ -75,6 +75,11 @@ class GraphState(_CatalogModel):
 
     state_id: int
     variant: str
+    # `register_variant.name` — the variant's curator display name (e.g. "Snöskotrar"
+    # for slug `snoskotrar`), surfaced for DISPLAY (the picker shows it instead of the
+    # ASCII-folded slug). None for a NULL-named variant → the consumer falls back to
+    # the `variant` slug. Display-only; `variant` stays the add coordinate.
+    variant_label: str | None
     representation_run_id: int
     delivery_column_name: str | None
     value_set_id: int | None
@@ -112,6 +117,13 @@ class VariableGraphNode(_GraphNodeBase):
     group are all variable-grain and the FQID must map to exactly one node."""
 
     kind: Literal["variable"] = "variable"
+    # The variable's shared metadata (`ResolvedVariable.definition`/`description`) —
+    # the human-readable concept text. Carried on the node so a group page can surface
+    # its shared concept definition/description from the member union alone (#678),
+    # without a separate per-member resolve. None on a succession-chain edition node
+    # minted thin (no full resolve) — fine; those carry no metadata.
+    definition: str | None
+    description: str | None
     states: list[GraphState]
     same_as: list[SameAsRef]
     # The resolved variable's facet assignments WITHIN its canonical concept group
@@ -222,27 +234,37 @@ def _graph_states(states: tuple[VariableState, ...]) -> list[GraphState]:
     """Fold a variable's ``variable_state`` history into ``GraphState`` rows with
     ``representation_run_id`` assigned. Ordered by ``(variant, valid_from)``; the
     run id increments at each #526 representation boundary AND at every variant
-    change (a run never spans variants). States are first deduped by ``state_id``
-    (a monthly-family annual state expands READ-TIME into N per-month windows
-    sharing one ``state_id`` — alias multiplexing, not a coding boundary; we fold
-    those back to the single claim so a family doesn't mint phantom runs)."""
-    by_state: dict[int, VariableState] = {}
+    change (a run never spans variants). States are first deduped by
+    ``(state_id, delivery_column_name)`` — a monthly-family annual state expands
+    READ-TIME into N per-month windows that SHARE one ``state_id`` but carry
+    DISTINCT delivery columns. Those columns are genuinely selectable (the group
+    picker enumerates them), so they must SURVIVE the fold; only a true duplicate
+    (same state_id AND same column) collapses. The run-id logic below still folds
+    them into ONE run (a same-state_id column change is alias multiplexing, not a
+    coding boundary) so a family doesn't mint phantom runs."""
+    by_key: dict[tuple[int, str | None], VariableState] = {}
     for s in states:
-        by_state.setdefault(s.state_id, s)
-    ordered = sorted(by_state.values(), key=lambda s: (s.variant, s.valid_from))
+        by_key.setdefault((s.state_id, s.delivery_column_name), s)
+    ordered = sorted(by_key.values(), key=lambda s: (s.variant, s.valid_from))
 
     out: list[GraphState] = []
     run_id = 0
     prev: VariableState | None = None
     for s in ordered:
         if prev is not None and (
-            s.variant != prev.variant or _is_representation_boundary(prev, s)
+            s.variant != prev.variant
+            # A pure delivery-column change among windows SHARING a state_id is alias
+            # multiplexing (one annual claim delivered as N month-columns), NOT a
+            # representation boundary — fold them into one run so the monthly family
+            # mints no phantom runs while its columns still survive the dedup above.
+            or (s.state_id != prev.state_id and _is_representation_boundary(prev, s))
         ):
             run_id += 1
         out.append(
             GraphState(
                 state_id=s.state_id,
                 variant=s.variant,
+                variant_label=s.variant_label,
                 representation_run_id=run_id,
                 delivery_column_name=s.delivery_column_name,
                 value_set_id=s.value_set_id,
@@ -428,6 +450,8 @@ class _GraphBuilder:
             fqid=resolved.canonical_fqid,
             label=resolved.name or node_id,
             group_key=group_key,
+            definition=resolved.definition,
+            description=resolved.description,
             states=_graph_states(resolved.states),
             same_as=[
                 SameAsRef(fqid=ref.fqid, register=ref.register_name)
@@ -541,6 +565,8 @@ class _GraphBuilder:
                 fqid=edition.fqid,
                 label=edition.name or node_id,
                 group_key=None,
+                definition=None,
+                description=None,
                 states=[],
                 same_as=[],
                 facets=[],

@@ -204,6 +204,95 @@ export function periodTokenBounds(token: string): PeriodBounds | null {
   return { from: `${value}-01-01`, to: `${value}-12-31` };
 }
 
+/** Render an inclusive ISO interval `[lo, hi]` as the COARSEST period token that
+ * `periodTokenBounds` expands back to EXACTLY `(lo, hi)` — the display/diagnostic
+ * inverse, mirroring reg_meta's `period_token_for_bounds` (#271). A window that no
+ * single token covers exactly renders as the explicit `"lo..hi"` range, NEVER
+ * rounded to a containing year: two sub-annual sibling spans both reading "2009"
+ * would re-create the very ambiguity the interval resolver removes. Month windows
+ * use the same `lastDayOfMonth` end as the forward expansion so the two directions
+ * stay agreed. Tie-break: VT/HT share bounds with `YYYY-H1`/`-H2`; the term form
+ * wins (these windows come from SCB's term registers, and the curated grammar
+ * prefers the term spelling) — the `-H` forms are accepted on input but never
+ * emitted here. Both `lo`/`hi` must be full ISO `YYYY-MM-DD` (the catalog states'
+ * bounds are); a non-ISO/sentinel bound is the caller's concern. */
+export function periodTokenForBounds(lo: string, hi: string): string {
+  const year = lo.slice(0, 4);
+  const loMonth = lo.slice(5, 7);
+  if (hi.slice(0, 4) === year) {
+    if (lo === `${year}-01-01` && hi === `${year}-12-31`) {
+      return year;
+    }
+    if (lo === `${year}-${loMonth}-01`) {
+      if (loMonth === "01" && hi === `${year}-06-30`) {
+        return `VT${year}`;
+      }
+      if (loMonth === "07" && hi === `${year}-12-31`) {
+        return `HT${year}`;
+      }
+      // Quarter: lo is the quarter's first month, hi the quarter's last day.
+      for (const q of ["1", "2", "3", "4"] as const) {
+        const bounds = periodTokenBounds(`${year}-Q${q}`);
+        if (bounds && bounds.from === lo && bounds.to === hi) {
+          return `${year}-Q${q}`;
+        }
+      }
+      // Single month: lo on the 1st, hi on the month's last day.
+      const yNum = Number(year);
+      const mNum = Number(loMonth);
+      if (
+        Number.isFinite(yNum) &&
+        Number.isFinite(mNum) &&
+        hi === `${year}-${loMonth}-${lastDayOfMonth(yNum, mNum)}`
+      ) {
+        return `${year}-${loMonth}`;
+      }
+    }
+  }
+  // A single day, or any window no coarser token covers exactly → the explicit
+  // range (a single day collapses to the bare day token).
+  if (lo === hi && isPeriodToken(lo)) {
+    return lo;
+  }
+  return `${lo}..${hi}`;
+}
+
+/** The OUTER inclusive ISO date bounds of a whole wire `?period` — a single token,
+ * a `lo..hi` range, or a comma-union LIST (the #307 interrupted form) — at its REAL
+ * grain (NOT year-collapsed), or `null` when ANY part fails to parse to a bound
+ * (`_default`, junk, OR a partially-invalid wire like `2018,junk` — a single bad
+ * segment poisons the whole wire so a partial clamp can't silently invent a valid
+ * source period from the good fragments). The union of every part's bounds:
+ * `from` = earliest part start, `to` = latest part end. Used to intersect a
+ * picker row's span with the active period on
+ * Add so a SUB-ANNUAL `?period` (`2020-Q1`) commits at its true grain instead of
+ * widening to the outer year (#678 finding). ADVISORY mirror of the wire grammar —
+ * the backend stays the canonical period authority. */
+export function periodWireBounds(wire: string): PeriodBounds | null {
+  let from: string | null = null;
+  let to: string | null = null;
+  for (const part of wire.split(LIST_SEP)) {
+    const endpoints = periodRangeEndpoints(part) ?? [part.trim(), part.trim()];
+    const loBounds = periodTokenBounds(endpoints[0]);
+    const hiBounds = periodTokenBounds(endpoints[1]);
+    // ALL-or-nothing: a single unparseable segment (`2018,junk`,
+    // `2010..junk,2015..2020`) makes the WHOLE wire ambiguous. Returning the
+    // valid fragments' clamp would silently turn an invalid user period into a
+    // DIFFERENT valid source period on Add, so refuse the whole wire instead —
+    // the caller falls back to its safe default (the row's own span / window).
+    if (!loBounds || !hiBounds) {
+      return null;
+    }
+    if (from === null || loBounds.from < from) {
+      from = loBounds.from;
+    }
+    if (to === null || hiBounds.to > to) {
+      to = hiBounds.to;
+    }
+  }
+  return from !== null && to !== null ? { from, to } : null;
+}
+
 /** Split a wire period into its two RANGE endpoints (`"2010..2020"` →
  * `["2010", "2020"]`), or `null` when it isn't a 2-endpoint range. */
 export function periodRangeEndpoints(wire: string): [string, string] | null {
