@@ -87,6 +87,11 @@ slug = "rtb"
 # flips to the name basis `personnummer`, dangling every RTB variant's
 # `panel_entity_key = "personnr"`. Pin it (split-sibling key: earliest column
 # PersonNr → discriminator `personnr`).
+# #846: with the RTB `column_merge` entry retired, the never-co-occurring legacy
+# `PNR` header splits into its own sparse `2.57.pnr` sibling (auto-slugged `pnr`);
+# this pin still freezes the DENSE `PersonNr` sibling that every variant's
+# `panel_entity_key` resolves to (the PNR→PersonNr rename is recorded as a
+# representation `replaced_by` edge in curation/relations.toml).
 [variable."2.57.personnr"]
 slug = "personnr"
 

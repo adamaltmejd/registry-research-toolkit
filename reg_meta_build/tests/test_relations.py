@@ -1398,9 +1398,10 @@ class TestMovedEdges:
         # replaced_by (the #400 SSYK 96 → SSYK 2012 J16 succession) + 3
         # classification replaced_by (the #579 sun1996 → niva/inriktning/grupp
         # split) + 2 #770 ICD/KS disease-classification succession edges + 7
-        # #814 iot disponibel-inkomst 2004-års-definition succession edges + 3
+        # #814 iot disponibel-inkomst 2004-års-definition succession edges + 1
+        # #846 RTB PNR → PersonNr representation-grain rename edge + 3
         # related_to (#403).
-        assert len(rel.replaced_by) == 25
+        assert len(rel.replaced_by) == 26
         assert len(rel.related_to) == 3
         # The #508 tier-1 batch: 615 curated same_as identity edges (62 connected
         # components, each ≤32 FQIDs). All variable-grain with a non-empty note.
@@ -1437,6 +1438,16 @@ class TestMovedEdges:
         assert ("scb", "ekonomiskt-bistand", "utbetalt-belopp-till-hushallet") in {
             (e.a_provider, e.a_register, e.a_variable) for e in rel.related_to
         }
+        # The #846 RTB representation-grain rename: a variable-grain edge carrying
+        # BOTH `from_column`/`to_column`, parsed onto `predecessor_column` /
+        # `successor_column` (the representation arm of `replaced_by`).
+        rtb = next(
+            e
+            for e in rel.replaced_by
+            if (str(e.predecessor), str(e.successor))
+            == ("scb/rtb/pnr", "scb/rtb/personnr")
+        )
+        assert (rtb.predecessor_column, rtb.successor_column) == ("PNR", "PersonNr")
 
 
 # ---------------------------------------------------------------------------

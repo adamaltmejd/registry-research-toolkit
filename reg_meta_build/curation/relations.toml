@@ -287,6 +287,28 @@ to = "scb/iot/cdisp504kevx"
 effective_year = 2021
 note = "Individbaserad ekvivalerad disponibel inkomst exkl. kapitalvinst (växelvist) recut to 2004 års definition"
 
+# ── RTB subject personnummer: column-era rename PNR → PersonNr (#846/#196) ──
+#    Representation-grain succession (`from_column`/`to_column`, #843). var 57
+#    ("Personnummer", RTB) delivered the subject key as the legacy `PNR` header in
+#    the early `familjer-1990-1997` variant (1990–1997) and as `PersonNr` from the
+#    `familjer-fran-1998` successor variant onward. The two headers NEVER co-occur
+#    (verified against the raw SCB Registerinformation.csv: `PNR` appears only in
+#    the 1990–1997 family variant, `PersonNr` in every other RTB variant). With the
+#    RTB `column_merge` entry retired (#846), removing the by-fiat union splits
+#    the subject key into the sparse legacy `pnr` sibling + the dense `personnr`;
+#    this edge records the rename so the cross-era continuity survives as navigation
+#    (and the entity-key resolver follows it to the dense successor). The
+#    co-delivered relation columns of var 57 (`PersonNrMor`/`PersonNrAnkn`/
+#    `PersonNrSamh`) are different ROLES and correctly stay split, untouched here.
+[[edge]]
+type = "replaced_by"
+from = "scb/rtb/pnr"
+to = "scb/rtb/personnr"
+from_column = "PNR"
+to_column = "PersonNr"
+effective_year = 1998
+note = "RTB subject personnummer delivery column renamed PNR → PersonNr (era rename, never co-occurring; replaces the retired column_merge entry, #846)"
+
 # ── Curated "see also" edges (#403) ──
 # Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an
 # identity (identity is a `type = "same_as"` edge). Slugs verified against a real

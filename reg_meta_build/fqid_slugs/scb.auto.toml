@@ -76167,6 +76167,9 @@ slug = "medblandnamnrel-eu"  # source: kolumnnamn
 [variable."2.5144.inkomdatum-fel"]
 slug = "inkomdatum-fel"  # source: kolumnnamn
 
+[variable."2.57.pnr"]
+slug = "pnr"  # source: kolumnnamn
+
 [variable."2.73.ar"]
 slug = "ar"  # source: kolumnnamn
 

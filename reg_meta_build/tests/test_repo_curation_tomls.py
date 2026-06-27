@@ -159,8 +159,9 @@ def test_repo_relations_parses() -> None:
     # 11 #375 variable succession edges + 2 #400 SSYK J16 succession edges
     # + 3 #579 classification split edges
     # + 2 #770 ICD/KS disease-classification succession edges
-    # + 7 #814 iot disponibel-inkomst 2004-års-definition succession edges.
-    assert len(relations.replaced_by) == 25
+    # + 7 #814 iot disponibel-inkomst 2004-års-definition succession edges
+    # + 1 #846 RTB PNR → PersonNr representation-grain rename edge.
+    assert len(relations.replaced_by) == 26
     assert len(relations.related_to) == 3  # the moved #403 see-also edges
     assert all(
         e.a_provider
