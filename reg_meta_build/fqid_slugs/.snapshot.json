@@ -9670,6 +9670,7 @@
     "scb/121.56.borgnr": "person-orgnr",
     "scb/121.56.borgnr-bolag": "person-orgnr-bolag",
     "scb/121.56.bpnr": "person-orgnr-2",
+    "scb/121.56.persorgnr": "persorgnr",
     "scb/121.5601": "bjamka",
     "scb/121.561": "taxeringsvarde-totalt",
     "scb/121.5610": "kyrkoavgift-inklusive-begravningsavgift",
