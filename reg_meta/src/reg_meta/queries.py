@@ -2421,11 +2421,14 @@ def get_varinfo(
                 "register_name": var["register_name"],
                 "var_id": vid,
                 # Glossary-rename keys (see DESIGN.md → Glossary and Swedish↔English crosswalk): SCB Swedish columns surface here as the
-                # universal English names. Dropped columns
+                # universal English names. Genuinely-dropped columns
                 # (variabelreferenstid, variabelhamtadfran,
-                # variabelextern_kommentar, variabeloperationell_definition)
-                # no longer appear; their values (where meaningful) were
-                # folded into `description` at ingest.
+                # variabelextern_kommentar) no longer appear; their values
+                # (where meaningful) were folded into `description` at ingest.
+                # `variabeloperationell_definition` is NOT dropped — since #892
+                # it is the first-class `variable.operational_definition` column
+                # (no longer folded into `description`). It is intentionally not
+                # surfaced in this read-dict yet (consumer wiring is a follow-up).
                 "name": var["name"],
                 "definition": var["definition"],
                 "description": var["description"],

@@ -816,6 +816,7 @@ CREATE VIRTUAL TABLE variable_fts USING fts5(
     name,
     definition,
     description,
+    operational_definition,
     content='variable',
     content_rowid='rowid',
     tokenize='unicode61'
@@ -2355,14 +2356,15 @@ def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) 
     # are excluded (they contain technical suffixes like _LISA that pollute
     # search results).
     conn.execute("""
-        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description)
+        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description, operational_definition)
         SELECT
             v.rowid,
             v.register_id,
             v.provider_key,
             v.name,
             v.definition,
-            v.description
+            v.description,
+            v.operational_definition
         FROM variable v
     """)
 

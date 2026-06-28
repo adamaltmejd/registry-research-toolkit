@@ -1848,6 +1848,131 @@ class TestOperationalDefinition:
         assert desc == ""
         assert op == "Operational refinement"
 
+    def test_operational_definition_is_fts_searchable(self, tmp_path: Path):
+        """FIX (#892 follow-up): the op-def moving out of `description` into its
+        own column must NOT drop out of full-text search. `_populate_fts` indexes
+        `operational_definition` in `variable_fts`, so a term that appears ONLY in
+        the op-def (never in name/definition/description) is still MATCHable —
+        proving the FTS column was added and populated.
+        """
+        # `_build_and_fetch` builds a variable with description "Plain description"
+        # and a distinctive op-def token that appears in no other indexed column.
+        ri_row = _ri_row(
+            "FTSREG",
+            "Ftsregistret",
+            "Fts test",
+            "Individer",
+            "Individer",
+            "Alla individer",
+            "Nej",
+            "2020",
+            "Version 2020",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "FtsVar",
+            "Definition",
+            "Plain description",
+            "Zonkvärde refinement",  # op-def-only token: "Zonkvärde"
+            "",
+            "",
+            "",
+            "",
+            "",
+            "FtsCol",
+            "int",
+            "1",
+            "9401",
+            "999",
+            "9401",
+            "9401",
+            "778",
+        )
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [ri_row]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            rows = conn.execute(
+                "SELECT provider_key FROM variable_fts WHERE variable_fts MATCH ?",
+                ("Zonkvärde",),
+            ).fetchall()
+            assert len(rows) == 1, "op-def-only term must be FTS-matchable"
+            assert rows[0]["provider_key"] == "778"
+        finally:
+            conn.close()
+
+    def test_within_sibling_tiebreak_is_min_cvid(self, tmp_path: Path):
+        """One (non-split) sibling spanning several cvids that each carry a
+        DIFFERENT non-empty operational definition: the materialized
+        `variable.operational_definition` is the min-cvid one.
+
+        `_coalesce_variable_states` resolves this with
+        `ORDER BY vi.cvid LIMIT 1` over the non-empty ops — a deterministic
+        first-non-empty tiebreak. The split test covers DISTINCT ops routing to
+        DIFFERENT siblings; this one locks the WITHIN-sibling collapse, which no
+        other test exercises. Same delivery column across both editions (no
+        disjoint-stem split), so the two cvids land on ONE sibling.
+        """
+        # Same delivery column, same edition (year/regver) → ONE sibling spanning
+        # two cvids. Distinct regver_id keeps the two rows as separate
+        # variable_instance carriers without minting a second population row.
+        same_col_rows = [
+            _var_row(
+                colname="Kommun",
+                cvid=9311,  # min cvid → its op wins
+                var_id=921,
+                year="2019",
+                regver_id=210,
+                varopdef="Op def carrier alpha",
+            ),
+            _var_row(
+                colname="Kommun",
+                cvid=9312,  # higher cvid → its op is the loser
+                var_id=921,
+                year="2019",
+                regver_id=211,
+                varopdef="Op def carrier beta",
+            ),
+        ]
+        ri_rows = list(REGISTERINFORMATION_ROWS) + same_col_rows
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            # Precondition: ONE sibling (same column → no split), spanning the
+            # two cvids.
+            rows = conn.execute(
+                "SELECT operational_definition FROM variable "
+                "WHERE register_id = 1 AND provider_key = '921'"
+            ).fetchall()
+            assert len(rows) == 1, "same-column editions must collapse to ONE sibling"
+            # The min-cvid op (9311) wins the deterministic tiebreak.
+            assert rows[0]["operational_definition"] == "Op def carrier alpha"
+        finally:
+            conn.close()
+
     def test_parallel_column_split_gives_each_sibling_its_own_op(self, tmp_path: Path):
         """The core #892 invariant: when SCB delivers parallel columns under one
         var_id that triage SPLITS into siblings, each sibling carries ITS column's
