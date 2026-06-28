@@ -5,7 +5,7 @@ import type {
   StatesResponse,
   VariableStateModel,
 } from "./api";
-import type { PickerRepresentation } from "./catalog";
+import type { PickerDimension, PickerRepresentation } from "./catalog";
 import {
   addWindowBounds,
   axisNoun,
@@ -38,8 +38,10 @@ import {
   narrowCatalogNode,
   narrowStatesByModifier,
   nodeLabel,
+  pickerFilterDimensions,
   pickerLabeling,
   pickerRepresentations,
+  pickerRowPasses,
   pickerWindowYears,
   qualifierFromFocus,
   rankFilter,
@@ -2227,6 +2229,167 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
     expect(withVariant.primary).toEqual({ text: "only-pop", mono: false });
     const [bare] = pickerLabeling([rep({ variant: "", column: "" })]).rows;
     expect(bare.primary).toEqual({ text: "—", mono: false });
+  });
+});
+
+describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
+  function row(over: Partial<PickerRepresentation>): PickerRepresentation {
+    return {
+      key: `${over.variant ?? "v"}::${over.column ?? "Col"}`,
+      variant: "v",
+      variantLabel: over.variant ?? "v",
+      column: over.column ?? "Col",
+      from: "2000-01-01",
+      to: "2010-12-31",
+      windows: [{ from: "2000-01-01", to: "2010-12-31" }],
+      period: "2000 – 2010",
+      wirePeriod: "2000..2010",
+      valueSetLabel: "",
+      codingsVary: false,
+      ...over,
+    };
+  }
+  // A band carrying a single representation column with the given facets on that column.
+  function fband(
+    column: string,
+    facets: { axis: string; value: string; label: string }[],
+    rowOver: Partial<PickerRepresentation> = {},
+  ) {
+    return {
+      rows: [row({ column, ...rowOver })],
+      facetsByColumn: { [column]: facets },
+    };
+  }
+  const axes = [
+    { name: "enhet", label: "Enhet" },
+    { name: "hush", label: "Hushållsbegrepp" },
+  ];
+
+  it("emits a facet axis only when it discriminates (≥2 distinct values)", () => {
+    const bands = [
+      fband("DIN1", [
+        { axis: "enhet", value: "ind", label: "Individ" },
+        { axis: "hush", value: "h1", label: "Hushåll A" },
+      ]),
+      fband("DIN2", [
+        { axis: "enhet", value: "ind", label: "Individ" },
+        { axis: "hush", value: "h2", label: "Hushåll B" },
+      ]),
+    ];
+    const dims = pickerFilterDimensions(bands, axes);
+    // `enhet` is constant (all "ind") → not a filter; `hush` varies → a filter.
+    expect(dims.map((d) => d.key)).toEqual(["hush"]);
+    const hush = dims[0];
+    expect(hush.kind).toBe("facet");
+    expect(hush.label).toBe("Hushållsbegrepp");
+    expect(hush.values).toEqual([
+      { value: "h1", label: "Hushåll A" },
+      { value: "h2", label: "Hushåll B" },
+    ]);
+  });
+
+  it("surfaces variant + coding dimensions when they discriminate; never single-value", () => {
+    const bands = [
+      {
+        rows: [row({ variant: "ind", column: "C", valueSetLabel: "SNI 2002" })],
+      },
+      {
+        rows: [row({ variant: "fam", column: "C", valueSetLabel: "SNI 2007" })],
+      },
+    ];
+    const dims = pickerFilterDimensions(bands, []);
+    expect(dims.map((d) => d.kind)).toEqual(["variant", "coding"]);
+    expect(dims[0].label).toBe("Population");
+    expect(dims[0].values.map((v) => v.value).sort()).toEqual(["fam", "ind"]);
+    expect(dims[1].label).toBe("Coding");
+    expect(dims[1].values.map((v) => v.value)).toEqual([
+      "SNI 2002",
+      "SNI 2007",
+    ]);
+  });
+
+  it("a single-population, single-coding, single-axis group surfaces NO dimension", () => {
+    const bands = [
+      fband("C", [{ axis: "enhet", value: "ind", label: "Individ" }], {
+        valueSetLabel: "SNI",
+      }),
+    ];
+    expect(pickerFilterDimensions(bands, axes)).toEqual([]);
+  });
+
+  it("an empty value-set label contributes no coding value", () => {
+    const bands = [
+      { rows: [row({ column: "A", valueSetLabel: "X" })] },
+      { rows: [row({ column: "B", valueSetLabel: "" })] },
+    ];
+    // Only one non-empty coding label → not a filter.
+    expect(
+      pickerFilterDimensions(bands, []).some((d) => d.kind === "coding"),
+    ).toBe(false);
+  });
+
+  it("pickerRowPasses: AND across dimensions, OR within a dimension", () => {
+    const dims: PickerDimension[] = [
+      {
+        kind: "facet",
+        key: "hush",
+        label: "Hushållsbegrepp",
+        values: [
+          { value: "h1", label: "A" },
+          { value: "h2", label: "B" },
+        ],
+      },
+      {
+        kind: "variant",
+        key: "variant",
+        label: "Population",
+        values: [
+          { value: "ind", label: "ind" },
+          { value: "fam", label: "fam" },
+        ],
+      },
+    ];
+    const band = fband("DIN1", [{ axis: "hush", value: "h1", label: "A" }], {
+      variant: "ind",
+    });
+    const theRow = band.rows[0];
+    // No selection → passes.
+    expect(pickerRowPasses(theRow, band, dims, {})).toBe(true);
+    // Matching facet → passes.
+    expect(pickerRowPasses(theRow, band, dims, { hush: new Set(["h1"]) })).toBe(
+      true,
+    );
+    // Non-matching facet → fails.
+    expect(pickerRowPasses(theRow, band, dims, { hush: new Set(["h2"]) })).toBe(
+      false,
+    );
+    // OR within: either value selected passes.
+    expect(
+      pickerRowPasses(theRow, band, dims, { hush: new Set(["h1", "h2"]) }),
+    ).toBe(true);
+    // AND across: facet matches but variant doesn't → fails.
+    expect(
+      pickerRowPasses(theRow, band, dims, {
+        hush: new Set(["h1"]),
+        variant: new Set(["fam"]),
+      }),
+    ).toBe(false);
+  });
+
+  it("pickerRowPasses: a row lacking a facet on a SELECTED axis fails that axis", () => {
+    const dims: PickerDimension[] = [
+      {
+        kind: "facet",
+        key: "hush",
+        label: "Hushållsbegrepp",
+        values: [{ value: "h1", label: "A" }],
+      },
+    ];
+    // The band carries no facet on `hush` for this column.
+    const band = { rows: [row({ column: "C" })], facetsByColumn: {} };
+    expect(
+      pickerRowPasses(band.rows[0], band, dims, { hush: new Set(["h1"]) }),
+    ).toBe(false);
   });
 });
 

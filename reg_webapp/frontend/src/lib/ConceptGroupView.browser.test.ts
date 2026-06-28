@@ -1271,12 +1271,17 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // toggles ALL the variable's columns.
     (context as HTMLElement).click();
     await expect.element(page.getByText("2 columns selected")).toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /lastbilar/ }))
-      .toBeChecked();
-    await expect
-      .element(page.getByRole("checkbox", { name: /bussar/ }))
-      .toBeChecked();
+    // Both column ROW checkboxes are checked. Scope to the column-list row checkboxes:
+    // a two-variant single-column member also surfaces a Population FILTER (#908) whose
+    // pill checkboxes carry the same variant text, so a bare role+name query would be
+    // ambiguous; the row checkbox is the `.cbox` inside `.col-list .row-btn`.
+    const rowChecked = [
+      ...document.querySelectorAll<HTMLInputElement>(
+        ".col-list .row-btn input.cbox",
+      ),
+    ];
+    expect(rowChecked.length).toBe(2);
+    expect(rowChecked.every((c) => c.checked)).toBe(true);
   });
 
   it("hovering a subheading highlights ALL its column rows (band-hover)", async () => {

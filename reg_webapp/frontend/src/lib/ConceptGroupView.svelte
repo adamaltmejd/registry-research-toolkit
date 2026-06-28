@@ -1,6 +1,7 @@
 <script lang="ts">
 import {
   type ConceptGroupNodeMember,
+  type GroupFacetModel,
   getConceptGroup,
   getConceptGroupGraph,
   type VariableGraphNode,
@@ -209,9 +210,22 @@ const bands = $derived.by((): PickerBand[] => {
   // the later members' facet labels would otherwise never reach their rows — collect
   // them here so the picker can show the human facet per column.
   const facetByColumnByFqid = new Map<string, Record<string, string>>();
+  // delivery_column → the member's STRUCTURED facets (#908): the per-axis (axis,
+  // value, label) tuples the picker's dimension marking + per-axis filter read.
+  // Same per-(fqid, column) keying as the joined-label map above — first member
+  // wins — but carries the raw facets so the picker can group/filter by axis.
+  const facetsByColumnByFqid = new Map<
+    string,
+    Record<string, GroupFacetModel[]>
+  >();
   for (const member of node.members) {
     if (member.delivery_column == null) {
       continue;
+    }
+    if (member.facets.length > 0) {
+      const fmap = facetsByColumnByFqid.get(member.fqid) ?? {};
+      fmap[member.delivery_column] ??= member.facets;
+      facetsByColumnByFqid.set(member.fqid, fmap);
     }
     const facet = memberFacetLabel(member);
     if (facet == null) {
@@ -251,6 +265,9 @@ const bands = $derived.by((): PickerBand[] => {
       // Per-column facet labels across ALL the fqid's members (#678) — so a
       // multi-member-on-one-fqid representation group shows each column's human facet.
       facetByColumn: facetByColumnByFqid.get(member.fqid),
+      // The structured per-column facets (#908) — the picker's dimension marking
+      // + per-axis filter read these to group/filter rows by axis.
+      facetsByColumn: facetsByColumnByFqid.get(member.fqid),
       // The member's own leaf page — the picker renders the identity as a nav link
       // (the binding leaf passes no href; it's already that page). Carry the active
       // group `?period` onto the link (#678) so opening a member from the picker
@@ -469,6 +486,7 @@ function commitSelected(selected: PickerSelection[]): void {
     {#if bands.length > 0}
       <RepresentationPicker
         {bands}
+        axes={node.axes}
         window={pickerWindow}
         canAdd={seedReady}
         {focusKey}

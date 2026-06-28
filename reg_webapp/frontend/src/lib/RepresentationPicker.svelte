@@ -1,11 +1,15 @@
 <script lang="ts">
+import type { GroupAxisModel, GroupFacetModel } from "./api";
 import {
   type BandIdentity,
   type BandLabel,
   clusterBands,
   leafSlug,
+  type PickerDimension,
   type PickerRepresentation,
+  pickerFilterDimensions,
   pickerLabeling,
+  pickerRowPasses,
   representationInWindow,
   yearOf,
 } from "./catalog";
@@ -41,6 +45,12 @@ export interface PickerBand {
    * sets it; the binding LEAF leaves it undefined (its single member has no per-column
    * facet split). */
   facetByColumn?: Record<string, string>;
+  /** Per-DELIVERY-COLUMN structured facets (#908): the (axis, value, label) tuples
+   * a representation member carries, keyed by `delivery_column`. The dimension
+   * marking + per-axis filter controls read these to mark each row with its facet
+   * dimension and to narrow the list to one axis value. The GROUP view sets it; the
+   * binding LEAF leaves it undefined (no facet split on a single member). */
+  facetsByColumn?: Record<string, GroupFacetModel[]>;
   isSensitive?: boolean;
   isIdentifier?: boolean;
   rows: PickerRepresentation[];
@@ -61,6 +71,7 @@ export interface PickerSelection {
 
 let {
   bands,
+  axes = [],
   window,
   canAdd,
   focusKey = null,
@@ -69,6 +80,10 @@ let {
   /** The variables, in render order. One element for the leaf; one per member for
    * the group page. */
   bands: PickerBand[];
+  /** The group's declared facet axes (#819/#908): the per-axis filter controls match
+   * on `axis.name` and display `axis.label`. Empty (the default — the binding leaf,
+   * or an axis-less group) → no facet-dimension filters. */
+  axes?: readonly GroupAxisModel[];
   /** The active period window as an inclusive year pair, or null (no narrowing → no
    * column dims). Columns whose span doesn't overlap render dimmed (still selectable). */
   window: [number, number] | null;
@@ -91,13 +106,81 @@ let {
  * underneath (a re-enumeration / a different group) so a stale key can never commit
  * a vanished column. */
 let selectedKeys = $state(new Set<string>());
+/** The active filter selection (#908): dimension key → set of selected values. An
+ * empty / absent set imposes no constraint (the initial all-empty state shows every
+ * row). Reassigned (not mutated) so the `$state` record/Set stay reactive. Reset
+ * alongside `selectedKeys` when the band set changes (the effect below). */
+let filterSelection = $state<Record<string, Set<string>>>({});
 const bandsSignature = $derived(
   bands.map((b) => `${b.key}:${b.rows.map((r) => r.key).join(",")}`).join("|"),
 );
 $effect(() => {
   void bandsSignature;
   selectedKeys = new Set<string>();
+  // Reset the filters too (#908): a stale axis value from a different group could
+  // otherwise hide everything in the new one.
+  filterSelection = {};
 });
+
+// ── Dimension marking + per-dimension filters (#908) ─────────────────────────
+// The filterable dimensions across the bands (facet axes first, then variant, then
+// coding), each emitted only when it DISCRIMINATES (≥2 distinct values). A
+// single-population, single-coding, single-axis-value group surfaces none → the
+// controls collapse. Filtering is a CLIENT-SIDE LENS: it narrows which rows show,
+// never the selection or the commit.
+const dimensions = $derived(pickerFilterDimensions(bands, axes));
+
+const anyFilterActive = $derived(
+  Object.values(filterSelection).some((s) => s.size > 0),
+);
+
+/** Whether a value is selected in its dimension's filter. */
+function isFilterOn(key: string, value: string): boolean {
+  return filterSelection[key]?.has(value) ?? false;
+}
+
+/** Toggle a value in a dimension's filter set (multi-select within a dimension). */
+function toggleFilter(key: string, value: string): void {
+  const current = filterSelection[key] ?? new Set<string>();
+  const next = new Set(current);
+  if (next.has(value)) {
+    next.delete(value);
+  } else {
+    next.add(value);
+  }
+  filterSelection = { ...filterSelection, [key]: next };
+}
+
+/** Clear every dimension filter (back to "show all columns"). */
+function clearFilters(): void {
+  filterSelection = {};
+}
+
+/** The bands with their rows narrowed to those passing the active filters; a band
+ * whose rows are ALL filtered out is dropped (so the adaptive labeling / clustering
+ * below run on the visible subset, exactly as they do unfiltered). The narrowed
+ * bands keep every other field — only `rows` shrinks. */
+const filteredBands = $derived.by((): PickerBand[] => {
+  if (!anyFilterActive) {
+    return bands;
+  }
+  const out: PickerBand[] = [];
+  for (const band of bands) {
+    const rows = band.rows.filter((row) =>
+      pickerRowPasses(row, band, dimensions, filterSelection),
+    );
+    if (rows.length > 0) {
+      out.push({ ...band, rows });
+    }
+  }
+  return out;
+});
+
+/** The total visible rows under the active filters (the "showing N of M" count). */
+const totalRows = $derived(bands.reduce((n, b) => n + b.rows.length, 0));
+const visibleRows = $derived(
+  filteredBands.reduce((n, b) => n + b.rows.length, 0),
+);
 
 /** The namespaced selection key for a variable's column row. */
 function selKey(bandKey: string, rowKey: string): string {
@@ -149,18 +232,32 @@ function toggleBand(band: PickerBand): void {
  * the rows are sibling `<li>`s, so a JS `$state` flag scopes the highlight. */
 let hoveredBandKey = $state<string | null>(null);
 
-/** Every column key across all variables — the global select-all target. */
+/** Every VISIBLE column key — the global select-all target (#908): select-all acts
+ * on the rows the active filters leave showing, never the hidden ones (filtering is
+ * a presentation lens — it must not let "select all" grab a row the user has filtered
+ * out of view). A hidden row's own selection persists in `selectedKeys` regardless. */
 const allKeys = $derived(
-  bands.flatMap((b) => b.rows.map((r) => selKey(b.key, r.key))),
+  filteredBands.flatMap((b) => b.rows.map((r) => selKey(b.key, r.key))),
 );
 const allSelected = $derived(
   allKeys.length > 0 && allKeys.every((k) => selectedKeys.has(k)),
 );
 const someSelected = $derived(allKeys.some((k) => selectedKeys.has(k)));
 
-/** Select or clear every column across every variable in one move. */
+/** Select or clear every VISIBLE column in one move — leaving any hidden-but-selected
+ * row's selection untouched (clear removes only the visible keys). */
 function toggleAll(): void {
-  selectedKeys = allSelected ? new Set() : new Set(allKeys);
+  const next = new Set(selectedKeys);
+  if (allSelected) {
+    for (const k of allKeys) {
+      next.delete(k);
+    }
+  } else {
+    for (const k of allKeys) {
+      next.add(k);
+    }
+  }
+  selectedKeys = next;
 }
 
 /** The selected columns across all variables, in variable-then-column order — the
@@ -228,12 +325,15 @@ function bandIdentity(b: PickerBand): BandIdentity {
  * cluster (all members share the name, or the lone leaf) `showClusterHeadings` is
  * false → render as today (the name is already the page title); with several, each
  * name renders ONCE as a group heading over its distinguisher-led bands. */
-const clustered = $derived(clusterBands(bands, bandIdentity));
+// Cluster + label the FILTERED bands (#908) so the adaptive labeling adapts to the
+// VISIBLE rows (e.g. once a filter leaves a band one column, its labels re-collapse).
+const clustered = $derived(clusterBands(filteredBands, bandIdentity));
 
 /** Per-variable adaptive COLUMN labels (#678 1b) — show only what varies within the
- * variable, constants hoisted to a thin context line. Keyed by variable key. */
+ * variable, constants hoisted to a thin context line. Keyed by variable key. Built
+ * over the FILTERED bands (#908). */
 const labelingByBand = $derived(
-  new Map(bands.map((b) => [b.key, pickerLabeling(b.rows)])),
+  new Map(filteredBands.map((b) => [b.key, pickerLabeling(b.rows)])),
 );
 
 /** Whether the active window starts BEFORE a row's data actually begins — the
@@ -307,8 +407,54 @@ const view = $derived(
   })),
 );
 
+/** A row's facet DIMENSION markers (#908): one `{ axis, value }` per declared axis
+ * the row's column carries a facet on (axis = the curator label, value = the facet
+ * label), in `axes` order. Generalizes the quiet single facet line into an
+ * axis-named marker so the user sees WHAT KIND of dimension (e.g. "Hushållsbegrepp:
+ * Individ") distinguishes the row. Empty for a row with no structured facets (the
+ * binding leaf, or an axis-less group) — the existing `facetByColumn` line still
+ * renders there. */
+function rowFacetMarkers(
+  band: PickerBand,
+  column: string,
+): { axis: string; value: string }[] {
+  const facets = band.facetsByColumn?.[column];
+  if (!facets) {
+    return [];
+  }
+  const out: { axis: string; value: string }[] = [];
+  for (const axis of axes) {
+    const f = facets.find((x) => x.axis === axis.name);
+    if (f) {
+      out.push({ axis: axis.label, value: f.label });
+    }
+  }
+  return out;
+}
+
+/** Selected columns currently HIDDEN by the active filters (#908) — a presentation
+ * lens never silently drops a selection, so the footer signals that N of the
+ * committed columns aren't visible. Compared by namespaced key against the visible
+ * set. */
+const hiddenSelectedCount = $derived.by((): number => {
+  if (!anyFilterActive) {
+    return 0;
+  }
+  const visible = new Set(allKeys);
+  let n = 0;
+  for (const { band, row } of selected) {
+    if (!visible.has(selKey(band.key, row.key))) {
+      n += 1;
+    }
+  }
+  return n;
+});
+
 const footerLabel = $derived(
-  `${selectedCount} ${selectedCount === 1 ? "column" : "columns"} selected`,
+  `${selectedCount} ${selectedCount === 1 ? "column" : "columns"} selected` +
+    (hiddenSelectedCount > 0
+      ? ` (${hiddenSelectedCount} hidden by filters)`
+      : ""),
 );
 
 /** Navigate an in-picker identity link (the column chip / subhead title) through
@@ -369,7 +515,61 @@ function navigateChip(event: MouseEvent, href: string): void {
   {/if}
 {/snippet}
 
+<!-- One dimension FILTER fieldset (#908): a tracked micro-label naming the dimension
+     KIND (an axis label, "Population", or "Coding") over its pill-checkboxes. The
+     pills reuse the #819 navigator pattern — a visually-hidden native checkbox
+     (keyboard + a11y + labelled) under a selectable accent chip — so axis identity is
+     carried by TEXT (the legend), never hue. Multi-select within a dimension (OR),
+     AND across dimensions. Filter-only: it narrows the visible rows, never the
+     selection or the commit. -->
+{#snippet dimFilter(dim: PickerDimension)}
+  <fieldset class="dim-filter">
+    <legend>
+      <span class="dim-kind" data-kind={dim.kind}>{dim.label}</span>
+    </legend>
+    <div class="filter-options">
+      {#each dim.values as v (v.value)}
+        <label class="filter-pill" class:on={isFilterOn(dim.key, v.value)}>
+          <input
+            class="visually-hidden"
+            type="checkbox"
+            checked={isFilterOn(dim.key, v.value)}
+            onchange={() => toggleFilter(dim.key, v.value)}
+          />
+          <span>{v.label}</span>
+        </label>
+      {/each}
+    </div>
+  </fieldset>
+{/snippet}
+
 <div class="rep-picker">
+  {#if dimensions.length > 0}
+    <!-- The per-dimension filters sit ABOVE the column list (#908): narrow a large
+         multi-axis group to one axis value / population / coding. Each dimension is
+         shown only when it discriminates (≥2 distinct values), so a single-axis-value
+         group surfaces no control. -->
+    <div class="dim-filters" role="group" aria-label="Filter columns by dimension">
+      {#each dimensions as dim (dim.key)}
+        {@render dimFilter(dim)}
+      {/each}
+      <div class="dim-filters-status">
+        <span class="showing" aria-live="polite"
+          >Showing {visibleRows} of {totalRows} columns</span
+        >
+        {#if anyFilterActive}
+          <button type="button" class="clear-filters" onclick={clearFilters}>
+            Clear filters
+          </button>
+        {/if}
+      </div>
+    </div>
+  {/if}
+
+  {#if anyFilterActive && filteredBands.length === 0}
+    <p class="no-match" role="status">No columns match the active filters.</p>
+  {/if}
+
   {#if bands.length > 1 && allKeys.length > 1}
     <!-- Global select-all: grab every column of the concept (for the active period)
          in one move. A header strip, not card chrome. Omitted when there's only ONE
@@ -416,6 +616,11 @@ function navigateChip(event: MouseEvent, href: string): void {
           {@const facet = v.primaryIsFacet
             ? undefined
             : band.facetByColumn?.[row.column]}
+          <!-- #908: the row's structured facet DIMENSION markers (axis label : value).
+               When the band carries declared-axis facets, mark each row with its axis
+               so the dimension TYPE is legible; this generalizes the single `facet`
+               line above. Empty for the leaf / axis-less group (the `facet` line stays). -->
+          {@const facetMarkers = rowFacetMarkers(band, row.column)}
           <!-- A single-column variable = ONE selectable row, led by the variable's
                distinguishing identity (the leaf ≈ one-variable group case). The row is a
                click-anywhere container (mouse toggles selection); a real checkbox owns
@@ -462,12 +667,28 @@ function navigateChip(event: MouseEvent, href: string): void {
                     >
                   {/if}
                 </span>
+                <!-- #908: the per-axis facet markers — each an axis-named dimension
+                     marker (e.g. "Hushållsbegrepp: Individ") so the user sees what KIND
+                     of dimension distinguishes the row. -->
+                {#if facetMarkers.length > 0}
+                  <span class="facet-markers">
+                    {#each facetMarkers as m (m.axis)}
+                      <span class="facet-marker"
+                        ><span class="dim-kind facet">{m.axis}</span
+                        >{m.value}</span
+                      >
+                    {/each}
+                  </span>
+                {/if}
                 <!-- The column's human facet label (#678) leads the quiet context for a
                      single-column representation member (e.g. CDISP "Inkl. kapitalvinst")
-                     so the row shows the human distinction, not only the column name. -->
-                {#if facet || v.context.length > 0}
+                     so the row shows the human distinction, not only the column name.
+                     Suppressed when the structured axis markers already render (#908). -->
+                {#if (facet && facetMarkers.length === 0) || v.context.length > 0}
                   <span class="sub"
-                    >{[facet, ...v.context].filter(Boolean).join(" · ")}</span
+                    >{[facetMarkers.length === 0 ? facet : undefined, ...v.context]
+                      .filter(Boolean)
+                      .join(" · ")}</span
                   >
                 {/if}
               </span>
@@ -625,6 +846,7 @@ function navigateChip(event: MouseEvent, href: string): void {
             {@const inWindow = representationInWindow(row, window)}
             {@const label = v.rowLabels.get(row.key)}
             {@const facet = band.facetByColumn?.[row.column]}
+            {@const facetMarkers = rowFacetMarkers(band, row.column)}
             <!-- A nested column row: the SAME <label>-wraps-checkbox click-anywhere
                  pattern as the single row, minus the nav link (a nested column is not
                  its own variable). Gets the band-hover highlight when its subheading is
@@ -652,14 +874,30 @@ function navigateChip(event: MouseEvent, href: string): void {
                   {:else}
                     <span class="primary">{label?.primary.text}</span>
                   {/if}
+                  <!-- #908: the per-axis facet dimension markers (axis label : value)
+                       so a multi-axis column reads its dimension TYPE at a glance. -->
+                  {#if facetMarkers.length > 0}
+                    <span class="facet-markers">
+                      {#each facetMarkers as m (m.axis)}
+                        <span class="facet-marker"
+                          ><span class="dim-kind facet">{m.axis}</span
+                          >{m.value}</span
+                        >
+                      {/each}
+                    </span>
+                  {/if}
                   <!-- The human FACET label for this column (#678): a representation
                        group with several members on one variable distinguishes its
                        columns by facet ("Inkl./Exkl. kapitalvinst"), not just the
                        technical column name. Shown as the leading qualifier so the row
-                       reads as the human distinction, not only `CDISP`/`CDISP5`. -->
-                  {#if facet || (label && label.qualifiers.length > 0)}
+                       reads as the human distinction, not only `CDISP`/`CDISP5`.
+                       Suppressed when the structured axis markers already render (#908). -->
+                  {#if (facet && facetMarkers.length === 0) || (label && label.qualifiers.length > 0)}
                     <span class="sub"
-                      >{[facet, ...(label?.qualifiers ?? [])]
+                      >{[
+                        facetMarkers.length === 0 ? facet : undefined,
+                        ...(label?.qualifiers ?? []),
+                      ]
                         .filter(Boolean)
                         .join(" · ")}</span
                     >
@@ -714,6 +952,130 @@ function navigateChip(event: MouseEvent, href: string): void {
     border-radius: 6px;
     background: var(--surface);
     overflow: hidden;
+  }
+
+  /* ── Per-dimension filters (#908) ───────────────────────────────────────────
+     A quiet strip of per-dimension fieldsets above the column list. NEUTRAL
+     throughout — no `--cat-*` type palette (that sub-system tags result/node TYPE;
+     reusing it here would read a facet/coding value as a CODE/REG chip). Dimension
+     identity is carried by TEXT (the legend's tracked micro-label), never hue —
+     mirroring the #819 ConceptGroupNavigator. */
+  .dim-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: flex-start;
+    padding: var(--space-3) var(--space-3);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-sunken);
+  }
+  .dim-filter {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-1) var(--space-2) var(--space-2);
+    margin: 0;
+    min-inline-size: 0;
+  }
+  .dim-filter legend {
+    padding: 0 var(--space-1);
+  }
+  /* The dimension-KIND eyebrow: a tracked uppercase micro-label naming the dimension
+     (an axis label, "Population", or "Coding"). The design system's hierarchy device
+     — it reads as a section label, not a value. Reused as the per-row facet-marker
+     axis prefix so the marking and the filter legend share one visual language. */
+  .dim-kind {
+    font-size: var(--text-micro);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  /* A filter pill: a checkbox styled as a selectable neutral chip (the #819 navigator
+     pattern). The native input is visually hidden (the `.visually-hidden` global
+     utility) but kept in the DOM for keyboard + a11y + labelling; `.on` paints the
+     selected state with the brand accent (the one interactive-chrome use). */
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0.1em 0.5em;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+    color: var(--text);
+  }
+  .filter-pill.on {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+  /* Keyboard focus ring on the (hidden) input projects onto its pill label. */
+  .filter-pill:focus-within {
+    box-shadow: var(--focus-ring);
+  }
+  .dim-filters-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: center;
+  }
+  .showing {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .clear-filters {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-3);
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .clear-filters:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .clear-filters:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  /* The empty-result line when every column is filtered out. */
+  .no-match {
+    margin: 0;
+    padding: var(--space-3) var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  /* The per-row facet dimension markers (#908): one axis-named marker per declared
+     axis the row carries, sitting in the quiet sub-context line. Each pairs the
+     uppercase axis eyebrow (`.dim-kind`) with the facet value, so a multi-axis row
+     reads "HUSHÅLLSBEGREPP Individ · KAPITALVINST Inkl." — the dimension type made
+     legible, not just the value. */
+  .facet-markers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .facet-marker {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    overflow-wrap: anywhere;
   }
 
   /* The global select-all strip — a quiet header, not a card. */
