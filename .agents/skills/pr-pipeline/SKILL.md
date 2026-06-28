@@ -28,9 +28,9 @@ Agent-surface notes:
   diagnostic checklist, not as independent review evidence. The GitHub bot-review window
   described by the repository guidance still applies.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
-  new UI authoring, use `frontend-design` before building when that skill is exposed in
-  the active Codex setup. If it is not exposed, report that setup gap before authoring
-  substantial new UI instead of silently substituting generic design prose.
+  new UI authoring, use the repo-local `frontend-design` skill before building. If the
+  active Codex setup does not expose that repo-local skill, report the setup gap before
+  authoring substantial new UI instead of silently substituting generic design prose.
 - Do not merge unless the user explicitly asked for merge/full pipeline or confirms at
   the merge gate. Otherwise finish by marking the PR ready and reporting the gate state.
 

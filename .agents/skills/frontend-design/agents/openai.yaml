@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Frontend Design"
+  short_description: "Design registry webapp UI changes"
+  default_prompt: "Use $frontend-design before authoring substantial registry webapp UI."
+policy:
+  allow_implicit_invocation: true
