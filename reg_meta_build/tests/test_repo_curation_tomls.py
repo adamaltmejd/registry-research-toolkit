@@ -149,13 +149,14 @@ def test_repo_period_family_merges_parses() -> None:
 def test_repo_relations_parses() -> None:
     # The single typed `[[edge]]` surface (#522). It ships with the #375 variable
     # succession edges + the #579 sun1996 classification split (both
-    # `type = "replaced_by"`) + the #508 tier-1 curated `same_as` identity batch.
+    # `type = "replaced_by"`) + the #508 tier-1 and #737 recall-liberal
+    # cross-register curated `same_as` identity batches.
     # The gate is load-time shape — a malformed entry would otherwise surface only
     # on a real build. Endpoint RESOLUTION is maintainer-build territory (the
     # materializers fail fast).
     relations = load_relations(_ROOT / "curation" / "relations.toml")
-    # The #508 tier-1 batch: 615 curated variable-grain identity edges.
-    assert len(relations.same_as) == 615
+    # 615 (#508) + 232 (#737) = 847 curated variable-grain identity edges.
+    assert len(relations.same_as) == 847
     assert all(
         e.grain is FqidKind.VARIABLE_BINDING and e.a_variable and e.b_variable
         for e in relations.same_as
