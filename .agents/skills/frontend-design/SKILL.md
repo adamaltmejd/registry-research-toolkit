@@ -1,11 +1,11 @@
 ---
 name: frontend-design
 description: >-
-  Registry Research Toolkit frontend design skill for reg_webapp UI authoring.
-  Use before building new or substantially reworked Svelte views, components,
-  app-shell surfaces, catalog/project authoring flows, responsive layouts, or
-  visual systems under reg_webapp/frontend/. Also use when pr-pipeline needs the
-  design-authoring pass that precedes implementation for rendered UI changes.
+  Registry Research Toolkit frontend design skill for reg_webapp UI authoring. Use
+  before building new or substantially reworked Svelte views, components, app-shell
+  surfaces, catalog/project authoring flows, responsive layouts, or visual systems under
+  reg_webapp/frontend/. Also use when pr-pipeline needs the design-authoring pass that
+  precedes implementation for rendered UI changes.
 ---
 
 # Registry Frontend Design
