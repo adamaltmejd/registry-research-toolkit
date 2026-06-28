@@ -671,8 +671,8 @@ covers binding, register, and provider grains uniformly:
 - a dead slug whose terminal successor is UNHELD or has no successor → **404**.
 
 The `/graph` sub-endpoint gates the subject binding but does NOT narrow the graph's node
-set (same_as/group neighborhood) to held — that traversal-narrowing is deferred
-as a follow-up.
+set (same_as/group neighborhood) to held — that traversal-narrowing is deferred as a
+follow-up.
 
 *Classification pass-through (decision 2).* Classifications and codes are
 catalog-global. A steward `project_data` holds only variable bindings, so there is no
