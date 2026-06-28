@@ -4023,6 +4023,29 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
     expect(valueSetKeyForColumn(states, "COL")).toBe("id/249");
   });
 
+  it("breaks a valid_to tie by the higher state_id", () => {
+    // Two states for the SAME column share an identical latest valid_to — the
+    // tie-break (max state_id) selects the higher-id state's value set, so the
+    // resolution stays deterministic regardless of iteration order.
+    const states = [
+      state({
+        state_id: 5,
+        value_set_id: 303,
+        delivery_column_name: "COL",
+        valid_from: "2018-01-01",
+        valid_to: "2022-12-31",
+      }),
+      state({
+        state_id: 9,
+        value_set_id: 249,
+        delivery_column_name: "COL",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    expect(valueSetKeyForColumn(states, "COL")).toBe("id/249");
+  });
+
   it("resolves a classification column to its slug key (two-level dedup)", () => {
     const states = [
       state({

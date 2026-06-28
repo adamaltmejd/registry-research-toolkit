@@ -410,6 +410,114 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
   });
 
+  it("re-seeds the isolation when the states change underneath (sibling navigation)", async () => {
+    // The reset `$effect` (keyed on `states`) must re-run when navigation swaps the
+    // states for a sibling column: a stale isolated detail can't survive into the new
+    // view. Render with COL → "First coding" focused, then rerender with a DIFFERENT
+    // `states` set where COL now delivers "Second coding"; the isolation must FOLLOW
+    // to the new value set, not strand the old one.
+    const first = state({
+      state_id: 1,
+      value_set_id: 401,
+      value_set_version_label: "First coding",
+      variant: "v",
+      delivery_column_name: "COL",
+      valid_from: "2010-01-01",
+      valid_to: "2012-12-31",
+    });
+    const firstOther = state({
+      state_id: 2,
+      value_set_id: 402,
+      value_set_version_label: "First other",
+      variant: "v",
+      delivery_column_name: "OTHER",
+      valid_from: "2010-01-01",
+      valid_to: "2012-12-31",
+    });
+    const { rerender } = render(ValueSetView, {
+      states: [first, firstOther],
+      narrowed: false,
+      focusColumn: "COL",
+    });
+    expect(
+      document.querySelector(".vs-detail .vs-heading")?.textContent,
+    ).toContain("First coding");
+
+    // Navigate to a sibling: a NEW states set where COL delivers a different coding.
+    const second = state({
+      state_id: 3,
+      value_set_id: 501,
+      value_set_version_label: "Second coding",
+      variant: "v",
+      delivery_column_name: "COL",
+      valid_from: "2013-01-01",
+      valid_to: "2015-12-31",
+    });
+    const secondOther = state({
+      state_id: 4,
+      value_set_id: 502,
+      value_set_version_label: "Second other",
+      variant: "v",
+      delivery_column_name: "OTHER",
+      valid_from: "2013-01-01",
+      valid_to: "2015-12-31",
+    });
+    await rerender({
+      states: [second, secondOther],
+      narrowed: false,
+      focusColumn: "COL",
+    });
+    // The isolation re-seeded onto the NEW value set; the stale one is gone.
+    const heading = document.querySelector(
+      ".vs-detail .vs-heading",
+    )?.textContent;
+    expect(heading).toContain("Second coding");
+    expect(heading).not.toContain("First coding");
+  });
+
+  it("isolates a focusColumn value set even when it is OUT of period (isolate beats period-collapse)", async () => {
+    // A `?period` collapses out-of-period value sets behind a disclosure (#744), but
+    // a `?codes=<column>` deep link must still land on its target even when that
+    // column's value set falls OUTSIDE the period. The isolate path (keyed on the
+    // value set regardless of period) takes precedence over the period-collapse: the
+    // focused detail renders fully, not buried under "… outside this period".
+    const inPeriodCol = state({
+      state_id: 1,
+      value_set_id: 600,
+      value_set_version_label: "In-period coding",
+      variant: "v",
+      delivery_column_name: "INCOL",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    const outOfPeriodCol = state({
+      state_id: 2,
+      value_set_id: 601,
+      value_set_version_label: "Out-of-period coding",
+      variant: "v",
+      delivery_column_name: "OUTCOL",
+      valid_from: "1990-01-01",
+      valid_to: "1995-12-31",
+    });
+    render(ValueSetView, {
+      states: [inPeriodCol, outOfPeriodCol],
+      // scopeStates covers ONLY the in-period value set.
+      scopeStates: [inPeriodCol],
+      narrowed: true,
+      // …but the deep link focuses the OUT-of-period column.
+      focusColumn: "OUTCOL",
+    });
+    // The isolated detail is fully visible (not collapsed): its heading shows the
+    // out-of-period coding and "Used by" is present, with no period disclosure in
+    // the way.
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    expect(
+      document.querySelector(".vs-detail .vs-heading")?.textContent,
+    ).toContain("Out-of-period coding");
+    // The period-collapse disclosure does not gate the focused detail.
+    expect(document.querySelector(".out-of-period")).toBeNull();
+  });
+
   it("focusColumn degrades to the default union when no state delivers it", async () => {
     // A stale / unknown `?codes=` matches nothing → the viewer shows its default
     // union list, not a blank isolated detail.

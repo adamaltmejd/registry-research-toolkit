@@ -319,6 +319,43 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 });
 
+describe("codingsVaryNudge deep link (#905)", () => {
+  // The leaf branch (band.href undefined → current path) is covered in
+  // BindingLeafView.browser.test.ts. This covers the GROUP branch: when a band
+  // carries `href` (the member's own leaf), the nudge links to that leaf with a
+  // CLEAN query — `?codes=<column>#states-heading`, no inherited query string,
+  // no double-encoding.
+  it("a coding-varying row links to the member leaf with a clean ?codes deep link", async () => {
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: "scb/lisa/yrkesreg",
+          name: "Yrkesregistret",
+          registerPrefix: "scb/lisa",
+          href: "/catalog/scb/lisa/yrkesreg",
+          rows: [row({ column: "Yrke", codingsVary: true })],
+        } satisfies PickerBand,
+      ],
+      axes: [],
+      ...PROPS,
+    });
+
+    const nudge = await vi.waitFor(() => {
+      const a = document.querySelector(".rep-picker .codings-vary");
+      if (!a) {
+        throw new Error("codings-vary nudge not yet rendered");
+      }
+      return a;
+    });
+    expect(nudge.tagName).toBe("A");
+    // Exactly the member leaf + clean codes query + states hash — no inherited
+    // query string, no double-encoding.
+    expect(nudge.getAttribute("href")).toBe(
+      "/catalog/scb/lisa/yrkesreg?codes=Yrke#states-heading",
+    );
+  });
+});
+
 describe("RepresentationPicker sequential-rename hint (#902)", () => {
   // The picker collapses a variable's sequential column RENAME (non-overlapping eras,
   // distinct names) into ONE row led by the latest column, surfacing the earlier name(s)

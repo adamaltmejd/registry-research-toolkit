@@ -1164,7 +1164,7 @@ Per-kind mapping into the five sections:
   | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
   | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                       | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
   | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via `HistoryGraph` succession edges) | column picker (`RepresentationPicker`) + `PeriodPicker` (availability lens) (#678)                             |
-  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                 | —                                                                                                              |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                  | `ClassificationCodesPanel` (`CodeList`)                 | —                                                                                                              |
   | relationships | `HistoryGraph` (over `/graph` payload) + `LineageDetails` (provenance/warnings)                          | `HistoryGraph` (edition points, succession edges)       | — (members live in the picker)                                                                                 |
   | docs          | `DocMentionsPanel`                                                                                       | —                                                       | —                                                                                                              |
 
@@ -1264,19 +1264,52 @@ form when the start is unknown (#658).
 
 ### Shared section components
 
+- **`ValueSetView`** (#905, replacing the retired `StatesView`) — the pure value-set /
+  coding viewer for a variable's `variable_state` rows. It is **presentation-only**: no
+  fetch, no navigation, no resolution state. The `RepresentationPicker` now owns the
+  `?variant` / `?value_set_version` narrowing (the `onpickVariant` /
+  `onpickValueSetVersion` callbacks and the `inScope` / out-of-scope greying that lived
+  in `StatesView` are retired). `ValueSetView` receives the already-resolved `states`
+  list from `BindingLeafView` and renders in one of three modes:
+
+  - **Single-state detail** (`states.length === 1`): variant, validity, type/length,
+    delivery column, value-set version, and a height-constrained code table.
+  - **Multi-state / distinct-value-set view** (`states.length > 1`, #668): dedups at two
+    levels — classification editions by `classification_slug`, others by `value_set_id`
+    — so a column with 415 states collapses to \~21 LKF editions + a few plain lists. A
+    `FilterInput` narrows the list; per-row "Isolate" focuses one; "All value sets"
+    resets. Period-greying (which value sets are in-scope for the current `?period`) is
+    driven by a `scopeStates` prop from `BindingLeafView`, not by internal resolution
+    logic (#744).
+  - **Empty** (`states.length === 0`): a clean "no state delivered for this period"
+    message (a valid resolved period outside every validity window — not an error).
+
+  **`?codes=<column>` deep-link** (#905): the picker's "codings vary" nudge became a
+  deep link to `?codes=<column>#states-heading`. `BindingLeafView` reads `?codes` into
+  `focusColumn` (pure view state — no refetch) and passes it to `ValueSetView`, which
+  seeds the local isolation onto the distinct value set `valueSetKeyForColumn` resolves
+  that column to (latest-era coding), then scrolls the viewer into view. A stale or
+  unknown column degrades silently to the default union view.
+
+  The component is kept standalone (not folded back into the leaf) so a future
+  `HistoryGraph` convergence (#666) can move this coding viewer cleanly into the unified
+  subject view.
+
 - **`CodeList`** (#638 PR3) — the single value-set / code viewer. A variable's value set
   and a classification's code list are the same shape (a code → label set, and a value
-  set often *is* a classification), so they render identically: `StatesView` uses it for
-  each distinct value set in the multi-state view (and for the single value set in the
-  detail mode), and `ClassificationCodesPanel` for the edition's codes. It owns a
-  **size-dependent filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD`
-  codes — pointless for a handful) and a height-constrained scroll for the long LISA
-  sets; the classification side's per-code `is_valid` surfaces an "observed" tag (a
-  variable member omits it, so no tag shows — same component, fewer columns of signal).
+  set often *is* a classification), so they render identically: `ValueSetView` (#905,
+  superseding the retired `StatesView`) uses it for each distinct value set in the
+  multi-state view (and for the single value set in the detail mode), and
+  `ClassificationCodesPanel` for the edition's codes. It owns a **size-dependent
+  filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for
+  a handful) and a height-constrained scroll for the long LISA sets; the classification
+  side's per-code `is_valid` surfaces an "observed" tag (a variable member omits it, so
+  no tag shows — same component, fewer columns of signal).
+
 - **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
   disclosure that demotes **backend/structural** fields below the user-facing ones: the
   variable's sensitive / identifier flags, a state's type / length / delivery column
-  (`StatesView`), and a group's key / facets / source. One component keeps the summary +
+  (`ValueSetView`), and a group's key / facets / source. One component keeps the summary +
   styling consistent across the three call sites; callers omit it entirely when there's
   nothing to demote.
 
