@@ -742,6 +742,27 @@ class TestEdges:
 
 
 class TestVariableGroups:
+    def test_grouped_solo_variable_renders(self) -> None:
+        # #791 regression: a single-member variable group is still a group view.
+        # Even with no succession edges and one representation run, the grouped
+        # node must not be suppressed by the empty-solo gate.
+        conn = build_slugged_db()
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon"],
+        )
+        g = Catalog(conn).graph_for_fqid(_KON)
+        assert g.focus_id == _KON
+        assert g.edges == []
+        (node,) = g.nodes
+        assert isinstance(node, VariableGraphNode)
+        assert node.id == _KON
+        assert node.group_key == "scb/lisa/demog"
+        assert [s.representation_run_id for s in node.states] == [0]
+
     def test_member_renders_group_union_with_focus(self) -> None:
         conn = build_slugged_db()
         add_variable(conn, register_id=1, var_id=45, name="Civ", slug="civilstand")
