@@ -81,6 +81,51 @@ def _data_type_class(dt: str | None) -> str:
     return "other"
 
 
+# Code/label column-pair detection. Hoisted here (alongside `_data_type_class`)
+# so the SCB triage (`sources/scb.py`) and the read-only split-sibling diagnostic
+# (`split_sibling_suspects.py`) apply ONE code-vs-label name heuristic — the build
+# checks it BEFORE the import-bug shape heuristic (a `<stem>` code + its
+# `<stem>namn` label is a representation pair, NOT a mis-typed delivery), so the
+# diagnostic must apply the same precedence or it mislabels code/label pairs as
+# `type_flip`. A label column carries the Swedish `namn` (name) suffix; its
+# partner code column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a
+# `kod`/`id` code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`). `fold_column`
+# (above) is the only dependency, so these leaves live with it.
+_CODE_SUFFIXES = ("kod", "id")
+_LABEL_SUFFIX = "namn"
+
+
+def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
+    """The non-empty stem when `folded` ends with one of `suffixes`, else None."""
+    for suf in suffixes:
+        if folded.endswith(suf) and len(folded) > len(suf):
+            return folded[: -len(suf)]
+    return None
+
+
+def _is_code_then_label(code: str, label: str) -> bool:
+    """True when `code` is a code column and `label` its matching label column:
+    `label` is `<stem>namn` and `code` is either the bare `<stem>` or
+    `<stem>kod`/`<stem>id` on the SAME stem. Both args are already `fold_column`-
+    folded."""
+    stem = _strip_suffix(label, (_LABEL_SUFFIX,))
+    if stem is None:
+        return False
+    if code == stem:  # bare-stem code paired with its `<stem>namn` label
+        return True
+    return _strip_suffix(code, _CODE_SUFFIXES) == stem
+
+
+def _looks_like_code_label_pair(col_a: str, col_b: str) -> bool:
+    """A code column paired with its label column, in either order. Name-based
+    only (the old #132 heuristic, re-derived to current conventions). Folds each
+    column via `fold_column` (== the SCB coalescer's `_ascii_fold_lower`)."""
+    a, b = fold_column(col_a), fold_column(col_b)
+    if not a or not b:
+        return False
+    return _is_code_then_label(a, b) or _is_code_then_label(b, a)
+
+
 def canonical_int(value: object) -> int | None:
     """Coerce a TOML `register_id` / `var_id` value to its canonical int, or None
     if it isn't one. A TOML integer is already canonical (the format forbids

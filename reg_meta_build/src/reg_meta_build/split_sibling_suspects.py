@@ -15,18 +15,34 @@ by hand; the `disposition` placeholder is the human's to fill.
 
 A SPLIT family is the variables sharing one `(register_id, provider_key)` (the
 A2.2 triage minted siblings under one source var_id). For each intra-family PAIR
-the shape relation is classified off each variable's REPRESENTATIVE state (its
-latest-era `variable_state`): a `type_flip` (one side numeric, the other text —
-the primary SCB/SOS import-bug signal) or a `length_disagree` (an unclassifiable
-"other" type on at least one side with a present-on-both differing `data_length`)
-is a SUSPECT. This mirrors `sources/scb.py::_import_bug_suspect` (the build-time
-fold gate) exactly, reusing the same `_data_type_class` classifier so the
-diagnostic and the build can't diverge on what "numeric-vs-text" means.
+the reason is classified with the SAME PRECEDENCE as the build-time
+`sources/scb.py::_split_relation_kind` (the fold gate) so the diagnostic and the
+build can't diverge on which pairs are suspects vs representation/fold candidates:
+
+  1. CO-DELIVERY gate — the build short-circuits a non-co-delivered pair to the
+     generic (foldable) kind BEFORE any heuristic, because cross-edition shape
+     differences are meaningless (a temporal rename/split whose two siblings never
+     overlap is not a mis-import). So a pair is emitted ONLY when its two siblings
+     were co-delivered: each has a `variable_state` in the SAME `register_variant`
+     with OVERLAPPING `[valid_from, valid_to]`. A non-co-delivered pair is skipped.
+  2. `code_vs_label` — a code column + its `<stem>namn` label
+     (`_looks_like_code_label_pair`, mirroring the build's `code_vs_label_pair`):
+     a distinct representation/fold candidate, NOT an import-bug suspect.
+  3. `type_flip` — one side numeric, the other text (the primary SCB/SOS
+     import-bug signal).
+  4. `length_disagree` — an unclassifiable "other" type on at least one side with
+     a present-on-both differing `data_length`.
+
+The shape checks read each variable's REPRESENTATIVE state (its latest-era
+`variable_state`) and reuse the shared `_data_type_class` / `_looks_like_code_label_pair`
+helpers so the diagnostic and the build can't diverge on "numeric-vs-text" or
+"code-vs-label".
 
 Each suspect also records whether the two variables are ALREADY co-grouped (share
-a `concept_group` via `concept_group_variable`): a co-grouped suspect already
-folds into one browse row, so it is the resolved case; an un-grouped suspect is
-the OPEN fold/sever question the worklist exists to surface.
+a `concept_group` via `concept_group_variable`): co-delivery and co-grouping are
+SEPARATE axes — co-delivery gates whether the pair is a suspect at all (did the
+siblings ever overlap?), co-grouping records whether an emitted suspect already
+folds into one browse row (the resolved case) vs the OPEN fold/sever question.
 """
 
 from __future__ import annotations
@@ -35,7 +51,7 @@ from dataclasses import dataclass
 from itertools import combinations
 from typing import TYPE_CHECKING
 
-from reg_meta_build._curation import _data_type_class
+from reg_meta_build._curation import _data_type_class, _looks_like_code_label_pair
 from reg_meta_build.db import _progress
 from reg_meta_build.fqid_slugs import _toml_comment, _toml_str
 
@@ -66,16 +82,18 @@ class SiblingShape:
 @dataclass(frozen=True)
 class SplitSiblingSuspect:
     """One suspect intra-family PAIR: the two siblings' shapes, the `reason`
-    (`type_flip` | `length_disagree`), and whether they are already co-grouped.
-    `register_fqid` is the shared `provider/register` slug; `provider_key` is the
-    siblings' shared source var_id. `a` / `b` are ordered by `variable_id` for a
-    deterministic emit."""
+    (`code_vs_label` | `type_flip` | `length_disagree`), and whether they are
+    already co-grouped. Every emitted suspect is CO-DELIVERED (the pair's two
+    siblings overlap in some `register_variant`; the gate is the build's
+    short-circuit, see the module docstring). `register_fqid` is the shared
+    `provider/register` slug; `provider_key` is the siblings' shared source
+    var_id. `a` / `b` are ordered by `variable_id` for a deterministic emit."""
 
     register_fqid: str
     provider_key: str
     a: SiblingShape
     b: SiblingShape
-    reason: str  # "type_flip" | "length_disagree"
+    reason: str  # "code_vs_label" | "type_flip" | "length_disagree"
     co_grouped: bool
 
 
@@ -95,11 +113,18 @@ class SplitSiblingResult:
 
 
 def _split_relation_reason(a: SiblingShape, b: SiblingShape) -> str | None:
-    """Classify a pair's shape relation, returning the suspect `reason` or None.
+    """Classify a CO-DELIVERED pair's relation, returning the `reason` or None.
 
-    Mirrors `sources/scb.py::_import_bug_suspect` (the build-time fold gate),
-    reusing the shared `_data_type_class` classifier:
+    Mirrors the precedence of `sources/scb.py::_split_relation_kind` (the
+    build-time fold gate) AFTER its co-delivery short-circuit — callers must apply
+    the co-delivery gate first (see `_codelivered_pairs`); this leaf assumes the
+    pair is co-delivered. Reusing the shared `_looks_like_code_label_pair` /
+    `_data_type_class` helpers, most specific first:
 
+    - `code_vs_label` — a code column + its `<stem>namn` label (name-based, high
+      confidence; the build's `code_vs_label_pair`). A representation/fold
+      candidate, NOT an import-bug suspect — checked FIRST so a `<stem>` (numeric)
+      / `<stem>namn` (text) pair is never mislabeled as a `type_flip`;
     - `type_flip` — one side numeric, the other text (the primary import-bug
       signal: one lumped delivery shipped as a number, the other as text);
     - `length_disagree` — at least one side's type is unclassifiable (`other`)
@@ -109,6 +134,12 @@ def _split_relation_reason(a: SiblingShape, b: SiblingShape) -> str | None:
     A SAME-class length difference is deliberately NOT a suspect: on genuinely
     distinct split siblings differing widths are normal and would fire on nearly
     every split, diluting the worklist. Returns None for a non-suspect pair."""
+    if (
+        a.delivery_column
+        and b.delivery_column
+        and _looks_like_code_label_pair(a.delivery_column, b.delivery_column)
+    ):
+        return "code_vs_label"
     class_a, class_b = _data_type_class(a.data_type), _data_type_class(b.data_type)
     if {class_a, class_b} == {"numeric", "text"}:
         return "type_flip"
@@ -206,19 +237,55 @@ def _co_grouped_pairs(conn: sqlite3.Connection) -> set[frozenset[int]]:
     return {frozenset((a, b)) for a, b in rows}
 
 
+def _codelivered_pairs(conn: sqlite3.Connection) -> set[frozenset[int]]:
+    """The unordered `{variable_id, variable_id}` SPLIT-SIBLING pairs that were
+    CO-DELIVERED: each side has a `variable_state` in the SAME `register_variant`
+    whose `[valid_from, valid_to]` eras OVERLAP. This is the diagnostic side of
+    the build's co-delivery short-circuit (`sources/scb.py::_split_relation_kind`):
+    a non-co-delivered pair (a temporal rename/split whose two siblings never
+    shared a variant era) is NOT a suspect — its cross-edition shape difference is
+    meaningless. Standard closed-interval overlap on the inclusive `YYYY-MM-DD`
+    text bounds (`a.from <= b.to AND b.from <= a.to`; lexical compare is
+    calendar-correct on fixed-width zero-padded dates).
+
+    Scoped to same-family siblings only (same `(register_id, provider_key)`,
+    `provider_key IS NOT NULL`) — co-delivery is only asked about intra-family
+    pairs, so the self-join never widens past a split family. `s1.variable_id <
+    s2.variable_id` emits each unordered pair once."""
+    rows = conn.execute(
+        """
+        SELECT DISTINCT s1.variable_id, s2.variable_id
+        FROM variable_state s1
+        JOIN variable v1 ON v1.variable_id = s1.variable_id
+        JOIN variable_state s2 ON s2.register_variant_id = s1.register_variant_id
+        JOIN variable v2 ON v2.variable_id = s2.variable_id
+        WHERE s1.variable_id < s2.variable_id
+          AND v1.register_id = v2.register_id
+          AND v1.provider_key IS NOT NULL
+          AND v1.provider_key = v2.provider_key
+          AND s1.valid_from <= s2.valid_to
+          AND s2.valid_from <= s1.valid_to
+        """
+    ).fetchall()
+    return {frozenset((a, b)) for a, b in rows}
+
+
 def infer_split_sibling_suspects(conn: sqlite3.Connection) -> SplitSiblingResult:
     """Emit the #918 split-sibling SUSPECT worklist from a BUILT DB (read-only —
     NEVER mutates).
 
     A SPLIT family is the variables sharing one `(register_id, provider_key)` with
-    `provider_key IS NOT NULL` and >= 2 members. For each intra-family PAIR the
-    shape relation is classified off each variable's representative
-    `variable_state` (`_representative_shapes`); a `type_flip` or `length_disagree`
-    pair (`_split_relation_reason`, mirroring the build-time
-    `_import_bug_suspect`) is a SUSPECT. Each suspect records whether the pair is
-    already co-grouped (`_co_grouped_pairs`). Nothing is materialized."""
+    `provider_key IS NOT NULL` and >= 2 members. For each intra-family PAIR, with
+    the SAME precedence as the build-time `sources/scb.py::_split_relation_kind`:
+    a pair is SKIPPED unless CO-DELIVERED (`_codelivered_pairs` — the two siblings
+    overlap in some `register_variant`), then classified off each variable's
+    representative `variable_state` (`_representative_shapes`) via
+    `_split_relation_reason` — `code_vs_label` / `type_flip` / `length_disagree`.
+    Each suspect records whether the pair is already co-grouped (`_co_grouped_pairs`
+    — a SEPARATE axis from co-delivery). Nothing is materialized."""
     shapes = _representative_shapes(conn)
     co_grouped = _co_grouped_pairs(conn)
+    codelivered = _codelivered_pairs(conn)
 
     # Split families: (register_id, provider_key) with >= 2 members. provider_key
     # IS NOT NULL by the DDL (NOT NULL column), but the explicit guard documents
@@ -253,6 +320,12 @@ def infer_split_sibling_suspects(conn: sqlite3.Connection) -> SplitSiblingResult
         # combination is (a, b) with a.variable_id < b.variable_id — a
         # deterministic, once-per-pair emit.
         for vid_a, vid_b in combinations(members, 2):
+            # CO-DELIVERY gate (mirrors the build short-circuit): a pair whose two
+            # siblings never overlapped in a register_variant era is a temporal
+            # rename/split, not a mis-import — its shape difference is meaningless,
+            # so it is NOT a suspect.
+            if frozenset((vid_a, vid_b)) not in codelivered:
+                continue
             a, b = shapes[vid_a], shapes[vid_b]
             reason = _split_relation_reason(a, b)
             if reason is None:
@@ -295,11 +368,13 @@ def render_suspects_toml(result: SplitSiblingResult) -> str:
     round-trip safety, the same as `render_residue_toml`.
 
     Each `[[pair]]` carries the shape evidence (both sides' FQID / name / delivery
-    column / data_type / data_length / value-set presence, the suspect reason, and
-    the co-group status) and a `disposition = ""` placeholder for the maintainer
-    to set to `"fold"` or `"distinct"`. NOTHING loads this — it is a worklist for
-    humans; the fold lands via `concept_groups.toml` and a sever is a no-op (the
-    edge is already gone). Read-only worklist only."""
+    column / data_type / data_length / value-set presence, the reason —
+    `code_vs_label` / `type_flip` / `length_disagree` — and the co-group status)
+    and a `disposition = ""` placeholder for the maintainer to set to `"fold"` or
+    `"distinct"`. Every emitted pair is CO-DELIVERED (the gate; see the module
+    docstring). NOTHING loads this — it is a worklist for humans; the fold lands
+    via `concept_groups.toml` and a sever is a no-op (the edge is already gone).
+    Read-only worklist only."""
     # Group suspects by family (register_fqid, provider_key) so each family's
     # pairs emit together; sort families high-value-first (most pairs first), then
     # register / provider_key for stability.
@@ -318,9 +393,15 @@ def render_suspects_toml(result: SplitSiblingResult) -> str:
         "reg-meta-build split-sibling-suspects.",
         "#",
         "# A SPLIT family is the variables the A2.2 triage minted under one source",
-        "# var_id (shared (register, provider_key)). A SUSPECT pair disagrees on",
-        "# physical SHAPE in a way that suggests one delivery was mis-imported — a",
-        "# numeric-vs-text type_flip, or a length_disagree on an unclassifiable type.",
+        "# var_id (shared (register, provider_key)). Only CO-DELIVERED pairs (the two",
+        "# siblings overlap in some register_variant era) are listed — a temporal",
+        "# rename/split that never overlapped is not a mis-import. Each pair's reason,",
+        "# in build-gate precedence:",
+        "#   code_vs_label   — a code column + its <stem>namn label: a representation",
+        "#                     /fold candidate, NOT an import-bug suspect.",
+        "#   type_flip       — one side numeric, the other text (the primary",
+        "#                     SCB/SOS import-bug signal).",
+        "#   length_disagree — an unclassifiable type with differing widths.",
         "# #800 retired the `related` edge; this re-derives the signal READ-ONLY for",
         "# the deferred fold-or-sever curation.",
         "#",

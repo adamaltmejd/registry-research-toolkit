@@ -3,9 +3,10 @@
 
 Mirrors the other read-only diagnostics' test shape (`test_doc_coverage.py`,
 `test_concept_group_candidates.py`): `infer_split_sibling_suspects` over a
-hand-built synthetic DB exercises the type_flip / length_disagree / same-shape /
-co-grouped classification, and `render_suspects_toml` round-trips through a TOML
-parse. A separate test proves the diagnostic never mutates the DB.
+hand-built synthetic DB exercises the co-delivery gate plus the code_vs_label /
+type_flip / length_disagree / same-shape / co-grouped classification, and
+`render_suspects_toml` round-trips through a TOML parse. A separate test proves
+the diagnostic never mutates the DB.
 
 Fully synthetic (CLAUDE.md): builds its own in-memory DB via the `_slugged_db`
 helpers; never reads a real built DB.
@@ -49,14 +50,19 @@ def _add_sibling(
     data_length: str | None,
     value_set_id: int | None = None,
     delivery_column: str | None = None,
+    valid_from: str = "2018-01-01",
     valid_to: str = "9999-12-31",
 ) -> None:
     """Add one split sibling: a `variable` (sharing `var_id`/provider_key with its
-    family) plus its representative `variable_state` (the latest-era shape)."""
+    family) plus its representative `variable_state` (the latest-era shape). The
+    default `[valid_from, valid_to]` spans the whole timeline, so siblings added
+    with the defaults are CO-DELIVERED (their eras overlap); pass disjoint windows
+    to make a pair non-co-delivered."""
     add_variable(conn, register_id=_REGISTER_ID, var_id=var_id, name=name, slug=slug)
     _add_state(
         conn,
         variable_slug=slug,
+        valid_from=valid_from,
         valid_to=valid_to,
         data_type=data_type,
         data_length=data_length,
@@ -120,14 +126,21 @@ def _co_group(conn: sqlite3.Connection, *slugs: str) -> None:
 
 
 def _seed_corpus(conn: sqlite3.Connection) -> None:
-    """Seed four split families exercising every branch:
+    """Seed six split families exercising every branch. Unless noted, both siblings
+    span the default whole-timeline window, so the pair is CO-DELIVERED:
 
-    - var_id 100 — type_flip (numeric `int` vs text `varchar`) → suspect;
+    - var_id 100 — type_flip (numeric `int` vs text `varchar`, non-code/label
+      delivery columns) → suspect `type_flip`;
     - var_id 200 — length_disagree (both `Datum`/other, lengths 8 vs 10) → suspect;
     - var_id 300 — same shape (both `int`, length 4) → NOT a suspect;
-    - var_id 400 — type_flip AND co-grouped → suspect flagged co_grouped.
+    - var_id 400 — type_flip AND co-grouped → suspect flagged co_grouped;
+    - var_id 600 — code/label (`<stem>` numeric + `<stem>namn` text) → suspect
+      `code_vs_label`, NOT type_flip (code-vs-label precedes the type-flip check);
+    - var_id 700 — type_flip shape but NON-co-delivered (disjoint windows) → NOT a
+      suspect (the co-delivery gate drops it).
     """
-    # type_flip family.
+    # type_flip family. Delivery columns are deliberately NOT a code/label pair
+    # (`BeloppTxt` doesn't carry the `namn` label suffix) so the reason is type_flip.
     _add_sibling(
         conn,
         var_id=100,
@@ -198,13 +211,59 @@ def _seed_corpus(conn: sqlite3.Connection) -> None:
         data_length="10",
     )
     _co_group(conn, "cog-num", "cog-text")
+    # code/label family: `Sun2000` (numeric code) + `Sun2000Namn` (text label),
+    # co-delivered. The shapes also form a numeric/text type_flip, but the
+    # code-vs-label name check PRECEDES the type-flip check → reason code_vs_label.
+    _add_sibling(
+        conn,
+        var_id=600,
+        slug="cl-code",
+        name="Sun2000",
+        data_type="int",
+        data_length="4",
+        delivery_column="Sun2000",
+    )
+    _add_sibling(
+        conn,
+        var_id=600,
+        slug="cl-label",
+        name="Sun2000",
+        data_type="varchar",
+        data_length="80",
+        delivery_column="Sun2000Namn",
+    )
+    # NON-co-delivered family: a numeric/text type_flip SHAPE, but the two siblings
+    # never overlapped in a register_variant era (disjoint windows) → the
+    # co-delivery gate drops it (a temporal rename/split, not a mis-import).
+    _add_sibling(
+        conn,
+        var_id=700,
+        slug="nocod-num",
+        name="Region",
+        data_type="int",
+        data_length="4",
+        valid_from="2010-01-01",
+        valid_to="2014-12-31",
+    )
+    _add_sibling(
+        conn,
+        var_id=700,
+        slug="nocod-text",
+        name="Region",
+        data_type="varchar",
+        data_length="20",
+        valid_from="2015-01-01",
+        valid_to="9999-12-31",
+    )
     conn.commit()
 
 
 class TestRelationReason:
-    """Unit coverage of the shape classifier (mirrors `_import_bug_suspect`)."""
+    """Unit coverage of the pair classifier (mirrors `_split_relation_kind`'s
+    precedence: code_vs_label → type_flip → length_disagree). The classifier
+    assumes the pair is already CO-DELIVERED (the gate is applied by the caller)."""
 
-    def _shape(self, data_type, data_length):
+    def _shape(self, data_type, data_length, delivery_column=None):
         from reg_meta_build.split_sibling_suspects import SiblingShape
 
         return SiblingShape(
@@ -214,13 +273,35 @@ class TestRelationReason:
             data_type=data_type,
             data_length=data_length,
             has_value_set=False,
-            delivery_column=None,
+            delivery_column=delivery_column,
         )
 
     def test_type_flip(self) -> None:
         assert (
             _split_relation_reason(
                 self._shape("int", "8"), self._shape("varchar", "20")
+            )
+            == "type_flip"
+        )
+
+    def test_code_vs_label_precedes_type_flip(self) -> None:
+        # A `<stem>` (numeric) + `<stem>namn` (text) pair is a numeric/text flip on
+        # shape, but the code-vs-label name check runs FIRST → code_vs_label.
+        assert (
+            _split_relation_reason(
+                self._shape("int", "4", delivery_column="Sun2000"),
+                self._shape("varchar", "80", delivery_column="Sun2000Namn"),
+            )
+            == "code_vs_label"
+        )
+
+    def test_non_code_label_columns_stay_type_flip(self) -> None:
+        # Delivery columns present but NOT a code/label pair → falls through to the
+        # shape check (type_flip).
+        assert (
+            _split_relation_reason(
+                self._shape("int", "8", delivery_column="Belopp"),
+                self._shape("varchar", "20", delivery_column="BeloppTxt"),
             )
             == "type_flip"
         )
@@ -256,12 +337,14 @@ class TestInfer:
         conn = _base_db()
         _seed_corpus(conn)
         result = infer_split_sibling_suspects(conn)
-        # 4 families, 8 variables total (the #805-shape sanity check, in miniature).
-        assert result.family_count == 4
-        assert result.family_variable_count == 8
-        # Three of the four families are suspects (same-shape family is not).
-        assert result.total_pairs == 3
-        assert len(result.suspects) == 3
+        # 6 families, 12 variables total (the #805-shape sanity check, in miniature).
+        assert result.family_count == 6
+        assert result.family_variable_count == 12
+        # Four families are suspects: type_flip (100), length_disagree (200),
+        # co-grouped type_flip (400), code_vs_label (600). The same-shape family
+        # (300) and the non-co-delivered family (700) are NOT flagged.
+        assert result.total_pairs == 4
+        assert len(result.suspects) == 4
         assert result.co_grouped_count == 1
 
     def test_each_pair_classified(self) -> None:
@@ -276,10 +359,37 @@ class TestInfer:
         # co-grouped type_flip family 400.
         cog = by_key[("400", "type_flip")]
         assert cog.co_grouped is True
+        # code/label family 600 → code_vs_label, NOT type_flip (precedence).
+        assert ("600", "code_vs_label") in by_key
+        assert ("600", "type_flip") not in by_key
         # The non-co-grouped families are NOT flagged.
         assert by_key[("100", "type_flip")].co_grouped is False
-        # The same-shape family (300) produced no suspect.
-        assert all(s.provider_key != "300" for s in result.suspects)
+        # The same-shape family (300) and non-co-delivered family (700) produced
+        # no suspect.
+        assert all(s.provider_key not in {"300", "700"} for s in result.suspects)
+
+    def test_non_codelivered_pair_not_flagged(self) -> None:
+        # A numeric/text type_flip SHAPE whose two siblings never overlapped in a
+        # register_variant era is a temporal rename/split, not a mis-import — the
+        # co-delivery gate drops it (mirrors the build short-circuit).
+        conn = _base_db()
+        _seed_corpus(conn)
+        result = infer_split_sibling_suspects(conn)
+        assert all(s.provider_key != "700" for s in result.suspects)
+
+    def test_code_label_pair_is_code_vs_label_not_type_flip(self) -> None:
+        # `Sun2000` (numeric code) + `Sun2000Namn` (text label), co-delivered: the
+        # shapes are a numeric/text flip, but the code-vs-label name check runs
+        # FIRST (build-gate precedence), so the reason is code_vs_label.
+        conn = _base_db()
+        _seed_corpus(conn)
+        result = infer_split_sibling_suspects(conn)
+        cl = next(s for s in result.suspects if s.provider_key == "600")
+        assert cl.reason == "code_vs_label"
+        assert {cl.a.delivery_column, cl.b.delivery_column} == {
+            "Sun2000",
+            "Sun2000Namn",
+        }
 
     def test_register_fqid_and_shape_evidence(self) -> None:
         conn = _base_db()
@@ -365,14 +475,14 @@ class TestRender:
         toml_text = render_suspects_toml(result)
         parsed = tomllib.loads(toml_text)
         pairs = parsed["pair"]
-        assert len(pairs) == 3
+        assert len(pairs) == 4
         # Every pair carries the curation contract: register, the two variable
         # FQIDs, the reason, co_grouped, and the empty disposition placeholder.
         for p in pairs:
             assert p["register"] == "scb/lisa"
             assert p["variable_a"].startswith("scb/lisa/")
             assert p["variable_b"].startswith("scb/lisa/")
-            assert p["reason"] in {"type_flip", "length_disagree"}
+            assert p["reason"] in {"code_vs_label", "type_flip", "length_disagree"}
             assert p["disposition"] == ""
             assert isinstance(p["co_grouped"], bool)
         # The co-grouped pair round-trips its flag.
