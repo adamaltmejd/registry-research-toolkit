@@ -18,21 +18,30 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_register, add_variable, build_slugged_db
+from _slugged_db import (
+    add_register,
+    add_state,
+    add_value_set,
+    add_variable,
+    build_slugged_db,
+)
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.concept_groups import (
     Accept,
     ClassificationGroup,
     ClassificationGroupMember,
+    CodeLabelPair,
     CuratedGroup,
     CuratedMember,
     _insert_group,
     derive_classification_succession,
     load_classification_groups,
+    load_code_label_pairs,
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
 )
+from reg_meta_build.db import _append_code_label_edges
 
 if TYPE_CHECKING:
     import sqlite3
@@ -1832,3 +1841,350 @@ class TestAcceptLoader:
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, text)
         assert exc.value.code == "concept_groups_invalid"
+
+
+# ── code↔label pairs (#923) ─────────────────────────────────────────────────
+
+
+def _code_label_db(
+    *,
+    code_slug: str = "partikod",
+    label_slug: str = "partinamn",
+    code_has_value_set: bool = True,
+    label_has_value_set: bool = False,
+    co_delivered: bool = True,
+):
+    """Synthetic scb/lisa DB with a coded variable + its label variable, both
+    co-delivered in variant 10 (the fixture default). The code variable's state
+    carries a `value_set_id`; the label variable's does not. Toggles flip each
+    structural-guard precondition so the guard tests can drive a single failure."""
+    conn = build_slugged_db(classification=None)
+    add_value_set(conn, value_set_id=500, codes=[("01", "A"), ("02", "B")])
+    add_variable(conn, register_id=1, var_id=200, name="Parti", slug=code_slug)
+    add_variable(conn, register_id=1, var_id=201, name="Partinamn", slug=label_slug)
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug=code_slug,
+        register_variant_id=10,
+        delivery_column_name="Partikod",
+        value_set_id=500 if code_has_value_set else None,
+    )
+    # The label variable's co-delivery is the SHARED register_variant_id with the
+    # code variable's state; flip to a different variant to break it.
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug=label_slug,
+        register_variant_id=10 if co_delivered else 11,
+        delivery_column_name="Partinamn",
+        value_set_id=500 if label_has_value_set else None,
+    )
+    conn.commit()
+    return conn
+
+
+def _pair(code_slug: str = "partikod", label_slug: str = "partinamn") -> CodeLabelPair:
+    return CodeLabelPair(
+        code_provider="scb",
+        code_register="lisa",
+        code_variable=code_slug,
+        label_provider="scb",
+        label_register="lisa",
+        label_variable=label_slug,
+    )
+
+
+class TestCodeLabelPairs:
+    """A curated code↔label pair (#923) feeds the edge `sibling_edges` channel so
+    the code variable and its denormalized label column fold into ONE axis-less
+    edge concept group."""
+
+    def test_pair_folds_into_one_axisless_group(self) -> None:
+        conn = _code_label_db()
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (_pair(),), _SCB, siblings)
+        # One (code_vid, label_vid) edge appended.
+        assert siblings == [(_vid(conn, "partikod"), _vid(conn, "partinamn"))]
+
+        counts = materialize_concept_groups(conn, edge_siblings=siblings)
+        assert counts["edge_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"partikod"}
+        g = groups["partikod"]
+        assert g["source"] == "edge"
+        assert g["kind"] == "variable"
+        assert g["register_id"] == 1
+        assert g["members"] == ["partikod", "partinamn"]
+        # Axis-less: zero concept_group_axis rows, both members carry no facets and
+        # a NULL delivery_column_name.
+        assert g["axes"] == []
+        assert _facets(conn, "partikod") == []
+        assert _facets(conn, "partinamn") == []
+        delivery_cols = [
+            r[0]
+            for r in conn.execute(
+                "SELECT delivery_column_name FROM concept_group_variable"
+            )
+        ]
+        assert delivery_cols == [None, None]
+
+    def test_provider_not_in_build_is_skipped(self) -> None:
+        # A partial --providers build that excludes the pair's provider can't
+        # represent it — skip silently (no edge appended, no raise).
+        conn = _code_label_db()
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (_pair(),), frozenset({"sos"}), siblings)
+        assert siblings == []
+
+    def test_label_provider_not_in_build_is_skipped(self) -> None:
+        # The provider gate checks BOTH endpoints (mirroring materialize_same_as):
+        # when only the LABEL provider is absent from the active set, the pair is
+        # skipped silently — no EXIT_CONFIG raise, no edge appended. (The structural
+        # guards never run, so a mismatched label endpoint can't trip them.)
+        conn = _code_label_db()
+        pair = CodeLabelPair("scb", "lisa", "partikod", "sos", "lisa", "partinamn")
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (pair,), _SCB, siblings)
+        assert siblings == []
+
+    def test_label_owning_value_set_fails(self) -> None:
+        conn = _code_label_db(label_has_value_set=True)
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_code_owning_no_value_set_fails(self) -> None:
+        conn = _code_label_db(code_has_value_set=False)
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_not_co_delivered_fails(self) -> None:
+        conn = _code_label_db(co_delivered=False)
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_dangling_code_fqid_fails(self) -> None:
+        conn = _code_label_db()
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(code_slug="nope"),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_unresolved"
+
+    def test_dangling_label_fqid_fails(self) -> None:
+        conn = _code_label_db()
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(label_slug="nope"),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_unresolved"
+
+    def test_two_pairs_sharing_label_fold_into_one_group(self) -> None:
+        # The real shape of the shipped landsting/glyfosat/vaxtskyddsmedel clusters:
+        # two coded variables (each owns a value_set) co-delivered with ONE shared
+        # denormalized label column. Two pairs share the label endpoint, so the edge
+        # component builder unions them into ONE axis-less 3-member group.
+        conn = build_slugged_db(classification=None)
+        add_value_set(conn, value_set_id=500, codes=[("01", "A"), ("02", "B")])
+        add_value_set(conn, value_set_id=501, codes=[("11", "X"), ("12", "Y")])
+        add_variable(conn, register_id=1, var_id=200, name="Kod A", slug="koda")
+        add_variable(conn, register_id=1, var_id=201, name="Kod B", slug="kodb")
+        add_variable(conn, register_id=1, var_id=202, name="Namn", slug="namn")
+        # Both codes own a value_set; the shared label owns none; all three
+        # co-delivered in variant 10.
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="koda",
+            register_variant_id=10,
+            delivery_column_name="KodA",
+            value_set_id=500,
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kodb",
+            register_variant_id=10,
+            delivery_column_name="KodB",
+            value_set_id=501,
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="namn",
+            register_variant_id=10,
+            delivery_column_name="Namn",
+            value_set_id=None,
+        )
+        conn.commit()
+        pairs = (
+            CodeLabelPair("scb", "lisa", "koda", "scb", "lisa", "namn"),
+            CodeLabelPair("scb", "lisa", "kodb", "scb", "lisa", "namn"),
+        )
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, pairs, _SCB, siblings)
+        assert siblings == [
+            (_vid(conn, "koda"), _vid(conn, "namn")),
+            (_vid(conn, "kodb"), _vid(conn, "namn")),
+        ]
+
+        counts = materialize_concept_groups(conn, edge_siblings=siblings)
+        assert counts["edge_groups"] == 1
+        groups = _groups(conn)
+        assert len(groups) == 1
+        (g,) = groups.values()
+        assert g["source"] == "edge"
+        assert set(g["members"]) == {"koda", "kodb", "namn"}
+        # Axis-less: no axis rows, no member facets, NULL delivery columns.
+        assert g["axes"] == []
+        assert _facets(conn, "koda") == []
+        assert _facets(conn, "kodb") == []
+        assert _facets(conn, "namn") == []
+        delivery_cols = {
+            r[0]
+            for r in conn.execute(
+                "SELECT delivery_column_name FROM concept_group_variable"
+            )
+        }
+        assert delivery_cols == {None}
+
+    def test_curated_group_excludes_pair_endpoint(self) -> None:
+        # Curated precedence (#591) over the code-label edge: when a curated
+        # `[[variable_group]]` already claims one of a pair's endpoints, the edge
+        # fold excludes it (the `exclude_variable_ids` path), so the component drops
+        # below 2 survivors and the edge channel mints no overlapping group — the
+        # one-group-per-variable invariant holds. Mirrors
+        # TestEdgeGroups.test_curated_member_excluded_from_edge_fold, driving the
+        # edge via `_append_code_label_edges`.
+        conn = _code_label_db()
+        add_variable(conn, register_id=1, var_id=202, name="Other", slug="other")
+        conn.commit()
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (_pair(),), _SCB, siblings)
+        assert siblings == [(_vid(conn, "partikod"), _vid(conn, "partinamn"))]
+        # The curated group claims the pair's code endpoint (+ an unrelated member),
+        # so the {partikod, partinamn} component drops to 1 survivor.
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="fam",
+            label="Familj",
+            axes=_axis1("part"),
+            members=(
+                _member("partikod", "part", "1", "A"),
+                _member("other", "part", "2", "O"),
+            ),
+        )
+        counts = materialize_concept_groups(
+            conn, (curated,), edge_siblings=siblings, providers=_SCB
+        )
+        assert counts["edge_groups"] == 0  # component below 2 survivors
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"fam"}
+        assert groups["fam"]["members"] == ["other", "partikod"]
+        # No minted group folds partikod and partinamn together.
+        for g in groups.values():
+            assert not ({"partikod", "partinamn"} <= set(g["members"]))
+
+
+class TestCodeLabelPairLoader:
+    @staticmethod
+    def _load(tmp_path, text: str):
+        path = tmp_path / "code_label_pairs.toml"
+        path.write_text(text, encoding="utf-8")
+        return load_code_label_pairs(path)
+
+    def test_missing_file_is_empty(self, tmp_path) -> None:
+        assert load_code_label_pairs(None) == ()
+        assert load_code_label_pairs(tmp_path / "absent.toml") == ()
+
+    def test_parses_pair(self, tmp_path) -> None:
+        pairs = self._load(
+            tmp_path,
+            """
+            [[pair]]
+            code  = "scb/lisa/partikod"
+            label = "scb/lisa/partinamn"
+            """,
+        )
+        assert pairs == (_pair(),)
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            # missing label
+            """
+            [[pair]]
+            code = "scb/lisa/partikod"
+            """,
+            # missing code
+            """
+            [[pair]]
+            label = "scb/lisa/partinamn"
+            """,
+            # 2-segment code FQID
+            """
+            [[pair]]
+            code  = "scb/partikod"
+            label = "scb/lisa/partinamn"
+            """,
+            # 2-segment label FQID
+            """
+            [[pair]]
+            code  = "scb/lisa/partikod"
+            label = "lisa/partinamn"
+            """,
+            # empty segment
+            """
+            [[pair]]
+            code  = "scb//partikod"
+            label = "scb/lisa/partinamn"
+            """,
+        ],
+    )
+    def test_malformed_entry_fails(self, tmp_path, text: str) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_unknown_top_level_key_fails(self, tmp_path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, '[[pairs]]\ncode = "a/b/c"\nlabel = "a/b/d"\n')
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_duplicate_pair_fails(self, tmp_path) -> None:
+        # Two identical (code, label) entries are drift — fail fast (EXIT_CONFIG,
+        # the dedicated duplicate-pair code). The committed TOML is deduplicated, so
+        # this guards future drift.
+        text = """
+        [[pair]]
+        code  = "scb/lisa/partikod"
+        label = "scb/lisa/partinamn"
+        [[pair]]
+        code  = "scb/lisa/partikod"
+        label = "scb/lisa/partinamn"
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_self_pair_fails(self, tmp_path) -> None:
+        # A pair whose code and label FQID are identical is drift — a variable can't
+        # decode itself. Fail fast at load with a clear error, rather than letting
+        # the contradictory value_set guards fire at materialize time.
+        text = """
+        [[pair]]
+        code  = "scb/lisa/partikod"
+        label = "scb/lisa/partikod"
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"

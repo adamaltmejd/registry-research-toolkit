@@ -85,7 +85,12 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
 
 from ._components import DisjointSet
-from ._curation import curation_error, load_curation_entries, require_str
+from ._curation import (
+    curation_error,
+    load_curation_entries,
+    require_fqid,
+    require_str,
+)
 
 # A concept-group key is one URL path segment in
 # `/catalog/group/<provider>/<register>/<key>` (#640). Path-safe = the RFC 3986
@@ -254,6 +259,31 @@ class ClassificationGroup:
     members: tuple[ClassificationGroupMember, ...]
 
 
+@dataclass(frozen=True)
+class CodeLabelPair:
+    """One curated code↔label column pair (#923): a coded variable (the `code`
+    endpoint, which OWNS a `value_set`) co-delivered with its denormalized label
+    column (the `label` endpoint, which owns none) — `partikod`+`partinamn`,
+    `kommun`+`kommunnamn`. They are ONE concept, folded into a single register-
+    scoped AXIS-LESS `edge` concept group by feeding the pair into the existing
+    edge `sibling_edges` channel. Each endpoint is parsed independently as a
+    3-segment `provider/register/variable` FQID; the loader does not ASSUME one
+    provider/register per pair, but Guard 3 (co-delivery via a shared
+    `register_variant`) requires both endpoints in one register, so in practice
+    every pair is same-register/provider — this is NOT a cross-register or
+    cross-provider folding mechanism. The code/label distinction is NOT stored by
+    this change and NO read-side derivation ships here; it is DERIVABLE from
+    value_set ownership (the `code` member owns a value_set, the `label` member
+    owns none) as a future read-side affordance."""
+
+    code_provider: str
+    code_register: str
+    code_variable: str
+    label_provider: str
+    label_register: str
+    label_variable: str
+
+
 def repo_concept_groups_path() -> Path | None:
     """`reg_meta_build/concept_groups.toml` from a repo checkout, or None
     (wheel installs don't ship curation — it's a maintainer artifact like the
@@ -277,11 +307,29 @@ def repo_concept_groups_auto_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
+def repo_code_label_pairs_path() -> Path | None:
+    """`reg_meta_build/code_label_pairs.toml` from a repo checkout, or None
+    (wheel installs don't ship curation — it's a maintainer artifact like the
+    slug TOMLs). Sibling of `repo_concept_groups_path()` at the package root; the
+    curated code↔label pair list (#923) the build folds into axis-less `edge`
+    groups via the same `edge_siblings` channel."""
+    candidate = Path(__file__).resolve().parent.parent.parent / "code_label_pairs.toml"
+    return candidate if candidate.is_file() else None
+
+
 _require_str = functools.partial(
     require_str,
     code="concept_groups_invalid",
     prefix="concept_groups",
     file_name="concept_groups.toml",
+)
+
+_require_pair_fqid = functools.partial(
+    require_fqid,
+    code="code_label_pairs_invalid",
+    prefix="code_label_pairs",
+    entry_table="[[pair]]",
+    file_name="code_label_pairs.toml",
 )
 
 
@@ -771,6 +819,67 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
     return tuple(out)
 
 
+def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
+    """Parse the curated code↔label pair TOML (`reg_meta_build/code_label_pairs.toml`,
+    #923). Empty when no file (synthetic test builds, wheel installs).
+
+    Load-time validation (all EXIT_CONFIG, actionable): only `[[pair]]` top-level;
+    each entry sets `code` AND `label`, each a 3-segment `provider/register/variable`
+    FQID; `(code, label)` FQID tuples are unique (a duplicate pair is drift, mirroring
+    the duplicate-key rejection in `load_concept_groups`). Endpoint RESOLUTION (do the
+    variables exist? is the code the value-set owner? are they co-delivered?) happens
+    at materialize time against the built DB (`_append_code_label_edges`), not here."""
+    entries = load_curation_entries(
+        path,
+        entry_key="pair",
+        label="code-label-pair",
+        prefix="code_label_pairs",
+        code_base="code_label_pairs",
+        file_name="code_label_pairs.toml",
+        entry_fields="code / label (both 3-segment FQIDs)",
+    )
+    out: list[CodeLabelPair] = []
+    seen_pairs: set[tuple[tuple[str, str, str], tuple[str, str, str]]] = set()
+    for entry in entries:
+        code = _require_pair_fqid(entry, "code")
+        label = _require_pair_fqid(entry, "label")
+        # Reject a self-pair (code == label): a variable can't be both endpoints of
+        # a code↔label decode. Caught here with a clear loader error rather than
+        # letting the contradictory value_set guards fire at materialize time.
+        if code == label:
+            raise curation_error(
+                "code_label_pairs_invalid",
+                f"code_label_pairs pair has identical `code` and `label` FQID "
+                f"{'/'.join(code)!r}.",
+                "A code↔label pair needs two distinct variables. Fix or drop the "
+                "pair in reg_meta_build/code_label_pairs.toml.",
+            )
+        # Reject duplicate (code, label) FQID tuples (mirrors `load_concept_groups`
+        # rejecting duplicate keys in the same file). The committed TOML is
+        # deduplicated, so this is a drift guard; the full FQID keys the set since
+        # two registers can share a variable slug.
+        if (code, label) in seen_pairs:
+            raise curation_error(
+                "code_label_pairs_invalid",
+                f"code_label_pairs duplicate pair {'/'.join(code)!r} <-> "
+                f"{'/'.join(label)!r}.",
+                "List each (code, label) pair once in "
+                "reg_meta_build/code_label_pairs.toml.",
+            )
+        seen_pairs.add((code, label))
+        out.append(
+            CodeLabelPair(
+                code_provider=code[0],
+                code_register=code[1],
+                code_variable=code[2],
+                label_provider=label[0],
+                label_register=label[1],
+                label_variable=label[2],
+            )
+        )
+    return tuple(out)
+
+
 # ── derivation passes ───────────────────────────────────────────────────────
 
 
@@ -873,7 +982,11 @@ def _derive_edge_groups(
     """Dimension 0: one group per connected component of within-register
     split-sibling pairs. `edge_siblings` is the IN-BUILD set of same-definition
     sibling pairs the triage minted (`(variable_id, variable_id)`) — NOT a table
-    round-trip; they are never persisted to any shipped table.
+    round-trip; they are never persisted to any shipped table. Since #923 it ALSO
+    carries curated code↔label decode pairs (`code_label_pairs.toml`, appended by
+    `_append_code_label_edges`), so an `edge` group is NOT exclusively an auto
+    same-definition split — a future feature must not assume that (e.g. must not
+    auto-merge edge-group members into one variable identity).
 
     Only a pair whose BOTH endpoints are slugged (`meta`) AND share a register is
     unioned — mirroring the old table query's `WHERE slug IS NOT NULL` join and
