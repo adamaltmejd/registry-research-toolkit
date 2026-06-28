@@ -2512,18 +2512,17 @@ panel_time_grain = "row"
 # `Ksjusni` column (2011–2023), the `bransch` column (2011), and the 2009-only
 # `lgrp` predecessor. All four are the SAME SNI näringsgren concept under
 # different KSju delivery columns; they are grouped back into one näringsgren
-# family via concept_groups.toml (group key `naringsgren`). Each sibling's slug
-# is curated below (or at its existing `lgrp` entry). This chain keeps the bare
-# `naringsgren`; keyed on the split-sibling discriminator — the earliest delivery
-# column NG1_2007 (2006) → `ng1-2007`.
+# family via concept_groups.toml (group key `naringsgren`). This chain keeps the
+# bare `naringsgren`; the sibling slugs below name the semantic role rather than
+# echoing delivery-column names (#875/#931).
 [variable."195.4027.ng1-2007"]
 slug = "naringsgren"
 
 [variable."195.4027.bransch"]
-slug = "naringsgren-bransch"
+slug = "naringsgren-2siffer"
 
 [variable."195.4027.ksjusni"]
-slug = "naringsgren-ksjusni"
+slug = "naringsgren-rams"
 
 # Energianvändningen inom fiskesektorn
 [register."196"]
@@ -29139,10 +29138,10 @@ slug = "sarskoleform-2"
 
 # register 195 (ksju)
 # var 4027 näringsgren 2009-only predecessor: the `lgrp` sibling of the #845
-# split (see the `195.4027.ng1-2007` entry above). It's the 2009 member of the
-# näringsgren group (concept_groups.toml key `naringsgren`).
+# split (see the `195.4027.ng1-2007` entry above). It's the 2009 grouped-SNI
+# member of the näringsgren group (concept_groups.toml key `naringsgren`).
 [variable."195.4027.lgrp"]
-slug = "naringsgren-lgrp"
+slug = "naringsgren-grupperad-2009"
 
 # register 198 (avgifter-hyror)
 [variable."198.17046.totlgh"]

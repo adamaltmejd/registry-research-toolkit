@@ -1633,9 +1633,10 @@ class TestMovedEdges:
         # classification replaced_by (the #579 sun1996 → niva/inriktning/grupp
         # split) + 2 #770 ICD/KS disease-classification succession edges + 7
         # #814 iot disponibel-inkomst 2004-års-definition succession edges + 1
+        # #875 KSju lgrp → NgGr1 representation-grain succession edge + 1
         # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
         # firm-key variant-scoped gap-fill round-trip edges.
-        assert len(rel.replaced_by) == 28
+        assert len(rel.replaced_by) == 29
         # #508 (615) + #737 (232) = 847 curated same_as identity edges; all
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.
@@ -1679,6 +1680,16 @@ class TestMovedEdges:
             == ("scb/rtb/pnr", "scb/rtb/personnr")
         )
         assert (rtb.predecessor_column, rtb.successor_column) == ("PNR", "PersonNr")
+        # The #875 KSju grouped-SNI handoff is also representation-grain, but
+        # crosses sibling variables inside one register rather than columns inside
+        # one variable.
+        ksju = next(
+            e
+            for e in rel.replaced_by
+            if str(e.predecessor) == "scb/ksju/naringsgren-grupperad-2009"
+        )
+        assert str(ksju.successor) == "scb/ksju/naringsgren"
+        assert (ksju.predecessor_column, ksju.successor_column) == ("lgrp", "NgGr1")
         # The #846 FRIDA firm-key gap-fill: a variant-SCOPED representation
         # round-trip (`borgnr` → `PERSORGNR` → `borgnr`) on the
         # punktskatter-for-energi variant, time-ordered 2014 < 2018. Verifies the

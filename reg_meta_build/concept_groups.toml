@@ -753,25 +753,25 @@ delivery_column = "NGS1"
 coords = [{ axis = "nivo", value = "5-siffer", label = "5-siffrig SNI (FDB)" }]
 
 [[variable_group.members]]
-variable = "naringsgren-ksjusni"
+variable = "naringsgren-rams"
 delivery_column = "Ksjusni"
 coords = [{ axis = "nivo", value = "5-siffer", label = "5-siffrig SNI (RAMS)" }]
 
-# Grupperad SNI — NgGr1 (2010–11); lgrp (2009) is its predecessor (cross-variable
-# `replaced_by` succession is a follow-up; here both stand as grouped reps).
+# Grupperad SNI — lgrp (2009) is the representation-grain predecessor of NgGr1
+# (2010–11); the succession edge is authored in curation/relations.toml.
 [[variable_group.members]]
 variable = "naringsgren"
 delivery_column = "NgGr1"
 coords = [{ axis = "nivo", value = "grupperad", label = "Grupperad SNI" }]
 
 [[variable_group.members]]
-variable = "naringsgren-lgrp"
+variable = "naringsgren-grupperad-2009"
 delivery_column = "lgrp"
 coords = [{ axis = "nivo", value = "grupperad", label = "Grupperad SNI (2009)" }]
 
 # 2-siffrig SNI
 [[variable_group.members]]
-variable = "naringsgren-bransch"
+variable = "naringsgren-2siffer"
 delivery_column = "bransch"
 coords = [{ axis = "nivo", value = "2-siffer", label = "2-siffrig SNI" }]
 

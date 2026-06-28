@@ -17374,7 +17374,7 @@
           "representation": "NGS1"
         },
         {
-          "variable": "scb/ksju/naringsgren-ksjusni",
+          "variable": "scb/ksju/naringsgren-rams",
           "type": "opaque",
           "representation": "Ksjusni"
         },

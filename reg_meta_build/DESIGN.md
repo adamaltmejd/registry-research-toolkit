@@ -1468,18 +1468,20 @@ override. KSju has ONE register variant whose unit is the PERSON, so all these c
 are the same concept (the employee's workplace SNI); SCB merely ships several IN
 PARALLEL per edition, which the `variable_state` uniqueness index (one delivery column
 per variable × variant × period) cannot hold in one variable — so the build splits them
-into siblings
-(`naringsgren`/`naringsgren-ksjusni`/`naringsgren-bransch`/`naringsgren-lgrp`). A
-**representation-grained** `[[variable_group]]` in `concept_groups.toml` (group key
-`naringsgren`, register `scb/ksju`) then re-unifies them: one member per live delivery
-column, faceted only by detail level (`nivo`: 5-siffer / 2-siffer / grupperad). There is
-NO entity axis (all are the person's workplace SNI), and vintage spellings ride each
-variable's own state timeline / `replaced_by` rather than a facet. This is strictly
-better than the old fiat-fold, which — bound by the same uniqueness index — could only
-keep one column per period and DROPPED the co-delivered others (lossy). It also resolved
-the binding / default-selection precondition without a remapping step: since the sibling
-FQIDs never existed as a fiat-folded FQID, there were no existing bindings to remap.
-Lower-risk than `column_merge`, and now done.
+into siblings (`naringsgren`/`naringsgren-rams`/`naringsgren-2siffer`/
+`naringsgren-grupperad-2009`). A **representation-grained** `[[variable_group]]` in
+`concept_groups.toml` (group key `naringsgren`, register `scb/ksju`) then re-unifies
+them: one member per live delivery column, faceted only by detail level (`nivo`:
+5-siffer / 2-siffer / grupperad). There is NO entity axis (all are the person's
+workplace SNI), and vintage spellings ride each variable's own state timeline /
+`replaced_by` rather than a facet. The 2009 grouped-SNI `lgrp` representation is
+authored as a representation-grain successor edge to `NgGr1` in
+`curation/relations.toml` (#875). This is strictly better than the old fiat-fold, which
+— bound by the same uniqueness index — could only keep one column per period and DROPPED
+the co-delivered others (lossy). It also resolved the binding / default-selection
+precondition without a remapping step: since the sibling FQIDs never existed as a
+fiat-folded FQID, there were no existing bindings to remap. Lower-risk than
+`column_merge`, and now done.
 
 **`codelivery` — keep (confirm-only).** Order-bearing: it pins which
 `value_set_version_label` (coding) a single delivery column KEEPS when it carries two

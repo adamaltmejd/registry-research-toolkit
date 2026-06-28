@@ -148,6 +148,20 @@ to = "scb/lisa/agi3astsni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
+# ── KSju näringsgren: grouped-SNI 2009 column → NgGr1 (#875) ──
+#    The 2009 `lgrp` sibling is the grouped-SNI predecessor of `NgGr1`
+#    (2010–11). This is representation-grain because the succession is between
+#    delivery columns inside the curated KSju näringsgren concept group, not a
+#    whole-register or cross-register identity relation.
+[[edge]]
+type = "replaced_by"
+from = "scb/ksju/naringsgren-grupperad-2009"
+to = "scb/ksju/naringsgren"
+from_column = "lgrp"
+to_column = "NgGr1"
+effective_year = 2010
+note = "KSju grouped SNI moved from lgrp (2009) to NgGr1 in 2010"
+
 # ── LISA yrke (SSYK): SSYK 96 → SSYK 2012 J16-frame succession (#400) ──
 #    The härledd J16-ram occupation columns recut from SSYK 96 to SSYK 2012 at
 #    årgång 2014: the SSYK 96 3-/4-siffer J16 columns (2010–2013, the canonical-
