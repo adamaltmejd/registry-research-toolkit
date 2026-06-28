@@ -1059,8 +1059,8 @@ or re-pointed — linkage is additive.
    `classification_replaced_by`; #579). For each remaining multi-family value set, group
    candidates into vintage families keyed on `(chain root, slug stem)` (recursive CTE
    over `supersedes_id`). A family is a **multi-vintage chain** when the value set
-   matches ≥2 of its editions. Reclaim when EXACTLY ONE family is a multi-vintage chain
-   (the **dominant chain**), subject to two conditions:
+   matches ≥2 of its editions. Identify the **dominant chain** and reclaim when it
+   passes two conditions (see #897 below for the ≥2-chain case):
 
    - **Relative lever (kept from #494):** the dominant family's best `label_agree` ≥
      every off-chain candidate's.
@@ -1074,9 +1074,15 @@ or re-pointed — linkage is additive.
      keeping genuinely labeled sets such as LKF county vintages (which match at ≥0.90).
 
    A same-root/different-stem family (e.g. orthogonal SUN dimensions, #579) disqualifies
-   the value set — the dominant must be the unique family on its root. If ≥2 distinct
-   families are multi-vintage chains, the cross-family ambiguity is genuine and the set
-   stays in the residue.
+   the value set — the dominant must be the unique family on its root.
+
+   **≥2 multi-vintage chains — label-dominant selection (#897):** when more than one
+   family is a multi-vintage chain, the dominant chain is the one whose best
+   `label_agree` STRICTLY exceeds every other multi-vintage chain's best `label_agree`.
+   The same absolute floor (`_CONFIDENT_LABEL_AGREE`, 0.90), relative lever, and #579
+   same-root guard apply unchanged. A tie (two chains with equal best `label_agree`,
+   including the all-label-less 0 case) leaves the value set in the residue — genuine
+   cross-family ambiguity without a label signal to break the tie.
 
    Step 7c resolves by period: for each `(variable_id, value_set_id)` pair, pick the
    LATEST dominant-family edition (max `valid_from`) whose `[valid_from, valid_to]`
@@ -1150,9 +1156,11 @@ must triage them.
   span — do not attempt per-state-period resolution; the backfill grain forbids it. The
   dominant-chain rule (#514) now reclaims labeled LKF county sets past single off-chain
   strays (SNI, MDC) — the county labels match LKF at ≥0.90, clearing the conditional
-  absolute floor. County sets that remain in the residue are those that ALSO match ≥2
-  SNI editions (a second multi-vintage chain → genuine cross-family ambiguity, left for
-  curation).
+  absolute floor. County sets that matched ≥2 SNI editions (forming a second
+  multi-vintage chain) previously stayed in the residue as genuine cross-family
+  ambiguity; #897's label-dominant selection reclaims those \~28 sets because the LKF
+  county labels strictly dominate the SNI chain's `label_agree`, while only true ties or
+  label-less two-chain spans remain in the residue.
 
 ### Curated classification links (`classification_links.toml`, #416 tail)
 
