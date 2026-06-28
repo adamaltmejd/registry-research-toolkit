@@ -4,20 +4,28 @@
 # Each fact is one `[[edge]]` table discriminated by `type`. Order by SUBJECT;
 # group related edges of different types under one comment.
 #
-# Three relation kinds:
+# Two relation kinds:
 #
 #   type = "same_as"      — symmetric/transitive IDENTITY ("one concept, two
-#                           FQIDs"). RESOLVER-LOAD-BEARING: Catalog.resolve follows
-#                           it transitively and the build cycle-checks the graph,
-#                           so a WRONG edge corrupts resolution. `a` / `b` are
-#                           FQIDs of the SAME grain — both 3-segment variable OR
-#                           both 2-segment classification (provider/slug). The
-#                           build writes BOTH directions; there is NO relation_kind
+#                           FQIDs"). Powers the catalog DISCOVERY surface:
+#                           Catalog.resolve follows it transitively for the
+#                           canonical address, search dedup, and the cross-register
+#                           graph node, and the build cycle-checks the graph. It is
+#                           NOT load-bearing for data orders/specs — those bind the
+#                           concrete (variable, variant, period) the user picks and
+#                           are never canonicalized — so a wrong edge is a
+#                           reversible cosmetic mis-link in discovery, not data
+#                           corruption. The bar is therefore reasonable-confidence
+#                           cross-register identity (recall-liberal, #737), bounded
+#                           by the _SAME_AS_MAX_COMPONENT cap that stops a gross
+#                           weld from polluting dedup broadly. `a` / `b` are FQIDs
+#                           of the SAME grain — both 3-segment variable OR both
+#                           2-segment classification (provider/slug). The build
+#                           writes BOTH directions; there is NO relation_kind
 #                           (identity is identity). The variable/classification
 #                           slug is NOT validated (slug-anchored, survives
 #                           renames); provider+register (or provider+class slug)
-#                           must exist. Only CONFIRMED identity belongs here.
-#                           Generate a review worklist with
+#                           must exist. Generate a review worklist with
 #                           `reg-meta-build same-as-candidates`.
 #
 #   type = "replaced_by"  — directional SUCCESSION (`from` superseded by `to`).
@@ -4543,12 +4551,12 @@ type = "same_as"
 a = "scb/iot/batpe"
 b = "scb/linda/batpe"
 note = "curated:#737 kod för atp"
-# byggnads-/fastighets-id (2 vars)
+# bränsleidentitet (2 vars)
 [[edge]]
 type = "same_as"
 a = "scb/frida/bbid"
 b = "scb/isen/bid"
-note = "curated:#737 byggnads-/fastighets-id"
+note = "curated:#737 bränsleidentitet"
 # folkpension, egen förmån (3 vars)
 [[edge]]
 type = "same_as"
@@ -4791,3 +4799,4 @@ type = "same_as"
 a = "scb/slk/utbildningens-niva-och-inriktning"
 b = "scb/slr/sun"
 note = "curated:#737 utbildningens nivå och inriktning (sun)"
+# Result: 61 components, 232 edges, 179 variables (max component 7 FQIDs, well under the _SAME_AS_MAX_COMPONENT cap).
