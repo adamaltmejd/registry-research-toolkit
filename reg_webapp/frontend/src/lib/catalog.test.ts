@@ -358,20 +358,21 @@ describe("routeBreadcrumbs", () => {
     expect(trail[1]).toEqual({ label: "scb", href: undefined });
   });
 
-  it("group → browser root + register hop + the un-linked key", () => {
+  it("group → browser root + split provider/register hops + the un-linked key", () => {
     const trail = routeBreadcrumbs({
       name: "group",
       provider: "scb",
       register: "lisa",
       key: "ink",
     });
-    expect(trail).toHaveLength(3);
+    expect(trail).toHaveLength(4);
     expect(trail[0]).toEqual(browserRoot);
-    expect(trail[1]).toEqual({
-      label: "scb/lisa",
+    expect(trail[1]).toEqual({ label: "scb", href: catalogHref("scb") });
+    expect(trail[2]).toEqual({
+      label: "lisa",
       href: catalogHref("scb/lisa"),
     });
-    expect(trail[2]).toEqual({ label: "ink" });
+    expect(trail[3]).toEqual({ label: "ink" });
   });
 
   it("class-group → browser root + a linked class hop + the un-linked key", () => {

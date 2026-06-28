@@ -545,10 +545,14 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       ];
     }
     case "group":
+      // Split provider and register into separate, individually-linked crumbs
+      // (#887) — same per-segment idiom as `catalog-node`; the group key is the
+      // current page (no href).
       return [
         browserRoot,
+        { label: route.provider, href: catalogHref(route.provider) },
         {
-          label: `${route.provider}/${route.register}`,
+          label: route.register,
           href: catalogHref(`${route.provider}/${route.register}`),
         },
         { label: route.key },
