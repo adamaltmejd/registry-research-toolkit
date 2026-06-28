@@ -2120,4 +2120,158 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       .toBeVisible();
     expect(document.querySelector("details.history")).toBeNull();
   });
+
+  it("folds a transitive chain A→B→C into ONE band led by C, history oldest-first", async () => {
+    // A→B (effective 2000), B→C (effective 2010). All three are members, so A and B
+    // are both superseded and fold away; only C remains as a band, carrying both as
+    // history (oldest-first [A, B]).
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "disponibel-inkomst",
+        label: "Disponibel inkomst",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/iot/dispink-a",
+            name: "Disponibel inkomst A",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink-b",
+            name: "Disponibel inkomst B",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink-c",
+            name: "Disponibel inkomst C",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode(
+          "scb/iot/dispink-a",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINA",
+              valid_from: "1995-01-01",
+              valid_to: "1999-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst A" },
+        ),
+        vnode(
+          "scb/iot/dispink-b",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINB",
+              valid_from: "2000-01-01",
+              valid_to: "2009-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst B" },
+        ),
+        vnode(
+          "scb/iot/dispink-c",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINC",
+              valid_from: "2010-01-01",
+              valid_to: "2020-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst C" },
+        ),
+      ],
+      edges: [
+        {
+          id: "succession:scb/iot/dispink-a->scb/iot/dispink-b",
+          kind: "succession",
+          source: "scb/iot/dispink-a",
+          target: "scb/iot/dispink-b",
+          label: null,
+          effective_year: 2000,
+        },
+        {
+          id: "succession:scb/iot/dispink-b->scb/iot/dispink-c",
+          kind: "succession",
+          source: "scb/iot/dispink-b",
+          target: "scb/iot/dispink-c",
+          label: null,
+          effective_year: 2010,
+        },
+      ],
+      focus_id: null,
+    });
+    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // Exactly ONE selectable band remains — the chain head C (A and B folded away).
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINC/ }))
+      .toBeVisible();
+    const rows = document.querySelectorAll(".col-row");
+    expect(rows).toHaveLength(1);
+    expect(rows[0].textContent).toContain("DINC");
+
+    // The disclosure surfaces BOTH predecessors transitively…
+    const summary = document.querySelector("details.history > summary");
+    expect(summary?.textContent?.replace(/\s+/g, " ").trim()).toContain(
+      "supersedes 2 editions",
+    );
+    // …oldest-first: A before B.
+    const links = [
+      ...document.querySelectorAll<HTMLAnchorElement>(
+        "details.history a.history-link",
+      ),
+    ];
+    expect(links.map((a) => a.getAttribute("href"))).toEqual([
+      "/catalog/scb/iot/dispink-a",
+      "/catalog/scb/iot/dispink-b",
+    ]);
+  });
+
+  it("omits the 'until <year>' marker when effective_year is null", async () => {
+    // A null effective_year (the edge carries no supersession year) must not render a
+    // ".history-until" element — the `{#if … != null}` guard suppresses "until null".
+    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    const g = successionGraph();
+    g.edges[0].effective_year = null;
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(g);
+    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // The disclosure still renders (the predecessor is still folded as history)…
+    const link = await vi.waitFor(() => {
+      const el = document.querySelector("details.history a.history-link");
+      if (!el) {
+        throw new Error("history disclosure not yet rendered");
+      }
+      return el;
+    });
+    expect(link.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
+    // …but with NO "until <year>" marker (no ".history-until", no "until" text).
+    expect(document.querySelector(".history .history-until")).toBeNull();
+    expect(
+      document.querySelector("details.history")?.textContent,
+    ).not.toContain("until");
+  });
 });

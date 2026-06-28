@@ -215,11 +215,9 @@ const successionFold = $derived.by(() => {
       memberFqids.has(e.source) &&
       memberFqids.has(e.target),
   );
-  // predecessor → its successor edge (each predecessor has at most one in-group
-  // successor in a linear chain); successor → its predecessor edges (to walk a chain
-  // back from its head). `effective_year` rides on the predecessor (the year it was
-  // replaced by the successor).
-  const successorOf = new Map<string, string>();
+  // successor → its predecessor edges (to walk a chain back from its head).
+  // `effective_year` rides on the predecessor (the year it was replaced by the
+  // successor).
   const predecessorsOf = new Map<
     string,
     { fqid: string; effectiveYear: number | null }[]
@@ -227,7 +225,6 @@ const successionFold = $derived.by(() => {
   const superseded = new Set<string>();
   for (const e of edges) {
     superseded.add(e.source); // a source (predecessor) is superseded
-    successorOf.set(e.source, e.target);
     const preds = predecessorsOf.get(e.target) ?? [];
     preds.push({ fqid: e.source, effectiveYear: e.effective_year ?? null });
     predecessorsOf.set(e.target, preds);

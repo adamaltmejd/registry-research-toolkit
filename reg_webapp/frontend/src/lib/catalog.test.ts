@@ -1939,6 +1939,57 @@ describe("coexistingColumns (#902 shared overlap leaf)", () => {
     ]);
     expect([...set].sort()).toEqual(["A", "B"]);
   });
+
+  it("treats a null (unbounded) start as overlapping everything before it", () => {
+    // A's null valid_from normalizes to YEARLESS_VALID_FROM (0001), so its window
+    // reaches back before B and the two overlap.
+    const set = coexistingColumns([
+      {
+        delivery_column_name: "A",
+        valid_from: null,
+        valid_to: "2005-12-31",
+      },
+      {
+        delivery_column_name: "B",
+        valid_from: "1990-01-01",
+        valid_to: "1995-12-31",
+      },
+    ]);
+    expect([...set].sort()).toEqual(["A", "B"]);
+  });
+
+  it("treats a fully-null-bounds column as overlapping everything", () => {
+    // Both bounds null → window is the full 0001..9999 sentinel span, so it
+    // overlaps any other column regardless of era.
+    const set = coexistingColumns([
+      { delivery_column_name: "A", valid_from: null, valid_to: null },
+      {
+        delivery_column_name: "B",
+        valid_from: "2050-01-01",
+        valid_to: "2055-12-31",
+      },
+    ]);
+    expect([...set].sort()).toEqual(["A", "B"]);
+  });
+
+  it("treats columns touching at a single boundary instant as co-existing", () => {
+    // A ends and B starts on the same day. The inclusive `<=` overlap counts this
+    // as co-existing. This documents the explicit design choice so a future `<`
+    // "cleanup" can't silently flip it.
+    const set = coexistingColumns([
+      {
+        delivery_column_name: "A",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+      },
+      {
+        delivery_column_name: "B",
+        valid_from: "2015-12-31",
+        valid_to: "2020-12-31",
+      },
+    ]);
+    expect([...set].sort()).toEqual(["A", "B"]);
+  });
 });
 
 describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => {
