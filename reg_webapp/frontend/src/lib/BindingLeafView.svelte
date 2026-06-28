@@ -190,8 +190,15 @@ const stateScope = $derived(
 // single-state paths are preserved. With NO modifier active these pass through
 // unchanged (full history). ValueSetView stays PURE: the leaf decides which states it
 // gets; the view carries no resolution state.
+//
+// CRUCIALLY gated on `!narrowedError` (mirroring `resolvedStates`/`states`): when the
+// `?period` resolve FAILS, `states` deliberately falls back to `node.states` (full
+// history). A stale/typo `?variant` would then narrow that fallback to empty, defeating
+// the full-history fallback — so on a resolve error we skip the modifier narrowing and
+// let `valueSetStates`/`valueSetScope` equal the same full-history fallback the rest of
+// the page shows.
 const valueSetStates = $derived.by(() => {
-  if (states === null || !hasResolutionModifier) {
+  if (states === null || narrowedError || !hasResolutionModifier) {
     return states;
   }
   return [
@@ -203,7 +210,7 @@ const valueSetStates = $derived.by(() => {
   ];
 });
 const valueSetScope = $derived.by(() => {
-  if (stateScope === null || !hasResolutionModifier) {
+  if (stateScope === null || narrowedError || !hasResolutionModifier) {
     return stateScope;
   }
   return [

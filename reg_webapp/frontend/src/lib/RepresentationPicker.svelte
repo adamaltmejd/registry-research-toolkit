@@ -513,33 +513,34 @@ function navigateChip(event: MouseEvent, href: string): void {
  * coding, not another variant's latest era. This is a dedicated `?codes=` encoding,
  * distinct from the `?variant` RESOLUTION modifier (which narrows the picker + drives
  * the "Narrowed by" chips), so the focus never perturbs the resolution.
- *   - GROUP view (`band.href` set → the member's own leaf): the member's own href,
- *     which ALREADY carries any active `?period` (`ConceptGroupView.memberHref`), with
- *     `codes` merged into its existing query — never a second literal `?`.
- *   - BINDING leaf (`band.href` undefined → already this page): the CURRENT path +
- *     query with `codes` set (preserving an active `?period`/`?variant` so the
- *     focused coding stays consistent with the narrowed states).
- * Both branches assemble the URL via URLSearchParams (no `?`/`&` hand-concat) so an
- * existing query merges cleanly; the `#states-heading` hash targets the
- * `<section id="states-heading">` anchor BindingLeafView keeps; the router preserves
- * both query + hash on navigate. */
+ *
+ * The nudge means "this column's coding changed OVER TIME — see the value sets", which
+ * is inherently a FULL-HISTORY inspection. So the href carries ONLY the focus and
+ * DROPS any inherited query (`?period`/`?variant`/…): a period-narrowed leaf, when
+ * focused via `?codes`, must show the column's full coding history, not the
+ * period-scoped (and possibly out-of-era) subset.
+ *   - GROUP view (`band.href` set → the member's own leaf): the member's PATH only
+ *     (`band.href.split("?")[0]`), discarding any `?period` carried by `memberHref`.
+ *   - BINDING leaf (`band.href` undefined → already this page): the CURRENT path with
+ *     NO search (`globalThis.location.pathname`), discarding the live `?period`/
+ *     `?variant`.
+ * Both branches yield a clean `<path>?codes=<variant>::<column>#states-heading`; the
+ * `#states-heading` hash targets the `<section id="states-heading">` anchor
+ * BindingLeafView keeps; the router preserves both query + hash on navigate. */
 function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   const codes = encodeCodesParam(row.variant, row.column);
-  if (band.href) {
-    // `band.href` may already carry `?period=…` (memberHref) and has no hash; split
-    // off any existing query, set/overwrite `codes`, and re-assemble — so a periodic
-    // member yields `…?period=2020&codes=…`, never `…?period=2020?codes=…`.
-    const [path, existingQuery = ""] = band.href.split("?");
-    const search = new URLSearchParams(existingQuery);
-    search.set("codes", codes);
-    return `${path}?${search.toString()}#states-heading`;
-  }
-  // `window` is a component prop here (the period window), shadowing the global —
-  // read the location off `globalThis`.
-  const { pathname, search: queryString } = globalThis.location;
-  const search = new URLSearchParams(queryString);
+  // `band.href` (group branch) may carry `?period=…` (memberHref); the leaf branch
+  // reads the live path off `globalThis` (`window` is the period-window prop here,
+  // shadowing the global). Either way, take ONLY the path — drop the query.
+  const path = band.href
+    ? band.href.split("?")[0]
+    : globalThis.location.pathname;
+  // Emit `codes` as the SOLE param via URLSearchParams so the value round-trips through
+  // `router.getQueryParam` (one decode) back to the `encodeCodesParam` composite that
+  // `parseCodesParam` expects.
+  const search = new URLSearchParams();
   search.set("codes", codes);
-  return `${pathname}?${search.toString()}#states-heading`;
+  return `${path}?${search.toString()}#states-heading`;
 }
 </script>
 

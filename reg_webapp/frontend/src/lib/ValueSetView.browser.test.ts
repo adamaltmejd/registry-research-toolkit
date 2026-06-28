@@ -353,6 +353,59 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       .toBeVisible();
   });
 
+  it("single-state detail is PERIOD-AWARE: a 1-state variable viewed OUTSIDE its window shows the no-state message, NOT the detail (Fix C)", async () => {
+    // #905, Codex P2: a variable with exactly ONE historical state, viewed at a
+    // `?period` OUTSIDE that state. The leaf passes the full history (1 state) but an
+    // EMPTY period scope. `single` must key off the SCOPE (zero in-period → no single
+    // detail) and fall through to the "No state delivered" path — not render the lone
+    // state's detail as if it were in-period.
+    const lone = state({
+      variant: "doda",
+      value_set_version_label: "Kommun historisk",
+      value_set: [{ code: "0114", label: "Upplands Väsby" }],
+      valid_from: "2007-01-01",
+      valid_to: "2010-12-31",
+    });
+    render(ValueSetView, {
+      states: [lone],
+      scopeStates: [], // the period delivered ZERO of this variable's states
+      narrowed: true,
+    });
+    // Full history (1 state) is present, so this lands in the multi-state branch's
+    // empty-period hint (NOT the bare empty branch) — but it still tells the user no
+    // state was delivered for the period, and the historical state is collapsed.
+    await expect
+      .element(
+        page.getByText(/No state delivered for this period\./, {
+          exact: false,
+        }),
+      )
+      .toBeVisible();
+    // The single-state DETAIL block must NOT render (the lone state is collapsed as a
+    // historical value set, not surfaced as the in-period detail).
+    expect(document.querySelector(".state-detail")).toBeNull();
+  });
+
+  it("single-state detail is PERIOD-AWARE: a 1-state variable viewed IN its window still shows the detail (Fix C)", async () => {
+    // The control: the SAME lone state, with a period scope that DID deliver it →
+    // exactly one in-period state → the single-state detail renders.
+    const lone = state({
+      variant: "doda",
+      value_set_version_label: "Kommun historisk",
+      value_set: [{ code: "0114", label: "Upplands Väsby" }],
+      valid_from: "2007-01-01",
+      valid_to: "2010-12-31",
+    });
+    render(ValueSetView, {
+      states: [lone],
+      scopeStates: [lone],
+      narrowed: true,
+    });
+    await expect.element(page.getByText("Variant")).toBeVisible();
+    expect(document.querySelector(".vs-list")).toBeNull();
+    await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
+  });
+
   it("a filter that hides the in-period rows does NOT mis-report 'No state delivered for this period' (Codex P3)", async () => {
     // The period DID deliver in-period value sets (classState + inScopePlain), but a
     // text filter matches only the OUT-of-period row's variant ("fodda"). The empty

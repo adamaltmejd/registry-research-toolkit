@@ -355,11 +355,12 @@ describe("codingsVaryNudge deep link (#905)", () => {
     );
   });
 
-  // Bug 1: `memberHref` already appends `?period=<p>` when a period is active, so the
-  // nudge must MERGE `codes` into the existing query (single `?`, `&`-joined), never
-  // append a second literal `?` (the old `${band.href}?codes=…` produced
-  // `…?period=2020?codes=…`, dropping `codes`).
-  it("merges ?codes into a band.href that already carries ?period (single `?`)", async () => {
+  // The nudge means "this column's coding changed OVER TIME — see the value sets",
+  // which is inherently a FULL-HISTORY inspection (#905, Codex P2). So when `band.href`
+  // carries an active `?period`, the nudge DROPS it (taking only the member path) and
+  // emits a CLEAN `?codes=…` query — a period-narrowed leaf, focused via `?codes`, must
+  // show the column's full coding history, not the period-scoped subset.
+  it("drops an inherited ?period and emits a clean ?codes-only deep link", async () => {
     const href = await nudgeHref({
       key: "scb/lisa/yrkesreg",
       name: "Yrkesregistret",
@@ -367,9 +368,11 @@ describe("codingsVaryNudge deep link (#905)", () => {
       href: "/catalog/scb/lisa/yrkesreg?period=2020",
       rows: [row({ variant: "v", column: "Yrke", codingsVary: true })],
     } satisfies PickerBand);
+    // No `period` survives; the only param is the (variant, column) composite.
     expect(href).toBe(
-      "/catalog/scb/lisa/yrkesreg?period=2020&codes=v%3A%3AYrke#states-heading",
+      "/catalog/scb/lisa/yrkesreg?codes=v%3A%3AYrke#states-heading",
     );
+    expect(href).not.toContain("period");
     // Exactly ONE `?` (no double query separator).
     expect(href.match(/\?/g)).toHaveLength(1);
   });

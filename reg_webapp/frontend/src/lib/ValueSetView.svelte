@@ -70,11 +70,27 @@ let {
   focusVariant?: string | null;
 } = $props();
 
-// Single-state DETAIL when exactly one state reaches the view — the full-history
-// view with one recorded state, OR a `?period` that BindingLeafView resolved to a
-// single state (it passes that single state as `states`). Multi/empty resolves
-// pass the full history with `scopeStates` marking what is in-period (#744).
-const single = $derived(states.length === 1 ? states[0] : null);
+// Single-state DETAIL — PERIOD-AWARE (#905, Codex P2). A single state reaching the view
+// (`states.length === 1`) drives the detail — the full-history view with one recorded
+// state, OR a `?period` that BindingLeafView resolved to exactly one state (it passes
+// that single state as `states`). BUT when narrowed, the period must have actually
+// DELIVERED it: a variable with one historical state viewed at a `?period` OUTSIDE that
+// state falls back to the lone `node.states` (length 1) with an EMPTY `scopeStates`, and
+// must NOT render that out-of-era state as the in-period detail. So a narrowed view with
+// an empty period scope suppresses the single detail and falls through to the
+// "No state delivered for this period" path (consistent with `hasInPeriodValueSets`).
+// A multi-history view (`states.length > 1`) is never single regardless of scope, so the
+// value-set list / focus-isolation render. Uses only `states` + `scopeStates` — never
+// resolution-modifier coupling.
+const single = $derived.by(() => {
+  if (states.length !== 1) {
+    return null;
+  }
+  if (narrowed && scopeStates !== null && scopeStates.length === 0) {
+    return null;
+  }
+  return states[0];
+});
 
 // #668: the dedup that powers the multi-state view — the DISTINCT value sets
 // (classification editions by slug, others by `value_set_id`), each carrying

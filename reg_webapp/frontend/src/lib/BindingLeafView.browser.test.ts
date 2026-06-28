@@ -1172,6 +1172,53 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .element(page.getByRole("button", { name: "Add to project" }))
       .toBeEnabled();
   });
+
+  it("shows FULL history in the value-set list when a `?period` resolve fails with a stale `?variant` (Fix B)", async () => {
+    // #905, Codex P2: when the PRIMARY `?period` resolve fails (a stale/typo `?variant`,
+    // a 5xx, a network drop), `states` falls back to `node.states` (full history). The
+    // modifier narrowing must NOT then apply — a stale `?variant` would narrow that
+    // fallback to empty, defeating the full-history fallback. `valueSetStates`/
+    // `valueSetScope` are gated on `!narrowedError`, so the value-set list shows the
+    // full history (every variant), not a modifier-narrowed (possibly empty) subset.
+    const individerCoding = state({
+      state_id: 50,
+      variant: "individer",
+      value_set_id: 50,
+      value_set_version_label: "Individer coding",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const otherCoding = state({
+      state_id: 51,
+      variant: "other-population",
+      value_set_id: 51,
+      value_set_version_label: "Other coding",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      // The variant-scoped PRIMARY resolve fails (a stale `?variant=typo`); the
+      // period-only scope would succeed but is moot once the primary errors.
+      if (params?.variant) {
+        throw new Error("422 bad variant");
+      }
+      return { states: [individerCoding, otherCoding] } as never;
+    });
+    router.navigate("/catalog/scb/lisa/kon?period=2007&variant=typo");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([individerCoding, otherCoding]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The full-history value-set list shows BOTH variants' codings — the stale variant
+    // did NOT narrow the error-fallback to empty.
+    await expect.element(page.getByText("Individer coding")).toBeVisible();
+    await expect.element(page.getByText("Other coding")).toBeVisible();
+  });
 });
 
 describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
