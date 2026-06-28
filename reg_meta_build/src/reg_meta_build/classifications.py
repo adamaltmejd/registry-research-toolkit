@@ -1295,9 +1295,22 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # set spanning two of them must stay in the residue, not collapse to one).
     #
     # A family is a MULTI-VINTAGE CHAIN when the value set matches >=2 of its
-    # editions (`n_matched >= 2`). We reclaim a value set when EXACTLY ONE family is
-    # a multi-vintage chain — the DOMINANT chain — and carry that family's (root,
-    # stem) so 7c restricts the latest-vintage pick to it.
+    # editions (`n_matched >= 2`). We reclaim a value set by selecting its DOMINANT
+    # multi-vintage chain and carry that family's (root, stem) so 7c restricts the
+    # latest-vintage pick to it.
+    #
+    # LABEL-DOMINANT selection (#897). A value set may match >=2 multi-vintage chains
+    # at once. The old rule bailed to residue whenever there were >=2 such chains
+    # (`HAVING COUNT(*) = 1`); #897 relaxes that to a LABEL lever:
+    #   - ONE multi-vintage chain → it is trivially the dominant (no competitor), and
+    #     its existing absolute-floor / #494 label-free behavior is unchanged.
+    #   - >=2 multi-vintage chains → the dominant is the one whose `fam_max_la`
+    #     (1) clears the absolute floor `_CONFIDENT_LABEL_AGREE` AND (2) STRICTLY
+    #     dominates every OTHER multi-vintage chain's `fam_max_la`. A tie (two chains
+    #     with equal best label_agree, including the label-less all-0 case) leaves the
+    #     value set ambiguous → residue. This reclaims e.g. a county set that matches
+    #     two overlapping LKF year-chains where labels cleanly pick the right one, but
+    #     keeps a genuine cross-family span (two label-less chains) in residue.
     #
     # Permitted strays must be OFF-CHAIN — a DIFFERENT chain ROOT than the dominant
     # family. Any number of single-edition off-chain families pass: this is what
@@ -1305,8 +1318,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # >=2 LKF year-editions (one multi-vintage chain) plus STRAY off-chain
     # coincidences (the 2-digit codes also hit one SNI2007 division + one MDC, both a
     # DIFFERENT root than LKF) that the OLD all-on-chain rule treated as disqualifying
-    # cross-family candidates. If >=2 distinct families are multi-vintage chains it is
-    # a genuine cross-family span → not reclaimed.
+    # cross-family candidates.
     #
     # But a family that shares the dominant's chain root and differs only in slug STEM
     # is NOT an off-chain coincidence — it is a curated ORTHOGONAL dimension (the #579
@@ -1373,9 +1385,12 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # NULL stem while its root = its own cls id is non-NULL; such builds make the
     # whole reclaim inert anyway — 7c's `cr.stem = dom_stem` matches nothing when
     # dom_stem is NULL — and don't ship, so the NULL stem is harmless here.)
-    # `dominant` guarantees exactly one multi-vintage family per value set, so
-    # `multi m JOIN dominant d` yields exactly one (dom_root, dom_stem) row per value
-    # set (asserted by the UNIQUE index).
+    # `dominant` selects AT MOST ONE multi-vintage family per value set (the label-
+    # dominant chain, #897), so it already carries (root, stem); the final SELECT reads
+    # those columns directly. A value set with >=2 multi-vintage chains and no strictly-
+    # dominant one emits no `dominant` row (stays in residue), and a lone multi-vintage
+    # chain is trivially its own dominant — exactly the old single-chain path. The
+    # UNIQUE index asserts the at-most-one-row-per-value-set invariant.
     conn.execute(
         f"""
         CREATE TEMP TABLE _vs_dominant_chain AS
@@ -1398,8 +1413,33 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         multi AS (                     -- multi-vintage chains: >=2 matched editions
             SELECT value_set_id, root, stem, fam_max_la FROM fam WHERE n_matched >= 2
         ),
-        dominant AS (                  -- value sets with EXACTLY ONE such chain
-            SELECT value_set_id FROM multi GROUP BY value_set_id HAVING COUNT(*) = 1
+        dominant AS (                  -- #897: the label-dominant multi-vintage chain
+            -- A multi-vintage chain is the dominant iff NO OTHER multi-vintage chain
+            -- on the same value set ties-or-beats its `fam_max_la`. With one chain
+            -- there is no competitor → trivially dominant (the old single-chain path,
+            -- unchanged). With >=2 chains the winner must STRICTLY exceed every rival
+            -- (a tie or a label-less all-0 set leaves no winner → residue) AND clear
+            -- the absolute floor `_CONFIDENT_LABEL_AGREE`, which only binds when a
+            -- competitor exists. `m2.fam_max_la` is non-NULL (label_agree = matched /
+            -- n_codes, n_codes >= 1), but the comparison stays NULL-safe by treating a
+            -- NULL rival max as a tie via COALESCE so it can never spuriously "lose".
+            SELECT m.value_set_id, m.root, m.stem, m.fam_max_la
+            FROM multi m
+            WHERE NOT EXISTS (
+                SELECT 1 FROM multi m2
+                WHERE m2.value_set_id = m.value_set_id
+                  AND (m2.root <> m.root OR m2.stem <> m.stem)
+                  AND COALESCE(m2.fam_max_la, 0) >= COALESCE(m.fam_max_la, 0)
+            )
+            -- absolute floor applies only when a (now strictly-beaten) competitor exists
+            AND (
+                NOT EXISTS (
+                    SELECT 1 FROM multi m3
+                    WHERE m3.value_set_id = m.value_set_id
+                      AND (m3.root <> m.root OR m3.stem <> m.stem)
+                )
+                OR m.fam_max_la >= {_CONFIDENT_LABEL_AGREE}
+            )
         )
         SELECT m.value_set_id, m.root AS dom_root, m.stem AS dom_stem,
                -- carried to 7c so the AUTHORITATIVE per-edition label gate runs on the
@@ -1421,8 +1461,9 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
                     WHERE f2.value_set_id = m.value_set_id
                       AND (f2.root <> m.root OR f2.stem <> m.stem)),
                    0) AS max_stray_la
-        FROM multi m
-        JOIN dominant d ON d.value_set_id = m.value_set_id
+        -- read the chosen (root, stem) straight from `dominant`; it already carries
+        -- exactly one family per value set, so no re-expansion over `multi`.
+        FROM dominant m
         WHERE m.value_set_id NOT IN (SELECT value_set_id FROM rootless)
           -- off-chain only: the dominant must be the UNIQUE family on its root, so a
           -- same-root different-stem orthogonal dimension (#579) keeps the set ambiguous

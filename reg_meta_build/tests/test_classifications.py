@@ -1773,6 +1773,157 @@ class TestLinkValueSetClassifications:
         assert counts["multi_family_after"] == 1
         assert g.candidates() == []
 
+    def test_two_multi_vintage_chains_label_dominant_wins(self) -> None:
+        """#897 label-dominant relaxation: a value set is ≥0.90-contained in TWO
+        multi-vintage chains on DIFFERENT roots — an LKF county chain (LKF1996 →
+        LKF1998) whose canonical labels MATCH the value set (label_agree 1.0) and an
+        SSYK chain (SSYK2012 → SSYK2019) carrying the SAME codes under DIFFERENT labels
+        (label_agree 0). The OLD `HAVING COUNT(*) = 1` gate bailed to residue (two
+        multi-vintage chains); the new gate selects the LABEL-DOMINANT chain — LKF
+        clears the 0.90 floor AND strictly dominates SSYK's 0 — and 7c picks LKF's
+        latest overlapping edition (LKF1998)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+        from reg_meta_build.db import _backfill_state_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("LKF", 10, 2)  # < 15 → never confident
+        # LKF chain: the value set's labels are LKF's canonical labels → label_agree 1.0.
+        g.add_classification(
+            70,
+            "LKF1996",
+            shared + [("90", "lkf96 only")],
+            valid_from=1996,
+            valid_to=1997,
+        )
+        g.add_classification(
+            71,
+            "LKF1998",
+            shared + [("91", "lkf98 only")],
+            supersedes_id=70,
+            valid_from=1998,
+            valid_to=None,
+        )
+        # SSYK chain (4-digit-year slugs → one `ssyk` stem family): SAME codes, but
+        # DIFFERENT labels → label_agree 0 vs the value set.
+        relabeled = [(code, f"ssyk {code}") for code, _ in shared]
+        g.add_classification(
+            72,
+            "SSYK2012",
+            relabeled + [("92", "ssyk2012 only")],
+            valid_from=2012,
+            valid_to=2018,
+        )
+        g.add_classification(
+            73,
+            "SSYK2019",
+            relabeled + [("93", "ssyk2019 only")],
+            supersedes_id=72,
+            valid_from=2019,
+            valid_to=None,
+        )
+        g.add_value_set(170, shared)  # LKF labels → agrees with LKF, not SSYK
+        g.add_variable_state(970, 170)  # open-ended → overlaps LKF1998 and SSYK2019
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 0  # not confident (multi-family)
+        assert counts["multi_family"] == 1
+        assert counts["vintage_value_sets_linked"] == 1
+        assert counts["vintage_variables_linked"] == 1
+        assert counts["multi_family_after"] == 0
+        # Latest overlapping edition of the LABEL-DOMINANT (LKF) chain.
+        assert g.candidates() == [(970, 170, 71)]
+
+        _backfill_state_classifications(g.conn)
+        assert g.tagged_classification(970) == 71
+
+    def test_two_multi_vintage_chains_label_tie_stays_ambiguous(self) -> None:
+        """#897: when TWO multi-vintage chains are LABEL-LESS (the value set's labels
+        match NEITHER chain → both fam_max_la 0), no chain strictly dominates → the
+        value set stays in residue (no link). This is the SSYK-coincidence class the
+        absolute floor already drops for single chains, here generalized: a tie can
+        never produce a winner."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("X", 10, 4)
+        # Two DIFFERENT-root multi-vintage chains sharing the codes.
+        g.add_classification(
+            80, "SNI2002", shared + [("9001", "a")], valid_from=2002, valid_to=2007
+        )
+        g.add_classification(
+            81,
+            "SNI2007",
+            shared + [("9002", "b")],
+            supersedes_id=80,
+            valid_from=2008,
+            valid_to=None,
+        )
+        g.add_classification(
+            82, "SSYK2012", shared + [("9003", "c")], valid_from=2012, valid_to=2018
+        )
+        g.add_classification(
+            83,
+            "SSYK2019",
+            shared + [("9004", "d")],
+            supersedes_id=82,
+            valid_from=2019,
+            valid_to=None,
+        )
+        # Value set relabels every shared code → label_agree 0 against BOTH chains.
+        relabeled = [(code, f"vs {code}") for code, _ in shared]
+        g.add_value_set(180, relabeled)
+        g.add_variable_state(980, 180)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
+    def test_two_multi_vintage_chains_high_label_tie_stays_ambiguous(self) -> None:
+        """#897: a tie that CLEARS the absolute floor must still stay ambiguous — the
+        gate is STRICT dominance, not "both confident". Two multi-vintage chains share
+        the codes AND both label-agree 1.0 (the value set's labels match BOTH because
+        the chains carry identical (code, label) canon). Neither strictly exceeds the
+        other → no winner → residue. Guards that the 0.90 floor alone can't reclaim a
+        label tie."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("Y", 10, 4)
+        # Both chains carry the SHARED codes under the SAME labels as the value set →
+        # label_agree 1.0 on both, so fam_max_la ties at 1.0.
+        g.add_classification(
+            84, "SNI2002", shared + [("9001", "a")], valid_from=2002, valid_to=2007
+        )
+        g.add_classification(
+            85,
+            "SNI2007",
+            shared + [("9002", "b")],
+            supersedes_id=84,
+            valid_from=2008,
+            valid_to=None,
+        )
+        g.add_classification(
+            86, "SSYK2012", shared + [("9003", "c")], valid_from=2012, valid_to=2018
+        )
+        g.add_classification(
+            87,
+            "SSYK2019",
+            shared + [("9004", "d")],
+            supersedes_id=86,
+            valid_from=2019,
+            valid_to=None,
+        )
+        g.add_value_set(181, shared)  # labels match BOTH chains → 1.0 vs 1.0 tie
+        g.add_variable_state(981, 181)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
     def test_no_overlap_no_link(self) -> None:
         """Candidates all on one chain, but the state period overlaps NO candidate
         vintage → no emit (residual, safe by omission). Stays counted as
