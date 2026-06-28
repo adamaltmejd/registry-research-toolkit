@@ -1207,6 +1207,16 @@ kind:
   renders once and each band leads with its within-cluster distinguisher (facet,
   delivery column, or member slug) rather than the repeated name. One shared
   cross-variable selection basket and a single "Add to project" footer span all bands.
+  Each picker row is marked with the **kind** of dimension that distinguishes it from
+  its siblings — a `facet` (a #819 `GroupAxis` value, per member), `variant`
+  (population), or `coding` (value-set version label) — and a **per-dimension filter
+  strip** lets the user narrow a large multi-axis group to one axis value (#908,
+  `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in `catalog.ts`). A
+  dimension surfaces as a filter only when it discriminates (≥2 distinct values across
+  all visible rows); single-value dimensions are invisible. Filtering is a client-side
+  presentation lens: a hidden-but-selected row still commits, and the footer signals
+  this. The filter logic mirrors the #819 `ConceptGroupNavigator`: OR within a
+  dimension, AND across.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section),
 but it does a different job per kind:
