@@ -164,9 +164,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
-- `uvx --from panache-cli==2.55.0 panache format --check .` — markdown format check
+- `uvx --from panache-cli==2.57.0 panache format --check .` — markdown format check
   (config in `.panache.toml`; drop `--check` to fix)
-- `uvx --from panache-cli==2.55.0 panache lint --check .` — markdown lint
+- `uvx --from panache-cli==2.57.0 panache lint --check .` — markdown lint
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package
