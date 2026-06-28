@@ -1204,9 +1204,9 @@ kind:
   per-variable "select all") over its column rows. Each band identity links to the
   member's leaf page. When the group spans more than one distinct concept name,
   `clusterBands` (#901) groups the bands under `<h3>` name-cluster headings — each name
-  renders once and each band leads with its within-cluster distinguisher (facet or
-  delivery column) rather than the repeated name. One shared cross-variable selection
-  basket and a single "Add to project" footer span all bands.
+  renders once and each band leads with its within-cluster distinguisher (facet,
+  delivery column, or member slug) rather than the repeated name. One shared
+  cross-variable selection basket and a single "Add to project" footer span all bands.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section),
 but it does a different job per kind:
