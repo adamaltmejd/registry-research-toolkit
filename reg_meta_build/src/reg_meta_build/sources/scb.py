@@ -286,15 +286,16 @@ def _import_registerinformation(
                 {
                     "register_id": rid,
                     "var_id": vid,
-                    # The operational definition merges into
-                    # `description` at ingest when distinct + non-empty (see
-                    # `_merge_operational_definition` after the fill loop).
+                    # #892: `VariabelOperationell_definition` is NO LONGER folded
+                    # into `description` — it's a first-class per-(split-)variable
+                    # column carried at the per-cvid grain (`instances` below) so it
+                    # survives the parallel-column split, then aggregated to the
+                    # owning sibling by `_coalesce_variable_states`.
                     # `variabelreferenstid`, `variabelhamtadfran`, and
                     # `variabelextern_kommentar` are dropped entirely.
                     "name": variabelnamn,
                     "definition": variabeldefinition,
                     "description": variabelbeskrivning,
-                    "_operational_definition": operationell_definition,
                     "source_register_text": variabelregister_kalla,
                     "measurement_unit": mattenhet,
                 },
@@ -304,19 +305,16 @@ def _import_registerinformation(
             # now-empty (was whitespace-only) values as empty, so a clean
             # later spelling wins over a padded earlier one instead of the
             # raw-first row pinning surrounding whitespace.
-            # `_operational_definition` is a transient carrier folded into
-            # `description` after this loop.
             for tgt, val in [
                 ("name", variabelnamn),
                 ("definition", variabeldefinition),
                 ("description", variabelbeskrivning),
-                ("_operational_definition", operationell_definition),
                 ("source_register_text", variabelregister_kalla),
                 ("measurement_unit", mattenhet),
             ]:
                 var[tgt] = _first_non_empty(var[tgt], val)
 
-            instances.setdefault(
+            inst = instances.setdefault(
                 cvid,
                 {
                     "cvid": cvid,
@@ -333,7 +331,15 @@ def _import_registerinformation(
                     "variabelnamn": variabelnamn,
                     "data_type": row["Datatyp"],
                     "data_length": row["Datalängd"],
+                    # #892: per-cvid operational definition (the right grain — it
+                    # distinguishes parallel columns of one var_id). Aggregated
+                    # first-non-empty across the cvid's rows below, since SCB may
+                    # leave it blank on the first row and fill it on a later one.
+                    "operational_definition": operationell_definition,
                 },
+            )
+            inst["operational_definition"] = _first_non_empty(
+                inst["operational_definition"], operationell_definition
             )
 
             # Kolumnnamn (#364): trim at the read boundary like the name
@@ -413,25 +419,14 @@ def _import_registerinformation(
         ":registerversion_senastgodkanddatum)",
         list(versions.values()),
     )
-    # Named INSERT (explicit columns). Two reasons the list is explicit:
-    # (1) the variable dict carries the transient `_operational_definition`
-    # key which we merge into `description` below then drop before binding;
-    # (2) A1.2's `is_sensitive` / `is_identifier` columns on `variable`
-    # are intentionally omitted here so they keep their DDL DEFAULT 0 —
-    # `_populate_sensitivity_flags` writes them later after unika_summary
-    # is loaded.
-    for var in variables.values():
-        op = (var.pop("_operational_definition", None) or "").strip()
-        desc = (var.get("description") or "").strip()
-        # Operational definition folds into description when distinct
-        # + non-empty (e.g. SCB's "OperationellDef" carries a refinement over
-        # the plain definition). Use a newline-separated concat that survives
-        # round-trips through CSV / JSON. The `op not in desc` guard catches
-        # the partial-substring case as well as exact duplicates — important
-        # when a rebuild re-imports a CSV whose `description` already carries
-        # the previously-merged operational text.
-        if op and op not in desc:
-            var["description"] = f"{desc}\n\n{op}".strip() if desc else op
+    # Named INSERT (explicit columns). The list is explicit because A1.2's
+    # `is_sensitive` / `is_identifier` columns on `variable` are intentionally
+    # omitted here so they keep their DDL DEFAULT 0 — `_populate_sensitivity_flags`
+    # writes them later after unika_summary is loaded. `operational_definition`
+    # is likewise omitted (stays NULL): it's a per-(split-)variable fact the
+    # coalescer fills AFTER triage from the per-cvid `variable_instance` carrier
+    # (#892), so a value written on this pre-split intermediate would be the wrong
+    # grain (it would pin the first-non-empty across ALL columns of a var_id).
     conn.executemany(
         "INSERT INTO variable (register_id, provider_key, name, definition, description, "
         "source_register_text, measurement_unit, source_register_id, source_label) "
@@ -442,9 +437,9 @@ def _import_registerinformation(
     conn.executemany(
         "INSERT INTO variable_instance "
         "(cvid, register_id, register_variant_id, regver_id, var_id, variabelnamn, "
-        " data_type, data_length) "
+        " data_type, data_length, operational_definition) "
         "VALUES (:cvid, :register_id, :register_variant_id, :regver_id, "
-        ":var_id, :variabelnamn, :data_type, :data_length)",
+        ":var_id, :variabelnamn, :data_type, :data_length, :operational_definition)",
         list(instances.values()),
     )
     # A2.7: cvid-grained alias staging; projected onto the shipped
@@ -2785,6 +2780,28 @@ def _coalesce_variable_states(
         + (f" ({n_unattributed:,} unattributed)" if n_unattributed else "")
     )
 
+    # #892: attribute each cvid's operational definition to its OWNING (post-split
+    # sibling) variable. The cvid→variable_id stamp above is the SAME ground-truth
+    # routing `_emit_variable_aliases` uses, so a parallel-column split sends each
+    # sibling ITS column's operational definition (the per-column distinguishing
+    # meaning). A sibling spanning several cvids/editions aggregates first-non-empty
+    # (deterministic min(cvid) tiebreak for the SQL aggregate). Written to the
+    # `variable` table here, NOT folded into `description` (kept DISTINCT). NULL
+    # when the variable's cvids carry no operational definition (UPDATE skips it).
+    conn.execute(
+        "UPDATE variable SET operational_definition = ("
+        "  SELECT vi.operational_definition FROM variable_instance vi"
+        "  WHERE vi.variable_id = variable.variable_id"
+        "    AND COALESCE(vi.operational_definition, '') <> ''"
+        "  ORDER BY vi.cvid LIMIT 1"
+        ") "
+        "WHERE EXISTS ("
+        "  SELECT 1 FROM variable_instance vi"
+        "  WHERE vi.variable_id = variable.variable_id"
+        "    AND COALESCE(vi.operational_definition, '') <> ''"
+        ")"
+    )
+
     batch: list[tuple] = []
     sentinel_count = 0
     fallback_only_count = 0
@@ -4105,7 +4122,8 @@ class SCBAdapter:
         for row in self.conn.execute(
             "SELECT variable_id, register_id, provider_key, name, definition, "
             "       description, measurement_unit, is_sensitive, is_identifier, "
-            "       source_register_id, source_register_text, slug, source_label "
+            "       source_register_id, source_register_text, slug, source_label, "
+            "       operational_definition "
             "FROM variable ORDER BY variable_id"
         ):
             yield IRVariable(
@@ -4116,6 +4134,7 @@ class SCBAdapter:
                 name=row[3],
                 definition=row[4],
                 description=row[5],
+                operational_definition=row[13],
                 measurement_unit=row[6],
                 is_sensitive=bool(row[7]),
                 is_identifier=bool(row[8]),

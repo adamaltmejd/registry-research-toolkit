@@ -93,8 +93,12 @@ class IRVariable(_IRBase):
     slug: str
     name: str
     definition: str | None
-    # description includes inlined operational_definition when present:
     description: str | None
+    # SCB's `VariabelOperationell_definition` — the per-column distinguishing
+    # meaning (owner vs previous-owner; establishment-SNI vs individual-SNI),
+    # kept DISTINCT from `description` so it survives the parallel-column split:
+    # each split sibling carries ITS column's operational definition (#892).
+    operational_definition: str | None = None
     measurement_unit: str | None  # NULL when source was "Okänd"
     is_sensitive: bool = False
     is_identifier: bool = False

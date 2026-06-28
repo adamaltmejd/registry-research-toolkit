@@ -561,10 +561,13 @@ def _insert_core_graph(
                 conn.execute(
                     "INSERT INTO variable "
                     "(variable_id, register_id, provider_key, slug, name, "
-                    " definition, description, source_register_text, "
+                    " definition, description, operational_definition, "
+                    " source_register_text, "
                     " measurement_unit, source_register_id, source_label, "
                     " is_sensitive, is_identifier) "
-                    "VALUES (?, ?, ?, NULL, ?, ?, ?, NULL, NULL, NULL, ?, ?, ?)",
+                    # operational_definition NULL: a steward inventory carries no
+                    # SCB-style per-column operational definition (#892).
+                    "VALUES (?, ?, ?, NULL, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?)",
                     (
                         variable_id,
                         register_id,

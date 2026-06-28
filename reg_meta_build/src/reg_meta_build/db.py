@@ -409,14 +409,17 @@ CREATE TABLE variable (
     -- populates it; SQLite treats NULLs as distinct, so the transient all-NULL
     -- window doesn't trip the unique index below.
     slug TEXT,
-    -- Universal-vocabulary rename. Values stay provider-native. `variabeloperationell_definition`
-    -- merges into `description` at ingest when distinct + non-empty;
-    -- `variabelreferenstid`, `variabelhamtadfran`, and `variabelextern_kommentar`
-    -- are dropped. `variabelregister_kalla` (raw attribution text)
-    -- becomes `source_register_text`.
+    -- Universal-vocabulary rename. Values stay provider-native. SCB's
+    -- `variabeloperationell_definition` is a FIRST-CLASS column
+    -- (`operational_definition`) carrying the per-(split-)variable distinguishing
+    -- meaning, NOT merged into `description` (#892) — it survives the
+    -- parallel-column split so each sibling keeps its own. `variabelreferenstid`,
+    -- `variabelhamtadfran`, and `variabelextern_kommentar` are dropped.
+    -- `variabelregister_kalla` (raw attribution text) becomes `source_register_text`.
     name TEXT,
     definition TEXT,
     description TEXT,
+    operational_definition TEXT,
     source_register_text TEXT,
     measurement_unit TEXT,
     source_register_id INTEGER REFERENCES register(register_id),
@@ -491,6 +494,13 @@ CREATE TABLE variable_instance (
     data_length TEXT,
     value_set_version_label TEXT,
     vardemangdsniva TEXT,
+    -- #892: per-cvid carrier for SCB's `VariabelOperationell_definition`. The
+    -- ingest pass writes it here (the per-cvid grain is the right carrier — it
+    -- distinguishes parallel columns of one var_id), then `_coalesce_variable_states`
+    -- aggregates it to each OWNING (post-split-sibling) `variable.operational_definition`
+    -- via the same ground-truth `variable_id` stamp that routes aliases. Dropped
+    -- with this build-time-only table before ship.
+    operational_definition TEXT,
     classification_id INTEGER REFERENCES classification(id),
     -- value_set_id links to the cvid's deduplicated, year-projected code list.
     -- NULL when the cvid has no codes (sentinel-only or every union pair
@@ -806,6 +816,7 @@ CREATE VIRTUAL TABLE variable_fts USING fts5(
     name,
     definition,
     description,
+    operational_definition,
     content='variable',
     content_rowid='rowid',
     tokenize='unicode61'
@@ -2345,14 +2356,15 @@ def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) 
     # are excluded (they contain technical suffixes like _LISA that pollute
     # search results).
     conn.execute("""
-        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description)
+        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description, operational_definition)
         SELECT
             v.rowid,
             v.register_id,
             v.provider_key,
             v.name,
             v.definition,
-            v.description
+            v.description,
+            v.operational_definition
         FROM variable v
     """)
 
@@ -3021,10 +3033,12 @@ def _reinsert_core_graph_from_ir(
     conn.executemany(
         "INSERT INTO variable "
         "(variable_id, register_id, provider_key, slug, name, definition, "
-        " description, source_register_text, measurement_unit, source_register_id, "
+        " description, operational_definition, source_register_text, "
+        " measurement_unit, source_register_id, "
         " source_label, is_sensitive, is_identifier) "
         "VALUES (:variable_id, :register_id, :provider_key, NULL, :name, "
-        " :definition, :description, :source_register_text, :measurement_unit, "
+        " :definition, :description, :operational_definition, "
+        " :source_register_text, :measurement_unit, "
         " :source_register_id, :source_label, :is_sensitive, :is_identifier)",
         [
             {
@@ -3034,6 +3048,7 @@ def _reinsert_core_graph_from_ir(
                 "name": v.name,
                 "definition": v.definition,
                 "description": v.description,
+                "operational_definition": v.operational_definition,
                 "source_register_text": v.source_register_text,
                 "measurement_unit": v.measurement_unit,
                 "source_register_id": v.source_register_id,
