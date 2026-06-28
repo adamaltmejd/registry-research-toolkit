@@ -222,7 +222,7 @@ export interface paths {
          * @description The relationship graph for a catalog LEAF — a binding (3-seg) OR a
          *     classification edition (2-seg) — dispatched on FQID kind (#761/#792). A binding:
          *     one node per variable with its representation-run state history +
-         *     succession/related edges + same_as/group metadata, unioned over the variable's
+         *     succession edges + same_as/group metadata, unioned over the variable's
          *     concept group (Fork B). A classification: the edition's succession chain unioned
          *     with its curated umbrella group(s) (the #678 unified-graph payload that retires
          *     the lineage/dimensions panels). An empty graph (`nodes: []`) is the "don't
@@ -299,28 +299,6 @@ export interface paths {
          *     dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).
          */
         get: operations["get_binding_predecessors_api_catalog__fqid__predecessors_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/catalog/{fqid}/related": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Binding Related
-         * @description Split-sibling variables (variable grain — see reg_meta_build/DESIGN.md →
-         *     Build-time triage (SCB)). A dead/renamed binding 301s to `/related` on its
-         *     terminal successor (#411).
-         */
-        get: operations["get_binding_related_api_catalog__fqid__related_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -655,7 +633,7 @@ export interface components {
          * @description A binding LEAF (3-seg FQID) — the addressable variable plus its FULL
          *     longitudinal record embedded from one `Catalog.resolve` call: shared
          *     metadata, every state (each tagged with its variant), the variable-grain
-         *     `same_as` / `related_to` / `lineage` edges, and the full variable
+         *     `same_as` / `lineage` edges, and the full variable
          *     `succession_chain` (#582).
          *
          *     `lineage_warnings` are intentionally OMITTED — `ResolvedVariable` doesn't
@@ -690,8 +668,6 @@ export interface components {
             name: string | null;
             /** Register Id */
             register_id: number;
-            /** Related To */
-            related_to: components["schemas"]["RelatedRef"][];
             /** Same As */
             same_as: components["schemas"]["VariableRef"][];
             /** Source Register Id */
@@ -1488,17 +1464,13 @@ export interface components {
         /**
          * GraphEdge
          * @description A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``
-         *     is DIRECTED (predecessor → successor); ``related`` is UNDIRECTED — its
-         *     endpoints are canonicalized (sorted by node id) so the same relation seen from
-         *     both ends during group expansion collapses to one edge. ``label`` is the
-         *     succession reason / the related ``relation_kind``.
+         *     is DIRECTED (predecessor → successor). ``label`` is the succession reason.
          *
-         *     ``effective_year`` is the supersession year of a SUCCESSION edge — the year the
-         *     source edition was replaced by the target (the ``*_replaced_by`` row's
-         *     ``effective_year``). It is carried independently of ``label`` so the #678
-         *     timeline can annotate the transition with its year even when there is no human
-         *     reason (a year-only edge would otherwise render as an unlabelled arrow). Always
-         *     None on a ``related`` edge.
+         *     ``effective_year`` is the supersession year — the year the source edition was
+         *     replaced by the target (the ``*_replaced_by`` row's ``effective_year``). It is
+         *     carried independently of ``label`` so the #678 timeline can annotate the
+         *     transition with its year even when there is no human reason (a year-only edge
+         *     would otherwise render as an unlabelled arrow).
          */
         GraphEdge: {
             /** Effective Year */
@@ -1507,9 +1479,10 @@ export interface components {
             id: string;
             /**
              * Kind
-             * @enum {string}
+             * @default succession
+             * @constant
              */
-            kind: "succession" | "related";
+            kind: "succession";
             /** Label */
             label: string | null;
             /** Source */
@@ -1814,47 +1787,10 @@ export interface components {
             type: "register";
         };
         /**
-         * RelatedRef
-         * @description A variable-grain "see also" link from `variable_related_to`. Same 3-part
-         *     identity as `VariableRef` plus the `relation_kind`. The table carries the
-         *     MEANINGFUL links: the non-foldable auto-derived split reasons
-         *     (`code_vs_label_pair`, `import_bug_suspect`) and curated see-also kinds. The
-         *     bulk mechanical `same_definition_different_column` split siblings are NOT here
-         *     — they're the concept group (presentation fold), not a related edge (#591;
-         *     full taxonomy in reg_meta_build/DESIGN.md). `fqid` is the sibling's 3-segment
-         *     binding FQID (A2.6).
-         *
-         *     `register` is a `BaseModel` method, so the Python attr is `register_name`
-         *     aliased to the `register` wire/init name (#681); construct/serialize as
-         *     `register`, read as `.register_name` (see `BindingGroupRef`).
-         */
-        RelatedRef: {
-            /** Fqid */
-            fqid: string | null;
-            /** Provider */
-            provider: string;
-            /** Register */
-            register: string;
-            /** Relation Kind */
-            relation_kind: string;
-            /** Variable */
-            variable: string;
-        };
-        /**
-         * RelatedResponse
-         * @description `GET /api/catalog/{fqid}/related` — split-sibling edges.
-         */
-        RelatedResponse: {
-            /** Binding */
-            binding: string;
-            /** Related */
-            related: components["schemas"]["RelatedRef"][];
-        };
-        /**
          * RelationshipGraph
          * @description The relationship graph for a subject. ``nodes: []`` is the "don't render"
          *     signal (the frontend gate is ``nodes.length === 0``): a lone variable with no
-         *     succession / related / group siblings / meaningful representation boundary, or
+         *     succession / group siblings / meaningful representation boundary, or
          *     a lone classification edition with no succession chain and no group context.
          *     ``focus_id`` is the node matching the requested FQID (post same_as); None for
          *     group-addressed calls.
@@ -2153,8 +2089,8 @@ export interface components {
          * VariableGraphNode
          * @description A variable node: ONE node per variable, its full ``variable_state`` history
          *     as sub-structure (ordered ``(variant, valid_from)``; the run ids drive cells).
-         *     Nodes are variables — not states — because succession / related / same_as /
-         *     group are all variable-grain and the FQID must map to exactly one node.
+         *     Nodes are variables — not states — because succession / same_as / group are
+         *     all variable-grain and the FQID must map to exactly one node.
          */
         VariableGraphNode: {
             /** Definition */
@@ -2697,37 +2633,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PredecessorsResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_binding_related_api_catalog__fqid__related_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                fqid: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RelatedResponse"];
                 };
             };
             /** @description Validation Error */

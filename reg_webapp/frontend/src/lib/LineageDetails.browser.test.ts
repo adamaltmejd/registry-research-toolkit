@@ -7,8 +7,8 @@ import LineageDetails from "./LineageDetails.svelte";
 
 // LineageDetails (#678) re-homes the two NON-graph affordances off the retired
 // LineagePanels: PROVENANCE (the embedded `lineage[]` edges + the variable's
-// source register) and the FETCHED lineage warnings. Succession/related are NOT
-// here — they're graph edges now (HistoryGraph). These port the relevant cases:
+// source register) and the FETCHED lineage warnings. Succession is NOT
+// here — it's a graph edge now (HistoryGraph). These port the relevant cases:
 // omit-when-empty, the provenance list, the source-register line, the warnings
 // loading/error/empty/data states, and failure isolation.
 
@@ -27,7 +27,6 @@ function node(over: Partial<BindingNodeData> = {}): BindingNodeData {
     source_register_text: null,
     states: [],
     succession_chain: [],
-    related_to: [],
     same_as: [],
     ...over,
   } as unknown as BindingNodeData;

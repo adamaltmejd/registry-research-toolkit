@@ -112,7 +112,7 @@ const nodesByFqid = $derived.by(() => {
 // parallel-column siblings carry null — that's expected — but the canonical member
 // usually carries the one definition the whole group shares. Collect the DISTINCT
 // non-empty values across the MEMBER nodes (scoped to `node.members`, so a
-// succession/related neighbour the graph union pulls in never leaks its text here),
+// succession neighbour the graph union pulls in never leaks its text here),
 // then return the LONE shared value, or null.
 //
 // #900: a group-level definition is only honest when members genuinely AGREE — one

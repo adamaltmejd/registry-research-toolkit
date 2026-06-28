@@ -552,7 +552,7 @@ function commitSelected(selected: PickerSelection[]): void {
 
 {#snippet relationships()}
   <!-- #678: the unified history-graph view over the relationship-graph contract
-       (#761/#792) — succession / related / groups (Fork B) / same_as / focus
+       (#761/#792) — succession / groups (Fork B) / same_as / focus
        highlight, drawn as SVG. Omits itself on an empty graph (`nodes: []`) or
        while the fetch is unresolved/errored (its own failure domain — never
        blanks the leaf). It REPLACES the retired Dimensions + Lineage panels. -->
@@ -565,7 +565,7 @@ function commitSelected(selected: PickerSelection[]): void {
 
   <!-- The two NON-graph affordances the #761 payload doesn't carry — provenance
        (lineage edges + source register) and the fetched lineage warnings — live
-       here on the binding leaf (succession/related are graph edges now). -->
+       here on the binding leaf (succession is a graph edge now). -->
   <LineageDetails {fqidPath} {node} />
 {/snippet}
 

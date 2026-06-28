@@ -84,7 +84,6 @@ function node(
     source_register_text: null,
     states,
     same_as: [],
-    related_to: [],
     lineage: [],
     succession_chain: [],
     via_same_as: null,

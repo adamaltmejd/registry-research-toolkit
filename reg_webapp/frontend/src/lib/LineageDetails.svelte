@@ -16,7 +16,7 @@ import { catalogHref, formatWindow, windowTitle } from "./catalog";
 //                loading / error / empty handled; omitted when empty; an error
 //                renders inline and NEVER blanks the leaf.
 //
-// Succession + related are NOT here — they are graph EDGES now (HistoryGraph).
+// Succession is NOT here — it is a graph EDGE now (HistoryGraph).
 //
 // Omit-when-empty (the LineagePanels ethos): each section is shown when it has
 // data OR (warnings) is still loading / errored — we never hide a section whose
