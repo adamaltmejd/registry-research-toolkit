@@ -747,12 +747,13 @@ variables and the layer shrinks to edge/rank/vintage duty.
 **API**: `Catalog.list_concept_groups(provider, register)` (variable groups, register
 scope) and `Catalog.list_classification_groups()` (classification umbrella groups,
 catalog scope) return `ConceptGroupSummary` — `key` (scope-unique derivation key, a UI
-anchor), `label`, `source` (`edge`/`token`/`curated`), `axes` (the group's ordered named
-facet axes from `concept_group_axis`, #819: empty for edge/axis-less umbrella groups,
-one element for single-axis groups, N for multi-axis curated families), and members
-ordered by first-axis facet value then slug. Each `ConceptGroupMember` carries the leaf
-`Fqid`, display name, optional `delivery_column` (None for a whole-variable member, the
-SCB delivery column for a representation member), and per-axis `GroupFacet` assignments
+anchor), `label`, `source` (`edge`/`token`/`curated`), `axes` (the group's ordered
+`GroupAxis(name, label)` objects from `concept_group_axis`, #819: match on stable
+`name`, display curator-authored `label`; empty for edge/axis-less umbrella groups, one
+element for single-axis groups, N for multi-axis curated families), and members ordered
+by first-axis facet value then slug. Each `ConceptGroupMember` carries the leaf `Fqid`,
+display name, optional `delivery_column` (None for a whole-variable member, the SCB
+delivery column for a representation member), and per-axis `GroupFacet` assignments
 (`month`/`rank`/`vintage`/`enhet` — sortable `value`, display `label`). The webapp's
 register / classification-root responses embed these alongside the complete flat
 children list, and the SPA folds (`reg_webapp/DESIGN.md`).
