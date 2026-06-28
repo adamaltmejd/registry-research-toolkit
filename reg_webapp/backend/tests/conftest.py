@@ -366,7 +366,6 @@ def _seed_kon_edges(src: sqlite3.Connection) -> None:
 
     - ``variable_replaced_by``: kon → rams/syss (a succession edge, so
       ``/successors`` on kon and ``/predecessors`` on syss are non-empty).
-    - ``variable_related_to``: kon ↔ rams/syss split-sibling (``/related``).
     - ``variable_state_lineage``: kon's state consumes rams/syss's state
       (``/lineage`` non-empty, with a real ``source_fqid``).
     - ``variable_state_lineage_warning``: a ``no_source_state`` warning on kon's
@@ -385,12 +384,6 @@ def _seed_kon_edges(src: sqlite3.Connection) -> None:
         "successor_provider, successor_register, successor_variable, "
         "effective_year, note, beskrivning) "
         "VALUES ('scb','lisa','kon','scb','rams','syss',2019,'auto:test','kon→syss')"
-    )
-    src.execute(
-        "INSERT INTO variable_related_to "
-        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable, "
-        "relation_kind) "
-        "VALUES ('scb','lisa','kon','scb','rams','syss','code_vs_label_pair')"
     )
     src.execute(
         "INSERT INTO variable_state_lineage "

@@ -1,7 +1,7 @@
 """A5.2a-ii catalog-READ sub-endpoints against the slugged ``catalog_db`` fixture.
 
-Covers the 7 suffixed / sub-resource routes (`/states`, `/predecessors`,
-`/successors`, `/related`, `/lineage`, `/lineage_warnings`, and the
+Covers the suffixed / sub-resource routes (`/states`, `/predecessors`,
+`/successors`, `/lineage`, `/lineage_warnings`, and the
 `/{provider}/{register}/variants` register sub-resource), the `?period` query on
 the catch-all (the `{states: [...]}` resolve_at shape), the read-only
 `?value_set_version` browse-narrowing label filter, and a per-DB-backed-route
@@ -12,9 +12,8 @@ gate
 guard (catalog_fqid.py)) lives in ``test_fqid_validation.py``.
 
 The ``catalog_db`` fixture seeds ``scb/lisa/kon`` with a same_as edge, a
-succession edge (kon→rams/syss), a related-to edge, a lineage edge (kon's state
-consumes syss's), and a lineage warning — so the suffixed endpoints return
-non-empty bodies.
+succession edge (kon→rams/syss), a lineage edge (kon's state consumes syss's),
+and a lineage warning — so the suffixed endpoints return non-empty bodies.
 """
 
 from __future__ import annotations
@@ -78,15 +77,6 @@ def test_predecessors_endpoint(client):
     body = resp.json()
     assert body["binding"] == _SYSS
     assert any(r["fqid"] == _KON for r in body["predecessors"])
-
-
-def test_related_endpoint(client):
-    resp = client.get(f"/api/catalog/{_KON}/related")
-    assert resp.status_code == 200
-    body = resp.json()
-    assert body["binding"] == _KON
-    rel = next(r for r in body["related"] if r["fqid"] == _SYSS)
-    assert rel["relation_kind"] == "code_vs_label_pair"
 
 
 def test_lineage_endpoint(client):
@@ -172,20 +162,17 @@ def test_clean_binding_has_empty_lineage_and_warnings(client):
 
 
 def test_graph_endpoint_variable(client):
-    # kon has a succession edge to rams/syss and a related edge to it → a non-empty
-    # graph with both node kinds present and `focus_id` = the queried node.
+    # kon has a succession edge to rams/syss → a non-empty graph with both nodes
+    # present and `focus_id` = the queried node. The graph is succession-only.
     resp = client.get(f"/api/catalog/{_KON}/graph")
     assert resp.status_code == 200
     body = resp.json()
     assert body["focus_id"] == _KON
     node_ids = {n["id"] for n in body["nodes"]}
     assert _KON in node_ids
-    assert _SYSS in node_ids  # succession + related neighbor
+    assert _SYSS in node_ids  # the succession successor
     kinds = {e["kind"] for e in body["edges"]}
-    assert kinds == {"succession", "related"}, body
-    # Undirected related dedup: exactly one related edge despite both stored directions.
-    related = [e for e in body["edges"] if e["kind"] == "related"]
-    assert len(related) == 1
+    assert kinds == {"succession"}, body
 
 
 def test_graph_endpoint_variable_carries_same_as(client):
@@ -351,7 +338,6 @@ def test_variants_reserved_segment_422_not_500(client, path: str):
         "states",
         "predecessors",
         "successors",
-        "related",
         "lineage",
         "lineage_warnings",
         "dimensions",
@@ -373,7 +359,6 @@ def test_subendpoint_on_register_fqid_is_422(client, suffix: str):
         "states",
         "predecessors",
         "successors",
-        "related",
         "lineage",
         "lineage_warnings",
         "dimensions",
@@ -390,7 +375,6 @@ def test_subendpoint_on_absent_binding_is_404(client, suffix: str):
         "states",
         "predecessors",
         "successors",
-        "related",
         "lineage",
         "lineage_warnings",
         "dimensions",
@@ -606,7 +590,6 @@ _READ_PATHS = [
     f"/api/catalog/{_KON}/states",
     f"/api/catalog/{_KON}/predecessors",
     f"/api/catalog/{_KON}/successors",
-    f"/api/catalog/{_KON}/related",
     f"/api/catalog/{_KON}/lineage",
     f"/api/catalog/{_KON}/lineage_warnings",
     f"/api/catalog/{_INKJAN}/dimensions",
@@ -666,7 +649,6 @@ _CONCURRENT_DB_ROUTES = [
     f"/api/catalog/{_KON}/predecessors",
     f"/api/catalog/{_SYSS}/predecessors",
     f"/api/catalog/{_KON}/successors",
-    f"/api/catalog/{_KON}/related",
     f"/api/catalog/{_KON}/lineage",
     f"/api/catalog/{_KON}/lineage_warnings",
     f"/api/catalog/{_INKJAN}/dimensions",

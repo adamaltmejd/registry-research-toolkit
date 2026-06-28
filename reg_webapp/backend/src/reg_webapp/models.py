@@ -24,7 +24,6 @@ from reg_meta.catalog import (
     LineageEdge,
     LineageWarning,
     RegisterCoverage,
-    RelatedRef,
     VariableCoverage,
     VariableEdition,
     VariableRef,
@@ -223,9 +222,9 @@ class VariantsRef(BaseModel):
 # ── Binding-leaf embedded longitudinal record ──────────────────────────────
 # The binding LEAF (3-seg) embeds the variable's FULL record from one
 # `Catalog.resolve` call: every state + variable-grain edges. These are reg_meta's
-# frozen Pydantic models (`VariableState` / `VariableRef` / `RelatedRef` /
-# `LineageEdge` / `VariableEdition`) embedded directly (#681). `ResolvedVariable`
-# does NOT carry lineage_warnings, so they are OMITTED here (they arrive via A5.2's
+# frozen Pydantic models (`VariableState` / `VariableRef` / `LineageEdge` /
+# `VariableEdition`) embedded directly (#681). `ResolvedVariable` does NOT carry
+# lineage_warnings, so they are OMITTED here (they arrive via A5.2's
 # `/lineage_warnings`).
 
 
@@ -233,7 +232,7 @@ class BindingNode(BaseModel):
     """A binding LEAF (3-seg FQID) — the addressable variable plus its FULL
     longitudinal record embedded from one `Catalog.resolve` call: shared
     metadata, every state (each tagged with its variant), the variable-grain
-    `same_as` / `related_to` / `lineage` edges, and the full variable
+    `same_as` / `lineage` edges, and the full variable
     `succession_chain` (#582).
 
     `lineage_warnings` are intentionally OMITTED — `ResolvedVariable` doesn't
@@ -264,7 +263,6 @@ class BindingNode(BaseModel):
     # succession carries a single self+current edition. The `/predecessors` /
     # `/successors` sub-resources stay (they back the #411 permalink-redirect rails).
     succession_chain: list[VariableEdition] = Field(default_factory=list)
-    related_to: list[RelatedRef]
     lineage: list[LineageEdge]
     # #616/#617: the binding's owning concept group as its addressable
     # `(provider, register, key)` when it is a group member, else None. Lets a
@@ -414,10 +412,10 @@ CatalogNode = Annotated[
 
 
 # ── A5.2a-ii sub-endpoint models (see DESIGN.md → Catalog router structure) ──
-# The 7 suffixed/sub-resource read endpoints. Each returns a thin envelope
+# The suffixed/sub-resource read endpoints. Each returns a thin envelope
 # echoing the queried `binding` (or `register`) FQID plus the reg_meta model list,
 # so the SPA codegen sees one response type per endpoint. These EMBED the same
-# reg_meta models the leaf embeds (`VariableState` / `VariableRef` / `RelatedRef` /
+# reg_meta models the leaf embeds (`VariableState` / `VariableRef` /
 # `LineageEdge` / `LineageWarning` / `VariantSummary`) — the sub-endpoints are the
 # standalone accessors for the same edges the leaf embeds (#681).
 
@@ -455,13 +453,6 @@ class DimensionsResponse(BaseModel):
 
     binding: str
     dimensions: list[ConceptGroupSummary]
-
-
-class RelatedResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/related` — split-sibling edges."""
-
-    binding: str
-    related: list[RelatedRef]
 
 
 class LineageResponse(BaseModel):

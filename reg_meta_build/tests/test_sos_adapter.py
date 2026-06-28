@@ -23,7 +23,6 @@ from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.id import _MINT_BIT, mint
 from reg_meta_build.ir import (
     IRRegister,
-    IRRelatedToEdge,
     IRValueCode,
     IRVariable,
     IRVariableAlias,
@@ -213,13 +212,9 @@ def test_known_split_bu_fod_datumn() -> None:
     ids = {v.variable_id for v in variables}
     assert len(ids) == 2, "distinct minted sibling ids"
     assert all(v.provider_key == "FOD_DATUMN" for v in variables)
-    edges = _of(objs, IRRelatedToEdge)
-    # IRRelatedToEdge is not emitted in-stream by SOS (the adapter pushes to
-    # related_edges); the materializer writes them. So assert via the adapter.
-    assert edges == []
 
 
-def test_known_split_bu_records_related_edge() -> None:
+def test_known_split_bu_records_sibling_edge() -> None:
     reg = _register(
         "bu",
         [
@@ -228,9 +223,10 @@ def test_known_split_bu_records_related_edge() -> None:
         ],
     )
     _, adapter = _emit(reg)
-    assert len(adapter.related_edges) == 1
-    a, b, kind = adapter.related_edges[0]
-    assert kind == "same_definition_different_column"
+    # The split records ONE sibling pair (the in-build concept-group fold input,
+    # never persisted to a shipped table).
+    assert len(adapter.sibling_edges) == 1
+    a, b = adapter.sibling_edges[0]
     assert a != b
 
 
@@ -245,7 +241,7 @@ def test_known_split_par_atc() -> None:
     )
     objs, adapter = _emit(reg)
     assert len(_of(objs, IRVariable)) == 2
-    assert len(adapter.related_edges) == 1
+    assert len(adapter.sibling_edges) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -266,7 +262,7 @@ def test_warn_merge_unanticipated_conflict() -> None:
     )
     objs, adapter = _emit(reg)
     assert len(_of(objs, IRVariable)) == 1, "unanticipated conflict warn-MERGEs"
-    assert adapter.related_edges == []
+    assert adapter.sibling_edges == []
     warns = [
         w
         for w in _of(objs, IRWarning)
@@ -2241,10 +2237,9 @@ def test_synthetic_combined_scb_subset_identical_to_scb_only(tmp_path: Path) -> 
     # byte-identical to an SCB-only build over the same input. Diff the
     # provider-shaped tables with SOS filtered out (value tables are
     # content-shared, so they legitimately differ by the SOS-only value_sets and
-    # are excluded from the proxy). `variable_related_to` is included, filtered
-    # to its SOS endpoints — the surface the P3#1 leaked-loop-var regression
-    # polluted. (Under skip_slugs the slug-keyed tables are empty, so this is the
-    # same contract pin the deleted real-data byte-identity proxy relied on.)
+    # are excluded from the proxy). (Under skip_slugs the slug-keyed tables are
+    # empty, so this is the same contract pin the deleted real-data byte-identity
+    # proxy relied on.)
     from _sos_fixtures import write_sos_input
     from reg_meta_build.dbdiff import DEFAULT_IGNORE, TableIgnore, diff_db_content
 
@@ -2278,11 +2273,10 @@ def test_synthetic_combined_scb_subset_identical_to_scb_only(tmp_path: Path) -> 
             "variable",
             "register_id IN (SELECT register_id FROM register WHERE provider_id = 2)",
         ),
-        ("variable_related_to", "a_provider = 'sos' OR b_provider = 'sos'"),
     ):
         ignore[table] = TableIgnore(skip_where=where)
     rep = diff_db_content(scb, comb, ignore=ignore)
-    proxy_tables = {"register", "register_variant", "variable", "variable_related_to"}
+    proxy_tables = {"register", "register_variant", "variable"}
     seen = set()
     for tr in rep.table_results:
         if tr.table in proxy_tables:
@@ -2597,17 +2591,15 @@ def test_synthetic_combined_build_validates_edges_fts(tmp_path: Path) -> None:
             == 2
         )
 
-        # (2) No cross-provider equivalence/relation edges (validate doesn't
-        # cover cross-provider edges). Under --skip-slugs
-        # both tables are empty (slug-keyed; can't resolve), so this is the same
-        # contract pin the real-data combined test relies on — a future
-        # regression that leaks a cross-provider edge (e.g. the P3#1
-        # leaked-loop-var merge) is caught.
-        for table in ("variable_same_as", "variable_related_to"):
-            n_cross = conn.execute(
-                f"SELECT COUNT(*) FROM {table} WHERE a_provider != b_provider"
-            ).fetchone()[0]
-            assert n_cross == 0, f"{table} has {n_cross} cross-provider edge(s)"
+        # (2) No cross-provider equivalence edges (validate doesn't cover
+        # cross-provider edges). Under --skip-slugs the table is empty (slug-keyed;
+        # can't resolve), so this is the same contract pin the real-data combined
+        # test relies on — a future regression that leaks a cross-provider edge
+        # (e.g. the P3#1 leaked-loop-var merge) is caught.
+        n_cross = conn.execute(
+            "SELECT COUNT(*) FROM variable_same_as WHERE a_provider != b_provider"
+        ).fetchone()[0]
+        assert n_cross == 0, f"variable_same_as has {n_cross} cross-provider edge(s)"
 
         # (3) FTS row-count parity with the base tables (content-synced
         # indexes; validate doesn't cover the FTS mirrors).
@@ -2702,14 +2694,14 @@ def test_synthetic_sos_only_build_drops_classification_candidate(
         conn.close()
 
 
-def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
+def test_synthetic_combined_build_with_slugs_split_stays_sos_internal(
     tmp_path: Path,
 ) -> None:
     # The skip-slugs combined test above pins the edge-count CONTRACT but can't
     # exercise the slug-keyed derivation (the fold is empty without slugs). This
     # runs the build WITH slugs so the PAR ATC split materializes its concept-
-    # group EDGE fold (#591 — the foldable `same_def` siblings no longer land in
-    # `variable_related_to`), then asserts SOS's split siblings stay SOS-internal —
+    # group EDGE fold (the sibling pairs feed the fold directly; they never land
+    # in a shipped table), then asserts SOS's split siblings stay SOS-internal —
     # the LIVE guard for the P3#1 leaked-loop-var regression that crossed SOS
     # edges onto SCB. populate_slugs(strict=True) demands a slug for every
     # register/variant, so we curate them from a throwaway no-slug "probe" build
@@ -2723,7 +2715,7 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
     from reg_meta_build.validate import validate_built_db
 
     inp = _write_scb_only(tmp_path)
-    # PAR triggers the ("par", "ATC") split -> one related-to edge between its
+    # PAR triggers the ("par", "ATC") split -> one sibling pair between its
     # two sibling variables.
     write_sos_input(inp, registers=DEFAULT_REGISTERS + (PAR_SPLIT_REGISTER,))
 
@@ -2760,16 +2752,9 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
             == 0
         )
 
-        # #591: the PAR ATC `same_def` split no longer persists to
-        # `variable_related_to` (that table now carries only non-foldable /
-        # curated links — none in this build) — it folds into a concept-group
-        # EDGE group instead. So the table is empty here.
-        n_related = conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[
-            0
-        ]
-        assert n_related == 0, f"expected an empty related-to table, got {n_related}"
-
-        # The split's regression guard moves to the edge concept group: the PAR
+        # The PAR ATC split's siblings feed the concept-group EDGE fold directly
+        # (never a shipped table). The split's regression guard is the edge group:
+        # the PAR
         # ATC siblings folded into ONE `source='edge'` group, and EVERY variable
         # in any edge group is SOS-internal — none leaked to SCB (the P3#1
         # leaked-loop-var regression that crossed SOS edges onto SCB).

@@ -1,14 +1,14 @@
 """One typed curation surface for the curated pairwise-relation facts (#522).
 
-Four maintainer-authored relation surfaces used to live apart — `same_as` (split
-between `variable_same_as.toml` and an inline `same_as` field on the slug TOMLs),
-`related_to` (`variable_related_to.toml`), and `replaced_by` (a top-level
-`[[replaced_by]]` array inside the slug TOMLs). They are three *kinds* of the
-same thing — a curated assertion about a pair of catalog entities — so they now
-share ONE file (`reg_meta_build/curation/relations.toml`) as a single `[[edge]]`
-array discriminated by `type`, and ONE loader + materializer (this module).
+Maintainer-authored relation surfaces used to live apart — `same_as` (split
+between `variable_same_as.toml` and an inline `same_as` field on the slug TOMLs)
+and `replaced_by` (a top-level `[[replaced_by]]` array inside the slug TOMLs).
+They are two *kinds* of the same thing — a curated assertion about a pair of
+catalog entities — so they now share ONE file
+(`reg_meta_build/curation/relations.toml`) as a single `[[edge]]` array
+discriminated by `type`, and ONE loader + materializer (this module).
 
-The three relation kinds are genuinely different relations, and the materializer
+The two relation kinds are genuinely different relations, and the materializer
 keeps every prior behavior verbatim (the DB output is byte-identical — gated by
 dbdiff):
 
@@ -26,15 +26,6 @@ dbdiff):
     `register_replaced_by` / `variable_replaced_by`, one direction, sharing the
     event pass's seen-PK sets so a curated edge dedups against an event one and
     the combined per-grain graph is cycle-checked.
-  - `related_to` — weak "see also" DISCOVERY link between distinct concepts. Lands
-    in `variable_related_to` (the same table the A2.2 triage feeds with the
-    NON-FOLDABLE `auto:triage` split kinds — `code_vs_label_pair`,
-    `import_bug_suspect`) but on a DISJOINT relation-kind vocabulary
-    (`CURATED_RELATION_KINDS`) so a curated weak link can never be mistaken for a
-    split sibling. The bulk `same_definition_different_column` siblings are NOT in
-    this table at all (#591) — they feed the concept-group edge fold directly from
-    the in-build sibling sets — so a curated kind matching them is rejected by the
-    allowlist on principle.
 
 The same-as candidate GENERATOR (`infer_same_as_candidates`, #508) stays in
 `variable_same_as.py`; it reads structured signals off a built DB and RENDERS a
@@ -50,7 +41,6 @@ is a maintainer artifact — absent in wheel installs and synthetic test builds.
 from __future__ import annotations
 
 import functools
-import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -62,28 +52,17 @@ from ._curation import (
     load_curation_entries,
     require_fqid,
     resolve_register_id,
-    resolve_variable_id,
 )
 
 if TYPE_CHECKING:
+    import sqlite3
     from collections.abc import Iterable
 
 # ── relation kind vocabularies ──────────────────────────────────────────────
 
 # The legal `type` discriminators. Surfaced in the unknown-type error so a typo
 # is self-correcting.
-_EDGE_TYPES: frozenset[str] = frozenset({"same_as", "replaced_by", "related_to"})
-
-# Curated `related_to` relation-kind vocabulary. Grows with curation needs (add
-# the kind here + document its meaning). The allowlist is the gate: a curated
-# `related_to` must name one of these kinds, so a typo or the bulk auto:triage
-# split kind is rejected (the concept-group edge fold owns the bulk siblings, and
-# a curated "see also" must never be one).
-CURATED_RELATION_KINDS: frozenset[str] = frozenset({"similar_concept"})
-
-# Default `note` for a curated related_to edge that doesn't set one — provenance
-# marker distinguishing these rows from the auto:triage edges in the same table.
-_CURATED_RELATED_NOTE_DEFAULT = "curated"
+_EDGE_TYPES: frozenset[str] = frozenset({"same_as", "replaced_by"})
 
 # Provenance marker for curated replaced_by edges (mirrors db.py so a consumer can
 # tell curated from auto-derived). It lands in `note` for ALL three grains. For
@@ -124,8 +103,8 @@ _REPLACED_BY_GRAINS: frozenset[FqidKind] = frozenset(
 _SAME_AS_FIELDS: frozenset[str] = frozenset({"a", "b", "note"})
 # `from_column` / `to_column` (#843) ride a variable-grain replaced_by edge to
 # name a REPRESENTATION endpoint `(variable_fqid, delivery_column)` — both or
-# neither, both endpoints variable-grain. A column field on a same_as / related_to
-# edge is foreign and rejected by their maps.
+# neither, both endpoints variable-grain. A column field on a same_as edge is
+# foreign and rejected by its map.
 # `variant` (#846) optionally rides a REPRESENTATION edge (one carrying
 # `from_column` / `to_column`) to scope the succession to a single
 # register-variant: `''`/absent = variable-level (the default, whole-variable
@@ -135,7 +114,6 @@ _SAME_AS_FIELDS: frozenset[str] = frozenset({"a", "b", "note"})
 _REPLACED_BY_FIELDS: frozenset[str] = frozenset(
     {"from", "to", "effective_year", "note", "from_column", "to_column", "variant"}
 )
-_RELATED_TO_FIELDS: frozenset[str] = frozenset({"a", "b", "relation_kind", "note"})
 
 _VarKey = tuple[str, str, str]
 _ClassKey = tuple[str, str]
@@ -220,30 +198,12 @@ class CuratedReplacedBy:
 
 
 @dataclass(frozen=True)
-class CuratedRelatedTo:
-    """One `type = "related_to"` "see also" edge: an UNORDERED pair of variable
-    FQIDs (`a` / `b`, 3-segment), the curated `relation_kind`, and an optional
-    `note`. Endpoint resolution happens at materialize time against the built
-    DB."""
-
-    a_provider: str
-    a_register: str
-    a_variable: str
-    b_provider: str
-    b_register: str
-    b_variable: str
-    relation_kind: str
-    note: str | None
-
-
-@dataclass(frozen=True)
 class CuratedRelations:
-    """The parsed `relations.toml`, grouped by relation kind. One load yields all
-    three; the build materializes each into its own table(s)."""
+    """The parsed `relations.toml`, grouped by relation kind. One load yields
+    both; the build materializes each into its own table(s)."""
 
     same_as: tuple[CuratedSameAs, ...]
     replaced_by: tuple[CuratedReplacedBy, ...]
-    related_to: tuple[CuratedRelatedTo, ...]
 
 
 def _join_fqid(provider: str, register: str, variable: str | None) -> str:
@@ -610,63 +570,17 @@ def _parse_replaced_by_fqid(field: str, raw: Any) -> Fqid:
     return fqid
 
 
-def _load_related_to(entry: dict) -> CuratedRelatedTo:
-    """Validate one `type = "related_to"` edge. `a` / `b` are 3-seg variable
-    FQIDs; `relation_kind` is in `CURATED_RELATION_KINDS` (a non-curated kind is
-    rejected — the bulk split siblings are the concept-group fold's, never a
-    curated see-also). No self-edge."""
-    _reject_foreign_fields(entry, "related_to", _RELATED_TO_FIELDS)
-    a = _require_fqid_variable(entry, "a")
-    b = _require_fqid_variable(entry, "b")
-    if a == b:
-        raise curation_error(
-            "relations_invalid",
-            f"relations [[edge]] type='related_to' relates {'/'.join(a)} to itself.",
-            "A see-also edge connects two DISTINCT variables; remove the self-edge.",
-        )
-    kind = entry.get("relation_kind")
-    if not isinstance(kind, str) or not kind:
-        raise curation_error(
-            "relations_invalid",
-            f"relations [[edge]] type='related_to' needs `relation_kind` as a "
-            f"non-empty string, got {kind!r}.",
-            f'Use `relation_kind = "<kind>"` with a kind in '
-            f"{sorted(CURATED_RELATION_KINDS)}.",
-        )
-    if kind not in CURATED_RELATION_KINDS:
-        raise curation_error(
-            "relations_invalid",
-            f"relations [[edge]] type='related_to' relation_kind {kind!r} is not "
-            f"a curated kind {sorted(CURATED_RELATION_KINDS)} (the bulk auto:triage "
-            "split kinds are owned by the concept-group fold, never curated here).",
-            "Use a curated relation_kind, or add the new kind to "
-            "CURATED_RELATION_KINDS in reg_meta_build/relations.py.",
-        )
-    note = _require_note(entry, "related_to")
-    return CuratedRelatedTo(
-        a_provider=a[0],
-        a_register=a[1],
-        a_variable=a[2],
-        b_provider=b[0],
-        b_register=b[1],
-        b_variable=b[2],
-        relation_kind=kind,
-        note=note,
-    )
-
-
 def load_relations(path: Path | None) -> CuratedRelations:
     """Parse the single `[[edge]]` array from `relations.toml`, dispatching on
     each entry's `type` to per-type validation. Empty when no file (synthetic
     test builds, wheel installs) or no entries.
 
     Load-time validation (all EXIT_CONFIG, actionable): `type` is one of
-    `same_as` / `replaced_by` / `related_to`; per-type required fields are
-    present and well-shaped; a field legal for ANOTHER type is rejected as
-    foreign (a mis-typed edge); no self-edge/self-loop; unordered duplicate pairs
-    within same_as and related_to are rejected. Endpoint RESOLUTION against the
-    built DB is deferred to materialize time (the same load/resolve split as the
-    other curation surfaces)."""
+    `same_as` / `replaced_by`; per-type required fields are present and
+    well-shaped; a field legal for ANOTHER type is rejected as foreign (a
+    mis-typed edge); no self-edge/self-loop; unordered duplicate same_as pairs are
+    rejected. Endpoint RESOLUTION against the built DB is deferred to materialize
+    time (the same load/resolve split as the other curation surfaces)."""
     entries = load_curation_entries(
         path,
         entry_key="edge",
@@ -678,11 +592,9 @@ def load_relations(path: Path | None) -> CuratedRelations:
     )
     same_as: list[CuratedSameAs] = []
     replaced_by: list[CuratedReplacedBy] = []
-    related_to: list[CuratedRelatedTo] = []
-    # Unordered FQID pairs already seen per pair-typed kind — a duplicate is
-    # curation drift, not something to silently dedup.
+    # Unordered FQID pairs already seen — a duplicate is curation drift, not
+    # something to silently dedup.
     seen_same_as: set[frozenset[str]] = set()
-    seen_related: set[frozenset[tuple[str, str, str]]] = set()
     for entry in entries:
         edge_type = entry.get("type")
         if not isinstance(edge_type, str) or edge_type not in _EDGE_TYPES:
@@ -705,30 +617,11 @@ def load_relations(path: Path | None) -> CuratedRelations:
                 )
             seen_same_as.add(pair)
             same_as.append(edge)
-        elif edge_type == "replaced_by":
+        else:  # replaced_by
             replaced_by.append(_load_replaced_by(entry))
-        else:  # related_to
-            rel = _load_related_to(entry)
-            rpair = frozenset(
-                {
-                    (rel.a_provider, rel.a_register, rel.a_variable),
-                    (rel.b_provider, rel.b_register, rel.b_variable),
-                }
-            )
-            if rpair in seen_related:
-                raise curation_error(
-                    "relations_invalid",
-                    f"relations has a duplicate related_to pair "
-                    f"{{{'/'.join((rel.a_provider, rel.a_register, rel.a_variable))}, "
-                    f"{'/'.join((rel.b_provider, rel.b_register, rel.b_variable))}}}.",
-                    "List each variable pair once (the edge is symmetric).",
-                )
-            seen_related.add(rpair)
-            related_to.append(rel)
     return CuratedRelations(
         same_as=tuple(same_as),
         replaced_by=tuple(replaced_by),
-        related_to=tuple(related_to),
     )
 
 
@@ -897,89 +790,6 @@ def _unknown_same_as_endpoint(fqid: str, side: str, grain: str) -> Exception:
         "not exist in this build.",
         f"Fix the `{side}` FQID in reg_meta_build/curation/relations.toml.",
     )
-
-
-# ---------------------------------------------------------------------------
-# Materialization — related_to
-# ---------------------------------------------------------------------------
-
-
-def materialize_related_to(
-    conn: sqlite3.Connection,
-    related_to: Iterable[CuratedRelatedTo],
-    *,
-    providers: frozenset[str] = frozenset(),
-) -> int:
-    """Write curated "see also" edges (both directions) into `variable_related_to`
-    on the curated (non-foldable) relation-kind vocabulary. Provider-gated (an
-    out-of-build endpoint is SKIPPED). An edge whose providers ARE built but whose
-    variable doesn't resolve IS drift -> fail fast. A PK collision with an
-    existing edge (auto:triage sibling or another curated edge) is curation drift,
-    not a benign re-add -> fail loud. Returns the row count inserted (both
-    directions counted)."""
-    n_inserted = 0
-    for e in related_to:
-        if e.a_provider not in providers or e.b_provider not in providers:
-            continue
-        a_fqid = f"{e.a_provider}/{e.a_register}/{e.a_variable}"
-        b_fqid = f"{e.b_provider}/{e.b_register}/{e.b_variable}"
-        if resolve_variable_id(conn, e.a_provider, e.a_register, e.a_variable) is None:
-            raise curation_error(
-                "relations_related_to_unresolved",
-                f"relations related_to edge endpoint {a_fqid!r} does not resolve "
-                "to a variable.",
-                "Fix the `a` FQID in reg_meta_build/curation/relations.toml.",
-            )
-        if resolve_variable_id(conn, e.b_provider, e.b_register, e.b_variable) is None:
-            raise curation_error(
-                "relations_related_to_unresolved",
-                f"relations related_to edge endpoint {b_fqid!r} does not resolve "
-                "to a variable.",
-                "Fix the `b` FQID in reg_meta_build/curation/relations.toml.",
-            )
-        note = e.note if e.note is not None else _CURATED_RELATED_NOTE_DEFAULT
-        # Plain INSERT (NOT OR IGNORE): a PK collision is curation drift, not a
-        # benign re-add — fail loud rather than silently drop the curated
-        # kind/note.
-        try:
-            conn.executemany(
-                "INSERT INTO variable_related_to "
-                "(a_provider, a_register, a_variable, b_provider, b_register, "
-                " b_variable, relation_kind, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                [
-                    (
-                        e.a_provider,
-                        e.a_register,
-                        e.a_variable,
-                        e.b_provider,
-                        e.b_register,
-                        e.b_variable,
-                        e.relation_kind,
-                        note,
-                    ),
-                    (
-                        e.b_provider,
-                        e.b_register,
-                        e.b_variable,
-                        e.a_provider,
-                        e.a_register,
-                        e.a_variable,
-                        e.relation_kind,
-                        note,
-                    ),
-                ],
-            )
-        except sqlite3.IntegrityError as exc:
-            raise curation_error(
-                "relations_related_to_collision",
-                f"relations related_to curated edge {{{a_fqid}, {b_fqid}}} "
-                "collides with an edge already present (auto:triage sibling or "
-                "another curated edge).",
-                "Remove the duplicate edge from "
-                "reg_meta_build/curation/relations.toml.",
-            ) from exc
-        n_inserted += 2
-    return n_inserted
 
 
 # ---------------------------------------------------------------------------

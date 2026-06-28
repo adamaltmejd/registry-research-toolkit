@@ -19,9 +19,8 @@ never claims an already-grouped member):
    zero-inference (e.g. ureg's sun2000inr/sun2020inr coding succession; on the
    real corpus ~2,200 components covering ~8,200 variables, 2,191/2,193
    sharing a single name). The pairs are read from the IN-BUILD sibling sets the
-   triage minted (``edge_siblings``), NOT from the ``variable_related_to`` table
-   — the foldable ``same_def`` edges are no longer persisted there (#591; the
-   table now carries only the meaningful curated/non-foldable links). A later
+   triage minted (``edge_siblings``); they are never persisted to any shipped
+   table. A later
    ``curated`` ``[[variable_group]]`` takes PRECEDENCE: any FQID it claims is
    subtracted from the edge components before they mint groups (so #488's
    per-population curation can re-home a näringsgren variable the edge fold would
@@ -165,10 +164,6 @@ _MIN_LABEL_PREFIX = 5
 # year, and the year-stripped names must all be identical.
 _MIN_VINTAGE_SIBLINGS = 2
 _VINTAGE_YEARS = range(1900, 2100)
-
-# The foldable split-sibling kind (#591). Public so db.py can skip persisting it
-# to `variable_related_to` and key the in-build `edge_siblings` subset off it.
-EDGE_RELATION_KIND = "same_definition_different_column"
 
 
 # ── curated TOML ────────────────────────────────────────────────────────────
@@ -876,9 +871,9 @@ def _derive_edge_groups(
     exclude_variable_ids: set[int],
 ) -> int:
     """Dimension 0: one group per connected component of within-register
-    split-sibling pairs. `edge_siblings` is the IN-BUILD `same_def` subset the
-    triage minted (`(variable_id, variable_id)` pairs) — NOT a table round-trip;
-    the foldable edges are no longer persisted to `variable_related_to` (#591).
+    split-sibling pairs. `edge_siblings` is the IN-BUILD set of same-definition
+    sibling pairs the triage minted (`(variable_id, variable_id)`) — NOT a table
+    round-trip; they are never persisted to any shipped table.
 
     Only a pair whose BOTH endpoints are slugged (`meta`) AND share a register is
     unioned — mirroring the old table query's `WHERE slug IS NOT NULL` join and
@@ -1584,9 +1579,9 @@ def materialize_concept_groups(
     rows). `providers` gates curated/accept entries to the providers in this build,
     so a `--providers=sos` build doesn't fail on an scb family.
 
-    Dimension 0 (`edge`) folds the IN-BUILD `same_def` split-sibling pairs
-    (`edge_siblings`, `(variable_id, variable_id)`), NOT a `variable_related_to`
-    round-trip — those foldable edges are no longer persisted (#591). The CURATED
+    Dimension 0 (`edge`) folds the IN-BUILD same-definition split-sibling pairs
+    (`edge_siblings`, `(variable_id, variable_id)`), NOT a table round-trip — they
+    are never persisted to any shipped table. The CURATED
     pass takes PRECEDENCE over the edge fold (unblocks #488): `custom` + `accepted`
     are resolved FIRST, the variable_ids their members claim become
     `exclude_variable_ids`, and `_derive_edge_groups` subtracts them from every

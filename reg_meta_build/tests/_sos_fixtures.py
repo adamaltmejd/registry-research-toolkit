@@ -150,10 +150,9 @@ DEFAULT_REGISTERS: tuple[_Register, ...] = (
 
 # A register that triggers the ("par", "ATC") KNOWN_SPLIT_ALLOWLIST split: ATC
 # arrives under two deldatamängder with incompatible data_types, so the adapter
-# splits it into two sibling variables and records a related-to edge between
-# them. With slugs populated the build materializes that edge into
-# `variable_related_to` — the surface the P3#1 leaked-loop-var regression
-# polluted. Append to DEFAULT_REGISTERS for the with-slugs combined test.
+# splits it into two sibling variables and records a sibling pair between them
+# (the in-build fold input — the surface the P3#1 leaked-loop-var regression
+# polluted). Append to DEFAULT_REGISTERS for the with-slugs combined test.
 PAR_SPLIT_REGISTER = _Register(
     abbrev="PAR",
     title_sv="Syntetiskt patientregister",

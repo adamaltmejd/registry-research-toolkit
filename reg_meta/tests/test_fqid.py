@@ -183,7 +183,7 @@ class TestReservedHttpSuffixSlugs:
 
     @pytest.mark.parametrize(
         "value",
-        ["scb/lisa/states", "scb/lisa/related", "scb/lisa/variants"],
+        ["scb/lisa/states", "scb/lisa/successors", "scb/lisa/variants"],
     )
     def test_parse_rejects_reserved_variable_leaf(self, value: str) -> None:
         with pytest.raises(FqidError, match="reserved"):
@@ -203,9 +203,7 @@ class TestReservedHttpSuffixSlugs:
         assert f.kind is FqidKind.REGISTER
         assert str(f) == "scb/variants"
 
-    @pytest.mark.parametrize(
-        "name", ["States", "Variants", "Lineage", "Related", "Class"]
-    )
+    @pytest.mark.parametrize("name", ["States", "Variants", "Lineage", "Class"])
     def test_derive_variable_slug_rejects_folded_reserved(self, name: str) -> None:
         # A column name that folds to a reserved variable-slot token degrades to
         # None so the caller falls back to the name / last-resort slug instead of

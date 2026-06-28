@@ -82,7 +82,7 @@ def load_classification_links(
     materialize); no duplicate `variable` within the file; `note` optional but
     non-empty if present. The variable → classification RESOLUTION happens at
     materialize time, not here — the same load/resolve split as
-    `variable_related_to` / `concept_groups`."""
+    `concept_groups`."""
     entries = load_curation_entries(
         path,
         entry_key="link",
@@ -148,7 +148,7 @@ def materialize_classification_links(
     additive guard then skips the curated keys).
 
     `providers` gates each entry to this build's providers (mirrors
-    `materialize_curated_related_to`): an entry whose provider isn't built is
+    `materialize_same_as`): an entry whose provider isn't built is
     SKIPPED (a `--providers=sos` build genuinely can't represent an scb variable —
     deferral, not drift). An entry whose provider IS built but whose FQID or
     `classification` short_name doesn't resolve IS drift → fail fast (EXIT_CONFIG).

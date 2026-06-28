@@ -64,7 +64,6 @@ from reg_meta_build.db import (
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
-    IRRelatedToEdge,
     IRValueCode,
     IRValueSet,
     IRVariable,
@@ -974,7 +973,7 @@ class _StateGroup:
 #   SPLIT    — genuinely different concepts under a generic var_id (disjoint
 #              column stems): mint distinct sibling `variable` rows (sharing the
 #              source provider_key), reassign each column's states to its
-#              sibling, link siblings with variable_related_to edges.
+#              sibling, and record the sibling pairs for the concept-group fold.
 #   COLLAPSE — residual same-column metadata drift (data_type / value_set_id
 #              re-delivery churn that survived grouping): keep the latest-era
 #              state, drop the rest.
@@ -1077,9 +1076,13 @@ class _TriageResult:
     # populate_variable_slugs; a single-column variable is absent → derives
     # from its column as usual).
     fold_slug_hints: dict[int, str]
-    # (variable_id_a, variable_id_b, relation_kind) sibling edges (both
-    # directions emitted at materialization, after slugs exist).
-    related_edges: list[tuple[int, int, str]]
+    # (variable_id_a, variable_id_b) split-sibling pairs — the IN-BUILD sibling
+    # sets the concept-group edge fold reads directly (`edge_siblings`). These are
+    # NOT persisted to any shipped table; they only feed the #303 fold. The
+    # researcher-facing `variable_related_to` edges (and the per-pair relation_kind
+    # taxonomy) were retired, so a split now records only the bare sibling pairing
+    # the fold needs.
+    sibling_edges: list[tuple[int, int]]
     stats: Counter
 
 
@@ -1205,16 +1208,9 @@ def _triage_groups(
             for regver in grp.regvers:
                 bucket_cols[(grp.register_variant_id, regver)].add(col_of[gk])
         contested: set[str] = set()
-        # CO-DELIVERED column pairs: two columns that share at least one edition
-        # bucket. `contested` is a UNION across buckets, so contested membership
-        # does NOT imply two columns ever co-occurred — the per-pair split kind
-        # must gate on this precise pairwise relation, not on `contested`.
-        codelivered_pairs: set[frozenset[str]] = set()
         for cols in bucket_cols.values():
             if len(cols) > 1:
                 contested |= cols
-                for col_a, col_b in combinations(cols - {""}, 2):
-                    codelivered_pairs.add(frozenset((col_a, col_b)))
         contested.discard("")  # empty-column stubs aren't fold/split contestants
         if len(contested) < 2:
             continue  # no real multi-column same-year collision → not a container
@@ -1260,7 +1256,6 @@ def _triage_groups(
                     groups,
                     by_col,
                     clusters,
-                    codelivered_pairs,
                     register_id,
                     var_id,
                     orig_vid,
@@ -1275,10 +1270,8 @@ def _triage_groups(
                 # No foldable sub-cluster → byte-identical to the legacy split-all.
                 _apply_split(
                     conn,
-                    groups,
                     by_col,
                     all_cols,
-                    codelivered_pairs,
                     register_id,
                     var_id,
                     orig_vid,
@@ -1538,58 +1531,6 @@ def _apply_fold(
         res.fold_slug_hints[orig_vid] = hint
 
 
-# ── split relation_kind heuristics (#218) ─────────────────────────────────
-# A triage SPLIT links its sibling variables with `variable_related_to` edges.
-# The kind is decided PER CO-DELIVERED PAIR — only two columns that actually
-# shared an edition bucket may receive a specific kind, because a code/label
-# pairing or a mis-typed-delivery suspicion is a claim about TWO columns SEEN
-# TOGETHER. A pair that never co-occurred (a temporal/renamed sibling, or two
-# `contested` columns that — `contested` being a union across buckets — never
-# shared one bucket) stays generic; its pairwise code/datatype signals are
-# meaningless across editions. Precedence for a co-delivered pair, most
-# specific first:
-#   1. code_vs_label_pair — name-based, high confidence
-#   2. import_bug_suspect — data_type/shape mismatch, lower confidence
-#   3. same_definition_different_column — generic fallback
-# NEVER `same_concept_different_grain`: that is a FOLD-only kind and folds emit
-# no edges at all (DESIGN.md → Build-time triage (SCB)).
-
-# A label column carries the Swedish `namn` (name) suffix; its partner code
-# column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a `kod`/`id`
-# code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`).
-_CODE_SUFFIXES = ("kod", "id")
-_LABEL_SUFFIX = "namn"
-
-
-def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
-    """The non-empty stem when `folded` ends with one of `suffixes`, else None."""
-    for suf in suffixes:
-        if folded.endswith(suf) and len(folded) > len(suf):
-            return folded[: -len(suf)]
-    return None
-
-
-def _is_code_then_label(code: str, label: str) -> bool:
-    """True when `code` is a code column and `label` its matching label column:
-    `label` is `<stem>namn` and `code` is either the bare `<stem>` or
-    `<stem>kod`/`<stem>id` on the SAME stem."""
-    stem = _strip_suffix(label, (_LABEL_SUFFIX,))
-    if stem is None:
-        return False
-    if code == stem:  # bare-stem code paired with its `<stem>namn` label
-        return True
-    return _strip_suffix(code, _CODE_SUFFIXES) == stem
-
-
-def _looks_like_code_label_pair(col_a: str, col_b: str) -> bool:
-    """A code column paired with its label column, in either order. Name-based
-    only (the old #132 heuristic, re-derived to current conventions)."""
-    a, b = _ascii_fold_lower(col_a), _ascii_fold_lower(col_b)
-    if not a or not b:
-        return False
-    return _is_code_then_label(a, b) or _is_code_then_label(b, a)
-
-
 # data_type marker substrings. SCB ships SQL-ish lowercased types (`int`,
 # `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
 # the same column. Substring match is safe — the field only ever holds a type
@@ -1642,89 +1583,19 @@ def _canon_data_type(dt: str | None) -> str:
     return _TEXT_FAMILY_CANON if s in _TEXT_FAMILY_TYPES else s
 
 
-def _representative_group(
-    gkeys: list[tuple], groups: dict[tuple, _StateGroup]
-) -> _StateGroup | None:
-    """The latest-era group for a column — highest `latest_alias_regver` (the
-    edition that set the surviving delivery alias), deterministic stringified-
-    gkey tiebreak. Mirrors the `latest_alias` rule so the compared shape is the
-    column's latest delivered shape. None when no gkey resolves to a group
-    (defensive: the kind then falls back to generic)."""
-    present = [(gk, groups[gk]) for gk in gkeys if gk in groups]
-    if not present:
-        return None
-    _, grp = max(
-        present,
-        key=lambda item: (
-            item[1].latest_alias_regver
-            if item[1].latest_alias_regver is not None
-            else -1,
-            tuple("" if x is None else str(x) for x in item[0]),
-        ),
-    )
-    return grp
-
-
-def _import_bug_suspect(a: _StateGroup | None, b: _StateGroup | None) -> bool:
-    """Lower-confidence shape heuristic: the two split siblings disagree on
-    physical SHAPE in a way that suggests one delivery was mis-imported. Primary
-    signal — a numeric-vs-text `data_type` mismatch (the canonical SCB/SOS import
-    bug: one lumped delivery shipped as a number, the other as text). Fallback —
-    when `data_type` can't be classified on at least one side, a present-on-both
-    `data_length` disagreement is the only remaining shape evidence. A SAME-class
-    length difference is deliberately NOT flagged: on genuinely-distinct split
-    siblings differing widths are normal and would fire this 'suspect' label on
-    nearly every split, diluting the taxonomy."""
-    if a is None or b is None:
-        return False
-    class_a, class_b = _data_type_class(a.data_type), _data_type_class(b.data_type)
-    if {class_a, class_b} == {"numeric", "text"}:
-        return True
-    if "other" in (class_a, class_b) and a.data_length and b.data_length:
-        return a.data_length != b.data_length
-    return False
-
-
-def _split_relation_kind(
-    col_a: str,
-    col_b: str,
-    groups: dict[tuple, _StateGroup],
-    by_col: dict[str, list[tuple]],
-    codelivered_pairs: set[frozenset[str]],
-) -> str:
-    """relation_kind for ONE split sibling pair, decided from the pair's two
-    delivery columns (precedence in the section note above). A pair that is not
-    CO-DELIVERED (never shared an edition bucket) short-circuits to the generic
-    kind BEFORE the heuristics run — across editions the pairwise code/datatype
-    signals are meaningless."""
-    if frozenset((col_a, col_b)) not in codelivered_pairs:
-        return "same_definition_different_column"
-    if _looks_like_code_label_pair(col_a, col_b):
-        return "code_vs_label_pair"
-    if _import_bug_suspect(
-        _representative_group(by_col[col_a], groups),
-        _representative_group(by_col[col_b], groups),
-    ):
-        return "import_bug_suspect"
-    return "same_definition_different_column"
-
-
 def _apply_split(
     conn: sqlite3.Connection,
-    groups: dict[tuple, _StateGroup],
     by_col: dict[str, list[tuple]],
     named_cols: list[str],
-    codelivered_pairs: set[frozenset[str]],
     register_id: int,
     var_id: int,
     orig_vid: int,
     res: _TriageResult,
 ) -> None:
     """SPLIT: each distinct column becomes its own sibling `variable` (sharing
-    the source provider_key); link siblings with variable_related_to edges.
-    Sibling slugs derive later from each sibling's own reassigned column.
-    `codelivered_pairs` is the set of unordered column pairs that actually
-    shared an edition bucket — only those pairs get a specific relation_kind."""
+    the source provider_key); record the (N choose 2) sibling pairs so the
+    concept-group fold can re-collapse them into one browse row. Sibling slugs
+    derive later from each sibling's own reassigned column."""
     # First column (lexically) keeps the original variable; the rest mint new
     # sibling variables. Name + sensitivity/identity flags are shared: siblings
     # are column-variants of ONE source var_id (same concept family), so a flag
@@ -1747,19 +1618,12 @@ def _apply_split(
         sibling_vids.append(new_vid)
         for gk in by_col[col]:
             res.assignments[gk] = new_vid
-    # (N choose 2) edges between siblings (both directions are emitted at
-    # materialization). The relation_kind is computed PER CO-DELIVERED PAIR from
-    # the pair's two delivery columns — code_vs_label_pair / import_bug_suspect
-    # are claims about two columns seen together, not the whole split; a pair
-    # that never shared an edition bucket stays generic. sibling_vids[k] ⟷
-    # named_cols[k] by construction (sibling_vids[0] = orig_vid ⟷ named_cols[0],
-    # then named_cols[1:] append in order), so zip re-pairs each vid with its
-    # column. EVERY pair still emits an edge in the same order — identity (the
-    # vid pairs and their order) is unchanged; only the kind label is refined.
-    for i, (vid_a, col_a) in enumerate(zip(sibling_vids, named_cols)):
-        for vid_b, col_b in zip(sibling_vids[i + 1 :], named_cols[i + 1 :]):
-            kind = _split_relation_kind(col_a, col_b, groups, by_col, codelivered_pairs)
-            res.related_edges.append((vid_a, vid_b, kind))
+    # (N choose 2) sibling pairs → the concept-group edge fold (`edge_siblings`).
+    # Not persisted as researcher-facing edges; the fold just needs the pairing to
+    # re-collapse a split into one browse row.
+    for i, vid_a in enumerate(sibling_vids):
+        for vid_b in sibling_vids[i + 1 :]:
+            res.sibling_edges.append((vid_a, vid_b))
 
 
 def _apply_clustered(
@@ -1767,7 +1631,6 @@ def _apply_clustered(
     groups: dict[tuple, _StateGroup],
     by_col: dict[str, list[tuple]],
     clusters: list[list[str]],
-    codelivered_pairs: set[frozenset[str]],
     register_id: int,
     var_id: int,
     orig_vid: int,
@@ -1781,12 +1644,8 @@ def _apply_clustered(
 
     The lexically-first cluster keeps `orig_vid`; the rest mint siblings with the
     inherited name/sensitivity/identity flags (see `_apply_split` for why the
-    flags must be copied). Sibling edges link the cluster variables; the
-    relation_kind is decided from each cluster's REPRESENTATIVE (lex-min) column
-    via PR1's `_split_relation_kind` — so a specific kind (`code_vs_label_pair` /
-    `import_bug_suspect`) needs the two REPS to have co-delivered, and a non-rep
-    cross-member co-delivery degrades to the generic kind (an acceptable
-    precision tradeoff on an informational label)."""
+    flags must be copied). The (N_clusters choose 2) sibling pairs feed the
+    concept-group edge fold (`edge_siblings`)."""
     clusters_sorted = sorted(clusters, key=lambda c: min(c))
     shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
     cluster_vids: list[int] = []
@@ -1815,14 +1674,10 @@ def _apply_clustered(
                 vid,
                 res,
             )
-    # (N_clusters choose 2) edges, kind from each cluster's representative column.
-    reps = [min(c) for c in clusters_sorted]
+    # (N_clusters choose 2) sibling pairs → the concept-group edge fold.
     for i, vid_a in enumerate(cluster_vids):
-        for j in range(i + 1, len(cluster_vids)):
-            kind = _split_relation_kind(
-                reps[i], reps[j], groups, by_col, codelivered_pairs
-            )
-            res.related_edges.append((vid_a, cluster_vids[j], kind))
+        for vid_b in cluster_vids[i + 1 :]:
+            res.sibling_edges.append((vid_a, vid_b))
 
 
 def _split_off_non_contested(
@@ -1839,10 +1694,10 @@ def _split_off_non_contested(
     collide same-year (a later or renamed column) must NOT keep the seeded
     original assignment — that lumps its history onto the lex-first sibling and
     a consumer querying that sibling's slug gets the wrong data (Codex P2 #139).
-    Give each such column its own variable, linked to `orig_vid` by a
-    variable_related_to edge. Perfect rename *continuity* (re-joining a renamed
-    column to its sibling) needs A2.3 tracking; own-variable avoids the
-    mis-attribution."""
+    Give each such column its own variable, recording the sibling pair so the
+    concept-group fold can still re-collapse them into one browse row. Perfect
+    rename *continuity* (re-joining a renamed column to its sibling) needs A2.3
+    tracking; own-variable avoids the mis-attribution."""
     if not non_contested_cols:
         return
     # Inherit name + sensitivity/identity flags from the origin (see _apply_split).
@@ -1860,13 +1715,11 @@ def _split_off_non_contested(
         vids.append(nvid)
         for gk in by_col[col]:
             res.assignments[gk] = nvid
-    # Generic kind by design (NOT the per-pair `_apply_split` heuristics): a
-    # non-contested column never co-occurs with another in one edition, so these
-    # siblings are temporal/rename variants, not parallel code/label or mis-typed
-    # co-deliveries — the pairwise code/datatype signals are meaningless here.
+    # Sibling pairs → the concept-group edge fold (`edge_siblings`); a
+    # non-contested column is a temporal/rename variant of the same definition.
     for i, a in enumerate(vids):
         for b in vids[i + 1 :]:
-            res.related_edges.append((a, b, "same_definition_different_column"))
+            res.sibling_edges.append((a, b))
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -3285,10 +3138,10 @@ def _coalesce_variable_states(
         "n_type_folds": n_type_folds,
         "n_type_class_folds": n_type_class_folds,
         # Build-only routing consumed downstream by build_db (NOT manifest
-        # values): fold-slug hints → populate_variable_slugs; sibling edges →
-        # _materialize_variable_related_to (after slugs exist).
+        # values): fold-slug hints → populate_variable_slugs; split-sibling pairs →
+        # the concept-group edge fold (`edge_siblings`).
         "_fold_slug_hints": triage.fold_slug_hints,
-        "_related_edges": triage.related_edges,
+        "_sibling_edges": triage.sibling_edges,
         # #526 class-flip exemplars (capped, deterministic) — private key, like
         # the two above: surfaced for maintainer eyeballing, not a manifest count.
         "_type_class_fold_sample": type_class_fold_sample,
@@ -3839,9 +3692,9 @@ class SCBAdapter:
       - `coalesce_stats`, `projection_stats` — manifest inputs.
       - `fold_slug_hints` — side channel to `populate_variable_slugs`
         (R8: not an IR object; a build-only `{variable_id: slug_stem}` dict).
-      - `related_edges` — split-sibling (variable_id, variable_id, kind) triples
-        (also surfaced in-stream as `IRRelatedToEdge`; the materializer
-        resolves variable_id → slug at write time, after slugs exist).
+      - `sibling_edges` — split-sibling (variable_id, variable_id) pairs the
+        concept-group edge fold reads directly (`edge_siblings`). Build-only
+        routing, not an IR object and not persisted to any shipped table.
     """
 
     provider = "scb"
@@ -3862,7 +3715,7 @@ class SCBAdapter:
         self.coalesce_stats: dict[str, Any] = {}
         self.projection_stats: _ProjectionStats = _ProjectionStats()
         self.fold_slug_hints: dict[int, str] = {}
-        self.related_edges: list[tuple[int, int, str]] = []
+        self.sibling_edges: list[tuple[int, int]] = []
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         """Parse SCB exports under ``source_dir`` and emit IR objects.
@@ -3870,7 +3723,7 @@ class SCBAdapter:
         ``source_dir`` is the ``SCB/`` directory (containing
         Registerinformation.csv and the enrichment files). Yields in
         FK-topological order: registers → variants → value_sets (+codes) →
-        variables → variable_states → related-to edges → provenance/warnings.
+        variables → variable_states → aliases → provenance/warnings.
         (No IRClassification / IRLineageEdge / IRReplacedByEdge: in A4.1 those
         stay materializer-derived; the adapter emits the subset above.)
 
@@ -3996,9 +3849,9 @@ class SCBAdapter:
             self.coalesce_stats = _coalesce_variable_states(conn, self.codelivery)
         self.row_counts["variable_state"] = self.coalesce_stats["n_variable_states"]
         # R8 side channels (NOT manifest values): consumed by the materializer's
-        # slug + related-to post-passes.
+        # slug post-pass and the concept-group edge fold.
         self.fold_slug_hints = self.coalesce_stats["_fold_slug_hints"]
-        self.related_edges = self.coalesce_stats["_related_edges"]
+        self.sibling_edges = self.coalesce_stats["_sibling_edges"]
 
         # A2.1: drop the now-unused unika_summary table (both consumers ran).
         conn.execute("DROP TABLE unika_summary")
@@ -4029,7 +3882,6 @@ class SCBAdapter:
         yield from self._emit_variables()
         yield from self._emit_variable_states()
         yield from self._emit_variable_aliases()
-        yield from self._emit_related_edges()
         yield from self._emit_replaced_by_edges()
         yield from self._emit_provenance()
         yield from self._emit_warnings()
@@ -4190,15 +4042,6 @@ class SCBAdapter:
                 variable_id=variable_id,
                 register_variant_id=register_variant_id,
                 delivery_column_name=column,
-            )
-
-    def _emit_related_edges(self) -> Iterator[IRObject]:
-        # Variable-grain split-sibling edges. The materializer resolves
-        # variable_id → slug at write time (after slugs exist), so these are
-        # emitted from the build-only routing list, not the shipped table.
-        for a, b, kind in self.related_edges:
-            yield IRRelatedToEdge(
-                a_variable_id=a, b_variable_id=b, relation_kind=kind, note="auto:triage"
             )
 
     def _emit_replaced_by_edges(self) -> Iterator[IRObject]:

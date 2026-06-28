@@ -75,23 +75,6 @@ def _seed_same_as(
     conn.commit()
 
 
-def _seed_related(
-    conn: sqlite3.Connection,
-    a: tuple[str, str, str],
-    b: tuple[str, str, str],
-    kind: str = "code_vs_label_pair",
-) -> None:
-    # variable_related_to stores BOTH directions (the build writes a↔b and b↔a).
-    for src, tgt in ((a, b), (b, a)):
-        conn.execute(
-            "INSERT INTO variable_related_to (a_provider,a_register,a_variable,"
-            "b_provider,b_register,b_variable,relation_kind,note) "
-            "VALUES (?,?,?,?,?,?,?,'auto:test')",
-            (*src, *tgt, kind),
-        )
-    conn.commit()
-
-
 def _add_concept_group(
     conn: sqlite3.Connection,
     *,
@@ -177,7 +160,7 @@ def _add_class_succession(
 
 class TestEmptyGraph:
     def test_lone_variable_type_only_split_is_empty(self) -> None:
-        # The `akters` case: a lone variable, no succession / related / group, whose
+        # The `akters` case: a lone variable, no succession / group, whose
         # two states differ ONLY by `data_type` `int` -> `bigint` (same column, no
         # value-set, no classification). `data_type` is NOT a boundary signal at all
         # (low-trust passthrough #526 blanks), so both states share one
@@ -685,101 +668,28 @@ class TestEdges:
         succ = [e for e in g.edges if e.kind == "succession"]
         assert (succ[0].source, succ[0].target) == ("scb/lisa/dead-old", "scb/lisa/kon")
 
-    def test_undirected_related_dedups_from_both_ends(self) -> None:
-        # The same relation seen from kon's and kon-alt's side must collapse to ONE
-        # edge (canonicalized endpoints). Both members are reached (kon-alt via the
-        # related neighbor walk), and the related table holds both directions.
-        conn = build_slugged_db()
-        add_variable(conn, register_id=1, var_id=46, name="Kön alt", slug="kon-alt")
+    def test_every_edge_is_succession(self) -> None:
+        # The contract is now succession-only: `GraphEdge.kind` only ever produces
+        # "succession". Build a union with a succession chain + a group + a value-set
+        # change and assert every emitted edge is a succession edge.
+        conn = build_slugged_db()  # kon
+        add_variable(conn, register_id=1, var_id=45, name="Kön ny", slug="kon-ny")
         add_state(
             conn,
             register_id=1,
-            variable_slug="kon-alt",
+            variable_slug="kon-ny",
             register_variant_id=10,
-            delivery_column_name="KonAlt",
+            delivery_column_name="KonNy",
         )
-        _seed_related(conn, ("scb", "lisa", "kon"), ("scb", "lisa", "kon-alt"))
-        g = Catalog(conn).graph_for_fqid(_KON)
-        related = [e for e in g.edges if e.kind == "related"]
-        assert len(related) == 1
-        assert {related[0].source, related[0].target} == {
-            "scb/lisa/kon",
-            "scb/lisa/kon-alt",
-        }
-        # Both endpoints are real nodes.
-        assert {n.id for n in g.nodes} >= {"scb/lisa/kon", "scb/lisa/kon-alt"}
-
-    def test_related_expansion_is_one_hop(self) -> None:
-        # A related B, B related C. Querying A pulls A + its immediate related
-        # neighbor B (one hop), but NOT C (related-of-related). The #761 union is the
-        # subject + its succession chains + related edges among/from the union, not
-        # the transitive closure of related.
-        conn = build_slugged_db()  # A = kon
-        for vid, slug, col in ((45, "btwo", "BTwo"), (46, "cthree", "CThree")):
-            add_variable(conn, register_id=1, var_id=vid, name=slug, slug=slug)
-            add_state(
-                conn,
-                register_id=1,
-                variable_slug=slug,
-                register_variant_id=10,
-                delivery_column_name=col,
-            )
-        _seed_related(conn, ("scb", "lisa", "kon"), ("scb", "lisa", "btwo"))
-        _seed_related(conn, ("scb", "lisa", "btwo"), ("scb", "lisa", "cthree"))
-        g = Catalog(conn).graph_for_fqid(_KON)
-        ids = {n.id for n in g.nodes}
-        assert "scb/lisa/kon" in ids
-        assert "scb/lisa/btwo" in ids  # one hop
-        assert "scb/lisa/cthree" not in ids  # NOT related-of-related
-        # Only the A--B related edge, never B--C.
-        related = {(e.source, e.target) for e in g.edges if e.kind == "related"}
-        assert related == {("scb/lisa/btwo", "scb/lisa/kon")}
-
-    def test_member_pre_seeded_as_neighbor_still_expands_related(self) -> None:
-        # Order-dependent dropped-edge regression: group {A, B} with A related B and
-        # B related C (C outside the group). graph_for_fqid(A) reaches B FIRST as A's
-        # one-hop related neighbor (follow_related=False, B built but un-expanded),
-        # THEN as a group member (follow_related=True). The member arrival must
-        # COMPLETE B's related expansion so its one-hop neighbor C appears — B is a
-        # member, so its one-hop neighbor C is in the union regardless of which order
-        # B/its neighbors are reached. Before the fix the unconditional node-dedup
-        # early-out dropped C.
-        conn = build_slugged_db()  # A = kon
-        for vid, slug, col in ((45, "btwo", "BTwo"), (46, "cthree", "CThree")):
-            add_variable(conn, register_id=1, var_id=vid, name=slug, slug=slug)
-            add_state(
-                conn,
-                register_id=1,
-                variable_slug=slug,
-                register_variant_id=10,
-                delivery_column_name=col,
-            )
-        _seed_related(conn, ("scb", "lisa", "kon"), ("scb", "lisa", "btwo"))
-        _seed_related(conn, ("scb", "lisa", "btwo"), ("scb", "lisa", "cthree"))
-        _add_concept_group(
+        _seed_replaced_by(
             conn,
-            group_id=40,
-            register_id=1,
-            group_key="demog",
-            member_slugs=["kon", "btwo"],
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "kon-ny"),
+            effective_year=2010,
         )
-        catalog = Catalog(conn)
-
-        g = catalog.graph_for_fqid(_KON)
-        ids = {n.id for n in g.nodes}
-        # C is B's one-hop neighbor and B is a member, so C is in the union.
-        assert ids >= {"scb/lisa/kon", "scb/lisa/btwo", "scb/lisa/cthree"}
-        related = {(e.source, e.target) for e in g.edges if e.kind == "related"}
-        assert ("scb/lisa/btwo", "scb/lisa/cthree") in related
-
-        # Same union via the group accessor, independent of member traversal order.
-        gg = catalog.graph_for_group("scb", "lisa", "demog")
-        assert gg is not None
-        assert {n.id for n in gg.nodes} >= {
-            "scb/lisa/kon",
-            "scb/lisa/btwo",
-            "scb/lisa/cthree",
-        }
+        g = Catalog(conn).graph_for_fqid(_KON)
+        assert g.edges  # the succession edge is present
+        assert all(e.kind == "succession" for e in g.edges)
 
     def test_alias_entry_keys_on_canonical_node(self) -> None:
         # A pure-alias FQID (no live variable row) resolving via same_as to a
@@ -876,10 +786,10 @@ class TestVariableGroups:
 
     def test_group_key_namespaced_by_register(self) -> None:
         # P2-2 regression: concept-group keys are only register-unique, so a graph
-        # spanning >1 register (a cross-register related edge here) must NOT emit the
-        # same `group_key` for two unrelated groups that happen to share a bare key.
-        # Two registers (lisa, other) each carry a group with the SAME bare key
-        # "demog"; their members are joined into one graph by a related edge.
+        # spanning >1 register (a cross-register succession edge here) must NOT emit
+        # the same `group_key` for two unrelated groups that happen to share a bare
+        # key. Two registers (lisa, other) each carry a group with the SAME bare key
+        # "demog"; their members are joined into one graph by a succession edge.
         # Namespacing by provider/register keeps the two clusters distinct.
         conn = build_slugged_db()
         add_register(conn, register_id=2, slug="other", name="OTHER")
@@ -895,9 +805,13 @@ class TestVariableGroups:
             valid_from="2018-01-01",
             delivery_column_name="Ink",
         )
-        # Cross-register related edge joins kon (lisa) and inkomst (other) into one
-        # graph.
-        _seed_related(conn, ("scb", "lisa", "kon"), ("scb", "other", "inkomst"))
+        # Cross-register succession edge joins kon (lisa) and inkomst (other) into
+        # one graph (distinct nodes — succession is not identity).
+        _seed_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "other", "inkomst"),
+        )
         # Both registers have a group with the SAME bare key "demog".
         _add_concept_group(
             conn, group_id=40, register_id=1, group_key="demog", member_slugs=["kon"]

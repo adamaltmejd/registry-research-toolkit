@@ -120,10 +120,10 @@ def test_repo_period_family_merges_parses() -> None:
 def test_repo_relations_parses() -> None:
     # The single typed `[[edge]]` surface (#522). It ships with the #375 variable
     # succession edges + the #579 sun1996 classification split (both
-    # `type = "replaced_by"`) + the #403 see-also edges (`type = "related_to"`) +
-    # the #508 tier-1 curated `same_as` identity batch. The gate is load-time shape
-    # — a malformed entry would otherwise surface only on a real build. Endpoint
-    # RESOLUTION is maintainer-build territory (the materializers fail fast).
+    # `type = "replaced_by"`) + the #508 tier-1 curated `same_as` identity batch.
+    # The gate is load-time shape — a malformed entry would otherwise surface only
+    # on a real build. Endpoint RESOLUTION is maintainer-build territory (the
+    # materializers fail fast).
     relations = load_relations(_ROOT / "curation" / "relations.toml")
     # The #508 tier-1 batch: 615 curated variable-grain identity edges.
     assert len(relations.same_as) == 615
@@ -166,17 +166,6 @@ def test_repo_relations_parses() -> None:
     # + 1 #846 RTB PNR → PersonNr representation-grain rename edge
     # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges.
     assert len(relations.replaced_by) == 28
-    assert len(relations.related_to) == 3  # the moved #403 see-also edges
-    assert all(
-        e.a_provider
-        and e.a_register
-        and e.a_variable
-        and e.b_provider
-        and e.b_register
-        and e.b_variable
-        and e.relation_kind
-        for e in relations.related_to
-    )
     assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
 
 

@@ -5,9 +5,10 @@ is exercised through `build_db` with crafted Registerinformation rows that put
 one source `var_id` under multiple delivery columns. These builds run with
 `skip_slugs=True`, so they assert the *structural* triage outcome (sibling
 `variable` rows, per-state `value_set_version_label` labels, the uniqueness
-index). Slug derivation (fold stem, sibling slugs) and `variable_related_to`
-edge materialization need the slug pipeline and are covered by the real
-`build-db` validation (they no-op under `skip_slugs`).
+index) plus the in-build sibling pairs the concept-group fold consumes
+(`res.sibling_edges`). Slug derivation (fold stem, sibling slugs) needs the slug
+pipeline and is covered by the real `build-db` validation (it no-ops under
+`skip_slugs`).
 """
 
 from __future__ import annotations
@@ -46,13 +47,10 @@ from reg_meta_build.sources.scb import (
     _edition_authority,
     _edition_bounds,
     _fold_token_from_grain,
-    _import_bug_suspect,
-    _looks_like_code_label_pair,
     _pick_state_rep,
     _resolve_year_winners,
     _spans_overlap,
     _split_off_non_contested,
-    _split_relation_kind,
     _StateGroup,
     _triage_groups,
     _TriageResult,
@@ -106,12 +104,6 @@ def _year_claim(year: int, authority: int = _AUTH_PLAIN, approval: str = "") -> 
     """A full-year `Claim` — the shorthand for tests that only care WHICH
     years a group claims (and optionally the year's cascade signals)."""
     return Claim(f"{year:04d}-01-01", f"{year:04d}-12-31", authority, approval)
-
-
-def _shape(data_type: str | None, data_length: str | None = None) -> _StateGroup:
-    """A minimal `_StateGroup` carrying only the shape fields the split
-    relation_kind heuristics read (`data_type` / `data_length`)."""
-    return _StateGroup(1, 10, 1, data_type, data_length, None, None)
 
 
 class TestEditionAuthority:
@@ -905,19 +897,6 @@ class TestClusterContested:
         ]
 
 
-class TestLooksLikeCodeLabelPair:
-    def test_two_namn_columns_are_not_a_pair(self) -> None:
-        assert not _looks_like_code_label_pair("Fornamn", "Efternamn")
-
-    def test_code_label_pairs(self) -> None:
-        assert _looks_like_code_label_pair("Lid", "LNamn")  # code suffix vs namn
-        assert _looks_like_code_label_pair("Sun2000Kod", "Sun2000Namn")  # kod vs namn
-        assert _looks_like_code_label_pair("Kommun", "Kommunnamn")  # bare stem vs namn
-
-    def test_order_independent(self) -> None:
-        assert _looks_like_code_label_pair("Kommunnamn", "Kommun")
-
-
 class TestDataTypeClass:
     def test_classes(self) -> None:
         assert _data_type_class("Heltal") == "numeric"
@@ -926,72 +905,13 @@ class TestDataTypeClass:
         assert _data_type_class(None) == "other"
 
 
-class TestImportBugSuspect:
-    def test_numeric_vs_text_fires(self) -> None:
-        assert _import_bug_suspect(_shape("int"), _shape("text"))
+class TestSplitEmitsSiblingEdges:
+    """End-to-end: triage of a real same-edition Lid/LNamn collision splits into
+    sibling variables and records the sibling PAIR for the concept-group fold.
+    Drives `_triage_groups` and inspects `res.sibling_edges` (the in-build fold
+    input — never persisted to any shipped table)."""
 
-    def test_same_class_differing_width_does_not_fire(self) -> None:
-        assert not _import_bug_suspect(_shape("int", "4"), _shape("int", "8"))
-
-    def test_none_side_does_not_fire(self) -> None:
-        assert not _import_bug_suspect(None, _shape("int"))
-        assert not _import_bug_suspect(_shape("int"), None)
-
-    def test_length_fallback_requires_length_on_both_sides(self) -> None:
-        # Unclassifiable types (class "other") fall back to data_length, but only
-        # when BOTH lengths are present — a blank side must short-circuit, never
-        # compare None/"" against a real width.
-        assert not _import_bug_suspect(_shape(None, ""), _shape("Datum", "10"))
-        assert _import_bug_suspect(_shape("Datum", "4"), _shape("Datum", "8"))
-
-
-class TestSplitRelationKind:
-    """Per-CO-DELIVERED-pair precedence: code_vs_label_pair → import_bug_suspect
-    → generic; a non-co-delivered pair short-circuits to generic."""
-
-    @staticmethod
-    def _kind(
-        col_a: str, type_a: str, col_b: str, type_b: str, *, codelivered: bool = True
-    ) -> str:
-        gk_a = (1, 10, 1, type_a, "1", 1, "", "", col_a)
-        gk_b = (1, 10, 1, type_b, "1", 2, "", "", col_b)
-        groups = {gk_a: _shape(type_a), gk_b: _shape(type_b)}
-        by_col = {col_a: [gk_a], col_b: [gk_b]}
-        pairs = {frozenset((col_a, col_b))} if codelivered else set()
-        return _split_relation_kind(col_a, col_b, groups, by_col, pairs)
-
-    def test_name_match_wins_over_datatype_signal(self) -> None:
-        # Lid int / LNamn text matches BOTH signals; the name-based, higher-
-        # confidence kind takes precedence over import_bug_suspect.
-        assert self._kind("Lid", "int", "LNamn", "text") == "code_vs_label_pair"
-
-    def test_datatype_signal_when_names_do_not_pair(self) -> None:
-        assert (
-            self._kind("Hemkommun", "int", "Skolkommun", "text") == "import_bug_suspect"
-        )
-
-    def test_generic_when_neither_signal(self) -> None:
-        assert (
-            self._kind("Hemkommun", "int", "Skolkommun", "int")
-            == "same_definition_different_column"
-        )
-
-    def test_non_codelivered_pair_stays_generic_despite_signals(self) -> None:
-        # A pair that never shared an edition bucket is generic even though its
-        # names AND types would otherwise trip code_vs_label_pair.
-        assert (
-            self._kind("Lid", "int", "LNamn", "text", codelivered=False)
-            == "same_definition_different_column"
-        )
-
-
-class TestSplitEmitsSpecificRelationKind:
-    """End-to-end: triage of a real same-edition Lid/LNamn collision routes the
-    specific `code_vs_label_pair` kind onto the split's edge. Drives
-    `_triage_groups` and inspects `res.related_edges`; the edge → DB-row
-    materializer passthrough is covered by `TestVariableRelatedToEdges`."""
-
-    def test_lid_lnamn_split_emits_code_vs_label_pair(self) -> None:
+    def test_lid_lnamn_split_records_sibling_pair(self) -> None:
         from reg_meta_build.db import DDL
 
         conn = sqlite3.connect(":memory:")
@@ -1004,8 +924,7 @@ class TestSplitEmitsSpecificRelationKind:
         orig = cur.lastrowid
         assert orig is not None
         # Two disjoint-stem columns under one var_id co-delivered in one edition
-        # (shared regver) → a split; int code vs text label → code_vs_label_pair
-        # wins over the numeric-vs-text import_bug_suspect signal.
+        # (shared regver) → a split into two sibling variables.
         gk_lid = (1, 10, 920, "int", "10", 1, "", "", "Lid")
         gk_lnamn = (1, 10, 920, "text", "40", 2, "", "", "LNamn")
         g_lid = _StateGroup(1, 10, 920, "int", "10", 1, "")
@@ -1014,50 +933,13 @@ class TestSplitEmitsSpecificRelationKind:
         g_lnamn.regvers = {100}
         res = _triage_groups(conn, {gk_lid: g_lid, gk_lnamn: g_lnamn}, {(1, 920): orig})
         assert res.stats["splits"] == 1
-        assert {kind for _, _, kind in res.related_edges} == {"code_vs_label_pair"}
-        conn.close()
-
-    def test_temporal_pair_stays_generic_only_codelivered_is_specific(self) -> None:
-        # One split container with BOTH a co-delivered Lid/LNamn collision in
-        # edition 100 AND a non-contested `Lidnamn` delivered alone in edition
-        # 200. `Lidnamn` would form a code/label pair with `Lid` by name, but it
-        # never co-occurred — so only the genuinely co-delivered pair is specific.
-        from reg_meta_build.db import DDL
-
-        conn = sqlite3.connect(":memory:")
-        conn.row_factory = sqlite3.Row
-        conn.executescript(DDL)
-        cur = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (1, '920', 'Lan')"
-        )
-        orig = cur.lastrowid
-        assert orig is not None
-        gk_lid = (1, 10, 920, "int", "10", 1, "", "", "Lid")
-        gk_lnamn = (1, 10, 920, "text", "40", 2, "", "", "LNamn")
-        gk_temporal = (1, 10, 920, "text", "40", 3, "", "", "Lidnamn")
-        g_lid = _StateGroup(1, 10, 920, "int", "10", 1, "")
-        g_lid.regvers = {100}
-        g_lnamn = _StateGroup(1, 10, 920, "text", "40", 2, "")
-        g_lnamn.regvers = {100}
-        g_temporal = _StateGroup(1, 10, 920, "text", "40", 3, "")
-        g_temporal.regvers = {200}  # different edition → never co-delivered
-        res = _triage_groups(
-            conn,
-            {gk_lid: g_lid, gk_lnamn: g_lnamn, gk_temporal: g_temporal},
-            {(1, 920): orig},
-        )
-        assert res.stats["splits"] == 1
-        kind_by_pair = {frozenset((a, b)): kind for a, b, kind in res.related_edges}
+        # The two columns map to distinct sibling variables, linked by one pair.
         vid_lid = res.assignments[gk_lid]
-        vid_temporal = res.assignments[gk_temporal]
-        # The co-delivered code/label pair is specific; the temporal pair (which
-        # would otherwise trip the name heuristic) stays generic.
-        assert kind_by_pair[frozenset((orig, vid_lid))] == "code_vs_label_pair"
-        assert (
-            kind_by_pair[frozenset((vid_lid, vid_temporal))]
-            == "same_definition_different_column"
-        )
+        vid_lnamn = res.assignments[gk_lnamn]
+        assert vid_lid != vid_lnamn
+        assert {frozenset(p) for p in res.sibling_edges} == {
+            frozenset((vid_lid, vid_lnamn))
+        }
         conn.close()
 
 
@@ -1105,9 +987,11 @@ class TestPerClusterFoldSplit:
         assert res.stats["clustered"] == 1
         assert res.stats["folds"] == 1  # one multi-column fold cluster
         assert res.stats["splits"] == 1  # one singleton cluster (Hemkommun)
-        # One cross-cluster sibling edge, generic (not a code/label or type pair).
-        assert {kind for _, _, kind in res.related_edges} == {
-            "same_definition_different_column"
+        # One cross-cluster sibling pair (Ssyk fold vid ⟷ Hemkommun split vid).
+        ssyk_vid = res.assignments[gk_s3]
+        hem_vid = res.assignments[gk_hem]
+        assert {frozenset(p) for p in res.sibling_edges} == {
+            frozenset((ssyk_vid, hem_vid))
         }
         conn.close()
 
@@ -1144,12 +1028,10 @@ class TestPerClusterFoldSplit:
         assert ssyk_vid in res.fold_slug_hints  # shared-stem ("ssyk") slug hint
         conn.close()
 
-    def test_cluster_rep_edge_code_vs_label_for_lid_lnamn(self) -> None:
-        # Confirms `reps = [min(c) …]` + `_split_relation_kind` wiring through the
-        # clustered path: the Lid/LNamn rep pair (name-based code/label) keeps its
-        # specific kind, while the Ssyk cluster's cross edges stay generic. Ssyk
-        # is typed neutrally (class "other") so neither Ssyk↔Lid (int) nor
-        # Ssyk↔LNamn (text) trips the numeric-vs-text import_bug heuristic.
+    def test_cluster_records_all_sibling_pairs(self) -> None:
+        # Confirms the clustered path records the (N_clusters choose 2) sibling
+        # pairs for the concept-group fold: a Ssyk fold-cluster + two singleton
+        # clusters (Lid, LNamn) yield three sibling variables and all three pairs.
         from reg_meta_build.db import DDL
 
         conn = sqlite3.connect(":memory:")
@@ -1182,20 +1064,15 @@ class TestPerClusterFoldSplit:
             "SELECT COUNT(*) FROM variable WHERE register_id = 1 AND provider_key = '920'"
         ).fetchone()[0]
         assert n_vars == 3  # Ssyk fold + Lid + LNamn
-        kind_by_pair = {frozenset((a, b)): kind for a, b, kind in res.related_edges}
         vid_lnamn = res.assignments[gk_lnamn]  # lex-first cluster keeps the origin
         vid_lid = res.assignments[gk_lid]
         vid_ssyk = res.assignments[gk_s3]
         assert vid_lnamn == orig
-        assert kind_by_pair[frozenset((vid_lid, vid_lnamn))] == "code_vs_label_pair"
-        assert (
-            kind_by_pair[frozenset((vid_ssyk, vid_lid))]
-            == "same_definition_different_column"
-        )
-        assert (
-            kind_by_pair[frozenset((vid_ssyk, vid_lnamn))]
-            == "same_definition_different_column"
-        )
+        assert {frozenset(p) for p in res.sibling_edges} == {
+            frozenset((vid_lid, vid_lnamn)),
+            frozenset((vid_ssyk, vid_lid)),
+            frozenset((vid_ssyk, vid_lnamn)),
+        }
         conn.close()
 
 
@@ -1226,9 +1103,7 @@ class TestSplitSiblingFlagInheritance:
         # 'PNR' (lex-first) keeps the origin; 'PersonNr' mints a sibling that must
         # inherit the flags rather than defaulting to 0/0.
         by_col = {"PNR": [("gk-pnr",)], "PersonNr": [("gk-personnr",)]}
-        # codelivered_pairs empty: this test only asserts flag propagation, and
-        # PNR/PersonNr don't co-occur here, so every edge is generic.
-        _apply_split(conn, {}, by_col, ["PNR", "PersonNr"], set(), 1, 57, orig, res)
+        _apply_split(conn, by_col, ["PNR", "PersonNr"], 1, 57, orig, res)
         rows = conn.execute(
             "SELECT name, is_sensitive, is_identifier FROM variable "
             "WHERE register_id = 1 AND provider_key = '57'"
@@ -1272,7 +1147,6 @@ class TestSplitSiblingFlagInheritance:
             groups,
             by_col,
             [["Ssyk3", "Ssyk5"], ["Hemkommun"]],
-            set(),
             1,
             57,
             orig,
@@ -2297,7 +2171,7 @@ class TestCollapseResidual:
             dropped=set(),
             clamped_to={},
             fold_slug_hints={},
-            related_edges=[],
+            sibling_edges=[],
             stats=Counter(),
         )
         _collapse_residual(groups, res)  # must not raise on None vs int
@@ -2347,7 +2221,7 @@ class TestCollapseResidualOverlap:
             dropped=set(),
             clamped_to={},
             fold_slug_hints={},
-            related_edges=[],
+            sibling_edges=[],
             stats=Counter(),
         )
 
@@ -2535,7 +2409,7 @@ class TestFoldSlugHint:
             dropped=set(),
             clamped_to={},
             fold_slug_hints={},
-            related_edges=[],
+            sibling_edges=[],
             stats=Counter(),
         )
         _apply_fold(
@@ -2577,7 +2451,7 @@ class TestFoldSlugHint:
             dropped=set(),
             clamped_to={},
             fold_slug_hints={},
-            related_edges=[],
+            sibling_edges=[],
             stats=Counter(),
         )
         _apply_fold(
@@ -2639,124 +2513,6 @@ class TestSplitSiblingSlugCache:
         conn.close()
         assert first == second, "auto slugs must be immutable across rebuilds"
         assert len(set(second.values())) == 2
-
-
-class TestVariableRelatedToEdges:
-    """Maintainer: the `variable_related_to` materializer (both-direction
-    (N choose 2) edges, FQID endpoints, `note='auto:triage'`, skip-on-missing-slug)
-    is no-op'd under skip_slugs, so cover it directly. #591: only the NON-FOLDABLE
-    split kinds (`code_vs_label_pair`, `import_bug_suspect`) persist here — the
-    foldable `same_definition_different_column` siblings are skipped (they feed the
-    concept-group edge fold instead), covered by `test_same_def_kind_is_skipped`."""
-
-    @staticmethod
-    def _split_db(tmp_path: Path) -> sqlite3.Connection:
-        ri = list(REGISTERINFORMATION_ROWS) + [
-            _var_row(colname="Hemkommun", cvid=9300, var_id=920),
-            _var_row(colname="Skolkommun", cvid=9301, var_id=920),
-        ]
-        input_dir = tmp_path / "input"
-        write_scb_input(input_dir, registerinformation_rows=ri)
-        db_dir = tmp_path / "db"
-        build_db(
-            input_dir=input_dir,
-            db_dir=db_dir,
-            skip_classifications=True,
-            skip_slugs=True,
-        )
-        conn = sqlite3.connect(db_dir / "reg_meta.db")
-        conn.row_factory = sqlite3.Row
-        conn.execute("UPDATE register SET slug = 'testreg' WHERE register_id = 1")
-        return conn
-
-    def test_edges_have_fqid_endpoints_both_directions(self, tmp_path: Path) -> None:
-        from reg_meta_build.db import _materialize_variable_related_to
-
-        conn = self._split_db(tmp_path)
-        prov = conn.execute(
-            "SELECT p.slug FROM provider p JOIN register r ON r.provider_id = "
-            "p.provider_id WHERE r.register_id = 1"
-        ).fetchone()[0]
-        sibs = conn.execute(
-            "SELECT variable_id FROM variable WHERE register_id = 1 "
-            "AND provider_key = '920' ORDER BY variable_id"
-        ).fetchall()
-        a, b = sibs[0]["variable_id"], sibs[1]["variable_id"]
-        conn.execute(
-            "UPDATE variable SET slug = 'kommun-hem' WHERE variable_id = ?", (a,)
-        )
-        conn.execute(
-            "UPDATE variable SET slug = 'kommun-skol' WHERE variable_id = ?", (b,)
-        )
-        conn.commit()
-
-        n = _materialize_variable_related_to(conn, [(a, b, "code_vs_label_pair")])
-        assert n == 2  # (N choose 2) × both directions
-        rows = conn.execute(
-            "SELECT a_provider, a_register, a_variable, b_provider, b_register, "
-            "b_variable, relation_kind, note FROM variable_related_to"
-        ).fetchall()
-        assert {(r["a_variable"], r["b_variable"]) for r in rows} == {
-            ("kommun-hem", "kommun-skol"),
-            ("kommun-skol", "kommun-hem"),
-        }
-        for r in rows:
-            assert (r["a_provider"], r["a_register"]) == (prov, "testreg")
-            assert (r["b_provider"], r["b_register"]) == (prov, "testreg")
-            assert r["relation_kind"] == "code_vs_label_pair"
-            assert r["note"] == "auto:triage"
-        conn.close()
-
-    def test_same_def_kind_is_skipped(self, tmp_path: Path) -> None:
-        # #591: the foldable `same_definition_different_column` kind is NOT
-        # persisted (it feeds the concept-group edge fold via `edge_siblings`),
-        # so the materializer drops it even with both endpoints slugged.
-        from reg_meta_build.db import _materialize_variable_related_to
-
-        conn = self._split_db(tmp_path)
-        sibs = conn.execute(
-            "SELECT variable_id FROM variable WHERE register_id = 1 "
-            "AND provider_key = '920' ORDER BY variable_id"
-        ).fetchall()
-        a, b = sibs[0]["variable_id"], sibs[1]["variable_id"]
-        conn.execute(
-            "UPDATE variable SET slug = 'kommun-hem' WHERE variable_id = ?", (a,)
-        )
-        conn.execute(
-            "UPDATE variable SET slug = 'kommun-skol' WHERE variable_id = ?", (b,)
-        )
-        conn.commit()
-        n = _materialize_variable_related_to(
-            conn, [(a, b, "same_definition_different_column")]
-        )
-        assert n == 0
-        assert (
-            conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[0] == 0
-        )
-        conn.close()
-
-    def test_edge_skipped_when_a_slug_is_missing(self, tmp_path: Path) -> None:
-        from reg_meta_build.db import _materialize_variable_related_to
-
-        conn = self._split_db(tmp_path)
-        sibs = conn.execute(
-            "SELECT variable_id FROM variable WHERE register_id = 1 "
-            "AND provider_key = '920' ORDER BY variable_id"
-        ).fetchall()
-        a, b = sibs[0]["variable_id"], sibs[1]["variable_id"]
-        # Only one sibling gets a slug; the edge has a NULL endpoint → skipped,
-        # not inserted with a NULL (which would corrupt the FQID). A PERSISTABLE
-        # kind so the skip is the missing-slug path, not the #591 same_def drop.
-        conn.execute(
-            "UPDATE variable SET slug = 'kommun-hem' WHERE variable_id = ?", (a,)
-        )
-        conn.commit()
-        n = _materialize_variable_related_to(conn, [(a, b, "code_vs_label_pair")])
-        assert n == 0
-        assert (
-            conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[0] == 0
-        )
-        conn.close()
 
 
 def _seed_split_for_backfill(conn: sqlite3.Connection) -> tuple[int, int, int, int]:
