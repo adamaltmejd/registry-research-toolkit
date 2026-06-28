@@ -877,9 +877,10 @@ export function representationsCollapse(reps: Representation[]): boolean {
  * source's period is left unset, the honest "covers the rep's whole span"
  * default, rather than emitting an out-of-grammar `0001`/`9999` token).
  * `valueSetLabel` is the value-set version label of the LATEST-era state (max
- * `valid_to`) — the row's representative coding. `codingsVary` is true when this one
- * column carried MORE THAN ONE distinct `value_set_id` across its states (a coding
- * change over time, e.g. yrkesreg's SUN2020Niva_Old going value-set 303 → 249); the
+ * `valid_to`, ties by max `state_id`) — the row's representative coding.
+ * `codingsVary` is true when this one column carried MORE THAN ONE distinct
+ * `value_set_id` across its states (a coding change over time, e.g. yrkesreg's
+ * SUN2020Niva_Old going value-set 303 → 249); the
  * picker shows a quiet "codings vary" nudge then, pointing the user to the States /
  * value-set detail. Keyed on the reliable `value_set_id`, NOT the low-trust
  * per-delivery `value_set_version_label` (the same id is labelled inconsistently
@@ -1110,6 +1111,7 @@ function minIso(a: string, b: string): string {
  * nullable), so the leaf call needs no cast — this widens the param, it doesn't
  * fork the function. */
 export interface PickerStateInput {
+  state_id: number;
   variant: string;
   /** The variant's curator DISPLAY name (`register_variant.name`), or null for a
    * NULL-named variant. Display-only — `variant` (the slug) stays the selection key /
@@ -1127,6 +1129,22 @@ export interface PickerStateInput {
   value_set_id: number | null;
   valid_from: string | null;
   valid_to: string | null;
+}
+
+function latestRepresentativeState<S extends { state_id: number }>(
+  states: readonly S[],
+  validTo: (s: S) => string,
+): S {
+  const first = states[0];
+  if (first === undefined) {
+    throw new Error("latestRepresentativeState requires at least one state");
+  }
+  return states.reduce((best, s) =>
+    validTo(s) > validTo(best) ||
+    (validTo(s) === validTo(best) && s.state_id > best.state_id)
+      ? s
+      : best,
+  );
 }
 
 /** Enumerate a variable's representation rows from its states (#678): one row per
@@ -1234,9 +1252,10 @@ function pickerRow(
     group.map((s) => ({ from: validFrom(s), to: validTo(s) })),
   );
   // The latest-era state (max valid_to) leads: its column is the row identity and its
-  // value-set label the representative coding. For a folded rename this is the CURRENT
+  // value-set label the representative coding. Ties use max state_id, matching the
+  // codings-vary deep-link resolver. For a folded rename this is the CURRENT
   // (surviving) column name — `DINF86`, not the retired `DINF`.
-  const latest = group.reduce((a, b) => (validTo(b) > validTo(a) ? b : a));
+  const latest = latestRepresentativeState(group, validTo);
   const column = latest.delivery_column_name as string;
   // The superseded columns of a folded rename, oldest-first (the leading latest column
   // excluded) — the picker's "was X, Y, Z" progression hint. Ordered by each column's
@@ -2293,22 +2312,22 @@ export function parseCodesParam(
  * delivery COLUMN resolves to — the deep-link target for the picker's "codings
  * vary" nudge (#905). A column with a STABLE coding maps to one value set; a column
  * whose coding VARIED over time (`codingsVary`) touches SEVERAL distinct value
- * sets, so we pick the LATEST-era one (max `valid_to`, ties broken by `state_id`)
- * to isolate — the row's representative coding (matching `PickerRepresentation`'s
- * `valueSetLabel`, also the latest era), with the rest one "← All value sets" click
- * away. When `variant` is given, only states of THAT variant are considered before
- * the latest-era pick — two rows sharing a column across different variants/populations
- * each isolate their OWN coding (the row key is `(variant, column)`, #905). When
- * `variant` is null/omitted (a column unambiguous across variants, or a leaf link with
- * no variant), all states for the column are considered (unchanged behavior). Returns
- * null when no matching state delivers the column (a stale / unknown `?codes=`), so the
- * viewer degrades to its default union view. Pure. */
+ * sets, so we pick the same representative state as `pickerRepresentations` (max
+ * `valid_to`, ties broken by `state_id`) to isolate the row's representative coding,
+ * with the rest one "← All value sets" click away. When `variant` is given, only
+ * states of THAT variant are considered before the latest-era pick — two rows sharing
+ * a column across different variants/populations each isolate their OWN coding (the
+ * row key is `(variant, column)`, #905). When `variant` is null/omitted (a column
+ * unambiguous across variants, or a leaf link with no variant), all states for the
+ * column are considered (unchanged behavior). Returns null when no matching state
+ * delivers the column (a stale / unknown `?codes=`), so the viewer degrades to its
+ * default union view. Pure. */
 export function valueSetKeyForColumn(
   states: VariableStateModel[],
   column: string,
   variant?: string | null,
 ): string | null {
-  let best: VariableStateModel | null = null;
+  const candidates: VariableStateModel[] = [];
   for (const s of states) {
     if (s.delivery_column_name !== column) {
       continue;
@@ -2316,14 +2335,12 @@ export function valueSetKeyForColumn(
     if (variant != null && s.variant !== variant) {
       continue;
     }
-    if (
-      best === null ||
-      s.valid_to > best.valid_to ||
-      (s.valid_to === best.valid_to && s.state_id > best.state_id)
-    ) {
-      best = s;
-    }
+    candidates.push(s);
   }
+  const best =
+    candidates.length === 0
+      ? null
+      : latestRepresentativeState(candidates, (s) => s.valid_to);
   return best === null ? null : valueSetDedupKey(best);
 }
 

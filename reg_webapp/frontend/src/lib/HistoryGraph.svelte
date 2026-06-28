@@ -36,9 +36,9 @@ import {
 // SUBSTRATE: HTML/CSS lanes over an absolute-positioned, year-scaled track (not a
 // monolithic SVG) — that gives a STICKY left gutter under horizontal scroll, a
 // real type hierarchy, and native hover/tooltip affordances cohesive with the
-// rest of the app. Accessibility: a parallel VISUALLY-HIDDEN structured list
-// (`role="img"` container + sr-only list) mirrors every node/cell/edge so a
-// screen reader reads the graph as text, never a pixel/scroll blob.
+// rest of the app. Accessibility: the timeline is a labelled `role="group"` so
+// the exposed gutter links carry node names/navigation, while a visually-hidden
+// relation list preserves edge text the drawn connectors cannot expose.
 //
 // An empty graph (`nodes.length === 0`) is the contract's "don't render" signal.
 let { graph, vintageYear }: { graph: RelationshipGraph; vintageYear?: number } =
@@ -204,8 +204,7 @@ function memberLabel(rn: VariableLane): string {
  * AND is not the focus node (the current page — kept a plain label, not a self
  * link). This makes predecessors/successors and non-focus
  * classification editions clickable for sighted mouse + keyboard users (#794 P2),
- * restoring the open-affordance the retired panels had; the sr-only fallback's own
- * `<a>`s stay as the screen-reader surface. */
+ * restoring the open-affordance the retired panels had. */
 function nodeHref(rn: RenderNode): string | null {
   if (isFocus(rn) || !rn.node.fqid) {
     return null;
@@ -295,10 +294,10 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
              group its children stay in the a11y tree, so the links are reachable.
              The purely-decorative visuals (axis, gridlines, connectors, the cell /
              point bars) are each `aria-hidden` so AT isn't read the pixel layout;
-             the structured `.graph-fallback` list below mirrors that layout as text
-             (cells, editions, edges) — a NON-interactive description (its links were
-             removed so they don't duplicate the gutter's nav as invisible tab
-             stops). -->
+             the structured `.graph-fallback` list below keeps the edge relations
+             the drawn connectors cannot expose as text — a NON-interactive
+             description (its links were removed so they don't duplicate the
+             gutter's nav as invisible tab stops). -->
         <div
           class="timeline"
           role="group"
@@ -461,8 +460,9 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                   </div>
 
                   <!-- Track: cells (variable) or one point (classification). The
-                       drawn bars are a pixel layout — `aria-hidden`; the
-                       `.graph-fallback` list re-states each cell / edition as text. -->
+                       drawn bars are a pixel layout — `aria-hidden`; the exposed
+                       gutter carries node names while the sr-only fallback carries
+                       edge text. -->
                   <div class="track" style={`width:${trackW}px`} aria-hidden="true">
                     {#if rn.kind === "variable"}
                       {#each rn.cells as cell, i (cell.runId)}
@@ -514,74 +514,23 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
           </div>
         </div>
 
-        <!-- The structured, screen-reader-legible mirror of the same graph: every
-             node (focus marker, member label, same_as affordances), its cells /
-             edition, and the cluster's edges — as real text the visual can't be.
-             NON-interactive by design: the visible gutter already carries the nav
-             <a>s (the real, focusable navigation), so this mirror uses plain TEXT
-             for the same labels — an <a> here would be a clipped, invisible
-             DUPLICATE tab stop (incl. a focus self-link), which is the #794 P1
-             keyboard-trap this avoids. -->
-        <ul class="graph-fallback">
-          {#each cluster.nodes as rn (rn.node.id)}
-            <li class:focus={isFocus(rn)}>
-              <span class="fb-marker" aria-hidden="true"
-                >{isFocus(rn) ? "●" : "○"}</span
-              >
-              <span class="fb-node">
-                {#if rn.kind === "variable"}
-                  {memberLabel(rn)}
-                  {#if isRenamed(rn)}
-                    <span class="muted tag">(renamed)</span>
-                  {/if}
-                  {#if isFocus(rn)}
-                    <span class="muted tag">this variable</span>
-                  {/if}
-                  <ul class="fb-cells">
-                    {#each rn.cells as cell (cell.runId)}
-                      <li>
-                        <span class="fb-cell-label">{cell.label}</span>
-                        <span class="muted">{cell.window}</span>
-                        {#if rn.multiVariant}
-                          <span class="muted">· {cell.variant}</span>
-                        {/if}
-                      </li>
-                    {/each}
-                  </ul>
-                  {#if rn.node.same_as.length > 0}
-                    <p class="fb-same-as muted">
-                      also delivered in
-                      {#each rn.node.same_as as sa, i (sa.fqid)}
-                        {#if i > 0}, {/if}{sa.register}
-                      {/each}
-                    </p>
-                  {/if}
-                {:else}
-                  {rn.node.label}
-                  {#if yearTag(rn)}
-                    <span class="muted">({yearTag(rn)})</span>
-                  {/if}
-                  {#if rn.node.is_current}
-                    <span class="muted tag">current edition</span>
-                  {/if}
-                  {#if isFocus(rn)}
-                    <span class="muted tag">this edition</span>
-                  {/if}
-                {/if}
-              </span>
-            </li>
-          {/each}
-
-          {#each cEdges as re (re.edge.id)}
-            <li class="fb-edge muted">
-              <span class="fb-marker" aria-hidden="true">▸</span>
-              {re.source.label}
-              →
-              {re.target.label}
-              {#if edgeLabelText(re)}({edgeLabelText(re)}){/if}
-            </li>
-          {/each}
-        </ul>
+        {#if cEdges.length > 0}
+          <!-- The screen-reader-only relation list. The visible gutter is exposed
+               through the timeline's role="group", so re-listing every node label
+               here double-announces the graph. Keep only edge text, which the drawn
+               connectors cannot expose. -->
+          <ul class="graph-fallback">
+            {#each cEdges as re (re.edge.id)}
+              <li class="fb-edge muted">
+                <span class="fb-marker" aria-hidden="true">▸</span>
+                {re.source.label}
+                →
+                {re.target.label}
+                {#if edgeLabelText(re)}({edgeLabelText(re)}){/if}
+              </li>
+            {/each}
+          </ul>
+        {/if}
       </div>
     {/each}
   </section>
@@ -1010,8 +959,8 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     pointer-events: none;
   }
 
-  /* The screen-reader / no-visual structured fallback — visually hidden but
-     present in the accessibility tree. */
+  /* The screen-reader relation fallback — visually hidden but present in the
+     accessibility tree. */
   .graph-fallback {
     position: absolute;
     width: 1px;
@@ -1025,9 +974,5 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
   }
   .muted {
     color: var(--text-muted);
-  }
-  .tag {
-    font-size: 0.85em;
-    font-style: italic;
   }
 </style>
