@@ -1193,10 +1193,12 @@ kind:
   auto-splits into one source per segment — so the selector is invisible for an
   unambiguous variable. (The *representation* / delivery-column choice stays a
   post-click chooser; it is per-segment and a succession split can carry several.)
+
 - **Classification** — editions (`sun1996` → `sun2000` → …) are the slice, but there is
   **deliberately no picker**. Editions switch via the succession edges in `HistoryGraph`
   (rendered under relationships): each edition is its own `class/<slug>` URL, so
   navigating the graph *is* the edition switch. Adding a picker would duplicate that.
+
 - **Concept group** — the **column / representation picker** (`RepresentationPicker`,
   #678): one compact band per member variable, each listing that variable's delivery
   columns as selectable rows. A single-column variable collapses to one row; a
@@ -1217,6 +1219,30 @@ kind:
   presentation lens: a hidden-but-selected row still commits, and the footer signals
   this. The filter logic mirrors the #819 `ConceptGroupNavigator`: OR within a
   dimension, AND across.
+
+  Two **succession-collapse** folds ship in #902, both client-side and purely
+  presentational:
+
+  - **Intra-variable sequential-rename collapse** (`pickerRepresentations` /
+    `coexistingColumns` in `catalog.ts`): one variable+variant whose delivery columns
+    span NON-overlapping eras (`DINF` → `DINF83` → `DINF84` → `DINF86`) collapses into
+    ONE picker row led by the latest-era column, spanning the union of all contributing
+    windows. Earlier column names appear as a quiet inline hint ("was DINF, DINF83, …")
+    via `renamedColumns` on `PickerRepresentation`. Genuinely parallel
+    (overlapping-window) columns stay separate rows. The coexist-vs-rename test is the
+    shared `coexistingColumns` leaf — also used by the binding-leaf editor's
+    `representationsFromStates` chooser — so the two surfaces can never drift on the
+    distinction. The full era/Gantt view is deferred to #904.
+
+  - **Inter-variable succession fold** (`successionFold` derived in
+    `ConceptGroupView.svelte`): the group graph's `succession` edges (#761 contract) are
+    read to detect predecessor→successor chains where BOTH endpoints are group members.
+    The superseded predecessor is dropped as a co-equal selectable band; the chain head
+    (latest edition) leads and carries its predecessors as a "supersedes N edition(s)"
+    disclosure (a closed `<details>` — oldest-first leaf links with the `effective_year`
+    qualifier, never selection targets). Partial chains — an edge endpoint outside the
+    group — stay normal bands. The fold is purely client-side (`bands` derived reads
+    `successionFold`) and requires no API change.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section),
 but it does a different job per kind:

@@ -18,6 +18,7 @@ function row(over: Partial<PickerRepresentation>): PickerRepresentation {
     variant: "v",
     variantLabel: over.variant ?? "v",
     column: over.column ?? "Col",
+    representation: over.column ?? "Col",
     from: "2000-01-01",
     to: "2010-12-31",
     windows: [{ from: "2000-01-01", to: "2010-12-31" }],
@@ -25,6 +26,7 @@ function row(over: Partial<PickerRepresentation>): PickerRepresentation {
     wirePeriod: "2000..2010",
     valueSetLabel: "",
     codingsVary: false,
+    renamedColumns: [],
     ...over,
   };
 }
@@ -314,5 +316,49 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .element(page.getByText("Showing 1 of 2 columns"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["FEB"]);
+  });
+});
+
+describe("RepresentationPicker sequential-rename hint (#902)", () => {
+  // The picker collapses a variable's sequential column RENAME (non-overlapping eras,
+  // distinct names) into ONE row led by the latest column, surfacing the earlier name(s)
+  // as a quiet inline ".rename-hint" ("was OldCol"). This is normally produced by
+  // pickerRepresentations; here we feed the collapsed `renamedColumns` directly to test
+  // the render path (the `{@render renameHint(...)}` snippet) in isolation.
+  it("renders a 'was <old>' hint for a collapsed rename, and none when empty", async () => {
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: "scb/x/renamed",
+          name: "Renamed",
+          registerPrefix: "scb/x",
+          rows: [row({ column: "NewCol", renamedColumns: ["OldCol"] })],
+        } satisfies PickerBand,
+        {
+          key: "scb/x/plain",
+          name: "Plain",
+          registerPrefix: "scb/x",
+          rows: [row({ column: "PlainCol", renamedColumns: [] })],
+        } satisfies PickerBand,
+      ],
+      axes: [],
+      ...PROPS,
+    });
+    await vi.waitFor(() => {
+      if (document.querySelectorAll(".col-row .col-chip").length < 2) {
+        throw new Error("rows not rendered yet");
+      }
+    });
+
+    // The renamed band shows exactly one ".rename-hint" naming the earlier column.
+    const hints = [...document.querySelectorAll(".rename-hint")];
+    expect(hints).toHaveLength(1);
+    expect(hints[0].textContent?.trim()).toBe("was OldCol");
+
+    // The plain band's row carries NO ".rename-hint".
+    const plainRow = [...document.querySelectorAll(".col-row")].find((r) =>
+      r.textContent?.includes("PlainCol"),
+    );
+    expect(plainRow?.querySelector(".rename-hint")).toBeNull();
   });
 });

@@ -304,6 +304,63 @@ describe("BindingLeafView representation picker (#678)", () => {
     spy.mockRestore();
   });
 
+  // #902: a folded sequential RENAME commits `representation: null`, NOT the latest
+  // column — the picker leads the row with the latest column (DINF86) for DISPLAY, but
+  // pinning it over the union 1981–1995 window would break the earlier eras (DINF86
+  // wasn't delivered before 1986). Null lets per-period resolution pick the right column
+  // per year.
+  it("a folded rename row commits representation: null (not the latest column)", async () => {
+    const renameStates = [
+      state({
+        state_id: 1,
+        variant: "individer",
+        delivery_column_name: "DINF",
+        valid_from: "1981-01-01",
+        valid_to: "1983-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "individer",
+        delivery_column_name: "DINF83",
+        valid_from: "1984-01-01",
+        valid_to: "1985-12-31",
+      }),
+      // Contiguous eras (no delivery gap) so the union wire period is a single
+      // 1981..1995 span — the rename fold, not an interrupted series.
+      state({
+        state_id: 3,
+        variant: "individer",
+        delivery_column_name: "DINF86",
+        valid_from: "1986-01-01",
+        valid_to: "1995-12-31",
+      }),
+    ];
+    const spy = vi.spyOn(projectStore, "addFromCatalog");
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(renameStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // ONE folded row, led by the latest column DINF86 (the display identity / chip).
+    await page.getByRole("checkbox", { name: /DINF86/ }).click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        registerVariant: "scb/lisa/individer",
+        variable: "scb/lisa/kon",
+        // NOT "DINF86" — the rename fold commits null so resolution picks per year.
+        representation: null,
+        resolvedPeriod: "1981..1995",
+      }),
+    );
+    spy.mockRestore();
+  });
+
   // #678 finding 3: an active ?period is HONORED on add — the committed period is
   // the row span INTERSECTED with the window, not the row's full span.
   it("commits the row span intersected with the active ?period (not the full span)", async () => {
@@ -454,9 +511,11 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("renders the delivery column as a prominent CHIP in a column-varies row; the variant primary stays plain (#678)", async () => {
-    // Two distinct columns on one variable (column VARIES) → each nested row leads
-    // with its column rendered as a .col-chip (the selection signal); the value-set
-    // qualifier (which varies too) stays plain text, NOT a chip.
+    // Two CO-EXISTING (overlapping) columns on one variable (column VARIES) → each
+    // nested row leads with its column rendered as a .col-chip (the selection signal);
+    // the value-set qualifier (which varies too) stays plain text, NOT a chip. The
+    // windows OVERLAP (the SSYK 3-digit / 5-digit parallel-coding case): a non-
+    // overlapping pair would collapse to one rename row (#902).
     const colVaries = [
       state({
         state_id: 1,
@@ -464,14 +523,14 @@ describe("BindingLeafView representation picker (#678)", () => {
         delivery_column_name: "Ssyk3",
         value_set_version_label: "SSYK 3-siffrig",
         valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
+        valid_to: "2020-12-31",
       }),
       state({
         state_id: 2,
         variant: "individer",
         delivery_column_name: "Ssyk5",
         value_set_version_label: "SSYK 5-siffrig",
-        valid_from: "2016-01-01",
+        valid_from: "2010-01-01",
         valid_to: "2020-12-31",
       }),
     ];
@@ -508,6 +567,8 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("hoists a common value-set STEM to the context and shows per-row suffixes (sni92 shape, #678)", async () => {
     // sni92: the long "Svensk standard för näringsgrensindelning," stem repeats; the
     // picker hoists it once to the subhead context and each row shows only its suffix.
+    // Two CO-EXISTING (overlapping-window) columns so they stay separate nested rows
+    // (a non-overlapping pair would collapse to one rename row, #902).
     const sni92 = [
       state({
         state_id: 1,
@@ -516,7 +577,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         value_set_version_label:
           "Svensk standard för näringsgrensindelning, Aktiviteter",
         valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
+        valid_to: "2020-12-31",
       }),
       state({
         state_id: 2,
@@ -524,7 +585,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         delivery_column_name: "Sni92B",
         value_set_version_label:
           "Svensk standard för näringsgrensindelning, Branscher",
-        valid_from: "2016-01-01",
+        valid_from: "2010-01-01",
         valid_to: "2020-12-31",
       }),
     ];

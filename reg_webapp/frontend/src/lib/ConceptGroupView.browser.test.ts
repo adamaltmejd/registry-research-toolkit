@@ -56,13 +56,17 @@ function gstate(over: Partial<GraphState>): GraphState {
 function vnode(
   fqid: string,
   states: GraphState[],
-  meta: { definition?: string | null; description?: string | null } = {},
+  meta: {
+    definition?: string | null;
+    description?: string | null;
+    label?: string;
+  } = {},
 ): VariableGraphNode {
   return {
     kind: "variable",
     id: fqid,
     fqid,
-    label: fqid,
+    label: meta.label ?? fqid,
     group_key: null,
     group_label: null,
     facets: [],
@@ -131,8 +135,11 @@ function twoSingleColGraph(): RelationshipGraph {
   ]);
 }
 
-/** A two-member graph where each member has TWO columns → each renders as a thin
- * subheading over its column rows. */
+/** A two-member graph where each member has TWO genuinely CO-EXISTING (overlapping
+ * windows) columns → each renders as a thin subheading over its parallel column rows.
+ * The windows OVERLAP (both 2010–2020) on purpose: parallel columns stay co-equal rows,
+ * whereas NON-overlapping columns of one variable are a sequential rename that the
+ * picker now collapses (#902) — see `renameChainGraph` for that shape. */
 function twoMultiColGraph(): RelationshipGraph {
   return graph([
     vnode("scb/rams/inkjan", [
@@ -140,12 +147,12 @@ function twoMultiColGraph(): RelationshipGraph {
         variant: "individer",
         delivery_column_name: "InkjanA",
         valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
+        valid_to: "2020-12-31",
       }),
       gstate({
         variant: "individer",
         delivery_column_name: "InkjanB",
-        valid_from: "2016-01-01",
+        valid_from: "2010-01-01",
         valid_to: "2020-12-31",
       }),
     ]),
@@ -154,12 +161,12 @@ function twoMultiColGraph(): RelationshipGraph {
         variant: "individer",
         delivery_column_name: "InkfebA",
         valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
+        valid_to: "2020-12-31",
       }),
       gstate({
         variant: "individer",
         delivery_column_name: "InkfebB",
-        valid_from: "2016-01-01",
+        valid_from: "2010-01-01",
         valid_to: "2020-12-31",
       }),
     ]),
@@ -470,8 +477,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
   it("dims the SUBHEADING when ALL its columns are out of the active window (#678)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
-    // inkjan: both columns 2010–2020 (fully out of 1980..2004). inkfeb: one column
-    // 2000–2004 (IN window), one 2016–2020 (out) → at least one in.
+    // Both members carry two CO-EXISTING (overlapping) columns → each is a multi-column
+    // subheading (a non-overlapping pair would collapse to one rename row, #902).
+    // inkjan: both columns 2010–2020 (fully out of 1980..2004) → subheading dims.
+    // inkfeb: one column 2000–2004 (IN window), one 2002–2020 (overlaps it, partly out)
+    // → at least one in → subheading stays full strength.
     vi.mocked(getConceptGroupGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/inkjan", [
@@ -479,12 +489,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             variant: "v",
             delivery_column_name: "InkjanA",
             valid_from: "2010-01-01",
-            valid_to: "2015-12-31",
+            valid_to: "2020-12-31",
           }),
           gstate({
             variant: "v",
             delivery_column_name: "InkjanB",
-            valid_from: "2016-01-01",
+            valid_from: "2010-01-01",
             valid_to: "2020-12-31",
           }),
         ]),
@@ -498,7 +508,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
           gstate({
             variant: "v",
             delivery_column_name: "InkfebB",
-            valid_from: "2016-01-01",
+            valid_from: "2002-01-01",
             valid_to: "2020-12-31",
           }),
         ]),
@@ -789,11 +799,13 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
           }),
         ]),
         vnode("scb/moms/naringsgren_sni", [
+          // Two CO-EXISTING (overlapping) columns → a genuine multi-column subheading.
+          // A non-overlapping pair would collapse to one rename row (#902).
           gstate({
             variant: "individer",
             delivery_column_name: "Sni92",
             valid_from: "2002-01-01",
-            valid_to: "2006-12-31",
+            valid_to: "2015-12-31",
           }),
           gstate({
             variant: "individer",
@@ -1926,5 +1938,340 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
       }
     });
     expect(document.querySelectorAll(".focused")).toHaveLength(0);
+  });
+});
+
+describe("ConceptGroupView inter-variable succession fold (#902)", () => {
+  /** A two-member group whose members are a succession PAIR: predecessor `old` →
+   * successor `new` (effective 2005). Both are members, so the fold collapses them to
+   * ONE band (led by `new`) with `old` as history. */
+  function successionNode(): ConceptGroupNodeData {
+    return node({
+      key: "disponibel-inkomst",
+      label: "Disponibel inkomst",
+      axes: [],
+      members: [
+        {
+          fqid: "scb/iot/dispink-old",
+          name: "Disponibel inkomst familj",
+          facets: [],
+          coverage: null,
+        },
+        {
+          fqid: "scb/iot/dispink-new",
+          name: "Disponibel inkomst familj 2004",
+          facets: [],
+          coverage: null,
+        },
+      ],
+    } as unknown as Partial<ConceptGroupNodeData>);
+  }
+
+  /** The graph: a node per member + a succession edge old→new (predecessor→successor,
+   * effective 2005). */
+  function successionGraph(): RelationshipGraph {
+    return {
+      nodes: [
+        vnode(
+          "scb/iot/dispink-old",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINFold",
+              valid_from: "1999-01-01",
+              valid_to: "2004-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst familj" },
+        ),
+        vnode(
+          "scb/iot/dispink-new",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINFnew",
+              valid_from: "2005-01-01",
+              valid_to: "2020-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst familj 2004" },
+        ),
+      ],
+      edges: [
+        {
+          id: "succession:scb/iot/dispink-old->scb/iot/dispink-new",
+          kind: "succession",
+          source: "scb/iot/dispink-old",
+          target: "scb/iot/dispink-new",
+          label: null,
+          effective_year: 2005,
+        },
+      ],
+      focus_id: null,
+    };
+  }
+
+  it("folds a predecessor→successor member pair into ONE band led by the LATEST edition", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // The successor's column is selectable as a co-equal row…
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFnew/ }))
+      .toBeVisible();
+    // …but the superseded predecessor's column is NOT a co-equal selectable band.
+    expect(document.querySelector('input[aria-label*="DINFold"]')).toBeNull();
+    // Exactly ONE selectable row remains (the predecessor folded away).
+    const rows = document.querySelectorAll(".col-row");
+    expect(rows).toHaveLength(1);
+    expect(rows[0].textContent).toContain("DINFnew");
+  });
+
+  it("surfaces the superseded predecessor as reachable HISTORY (a 'supersedes' disclosure)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // The chain head carries a "supersedes 1 edition" disclosure…
+    const summary = await vi.waitFor(() => {
+      const el = document.querySelector("details.history > summary");
+      if (!el) {
+        throw new Error("history disclosure not yet rendered");
+      }
+      return el;
+    });
+    expect(summary.textContent?.replace(/\s+/g, " ").trim()).toContain(
+      "supersedes 1 edition",
+    );
+    // …whose entry links to the predecessor's own leaf page (still reachable), with its
+    // supersession year, and is NOT a co-equal selection target.
+    const link = document.querySelector<HTMLAnchorElement>(
+      "details.history a.history-link",
+    );
+    expect(link?.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
+    expect(link?.textContent).toContain("Disponibel inkomst familj");
+    expect(
+      document.querySelector(".history .history-until")?.textContent,
+    ).toContain("2005");
+  });
+
+  it("does NOT fold when the successor is OUTSIDE the group (partial chain)", async () => {
+    // The edge's target is not a group member → the predecessor stays a normal band
+    // (only pairs with BOTH endpoints in the group fold).
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "g",
+        label: "G",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/iot/dispink-old",
+            name: "Old",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode("scb/iot/dispink-old", [
+          gstate({
+            variant: "familj",
+            delivery_column_name: "DINFold",
+            valid_from: "1999-01-01",
+            valid_to: "2004-12-31",
+          }),
+        ]),
+      ],
+      edges: [
+        {
+          id: "succession:scb/iot/dispink-old->scb/iot/dispink-out",
+          kind: "succession",
+          source: "scb/iot/dispink-old",
+          target: "scb/iot/dispink-out", // NOT a member
+          label: null,
+          effective_year: 2005,
+        },
+      ],
+      focus_id: null,
+    });
+    router.navigate("/catalog/group/scb/iot/g");
+
+    renderGroup({ provider: "scb", register: "iot", key: "g" });
+
+    // The predecessor still renders its own selectable row (not folded away), and there
+    // is no history disclosure.
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFold/ }))
+      .toBeVisible();
+    expect(document.querySelector("details.history")).toBeNull();
+  });
+
+  it("folds a transitive chain A→B→C into ONE band led by C, history oldest-first", async () => {
+    // A→B (effective 2000), B→C (effective 2010). All three are members, so A and B
+    // are both superseded and fold away; only C remains as a band, carrying both as
+    // history (oldest-first [A, B]).
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "disponibel-inkomst",
+        label: "Disponibel inkomst",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/iot/dispink-a",
+            name: "Disponibel inkomst A",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink-b",
+            name: "Disponibel inkomst B",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink-c",
+            name: "Disponibel inkomst C",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode(
+          "scb/iot/dispink-a",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINA",
+              valid_from: "1995-01-01",
+              valid_to: "1999-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst A" },
+        ),
+        vnode(
+          "scb/iot/dispink-b",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINB",
+              valid_from: "2000-01-01",
+              valid_to: "2009-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst B" },
+        ),
+        vnode(
+          "scb/iot/dispink-c",
+          [
+            gstate({
+              variant: "familj",
+              delivery_column_name: "DINC",
+              valid_from: "2010-01-01",
+              valid_to: "2020-12-31",
+            }),
+          ],
+          { label: "Disponibel inkomst C" },
+        ),
+      ],
+      edges: [
+        {
+          id: "succession:scb/iot/dispink-a->scb/iot/dispink-b",
+          kind: "succession",
+          source: "scb/iot/dispink-a",
+          target: "scb/iot/dispink-b",
+          label: null,
+          effective_year: 2000,
+        },
+        {
+          id: "succession:scb/iot/dispink-b->scb/iot/dispink-c",
+          kind: "succession",
+          source: "scb/iot/dispink-b",
+          target: "scb/iot/dispink-c",
+          label: null,
+          effective_year: 2010,
+        },
+      ],
+      focus_id: null,
+    });
+    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // Exactly ONE selectable band remains — the chain head C (A and B folded away).
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINC/ }))
+      .toBeVisible();
+    const rows = document.querySelectorAll(".col-row");
+    expect(rows).toHaveLength(1);
+    expect(rows[0].textContent).toContain("DINC");
+
+    // The disclosure surfaces BOTH predecessors transitively…
+    const summary = document.querySelector("details.history > summary");
+    expect(summary?.textContent?.replace(/\s+/g, " ").trim()).toContain(
+      "supersedes 2 editions",
+    );
+    // …oldest-first: A before B.
+    const links = [
+      ...document.querySelectorAll<HTMLAnchorElement>(
+        "details.history a.history-link",
+      ),
+    ];
+    expect(links.map((a) => a.getAttribute("href"))).toEqual([
+      "/catalog/scb/iot/dispink-a",
+      "/catalog/scb/iot/dispink-b",
+    ]);
+  });
+
+  it("omits the 'until <year>' marker when effective_year is null", async () => {
+    // A null effective_year (the edge carries no supersession year) must not render a
+    // ".history-until" element — the `{#if … != null}` guard suppresses "until null".
+    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    const g = successionGraph();
+    g.edges[0].effective_year = null;
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(g);
+    router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    // The disclosure still renders (the predecessor is still folded as history)…
+    const link = await vi.waitFor(() => {
+      const el = document.querySelector("details.history a.history-link");
+      if (!el) {
+        throw new Error("history disclosure not yet rendered");
+      }
+      return el;
+    });
+    expect(link.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
+    // …but with NO "until <year>" marker (no ".history-until", no "until" text).
+    expect(document.querySelector(".history .history-until")).toBeNull();
+    expect(
+      document.querySelector("details.history")?.textContent,
+    ).not.toContain("until");
   });
 });

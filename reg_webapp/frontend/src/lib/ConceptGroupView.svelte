@@ -190,6 +190,81 @@ const memberColumnsByFqid = $derived.by(() => {
   return map;
 });
 
+/** The inter-variable SUCCESSION fold (#902): the group graph's `succession` edges
+ * collapse predecessor→successor pairs whose BOTH endpoints are members of this group,
+ * so a superseded edition is NOT a co-equal band — the chain HEAD (the latest edition)
+ * leads and its predecessor(s) become quiet history on the head band.
+ *
+ * Edge direction (reg_meta `graph.py`): `source` is the PREDECESSOR (older), `target`
+ * the SUCCESSOR (newer), and `effective_year` the year the source was replaced by the
+ * target. So a member that is ANY in-group edge's `source` is SUPERSEDED; a member that
+ * is only ever a `target` (never a source) is the chain head that leads. Chains of
+ * length >2 (A→B→C) fold transitively: B and A are both superseded, C leads with both as
+ * history. An edge endpoint OUTSIDE the group (a partial chain) is ignored — only pairs
+ * where both endpoints are group members fold; a member with an out-of-group successor
+ * stays a normal band.
+ *
+ * Yields `{ superseded, historyByHead }`: the set of member fqids to DROP as co-equal
+ * bands, and per chain-head fqid the ordered (oldest-first) superseded predecessors to
+ * surface as history. */
+const successionFold = $derived.by(() => {
+  const memberFqids = new Set((node?.members ?? []).map((m) => m.fqid));
+  const edges = (graph?.edges ?? []).filter(
+    (e) =>
+      e.kind === "succession" &&
+      memberFqids.has(e.source) &&
+      memberFqids.has(e.target),
+  );
+  // successor → its predecessor edges (to walk a chain back from its head).
+  // `effective_year` rides on the predecessor (the year it was replaced by the
+  // successor).
+  const predecessorsOf = new Map<
+    string,
+    { fqid: string; effectiveYear: number | null }[]
+  >();
+  const superseded = new Set<string>();
+  for (const e of edges) {
+    superseded.add(e.source); // a source (predecessor) is superseded
+    const preds = predecessorsOf.get(e.target) ?? [];
+    preds.push({ fqid: e.source, effectiveYear: e.effective_year ?? null });
+    predecessorsOf.set(e.target, preds);
+  }
+  // Chain heads: members that participate in succession but are never superseded (only
+  // ever a target). Walk each head back through its predecessors, depth-first, so the
+  // history lists the whole chain (A→B→C ⇒ C's history is [A, B]); order oldest-first.
+  const historyByHead = new Map<
+    string,
+    { fqid: string; effectiveYear: number | null }[]
+  >();
+  for (const fqid of memberFqids) {
+    if (superseded.has(fqid) || !predecessorsOf.has(fqid)) {
+      continue; // not a head (it's superseded, or has no in-group predecessor)
+    }
+    const chain: { fqid: string; effectiveYear: number | null }[] = [];
+    const visited = new Set<string>([fqid]);
+    const walk = (target: string): void => {
+      for (const pred of predecessorsOf.get(target) ?? []) {
+        if (visited.has(pred.fqid)) {
+          continue; // defend against a cyclic edge set (shouldn't occur)
+        }
+        visited.add(pred.fqid);
+        walk(pred.fqid); // older predecessors first
+        chain.push(pred);
+      }
+    };
+    walk(fqid);
+    historyByHead.set(fqid, chain);
+  }
+  return { superseded, historyByHead };
+});
+
+/** The display name for a superseded predecessor fqid: its graph node label, else its
+ * member name, else the leaf slug — so the history entry reads a human name. */
+function predecessorName(fqid: string): string {
+  const member = node?.members.find((m) => m.fqid === fqid);
+  return nodesByFqid.get(fqid)?.label ?? member?.name ?? leafSlug(fqid);
+}
+
 /** The picker bands — one per DISTINCT member variable (by fqid), in the group's
  * member order. Each band pulls its representation rows from the matching graph
  * node's states, RESTRICTED to the group's member delivery columns for that fqid
@@ -198,7 +273,8 @@ const memberColumnsByFqid = $derived.by(() => {
  * renders a band with EMPTY rows (the band shows a quiet "no representations" rather
  * than dropping the member). The facet label distinguishes representation members
  * collapsed onto one fqid; the band's adaptive rows surface the delivery-column
- * split. */
+ * split. A member superseded by an in-group succession edge (#902) is DROPPED as a
+ * co-equal band — it rides as history on the chain head instead. */
 const bands = $derived.by((): PickerBand[] => {
   if (!node) {
     return [];
@@ -249,6 +325,7 @@ const bands = $derived.by((): PickerBand[] => {
     map[member.delivery_column] ??= facet;
     facetByColumnByFqid.set(member.fqid, map);
   }
+  const { superseded, historyByHead } = successionFold;
   const seen = new Set<string>();
   const out: PickerBand[] = [];
   for (const member of node.members) {
@@ -256,6 +333,11 @@ const bands = $derived.by((): PickerBand[] => {
       continue;
     }
     seen.add(member.fqid);
+    // A member superseded by an in-group succession edge (#902) is not its own band —
+    // it rides as history on its chain head. Drop it here.
+    if (superseded.has(member.fqid)) {
+      continue;
+    }
     const allStates = nodesByFqid.get(member.fqid)?.states ?? [];
     // null filter = whole-variable member → every column; a Set = only the group's
     // member columns for this variable (a state with no column is always dropped by
@@ -291,6 +373,14 @@ const bands = $derived.by((): PickerBand[] => {
       // leaf to full history.
       href: memberHref(member.fqid),
       rows: pickerRepresentations(states),
+      // The chain head carries its superseded predecessor editions as history (#902):
+      // oldest-first, each a leaf-page link, so they stay reachable without being
+      // co-equal selectable bands. Undefined for a member that heads no in-group chain.
+      supersedes: historyByHead.get(member.fqid)?.map((p) => ({
+        name: predecessorName(p.fqid),
+        href: memberHref(p.fqid),
+        effectiveYear: p.effectiveYear,
+      })),
     });
   }
   return out;
@@ -415,7 +505,10 @@ function commitSelected(selected: PickerSelection[]): void {
       {
         registerVariant: `${registerPrefixOf(band.key)}/${row.variant}`,
         variable: band.key,
-        representation: row.column,
+        // `row.representation` (NOT `row.column`): a folded sequential rename commits
+        // null so resolution picks the right column per year; an ordinary / parallel
+        // column commits its own column (#902).
+        representation: row.representation,
         resolvedPeriod: addPeriod,
       },
       { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
