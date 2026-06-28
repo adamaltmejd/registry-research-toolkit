@@ -41,7 +41,7 @@ from reg_meta.fqid import (
 from reg_meta.queries import extract_year
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build._curation import fold_column
+from reg_meta_build._curation import _data_type_class, fold_column
 
 # Shared SCB-CSV / hashing / progress infra + the Vardemangder sentinel
 # allowlists + the SCB provider id stay in `db.py` (used by the materializer
@@ -1541,24 +1541,12 @@ def _apply_fold(
         res.fold_slug_hints[orig_vid] = hint
 
 
-# data_type marker substrings. SCB ships SQL-ish lowercased types (`int`,
-# `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
-# the same column. Substring match is safe — the field only ever holds a type
-# name — and the two marker sets are disjoint across known types, so order
-# doesn't matter.
-_NUMERIC_TYPE_MARKERS = ("int", "tal", "num", "dec", "float", "real", "double")
-_TEXT_TYPE_MARKERS = ("text", "char", "strang", "string", "varchar")
-
-
-def _data_type_class(dt: str | None) -> str:
-    """Coarse `numeric` / `text` / `other` class for a data_type. `other` covers
-    dates and anything unrecognized (never claimed numeric or text)."""
-    s = _ascii_fold_lower(dt)
-    if any(m in s for m in _TEXT_TYPE_MARKERS):
-        return "text"
-    if any(m in s for m in _NUMERIC_TYPE_MARKERS):
-        return "numeric"
-    return "other"
+# `_data_type_class` + its `_NUMERIC_TYPE_MARKERS` / `_TEXT_TYPE_MARKERS` markers
+# were hoisted to `_curation.py` (imported above) so the read-only split-sibling
+# diagnostic shares one numeric/text/other classifier with this triage. The
+# shared form folds via `fold_column` (== this module's `_ascii_fold_lower`), so
+# the SCB-flavoured labels (`Heltal`, `Sträng (text)`, `Datum`) classify
+# identically.
 
 
 # Text-family `data_type` tokens that SCB's low-trust per-delivery `Datatyp`

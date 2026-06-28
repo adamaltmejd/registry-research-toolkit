@@ -55,6 +55,32 @@ def fold_column(s: str) -> str:
     )
 
 
+# data_type marker substrings. SCB ships SQL-ish lowercased types (`int`,
+# `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
+# the same column. Substring match is safe — the field only ever holds a type
+# name — and the two marker sets are disjoint across known types, so order
+# doesn't matter. Hoisted here (with `_data_type_class` below) so the SCB triage
+# (`sources/scb.py`) and the read-only split-sibling diagnostic
+# (`split_sibling_suspects.py`) share ONE numeric/text/other classifier — the
+# import-bug shape signal must not diverge between the build-time split and the
+# diagnostic that re-derives it. `fold_column` (above) is the only dependency, so
+# this leaf lives with it rather than in a provider-specific adapter.
+_NUMERIC_TYPE_MARKERS = ("int", "tal", "num", "dec", "float", "real", "double")
+_TEXT_TYPE_MARKERS = ("text", "char", "strang", "string", "varchar")
+
+
+def _data_type_class(dt: str | None) -> str:
+    """Coarse `numeric` / `text` / `other` class for a data_type. `other` covers
+    dates and anything unrecognized (never claimed numeric or text). Folds via
+    `fold_column` so `Sträng (text)` and `Heltal` classify by their ASCII form."""
+    s = fold_column(dt) if dt else ""
+    if any(m in s for m in _TEXT_TYPE_MARKERS):
+        return "text"
+    if any(m in s for m in _NUMERIC_TYPE_MARKERS):
+        return "numeric"
+    return "other"
+
+
 def canonical_int(value: object) -> int | None:
     """Coerce a TOML `register_id` / `var_id` value to its canonical int, or None
     if it isn't one. A TOML integer is already canonical (the format forbids
