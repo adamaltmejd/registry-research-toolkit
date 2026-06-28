@@ -1160,13 +1160,13 @@ that fills the shell: `binding` → `BindingLeafView`, `classification` →
 
 Per-kind mapping into the five sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)                   | Concept group (`ConceptGroupView`)                           |
-  | ------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                           | Technical details only (key / facets / source)               |
-  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via `HistoryGraph` succession edges)     | member selector (slice) + `PeriodPicker` (availability lens) |
-  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                     | —                                                            |
-  | relationships | `HistoryGraph` (over `/graph` payload) + `LineageDetails` (provenance/warnings)                          | `HistoryGraph` (edition points, succession + related edges) | — (members live in the picker)                               |
-  | docs          | `DocMentionsPanel`                                                                                       | —                                                           | —                                                            |
+  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)                   | Concept group (`ConceptGroupView`)                                                                             |
+  | ------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                           | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
+  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via `HistoryGraph` succession edges)     | column picker (`RepresentationPicker`) + `PeriodPicker` (availability lens) (#678)                             |
+  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                     | —                                                                                                              |
+  | relationships | `HistoryGraph` (over `/graph` payload) + `LineageDetails` (provenance/warnings)                          | `HistoryGraph` (edition points, succession + related edges) | — (members live in the picker)                                                                                 |
+  | docs          | `DocMentionsPanel`                                                                                       | —                                                           | —                                                                                                              |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
@@ -1197,10 +1197,16 @@ kind:
   **deliberately no picker**. Editions switch via the succession edges in `HistoryGraph`
   (rendered under relationships): each edition is its own `class/<slug>` URL, so
   navigating the graph *is* the edition switch. Adding a picker would duplicate that.
-- **Concept group** — the **member selector**: the group's facet grid rendered expanded
-  (a 2-axis matrix / 1-axis chips / 0-axis list, mirroring the register-browse
-  `ConceptGroupRow` shapes but richer — per-member coverage + availability greying).
-  Each member links to its leaf FQID.
+- **Concept group** — the **column / representation picker** (`RepresentationPicker`,
+  #678): one compact band per member variable, each listing that variable's delivery
+  columns as selectable rows. A single-column variable collapses to one row; a
+  multi-column variable gets a thin subheading (its distinguishing identity + a
+  per-variable "select all") over its column rows. Each band identity links to the
+  member's leaf page. When the group spans more than one distinct concept name,
+  `clusterBands` (#901) groups the bands under `<h3>` name-cluster headings — each name
+  renders once and each band leads with its within-cluster distinguisher (facet or
+  delivery column) rather than the repeated name. One shared cross-variable selection
+  basket and a single "Add to project" footer span all bands.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section),
 but it does a different job per kind:
