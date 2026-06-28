@@ -59,6 +59,7 @@ function vnode(
   meta: {
     definition?: string | null;
     description?: string | null;
+    operationalDefinition?: string | null;
     label?: string;
   } = {},
 ): VariableGraphNode {
@@ -74,6 +75,7 @@ function vnode(
     same_as: [],
     definition: meta.definition ?? null,
     description: meta.description ?? null,
+    operational_definition: meta.operationalDefinition ?? null,
   };
 }
 
@@ -1583,6 +1585,79 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(document.body.textContent).not.toContain(
       "Member-specific February description.",
     );
+  });
+
+  // ── Operational definition per member (#892/#932) ────────────────────────────
+  // The consumer half of #892: where the shared def/desc (#900) is SUPPRESSED when
+  // members disagree, the operational_definition is the OPPOSITE — it is precisely the
+  // per-member DISTINGUISHING text, so it renders PER BAND even (especially) when the
+  // members differ. This is what lets a researcher tell parallel siblings apart
+  // (fordonsreg näringsgren: owner / previous-owner / 2nd-previous-owner).
+  it("renders each member's operational_definition per band so parallel siblings are distinguishable (#892)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode(
+          "scb/rams/inkjan",
+          [
+            gstate({
+              variant: "individer",
+              delivery_column_name: "Inkjan",
+              valid_from: "2010-01-01",
+              valid_to: "2015-12-31",
+            }),
+          ],
+          { operationalDefinition: "Owner at year end." },
+        ),
+        vnode(
+          "scb/rams/inkfeb",
+          [
+            gstate({
+              variant: "individer",
+              delivery_column_name: "Inkfeb",
+              valid_from: "2018-01-01",
+              valid_to: "2020-12-31",
+            }),
+          ],
+          {
+            operationalDefinition: "Previous owner before the latest transfer.",
+          },
+        ),
+      ]),
+    );
+
+    renderGroup();
+
+    // BOTH members' distinct op-def text renders inline on their own band — NOT
+    // deduped away (it's the distinguishing text, not shared concept text).
+    await expect
+      .element(page.getByText("Owner at year end.", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByText("Previous owner before the latest transfer.", {
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    // It is NOT promoted to the group-level shared-meta block (members disagree).
+    const sharedMeta = [...document.querySelectorAll("dl.meta")].filter(
+      (dl) => !dl.closest("details.tech-details"),
+    );
+    expect(sharedMeta).toHaveLength(0);
+  });
+
+  it("renders no operational-definition line when a member carries none (#892)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+
+    renderGroup();
+
+    // The bands render (rows named by their delivery column), but no op-def eyebrow.
+    await expect
+      .element(page.getByRole("checkbox", { name: /Inkjan/ }))
+      .toBeVisible();
+    expect(document.querySelector(".op-def")).toBeNull();
   });
 
   // ── #678 finding 1: a representation group exposes only its MEMBER columns ────

@@ -149,6 +149,17 @@
             ],
             "title": "Name"
           },
+          "operational_definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operational Definition"
+          },
           "register_id": {
             "title": "Register Id",
             "type": "integer"
@@ -3021,6 +3032,17 @@
             "title": "Label",
             "type": "string"
           },
+          "operational_definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operational Definition"
+          },
           "same_as": {
             "items": {
               "$ref": "#/components/schemas/SameAsRef"
@@ -3043,6 +3065,7 @@
           "group_key",
           "definition",
           "description",
+          "operational_definition",
           "states",
           "same_as",
           "facets",

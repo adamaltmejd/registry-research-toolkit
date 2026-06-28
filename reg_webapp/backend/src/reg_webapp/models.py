@@ -249,6 +249,12 @@ class BindingNode(BaseModel):
     name: str | None
     definition: str | None
     description: str | None
+    # SCB's "operationell definition" — per-(split-)variable distinguishing text
+    # (#892/#932). Disambiguates parallel concept-group members whose only differing
+    # metadata is this field (e.g. owner / previous-owner näringsgren). Defaulted
+    # (additive) per the #317 rule — the SPA tolerates one edge-cache generation of
+    # payloads missing it.
+    operational_definition: str | None = None
     measurement_unit: str | None
     is_sensitive: bool
     is_identifier: bool

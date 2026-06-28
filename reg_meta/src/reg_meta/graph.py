@@ -124,6 +124,11 @@ class VariableGraphNode(_GraphNodeBase):
     # minted thin (no full resolve) — fine; those carry no metadata.
     definition: str | None
     description: str | None
+    # Per-(split-)variable distinguishing text (#892/#932) — disambiguates parallel
+    # concept-group members whose only differing metadata is this field. Carried on the
+    # node so a group page surfaces each member's op-def from the member union alone.
+    # None on a thin succession-chain edition node (no full resolve).
+    operational_definition: str | None
     states: list[GraphState]
     same_as: list[SameAsRef]
     # The resolved variable's facet assignments WITHIN its canonical concept group
@@ -416,6 +421,7 @@ class _GraphBuilder:
             group_key=group_key,
             definition=resolved.definition,
             description=resolved.description,
+            operational_definition=resolved.operational_definition,
             states=_graph_states(resolved.states),
             same_as=[
                 SameAsRef(fqid=ref.fqid, register=ref.register_name)
@@ -530,6 +536,7 @@ class _GraphBuilder:
                 group_key=None,
                 definition=None,
                 description=None,
+                operational_definition=None,
                 states=[],
                 same_as=[],
                 facets=[],

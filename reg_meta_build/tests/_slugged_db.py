@@ -193,15 +193,19 @@ def add_variable(
     name: str,
     source_register_id: int | None = None,
     slug: str | None = None,
+    operational_definition: str | None = None,
 ) -> None:
     # A2.1.5: `slug` sets the stored `variable.slug` the resolver reads. Pass it
     # for variables that must resolve by FQID; leave None for fixture rows that
     # only need to exist (e.g. a source register target).
+    # `operational_definition` (#892/#932) is the per-(split-)variable distinguishing
+    # text; pass it to prove the read-stack surfaces it.
     conn.execute(
         "INSERT INTO variable "
-        "(register_id, provider_key, name, source_register_id, slug) "
-        "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
-        (register_id, var_id, name, source_register_id, slug),
+        "(register_id, provider_key, name, source_register_id, slug, "
+        "operational_definition) "
+        "VALUES (?, CAST(? AS TEXT), ?, ?, ?, ?)",
+        (register_id, var_id, name, source_register_id, slug, operational_definition),
     )
 
 

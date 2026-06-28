@@ -44,6 +44,7 @@ function variableNode(
     group_label: null,
     definition: null,
     description: null,
+    operational_definition: null,
     facets: [],
     states: [state()],
     same_as: [],

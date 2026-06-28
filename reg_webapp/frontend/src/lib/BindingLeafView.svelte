@@ -451,6 +451,10 @@ function commitSelected(selected: PickerSelection[]): void {
       <dt>Description</dt>
       <dd>{node.description}</dd>
     {/if}
+    {#if node.operational_definition}
+      <dt>Operational definition</dt>
+      <dd>{node.operational_definition}</dd>
+    {/if}
     {#if node.measurement_unit}
       <dt>Unit</dt>
       <dd>{node.measurement_unit}</dd>

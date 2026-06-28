@@ -366,6 +366,14 @@ const bands = $derived.by((): PickerBand[] => {
       // have no delivery column to key by and so apply to every row of the band. The
       // picker's `rowFacet` falls back to these after the per-column lookup.
       facets: bandFacetsByFqid.get(member.fqid),
+      // The member's OPERATIONAL DEFINITION (#892/#932): the per-(split-)variable
+      // distinguishing text, carried on its graph node. Surfaced per band so parallel
+      // members whose name/definition coincide (owner / previous-owner näringsgren) are
+      // told apart inline — the consumer half of #892, replacing the #900 deferral that
+      // hid distinct per-member text rather than misrepresent it as concept text. Most
+      // siblings carry null; the picker renders the line only when present.
+      operationalDefinition: nodesByFqid.get(member.fqid)
+        ?.operational_definition,
       // The member's own leaf page — the picker renders the identity as a nav link
       // (the binding leaf passes no href; it's already that page). Carry the active
       // group `?period` onto the link (#678) so opening a member from the picker

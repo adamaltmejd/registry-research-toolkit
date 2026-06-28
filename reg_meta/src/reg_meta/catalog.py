@@ -666,6 +666,11 @@ class ResolvedVariable(_CatalogModel):
     name: str | None
     definition: str | None
     description: str | None
+    # SCB's "operationell definition" — per-(split-)variable distinguishing text
+    # (#892/#932). Disambiguates parallel concept-group members whose only differing
+    # metadata is this field (e.g. owner / previous-owner näringsgren). A first-class
+    # column since schema 6.1.0, no longer folded into `description`.
+    operational_definition: str | None
     measurement_unit: str | None
     is_sensitive: bool
     is_identifier: bool
@@ -1460,6 +1465,7 @@ class Catalog:
             name=meta["name"],
             definition=meta["definition"],
             description=meta["description"],
+            operational_definition=meta["operational_definition"],
             measurement_unit=meta["measurement_unit"],
             is_sensitive=bool(meta["is_sensitive"]),
             is_identifier=bool(meta["is_identifier"]),
@@ -1518,7 +1524,8 @@ class Catalog:
         is already resolved, so this always finds a row."""
         row = self._conn.execute(
             "SELECT v.register_id, v.provider_key, v.slug, v.name, v.definition, "
-            "v.description, v.measurement_unit, v.is_sensitive, v.is_identifier, "
+            "v.description, v.operational_definition, "
+            "v.measurement_unit, v.is_sensitive, v.is_identifier, "
             "v.source_register_id, v.source_register_text, "
             "r.slug AS register_slug, p.slug AS provider_slug "
             "FROM variable v "
