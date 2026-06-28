@@ -428,13 +428,22 @@ describe("BindingLeafView representation picker (#678)", () => {
     ].map((el) => el.textContent?.trim());
     expect(periods).toEqual(["2003 – 2015", "2003 – 2015"]);
 
-    // Each row shows the varying POPULATION (not the repeated column).
-    await expect
-      .element(page.getByRole("checkbox", { name: /lastbilar/ }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("checkbox", { name: /bussar/ }))
-      .toBeVisible();
+    // Each row shows the varying POPULATION (not the repeated column) as its primary.
+    // (Asserted on the column-list row primaries — a two-variant leaf now also surfaces
+    // a Population FILTER (#908) whose pill checkboxes carry the same variant text, so a
+    // bare role+name checkbox query would be ambiguous.)
+    const rowPrimaries = [
+      ...document.querySelectorAll(".col-row.nested .primary"),
+    ].map((el) => el.textContent?.trim());
+    expect(rowPrimaries).toContain("lastbilar");
+    expect(rowPrimaries).toContain("bussar");
+    // The two populations discriminate, so the leaf surfaces the #908 Population
+    // FILTER fieldset (the leaf surface of #908 the picker exposes for a varying-
+    // population variable).
+    const filterLegends = [
+      ...document.querySelectorAll(".dim-filters .dim-filter legend"),
+    ].map((el) => el.textContent?.trim());
+    expect(filterLegends).toContain("Population");
     // The constant column is NOT repeated as a per-row label (the populations are the
     // row primaries; no nested row's primary/chip is the column).
     expect(

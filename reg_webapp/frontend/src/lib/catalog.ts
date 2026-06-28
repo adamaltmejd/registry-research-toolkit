@@ -1397,6 +1397,198 @@ export function pickerLabeling(
   return { column, headerContext, rows: labelRows };
 }
 
+// ── Picker dimension marking + filtering (#908) ──────────────────────────────
+// A multi-axis concept group (the #819 families — enhet × hushållsbegrepp ×
+// kapitalvinst, or a coding/variant split) crowds the picker: the user can see a
+// column chip + a quiet facet/qualifier line, but can't (a) tell at a glance what
+// KIND of dimension distinguishes two rows, nor (b) narrow the list to one axis
+// value ("only Hushåll", or one variant). These helpers make the dimensions
+// first-class. A dimension is one of three KINDS:
+//   - `facet`  — a #819 declared axis (`GroupAxis`), a per-MEMBER property (every
+//     row of a band carries the band's facet on that axis);
+//   - `variant` — the population (`register_variant`), a per-ROW property;
+//   - `coding`  — the value-set version label, a per-ROW property.
+// A dimension is only marked/filterable when it DISCRIMINATES — ≥2 distinct values
+// across the picker's rows; a single-value axis is not a filter. Filtering is a
+// CLIENT-SIDE LENS: it narrows which rows show, never the selection or the commit.
+
+/** One filterable dimension of the picker (#908): its `kind` (drives the marker
+ * styling + the filter ordering — facets first, then variant, then coding), the
+ * stable `key` (NAMESPACED `facet:<axis>` for a facet; the literal
+ * `"variant"`/`"coding"` for the row dimensions — the `facet:` prefix makes the key
+ * UNIQUE even when a declared axis is literally named `variant`/`coding`, #908 C2),
+ * the raw `axis` name (set ONLY for `kind: "facet"`, so the facet branch can look the
+ * row's facet up by its un-prefixed axis name), the display `label`, and the distinct
+ * `(value, label)` pairs the rows carry on it (value-sorted). Only dimensions with ≥2
+ * distinct values are emitted. */
+export interface PickerDimension {
+  kind: "facet" | "variant" | "coding";
+  key: string;
+  /** The raw axis name a facet dimension matches on (`rowFacet(band, row, axis)`).
+   * Set only for `kind: "facet"`; the namespaced `key` (`facet:<axis>`) keys the UI /
+   * selection state, this is the value-lookup key. */
+  axis?: string;
+  label: string;
+  values: { value: string; label: string }[];
+}
+
+/** The facet a ROW carries on `axis` — looked up PER-COLUMN first, then BAND-LEVEL
+ * (#908 C1). A facet is normally a per-MEMBER = per-(fqid,column) property, so a
+ * representation group that collapses several members onto ONE band/fqid carries
+ * DISTINCT facets per delivery column (`facetsByColumn`, keyed by the row's own
+ * column). But a WHOLE-VARIABLE faceted member has a null `delivery_column` (e.g. a
+ * month-faceted group: one variable per month), so its facets can't key by column —
+ * they're carried band-level (`band.facets`) and apply to ALL of the band's rows. The
+ * per-column entry wins when present; the band-level facet is the fallback. Undefined
+ * when neither carries a facet on `axis`. */
+export function rowFacet(
+  band: PickerBandFacets,
+  row: PickerRepresentation,
+  axis: string,
+): GroupFacetModel | undefined {
+  return (
+    band.facetsByColumn?.[row.column]?.find((x) => x.axis === axis) ??
+    band.facets?.find((x) => x.axis === axis)
+  );
+}
+
+/** The minimal band shape the dimension helpers read: its rows (for variant /
+ * coding), its per-delivery-column facets (for the #819 representation-member axes),
+ * and its BAND-LEVEL facets (#908 C1 — a whole-variable faceted member's facets,
+ * which have no delivery column to key by and so apply to every row of the band). The
+ * picker's `PickerBand` widens this. */
+export interface PickerBandFacets {
+  rows: readonly PickerRepresentation[];
+  facetsByColumn?: Record<string, GroupFacetModel[]>;
+  facets?: GroupFacetModel[];
+}
+
+/** The filterable dimensions across the picker's bands (#908), in display order:
+ * the declared facet axes first (curator-ordered via `axes`), then `variant`, then
+ * `coding`. Each is emitted ONLY when it discriminates — ≥2 distinct values across
+ * the bands' rows — so a single-population, single-coding, single-axis-value group
+ * surfaces NO filter (the controls collapse). Pure — unit-tested in catalog.test.ts. */
+export function pickerFilterDimensions(
+  bands: readonly PickerBandFacets[],
+  axes: readonly GroupAxisModel[],
+): PickerDimension[] {
+  const out: PickerDimension[] = [];
+
+  // Facet axes (#819): a per-MEMBER (= per-(fqid,column)) dimension — collect the
+  // distinct facet values across every ROW's column. A representation group collapses
+  // several members onto one band, so the axis varies WITHIN the band, column to
+  // column. Curator order preserved (the `axes` tuple is ordinal-sorted); values
+  // value-sorted within the axis.
+  for (const axis of axes) {
+    const seen = new Map<string, string>();
+    for (const band of bands) {
+      for (const row of band.rows) {
+        const f = rowFacet(band, row, axis.name);
+        if (f && !seen.has(f.value)) {
+          seen.set(f.value, f.label);
+        }
+      }
+    }
+    if (seen.size >= 2) {
+      out.push({
+        kind: "facet",
+        // Namespace the key (#908 C2) so a declared axis literally named
+        // `variant`/`coding` can't collide with the built-in row dimensions below;
+        // `axis` carries the raw name for the per-row facet lookup.
+        key: `facet:${axis.name}`,
+        axis: axis.name,
+        label: axis.label,
+        values: [...seen.entries()]
+          .map(([value, label]) => ({ value, label }))
+          .sort((a, b) => a.value.localeCompare(b.value)),
+      });
+    }
+  }
+
+  // Variant (population) — a per-ROW dimension keyed on the variant slug, displayed
+  // by its `variantLabel` (curator name, slug-fallback).
+  const variantSeen = new Map<string, string>();
+  for (const band of bands) {
+    for (const row of band.rows) {
+      if (!variantSeen.has(row.variant)) {
+        variantSeen.set(row.variant, row.variantLabel);
+      }
+    }
+  }
+  if (variantSeen.size >= 2) {
+    out.push({
+      kind: "variant",
+      key: "variant",
+      label: "Population",
+      values: [...variantSeen.entries()]
+        .map(([value, label]) => ({ value, label }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    });
+  }
+
+  // Coding (value-set version) — a per-ROW dimension keyed on the label itself
+  // (it's display-only; empty labels — a code-less population — contribute none).
+  const codingSeen = new Set<string>();
+  for (const band of bands) {
+    for (const row of band.rows) {
+      if (row.valueSetLabel !== "") {
+        codingSeen.add(row.valueSetLabel);
+      }
+    }
+  }
+  if (codingSeen.size >= 2) {
+    out.push({
+      kind: "coding",
+      key: "coding",
+      label: "Coding",
+      values: [...codingSeen]
+        .sort((a, b) => a.localeCompare(b))
+        .map((v) => ({ value: v, label: v })),
+    });
+  }
+
+  return out;
+}
+
+/** Whether a picker ROW passes the active filter selection (#908): for EVERY
+ * dimension with a non-empty selection the row must carry a matching value (OR
+ * within a dimension, AND across) — the same logic the #819 navigator uses. A
+ * dimension with no selection imposes no constraint. The row's facet value on an
+ * axis comes from `rowFacet` (per-column, then band-level — #908 C1); a row lacking a
+ * facet on a selected axis fails that axis (it isn't part of that facet's slice).
+ * Pure. */
+export function pickerRowPasses(
+  row: PickerRepresentation,
+  band: PickerBandFacets,
+  dimensions: readonly PickerDimension[],
+  selected: Readonly<Record<string, ReadonlySet<string>>>,
+): boolean {
+  for (const dim of dimensions) {
+    const sel = selected[dim.key];
+    if (!sel || sel.size === 0) {
+      continue;
+    }
+    if (dim.kind === "variant") {
+      if (!sel.has(row.variant)) {
+        return false;
+      }
+    } else if (dim.kind === "coding") {
+      if (!sel.has(row.valueSetLabel)) {
+        return false;
+      }
+    } else {
+      // facet: the row's facet value on this axis (per-column, then band-level). The
+      // selection is keyed by the namespaced `dim.key` (`facet:<axis>`), but the facet
+      // is looked up by the RAW axis name (#908 C2).
+      const f = rowFacet(band, row, dim.axis ?? dim.key);
+      if (!f || !sel.has(f.value)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 // ── Adaptive band IDENTITY labeling (#678 inc 2) ─────────────────────────────
 // One level UP from `pickerLabeling` (which adapts ROWS within one variable): a
 // group's member BANDS differ along up to four identity dimensions — the variable
