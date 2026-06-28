@@ -158,6 +158,9 @@ describe("HistoryGraph (#678)", () => {
     await expect.element(page.getByText("2-siffrig").first()).toBeVisible();
     await expect.element(page.getByText("2010 – 2011").first()).toBeVisible();
     await expect.element(page.getByText("since 2012").first()).toBeVisible();
+    const a11yDetails = document.querySelector(".gutter .sr-only");
+    expect(a11yDetails?.textContent).toContain("1-siffrig, 2010 – 2011");
+    expect(a11yDetails?.textContent).toContain("2-siffrig, since 2012");
   });
 
   it("labels a cell by classification slug / delivery column when no version label", async () => {
@@ -210,6 +213,10 @@ describe("HistoryGraph (#678)", () => {
       return el as HTMLElement;
     });
     expect(currentTag.textContent?.trim()).toBe("current");
+    const details = [...document.querySelectorAll(".gutter .sr-only")].map(
+      (el) => el.textContent?.replace(/\s+/g, " ").trim() ?? "",
+    );
+    expect(details.some((text) => text.includes("current edition"))).toBe(true);
   });
 
   it("renders a succession (directed) edge with its label", async () => {
@@ -382,6 +389,41 @@ describe("HistoryGraph (#678)", () => {
     await expect
       .element(page.getByRole("link", { name: "ku1astsni2002" }))
       .toBeVisible();
+  });
+
+  it("uses disambiguated gutter labels for fallback relation endpoints (#907)", async () => {
+    const a = variableNode({
+      id: "a",
+      fqid: "scb/lisa/agi1astsni2007",
+      label: "Näringsgren",
+      group_key: "naringsgren",
+      group_label: "Näringsgren, största förvärvskälla",
+      facets: [],
+    });
+    const b = variableNode({
+      id: "b",
+      fqid: "scb/lisa/ku1astsni2002",
+      label: "Näringsgren",
+      group_key: "naringsgren",
+      group_label: "Näringsgren, största förvärvskälla",
+      facets: [],
+    });
+    const edges: GraphEdge[] = [
+      { id: "e1", kind: "succession", source: "a", target: "b", label: null },
+    ];
+    render(HistoryGraph, {
+      graph: graph({ nodes: [a, b], edges, focus_id: "a" }),
+    });
+
+    const edgeText = await vi.waitFor(() => {
+      const el = document.querySelector(".fb-edge");
+      if (!el) {
+        throw new Error("edge not yet rendered");
+      }
+      return el.textContent?.replace(/\s+/g, " ").trim() ?? "";
+    });
+    expect(edgeText).toContain("agi1astsni2007 → ku1astsni2002");
+    expect(edgeText).not.toContain("Näringsgren → Näringsgren");
   });
 
   it("suppresses the internal curation tag on classification succession edges", async () => {

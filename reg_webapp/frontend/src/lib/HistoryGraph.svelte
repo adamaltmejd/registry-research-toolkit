@@ -199,6 +199,34 @@ function memberLabel(rn: VariableLane): string {
   return rn.node.label;
 }
 
+function nodeDisplayLabel(rn: RenderNode): string {
+  if (rn.kind === "variable") {
+    const label = memberLabel(rn);
+    return isRenamed(rn) ? `${label} (renamed)` : label;
+  }
+  return rn.node.label;
+}
+
+function laneA11yDetails(rn: RenderNode): string {
+  if (rn.kind === "classification") {
+    const bits = [yearTag(rn) ? `version ${yearTag(rn)}` : "undated edition"];
+    if (rn.node.is_current) {
+      bits.push("current edition");
+    }
+    return bits.join(", ");
+  }
+  if (rn.cells.length === 0) {
+    return isRenamed(rn)
+      ? "renamed predecessor with no live states"
+      : "no delivered state rows";
+  }
+  const cells = rn.cells.map(
+    (cell) =>
+      `${cell.label}, ${cell.window}${rn.multiVariant ? `, ${cell.variant}` : ""}`,
+  );
+  return `representation history: ${cells.join("; ")}`;
+}
+
 /** The catalog href to open a NAVIGABLE node from the visible gutter, or null when
  * the node is not a link target. A node is navigable iff it has a binding `fqid`
  * AND is not the focus node (the current page — kept a plain label, not a self
@@ -446,6 +474,7 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                       {#if isFocus(rn)}
                         <span class="viewed">viewed</span>
                       {/if}
+                      <span class="sr-only">{laneA11yDetails(rn)}</span>
                     </div>
                     {#if rn.kind === "variable" && rn.node.same_as.length > 0}
                       <div class="same-as">
@@ -521,11 +550,13 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                connectors cannot expose. -->
           <ul class="graph-fallback">
             {#each cEdges as re (re.edge.id)}
+              {@const sourceRn = byId.get(re.source.id)?.rn}
+              {@const targetRn = byId.get(re.target.id)?.rn}
               <li class="fb-edge muted">
                 <span class="fb-marker" aria-hidden="true">▸</span>
-                {re.source.label}
+                {sourceRn ? nodeDisplayLabel(sourceRn) : re.source.label}
                 →
-                {re.target.label}
+                {targetRn ? nodeDisplayLabel(targetRn) : re.target.label}
                 {#if edgeLabelText(re)}({edgeLabelText(re)}){/if}
               </li>
             {/each}
@@ -962,6 +993,17 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
   /* The screen-reader relation fallback — visually hidden but present in the
      accessibility tree. */
   .graph-fallback {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .sr-only {
     position: absolute;
     width: 1px;
     height: 1px;
