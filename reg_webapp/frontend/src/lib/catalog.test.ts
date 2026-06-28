@@ -1459,6 +1459,9 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     const rows = pickerRepresentations(states);
     expect(rows).toHaveLength(1);
     expect(rows[0].column).toBe("Real");
+    // An ordinary single-column row commits its own column (no rename fold) (#902).
+    expect(rows[0].representation).toBe("Real");
+    expect(rows[0].renamedColumns).toEqual([]);
   });
 
   it("an open-ended span renders 'since' and leaves the wire period unset", () => {
@@ -1818,6 +1821,12 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     // The collapsed row spans the union of every era (1981 → 1995).
     expect(rows[0].from).toBe("1981-01-01");
     expect(rows[0].to).toBe("1995-12-31");
+    // CRITICAL (#902): a folded rename commits `representation: null` — NOT the latest
+    // column. Pinning DINF86 over 1981–1995 would be wrong (DINF86 wasn't delivered
+    // before 1990); null lets per-period resolution pick the right column per year. The
+    // display identity (`column`, the chip) stays the latest column.
+    expect(rows[0].representation).toBeNull();
+    expect(rows[0].column).toBe("DINF86");
   });
 
   it("keeps genuinely PARALLEL (overlapping) columns as separate rows", () => {
@@ -1840,6 +1849,9 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     expect(rows.map((r) => r.column).sort()).toEqual(["CDISP", "CDISP5"]);
     // Neither is a rename fold → no superseded-column hint.
     expect(rows.every((r) => r.renamedColumns.length === 0)).toBe(true);
+    // A parallel co-existing column commits its OWN column (#902): the author pins which
+    // of the co-existing columns they mean.
+    expect(rows.every((r) => r.representation === r.column)).toBe(true);
   });
 
   it("folds the renames but keeps a co-existing parallel PAIR separate", () => {
@@ -1878,6 +1890,11 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     expect(byCol.get("B")?.renamedColumns).toEqual(["A"]);
     expect(byCol.get("X")?.renamedColumns).toEqual([]);
     expect(byCol.get("Y")?.renamedColumns).toEqual([]);
+    // The folded rename (B) commits null; the parallel pair (X, Y) commit their own
+    // columns (#902).
+    expect(byCol.get("B")?.representation).toBeNull();
+    expect(byCol.get("X")?.representation).toBe("X");
+    expect(byCol.get("Y")?.representation).toBe("Y");
   });
 
   it("does NOT fold a rename ACROSS variants (rename is one variable+population)", () => {
@@ -2006,6 +2023,7 @@ describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => 
       variant: "v1",
       variantLabel: "v1",
       column: "Col",
+      representation: "Col",
       from,
       to,
       windows: [{ from, to }],
@@ -2228,6 +2246,7 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       variant: "v",
       variantLabel: over.variant ?? "v",
       column: "Col",
+      representation: over.column ?? "Col",
       from: "2000-01-01",
       to: "2010-12-31",
       windows: [{ from: "2000-01-01", to: "2010-12-31" }],
@@ -2460,6 +2479,7 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
       variant: "v",
       variantLabel: over.variant ?? "v",
       column: over.column ?? "Col",
+      representation: over.column ?? "Col",
       from: "2000-01-01",
       to: "2010-12-31",
       windows: [{ from: "2000-01-01", to: "2010-12-31" }],

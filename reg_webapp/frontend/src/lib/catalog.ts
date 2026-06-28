@@ -893,6 +893,16 @@ export interface PickerRepresentation {
    * selection key and the add coordinate. */
   variantLabel: string;
   column: string;
+  /** The value to COMMIT to `binding.representation` for this row — DISTINCT from
+   * `column` (the display identity, the chip the picker always shows). `column` for an
+   * ordinary single-column row or a genuinely PARALLEL co-existing column (the author
+   * pins which co-existing column they mean). But `null` for a FOLDED SEQUENTIAL RENAME
+   * (`renamedColumns.length > 0`): a rename resolves to exactly ONE column per period, so
+   * per the `Binding.representation` contract (reg_schema project_data.py) it must stay
+   * unset and let resolution pick the right column per year. Pinning the latest column
+   * (`DINF86`) over the union window would break the earlier eras — `DINF86` wasn't
+   * delivered before 1990, so it would resolve empty / under-cover those years (#902). */
+  representation: string | null;
   from: string;
   to: string;
   /** The column's DISJOINT delivery windows (#678 finding: an interrupted series),
@@ -1251,11 +1261,16 @@ function pickerRow(
   // The variant display label — the curator `variant_label`, falling back to the
   // slug for a NULL-named variant. Display-only; the slug stays the key/coordinate.
   const variantLabel = group[0].variant_label ?? variant;
+  // A folded rename (>1 column collapsed → `renamedColumns` non-empty) commits
+  // `representation: null` so per-period resolution picks the right column per year; an
+  // ordinary single column or a parallel co-existing column commits its own `column` (#902).
+  const representation = renamedColumns.length > 0 ? null : column;
   return {
     key: `${variant}::${column}`,
     variant,
     variantLabel,
     column,
+    representation,
     from,
     to,
     windows,

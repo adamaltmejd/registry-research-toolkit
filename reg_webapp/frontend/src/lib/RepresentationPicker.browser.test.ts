@@ -18,6 +18,7 @@ function row(over: Partial<PickerRepresentation>): PickerRepresentation {
     variant: "v",
     variantLabel: over.variant ?? "v",
     column: over.column ?? "Col",
+    representation: over.column ?? "Col",
     from: "2000-01-01",
     to: "2010-12-31",
     windows: [{ from: "2000-01-01", to: "2010-12-31" }],

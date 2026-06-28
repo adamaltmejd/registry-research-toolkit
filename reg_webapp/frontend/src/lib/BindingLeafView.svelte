@@ -332,7 +332,10 @@ function commitSelected(selected: PickerSelection[]): void {
       {
         registerVariant: `${registerPrefix}/${row.variant}`,
         variable: node.fqid,
-        representation: row.column,
+        // `row.representation` (NOT `row.column`): a folded sequential rename commits
+        // null so resolution picks the right column per year; an ordinary / parallel
+        // column commits its own column (#902).
+        representation: row.representation,
         resolvedPeriod: addPeriod,
       },
       { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
