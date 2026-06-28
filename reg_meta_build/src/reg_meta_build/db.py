@@ -29,7 +29,7 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.queries import extract_year
 
-from ._curation import fold_column
+from ._curation import curation_error, fold_column, resolve_variable_id
 from .classification_links import (
     load_classification_links,
     materialize_classification_links,
@@ -46,11 +46,14 @@ from .codeless_overlap import (
     repo_codeless_overlap_path,
 )
 from .concept_groups import (
+    CodeLabelPair,
     derive_classification_succession,
     load_classification_groups,
+    load_code_label_pairs,
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
+    repo_code_label_pairs_path,
     repo_concept_groups_auto_path,
     repo_concept_groups_path,
 )
@@ -2822,6 +2825,111 @@ _VALID_TO_SENTINEL = "9999-12-31"  # variable_state.valid_to open-ended
 _VALID_FROM_UNKNOWN = "0001-01-01"  # variable_state.valid_from start unknown
 
 
+def _append_code_label_edges(
+    conn: sqlite3.Connection,
+    pairs: tuple[CodeLabelPair, ...],
+    providers: frozenset[str],
+    sibling_edges: list[tuple[int, int]],
+) -> None:
+    """Fold each curated code↔label pair (#923) into the edge `sibling_edges`
+    channel — the SAME list the edge concept-group pass folds into axis-less
+    groups — so a coded variable (`partikod`) and its denormalized label column
+    (`partinamn`) browse as ONE concept. Runs after `populate_variable_slugs`
+    (FQIDs resolve off stored slugs) and before `materialize_concept_groups`.
+
+    Per pair: a pair whose CODE provider is absent from `providers` (a partial
+    `--providers` build that can't represent it) is SKIPPED silently — mirroring
+    `materialize_same_as`'s provider gate. Otherwise both FQIDs resolve to a
+    `variable_id` (a dangling FQID FAILS the build, EXIT_CONFIG) and three
+    structural guards must hold (each failure EXIT_CONFIG, naming the pair):
+    the code endpoint OWNS a value_set, the label endpoint owns NONE, and the two
+    are co-delivered (share a `register_variant_id` across their states). The
+    appended `(code_vid, label_vid)` pair then rides the existing edge component
+    builder."""
+    for p in pairs:
+        code_fqid = f"{p.code_provider}/{p.code_register}/{p.code_variable}"
+        label_fqid = f"{p.label_provider}/{p.label_register}/{p.label_variable}"
+        # Provider gate (mirrors materialize_same_as): a partial --providers build
+        # that excludes this pair's provider can't represent it — skip silently.
+        if p.code_provider not in providers:
+            continue
+        code_vid = resolve_variable_id(
+            conn, p.code_provider, p.code_register, p.code_variable
+        )
+        if code_vid is None:
+            raise curation_error(
+                "code_label_pairs_unresolved",
+                f"code_label_pairs pair code {code_fqid!r} does not resolve to a "
+                "variable.",
+                "Fix the `code` FQID in reg_meta_build/code_label_pairs.toml "
+                "(provider/register/variable must exist in the built DB).",
+            )
+        label_vid = resolve_variable_id(
+            conn, p.label_provider, p.label_register, p.label_variable
+        )
+        if label_vid is None:
+            raise curation_error(
+                "code_label_pairs_unresolved",
+                f"code_label_pairs pair label {label_fqid!r} does not resolve to a "
+                "variable.",
+                "Fix the `label` FQID in reg_meta_build/code_label_pairs.toml "
+                "(provider/register/variable must exist in the built DB).",
+            )
+        ctx = f"code_label_pairs pair {code_fqid!r} <-> {label_fqid!r}"
+        # Guard 1: the code endpoint owns a value_set.
+        if not _variable_owns_value_set(conn, code_vid):
+            raise curation_error(
+                "code_label_pairs_invalid",
+                f"{ctx}: the `code` endpoint owns no value_set (a code endpoint "
+                "must own one).",
+                "The `code` FQID must be the coded variable (the value-set owner). "
+                "Swap code/label or drop the pair in "
+                "reg_meta_build/code_label_pairs.toml.",
+            )
+        # Guard 2: the label endpoint owns NO value_set.
+        if _variable_owns_value_set(conn, label_vid):
+            raise curation_error(
+                "code_label_pairs_invalid",
+                f"{ctx}: the `label` endpoint owns a value_set (a label endpoint "
+                "must own none).",
+                "The `label` FQID must be the denormalized name column (no value "
+                "set). Swap code/label or drop the pair in "
+                "reg_meta_build/code_label_pairs.toml.",
+            )
+        # Guard 3: the two are co-delivered (share a register_variant_id).
+        co_delivered = conn.execute(
+            "SELECT 1 FROM variable_state a "
+            "JOIN variable_state b "
+            "  ON a.register_variant_id = b.register_variant_id "
+            "WHERE a.variable_id = ? AND b.variable_id = ? LIMIT 1",
+            (code_vid, label_vid),
+        ).fetchone()
+        if co_delivered is None:
+            raise curation_error(
+                "code_label_pairs_invalid",
+                f"{ctx}: the endpoints are not co-delivered (no shared "
+                "register_variant_id between their states).",
+                "A code↔label pair must be delivered together in one register "
+                "variant. Fix or drop the pair in "
+                "reg_meta_build/code_label_pairs.toml.",
+            )
+        sibling_edges.append((code_vid, label_vid))
+
+
+def _variable_owns_value_set(conn: sqlite3.Connection, variable_id: int) -> bool:
+    """True when any `variable_state` of `variable_id` carries a non-NULL
+    `value_set_id` — i.e. the variable is the coded (value-set-owning) endpoint of
+    a code↔label pair (#923)."""
+    return (
+        conn.execute(
+            "SELECT 1 FROM variable_state "
+            "WHERE variable_id = ? AND value_set_id IS NOT NULL LIMIT 1",
+            (variable_id,),
+        ).fetchone()
+        is not None
+    )
+
+
 def _reinsert_core_graph_from_ir(
     conn: sqlite3.Connection,
     *,
@@ -4259,6 +4367,21 @@ def materialize(
         # not-yet-curated state) → no-op when there are no residual overlaps.
         _resolve_curated_codeless_overlaps(
             conn, load_codeless_overlap(repo_codeless_overlap_path())
+        )
+
+        # Curated code↔label pairs (#923) — fold a coded variable (`partikod`)
+        # and its denormalized label column (`partinamn`) into ONE axis-less edge
+        # concept group by appending each resolved (code_vid, label_vid) pair to
+        # the in-build `sibling_edges` channel the edge fold consumes below.
+        # Slug-dependent (FQIDs resolve off stored slugs) and provider-gated
+        # (a pair whose provider is absent from this --providers build is skipped),
+        # so it lives in this block and reads `active_providers`. A dangling FQID
+        # or a failed structural guard FAILS the build (EXIT_CONFIG).
+        _append_code_label_edges(
+            conn,
+            load_code_label_pairs(repo_code_label_pairs_path()),
+            active_providers,
+            sibling_edges,
         )
 
         # Derived concept groups (#303) — presentation-only browse folding.

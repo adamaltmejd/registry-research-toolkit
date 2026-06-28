@@ -85,7 +85,12 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
 
 from ._components import DisjointSet
-from ._curation import curation_error, load_curation_entries, require_str
+from ._curation import (
+    curation_error,
+    load_curation_entries,
+    require_fqid,
+    require_str,
+)
 
 # A concept-group key is one URL path segment in
 # `/catalog/group/<provider>/<register>/<key>` (#640). Path-safe = the RFC 3986
@@ -254,6 +259,27 @@ class ClassificationGroup:
     members: tuple[ClassificationGroupMember, ...]
 
 
+@dataclass(frozen=True)
+class CodeLabelPair:
+    """One curated code↔label column pair (#923): a coded variable (the `code`
+    endpoint, which OWNS a `value_set`) co-delivered with its denormalized label
+    column (the `label` endpoint, which owns none) — `partikod`+`partinamn`,
+    `kommun`+`kommunnamn`. They are ONE concept, folded into a single register-
+    scoped AXIS-LESS `edge` concept group by feeding the pair into the existing
+    edge `sibling_edges` channel. Each endpoint is parsed independently as a
+    3-segment `provider/register/variable` FQID (in practice both share the same
+    provider+register, but the loader does not assume it). The code/label
+    distinction is NOT stored — the webapp derives it from value_set ownership at
+    read time."""
+
+    code_provider: str
+    code_register: str
+    code_variable: str
+    label_provider: str
+    label_register: str
+    label_variable: str
+
+
 def repo_concept_groups_path() -> Path | None:
     """`reg_meta_build/concept_groups.toml` from a repo checkout, or None
     (wheel installs don't ship curation — it's a maintainer artifact like the
@@ -274,6 +300,16 @@ def repo_concept_groups_auto_path() -> Path | None:
     candidate = (
         Path(__file__).resolve().parent.parent.parent / "concept_groups.auto.toml"
     )
+    return candidate if candidate.is_file() else None
+
+
+def repo_code_label_pairs_path() -> Path | None:
+    """`reg_meta_build/code_label_pairs.toml` from a repo checkout, or None
+    (wheel installs don't ship curation — it's a maintainer artifact like the
+    slug TOMLs). Sibling of `repo_concept_groups_path()` at the package root; the
+    curated code↔label pair list (#923) the build folds into axis-less `edge`
+    groups via the same `edge_siblings` channel."""
+    candidate = Path(__file__).resolve().parent.parent.parent / "code_label_pairs.toml"
     return candidate if candidate.is_file() else None
 
 
@@ -767,6 +803,55 @@ def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, 
             )
         out.append(
             ClassificationGroup(key=key, label=label, axis=axis, members=tuple(members))
+        )
+    return tuple(out)
+
+
+def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
+    """Parse the curated code↔label pair TOML (`reg_meta_build/code_label_pairs.toml`,
+    #923). Empty when no file (synthetic test builds, wheel installs).
+
+    Load-time validation (all EXIT_CONFIG, actionable): only `[[pair]]` top-level;
+    each entry sets `code` AND `label`, each a 3-segment `provider/register/variable`
+    FQID. Endpoint RESOLUTION (do the variables exist? is the code the value-set
+    owner? are they co-delivered?) happens at materialize time against the built DB
+    (`_append_code_label_edges`), not here."""
+    entries = load_curation_entries(
+        path,
+        entry_key="pair",
+        label="code-label-pair",
+        prefix="code_label_pairs",
+        code_base="code_label_pairs",
+        file_name="code_label_pairs.toml",
+        entry_fields="code / label (both 3-segment FQIDs)",
+    )
+    out: list[CodeLabelPair] = []
+    for entry in entries:
+        code = require_fqid(
+            entry,
+            "code",
+            code="code_label_pairs_invalid",
+            prefix="code_label_pairs",
+            entry_table="[[pair]]",
+            file_name="code_label_pairs.toml",
+        )
+        label = require_fqid(
+            entry,
+            "label",
+            code="code_label_pairs_invalid",
+            prefix="code_label_pairs",
+            entry_table="[[pair]]",
+            file_name="code_label_pairs.toml",
+        )
+        out.append(
+            CodeLabelPair(
+                code_provider=code[0],
+                code_register=code[1],
+                code_variable=code[2],
+                label_provider=label[0],
+                label_register=label[1],
+                label_variable=label[2],
+            )
         )
     return tuple(out)
 

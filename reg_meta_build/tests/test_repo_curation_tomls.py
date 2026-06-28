@@ -25,6 +25,7 @@ from reg_meta_build.codeless_overlap import load_codeless_overlap
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
     load_classification_groups,
+    load_code_label_pairs,
     load_concept_group_accepts,
     load_concept_groups,
 )
@@ -66,6 +67,19 @@ def test_repo_concept_groups_auto_parses() -> None:
     groups = load_concept_groups(_ROOT / "concept_groups.auto.toml")
     assert groups  # the generator emits >0 foldable families
     assert all(len(g.members) >= 2 for g in groups)
+
+
+def test_repo_code_label_pairs_parses() -> None:
+    # The curated code↔label pair list (#923) ships in the repo and feeds the edge
+    # concept-group fold. Load-time shape (every entry sets `code`/`label` as
+    # 3-segment FQIDs) is this gate; endpoint resolution + the structural guards
+    # (value-set ownership, co-delivery) are maintainer-build territory.
+    pairs = load_code_label_pairs(_ROOT / "code_label_pairs.toml")
+    assert pairs  # the curated SCB pairs ship with the repo
+    assert all(p.code_provider and p.code_register and p.code_variable for p in pairs)
+    assert all(
+        p.label_provider and p.label_register and p.label_variable for p in pairs
+    )
 
 
 def test_repo_concept_group_accepts_parses() -> None:

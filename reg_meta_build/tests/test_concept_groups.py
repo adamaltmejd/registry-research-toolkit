@@ -18,21 +18,30 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_register, add_variable, build_slugged_db
+from _slugged_db import (
+    add_register,
+    add_state,
+    add_value_set,
+    add_variable,
+    build_slugged_db,
+)
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.concept_groups import (
     Accept,
     ClassificationGroup,
     ClassificationGroupMember,
+    CodeLabelPair,
     CuratedGroup,
     CuratedMember,
     _insert_group,
     derive_classification_succession,
     load_classification_groups,
+    load_code_label_pairs,
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
 )
+from reg_meta_build.db import _append_code_label_edges
 
 if TYPE_CHECKING:
     import sqlite3
@@ -1832,3 +1841,200 @@ class TestAcceptLoader:
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, text)
         assert exc.value.code == "concept_groups_invalid"
+
+
+# ── code↔label pairs (#923) ─────────────────────────────────────────────────
+
+
+def _code_label_db(
+    *,
+    code_slug: str = "partikod",
+    label_slug: str = "partinamn",
+    code_has_value_set: bool = True,
+    label_has_value_set: bool = False,
+    co_delivered: bool = True,
+):
+    """Synthetic scb/lisa DB with a coded variable + its label variable, both
+    co-delivered in variant 10 (the fixture default). The code variable's state
+    carries a `value_set_id`; the label variable's does not. Toggles flip each
+    structural-guard precondition so the guard tests can drive a single failure."""
+    conn = build_slugged_db(classification=None)
+    add_value_set(conn, value_set_id=500, codes=[("01", "A"), ("02", "B")])
+    add_variable(conn, register_id=1, var_id=200, name="Parti", slug=code_slug)
+    add_variable(conn, register_id=1, var_id=201, name="Partinamn", slug=label_slug)
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug=code_slug,
+        register_variant_id=10,
+        delivery_column_name="Partikod",
+        value_set_id=500 if code_has_value_set else None,
+    )
+    # The label variable's co-delivery is the SHARED register_variant_id with the
+    # code variable's state; flip to a different variant to break it.
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug=label_slug,
+        register_variant_id=10 if co_delivered else 11,
+        delivery_column_name="Partinamn",
+        value_set_id=500 if label_has_value_set else None,
+    )
+    conn.commit()
+    return conn
+
+
+def _pair(code_slug: str = "partikod", label_slug: str = "partinamn") -> CodeLabelPair:
+    return CodeLabelPair(
+        code_provider="scb",
+        code_register="lisa",
+        code_variable=code_slug,
+        label_provider="scb",
+        label_register="lisa",
+        label_variable=label_slug,
+    )
+
+
+class TestCodeLabelPairs:
+    """A curated code↔label pair (#923) feeds the edge `sibling_edges` channel so
+    the code variable and its denormalized label column fold into ONE axis-less
+    edge concept group."""
+
+    def test_pair_folds_into_one_axisless_group(self) -> None:
+        conn = _code_label_db()
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (_pair(),), _SCB, siblings)
+        # One (code_vid, label_vid) edge appended.
+        assert siblings == [(_vid(conn, "partikod"), _vid(conn, "partinamn"))]
+
+        counts = materialize_concept_groups(conn, edge_siblings=siblings)
+        assert counts["edge_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"partikod"}
+        g = groups["partikod"]
+        assert g["source"] == "edge"
+        assert g["kind"] == "variable"
+        assert g["register_id"] == 1
+        assert g["members"] == ["partikod", "partinamn"]
+        # Axis-less: zero concept_group_axis rows, both members carry no facets and
+        # a NULL delivery_column_name.
+        assert g["axes"] == []
+        assert _facets(conn, "partikod") == []
+        assert _facets(conn, "partinamn") == []
+        delivery_cols = [
+            r[0]
+            for r in conn.execute(
+                "SELECT delivery_column_name FROM concept_group_variable"
+            )
+        ]
+        assert delivery_cols == [None, None]
+
+    def test_provider_not_in_build_is_skipped(self) -> None:
+        # A partial --providers build that excludes the pair's provider can't
+        # represent it — skip silently (no edge appended, no raise).
+        conn = _code_label_db()
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (_pair(),), frozenset({"sos"}), siblings)
+        assert siblings == []
+
+    def test_label_owning_value_set_fails(self) -> None:
+        conn = _code_label_db(label_has_value_set=True)
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_code_owning_no_value_set_fails(self) -> None:
+        conn = _code_label_db(code_has_value_set=False)
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_not_co_delivered_fails(self) -> None:
+        conn = _code_label_db(co_delivered=False)
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_dangling_code_fqid_fails(self) -> None:
+        conn = _code_label_db()
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(code_slug="nope"),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_unresolved"
+
+    def test_dangling_label_fqid_fails(self) -> None:
+        conn = _code_label_db()
+        with pytest.raises(RegMetaError) as exc:
+            _append_code_label_edges(conn, (_pair(label_slug="nope"),), _SCB, [])
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_unresolved"
+
+
+class TestCodeLabelPairLoader:
+    @staticmethod
+    def _load(tmp_path, text: str):
+        path = tmp_path / "code_label_pairs.toml"
+        path.write_text(text, encoding="utf-8")
+        return load_code_label_pairs(path)
+
+    def test_missing_file_is_empty(self, tmp_path) -> None:
+        assert load_code_label_pairs(None) == ()
+        assert load_code_label_pairs(tmp_path / "absent.toml") == ()
+
+    def test_parses_pair(self, tmp_path) -> None:
+        pairs = self._load(
+            tmp_path,
+            """
+            [[pair]]
+            code  = "scb/lisa/partikod"
+            label = "scb/lisa/partinamn"
+            """,
+        )
+        assert pairs == (_pair(),)
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            # missing label
+            """
+            [[pair]]
+            code = "scb/lisa/partikod"
+            """,
+            # missing code
+            """
+            [[pair]]
+            label = "scb/lisa/partinamn"
+            """,
+            # 2-segment code FQID
+            """
+            [[pair]]
+            code  = "scb/partikod"
+            label = "scb/lisa/partinamn"
+            """,
+            # 2-segment label FQID
+            """
+            [[pair]]
+            code  = "scb/lisa/partikod"
+            label = "lisa/partinamn"
+            """,
+            # empty segment
+            """
+            [[pair]]
+            code  = "scb//partikod"
+            label = "scb/lisa/partinamn"
+            """,
+        ],
+    )
+    def test_malformed_entry_fails(self, tmp_path, text: str) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_unknown_top_level_key_fails(self, tmp_path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, '[[pairs]]\ncode = "a/b/c"\nlabel = "a/b/d"\n')
+        assert exc.value.exit_code == EXIT_CONFIG

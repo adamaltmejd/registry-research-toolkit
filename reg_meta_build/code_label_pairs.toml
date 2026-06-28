@@ -1,0 +1,391 @@
+# Curated code<->label decode pairs (#923) -- see reg_meta_build/concept_groups.py
+# (load_code_label_pairs) and the build wiring in db.py (_append_code_label_edges).
+#
+# A coded variable (owns a value_set: codes + their labels) is co-delivered with a
+# denormalized LABEL column that re-states those labels as free text (e.g. `partikod`
+# + `partinamn`, `kommun` + `kommunnamn`). They are ONE concept. Each [[pair]] folds
+# the two variables into one register-scoped, AXIS-LESS concept group (an `edge`-style
+# group) via the existing edge fold -- the curated pair is appended to the in-build
+# `sibling_edges` set. No new tables, no SCHEMA_VERSION bump (content only). The
+# code/label distinction is NOT stored: the code member owns the value_set, the label
+# member owns none, so the webapp derives it.
+#
+# Schema:
+#   [[pair]]
+#   code  = "<provider>/<register>/<variable>"   # 3-seg FQID; OWNS a value_set
+#   label = "<provider>/<register>/<variable>"   # 3-seg FQID; owns NO value_set
+#
+# CURATED, never a name-pattern rule: a heuristic scan seeds the worklist, but every
+# entry is hand-checked. A register can co-deliver several codes and several name
+# columns; only the genuine code->its-own-decode pairs are listed here. Cross-concept
+# links the heuristic proposed (e.g. glyfosat<->vaxtskyddsmedel name, skola<->skolenhet)
+# are deliberately omitted -- a wrong pairing simply gets no group.
+#
+# Resolved against the built DB at materialize time. A dangling FQID, or a pair that
+# fails the structural guard (code must own a value_set, label must own none, both must
+# be co-delivered), FAILS the build (EXIT_CONFIG). A pair whose provider is not in the
+# --providers build is SKIPPED.
+
+[[pair]]
+code  = "scb/allmanna-val-nominerade/partikod"
+label = "scb/allmanna-val-nominerade/partinamn"
+
+[[pair]]
+code  = "scb/allmanna-val-valdeltagande/fodelseland-varldsdel-2"
+label = "scb/allmanna-val-valdeltagande/fodelselandvdnamn"
+
+[[pair]]
+code  = "scb/allmanna-val-valdeltagande/kommun"
+label = "scb/allmanna-val-valdeltagande/kommunnamn"
+
+[[pair]]
+code  = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-2"
+label = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-namn"
+
+[[pair]]
+code  = "scb/allmanna-val-valresultat/partikod"
+label = "scb/allmanna-val-valresultat/partinamn"
+
+[[pair]]
+code  = "scb/allmanna-val-valresultat/riksdagsvalkrets-kod"
+label = "scb/allmanna-val-valresultat/riksdagsvalkrets-namn"
+
+[[pair]]
+code  = "scb/annan-pedagogisk-verksamhet/huvudman"
+label = "scb/annan-pedagogisk-verksamhet/huvudman-namn"
+
+[[pair]]
+code  = "scb/anpassad-grundskola/huvudman"
+label = "scb/anpassad-grundskola/huvudman-namn"
+
+[[pair]]
+code  = "scb/anpassad-grundskola/skolenhetskod"
+label = "scb/anpassad-grundskola/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/anpassad-gymnasieskola/gymnasieforbund-id"
+label = "scb/anpassad-gymnasieskola/gymnasieforbundets-namn"
+
+[[pair]]
+code  = "scb/anpassad-gymnasieskola/huvudman"
+label = "scb/anpassad-gymnasieskola/huvudman-namn"
+
+[[pair]]
+code  = "scb/anpassad-gymnasieskola/skolenhetskod"
+label = "scb/anpassad-gymnasieskola/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/bebyggd-mark-strandskydd/kommun"
+label = "scb/bebyggd-mark-strandskydd/kommunnamn"
+
+[[pair]]
+code  = "scb/bebyggd-mark-strandskydd/lan"
+label = "scb/bebyggd-mark-strandskydd/lannamn"
+
+[[pair]]
+code  = "scb/bostadsbestand/distriktskod"
+label = "scb/bostadsbestand/distriktsnamn"
+
+[[pair]]
+code  = "scb/branslestatistik/land-for-import-export"
+label = "scb/branslestatistik/lnamn"
+
+[[pair]]
+code  = "scb/distansutbildning/hogskolekod"
+label = "scb/distansutbildning/hogskolenamn"
+
+[[pair]]
+code  = "scb/ep-val-deltagande/fodelseland-varldsdel-2"
+label = "scb/ep-val-deltagande/fodelselandvdnamn"
+
+[[pair]]
+code  = "scb/ep-val-deltagande/kommun"
+label = "scb/ep-val-deltagande/kommunnamn"
+
+[[pair]]
+code  = "scb/ep-val-deltagande/medborgarland-varldsdel-2"
+label = "scb/ep-val-deltagande/medborgarland-varldsdel-namn"
+
+[[pair]]
+code  = "scb/ep-val-nominerade/partikod"
+label = "scb/ep-val-nominerade/partinamn"
+
+[[pair]]
+code  = "scb/ep-val-resultat/partikod"
+label = "scb/ep-val-resultat/partinamn"
+
+[[pair]]
+code  = "scb/fastighetsreg/distriktskod"
+label = "scb/fastighetsreg/distriktsnamn"
+
+[[pair]]
+code  = "scb/folkhogskolan/kommunalforbund-id"
+label = "scb/folkhogskolan/kommunalforbund-namn"
+
+[[pair]]
+code  = "scb/folkomrostningar-valdeltagande/fodelseland-varldsdel"
+label = "scb/folkomrostningar-valdeltagande/fodelselandvdnamn"
+
+[[pair]]
+code  = "scb/folkomrostningar-valdeltagande/medborgarland-varldsdel"
+label = "scb/folkomrostningar-valdeltagande/medborgarland-varldsdel-namn"
+
+[[pair]]
+code  = "scb/forskola/huvudman"
+label = "scb/forskola/huvudman-namn"
+
+[[pair]]
+code  = "scb/forskoleklass/huvudman"
+label = "scb/forskoleklass/huvudman-namn"
+
+[[pair]]
+code  = "scb/forskoleklass/skolenhetskod"
+label = "scb/forskoleklass/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/forskoleklass/skolkod"
+label = "scb/forskoleklass/skolans-namn"
+
+[[pair]]
+code  = "scb/fortroendevalda/parti"
+label = "scb/fortroendevalda/partinamn"
+
+[[pair]]
+code  = "scb/fortroendevalda/skl-grupp"
+label = "scb/fortroendevalda/skl-gruppnamn"
+
+[[pair]]
+code  = "scb/fritidsfiske/folkbokforingslan"
+label = "scb/fritidsfiske/lansnamn"
+
+[[pair]]
+code  = "scb/fritidsfiske/kommunkod"
+label = "scb/fritidsfiske/kommunnamn"
+
+[[pair]]
+code  = "scb/fritidshem/huvudman"
+label = "scb/fritidshem/huvudman-namn"
+
+[[pair]]
+code  = "scb/fritidshusomraden/kommun"
+label = "scb/fritidshusomraden/kommunnamn"
+
+[[pair]]
+code  = "scb/fritidshusomraden/lan"
+label = "scb/fritidshusomraden/lannamn"
+
+[[pair]]
+code  = "scb/grundskola-ak9/huvudman"
+label = "scb/grundskola-ak9/hmannamn"
+
+[[pair]]
+code  = "scb/grundskola-ak9/skolkod"
+label = "scb/grundskola-ak9/skolans-namn"
+
+[[pair]]
+code  = "scb/grundskola-betyg-ak6/huvudman"
+label = "scb/grundskola-betyg-ak6/hmannamn"
+
+[[pair]]
+code  = "scb/grundskola-elever/huvudman"
+label = "scb/grundskola-elever/huvudman-namn"
+
+[[pair]]
+code  = "scb/grundskola-elever/skolenhetskod"
+label = "scb/grundskola-elever/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/grundskola-elever/skolkod"
+label = "scb/grundskola-elever/skolans-namn"
+
+[[pair]]
+code  = "scb/grundskola-prov-ak3/skolenhetskod"
+label = "scb/grundskola-prov-ak3/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/grundskola-prov-ak3/skolkod"
+label = "scb/grundskola-prov-ak3/skolans-namn"
+
+[[pair]]
+code  = "scb/grundskola-prov-ak5/skolkod"
+label = "scb/grundskola-prov-ak5/skolans-namn"
+
+[[pair]]
+code  = "scb/grundskola-prov-ak6/skolkod"
+label = "scb/grundskola-prov-ak6/skolans-namn"
+
+[[pair]]
+code  = "scb/grundskola-prov-ak9/skolkod"
+label = "scb/grundskola-prov-ak9/skolans-namn"
+
+[[pair]]
+code  = "scb/gymnasieskola-betyg/huvudman"
+label = "scb/gymnasieskola-betyg/huvudman-namn"
+
+[[pair]]
+code  = "scb/gymnasieskola-betyg/kurs"
+label = "scb/gymnasieskola-betyg/kursnamn"
+
+[[pair]]
+code  = "scb/gymnasieskola-betyg/skolkod"
+label = "scb/gymnasieskola-betyg/skolans-namn"
+
+[[pair]]
+code  = "scb/gymnasieskola-betyg/studievag"
+label = "scb/gymnasieskola-betyg/studievag-namn"
+
+[[pair]]
+code  = "scb/gymnasieskola-elever/gymnasieforbund-id"
+label = "scb/gymnasieskola-elever/gymnasieforbundets-namn"
+
+[[pair]]
+code  = "scb/gymnasieskola-elever/skolenhetskod"
+label = "scb/gymnasieskola-elever/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/gymnasieskola-prov/skolenhetskod"
+label = "scb/gymnasieskola-prov/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/hreg/anknytande-hogskola"
+label = "scb/hreg/hogskolenamn"
+
+[[pair]]
+code  = "scb/klk/kommun"
+label = "scb/klk/kommunnamn"
+
+[[pair]]
+code  = "scb/klr/landsting"
+label = "scb/klr/landstingets-namn"
+
+[[pair]]
+code  = "scb/klr/landstingskod"
+label = "scb/klr/landstingets-namn"
+
+[[pair]]
+code  = "scb/kommunalskatter/kommun"
+label = "scb/kommunalskatter/kommun-eller-lansnamn"
+
+[[pair]]
+code  = "scb/kompletterande-utbildning/kategorikod"
+label = "scb/kompletterande-utbildning/kategorinamn"
+
+[[pair]]
+code  = "scb/kompletterande-utbildning/studievag"
+label = "scb/kompletterande-utbildning/studievag-namn"
+
+[[pair]]
+code  = "scb/komvux/gymnasieforbund-id"
+label = "scb/komvux/gymnasieforbundets-namn"
+
+[[pair]]
+code  = "scb/komvux/kommunalforbund-id"
+label = "scb/komvux/kommunalforbund-namn"
+
+[[pair]]
+code  = "scb/komvux/kommunalforbund-id-2"
+label = "scb/komvux/kommunalforbund-namn-2"
+
+[[pair]]
+code  = "scb/komvux-anpassad/gymnasieforbund-id"
+label = "scb/komvux-anpassad/gymnasieforbundets-namn"
+
+[[pair]]
+code  = "scb/komvux-anpassad/gymnasieforbund-id"
+label = "scb/komvux-anpassad/gymnasieforbundets-namn"
+
+[[pair]]
+code  = "scb/komvux-sfi/kommunalforbund-id"
+label = "scb/komvux-sfi/kommunalforbund-namn"
+
+[[pair]]
+code  = "scb/komvux-sfi/kommunalforbund-id-2"
+label = "scb/komvux-sfi/kommunalforbund-namn-2"
+
+[[pair]]
+code  = "scb/lararreg/huvudman"
+label = "scb/lararreg/huvudman-namn"
+
+[[pair]]
+code  = "scb/lbr/distriktskod"
+label = "scb/lbr/distriktsnamn"
+
+[[pair]]
+code  = "scb/lbr/djurid"
+label = "scb/lbr/djur"
+
+[[pair]]
+code  = "scb/lbr/grodans-id-nummer"
+label = "scb/lbr/grodans-namn"
+
+[[pair]]
+code  = "scb/lbr/grodid"
+label = "scb/lbr/grodnamn"
+
+[[pair]]
+code  = "scb/lbr/kommunkod"
+label = "scb/lbr/kommunnamn"
+
+[[pair]]
+code  = "scb/prisindex/produktgrupp-sju-tpi"
+label = "scb/prisindex/prodnamn"
+
+[[pair]]
+code  = "scb/smaorter/kommun"
+label = "scb/smaorter/kommunnamn"
+
+[[pair]]
+code  = "scb/smaorter/lan"
+label = "scb/smaorter/lannamn"
+
+[[pair]]
+code  = "scb/specialskola/huvudman"
+label = "scb/specialskola/huvudman-namn"
+
+[[pair]]
+code  = "scb/specialskola/skolenhetskod"
+label = "scb/specialskola/skolenhetens-namn"
+
+[[pair]]
+code  = "scb/specialskola/skolkod"
+label = "scb/specialskola/skolans-namn"
+
+[[pair]]
+code  = "scb/tatorter/kommun"
+label = "scb/tatorter/kommunnamn"
+
+[[pair]]
+code  = "scb/tatorter/lan"
+label = "scb/tatorter/lannamn"
+
+[[pair]]
+code  = "scb/tidsanvandning/kommun"
+label = "scb/tidsanvandning/kommunnamn"
+
+[[pair]]
+code  = "scb/tidsanvandning/lan"
+label = "scb/tidsanvandning/lansnamn"
+
+[[pair]]
+code  = "scb/vaxtskyddsmedel/glyfosat-id"
+label = "scb/vaxtskyddsmedel/glyfosat-namn"
+
+[[pair]]
+code  = "scb/vaxtskyddsmedel/glyfosat-id-2006"
+label = "scb/vaxtskyddsmedel/glyfosat-namn"
+
+[[pair]]
+code  = "scb/vaxtskyddsmedel/grodid"
+label = "scb/vaxtskyddsmedel/grodnamn"
+
+[[pair]]
+code  = "scb/vaxtskyddsmedel/vaxtskyddsmedel-id"
+label = "scb/vaxtskyddsmedel/vaxtskyddsmedel-namn"
+
+[[pair]]
+code  = "scb/vaxtskyddsmedel/vaxtskyddsmedel-id"
+label = "scb/vaxtskyddsmedel/vaxtskyddsmedelsnamn"
+
+[[pair]]
+code  = "scb/vaxtskyddsmedel/vsid"
+label = "scb/vaxtskyddsmedel/vsnamn"

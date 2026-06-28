@@ -56,6 +56,12 @@ def _no_repo_curation() -> Iterator[None]:
     # patch it there too.
     mp.setattr(_cg, "repo_concept_groups_path", lambda: None)
     mp.setattr(_db, "repo_concept_groups_path", lambda: None)
+    # code_label_pairs.toml (#923) references real scb slugs by FQID; the build
+    # fails LOUD on a dangling reference or a failed structural guard, so a
+    # synthetic build must see an empty file. db.py imported the symbol directly —
+    # patch it there too.
+    mp.setattr(_cg, "repo_code_label_pairs_path", lambda: None)
+    mp.setattr(_db, "repo_code_label_pairs_path", lambda: None)
     # delivery_enrichment.toml's backfills are keyed on real scb slugs; against a
     # fixture DB every one is unresolved (lenient, but 383 wasted lookups + a
     # warning per build). db.py imported the symbol directly — patch it there.
