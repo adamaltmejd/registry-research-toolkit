@@ -1304,13 +1304,18 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # (`HAVING COUNT(*) = 1`); #897 relaxes that to a LABEL lever:
     #   - ONE multi-vintage chain → it is trivially the dominant (no competitor), and
     #     its existing absolute-floor / #494 label-free behavior is unchanged.
-    #   - >=2 multi-vintage chains → the dominant is the one whose `fam_max_la`
-    #     (1) clears the absolute floor `_CONFIDENT_LABEL_AGREE` AND (2) STRICTLY
+    #   - >=2 multi-vintage chains → the dominant is the one whose `fam_max_la` STRICTLY
     #     dominates every OTHER multi-vintage chain's `fam_max_la`. A tie (two chains
     #     with equal best label_agree, including the label-less all-0 case) leaves the
     #     value set ambiguous → residue. This reclaims e.g. a county set that matches
     #     two overlapping LKF year-chains where labels cleanly pick the right one, but
-    #     keeps a genuine cross-family span (two label-less chains) in residue.
+    #     keeps a genuine cross-family span (two label-less chains) in residue. The
+    #     strictly-dominant chain still has to clear the absolute floor
+    #     `_CONFIDENT_LABEL_AGREE` and the relative lever — but those are the SAME
+    #     downstream final-SELECT gates that already apply to the single-chain path
+    #     (below), not a separate dominant-selection floor: once a competitor is
+    #     strictly beaten it is necessarily off-chain (a same-root rival is barred by
+    #     the #579 guard), so the conditional floor (f4) covers it.
     #
     # Permitted strays must be OFF-CHAIN — a DIFFERENT chain ROOT than the dominant
     # family. Any number of single-edition off-chain families pass: this is what
@@ -1418,11 +1423,20 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
             -- on the same value set ties-or-beats its `fam_max_la`. With one chain
             -- there is no competitor → trivially dominant (the old single-chain path,
             -- unchanged). With >=2 chains the winner must STRICTLY exceed every rival
-            -- (a tie or a label-less all-0 set leaves no winner → residue) AND clear
-            -- the absolute floor `_CONFIDENT_LABEL_AGREE`, which only binds when a
-            -- competitor exists. `m2.fam_max_la` is non-NULL (label_agree = matched /
-            -- n_codes, n_codes >= 1), but the comparison stays NULL-safe by treating a
-            -- NULL rival max as a tie via COALESCE so it can never spuriously "lose".
+            -- (a tie or a label-less all-0 set leaves no winner → residue).
+            -- `m2.fam_max_la` is non-NULL (label_agree = matched / n_codes, n_codes >=
+            -- 1), but the comparison stays NULL-safe by treating a NULL rival max as a
+            -- tie via COALESCE so it can never spuriously "lose".
+            --
+            -- This CTE applies ONLY the strict-dominance lever; it carries (root, stem,
+            -- fam_max_la) to the final SELECT, which enforces the rest unchanged: the
+            -- #579 same-root guard (f3), the relative label lever, and the CONDITIONAL
+            -- absolute floor `_CONFIDENT_LABEL_AGREE` (f4, binding when an off-chain
+            -- stray exists). The floor lives ONLY there — its canonical #514 home — so
+            -- the constant isn't duplicated. A separate CTE-level floor would be
+            -- redundant: any competitor that lets a dominant row reach the final SELECT
+            -- is different-root (a same-root/different-stem rival is rejected by f3), and
+            -- a different-root competitor already triggers f4 at the same threshold.
             SELECT m.value_set_id, m.root, m.stem, m.fam_max_la
             FROM multi m
             WHERE NOT EXISTS (
@@ -1430,15 +1444,6 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
                 WHERE m2.value_set_id = m.value_set_id
                   AND (m2.root <> m.root OR m2.stem <> m.stem)
                   AND COALESCE(m2.fam_max_la, 0) >= COALESCE(m.fam_max_la, 0)
-            )
-            -- absolute floor applies only when a (now strictly-beaten) competitor exists
-            AND (
-                NOT EXISTS (
-                    SELECT 1 FROM multi m3
-                    WHERE m3.value_set_id = m.value_set_id
-                      AND (m3.root <> m.root OR m3.stem <> m.stem)
-                )
-                OR m.fam_max_la >= {_CONFIDENT_LABEL_AGREE}
             )
         )
         SELECT m.value_set_id, m.root AS dom_root, m.stem AS dom_stem,

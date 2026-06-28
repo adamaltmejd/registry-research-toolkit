@@ -1924,6 +1924,97 @@ class TestLinkValueSetClassifications:
         assert counts["multi_family_after"] == 1
         assert g.candidates() == []
 
+    def test_two_multi_vintage_chains_strict_dominant_below_floor_stays_residue(
+        self,
+    ) -> None:
+        """#897 / #514 regression guard for the m3-removal: the STRICTLY label-dominant
+        chain still has to clear the CONDITIONAL ABSOLUTE floor, and that floor lives
+        ONLY in the final SELECT (f4), not in a CTE-level dominance gate.
+
+        Two multi-vintage chains on DIFFERENT roots both >=0.90-CONTAIN the value set
+        (containment is code-only). One (LKF) STRICTLY label-dominates the other (SSYK):
+        LKF's best label_agree ~0.5 > SSYK's ~0.3, so the `dominant` CTE selects LKF.
+        But the rival SSYK chain is itself an OFF-CHAIN stray (a different root), so the
+        final SELECT's conditional absolute floor (f4) binds and REQUIRES LKF's
+        fam_max_la >= _CONFIDENT_LABEL_AGREE (0.90). 0.5 < 0.90 → the value set stays in
+        residue (no link). This would also have been rejected by the removed CTE m3
+        floor (a different-root multi-vintage competitor exists → CTE-floor required 0.90
+        too) — so the outcome is identical with or without m3, which is exactly what the
+        removal claims. It pins that the floor on the strictly-dominant-but-below-floor
+        case is enforced downstream and survives the m3 deletion."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        # Value set: 10 codes; pairs (code,label) are the label-agreement TRUTH.
+        #   codes 1-5  -> "LKF i" labels (match the LKF chain)
+        #   codes 6-10 -> "VS i"  labels (match neither chain)
+        vs_codes = [(str(i).zfill(4), f"LKF {i}") for i in range(1, 6)] + [
+            (str(i).zfill(4), f"VS {i}") for i in range(6, 11)
+        ]
+        shared_kods = [code for code, _ in vs_codes]
+
+        g = _Graph()
+        # DOMINANT chain (LKF root): contains ALL 10 codes (containment 1.0), but matches
+        # the value set's labels on only codes 1-5 -> fam_max_la = 5/10 = 0.5 (BELOW the
+        # 0.90 floor) yet STRICTLY above the SSYK rival.
+        lkf_canon = [(str(i).zfill(4), f"LKF {i}") for i in range(1, 6)] + [
+            (str(i).zfill(4), f"LKFX {i}") for i in range(6, 11)
+        ]
+        g.add_classification(
+            300,
+            "LKF2015",
+            lkf_canon + [("9001", "lkf2015 only")],
+            slug="lkf2015",
+            valid_from=2015,
+            valid_to=2017,
+        )
+        g.add_classification(
+            301,
+            "LKF2018",
+            lkf_canon + [("9002", "lkf2018 only")],
+            slug="lkf2018",
+            supersedes_id=300,
+            valid_from=2018,
+            valid_to=None,
+        )
+        # RIVAL chain (SSYK root, a DIFFERENT root -> an off-chain stray): contains ALL
+        # 10 codes, but matches the value set's labels on only codes 1-3 -> fam_max_la =
+        # 3/10 = 0.3, STRICTLY beaten by LKF's 0.5.
+        ssyk_canon = [(str(i).zfill(4), f"LKF {i}") for i in range(1, 4)] + [
+            (str(i).zfill(4), f"SSYK {i}") for i in range(4, 11)
+        ]
+        g.add_classification(
+            302,
+            "SSYK2012",
+            ssyk_canon + [("9003", "ssyk2012 only")],
+            slug="ssyk2012",
+            valid_from=2012,
+            valid_to=2018,
+        )
+        g.add_classification(
+            303,
+            "SSYK2019",
+            ssyk_canon + [("9004", "ssyk2019 only")],
+            slug="ssyk2019",
+            supersedes_id=302,
+            valid_from=2019,
+            valid_to=None,
+        )
+        g.add_value_set(300, vs_codes)
+        g.add_variable_state(990, 300)  # open-ended -> overlaps both chains' latest
+
+        # Sanity: every code IS contained by both chains (containment, code-only, = 1.0).
+        assert len(shared_kods) == 10
+
+        counts = link_value_set_classifications(g.conn)
+        # 4 candidates (2 LKF + 2 SSYK) -> multi-family, not confident.
+        assert counts["value_sets_linked"] == 0
+        assert counts["multi_family"] == 1
+        # LKF strictly dominates (0.5 > 0.3) so the CTE picks it, but the off-chain SSYK
+        # stray triggers f4's absolute floor and 0.5 < 0.90 -> no reclaim, residue.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
+
     def test_no_overlap_no_link(self) -> None:
         """Candidates all on one chain, but the state period overlaps NO candidate
         vintage → no emit (residual, safe by omission). Stays counted as
