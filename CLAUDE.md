@@ -146,7 +146,7 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   (dev-only) is used for property-based tests on invariant-heavy surfaces
   (`test_*_properties.py` in `reg_meta` and `reg_meta_build`), additive to the
   example/snapshot suites.
-- **Type checking**: `uvx --from ty==0.0.49 ty check` (Astral, beta). Blocking in CI;
+- **Type checking**: `uvx --from ty==0.0.51 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
   keep `pyproject.toml` clean.

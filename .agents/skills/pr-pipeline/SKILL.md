@@ -95,7 +95,7 @@ JSON-contract validation, or anything requested.
 Run focused verification as the work evolves:
 
 - Python: `uv run ruff check`, `uv run ruff format --check`,
-  `uvx --from ty==0.0.49 ty check`, and targeted `uv run python -m pytest <pkg>/`.
+  `uvx --from ty==0.0.51 ty check`, and targeted `uv run python -m pytest <pkg>/`.
 - Frontend: from `reg_webapp/frontend/`, use `bun run lint`, `bun run check`,
   `bun run test`, `bun run build`, and regenerate API types only after backend contract
   changes. Headless checks never render a pixel. If the change alters rendered output

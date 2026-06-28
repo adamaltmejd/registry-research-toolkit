@@ -48,6 +48,6 @@ Update where the diff makes them stale or incomplete:
 2. Update them. Run `uvx --from panache-cli==2.55.0 panache format .` then
    `uvx --from panache-cli==2.55.0 panache lint --check .` on touched markdown; if you
    edited docstrings or any `.py`, also run the package Verify (`uv run ruff check`,
-   `uvx --from ty==0.0.49 ty check`, `uv run python -m pytest <pkg>/`).
+   `uvx --from ty==0.0.51 ty check`, `uv run python -m pytest <pkg>/`).
 3. **End your turn with** which docs you updated and why (+ files touched) — or "no doc
    update needed". Do NOT run git — the lead commits and pushes your edits.

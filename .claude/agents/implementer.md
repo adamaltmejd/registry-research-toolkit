@@ -52,7 +52,7 @@ the lead runs the authoritative union Verify on the assembled result.
      generic-AI aesthetics; skip it only for non-visual or trivial frontend edits.
 3. Run the plan's Verify (or the touched package's standard checks) until green:
    - Python: `uv run ruff check`, `uv run ruff format --check`,
-     `uvx --from ty==0.0.49 ty check`, `uv run python -m pytest <pkg>/`.
+     `uvx --from ty==0.0.51 ty check`, `uv run python -m pytest <pkg>/`.
    - Build-affecting changes (SCB/SOS triage, slugs, DDL): the real `build-db` is the
      LEAD's merge-gate check (\~20 min, run once on final HEAD) — do **not** run it
      yourself unless the plan explicitly asks. Cover the change with the fast
