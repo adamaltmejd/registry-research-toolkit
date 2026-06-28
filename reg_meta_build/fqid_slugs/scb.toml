@@ -1411,11 +1411,12 @@ slug = "kts"
 [register_variant."116.131"]
 slug = "_default"
 display_group = "Kommunernas och regionernas finansiella tillgångar och skulder"
-# Sub-annual aggregate panel (#730, follow-up to #577): one row per kommun per
-# year (ar) × quarter (kvartal). The subject is an aggregate geography, so
-# panel_entity_key = "kommun" (cf. register_variant."115.1227"). The composite time
-# key addresses one delivered quarter, so grain = "row".
-panel_entity_key = "kommun"
+# Sub-annual aggregate time series (#730, follow-up to #577): year (ar) × quarter
+# (kvartal), grain = "row". MIXED population (Codex review): this variant covers BOTH
+# kommuner AND regioner/landsting (separate kommun `116.36` and landsting `116.5059`
+# columns), so no single panel_entity_key identifies every row — left unkeyed, a time
+# series over a mixed aggregate (like byggproduktionsindex). The kvartalsutfall
+# kommuner/regioner panels below ARE keyed because each is split to one population.
 panel_time_key = ["ar", "kvartal"]
 panel_time_grain = "row"
 
@@ -5398,7 +5399,7 @@ slug = "medborgarskap"
 #     --output-toml /tmp/entity_key_pins.toml
 # and fold the NON-duplicate entries in here. dbdiff-identical (slug values
 # only — pins reproduce the slug the variable already carries).
-# 241 pin(s).
+# 240 pin(s).
 
 [variable."1.29"]  # fdb: panel_entity_key = 'fenr'
 slug = "fenr"
@@ -5546,9 +5547,6 @@ slug = "kommun"
 
 [variable."115.56"]  # kommunalskatter: panel_entity_key = 'peorgnr'
 slug = "person-orgnr"
-
-[variable."116.36"]  # kts: panel_entity_key = 'kommun'
-slug = "kommun"
 
 [variable."121.1839"]  # frida: panel_entity_key = 'organisationsnummer'
 slug = "orgnr"
