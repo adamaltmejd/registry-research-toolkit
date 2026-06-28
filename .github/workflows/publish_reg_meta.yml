@@ -17,14 +17,13 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.0
       - uses: astral-sh/setup-uv@v8.2.0
 
-      # Smoke-test the release's DB assets before pushing to PyPI. This runs
-      # after the pypi-environment approval, giving the maintainer a chance to
-      # upload freshly-built reg_meta.db.zst and reg_meta_docs.db.zst assets
-      # (per .claude/skills/release/SKILL.md) if SCHEMA_VERSION or
-      # DOC_SCHEMA_VERSION changed, or if docs content changed.
+      # Smoke-test the release's DB assets before pushing to PyPI. There is no
+      # pypi-environment approval pause; the release must stay draft until
+      # reg_meta.db.zst and reg_meta_docs.db.zst have been uploaded or copied
+      # forward per the release skill.
       #
       # download_db and download_docs_db each validate the asset's schema
       # before install, so an incompatible asset fails here instead of in
@@ -55,7 +54,7 @@ jobs:
           fi
 
       - run: uv build reg_meta/ --out-dir dist/
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: pypa/gh-action-pypi-publish@v1.14.0
 
   # Post-release end-to-end smoke: install reg_meta into a clean Docker container
   # and run the full install → `reg-meta update` (downloads this release's DB) →

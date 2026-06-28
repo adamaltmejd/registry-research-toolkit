@@ -6,9 +6,10 @@ cycle — in `/pr-pipeline` Step E and in ad-hoc agent-driven PR work alike. The
 fiddly and has been shipped wrong before (Codex submits reviews/comments as login
 `chatgpt-codex-connector` but reacts as `chatgpt-codex-connector[bot]`, so a poller keyed
 on one login misses the other). This script is the get-it-right-once classifier: given a
-PR number it fetches reviews, issue comments, and PR-body reactions, then reports the
-Codex signal as JSON. The two merge-gating verdicts (findings, clean) are bound to the
-head commit by SHA, so a verdict from a prior push is never mistaken for fresh.
+PR number it fetches reviews, issue comments, PR-body reactions, and reactions on human
+`@codex review` comments, then reports the Codex signal as JSON. The two merge-gating
+verdicts (findings, clean) are bound to the head commit by SHA, so a verdict from a prior
+push is never mistaken for fresh.
 
 Scope: this computes the **Codex** signal only — Codex is the bot whose verdict lands as a
 reaction + a comment rather than as a normal review. Copilot (the gate's other bot) posts
@@ -326,13 +327,45 @@ def _paginated(endpoint: str) -> list[dict[str, Any]]:
     return [item for page in pages for item in page]
 
 
+def _review_request_reactions(
+    base: str, comments: list[dict[str, Any]], bot: str = DEFAULT_BOT
+) -> list[dict[str, Any]]:
+    """Fetch reactions attached to human `@codex review` issue comments.
+
+    GitHub's PR-level reactions endpoint covers reactions on the PR body only. Codex marks
+    explicit review requests as started by reacting 👀 to the *request comment*, so the
+    poller must include those comment-level reactions or it falsely reports "no
+    engagement" after Codex has already begun.
+    """
+    bot_logins = {bot.lower(), f"{bot}[bot]".lower()}
+
+    def is_bot(rec: dict[str, Any]) -> bool:
+        return (rec.get("user") or {}).get("login", "").lower() in bot_logins
+
+    reactions: list[dict[str, Any]] = []
+    for c in comments:
+        comment_id = c.get("id")
+        if (
+            comment_id
+            and not is_bot(c)
+            and CODEX_REVIEW_REQUEST_RE.search(c.get("body") or "")
+        ):
+            reactions.extend(
+                _paginated(f"{base}/issues/comments/{comment_id}/reactions")
+            )
+    return reactions
+
+
 def evaluate(owner: str, name: str, pr: int, bot: str = DEFAULT_BOT) -> dict[str, Any]:
     """Fetch the PR's review/comment/reaction context and classify it. (Live gh calls.)"""
     base = f"repos/{owner}/{name}"
     pr_view = gh_json(["pr", "view", str(pr), "--json", "state,headRefOid,commits"])
     reviews = _paginated(f"{base}/pulls/{pr}/reviews")
     comments = _paginated(f"{base}/issues/{pr}/comments")
-    reactions = _paginated(f"{base}/issues/{pr}/reactions")
+    reactions = [
+        *_paginated(f"{base}/issues/{pr}/reactions"),
+        *_review_request_reactions(base, comments, bot),
+    ]
     review_comments = _paginated(f"{base}/pulls/{pr}/comments")
     committed_date = _head_push_ts(pr_view)
     result = classify(

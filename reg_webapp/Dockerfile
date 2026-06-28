@@ -55,7 +55,7 @@ RUN bun run gen:types && bun run build
 # re-fetching it on every build. `reg-meta update` (not raw curl) does the
 # fetch: it owns release resolution, asset naming, and zstd unpack, and tag
 # slashes (`reg_meta/vX.Y.Z`) make hand-built download URLs fragile.
-FROM python:3.14.6-slim-bookworm AS regmeta-db
+FROM python:3.14.5-slim-bookworm AS regmeta-db
 COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
@@ -114,7 +114,7 @@ RUN /app/.venv/bin/reg-meta update --db /opt/reg_meta --tag "$REG_META_TAG" --ye
 # matches) and copy a version-pinned uv binary off its official image. uv's own
 # combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
 # python jointly the way we need, so we compose the pin ourselves.
-FROM python:3.14.6-slim-bookworm AS backend
+FROM python:3.14.5-slim-bookworm AS backend
 COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /usr/local/bin/uv
 
 # Deterministic install: bytecode-compile ahead of time, copy (not symlink) into
@@ -154,7 +154,7 @@ RUN uv sync --frozen --no-dev --package reg-webapp
 # python:slim (no uv) — runtime needs only the interpreter + the baked .venv.
 # Pinned to the same 3.14 minor the backend stage built against so the venv's
 # absolute interpreter path resolves.
-FROM python:3.14.6-slim-bookworm AS runtime
+FROM python:3.14.5-slim-bookworm AS runtime
 
 # Non-root runtime user (the API needs no write access to anything it ships).
 RUN groupadd --system app && useradd --system --gid app --home /app app

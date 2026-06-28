@@ -68,8 +68,8 @@ jobs:
       image: ${{ steps.filter.outputs.image }}
       edge: ${{ steps.filter.outputs.edge }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: dorny/paths-filter@v4
+      - uses: actions/checkout@v7.0.0
+      - uses: dorny/paths-filter@v4.0.1
         id: filter
         with:
           # `image` lists exactly what enters the Docker image (Dockerfile
@@ -112,7 +112,7 @@ jobs:
     steps:
       # fetch-depth: 0 + tags so the schema guard below can `git show <tag>:...`
       # the released asset's schema constants (the resolved reg_meta/v* tag).
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -259,14 +259,14 @@ jobs:
       # bare sha. The deploy job computes the identical expression.
       IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: docker/setup-buildx-action@v4
+      - uses: actions/checkout@v7.0.0
+      - uses: docker/setup-buildx-action@v4.1.0
       # Registry push auth (main/dispatch only). The username is ignored by
       # Fly's registry — the FLY_API_TOKEN deploy token authenticates. Skipped on a
       # pending bump (#448) — nothing to push when the bake is deferred.
       - name: Log in to registry.fly.io
         if: github.event_name != 'pull_request' && needs.schema-guard.outputs.pending_bump != 'true'
-        uses: docker/login-action@v4
+        uses: docker/login-action@v4.2.0
         with:
           registry: registry.fly.io
           username: x
@@ -285,7 +285,7 @@ jobs:
       # asset (exit 10) by design — defer it to the owed reg_meta release rather
       # than fail red. build-image stays green; deploys wait (job output below).
       - if: needs.schema-guard.outputs.pending_bump != 'true'
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v7.2.0
         with:
           context: .
           file: reg_webapp/Dockerfile
@@ -315,7 +315,7 @@ jobs:
       cancel-in-progress: false
     steps:
       # Checkout only for reg_webapp/fly.toml — the image is already pushed.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.0
       # Stale-deploy guard: only ship if this commit is still main's HEAD.
       # Build times vary (GHA cache hit vs miss), so an older commit's deploy
       # can reach this job AFTER a newer commit already deployed; without this
@@ -433,12 +433,12 @@ jobs:
       group: edge-deploy-global
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.0
       # Pinned to the same bun the Dockerfile's frontend stage uses
       # (oven/bun:1.3.0-alpine) — bump both together. A floating toolchain
       # here would make the production SPA bundle non-reproducible while the
       # image-baked copy stays pinned.
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.3.14"
       - run: bun install --frozen-lockfile

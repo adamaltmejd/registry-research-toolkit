@@ -12,6 +12,23 @@ import { configDefaults } from "vitest/config";
 const backendUrl =
   (globalThis as { process?: { env?: Record<string, string | undefined> } })
     .process?.env?.REG_WEBAPP_BACKEND_URL ?? "http://localhost:8000";
+const runtimeProcess = (
+  globalThis as {
+    process?: { env?: Record<string, string | undefined>; platform?: string };
+  }
+).process;
+const isCodexSeatbeltSandbox =
+  runtimeProcess?.env?.CODEX_SANDBOX === "seatbelt";
+const isMacOS = runtimeProcess?.platform === "darwin";
+const needsSingleProcessChromium = isMacOS && isCodexSeatbeltSandbox;
+
+// Playwright 1.61's Chromium build registers a Mach rendezvous port on macOS. The
+// Codex seatbelt sandbox denies that registration; single-process Chromium avoids
+// the blocked multi-process bootstrap. Normal local runs and Linux CI keep the
+// standard browser path.
+const chromiumLaunchArgs = needsSingleProcessChromium
+  ? ["--single-process"]
+  : [];
 
 export default defineConfig({
   plugins: [svelte()],
@@ -50,6 +67,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: "browser",
+          fileParallelism: !needsSingleProcessChromium,
           include: ["src/**/*.browser.test.ts"],
           // vitest-browser-svelte injects `render`/`cleanup` (it auto-cleans
           // BEFORE each test) and its locator types via this setup entry. The
@@ -60,7 +78,9 @@ export default defineConfig({
           browser: {
             enabled: true,
             // Vitest 4.1 takes a provider FACTORY, not the old "playwright" string.
-            provider: playwright(),
+            provider: playwright({
+              launchOptions: { args: chromiumLaunchArgs },
+            }),
             headless: true,
             instances: [{ browser: "chromium" }],
           },
