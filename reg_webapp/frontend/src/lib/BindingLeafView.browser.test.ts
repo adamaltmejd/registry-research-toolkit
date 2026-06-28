@@ -199,7 +199,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       .element(page.getByRole("checkbox", { name: /Sni/ }))
       .toBeVisible();
     // The column's full-history period span is shown (scoped to the picker — the
-    // same span text also appears in the StatesView usage list).
+    // same span text also appears in the value-set viewer's usage list).
     const spans = await vi.waitFor(() => {
       const els = [...document.querySelectorAll(".rep-picker .period")].map(
         (el) => el.textContent?.trim(),
@@ -675,6 +675,106 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(nudge?.getAttribute("aria-label")).toBe(
       "Coding changes over time — see the value sets",
     );
+    // #905: it's a DEEP LINK (an anchor) to the value-set viewer focused on this
+    // ROW — the current leaf path + `?codes=<variant>::<column>#states-heading` (no
+    // `band.href` on the binding leaf). The variant ("v") is carried so a column shared
+    // across variants isolates the clicked row's coding.
+    expect(nudge?.tagName).toBe("A");
+    expect(nudge?.getAttribute("href")).toBe(
+      "/catalog/scb/lisa/kon?codes=v%3A%3AColA#states-heading",
+    );
+  });
+
+  it("a ?codes=<column> deep link focuses the value-set viewer on that column's latest coding (#905)", async () => {
+    // The other side of the deep link: with `?codes=ColA` in the URL the leaf passes
+    // it as `focusColumn`, and the value-set viewer auto-isolates ColA's latest-era
+    // coding (value-set 249 / "SUN", not the earlier 303 / "MiS 1996:1").
+    const states = [
+      state({
+        state_id: 1,
+        variant: "v",
+        delivery_column_name: "ColA",
+        value_set_id: 303,
+        value_set_version_label: "MiS 1996:1",
+        valid_from: "2019-01-01",
+        valid_to: "2019-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "v",
+        delivery_column_name: "ColA",
+        value_set_id: 249,
+        value_set_version_label: "SUN",
+        valid_from: "2020-01-01",
+        valid_to: "2022-12-31",
+      }),
+      state({
+        state_id: 3,
+        variant: "v",
+        delivery_column_name: "ColB",
+        value_set_id: 100,
+        value_set_version_label: "Stable",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    router.navigate("/catalog/scb/lisa/kon?codes=ColA");
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(states),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+    // The viewer is isolated on ColA's latest coding: the "Used by" detail + the
+    // "SUN" heading show, and the union list is hidden.
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    expect(
+      document.querySelector(".vs-detail .vs-heading")?.textContent,
+    ).toContain("SUN");
+    expect(document.querySelector(".vs-list > li")).toBeNull();
+  });
+
+  it("a ?codes=<variant>::<column> deep link isolates the CLICKED variant's coding when a column is shared across variants (#905)", async () => {
+    // One delivery column COL delivered by TWO variants with DISTINCT codings:
+    // variant "a" → "Coding A" (older), variant "b" → "Coding B" (latest era). The
+    // unscoped column lookup would pick B (the latest), but the deep link carries the
+    // ROW's variant, so `?codes=a::COL` must isolate A's coding — the deep-link bug.
+    const states = [
+      state({
+        state_id: 1,
+        variant: "a",
+        delivery_column_name: "COL",
+        value_set_id: 100,
+        value_set_version_label: "Coding A",
+        valid_from: "2015-01-01",
+        valid_to: "2018-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "b",
+        delivery_column_name: "COL",
+        value_set_id: 200,
+        value_set_version_label: "Coding B",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    router.navigate("/catalog/scb/lisa/kon?codes=a%3A%3ACOL");
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(states),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+    // Isolated on variant "a"'s coding ("Coding A"), NOT "b"'s latest-era "Coding B".
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    const heading = document.querySelector(
+      ".vs-detail .vs-heading",
+    )?.textContent;
+    expect(heading).toContain("Coding A");
+    expect(heading).not.toContain("Coding B");
   });
 
   it("the single-COLUMN leaf renders ONE compact row led by its COLUMN (#678)", async () => {
@@ -870,7 +970,12 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .toBeEnabled();
   });
 
-  it("uses a period-only scope when a variant modifier is active", async () => {
+  it("narrows the value-set list to the active variant modifier, keeping a period-only outside-period scope (Codex P2)", async () => {
+    // #905, Codex P2: with `?variant` active the page shows a "Narrowed by" chip and
+    // the picker is scoped via `narrowStatesByModifier`. The value-set list MUST match
+    // that narrowing — a DIFFERENT variant's same-period coding must NOT appear as an
+    // in-scope row. The period-only outside-period collapse (#744) still works, scoped
+    // to the narrowed variant.
     const inA = state({
       state_id: 20,
       variant: "individer",
@@ -895,9 +1000,12 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
-    const outside = state({
+    // An individer coding OUTSIDE the period — survives the modifier narrowing and
+    // demonstrates the outside-period disclosure still functions for the narrowed
+    // variant.
+    const outsideIndivider = state({
       state_id: 23,
-      variant: "outside-population",
+      variant: "individer",
       value_set_id: 23,
       value_set_version_label: "Outside period",
       valid_from: "1990-01-01",
@@ -906,6 +1014,8 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     vi.mocked(getCatalogNode).mockImplementation(
       async (_fqid, params) =>
         ({
+          // The period-only scope (no variant param) returns the same-period rows of
+          // ALL variants; the variant-scoped resolve returns only individer's.
           states: params?.variant
             ? [inA, inB]
             : [inA, inB, samePeriodOtherVariant],
@@ -917,20 +1027,65 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([inA, inB, samePeriodOtherVariant, outside]),
+      node: node([inA, inB, samePeriodOtherVariant, outsideIndivider]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       vintageYear: 2024,
     });
 
+    // The narrowed value-set list shows individer's in-period codings…
+    await expect.element(page.getByText("In-period A")).toBeVisible();
+    await expect.element(page.getByText("In-period B")).toBeVisible();
+    // …the period-only outside-period collapse still works (individer's out-of-period
+    // coding)…
     await expect
       .element(page.getByText("1 value set outside this period"))
       .toBeVisible();
+    // …and the OTHER variant's same-period coding is absent (Fix 3): the list reflects
+    // the active narrowing, not the full history.
     expect(
       [...document.querySelectorAll(".vs-label")].some(
         (el) => el.textContent === "Same-period other variant",
       ),
-    ).toBe(true);
+    ).toBe(false);
+  });
+
+  it("shows ALL period codings (every variant) when NO modifier is active", async () => {
+    // The control for Fix 3: with no `?variant`/`?value_set_version`, the value-set
+    // list is the full period history — every variant's same-period coding shows.
+    const inA = state({
+      state_id: 24,
+      variant: "individer",
+      value_set_id: 24,
+      value_set_version_label: "In-period A",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const samePeriodOtherVariant = state({
+      state_id: 25,
+      variant: "other-population",
+      value_set_id: 25,
+      value_set_version_label: "Same-period other variant",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: [inA, samePeriodOtherVariant],
+    } as never);
+    router.navigate("/catalog/scb/lisa/kon?period=2007");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([inA, samePeriodOtherVariant]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("In-period A")).toBeVisible();
+    await expect
+      .element(page.getByText("Same-period other variant"))
+      .toBeVisible();
   });
 
   it("keeps modifier-resolved single-state detail with a broader period-only scope", async () => {
@@ -1016,6 +1171,53 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     await expect
       .element(page.getByRole("button", { name: "Add to project" }))
       .toBeEnabled();
+  });
+
+  it("shows FULL history in the value-set list when a `?period` resolve fails with a stale `?variant` (Fix B)", async () => {
+    // #905, Codex P2: when the PRIMARY `?period` resolve fails (a stale/typo `?variant`,
+    // a 5xx, a network drop), `states` falls back to `node.states` (full history). The
+    // modifier narrowing must NOT then apply — a stale `?variant` would narrow that
+    // fallback to empty, defeating the full-history fallback. `valueSetStates`/
+    // `valueSetScope` are gated on `!narrowedError`, so the value-set list shows the
+    // full history (every variant), not a modifier-narrowed (possibly empty) subset.
+    const individerCoding = state({
+      state_id: 50,
+      variant: "individer",
+      value_set_id: 50,
+      value_set_version_label: "Individer coding",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const otherCoding = state({
+      state_id: 51,
+      variant: "other-population",
+      value_set_id: 51,
+      value_set_version_label: "Other coding",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      // The variant-scoped PRIMARY resolve fails (a stale `?variant=typo`); the
+      // period-only scope would succeed but is moot once the primary errors.
+      if (params?.variant) {
+        throw new Error("422 bad variant");
+      }
+      return { states: [individerCoding, otherCoding] } as never;
+    });
+    router.navigate("/catalog/scb/lisa/kon?period=2007&variant=typo");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([individerCoding, otherCoding]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The full-history value-set list shows BOTH variants' codings — the stale variant
+    // did NOT narrow the error-fallback to empty.
+    await expect.element(page.getByText("Individer coding")).toBeVisible();
+    await expect.element(page.getByText("Other coding")).toBeVisible();
   });
 });
 

@@ -15,6 +15,7 @@ import {
   grainsFromStates,
   groupLinkFromFocus,
   narrowStatesByModifier,
+  parseCodesParam,
   pickerRepresentations,
   pickerWindowYears,
   qualifierFromFocus,
@@ -32,9 +33,9 @@ import RepresentationPicker, {
   type PickerSelection,
 } from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
-import StatesView from "./StatesView.svelte";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
+import ValueSetView from "./ValueSetView.svelte";
 import { windowStore } from "./window.svelte";
 
 // The binding LEAF — the addressable variable, its resolution controls, the
@@ -82,6 +83,18 @@ const params = $derived({
 const hasResolutionModifier = $derived(
   params.variant !== undefined || params.value_set_version !== undefined,
 );
+
+// #905: a `?codes=<variant>::<column>` deep link (the picker's "codings vary" nudge)
+// focuses the value-set viewer on that ROW's `(variant, column)` coding. The variant
+// is carried because a column can be shared across variants/populations with distinct
+// codings, so the focus must target the clicked row's coding — not just the column.
+// This is a DEDICATED `?codes=` encoding, separate from the `?variant` RESOLUTION
+// modifier (which narrows + re-fetches), so the focus never perturbs the resolution.
+// Pure VIEW state — it does NOT re-fetch, so it's read separately from `params` and
+// passed straight to ValueSetView. A bare `<column>` (no `::`) parses variant=null.
+const codesFocus = $derived(parseCodesParam(router.getQueryParam("codes")));
+const focusColumn = $derived(codesFocus?.column ?? null);
+const focusVariant = $derived(codesFocus?.variant ?? null);
 
 // Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
 // node's embedded states are shown (no redundant request; CatalogNodeView already
@@ -157,7 +170,7 @@ const states = $derived.by(() => {
 });
 
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
-// + StatesView's empty-message wording).
+// + ValueSetView's empty-message wording).
 const isNarrowed = $derived(!!params.period && !narrowedError);
 const stateScope = $derived(
   isNarrowed
@@ -166,6 +179,48 @@ const stateScope = $derived(
       : resolvedStates
     : null,
 );
+
+// #905 (Codex P2): when a `?variant` / `?value_set_version` modifier is active, the
+// page shows a "Narrowed by" chip and the picker is scoped via
+// `narrowStatesByModifier`. The value-set view must reflect the SAME narrowing —
+// otherwise it would list OTHER variants'/versions' same-period codings as in-scope
+// rows, contradicting the rest of the page. Apply the modifier-narrowing (the SAME
+// helper the picker uses) ON TOP of the loading/single/multi `states` derivation and
+// the `stateScope` it pairs with — never instead of it, so the loading (`null`) and
+// single-state paths are preserved. With NO modifier active these pass through
+// unchanged (full history). ValueSetView stays PURE: the leaf decides which states it
+// gets; the view carries no resolution state.
+//
+// CRUCIALLY gated on `!narrowedError` (mirroring `resolvedStates`/`states`): when the
+// `?period` resolve FAILS, `states` deliberately falls back to `node.states` (full
+// history). A stale/typo `?variant` would then narrow that fallback to empty, defeating
+// the full-history fallback — so on a resolve error we skip the modifier narrowing and
+// let `valueSetStates`/`valueSetScope` equal the same full-history fallback the rest of
+// the page shows.
+const valueSetStates = $derived.by(() => {
+  if (states === null || narrowedError || !hasResolutionModifier) {
+    return states;
+  }
+  return [
+    ...narrowStatesByModifier(
+      states,
+      params.variant ?? null,
+      params.value_set_version ?? null,
+    ),
+  ];
+});
+const valueSetScope = $derived.by(() => {
+  if (stateScope === null || narrowedError || !hasResolutionModifier) {
+    return stateScope;
+  }
+  return [
+    ...narrowStatesByModifier(
+      stateScope,
+      params.variant ?? null,
+      params.value_set_version ?? null,
+    ),
+  ];
+});
 
 // ── The relationship-graph fetch (#678) ─────────────────────────────────────
 // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the HistoryGraph
@@ -263,11 +318,11 @@ const coverage = $derived(coverageFromStates(node.states));
 // unit-tested.
 //
 // A `?variant` / `?value_set_version` MODIFIER (the "Narrowed by" chip) is the
-// exception: it scopes the StatesView to one axis, so the picker must offer ONLY
-// the rows consistent with that narrowing (`narrowStatesByModifier`, the same
-// match as StatesView's `inScope`) — otherwise "select all" would add rows for
-// variants / versions OUTSIDE the active narrowing. With NO modifier active the
-// states pass through unchanged (full history, behavior unchanged).
+// exception: it scopes the resolution to one axis, so the picker must offer ONLY
+// the rows consistent with that narrowing (`narrowStatesByModifier`) — otherwise
+// "select all" would add rows for variants / versions OUTSIDE the active
+// narrowing. With NO modifier active the states pass through unchanged (full
+// history, behavior unchanged).
 
 /** The selectable representation rows — one per distinct (variant, delivery
  * column) over the active state history (the full history, or the
@@ -535,17 +590,18 @@ function commitSelected(selected: PickerSelection[]): void {
           · narrowed to {params.period.split(",").join(" + ")}</span
         >{/if}
     </h3>
-    {#if states}
-      <StatesView
-        {states}
+    {#if valueSetStates}
+      <!-- The pure value-set / coding viewer (#905). Narrowing to one state is the
+           PICKER's job now (it writes `?variant`/`?value_set_version`); this view
+           only DISPLAYS the codings. The "codings vary" nudge deep-links here via
+           `?codes=<variant>::<column>` → `focusColumn`/`focusVariant`, focusing the
+           right (variant, column) coding. -->
+      <ValueSetView
+        states={valueSetStates}
         narrowed={isNarrowed}
-        resolutionStates={isNarrowed ? resolvedStates : null}
-        scopeStates={stateScope}
-        activeVariant={params.variant ?? null}
-        activeValueSetVersion={params.value_set_version ?? null}
-        onpickVariant={(variant) => setResolution({ variant })}
-        onpickValueSetVersion={(value_set_version) =>
-          setResolution({ value_set_version })}
+        scopeStates={valueSetScope}
+        {focusColumn}
+        {focusVariant}
       />
     {:else}
       <p class="muted" aria-busy="true">Loading states…</p>

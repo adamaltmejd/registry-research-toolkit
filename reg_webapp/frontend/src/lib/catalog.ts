@@ -1283,11 +1283,12 @@ function pickerRow(
 }
 
 /** Narrow `pickerRepresentations`' input states to the SAME subset an active
- * StatesView narrowing modifier scopes to (#678 finding): when the leaf is opened
- * with a `?variant` and/or `?value_set_version` modifier (the "Narrowed by" chip),
- * the picker rows must be built only from states consistent with that narrowing —
- * else "select all" would add rows for variants / value-set versions OUTSIDE the
- * active narrowing. Mirrors StatesView's `inScope` matching exactly:
+ * `?variant` / `?value_set_version` modifier scopes to (#678 finding): when the
+ * leaf is opened with such a modifier (the "Narrowed by" chip), the picker rows
+ * must be built only from states consistent with that narrowing — else "select
+ * all" would add rows for variants / value-set versions OUTSIDE the active
+ * narrowing. The match (#905: the picker now owns this narrowing — StatesView is
+ * retired):
  *   - `variant` matches `state.variant`;
  *   - `valueSetVersion` matches `state.value_set_version_label`, with the
  *     `_none` sentinel (`VALUE_SET_VERSION_NONE`) meaning the empty/default label
@@ -2006,7 +2007,7 @@ export function representationInWindow(
 //     overall period span so the rows aren't indistinguishable.
 // The usages of a collapsed classification row are the UNION of all states across
 // its `value_set_id`s (the per-variant adjacent-year M20 collapse runs over that
-// union). Pure projection, unit-tested in catalog.test.ts; the StatesView is
+// union). Pure projection, unit-tested in catalog.test.ts; ValueSetView is
 // presentational over the result.
 
 /** A contiguous delivery-year run within one (value set, variant), collapsed
@@ -2242,6 +2243,88 @@ export function distinctValueSets(
       overallSpan,
     };
   });
+}
+
+/** The deep-link payload for the picker's "codings vary" nudge (#905), encoding the
+ * row's `(variant, column)` IDENTITY — not just the column. A picker row is keyed
+ * `${variant}::${column}`, so two rows can share ONE delivery column across DIFFERENT
+ * variants/populations with DISTINCT codings; the deep link must carry the variant so
+ * the value-set viewer isolates the clicked row's coding, not another variant's
+ * latest-era one. Mirrors the row-key grammar (`variant::column`, neither segment
+ * contains `::`), each segment percent-encoded so reserved/non-ASCII chars survive
+ * the URL round-trip. This is a DEDICATED encoding for the `?codes=` param — distinct
+ * from the `?variant` RESOLUTION modifier (which narrows the picker + drives the
+ * "Narrowed by" chips), so a deep-link focus never perturbs the resolution. */
+export function encodeCodesParam(variant: string, column: string): string {
+  return `${encodeURIComponent(variant)}::${encodeURIComponent(column)}`;
+}
+
+/** Parse a `?codes=` deep-link param (`encodeCodesParam`'s inverse) into its
+ * `(variant, column)` pair. A bare `<column>` with no `::` (back-compat / a leaf
+ * link that carries no variant) parses to `{ variant: null, column }`. Each segment
+ * is percent-DEcoded. Returns null for an empty / missing param.
+ *
+ * TOTAL by design: `?codes=` is purely client-side FOCUS state (it never re-fetches),
+ * so a malformed value — a stray `%` or a truncated escape (`%E0%A4%A`) that makes
+ * `decodeURIComponent` THROW — must DEGRADE to the default union view, not crash the
+ * leaf render. Any decode failure returns null (no focus). This is fail-SOFT on
+ * URL-supplied cosmetic state, distinct from fail-fast on real data contracts. */
+export function parseCodesParam(
+  codes: string | null | undefined,
+): { variant: string | null; column: string } | null {
+  if (!codes) {
+    return null;
+  }
+  try {
+    const sep = codes.indexOf("::");
+    if (sep === -1) {
+      return { variant: null, column: decodeURIComponent(codes) };
+    }
+    return {
+      variant: decodeURIComponent(codes.slice(0, sep)),
+      column: decodeURIComponent(codes.slice(sep + 2)),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** The DISTINCT value-set `key` (the `distinctValueSets` dedup identity) a given
+ * delivery COLUMN resolves to — the deep-link target for the picker's "codings
+ * vary" nudge (#905). A column with a STABLE coding maps to one value set; a column
+ * whose coding VARIED over time (`codingsVary`) touches SEVERAL distinct value
+ * sets, so we pick the LATEST-era one (max `valid_to`, ties broken by `state_id`)
+ * to isolate — the row's representative coding (matching `PickerRepresentation`'s
+ * `valueSetLabel`, also the latest era), with the rest one "← All value sets" click
+ * away. When `variant` is given, only states of THAT variant are considered before
+ * the latest-era pick — two rows sharing a column across different variants/populations
+ * each isolate their OWN coding (the row key is `(variant, column)`, #905). When
+ * `variant` is null/omitted (a column unambiguous across variants, or a leaf link with
+ * no variant), all states for the column are considered (unchanged behavior). Returns
+ * null when no matching state delivers the column (a stale / unknown `?codes=`), so the
+ * viewer degrades to its default union view. Pure. */
+export function valueSetKeyForColumn(
+  states: VariableStateModel[],
+  column: string,
+  variant?: string | null,
+): string | null {
+  let best: VariableStateModel | null = null;
+  for (const s of states) {
+    if (s.delivery_column_name !== column) {
+      continue;
+    }
+    if (variant != null && s.variant !== variant) {
+      continue;
+    }
+    if (
+      best === null ||
+      s.valid_to > best.valid_to ||
+      (s.valid_to === best.valid_to && s.state_id > best.state_id)
+    ) {
+      best = s;
+    }
+  }
+  return best === null ? null : valueSetDedupKey(best);
 }
 
 /** Humanize a classification slug for the value-set label (#668): the clean

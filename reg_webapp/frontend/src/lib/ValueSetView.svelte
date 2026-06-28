@@ -11,16 +11,23 @@ import {
   humanizeClassificationSlug,
   matchesFilter,
   type ValueSetTechnicalChange,
+  valueSetKeyForColumn,
   windowTitle,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
-import { VALUE_SET_VERSION_NONE } from "./period";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 
-// Presentational view of a variable's `variable_state` rows (from the full
-// node's embedded `states` OR a `?period`-narrowed StatesResponse). Pure
-// presentation + selection callbacks — it never fetches and never navigates;
-// BindingLeafView owns the URL writes.
+// The PURE value-set / coding viewer for a variable's `variable_state` rows
+// (extracted from the retired StatesView — #905). Presentation ONLY: it never
+// fetches, never navigates, and carries NO resolution (variant / value-set
+// version) state — the picker (RepresentationPicker) owns the
+// `?variant`/`?value_set_version` narrowing now, and BindingLeafView owns the URL
+// writes. This view just renders the codings the leaf hands it, focused (via
+// `focusColumn` + `focusVariant`) on the (variant, column) a deep-link points at.
+//
+// DELIBERATELY STANDALONE: kept as its own component (not folded back into the
+// leaf) so a future HistoryGraph convergence (#666) can move this viewer cleanly —
+// the unified subject view will host the same coding display next to the graph.
 //
 //   length === 1 → single-state DETAIL (variant, validity, type/length, column,
 //                  value-set version + the (code, label) table in a
@@ -32,92 +39,69 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 //                  plain code lists), shown as a compact list by DEFAULT (the
 //                  union). A FilterInput narrows the list and a per-row "Isolate"
 //                  focuses one (both LOCAL view state); "All value sets" resets.
-//                  A classification value set links out (no code dump); a plain
-//                  one expands its codes. The narrowing picker (variant /
-//                  value-set version) still writes `?variant`/`?value_set_version`
-//                  to resolve to length-1 — distinct from the LOCAL isolation.
+//                  A `focusColumn` deep-link seeds the same isolation. A
+//                  classification value set links out (no code dump); a plain one
+//                  expands its codes.
 //   length === 0 → a clean "no state delivered for this period" message (a valid
 //                  period outside every validity window — NOT an error).
-// No add affordance here: the page-level "Add to project" (#306) lives in
-// BindingLeafView — a state is an implementation concept, not a pick target.
 let {
   states,
   narrowed,
-  activeVariant = null,
-  activeValueSetVersion = null,
-  resolutionStates = null,
   scopeStates = null,
-  onpickVariant,
-  onpickValueSetVersion,
+  focusColumn = null,
+  focusVariant = null,
 }: {
   states: VariableStateModel[];
   /** True when these are the `?period`-narrowed subset (drives empty wording). */
   narrowed: boolean;
-  activeVariant?: string | null;
-  activeValueSetVersion?: string | null;
-  /** The modifier-resolved subset, when it differs from the period scope. */
-  resolutionStates?: VariableStateModel[] | null;
   /** The period-resolved subset when `states` intentionally carries full history. */
   scopeStates?: VariableStateModel[] | null;
-  onpickVariant: (variant: string) => void;
-  onpickValueSetVersion: (valueSetVersion: string) => void;
+  /** A delivery column to FOCUS (#905): the picker's "codings vary" nudge deep-links
+   * to `?codes=<variant>::<column>`, which BindingLeafView passes here. It seeds the
+   * local isolation onto the distinct value set that (`focusVariant`, column) resolves
+   * to and scrolls it into view. Null (or a column no state delivers) → no focus
+   * (the default union). */
+  focusColumn?: string | null;
+  /** The variant scoping the focus (#905): a delivery column can be shared across
+   * variants/populations with DISTINCT codings (picker rows are keyed
+   * `(variant, column)`), so the focus isolates THIS variant's coding. Null → the
+   * column is considered across all variants (a column unique across variants, or a
+   * deep link with no variant) — `valueSetKeyForColumn`'s back-compat path. */
+  focusVariant?: string | null;
 } = $props();
 
-const resolvedChoiceStates = $derived(
-  resolutionStates ?? scopeStates ?? states,
-);
-const single = $derived(
-  narrowed
-    ? resolvedChoiceStates.length === 1
-      ? resolvedChoiceStates[0]
-      : null
-    : states.length === 1
-      ? states[0]
-      : null,
-);
-
-// Distinct variants / value-set versions across the (multi-state) set — the two
-// narrowing axes. Order-preserving de-dup so the picker is stable.
-function distinct<K>(xs: K[]): K[] {
-  return [...new Set(xs)];
-}
-const choiceStates = $derived(narrowed ? resolvedChoiceStates : states);
-const variants = $derived(distinct(choiceStates.map((s) => s.variant)));
-// ALL distinct versions, INCLUDING the empty default label (`value_set_version_label`
-// is `TEXT NOT NULL DEFAULT ''`): the states DIFFER by version when this has >1,
-// so it drives whether the version axis can narrow. The CHIPS, though, are only
-// the non-empty labels — you can't narrow to "no version" via `?value_set_version=`
-// (it would be omitted), so an empty-label state is narrowed by variant instead.
-const versionsAll = $derived(
-  distinct(choiceStates.map((s) => s.value_set_version_label)),
-);
-const versionChips = $derived(versionsAll.filter((v) => v !== ""));
-// A state may carry the empty/default label; it gets a "(no version)" chip
-// (sending the `_none` sentinel) so it's individually selectable too.
-const hasEmptyVersion = $derived(versionsAll.includes(""));
-// Whether either narrowing axis can actually resolve the multi-state set to one.
-const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
+// Single-state DETAIL — PERIOD-AWARE (#905, Codex P2). A single state reaching the view
+// (`states.length === 1`) drives the detail — the full-history view with one recorded
+// state, OR a `?period` that BindingLeafView resolved to exactly one state (it passes
+// that single state as `states`). BUT when narrowed, the period must have actually
+// DELIVERED it: a variable with one historical state viewed at a `?period` OUTSIDE that
+// state falls back to the lone `node.states` (length 1) with an EMPTY `scopeStates`, and
+// must NOT render that out-of-era state as the in-period detail. So a narrowed view with
+// an empty period scope suppresses the single detail and falls through to the
+// "No state delivered for this period" path (consistent with `hasInPeriodValueSets`).
+// A multi-history view (`states.length > 1`) is never single regardless of scope, so the
+// value-set list / focus-isolation render. Uses only `states` + `scopeStates` — never
+// resolution-modifier coupling.
+const single = $derived.by(() => {
+  if (states.length !== 1) {
+    return null;
+  }
+  if (narrowed && scopeStates !== null && scopeStates.length === 0) {
+    return null;
+  }
+  return states[0];
+});
 
 // #668: the dedup that powers the multi-state view — the DISTINCT value sets
 // (classification editions by slug, others by `value_set_id`), each carrying
 // which variants/spans use it. kommun's 415 states collapse to ~21 LKF editions
 // + a few plain code lists here.
 const valueSets = $derived(distinctValueSets(states));
-const resolutionValueSets = $derived(distinctValueSets(choiceStates));
 const scopeValueSetKeys = $derived.by(() => {
   if (scopeStates === null) {
     return null;
   }
   return new Set(distinctValueSets(scopeStates).map((vs) => vs.key));
-});
-const activeScopeValueSetKeys = $derived.by(() => {
-  if (resolutionStates === null) {
-    return null;
-  }
-  if (activeVariant === null && activeValueSetVersion === null) {
-    return null;
-  }
-  return new Set(distinctValueSets(resolutionStates).map((vs) => vs.key));
 });
 
 // A version label shared by ≥2 NON-classification rows can't tell them apart on
@@ -136,19 +120,26 @@ const ambiguousLabels = $derived.by(() => {
   );
 });
 
-// Local filter + isolate: LOCAL view state (NOT a URL write — distinct from the
-// `?variant`/`?value_set_version` narrowing picker, which BindingLeafView owns).
-// Isolation is keyed by the value set's STABLE `key` (not a list index, which the
-// filter's slice would invalidate); null = the union (default). Both reset when
-// the state set changes underneath (navigation / narrowing) so a stale key can't
-// isolate / a stale needle can't hide the wrong value set.
+// Local filter + isolate: LOCAL view state (NOT a URL write). Isolation is keyed
+// by the value set's STABLE `key` (not a list index, which the filter's slice
+// would invalidate); null = the union (default). Both reset when the state set
+// changes underneath (navigation / narrowing) so a stale key can't isolate / a
+// stale needle can't hide the wrong value set. A `focusColumn` deep-link SEEDS the
+// isolation to the value set that column resolves to (#905).
 let isolatedKey = $state<string | null>(null);
 let filter = $state("");
 $effect(() => {
   void states;
-  void resolutionStates;
   void scopeStates;
-  isolatedKey = null;
+  void focusVariant;
+  // A deep-link `?codes=<variant>::<column>` seeds the isolation to that ROW's
+  // (variant-scoped, latest-era) distinct value set; absent / unmatched → the default
+  // union. `focusVariant` narrows to the clicked row's coding when a column is shared
+  // across variants.
+  isolatedKey =
+    focusColumn != null
+      ? valueSetKeyForColumn(states, focusColumn, focusVariant)
+      : null;
   filter = "";
 });
 const isolated = $derived(
@@ -177,40 +168,34 @@ const filteredValueSetCount = $derived(
   shownValueSets.length + collapsedValueSets.length,
 );
 
-// A value set is IN SCOPE for the active resolution when no variant is pinned, or
-// when one of its variants matches the pinned `?variant`, and when the
-// period-resolved subset contains the value-set key. Period-out-of-scope rows are
-// collapsed under a disclosure so high-cardinality variables keep their context
-// without rendering every historical code list inline (#744).
-//
-// Greying only has a VISIBLE effect when `states` is MULTI-variant — i.e. full
-// history (no `?period`), a `?variant`-without-`?period` deep link, or the
-// narrowedError fallback. In the normal variant-pick flow the SERVER narrows the
-// states to the active variant, so the out-of-scope value sets are simply ABSENT
-// and `inScope` is a no-op (every remaining value set matches `activeVariant`).
-// Keeping the test here makes the grey appear whenever multi-variant states DO
-// reach the view, without the view needing to know which path produced them.
-// (Follow-up: a richer "show full history + grey out-of-scope even on a
-// server-narrowed variant-pick" behavior is out of scope for #668.)
+// The UNFILTERED period scope: whether the period genuinely delivered ANY in-period
+// value set, computed BEFORE the text filter (#905, Codex P3). The empty hint keys off
+// this — not off `shownValueSets`/`collapsedValueSets`, which the filter already
+// narrows — so a filter that hides in-period rows (matching only an out-of-period one)
+// does NOT mis-report "No state delivered for this period". The filter's own
+// zero-results state describes "no matches" separately. Null scope (full history) →
+// always non-empty (no period to be empty for).
+const hasInPeriodValueSets = $derived(
+  scopeValueSetKeys === null || valueSets.some((vs) => inPeriod(vs)),
+);
+
+// Scroll the focused (isolated) detail into view once it renders — the deep-link
+// from the picker's "codings vary" nudge lands the user on the right coding. Gated
+// on a focusColumn so ordinary in-page isolation (a row's "Isolate" click) doesn't
+// yank the scroll position.
+let detailEl = $state<HTMLDivElement | null>(null);
+$effect(() => {
+  if (focusColumn != null && detailEl) {
+    detailEl.scrollIntoView({ block: "nearest" });
+  }
+});
+
+// A value set is IN PERIOD when the period-resolved subset contains its key.
+// Period-out-of-scope rows are collapsed under a disclosure so high-cardinality
+// variables keep their context without rendering every historical code list inline
+// (#744). No scope → everything is in period (full-history view).
 function inPeriod(vs: DistinctValueSet): boolean {
   return scopeValueSetKeys === null ? true : scopeValueSetKeys.has(vs.key);
-}
-
-function inScope(vs: DistinctValueSet): boolean {
-  if (!inPeriod(vs)) {
-    return false;
-  }
-  if (activeScopeValueSetKeys !== null) {
-    return activeScopeValueSetKeys.has(vs.key);
-  }
-  const inVariant =
-    activeVariant == null || vs.variants.includes(activeVariant);
-  const activeVersion =
-    activeValueSetVersion === VALUE_SET_VERSION_NONE
-      ? ""
-      : activeValueSetVersion;
-  const inVersion = activeVersion == null || vs.versionLabel === activeVersion;
-  return inVariant && inVersion;
 }
 
 // The label for a distinct value set: a classification value set reads
@@ -300,7 +285,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
 {/snippet}
 
 {#snippet valueSetRow(vs: DistinctValueSet)}
-  <li class:out-of-scope={!inScope(vs)}>
+  <li>
     <div class="vs-row">
       {#if vs.classificationSlug}
         <!-- A classification value set: link out, never dump the (huge)
@@ -386,94 +371,34 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     {/if}
   </div>
 {:else}
-  <!-- Multiple states → the value-set-centric view (#668). The narrowing picker
-       writes `?variant`/`?value_set_version`, which the server only honors WITH a
-       `?period` (it 422s them otherwise), so it's shown only when a period is
-       active (`narrowed`). Without a period the view is the full state history —
-       set a period to narrow to one. -->
-  {#if narrowed && resolvedChoiceStates.length === 0}
+  <!-- Multiple states → the value-set-centric view (#668). With NO period this is
+       the full state history; a `?period` collapses out-of-period value sets under
+       a disclosure (#744). Narrowing to a single state is the PICKER's job now
+       (it writes `?variant`/`?value_set_version`) — this view only DISPLAYS. -->
+  {#if narrowed && scopeValueSetKeys !== null && !hasInPeriodValueSets}
+    <!-- Keyed off the UNFILTERED period scope (`hasInPeriodValueSets`), NOT the
+         filter-narrowed lists: the period genuinely delivered zero in-period value
+         sets. A text filter that hides in-period rows falls through to the union
+         branch's own "No value set matches the filter" instead (#905, Codex P3). -->
     <p class="muted picker-hint">
       No state delivered for this period. Historical value sets outside this period
       are collapsed below.
-    </p>
-  {:else if narrowed && canNarrow}
-    <p class="muted picker-hint">
-      {resolutionValueSets.length}
-      {resolutionValueSets.length === 1 ? "value set" : "value sets"} at this period across
-      {variants.length}
-      {variants.length === 1 ? "variant" : "variants"}. Narrow to a single state:
-    </p>
-    {#if variants.length > 1}
-      <fieldset class="picker">
-        <legend class="micro-label">Variant</legend>
-        <div class="chips">
-          {#each variants as variant (variant)}
-            <button
-              type="button"
-              class="chip"
-              class:active={variant === activeVariant}
-              aria-pressed={variant === activeVariant}
-              onclick={() => onpickVariant(variant)}
-            >
-              {variant}
-            </button>
-          {/each}
-        </div>
-      </fieldset>
-    {/if}
-    {#if versionsAll.length > 1}
-      <fieldset class="picker">
-        <legend class="micro-label">Value-set version</legend>
-        <div class="chips">
-          {#each versionChips as version (version)}
-            <button
-              type="button"
-              class="chip"
-              class:active={version === activeValueSetVersion}
-              aria-pressed={version === activeValueSetVersion}
-              onclick={() => onpickValueSetVersion(version)}
-            >
-              {version}
-            </button>
-          {/each}
-          {#if hasEmptyVersion}
-            <!-- The empty/default-label state — selectable via the `_none`
-                 sentinel (an empty `?value_set_version` can't ride in the URL). -->
-            <button
-              type="button"
-              class="chip"
-              class:active={activeValueSetVersion === VALUE_SET_VERSION_NONE}
-              aria-pressed={activeValueSetVersion === VALUE_SET_VERSION_NONE}
-              onclick={() => onpickValueSetVersion(VALUE_SET_VERSION_NONE)}
-            >
-              (no version)
-            </button>
-          {/if}
-        </div>
-      </fieldset>
-    {/if}
-  {:else if narrowed}
-    <!-- A period that resolves to several states which share one variant AND one
-         value-set version (e.g. a RANGE crossing validity windows): no narrowing
-         axis can pick one, so don't promise "narrow to a single state". -->
-    <p class="muted picker-hint">
-      {resolutionValueSets.length} overlapping value sets at this period — narrow to a single
-      point period to resolve to one.
     </p>
   {:else}
     <p class="muted picker-hint">
       {valueSets.length}
       {valueSets.length === 1 ? "value set" : "value sets"} across {states.length}
-      states over time. Set a period above to resolve to one.
+      states over time.
     </p>
   {/if}
 
   {#if isolated}
     <!-- ISOLATED: one value set's full detail — its label/link or code table,
          then which variants/spans use it. "All value sets" returns to the union
-         (the one always-present reset — replaces the old all-chips strip). -->
+         (the one always-present reset — replaces the old all-chips strip). The
+         deep-link `?codes=<column>` lands here, scrolled into view (#905). -->
     {@const vs = isolated}
-    <div class="vs-detail">
+    <div class="vs-detail" bind:this={detailEl}>
       <button
         type="button"
         class="chip vs-reset"
@@ -503,7 +428,7 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
          the old all-chips strip — and each row carries an Isolate affordance.
          A classification value set shows the "= LKF ⟨vintage⟩" link (NO code dump
          — the M13/kommun fix); a plain one expands its codes inline (#310).
-         Out-of-scope value sets are greyed, not removed. -->
+         Out-of-period value sets are collapsed below, not removed (#744). -->
     {#if valueSets.length > 1}
       <FilterInput
         bind:value={filter}
@@ -548,20 +473,6 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   .vs-heading {
     margin: var(--space-2) 0 0.4rem;
   }
-  .picker {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    margin: var(--space-2) 0;
-    padding: var(--space-2) var(--space-3) var(--space-3);
-  }
-  .picker legend {
-    padding: 0 0.3rem;
-  }
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
   .chip {
     padding: var(--space-1) 0.7rem;
     border: 1px solid var(--accent);
@@ -572,24 +483,9 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     font-size: var(--text-sm);
     cursor: pointer;
   }
-  .chip.active {
-    background: var(--accent);
-    color: var(--accent-fg);
-  }
   .chip:hover {
     background: var(--accent-bg);
-  }
-  /* Scope the hover ink to non-active chips: an active chip keeps its accent-fg on
-     the accent fill. Without :not(.active), this rule and
-     .chip.active{color:var(--accent-fg)} are equal specificity (0,2,0) and source
-     order would let --accent-ink (dark rust) clobber the white, giving dark-on-dark
-     accent fill (~1.2:1, illegible). */
-  .chip:not(.active):hover {
     color: var(--accent-ink);
-  }
-  .chip.active:hover {
-    background: var(--accent);
-    filter: brightness(0.95);
   }
   /* #668: the "← All value sets" reset on the isolated detail — a one-click
      return to the union (replaces the old all-chips strip). */
@@ -613,9 +509,6 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     padding: 0.4rem var(--space-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-  }
-  .vs-list li.out-of-scope {
-    opacity: 0.55;
   }
   .vs-row {
     display: flex;

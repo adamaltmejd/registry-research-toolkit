@@ -380,7 +380,7 @@ export interface CatalogAddPayload {
   /** The bare 3-seg variable FQID (`scb/lisa/kon`). */
   variable: string;
   /** The chosen delivery column when the page resolved a specific representation
-   * (the StatesView is at a single state), else null. */
+   * (the picker row pins a single column), else null. */
   representation: string | null;
   /** The page's resolved period as a wire string (`"2018"`, `"2010..2020"`, a
    * token), or null when the user hasn't resolved a period — only used to PREFILL a

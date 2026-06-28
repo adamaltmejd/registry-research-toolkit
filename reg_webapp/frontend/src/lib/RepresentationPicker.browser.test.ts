@@ -319,6 +319,65 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 });
 
+describe("codingsVaryNudge deep link (#905)", () => {
+  /** Render one band whose single coding-varying row carries the nudge, then return
+   * the nudge anchor's `href`. */
+  async function nudgeHref(band: PickerBand): Promise<string> {
+    render(RepresentationPicker, { bands: [band], axes: [], ...PROPS });
+    const nudge = await vi.waitFor(() => {
+      const a = document.querySelector(".rep-picker .codings-vary");
+      if (!a) {
+        throw new Error("codings-vary nudge not yet rendered");
+      }
+      return a;
+    });
+    expect(nudge.tagName).toBe("A");
+    return nudge.getAttribute("href") ?? "";
+  }
+
+  // The leaf branch (band.href undefined → current path) is covered in
+  // BindingLeafView.browser.test.ts. This covers the GROUP branch: when a band
+  // carries `href` (the member's own leaf), the nudge links to that leaf with the
+  // `codes` param carrying the ROW's `(variant, column)` identity — `variant::column`
+  // (#905), merged into the href's existing query.
+  it("a coding-varying row links to the member leaf with a (variant, column) ?codes deep link", async () => {
+    const href = await nudgeHref({
+      key: "scb/lisa/yrkesreg",
+      name: "Yrkesregistret",
+      registerPrefix: "scb/lisa",
+      href: "/catalog/scb/lisa/yrkesreg",
+      rows: [row({ variant: "individer", column: "Yrke", codingsVary: true })],
+    } satisfies PickerBand);
+    // The member leaf + `codes=<variant>::<column>` + states hash — clean query, the
+    // row's variant carried so a shared column isolates THIS variant's coding.
+    expect(href).toBe(
+      "/catalog/scb/lisa/yrkesreg?codes=individer%3A%3AYrke#states-heading",
+    );
+  });
+
+  // The nudge means "this column's coding changed OVER TIME — see the value sets",
+  // which is inherently a FULL-HISTORY inspection (#905, Codex P2). So when `band.href`
+  // carries an active `?period`, the nudge DROPS it (taking only the member path) and
+  // emits a CLEAN `?codes=…` query — a period-narrowed leaf, focused via `?codes`, must
+  // show the column's full coding history, not the period-scoped subset.
+  it("drops an inherited ?period and emits a clean ?codes-only deep link", async () => {
+    const href = await nudgeHref({
+      key: "scb/lisa/yrkesreg",
+      name: "Yrkesregistret",
+      registerPrefix: "scb/lisa",
+      href: "/catalog/scb/lisa/yrkesreg?period=2020",
+      rows: [row({ variant: "v", column: "Yrke", codingsVary: true })],
+    } satisfies PickerBand);
+    // No `period` survives; the only param is the (variant, column) composite.
+    expect(href).toBe(
+      "/catalog/scb/lisa/yrkesreg?codes=v%3A%3AYrke#states-heading",
+    );
+    expect(href).not.toContain("period");
+    // Exactly ONE `?` (no double query separator).
+    expect(href.match(/\?/g)).toHaveLength(1);
+  });
+});
+
 describe("RepresentationPicker sequential-rename hint (#902)", () => {
   // The picker collapses a variable's sequential column RENAME (non-overlapping eras,
   // distinct names) into ONE row led by the latest column, surfacing the earlier name(s)

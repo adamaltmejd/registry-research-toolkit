@@ -4,6 +4,7 @@ import {
   type BandIdentity,
   type BandLabel,
   clusterBands,
+  encodeCodesParam,
   leafSlug,
   type PickerDimension,
   type PickerRepresentation,
@@ -503,6 +504,44 @@ function navigateChip(event: MouseEvent, href: string): void {
   event.preventDefault();
   router.navigate(href);
 }
+
+/** The deep-link target for a row's "codings vary" nudge (#905): the value-set
+ * viewer focused on that row's `(variant, column)` coding, scrolled to the States
+ * section. The `codes` param carries the row's IDENTITY (`encodeCodesParam` →
+ * `variant::column`), NOT just the column — two rows can share one delivery column
+ * across different variants/populations, so the focus must target the clicked row's
+ * coding, not another variant's latest era. This is a dedicated `?codes=` encoding,
+ * distinct from the `?variant` RESOLUTION modifier (which narrows the picker + drives
+ * the "Narrowed by" chips), so the focus never perturbs the resolution.
+ *
+ * The nudge means "this column's coding changed OVER TIME — see the value sets", which
+ * is inherently a FULL-HISTORY inspection. So the href carries ONLY the focus and
+ * DROPS any inherited query (`?period`/`?variant`/…): a period-narrowed leaf, when
+ * focused via `?codes`, must show the column's full coding history, not the
+ * period-scoped (and possibly out-of-era) subset.
+ *   - GROUP view (`band.href` set → the member's own leaf): the member's PATH only
+ *     (`band.href.split("?")[0]`), discarding any `?period` carried by `memberHref`.
+ *   - BINDING leaf (`band.href` undefined → already this page): the CURRENT path with
+ *     NO search (`globalThis.location.pathname`), discarding the live `?period`/
+ *     `?variant`.
+ * Both branches yield a clean `<path>?codes=<variant>::<column>#states-heading`; the
+ * `#states-heading` hash targets the `<section id="states-heading">` anchor
+ * BindingLeafView keeps; the router preserves both query + hash on navigate. */
+function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
+  const codes = encodeCodesParam(row.variant, row.column);
+  // `band.href` (group branch) may carry `?period=…` (memberHref); the leaf branch
+  // reads the live path off `globalThis` (`window` is the period-window prop here,
+  // shadowing the global). Either way, take ONLY the path — drop the query.
+  const path = band.href
+    ? band.href.split("?")[0]
+    : globalThis.location.pathname;
+  // Emit `codes` as the SOLE param via URLSearchParams so the value round-trips through
+  // `router.getQueryParam` (one decode) back to the `encodeCodesParam` composite that
+  // `parseCodesParam` expects.
+  const search = new URLSearchParams();
+  search.set("codes", codes);
+  return `${path}?${search.toString()}#states-heading`;
+}
 </script>
 
 <!-- The delivery COLUMN chip (#678): the main selection signal, rendered as a small
@@ -580,6 +619,24 @@ function navigateChip(event: MouseEvent, href: string): void {
     {@const msg = `Data starts ${late.dataStart} — your selected period begins ${late.windowStart}`}
     <span class="late-warn" title={msg} aria-label={msg}>⚠</span>
   {/if}
+{/snippet}
+
+<!-- The "codings vary" nudge (#905): a quiet DEEP LINK (no longer a passive span) to
+     the value-set viewer focused on this column's coding (`?codes=<column>` +
+     `#states-heading`). A nudge, not a control — token-styled, must not dominate the
+     row. Routed through `navigateChip` (preventDefault + SPA-router navigate) because
+     it sits inside the row's <label>: a plain click would toggle the checkbox AND a
+     stopPropagation would full-reload the app (same reasoning as `colChip`). A real
+     anchor keeps it keyboard-accessible; the title/aria are unchanged. -->
+{#snippet codingsVaryNudge(band: PickerBand, row: PickerRepresentation)}
+  {@const href = codingsVaryHref(band, row)}
+  <a
+    class="codings-vary"
+    {href}
+    title="Coding changes over time — see the value sets"
+    aria-label="Coding changes over time — see the value sets"
+    onclick={(e) => navigateChip(e, href)}>codings vary</a
+  >
 {/snippet}
 
 <!-- One dimension FILTER fieldset (#908): a tracked micro-label naming the dimension
@@ -762,15 +819,10 @@ function navigateChip(event: MouseEvent, href: string): void {
               </span>
               {#if row.codingsVary}
                 <!-- A coding change over time on this ONE column (distinct value_set_id
-                     across years). A quiet nudge to the value-set / States detail —
-                     not a control. Placed BEFORE the period so the period stays the
+                     across years). A quiet DEEP LINK to the value-set viewer focused on
+                     this column (#905). Placed BEFORE the period so the period stays the
                      last, right-aligned element on every row (aligned column). -->
-                <span
-                  class="codings-vary"
-                  title="Coding changes over time — see the value sets"
-                  aria-label="Coding changes over time — see the value sets"
-                  >codings vary</span
-                >
+                {@render codingsVaryNudge(band, row)}
               {/if}
               {#if inWindow}
                 {@render lateWarn(row)}
@@ -974,16 +1026,11 @@ function navigateChip(event: MouseEvent, href: string): void {
                   {/if}
                   {@render renameHint(row.renamedColumns)}
                 </span>
-                <!-- The codings-vary nudge sits BEFORE the period so the period is the
-                     last, right-aligned element on every row (a clean aligned column
-                     whether or not a row carries the nudge — #678 fix). -->
+                <!-- The codings-vary nudge (#905 deep link) sits BEFORE the period so
+                     the period is the last, right-aligned element on every row (a clean
+                     aligned column whether or not a row carries the nudge — #678 fix). -->
                 {#if row.codingsVary}
-                  <span
-                    class="codings-vary"
-                    title="Coding changes over time — see the value sets"
-                    aria-label="Coding changes over time — see the value sets"
-                    >codings vary</span
-                  >
+                  {@render codingsVaryNudge(band, row)}
                 {/if}
                 {#if inWindow}
                   {@render lateWarn(row)}
@@ -1595,8 +1642,11 @@ function navigateChip(event: MouseEvent, href: string): void {
     font-variant-numeric: tabular-nums;
   }
   /* A quiet nudge for a column whose CODING changed over time (#678): a tiny muted
-     pill after the period, pointing the eye to the value-set / States detail. A hint,
-     not a control — token-styled, must not dominate the row. */
+     pill before the period. As of #905 it's a DEEP LINK (an <a>) to the value-set
+     viewer focused on that column — still a hint, not a control, so it stays
+     token-styled and low-key (no link-blue, no default underline); a hover deepen +
+     underline is the link affordance, consistent with the picker's other in-row
+     links. */
   .codings-vary {
     flex: 0 0 auto;
     font-size: 0.7rem;
@@ -1606,6 +1656,17 @@ function navigateChip(event: MouseEvent, href: string): void {
     border-radius: 999px;
     color: var(--text-muted);
     white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .codings-vary:hover {
+    color: var(--accent-ink);
+    border-color: var(--accent);
+    text-decoration: underline;
+  }
+  .codings-vary:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   /* The data-starts-late warning marker (#678): a quiet --warn glyph just before the
      period. Sized so it sits in the row gap and never shifts the right-aligned period
