@@ -1636,9 +1636,10 @@ class TestMovedEdges:
         # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
         # firm-key variant-scoped gap-fill round-trip edges.
         assert len(rel.replaced_by) == 28
-        # The #508 tier-1 batch: 615 curated same_as identity edges (62 connected
-        # components, each ≤32 FQIDs). All variable-grain with a non-empty note.
-        assert len(rel.same_as) == 615
+        # #508 (615) + #737 (232) = 847 curated same_as identity edges; all
+        # variable-grain with a non-empty note; max connected component stays
+        # ≤32 FQIDs.
+        assert len(rel.same_as) == 847
         assert all(
             e.grain is FqidKind.VARIABLE_BINDING
             and e.a_variable

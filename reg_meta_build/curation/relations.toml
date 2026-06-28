@@ -4,20 +4,28 @@
 # Each fact is one `[[edge]]` table discriminated by `type`. Order by SUBJECT;
 # group related edges of different types under one comment.
 #
-# Three relation kinds:
+# Two relation kinds:
 #
 #   type = "same_as"      — symmetric/transitive IDENTITY ("one concept, two
-#                           FQIDs"). RESOLVER-LOAD-BEARING: Catalog.resolve follows
-#                           it transitively and the build cycle-checks the graph,
-#                           so a WRONG edge corrupts resolution. `a` / `b` are
-#                           FQIDs of the SAME grain — both 3-segment variable OR
-#                           both 2-segment classification (provider/slug). The
-#                           build writes BOTH directions; there is NO relation_kind
+#                           FQIDs"). Powers the catalog DISCOVERY surface:
+#                           Catalog.resolve follows it transitively for the
+#                           canonical address, search dedup, and the cross-register
+#                           graph node, and the build cycle-checks the graph. It is
+#                           NOT load-bearing for data orders/specs — those bind the
+#                           concrete (variable, variant, period) the user picks and
+#                           are never canonicalized — so a wrong edge is a
+#                           reversible cosmetic mis-link in discovery, not data
+#                           corruption. The bar is therefore reasonable-confidence
+#                           cross-register identity (recall-liberal, #737), bounded
+#                           by the _SAME_AS_MAX_COMPONENT cap that stops a gross
+#                           weld from polluting dedup broadly. `a` / `b` are FQIDs
+#                           of the SAME grain — both 3-segment variable OR both
+#                           2-segment classification (provider/slug). The build
+#                           writes BOTH directions; there is NO relation_kind
 #                           (identity is identity). The variable/classification
 #                           slug is NOT validated (slug-anchored, survives
 #                           renames); provider+register (or provider+class slug)
-#                           must exist. Only CONFIRMED identity belongs here.
-#                           Generate a review worklist with
+#                           must exist. Generate a review worklist with
 #                           `reg-meta-build same-as-candidates`.
 #
 #   type = "replaced_by"  — directional SUCCESSION (`from` superseded by `to`).
@@ -3560,3 +3568,1235 @@ type = "same_as"
 a = "scb/allmanna-val-valresultat/sun2000niva"
 b = "scb/ep-val-resultat/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
+
+# ── #737 same_as: recall-liberal cross-register identity batch ──
+# Follow-up to #508/#714 (the first canonical-family subset). Derivation:
+#   `reg-meta-build same-as-candidates` on a real scb,sos build, then a
+#   human pass per the #737 model: curate genuine same-role/concept
+#   cross-register identities (within the 32-FQID cap, <=1 var/register);
+#   skip different-role/level shares of a standard (kommun-of-residence vs
+#   -of-workplace, NUTS levels -> modeled via #416 classification linkage)
+#   and survey-methodology artifacts (sampling stratum, sub-sample).
+#   FULL pairwise clique per identity component (Catalog reads DIRECT rows).
+# utbildningsinriktning sun2000 (3 pos) (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aes/finr"
+b = "scb/hreg/utbildnings-inriktning-sun-2000"
+note = "curated:#737 utbildningsinriktning sun2000 (3 pos)"
+[[edge]]
+type = "same_as"
+a = "scb/aes/finr"
+b = "scb/ureg/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (3 pos)"
+[[edge]]
+type = "same_as"
+a = "scb/hreg/utbildnings-inriktning-sun-2000"
+b = "scb/ureg/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (3 pos)"
+# företagets bransch/näringsgren (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aktieagarstatistik/foretagets-bransch-naringsgren"
+b = "scb/civila-samhallet/foretagets-bransch-naringsgren"
+note = "curated:#737 företagets bransch/näringsgren"
+# yrke på 1-siffernivå i huvudsysslan (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/hussyk1"
+b = "scb/arbetsmiljoundersokningen/hussyk1"
+note = "curated:#737 yrke på 1-siffernivå i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/hussyk1"
+b = "scb/arbetsorsakade-besvar/hussyk1"
+note = "curated:#737 yrke på 1-siffernivå i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/hussyk1"
+b = "scb/arbetsorsakade-besvar/hussyk1"
+note = "curated:#737 yrke på 1-siffernivå i huvudsysslan"
+# yrke på 3-siffernivå i huvudsysslan (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/hussyk3"
+b = "scb/arbetsmiljoundersokningen/hussyk3"
+note = "curated:#737 yrke på 3-siffernivå i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/hussyk3"
+b = "scb/arbetsorsakade-besvar/hussyk3"
+note = "curated:#737 yrke på 3-siffernivå i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/hussyk3"
+b = "scb/arbetsorsakade-besvar/hussyk3"
+note = "curated:#737 yrke på 3-siffernivå i huvudsysslan"
+# näringsgren sni2007 (enbokstavskod) i huvudsysslan (4 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-1bokstav"
+b = "scb/arbetsmiljoundersokningen/sni2007-1bokstav"
+note = "curated:#737 näringsgren sni2007 (enbokstavskod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-1bokstav"
+b = "scb/arbetsorsakade-besvar/sni2007-1bokstav"
+note = "curated:#737 näringsgren sni2007 (enbokstavskod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-1bokstav"
+b = "scb/personalutbildningsstatistik/sni2007-1bokstav"
+note = "curated:#737 näringsgren sni2007 (enbokstavskod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/sni2007-1bokstav"
+b = "scb/arbetsorsakade-besvar/sni2007-1bokstav"
+note = "curated:#737 näringsgren sni2007 (enbokstavskod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/sni2007-1bokstav"
+b = "scb/personalutbildningsstatistik/sni2007-1bokstav"
+note = "curated:#737 näringsgren sni2007 (enbokstavskod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsorsakade-besvar/sni2007-1bokstav"
+b = "scb/personalutbildningsstatistik/sni2007-1bokstav"
+note = "curated:#737 näringsgren sni2007 (enbokstavskod) i huvudsysslan"
+# näringsgren sni2007 (tresifferkod) i huvudsysslan (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-3siffror"
+b = "scb/arbetsmiljoundersokningen/sni2007-3siffror"
+note = "curated:#737 näringsgren sni2007 (tresifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-3siffror"
+b = "scb/arbetsorsakade-besvar/sni2007-3siffror"
+note = "curated:#737 näringsgren sni2007 (tresifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/sni2007-3siffror"
+b = "scb/arbetsorsakade-besvar/sni2007-3siffror"
+note = "curated:#737 näringsgren sni2007 (tresifferkod) i huvudsysslan"
+# näringsgren sni2007 (fyrsifferkod) i huvudsysslan (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-4siffror"
+b = "scb/arbetsmiljoundersokningen/sni2007-4siffror"
+note = "curated:#737 näringsgren sni2007 (fyrsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-4siffror"
+b = "scb/arbetsorsakade-besvar/sni2007-4siffror"
+note = "curated:#737 näringsgren sni2007 (fyrsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/sni2007-4siffror"
+b = "scb/arbetsorsakade-besvar/sni2007-4siffror"
+note = "curated:#737 näringsgren sni2007 (fyrsifferkod) i huvudsysslan"
+# näringsgren sni2007 (femsifferkod) i huvudsysslan (5 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-5siffror"
+b = "scb/arbetsmiljoundersokningen/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-5siffror"
+b = "scb/arbetsorsakade-besvar/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-5siffror"
+b = "scb/fasit/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/aku/sni2007-5siffror"
+b = "scb/konkurser/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/sni2007-5siffror"
+b = "scb/arbetsorsakade-besvar/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/sni2007-5siffror"
+b = "scb/fasit/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsmiljoundersokningen/sni2007-5siffror"
+b = "scb/konkurser/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsorsakade-besvar/sni2007-5siffror"
+b = "scb/fasit/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/arbetsorsakade-besvar/sni2007-5siffror"
+b = "scb/konkurser/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/sni2007-5siffror"
+b = "scb/konkurser/sni2007-5siffror"
+note = "curated:#737 näringsgren sni2007 (femsifferkod) i huvudsysslan"
+# utbildningsinriktning sun2000 (4 positioner) (7 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/utbildningsinriktning-4-positioner"
+b = "scb/allmanna-val-nominerade/utbildningsinriktning-4-positioner"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/aku/utbildningsinriktning-4-positioner"
+b = "scb/allmanna-val-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/aku/utbildningsinriktning-4-positioner"
+b = "scb/allmanna-val-valresultat/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/aku/utbildningsinriktning-4-positioner"
+b = "scb/ep-val-deltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/aku/utbildningsinriktning-4-positioner"
+b = "scb/ep-val-nominerade/utbildningsinriktning-4-positioner"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/aku/utbildningsinriktning-4-positioner"
+b = "scb/folkomrostningar-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsinriktning-4-positioner"
+b = "scb/allmanna-val-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsinriktning-4-positioner"
+b = "scb/allmanna-val-valresultat/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsinriktning-4-positioner"
+b = "scb/ep-val-deltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsinriktning-4-positioner"
+b = "scb/ep-val-nominerade/utbildningsinriktning-4-positioner"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/utbildningsinriktning-4-positioner"
+b = "scb/folkomrostningar-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valdeltagande/sun2000inr"
+b = "scb/allmanna-val-valresultat/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valdeltagande/sun2000inr"
+b = "scb/ep-val-deltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valdeltagande/sun2000inr"
+b = "scb/ep-val-nominerade/utbildningsinriktning-4-positioner"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valdeltagande/sun2000inr"
+b = "scb/folkomrostningar-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valresultat/sun2000inr"
+b = "scb/ep-val-deltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valresultat/sun2000inr"
+b = "scb/ep-val-nominerade/utbildningsinriktning-4-positioner"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valresultat/sun2000inr"
+b = "scb/folkomrostningar-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-deltagande/sun2000inr"
+b = "scb/ep-val-nominerade/utbildningsinriktning-4-positioner"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-deltagande/sun2000inr"
+b = "scb/folkomrostningar-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/ep-val-nominerade/utbildningsinriktning-4-positioner"
+b = "scb/folkomrostningar-valdeltagande/sun2000inr"
+note = "curated:#737 utbildningsinriktning sun2000 (4 positioner)"
+# yrkesbenämning i huvudsyssla (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/aku/yrkesbenamning-huvud"
+b = "scb/funktionsnedsattning-arbetsmarknad/yrkesbenamning-huvud"
+note = "curated:#737 yrkesbenämning i huvudsyssla"
+# riksdagsvalkrets (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/riksdagsvalkrets-kod"
+b = "scb/allmanna-val-valresultat/riksdagsvalkrets-kod"
+note = "curated:#737 riksdagsvalkrets"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-nominerade/riksdagsvalkrets-kod"
+b = "scb/ep-val-resultat/riksdagsvalkrets-kod"
+note = "curated:#737 riksdagsvalkrets"
+[[edge]]
+type = "same_as"
+a = "scb/allmanna-val-valresultat/riksdagsvalkrets-kod"
+b = "scb/ep-val-resultat/riksdagsvalkrets-kod"
+note = "curated:#737 riksdagsvalkrets"
+# kommunkod (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/arlig-energistatistik/kommunkod"
+b = "scb/fortroendevalda/kommunkod"
+note = "curated:#737 kommunkod"
+[[edge]]
+type = "same_as"
+a = "scb/arlig-energistatistik/kommunkod"
+b = "scb/lokal-demokrati/kommun"
+note = "curated:#737 kommunkod"
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/kommunkod"
+b = "scb/lokal-demokrati/kommun"
+note = "curated:#737 kommunkod"
+# byggnadstyp (5 vars)
+[[edge]]
+type = "same_as"
+a = "scb/bebyggd-mark-strandskydd/byggnadstyp"
+b = "scb/bostadsbestand/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bebyggd-mark-strandskydd/byggnadstyp"
+b = "scb/bylbbs/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bebyggd-mark-strandskydd/byggnadstyp"
+b = "scb/fastighetsreg/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bebyggd-mark-strandskydd/byggnadstyp"
+b = "scb/lagenhetsreg/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bostadsbestand/byggnadstyp"
+b = "scb/bylbbs/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bostadsbestand/byggnadstyp"
+b = "scb/fastighetsreg/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bostadsbestand/byggnadstyp"
+b = "scb/lagenhetsreg/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bylbbs/byggnadstyp"
+b = "scb/fastighetsreg/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/bylbbs/byggnadstyp"
+b = "scb/lagenhetsreg/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+[[edge]]
+type = "same_as"
+a = "scb/fastighetsreg/byggnadstyp"
+b = "scb/lagenhetsreg/byggnadstyp"
+note = "curated:#737 byggnadstyp"
+# folkbokföringskommun (5 vars)
+[[edge]]
+type = "same_as"
+a = "scb/cfl/folkbokforingskommun"
+b = "scb/grundskola-ak9/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/folkbokforingskommun"
+b = "scb/grundskola-prov-ak9/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/folkbokforingskommun"
+b = "scb/rpu/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/folkbokforingskommun"
+b = "scb/ssv/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/folkbokforingskommun"
+b = "scb/grundskola-prov-ak9/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/folkbokforingskommun"
+b = "scb/rpu/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-ak9/folkbokforingskommun"
+b = "scb/ssv/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak9/folkbokforingskommun"
+b = "scb/rpu/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/grundskola-prov-ak9/folkbokforingskommun"
+b = "scb/ssv/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+[[edge]]
+type = "same_as"
+a = "scb/rpu/folkbokforingskommun"
+b = "scb/ssv/folkbokforingskommun"
+note = "curated:#737 folkbokföringskommun"
+# skolform (vuxenutbildning) (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolform"
+b = "scb/komvux/skolform"
+note = "curated:#737 skolform (vuxenutbildning)"
+[[edge]]
+type = "same_as"
+a = "scb/cfl/skolform"
+b = "scb/ssv/skolform"
+note = "curated:#737 skolform (vuxenutbildning)"
+[[edge]]
+type = "same_as"
+a = "scb/komvux/skolform"
+b = "scb/ssv/skolform"
+note = "curated:#737 skolform (vuxenutbildning)"
+# sektorkod och näringsgren (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/byrngr2"
+b = "scb/frida/byrngr2"
+note = "curated:#737 sektorkod och näringsgren"
+# civilstånd för inkomståret (5 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/civilstand-inkomstar"
+b = "scb/frida/civilstand-inkomstar"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/civilstand-inkomstar"
+b = "scb/hek/civilstand-inkomstar"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/civilstand-inkomstar"
+b = "scb/iot/civi"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/civilstand-inkomstar"
+b = "scb/linda/civilstand-inkomstar"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/frida/civilstand-inkomstar"
+b = "scb/hek/civilstand-inkomstar"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/frida/civilstand-inkomstar"
+b = "scb/iot/civi"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/frida/civilstand-inkomstar"
+b = "scb/linda/civilstand-inkomstar"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/hek/civilstand-inkomstar"
+b = "scb/iot/civi"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/hek/civilstand-inkomstar"
+b = "scb/linda/civilstand-inkomstar"
+note = "curated:#737 civilstånd för inkomståret"
+[[edge]]
+type = "same_as"
+a = "scb/iot/civi"
+b = "scb/linda/civilstand-inkomstar"
+note = "curated:#737 civilstånd för inkomståret"
+# högsta utbildning, nivå (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/hogsta-utbildning-niva"
+b = "scb/linda/hogsta-utbildning-niva"
+note = "curated:#737 högsta utbildning, nivå"
+# näringsgrenskod, sni 2007, 5-ställig (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/naringsgrenskod-sni-2007-5-stallig"
+b = "scb/fou/naringsgrenskod-sni-2007-5-stallig"
+note = "curated:#737 näringsgrenskod, sni 2007, 5-ställig"
+# regionindelning nuts2, 8 st (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/regionindelning-nuts2"
+b = "scb/frida/regionindelning-nuts2"
+note = "curated:#737 regionindelning nuts2, 8 st"
+# senast kända uppgift om civilstånd (6 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/senast-kanda-civilstand"
+b = "scb/frida/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/senast-kanda-civilstand"
+b = "scb/hek/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/senast-kanda-civilstand"
+b = "scb/iot/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/senast-kanda-civilstand"
+b = "scb/kapitalvinster/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/senast-kanda-civilstand"
+b = "scb/linda/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/frida/senast-kanda-civilstand"
+b = "scb/hek/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/frida/senast-kanda-civilstand"
+b = "scb/iot/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/frida/senast-kanda-civilstand"
+b = "scb/kapitalvinster/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/frida/senast-kanda-civilstand"
+b = "scb/linda/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/hek/senast-kanda-civilstand"
+b = "scb/iot/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/hek/senast-kanda-civilstand"
+b = "scb/kapitalvinster/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/hek/senast-kanda-civilstand"
+b = "scb/linda/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/iot/senast-kanda-civilstand"
+b = "scb/kapitalvinster/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/iot/senast-kanda-civilstand"
+b = "scb/linda/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+[[edge]]
+type = "same_as"
+a = "scb/kapitalvinster/senast-kanda-civilstand"
+b = "scb/linda/senast-kanda-civilstand"
+note = "curated:#737 senast kända uppgift om civilstånd"
+# utbildningsnivå (aggregat old) (7 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fasit/utbildningsniva-aggregat-old"
+b = "scb/lisa/utbildningsniva-aggregat-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/utbildningsniva-aggregat-old"
+b = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/utbildningsniva-aggregat-old"
+b = "scb/rams/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/utbildningsniva-aggregat-old"
+b = "scb/slk/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/utbildningsniva-aggregat-old"
+b = "scb/sls/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/fasit/utbildningsniva-aggregat-old"
+b = "scb/stativ/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/utbildningsniva-aggregat-old"
+b = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/utbildningsniva-aggregat-old"
+b = "scb/rams/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/utbildningsniva-aggregat-old"
+b = "scb/slk/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/utbildningsniva-aggregat-old"
+b = "scb/sls/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/utbildningsniva-aggregat-old"
+b = "scb/stativ/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+b = "scb/rams/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+b = "scb/slk/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+b = "scb/sls/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/utbildningsniva-aggregat-old"
+b = "scb/stativ/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sun2000niva-old"
+b = "scb/slk/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sun2000niva-old"
+b = "scb/sls/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/rams/sun2000niva-old"
+b = "scb/stativ/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/slk/sun2000niva-old"
+b = "scb/sls/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/slk/sun2000niva-old"
+b = "scb/stativ/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+[[edge]]
+type = "same_as"
+a = "scb/sls/sun2000niva-old"
+b = "scb/stativ/sun2000niva-old"
+note = "curated:#737 utbildningsnivå (aggregat old)"
+# församling (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fastighetspriser/forsamling"
+b = "scb/kommunalskatter/forsamling"
+note = "curated:#737 församling"
+[[edge]]
+type = "same_as"
+a = "scb/fastighetspriser/forsamling"
+b = "scb/lbr/forsamling"
+note = "curated:#737 församling"
+[[edge]]
+type = "same_as"
+a = "scb/kommunalskatter/forsamling"
+b = "scb/lbr/forsamling"
+note = "curated:#737 församling"
+# aktuellt antal anställda, storleksklass (7 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fdb/anstallda-storleksklass"
+b = "scb/fek/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/anstallda-storleksklass"
+b = "scb/foretagsreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/anstallda-storleksklass"
+b = "scb/foretagsstatistik/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/anstallda-storleksklass"
+b = "scb/fou/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/anstallda-storleksklass"
+b = "scb/livsmedelsforsaljning/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/anstallda-storleksklass"
+b = "scb/utforarreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fek/anstallda-storleksklass"
+b = "scb/foretagsreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fek/anstallda-storleksklass"
+b = "scb/foretagsstatistik/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fek/anstallda-storleksklass"
+b = "scb/fou/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fek/anstallda-storleksklass"
+b = "scb/livsmedelsforsaljning/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fek/anstallda-storleksklass"
+b = "scb/utforarreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/anstallda-storleksklass"
+b = "scb/foretagsstatistik/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/anstallda-storleksklass"
+b = "scb/fou/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/anstallda-storleksklass"
+b = "scb/livsmedelsforsaljning/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/anstallda-storleksklass"
+b = "scb/utforarreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/anstallda-storleksklass"
+b = "scb/fou/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/anstallda-storleksklass"
+b = "scb/livsmedelsforsaljning/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsstatistik/anstallda-storleksklass"
+b = "scb/utforarreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fou/anstallda-storleksklass"
+b = "scb/livsmedelsforsaljning/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/fou/anstallda-storleksklass"
+b = "scb/utforarreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+[[edge]]
+type = "same_as"
+a = "scb/livsmedelsforsaljning/anstallda-storleksklass"
+b = "scb/utforarreg/anstallda-storleksklass"
+note = "curated:#737 aktuellt antal anställda, storleksklass"
+# årsomsättning, klass (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fdb/omskl"
+b = "scb/foretagsreg/omskl"
+note = "curated:#737 årsomsättning, klass"
+[[edge]]
+type = "same_as"
+a = "scb/fdb/omskl"
+b = "scb/foretagsstatistik/omskl"
+note = "curated:#737 årsomsättning, klass"
+[[edge]]
+type = "same_as"
+a = "scb/foretagsreg/omskl"
+b = "scb/foretagsstatistik/omskl"
+note = "curated:#737 årsomsättning, klass"
+# storleksklass efter anställda, huvudsaklig sysselsättning (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fek/anstkl"
+b = "scb/yrkesreg/anstkl"
+note = "curated:#737 storleksklass efter anställda, huvudsaklig sysselsättning"
+# län (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/folkomrostningar-valresultat/ll"
+b = "scb/gyst/lan"
+note = "curated:#737 län"
+# skolform (grundnivå) (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/forskoleklass/skolform"
+b = "scb/grundskola-elever/skolform"
+note = "curated:#737 skolform (grundnivå)"
+# institutionell sektorkod (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/fortroendevalda/institutionell-sektorkod"
+b = "scb/rams/institutionell-sektorkod"
+note = "curated:#737 institutionell sektorkod"
+# ägarkategori (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/frida/agarkategori"
+b = "scb/nystartade-foretag-kvartal/agarkategori"
+note = "curated:#737 ägarkategori"
+# anställd från och med månad (5 vars)
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-fran-manad"
+b = "scb/hek/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-fran-manad"
+b = "scb/linda/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-fran-manad"
+b = "scb/lsum/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-fran-manad"
+b = "scb/rams/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/hek/anstalld-fran-manad"
+b = "scb/linda/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/hek/anstalld-fran-manad"
+b = "scb/lsum/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/hek/anstalld-fran-manad"
+b = "scb/rams/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/linda/anstalld-fran-manad"
+b = "scb/lsum/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/linda/anstalld-fran-manad"
+b = "scb/rams/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/anstalld-fran-manad"
+b = "scb/rams/anstalld-fran-manad"
+note = "curated:#737 anställd från och med månad"
+# anställd till och med månad (5 vars)
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-till-manad"
+b = "scb/hek/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-till-manad"
+b = "scb/linda/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-till-manad"
+b = "scb/lsum/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/frida/anstalld-till-manad"
+b = "scb/rams/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/hek/anstalld-till-manad"
+b = "scb/linda/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/hek/anstalld-till-manad"
+b = "scb/lsum/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/hek/anstalld-till-manad"
+b = "scb/rams/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/linda/anstalld-till-manad"
+b = "scb/lsum/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/linda/anstalld-till-manad"
+b = "scb/rams/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+[[edge]]
+type = "same_as"
+a = "scb/lsum/anstalld-till-manad"
+b = "scb/rams/anstalld-till-manad"
+note = "curated:#737 anställd till och med månad"
+# kod för atp (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/frida/batpe"
+b = "scb/iot/batpe"
+note = "curated:#737 kod för atp"
+[[edge]]
+type = "same_as"
+a = "scb/frida/batpe"
+b = "scb/linda/batpe"
+note = "curated:#737 kod för atp"
+[[edge]]
+type = "same_as"
+a = "scb/iot/batpe"
+b = "scb/linda/batpe"
+note = "curated:#737 kod för atp"
+# bränsleidentitet (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/frida/bbid"
+b = "scb/isen/bid"
+note = "curated:#737 bränsleidentitet"
+# folkpension, egen förmån (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/frida/folkpension-egen-forman"
+b = "scb/iot/folkpension-egen-forman"
+note = "curated:#737 folkpension, egen förmån"
+[[edge]]
+type = "same_as"
+a = "scb/frida/folkpension-egen-forman"
+b = "scb/linda/folkpension-egen-forman"
+note = "curated:#737 folkpension, egen förmån"
+[[edge]]
+type = "same_as"
+a = "scb/iot/folkpension-egen-forman"
+b = "scb/linda/folkpension-egen-forman"
+note = "curated:#737 folkpension, egen förmån"
+# moderns utbildningsnivå (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/sun-niva-grov-mor"
+b = "scb/studieuppehall/sun-niva-grov-mor"
+note = "curated:#737 moderns utbildningsnivå"
+# faderns utbildningsnivå (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/sun2000niva-grov-far"
+b = "scb/studieuppehall/sun2000niva-grov-far"
+note = "curated:#737 faderns utbildningsnivå"
+# verksamhetsform inom skolväsendet (4 vars)
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/verksamhetsform-skolvasendet"
+b = "scb/komvux-anpassad/verksamhetsform-skolvasendet"
+note = "curated:#737 verksamhetsform inom skolväsendet"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/verksamhetsform-skolvasendet"
+b = "scb/komvux-sfi/verksamhetsform-skolvasendet"
+note = "curated:#737 verksamhetsform inom skolväsendet"
+[[edge]]
+type = "same_as"
+a = "scb/gymnasieskola-betyg/verksamhetsform-skolvasendet"
+b = "scb/komvux/verksamhetsform-skolvasendet"
+note = "curated:#737 verksamhetsform inom skolväsendet"
+[[edge]]
+type = "same_as"
+a = "scb/komvux-anpassad/verksamhetsform-skolvasendet"
+b = "scb/komvux-sfi/verksamhetsform-skolvasendet"
+note = "curated:#737 verksamhetsform inom skolväsendet"
+[[edge]]
+type = "same_as"
+a = "scb/komvux-anpassad/verksamhetsform-skolvasendet"
+b = "scb/komvux/verksamhetsform-skolvasendet"
+note = "curated:#737 verksamhetsform inom skolväsendet"
+[[edge]]
+type = "same_as"
+a = "scb/komvux-sfi/verksamhetsform-skolvasendet"
+b = "scb/komvux/verksamhetsform-skolvasendet"
+note = "curated:#737 verksamhetsform inom skolväsendet"
+# utbildningsinriktning (3 positioner) (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/hek/utbildningsinriktning-3-positioner"
+b = "scb/personalutbildningsstatistik/utbildningsinriktning-3-positioner"
+note = "curated:#737 utbildningsinriktning (3 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/hek/utbildningsinriktning-3-positioner"
+b = "scb/utbildningsanalyser/utbildningsinriktning-3-positioner"
+note = "curated:#737 utbildningsinriktning (3 positioner)"
+[[edge]]
+type = "same_as"
+a = "scb/personalutbildningsstatistik/utbildningsinriktning-3-positioner"
+b = "scb/utbildningsanalyser/utbildningsinriktning-3-positioner"
+note = "curated:#737 utbildningsinriktning (3 positioner)"
+# yrke_mätveckan (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/hogutbildade-utrikes-fodda/yrke-matveckan"
+b = "scb/intradet-pa-arbetsmarknaden/yrke-matveckan"
+note = "curated:#737 yrke_mätveckan"
+# hushållsställning (4 vars)
+[[edge]]
+type = "same_as"
+a = "scb/hushallens-boende/hushallsstallning"
+b = "scb/lisa/hushallsst-rtb"
+note = "curated:#737 hushållsställning"
+[[edge]]
+type = "same_as"
+a = "scb/hushallens-boende/hushallsstallning"
+b = "scb/rtb/hushallsstallning"
+note = "curated:#737 hushållsställning"
+[[edge]]
+type = "same_as"
+a = "scb/hushallens-boende/hushallsstallning"
+b = "scb/statund/hushallsstallning"
+note = "curated:#737 hushållsställning"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/hushallsst-rtb"
+b = "scb/rtb/hushallsstallning"
+note = "curated:#737 hushållsställning"
+[[edge]]
+type = "same_as"
+a = "scb/lisa/hushallsst-rtb"
+b = "scb/statund/hushallsstallning"
+note = "curated:#737 hushållsställning"
+[[edge]]
+type = "same_as"
+a = "scb/rtb/hushallsstallning"
+b = "scb/statund/hushallsstallning"
+note = "curated:#737 hushållsställning"
+# utbildningsnivå (1 position) (3 vars)
+[[edge]]
+type = "same_as"
+a = "scb/hut/utbildningsniva-1-position"
+b = "scb/it-anvandning/utbildningsniva-1-position"
+note = "curated:#737 utbildningsnivå (1 position)"
+[[edge]]
+type = "same_as"
+a = "scb/hut/utbildningsniva-1-position"
+b = "scb/slh/utbildningsniva-1-position"
+note = "curated:#737 utbildningsnivå (1 position)"
+[[edge]]
+type = "same_as"
+a = "scb/it-anvandning/utbildningsniva-1-position"
+b = "scb/slh/utbildningsniva-1-position"
+note = "curated:#737 utbildningsnivå (1 position)"
+# näringsgren enligt nr (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/investeringsenkaten/naringsgren-enligt-nr"
+b = "scb/ivp/naringsgren-enligt-nr"
+note = "curated:#737 näringsgren enligt nr"
+# makar som inte är skrivna på samma fastighet (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/iot/makebost"
+b = "scb/linda/makebost"
+note = "curated:#737 makar som inte är skrivna på samma fastighet"
+# typ av gymnasieprogram (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/kkv/gymnasiebakgrund-sun2000niva"
+b = "scb/yrkeshogskolan/gymnasiebakgrund-sun2000niva"
+note = "curated:#737 typ av gymnasieprogram"
+# utbildningens nivå (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/kkv/utbildningens-niva"
+b = "scb/slr/utbildningens-niva"
+note = "curated:#737 utbildningens nivå"
+# region (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/klr/region"
+b = "scb/lararreg/region"
+note = "curated:#737 region"
+# avtal (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/kls/avtal"
+b = "scb/sls/avtal"
+note = "curated:#737 avtal"
+# arbetsställets kommun, största förvärvskällan (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/ku1astkommun"
+b = "scb/yrkesreg/ku1astkommun"
+note = "curated:#737 arbetsställets kommun, största förvärvskällan"
+# län för arbetsstället, största förvärvskällan (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/ku1astlan"
+b = "scb/yrkesreg/ku1astlan"
+note = "curated:#737 län för arbetsstället, största förvärvskällan"
+# källa för yrkesuppgift, största förvärvskällan (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/ku1ssykkalla"
+b = "scb/yrkesreg/ku1ssykkalla"
+note = "curated:#737 källa för yrkesuppgift, största förvärvskällan"
+# källa för yrkesuppgift, näst största förvärvskällan (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/ku2ssykkalla"
+b = "scb/yrkesreg/ku2ssykkalla"
+note = "curated:#737 källa för yrkesuppgift, näst största förvärvskällan"
+# sektorkod, största förvärvskälla (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/sektorkod-storsta-forvarvskalla"
+b = "scb/yrkesreg/sektorkod-storsta-forvarvskalla"
+note = "curated:#737 sektorkod, största förvärvskälla"
+# yrke på 3-siffernivå, näst största förvärvskällan (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/ssyk3-nast"
+b = "scb/yrkesreg/ssyk3-nast"
+note = "curated:#737 yrke på 3-siffernivå, näst största förvärvskällan"
+# yrke på 4-siffernivå, näst största förvärvskällan (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/lisa/ssyk4-nast"
+b = "scb/yrkesreg/ssyk4-nast"
+note = "curated:#737 yrke på 4-siffernivå, näst största förvärvskällan"
+# näringsgren för statistiken (arbetsställe) (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/nystartade-foretag-kvartal/naringsgren-for-statistiken"
+b = "scb/rpu/astsnig"
+note = "curated:#737 näringsgren för statistiken (arbetsställe)"
+# kommunstorlek (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/ombyggnad-och-rivning/storlek"
+b = "scb/priser-nyproducerade-bostader/storlek"
+note = "curated:#737 kommunstorlek"
+# examenskommun (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/rams/examenskommun"
+b = "scb/ureg/examenskommun"
+note = "curated:#737 examenskommun"
+# födelselän mor (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/rtb/fodelselanmor"
+b = "scb/statund/fodelselanmor"
+note = "curated:#737 födelselän mor"
+# månadslöneintervall (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/slk/manadsloneintervall"
+b = "scb/slr/manadsloneintervall"
+note = "curated:#737 månadslöneintervall"
+# utbildningens nivå och inriktning (sun) (2 vars)
+[[edge]]
+type = "same_as"
+a = "scb/slk/utbildningens-niva-och-inriktning"
+b = "scb/slr/sun"
+note = "curated:#737 utbildningens nivå och inriktning (sun)"
+# Result: 61 components, 232 edges, 179 variables (max component 7 FQIDs, well under the _SAME_AS_MAX_COMPONENT cap).
