@@ -5,7 +5,11 @@ import type {
   StatesResponse,
   VariableStateModel,
 } from "./api";
-import type { PickerDimension, PickerRepresentation } from "./catalog";
+import type {
+  PickerBandFacets,
+  PickerDimension,
+  PickerRepresentation,
+} from "./catalog";
 import {
   addWindowBounds,
   axisNoun,
@@ -51,6 +55,7 @@ import {
   representationsFromStates,
   routeBreadcrumbs,
   rowAddPeriod,
+  rowFacet,
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
@@ -2278,9 +2283,11 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
     ];
     const dims = pickerFilterDimensions(bands, axes);
     // `enhet` is constant (all "ind") → not a filter; `hush` varies → a filter.
-    expect(dims.map((d) => d.key)).toEqual(["hush"]);
+    // The facet key is namespaced (#908 C2); the raw axis name rides on `axis`.
+    expect(dims.map((d) => d.key)).toEqual(["facet:hush"]);
     const hush = dims[0];
     expect(hush.kind).toBe("facet");
+    expect(hush.axis).toBe("hush");
     expect(hush.label).toBe("Hushållsbegrepp");
     expect(hush.values).toEqual([
       { value: "h1", label: "Hushåll A" },
@@ -2440,12 +2447,159 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
       },
     };
     const dims = pickerFilterDimensions([band], axes);
-    expect(dims.map((d) => d.key)).toEqual(["hush"]);
+    expect(dims.map((d) => d.key)).toEqual(["facet:hush"]);
     // h1 appears on two columns but dedupes to one value alongside h2.
     expect(dims[0].values).toEqual([
       { value: "h1", label: "Hushåll A" },
       { value: "h2", label: "Hushåll B" },
     ]);
+  });
+
+  // ── C1: band-level facets (whole-variable faceted members) ────────────────
+  // A whole-variable faceted member has a null delivery_column, so its facets are
+  // carried band-level (`band.facets`) and apply to EVERY row, regardless of column.
+  it("rowFacet falls back to band-level facets when there's no per-column facet (C1)", () => {
+    const band = {
+      rows: [row({ column: "C1" }), row({ column: "C2" })],
+      facets: [{ axis: "month", value: "01", label: "January" }],
+    };
+    // No `facetsByColumn` → the band-level facet applies to any row's column.
+    expect(rowFacet(band, band.rows[0], "month")?.value).toBe("01");
+    expect(rowFacet(band, band.rows[1], "month")?.value).toBe("01");
+    expect(rowFacet(band, band.rows[0], "missing")).toBeUndefined();
+  });
+
+  it("rowFacet prefers the per-column facet over the band-level one (C1)", () => {
+    const band = {
+      rows: [row({ column: "C1" }), row({ column: "C2" })],
+      facetsByColumn: {
+        C1: [{ axis: "month", value: "02", label: "February" }],
+      },
+      facets: [{ axis: "month", value: "01", label: "January" }],
+    };
+    // C1 has a per-column facet → it wins; C2 has none → falls back to band-level.
+    expect(rowFacet(band, band.rows[0], "month")?.value).toBe("02");
+    expect(rowFacet(band, band.rows[1], "month")?.value).toBe("01");
+  });
+
+  it("pickerFilterDimensions surfaces a band-level axis across rows (C1)", () => {
+    // Two whole-variable faceted bands, each a different month → the axis discriminates.
+    const bands = [
+      {
+        rows: [row({ column: "JAN" })],
+        facets: [{ axis: "month", value: "01", label: "January" }],
+      },
+      {
+        rows: [row({ column: "FEB" })],
+        facets: [{ axis: "month", value: "02", label: "February" }],
+      },
+    ];
+    const dims = pickerFilterDimensions(bands, [
+      { name: "month", label: "Month" },
+    ]);
+    expect(dims.map((d) => d.key)).toEqual(["facet:month"]);
+    expect(dims[0].axis).toBe("month");
+    expect(dims[0].values).toEqual([
+      { value: "01", label: "January" },
+      { value: "02", label: "February" },
+    ]);
+  });
+
+  it("pickerRowPasses filters by a band-level facet (C1)", () => {
+    const dims = pickerFilterDimensions(
+      [
+        {
+          rows: [row({ column: "JAN" })],
+          facets: [{ axis: "month", value: "01", label: "January" }],
+        },
+        {
+          rows: [row({ column: "FEB" })],
+          facets: [{ axis: "month", value: "02", label: "February" }],
+        },
+      ],
+      [{ name: "month", label: "Month" }],
+    );
+    const janBand = {
+      rows: [row({ column: "JAN" })],
+      facets: [{ axis: "month", value: "01", label: "January" }],
+    };
+    const janRow = janBand.rows[0];
+    // The namespaced selection key (`facet:month`) is what pickerRowPasses reads.
+    expect(
+      pickerRowPasses(janRow, janBand, dims, {
+        "facet:month": new Set(["01"]),
+      }),
+    ).toBe(true);
+    expect(
+      pickerRowPasses(janRow, janBand, dims, {
+        "facet:month": new Set(["02"]),
+      }),
+    ).toBe(false);
+  });
+
+  // ── C2: facet key namespacing vs. built-in dimension keys ──────────────────
+  it("namespaces a facet key so an axis named 'coding' can't collide with the built-in coding dim (C2)", () => {
+    // A declared axis literally named "coding", AND rows that also vary on the
+    // built-in coding (value-set label). Both must surface as DISTINCT dimensions.
+    const bands: PickerBandFacets[] = [
+      {
+        rows: [row({ column: "A", valueSetLabel: "SNI 2002" })],
+        facetsByColumn: { A: [{ axis: "coding", value: "x", label: "X" }] },
+      },
+      {
+        rows: [row({ column: "B", valueSetLabel: "SNI 2007" })],
+        facetsByColumn: { B: [{ axis: "coding", value: "y", label: "Y" }] },
+      },
+    ];
+    const dims = pickerFilterDimensions(bands, [
+      { name: "coding", label: "Coding axis" },
+    ]);
+    // Two distinct dimensions: the facet (namespaced) and the built-in coding.
+    const facetDim = dims.find((d) => d.kind === "facet");
+    const codingDim = dims.find((d) => d.kind === "coding");
+    expect(facetDim?.key).toBe("facet:coding");
+    expect(facetDim?.axis).toBe("coding");
+    expect(codingDim?.key).toBe("coding");
+    expect(codingDim?.axis).toBeUndefined();
+    // Distinct keys → no duplicate Svelte #each key, no shared selection slot.
+    expect(new Set(dims.map((d) => d.key)).size).toBe(dims.length);
+  });
+
+  it("a selection on the facet axis 'coding' does not bleed into the built-in coding dim (C2)", () => {
+    const bands: PickerBandFacets[] = [
+      {
+        rows: [row({ column: "A", valueSetLabel: "SNI 2002" })],
+        facetsByColumn: { A: [{ axis: "coding", value: "x", label: "X" }] },
+      },
+      {
+        rows: [row({ column: "B", valueSetLabel: "SNI 2007" })],
+        facetsByColumn: { B: [{ axis: "coding", value: "y", label: "Y" }] },
+      },
+    ];
+    const dims = pickerFilterDimensions(bands, [
+      { name: "coding", label: "Coding axis" },
+    ]);
+    const bandA = bands[0];
+    const rowA = bandA.rows[0]; // facet coding=x, value-set "SNI 2002"
+    // Select the FACET value "x" only — the built-in coding dim has no selection, so
+    // it imposes no constraint; rowA passes (its facet IS "x").
+    expect(
+      pickerRowPasses(rowA, bandA, dims, { "facet:coding": new Set(["x"]) }),
+    ).toBe(true);
+    // Select the built-in CODING value "SNI 2007" only — rowA's value-set is
+    // "SNI 2002", so it fails. The facet selection slot ("facet:coding") is separate
+    // and untouched, proving no bleed: the same literal "coding" lives in two slots.
+    expect(
+      pickerRowPasses(rowA, bandA, dims, { coding: new Set(["SNI 2007"]) }),
+    ).toBe(false);
+    // And selecting the facet "x" must NOT satisfy a built-in coding filter for a
+    // different value-set: distinct slots, no cross-talk.
+    expect(
+      pickerRowPasses(rowA, bandA, dims, {
+        "facet:coding": new Set(["x"]),
+        coding: new Set(["SNI 2007"]),
+      }),
+    ).toBe(false);
   });
 });
 

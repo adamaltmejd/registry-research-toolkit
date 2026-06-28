@@ -218,8 +218,20 @@ const bands = $derived.by((): PickerBand[] => {
     string,
     Record<string, GroupFacetModel[]>
   >();
+  // fqid → the BAND-LEVEL facets of a WHOLE-VARIABLE faceted member (#908 C1): a
+  // member whose `delivery_column` is null carries facets that can't key by column
+  // (e.g. a month-faceted group — one variable per month, each carrying a `month`-axis
+  // facet on the whole variable). Those facets apply to ALL the band's rows. First
+  // such member per fqid wins. Distinct from the per-column path below, which is keyed
+  // by delivery_column and so only sees members WITH a column.
+  const bandFacetsByFqid = new Map<string, GroupFacetModel[]>();
   for (const member of node.members) {
+    // A whole-variable (null delivery_column) faceted member contributes its facets
+    // band-level, then is skipped for the per-COLUMN maps (which key by column).
     if (member.delivery_column == null) {
+      if (member.facets.length > 0 && !bandFacetsByFqid.has(member.fqid)) {
+        bandFacetsByFqid.set(member.fqid, member.facets);
+      }
       continue;
     }
     if (member.facets.length > 0) {
@@ -268,6 +280,10 @@ const bands = $derived.by((): PickerBand[] => {
       // The structured per-column facets (#908) — the picker's dimension marking
       // + per-axis filter read these to group/filter rows by axis.
       facetsByColumn: facetsByColumnByFqid.get(member.fqid),
+      // Band-level facets (#908 C1) — a whole-variable faceted member's facets, which
+      // have no delivery column to key by and so apply to every row of the band. The
+      // picker's `rowFacet` falls back to these after the per-column lookup.
+      facets: bandFacetsByFqid.get(member.fqid),
       // The member's own leaf page — the picker renders the identity as a nav link
       // (the binding leaf passes no href; it's already that page). Carry the active
       // group `?period` onto the link (#678) so opening a member from the picker

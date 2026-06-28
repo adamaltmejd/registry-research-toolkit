@@ -52,6 +52,12 @@ export interface PickerBand {
    * dimension and to narrow the list to one axis value. The GROUP view sets it; the
    * binding LEAF leaves it undefined (no facet split on a single member). */
   facetsByColumn?: Record<string, GroupFacetModel[]>;
+  /** BAND-LEVEL structured facets (#908 C1): the facets of a WHOLE-VARIABLE faceted
+   * member — one whose `delivery_column` is null, so its facets can't key by column
+   * (e.g. a month-faceted group: one variable per month). These apply to ALL of the
+   * band's rows, as `rowFacet`'s fallback after the per-column lookup. The GROUP view
+   * sets it for such members; otherwise undefined. */
+  facets?: GroupFacetModel[];
   isSensitive?: boolean;
   isIdentifier?: boolean;
   rows: PickerRepresentation[];

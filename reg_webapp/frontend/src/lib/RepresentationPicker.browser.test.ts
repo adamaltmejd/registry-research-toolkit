@@ -265,4 +265,54 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .element(page.getByText("No columns match the active filters."))
       .toBeVisible();
   });
+
+  // C1: a whole-variable faceted member has a null delivery_column, so its facets
+  // arrive band-level (the GROUP view sets `band.facets`), NOT keyed by column. The
+  // common shape is a month-faceted group: one variable per month, each band carrying
+  // its own `month`-axis facet on the whole variable. #908 must still surface the
+  // facet filter + per-row markers for these.
+  const MONTH_AXES: GroupAxisModel[] = [{ name: "month", label: "Month" }];
+  function monthBand(slug: string, col: string, value: string, label: string) {
+    return {
+      key: `scb/x/${slug}`,
+      name: label,
+      registerPrefix: "scb/x",
+      rows: [row({ column: col, valueSetLabel: "kr" })],
+      // Band-level facets — no `facetsByColumn` (the whole-variable shape).
+      facets: [{ axis: "month", value, label }],
+    } satisfies PickerBand;
+  }
+
+  it("band-level facets (whole-variable members) render the facet filter + per-row markers (C1)", async () => {
+    render(RepresentationPicker, {
+      bands: [
+        monthBand("jan", "JAN", "01", "January"),
+        monthBand("feb", "FEB", "02", "February"),
+      ],
+      axes: MONTH_AXES,
+      ...PROPS,
+    });
+    // The month axis discriminates (01/02) → one filter fieldset named "Month".
+    await expect
+      .element(page.getByRole("group", { name: /Filter columns/ }))
+      .toBeVisible();
+    const legends = [...document.querySelectorAll(".dim-filter legend")].map(
+      (l) => l.textContent?.trim(),
+    );
+    expect(legends).toEqual(["Month"]);
+    // Each row shows its band-level facet as a per-row marker (the fallback path).
+    const markers = [
+      ...document.querySelectorAll(".col-row .facet-markers"),
+    ].map((m) => m.textContent);
+    expect(markers.join(" ")).toContain("January");
+    expect(markers.join(" ")).toContain("February");
+
+    // Filtering by the band-level facet narrows the list.
+    expect(visibleColumns()).toEqual(["JAN", "FEB"]);
+    clickFilter("February");
+    await expect
+      .element(page.getByText("Showing 1 of 2 columns"))
+      .toBeVisible();
+    expect(visibleColumns()).toEqual(["FEB"]);
+  });
 });
