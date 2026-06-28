@@ -1738,19 +1738,23 @@ class TestRestrictedBuildUnbuiltProviderOverride:
             conn.close()
 
 
-class TestOperationalDefinitionFold:
-    """SCB ships `VariabelOperationell_definition` as a refinement
-    over `Variabelbeskrivning`. The Model A schema drops the dedicated column
-    and folds the operational definition into `description` when it's distinct
-    and non-empty. These tests lock the fold contract — empty op stays empty,
-    duplicate op is skipped, distinct op appends with a blank-line separator,
-    and a re-built DB doesn't double-fold (the `op not in desc` substring guard).
+class TestOperationalDefinition:
+    """SCB ships `VariabelOperationell_definition` as a per-column refinement
+    over `Variabelbeskrivning`. #892 promotes it to a FIRST-CLASS
+    `variable.operational_definition` column (no longer folded into
+    `description`), so it survives the parallel-column split: each sibling carries
+    ITS column's operational definition. These tests lock the new contract — the
+    value lands in `operational_definition`, `description` is NOT mutated, an empty
+    op stays NULL, and a split routes each column's op to its own sibling.
     """
 
     @staticmethod
-    def _build_and_fetch(tmp_path: Path, *, vardesc: str, varopdef: str) -> str:
-        """Build a minimal DB with one variable carrying the given description
-        and operational definition; return the persisted `variable.description`.
+    def _build_and_fetch(
+        tmp_path: Path, *, vardesc: str, varopdef: str
+    ) -> tuple[str, str | None]:
+        """Build a minimal DB with one (non-split) variable carrying the given
+        description and operational definition; return
+        `(variable.description, variable.operational_definition)`.
         """
         ri_row = _ri_row(
             "FOLDREG",
@@ -1806,66 +1810,117 @@ class TestOperationalDefinitionFold:
         conn = open_db(db_dir / "reg_meta.db")
         try:
             row = conn.execute(
-                "SELECT description FROM variable "
+                "SELECT description, operational_definition FROM variable "
                 "WHERE register_id = 999 AND provider_key = '777'"
             ).fetchone()
-            return row["description"]
+            return row["description"], row["operational_definition"]
         finally:
             conn.close()
 
-    def test_empty_operational_definition_leaves_description_untouched(
-        self, tmp_path: Path
-    ):
-        """Empty `VariabelOperationell_definition` → description unchanged."""
-        result = self._build_and_fetch(
+    def test_empty_operational_definition_is_null(self, tmp_path: Path):
+        """Empty `VariabelOperationell_definition` → NULL column, description
+        unchanged."""
+        desc, op = self._build_and_fetch(
             tmp_path, vardesc="Plain description", varopdef=""
         )
-        assert result == "Plain description"
+        assert desc == "Plain description"
+        assert op is None
 
-    def test_distinct_operational_definition_appended_with_blank_line(
-        self, tmp_path: Path
-    ):
-        """Non-empty op_def distinct from desc → appended with `\\n\\n` separator."""
-        result = self._build_and_fetch(
+    def test_operational_definition_is_separate_column(self, tmp_path: Path):
+        """A non-empty op lands in its OWN column and is NOT appended to
+        `description` (the #892 reversal of the old fold-into-description)."""
+        desc, op = self._build_and_fetch(
             tmp_path,
             vardesc="Plain description",
             varopdef="Operational refinement",
         )
-        assert result == "Plain description\n\nOperational refinement"
-
-    def test_duplicate_operational_definition_not_appended(self, tmp_path: Path):
-        """When `op == desc` exactly, the fold is skipped (no `desc\\n\\ndesc`)."""
-        result = self._build_and_fetch(
-            tmp_path,
-            vardesc="Same content",
-            varopdef="Same content",
-        )
-        assert result == "Same content"
-
-    def test_substring_operational_definition_not_appended(self, tmp_path: Path):
-        """When `op` is already a substring of `desc`, the fold must skip —
-        otherwise rebuilds (which can see a `description` already carrying
-        the merged operational text) would accumulate duplicated tails.
-        This is the `op not in desc` guard. Pipe-delimited CSV doesn't
-        carry literal newlines, so we use a single-line description that
-        embeds the operational text verbatim — the substring relationship
-        is what the guard actually checks."""
-        result = self._build_and_fetch(
-            tmp_path,
-            vardesc="Operational refinement is part of this longer description",
-            varopdef="Operational refinement",
-        )
-        assert result == "Operational refinement is part of this longer description"
+        assert desc == "Plain description"  # untouched, no "\n\n" append
+        assert op == "Operational refinement"
 
     def test_operational_definition_with_empty_description(self, tmp_path: Path):
-        """When desc is empty but op is set, the merged value is just op
-        (no leading `\\n\\n`)."""
-        result = self._build_and_fetch(
+        """An op with an empty description: op still lands in its own column;
+        description stays empty (no longer absorbs the op)."""
+        desc, op = self._build_and_fetch(
             tmp_path,
             vardesc="",
             varopdef="Operational refinement",
         )
-        assert result == "Operational refinement"
+        assert desc == ""
+        assert op == "Operational refinement"
+
+    def test_parallel_column_split_gives_each_sibling_its_own_op(self, tmp_path: Path):
+        """The core #892 invariant: when SCB delivers parallel columns under one
+        var_id that triage SPLITS into siblings, each sibling carries ITS column's
+        operational definition — not the first-non-empty collapsed across columns.
+
+        Reuses #139's canonical disjoint-stem split (Hemkommun + Skolkommun, same
+        edition under var_id 920 → two sibling variables), giving each column a
+        distinct operational definition. Before #892 the op was collapsed per
+        (register, var_id) and merged into one description, so the split lost the
+        per-column distinction; now each sibling keeps its own.
+        """
+        split_rows = [
+            _var_row(
+                colname="Hemkommun",
+                cvid=9300,
+                var_id=920,
+                year="2019",
+                varopdef="Kommun där personen är folkbokförd",
+            ),
+            _var_row(
+                colname="Skolkommun",
+                cvid=9301,
+                var_id=920,
+                year="2019",
+                varopdef="Kommun där skolan är belägen",
+            ),
+        ]
+        ri_rows = list(REGISTERINFORMATION_ROWS) + split_rows
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            # Precondition: the split actually fired (2 siblings share '920').
+            sibs = conn.execute(
+                "SELECT COUNT(*) FROM variable "
+                "WHERE register_id = 1 AND provider_key = '920'"
+            ).fetchone()[0]
+            assert sibs == 2, "fixture should produce a triage split"
+
+            # Each sibling's operational_definition matches ITS delivery column.
+            # Join through variable_state.delivery_column_name (the post-split
+            # per-sibling column) so we attribute by column, not by guessing.
+            by_col = dict(
+                conn.execute(
+                    "SELECT DISTINCT vs.delivery_column_name, v.operational_definition "
+                    "FROM variable v "
+                    "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+                    "WHERE v.register_id = 1 AND v.provider_key = '920'"
+                ).fetchall()
+            )
+            assert by_col["Hemkommun"] == "Kommun där personen är folkbokförd"
+            assert by_col["Skolkommun"] == "Kommun där skolan är belägen"
+
+            # description is NOT mutated — it stays the generic family description.
+            descs = {
+                r[0]
+                for r in conn.execute(
+                    "SELECT DISTINCT description FROM variable "
+                    "WHERE register_id = 1 AND provider_key = '920'"
+                )
+            }
+            for d in descs:
+                assert "folkbokförd" not in (d or "")
+                assert "belägen" not in (d or "")
+        finally:
+            conn.close()
 
 
 class TestVariableStateOpenEnded:

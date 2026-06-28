@@ -146,6 +146,7 @@ def _var_row(
     regver_id: int = 110,
     data_type: str = "int",
     data_length: str = "1",
+    varopdef: str = "",
 ) -> str:
     """A Registerinformation row for register TESTREG (register_id 1, variant
     register_variant_id 10), varying only the fields triage keys on. Shared by
@@ -156,7 +157,11 @@ def _var_row(
     `versionname` overrides the `registerversionnamn` cell (the value the
     coalescer derives the edition year and sub-annual window from); it defaults
     to `year`. Pass a sub-annual phrasing (e.g. `"Höstterminen 2018"`) while
-    keeping `year` a bare year so the approval dates stay well-formed."""
+    keeping `year` a bare year so the approval dates stay well-formed.
+
+    `varopdef` sets the per-row `VariabelOperationell_definition` cell (default
+    empty) — used to verify each split sibling carries ITS column's operational
+    definition (#892)."""
     return _ri_row(
         "TESTREG",
         "Testregistret",
@@ -180,7 +185,7 @@ def _var_row(
         varname,
         "A generic family label",
         "",
-        "",
+        varopdef,
         "",
         "",
         "",

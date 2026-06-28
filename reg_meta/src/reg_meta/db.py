@@ -246,7 +246,15 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `variable_instance` drop): old code still issuing `SELECT … FROM
 #   variable_related_to` would fault on a 6.x DB, so a 5.x DB is rejected via the
 #   MAJOR-version gate (5 != 6) — rebuild with `reg-meta-build build-db`.
-SCHEMA_VERSION = "6.0.0"
+# - 6.1.0 (#892): additive `variable.operational_definition` column — SCB's
+#   `VariabelOperationell_definition` promoted to a first-class per-(split-)variable
+#   column instead of being folded into `description`. It carries the per-column
+#   distinguishing meaning (owner vs previous-owner; establishment-SNI vs
+#   individual-SNI) and survives the parallel-column triage split so each sibling
+#   keeps its own. `definition`/`description` keep their meaning. Additive column →
+#   minor bump (like #819's 5.8.0); a 6.0.0 DB lacks the column, so it's rejected
+#   via the minor-version gate.
+SCHEMA_VERSION = "6.1.0"
 DB_FILENAME = "reg_meta.db"
 
 
