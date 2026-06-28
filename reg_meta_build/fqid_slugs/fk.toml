@@ -372,6 +372,9 @@ panel_time_grain = "row"
 [register_variant."7664376130118991107.6332006637200314922"]
 slug = "arende-atgard"
 display_group = "Tandvårdsstödet"
+panel_entity_key = "aro-sekvnr"
+panel_time_key = "beslutstidpunkt"
+panel_time_grain = "row"
 
 # Underhållsstöd
 [register."9011624717046135047"]
@@ -688,6 +691,9 @@ slug = "lopnr-arende-id"
 
 [variable."7664376130118991107.LOPNUMMER"]  # tandvardsstodet: panel_entity_key = 'lopnummer'
 slug = "lopnummer"
+
+[variable."7664376130118991107.ARO_SEKVNR"]  # tandvardsstodet: panel_entity_key = 'aro-sekvnr'
+slug = "aro-sekvnr"
 
 [variable."7724610645254369578.PERSID"]  # foraldrapenning: panel_entity_key = 'persid'
 slug = "persid"
