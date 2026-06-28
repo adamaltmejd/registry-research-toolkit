@@ -1098,6 +1098,14 @@ slug = "klr"
 [register_variant."90.165"]
 slug = "_default"
 display_group = "Konjunkturstatistik, löner för regioner"
+# Sub-annual aggregate panel (#730, follow-up to #577): one row per region per
+# year (ar) × month (manad). The subject is an aggregate geography, so
+# panel_entity_key = "region" (cf. register_variant."115.1227", which keys on the
+# aggregate geography "kommun"). The composite time key addresses one delivered
+# month, so grain = "row".
+panel_entity_key = "region"
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Konjunkturstatistik, löner för privat sektor (KLP)
 [register."91"]
@@ -1403,6 +1411,14 @@ slug = "kts"
 [register_variant."116.131"]
 slug = "_default"
 display_group = "Kommunernas och regionernas finansiella tillgångar och skulder"
+# Sub-annual aggregate time series (#730, follow-up to #577): year (ar) × quarter
+# (kvartal), grain = "row". MIXED population (Codex review): this variant covers BOTH
+# kommuner AND regioner/landsting (separate kommun `116.36` and landsting `116.5059`
+# columns), so no single panel_entity_key identifies every row — left unkeyed, a time
+# series over a mixed aggregate (like byggproduktionsindex). The kvartalsutfall
+# kommuner/regioner panels below ARE keyed because each is split to one population.
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
 
 # Kommunalekonomisk utjämning och utjämning av LSS-kostnader mellan kommuner
 [register."117"]
@@ -3584,13 +3600,28 @@ display_group = "Jordbrukets vattenanvändning"
 [register."290"]
 slug = "kvartalsutfall"
 
+# Sub-annual aggregate panels (#730, follow-up to #577): one row per geography per
+# year × quarter, grain = "row". The subject is an aggregate geography, so each
+# variant carries a panel_entity_key (cf. register_variant."115.1227"): the kommuner
+# variant keys on "kommun", the regioner variant on "region". NOTE the slug
+# discrepancy vs the sibling sub-annual variants above: register 290's year/quarter
+# columns deliver as `Ar`/`Kvartal` but fold to the more specific slugs
+# `kalenderar`/`kvartal-period` (a separate `berakningsperiod`/`KvEnk` column records
+# the *collection* period, not the reference period, and is deliberately excluded
+# from the key). Both variants (774 kommuner, 775 regioner) carry the same time pair.
 [register_variant."290.774"]
 slug = "kvartalsutfall-kommuner"
 display_group = "Kvartalsutfall kommuner"
+panel_entity_key = "kommun"
+panel_time_key = ["kalenderar", "kvartal-period"]
+panel_time_grain = "row"
 
 [register_variant."290.775"]
 slug = "kvartalsutfall-regioner"
 display_group = "Kvartalsutfall regioner/landsting"
+panel_entity_key = "region"
+panel_time_key = ["kalenderar", "kvartal-period"]
+panel_time_grain = "row"
 
 # Finansiella företag, årsbokslut
 [register."292"]
@@ -3828,6 +3859,12 @@ slug = "byggproduktionsindex"
 [register_variant."319.986"]
 slug = "_default"
 display_group = "Byggproduktionsindex"
+# Sub-annual aggregate series (#730, follow-up to #577): year (ar) × month (manad).
+# Genuinely national — no geography column, so there is no panel subject and no
+# panel_entity_key (a pure time series, unlike the geography×time panels above). The
+# composite time key addresses one delivered month, so grain = "row".
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Grundskola: nationella prov åk 6
 [register."320"]
@@ -5362,7 +5399,7 @@ slug = "medborgarskap"
 #     --output-toml /tmp/entity_key_pins.toml
 # and fold the NON-duplicate entries in here. dbdiff-identical (slug values
 # only — pins reproduce the slug the variable already carries).
-# 239 pin(s).
+# 240 pin(s).
 
 [variable."1.29"]  # fdb: panel_entity_key = 'fenr'
 slug = "fenr"
@@ -5795,6 +5832,9 @@ slug = "orgnr"
 
 [variable."286.57"]  # ep-val-nominerade: panel_entity_key = 'personnr'
 slug = "personnr"
+
+[variable."290.36"]  # kvartalsutfall: panel_entity_key = 'kommun'
+slug = "kommun"
 
 [variable."296.56"]  # prisindex: panel_entity_key = 'peorgnr'
 slug = "person-orgnr"
