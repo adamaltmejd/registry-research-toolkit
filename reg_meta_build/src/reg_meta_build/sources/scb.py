@@ -41,7 +41,11 @@ from reg_meta.fqid import (
 from reg_meta.queries import extract_year
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build._curation import fold_column
+from reg_meta_build._curation import (
+    _data_type_class,
+    _looks_like_code_label_pair,
+    fold_column,
+)
 
 # Shared SCB-CSV / hashing / progress infra + the Vardemangder sentinel
 # allowlists + the SCB provider id stay in `db.py` (used by the materializer
@@ -1541,24 +1545,12 @@ def _apply_fold(
         res.fold_slug_hints[orig_vid] = hint
 
 
-# data_type marker substrings. SCB ships SQL-ish lowercased types (`int`,
-# `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
-# the same column. Substring match is safe — the field only ever holds a type
-# name — and the two marker sets are disjoint across known types, so order
-# doesn't matter.
-_NUMERIC_TYPE_MARKERS = ("int", "tal", "num", "dec", "float", "real", "double")
-_TEXT_TYPE_MARKERS = ("text", "char", "strang", "string", "varchar")
-
-
-def _data_type_class(dt: str | None) -> str:
-    """Coarse `numeric` / `text` / `other` class for a data_type. `other` covers
-    dates and anything unrecognized (never claimed numeric or text)."""
-    s = _ascii_fold_lower(dt)
-    if any(m in s for m in _TEXT_TYPE_MARKERS):
-        return "text"
-    if any(m in s for m in _NUMERIC_TYPE_MARKERS):
-        return "numeric"
-    return "other"
+# `_data_type_class` + its `_NUMERIC_TYPE_MARKERS` / `_TEXT_TYPE_MARKERS` markers
+# were hoisted to `_curation.py` (imported above) so the read-only split-sibling
+# diagnostic shares one numeric/text/other classifier with this triage. The
+# shared form folds via `fold_column` (== this module's `_ascii_fold_lower`), so
+# the SCB-flavoured labels (`Heltal`, `Sträng (text)`, `Datum`) classify
+# identically.
 
 
 # Text-family `data_type` tokens that SCB's low-trust per-delivery `Datatyp`
@@ -1617,40 +1609,12 @@ def _canon_data_type(dt: str | None) -> str:
 # Only this kind folds into a concept group; the other kinds are excluded.
 _FOLDABLE_KIND = "same_definition_different_column"
 
-# A label column carries the Swedish `namn` (name) suffix; its partner code
-# column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a `kod`/`id`
-# code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`).
-_CODE_SUFFIXES = ("kod", "id")
-_LABEL_SUFFIX = "namn"
-
-
-def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
-    """The non-empty stem when `folded` ends with one of `suffixes`, else None."""
-    for suf in suffixes:
-        if folded.endswith(suf) and len(folded) > len(suf):
-            return folded[: -len(suf)]
-    return None
-
-
-def _is_code_then_label(code: str, label: str) -> bool:
-    """True when `code` is a code column and `label` its matching label column:
-    `label` is `<stem>namn` and `code` is either the bare `<stem>` or
-    `<stem>kod`/`<stem>id` on the SAME stem."""
-    stem = _strip_suffix(label, (_LABEL_SUFFIX,))
-    if stem is None:
-        return False
-    if code == stem:  # bare-stem code paired with its `<stem>namn` label
-        return True
-    return _strip_suffix(code, _CODE_SUFFIXES) == stem
-
-
-def _looks_like_code_label_pair(col_a: str, col_b: str) -> bool:
-    """A code column paired with its label column, in either order. Name-based
-    only (the old #132 heuristic, re-derived to current conventions)."""
-    a, b = _ascii_fold_lower(col_a), _ascii_fold_lower(col_b)
-    if not a or not b:
-        return False
-    return _is_code_then_label(a, b) or _is_code_then_label(b, a)
+# `_looks_like_code_label_pair` (+ `_is_code_then_label` / `_strip_suffix` and the
+# `_CODE_SUFFIXES` / `_LABEL_SUFFIX` tokens) were hoisted to `_curation.py`
+# (imported above) so this triage and the read-only split-sibling diagnostic
+# (`split_sibling_suspects.py`) share ONE code-vs-label name heuristic — both must
+# apply it BEFORE the import-bug shape heuristic, or the diagnostic mislabels a
+# `<stem>`/`<stem>namn` code/label pair as a `type_flip`.
 
 
 def _representative_group(

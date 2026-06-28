@@ -74,6 +74,10 @@ from .fqid_slugs import (
     write_snapshot,
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
+from .split_sibling_suspects import (
+    infer_split_sibling_suspects,
+    render_suspects_toml,
+)
 from .validate import validate_built_db
 from .variable_same_as import (
     infer_same_as_candidates,
@@ -647,6 +651,48 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Write the residue worklist TOML to this path. Without it the JSON counts "
+            "summary still prints; the TOML is included in the payload."
+        ),
+    )
+
+    suspects_p = sub.add_parser(
+        "split-sibling-suspects",
+        help="Emit the #918 split-sibling curation worklist (maintainer review).",
+        description=(
+            "Emit the #918 split-sibling SUSPECT worklist from a BUILT DB: the A2.2\n"
+            "triage siblings (variables sharing one (register, provider_key)) that\n"
+            "were CO-DELIVERED (overlap in some register_variant era) and whose\n"
+            "representative shapes signal a curation question. The reason follows the\n"
+            "build-time fold-gate precedence: code_vs_label (a code column + its\n"
+            "<stem>namn label — a representation/fold candidate, not a mis-import),\n"
+            "type_flip (numeric-vs-text), or length_disagree (an unclassifiable type\n"
+            "with differing widths). A non-co-delivered pair (a temporal rename/split\n"
+            "that never overlapped) is NOT a suspect. #800 retired the `related` edge\n"
+            "and its import_bug_suspect kind; this re-derives the signal READ-ONLY\n"
+            "from variable_state for the deferred fold-or-sever curation. Reads a\n"
+            "built DB; NEVER mutates it and NOTHING is materialized.\n\n"
+            "For each suspect PAIR it reports both siblings' FQID + name + delivery\n"
+            "column, each side's data_type / data_length / value-set presence, the\n"
+            "reason, and whether the pair is already co-grouped (shares a\n"
+            "concept_group — the resolved fold; a SEPARATE axis from co-delivery). The\n"
+            "classifier reuses the SAME code-vs-label + numeric/text/other helpers the\n"
+            "build-time fold gate uses.\n\n"
+            "-o/--output-toml writes a comment-rich worklist (one `[[pair]]` per\n"
+            "suspect, grouped by family, high-value-first) with a `disposition`\n"
+            'placeholder for the maintainer to set to "fold" or "distinct". NOTHING\n'
+            "loads it — the fold lands via concept_groups.toml; a sever is a no-op.\n\n"
+            "Examples:\n"
+            "  reg-meta-build --db <built-db> split-sibling-suspects -o /tmp/split.toml\n"
+            "  reg-meta-build --db <built-db> split-sibling-suspects  # counts only"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    suspects_p.add_argument(
+        "-o",
+        "--output-toml",
+        default=None,
+        help=(
+            "Write the suspect worklist TOML to this path. Without it the JSON counts "
             "summary still prints; the TOML is included in the payload."
         ),
     )
@@ -1516,6 +1562,40 @@ def _cmd_classification_residue(
     ), 0
 
 
+def _cmd_split_sibling_suspects(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    # Schema-checked open: the diagnostic reads current-schema tables (variable,
+    # variable_state, concept_group_variable), so a stale DB should fail fast with
+    # the standard actionable schema-mismatch error — same as the residue command.
+    conn = open_db(db)
+    try:
+        result = infer_split_sibling_suspects(conn)
+    finally:
+        conn.close()
+
+    toml = render_suspects_toml(result)
+
+    data: dict[str, Any] = {
+        "total_pairs": result.total_pairs,
+        "family_count": result.family_count,
+        "family_variable_count": result.family_variable_count,
+        "co_grouped_count": result.co_grouped_count,
+    }
+    _emit_toml(args.output_toml, toml, data)
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="split-sibling-suspects",
+        args_payload={"output_toml": args.output_toml},
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 def _cmd_doc_coverage(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
@@ -1573,6 +1653,7 @@ COMMAND_DISPATCH: dict[
     "entity-key-pins": _cmd_entity_key_pins,
     "concept-group-candidates": _cmd_concept_group_candidates,
     "classification-residue": _cmd_classification_residue,
+    "split-sibling-suspects": _cmd_split_sibling_suspects,
     "doc-coverage": _cmd_doc_coverage,
 }
 
@@ -1625,6 +1706,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "classification-residue [-o TOML]",
         "Emit the #416 classification-linkage residue worklist (maintainer review).",
+    ),
+    (
+        "split-sibling-suspects [-o TOML]",
+        "Emit the #918 split-sibling curation worklist (maintainer review).",
     ),
     (
         "doc-coverage [-o TOML]",
