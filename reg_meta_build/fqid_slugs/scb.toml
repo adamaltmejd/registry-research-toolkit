@@ -5398,7 +5398,7 @@ slug = "medborgarskap"
 #     --output-toml /tmp/entity_key_pins.toml
 # and fold the NON-duplicate entries in here. dbdiff-identical (slug values
 # only — pins reproduce the slug the variable already carries).
-# 239 pin(s).
+# 241 pin(s).
 
 [variable."1.29"]  # fdb: panel_entity_key = 'fenr'
 slug = "fenr"
@@ -5546,6 +5546,9 @@ slug = "kommun"
 
 [variable."115.56"]  # kommunalskatter: panel_entity_key = 'peorgnr'
 slug = "person-orgnr"
+
+[variable."116.36"]  # kts: panel_entity_key = 'kommun'
+slug = "kommun"
 
 [variable."121.1839"]  # frida: panel_entity_key = 'organisationsnummer'
 slug = "orgnr"
@@ -5831,6 +5834,9 @@ slug = "orgnr"
 
 [variable."286.57"]  # ep-val-nominerade: panel_entity_key = 'personnr'
 slug = "personnr"
+
+[variable."290.36"]  # kvartalsutfall: panel_entity_key = 'kommun'
+slug = "kommun"
 
 [variable."296.56"]  # prisindex: panel_entity_key = 'peorgnr'
 slug = "person-orgnr"
