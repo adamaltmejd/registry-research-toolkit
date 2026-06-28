@@ -3512,6 +3512,8 @@ name = "ARO_SEKVNR"
 column = "ARO_SEKVNR"
 definition = "ARENDE_ID"
 data_type = "text"
+is_identifier = true
+is_sensitive = true
 variants = ["arende-atgard"]
 
 [[register.variable]]
