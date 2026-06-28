@@ -10,13 +10,11 @@ import type {
 } from "./api";
 import HistoryGraph from "./HistoryGraph.svelte";
 
-// HistoryGraph (#678) renders the relationship-graph contract (#761/#792) as SVG +
-// a structured screen-reader fallback. These cover the contract behaviours: the
+// HistoryGraph (#678) renders the relationship-graph contract (#761/#792) as HTML/CSS
+// lanes plus a screen-reader relation fallback. These cover the contract behaviours: the
 // empty "don't render" signal, representation-run cells per variable, classification
 // version ordering + is_current, succession edges with labels, focus
-// highlight, and the same_as "also delivered in" affordance. We assert against the
-// VISUALLY-HIDDEN structured fallback (real text the SVG mirrors), which the a11y
-// queries reach regardless of the SVG geometry.
+// highlight, and the same_as "also delivered in" affordance.
 
 function state(over: Partial<GraphState> = {}): GraphState {
   return {
@@ -127,7 +125,7 @@ describe("HistoryGraph (#678)", () => {
 
   it("renders one cell per representation_run_id (2 runs → 2 cells) with each window", async () => {
     // Two consecutive states share run 1 (one cell, fused window); a third opens
-    // run 2 (a second cell). The fallback list mirrors one <li> per cell.
+    // run 2 (a second cell).
     const node = variableNode({
       states: [
         state({
@@ -160,6 +158,9 @@ describe("HistoryGraph (#678)", () => {
     await expect.element(page.getByText("2-siffrig").first()).toBeVisible();
     await expect.element(page.getByText("2010 – 2011").first()).toBeVisible();
     await expect.element(page.getByText("since 2012").first()).toBeVisible();
+    const a11yDetails = document.querySelector(".gutter .sr-only");
+    expect(a11yDetails?.textContent).toContain("1-siffrig, 2010 – 2011");
+    expect(a11yDetails?.textContent).toContain("2-siffrig, since 2012");
   });
 
   it("labels a cell by classification slug / delivery column when no version label", async () => {
@@ -196,12 +197,26 @@ describe("HistoryGraph (#678)", () => {
       graph: graph({ nodes: [newer, older], focus_id: "c2" }),
     });
 
-    const fallback = document.querySelector(".graph-fallback");
-    const text = fallback?.textContent ?? "";
-    // The older edition appears before the newer in the ordered fallback.
-    expect(text.indexOf("SUN 2000")).toBeLessThan(text.indexOf("SUN 2020"));
-    // The current/head edition is marked.
-    await expect.element(page.getByText("current edition")).toBeVisible();
+    const gutterText = [...document.querySelectorAll(".gutter .name")].map(
+      (el) => el.textContent?.replace(/\s+/g, " ").trim() ?? "",
+    );
+    // The older edition appears before the newer in the exposed gutter order.
+    expect(gutterText.indexOf("SUN 2000")).toBeLessThan(
+      gutterText.indexOf("SUN 2020"),
+    );
+    // The current/head edition is marked in the visible point label.
+    const currentTag = await vi.waitFor(() => {
+      const el = document.querySelector(".current-tag");
+      if (!el) {
+        throw new Error("current edition tag not yet rendered");
+      }
+      return el as HTMLElement;
+    });
+    expect(currentTag.textContent?.trim()).toBe("current");
+    const details = [...document.querySelectorAll(".gutter .sr-only")].map(
+      (el) => el.textContent?.replace(/\s+/g, " ").trim() ?? "",
+    );
+    expect(details.some((text) => text.includes("current edition"))).toBe(true);
   });
 
   it("renders a succession (directed) edge with its label", async () => {
@@ -236,7 +251,7 @@ describe("HistoryGraph (#678)", () => {
     );
   });
 
-  it("highlights the focus node ('this variable')", async () => {
+  it("highlights the focus node with the viewed marker", async () => {
     const focus = variableNode({
       id: "v1",
       fqid: "scb/lisa/kon",
@@ -250,13 +265,13 @@ describe("HistoryGraph (#678)", () => {
     render(HistoryGraph, {
       graph: graph({ nodes: [focus, other], focus_id: "v1" }),
     });
-    await expect.element(page.getByText("this variable")).toBeVisible();
+    await expect.element(page.getByText("viewed")).toBeVisible();
   });
 
-  it("marks the focus classification edition ('this edition')", async () => {
+  it("marks the focus classification edition with the viewed marker", async () => {
     const node = classificationNode({ id: "c1", is_current: false });
     render(HistoryGraph, { graph: graph({ nodes: [node], focus_id: "c1" }) });
-    await expect.element(page.getByText("this edition")).toBeVisible();
+    await expect.element(page.getByText("viewed")).toBeVisible();
   });
 
   it("surfaces same_as as an 'also delivered in {register}' affordance (NOT an edge)", async () => {
@@ -269,11 +284,10 @@ describe("HistoryGraph (#678)", () => {
     });
     render(HistoryGraph, { graph: graph({ nodes: [node], focus_id: "v1" }) });
 
-    // The sr-only fallback carries the full "also delivered in" prose as plain text
-    // (register names, no links — #794 P1); the gutter shows a compact "also in"
-    // chip set whose chips ARE the links. Assert the VISIBLE chip affordance — a
-    // link labelled by the register, NOT an edge (the timeline draws no same_as
-    // connector). The gutter `.sa-chip` is the only `rams` LINK.
+    // The gutter shows a compact "also in" chip set whose chips ARE the links.
+    // Assert the VISIBLE chip affordance — a link labelled by the register, NOT an
+    // edge (the timeline draws no same_as connector). The gutter `.sa-chip` is the
+    // only `rams` LINK.
     await expect.element(page.getByText("also in")).toBeVisible();
     const ramsChip = page.getByRole("link", { name: "rams" }).first();
     await expect.element(ramsChip).toHaveClass(/sa-chip/);
@@ -345,9 +359,8 @@ describe("HistoryGraph (#678)", () => {
     // Each member lane reads by its distinct leaf slug, not the shared `label`.
     // `a` is the focus node (plain label in the gutter, not a link) — its slug
     // shows as gutter TEXT; `b` is navigable, so its VISIBLE gutter name-link
-    // carries the slug. The sr-only fallback carries the labels as plain text only
-    // (no <a>) — #794 P1 removed the duplicate fallback links — so the ONLY link
-    // here is `b`'s gutter name-link (the focus self-link is gone).
+    // carries the slug. The sr-only fallback is relation-only, so the ONLY link here
+    // is `b`'s gutter name-link (the focus self-link is gone).
     const aGutter = await vi.waitFor(() => {
       const el = [...document.querySelectorAll(".gutter .name")].find((n) =>
         n.textContent?.trim().startsWith("agi1astsni2007"),
@@ -376,6 +389,41 @@ describe("HistoryGraph (#678)", () => {
     await expect
       .element(page.getByRole("link", { name: "ku1astsni2002" }))
       .toBeVisible();
+  });
+
+  it("uses disambiguated gutter labels for fallback relation endpoints (#907)", async () => {
+    const a = variableNode({
+      id: "a",
+      fqid: "scb/lisa/agi1astsni2007",
+      label: "Näringsgren",
+      group_key: "naringsgren",
+      group_label: "Näringsgren, största förvärvskälla",
+      facets: [],
+    });
+    const b = variableNode({
+      id: "b",
+      fqid: "scb/lisa/ku1astsni2002",
+      label: "Näringsgren",
+      group_key: "naringsgren",
+      group_label: "Näringsgren, största förvärvskälla",
+      facets: [],
+    });
+    const edges: GraphEdge[] = [
+      { id: "e1", kind: "succession", source: "a", target: "b", label: null },
+    ];
+    render(HistoryGraph, {
+      graph: graph({ nodes: [a, b], edges, focus_id: "a" }),
+    });
+
+    const edgeText = await vi.waitFor(() => {
+      const el = document.querySelector(".fb-edge");
+      if (!el) {
+        throw new Error("edge not yet rendered");
+      }
+      return el.textContent?.replace(/\s+/g, " ").trim() ?? "";
+    });
+    expect(edgeText).toContain("agi1astsni2007 → ku1astsni2002");
+    expect(edgeText).not.toContain("Näringsgren → Näringsgren");
   });
 
   it("suppresses the internal curation tag on classification succession edges", async () => {
@@ -696,9 +744,7 @@ describe("HistoryGraph (#678)", () => {
     await expect
       .element(page.getByRole("heading", { name: "History" }))
       .toBeVisible();
-    await expect
-      .element(page.getByText("this variable"))
-      .not.toBeInTheDocument();
+    await expect.element(page.getByText("viewed")).not.toBeInTheDocument();
   });
 
   it("exposes ONE coherent set of nav links: visible gutter links in the a11y tree, NO duplicate hidden fallback links (#794 P1)", async () => {
@@ -738,10 +784,14 @@ describe("HistoryGraph (#678)", () => {
     expect(timeline.getAttribute("role")).toBe("group");
     expect(timeline.getAttribute("aria-label")).toMatch(/History timeline/);
 
-    // The visually-hidden fallback exists (the SR description) but holds NO links.
+    // The visually-hidden fallback exists (the SR relation description) but holds
+    // NO links and no standalone node rows.
     const fallback = document.querySelector(".graph-fallback");
     expect(fallback).not.toBeNull();
     expect(fallback?.querySelectorAll("a").length).toBe(0);
+    expect(fallback?.children.length).toBe(1);
+    expect(fallback?.querySelectorAll(".fb-edge").length).toBe(1);
+    expect(fallback?.querySelectorAll("li:not(.fb-edge)").length).toBe(0);
 
     // EVERY link in the component lives in the visible gutter (none clipped in the
     // fallback) — exactly one nav surface. The focus self-link is gone, so the only
@@ -758,8 +808,8 @@ describe("HistoryGraph (#678)", () => {
 
   it("hides the decorative track/connectors from AT while keeping the gutter exposed (#794 P1)", async () => {
     // The drawn pixel layout (cell/point bars, connectors, axis) is aria-hidden so
-    // AT isn't read the geometry; the fallback list mirrors it as text. The gutter
-    // (names + nav links) stays in the a11y tree.
+    // AT isn't read the geometry; the gutter (names + nav links) stays in the a11y
+    // tree and the fallback carries relation text only.
     const node = variableNode({
       id: "v1",
       fqid: "scb/lisa/kon",

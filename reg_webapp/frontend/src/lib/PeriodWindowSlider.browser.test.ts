@@ -315,6 +315,26 @@ describe("PeriodWindowSlider", () => {
       .not.toBeInTheDocument();
   });
 
+  it("renders a positive delivered cue for a single-year coverage band (#796)", async () => {
+    const screen = await render(PeriodWindowSlider, {
+      min: 1960,
+      max: 2004,
+      coverage: { from: 2004, to: 2004 } as Coverage,
+      subAnnualPeriod: null,
+      hasSelection: false,
+      userChosen: false,
+      selection: { from: 2004, to: 2004 },
+      window: null,
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+
+    expect(screen.container.querySelectorAll(".unavailable").length).toBe(1);
+    expect(screen.container.querySelector(".coverage")).not.toBeNull();
+    expect(screen.container.querySelector(".coverage-cue")).not.toBeNull();
+    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
+  });
+
   it("clamps the thumbs to coverage so a drag can't enter the not-delivered region (#671)", async () => {
     // coverage 1995–2015 → selectableMin/Max = 1995/2015. Dragging the To thumb
     // up to 2020 is clamped to 2015 (the delivered ceiling); the From thumb down

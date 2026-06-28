@@ -4027,12 +4027,13 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
 
   it("breaks a valid_to tie by the higher state_id", () => {
     // Two states for the SAME column share an identical latest valid_to — the
-    // tie-break (max state_id) selects the higher-id state's value set, so the
-    // resolution stays deterministic regardless of iteration order.
+    // shared tie-break (max state_id) selects the higher-id state's value set, so
+    // the picker row and deep-link resolver stay aligned.
     const states = [
       state({
         state_id: 5,
         value_set_id: 303,
+        value_set_version_label: "SNI 2003",
         delivery_column_name: "COL",
         valid_from: "2018-01-01",
         valid_to: "2022-12-31",
@@ -4040,11 +4041,14 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
       state({
         state_id: 9,
         value_set_id: 249,
+        value_set_version_label: "SNI 2022",
         delivery_column_name: "COL",
         valid_from: "2019-01-01",
         valid_to: "2022-12-31",
       }),
     ];
+    const [row] = pickerRepresentations(states);
+    expect(row.valueSetLabel).toBe("SNI 2022");
     expect(valueSetKeyForColumn(states, "COL")).toBe("id/249");
   });
 

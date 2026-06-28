@@ -115,6 +115,7 @@ function onLiveInput(): void {
 
 // ── Track geometry (left/width % of the [min,max] span) ──────────────────────
 const span = $derived(max - min || 1);
+const MIN_COVERAGE_CUE_PCT = 3;
 // A YEAR is a unit, not a point: render the [year, year+1) cell so a single-year
 // selection has visible width and the right edge reaches `max`'s far side.
 function leftPct(year: number): number {
@@ -171,6 +172,11 @@ const coverageBand = $derived(
         left: leftPct(bandEdges.from),
         width: widthPct(bandEdges.from, bandEdges.to),
       },
+);
+const coverageCue = $derived(
+  coverageBand !== null && coverageBand.width < MIN_COVERAGE_CUE_PCT
+    ? { left: coverageBand.left + coverageBand.width / 2 }
+    : null,
 );
 
 // The UNAVAILABLE regions (#671): the track spans OUTSIDE the coverage band —
@@ -362,6 +368,13 @@ const coverageThrough = $derived(
           style="left: {coverageBand.left}%; width: {coverageBand.width}%;"
         ></div>
       {/if}
+      {#if coverageCue}
+        <div
+          class="coverage-cue"
+          style="--coverage-cue-left: {coverageCue.left}%;"
+          aria-hidden="true"
+        ></div>
+      {/if}
       <!-- The selected span fill. -->
       <div class="fill" style="left: {fillLeft}%; width: {fillWidth}%;"></div>
       <!-- Not-delivered gaps (inside the selection, outside coverage): greyed
@@ -464,6 +477,31 @@ const coverageThrough = $derived(
     border-radius: 4px;
     background: var(--border);
     opacity: 0.7;
+  }
+  .coverage-cue {
+    position: absolute;
+    top: calc(50% - 0.7rem);
+    left: clamp(5px, var(--coverage-cue-left), calc(100% - 5px));
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--surface) 80%, transparent);
+    pointer-events: none;
+  }
+  .coverage-cue::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 2px;
+    height: 0.45rem;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: var(--accent);
   }
   .fill {
     position: absolute;
