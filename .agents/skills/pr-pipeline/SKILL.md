@@ -16,17 +16,20 @@ Turn an issue, a lane, or a feature request into one or more tightly scoped PRs.
 
 Agent-surface notes:
 
-- The lead agent implements directly by default, except for review: launch the review
-  pass in a fresh subagent when the current environment allows it, so findings are
-  independent of the authoring session. The review subagent reports findings back to the
-  lead agent; the lead agent fixes or dismisses them.
+- The lead agent implements directly by default, except for review: first attempt to
+  launch the review pass in a fresh subagent so findings are independent of the
+  authoring session. The review subagent reports findings back to the lead agent; the
+  lead agent fixes or dismisses them.
 - For review, prefer a callable built-in review capability when one is exposed.
   Slash-command reviews may be available to the top-level user/session without being
   invokable from inside this skill workflow. When no callable built-in review is
   exposed, run `registry-code-review` as the repo-scoped callable review workflow in a
-  fresh subagent. If the review can only run in the authoring session, treat it as a
-  diagnostic checklist, not as independent review evidence. The GitHub bot-review window
-  described by the repository guidance still applies.
+  fresh subagent. If no subagent tool is preloaded, search for a callable multi-agent or
+  reviewer tool before declaring subagents unavailable. Only fall back to an in-session
+  `registry-code-review` checklist after discovery fails or the tool rejects the
+  request; state what was tried. In-session review is diagnostic, not independent review
+  evidence. The GitHub bot-review window described by the repository guidance still
+  applies.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
   new UI authoring, use the repo-local `frontend-design` skill before building. If the
   active Codex setup does not expose that repo-local skill, report the setup gap before
@@ -117,20 +120,22 @@ Run focused verification as the work evolves:
    review of that stale diff as the independent review for the actual patch. If running
    a callable built-in review locally before push, target the current local diff
    explicitly.
-3. Run review on the actual implementation diff. Launch a fresh review subagent when
-   available, and pass only the PR number or branch/range plus necessary issue context,
+3. Run review on the actual implementation diff. First attempt to launch a fresh review
+   subagent, and pass only the PR number or branch/range plus necessary issue context,
    not the author's intended fixes or conclusions. Prefer a callable built-in review
    capability; do not try to invoke slash commands that are only exposed to the
    top-level session. If no built-in review is callable from this workflow, have the
-   subagent run `registry-code-review` on the PR number or branch/range. If subagents
-   are unavailable, run `registry-code-review` in-session only as a diagnostic
-   checklist, state that it does not satisfy the independent review gate, and stop
-   before ready/merge until an external or subagent review signal is available. Fix or
-   explicitly dismiss every material finding with a reason. Beyond correctness, weigh
-   reuse/simplification/altitude cleanup — a one-caller abstraction, a module
-   duplicating a subsystem elsewhere, a library that subsumes the approach — and route
-   those cuts like any finding. (There is no `/simplify` on this surface; it is a Claude
-   Code skill only.)
+   subagent run `registry-code-review` on the PR number or branch/range. If no subagent
+   tool is preloaded, search for a callable multi-agent or reviewer tool before
+   declaring subagents unavailable. Only fall back to an in-session
+   `registry-code-review` checklist after discovery fails or the tool rejects the
+   request; state what was tried and that it does not satisfy the independent review
+   gate. Stop before ready/merge until an external or subagent review signal is
+   available. Fix or explicitly dismiss every material finding with a reason. Beyond
+   correctness, weigh reuse/simplification/altitude cleanup — a one-caller abstraction,
+   a module duplicating a subsystem elsewhere, a library that subsumes the approach —
+   and route those cuts like any finding. (There is no `/simplify` on this surface; it
+   is a Claude Code skill only.)
 4. For rendered-output changes, run `web-design-reviewer` against the rendered app as
    the structured design-quality pass when the skill is exposed in the active Codex
    setup. If it is not exposed, report that setup gap and still complete the mandatory
