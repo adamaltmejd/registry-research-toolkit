@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0.0",
   "steward": "swecov",
-  "reg_meta_version": "reg_meta/v0.25.0",
+  "reg_meta_version": "reg_meta/v0.26.0",
   "name": "SWECOV holdings catalog",
   "sources": [
     {
