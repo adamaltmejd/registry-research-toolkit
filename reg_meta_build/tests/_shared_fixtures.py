@@ -72,8 +72,8 @@ def _no_repo_curation() -> Iterator[None]:
     mp.setattr(_fm, "repo_period_family_merges_path", lambda: None)
     mp.setattr(_db, "repo_period_family_merges_path", lambda: None)
     # relations.toml (#522) is the typed `[[edge]]` surface for the curated
-    # pairwise relations (same_as / replaced_by / related_to). It carries real
-    # scb/sos slugs (the moved #375 succession + #403 see-also edges); every
+    # pairwise relations (same_as / replaced_by). It carries real
+    # scb/sos slugs (the moved #375 succession edges); every
     # materializer fails LOUD on a dangling/unknown endpoint, so a synthetic
     # build must see an empty file. db.py imported `repo_relations_path` directly
     # — patch it there too. (`_rel` patch covers any callers that resolve the

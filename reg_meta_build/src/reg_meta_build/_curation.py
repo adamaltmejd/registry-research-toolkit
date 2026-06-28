@@ -8,7 +8,7 @@ curation-TOML loaders —
 `codelivery.py`, `concept_groups.py`, `tags.py`,
 `period_family_merges.py`, `delivery_enrichment.py`, `variable_grafts.py`,
 `classification_links.py`, and `relations.py` (the single typed `[[edge]]`
-surface for the curated pairwise relations — same_as / replaced_by / related_to,
+surface for the curated pairwise relations — same_as / replaced_by,
 #522). Each loader threads its own `code` / `prefix` / `file_name` through
 (typically via a module-level `functools.partial`) so its established error
 codes (and near-identical messages) are preserved.

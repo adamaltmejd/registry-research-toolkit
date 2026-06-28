@@ -23,7 +23,6 @@ from reg_meta.catalog import (
     ClassificationEdition,
     ClassificationRef,
     GroupAxis,
-    RelatedRef,
     ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
@@ -153,7 +152,6 @@ class TestResolveBinding:
         assert isinstance(r, ResolvedVariable)
         assert r.same_as == ()
         assert r.replaced_by == ()
-        assert r.related_to == ()
         assert r.lineage == ()
         assert r.via_same_as is None
 
@@ -991,7 +989,7 @@ class TestResolveAt:
 
 
 class TestEdgeAccessors:
-    """see DESIGN.md → Catalog API surface: predecessors/successors/related/lineage/lineage_warnings + the
+    """see DESIGN.md → Catalog API surface: predecessors/successors/lineage/lineage_warnings + the
     edges surfaced on ResolvedVariable (variable grain)."""
 
     @staticmethod
@@ -1649,26 +1647,6 @@ class TestEdgeAccessors:
         assert nested["register"] == "rtb"
         assert "register_name" not in nested
 
-    def test_related(self) -> None:
-        conn = build_slugged_db()
-        for src, tgt in (
-            (("scb", "lisa", "kon"), ("scb", "lisa", "kon-alt")),
-            (("scb", "lisa", "kon-alt"), ("scb", "lisa", "kon")),
-        ):
-            conn.execute(
-                "INSERT INTO variable_related_to (a_provider,a_register,a_variable,"
-                "b_provider,b_register,b_variable,relation_kind,note) "
-                "VALUES (?,?,?,?,?,?,?,?)",
-                (*src, *tgt, "same_definition_different_column", "auto:triage"),
-            )
-        conn.commit()
-        rel = Catalog(conn).related(_KON)
-        assert len(rel) == 1
-        assert isinstance(rel[0], RelatedRef)
-        assert rel[0].variable == "kon-alt"
-        assert rel[0].relation_kind == "same_definition_different_column"
-        assert Catalog(conn).resolve(_KON).related_to == tuple(rel)
-
     def test_lineage_and_warnings(self) -> None:
         # Seed a consumer→source lineage edge + a warning on the consumer state.
         conn = build_slugged_db()  # kon state_id is the consumer state
@@ -1724,7 +1702,6 @@ class TestEdgeAccessors:
         for fn in (
             cat.predecessors,
             cat.successors,
-            cat.related,
             cat.lineage,
             cat.lineage_warnings,
         ):

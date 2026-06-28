@@ -91,7 +91,6 @@ from reg_webapp.models import (
     RegisterChild,
     RegisterNode,
     RegisterResponse,
-    RelatedResponse,
     RootResponse,
     StatesResponse,
     SuccessorsResponse,
@@ -407,8 +406,8 @@ def _resolves_live(catalog: Catalog, parsed: Fqid) -> bool:
     return True
 
 
-def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN001 — VariableRef/RelatedRef list
-    """Narrow a list of variable-grain edge refs (predecessors/successors/related)
+def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN001 — VariableRef list
+    """Narrow a list of variable-grain edge refs (predecessors/successors/same_as)
     to those whose `fqid` is a held binding (#859). A ref with `fqid is None`
     (unaddressable) can be in no steward catalog, so it drops. Reuses
     `admitted_variable_fqids`."""
@@ -447,7 +446,7 @@ def _binding_node(
     `lineage_warnings` are NOT on `ResolvedVariable` so they're omitted (A5.2
     `/lineage_warnings`).
 
-    The leaf edges (`states` / `same_as` / `related_to` / `lineage`) are reg_meta's
+    The leaf edges (`states` / `same_as` / `lineage`) are reg_meta's
     frozen Pydantic models, passed straight through (#681). The FULL variable
     succession chain (#582) is embedded as `succession_chain` — resolved server-side
     (`Catalog.variable_chain`, same_as-canonicalized + walked
@@ -457,24 +456,22 @@ def _binding_node(
 
     #859: for a filtered steward the embedded `states` are narrowed to the delivery
     columns the steward holds for this binding (column-grain faithful), AND the embedded
-    edge collections (`same_as` / `related_to` / `succession_chain` / `lineage`) are
+    edge collections (`same_as` / `succession_chain` / `lineage`) are
     narrowed to held neighbors — otherwise a held binding's leaf would leak unheld
-    neighbors, inconsistent with the already-narrowed `/predecessors` / `/successors` /
-    `/related` sub-endpoints. Admission of the binding ITSELF is gated by the caller
+    neighbors, inconsistent with the already-narrowed `/predecessors` / `/successors`
+    sub-endpoints. Admission of the binding ITSELF is gated by the caller
     (`_require_admitted`) before this is reached, so a kept binding always has ≥1 held
     column. NOTE: the binding `/graph` node-set narrowing remains a tracked deferral —
     this covers only the leaf-EMBEDDED edge collections."""
     states = list(resolved.states)
     same_as = list(resolved.same_as)
-    related_to = list(resolved.related_to)
     succession_chain = catalog.variable_chain(resolved.fqid)
     lineage = list(resolved.lineage)
     if index is not None:
         states = _filter_states_to_held(states, index, str(resolved.fqid))
-        # `same_as` / `related_to` carry `.fqid`; succession-chain editions carry a
-        # navigable `.fqid` too, so the same held-FQID narrower applies to all three.
+        # `same_as` carries `.fqid`; succession-chain editions carry a navigable
+        # `.fqid` too, so the same held-FQID narrower applies to both.
         same_as = _narrow_refs_to_held(same_as, index)
-        related_to = _narrow_refs_to_held(related_to, index)
         succession_chain = _narrow_refs_to_held(succession_chain, index)
         # `LineageEdge` narrows on `source_fqid` (not `fqid`) — factored into the
         # shared `_narrow_lineage_to_held` so the leaf embed and `/lineage` agree.
@@ -496,7 +493,6 @@ def _binding_node(
         states=states,
         same_as=same_as,
         succession_chain=succession_chain,
-        related_to=related_to,
         lineage=lineage,
         # #616/#617: the binding's owning group as `(provider, register, key)` so a
         # member page links to the group subject without a second fetch; None when
@@ -1363,7 +1359,7 @@ def get_binding_graph(
     """The relationship graph for a catalog LEAF — a binding (3-seg) OR a
     classification edition (2-seg) — dispatched on FQID kind (#761/#792). A binding:
     one node per variable with its representation-run state history +
-    succession/related edges + same_as/group metadata, unioned over the variable's
+    succession edges + same_as/group metadata, unioned over the variable's
     concept group (Fork B). A classification: the edition's succession chain unioned
     with its curated umbrella group(s) (the #678 unified-graph payload that retires
     the lineage/dimensions panels). An empty graph (`nodes: []`) is the "don't
@@ -1375,7 +1371,7 @@ def get_binding_graph(
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
         # #859: gate the SUBJECT binding (held-successor 301 / 404). DEFERRAL: the
-        # graph's NODE set (the variable's same_as/related/group union) is NOT
+        # graph's NODE set (the variable's same_as/group union) is NOT
         # narrowed to held — that traversal-narrowing is non-trivial and would
         # balloon this diff, so a held steward subject renders its full reg_meta
         # neighborhood. Tracked as a follow-up (see report); the subject gate alone
@@ -1392,34 +1388,6 @@ def get_binding_graph(
             return catalog.graph_for_fqid(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/graph")
-
-
-@router.get("/catalog/{fqid:path}/related", response_model=RelatedResponse)
-def get_binding_related(
-    request: Request,
-    validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> RelatedResponse | RedirectResponse:
-    """Split-sibling variables (variable grain — see reg_meta_build/DESIGN.md →
-    Build-time triage (SCB)). A dead/renamed binding 301s to `/related` on its
-    terminal successor (#411)."""
-    parsed = _parsed_binding(validated)
-    index = _index(request)
-    with _catalog_conn(request) as conn:
-        catalog = Catalog(conn)
-        if index is not None:
-            redirect = _require_admitted(
-                catalog, parsed, index, request, suffix="/related"
-            )
-            if redirect is not None:
-                return redirect
-        try:
-            refs = catalog.related(parsed)
-        except RegMetaError as exc:
-            return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/related")
-        # #859: narrow the returned refs to held variable FQIDs.
-        if index is not None:
-            refs = _narrow_refs_to_held(refs, index)
-    return RelatedResponse(binding=str(parsed), related=refs)
 
 
 @router.get("/catalog/{fqid:path}/lineage", response_model=LineageResponse)

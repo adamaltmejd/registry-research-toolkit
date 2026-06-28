@@ -66,7 +66,6 @@ _ROUTES_BEFORE_CATCH_ALL = [
     # suffix, reserved in RESERVED_HTTP_SUFFIX_SLUGS like the others).
     "/api/catalog/{fqid:path}/graph",
     "/api/catalog/{fqid:path}/dimensions",
-    "/api/catalog/{fqid:path}/related",
     "/api/catalog/{fqid:path}/lineage",
     "/api/catalog/{fqid:path}/lineage_warnings",
 ]

@@ -235,7 +235,18 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   the table, so it's rejected via the minor gate.
 # - 5.10.0 (#846): additive optional variant scope on representation_replaced_by
 #   (variant-local succession; '' = variable-level)
-SCHEMA_VERSION = "5.10.0"
+# - 6.0.0 (#800): drops the `variable_related_to` table and retires the `related`
+#   researcher-facing graph edge kind entirely. The table held the auto-triage
+#   split reasons (`import_bug_suspect` / `code_vs_label_pair`) plus the curated
+#   `similar_concept` see-also rows; none survived as anything the read side
+#   surfaced beyond the concept-group fold, which reads the in-build sibling sets
+#   directly (`edge_siblings`) and is untouched. `Catalog.related` / `RelatedRef`
+#   are gone and `GraphEdge.kind` narrows to `Literal["succession"]`. A table DROP
+#   the query layer used to read is a MAJOR break (mirrors 5.0.0's
+#   `variable_instance` drop): old code still issuing `SELECT … FROM
+#   variable_related_to` would fault on a 6.x DB, so a 5.x DB is rejected via the
+#   MAJOR-version gate (5 != 6) — rebuild with `reg-meta-build build-db`.
+SCHEMA_VERSION = "6.0.0"
 DB_FILENAME = "reg_meta.db"
 
 

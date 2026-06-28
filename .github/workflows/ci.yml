@@ -33,7 +33,7 @@ jobs:
       # deliberately/frequently. Baseline triage landed (scripts/tests excluded,
       # structural.py validator-narrow noise suppressed via [tool.ty.overrides]
       # in pyproject.toml); the check is now blocking.
-      - run: uvx --from ty==0.0.49 ty check
+      - run: uvx --from ty==0.0.51 ty check
 
   check-versions:
     runs-on: ubuntu-latest

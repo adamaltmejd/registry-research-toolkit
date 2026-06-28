@@ -177,10 +177,10 @@ class CuratedAdapter:
         # `populate_classifications` seeds; None → the in-repo default.
         self._classification_seed_path = classification_seed_path
         # Side channels the materializer drains off every adapter (db.materialize).
-        # A thin provider has no related edges, fold hints, or coalesce stats.
+        # A thin provider has no sibling edges, fold hints, or coalesce stats.
         self.row_counts: dict[str, int] = {}
         self.source_checksums: dict[str, str] = {}
-        self.related_edges: list[tuple[int, int, str]] = []
+        self.sibling_edges: list[tuple[int, int]] = []
         self.fold_slug_hints: dict[int, str] = {}
         # `(variable_id, value_set_id, short_name)` — the same provider-blind
         # classification side channel SOS feeds; the materializer drains it and

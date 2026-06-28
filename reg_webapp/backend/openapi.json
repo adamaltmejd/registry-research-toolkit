@@ -68,7 +68,7 @@
         "type": "object"
       },
       "BindingNode": {
-        "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call: shared\nmetadata, every state (each tagged with its variant), the variable-grain\n`same_as` / `related_to` / `lineage` edges, and the full variable\n`succession_chain` (#582).\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node\nshape is the binding leaf with NO narrowing query: a `?period` resolves via\n`resolve_at` (\u2192 `StatesResponse`) instead, and a narrowing modifier (`?variant`\n/ `?value_set_version`) WITHOUT `?period` is a 422 \u2014 it is inert without a\nperiod, so it errors rather than silently embedding full history.",
+        "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call: shared\nmetadata, every state (each tagged with its variant), the variable-grain\n`same_as` / `lineage` edges, and the full variable\n`succession_chain` (#582).\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node\nshape is the binding leaf with NO narrowing query: a `?period` resolves via\n`resolve_at` (\u2192 `StatesResponse`) instead, and a narrowing modifier (`?variant`\n/ `?value_set_version`) WITHOUT `?period` is a 422 \u2014 it is inert without a\nperiod, so it errors rather than silently embedding full history.",
         "properties": {
           "definition": {
             "anyOf": [
@@ -153,13 +153,6 @@
             "title": "Register Id",
             "type": "integer"
           },
-          "related_to": {
-            "items": {
-              "$ref": "#/components/schemas/RelatedRef"
-            },
-            "title": "Related To",
-            "type": "array"
-          },
           "same_as": {
             "items": {
               "$ref": "#/components/schemas/VariableRef"
@@ -236,7 +229,6 @@
           "source_register_text",
           "states",
           "same_as",
-          "related_to",
           "lineage"
         ],
         "title": "BindingNode",
@@ -1722,7 +1714,7 @@
       },
       "GraphEdge": {
         "additionalProperties": false,
-        "description": "A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``\nis DIRECTED (predecessor \u2192 successor); ``related`` is UNDIRECTED \u2014 its\nendpoints are canonicalized (sorted by node id) so the same relation seen from\nboth ends during group expansion collapses to one edge. ``label`` is the\nsuccession reason / the related ``relation_kind``.\n\n``effective_year`` is the supersession year of a SUCCESSION edge \u2014 the year the\nsource edition was replaced by the target (the ``*_replaced_by`` row's\n``effective_year``). It is carried independently of ``label`` so the #678\ntimeline can annotate the transition with its year even when there is no human\nreason (a year-only edge would otherwise render as an unlabelled arrow). Always\nNone on a ``related`` edge.",
+        "description": "A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``\nis DIRECTED (predecessor \u2192 successor). ``label`` is the succession reason.\n\n``effective_year`` is the supersession year \u2014 the year the source edition was\nreplaced by the target (the ``*_replaced_by`` row's ``effective_year``). It is\ncarried independently of ``label`` so the #678 timeline can annotate the\ntransition with its year even when there is no human reason (a year-only edge\nwould otherwise render as an unlabelled arrow).",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -1740,10 +1732,8 @@
             "type": "string"
           },
           "kind": {
-            "enum": [
-              "succession",
-              "related"
-            ],
+            "const": "succession",
+            "default": "succession",
             "title": "Kind",
             "type": "string"
           },
@@ -1769,7 +1759,6 @@
         },
         "required": [
           "id",
-          "kind",
           "source",
           "target",
           "label"
@@ -2428,73 +2417,9 @@
         "title": "RegisterSearchResult",
         "type": "object"
       },
-      "RelatedRef": {
-        "additionalProperties": false,
-        "description": "A variable-grain \"see also\" link from `variable_related_to`. Same 3-part\nidentity as `VariableRef` plus the `relation_kind`. The table carries the\nMEANINGFUL links: the non-foldable auto-derived split reasons\n(`code_vs_label_pair`, `import_bug_suspect`) and curated see-also kinds. The\nbulk mechanical `same_definition_different_column` split siblings are NOT here\n\u2014 they're the concept group (presentation fold), not a related edge (#591;\nfull taxonomy in reg_meta_build/DESIGN.md). `fqid` is the sibling's 3-segment\nbinding FQID (A2.6).\n\n`register` is a `BaseModel` method, so the Python attr is `register_name`\naliased to the `register` wire/init name (#681); construct/serialize as\n`register`, read as `.register_name` (see `BindingGroupRef`).",
-        "properties": {
-          "fqid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Fqid"
-          },
-          "provider": {
-            "title": "Provider",
-            "type": "string"
-          },
-          "register": {
-            "title": "Register",
-            "type": "string"
-          },
-          "relation_kind": {
-            "title": "Relation Kind",
-            "type": "string"
-          },
-          "variable": {
-            "title": "Variable",
-            "type": "string"
-          }
-        },
-        "required": [
-          "fqid",
-          "provider",
-          "register",
-          "variable",
-          "relation_kind"
-        ],
-        "title": "RelatedRef",
-        "type": "object"
-      },
-      "RelatedResponse": {
-        "description": "`GET /api/catalog/{fqid}/related` \u2014 split-sibling edges.",
-        "properties": {
-          "binding": {
-            "title": "Binding",
-            "type": "string"
-          },
-          "related": {
-            "items": {
-              "$ref": "#/components/schemas/RelatedRef"
-            },
-            "title": "Related",
-            "type": "array"
-          }
-        },
-        "required": [
-          "binding",
-          "related"
-        ],
-        "title": "RelatedResponse",
-        "type": "object"
-      },
       "RelationshipGraph": {
         "additionalProperties": false,
-        "description": "The relationship graph for a subject. ``nodes: []`` is the \"don't render\"\nsignal (the frontend gate is ``nodes.length === 0``): a lone variable with no\nsuccession / related / group siblings / meaningful representation boundary, or\na lone classification edition with no succession chain and no group context.\n``focus_id`` is the node matching the requested FQID (post same_as); None for\ngroup-addressed calls.",
+        "description": "The relationship graph for a subject. ``nodes: []`` is the \"don't render\"\nsignal (the frontend gate is ``nodes.length === 0``): a lone variable with no\nsuccession / group siblings / meaningful representation boundary, or\na lone classification edition with no succession chain and no group context.\n``focus_id`` is the node matching the requested FQID (post same_as); None for\ngroup-addressed calls.",
         "properties": {
           "edges": {
             "items": {
@@ -3018,7 +2943,7 @@
       },
       "VariableGraphNode": {
         "additionalProperties": false,
-        "description": "A variable node: ONE node per variable, its full ``variable_state`` history\nas sub-structure (ordered ``(variant, valid_from)``; the run ids drive cells).\nNodes are variables \u2014 not states \u2014 because succession / related / same_as /\ngroup are all variable-grain and the FQID must map to exactly one node.",
+        "description": "A variable node: ONE node per variable, its full ``variable_state`` history\nas sub-structure (ordered ``(variant, valid_from)``; the run ids drive cells).\nNodes are variables \u2014 not states \u2014 because succession / same_as / group are\nall variable-grain and the FQID must map to exactly one node.",
         "properties": {
           "definition": {
             "anyOf": [
@@ -4022,7 +3947,7 @@
     },
     "/api/catalog/{fqid}/graph": {
       "get": {
-        "description": "The relationship graph for a catalog LEAF \u2014 a binding (3-seg) OR a\nclassification edition (2-seg) \u2014 dispatched on FQID kind (#761/#792). A binding:\none node per variable with its representation-run state history +\nsuccession/related edges + same_as/group metadata, unioned over the variable's\nconcept group (Fork B). A classification: the edition's succession chain unioned\nwith its curated umbrella group(s) (the #678 unified-graph payload that retires\nthe lineage/dimensions panels). An empty graph (`nodes: []`) is the \"don't\nrender\" signal. A dead/renamed binding 301s to `/graph` on its terminal\nsuccessor (#411); shares the `/api/catalog` cache. Topology + predicates live in\nreg_meta (`Catalog.graph_for_fqid` / `graph_for_classification_fqid`).",
+        "description": "The relationship graph for a catalog LEAF \u2014 a binding (3-seg) OR a\nclassification edition (2-seg) \u2014 dispatched on FQID kind (#761/#792). A binding:\none node per variable with its representation-run state history +\nsuccession edges + same_as/group metadata, unioned over the variable's\nconcept group (Fork B). A classification: the edition's succession chain unioned\nwith its curated umbrella group(s) (the #678 unified-graph payload that retires\nthe lineage/dimensions panels). An empty graph (`nodes: []`) is the \"don't\nrender\" signal. A dead/renamed binding 301s to `/graph` on its terminal\nsuccessor (#411); shares the `/api/catalog` cache. Topology + predicates live in\nreg_meta (`Catalog.graph_for_fqid` / `graph_for_classification_fqid`).",
         "operationId": "get_binding_graph_api_catalog__fqid__graph_get",
         "parameters": [
           {
@@ -4178,46 +4103,6 @@
           }
         },
         "summary": "Get Binding Predecessors"
-      }
-    },
-    "/api/catalog/{fqid}/related": {
-      "get": {
-        "description": "Split-sibling variables (variable grain \u2014 see reg_meta_build/DESIGN.md \u2192\nBuild-time triage (SCB)). A dead/renamed binding 301s to `/related` on its\nterminal successor (#411).",
-        "operationId": "get_binding_related_api_catalog__fqid__related_get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "fqid",
-            "required": true,
-            "schema": {
-              "title": "Fqid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RelatedResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Binding Related"
       }
     },
     "/api/catalog/{fqid}/states": {

@@ -209,14 +209,13 @@ def test_class_literal_in_illegal_slot_guard_rejects(catalog_db, path: str):
 # segment guard) is a sub-dependency that runs before the per-request open.
 
 _KON = "scb/lisa/kon"
-# The 6 binding-suffix routes (FQID before the literal suffix) + the variants
+# The binding-suffix routes (FQID before the literal suffix) + the variants
 # sub-resource (FQID is the 2-seg register prefix before the literal `variants`).
 _SUFFIXED_ROUTE_TEMPLATES = [
     "/api/catalog/{fqid}/states",
     "/api/catalog/{fqid}/predecessors",
     "/api/catalog/{fqid}/successors",
     "/api/catalog/{fqid}/graph",
-    "/api/catalog/{fqid}/related",
     "/api/catalog/{fqid}/lineage",
     "/api/catalog/{fqid}/lineage_warnings",
 ]

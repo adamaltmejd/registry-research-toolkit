@@ -208,13 +208,6 @@ class IRReplacedByEdge(_IRBase):
     note: str | None
 
 
-class IRRelatedToEdge(_IRBase):
-    a_variable_id: int
-    b_variable_id: int
-    relation_kind: str
-    note: str | None
-
-
 class IRWarning(_IRBase):
     entity_kind: str
     entity_id: int
@@ -257,7 +250,6 @@ __all__ = [
     "IRDeliveryProvenance",
     "IRLineageEdge",
     "IRRegister",
-    "IRRelatedToEdge",
     "IRReplacedByEdge",
     "IRValueCode",
     "IRValueSet",

@@ -18,7 +18,7 @@ the webapp's FastAPI response models (no wrapper, per #681).
 
 **Compose, don't re-query.** The builder orchestrates the existing ``Catalog``
 accessors — each the single source of truth for its edge type (``variable_chain``
-for succession, ``related`` for see-also, ``resolve``'s ``ResolvedVariable.group``
+for succession, ``resolve``'s ``ResolvedVariable.group``
 + ``concept_group`` for variable-group membership, ``classification_group`` for the
 classification umbrella, ``classification_chain`` for classification editions,
 ``resolve`` for same_as canonicalization). The only genuinely new logic is group
@@ -26,12 +26,12 @@ expansion, edition dedup, and the representation-run computation — no fresh SQ
 re-deriving succession / lineage (that would fork the edge logic; the repo's
 leaf-duplication trap).
 
-**Two edge kinds only: ``succession`` + ``related``.** Everything else is
-metadata / affordance: ``lineage`` and ``source_register`` are #678's provenance
-affordance (not edges); group membership is shared ``group_key`` metadata +
-renderer clustering (no ``group:<key>`` node); ``same_as`` is resolved away to the
-canonical node and exposed as node metadata (``same_as[]``); representation /
-value-set transitions are states-within-a-node (the run ids), not edges.
+**One edge kind: ``succession``.** Everything else is metadata / affordance:
+``lineage`` and ``source_register`` are #678's provenance affordance (not edges);
+group membership is shared ``group_key`` metadata + renderer clustering (no
+``group:<key>`` node); ``same_as`` is resolved away to the canonical node and
+exposed as node metadata (``same_as[]``); representation / value-set transitions
+are states-within-a-node (the run ids), not edges.
 """
 
 from __future__ import annotations
@@ -113,8 +113,8 @@ class _GraphNodeBase(_CatalogModel):
 class VariableGraphNode(_GraphNodeBase):
     """A variable node: ONE node per variable, its full ``variable_state`` history
     as sub-structure (ordered ``(variant, valid_from)``; the run ids drive cells).
-    Nodes are variables — not states — because succession / related / same_as /
-    group are all variable-grain and the FQID must map to exactly one node."""
+    Nodes are variables — not states — because succession / same_as / group are
+    all variable-grain and the FQID must map to exactly one node."""
 
     kind: Literal["variable"] = "variable"
     # The variable's shared metadata (`ResolvedVariable.definition`/`description`) —
@@ -165,21 +165,17 @@ GraphNode = Annotated[
 
 class GraphEdge(_CatalogModel):
     """A graph edge. ``id`` is stable and doubles as the dedup key. ``succession``
-    is DIRECTED (predecessor → successor); ``related`` is UNDIRECTED — its
-    endpoints are canonicalized (sorted by node id) so the same relation seen from
-    both ends during group expansion collapses to one edge. ``label`` is the
-    succession reason / the related ``relation_kind``.
+    is DIRECTED (predecessor → successor). ``label`` is the succession reason.
 
-    ``effective_year`` is the supersession year of a SUCCESSION edge — the year the
-    source edition was replaced by the target (the ``*_replaced_by`` row's
-    ``effective_year``). It is carried independently of ``label`` so the #678
-    timeline can annotate the transition with its year even when there is no human
-    reason (a year-only edge would otherwise render as an unlabelled arrow). Always
-    None on a ``related`` edge."""
+    ``effective_year`` is the supersession year — the year the source edition was
+    replaced by the target (the ``*_replaced_by`` row's ``effective_year``). It is
+    carried independently of ``label`` so the #678 timeline can annotate the
+    transition with its year even when there is no human reason (a year-only edge
+    would otherwise render as an unlabelled arrow)."""
 
     id: str
-    kind: Literal["succession", "related"]
-    source: str  # node id (canonicalized order for related)
+    kind: Literal["succession"] = "succession"
+    source: str  # node id
     target: str  # node id
     label: str | None
     effective_year: int | None = None
@@ -188,7 +184,7 @@ class GraphEdge(_CatalogModel):
 class RelationshipGraph(_CatalogModel):
     """The relationship graph for a subject. ``nodes: []`` is the "don't render"
     signal (the frontend gate is ``nodes.length === 0``): a lone variable with no
-    succession / related / group siblings / meaningful representation boundary, or
+    succession / group siblings / meaningful representation boundary, or
     a lone classification edition with no succession chain and no group context.
     ``focus_id`` is the node matching the requested FQID (post same_as); None for
     group-addressed calls."""
@@ -310,24 +306,14 @@ def _succession_edge(
     )
 
 
-def _related_edge(a: str, b: str, label: str | None) -> GraphEdge:
-    """An UNDIRECTED related edge. Endpoints are canonicalized (sorted by node id)
-    so the same relation seen from both ends — `a→b` and `b→a`, both stored in
-    `variable_related_to` — collapses to one edge by id."""
-    lo, hi = sorted((a, b))
-    return GraphEdge(
-        id=f"related:{lo}--{hi}", kind="related", source=lo, target=hi, label=label
-    )
-
-
 # ── The builder ──────────────────────────────────────────────────────────────
 
 
 class _GraphBuilder:
     """Accumulates nodes + edges across a member union, deduping both by id. A node
     is built ONCE per canonical id (the first member to reach it wins); edges dedup
-    by their stable id (so a shared succession edge or an undirected related edge
-    surfaced from two ends collapses)."""
+    by their stable id (so a shared succession edge surfaced from two ends
+    collapses)."""
 
     def __init__(self, catalog: Catalog) -> None:
         self._catalog = catalog
@@ -341,13 +327,6 @@ class _GraphBuilder:
         # stays thin and violates the variable-node contract (#761). A dead/unresolvable
         # edition that `resolve` rejects never enters this set, so it stays thin.
         self._hydrated: set[str] = set()
-        # Node-build dedup and related-expansion are decoupled: a node first reached
-        # as another node's one-hop related neighbor (follow_related=False) builds the
-        # node but does NOT expand its related edges, so a later focus/group-member
-        # arrival (follow_related=True) must still be able to COMPLETE that expansion
-        # on the already-built node — otherwise a member's one-hop neighbors would be
-        # dropped purely by traversal order (#761).
-        self._related_expanded: set[str] = set()
         # Classification slugs `add_classification` has WALKED a chain FROM (been the
         # anchor of). The early-out gates on THIS — not node-presence — because at a
         # #579 SPLIT, `classification_chain(leaf)` returns only that leaf's linear path
@@ -385,19 +364,12 @@ class _GraphBuilder:
             )
         return self._group_cache[cache_key]
 
-    def add_variable(self, fqid: Fqid, *, follow_related: bool = True) -> str | None:
+    def add_variable(self, fqid: Fqid) -> str | None:
         """Build the variable node for ``fqid`` (resolving same_as to canonical) and
-        all its variable-grain edges (succession + related), recursing into
-        succession-chain members and related neighbors so the union is complete.
-        Returns the CANONICAL node id (the resolved variable's own identity, not the
-        caller's same_as alias), or None when the FQID resolves to no live variable.
-
-        ``follow_related=False`` adds the node + its succession chain but does NOT
-        chase its related edges — so a related neighbor is one hop, never the
-        transitive closure of related-of-related (#761 scopes the union to the
-        subject/group + their succession chains + related edges among/from the
-        union, not related-of-related). Only the focus + group members seed related
-        expansion (``follow_related=True``)."""
+        its succession edges, recursing into succession-chain members so the union
+        is complete. Returns the CANONICAL node id (the resolved variable's own
+        identity, not the caller's same_as alias), or None when the FQID resolves
+        to no live variable."""
         try:
             resolved = self._catalog.resolve(fqid)
         except RegMetaError as exc:
@@ -422,20 +394,12 @@ class _GraphBuilder:
             self._hydrated.add(node_id)
         if first_build:
             self._add_succession(resolved.canonical_fqid)
-        # Related expansion is gated separately: a follow_related=True arrival
-        # completes the one-hop neighbor walk even on an already-built node, but
-        # only once (no transitive closure — neighbors are added with
-        # follow_related=False and stay un-expanded so a later True arrival can
-        # still expand them).
-        if follow_related and node_id not in self._related_expanded:
-            self._related_expanded.add(node_id)
-            self._add_related(resolved.canonical_fqid)
         return node_id
 
     def _variable_node(self, resolved: ResolvedVariable) -> VariableGraphNode:
         # Concept-group keys are only register-unique, so namespace by
         # provider/register to make `group_key` globally unique — a graph spanning >1
-        # register (cross-register related/succession) must not cluster two unrelated
+        # register (cross-register succession) must not cluster two unrelated
         # same-keyed groups together. Still STABLE across members of one group (all
         # share provider/register/key), so the renderer clusters a group correctly.
         group_key = (
@@ -525,7 +489,7 @@ class _GraphBuilder:
         live variable node carries its full ``variable_state`` history (the #678
         timeline renders each node's states as cells, so a stateless live node would
         render empty). It is marked ``_hydrated`` so a later focus/group-member
-        arrival skips the rebuild but still gets related-expansion if it seeds it.
+        arrival skips the rebuild.
 
         A DEAD/renamed predecessor (no live row, #355/#411) instead gets a THIN
         placeholder (no states/edges): it still carries a binding ``fqid`` so a
@@ -533,11 +497,10 @@ class _GraphBuilder:
         resolve (``name is None`` per ``VariableEdition``; ``resolve`` raises
         ``fqid_not_found``). It never enters ``_hydrated``, so it stays thin.
 
-        This only BUILDS the node — it never recurses into ``_add_succession`` /
-        ``_add_related``; the succession EDGES are still added by the caller's
-        ``_add_succession`` loop, and related/group expansion stays seeded by
-        focus/members. ``fqid`` is None only on a malformed triple — then it can't be
-        a node."""
+        This only BUILDS the node — it never recurses into ``_add_succession``; the
+        succession EDGES are still added by the caller's ``_add_succession`` loop,
+        and group expansion stays seeded by focus/members. ``fqid`` is None only on a
+        malformed triple — then it can't be a node."""
         if edition.fqid is None:
             return None
         node_id = str(edition.fqid)
@@ -553,7 +516,7 @@ class _GraphBuilder:
                 raise
             resolved = None
         if isinstance(resolved, ResolvedVariable):
-            # Live edition: full node, upgradable to seed related-expansion later.
+            # Live edition: full node.
             self._nodes[node_id] = self._variable_node(resolved)
             self._hydrated.add(node_id)
             return node_id
@@ -574,25 +537,6 @@ class _GraphBuilder:
             ),
         )
         return node_id
-
-    def _add_related(self, fqid: Fqid) -> None:
-        """Add undirected related edges for ``fqid`` (``related`` — the single
-        source of truth). ``fqid`` is the CANONICAL fqid (the caller passes
-        ``resolved.canonical_fqid``), so ``source_id`` matches the node id. Each
-        neighbor becomes a node WITH its own succession chain, but with
-        ``follow_related=False`` so the union does NOT chase the neighbor's OWN
-        related edges — the union is one related hop, not the transitive closure
-        (#761). ``variable_related_to`` stores both directions, but the
-        canonicalized edge id collapses the pair to one."""
-        source_id = str(fqid)
-        for ref in self._catalog.related(fqid):
-            if ref.fqid is None:
-                continue
-            target_id = self.add_variable(ref.fqid, follow_related=False)
-            if target_id is None:
-                continue
-            edge = _related_edge(source_id, target_id, ref.relation_kind)
-            self._edges.setdefault(edge.id, edge)
 
     def add_classification(
         self,
@@ -872,8 +816,8 @@ def _add_classification_group_members(
 
 def _add_group_members(builder: _GraphBuilder, group: ConceptGroupSummary) -> None:
     """Union every member of a register concept group into the builder. Members are
-    variable bindings; ``add_variable`` recurses into each member's succession +
-    related neighbors and dedups shared nodes/edges."""
+    variable bindings; ``add_variable`` recurses into each member's succession
+    chain and dedups shared nodes/edges."""
     for member in group.members:
         if member.fqid is not None:
             builder.add_variable(member.fqid)

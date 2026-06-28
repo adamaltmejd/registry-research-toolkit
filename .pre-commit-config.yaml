@@ -30,7 +30,7 @@ repos:
       # pass_filenames: false. files gate skips doc-only commits.
       - id: ty
         name: ty check
-        entry: uvx --from ty==0.0.49 ty check
+        entry: uvx --from ty==0.0.51 ty check
         language: system
         pass_filenames: false
         files: \.py$

@@ -46,7 +46,6 @@ from .codeless_overlap import (
     repo_codeless_overlap_path,
 )
 from .concept_groups import (
-    EDGE_RELATION_KIND,
     derive_classification_succession,
     load_classification_groups,
     load_concept_group_accepts,
@@ -87,7 +86,6 @@ from .relations import (
     derive_variable_vintage_succession,
     load_relations,
     materialize_curated_replaced_by,
-    materialize_related_to,
     materialize_same_as,
     repo_relations_path,
 )
@@ -914,49 +912,18 @@ CREATE TABLE classification_same_as (
     )
 ) WITHOUT ROWID;
 
--- Meaningful "see also" links (variable grain). Carries TWO kinds of row:
---   * A2.2 triage `auto:triage` edges between the distinct `variable` rows a
---     *split* produced (disjoint columns lumped under one source `var_id`), but
---     ONLY the NON-FOLDABLE split reasons — `code_vs_label_pair` (a code/label
---     column pair) and `import_bug_suspect`. The bulk MECHANICAL
---     `same_definition_different_column` siblings are NOT stored here (#591):
---     they only ever fed the concept-group edge fold, which now reads the
---     in-build sibling sets directly (`edge_siblings`), so persisting ~134k
---     rows the read side never surfaced as anything but the concept group was
---     dead weight.
---   * curated `[[edge]] type = "related_to"` see-also links (a DISJOINT,
---     non-foldable `relation_kind` vocabulary; `note` distinguishes them).
--- Stored in BOTH directions (like `variable_same_as`) so the a-side PK prefix
--- serves `Catalog.related(x)` without a second b-side scan; each pair yields two
--- rows. `relation_kind` reflects the split/curation reason; `note` carries
--- provenance (`auto:triage` for build-emitted edges, vs. a curated marker).
-CREATE TABLE variable_related_to (
-    a_provider     TEXT NOT NULL,
-    a_register     TEXT NOT NULL,
-    a_variable     TEXT NOT NULL,
-    b_provider     TEXT NOT NULL,
-    b_register     TEXT NOT NULL,
-    b_variable     TEXT NOT NULL,
-    relation_kind  TEXT NOT NULL,
-    note           TEXT,
-    PRIMARY KEY (
-        a_provider, a_register, a_variable,
-        b_provider, b_register, b_variable
-    )
-) WITHOUT ROWID;
-
 -- Derived concept groups (#303): PRESENTATION-ONLY grouping of near-identical
 -- catalog rows for browse. Identity is untouched — bindings/orders/stats keep
 -- leaf FQIDs and `value_set: "class/<slug>"` keeps referencing the exact
 -- vintage; a wrong group is a cosmetic curation bug, not the identity
 -- corruption that killed identity-level folding (#223 part 2). Three
 -- derivation sources, in priority order (see `concept_groups.py`):
---   'edge'    — connected components of within-register
---               `same_definition_different_column` split siblings (ground truth
---               minted by the A2.2 split machinery; zero inference). Fed by the
---               in-build sibling sets, NOT a `variable_related_to` round-trip
---               (#591); a curated `[[variable_group]]` claiming a member excludes
---               it from the component (curated precedence).
+--   'edge'    — connected components of within-register split siblings (ground
+--               truth minted by the A2.2 split machinery; zero inference). Fed by
+--               the in-build sibling sets the triage minted (`edge_siblings`),
+--               never persisted to any shipped table; a curated
+--               `[[variable_group]]` claiming a member excludes it from the
+--               component (curated precedence).
 --   'token'   — exact curated vocabularies only (no regex name-patterns):
 --               Swedish month slug tails for variables; 4-digit vintage-year
 --               slug tails for classifications (lkf1980…, sni2007).
@@ -2194,56 +2161,6 @@ def _materialize_replaced_by_edges(
         n_curated_skipped_inactive_provider=curated["skipped_inactive_provider"],
     )
     return stats
-
-
-def _materialize_variable_related_to(
-    conn: sqlite3.Connection, edges: list[tuple[int, int, str]]
-) -> int:
-    """Insert the NON-FOLDABLE split-sibling edges (both directions) into
-    `variable_related_to`. Runs after `populate_variable_slugs` so each
-    `variable_id` resolves to its (provider, register, variable) slug FQID.
-    Returns the row count inserted.
-
-    A4.1: the SCB adapter emits these as `IRRelatedToEdge` (variable-grain) and
-    hands the build-only `(variable_id, variable_id, kind)` list to the
-    materializer via `adapter.related_edges`; this materializer post-pass
-    resolves variable_id → slug at write time (after slugs exist).
-
-    #591: the foldable `same_def` kind (`EDGE_RELATION_KIND`) is NO LONGER
-    persisted — it fed only the concept-group edge pass, which now reads the
-    in-build sibling sets directly (`edge_siblings`). Only the meaningful
-    non-foldable kinds (`code_vs_label_pair`, `import_bug_suspect`) land here, so
-    the table is the meaningful-links surface (code/label pairs, import-bug hints,
-    plus the curated see-also rows the related_to pass adds)."""
-    if not edges:
-        return 0
-    fqid_of = {
-        r[0]: (r[1], r[2], r[3])
-        for r in conn.execute(
-            "SELECT v.variable_id, p.slug, r.slug, v.slug "
-            "FROM variable v "
-            "JOIN register r ON v.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id"
-        )
-    }
-    rows: list[tuple] = []
-    for a, b, kind in edges:
-        if kind == EDGE_RELATION_KIND:
-            continue  # foldable — fed to the concept-group pass, not persisted
-        fa, fb = fqid_of.get(a), fqid_of.get(b)
-        # A sibling whose slug never populated (skip_slugs build) can't form an
-        # FQID-keyed edge; skip rather than insert a NULL endpoint.
-        if fa is None or fb is None or None in fa or None in fb:
-            continue
-        rows.append((*fa, *fb, kind, "auto:triage"))
-        rows.append((*fb, *fa, kind, "auto:triage"))
-    conn.executemany(
-        "INSERT OR IGNORE INTO variable_related_to "
-        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable, "
-        " relation_kind, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        rows,
-    )
-    return len(rows)
 
 
 # A4.4e: the SCB feed of the provider-blind `classification_candidate` table — a
@@ -3918,7 +3835,7 @@ def materialize(
     the SHARED post-passes (classifications, slugs, same_as, replaced_by,
     lineage, code_variable_map, classification backfill, scratch DROPs, FTS) run
     ONCE over both providers' rows. Each adapter's
-    `row_counts`/`source_checksums`/`related_edges`/`fold_slug_hints` and the
+    `row_counts`/`source_checksums`/`sibling_edges`/`fold_slug_hints` and the
     provenance sinks are MERGED into combined structures the post-passes consume
     once. SCB-only stats (`projection_stats`, `coalesce_stats`) come from the SCB
     adapter; the SCB `code_variable_map` coverage guard reads SCB scratch
@@ -3998,10 +3915,10 @@ def materialize(
     # Combined manifest inputs + the side channels the post-passes consume once.
     row_counts: dict[str, Any] = {}
     source_checksums: dict[str, str] = {}
-    related_edges: list[tuple[int, int, str]] = []
+    sibling_edges: list[tuple[int, int]] = []
     # A4.4e PR2: provider-blind classification linkage from the SOS adapter
     # (variable_id, value_set_id, short_name). Merged per-adapter like
-    # `related_edges`; fed into `classification_candidate` after the SCB feed.
+    # `sibling_edges`; fed into `classification_candidate` after the SCB feed.
     classification_candidates: list[tuple[int, int | None, str]] = []
     fold_slug_hints: dict[int, str] = {}
     # SCB-only stats (the SOS adapter has no projection/coalesce passes). The SCB
@@ -4022,7 +3939,7 @@ def materialize(
     # A4.3b multi-adapter loop. Per adapter: drain its IR stream into the COMBINED
     # buffers (the DELETE-then-reinsert flip can't reinsert until every adapter's
     # emit() has drained — SCB is still writing those tables during iteration;
-    # SOS writes none), and MERGE its row_counts/source_checksums/related_edges/
+    # SOS writes none), and MERGE its row_counts/source_checksums/sibling_edges/
     # fold_slug_hints. The reinsert + shared post-passes then run ONCE below.
     for adapter, source_dir in adapters:
         _adapter_t0 = time.perf_counter()
@@ -4092,7 +4009,7 @@ def materialize(
         # Merge this adapter's manifest inputs + side channels.
         row_counts.update(adapter.row_counts)
         source_checksums.update(adapter.source_checksums)
-        related_edges.extend(adapter.related_edges)
+        sibling_edges.extend(adapter.sibling_edges)
         # SOS and curated thin providers (#446) populate classification
         # candidates; SCB instead tags classification on `variable_instance` and
         # feeds the candidate table via SQL (the SCB feed below). getattr keeps
@@ -4151,10 +4068,9 @@ def materialize(
     active_providers = frozenset(a.provider for a, _ in adapters)
 
     # Curated pairwise relations (#522): one typed `[[edge]]` surface loaded
-    # ONCE here, then materialized into its three table groups — `related_to`
-    # below (after variable slugs), `same_as` / `replaced_by` further down (after
-    # all slugs). Empty when the file is absent (synthetic builds, wheel
-    # installs).
+    # ONCE here, then materialized into its `same_as` / `replaced_by` table groups
+    # further down (after all slugs). Empty when the file is absent (synthetic
+    # builds, wheel installs).
     relations = load_relations(repo_relations_path())
 
     # Classifications — maintainer-curated normalized code systems. Every
@@ -4318,7 +4234,7 @@ def materialize(
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
         # _coalesce_variable_states (reads variable_state.delivery_column_name),
-        # but before the curated relation passes (related_to / replaced_by
+        # but before the curated relation passes (same_as / replaced_by
         # resolve endpoints off the stored `variable.slug`). Curated `[variable]`
         # overrides in scb.toml win; the rest auto-derive into scb.auto.toml.
         # `fold_slugs` is the adapter's R8 build-only side channel (NOT an IR
@@ -4345,47 +4261,20 @@ def materialize(
             conn, load_codeless_overlap(repo_codeless_overlap_path())
         )
 
-        # Non-foldable split-sibling edges. Runs after variable slugs so each
-        # sibling variable_id resolves to its FQID slug; the triage emitted the
-        # (variable_id, variable_id, kind) pairs during coalescing. #591: the
-        # foldable `same_def` kind is NOT persisted here — it feeds the concept-
-        # group edge pass below via `edge_siblings`; only code/label-pair and
-        # import-bug-suspect edges land in the table.
-        n_related = _materialize_variable_related_to(conn, related_edges)
-        row_counts["variable_related_to"] = n_related
-        _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
-
-        # Curated cross-register "see also" edges (#353, now from the typed
-        # `relations.toml`). Runs right after the auto:triage pass (both write
-        # `variable_related_to`, on disjoint relation-kind vocabularies) so it
-        # shares the --skip-slugs guard; the curated kinds are NON-foldable, so
-        # the concept-group edge pass below ignores them. `providers` gates each
-        # edge to this build's providers.
-        n_curated_related = materialize_related_to(
-            conn,
-            relations.related_to,
-            providers=active_providers,
-        )
-        row_counts["variable_related_to_curated"] = n_curated_related
-        _progress(f"  {n_curated_related:,} curated variable_related_to edges")
-
         # Derived concept groups (#303) — presentation-only browse folding.
         # Ordering: after variable slugs (the edge pass resolves the in-build
         # sibling variable_ids to slugs) and after populate_classifications +
         # populate_slugs (classification rows + slugs, both above). Skipped
         # with the rest of the slug-dependent passes under --skip-slugs (every
         # slug is NULL then — month stems and edge endpoints don't exist).
-        # Dimension 0 folds the in-build `same_def` split-sibling subset
-        # (`edge_siblings`) — #591: those pairs are no longer persisted to
-        # `variable_related_to`, so the fold reads them straight off the triage's
-        # list. Dimension 2 is opt-in over the generated auto catalog (#496):
-        # custom `[[variable_group]]` families fold unconditionally (and take
-        # PRECEDENCE over the edge fold — a claimed FQID is excluded from its
-        # edge component); an auto family folds only when an `[[accept]]` in
+        # Dimension 0 folds the in-build split-sibling pairs (`edge_siblings`)
+        # the triage minted during coalescing — they are never persisted to any
+        # shipped table, just read straight off the triage's list. Dimension 2 is
+        # opt-in over the generated auto catalog (#496): custom
+        # `[[variable_group]]` families fold unconditionally (and take PRECEDENCE
+        # over the edge fold — a claimed FQID is excluded from its edge
+        # component); an auto family folds only when an `[[accept]]` in
         # concept_groups.toml references it.
-        edge_siblings = [
-            (a, b) for a, b, kind in related_edges if kind == EDGE_RELATION_KIND
-        ]
         cg_counts = materialize_concept_groups(
             conn,
             load_concept_groups(repo_concept_groups_path()),
@@ -4394,7 +4283,7 @@ def materialize(
             classification_groups=load_classification_groups(
                 repo_concept_groups_path()
             ),
-            edge_siblings=edge_siblings,
+            edge_siblings=sibling_edges,
             providers=active_providers,
             warn=_progress,
         )
@@ -4475,7 +4364,7 @@ def materialize(
             providers=active_providers,
         )
         # #522: same_as curated counts now reach the manifest (previously
-        # missing) — both grains, mirroring the related_to / replaced_by curated
+        # missing) — both grains, mirroring the replaced_by curated
         # keys. Emitted ONLY when non-zero: a build with no same_as edge for a
         # grain (e.g. classification today, or any partial `--providers` build
         # that gates out the #508 variable batch) would otherwise carry an

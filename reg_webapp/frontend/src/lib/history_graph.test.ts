@@ -521,7 +521,7 @@ describe("resolveEdges", () => {
       edges: [
         { id: "e1", kind: "succession", source: "a", target: "b", label: null },
         // dangling: "z" isn't a node → dropped.
-        { id: "e2", kind: "related", source: "a", target: "z", label: null },
+        { id: "e2", kind: "succession", source: "a", target: "z", label: null },
       ],
       focus_id: "a",
     };

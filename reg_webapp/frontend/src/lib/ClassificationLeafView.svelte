@@ -12,7 +12,7 @@ import SubjectView from "./SubjectView.svelte";
 // history graph over the relationship-graph contract (#761/#792): the route
 // serves classification leaves now (`getBindingGraph(node.fqid)` dispatches on
 // FQID kind), and the renderer draws editions as version-ordered points with
-// succession + related edges — replacing the retired dimensions + lineage panels.
+// succession edges — replacing the retired dimensions + lineage panels.
 // No period picker yet (an edition picker is a later PR), and no docs surface
 // (classifications carry no doc mentions), so those two SubjectView sections are
 // omitted. No LineageDetails here either — classifications carry no
@@ -43,7 +43,7 @@ const graphReady = $derived(
 {/snippet}
 
 <!-- #678: the unified history graph — editions as version-ordered points
-     (succession + related edges, Fork B group clusters). Omits itself on an empty
+     (succession edges, Fork B group clusters). Omits itself on an empty
      graph or while the fetch is unresolved/errored (its own failure domain). -->
 {#snippet relationships()}
   {#if graphReady && graph}

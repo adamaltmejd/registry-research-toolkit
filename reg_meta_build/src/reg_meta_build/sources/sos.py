@@ -1453,8 +1453,9 @@ class SOSAdapter:
       - `source_checksums`, `row_counts` — manifest inputs.
       - `coalesce_stats` — minimal SOS analog (`{}` shape ok).
       - `fold_slug_hints` — SOS folds are rare; left empty.
-      - `related_edges` — split-sibling (variable_id, variable_id, kind) triples
-        the materializer resolves to FQID slugs after slugs exist.
+      - `sibling_edges` — split-sibling (variable_id, variable_id) pairs the
+        concept-group edge fold reads directly (`edge_siblings`); build-only
+        routing, not persisted to any shipped table.
     """
 
     provider = "sos"
@@ -1468,7 +1469,7 @@ class SOSAdapter:
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
         self.fold_slug_hints: dict[int, str] = {}
-        self.related_edges: list[tuple[int, int, str]] = []
+        self.sibling_edges: list[tuple[int, int]] = []
         # Provider-blind classification linkage: (variable_id, value_set_id,
         # short_name) per variable_state of a RESOLVED variable. `db.py` resolves
         # short_name → classification_id and feeds `classification_candidate`,
@@ -1921,18 +1922,11 @@ class SOSAdapter:
                 classification=classification,
                 has_kodlista_sheet=has_kodlista_sheet,
             )
-        # (N choose 2) sibling related-to edges -> self.related_edges. The
-        # materializer resolves variable_id -> FQID slug after slugs exist; it
-        # writes BOTH directions, so emit each unordered pair once.
+        # (N choose 2) sibling pairs -> self.sibling_edges, feeding the
+        # concept-group edge fold (`edge_siblings`). Emit each unordered pair once.
         for i in range(len(sibling_ids)):
             for j in range(i + 1, len(sibling_ids)):
-                self.related_edges.append(
-                    (
-                        sibling_ids[i],
-                        sibling_ids[j],
-                        "same_definition_different_column",
-                    )
-                )
+                self.sibling_edges.append((sibling_ids[i], sibling_ids[j]))
 
     def _resolve_group_classification(
         self, abbrev: str, name: str, group: list[SosVariable]

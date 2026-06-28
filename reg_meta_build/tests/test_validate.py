@@ -1680,9 +1680,9 @@ class TestConceptGroupChecks:
 
     @staticmethod
     def _grouped_db():
-        # #591: the edge fold no longer round-trips `variable_related_to`, so the
-        # check recomputes nothing from sibling rows — a hand-built `edge` group
-        # row is the whole fixture (no companion edges needed).
+        # The edge fold reads the in-build sibling pairs (`edge_siblings`), never a
+        # shipped table, so the check recomputes nothing from sibling rows — a
+        # hand-built `edge` group row is the whole fixture (no companion edges).
         from _slugged_db import add_variable, build_slugged_db
 
         conn = build_slugged_db(classification=None)  # scb/lisa (register 1)

@@ -2,7 +2,7 @@
 
 Covers the three derivation dimensions against hand-curated slugged DBs
 (`_slugged_db`): edge components from the in-build sibling sets (`edge_siblings`,
-dimension 0; #591 — not a `variable_related_to` round-trip), with curated
+dimension 0 — never a shipped-table round-trip), with curated
 precedence excluding a claimed member; month token folds with their guards
 (dimension 1); and curated single-variable families with their single inline
 facet axis and the fail-fast resolution errors (dimension 2). The
@@ -194,9 +194,9 @@ def _facets_for(
 
 
 class TestEdgeGroups:
-    """#591: edge groups fold the IN-BUILD `same_def` split-sibling subset passed
-    as `edge_siblings` (variable_id pairs), NOT rows read back from
-    `variable_related_to` — those foldable edges are no longer persisted."""
+    """Edge groups fold the IN-BUILD split-sibling pairs passed as `edge_siblings`
+    (variable_id pairs) the triage minted — never rows read back from a shipped
+    table."""
 
     def test_component_folds_into_one_group(self) -> None:
         conn = build_slugged_db(classification=None)  # scb/lisa with `kon`
@@ -221,10 +221,9 @@ class TestEdgeGroups:
         # Edge members carry no facets — the member list is the presentation.
         assert _facets(conn, "sun2000") == []
 
-    def test_non_same_def_pair_is_simply_absent(self) -> None:
-        # A non-foldable split kind (code_vs_label_pair / import_bug_suspect) is
-        # never in `edge_siblings` — the build filters by EDGE_RELATION_KIND — so
-        # passing no siblings mints no edge group.
+    def test_no_siblings_mints_no_group(self) -> None:
+        # With no sibling pairs the edge fold mints nothing — the only edge-group
+        # input is the triage's in-build sibling set.
         conn = build_slugged_db(classification=None)
         add_variable(conn, register_id=1, var_id=91, name="A", slug="vara")
         add_variable(conn, register_id=1, var_id=91, name="A", slug="varb")

@@ -47,7 +47,6 @@ from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRLineageEdge,
     IRRegister,
-    IRRelatedToEdge,
     IRReplacedByEdge,
     IRValueCode,
     IRValueSet,
@@ -75,7 +74,6 @@ IRObject = (
     | IRClassification
     | IRLineageEdge
     | IRReplacedByEdge
-    | IRRelatedToEdge
     | IRWarning
     | IRDeliveryProvenance
 )
@@ -105,7 +103,7 @@ class IRAdapter(Protocol):
           5. ``IRVariable``        (FK → register, optional source_register_id)
           6. ``IRVariableState`` / ``IRVariableAlias`` (FK → variable + variant
              [+ value_set for states])
-          7. ``IRLineageEdge`` / ``IRReplacedByEdge`` / ``IRRelatedToEdge``
+          7. ``IRLineageEdge`` / ``IRReplacedByEdge``
           8. ``IRWarning`` / ``IRDeliveryProvenance`` (order-free sinks)
 
         The order constrains only the types an adapter actually emits — an

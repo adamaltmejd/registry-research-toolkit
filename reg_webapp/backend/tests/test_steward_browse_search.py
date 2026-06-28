@@ -319,11 +319,6 @@ def test_successors_subendpoint_gated_and_narrowed(steward_client):
     assert body["successors"] == []
 
 
-def test_related_subendpoint_gated_and_narrowed(steward_client):
-    body = steward_client.get("/api/catalog/scb/lisa/kon/related").json()
-    assert body["related"] == []  # the only related (rams/syss) is unheld
-
-
 def test_period_query_gates_and_narrows(steward_client):
     held = steward_client.get("/api/catalog/scb/lisa/kon?period=2018").json()
     assert {s["delivery_column_name"] for s in held["states"]} == {"Kon"}
@@ -533,15 +528,14 @@ def test_all_unheld_concept_group_404s(steward_client):
 
 
 def test_held_binding_leaf_narrows_embedded_edges(steward_client):
-    # Fix 3: the kon-only steward holds scb/lisa/kon; its embedded same_as / related_to
-    # / succession_chain / lineage all point at scb/rams/syss (UNHELD). The leaf must
+    # Fix 3: the kon-only steward holds scb/lisa/kon; its embedded same_as /
+    # succession_chain / lineage all point at scb/rams/syss (UNHELD). The leaf must
     # narrow them to held — consistent with the already-narrowed sub-endpoints — so it
     # does NOT leak the unheld neighbor.
     body = steward_client.get("/api/catalog/scb/lisa/kon").json()
     assert body["kind"] == "binding"
-    # same_as / related_to / lineage point only at the unheld syss → empty.
+    # same_as / lineage point only at the unheld syss → empty.
     assert body["same_as"] == []
-    assert body["related_to"] == []
     assert body["lineage"] == []
     # succession_chain keeps the held self-edition (kon), drops the unheld successor.
     assert {e["fqid"] for e in body["succession_chain"]} == {"scb/lisa/kon"}
@@ -552,7 +546,6 @@ def test_global_binding_leaf_shows_full_embedded_edges(global_client):
     # neighbor set on the kon leaf — the narrowing must not fire unconditionally.
     body = global_client.get("/api/catalog/scb/lisa/kon").json()
     assert {r["fqid"] for r in body["same_as"]} == {"scb/rams/syss"}
-    assert {r["fqid"] for r in body["related_to"]} == {"scb/rams/syss"}
     assert {e["source_fqid"] for e in body["lineage"]} == {"scb/rams/syss"}
     assert {e["fqid"] for e in body["succession_chain"]} == {
         "scb/lisa/kon",
@@ -685,7 +678,7 @@ def test_classification_group_graph_passthrough(steward_client):
 
 
 class _StubRef:
-    """A minimal variable-grain edge ref (predecessors/successors/related carry a
+    """A minimal variable-grain edge ref (predecessors/successors carry a
     `fqid` field, str-able or None)."""
 
     def __init__(self, fqid: str | None) -> None:

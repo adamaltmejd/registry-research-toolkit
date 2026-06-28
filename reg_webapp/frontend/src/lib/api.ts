@@ -236,7 +236,6 @@ export type VariableRefModel = Schemas["VariableRef"];
  * `name` (no live row). `fqid` is null only on a malformed triple. The browse
  * panel renders the whole chain synchronously from these. */
 export type VariableEditionModel = Schemas["VariableEdition"];
-export type RelatedRefModel = Schemas["RelatedRef"];
 export type LineageEdgeModel = Schemas["LineageEdge"];
 export type LineageWarningModel = Schemas["LineageWarning"];
 
@@ -281,7 +280,7 @@ export type BindingGroupRef = Schemas["BindingGroupRef"];
 /** The catalog relationship-graph contract (#761) — a typed graph object the
  * renderer (#678) draws as-is: one node per variable (states as sub-structure,
  * grouped into representation-run cells) or classification edition, plus
- * `succession` / `related` edges. An empty graph (`nodes: []`) is the "don't
+ * `succession` edges. An empty graph (`nodes: []`) is the "don't
  * render" signal (`nodes.length === 0`). `focus_id` is the requested node
  * (post-same_as), null for a group-addressed call. reg_meta owns topology +
  * predicates; this is just the wire shape. */
@@ -429,7 +428,7 @@ export function getClassificationGroup(
 
 // ── Binding sub-endpoints ───────────────────────────────────────────────────
 // The leaf now EMBEDS states / same_as / succession_chain (the FULL chain, #582) /
-// related_to / lineage, so the SPA fetches only the one it does NOT embed:
+// lineage, so the SPA fetches only the one it does NOT embed:
 // `/lineage_warnings`. It GETs `/catalog/{encodeFqid}/lineage_warnings`; the suffix
 // is greedy-matched ABOVE the catch-all server-side. (The `/predecessors` route
 // still exists server-side — the #411 inbound-succession surface — but the SPA no

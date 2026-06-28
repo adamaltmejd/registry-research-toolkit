@@ -623,27 +623,6 @@ class ClassificationCode(_CatalogModel):
     )
 
 
-class RelatedRef(_CatalogModel):
-    """A variable-grain "see also" link from `variable_related_to`. Same 3-part
-    identity as `VariableRef` plus the `relation_kind`. The table carries the
-    MEANINGFUL links: the non-foldable auto-derived split reasons
-    (`code_vs_label_pair`, `import_bug_suspect`) and curated see-also kinds. The
-    bulk mechanical `same_definition_different_column` split siblings are NOT here
-    — they're the concept group (presentation fold), not a related edge (#591;
-    full taxonomy in reg_meta_build/DESIGN.md). `fqid` is the sibling's 3-segment
-    binding FQID (A2.6).
-
-    `register` is a `BaseModel` method, so the Python attr is `register_name`
-    aliased to the `register` wire/init name (#681); construct/serialize as
-    `register`, read as `.register_name` (see `BindingGroupRef`)."""
-
-    fqid: Fqid | None
-    provider: str
-    register_name: str = Field(alias="register")
-    variable: str
-    relation_kind: str
-
-
 class LineageEdge(_CatalogModel):
     """Consumer-side lineage at STATE grain (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)): one `variable_state_lineage`
     row tying a consumer state to a source state over their validity
@@ -699,7 +678,6 @@ class ResolvedVariable(_CatalogModel):
     replaced_by: tuple[
         VariableRef, ...
     ]  # OUTBOUND successors (see DESIGN.md → Catalog API surface)
-    related_to: tuple[RelatedRef, ...]  # variable_related_to (split siblings)
     lineage: tuple[LineageEdge, ...]  # variable_state_lineage (consumer-side)
     # The binding's owning concept group as `(provider, register, key)` when it is
     # a group member, else None (#616). Lets a member page render group-aware
@@ -1490,7 +1468,6 @@ class Catalog:
             states=self._states_for_variable(var["variable_id"]),
             same_as=edges["same_as"],
             replaced_by=edges["replaced_by"],
-            related_to=edges["related_to"],
             lineage=edges["lineage"],
             group=group,
             via_same_as=via_same_as,
@@ -1811,7 +1788,6 @@ class Catalog:
         return {
             "same_as": self._same_as_edges(provider, register, variable),
             "replaced_by": self._successor_edges(provider, register, variable),
-            "related_to": self._related_edges(provider, register, variable),
             "lineage": self._lineage_edges(variable_id),
         }
 
@@ -1945,32 +1921,6 @@ class Catalog:
             for r in rows
         )
 
-    def _related_edges(
-        self, provider: str, register: str, variable: str
-    ) -> tuple[RelatedRef, ...]:
-        """`variable_related_to` see-also links (a-side keyed; stored both
-        directions, see reg_meta_build/DESIGN.md → Build-time triage (SCB)). Carries
-        `relation_kind`. The meaningful links only — code/label pairs, import-bug
-        hints, curated see-also; the bulk mechanical split siblings are the
-        concept group, not here (#591)."""
-        rows = self._conn.execute(
-            "SELECT b_provider, b_register, b_variable, relation_kind "
-            "FROM variable_related_to "
-            "WHERE a_provider = ? AND a_register = ? AND a_variable = ? "
-            "ORDER BY b_provider, b_register, b_variable, relation_kind",
-            (provider, register, variable),
-        ).fetchall()
-        return tuple(
-            RelatedRef(
-                fqid=self._ref_fqid(r["b_provider"], r["b_register"], r["b_variable"]),
-                provider=r["b_provider"],
-                register=r["b_register"],
-                variable=r["b_variable"],
-                relation_kind=r["relation_kind"],
-            )
-            for r in rows
-        )
-
     def _lineage_edges(self, variable_id: int) -> tuple[LineageEdge, ...]:
         """Consumer-side lineage (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)) for this variable's states (the consumer
         side). A2.6: `source_fqid` is the source state's 3-segment binding FQID,
@@ -2091,11 +2041,6 @@ class Catalog:
         """see DESIGN.md → Catalog API surface: variables that replaced this binding's variable (outbound)."""
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._successor_edges(provider, register, variable))
-
-    def related(self, fqid: str | Fqid) -> list[RelatedRef]:
-        """see DESIGN.md → Catalog API surface: "see also" links (variable grain; the meaningful code/label-pair, import-bug, and curated see-also edges — NOT the bulk mechanical split siblings, which are the concept group; #591; see reg_meta_build/DESIGN.md → Build-time triage (SCB))."""
-        provider, register, variable, _ = self._resolve_edge_triple(fqid)
-        return list(self._related_edges(provider, register, variable))
 
     def variable_chain(self, fqid: str | Fqid) -> list[VariableEdition]:
         """The FULL succession timeline of a variable's chain (#582), oldest first,

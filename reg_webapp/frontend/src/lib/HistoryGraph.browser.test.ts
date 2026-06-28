@@ -13,7 +13,7 @@ import HistoryGraph from "./HistoryGraph.svelte";
 // HistoryGraph (#678) renders the relationship-graph contract (#761/#792) as SVG +
 // a structured screen-reader fallback. These cover the contract behaviours: the
 // empty "don't render" signal, representation-run cells per variable, classification
-// version ordering + is_current, succession/related edges with labels, focus
+// version ordering + is_current, succession edges with labels, focus
 // highlight, and the same_as "also delivered in" affordance. We assert against the
 // VISUALLY-HIDDEN structured fallback (real text the SVG mirrors), which the a11y
 // queries reach regardless of the SVG geometry.
@@ -204,10 +204,9 @@ describe("HistoryGraph (#678)", () => {
     await expect.element(page.getByText("current edition")).toBeVisible();
   });
 
-  it("renders succession (directed) and related (undirected) edges with labels", async () => {
+  it("renders a succession (directed) edge with its label", async () => {
     const a = variableNode({ id: "a", fqid: "scb/lisa/a", label: "A" });
     const b = variableNode({ id: "b", fqid: "scb/lisa/b", label: "B" });
-    const c = variableNode({ id: "c", fqid: "scb/lisa/c", label: "C" });
     const edges: GraphEdge[] = [
       {
         id: "e1",
@@ -216,71 +215,25 @@ describe("HistoryGraph (#678)", () => {
         target: "b",
         label: "Definition change",
       },
-      {
-        id: "e2",
-        kind: "related",
-        source: "b",
-        target: "c",
-        label: "code_vs_label_pair",
-      },
     ];
     render(HistoryGraph, {
-      graph: graph({ nodes: [a, b, c], edges, focus_id: "a" }),
+      graph: graph({ nodes: [a, b], edges, focus_id: "a" }),
     });
 
-    // The fallback lists each edge with its label + the directional glyph. The
+    // The fallback lists the edge with its label + the directional glyph. The
     // edge text spans several text nodes (whitespace-separated), so assert against
-    // each `.fb-edge`'s normalized textContent rather than a single text node.
+    // the `.fb-edge`'s normalized textContent rather than a single text node.
     const edgeTexts = await vi.waitFor(() => {
       const els = [...document.querySelectorAll(".fb-edge")];
-      if (els.length < 2) {
+      if (els.length < 1) {
         throw new Error("edges not yet rendered");
       }
       return els.map((el) => el.textContent?.replace(/\s+/g, " ").trim() ?? "");
     });
-    // Succession is directed (→) with its reason label; related is undirected (↔)
-    // with its relation_kind label.
+    // Succession is directed (→) with its reason label.
     expect(edgeTexts.some((t) => /▸ A → B \(Definition change\)/.test(t))).toBe(
       true,
     );
-    expect(
-      edgeTexts.some((t) => /↔ B ↔ C \(code_vs_label_pair\)/.test(t)),
-    ).toBe(true);
-  });
-
-  it("shows a related edge's relation_kind in a VISIBLE chip, not only the a11y fallback (#678 P2)", async () => {
-    // The retired Related section showed `relation_kind` to sighted users; the new
-    // dashed bow must not bury it in the sr-only fallback. A visible `.reason.related`
-    // chip (outside the visually-hidden `.graph-fallback`) carries it.
-    const a = variableNode({ id: "a", fqid: "scb/lisa/a", label: "A" });
-    const b = variableNode({ id: "b", fqid: "scb/lisa/b", label: "B" });
-    render(HistoryGraph, {
-      graph: graph({
-        nodes: [a, b],
-        edges: [
-          {
-            id: "e1",
-            kind: "related",
-            source: "a",
-            target: "b",
-            label: "code_vs_label_pair",
-          },
-        ],
-        focus_id: "a",
-      }),
-    });
-    const chip = await vi.waitFor(() => {
-      const el = document.querySelector(".reason.related");
-      if (!el) {
-        throw new Error("related reason chip not yet rendered");
-      }
-      return el;
-    });
-    // The chip carries the relation_kind text and is NOT inside the sr-only fallback.
-    expect(chip.textContent?.replace(/\s+/g, " ").trim()).toContain(
-      "code_vs_label_pair",
-    );
-    expect(chip.closest(".graph-fallback")).toBeNull();
   });
 
   it("highlights the focus node ('this variable')", async () => {
@@ -724,9 +677,9 @@ describe("HistoryGraph (#678)", () => {
 
     // VISIBLE reason chips (outside the sr-only fallback) carry the year.
     const chips = await vi.waitFor(() => {
-      const els = [
-        ...document.querySelectorAll(".reason:not(.related)"),
-      ].filter((el) => el.closest(".graph-fallback") === null);
+      const els = [...document.querySelectorAll(".reason")].filter(
+        (el) => el.closest(".graph-fallback") === null,
+      );
       if (els.length < 2) {
         throw new Error("succession reason chips not yet rendered");
       }

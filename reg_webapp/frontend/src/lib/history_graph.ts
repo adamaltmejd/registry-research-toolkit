@@ -447,7 +447,7 @@ export function clustersOf(
       }
     }
   }
-  // Union edge-connected nodes (a succession/related chain is one subject).
+  // Union edge-connected nodes (a succession chain is one subject).
   for (const edge of graph.edges) {
     union(edge.source, edge.target);
   }
@@ -491,8 +491,8 @@ export interface ResolvedEdge {
 }
 
 /** Resolve each edge's `source`/`target` ids to nodes, dropping any edge whose
- * endpoint isn't present. Succession (directed) and related (undirected) are
- * both returned; the renderer styles them by `edge.kind`. */
+ * endpoint isn't present. The edge set is succession-only (directed); the
+ * renderer draws each as a chronological arrow. */
 export function resolveEdges(graph: RelationshipGraph): ResolvedEdge[] {
   const byId = new Map<string, GraphNode>(graph.nodes.map((n) => [n.id, n]));
   const resolved: ResolvedEdge[] = [];

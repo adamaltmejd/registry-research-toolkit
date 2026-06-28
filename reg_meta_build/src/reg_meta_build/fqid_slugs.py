@@ -8,7 +8,7 @@ machinery the CLI exposes.
 
 Variables auto-slug from the latest kolumnnamn at build time. Explicit
 ``[variable]`` TOML rows are exceptions — overrides or deprecations. Graph
-semantics (``same_as`` / ``replaced_by`` succession / ``related_to``) are NOT a
+semantics (``same_as`` / ``replaced_by`` succession) are NOT a
 slug surface; they live in ``curation/relations.toml`` (#522, see
 ``relations.py``). The per-entry ``replaced_by`` field that survives here is the
 WITHIN-FILE slug-typo rename pointer, a different relation from succession.
@@ -68,7 +68,7 @@ SNAPSHOT_FILENAME = ".snapshot.json"
 # silently no-op. `lineage_defaults` / `lineage` are NOT SlugEntry rows —
 # `load_lineage_config` parses them separately — but they're legal top-level
 # tables, so the strict typo check must accept them. Graph semantics
-# (`same_as` / `replaced_by` succession / `related_to`) are NOT a slug surface
+# (`same_as` / `replaced_by` succession) are NOT a slug surface
 # anymore (#522) — they live in `curation/relations.toml`, so a top-level
 # `[[replaced_by]]` or an inline `same_as` field in a slug TOML now fails as an
 # unknown key.

@@ -123,7 +123,7 @@ def test_binding_leaf_embeds_full_record(client):
     # Edge collections are present (possibly empty); #582 replaced the immediate
     # `replaced_by` embed with the full `succession_chain` (asserted in detail in
     # test_binding_leaf_embeds_full_succession_chain).
-    for field in ("succession_chain", "related_to", "lineage"):
+    for field in ("succession_chain", "lineage"):
         assert field in body
 
 
@@ -771,7 +771,6 @@ _SUB_ENDPOINTS = [
     "states",
     "predecessors",
     "successors",
-    "related",
     "lineage",
     "lineage_warnings",
 ]

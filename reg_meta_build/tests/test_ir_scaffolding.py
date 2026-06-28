@@ -24,7 +24,6 @@ from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRLineageEdge,
     IRRegister,
-    IRRelatedToEdge,
     IRReplacedByEdge,
     IRValueCode,
     IRValueSet,
@@ -163,15 +162,6 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "predecessor_variable_id": 10,
             "successor_variable_id": 11,
             "effective_year": 2020,
-            "note": None,
-        },
-    ),
-    "IRRelatedToEdge": (
-        IRRelatedToEdge,
-        {
-            "a_variable_id": 10,
-            "b_variable_id": 11,
-            "relation_kind": "same_panel",
             "note": None,
         },
     ),

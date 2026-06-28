@@ -72,7 +72,7 @@ REVALIDATE_ALWAYS_PATHS = frozenset({"/api/context"})
 # API path prefixes that get the short fold-bearing window. PREFIX (not exact)
 # match. The catalog read surface is `/api/catalog`, `/api/catalog/{...}/variants`,
 # the `{fqid:path}` suffixed sub-endpoints (states/predecessors/successors
-# /dimensions/related/lineage/lineage_warnings), and the `/api/catalog/{fqid:path}`
+# /dimensions/lineage/lineage_warnings), and the `/api/catalog/{fqid:path}`
 # catch-all — all share the `/api/catalog` prefix. `/api/search` is the
 # variable/code search route (routes/search.py); it embeds the same #322
 # concept-group folds, so it shares the staleness gap and the short window (#506).

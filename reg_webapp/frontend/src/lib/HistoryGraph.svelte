@@ -29,9 +29,9 @@ import {
 //     edition is NOT a span and NOT dead after its successor), drawn as a labelled
 //     stop on a thin succession line.
 // Nodes sharing a `group_key` CLUSTER under their `group_label` heading (Fork B);
-// `succession` (directed) + `related` (undirected) edges read as chronological
-// flow / a subtle related affordance; `same_as` surfaces as a per-node "also
-// delivered in {register}" chip (NOT an edge); the `focus_id` node is emphasized.
+// `succession` (directed) edges read as chronological flow; `same_as` surfaces as
+// a per-node "also delivered in {register}" chip (NOT an edge); the `focus_id`
+// node is emphasized.
 //
 // SUBSTRATE: HTML/CSS lanes over an absolute-positioned, year-scaled track (not a
 // monolithic SVG) — that gives a STICKY left gutter under horizontal scroll, a
@@ -202,7 +202,7 @@ function memberLabel(rn: VariableLane): string {
 /** The catalog href to open a NAVIGABLE node from the visible gutter, or null when
  * the node is not a link target. A node is navigable iff it has a binding `fqid`
  * AND is not the focus node (the current page — kept a plain label, not a self
- * link). This makes predecessors/successors/related variables and non-focus
+ * link). This makes predecessors/successors and non-focus
  * classification editions clickable for sighted mouse + keyboard users (#794 P2),
  * restoring the open-affordance the retired panels had; the sr-only fallback's own
  * `<a>`s stay as the screen-reader surface. */
@@ -227,8 +227,7 @@ function gutterSlug(rn: VariableLane): string | null {
  * VARIABLE nodes: a classification-edition succession carries an internal curation
  * provenance tag (the predecessor `note`) as its label, never a human reason — the
  * retired ClassificationLineagePanels showed no edition succession reason, so
- * suppress it for parity AND to avoid leaking the internal tag. (`related` reasons
- * — the `relation_kind` — are handled by `edgeLabelText` directly.) */
+ * suppress it for parity AND to avoid leaking the internal tag. */
 function successionReason(re: ResolvedEdge): string | null {
   if (!re.edge.label) {
     return null;
@@ -239,18 +238,14 @@ function successionReason(re: ResolvedEdge): string | null {
   return re.edge.label;
 }
 
-/** The display label for an edge, or null to render none.
- *  - a `related` edge keeps its `relation_kind` label;
- *  - a `succession` edge folds its (surfaced) human reason with its
- *    `effective_year` — the transition year the retired LineagePanels showed
- *    (`variable_replaced_by.effective_year`). A year-only edge (no reason, or a
- *    classification edge whose internal tag is suppressed) thus still annotates as
- *    "→ 2009" instead of rendering an unlabelled arrow; a reason-with-year reads
- *    "renamed → 2009". Null only when neither a surfaced reason nor a year exists. */
+/** The display label for a succession edge, or null to render none. Folds its
+ * (surfaced) human reason with its `effective_year` — the transition year the
+ * retired LineagePanels showed (`variable_replaced_by.effective_year`). A year-only
+ * edge (no reason, or a classification edge whose internal tag is suppressed) thus
+ * still annotates as "→ 2009" instead of rendering an unlabelled arrow; a
+ * reason-with-year reads "renamed → 2009". Null only when neither a surfaced reason
+ * nor a year exists. */
 function edgeLabelText(re: ResolvedEdge): string | null {
-  if (re.edge.kind === "related") {
-    return re.edge.label || null;
-  }
   const reason = successionReason(re);
   const year = re.edge.effective_year;
   if (year != null) {
@@ -327,8 +322,8 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
               </div>
             {/if}
 
-            <!-- Lanes: gutter (sticky) + track. Succession/related connectors are
-                 an absolutely-positioned overlay over the lane stack (drawn first,
+            <!-- Lanes: gutter (sticky) + track. Succession connectors are an
+                 absolutely-positioned overlay over the lane stack (drawn first,
                  behind the cells). -->
             <div class="lanes" style={`height:${stackH}px`}>
               <!-- Gridlines behind everything (through the whole lane stack). -->
@@ -340,9 +335,9 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                 </div>
               {/if}
 
-              <!-- Connector overlay: succession is the chronological flow, related
-                   a subtle dashed bow. Both anchor at the source/target lane
-                   centres down the gutter rail. -->
+              <!-- Connector overlay: succession is the chronological flow,
+                   anchored at the source/target lane centres down the gutter
+                   rail. -->
               <svg
                 class="connectors"
                 width={trackW}
@@ -362,29 +357,20 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                     <path d="M0,0 L8,4 L0,8 z" class="arrow-head" />
                   </marker>
                 </defs>
-                {#each cEdges as re, ei (re.edge.id)}
+                {#each cEdges as re (re.edge.id)}
                   {@const s = byId.get(re.source.id)}
                   {@const t = byId.get(re.target.id)}
                   {#if s && t}
-                    {#if re.edge.kind === "succession"}
-                      <!-- A thin connector down the gutter rail (predecessor →
-                           successor), arrowed at the successor. -->
-                      <line
-                        x1={GUTTER_W - 10}
-                        y1={s.center}
-                        x2={GUTTER_W - 10}
-                        y2={t.center}
-                        class="edge succession"
-                        marker-end={`url(#arrow-${ci})`}
-                      />
-                    {:else}
-                      {@const bow = GUTTER_W - 22 - ei * 7}
-                      <path
-                        d={`M ${GUTTER_W - 10} ${s.center} Q ${bow} ${(s.center + t.center) / 2} ${GUTTER_W - 10} ${t.center}`}
-                        class="edge related"
-                        fill="none"
-                      />
-                    {/if}
+                    <!-- A thin connector down the gutter rail (predecessor →
+                         successor), arrowed at the successor. -->
+                    <line
+                      x1={GUTTER_W - 10}
+                      y1={s.center}
+                      x2={GUTTER_W - 10}
+                      y2={t.center}
+                      class="edge succession"
+                      marker-end={`url(#arrow-${ci})`}
+                    />
                   {/if}
                 {/each}
               </svg>
@@ -394,25 +380,18 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
                    carries a full-text title; the sr-only fallback has the full
                    text). Succession shows its human reason (variable→variable
                    only — edgeLabelText suppresses the internal classification
-                   tag); a `related` edge shows its `relation_kind` (#678 P2: the
-                   retired Related section showed this to sighted users, so the
-                   dashed bow can't be the only visible carrier) prefixed `↔` to
-                   read as the undirected see-also affordance, not a flow reason. -->
+                   tag). -->
               {#each cEdges as re (re.edge.id)}
                 {@const s = byId.get(re.source.id)}
                 {@const t = byId.get(re.target.id)}
                 {#if edgeLabelText(re) && s && t}
                   <div
                     class="reason"
-                    class:related={re.edge.kind === "related"}
                     style={`top:${(s.center + t.center) / 2}px; left:${GUTTER_W + 6}px`}
                     title={edgeLabelText(re)}
                     aria-hidden="true"
                   >
-                    {#if re.edge.kind === "related"}<span
-                        class="rel-mark"
-                        aria-hidden="true">↔ </span
-                      >{/if}{edgeLabelText(re)}
+                    {edgeLabelText(re)}
                   </div>
                 {/if}
               {/each}
@@ -595,11 +574,9 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
 
           {#each cEdges as re (re.edge.id)}
             <li class="fb-edge muted">
-              <span class="fb-marker" aria-hidden="true"
-                >{re.edge.kind === "succession" ? "▸" : "↔"}</span
-              >
+              <span class="fb-marker" aria-hidden="true">▸</span>
               {re.source.label}
-              {re.edge.kind === "succession" ? "→" : "↔"}
+              →
               {re.target.label}
               {#if edgeLabelText(re)}({edgeLabelText(re)}){/if}
             </li>
@@ -1005,18 +982,11 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
   }
 
   /* Connectors — graph EDGES are DATA, so they read viz tokens (#810), never the
-     brand --accent: a succession/related edge must not collide with the
-     accent-tinted focus/selection chrome. Succession is the directed flow (solid
-     + arrowed); related is the undirected "see also" bow (dashed, low-opacity). */
+     brand --accent: a succession edge must not collide with the accent-tinted
+     focus/selection chrome. Succession is the directed flow (solid + arrowed). */
   .edge.succession {
     stroke: var(--viz-edge-succession);
     stroke-width: 1.5;
-  }
-  .edge.related {
-    stroke: var(--viz-edge-related);
-    stroke-width: 1.2;
-    stroke-dasharray: 4 3;
-    opacity: 0.7;
   }
   .arrow-head {
     fill: var(--viz-edge-succession);
@@ -1038,16 +1008,6 @@ function cellTop(laneHeight: number, row: number, rowCount: number): number {
     text-overflow: ellipsis;
     white-space: nowrap;
     pointer-events: none;
-  }
-  /* A `related` edge's relation_kind chip reads as the see-also affordance, not a
-     succession reason: it carries the related-edge viz token (matching its dashed
-     bow) so the kind is legible to sighted users (#678 P2), distinct from the
-     muted succession reason above. */
-  .reason.related {
-    color: var(--viz-edge-related);
-  }
-  .reason .rel-mark {
-    font-weight: 600;
   }
 
   /* The screen-reader / no-visual structured fallback — visually hidden but

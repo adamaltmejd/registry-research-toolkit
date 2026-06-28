@@ -41,12 +41,6 @@
 #                           edges. A 1→many split (one predecessor, several
 #                           successors) is allowed.
 #
-#   type = "related_to"   — weak "see also" DISCOVERY link between DISTINCT
-#                           concepts (NOT identity). `a` / `b` are 3-segment
-#                           variable FQIDs; `relation_kind` is a curated kind
-#                           (CURATED_RELATION_KINDS, currently `similar_concept`);
-#                           the foldable auto kind is rejected. Optional `note`.
-#
 # References resolve against the built DB at materialize time; a dangling FQID
 # FAILS the build (EXIT_CONFIG). An edge whose provider isn't in the build is
 # SKIPPED (a partial --providers build can't represent it).
@@ -340,39 +334,6 @@ to_column = "borgnr"
 variant = "punktskatter-for-energi"
 effective_year = 2018
 note = "FRIDA firm key resumes delivery as borgnr from 2018 in the punktskatter-for-energi variant (end of the 2014–2017 PERSORGNR gap-fill)"
-
-# ── Curated "see also" edges (#403) ──
-# Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an
-# identity (identity is a `type = "same_as"` edge). Slugs verified against a real
-# scb,sos build.
-
-# Cross-provider economic-assistance counterparts: SCB's ekonomiskt-bistånd
-# register vs Socialstyrelsen's authority register (`ekb`). Same real-world
-# concept, two providers' distinct data products.
-[[edge]]
-type = "related_to"
-a = "scb/ekonomiskt-bistand/utbetalt-belopp-till-hushallet"   # Utbetalt belopp till hushållet
-b = "sos/ekb/ekbbelopp"               # Ekonomiskt bistånd
-relation_kind = "similar_concept"
-note = "curated:cross_register"
-
-[[edge]]
-type = "related_to"
-a = "scb/ekonomiskt-bistand/antmanad" # Månader med bistånd
-b = "sos/ekb/ekbantmanad"             # Månader med ekonomiskt bistånd
-relation_kind = "similar_concept"
-note = "curated:cross_register"
-
-# Cross-register earned-income siblings within SCB: LISA's tax-aggregate earned
-# income vs RAMS's labour-income measure — related but DIFFERENT definitions
-# (förvärvsinkomst is broader than RAMS arbetsinkomst), so a weak see-also, not
-# a fold.
-[[edge]]
-type = "related_to"
-a = "scb/lisa/sammanraknad-forvarvsinkomst"                  # Sammanräknad förvärvsinkomst
-b = "scb/rams/arbink"                 # Arbetsinkomst i RAMS
-relation_kind = "similar_concept"
-note = "curated:cross_register"
 
 # ── #508 tier-1 same_as: auto-curated canonical-family identities ──
 # Reproducible derivation (re-runnable for the deferred follow-up):
