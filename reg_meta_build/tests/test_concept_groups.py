@@ -1937,6 +1937,17 @@ class TestCodeLabelPairs:
         _append_code_label_edges(conn, (_pair(),), frozenset({"sos"}), siblings)
         assert siblings == []
 
+    def test_label_provider_not_in_build_is_skipped(self) -> None:
+        # The provider gate checks BOTH endpoints (mirroring materialize_same_as):
+        # when only the LABEL provider is absent from the active set, the pair is
+        # skipped silently — no EXIT_CONFIG raise, no edge appended. (The structural
+        # guards never run, so a mismatched label endpoint can't trip them.)
+        conn = _code_label_db()
+        pair = CodeLabelPair("scb", "lisa", "partikod", "sos", "lisa", "partinamn")
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (pair,), _SCB, siblings)
+        assert siblings == []
+
     def test_label_owning_value_set_fails(self) -> None:
         conn = _code_label_db(label_has_value_set=True)
         with pytest.raises(RegMetaError) as exc:
@@ -2158,6 +2169,20 @@ class TestCodeLabelPairLoader:
         [[pair]]
         code  = "scb/lisa/partikod"
         label = "scb/lisa/partinamn"
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"
+
+    def test_self_pair_fails(self, tmp_path) -> None:
+        # A pair whose code and label FQID are identical is drift — a variable can't
+        # decode itself. Fail fast at load with a clear error, rather than letting
+        # the contradictory value_set guards fire at materialize time.
+        text = """
+        [[pair]]
+        code  = "scb/lisa/partikod"
+        label = "scb/lisa/partikod"
         """
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, text)

@@ -267,10 +267,14 @@ class CodeLabelPair:
     `kommun`+`kommunnamn`. They are ONE concept, folded into a single register-
     scoped AXIS-LESS `edge` concept group by feeding the pair into the existing
     edge `sibling_edges` channel. Each endpoint is parsed independently as a
-    3-segment `provider/register/variable` FQID (in practice both share the same
-    provider+register, but the loader does not assume it). The code/label
-    distinction is NOT stored — the webapp derives it from value_set ownership at
-    read time."""
+    3-segment `provider/register/variable` FQID; the loader does not ASSUME one
+    provider/register per pair, but Guard 3 (co-delivery via a shared
+    `register_variant`) requires both endpoints in one register, so in practice
+    every pair is same-register/provider — this is NOT a cross-register or
+    cross-provider folding mechanism. The code/label distinction is NOT stored by
+    this change and NO read-side derivation ships here; it is DERIVABLE from
+    value_set ownership (the `code` member owns a value_set, the `label` member
+    owns none) as a future read-side affordance."""
 
     code_provider: str
     code_register: str
@@ -318,6 +322,14 @@ _require_str = functools.partial(
     code="concept_groups_invalid",
     prefix="concept_groups",
     file_name="concept_groups.toml",
+)
+
+_require_pair_fqid = functools.partial(
+    require_fqid,
+    code="code_label_pairs_invalid",
+    prefix="code_label_pairs",
+    entry_table="[[pair]]",
+    file_name="code_label_pairs.toml",
 )
 
 
@@ -829,22 +841,19 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
     out: list[CodeLabelPair] = []
     seen_pairs: set[tuple[tuple[str, str, str], tuple[str, str, str]]] = set()
     for entry in entries:
-        code = require_fqid(
-            entry,
-            "code",
-            code="code_label_pairs_invalid",
-            prefix="code_label_pairs",
-            entry_table="[[pair]]",
-            file_name="code_label_pairs.toml",
-        )
-        label = require_fqid(
-            entry,
-            "label",
-            code="code_label_pairs_invalid",
-            prefix="code_label_pairs",
-            entry_table="[[pair]]",
-            file_name="code_label_pairs.toml",
-        )
+        code = _require_pair_fqid(entry, "code")
+        label = _require_pair_fqid(entry, "label")
+        # Reject a self-pair (code == label): a variable can't be both endpoints of
+        # a code↔label decode. Caught here with a clear loader error rather than
+        # letting the contradictory value_set guards fire at materialize time.
+        if code == label:
+            raise curation_error(
+                "code_label_pairs_invalid",
+                f"code_label_pairs pair has identical `code` and `label` FQID "
+                f"{'/'.join(code)!r}.",
+                "A code↔label pair needs two distinct variables. Fix or drop the "
+                "pair in reg_meta_build/code_label_pairs.toml.",
+            )
         # Reject duplicate (code, label) FQID tuples (mirrors `load_concept_groups`
         # rejecting duplicate keys in the same file). The committed TOML is
         # deduplicated, so this is a drift guard; the full FQID keys the set since
@@ -973,7 +982,11 @@ def _derive_edge_groups(
     """Dimension 0: one group per connected component of within-register
     split-sibling pairs. `edge_siblings` is the IN-BUILD set of same-definition
     sibling pairs the triage minted (`(variable_id, variable_id)`) — NOT a table
-    round-trip; they are never persisted to any shipped table.
+    round-trip; they are never persisted to any shipped table. Since #923 it ALSO
+    carries curated code↔label decode pairs (`code_label_pairs.toml`, appended by
+    `_append_code_label_edges`), so an `edge` group is NOT exclusively an auto
+    same-definition split — a future feature must not assume that (e.g. must not
+    auto-merge edge-group members into one variable identity).
 
     Only a pair whose BOTH endpoints are slugged (`meta`) AND share a register is
     unioned — mirroring the old table query's `WHERE slug IS NOT NULL` join and

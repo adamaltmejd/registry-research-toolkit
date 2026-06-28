@@ -926,7 +926,12 @@ CREATE TABLE classification_same_as (
 --               the in-build sibling sets the triage minted (`edge_siblings`),
 --               never persisted to any shipped table; a curated
 --               `[[variable_group]]` claiming a member excludes it from the
---               component (curated precedence).
+--               component (curated precedence). Since #923, curated code↔label
+--               decode pairs (`code_label_pairs.toml`) are ALSO appended to
+--               `edge_siblings`, so an `edge` group is NOT exclusively an auto
+--               same-definition split — a future feature must not assume that
+--               (e.g. must not auto-merge edge-group members into one variable
+--               identity).
 --   'token'   — exact curated vocabularies only (no regex name-patterns):
 --               Swedish month slug tails for variables; 4-digit vintage-year
 --               slug tails for classifications (lkf1980…, sni2007).
@@ -2837,9 +2842,10 @@ def _append_code_label_edges(
     (`partinamn`) browse as ONE concept. Runs after `populate_variable_slugs`
     (FQIDs resolve off stored slugs) and before `materialize_concept_groups`.
 
-    Per pair: a pair whose CODE provider is absent from `providers` (a partial
-    `--providers` build that can't represent it) is SKIPPED silently — mirroring
-    `materialize_same_as`'s provider gate. Otherwise both FQIDs resolve to a
+    Per pair: a pair whose CODE or LABEL provider is absent from `providers` (a
+    partial `--providers` build that can't represent it) is SKIPPED silently —
+    mirroring `materialize_same_as`'s both-endpoints provider gate. Otherwise both
+    FQIDs resolve to a
     `variable_id` (a dangling FQID FAILS the build, EXIT_CONFIG) and three
     structural guards must hold (each failure EXIT_CONFIG, naming the pair):
     the code endpoint OWNS a value_set, the label endpoint owns NONE, and the two
@@ -2849,9 +2855,11 @@ def _append_code_label_edges(
     for p in pairs:
         code_fqid = f"{p.code_provider}/{p.code_register}/{p.code_variable}"
         label_fqid = f"{p.label_provider}/{p.label_register}/{p.label_variable}"
-        # Provider gate (mirrors materialize_same_as): a partial --providers build
-        # that excludes this pair's provider can't represent it — skip silently.
-        if p.code_provider not in providers:
+        # Provider gate (mirrors materialize_same_as, which gates on BOTH edge
+        # endpoints): a partial --providers build that excludes EITHER endpoint's
+        # provider can't represent the pair — skip silently. The loader doesn't
+        # assume one provider per pair, so both are checked.
+        if p.code_provider not in providers or p.label_provider not in providers:
             continue
         code_vid = resolve_variable_id(
             conn, p.code_provider, p.code_register, p.code_variable
