@@ -199,7 +199,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       .element(page.getByRole("checkbox", { name: /Sni/ }))
       .toBeVisible();
     // The column's full-history period span is shown (scoped to the picker — the
-    // same span text also appears in the StatesView usage list).
+    // same span text also appears in the value-set viewer's usage list).
     const spans = await vi.waitFor(() => {
       const els = [...document.querySelectorAll(".rep-picker .period")].map(
         (el) => el.textContent?.trim(),
@@ -675,6 +675,63 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(nudge?.getAttribute("aria-label")).toBe(
       "Coding changes over time — see the value sets",
     );
+    // #905: it's a DEEP LINK (an anchor) to the value-set viewer focused on this
+    // column — the current leaf path + `?codes=<column>#states-heading` (no
+    // `band.href` on the binding leaf).
+    expect(nudge?.tagName).toBe("A");
+    expect(nudge?.getAttribute("href")).toBe(
+      "/catalog/scb/lisa/kon?codes=ColA#states-heading",
+    );
+  });
+
+  it("a ?codes=<column> deep link focuses the value-set viewer on that column's latest coding (#905)", async () => {
+    // The other side of the deep link: with `?codes=ColA` in the URL the leaf passes
+    // it as `focusColumn`, and the value-set viewer auto-isolates ColA's latest-era
+    // coding (value-set 249 / "SUN", not the earlier 303 / "MiS 1996:1").
+    const states = [
+      state({
+        state_id: 1,
+        variant: "v",
+        delivery_column_name: "ColA",
+        value_set_id: 303,
+        value_set_version_label: "MiS 1996:1",
+        valid_from: "2019-01-01",
+        valid_to: "2019-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "v",
+        delivery_column_name: "ColA",
+        value_set_id: 249,
+        value_set_version_label: "SUN",
+        valid_from: "2020-01-01",
+        valid_to: "2022-12-31",
+      }),
+      state({
+        state_id: 3,
+        variant: "v",
+        delivery_column_name: "ColB",
+        value_set_id: 100,
+        value_set_version_label: "Stable",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    router.navigate("/catalog/scb/lisa/kon?codes=ColA");
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(states),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+    // The viewer is isolated on ColA's latest coding: the "Used by" detail + the
+    // "SUN" heading show, and the union list is hidden.
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    expect(
+      document.querySelector(".vs-detail .vs-heading")?.textContent,
+    ).toContain("SUN");
+    expect(document.querySelector(".vs-list > li")).toBeNull();
   });
 
   it("the single-COLUMN leaf renders ONE compact row led by its COLUMN (#678)", async () => {

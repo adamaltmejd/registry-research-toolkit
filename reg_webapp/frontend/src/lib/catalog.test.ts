@@ -57,6 +57,7 @@ import {
   routeBreadcrumbs,
   rowAddPeriod,
   rowFacet,
+  valueSetKeyForColumn,
   variantSeg,
   windowTitle,
   YEARLESS_VALID_FROM,
@@ -3978,5 +3979,65 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     expect(vs[0].usages[0].spans).toEqual([
       { from: "2016-01-01", to: "9999-12-31" },
     ]);
+  });
+});
+
+describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () => {
+  it("maps a stable-coding column to its distinct value set key", () => {
+    const states = [
+      state({
+        value_set_id: 100,
+        delivery_column_name: "COLA",
+        valid_from: "2010-01-01",
+        valid_to: "2012-12-31",
+      }),
+      state({
+        value_set_id: 200,
+        delivery_column_name: "COLB",
+        valid_from: "2010-01-01",
+        valid_to: "2012-12-31",
+      }),
+    ];
+    expect(valueSetKeyForColumn(states, "COLA")).toBe("id/100");
+    expect(valueSetKeyForColumn(states, "COLB")).toBe("id/200");
+  });
+
+  it("picks the LATEST-era value set for a coding-varying column", () => {
+    // One column delivered two distinct value sets over time — the deep link
+    // resolves to the latest-era (max valid_to) coding, matching the picker row's
+    // representative.
+    const states = [
+      state({
+        value_set_id: 303,
+        delivery_column_name: "COL",
+        valid_from: "2015-01-01",
+        valid_to: "2018-12-31",
+      }),
+      state({
+        value_set_id: 249,
+        delivery_column_name: "COL",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    expect(valueSetKeyForColumn(states, "COL")).toBe("id/249");
+  });
+
+  it("resolves a classification column to its slug key (two-level dedup)", () => {
+    const states = [
+      state({
+        value_set_id: 100,
+        classification_slug: "lkf2007",
+        delivery_column_name: "KOMMUN",
+        valid_from: "2007-01-01",
+        valid_to: "2010-12-31",
+      }),
+    ];
+    expect(valueSetKeyForColumn(states, "KOMMUN")).toBe("class/lkf2007");
+  });
+
+  it("returns null when no state delivers the column", () => {
+    const states = [state({ value_set_id: 100, delivery_column_name: "COLA" })];
+    expect(valueSetKeyForColumn(states, "NOPE")).toBeNull();
   });
 });

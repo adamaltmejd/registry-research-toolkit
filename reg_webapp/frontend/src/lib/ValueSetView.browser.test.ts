@@ -2,16 +2,19 @@ import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { VariableStateModel } from "./api";
-import StatesView from "./StatesView.svelte";
+import ValueSetView from "./ValueSetView.svelte";
 
-// The value-set-centric multi-state view (#668 — dogfooding M13/M18/M20). The
-// kommun shape blows up by VINTAGE (415 states); the view dedups at TWO levels —
-// classification editions by `classification_slug`, others by `value_set_id` —
-// and shows DISTINCT value sets, classification ones linking out (no code dump).
-// A FilterInput + per-row Isolate replace the old all-chips strip. Single-state
-// detail + the empty mode are unchanged.
+// The pure value-set / coding viewer (#905 — extracted from the retired StatesView,
+// #668 dogfooding M13/M18/M20). The kommun shape blows up by VINTAGE (415 states);
+// the view dedups at TWO levels — classification editions by `classification_slug`,
+// others by `value_set_id` — and shows DISTINCT value sets, classification ones
+// linking out (no code dump). A FilterInput + per-row Isolate replace the old
+// all-chips strip. A `?codes=<column>` deep link (the picker's "codings vary"
+// nudge) seeds the isolation via `focusColumn`. Single-state detail + the empty
+// mode are unchanged. NO resolution (variant / value-set version) plumbing — the
+// picker owns that now.
 
-// Minimal VariableStateModel — only the fields StatesView reads.
+// Minimal VariableStateModel — only the fields ValueSetView reads.
 function state(over: Partial<VariableStateModel>): VariableStateModel {
   return {
     state_id: 1,
@@ -32,13 +35,6 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     ...over,
   };
 }
-
-// Required callbacks — no-ops; the view is presentational, the URL writes are
-// BindingLeafView's. Local isolation is independent of these.
-const noopCallbacks = {
-  onpickVariant: () => {},
-  onpickValueSetVersion: () => {},
-};
 
 // A two-value-set fixture mirroring kommun: one classification value set (links
 // out, no codes), one plain value set (expandable codes).
@@ -65,7 +61,7 @@ const plainState = state({
   ],
 });
 
-describe("StatesView — value-set-centric multi-state view (#668)", () => {
+describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () => {
   it("renders DISTINCT value sets, not raw states (the dedup)", async () => {
     // Four states, two value sets → two rows in the union list.
     const states = [
@@ -74,15 +70,14 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       plainState,
       state({ ...plainState, state_id: 4, valid_from: "1968-01-01" }),
     ];
-    render(StatesView, { states, narrowed: false, ...noopCallbacks });
+    render(ValueSetView, { states, narrowed: false });
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
   });
 
   it("a classification value set shows the '= LKF ⟨vintage⟩' link, NOT a code dump", async () => {
-    render(StatesView, {
+    render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
-      ...noopCallbacks,
     });
     // The classification row links out to the classification.
     const link = page.getByRole("link", { name: "= LKF 2007" });
@@ -92,10 +87,9 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
 
   it("a plain value set exposes its codes inline (expandable), not the classification link", async () => {
     // ≥2 states → the multi-state union (one state alone is single-state DETAIL).
-    render(StatesView, {
+    render(ValueSetView, {
       states: [plainState, classState],
       narrowed: false,
-      ...noopCallbacks,
     });
     // The "Values (2)" disclosure is present (the plain value set); expanding
     // reveals the code rows.
@@ -114,7 +108,7 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       state({ ...classState, state_id: 9, value_set_id: 101 }), // SAME edition, distinct id
       plainState,
     ];
-    render(StatesView, { states, narrowed: false, ...noopCallbacks });
+    render(ValueSetView, { states, narrowed: false });
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
     // Exactly one "= LKF 2007" link (no duplicate row).
     expect(
@@ -141,7 +135,7 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       valid_from: "1971-01-01",
       valid_to: "1973-12-31",
     });
-    render(StatesView, { states: [a, b], narrowed: false, ...noopCallbacks });
+    render(ValueSetView, { states: [a, b], narrowed: false });
     const labels = [...document.querySelectorAll(".vs-label")].map(
       (el) => el.textContent,
     );
@@ -152,10 +146,9 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
   });
 
   it("per-row Isolate focuses one value set; '← All value sets' returns to the union", async () => {
-    render(StatesView, {
+    render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
-      ...noopCallbacks,
     });
     // Union by default: two list rows, each with an Isolate button.
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
@@ -170,10 +163,9 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
   });
 
   it("the FilterInput narrows the union list (by label / variant slug)", async () => {
-    render(StatesView, {
+    render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
-      ...noopCallbacks,
     });
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
     // Filter to the plain value set by its label substring.
@@ -191,10 +183,9 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
     // unfiltered list. If isolation keyed on a list INDEX, the filtered row's
     // index 0 would wrongly isolate `classState` (= LKF 2007); keying on the
     // stable `vs.key` isolates the right one.
-    render(StatesView, {
+    render(ValueSetView, {
       states: [classState, plainState],
       narrowed: false,
-      ...noopCallbacks,
     });
     const filter = page.getByRole("textbox", { name: "Filter value sets" });
     await filter.fill("historisk");
@@ -228,44 +219,23 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       value_set_version_label: "Other",
       variant: "a",
     });
-    render(StatesView, {
+    render(ValueSetView, {
       states: [codeless, other],
       narrowed: false,
-      ...noopCallbacks,
     });
     await page.getByRole("button", { name: "Isolate" }).first().click();
     await expect.element(page.getByText("No value set.")).toBeVisible();
   });
 
-  it("narrowed=false with multiple variants does NOT render the narrowing picker", async () => {
-    // The narrowing picker (`.picker`) writes `?variant`/`?value_set_version`,
-    // which the server only honors WITH a `?period` — so it must NOT appear in the
-    // full-history (`narrowed: false`) view, even when several variants exist.
-    render(StatesView, {
+  it("does NOT render any resolution-narrowing picker (the picker owns that now)", async () => {
+    // #905: the old variant / value-set-version chips moved to RepresentationPicker.
+    // The viewer is pure display — no `.picker` fieldset, regardless of variant
+    // multiplicity.
+    render(ValueSetView, {
       states: [classState, plainState], // distinct variants doda / fodda
       narrowed: false,
-      ...noopCallbacks,
     });
     expect(document.querySelector(".picker")).toBeNull();
-  });
-
-  it("greys an out-of-scope value set when a variant is active", async () => {
-    // `lkf2007` is used by `doda`, `Kommun historisk` by `fodda`. Pinning variant
-    // `doda` greys the `fodda`-only value set (greyed, NOT removed).
-    render(StatesView, {
-      states: [classState, plainState],
-      narrowed: true,
-      activeVariant: "doda",
-      ...noopCallbacks,
-    });
-    const rows = document.querySelectorAll<HTMLLIElement>(".vs-list > li");
-    expect(rows).toHaveLength(2);
-    const greyed = [...rows].filter((li) =>
-      li.classList.contains("out-of-scope"),
-    );
-    // Exactly the fodda-only value set is greyed.
-    expect(greyed).toHaveLength(1);
-    expect(greyed[0].textContent).toContain("Kommun historisk");
   });
 
   it("renders technical-change hints inside a folded value-set usage (#743)", async () => {
@@ -291,7 +261,7 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
         delivery_column_name: "KOMMUN_ID",
       }),
     ];
-    render(StatesView, { states, narrowed: false, ...noopCallbacks });
+    render(ValueSetView, { states, narrowed: false });
     await expect
       .element(
         page.getByText(
@@ -310,11 +280,10 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
-    render(StatesView, {
+    render(ValueSetView, {
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
-      ...noopCallbacks,
     });
     const inlineRows = document.querySelectorAll(
       "ul.vs-list:not(.out-of-period-list) > li",
@@ -345,11 +314,10 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
-    render(StatesView, {
+    render(ValueSetView, {
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
-      ...noopCallbacks,
     });
     const filter = page.getByRole("textbox", { name: "Filter value sets" });
     await filter.fill("historisk");
@@ -359,145 +327,8 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
       .toBeVisible();
   });
 
-  it("keeps same-period other-variant value sets inline and greyed (#744 review)", async () => {
-    const samePeriodOtherVariant = state({
-      state_id: 3,
-      value_set_id: 201,
-      value_set_version_label: "Same-period other variant",
-      variant: "fodda",
-      valid_from: "2008-01-01",
-      valid_to: "2008-12-31",
-    });
-    render(StatesView, {
-      states: [classState, samePeriodOtherVariant, plainState],
-      scopeStates: [classState, samePeriodOtherVariant],
-      narrowed: true,
-      activeVariant: "doda",
-      ...noopCallbacks,
-    });
-    const inlineRows = [
-      ...document.querySelectorAll<HTMLLIElement>(
-        "ul.vs-list:not(.out-of-period-list) > li",
-      ),
-    ];
-    expect(inlineRows).toHaveLength(2);
-    const otherVariantRow = inlineRows.find((row) =>
-      row.textContent?.includes("Same-period other variant"),
-    );
-    expect(otherVariantRow).toBeDefined();
-    expect(otherVariantRow?.classList.contains("out-of-scope")).toBe(true);
-    await expect
-      .element(page.getByText("1 value set outside this period"))
-      .toBeVisible();
-  });
-
-  it("uses modifier-resolved states for detail mode when period scope is broader (#744 review)", async () => {
-    render(StatesView, {
-      states: [classState],
-      resolutionStates: [classState],
-      scopeStates: [classState, plainState],
-      narrowed: true,
-      activeVariant: "doda",
-      ...noopCallbacks,
-    });
-    await expect.element(page.getByText("Variant")).toBeVisible();
-    expect(document.querySelector(".vs-list")).toBeNull();
-  });
-
-  it("greys same-period rows outside the active value-set version (#744 review)", async () => {
-    const selectedA = state({
-      state_id: 4,
-      value_set_id: 301,
-      value_set_version_label: "Selected",
-      variant: "doda",
-      valid_from: "2008-01-01",
-      valid_to: "2008-06-30",
-    });
-    const selectedB = state({
-      state_id: 5,
-      value_set_id: 302,
-      value_set_version_label: "Selected",
-      variant: "doda",
-      valid_from: "2008-07-01",
-      valid_to: "2008-12-31",
-    });
-    const otherVersion = state({
-      state_id: 6,
-      value_set_id: 303,
-      value_set_version_label: "Other version",
-      variant: "doda",
-      valid_from: "2008-01-01",
-      valid_to: "2008-12-31",
-    });
-    render(StatesView, {
-      states: [selectedA, selectedB, otherVersion, plainState],
-      resolutionStates: [selectedA, selectedB],
-      scopeStates: [selectedA, selectedB, otherVersion],
-      narrowed: true,
-      activeValueSetVersion: "Selected",
-      ...noopCallbacks,
-    });
-    const inlineRows = [
-      ...document.querySelectorAll<HTMLLIElement>(
-        "ul.vs-list:not(.out-of-period-list) > li",
-      ),
-    ];
-    const otherRow = inlineRows.find((row) =>
-      row.textContent?.includes("Other version"),
-    );
-    expect(otherRow).toBeDefined();
-    expect(otherRow?.classList.contains("out-of-scope")).toBe(true);
-    await expect
-      .element(page.getByText("1 value set outside this period"))
-      .toBeVisible();
-  });
-
-  it("ties active variant styling to the period-matched rows (#744 review)", async () => {
-    const historicalActiveVariant = state({
-      state_id: 7,
-      value_set_id: 304,
-      value_set_version_label: "Shared value set",
-      variant: "doda",
-      valid_from: "2007-01-01",
-      valid_to: "2007-12-31",
-    });
-    const periodOtherVariant = state({
-      state_id: 8,
-      value_set_id: 304,
-      value_set_version_label: "Shared value set",
-      variant: "fodda",
-      valid_from: "2008-01-01",
-      valid_to: "2008-12-31",
-    });
-    render(StatesView, {
-      states: [historicalActiveVariant, periodOtherVariant],
-      resolutionStates: [],
-      scopeStates: [periodOtherVariant],
-      narrowed: true,
-      activeVariant: "doda",
-      ...noopCallbacks,
-    });
-    const rows = document.querySelectorAll<HTMLLIElement>(
-      "ul.vs-list:not(.out-of-period-list) > li",
-    );
-    expect(rows).toHaveLength(1);
-    expect(rows[0].classList.contains("out-of-scope")).toBe(true);
-    expect(document.querySelector(".out-of-period")).toBeNull();
-  });
-
-  it("keeps single-state detail resolution when full history is available (#744)", async () => {
-    render(StatesView, {
-      states: [classState, plainState],
-      scopeStates: [classState],
-      narrowed: true,
-      ...noopCallbacks,
-    });
-    await expect.element(page.getByText("Variant")).toBeVisible();
-    expect(document.querySelector(".vs-list")).toBeNull();
-  });
-
   it("single-state DETAIL mode is unchanged (Variant / Valid / value set)", async () => {
-    render(StatesView, {
+    render(ValueSetView, {
       states: [
         state({
           variant: "doda",
@@ -506,7 +337,6 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
         }),
       ],
       narrowed: false,
-      ...noopCallbacks,
     });
     // The single-state detail renders its own dl.meta + the value-set heading —
     // NOT the multi-state value-set list UI (`.vs-list`, which only the >1-state
@@ -517,9 +347,80 @@ describe("StatesView — value-set-centric multi-state view (#668)", () => {
   });
 
   it("empty mode is unchanged (clean no-state message, not an error)", async () => {
-    render(StatesView, { states: [], narrowed: true, ...noopCallbacks });
+    render(ValueSetView, { states: [], narrowed: true });
     await expect
       .element(page.getByText("No state delivered for this period."))
       .toBeVisible();
+  });
+
+  // ── focusColumn deep-link (#905) ────────────────────────────────────────────
+  it("focusColumn auto-isolates the distinct value set its column delivers", async () => {
+    // `plainState` is delivered via column PLAINCOL; the `?codes=PLAINCOL` deep link
+    // (focusColumn) seeds the isolation onto its value set, NOT the classification
+    // one — the union list is hidden and the isolated detail shows it.
+    const classCol = state({ ...classState, delivery_column_name: "CLASSCOL" });
+    const plainCol = state({ ...plainState, delivery_column_name: "PLAINCOL" });
+    render(ValueSetView, {
+      states: [classCol, plainCol],
+      narrowed: false,
+      focusColumn: "PLAINCOL",
+    });
+    // Isolated → no union rows, the detail's "Used by" + the plain value set's
+    // heading are visible.
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(0);
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    expect(
+      document.querySelector(".vs-detail .vs-heading")?.textContent,
+    ).toContain("Kommun historisk");
+  });
+
+  it("focusColumn on a coding-VARYING column isolates the LATEST-era value set", async () => {
+    // One column delivered two distinct value sets over time (a coding change):
+    // the deep link isolates the LATEST-era one (max valid_to) — the picker row's
+    // representative coding. The earlier coding stays one "← All value sets" away.
+    const early = state({
+      state_id: 1,
+      value_set_id: 303,
+      value_set_version_label: "Old coding",
+      variant: "v",
+      delivery_column_name: "COL",
+      valid_from: "2015-01-01",
+      valid_to: "2018-12-31",
+    });
+    const latest = state({
+      state_id: 2,
+      value_set_id: 249,
+      value_set_version_label: "New coding",
+      variant: "v",
+      delivery_column_name: "COL",
+      valid_from: "2019-01-01",
+      valid_to: "2022-12-31",
+    });
+    render(ValueSetView, {
+      states: [early, latest],
+      narrowed: false,
+      focusColumn: "COL",
+    });
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    expect(
+      document.querySelector(".vs-detail .vs-heading")?.textContent,
+    ).toContain("New coding");
+    // The reset returns to the union showing BOTH codings.
+    await page.getByRole("button", { name: "← All value sets" }).click();
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
+  });
+
+  it("focusColumn degrades to the default union when no state delivers it", async () => {
+    // A stale / unknown `?codes=` matches nothing → the viewer shows its default
+    // union list, not a blank isolated detail.
+    const classCol = state({ ...classState, delivery_column_name: "CLASSCOL" });
+    const plainCol = state({ ...plainState, delivery_column_name: "PLAINCOL" });
+    render(ValueSetView, {
+      states: [classCol, plainCol],
+      narrowed: false,
+      focusColumn: "NOPE",
+    });
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
+    expect(document.querySelector(".vs-detail")).toBeNull();
   });
 });

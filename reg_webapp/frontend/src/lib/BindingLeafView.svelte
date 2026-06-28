@@ -32,9 +32,9 @@ import RepresentationPicker, {
   type PickerSelection,
 } from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
-import StatesView from "./StatesView.svelte";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
+import ValueSetView from "./ValueSetView.svelte";
 import { windowStore } from "./window.svelte";
 
 // The binding LEAF — the addressable variable, its resolution controls, the
@@ -82,6 +82,12 @@ const params = $derived({
 const hasResolutionModifier = $derived(
   params.variant !== undefined || params.value_set_version !== undefined,
 );
+
+// #905: a `?codes=<column>` deep link (the picker's "codings vary" nudge) focuses
+// the value-set viewer on that delivery column's coding. Pure VIEW state — it does
+// NOT re-fetch (it's not a server modifier, unlike `?period`/`?variant`), so it's
+// read separately from `params` and passed straight to ValueSetView.
+const focusColumn = $derived(router.getQueryParam("codes"));
 
 // Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
 // node's embedded states are shown (no redundant request; CatalogNodeView already
@@ -157,7 +163,7 @@ const states = $derived.by(() => {
 });
 
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
-// + StatesView's empty-message wording).
+// + ValueSetView's empty-message wording).
 const isNarrowed = $derived(!!params.period && !narrowedError);
 const stateScope = $derived(
   isNarrowed
@@ -263,11 +269,11 @@ const coverage = $derived(coverageFromStates(node.states));
 // unit-tested.
 //
 // A `?variant` / `?value_set_version` MODIFIER (the "Narrowed by" chip) is the
-// exception: it scopes the StatesView to one axis, so the picker must offer ONLY
-// the rows consistent with that narrowing (`narrowStatesByModifier`, the same
-// match as StatesView's `inScope`) — otherwise "select all" would add rows for
-// variants / versions OUTSIDE the active narrowing. With NO modifier active the
-// states pass through unchanged (full history, behavior unchanged).
+// exception: it scopes the resolution to one axis, so the picker must offer ONLY
+// the rows consistent with that narrowing (`narrowStatesByModifier`) — otherwise
+// "select all" would add rows for variants / versions OUTSIDE the active
+// narrowing. With NO modifier active the states pass through unchanged (full
+// history, behavior unchanged).
 
 /** The selectable representation rows — one per distinct (variant, delivery
  * column) over the active state history (the full history, or the
@@ -536,16 +542,15 @@ function commitSelected(selected: PickerSelection[]): void {
         >{/if}
     </h3>
     {#if states}
-      <StatesView
+      <!-- The pure value-set / coding viewer (#905). Narrowing to one state is the
+           PICKER's job now (it writes `?variant`/`?value_set_version`); this view
+           only DISPLAYS the codings. The "codings vary" nudge deep-links here via
+           `?codes=<column>` → `focusColumn`, focusing the right coding. -->
+      <ValueSetView
         {states}
         narrowed={isNarrowed}
-        resolutionStates={isNarrowed ? resolvedStates : null}
         scopeStates={stateScope}
-        activeVariant={params.variant ?? null}
-        activeValueSetVersion={params.value_set_version ?? null}
-        onpickVariant={(variant) => setResolution({ variant })}
-        onpickValueSetVersion={(value_set_version) =>
-          setResolution({ value_set_version })}
+        {focusColumn}
       />
     {:else}
       <p class="muted" aria-busy="true">Loading states…</p>
