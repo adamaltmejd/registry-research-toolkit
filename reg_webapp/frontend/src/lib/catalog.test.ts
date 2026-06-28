@@ -2391,6 +2391,62 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
       pickerRowPasses(band.rows[0], band, dims, { hush: new Set(["h1"]) }),
     ).toBe(false);
   });
+
+  it("pickerRowPasses: coding branch matches the row's value-set label; code-less always fails", () => {
+    const dims: PickerDimension[] = [
+      {
+        kind: "coding",
+        key: "coding",
+        label: "Coding",
+        values: [
+          { value: "SNI 2002", label: "SNI 2002" },
+          { value: "SNI 2007", label: "SNI 2007" },
+        ],
+      },
+    ];
+    const band = { rows: [row({ column: "C", valueSetLabel: "SNI 2002" })] };
+    const coded = band.rows[0];
+    // In the selected coding set → passes; not in it → fails.
+    expect(
+      pickerRowPasses(coded, band, dims, { coding: new Set(["SNI 2002"]) }),
+    ).toBe(true);
+    expect(
+      pickerRowPasses(coded, band, dims, { coding: new Set(["SNI 2007"]) }),
+    ).toBe(false);
+    // A code-less row (valueSetLabel "") is NOT a coding choice — it fails ANY
+    // active coding filter, even one whose set is non-empty (intended design).
+    const bare = row({ column: "D", valueSetLabel: "" });
+    expect(
+      pickerRowPasses(bare, { rows: [bare] }, dims, {
+        coding: new Set(["SNI 2002", "SNI 2007"]),
+      }),
+    ).toBe(false);
+  });
+
+  it("pickerFilterDimensions: dedupes a facet axis across a band's sibling columns (#819 group shape)", () => {
+    // One band / fqid carrying several sibling delivery columns (the representation-
+    // group shape): the `hush` axis takes value h1 on two columns and h2 on a third.
+    // The inner per-row loop must dedupe h1 across the two columns to a single value.
+    const band = {
+      rows: [
+        row({ column: "C1" }),
+        row({ column: "C2" }),
+        row({ column: "C3" }),
+      ],
+      facetsByColumn: {
+        C1: [{ axis: "hush", value: "h1", label: "Hushåll A" }],
+        C2: [{ axis: "hush", value: "h1", label: "Hushåll A" }],
+        C3: [{ axis: "hush", value: "h2", label: "Hushåll B" }],
+      },
+    };
+    const dims = pickerFilterDimensions([band], axes);
+    expect(dims.map((d) => d.key)).toEqual(["hush"]);
+    // h1 appears on two columns but dedupes to one value alongside h2.
+    expect(dims[0].values).toEqual([
+      { value: "h1", label: "Hushåll A" },
+      { value: "h2", label: "Hushåll B" },
+    ]);
+  });
 });
 
 describe("bandLabeling (#678 inc 2 adaptive band identity)", () => {

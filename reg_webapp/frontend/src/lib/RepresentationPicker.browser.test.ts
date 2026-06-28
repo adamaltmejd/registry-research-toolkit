@@ -197,6 +197,58 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
   });
 
+  it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
+    const onadd = vi.fn();
+    render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      onadd,
+    });
+    // Select DIN3 (enhet=fam, hush=h1) via its row checkbox.
+    const din3 = await vi.waitFor(() => {
+      const cb = [
+        ...document.querySelectorAll<HTMLInputElement>(
+          ".col-list .row-btn input.cbox",
+        ),
+      ][2];
+      if (!cb) {
+        throw new Error("DIN3 row checkbox not yet rendered");
+      }
+      return cb;
+    });
+    din3.click();
+    await expect.element(page.getByText("1 column selected")).toBeVisible();
+
+    // Filter Enhet → "Individ" (ind): DIN3 (fam) is now hidden but still selected.
+    clickFilter("Individ");
+    await expect
+      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .toBeVisible();
+    expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
+
+    const selectAll = page.getByRole("checkbox", {
+      name: "Select all columns",
+    });
+    // Select all → adds the 2 visible rows; the hidden DIN3 stays selected (3 total).
+    await selectAll.click();
+    await expect
+      .element(page.getByText("3 columns selected (1 hidden by filters)"))
+      .toBeVisible();
+    // Deselect all → clears the 2 visible rows only; the hidden DIN3 survives.
+    await selectAll.click();
+    await expect
+      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .toBeVisible();
+    expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
+
+    // The surviving hidden selection still commits.
+    await page.getByRole("button", { name: "Add to project" }).click();
+    expect(onadd).toHaveBeenCalledTimes(1);
+    const committed = onadd.mock.calls[0][0] as { row: PickerRepresentation }[];
+    expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
+  });
+
   it("'No columns match' shows when a filter empties the list", async () => {
     render(RepresentationPicker, {
       bands: [multiAxisBand()],

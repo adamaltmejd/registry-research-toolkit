@@ -437,6 +437,13 @@ describe("BindingLeafView representation picker (#678)", () => {
     ].map((el) => el.textContent?.trim());
     expect(rowPrimaries).toContain("lastbilar");
     expect(rowPrimaries).toContain("bussar");
+    // The two populations discriminate, so the leaf surfaces the #908 Population
+    // FILTER fieldset (the leaf surface of #908 the picker exposes for a varying-
+    // population variable).
+    const filterLegends = [
+      ...document.querySelectorAll(".dim-filters .dim-filter legend"),
+    ].map((el) => el.textContent?.trim());
+    expect(filterLegends).toContain("Population");
     // The constant column is NOT repeated as a per-row label (the populations are the
     // row primaries; no nested row's primary/chip is the column).
     expect(

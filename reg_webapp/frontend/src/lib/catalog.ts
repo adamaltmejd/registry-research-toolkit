@@ -1431,7 +1431,7 @@ export interface PickerDimension {
  * /fqid carries DISTINCT facets per delivery column), or undefined when the row's
  * column has no facet there. Read from the band's `facetsByColumn` keyed by the row's
  * own column. */
-function rowFacet(
+export function rowFacet(
   band: PickerBandFacets,
   row: PickerRepresentation,
   axis: string,
@@ -1557,8 +1557,7 @@ export function pickerRowPasses(
       }
     } else {
       // facet: the row's facet value on this axis (from its band's column facets).
-      const facets = band.facetsByColumn?.[row.column] ?? [];
-      const f = facets.find((x) => x.axis === dim.key);
+      const f = rowFacet(band, row, dim.key);
       if (!f || !sel.has(f.value)) {
         return false;
       }

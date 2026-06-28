@@ -11,6 +11,7 @@ import {
   pickerLabeling,
   pickerRowPasses,
   representationInWindow,
+  rowFacet,
   yearOf,
 } from "./catalog";
 import { router } from "./router.svelte";
@@ -417,16 +418,14 @@ const view = $derived(
 function rowFacetMarkers(
   band: PickerBand,
   column: string,
-): { axis: string; value: string }[] {
-  const facets = band.facetsByColumn?.[column];
-  if (!facets) {
-    return [];
-  }
-  const out: { axis: string; value: string }[] = [];
+): { name: string; axis: string; value: string }[] {
+  const out: { name: string; axis: string; value: string }[] = [];
   for (const axis of axes) {
-    const f = facets.find((x) => x.axis === axis.name);
+    // Reuse catalog's single facetsByColumn[column] lookup; the marker shape maps
+    // the curator label (display) over the stable axis NAME (Svelte #each key).
+    const f = rowFacet(band, { column } as PickerRepresentation, axis.name);
     if (f) {
-      out.push({ axis: axis.label, value: f.label });
+      out.push({ name: axis.name, axis: axis.label, value: f.label });
     }
   }
   return out;
@@ -525,7 +524,7 @@ function navigateChip(event: MouseEvent, href: string): void {
 {#snippet dimFilter(dim: PickerDimension)}
   <fieldset class="dim-filter">
     <legend>
-      <span class="dim-kind" data-kind={dim.kind}>{dim.label}</span>
+      <span class="dim-kind">{dim.label}</span>
     </legend>
     <div class="filter-options">
       {#each dim.values as v (v.value)}
@@ -672,7 +671,7 @@ function navigateChip(event: MouseEvent, href: string): void {
                      of dimension distinguishes the row. -->
                 {#if facetMarkers.length > 0}
                   <span class="facet-markers">
-                    {#each facetMarkers as m (m.axis)}
+                    {#each facetMarkers as m (m.name)}
                       <span class="facet-marker"
                         ><span class="dim-kind facet">{m.axis}</span
                         >{m.value}</span
@@ -878,7 +877,7 @@ function navigateChip(event: MouseEvent, href: string): void {
                        so a multi-axis column reads its dimension TYPE at a glance. -->
                   {#if facetMarkers.length > 0}
                     <span class="facet-markers">
-                      {#each facetMarkers as m (m.axis)}
+                      {#each facetMarkers as m (m.name)}
                         <span class="facet-marker"
                           ><span class="dim-kind facet">{m.axis}</span
                           >{m.value}</span
