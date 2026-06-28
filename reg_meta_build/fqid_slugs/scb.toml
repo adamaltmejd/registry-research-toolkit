@@ -1098,6 +1098,11 @@ slug = "klr"
 [register_variant."90.165"]
 slug = "_default"
 display_group = "Konjunkturstatistik, löner för regioner"
+# Sub-annual aggregate series (#730, follow-up to #577): year (ar) × month (manad),
+# no micro entity → no panel_entity_key. The composite key addresses one delivered
+# month, so grain = "row".
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Konjunkturstatistik, löner för privat sektor (KLP)
 [register."91"]
@@ -1403,6 +1408,11 @@ slug = "kts"
 [register_variant."116.131"]
 slug = "_default"
 display_group = "Kommunernas och regionernas finansiella tillgångar och skulder"
+# Sub-annual aggregate series (#730, follow-up to #577): year (ar) × quarter (kvartal),
+# no micro entity → no panel_entity_key. The composite key addresses one delivered
+# quarter, so grain = "row".
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
 
 # Kommunalekonomisk utjämning och utjämning av LSS-kostnader mellan kommuner
 [register."117"]
@@ -3584,13 +3594,24 @@ display_group = "Jordbrukets vattenanvändning"
 [register."290"]
 slug = "kvartalsutfall"
 
+# Sub-annual aggregate series (#730, follow-up to #577): year × quarter, no micro
+# entity → no panel_entity_key, grain = "row". NOTE the slug discrepancy vs the
+# sibling sub-annual variants above: register 290's year/quarter columns deliver as
+# `Ar`/`Kvartal` but fold to the more specific slugs `kalenderar`/`kvartal-period`
+# (a separate `berakningsperiod`/`KvEnk` column records the *collection* period, not
+# the reference period, and is deliberately excluded from the key). Both variants
+# (774 kommuner, 775 regioner) carry the same pair.
 [register_variant."290.774"]
 slug = "kvartalsutfall-kommuner"
 display_group = "Kvartalsutfall kommuner"
+panel_time_key = ["kalenderar", "kvartal-period"]
+panel_time_grain = "row"
 
 [register_variant."290.775"]
 slug = "kvartalsutfall-regioner"
 display_group = "Kvartalsutfall regioner/landsting"
+panel_time_key = ["kalenderar", "kvartal-period"]
+panel_time_grain = "row"
 
 # Finansiella företag, årsbokslut
 [register."292"]
@@ -3828,6 +3849,11 @@ slug = "byggproduktionsindex"
 [register_variant."319.986"]
 slug = "_default"
 display_group = "Byggproduktionsindex"
+# Sub-annual aggregate series (#730, follow-up to #577): year (ar) × month (manad),
+# no micro entity → no panel_entity_key. The composite key addresses one delivered
+# month, so grain = "row".
+panel_time_key = ["ar", "manad"]
+panel_time_grain = "row"
 
 # Grundskola: nationella prov åk 6
 [register."320"]
