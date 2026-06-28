@@ -1972,6 +1972,114 @@ class TestCodeLabelPairs:
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "code_label_pairs_unresolved"
 
+    def test_two_pairs_sharing_label_fold_into_one_group(self) -> None:
+        # The real shape of the shipped landsting/glyfosat/vaxtskyddsmedel clusters:
+        # two coded variables (each owns a value_set) co-delivered with ONE shared
+        # denormalized label column. Two pairs share the label endpoint, so the edge
+        # component builder unions them into ONE axis-less 3-member group.
+        conn = build_slugged_db(classification=None)
+        add_value_set(conn, value_set_id=500, codes=[("01", "A"), ("02", "B")])
+        add_value_set(conn, value_set_id=501, codes=[("11", "X"), ("12", "Y")])
+        add_variable(conn, register_id=1, var_id=200, name="Kod A", slug="koda")
+        add_variable(conn, register_id=1, var_id=201, name="Kod B", slug="kodb")
+        add_variable(conn, register_id=1, var_id=202, name="Namn", slug="namn")
+        # Both codes own a value_set; the shared label owns none; all three
+        # co-delivered in variant 10.
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="koda",
+            register_variant_id=10,
+            delivery_column_name="KodA",
+            value_set_id=500,
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kodb",
+            register_variant_id=10,
+            delivery_column_name="KodB",
+            value_set_id=501,
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="namn",
+            register_variant_id=10,
+            delivery_column_name="Namn",
+            value_set_id=None,
+        )
+        conn.commit()
+        pairs = (
+            CodeLabelPair("scb", "lisa", "koda", "scb", "lisa", "namn"),
+            CodeLabelPair("scb", "lisa", "kodb", "scb", "lisa", "namn"),
+        )
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, pairs, _SCB, siblings)
+        assert siblings == [
+            (_vid(conn, "koda"), _vid(conn, "namn")),
+            (_vid(conn, "kodb"), _vid(conn, "namn")),
+        ]
+
+        counts = materialize_concept_groups(conn, edge_siblings=siblings)
+        assert counts["edge_groups"] == 1
+        groups = _groups(conn)
+        assert len(groups) == 1
+        (g,) = groups.values()
+        assert g["source"] == "edge"
+        assert set(g["members"]) == {"koda", "kodb", "namn"}
+        # Axis-less: no axis rows, no member facets, NULL delivery columns.
+        assert g["axes"] == []
+        assert _facets(conn, "koda") == []
+        assert _facets(conn, "kodb") == []
+        assert _facets(conn, "namn") == []
+        delivery_cols = {
+            r[0]
+            for r in conn.execute(
+                "SELECT delivery_column_name FROM concept_group_variable"
+            )
+        }
+        assert delivery_cols == {None}
+
+    def test_curated_group_excludes_pair_endpoint(self) -> None:
+        # Curated precedence (#591) over the code-label edge: when a curated
+        # `[[variable_group]]` already claims one of a pair's endpoints, the edge
+        # fold excludes it (the `exclude_variable_ids` path), so the component drops
+        # below 2 survivors and the edge channel mints no overlapping group — the
+        # one-group-per-variable invariant holds. Mirrors
+        # TestEdgeGroups.test_curated_member_excluded_from_edge_fold, driving the
+        # edge via `_append_code_label_edges`.
+        conn = _code_label_db()
+        add_variable(conn, register_id=1, var_id=202, name="Other", slug="other")
+        conn.commit()
+        siblings: list[tuple[int, int]] = []
+        _append_code_label_edges(conn, (_pair(),), _SCB, siblings)
+        assert siblings == [(_vid(conn, "partikod"), _vid(conn, "partinamn"))]
+        # The curated group claims the pair's code endpoint (+ an unrelated member),
+        # so the {partikod, partinamn} component drops to 1 survivor.
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="fam",
+            label="Familj",
+            axes=_axis1("part"),
+            members=(
+                _member("partikod", "part", "1", "A"),
+                _member("other", "part", "2", "O"),
+            ),
+        )
+        counts = materialize_concept_groups(
+            conn, (curated,), edge_siblings=siblings, providers=_SCB
+        )
+        assert counts["edge_groups"] == 0  # component below 2 survivors
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"fam"}
+        assert groups["fam"]["members"] == ["other", "partikod"]
+        # No minted group folds partikod and partinamn together.
+        for g in groups.values():
+            assert not ({"partikod", "partinamn"} <= set(g["members"]))
+
 
 class TestCodeLabelPairLoader:
     @staticmethod
@@ -2038,3 +2146,20 @@ class TestCodeLabelPairLoader:
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, '[[pairs]]\ncode = "a/b/c"\nlabel = "a/b/d"\n')
         assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_duplicate_pair_fails(self, tmp_path) -> None:
+        # Two identical (code, label) entries are drift — fail fast (EXIT_CONFIG,
+        # the dedicated duplicate-pair code). The committed TOML is deduplicated, so
+        # this guards future drift.
+        text = """
+        [[pair]]
+        code  = "scb/lisa/partikod"
+        label = "scb/lisa/partinamn"
+        [[pair]]
+        code  = "scb/lisa/partikod"
+        label = "scb/lisa/partinamn"
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "code_label_pairs_invalid"

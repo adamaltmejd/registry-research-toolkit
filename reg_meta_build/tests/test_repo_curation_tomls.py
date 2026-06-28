@@ -80,6 +80,21 @@ def test_repo_code_label_pairs_parses() -> None:
     assert all(
         p.label_provider and p.label_register and p.label_variable for p in pairs
     )
+    # No duplicate (code, label) pairs (the loader also rejects this — guard the
+    # committed TOML against future drift). Key on the full FQID, not just the
+    # variable slug, since two registers could share a variable slug.
+    pair_tuples = [
+        (
+            p.code_provider,
+            p.code_register,
+            p.code_variable,
+            p.label_provider,
+            p.label_register,
+            p.label_variable,
+        )
+        for p in pairs
+    ]
+    assert len(pair_tuples) == len(set(pair_tuples))
 
 
 def test_repo_concept_group_accepts_parses() -> None:

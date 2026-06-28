@@ -813,9 +813,10 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[pair]]` top-level;
     each entry sets `code` AND `label`, each a 3-segment `provider/register/variable`
-    FQID. Endpoint RESOLUTION (do the variables exist? is the code the value-set
-    owner? are they co-delivered?) happens at materialize time against the built DB
-    (`_append_code_label_edges`), not here."""
+    FQID; `(code, label)` FQID tuples are unique (a duplicate pair is drift, mirroring
+    the duplicate-key rejection in `load_concept_groups`). Endpoint RESOLUTION (do the
+    variables exist? is the code the value-set owner? are they co-delivered?) happens
+    at materialize time against the built DB (`_append_code_label_edges`), not here."""
     entries = load_curation_entries(
         path,
         entry_key="pair",
@@ -826,6 +827,7 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
         entry_fields="code / label (both 3-segment FQIDs)",
     )
     out: list[CodeLabelPair] = []
+    seen_pairs: set[tuple[tuple[str, str, str], tuple[str, str, str]]] = set()
     for entry in entries:
         code = require_fqid(
             entry,
@@ -843,6 +845,19 @@ def load_code_label_pairs(path: Path | None) -> tuple[CodeLabelPair, ...]:
             entry_table="[[pair]]",
             file_name="code_label_pairs.toml",
         )
+        # Reject duplicate (code, label) FQID tuples (mirrors `load_concept_groups`
+        # rejecting duplicate keys in the same file). The committed TOML is
+        # deduplicated, so this is a drift guard; the full FQID keys the set since
+        # two registers can share a variable slug.
+        if (code, label) in seen_pairs:
+            raise curation_error(
+                "code_label_pairs_invalid",
+                f"code_label_pairs duplicate pair {'/'.join(code)!r} <-> "
+                f"{'/'.join(label)!r}.",
+                "List each (code, label) pair once in "
+                "reg_meta_build/code_label_pairs.toml.",
+            )
+        seen_pairs.add((code, label))
         out.append(
             CodeLabelPair(
                 code_provider=code[0],

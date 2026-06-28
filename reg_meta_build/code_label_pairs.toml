@@ -3,28 +3,7 @@
 #
 # A coded variable (owns a value_set: codes + their labels) is co-delivered with a
 # denormalized LABEL column that re-states those labels as free text (e.g. `partikod`
-# + `partinamn`, `kommun` + `kommunnamn`). They are ONE concept. Each [[pair]] folds
-# the two variables into one register-scoped, AXIS-LESS concept group (an `edge`-style
-# group) via the existing edge fold -- the curated pair is appended to the in-build
-# `sibling_edges` set. No new tables, no SCHEMA_VERSION bump (content only). The
-# code/label distinction is NOT stored: the code member owns the value_set, the label
-# member owns none, so the webapp derives it.
-#
-# Schema:
-#   [[pair]]
-#   code  = "<provider>/<register>/<variable>"   # 3-seg FQID; OWNS a value_set
-#   label = "<provider>/<register>/<variable>"   # 3-seg FQID; owns NO value_set
-#
-# CURATED, never a name-pattern rule: a heuristic scan seeds the worklist, but every
-# entry is hand-checked. A register can co-deliver several codes and several name
-# columns; only the genuine code->its-own-decode pairs are listed here. Cross-concept
-# links the heuristic proposed (e.g. glyfosat<->vaxtskyddsmedel name, skola<->skolenhet)
-# are deliberately omitted -- a wrong pairing simply gets no group.
-#
-# Resolved against the built DB at materialize time. A dangling FQID, or a pair that
-# fails the structural guard (code must own a value_set, label must own none, both must
-# be co-delivered), FAILS the build (EXIT_CONFIG). A pair whose provider is not in the
-# --providers build is SKIPPED.
+# + `partinamn`, `kommun` + `kommunnamn`). They are ONE concept. Each
 
 [[pair]]
 code  = "scb/allmanna-val-nominerade/partikod"
@@ -285,10 +264,6 @@ label = "scb/komvux/kommunalforbund-namn"
 [[pair]]
 code  = "scb/komvux/kommunalforbund-id-2"
 label = "scb/komvux/kommunalforbund-namn-2"
-
-[[pair]]
-code  = "scb/komvux-anpassad/gymnasieforbund-id"
-label = "scb/komvux-anpassad/gymnasieforbundets-namn"
 
 [[pair]]
 code  = "scb/komvux-anpassad/gymnasieforbund-id"
