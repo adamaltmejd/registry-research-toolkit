@@ -454,9 +454,11 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("renders the delivery column as a prominent CHIP in a column-varies row; the variant primary stays plain (#678)", async () => {
-    // Two distinct columns on one variable (column VARIES) → each nested row leads
-    // with its column rendered as a .col-chip (the selection signal); the value-set
-    // qualifier (which varies too) stays plain text, NOT a chip.
+    // Two CO-EXISTING (overlapping) columns on one variable (column VARIES) → each
+    // nested row leads with its column rendered as a .col-chip (the selection signal);
+    // the value-set qualifier (which varies too) stays plain text, NOT a chip. The
+    // windows OVERLAP (the SSYK 3-digit / 5-digit parallel-coding case): a non-
+    // overlapping pair would collapse to one rename row (#902).
     const colVaries = [
       state({
         state_id: 1,
@@ -464,14 +466,14 @@ describe("BindingLeafView representation picker (#678)", () => {
         delivery_column_name: "Ssyk3",
         value_set_version_label: "SSYK 3-siffrig",
         valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
+        valid_to: "2020-12-31",
       }),
       state({
         state_id: 2,
         variant: "individer",
         delivery_column_name: "Ssyk5",
         value_set_version_label: "SSYK 5-siffrig",
-        valid_from: "2016-01-01",
+        valid_from: "2010-01-01",
         valid_to: "2020-12-31",
       }),
     ];
@@ -508,6 +510,8 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("hoists a common value-set STEM to the context and shows per-row suffixes (sni92 shape, #678)", async () => {
     // sni92: the long "Svensk standard för näringsgrensindelning," stem repeats; the
     // picker hoists it once to the subhead context and each row shows only its suffix.
+    // Two CO-EXISTING (overlapping-window) columns so they stay separate nested rows
+    // (a non-overlapping pair would collapse to one rename row, #902).
     const sni92 = [
       state({
         state_id: 1,
@@ -516,7 +520,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         value_set_version_label:
           "Svensk standard för näringsgrensindelning, Aktiviteter",
         valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
+        valid_to: "2020-12-31",
       }),
       state({
         state_id: 2,
@@ -524,7 +528,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         delivery_column_name: "Sni92B",
         value_set_version_label:
           "Svensk standard för näringsgrensindelning, Branscher",
-        valid_from: "2016-01-01",
+        valid_from: "2010-01-01",
         valid_to: "2020-12-31",
       }),
     ];

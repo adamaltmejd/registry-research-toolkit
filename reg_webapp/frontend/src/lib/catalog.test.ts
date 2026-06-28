@@ -19,6 +19,7 @@ import {
   catalogHref,
   classGroupHref,
   clusterBands,
+  coexistingColumns,
   commonLabelStem,
   coverageFromStates,
   DATA_BROWSER_LABEL,
@@ -1776,6 +1777,168 @@ describe("pickerRepresentations (#678 direct picker)", () => {
     ]);
     expect(row.variantLabel).toBe("ovriga-fordonsslag");
   });
+
+  // ── #902 part 2: collapse an intra-variable SEQUENTIAL RENAME ────────────────
+  it("collapses a non-overlapping rename chain into ONE row led by the LATEST column", () => {
+    // disponibel-inkomst-familj-2: DINF (1981) → DINF83 (1984–85) → DINF84 (1986–87)
+    // → DINF86 (1990–). Distinct columns over NON-overlapping eras = one evolving
+    // representation by rename, NOT four co-equal parallel columns.
+    const rows = pickerRepresentations([
+      state({
+        variant: "familj",
+        delivery_column_name: "DINF",
+        valid_from: "1981-01-01",
+        valid_to: "1983-12-31",
+      }),
+      state({
+        variant: "familj",
+        delivery_column_name: "DINF83",
+        valid_from: "1984-01-01",
+        valid_to: "1985-12-31",
+      }),
+      state({
+        variant: "familj",
+        delivery_column_name: "DINF84",
+        valid_from: "1986-01-01",
+        valid_to: "1987-12-31",
+      }),
+      state({
+        variant: "familj",
+        delivery_column_name: "DINF86",
+        valid_from: "1990-01-01",
+        valid_to: "1995-12-31",
+      }),
+    ]);
+    // ONE row, not four — led by the latest-era column DINF86.
+    expect(rows).toHaveLength(1);
+    expect(rows[0].column).toBe("DINF86");
+    expect(rows[0].key).toBe("familj::DINF86");
+    // The earlier (superseded) columns ride as the chronological progression hint.
+    expect(rows[0].renamedColumns).toEqual(["DINF", "DINF83", "DINF84"]);
+    // The collapsed row spans the union of every era (1981 → 1995).
+    expect(rows[0].from).toBe("1981-01-01");
+    expect(rows[0].to).toBe("1995-12-31");
+  });
+
+  it("keeps genuinely PARALLEL (overlapping) columns as separate rows", () => {
+    // CDISP and CDISP5 both delivered 2010–2020 (inkl. / exkl. kapitalvinst) — a real
+    // co-existing choice, NOT a rename: each stays its own selectable row.
+    const rows = pickerRepresentations([
+      state({
+        variant: "individer",
+        delivery_column_name: "CDISP",
+        valid_from: "2010-01-01",
+        valid_to: "2020-12-31",
+      }),
+      state({
+        variant: "individer",
+        delivery_column_name: "CDISP5",
+        valid_from: "2010-01-01",
+        valid_to: "2020-12-31",
+      }),
+    ]);
+    expect(rows.map((r) => r.column).sort()).toEqual(["CDISP", "CDISP5"]);
+    // Neither is a rename fold → no superseded-column hint.
+    expect(rows.every((r) => r.renamedColumns.length === 0)).toBe(true);
+  });
+
+  it("folds the renames but keeps a co-existing parallel PAIR separate", () => {
+    // A MIX: A (2008–2010) → B (2011–2014) are a sequential rename (non-overlapping,
+    // overlapping nothing else); X and Y both deliver 2015–2020 → a parallel pair. The
+    // renames collapse to ONE row (led by B); X and Y each stay their own row (only
+    // columns that overlap NOTHING fold — a column overlapping a sibling is parallel).
+    const rows = pickerRepresentations([
+      state({
+        variant: "v",
+        delivery_column_name: "A",
+        valid_from: "2008-01-01",
+        valid_to: "2010-12-31",
+      }),
+      state({
+        variant: "v",
+        delivery_column_name: "B",
+        valid_from: "2011-01-01",
+        valid_to: "2014-12-31",
+      }),
+      state({
+        variant: "v",
+        delivery_column_name: "X",
+        valid_from: "2015-01-01",
+        valid_to: "2020-12-31",
+      }),
+      state({
+        variant: "v",
+        delivery_column_name: "Y",
+        valid_from: "2015-01-01",
+        valid_to: "2020-12-31",
+      }),
+    ]);
+    const byCol = new Map(rows.map((r) => [r.column, r]));
+    expect([...byCol.keys()].sort()).toEqual(["B", "X", "Y"]);
+    expect(byCol.get("B")?.renamedColumns).toEqual(["A"]);
+    expect(byCol.get("X")?.renamedColumns).toEqual([]);
+    expect(byCol.get("Y")?.renamedColumns).toEqual([]);
+  });
+
+  it("does NOT fold a rename ACROSS variants (rename is one variable+population)", () => {
+    // Same column-name lineage but different populations → each variant keeps its own
+    // single-column row (per-variant scope), never folded together.
+    const rows = pickerRepresentations([
+      state({
+        variant: "individer",
+        delivery_column_name: "Old",
+        valid_from: "2010-01-01",
+        valid_to: "2014-12-31",
+      }),
+      state({
+        variant: "familj",
+        delivery_column_name: "New",
+        valid_from: "2015-01-01",
+        valid_to: "2020-12-31",
+      }),
+    ]);
+    expect(rows.map((r) => r.key).sort()).toEqual([
+      "familj::New",
+      "individer::Old",
+    ]);
+    expect(rows.every((r) => r.renamedColumns.length === 0)).toBe(true);
+  });
+});
+
+describe("coexistingColumns (#902 shared overlap leaf)", () => {
+  it("returns columns whose windows overlap; excludes a sequential rename", () => {
+    const set = coexistingColumns([
+      {
+        delivery_column_name: "A",
+        valid_from: "2010-01-01",
+        valid_to: "2020-12-31",
+      },
+      {
+        delivery_column_name: "B",
+        valid_from: "2012-01-01",
+        valid_to: "2018-12-31",
+      },
+      {
+        delivery_column_name: "C",
+        valid_from: "2021-01-01",
+        valid_to: "2025-12-31",
+      },
+    ]);
+    // A and B overlap; C is wholly after both → a rename, not coexisting.
+    expect([...set].sort()).toEqual(["A", "B"]);
+  });
+
+  it("treats a null (unbounded) end as overlapping everything after it", () => {
+    const set = coexistingColumns([
+      { delivery_column_name: "A", valid_from: "2010-01-01", valid_to: null },
+      {
+        delivery_column_name: "B",
+        valid_from: "2030-01-01",
+        valid_to: "2031-12-31",
+      },
+    ]);
+    expect([...set].sort()).toEqual(["A", "B"]);
+  });
 });
 
 describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => {
@@ -1799,6 +1962,7 @@ describe("rowAddPeriod (#678 finding 3: honor the active period on add)", () => 
       wirePeriod: "2010..2020",
       valueSetLabel: "",
       codingsVary: false,
+      renamedColumns: [],
       ...over,
     };
   };
@@ -2020,6 +2184,7 @@ describe("pickerLabeling (#678 1b adaptive labels)", () => {
       wirePeriod: "2000..2010",
       valueSetLabel: "",
       codingsVary: false,
+      renamedColumns: [],
       ...over,
     };
   }
@@ -2251,6 +2416,7 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
       wirePeriod: "2000..2010",
       valueSetLabel: "",
       codingsVary: false,
+      renamedColumns: [],
       ...over,
     };
   }

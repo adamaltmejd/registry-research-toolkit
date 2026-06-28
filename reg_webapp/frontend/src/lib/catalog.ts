@@ -729,6 +729,50 @@ function codingKeyOf(s: VariableStateModel): string {
   return `${s.value_set_version_label}|${members.join(",")}`;
 }
 
+/** The DISTINCT delivery columns among `states` that genuinely CO-EXIST — a column
+ * whose validity window overlaps ANOTHER (different) column's window at some instant.
+ * The single overlap-detection leaf shared by the editor's `representationsFromStates`
+ * chooser (#266) AND the picker's `pickerRepresentations` sequential-rename collapse
+ * (#902), so the two never re-derive (and can't drift apart on) the
+ * coexist-vs-rename distinction. A column NOT in this set is, relative to its siblings,
+ * a SEQUENTIAL RENAME (non-overlapping eras), not a parallel representation. Reads only
+ * `delivery_column_name` / `valid_from` / `valid_to`; a null bound is normalized to the
+ * `0001`/`9999` sentinel (an unbounded side overlaps freely), so both the leaf's
+ * non-null `VariableStateModel` states and the picker's nullable `PickerStateInput`
+ * states feed it. Inclusive overlap (`a.from <= b.to && b.from <= a.to`): two columns
+ * whose windows merely touch at a shared instant are still co-existing. simplify: O(n^2)
+ * pairwise scan, fine for a variable's handful of states. */
+export function coexistingColumns(
+  states: readonly {
+    delivery_column_name: string | null;
+    valid_from: string | null;
+    valid_to: string | null;
+  }[],
+): Set<string> {
+  const from = (s: { valid_from: string | null }): string =>
+    s.valid_from ?? YEARLESS_VALID_FROM;
+  const to = (s: { valid_to: string | null }): string =>
+    s.valid_to ?? OPEN_ENDED_VALID_TO;
+  const coexisting = new Set<string>();
+  for (let i = 0; i < states.length; i++) {
+    for (let j = i + 1; j < states.length; j++) {
+      const a = states[i];
+      const b = states[j];
+      if (
+        a.delivery_column_name &&
+        b.delivery_column_name &&
+        a.delivery_column_name !== b.delivery_column_name &&
+        from(a) <= to(b) &&
+        from(b) <= to(a)
+      ) {
+        coexisting.add(a.delivery_column_name);
+        coexisting.add(b.delivery_column_name);
+      }
+    }
+  }
+  return coexisting;
+}
+
 /** The delivery-column representations a binding must choose between among a
  * resolve's states (the `StatesResponse` from a `?period` resolve), ranked
  * latest-era first so the PRIMARY (currently-active) column is `[0]` — the
@@ -785,23 +829,7 @@ export function representationsFromStates(
     b.validTo.localeCompare(a.validTo) || a.column.localeCompare(b.column);
   // Distinct columns valid at the SAME instant (overlapping windows) are parallel
   // representations; distinct columns in non-overlapping windows are a rename.
-  const coexisting = new Set<string>();
-  for (let i = 0; i < states.length; i++) {
-    for (let j = i + 1; j < states.length; j++) {
-      const a = states[i];
-      const b = states[j];
-      if (
-        a.delivery_column_name &&
-        b.delivery_column_name &&
-        a.delivery_column_name !== b.delivery_column_name &&
-        a.valid_from <= b.valid_to &&
-        b.valid_from <= a.valid_to
-      ) {
-        coexisting.add(a.delivery_column_name);
-        coexisting.add(b.delivery_column_name);
-      }
-    }
-  }
+  const coexisting = coexistingColumns(states);
   if (coexisting.size >= 2) {
     return [...byColumn.values()]
       .filter((s) => coexisting.has(s.delivery_column_name as string))
@@ -879,6 +907,17 @@ export interface PickerRepresentation {
   wirePeriod: string | null;
   valueSetLabel: string;
   codingsVary: boolean;
+  /** The SUPERSEDED delivery-column names this row folds, when it is a collapsed
+   * SEQUENTIAL RENAME (#902): one variable+variant's columns delivered over
+   * NON-overlapping eras (`DINF` → `DINF83` → `DINF84` → `DINF86`) are ONE evolving
+   * representation, not co-equal parallel columns, so they collapse into ONE row led by
+   * the LATEST-era column (`column`/`key`) spanning the union of their windows. This
+   * lists the EARLIER column names in chronological order (the latest, which leads, is
+   * excluded) so the picker can surface the progression as a quiet sub-text hint
+   * (`was DINF, DINF83, DINF84`) — NOT the full Gantt/time-band era view (#904).
+   * Empty for an ordinary single-column row or a genuinely parallel (co-existing)
+   * column, which stay their own rows. */
+  renamedColumns: string[];
 }
 
 /** The WIRE segment for ONE inclusive ISO window, or null when a bound is a sentinel
@@ -1095,19 +1134,74 @@ export interface PickerStateInput {
 export function pickerRepresentations(
   states: readonly PickerStateInput[],
 ): PickerRepresentation[] {
-  const byKey = new Map<string, PickerStateInput[]>();
+  // Group by VARIANT first, then by column within each variant: the
+  // coexist-vs-rename distinction (#902) is per-variant (a rename is one
+  // variable+variant's columns over non-overlapping eras), so coexistence must be
+  // computed on a variant's own states, not across populations. First-seen variant
+  // order, then first-seen column order within it, keep the output stable.
+  const byVariant = new Map<string, Map<string, PickerStateInput[]>>();
   for (const s of states) {
     if (!s.delivery_column_name) {
       continue;
     }
-    const key = `${s.variant}::${s.delivery_column_name}`;
-    const group = byKey.get(key);
+    const cols =
+      byVariant.get(s.variant) ?? new Map<string, PickerStateInput[]>();
+    const group = cols.get(s.delivery_column_name);
     if (group) {
       group.push(s);
     } else {
-      byKey.set(key, [s]);
+      cols.set(s.delivery_column_name, [s]);
+    }
+    byVariant.set(s.variant, cols);
+  }
+  const out: PickerRepresentation[] = [];
+  for (const [variant, cols] of byVariant) {
+    // The variant's genuinely CO-EXISTING (overlapping) columns — parallel
+    // representations that stay their OWN rows. Every other column is, relative to its
+    // siblings, a sequential RENAME and folds into ONE row (when ≥2 of them). Reuses
+    // the shared `coexistingColumns` leaf so the picker and the editor's chooser can't
+    // drift on the distinction (CLAUDE.md: reuse the leaf, don't re-derive it).
+    const variantStates: PickerStateInput[] = [];
+    for (const g of cols.values()) {
+      variantStates.push(...g);
+    }
+    const coexisting = coexistingColumns(variantStates);
+    const renameGroups: PickerStateInput[][] = [];
+    const renameStates: PickerStateInput[] = [];
+    for (const [column, group] of cols) {
+      if (coexisting.has(column)) {
+        // A parallel (co-existing) column: its own standalone row, as before.
+        renameGroups.push(group);
+      } else {
+        // A non-overlapping column: accumulate into the variant's single rename fold.
+        renameStates.push(...group);
+      }
+    }
+    // The non-coexisting columns collapse into ONE row only when there are ≥2 of them
+    // (a genuine rename progression); a lone non-coexisting column is just an ordinary
+    // single-column row (handled by the same fold of one column).
+    if (renameStates.length > 0) {
+      renameGroups.push(renameStates);
+    }
+    for (const group of renameGroups) {
+      out.push(pickerRow(variant, group));
     }
   }
+  return out;
+}
+
+/** Build ONE picker row from a column-group's states (#902): an ordinary single
+ * column's states, OR several SEQUENTIAL-RENAME columns of one variant+variant folded
+ * together (`pickerRepresentations` decides which). The row leads with the LATEST-era
+ * column (max `valid_to`) — its `key`/`column`/coding — and spans the union of every
+ * contributing column's delivery windows, so a folded rename reads as ONE evolving
+ * representation over its full time span. When the group folds >1 distinct column, the
+ * superseded (earlier) columns are listed chronologically in `renamedColumns` for the
+ * picker's quiet progression hint (the latest, which leads, is excluded). */
+function pickerRow(
+  variant: string,
+  group: PickerStateInput[],
+): PickerRepresentation {
   // Normalize a state's nullable bounds to the catalog sentinels: a null start is
   // the yearless floor, a null end the open-ended ceiling — the same forms the leaf
   // states already carry, so the span/wire-period logic below stays bound-uniform.
@@ -1115,46 +1209,62 @@ export function pickerRepresentations(
     s.valid_from ?? YEARLESS_VALID_FROM;
   const validTo = (s: PickerStateInput): string =>
     s.valid_to ?? OPEN_ENDED_VALID_TO;
-  return [...byKey.entries()].map(([key, group]) => {
-    const from = group.reduce(
-      (m, s) => (validFrom(s) < m ? validFrom(s) : m),
-      validFrom(group[0]),
-    );
-    const to = group.reduce(
-      (m, s) => (validTo(s) > m ? validTo(s) : m),
-      validTo(group[0]),
-    );
-    // The column's DISJOINT delivery windows (an interrupted series fuses adjacent
-    // states but leaves a real gap as its own window) — the wire period commits the
-    // comma-union over these so a gap year is never covered (#678 finding). A
-    // continuously-delivered column yields one window spanning from..to.
-    const windows = deliveryWindows(
-      group.map((s) => ({ from: validFrom(s), to: validTo(s) })),
-    );
-    // The latest-era state (max valid_to, column tie-break is moot within one
-    // group) supplies the representative value-set label — the current coding.
-    const latest = group.reduce((a, b) => (validTo(b) > validTo(a) ? b : a));
-    // Coding change over time: >1 DISTINCT value_set_id across this column's states.
-    // Keyed on the reliable id (not the label, which SCB labels inconsistently for
-    // one id); `null` (code-less) is its own value, so a null↔id transition counts.
-    const codingsVary = new Set(group.map((s) => s.value_set_id)).size > 1;
-    // The variant display label — the curator `variant_label`, falling back to the
-    // slug for a NULL-named variant. Display-only; the slug stays the key/coordinate.
-    const variantLabel = group[0].variant_label ?? group[0].variant;
-    return {
-      key,
-      variant: group[0].variant,
-      variantLabel,
-      column: group[0].delivery_column_name as string,
-      from,
-      to,
-      windows,
-      period: formatWindow(from, to),
-      wirePeriod: rowWirePeriod(windows),
-      valueSetLabel: latest.value_set_version_label,
-      codingsVary,
-    };
-  });
+  const from = group.reduce(
+    (m, s) => (validFrom(s) < m ? validFrom(s) : m),
+    validFrom(group[0]),
+  );
+  const to = group.reduce(
+    (m, s) => (validTo(s) > m ? validTo(s) : m),
+    validTo(group[0]),
+  );
+  // The DISJOINT delivery windows across ALL the group's states (a folded rename's
+  // several columns, or one column's interrupted series) — the wire period commits the
+  // comma-union over these so a gap year is never covered (#678 finding).
+  const windows = deliveryWindows(
+    group.map((s) => ({ from: validFrom(s), to: validTo(s) })),
+  );
+  // The latest-era state (max valid_to) leads: its column is the row identity and its
+  // value-set label the representative coding. For a folded rename this is the CURRENT
+  // (surviving) column name — `DINF86`, not the retired `DINF`.
+  const latest = group.reduce((a, b) => (validTo(b) > validTo(a) ? b : a));
+  const column = latest.delivery_column_name as string;
+  // The superseded columns of a folded rename, oldest-first (the leading latest column
+  // excluded) — the picker's "was X, Y, Z" progression hint. Ordered by each column's
+  // own earliest era so the hint reads chronologically. Empty for an ordinary single
+  // column (one distinct column → nothing superseded).
+  const eraByColumn = new Map<string, string>();
+  for (const s of group) {
+    const col = s.delivery_column_name as string;
+    const prev = eraByColumn.get(col);
+    if (prev === undefined || validFrom(s) < prev) {
+      eraByColumn.set(col, validFrom(s));
+    }
+  }
+  const renamedColumns = [...eraByColumn.entries()]
+    .filter(([col]) => col !== column)
+    .sort((a, b) => a[1].localeCompare(b[1]))
+    .map(([col]) => col);
+  // Coding change over time: >1 DISTINCT value_set_id across the group's states.
+  // Keyed on the reliable id (not the label, which SCB labels inconsistently for
+  // one id); `null` (code-less) is its own value, so a null↔id transition counts.
+  const codingsVary = new Set(group.map((s) => s.value_set_id)).size > 1;
+  // The variant display label — the curator `variant_label`, falling back to the
+  // slug for a NULL-named variant. Display-only; the slug stays the key/coordinate.
+  const variantLabel = group[0].variant_label ?? variant;
+  return {
+    key: `${variant}::${column}`,
+    variant,
+    variantLabel,
+    column,
+    from,
+    to,
+    windows,
+    period: formatWindow(from, to),
+    wirePeriod: rowWirePeriod(windows),
+    valueSetLabel: latest.value_set_version_label,
+    codingsVary,
+    renamedColumns,
+  };
 }
 
 /** Narrow `pickerRepresentations`' input states to the SAME subset an active

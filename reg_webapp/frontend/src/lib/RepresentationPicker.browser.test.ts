@@ -25,6 +25,7 @@ function row(over: Partial<PickerRepresentation>): PickerRepresentation {
     wirePeriod: "2000..2010",
     valueSetLabel: "",
     codingsVary: false,
+    renamedColumns: [],
     ...over,
   };
 }

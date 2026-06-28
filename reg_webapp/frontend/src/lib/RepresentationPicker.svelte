@@ -67,6 +67,22 @@ export interface PickerBand {
    * the variable IDENTITY becomes a navigation link, kept DISTINCT from the selection
    * checkbox. */
   href?: string;
+  /** The SUPERSEDED predecessor editions this band folds (#902): when an inter-variable
+   * `succession` edge runs between two members of the group, the predecessor is NOT a
+   * co-equal selectable band — the chain HEAD (latest edition) leads, and its superseded
+   * predecessor(s) are surfaced here as quiet HISTORY (a "supersedes …" disclosure), each
+   * still reachable via its own leaf page. Oldest-first along the chain; the head (this
+   * band) is excluded. Undefined / empty when the member heads no in-group succession
+   * (the binding leaf, or a member with no superseded predecessor). The GROUP view sets
+   * it. */
+  supersedes?: {
+    name: string;
+    href: string;
+    /** The year the predecessor was replaced by its successor (the edge
+     * `effective_year`), or null when the edge carries none — shown as a quiet
+     * "until <year>" qualifier on the history entry. */
+    effectiveYear: number | null;
+  }[];
 }
 
 /** A committed selection — the variable it belongs to plus the picked column, so the
@@ -396,6 +412,8 @@ function bandView(band: PickerBand, id: BandLabel, showPrefix: boolean) {
     focused: focusKey != null && band.key === focusKey,
     context: labeling?.headerContext ?? [],
     rowLabels: new Map((labeling?.rows ?? []).map((r) => [r.key, r])),
+    // The superseded predecessor editions folded onto this chain head (#902).
+    supersedes: band.supersedes ?? [],
   };
 }
 
@@ -504,6 +522,50 @@ function navigateChip(event: MouseEvent, href: string): void {
     >
   {:else}
     <code class="col-chip" title={`Delivery column ${text}`}>{text}</code>
+  {/if}
+{/snippet}
+
+<!-- The SUPERSEDED-editions history (#902): an inter-variable succession fold leads
+     with the LATEST edition (this band) and tucks its superseded predecessor(s) behind
+     a quiet disclosure — "supersedes <name>" — rather than rendering each as a co-equal
+     selectable band. Each predecessor stays reachable via its own leaf-page link (NOT a
+     selection target). Closed by default; a thin, low-key affordance, never card chrome. -->
+<!-- The sequential-RENAME progression hint (#902): a column delivered under several
+     names over non-overlapping eras (`DINF` → `DINF83` → `DINF86`) collapses to ONE row
+     led by the latest column; this quiet sub-text names the superseded column(s) so the
+     rename is legible without the full Gantt era view (#904). Empty for an ordinary
+     single column or a genuinely parallel column. -->
+{#snippet renameHint(renamed: string[])}
+  {#if renamed.length > 0}
+    <span class="rename-hint" title={`Earlier delivery columns: ${renamed.join(", ")}`}
+      >was {renamed.join(", ")}</span
+    >
+  {/if}
+{/snippet}
+
+{#snippet historyDisclosure(
+  supersedes: { name: string; href: string; effectiveYear: number | null }[],
+)}
+  {#if supersedes.length > 0}
+    <details class="history">
+      <summary
+        >supersedes {supersedes.length}
+        {supersedes.length === 1 ? "edition" : "editions"}</summary
+      >
+      <ul class="history-list">
+        {#each supersedes as p (p.href)}
+          <li>
+            <a
+              class="history-link"
+              href={p.href}
+              onclick={(e) => navigateChip(e, p.href)}>{p.name}</a
+            >{#if p.effectiveYear != null}<span class="history-until"
+                >until {p.effectiveYear}</span
+              >{/if}
+          </li>
+        {/each}
+      </ul>
+    </details>
   {/if}
 {/snippet}
 
@@ -696,6 +758,7 @@ function navigateChip(event: MouseEvent, href: string): void {
                       .join(" · ")}</span
                   >
                 {/if}
+                {@render renameHint(row.renamedColumns)}
               </span>
               {#if row.codingsVary}
                 <!-- A coding change over time on this ONE column (distinct value_set_id
@@ -716,6 +779,7 @@ function navigateChip(event: MouseEvent, href: string): void {
                 <span class="period">{row.period}</span>
               {/if}
             </label>
+            {@render historyDisclosure(v.supersedes)}
           </li>
         {:else}
           <!-- A multi-column variable: a thin, quiet subheading (its distinguishing
@@ -845,6 +909,7 @@ function navigateChip(event: MouseEvent, href: string): void {
                 </span>
               </label>
             {/if}
+            {@render historyDisclosure(v.supersedes)}
           </li>
           {#each band.rows as row (row.key)}
             {@const checked = selectedKeys.has(selKey(band.key, row.key))}
@@ -907,6 +972,7 @@ function navigateChip(event: MouseEvent, href: string): void {
                         .join(" · ")}</span
                     >
                   {/if}
+                  {@render renameHint(row.renamedColumns)}
                 </span>
                 <!-- The codings-vary nudge sits BEFORE the period so the period is the
                      last, right-aligned element on every row (a clean aligned column
@@ -1467,6 +1533,55 @@ function navigateChip(event: MouseEvent, href: string): void {
     font-size: 0.8rem;
     color: var(--text-muted);
     overflow-wrap: anywhere;
+  }
+  /* The sequential-rename progression hint (#902): a quiet inline "was DINF, DINF83"
+     beneath the collapsed row's identity — the rename made legible without the full era
+     view. Muted, mono for the column names so they read as columns, never a control. */
+  .rename-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    overflow-wrap: anywhere;
+  }
+  /* The superseded-editions history disclosure (#902): a thin, low-key <details> on a
+     succession chain head, listing the predecessor editions it folds. Closed by default;
+     it indents under the band identity and never reads as card chrome. */
+  .history {
+    margin: 0.1rem 0 0.2rem 1.6rem;
+    font-size: 0.78rem;
+  }
+  .history > summary {
+    color: var(--text-muted);
+    cursor: pointer;
+    list-style: revert;
+  }
+  .history > summary:hover {
+    color: var(--text);
+  }
+  .history-list {
+    list-style: none;
+    margin: 0.15rem 0 0;
+    padding: 0 0 0 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .history-link {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .history-link:hover {
+    color: var(--accent);
+  }
+  .history-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
+  .history-until {
+    margin-left: 0.4rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
   }
   .period {
     flex: 0 0 auto;
