@@ -24901,6 +24901,15 @@ slug = "socialbidragstyp-moder"
 slug = "akassa-ers-far"
 [variable."273.18649"]
 slug = "akassa-ers-mor"
+# #931: stativ näringsgren parallel siblings (SNI vintage × method)
+[variable."273.19054.astsni2002"]
+slug = "naringsgren"
+[variable."273.19054.astsni92"]
+slug = "naringsgren-sni92"
+[variable."273.19054.astsni2002nymet"]
+slug = "naringsgren-sni2002-nymet"
+[variable."273.19054.astngs07"]
+slug = "naringsgren-sni2007"
 [variable."273.27129"]
 slug = "grund-for-bosattning-klassgrupp"
 [variable."273.29240"]
@@ -30268,6 +30277,25 @@ slug = "drivmedel"
 slug = "drivmedel-2"
 [variable."8.4027.sni2002"]
 slug = "naringsgren"
+# #931: fordonsreg näringsgren parallel siblings (SNI vintage × owner-role)
+[variable."8.4027.sni92"]
+slug = "naringsgren-sni92"
+[variable."8.4027.sni92-2"]
+slug = "naringsgren-sni92-foregaende"
+[variable."8.4027.sni92-3"]
+slug = "naringsgren-sni92-nastforegaende"
+[variable."8.4027.sni2002-2"]
+slug = "naringsgren-sni2002-foregaende"
+[variable."8.4027.sni2002-3"]
+slug = "naringsgren-sni2002-nastforegaende"
+[variable."8.4027.sni2007"]
+slug = "naringsgren-sni2007"
+[variable."8.4027.sni2007-2"]
+slug = "naringsgren-sni2007-foregaende"
+[variable."8.4027.sni2007-3"]
+slug = "naringsgren-sni2007-nastforegaende"
+[variable."8.4027.sni2007-ag"]
+slug = "naringsgren-sni2007-administrativ"
 
 # register 97 (hek)
 [variable."97.105.stotex"]
