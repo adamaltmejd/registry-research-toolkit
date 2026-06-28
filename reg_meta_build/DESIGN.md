@@ -73,6 +73,7 @@ into six families:
   | **identifier**          | `fqid_slugs/<provider>.toml`, `fqid_slugs/<provider>.auto.toml`, `fqid_slugs/freeze.toml`, `fqid_slugs/classifications.toml` (loaded by `load_classifications_toml` in `fqid_slugs.py`); steward shards in `fqid_slugs/<steward>/`                                           | Canonical register/variant/classification/variable slugs; panel-shape metadata on variants; per-provider freeze state. `fqid_slugs/classifications.toml` is the provider-independent classification slug surface (loaded separately from provider TOMLs). `[lineage_defaults]` / `[lineage.*]` blocks in the same TOMLs pin source-variant choices for `variable_state_lineage`.                                                             |
   | **relation**            | `curation/relations.toml` (loaded by `relations.py`)                                                                                                                                                                                                                         | All curated pairwise graph facts: `same_as` identity edges and `replaced_by` succession edges. One typed `[[edge]]` array; `type` selects the DB target and validation rules. (The `related_to` edge type was retired in #800 — see *Build-time triage (SCB)* for the preserved in-build split-sibling pairs.)                                                                                                                               |
   | **set**                 | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                                                                     | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                |
+  | **code↔label pairing**  | `code_label_pairs.toml` (loaded by `load_code_label_pairs` in `concept_groups.py`)                                                                                                                                                                                           | Curated list of `[[pair]]` entries declaring that a code variable (owns a value_set) and a label variable (owns none) are decode partners co-delivered in the same register. Each pair is resolved and appended to `edge_siblings` by `_append_code_label_edges` at materialize time, so the two variables fold into one axis-less `edge` concept group. Presentation-only; regenerated each build.                                          |
   | **source/gap-fill**     | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `variable_grafts.toml` (loaded by `variable_grafts.py`), `input_data/scb_canonical/lisa_canonical.toml` (loaded by `canonical_attach.py`) | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions backfilled from steward delivery lists; variables present in steward docs but absent from machine metadata; canonical-SCB columns attached onto an existing register — `canonical_attach.py`, the rich analog of grafts).                                                                          |
   | **value/coding**        | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)                                                       | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                          |
   | **period family merge** | `curation/period_family_merges.toml` (loaded by `period_family_merges.py`)                                                                                                                                                                                                   | Identity-mutating post-triage pass: merges N period-named physical columns (today the 12 months, e.g. `lonfinkjan`…`lonfinkdec`) into ONE variable with per-period alias windows. Runs after triage (`variable_state` exists) but before slug population. 8 entries covering 8 bounded monthly families (4 LISA + 4 non-LISA). Retained per #523 under epic #518 R4; see the "Decision (#518/#523): retain the merge" section for rationale. |
@@ -2406,20 +2407,27 @@ already-grouped member:
    single name (the group label; key = min member slug). The pairs are read from the
    IN-BUILD sibling sets (`edge_siblings`, `(variable_id, variable_id)` pairs the triage
    minted) — the `variable_related_to` table no longer exists (#800), so these in-build
-   pairs are the sole home for split-sibling relationships. **Curated precedence**
-   (#591): any FQID claimed by a curated `[[variable_group]]` or `[[accept]]` is
-   subtracted from the edge components before they mint groups; a component reduced
-   below 2 survivors mints no group (the curated entry claims those FQIDs instead).
-   Other auto:triage `relation_kind`s (`code_vs_label_pair`, `import_bug_suspect`) do
-   NOT group — the foldable auto kind (`same_definition_different_column`) is the only
-   kind that drives edge components, by construction. The former exact-parity check
-   (`_check_edge_group_parity`, which recomputed components from persisted rows) is
-   replaced by a corpus-only volume floor `_CG_MIN_EDGE_GROUPS` (#591): there are no
+   pairs are the sole home for split-sibling relationships. Since #923, `edge_siblings`
+   is also fed by curated `code_label_pairs.toml` pairs (`_append_code_label_edges`):
+   each curated code↔label decode pair (code variable owns a value_set; label variable
+   owns none; both co-delivered) is appended to `edge_siblings` before components are
+   computed, so an `edge` group is not exclusively an auto same-definition split.
+   **Curated precedence** (#591): any FQID claimed by a curated `[[variable_group]]` or
+   `[[accept]]` is subtracted from the edge components before they mint groups; a
+   component reduced below 2 survivors mints no group (the curated entry claims those
+   FQIDs instead). Other auto:triage `relation_kind`s (`code_vs_label_pair`,
+   `import_bug_suspect`) do NOT group — among auto:triage kinds, only
+   `same_definition_different_column` drives edge components (curated
+   `code_label_pairs.toml` pairs are the one non-triage addition, appended by
+   `_append_code_label_edges` before components are computed). The former exact-parity
+   check (`_check_edge_group_parity`, which recomputed components from persisted rows)
+   is replaced by a corpus-only volume floor `_CG_MIN_EDGE_GROUPS` (#591): there are no
    persisted rows to recompute against, so a volume floor catches a derivation collapse
    (slug drift, empty `edge_siblings`) without recomputation. The floor is additionally
    gated on SCB being in the build (#595): a `--providers sos` real build skips it
-   (info-level) rather than false-failing, since the edge groups are entirely
-   SCB-sourced.
+   (info-level) rather than false-failing, since the auto split-sibling pairs in
+   `edge_siblings` are entirely SCB-sourced (curated `code_label_pairs.toml` pairs are
+   provider-gated per-pair and silently skipped when their provider is absent).
 
 1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
    curation rule). Variables: the Swedish month slug tails, both short and full forms
