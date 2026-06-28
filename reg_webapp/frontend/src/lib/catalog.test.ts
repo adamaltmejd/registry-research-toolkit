@@ -25,6 +25,7 @@ import {
   DATA_BROWSER_LABEL,
   deriveType,
   distinctValueSets,
+  encodeCodesParam,
   facetLabelJoin,
   foldText,
   formatDataType,
@@ -43,6 +44,7 @@ import {
   narrowCatalogNode,
   narrowStatesByModifier,
   nodeLabel,
+  parseCodesParam,
   pickerFilterDimensions,
   pickerLabeling,
   pickerRepresentations,
@@ -4062,5 +4064,80 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
   it("returns null when no state delivers the column", () => {
     const states = [state({ value_set_id: 100, delivery_column_name: "COLA" })];
     expect(valueSetKeyForColumn(states, "NOPE")).toBeNull();
+  });
+
+  it("scopes to the given variant when one column is shared across variants (#905)", () => {
+    // Two picker rows (keyed `(variant, column)`) share ONE delivery column across
+    // different populations with DISTINCT codings. The variant-scoped call must
+    // return the CLICKED variant's value set, not the other variant's latest era —
+    // the deep-link bug fix. Variant B's coding is more recent overall, so the
+    // unscoped (column-only) call would pick B even for an A nudge.
+    const states = [
+      state({
+        variant: "a",
+        value_set_id: 100,
+        delivery_column_name: "COL",
+        valid_from: "2015-01-01",
+        valid_to: "2018-12-31",
+      }),
+      state({
+        variant: "b",
+        value_set_id: 200,
+        delivery_column_name: "COL",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    expect(valueSetKeyForColumn(states, "COL", "a")).toBe("id/100");
+    expect(valueSetKeyForColumn(states, "COL", "b")).toBe("id/200");
+    // Unscoped (back-compat) keeps picking the column's latest era across variants.
+    expect(valueSetKeyForColumn(states, "COL")).toBe("id/200");
+    // null variant is the same back-compat path (a leaf with no ambiguity).
+    expect(valueSetKeyForColumn(states, "COL", null)).toBe("id/200");
+  });
+
+  it("variant scoping still resolves a column unique to one variant", () => {
+    // A column delivered by only ONE variant: scoping to that variant is a no-op
+    // (no behavior change), and scoping to a variant that never delivers it → null.
+    const states = [
+      state({
+        variant: "only",
+        value_set_id: 300,
+        delivery_column_name: "COL",
+      }),
+    ];
+    expect(valueSetKeyForColumn(states, "COL", "only")).toBe("id/300");
+    expect(valueSetKeyForColumn(states, "COL", "absent")).toBeNull();
+  });
+});
+
+describe("encode/parseCodesParam (#905 — (variant, column) deep-link payload)", () => {
+  it("round-trips a (variant, column) pair through the row-key grammar", () => {
+    expect(encodeCodesParam("individer", "Yrke")).toBe("individer::Yrke");
+    expect(parseCodesParam("individer::Yrke")).toEqual({
+      variant: "individer",
+      column: "Yrke",
+    });
+  });
+
+  it("percent-encodes each segment so reserved/non-ASCII chars survive", () => {
+    // A variant slug or column with a space / reserved char must not break the URL
+    // or the `::` separator parse.
+    const encoded = encodeCodesParam("a b", "Kön/2");
+    expect(encoded).toBe("a%20b::K%C3%B6n%2F2");
+    expect(parseCodesParam(encoded)).toEqual({
+      variant: "a b",
+      column: "Kön/2",
+    });
+  });
+
+  it("parses a bare column (no `::`) as variant=null (back-compat / no-variant leaf)", () => {
+    expect(parseCodesParam("Yrke")).toEqual({ variant: null, column: "Yrke" });
+  });
+
+  it("returns null for an empty / missing param", () => {
+    expect(parseCodesParam(null)).toBeNull();
+    expect(parseCodesParam(undefined)).toBeNull();
+    expect(parseCodesParam("")).toBeNull();
   });
 });

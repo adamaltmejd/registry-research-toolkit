@@ -23,7 +23,7 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 // version) state — the picker (RepresentationPicker) owns the
 // `?variant`/`?value_set_version` narrowing now, and BindingLeafView owns the URL
 // writes. This view just renders the codings the leaf hands it, focused (via
-// `focusColumn`) on the column a deep-link points at.
+// `focusColumn` + `focusVariant`) on the (variant, column) a deep-link points at.
 //
 // DELIBERATELY STANDALONE: kept as its own component (not folded back into the
 // leaf) so a future HistoryGraph convergence (#666) can move this viewer cleanly —
@@ -49,6 +49,7 @@ let {
   narrowed,
   scopeStates = null,
   focusColumn = null,
+  focusVariant = null,
 }: {
   states: VariableStateModel[];
   /** True when these are the `?period`-narrowed subset (drives empty wording). */
@@ -56,10 +57,17 @@ let {
   /** The period-resolved subset when `states` intentionally carries full history. */
   scopeStates?: VariableStateModel[] | null;
   /** A delivery column to FOCUS (#905): the picker's "codings vary" nudge deep-links
-   * to `?codes=<column>`, which BindingLeafView passes here. It seeds the local
-   * isolation onto the distinct value set that column resolves to and scrolls it
-   * into view. Null (or a column no state delivers) → no focus (the default union). */
+   * to `?codes=<variant>::<column>`, which BindingLeafView passes here. It seeds the
+   * local isolation onto the distinct value set that (`focusVariant`, column) resolves
+   * to and scrolls it into view. Null (or a column no state delivers) → no focus
+   * (the default union). */
   focusColumn?: string | null;
+  /** The variant scoping the focus (#905): a delivery column can be shared across
+   * variants/populations with DISTINCT codings (picker rows are keyed
+   * `(variant, column)`), so the focus isolates THIS variant's coding. Null → the
+   * column is considered across all variants (a column unique across variants, or a
+   * deep link with no variant) — `valueSetKeyForColumn`'s back-compat path. */
+  focusVariant?: string | null;
 } = $props();
 
 // Single-state DETAIL when exactly one state reaches the view — the full-history
@@ -107,10 +115,15 @@ let filter = $state("");
 $effect(() => {
   void states;
   void scopeStates;
-  // A deep-link `?codes=<column>` seeds the isolation to that column's
-  // (latest-era) distinct value set; absent / unmatched → the default union.
+  void focusVariant;
+  // A deep-link `?codes=<variant>::<column>` seeds the isolation to that ROW's
+  // (variant-scoped, latest-era) distinct value set; absent / unmatched → the default
+  // union. `focusVariant` narrows to the clicked row's coding when a column is shared
+  // across variants.
   isolatedKey =
-    focusColumn != null ? valueSetKeyForColumn(states, focusColumn) : null;
+    focusColumn != null
+      ? valueSetKeyForColumn(states, focusColumn, focusVariant)
+      : null;
   filter = "";
 });
 const isolated = $derived(

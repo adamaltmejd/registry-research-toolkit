@@ -531,4 +531,54 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
     expect(document.querySelector(".vs-detail")).toBeNull();
   });
+
+  it("focusVariant isolates the clicked variant's coding when a column is shared across variants (#905)", async () => {
+    // One delivery column COL delivered by TWO variants with DISTINCT codings —
+    // picker rows are keyed `(variant, column)`, so the deep link carries the variant.
+    // `focusVariant: "a"` must isolate variant a's coding, NOT variant b's latest-era
+    // one (the unscoped column lookup would pick b).
+    const a = state({
+      state_id: 1,
+      value_set_id: 100,
+      value_set_version_label: "Coding A",
+      variant: "a",
+      delivery_column_name: "COL",
+      valid_from: "2015-01-01",
+      valid_to: "2018-12-31",
+    });
+    const b = state({
+      state_id: 2,
+      value_set_id: 200,
+      value_set_version_label: "Coding B",
+      variant: "b",
+      delivery_column_name: "COL",
+      valid_from: "2019-01-01",
+      valid_to: "2022-12-31",
+    });
+    const { rerender } = render(ValueSetView, {
+      states: [a, b],
+      narrowed: false,
+      focusColumn: "COL",
+      focusVariant: "a",
+    });
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    const headingA = document.querySelector(
+      ".vs-detail .vs-heading",
+    )?.textContent;
+    expect(headingA).toContain("Coding A");
+    expect(headingA).not.toContain("Coding B");
+    // Re-render with the OTHER variant: same column, the other row's coding. The
+    // reset $effect re-seeds the isolation onto b's value set.
+    await rerender({
+      states: [a, b],
+      narrowed: false,
+      focusColumn: "COL",
+      focusVariant: "b",
+    });
+    const headingB = document.querySelector(
+      ".vs-detail .vs-heading",
+    )?.textContent;
+    expect(headingB).toContain("Coding B");
+    expect(headingB).not.toContain("Coding A");
+  });
 });

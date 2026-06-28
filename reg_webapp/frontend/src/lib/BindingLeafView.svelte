@@ -15,6 +15,7 @@ import {
   grainsFromStates,
   groupLinkFromFocus,
   narrowStatesByModifier,
+  parseCodesParam,
   pickerRepresentations,
   pickerWindowYears,
   qualifierFromFocus,
@@ -83,11 +84,17 @@ const hasResolutionModifier = $derived(
   params.variant !== undefined || params.value_set_version !== undefined,
 );
 
-// #905: a `?codes=<column>` deep link (the picker's "codings vary" nudge) focuses
-// the value-set viewer on that delivery column's coding. Pure VIEW state — it does
-// NOT re-fetch (it's not a server modifier, unlike `?period`/`?variant`), so it's
-// read separately from `params` and passed straight to ValueSetView.
-const focusColumn = $derived(router.getQueryParam("codes"));
+// #905: a `?codes=<variant>::<column>` deep link (the picker's "codings vary" nudge)
+// focuses the value-set viewer on that ROW's `(variant, column)` coding. The variant
+// is carried because a column can be shared across variants/populations with distinct
+// codings, so the focus must target the clicked row's coding — not just the column.
+// This is a DEDICATED `?codes=` encoding, separate from the `?variant` RESOLUTION
+// modifier (which narrows + re-fetches), so the focus never perturbs the resolution.
+// Pure VIEW state — it does NOT re-fetch, so it's read separately from `params` and
+// passed straight to ValueSetView. A bare `<column>` (no `::`) parses variant=null.
+const codesFocus = $derived(parseCodesParam(router.getQueryParam("codes")));
+const focusColumn = $derived(codesFocus?.column ?? null);
+const focusVariant = $derived(codesFocus?.variant ?? null);
 
 // Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
 // node's embedded states are shown (no redundant request; CatalogNodeView already
@@ -545,12 +552,14 @@ function commitSelected(selected: PickerSelection[]): void {
       <!-- The pure value-set / coding viewer (#905). Narrowing to one state is the
            PICKER's job now (it writes `?variant`/`?value_set_version`); this view
            only DISPLAYS the codings. The "codings vary" nudge deep-links here via
-           `?codes=<column>` → `focusColumn`, focusing the right coding. -->
+           `?codes=<variant>::<column>` → `focusColumn`/`focusVariant`, focusing the
+           right (variant, column) coding. -->
       <ValueSetView
         {states}
         narrowed={isNarrowed}
         scopeStates={stateScope}
         {focusColumn}
+        {focusVariant}
       />
     {:else}
       <p class="muted" aria-busy="true">Loading states…</p>

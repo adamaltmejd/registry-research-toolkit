@@ -2245,6 +2245,40 @@ export function distinctValueSets(
   });
 }
 
+/** The deep-link payload for the picker's "codings vary" nudge (#905), encoding the
+ * row's `(variant, column)` IDENTITY — not just the column. A picker row is keyed
+ * `${variant}::${column}`, so two rows can share ONE delivery column across DIFFERENT
+ * variants/populations with DISTINCT codings; the deep link must carry the variant so
+ * the value-set viewer isolates the clicked row's coding, not another variant's
+ * latest-era one. Mirrors the row-key grammar (`variant::column`, neither segment
+ * contains `::`), each segment percent-encoded so reserved/non-ASCII chars survive
+ * the URL round-trip. This is a DEDICATED encoding for the `?codes=` param — distinct
+ * from the `?variant` RESOLUTION modifier (which narrows the picker + drives the
+ * "Narrowed by" chips), so a deep-link focus never perturbs the resolution. */
+export function encodeCodesParam(variant: string, column: string): string {
+  return `${encodeURIComponent(variant)}::${encodeURIComponent(column)}`;
+}
+
+/** Parse a `?codes=` deep-link param (`encodeCodesParam`'s inverse) into its
+ * `(variant, column)` pair. A bare `<column>` with no `::` (back-compat / a leaf
+ * link that carries no variant) parses to `{ variant: null, column }`. Each segment
+ * is percent-DEcoded. Returns null for an empty / missing param. */
+export function parseCodesParam(
+  codes: string | null | undefined,
+): { variant: string | null; column: string } | null {
+  if (!codes) {
+    return null;
+  }
+  const sep = codes.indexOf("::");
+  if (sep === -1) {
+    return { variant: null, column: decodeURIComponent(codes) };
+  }
+  return {
+    variant: decodeURIComponent(codes.slice(0, sep)),
+    column: decodeURIComponent(codes.slice(sep + 2)),
+  };
+}
+
 /** The DISTINCT value-set `key` (the `distinctValueSets` dedup identity) a given
  * delivery COLUMN resolves to — the deep-link target for the picker's "codings
  * vary" nudge (#905). A column with a STABLE coding maps to one value set; a column
@@ -2252,15 +2286,24 @@ export function distinctValueSets(
  * sets, so we pick the LATEST-era one (max `valid_to`, ties broken by `state_id`)
  * to isolate — the row's representative coding (matching `PickerRepresentation`'s
  * `valueSetLabel`, also the latest era), with the rest one "← All value sets" click
- * away. Returns null when no state delivers the column (a stale / unknown
- * `?codes=`), so the viewer degrades to its default union view. Pure. */
+ * away. When `variant` is given, only states of THAT variant are considered before
+ * the latest-era pick — two rows sharing a column across different variants/populations
+ * each isolate their OWN coding (the row key is `(variant, column)`, #905). When
+ * `variant` is null/omitted (a column unambiguous across variants, or a leaf link with
+ * no variant), all states for the column are considered (unchanged behavior). Returns
+ * null when no matching state delivers the column (a stale / unknown `?codes=`), so the
+ * viewer degrades to its default union view. Pure. */
 export function valueSetKeyForColumn(
   states: VariableStateModel[],
   column: string,
+  variant?: string | null,
 ): string | null {
   let best: VariableStateModel | null = null;
   for (const s of states) {
     if (s.delivery_column_name !== column) {
+      continue;
+    }
+    if (variant != null && s.variant !== variant) {
       continue;
     }
     if (

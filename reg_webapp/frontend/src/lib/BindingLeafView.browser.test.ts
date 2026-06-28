@@ -676,11 +676,12 @@ describe("BindingLeafView representation picker (#678)", () => {
       "Coding changes over time — see the value sets",
     );
     // #905: it's a DEEP LINK (an anchor) to the value-set viewer focused on this
-    // column — the current leaf path + `?codes=<column>#states-heading` (no
-    // `band.href` on the binding leaf).
+    // ROW — the current leaf path + `?codes=<variant>::<column>#states-heading` (no
+    // `band.href` on the binding leaf). The variant ("v") is carried so a column shared
+    // across variants isolates the clicked row's coding.
     expect(nudge?.tagName).toBe("A");
     expect(nudge?.getAttribute("href")).toBe(
-      "/catalog/scb/lisa/kon?codes=ColA#states-heading",
+      "/catalog/scb/lisa/kon?codes=v%3A%3AColA#states-heading",
     );
   });
 
@@ -732,6 +733,48 @@ describe("BindingLeafView representation picker (#678)", () => {
       document.querySelector(".vs-detail .vs-heading")?.textContent,
     ).toContain("SUN");
     expect(document.querySelector(".vs-list > li")).toBeNull();
+  });
+
+  it("a ?codes=<variant>::<column> deep link isolates the CLICKED variant's coding when a column is shared across variants (#905)", async () => {
+    // One delivery column COL delivered by TWO variants with DISTINCT codings:
+    // variant "a" → "Coding A" (older), variant "b" → "Coding B" (latest era). The
+    // unscoped column lookup would pick B (the latest), but the deep link carries the
+    // ROW's variant, so `?codes=a::COL` must isolate A's coding — the deep-link bug.
+    const states = [
+      state({
+        state_id: 1,
+        variant: "a",
+        delivery_column_name: "COL",
+        value_set_id: 100,
+        value_set_version_label: "Coding A",
+        valid_from: "2015-01-01",
+        valid_to: "2018-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "b",
+        delivery_column_name: "COL",
+        value_set_id: 200,
+        value_set_version_label: "Coding B",
+        valid_from: "2019-01-01",
+        valid_to: "2022-12-31",
+      }),
+    ];
+    router.navigate("/catalog/scb/lisa/kon?codes=a%3A%3ACOL");
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(states),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+    // Isolated on variant "a"'s coding ("Coding A"), NOT "b"'s latest-era "Coding B".
+    await expect.element(page.getByText("Used by")).toBeVisible();
+    const heading = document.querySelector(
+      ".vs-detail .vs-heading",
+    )?.textContent;
+    expect(heading).toContain("Coding A");
+    expect(heading).not.toContain("Coding B");
   });
 
   it("the single-COLUMN leaf renders ONE compact row led by its COLUMN (#678)", async () => {

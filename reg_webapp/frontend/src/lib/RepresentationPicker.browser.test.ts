@@ -320,26 +320,10 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 });
 
 describe("codingsVaryNudge deep link (#905)", () => {
-  // The leaf branch (band.href undefined → current path) is covered in
-  // BindingLeafView.browser.test.ts. This covers the GROUP branch: when a band
-  // carries `href` (the member's own leaf), the nudge links to that leaf with a
-  // CLEAN query — `?codes=<column>#states-heading`, no inherited query string,
-  // no double-encoding.
-  it("a coding-varying row links to the member leaf with a clean ?codes deep link", async () => {
-    render(RepresentationPicker, {
-      bands: [
-        {
-          key: "scb/lisa/yrkesreg",
-          name: "Yrkesregistret",
-          registerPrefix: "scb/lisa",
-          href: "/catalog/scb/lisa/yrkesreg",
-          rows: [row({ column: "Yrke", codingsVary: true })],
-        } satisfies PickerBand,
-      ],
-      axes: [],
-      ...PROPS,
-    });
-
+  /** Render one band whose single coding-varying row carries the nudge, then return
+   * the nudge anchor's `href`. */
+  async function nudgeHref(band: PickerBand): Promise<string> {
+    render(RepresentationPicker, { bands: [band], axes: [], ...PROPS });
     const nudge = await vi.waitFor(() => {
       const a = document.querySelector(".rep-picker .codings-vary");
       if (!a) {
@@ -348,11 +332,46 @@ describe("codingsVaryNudge deep link (#905)", () => {
       return a;
     });
     expect(nudge.tagName).toBe("A");
-    // Exactly the member leaf + clean codes query + states hash — no inherited
-    // query string, no double-encoding.
-    expect(nudge.getAttribute("href")).toBe(
-      "/catalog/scb/lisa/yrkesreg?codes=Yrke#states-heading",
+    return nudge.getAttribute("href") ?? "";
+  }
+
+  // The leaf branch (band.href undefined → current path) is covered in
+  // BindingLeafView.browser.test.ts. This covers the GROUP branch: when a band
+  // carries `href` (the member's own leaf), the nudge links to that leaf with the
+  // `codes` param carrying the ROW's `(variant, column)` identity — `variant::column`
+  // (#905), merged into the href's existing query.
+  it("a coding-varying row links to the member leaf with a (variant, column) ?codes deep link", async () => {
+    const href = await nudgeHref({
+      key: "scb/lisa/yrkesreg",
+      name: "Yrkesregistret",
+      registerPrefix: "scb/lisa",
+      href: "/catalog/scb/lisa/yrkesreg",
+      rows: [row({ variant: "individer", column: "Yrke", codingsVary: true })],
+    } satisfies PickerBand);
+    // The member leaf + `codes=<variant>::<column>` + states hash — clean query, the
+    // row's variant carried so a shared column isolates THIS variant's coding.
+    expect(href).toBe(
+      "/catalog/scb/lisa/yrkesreg?codes=individer%3A%3AYrke#states-heading",
     );
+  });
+
+  // Bug 1: `memberHref` already appends `?period=<p>` when a period is active, so the
+  // nudge must MERGE `codes` into the existing query (single `?`, `&`-joined), never
+  // append a second literal `?` (the old `${band.href}?codes=…` produced
+  // `…?period=2020?codes=…`, dropping `codes`).
+  it("merges ?codes into a band.href that already carries ?period (single `?`)", async () => {
+    const href = await nudgeHref({
+      key: "scb/lisa/yrkesreg",
+      name: "Yrkesregistret",
+      registerPrefix: "scb/lisa",
+      href: "/catalog/scb/lisa/yrkesreg?period=2020",
+      rows: [row({ variant: "v", column: "Yrke", codingsVary: true })],
+    } satisfies PickerBand);
+    expect(href).toBe(
+      "/catalog/scb/lisa/yrkesreg?period=2020&codes=v%3A%3AYrke#states-heading",
+    );
+    // Exactly ONE `?` (no double query separator).
+    expect(href.match(/\?/g)).toHaveLength(1);
   });
 });
 

@@ -4,6 +4,7 @@ import {
   type BandIdentity,
   type BandLabel,
   clusterBands,
+  encodeCodesParam,
   leafSlug,
   type PickerDimension,
   type PickerRepresentation,
@@ -504,25 +505,40 @@ function navigateChip(event: MouseEvent, href: string): void {
   router.navigate(href);
 }
 
-/** The deep-link target for a column's "codings vary" nudge (#905): the value-set
- * viewer focused on that column's coding, scrolled to the States section.
- *   - GROUP view (`band.href` set → the member's own leaf): the member leaf +
- *     `?codes=<column>#states-heading` (a clean href, no inherited query).
+/** The deep-link target for a row's "codings vary" nudge (#905): the value-set
+ * viewer focused on that row's `(variant, column)` coding, scrolled to the States
+ * section. The `codes` param carries the row's IDENTITY (`encodeCodesParam` →
+ * `variant::column`), NOT just the column — two rows can share one delivery column
+ * across different variants/populations, so the focus must target the clicked row's
+ * coding, not another variant's latest era. This is a dedicated `?codes=` encoding,
+ * distinct from the `?variant` RESOLUTION modifier (which narrows the picker + drives
+ * the "Narrowed by" chips), so the focus never perturbs the resolution.
+ *   - GROUP view (`band.href` set → the member's own leaf): the member's own href,
+ *     which ALREADY carries any active `?period` (`ConceptGroupView.memberHref`), with
+ *     `codes` merged into its existing query — never a second literal `?`.
  *   - BINDING leaf (`band.href` undefined → already this page): the CURRENT path +
  *     query with `codes` set (preserving an active `?period`/`?variant` so the
- *     focused coding stays consistent with the narrowed states) + the hash.
- * The `#states-heading` hash targets the `<section id="states-heading">` anchor
- * BindingLeafView keeps; the router preserves both query + hash on navigate. */
-function codingsVaryHref(band: PickerBand, column: string): string {
-  const codes = encodeURIComponent(column);
+ *     focused coding stays consistent with the narrowed states).
+ * Both branches assemble the URL via URLSearchParams (no `?`/`&` hand-concat) so an
+ * existing query merges cleanly; the `#states-heading` hash targets the
+ * `<section id="states-heading">` anchor BindingLeafView keeps; the router preserves
+ * both query + hash on navigate. */
+function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
+  const codes = encodeCodesParam(row.variant, row.column);
   if (band.href) {
-    return `${band.href}?codes=${codes}#states-heading`;
+    // `band.href` may already carry `?period=…` (memberHref) and has no hash; split
+    // off any existing query, set/overwrite `codes`, and re-assemble — so a periodic
+    // member yields `…?period=2020&codes=…`, never `…?period=2020?codes=…`.
+    const [path, existingQuery = ""] = band.href.split("?");
+    const search = new URLSearchParams(existingQuery);
+    search.set("codes", codes);
+    return `${path}?${search.toString()}#states-heading`;
   }
   // `window` is a component prop here (the period window), shadowing the global —
   // read the location off `globalThis`.
   const { pathname, search: queryString } = globalThis.location;
   const search = new URLSearchParams(queryString);
-  search.set("codes", column);
+  search.set("codes", codes);
   return `${pathname}?${search.toString()}#states-heading`;
 }
 </script>
@@ -611,8 +627,8 @@ function codingsVaryHref(band: PickerBand, column: string): string {
      it sits inside the row's <label>: a plain click would toggle the checkbox AND a
      stopPropagation would full-reload the app (same reasoning as `colChip`). A real
      anchor keeps it keyboard-accessible; the title/aria are unchanged. -->
-{#snippet codingsVaryNudge(band: PickerBand, column: string)}
-  {@const href = codingsVaryHref(band, column)}
+{#snippet codingsVaryNudge(band: PickerBand, row: PickerRepresentation)}
+  {@const href = codingsVaryHref(band, row)}
   <a
     class="codings-vary"
     {href}
@@ -805,7 +821,7 @@ function codingsVaryHref(band: PickerBand, column: string): string {
                      across years). A quiet DEEP LINK to the value-set viewer focused on
                      this column (#905). Placed BEFORE the period so the period stays the
                      last, right-aligned element on every row (aligned column). -->
-                {@render codingsVaryNudge(band, row.column)}
+                {@render codingsVaryNudge(band, row)}
               {/if}
               {#if inWindow}
                 {@render lateWarn(row)}
@@ -1013,7 +1029,7 @@ function codingsVaryHref(band: PickerBand, column: string): string {
                      the period is the last, right-aligned element on every row (a clean
                      aligned column whether or not a row carries the nudge — #678 fix). -->
                 {#if row.codingsVary}
-                  {@render codingsVaryNudge(band, row.column)}
+                  {@render codingsVaryNudge(band, row)}
                 {/if}
                 {#if inWindow}
                   {@render lateWarn(row)}
