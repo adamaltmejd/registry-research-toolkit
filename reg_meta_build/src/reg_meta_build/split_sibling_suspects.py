@@ -252,6 +252,16 @@ def _codelivered_pairs(conn: sqlite3.Connection) -> set[frozenset[int]]:
     `provider_key IS NOT NULL`) — co-delivery is only asked about intra-family
     pairs, so the self-join never widens past a split family. `s1.variable_id <
     s2.variable_id` emits each unordered pair once."""
+    # simplify: window-overlap PROXY for the build's edition-exact co-delivery.
+    # The build (`scb.py::_triage_groups`) keys `codelivered_pairs` on a shared
+    # `(register_variant_id, regver_id)` EDITION bucket; the shipped
+    # `variable_state` materializes only projected `[valid_from, valid_to]` windows
+    # (no `regver_id`), so edition-exact co-delivery is not recomputable read-side.
+    # Window-overlap is the faithful available proxy and is CONSERVATIVE: it can
+    # over-include a boundary temporal-rename pair whose windows abut, but never
+    # drops a genuinely co-delivered pair — and this is a maintainer worklist that
+    # is triaged per-pair anyway. Upgrade to an exact edition join if `regver_id`
+    # is ever materialized into `variable_state`.
     rows = conn.execute(
         """
         SELECT DISTINCT s1.variable_id, s2.variable_id
