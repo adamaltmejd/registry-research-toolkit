@@ -47,10 +47,13 @@ from reg_meta_build.sources.scb import (
     _edition_authority,
     _edition_bounds,
     _fold_token_from_grain,
+    _import_bug_suspect,
+    _looks_like_code_label_pair,
     _pick_state_rep,
     _resolve_year_winners,
     _spans_overlap,
     _split_off_non_contested,
+    _split_relation_kind,
     _StateGroup,
     _triage_groups,
     _TriageResult,
@@ -104,6 +107,12 @@ def _year_claim(year: int, authority: int = _AUTH_PLAIN, approval: str = "") -> 
     """A full-year `Claim` — the shorthand for tests that only care WHICH
     years a group claims (and optionally the year's cascade signals)."""
     return Claim(f"{year:04d}-01-01", f"{year:04d}-12-31", authority, approval)
+
+
+def _shape(data_type: str | None, data_length: str | None = None) -> _StateGroup:
+    """A minimal `_StateGroup` carrying only the shape fields the split fold-gate
+    heuristics read (`data_type` / `data_length`)."""
+    return _StateGroup(1, 10, 1, data_type, data_length, None, None)
 
 
 class TestEditionAuthority:
@@ -905,13 +914,97 @@ class TestDataTypeClass:
         assert _data_type_class(None) == "other"
 
 
+# ── Fold-gate classifier (kind labels are INTERNAL — they only EXCLUDE pairs
+# from the concept-group fold; nothing persists them since the researcher-facing
+# `variable_related_to` edge was retired). ───────────────────────────────────
+
+
+class TestLooksLikeCodeLabelPair:
+    def test_two_namn_columns_are_not_a_pair(self) -> None:
+        assert not _looks_like_code_label_pair("Fornamn", "Efternamn")
+
+    def test_code_label_pairs(self) -> None:
+        assert _looks_like_code_label_pair("Lid", "LNamn")  # code suffix vs namn
+        assert _looks_like_code_label_pair("Sun2000Kod", "Sun2000Namn")  # kod vs namn
+        assert _looks_like_code_label_pair("Kommun", "Kommunnamn")  # bare stem vs namn
+
+    def test_order_independent(self) -> None:
+        assert _looks_like_code_label_pair("Kommunnamn", "Kommun")
+
+
+class TestImportBugSuspect:
+    def test_numeric_vs_text_fires(self) -> None:
+        assert _import_bug_suspect(_shape("int"), _shape("text"))
+
+    def test_same_class_differing_width_does_not_fire(self) -> None:
+        assert not _import_bug_suspect(_shape("int", "4"), _shape("int", "8"))
+
+    def test_none_side_does_not_fire(self) -> None:
+        assert not _import_bug_suspect(None, _shape("int"))
+        assert not _import_bug_suspect(_shape("int"), None)
+
+    def test_length_fallback_requires_length_on_both_sides(self) -> None:
+        # Unclassifiable types (class "other") fall back to data_length, but only
+        # when BOTH lengths are present — a blank side must short-circuit, never
+        # compare None/"" against a real width.
+        assert not _import_bug_suspect(_shape(None, ""), _shape("Datum", "10"))
+        assert _import_bug_suspect(_shape("Datum", "4"), _shape("Datum", "8"))
+
+
+class TestSplitRelationKind:
+    """Per-CO-DELIVERED-pair precedence: code_vs_label_pair → import_bug_suspect
+    → generic (`same_definition_different_column`, the ONLY foldable kind); a
+    non-co-delivered pair short-circuits to the generic/foldable kind."""
+
+    @staticmethod
+    def _kind(
+        col_a: str, type_a: str, col_b: str, type_b: str, *, codelivered: bool = True
+    ) -> str:
+        gk_a = (1, 10, 1, type_a, "1", 1, "", "", col_a)
+        gk_b = (1, 10, 1, type_b, "1", 2, "", "", col_b)
+        groups = {gk_a: _shape(type_a), gk_b: _shape(type_b)}
+        by_col = {col_a: [gk_a], col_b: [gk_b]}
+        pairs = {frozenset((col_a, col_b))} if codelivered else set()
+        return _split_relation_kind(col_a, col_b, groups, by_col, pairs)
+
+    def test_name_match_wins_over_datatype_signal(self) -> None:
+        # Lid int / LNamn text matches BOTH signals; the name-based, higher-
+        # confidence kind takes precedence over import_bug_suspect.
+        assert self._kind("Lid", "int", "LNamn", "text") == "code_vs_label_pair"
+
+    def test_datatype_signal_when_names_do_not_pair(self) -> None:
+        assert (
+            self._kind("Hemkommun", "int", "Skolkommun", "text") == "import_bug_suspect"
+        )
+
+    def test_generic_when_neither_signal_is_foldable(self) -> None:
+        assert (
+            self._kind("Hemkommun", "int", "Skolkommun", "int")
+            == "same_definition_different_column"
+        )
+
+    def test_non_codelivered_pair_stays_generic_despite_signals(self) -> None:
+        # A pair that never shared an edition bucket is generic (foldable) even
+        # though its names AND types would otherwise trip code_vs_label_pair.
+        assert (
+            self._kind("Lid", "int", "LNamn", "text", codelivered=False)
+            == "same_definition_different_column"
+        )
+
+
 class TestSplitEmitsSiblingEdges:
-    """End-to-end: triage of a real same-edition Lid/LNamn collision splits into
-    sibling variables and records the sibling PAIR for the concept-group fold.
+    """End-to-end: a split records a sibling PAIR for the concept-group fold ONLY
+    when the pair is foldable (`same_definition_different_column`). A co-delivered
+    `code_vs_label_pair` / `import_bug_suspect` pair is a DISTINCT concept and is
+    EXCLUDED from the fold (manual curation, #800) — this is the fold-gate
+    regression guard (the gate was lost when the `variable_related_to` edge was
+    retired, over-folding code/label + import-bug siblings into one browse row).
     Drives `_triage_groups` and inspects `res.sibling_edges` (the in-build fold
     input — never persisted to any shipped table)."""
 
-    def test_lid_lnamn_split_records_sibling_pair(self) -> None:
+    def test_foldable_split_records_sibling_pair(self) -> None:
+        # Two disjoint-stem columns, SAME data_type and non-code/label names →
+        # neither heuristic fires → foldable → the pair IS recorded.
         from reg_meta_build.db import DDL
 
         conn = sqlite3.connect(":memory:")
@@ -919,12 +1012,42 @@ class TestSplitEmitsSiblingEdges:
         conn.executescript(DDL)  # FKs off → no provider/register parent needed
         cur = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Kommun')"
+        )
+        orig = cur.lastrowid
+        assert orig is not None
+        gk_hem = (1, 10, 920, "int", "10", 1, "", "", "Hemkommun")
+        gk_skol = (1, 10, 920, "int", "10", 2, "", "", "Skolkommun")
+        g_hem = _StateGroup(1, 10, 920, "int", "10", 1, "")
+        g_hem.regvers = {100}
+        g_skol = _StateGroup(1, 10, 920, "int", "10", 2, "")
+        g_skol.regvers = {100}
+        res = _triage_groups(conn, {gk_hem: g_hem, gk_skol: g_skol}, {(1, 920): orig})
+        assert res.stats["splits"] == 1
+        vid_hem = res.assignments[gk_hem]
+        vid_skol = res.assignments[gk_skol]
+        assert vid_hem != vid_skol
+        assert {frozenset(p) for p in res.sibling_edges} == {
+            frozenset((vid_hem, vid_skol))
+        }
+        conn.close()
+
+    def test_code_vs_label_pair_is_excluded_from_fold(self) -> None:
+        # REGRESSION (#800): a co-delivered Lid (int) / LNamn (text) pair is a
+        # code+label pairing — a distinct concept that must NOT auto-fold. The
+        # split still mints two sibling variables, but NO sibling edge is recorded
+        # so the concept-group fold leaves them as separate browse rows.
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
             "VALUES (1, '920', 'Lan')"
         )
         orig = cur.lastrowid
         assert orig is not None
-        # Two disjoint-stem columns under one var_id co-delivered in one edition
-        # (shared regver) → a split into two sibling variables.
         gk_lid = (1, 10, 920, "int", "10", 1, "", "", "Lid")
         gk_lnamn = (1, 10, 920, "text", "40", 2, "", "", "LNamn")
         g_lid = _StateGroup(1, 10, 920, "int", "10", 1, "")
@@ -933,13 +1056,34 @@ class TestSplitEmitsSiblingEdges:
         g_lnamn.regvers = {100}
         res = _triage_groups(conn, {gk_lid: g_lid, gk_lnamn: g_lnamn}, {(1, 920): orig})
         assert res.stats["splits"] == 1
-        # The two columns map to distinct sibling variables, linked by one pair.
-        vid_lid = res.assignments[gk_lid]
-        vid_lnamn = res.assignments[gk_lnamn]
-        assert vid_lid != vid_lnamn
-        assert {frozenset(p) for p in res.sibling_edges} == {
-            frozenset((vid_lid, vid_lnamn))
-        }
+        assert res.assignments[gk_lid] != res.assignments[gk_lnamn]  # still split
+        assert res.sibling_edges == []  # but NOT folded
+
+    def test_import_bug_suspect_pair_is_excluded_from_fold(self) -> None:
+        # REGRESSION (#800): a co-delivered numeric-vs-text shape mismatch on
+        # disjoint-stem, non-code/label columns is an import-bug suspect — also
+        # excluded from the fold.
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Kommun')"
+        )
+        orig = cur.lastrowid
+        assert orig is not None
+        gk_hem = (1, 10, 920, "int", "10", 1, "", "", "Hemkommun")
+        gk_skol = (1, 10, 920, "text", "40", 2, "", "", "Skolkommun")
+        g_hem = _StateGroup(1, 10, 920, "int", "10", 1, "")
+        g_hem.regvers = {100}
+        g_skol = _StateGroup(1, 10, 920, "text", "40", 2, "")
+        g_skol.regvers = {100}
+        res = _triage_groups(conn, {gk_hem: g_hem, gk_skol: g_skol}, {(1, 920): orig})
+        assert res.stats["splits"] == 1
+        assert res.assignments[gk_hem] != res.assignments[gk_skol]  # still split
+        assert res.sibling_edges == []  # but NOT folded
         conn.close()
 
 
@@ -1028,10 +1172,12 @@ class TestPerClusterFoldSplit:
         assert ssyk_vid in res.fold_slug_hints  # shared-stem ("ssyk") slug hint
         conn.close()
 
-    def test_cluster_records_all_sibling_pairs(self) -> None:
-        # Confirms the clustered path records the (N_clusters choose 2) sibling
-        # pairs for the concept-group fold: a Ssyk fold-cluster + two singleton
-        # clusters (Lid, LNamn) yield three sibling variables and all three pairs.
+    def test_cluster_records_foldable_pairs_only(self) -> None:
+        # The clustered path GATES the (N_clusters choose 2) sibling pairs by the
+        # per-rep fold kind: a Ssyk fold-cluster + two singleton clusters (Lid,
+        # LNamn) yield three sibling variables, but the co-delivered Lid↔LNamn
+        # cluster pair is a code_vs_label_pair → EXCLUDED. Only the two foldable
+        # Ssyk↔{Lid,LNamn} pairs are recorded (regression #800).
         from reg_meta_build.db import DDL
 
         conn = sqlite3.connect(":memory:")
@@ -1068,8 +1214,8 @@ class TestPerClusterFoldSplit:
         vid_lid = res.assignments[gk_lid]
         vid_ssyk = res.assignments[gk_s3]
         assert vid_lnamn == orig
+        # Lid↔LNamn (code_vs_label_pair) excluded; the two Ssyk pairs are foldable.
         assert {frozenset(p) for p in res.sibling_edges} == {
-            frozenset((vid_lid, vid_lnamn)),
             frozenset((vid_ssyk, vid_lid)),
             frozenset((vid_ssyk, vid_lnamn)),
         }
@@ -1103,7 +1249,10 @@ class TestSplitSiblingFlagInheritance:
         # 'PNR' (lex-first) keeps the origin; 'PersonNr' mints a sibling that must
         # inherit the flags rather than defaulting to 0/0.
         by_col = {"PNR": [("gk-pnr",)], "PersonNr": [("gk-personnr",)]}
-        _apply_split(conn, by_col, ["PNR", "PersonNr"], 1, 57, orig, res)
+        # codelivered_pairs empty: this test only asserts flag propagation, and
+        # an empty set keeps every pair generic (foldable) — irrelevant here, the
+        # variables are minted regardless of whether the pair folds.
+        _apply_split(conn, {}, by_col, ["PNR", "PersonNr"], set(), 1, 57, orig, res)
         rows = conn.execute(
             "SELECT name, is_sensitive, is_identifier FROM variable "
             "WHERE register_id = 1 AND provider_key = '57'"
@@ -1147,6 +1296,7 @@ class TestSplitSiblingFlagInheritance:
             groups,
             by_col,
             [["Ssyk3", "Ssyk5"], ["Hemkommun"]],
+            set(),  # codelivered_pairs irrelevant to flag propagation
             1,
             57,
             orig,

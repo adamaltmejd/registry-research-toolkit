@@ -1208,9 +1208,16 @@ def _triage_groups(
             for regver in grp.regvers:
                 bucket_cols[(grp.register_variant_id, regver)].add(col_of[gk])
         contested: set[str] = set()
+        # CO-DELIVERED column pairs: two columns that share at least one edition
+        # bucket. `contested` is a UNION across buckets, so contested membership
+        # does NOT imply two columns ever co-occurred — the per-pair fold gate
+        # must gate on this precise pairwise relation, not on `contested`.
+        codelivered_pairs: set[frozenset[str]] = set()
         for cols in bucket_cols.values():
             if len(cols) > 1:
                 contested |= cols
+                for col_a, col_b in combinations(cols - {""}, 2):
+                    codelivered_pairs.add(frozenset((col_a, col_b)))
         contested.discard("")  # empty-column stubs aren't fold/split contestants
         if len(contested) < 2:
             continue  # no real multi-column same-year collision → not a container
@@ -1256,6 +1263,7 @@ def _triage_groups(
                     groups,
                     by_col,
                     clusters,
+                    codelivered_pairs,
                     register_id,
                     var_id,
                     orig_vid,
@@ -1270,8 +1278,10 @@ def _triage_groups(
                 # No foldable sub-cluster → byte-identical to the legacy split-all.
                 _apply_split(
                     conn,
+                    groups,
                     by_col,
                     all_cols,
+                    codelivered_pairs,
                     register_id,
                     var_id,
                     orig_vid,
@@ -1583,19 +1593,153 @@ def _canon_data_type(dt: str | None) -> str:
     return _TEXT_FAMILY_CANON if s in _TEXT_FAMILY_TYPES else s
 
 
+# ── Split-sibling FOLD GATE ───────────────────────────────────────────────
+# Researcher-facing `variable_related_to` edges were retired, but the per-pair
+# KIND classifier they used is still LOAD-BEARING for the concept-group fold:
+# only pairs classified `same_definition_different_column` are foldable. A
+# `code_vs_label_pair` (a code column + its label column) or an
+# `import_bug_suspect` (numeric-vs-text shape mismatch) is a DISTINCT concept
+# that must NOT auto-fold into one browse row — those need manual curation
+# (#800). The kind strings are now purely INTERNAL fold-gate labels; nothing
+# persists them.
+#
+# The kind is decided PER CO-DELIVERED PAIR — only two columns that actually
+# shared an edition bucket may receive a specific kind, because a code/label
+# pairing or a mis-typed-delivery suspicion is a claim about TWO columns SEEN
+# TOGETHER. A pair that never co-occurred (a temporal/renamed sibling, or two
+# `contested` columns that — `contested` being a union across buckets — never
+# shared one bucket) stays generic; its pairwise signals are meaningless across
+# editions. Precedence for a co-delivered pair, most specific first:
+#   1. code_vs_label_pair — name-based, high confidence
+#   2. import_bug_suspect — data_type/shape mismatch, lower confidence
+#   3. same_definition_different_column — generic fallback (the ONLY foldable kind)
+
+# Only this kind folds into a concept group; the other kinds are excluded.
+_FOLDABLE_KIND = "same_definition_different_column"
+
+# A label column carries the Swedish `namn` (name) suffix; its partner code
+# column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a `kod`/`id`
+# code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`).
+_CODE_SUFFIXES = ("kod", "id")
+_LABEL_SUFFIX = "namn"
+
+
+def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
+    """The non-empty stem when `folded` ends with one of `suffixes`, else None."""
+    for suf in suffixes:
+        if folded.endswith(suf) and len(folded) > len(suf):
+            return folded[: -len(suf)]
+    return None
+
+
+def _is_code_then_label(code: str, label: str) -> bool:
+    """True when `code` is a code column and `label` its matching label column:
+    `label` is `<stem>namn` and `code` is either the bare `<stem>` or
+    `<stem>kod`/`<stem>id` on the SAME stem."""
+    stem = _strip_suffix(label, (_LABEL_SUFFIX,))
+    if stem is None:
+        return False
+    if code == stem:  # bare-stem code paired with its `<stem>namn` label
+        return True
+    return _strip_suffix(code, _CODE_SUFFIXES) == stem
+
+
+def _looks_like_code_label_pair(col_a: str, col_b: str) -> bool:
+    """A code column paired with its label column, in either order. Name-based
+    only (the old #132 heuristic, re-derived to current conventions)."""
+    a, b = _ascii_fold_lower(col_a), _ascii_fold_lower(col_b)
+    if not a or not b:
+        return False
+    return _is_code_then_label(a, b) or _is_code_then_label(b, a)
+
+
+def _representative_group(
+    gkeys: list[tuple], groups: dict[tuple, _StateGroup]
+) -> _StateGroup | None:
+    """The latest-era group for a column — highest `latest_alias_regver` (the
+    edition that set the surviving delivery alias), deterministic stringified-
+    gkey tiebreak. Mirrors the `latest_alias` rule so the compared shape is the
+    column's latest delivered shape. None when no gkey resolves to a group
+    (defensive: the kind then falls back to generic)."""
+    present = [(gk, groups[gk]) for gk in gkeys if gk in groups]
+    if not present:
+        return None
+    _, grp = max(
+        present,
+        key=lambda item: (
+            item[1].latest_alias_regver
+            if item[1].latest_alias_regver is not None
+            else -1,
+            tuple("" if x is None else str(x) for x in item[0]),
+        ),
+    )
+    return grp
+
+
+def _import_bug_suspect(a: _StateGroup | None, b: _StateGroup | None) -> bool:
+    """Lower-confidence shape heuristic: the two split siblings disagree on
+    physical SHAPE in a way that suggests one delivery was mis-imported. Primary
+    signal — a numeric-vs-text `data_type` mismatch (the canonical SCB/SOS import
+    bug: one lumped delivery shipped as a number, the other as text). Fallback —
+    when `data_type` can't be classified on at least one side, a present-on-both
+    `data_length` disagreement is the only remaining shape evidence. A SAME-class
+    length difference is deliberately NOT flagged: on genuinely-distinct split
+    siblings differing widths are normal and would fire this 'suspect' label on
+    nearly every split, diluting the taxonomy."""
+    if a is None or b is None:
+        return False
+    class_a, class_b = _data_type_class(a.data_type), _data_type_class(b.data_type)
+    if {class_a, class_b} == {"numeric", "text"}:
+        return True
+    if "other" in (class_a, class_b) and a.data_length and b.data_length:
+        return a.data_length != b.data_length
+    return False
+
+
+def _split_relation_kind(
+    col_a: str,
+    col_b: str,
+    groups: dict[tuple, _StateGroup],
+    by_col: dict[str, list[tuple]],
+    codelivered_pairs: set[frozenset[str]],
+) -> str:
+    """Fold-gate kind for ONE split sibling pair, decided from the pair's two
+    delivery columns (precedence in the section note above). A pair that is not
+    CO-DELIVERED (never shared an edition bucket) short-circuits to the generic
+    (foldable) kind BEFORE the heuristics run — across editions the pairwise
+    code/datatype signals are meaningless. Only `_FOLDABLE_KIND` folds."""
+    if frozenset((col_a, col_b)) not in codelivered_pairs:
+        return _FOLDABLE_KIND
+    if _looks_like_code_label_pair(col_a, col_b):
+        return "code_vs_label_pair"
+    if _import_bug_suspect(
+        _representative_group(by_col[col_a], groups),
+        _representative_group(by_col[col_b], groups),
+    ):
+        return "import_bug_suspect"
+    return _FOLDABLE_KIND
+
+
 def _apply_split(
     conn: sqlite3.Connection,
+    groups: dict[tuple, _StateGroup],
     by_col: dict[str, list[tuple]],
     named_cols: list[str],
+    codelivered_pairs: set[frozenset[str]],
     register_id: int,
     var_id: int,
     orig_vid: int,
     res: _TriageResult,
 ) -> None:
     """SPLIT: each distinct column becomes its own sibling `variable` (sharing
-    the source provider_key); record the (N choose 2) sibling pairs so the
+    the source provider_key); record the foldable sibling pairs so the
     concept-group fold can re-collapse them into one browse row. Sibling slugs
-    derive later from each sibling's own reassigned column."""
+    derive later from each sibling's own reassigned column.
+
+    `codelivered_pairs` is the set of unordered column pairs that actually
+    shared an edition bucket — only a co-delivered `code_vs_label_pair` /
+    `import_bug_suspect` pair is EXCLUDED from the fold; every other pair is
+    foldable (see `_split_relation_kind`)."""
     # First column (lexically) keeps the original variable; the rest mint new
     # sibling variables. Name + sensitivity/identity flags are shared: siblings
     # are column-variants of ONE source var_id (same concept family), so a flag
@@ -1618,12 +1762,20 @@ def _apply_split(
         sibling_vids.append(new_vid)
         for gk in by_col[col]:
             res.assignments[gk] = new_vid
-    # (N choose 2) sibling pairs → the concept-group edge fold (`edge_siblings`).
-    # Not persisted as researcher-facing edges; the fold just needs the pairing to
-    # re-collapse a split into one browse row.
-    for i, vid_a in enumerate(sibling_vids):
-        for vid_b in sibling_vids[i + 1 :]:
-            res.sibling_edges.append((vid_a, vid_b))
+    # (N choose 2) sibling pairs, GATED by the fold kind: only a
+    # `same_definition_different_column` pair re-collapses into one browse row.
+    # A co-delivered code/label or import-bug-suspect pair is a distinct concept
+    # and is EXCLUDED from the fold (manual curation, #800). sibling_vids[k] ⟷
+    # named_cols[k] by construction (sibling_vids[0] = orig_vid ⟷ named_cols[0],
+    # then named_cols[1:] append in order), so zip re-pairs each vid with its
+    # column for the per-pair kind decision.
+    for i, (vid_a, col_a) in enumerate(zip(sibling_vids, named_cols)):
+        for vid_b, col_b in zip(sibling_vids[i + 1 :], named_cols[i + 1 :]):
+            if (
+                _split_relation_kind(col_a, col_b, groups, by_col, codelivered_pairs)
+                == _FOLDABLE_KIND
+            ):
+                res.sibling_edges.append((vid_a, vid_b))
 
 
 def _apply_clustered(
@@ -1631,6 +1783,7 @@ def _apply_clustered(
     groups: dict[tuple, _StateGroup],
     by_col: dict[str, list[tuple]],
     clusters: list[list[str]],
+    codelivered_pairs: set[frozenset[str]],
     register_id: int,
     var_id: int,
     orig_vid: int,
@@ -1645,7 +1798,11 @@ def _apply_clustered(
     The lexically-first cluster keeps `orig_vid`; the rest mint siblings with the
     inherited name/sensitivity/identity flags (see `_apply_split` for why the
     flags must be copied). The (N_clusters choose 2) sibling pairs feed the
-    concept-group edge fold (`edge_siblings`)."""
+    concept-group fold, GATED by the per-pair kind decided from each cluster's
+    REPRESENTATIVE (lex-min) column via `_split_relation_kind` — so a non-foldable
+    kind (`code_vs_label_pair` / `import_bug_suspect`) needs the two REPS to have
+    co-delivered, and a non-rep cross-member co-delivery degrades to the foldable
+    kind (an acceptable precision tradeoff)."""
     clusters_sorted = sorted(clusters, key=lambda c: min(c))
     shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
     cluster_vids: list[int] = []
@@ -1674,10 +1831,19 @@ def _apply_clustered(
                 vid,
                 res,
             )
-    # (N_clusters choose 2) sibling pairs → the concept-group edge fold.
+    # (N_clusters choose 2) sibling pairs, GATED by the per-pair fold kind from
+    # each cluster's representative (lex-min) column. Only a foldable pair
+    # re-collapses into one browse row.
+    reps = [min(c) for c in clusters_sorted]
     for i, vid_a in enumerate(cluster_vids):
-        for vid_b in cluster_vids[i + 1 :]:
-            res.sibling_edges.append((vid_a, vid_b))
+        for j in range(i + 1, len(cluster_vids)):
+            if (
+                _split_relation_kind(
+                    reps[i], reps[j], groups, by_col, codelivered_pairs
+                )
+                == _FOLDABLE_KIND
+            ):
+                res.sibling_edges.append((vid_a, cluster_vids[j]))
 
 
 def _split_off_non_contested(
