@@ -259,13 +259,20 @@ class TestNodeMetadata:
     def test_definition_description_flow_onto_variable_node(self) -> None:
         # #678: the variable's shared concept text (`ResolvedVariable.definition` /
         # `description`) is carried on its graph node so the group page can surface
-        # the shared concept definition/description from the member union alone. Seed
-        # them on the resolving variable + a meaningful representation change so the
-        # node renders.
+        # the shared concept definition/description from the member union alone.
+        # #892/#932: `operational_definition` rides the same path — it's the per-member
+        # distinguishing text that lets the group page tell parallel siblings apart.
+        # Seed them on the resolving variable + a meaningful representation change so
+        # the node renders.
         conn = build_slugged_db()
         conn.execute(
-            "UPDATE variable SET definition = ?, description = ? WHERE slug = 'kon'",
-            ("The legal sex of the individual.", "Coded one digit, SCB standard."),
+            "UPDATE variable SET definition = ?, description = ?, "
+            "operational_definition = ? WHERE slug = 'kon'",
+            (
+                "The legal sex of the individual.",
+                "Coded one digit, SCB standard.",
+                "Registered sex at year end.",
+            ),
         )
         add_value_set(conn, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
         add_value_set(conn, value_set_id=2, codes=[("1", "M"), ("2", "K")])
@@ -285,6 +292,7 @@ class TestNodeMetadata:
         assert isinstance(node, VariableGraphNode)
         assert node.definition == "The legal sex of the individual."
         assert node.description == "Coded one digit, SCB standard."
+        assert node.operational_definition == "Registered sex at year end."
 
     def test_metadata_absent_is_none(self) -> None:
         # The seed leaves definition/description NULL → the node carries None (the
@@ -308,6 +316,7 @@ class TestNodeMetadata:
         assert isinstance(node, VariableGraphNode)
         assert node.definition is None
         assert node.description is None
+        assert node.operational_definition is None
 
 
 # ── Representation runs ──────────────────────────────────────────────────────

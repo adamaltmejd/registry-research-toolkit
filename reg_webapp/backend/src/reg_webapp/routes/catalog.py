@@ -483,6 +483,7 @@ def _binding_node(
         name=resolved.name,
         definition=resolved.definition,
         description=resolved.description,
+        operational_definition=resolved.operational_definition,
         measurement_unit=resolved.measurement_unit,
         is_sensitive=resolved.is_sensitive,
         is_identifier=resolved.is_identifier,

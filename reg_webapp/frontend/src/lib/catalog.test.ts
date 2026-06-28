@@ -782,6 +782,7 @@ function focusNode(over: Partial<VariableGraphNode> = {}): VariableGraphNode {
     group_label: null,
     definition: null,
     description: null,
+    operational_definition: null,
     facets: [],
     states: [],
     same_as: [],

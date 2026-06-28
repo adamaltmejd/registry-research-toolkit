@@ -118,6 +118,11 @@ def test_binding_leaf_embeds_full_record(client):
         {"code": "1", "label": "Man"},
         {"code": "2", "label": "Kvinna"},
     ]
+    # #892/#932: the per-(split-)variable distinguishing text is serialized on the
+    # binding leaf. The fixture kon row leaves it empty → None; the field is always
+    # present (proves the resolve→node wiring).
+    assert "operational_definition" in body
+    assert body["operational_definition"] is None
     # The same_as edge (kon → rams/syss) is embedded, fqid serialized as a string.
     assert any(ref["fqid"] == "scb/rams/syss" for ref in body["same_as"])
     # Edge collections are present (possibly empty); #582 replaced the immediate

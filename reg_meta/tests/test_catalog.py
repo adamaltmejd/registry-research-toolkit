@@ -139,6 +139,25 @@ class TestResolveBinding:
         assert isinstance(r, ResolvedVariable)
         assert r.states[0].delivery_column_name == "Kön"
 
+    def test_operational_definition_flows_through_resolve(self) -> None:
+        # #892/#932: the per-(split-)variable distinguishing text is a first-class
+        # column surfaced on `ResolvedVariable`. Default fixture leaves it NULL.
+        conn = build_slugged_db()
+        r = Catalog(conn).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert r.operational_definition is None
+        conn.execute(
+            "UPDATE variable SET operational_definition = ? WHERE slug = 'kon'",
+            ("Avser personens registrerade kön vid årets slut.",),
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert (
+            r.operational_definition
+            == "Avser personens registrerade kön vid årets slut."
+        )
+
     def test_unknown_variable_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
             Catalog(slugged_conn).resolve("scb/lisa/nonexistent")

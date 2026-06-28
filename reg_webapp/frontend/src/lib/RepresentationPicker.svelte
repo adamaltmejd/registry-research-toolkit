@@ -61,6 +61,13 @@ export interface PickerBand {
   facets?: GroupFacetModel[];
   isSensitive?: boolean;
   isIdentifier?: boolean;
+  /** The member variable's OPERATIONAL DEFINITION (#892/#932): SCB's per-(split-)variable
+   * distinguishing text — the one field that tells parallel concept-group members apart
+   * when their name/definition/description coincide (e.g. fordonsreg näringsgren: owner /
+   * previous-owner). The GROUP view sets it per member (from its graph node) so a band
+   * surfaces its own distinguishing text inline; the binding LEAF leaves it undefined (its
+   * meta list already renders the op-def, so the single band would duplicate it). */
+  operationalDefinition?: string | null;
   rows: PickerRepresentation[];
   /** The variable's leaf page href (the GROUP view sets it per member —
    * `catalogHref(member.fqid)` — so the picker can link to each member's own page).
@@ -608,6 +615,18 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   {/if}
 {/snippet}
 
+<!-- The OPERATIONAL-DEFINITION line (#892/#932): a member variable's per-(split-)variable
+     distinguishing text — what tells parallel concept-group members apart when their name/
+     definition coincide (e.g. owner vs previous-owner näringsgren). A quiet band-level line
+     under the identity, led by an `op def` eyebrow (the `.dim-kind` device, so it reads as a
+     kind-of-text label, never a value/code chip). Rendered only when the member carries it
+     (most siblings carry null) — additive, off the existing band-context language. -->
+{#snippet opDefLine(text: string)}
+  <span class="op-def">
+    <span class="dim-kind">op def</span><span class="op-def-text">{text}</span>
+  </span>
+{/snippet}
+
 <!-- The DATA-STARTS-LATE warning (#678): a quiet --warn marker shown immediately
      before the period when the active window starts BEFORE this column's data begins
      (the user asked from <windowStart> but data only starts <dataStart>). A text glyph
@@ -815,6 +834,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                       .join(" · ")}</span
                   >
                 {/if}
+                {#if band.operationalDefinition}
+                  {@render opDefLine(band.operationalDefinition)}
+                {/if}
                 {@render renameHint(row.renamedColumns)}
               </span>
               {#if row.codingsVary}
@@ -903,6 +925,12 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                     <span class="ctx-text">{v.context.join(" · ")}</span>
                   {/if}
                 </span>
+              {/if}
+              <!-- The member's operational definition (#892/#932): the per-variable
+                   distinguishing text, on its OWN line below the heading/context (it's a
+                   sentence, not a chip) so parallel members are told apart at a glance. -->
+              {#if band.operationalDefinition}
+                {@render opDefLine(band.operationalDefinition)}
               {/if}
             {/snippet}
             {#if empty}
@@ -1579,6 +1607,26 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   .sub {
     font-size: 0.8rem;
     color: var(--text-muted);
+    overflow-wrap: anywhere;
+  }
+  /* The operational-definition line (#892/#932): a member's per-variable distinguishing
+     text, on its own quiet line. In `.row-main` (single row, a flex column) it sits below
+     the identity naturally; inside `.subhead-body` (a wrapping flex row) `flex-basis:100%`
+     drops it WHOLE to its own row beneath the heading — never sharing a line with the title.
+     A baseline-aligned eyebrow (`.dim-kind` "op def") + the text, muted, so it reads as a
+     distinguishing annotation, not a control. */
+  .op-def {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    flex-basis: 100%;
+    min-width: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+  }
+  .op-def-text {
+    min-width: 0;
     overflow-wrap: anywhere;
   }
   /* The sequential-rename progression hint (#902): a quiet inline "was DINF, DINF83"

@@ -666,6 +666,8 @@ export interface components {
             measurement_unit: string | null;
             /** Name */
             name: string | null;
+            /** Operational Definition */
+            operational_definition?: string | null;
             /** Register Id */
             register_id: number;
             /** Same As */
@@ -2114,6 +2116,8 @@ export interface components {
             kind: "variable";
             /** Label */
             label: string;
+            /** Operational Definition */
+            operational_definition: string | null;
             /** Same As */
             same_as: components["schemas"]["SameAsRef"][];
             /** States */
