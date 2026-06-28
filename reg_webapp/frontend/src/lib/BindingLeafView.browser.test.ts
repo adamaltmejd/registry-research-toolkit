@@ -970,7 +970,12 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .toBeEnabled();
   });
 
-  it("uses a period-only scope when a variant modifier is active", async () => {
+  it("narrows the value-set list to the active variant modifier, keeping a period-only outside-period scope (Codex P2)", async () => {
+    // #905, Codex P2: with `?variant` active the page shows a "Narrowed by" chip and
+    // the picker is scoped via `narrowStatesByModifier`. The value-set list MUST match
+    // that narrowing — a DIFFERENT variant's same-period coding must NOT appear as an
+    // in-scope row. The period-only outside-period collapse (#744) still works, scoped
+    // to the narrowed variant.
     const inA = state({
       state_id: 20,
       variant: "individer",
@@ -995,9 +1000,12 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       valid_from: "2008-01-01",
       valid_to: "2008-12-31",
     });
-    const outside = state({
+    // An individer coding OUTSIDE the period — survives the modifier narrowing and
+    // demonstrates the outside-period disclosure still functions for the narrowed
+    // variant.
+    const outsideIndivider = state({
       state_id: 23,
-      variant: "outside-population",
+      variant: "individer",
       value_set_id: 23,
       value_set_version_label: "Outside period",
       valid_from: "1990-01-01",
@@ -1006,6 +1014,8 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     vi.mocked(getCatalogNode).mockImplementation(
       async (_fqid, params) =>
         ({
+          // The period-only scope (no variant param) returns the same-period rows of
+          // ALL variants; the variant-scoped resolve returns only individer's.
           states: params?.variant
             ? [inA, inB]
             : [inA, inB, samePeriodOtherVariant],
@@ -1017,20 +1027,65 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([inA, inB, samePeriodOtherVariant, outside]),
+      node: node([inA, inB, samePeriodOtherVariant, outsideIndivider]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       vintageYear: 2024,
     });
 
+    // The narrowed value-set list shows individer's in-period codings…
+    await expect.element(page.getByText("In-period A")).toBeVisible();
+    await expect.element(page.getByText("In-period B")).toBeVisible();
+    // …the period-only outside-period collapse still works (individer's out-of-period
+    // coding)…
     await expect
       .element(page.getByText("1 value set outside this period"))
       .toBeVisible();
+    // …and the OTHER variant's same-period coding is absent (Fix 3): the list reflects
+    // the active narrowing, not the full history.
     expect(
       [...document.querySelectorAll(".vs-label")].some(
         (el) => el.textContent === "Same-period other variant",
       ),
-    ).toBe(true);
+    ).toBe(false);
+  });
+
+  it("shows ALL period codings (every variant) when NO modifier is active", async () => {
+    // The control for Fix 3: with no `?variant`/`?value_set_version`, the value-set
+    // list is the full period history — every variant's same-period coding shows.
+    const inA = state({
+      state_id: 24,
+      variant: "individer",
+      value_set_id: 24,
+      value_set_version_label: "In-period A",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    const samePeriodOtherVariant = state({
+      state_id: 25,
+      variant: "other-population",
+      value_set_id: 25,
+      value_set_version_label: "Same-period other variant",
+      valid_from: "2007-01-01",
+      valid_to: "2007-12-31",
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: [inA, samePeriodOtherVariant],
+    } as never);
+    router.navigate("/catalog/scb/lisa/kon?period=2007");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node([inA, samePeriodOtherVariant]),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("In-period A")).toBeVisible();
+    await expect
+      .element(page.getByText("Same-period other variant"))
+      .toBeVisible();
   });
 
   it("keeps modifier-resolved single-state detail with a broader period-only scope", async () => {

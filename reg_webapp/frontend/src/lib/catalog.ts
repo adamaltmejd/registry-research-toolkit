@@ -2262,21 +2262,31 @@ export function encodeCodesParam(variant: string, column: string): string {
 /** Parse a `?codes=` deep-link param (`encodeCodesParam`'s inverse) into its
  * `(variant, column)` pair. A bare `<column>` with no `::` (back-compat / a leaf
  * link that carries no variant) parses to `{ variant: null, column }`. Each segment
- * is percent-DEcoded. Returns null for an empty / missing param. */
+ * is percent-DEcoded. Returns null for an empty / missing param.
+ *
+ * TOTAL by design: `?codes=` is purely client-side FOCUS state (it never re-fetches),
+ * so a malformed value — a stray `%` or a truncated escape (`%E0%A4%A`) that makes
+ * `decodeURIComponent` THROW — must DEGRADE to the default union view, not crash the
+ * leaf render. Any decode failure returns null (no focus). This is fail-SOFT on
+ * URL-supplied cosmetic state, distinct from fail-fast on real data contracts. */
 export function parseCodesParam(
   codes: string | null | undefined,
 ): { variant: string | null; column: string } | null {
   if (!codes) {
     return null;
   }
-  const sep = codes.indexOf("::");
-  if (sep === -1) {
-    return { variant: null, column: decodeURIComponent(codes) };
+  try {
+    const sep = codes.indexOf("::");
+    if (sep === -1) {
+      return { variant: null, column: decodeURIComponent(codes) };
+    }
+    return {
+      variant: decodeURIComponent(codes.slice(0, sep)),
+      column: decodeURIComponent(codes.slice(sep + 2)),
+    };
+  } catch {
+    return null;
   }
-  return {
-    variant: decodeURIComponent(codes.slice(0, sep)),
-    column: decodeURIComponent(codes.slice(sep + 2)),
-  };
 }
 
 /** The DISTINCT value-set `key` (the `distinctValueSets` dedup identity) a given

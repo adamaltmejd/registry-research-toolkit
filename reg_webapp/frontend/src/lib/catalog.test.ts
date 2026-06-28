@@ -4140,4 +4140,20 @@ describe("encode/parseCodesParam (#905 — (variant, column) deep-link payload)"
     expect(parseCodesParam(undefined)).toBeNull();
     expect(parseCodesParam("")).toBeNull();
   });
+
+  it("degrades to null (no throw) on a malformed percent-escape (P2: a bad ?codes deep link must not crash the page)", () => {
+    // `?codes=` is purely client-side FOCUS state, so a stale/bad deep link must
+    // degrade to the default union view, never crash BindingLeafView's render.
+    // `decodeURIComponent` THROWS on these — `parseCodesParam` must be total.
+    expect(() => parseCodesParam("%")).not.toThrow();
+    expect(parseCodesParam("%")).toBeNull();
+    // A truncated escape in the COLUMN segment (after a valid variant + `::`).
+    expect(() => parseCodesParam("a::%E0%A4%A")).not.toThrow();
+    expect(parseCodesParam("a::%E0%A4%A")).toBeNull();
+    // A lone malformed bare column (no `::`).
+    expect(() => parseCodesParam("%E0%A4%A")).not.toThrow();
+    expect(parseCodesParam("%E0%A4%A")).toBeNull();
+    // A malformed VARIANT segment also degrades.
+    expect(parseCodesParam("%::Yrke")).toBeNull();
+  });
 });

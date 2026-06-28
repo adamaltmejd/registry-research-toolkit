@@ -353,6 +353,41 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       .toBeVisible();
   });
 
+  it("a filter that hides the in-period rows does NOT mis-report 'No state delivered for this period' (Codex P3)", async () => {
+    // The period DID deliver in-period value sets (classState + inScopePlain), but a
+    // text filter matches only the OUT-of-period row's variant ("fodda"). The empty
+    // hint must key off the UNFILTERED period scope (which is non-empty), so it must
+    // NOT appear — the union branch's own "no matches" describes the filtered-out
+    // state instead.
+    const inScopePlain = state({
+      state_id: 3,
+      value_set_id: 201,
+      value_set_version_label: "In-period plain",
+      variant: "doda",
+      valid_from: "2008-01-01",
+      valid_to: "2008-12-31",
+    });
+    render(ValueSetView, {
+      states: [classState, inScopePlain, plainState],
+      scopeStates: [classState, inScopePlain],
+      narrowed: true,
+    });
+    const filter = page.getByRole("textbox", { name: "Filter value sets" });
+    // "fodda" is only the out-of-period plainState's variant → in-period shown rows
+    // become empty, but the out-of-period row still matches and stays collapsed.
+    await filter.fill("fodda");
+    // The out-of-period row stays collapsed (the filter matched it), which renders the
+    // union branch — proving we did NOT fall into the "No state delivered" branch.
+    await expect
+      .element(page.getByText("1 value set outside this period"))
+      .toBeVisible();
+    // The mis-report must be entirely absent from the DOM (the in-period scope is
+    // non-empty), not merely hidden.
+    expect(document.body.textContent).not.toContain(
+      "No state delivered for this period.",
+    );
+  });
+
   // ── focusColumn deep-link (#905) ────────────────────────────────────────────
   it("focusColumn auto-isolates the distinct value set its column delivers", async () => {
     // `plainState` is delivered via column PLAINCOL; the `?codes=PLAINCOL` deep link

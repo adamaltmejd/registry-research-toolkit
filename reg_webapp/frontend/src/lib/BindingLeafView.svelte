@@ -180,6 +180,41 @@ const stateScope = $derived(
     : null,
 );
 
+// #905 (Codex P2): when a `?variant` / `?value_set_version` modifier is active, the
+// page shows a "Narrowed by" chip and the picker is scoped via
+// `narrowStatesByModifier`. The value-set view must reflect the SAME narrowing —
+// otherwise it would list OTHER variants'/versions' same-period codings as in-scope
+// rows, contradicting the rest of the page. Apply the modifier-narrowing (the SAME
+// helper the picker uses) ON TOP of the loading/single/multi `states` derivation and
+// the `stateScope` it pairs with — never instead of it, so the loading (`null`) and
+// single-state paths are preserved. With NO modifier active these pass through
+// unchanged (full history). ValueSetView stays PURE: the leaf decides which states it
+// gets; the view carries no resolution state.
+const valueSetStates = $derived.by(() => {
+  if (states === null || !hasResolutionModifier) {
+    return states;
+  }
+  return [
+    ...narrowStatesByModifier(
+      states,
+      params.variant ?? null,
+      params.value_set_version ?? null,
+    ),
+  ];
+});
+const valueSetScope = $derived.by(() => {
+  if (stateScope === null || !hasResolutionModifier) {
+    return stateScope;
+  }
+  return [
+    ...narrowStatesByModifier(
+      stateScope,
+      params.variant ?? null,
+      params.value_set_version ?? null,
+    ),
+  ];
+});
+
 // ── The relationship-graph fetch (#678) ─────────────────────────────────────
 // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the HistoryGraph
 // renderer AND the #670 header identity (qualifier + group link), derived from
@@ -548,16 +583,16 @@ function commitSelected(selected: PickerSelection[]): void {
           · narrowed to {params.period.split(",").join(" + ")}</span
         >{/if}
     </h3>
-    {#if states}
+    {#if valueSetStates}
       <!-- The pure value-set / coding viewer (#905). Narrowing to one state is the
            PICKER's job now (it writes `?variant`/`?value_set_version`); this view
            only DISPLAYS the codings. The "codings vary" nudge deep-links here via
            `?codes=<variant>::<column>` → `focusColumn`/`focusVariant`, focusing the
            right (variant, column) coding. -->
       <ValueSetView
-        {states}
+        states={valueSetStates}
         narrowed={isNarrowed}
-        scopeStates={stateScope}
+        scopeStates={valueSetScope}
         {focusColumn}
         {focusVariant}
       />

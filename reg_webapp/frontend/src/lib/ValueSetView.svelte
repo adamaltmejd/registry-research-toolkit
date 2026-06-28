@@ -152,6 +152,17 @@ const filteredValueSetCount = $derived(
   shownValueSets.length + collapsedValueSets.length,
 );
 
+// The UNFILTERED period scope: whether the period genuinely delivered ANY in-period
+// value set, computed BEFORE the text filter (#905, Codex P3). The empty hint keys off
+// this — not off `shownValueSets`/`collapsedValueSets`, which the filter already
+// narrows — so a filter that hides in-period rows (matching only an out-of-period one)
+// does NOT mis-report "No state delivered for this period". The filter's own
+// zero-results state describes "no matches" separately. Null scope (full history) →
+// always non-empty (no period to be empty for).
+const hasInPeriodValueSets = $derived(
+  scopeValueSetKeys === null || valueSets.some((vs) => inPeriod(vs)),
+);
+
 // Scroll the focused (isolated) detail into view once it renders — the deep-link
 // from the picker's "codings vary" nudge lands the user on the right coding. Gated
 // on a focusColumn so ordinary in-page isolation (a row's "Isolate" click) doesn't
@@ -348,7 +359,11 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
        the full state history; a `?period` collapses out-of-period value sets under
        a disclosure (#744). Narrowing to a single state is the PICKER's job now
        (it writes `?variant`/`?value_set_version`) — this view only DISPLAYS. -->
-  {#if narrowed && scopeValueSetKeys !== null && shownValueSets.length === 0 && collapsedValueSets.length > 0}
+  {#if narrowed && scopeValueSetKeys !== null && !hasInPeriodValueSets}
+    <!-- Keyed off the UNFILTERED period scope (`hasInPeriodValueSets`), NOT the
+         filter-narrowed lists: the period genuinely delivered zero in-period value
+         sets. A text filter that hides in-period rows falls through to the union
+         branch's own "No value set matches the filter" instead (#905, Codex P3). -->
     <p class="muted picker-hint">
       No state delivered for this period. Historical value sets outside this period
       are collapsed below.
