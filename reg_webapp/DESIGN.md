@@ -122,20 +122,20 @@ grammar (see reg_meta/DESIGN.md → FQID grammar) at build time, so a variable s
 `states` can't shadow a sub-endpoint. The validate→parse→Catalog-dispatch→Pydantic-map
 flow is factored into reusable helpers.
 
-The suffixed surface has one family declared above the catch-all: eight **binding-suffix
-routes** (`/states`, `/predecessors`, `/successors`, `/related`, `/lineage`,
-`/lineage_warnings`, `/dimensions`, `/graph`), each mapping 1:1 to a `Catalog` accessor
-and returning a thin `{binding, <list>}` envelope so the SPA codegen sees one response
-type per endpoint. (`/graph` returns a `RelationshipGraph` — no `{binding, …}` wrapper —
-so its shape differs from the others, but the declaration position and slug-reservation
-rules are identical.) Plus one **register sub-resource**
-`/{provider}/{register}/variants` (a FIXED 3-seg shape with a literal `variants` tail —
-explicit `{provider}`/`{register}` segments, NOT an `{fqid:path}` suffix). The
-binding-suffix routes are binding-only: a non-binding FQID raises reg_meta's
-`not_a_binding_fqid` (EXIT_USAGE) → **422** (a usage error, not a 500); an absent
-binding → 404. A register node's children include a `variants` reference (`VariantsRef`)
-so the variant browser has a stable slot in the discriminated union without the variant
-being an FQID.
+The suffixed surface has one family declared above the catch-all: seven **binding-suffix
+routes** (`/states`, `/predecessors`, `/successors`, `/lineage`, `/lineage_warnings`,
+`/dimensions`, `/graph`), each mapping 1:1 to a `Catalog` accessor and returning a thin
+`{binding, <list>}` envelope so the SPA codegen sees one response type per endpoint.
+(`/graph` returns a `RelationshipGraph` — no `{binding, …}` wrapper — so its shape
+differs from the others, but the declaration position and slug-reservation rules are
+identical.) The `/related` route and `variable_related_to` edge surface were retired in
+#800. Plus one **register sub-resource** `/{provider}/{register}/variants` (a FIXED
+3-seg shape with a literal `variants` tail — explicit `{provider}`/`{register}`
+segments, NOT an `{fqid:path}` suffix). The binding-suffix routes are binding-only: a
+non-binding FQID raises reg_meta's `not_a_binding_fqid` (EXIT_USAGE) → **422** (a usage
+error, not a 500); an absent binding → 404. A register node's children include a
+`variants` reference (`VariantsRef`) so the variant browser has a stable slot in the
+discriminated union without the variant being an FQID.
 
 Plus two **concept-group subject routes**, both declared above the catch-all:
 
@@ -256,16 +256,16 @@ A truly-unknown slug — no successor edge, or a PROVIDER FQID — re-raises the
 
 The redirect covers all entry points into a dead binding slug (#411): the no-period
 catch-all node path, the `?period` branch (query string preserved, so `?period=2019` /
-`?variant` ride to the terminal), and all eight binding-suffix sub-endpoints (`/states`,
-`/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings`,
-`/dimensions`, `/graph`), which redirect to the **same suffix** on the terminal (e.g. a
-dead slug `/states` → terminal slug `/states`). The shared `_redirect_or_4xx` helper
-implements this policy for the `?period` branch and all sub-endpoints; the no-period
-node path has a sibling implementation at the `HTTPException` layer (keep the two in
-sync on any 301→308 switch). Only a genuine `fqid_not_found` ever redirects — a usage
-422 (e.g. an inverted `?period` range) and a build-invariant 500 are never turned into
-redirects. The 301 is permanent and cache-eligible; the terminal resolution guarantees
-the redirect target stays stable under double renames (see
+`?variant` ride to the terminal), and all seven binding-suffix sub-endpoints (`/states`,
+`/predecessors`, `/successors`, `/lineage`, `/lineage_warnings`, `/dimensions`,
+`/graph`), which redirect to the **same suffix** on the terminal (e.g. a dead slug
+`/states` → terminal slug `/states`). The shared `_redirect_or_4xx` helper implements
+this policy for the `?period` branch and all sub-endpoints; the no-period node path has
+a sibling implementation at the `HTTPException` layer (keep the two in sync on any
+301→308 switch). Only a genuine `fqid_not_found` ever redirects — a usage 422 (e.g. an
+inverted `?period` range) and a build-invariant 500 are never turned into redirects. The
+301 is permanent and cache-eligible; the terminal resolution guarantees the redirect
+target stays stable under double renames (see
 `reg_meta/DESIGN.md → resolve_terminal_successor`).
 
 A dead/renamed **classification** slug still redirects via the catch-all node path: a
@@ -560,7 +560,7 @@ prompt revalidation opportunity instead of letting the browser serve a stale cou
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
 Every read endpoint (`/api/context`, `/api/stats`, the `/api/catalog` root + catch-all,
-the 8 binding-suffix sub-endpoints) carries
+the 7 binding-suffix sub-endpoints) carries
 `ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and a per-route
 `Cache-Control` (`cache_control_for`) in three tiers: `/api/context` revalidates always
 (see below); fold- or steward-dependent reads (`/api/catalog/*`, `/api/search`, and
@@ -657,8 +657,8 @@ membership in `admitted_variable_fqids`; a group with no surviving member is dro
 held binding leaf narrows its embedded `states` to held delivery columns
 (`held_columns`), and the `?period` / `/states` resolve_at subset is narrowed the same
 way. The `/variants` sub-resource filters to variant coordinates with ≥1 held binding
-(`held_variant_coords_for_register`). All eight binding-suffix sub-endpoints (`/states`,
-`/predecessors`, `/successors`, `/related`, `/dimensions`, `/graph`, `/lineage`,
+(`held_variant_coords_for_register`). All seven binding-suffix sub-endpoints (`/states`,
+`/predecessors`, `/successors`, `/dimensions`, `/graph`, `/lineage`,
 `/lineage_warnings`) apply the ONE pre-resolve admission gate (`_require_admitted`) that
 covers binding, register, and provider grains uniformly:
 
@@ -671,7 +671,7 @@ covers binding, register, and provider grains uniformly:
 - a dead slug whose terminal successor is UNHELD or has no successor → **404**.
 
 The `/graph` sub-endpoint gates the subject binding but does NOT narrow the graph's node
-set (same_as/related/group neighborhood) to held — that traversal-narrowing is deferred
+set (same_as/group neighborhood) to held — that traversal-narrowing is deferred
 as a follow-up.
 
 *Classification pass-through (decision 2).* Classifications and codes are
@@ -750,8 +750,8 @@ to emit a clean tagged union for the catch-all; `ConceptGroupNode` is a standalo
 schema used only by the group route. FQID fields serialize as plain `str` (`str(fqid)`),
 never nested models, so the codegen'd TS sees flat string fields. The binding **leaf**
 embeds the variable's FULL longitudinal record from one `Catalog.resolve` call (states,
-value sets, and the variable-grain `same_as` / `related_to` / `lineage` edges), plus the
-full variable `succession_chain` (#582, below). `lineage_warnings` are **omitted** —
+value sets, and the variable-grain `same_as` / `lineage` edges), plus the full variable
+`succession_chain` (#582, below). `lineage_warnings` are **omitted** —
 `ResolvedVariable` doesn't carry them; they arrive via the `/lineage_warnings` endpoint.
 
 One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a
@@ -1160,13 +1160,13 @@ that fills the shell: `binding` → `BindingLeafView`, `classification` →
 
 Per-kind mapping into the five sections:
 
-  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)                   | Concept group (`ConceptGroupView`)                                                                             |
-  | ------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                           | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via `HistoryGraph` succession edges)     | column picker (`RepresentationPicker`) + `PeriodPicker` (availability lens) (#678)                             |
-  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                     | —                                                                                                              |
-  | relationships | `HistoryGraph` (over `/graph` payload) + `LineageDetails` (provenance/warnings)                          | `HistoryGraph` (edition points, succession + related edges) | — (members live in the picker)                                                                                 |
-  | docs          | `DocMentionsPanel`                                                                                       | —                                                           | —                                                                                                              |
+  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)               | Concept group (`ConceptGroupView`)                                                                             |
+  | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                       | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
+  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via `HistoryGraph` succession edges) | column picker (`RepresentationPicker`) + `PeriodPicker` (availability lens) (#678)                             |
+  | value / codes | states (`StatesView`, each distinct value set via `CodeList`)                                            | `ClassificationCodesPanel` (`CodeList`)                 | —                                                                                                              |
+  | relationships | `HistoryGraph` (over `/graph` payload) + `LineageDetails` (provenance/warnings)                          | `HistoryGraph` (edition points, succession edges)       | — (members live in the picker)                                                                                 |
+  | docs          | `DocMentionsPanel`                                                                                       | —                                                       | —                                                                                                              |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
 `BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
@@ -1251,14 +1251,13 @@ form when the start is unknown (#658).
 (`Catalog.graph_for_binding` vs `graph_for_classification`) and in the pure projection
 (`history_graph.ts`), not in the renderer. Variable nodes lay out as horizontal
 representation-run cells along the time axis; classification nodes lay out as
-version-ordered edition points. Succession and related edges draw the same way in both
-cases — directed arcs between node markers. The remaining per-kind differences that the
-old separate panels had to special-case are either absent from the graph contract (the
-classification chain carries no per-transition reason; dead predecessors are resolved
-server-side before the graph is returned) or kept in the non-graph residue:
-`LineageDetails` carries the variable-only surfaces (`variable_state_lineage` provenance
-edges + `/lineage_warnings`) and is simply not mounted on the classification leaf, which
-has neither.
+version-ordered edition points. Succession edges draw as directed arcs between node
+markers. The remaining per-kind differences that the old separate panels had to
+special-case are either absent from the graph contract (the classification chain carries
+no per-transition reason; dead predecessors are resolved server-side before the graph is
+returned) or kept in the non-graph residue: `LineageDetails` carries the variable-only
+surfaces (`variable_state_lineage` provenance edges + `/lineage_warnings`) and is simply
+not mounted on the classification leaf, which has neither.
 
 ### Rejected alternatives + the viz-dependency trigger (#667 spike)
 
@@ -1730,7 +1729,6 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | GET    | `/api/catalog/{fqid}/states`                     | Full state history for a binding. Dead/renamed binding 301s to `/states` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
   | GET    | `/api/catalog/{fqid}/predecessors`               | Inbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
   | GET    | `/api/catalog/{fqid}/successors`                 | Outbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/successors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-  | GET    | `/api/catalog/{fqid}/related`                    | `variable_related_to` edges (sibling-grain variables). Dead/renamed binding 301s to `/related` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | GET    | `/api/catalog/{fqid}/lineage`                    | Materialized `variable_state_lineage` edges (consumer ← source). Dead/renamed binding 301s to `/lineage` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
   | GET    | `/api/catalog/{fqid}/lineage_warnings`           | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
   | GET    | `/api/catalog/{fqid}/dimensions`                 | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                |

@@ -71,7 +71,7 @@ into six families:
   | Family                  | Files                                                                                                                                                                                                                                                                        | Role                                                                                                                                                                                                                                                                                                                                                                                                                                         |
   | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | **identifier**          | `fqid_slugs/<provider>.toml`, `fqid_slugs/<provider>.auto.toml`, `fqid_slugs/freeze.toml`, `fqid_slugs/classifications.toml` (loaded by `load_classifications_toml` in `fqid_slugs.py`); steward shards in `fqid_slugs/<steward>/`                                           | Canonical register/variant/classification/variable slugs; panel-shape metadata on variants; per-provider freeze state. `fqid_slugs/classifications.toml` is the provider-independent classification slug surface (loaded separately from provider TOMLs). `[lineage_defaults]` / `[lineage.*]` blocks in the same TOMLs pin source-variant choices for `variable_state_lineage`.                                                             |
-  | **relation**            | `curation/relations.toml` (loaded by `relations.py`)                                                                                                                                                                                                                         | All curated pairwise graph facts: `same_as` identity edges, `replaced_by` succession edges, `related_to` see-also edges. One typed `[[edge]]` array; `type` selects the DB target and validation rules.                                                                                                                                                                                                                                      |
+  | **relation**            | `curation/relations.toml` (loaded by `relations.py`)                                                                                                                                                                                                                         | All curated pairwise graph facts: `same_as` identity edges and `replaced_by` succession edges. One typed `[[edge]]` array; `type` selects the DB target and validation rules. (The `related_to` edge type was retired in #800 — see *Build-time triage (SCB)* for the preserved in-build split-sibling pairs.)                                                                                                                               |
   | **set**                 | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                                                                     | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                |
   | **source/gap-fill**     | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `variable_grafts.toml` (loaded by `variable_grafts.py`), `input_data/scb_canonical/lisa_canonical.toml` (loaded by `canonical_attach.py`) | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions backfilled from steward delivery lists; variables present in steward docs but absent from machine metadata; canonical-SCB columns attached onto an existing register — `canonical_attach.py`, the rich analog of grafts).                                                                          |
   | **value/coding**        | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)                                                       | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                          |
@@ -140,9 +140,9 @@ The three patterns, and the surfaces on each:
   (stdout / a throwaway `-o` file); the build consumes **only** the hand-curated file,
   which ships empty and grows one reviewed entry at a time. For resolver-load-bearing
   facts produced by an imprecise rule. Surface: `curation/relations.toml` (`same_as` /
-  `replaced_by` / `related_to`). Generator: `same-as-candidates`. **A low-precision rule
-  must never auto-load into a resolver-load-bearing table** — that is the whole reason
-  this surface ships empty.
+  `replaced_by`). Generator: `same-as-candidates`. **A low-precision rule must never
+  auto-load into a resolver-load-bearing table** — that is the whole reason this surface
+  ships empty.
 - **(b) Committed-auto + opt-in overlay** — the generator writes a **tracked,
   machine-owned** `*.auto.toml`, regenerated by a *deliberate subcommand* (not inside
   `build-db`) and idempotent (it preserves already-accepted families); a curated overlay
@@ -1206,8 +1206,10 @@ invariant, so the SCB adapter triages every such collision (`sources/scb.py`,
   variable slug derives from the shared column stem. No edge — it's one variable.
 - **Split** — genuinely different concepts under a generic `var_id` (disjoint column
   stems). Mint distinct sibling `variable` rows sharing the source `provider_key`,
-  reassign each column's states to its sibling, and link the siblings with
-  `variable_related_to` edges.
+  reassign each column's states to its sibling, and record the sibling pairs in
+  `edge_siblings` (in-build only — they drive the concept-group fold but are **not**
+  persisted to a researcher-facing edge table; the `variable_related_to` table was
+  retired in #800).
 - **Collapse** — residual same-column metadata drift (`data_type` / `value_set_id`
   re-delivery churn). `_collapse_residual` runs in two passes: pass 1 dedupes groups
   sharing the same `valid_from`-year index key (keeps the latest-era state, drops pure
@@ -1329,9 +1331,12 @@ Two notes on the triage signals:
   co-occurred — a temporal/rename sibling, OR two `contested` columns that (since
   `contested` is a union across buckets) never shared one bucket — stays generic, the
   pairwise signals being meaningless across editions. `_split_off_non_contested` is
-  generic for the same reason. Edges carry `note = "auto:triage"`. There is **no**
-  `triage_unresolved_split` warning — an unmatched column just routes to a fresh
-  auto-slugged sibling (additive under grow-only).
+  generic for the same reason. The `relation_kind` tag rides on the `edge_siblings`
+  in-build pair record (it drives concept-group edge classification); since #800 it is
+  **not** persisted as a `variable_related_to` row. The `import_bug_suspect` and
+  `code_vs_label_pair` curation worklist use case — sever vs fold triage — is a deferred
+  follow-up. There is **no** `triage_unresolved_split` warning — an unmatched column
+  just routes to a fresh auto-slugged sibling (additive under grow-only).
 
 Slug collisions during triage (and in the *Slug curation* auto-derive below) are
 resolved with a deterministic **numeric `-N` suffix** (`_uniquify` /
@@ -2121,19 +2126,21 @@ forced into this family — it keeps its own descriptive slug (`lopnr`, `lopnr-b
 **Edge field on `[variable]` rows.** The one surviving curatable edge field is
 `replaced_by` — a **single in-file key string** (a typo-correction pointer to another
 row's TOML key in the same file), validated for shape and cycle-freedom — *not* a
-cross-provider tuple. Graph semantics (`same_as`, succession `replaced_by`,
-`related_to`) are **not** a slug surface: they live in `curation/relations.toml` (#522).
-A slug TOML that contains an inline `same_as` field or a top-level `[[replaced_by]]`
-array now fails as an unknown-key error at load.
+cross-provider tuple. Graph semantics (`same_as`, succession `replaced_by`) are **not**
+a slug surface: they live in `curation/relations.toml` (#522). A slug TOML that contains
+an inline `same_as` field or a top-level `[[replaced_by]]` array now fails as an
+unknown-key error at load.
 
 **Curated pairwise-relation surface (`curation/relations.toml`, #522).** All curated
-pairwise graph facts — same-identity links, succession edges, and weak see-also
-discovery links — live in ONE file as a single typed `[[edge]]` array loaded and
-materialized by `relations.py`. This consolidates what used to be four separate surfaces
-(`variable_same_as.toml`, `variable_related_to.toml`, inline slug-TOML `same_as` fields,
-top-level slug-TOML `[[replaced_by]]`). The `type` discriminator selects the relation
-kind; each type accepts ONLY its own fields (a foreign field fails the build with
-`EXIT_CONFIG` — type-dispatch catches misspellings that would otherwise silently no-op):
+pairwise graph facts — same-identity links and succession edges — live in ONE file as a
+single typed `[[edge]]` array loaded and materialized by `relations.py`. This
+consolidates what used to be four separate surfaces (`variable_same_as.toml`,
+`variable_related_to.toml`, inline slug-TOML `same_as` fields, top-level slug-TOML
+`[[replaced_by]]`). The `related_to` edge type was retired in #800; any entry with
+`type = "related_to"` now fails the build with `EXIT_CONFIG`. The `type` discriminator
+selects the relation kind; each type accepts ONLY its own fields (a foreign field fails
+the build with `EXIT_CONFIG` — type-dispatch catches misspellings that would otherwise
+silently no-op):
 
 ```toml
 [[edge]]
@@ -2146,12 +2153,6 @@ type = "replaced_by"    # directional; from/to same grain (register, variable, c
 from = "scb/lisa/anninkf"
 to   = "scb/lisa/anninkf04"
 effective_year = 2004
-
-[[edge]]
-type = "related_to"     # weak; a/b 3-seg variables; curated kind that cannot fold
-a = "scb/ekonomiskt-bistand/belopp"
-b = "sos/ekb/ekbbelopp"
-relation_kind = "similar_concept"
 ```
 
 Like every other curation TOML the file is a maintainer artifact — absent in wheel
@@ -2160,7 +2161,7 @@ installs and synthetic test builds; missing ⇒ zero edges. Each type is provide
 load/resolve-split (shape validation at load, endpoint resolution against the built DB
 at materialize time).
 
-The three relation kinds remain genuinely distinct; only the authoring surface
+The two relation kinds remain genuinely distinct; only the authoring surface
 consolidated:
 
 - **`same_as`** — symmetric, transitive identity ("one concept, two FQIDs").
@@ -2269,17 +2270,6 @@ to_column   = "persorgnr"
 variant = "punktskatter-for-energi"   # variant slug; omit for variable-level (default)
 effective_year = 2014
 ```
-
-- **`related_to`** — weak "see also" discovery link between distinct variable concepts.
-  Variables only (3-seg FQIDs). The curated relation-kind vocabulary
-  (`CURATED_RELATION_KINDS`, currently `similar_concept`) is **disjoint** from the
-  auto:triage kind `same_definition_different_column` — the foldable triage kind is
-  rejected here, so a curated cross-register "see also" can never trigger browse-level
-  folding. `variable_related_to` carries the non-foldable auto kinds
-  (`code_vs_label_pair`, `import_bug_suspect`) and curated kinds only; the bulk
-  mechanical `same_definition_different_column` split siblings are NOT persisted here
-  (#591) — they feed the concept-group edge fold directly from the in-build sibling sets
-  (`edge_siblings`).
 
 Curated variable → classification overrides live in the parallel standalone
 `reg_meta_build/classification_links.toml` (#416), loaded by `classification_links.py`.
@@ -2402,7 +2392,7 @@ yet. Workflow:
 `concept_groups.py` materializes the presentation-only concept-group layer (see
 `reg_meta/DESIGN.md` → Concept groups) as the last slug-gated post-pass — after
 `populate_variable_slugs` + the `relations.py` edge pass (which resolves slug-anchored
-`variable_related_to` and `variable_same_as` edges from `curation/relations.toml`) and
+`variable_same_as` and `replaced_by` edges from `curation/relations.toml`) and
 `populate_classifications` + `populate_slugs` (classification rows + slugs). Skipped
 under `--skip-slugs` like the other slug-keyed linkers. Three dimension sources, in
 priority order; a member belongs to at most one group, and a later pass never claims an
@@ -2415,14 +2405,14 @@ already-grouped member:
    2026-06-11: 2,193 components / 8,151 variables (16% of the catalog), 2,191 sharing a
    single name (the group label; key = min member slug). The pairs are read from the
    IN-BUILD sibling sets (`edge_siblings`, `(variable_id, variable_id)` pairs the triage
-   minted) — NOT from a `variable_related_to` round-trip; the foldable edges are not
-   persisted to that table (#591). **Curated precedence** (#591): any FQID claimed by a
-   curated `[[variable_group]]` or `[[accept]]` is subtracted from the edge components
-   before they mint groups; a component reduced below 2 survivors mints no group (the
-   curated entry claims those FQIDs instead). Other auto:triage `relation_kind`s
-   (`code_vs_label_pair`, `import_bug_suspect`) do NOT group; neither do curated kinds
-   from `curation/relations.toml` (`similar_concept`) — the curated vocabulary is
-   disjoint from the foldable auto kind by construction. The former exact-parity check
+   minted) — the `variable_related_to` table no longer exists (#800), so these in-build
+   pairs are the sole home for split-sibling relationships. **Curated precedence**
+   (#591): any FQID claimed by a curated `[[variable_group]]` or `[[accept]]` is
+   subtracted from the edge components before they mint groups; a component reduced
+   below 2 survivors mints no group (the curated entry claims those FQIDs instead).
+   Other auto:triage `relation_kind`s (`code_vs_label_pair`, `import_bug_suspect`) do
+   NOT group — the foldable auto kind (`same_definition_different_column`) is the only
+   kind that drives edge components, by construction. The former exact-parity check
    (`_check_edge_group_parity`, which recomputed components from persisted rows) is
    replaced by a corpus-only volume floor `_CG_MIN_EDGE_GROUPS` (#591): there are no
    persisted rows to recompute against, so a volume floor catches a derivation collapse
