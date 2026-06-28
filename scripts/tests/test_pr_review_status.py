@@ -505,3 +505,40 @@ def test_poll_does_not_bail_once_reviewing(monkeypatch) -> None:
     assert out.get("no_engagement") is None
     assert out["signal"] == "reviewing"
     assert out["timed_out"] is True
+
+
+def test_evaluate_includes_review_request_comment_reactions(monkeypatch) -> None:
+    endpoints: list[str] = []
+
+    request_comment = _review_request(at=AFTER1) | {
+        "id": 99,
+        "html_url": "request",
+    }
+
+    def fake_gh_json(args):
+        if args[:3] == ["pr", "view", "42"]:
+            return {
+                "state": "OPEN",
+                "headRefOid": HEAD,
+                "commits": [{"oid": HEAD, "committedDate": PUSH}],
+            }
+
+        endpoint = args[-1]
+        endpoints.append(endpoint)
+        pages = {
+            "repos/o/n/pulls/42/reviews": [[]],
+            "repos/o/n/issues/42/comments": [[request_comment]],
+            "repos/o/n/issues/42/reactions": [[]],
+            "repos/o/n/issues/comments/99/reactions": [
+                [_reaction("eyes", BOT_REACT, at=AFTER2)]
+            ],
+            "repos/o/n/pulls/42/comments": [[]],
+        }
+        return pages[endpoint]
+
+    monkeypatch.setattr(prs, "gh_json", fake_gh_json)
+
+    out = prs.evaluate("o", "n", 42)
+
+    assert out["signal"] == "reviewing"
+    assert "repos/o/n/issues/comments/99/reactions" in endpoints
