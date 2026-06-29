@@ -17,9 +17,11 @@ from pathlib import Path
 import pytest
 import reg_meta.db
 from fastapi.testclient import TestClient
+from reg_meta.catalog import ConceptGroupMember
 from reg_meta.queries import _code_system
 from reg_meta.search import (
     CodeSearchResult,
+    ConceptGroupSearchResult,
     RegisterSearchResult,
     SearchResults,
     VariableSearchResult,
@@ -705,6 +707,61 @@ def test_top_results_type_priors_break_non_exact_ties():
     )
 
     assert [r.type for r in top] == ["register", "variable", "code"]
+
+
+def test_top_results_group_member_exact_match_gets_boost():
+    register = RegisterSearchResult(
+        fqid="scb/konj",
+        name="Konjunktur",
+        rank=0.0,
+    )
+    group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="scb/lisa/demografi",
+        group_label="Demografi",
+        register="LISA",
+        member_count=2,
+        matched_count=1,
+        members=(
+            ConceptGroupMember(fqid="scb/lisa/kon", name="Kön", facets=()),
+            ConceptGroupMember(fqid="scb/lisa/alder", name="Ålder", facets=()),
+        ),
+        rank=0.0,
+    )
+
+    top = _best_bets(
+        "kon",
+        [
+            RegisterSearchGroup(total_count=1, results=[register]),
+            VariableSearchGroup(total_count=1, results=[group]),
+        ],
+        limit=2,
+    )
+
+    assert top == [group, register]
+
+
+def test_top_results_keeps_distinct_null_fqid_leaves():
+    first = VariableSearchResult(
+        fqid=None,
+        name="Unresolved first",
+        register="LISA",
+        rank=0.0,
+    )
+    second = VariableSearchResult(
+        fqid=None,
+        name="Unresolved second",
+        register="LISA",
+        rank=1.0,
+    )
+
+    top = _best_bets(
+        "unresolved",
+        [VariableSearchGroup(total_count=2, results=[first, second])],
+        limit=5,
+    )
+
+    assert top == [first, second]
 
 
 def test_best_bet_score_folds_diacritics_for_exact_matches():

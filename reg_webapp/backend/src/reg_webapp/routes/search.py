@@ -161,6 +161,17 @@ def _candidate_identity_texts(result: SearchResult) -> tuple[str, ...]:
         texts.extend(
             (result.group_key, _fqid_leaf(result.group_key), result.group_label)
         )
+        for member in result.members:
+            texts.extend(
+                (
+                    member.fqid,
+                    _fqid_leaf(member.fqid),
+                    member.name,
+                    member.delivery_column,
+                )
+            )
+            for facet in member.facets:
+                texts.extend((facet.value, facet.label))
     elif result.type == "code":
         texts.extend((result.code, result.label, result.code_system))
     return tuple(_fold_match_text(text) for text in texts if text is not None)
@@ -194,12 +205,15 @@ def _best_bet_score(query: str, result: SearchResult) -> int:
     )
 
 
-def _top_candidate_key(result: SearchResult) -> str:
+def _top_candidate_key(result: SearchResult, group_order: int, row_order: int) -> str:
     if result.type == "group":
         return f"group:{result.kind}:{result.group_key}"
     if result.type == "code":
         return f"code:{result.code}:{result.label}:{result.code_system}"
-    return f"{result.type}:{getattr(result, 'fqid', None)}"
+    fqid = getattr(result, "fqid", None)
+    if fqid is not None:
+        return f"{result.type}:{fqid}"
+    return f"{result.type}:unresolved:{group_order}:{row_order}"
 
 
 @dataclass(frozen=True)
@@ -231,7 +245,7 @@ def _best_bets(
                 row_order=row_order,
                 result=cast("SearchResult", result),
             )
-            key = _top_candidate_key(candidate.result)
+            key = _top_candidate_key(candidate.result, group_order, row_order)
             current = by_key.get(key)
             if current is None or (
                 candidate.score,
