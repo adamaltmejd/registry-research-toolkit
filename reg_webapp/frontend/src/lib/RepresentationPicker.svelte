@@ -733,7 +733,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     </div>
   {/if}
 
-  <ul class="col-list">
+  <ul class="col-list integrated-list">
     {#each view as cluster (cluster.name)}
       {#if cluster.showHeading}
         <!-- The name-CLUSTER heading (#901): a heterogeneous group renders each
@@ -776,7 +776,11 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                  it toggles selection natively (no JS, keyboard via the input). The chip-
                  link inside `preventDefault`s + router-navigates so a nav click neither
                  toggles the row NOR full-reloads the app. -->
-            <label class="row-btn" class:selected={checked} class:dimmed={!inWindow}>
+            <label
+              class="row-btn integrated-list-row"
+              class:selected={checked}
+              class:dimmed={!inWindow}
+            >
               <!-- No aria-label: the wrapping <label>'s text content (the column chip +
                    population + value set + period) names the checkbox for AT. -->
               <input
@@ -870,7 +874,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                selected rows do (only full selection — not partial — mirrors the fill). -->
           {@const fullySelected = allOfBandSelected(band)}
           <li
-            class="subhead"
+            class="subhead integrated-list-row"
             class:empty
             class:dimmed={v.allOut}
             class:selected={fullySelected}
@@ -1003,7 +1007,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                  hovered. -->
             <li class="col-row nested">
               <label
-                class="row-btn"
+                class="row-btn integrated-list-row"
                 class:selected={checked}
                 class:dimmed={!inWindow}
                 class:band-hover={hoveredBandKey === band.key}

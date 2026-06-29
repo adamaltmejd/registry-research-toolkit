@@ -484,7 +484,7 @@ function closeSearch(): void {
       {#if renderedResults.length > 0 && heading}
         {@const caption = showingOf(renderedResults.length, group.total_count)}
         <div class="group">
-          <Panel title={heading.label}>
+          <Panel title={heading.label} flush>
             {#snippet meta()}
               {#if caption}<span class="count">{caption}</span>{/if}
             {/snippet}
@@ -522,7 +522,7 @@ function closeSearch(): void {
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else if isClassificationSuccession(result)}
-                  <div class="span-row">
+                  <div class="span-row integrated-list-row">
                     {@render classificationSuccession(result)}
                   </div>
                 {:else}
@@ -538,9 +538,9 @@ function closeSearch(): void {
                  item-2-ordered (classification-backed first), and
                  groupCodesBySystem preserves first-appearance order, so curated
                  systems lead; null/empty code_system folds into the trailing
-                 "Register-local" bucket. Each bucket is a compact, code-FIRST grid
-                 table — the CODE is the highlighted primary column, the Label the
-                 second, and a MUTED owner-count summary the third. A code WITH
+                 "Register-local" bucket. Each bucket is a compact, code-FIRST list
+                 — the CODE is highlighted first, followed by the label and a MUTED
+                 owner-count summary. A code WITH
                  owners is a native <details> DISCLOSURE (the <summary> is the
                  aligned collapsed row, keyboard- + `aria-expanded`-correct for
                  free) that expands an indented owner sub-table; an OWNERLESS code
@@ -550,11 +550,6 @@ function closeSearch(): void {
               <div class="code-system">
                 <h4 class="code-system-heading">{system.label}</h4>
                 <div class="children table codes" role="presentation">
-                  <div class="head-row code-cells" aria-hidden="true">
-                    <span class="col-head">Code</span>
-                    <span class="col-head">Label</span>
-                    <span class="col-head">Used in</span>
-                  </div>
                   <!-- Key by `code|index`, NOT the bare index: each code is a
                        native <details> disclosure, and a bare-index key makes
                        Svelte REUSE the existing <details> element for whatever NEW
@@ -594,7 +589,7 @@ function closeSearch(): void {
       docs.data.total_count,
     )}
     <div class="group">
-      <Panel title="Documentation">
+      <Panel title="Documentation" flush>
         {#snippet meta()}
           {#if caption}<span class="count">{caption}</span>{/if}
         {/snippet}
@@ -604,7 +599,7 @@ function closeSearch(): void {
                (a natural key like `filename` could collide and crash the keyed
                each — see the #379/#391 each_key_duplicate lesson above). -->
           {#each docs.data.results as result, i (i)}
-            <li>{@render docHit(result)}</li>
+            <li class="integrated-list-row">{@render docHit(result)}</li>
           {/each}
         </ul>
       </Panel>
@@ -615,7 +610,7 @@ function closeSearch(): void {
 <!-- A LEAF register row: same one-column visual shape as variable rows. -->
 {#snippet registerLeafRow(r: RegisterSearchResult)}
   {#if r.fqid}
-    <a class="leaf-row" href={catalogHref(r.fqid)}>
+    <a class="leaf-row integrated-list-row" href={catalogHref(r.fqid)}>
       <span class="name-cell">
         <span class="result-title">
           <span class="row-link">{r.name ?? leafSlug(r.fqid)}</span>
@@ -624,7 +619,7 @@ function closeSearch(): void {
       </span>
     </a>
   {:else}
-    <div class="leaf-row plain">
+    <div class="leaf-row integrated-list-row plain">
       <span class="name-cell">
         <span class="result-title">
           <span class="row-link plain">{r.name ?? "—"}</span>
@@ -660,7 +655,7 @@ function closeSearch(): void {
 {#snippet variableLeafRow(v: VariableSearchResult)}
   {@const detailParts = variableDetailParts(v)}
   {#if v.fqid}
-    <a class="leaf-row" href={catalogHref(v.fqid)}>
+    <a class="leaf-row integrated-list-row" href={catalogHref(v.fqid)}>
       <span class="name-cell">
         <span class="result-title">
           <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
@@ -672,7 +667,7 @@ function closeSearch(): void {
       </span>
     </a>
   {:else}
-    <div class="leaf-row plain">
+    <div class="leaf-row integrated-list-row plain">
       <span class="name-cell"><span class="result-title">
           <span class="row-link plain">{v.name ?? "—"}</span>
           {@render variableMetaPills(v)}
@@ -709,7 +704,7 @@ function closeSearch(): void {
   {@const short = c.short_name ?? c.name}
   {@const showName = c.name && c.name !== short}
   {#if c.terminal_fqid}
-    <div class="leaf-row{c.fqid ? '' : ' plain'}">
+    <div class="leaf-row integrated-list-row{c.fqid ? '' : ' plain'}">
       <span class="name-cell">
         {#if c.fqid}
           <a class="row-link" href={catalogHref(c.fqid)}>{short ?? leafSlug(c.fqid)}</a>
@@ -723,14 +718,14 @@ function closeSearch(): void {
       <span class="name-full muted">{showName ? c.name : ""}</span>
     </div>
   {:else if c.fqid}
-    <a class="leaf-row" href={catalogHref(c.fqid)}>
+    <a class="leaf-row integrated-list-row" href={catalogHref(c.fqid)}>
       <span class="name-cell"
         ><span class="row-link">{short ?? leafSlug(c.fqid)}</span></span
       >
       <span class="name-full muted">{showName ? c.name : ""}</span>
     </a>
   {:else}
-    <div class="leaf-row plain">
+    <div class="leaf-row integrated-list-row plain">
       <span class="name-cell"><span class="row-link plain">{short ?? "—"}</span></span>
       <span class="name-full muted">{showName ? c.name : ""}</span>
     </div>
@@ -804,11 +799,11 @@ function closeSearch(): void {
 {#snippet codeRow(result: CodeSearchResult)}
   {#if result.variable_count > 0 || result.classification_count > 0}
     <details class="code-row code-disclosure">
-      <summary>{@render codeCells(result)}</summary>
+      <summary class="integrated-list-row">{@render codeCells(result)}</summary>
       <div class="owner-table">{@render ownerSubRows(result)}</div>
     </details>
   {:else}
-    <div class="code-row">{@render codeCells(result)}</div>
+    <div class="code-row integrated-list-row">{@render codeCells(result)}</div>
   {/if}
 {/snippet}
 
@@ -819,7 +814,7 @@ function closeSearch(): void {
   {@const href = conceptGroupHref(result)}
   {@const detailParts = groupDetailParts(result)}
   {#if href}
-    <a class="leaf-row group-result-row" href={href}>
+    <a class="leaf-row integrated-list-row group-result-row" href={href}>
       <span class="name-cell">
         <span class="result-title">
           <span class="group-prefix">Group:</span>
@@ -832,7 +827,10 @@ function closeSearch(): void {
     </a>
   {:else}
     {#each result.members as member, i (`${member.fqid}|${i}`)}
-      <a class="leaf-row group-member-row" href={catalogHref(member.fqid)}>
+      <a
+        class="leaf-row integrated-list-row group-member-row"
+        href={catalogHref(member.fqid)}
+      >
         <span class="name-cell">
           <span class="result-title">
             <span class="row-link">{member.name ?? leafSlug(member.fqid)}</span>
@@ -972,10 +970,16 @@ function closeSearch(): void {
     margin-bottom: 1.5rem;
   }
   .code-system {
-    margin-bottom: 1rem;
+    margin: 0;
+  }
+  .code-system + .code-system {
+    border-top: 1px solid var(--border);
   }
   .code-system-heading {
-    margin: 0 0 0.4rem;
+    margin: 0;
+    padding: 0.5rem 0.75rem 0.3rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-sunken);
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-muted);
@@ -1041,18 +1045,19 @@ function closeSearch(): void {
     padding: 0 0.1em;
   }
 
-  /* ── CSS-grid result table (#808 round 3 / a11y) ──────────────────────────
+  /* ── Integrated result list (#808 round 3 / a11y) ─────────────────────────
      Mirrors CatalogNodeView's `.children.table`: one grid on the container
      aligns columns ACROSS rows; a LEAF row's <a> is a SUBGRID box (`display:grid`
      spanning `1 / -1` with `grid-template-columns: subgrid`) so the <a>'s children
      land in the PARENT grid's tracks while the anchor itself stays a real,
      keyboard-FOCUSABLE element (a `display:contents` <a> is dropped from Chromium's
-     sequential tab order — the #808 a11y defect this round fixes). A FOLD or HEADER
-     row spans all columns. Columns are `minmax(0, …)` so long Swedish compounds
-     shrink instead of overflowing the 375px canvas (#806). */
+     sequential tab order — the #808 a11y defect this round fixes). Inside the search
+     Panel it follows the shared integrated-list treatment used by
+     RepresentationPicker: rows span the full panel surface, separators run full
+     width, and hover uses the accent tint rather than a local grey table hover. */
   .children.table {
     display: grid;
-    column-gap: var(--space-3);
+    column-gap: 0;
     /* STRETCH (not baseline): a leaf row's cells differ in height (a variable's
        definition sub-line / a classification's full-name cell make the name cell
        taller than its siblings). With baseline, each cell's own bottom border lands
@@ -1071,22 +1076,19 @@ function closeSearch(): void {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
   /* The codes bucket is a master-detail disclosure list (#808 round 5), NOT a flat
-     grid: a `<details>` row must STACK its collapsed <summary> over its expanded
+     list: a `<details>` row must STACK its collapsed <summary> over its expanded
      owner sub-table, which a `display:contents` grid leaf can't do. So the bucket
      is a FLEX COLUMN of rows; column alignment lives on an inner `.code-cells`
-     grid that the head row AND every collapsed row (a <summary> or the ownerless
+     grid that every collapsed row (a <summary> or the ownerless
      <div>) share with the SAME template. A leading fixed-width MARKER column holds
      the disclosure triangle (a custom rotating glyph — the native list marker is
-     suppressed so the cells don't wrap below it); the head row + ownerless rows
-     reserve the same marker column (empty) so every collapsed row lines up as one
-     aligned table regardless of which rows are disclosures. Overrides the shared
+     suppressed so the cells don't wrap below it); ownerless rows reserve the same
+     marker column (empty) so every collapsed row lines up regardless of which rows
+     are disclosures. Overrides the shared
      `.children.table` grid. */
   .children.table.codes {
     display: flex;
     flex-direction: column;
-  }
-  .children.table.codes > .head-row {
-    display: grid;
   }
   .code-cells {
     display: grid;
@@ -1100,10 +1102,10 @@ function closeSearch(): void {
     min-width: 0;
   }
   /* Every `.code-cells` reserves the leading marker column with an empty `::before`
-     so the head row, ownerless rows, and disclosure summaries all align. Only a
-     disclosure summary's marker carries the triangle glyph (the native list marker
-     is suppressed below so the cells don't wrap onto a second line); it rotates
-     down when the <details> is open. */
+     so ownerless rows and disclosure summaries align. Only a disclosure summary's
+     marker carries the triangle glyph (the native list marker is suppressed below so
+     the cells don't wrap onto a second line); it rotates down when the <details> is
+     open. */
   .code-cells::before {
     content: "";
   }
@@ -1129,12 +1131,12 @@ function closeSearch(): void {
   }
   .code-row > summary,
   .code-row:not(.code-disclosure) {
-    padding: var(--space-1) 0;
+    padding: 0.4rem 0.75rem;
     border-bottom: 1px solid var(--border);
   }
-  .code-row > summary:hover,
-  .code-row:not(.code-disclosure):hover {
-    background: var(--surface-hover);
+  .code-row:last-child > summary,
+  .code-row:last-child:not(.code-disclosure) {
+    border-bottom: none;
   }
   /* The owner SUB-TABLE under an expanded disclosure: indented, one row per owner
      match, each a flex whole-row `<a>` link or a non-link row. */
@@ -1167,18 +1169,6 @@ function closeSearch(): void {
   .owner-kind {
     line-height: 1;
   }
-  /* The uppercase micro-label header row (matches DataTable's <th> treatment). */
-  .head-row {
-    display: contents;
-  }
-  .col-head {
-    font-size: var(--micro-label-size);
-    letter-spacing: var(--micro-label-tracking);
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding-bottom: var(--space-1);
-    border-bottom: 1px solid var(--border);
-  }
   /* A LEAF row is a real, keyboard-focusable box (an <a> whole-row link OR a <div>
      for the null-fqid / second-link cases) that spans every column and aligns its
      own cells to the PARENT grid's tracks via `subgrid` — so the whole row is one
@@ -1188,19 +1178,22 @@ function closeSearch(): void {
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: subgrid;
-    column-gap: var(--space-3);
+    column-gap: 0;
     align-items: stretch;
     color: inherit;
     text-decoration: none;
   }
   .leaf-row > * {
     min-width: 0;
-    padding: var(--space-1) 0;
+    padding: 0.4rem 0.75rem;
     border-bottom: 1px solid var(--border);
+  }
+  .leaf-row:last-child > * {
+    border-bottom: none;
   }
   /* Hover the whole row (every cell tints). */
   .leaf-row:hover > * {
-    background: var(--surface-hover);
+    background: inherit;
   }
   /* #808 a11y: now the leaf link is a real focusable box (subgrid, NOT
      display:contents), a visible keyboard focus ring draws on it — the shared
@@ -1216,8 +1209,14 @@ function closeSearch(): void {
      and owns its own internal layout, sitting inline at its rank position. */
   .span-row {
     grid-column: 1 / -1;
-    padding: var(--space-1) 0;
     border-bottom: 1px solid var(--border);
+  }
+  .span-row:last-child {
+    border-bottom: none;
+  }
+  .span-row > .concept-group {
+    margin: 0;
+    padding: 0.4rem 0.75rem;
   }
   .group-result-row > .name-cell,
   .group-member-row > .name-cell {
@@ -1331,7 +1330,14 @@ function closeSearch(): void {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0;
+  }
+  .results li {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .results li:last-child {
+    border-bottom: none;
   }
   .more {
     font-size: 0.85em;

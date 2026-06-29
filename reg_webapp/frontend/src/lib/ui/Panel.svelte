@@ -14,10 +14,11 @@ import type { Snippet } from "svelte";
 interface Props {
   title: string | Snippet;
   meta?: Snippet;
+  flush?: boolean;
   children: Snippet;
 }
 
-let { title, meta, children }: Props = $props();
+let { title, meta, flush = false, children }: Props = $props();
 </script>
 
 <section class="panel">
@@ -27,7 +28,7 @@ let { title, meta, children }: Props = $props();
     </h2>
     {#if meta}<div class="panel-meta">{@render meta()}</div>{/if}
   </header>
-  <div class="panel-body">{@render children()}</div>
+  <div class="panel-body" class:flush>{@render children()}</div>
 </section>
 
 <style>
@@ -56,5 +57,8 @@ let { title, meta, children }: Props = $props();
   }
   .panel-body {
     padding: var(--space-4);
+  }
+  .panel-body.flush {
+    padding: 0;
   }
 </style>

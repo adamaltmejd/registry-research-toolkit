@@ -1250,7 +1250,15 @@ describe("SearchView — compact per-type tables (#808)", () => {
     );
     const variablePanel = row?.closest(".panel");
     expect(variablePanel).not.toBeNull();
-    expect(variablePanel?.querySelector(".head-row")).toBeNull();
+    expect(row?.classList.contains("integrated-list-row")).toBe(true);
+    expect(row ? getComputedStyle(row).borderLeftWidth : null).toBe("3px");
+    const panelBody = row?.closest(".panel-body");
+    expect(panelBody ? getComputedStyle(panelBody).paddingTop : null).toBe(
+      "0px",
+    );
+    const rowCell = row?.querySelector<HTMLElement>(".name-cell");
+    expect(rowCell ? getComputedStyle(rowCell).paddingLeft : null).toBe("12px");
+    expect(document.querySelector(".search-view .head-row")).toBeNull();
     expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
     expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
