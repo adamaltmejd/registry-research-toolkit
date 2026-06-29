@@ -232,18 +232,23 @@ the login-sensitive `gh api` calls. Operate it like this:
 Pipeline-specific operational notes the gate doesn't carry:
 
 - Run the cheap gates first and the real `build-db` **LAST and ONCE** on the truly-final
-  HEAD — it takes \~20 min, so launch it with `run_in_background: true` (the 10-min
-  foreground `Bash` cap silently kills it mid-import). In a worktree the 14 GB seed
-  lives in the MAIN checkout, so pass an ABSOLUTE `--input-dir`, plus `--db` (a
-  DIRECTORY, BEFORE the subcommand) so the build lands in scratch instead of clobbering
-  the real query DB. Use the main checkout's input dir only when the PR does not change
-  tracked `reg_meta_build/input_data/**`; otherwise set `input_dir` to the overlay root
-  described below:
+  HEAD. Use the `build-db` skill / `scripts/build_db_watch.py` so the run has a
+  timestamped log, sparse progress, post-build SQLite checks, and long-session polling
+  instead of a raw foreground shell command. In a worktree the 14 GB seed lives in the
+  MAIN checkout, so pass an ABSOLUTE `--input-dir`; the watcher builds into scratch by
+  default, and `--db-dir` may be supplied when you need a stable scratch path. Use the
+  main checkout's input dir only when the PR does not change tracked
+  `reg_meta_build/input_data/**`; otherwise set `input_dir` to the overlay root
+  described below. Add `--dbdiff-against <baseline-reg_meta.db>` when the PR is expected
+  to be content-neutral or to have a small inspected DB delta:
 
   ```sh
   db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"
   input_dir="<main-checkout>/reg_meta_build/input_data"
-  reg-meta-build --db "$db_dir" build-db --input-dir "$input_dir"
+  uv run --no-project python scripts/build_db_watch.py \
+    --slug "<slug>" \
+    --db-dir "$db_dir" \
+    --input-dir "$input_dir"
   ```
 
   **Narrowing with `--providers` is fine for a scoped dbdiff** — e.g.
@@ -263,13 +268,11 @@ Pipeline-specific operational notes the gate doesn't carry:
   main checkout) and mirror any deletion/rename, so the build sees exactly your PR's
   tree.
 
-  Then clean up — the build writes **gitignored** `*.auto.toml` into the slug dir, and
-  the scratch DB is yours to remove. The slug files are ignored, so plain `git clean -f`
-  SKIPS them — you need `-X` (clean ignored) or they survive and the next commit's
-  pre-commit `test_slug_snapshot` fails with thousands of phantom added slugs:
+  The watcher copies `reg_meta_build/fqid_slugs/` to scratch before passing
+  `--slug-dir`, so generated `*.auto.toml` files do not dirty the checkout. Remove the
+  scratch DB only after the post-build checks and any needed inspection are complete:
 
   ```sh
-  git clean -fdX reg_meta_build/fqid_slugs/
   rm -rf "$db_dir"
   ```
 

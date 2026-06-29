@@ -516,10 +516,11 @@ CREATE TABLE variable_instance (
     -- records here. `SCBAdapter._emit_variable_aliases` (→ IRVariableAlias →
     -- materializer) and `_backfill_state_classifications` read it to attribute
     -- each cvid's delivery columns / classification to the right sibling — no
-    -- post-hoc column-tie heuristic, no skip. No FK and no
-    -- index: build-time-only (dropped with the table, before
-    -- `PRAGMA foreign_key_check`), values valid by construction, and every
-    -- reader joins from the cvid PK side. Distinct from the natural-key note
+    -- post-hoc column-tie heuristic, no skip. No FK: build-time-only (dropped
+    -- with the table, before `PRAGMA foreign_key_check`) and values valid by
+    -- construction. No CREATE-time index: the column is NULL until triage. Once
+    -- stamped, the coalescer creates a transient `variable_id, cvid` scratch index
+    -- for sibling-routed post-stamp readers. Distinct from the natural-key note
     -- below — that's about the absent `(register_id, var_id)` → `variable` FK.
     variable_id INTEGER
     -- A2.1.5: no FK on the `(register_id, var_id)` natural key to `variable` —
@@ -4873,6 +4874,8 @@ def build_db(
     slug_dir: Path | None = None,
     skip_slugs: bool = False,
     providers: tuple[str, ...] = ("scb",),
+    scb_value_prestage_cache: Path | None = None,
+    refresh_scb_value_prestage: bool = False,
     pre_rename_hook: Callable[[Path], None] | None = None,
     provenance_pre_rename_hook: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
@@ -4904,10 +4907,17 @@ def build_db(
     contains unknown sentinel-shape vardekod values — see
     ``_VARDEMANGDER_SENTINELS`` / ``_VARDEMANGDER_REAL_SHAPED``.
 
+    ``scb_value_prestage_cache`` optionally points at a provider-scoped cache of
+    SCB's expensive Vardemangder year-projection output. It is validated by raw
+    Vardemangder hashes plus the projection-relevant CVID/year backbone and is
+    rebuilt automatically when missing or stale.
+
     Returns a summary dict for the CLI to display.
     """
     input_dir = input_dir.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()
+    if scb_value_prestage_cache is not None:
+        scb_value_prestage_cache = scb_value_prestage_cache.expanduser().resolve()
     scb_dir = input_dir / "SCB"
     sos_dir = input_dir / "Socialstyrelsen"
     cls_dir = input_dir / "classifications"
@@ -5090,7 +5100,17 @@ def build_db(
             # codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
             codelivery = load_codelivery(repo_codelivery_path())
-            adapters.append((SCBAdapter(conn, codelivery), scb_dir))
+            adapters.append(
+                (
+                    SCBAdapter(
+                        conn,
+                        codelivery,
+                        value_prestage_cache=scb_value_prestage_cache,
+                        refresh_value_prestage=refresh_scb_value_prestage,
+                    ),
+                    scb_dir,
+                )
+            )
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))
         # Thin curated providers (#422): one shared adapter per agency, each

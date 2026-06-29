@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Build DB"
+  short_description: "Run, cache, profile, and dbdiff build-db"
+  default_prompt: "Use $build-db to run a cached registry metadata DB rebuild with verification."
+policy:
+  allow_implicit_invocation: true

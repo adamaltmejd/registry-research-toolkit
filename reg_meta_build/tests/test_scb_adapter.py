@@ -34,6 +34,7 @@ from reg_meta_build.ir import (
     IRVariant,
     IRWarning,
 )
+from reg_meta_build.sources import scb as scb_module
 from reg_meta_build.sources.scb import SCBAdapter
 
 if TYPE_CHECKING:
@@ -81,6 +82,38 @@ class TestAdapterConformance:
         # ty checks it, and this keeps the import live for that contract.
         _typed: IRAdapter = adapter
         assert _typed.provider == "scb"
+
+
+# ── 1b. SCB build-scratch performance contracts ────────────────────────────
+
+
+class TestAdapterScratchIndexes:
+    def test_stamped_variable_id_index_exists_for_post_stamp_readers(
+        self, tmp_path: Path
+    ) -> None:
+        conn, _adapter, _objects = _drained_adapter(tmp_path)
+        try:
+            row = conn.execute(
+                "SELECT sql FROM sqlite_master "
+                "WHERE type = 'index' "
+                "AND name = 'idx_variable_instance_variable_id_cvid'"
+            ).fetchone()
+            assert row is not None
+            assert "variable_instance(variable_id, cvid)" in row[0]
+
+            plan = conn.execute(
+                "EXPLAIN QUERY PLAN "
+                "SELECT vi.operational_definition FROM variable_instance vi "
+                "WHERE vi.variable_id = ? "
+                "AND COALESCE(vi.operational_definition, '') <> '' "
+                "ORDER BY vi.cvid LIMIT 1",
+                (1,),
+            ).fetchall()
+            assert any(
+                "idx_variable_instance_variable_id_cvid" in step[3] for step in plan
+            )
+        finally:
+            conn.close()
 
 
 # ── 2. IR validation + FK-referential emit order ───────────────────────────
@@ -443,6 +476,104 @@ class TestCodeIdParity:
             "WHERE vc.code_id IS NULL"
         ).fetchone()[0]
         assert orphans == 0
+
+
+# ── 6b. SCB value prestage cache ───────────────────────────────────────────
+
+
+class TestValuePrestageCache:
+    def test_reuses_valid_cache_without_reimporting_vardemangder(
+        self, monkeypatch, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+
+        first_db = tmp_path / "db_first"
+        build_db(
+            input_dir=input_dir,
+            db_dir=first_db,
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_value_prestage_cache=cache,
+        )
+        assert cache.exists()
+
+        def fail_import(*_args, **_kwargs):
+            raise AssertionError("valid prestage cache should skip Vardemangder import")
+
+        monkeypatch.setattr(scb_module, "_import_vardemangder", fail_import)
+
+        second_db = tmp_path / "db_second"
+        build_db(
+            input_dir=input_dir,
+            db_dir=second_db,
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_value_prestage_cache=cache,
+        )
+
+        report = diff_db_content(
+            first_db / "reg_meta.db",
+            second_db / "reg_meta.db",
+        )
+        assert report.identical, report
+
+    def test_operational_definition_change_does_not_stale_value_prestage(
+        self, monkeypatch, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        rows = [
+            _var_row(
+                colname="Kon",
+                cvid=1001,
+                var_id=101,
+                varopdef="Original operational definition",
+            )
+        ]
+        write_scb_input(input_dir, registerinformation_rows=rows)
+        cache = tmp_path / "scb-value-prestage.sqlite"
+        build_db(
+            input_dir=input_dir,
+            db_dir=tmp_path / "db_seed",
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_value_prestage_cache=cache,
+        )
+
+        rows = [
+            _var_row(
+                colname="Kon",
+                cvid=1001,
+                var_id=101,
+                varopdef="Updated operational definition",
+            )
+        ]
+        write_scb_input(input_dir, registerinformation_rows=rows)
+
+        def fail_import(*_args, **_kwargs):
+            raise AssertionError("op-def-only changes should not rebuild prestage")
+
+        monkeypatch.setattr(scb_module, "_import_vardemangder", fail_import)
+
+        db_dir = tmp_path / "db_replay"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            scb_value_prestage_cache=cache,
+        )
+
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+        try:
+            op_def = conn.execute(
+                "SELECT operational_definition FROM variable "
+                "WHERE operational_definition IS NOT NULL"
+            ).fetchone()[0]
+        finally:
+            conn.close()
+        assert op_def == "Updated operational definition"
 
 
 # ── 7. A4.3a provider-blindness flip parity gates ──────────────────────────
