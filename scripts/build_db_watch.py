@@ -350,7 +350,11 @@ def run_build(cmd: list[str], paths: RunPaths, quiet_seconds: int) -> int:
                         emit("build", line.strip())
 
                 now = time.monotonic()
-                if proc.poll() is None and now - last_health >= quiet_seconds:
+                if (
+                    proc.poll() is None
+                    and now - last_health >= quiet_seconds
+                    and now - last_output >= quiet_seconds
+                ):
                     health = process_health(proc.pid)
                     emit(
                         "quiet",

@@ -203,6 +203,61 @@ def test_run_build_drains_late_tail_output(monkeypatch, tmp_path: Path) -> None:
     assert "late actionable error" in paths.log_path.read_text(encoding="utf-8")
 
 
+def test_run_build_does_not_emit_quiet_health_when_output_is_current(
+    monkeypatch, tmp_path: Path
+) -> None:
+    class ScriptedQueue:
+        def __init__(self) -> None:
+            self.items = ["still working", build_db_watch.QUEUE_EOF]
+
+        def get(self, timeout=None):
+            return self.items.pop(0)
+
+    class FakeThread:
+        def __init__(self, *_args, **_kwargs) -> None:
+            pass
+
+        def start(self) -> None:
+            pass
+
+    class FakeProc:
+        pid = 12345
+        stdout = []
+
+        def poll(self):
+            return None
+
+        def wait(self, timeout=None):
+            return 0
+
+    times = iter([0.0, 2.0, 2.0, 3.0])
+    events: list[tuple[str, str]] = []
+    monkeypatch.setattr(build_db_watch.time, "monotonic", lambda: next(times))
+    monkeypatch.setattr(build_db_watch.queue, "Queue", ScriptedQueue)
+    monkeypatch.setattr(build_db_watch.threading, "Thread", FakeThread)
+    monkeypatch.setattr(
+        build_db_watch.subprocess, "Popen", lambda *_a, **_kw: FakeProc()
+    )
+    monkeypatch.setattr(
+        build_db_watch, "emit", lambda kind, message: events.append((kind, message))
+    )
+
+    paths = build_db_watch.RunPaths(
+        db_dir=tmp_path / "db",
+        slug_dir=None,
+        prestage_cache=None,
+        log_path=tmp_path / "build.log",
+        summary_path=tmp_path / "summary.json",
+        created_db_dir=False,
+        created_slug_dir=False,
+    )
+
+    rc = build_db_watch.run_build(["fake-build"], paths, quiet_seconds=1)
+
+    assert rc == 0
+    assert not any(kind == "quiet" for kind, _message in events)
+
+
 def test_run_build_sigterm_path_terminates_child(monkeypatch, tmp_path: Path) -> None:
     class InterruptingQueue:
         def get(self, timeout=None):
