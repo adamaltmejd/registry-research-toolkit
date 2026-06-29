@@ -1824,6 +1824,26 @@ concept group (#303) now references these merged variables as plain `variable =`
 non-overlap invariant and `_check_variable_alias_covers_state_columns` both still hold
 for the survivor (its annual state's single column is one of the 12 retained aliases).
 
+#### Consumers: multi-alias delivery representations (#945)
+
+Some SCB cvids list several concrete delivery headers for one source edition (for
+example year-suffixed aliases such as `LoneInk_LISA2006` … `LoneInk_LISA2016`). Those
+headers are real orderable columns: `variable_alias` already makes them searchable and
+header-resolvable, but without validity rows they would be invisible to
+`states()`/`resolve_at()` and therefore to the picker/order representation contract.
+`materialize_multi_alias_windows` runs at the same post-triage, pre-scratch-drop point
+as the monthly merge, while `variable_instance` + `variable_alias_build` still retain
+the cvid/edition grain. For every cvid with >1 alias column, it anchors those aliases to
+the single shipped `variable_state` for the cvid's variable/variant/value-set/edition
+and writes one `variable_alias_window` row per alias over that state's exact window.
+Every alias on the cvid therefore resolves as a co-existing representation; consumers
+reuse the existing representation picker and semantic/order checks. The pass is
+build-side on purpose: the shipped `variable_alias` table has no validity coordinate, so
+read-time inference would be lossy. Mixed-shape cvids whose alias set maps to several
+shipped state windows are deliberately left as ordinary search/header aliases; they are
+not one-state representation families and need explicit curation before they can be
+picker-visible.
+
 ##### Decision (#518/#523): retain the merge
 
 Under epic #518 (R4), issue #523 evaluated the monthly `period_family_merges` mechanism

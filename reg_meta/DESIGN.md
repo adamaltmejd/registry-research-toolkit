@@ -496,20 +496,23 @@ period (a crosswalk era, SNI92 + SNI2007 in a transition year). The list shape i
 contract; no exception is raised on ambiguity. Callers who know the variant pass
 `variant=…`; callers who know the vintage pass `value_set_version=…`.
 
-**Monthly column families (#319).** A curated monthly-family merge (build-side, see
-reg_meta_build/DESIGN.md → Consumers: monthly column families) folds 12 month-named
-delivery columns into ONE variable carrying an ANNUAL `variable_state` per year, with
-each month column's window in `variable_alias_window`. `resolve_at` / `states` EXPAND
-that annual state READ-TIME into one `VariableState` per overlapping month window —
+**Alias windows (#319/#945).** `variable_alias_window` records validity intervals for
+delivery-column aliases that must be resolver-visible representations. A curated
+monthly-family merge (build-side, see reg_meta_build/DESIGN.md → Consumers: monthly
+column families) folds 12 month-named delivery columns into ONE variable carrying an
+ANNUAL `variable_state` per year, with each month column's sub-annual window here:
 `resolve_at("2024-03")` → the `mar` column (window `2024-03-01..2024-03-31`),
-`resolve_at("2024")` → all 12. The expansion (`_expand_state_windows`) overrides only
-`delivery_column_name` + `valid_from`/`valid_to`; `value_set`/`data_type`/`state_id`/
-`value_set_version_label` come from the annual claim, so a year's windows SHARE one
-`state_id` (one claim, N representations) — the per-window identity is the compound
-(`state_id`, `delivery_column_name`, `valid_from`). A variable with no window rows
-(every non-merged variable) maps 1:1, byte-identically. The merge is explicitly retained
-under #518/#523; the retention rationale and the #523↔#496 two-layer boundary are
-recorded in `reg_meta_build/DESIGN.md` → *Consumers: monthly column families*.
+`resolve_at("2024")` → all 12. Multi-alias SCB cvids (#945) use the same table for
+state-window aliases such as `LoneInk_LISA2006` / `LoneInk_LISA2007`, so every concrete
+delivery column can be picked/ordered rather than remaining search-only. The expansion
+(`_expand_state_windows`) overrides only `delivery_column_name` + `valid_from`/
+`valid_to`; `value_set`/`data_type`/`state_id`/`value_set_version_label` come from the
+base claim, so windows can SHARE one `state_id` (one claim, N representations) — the
+per-window identity is the compound (`state_id`, `delivery_column_name`, `valid_from`).
+A variable with no window rows maps 1:1, byte-identically. The monthly merge is
+explicitly retained under #518/#523; the retention rationale and the #523↔#496 two-layer
+boundary are recorded in `reg_meta_build/DESIGN.md` → *Consumers: monthly column
+families*.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors
 `Source.period`): a bare year (`2018`), a period token

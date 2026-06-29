@@ -40,7 +40,6 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
     derive_variable_slug,
     period_token_for_bounds,
-    period_token_to_bounds,
 )
 from reg_meta.queries import extract_year
 
@@ -69,6 +68,7 @@ from reg_meta_build.db import (
     _stage_timer,
     _value_set_hash,
 )
+from reg_meta_build.edition_bounds import edition_bounds as _edition_bounds
 from reg_meta_build.ir import (
     IRDeliveryProvenance,
     IRRegister,
@@ -752,101 +752,8 @@ def _edition_authority(versionname: str | None) -> int:
     return _AUTH_PLAIN
 
 
-# Sub-annual delivery-window narrowing (#219). `_edition_authority` above answers
-# "is this a partial-year slice?" for value-set authority ranking; this answers the
-# adjacent but distinct question "what inclusive ISO window did this edition cover?"
-# so the materializer can clamp a state's lifetime START/END to the real delivery
-# window instead of over-claiming the whole boundary year (the HT-start / VT-end
-# over-claim — see DESIGN.md → Sub-annual boundary clamp).
-#
-# We narrow ONLY the academic-term / quarter / half-year forms, where the slice is
-# unambiguous. Everything else — bare year, dated annual, prelim/final, month names,
-# seasons (Hösten/Våren/Sommar), läsår, Sommarterminen — expands to the FULL year:
-# their sub-year span is ambiguous (a season is not cleanly H1/H2; a läsår spans two
-# calendar years) and over-narrowing would drop real coverage. So this is a CURATED
-# SUBSET of `_SUBANNUAL_MARKERS` on purpose — authority ranks ANY partial slice down,
-# but bounds narrows only the forms whose window is well-defined.
-#
-# Token → ISO expansion is delegated to reg_meta's `period_token_to_bounds` so a
-# query (`HT2024`) and the emitted state bound agree byte-for-byte (identical
-# month/day arithmetic, incl. the intentional Feb-29 over-count).
-
-# Term phrase → HT/VT prefix, year on either side. `\bhosttermin(?:en)?\b` covers
-# `Höstterminen`/`Hösttermin` (NFKD-folded); `\bht` the compact `HT 2024`/`Ht 2003`/
-# `HT2024`. We scan with `finditer` (not a single match) so a multi-term name
-# (`Höstterminen 2020 - Vårterminen 2021`, `Komvux HT 1988 - VT 2024`) surfaces every
-# term; `_edition_bounds` then keeps only those matching the row's edition year (see
-# there). Mirrors reg_meta.fqid._TERMIN_EXTRACT_PATTERNS (höst→HT, vår→VT) but needs
-# ALL matches; `_SUBANNUAL_TERM_RE` can't be reused — it carries no year group.
-_TERM_BOUND_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
-    (re.compile(r"\bhosttermin(?:en)?\s+(\d{4})\b"), "HT"),
-    (re.compile(r"\b(\d{4})\s+hosttermin(?:en)?\b"), "HT"),
-    (re.compile(r"\bht\s*(\d{4})\b"), "HT"),
-    (re.compile(r"\bvartermin(?:en)?\s+(\d{4})\b"), "VT"),
-    (re.compile(r"\b(\d{4})\s+vartermin(?:en)?\b"), "VT"),
-    (re.compile(r"\bvt\s*(\d{4})\b"), "VT"),
-)
-
-# Quarter: `kvartal N` / `kv N` / `kvN`, optionally a range `N-M` / `N- kv M`
-# (`2005 kvartal 2-4`, `2007 kv 2-kv 4`). The quarter token carries no year of its own
-# (unlike HT/VT), so it is expanded against the row's edition year. A bare `kvartal`
-# with no digit (`2010 Kvartal`) matches nothing → full year (all quarters). Both
-# range endpoints are emitted as separate tokens so the union picks up the whole range.
-_QUARTER_BOUND_RE = re.compile(r"\bkv(?:artal)?\s*([1-4])(?:\s*-\s*(?:kv\s*)?([1-4]))?")
-
-# Half-year: `Första/Andra halvåret YYYY` → H1/H2 (NFKD-folded `forsta`/`andra` +
-# `halvar`). A bare `halvår` with no ordinal can't pick a half → full year.
-_HALF_BOUND_RE = re.compile(r"\b(forsta|andra)\s+halvar(?:et)?\s+(\d{4})\b")
-
-
-def _edition_bounds(
-    versionname: str | None, year: int | None
-) -> tuple[str, str] | None:
-    """Inclusive ISO ``(lo, hi)`` delivery window for a ``registerversionnamn``.
-
-    ``year`` is the row's edition year (`extract_year(registerversionnamn)`). Only
-    sub-annual markers whose own year EQUALS ``year`` are narrowed; a marker naming a
-    DIFFERENT year is ignored. This ties the window to the edition year, so the result
-    is always a subset of ``[year-01-01, year-12-31]`` — it can never invert or escape
-    the edition's `[regver_min, regver_max]` band. Two corpus-constructible traps this
-    closes:
-
-      - a collection note like ``"Insamling 2019 avseende höstterminen 2020"``
-        (`year=2019`) → the 2020 term is dropped → full-year 2019, NOT an inverted
-        2020-07-01..2019-12-31 window;
-      - a stray out-of-range term like ``"HT 1850, version 2024"`` (`year=2024`) → the
-        1850 term is dropped → full-year 2024, NOT a `period_token_to_bounds("HT1850")`
-        `FqidError` crash (every retained marker reuses ``year``, which `extract_year`
-        already validated to 1900-2099, so the expansion can't raise).
-
-    Quarter markers carry no year and are expanded against ``year`` directly. With no
-    matching marker, returns full-year ``(year-01-01, year-12-31)``; with ``year``
-    None (yearless row), returns ``None`` so the caller's year/unika fallback fires.
-    See the narrowing-scope note above for why seasons/läsår/months stay full-year."""
-    if year is None:
-        return None
-    s = _ascii_fold_lower(versionname)
-    if not s:
-        return None
-    ystr = f"{year:04d}"
-    bounds: list[tuple[str, str]] = []
-    for pat, prefix in _TERM_BOUND_PATTERNS:
-        for m in pat.finditer(s):
-            if m.group(1) == ystr:  # only the edition year's term
-                bounds.append(period_token_to_bounds(f"{prefix}{ystr}"))
-    for m in _QUARTER_BOUND_RE.finditer(s):
-        for q in (m.group(1), m.group(2)):
-            if q:
-                bounds.append(period_token_to_bounds(f"{ystr}-Q{q}"))
-    for m in _HALF_BOUND_RE.finditer(s):
-        if m.group(2) == ystr:
-            half = "1" if m.group(1) == "forsta" else "2"
-            bounds.append(period_token_to_bounds(f"{ystr}-H{half}"))
-    if bounds:
-        return min(lo for lo, _ in bounds), max(hi for _, hi in bounds)
-    return f"{ystr}-01-01", f"{ystr}-12-31"
-
-
+# Sub-annual delivery-window narrowing (#219) lives in
+# `reg_meta_build.edition_bounds` so post-coalescer consumers use the same parser.
 def _parse_unika_year(raw: str | None) -> int | None:
     """Parse a `VersionForsta` / `VersionSista` cell. Empty / unparseable
     yields None so the coalescer can fall back to the register_version

@@ -1675,11 +1675,11 @@ class Catalog:
     def _variable_windows(
         self, variable_id: int
     ) -> dict[int, list[tuple[str, str, str]]]:
-        """`variable_alias_window` rows (#319) for a merged monthly-family
-        variable, grouped by `register_variant_id` → [(delivery_column_name,
-        valid_from, valid_to), …] sorted by window start. EMPTY for every
-        non-merged variable (no window rows), so the per-month expansion is a
-        no-op there. One indexed point-lookup on `idx_variable_alias_window_lookup`."""
+        """`variable_alias_window` rows (#319/#945) grouped by
+        `register_variant_id` → [(delivery_column_name, valid_from, valid_to), …]
+        sorted by window start. EMPTY for variables with no resolver-visible alias
+        representations, so expansion is a no-op there. One indexed point-lookup
+        on `idx_variable_alias_window_lookup`."""
         out: dict[int, list[tuple[str, str, str]]] = {}
         for rvid, col, wfrom, wto in self._conn.execute(
             "SELECT register_variant_id, delivery_column_name, valid_from, valid_to "
@@ -1697,19 +1697,16 @@ class Catalog:
         bounds: tuple[str, str] | None,
     ) -> list[VariableState]:
         """Map period-filtered `variable_state` rows to `VariableState`s, expanding
-        a MERGED monthly-family variable's ANNUAL state into one `VariableState`
-        per month-column window that OVERLAPS `bounds` (#319). The stored state is
-        ONE annual single-claim row per year; the per-month dimension is READ-TIME
-        from `variable_alias_window` — `resolve_at("2024-03")` → the mar column,
-        `resolve_at("2024")` → 12 windows. Non-merged variables have no window
-        rows → each state maps 1:1 via `_row_to_state` (byte-identical behaviour).
+        stored alias windows that overlap `bounds`.
 
-        D2: a year's 12 windows SHARE the annual state's `state_id` +
-        `value_set_version_label` (one claim, 12 representations); only
-        `delivery_column_name` + `valid_from`/`valid_to` are overridden per window.
-        The per-window identity is the compound (state_id, delivery_column_name,
-        valid_from). A window is attributed to the state whose validity range
-        contains it (windows were emitted per the state's delivery year)."""
+        Monthly-family variables (#319) expand one annual state into month-column
+        windows. Multi-alias cvids (#945) expand one state into co-delivered alias
+        columns over that same state window. Variables with no window rows map 1:1
+        via `_row_to_state` (byte-identical behaviour). Windows share the base
+        state's `state_id` + `value_set_version_label`; only
+        `delivery_column_name` + `valid_from`/`valid_to` are overridden. The
+        per-window identity is the compound (state_id, delivery_column_name,
+        valid_from)."""
         windows_by_variant = self._variable_windows(variable_id)
         if not windows_by_variant:
             return [self._row_to_state(r) for r in rows]
@@ -1718,20 +1715,31 @@ class Catalog:
         for row in rows:
             base = self._row_to_state(row)
             windows = windows_by_variant.get(row["register_variant_id"], [])
-            # Windows belonging to THIS annual state (within its validity range)
-            # that also overlap the queried bounds.
-            matched = [
+            # Windows belonging to THIS state. Overlapping states can exist; a
+            # state expands only if its own representative column participates
+            # somewhere in its window set, so unrelated narrower windows do not
+            # hide this state's base column.
+            state_windows = [
                 (col, wfrom, wto)
                 for (col, wfrom, wto) in windows
-                if base.valid_from <= wfrom
-                and wto <= base.valid_to
-                and wfrom <= hi
-                and wto >= lo
+                if base.valid_from <= wfrom and wto <= base.valid_to
+            ]
+            has_base_window = base.delivery_column_name is not None and any(
+                col.lower() == base.delivery_column_name.lower()
+                for (col, _wfrom, _wto) in state_windows
+            )
+            if state_windows and not has_base_window:
+                out.append(base)
+                continue
+            matched = [
+                (col, wfrom, wto)
+                for (col, wfrom, wto) in state_windows
+                if wfrom <= hi and wto >= lo
             ]
             if not matched:
-                # A merged variable's state with no window in range (e.g. a year
-                # the family didn't deliver this column) — keep the annual row so
-                # the variable never silently drops a claim.
+                # A windowed variable's state with no window in range (e.g. a year
+                # a monthly family didn't deliver a column) stays visible rather
+                # than silently dropping the claim.
                 out.append(base)
                 continue
             for col, wfrom, wto in matched:
