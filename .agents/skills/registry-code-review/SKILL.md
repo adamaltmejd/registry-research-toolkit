@@ -2,24 +2,24 @@
 name: registry-code-review
 description: >-
   Registry Research Toolkit callable code review workflow. Use when asked to review a
-  Registry PR, branch, range, or working-tree diff; when pr-pipeline needs a callable
-  review pass because slash-command review is unavailable; or when a repo-specific
-  review checklist is needed. Review only; do not mutate files.
+  Registry PR, branch, range, or working-tree diff; when pr-pipeline needs its
+  independent review pass; or when a repo-specific review checklist is needed. Review
+  only; do not mutate files.
 ---
 
 # Registry Code Review
 
 ## Scope
 
-Review only. This is the repo-scoped callable review workflow for Registry PRs/diffs.
-Use it when the top-level built-in review command is unavailable from the current
-workflow or when explicitly asked. In `pr-pipeline`, run this skill in a fresh subagent
-so the review is independent of the authoring session. If no subagent tool is preloaded,
-search for a callable multi-agent or reviewer tool before declaring subagents
-unavailable. The subagent reports findings back to the lead agent; it does not mutate
-files, commit, push, regenerate artifacts, apply fixes, or post GitHub comments unless
-explicitly instructed. Findings lead the response, ordered by severity, with file and
-line references.
+Review only. This is the repo-scoped callable review workflow for Registry PRs/diffs. In
+`pr-pipeline`, run this skill in a fresh subagent so the review is independent of the
+authoring session. On Codex `multi_agent_v1`, omit `agent_type` (there is no
+review-specific role), do not fork the full history, and pass only the PR number or
+branch/range plus necessary issue context. If no subagent tool is preloaded, search for
+a callable multi-agent tool before declaring subagents unavailable. The subagent reports
+findings back to the lead agent; it does not mutate files, commit, push, regenerate
+artifacts, apply fixes, or post GitHub comments unless explicitly instructed. Findings
+lead the response, ordered by severity, with file and line references.
 
 When this skill is run by the same session that authored the patch because subagents are
 unavailable after discovery fails or the tool rejects the request, state what was tried
