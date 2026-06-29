@@ -87,6 +87,7 @@ description = "Månadspanel med utbetalningar av livränta enligt lagen om yrkes
 [[register.variant]]
 key = "beslut"
 name = "Beslut om arbetsskadeersättning 2013-"
+valid_from = "2013-01-01"
 description = "Innehåller information om beslut av ersättning enligt Arbetsskadeförsäkringen. Ersättning kan vara i form av livränta, ersättning för sjukvårds- och tandvårdskostnader, ersättning för kostnader för särskilda hjälpmedel eller för sjukvård utomlands. Beslut om ett sjukfall eller en skada är en arbetsskada s.k. serviceprövning finns även med i tabellen. Liksom serviceprövning dödsfall som Försäkringskassan utreder åt Pensionsmyndigheten. Tabellen innehåller både beslut som görs i samband med att en arbetsskada prövas för första gången samt beslut för redan godkända arbetsskador."
 
 [[register.variable]]
@@ -256,31 +257,41 @@ purpose = "Statlig assistansersättning enligt socialförsäkringsbalken (tidiga
 [[register.variant]]
 key = "pagaende-beslut-1994-2001"
 name = "Assistansersättning - Pågående beslut, 1994-2001"
+valid_from = "1994-01-01"
+valid_to = "2001-12-31"
 description = "Innehåller alla pågående beslut för personer som har rätt till assistansersättning vid månadsskifte, d.v.s. den sista per månad. Har personen rätt till assistansersättning en del av månaden, men inte den sista dagen i månaden, kommer den personen inte med i urvalet. Har ett beslut om rätten till fattats aktuell månad, men avser period efter månadsskiftet, kommer den personen inte med. Alla attribut avser den sista dagen i månaden där det är relevant, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
 
 [[register.variant]]
 key = "pagaende-beslut-2002-201809"
 name = "Assistansersättning - Pågående beslut, 2002-201809"
+valid_from = "2002-01-01"
+valid_to = "2018-09-30"
 description = "Innehåller alla pågående beslut för personer som har rätt till assistansersättning vid månadsskifte, d.v.s. den sista per månad. Har personen rätt till assistansersättning en del av månaden, men inte den sista dagen i månaden, kommer den personen inte med i urvalet. Har ett beslut om rätten till fattats aktuell månad, men avser period efter månadsskiftet, kommer den personen inte med. Alla attribut avser den sista dagen i månaden där det är relevant, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
 
 [[register.variant]]
 key = "pagaende-beslut-201810"
 name = "Assistansersättning - Pågående beslut, 201810-"
+valid_from = "2018-10-01"
 description = "Innehåller alla pågående beslut för personer som har rätt till assistansersättning vid månadsskifte, d.v.s. den sista per månad. Har personen rätt till assistansersättning en del av månaden, men inte den sista dagen i månaden, kommer den personen inte med i urvalet. Har ett beslut om rätten till fattats aktuell månad, men avser period efter månadsskiftet, kommer den personen inte med. Alla attribut avser den sista dagen i månaden där det är relevant, t.ex. personens ålder och geografi. Detaljerade uppgifter om timmarna finns för personer som har fått ett nytt beslut efter 201809. Annars finns bara uppgift om totala antalet timmar. Data uppdateras månadsvis."
 
 [[register.variant]]
 key = "beviljanden"
 name = "Assistansersättning - Beviljanden, 1994-201809"
+valid_from = "1994-01-01"
+valid_to = "2018-09-30"
 description = "Beviljanden från år 1994 och framåt går att få som antingen enbart förstagångsbeviljanden eller förstagångsbeviljanden tillsammans med återvändare. Ett förstagångsbeviljande är första gången en person har blivit beviljad assistansersättning och en återvändare är när en person tidigare har haft rätt till assistansersättning, blivit av med den av någon anledning och sedan blir beviljad igen. Alla attribut avser tidpunkten vid beslutet, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
 
 [[register.variant]]
 key = "avslag"
 name = "Assistansersättning - Avslag, 1994-201809"
+valid_from = "1994-01-01"
+valid_to = "2018-09-30"
 description = "Innehåller avslag på rätten till assistansersättning. Alla attribut avser tidpunkten vid beslutet, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
 
 [[register.variant]]
 key = "fattade-beslut"
 name = "Assistansersättning - Fattade beslut, 201810-"
+valid_from = "2018-10-01"
 description = "Innehåller alla fattade beslut (bl.a. både beviljanden och avslag) för personer gällande assistansersättningen. Varje rad avser ett beslut och en person. Alla attribut avser tidpunkten vid beslutet, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
 
 [[register.variable]]
@@ -3610,16 +3621,19 @@ purpose = "Underhållsstöd till barn vars föräldrar inte bor tillsammans, nä
 [[register.variant]]
 key = "utbetalningar-barn"
 name = "Barn och familj - Underhållsstöd — Utbetalningar barn"
+valid_from = "2018-01-01"
 description = "Varje rad är en utbetalning av underhållsstöd på barnnivå. Data finns från 2018-01-01 och framåt."
 
 [[register.variant]]
 key = "beslut"
 name = "Barn och familj - Underhållsstöd — Beslut"
+valid_from = "1997-01-01"
 description = "Denna tabell innehåller beslut om underhållsstöd, där varje rad motsvarar ett beslut kopplat till ett specifikt barn. Datan sträcker sig från 1997 och framåt."
 
 [[register.variant]]
 key = "utbetalningar-manad"
 name = "Barn och familj - Underhållsstöd — Utbetalningar manad"
+valid_from = "1997-01-01"
 description = "Den här tabellen visar faktiska utbetalningar av underhållsstöd per barn och månad. Varje rad motsvarar en utbetalning. Data finns från 1997 och framåt."
 
 [[register.variant]]
@@ -4092,6 +4106,7 @@ data_type = "decimal"
 key = "ersattning-karens"
 name = "Ersättning för karens"
 valid_from = "2020-03-11"  # pandemic; karensdagar fr.o.m. 2020-03-11 t.o.m. 2022-03-31
+valid_to = "2022-03-31"
 purpose = """
 Tillfällig ersättning för karensavdrag/karensdag under covid-19-pandemin \
 (ersättningsperioder 2020-03-11–2022-03-31). Registret innehåller utbetalt \
@@ -4135,6 +4150,7 @@ data_type = "decimal"
 key = "ersattning-riskgrupper"
 name = "Ersättning till riskgrupper"
 valid_from = "2020-07-01"  # pandemic; ersättningsperioder fr.o.m. 2020-07-01
+valid_to = "2020-12-31"  # SFS 2020:582 applied to periods through the end of 2020
 purpose = """
 Tillfällig ersättning till personer i riskgrupp (och vissa anhöriga) som behövde \
 avstå arbete under covid-19-pandemin. Registret innehåller utbetalt belopp per \

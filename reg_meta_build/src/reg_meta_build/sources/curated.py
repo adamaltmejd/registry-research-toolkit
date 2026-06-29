@@ -41,6 +41,8 @@ gets a synthesized `_default` variant, the single-table case):
       key = "fall"
       name = "…"
       description = "…"
+      valid_from = "2004-01-01"    # OPTIONAL per-variant coverage window
+      valid_to = "2010-12-31"
 
       [[register.variable]]
       name = "Personnummer"        # source/display name → variable.name
@@ -97,7 +99,7 @@ _ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _REGISTER_KEYS = frozenset(
     {"key", "name", "purpose", "valid_from", "valid_to", "variant", "variable"}
 )
-_VARIANT_KEYS = frozenset({"key", "name", "description"})
+_VARIANT_KEYS = frozenset({"key", "name", "description", "valid_from", "valid_to"})
 _VARIABLE_KEYS = frozenset(
     {
         "name",
@@ -139,6 +141,8 @@ class _CuratedVariant:
     key: str
     name: str
     description: str | None
+    valid_from: str | None  # None → no variant-specific floor
+    valid_to: str | None  # None → no variant-specific ceiling
     synthesized: bool
 
 
@@ -297,6 +301,20 @@ class CuratedAdapter:
             self._reject_unknown(
                 path, v, _VARIANT_KEYS, f"register {key!r} variant {vk!r}"
             )
+            variant_valid_from = self._opt_str(v, "valid_from")
+            if variant_valid_from is not None:
+                self._check_iso(
+                    path,
+                    variant_valid_from,
+                    f"register {key!r} variant {vk!r} valid_from",
+                )
+            variant_valid_to = self._opt_str(v, "valid_to")
+            if variant_valid_to is not None:
+                self._check_iso(
+                    path,
+                    variant_valid_to,
+                    f"register {key!r} variant {vk!r} valid_to",
+                )
             variants.append(
                 _CuratedVariant(
                     key=vk,
@@ -304,6 +322,8 @@ class CuratedAdapter:
                         path, v, "name", f"register {key!r} variant {vk!r}"
                     ),
                     description=self._opt_str(v, "description"),
+                    valid_from=variant_valid_from,
+                    valid_to=variant_valid_to,
                     synthesized=False,
                 )
             )
@@ -314,6 +334,8 @@ class CuratedAdapter:
                     key=_DEFAULT_VARIANT,
                     name=_DEFAULT_VARIANT,
                     description=None,
+                    valid_from=None,
+                    valid_to=None,
                     synthesized=True,
                 )
             )
@@ -528,13 +550,16 @@ class CuratedAdapter:
                 slug="",
                 name=variant.name,
                 description=variant.description,
+                valid_from=variant.valid_from,
+                valid_to=variant.valid_to,
                 synthesized=variant.synthesized,
             )
 
         all_variant_keys = tuple(v.key for v in reg.variants)
+        variant_by_key = {v.key: v for v in reg.variants}
         for var in reg.variables:
             yield from self._emit_variable(
-                reg, register_id, variant_ids, all_variant_keys, var
+                reg, register_id, variant_ids, variant_by_key, all_variant_keys, var
             )
 
     def _value_set_id_for(
@@ -550,6 +575,7 @@ class CuratedAdapter:
         reg: _CuratedRegister,
         register_id: int,
         variant_ids: dict[str, int],
+        variant_by_key: dict[str, _CuratedVariant],
         all_variant_keys: tuple[str, ...],
         var: _CuratedVariable,
     ) -> Iterator[IRObject]:
@@ -581,12 +607,9 @@ class CuratedAdapter:
             source_label=None,
         )
 
-        valid_from = var.valid_from or reg.valid_from
-        # A closed register (1997-2010 Pliktverket, a discontinued benefit, …) sets
-        # register-level `valid_to`; a per-variable `valid_to` overrides it.
-        valid_to = var.valid_to or reg.valid_to
         target_keys = var.variants if var.variants is not None else all_variant_keys
         for vk in target_keys:
+            valid_from, valid_to = self._state_window(reg, var, variant_by_key[vk])
             variant_id = variant_ids[vk]
             yield IRVariableState(
                 state_id=self._mint(self.provider, reg.key, var.column, vk),
@@ -605,6 +628,34 @@ class CuratedAdapter:
                 register_variant_id=variant_id,
                 delivery_column_name=var.column,
             )
+
+    def _state_window(
+        self,
+        reg: _CuratedRegister,
+        var: _CuratedVariable,
+        variant: _CuratedVariant,
+    ) -> tuple[str, str | None]:
+        base_valid_from = var.valid_from or reg.valid_from
+        # A closed register (1997-2010 Pliktverket, a discontinued benefit, …) sets
+        # register-level `valid_to`; a per-variable `valid_to` overrides it.
+        base_valid_to = var.valid_to or reg.valid_to
+        valid_from = max(
+            d for d in (base_valid_from, variant.valid_from) if d is not None
+        )
+        valid_to = self._earliest_valid_to(base_valid_to, variant.valid_to)
+        if valid_to is not None and valid_to < valid_from:
+            raise curation_error(
+                "curated_toml_invalid",
+                f"{self.provider}.toml: register {reg.key!r} variable "
+                f"{var.name!r} has no overlap with variant {variant.key!r} "
+                f"({valid_from} > {valid_to}).",
+                "Drop the variant from the variable or fix the validity windows.",
+            )
+        return valid_from, valid_to
+
+    def _earliest_valid_to(self, *dates: str | None) -> str | None:
+        present = [d for d in dates if d is not None]
+        return min(present) if present else None
 
 
 class CanonicalScbAdapter(CuratedAdapter):

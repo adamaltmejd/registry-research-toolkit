@@ -335,8 +335,9 @@ near-identical adapter per agency. Adding a thin provider is four steps:
 1. append a `provider` seed row (`db._PROVIDER_SEED`; never renumber);
 2. register the agency's input dir (`db._CURATED_PROVIDERS`: `(slug, subdir)`);
 3. author `input_data/<Agency>/<provider>.toml` (registers → optional variants →
-   variables; a register with no `[[register.variant]]` gets a synthesized `_default`
-   variant, the single-table case — like SOS LSS/BU);
+   variables; register/variant/variable validity windows materialize as
+   `variable_state.valid_from` and `valid_to`; a register with no `[[register.variant]]`
+   gets a synthesized `_default` variant, the single-table case — like SOS LSS/BU);
 4. curate register/variant slugs in `fqid_slugs/<provider>.toml` (minted-id keys, same
    as `sos.toml`); variable slugs stay AUTO (derived from each variable's clean delivery
    column).

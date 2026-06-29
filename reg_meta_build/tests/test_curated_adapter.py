@@ -27,6 +27,7 @@ from reg_meta_build.validate import validate_built_db
 
 _REPO = Path(__file__).resolve().parents[1]  # reg_meta_build/
 _REAL_INPUT = _REPO / "input_data"
+_REAL_FK_INPUT = _REAL_INPUT / "Forsakringskassan"
 _REAL_SLUG = _REPO / "fqid_slugs" / "fohm.toml"
 
 
@@ -148,6 +149,92 @@ def test_register_valid_to_bounds_states(tmp_path: Path) -> None:
     assert states["pnr"].valid_from == "1997-01-01"
     assert states["pnr"].valid_to == "2010-12-31"  # inherits the register bound
     assert states["ovr"].valid_to == "2005-12-31"  # per-variable override wins
+
+
+_VARIANT_WINDOWS = """\
+[[register]]
+key = "windowed"
+name = "Windowed register"
+valid_from = "2010-01-01"
+valid_to = "2020-12-31"
+
+  [[register.variant]]
+  key = "early"
+  name = "Early table"
+  valid_to = "2015-12-31"
+
+  [[register.variant]]
+  key = "late"
+  name = "Late table"
+  valid_from = "2016-01-01"
+
+  [[register.variable]]
+  name = "Shared"
+  column = "shared"
+
+  [[register.variable]]
+  name = "Late override"
+  column = "late_override"
+  valid_from = "2018-01-01"
+  valid_to = "2019-12-31"
+  variants = ["late"]
+"""
+
+
+def test_variant_windows_intersect_state_windows(tmp_path: Path) -> None:
+    objs = _emit("fk", _VARIANT_WINDOWS, tmp_path)
+    variants = {v.name: v for v in objs if isinstance(v, IRVariant)}
+    states = {
+        (s.delivery_column_name, s.register_variant_id): s
+        for s in objs
+        if isinstance(s, IRVariableState)
+    }
+    early_id = mint("fk", "windowed", "early")
+    late_id = mint("fk", "windowed", "late")
+
+    assert variants["Early table"].valid_to == "2015-12-31"
+    assert variants["Late table"].valid_from == "2016-01-01"
+    assert (
+        states["shared", early_id].valid_from,
+        states["shared", early_id].valid_to,
+    ) == (
+        "2010-01-01",
+        "2015-12-31",
+    )
+    assert (
+        states["shared", late_id].valid_from,
+        states["shared", late_id].valid_to,
+    ) == (
+        "2016-01-01",
+        "2020-12-31",
+    )
+    assert (
+        states["late_override", late_id].valid_from,
+        states["late_override", late_id].valid_to,
+    ) == ("2018-01-01", "2019-12-31")
+
+
+def test_variant_window_without_overlap_raises(tmp_path: Path) -> None:
+    toml = """\
+[[register]]
+key = "windowed"
+name = "Windowed register"
+valid_from = "2010-01-01"
+
+  [[register.variant]]
+  key = "closed"
+  name = "Closed table"
+  valid_to = "2015-12-31"
+
+  [[register.variable]]
+  name = "Future"
+  column = "future"
+  valid_from = "2016-01-01"
+"""
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fk", toml, tmp_path)
+    assert exc.value.code == "curated_toml_invalid"
+    assert "no overlap" in exc.value.message
 
 
 def test_emit_synthesizes_default_variant(tmp_path: Path) -> None:
@@ -626,6 +713,49 @@ def test_real_fohm_catalog_builds(fohm_db: Path) -> None:
         assert dosnummer_from == "2021-01-01"
     finally:
         conn.close()
+
+
+def test_real_fk_variant_and_register_windows_emit() -> None:
+    objs = list(CuratedAdapter("fk").emit(_REAL_FK_INPUT))
+    states = {
+        (s.register_variant_id, s.delivery_column_name): s
+        for s in objs
+        if isinstance(s, IRVariableState)
+    }
+
+    assistans_1994 = states[
+        mint("fk", "assistansersattning", "pagaende-beslut-1994-2001"), "Lopnr"
+    ]
+    assistans_2002 = states[
+        mint("fk", "assistansersattning", "pagaende-beslut-2002-201809"), "Lopnr"
+    ]
+    assistans_201810 = states[
+        mint("fk", "assistansersattning", "pagaende-beslut-201810"), "Lopnr"
+    ]
+    assert (assistans_1994.valid_from, assistans_1994.valid_to) == (
+        "1994-01-01",
+        "2001-12-31",
+    )
+    assert (assistans_2002.valid_from, assistans_2002.valid_to) == (
+        "2002-01-01",
+        "2018-09-30",
+    )
+    assert (assistans_201810.valid_from, assistans_201810.valid_to) == (
+        "2018-10-01",
+        None,
+    )
+
+    underhall_barn = states[
+        mint("fk", "underhallsstod", "utbetalningar-barn"), "LOPNR_BM"
+    ]
+    assert underhall_barn.valid_from == "2018-01-01"
+
+    karens = states[mint("fk", "ersattning-karens", "_default"), "personnummer"]
+    riskgrupper = states[
+        mint("fk", "ersattning-riskgrupper", "_default"), "personnummer"
+    ]
+    assert karens.valid_to == "2022-03-31"
+    assert riskgrupper.valid_to == "2020-12-31"
 
 
 def test_real_fohm_catalog_validates(fohm_db: Path) -> None:
