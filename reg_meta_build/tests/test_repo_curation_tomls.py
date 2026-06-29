@@ -30,7 +30,11 @@ from reg_meta_build.concept_groups import (
     load_concept_groups,
 )
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
-from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
+from reg_meta_build.doc_db import (
+    _require_doc_source_str,
+    load_doc_sources,
+    load_related_documents,
+)
 from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import _SAME_AS_MAX_COMPONENT, load_relations
 from reg_meta_build.variable_grafts import load_variable_grafts
@@ -246,6 +250,19 @@ def test_repo_doc_sources_parses() -> None:
     assert all(entry["url"] and entry["title"] for entry in sources.values())
 
 
+def test_repo_related_documents_parses() -> None:
+    # `related_documents.toml` (#740) maps register-version related-document
+    # binaries to provenance. Binary existence is maintainer-build territory
+    # because PDFs are gitignored; this gate locks the tracked map shape.
+    docs = load_related_documents(_ROOT / "related_documents.toml")
+    assert "aes" in docs
+    assert len(docs["aes"]) == 5
+    assert all(
+        doc.title and doc.filename and doc.license and doc.sha256 and doc.byte_size
+        for doc in docs["aes"]
+    )
+
+
 def test_doc_sources_malformed_entry_raises_curation_error() -> None:
     # A missing/empty/wrong-type `url`/`title` is an actionable config error
     # (EXIT_CONFIG), not a bare KeyError. `load_doc_sources` resolves the repo
@@ -256,3 +273,101 @@ def test_doc_sources_malformed_entry_raises_curation_error() -> None:
         assert exc_info.value.code == "doc_sources_invalid"
         assert exc_info.value.exit_code == EXIT_CONFIG
         assert "some-slug" in exc_info.value.message
+
+
+def test_related_documents_malformed_entry_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        "[[register.aes.document]]\n"
+        'title = "Bad"\n'
+        'filename = "../bad.pdf"\n'
+        'source_url = "https://mikrometadata.scb.se/"\n'
+        'license = "CC BY 4.0"\n'
+        'fetched = "2026-06-23"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert exc_info.value.exit_code == EXIT_CONFIG
+    assert "filename" in exc_info.value.message
+
+
+def test_related_documents_invalid_license_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        "[[register.aes.document]]\n"
+        'title = "Bad"\n'
+        'filename = "bad.pdf"\n'
+        'source_url = "https://mikrometadata.scb.se/"\n'
+        'license = "unknown"\n'
+        'fetched = "2026-06-23"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "license" in exc_info.value.message
+
+
+def test_related_documents_noncanonical_fetched_date_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        "[[register.aes.document]]\n"
+        'title = "Bad"\n'
+        'filename = "bad.pdf"\n'
+        'source_url = "https://mikrometadata.scb.se/"\n'
+        'license = "CC BY 4.0"\n'
+        'fetched = "20260623"\n'
+        'sha256 = "0000000000000000000000000000000000000000000000000000000000000000"\n'
+        "byte_size = 1\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "fetched" in exc_info.value.message
+
+
+def test_related_documents_missing_document_array_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        '[register.aes]\ndocuments = "bad"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "unknown field" in exc_info.value.message
+
+
+def test_related_documents_unknown_top_level_key_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        "[[registr.aes.document]]\n"
+        'title = "Bad"\n'
+        'filename = "bad.pdf"\n'
+        'source_url = "https://mikrometadata.scb.se/"\n'
+        'license = "CC BY 4.0"\n'
+        'fetched = "2026-06-23"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "top-level" in exc_info.value.message

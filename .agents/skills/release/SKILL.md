@@ -297,6 +297,13 @@ Build and upload fresh if **any** of these is true:
 
 - `DOC_SCHEMA_VERSION` was bumped.
 - `git diff <tag>..HEAD -- reg_meta_build/docs/` is non-empty (docs content changed).
+- `git diff <tag>..HEAD -- reg_meta_build/related_documents.toml` is non-empty
+  (related-document provenance changed; the binaries are gitignored but the doc asset
+  consumes this tracked map).
+- Any gitignored related-document PDF under `reg_meta_build/input_data/SCB/docs/` was
+  added, replaced, or refetched since the prior doc asset. Because git cannot detect
+  this, compare the maintainer seed / build-computed `related_document.sha256` against
+  the prior asset when in doubt; a binary change means build fresh.
 - The release is a **major** version bump.
 
 Otherwise copy the prior release's asset forward (8c) and skip the rest of 8b.

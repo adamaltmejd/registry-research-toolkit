@@ -119,20 +119,20 @@ def test_open_doc_db_reads_wal_db_in_readonly_dir(
         conn.close()
 
 
-def test_open_doc_db_rejects_stale_1_0_0_schema(tmp_path: Path) -> None:
-    """The 1.0.0→1.1.0 bump (source_url/source_title, #372) is the gate that
-    stops new code from opening a doc DB lacking those columns. A same-major,
-    older-minor DB must be refused with `doc_schema_incompatible`."""
+def test_open_doc_db_rejects_stale_1_1_0_schema(tmp_path: Path) -> None:
+    """The 1.1.0→1.2.0 bump (related_document, #740) is the gate that
+    stops new code from opening a doc DB lacking the related-doc table. A
+    same-major, older-minor DB must be refused with `doc_schema_incompatible`."""
     db_file = tmp_path / DOC_DB_FILENAME
     _make_wal_db(
         db_file,
         setup_sql=(
             "CREATE TABLE doc_meta (key TEXT PRIMARY KEY, value TEXT);"
-            "INSERT INTO doc_meta VALUES ('schema_version', '1.0.0');"
+            "INSERT INTO doc_meta VALUES ('schema_version', '1.1.0');"
         ),
     )
 
-    assert DOC_SCHEMA_VERSION == "1.1.0"  # guard: the bump this test locks
+    assert DOC_SCHEMA_VERSION == "1.2.0"  # guard: the bump this test locks
     with pytest.raises(RegMetaError) as exc_info:
         open_doc_db(db_file)
     assert exc_info.value.code == "doc_schema_incompatible"

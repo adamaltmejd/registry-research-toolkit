@@ -23,7 +23,7 @@ DOCS_SOURCE_FILE = ".docs_source"
 # Versioning parallels the main-DB SCHEMA_VERSION. Bump the minor when the
 # code starts reading a new column / meta key, major when tables or columns
 # are renamed or removed. Patch differences are ignored.
-DOC_SCHEMA_VERSION = "1.1.0"
+DOC_SCHEMA_VERSION = "1.2.0"
 
 
 def doc_db_path(db_arg: str | None) -> Path:
