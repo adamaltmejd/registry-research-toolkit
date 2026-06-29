@@ -72,6 +72,17 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     await expect.poll(() => router.getQueryParam("q")).toBe("kon");
   });
 
+  it("shows an Enter hint while a non-search route has uncommitted text", async () => {
+    await render(SearchOmnibox);
+
+    await box().fill("kon");
+
+    await expect.element(page.getByText("Enter")).toBeVisible();
+    await expect
+      .element(box())
+      .toHaveAttribute("aria-describedby", "omnibox-enter-hint");
+  });
+
   it("refines in place (replaceState) while already on /search — no back-stack spam", async () => {
     setUrl("/search?q=ko");
     await render(SearchOmnibox);

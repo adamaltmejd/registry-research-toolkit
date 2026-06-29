@@ -641,6 +641,8 @@ def _row_to_model(row: dict[str, Any]) -> SearchResult:
             name=row.get("variable_name"),
             register=row.get("register_name"),
             definition=row.get("variable_definition"),
+            operational_definition=row.get("variable_operational_definition"),
+            delivery_column_names=tuple(row.get("delivery_column_names", ())),
             concept_group=row.get("concept_group"),
             concept_group_label=row.get("concept_group_label"),
             rank=rank,
@@ -860,7 +862,10 @@ def _search_description_variables(
         "SELECT vf.register_id, vf.rowid AS variable_id, "
         "" + _VAR_ID_VF + ", "
         "vf.name AS variable_name, vf.definition AS variable_definition, "
-        "vf.description AS variable_description, vf.rank, "
+        "vf.description AS variable_description, "
+        "vf.operational_definition AS variable_operational_definition, "
+        "vf.delivery_column_names AS delivery_column_names, "
+        "bm25(variable_fts, 0.2, 0.2, 6.0, 4.0, 2.0, 1.0, 0.4) AS rank, "
         "r.name AS register_name, r.purpose AS register_purpose, "
         "r.slug AS register_slug, p.slug AS provider_slug, v.slug AS variable_slug "
         "FROM variable_fts vf "
@@ -890,6 +895,10 @@ def _search_description_variables(
                 "var_id": r["var_id"],
                 "variable_name": r["variable_name"],
                 "variable_definition": r["variable_definition"],
+                "variable_operational_definition": r["variable_operational_definition"],
+                "delivery_column_names": tuple(
+                    (r["delivery_column_names"] or "").split()
+                ),
                 "fts_rank": r["rank"],
                 "_variable_id": r["variable_id"],
             }

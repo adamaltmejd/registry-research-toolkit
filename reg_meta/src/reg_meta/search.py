@@ -36,11 +36,12 @@ class RegisterSearchResult(_CatalogModel):
 
 
 class VariableSearchResult(_CatalogModel):
-    """A variable hit (`variable_fts` name/definition/description). `register` is
-    the owning register's display name (context for the omnibox). When the hit is
-    a LONE member of a concept group (#322 — the family didn't fold because only
-    one member matched), `concept_group`/`concept_group_label` annotate the family
-    so it stays discoverable; both None otherwise."""
+    """A variable hit (`variable_fts` name/definition/description/
+    operational_definition/delivery_column_names). `register` is the owning
+    register's display name (context for the omnibox). When the hit is a LONE
+    member of a concept group (#322 — the family didn't fold because only one
+    member matched), `concept_group`/`concept_group_label` annotate the family so
+    it stays discoverable; both None otherwise."""
 
     type: Literal["variable"] = "variable"
     fqid: Fqid | None
@@ -50,6 +51,8 @@ class VariableSearchResult(_CatalogModel):
     # canonical init param; serialized by alias, so the JSON key is `register`.
     register_name: str | None = Field(default=None, alias="register")
     definition: str | None = None
+    operational_definition: str | None = None
+    delivery_column_names: tuple[str, ...] = ()
     concept_group: str | None = None
     concept_group_label: str | None = None
     rank: float

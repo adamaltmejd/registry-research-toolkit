@@ -3177,7 +3177,7 @@
       },
       "VariableSearchResult": {
         "additionalProperties": false,
-        "description": "A variable hit (`variable_fts` name/definition/description). `register` is\nthe owning register's display name (context for the omnibox). When the hit is\na LONE member of a concept group (#322 \u2014 the family didn't fold because only\none member matched), `concept_group`/`concept_group_label` annotate the family\nso it stays discoverable; both None otherwise.",
+        "description": "A variable hit (`variable_fts` name/definition/description/\noperational_definition/delivery_column_names). `register` is the owning\nregister's display name (context for the omnibox). When the hit is a LONE\nmember of a concept group (#322 \u2014 the family didn't fold because only one\nmember matched), `concept_group`/`concept_group_label` annotate the family so\nit stays discoverable; both None otherwise.",
         "properties": {
           "concept_group": {
             "anyOf": [
@@ -3212,6 +3212,14 @@
             ],
             "title": "Definition"
           },
+          "delivery_column_names": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Delivery Column Names",
+            "type": "array"
+          },
           "fqid": {
             "anyOf": [
               {
@@ -3233,6 +3241,17 @@
               }
             ],
             "title": "Name"
+          },
+          "operational_definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operational Definition"
           },
           "rank": {
             "title": "Rank",

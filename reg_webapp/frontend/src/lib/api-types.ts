@@ -2169,11 +2169,12 @@ export interface components {
         };
         /**
          * VariableSearchResult
-         * @description A variable hit (`variable_fts` name/definition/description). `register` is
-         *     the owning register's display name (context for the omnibox). When the hit is
-         *     a LONE member of a concept group (#322 — the family didn't fold because only
-         *     one member matched), `concept_group`/`concept_group_label` annotate the family
-         *     so it stays discoverable; both None otherwise.
+         * @description A variable hit (`variable_fts` name/definition/description/
+         *     operational_definition/delivery_column_names). `register` is the owning
+         *     register's display name (context for the omnibox). When the hit is a LONE
+         *     member of a concept group (#322 — the family didn't fold because only one
+         *     member matched), `concept_group`/`concept_group_label` annotate the family so
+         *     it stays discoverable; both None otherwise.
          */
         VariableSearchResult: {
             /** Concept Group */
@@ -2182,10 +2183,17 @@ export interface components {
             concept_group_label?: string | null;
             /** Definition */
             definition?: string | null;
+            /**
+             * Delivery Column Names
+             * @default []
+             */
+            delivery_column_names: string[];
             /** Fqid */
             fqid: string | null;
             /** Name */
             name?: string | null;
+            /** Operational Definition */
+            operational_definition?: string | null;
             /** Rank */
             rank: number;
             /** Register */

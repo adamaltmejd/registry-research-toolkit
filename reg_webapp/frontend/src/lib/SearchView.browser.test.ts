@@ -77,6 +77,7 @@ describe("SearchView — typed result groups (#379)", () => {
               name: "Kön",
               register: "LISA",
               definition: null,
+              delivery_column_names: ["kon"],
             },
           ],
         },
@@ -127,15 +128,105 @@ describe("SearchView — typed result groups (#379)", () => {
         .toBeVisible();
     }
     // A register/variable/classification leaf links to its catalog node. The
-    // register leaf is the registers-DataTable name link (exact "LISA"); the
+    // register leaf is the registers whole-row name link (exact "LISA"); the
     // variable leaf is the whole-row grid link whose accessible name folds in the
-    // register cell ("Kön LISA kon"), so match the variable by its /Kön/ name.
+    // register/column pills ("Kön LISA kon"), so match the variable by its /Kön/
+    // name.
     await expect
       .element(page.getByRole("link", { name: "LISA", exact: true }))
       .toHaveAttribute("href", "/catalog/scb/lisa");
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
+  });
+
+  it("shows delivery column names and operational definitions on variable hits", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "fedunsatreason",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/aes/formal-utbildning",
+              name: "Orsak till missnöje, formell utbildning",
+              register: "AES",
+              definition: "Orsak till missnöje",
+              operational_definition: "Formal education dissatisfaction reason",
+              delivery_column_names: ["fedunsatreason_1", "fedunsatreason_2"],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("fedunsatreason");
+    await render(SearchView);
+
+    const registerPill = document.querySelector(".search-view .register-pill");
+    expect(registerPill?.textContent?.trim()).toBe("AES");
+    const columnPills = Array.from(
+      document.querySelectorAll<HTMLElement>(".search-view .col-chip"),
+    ).map((pill) => pill.textContent?.trim());
+    expect(columnPills).toEqual(["fedunsatreason_1", "fedunsatreason_2"]);
+    await expect
+      .element(
+        page.getByText("Operational: Formal education dissatisfaction reason"),
+      )
+      .toBeVisible();
+  });
+
+  it("keeps the matched delivery column visible before the +N overflow", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "target",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/aes/formal-utbildning",
+              name: "Orsak till missnöje, formell utbildning",
+              register: "AES",
+              definition: null,
+              delivery_column_names: [
+                "alpha_1",
+                "bravo_1",
+                "charlie_1",
+                "target_1",
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("target");
+    await render(SearchView);
+
+    await expect.element(page.getByText("target_1")).toBeVisible();
+    await expect.element(page.getByText("+1")).toBeVisible();
+    await expect.element(page.getByText("charlie_1")).not.toBeInTheDocument();
+  });
+
+  it("closes back to the route that entered search using replaceState", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "kon",
+      groups: [],
+    } as unknown as SearchResponse);
+    window.history.pushState({}, "", "/__reset__");
+    router.navigate("/catalog/scb/lisa");
+    router.navigate("/search?q=kon");
+    await render(SearchView);
+
+    await page.getByRole("button", { name: "Close search" }).click();
+
+    await expect.poll(() => router.route.name).toBe("catalog-node");
+    await expect.poll(() => window.location.pathname).toBe("/catalog/scb/lisa");
   });
 
   it("omits a group whose results are empty (no empty header)", async () => {
@@ -955,13 +1046,12 @@ describe("SearchView — typed result groups (#379)", () => {
 });
 
 describe("SearchView — compact per-type tables (#808)", () => {
-  // The #808 round-3 redesign: registers stay a DataTable; the variables /
-  // classifications groups render ONE CSS-grid `.children.table` over their results
-  // IN RANK ORDER — a leaf is a whole-row `display:contents` <a> (one real link),
-  // and a fold (concept group / succession) is a column-spanning row with its
-  // <details> INLINE at its rank position (NO "Grouped families" block). Categorical
-  // type identity lives on the GROUP HEADING (a single Tag); the raw FQID is hidden
-  // (the leaf SLUG is the only identifier). Codes render a compact, code-FIRST grid
+  // The #808 round-3 redesign: registers / variables / classifications render ONE
+  // CSS-grid `.children.table` over their results IN RANK ORDER — a leaf is a
+  // whole-row subgrid <a> (one real link), and a fold (concept group / succession)
+  // is a column-spanning row with its <details> INLINE at its rank position (NO
+  // "Grouped families" block). Selected categorical group identity lives on the
+  // GROUP HEADING; the raw FQID is hidden. Codes render a compact, code-FIRST grid
   // table per code-system bucket.
   const FOUR_GROUPS = {
     kind: "search",
@@ -984,6 +1074,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
             name: "Kön",
             register: "LISA",
             definition: null,
+            delivery_column_names: ["kon"],
           },
         ],
       },
@@ -1061,44 +1152,44 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(row?.getAttribute("href")).toBe(catalogHref("scb/lisa"));
   });
 
-  it("hides the raw FQID and shows the leaf SLUG as the variable's Column", async () => {
+  it("hides the raw FQID and shows the variable's delivery column as a heading chip", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
-    // The variable's Column cell shows the LEAF SLUG ("kon"), never the full
+    // The variable heading shows the delivery-column name ("kon"), never the full
     // FQID path ("scb/lisa/kon").
     await expect
       .element(page.getByRole("heading", { name: "Variables" }))
       .toBeVisible();
-    // No leaf row renders the full FQID with slashes (the slug <code> + the
-    // member-slug <code> in folded families never carry slashes).
+    // No code-like token renders the full FQID with slashes (the delivery-column
+    // chip + member-slug <code> in folded families never carry slashes).
     for (const code of document.querySelectorAll(".search-view code")) {
       expect(code.textContent ?? "").not.toContain("/");
     }
-    // The mono slug cell carries the bare leaf slug.
-    const slugCells = Array.from(
-      document.querySelectorAll<HTMLElement>(".search-view .slug-cell"),
+    const columnChips = Array.from(
+      document.querySelectorAll<HTMLElement>(".search-view .col-chip"),
     ).map((c) => c.textContent?.trim());
-    expect(slugCells).toContain("kon");
+    expect(columnChips).toContain("kon");
   });
 
-  it("renders a prominent Register column for variable hits", async () => {
+  it("renders Variables as a normal heading and variable metadata as inline pills", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
-    // The variables grid carries a "Column" header (the leaf-slug column) that
-    // disambiguates it from the registers table — assert its presence so we know
-    // the variable grid rendered with its three columns.
-    await expect.element(page.getByText("Column")).toBeVisible();
-    // The variable's Register renders in its OWN prominent column (the `.register`
-    // span), not as a muted trailing label. Scope to the variable leaf row (an
-    // unscoped `.search-view .register` can match a codes "Used in" `.register.muted`
-    // if render order / fixtures change — mirror the whole-row-nav test's scoping).
-    const row = document.querySelector(".search-view .cols-3 a.leaf-row");
-    const register = row?.querySelector(".register");
-    expect(register?.textContent?.trim()).toBe("LISA");
+    await expect.element(page.getByText("Column")).not.toBeInTheDocument();
+    const variablesHeading = page.getByRole("heading", { name: "Variables" });
+    await expect.element(variablesHeading).toBeVisible();
+    expect(
+      document.querySelector(".search-view h3 .heading-tag .tag.tone-var"),
+    ).toBeNull();
+
+    const row = document.querySelector(".search-view .cols-1 a.leaf-row");
+    expect(row?.querySelector(".register-pill")?.textContent?.trim()).toBe(
+      "LISA",
+    );
+    expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
   });
 
   it("makes each leaf a real catalog link (open-in-new-tab safe)", async () => {
@@ -1108,7 +1199,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
 
     // Each leaf is a real <a href> to its catalog node (so middle-click /
     // open-in-new-tab / screen readers get a link). The register leaf is the
-    // DataTable name link (exact "LISA"); the variable + classification leaves are
+    // whole-row name link (exact "LISA"); the variable + classification leaves are
     // whole-row grid links matched by their /Kön/ + /SUN/ names.
     await expect
       .element(page.getByRole("link", { name: "LISA", exact: true }))
@@ -1129,35 +1220,39 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Registers" }))
       .toBeVisible();
-    // The categorical tone lives on the heading Tag (one per leaf group), NOT a
-    // per-row badge. The codes heading carries no single tone.
-    for (const tone of ["reg", "var", "class"] as const) {
+    // The categorical tone lives on selected heading Tags, NOT per-row badges. The
+    // Variables and codes headings stay plain text.
+    for (const tone of ["reg", "class"] as const) {
       const tag = document.querySelector(
         `.search-view h3 .heading-tag .tag.tone-${tone}`,
       );
       expect(tag, `expected a heading Tag on tone ${tone}`).not.toBeNull();
     }
-    // Exactly the three leaf-group headings carry a categorical Tag (no per-row
-    // badge proliferation).
+    expect(
+      document.querySelector(".search-view h3 .heading-tag .tag.tone-var"),
+    ).toBeNull();
+    // Exactly the two non-variable leaf-group headings carry a categorical Tag (no
+    // per-row badge proliferation).
     const headingTags = document.querySelectorAll(".search-view h3 .tag");
-    expect(headingTags.length).toBe(3);
+    expect(headingTags.length).toBe(2);
   });
 
-  it("makes a variable leaf row a whole-row subgrid link carrying register + slug cells, keyboard-focusable (#808 a11y)", async () => {
+  it("makes a variable leaf row a whole-row subgrid link carrying register + column pills, keyboard-focusable (#808 a11y)", async () => {
     // The headline redesign + a11y fix: a variable leaf row is ONE real link — a
     // SUBGRID box (`display:grid` + `grid-template-columns: subgrid`, NOT
-    // `display:contents`) so its child cells align to the parent grid's tracks while
+    // `display:contents`) so its child cells align to the parent grid's track while
     // the <a> stays a real, keyboard-focusable element. Clicking anywhere on the row
     // = clicking the link. Assert the <a> targets the catalog node, carries the
-    // prominent register + mono slug cells, resolves its columns to `subgrid`, AND is
-    // keyboard-focusable (the display:contents version was dropped from the tab order).
+    // register + delivery-column pills, resolves to `subgrid`, AND is
+    // keyboard-focusable (the display:contents version was dropped from the tab
+    // order).
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
     // The variable leaf row is an <a.leaf-row> to the variable's catalog node.
     const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view .cols-3 a.leaf-row",
+      ".search-view .cols-1 a.leaf-row",
     );
     expect(row).not.toBeNull();
     expect(row?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
@@ -1170,12 +1265,11 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // bearing proof (a `display:contents` <a> fails this, dropped from the tab order).
     row?.focus();
     expect(document.activeElement).toBe(row);
-    // The row carries the prominent register cell AND the mono leaf-slug cell —
-    // so clicking the register/slug area is clicking the same single row link.
-    const register = row?.querySelector(".register");
-    expect(register?.textContent?.trim()).toBe("LISA");
-    const slug = row?.querySelector(".slug-cell");
-    expect(slug?.textContent?.trim()).toBe("kon");
+    // The row carries the register and delivery-column pills inside the same link.
+    expect(row?.querySelector(".register-pill")?.textContent?.trim()).toBe(
+      "LISA",
+    );
+    expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
   });
 
   it("makes a classification leaf row a keyboard-focusable whole-row link (#808 a11y)", async () => {
@@ -1253,27 +1347,18 @@ describe("SearchView — compact per-type tables (#808)", () => {
       .not.toBeInTheDocument();
     // The row is a non-link <div>, not an <a> (no navigation target on a null fqid).
     expect(
-      document.querySelector(".search-view .cols-3 a.leaf-row"),
+      document.querySelector(".search-view .cols-1 a.leaf-row"),
     ).toBeNull();
     expect(
-      document.querySelector(".search-view .cols-3 div.leaf-row"),
+      document.querySelector(".search-view .cols-1 div.leaf-row"),
     ).not.toBeNull();
   });
 
-  it("bounds a long unbroken variable slug's Column track on the mobile canvas so the Variable column keeps its share (#808/#806)", async () => {
-    // Regression for the variables-grid third-column blowout at the 375px canvas.
-    // The Column track is `minmax(0, max-content)`: max-content sizes to the slug's
-    // UNWRAPPED intrinsic width (soft-wrap opportunities — incl. `.slug-cell`'s
-    // overflow-wrap — are NOT taken when MEASURING a max-content track). With the grid
-    // pinned to the canvas the `minmax(0, …)` floor still lets the track SHRINK, so it
-    // doesn't push the grid past 375px — but it greedily claims ~286px of the 375,
-    // STARVING the Variable + Register columns to ~44px / ~22px (the name unreadable,
-    // the slug over-wrapped to ~200px tall). The earlier "overflow-wrap on .slug-cell"
-    // fix could never help: the grid never overflowed; the defect is column STARVATION.
-    // The fix caps the track with `fit-content(7rem)` on the ≤48rem mobile breakpoint
-    // (the browser-test viewport is 414px, BELOW 48rem, so the media query is ACTIVE —
-    // the precedent AppShell's drawer test relies on; asserted below). Desktop keeps
-    // the content-sized `max-content` track (short slugs stay narrow there).
+  it("wraps a long delivery-column chip without creating horizontal overflow on mobile (#808/#806)", async () => {
+    // Regression for the former variables-grid third-column blowout at the 375px
+    // canvas. Variable metadata now rides inside the full-width heading, so a long
+    // unbroken delivery-column chip must wrap within the single row instead of
+    // claiming a separate max-content grid track.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "for",
@@ -1284,12 +1369,13 @@ describe("SearchView — compact per-type tables (#808)", () => {
           results: [
             {
               type: "variable",
-              // A long (35-char leaf) unbroken slug — the shape that drove the track
-              // to its full intrinsic width and starved the other columns.
+              // A long unbroken delivery column — the shape that formerly drove
+              // the separate column track to its full intrinsic width.
               fqid: "scb/lisa/foervaervsarbetandebefolkningstatus",
               name: "Förvärvsarbetande befolkningsstatus",
               register: "LISA",
               definition: null,
+              delivery_column_names: ["foervaervsarbetandebefolkningstatus"],
             },
           ],
         },
@@ -1312,35 +1398,18 @@ describe("SearchView — compact per-type tables (#808)", () => {
       root.style.width = "375px";
     }
 
-    const grid = document.querySelector<HTMLElement>(".search-view .cols-3");
+    const grid = document.querySelector<HTMLElement>(".search-view .cols-1");
     expect(grid).not.toBeNull();
-    // The mono slug rendered (the third column is genuinely populated with the long
-    // content under test, not silently empty).
-    const slug = grid?.querySelector<HTMLElement>(".slug-cell");
-    expect(slug?.textContent?.trim()).toBe(
+    const columnChip = grid?.querySelector<HTMLElement>(".col-chip");
+    expect(columnChip?.textContent?.trim()).toBe(
       "foervaervsarbetandebefolkningstatus",
     );
 
-    // The three resolved grid tracks. With the fix the slug (3rd) track is capped at
-    // fit-content(7rem) = 112px; without it, max-content claims ~286px and the others
-    // collapse to ~44 / ~22.
     const cols = grid ? getComputedStyle(grid).gridTemplateColumns : "";
     const trackPx = cols.split(/\s+/).map((t) => Number.parseFloat(t));
-    expect(trackPx).toHaveLength(3);
-    const [nameTrack, registerTrack, slugTrack] = trackPx;
+    expect(trackPx).toHaveLength(1);
+    expect(trackPx[0]).toBeGreaterThan(300);
 
-    // The slug track is bounded by the 7rem cap (112px), NOT the slug's ~286px
-    // intrinsic width — the load-bearing assertion. (Small slack for sub-pixel
-    // rounding / a fractional root font-size.)
-    expect(slugTrack).toBeLessThanOrEqual(112 + 1);
-    // …and the Variable column keeps a usable share instead of being starved to ~44px.
-    // It must be the WIDEST track (the 2fr primary column), and comfortably so.
-    expect(nameTrack).toBeGreaterThan(slugTrack);
-    expect(nameTrack).toBeGreaterThan(120);
-    // The Register column is no longer crushed to a couple of glyphs either.
-    expect(registerTrack).toBeGreaterThan(40);
-
-    // Belt-and-suspenders: the grid still fits the canvas (no horizontal overflow).
     expect(grid?.scrollWidth ?? 0).toBeLessThanOrEqual(
       (grid?.clientWidth ?? 0) + 1,
     );
@@ -1410,7 +1479,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // The fold is a <details> sitting INLINE in the same grid table (a span-row),
     // interleaved between the two leaf rows.
     await expect.element(page.getByText("matched 2 of 3")).toBeVisible();
-    const grid = document.querySelector(".search-view .cols-3");
+    const grid = document.querySelector(".search-view .cols-1");
     const fold = grid?.querySelector(".span-row details.concept-group");
     expect(
       fold,

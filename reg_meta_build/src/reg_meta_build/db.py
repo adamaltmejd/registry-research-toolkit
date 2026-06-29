@@ -693,6 +693,30 @@ CREATE TABLE variable_alias_window (
 CREATE INDEX idx_variable_alias_window_lookup
     ON variable_alias_window(variable_id, register_variant_id);
 
+-- External-content projection for `variable_fts`. `variable_alias` stays the
+-- normalized source of truth; this view contributes a search-only, deterministic
+-- aggregate of historical delivery column names so FTS rebuilds can index the
+-- aliases without denormalizing `variable`.
+CREATE VIEW variable_fts_content AS
+SELECT
+    v.variable_id,
+    v.register_id,
+    v.provider_key,
+    v.name,
+    v.definition,
+    v.description,
+    v.operational_definition,
+    (
+        SELECT group_concat(delivery_column_name, ' ')
+        FROM (
+            SELECT DISTINCT va.delivery_column_name
+            FROM variable_alias va
+            WHERE va.variable_id = v.variable_id
+            ORDER BY va.delivery_column_name
+        )
+    ) AS delivery_column_names
+FROM variable v;
+
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
 -- Populated at build time from a maintainer-curated seed (classifications.toml)
 -- that maps raw variable_instance.vardemangdsversion labels to normalized
@@ -818,8 +842,9 @@ CREATE VIRTUAL TABLE variable_fts USING fts5(
     definition,
     description,
     operational_definition,
-    content='variable',
-    content_rowid='rowid',
+    delivery_column_names,
+    content='variable_fts_content',
+    content_rowid='variable_id',
     tokenize='unicode61'
 );
 
@@ -2353,20 +2378,21 @@ def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) 
         "SELECT rowid, register_id, name, purpose FROM register"
     )
 
-    # variable_fts: content-synced with variable table. Delivery column names
-    # are excluded (they contain technical suffixes like _LISA that pollute
-    # search results).
+    # variable_fts: content-synced with `variable_fts_content`, which derives a
+    # delivery-column aggregate from `variable_alias` without storing it on
+    # `variable`.
     conn.execute("""
-        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description, operational_definition)
+        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description, operational_definition, delivery_column_names)
         SELECT
-            v.rowid,
-            v.register_id,
-            v.provider_key,
-            v.name,
-            v.definition,
-            v.description,
-            v.operational_definition
-        FROM variable v
+            variable_id,
+            register_id,
+            provider_key,
+            name,
+            definition,
+            description,
+            operational_definition,
+            delivery_column_names
+        FROM variable_fts_content
     """)
 
     if include_value_code:

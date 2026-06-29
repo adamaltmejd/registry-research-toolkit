@@ -24,7 +24,12 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import add_value_set, build_slugged_db  # noqa: E402
+from _slugged_db import (  # noqa: E402
+    add_binding,
+    add_value_set,
+    add_variable,
+    build_slugged_db,
+)
 
 
 def _seed_classification(
@@ -495,6 +500,69 @@ def test_variable_fts_row_carries_binding_fqid(db: sqlite3.Connection) -> None:
     rows = out.results
     assert _types(rows) == {"variable"}
     assert str(rows[0].fqid) == "scb/lisa/kon"
+
+
+def test_variable_search_matches_delivery_column_name() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "fedunsatreason", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert str(rows[0].fqid) == "scb/lisa/formal-utbildning"
+    assert rows[0].delivery_column_names == ("fedunsatreason_1",)
+
+
+def test_variable_name_hit_ranks_above_delivery_column_hit() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    add_variable(
+        conn,
+        register_id=1,
+        var_id=42181,
+        name="fedunsatreason",
+        slug="name-hit",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=42181,
+        delivery_column_name="other_column",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "fedunsatreason", field="description", type="variable")
+
+    assert [str(row.fqid) for row in out.results] == [
+        "scb/lisa/name-hit",
+        "scb/lisa/formal-utbildning",
+    ]
+
+
+def test_variable_search_carries_operational_definition() -> None:
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable SET operational_definition = ? WHERE slug = 'kon'",
+        ("Registered sex at year end",),
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "Registered", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert rows[0].operational_definition == "Registered sex at year end"
 
 
 def test_type_all_spans_classification(db: sqlite3.Connection) -> None:

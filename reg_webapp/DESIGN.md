@@ -351,20 +351,25 @@ navigation to catalog nodes. The router gained `search` and `doc` routes (query 
 `?q=`, keyed on pathname so the page re-runs on every query change) and a
 `router.replace()` method (mirrors the `?period` URL-as-single-source-of-truth pattern:
 the omnibox syncs back to the URL, and the URL drives the view). `api.ts` gained
-`search(q, {limit?, type?})` typed off the codegen'd contract. `SearchView` renders an
-"All · Registers · Variables · Classifications · Codes" scope toggle backed by `?type=`
-(URL state, like `?q=`/`?period`; `all` is omitted from the canonical URL); the omnibox
-preserves an active scope when re-querying. The **docs group** ships as a 5th sibling
-group in `SearchView.svelte` (#394): it calls the DEDICATED `/api/docs/search` endpoint
-via a SECOND, independent `asyncResource` — failure-isolated from the four main groups
-(a docs failure, an absent index returning `ingested:false`, or an empty result silently
-omits the docs section and never blanks the main groups). The `/doc/<filename>` route
-(router `Route` union arm `{name:"doc",identifier}`) renders `DocView.svelte`: title,
-register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
-curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
-and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
-`snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
-is never fetched.
+`search(q, {limit?, type?})` typed off the codegen'd contract. Off `/search`, typing in
+the omnibox stays local until Enter/form submit and shows an Enter hint while focused;
+on `/search`, typing live-refines with replaceState. `SearchView` renders an "All ·
+Registers · Variables · Classifications · Codes" scope toggle backed by `?type=` (URL
+state, like `?q=`/`?period`; `all` is omitted from the canonical URL), a Close control
+that `replace()`s back to the route that entered search (or `/catalog` for a cold
+deep-link), and variable rows whose heading carries register and delivery-column pills
+plus `operational_definition` when present; the "Variables" group heading itself stays
+plain text. The omnibox preserves an active scope when re-querying. The **docs group**
+ships as a 5th sibling group in `SearchView.svelte` (#394): it calls the DEDICATED
+`/api/docs/search` endpoint via a SECOND, independent `asyncResource` — failure-isolated
+from the four main groups (a docs failure, an absent index returning `ingested:false`,
+or an empty result silently omits the docs section and never blanks the main groups).
+The `/doc/<filename>` route (router `Route` union arm `{name:"doc",identifier}`) renders
+`DocView.svelte`: title, register/variable/tags, a `source_url` link to the SCB source
+PDF (resolved from the curated map at doc-DB build, #372; None when uncurated) with
+`source_title` as label, and a bounded `excerpt`; 404 distinguishes "not ingested" vs
+"not found"; `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full
+converted body is never fetched.
 
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm

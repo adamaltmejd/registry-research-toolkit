@@ -35,8 +35,9 @@ import { Tag } from "./ui";
 // "Grouped families" block). Codes render a compact, code-FIRST grid table per
 // code-system bucket (the bucket heading names the classification / value-set);
 // each row's owner VARIABLES are the navigable targets (a code has no own page).
-// Categorical type identity lives on the GROUP HEADING (a single Tag); the raw
-// FQID is hidden everywhere (the leaf SLUG is the only identifier shown).
+// Categorical type identity lives on selected GROUP HEADINGS; the raw FQID is
+// hidden everywhere. Variable rows surface register + delivery-column metadata as
+// compact heading pills.
 //
 // The registers group previously used a DataTable with selection-as-navigation,
 // but a null-fqid register made the row focusable/clickable while `navigateTo`
@@ -164,7 +165,7 @@ const noMatches = $derived(
 // it has none.
 const GROUP_HEADINGS = {
   registers: { label: "Registers", tone: "reg" },
-  variables: { label: "Variables", tone: "var" },
+  variables: { label: "Variables", tone: null },
   classifications: { label: "Classifications", tone: "class" },
   codes: { label: "Codes / values", tone: null },
 } as const;
@@ -260,10 +261,50 @@ function usageSummary(result: CodeSearchResult): string {
   }
   return parts.join(" · ");
 }
+
+const DELIVERY_COLUMN_LIMIT = 3;
+
+function deliveryColumnNames(result: VariableSearchResult): string[] {
+  return result.delivery_column_names ?? [];
+}
+
+function deliveryColumnMatchesQuery(column: string): boolean {
+  const needle = q.toLocaleLowerCase();
+  return needle !== "" && column.toLocaleLowerCase().includes(needle);
+}
+
+function visibleDeliveryColumns(result: VariableSearchResult): string[] {
+  return [...deliveryColumnNames(result)]
+    .sort((a, b) => {
+      const aMatched = deliveryColumnMatchesQuery(a);
+      const bMatched = deliveryColumnMatchesQuery(b);
+      if (aMatched !== bMatched) {
+        return aMatched ? -1 : 1;
+      }
+      return 0;
+    })
+    .slice(0, DELIVERY_COLUMN_LIMIT);
+}
+
+function hiddenDeliveryColumnCount(result: VariableSearchResult): number {
+  return Math.max(
+    0,
+    deliveryColumnNames(result).length - DELIVERY_COLUMN_LIMIT,
+  );
+}
+
+function closeSearch(): void {
+  router.replace(router.searchReturnUrl);
+}
 </script>
 
 <article class="search-view">
-  <h2>Search</h2>
+  <div class="search-heading">
+    <h2>Search</h2>
+    <button type="button" class="close-search" aria-label="Close search" onclick={closeSearch}>
+      Close
+    </button>
+  </div>
 
   <!-- Scoped-search toggle (#393 item 1): visible whenever there's a query (incl.
        loading / no-match / results) so the user can switch scope from any state.
@@ -338,15 +379,13 @@ function usageSummary(result: CodeSearchResult): string {
           {:else if group.group === "variables"}
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
                  ORDER (CatalogNodeView's `.children.table`). A leaf variable is a
-                 whole-row link (`display: contents` on the <a>); a concept-group
+                 whole-row subgrid link; a concept-group
                  fold is a column-spanning row rendering its <details> INLINE at
-                 its rank position. Columns: Variable (name + muted definition) ·
-                 Register (PROMINENT, own column) · Column (leaf slug, mono). -->
-            <div class="children table cols-3" role="presentation">
+                 its rank position. Variable metadata (register + delivery
+                 columns) rides as inline pills in the result heading. -->
+            <div class="children table cols-1" role="presentation">
               <div class="head-row" aria-hidden="true">
                 <span class="col-head">Variable</span>
-                <span class="col-head">Register</span>
-                <span class="col-head">Column</span>
               </div>
               {#each group.results as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
@@ -491,28 +530,50 @@ function usageSummary(result: CodeSearchResult): string {
      grid's tracks while the anchor stays a real focusable box (middle-click /
      open-in-new-tab / screen-reader / Tab friendly), no role=grid, no nested
      interactive elements. A null-fqid leaf can't navigate, so it renders as a
-     non-link <div> row (no focus ring). The raw FQID is never shown — the Column
-     cell carries the leaf SLUG only. -->
+     non-link <div> row (no focus ring). The raw FQID is never shown; register and
+     delivery columns are compact pills in the heading so the name keeps the full
+     row width. -->
+{#snippet variableMetaPills(v: VariableSearchResult)}
+  {@const columns = visibleDeliveryColumns(v)}
+  {@const hidden = hiddenDeliveryColumnCount(v)}
+  {#if v.register || columns.length > 0 || hidden > 0}
+    <span class="result-pills">
+      {#if v.register}
+        <span class="result-pill register-pill">{v.register}</span>
+      {/if}
+      {#each columns as column (column)}
+        <code class="col-chip">{column}</code>
+      {/each}
+      {#if hidden > 0}<span class="more muted column-more">+{hidden}</span>{/if}
+    </span>
+  {/if}
+{/snippet}
+
 {#snippet variableLeafRow(v: VariableSearchResult)}
   {#if v.fqid}
     <a class="leaf-row" href={catalogHref(v.fqid)}>
       <span class="name-cell">
-        <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
+        <span class="result-title">
+          <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
+          {@render variableMetaPills(v)}
+        </span>
         {#if v.definition}<span class="sub muted">{v.definition}</span>{/if}
+        {#if v.operational_definition}
+          <span class="sub muted">Operational: {v.operational_definition}</span>
+        {/if}
       </span>
-      <!-- Register is PROMINENT: a display-name string, its own normal-weight
-           column (NOT a muted trailing label). -->
-      <span class="register">{v.register ?? ""}</span>
-      <!-- The catalog's canonical column/binding identifier: the leaf slug. -->
-      <code class="slug-cell mono muted">{leafSlug(v.fqid)}</code>
     </a>
   {:else}
     <div class="leaf-row plain">
-      <span class="name-cell"><span class="row-link plain">{v.name ?? "—"}</span>
+      <span class="name-cell"><span class="result-title">
+          <span class="row-link plain">{v.name ?? "—"}</span>
+          {@render variableMetaPills(v)}
+        </span>
         {#if v.definition}<span class="sub muted">{v.definition}</span>{/if}
+        {#if v.operational_definition}
+          <span class="sub muted">Operational: {v.operational_definition}</span>
+        {/if}
       </span>
-      <span class="register">{v.register ?? ""}</span>
-      <span class="slug-cell"></span>
     </div>
   {/if}
 {/snippet}
@@ -730,8 +791,33 @@ function usageSummary(result: CodeSearchResult): string {
 {/snippet}
 
 <style>
-  .search-view h2 {
+  .search-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
     margin-bottom: 1rem;
+  }
+  .search-heading h2 {
+    margin: 0;
+  }
+  .close-search {
+    padding: 0.25rem 0.55rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+  .close-search:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .close-search:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .type-toggle {
     display: flex;
@@ -781,8 +867,9 @@ function usageSummary(result: CodeSearchResult): string {
     margin: 0 0 0.5rem;
     font-size: 1rem;
   }
-  /* The categorical group-type Tag sits on the heading baseline (replacing the
-     old per-row badges, #808 round 2). */
+  /* Categorical group-type Tags sit on selected heading baselines (replacing the
+     old per-row badges, #808 round 2). Variables stay plain text so the var hue is
+     reserved for delivery-column chips inside result rows. */
   .heading-tag {
     align-self: center;
     line-height: 1;
@@ -803,8 +890,7 @@ function usageSummary(result: CodeSearchResult): string {
   .row-link.plain {
     color: var(--text);
   }
-  /* The prominent Register column on a variable hit (#808 round 2): normal text
-     weight, NOT muted trailing text — register must be far more visible. */
+  /* Register text outside variable result pills, e.g. code owners and group folds. */
   .register {
     overflow-wrap: anywhere;
   }
@@ -817,7 +903,7 @@ function usageSummary(result: CodeSearchResult): string {
     display: block;
     font-size: 0.9em;
   }
-  /* Clamp a register's description to ~2 lines in the DataTable cell; the full
+  /* Clamp a register's description to ~2 lines in the result row; the full
      text lives on the register's own subject page (the #806 treatment). */
   .clamp-2 {
     display: -webkit-box;
@@ -865,26 +951,9 @@ function usageSummary(result: CodeSearchResult): string {
        (below) so multi-line cells grow downward and still read top-down. */
     align-items: stretch;
   }
-  .children.table.cols-3 {
-    /* Variable · Register · Column(slug) */
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, max-content);
-  }
-  /* On the narrow (≤375px) mobile canvas, a long unbroken leaf slug sizes the
-     `max-content` Column track to its FULL intrinsic width (soft-wrap opportunities,
-     incl. the `.slug-cell` overflow-wrap, are NOT taken when MEASURING a max-content
-     track). The `minmax(0, …)` floor still lets the track shrink, so the grid itself
-     doesn't overflow the canvas — but the slug track greedily claims ~286 of the 375
-     px, STARVING the 2fr/1fr Variable + Register columns down to ~44px / ~22px (name
-     unreadable, slug over-wrapped). `overflow-wrap` on `.slug-cell` can't help — the
-     grid never overflowed; the defect is column starvation. Cap the track with
-     `fit-content(7rem)` so a long slug is bounded at 7rem (and wraps via the
-     `.slug-cell` overflow-wrap) while the other columns keep their share; a short
-     slug still sizes to content. Desktop keeps the content-sized `max-content` track
-     (above) — slugs are short there and shouldn't wrap. Matches AppShell's 48rem. */
-  @media (max-width: 48rem) {
-    .children.table.cols-3 {
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) fit-content(7rem);
-    }
+  .children.table.cols-1 {
+    /* Variable hit: full-width heading + inline register/column pills. */
+    grid-template-columns: minmax(0, 1fr);
   }
   .children.table.cols-2 {
     /* Classification · Name */
@@ -1045,15 +1114,54 @@ function usageSummary(result: CodeSearchResult): string {
     flex-direction: column;
     gap: 0.1rem;
   }
-  .name-full {
-    font-size: 0.9em;
+  .result-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.45rem;
+    min-width: 0;
+  }
+  .result-pills {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.35rem;
+    min-width: 0;
+  }
+  .result-pill,
+  .col-chip {
+    display: inline-flex;
+    align-items: baseline;
+    line-height: 1.3;
+    padding: 0.05rem 0.4rem;
+    border-radius: var(--radius-sm);
+    max-width: 100%;
     overflow-wrap: anywhere;
   }
-  .slug-cell {
+  .result-pill {
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .register-pill {
+    color: var(--cat-reg-ink);
+    border: 1px solid color-mix(in srgb, var(--cat-reg) 35%, transparent);
+    background: color-mix(in srgb, var(--cat-reg) 10%, var(--surface));
+  }
+  /* Mirrors RepresentationPicker's delivery-column chip: mono, purple/indigo
+     variable hue, and no link affordance on the search-result metadata. */
+  .col-chip {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--cat-var-ink);
+    border: 1px solid color-mix(in srgb, var(--cat-var) 35%, transparent);
+    background: color-mix(in srgb, var(--cat-var) 10%, var(--surface));
+  }
+  .column-more {
     font-size: 0.85em;
-    text-align: right;
-    /* A long unbroken mono slug must break to fit the narrow (375px) canvas
-       instead of spilling past its minmax(0, max-content) track (#806). */
+  }
+  .name-full {
+    font-size: 0.9em;
     overflow-wrap: anywhere;
   }
   /* The CODE is the highlighted primary column: mono + strong + a code-tint ink

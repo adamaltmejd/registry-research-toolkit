@@ -254,7 +254,12 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   keeps its own. `definition`/`description` keep their meaning. Additive column →
 #   minor bump (like #819's 5.8.0); a 6.0.0 DB lacks the column, so it's rejected
 #   via the minor-version gate.
-SCHEMA_VERSION = "6.1.0"
+# - 6.2.0 (#735): `variable_fts` switches to the `variable_fts_content` external
+#   content view and indexes its `delivery_column_names` aggregate, derived from
+#   `variable_alias`. This makes SCB delivery column codes searchable without
+#   indexing FQID slugs. A 6.1.0 DB lacks the FTS column/view, so it is rejected
+#   via the minor-version gate.
+SCHEMA_VERSION = "6.2.0"
 DB_FILENAME = "reg_meta.db"
 
 

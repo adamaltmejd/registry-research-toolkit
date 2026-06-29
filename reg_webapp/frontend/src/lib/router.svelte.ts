@@ -136,6 +136,10 @@ class Router {
    * etc. and re-fetch when it changes. Kept in sync with the URL in BOTH the
    * popstate handler AND inside `navigate` after `pushState`. */
   search = $state<string>(window.location.search);
+  /** Where the search view's close control returns. Updated only when entering
+   * `/search` from a non-search route, so query refinements on `/search` do not
+   * overwrite it. A cold deep-link falls back to the catalog root. */
+  searchReturnUrl = $state<string>("/catalog");
 
   constructor() {
     window.addEventListener("popstate", () => {
@@ -170,6 +174,11 @@ class Router {
       window.location.pathname + window.location.search + window.location.hash;
     if (url === current) {
       return;
+    }
+    const next = new URL(url, window.location.origin);
+    const nextRoute = parseRoute(next.pathname);
+    if (nextRoute.name === "search" && this.route.name !== "search") {
+      this.searchReturnUrl = current;
     }
     if (replace) {
       window.history.replaceState({}, "", url);

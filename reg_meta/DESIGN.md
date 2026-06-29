@@ -75,11 +75,13 @@ above; the provider-specific parsing that feeds it lives in
 Four content-synced FTS5 indexes power search:
 
 - **`register_fts`** — indexes register `name`, `purpose`.
-- **`variable_fts`** — indexes variable `name`, `definition`, `description`. Uses
-  `unicode61` tokenizer for correct Swedish character handling. Delivery column names
-  (`variable_alias.delivery_column_name`) are deliberately excluded — they contain
-  technical suffixes (e.g. `_LISA`) that pollute search results. Column name matching is
-  handled by `resolve` instead.
+- **`variable_fts`** — indexes variable `name`, `definition`, `description`,
+  `operational_definition`, and a `delivery_column_names` aggregate derived from
+  `variable_alias.delivery_column_name` (#735/#936). Uses `unicode61` tokenizer for
+  correct Swedish character handling and for SCB column-code tokens such as
+  `fedunsatreason_1` matching `fedunsatreason`. The FTS table's external content is the
+  `variable_fts_content` view, not `variable` directly, so delivery-column search stays
+  derived from the normalized alias table. FQID slugs are **not** indexed here.
 - **`classification_fts`** — indexes classification `short_name`, `name`, `name_en`,
   `description`. Searched via `search(..., type="classification")` (#350), the catalog
   discovery surface. Catalog-scoped: a `--register` scope excludes it. **Code-aware
