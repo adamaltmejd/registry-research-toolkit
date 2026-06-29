@@ -518,6 +518,151 @@ def test_variable_search_matches_delivery_column_name() -> None:
     assert rows[0].delivery_column_names == ("fedunsatreason_1",)
 
 
+def test_variable_search_preserves_whitespace_delivery_column_name() -> None:
+    conn = build_slugged_db(
+        variable=("Annual expense", 32183, 1001, "Kol"),
+        delivery_column_name="TOTAL COST",
+        variable_slug="annual-expense",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "TOTAL", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert str(rows[0].fqid) == "scb/lisa/annual-expense"
+    assert rows[0].delivery_column_names == ("TOTAL COST",)
+
+
+def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:
+    conn = build_slugged_db(
+        variable=("Plain variable", 32183, 1001, "HeldColumn"),
+        delivery_column_name="HeldColumn",
+        variable_slug="plain-variable",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="LeakTermAlias",
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "LeakTerm",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/plain-variable"},
+        delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
+    )
+
+    assert out.total_count == 0
+    assert out.results == ()
+
+
+def test_variable_search_delivery_scope_keeps_description_hit() -> None:
+    conn = build_slugged_db(
+        variable=("Plain variable", 32183, 1001, "HeldColumn"),
+        delivery_column_name="HeldColumn",
+        variable_slug="plain-variable",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="LeakTermAlias",
+    )
+    conn.execute(
+        "UPDATE variable SET description = ? WHERE slug = 'plain-variable'",
+        ("LeakTerm appears in the public description",),
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "LeakTerm",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/plain-variable"},
+        delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
+    )
+
+    assert out.total_count == 1
+    assert str(out.results[0].fqid) == "scb/lisa/plain-variable"
+    assert out.results[0].delivery_column_names == ("HeldColumn",)
+
+
+def test_variable_search_delivery_scope_filters_before_group_folding() -> None:
+    conn = build_slugged_db(
+        variable=("First variable", 32183, 1001, "HeldA"),
+        delivery_column_name="HeldA",
+        variable_slug="first-variable",
+    )
+    add_variable(
+        conn,
+        register_id=1,
+        var_id=42181,
+        name="Second variable",
+        slug="second-variable",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=42181,
+        delivery_column_name="HeldB",
+    )
+    first_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'first-variable'"
+    ).fetchone()[0]
+    second_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'second-variable'"
+    ).fetchone()[0]
+    conn.executemany(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, 10, ?)",
+        [(first_id, "LeakTermA"), (second_id, "LeakTermB")],
+    )
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (80, 'variable', 1, 'pair', 'Pair group', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (80, 'member', 0, 'member')"
+    )
+    conn.executemany(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) VALUES (80, ?, NULL)",
+        [(first_id,), (second_id,)],
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "LeakTerm",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/first-variable", "scb/lisa/second-variable"},
+        delivery_column_scope={
+            "scb/lisa/first-variable": {"HeldA"},
+            "scb/lisa/second-variable": {"HeldB"},
+        },
+    )
+
+    assert out.total_count == 0
+    assert out.results == ()
+
+
 def test_variable_name_hit_ranks_above_delivery_column_hit() -> None:
     conn = build_slugged_db(
         variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),

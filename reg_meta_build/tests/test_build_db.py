@@ -1977,7 +1977,7 @@ class TestOperationalDefinition:
             ).fetchall()
             assert len(rows) == 1, "column-only token must be FTS-matchable"
             assert rows[0]["provider_key"] == "779"
-            assert rows[0]["delivery_column_names"] == "fedunsatreason_1"
+            assert json.loads(rows[0]["delivery_column_names"]) == ["fedunsatreason_1"]
         finally:
             conn.close()
 

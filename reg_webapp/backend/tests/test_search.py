@@ -18,11 +18,14 @@ import pytest
 import reg_meta.db
 from fastapi.testclient import TestClient
 from reg_meta.queries import _code_system
-from reg_meta.search import CodeSearchResult
+from reg_meta.search import CodeSearchResult, SearchResults, VariableSearchResult
 from reg_webapp.app import create_app
+from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.golden import _Pin, apply_golden_boost
+from reg_webapp.routes import search as search_route
 from reg_webapp.routes.search import (
     _has_searchable_token,
+    _narrow_variable_leaf_columns,
     _rank_codes,
     _validated_limit,
 )
@@ -414,6 +417,86 @@ def test_validated_limit_clamps():
     assert _validated_limit(0) == 1
     assert _validated_limit(999) == 50
     assert _validated_limit(10) == 10
+
+
+def test_narrow_variable_leaf_columns_treats_none_as_concrete_column():
+    index = CatalogIndex(
+        bindings_by_variant={
+            "scb/lisa/individer-15plus": frozenset(
+                {("scb/lisa/kon", None), ("scb/lisa/kon", "Kon")}
+            )
+        },
+        period_range_by_register={"scb/lisa": ("2018", "2018")},
+        drift_warnings=(),
+    )
+    result = VariableSearchResult(
+        fqid="scb/lisa/kon",
+        name="Kön",
+        register="LISA",
+        delivery_column_names=("Kon", "KonOld"),
+        rank=0.0,
+    )
+
+    kept = _narrow_variable_leaf_columns([result], index)
+
+    assert len(kept) == 1
+    assert kept[0].delivery_column_names == ("Kon",)
+
+
+def test_filtered_variable_search_passes_delivery_scope_before_pagination(
+    client, monkeypatch
+):
+    index = CatalogIndex(
+        bindings_by_variant={
+            "scb/lisa/individer-15plus": frozenset({("scb/lisa/kon", "Kon")})
+        },
+        period_range_by_register={"scb/lisa": ("2018", "2018")},
+        drift_warnings=(),
+    )
+    client.app.state.catalog_index = index
+    calls: list[int | None] = []
+
+    def fake_search(
+        _conn,
+        query,
+        *,
+        field,
+        type,
+        fqids=None,
+        delivery_column_scope=None,
+        limit=50,
+        fold_groups=True,
+    ):
+        assert query == "needle"
+        assert field == "description"
+        assert type == "variable"
+        assert fqids == {"scb/lisa", "scb/lisa/kon"}
+        assert delivery_column_scope == {"scb/lisa/kon": frozenset({"Kon"})}
+        assert fold_groups
+        calls.append(limit)
+        rows = (
+            VariableSearchResult(
+                fqid="scb/lisa/kon",
+                name="needle variable",
+                register="LISA",
+                delivery_column_names=("Kon",),
+                rank=1.0,
+            ),
+        )
+        return SearchResults(
+            total_count=len(rows),
+            results=rows if limit is None else rows[:limit],
+        )
+
+    monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
+
+    body = client.get("/api/search?q=needle&type=variable&limit=1").json()
+    group = _group(body, "variables")
+
+    assert calls == [None]
+    assert group["total_count"] == 1
+    assert [r["name"] for r in group["results"]] == ["needle variable"]
+    assert group["results"][0]["delivery_column_names"] == ["Kon"]
 
 
 def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):

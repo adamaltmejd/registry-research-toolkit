@@ -417,6 +417,26 @@ def test_search_group_members_narrowed_to_held_column(lonfink_rep_jan_client):
     assert grp["total_count"] == len(grp["results"])
 
 
+def test_search_variable_leaf_column_chips_narrowed_to_held_column(
+    lonfink_jan_client,
+):
+    body = lonfink_jan_client.get("/api/search?q=LonFink&type=variable").json()
+    grp = {g["group"]: g for g in body["groups"]}["variables"]
+    leaf = next(
+        r
+        for r in grp["results"]
+        if r["type"] == "variable" and r["fqid"] == "scb/lisa/lonfink"
+    )
+    assert leaf["delivery_column_names"] == ["LonFinkJan"]
+
+
+def test_search_variable_leaf_drops_unheld_delivery_alias_hit(lonfink_jan_client):
+    body = lonfink_jan_client.get("/api/search?q=LonFinkFeb&type=variable").json()
+    grp = {g["group"]: g for g in body["groups"]}["variables"]
+    assert grp["results"] == []
+    assert grp["total_count"] == 0
+
+
 def test_search_group_column_grain_passthrough_global(global_client):
     # Fix 2 is index-gated: the global deployment (no index) shows BOTH representation
     # members of the `lonefink-rep` group — the column-grain narrow must not fire.

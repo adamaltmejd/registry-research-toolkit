@@ -180,7 +180,7 @@ describe("SearchView — typed result groups (#379)", () => {
   it("keeps the matched delivery column visible before the +N overflow", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
-      query: "target",
+      query: "target variable",
       groups: [
         {
           group: "variables",
@@ -203,7 +203,7 @@ describe("SearchView — typed result groups (#379)", () => {
         },
       ],
     } as unknown as SearchResponse);
-    setQuery("target");
+    setQuery("target variable");
     await render(SearchView);
 
     await expect.element(page.getByText("target_1")).toBeVisible();

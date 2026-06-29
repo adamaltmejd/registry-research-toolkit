@@ -7,8 +7,10 @@ the functions that library consumers import.
 
 from __future__ import annotations
 
+import json
 import math
 import re
+import unicodedata
 from typing import TYPE_CHECKING, Any
 
 from .catalog import Catalog, ConceptGroupMember, GroupFacet
@@ -32,7 +34,7 @@ from .search import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Collection, Iterable
+    from collections.abc import Collection, Iterable, Mapping
 
     from .catalog import ConceptGroupSummary
 
@@ -230,6 +232,7 @@ SEARCH_TYPES = frozenset({"register", "variable", "classification", "value", "al
 # A "real" FTS token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in unicode61 and would yield an empty phrase.
 _FTS_WORD_CHAR = re.compile(r"[^\W_]", re.UNICODE)
+_FTS_TOKEN = re.compile(r"[^\W_]+", re.UNICODE)
 
 
 def _fts_match_query(raw: str) -> str | None:
@@ -250,6 +253,74 @@ def _fts_match_query(raw: str) -> str | None:
         if _FTS_WORD_CHAR.search(tok)
     ]
     return " ".join(terms) if terms else None
+
+
+def _fold_fts_text(text: str) -> str:
+    return (
+        unicodedata.normalize("NFKD", text)
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .casefold()
+    )
+
+
+def _fts_terms(text: str) -> tuple[str, ...]:
+    return tuple(_FTS_TOKEN.findall(_fold_fts_text(text)))
+
+
+def _matches_fts_term(text: str | None, term: str) -> bool:
+    if not text:
+        return False
+    return any(token.startswith(term) for token in _fts_terms(text))
+
+
+def _depends_on_unheld_delivery_alias(
+    row: dict[str, Any], terms: tuple[str, ...], held_columns: tuple[str, ...]
+) -> bool:
+    public_text = (
+        row.get("variable_name"),
+        row.get("variable_definition"),
+        row.get("variable_description"),
+        row.get("variable_operational_definition"),
+    )
+    held_set = frozenset(held_columns)
+    unheld_columns = tuple(
+        col for col in row.get("delivery_column_names", ()) if col not in held_set
+    )
+    for term in terms:
+        if not any(_matches_fts_term(col, term) for col in unheld_columns):
+            continue
+        if any(_matches_fts_term(col, term) for col in held_columns):
+            continue
+        if any(_matches_fts_term(text, term) for text in public_text):
+            continue
+        return True
+    return False
+
+
+def _filter_variable_delivery_scope(
+    results: list[dict[str, Any]],
+    query: str,
+    delivery_column_scope: Mapping[str, Collection[str | None]],
+) -> list[dict[str, Any]]:
+    terms = _fts_terms(query)
+    filtered: list[dict[str, Any]] = []
+    for row in results:
+        if row["type"] != "variable":
+            filtered.append(row)
+            continue
+        held = delivery_column_scope.get(row.get("fqid"))
+        if held is None or not row.get("delivery_column_names"):
+            filtered.append(row)
+            continue
+        held_names = frozenset(col for col in held if col is not None)
+        held_columns = tuple(
+            col for col in row["delivery_column_names"] if col in held_names
+        )
+        if _depends_on_unheld_delivery_alias(row, terms, held_columns):
+            continue
+        filtered.append({**row, "delivery_column_names": held_columns})
+    return filtered
 
 
 def _escape_like(s: str) -> str:
@@ -354,7 +425,8 @@ def search(
     register: str | None = None,
     years: str | None = None,
     fqids: Collection[str] | None = None,
-    limit: int = 50,
+    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
+    limit: int | None = 50,
     offset: int = 0,
     fold_groups: bool = True,
 ) -> SearchResults:
@@ -403,9 +475,15 @@ def search(
     reg_meta stays steward-agnostic: the caller passes the allow-list; the set's
     provenance is opaque here.
 
-    Returns a `SearchResults` (`total_count` + the sliced, folded `results` tuple
-    of typed result models, discriminated on `type`). Doc results are NOT included
-    here — the CLI layer merges them separately.
+    delivery_column_scope is the optional column-grain companion to ``fqids`` for
+    variable FTS rows. It masks returned delivery-column aliases to held columns
+    and drops rows whose only query evidence is an unheld delivery alias, before
+    concept folding and pagination.
+
+    ``limit=None`` returns the full result set after ``offset``. Returns a
+    `SearchResults` (`total_count` + the sliced, folded `results` tuple of typed
+    result models, discriminated on `type`). Doc results are NOT included here —
+    the CLI layer merges them separately.
     """
     if field not in SEARCH_FIELDS:
         raise RegMetaError(
@@ -526,6 +604,10 @@ def search(
             for r in all_results
             if r["type"] not in _RESTRICTABLE_LEAF_TYPES or r.get("fqid") in allow
         ]
+    if delivery_column_scope is not None:
+        all_results = _filter_variable_delivery_scope(
+            all_results, query, delivery_column_scope
+        )
 
     if fold_groups:
         # Label hits ride the NAME surface (a group label is a concept name).
@@ -567,7 +649,9 @@ def search(
 
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
-    results = all_results[offset : offset + limit]
+    results = (
+        all_results[offset:] if limit is None else all_results[offset : offset + limit]
+    )
 
     # Annotate value/code rows AFTER the slice: the unscoped value arm
     # (`reg_ids is None`) returns rows unannotated with a `_code_id` marker, so we
@@ -873,7 +957,7 @@ def _search_description_variables(
         "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN variable v ON v.variable_id = vf.rowid "
         "WHERE variable_fts MATCH ? "
-        "ORDER BY vf.rank",
+        "ORDER BY rank",
         (query,),
     ).fetchall()
     results = []
@@ -895,15 +979,26 @@ def _search_description_variables(
                 "var_id": r["var_id"],
                 "variable_name": r["variable_name"],
                 "variable_definition": r["variable_definition"],
+                "variable_description": r["variable_description"],
                 "variable_operational_definition": r["variable_operational_definition"],
-                "delivery_column_names": tuple(
-                    (r["delivery_column_names"] or "").split()
+                "delivery_column_names": _decode_delivery_column_names(
+                    r["delivery_column_names"]
                 ),
                 "fts_rank": r["rank"],
                 "_variable_id": r["variable_id"],
             }
         )
     return results
+
+
+def _decode_delivery_column_names(raw: str | None) -> tuple[str, ...]:
+    """Decode the FTS content view's JSON aggregate of delivery column aliases."""
+    if not raw:
+        return ()
+    parsed = json.loads(raw)
+    if not isinstance(parsed, list):  # pragma: no cover - DB view owns shape
+        return ()
+    return tuple(str(v) for v in parsed if v is not None)
 
 
 # How many owning variables / classifications a single code hit carries on the
@@ -1999,7 +2094,12 @@ def _group_result_row(
 # `_code_id` is the value-arm's deferred-annotation marker (#352 perf):
 # `_annotate_value_page` removes it on the shown page, but list it here so a stray
 # marker can never leak past `_strip_internal_keys` into a public result row.
-_INTERNAL_KEYS = ("_variable_id", "_classification_id", "_code_id")
+_INTERNAL_KEYS = (
+    "_variable_id",
+    "_classification_id",
+    "_code_id",
+    "variable_description",
+)
 
 
 def _strip_internal_keys(results: list[dict[str, Any]]) -> None:

@@ -707,7 +707,7 @@ SELECT
     v.description,
     v.operational_definition,
     (
-        SELECT group_concat(delivery_column_name, ' ')
+        SELECT json_group_array(delivery_column_name)
         FROM (
             SELECT DISTINCT va.delivery_column_name
             FROM variable_alias va

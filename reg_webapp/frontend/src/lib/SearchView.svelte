@@ -399,9 +399,16 @@ function deliveryColumnNames(result: VariableSearchResult): string[] {
   return result.delivery_column_names ?? [];
 }
 
+function deliveryColumnQueryTerms(): string[] {
+  return q
+    .toLocaleLowerCase()
+    .split(/[^\p{Letter}\p{Number}]+/u)
+    .filter((term) => term !== "");
+}
+
 function deliveryColumnMatchesQuery(column: string): boolean {
-  const needle = q.toLocaleLowerCase();
-  return needle !== "" && column.toLocaleLowerCase().includes(needle);
+  const haystack = column.toLocaleLowerCase();
+  return deliveryColumnQueryTerms().some((term) => haystack.includes(term));
 }
 
 function visibleDeliveryColumns(result: VariableSearchResult): string[] {
