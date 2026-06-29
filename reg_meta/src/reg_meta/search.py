@@ -164,8 +164,9 @@ class ConceptGroupSearchResult(_CatalogModel):
 
 # ── Code/value search (#352) ─────────────────────────────────────────────────
 # A code hit's actionable target is the VARIABLE or CLASSIFICATION carrying the
-# code, not the bare (code, label) pair — so each hit surfaces a bounded
-# representative slice of its owners plus the full count (the SPA shows "+N more").
+# code, not the bare (code, label) pair — so each hit carries representative owner
+# annotations plus the full counts. The webapp can opt into all variable owners for
+# the paginated code rows when rendering an expanded list.
 
 
 class CodeOwnerVariable(_CatalogModel):
@@ -189,10 +190,10 @@ class CodeOwnerClassification(_CatalogModel):
 
 class CodeSearchResult(_CatalogModel):
     """A code/value hit (`value_code_fts` label match + code-shape match, #352).
-    `code`/`label` are the SCB value pair; `variables`/`classifications` are a
-    bounded representative slice of the owning entities (the researcher's actual
-    target), and `variable_count`/`classification_count` are the full totals before
-    the slice cap."""
+    `code`/`label` are the SCB value pair; `variables`/`classifications` annotate
+    owning entities (the researcher's actual target), and `variable_count`/
+    `classification_count` are the full totals before any caller-selected owner
+    slice cap."""
 
     type: Literal["code"] = "code"
     code: str

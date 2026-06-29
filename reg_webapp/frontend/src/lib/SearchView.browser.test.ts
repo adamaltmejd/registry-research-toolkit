@@ -305,7 +305,7 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText(/showing/)).not.toBeInTheDocument();
   });
 
-  it("collapses a code's owners behind a disclosure; expanding reveals owner variable links + a muted '+N more' (#808 round 5)", async () => {
+  it("expands a multi-variable code to the full variable-owner link list (#808 round 5)", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "11",
@@ -320,8 +320,14 @@ describe("SearchView — typed result groups (#379)", () => {
               label: "Man",
               variables: [
                 { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+                {
+                  fqid: "scb/lisa/civil",
+                  name: "Civilstånd",
+                  register: "LISA",
+                },
+                { fqid: "scb/rams/age", name: "Ålder", register: "RAMS" },
               ],
-              variable_count: 6,
+              variable_count: 3,
               classifications: [],
               classification_count: 0,
             },
@@ -333,8 +339,8 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("11");
     await render(SearchView);
 
-    // The collapsed row shows the MUTED owner-count summary…
-    await expect.element(page.getByText("6 variables")).toBeVisible();
+    // The collapsed row shows the MUTED variable-count summary…
+    await expect.element(page.getByText("3 variables")).toBeVisible();
     // …and the owner sub-rows are NOT rendered until expanded (the disclosure is
     // collapsed by default, so the owner link is absent).
     await expect
@@ -348,8 +354,13 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
-    // The slice cap surfaces as a muted, non-interactive "+5 more".
-    await expect.element(page.getByText("+5 more")).toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Civilstånd/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/civil");
+    await expect
+      .element(page.getByRole("link", { name: /Ålder/ }))
+      .toHaveAttribute("href", "/catalog/scb/rams/age");
+    await expect.element(page.getByText(/\+\d+ more/)).not.toBeInTheDocument();
   });
 
   it("makes an expanded owner-row link keyboard-focusable (#808 a11y)", async () => {
@@ -372,8 +383,9 @@ describe("SearchView — typed result groups (#379)", () => {
               label: "Man",
               variables: [
                 { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+                { fqid: "scb/rams/kon", name: "Kön RAMS", register: "RAMS" },
               ],
-              variable_count: 1,
+              variable_count: 2,
               classifications: [],
               classification_count: 0,
             },
@@ -441,12 +453,10 @@ describe("SearchView — typed result groups (#379)", () => {
     ).toBeNull();
   });
 
-  it("expands a code's CLASSIFICATION owners as a sub-table (distinguishable from variable owners) (#808 round 5)", async () => {
-    // A code carrying BOTH variable + classification owners: the collapsed row
-    // summarizes both counts; expanding reveals the variable owner (name + muted
-    // register) AND the classification owner (short_name, tagged "classification"
-    // so the two owner kinds are distinguishable). No owner classification is
-    // exploded inline on the collapsed row.
+  it("links a classification-backed code-system heading and keeps classification owners out of row matches (#808 round 5)", async () => {
+    // A code carrying BOTH variable + classification owners: the bucket heading is
+    // the classification link, while the row summarizes and expands variable
+    // matches only.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "11",
@@ -461,10 +471,11 @@ describe("SearchView — typed result groups (#379)", () => {
               label: "Man",
               variables: [
                 { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+                { fqid: "scb/rams/kon", name: "Kön RAMS", register: "RAMS" },
               ],
-              variable_count: 1,
+              variable_count: 2,
               classifications: [
-                { fqid: "class/sun2020", short_name: "SUN", name: null },
+                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
               ],
               classification_count: 1,
               code_system: "SUN2020",
@@ -477,27 +488,33 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("11");
     await render(SearchView);
 
-    // The collapsed row summarizes BOTH owner kinds; no owner is rendered yet.
     await expect
-      .element(page.getByText("1 variable · 1 classification"))
-      .toBeVisible();
+      .element(page.getByRole("link", { name: "SUN2020" }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+    // The collapsed row summarizes variable owners only; no owner is rendered yet.
+    await expect.element(page.getByText("2 variables")).toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: /Kön/ }))
+      .element(page.getByRole("link", { name: "Kön", exact: true }))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByText("1 classification"))
       .not.toBeInTheDocument();
 
-    // Expand: both owners become navigable sub-rows.
+    // Expand: variable owners become navigable sub-rows; the classification owner
+    // is not repeated inside the row because the heading is already linked.
     await page.getByText("Man").click();
     await expect
-      .element(page.getByRole("link", { name: /Kön/ }))
+      .element(page.getByRole("link", { name: /Kön LISA/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
-    // The classification owner links to its catalog node (short_name as the label,
-    // tagged "classification" to distinguish it from the variable owner).
     await expect
-      .element(page.getByRole("link", { name: /SUN/ }))
-      .toHaveAttribute("href", "/catalog/class/sun2020");
+      .element(page.getByRole("link", { name: /Kön RAMS/ }))
+      .toHaveAttribute("href", "/catalog/scb/rams/kon");
     expect(
-      document.querySelector(".search-view .owner-row .tag.tone-class"),
-    ).not.toBeNull();
+      document.querySelector(
+        ".search-view .owner-row[href='/catalog/class/sun2020']",
+      ),
+    ).toBeNull();
+    expect(document.querySelector(".search-view .owner-row .tag")).toBeNull();
   });
 
   it("links a concept-group result to its group page", async () => {
@@ -608,7 +625,7 @@ describe("SearchView — typed result groups (#379)", () => {
     ).toBeNull();
   });
 
-  it("renders a classification_succession result: terminal edition links + a folded edition history (#571)", async () => {
+  it("renders a classification_succession result: terminal edition links + flat edition rows (#571)", async () => {
     // A folded succession row in the classifications group: the TERMINAL edition is
     // the navigable header link; the editions fold under a <details> disclosure
     // (collapsed) with the "matched M of N editions" hint, each edition linkable.
@@ -656,14 +673,13 @@ describe("SearchView — typed result groups (#379)", () => {
 
     // The terminal edition is the always-visible header link.
     await expect
-      .element(page.getByRole("link", { name: /SUN/ }))
+      .element(page.getByRole("link", { name: "SUN matched 2 of 3 editions" }))
       .toHaveAttribute("href", "/catalog/class/sun2020");
     // The family hint reads "matched M of N editions"; the row is NOT a concept group.
     await expect
       .element(page.getByText("matched 2 of 3 editions"))
       .toBeVisible();
-    // Expand the <details> to reveal the per-edition links.
-    await page.getByText("matched 2 of 3 editions").click();
+    // Older editions are normal visible rows, not hidden behind a disclosure.
     await expect
       .element(page.getByRole("link", { name: /SUN 1996/ }))
       .toHaveAttribute("href", "/catalog/class/sun1996");
@@ -1346,7 +1362,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
 
     // Scope by the classification href; several groups share the same row class.
     const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view .cols-2 a.leaf-row[href='/catalog/class/sun2020']",
+      ".search-view a.leaf-row[href='/catalog/class/sun2020']",
     );
     expect(row).not.toBeNull();
     expect(row?.getAttribute("href")).toBe("/catalog/class/sun2020");
@@ -1620,12 +1636,11 @@ describe("SearchView — compact per-type tables (#808)", () => {
     ).toBeNull();
   });
 
-  it("renders codes as a code-first disclosure: highlighted code cell, muted owner count, owners revealed on expand (#808 round 5)", async () => {
+  it("renders a single-owner code as a code-first row with a muted variable detail link (#808 round 5)", async () => {
     // #808 round 5: each code-system bucket is a compact code-FIRST table — one row
-    // per code, the CODE the highlighted primary cell, then the Label and a muted
-    // owner-count summary. A code WITH owners is a disclosure that expands an owner
-    // sub-table; the owner VARIABLES are the navigable targets and the owner
-    // CLASSIFICATION owners appear too (tagged), but only AFTER expansion.
+    // per code, the CODE the highlighted primary cell, then the Label. A single
+    // variable owner is shown as muted detail context, not as an expandable row.
+    // The classification owner is represented by the linked bucket heading.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "man",
@@ -1655,30 +1670,21 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("man");
     await render(SearchView);
 
-    // The bucket heading names the classification/value-set the codes come from.
+    // The bucket heading names and links the classification/value-set the codes
+    // come from.
     await expect
-      .element(page.getByRole("heading", { name: "ATC" }))
-      .toBeVisible();
+      .element(page.getByRole("link", { name: "ATC", exact: true }))
+      .toHaveAttribute("href", "/catalog/class/atc");
     // One code row, with the highlighted primary CODE cell.
     const codeCell = document.querySelector(".search-view .code-cell");
     expect(codeCell?.textContent?.trim()).toBe("A10");
-    // The collapsed row shows the muted owner-count summary; owners are hidden.
     await expect
-      .element(page.getByText("1 variable · 1 classification"))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: /ATC-kod/ }))
+      .element(page.getByText("1 classification"))
       .not.toBeInTheDocument();
-
-    // Expand the disclosure — the owner variable is the navigable target.
-    await page.getByText("Diabetes drugs").click();
     await expect
       .element(page.getByRole("link", { name: /ATC-kod/ }))
       .toHaveAttribute("href", "/catalog/scb/lmed/atc");
-    // The owner classification surfaces in the sub-table (tagged "classification").
-    await expect
-      .element(page.getByRole("link", { name: /ATC code list/ }))
-      .toHaveAttribute("href", "/catalog/class/atc");
+    expect(document.querySelector(".search-view details.code-row")).toBeNull();
   });
 
   // Fix A keys the disclosure each-blocks by CONTENT identity + index (`code|i` for
@@ -1739,9 +1745,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect.element(page.getByText("First meaning")).toBeVisible();
     await expect.element(page.getByText("Second meaning")).toBeVisible();
     await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
-    expect(
-      document.querySelectorAll(".search-view details.code-row").length,
-    ).toBe(2);
+    expect(document.querySelectorAll(".search-view .code-row").length).toBe(2);
   });
 
   it("renders two group links sharing a group_key across registers without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
@@ -2220,6 +2224,9 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
     await expect
       .element(page.getByRole("heading", { name: "SUN2020" }))
       .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "SUN2020" }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
     await expect
       .element(page.getByRole("heading", { name: "Register-local" }))
       .toBeVisible();

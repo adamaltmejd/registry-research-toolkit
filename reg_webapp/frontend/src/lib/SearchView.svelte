@@ -23,7 +23,7 @@ import {
 } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
-import { Panel, Tag } from "./ui";
+import { Panel } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
 // the four ORDERED, typed groups GET /api/search returns (registers / variables /
@@ -257,6 +257,7 @@ type ClassificationDisplayResult =
   | ClassificationSearchResult
   | ClassificationSuccessionSearchResult
   | ConceptGroupSearchResult;
+type CodeOwnerVariable = CodeSearchResult["variables"][number];
 
 function isVariableResult(r: { type: string }): r is VariableSearchResult {
   return r.type === "variable";
@@ -355,42 +356,60 @@ const REGISTER_LOCAL_LABEL = "Register-local";
 type CodeSystemBucket = {
   key: string | null;
   label: string;
+  href: string | null;
   codes: CodeSearchResult[];
 };
+
+function codeSystemHref(result: CodeSearchResult): string | null {
+  const owner =
+    result.classifications.find(
+      (classification) =>
+        classification.fqid != null &&
+        (classification.short_name ?? classification.name) ===
+          result.code_system,
+    ) ??
+    result.classifications.find(
+      (classification) => classification.fqid != null,
+    );
+  return owner?.fqid ? catalogHref(owner.fqid) : null;
+}
+
 function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   const buckets = new Map<string | null, CodeSystemBucket>();
   for (const code of results) {
     const key = code.code_system || null;
     let bucket = buckets.get(key);
     if (!bucket) {
-      bucket = { key, label: key ?? REGISTER_LOCAL_LABEL, codes: [] };
+      bucket = {
+        key,
+        label: key ?? REGISTER_LOCAL_LABEL,
+        href: codeSystemHref(code),
+        codes: [],
+      };
       buckets.set(key, bucket);
+    } else if (bucket.href == null) {
+      bucket.href = codeSystemHref(code);
     }
     bucket.codes.push(code);
   }
   return [...buckets.values()];
 }
 
-// The collapsed code row's MUTED owner-count summary (#808 round 5): the full
-// owner totals (`variable_count` / `classification_count`, before the slice cap),
-// pluralized, joined with " · ", omitting a zero side — e.g. "11 variables",
-// "2 classifications", "11 variables · 2 classifications". An all-zero code shows
-// no summary (it's not a disclosure at all — see codeRow).
+// The collapsed code row's MUTED variable-count summary. Classification ownership is
+// represented by the bucket heading/link, so rows summarize variable matches only.
+// A single variable owner is shown as a detail line instead of an expandable count.
 function usageSummary(result: CodeSearchResult): string {
-  const parts: string[] = [];
-  if (result.variable_count > 0) {
-    parts.push(
-      `${result.variable_count} variable${result.variable_count === 1 ? "" : "s"}`,
-    );
-  }
-  if (result.classification_count > 0) {
-    parts.push(
-      `${result.classification_count} classification${
-        result.classification_count === 1 ? "" : "s"
-      }`,
-    );
-  }
-  return parts.join(" · ");
+  return result.variable_count > 1 ? `${result.variable_count} variables` : "";
+}
+
+function singleVariableOwner(
+  result: CodeSearchResult,
+): CodeOwnerVariable | null {
+  return result.variable_count === 1 ? (result.variables[0] ?? null) : null;
+}
+
+function hasExpandableVariableOwners(result: CodeSearchResult): boolean {
+  return result.variable_count > 1;
 }
 
 const DELIVERY_COLUMN_LIMIT = 3;
@@ -524,14 +543,12 @@ function closeSearch(): void {
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
                  ORDER. A leaf classification or concept group is a whole-row link;
                  classification-succession stays a column-spanning disclosure. -->
-            <div class="children table cols-2" role="presentation">
+            <div class="children table cols-1" role="presentation">
               {#each classificationDisplayResults(group) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else if isClassificationSuccession(result)}
-                  <div class="span-row integrated-list-row">
-                    {@render classificationSuccession(result)}
-                  </div>
+                  {@render classificationSuccession(result)}
                 {:else}
                   {@render classificationLeafRow(result)}
                 {/if}
@@ -541,21 +558,26 @@ function closeSearch(): void {
             <!-- Per-code-system buckets (#393 item 3, #808 round 5). The bucket
                  heading NAMES the classification / value-set the codes come from
                  (the null bucket → "Register-local"), so each code row need NOT
-                 repeat its owner classification. The codes are already
+                 repeat its owner classification. Classification-backed headings
+                 link to their classification page. The codes are already
                  item-2-ordered (classification-backed first), and
                  groupCodesBySystem preserves first-appearance order, so curated
                  systems lead; null/empty code_system folds into the trailing
                  "Register-local" bucket. Each bucket is a compact, code-FIRST list
-                 — the CODE is highlighted first, followed by the label and a MUTED
-                 owner-count summary. A code WITH
-                 owners is a native <details> DISCLOSURE (the <summary> is the
-                 aligned collapsed row, keyboard- + `aria-expanded`-correct for
-                 free) that expands an indented owner sub-table; an OWNERLESS code
-                 (the common value-set code) is a plain, non-expandable Code · Label
-                 row with no count. -->
+                 — the CODE is highlighted first, followed by the label and, for
+                 multi-variable hits, a MUTED variable-count summary. A code with
+                 multiple variable matches is a native <details> disclosure; a
+                 single variable match is shown as a muted detail line; a code with
+                 no variable matches is a plain Code · Label row. -->
             {#each groupCodesBySystem(codeDisplayResults(group)) as system (system.key)}
               <div class="code-system">
-                <h4 class="code-system-heading">{system.label}</h4>
+                <h4 class="code-system-heading">
+                  {#if system.href}
+                    <a href={system.href}>{system.label}</a>
+                  {:else}
+                    {system.label}
+                  {/if}
+                </h4>
                 <div class="children table codes" role="presentation">
                   <!-- Key by `code|index`, NOT the bare index: each code is a
                        native <details> disclosure, and a bare-index key makes
@@ -689,8 +711,7 @@ function closeSearch(): void {
 
 {#snippet detailLine(parts: string[])}
   <span class="result-detail muted">
-    {#each parts as part, i (i)}
-      {#if i > 0}<span class="detail-separator">·</span>{/if}
+    {#each parts as part (part)}
       <span>{part}</span>
     {/each}
   </span>
@@ -713,89 +734,80 @@ function closeSearch(): void {
   {#if c.terminal_fqid}
     <div class="leaf-row integrated-list-row{c.fqid ? '' : ' plain'}">
       <span class="name-cell">
-        {#if c.fqid}
-          <a class="row-link" href={catalogHref(c.fqid)}>{short ?? leafSlug(c.fqid)}</a>
-        {:else}
-          <span class="row-link plain">{short ?? "—"}</span>
+        <span class="result-title">
+          {#if c.fqid}
+            <a class="row-link" href={catalogHref(c.fqid)}
+              >{short ?? leafSlug(c.fqid)}</a
+            >
+          {:else}
+            <span class="row-link plain">{short ?? "—"}</span>
+          {/if}
+        </span>
+        {#if showName || c.terminal_fqid}
+          <span class="result-detail muted">
+            {#if showName}<span>{c.name}</span>{/if}
+            <a class="detail-link" href={catalogHref(c.terminal_fqid)}>
+              current edition
+            </a>
+          </span>
         {/if}
-        <a class="terminal-link" href={catalogHref(c.terminal_fqid)}>
-          → current edition
-        </a>
       </span>
-      <span class="name-full muted">{showName ? c.name : ""}</span>
     </div>
   {:else if c.fqid}
     <a class="leaf-row integrated-list-row" href={catalogHref(c.fqid)}>
-      <span class="name-cell"
-        ><span class="row-link">{short ?? leafSlug(c.fqid)}</span></span
-      >
-      <span class="name-full muted">{showName ? c.name : ""}</span>
+      <span class="name-cell">
+        <span class="result-title">
+          <span class="row-link">{short ?? leafSlug(c.fqid)}</span>
+        </span>
+        {#if showName}<span class="result-detail muted">{c.name}</span>{/if}
+      </span>
     </a>
   {:else}
     <div class="leaf-row integrated-list-row plain">
-      <span class="name-cell"><span class="row-link plain">{short ?? "—"}</span></span>
-      <span class="name-full muted">{showName ? c.name : ""}</span>
+      <span class="name-cell">
+        <span class="result-title">
+          <span class="row-link plain">{short ?? "—"}</span>
+        </span>
+        {#if showName}<span class="result-detail muted">{c.name}</span>{/if}
+      </span>
     </div>
   {/if}
 {/snippet}
 
-<!-- A compact, code-FIRST code row (#808 round 5) — a master-detail disclosure.
-     THREE collapsed columns: the highlighted primary CODE (mono + strong + a
-     code-tint ink), its Label, and a MUTED owner-COUNT summary ("11 variables" /
-     "2 classifications" / "11 variables · 2 classifications", omitting a zero
-     side). The owner classification is NOT named per row (the bucket heading
-     already names the value-set). A code's owners are no longer exploded inline:
-     a code WITH owners (variable_count or classification_count > 0) is a native
-     <details>, its <summary> the collapsed grid row (keyboard- + aria-expanded-
-     correct for free), expanding an indented owner SUB-TABLE — one row per owner
-     MATCH (variable owners first with their muted register, then classification
-     owners as a `class`-tone Tag), each a whole-row link to the owner's catalog
-     node (the row IS a flex `<a>`; a null-fqid owner → a non-link row), capped per
-     side with a muted "+N more" from the count vs the returned slice length. A
-     code with ZERO owners (the common classification value-set code) is a plain,
-     NON-expandable Code · Label row with no count and no disclosure. -->
+<!-- A compact, code-FIRST code row. Classification ownership is represented by the
+     bucket heading/link, so per-row matches are variables only. Multiple variable
+     owners use a native <details> disclosure; one owner is a non-expandable row
+     with the matched variable in a muted detail line; zero variable owners render
+     as a plain Code · Label row. -->
 {#snippet ownerSubRows(result: CodeSearchResult)}
   {#each result.variables as owner, i (i)}
     {#if owner.fqid}
-      <a class="owner-row" href={catalogHref(owner.fqid)}>
+      <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
         <span class="row-link">{owner.name ?? leafSlug(owner.fqid)}</span>
         {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
       </a>
     {:else}
-      <div class="owner-row plain">
+      <div class="owner-row integrated-list-row plain">
         <span class="row-link plain">{owner.name ?? "—"}</span>
         {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
       </div>
     {/if}
   {/each}
-  {#if result.variable_count > result.variables.length}
-    <div class="owner-row more-row">
-      <span class="more muted">
-        +{result.variable_count - result.variables.length} more
-      </span>
-    </div>
-  {/if}
-  {#each result.classifications as owner, i (i)}
-    {#if owner.fqid}
-      <a class="owner-row" href={catalogHref(owner.fqid)}>
-        <span class="row-link">{owner.short_name ?? owner.name ?? leafSlug(owner.fqid)}</span>
-        <span class="owner-kind"><Tag tone="class">classification</Tag></span>
-      </a>
-    {:else}
-      <div class="owner-row plain">
-        <span class="row-link plain">{owner.short_name ?? owner.name ?? "—"}</span>
-        <span class="owner-kind"><Tag tone="class">classification</Tag></span>
-      </div>
-    {/if}
-  {/each}
-  {#if result.classification_count > result.classifications.length}
-    <div class="owner-row more-row">
-      <span class="more muted">
-        +{result.classification_count - result.classifications.length} more
-      </span>
-    </div>
-  {/if}
 {/snippet}
+
+{#snippet singleOwnerLine(owner: CodeOwnerVariable)}
+  <span class="result-detail muted code-owner-single">
+    {#if owner.fqid}
+      <a class="detail-link" href={catalogHref(owner.fqid)}
+        >{owner.name ?? leafSlug(owner.fqid)}</a
+      >
+    {:else}
+      <span>{owner.name ?? "—"}</span>
+    {/if}
+    {#if owner.register}<span>{owner.register}</span>{/if}
+  </span>
+{/snippet}
+
 {#snippet codeCells(result: CodeSearchResult)}
   <span class="code-cells">
     <code class="code-cell mono">{result.code}</code>
@@ -804,13 +816,20 @@ function closeSearch(): void {
   </span>
 {/snippet}
 {#snippet codeRow(result: CodeSearchResult)}
-  {#if result.variable_count > 0 || result.classification_count > 0}
+  {@const singleOwner = singleVariableOwner(result)}
+  {#if hasExpandableVariableOwners(result)}
     <details class="code-row code-disclosure">
-      <summary class="integrated-list-row">{@render codeCells(result)}</summary>
+      <summary class="integrated-list-row code-summary">
+        <span class="disclosure-icon" aria-hidden="true"></span>
+        {@render codeCells(result)}
+      </summary>
       <div class="owner-table">{@render ownerSubRows(result)}</div>
     </details>
   {:else}
-    <div class="code-row integrated-list-row">{@render codeCells(result)}</div>
+    <div class="code-row integrated-list-row single-code-row">
+      {@render codeCells(result)}
+      {#if singleOwner}{@render singleOwnerLine(singleOwner)}{/if}
+    </div>
   {/if}
 {/snippet}
 
@@ -849,47 +868,67 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
-<!-- A folded classification-succession row (#571): unlike a concept group, the
-     terminal (current) edition IS navigable — so its `fqid` link is the always-
-     visible header. A <details> discloses the full edition chain (terminal-first,
-     descending year); each edition with a live `fqid` is itself a link. The
-     family hint reads "matched M of N editions". Member rows show the leaf SLUG
-     (not the full FQID), #808 round 2. -->
+<!-- A classification-succession family (#571): keep search flat like variable
+     concept groups. The current edition is the primary linked row; older
+     editions are normal linked rows underneath, not an in-list disclosure. -->
 {#snippet classificationSuccession(result: ClassificationSuccessionSearchResult)}
   {@const editions = result.editions ?? []}
-  <details class="concept-group">
-    <summary>
-      {#if result.fqid}
-        <a href={catalogHref(result.fqid)}>
-          <span class="label"
-            >{result.short_name ?? result.name ?? leafSlug(result.fqid)}</span
-          >
-        </a>
-      {:else}
-        <span class="label">{result.short_name ?? result.name ?? "—"}</span>
-      {/if}
-      <span class="count">
-        matched {result.matched_count} of {editions.length} editions
+  {@const primaryLabel = result.short_name ?? result.name ?? "—"}
+  {#if result.fqid}
+    <a class="leaf-row integrated-list-row group-result-row" href={catalogHref(result.fqid)}>
+      <span class="name-cell">
+        <span class="result-title">
+          <span class="row-link">{primaryLabel}</span>
+        </span>
+        {@render detailLine([
+          `matched ${result.matched_count} of ${editions.length} editions`,
+        ])}
       </span>
-    </summary>
-    <ul class="members">
-      {#each editions as edition, i (i)}
-        <li>
-          {#if edition.fqid}
-            <a href={catalogHref(edition.fqid)}>
-              <span class="label">{edition.name ?? edition.slug}</span>
-              <code class="member-slug">{edition.slug}</code>
-            </a>
-          {:else}
-            <span class="label">{edition.name ?? edition.slug}</span>
-          {/if}
-          {#if edition.effective_year != null}
-            <span class="register muted">{edition.effective_year}</span>
-          {/if}
-        </li>
-      {/each}
-    </ul>
-  </details>
+    </a>
+  {:else}
+    <div class="leaf-row integrated-list-row group-result-row plain">
+      <span class="name-cell">
+        <span class="result-title">
+          <span class="row-link plain">{primaryLabel}</span>
+        </span>
+        {@render detailLine([
+          `matched ${result.matched_count} of ${editions.length} editions`,
+        ])}
+      </span>
+    </div>
+  {/if}
+  {#each editions as edition, i (`${edition.fqid ?? edition.slug}|${i}`)}
+    {#if edition.fqid && edition.fqid !== result.fqid}
+      <a
+        class="leaf-row integrated-list-row group-member-row"
+        href={catalogHref(edition.fqid)}
+      >
+        <span class="name-cell">
+          <span class="result-title">
+            <span class="row-link">{edition.name ?? edition.slug}</span>
+          </span>
+          {@render detailLine([
+            edition.effective_year == null
+              ? "Edition"
+              : `superseded ${edition.effective_year}`,
+          ])}
+        </span>
+      </a>
+    {:else if !edition.fqid}
+      <div class="leaf-row integrated-list-row group-member-row plain">
+        <span class="name-cell">
+          <span class="result-title">
+            <span class="row-link plain">{edition.name ?? edition.slug}</span>
+          </span>
+          {@render detailLine([
+            edition.effective_year == null
+              ? "Edition"
+              : `superseded ${edition.effective_year}`,
+          ])}
+        </span>
+      </div>
+    {/if}
+  {/each}
 {/snippet}
 
 <!-- A documentation hit (#394): links to the minimal /doc viewer (the shell's
@@ -984,12 +1023,19 @@ function closeSearch(): void {
   }
   .code-system-heading {
     margin: 0;
-    padding: 0.5rem 0.75rem 0.3rem;
+    padding: 0.55rem 0.75rem 0.35rem;
     border-bottom: 1px solid var(--border);
-    background: var(--surface-sunken);
+    background: var(--surface);
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-muted);
+  }
+  .code-system-heading a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .code-system-heading a:hover {
+    color: var(--text);
   }
   .count {
     color: var(--text-muted);
@@ -1018,12 +1064,17 @@ function closeSearch(): void {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.25rem;
+    gap: 0.15rem 0.75rem;
     font-size: 0.9em;
     overflow-wrap: anywhere;
   }
-  .detail-separator {
-    color: var(--text-faint);
+  .detail-link {
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .detail-link:hover {
+    color: var(--accent-ink);
   }
   /* Clamp a register's description to ~2 lines in the result row; the full
      text lives on the register's own subject page (the #806 treatment). */
@@ -1035,11 +1086,6 @@ function closeSearch(): void {
     overflow: hidden;
     color: var(--text-muted);
     overflow-wrap: anywhere;
-  }
-  .terminal-link {
-    margin-left: 0.5rem;
-    font-size: 0.85em;
-    font-weight: 400;
   }
   .hit-detail {
     display: block;
@@ -1075,60 +1121,56 @@ function closeSearch(): void {
     align-items: stretch;
   }
   .children.table.cols-1 {
-    /* Full-width one-column result rows (registers, variables, group links). */
+    /* Full-width one-column result rows (registers, variables, classifications, groups). */
     grid-template-columns: minmax(0, 1fr);
   }
-  .children.table.cols-2 {
-    /* Classification · Name */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-  /* The codes bucket is a master-detail disclosure list (#808 round 5), NOT a flat
-     list: a `<details>` row must STACK its collapsed <summary> over its expanded
-     owner sub-table, which a `display:contents` grid leaf can't do. So the bucket
-     is a FLEX COLUMN of rows; column alignment lives on an inner `.code-cells`
-     grid that every collapsed row (a <summary> or the ownerless
-     <div>) share with the SAME template. A leading fixed-width MARKER column holds
-     the disclosure triangle (a custom rotating glyph — the native list marker is
-     suppressed so the cells don't wrap below it); ownerless rows reserve the same
-     marker column (empty) so every collapsed row lines up regardless of which rows
-     are disclosures. Overrides the shared
-     `.children.table` grid. */
+  /* The codes bucket is a master-detail disclosure list. A `<details>` row stacks
+     its collapsed summary over the expanded owner rows, so this bucket is a flex
+     column rather than a subgrid. */
   .children.table.codes {
     display: flex;
     flex-direction: column;
   }
   .code-cells {
     display: grid;
-    /* marker · Code(highlighted) · Label · usage-count. */
+    /* Code(highlighted) · Label · usage-count. */
     grid-template-columns:
-      1rem minmax(0, max-content) minmax(0, 1fr) minmax(0, max-content);
+      minmax(0, max-content) minmax(0, 1fr) minmax(0, max-content);
     column-gap: var(--space-3);
     align-items: baseline;
   }
   .code-cells > * {
     min-width: 0;
   }
-  /* Every `.code-cells` reserves the leading marker column with an empty `::before`
-     so ownerless rows and disclosure summaries align. Only a disclosure summary's
-     marker carries the triangle glyph (the native list marker is suppressed below so
-     the cells don't wrap onto a second line); it rotates down when the <details> is
-     open. */
-  .code-cells::before {
-    content: "";
+  .code-summary {
+    display: grid;
+    grid-template-columns: 0.85rem minmax(0, 1fr);
+    column-gap: 0.45rem;
+    align-items: baseline;
   }
-  .code-row > summary > .code-cells::before {
-    content: "▸";
+  .disclosure-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 0.85rem;
+    height: 0.85rem;
     color: var(--text-muted);
-    font-size: 0.8em;
-    transition: transform 0.12s ease;
+    transform-origin: 50% 50%;
+    transition: transform var(--motion-fast) ease;
   }
-  .code-row[open] > summary > .code-cells::before {
+  .disclosure-icon::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+  }
+  .code-row[open] > summary .disclosure-icon {
     transform: rotate(90deg);
   }
-  /* A code DISCLOSURE row: <details>; its <summary> carries the collapsed cells. A
-     non-disclosure (ownerless) code row carries its `.code-cells` directly. Both
-     get the same row padding + hairline so all collapsed rows align as one table.
-     The native disclosure marker is suppressed (the custom ::before is the glyph). */
+  /* A code DISCLOSURE row: <details>; its <summary> carries the collapsed cells.
+     Non-disclosure rows carry `.code-cells` directly plus an optional muted owner
+     detail line. The native marker is suppressed in favor of the centered chevron. */
   .code-row > summary {
     cursor: pointer;
     list-style: none;
@@ -1137,33 +1179,47 @@ function closeSearch(): void {
     display: none;
   }
   .code-row > summary,
-  .code-row:not(.code-disclosure) {
-    padding: 0.4rem 0.75rem;
+  .single-code-row {
+    padding: 0.45rem 0.75rem;
     border-bottom: 1px solid var(--border);
   }
-  .code-row:last-child > summary,
-  .code-row:last-child:not(.code-disclosure) {
+  .single-code-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .code-row:last-child:not([open]) > summary,
+  .code-row:last-child.single-code-row {
     border-bottom: none;
   }
-  /* The owner SUB-TABLE under an expanded disclosure: indented, one row per owner
-     match, each a flex whole-row `<a>` link or a non-link row. */
+  /* Expanded owner rows use the same integrated-list surface, not an inset mini
+     table: row highlights and separators span the full panel width. */
   .owner-table {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    margin: 0.4rem 0 0.6rem 1.25rem;
+    margin: 0;
   }
   .owner-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
     align-items: baseline;
-    gap: 0.5rem;
+    column-gap: 1rem;
+    row-gap: 0.1rem;
     color: inherit;
     text-decoration: none;
     overflow-wrap: anywhere;
     font-size: 0.9em;
+    padding: 0.35rem 0.75rem 0.35rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .owner-row > * {
+    min-width: 0;
   }
   .owner-row:hover .row-link {
-    text-decoration: underline;
+    color: var(--accent-ink);
+  }
+  .code-row:last-child .owner-row:last-child {
+    border-bottom: none;
   }
   /* Keyboard focus on a whole-row owner link. Unlike `.leaf-row`, an owner row IS a
      flex `<a>` with its own box, so a normal box-shadow focus ring draws fine (the
@@ -1172,9 +1228,6 @@ function closeSearch(): void {
     outline: none;
     box-shadow: var(--focus-ring);
     border-radius: var(--radius-sm);
-  }
-  .owner-kind {
-    line-height: 1;
   }
   /* A LEAF row is a real, keyboard-focusable box (an <a> whole-row link OR a <div>
      for the null-fqid / second-link cases) that spans every column and aligns its
@@ -1212,19 +1265,6 @@ function closeSearch(): void {
     box-shadow: var(--focus-ring);
     border-radius: var(--radius-sm);
   }
-  /* A FOLD row (currently classification succession <details>) spans all columns
-     and owns its own internal layout, sitting inline at its rank position. */
-  .span-row {
-    grid-column: 1 / -1;
-    border-bottom: 1px solid var(--border);
-  }
-  .span-row:last-child {
-    border-bottom: none;
-  }
-  .span-row > .concept-group {
-    margin: 0;
-    padding: 0.4rem 0.75rem;
-  }
   .group-result-row > .name-cell,
   .group-member-row > .name-cell {
     grid-column: 1 / -1;
@@ -1248,6 +1288,11 @@ function closeSearch(): void {
     align-items: baseline;
     gap: 0.2rem 0.35rem;
     min-width: 0;
+  }
+  @media (max-width: 640px) {
+    .owner-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
   .col-chip {
     display: inline-flex;
@@ -1275,10 +1320,6 @@ function closeSearch(): void {
     color: var(--cat-group-ink);
     font-weight: 600;
   }
-  .name-full {
-    font-size: 0.9em;
-    overflow-wrap: anywhere;
-  }
   /* The CODE is the highlighted primary column: mono + strong + a code-tint ink
      so it reads as the main thing in the row (#808 round 3). */
   .code-cell {
@@ -1290,45 +1331,11 @@ function closeSearch(): void {
   .code-label {
     overflow-wrap: anywhere;
   }
-  /* The MUTED owner-count summary in the collapsed code row's third column —
-     right-aligned to read as a trailing tally, mirroring the variable slug cell. */
+  /* The MUTED variable-count summary in the collapsed code row's third column. */
   .usage-count {
     font-size: 0.85em;
     text-align: right;
     white-space: nowrap;
-  }
-
-  .concept-group {
-    margin-bottom: 0.35rem;
-  }
-  .concept-group summary {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.5rem 0.75rem;
-    cursor: pointer;
-  }
-  .concept-group .label {
-    font-weight: 600;
-    overflow-wrap: anywhere;
-  }
-  .member-slug {
-    color: var(--text-muted);
-    font-size: 0.85em;
-    font-family: var(--font-mono);
-  }
-  .members {
-    list-style: none;
-    padding: 0;
-    margin: 0.5rem 0 0.5rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-  .members a {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
   }
   /* The docs group (#394) stays a simple vertical list. */
   .results {

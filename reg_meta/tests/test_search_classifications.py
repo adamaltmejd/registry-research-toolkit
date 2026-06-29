@@ -534,6 +534,38 @@ def test_variable_search_preserves_whitespace_delivery_column_name() -> None:
     assert rows[0].delivery_column_names == ("TOTAL COST",)
 
 
+def test_variable_search_reads_alias_table_when_fts_payload_is_legacy_text() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="zedalias",
+    )
+    _rebuild_fts(conn)
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'formal-utbildning'"
+    ).fetchone()[0]
+    conn.execute(
+        "UPDATE variable_fts SET delivery_column_names = ? WHERE rowid = ?",
+        ("fedunsatreason_1 zedalias", variable_id),
+    )
+
+    out = search(conn, "fedunsatreason", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert str(rows[0].fqid) == "scb/lisa/formal-utbildning"
+    assert rows[0].delivery_column_names == ("fedunsatreason_1", "zedalias")
+
+
 def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:
     conn = build_slugged_db(
         variable=("Plain variable", 32183, 1001, "HeldColumn"),

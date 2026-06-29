@@ -1103,10 +1103,10 @@ export interface components {
         /**
          * CodeSearchResult
          * @description A code/value hit (`value_code_fts` label match + code-shape match, #352).
-         *     `code`/`label` are the SCB value pair; `variables`/`classifications` are a
-         *     bounded representative slice of the owning entities (the researcher's actual
-         *     target), and `variable_count`/`classification_count` are the full totals before
-         *     the slice cap.
+         *     `code`/`label` are the SCB value pair; `variables`/`classifications` annotate
+         *     owning entities (the researcher's actual target), and `variable_count`/
+         *     `classification_count` are the full totals before any caller-selected owner
+         *     slice cap.
          */
         CodeSearchResult: {
             /**

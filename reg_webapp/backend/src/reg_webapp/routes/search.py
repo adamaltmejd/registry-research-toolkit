@@ -389,6 +389,7 @@ def get_search(
                 type="value",
                 limit=limit,
                 fold_groups=False,
+                code_variable_owner_limit=None,
             )
             boosted_codes = cast(
                 "list[CodeSearchResult]",
