@@ -4,14 +4,12 @@ import type {
   ClassificationSuccessionSearchResult,
   CodeSearchResult,
   ConceptGroupSearchResult,
-  DocResult,
-  DocSearchResponse,
   RegisterSearchResult,
   SearchResponse,
   SearchType,
   VariableSearchResult,
 } from "./api";
-import { docSearch, SEARCH_MIN_QUERY_LENGTH, search } from "./api";
+import { SEARCH_MIN_QUERY_LENGTH, search } from "./api";
 import { asyncResource } from "./async.svelte";
 import {
   catalogHref,
@@ -21,7 +19,6 @@ import {
   leafSlug,
   showingOf,
 } from "./catalog";
-import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
 import { Panel } from "./ui";
 
@@ -103,34 +100,6 @@ const results = asyncResource<SearchResponse>((signal) =>
     : Promise.resolve({ kind: "search", query: q, groups: [] }),
 );
 
-// A SEPARATE resource for the additive "Documentation" group (#394), keyed on the
-// same `q`. Kept independent from `results` for FAILURE ISOLATION: a docs failure
-// (error/timeout) or an absent docs index (`ingested:false`) must NEVER blank or
-// error the four main groups — there is intentionally no docs loading indicator
-// and no docs error banner; silent omission IS the isolation. Short-circuits a
-// too-short query to an empty response without a network call (mirrors `results`).
-// Docs is shown ONLY in the unscoped (`all`) view: the #393 toggle has no Docs
-// option, and a scoped search means "show only that one group", so any non-`all`
-// scope short-circuits to the empty `ingested:false` response (no fetch, and
-// `docsHasHits` stays false → the section is hidden). Read `searchType` HERE so the
-// resource refetches when the scope returns to `all`.
-const docs = asyncResource<DocSearchResponse>((signal) =>
-  q.length >= SEARCH_MIN_QUERY_LENGTH && searchType === "all"
-    ? docSearch(q, { signal })
-    : Promise.resolve({
-        kind: "doc-search",
-        query: q,
-        ingested: false,
-        total_count: 0,
-        results: [],
-      }),
-);
-
-// The docs group renders ONLY when the index is present AND there are hits.
-const docsHasHits = $derived(
-  !!docs.data?.ingested && (docs.data?.results.length ?? 0) > 0,
-);
-
 function syncDetailSeparators(node: HTMLElement): {
   update: () => void;
   destroy: () => void;
@@ -195,9 +164,6 @@ const groups = $derived(results.data?.groups ?? []);
 // A searched query (≥ min length) with zero results across every group (distinct
 // from the empty / keep-typing hints and from loading). Gate on the min length so
 // a 1-char query shows the keep-typing hint, not a spurious "no matches".
-// The docs group participates in "any results at all" so we never show "No
-// matches" above a rendered docs group; gated on `!docs.loading && !docsHasHits`
-// so a docs failure/empty/absent-index still lets the main "No matches" show.
 // A group the render loop SKIPS (an unknown/future `group` value with no
 // GROUP_HEADINGS entry — see the render guard below) must NOT count as a match:
 // its non-empty `results` render nothing, so without this a response carrying ONLY
@@ -212,9 +178,7 @@ const noMatches = $derived(
     !results.error &&
     groups.every(
       (g) => displayResults(g).length === 0 || !(g.group in GROUP_HEADINGS),
-    ) &&
-    !docs.loading &&
-    !docsHasHits,
+    ),
 );
 
 // Per-group heading labels. Keep these as normal text headings; result type and
@@ -370,10 +334,38 @@ function codeDisplayResults(group: SearchGroup): CodeSearchResult[] {
     : [];
 }
 
+function normalizedDisplayText(value: string | null | undefined): string {
+  return (value ?? "").trim().replace(/\s+/g, " ").toLocaleLowerCase("sv-SE");
+}
+
+function comparableDefinitionText(value: string | null | undefined): string {
+  return normalizedDisplayText(value)
+    .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+    .replace(/\bandelen\b/gu, "andel")
+    .replace(/\bunder året\b/gu, "")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function isRepeatedDefinition(
+  name: string | null | undefined,
+  definition: string | null | undefined,
+): boolean {
+  if (normalizedDisplayText(name) === normalizedDisplayText(definition)) {
+    return true;
+  }
+  return (
+    comparableDefinitionText(name) === comparableDefinitionText(definition)
+  );
+}
+
 function variableDetailParts(v: VariableSearchResult): string[] {
+  const definition = isRepeatedDefinition(v.name, v.definition)
+    ? null
+    : v.definition;
   return [
     v.register,
-    v.definition,
+    definition,
     v.operational_definition
       ? `Operational: ${v.operational_definition}`
       : null,
@@ -683,37 +675,6 @@ function closeSearch(): void {
     {/each}
   {/if}
 
-  <!-- Additive "Documentation" group (#394), driven by the SEPARATE `docs`
-       resource and rendered as a SIBLING of the main-search `{#if}` block — so it
-       shows whenever it has hits REGARDLESS of the main groups' loading / error /
-       timeout / no-match state (full failure isolation: e.g. the main /api/search
-       codes sub-query can time out while the separate docs index resolves fine).
-       Its own panel with a literal heading (NOT folded into GROUP_HEADINGS,
-       which is keyed on the four main group literals). A docs failure / empty /
-       absent index is silently omitted; the empty + too-short query states
-       short-circuit `docs` to `ingested:false`, so `docsHasHits` is false there. -->
-  {#if docsHasHits && docs.data}
-    {@const caption = showingOf(
-      docs.data.results.length,
-      docs.data.total_count,
-    )}
-    <div class="group">
-      <Panel title="Documentation" flush>
-        {#snippet meta()}
-          {#if caption}<span class="count">{caption}</span>{/if}
-        {/snippet}
-        <ul class="results">
-          <!-- Key by array INDEX: like the other groups, this list is replaced
-               wholesale per query, so the index is stable + unique within a render
-               (a natural key like `filename` could collide and crash the keyed
-               each — see the #379/#391 each_key_duplicate lesson above). -->
-          {#each docs.data.results as result, i (i)}
-            <li class="integrated-list-row">{@render docHit(result)}</li>
-          {/each}
-        </ul>
-      </Panel>
-    </div>
-  {/if}
 </article>
 
 <!-- A LEAF register row: same one-column visual shape as variable rows. -->
@@ -860,8 +821,8 @@ function closeSearch(): void {
 <!-- A compact, code-FIRST code row. The bucket heading/link represents the normal
      single-classification owner; reused codes with multiple classifications repeat
      the secondary classification owners in the expansion. Multiple owners use a
-     native <details> disclosure; one variable owner is a non-expandable row with
-     the matched variable in a muted detail line; zero owners render as a plain
+     native <details> disclosure; one variable owner is a whole-row link with
+     matched variable context inline; zero owners render as a plain
      Code · Label row. -->
 {#snippet ownerSubRows(result: CodeSearchResult)}
   {@const classificationOwners = secondaryClassificationOwners(result)}
@@ -869,13 +830,11 @@ function closeSearch(): void {
   {#each result.variables as owner, i (i)}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
-        <span class="row-link">{owner.name ?? leafSlug(owner.fqid)}</span>
-        {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
+        {@render ownerInline(owner.name ?? leafSlug(owner.fqid), owner.register)}
       </a>
     {:else}
       <div class="owner-row integrated-list-row plain">
-        <span class="row-link plain">{owner.name ?? "—"}</span>
-        {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
+        {@render ownerInline(owner.name ?? "—", owner.register)}
       </div>
     {/if}
   {/each}
@@ -887,40 +846,46 @@ function closeSearch(): void {
     </div>
   {/if}
   {#each classificationOwners as owner, i (`${owner.fqid ?? owner.short_name ?? owner.name}|${i}`)}
+    {@const label =
+      owner.short_name ?? owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+    {@const detail = owner.name && owner.name !== label ? owner.name : null}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
-        <span class="row-link">
-          {owner.short_name ?? owner.name ?? leafSlug(owner.fqid)}
-        </span>
-        {#if owner.name}<span class="register muted">{owner.name}</span>{/if}
+        {@render ownerInline(label, detail)}
       </a>
     {:else}
       <div class="owner-row integrated-list-row plain">
-        <span class="row-link plain">{owner.short_name ?? owner.name ?? "—"}</span>
-        {#if owner.name}<span class="register muted">{owner.name}</span>{/if}
+        {@render ownerInline(label, detail)}
       </div>
     {/if}
   {/each}
 {/snippet}
 
+{#snippet ownerInline(label: string, detail: string | null | undefined)}
+  <span class="owner-inline">
+    <span class="owner-name">{label}</span>
+    {#if detail}<span class="owner-context muted">{detail}</span>{/if}
+  </span>
+{/snippet}
+
 {#snippet singleOwnerLine(owner: CodeOwnerVariable)}
-  <span class="result-detail muted code-owner-single">
-    {#if owner.fqid}
-      <a class="detail-link" href={catalogHref(owner.fqid)}
-        >{owner.name ?? leafSlug(owner.fqid)}</a
-      >
-    {:else}
-      <span>{owner.name ?? "—"}</span>
-    {/if}
-    {#if owner.register}<span>{owner.register}</span>{/if}
+  <span class="owner-inline muted code-owner-single">
+    <span class="owner-name">
+      {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+    </span>
+    {#if owner.register}<span class="owner-context">{owner.register}</span>{/if}
   </span>
 {/snippet}
 
 {#snippet codeCells(result: CodeSearchResult)}
+  {@const usage = usageSummary(result)}
   <span class="code-cells">
-    <code class="code-cell mono">{result.code}</code>
-    <span class="code-label">{result.label}</span>
-    <span class="usage-count muted">{usageSummary(result)}</span>
+    <span class="code-expression">
+      <code class="code-cell mono">{result.code}</code>
+      <span class="code-equals">=</span>
+      <span class="code-label">{result.label}</span>
+    </span>
+    {#if usage}<span class="usage-count muted">{usage}</span>{/if}
   </span>
 {/snippet}
 {#snippet codeRow(result: CodeSearchResult)}
@@ -933,6 +898,14 @@ function closeSearch(): void {
       </summary>
       <div class="owner-table">{@render ownerSubRows(result)}</div>
     </details>
+  {:else if singleOwner?.fqid}
+    <a
+      class="code-row integrated-list-row single-code-row"
+      href={catalogHref(singleOwner.fqid)}
+    >
+      {@render codeCells(result)}
+      {@render singleOwnerLine(singleOwner)}
+    </a>
   {:else}
     <div class="code-row integrated-list-row single-code-row">
       {@render codeCells(result)}
@@ -1039,29 +1012,6 @@ function closeSearch(): void {
   {/each}
 {/snippet}
 
-<!-- A documentation hit (#394): links to the minimal /doc viewer (the shell's
-     use:link intercepts it). `snippet` is an FTS EXCERPT rendered through the
-     same SAFE inline-emphasis subset as DocMentionsPanel: parse into DATA
-     segments, then interpolate each `{seg.text}` so Svelte auto-escapes it.
-     NEVER {@html}, as the full body is never fetched/rendered (it lives at the
-     SCB source). -->
-{#snippet docHit(result: DocResult)}
-  <a href={`/doc/${encodeURIComponent(result.filename)}`}>
-    <span class="label">{result.display_name ?? result.filename}</span>
-  </a>
-  {#if result.register}
-    <span class="register muted">{result.register}</span>
-  {/if}
-  {#if result.snippet}
-    <span class="hit-detail muted"
-      >{#each parseInlineMarkdown(result.snippet) as seg, si (si)}{#if seg.emphasis === "strong"}<mark
-          >{seg.text}</mark
-        >{:else if seg.emphasis === "em"}<em>{seg.text}</em
-        >{:else}{seg.text}{/if}{/each}</span
-    >
-  {/if}
-{/snippet}
-
 <style>
   .search-heading {
     display: flex;
@@ -1161,13 +1111,6 @@ function closeSearch(): void {
   .row-link.plain {
     color: var(--text);
   }
-  /* Register text outside variable result pills, e.g. code owners and group folds. */
-  .register {
-    overflow-wrap: anywhere;
-  }
-  .register.muted {
-    font-size: 0.85em;
-  }
   .result-detail {
     display: flex;
     flex-wrap: wrap;
@@ -1198,17 +1141,6 @@ function closeSearch(): void {
     color: var(--text-muted);
     overflow-wrap: anywhere;
   }
-  .hit-detail {
-    display: block;
-    font-size: 0.9em;
-  }
-  .hit-detail mark {
-    background: var(--accent-bg);
-    color: var(--accent-ink);
-    border-radius: var(--radius);
-    padding: 0 0.1em;
-  }
-
   /* ── Integrated result list (#808 round 3 / a11y) ─────────────────────────
      Mirrors CatalogNodeView's `.children.table`: one grid on the container
      aligns columns ACROSS rows; a LEAF row's <a> is a SUBGRID box (`display:grid`
@@ -1251,14 +1183,21 @@ function closeSearch(): void {
   }
   .code-cells {
     display: grid;
-    /* Code(highlighted) · Label · usage-count. */
-    grid-template-columns:
-      minmax(0, max-content) minmax(0, 1fr) minmax(0, max-content);
+    grid-template-columns: minmax(0, 1fr) max-content;
     column-gap: var(--space-3);
+    row-gap: 0.1rem;
     align-items: baseline;
   }
   .code-cells > * {
     min-width: 0;
+  }
+  .code-expression {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.05rem 0.35rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .code-summary {
     display: grid;
@@ -1306,10 +1245,17 @@ function closeSearch(): void {
     flex-direction: column;
     gap: 0.1rem;
     padding-left: var(--code-text-start);
+    color: inherit;
+    text-decoration: none;
   }
   .code-row:last-child:not([open]) > summary,
   .code-row:last-child.single-code-row {
     border-bottom: none;
+  }
+  a.single-code-row:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
   }
   /* Expanded owner rows use the same integrated-list surface, not an inset mini
      table: row highlights and separators span the full panel width. */
@@ -1319,15 +1265,11 @@ function closeSearch(): void {
     margin: 0;
   }
   .owner-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    display: flex;
     align-items: baseline;
-    column-gap: 1rem;
-    row-gap: 0.1rem;
     color: inherit;
     text-decoration: none;
     overflow-wrap: anywhere;
-    font-size: 0.9em;
     padding: 0.35rem var(--code-row-inline) 0.35rem
       var(--code-text-start);
     border-bottom: 1px solid var(--border);
@@ -1335,11 +1277,21 @@ function closeSearch(): void {
   .owner-row > * {
     min-width: 0;
   }
-  .owner-note > * {
-    grid-column: 1 / -1;
+  .owner-inline {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.1rem 0.45rem;
+    min-width: 0;
+    color: var(--text-muted);
+    font-size: 0.9em;
   }
-  .owner-row:hover .row-link {
-    color: var(--accent-ink);
+  .owner-name {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .owner-context {
+    overflow-wrap: anywhere;
   }
   .code-row:last-child .owner-row:last-child {
     border-bottom: none;
@@ -1412,11 +1364,6 @@ function closeSearch(): void {
     gap: 0.2rem 0.35rem;
     min-width: 0;
   }
-  @media (max-width: 640px) {
-    .owner-row {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
   .col-chip {
     display: inline-flex;
     align-items: baseline;
@@ -1443,38 +1390,28 @@ function closeSearch(): void {
     color: var(--cat-group-ink);
     font-weight: 600;
   }
-  /* The CODE is the highlighted primary column: mono + strong + a code-tint ink
-     so it reads as the main thing in the row (#808 round 3). */
+  /* Code and label form one expression ("code = label") so the value reads as a
+     paired token rather than two unrelated columns. */
   .code-cell {
     font-family: var(--font-mono);
-    font-weight: 700;
-    color: var(--cat-code-ink);
+    font-weight: 600;
+    color: var(--text);
     overflow-wrap: anywhere;
   }
   .code-label {
+    font-weight: 600;
+    color: var(--text);
     overflow-wrap: anywhere;
+  }
+  .code-equals {
+    color: var(--text-muted);
+    font-weight: 600;
   }
   /* The MUTED variable-count summary in the collapsed code row's third column. */
   .usage-count {
     font-size: 0.85em;
     text-align: right;
     white-space: nowrap;
-  }
-  /* The docs group (#394) stays a simple vertical list. */
-  .results {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .results li {
-    padding: 0.4rem 0.75rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .results li:last-child {
-    border-bottom: none;
   }
   .more {
     font-size: 0.85em;

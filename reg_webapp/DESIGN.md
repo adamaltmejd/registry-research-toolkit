@@ -357,19 +357,17 @@ on `/search`, typing live-refines with replaceState. `SearchView` renders an "Al
 Registers · Variables · Classifications · Codes" scope toggle backed by `?type=` (URL
 state, like `?q=`/`?period`; `all` is omitted from the canonical URL), a Close control
 that `replace()`s back to the route that entered search (or `/catalog` for a cold
-deep-link), and variable rows whose heading carries register and delivery-column pills
-plus `operational_definition` when present; the "Variables" group heading itself stays
-plain text. The omnibox preserves an active scope when re-querying. The **docs group**
-ships as a 5th sibling group in `SearchView.svelte` (#394): it calls the DEDICATED
-`/api/docs/search` endpoint via a SECOND, independent `asyncResource` — failure-isolated
-from the four main groups (a docs failure, an absent index returning `ingested:false`,
-or an empty result silently omits the docs section and never blanks the main groups).
-The `/doc/<filename>` route (router `Route` union arm `{name:"doc",identifier}`) renders
-`DocView.svelte`: title, register/variable/tags, a `source_url` link to the SCB source
-PDF (resolved from the curated map at doc-DB build, #372; None when uncurated) with
-`source_title` as label, and a bounded `excerpt`; 404 distinguishes "not ingested" vs
-"not found"; `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full
-converted body is never fetched.
+deep-link), and variable rows whose heading carries delivery-column pills while
+register, definition, and `operational_definition` live in the muted detail line; the
+"Variables" group heading itself stays plain text. The omnibox preserves an active scope
+when re-querying. Global search does **not** render documentation results; documentation
+is reached from item pages via `DocMentionsPanel` and then the `/doc/<filename>` route
+(router `Route` union arm `{name:"doc",identifier}`), which renders `DocView.svelte`:
+title, register/variable/tags, a `source_url` link to the SCB source PDF (resolved from
+the curated map at doc-DB build, #372; None when uncurated) with `source_title` as
+label, and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
+`snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
+is never fetched.
 
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
@@ -380,11 +378,11 @@ hits ≥2 editions of the same chain collapses to one
 `ClassificationSuccessionSearchResult` keyed on the terminal edition, carrying the full
 `editions` chain and `matched_count`) ⧺ folded umbrella concept-group rows
 (`type: "group"`, #516 — e.g. `group:sun`)), and `codes` (#352 — value-label hits
-annotated with their owning variables/classifications). **Docs (#354) join as a NEW arm
-of the `SearchGroup` union + new result models — existing groups are never reshaped.**
-The SPA must tolerate an unknown `group` value (skip it) so a new group can ship before
-the SPA renders it (the same payload-skew tolerance the `?period` additive fields rely
-on). Each result carries its navigable `fqid` and a `rank: float` (the FTS rank the
+annotated with their owning variables/classifications). The reserved docs arm remains
+unused by global search; docs stay on the separate `/api/docs/*` endpoints and item-page
+hooks. The SPA must tolerate an unknown `group` value (skip it) so a new group can ship
+before the SPA renders it (the same payload-skew tolerance the `?period` additive fields
+rely on). Each result carries its navigable `fqid` and a `rank: float` (the FTS rank the
 CLI's doc-merge interleaves by, #701); results within a group are pre-sorted by FTS rank
 before grouping, so the SPA may ignore `rank` — it is present on the wire as the shared
 sort key.
@@ -473,30 +471,26 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   (search / for-variable) or 404 "not ingested" (doc get). When present, the per-request
   open is `conn.docs_conn` (same threadpool-safe model as `catalog_conn`,
   `check_schema=False`).
-- **Not folded into `/api/search`**: the `SearchGroup` union reserves a `docs` arm (#350
-  contract), but it remains unused — the docs index is a *separate optional DB* and its
-  `ingested` degradation doesn't map onto a group's `total_count`/`results` shape, so
-  folding it into the omnibox endpoint would couple `/api/search` to a second DB open on
-  every search request. Instead (#394), `SearchView.svelte` fires a SECOND, independent
-  `asyncResource` directly at `/api/docs/search` and renders the results as a 5th
-  sibling group — failure-isolated, silently omitted when the docs index is absent or
-  empty, and never able to blank the four main groups. The SPA shows the docs group ONLY
-  under the unscoped (`all`) view (#393): the scope toggle has no Docs option, and a
-  non-`all` `?type=` short-circuits the docs fetch so a scoped search shows just its one
-  group. The reserved `docs` `SearchGroup` arm stays unused; the separation is the right
-  call given the optional-DB / degradation rationale above. The `/api/docs/for-variable`
-  leaf hook has its own SPA consumer (#402): `BindingLeafView.svelte` renders a
-  `DocMentionsPanel` sibling of the lineage panels, firing a SEPARATE independent
-  `asyncResource` at `/api/docs/for-variable` — a distinct failure domain (a docs error,
-  timeout, or absent index never blanks the leaf). The panel omits the entire section
-  when the response is empty in any sense (`ingested:false`, `register_ingested:false`,
-  or zero results), mirroring the omit-when-empty behaviour of `HistoryGraph` and
-  `LineageDetails` (#612); loading and error states still render inline, so an in-flight
-  or errored fetch never reads as a confirmed absence. When results are present, fuzzy
-  hits are labelled as such; each hit links to the `/doc/<filename>` viewer and renders
-  the FTS snippet via a safe inline-emphasis subset (`**…**` → `<mark>` for matched-term
-  highlight, `*…*`/`_…_` → `<em>`) through auto-escaped Svelte interpolation — never
-  `{@html}`, still excerpt-only.
+- **Not folded into `/api/search` or global SearchView**: the `SearchGroup` union
+  reserves a `docs` arm (#350 contract), but it remains unused — the docs index is a
+  *separate optional DB* and its `ingested` degradation doesn't map onto a group's
+  `total_count`/`results` shape, so folding it into the omnibox endpoint would couple
+  `/api/search` to a second DB open on every search request. `SearchView.svelte` no
+  longer calls `/api/docs/search` or renders a docs section; the docs search endpoint
+  remains available for doc-specific callers, while the SPA entrypoint is through item
+  pages. The `/api/docs/for-variable` leaf hook has its own SPA consumer (#402):
+  `BindingLeafView.svelte` renders a `DocMentionsPanel` sibling of the lineage panels,
+  firing a SEPARATE independent `asyncResource` at `/api/docs/for-variable` — a distinct
+  failure domain (a docs error, timeout, or absent index never blanks the leaf). The
+  panel omits the entire section when the response is empty in any sense
+  (`ingested:false`, `register_ingested:false`, or zero results), mirroring the
+  omit-when-empty behaviour of `HistoryGraph` and `LineageDetails` (#612); loading and
+  error states still render inline, so an in-flight or errored fetch never reads as a
+  confirmed absence. When results are present, fuzzy hits are labelled as such; each hit
+  links to the `/doc/<filename>` viewer and renders the FTS snippet via a safe
+  inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight, `*…*`/`_…_` →
+  `<em>`) through auto-escaped Svelte interpolation — never `{@html}`, still
+  excerpt-only.
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
@@ -1792,7 +1786,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | ------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | GET    | `/api/context`                                   | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | GET    | `/api/search`                                    | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible (docs join as a new group). `?q=` required, `?limit=` per-group cap, `?type=` scopes to one group (`all` default; #393).                                                                                                                                                                                                                                                                                                                                                                        |
+  | GET    | `/api/search`                                    | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible, with unknown groups skipped by the SPA. Documentation is not rendered in global search. `?q=` required, `?limit=` per-group cap, `?type=` scopes to one group (`all` default; #393).                                                                                                                                                                                                                                                                                                           |
   | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
   | GET    | `/api/docs/doc/{identifier}`                     | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
   | GET    | `/api/docs/for-variable`                         | "Mentioned in documentation" hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |

@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { DocSearchResponse, SearchResponse } from "./api";
+import type { SearchResponse } from "./api";
 import { docSearch, search } from "./api";
 import { catalogHref } from "./catalog";
 import { router } from "./router.svelte";
 import SearchView from "./SearchView.svelte";
 
-// Stub the two GETs the view drives (`search` + the independent `docSearch`, #394);
-// keep the rest of api.ts real (the type exports). SearchView reads `?q=` off the
-// `router` singleton, so each case sets the URL (and re-syncs the singleton's
-// reactive `search`) before rendering. `docSearch` is mocked in EVERY test so it
-// never hits a real fetch — defaulted to a no-hit response in `beforeEach`.
+// Stub the search GET the view drives; keep the rest of api.ts real (the type
+// exports). `docSearch` stays mocked so regressions that reintroduce documentation
+// results cannot silently hit a real fetch. SearchView reads `?q=` off the `router`
+// singleton, so each case sets the URL (and re-syncs the singleton's reactive
+// `search`) before rendering.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
@@ -20,16 +20,6 @@ vi.mock("./api", async (importOriginal) => {
     docSearch: vi.fn(),
   };
 });
-
-// A docs response with no hits — the default for the #379 suite, so its existing
-// assertions are unaffected by the additive docs group.
-const NO_DOC_HITS: DocSearchResponse = {
-  kind: "doc-search",
-  query: "",
-  ingested: true,
-  total_count: 0,
-  results: [],
-};
 
 function setQuery(q: string): void {
   // Reset to a SENTINEL URL distinct from the target first so `navigate` isn't a
@@ -47,11 +37,7 @@ function nextFrame(): Promise<void> {
 
 beforeEach(() => {
   vi.mocked(search).mockReset();
-  // Default the docs resource to a no-hit response so the docs group is omitted
-  // and the #379 suite's assertions stand unchanged. Tests that exercise the docs
-  // group override this.
   vi.mocked(docSearch).mockReset();
-  vi.mocked(docSearch).mockResolvedValue(NO_DOC_HITS);
 });
 
 afterEach(() => {
@@ -427,7 +413,7 @@ describe("SearchView — typed result groups (#379)", () => {
       ".search-view details.code-row .code-cells",
     );
     const firstOwnerText = document.querySelector<HTMLElement>(
-      ".search-view details.code-row .owner-row .row-link",
+      ".search-view details.code-row .owner-row .owner-name",
     );
     expect(codeCells).not.toBeNull();
     expect(firstOwnerText).not.toBeNull();
@@ -558,9 +544,7 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByText(/variable|classification/))
       .not.toBeInTheDocument();
-    expect(
-      document.querySelector(".search-view .usage-count")?.textContent?.trim(),
-    ).toBe("");
+    expect(document.querySelector(".search-view .usage-count")).toBeNull();
     expect(
       document.querySelector(".search-view details.code-disclosure"),
     ).toBeNull();
@@ -1439,6 +1423,44 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
   });
 
+  it("omits the variable definition when it repeats the variable name", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "raks",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/lisa/raks-andelutbbidrink",
+              name: "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
+              register: "LISA",
+              definition:
+                "Andelen av den totala inkomsten under året som är föranledd av arbetsmarknadspolitiska åtgärder.",
+              operational_definition: null,
+              delivery_column_names: ["Raks_AndelUtbBidrInk"],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("raks");
+    await render(SearchView);
+
+    const row = document.querySelector<HTMLElement>(
+      ".search-view a.leaf-row[href='/catalog/scb/lisa/raks-andelutbbidrink']",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.querySelector(".result-title")?.textContent).toContain(
+      "Andel av den totala inkomsten",
+    );
+    expect(row?.querySelector(".result-detail")?.textContent?.trim()).toBe(
+      "LISA",
+    );
+  });
+
   it("makes each leaf a real catalog link (open-in-new-tab safe)", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
@@ -1795,11 +1817,12 @@ describe("SearchView — compact per-type tables (#808)", () => {
     ).toBeNull();
   });
 
-  it("renders a single-owner code as a code-first row with a muted variable detail link (#808 round 5)", async () => {
+  it("renders a single-owner code as a compact whole-row link to the variable (#808 round 5)", async () => {
     // #808 round 5: each code-system bucket is a compact code-FIRST table — one row
-    // per code, the CODE the highlighted primary cell, then the Label. A single
-    // variable owner is shown as muted detail context, not as an expandable row.
-    // The classification owner is represented by the linked bucket heading.
+    // per code, with code and label paired as `code = label`. A single variable
+    // owner makes the whole code row link to that variable and renders the owner as
+    // muted inline context, not as an expandable row. The classification owner is
+    // represented by the linked bucket heading.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "man",
@@ -1834,12 +1857,27 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("link", { name: "ATC", exact: true }))
       .toHaveAttribute("href", "/catalog/class/atc");
-    // One code row, with the highlighted primary CODE cell.
+    // One code row, with the code and label rendered as one paired expression.
     const codeCell = document.querySelector(".search-view .code-cell");
     expect(codeCell?.textContent?.trim()).toBe("A10");
+    expect(
+      document
+        .querySelector(".search-view .code-expression")
+        ?.textContent?.trim(),
+    ).toBe("A10 = Diabetes drugs");
     await expect
       .element(page.getByText("1 classification"))
       .not.toBeInTheDocument();
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view a.single-code-row[href='/catalog/scb/lmed/atc']",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.querySelector(".code-owner-single")?.textContent).toContain(
+      "ATC-kod",
+    );
+    expect(row?.querySelector(".code-owner-single")?.textContent).toContain(
+      "LMED",
+    );
     await expect
       .element(page.getByRole("link", { name: /ATC-kod/ }))
       .toHaveAttribute("href", "/catalog/scb/lmed/atc");
@@ -1971,9 +2009,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
   });
 });
 
-describe("SearchView — docs group (#394)", () => {
-  // A one-register main-search response so the main groups have a visible heading
-  // (lets the failure-isolation cases assert the main groups are unaffected).
+describe("SearchView — documentation is excluded from global search", () => {
   const ONE_REGISTER: SearchResponse = {
     kind: "search",
     query: "kon",
@@ -1988,46 +2024,28 @@ describe("SearchView — docs group (#394)", () => {
     ],
   } as unknown as SearchResponse;
 
-  // A docs response with N hits (total defaults to results.length; override for the
-  // truncation-caption case).
-  function docHits(
-    results: DocSearchResponse["results"],
-    total = results.length,
-  ): DocSearchResponse {
-    return {
-      kind: "doc-search",
-      query: "kon",
-      ingested: true,
-      total_count: total,
-      results,
-    };
-  }
-
-  it("(A) keeps the main groups and omits Documentation when docSearch REJECTS", async () => {
-    // Failure isolation: a docs fetch error must NOT error or blank the main
-    // groups, and the docs group is silently omitted.
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
-    vi.mocked(docSearch).mockRejectedValue(new Error("docs index down"));
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Registers" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Documentation" }))
-      .not.toBeInTheDocument();
-  });
-
-  it("(B) omits Documentation when the docs index is absent (ingested:false)", async () => {
+  it("does not fetch or render Documentation results", async () => {
     vi.mocked(search).mockResolvedValue(ONE_REGISTER);
     vi.mocked(docSearch).mockResolvedValue({
       kind: "doc-search",
       query: "kon",
-      ingested: false,
-      total_count: 0,
-      results: [],
+      ingested: true,
+      total_count: 1,
+      results: [
+        {
+          filename: "lisa_kon.md",
+          display_name: "LISA — Kön",
+          fuzzy: false,
+          register: "LISA",
+          snippet: null,
+          source: null,
+          source_url: null,
+          tags: [],
+          variable: null,
+        },
+      ],
     });
+
     setQuery("kon");
     await render(SearchView);
 
@@ -2037,176 +2055,8 @@ describe("SearchView — docs group (#394)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Documentation" }))
       .not.toBeInTheDocument();
-  });
-
-  it("(C) omits Documentation when the index is present but has zero hits", async () => {
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
-    vi.mocked(docSearch).mockResolvedValue(docHits([]));
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Documentation" }))
-      .not.toBeInTheDocument();
-  });
-
-  it("(D) renders Documentation even when the MAIN search errors (sibling/independent)", async () => {
-    // The highest-value invariant: the docs group is a SIBLING of the main `{#if}`,
-    // so a main-search failure shows its error AND the resolved docs group renders.
-    vi.mocked(search).mockRejectedValue(new Error("backend down"));
-    vi.mocked(docSearch).mockResolvedValue(
-      docHits([
-        {
-          filename: "lisa_kon.md",
-          display_name: "LISA — Kön",
-          fuzzy: false,
-          register: "LISA",
-          snippet: null,
-          source: null,
-          source_url: null,
-          tags: [],
-          variable: null,
-        },
-      ]),
-    );
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByText(/Search failed:.*backend down/))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Documentation" }))
-      .toBeVisible();
-    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
-  });
-
-  it("(E) renders docs hits with display_name, /doc link, and the truncation caption", async () => {
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
-    vi.mocked(docSearch).mockResolvedValue(
-      // total_count 9 > 1 rendered → the "showing 1 of 9" caption shows; the
-      // filename carries a space to assert the href is encoded.
-      docHits(
-        [
-          {
-            filename: "lisa kon.md",
-            display_name: "LISA — Kön",
-            fuzzy: false,
-            register: "LISA",
-            snippet: null,
-            source: null,
-            source_url: null,
-            tags: [],
-            variable: null,
-          },
-        ],
-        9,
-      ),
-    );
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByRole("heading", { name: "Documentation" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: /LISA — Kön/ }))
-      .toHaveAttribute("href", "/doc/lisa%20kon.md");
-    await expect.element(page.getByText("showing 1 of 9")).toBeVisible();
-  });
-
-  it("renders Documentation under the default (all) scope but NOT under a non-all scope (#393)", async () => {
-    // The #393 toggle has no Docs option, so a scoped search means "only that one
-    // group" — the additive docs section must be skipped (no fetch) and hidden
-    // whenever ?type= is anything but the default `all`.
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
-    vi.mocked(docSearch).mockResolvedValue(
-      docHits([
-        {
-          filename: "lisa_kon.md",
-          display_name: "LISA — Kön",
-          fuzzy: false,
-          register: "LISA",
-          snippet: null,
-          source: null,
-          source_url: null,
-          tags: [],
-          variable: null,
-        },
-      ]),
-    );
-
-    // Default (all) scope → Documentation renders.
-    setQuery("kon");
-    const allView = await render(SearchView);
-    await expect
-      .element(page.getByRole("heading", { name: "Documentation" }))
-      .toBeVisible();
-    allView.unmount();
-    vi.mocked(docSearch).mockClear();
-
-    // A scoped (?type=value) search → docs is short-circuited (no fetch) and hidden.
-    window.history.pushState({}, "", "/__reset__");
-    router.navigate("/search?q=kon&type=value");
-    await render(SearchView);
-    await expect
-      .element(page.getByRole("heading", { name: "Documentation" }))
-      .not.toBeInTheDocument();
+    await expect.element(page.getByText("LISA — Kön")).not.toBeInTheDocument();
     expect(docSearch).not.toHaveBeenCalled();
-  });
-
-  it("renders a docs snippet as escaped text, never parsed HTML (republication guard)", async () => {
-    // The snippet may carry HTML-looking text; the inline renderer still
-    // interpolates DATA segments through Svelte, so a `<b>` in the snippet must
-    // surface as literal characters, not as a parsed element.
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
-    vi.mocked(docSearch).mockResolvedValue(
-      docHits([
-        {
-          filename: "lisa_kon.md",
-          display_name: "LISA — Kön",
-          fuzzy: false,
-          register: "LISA",
-          snippet: "foo <b>bar</b> baz",
-          source: null,
-          source_url: null,
-          tags: [],
-          variable: null,
-        },
-      ]),
-    );
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect.element(page.getByText("foo <b>bar</b> baz")).toBeVisible();
-    expect(document.querySelector(".search-view b")).toBeNull();
-  });
-
-  it("renders docs FTS highlight markers with safe inline markdown (#745)", async () => {
-    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
-    vi.mocked(docSearch).mockResolvedValue(
-      docHits([
-        {
-          filename: "lisa_kon.md",
-          display_name: "LISA — Kön",
-          fuzzy: false,
-          register: "LISA",
-          snippet: "…the **kön** variable and _below_ <b>tag</b>…",
-          source: null,
-          source_url: null,
-          tags: [],
-          variable: null,
-        },
-      ]),
-    );
-    setQuery("kon");
-    await render(SearchView);
-
-    const detail = document.querySelector(".search-view .hit-detail");
-    expect(detail?.textContent).toBe("…the kön variable and below <b>tag</b>…");
-    expect(detail?.querySelector("mark")?.textContent).toBe("kön");
-    expect(detail?.querySelector("em")?.textContent).toBe("below");
-    expect(detail?.querySelector("b")).toBeNull();
   });
 });
 
