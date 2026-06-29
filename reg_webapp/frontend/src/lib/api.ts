@@ -516,9 +516,10 @@ export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
 // `GET /api/search?q=` returns four ORDERED, typed result groups over the shipped
 // FTS indexes (registers / variables / classifications / codes). Each group's
 // `total_count` is the full match count BEFORE the per-request `limit`, so the SPA
-// renders "showing N of M". A folded concept-group row (`type:"group"`) is NOT
-// itself FQID-addressable — its `members` carry the real leaf FQIDs. A `fqid` can
-// be `null` on any leaf (a hit with no resolvable catalog node).
+// renders "showing N of M". A concept-group row (`type:"group"`) is not an FQID,
+// but it can be linked to its fixed group route when the scope is derivable from
+// members; its `members` carry the real leaf FQIDs for fallback links. A `fqid`
+// can be `null` on any leaf (a hit with no resolvable catalog node).
 
 export type SearchResponse = Schemas["SearchResponse"];
 export type RegisterSearchGroup = Schemas["RegisterSearchGroup"];

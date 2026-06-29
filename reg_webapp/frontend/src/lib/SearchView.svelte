@@ -13,7 +13,14 @@ import type {
 } from "./api";
 import { docSearch, SEARCH_MIN_QUERY_LENGTH, search } from "./api";
 import { asyncResource } from "./async.svelte";
-import { catalogHref, leafSlug, showingOf } from "./catalog";
+import {
+  catalogHref,
+  classGroupHref,
+  fqidSegments,
+  groupHref,
+  leafSlug,
+  showingOf,
+} from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
 import { Tag } from "./ui";
@@ -29,11 +36,12 @@ import { Tag } from "./ui";
 // (an `<a>` that is `display: grid` + `grid-template-columns: subgrid` spanning
 // `1 / -1`, so the row is ONE real, KEYBOARD-FOCUSABLE link whose cells align to
 // the parent grid's tracks — NOT `display: contents`, which drops the anchor from
-// Chromium's sequential tab order entirely, #808 a11y fork), and a fold (concept
-// group / classification succession) is a column-spanning row rendering its
-// existing expandable <details> INLINE at its rank position (no pulled-out
-// "Grouped families" block). Codes render a compact, code-FIRST grid table per
-// code-system bucket (the bucket heading names the classification / value-set);
+// Chromium's sequential tab order entirely, #808 a11y fork). Concept-group hits
+// are also flat links: to the group page when addressable, otherwise to member
+// leaves. Classification succession stays a disclosure because it represents an
+// edition chain under one terminal classification. Codes render a compact,
+// code-FIRST grid table per code-system bucket (the bucket heading names the
+// classification / value-set);
 // each row's owner VARIABLES are the navigable targets (a code has no own page).
 // Categorical type identity lives on selected GROUP HEADINGS; the raw FQID is
 // hidden everywhere. Variable rows surface register + delivery-column metadata as
@@ -185,15 +193,10 @@ function isClassificationSuccession(r: {
 
 // The keyed-each key for a variables / classifications grid row. Folds the row's
 // CONTENT identity (a concept group's `group_key`, else the leaf/succession `fqid`)
-// into the key, NOT the bare index — because a fold row renders a native <details>
-// disclosure, and a bare-index key makes Svelte REUSE the existing <details> for
-// whatever NEW result lands at position `i` on a query refine, carrying the prior
-// row's `open` state over (a freshly-fetched fold would render expanded though the
-// user never opened it). Identity changes → new key → fresh CLOSED <details>; an
-// unchanged row keeps its state. The index stays in the key for UNIQUENESS: a
-// concept_group's `group_key` is only register-scoped-unique (the same key recurs
-// across registers, #322) and a null/duplicate `fqid` recurs too, so identity alone
-// could collide and crash the render (the #379/#391 each_key_duplicate lesson).
+// into the key. The index stays in the key for UNIQUENESS: a concept_group's
+// `group_key` is only register-scoped-unique (the same key recurs across
+// registers, #322) and a null/duplicate `fqid` recurs too, so identity alone could
+// collide and crash the render (the #379/#391 each_key_duplicate lesson).
 function resultKey(
   r:
     | VariableSearchResult
@@ -204,6 +207,55 @@ function resultKey(
 ): string {
   const identity = isConceptGroup(r) ? r.group_key : r.fqid;
   return `${identity}|${i}`;
+}
+
+function memberRegisterFqid(
+  member: ConceptGroupSearchResult["members"][number],
+): string | null {
+  const [provider, register] = fqidSegments(member.fqid);
+  return provider && register ? `${provider}/${register}` : null;
+}
+
+function sharedMemberRegisterFqid(
+  result: ConceptGroupSearchResult,
+): string | null {
+  const scopes = new Set(
+    result.members
+      .map((member) => memberRegisterFqid(member))
+      .filter((scope): scope is string => scope != null),
+  );
+  return scopes.size === 1 ? [...scopes][0] : null;
+}
+
+function normalizedVariableGroupKey(
+  result: ConceptGroupSearchResult,
+  registerFqid: string,
+): string {
+  const [provider, register, key] = fqidSegments(result.group_key);
+  return key && `${provider}/${register}` === registerFqid
+    ? key
+    : result.group_key;
+}
+
+function normalizedClassGroupKey(result: ConceptGroupSearchResult): string {
+  const [head, key] = fqidSegments(result.group_key);
+  return head === "class" && key ? key : result.group_key;
+}
+
+function conceptGroupHref(result: ConceptGroupSearchResult): string | null {
+  if (result.kind === "classification") {
+    return classGroupHref(normalizedClassGroupKey(result));
+  }
+  const registerFqid = sharedMemberRegisterFqid(result);
+  return registerFqid
+    ? groupHref(registerFqid, normalizedVariableGroupKey(result, registerFqid))
+    : null;
+}
+
+function conceptGroupMatchSummary(result: ConceptGroupSearchResult): string {
+  const noun = result.kind === "classification" ? "classification" : "variable";
+  const plural = result.member_count === 1 ? noun : `${noun}s`;
+  return `${result.matched_count} of ${result.member_count} ${plural} matched`;
 }
 
 // The registers / variables / classifications groups render the `.children.table`
@@ -378,18 +430,17 @@ function closeSearch(): void {
             </div>
           {:else if group.group === "variables"}
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
-                 ORDER (CatalogNodeView's `.children.table`). A leaf variable is a
-                 whole-row subgrid link; a concept-group
-                 fold is a column-spanning row rendering its <details> INLINE at
-                 its rank position. Variable metadata (register + delivery
-                 columns) rides as inline pills in the result heading. -->
+                 ORDER (CatalogNodeView's `.children.table`). Variable leaves and
+                 concept groups are whole-row subgrid links; no inline grouped
+                 disclosures. Variable metadata (register + delivery columns)
+                 rides as inline pills in the result heading. -->
             <div class="children table cols-1" role="presentation">
               <div class="head-row" aria-hidden="true">
                 <span class="col-head">Variable</span>
               </div>
               {#each group.results as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
-                  <div class="span-row">{@render conceptGroup(result)}</div>
+                  {@render conceptGroup(result)}
                 {:else}
                   {@const v = result as VariableSearchResult}
                   {@render variableLeafRow(v)}
@@ -398,11 +449,11 @@ function closeSearch(): void {
             </div>
           {:else if group.group === "classifications"}
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
-                 ORDER. A leaf classification is a whole-row link; a concept-group
-                 or classification-succession fold is a column-spanning row with
-                 its <details> INLINE. Columns: Classification (short_name ?? name,
-                 + the "→ current edition" terminal link) · Name (full name when it
-                 differs from the short name). -->
+                 ORDER. A leaf classification or concept group is a whole-row link;
+                 classification-succession stays a column-spanning disclosure.
+                 Columns: Classification (short_name ?? name, + the "→ current
+                 edition" terminal link) · Name (full name when it differs from the
+                 short name). -->
             <div class="children table cols-2" role="presentation">
               <div class="head-row" aria-hidden="true">
                 <span class="col-head">Classification</span>
@@ -410,7 +461,7 @@ function closeSearch(): void {
               </div>
               {#each group.results as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
-                  <div class="span-row">{@render conceptGroup(result)}</div>
+                  {@render conceptGroup(result)}
                 {:else if isClassificationSuccession(result)}
                   <div class="span-row">
                     {@render classificationSuccession(result)}
@@ -696,32 +747,44 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
-<!-- A folded concept-group family (#322): the group itself is NOT FQID-addressable,
-     so it expands to its member leaves' links. The family hint reads "matched M of
-     N" (matched_count of member_count). Member rows show the leaf SLUG (not the
-     full FQID) as the compact identifier (#808 round 2). -->
+<!-- A concept-group family (#322): search stays flat. Prefer the first-class group
+     subject page when its route is derivable; if not, emit the member leaf links
+     directly rather than putting a disclosure inside the results list. -->
 {#snippet conceptGroup(result: ConceptGroupSearchResult)}
-  <details class="concept-group">
-    <summary>
-      <span class="label">{result.group_label}</span>
-      <span class="count">
-        matched {result.matched_count} of {result.member_count}
+  {@const href = conceptGroupHref(result)}
+  {#if href}
+    <a class="leaf-row group-result-row" href={href}>
+      <span class="name-cell">
+        <span class="result-title">
+          <span class="row-link">{result.group_label}</span>
+          {#if result.register}
+            <span class="result-pills">
+              <span class="result-pill register-pill">{result.register}</span>
+            </span>
+          {/if}
+        </span>
+        <span class="sub muted">
+          {conceptGroupMatchSummary(result)}
+        </span>
       </span>
-      {#if result.register}
-        <span class="register muted">{result.register}</span>
-      {/if}
-    </summary>
-    <ul class="members">
-      {#each result.members as member, i (i)}
-        <li>
-          <a href={catalogHref(member.fqid)}>
-            <span class="label">{member.name ?? leafSlug(member.fqid)}</span>
-            <code class="member-slug">{leafSlug(member.fqid)}</code>
-          </a>
-        </li>
-      {/each}
-    </ul>
-  </details>
+    </a>
+  {:else}
+    {#each result.members as member, i (`${member.fqid}|${i}`)}
+      <a class="leaf-row group-member-row" href={catalogHref(member.fqid)}>
+        <span class="name-cell">
+          <span class="result-title">
+            <span class="row-link">{member.name ?? leafSlug(member.fqid)}</span>
+            {#if result.register}
+              <span class="result-pills">
+                <span class="result-pill register-pill">{result.register}</span>
+              </span>
+            {/if}
+          </span>
+          <span class="sub muted">{result.group_label}</span>
+        </span>
+      </a>
+    {/each}
+  {/if}
 {/snippet}
 
 <!-- A folded classification-succession row (#571): unlike a concept group, the
@@ -1101,12 +1164,16 @@ function closeSearch(): void {
     box-shadow: var(--focus-ring);
     border-radius: var(--radius-sm);
   }
-  /* A FOLD row (concept group / succession <details>) spans all columns and owns
-     its own internal layout, sitting inline at its rank position. */
+  /* A FOLD row (currently classification succession <details>) spans all columns
+     and owns its own internal layout, sitting inline at its rank position. */
   .span-row {
     grid-column: 1 / -1;
     padding: var(--space-1) 0;
     border-bottom: 1px solid var(--border);
+  }
+  .group-result-row > .name-cell,
+  .group-member-row > .name-cell {
+    grid-column: 1 / -1;
   }
   /* The name cell stacks the primary name over an optional muted sub-line. */
   .name-cell {

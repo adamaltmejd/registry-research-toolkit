@@ -1236,7 +1236,8 @@ export interface components {
          *     `member_count` is the family's full size, `matched_count` how many members the
          *     query hit, `label_matched` whether the group label/key matched directly.
          *     `members` is the full facet-ordered member list (each a real leaf FQID) so the
-         *     SPA can expand the family inline — a group is NOT itself FQID-addressable.
+         *     SPA can derive a group-page link when available, or fall back to member links.
+         *     A group is not itself an FQID-addressable catalog leaf.
          */
         ConceptGroupSearchResult: {
             /** Group Key */

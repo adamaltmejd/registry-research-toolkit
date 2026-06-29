@@ -1248,7 +1248,7 @@
       },
       "ConceptGroupSearchResult": {
         "additionalProperties": false,
-        "description": "A folded concept-group row (#322): \u22652 sibling members matched OR the\ngroup's own label matched, so the family collapses to one result. `kind` is\n'variable' or 'classification' (which group bucket it belongs to);\n`member_count` is the family's full size, `matched_count` how many members the\nquery hit, `label_matched` whether the group label/key matched directly.\n`members` is the full facet-ordered member list (each a real leaf FQID) so the\nSPA can expand the family inline \u2014 a group is NOT itself FQID-addressable.",
+        "description": "A folded concept-group row (#322): \u22652 sibling members matched OR the\ngroup's own label matched, so the family collapses to one result. `kind` is\n'variable' or 'classification' (which group bucket it belongs to);\n`member_count` is the family's full size, `matched_count` how many members the\nquery hit, `label_matched` whether the group label/key matched directly.\n`members` is the full facet-ordered member list (each a real leaf FQID) so the\nSPA can derive a group-page link when available, or fall back to member links.\nA group is not itself an FQID-addressable catalog leaf.",
         "properties": {
           "group_key": {
             "title": "Group Key",

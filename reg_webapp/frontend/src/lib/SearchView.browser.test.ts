@@ -501,7 +501,7 @@ describe("SearchView — typed result groups (#379)", () => {
     ).not.toBeNull();
   });
 
-  it("expands a folded concept-group result to its member links", async () => {
+  it("links a concept-group result to its group page", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "ink",
@@ -512,7 +512,7 @@ describe("SearchView — typed result groups (#379)", () => {
           results: [
             {
               type: "group",
-              group_key: "scb/lisa/dispink",
+              group_key: "dispink",
               group_label: "Disponibel inkomst",
               kind: "variable",
               label_matched: false,
@@ -540,14 +540,14 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("ink");
     await render(SearchView);
 
-    // The family hint reads "matched M of N"; the group is NOT itself a link.
-    await expect.element(page.getByText("matched 2 of 3")).toBeVisible();
-    // Expand the <details> (collapsed by default) to reveal the member links.
-    await page.getByText("Disponibel inkomst").click();
-    // Members are real leaf links.
+    // The group itself is a normal row link to the first-class group page; no
+    // inline disclosure is reintroduced in search results.
     await expect
-      .element(page.getByRole("link", { name: /Disp 2019/ }))
-      .toHaveAttribute("href", "/catalog/scb/lisa/dispink-2019");
+      .element(page.getByRole("link", { name: /Disponibel inkomst/ }))
+      .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
+    expect(
+      document.querySelector(".search-view details.concept-group"),
+    ).toBeNull();
   });
 
   it("renders a classification_succession result: terminal edition links + a folded edition history (#571)", async () => {
@@ -763,7 +763,7 @@ describe("SearchView — typed result groups (#379)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("renders two folded concept groups sharing a group_key across registers (no each_key_duplicate crash)", async () => {
+  it("renders two concept groups sharing a group_key across registers (no each_key_duplicate crash)", async () => {
     // The `inkomst` production crash (#379 omnibox-dup-key): the variables group
     // returns TWO type:"group" results with the SAME group_key ("tfoab") from
     // DIFFERENT registers (IoT vs LINDA). Concept-group keys are register-scoped
@@ -825,6 +825,12 @@ describe("SearchView — typed result groups (#379)", () => {
       .toBeVisible();
     await expect.element(page.getByText("Inkomst IoT")).toBeVisible();
     await expect.element(page.getByText("Inkomst LINDA")).toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Inkomst IoT/ }))
+      .toHaveAttribute("href", "/catalog/group/scb/iot/tfoab");
+    await expect
+      .element(page.getByRole("link", { name: /Inkomst LINDA/ }))
+      .toHaveAttribute("href", "/catalog/group/scb/linda/tfoab");
     await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
   });
 
@@ -1047,12 +1053,11 @@ describe("SearchView — typed result groups (#379)", () => {
 
 describe("SearchView — compact per-type tables (#808)", () => {
   // The #808 round-3 redesign: registers / variables / classifications render ONE
-  // CSS-grid `.children.table` over their results IN RANK ORDER — a leaf is a
-  // whole-row subgrid <a> (one real link), and a fold (concept group / succession)
-  // is a column-spanning row with its <details> INLINE at its rank position (NO
-  // "Grouped families" block). Selected categorical group identity lives on the
-  // GROUP HEADING; the raw FQID is hidden. Codes render a compact, code-FIRST grid
-  // table per code-system bucket.
+  // CSS-grid `.children.table` over their results IN RANK ORDER — leaves and
+  // concept groups are whole-row subgrid <a>s, while classification succession is
+  // the only inline disclosure. Selected categorical group identity lives on the
+  // GROUP HEADING; the raw FQID is hidden. Codes render a compact, code-FIRST
+  // grid table per code-system bucket.
   const FOUR_GROUPS = {
     kind: "search",
     query: "kon",
@@ -1162,8 +1167,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Variables" }))
       .toBeVisible();
-    // No code-like token renders the full FQID with slashes (the delivery-column
-    // chip + member-slug <code> in folded families never carry slashes).
+    // No code-like token renders the full FQID with slashes (delivery-column
+    // chips are column names, not FQIDs).
     for (const code of document.querySelectorAll(".search-view code")) {
       expect(code.textContent ?? "").not.toContain("/");
     }
@@ -1417,11 +1422,11 @@ describe("SearchView — compact per-type tables (#808)", () => {
     view.unmount();
   });
 
-  it("interleaves a folded family inline in rank order (no 'Grouped families' block)", async () => {
-    // #808 round 3: a fold sits inline at its rank position among the leaf rows —
-    // it is NOT pulled out into a separate "Grouped families" sub-block. Assert a
-    // leaf row, a fold <details>, and another leaf row all render in the SAME grid
-    // table, and that the old "Grouped families" label is gone.
+  it("interleaves a concept-group link inline in rank order (no 'Grouped families' block)", async () => {
+    // #808 round 3: a group result sits inline at its rank position among the leaf
+    // rows — it is NOT pulled out into a separate "Grouped families" sub-block and
+    // it is NOT a disclosure. Assert a leaf row, a group link, and another leaf row
+    // all render in the SAME grid table, and that the old label is gone.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "ink",
@@ -1439,7 +1444,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
             },
             {
               type: "group",
-              group_key: "scb/lisa/dispink",
+              group_key: "dispink",
               group_label: "Disponibel inkomst",
               kind: "variable",
               label_matched: false,
@@ -1469,22 +1474,28 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("ink");
     await render(SearchView);
 
-    // Both leaf rows AND the fold render.
+    // Both leaf rows AND the group row render.
     await expect
       .element(page.getByRole("link", { name: /Before fold/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/before");
     await expect
       .element(page.getByRole("link", { name: /After fold/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/after");
-    // The fold is a <details> sitting INLINE in the same grid table (a span-row),
-    // interleaved between the two leaf rows.
-    await expect.element(page.getByText("matched 2 of 3")).toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Disponibel inkomst/ }))
+      .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
     const grid = document.querySelector(".search-view .cols-1");
-    const fold = grid?.querySelector(".span-row details.concept-group");
+    const groupLink = grid?.querySelector(
+      "a.group-result-row[href='/catalog/group/scb/lisa/dispink']",
+    );
     expect(
-      fold,
-      "fold <details> renders inline in the variables grid",
+      groupLink,
+      "group link renders inline in the variables grid",
     ).not.toBeNull();
+    expect(
+      grid?.querySelector("details.concept-group"),
+      "variable concept groups do not render as details",
+    ).toBeNull();
     // The old "Grouped families" pulled-out block is GONE.
     expect(document.querySelector(".search-view .folds-label")).toBeNull();
     await expect
@@ -1492,7 +1503,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("keeps folded families as <details> with leaf-slug members (no full FQID)", async () => {
+  it("falls back to direct member links when a group page is not derivable", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "ink",
@@ -1503,7 +1514,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
           results: [
             {
               type: "group",
-              group_key: "scb/lisa/dispink",
+              group_key: "mixed-income",
               group_label: "Disponibel inkomst",
               kind: "variable",
               label_matched: false,
@@ -1514,7 +1525,12 @@ describe("SearchView — compact per-type tables (#808)", () => {
               members: [
                 {
                   fqid: "scb/lisa/dispink-2019",
-                  name: "Disp 2019",
+                  name: "Disp LISA",
+                  facets: [],
+                },
+                {
+                  fqid: "scb/iot/dispink-2019",
+                  name: "Disp IoT",
                   facets: [],
                 },
               ],
@@ -1526,16 +1542,17 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("ink");
     await render(SearchView);
 
-    // The fold stays a <details> disclosure (no DataTable for it).
-    await expect.element(page.getByText("matched 2 of 3")).toBeVisible();
-    await page.getByText("Disponibel inkomst").click();
-    // Members are real leaf links…
+    // No single register-scoped group page can be derived, so members are emitted
+    // as direct leaf links. They are visible without expanding anything.
     await expect
-      .element(page.getByRole("link", { name: /Disp 2019/ }))
+      .element(page.getByRole("link", { name: /Disp LISA/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/dispink-2019");
-    // …and the member identifier is the leaf SLUG, never the full FQID path.
-    const memberSlug = document.querySelector(".search-view .member-slug");
-    expect(memberSlug?.textContent?.trim()).toBe("dispink-2019");
+    await expect
+      .element(page.getByRole("link", { name: /Disp IoT/ }))
+      .toHaveAttribute("href", "/catalog/scb/iot/dispink-2019");
+    expect(
+      document.querySelector(".search-view details.concept-group"),
+    ).toBeNull();
   });
 
   it("renders codes as a code-first disclosure: highlighted code cell, muted owner count, owners revealed on expand (#808 round 5)", async () => {
@@ -1662,11 +1679,11 @@ describe("SearchView — compact per-type tables (#808)", () => {
     ).toBe(2);
   });
 
-  it("renders two folds sharing a group_key across registers without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
+  it("renders two group links sharing a group_key across registers without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
     // A concept_group's `group_key` is only register-scoped-unique (#322), so the
     // same key legitimately recurs across registers in one variables group. A
     // `group_key`-ONLY each key would crash; `group_key|index` tolerates it — both
-    // fold disclosures must render.
+    // group links must render.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "ink",
@@ -1718,8 +1735,11 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect.element(page.getByText("Inkomst LINDA")).toBeVisible();
     await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
     expect(
-      document.querySelectorAll(".search-view details.concept-group").length,
+      document.querySelectorAll(".search-view a.group-result-row").length,
     ).toBe(2);
+    expect(
+      document.querySelectorAll(".search-view details.concept-group").length,
+    ).toBe(0);
   });
 });
 
