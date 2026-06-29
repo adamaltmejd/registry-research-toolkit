@@ -257,7 +257,10 @@ def test_repo_related_documents_parses() -> None:
     docs = load_related_documents(_ROOT / "related_documents.toml")
     assert "aes" in docs
     assert len(docs["aes"]) == 5
-    assert all(doc.title and doc.filename and doc.license for doc in docs["aes"])
+    assert all(
+        doc.title and doc.filename and doc.license and doc.sha256 and doc.byte_size
+        for doc in docs["aes"]
+    )
 
 
 def test_doc_sources_malformed_entry_raises_curation_error() -> None:
@@ -311,6 +314,28 @@ def test_related_documents_invalid_license_raises_curation_error(
         load_related_documents(path)
     assert exc_info.value.code == "related_documents_invalid"
     assert "license" in exc_info.value.message
+
+
+def test_related_documents_noncanonical_fetched_date_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        "[[register.aes.document]]\n"
+        'title = "Bad"\n'
+        'filename = "bad.pdf"\n'
+        'source_url = "https://mikrometadata.scb.se/"\n'
+        'license = "CC BY 4.0"\n'
+        'fetched = "20260623"\n'
+        'sha256 = "0000000000000000000000000000000000000000000000000000000000000000"\n'
+        "byte_size = 1\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "fetched" in exc_info.value.message
 
 
 def test_related_documents_missing_document_array_raises_curation_error(

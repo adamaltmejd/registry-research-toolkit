@@ -1,9 +1,10 @@
 # Curated register-version related documents (#740).
 #
 # Binaries are maintainer-supplied, gitignored seed files under
-# `reg_meta_build/input_data/SCB/docs/<register>/`. The build stores the bytes
-# plus this provenance in `reg_meta_docs.db` so the released asset can rehost
-# permitted documents as one file.
+# `reg_meta_build/input_data/SCB/docs/<register>/`. `sha256` and `byte_size`
+# pin the exact gitignored bytes so release assets are reproducible. The build
+# stores the bytes plus this provenance in `reg_meta_docs.db` so the released
+# asset can rehost permitted documents as one file.
 #
 # SCB's "Relaterat dokument - Registerversion" file links are served from the
 # mikrometadata UI without stable public PDF URLs. For those files, `source_url`
@@ -16,6 +17,8 @@ filename = "UF0538_DO_2012_160104_Publicerad.pdf"
 source_url = "https://mikrometadata.scb.se/"
 license = "CC BY 4.0"
 fetched = "2026-06-23"
+sha256 = "0309140df787abbc30232a41c139f96c6de556d2e5b6e4fd11ea285281825e73"
+byte_size = 2161001
 
 [[register.aes.document]]
 title = "Draft AES manual, version 8"
@@ -23,6 +26,8 @@ filename = "AES_MANUAL_2012.pdf"
 source_url = "https://mikrometadata.scb.se/"
 license = "CC BY 4.0"
 fetched = "2026-06-23"
+sha256 = "b4eca07bf132307cf9e53493254dd6eb101e56b0b2b210d52db7ee1160fea815"
+byte_size = 2315928
 
 [[register.aes.document]]
 title = "AES questionnaire 2011"
@@ -30,6 +35,8 @@ filename = "AES_Questionnaire_SE_Swedish_2011.pdf"
 source_url = "https://mikrometadata.scb.se/"
 license = "CC BY 4.0"
 fetched = "2026-06-23"
+sha256 = "7d1f3035c57f87f757e12159df54ea113d47054f84a3d1fa877f2ef821a2a9a5"
+byte_size = 366395
 
 [[register.aes.document]]
 title = "Commission Regulation (EU) No 823/2010"
@@ -37,6 +44,8 @@ filename = "Commission regulation.pdf"
 source_url = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32010R0823"
 license = "EU law"
 fetched = "2026-06-23"
+sha256 = "857983a5930cb4301942baf7af9937b32d0427fc87f9ca492a473950e0627fb3"
+byte_size = 1326581
 
 [[register.aes.document]]
 title = "Kommissionens förordning (EU) nr 823/2010"
@@ -44,3 +53,5 @@ filename = "Kommissionens förordning.pdf"
 source_url = "https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=CELEX:32010R0823"
 license = "EU law"
 fetched = "2026-06-23"
+sha256 = "67089124ae4a6bc3104332faf10ecd8756b2cbfbb72786d9bad04b0e23b67cb8"
+byte_size = 1328961

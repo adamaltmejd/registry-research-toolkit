@@ -5,13 +5,13 @@ import sqlite3
 from hashlib import sha256
 from typing import TYPE_CHECKING
 
+import pytest
 import reg_meta_build.doc_db as doc_db
+from reg_meta.errors import RegMetaError
 from reg_meta_build.doc_db import RelatedDocument, build_doc_db
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-    import pytest
 
 
 def _write_doc(docs_dir: Path, register: str = "testreg") -> None:
@@ -23,7 +23,13 @@ def _write_doc(docs_dir: Path, register: str = "testreg") -> None:
     )
 
 
-def _related_doc(register: str, filename: str) -> RelatedDocument:
+def _related_doc(
+    register: str,
+    filename: str,
+    *,
+    content: bytes = b"%PDF-1.4\nfixture\n",
+    required: bool = True,
+) -> RelatedDocument:
     return RelatedDocument(
         register=register,
         title="Related test document",
@@ -31,6 +37,9 @@ def _related_doc(register: str, filename: str) -> RelatedDocument:
         source_url="https://mikrometadata.scb.se/",
         license="CC BY 4.0",
         fetched="2026-06-23",
+        sha256=sha256(content).hexdigest(),
+        byte_size=len(content),
+        required=required,
     )
 
 
@@ -48,7 +57,7 @@ def test_build_doc_db_stores_related_document_binary(
     monkeypatch.setattr(
         doc_db,
         "load_related_documents",
-        lambda: {"testreg": [_related_doc("testreg", "related.pdf")]},
+        lambda: {"testreg": [_related_doc("testreg", "related.pdf", content=content)]},
     )
     monkeypatch.setattr(
         doc_db, "repo_related_document_binaries_dir", lambda: related_root
@@ -117,6 +126,31 @@ def test_build_doc_db_warns_for_missing_and_unmapped_related_documents(
         conn.close()
 
 
+def test_build_doc_db_rejects_related_document_binary_mismatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    docs_dir = tmp_path / "docs"
+    _write_doc(docs_dir)
+    related_root = tmp_path / "related"
+    related_dir = related_root / "testreg"
+    related_dir.mkdir(parents=True)
+    (related_dir / "related.pdf").write_bytes(b"%PDF-1.4\nchanged\n")
+
+    monkeypatch.setattr(
+        doc_db,
+        "load_related_documents",
+        lambda: {"testreg": [_related_doc("testreg", "related.pdf")]},
+    )
+    monkeypatch.setattr(
+        doc_db, "repo_related_document_binaries_dir", lambda: related_root
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        build_doc_db(docs_dir, tmp_path / "db")
+    assert exc_info.value.code == "related_documents_binary_mismatch"
+    assert "related.pdf" in exc_info.value.message
+
+
 def test_build_doc_db_warns_when_related_document_root_is_absent(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
@@ -159,7 +193,7 @@ def test_build_doc_db_skips_future_related_document_register(
     monkeypatch.setattr(
         doc_db,
         "load_related_documents",
-        lambda: {"future": [_related_doc("future", "future.pdf")]},
+        lambda: {"future": [_related_doc("future", "future.pdf", required=False)]},
     )
     monkeypatch.setattr(
         doc_db, "repo_related_document_binaries_dir", lambda: related_root

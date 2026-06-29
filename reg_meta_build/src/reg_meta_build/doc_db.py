@@ -174,6 +174,9 @@ class RelatedDocument:
     source_url: str
     license: str
     fetched: str
+    sha256: str
+    byte_size: int
+    required: bool
 
 
 def _require_doc_curation_str(
@@ -257,7 +260,9 @@ def _related_documents_invalid(subject: str, message: str) -> NoReturn:
         message=f"{subject} {message}",
         remediation=(
             "Use `[[register.<slug>.document]]` entries with title, filename, "
-            "source_url, license, and fetched in reg_meta_build/related_documents.toml."
+            "source_url, license, fetched, sha256, and byte_size in "
+            "reg_meta_build/related_documents.toml. Use `required = false` only "
+            "for intentionally staged future entries."
         ),
     )
 
@@ -281,7 +286,16 @@ def _parse_related_document(
     register: str, index: int, entry: dict[str, object]
 ) -> RelatedDocument:
     subject = f"related_documents `{register}` entry #{index}"
-    expected = {"title", "filename", "source_url", "license", "fetched"}
+    expected = {
+        "title",
+        "filename",
+        "source_url",
+        "license",
+        "fetched",
+        "sha256",
+        "byte_size",
+        "required",
+    }
     unknown = set(entry) - expected
     if unknown:
         _related_documents_invalid(
@@ -302,7 +316,7 @@ def _parse_related_document(
 
     fetched = _require_related_document_str(entry, "fetched", subject)
     try:
-        date.fromisoformat(fetched)
+        parsed_fetched = date.fromisoformat(fetched)
     except ValueError as exc:
         raise curation_error(
             code="related_documents_invalid",
@@ -312,6 +326,15 @@ def _parse_related_document(
                 '`fetched = "2026-06-23"`.'
             ),
         ) from exc
+    if parsed_fetched.isoformat() != fetched:
+        raise curation_error(
+            code="related_documents_invalid",
+            message=f"{subject} needs `fetched` as YYYY-MM-DD, got {fetched!r}.",
+            remediation=(
+                "Use the date the maintainer fetched the binary, for example "
+                '`fetched = "2026-06-23"`.'
+            ),
+        )
 
     return RelatedDocument(
         register=register,
@@ -320,6 +343,9 @@ def _parse_related_document(
         source_url=_require_related_document_str(entry, "source_url", subject),
         license=_parse_related_document_license(entry, subject),
         fetched=fetched,
+        sha256=_parse_related_document_sha256(entry, subject),
+        byte_size=_parse_related_document_byte_size(entry, subject),
+        required=_parse_related_document_required(entry, subject),
     )
 
 
@@ -332,6 +358,36 @@ def _parse_related_document_license(entry: dict[str, object], subject: str) -> s
             f"{', '.join(sorted(RELATED_DOCUMENT_LICENSES))}, got {license_!r}.",
         )
     return license_
+
+
+def _parse_related_document_sha256(entry: dict[str, object], subject: str) -> str:
+    digest = _require_related_document_str(entry, "sha256", subject)
+    if not re.fullmatch(r"[0-9a-f]{64}", digest):
+        _related_documents_invalid(
+            subject,
+            f"needs `sha256` as 64 lowercase hex characters, got {digest!r}.",
+        )
+    return digest
+
+
+def _parse_related_document_byte_size(entry: dict[str, object], subject: str) -> int:
+    value = entry.get("byte_size")
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+        _related_documents_invalid(
+            subject,
+            f"needs `byte_size` as a non-negative integer, got {value!r}.",
+        )
+    return value
+
+
+def _parse_related_document_required(entry: dict[str, object], subject: str) -> bool:
+    value = entry.get("required", True)
+    if not isinstance(value, bool):
+        _related_documents_invalid(
+            subject,
+            f"needs `required` as a boolean when present, got {value!r}.",
+        )
+    return value
 
 
 def load_related_documents(
@@ -432,7 +488,15 @@ def _insert_related_documents(
     docs_dir: Path,
     related_docs_dir: Path | None,
 ) -> int:
-    active_registers = _register_dirs(docs_dir) | _register_dirs(related_docs_dir)
+    active_registers = (
+        _register_dirs(docs_dir)
+        | _register_dirs(related_docs_dir)
+        | {
+            register
+            for register, docs in related_documents.items()
+            if any(doc.required for doc in docs)
+        }
+    )
     if not active_registers:
         return 0
 
@@ -491,6 +555,24 @@ def _insert_related_documents(
                 missing_binaries.append(f"{register}/{doc.filename}")
                 continue
             content = binary_path.read_bytes()
+            digest = sha256(content).hexdigest()
+            byte_size = len(content)
+            if digest != doc.sha256 or byte_size != doc.byte_size:
+                raise curation_error(
+                    code="related_documents_binary_mismatch",
+                    message=(
+                        f"related document binary {register}/{doc.filename} does not "
+                        "match the tracked pins: "
+                        f"sha256 {digest} (expected {doc.sha256}), "
+                        f"byte_size {byte_size} (expected {doc.byte_size})."
+                    ),
+                    remediation=(
+                        "Verify the gitignored PDF seed. If the replacement is "
+                        "intentional and license-compatible, update `sha256`, "
+                        "`byte_size`, and usually `fetched` in "
+                        "reg_meta_build/related_documents.toml."
+                    ),
+                )
             conn.execute(
                 "INSERT INTO related_document ("
                 "register, title, filename, source_url, license, fetched, "
@@ -503,8 +585,8 @@ def _insert_related_documents(
                     doc.source_url,
                     doc.license,
                     doc.fetched,
-                    sha256(content).hexdigest(),
-                    len(content),
+                    digest,
+                    byte_size,
                     content,
                 ),
             )
