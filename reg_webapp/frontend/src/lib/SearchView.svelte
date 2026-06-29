@@ -131,6 +131,56 @@ const docsHasHits = $derived(
   !!docs.data?.ingested && (docs.data?.results.length ?? 0) > 0,
 );
 
+function syncDetailSeparators(node: HTMLElement): {
+  update: () => void;
+  destroy: () => void;
+} {
+  let frame: number | null = null;
+
+  const measure = () => {
+    frame = null;
+    const separators = [
+      ...node.querySelectorAll<HTMLElement>(".detail-separator"),
+    ];
+    for (const separator of separators) {
+      separator.hidden = false;
+    }
+    for (const separator of separators) {
+      const previous = separator.previousElementSibling as HTMLElement | null;
+      const next = separator.nextElementSibling as HTMLElement | null;
+      if (previous == null || next == null) {
+        separator.hidden = true;
+        continue;
+      }
+      const previousTop = Math.round(previous.getBoundingClientRect().top);
+      const nextTop = Math.round(next.getBoundingClientRect().top);
+      separator.hidden = previousTop !== nextTop;
+    }
+  };
+
+  const schedule = () => {
+    if (frame != null) return;
+    frame = requestAnimationFrame(measure);
+  };
+
+  const observer =
+    typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
+  observer?.observe(node);
+  window.addEventListener("resize", schedule);
+  schedule();
+
+  return {
+    update: schedule,
+    destroy() {
+      if (frame != null) {
+        cancelAnimationFrame(frame);
+      }
+      observer?.disconnect();
+      window.removeEventListener("resize", schedule);
+    },
+  };
+}
+
 // Distinguish a TIMEOUT abort from every other failure. A supersede/unmount abort
 // never reaches here (asyncResource's `cancelled` guard swallows it); a timeout
 // abort fires while NOT cancelled, surfacing as an error. asyncResource exposes
@@ -740,8 +790,11 @@ function closeSearch(): void {
 {/snippet}
 
 {#snippet detailLine(parts: string[])}
-  <span class="result-detail muted">
+  <span class="result-detail muted" use:syncDetailSeparators>
     {#each parts as part, i (i)}
+      {#if i > 0}
+        <span class="detail-separator" aria-hidden="true">·</span>
+      {/if}
       <span>{part}</span>
     {/each}
   </span>
@@ -1119,9 +1172,12 @@ function closeSearch(): void {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.15rem 0.75rem;
+    gap: 0.15rem 0.35rem;
     font-size: 0.9em;
     overflow-wrap: anywhere;
+  }
+  .detail-separator {
+    color: var(--text-muted);
   }
   .detail-link {
     color: var(--text-muted);
@@ -1185,6 +1241,13 @@ function closeSearch(): void {
   .children.table.codes {
     display: flex;
     flex-direction: column;
+    --code-row-inline: 0.75rem;
+    --code-disclosure-gutter: 0.85rem;
+    --code-disclosure-gap: 0.45rem;
+    --code-text-start: calc(
+      var(--code-row-inline) + var(--code-disclosure-gutter) +
+        var(--code-disclosure-gap)
+    );
   }
   .code-cells {
     display: grid;
@@ -1199,8 +1262,8 @@ function closeSearch(): void {
   }
   .code-summary {
     display: grid;
-    grid-template-columns: 0.85rem minmax(0, 1fr);
-    column-gap: 0.45rem;
+    grid-template-columns: var(--code-disclosure-gutter) minmax(0, 1fr);
+    column-gap: var(--code-disclosure-gap);
     align-items: baseline;
   }
   .disclosure-icon {
@@ -1235,13 +1298,14 @@ function closeSearch(): void {
   }
   .code-row > summary,
   .single-code-row {
-    padding: 0.45rem 0.75rem;
+    padding: 0.45rem var(--code-row-inline);
     border-bottom: 1px solid var(--border);
   }
   .single-code-row {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
+    padding-left: var(--code-text-start);
   }
   .code-row:last-child:not([open]) > summary,
   .code-row:last-child.single-code-row {
@@ -1264,7 +1328,8 @@ function closeSearch(): void {
     text-decoration: none;
     overflow-wrap: anywhere;
     font-size: 0.9em;
-    padding: 0.35rem 0.75rem 0.35rem 1.8rem;
+    padding: 0.35rem var(--code-row-inline) 0.35rem
+      var(--code-text-start);
     border-bottom: 1px solid var(--border);
   }
   .owner-row > * {

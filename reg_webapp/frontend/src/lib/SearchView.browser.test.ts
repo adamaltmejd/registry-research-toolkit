@@ -41,6 +41,10 @@ function setQuery(q: string): void {
   router.navigate(`/search?q=${encodeURIComponent(q)}`);
 }
 
+function nextFrame(): Promise<void> {
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
+
 beforeEach(() => {
   vi.mocked(search).mockReset();
   // Default the docs resource to a no-hit response so the docs group is omitted
@@ -175,6 +179,63 @@ describe("SearchView — typed result groups (#379)", () => {
         page.getByText("Operational: Formal education dissatisfaction reason"),
       )
       .toBeVisible();
+    const root = document.querySelector<HTMLElement>(".search-view");
+    expect(root).not.toBeNull();
+    if (root) {
+      root.style.width = "1200px";
+    }
+    window.dispatchEvent(new Event("resize"));
+    await nextFrame();
+    const separators = [
+      ...document.querySelectorAll<HTMLElement>(
+        ".search-view .result-detail .detail-separator",
+      ),
+    ];
+    expect(separators).toHaveLength(2);
+    expect(separators.every((separator) => !separator.hidden)).toBe(true);
+  });
+
+  it("hides variable detail separators when metadata wraps to new rows", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "fedunsatreason",
+      groups: [
+        {
+          group: "variables",
+          total_count: 1,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/aes/formal-utbildning",
+              name: "Orsak till missnöje, formell utbildning",
+              register: "AES",
+              definition: "Orsak till missnöje",
+              operational_definition: "Formal education dissatisfaction reason",
+              delivery_column_names: ["fedunsatreason_1"],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("fedunsatreason");
+    await render(SearchView);
+
+    const detail = document.querySelector<HTMLElement>(
+      ".search-view .result-detail",
+    );
+    expect(detail).not.toBeNull();
+    if (detail) {
+      detail.style.width = "4rem";
+    }
+    window.dispatchEvent(new Event("resize"));
+    await nextFrame();
+    const separators = [
+      ...document.querySelectorAll<HTMLElement>(
+        ".search-view .result-detail .detail-separator",
+      ),
+    ];
+    expect(separators).toHaveLength(2);
+    expect(separators.every((separator) => separator.hidden)).toBe(true);
   });
 
   it("keeps the matched delivery column visible before the +N overflow", async () => {
@@ -361,6 +422,18 @@ describe("SearchView — typed result groups (#379)", () => {
       .element(page.getByRole("link", { name: /Ålder/ }))
       .toHaveAttribute("href", "/catalog/scb/rams/age");
     await expect.element(page.getByText(/\+\d+ more/)).not.toBeInTheDocument();
+
+    const codeCells = document.querySelector<HTMLElement>(
+      ".search-view details.code-row .code-cells",
+    );
+    const firstOwnerText = document.querySelector<HTMLElement>(
+      ".search-view details.code-row .owner-row .row-link",
+    );
+    expect(codeCells).not.toBeNull();
+    expect(firstOwnerText).not.toBeNull();
+    expect(Math.round(firstOwnerText?.getBoundingClientRect().left ?? 0)).toBe(
+      Math.round(codeCells?.getBoundingClientRect().left ?? 0),
+    );
   });
 
   it("shows when a bounded code-owner expansion omits variables", async () => {
