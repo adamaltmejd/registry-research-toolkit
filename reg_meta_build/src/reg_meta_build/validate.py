@@ -1334,7 +1334,9 @@ def _check_tags(
 # floor like the lkf one — adding/removing a family forces a gate update. Corpus-only,
 # and additionally gated on SCB being in the build (#595): the merged families are all
 # SCB-sourced (period_family_merges.toml is entirely scb/...), so a non-SCB
-# `--providers` subset carries no families and would false-fail.
+# `--providers` subset carries no families and would false-fail. Count only
+# sub-annual alias-window variables so yearly/co-delivered alias representations
+# in the same table do not mask a monthly-family regression.
 _AW_MIN_MERGED_FAMILIES = 8
 
 
@@ -1345,22 +1347,26 @@ def _check_variable_alias_window(
     *,
     corpus: bool,
 ) -> None:
-    """#319 monthly-family alias-window structural closure (corpus-independent).
-    EMPTY without `curation/period_family_merges.toml`, so no volume floor on
-    synthetic builds.
+    """Alias-window structural closure (corpus-independent). EMPTY without
+    `curation/period_family_merges.toml` or SCB multi-alias cvids, so no volume
+    floor on synthetic builds.
 
     Asserts: every window's (variable_id, register_variant_id) resolves to a live
     variable / register_variant; valid_from <= valid_to; the window's
     delivery_column_name is present in `variable_alias` for that variable+variant
-    (the merged variable retains all 12 columns there — same invariant
-    `_check_variable_alias_covers_state_columns` enforces for states). Corpus: a
+    (monthly-family survivors retain all 12 columns there; multi-alias cvids
+    retain every co-delivered alias — same invariant
+    `_check_variable_alias_covers_state_columns` enforces for states); every exact
+    state-window alias family keeps the state's representative column, so resolver
+    expansion cannot hide the base column. Corpus: a
     real maintainer build merges the 8 monthly families (#319/#383), so this is
     also the regression floor for family-merge (>= `_AW_MIN_MERGED_FAMILIES`
-    survivors) now that the month-token-group floor in `_check_concept_groups`
-    is gone — the merge consumes every month-suffixed family pre-fold. The floor is
-    additionally gated on SCB being in the build (#595) — the merged families are all
-    SCB-sourced, so a non-SCB `--providers` subset SKIPS rather than false-fails."""
-    result.section("[monthly-family windows]")
+    sub-annual survivors) now that the month-token-group floor in
+    `_check_concept_groups` is gone — the merge consumes every month-suffixed
+    family pre-fold. The floor is additionally gated on SCB being in the build
+    (#595) — the merged families are all SCB-sourced, so a non-SCB `--providers`
+    subset SKIPS rather than false-fails."""
+    result.section("[alias windows]")
     if "variable_alias_window" not in tables:
         result.ok("variable_alias_window absent — window check skipped")
         return
@@ -1399,25 +1405,54 @@ def _check_variable_alias_window(
         else:
             result.fail(f"{uncovered:,} window column(s) missing from variable_alias")
 
+    base_hidden = conn.execute(
+        "SELECT COUNT(*) FROM variable_state vs "
+        "WHERE vs.delivery_column_name IS NOT NULL "
+        "AND EXISTS ("
+        "  SELECT 1 FROM variable_alias_window w "
+        "  WHERE w.variable_id = vs.variable_id "
+        "  AND w.register_variant_id = vs.register_variant_id "
+        "  AND w.valid_from = vs.valid_from "
+        "  AND w.valid_to = vs.valid_to"
+        ") "
+        "AND NOT EXISTS ("
+        "  SELECT 1 FROM variable_alias_window w "
+        "  WHERE w.variable_id = vs.variable_id "
+        "  AND w.register_variant_id = vs.register_variant_id "
+        "  AND py_lower(w.delivery_column_name) = py_lower(vs.delivery_column_name) "
+        "  AND w.valid_from = vs.valid_from "
+        "  AND w.valid_to = vs.valid_to"
+        ")"
+    ).fetchone()[0]
+    if base_hidden == 0:
+        result.ok("every exact-window state keeps its representative column visible")
+    else:
+        result.fail(
+            f"{base_hidden:,} exact-window state(s) missing their representative column"
+        )
+
     if corpus:
         n_families = conn.execute(
-            "SELECT COUNT(DISTINCT variable_id) FROM variable_alias_window"
+            "SELECT COUNT(DISTINCT variable_id) FROM variable_alias_window "
+            "WHERE substr(valid_from, 6, 5) != '01-01' "
+            "OR substr(valid_to, 6, 5) != '12-31'"
         ).fetchone()[0]
         # Gated on SCB presence (#595): the merged monthly families are all
         # SCB-sourced (period_family_merges.toml is entirely scb/...), so a non-SCB
         # `--providers` subset SKIPS rather than false-fails this floor.
         if not _scb_in_build(conn):
             result.info(
-                f"{n_families} merged monthly families — SCB not in this build, "
+                f"{n_families} sub-annual alias-window families — SCB not in this build, "
                 f"floor (>= {_AW_MIN_MERGED_FAMILIES}) skipped (#595)"
             )
         elif n_families >= _AW_MIN_MERGED_FAMILIES:
             result.ok(
-                f"{n_families} merged monthly families (>= {_AW_MIN_MERGED_FAMILIES})"
+                f"{n_families} sub-annual alias-window families "
+                f"(>= {_AW_MIN_MERGED_FAMILIES})"
             )
         else:
             result.fail(
-                f"only {n_families} merged monthly families "
+                f"only {n_families} sub-annual alias-window families "
                 f"(< {_AW_MIN_MERGED_FAMILIES}) — family-merge regression?"
             )
 

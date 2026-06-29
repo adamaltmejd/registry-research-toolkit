@@ -2101,10 +2101,37 @@ class TestVariableAliasWindowChecks:
             result.failures
         )
 
+    def test_windowed_state_without_base_column_fails(self):
+        conn = self._windowed_db()
+        vid, rvid, _base_col = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name "
+            "FROM variable_alias_window"
+        ).fetchone()
+        valid_from, valid_to = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE variable_id = ? AND register_variant_id = ?",
+            (vid, rvid),
+        ).fetchone()
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, ?, 'OtherCol')",
+            (vid, rvid),
+        )
+        conn.execute(
+            "UPDATE variable_alias_window "
+            "SET delivery_column_name = 'OtherCol', valid_from = ?, valid_to = ?",
+            (valid_from, valid_to),
+        )
+        result = self._run(conn)
+        assert any("representative column" in f for f in result.failures), (
+            result.failures
+        )
+
 
 def test_variable_alias_window_section_present_in_report(fixture_db: Path):
-    """#319: the `[monthly-family windows]` section must appear so the check can't
-    be silently de-registered (the fixture ships zero windows)."""
+    """#319/#945: the `[alias windows]` section must appear so the check can't
+    be silently de-registered."""
     report = validate_built_db(fixture_db).format_report()
-    assert "[monthly-family windows]" in report
-    assert "0 alias windows" in report
+    assert "[alias windows]" in report
+    assert "every window has valid_from <= valid_to" in report

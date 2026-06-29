@@ -30,6 +30,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.queries import extract_year
 
 from ._curation import curation_error, fold_column, resolve_variable_id
+from .alias_windows import materialize_multi_alias_windows
 from .classification_links import (
     load_classification_links,
     materialize_classification_links,
@@ -670,18 +671,13 @@ CREATE TABLE variable_alias (
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_name)
 );
 
--- #319: per-month alias windows for CURATED MONTHLY-FAMILY merges. A monthly
--- family (12 month-named delivery columns, e.g. lisa `agi1lonfink{jan..dec}`,
--- shipped inside ANNUAL editions) is merged at build time into ONE variable
--- carrying an annual `variable_state` per delivery year (NOT 12 — the per-month
--- dimension is a representation/alias concern, not a coding boundary; see
--- reg_meta_build/DESIGN.md → Consumers: monthly column families). This sibling
--- table records each month column's validity window so `resolve_at` can pick the
--- column for a queried sub-annual period: `resolve_at("2024-03")` → the `mar`
--- column. EMPTY for every non-merged variable (the resolver no-ops then, leaving
--- those variables' behaviour byte-identical). Windows are `YYYY-MM` expanded via
--- `period_token_to_bounds` (same `_MONTH_LAST_DAY` ends the display formatter
--- reads back). SHIPS — the query layer reads it.
+-- Alias validity windows for delivery-column representations. #319 monthly-family
+-- merges write sub-annual month windows for 12 month-named columns folded into one
+-- annual variable. #945 multi-alias SCB cvids write one state-window row per
+-- co-delivered alias column so aliases that can appear in delivered data are
+-- picker/order-visible representations instead of search-only headers. EMPTY for
+-- variables with no alias windows (the resolver no-ops then, leaving those variables'
+-- behaviour byte-identical). SHIPS — the query layer reads it.
 CREATE TABLE variable_alias_window (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
@@ -4307,6 +4303,7 @@ def materialize(
             fold_slug_hints=fold_slug_hints,
             progress=_progress,
         )
+        alias_window_counts = materialize_multi_alias_windows(conn, progress=_progress)
         # Manifest row-count key deliberately kept as the pre-rename
         # `monthly_family_merges` (the surface is now `period_family_merges`): the
         # whole `row_counts` dict is serialized into the dbdiff-compared
@@ -4315,7 +4312,9 @@ def materialize(
         # change. It's an internal metric label with no runtime consumer; rename it
         # in a future build that already owes a manifest delta.
         row_counts["monthly_family_merges"] = fm_counts["families"]
-        row_counts["variable_alias_windows"] = fm_counts["windows"]
+        row_counts["variable_alias_windows"] = (
+            fm_counts["windows"] + alias_window_counts["windows"]
+        )
 
         # Variable grafts (#365 PR1d) — mint catalog variables reg_meta lacks but
         # a steward delivers, onto an existing (register, variant). Runs AFTER
