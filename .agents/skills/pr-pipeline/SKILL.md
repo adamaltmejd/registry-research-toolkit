@@ -192,14 +192,17 @@ For merge, satisfy the repo gate:
   when the active Codex setup exposes it;
 - stale-head check before and after merge.
 
-Run the real `build-db` last and once for build-affecting work, using the main
-checkout's untracked seed if working from a worktree. Narrowing with `--providers` is
-fine for a scoped dbdiff (e.g. `--providers scb,sos` for an SCB/SOS-only change is
-faster than the full global build); a thin / non-SCB subset builds and validates green
-end-to-end (the staleness, corpus-volume, and seed-drift gates are scoped to the built
-providers). Pick the providers your PR affects, or omit `--providers` for the full
-global set (release asset / cross-provider PRs). If the PR changes any tracked
-`reg_meta_build/input_data/**` file (provider `*.toml`,
+Run the real `build-db` last and once for build-affecting work, using the `build-db`
+skill / `scripts/build_db_watch.py` so the run has a timestamped log, sparse progress,
+post-build SQLite checks, and long-session polling. Use the main checkout's untracked
+seed if working from a worktree. Add `--dbdiff-against <baseline-reg_meta.db>` when the
+PR is expected to be content-neutral or to have a small inspected DB delta. Narrowing
+with `--providers` is fine for a scoped dbdiff (e.g. `--providers scb,sos` for an
+SCB/SOS-only change is faster than the full global build); a thin / non-SCB subset
+builds and validates green end-to-end (the staleness, corpus-volume, and seed-drift
+gates are scoped to the built providers). Pick the providers your PR affects, or omit
+`--providers` for the full global set (release asset / cross-provider PRs). If the PR
+changes any tracked `reg_meta_build/input_data/**` file (provider `*.toml`,
 `classifications/`/`scb_canonical/` CSV, or an add/delete/rename), do not point
 `--input-dir` directly at the main checkout: that validates main's tracked inputs, not
 the PR head. Instead build an overlay input root that starts from the main checkout's
@@ -212,14 +215,15 @@ db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"
 input_dir="<main-checkout>/reg_meta_build/input_data"
 # If this PR changes tracked reg_meta_build/input_data/**, first build an
 # overlay input root and set input_dir to that overlay.
-uv run reg-meta-build --db "$db_dir" build-db \
+uv run --no-project python scripts/build_db_watch.py \
+  --slug "<slug>" \
+  --db-dir "$db_dir" \
   --input-dir "$input_dir"
 ```
 
 Clean scratch outputs afterward:
 
 ```sh
-git clean -fdX reg_meta_build/fqid_slugs/
 rm -rf "$db_dir"
 ```
 

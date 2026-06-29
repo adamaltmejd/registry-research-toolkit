@@ -206,6 +206,24 @@ def _build_parser() -> argparse.ArgumentParser:
             "where build time goes."
         ),
     )
+    build_p.add_argument(
+        "--scb-value-prestage-cache",
+        default=None,
+        help=(
+            "Optional SQLite cache file for SCB's projected Vardemangder value-set "
+            "layer. When supplied, build-db validates it against the raw "
+            "Vardemangder files and SCB projection backbone, uses it when valid, "
+            "and rebuilds it automatically when missing or stale."
+        ),
+    )
+    build_p.add_argument(
+        "--refresh-scb-value-prestage-cache",
+        action="store_true",
+        help=(
+            "Force rebuilding --scb-value-prestage-cache even when its fingerprint "
+            "matches. Ignored unless --scb-value-prestage-cache is supplied."
+        ),
+    )
 
     extend_db_p = sub.add_parser(
         "extend-db",
@@ -807,6 +825,12 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         slug_dir=slug_dir,
         skip_slugs=args.skip_slugs,
         providers=providers,
+        scb_value_prestage_cache=(
+            Path(args.scb_value_prestage_cache)
+            if args.scb_value_prestage_cache
+            else None
+        ),
+        refresh_scb_value_prestage=args.refresh_scb_value_prestage_cache,
         pre_rename_hook=pre_rename_hook,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
@@ -817,6 +841,8 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "skip_slugs": args.skip_slugs,
             "validate": not args.no_validate,
             "providers": list(providers),
+            "scb_value_prestage_cache": args.scb_value_prestage_cache,
+            "refresh_scb_value_prestage_cache": args.refresh_scb_value_prestage_cache,
         },
         db_info={
             "schema_version": SCHEMA_VERSION,

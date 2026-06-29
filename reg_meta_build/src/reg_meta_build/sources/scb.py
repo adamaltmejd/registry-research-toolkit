@@ -25,6 +25,8 @@ A4.1 does not populate the provenance DB (resolved fork #1).
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 import sqlite3
 from collections import Counter, defaultdict
@@ -2314,17 +2316,18 @@ def _coalesce_variable_states(
     # this reason.
     cur = conn.cursor()
     cur.row_factory = sqlite3.Row
-    rows = cur.execute(
-        "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
-        "       vi.data_type, vi.data_length, vi.value_set_id, "
-        "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
-        "       vi.variabelnamn, va.delivery_column_name, "
-        "       rv.registerversionnamn, "
-        "       rv.registerversion_senastgodkanddatum "
-        "FROM variable_instance vi "
-        "LEFT JOIN variable_alias_build va ON va.cvid = vi.cvid "
-        "JOIN register_version rv ON rv.regver_id = vi.regver_id"
-    ).fetchall()
+    with _stage_timer("scb:coalesce:load_instances"):
+        rows = cur.execute(
+            "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
+            "       vi.data_type, vi.data_length, vi.value_set_id, "
+            "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
+            "       vi.variabelnamn, va.delivery_column_name, "
+            "       rv.registerversionnamn, "
+            "       rv.registerversion_senastgodkanddatum "
+            "FROM variable_instance vi "
+            "LEFT JOIN variable_alias_build va ON va.cvid = vi.cvid "
+            "JOIN register_version rv ON rv.regver_id = vi.regver_id"
+        ).fetchall()
 
     # Rule 2 — kolumnnamn connectivity per (register, variant, var_id).
     # Two delivery columns are one concept-candidate iff some cvid carries both
@@ -2740,18 +2743,20 @@ def _coalesce_variable_states(
     # merged variable *names* — `CAST('name' AS INTEGER)` → 0 in SQLite — but
     # this SCB-specific coalescer is replaced by the per-provider IR adapters in
     # A4, so the numeric-key assumption never reaches SOS.
-    vid_map: dict[tuple[int, int], int] = {
-        (r[0], r[1]): r[2]
-        for r in conn.execute(
-            "SELECT register_id, CAST(provider_key AS INTEGER), variable_id FROM variable"
-        )
-    }
+    with _stage_timer("scb:coalesce:load_variable_map"):
+        vid_map: dict[tuple[int, int], int] = {
+            (r[0], r[1]): r[2]
+            for r in conn.execute(
+                "SELECT register_id, CAST(provider_key AS INTEGER), variable_id FROM variable"
+            )
+        }
 
     # Triage: resolve pre-triage collisions (fold/split/collapse) before
     # materializing. Mints split-sibling `variable` rows (so vid_map above is
     # stale for them — triage.assignments carries the per-gkey target) and
     # routes each group to its variable_id + (folded) value_set_version_label.
-    triage = _triage_groups(conn, groups, vid_map)
+    with _stage_timer("scb:coalesce:triage_groups"):
+        triage = _triage_groups(conn, groups, vid_map)
 
     # Stamp each cvid's OWNING `variable_id` now that triage has assigned every
     # group (including the split siblings it just minted). This is the GROUND
@@ -2766,19 +2771,30 @@ def _coalesce_variable_states(
     # `variable_state` either, so an unstamped cvid is consistent with
     # materialization — never a dropped state. The real corpus stamps every cvid
     # (0 unattributed); the importer writes a `register_version` per edition.
-    stamps = [
-        (vid, cvid)
-        for cvid, gkey in cvid_gkey.items()
-        if (vid := triage.assignments.get(gkey)) is not None
-    ]
-    conn.executemany(
-        "UPDATE variable_instance SET variable_id = ? WHERE cvid = ?", stamps
-    )
-    n_unattributed = len(cvid_gkey) - len(stamps)
-    _progress(
-        f"  stamped {len(stamps):,} cvids with their owning variable_id"
-        + (f" ({n_unattributed:,} unattributed)" if n_unattributed else "")
-    )
+    with _stage_timer("scb:coalesce:stamp_variable_instances"):
+        stamps = [
+            (vid, cvid)
+            for cvid, gkey in cvid_gkey.items()
+            if (vid := triage.assignments.get(gkey)) is not None
+        ]
+        conn.executemany(
+            "UPDATE variable_instance SET variable_id = ? WHERE cvid = ?", stamps
+        )
+        n_unattributed = len(cvid_gkey) - len(stamps)
+        _progress(
+            f"  stamped {len(stamps):,} cvids with their owning variable_id"
+            + (f" ({n_unattributed:,} unattributed)" if n_unattributed else "")
+        )
+
+    # Post-triage scratch index. `variable_instance.variable_id` is NULL until the
+    # stamp above, so a CREATE-time index would only slow ingestion and the bulk
+    # update. Once stamped, several sibling-routed readers need variable_id lookups;
+    # cvid as the second key also satisfies the op-def min-cvid tiebreak.
+    with _stage_timer("scb:coalesce:index_stamped_variable_instances"):
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_variable_instance_variable_id_cvid "
+            "ON variable_instance(variable_id, cvid)"
+        )
 
     # #892: attribute each cvid's operational definition to its OWNING (post-split
     # sibling) variable. The cvid→variable_id stamp above is the SAME ground-truth
@@ -2788,19 +2804,20 @@ def _coalesce_variable_states(
     # (deterministic min(cvid) tiebreak for the SQL aggregate). Written to the
     # `variable` table here, NOT folded into `description` (kept DISTINCT). NULL
     # when the variable's cvids carry no operational definition (UPDATE skips it).
-    conn.execute(
-        "UPDATE variable SET operational_definition = ("
-        "  SELECT vi.operational_definition FROM variable_instance vi"
-        "  WHERE vi.variable_id = variable.variable_id"
-        "    AND COALESCE(vi.operational_definition, '') <> ''"
-        "  ORDER BY vi.cvid LIMIT 1"
-        ") "
-        "WHERE EXISTS ("
-        "  SELECT 1 FROM variable_instance vi"
-        "  WHERE vi.variable_id = variable.variable_id"
-        "    AND COALESCE(vi.operational_definition, '') <> ''"
-        ")"
-    )
+    with _stage_timer("scb:coalesce:backfill_operational_definitions"):
+        conn.execute(
+            "UPDATE variable SET operational_definition = ("
+            "  SELECT vi.operational_definition FROM variable_instance vi"
+            "  WHERE vi.variable_id = variable.variable_id"
+            "    AND COALESCE(vi.operational_definition, '') <> ''"
+            "  ORDER BY vi.cvid LIMIT 1"
+            ") "
+            "WHERE EXISTS ("
+            "  SELECT 1 FROM variable_instance vi"
+            "  WHERE vi.variable_id = variable.variable_id"
+            "    AND COALESCE(vi.operational_definition, '') <> ''"
+            ")"
+        )
 
     batch: list[tuple] = []
     sentinel_count = 0
@@ -3230,13 +3247,14 @@ def _coalesce_variable_states(
             ),
         )
 
-    conn.executemany(
-        "INSERT INTO variable_state (variable_id, register_variant_id, "
-        "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
-        "    value_set_id, value_set_version_label) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        batch,
-    )
+    with _stage_timer("scb:coalesce:insert_variable_states"):
+        conn.executemany(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
+            "    value_set_id, value_set_version_label) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            batch,
+        )
 
     # State-uniqueness index — UNIQUE(variable_id, register_variant_id,
     # valid_from, value_set_version_label). A4.3b moved its CREATE into the
@@ -3592,6 +3610,247 @@ class _ProjectionStats:
     n_value_sets: int = 0
 
 
+_SCB_VALUE_PRESTAGE_VERSION = "1"
+
+
+@dataclass(frozen=True)
+class _ValuePrestagePayload:
+    row_counts: dict[str, int]
+    projection_stats: _ProjectionStats
+
+
+def _projection_backbone_hash(conn: sqlite3.Connection) -> str:
+    """Hash only the Registerinformation facts value-set projection consumes."""
+    digest = hashlib.sha256()
+    count = 0
+    for cvid, version_name in conn.execute(
+        "SELECT vi.cvid, COALESCE(rv.registerversionnamn, '') "
+        "FROM variable_instance vi "
+        "JOIN register_version rv ON vi.regver_id = rv.regver_id "
+        "ORDER BY vi.cvid"
+    ):
+        count += 1
+        digest.update(str(cvid).encode("ascii"))
+        digest.update(b"\0")
+        digest.update(version_name.encode("utf-8"))
+        digest.update(b"\n")
+    digest.update(f"count={count}".encode("ascii"))
+    return digest.hexdigest()
+
+
+def _value_prestage_fingerprint(
+    *,
+    vardemangder_sha256: str,
+    validity_sha256: str,
+    projection_backbone_sha256: str,
+) -> dict[str, str]:
+    return {
+        "format_version": _SCB_VALUE_PRESTAGE_VERSION,
+        "source:Vardemangder.csv": vardemangder_sha256,
+        "source:VardemangderValidDates.csv": validity_sha256,
+        "projection_backbone_sha256": projection_backbone_sha256,
+    }
+
+
+def _read_prestage_meta(conn: sqlite3.Connection, schema: str) -> dict[str, str]:
+    return {
+        str(key): str(value)
+        for key, value in conn.execute(f"SELECT key, value FROM {schema}.meta")
+    }
+
+
+def _metadata_matches(
+    meta: dict[str, str],
+    fingerprint: dict[str, str],
+) -> tuple[bool, str | None]:
+    for key, expected in fingerprint.items():
+        actual = meta.get(key)
+        if actual != expected:
+            return False, f"{key} changed"
+    return True, None
+
+
+def _projection_stats_from_meta(meta: dict[str, str]) -> _ProjectionStats:
+    return _ProjectionStats(
+        cvids_with_set=int(meta.get("projection:cvids_with_set", "0")),
+        cvids_empty_after_projection=int(
+            meta.get("projection:cvids_empty_after_projection", "0")
+        ),
+        n_value_sets=int(meta.get("projection:n_value_sets", "0")),
+    )
+
+
+def _apply_value_prestage(
+    conn: sqlite3.Connection,
+    cache_path: Path,
+    fingerprint: dict[str, str],
+    *,
+    force_rebuild: bool,
+) -> _ValuePrestagePayload | None:
+    if force_rebuild:
+        _progress(f"SCB value prestage refresh requested: {cache_path}")
+        return None
+    if not cache_path.exists():
+        _progress(f"SCB value prestage cache missing; rebuilding: {cache_path}")
+        return None
+
+    attached = False
+    try:
+        conn.execute("ATTACH DATABASE ? AS prestage", (str(cache_path),))
+        attached = True
+        meta = _read_prestage_meta(conn, "prestage")
+        payload = _ValuePrestagePayload(
+            row_counts={
+                "Vardemangder.csv": int(meta["row_count:Vardemangder.csv"]),
+            },
+            projection_stats=_projection_stats_from_meta(meta),
+        )
+    except (sqlite3.DatabaseError, KeyError, ValueError) as exc:
+        _progress(
+            f"SCB value prestage cache unusable ({type(exc).__name__}); "
+            f"rebuilding: {cache_path}"
+        )
+        if attached:
+            conn.execute("DETACH DATABASE prestage")
+        return None
+
+    try:
+        matches, reason = _metadata_matches(meta, fingerprint)
+        if not matches:
+            _progress(
+                f"SCB value prestage cache stale ({reason}); rebuilding: {cache_path}"
+            )
+            return None
+
+        _progress(f"Applying SCB value prestage cache: {cache_path}")
+        try:
+            conn.executescript(
+                """
+                INSERT INTO main.value_code (code_id, code, label)
+                    SELECT code_id, code, label FROM prestage.value_code;
+                INSERT INTO main.value_set (value_set_id, member_hash)
+                    SELECT value_set_id, member_hash FROM prestage.value_set;
+                INSERT INTO main.value_set_member (value_set_id, code_id)
+                    SELECT value_set_id, code_id FROM prestage.value_set_member;
+                UPDATE main.variable_instance
+                SET value_set_id = cvs.value_set_id,
+                    value_set_version_label = cvs.value_set_version_label,
+                    vardemangdsniva = cvs.vardemangdsniva
+                FROM prestage.cvid_value_set AS cvs
+                WHERE main.variable_instance.cvid = cvs.cvid;
+                """
+            )
+            conn.commit()
+        except sqlite3.DatabaseError as exc:
+            conn.rollback()
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="scb_value_prestage_apply_failed",
+                error_class="configuration",
+                message=(
+                    f"SCB value prestage cache matched the source fingerprint but "
+                    f"could not be applied: {cache_path} ({exc})."
+                ),
+                remediation=(
+                    "Delete the cache or rerun with --refresh-scb-value-prestage-cache "
+                    "so build-db regenerates it from raw SCB inputs."
+                ),
+            ) from exc
+
+        counts = {
+            "value_code": int(
+                conn.execute("SELECT COUNT(*) FROM prestage.value_code").fetchone()[0]
+            ),
+            "value_set": int(
+                conn.execute("SELECT COUNT(*) FROM prestage.value_set").fetchone()[0]
+            ),
+            "value_set_member": int(
+                conn.execute(
+                    "SELECT COUNT(*) FROM prestage.value_set_member"
+                ).fetchone()[0]
+            ),
+            "cvid_value_set": int(
+                conn.execute("SELECT COUNT(*) FROM prestage.cvid_value_set").fetchone()[
+                    0
+                ]
+            ),
+        }
+        _progress(
+            "  Applied SCB value prestage rows: "
+            f"value_code={counts['value_code']:,}, "
+            f"value_set={counts['value_set']:,}, "
+            f"value_set_member={counts['value_set_member']:,}, "
+            f"cvid_value_set={counts['cvid_value_set']:,}"
+        )
+        return payload
+    finally:
+        if attached:
+            conn.execute("DETACH DATABASE prestage")
+
+
+def _write_value_prestage(
+    conn: sqlite3.Connection,
+    cache_path: Path,
+    fingerprint: dict[str, str],
+    *,
+    vardemangder_rows: int,
+    validity_rows: int,
+    projection_stats: _ProjectionStats,
+) -> None:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = cache_path.with_name(f".{cache_path.name}.tmp")
+    tmp_path.unlink(missing_ok=True)
+    conn.execute("ATTACH DATABASE ? AS prestage_out", (str(tmp_path),))
+    conn.commit()
+    try:
+        conn.execute("PRAGMA prestage_out.journal_mode=OFF")
+        conn.execute("PRAGMA prestage_out.synchronous=OFF")
+        meta = {
+            **fingerprint,
+            "row_count:Vardemangder.csv": str(vardemangder_rows),
+            "row_count:VardemangderValidDates.csv": str(validity_rows),
+            "projection:cvids_with_set": str(projection_stats.cvids_with_set),
+            "projection:cvids_empty_after_projection": str(
+                projection_stats.cvids_empty_after_projection
+            ),
+            "projection:n_value_sets": str(projection_stats.n_value_sets),
+        }
+        conn.executescript(
+            """
+            CREATE TABLE prestage_out.meta (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            ) WITHOUT ROWID;
+            CREATE TABLE prestage_out.value_code AS
+                SELECT code_id, code, label FROM main.value_code;
+            CREATE TABLE prestage_out.value_set AS
+                SELECT value_set_id, member_hash FROM main.value_set;
+            CREATE TABLE prestage_out.value_set_member AS
+                SELECT value_set_id, code_id FROM main.value_set_member;
+            CREATE TABLE prestage_out.cvid_value_set AS
+                SELECT cvid, value_set_id, value_set_version_label, vardemangdsniva
+                FROM main.variable_instance
+                WHERE value_set_id IS NOT NULL
+                   OR value_set_version_label IS NOT NULL
+                   OR vardemangdsniva IS NOT NULL;
+            CREATE INDEX prestage_out.idx_cvid_value_set_cvid
+                ON cvid_value_set(cvid);
+            """
+        )
+        conn.executemany(
+            "INSERT INTO prestage_out.meta (key, value) VALUES (?, ?)",
+            sorted(meta.items()),
+        )
+        conn.commit()
+    finally:
+        conn.execute("DETACH DATABASE prestage_out")
+    tmp_path.replace(cache_path)
+    _progress(
+        "Updated SCB value prestage cache "
+        f"({json.dumps({'path': str(cache_path)}, ensure_ascii=False)})"
+    )
+
+
 def _accept_code(
     item_ids: list[int],
     cvid_year: int | None,
@@ -3850,10 +4109,15 @@ class SCBAdapter:
         self,
         conn: sqlite3.Connection,
         codelivery: CodeliveryMap | None = None,
+        *,
+        value_prestage_cache: Path | None = None,
+        refresh_value_prestage: bool = False,
     ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
         # and reads the universal rows back to emit IR (strategy B).
         self.conn = conn
+        self.value_prestage_cache = value_prestage_cache
+        self.refresh_value_prestage = refresh_value_prestage
         # Co-delivery curation (register_id, var_id, column) → kept label,
         # consulted by the coalescer for genuine one-off same-column conflicts.
         self.codelivery = codelivery or {}
@@ -3921,9 +4185,12 @@ class SCBAdapter:
                 conn, ri_path
             )
         self.row_counts["Registerinformation.csv"] = ri_count
+        projection_backbone_sha256 = _projection_backbone_hash(conn)
 
         # Pre-load validity windows (consumed by Vardemangder year-projection).
         validity_map: dict[int, list[tuple[int, int]]] = {}
+        validity_row_count = 0
+        validity_sha256 = ""
         vvd_path = scb_dir / "VardemangderValidDates.csv"
         vm_path = scb_dir / "Vardemangder.csv"
         if vm_path.exists() and not vvd_path.exists():
@@ -3941,7 +4208,8 @@ class SCBAdapter:
                 ),
             )
         if vvd_path.exists():
-            self.source_checksums["VardemangderValidDates.csv"] = _file_sha256(vvd_path)
+            validity_sha256 = _file_sha256(vvd_path)
+            self.source_checksums["VardemangderValidDates.csv"] = validity_sha256
             validity_map, validity_row_count = _load_validity_map(vvd_path)
             self.row_counts["VardemangderValidDates.csv"] = validity_row_count
 
@@ -3960,6 +4228,25 @@ class SCBAdapter:
             elif filename == "Timeseries.csv":
                 self.row_counts[filename] = _import_timeseries(conn, path)
             elif filename == "Vardemangder.csv":
+                fingerprint = _value_prestage_fingerprint(
+                    vardemangder_sha256=self.source_checksums[filename],
+                    validity_sha256=validity_sha256,
+                    projection_backbone_sha256=projection_backbone_sha256,
+                )
+                cached = None
+                if self.value_prestage_cache is not None:
+                    with _stage_timer("scb:value_prestage_apply"):
+                        cached = _apply_value_prestage(
+                            conn,
+                            self.value_prestage_cache,
+                            fingerprint,
+                            force_rebuild=self.refresh_value_prestage,
+                        )
+                if cached is not None:
+                    self.row_counts.update(cached.row_counts)
+                    self.projection_stats = cached.projection_stats
+                    continue
+
                 with _stage_timer("scb:vardemangder_import"):
                     vm_count, cvid_vs_info = _import_vardemangder(
                         conn, path, known_cvids
@@ -3983,11 +4270,22 @@ class SCBAdapter:
                     self.projection_stats = _project_and_mint_value_sets(
                         conn, validity_map
                     )
+                if self.value_prestage_cache is not None:
+                    with _stage_timer("scb:value_prestage_write"):
+                        _write_value_prestage(
+                            conn,
+                            self.value_prestage_cache,
+                            fingerprint,
+                            vardemangder_rows=vm_count,
+                            validity_rows=validity_row_count,
+                            projection_stats=self.projection_stats,
+                        )
 
         # A1.2: lift sensitivity / identifier flags from unika_summary into the
         # variable table. Runs after the enrichment loop so both source and
         # target tables are populated.
-        _populate_sensitivity_flags(conn)
+        with _stage_timer("scb:populate_sensitivity_flags"):
+            _populate_sensitivity_flags(conn)
 
         # A2.1: coalesce variable_instance rows into variable_state. Reads
         # `unika_summary` and `register_version`; must run before the
