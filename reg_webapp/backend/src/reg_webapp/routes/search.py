@@ -38,6 +38,7 @@ if TYPE_CHECKING:
         CodeSearchResult,
         RegisterSearchResult,
         SearchResult,
+        VariableSearchResult,
     )
 
     from reg_webapp.catalog_index import CatalogIndex
@@ -190,6 +191,28 @@ def _narrow_search_groups(
     return kept_rows, dropped
 
 
+def _narrow_variable_leaf_columns(
+    results: list[SearchResult], index: CatalogIndex
+) -> list[SearchResult]:
+    """Mask variable leaf delivery-column chips to the steward's held columns."""
+    narrowed: list[SearchResult] = []
+    for result in results:
+        if result.type != "variable" or result.fqid is None:
+            narrowed.append(result)
+            continue
+        leaf = cast("VariableSearchResult", result)
+        held = index.held_columns(str(leaf.fqid))
+        if not held or not leaf.delivery_column_names:
+            narrowed.append(leaf)
+            continue
+        held_names = frozenset(col for col in held if col is not None)
+        held_columns = tuple(
+            col for col in leaf.delivery_column_names if col in held_names
+        )
+        narrowed.append(leaf.model_copy(update={"delivery_column_names": held_columns}))
+    return narrowed
+
+
 @router.get("/search", response_model=SearchResponse)
 def get_search(
     request: Request,
@@ -294,12 +317,21 @@ def get_search(
                 )
             )
         if want_variable:
+            delivery_column_scope = (
+                {
+                    fqid: index.held_columns(fqid)
+                    for fqid in index.admitted_variable_fqids
+                }
+                if index is not None
+                else None
+            )
             var = reg_meta_search(
                 conn,
                 q,
                 field="description",
                 type="variable",
                 fqids=fqids,
+                delivery_column_scope=delivery_column_scope,
                 limit=limit,
             )
             var_results = golden.apply_golden_boost(conn, q, "variable", var.results)
@@ -317,6 +349,7 @@ def get_search(
             # equivalent for the search model), dropping a group with no held member and
             # decrementing total_count for it (best-effort — see `_narrow_search_groups`).
             if index is not None:
+                var_results = _narrow_variable_leaf_columns(var_results, index)
                 var_results, dropped = _narrow_search_groups(var_results, index)
                 var_total -= dropped
             groups.append(
@@ -359,6 +392,7 @@ def get_search(
                 type="value",
                 limit=limit,
                 fold_groups=False,
+                code_variable_owner_limit=None,
             )
             boosted_codes = cast(
                 "list[CodeSearchResult]",

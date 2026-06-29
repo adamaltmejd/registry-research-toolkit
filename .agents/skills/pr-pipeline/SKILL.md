@@ -20,16 +20,15 @@ Agent-surface notes:
   launch the review pass in a fresh subagent so findings are independent of the
   authoring session. The review subagent reports findings back to the lead agent; the
   lead agent fixes or dismisses them.
-- For review, prefer a callable built-in review capability when one is exposed.
-  Slash-command reviews may be available to the top-level user/session without being
-  invokable from inside this skill workflow. When no callable built-in review is
-  exposed, run `registry-code-review` as the repo-scoped callable review workflow in a
-  fresh subagent. If no subagent tool is preloaded, search for a callable multi-agent or
-  reviewer tool before declaring subagents unavailable. Only fall back to an in-session
-  `registry-code-review` checklist after discovery fails or the tool rejects the
-  request; state what was tried. In-session review is diagnostic, not independent review
-  evidence. The GitHub bot-review window described by the repository guidance still
-  applies.
+- For review, run `registry-code-review` as the repo-scoped callable review workflow in
+  a fresh subagent. On Codex `multi_agent_v1`, omit `agent_type` (there is no
+  review-specific role), do not fork the full history, and pass only the PR number or
+  branch/range plus necessary issue context. If no subagent tool is preloaded, search
+  for a callable multi-agent tool before declaring subagents unavailable. Only fall back
+  to an in-session `registry-code-review` checklist after discovery fails or the tool
+  rejects the request; state what was tried. In-session review is diagnostic, not
+  independent review evidence. The GitHub bot-review window described by the repository
+  guidance still applies.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
   new UI authoring, use the repo-local `frontend-design` skill before building. If the
   active Codex setup does not expose that repo-local skill, report the setup gap before
@@ -118,18 +117,15 @@ Run focused verification as the work evolves:
 2. Commit and push the implementation before any GitHub-based PR review or bot-review
    window. The early draft PR may contain only the empty claim commit; do not count a
    review of that stale diff as the independent review for the actual patch. If running
-   a callable built-in review locally before push, target the current local diff
-   explicitly.
-3. Run review on the actual implementation diff. First attempt to launch a fresh review
-   subagent, and pass only the PR number or branch/range plus necessary issue context,
-   not the author's intended fixes or conclusions. Prefer a callable built-in review
-   capability; do not try to invoke slash commands that are only exposed to the
-   top-level session. If no built-in review is callable from this workflow, have the
-   subagent run `registry-code-review` on the PR number or branch/range. If no subagent
-   tool is preloaded, search for a callable multi-agent or reviewer tool before
-   declaring subagents unavailable. Only fall back to an in-session
-   `registry-code-review` checklist after discovery fails or the tool rejects the
-   request; state what was tried and that it does not satisfy the independent review
+   `registry-code-review` locally before push, target the current local diff explicitly.
+3. Run review on the actual implementation diff. First attempt to launch a fresh
+   subagent running `registry-code-review`, and pass only the PR number or branch/range
+   plus necessary issue context, not the author's intended fixes or conclusions. On
+   Codex `multi_agent_v1`, omit `agent_type` (there is no review-specific role) and do
+   not fork the full history. If no subagent tool is preloaded, search for a callable
+   multi-agent tool before declaring subagents unavailable. Only fall back to an
+   in-session `registry-code-review` checklist after discovery fails or the tool rejects
+   the request; state what was tried and that it does not satisfy the independent review
    gate. Stop before ready/merge until an external or subagent review signal is
    available. Fix or explicitly dismiss every material finding with a reason. Beyond
    correctness, weigh reuse/simplification/altitude cleanup — a one-caller abstraction,

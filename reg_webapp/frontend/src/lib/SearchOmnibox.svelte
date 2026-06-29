@@ -46,6 +46,9 @@ let inputEl = $state<HTMLInputElement | null>(null);
 // Whether the <input> currently holds focus — used only to hide the redundant ⌘K
 // hint badge while the box is focused.
 let focused = $state(false);
+const showEnterHint = $derived(
+  focused && query.trim() !== "" && router.route.name !== "search",
+);
 
 // Register the global shortcut on the window: the listener lives in onMount so it
 // tears down on unmount (the omnibox is persistent in the topbar, but a clean
@@ -150,12 +153,18 @@ function onKeydown(event: KeyboardEvent): void {
 }
 </script>
 
-<form class="omnibox" role="search" onsubmit={(e) => { e.preventDefault(); commit(query); }}>
+<form
+  class="omnibox"
+  class:enter-hint={showEnterHint}
+  role="search"
+  onsubmit={(e) => { e.preventDefault(); commit(query); }}
+>
   <input
     bind:this={inputEl}
     bind:value={query}
     type="text"
     aria-label="Search the catalog"
+    aria-describedby={showEnterHint ? "omnibox-enter-hint" : undefined}
     autocomplete="off"
     placeholder="Search registers, variables, codes…"
     onfocus={() => { focused = true; }}
@@ -163,12 +172,13 @@ function onKeydown(event: KeyboardEvent): void {
     onkeydown={onKeydown}
   />
 
-  <!-- Platform-adaptive shortcut hint (#803): ⌘K / Ctrl+K, shown only while
-       the input is UNFOCUSED (focusing it via the shortcut hides the redundant
-       badge). aria-hidden — the input's accessible name already says "Search the
-       catalog"; the badge is a sighted affordance, and screen-reader users get
-       the shortcut from the input, not a decorative kbd glyph. -->
-  {#if !focused}
+  <!-- Platform-adaptive shortcut hint (#803) while unfocused; Enter hint while a
+       non-search route has uncommitted focused text. The shortcut badge is
+       aria-hidden because the input's accessible name already names the control;
+       the Enter hint is referenced through aria-describedby. -->
+  {#if showEnterHint}
+    <kbd id="omnibox-enter-hint" class="omnibox-hint">Enter</kbd>
+  {:else if !focused}
     <kbd class="omnibox-hint" aria-hidden="true">{shortcutHint}</kbd>
   {/if}
 </form>
@@ -230,10 +240,10 @@ function onKeydown(event: KeyboardEvent): void {
      gone, drop the badge-clearing right padding so the placeholder uses the full
      width. */
   @media (max-width: 48rem) {
-    .omnibox-hint {
+    .omnibox-hint[aria-hidden="true"] {
       display: none;
     }
-    .omnibox input {
+    .omnibox:not(.enter-hint) input {
       padding-right: var(--space-3);
     }
   }

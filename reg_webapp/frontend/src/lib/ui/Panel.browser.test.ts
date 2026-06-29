@@ -47,4 +47,17 @@ describe("Panel", () => {
     });
     expect(container.querySelector(".panel-meta")).toBeNull();
   });
+
+  it("can render a flush body for integrated lists", () => {
+    const { container } = render(Panel, {
+      title: "Variables",
+      flush: true,
+      children: body("x"),
+    });
+    const panelBody = container.querySelector<HTMLElement>(".panel-body");
+    expect(panelBody?.classList.contains("flush")).toBe(true);
+    expect(panelBody ? getComputedStyle(panelBody).paddingTop : null).toBe(
+      "0px",
+    );
+  });
 });

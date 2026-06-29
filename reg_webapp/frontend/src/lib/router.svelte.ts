@@ -41,6 +41,10 @@ export type Route =
   | { name: "doc"; identifier: string }
   | { name: "not-found"; path: string };
 
+type AppHistoryState = {
+  searchReturnUrl?: unknown;
+};
+
 /** `decodeURIComponent` that returns `null` on a malformed percent-sequence
  * instead of throwing a `URIError`. Load-bearing: `parseRoute` runs at module
  * import (the `Router` singleton's `$state` initializer), so an unguarded throw
@@ -136,11 +140,18 @@ class Router {
    * etc. and re-fetch when it changes. Kept in sync with the URL in BOTH the
    * popstate handler AND inside `navigate` after `pushState`. */
   search = $state<string>(window.location.search);
+  /** Where the search view's close control returns. Updated only when entering
+   * `/search` from a non-search route, so query refinements on `/search` do not
+   * overwrite it. A cold deep-link falls back to the catalog root. */
+  searchReturnUrl = $state<string>("/catalog");
 
   constructor() {
     window.addEventListener("popstate", () => {
       this.route = parseRoute(window.location.pathname);
       this.search = window.location.search;
+      if (this.route.name === "search") {
+        this.searchReturnUrl = this.searchReturnUrlFromState();
+      }
     });
   }
 
@@ -171,13 +182,33 @@ class Router {
     if (url === current) {
       return;
     }
+    const next = new URL(url, window.location.origin);
+    const nextRoute = parseRoute(next.pathname);
+    const nextState = this.nextHistoryState(nextRoute, current);
     if (replace) {
-      window.history.replaceState({}, "", url);
+      window.history.replaceState(nextState, "", url);
     } else {
-      window.history.pushState({}, "", url);
+      window.history.pushState(nextState, "", url);
     }
     this.route = parseRoute(window.location.pathname);
     this.search = window.location.search;
+  }
+
+  private nextHistoryState(nextRoute: Route, current: string): AppHistoryState {
+    if (nextRoute.name !== "search") {
+      return {};
+    }
+    const returnUrl =
+      this.route.name === "search" ? this.searchReturnUrlFromState() : current;
+    this.searchReturnUrl = returnUrl;
+    return { searchReturnUrl: returnUrl };
+  }
+
+  private searchReturnUrlFromState(): string {
+    const state = window.history.state as AppHistoryState | null;
+    return typeof state?.searchReturnUrl === "string"
+      ? state.searchReturnUrl
+      : "/catalog";
   }
 
   /** Read a query parameter off the reactive `search` (so reads inside an

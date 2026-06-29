@@ -1005,7 +1005,7 @@
       },
       "CodeSearchResult": {
         "additionalProperties": false,
-        "description": "A code/value hit (`value_code_fts` label match + code-shape match, #352).\n`code`/`label` are the SCB value pair; `variables`/`classifications` are a\nbounded representative slice of the owning entities (the researcher's actual\ntarget), and `variable_count`/`classification_count` are the full totals before\nthe slice cap.",
+        "description": "A code/value hit (`value_code_fts` label match + code-shape match, #352).\n`code`/`label` are the SCB value pair; `variables`/`classifications` annotate\nowning entities (the researcher's actual target), and `variable_count`/\n`classification_count` are the full totals before any caller-selected owner\nslice cap.",
         "properties": {
           "classification_count": {
             "default": 0,
@@ -1248,7 +1248,7 @@
       },
       "ConceptGroupSearchResult": {
         "additionalProperties": false,
-        "description": "A folded concept-group row (#322): \u22652 sibling members matched OR the\ngroup's own label matched, so the family collapses to one result. `kind` is\n'variable' or 'classification' (which group bucket it belongs to);\n`member_count` is the family's full size, `matched_count` how many members the\nquery hit, `label_matched` whether the group label/key matched directly.\n`members` is the full facet-ordered member list (each a real leaf FQID) so the\nSPA can expand the family inline \u2014 a group is NOT itself FQID-addressable.",
+        "description": "A folded concept-group row (#322): \u22652 sibling members matched OR the\ngroup's own label matched, so the family collapses to one result. `kind` is\n'variable' or 'classification' (which group bucket it belongs to);\n`member_count` is the family's full size, `matched_count` how many members the\nquery hit, `label_matched` whether the group label/key matched directly.\n`members` is the full facet-ordered member list (each a real leaf FQID) so the\nSPA can derive a group-page link when available, or fall back to member links.\nA group is not itself an FQID-addressable catalog leaf.",
         "properties": {
           "group_key": {
             "title": "Group Key",
@@ -3177,7 +3177,7 @@
       },
       "VariableSearchResult": {
         "additionalProperties": false,
-        "description": "A variable hit (`variable_fts` name/definition/description). `register` is\nthe owning register's display name (context for the omnibox). When the hit is\na LONE member of a concept group (#322 \u2014 the family didn't fold because only\none member matched), `concept_group`/`concept_group_label` annotate the family\nso it stays discoverable; both None otherwise.",
+        "description": "A variable hit (`variable_fts` name/definition/description/\noperational_definition/delivery_column_names). `register` is the owning\nregister's display name (context for the omnibox). When the hit is a LONE\nmember of a concept group (#322 \u2014 the family didn't fold because only one\nmember matched), `concept_group`/`concept_group_label` annotate the family so\nit stays discoverable; both None otherwise.",
         "properties": {
           "concept_group": {
             "anyOf": [
@@ -3212,6 +3212,14 @@
             ],
             "title": "Definition"
           },
+          "delivery_column_names": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Delivery Column Names",
+            "type": "array"
+          },
           "fqid": {
             "anyOf": [
               {
@@ -3233,6 +3241,17 @@
               }
             ],
             "title": "Name"
+          },
+          "operational_definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operational Definition"
           },
           "rank": {
             "title": "Rank",

@@ -281,6 +281,36 @@ class TestSchemaDiffs:
         assert report.schema_differs
         assert "idx_widget_name" in report.indexes_only_in_a
 
+    def test_view_only_in_one(self, db_a: Path, tmp_path: Path):
+        b = tmp_path / "b.db"
+        _build(b)
+        conn = sqlite3.connect(b)
+        conn.execute("CREATE VIEW widget_names AS SELECT name FROM widget")
+        conn.commit()
+        conn.close()
+        report = diff_db_content(db_a, b)
+        assert report.schema_differs
+        assert "widget_names" in report.views_only_in_b
+        assert "view only in B: widget_names" in format_report(report)
+
+    def test_view_definition_diff(self, tmp_path: Path):
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        _build(a)
+        _build(b)
+        conn = sqlite3.connect(a)
+        conn.execute("CREATE VIEW widget_names AS SELECT name FROM widget")
+        conn.commit()
+        conn.close()
+        conn = sqlite3.connect(b)
+        conn.execute("CREATE VIEW widget_names AS SELECT id, name FROM widget")
+        conn.commit()
+        conn.close()
+        report = diff_db_content(a, b)
+        assert report.schema_differs
+        assert [m[0] for m in report.view_mismatches] == ["widget_names"]
+        assert "view widget_names: SQL differs" in format_report(report)
+
     def test_inline_unique_column_change_caught(self, tmp_path: Path):
         # Same columns, but the inline UNIQUE constraint moves a→b. Both DBs
         # get a `sqlite_autoindex_*` index with the SAME name and NULL sql, and

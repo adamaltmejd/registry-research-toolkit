@@ -2699,7 +2699,9 @@ input, never mutated), then runs an insert-only overlay on the copy:
    slugs). `_assert_steward_rows_slugged` then guards that no steward register or
    variant shipped without a slug (an unaddressable FQID).
 4. **FTS rebuild** — `register_fts` and `variable_fts` are cleared with
-   `INSERT INTO <fts>(<fts>) VALUES('delete-all')` and repopulated. `value_code_fts` is
+   `INSERT INTO <fts>(<fts>) VALUES('delete-all')` and repopulated. `variable_fts` reads
+   through `variable_fts_content`, so the newly inserted `variable_alias` rows
+   contribute to the indexed `delivery_column_names` aggregate. `value_code_fts` is
    deliberately skipped (`_populate_fts(include_value_code=False)`) — the overlay
    inserts no `value_code` rows, so the index copied from the base DB is already in
    sync; rebuilding \~4M rows would be pure waste.

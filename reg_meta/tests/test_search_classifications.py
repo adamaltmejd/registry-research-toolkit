@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
+import reg_meta.queries as queries
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import _fts_match_query, search
 
@@ -24,7 +25,12 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import add_value_set, build_slugged_db  # noqa: E402
+from _slugged_db import (  # noqa: E402
+    add_binding,
+    add_value_set,
+    add_variable,
+    build_slugged_db,
+)
 
 
 def _seed_classification(
@@ -53,6 +59,7 @@ def _seed_classification_edge(
 
 if TYPE_CHECKING:
     import sqlite3
+    from collections.abc import Iterable
 
 
 def _rebuild_fts(conn: sqlite3.Connection) -> None:
@@ -495,6 +502,295 @@ def test_variable_fts_row_carries_binding_fqid(db: sqlite3.Connection) -> None:
     rows = out.results
     assert _types(rows) == {"variable"}
     assert str(rows[0].fqid) == "scb/lisa/kon"
+
+
+def test_variable_search_matches_delivery_column_name() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "fedunsatreason", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert str(rows[0].fqid) == "scb/lisa/formal-utbildning"
+    assert rows[0].delivery_column_names == ("fedunsatreason_1",)
+
+
+def test_variable_search_preserves_whitespace_delivery_column_name() -> None:
+    conn = build_slugged_db(
+        variable=("Annual expense", 32183, 1001, "Kol"),
+        delivery_column_name="TOTAL COST",
+        variable_slug="annual-expense",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "TOTAL", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert str(rows[0].fqid) == "scb/lisa/annual-expense"
+    assert rows[0].delivery_column_names == ("TOTAL COST",)
+
+
+def test_variable_search_reads_alias_table_when_fts_payload_is_legacy_text() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="zedalias",
+    )
+    _rebuild_fts(conn)
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'formal-utbildning'"
+    ).fetchone()[0]
+    conn.execute(
+        "UPDATE variable_fts SET delivery_column_names = ? WHERE rowid = ?",
+        ("fedunsatreason_1 zedalias", variable_id),
+    )
+
+    out = search(conn, "fedunsatreason", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert str(rows[0].fqid) == "scb/lisa/formal-utbildning"
+    assert rows[0].delivery_column_names == ("fedunsatreason_1", "zedalias")
+
+
+def test_variable_search_hydrates_delivery_aliases_for_displayed_page_only(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    conn = build_slugged_db(
+        variable=("Needle alpha", 32183, 1001, "Alpha"),
+        delivery_column_name="Alpha",
+        variable_slug="needle-alpha",
+    )
+    add_variable(
+        conn,
+        register_id=1,
+        var_id=42181,
+        name="Needle beta",
+        slug="needle-beta",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=42181,
+        delivery_column_name="Beta",
+    )
+    _rebuild_fts(conn)
+    seen: list[tuple[int, ...]] = []
+    real = queries._delivery_column_names_for_variables
+
+    def spy(
+        conn_arg: sqlite3.Connection, variable_ids: Iterable[int]
+    ) -> dict[int, tuple[str, ...]]:
+        ids = tuple(variable_ids)
+        seen.append(ids)
+        return real(conn_arg, ids)
+
+    monkeypatch.setattr(queries, "_delivery_column_names_for_variables", spy)
+
+    out = search(conn, "Needle", field="description", type="variable", limit=1)
+
+    shown_slug = str(out.results[0].fqid).split("/")[-1]
+    shown_variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = ?", (shown_slug,)
+    ).fetchone()[0]
+    assert out.total_count == 2
+    assert len(out.results) == 1
+    assert seen == [(shown_variable_id,)]
+    assert out.results[0].delivery_column_names in {("Alpha",), ("Beta",)}
+
+
+def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:
+    conn = build_slugged_db(
+        variable=("Plain variable", 32183, 1001, "HeldColumn"),
+        delivery_column_name="HeldColumn",
+        variable_slug="plain-variable",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="LeakTermAlias",
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "LeakTerm",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/plain-variable"},
+        delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
+    )
+
+    assert out.total_count == 0
+    assert out.results == ()
+
+
+def test_variable_search_delivery_scope_keeps_description_hit() -> None:
+    conn = build_slugged_db(
+        variable=("Plain variable", 32183, 1001, "HeldColumn"),
+        delivery_column_name="HeldColumn",
+        variable_slug="plain-variable",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="LeakTermAlias",
+    )
+    conn.execute(
+        "UPDATE variable SET description = ? WHERE slug = 'plain-variable'",
+        ("LeakTerm appears in the public description",),
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "LeakTerm",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/plain-variable"},
+        delivery_column_scope={"scb/lisa/plain-variable": {"HeldColumn"}},
+    )
+
+    assert out.total_count == 1
+    assert str(out.results[0].fqid) == "scb/lisa/plain-variable"
+    assert out.results[0].delivery_column_names == ("HeldColumn",)
+
+
+def test_variable_search_delivery_scope_filters_before_group_folding() -> None:
+    conn = build_slugged_db(
+        variable=("First variable", 32183, 1001, "HeldA"),
+        delivery_column_name="HeldA",
+        variable_slug="first-variable",
+    )
+    add_variable(
+        conn,
+        register_id=1,
+        var_id=42181,
+        name="Second variable",
+        slug="second-variable",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=42181,
+        delivery_column_name="HeldB",
+    )
+    first_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'first-variable'"
+    ).fetchone()[0]
+    second_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'second-variable'"
+    ).fetchone()[0]
+    conn.executemany(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, 10, ?)",
+        [(first_id, "LeakTermA"), (second_id, "LeakTermB")],
+    )
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (80, 'variable', 1, 'pair', 'Pair group', 'curated')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+        "VALUES (80, 'member', 0, 'member')"
+    )
+    conn.executemany(
+        "INSERT INTO concept_group_variable "
+        "(group_id, variable_id, delivery_column_name) VALUES (80, ?, NULL)",
+        [(first_id,), (second_id,)],
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "LeakTerm",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/first-variable", "scb/lisa/second-variable"},
+        delivery_column_scope={
+            "scb/lisa/first-variable": {"HeldA"},
+            "scb/lisa/second-variable": {"HeldB"},
+        },
+    )
+
+    assert out.total_count == 0
+    assert out.results == ()
+
+
+def test_variable_name_hit_ranks_above_delivery_column_hit() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    add_variable(
+        conn,
+        register_id=1,
+        var_id=42181,
+        name="fedunsatreason",
+        slug="name-hit",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=42181,
+        delivery_column_name="other_column",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "fedunsatreason", field="description", type="variable")
+
+    assert [str(row.fqid) for row in out.results] == [
+        "scb/lisa/name-hit",
+        "scb/lisa/formal-utbildning",
+    ]
+
+
+def test_variable_search_carries_operational_definition() -> None:
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable SET operational_definition = ? WHERE slug = 'kon'",
+        ("Registered sex at year end",),
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "Registered", field="description", type="variable")
+
+    rows = out.results
+    assert _types(rows) == {"variable"}
+    assert rows[0].operational_definition == "Registered sex at year end"
 
 
 def test_type_all_spans_classification(db: sqlite3.Connection) -> None:

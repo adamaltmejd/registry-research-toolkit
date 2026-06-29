@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 import re
+import unicodedata
 from typing import TYPE_CHECKING, Any
 
 from .catalog import Catalog, ConceptGroupMember, GroupFacet
@@ -32,11 +33,20 @@ from .search import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Collection, Iterable
+    from collections.abc import Collection, Iterable, Mapping
 
     from .catalog import ConceptGroupSummary
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
+
+# Default number of owning variables / classifications a single code hit carries
+# on the wire. Common codes can map to thousands of variables (`code_variable_map`
+# is large), so the library default stays bounded. Callers that render an explicit
+# expanded owner list can opt into all variable owners with
+# `code_variable_owner_limit=None`; classification owners remain bounded because
+# they are used for code-system identity/ranking, not as per-row navigation in the
+# webapp.
+_CODE_OWNERS_PER_HIT = 5
 
 # var_id is the SCB legacy numeric variable id (= SCB's numeric provider_key).
 # SOS (provider_key=name) and curated thin providers (provider_key=column) carry
@@ -230,6 +240,7 @@ SEARCH_TYPES = frozenset({"register", "variable", "classification", "value", "al
 # A "real" FTS token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in unicode61 and would yield an empty phrase.
 _FTS_WORD_CHAR = re.compile(r"[^\W_]", re.UNICODE)
+_FTS_TOKEN = re.compile(r"[^\W_]+", re.UNICODE)
 
 
 def _fts_match_query(raw: str) -> str | None:
@@ -250,6 +261,74 @@ def _fts_match_query(raw: str) -> str | None:
         if _FTS_WORD_CHAR.search(tok)
     ]
     return " ".join(terms) if terms else None
+
+
+def _fold_fts_text(text: str) -> str:
+    return (
+        unicodedata.normalize("NFKD", text)
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .casefold()
+    )
+
+
+def _fts_terms(text: str) -> tuple[str, ...]:
+    return tuple(_FTS_TOKEN.findall(_fold_fts_text(text)))
+
+
+def _matches_fts_term(text: str | None, term: str) -> bool:
+    if not text:
+        return False
+    return any(token.startswith(term) for token in _fts_terms(text))
+
+
+def _depends_on_unheld_delivery_alias(
+    row: dict[str, Any], terms: tuple[str, ...], held_columns: tuple[str, ...]
+) -> bool:
+    public_text = (
+        row.get("variable_name"),
+        row.get("variable_definition"),
+        row.get("variable_description"),
+        row.get("variable_operational_definition"),
+    )
+    held_set = frozenset(held_columns)
+    unheld_columns = tuple(
+        col for col in row.get("delivery_column_names", ()) if col not in held_set
+    )
+    for term in terms:
+        if not any(_matches_fts_term(col, term) for col in unheld_columns):
+            continue
+        if any(_matches_fts_term(col, term) for col in held_columns):
+            continue
+        if any(_matches_fts_term(text, term) for text in public_text):
+            continue
+        return True
+    return False
+
+
+def _filter_variable_delivery_scope(
+    results: list[dict[str, Any]],
+    query: str,
+    delivery_column_scope: Mapping[str, Collection[str | None]],
+) -> list[dict[str, Any]]:
+    terms = _fts_terms(query)
+    filtered: list[dict[str, Any]] = []
+    for row in results:
+        if row["type"] != "variable":
+            filtered.append(row)
+            continue
+        held = delivery_column_scope.get(row.get("fqid"))
+        if held is None or not row.get("delivery_column_names"):
+            filtered.append(row)
+            continue
+        held_names = frozenset(col for col in held if col is not None)
+        held_columns = tuple(
+            col for col in row["delivery_column_names"] if col in held_names
+        )
+        if _depends_on_unheld_delivery_alias(row, terms, held_columns):
+            continue
+        filtered.append({**row, "delivery_column_names": held_columns})
+    return filtered
 
 
 def _escape_like(s: str) -> str:
@@ -354,9 +433,11 @@ def search(
     register: str | None = None,
     years: str | None = None,
     fqids: Collection[str] | None = None,
-    limit: int = 50,
+    delivery_column_scope: Mapping[str, Collection[str | None]] | None = None,
+    limit: int | None = 50,
     offset: int = 0,
     fold_groups: bool = True,
+    code_variable_owner_limit: int | None = _CODE_OWNERS_PER_HIT,
 ) -> SearchResults:
     """Search across registers, variables, and classifications.
 
@@ -375,10 +456,10 @@ def search(
     `register` scope excludes them. Each register/variable/classification leaf row
     carries its navigable `fqid` (None when the entity isn't slugged). `value`
     (#352) returns `type: "code"` rows — each a (code, label) hit annotated with
-    its owning variables/classifications (a bounded representative slice under
-    `variables`/`classifications` plus the full `variable_count`/
-    `classification_count`); the owning entity, not the bare code pair, is the
-    actionable target.
+    its owning variables/classifications plus the full `variable_count`/
+    `classification_count`; the owning entity, not the bare code pair, is the
+    actionable target. Variable owners are bounded by
+    ``code_variable_owner_limit`` below.
 
     fold_groups (#322): when hits land on ≥2 member variables of one concept
     group (see DESIGN.md → Concept groups), the sibling hits collapse into a
@@ -403,9 +484,20 @@ def search(
     reg_meta stays steward-agnostic: the caller passes the allow-list; the set's
     provenance is opaque here.
 
-    Returns a `SearchResults` (`total_count` + the sliced, folded `results` tuple
-    of typed result models, discriminated on `type`). Doc results are NOT included
-    here — the CLI layer merges them separately.
+    delivery_column_scope is the optional column-grain companion to ``fqids`` for
+    variable FTS rows. It masks returned delivery-column aliases to held columns
+    and drops rows whose only query evidence is an unheld delivery alias, before
+    concept folding and pagination.
+
+    ``code_variable_owner_limit`` controls the shown code rows' variable owner slice
+    (``None`` = all variable owners for the paginated code rows). Classification
+    owners stay bounded to preserve code-system identity without sending large
+    repeated owner lists.
+
+    ``limit=None`` returns the full result set after ``offset``. Returns a
+    `SearchResults` (`total_count` + the sliced, folded `results` tuple of typed
+    result models, discriminated on `type`). Doc results are NOT included here —
+    the CLI layer merges them separately.
     """
     if field not in SEARCH_FIELDS:
         raise RegMetaError(
@@ -465,7 +557,14 @@ def search(
         if type in ("register", "all"):
             all_results.extend(_search_description_registers(conn, fts_query, reg_ids))
         if type in ("variable", "all"):
-            all_results.extend(_search_description_variables(conn, fts_query, reg_ids))
+            all_results.extend(
+                _search_description_variables(
+                    conn,
+                    fts_query,
+                    reg_ids,
+                    include_delivery_columns=delivery_column_scope is not None,
+                )
+            )
         # Classifications are catalog-scoped (no register), so a `--register` scope
         # excludes them — `reg_ids` set means "registers only".
         if type in ("classification", "all") and reg_ids is None:
@@ -526,6 +625,10 @@ def search(
             for r in all_results
             if r["type"] not in _RESTRICTABLE_LEAF_TYPES or r.get("fqid") in allow
         ]
+    if delivery_column_scope is not None:
+        all_results = _filter_variable_delivery_scope(
+            all_results, query, delivery_column_scope
+        )
 
     if fold_groups:
         # Label hits ride the NAME surface (a group label is a concept name).
@@ -567,14 +670,23 @@ def search(
 
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
-    results = all_results[offset : offset + limit]
+    results = (
+        all_results[offset:] if limit is None else all_results[offset : offset + limit]
+    )
 
     # Annotate value/code rows AFTER the slice: the unscoped value arm
     # (`reg_ids is None`) returns rows unannotated with a `_code_id` marker, so we
     # only run the owner-annotation queries for the ≤limit codes actually shown
     # (the omnibox-timeout fix for broad terms). No-op for the reg-scoped arm
     # (those rows are already annotated and carry no `_code_id`).
-    _annotate_value_page(conn, results, reg_ids)
+    _annotate_value_page(
+        conn,
+        results,
+        reg_ids,
+        variable_limit=code_variable_owner_limit,
+    )
+    if delivery_column_scope is None:
+        _annotate_variable_delivery_columns(conn, results)
     # Strip fold-internal keys from the SHOWN page only — non-page rows are
     # discarded, so there's nothing to clean on them. (`_strip_internal_keys`
     # touches only `_INTERNAL_KEYS`, never `fts_rank`, so the sort above is safe.)
@@ -641,6 +753,8 @@ def _row_to_model(row: dict[str, Any]) -> SearchResult:
             name=row.get("variable_name"),
             register=row.get("register_name"),
             definition=row.get("variable_definition"),
+            operational_definition=row.get("variable_operational_definition"),
+            delivery_column_names=tuple(row.get("delivery_column_names", ())),
             concept_group=row.get("concept_group"),
             concept_group_label=row.get("concept_group_label"),
             rank=rank,
@@ -848,7 +962,11 @@ def _search_description_registers(
 
 
 def _search_description_variables(
-    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
+    conn: sqlite3.Connection,
+    query: str,
+    reg_ids: set[int] | None,
+    *,
+    include_delivery_columns: bool,
 ) -> list[dict[str, Any]]:
     # `variable_fts` is content-synced to `variable` (content_rowid='rowid', and
     # `variable_id` is the INTEGER PRIMARY KEY rowid alias), so `vf.rowid` IS
@@ -860,7 +978,9 @@ def _search_description_variables(
         "SELECT vf.register_id, vf.rowid AS variable_id, "
         "" + _VAR_ID_VF + ", "
         "vf.name AS variable_name, vf.definition AS variable_definition, "
-        "vf.description AS variable_description, vf.rank, "
+        "vf.description AS variable_description, "
+        "vf.operational_definition AS variable_operational_definition, "
+        "bm25(variable_fts, 0.2, 0.2, 6.0, 4.0, 2.0, 1.0, 0.4) AS rank, "
         "r.name AS register_name, r.purpose AS register_purpose, "
         "r.slug AS register_slug, p.slug AS provider_slug, v.slug AS variable_slug "
         "FROM variable_fts vf "
@@ -868,9 +988,21 @@ def _search_description_variables(
         "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN variable v ON v.variable_id = vf.rowid "
         "WHERE variable_fts MATCH ? "
-        "ORDER BY vf.rank",
+        "ORDER BY rank",
         (query,),
     ).fetchall()
+    delivery_columns = (
+        _delivery_column_names_for_variables(
+            conn,
+            (
+                r["variable_id"]
+                for r in rows
+                if not reg_ids or r["register_id"] in reg_ids
+            ),
+        )
+        if include_delivery_columns
+        else {}
+    )
     results = []
     for r in rows:
         if reg_ids and r["register_id"] not in reg_ids:
@@ -890,6 +1022,9 @@ def _search_description_variables(
                 "var_id": r["var_id"],
                 "variable_name": r["variable_name"],
                 "variable_definition": r["variable_definition"],
+                "variable_description": r["variable_description"],
+                "variable_operational_definition": r["variable_operational_definition"],
+                "delivery_column_names": delivery_columns.get(r["variable_id"], ()),
                 "fts_rank": r["rank"],
                 "_variable_id": r["variable_id"],
             }
@@ -897,14 +1032,54 @@ def _search_description_variables(
     return results
 
 
-# How many owning variables / classifications a single code hit carries on the
-# wire. A common code maps to thousands of variables (`code_variable_map` is
-# 4.1M rows); the result row a researcher wants is the variable or classification
-# carrying the code, so each code hit surfaces a bounded representative slice plus
-# the full count (the SPA shows "+N more"). Owners are ordered by the variable's
-# own discriminativeness — variables that carry FEWER distinct codes first (a code
-# on a 3-value enum is more telling than the same code on a 500-value catalog).
-_CODE_OWNERS_PER_HIT = 5
+def _annotate_variable_delivery_columns(
+    conn: sqlite3.Connection, page: list[dict[str, Any]]
+) -> None:
+    """Attach delivery aliases to shown variable rows after pagination."""
+    variable_ids = [
+        r["_variable_id"]
+        for r in page
+        if r.get("type") == "variable" and "_variable_id" in r
+    ]
+    if not variable_ids:
+        return
+    delivery_columns = _delivery_column_names_for_variables(conn, variable_ids)
+    for row in page:
+        if row.get("type") == "variable" and "_variable_id" in row:
+            row["delivery_column_names"] = delivery_columns.get(row["_variable_id"], ())
+
+
+def _delivery_column_names_for_variables(
+    conn: sqlite3.Connection, variable_ids: Iterable[int]
+) -> dict[int, tuple[str, ...]]:
+    """Return structured delivery aliases for variable search result rows.
+
+    The FTS payload is only a match surface. DBs built before #735 can expose it
+    as a legacy space-joined string, which is not a reliable display contract.
+    """
+    ids = tuple(dict.fromkeys(variable_ids))
+    if not ids:
+        return {}
+    by_variable: dict[int, list[str]] = {variable_id: [] for variable_id in ids}
+    for start in range(0, len(ids), 900):
+        chunk = ids[start : start + 900]
+        placeholders = _in_placeholders(chunk)
+        rows = conn.execute(
+            "SELECT DISTINCT variable_id, delivery_column_name "
+            "FROM variable_alias "
+            f"WHERE variable_id IN ({placeholders}) "
+            "ORDER BY variable_id, delivery_column_name",
+            chunk,
+        ).fetchall()
+        for row in rows:
+            by_variable.setdefault(row["variable_id"], []).append(
+                row["delivery_column_name"]
+            )
+    return {
+        variable_id: tuple(delivery_column_names)
+        for variable_id, delivery_column_names in by_variable.items()
+    }
+
 
 # A code-shaped query gets an exact + prefix match on `value_code.code`
 # (idx_value_code_code) merged with the label-FTS hits: a digit AND length >= 3
@@ -928,7 +1103,11 @@ def _empty_owner_annotation() -> dict[str, Any]:
 
 
 def _code_owner_annotations_batch(
-    conn: sqlite3.Connection, code_ids: list[int], reg_ids: set[int] | None
+    conn: sqlite3.Connection,
+    code_ids: list[int],
+    reg_ids: set[int] | None,
+    *,
+    variable_limit: int | None = _CODE_OWNERS_PER_HIT,
 ) -> dict[int, dict[str, Any]]:
     """Resolve owning variables / classifications for a SET of codes at once (#352).
 
@@ -937,8 +1116,10 @@ def _code_owner_annotations_batch(
     blowup. We materialize the matched `code_id`s into a TEMP table and JOIN
     `code_variable_map` / `classification_code` against it — JOIN (not
     `WHERE code_id IN (<thousands>)`, which risks SQLite's bound-param limit). Owner
-    slices are capped to `_CODE_OWNERS_PER_HIT` per code via a window
-    `ROW_NUMBER()`; the counts are the FULL per-code totals.
+    variable slices are capped by `variable_limit` per code via a window
+    `ROW_NUMBER()`; pass `None` for the full variable owner list. Counts are always
+    the FULL per-code totals. Classification owner slices stay capped to
+    `_CODE_OWNERS_PER_HIT`.
 
     Semantics preserved from the per-code version:
       - variables via `code_variable_map` (variable_id-grained, so a split sibling
@@ -983,9 +1164,17 @@ def _code_owner_annotations_batch(
         ):
             out[row["code_id"]]["variable_count"] = row["n"]
 
-        # Top-N variable owners per code via a windowed rank over the same ordering
-        # the per-code slice used (var_code_count ASC, slug). The outer filter on
-        # rn keeps the cap; provider/register/variable slugs feed the binding FQID.
+        # Variable owners per code via a windowed rank over the same ordering the
+        # capped slice used (var_code_count ASC, slug). The outer rn filter is
+        # optional: web search needs the full expanded variable list, while the
+        # library/CLI default stays capped. Provider/register/variable slugs feed
+        # the binding FQID.
+        var_rank_filter = "" if variable_limit is None else " WHERE rn <= ?"
+        var_params: tuple[Any, ...] = (
+            tuple(reg_params)
+            if variable_limit is None
+            else (*reg_params, variable_limit)
+        )
         var_rows = conn.execute(
             "WITH owners AS ("
             "  SELECT cvm.code_id, v.name AS variable_name, v.slug AS variable_slug, "
@@ -1003,8 +1192,8 @@ def _code_owner_annotations_batch(
             "  SELECT *, ROW_NUMBER() OVER ("
             "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug"
             "  ) AS rn FROM owners"
-            ") SELECT * FROM ranked WHERE rn <= ? ORDER BY code_id, rn",
-            (*reg_params, _CODE_OWNERS_PER_HIT),
+            f") SELECT * FROM ranked{var_rank_filter} ORDER BY code_id, rn",
+            var_params,
         ).fetchall()
         for r in var_rows:
             out[r["code_id"]]["variables"].append(
@@ -1226,6 +1415,8 @@ def _annotate_value_page(
     conn: sqlite3.Connection,
     page: list[dict[str, Any]],
     reg_ids: set[int] | None,
+    *,
+    variable_limit: int | None = _CODE_OWNERS_PER_HIT,
 ) -> None:
     """Annotate the value/code rows of a SHOWN page with their owning variables /
     classifications, in place (#352 perf, the annotate-only-the-page optimization).
@@ -1235,6 +1426,7 @@ def _annotate_value_page(
     `search()` can defer the (expensive) owner lookups to the ≤limit rows actually
     paginated. This runs one set-based `_code_owner_annotations_batch` over just
     those page code_ids and merges the result onto each row, then drops the marker.
+    `variable_limit=None` makes the paginated rows carry all variable owners.
 
     No-op when no row carries `_code_id` — i.e. the reg-scoped arm, where rows were
     already annotated up front (the reg-scope drop needed the full owner set). Only
@@ -1247,7 +1439,12 @@ def _annotate_value_page(
     ]
     if not code_ids:
         return
-    owners_by_code = _code_owner_annotations_batch(conn, code_ids, reg_ids)
+    owners_by_code = _code_owner_annotations_batch(
+        conn,
+        code_ids,
+        reg_ids,
+        variable_limit=variable_limit,
+    )
     for r in page:
         if r.get("type") == "code" and "_code_id" in r:
             r.update(owners_by_code[r["_code_id"]])
@@ -1990,7 +2187,12 @@ def _group_result_row(
 # `_code_id` is the value-arm's deferred-annotation marker (#352 perf):
 # `_annotate_value_page` removes it on the shown page, but list it here so a stray
 # marker can never leak past `_strip_internal_keys` into a public result row.
-_INTERNAL_KEYS = ("_variable_id", "_classification_id", "_code_id")
+_INTERNAL_KEYS = (
+    "_variable_id",
+    "_classification_id",
+    "_code_id",
+    "variable_description",
+)
 
 
 def _strip_internal_keys(results: list[dict[str, Any]]) -> None:

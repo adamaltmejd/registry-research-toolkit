@@ -36,11 +36,12 @@ class RegisterSearchResult(_CatalogModel):
 
 
 class VariableSearchResult(_CatalogModel):
-    """A variable hit (`variable_fts` name/definition/description). `register` is
-    the owning register's display name (context for the omnibox). When the hit is
-    a LONE member of a concept group (#322 — the family didn't fold because only
-    one member matched), `concept_group`/`concept_group_label` annotate the family
-    so it stays discoverable; both None otherwise."""
+    """A variable hit (`variable_fts` name/definition/description/
+    operational_definition/delivery_column_names). `register` is the owning
+    register's display name (context for the omnibox). When the hit is a LONE
+    member of a concept group (#322 — the family didn't fold because only one
+    member matched), `concept_group`/`concept_group_label` annotate the family so
+    it stays discoverable; both None otherwise."""
 
     type: Literal["variable"] = "variable"
     fqid: Fqid | None
@@ -50,6 +51,8 @@ class VariableSearchResult(_CatalogModel):
     # canonical init param; serialized by alias, so the JSON key is `register`.
     register_name: str | None = Field(default=None, alias="register")
     definition: str | None = None
+    operational_definition: str | None = None
+    delivery_column_names: tuple[str, ...] = ()
     concept_group: str | None = None
     concept_group_label: str | None = None
     rank: float
@@ -139,7 +142,8 @@ class ConceptGroupSearchResult(_CatalogModel):
     `member_count` is the family's full size, `matched_count` how many members the
     query hit, `label_matched` whether the group label/key matched directly.
     `members` is the full facet-ordered member list (each a real leaf FQID) so the
-    SPA can expand the family inline — a group is NOT itself FQID-addressable."""
+    SPA can derive a group-page link when available, or fall back to member links.
+    A group is not itself an FQID-addressable catalog leaf."""
 
     type: Literal["group"] = "group"
     kind: Literal["variable", "classification"]
@@ -160,8 +164,9 @@ class ConceptGroupSearchResult(_CatalogModel):
 
 # ── Code/value search (#352) ─────────────────────────────────────────────────
 # A code hit's actionable target is the VARIABLE or CLASSIFICATION carrying the
-# code, not the bare (code, label) pair — so each hit surfaces a bounded
-# representative slice of its owners plus the full count (the SPA shows "+N more").
+# code, not the bare (code, label) pair — so each hit carries representative owner
+# annotations plus the full counts. The webapp can opt into all variable owners for
+# the paginated code rows when rendering an expanded list.
 
 
 class CodeOwnerVariable(_CatalogModel):
@@ -185,10 +190,10 @@ class CodeOwnerClassification(_CatalogModel):
 
 class CodeSearchResult(_CatalogModel):
     """A code/value hit (`value_code_fts` label match + code-shape match, #352).
-    `code`/`label` are the SCB value pair; `variables`/`classifications` are a
-    bounded representative slice of the owning entities (the researcher's actual
-    target), and `variable_count`/`classification_count` are the full totals before
-    the slice cap."""
+    `code`/`label` are the SCB value pair; `variables`/`classifications` annotate
+    owning entities (the researcher's actual target), and `variable_count`/
+    `classification_count` are the full totals before any caller-selected owner
+    slice cap."""
 
     type: Literal["code"] = "code"
     code: str

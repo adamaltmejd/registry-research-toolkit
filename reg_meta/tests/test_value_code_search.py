@@ -179,6 +179,29 @@ def test_owner_cap_vs_full_count(conn: sqlite3.Connection) -> None:
     assert len(hit.variables) == _CODE_OWNERS_PER_HIT == 5
 
 
+def test_owner_cap_can_be_disabled_for_variable_owners(
+    conn: sqlite3.Connection,
+) -> None:
+    """The web search page expands code rows into full variable-owner lists."""
+    _seed_register(conn, 1, "reg")
+    _seed_code(conn, 1, "7", "Delad kod")
+    for i in range(6):
+        vid = _seed_variable(conn, 1, str(100 + i), f"Var{i}", f"var{i}")
+        _map(conn, 1, vid)
+    _finalize(conn)
+
+    results = search(
+        conn,
+        "Delad kod",
+        field="value",
+        type="value",
+        code_variable_owner_limit=None,
+    ).results
+    hit = next(r for r in results if r.label == "Delad kod")
+    assert hit.variable_count == 6
+    assert len(hit.variables) == 6
+
+
 def test_mapping_count_downweight_orders_rarer_first(conn: sqlite3.Connection) -> None:
     """Two pairs with the SAME matched label text but different mapping_count: the
     rarer (lower mapping_count) one ranks first. Pins the downweight DIRECTION."""
@@ -285,9 +308,20 @@ def test_annotate_only_the_page_unscoped(
     seen_batches: list[list[int]] = []
     real_batch = queries._code_owner_annotations_batch
 
-    def _spy(c: sqlite3.Connection, code_ids: list[int], reg_ids: object) -> object:
+    def _spy(
+        c: sqlite3.Connection,
+        code_ids: list[int],
+        reg_ids: object,
+        *,
+        variable_limit: int | None = queries._CODE_OWNERS_PER_HIT,
+    ) -> object:
         seen_batches.append(list(code_ids))
-        return real_batch(c, code_ids, reg_ids)  # type: ignore[arg-type]
+        return real_batch(
+            c,
+            code_ids,
+            reg_ids,  # type: ignore[arg-type]
+            variable_limit=variable_limit,
+        )
 
     monkeypatch.setattr(queries, "_code_owner_annotations_batch", _spy)
 

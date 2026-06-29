@@ -205,6 +205,10 @@ class DiffReport:
     indexes_only_in_b: tuple[str, ...] = ()
     # (index_name, a_sql, b_sql) for indexes present in both with different SQL.
     index_mismatches: tuple[tuple[str, str, str], ...] = ()
+    views_only_in_a: tuple[str, ...] = ()
+    views_only_in_b: tuple[str, ...] = ()
+    # (view_name, a_sql, b_sql) for views present in both with different SQL.
+    view_mismatches: tuple[tuple[str, str, str], ...] = ()
     column_diffs: tuple[ColumnDiff, ...] = ()
     table_results: tuple[TableContentResult, ...] = ()
     # column name lists for shared tables, for rendering SampleRow values.
@@ -218,6 +222,9 @@ class DiffReport:
             or self.indexes_only_in_a
             or self.indexes_only_in_b
             or self.index_mismatches
+            or self.views_only_in_a
+            or self.views_only_in_b
+            or self.view_mismatches
             or any(cd.differs for cd in self.column_diffs)
         )
 
@@ -258,13 +265,17 @@ class _Schema:
     # index name -> CREATE sql ("" for auto-indexes, which have NULL sql; their
     # defining constraint lives in the owning table's table_sql instead).
     indexes: dict[str, str]
+    # view name -> normalized CREATE sql. Views are schema objects, not content
+    # tables, so dbdiff compares definitions here and never row-fingerprints them.
+    views: dict[str, str]
     virtual_tables: frozenset[str]
     shadow_tables: frozenset[str]
 
 
 def _read_schema(conn: sqlite3.Connection) -> _Schema:
     master = conn.execute(
-        "SELECT type, name, sql FROM sqlite_master WHERE type IN ('table', 'index')"
+        "SELECT type, name, sql FROM sqlite_master "
+        "WHERE type IN ('table', 'index', 'view')"
     ).fetchall()
     table_names = [
         r["name"]
@@ -294,7 +305,12 @@ def _read_schema(conn: sqlite3.Connection) -> _Schema:
         for r in master
         if r["type"] == "index" and not r["name"].startswith("sqlite_stat")
     }
-    return _Schema(tables, table_sql, indexes, virtual, shadow)
+    views = {
+        r["name"]: _normalize_sql(r["sql"])
+        for r in master
+        if r["type"] == "view" and not r["name"].startswith("sqlite_")
+    }
+    return _Schema(tables, table_sql, indexes, views, virtual, shadow)
 
 
 def _normalize_sql(sql: str | None) -> str:
@@ -546,6 +562,16 @@ def _compare_schema(schema_a: _Schema, schema_b: _Schema, report: DiffReport) ->
         if schema_a.indexes[name] != schema_b.indexes[name]
     )
 
+    a_views = set(schema_a.views)
+    b_views = set(schema_b.views)
+    report.views_only_in_a = tuple(sorted(a_views - b_views))
+    report.views_only_in_b = tuple(sorted(b_views - a_views))
+    report.view_mismatches = tuple(
+        (name, schema_a.views[name], schema_b.views[name])
+        for name in sorted(a_views & b_views)
+        if schema_a.views[name] != schema_b.views[name]
+    )
+
 
 def _fmt_coldef(coldef: tuple[str, str, int, str | None, int]) -> str:
     name, ctype, notnull, dflt, pk = coldef
@@ -708,6 +734,14 @@ def format_report(report: DiffReport) -> str:
             out.append(f"  index {name}: SQL differs")
             out.append(f"      A: {a_sql}")
             out.append(f"      B: {b_sql}")
+        for v in report.views_only_in_a:
+            out.append(f"  view only in A: {v}")
+        for v in report.views_only_in_b:
+            out.append(f"  view only in B: {v}")
+        for name, a_sql, b_sql in report.view_mismatches:
+            out.append(f"  view {name}: SQL differs")
+            out.append(f"      A: {a_sql}")
+            out.append(f"      B: {b_sql}")
 
     differing = [r for r in report.table_results if not r.identical]
     if differing:
@@ -761,6 +795,9 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
             "indexes_only_in_a": list(report.indexes_only_in_a),
             "indexes_only_in_b": list(report.indexes_only_in_b),
             "index_mismatches": [m[0] for m in report.index_mismatches],
+            "views_only_in_a": list(report.views_only_in_a),
+            "views_only_in_b": list(report.views_only_in_b),
+            "view_mismatches": [m[0] for m in report.view_mismatches],
             "column_diffs": [
                 {
                     "table": cd.table,

@@ -1103,10 +1103,10 @@ export interface components {
         /**
          * CodeSearchResult
          * @description A code/value hit (`value_code_fts` label match + code-shape match, #352).
-         *     `code`/`label` are the SCB value pair; `variables`/`classifications` are a
-         *     bounded representative slice of the owning entities (the researcher's actual
-         *     target), and `variable_count`/`classification_count` are the full totals before
-         *     the slice cap.
+         *     `code`/`label` are the SCB value pair; `variables`/`classifications` annotate
+         *     owning entities (the researcher's actual target), and `variable_count`/
+         *     `classification_count` are the full totals before any caller-selected owner
+         *     slice cap.
          */
         CodeSearchResult: {
             /**
@@ -1236,7 +1236,8 @@ export interface components {
          *     `member_count` is the family's full size, `matched_count` how many members the
          *     query hit, `label_matched` whether the group label/key matched directly.
          *     `members` is the full facet-ordered member list (each a real leaf FQID) so the
-         *     SPA can expand the family inline — a group is NOT itself FQID-addressable.
+         *     SPA can derive a group-page link when available, or fall back to member links.
+         *     A group is not itself an FQID-addressable catalog leaf.
          */
         ConceptGroupSearchResult: {
             /** Group Key */
@@ -2169,11 +2170,12 @@ export interface components {
         };
         /**
          * VariableSearchResult
-         * @description A variable hit (`variable_fts` name/definition/description). `register` is
-         *     the owning register's display name (context for the omnibox). When the hit is
-         *     a LONE member of a concept group (#322 — the family didn't fold because only
-         *     one member matched), `concept_group`/`concept_group_label` annotate the family
-         *     so it stays discoverable; both None otherwise.
+         * @description A variable hit (`variable_fts` name/definition/description/
+         *     operational_definition/delivery_column_names). `register` is the owning
+         *     register's display name (context for the omnibox). When the hit is a LONE
+         *     member of a concept group (#322 — the family didn't fold because only one
+         *     member matched), `concept_group`/`concept_group_label` annotate the family so
+         *     it stays discoverable; both None otherwise.
          */
         VariableSearchResult: {
             /** Concept Group */
@@ -2182,10 +2184,17 @@ export interface components {
             concept_group_label?: string | null;
             /** Definition */
             definition?: string | null;
+            /**
+             * Delivery Column Names
+             * @default []
+             */
+            delivery_column_names: string[];
             /** Fqid */
             fqid: string | null;
             /** Name */
             name?: string | null;
+            /** Operational Definition */
+            operational_definition?: string | null;
             /** Rank */
             rank: number;
             /** Register */

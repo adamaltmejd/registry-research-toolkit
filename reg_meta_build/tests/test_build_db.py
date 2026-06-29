@@ -1916,6 +1916,71 @@ class TestOperationalDefinition:
         finally:
             conn.close()
 
+    def test_delivery_column_name_is_fts_searchable(self, tmp_path: Path):
+        """#735: a delivery column token that appears in no public label text is
+        still searchable through `variable_fts`.
+        """
+        ri_row = _ri_row(
+            "COLREG",
+            "Columnregistret",
+            "Column test",
+            "Individer",
+            "Individer",
+            "Alla individer",
+            "Nej",
+            "2020",
+            "Version 2020",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "MissnojeFormellUtbildning",
+            "Definition",
+            "Plain description",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "fedunsatreason_1",
+            "int",
+            "1",
+            "9501",
+            "999",
+            "9501",
+            "9501",
+            "779",
+        )
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [ri_row]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            rows = conn.execute(
+                "SELECT provider_key, delivery_column_names "
+                "FROM variable_fts WHERE variable_fts MATCH ?",
+                ("fedunsatreason",),
+            ).fetchall()
+            assert len(rows) == 1, "column-only token must be FTS-matchable"
+            assert rows[0]["provider_key"] == "779"
+            assert json.loads(rows[0]["delivery_column_names"]) == ["fedunsatreason_1"]
+        finally:
+            conn.close()
+
     def test_within_sibling_tiebreak_is_min_cvid(self, tmp_path: Path):
         """One (non-split) sibling spanning several cvids that each carry a
         DIFFERENT non-empty operational definition: the materialized
