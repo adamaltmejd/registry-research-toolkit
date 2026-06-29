@@ -146,3 +146,31 @@ def test_build_doc_db_warns_when_related_document_root_is_absent(
         )
     finally:
         conn.close()
+
+
+def test_build_doc_db_skips_future_related_document_register(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    docs_dir = tmp_path / "docs"
+    _write_doc(docs_dir, register="testreg")
+    related_root = tmp_path / "related"
+    related_root.mkdir()
+
+    monkeypatch.setattr(
+        doc_db,
+        "load_related_documents",
+        lambda: {"future": [_related_doc("future", "future.pdf")]},
+    )
+    monkeypatch.setattr(
+        doc_db, "repo_related_document_binaries_dir", lambda: related_root
+    )
+    caplog.set_level(logging.WARNING, logger="reg_meta_build.doc_db")
+
+    db_path = build_doc_db(docs_dir, tmp_path / "db")
+
+    assert not caplog.records
+    conn = sqlite3.connect(db_path)
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM related_document").fetchone()[0] == 0
+    finally:
+        conn.close()

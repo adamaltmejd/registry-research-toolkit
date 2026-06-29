@@ -349,6 +349,12 @@ def load_related_documents(
         return {}
 
     data = tomllib.loads(path.read_text(encoding="utf-8"))
+    unknown_top_level = set(data) - {"register"}
+    if unknown_top_level:
+        _related_documents_invalid(
+            "related_documents",
+            f"has unknown top-level key(s): {', '.join(sorted(unknown_top_level))}.",
+        )
     registers = data.get("register", {})
     if not isinstance(registers, dict):
         _related_documents_invalid(
@@ -426,11 +432,7 @@ def _insert_related_documents(
     docs_dir: Path,
     related_docs_dir: Path | None,
 ) -> int:
-    active_registers = (
-        _register_dirs(docs_dir)
-        | _register_dirs(related_docs_dir)
-        | related_documents.keys()
-    )
+    active_registers = _register_dirs(docs_dir) | _register_dirs(related_docs_dir)
     if not active_registers:
         return 0
 
@@ -461,6 +463,18 @@ def _insert_related_documents(
 
     if not related_documents:
         return 0
+    if related_docs_dir is None:
+        skipped = [
+            f"{register}/{doc.filename}"
+            for register, docs in sorted(related_documents.items())
+            for doc in docs
+        ]
+        if skipped:
+            log.warning(
+                "related document binary root input_data/SCB/docs is missing; "
+                "skipping mapped related documents: %s",
+                ", ".join(skipped),
+            )
 
     missing_binaries: list[str] = []
     total = 0

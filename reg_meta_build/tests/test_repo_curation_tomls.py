@@ -326,3 +326,23 @@ def test_related_documents_missing_document_array_raises_curation_error(
         load_related_documents(path)
     assert exc_info.value.code == "related_documents_invalid"
     assert "unknown field" in exc_info.value.message
+
+
+def test_related_documents_unknown_top_level_key_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        "[[registr.aes.document]]\n"
+        'title = "Bad"\n'
+        'filename = "bad.pdf"\n'
+        'source_url = "https://mikrometadata.scb.se/"\n'
+        'license = "CC BY 4.0"\n'
+        'fetched = "2026-06-23"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "top-level" in exc_info.value.message

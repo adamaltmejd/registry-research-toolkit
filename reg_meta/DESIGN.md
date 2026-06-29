@@ -1055,16 +1055,18 @@ package.
 Every published release carries **both** assets (self-contained releases). A release
 only needs a **freshly built** main DB when `SCHEMA_VERSION` changes, and a fresh doc DB
 when `DOC_SCHEMA_VERSION`, `reg_meta_build/docs/`, or
-`reg_meta_build/related_documents.toml` content changes — otherwise the release flow
-copies the prior release's asset forward (`.claude/skills/release/SKILL.md` step 8). The
-invariant exists because the container deploy pipeline resolves the newest `reg_meta/v*`
-release into a concrete `reg-meta update --tag`, which fetches both assets from that
-single tag — an asset-less release blocks every image deploy (#343).
-`resolve_latest_release()` still walks recent releases backwards looking for each asset
-independently, keeping `latest`-mode updates robust against historical asset-less
-releases. The publish workflow's smoke step exercises `reg-meta update --force` before
-allowing PyPI publish, so a release that breaks the walker (e.g. incompatible assets, or
-no resolvable asset at all) fails CI instead of shipping.
+`reg_meta_build/related_documents.toml` content changes, or when a gitignored
+related-document PDF seed under `reg_meta_build/input_data/SCB/docs/` was added,
+replaced, or refetched — otherwise the release flow copies the prior release's asset
+forward (`.claude/skills/release/SKILL.md` step 8). The invariant exists because the
+container deploy pipeline resolves the newest `reg_meta/v*` release into a concrete
+`reg-meta update --tag`, which fetches both assets from that single tag — an asset-less
+release blocks every image deploy (#343). `resolve_latest_release()` still walks recent
+releases backwards looking for each asset independently, keeping `latest`-mode updates
+robust against historical asset-less releases. The publish workflow's smoke step
+exercises `reg-meta update --force` before allowing PyPI publish, so a release that
+breaks the walker (e.g. incompatible assets, or no resolvable asset at all) fails CI
+instead of shipping.
 
 The wheel contains Python source only. The markdown under `reg_meta_build/docs/` is
 maintainer source-of-truth and is **not** bundled — end users receive the built doc DB
