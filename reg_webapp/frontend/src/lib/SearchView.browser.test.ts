@@ -181,6 +181,45 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
   });
 
+  it("shows code-system context on code hits in top results", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "C12",
+      groups: [
+        {
+          group: "top_results",
+          total_count: 2,
+          results: [
+            {
+              type: "code",
+              code: "C12",
+              label: "Malign tumör i tungbas",
+              variables: [],
+              variable_count: 0,
+              classifications: [
+                {
+                  fqid: "class/sun2020",
+                  short_name: "SUN2020",
+                  name: "Svensk utbildningsnomenklatur",
+                },
+              ],
+              classification_count: 1,
+              code_system: "SUN2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("C12");
+    await render(SearchView);
+
+    await expect.element(page.getByText("C12")).toBeVisible();
+    await expect.element(page.getByText("Code system")).toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "SUN2020" }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+  });
+
   it("shows delivery column names and operational definitions on variable hits", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",

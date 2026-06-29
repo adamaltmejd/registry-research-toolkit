@@ -711,7 +711,7 @@ function closeSearch(): void {
   {:else if result.type === "group"}
     {@render conceptGroup(result)}
   {:else if result.type === "code"}
-    {@render codeRow(result)}
+    {@render topCodeRow(result)}
   {/if}
 {/snippet}
 
@@ -884,6 +884,19 @@ function closeSearch(): void {
   </span>
 {/snippet}
 
+{#snippet codeSystemLine(result: CodeSearchResult)}
+  {@const href = codeSystemHref(result)}
+  {@const label = result.code_system ?? REGISTER_LOCAL_LABEL}
+  <span class="owner-inline muted code-system-line">
+    <span class="owner-context">Code system</span>
+    {#if href}
+      <a class="detail-link owner-name" href={href}>{label}</a>
+    {:else}
+      <span class="owner-name">{label}</span>
+    {/if}
+  </span>
+{/snippet}
+
 {#snippet codeCells(result: CodeSearchResult)}
   {@const usage = usageSummary(result)}
   <span class="code-cells">
@@ -919,6 +932,13 @@ function closeSearch(): void {
       {#if singleOwner}{@render singleOwnerLine(singleOwner)}{/if}
     </div>
   {/if}
+{/snippet}
+
+{#snippet topCodeRow(result: CodeSearchResult)}
+  <div class="code-row integrated-list-row single-code-row top-code-row">
+    {@render codeCells(result)}
+    {@render codeSystemLine(result)}
+  </div>
 {/snippet}
 
 <!-- A concept-group family (#322): search stays flat. Prefer the first-class group
