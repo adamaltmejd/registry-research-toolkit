@@ -398,6 +398,13 @@ type CodeSystemBucket = {
 };
 
 function codeSystemHref(result: CodeSearchResult): string | null {
+  const owner = codeSystemOwner(result);
+  return owner?.fqid ? catalogHref(owner.fqid) : null;
+}
+
+function codeSystemOwner(
+  result: CodeSearchResult,
+): CodeOwnerClassification | null {
   const owner =
     result.classifications.find(
       (classification) =>
@@ -408,7 +415,7 @@ function codeSystemHref(result: CodeSearchResult): string | null {
     result.classifications.find(
       (classification) => classification.fqid != null,
     );
-  return owner?.fqid ? catalogHref(owner.fqid) : null;
+  return owner ?? null;
 }
 
 function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
@@ -570,8 +577,15 @@ function closeSearch(): void {
       {@const heading = GROUP_HEADINGS[group.group]}
       {@const renderedResults = displayResults(group)}
       {#if renderedResults.length > 0 && heading}
-        {@const caption = showingOf(renderedResults.length, group.total_count)}
-        <div class="group">
+        {@const caption =
+          group.group === "top_results"
+            ? null
+            : showingOf(renderedResults.length, group.total_count)}
+        <div
+          class={group.group === "top_results"
+            ? "group top-results-group"
+            : "group"}
+        >
           <Panel title={heading.label} flush>
             {#snippet meta()}
               {#if caption}<span class="count">{caption}</span>{/if}
@@ -897,6 +911,14 @@ function closeSearch(): void {
   </span>
 {/snippet}
 
+{#snippet codeSystemLinePlain(result: CodeSearchResult)}
+  {@const label = result.code_system ?? REGISTER_LOCAL_LABEL}
+  <span class="owner-inline muted code-system-line">
+    <span class="owner-context">Code system</span>
+    <span class="owner-name">{label}</span>
+  </span>
+{/snippet}
+
 {#snippet codeCells(result: CodeSearchResult)}
   {@const usage = usageSummary(result)}
   <span class="code-cells">
@@ -916,7 +938,9 @@ function closeSearch(): void {
         <span class="disclosure-icon" aria-hidden="true"></span>
         {@render codeCells(result)}
       </summary>
-      <div class="owner-table">{@render ownerSubRows(result)}</div>
+      <div class="owner-table">
+        {@render ownerSubRows(result)}
+      </div>
     </details>
   {:else if singleOwner?.fqid}
     <a
@@ -935,10 +959,43 @@ function closeSearch(): void {
 {/snippet}
 
 {#snippet topCodeRow(result: CodeSearchResult)}
-  <div class="code-row integrated-list-row single-code-row top-code-row">
-    {@render codeCells(result)}
-    {@render codeSystemLine(result)}
-  </div>
+  {@const singleOwner = singleVariableOwner(result)}
+  {@const systemHref = codeSystemHref(result)}
+  {#if hasExpandableOwners(result)}
+    <details class="code-row code-disclosure top-code-row">
+      <summary class="integrated-list-row code-summary top-code-summary">
+        <span class="disclosure-icon" aria-hidden="true"></span>
+        <span class="top-code-summary-body">
+          {@render codeCells(result)}
+          {@render codeSystemLinePlain(result)}
+        </span>
+      </summary>
+      <div class="owner-table">{@render ownerSubRows(result)}</div>
+    </details>
+  {:else if singleOwner?.fqid}
+    <a
+      class="code-row integrated-list-row single-code-row top-code-row"
+      href={catalogHref(singleOwner.fqid)}
+    >
+      {@render codeCells(result)}
+      {@render codeSystemLinePlain(result)}
+      {@render singleOwnerLine(singleOwner)}
+    </a>
+  {:else if systemHref}
+    <a
+      class="code-row integrated-list-row single-code-row top-code-row"
+      href={systemHref}
+    >
+      {@render codeCells(result)}
+      {@render codeSystemLinePlain(result)}
+    </a>
+  {:else}
+    <div class="code-row integrated-list-row single-code-row top-code-row">
+      {@render codeCells(result)}
+      {@render codeSystemLinePlain(result)}
+      {#if singleOwner}{@render singleOwnerLine(singleOwner)}{/if}
+    </div>
+  {/if}
 {/snippet}
 
 <!-- A concept-group family (#322): search stays flat. Prefer the first-class group
@@ -1100,6 +1157,11 @@ function closeSearch(): void {
   .group {
     margin-bottom: 1.5rem;
   }
+  .top-results-group {
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
   .code-system {
     margin: 0;
   }
@@ -1243,6 +1305,15 @@ function closeSearch(): void {
     grid-template-columns: var(--code-disclosure-gutter) minmax(0, 1fr);
     column-gap: var(--code-disclosure-gap);
     align-items: baseline;
+  }
+  .top-code-summary {
+    align-items: start;
+  }
+  .top-code-summary-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
   }
   .disclosure-icon {
     display: inline-grid;

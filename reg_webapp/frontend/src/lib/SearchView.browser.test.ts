@@ -188,14 +188,25 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "top_results",
-          total_count: 2,
+          total_count: 25,
           results: [
             {
               type: "code",
               code: "C12",
               label: "Malign tumör i tungbas",
-              variables: [],
-              variable_count: 0,
+              variables: [
+                {
+                  fqid: "scb/ulf/ha0611m",
+                  name: "Sjukdomsdiagnos 1, ICD-10",
+                  register: "ULF",
+                },
+                {
+                  fqid: "scb/ulf/ha0612m",
+                  name: "Sjukdomsdiagnos 2, ICD-10",
+                  register: "ULF",
+                },
+              ],
+              variable_count: 2,
               classifications: [
                 {
                   fqid: "class/icd-10-se",
@@ -216,8 +227,57 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("C12")).toBeVisible();
     await expect.element(page.getByText("Code system")).toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: "ICD-10-SE" }))
-      .toHaveAttribute("href", "/catalog/class/icd-10-se");
+      .element(page.getByText("showing 1 of 25"))
+      .not.toBeInTheDocument();
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      ".search-view .top-results details.code-disclosure",
+    );
+    expect(disclosure).not.toBeNull();
+    expect(disclosure?.querySelector(".disclosure-icon")).not.toBeNull();
+    disclosure?.querySelector("summary")?.click();
+    await nextFrame();
+    await expect
+      .element(page.getByRole("link", { name: /Sjukdomsdiagnos 1/ }))
+      .toHaveAttribute("href", "/catalog/scb/ulf/ha0611m");
+  });
+
+  it("links single-owner code hits in top results", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "man",
+      groups: [
+        {
+          group: "top_results",
+          total_count: 2,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [
+                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+              ],
+              variable_count: 1,
+              classifications: [
+                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
+              ],
+              classification_count: 1,
+              code_system: "SUN2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("man");
+    await render(SearchView);
+
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .top-results a.single-code-row[href='/catalog/scb/lisa/kon']",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.textContent).toContain("1 = Man");
+    expect(row?.textContent).toContain("Code system");
+    expect(row?.textContent).toContain("SUN2020");
   });
 
   it("shows delivery column names and operational definitions on variable hits", async () => {
