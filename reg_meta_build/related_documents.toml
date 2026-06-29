@@ -1,0 +1,46 @@
+# Curated register-version related documents (#740).
+#
+# Binaries are maintainer-supplied, gitignored seed files under
+# `reg_meta_build/input_data/SCB/docs/<register>/`. The build stores the bytes
+# plus this provenance in `reg_meta_docs.db` so the released asset can rehost
+# permitted documents as one file.
+#
+# SCB's "Relaterat dokument - Registerversion" file links are served from the
+# mikrometadata UI without stable public PDF URLs. For those files, `source_url`
+# names that source surface; the exact binary identity is the register-local
+# filename plus the build-computed sha256.
+
+[[register.aes.document]]
+title = "Undersökningen om vuxnas deltagande i utbildning 2012"
+filename = "UF0538_DO_2012_160104_Publicerad.pdf"
+source_url = "https://mikrometadata.scb.se/"
+license = "CC BY 4.0"
+fetched = "2026-06-23"
+
+[[register.aes.document]]
+title = "Draft AES manual, version 8"
+filename = "AES_MANUAL_2012.pdf"
+source_url = "https://mikrometadata.scb.se/"
+license = "CC BY 4.0"
+fetched = "2026-06-23"
+
+[[register.aes.document]]
+title = "AES questionnaire 2011"
+filename = "AES_Questionnaire_SE_Swedish_2011.pdf"
+source_url = "https://mikrometadata.scb.se/"
+license = "CC BY 4.0"
+fetched = "2026-06-23"
+
+[[register.aes.document]]
+title = "Commission Regulation (EU) No 823/2010"
+filename = "Commission regulation.pdf"
+source_url = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32010R0823"
+license = "EU law"
+fetched = "2026-06-23"
+
+[[register.aes.document]]
+title = "Kommissionens förordning (EU) nr 823/2010"
+filename = "Kommissionens förordning.pdf"
+source_url = "https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=CELEX:32010R0823"
+license = "EU law"
+fetched = "2026-06-23"

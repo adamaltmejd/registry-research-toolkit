@@ -264,9 +264,12 @@ def _build_parser() -> argparse.ArgumentParser:
 
     build_docs_p = sub.add_parser(
         "build-docs",
-        help="Rebuild the doc DB from markdown files (maintainer-only).",
+        help=(
+            "Rebuild the doc DB from markdown and related-document files "
+            "(maintainer-only)."
+        ),
         description=(
-            "Rebuild the documentation FTS index from markdown files.\n"
+            "Rebuild the documentation DB from markdown and related-document files.\n"
             "End users receive the doc DB via `reg-meta update`; this command\n"
             "is for maintainers rebuilding from a repo checkout before upload.\n\n"
             "Examples:\n"

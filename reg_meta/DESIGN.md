@@ -952,9 +952,10 @@ through deduplication, integer keys, and year-projection.
 
 Register documentation (parsed from SCB PDFs) is curated as Obsidian-compatible markdown
 files under `reg_meta_build/docs/`, source-of-truth for maintainers, and indexed into a
-separate FTS5 database (`reg_meta_docs.db`) with its own `DOC_SCHEMA_VERSION`. Docs are
-keyed to register and variable names, not numeric IDs, so doc updates and main-DB
-updates are independent.
+separate SQLite database (`reg_meta_docs.db`) with its own `DOC_SCHEMA_VERSION`. The doc
+DB contains the FTS5 markdown index plus curated, rehostable register-version related
+documents. Docs are keyed to register and variable names, not numeric IDs, so doc
+updates and main-DB updates are independent.
 
 End users never see the markdown files. The doc DB is distributed as a GitHub Release
 asset (`reg_meta_docs.db.zst`) parallel to the main DB asset, installed into the same
