@@ -3547,8 +3547,8 @@ class TestReplacedByEdges:
                 "n_curated_skipped_inactive_provider",
             }
             assert stats["n_register_replaced_by"] == 1
-            # #843: no real representation edges are authored yet (those land with
-            # the column_merge removal in #846), so a no-edge build reports 0.
+            # This fixture carries no curated representation edges, so a no-edge
+            # build reports 0 even though repo curation can author them.
             assert stats["n_curated_representation_replaced_by"] == 0
             # Scanned counts only Ersatt av/Ersätter rows on the four target
             # entitets — the single Register row in this fixture matches.

@@ -193,10 +193,22 @@ def test_repo_relations_parses() -> None:
     # + 3 #579 classification split edges
     # + 2 #770 ICD/KS disease-classification succession edges
     # + 7 #814 iot disponibel-inkomst 2004-års-definition succession edges
+    # + 1 #875 KSju lgrp → NgGr1 representation-grain succession edge
     # + 1 #846 RTB PNR → PersonNr representation-grain rename edge
     # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges.
-    assert len(relations.replaced_by) == 28
+    assert len(relations.replaced_by) == 29
     assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
+    ksju_edges = [
+        e
+        for e in relations.replaced_by
+        if str(e.predecessor) == "scb/ksju/naringsgren-grupperad-2009"
+    ]
+    assert len(ksju_edges) == 1
+    assert str(ksju_edges[0].successor) == "scb/ksju/naringsgren"
+    assert (ksju_edges[0].predecessor_column, ksju_edges[0].successor_column) == (
+        "lgrp",
+        "NgGr1",
+    )
 
 
 def test_repo_canonical_attach_parses() -> None:

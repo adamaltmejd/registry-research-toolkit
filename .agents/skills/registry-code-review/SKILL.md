@@ -14,15 +14,17 @@ description: >-
 Review only. This is the repo-scoped callable review workflow for Registry PRs/diffs.
 Use it when the top-level built-in review command is unavailable from the current
 workflow or when explicitly asked. In `pr-pipeline`, run this skill in a fresh subagent
-when available so the review is independent of the authoring session. The subagent
-reports findings back to the lead agent; it does not mutate files, commit, push,
-regenerate artifacts, apply fixes, or post GitHub comments unless explicitly instructed.
-Findings lead the response, ordered by severity, with file and line references.
+so the review is independent of the authoring session. If no subagent tool is preloaded,
+search for a callable multi-agent or reviewer tool before declaring subagents
+unavailable. The subagent reports findings back to the lead agent; it does not mutate
+files, commit, push, regenerate artifacts, apply fixes, or post GitHub comments unless
+explicitly instructed. Findings lead the response, ordered by severity, with file and
+line references.
 
 When this skill is run by the same session that authored the patch because subagents are
-unavailable, state that review surface in the closeout. It is a diagnostic checklist,
-not independent review evidence, and must not satisfy the `pr-pipeline` ready/merge gate
-by itself.
+unavailable after discovery fails or the tool rejects the request, state what was tried
+in the closeout. It is a diagnostic checklist, not independent review evidence, and must
+not satisfy the `pr-pipeline` ready/merge gate by itself.
 
 ## Inputs
 
