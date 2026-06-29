@@ -300,17 +300,17 @@ describe("HistoryGraph (#678)", () => {
   it("clusters group members under their group_label heading (Fork B), labelled by facets", async () => {
     const a = variableNode({
       id: "a",
-      fqid: "scb/lisa/agi1astsni2007g",
+      fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
       label: "Näringsgren",
-      group_key: "naringsgren",
+      group_key: "naringsgren-storsta-agi-sni2007",
       group_label: "Näringsgren, största förvärvskälla",
       facets: [{ axis: "source", value: "agi", label: "AGI" }],
     });
     const b = variableNode({
       id: "b",
-      fqid: "scb/lisa/ku1astsni2002g",
+      fqid: "scb/lisa/naringsgren-storsta-ku-sni2002g",
       label: "Näringsgren",
-      group_key: "naringsgren",
+      group_key: "naringsgren-storsta-agi-sni2007",
       group_label: "Näringsgren, största förvärvskälla",
       facets: [{ axis: "source", value: "ku", label: "KU" }],
     });
@@ -339,17 +339,17 @@ describe("HistoryGraph (#678)", () => {
     // leaf slug.
     const a = variableNode({
       id: "a",
-      fqid: "scb/lisa/agi1astsni2007",
+      fqid: "scb/lisa/naringsgren-storsta-agi-sni2007",
       label: "Näringsgren",
-      group_key: "naringsgren",
+      group_key: "naringsgren-storsta-agi-sni2007",
       group_label: "Näringsgren, största förvärvskälla",
       facets: [],
     });
     const b = variableNode({
       id: "b",
-      fqid: "scb/lisa/ku1astsni2002",
+      fqid: "scb/lisa/naringsgren-storsta-ku-sni2002g",
       label: "Näringsgren",
-      group_key: "naringsgren",
+      group_key: "naringsgren-storsta-agi-sni2007",
       group_label: "Näringsgren, största förvärvskälla",
       facets: [],
     });
@@ -364,7 +364,7 @@ describe("HistoryGraph (#678)", () => {
     // is `b`'s gutter name-link (the focus self-link is gone).
     const aGutter = await vi.waitFor(() => {
       const el = [...document.querySelectorAll(".gutter .name")].find((n) =>
-        n.textContent?.trim().startsWith("agi1astsni2007"),
+        n.textContent?.trim().startsWith("naringsgren-storsta-agi-sni2007"),
       );
       if (!el) {
         throw new Error("focus gutter name not yet rendered");
@@ -375,7 +375,7 @@ describe("HistoryGraph (#678)", () => {
     expect(aGutter.tagName).toBe("SPAN");
     const bGutter = await vi.waitFor(() => {
       const el = [...document.querySelectorAll("a.name-link")].find(
-        (a) => a.textContent?.trim() === "ku1astsni2002",
+        (a) => a.textContent?.trim() === "naringsgren-storsta-ku-sni2002g",
       );
       if (!el) {
         throw new Error("member gutter link not yet rendered");
@@ -383,29 +383,31 @@ describe("HistoryGraph (#678)", () => {
       return el as HTMLAnchorElement;
     });
     expect(bGutter.getAttribute("href")).toBe(
-      "/catalog/scb/lisa/ku1astsni2002",
+      "/catalog/scb/lisa/naringsgren-storsta-ku-sni2002g",
     );
     // The non-focus member's slug is reachable as a link; the focus self-link is
     // gone, so exactly one slug link exists.
     await expect
-      .element(page.getByRole("link", { name: "ku1astsni2002" }))
+      .element(
+        page.getByRole("link", { name: "naringsgren-storsta-ku-sni2002g" }),
+      )
       .toBeVisible();
   });
 
   it("uses disambiguated gutter labels for fallback relation endpoints (#907)", async () => {
     const a = variableNode({
       id: "a",
-      fqid: "scb/lisa/agi1astsni2007",
+      fqid: "scb/lisa/naringsgren-storsta-agi-sni2007",
       label: "Näringsgren",
-      group_key: "naringsgren",
+      group_key: "naringsgren-storsta-agi-sni2007",
       group_label: "Näringsgren, största förvärvskälla",
       facets: [],
     });
     const b = variableNode({
       id: "b",
-      fqid: "scb/lisa/ku1astsni2002",
+      fqid: "scb/lisa/naringsgren-storsta-ku-sni2002g",
       label: "Näringsgren",
-      group_key: "naringsgren",
+      group_key: "naringsgren-storsta-agi-sni2007",
       group_label: "Näringsgren, största förvärvskälla",
       facets: [],
     });
@@ -423,7 +425,9 @@ describe("HistoryGraph (#678)", () => {
       }
       return el.textContent?.replace(/\s+/g, " ").trim() ?? "";
     });
-    expect(edgeText).toContain("agi1astsni2007 → ku1astsni2002");
+    expect(edgeText).toContain(
+      "naringsgren-storsta-agi-sni2007 → naringsgren-storsta-ku-sni2002g",
+    );
     expect(edgeText).not.toContain("Näringsgren → Näringsgren");
   });
 

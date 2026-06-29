@@ -45,7 +45,7 @@ describe("SubjectView (#638 shell)", () => {
     // still present (used for the docs/dimensions wiring), but the line is dropped.
     const screen = await render(SubjectView, {
       title: "Näringsgren, största förvärvskälla",
-      fqid: "scb/lisa/agi1astsni2007g",
+      fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
       showFqid: false,
     });
     await expect

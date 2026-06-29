@@ -277,8 +277,9 @@ export function membersHaveUniqueCoords(
 }
 
 // ── Member-distinguishing qualifier (#670, graph-sourced #678) ───────────────
-// A grouped binding leaf (`scb/lisa/agi1astsni2007g`) shares its concept
-// `node.name` with ~31 siblings, so the header alone can't tell members apart.
+// A grouped binding leaf (`scb/lisa/naringsgren-storsta-agi-sni2007g`) shares
+// its concept `node.name` with ~31 siblings, so the header alone can't tell
+// members apart.
 // The #670 header qualifier + "member of ⟨group⟩" link now derive from the
 // relationship-graph FOCUS node (the `VariableGraphNode` whose `id === focus_id`)
 // instead of the retired `/dimensions` fetch (#678): the focus node already

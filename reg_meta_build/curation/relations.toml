@@ -87,64 +87,64 @@ note = "Summa annan inkomst recut to the 2018 års definition"
 #    dimensional grouping for a concept-group follow-up, not succession edges.
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku1astsni"
-to = "scb/lisa/agi1astsni2007"
+from = "scb/lisa/naringsgren-storsta-ku"
+to = "scb/lisa/naringsgren-storsta-agi-sni2007"
 effective_year = 2019
 note = "Näringsgren (rank 1) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku1astsni2007g"
-to = "scb/lisa/agi1astsni2007g"
+from = "scb/lisa/naringsgren-storsta-ku-sni2007g"
+to = "scb/lisa/naringsgren-storsta-agi-sni2007g"
 effective_year = 2019
 note = "Näringsgren (rank 1, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku1astsni2007u"
-to = "scb/lisa/agi1astsni2007u"
+from = "scb/lisa/naringsgren-storsta-ku-sni2007u"
+to = "scb/lisa/naringsgren-storsta-agi-sni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 1, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku2astsni"
-to = "scb/lisa/agi2astsni2007"
+from = "scb/lisa/naringsgren-nast-storsta-ku"
+to = "scb/lisa/naringsgren-nast-storsta-agi-sni2007"
 effective_year = 2019
 note = "Näringsgren (rank 2) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku2astsni2007g"
-to = "scb/lisa/agi2astsni2007g"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni2007g"
+to = "scb/lisa/naringsgren-nast-storsta-agi-sni2007g"
 effective_year = 2019
 note = "Näringsgren (rank 2, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku2astsni2007u"
-to = "scb/lisa/agi2astsni2007u"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni2007u"
+to = "scb/lisa/naringsgren-nast-storsta-agi-sni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 2, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku3astsni"
-to = "scb/lisa/agi3astsni2007"
+from = "scb/lisa/naringsgren-tredje-storsta-ku"
+to = "scb/lisa/naringsgren-tredje-storsta-agi-sni2007"
 effective_year = 2019
 note = "Näringsgren (rank 3) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku3astsni2007g"
-to = "scb/lisa/agi3astsni2007g"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni2007g"
+to = "scb/lisa/naringsgren-tredje-storsta-agi-sni2007g"
 effective_year = 2019
 note = "Näringsgren (rank 3, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku3astsni2007u"
-to = "scb/lisa/agi3astsni2007u"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni2007u"
+to = "scb/lisa/naringsgren-tredje-storsta-agi-sni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 

@@ -351,9 +351,13 @@ describe("DocMentionsPanel (#402)", () => {
     );
     await render(DocMentionsPanel, {
       node: node({
-        fqid: "scb/lisa/agi1astsni2007g",
+        fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
         name: "Näringsgren, största förvärvskälla",
-        group: { provider: "scb", register: "lisa", key: "naringsgren" },
+        group: {
+          provider: "scb",
+          register: "lisa",
+          key: "naringsgren-storsta-agi-sni2007",
+        },
       }),
     });
 
@@ -374,9 +378,13 @@ describe("DocMentionsPanel (#402)", () => {
     );
     await render(DocMentionsPanel, {
       node: node({
-        fqid: "scb/lisa/agi1astsni2007g",
+        fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
         name: "Näringsgren, största förvärvskälla",
-        group: { provider: "scb", register: "lisa", key: "naringsgren" },
+        group: {
+          provider: "scb",
+          register: "lisa",
+          key: "naringsgren-storsta-agi-sni2007",
+        },
       }),
     });
 

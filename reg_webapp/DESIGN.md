@@ -1125,9 +1125,10 @@ backend contract can't drift. The catch-all returns the `kind`-discriminated
 ## Unified catalog subject page (`SubjectView`) (#611/#638)
 
 The catalog's three *leaf* kinds — a **variable** (`scb/lisa/kon`), a **classification**
-(`class/sun2020`), and a **concept group** (`group/scb/lisa/agi-astsni`) — render
-through one shell, `SubjectView.svelte`, so they share a single article wrapper, one
-title/fqid header, and one **canonical section order**:
+(`class/sun2020`), and a **concept group**
+(`group/scb/lisa/naringsgren-storsta-agi-sni2007`) — render through one shell,
+`SubjectView.svelte`, so they share a single article wrapper, one title/fqid header, and
+one **canonical section order**:
 
 1. **description**
 2. **picker** — slice axis × time axis

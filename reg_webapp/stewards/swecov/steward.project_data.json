@@ -17902,47 +17902,47 @@
           "representation": "Ast_SektorKod"
         },
         {
-          "variable": "scb/lisa/ast-sni",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle",
           "type": "opaque",
           "representation": "Ast_Sni2002"
         },
         {
-          "variable": "scb/lisa/ast-sni",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle",
           "type": "opaque",
           "representation": "Ast_Sni2007"
         },
         {
-          "variable": "scb/lisa/ast-sni",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle",
           "type": "opaque",
           "representation": "Ast_Sni92"
         },
         {
-          "variable": "scb/lisa/ast-sni2002b",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle-sni2002b",
           "type": "opaque",
           "representation": "Ast_Sni2002B"
         },
         {
-          "variable": "scb/lisa/ast-sni2002g",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle-sni2002g",
           "type": "opaque",
           "representation": "Ast_Sni2002G"
         },
         {
-          "variable": "scb/lisa/ast-sni2007g",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle-sni2007g",
           "type": "opaque",
           "representation": "Ast_Sni2007G"
         },
         {
-          "variable": "scb/lisa/ast-sni2007u",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle-sni2007u",
           "type": "opaque",
           "representation": "Ast_Sni2007U"
         },
         {
-          "variable": "scb/lisa/ast-sni92b",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle-sni92b",
           "type": "opaque",
           "representation": "Ast_Sni92B"
         },
         {
-          "variable": "scb/lisa/ast-sni92g",
+          "variable": "scb/lisa/naringsgren-huvud-arbetsstalle-sni92g",
           "type": "opaque",
           "representation": "Ast_Sni92G"
         },
@@ -18349,47 +18349,47 @@
           "representation": "Org_SektorKod"
         },
         {
-          "variable": "scb/lisa/org-sni",
+          "variable": "scb/lisa/naringsgren-huvud-foretag",
           "type": "opaque",
           "representation": "Org_Sni2002"
         },
         {
-          "variable": "scb/lisa/org-sni",
+          "variable": "scb/lisa/naringsgren-huvud-foretag",
           "type": "opaque",
           "representation": "Org_Sni2007"
         },
         {
-          "variable": "scb/lisa/org-sni",
+          "variable": "scb/lisa/naringsgren-huvud-foretag",
           "type": "opaque",
           "representation": "Org_Sni92"
         },
         {
-          "variable": "scb/lisa/org-sni2002b",
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2002b",
           "type": "opaque",
           "representation": "Org_Sni2002B"
         },
         {
-          "variable": "scb/lisa/org-sni2002g",
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2002g",
           "type": "opaque",
           "representation": "Org_Sni2002G"
         },
         {
-          "variable": "scb/lisa/org-sni2007g",
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2007g",
           "type": "opaque",
           "representation": "Org_Sni2007G"
         },
         {
-          "variable": "scb/lisa/org-sni2007u",
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2007u",
           "type": "opaque",
           "representation": "Org_Sni2007U"
         },
         {
-          "variable": "scb/lisa/org-sni92b",
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni92b",
           "type": "opaque",
           "representation": "Org_Sni92B"
         },
         {
-          "variable": "scb/lisa/org-sni92g",
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni92g",
           "type": "opaque",
           "representation": "Org_Sni92G"
         },
@@ -18586,12 +18586,12 @@
           "representation": "AstNr_LISA"
         },
         {
-          "variable": "scb/lisa/astsni",
+          "variable": "scb/lisa/naringsgren-huvud-individ",
           "type": "opaque",
           "representation": "AstSNI2002"
         },
         {
-          "variable": "scb/lisa/astsni",
+          "variable": "scb/lisa/naringsgren-huvud-individ",
           "type": "opaque",
           "representation": "AstSNI2007"
         },
@@ -19453,22 +19453,22 @@
           "representation": "AstNr"
         },
         {
-          "variable": "scb/lisa/astsni",
+          "variable": "scb/lisa/naringsgren-huvud-individ",
           "type": "opaque",
           "representation": "AstSNI2002"
         },
         {
-          "variable": "scb/lisa/astsni",
+          "variable": "scb/lisa/naringsgren-huvud-individ",
           "type": "opaque",
           "representation": "AstSNI2007"
         },
         {
-          "variable": "scb/lisa/astsni",
+          "variable": "scb/lisa/naringsgren-huvud-individ",
           "type": "opaque",
           "representation": "AstSNI69"
         },
         {
-          "variable": "scb/lisa/astsni",
+          "variable": "scb/lisa/naringsgren-huvud-individ",
           "type": "opaque",
           "representation": "AstSNI92"
         },
@@ -20313,27 +20313,27 @@
           "representation": "AstNr"
         },
         {
-          "variable": "scb/rams/astsni",
+          "variable": "scb/rams/naringsgren-huvud",
           "type": "opaque",
           "representation": "AstSni92"
         },
         {
-          "variable": "scb/rams/astsni",
+          "variable": "scb/rams/naringsgren-huvud",
           "type": "opaque",
           "representation": "Astsni69"
         },
         {
-          "variable": "scb/rams/astsni0",
+          "variable": "scb/rams/naringsgren-stat-huvud",
           "type": "opaque",
           "representation": "AstSni02"
         },
         {
-          "variable": "scb/rams/astsni0",
+          "variable": "scb/rams/naringsgren-stat-huvud",
           "type": "opaque",
           "representation": "AstSni07"
         },
         {
-          "variable": "scb/rams/astsni02",
+          "variable": "scb/rams/naringsgren-huvud-sni2002",
           "type": "opaque",
           "representation": "AstSni02"
         },
@@ -20447,22 +20447,22 @@
           "representation": "AstNr"
         },
         {
-          "variable": "scb/rams/astsni",
+          "variable": "scb/rams/naringsgren-huvud",
           "type": "opaque",
           "representation": "AstSni69"
         },
         {
-          "variable": "scb/rams/astsni",
+          "variable": "scb/rams/naringsgren-huvud",
           "type": "opaque",
           "representation": "AstSni92"
         },
         {
-          "variable": "scb/rams/astsni0",
+          "variable": "scb/rams/naringsgren-stat-huvud",
           "type": "opaque",
           "representation": "AstSni02"
         },
         {
-          "variable": "scb/rams/astsni0",
+          "variable": "scb/rams/naringsgren-stat-huvud",
           "type": "opaque",
           "representation": "AstSni07"
         },
@@ -20529,27 +20529,27 @@
           "representation": "AstNr"
         },
         {
-          "variable": "scb/rams/astsni",
+          "variable": "scb/rams/naringsgren-huvud",
           "type": "opaque",
           "representation": "AstSni69"
         },
         {
-          "variable": "scb/rams/astsni",
+          "variable": "scb/rams/naringsgren-huvud",
           "type": "opaque",
           "representation": "AstSni92"
         },
         {
-          "variable": "scb/rams/astsni0",
+          "variable": "scb/rams/naringsgren-stat-huvud",
           "type": "opaque",
           "representation": "AstSni02"
         },
         {
-          "variable": "scb/rams/astsni0",
+          "variable": "scb/rams/naringsgren-stat-huvud",
           "type": "opaque",
           "representation": "AstSni07"
         },
         {
-          "variable": "scb/rams/astsni92",
+          "variable": "scb/rams/naringsgren-stat-huvud-sni92",
           "type": "opaque",
           "representation": "AstSni92"
         },

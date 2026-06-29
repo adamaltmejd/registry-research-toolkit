@@ -1223,11 +1223,12 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 });
 
 describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
-  const groupedFqid = "scb/lisa/agi1astsni2007g";
+  const groupedFqid = "scb/lisa/naringsgren-storsta-agi-sni2007g";
+  const groupedKey = "naringsgren-storsta-agi-sni2007";
   const groupedNode = node(single, {
     fqid: groupedFqid,
     name: "Näringsgren, största förvärvskälla",
-    group: { provider: "scb", register: "lisa", key: "naringsgren" },
+    group: { provider: "scb", register: "lisa", key: groupedKey },
   });
 
   /** A graph whose focus variable carries the member facets + group label. */
@@ -1239,7 +1240,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       {
         fqid: groupedFqid,
         label: "Näringsgren, största förvärvskälla",
-        group_key: "naringsgren",
+        group_key: groupedKey,
         group_label: "Näringsgren, största förvärvskälla",
         ...over,
       },
@@ -1280,7 +1281,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       document
         .querySelector(".member-identity .group-context a")
         ?.getAttribute("href"),
-    ).toBe("/catalog/group/scb/lisa/naringsgren");
+    ).toBe("/catalog/group/scb/lisa/naringsgren-storsta-agi-sni2007");
   });
 
   it("resolves the qualifier from the focus node even when it differs from the leaf fqid (same_as)", async () => {
@@ -1313,10 +1314,11 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   });
 
   it("a grouped facet-less focus opened via same_as shows the CANONICAL sibling slug, not the alias", async () => {
-    // Opened via a same_as alias (the leaf is `…/agi1astsni2007g`), the focus node
-    // is keyed on the RESOLVED canonical target. The facet-less slug qualifier must
-    // read the focus node's own (canonical) fqid so the alias page and the
-    // canonical page show the SAME technical identifier (#670 Codex-P2 parity).
+    // Opened via a same_as alias (the leaf is
+    // `.../naringsgren-storsta-agi-sni2007g`), the focus node is keyed on the
+    // RESOLVED canonical target. The facet-less slug qualifier must read the focus
+    // node's own (canonical) fqid so the alias page and the canonical page show the
+    // SAME technical identifier (#670 Codex-P2 parity).
     vi.mocked(getBindingGraph).mockResolvedValue(
       focusGraph({ fqid: "scb/rams/inkjan", facets: [] }) as never,
     );
@@ -1336,7 +1338,8 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       }
       return el;
     });
-    // The CANONICAL leaf slug, not the alias `agi1astsni2007g`.
+    // The CANONICAL leaf slug, not the alias
+    // `naringsgren-storsta-agi-sni2007g`.
     expect(slugEl.textContent).toBe("inkjan");
   });
 
@@ -1360,7 +1363,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       }
       return el;
     });
-    expect(slugEl.textContent).toBe("agi1astsni2007g");
+    expect(slugEl.textContent).toBe("naringsgren-storsta-agi-sni2007g");
     await expect
       .element(
         page

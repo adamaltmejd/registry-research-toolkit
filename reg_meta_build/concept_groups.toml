@@ -595,13 +595,14 @@ label = "9:e"
 # "Näringsgren för statistiken, huvudsaklig" — the auto edge grouper lumped them
 # into ONE family (`ast-sni`), so a browsing user couldn't tell a person's industry
 # from a workplace's from a firm's. The disambiguation is the DELIVERY POPULATION:
-# astsni*→individ (person), ast-sni*→arbetsställe (workplace), org-sni*→företag
-# (firm). Population is therefore the GROUP SPLIT (three groups), NOT a facet axis.
-# Within each group the single `edition` axis carries the SNI vintage+granularity
-# variant (1992/2002/2007 × b/g/u serie); #584's variable vintage lift will later
-# collapse the vintage dimension into succession, leaving granularity on the axis.
-# Curated `[[variable_group]]` precedence (#591) claims these 21 FQIDs, dissolving
-# the conflated auto edge group.
+# the three source-column populations are distinct: individ (person), arbetsställe
+# (workplace), and företag (firm). Population is therefore the GROUP SPLIT (three
+# groups), NOT a facet axis. Within each group the single `edition` axis carries the
+# SNI vintage+granularity variant (1992/2002/2007 × b/g/u serie); #584's variable
+# vintage lift will later collapse the vintage dimension into succession, leaving
+# granularity on the axis. Curated `[[variable_group]]` precedence (#591) claims
+# these 21 FQIDs, dissolving the conflated auto edge group. Slugs are pinned in
+# fqid_slugs/scb.toml (#931) to concept-stem names rather than raw delivery prefixes.
 
 [[variable_group]]
 register = "scb/lisa"
@@ -610,37 +611,37 @@ label = "Näringsgren för statistiken, huvudsaklig — individ"
 axis = "edition"
 
 [[variable_group.members]]
-variable = "astsni"
+variable = "naringsgren-huvud-individ"
 value = "0000"
 label = "Grundserie"
 
 [[variable_group.members]]
-variable = "astsni92b"
+variable = "naringsgren-huvud-individ-sni92b"
 value = "1992b"
 label = "SNI92 (b)"
 
 [[variable_group.members]]
-variable = "astsni92g"
+variable = "naringsgren-huvud-individ-sni92g"
 value = "1992g"
 label = "SNI92 (g)"
 
 [[variable_group.members]]
-variable = "astsni2002b"
+variable = "naringsgren-huvud-individ-sni2002b"
 value = "2002b"
 label = "SNI2002 (b)"
 
 [[variable_group.members]]
-variable = "astsni2002g"
+variable = "naringsgren-huvud-individ-sni2002g"
 value = "2002g"
 label = "SNI2002 (g)"
 
 [[variable_group.members]]
-variable = "astsni2007g"
+variable = "naringsgren-huvud-individ-sni2007g"
 value = "2007g"
 label = "SNI2007 (g)"
 
 [[variable_group.members]]
-variable = "astsni2007u"
+variable = "naringsgren-huvud-individ-sni2007u"
 value = "2007u"
 label = "SNI2007 (u)"
 
@@ -651,37 +652,37 @@ label = "Näringsgren för statistiken, huvudsaklig — arbetsställe"
 axis = "edition"
 
 [[variable_group.members]]
-variable = "ast-sni"
+variable = "naringsgren-huvud-arbetsstalle"
 value = "0000"
 label = "Grundserie"
 
 [[variable_group.members]]
-variable = "ast-sni92b"
+variable = "naringsgren-huvud-arbetsstalle-sni92b"
 value = "1992b"
 label = "SNI92 (b)"
 
 [[variable_group.members]]
-variable = "ast-sni92g"
+variable = "naringsgren-huvud-arbetsstalle-sni92g"
 value = "1992g"
 label = "SNI92 (g)"
 
 [[variable_group.members]]
-variable = "ast-sni2002b"
+variable = "naringsgren-huvud-arbetsstalle-sni2002b"
 value = "2002b"
 label = "SNI2002 (b)"
 
 [[variable_group.members]]
-variable = "ast-sni2002g"
+variable = "naringsgren-huvud-arbetsstalle-sni2002g"
 value = "2002g"
 label = "SNI2002 (g)"
 
 [[variable_group.members]]
-variable = "ast-sni2007g"
+variable = "naringsgren-huvud-arbetsstalle-sni2007g"
 value = "2007g"
 label = "SNI2007 (g)"
 
 [[variable_group.members]]
-variable = "ast-sni2007u"
+variable = "naringsgren-huvud-arbetsstalle-sni2007u"
 value = "2007u"
 label = "SNI2007 (u)"
 
@@ -692,37 +693,37 @@ label = "Näringsgren för statistiken, huvudsaklig — företag"
 axis = "edition"
 
 [[variable_group.members]]
-variable = "org-sni"
+variable = "naringsgren-huvud-foretag"
 value = "0000"
 label = "Grundserie"
 
 [[variable_group.members]]
-variable = "org-sni92b"
+variable = "naringsgren-huvud-foretag-sni92b"
 value = "1992b"
 label = "SNI92 (b)"
 
 [[variable_group.members]]
-variable = "org-sni92g"
+variable = "naringsgren-huvud-foretag-sni92g"
 value = "1992g"
 label = "SNI92 (g)"
 
 [[variable_group.members]]
-variable = "org-sni2002b"
+variable = "naringsgren-huvud-foretag-sni2002b"
 value = "2002b"
 label = "SNI2002 (b)"
 
 [[variable_group.members]]
-variable = "org-sni2002g"
+variable = "naringsgren-huvud-foretag-sni2002g"
 value = "2002g"
 label = "SNI2002 (g)"
 
 [[variable_group.members]]
-variable = "org-sni2007g"
+variable = "naringsgren-huvud-foretag-sni2007g"
 value = "2007g"
 label = "SNI2007 (g)"
 
 [[variable_group.members]]
-variable = "org-sni2007u"
+variable = "naringsgren-huvud-foretag-sni2007u"
 value = "2007u"
 label = "SNI2007 (u)"
 
