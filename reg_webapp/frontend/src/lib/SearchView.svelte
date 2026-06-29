@@ -23,7 +23,7 @@ import {
 } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 import { router } from "./router.svelte";
-import { Tag } from "./ui";
+import { Panel, Tag } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
 // the four ORDERED, typed groups GET /api/search returns (registers / variables /
@@ -483,20 +483,17 @@ function closeSearch(): void {
       {@const renderedResults = displayResults(group)}
       {#if renderedResults.length > 0 && heading}
         {@const caption = showingOf(renderedResults.length, group.total_count)}
-        <section class="group">
-          <h3>
-            {heading.label}
-            {#if caption}<span class="count">{caption}</span>{/if}
-          </h3>
+        <div class="group">
+          <Panel title={heading.label}>
+            {#snippet meta()}
+              {#if caption}<span class="count">{caption}</span>{/if}
+            {/snippet}
 
           {#if group.group === "registers"}
             <!-- Registers share the variables' one-column result shape: primary
                  line is the register name, secondary line is the muted
                  description. No split name/description columns. -->
             <div class="children table cols-1" role="presentation">
-              <div class="head-row" aria-hidden="true">
-                <span class="col-head">Register</span>
-              </div>
               {#each registerDisplayResults(group) as result, i (`${result.fqid}|${i}`)}
                 {@render registerLeafRow(result)}
               {/each}
@@ -508,9 +505,6 @@ function closeSearch(): void {
                  disclosures. Delivery-column chips ride in the result heading;
                  register context stays in the muted detail line. -->
             <div class="children table cols-1" role="presentation">
-              <div class="head-row" aria-hidden="true">
-                <span class="col-head">Variable</span>
-              </div>
               {#each variableDisplayResults(group) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
@@ -522,15 +516,8 @@ function closeSearch(): void {
           {:else if group.group === "classifications"}
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
                  ORDER. A leaf classification or concept group is a whole-row link;
-                 classification-succession stays a column-spanning disclosure.
-                 Columns: Classification (short_name ?? name, + the "→ current
-                 edition" terminal link) · Name (full name when it differs from the
-                 short name). -->
+                 classification-succession stays a column-spanning disclosure. -->
             <div class="children table cols-2" role="presentation">
-              <div class="head-row" aria-hidden="true">
-                <span class="col-head">Classification</span>
-                <span class="col-head">Name</span>
-              </div>
               {#each classificationDisplayResults(group) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
@@ -586,7 +573,8 @@ function closeSearch(): void {
               </div>
             {/each}
           {/if}
-        </section>
+          </Panel>
+        </div>
       {/if}
     {/each}
   {/if}
@@ -596,7 +584,7 @@ function closeSearch(): void {
        shows whenever it has hits REGARDLESS of the main groups' loading / error /
        timeout / no-match state (full failure isolation: e.g. the main /api/search
        codes sub-query can time out while the separate docs index resolves fine).
-       Its own <section> with a literal heading (NOT folded into GROUP_HEADINGS,
+       Its own panel with a literal heading (NOT folded into GROUP_HEADINGS,
        which is keyed on the four main group literals). A docs failure / empty /
        absent index is silently omitted; the empty + too-short query states
        short-circuit `docs` to `ingested:false`, so `docsHasHits` is false there. -->
@@ -605,21 +593,22 @@ function closeSearch(): void {
       docs.data.results.length,
       docs.data.total_count,
     )}
-    <section class="group">
-      <h3>
-        Documentation
-        {#if caption}<span class="count">{caption}</span>{/if}
-      </h3>
-      <ul class="results">
-        <!-- Key by array INDEX: like the other groups, this list is replaced
-             wholesale per query, so the index is stable + unique within a render
-             (a natural key like `filename` could collide and crash the keyed
-             each — see the #379/#391 each_key_duplicate lesson above). -->
-        {#each docs.data.results as result, i (i)}
-          <li>{@render docHit(result)}</li>
-        {/each}
-      </ul>
-    </section>
+    <div class="group">
+      <Panel title="Documentation">
+        {#snippet meta()}
+          {#if caption}<span class="count">{caption}</span>{/if}
+        {/snippet}
+        <ul class="results">
+          <!-- Key by array INDEX: like the other groups, this list is replaced
+               wholesale per query, so the index is stable + unique within a render
+               (a natural key like `filename` could collide and crash the keyed
+               each — see the #379/#391 each_key_duplicate lesson above). -->
+          {#each docs.data.results as result, i (i)}
+            <li>{@render docHit(result)}</li>
+          {/each}
+        </ul>
+      </Panel>
+    </div>
   {/if}
 </article>
 
@@ -990,13 +979,6 @@ function closeSearch(): void {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-muted);
-  }
-  .group h3 {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    margin: 0 0 0.5rem;
-    font-size: 1rem;
   }
   .count {
     color: var(--text-muted);

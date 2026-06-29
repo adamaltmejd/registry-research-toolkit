@@ -1243,11 +1243,14 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect.element(page.getByText("Column")).not.toBeInTheDocument();
     const variablesHeading = page.getByRole("heading", { name: "Variables" });
     await expect.element(variablesHeading).toBeVisible();
-    expect(document.querySelector(".search-view h3 .heading-tag")).toBeNull();
+    expect(document.querySelector(".search-view .heading-tag")).toBeNull();
 
     const row = document.querySelector(
       ".search-view a.leaf-row[href='/catalog/scb/lisa/kon']",
     );
+    const variablePanel = row?.closest(".panel");
+    expect(variablePanel).not.toBeNull();
+    expect(variablePanel?.querySelector(".head-row")).toBeNull();
     expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
     expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
