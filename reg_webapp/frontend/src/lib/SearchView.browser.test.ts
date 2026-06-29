@@ -130,8 +130,7 @@ describe("SearchView — typed result groups (#379)", () => {
     // A register/variable/classification leaf links to its catalog node. The
     // register leaf is the registers whole-row name link (exact "LISA"); the
     // variable leaf is the whole-row grid link whose accessible name folds in the
-    // register/column pills ("Kön LISA kon"), so match the variable by its /Kön/
-    // name.
+    // muted register/detail line and column chips, so match it by its /Kön/ name.
     await expect
       .element(page.getByRole("link", { name: "LISA", exact: true }))
       .toHaveAttribute("href", "/catalog/scb/lisa");
@@ -165,8 +164,8 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("fedunsatreason");
     await render(SearchView);
 
-    const registerPill = document.querySelector(".search-view .register-pill");
-    expect(registerPill?.textContent?.trim()).toBe("AES");
+    expect(document.querySelector(".search-view .register-pill")).toBeNull();
+    await expect.element(page.getByText("AES")).toBeVisible();
     const columnPills = Array.from(
       document.querySelectorAll<HTMLElement>(".search-view .col-chip"),
     ).map((pill) => pill.textContent?.trim());
@@ -543,10 +542,69 @@ describe("SearchView — typed result groups (#379)", () => {
     // The group itself is a normal row link to the first-class group page; no
     // inline disclosure is reintroduced in search results.
     await expect
-      .element(page.getByRole("link", { name: /Disponibel inkomst/ }))
+      .element(page.getByRole("link", { name: /Group: Disponibel inkomst/ }))
       .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
+    await expect.element(page.getByText("LISA")).toBeVisible();
+    await expect
+      .element(page.getByText(/variables matched/))
+      .not.toBeInTheDocument();
     expect(
       document.querySelector(".search-view details.concept-group"),
+    ).toBeNull();
+  });
+
+  it("deduplicates variable leaf hits that are already represented by a group-page result", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "disp",
+      groups: [
+        {
+          group: "variables",
+          total_count: 2,
+          results: [
+            {
+              type: "group",
+              group_key: "dispink",
+              group_label: "Disponibel inkomst",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 1,
+              member_count: 1,
+              register: "LISA",
+              source: "token",
+              members: [
+                {
+                  fqid: "scb/lisa/dispink-2019",
+                  name: "Disp 2019",
+                  facets: [],
+                },
+              ],
+            },
+            {
+              type: "variable",
+              fqid: "scb/lisa/dispink-2019",
+              name: "Disp 2019",
+              register: "LISA",
+              definition: null,
+              delivery_column_names: ["dispink"],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("disp");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("link", { name: /Group: Disponibel inkomst/ }))
+      .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
+    await expect
+      .element(page.getByRole("link", { name: /Disp 2019/ }))
+      .not.toBeInTheDocument();
+    expect(
+      document.querySelector(
+        ".search-view a.leaf-row[href='/catalog/scb/lisa/dispink-2019']",
+      ),
     ).toBeNull();
   });
 
@@ -1055,9 +1113,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
   // The #808 round-3 redesign: registers / variables / classifications render ONE
   // CSS-grid `.children.table` over their results IN RANK ORDER — leaves and
   // concept groups are whole-row subgrid <a>s, while classification succession is
-  // the only inline disclosure. Selected categorical group identity lives on the
-  // GROUP HEADING; the raw FQID is hidden. Codes render a compact, code-FIRST
-  // grid table per code-system bucket.
+  // the only inline disclosure. Headings stay plain text; the raw FQID is hidden.
+  // Codes render a compact, code-FIRST grid table per code-system bucket.
   const FOUR_GROUPS = {
     kind: "search",
     query: "kon",
@@ -1178,7 +1235,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(columnChips).toContain("kon");
   });
 
-  it("renders Variables as a normal heading and variable metadata as inline pills", async () => {
+  it("renders Variables as a normal heading with column chips and muted register context", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
@@ -1186,15 +1243,14 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect.element(page.getByText("Column")).not.toBeInTheDocument();
     const variablesHeading = page.getByRole("heading", { name: "Variables" });
     await expect.element(variablesHeading).toBeVisible();
-    expect(
-      document.querySelector(".search-view h3 .heading-tag .tag.tone-var"),
-    ).toBeNull();
+    expect(document.querySelector(".search-view h3 .heading-tag")).toBeNull();
 
-    const row = document.querySelector(".search-view .cols-1 a.leaf-row");
-    expect(row?.querySelector(".register-pill")?.textContent?.trim()).toBe(
-      "LISA",
+    const row = document.querySelector(
+      ".search-view a.leaf-row[href='/catalog/scb/lisa/kon']",
     );
+    expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
+    expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
   });
 
   it("makes each leaf a real catalog link (open-in-new-tab safe)", async () => {
@@ -1217,7 +1273,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       .toHaveAttribute("href", "/catalog/class/sun2020");
   });
 
-  it("marks the group identity via a heading Tag, not per-row badges", async () => {
+  it("renders result group headings as plain text, not heading badges", async () => {
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
@@ -1225,39 +1281,32 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Registers" }))
       .toBeVisible();
-    // The categorical tone lives on selected heading Tags, NOT per-row badges. The
-    // Variables and codes headings stay plain text.
-    for (const tone of ["reg", "class"] as const) {
-      const tag = document.querySelector(
-        `.search-view h3 .heading-tag .tag.tone-${tone}`,
-      );
-      expect(tag, `expected a heading Tag on tone ${tone}`).not.toBeNull();
-    }
-    expect(
-      document.querySelector(".search-view h3 .heading-tag .tag.tone-var"),
-    ).toBeNull();
-    // Exactly the two non-variable leaf-group headings carry a categorical Tag (no
-    // per-row badge proliferation).
-    const headingTags = document.querySelectorAll(".search-view h3 .tag");
-    expect(headingTags.length).toBe(2);
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Classifications" }))
+      .toBeVisible();
+    expect(document.querySelector(".search-view h3 .heading-tag")).toBeNull();
+    expect(document.querySelectorAll(".search-view h3 .tag").length).toBe(0);
   });
 
-  it("makes a variable leaf row a whole-row subgrid link carrying register + column pills, keyboard-focusable (#808 a11y)", async () => {
+  it("makes a variable leaf row a whole-row subgrid link carrying column chips and muted register context (#808 a11y)", async () => {
     // The headline redesign + a11y fix: a variable leaf row is ONE real link — a
     // SUBGRID box (`display:grid` + `grid-template-columns: subgrid`, NOT
     // `display:contents`) so its child cells align to the parent grid's track while
     // the <a> stays a real, keyboard-focusable element. Clicking anywhere on the row
-    // = clicking the link. Assert the <a> targets the catalog node, carries the
-    // register + delivery-column pills, resolves to `subgrid`, AND is
-    // keyboard-focusable (the display:contents version was dropped from the tab
-    // order).
+    // = clicking the link. Assert the <a> targets the catalog node, carries
+    // delivery-column chips plus muted register context, resolves to `subgrid`,
+    // AND is keyboard-focusable (the display:contents version was dropped from the
+    // tab order).
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
     // The variable leaf row is an <a.leaf-row> to the variable's catalog node.
     const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view .cols-1 a.leaf-row",
+      ".search-view a.leaf-row[href='/catalog/scb/lisa/kon']",
     );
     expect(row).not.toBeNull();
     expect(row?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
@@ -1270,11 +1319,11 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // bearing proof (a `display:contents` <a> fails this, dropped from the tab order).
     row?.focus();
     expect(document.activeElement).toBe(row);
-    // The row carries the register and delivery-column pills inside the same link.
-    expect(row?.querySelector(".register-pill")?.textContent?.trim()).toBe(
-      "LISA",
-    );
+    // The row carries delivery-column chips in the heading; register context is a
+    // muted detail, not a green pill.
+    expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
+    expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
   });
 
   it("makes a classification leaf row a keyboard-focusable whole-row link (#808 a11y)", async () => {
@@ -1284,8 +1333,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("kon");
     await render(SearchView);
 
-    // Scope by the classification href — the registers group is ALSO a `.cols-2`
-    // grid now, so a bare `.cols-2 a.leaf-row` would match the register row first.
+    // Scope by the classification href; several groups share the same row class.
     const row = document.querySelector<HTMLAnchorElement>(
       ".search-view .cols-2 a.leaf-row[href='/catalog/class/sun2020']",
     );
@@ -1307,8 +1355,9 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("kon");
     await render(SearchView);
 
-    // The registers group renders the grid table, NOT a DataTable (no role=grid).
-    const grid = document.querySelector(".search-view section.group");
+    // The registers group renders the same one-column grid table as variables,
+    // NOT a DataTable and not a split name/description table.
+    const grid = document.querySelector(".search-view .children.table.cols-1");
     expect(grid).not.toBeNull();
     const row = document.querySelector<HTMLAnchorElement>(
       ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
@@ -1317,6 +1366,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
     const style = getComputedStyle(row as Element);
     expect(style.display).toBe("grid");
     expect(style.gridTemplateColumns).toContain("subgrid");
+    expect(row?.querySelector(".result-title")?.textContent).toContain("LISA");
+    expect(row?.querySelector(".result-detail")).toBeNull();
     row?.focus();
     expect(document.activeElement).toBe(row);
   });
@@ -1482,7 +1533,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       .element(page.getByRole("link", { name: /After fold/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/after");
     await expect
-      .element(page.getByRole("link", { name: /Disponibel inkomst/ }))
+      .element(page.getByRole("link", { name: /Group: Disponibel inkomst/ }))
       .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
     const grid = document.querySelector(".search-view .cols-1");
     const groupLink = grid?.querySelector(
@@ -1496,6 +1547,9 @@ describe("SearchView — compact per-type tables (#808)", () => {
       grid?.querySelector("details.concept-group"),
       "variable concept groups do not render as details",
     ).toBeNull();
+    await expect
+      .element(page.getByText(/variables matched/))
+      .not.toBeInTheDocument();
     // The old "Grouped families" pulled-out block is GONE.
     expect(document.querySelector(".search-view .folds-label")).toBeNull();
     await expect

@@ -43,9 +43,9 @@ import { Tag } from "./ui";
 // code-FIRST grid table per code-system bucket (the bucket heading names the
 // classification / value-set);
 // each row's owner VARIABLES are the navigable targets (a code has no own page).
-// Categorical type identity lives on selected GROUP HEADINGS; the raw FQID is
-// hidden everywhere. Variable rows surface register + delivery-column metadata as
-// compact heading pills.
+// Group headings stay plain text; the raw FQID is hidden everywhere. Variable row
+// headings surface only delivery-column metadata as compact chips, while the
+// owning register sits in the muted detail line with the definition.
 //
 // The registers group previously used a DataTable with selection-as-navigation,
 // but a null-fqid register made the row focusable/clickable while `navigateTo`
@@ -161,21 +161,19 @@ const noMatches = $derived(
     !results.loading &&
     !results.error &&
     groups.every(
-      (g) => g.results.length === 0 || !(g.group in GROUP_HEADINGS),
+      (g) => displayResults(g).length === 0 || !(g.group in GROUP_HEADINGS),
     ) &&
     !docs.loading &&
     !docsHasHits,
 );
 
-// Per-group heading + its categorical type tone (#808): the tone marks the group
-// identity ONCE in the heading (a single Tag), replacing the old per-row badges.
-// The codes heading carries no single tone (a code fans out to mixed owners), so
-// it has none.
+// Per-group heading labels. Keep these as normal text headings; result type and
+// context live inside rows, not in heading badges.
 const GROUP_HEADINGS = {
-  registers: { label: "Registers", tone: "reg" },
-  variables: { label: "Variables", tone: null },
-  classifications: { label: "Classifications", tone: "class" },
-  codes: { label: "Codes / values", tone: null },
+  registers: { label: "Registers" },
+  variables: { label: "Variables" },
+  classifications: { label: "Classifications" },
+  codes: { label: "Codes / values" },
 } as const;
 
 // Discriminate a variable/classification group's mixed results on `type`.
@@ -252,10 +250,91 @@ function conceptGroupHref(result: ConceptGroupSearchResult): string | null {
     : null;
 }
 
-function conceptGroupMatchSummary(result: ConceptGroupSearchResult): string {
-  const noun = result.kind === "classification" ? "classification" : "variable";
-  const plural = result.member_count === 1 ? noun : `${noun}s`;
-  return `${result.matched_count} of ${result.member_count} ${plural} matched`;
+type SearchGroup = SearchResponse["groups"][number];
+type SearchResult = SearchGroup["results"][number];
+type VariableDisplayResult = VariableSearchResult | ConceptGroupSearchResult;
+type ClassificationDisplayResult =
+  | ClassificationSearchResult
+  | ClassificationSuccessionSearchResult
+  | ConceptGroupSearchResult;
+
+function isVariableResult(r: { type: string }): r is VariableSearchResult {
+  return r.type === "variable";
+}
+
+function groupMemberFqids(results: readonly SearchResult[]): Set<string> {
+  const fqids = new Set<string>();
+  for (const result of results) {
+    if (isConceptGroup(result) && result.kind === "variable") {
+      for (const member of result.members) {
+        fqids.add(member.fqid);
+      }
+    }
+  }
+  return fqids;
+}
+
+function displayResults(group: SearchGroup): SearchResult[] {
+  if (group.group !== "variables") {
+    return [...group.results];
+  }
+  const groupedMembers = groupMemberFqids(group.results);
+  if (groupedMembers.size === 0) {
+    return [...group.results];
+  }
+  return group.results.filter(
+    (result) =>
+      !(
+        isVariableResult(result) &&
+        result.fqid != null &&
+        groupedMembers.has(result.fqid)
+      ),
+  );
+}
+
+function registerDisplayResults(group: SearchGroup): RegisterSearchResult[] {
+  return group.group === "registers"
+    ? (displayResults(group) as RegisterSearchResult[])
+    : [];
+}
+
+function variableDisplayResults(group: SearchGroup): VariableDisplayResult[] {
+  return group.group === "variables"
+    ? (displayResults(group) as VariableDisplayResult[])
+    : [];
+}
+
+function classificationDisplayResults(
+  group: SearchGroup,
+): ClassificationDisplayResult[] {
+  return group.group === "classifications"
+    ? (displayResults(group) as ClassificationDisplayResult[])
+    : [];
+}
+
+function codeDisplayResults(group: SearchGroup): CodeSearchResult[] {
+  return group.group === "codes"
+    ? (displayResults(group) as CodeSearchResult[])
+    : [];
+}
+
+function variableDetailParts(v: VariableSearchResult): string[] {
+  return [
+    v.register,
+    v.definition,
+    v.operational_definition
+      ? `Operational: ${v.operational_definition}`
+      : null,
+  ].filter((part): part is string => part != null && part !== "");
+}
+
+function groupDetailParts(result: ConceptGroupSearchResult): string[] {
+  if (result.kind === "variable") {
+    return [result.register].filter(
+      (part): part is string => part != null && part !== "",
+    );
+  }
+  return [];
 }
 
 // The registers / variables / classifications groups render the `.children.table`
@@ -401,49 +480,42 @@ function closeSearch(): void {
            and we render nothing for that group instead of dereferencing
            `heading.tone` on undefined and crashing the whole search page. -->
       {@const heading = GROUP_HEADINGS[group.group]}
-      {#if group.results.length > 0 && heading}
-        {@const caption = showingOf(group.results.length, group.total_count)}
+      {@const renderedResults = displayResults(group)}
+      {#if renderedResults.length > 0 && heading}
+        {@const caption = showingOf(renderedResults.length, group.total_count)}
         <section class="group">
           <h3>
-            {#if heading.tone}<span class="heading-tag"
-                ><Tag tone={heading.tone}>{heading.label}</Tag></span
-              >{:else}{heading.label}{/if}
+            {heading.label}
             {#if caption}<span class="count">{caption}</span>{/if}
           </h3>
 
           {#if group.group === "registers"}
-            <!-- #808 a11y: registers render the SAME subgrid `.children.table` as
-                 variables / classifications — a whole-row, KEYBOARD-FOCUSABLE link
-                 (or a plain non-link <div> for a null-fqid register, never a dead
-                 tab stop). Columns: Register (name → catalog link) · Description
-                 (purpose, 2-line clamp). Replaces the prior DataTable + selection-
-                 as-navigation (which made a null-fqid row an interactive dead row,
-                 L319). -->
-            <div class="children table cols-2" role="presentation">
+            <!-- Registers share the variables' one-column result shape: primary
+                 line is the register name, secondary line is the muted
+                 description. No split name/description columns. -->
+            <div class="children table cols-1" role="presentation">
               <div class="head-row" aria-hidden="true">
                 <span class="col-head">Register</span>
-                <span class="col-head">Description</span>
               </div>
-              {#each group.results as result, i (`${result.fqid}|${i}`)}
-                {@render registerLeafRow(result as RegisterSearchResult)}
+              {#each registerDisplayResults(group) as result, i (`${result.fqid}|${i}`)}
+                {@render registerLeafRow(result)}
               {/each}
             </div>
           {:else if group.group === "variables"}
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
                  ORDER (CatalogNodeView's `.children.table`). Variable leaves and
                  concept groups are whole-row subgrid links; no inline grouped
-                 disclosures. Variable metadata (register + delivery columns)
-                 rides as inline pills in the result heading. -->
+                 disclosures. Delivery-column chips ride in the result heading;
+                 register context stays in the muted detail line. -->
             <div class="children table cols-1" role="presentation">
               <div class="head-row" aria-hidden="true">
                 <span class="col-head">Variable</span>
               </div>
-              {#each group.results as result, i (resultKey(result, i))}
+              {#each variableDisplayResults(group) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else}
-                  {@const v = result as VariableSearchResult}
-                  {@render variableLeafRow(v)}
+                  {@render variableLeafRow(result)}
                 {/if}
               {/each}
             </div>
@@ -459,7 +531,7 @@ function closeSearch(): void {
                 <span class="col-head">Classification</span>
                 <span class="col-head">Name</span>
               </div>
-              {#each group.results as result, i (resultKey(result, i))}
+              {#each classificationDisplayResults(group) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else if isClassificationSuccession(result)}
@@ -467,8 +539,7 @@ function closeSearch(): void {
                     {@render classificationSuccession(result)}
                   </div>
                 {:else}
-                  {@const c = result as ClassificationSearchResult}
-                  {@render classificationLeafRow(c)}
+                  {@render classificationLeafRow(result)}
                 {/if}
               {/each}
             </div>
@@ -488,7 +559,7 @@ function closeSearch(): void {
                  free) that expands an indented owner sub-table; an OWNERLESS code
                  (the common value-set code) is a plain, non-expandable Code · Label
                  row with no count. -->
-            {#each groupCodesBySystem(group.results) as system (system.key)}
+            {#each groupCodesBySystem(codeDisplayResults(group)) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">{system.label}</h4>
                 <div class="children table codes" role="presentation">
@@ -552,25 +623,25 @@ function closeSearch(): void {
   {/if}
 </article>
 
-<!-- A LEAF register row (#808 a11y): a whole-row, keyboard-focusable link via the
-     subgrid `.leaf-row` <a> — its child cells (the Register name + the clamped
-     Description) land in the parent grid's two tracks. A null-fqid register can't
-     navigate, so it renders as a non-link <div> row (plain text name, no dead tab
-     stop). The raw FQID is never shown — the name is the only label. -->
+<!-- A LEAF register row: same one-column visual shape as variable rows. -->
 {#snippet registerLeafRow(r: RegisterSearchResult)}
   {#if r.fqid}
     <a class="leaf-row" href={catalogHref(r.fqid)}>
-      <span class="name-cell"
-        ><span class="row-link">{r.name ?? leafSlug(r.fqid)}</span></span
-      >
-      {#if r.purpose}<span class="clamp-2">{r.purpose}</span>{:else}<span></span
-        >{/if}
+      <span class="name-cell">
+        <span class="result-title">
+          <span class="row-link">{r.name ?? leafSlug(r.fqid)}</span>
+        </span>
+        {#if r.purpose}<span class="result-detail muted clamp-2">{r.purpose}</span>{/if}
+      </span>
     </a>
   {:else}
     <div class="leaf-row plain">
-      <span class="name-cell"><span class="row-link plain">{r.name ?? "—"}</span></span>
-      {#if r.purpose}<span class="clamp-2">{r.purpose}</span>{:else}<span></span
-        >{/if}
+      <span class="name-cell">
+        <span class="result-title">
+          <span class="row-link plain">{r.name ?? "—"}</span>
+        </span>
+        {#if r.purpose}<span class="result-detail muted clamp-2">{r.purpose}</span>{/if}
+      </span>
     </div>
   {/if}
 {/snippet}
@@ -581,17 +652,14 @@ function closeSearch(): void {
      grid's tracks while the anchor stays a real focusable box (middle-click /
      open-in-new-tab / screen-reader / Tab friendly), no role=grid, no nested
      interactive elements. A null-fqid leaf can't navigate, so it renders as a
-     non-link <div> row (no focus ring). The raw FQID is never shown; register and
-     delivery columns are compact pills in the heading so the name keeps the full
-     row width. -->
+     non-link <div> row (no focus ring). The raw FQID is never shown; delivery
+     columns are compact chips in the heading, while register/definition context
+     stays in the muted detail line. -->
 {#snippet variableMetaPills(v: VariableSearchResult)}
   {@const columns = visibleDeliveryColumns(v)}
   {@const hidden = hiddenDeliveryColumnCount(v)}
-  {#if v.register || columns.length > 0 || hidden > 0}
+  {#if columns.length > 0 || hidden > 0}
     <span class="result-pills">
-      {#if v.register}
-        <span class="result-pill register-pill">{v.register}</span>
-      {/if}
       {#each columns as column (column)}
         <code class="col-chip">{column}</code>
       {/each}
@@ -601,6 +669,7 @@ function closeSearch(): void {
 {/snippet}
 
 {#snippet variableLeafRow(v: VariableSearchResult)}
+  {@const detailParts = variableDetailParts(v)}
   {#if v.fqid}
     <a class="leaf-row" href={catalogHref(v.fqid)}>
       <span class="name-cell">
@@ -608,9 +677,8 @@ function closeSearch(): void {
           <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
           {@render variableMetaPills(v)}
         </span>
-        {#if v.definition}<span class="sub muted">{v.definition}</span>{/if}
-        {#if v.operational_definition}
-          <span class="sub muted">Operational: {v.operational_definition}</span>
+        {#if detailParts.length > 0}
+          {@render detailLine(detailParts)}
         {/if}
       </span>
     </a>
@@ -620,13 +688,21 @@ function closeSearch(): void {
           <span class="row-link plain">{v.name ?? "—"}</span>
           {@render variableMetaPills(v)}
         </span>
-        {#if v.definition}<span class="sub muted">{v.definition}</span>{/if}
-        {#if v.operational_definition}
-          <span class="sub muted">Operational: {v.operational_definition}</span>
+        {#if detailParts.length > 0}
+          {@render detailLine(detailParts)}
         {/if}
       </span>
     </div>
   {/if}
+{/snippet}
+
+{#snippet detailLine(parts: string[])}
+  <span class="result-detail muted">
+    {#each parts as part, i (i)}
+      {#if i > 0}<span class="detail-separator">·</span>{/if}
+      <span>{part}</span>
+    {/each}
+  </span>
 {/snippet}
 
 <!-- A LEAF classification row (#808 round 3 / a11y): whole-row, keyboard-focusable
@@ -752,20 +828,17 @@ function closeSearch(): void {
      directly rather than putting a disclosure inside the results list. -->
 {#snippet conceptGroup(result: ConceptGroupSearchResult)}
   {@const href = conceptGroupHref(result)}
+  {@const detailParts = groupDetailParts(result)}
   {#if href}
     <a class="leaf-row group-result-row" href={href}>
       <span class="name-cell">
         <span class="result-title">
+          <span class="group-prefix">Group:</span>
           <span class="row-link">{result.group_label}</span>
-          {#if result.register}
-            <span class="result-pills">
-              <span class="result-pill register-pill">{result.register}</span>
-            </span>
-          {/if}
         </span>
-        <span class="sub muted">
-          {conceptGroupMatchSummary(result)}
-        </span>
+        {#if detailParts.length > 0}
+          {@render detailLine(detailParts)}
+        {/if}
       </span>
     </a>
   {:else}
@@ -774,13 +847,8 @@ function closeSearch(): void {
         <span class="name-cell">
           <span class="result-title">
             <span class="row-link">{member.name ?? leafSlug(member.fqid)}</span>
-            {#if result.register}
-              <span class="result-pills">
-                <span class="result-pill register-pill">{result.register}</span>
-              </span>
-            {/if}
           </span>
-          <span class="sub muted">{result.group_label}</span>
+          {@render detailLine([`Group: ${result.group_label}`])}
         </span>
       </a>
     {/each}
@@ -930,13 +998,6 @@ function closeSearch(): void {
     margin: 0 0 0.5rem;
     font-size: 1rem;
   }
-  /* Categorical group-type Tags sit on selected heading baselines (replacing the
-     old per-row badges, #808 round 2). Variables stay plain text so the var hue is
-     reserved for delivery-column chips inside result rows. */
-  .heading-tag {
-    align-self: center;
-    line-height: 1;
-  }
   .count {
     color: var(--text-muted);
     font-size: 0.85em;
@@ -960,11 +1021,16 @@ function closeSearch(): void {
   .register.muted {
     font-size: 0.85em;
   }
-  /* A muted secondary line under a leaf name (a variable definition, a
-     classification's full name) — sits below the name in the same cell. */
-  .sub {
-    display: block;
+  .result-detail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem;
     font-size: 0.9em;
+    overflow-wrap: anywhere;
+  }
+  .detail-separator {
+    color: var(--text-faint);
   }
   /* Clamp a register's description to ~2 lines in the result row; the full
      text lives on the register's own subject page (the #806 treatment). */
@@ -1015,7 +1081,7 @@ function closeSearch(): void {
     align-items: stretch;
   }
   .children.table.cols-1 {
-    /* Variable hit: full-width heading + inline register/column pills. */
+    /* Full-width one-column result rows (registers, variables, group links). */
     grid-template-columns: minmax(0, 1fr);
   }
   .children.table.cols-2 {
@@ -1195,7 +1261,6 @@ function closeSearch(): void {
     gap: 0.2rem 0.35rem;
     min-width: 0;
   }
-  .result-pill,
   .col-chip {
     display: inline-flex;
     align-items: baseline;
@@ -1204,15 +1269,6 @@ function closeSearch(): void {
     border-radius: var(--radius-sm);
     max-width: 100%;
     overflow-wrap: anywhere;
-  }
-  .result-pill {
-    font-size: 0.82rem;
-    font-weight: 600;
-  }
-  .register-pill {
-    color: var(--cat-reg-ink);
-    border: 1px solid color-mix(in srgb, var(--cat-reg) 35%, transparent);
-    background: color-mix(in srgb, var(--cat-reg) 10%, var(--surface));
   }
   /* Mirrors RepresentationPicker's delivery-column chip: mono, purple/indigo
      variable hue, and no link affordance on the search-result metadata. */
@@ -1226,6 +1282,10 @@ function closeSearch(): void {
   }
   .column-more {
     font-size: 0.85em;
+  }
+  .group-prefix {
+    color: var(--cat-group-ink);
+    font-weight: 600;
   }
   .name-full {
     font-size: 0.9em;
