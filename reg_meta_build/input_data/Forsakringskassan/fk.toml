@@ -4150,7 +4150,7 @@ data_type = "decimal"
 key = "ersattning-riskgrupper"
 name = "Ersättning till riskgrupper"
 valid_from = "2020-07-01"  # pandemic; ersättningsperioder fr.o.m. 2020-07-01
-valid_to = "2020-12-31"  # SFS 2020:582 applied to periods through the end of 2020
+valid_to = "2022-03-31"  # benefit ended 2022-04-01 (LISA 2023 changelog)
 purpose = """
 Tillfällig ersättning till personer i riskgrupp (och vissa anhöriga) som behövde \
 avstå arbete under covid-19-pandemin. Registret innehåller utbetalt belopp per \

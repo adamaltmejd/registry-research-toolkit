@@ -755,7 +755,7 @@ def test_real_fk_variant_and_register_windows_emit() -> None:
         mint("fk", "ersattning-riskgrupper", "_default"), "personnummer"
     ]
     assert karens.valid_to == "2022-03-31"
-    assert riskgrupper.valid_to == "2020-12-31"
+    assert riskgrupper.valid_to == "2022-03-31"
 
 
 def test_real_fohm_catalog_validates(fohm_db: Path) -> None:
