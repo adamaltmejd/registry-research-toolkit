@@ -255,11 +255,6 @@ def get_search(
         if index is not None
         else None
     )
-    delivery_column_scope = (
-        {fqid: index.held_columns(fqid) for fqid in index.admitted_variable_fqids}
-        if index is not None
-        else None
-    )
 
     # Groups are appended in the fixed register→variable→classification→code order
     # so the `all` case keeps today's exact 4-group shape; a single-type scope emits
@@ -323,6 +318,14 @@ def get_search(
                 )
             )
         if want_variable:
+            delivery_column_scope = (
+                {
+                    fqid: index.held_columns(fqid)
+                    for fqid in index.admitted_variable_fqids
+                }
+                if index is not None
+                else None
+            )
             var = reg_meta_search(
                 conn,
                 q,

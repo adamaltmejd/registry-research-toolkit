@@ -363,6 +363,46 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText(/\+\d+ more/)).not.toBeInTheDocument();
   });
 
+  it("shows when a bounded code-owner expansion omits variables", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "11",
+      groups: [
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [
+                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+                {
+                  fqid: "scb/lisa/civil",
+                  name: "Civilstånd",
+                  register: "LISA",
+                },
+              ],
+              variable_count: 5,
+              classifications: [],
+              classification_count: 0,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("11");
+    await render(SearchView);
+
+    await page.getByText("Man").click();
+
+    await expect
+      .element(page.getByText("Showing first 2 of 5 variables"))
+      .toBeVisible();
+    await expect.element(page.getByText(/\+\d+ more/)).not.toBeInTheDocument();
+  });
+
   it("makes an expanded owner-row link keyboard-focusable (#808 a11y)", async () => {
     // Fix 2 (#808 a11y): the owner sub-rows are whole-row FLEX `<a>`s (NOT
     // display:contents), so — unlike the leaf rows — they ARE in the keyboard tab

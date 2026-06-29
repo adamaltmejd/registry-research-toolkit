@@ -438,6 +438,10 @@ function hasExpandableOwners(result: CodeSearchResult): boolean {
   );
 }
 
+function omittedVariableOwnerCount(result: CodeSearchResult): number {
+  return Math.max(0, result.variable_count - result.variables.length);
+}
+
 const DELIVERY_COLUMN_LIMIT = 3;
 
 function deliveryColumnNames(result: VariableSearchResult): string[] {
@@ -737,7 +741,7 @@ function closeSearch(): void {
 
 {#snippet detailLine(parts: string[])}
   <span class="result-detail muted">
-    {#each parts as part (part)}
+    {#each parts as part, i (i)}
       <span>{part}</span>
     {/each}
   </span>
@@ -808,6 +812,7 @@ function closeSearch(): void {
      Code · Label row. -->
 {#snippet ownerSubRows(result: CodeSearchResult)}
   {@const classificationOwners = secondaryClassificationOwners(result)}
+  {@const omittedVariables = omittedVariableOwnerCount(result)}
   {#each result.variables as owner, i (i)}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
@@ -821,6 +826,13 @@ function closeSearch(): void {
       </div>
     {/if}
   {/each}
+  {#if omittedVariables > 0}
+    <div class="owner-row integrated-list-row owner-note plain">
+      <span class="muted">
+        Showing first {result.variables.length} of {result.variable_count} variables
+      </span>
+    </div>
+  {/if}
   {#each classificationOwners as owner, i (`${owner.fqid ?? owner.short_name ?? owner.name}|${i}`)}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
@@ -1257,6 +1269,9 @@ function closeSearch(): void {
   }
   .owner-row > * {
     min-width: 0;
+  }
+  .owner-note > * {
+    grid-column: 1 / -1;
   }
   .owner-row:hover .row-link {
     color: var(--accent-ink);

@@ -557,7 +557,14 @@ def search(
         if type in ("register", "all"):
             all_results.extend(_search_description_registers(conn, fts_query, reg_ids))
         if type in ("variable", "all"):
-            all_results.extend(_search_description_variables(conn, fts_query, reg_ids))
+            all_results.extend(
+                _search_description_variables(
+                    conn,
+                    fts_query,
+                    reg_ids,
+                    include_delivery_columns=delivery_column_scope is not None,
+                )
+            )
         # Classifications are catalog-scoped (no register), so a `--register` scope
         # excludes them — `reg_ids` set means "registers only".
         if type in ("classification", "all") and reg_ids is None:
@@ -678,6 +685,8 @@ def search(
         reg_ids,
         variable_limit=code_variable_owner_limit,
     )
+    if delivery_column_scope is None:
+        _annotate_variable_delivery_columns(conn, results)
     # Strip fold-internal keys from the SHOWN page only — non-page rows are
     # discarded, so there's nothing to clean on them. (`_strip_internal_keys`
     # touches only `_INTERNAL_KEYS`, never `fts_rank`, so the sort above is safe.)
@@ -953,7 +962,11 @@ def _search_description_registers(
 
 
 def _search_description_variables(
-    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
+    conn: sqlite3.Connection,
+    query: str,
+    reg_ids: set[int] | None,
+    *,
+    include_delivery_columns: bool,
 ) -> list[dict[str, Any]]:
     # `variable_fts` is content-synced to `variable` (content_rowid='rowid', and
     # `variable_id` is the INTEGER PRIMARY KEY rowid alias), so `vf.rowid` IS
@@ -978,9 +991,17 @@ def _search_description_variables(
         "ORDER BY rank",
         (query,),
     ).fetchall()
-    delivery_columns = _delivery_column_names_for_variables(
-        conn,
-        (r["variable_id"] for r in rows if not reg_ids or r["register_id"] in reg_ids),
+    delivery_columns = (
+        _delivery_column_names_for_variables(
+            conn,
+            (
+                r["variable_id"]
+                for r in rows
+                if not reg_ids or r["register_id"] in reg_ids
+            ),
+        )
+        if include_delivery_columns
+        else {}
     )
     results = []
     for r in rows:
@@ -1009,6 +1030,23 @@ def _search_description_variables(
             }
         )
     return results
+
+
+def _annotate_variable_delivery_columns(
+    conn: sqlite3.Connection, page: list[dict[str, Any]]
+) -> None:
+    """Attach delivery aliases to shown variable rows after pagination."""
+    variable_ids = [
+        r["_variable_id"]
+        for r in page
+        if r.get("type") == "variable" and "_variable_id" in r
+    ]
+    if not variable_ids:
+        return
+    delivery_columns = _delivery_column_names_for_variables(conn, variable_ids)
+    for row in page:
+        if row.get("type") == "variable" and "_variable_id" in row:
+            row["delivery_column_names"] = delivery_columns.get(row["_variable_id"], ())
 
 
 def _delivery_column_names_for_variables(

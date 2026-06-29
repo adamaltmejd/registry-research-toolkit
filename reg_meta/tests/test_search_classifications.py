@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
+import reg_meta.queries as queries
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import _fts_match_query, search
 
@@ -58,6 +59,7 @@ def _seed_classification_edge(
 
 if TYPE_CHECKING:
     import sqlite3
+    from collections.abc import Iterable
 
 
 def _rebuild_fts(conn: sqlite3.Connection) -> None:
@@ -564,6 +566,55 @@ def test_variable_search_reads_alias_table_when_fts_payload_is_legacy_text() -> 
     assert _types(rows) == {"variable"}
     assert str(rows[0].fqid) == "scb/lisa/formal-utbildning"
     assert rows[0].delivery_column_names == ("fedunsatreason_1", "zedalias")
+
+
+def test_variable_search_hydrates_delivery_aliases_for_displayed_page_only(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    conn = build_slugged_db(
+        variable=("Needle alpha", 32183, 1001, "Alpha"),
+        delivery_column_name="Alpha",
+        variable_slug="needle-alpha",
+    )
+    add_variable(
+        conn,
+        register_id=1,
+        var_id=42181,
+        name="Needle beta",
+        slug="needle-beta",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=42181,
+        delivery_column_name="Beta",
+    )
+    _rebuild_fts(conn)
+    seen: list[tuple[int, ...]] = []
+    real = queries._delivery_column_names_for_variables
+
+    def spy(
+        conn_arg: sqlite3.Connection, variable_ids: Iterable[int]
+    ) -> dict[int, tuple[str, ...]]:
+        ids = tuple(variable_ids)
+        seen.append(ids)
+        return real(conn_arg, ids)
+
+    monkeypatch.setattr(queries, "_delivery_column_names_for_variables", spy)
+
+    out = search(conn, "Needle", field="description", type="variable", limit=1)
+
+    shown_slug = str(out.results[0].fqid).split("/")[-1]
+    shown_variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = ?", (shown_slug,)
+    ).fetchone()[0]
+    assert out.total_count == 2
+    assert len(out.results) == 1
+    assert seen == [(shown_variable_id,)]
+    assert out.results[0].delivery_column_names in {("Alpha",), ("Beta",)}
 
 
 def test_variable_search_delivery_scope_drops_unheld_alias_hit() -> None:

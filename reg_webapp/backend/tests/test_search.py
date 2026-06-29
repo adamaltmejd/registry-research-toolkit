@@ -500,6 +500,14 @@ def test_filtered_variable_search_passes_delivery_scope_into_bounded_query(
 
 
 def test_value_search_passes_bounded_code_owner_limit(client, monkeypatch):
+    class ExplodingIndex:
+        held_register_fqids = frozenset({"scb/lisa"})
+        admitted_variable_fqids = frozenset({"scb/lisa/kon"})
+
+        def held_columns(self, _fqid):
+            raise AssertionError("value search must not build delivery-column scope")
+
+    client.app.state.catalog_index = ExplodingIndex()
     calls: list[int | None] = []
 
     def fake_search(
