@@ -62,6 +62,11 @@ class IRVariant(_IRBase):
     slug: str  # '_default' for variant-less registers
     name: str
     description: str | None
+    # Optional source-level coverage window for adapters whose delivery tables have
+    # variant-specific lifetimes. The SQLite schema stores validity on
+    # variable_state, so materializers do not persist these fields directly.
+    valid_from: str | None = None
+    valid_to: str | None = None
     # True when adapter invented this variant from var.deldatamangd:
     synthesized: bool = False
     # Natural panel structure for this variant (panel_template; see DESIGN.md → Slug curation):
