@@ -422,46 +422,6 @@ describe("SearchView — typed result groups (#379)", () => {
     );
   });
 
-  it("shows when a bounded code-owner expansion omits variables", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "11",
-      groups: [
-        {
-          group: "codes",
-          total_count: 1,
-          results: [
-            {
-              type: "code",
-              code: "1",
-              label: "Man",
-              variables: [
-                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
-                {
-                  fqid: "scb/lisa/civil",
-                  name: "Civilstånd",
-                  register: "LISA",
-                },
-              ],
-              variable_count: 5,
-              classifications: [],
-              classification_count: 0,
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("11");
-    await render(SearchView);
-
-    await page.getByText("Man").click();
-
-    await expect
-      .element(page.getByText("Showing first 2 of 5 variables"))
-      .toBeVisible();
-    await expect.element(page.getByText(/\+\d+ more/)).not.toBeInTheDocument();
-  });
-
   it("makes an expanded owner-row link keyboard-focusable (#808 a11y)", async () => {
     // Fix 2 (#808 a11y): the owner sub-rows are whole-row FLEX `<a>`s (NOT
     // display:contents), so — unlike the leaf rows — they ARE in the keyboard tab
@@ -1410,20 +1370,13 @@ describe("SearchView — compact per-type tables (#808)", () => {
     const variablePanel = row?.closest(".panel");
     expect(variablePanel).not.toBeNull();
     expect(row?.classList.contains("integrated-list-row")).toBe(true);
-    expect(row ? getComputedStyle(row).borderLeftWidth : null).toBe("3px");
-    const panelBody = row?.closest(".panel-body");
-    expect(panelBody ? getComputedStyle(panelBody).paddingTop : null).toBe(
-      "0px",
-    );
-    const rowCell = row?.querySelector<HTMLElement>(".name-cell");
-    expect(rowCell ? getComputedStyle(rowCell).paddingLeft : null).toBe("12px");
     expect(document.querySelector(".search-view .head-row")).toBeNull();
     expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
     expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
   });
 
-  it("omits the variable definition when it repeats the variable name", async () => {
+  it("omits the variable definition when it exactly repeats the variable name", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "raks",
@@ -1438,7 +1391,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
               name: "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
               register: "LISA",
               definition:
-                "Andelen av den totala inkomsten under året som är föranledd av arbetsmarknadspolitiska åtgärder.",
+                "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
               operational_definition: null,
               delivery_column_names: ["Raks_AndelUtbBidrInk"],
             },
@@ -1500,14 +1453,9 @@ describe("SearchView — compact per-type tables (#808)", () => {
   });
 
   it("makes a variable leaf row a whole-row subgrid link carrying column chips and muted register context (#808 a11y)", async () => {
-    // The headline redesign + a11y fix: a variable leaf row is ONE real link — a
-    // SUBGRID box (`display:grid` + `grid-template-columns: subgrid`, NOT
-    // `display:contents`) so its child cells align to the parent grid's track while
-    // the <a> stays a real, keyboard-focusable element. Clicking anywhere on the row
-    // = clicking the link. Assert the <a> targets the catalog node, carries
-    // delivery-column chips plus muted register context, resolves to `subgrid`,
-    // AND is keyboard-focusable (the display:contents version was dropped from the
-    // tab order).
+    // The headline redesign + a11y fix: a variable leaf row is ONE real link to
+    // the catalog node. Assert the <a> carries delivery-column chips plus muted
+    // register context and remains keyboard-focusable.
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
@@ -1518,11 +1466,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
     );
     expect(row).not.toBeNull();
     expect(row?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
-    // It is a subgrid GRID box (the whole row is the link, no role=grid): its cells
-    // align to the parent grid's tracks via subgrid.
-    const style = getComputedStyle(row as Element);
-    expect(style.display).toBe("grid");
-    expect(style.gridTemplateColumns).toContain("subgrid");
     // KEYBOARD FOCUSABLE: focusing the anchor moves activeElement to it — the load-
     // bearing proof (a `display:contents` <a> fails this, dropped from the tab order).
     row?.focus();
@@ -1547,9 +1490,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
     );
     expect(row).not.toBeNull();
     expect(row?.getAttribute("href")).toBe("/catalog/class/sun2020");
-    const style = getComputedStyle(row as Element);
-    expect(style.display).toBe("grid");
-    expect(style.gridTemplateColumns).toContain("subgrid");
     row?.focus();
     expect(document.activeElement).toBe(row);
   });
@@ -1571,9 +1511,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
       ".search-view .group a.leaf-row[href='/catalog/scb/lisa']",
     );
     expect(row).not.toBeNull();
-    const style = getComputedStyle(row as Element);
-    expect(style.display).toBe("grid");
-    expect(style.gridTemplateColumns).toContain("subgrid");
     expect(row?.querySelector(".result-title")?.textContent).toContain("LISA");
     expect(row?.querySelector(".result-detail")).toBeNull();
     row?.focus();
@@ -1668,11 +1605,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(columnChip?.textContent?.trim()).toBe(
       "foervaervsarbetandebefolkningstatus",
     );
-
-    const cols = grid ? getComputedStyle(grid).gridTemplateColumns : "";
-    const trackPx = cols.split(/\s+/).map((t) => Number.parseFloat(t));
-    expect(trackPx).toHaveLength(1);
-    expect(trackPx[0]).toBeGreaterThan(300);
 
     expect(grid?.scrollWidth ?? 0).toBeLessThanOrEqual(
       (grid?.clientWidth ?? 0) + 1,

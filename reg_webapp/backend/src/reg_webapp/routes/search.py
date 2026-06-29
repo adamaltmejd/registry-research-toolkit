@@ -48,7 +48,6 @@ router = APIRouter(prefix="/api")
 
 _DEFAULT_LIMIT = 20
 _MAX_LIMIT = 50
-_CODE_VARIABLE_OWNER_LIMIT = 200
 
 # A "real" token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in FTS5 and would yield an empty phrase.
@@ -393,7 +392,7 @@ def get_search(
                 type="value",
                 limit=limit,
                 fold_groups=False,
-                code_variable_owner_limit=_CODE_VARIABLE_OWNER_LIMIT,
+                code_variable_owner_limit=None,
             )
             boosted_codes = cast(
                 "list[CodeSearchResult]",

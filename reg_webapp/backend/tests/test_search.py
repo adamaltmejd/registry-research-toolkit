@@ -499,7 +499,7 @@ def test_filtered_variable_search_passes_delivery_scope_into_bounded_query(
     assert group["results"][0]["delivery_column_names"] == ["Kon"]
 
 
-def test_value_search_passes_bounded_code_owner_limit(client, monkeypatch):
+def test_value_search_requests_full_code_owner_list(client, monkeypatch):
     class ExplodingIndex:
         held_register_fqids = frozenset({"scb/lisa"})
         admitted_variable_fqids = frozenset({"scb/lisa/kon"})
@@ -533,7 +533,7 @@ def test_value_search_passes_bounded_code_owner_limit(client, monkeypatch):
     body = client.get("/api/search?q=needle&type=value&limit=1").json()
     group = _group(body, "codes")
 
-    assert calls == [search_route._CODE_VARIABLE_OWNER_LIMIT]
+    assert calls == [None]
     assert group["total_count"] == 1
     assert group["results"][0]["variable_count"] == 250
 

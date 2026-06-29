@@ -308,55 +308,37 @@ function displayResults(group: SearchGroup): SearchResult[] {
   );
 }
 
-function registerDisplayResults(group: SearchGroup): RegisterSearchResult[] {
-  return group.group === "registers"
-    ? (displayResults(group) as RegisterSearchResult[])
-    : [];
+function registerDisplayResults(
+  results: SearchResult[],
+): RegisterSearchResult[] {
+  return results as RegisterSearchResult[];
 }
 
-function variableDisplayResults(group: SearchGroup): VariableDisplayResult[] {
-  return group.group === "variables"
-    ? (displayResults(group) as VariableDisplayResult[])
-    : [];
+function variableDisplayResults(
+  results: SearchResult[],
+): VariableDisplayResult[] {
+  return results as VariableDisplayResult[];
 }
 
 function classificationDisplayResults(
-  group: SearchGroup,
+  results: SearchResult[],
 ): ClassificationDisplayResult[] {
-  return group.group === "classifications"
-    ? (displayResults(group) as ClassificationDisplayResult[])
-    : [];
+  return results as ClassificationDisplayResult[];
 }
 
-function codeDisplayResults(group: SearchGroup): CodeSearchResult[] {
-  return group.group === "codes"
-    ? (displayResults(group) as CodeSearchResult[])
-    : [];
+function codeDisplayResults(results: SearchResult[]): CodeSearchResult[] {
+  return results as CodeSearchResult[];
 }
 
 function normalizedDisplayText(value: string | null | undefined): string {
   return (value ?? "").trim().replace(/\s+/g, " ").toLocaleLowerCase("sv-SE");
 }
 
-function comparableDefinitionText(value: string | null | undefined): string {
-  return normalizedDisplayText(value)
-    .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
-    .replace(/\bandelen\b/gu, "andel")
-    .replace(/\bunder året\b/gu, "")
-    .trim()
-    .replace(/\s+/g, " ");
-}
-
 function isRepeatedDefinition(
   name: string | null | undefined,
   definition: string | null | undefined,
 ): boolean {
-  if (normalizedDisplayText(name) === normalizedDisplayText(definition)) {
-    return true;
-  }
-  return (
-    comparableDefinitionText(name) === comparableDefinitionText(definition)
-  );
+  return normalizedDisplayText(name) === normalizedDisplayText(definition);
 }
 
 function variableDetailParts(v: VariableSearchResult): string[] {
@@ -480,10 +462,6 @@ function hasExpandableOwners(result: CodeSearchResult): boolean {
   );
 }
 
-function omittedVariableOwnerCount(result: CodeSearchResult): number {
-  return Math.max(0, result.variable_count - result.variables.length);
-}
-
 const DELIVERY_COLUMN_LIMIT = 3;
 
 function deliveryColumnNames(result: VariableSearchResult): string[] {
@@ -592,7 +570,7 @@ function closeSearch(): void {
                  line is the register name, secondary line is the muted
                  description. No split name/description columns. -->
             <div class="children table cols-1" role="presentation">
-              {#each registerDisplayResults(group) as result, i (`${result.fqid}|${i}`)}
+              {#each registerDisplayResults(renderedResults) as result, i (`${result.fqid}|${i}`)}
                 {@render registerLeafRow(result)}
               {/each}
             </div>
@@ -603,7 +581,7 @@ function closeSearch(): void {
                  disclosures. Delivery-column chips ride in the result heading;
                  register context stays in the muted detail line. -->
             <div class="children table cols-1" role="presentation">
-              {#each variableDisplayResults(group) as result, i (resultKey(result, i))}
+              {#each variableDisplayResults(renderedResults) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else}
@@ -616,7 +594,7 @@ function closeSearch(): void {
                  ORDER. A leaf classification or concept group is a whole-row link;
                  classification-succession families emit direct linked rows. -->
             <div class="children table cols-1" role="presentation">
-              {#each classificationDisplayResults(group) as result, i (resultKey(result, i))}
+              {#each classificationDisplayResults(renderedResults) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else if isClassificationSuccession(result)}
@@ -641,7 +619,7 @@ function closeSearch(): void {
                  multiple variable matches is a native <details> disclosure; a
                  single variable match is shown as a muted detail line; a code with
                  no variable matches is a plain Code · Label row. -->
-            {#each groupCodesBySystem(codeDisplayResults(group)) as system (system.key)}
+            {#each groupCodesBySystem(codeDisplayResults(renderedResults)) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">
                   {#if system.href}
@@ -826,7 +804,6 @@ function closeSearch(): void {
      Code · Label row. -->
 {#snippet ownerSubRows(result: CodeSearchResult)}
   {@const classificationOwners = secondaryClassificationOwners(result)}
-  {@const omittedVariables = omittedVariableOwnerCount(result)}
   {#each result.variables as owner, i (i)}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
@@ -838,13 +815,6 @@ function closeSearch(): void {
       </div>
     {/if}
   {/each}
-  {#if omittedVariables > 0}
-    <div class="owner-row integrated-list-row owner-note plain">
-      <span class="muted">
-        Showing first {result.variables.length} of {result.variable_count} variables
-      </span>
-    </div>
-  {/if}
   {#each classificationOwners as owner, i (`${owner.fqid ?? owner.short_name ?? owner.name}|${i}`)}
     {@const label =
       owner.short_name ?? owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
@@ -1024,7 +994,7 @@ function closeSearch(): void {
     margin: 0;
   }
   .close-search {
-    padding: 0.25rem 0.55rem;
+    padding: var(--space-1) var(--space-2);
     font: inherit;
     font-size: var(--text-sm);
     color: var(--text-muted);
@@ -1048,7 +1018,7 @@ function closeSearch(): void {
     margin-bottom: 1.25rem;
   }
   .type-button {
-    padding: 0.3rem 0.7rem;
+    padding: var(--space-1) var(--space-3);
     font: inherit;
     font-size: var(--text-sm);
     color: var(--text);
@@ -1081,10 +1051,10 @@ function closeSearch(): void {
   }
   .code-system-heading {
     margin: 0;
-    padding: 0.55rem 0.75rem 0.35rem;
+    padding: var(--space-2) var(--space-3) var(--space-1);
     border-bottom: 1px solid var(--border);
     background: var(--surface);
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     font-weight: 600;
     color: var(--text-muted);
   }
@@ -1097,7 +1067,7 @@ function closeSearch(): void {
   }
   .count {
     color: var(--text-muted);
-    font-size: 0.85em;
+    font-size: var(--text-sm);
     font-weight: 400;
     white-space: nowrap;
   }
@@ -1116,7 +1086,7 @@ function closeSearch(): void {
     flex-wrap: wrap;
     align-items: baseline;
     gap: 0.15rem 0.35rem;
-    font-size: 0.9em;
+    font-size: var(--text-sm);
     overflow-wrap: anywhere;
   }
   .detail-separator {
@@ -1154,6 +1124,8 @@ function closeSearch(): void {
   .children.table {
     display: grid;
     column-gap: 0;
+    --search-row-block: calc(var(--space-1) * 1.5);
+    font-size: var(--text-sm);
     /* STRETCH (not baseline): a leaf row's cells differ in height (a variable's
        definition sub-line / a classification's full-name cell make the name cell
        taller than its siblings). With baseline, each cell's own bottom border lands
@@ -1237,7 +1209,7 @@ function closeSearch(): void {
   }
   .code-row > summary,
   .single-code-row {
-    padding: 0.45rem var(--code-row-inline);
+    padding: var(--search-row-block) var(--code-row-inline);
     border-bottom: 1px solid var(--border);
   }
   .single-code-row {
@@ -1270,7 +1242,7 @@ function closeSearch(): void {
     color: inherit;
     text-decoration: none;
     overflow-wrap: anywhere;
-    padding: 0.35rem var(--code-row-inline) 0.35rem
+    padding: var(--search-row-block) var(--code-row-inline) var(--search-row-block)
       var(--code-text-start);
     border-bottom: 1px solid var(--border);
   }
@@ -1284,7 +1256,7 @@ function closeSearch(): void {
     gap: 0.1rem 0.45rem;
     min-width: 0;
     color: var(--text-muted);
-    font-size: 0.9em;
+    font-size: var(--text-sm);
   }
   .owner-name {
     font-weight: 600;
@@ -1320,7 +1292,7 @@ function closeSearch(): void {
   }
   .leaf-row > * {
     min-width: 0;
-    padding: 0.4rem 0.75rem;
+    padding: var(--search-row-block) var(--space-3);
     border-bottom: 1px solid var(--border);
   }
   .leaf-row:last-child > * {
@@ -1368,7 +1340,7 @@ function closeSearch(): void {
     display: inline-flex;
     align-items: baseline;
     line-height: 1.3;
-    padding: 0.05rem 0.4rem;
+    padding: 0 var(--space-1);
     border-radius: var(--radius-sm);
     max-width: 100%;
     overflow-wrap: anywhere;
@@ -1377,14 +1349,14 @@ function closeSearch(): void {
      variable hue, and no link affordance on the search-result metadata. */
   .col-chip {
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: var(--text-sm);
     font-weight: 600;
     color: var(--cat-var-ink);
     border: 1px solid color-mix(in srgb, var(--cat-var) 35%, transparent);
     background: color-mix(in srgb, var(--cat-var) 10%, var(--surface));
   }
   .column-more {
-    font-size: 0.85em;
+    font-size: var(--text-sm);
   }
   .group-prefix {
     color: var(--cat-group-ink);
@@ -1409,11 +1381,11 @@ function closeSearch(): void {
   }
   /* The MUTED variable-count summary in the collapsed code row's third column. */
   .usage-count {
-    font-size: 0.85em;
+    font-size: var(--text-sm);
     text-align: right;
     white-space: nowrap;
   }
   .more {
-    font-size: 0.85em;
+    font-size: var(--text-sm);
   }
 </style>
