@@ -163,6 +163,7 @@ def repo_docs_dir() -> Path | None:
 
 DOC_SOURCES_FILE = "doc_sources.toml"
 RELATED_DOCUMENTS_FILE = "related_documents.toml"
+RELATED_DOCUMENT_LICENSES = frozenset({"CC BY 4.0", "EU law"})
 
 
 @dataclass(frozen=True)
@@ -317,9 +318,20 @@ def _parse_related_document(
         title=_require_related_document_str(entry, "title", subject),
         filename=filename,
         source_url=_require_related_document_str(entry, "source_url", subject),
-        license=_require_related_document_str(entry, "license", subject),
+        license=_parse_related_document_license(entry, subject),
         fetched=fetched,
     )
+
+
+def _parse_related_document_license(entry: dict[str, object], subject: str) -> str:
+    license_ = _require_related_document_str(entry, "license", subject)
+    if license_ not in RELATED_DOCUMENT_LICENSES:
+        _related_documents_invalid(
+            subject,
+            "needs `license` as one of "
+            f"{', '.join(sorted(RELATED_DOCUMENT_LICENSES))}, got {license_!r}.",
+        )
+    return license_
 
 
 def load_related_documents(
@@ -362,7 +374,19 @@ def load_related_documents(
                 f"related_documents `{register}`",
                 f"must be a register table, got {type(block).__name__}.",
             )
-        entries = block.get("document", [])
+        block = cast("dict[str, object]", block)
+        unknown = set(block) - {"document"}
+        if unknown:
+            _related_documents_invalid(
+                f"related_documents `{register}`",
+                f"has unknown field(s): {', '.join(sorted(unknown))}.",
+            )
+        if "document" not in block:
+            _related_documents_invalid(
+                f"related_documents `{register}`",
+                "needs at least one `[[register.<slug>.document]]` entry.",
+            )
+        entries = block["document"]
         if not isinstance(entries, list):
             _related_documents_invalid(
                 f"related_documents `{register}`", "needs `document` table entries."
@@ -402,7 +426,11 @@ def _insert_related_documents(
     docs_dir: Path,
     related_docs_dir: Path | None,
 ) -> int:
-    active_registers = _register_dirs(docs_dir) | _register_dirs(related_docs_dir)
+    active_registers = (
+        _register_dirs(docs_dir)
+        | _register_dirs(related_docs_dir)
+        | related_documents.keys()
+    )
     if not active_registers:
         return 0
 

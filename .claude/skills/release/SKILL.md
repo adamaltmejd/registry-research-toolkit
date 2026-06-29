@@ -295,6 +295,9 @@ Build and upload fresh if **any** of these is true:
 
 - `DOC_SCHEMA_VERSION` was bumped.
 - `git diff <tag>..HEAD -- reg_meta_build/docs/` is non-empty (docs content changed).
+- `git diff <tag>..HEAD -- reg_meta_build/related_documents.toml` is non-empty
+  (related-document provenance changed; the binaries are gitignored but the doc asset
+  consumes this tracked map).
 - The release is a **major** version bump.
 
 Otherwise copy the prior release's asset forward (8c) and skip the rest of 8b.

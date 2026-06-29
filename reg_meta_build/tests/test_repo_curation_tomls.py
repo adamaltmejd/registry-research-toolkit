@@ -291,3 +291,38 @@ def test_related_documents_malformed_entry_raises_curation_error(
     assert exc_info.value.code == "related_documents_invalid"
     assert exc_info.value.exit_code == EXIT_CONFIG
     assert "filename" in exc_info.value.message
+
+
+def test_related_documents_invalid_license_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        "[[register.aes.document]]\n"
+        'title = "Bad"\n'
+        'filename = "bad.pdf"\n'
+        'source_url = "https://mikrometadata.scb.se/"\n'
+        'license = "unknown"\n'
+        'fetched = "2026-06-23"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "license" in exc_info.value.message
+
+
+def test_related_documents_missing_document_array_raises_curation_error(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "related_documents.toml"
+    path.write_text(
+        '[register.aes]\ndocuments = "bad"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RegMetaError) as exc_info:
+        load_related_documents(path)
+    assert exc_info.value.code == "related_documents_invalid"
+    assert "unknown field" in exc_info.value.message

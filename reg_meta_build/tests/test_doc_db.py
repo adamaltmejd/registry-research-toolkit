@@ -117,29 +117,32 @@ def test_build_doc_db_warns_for_missing_and_unmapped_related_documents(
         conn.close()
 
 
-def test_build_doc_db_skips_related_documents_for_absent_register(
+def test_build_doc_db_warns_when_related_document_root_is_absent(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
     docs_dir = tmp_path / "docs"
     _write_doc(docs_dir, register="testreg")
-    related_root = tmp_path / "related"
-    related_root.mkdir()
 
     monkeypatch.setattr(
         doc_db,
         "load_related_documents",
-        lambda: {"absent": [_related_doc("absent", "missing.pdf")]},
+        lambda: {"testreg": [_related_doc("testreg", "missing.pdf")]},
     )
-    monkeypatch.setattr(
-        doc_db, "repo_related_document_binaries_dir", lambda: related_root
-    )
+    monkeypatch.setattr(doc_db, "repo_related_document_binaries_dir", lambda: None)
     caplog.set_level(logging.WARNING, logger="reg_meta_build.doc_db")
 
     db_path = build_doc_db(docs_dir, tmp_path / "db")
 
-    assert not caplog.records
+    messages = [record.getMessage() for record in caplog.records]
+    assert any("testreg/missing.pdf" in message for message in messages)
     conn = sqlite3.connect(db_path)
     try:
         assert conn.execute("SELECT COUNT(*) FROM related_document").fetchone()[0] == 0
+        assert (
+            conn.execute(
+                "SELECT value FROM doc_meta WHERE key = 'related_document_count'"
+            ).fetchone()[0]
+            == "0"
+        )
     finally:
         conn.close()
