@@ -563,13 +563,30 @@ describe("SearchView — typed result groups (#379)", () => {
     const codeCells = document.querySelector<HTMLElement>(
       ".search-view details.code-row .code-cells",
     );
+    const disclosureIcon = document.querySelector<HTMLElement>(
+      ".search-view details.code-row .disclosure-icon",
+    );
     const firstOwnerText = document.querySelector<HTMLElement>(
       ".search-view details.code-row .owner-row .owner-name",
     );
     expect(codeCells).not.toBeNull();
+    expect(disclosureIcon).not.toBeNull();
     expect(firstOwnerText).not.toBeNull();
-    expect(Math.round(firstOwnerText?.getBoundingClientRect().left ?? 0)).toBe(
-      Math.round(codeCells?.getBoundingClientRect().left ?? 0),
+    const codeRect = codeCells?.getBoundingClientRect();
+    const iconRect = disclosureIcon?.getBoundingClientRect();
+    const ownerRect = firstOwnerText?.getBoundingClientRect();
+    expect(Math.round(iconRect?.right ?? 0)).toBeLessThanOrEqual(
+      Math.round(codeRect?.left ?? 0),
+    );
+    expect(
+      Math.abs(
+        (iconRect?.top ?? 0) +
+          (iconRect?.height ?? 0) / 2 -
+          ((codeRect?.top ?? 0) + (codeRect?.height ?? 0) / 2),
+      ),
+    ).toBeLessThanOrEqual(2);
+    expect(Math.round(ownerRect?.left ?? 0)).toBeGreaterThan(
+      Math.round(codeRect?.left ?? 0),
     );
   });
 

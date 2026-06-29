@@ -1265,22 +1265,17 @@ function closeSearch(): void {
   .children.table.codes {
     display: flex;
     flex-direction: column;
-    --code-row-inline: 0.75rem;
-    --code-disclosure-gutter: 0.85rem;
-    --code-disclosure-gap: 0.45rem;
-    --code-text-start: calc(
-      var(--code-row-inline) + var(--code-disclosure-gutter) +
-      var(--code-disclosure-gap)
-    );
   }
+  .children.table.codes,
   .children.table.top-results {
-    --code-row-inline: 0.75rem;
-    --code-disclosure-gutter: 0.85rem;
-    --code-disclosure-gap: 0.45rem;
-    --code-text-start: calc(
-      var(--code-row-inline) + var(--code-disclosure-gutter) +
+    --code-row-inline: var(--space-3);
+    --code-disclosure-size: 0.65rem;
+    --code-disclosure-gap: 0.1rem;
+    --code-disclosure-left: calc(
+      var(--code-row-inline) - var(--code-disclosure-size) -
         var(--code-disclosure-gap)
     );
+    --code-owner-start: calc(var(--code-row-inline) + var(--space-4));
   }
   .code-cells {
     display: grid;
@@ -1301,13 +1296,8 @@ function closeSearch(): void {
     overflow-wrap: anywhere;
   }
   .code-summary {
-    display: grid;
-    grid-template-columns: var(--code-disclosure-gutter) minmax(0, 1fr);
-    column-gap: var(--code-disclosure-gap);
-    align-items: baseline;
-  }
-  .top-code-summary {
-    align-items: start;
+    position: relative;
+    display: block;
   }
   .top-code-summary-body {
     display: flex;
@@ -1316,24 +1306,29 @@ function closeSearch(): void {
     min-width: 0;
   }
   .disclosure-icon {
+    position: absolute;
+    top: calc(var(--search-row-block) + 0.75em);
+    left: var(--code-disclosure-left);
     display: inline-grid;
     place-items: center;
-    width: 0.85rem;
-    height: 0.85rem;
+    width: var(--code-disclosure-size);
+    height: var(--code-disclosure-size);
     color: var(--text-muted);
+    pointer-events: none;
     transform-origin: 50% 50%;
+    transform: translateY(-50%);
     transition: transform var(--motion-fast) ease;
   }
   .disclosure-icon::before {
     content: "";
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.42rem;
+    height: 0.42rem;
     border-right: 1.5px solid currentColor;
     border-bottom: 1.5px solid currentColor;
     transform: rotate(-45deg);
   }
   .code-row[open] > summary .disclosure-icon {
-    transform: rotate(90deg);
+    transform: translateY(-50%) rotate(90deg);
   }
   /* A code DISCLOSURE row: <details>; its <summary> carries the collapsed cells.
      Non-disclosure rows carry `.code-cells` directly plus an optional muted owner
@@ -1354,7 +1349,7 @@ function closeSearch(): void {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
-    padding-left: var(--code-text-start);
+    padding-left: var(--code-row-inline);
     color: inherit;
     text-decoration: none;
   }
@@ -1373,6 +1368,7 @@ function closeSearch(): void {
     display: flex;
     flex-direction: column;
     margin: 0;
+    background: color-mix(in srgb, var(--surface-sunken) 60%, var(--surface));
   }
   .owner-row {
     display: flex;
@@ -1381,8 +1377,10 @@ function closeSearch(): void {
     text-decoration: none;
     overflow-wrap: anywhere;
     padding: var(--search-row-block) var(--code-row-inline) var(--search-row-block)
-      var(--code-text-start);
+      var(--code-owner-start);
     border-bottom: 1px solid var(--border);
+    box-shadow: inset 2px 0 0
+      color-mix(in srgb, var(--border-strong) 70%, transparent);
   }
   .owner-row > * {
     min-width: 0;
