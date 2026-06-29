@@ -346,18 +346,19 @@ FQIDs — see § Steward layering → Browse and search scoping (#859) above; cl
 and code surfaces are catalog-global and unaffected.
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
-`/search?q=` results page (`SearchView.svelte`) that renders the four typed groups with
-navigation to catalog nodes. The router gained `search` and `doc` routes (query lives in
-`?q=`, keyed on pathname so the page re-runs on every query change) and a
-`router.replace()` method (mirrors the `?period` URL-as-single-source-of-truth pattern:
-the omnibox syncs back to the URL, and the URL drives the view). `api.ts` gained
-`search(q, {limit?, type?})` typed off the codegen'd contract. Off `/search`, typing in
-the omnibox stays local until Enter/form submit and shows an Enter hint while focused;
-on `/search`, typing live-refines with replaceState. `SearchView` renders an "All ·
-Registers · Variables · Classifications · Codes" scope toggle backed by `?type=` (URL
-state, like `?q=`/`?period`; `all` is omitted from the canonical URL), a Close control
-that `replace()`s back to the route that entered search (or `/catalog` for a cold
-deep-link), and variable rows whose heading carries delivery-column pills while
+`/search?q=` results page (`SearchView.svelte`) that renders an optional compact
+cross-group `Top results` group above the four typed groups when multiple candidates
+compete, with navigation to catalog nodes. The router gained `search` and `doc` routes
+(query lives in `?q=`, keyed on pathname so the page re-runs on every query change) and
+a `router.replace()` method (mirrors the `?period` URL-as-single-source-of-truth
+pattern: the omnibox syncs back to the URL, and the URL drives the view). `api.ts`
+gained `search(q, {limit?, type?})` typed off the codegen'd contract. Off `/search`,
+typing in the omnibox stays local until Enter/form submit and shows an Enter hint while
+focused; on `/search`, typing live-refines with replaceState. `SearchView` renders an
+"All · Registers · Variables · Classifications · Codes" scope toggle backed by `?type=`
+(URL state, like `?q=`/`?period`; `all` is omitted from the canonical URL), a Close
+control that `replace()`s back to the route that entered search (or `/catalog` for a
+cold deep-link), and variable rows whose heading carries delivery-column pills while
 register, definition, and `operational_definition` live in the muted detail line; the
 "Variables" group heading itself stays plain text. The omnibox preserves an active scope
 when re-querying. Global search does **not** render documentation results; documentation
@@ -371,7 +372,10 @@ is never fetched.
 
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
-(`group` literal) carrying its own `total_count` + typed `results`. Today: `registers`,
+(`group` literal) carrying its own `total_count` + typed `results`. Today: `top_results`
+(#393 items 6/7 — optional, all-scope-only, and emitted only when multiple candidates
+compete; built from the already-prepared typed rows, exact identifier/name/code matches
+first, then type priors register → variable/group → classification → code), `registers`,
 `variables` (leaf hits ⧺ folded concept groups), `classifications` (leaf hits ⧺ folded
 classification-succession rows (`type: "classification_succession"`, #571 — a query that
 hits ≥2 editions of the same chain collapses to one

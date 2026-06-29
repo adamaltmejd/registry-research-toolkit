@@ -2592,11 +2592,15 @@
                   "classifications": "#/components/schemas/ClassificationSearchGroup",
                   "codes": "#/components/schemas/CodeSearchGroup",
                   "registers": "#/components/schemas/RegisterSearchGroup",
+                  "top_results": "#/components/schemas/TopSearchGroup",
                   "variables": "#/components/schemas/VariableSearchGroup"
                 },
                 "propertyName": "group"
               },
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TopSearchGroup"
+                },
                 {
                   "$ref": "#/components/schemas/RegisterSearchGroup"
                 },
@@ -2698,6 +2702,64 @@
           "successors"
         ],
         "title": "SuccessorsResponse",
+        "type": "object"
+      },
+      "TopSearchGroup": {
+        "description": "Cross-group best-bets (#393 item 6): the strongest rows from the typed\ngroups, scored with exact-match boosts and type priors. The original typed\ngroups remain unchanged below it.",
+        "properties": {
+          "group": {
+            "const": "top_results",
+            "default": "top_results",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "classification": "#/components/schemas/ClassificationSearchResult",
+                  "classification_succession": "#/components/schemas/ClassificationSuccessionSearchResult",
+                  "code": "#/components/schemas/CodeSearchResult",
+                  "group": "#/components/schemas/ConceptGroupSearchResult",
+                  "register": "#/components/schemas/RegisterSearchResult",
+                  "variable": "#/components/schemas/VariableSearchResult"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/RegisterSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/VariableSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationSuccessionSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ConceptGroupSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeSearchResult"
+                }
+              ]
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "TopSearchGroup",
         "type": "object"
       },
       "ValidationError": {
@@ -4534,7 +4596,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each group is an independent\nreg_meta `search()` call (register/variable/classification via the FTS\n`field=\"description\"` path; codes via the `field=\"value\"` path) so each carries\nits own `total_count` and per-group `limit`. A query with no usable token\nreturns the selected group(s) empty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\nfour-group register\u2192variable\u2192classification\u2192code behavior; any single type runs\nAND emits only that one group. Group ORDER is fixed for the ``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.",
+        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each typed group is an\nindependent reg_meta `search()` call (register/variable/classification via the\nFTS `field=\"description\"` path; codes via the `field=\"value\"` path) so each\ncarries its own `total_count` and per-group `limit`. The all-scope response\nprepends a `top_results` best-bets group built from those same typed rows when\nmultiple candidates compete (#393 items 6/7); scoped responses emit only the\nrequested typed group. A query with no usable token returns the selected group(s)\nempty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\noptional top-results\u2192register\u2192variable\u2192classification\u2192code behavior; any single\ntype runs AND emits only that one typed group. Group ORDER is fixed for the\n``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.",
         "operationId": "get_search_api_search_get",
         "parameters": [
           {

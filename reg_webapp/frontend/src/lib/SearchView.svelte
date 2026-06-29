@@ -23,8 +23,8 @@ import { router } from "./router.svelte";
 import { Panel } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
-// the four ORDERED, typed groups GET /api/search returns (registers / variables /
-// classifications / codes). Every leaf navigates via a plain internal <a> the
+// GET /api/search's top-results group plus the four ordered typed groups
+// (registers / variables / classifications / codes). Every leaf navigates via a plain internal <a> the
 // shell's `use:link` intercepts — never `router.navigate` from here.
 //
 // #808 (round 3): the registers / variables / classifications groups render as a
@@ -184,6 +184,7 @@ const noMatches = $derived(
 // Per-group heading labels. Keep these as normal text headings; result type and
 // context live inside rows, not in heading badges.
 const GROUP_HEADINGS = {
+  top_results: { label: "Top results" },
   registers: { label: "Registers" },
   variables: { label: "Variables" },
   classifications: { label: "Classifications" },
@@ -328,6 +329,17 @@ function classificationDisplayResults(
 
 function codeDisplayResults(results: SearchResult[]): CodeSearchResult[] {
   return results as CodeSearchResult[];
+}
+
+function topResultKey(result: SearchResult, i: number): string {
+  if (isConceptGroup(result)) {
+    return `group|${result.kind}|${result.group_key}|${i}`;
+  }
+  if (result.type === "code") {
+    return `code|${result.code}|${result.label}|${result.code_system ?? ""}|${i}`;
+  }
+  const identity = "fqid" in result ? result.fqid : "";
+  return `${result.type}|${identity}|${i}`;
 }
 
 function normalizedDisplayText(value: string | null | undefined): string {
@@ -565,7 +577,16 @@ function closeSearch(): void {
               {#if caption}<span class="count">{caption}</span>{/if}
             {/snippet}
 
-          {#if group.group === "registers"}
+          {#if group.group === "top_results"}
+            <!-- Cross-group best bets (#393 items 6/7). Rows reuse the same typed
+                 snippets as the normal groups, so this remains a ranking/presentation
+                 layer over the canonical typed results rather than a second row model. -->
+            <div class="children table top-results" role="presentation">
+              {#each renderedResults as result, i (topResultKey(result, i))}
+                {@render topResult(result)}
+              {/each}
+            </div>
+          {:else if group.group === "registers"}
             <!-- Registers share the variables' one-column result shape: primary
                  line is the register name, secondary line is the muted
                  description. No split name/description columns. -->
@@ -675,6 +696,22 @@ function closeSearch(): void {
         {#if r.purpose}<span class="result-detail muted clamp-2">{r.purpose}</span>{/if}
       </span>
     </div>
+  {/if}
+{/snippet}
+
+{#snippet topResult(result: SearchResult)}
+  {#if result.type === "register"}
+    {@render registerLeafRow(result)}
+  {:else if result.type === "variable"}
+    {@render variableLeafRow(result)}
+  {:else if result.type === "classification"}
+    {@render classificationLeafRow(result)}
+  {:else if result.type === "classification_succession"}
+    {@render classificationSuccession(result)}
+  {:else if result.type === "group"}
+    {@render conceptGroup(result)}
+  {:else if result.type === "code"}
+    {@render codeRow(result)}
   {/if}
 {/snippet}
 
@@ -1135,7 +1172,8 @@ function closeSearch(): void {
        (below) so multi-line cells grow downward and still read top-down. */
     align-items: stretch;
   }
-  .children.table.cols-1 {
+  .children.table.cols-1,
+  .children.table.top-results {
     /* Full-width one-column result rows (registers, variables, classifications, groups). */
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1145,6 +1183,15 @@ function closeSearch(): void {
   .children.table.codes {
     display: flex;
     flex-direction: column;
+    --code-row-inline: 0.75rem;
+    --code-disclosure-gutter: 0.85rem;
+    --code-disclosure-gap: 0.45rem;
+    --code-text-start: calc(
+      var(--code-row-inline) + var(--code-disclosure-gutter) +
+      var(--code-disclosure-gap)
+    );
+  }
+  .children.table.top-results {
     --code-row-inline: 0.75rem;
     --code-disclosure-gutter: 0.85rem;
     --code-disclosure-gap: 0.45rem;

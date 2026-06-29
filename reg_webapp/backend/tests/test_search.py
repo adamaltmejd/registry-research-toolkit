@@ -18,12 +18,24 @@ import pytest
 import reg_meta.db
 from fastapi.testclient import TestClient
 from reg_meta.queries import _code_system
-from reg_meta.search import CodeSearchResult, SearchResults, VariableSearchResult
+from reg_meta.search import (
+    CodeSearchResult,
+    RegisterSearchResult,
+    SearchResults,
+    VariableSearchResult,
+)
 from reg_webapp.app import create_app
 from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.golden import _Pin, apply_golden_boost
+from reg_webapp.models import (
+    CodeSearchGroup,
+    RegisterSearchGroup,
+    VariableSearchGroup,
+)
 from reg_webapp.routes import search as search_route
 from reg_webapp.routes.search import (
+    _best_bet_score,
+    _best_bets,
     _has_searchable_token,
     _narrow_variable_leaf_columns,
     _rank_codes,
@@ -113,7 +125,8 @@ def test_invalid_type_is_422(client):
 
 
 def test_default_type_is_all_four_groups(client):
-    # No ?type= preserves today's exact four-group behavior (order included).
+    # No ?type= preserves the canonical typed groups when there is no useful
+    # cross-group top-results panel to show.
     body = client.get("/api/search", params={"q": "lisa"}).json()
     assert [g["group"] for g in body["groups"]] == [
         "registers",
@@ -612,6 +625,90 @@ def test_limit_param_clamped_end_to_end(client):
     body = client.get("/api/search", params={"q": "kon", "limit": 1}).json()
     for g in body["groups"]:
         assert len(g["results"]) <= 1
+
+
+# ── top-results / best-bets (#393 items 6/7) ────────────────────────────────
+
+
+def test_top_results_group_precedes_typed_groups(client):
+    body = client.get("/api/search", params={"q": "C12"}).json()
+    assert [g["group"] for g in body["groups"]][:2] == ["top_results", "registers"]
+    top = _group(body, "top_results")
+    assert top["total_count"] >= len(top["results"])
+    assert top["results"]
+
+
+def test_single_candidate_search_omits_top_results(client):
+    body = client.get("/api/search", params={"q": "lisa"}).json()
+    assert "top_results" not in [g["group"] for g in body["groups"]]
+
+
+def test_scoped_search_omits_top_results(client):
+    body = client.get("/api/search", params={"q": "lisa", "type": "register"}).json()
+    assert [g["group"] for g in body["groups"]] == ["registers"]
+
+
+def test_top_results_exact_variable_beats_register_prior():
+    register = RegisterSearchResult(
+        fqid="scb/konj",
+        name="Konjunktur",
+        rank=0.0,
+    )
+    variable = VariableSearchResult(
+        fqid="scb/lisa/kon",
+        name="Kön",
+        register="LISA",
+        rank=0.0,
+    )
+
+    top = _best_bets(
+        "kon",
+        [
+            RegisterSearchGroup(total_count=1, results=[register]),
+            VariableSearchGroup(total_count=1, results=[variable]),
+        ],
+        limit=2,
+    )
+
+    assert [r.type for r in top] == ["variable", "register"]
+
+
+def test_top_results_type_priors_break_non_exact_ties():
+    register = RegisterSearchResult(
+        fqid="scb/rams",
+        name="RAMS",
+        rank=0.0,
+    )
+    variable = VariableSearchResult(
+        fqid="scb/rams/syss",
+        name="Sysselsättning",
+        register="RAMS",
+        rank=0.0,
+    )
+    code = _code("1", variable_count=1)
+
+    top = _best_bets(
+        "arbetsmarknad",
+        [
+            CodeSearchGroup(total_count=1, results=[code]),
+            VariableSearchGroup(total_count=1, results=[variable]),
+            RegisterSearchGroup(total_count=1, results=[register]),
+        ],
+        limit=3,
+    )
+
+    assert [r.type for r in top] == ["register", "variable", "code"]
+
+
+def test_best_bet_score_folds_diacritics_for_exact_matches():
+    variable = VariableSearchResult(
+        fqid="scb/lisa/kon",
+        name="Kön",
+        register="LISA",
+        rank=0.0,
+    )
+
+    assert _best_bet_score("kon", variable) >= 1000
 
 
 # ── golden-boost: curated-pin injection (#393 item 4 / #311) ─────────────────

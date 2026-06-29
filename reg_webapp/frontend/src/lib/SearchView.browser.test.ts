@@ -129,6 +129,58 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
   });
 
+  it("renders the top-results group before the typed groups", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "kon",
+      groups: [
+        {
+          group: "top_results",
+          total_count: 2,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/lisa/kon",
+              name: "Kön",
+              register: "LISA",
+              definition: null,
+              delivery_column_names: ["Kon"],
+            },
+            {
+              type: "register",
+              fqid: "scb/lisa",
+              name: "LISA",
+              purpose: null,
+            },
+          ],
+        },
+        {
+          group: "registers",
+          total_count: 1,
+          results: [
+            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("kon");
+    await render(SearchView);
+
+    const headings = Array.from(document.querySelectorAll("h2")).map((h) =>
+      h.textContent?.trim(),
+    );
+    expect(headings.filter(Boolean).slice(-2)).toEqual([
+      "Top results",
+      "Registers",
+    ]);
+    await expect
+      .element(page.getByRole("heading", { name: "Top results" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }).first())
+      .toHaveAttribute("href", "/catalog/scb/lisa/kon");
+  });
+
   it("shows delivery column names and operational definitions on variable hits", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",

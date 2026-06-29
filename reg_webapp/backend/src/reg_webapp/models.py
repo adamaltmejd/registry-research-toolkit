@@ -605,10 +605,32 @@ class CodeSearchGroup(BaseModel):
     results: list[CodeSearchResult]
 
 
-# The extension seam: append `DocSearchGroup` (#354) arms here — each a new
-# `group` literal with its own result model — without touching the others.
+TopSearchItem = Annotated[
+    RegisterSearchResult
+    | VariableSearchResult
+    | ClassificationSearchResult
+    | ClassificationSuccessionSearchResult
+    | ConceptGroupSearchResult
+    | CodeSearchResult,
+    Field(discriminator="type"),
+]
+
+
+class TopSearchGroup(BaseModel):
+    """Cross-group best-bets (#393 item 6): the strongest rows from the typed
+    groups, scored with exact-match boosts and type priors. The original typed
+    groups remain unchanged below it."""
+
+    group: Literal["top_results"] = "top_results"
+    total_count: int
+    results: list[TopSearchItem]
+
+
+# The extension seam: append new `group` literal arms here — each a new
+# `SearchGroup` member + result model — without touching the others.
 SearchGroup = Annotated[
-    RegisterSearchGroup
+    TopSearchGroup
+    | RegisterSearchGroup
     | VariableSearchGroup
     | ClassificationSearchGroup
     | CodeSearchGroup,

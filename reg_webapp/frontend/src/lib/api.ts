@@ -513,15 +513,17 @@ export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────
-// `GET /api/search?q=` returns four ORDERED, typed result groups over the shipped
-// FTS indexes (registers / variables / classifications / codes). Each group's
-// `total_count` is the full match count BEFORE the per-request `limit`, so the SPA
-// renders "showing N of M". A concept-group row (`type:"group"`) is not an FQID,
-// but it can be linked to its fixed group route when the scope is derivable from
-// members; its `members` carry the real leaf FQIDs for fallback links. A `fqid`
-// can be `null` on any leaf (a hit with no resolvable catalog node).
+// `GET /api/search?q=` returns an optional cross-group best-bets group followed by
+// the typed result groups over the shipped FTS indexes (registers / variables /
+// classifications / codes). Each group's `total_count` is the full match count
+// BEFORE the per-request `limit`, so the SPA renders "showing N of M". A
+// concept-group row (`type:"group"`) is not an FQID, but it can be linked to its
+// fixed group route when the scope is derivable from members; its `members` carry
+// the real leaf FQIDs for fallback links. A `fqid` can be `null` on any leaf (a hit
+// with no resolvable catalog node).
 
 export type SearchResponse = Schemas["SearchResponse"];
+export type TopSearchGroup = Schemas["TopSearchGroup"];
 export type RegisterSearchGroup = Schemas["RegisterSearchGroup"];
 export type VariableSearchGroup = Schemas["VariableSearchGroup"];
 export type ClassificationSearchGroup = Schemas["ClassificationSearchGroup"];
