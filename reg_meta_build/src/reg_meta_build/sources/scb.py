@@ -29,9 +29,11 @@ import hashlib
 import json
 import re
 import sqlite3
+import tempfile
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from itertools import combinations, groupby
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -87,7 +89,6 @@ from reg_meta_build.resolution import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
-    from pathlib import Path
 
     from reg_meta_build.codelivery import CodeliveryMap
     from reg_meta_build.sources import IRObject
@@ -3798,53 +3799,67 @@ def _write_value_prestage(
     projection_stats: _ProjectionStats,
 ) -> None:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
-    tmp_path = cache_path.with_name(f".{cache_path.name}.tmp")
-    tmp_path.unlink(missing_ok=True)
-    conn.execute("ATTACH DATABASE ? AS prestage_out", (str(tmp_path),))
-    conn.commit()
+    with tempfile.NamedTemporaryFile(
+        prefix=f".{cache_path.name}.",
+        suffix=".tmp",
+        dir=cache_path.parent,
+        delete=False,
+    ) as tmp_file:
+        tmp_path = Path(tmp_file.name)
+    attached = False
+    published = False
     try:
-        conn.execute("PRAGMA prestage_out.journal_mode=OFF")
-        conn.execute("PRAGMA prestage_out.synchronous=OFF")
-        meta = {
-            **fingerprint,
-            "row_count:Vardemangder.csv": str(vardemangder_rows),
-            "row_count:VardemangderValidDates.csv": str(validity_rows),
-            "projection:cvids_with_set": str(projection_stats.cvids_with_set),
-            "projection:cvids_empty_after_projection": str(
-                projection_stats.cvids_empty_after_projection
-            ),
-            "projection:n_value_sets": str(projection_stats.n_value_sets),
-        }
-        conn.executescript(
-            """
-            CREATE TABLE prestage_out.meta (
-                key TEXT PRIMARY KEY,
-                value TEXT NOT NULL
-            ) WITHOUT ROWID;
-            CREATE TABLE prestage_out.value_code AS
-                SELECT code_id, code, label FROM main.value_code;
-            CREATE TABLE prestage_out.value_set AS
-                SELECT value_set_id, member_hash FROM main.value_set;
-            CREATE TABLE prestage_out.value_set_member AS
-                SELECT value_set_id, code_id FROM main.value_set_member;
-            CREATE TABLE prestage_out.cvid_value_set AS
-                SELECT cvid, value_set_id, value_set_version_label, vardemangdsniva
-                FROM main.variable_instance
-                WHERE value_set_id IS NOT NULL
-                   OR value_set_version_label IS NOT NULL
-                   OR vardemangdsniva IS NOT NULL;
-            CREATE INDEX prestage_out.idx_cvid_value_set_cvid
-                ON cvid_value_set(cvid);
-            """
-        )
-        conn.executemany(
-            "INSERT INTO prestage_out.meta (key, value) VALUES (?, ?)",
-            sorted(meta.items()),
-        )
-        conn.commit()
+        try:
+            conn.execute("ATTACH DATABASE ? AS prestage_out", (str(tmp_path),))
+            attached = True
+            conn.commit()
+            conn.execute("PRAGMA prestage_out.journal_mode=OFF")
+            conn.execute("PRAGMA prestage_out.synchronous=OFF")
+            meta = {
+                **fingerprint,
+                "row_count:Vardemangder.csv": str(vardemangder_rows),
+                "row_count:VardemangderValidDates.csv": str(validity_rows),
+                "projection:cvids_with_set": str(projection_stats.cvids_with_set),
+                "projection:cvids_empty_after_projection": str(
+                    projection_stats.cvids_empty_after_projection
+                ),
+                "projection:n_value_sets": str(projection_stats.n_value_sets),
+            }
+            conn.executescript(
+                """
+                CREATE TABLE prestage_out.meta (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL
+                ) WITHOUT ROWID;
+                CREATE TABLE prestage_out.value_code AS
+                    SELECT code_id, code, label FROM main.value_code;
+                CREATE TABLE prestage_out.value_set AS
+                    SELECT value_set_id, member_hash FROM main.value_set;
+                CREATE TABLE prestage_out.value_set_member AS
+                    SELECT value_set_id, code_id FROM main.value_set_member;
+                CREATE TABLE prestage_out.cvid_value_set AS
+                    SELECT cvid, value_set_id, value_set_version_label, vardemangdsniva
+                    FROM main.variable_instance
+                    WHERE value_set_id IS NOT NULL
+                       OR value_set_version_label IS NOT NULL
+                       OR vardemangdsniva IS NOT NULL;
+                CREATE INDEX prestage_out.idx_cvid_value_set_cvid
+                    ON cvid_value_set(cvid);
+                """
+            )
+            conn.executemany(
+                "INSERT INTO prestage_out.meta (key, value) VALUES (?, ?)",
+                sorted(meta.items()),
+            )
+            conn.commit()
+        finally:
+            if attached:
+                conn.execute("DETACH DATABASE prestage_out")
+        tmp_path.replace(cache_path)
+        published = True
     finally:
-        conn.execute("DETACH DATABASE prestage_out")
-    tmp_path.replace(cache_path)
+        if not published:
+            tmp_path.unlink(missing_ok=True)
     _progress(
         "Updated SCB value prestage cache "
         f"({json.dumps({'path': str(cache_path)}, ensure_ascii=False)})"

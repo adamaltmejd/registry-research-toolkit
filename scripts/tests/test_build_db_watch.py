@@ -4,8 +4,11 @@ import importlib.util
 import json
 import sqlite3
 import sys
+import time
 from argparse import Namespace
 from pathlib import Path
+
+import pytest
 
 _SPEC = importlib.util.spec_from_file_location(
     "build_db_watch", Path(__file__).parents[1] / "build_db_watch.py"
@@ -162,6 +165,94 @@ def test_format_process_health() -> None:
         )
         == "process=unavailable (CalledProcessError)"
     )
+
+
+def test_run_build_drains_late_tail_output(monkeypatch, tmp_path: Path) -> None:
+    class DelayedStdout:
+        def __iter__(self):
+            time.sleep(0.35)
+            yield "late actionable error\n"
+
+    class FakeProc:
+        pid = 12345
+        stdout = DelayedStdout()
+
+        def poll(self):
+            return 1
+
+        def wait(self, timeout=None):
+            return 1
+
+    monkeypatch.setattr(
+        build_db_watch.subprocess, "Popen", lambda *_a, **_kw: FakeProc()
+    )
+
+    paths = build_db_watch.RunPaths(
+        db_dir=tmp_path / "db",
+        slug_dir=None,
+        prestage_cache=None,
+        log_path=tmp_path / "build.log",
+        summary_path=tmp_path / "summary.json",
+        created_db_dir=False,
+        created_slug_dir=False,
+    )
+
+    rc = build_db_watch.run_build(["fake-build"], paths, quiet_seconds=999)
+
+    assert rc == 1
+    assert "late actionable error" in paths.log_path.read_text(encoding="utf-8")
+
+
+def test_run_build_sigterm_path_terminates_child(monkeypatch, tmp_path: Path) -> None:
+    class InterruptingQueue:
+        def get(self, timeout=None):
+            raise build_db_watch.SigtermReceived
+
+        def put(self, _item):
+            pass
+
+    class FakeProc:
+        pid = 12345
+        stdout = []
+        terminated = False
+        killed = False
+
+        def poll(self):
+            return None
+
+        def terminate(self):
+            self.terminated = True
+
+        def kill(self):
+            self.killed = True
+
+        def wait(self, timeout=None):
+            return 143
+
+    proc = FakeProc()
+    monkeypatch.setattr(build_db_watch.subprocess, "Popen", lambda *_a, **_kw: proc)
+    monkeypatch.setattr(build_db_watch.queue, "Queue", lambda: InterruptingQueue())
+
+    paths = build_db_watch.RunPaths(
+        db_dir=tmp_path / "db",
+        slug_dir=None,
+        prestage_cache=None,
+        log_path=tmp_path / "build.log",
+        summary_path=tmp_path / "summary.json",
+        created_db_dir=False,
+        created_slug_dir=False,
+    )
+
+    with pytest.raises(build_db_watch.SigtermReceived):
+        build_db_watch.run_build(["fake-build"], paths, quiet_seconds=999)
+
+    assert proc.terminated is True
+    assert proc.killed is False
+
+
+def test_sigterm_handler_raises_cleanup_exception() -> None:
+    with pytest.raises(build_db_watch.SigtermReceived):
+        build_db_watch.handle_sigterm(15, None)
 
 
 def test_run_dbdiff_writes_report_and_summarizes(monkeypatch, tmp_path: Path) -> None:

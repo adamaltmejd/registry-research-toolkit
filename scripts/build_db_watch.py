@@ -72,6 +72,15 @@ MILESTONE_CONTAINS = (
     "Database written to",
     "SCB value prestage",
 )
+QUEUE_EOF = object()
+
+
+class SigtermReceived(Exception):
+    """Raised by the SIGTERM handler so child cleanup still runs."""
+
+
+def handle_sigterm(_signum: int, _frame: Any) -> None:
+    raise SigtermReceived
 
 
 @dataclass(frozen=True)
@@ -294,12 +303,12 @@ def build_dbdiff_command(args: argparse.Namespace, built_db: Path) -> list[str]:
     return cmd
 
 
-def reader_thread(stream: Any, out: queue.Queue[str]) -> None:
+def reader_thread(stream: Any, out: queue.Queue[Any]) -> None:
     try:
         for line in stream:
             out.put(line.rstrip("\n"))
     finally:
-        out.put(None)  # type: ignore[arg-type]
+        out.put(QUEUE_EOF)
 
 
 def run_build(cmd: list[str], paths: RunPaths, quiet_seconds: int) -> int:
@@ -308,7 +317,7 @@ def run_build(cmd: list[str], paths: RunPaths, quiet_seconds: int) -> int:
     start = time.monotonic()
     last_output = start
     last_health = start
-    lines: queue.Queue[str] = queue.Queue()
+    lines: queue.Queue[Any] = queue.Queue()
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
@@ -322,7 +331,6 @@ def run_build(cmd: list[str], paths: RunPaths, quiet_seconds: int) -> int:
     )
     thread.start()
 
-    saw_eof = False
     try:
         with paths.log_path.open("a", encoding="utf-8") as log:
             log.write(f"[{now_stamp()}] $ {' '.join(cmd)}\n")
@@ -332,16 +340,14 @@ def run_build(cmd: list[str], paths: RunPaths, quiet_seconds: int) -> int:
                 except queue.Empty:
                     line = None
 
+                if line is QUEUE_EOF:
+                    break
                 if line is not None:
                     last_output = time.monotonic()
                     log.write(f"[{now_stamp()}] {line}\n")
                     log.flush()
                     if is_milestone(line):
                         emit("build", line.strip())
-                elif saw_eof:
-                    pass
-                elif proc.poll() is not None:
-                    saw_eof = True
 
                 now = time.monotonic()
                 if proc.poll() is None and now - last_health >= quiet_seconds:
@@ -357,12 +363,7 @@ def run_build(cmd: list[str], paths: RunPaths, quiet_seconds: int) -> int:
                         ),
                     )
                     last_health = now
-
-                if saw_eof and thread.is_alive() is False:
-                    break
-                if proc.poll() is not None and lines.empty():
-                    break
-    except KeyboardInterrupt:
+    except KeyboardInterrupt, SigtermReceived:
         emit("interrupt", "terminating child build process")
         proc.terminate()
         try:
@@ -611,6 +612,8 @@ def main(argv: list[str] | None = None) -> int:
                 rc = 30
             elif dbdiff.get("return_code") != 0:
                 rc = 31
+    except SigtermReceived:
+        rc = 143
     except KeyboardInterrupt:
         rc = 130
     finally:
@@ -643,5 +646,5 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    signal.signal(signal.SIGTERM, lambda _signum, _frame: sys.exit(143))
+    signal.signal(signal.SIGTERM, handle_sigterm)
     raise SystemExit(main())
