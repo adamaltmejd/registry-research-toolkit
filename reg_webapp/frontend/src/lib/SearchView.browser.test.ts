@@ -517,6 +517,52 @@ describe("SearchView — typed result groups (#379)", () => {
     expect(document.querySelector(".search-view .owner-row .tag")).toBeNull();
   });
 
+  it("keeps secondary classification owners visible for reused code rows", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "11",
+      groups: [
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Shared code",
+              variables: [
+                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+                { fqid: "scb/rams/kon", name: "Kön RAMS", register: "RAMS" },
+              ],
+              variable_count: 2,
+              classifications: [
+                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
+                { fqid: "class/sun2000", short_name: "SUN2000", name: null },
+              ],
+              classification_count: 2,
+              code_system: "SUN2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("11");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByText("2 variables | 2 classifications"))
+      .toBeVisible();
+    await page.getByText("Shared code").click();
+    await expect
+      .element(page.getByRole("link", { name: "SUN2000" }))
+      .toHaveAttribute("href", "/catalog/class/sun2000");
+    expect(
+      document.querySelector(
+        ".search-view .owner-row[href='/catalog/class/sun2020']",
+      ),
+    ).toBeNull();
+  });
+
   it("links a concept-group result to its group page", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",

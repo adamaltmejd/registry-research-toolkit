@@ -257,6 +257,7 @@ type ClassificationDisplayResult =
   | ClassificationSearchResult
   | ClassificationSuccessionSearchResult
   | ConceptGroupSearchResult;
+type CodeOwnerClassification = CodeSearchResult["classifications"][number];
 type CodeOwnerVariable = CodeSearchResult["variables"][number];
 
 function isVariableResult(r: { type: string }): r is VariableSearchResult {
@@ -395,11 +396,18 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   return [...buckets.values()];
 }
 
-// The collapsed code row's MUTED variable-count summary. Classification ownership is
-// represented by the bucket heading/link, so rows summarize variable matches only.
-// A single variable owner is shown as a detail line instead of an expandable count.
+// The collapsed code row's MUTED owner summary. The common single-classification
+// case is represented by the bucket heading/link; only reused codes with multiple
+// classification owners repeat that count at row level.
 function usageSummary(result: CodeSearchResult): string {
-  return result.variable_count > 1 ? `${result.variable_count} variables` : "";
+  const parts: string[] = [];
+  if (result.variable_count > 1) {
+    parts.push(`${result.variable_count} variables`);
+  }
+  if (result.classification_count > 1) {
+    parts.push(`${result.classification_count} classifications`);
+  }
+  return parts.join(" | ");
 }
 
 function singleVariableOwner(
@@ -408,8 +416,26 @@ function singleVariableOwner(
   return result.variable_count === 1 ? (result.variables[0] ?? null) : null;
 }
 
-function hasExpandableVariableOwners(result: CodeSearchResult): boolean {
-  return result.variable_count > 1;
+function secondaryClassificationOwners(
+  result: CodeSearchResult,
+): CodeOwnerClassification[] {
+  if (result.classification_count <= 1) {
+    return [];
+  }
+  const headingHref = codeSystemHref(result);
+  return result.classifications.filter((owner) => {
+    if (owner.fqid == null) {
+      return true;
+    }
+    return catalogHref(owner.fqid) !== headingHref;
+  });
+}
+
+function hasExpandableOwners(result: CodeSearchResult): boolean {
+  return (
+    result.variable_count > 1 ||
+    secondaryClassificationOwners(result).length > 0
+  );
 }
 
 const DELIVERY_COLUMN_LIMIT = 3;
@@ -542,7 +568,7 @@ function closeSearch(): void {
           {:else if group.group === "classifications"}
             <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
                  ORDER. A leaf classification or concept group is a whole-row link;
-                 classification-succession stays a column-spanning disclosure. -->
+                 classification-succession families emit direct linked rows. -->
             <div class="children table cols-1" role="presentation">
               {#each classificationDisplayResults(group) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
@@ -774,12 +800,14 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
-<!-- A compact, code-FIRST code row. Classification ownership is represented by the
-     bucket heading/link, so per-row matches are variables only. Multiple variable
-     owners use a native <details> disclosure; one owner is a non-expandable row
-     with the matched variable in a muted detail line; zero variable owners render
-     as a plain Code · Label row. -->
+<!-- A compact, code-FIRST code row. The bucket heading/link represents the normal
+     single-classification owner; reused codes with multiple classifications repeat
+     the secondary classification owners in the expansion. Multiple owners use a
+     native <details> disclosure; one variable owner is a non-expandable row with
+     the matched variable in a muted detail line; zero owners render as a plain
+     Code · Label row. -->
 {#snippet ownerSubRows(result: CodeSearchResult)}
+  {@const classificationOwners = secondaryClassificationOwners(result)}
   {#each result.variables as owner, i (i)}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
@@ -790,6 +818,21 @@ function closeSearch(): void {
       <div class="owner-row integrated-list-row plain">
         <span class="row-link plain">{owner.name ?? "—"}</span>
         {#if owner.register}<span class="register muted">{owner.register}</span>{/if}
+      </div>
+    {/if}
+  {/each}
+  {#each classificationOwners as owner, i (`${owner.fqid ?? owner.short_name ?? owner.name}|${i}`)}
+    {#if owner.fqid}
+      <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
+        <span class="row-link">
+          {owner.short_name ?? owner.name ?? leafSlug(owner.fqid)}
+        </span>
+        {#if owner.name}<span class="register muted">{owner.name}</span>{/if}
+      </a>
+    {:else}
+      <div class="owner-row integrated-list-row plain">
+        <span class="row-link plain">{owner.short_name ?? owner.name ?? "—"}</span>
+        {#if owner.name}<span class="register muted">{owner.name}</span>{/if}
       </div>
     {/if}
   {/each}
@@ -817,7 +860,7 @@ function closeSearch(): void {
 {/snippet}
 {#snippet codeRow(result: CodeSearchResult)}
   {@const singleOwner = singleVariableOwner(result)}
-  {#if hasExpandableVariableOwners(result)}
+  {#if hasExpandableOwners(result)}
     <details class="code-row code-disclosure">
       <summary class="integrated-list-row code-summary">
         <span class="disclosure-icon" aria-hidden="true"></span>

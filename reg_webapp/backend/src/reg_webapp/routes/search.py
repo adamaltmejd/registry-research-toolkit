@@ -48,6 +48,7 @@ router = APIRouter(prefix="/api")
 
 _DEFAULT_LIMIT = 20
 _MAX_LIMIT = 50
+_CODE_VARIABLE_OWNER_LIMIT = 200
 
 # A "real" token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in FTS5 and would yield an empty phrase.
@@ -329,7 +330,7 @@ def get_search(
                 type="variable",
                 fqids=fqids,
                 delivery_column_scope=delivery_column_scope,
-                limit=None if index is not None else limit,
+                limit=limit,
             )
             var_results = golden.apply_golden_boost(conn, q, "variable", var.results)
             # #859: same boost re-filter as the register arm (drops unheld LEAF pins;
@@ -389,7 +390,7 @@ def get_search(
                 type="value",
                 limit=limit,
                 fold_groups=False,
-                code_variable_owner_limit=None,
+                code_variable_owner_limit=_CODE_VARIABLE_OWNER_LIMIT,
             )
             boosted_codes = cast(
                 "list[CodeSearchResult]",

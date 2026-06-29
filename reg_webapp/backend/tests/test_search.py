@@ -443,7 +443,7 @@ def test_narrow_variable_leaf_columns_treats_none_as_concrete_column():
     assert kept[0].delivery_column_names == ("Kon",)
 
 
-def test_filtered_variable_search_passes_delivery_scope_before_pagination(
+def test_filtered_variable_search_passes_delivery_scope_into_bounded_query(
     client, monkeypatch
 ):
     index = CatalogIndex(
@@ -493,10 +493,41 @@ def test_filtered_variable_search_passes_delivery_scope_before_pagination(
     body = client.get("/api/search?q=needle&type=variable&limit=1").json()
     group = _group(body, "variables")
 
-    assert calls == [None]
+    assert calls == [1]
     assert group["total_count"] == 1
     assert [r["name"] for r in group["results"]] == ["needle variable"]
     assert group["results"][0]["delivery_column_names"] == ["Kon"]
+
+
+def test_value_search_passes_bounded_code_owner_limit(client, monkeypatch):
+    calls: list[int | None] = []
+
+    def fake_search(
+        _conn,
+        query,
+        *,
+        field,
+        type,
+        limit=50,
+        fold_groups=True,
+        code_variable_owner_limit=None,
+    ):
+        assert query == "needle"
+        assert field == "value"
+        assert type == "value"
+        assert limit == 1
+        assert not fold_groups
+        calls.append(code_variable_owner_limit)
+        return SearchResults(total_count=1, results=(_code("1", variable_count=250),))
+
+    monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
+
+    body = client.get("/api/search?q=needle&type=value&limit=1").json()
+    group = _group(body, "codes")
+
+    assert calls == [search_route._CODE_VARIABLE_OWNER_LIMIT]
+    assert group["total_count"] == 1
+    assert group["results"][0]["variable_count"] == 250
 
 
 def _code(code: str, *, classification_count: int = 0, variable_count: int = 0):
