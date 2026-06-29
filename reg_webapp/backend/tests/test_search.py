@@ -261,6 +261,13 @@ def test_code_hit_carries_code_system(client):
     assert hit["code_system"] == "SUN2020"
 
 
+def test_c12_code_hit_uses_icd_code_system(client):
+    g = _group(client.get("/api/search", params={"q": "C12"}).json(), "codes")
+    hit = next(r for r in g["results"] if r["label"] == "Malign tumör i tungbas")
+    assert hit["code_system"] == "ICD-10-SE"
+    assert [c["fqid"] for c in hit["classifications"]] == ["class/icd-10-se"]
+
+
 def test_register_local_code_has_null_code_system(client):
     # A code with NO owning classification (the kvinna_only value, seeded as a
     # register-local value with no classification owner) has code_system == null.
@@ -275,12 +282,12 @@ def test_register_local_code_has_null_code_system(client):
 
 
 def test_code_shaped_query_surfaces_owning_classification(client):
-    # 'C12' is a code-shaped query (digit + len>=3) owned by the sun2020
-    # classification (seeded in conftest), matching no classification NAME. The
-    # classifications group must surface sun2020 via code-containment, navigable.
+    # 'C12' is a code-shaped query (digit + len>=3) owned by ICD-10-SE
+    # (seeded in conftest), matching no classification NAME. The classifications
+    # group must surface ICD-10-SE via code-containment, navigable.
     g = _group(client.get("/api/search", params={"q": "C12"}).json(), "classifications")
     fqids = [r["fqid"] for r in g["results"] if r["type"] == "classification"]
-    assert "class/sun2020" in fqids
+    assert "class/icd-10-se" in fqids
     assert g["total_count"] >= 1
 
 

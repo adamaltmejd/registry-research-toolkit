@@ -198,13 +198,13 @@ describe("SearchView — typed result groups (#379)", () => {
               variable_count: 0,
               classifications: [
                 {
-                  fqid: "class/sun2020",
-                  short_name: "SUN2020",
-                  name: "Svensk utbildningsnomenklatur",
+                  fqid: "class/icd-10-se",
+                  short_name: "ICD-10-SE",
+                  name: "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version",
                 },
               ],
               classification_count: 1,
-              code_system: "SUN2020",
+              code_system: "ICD-10-SE",
             },
           ],
         },
@@ -216,8 +216,8 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("C12")).toBeVisible();
     await expect.element(page.getByText("Code system")).toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: "SUN2020" }))
-      .toHaveAttribute("href", "/catalog/class/sun2020");
+      .element(page.getByRole("link", { name: "ICD-10-SE" }))
+      .toHaveAttribute("href", "/catalog/class/icd-10-se");
   });
 
   it("shows delivery column names and operational definitions on variable hits", async () => {
