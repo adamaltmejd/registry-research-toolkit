@@ -181,6 +181,57 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
   });
 
+  it("renders concept groups directly in top results", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "näringsgren",
+      groups: [
+        {
+          group: "top_results",
+          total_count: 1,
+          results: [
+            {
+              type: "group",
+              kind: "variable",
+              group_key: "naringsgren",
+              group_label: "Näringsgren",
+              source: "edge",
+              register: "Labour Cost Survey (LCS)",
+              member_count: 2,
+              matched_count: 2,
+              label_matched: true,
+              members: [
+                {
+                  fqid: "scb/lcs/naringsgren",
+                  name: "Näringsgren",
+                  facets: [],
+                  delivery_column: null,
+                },
+                {
+                  fqid: "scb/lcs/sni",
+                  name: "Näringsgren",
+                  facets: [],
+                  delivery_column: null,
+                },
+              ],
+              rank: 0,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("näringsgren");
+    await render(SearchView);
+
+    const row = document.querySelector<HTMLAnchorElement>(
+      ".search-view .top-results .group-result-row[href='/catalog/group/scb/lcs/naringsgren']",
+    );
+    expect(row).not.toBeNull();
+    expect(row?.textContent).toContain("Group:");
+    expect(row?.textContent).toContain("Näringsgren");
+    expect(row?.textContent).toContain("Labour Cost Survey (LCS)");
+  });
+
   it("shows code-system context on code hits in top results", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
@@ -566,11 +617,15 @@ describe("SearchView — typed result groups (#379)", () => {
     const disclosureIcon = document.querySelector<HTMLElement>(
       ".search-view details.code-row .disclosure-icon",
     );
+    const firstOwnerRow = document.querySelector<HTMLElement>(
+      ".search-view details.code-row .owner-row",
+    );
     const firstOwnerText = document.querySelector<HTMLElement>(
       ".search-view details.code-row .owner-row .owner-name",
     );
     expect(codeCells).not.toBeNull();
     expect(disclosureIcon).not.toBeNull();
+    expect(firstOwnerRow).not.toBeNull();
     expect(firstOwnerText).not.toBeNull();
     const codeRect = codeCells?.getBoundingClientRect();
     const iconRect = disclosureIcon?.getBoundingClientRect();
@@ -588,6 +643,9 @@ describe("SearchView — typed result groups (#379)", () => {
     expect(Math.round(ownerRect?.left ?? 0)).toBeGreaterThan(
       Math.round(codeRect?.left ?? 0),
     );
+    if (firstOwnerRow) {
+      expect(getComputedStyle(firstOwnerRow).borderLeftWidth).toBe("3px");
+    }
   });
 
   it("makes an expanded owner-row link keyboard-focusable (#808 a11y)", async () => {

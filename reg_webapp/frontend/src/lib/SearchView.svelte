@@ -1099,6 +1099,7 @@ function closeSearch(): void {
 <style>
   .search-view {
     --search-row-inline: calc(var(--space-4) + var(--space-1));
+    --search-subrow-gutter: 3px;
   }
   .search-heading {
     display: flex;
@@ -1376,14 +1377,14 @@ function closeSearch(): void {
   .owner-row {
     display: flex;
     align-items: baseline;
+    box-sizing: border-box;
     color: inherit;
     text-decoration: none;
     overflow-wrap: anywhere;
     padding: var(--search-row-block) var(--code-row-inline) var(--search-row-block)
-      var(--code-owner-start);
+      calc(var(--code-owner-start) - var(--search-subrow-gutter));
+    border-left: var(--search-subrow-gutter) solid var(--border-strong);
     border-bottom: 1px solid var(--border);
-    box-shadow: inset 2px 0 0
-      color-mix(in srgb, var(--border-strong) 70%, transparent);
   }
   .owner-row > * {
     min-width: 0;
