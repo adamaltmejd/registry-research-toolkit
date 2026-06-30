@@ -82,6 +82,9 @@ recommend new work, but it must not edit project code as part of the work itself
      `plan_sequence.py --lane` after invalidating the ranked lanes.
 5. Merge ready PRs, if any pass the automerge gate below.
 6. Decide whether new pipelines should start:
+   - If a merge or lane-affecting issue edit changed during the tick, rerun and follow
+     the `issue-pulse` lane-staleness path before recommending work; do not rely only on
+     `plan_sequence.py --lane` after invalidating ranked lanes.
    - Re-run `uv run --no-project python scripts/plan_sequence.py --lane` immediately
      before the final recommendation if any PR claim, merge, or issue edit changed
      during the tick.
@@ -153,7 +156,7 @@ evidence.
 
 If the merge creates a required build/release boundary, such as DB content that must be
 published before dependent work can proceed, the chief of staff is authorized to invoke
-the release workflow as `/release minor`. Let the release skill resolve package scope
+the release workflow as `$release minor`. Let the release skill resolve package scope
 and run its own gates; stop if it requests input or if the required bump is not a minor
 release.
 

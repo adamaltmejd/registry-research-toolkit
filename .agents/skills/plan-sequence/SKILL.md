@@ -59,7 +59,8 @@ conflicts.
 ## Interpretation
 
 - Ready: no open blocker, no `parked` label, and no open linked PR.
-- Running: an open PR closes the issue.
+- Running: an open PR claims the issue with a closing keyword; the script uses GitHub's
+  native closing references plus a PR-body fallback for stacked PRs.
 - Parked: `parked` label; excluded from the lane floor without requiring a synthetic
   blocker.
 - Blocked: `blocked` label or open `Depends on` / `Blocked by` target.

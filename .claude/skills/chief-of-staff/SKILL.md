@@ -50,8 +50,10 @@ new work, but it must not edit project code as part of the work itself.
    `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
    not rely only on `plan_sequence.py --lane` after invalidating the ranked lanes.
 5. Merge ready PRs only through the automerge gate below.
-6. Re-run the live lane floor if any merge or issue edit changed the projection, then
-   recommend the next safe `/pr-pipeline issue ...` command or say to wait.
+6. If a merge or lane-affecting issue edit changed during the tick, rerun and follow the
+   `/issue-pulse` lane-staleness path before recommending work; do not rely only on
+   `plan_sequence.py --lane` after invalidating ranked lanes. Then re-run the live lane
+   floor and recommend the next safe `/pr-pipeline issue ...` command or say to wait.
 
 ## Automerge
 

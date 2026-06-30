@@ -223,6 +223,31 @@ def splice_block(body: str, block: str, start: str = START, end: str = END) -> s
 # --- data ----------------------------------------------------------------------------
 
 
+CLOSING_CLAUSE_RE = re.compile(
+    r"(?im)\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s*:?\s+"
+    r"("
+    r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+"
+    r"(?:\s*(?:,|and)\s*(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+)*"
+    r")"
+)
+ISSUE_REF_RE = re.compile(r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#(\d+)")
+
+
+def closing_issue_numbers_from_body(body: str | None) -> set[int]:
+    """Issue numbers named by closing-keyword clauses in a PR body.
+
+    GitHub's `closingIssuesReferences` only covers PRs whose base can close the issue.
+    Stacked successor PRs often target a predecessor branch, but their draft still needs
+    to hold the issue out of dispatch. Parse the body as a fallback for those claims.
+    """
+    found: set[int] = set()
+    for clause in CLOSING_CLAUSE_RE.finditer(body or ""):
+        found.update(
+            int(match.group(1)) for match in ISSUE_REF_RE.finditer(clause.group(1))
+        )
+    return found
+
+
 def epic_body(epic: int) -> str:
     """The epic issue's body, or '' if unset — the read every body-edit path starts from."""
     return gh_json(["issue", "view", str(epic), "--json", "body"])["body"] or ""
@@ -230,11 +255,13 @@ def epic_body(epic: int) -> str:
 
 def fetch_open_prs_by_issue() -> dict[int, list[int]]:
     prs = gh_json(["pr", "list", "--state", "open", "--limit", str(FETCH_CAP),
-                   "--json", "number,closingIssuesReferences"])  # fmt: skip
+                   "--json", "number,body,closingIssuesReferences"])  # fmt: skip
     by_issue: dict[int, list[int]] = {}
     for pr in prs:
-        for ref in pr.get("closingIssuesReferences") or []:
-            by_issue.setdefault(ref["number"], []).append(pr["number"])
+        numbers = {ref["number"] for ref in pr.get("closingIssuesReferences") or []}
+        numbers.update(closing_issue_numbers_from_body(pr.get("body")))
+        for number in sorted(numbers):
+            by_issue.setdefault(number, []).append(pr["number"])
     return by_issue
 
 

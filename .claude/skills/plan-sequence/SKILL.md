@@ -20,8 +20,9 @@ hygiene validator. Read-only by default.
 ## What it computes
 
 - **ready** — no open blocker, no open linked PR.
-- **running** — an open PR closes it (`Closes #N` in the PR body →
-  `closingIssuesReferences`).
+- **running** — an open PR claims it with `Closes #N` in the PR body; the script uses
+  GitHub's `closingIssuesReferences` plus a body-parser fallback for stacked PRs whose
+  base branch cannot close the issue yet.
 - **blocked** — a `blocked` label, or an open `Depends on`/`Blocked by` target (issue
   *or* PR).
 - **parallel-safe** — among ready issues, file-overlap of their `touches` globs is a

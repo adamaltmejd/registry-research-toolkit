@@ -313,17 +313,18 @@ scope changes, new priorities without evidence, unparking deferred work without 
 explicit resume signal, partial/disputed closure, new issue creation, deleting
 substantive prose, or contradictions between labels, body, comments, and live PR state.
 If maintenance changes lane-affecting state such as `priority:*`, `touches`,
-`Relationships`, `blocked`, or `parked`, rerun the issue-pulse lane-staleness path
-before recommending work. It must run only from the canonical main checkout
-`/Users/adam/Code/registry-research-toolkit`, never from a worktree. Its startup gate
-is: verify the exact repo top-level, `test -d .git`, and branch `main`; run
-`git pull --ff-only` as the first sync action; re-verify the main checkout; and stop if
-`git status --short` is not empty. If any gate fails, report the condition and ask the
-user to fix it before relaunching. Actual implementation work always happens in separate
-worktrees; chief-of-staff coordinates issues/PRs and merges ready gated PRs from the
-main checkout. When a merge creates a required build/release boundary, such as DB
-content that dependent work needs published, chief-of-staff may invoke `/release minor`
-and then must follow the release workflow gates.
+`Relationships`, `blocked`, or `parked`, or if a merge changes the ready/running sets,
+rerun the issue-pulse lane-staleness path before recommending work. It must run only
+from the canonical main checkout `/Users/adam/Code/registry-research-toolkit`, never
+from a worktree. Its startup gate is: verify the exact repo top-level, `test -d .git`,
+and branch `main`; run `git pull --ff-only` as the first sync action; re-verify the main
+checkout; and stop if `git status --short` is not empty. If any gate fails, report the
+condition and ask the user to fix it before relaunching. Actual implementation work
+always happens in separate worktrees; chief-of-staff coordinates issues/PRs and merges
+ready gated PRs from the main checkout. When a merge creates a required build/release
+boundary, such as DB content that dependent work needs published, chief-of-staff may
+invoke `/release minor` (`$release minor` on Codex surfaces) and then must follow the
+release workflow gates.
 
 # Git
 

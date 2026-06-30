@@ -55,6 +55,48 @@ def _rec(
     return rec
 
 
+# --- PR claims -----------------------------------------------------------------------
+
+
+def test_closing_issue_numbers_from_body_parses_closing_clauses() -> None:
+    body = """
+    Implements the stacked successor.
+
+    Closes #101, owner/repo#102
+    Resolves: #104 and owner/repo#105
+    Related to #999
+    Fixes #103
+    """
+    assert ps.closing_issue_numbers_from_body(body) == {101, 102, 103, 104, 105}
+
+
+def test_closing_issue_numbers_from_body_ignores_non_closing_refs() -> None:
+    body = """
+    Fixes parser wording; see #952
+    Closes #101; related to #328
+    Resolves this follow-up; see owner/repo#102
+    """
+    assert ps.closing_issue_numbers_from_body(body) == {101}
+
+
+def test_fetch_open_prs_by_issue_uses_body_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_gh_json(args: list[str]):
+        assert args[-1] == "number,body,closingIssuesReferences"
+        return [
+            {
+                "number": 7,
+                "closingIssuesReferences": [{"number": 101}],
+                "body": "Closes #102",
+            }
+        ]
+
+    monkeypatch.setattr(ps, "gh_json", fake_gh_json)
+
+    assert ps.fetch_open_prs_by_issue() == {101: [7], 102: [7]}
+
+
 # --- classify ------------------------------------------------------------------------
 
 

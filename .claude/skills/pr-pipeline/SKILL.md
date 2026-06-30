@@ -135,7 +135,9 @@ work, or the predecessor branch name for a stacked successor. Run
 `gh pr create --draft --base "$base_ref" --body-file <file>` whose body carries
 `Closes #<each issue this PR resolves>`. For stacked successors, passing `--base` is
 mandatory; otherwise `gh` defaults the child PR to `main` and pulls the predecessor diff
-into the successor PR. This marks the issue(s) **in-flight** (`running` in the
+into the successor PR. Keep the closing keyword in the body; `plan_sequence.py` parses
+PR bodies as a fallback because GitHub may not populate `closingIssuesReferences` for
+non-default-base stacked PRs. This marks the issue(s) **in-flight** (`running` in the
 sequencing projection) immediately, so a concurrent dispatch skips them and anything
 touching their files — it's how lanes stay non-colliding without a separate claim. Draft
 also holds bot review until you start it (Step B → "When to mark the PR ready"), and an
@@ -143,8 +145,8 @@ inline `--body` heredoc can trip the permission classifier, so use `--body-file`
 dependent successors, early draft creation is only a claim; before implementing or
 testing the successor, first update the predecessor branch with its real contract
 commits, then rebase or merge the successor branch onto that finalized predecessor
-branch and push the new successor head. Then dispatch the implementer(s) with the scope +
-the FAST Verify only (lint / format / `ty` / `pytest`); the real
+branch and push the new successor head. After that, dispatch the implementer(s) with the
+scope + the FAST Verify only (lint / format / `ty` / `pytest`); the real
 `reg-meta-build build-db` is NOT in their loop — it's your \~20-min merge-gate check
 (Step E). For a **frontend PR**, rendering is part of the loop too — cheap, unlike
 `build-db`: the implementer renders its change with the one-shot driver,
