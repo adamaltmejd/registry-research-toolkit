@@ -438,6 +438,7 @@ def search(
     offset: int = 0,
     fold_groups: bool = True,
     code_variable_owner_limit: int | None = _CODE_OWNERS_PER_HIT,
+    code_owner_scope: str = "all",
 ) -> SearchResults:
     """Search across registers, variables, and classifications.
 
@@ -494,6 +495,12 @@ def search(
     owners stay bounded to preserve code-system identity without sending large
     repeated owner lists.
 
+    ``code_owner_scope`` narrows the value/code surface to ``"classification"``
+    (codes owned by at least one classification), ``"register_local"`` (codes
+    owned by variables but no classification), or ``"all"``. It is ignored by
+    non-value surfaces. Filtering happens before pagination so split callers get
+    independent pages and counts.
+
     ``limit=None`` returns the full result set after ``offset``. Returns a
     `SearchResults` (`total_count` + the sliced, folded `results` tuple of typed
     result models, discriminated on `type`). Doc results are NOT included here —
@@ -514,6 +521,17 @@ def search(
             error_class="usage",
             message=f"Invalid search type '{type}'. Valid: {sorted(SEARCH_TYPES)}",
             remediation="Use --type register, variable, classification, value, or all.",
+        )
+    if code_owner_scope not in {"all", "classification", "register_local"}:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message=(
+                f"Invalid code owner scope '{code_owner_scope}'. "
+                "Valid: ['all', 'classification', 'register_local']"
+            ),
+            remediation="Use all, classification, or register_local.",
         )
 
     reg_ids: set[int] | None = None
@@ -596,7 +614,14 @@ def search(
     # the FULL in-scope match set (like the other arms); the outer offset/limit
     # slice below is what paginates, so total_count is the true count.
     if field in ("value", "all") and type in ("value", "all"):
-        all_results.extend(_search_values_fts(conn, query, reg_ids))
+        all_results.extend(
+            _search_values_fts(
+                conn,
+                query,
+                reg_ids,
+                code_owner_scope=code_owner_scope,
+            )
+        )
 
     if type == "register":
         all_results = [r for r in all_results if r["type"] in _REGISTER_TYPES]
@@ -1252,7 +1277,11 @@ def _code_owner_annotations_batch(
 
 
 def _search_values_fts(
-    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
+    conn: sqlite3.Connection,
+    query: str,
+    reg_ids: set[int] | None,
+    *,
+    code_owner_scope: str = "all",
 ) -> list[dict[str, Any]]:
     """Code/value search over `value_code_fts` (#352).
 
@@ -1289,6 +1318,30 @@ def _search_values_fts(
     exact/prefix hits are seeded ABOVE all label hits (rank below the FTS floor),
     since an exact code match is the strongest signal a code query can get."""
     fts_query = _fts_match_query(query)
+    owner_filter = ""
+    if code_owner_scope == "classification":
+        owner_filter = (
+            " AND EXISTS ("
+            "SELECT 1 FROM classification_code cc WHERE cc.code_id = vc.code_id"
+            ")"
+        )
+    elif code_owner_scope == "register_local":
+        owner_filter = (
+            " AND vc.mapping_count > 0 "
+            "AND NOT EXISTS ("
+            "SELECT 1 FROM classification_code cc WHERE cc.code_id = vc.code_id"
+            ")"
+        )
+    owner_order = (
+        "CASE "
+        "  WHEN EXISTS ("
+        "    SELECT 1 FROM classification_code cc WHERE cc.code_id = vc.code_id"
+        "  ) THEN 0 "
+        "  ELSE 1 "
+        "END, "
+        if code_owner_scope == "all"
+        else ""
+    )
 
     # code_id → (code, label, mapping_count, base_rank). base_rank is the sort key
     # (smaller first). Dedup by code_id so a code matched both by label-FTS and by
@@ -1315,7 +1368,7 @@ def _search_values_fts(
             "bm25(value_code_fts) AS rank "
             "FROM value_code_fts "
             "JOIN value_code vc ON vc.code_id = value_code_fts.rowid "
-            "WHERE value_code_fts MATCH ?",
+            f"WHERE value_code_fts MATCH ?{owner_filter}",
             (fts_query,),
         ).fetchall()
         for r in label_rows:
@@ -1333,23 +1386,19 @@ def _search_values_fts(
         # FROM, not classification_code.code_id inside the subquery.
         code_rows = conn.execute(
             "SELECT code_id, code, label, mapping_count "
-            "FROM value_code "
+            "FROM value_code vc "
             "WHERE (code = ? COLLATE NOCASE OR code LIKE ? ESCAPE '\\') "
             "AND (mapping_count > 0 OR EXISTS ("
-            "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id)) "
-            "ORDER BY "
-            "CASE "
-            "  WHEN EXISTS ("
-            "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id"
-            "  ) THEN 0 "
-            "  ELSE 1 "
-            "END, length(code), code, code_id",
-            (q, f"{_escape_like(q)}%"),
+            "    SELECT 1 FROM classification_code cc WHERE cc.code_id = vc.code_id)) "
+            f"{owner_filter} "
+            f"ORDER BY {owner_order}"
+            "(code = ? COLLATE NOCASE) DESC, length(code), code, code_id",
+            (q, f"{_escape_like(q)}%", q),
         ).fetchall()
         # Code matches are the strongest signal a code query gives — seed them
         # below the FTS rank floor (a large negative offset) so an exact "F32"
-        # outranks any label-text hit; the SQL order keeps classification-owned
-        # code hits ahead of register-local code hits. (In
+        # outranks any label-text hit. Scoped callers split classification-owned
+        # and register-local codes before this page is ranked/paginated. (In
         # the flat `type="all"` path this also puts code-exact hits ahead of other
         # result types for a code-shaped query — the user typed a code; the webapp
         # calls search() per-type, so its groups are unaffected.)

@@ -30,8 +30,8 @@ from reg_webapp.app import create_app
 from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.golden import _Pin, apply_golden_boost
 from reg_webapp.models import (
-    CodeSearchGroup,
     RegisterSearchGroup,
+    RegisterValueSetSearchGroup,
     VariableSearchGroup,
 )
 from reg_webapp.routes import search as search_route
@@ -82,7 +82,8 @@ def test_response_has_typed_groups(client):
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     }
     # Every group carries its own total_count + results list (the extensible
     # per-group envelope docs will reuse).
@@ -102,10 +103,13 @@ def test_type_register_returns_only_registers_group(client):
     assert "scb/lisa" in [r["fqid"] for r in g["results"]]
 
 
-def test_type_value_returns_only_codes_group(client):
+def test_type_value_returns_only_value_groups(client):
     body = client.get("/api/search", params={"q": "Man", "type": "value"}).json()
-    assert [g["group"] for g in body["groups"]] == ["codes"]
-    g = _group(body, "codes")
+    assert [g["group"] for g in body["groups"]] == [
+        "classification_codes",
+        "register_value_sets",
+    ]
+    g = _group(body, "classification_codes")
     assert any(r["label"] == "Man" for r in g["results"])
 
 
@@ -135,7 +139,8 @@ def test_default_type_is_all_four_groups(client):
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     ]
 
 
@@ -146,16 +151,21 @@ def test_type_all_explicit_matches_default(client):
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     ]
 
 
 def test_scoped_empty_query_returns_only_selected_empty_group(client):
-    # The empty-query short-circuit honors ?type= too — one empty group, not four.
+    # The empty-query short-circuit honors ?type= too — only the value groups,
+    # not the non-value groups.
     body = client.get("/api/search", params={"q": "", "type": "value"}).json()
-    assert [g["group"] for g in body["groups"]] == ["codes"]
-    assert body["groups"][0]["total_count"] == 0
-    assert body["groups"][0]["results"] == []
+    assert [g["group"] for g in body["groups"]] == [
+        "classification_codes",
+        "register_value_sets",
+    ]
+    assert all(g["total_count"] == 0 for g in body["groups"])
+    assert all(g["results"] == [] for g in body["groups"])
 
 
 def test_scoped_empty_query_non_value_scope(client):
@@ -214,20 +224,25 @@ def test_lone_old_edition_leaf_carries_terminal_fqid(client):
     assert hit["terminal_fqid"] == "class/sun2020"
 
 
-# ── codes group (#352) ───────────────────────────────────────────────────────
+# ── value/code groups (#352) ─────────────────────────────────────────────────
 
 
-def test_codes_group_always_present(client):
+def test_value_groups_always_present(client):
     # Present even when nothing matches (keep all groups in the envelope).
-    g = _group(client.get("/api/search", params={"q": "zzqq"}).json(), "codes")
-    assert g["total_count"] == 0
-    assert g["results"] == []
+    body = client.get("/api/search", params={"q": "zzqq"}).json()
+    for name in ("classification_codes", "register_value_sets"):
+        g = _group(body, name)
+        assert g["total_count"] == 0
+        assert g["results"] == []
 
 
 def test_code_label_hit_carries_owning_variable(client):
     # "Man" is a value label on the kon binding's value set (seeded in conftest)
     # → a code hit annotated with its owning variable.
-    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Man"}).json(),
+        "classification_codes",
+    )
     hit = next(r for r in g["results"] if r["label"] == "Man")
     assert hit["type"] == "code"
     assert hit["code"] == "1"
@@ -240,7 +255,10 @@ def test_code_label_hit_carries_owning_variable(client):
 def test_code_hit_carries_owning_classification(client):
     # The "Man" code is also linked to the sun2020 classification (seeded in
     # conftest) → the hit carries a non-empty classification owner + count.
-    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Man"}).json(),
+        "classification_codes",
+    )
     hit = next(r for r in g["results"] if r["label"] == "Man")
     assert hit["classification_count"] >= 1
     owner = next(c for c in hit["classifications"] if c["fqid"] == "class/sun2020")
@@ -252,20 +270,27 @@ def test_code_shaped_query_well_formed(client):
     # path. The fixture has no "0180" code, so this asserts the group stays
     # well-formed (no 500); the code-match resolution itself is covered by the
     # reg_meta query-layer unit test.
-    g = _group(client.get("/api/search", params={"q": "0180"}).json(), "codes")
-    assert isinstance(g["results"], list)
+    body = client.get("/api/search", params={"q": "0180"}).json()
+    assert isinstance(_group(body, "classification_codes")["results"], list)
+    assert isinstance(_group(body, "register_value_sets")["results"], list)
 
 
 def test_code_hit_carries_code_system(client):
     # The "Man" code is owned by the sun2020 classification (short_name SUN2020),
     # so its inferred `code_system` is that short_name (#393 item 3).
-    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Man"}).json(),
+        "classification_codes",
+    )
     hit = next(r for r in g["results"] if r["label"] == "Man")
     assert hit["code_system"] == "SUN2020"
 
 
 def test_c12_code_hit_uses_icd_code_system(client):
-    g = _group(client.get("/api/search", params={"q": "C12"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "C12"}).json(),
+        "classification_codes",
+    )
     hit = next(r for r in g["results"] if r["label"] == "Malign tumör i tungbas")
     assert hit["code_system"] == "ICD-10-SE"
     assert [c["fqid"] for c in hit["classifications"]] == ["class/icd-10-se"]
@@ -274,7 +299,10 @@ def test_c12_code_hit_uses_icd_code_system(client):
 def test_register_local_code_has_null_code_system(client):
     # A code with NO owning classification (the kvinna_only value, seeded as a
     # register-local value with no classification owner) has code_system == null.
-    g = _group(client.get("/api/search", params={"q": "Kvinna"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Kvinna"}).json(),
+        "register_value_sets",
+    )
     hit = next(
         r for r in g["results"] if r["label"] == "Kvinna" and not r["classifications"]
     )
@@ -350,7 +378,8 @@ def test_empty_query_returns_empty_groups(client):
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     }
     assert all(g["total_count"] == 0 and g["results"] == [] for g in body["groups"])
 
@@ -531,7 +560,7 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
             raise AssertionError("value search must not build delivery-column scope")
 
     client.app.state.catalog_index = ExplodingIndex()
-    calls: list[int | None] = []
+    calls: list[tuple[int | None, str]] = []
 
     def fake_search(
         _conn,
@@ -542,21 +571,26 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
         limit=50,
         fold_groups=True,
         code_variable_owner_limit=None,
+        code_owner_scope="all",
     ):
         assert query == "needle"
         assert field == "value"
         assert type == "value"
         assert limit == 1
         assert not fold_groups
-        calls.append(code_variable_owner_limit)
-        return SearchResults(total_count=1, results=(_code("1", variable_count=250),))
+        calls.append((code_variable_owner_limit, code_owner_scope))
+        if code_owner_scope == "register_local":
+            return SearchResults(
+                total_count=1, results=(_code("1", variable_count=250),)
+            )
+        return SearchResults(total_count=0, results=())
 
     monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
 
     body = client.get("/api/search?q=needle&type=value&limit=1").json()
-    group = _group(body, "codes")
+    group = _group(body, "register_value_sets")
 
-    assert calls == [None]
+    assert calls == [(None, "classification"), (None, "register_local")]
     assert group["total_count"] == 1
     assert group["results"][0]["variable_count"] == 250
 
@@ -700,7 +734,7 @@ def test_top_results_type_priors_break_non_exact_ties():
     top = _best_bets(
         "arbetsmarknad",
         [
-            CodeSearchGroup(total_count=1, results=[code]),
+            RegisterValueSetSearchGroup(total_count=1, results=[code]),
             VariableSearchGroup(total_count=1, results=[variable]),
             RegisterSearchGroup(total_count=1, results=[register]),
         ],

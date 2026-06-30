@@ -26,9 +26,10 @@ from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 from reg_webapp import golden
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
+    ClassificationCodeSearchGroup,
     ClassificationSearchGroup,
-    CodeSearchGroup,
     RegisterSearchGroup,
+    RegisterValueSetSearchGroup,
     SearchGroup,
     SearchResponse,
     TopSearchGroup,
@@ -446,16 +447,18 @@ def get_search(
     codes/values (#352) over the shipped FTS indexes. Each typed group is an
     independent reg_meta `search()` call (register/variable/classification via the
     FTS `field="description"` path; codes via the `field="value"` path) so each
-    carries its own `total_count` and per-group `limit`. The all-scope response
-    prepends a `top_results` best-bets group built from those same typed rows when
-    multiple candidates compete (#393 items 6/7); scoped responses emit only the
-    requested typed group. A query with no usable token returns the selected group(s)
+    carries its own `total_count` and per-group `limit`; the value surface is split
+    into classification codes and register-local value sets so each gets its own
+    page. The all-scope response prepends a `top_results` best-bets group built
+    from those same typed rows when multiple candidates compete (#393 items 6/7);
+    scoped responses emit only the requested typed surface (`type=value` emits the
+    two value groups). A query with no usable token returns the selected group(s)
     empty (total 0) — not a 422.
 
     ``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the
-    optional top-results→register→variable→classification→code behavior; any single
-    type runs AND emits only that one typed group. Group ORDER is fixed for the
-    ``all`` case.
+    optional top-results→register→variable→classification→value behavior; any
+    single type runs AND emits only that typed surface. Group ORDER is fixed for
+    the ``all`` case.
 
     A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
     REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
@@ -481,9 +484,9 @@ def get_search(
         else None
     )
 
-    # Typed groups are appended in the fixed register→variable→classification→code
+    # Typed groups are appended in the fixed register→variable→classification→value
     # order. The all-scope top-results group is prepended after these typed groups
-    # are prepared; a single-type scope emits just its one typed group.
+    # are prepared; `type=value` emits the two value groups.
     groups: list[SearchGroup] = []
 
     # The empty-query / no-usable-token short-circuit: same group selection as the
@@ -496,7 +499,8 @@ def get_search(
         if want_classification:
             groups.append(ClassificationSearchGroup(total_count=0, results=[]))
         if want_value:
-            groups.append(CodeSearchGroup(total_count=0, results=[]))
+            groups.append(ClassificationCodeSearchGroup(total_count=0, results=[]))
+            groups.append(RegisterValueSetSearchGroup(total_count=0, results=[]))
         return SearchResponse(query=q, groups=groups)
 
     with catalog_conn(request) as conn:
@@ -613,10 +617,9 @@ def get_search(
             # code-shape exact/prefix match, NOT the FTS description path. reg_meta
             # ranks (bm25 + rarity downweight) and annotates each hit with its
             # owning variables/classifications. Codes don't fold into concept
-            # groups. Golden-boost runs first (a no-op here — no `value` pins are
-            # supported, see reg_webapp.golden), THEN `_rank_codes` re-sorts the
-            # page so classification-backed codes lead (#393 item 2).
-            codes = reg_meta_search(
+            # groups. Split classification-owned codes from register-local value
+            # sets before pagination so neither bucket starves the other.
+            classification_codes = reg_meta_search(
                 conn,
                 q,
                 field="value",
@@ -624,20 +627,48 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
                 code_variable_owner_limit=None,
+                code_owner_scope="classification",
             )
-            boosted_codes = cast(
+            boosted_classification_codes = cast(
                 "list[CodeSearchResult]",
-                golden.apply_golden_boost(conn, q, "value", codes.results),
+                golden.apply_golden_boost(
+                    conn, q, "value", classification_codes.results
+                ),
             )
-            # Rank the FULL boosted set first (so a high-ranking net-new pin can lead),
-            # THEN cap the displayed page at `limit`; total_count still counts the full
-            # boosted set (incl. net-new) so the cap doesn't hide the true match volume.
-            code_results = _rank_codes(boosted_codes)[:limit]
+            classification_code_results = _rank_codes(boosted_classification_codes)[
+                :limit
+            ]
             groups.append(
-                CodeSearchGroup(
-                    total_count=codes.total_count
-                    + (len(boosted_codes) - len(codes.results)),
-                    results=code_results,
+                ClassificationCodeSearchGroup(
+                    total_count=classification_codes.total_count
+                    + (
+                        len(boosted_classification_codes)
+                        - len(classification_codes.results)
+                    ),
+                    results=classification_code_results,
+                )
+            )
+
+            register_values = reg_meta_search(
+                conn,
+                q,
+                field="value",
+                type="value",
+                limit=limit,
+                fold_groups=False,
+                code_variable_owner_limit=None,
+                code_owner_scope="register_local",
+            )
+            boosted_register_values = cast(
+                "list[CodeSearchResult]",
+                golden.apply_golden_boost(conn, q, "value", register_values.results),
+            )
+            register_value_results = _rank_codes(boosted_register_values)[:limit]
+            groups.append(
+                RegisterValueSetSearchGroup(
+                    total_count=register_values.total_count
+                    + (len(boosted_register_values) - len(register_values.results)),
+                    results=register_value_results,
                 )
             )
 

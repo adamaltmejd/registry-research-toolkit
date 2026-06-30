@@ -168,6 +168,57 @@ def test_classification_codes_rank_before_register_local_codes(
     ]
 
 
+def test_code_owner_scope_splits_classification_and_register_local_pages(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_register(conn, 1, "reg")
+    vid = _seed_variable(conn, 1, "10", "Register local code owner", "owner")
+    _seed_code(conn, 1, "E22", "Hyperfunktion av hypofysen")
+    _seed_code(conn, 2, "E22", "Register local exact")
+    _seed_code(conn, 3, "E220", "Register local compact prefix")
+    _seed_code(conn, 4, "E22.0", "ICD child")
+    _map(conn, 2, vid)
+    _map(conn, 3, vid)
+    classification_id = conn.execute(
+        "INSERT INTO classification (short_name, name) VALUES ('ICD-10-SE', 'ICD')"
+    ).lastrowid
+    for code_id in (1, 4):
+        conn.execute(
+            "INSERT INTO classification_code "
+            "(classification_id, code_id, level, is_valid) VALUES (?, ?, NULL, 1)",
+            (classification_id, code_id),
+        )
+    _finalize(conn)
+
+    classification = search(
+        conn,
+        "E22",
+        field="value",
+        type="value",
+        limit=2,
+        code_owner_scope="classification",
+    )
+    register_local = search(
+        conn,
+        "E22",
+        field="value",
+        type="value",
+        limit=2,
+        code_owner_scope="register_local",
+    )
+
+    assert classification.total_count == 2
+    assert [(r.code, r.label) for r in classification.results] == [
+        ("E22", "Hyperfunktion av hypofysen"),
+        ("E22.0", "ICD child"),
+    ]
+    assert register_local.total_count == 2
+    assert [(r.code, r.label) for r in register_local.results] == [
+        ("E22", "Register local exact"),
+        ("E220", "Register local compact prefix"),
+    ]
+
+
 def test_register_scope_drops_out_of_scope_only_owners(
     conn: sqlite3.Connection,
 ) -> None:

@@ -23,8 +23,9 @@ import { router } from "./router.svelte";
 import { Panel } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
-// GET /api/search's top-results group plus the four ordered typed groups
-// (registers / variables / classifications / codes). Every leaf navigates via a plain internal <a> the
+// GET /api/search's top-results group plus the ordered typed groups
+// (registers / variables / classifications / classification codes /
+// register-local value sets). Every leaf navigates via a plain internal <a> the
 // shell's `use:link` intercepts — never `router.navigate` from here.
 //
 // #808 (round 3): the registers / variables / classifications groups render as a
@@ -76,7 +77,7 @@ const TYPE_TOGGLE: ReadonlyArray<{ value: SearchType; label: string }> = [
   { value: "register", label: "Registers" },
   { value: "variable", label: "Variables" },
   { value: "classification", label: "Classifications" },
-  { value: "value", label: "Codes" },
+  { value: "value", label: "Codes / values" },
 ];
 
 /** Route to the current query scoped to `type` (in-place replace — scope is a
@@ -170,8 +171,8 @@ const groups = $derived(results.data?.groups ?? []);
 // GROUP_HEADINGS entry — see the render guard below) must NOT count as a match:
 // its non-empty `results` render nothing, so without this a response carrying ONLY
 // an unknown group would blank the body (neither a group NOR "No matches"). Every
-// group the loop actually renders (registers/variables/classifications/codes) is a
-// GROUP_HEADINGS key, and successions ride INSIDE the classifications group's
+// group the loop actually renders is a GROUP_HEADINGS key, and successions ride
+// INSIDE the classifications group's
 // results (a `classification_succession` row, not a top-level group), so this
 // exclusion can never suppress "No matches" above rendered content.
 const noMatches = $derived(
@@ -190,7 +191,8 @@ const GROUP_HEADINGS = {
   registers: { label: "Registers" },
   variables: { label: "Variables" },
   classifications: { label: "Classifications" },
-  codes: { label: "Codes / values" },
+  classification_codes: { label: "Classification codes" },
+  register_value_sets: { label: "Register-local value sets" },
 } as const;
 
 // Discriminate a variable/classification group's mixed results on `type`.
@@ -421,14 +423,10 @@ function variableDetailParts(v: VariableSearchResult): string[] {
 // `fqid` / `group_key`) so a null/duplicate `fqid` can't collide and crash the
 // render (the #379/#391 each_key_duplicate lesson).
 
-// The codes group, bucketed by code system (#393 item 3). STABLE group-by on
-// `code_system`, preserving FIRST-APPEARANCE order — so the item-2 ranking (which
-// already floats classification-backed/curated codes to the front) decides which
-// systems lead. `null`/empty → a trailing "Register-local" bucket. `label` is the
-// subsection heading; `key` is a stable each-key (the raw code_system, or JS
-// `null` for the register-local bucket — a Map treats `null` as a distinct key
-// that can never collide with any real code_system string). Map iteration is
-// insertion order, so its values come back in first-appearance order directly.
+// Classification codes are bucketed by code system (#393 item 3). STABLE group-by
+// on `code_system`, preserving FIRST-APPEARANCE order. Register-local value sets
+// render in their own top-level group, so they do not need a nested
+// "Register-local" subsection heading.
 const REGISTER_LOCAL_LABEL = "Register-local";
 type CodeSystemBucket = {
   key: string | null;
@@ -694,21 +692,11 @@ function closeSearch(): void {
                 {/if}
               {/each}
             </div>
-          {:else if group.group === "codes"}
+          {:else if group.group === "classification_codes"}
             <!-- Per-code-system buckets (#393 item 3, #808 round 5). The bucket
                  heading NAMES the classification / value-set the codes come from
-                 (the null bucket → "Register-local"), so each code row need NOT
-                 repeat its owner classification. Classification-backed headings
-                 link to their classification page. The codes are already
-                 item-2-ordered (classification-backed first), and
-                 groupCodesBySystem preserves first-appearance order, so curated
-                 systems lead; null/empty code_system folds into the trailing
-                 "Register-local" bucket. Each bucket is a compact, code-FIRST list
-                 — the CODE is highlighted first, followed by the label and, for
-                 multi-variable hits, a MUTED variable-count summary. A code with
-                 multiple variable matches is a native <details> disclosure; a
-                 single variable match is shown as a muted detail line; a code with
-                 no variable matches is a plain Code · Label row. -->
+                 so each code row need NOT repeat its owner classification.
+                 Classification-backed headings link to their classification page. -->
             {#each groupCodesBySystem(codeDisplayResults(renderedResults)) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">
@@ -736,6 +724,16 @@ function closeSearch(): void {
                 </div>
               </div>
             {/each}
+          {:else if group.group === "register_value_sets"}
+            <!-- Register-local value-set codes have no owning classification, so
+                 the top-level group label is enough. Rows keep the same compact
+                 code-FIRST rendering and disclosure behavior as classification
+                 code buckets. -->
+            <div class="children table codes" role="presentation">
+              {#each codeDisplayResults(renderedResults) as result, i (`${result.code}|${i}`)}
+                {@render codeRow(result)}
+              {/each}
+            </div>
           {/if}
           </Panel>
         </div>
@@ -1242,7 +1240,7 @@ function closeSearch(): void {
   }
   .code-system-heading {
     margin: 0;
-    padding: var(--space-2) var(--search-row-inline) var(--space-1);
+    padding: var(--space-2) var(--space-4) var(--space-1);
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     font-size: var(--text-sm);
