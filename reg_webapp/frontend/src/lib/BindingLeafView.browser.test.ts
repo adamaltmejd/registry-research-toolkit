@@ -12,6 +12,7 @@ import {
   getBindingLineageWarnings,
   getCatalogNode,
   getDocsForVariable,
+  getRelatedDocuments,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import { projectStore } from "./project_store.svelte";
@@ -26,8 +27,8 @@ import { router } from "./router.svelte";
 //      (#678) — the leaf's single `/graph` fetch feeds both the HistoryGraph
 //      renderer AND the header qualifier + "member of ⟨group⟩" link.
 //
-// The four catalog GETs the leaf + its sibling panels drive (graph / lineage
-// warnings / docs / the ?period resolve) are stubbed so nothing hits a real fetch;
+// The leaf + sibling-panel GETs (graph / lineage warnings / related docs /
+// mentioned-in-docs / the ?period resolve) are stubbed so nothing hits a real fetch;
 // the panels are independent failure domains, so an empty/rejecting stub never
 // blanks the picker under test.
 vi.mock("./api", async (importOriginal) => {
@@ -38,6 +39,7 @@ vi.mock("./api", async (importOriginal) => {
     getBindingGraph: vi.fn(),
     getBindingLineageWarnings: vi.fn(),
     getDocsForVariable: vi.fn(),
+    getRelatedDocuments: vi.fn(),
   };
 });
 
@@ -172,6 +174,13 @@ beforeEach(() => {
     results: [],
     total_count: 0,
   } as never);
+  vi.mocked(getRelatedDocuments).mockReset();
+  vi.mocked(getRelatedDocuments).mockResolvedValue({
+    kind: "related-documents",
+    ingested: true,
+    register: "lisa",
+    documents: [],
+  });
   // No `?period` — the embedded states drive the plan.
   window.history.pushState({}, "", "/__reset__");
   router.navigate("/catalog/scb/lisa/kon");

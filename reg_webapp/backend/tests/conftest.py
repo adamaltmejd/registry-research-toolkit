@@ -16,6 +16,7 @@ override (``reg_meta.db.default_db_dir``).
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 import sys
@@ -655,6 +656,7 @@ def _build_docs_fixture_db(db_path: Path) -> None:
     FTS index rebuilt and the `schema_version` meta `open_doc_db` gates on."""
     from reg_meta_build.doc_db import DOC_DDL
 
+    related_pdf = b"%PDF-1.4\n% related document fixture\n%%EOF\n"
     conn = sqlite3.connect(db_path)
     try:
         conn.executescript(DOC_DDL)
@@ -694,12 +696,30 @@ def _build_docs_fixture_db(db_path: Path) -> None:
                 ),
             ],
         )
+        conn.execute(
+            "INSERT INTO related_document ("
+            "register, title, filename, source_url, license, fetched, sha256, "
+            "byte_size, content"
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                "lisa",
+                "LISA register documentation",
+                "lisa_related.pdf",
+                "https://www.scb.se/lisa-related",
+                "CC BY 4.0",
+                "2026-06-01",
+                hashlib.sha256(related_pdf).hexdigest(),
+                len(related_pdf),
+                related_pdf,
+            ),
+        )
         conn.execute("INSERT INTO doc_fts(doc_fts) VALUES('rebuild')")
         conn.executemany(
             "INSERT INTO doc_meta(key, value) VALUES (?, ?)",
             [
                 ("schema_version", reg_meta.doc_db.DOC_SCHEMA_VERSION),
                 ("doc_count", "2"),
+                ("related_document_count", "1"),
             ],
         )
         conn.commit()

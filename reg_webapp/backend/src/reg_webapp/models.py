@@ -669,6 +669,33 @@ class SearchResponse(BaseModel):
 # UI never implies a variable is undocumented when it's merely un-ingested.
 
 
+class RelatedDocument(BaseModel):
+    """One rehosted register-version PDF's metadata. The binary BLOB is never
+    included in JSON; callers fetch it through `/api/docs/file/{register}/{filename}`.
+    `source_url` is the SCB source page/file pointer recorded during curation, and
+    `license` carries the per-document reuse basis (usually `CC BY 4.0`)."""
+
+    title: str
+    filename: str
+    source_url: str
+    license: str
+    fetched: str
+    sha256: str
+    byte_size: int
+
+
+class RelatedDocumentsResponse(BaseModel):
+    """`GET /api/docs/related/{register}` — the rehosted related-document PDFs for
+    a register. `ingested` is False when the deployment has no docs DB at all; an
+    empty `documents` list with `ingested=True` means the docs DB exists but this
+    register has no curated related-document rows."""
+
+    kind: Literal["related-documents"] = "related-documents"
+    ingested: bool
+    register_name: str = Field(alias="register")
+    documents: list[RelatedDocument]
+
+
 class DocResult(BaseModel):
     """One documentation hit. `snippet` is a query-context EXCERPT (the FTS5
     snippet), not full text. `source` is the SCB source-document identifier the
