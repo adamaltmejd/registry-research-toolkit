@@ -162,6 +162,27 @@ def test_no_priority_label_ok() -> None:
     assert not _has(items, "ERROR", "priority label")
 
 
+def test_parked_label_ok_without_blocker() -> None:
+    items = _check(labels=("reg_meta", "bug", "parked"))
+    assert not _has(items, "WARN", "blocked")
+    assert not _has(items, "ERROR", "label")
+
+
+def test_open_blocker_with_parked_label_does_not_require_blocked_label() -> None:
+    items = _check(
+        labels=("reg_meta", "bug", "parked"),
+        body="Blocked by #2",
+        known={1, 2},
+        open_numbers={2},
+    )
+    assert not _has(items, "WARN", "no 'blocked' label")
+
+
+def test_blocked_and_parked_labels_warn() -> None:
+    items = _check(labels=("reg_meta", "bug", "blocked", "parked"))
+    assert _has(items, "WARN", "both 'blocked' and 'parked'")
+
+
 def test_dangling_relationship_error() -> None:
     items = _check(labels=("reg_meta", "bug"), body="Depends on #999", known={1})
     assert _has(items, "ERROR", "#999")
@@ -256,7 +277,7 @@ def test_doc_touches_example_parses() -> None:
 
 
 def test_area_and_type_labels_documented() -> None:
-    for label in h.AREA_LABELS | h.TYPE_LABELS | h.PRIORITY_LABELS:
+    for label in h.AREA_LABELS | h.TYPE_LABELS | h.PRIORITY_LABELS | h.STATUS_LABELS:
         assert label in _AGENTS, f"label '{label}' missing from AGENTS.md"
 
 

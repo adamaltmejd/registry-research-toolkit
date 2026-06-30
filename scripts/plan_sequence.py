@@ -2,8 +2,8 @@
 """plan-sequence — generate the sequencing projection for the issue-tracker epic.
 
 Reads the structured open-issue corpus (area labels, `Relationships`, native sub-issues,
-`touches` globs, open PRs) and renders a deterministic **ready / running / blocked /
-parallel + pending-release** view. The render is a MARKED block
+`touches` globs, open PRs) and renders a deterministic **ready / running / parked /
+blocked / parallel + pending-release** view. The render is a MARKED block
 
     <!-- plan-sequence:start --> … <!-- plan-sequence:end -->
 
@@ -104,6 +104,7 @@ class Rec:
     area: str | None
     is_epic: bool
     blocked_label: bool
+    parked_label: bool
     touches: list[str]
     parent: int | None
     open_blockers: list[int]
@@ -129,9 +130,11 @@ def priority_of(labels: set[str]) -> str:
 
 
 def classify(rec: Rec) -> str:
-    """running (has an open linked PR) > blocked (label or open blocker) > ready."""
+    """running (has an open linked PR) > parked > blocked > ready."""
     if rec.open_prs:
         return "running"
+    if rec.parked_label:
+        return "parked"
     if rec.blocked_label or rec.open_blockers:
         return "blocked"
     return "ready"
@@ -251,6 +254,7 @@ def build_records(
             area=next(iter(sorted(labels & AREA_LABELS)), None),
             is_epic="epic" in labels,
             blocked_label="blocked" in labels,
+            parked_label="parked" in labels,
             touches=parse_touches(body),
             parent=parent_of.get(num),
             open_blockers=sorted(
@@ -388,10 +392,11 @@ def render_block(recs: list[Rec], debt: str | None) -> str:
     work = [r for r in recs if not r.is_epic]
     # Sort here (not just upstream) so the block is order-stable for any caller.
     by_status = {s: sorted((r for r in work if r.status == s), key=lambda r: r.number)
-                 for s in ("ready", "running", "blocked")}  # fmt: skip
-    ready, running, blocked = (
+                 for s in ("ready", "running", "parked", "blocked")}  # fmt: skip
+    ready, running, parked, blocked = (
         by_status["ready"],
         by_status["running"],
+        by_status["parked"],
         by_status["blocked"],
     )
     out: list[str] = [
@@ -402,7 +407,9 @@ def render_block(recs: list[Rec], debt: str | None) -> str:
         "Lanes, decisions, and narrative live OUTSIDE it. -->",
         "",
         f"_{len(work)} work · {len(ready)} ready · {len(running)} running · "
-        f"{len(blocked)} blocked" + (f" · {len(epics)} epics" if epics else "") + "_",
+        f"{len(parked)} parked · {len(blocked)} blocked"
+        + (f" · {len(epics)} epics" if epics else "")
+        + "_",
     ]
     if epics:
         out += ["", "**Epics:** " + ", ".join(f"#{r.number}" for r in epics)]
@@ -427,6 +434,9 @@ def render_block(recs: list[Rec], debt: str | None) -> str:
     out += ["", "### Running"]
     out += [f"- #{r.number} {r.title} ← " + ", ".join(f"PR #{p}" for p in r.open_prs)
             for r in running] or ["_none_"]  # fmt: skip
+
+    out += ["", "### Parked"]
+    out += [_line(r) for r in parked] or ["_none_"]
 
     out += ["", "### Blocked"]
     if blocked:
@@ -477,9 +487,10 @@ def lanes_content_signature(records: list[Rec]) -> str:
     Two classes of edge *into* the candidate graph are signed so an order-changing rewrite
     re-ranks even with no section move:
 
-    - Blocked issues are signed in full (not just ready) because their `Blocked by #N` edges
-      set the unblocking power of the candidates, and their `Related to`/`Follow-up to` ties
-      signal coherence — the same reason the prior all-work signature included them.
+    - Blocked and parked issues are signed in full (not just ready) because blocked issues'
+      `Blocked by #N` edges set the unblocking power of the candidates, and both blocked
+      and parked issues' `Related to`/`Follow-up to` ties signal coherence — the same
+      reason the prior all-work signature included them.
     - A *running* issue's relationships are otherwise dropped (signing them in full would
       re-rank every merge, as the closing issue's `Part of #<epic>`/coherence ties leave the
       corpus — the churn this signature exists to kill), EXCEPT a blocking edge it points at
@@ -751,8 +762,13 @@ def build_debt_line() -> str | None:
 
 # --- delta (for the /loop heartbeat) -------------------------------------------------
 
-_SECTIONS = ("Ready now", "Running", "Blocked")
-_SECTION_LABEL = {"Ready now": "ready", "Running": "running", "Blocked": "blocked"}
+_SECTIONS = ("Ready now", "Running", "Parked", "Blocked")
+_SECTION_LABEL = {
+    "Ready now": "ready",
+    "Running": "running",
+    "Parked": "parked",
+    "Blocked": "blocked",
+}
 
 
 def extract_block(body: str, start: str = START, end: str = END) -> str:

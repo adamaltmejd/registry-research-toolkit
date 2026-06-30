@@ -30,6 +30,7 @@ def _rec(
     area: str | None = None,
     is_epic: bool = False,
     blocked_label: bool = False,
+    parked_label: bool = False,
     touches: list[str] | None = None,
     open_blockers: list[int] | None = None,
     open_prs: list[int] | None = None,
@@ -42,6 +43,7 @@ def _rec(
         area=area,
         is_epic=is_epic,
         blocked_label=blocked_label,
+        parked_label=parked_label,
         touches=touches or [],
         parent=None,
         open_blockers=open_blockers or [],
@@ -60,12 +62,27 @@ def test_classify_running_wins_over_blocked() -> None:
     assert ps.classify(_rec(1, open_prs=[9], open_blockers=[2])) == "running"
 
 
+def test_classify_running_wins_over_parked() -> None:
+    assert ps.classify(_rec(1, open_prs=[9], parked_label=True)) == "running"
+
+
+def test_classify_parked_wins_over_blocked() -> None:
+    assert (
+        ps.classify(_rec(1, parked_label=True, blocked_label=True, open_blockers=[2]))
+        == "parked"
+    )
+
+
 def test_classify_blocked_by_open_blocker() -> None:
     assert ps.classify(_rec(1, open_blockers=[2])) == "blocked"
 
 
 def test_classify_blocked_by_label() -> None:
     assert ps.classify(_rec(1, blocked_label=True)) == "blocked"
+
+
+def test_classify_parked_by_label() -> None:
+    assert ps.classify(_rec(1, parked_label=True)) == "parked"
 
 
 def test_classify_ready() -> None:
@@ -551,12 +568,14 @@ def test_render_block_sections_and_counts() -> None:
         _rec(1, area="reg_webapp"),  # ready
         _rec(2, open_prs=[10]),  # running
         _rec(3, open_blockers=[1]),  # blocked
+        _rec(4, parked_label=True),  # parked
     ]
     block = ps.render_block(recs, debt=None)
     assert block.startswith(ps.START) and block.rstrip().endswith(ps.END)
     assert "### Ready now" in block
-    assert "1 ready · 1 running · 1 blocked" in block
+    assert "1 ready · 1 running · 1 parked · 1 blocked" in block
     assert "PR #10" in block  # running link
+    assert "### Parked" in block and "#4" in block
     assert "blocked by #1" in block
 
 
@@ -575,10 +594,17 @@ def test_extract_block() -> None:
 
 
 def test_diff_report_added_and_removed() -> None:
-    old = f"{ps.START}\n### Ready now\n- #1 a\n### Running\n_none_\n### Blocked\n- #3 c ← x\n{ps.END}"
-    new = f"{ps.START}\n### Ready now\n- #1 a\n- #2 b\n### Running\n_none_\n### Blocked\n_none_\n{ps.END}"
+    old = (
+        f"{ps.START}\n### Ready now\n- #1 a\n### Running\n_none_\n"
+        f"### Parked\n_none_\n### Blocked\n- #3 c ← x\n{ps.END}"
+    )
+    new = (
+        f"{ps.START}\n### Ready now\n- #1 a\n- #2 b\n### Running\n_none_\n"
+        f"### Parked\n- #4 d\n### Blocked\n_none_\n{ps.END}"
+    )
     report = ps.diff_report(old, new)
     assert "newly ready: #2" in report
+    assert "newly parked: #4" in report
     assert "left blocked: #3" in report
 
 
@@ -628,12 +654,13 @@ def test_dispatch_view_emits_flat_candidate_set_line() -> None:
         _rec(1, area="reg_meta_build", touches=["b.py"]),
         _rec(99, is_epic=True),  # epic excluded
         _rec(7, open_prs=[5], touches=["c.py"]),  # running, excluded
+        _rec(8, parked_label=True, touches=["d.py"]),  # parked, excluded
     ]
     view = ps.dispatch_view(recs)
     line = _candidate_line(view)
     assert line.startswith("Candidate set (2) — rank ONLY these")
     assert line.endswith("#1 #3")  # numbers on the line, sorted, free-only
-    assert "#99" not in view and "#7" not in view
+    assert "#99" not in view and "#7" not in view and "#8" not in view
 
 
 def test_dispatch_view_candidate_set_excludes_held() -> None:
@@ -669,7 +696,11 @@ def test_dispatch_view_flags_must_serialize() -> None:
 
 
 def test_dispatch_view_empty_when_nothing_free() -> None:
-    recs = [_rec(1, open_prs=[1]), _rec(2, blocked_label=True)]
+    recs = [
+        _rec(1, open_prs=[1]),
+        _rec(2, blocked_label=True),
+        _rec(3, parked_label=True),
+    ]
     assert ps.dispatch_view(recs) == "No ready issues free of in-flight conflicts."
 
 

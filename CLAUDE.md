@@ -191,7 +191,8 @@ issue is part of a tracked epic.
   `reg_monabundle`, `reg_webapp`, `mock_data_wizard`) or `cross-package`;
 - a **type** — `enhancement`, `bug`, or `documentation`;
 - `epic` on a tracking issue; `blocked` while an open dependency stalls it (remove once
-  cleared).
+  cleared); `parked` while maintainer-deferred work should stay out of `/plan-lanes`
+  dispatch without inventing a blocker.
 - Lanes (the ad-hoc S/L/G/… streams) live in the epic/tracker prose, **not** as labels —
   they churn too fast to maintain as a taxonomy.
 
@@ -236,13 +237,13 @@ reg_meta_build/concept_groups.toml
 **Epics** — a tracking issue labeled `epic` that owns its children as sub-issues; each
 child carries its own scope. An epic's plan lives in its **body** — the generated
 `<!-- plan-sequence -->` / `<!-- plan-lanes -->` blocks plus thin editorial (e.g.
-Parked, Self-close); decisions live on the child issues. **Don't post
-status-consolidation comments on an epic** — a recurring "current state" comment is the
-retired prose-as-state anti-pattern (latest-comment-is-truth goes stale); comments are
-for one-off notes, not the running plan.
+Self-close); decisions live on the child issues. **Don't post status-consolidation
+comments on an epic** — a recurring "current state" comment is the retired
+prose-as-state anti-pattern (latest-comment-is-truth goes stale); comments are for
+one-off notes, not the running plan.
 
 **Sequencing is generated, not hand-written.** An epic's status — **ready / running /
-blocked / parallel-safe / pending-release** — is rendered by `/plan-sequence`
+parked / blocked / parallel-safe / pending-release** — is rendered by `/plan-sequence`
 (`scripts/plan_sequence.py`) into a `<!-- plan-sequence -->` block in the epic body. To
 see what's ready to pick up and which issues are file-disjoint, **read that block** (or
 re-run `/plan-sequence`); **don't hand-edit inside the markers** — it's overwritten. The
@@ -275,24 +276,25 @@ signals that the work moved (the refresh absorbed it). The signature extends sta
 past membership: an area relabel, a `touches` edit, a `priority` change, or any
 `Relationships` edit (including a blocked issue's `Blocked by` rewrite, which shifts
 which ready issue has unblocking power) re-shapes the lane graph without moving a
-section, yet still **re-ranks** (exit 1). But a `running` issue is in-flight, never a
-lane member, so a delta confined to the running set (a PR merges, its issue closes, the
-claim clears) can't change lane content — it routes to a cheap **re-stamp** (exit 2,
-`--restamp-lanes`: rewrite the basis stamp, keep the ranked lanes) instead of paying for
-a re-rank. The content signature excludes running issues' own projection precisely so
-this common tick doesn't trip a re-rank; their one content effect — holding a ready
-candidate — is folded in via the free set, so a merge that unholds a candidate still
-re-ranks. Same edit rule as the projection: **don't hand-edit inside the markers** —
-it's overwritten.
+section, yet still **re-ranks** (exit 1). A `parked` issue is signed as non-running
+work, so adding/removing `parked` re-ranks and keeps it out of dispatch. But a `running`
+issue is in-flight, never a lane member, so a delta confined to the running set (a PR
+merges, its issue closes, the claim clears) can't change lane content — it routes to a
+cheap **re-stamp** (exit 2, `--restamp-lanes`: rewrite the basis stamp, keep the ranked
+lanes) instead of paying for a re-rank. The content signature excludes running issues'
+own projection precisely so this common tick doesn't trip a re-rank; their one content
+effect — holding a ready candidate — is folded in via the free set, so a merge that
+unholds a candidate still re-ranks. Same edit rule as the projection: **don't hand-edit
+inside the markers** — it's overwritten.
 
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
 `issue-hygiene.yml`, **read-only** — `issues:read`) checks these rules: required labels,
-at most one `priority:*` label, resolvable relationship targets, `blocked`-label /
-sub-issue ↔ `Part of` agreement, `touches`-glob resolution, plus drift alerts (a merged
-PR that left its issue open; `reg_meta_build` DB content changed since the last
-`reg_meta_build/v*` tag, i.e. a release is pending). The write-capable refresh lives in
-a **separate** workflow (`plan-sequence.yml`, `issues:write`) so the hygiene job's
-read-only guarantee stays intact.
+at most one `priority:*` label, resolvable relationship targets, `blocked` / `parked`
+status-label agreement, sub-issue ↔ `Part of` agreement, `touches`-glob resolution, plus
+drift alerts (a merged PR that left its issue open; `reg_meta_build` DB content changed
+since the last `reg_meta_build/v*` tag, i.e. a release is pending). The write-capable
+refresh lives in a **separate** workflow (`plan-sequence.yml`, `issues:write`) so the
+hygiene job's read-only guarantee stays intact.
 
 **Marking work in-flight** — when you start developing an issue — in `/pr-pipeline` **or
 ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the in-flight
