@@ -191,9 +191,7 @@ const memberColumnsByFqid = $derived.by(() => {
 });
 
 const suppressRowDimensionFilters = $derived(
-  node?.provider === "scb" &&
-    node.register === "lisa" &&
-    node.key === "naringsgren",
+  (node?.axes.length ?? 0) === 0 || node?.source === "curated",
 );
 
 const foldSuccessionBands = $derived((node?.axes.length ?? 0) === 0);

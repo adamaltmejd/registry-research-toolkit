@@ -820,10 +820,13 @@ fuzzy logic:
 2. Match text before `:` separator against register names
 3. Match entire text against register names
 
-Unresolved sources are stored as raw text in `source_label` for human review. The
-resulting `source_register_id` / `source_label` pair on `variable` is what query
-commands surface (see [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Composite
-registers and source tracking").
+Unresolved stable sources are stored as raw text in `source_label` for human review.
+When SCB source/questionnaire codes vary by edition, the raw code is kept on
+`variable_state.source_register_text` instead of collapsing to one variable-level value.
+The resulting stable `source_register_id` / `source_label` pair on `variable` is what
+query commands use for composite-register lineage (see
+[../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Composite registers and source
+tracking").
 
 ## Consumer-side lineage (`variable_state_lineage`)
 

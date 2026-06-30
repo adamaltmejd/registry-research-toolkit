@@ -142,6 +142,8 @@ class IRVariableState(_IRBase):
     # set rides on IRVariableAlias (the `variable_alias ⊇ states` invariant). None
     # when the source row had no column header.
     delivery_column_name: str | None
+    # Raw source attribution/code for this state when it varies by SCB edition.
+    source_register_text: str | None = None
     value_set_id: int | None
     value_set_version_label: str | None  # overlap discriminator (multi-vintage)
 

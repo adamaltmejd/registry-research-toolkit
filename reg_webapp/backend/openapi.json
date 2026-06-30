@@ -3349,6 +3349,17 @@
             "title": "Register Variant Id",
             "type": "integer"
           },
+          "source_register_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Register Text"
+          },
           "state_id": {
             "title": "State Id",
             "type": "integer"
@@ -3416,6 +3427,7 @@
           "data_type",
           "data_length",
           "delivery_column_name",
+          "source_register_text",
           "value_set_version_label",
           "value_set_id",
           "value_set",

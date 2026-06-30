@@ -2112,6 +2112,307 @@ class TestOperationalDefinition:
         finally:
             conn.close()
 
+    def test_code_like_opdefs_preserved_as_state_source_metadata(self, tmp_path: Path):
+        """#949: bare source/questionnaire codes must not become explanatory
+        variable text, and source codes that drift by edition stay state-grained.
+        """
+        drift_rows = [
+            _var_row(
+                colname="KamrBrak",
+                cvid=9320,
+                var_id=922,
+                year="2003",
+                regver_id=220,
+            ),
+            _var_row(
+                colname="KamrBrak",
+                cvid=9321,
+                var_id=922,
+                year="2005",
+                regver_id=221,
+                varopdef="E22",
+            ),
+            _var_row(
+                colname="KamrBrak",
+                cvid=9322,
+                var_id=922,
+                year="2007",
+                regver_id=222,
+                varsource="E25",
+            ),
+            _var_row(
+                colname="KamrBrak",
+                cvid=9323,
+                var_id=922,
+                year="2009",
+                regver_id=223,
+                varsource="E22",
+            ),
+        ]
+        same_year_rows = [
+            _var_row(
+                colname="SameYearSource",
+                cvid=9330,
+                var_id=923,
+                year="2005",
+                regver_id=230,
+                varsource="E22",
+            ),
+            _var_row(
+                colname="SameYearSource",
+                cvid=9331,
+                var_id=923,
+                year="2005",
+                regver_id=231,
+                varsource="E25",
+            ),
+        ]
+        subannual_rows = [
+            _var_row(
+                colname="TermSource",
+                cvid=9340,
+                var_id=924,
+                year="2005",
+                versionname="Vårterminen 2005",
+                regver_id=240,
+                varsource="E22",
+            ),
+            _var_row(
+                colname="TermSource",
+                cvid=9341,
+                var_id=924,
+                year="2005",
+                versionname="Höstterminen 2005",
+                regver_id=241,
+                varsource="E25",
+            ),
+        ]
+        yearless_rows = [
+            _var_row(
+                colname="YearlessSource",
+                cvid=9350,
+                var_id=925,
+                year="2003",
+                versionname="No dated edition",
+                regver_id=250,
+            ),
+            _var_row(
+                colname="YearlessSource",
+                cvid=9351,
+                var_id=925,
+                year="2005",
+                regver_id=251,
+                varsource="E22",
+            ),
+        ]
+        uniform_code_rows = [
+            _var_row(
+                colname="UniformOpaqueCode",
+                cvid=9360,
+                var_id=926,
+                year="2005",
+                regver_id=260,
+                varopdef="E22",
+            ),
+            _var_row(
+                colname="UniformOpaqueCode",
+                cvid=9361,
+                var_id=926,
+                year="2007",
+                regver_id=261,
+                varopdef="E22",
+            ),
+        ]
+        real_source_rows = [
+            _var_row(
+                colname="RealSourceWithBlank",
+                cvid=9370,
+                var_id=927,
+                year="2003",
+                regver_id=270,
+            ),
+            _var_row(
+                colname="RealSourceWithBlank",
+                cvid=9371,
+                var_id=927,
+                year="2005",
+                regver_id=271,
+                varopdef="E22",
+                varsource="TESTREG",
+            ),
+        ]
+        stable_source_rows = [
+            _var_row(
+                colname="StableResolvedSource",
+                cvid=9380,
+                var_id=928,
+                year="2005",
+                regver_id=280,
+                varsource="TESTREG : edition 2005",
+            ),
+            _var_row(
+                colname="StableResolvedSource",
+                cvid=9381,
+                var_id=928,
+                year="2007",
+                regver_id=281,
+                varsource="TESTREG : edition 2007",
+            ),
+        ]
+        ri_rows = (
+            list(REGISTERINFORMATION_ROWS)
+            + drift_rows
+            + same_year_rows
+            + subannual_rows
+            + yearless_rows
+            + uniform_code_rows
+            + real_source_rows
+            + stable_source_rows
+        )
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            var = conn.execute(
+                "SELECT variable_id, operational_definition, source_register_text "
+                "FROM variable WHERE register_id = 1 AND provider_key = '922'"
+            ).fetchone()
+            assert var["operational_definition"] is None
+            assert var["source_register_text"] == ""
+
+            states = conn.execute(
+                "SELECT valid_from, valid_to, source_register_text "
+                "FROM variable_state WHERE variable_id = ? "
+                "ORDER BY valid_from, valid_to",
+                (var["variable_id"],),
+            ).fetchall()
+            assert [(r["valid_from"], r["source_register_text"]) for r in states] == [
+                ("2003-01-01", None),
+                ("2005-01-01", "E22"),
+                ("2007-01-01", "E25"),
+                ("2009-01-01", "E22"),
+            ]
+            hits = conn.execute(
+                "SELECT provider_key FROM variable_fts WHERE variable_fts MATCH ?",
+                ("E22",),
+            ).fetchall()
+            assert "922" not in {r["provider_key"] for r in hits}
+
+            same_year_var = conn.execute(
+                "SELECT variable_id, source_register_text "
+                "FROM variable WHERE register_id = 1 AND provider_key = '923'"
+            ).fetchone()
+            assert same_year_var["source_register_text"] == ""
+            same_year_states = conn.execute(
+                "SELECT valid_from, source_register_text "
+                "FROM variable_state WHERE variable_id = ? "
+                "ORDER BY valid_from, state_id",
+                (same_year_var["variable_id"],),
+            ).fetchall()
+            assert [
+                (r["valid_from"], r["source_register_text"]) for r in same_year_states
+            ] == [("2005-01-01", "E25")]
+
+            term_var = conn.execute(
+                "SELECT variable_id FROM variable "
+                "WHERE register_id = 1 AND provider_key = '924'"
+            ).fetchone()
+            term_states = conn.execute(
+                "SELECT valid_from, source_register_text "
+                "FROM variable_state WHERE variable_id = ? "
+                "ORDER BY valid_from, state_id",
+                (term_var["variable_id"],),
+            ).fetchall()
+            assert [
+                (r["valid_from"], r["source_register_text"]) for r in term_states
+            ] == [
+                ("2005-01-01", "E22"),
+                ("2005-07-01", "E25"),
+            ]
+
+            yearless_var = conn.execute(
+                "SELECT variable_id, source_register_text "
+                "FROM variable WHERE register_id = 1 AND provider_key = '925'"
+            ).fetchone()
+            assert yearless_var["source_register_text"] == ""
+            yearless_states = conn.execute(
+                "SELECT valid_from, source_register_text "
+                "FROM variable_state WHERE variable_id = ? "
+                "ORDER BY valid_from, state_id",
+                (yearless_var["variable_id"],),
+            ).fetchall()
+            assert [
+                (r["valid_from"], r["source_register_text"]) for r in yearless_states
+            ] == [("2005-01-01", "E22")]
+
+            uniform_code_var = conn.execute(
+                "SELECT variable_id, operational_definition, source_register_text, "
+                "source_register_id "
+                "FROM variable WHERE register_id = 1 AND provider_key = '926'"
+            ).fetchone()
+            assert uniform_code_var["operational_definition"] is None
+            assert uniform_code_var["source_register_text"] == ""
+            assert uniform_code_var["source_register_id"] is None
+            uniform_code_states = conn.execute(
+                "SELECT valid_from, source_register_text "
+                "FROM variable_state WHERE variable_id = ?",
+                (uniform_code_var["variable_id"],),
+            ).fetchall()
+            assert [
+                (r["valid_from"], r["source_register_text"])
+                for r in uniform_code_states
+            ] == [("2005-01-01", "E22")]
+
+            real_source_var = conn.execute(
+                "SELECT variable_id, source_register_text, source_register_id "
+                "FROM variable WHERE register_id = 1 AND provider_key = '927'"
+            ).fetchone()
+            assert real_source_var["source_register_text"] == "TESTREG"
+            assert real_source_var["source_register_id"] == 1
+            real_source_states = conn.execute(
+                "SELECT valid_from, source_register_text "
+                "FROM variable_state WHERE variable_id = ? "
+                "ORDER BY valid_from, state_id",
+                (real_source_var["variable_id"],),
+            ).fetchall()
+            assert [
+                (r["valid_from"], r["source_register_text"]) for r in real_source_states
+            ] == [
+                ("2003-01-01", None),
+                ("2005-01-01", "TESTREG / E22"),
+            ]
+
+            stable_source_var = conn.execute(
+                "SELECT variable_id, source_register_text, source_register_id, "
+                "source_label "
+                "FROM variable WHERE register_id = 1 AND provider_key = '928'"
+            ).fetchone()
+            assert stable_source_var["source_register_text"] == "TESTREG : edition 2005"
+            assert stable_source_var["source_register_id"] == 1
+            assert stable_source_var["source_label"] == "TESTREG"
+            stable_source_states = conn.execute(
+                "SELECT valid_from, source_register_text "
+                "FROM variable_state WHERE variable_id = ? "
+                "ORDER BY valid_from, state_id",
+                (stable_source_var["variable_id"],),
+            ).fetchall()
+            assert [
+                (r["valid_from"], r["source_register_text"])
+                for r in stable_source_states
+            ] == [
+                ("2005-01-01", "TESTREG : edition 2005"),
+                ("2007-01-01", "TESTREG : edition 2007"),
+            ]
+        finally:
+            conn.close()
+
 
 class TestVariableStateOpenEnded:
     """A2.1: SCB's `VersionSista` is the upper bound of a variable's

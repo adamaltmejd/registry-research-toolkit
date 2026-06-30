@@ -53,6 +53,13 @@ column = "AL2UndEjU"
 keep = "Br07-kod"
 note = "Produktion inom näringslivet AL2UndEjU 2009-2010: SNI2007 (Br07, 45 codes) is the operative standard by 2009."
 
+[[resolve]]
+register_id = 176
+var_id = 19052
+column = "ngs"
+keep = "detalj"
+note = "Näringsgren för statistiken ngs 2019: the physical ngs column is FE-sourced and carries the 'Aktiviteter' detalj coding; the co-delivered NgS1Je JE sibling folds to the same column component and carries the alternate 'Branscher' detalj coding. Keep the ngs/FE coding."
+
 # ── ULF (levnadsförhållanden): prefer the fuller yes/no & education codings ──
 [[resolve]]
 register_id = 237

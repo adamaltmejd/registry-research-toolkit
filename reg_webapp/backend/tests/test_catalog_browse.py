@@ -865,6 +865,7 @@ def test_state_period_token_passes_through_reg_meta():
             data_type=None,
             data_length=None,
             delivery_column_name=None,
+            source_register_text=None,
             value_set_version_label="",
             value_set_id=None,
             value_set=None,

@@ -2046,16 +2046,47 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
     expect(await filterLegends()).toEqual(["Level", "Population", "Coding"]);
   });
 
-  it("shows only curated axes on the LISA näringsgren group page", async () => {
+  it("does not turn coding labels into filters on axis-less variable groups", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(
       dimensionNode({
-        register: "lisa",
-        key: "naringsgren",
+        axes: [],
+        members: [
+          {
+            fqid: "scb/rams/old",
+            name: "Old",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/rams/new",
+            name: "New",
+            facets: [],
+            coverage: null,
+          },
+        ],
       }),
     );
     vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
 
-    renderGroup({ provider: "scb", register: "lisa", key: "naringsgren" });
+    renderGroup({ provider: "scb", register: "rams", key: "dimensioned" });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-row.single")) {
+        throw new Error("rows not yet rendered");
+      }
+    });
+    expect(document.querySelector(".dim-filters")).toBeNull();
+  });
+
+  it("shows only declared axes on curated group pages", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      dimensionNode({
+        source: "curated",
+      }),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
+
+    renderGroup({ provider: "scb", register: "rams", key: "dimensioned" });
 
     expect(await filterLegends()).toEqual(["Level"]);
   });
