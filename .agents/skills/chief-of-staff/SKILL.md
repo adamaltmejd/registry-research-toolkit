@@ -52,6 +52,21 @@ detached jobs.
   new tick and return `DONT_NOTIFY` with reason `previous tick still running`; do not
   overlap issue maintenance, merge inspection, or recommendations.
 
+For high-frequency cadences such as every 15 minutes, prefer a deterministic preflight
+outside the agent instead of waking this skill every time. The built-in heartbeat has no
+shell precondition hook, so it always spends a model turn. Use:
+
+```sh
+uv run --no-project python scripts/cos_preflight.py
+```
+
+The preflight exits `0` when idle, `10` when a real tick should run, and `2` on setup or
+tool errors. It records its snapshot in `.git/cos-preflight-state.json` by default and
+wakes only when repo/GitHub state changes enough to justify a COS tick: lane drift,
+issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
+merge-gate state changes. A local scheduler wrapper may then resume the one COS thread
+only on exit `10`, for example with `codex resume <thread-id> '[$chief-of-staff](...)'`.
+
 ## Startup Gate
 
 Run only from the canonical main checkout: `/Users/adam/Code/registry-research-toolkit`.
