@@ -1477,37 +1477,37 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "ast-sni2002b"
+variable = "naringsgren-huvud-arbetsstalle-sni2002b"
 description = "Näringsgren, SNI2002, begränsad nivå (42 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "ast-sni2002g"
+variable = "naringsgren-huvud-arbetsstalle-sni2002g"
 description = "Näringsgren, SNI2002, grov nivå (10 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "ast-sni2007g"
+variable = "naringsgren-huvud-arbetsstalle-sni2007g"
 description = "Näringsgren, SNI2007, grov nivå (15 grupper)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "ast-sni2007u"
+variable = "naringsgren-huvud-arbetsstalle-sni2007u"
 description = "Näringsgren, SNI2007, utökad nivå (51 grupper)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "ast-sni92b"
+variable = "naringsgren-huvud-arbetsstalle-sni92b"
 description = "Näringsgren, SNI92, begränsad nivå (42 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "ast-sni92g"
+variable = "naringsgren-huvud-arbetsstalle-sni92g"
 description = "Näringsgren, SNI92, grov nivå (10 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
@@ -1801,37 +1801,37 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "org-sni2002b"
+variable = "naringsgren-huvud-foretag-sni2002b"
 description = "Näringsgren, SNI2002, begränsad nivå (42 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "org-sni2002g"
+variable = "naringsgren-huvud-foretag-sni2002g"
 description = "Näringsgren, SNI2002, grov nivå (10 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "org-sni2007g"
+variable = "naringsgren-huvud-foretag-sni2007g"
 description = "Näringsgren, SNI2007, grov nivå (15 grupper)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "org-sni2007u"
+variable = "naringsgren-huvud-foretag-sni2007u"
 description = "Näringsgren, SNI2007, utökad nivå (51 grupper)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "org-sni92b"
+variable = "naringsgren-huvud-foretag-sni92b"
 description = "Näringsgren, SNI92, begränsad nivå (42 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "org-sni92g"
+variable = "naringsgren-huvud-foretag-sni92g"
 description = "Näringsgren, SNI92, grov nivå (10 grupper)"
 provenance = "Bilaga 2 - Variabellista.xlsx"
 

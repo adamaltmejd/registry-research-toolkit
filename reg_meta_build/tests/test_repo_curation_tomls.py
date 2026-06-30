@@ -165,6 +165,47 @@ def test_repo_delivery_enrichment_parses() -> None:
     assert all(a.provider and a.register and a.delivery_column for a in enr.aliases)
 
 
+def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
+    enr = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml")
+    lisa_variables = {
+        d.variable
+        for d in enr.descriptions
+        if d.provider == "scb" and d.register == "lisa"
+    }
+
+    old_slugs = {
+        "ast-sni2002b",
+        "ast-sni2002g",
+        "ast-sni2007g",
+        "ast-sni2007u",
+        "ast-sni92b",
+        "ast-sni92g",
+        "org-sni2002b",
+        "org-sni2002g",
+        "org-sni2007g",
+        "org-sni2007u",
+        "org-sni92b",
+        "org-sni92g",
+    }
+    curated_slugs = {
+        "naringsgren-huvud-arbetsstalle-sni2002b",
+        "naringsgren-huvud-arbetsstalle-sni2002g",
+        "naringsgren-huvud-arbetsstalle-sni2007g",
+        "naringsgren-huvud-arbetsstalle-sni2007u",
+        "naringsgren-huvud-arbetsstalle-sni92b",
+        "naringsgren-huvud-arbetsstalle-sni92g",
+        "naringsgren-huvud-foretag-sni2002b",
+        "naringsgren-huvud-foretag-sni2002g",
+        "naringsgren-huvud-foretag-sni2007g",
+        "naringsgren-huvud-foretag-sni2007u",
+        "naringsgren-huvud-foretag-sni92b",
+        "naringsgren-huvud-foretag-sni92g",
+    }
+
+    assert old_slugs.isdisjoint(lisa_variables)
+    assert curated_slugs <= lisa_variables
+
+
 def test_repo_period_family_merges_parses() -> None:
     families = load_period_family_merges(
         _ROOT / "curation" / "period_family_merges.toml"
