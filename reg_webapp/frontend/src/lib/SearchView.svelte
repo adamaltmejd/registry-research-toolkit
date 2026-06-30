@@ -295,15 +295,51 @@ function groupMemberFqids(results: readonly SearchResult[]): Set<string> {
   return fqids;
 }
 
+function uniqueDeliveryColumns(columns: readonly string[]): string[] {
+  return [...new Set(columns)];
+}
+
+function foldVariableColumnHits(
+  results: readonly SearchResult[],
+): SearchResult[] {
+  const folded: SearchResult[] = [];
+  const variableIndexByFqid = new Map<string, number>();
+  for (const result of results) {
+    if (!isVariableResult(result) || result.fqid == null) {
+      folded.push(result);
+      continue;
+    }
+    const existingIndex = variableIndexByFqid.get(result.fqid);
+    if (existingIndex == null) {
+      variableIndexByFqid.set(result.fqid, folded.length);
+      folded.push(result);
+      continue;
+    }
+    const existing = folded[existingIndex] as VariableSearchResult;
+    folded[existingIndex] = {
+      ...existing,
+      delivery_column_names: uniqueDeliveryColumns([
+        ...deliveryColumnNames(existing),
+        ...deliveryColumnNames(result),
+      ]),
+    };
+  }
+  return folded;
+}
+
 function displayResults(group: SearchGroup): SearchResult[] {
+  const results =
+    group.group === "variables" || group.group === "top_results"
+      ? foldVariableColumnHits(group.results)
+      : [...group.results];
   if (group.group !== "variables" && group.group !== "top_results") {
-    return [...group.results];
+    return results;
   }
-  const groupedMembers = groupMemberFqids(group.results);
+  const groupedMembers = groupMemberFqids(results);
   if (groupedMembers.size === 0) {
-    return [...group.results];
+    return results;
   }
-  return group.results.filter(
+  return results.filter(
     (result) =>
       !(
         isVariableResult(result) &&

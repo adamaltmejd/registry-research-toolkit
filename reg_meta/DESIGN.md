@@ -81,7 +81,9 @@ Four content-synced FTS5 indexes power search:
   correct Swedish character handling and for SCB column-code tokens such as
   `fedunsatreason_1` matching `fedunsatreason`. The FTS table's external content is the
   `variable_fts_content` view, not `variable` directly, so delivery-column search stays
-  derived from the normalized alias table. FQID slugs are **not** indexed here.
+  derived from the normalized alias table. Variable search rows surface the matched
+  delivery aliases for alias hits, falling back to display aliases for non-alias hits.
+  FQID slugs are **not** indexed here.
 - **`classification_fts`** — indexes classification `short_name`, `name`, `name_en`,
   `description`. Searched via `search(..., type="classification")` (#350), the catalog
   discovery surface. Catalog-scoped: a `--register` scope excludes it. **Code-aware

@@ -359,14 +359,17 @@ focused; on `/search`, typing live-refines with replaceState. `SearchView` rende
 (URL state, like `?q=`/`?period`; `all` is omitted from the canonical URL), a Close
 control that `replace()`s back to the route that entered search (or `/catalog` for a
 cold deep-link), and variable rows whose heading carries delivery-column pills while
-register, definition, and `operational_definition` live in the muted detail line; the
-"Variables" group heading itself stays plain text. The omnibox preserves an active scope
-when re-querying. Global search does **not** render documentation results; documentation
-is reached from item pages via `DocMentionsPanel` and then the `/doc/<filename>` route
-(router `Route` union arm `{name:"doc",identifier}`), which renders `DocView.svelte`:
-title, register/variable/tags, a `source_url` link to the SCB source PDF (resolved from
-the curated map at doc-DB build, #372; None when uncurated) with `source_title` as
-label, and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
+register, definition, and `operational_definition` live in the muted detail line. When
+several search hits address the same variable, `SearchView` folds them into one row and
+merges the delivery-column pills so a column-code search shows one variable with the
+matched columns inline; the "Variables" group heading itself stays plain text. The
+omnibox preserves an active scope when re-querying. Global search does **not** render
+documentation results; documentation is reached from item pages via `DocMentionsPanel`
+and then the `/doc/<filename>` route (router `Route` union arm
+`{name:"doc",identifier}`), which renders `DocView.svelte`: title,
+register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
+curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
+and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
 `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
 is never fetched.
 
