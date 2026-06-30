@@ -54,7 +54,7 @@ the lead runs the authoritative union Verify on the assembled result.
    - Python: `uv run ruff check`, `uv run ruff format --check`,
      `uvx --from ty==0.0.51 ty check`, `uv run python -m pytest <pkg>/`.
    - Build-affecting changes (SCB/SOS triage, slugs, DDL): the real `build-db` is the
-     LEAD's merge-gate check (\~20 min, run once on final HEAD) — do **not** run it
+     LEAD's handoff-gate check (\~20 min, run once on final HEAD) — do **not** run it
      yourself unless the plan explicitly asks. Cover the change with the fast
      checks/fixtures, and honor any byte-identity / id-band gate the plan names.
    - Frontend: `bun run lint`, `bun run check`, `bun run test`, `bun run build`, and
