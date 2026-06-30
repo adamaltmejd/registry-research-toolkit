@@ -754,9 +754,10 @@ function closeSearch(): void {
       <span class="name-cell">
         <span class="result-title">
           <span class="row-link">{r.name ?? leafSlug(r.fqid)}</span>
+          {#if context}{@render registerContextPill(context)}{/if}
         </span>
-        {#if context || detailParts.length > 0}
-          {@render detailLine(context, detailParts, true)}
+        {#if detailParts.length > 0}
+          {@render detailLine(null, detailParts, true)}
         {/if}
       </span>
     </a>
@@ -821,9 +822,10 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
           {@render variableMetaPills(v)}
+          {#if context}{@render registerContextPill(context)}{/if}
         </span>
-        {#if context || detailParts.length > 0}
-          {@render detailLine(context, detailParts)}
+        {#if detailParts.length > 0}
+          {@render detailLine(null, detailParts)}
         {/if}
       </span>
     </a>
@@ -832,13 +834,18 @@ function closeSearch(): void {
       <span class="name-cell"><span class="result-title">
           <span class="row-link plain">{v.name ?? "—"}</span>
           {@render variableMetaPills(v)}
+          {#if context}{@render registerContextPill(context)}{/if}
         </span>
-        {#if context || detailParts.length > 0}
-          {@render detailLine(context, detailParts)}
+        {#if detailParts.length > 0}
+          {@render detailLine(null, detailParts)}
         {/if}
       </span>
     </div>
   {/if}
+{/snippet}
+
+{#snippet registerContextPill(context: string)}
+  <span class="register-context-chip">{context}</span>
 {/snippet}
 
 {#snippet detailLine(
@@ -974,34 +981,22 @@ function closeSearch(): void {
   </span>
 {/snippet}
 
-{#snippet codeSystemLine(result: CodeSearchResult)}
-  {@const href = codeSystemHref(result)}
+{#snippet codeSystemPill(result: CodeSearchResult)}
   {@const label = result.code_system ?? REGISTER_LOCAL_LABEL}
-  <span class="owner-inline muted code-system-line">
-    <span class="owner-context">Code system</span>
-    {#if href}
-      <a class="detail-link owner-name" href={href}>{label}</a>
-    {:else}
-      <span class="owner-name">{label}</span>
-    {/if}
-  </span>
+  <span class="code-system-chip">{label}</span>
 {/snippet}
 
-{#snippet codeSystemLinePlain(result: CodeSearchResult)}
-  {@const label = result.code_system ?? REGISTER_LOCAL_LABEL}
-  <span class="owner-inline muted code-system-line">
-    <span class="owner-context">Code system</span>
-    <span class="owner-name">{label}</span>
-  </span>
-{/snippet}
-
-{#snippet codeCells(result: CodeSearchResult)}
+{#snippet codeCells(
+  result: CodeSearchResult,
+  showCodeSystemPill: boolean = false,
+)}
   {@const usage = usageSummary(result)}
   <span class="code-cells">
     <span class="code-expression">
       <code class="code-cell mono">{result.code}</code>
       <span class="code-equals">=</span>
       <span class="code-label">{result.label}</span>
+      {#if showCodeSystemPill}{@render codeSystemPill(result)}{/if}
     </span>
     {#if usage}<span class="usage-count muted">{usage}</span>{/if}
   </span>
@@ -1042,8 +1037,7 @@ function closeSearch(): void {
       <summary class="integrated-list-row code-summary top-code-summary">
         <span class="disclosure-icon" aria-hidden="true"></span>
         <span class="top-code-summary-body">
-          {@render codeCells(result)}
-          {@render codeSystemLinePlain(result)}
+          {@render codeCells(result, true)}
         </span>
       </summary>
       <div class="owner-table">{@render ownerSubRows(result, true)}</div>
@@ -1053,8 +1047,7 @@ function closeSearch(): void {
       class="code-row integrated-list-row single-code-row top-code-row"
       href={catalogHref(singleOwner.fqid)}
     >
-      {@render codeCells(result)}
-      {@render codeSystemLinePlain(result)}
+      {@render codeCells(result, true)}
       {@render singleOwnerLine(singleOwner)}
     </a>
   {:else if systemHref}
@@ -1062,13 +1055,11 @@ function closeSearch(): void {
       class="code-row integrated-list-row single-code-row top-code-row"
       href={systemHref}
     >
-      {@render codeCells(result)}
-      {@render codeSystemLinePlain(result)}
+      {@render codeCells(result, true)}
     </a>
   {:else}
     <div class="code-row integrated-list-row single-code-row top-code-row">
-      {@render codeCells(result)}
-      {@render codeSystemLinePlain(result)}
+      {@render codeCells(result, true)}
       {#if singleOwner}{@render singleOwnerLine(singleOwner)}{/if}
     </div>
   {/if}
@@ -1086,14 +1077,13 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link">{result.group_label}</span>
           <span class="group-chip">Group</span>
+          {#if context}{@render registerContextPill(context)}{/if}
         </span>
-        {#if context}
-          {@render detailLine(context, [])}
-        {/if}
       </span>
     </a>
   {:else}
     {#each result.members as member, i (`${member.fqid}|${i}`)}
+      {@const memberContext = providerRegisterContext(member.fqid, result.register)}
       <a
         class="leaf-row integrated-list-row group-member-row"
         href={catalogHref(member.fqid)}
@@ -1102,10 +1092,9 @@ function closeSearch(): void {
           <span class="result-title">
             <span class="row-link">{member.name ?? leafSlug(member.fqid)}</span>
             <span class="group-chip">Group</span>
+            {#if memberContext}{@render registerContextPill(memberContext)}{/if}
           </span>
-          {@render detailLine(providerRegisterContext(member.fqid, result.register), [
-            result.group_label,
-          ])}
+          {@render detailLine(null, [result.group_label])}
         </span>
       </a>
     {/each}
@@ -1555,7 +1544,8 @@ function closeSearch(): void {
   }
   .col-chip,
   .group-chip,
-  .register-context-chip {
+  .register-context-chip,
+  .code-system-chip {
     display: inline-flex;
     align-items: baseline;
     line-height: 1.3;
@@ -1581,12 +1571,13 @@ function closeSearch(): void {
     border: 1px solid color-mix(in srgb, var(--cat-group) 35%, transparent);
     background: color-mix(in srgb, var(--cat-group) 10%, var(--surface));
   }
-  .register-context-chip {
+  .register-context-chip,
+  .code-system-chip {
     font-size: var(--text-sm);
     font-weight: 600;
     color: var(--text-muted);
-    border: 1px solid var(--border);
-    background: var(--surface-sunken);
+    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    background: color-mix(in srgb, var(--surface-sunken) 42%, var(--surface));
   }
   .column-more {
     font-size: var(--text-sm);

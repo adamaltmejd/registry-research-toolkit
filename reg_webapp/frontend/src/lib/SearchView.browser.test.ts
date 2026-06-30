@@ -292,7 +292,7 @@ describe("SearchView — typed result groups (#379)", () => {
     await render(SearchView);
 
     await expect.element(page.getByText("C12")).toBeVisible();
-    await expect.element(page.getByText("Code system")).toBeVisible();
+    await expect.element(page.getByText("Code system")).not.toBeInTheDocument();
     await expect
       .element(page.getByText("showing 1 of 25"))
       .not.toBeInTheDocument();
@@ -301,6 +301,10 @@ describe("SearchView — typed result groups (#379)", () => {
     );
     expect(disclosure).not.toBeNull();
     expect(disclosure?.querySelector(".disclosure-icon")).not.toBeNull();
+    expect(
+      disclosure?.querySelector(".code-expression .code-system-chip")
+        ?.textContent,
+    ).toBe("ICD-10-SE");
     disclosure?.querySelector("summary")?.click();
     await nextFrame();
     await expect
@@ -346,8 +350,10 @@ describe("SearchView — typed result groups (#379)", () => {
     );
     expect(row).not.toBeNull();
     expect(row?.textContent).toContain("1 = Man");
-    expect(row?.textContent).toContain("Code system");
-    expect(row?.textContent).toContain("SUN2020");
+    expect(row?.textContent).not.toContain("Code system");
+    expect(
+      row?.querySelector(".code-expression .code-system-chip")?.textContent,
+    ).toBe("SUN2020");
   });
 
   it("shows delivery column names and operational definitions on variable hits", async () => {
@@ -396,7 +402,7 @@ describe("SearchView — typed result groups (#379)", () => {
         ".search-view .result-detail .detail-separator",
       ),
     ];
-    expect(separators).toHaveLength(2);
+    expect(separators).toHaveLength(1);
     expect(separators.every((separator) => !separator.hidden)).toBe(true);
   });
 
@@ -439,7 +445,7 @@ describe("SearchView — typed result groups (#379)", () => {
         ".search-view .result-detail .detail-separator",
       ),
     ];
-    expect(separators).toHaveLength(2);
+    expect(separators).toHaveLength(1);
     expect(separators.every((separator) => separator.hidden)).toBe(true);
   });
 
@@ -1656,7 +1662,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(row?.querySelector(".result-title")?.textContent).toContain(
       "Andel av den totala inkomsten",
     );
-    expect(row?.querySelector(".result-detail")?.textContent?.trim()).toBe(
+    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
       "SCB: LISA",
     );
   });
