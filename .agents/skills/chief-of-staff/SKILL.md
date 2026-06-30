@@ -55,7 +55,8 @@ recommend new work, but it must not edit project code as part of the work itself
 1. Complete the startup gate above. Stop immediately if it fails.
 2. Ensure the canonical-main `reg_webapp` dev preview is running, following the Dev
    Preview section below. Reuse a healthy existing preview; do not start duplicate
-   servers. Record the frontend URL for the final report.
+   servers unless the startup gate's `git pull --ff-only` moved `main`. Record the
+   frontend URL for the final report.
 3. Invoke and follow the `issue-pulse` skill exactly for one heartbeat tick, including
    its tick-status, basis, restamp, re-rank, and refusal safeguards. Let `issue-pulse`
    write only its generated lanes block; apply structural issue maintenance afterward
@@ -88,8 +89,8 @@ recommend new work, but it must not edit project code as part of the work itself
      lane-staleness path before recommending work; do not rely only on
      `plan_sequence.py --lane` after invalidating the ranked lanes.
 6. Merge ready PRs, if any pass the automerge gate below. After every successful merge
-   and local fast-forward, restart or refresh the canonical-main dev preview so it
-   serves the new `main`, then capture the merged feature summary and inspection link.
+   and local fast-forward, restart the canonical-main dev preview so it serves the new
+   `main`, then capture the merged feature summary and inspection link.
 7. Decide whether new pipelines should start:
    - If a merge or lane-affecting issue edit changed during the tick, rerun and follow
      the `issue-pulse` lane-staleness path before recommending work; do not rely only on
@@ -129,9 +130,12 @@ can inspect freshly merged user-facing changes.
   Before starting a new one, check whether the recorded frontend URL still responds and
   whether `/api/context` works through it. Do not keep multiple main-checkout previews
   alive just because the old URL was forgotten.
-- After any successful merge and fast-forward of local `main`, restart or refresh the
-  preview before reporting the feature link. A running Vite/FastAPI process may still
-  serve pre-merge code until restarted.
+- If the startup gate's `git pull --ff-only` moved local `main`, restart the preview
+  before reusing it. A healthy URL only proves that the old process responds; the
+  FastAPI process does not autoreload Python code.
+- After any successful merge and fast-forward of local `main`, restart the preview
+  before reporting the feature link. A browser refresh alone can leave the FastAPI
+  process serving pre-merge backend/API code.
 - If the merged feature depends on unpublished DB content or a scratch build-db result,
   the default preview may not show it. Say that explicitly and give the
   `REG_META_DB=<scratch-db-dir> bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh`
