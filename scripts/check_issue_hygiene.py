@@ -8,6 +8,7 @@ Checks (per open issue):
   - every `Relationships` target (`Depends on`/`Blocked by`/`Part of`/… #N) resolves
     to a real issue or PR;
   - the `blocked` label agrees with whether an open blocker actually exists;
+  - the `parked` label is not combined with `blocked`;
   - native sub-issue ↔ `Part of #N` prose agree (catches half-wired epics);
   - `touches` globs resolve to real paths (a zero-match glob is a warning, not an
     error — new-file paths are legitimate).
@@ -72,6 +73,10 @@ TYPE_LABELS = {"enhancement", "bug", "documentation"}
 # Optional ranking signal for /plan-lanes (default = neither label = normal). At most one;
 # coarse + stable enough to be a label (unlike the churny S/L/G lanes, which stay prose).
 PRIORITY_LABELS = {"priority:high", "priority:low"}
+# Optional status labels. `blocked` means an open dependency stalls the issue; `parked`
+# means maintainer-deferred and excluded from /plan-lanes dispatch without needing a
+# synthetic blocker.
+STATUS_LABELS = {"blocked", "parked"}
 
 # A relationship tie from the AGENTS.md "# Issue tracker" convention. Anchored to the
 # start of a line (after optional bullet/quote markup) so a casual prose mention
@@ -272,10 +277,12 @@ def check_issue(
     open_blockers = sorted(
         {t for kw, t in rels if kw in BLOCKING_KEYWORDS and t in open_numbers}
     )
+    if "blocked" in labels and "parked" in labels:
+        out.warn(num, "has both 'blocked' and 'parked' labels — keep one status reason")
     if "blocked" in labels and not open_blockers:
         out.warn(num, "has 'blocked' label but no open Depends-on/Blocked-by target — "
                       "remove it if unblocked")  # fmt: skip
-    if open_blockers and "blocked" not in labels:
+    if open_blockers and "blocked" not in labels and "parked" not in labels:
         out.warn(num, f"open blocker(s) {open_blockers} but no 'blocked' label")
 
     part_of = [t for kw, t in rels if kw == "part of"]

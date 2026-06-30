@@ -3,8 +3,8 @@ name: plan-sequence
 description: >-
   Registry Research Toolkit issue sequencing workflow. Use when asked to run the
   plan-sequence workflow, preview or refresh epic #328 sequencing, inspect
-  ready/running/blocked/parallel-safe issues, update the generated plan-sequence block,
-  or carve the deterministic ready lane floor with scripts/plan_sequence.py.
+  ready/running/parked/blocked/parallel-safe issues, update the generated plan-sequence
+  block, or carve the deterministic ready lane floor with scripts/plan_sequence.py.
 ---
 
 # Registry Plan Sequence
@@ -27,7 +27,7 @@ uv run --no-project python scripts/plan_sequence.py --epic <N>
 ```
 
 Report the generated block and any obvious issue hygiene problems. Keep the answer
-focused on what is ready, running, blocked, parallel-safe, and pending release.
+focused on what is ready, running, parked, blocked, parallel-safe, and pending release.
 
 ## Publish
 
@@ -58,8 +58,10 @@ conflicts.
 
 ## Interpretation
 
-- Ready: no open blocker and no open linked PR.
+- Ready: no open blocker, no `parked` label, and no open linked PR.
 - Running: an open PR closes the issue.
+- Parked: `parked` label; excluded from the lane floor without requiring a synthetic
+  blocker.
 - Blocked: `blocked` label or open `Depends on` / `Blocked by` target.
 - Parallel-safe: ready issues with disjoint declared `touches` sets.
 - Pending release: `reg_meta_build` DB content changed since the last

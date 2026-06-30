@@ -36,8 +36,9 @@ parallel agent work and the current environment permits it.
    gh issue view <N> --comments
    ```
 
-   The epic narrative is context for ranking and parked/maintainer signals, not an
-   additional candidate source.
+   The epic narrative is context for ranking and maintainer signals, not an additional
+   candidate source. Parked work should carry the `parked` label and therefore be absent
+   from the candidate floor.
 
 4. For each candidate, read the issue body and comments:
 
@@ -46,11 +47,12 @@ parallel agent work and the current environment permits it.
    ```
 
    Look for semantic conflicts with no file overlap, implicit blockers, coherence across
-   issues, stale or missing `touches`, priority labels, and relationships.
+   issues, stale or missing `touches`, priority/status labels, and relationships.
 
 5. Compose small coherent lanes. Never downgrade a script-declared must-serialize group
-   to parallel-safe. If a candidate is actually blocked despite appearing in the floor,
-   place it in Held/Notes with a one-line reason rather than ranking it.
+   to parallel-safe. If a candidate is actually blocked or parked despite appearing in
+   the floor, place it in Held/Notes with a one-line reason and flag the missing
+   `blocked`/`parked` label rather than ranking it.
 
 6. Rank by priority bucket first: any `priority:high` member beats normal;
    `priority:low`-only lanes go last. Within a bucket, prefer unblocking power,
