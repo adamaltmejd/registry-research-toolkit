@@ -1339,23 +1339,22 @@ def _search_values_fts(
             "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id)) "
             "ORDER BY "
             "CASE "
-            "  WHEN code = ? COLLATE NOCASE THEN 0 "
-            "  WHEN length(code) > length(?) "
-            "   AND substr(code, length(?) + 1, 1) IN ('.', '-', '_', '/', ':') "
-            "  THEN 1 "
-            "  ELSE 2 "
-            "END, length(code), code",
-            (q, f"{_escape_like(q)}%", q, q, q),
+            "  WHEN EXISTS ("
+            "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id"
+            "  ) THEN 0 "
+            "  ELSE 1 "
+            "END, length(code), code, code_id",
+            (q, f"{_escape_like(q)}%"),
         ).fetchall()
         # Code matches are the strongest signal a code query gives — seed them
         # below the FTS rank floor (a large negative offset) so an exact "F32"
-        # outranks any label-text hit; exact before prefix via the -1 nudge. (In
+        # outranks any label-text hit; the SQL order keeps classification-owned
+        # code hits ahead of register-local code hits. (In
         # the flat `type="all"` path this also puts code-exact hits ahead of other
         # result types for a code-shaped query — the user typed a code; the webapp
         # calls search() per-type, so its groups are unaffected.)
         for i, r in enumerate(code_rows):
-            exact = r["code"].casefold() == q.casefold()
-            code_rank = -1_000_000 + (0 if exact else 1) + i
+            code_rank = -1_000_000 + i
             existing = hits.get(r["code_id"])
             if existing is None or code_rank < existing["base_rank"]:
                 hits[r["code_id"]] = _hit(r, code_rank)

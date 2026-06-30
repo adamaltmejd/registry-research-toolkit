@@ -136,15 +136,15 @@ def test_code_like_metacharacters_match_literally(conn: sqlite3.Connection) -> N
     assert _codes("12%") == {"12%5"}
 
 
-def test_dotted_code_descendant_ranks_before_compact_prefixes(
+def test_classification_codes_rank_before_register_local_codes(
     conn: sqlite3.Connection,
 ) -> None:
     _seed_register(conn, 1, "reg")
     vid = _seed_variable(conn, 1, "10", "Register local code owner", "owner")
     _seed_code(conn, 1, "E22", "Hyperfunktion av hypofysen")
-    _seed_code(conn, 2, "E220", "Register local zero")
-    _seed_code(conn, 3, "E221", "Register local one")
-    _seed_code(conn, 4, "E22.0", "Akromegali och hypofysar gigantism")
+    _seed_code(conn, 2, "E22", "Register local exact")
+    _seed_code(conn, 3, "E220", "Register local compact prefix")
+    _seed_code(conn, 4, "E22.0", "ICD child")
     _map(conn, 2, vid)
     _map(conn, 3, vid)
     classification_id = conn.execute(
@@ -158,9 +158,14 @@ def test_dotted_code_descendant_ranks_before_compact_prefixes(
         )
     _finalize(conn)
 
-    results = search(conn, "E22", field="value", type="value", limit=3).results
+    results = search(conn, "E22", field="value", type="value", limit=4).results
 
-    assert [r.code for r in results] == ["E22", "E22.0", "E220"]
+    assert [(r.code, r.label) for r in results] == [
+        ("E22", "Hyperfunktion av hypofysen"),
+        ("E22.0", "ICD child"),
+        ("E22", "Register local exact"),
+        ("E220", "Register local compact prefix"),
+    ]
 
 
 def test_register_scope_drops_out_of_scope_only_owners(
