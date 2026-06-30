@@ -806,6 +806,75 @@ def test_top_results_keep_same_key_groups_from_different_registers():
     assert top == [iot_group, lisa_group]
 
 
+def test_top_results_direct_group_label_match_beats_prefix_leaves():
+    leaves = [
+        VariableSearchResult(
+            fqid=f"scb/register-{i}/disponibel-inkomst",
+            name="Disponibel inkomst",
+            register=f"Register {i}",
+            rank=-10.0 - i,
+        )
+        for i in range(6)
+    ]
+    group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="disponibel-inkomst",
+        group_label="Disponibel inkomst",
+        register="IoT",
+        member_count=53,
+        matched_count=36,
+        label_matched=True,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/iot/disponibel-inkomst",
+                name="Disponibel inkomst",
+                facets=(),
+            ),
+        ),
+        rank=-12.0,
+    )
+
+    ranked = _rank_display_results("disponibel", [*leaves, group])
+    top = _best_bets(
+        "disponibel",
+        [VariableSearchGroup(total_count=7, results=ranked)],
+        limit=5,
+    )
+
+    assert ranked[0] == group
+    assert top[0] == group
+
+
+def test_top_results_exact_leaf_still_beats_group_authority_bonus():
+    exact = VariableSearchResult(
+        fqid="scb/lisa/kon",
+        name="Kön",
+        register="LISA",
+        rank=-10.0,
+    )
+    broad_group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="kontroll",
+        group_label="Kontroll",
+        register="IoT",
+        member_count=80,
+        matched_count=80,
+        label_matched=True,
+        members=(
+            ConceptGroupMember(fqid="scb/iot/kontroll", name="Kontroll", facets=()),
+        ),
+        rank=-9.0,
+    )
+
+    top = _best_bets(
+        "kon",
+        [VariableSearchGroup(total_count=2, results=[broad_group, exact])],
+        limit=2,
+    )
+
+    assert top == [exact, broad_group]
+
+
 def test_display_ranking_matches_best_bet_exact_boost():
     broad = VariableSearchResult(
         fqid="scb/lsum/ftgsni200",

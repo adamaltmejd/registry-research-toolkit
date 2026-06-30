@@ -55,6 +55,8 @@ router = APIRouter(prefix="/api")
 _DEFAULT_LIMIT = 20
 _MAX_LIMIT = 50
 _TOP_RESULTS_LIMIT = 5
+_GROUP_LABEL_MATCH_BONUS = 50
+_GROUP_MATCHED_MEMBER_BONUS_CAP = 50
 
 # A "real" token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in FTS5 and would yield an empty phrase.
@@ -198,6 +200,13 @@ def _type_prior(result: SearchResult) -> int:
     return 0
 
 
+def _group_authority_bonus(result: SearchResult) -> int:
+    if result.type != "group" or not result.label_matched:
+        return 0
+    matched = max(0, result.matched_count)
+    return _GROUP_LABEL_MATCH_BONUS + min(matched, _GROUP_MATCHED_MEMBER_BONUS_CAP)
+
+
 def _best_bet_score(query: str, result: SearchResult) -> int:
     folded_query = _fold_match_text(query)
     identity_texts = _candidate_identity_texts(result)
@@ -209,6 +218,7 @@ def _best_bet_score(query: str, result: SearchResult) -> int:
         _type_prior(result)
         + (1000 if exact else 0)
         + (100 if prefix and not exact else 0)
+        + _group_authority_bonus(result)
     )
 
 
