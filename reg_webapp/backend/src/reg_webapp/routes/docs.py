@@ -5,10 +5,11 @@ the deployed container, previously unopened by the webapp). Reuses reg_meta's
 read-only query layer (`doc_search` / `doc_get` / `doc_registers`) — no new query
 logic here beyond plumbing + the response policy.
 
-POLICY: serve EXCERPTS + a pointer to the SCB source, NEVER the full converted
-body (marker+Gemini conversion quality + republication exposure). Coverage is
-LISA-only today, so the responses distinguish "no docs INGESTED" from "no doc
-found" (see the models).
+POLICY for the FTS documentation library: serve EXCERPTS + a pointer to the SCB
+source, NEVER the full converted body (marker+Gemini conversion quality +
+republication exposure). The related-document PDF surface (#742) is separate:
+those binaries are curated/rehosted under the #739 CC BY 4.0 license basis and
+served verbatim with attribution metadata.
 
 The docs DB is OPTIONAL: when absent / schema-incompat, `app.state.docs_db_path`
 is None (set at boot) and every endpoint degrades to an `ingested=False` / 404
@@ -21,8 +22,19 @@ ETag).
 
 from __future__ import annotations
 
+import urllib.parse
+from typing import TYPE_CHECKING
+
 from fastapi import APIRouter, Depends, HTTPException, Request
-from reg_meta.doc_queries import doc_get, doc_registers, doc_search
+from fastapi.responses import Response
+from reg_meta.doc_queries import (
+    doc_get,
+    doc_registers,
+    doc_search,
+    related_document_content,
+    related_documents_for_register,
+)
+from reg_meta.fqid import FqidError, validate_slug
 
 from reg_webapp.conn import docs_conn
 from reg_webapp.models import (
@@ -30,8 +42,13 @@ from reg_webapp.models import (
     DocResult,
     DocSearchResponse,
     DocVariableMentions,
+    RelatedDocument,
+    RelatedDocumentsResponse,
 )
 from reg_webapp.query_input import validate_text_query
+
+if TYPE_CHECKING:
+    from reg_meta.doc_db import RelatedDocument as RegMetaRelatedDocument
 
 router = APIRouter(prefix="/api/docs")
 
@@ -55,6 +72,33 @@ def _validated_register(register: str | None = None) -> str | None:
     return register
 
 
+def _validated_register_slug(register: str) -> str:
+    """Register slug path gate for related-document endpoints."""
+    try:
+        validate_slug(register, "register")
+    except FqidError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return register
+
+
+def _validated_filename(filename: str) -> str:
+    """Register-local PDF filename path gate.
+
+    The DB query is parameterized, but the filename also feeds
+    Content-Disposition, so reject path separators and control characters at the
+    HTTP boundary.
+    """
+    if (
+        not filename
+        or filename in {".", ".."}
+        or "/" in filename
+        or "\\" in filename
+        or any(ord(ch) < 32 or ord(ch) == 127 for ch in filename)
+    ):
+        raise HTTPException(status_code=422, detail="invalid related-document filename")
+    return filename
+
+
 def _docs_available(request: Request) -> bool:
     return request.app.state.docs_db_path is not None
 
@@ -76,6 +120,10 @@ def _doc_result(r: dict, *, fuzzy: bool = False) -> DocResult:
     )
 
 
+def _related_document(doc: RegMetaRelatedDocument) -> RelatedDocument:
+    return RelatedDocument(**doc.model_dump())
+
+
 def _excerpt(body_clean: str | None) -> str | None:
     """A bounded preview of the cleaned body — never the full text."""
     if not body_clean:
@@ -86,6 +134,69 @@ def _excerpt(body_clean: str | None) -> str | None:
     if len(text) <= _EXCERPT_CHARS:
         return text
     return text[:_EXCERPT_CHARS].rstrip() + "…"
+
+
+def _content_disposition(filename: str) -> str:
+    fallback = "".join(
+        ch if 32 <= ord(ch) < 127 and ch not in {'"', "\\"} else "_" for ch in filename
+    )
+    fallback = fallback or "document.pdf"
+    encoded = urllib.parse.quote(filename, safe="")
+    return f"inline; filename=\"{fallback}\"; filename*=UTF-8''{encoded}"
+
+
+@router.get("/related/{register}", response_model=RelatedDocumentsResponse)
+def get_related_documents(request: Request, register: str) -> RelatedDocumentsResponse:
+    """List rehosted register-version PDFs for one register.
+
+    Missing docs DB degrades to `ingested=False` instead of failing the catalog
+    page. A present DB with no rows returns an empty list.
+    """
+    register = _validated_register_slug(register)
+    if not _docs_available(request):
+        return RelatedDocumentsResponse(
+            ingested=False,
+            register=register,
+            documents=[],
+        )
+    with docs_conn(request) as conn:
+        docs = related_documents_for_register(conn, register)
+    return RelatedDocumentsResponse(
+        ingested=True,
+        register=register,
+        documents=[_related_document(doc) for doc in docs],
+    )
+
+
+@router.get(
+    "/file/{register}/{filename}",
+    response_class=Response,
+    responses={200: {"content": {"application/pdf": {}}}},
+)
+def get_related_document_file(
+    request: Request, register: str, filename: str
+) -> Response:
+    """Serve one rehosted related-document PDF by register-local filename."""
+    register = _validated_register_slug(register)
+    filename = _validated_filename(filename)
+    if not _docs_available(request):
+        raise HTTPException(status_code=404, detail="documentation index not ingested")
+    with docs_conn(request) as conn:
+        doc = related_document_content(conn, register, filename)
+    if doc is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"no related document {filename!r} for register {register!r}",
+        )
+    return Response(
+        content=doc.content,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": _content_disposition(doc.filename),
+            "Content-Length": str(doc.byte_size),
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
 
 
 @router.get("/search", response_model=DocSearchResponse)

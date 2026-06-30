@@ -2456,6 +2456,83 @@
         "title": "RegisterValueSetSearchGroup",
         "type": "object"
       },
+      "RelatedDocument": {
+        "description": "One rehosted register-version PDF's metadata. The binary BLOB is never\nincluded in JSON; callers fetch it through `/api/docs/file/{register}/{filename}`.\n`source_url` is the SCB source page/file pointer recorded during curation, and\n`license` carries the per-document reuse basis (usually `CC BY 4.0`).",
+        "properties": {
+          "byte_size": {
+            "title": "Byte Size",
+            "type": "integer"
+          },
+          "fetched": {
+            "title": "Fetched",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "license": {
+            "title": "License",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "source_url": {
+            "title": "Source Url",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "filename",
+          "source_url",
+          "license",
+          "fetched",
+          "sha256",
+          "byte_size"
+        ],
+        "title": "RelatedDocument",
+        "type": "object"
+      },
+      "RelatedDocumentsResponse": {
+        "description": "`GET /api/docs/related/{register}` \u2014 the rehosted related-document PDFs for\na register. `ingested` is False when the deployment has no docs DB at all; an\nempty `documents` list with `ingested=True` means the docs DB exists but this\nregister has no curated related-document rows.",
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/RelatedDocument"
+            },
+            "title": "Documents",
+            "type": "array"
+          },
+          "ingested": {
+            "title": "Ingested",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "related-documents",
+            "default": "related-documents",
+            "title": "Kind",
+            "type": "string"
+          },
+          "register": {
+            "title": "Register",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ingested",
+          "register",
+          "documents"
+        ],
+        "title": "RelatedDocumentsResponse",
+        "type": "object"
+      },
       "RelationshipGraph": {
         "additionalProperties": false,
         "description": "The relationship graph for a subject. ``nodes: []`` is the \"don't render\"\nsignal (the frontend gate is ``nodes.length === 0``): a lone variable with no\nsuccession / group siblings / meaningful representation boundary, or\na lone classification edition with no succession chain and no group context.\n``focus_id`` is the node matching the requested FQID (post same_as); None for\ngroup-addressed calls.",
@@ -4440,6 +4517,51 @@
         "summary": "Get Doc"
       }
     },
+    "/api/docs/file/{register}/{filename}": {
+      "get": {
+        "description": "Serve one rehosted related-document PDF by register-local filename.",
+        "operationId": "get_related_document_file_api_docs_file__register___filename__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "register",
+            "required": true,
+            "schema": {
+              "title": "Register",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "filename",
+            "required": true,
+            "schema": {
+              "title": "Filename",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/pdf": {}
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Related Document File"
+      }
+    },
     "/api/docs/for-variable": {
       "get": {
         "description": "The \"mentioned in documentation\" hook for a variable leaf: FUZZY\nname/provider_key text search over the docs index (the SPA passes the\nvariable's provider_key and/or name as `q`, scoped to its register).\n\n`register_ingested` encodes the coverage distinction \u2014 when the variable's\nregister has no ingested docs (coverage is LISA-only), absence reads as \"no\ndocs ingested for this register\", NOT \"this variable is undocumented\". Every\nresult is flagged `fuzzy` (a heuristic text match, not an authoritative\nvariable\u2192doc link).",
@@ -4504,6 +4626,46 @@
           }
         },
         "summary": "Get Docs For Variable"
+      }
+    },
+    "/api/docs/related/{register}": {
+      "get": {
+        "description": "List rehosted register-version PDFs for one register.\n\nMissing docs DB degrades to `ingested=False` instead of failing the catalog\npage. A present DB with no rows returns an empty list.",
+        "operationId": "get_related_documents_api_docs_related__register__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "register",
+            "required": true,
+            "schema": {
+              "title": "Register",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelatedDocumentsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Related Documents"
       }
     },
     "/api/docs/search": {

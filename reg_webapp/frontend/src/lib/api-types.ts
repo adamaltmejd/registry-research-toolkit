@@ -412,6 +412,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/docs/file/{register}/{filename}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Related Document File
+         * @description Serve one rehosted related-document PDF by register-local filename.
+         */
+        get: operations["get_related_document_file_api_docs_file__register___filename__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/docs/for-variable": {
         parameters: {
             query?: never;
@@ -432,6 +452,29 @@ export interface paths {
          *     variable→doc link).
          */
         get: operations["get_docs_for_variable_api_docs_for_variable_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/related/{register}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Related Documents
+         * @description List rehosted register-version PDFs for one register.
+         *
+         *     Missing docs DB degrades to `ingested=False` instead of failing the catalog
+         *     page. A present DB with no rows returns an empty list.
+         */
+        get: operations["get_related_documents_api_docs_related__register__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1811,6 +1854,50 @@ export interface components {
             total_count: number;
         };
         /**
+         * RelatedDocument
+         * @description One rehosted register-version PDF's metadata. The binary BLOB is never
+         *     included in JSON; callers fetch it through `/api/docs/file/{register}/{filename}`.
+         *     `source_url` is the SCB source page/file pointer recorded during curation, and
+         *     `license` carries the per-document reuse basis (usually `CC BY 4.0`).
+         */
+        RelatedDocument: {
+            /** Byte Size */
+            byte_size: number;
+            /** Fetched */
+            fetched: string;
+            /** Filename */
+            filename: string;
+            /** License */
+            license: string;
+            /** Sha256 */
+            sha256: string;
+            /** Source Url */
+            source_url: string;
+            /** Title */
+            title: string;
+        };
+        /**
+         * RelatedDocumentsResponse
+         * @description `GET /api/docs/related/{register}` — the rehosted related-document PDFs for
+         *     a register. `ingested` is False when the deployment has no docs DB at all; an
+         *     empty `documents` list with `ingested=True` means the docs DB exists but this
+         *     register has no curated related-document rows.
+         */
+        RelatedDocumentsResponse: {
+            /** Documents */
+            documents: components["schemas"]["RelatedDocument"][];
+            /** Ingested */
+            ingested: boolean;
+            /**
+             * Kind
+             * @default related-documents
+             * @constant
+             */
+            kind: "related-documents";
+            /** Register */
+            register: string;
+        };
+        /**
          * RelationshipGraph
          * @description The relationship graph for a subject. ``nodes: []`` is the "don't render"
          *     signal (the frontend gate is ``nodes.length === 0``): a lone variable with no
@@ -2844,6 +2931,38 @@ export interface operations {
             };
         };
     };
+    get_related_document_file_api_docs_file__register___filename__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                register: string;
+                filename: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_docs_for_variable_api_docs_for_variable_get: {
         parameters: {
             query: {
@@ -2864,6 +2983,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DocVariableMentions"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_related_documents_api_docs_related__register__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                register: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RelatedDocumentsResponse"];
                 };
             };
             /** @description Validation Error */

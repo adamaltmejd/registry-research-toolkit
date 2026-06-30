@@ -154,6 +154,67 @@ def test_for_variable_degrades_when_docs_absent(client_no_docs):
     assert body["register_ingested"] is False
 
 
+# ── related-document PDFs ───────────────────────────────────────────────────
+
+
+def test_related_documents_list_returns_metadata_without_blob(client):
+    body = client.get("/api/docs/related/lisa").json()
+    assert body == {
+        "kind": "related-documents",
+        "ingested": True,
+        "register": "lisa",
+        "documents": [
+            {
+                "title": "LISA register documentation",
+                "filename": "lisa_related.pdf",
+                "source_url": "https://www.scb.se/lisa-related",
+                "license": "CC BY 4.0",
+                "fetched": "2026-06-01",
+                "sha256": body["documents"][0]["sha256"],
+                "byte_size": len(b"%PDF-1.4\n% related document fixture\n%%EOF\n"),
+            }
+        ],
+    }
+    assert "content" not in body["documents"][0]
+
+
+def test_related_documents_list_degrades_when_docs_absent(client_no_docs):
+    body = client_no_docs.get("/api/docs/related/lisa").json()
+    assert body == {
+        "kind": "related-documents",
+        "ingested": False,
+        "register": "lisa",
+        "documents": [],
+    }
+
+
+def test_related_document_file_serves_pdf_bytes(client):
+    r = client.get("/api/docs/file/lisa/lisa_related.pdf")
+    assert r.status_code == 200
+    assert r.headers["content-type"] == "application/pdf"
+    assert r.headers["x-content-type-options"] == "nosniff"
+    assert r.headers["content-disposition"].startswith(
+        'inline; filename="lisa_related.pdf"'
+    )
+    assert r.content == b"%PDF-1.4\n% related document fixture\n%%EOF\n"
+
+
+def test_related_document_file_404_when_docs_absent(client_no_docs):
+    r = client_no_docs.get("/api/docs/file/lisa/lisa_related.pdf")
+    assert r.status_code == 404
+    assert "not ingested" in r.json()["detail"]
+
+
+def test_related_document_file_404_for_unknown_filename(client):
+    r = client.get("/api/docs/file/lisa/missing.pdf")
+    assert r.status_code == 404
+    assert "no related document" in r.json()["detail"]
+
+
+def test_related_document_register_slug_gate(client):
+    assert client.get("/api/docs/related/not-a-register!").status_code == 422
+
+
 # ── ETag + excerpt unit ──────────────────────────────────────────────────────
 
 

@@ -25,10 +25,12 @@ if TYPE_CHECKING:
     from fastapi.routing import APIRoute
 
 # The binary/download endpoints: no Pydantic response_model (raw bytes), but
-# each MUST declare its download media type in OpenAPI instead. Pinned by path +
-# expected media type so a new download endpoint is a deliberate addition here.
-_DOWNLOAD_ENDPOINTS: dict[str, str] = {
-    "/api/project/order": "text/csv",
+# each MUST declare its download media type in OpenAPI instead. Pinned by path,
+# method, and expected media type so a new download endpoint is a deliberate
+# addition here.
+_DOWNLOAD_ENDPOINTS: dict[str, tuple[str, str]] = {
+    "/api/docs/file/{register}/{filename}": ("get", "application/pdf"),
+    "/api/project/order": ("post", "text/csv"),
 }
 
 
@@ -53,8 +55,8 @@ def test_download_endpoints_declare_their_media_type():
     """The download carve-outs declare their media type in OpenAPI (a typed
     contract for the SPA) — they don't silently fall back to ``application/json``."""
     schema = create_app().openapi()
-    for path, media_type in _DOWNLOAD_ENDPOINTS.items():
-        content = schema["paths"][path]["post"]["responses"]["200"]["content"]
+    for path, (method, media_type) in _DOWNLOAD_ENDPOINTS.items():
+        content = schema["paths"][path][method]["responses"]["200"]["content"]
         assert media_type in content, (
             f"{path} should declare 200 content-type {media_type!r}, got "
             f"{list(content)}"

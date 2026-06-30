@@ -622,24 +622,28 @@ export function search(
   return searchGet<SearchResponse>("/search", q, options);
 }
 
-// ── Docs surface (#354/#394/#402) ───────────────────────────────────────────
+// ── Docs surface (#354/#394/#402/#742) ─────────────────────────────────────
 // `GET /api/docs/search?q=` returns a single documentation result group over the
 // docs FTS index; `GET /api/docs/doc/{identifier}` returns one doc's metadata +
 // source pointer + a BOUNDED excerpt (never the full body); `GET
 // /api/docs/for-variable?q=&register=` is the binding-leaf "mentioned in
-// documentation" hook (#402) — FUZZY name/provider_key text matches for one
-// variable, scoped to its register. When the deployment ships no docs index,
-// search returns `ingested:false` with empty results (NOT a 500), and the doc
-// endpoint returns 404 — the SPA degrades silently on search (failure isolation
-// in SearchView + DocMentionsPanel) and shows a clear note on the doc viewer.
+// documentation" hook (#402), and `GET /api/docs/related/{register}` +
+// `/api/docs/file/{register}/{filename}` are the related-document PDF surface
+// (#742). When the deployment ships no docs index, search/related endpoints
+// return `ingested:false` with empty results (NOT a 500), and doc/file endpoints
+// return 404 — the SPA degrades silently on search (failure isolation in
+// SearchView + DocMentionsPanel + RelatedDocumentsPanel) and shows a clear note on
+// the doc viewer.
 // Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
 // `{value}`) — never `{@html}` (they may carry FTS highlight markers; the full
-// document lives at the SCB source, not here).
+// converted FTS document lives at the SCB source, not here).
 
 export type DocSearchResponse = Schemas["DocSearchResponse"];
 export type DocResult = Schemas["DocResult"];
 export type DocDetail = Schemas["DocDetail"];
 export type DocVariableMentions = Schemas["DocVariableMentions"];
+export type RelatedDocument = Schemas["RelatedDocument"];
+export type RelatedDocumentsResponse = Schemas["RelatedDocumentsResponse"];
 
 /** Search documentation. Shares `search`'s query + abort/timeout plumbing (a ~12s
  * client `TimeoutError` layered with the caller's teardown `signal`); `limit` is
@@ -673,4 +677,26 @@ export function getDocsForVariable(
   options?: { register?: string; limit?: number; signal?: AbortSignal },
 ): Promise<DocVariableMentions> {
   return searchGet<DocVariableMentions>("/docs/for-variable", q, options);
+}
+
+/** List rehosted register-version PDFs for a bare register slug. An absent docs
+ * DB returns `ingested:false`; a present DB with no curated rows returns
+ * `documents:[]`. */
+export function getRelatedDocuments(
+  register: string,
+  options?: { signal?: AbortSignal },
+): Promise<RelatedDocumentsResponse> {
+  return apiGet<RelatedDocumentsResponse>(
+    `/docs/related/${encodeURIComponent(register)}`,
+    { signal: options?.signal },
+  );
+}
+
+/** Same-origin PDF URL for one related document. This is a browser `href`, not a
+ * JSON fetch helper, so it includes the `/api` base. */
+export function relatedDocumentFileHref(
+  register: string,
+  filename: string,
+): string {
+  return `${API_BASE}/docs/file/${encodeURIComponent(register)}/${encodeURIComponent(filename)}`;
 }

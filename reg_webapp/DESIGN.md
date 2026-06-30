@@ -443,23 +443,29 @@ both → 422) is reused by the docs endpoints below; per-group `?limit` is clamp
 
 ## Docs library endpoints (`routes/docs.py`)
 
-`GET /api/docs/*` (#354) exposes the prebuilt `reg_meta_docs.db` FTS index — already
+`GET /api/docs/*` (#354/#742) exposes the prebuilt `reg_meta_docs.db` surfaces — already
 baked into the deployed container (the Dockerfile asserts it) but previously unopened by
 the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get` /
-`doc_registers`); no new query logic beyond plumbing + the response policy.
+`doc_registers` / `related_documents_for_register` / `related_document_content`); no new
+query logic beyond plumbing + the response policy.
 
 - **Endpoints**: `GET /api/docs/search?q=&register=&limit=&offset=` (register-scoped
-  optional), `GET /api/docs/doc/{identifier}` (by variable name or filename), and
+  optional), `GET /api/docs/doc/{identifier}` (by variable name or filename),
   `GET /api/docs/for-variable?q=&register=` (the "mentioned in documentation"
-  variable-leaf hook).
-- **Policy — excerpts, never full text**: the detail endpoint returns metadata + a
-  `source` pointer + a BOUNDED `excerpt` (first `_EXCERPT_CHARS` of the cleaned body),
-  and search returns the FTS `snippet`. The full converted body is NEVER served
-  (marker+Gemini conversion quality + republication exposure). `source` is the SCB
-  source-document identifier; `source_url` is the resolved SCB PDF link (populated at
-  doc-DB build from the curated `doc_sources.toml` map, #372), None when the source is
-  uncurated; `source_title` is the human-readable publication title (also None when
-  uncurated). Coverage is LISA-only today.
+  variable-leaf hook), `GET /api/docs/related/{register}` (metadata for rehosted
+  register-version PDFs), and `GET /api/docs/file/{register}/{filename}` (the PDF bytes
+  for an exact register-local filename).
+- **Policy — FTS excerpts, never full converted text**: the detail endpoint returns
+  metadata + a `source` pointer + a BOUNDED `excerpt` (first `_EXCERPT_CHARS` of the
+  cleaned body), and search returns the FTS `snippet`. The full converted body is NEVER
+  served (marker+Gemini conversion quality + republication exposure). `source` is the
+  SCB source-document identifier; `source_url` is the resolved SCB PDF link (populated
+  at doc-DB build from the curated `doc_sources.toml` map, #372), None when the source
+  is uncurated; `source_title` is the human-readable publication title (also None when
+  uncurated). Coverage is LISA-only today. The related-document PDF route is the
+  separate #739/#742 licensed rehost surface: it serves curated PDF bytes verbatim with
+  `Content-Type: application/pdf`, an inline filename disposition, and JSON metadata
+  carrying `source_url`, `license`, `fetched`, `sha256`, and `byte_size`.
 - **Coverage distinction encoded in the response**: coverage is LISA-only today.
   `ingested` is False when the docs index is absent entirely; the variable hook's
   `register_ingested` is False when *that register* has no ingested docs. The flag
@@ -472,9 +478,9 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   (`app._resolve_docs_db_path`) resolves + validates it once; on absence OR
   schema-incompat it sets `app.state.docs_db_path = None` (never crashes — a broken docs
   index must not take down the catalog API). Endpoints then return `ingested=False`
-  (search / for-variable) or 404 "not ingested" (doc get). When present, the per-request
-  open is `conn.docs_conn` (same threadpool-safe model as `catalog_conn`,
-  `check_schema=False`).
+  (search / for-variable / related metadata) or 404 "not ingested" (doc get / PDF file).
+  When present, the per-request open is `conn.docs_conn` (same threadpool-safe model as
+  `catalog_conn`, `check_schema=False`).
 - **Not folded into `/api/search` or global SearchView**: the `SearchGroup` union
   reserves a `docs` arm (#350 contract), but it remains unused — the docs index is a
   *separate optional DB* and its `ingested` degradation doesn't map onto a group's
@@ -495,6 +501,13 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight, `*…*`/`_…_` →
   `<em>`) through auto-escaped Svelte interpolation — never `{@html}`, still
   excerpt-only.
+- **Related documents on subject pages (#742)**: `BindingLeafView.svelte` renders a
+  `RelatedDocumentsPanel` in the `SubjectView` docs slot, above `DocMentionsPanel`.
+  Variables inherit the register's related documents via the bare register slug. The
+  panel is another independent docs failure domain: loading/error render inline; absent
+  docs DB, no curated rows, or an empty register result omits the whole section. Each
+  row links the title to `/api/docs/file/{register}/{filename}` and shows
+  `Källa: SCB · {license}` plus a source URL link.
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
