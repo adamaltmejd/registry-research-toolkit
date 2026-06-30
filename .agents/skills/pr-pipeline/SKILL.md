@@ -65,7 +65,7 @@ PR is expected to resolve so the sequencing projection holds the whole planned l
 
 ```sh
 base_ref="main"  # use the predecessor branch name for a stacked successor
-git fetch origin "$base_ref"
+git fetch origin "$base_ref:refs/remotes/origin/$base_ref"
 git checkout -b s/<slug> "origin/$base_ref"
 git commit --allow-empty -m "wip: <scope>"
 git push -u origin s/<slug>

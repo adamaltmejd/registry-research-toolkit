@@ -59,10 +59,12 @@ recommend new work, but it must not edit project code as part of the work itself
    - Read issue `#328` body and comments for current editorial intent.
    - Inspect open PRs that close issues, especially draft PRs, stale ready PRs, and PRs
      touching the same surfaces as free candidates. Prefer `plan_sequence.py`'s held /
-     running state for dispatch decisions; use `gh pr view` for metadata only. For Codex
-     bot-review or merge-gate status, use
-     `uv run --no-project python scripts/pr_review_status.py <pr>` rather than inferring
-     from `gh pr view`.
+     running state for dispatch decisions. Inspect merge-gate handoff state from the PR
+     body with
+     `gh pr view <pr> --json body,headRefOid,author,baseRefName,headRefName,isDraft,mergeable`;
+     `scripts/pr_review_status.py` does not read the PR body. For Codex bot-review
+     status, use `uv run --no-project python scripts/pr_review_status.py <pr>` rather
+     than inferring from `gh pr view`.
    - Read candidate issue bodies and comments before recommending them. Fetch one issue
      per command; do not pass a space-separated issue list as one `gh issue view`
      identifier.
@@ -129,12 +131,12 @@ Automerge is allowed when all of these are true:
   conflicting active PR, pending release coordination, or maintainer stop note.
 - For stacked PRs, branch deletion cannot break dependent PRs. Before merging a stack
   predecessor, inspect open successors' `baseRefName` and `headRefName`. If a successor
-  is based on the predecessor branch, prevent branch deletion or retarget the successor
-  immediately after merge, then verify it remains open on the intended head. After any
-  retarget, require the successor branch to be rebased or otherwise updated onto the new
-  base, then regenerate checks, Codex bot review, independent-review judgment, and the
-  merge-gate block before automerging it. Never delete a branch that is the head branch
-  of another open PR.
+  is based on the predecessor branch, do not delete the predecessor branch during merge;
+  immediately retarget the successor to `main` after the predecessor merge, then verify
+  it remains open on the intended head. After retargeting, require the successor branch
+  to be rebased or otherwise updated onto the new base, then regenerate checks, Codex
+  bot review, independent-review judgment, and the merge-gate block before automerging
+  it. Never delete a branch that is the head branch of another open PR.
 
 Use the repo's normal squash merge:
 

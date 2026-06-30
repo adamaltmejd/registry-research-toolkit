@@ -422,12 +422,12 @@ handoff, block automerge and ask the user.
   didn't advance in between.)
 - **Stacked PR branch safety**: before merging a stack predecessor, inspect open
   successor PRs' `baseRefName` and `headRefName`. If a successor is based on the
-  predecessor branch, prevent branch deletion or retarget the successor immediately
-  after merge, then verify it remains open on the intended head. After any retarget,
-  require the successor branch to be rebased or otherwise updated onto the new base,
-  then regenerate checks, Codex bot review, independent-review judgment, and the
-  merge-gate block before automerging it. Never delete a branch that is the head branch
-  of another open PR.
+  predecessor branch, do not delete the predecessor branch during merge; immediately
+  retarget the successor to `main` after the predecessor merge, then verify it remains
+  open on the intended head. After retargeting, require the successor branch to be
+  rebased or otherwise updated onto the new base, then regenerate checks, Codex bot
+  review, independent-review judgment, and the merge-gate block before automerging it.
+  Never delete a branch that is the head branch of another open PR.
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →

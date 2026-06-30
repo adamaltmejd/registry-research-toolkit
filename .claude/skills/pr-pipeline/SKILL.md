@@ -128,9 +128,9 @@ its Step A below; for a multi-PR lane, do all the known ones first.
 
 **A · Implement.** Branch off the correct remote base: `base_ref="main"` for independent
 work, or the predecessor branch name for a stacked successor. Run
-`git fetch origin "$base_ref" && git checkout -b s/<slug> "origin/$base_ref"` (you may
-be in a worktree with `main` checked out elsewhere, so don't `checkout main`). **Open
-the draft PR first**, before any code lands: an empty WIP commit
+`git fetch origin "$base_ref:refs/remotes/origin/$base_ref" && git checkout -b s/<slug> "origin/$base_ref"`
+(you may be in a worktree with `main` checked out elsewhere, so don't `checkout main`).
+**Open the draft PR first**, before any code lands: an empty WIP commit
 (`git commit --allow-empty -m "wip: <scope>"`), push, then
 `gh pr create --draft --base "$base_ref" --body-file <file>` whose body carries
 `Closes #<each issue this PR resolves>`. For stacked successors, passing `--base` is

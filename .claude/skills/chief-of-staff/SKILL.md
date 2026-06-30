@@ -42,7 +42,9 @@ new work, but it must not edit project code as part of the work itself.
 3. Build the operating picture:
    - run `uv run --no-project python scripts/plan_sequence.py --lane`;
    - read issue `#328` and current candidate issue bodies/comments;
-   - inspect open PRs that close issues, especially drafts, ready PRs, and stacks.
+   - inspect open PRs that close issues, especially drafts, ready PRs, and stacks;
+   - read merge-gate handoff blocks from PR bodies with `gh pr view`, not from
+     `scripts/pr_review_status.py`, which is only the Codex bot-review signal.
 4. Apply clear, evidence-backed issue maintenance automatically. If it changes
    lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
    `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
@@ -77,11 +79,12 @@ Merge only on the current head and only when every item passes:
   `--match-head-commit` with that same SHA.
 - For stacked PRs, branch deletion cannot close or break dependent PRs. Before merging a
   stack predecessor, inspect open successors' `baseRefName` and `headRefName`. If a
-  successor is based on the predecessor branch, prevent branch deletion or retarget the
-  successor immediately after merge, then verify it remains open on the intended head.
-  After any retarget, require the successor branch to be rebased or otherwise updated
-  onto the new base, then regenerate checks, Codex bot review, independent-review
-  judgment, and the merge-gate block before automerging it.
+  successor is based on the predecessor branch, do not delete the predecessor branch
+  during merge; immediately retarget the successor to `main` after the predecessor
+  merge, then verify it remains open on the intended head. After retargeting, require
+  the successor branch to be rebased or otherwise updated onto the new base, then
+  regenerate checks, Codex bot review, independent-review judgment, and the merge-gate
+  block before automerging it.
 
 Merge one PR at a time:
 
