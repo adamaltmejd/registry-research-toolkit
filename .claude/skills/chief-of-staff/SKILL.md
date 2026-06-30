@@ -72,6 +72,9 @@ Merge only on the current head and only when every item passes:
   stack predecessor, inspect open successors' `baseRefName` and `headRefName`. If a
   successor is based on the predecessor branch, prevent branch deletion or retarget the
   successor immediately after merge, then verify it remains open on the intended head.
+  After any retarget, require the successor branch to be rebased or otherwise updated
+  onto the new base, then regenerate checks, Codex bot review, independent-review
+  judgment, and the merge-gate block before automerging it.
 
 Merge one PR at a time:
 
@@ -79,8 +82,9 @@ Merge one PR at a time:
 gh pr merge <pr> --squash --match-head-commit <headRefOid>
 ```
 
-After each merge, fetch `origin main` and verify the PR's changes are actually present
-on `main`, not merely that GitHub reports a merge commit. For a stack, re-check the next
+After each merge, fetch `origin main`, fast-forward the local main checkout with
+`git merge --ff-only origin/main`, and verify the PR's changes are actually present on
+`main`, not merely that GitHub reports a merge commit. For a stack, re-check the next
 PR's head, checks, bot signal, mergeability, durable proof, and gate block before
 merging it.
 

@@ -409,14 +409,19 @@ single pipeline handoff signal; no separate ready-to-merge comment is required.
   complete the manual rendered review; do not skip visual verification.
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip and pass that SHA to `gh pr merge --match-head-commit`; after merging,
-  confirm the PR's changes are actually present on main — the GitHub API can capture a
-  stale head and silently drop just-pushed commits. (Comparing the merge commit's tree
-  to the branch tip works only when the base didn't advance in between.)
+  fetch `origin main`, fast-forward the local main checkout with
+  `git merge --ff-only origin/main`, and confirm the PR's changes are actually present
+  on main — the GitHub API can capture a stale head and silently drop just-pushed
+  commits. (Comparing the merge commit's tree to the branch tip works only when the base
+  didn't advance in between.)
 - **Stacked PR branch safety**: before merging a stack predecessor, inspect open
   successor PRs' `baseRefName` and `headRefName`. If a successor is based on the
   predecessor branch, prevent branch deletion or retarget the successor immediately
-  after merge, then verify it remains open on the intended head. Never delete a branch
-  that is the head branch of another open PR.
+  after merge, then verify it remains open on the intended head. After any retarget,
+  require the successor branch to be rebased or otherwise updated onto the new base,
+  then regenerate checks, Codex bot review, independent-review judgment, and the
+  merge-gate block before automerging it. Never delete a branch that is the head branch
+  of another open PR.
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →

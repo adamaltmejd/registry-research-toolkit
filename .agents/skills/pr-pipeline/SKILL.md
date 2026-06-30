@@ -64,16 +64,19 @@ implementation, not just the first branch. Each draft body must close the issue(
 PR is expected to resolve so the sequencing projection holds the whole planned lane.
 
 ```sh
-git fetch origin main
-git checkout -b s/<slug> origin/main
+base_ref="main"  # use the predecessor branch name for a stacked successor
+git fetch origin "$base_ref"
+git checkout -b s/<slug> "origin/$base_ref"
 git commit --allow-empty -m "wip: <scope>"
 git push -u origin s/<slug>
-gh pr create --draft --title "wip: <scope>" --body-file <body-file>
+gh pr create --draft --base "$base_ref" --title "wip: <scope>" --body-file <body-file>
 ```
 
-The PR body must contain `Closes #<issue>` for each issue the PR resolves. Use
-`--body-file`, not an inline heredoc. Supply `--title` (or `--fill` when appropriate) so
-the draft claim works in noninteractive agent runs.
+The PR body must contain `Closes #<issue>` for each issue the PR resolves. For stacked
+successors, set `base_ref` to the predecessor branch and pass `--base "$base_ref"`; do
+not let `gh pr create` default the child PR back to `main`. Use `--body-file`, not an
+inline heredoc. Supply `--title` (or `--fill` when appropriate) so the draft claim works
+in noninteractive agent runs.
 
 If the user asked only for local implementation and not PR creation, skip the draft
 claim and say why.

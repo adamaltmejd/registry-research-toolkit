@@ -126,23 +126,25 @@ pick a colliding issue (see CLAUDE.md "Marking work in-flight"). If a new PR bec
 necessary mid-flight, open its draft the moment you know. Each PR's draft is opened in
 its Step A below; for a multi-PR lane, do all the known ones first.
 
-**A · Implement.** Branch off the remote —
-`git fetch origin main && git checkout -b s/<slug> origin/main` (you may be in a
-worktree with `main` checked out elsewhere, so don't `checkout main`). **Open the draft
-PR first**, before any code lands: an empty WIP commit
+**A · Implement.** Branch off the correct remote base: `base_ref="main"` for independent
+work, or the predecessor branch name for a stacked successor. Run
+`git fetch origin "$base_ref" && git checkout -b s/<slug> "origin/$base_ref"` (you may
+be in a worktree with `main` checked out elsewhere, so don't `checkout main`). **Open
+the draft PR first**, before any code lands: an empty WIP commit
 (`git commit --allow-empty -m "wip: <scope>"`), push, then
-`gh pr create --draft --body-file <file>` whose body carries
-`Closes #<each issue this PR resolves>`. This marks the issue(s) **in-flight**
-(`running` in the sequencing projection) immediately, so a concurrent dispatch skips
-them and anything touching their files — it's how lanes stay non-colliding without a
-separate claim. Draft also holds bot review until you start it (Step B → "When to mark
-the PR ready"), and an inline `--body` heredoc can trip the permission classifier, so
-use `--body-file`. Then dispatch the implementer(s) with the scope + the FAST Verify
-only (lint / format / `ty` / `pytest`); the real `reg-meta-build build-db` is NOT in
-their loop — it's your \~20-min merge-gate check (Step E). For a **frontend PR**,
-rendering is part of the loop too — cheap, unlike `build-db`: the implementer renders
-its change with the one-shot driver,
-`reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` (or
+`gh pr create --draft --base "$base_ref" --body-file <file>` whose body carries
+`Closes #<each issue this PR resolves>`. For stacked successors, passing `--base` is
+mandatory; otherwise `gh` defaults the child PR to `main` and pulls the predecessor diff
+into the successor PR. This marks the issue(s) **in-flight** (`running` in the
+sequencing projection) immediately, so a concurrent dispatch skips them and anything
+touching their files — it's how lanes stay non-colliding without a separate claim. Draft
+also holds bot review until you start it (Step B → "When to mark the PR ready"), and an
+inline `--body` heredoc can trip the permission classifier, so use `--body-file`. Then
+dispatch the implementer(s) with the scope + the FAST Verify only (lint / format / `ty`
+/ `pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your
+\~20-min merge-gate check (Step E). For a **frontend PR**, rendering is part of the loop
+too — cheap, unlike `build-db`: the implementer renders its change with the one-shot
+driver, `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` (or
 `dev.sh smoke` for the catalog flow). That mode picks free ports, renders from the
 **worktree's own `.venv`**, and **tears the servers down on exit** — so it's
 worktree-correct and never collides or leaks even under parallel fan-out (no

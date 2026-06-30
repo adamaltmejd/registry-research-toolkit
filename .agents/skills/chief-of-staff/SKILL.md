@@ -122,8 +122,11 @@ Automerge is allowed when all of these are true:
 - For stacked PRs, branch deletion cannot break dependent PRs. Before merging a stack
   predecessor, inspect open successors' `baseRefName` and `headRefName`. If a successor
   is based on the predecessor branch, prevent branch deletion or retarget the successor
-  immediately after merge, then verify it remains open on the intended head. Never
-  delete a branch that is the head branch of another open PR.
+  immediately after merge, then verify it remains open on the intended head. After any
+  retarget, require the successor branch to be rebased or otherwise updated onto the new
+  base, then regenerate checks, Codex bot review, independent-review judgment, and the
+  merge-gate block before automerging it. Never delete a branch that is the head branch
+  of another open PR.
 
 Use the repo's normal squash merge:
 
@@ -131,8 +134,9 @@ Use the repo's normal squash merge:
 gh pr merge <pr> --squash --match-head-commit <headRefOid>
 ```
 
-After each merge, fetch `origin main` and verify the PR's changes are actually present
-on `main`, not merely that GitHub reports a merge commit. For a stack, merge one PR at a
+After each merge, fetch `origin main`, fast-forward the local main checkout with
+`git merge --ff-only origin/main`, and verify the PR's changes are actually present on
+`main`, not merely that GitHub reports a merge commit. For a stack, merge one PR at a
 time in dependency order, then re-check the next PR's head, mergeability, checks, Codex
 bot signal, and gate block before merging it. Do not batch-merge a stack from stale
 evidence.
