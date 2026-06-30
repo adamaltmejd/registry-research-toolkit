@@ -1337,8 +1337,15 @@ def _search_values_fts(
             "WHERE (code = ? COLLATE NOCASE OR code LIKE ? ESCAPE '\\') "
             "AND (mapping_count > 0 OR EXISTS ("
             "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id)) "
-            "ORDER BY (code = ? COLLATE NOCASE) DESC, length(code), code",
-            (q, f"{_escape_like(q)}%", q),
+            "ORDER BY "
+            "CASE "
+            "  WHEN code = ? COLLATE NOCASE THEN 0 "
+            "  WHEN length(code) > length(?) "
+            "   AND substr(code, length(?) + 1, 1) IN ('.', '-', '_', '/', ':') "
+            "  THEN 1 "
+            "  ELSE 2 "
+            "END, length(code), code",
+            (q, f"{_escape_like(q)}%", q, q, q),
         ).fetchall()
         # Code matches are the strongest signal a code query gives — seed them
         # below the FTS rank floor (a large negative offset) so an exact "F32"

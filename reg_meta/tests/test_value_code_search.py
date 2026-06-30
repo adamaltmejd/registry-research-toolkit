@@ -136,6 +136,33 @@ def test_code_like_metacharacters_match_literally(conn: sqlite3.Connection) -> N
     assert _codes("12%") == {"12%5"}
 
 
+def test_dotted_code_descendant_ranks_before_compact_prefixes(
+    conn: sqlite3.Connection,
+) -> None:
+    _seed_register(conn, 1, "reg")
+    vid = _seed_variable(conn, 1, "10", "Register local code owner", "owner")
+    _seed_code(conn, 1, "E22", "Hyperfunktion av hypofysen")
+    _seed_code(conn, 2, "E220", "Register local zero")
+    _seed_code(conn, 3, "E221", "Register local one")
+    _seed_code(conn, 4, "E22.0", "Akromegali och hypofysar gigantism")
+    _map(conn, 2, vid)
+    _map(conn, 3, vid)
+    classification_id = conn.execute(
+        "INSERT INTO classification (short_name, name) VALUES ('ICD-10-SE', 'ICD')"
+    ).lastrowid
+    for code_id in (1, 4):
+        conn.execute(
+            "INSERT INTO classification_code "
+            "(classification_id, code_id, level, is_valid) VALUES (?, ?, NULL, 1)",
+            (classification_id, code_id),
+        )
+    _finalize(conn)
+
+    results = search(conn, "E22", field="value", type="value", limit=3).results
+
+    assert [r.code for r in results] == ["E22", "E22.0", "E220"]
+
+
 def test_register_scope_drops_out_of_scope_only_owners(
     conn: sqlite3.Connection,
 ) -> None:
