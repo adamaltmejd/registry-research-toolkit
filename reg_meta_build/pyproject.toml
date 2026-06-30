@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reg-meta-build"
-version = "0.20.0"
+version = "0.21.0"
 description = "Builder for the reg_meta SQLite databases (main + docs)"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "reg-meta>=0.29.0",
+    "reg-meta>=0.30.0",
     "openpyxl>=3.1",
     "pydantic>=2.13.4",
 ]
