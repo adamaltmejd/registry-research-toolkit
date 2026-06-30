@@ -190,10 +190,21 @@ const memberColumnsByFqid = $derived.by(() => {
   return map;
 });
 
-/** The inter-variable SUCCESSION fold (#902): the group graph's `succession` edges
- * collapse predecessor→successor pairs whose BOTH endpoints are members of this group,
- * so a superseded edition is NOT a co-equal band — the chain HEAD (the latest edition)
- * leads and its predecessor(s) become quiet history on the head band.
+const suppressRowDimensionFilters = $derived(
+  node?.provider === "scb" &&
+    node.register === "lisa" &&
+    node.key === "naringsgren",
+);
+
+const foldSuccessionBands = $derived((node?.axes.length ?? 0) === 0);
+
+/** The inter-variable SUCCESSION fold (#902): for AXIS-LESS groups, the group graph's
+ * `succession` edges collapse predecessor→successor pairs whose BOTH endpoints are
+ * members of this group, so a superseded edition is NOT a co-equal band — the chain
+ * HEAD (the latest edition) leads and its predecessor(s) become quiet history on the
+ * head band. Faceted groups still surface the same history, but keep predecessor
+ * members selectable: their axes are the user's browse surface, and hiding an older
+ * member can make period-specific columns unreachable.
  *
  * Edge direction (reg_meta `graph.py`): `source` is the PREDECESSOR (older), `target`
  * the SUCCESSOR (newer), and `effective_year` the year the source was replaced by the
@@ -333,9 +344,11 @@ const bands = $derived.by((): PickerBand[] => {
       continue;
     }
     seen.add(member.fqid);
-    // A member superseded by an in-group succession edge (#902) is not its own band —
-    // it rides as history on its chain head. Drop it here.
-    if (superseded.has(member.fqid)) {
+    // In axis-less groups, a member superseded by an in-group succession edge (#902)
+    // is not its own band — it rides as history on its chain head. Faceted groups
+    // keep predecessors selectable while still showing the successor's history
+    // disclosure.
+    if (foldSuccessionBands && superseded.has(member.fqid)) {
       continue;
     }
     const allStates = nodesByFqid.get(member.fqid)?.states ?? [];
@@ -604,6 +617,7 @@ function commitSelected(selected: PickerSelection[]): void {
       <RepresentationPicker
         {bands}
         axes={node.axes}
+        includeRowDimensionFilters={!suppressRowDimensionFilters}
         window={pickerWindow}
         canAdd={seedReady}
         {focusKey}

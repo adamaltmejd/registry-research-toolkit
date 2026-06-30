@@ -776,7 +776,7 @@ function focusNode(over: Partial<VariableGraphNode> = {}): VariableGraphNode {
   return {
     kind: "variable",
     id: "v1",
-    fqid: "scb/lisa/agi1astsni2007g",
+    fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
     label: "Näringsgren, största förvärvskälla",
     group_key: null,
     group_label: null,
@@ -1070,7 +1070,9 @@ describe("qualifierFromFocus (#670, graph-sourced #678)", () => {
       ],
       group_label: "Näringsgren, största förvärvskälla",
     });
-    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
+    expect(
+      qualifierFromFocus(focus, "scb/lisa/naringsgren-storsta-agi-sni2007g"),
+    ).toEqual({
       text: "AGI · 2007 SNI edition",
       kind: "facets",
     });
@@ -1081,7 +1083,9 @@ describe("qualifierFromFocus (#670, graph-sourced #678)", () => {
       facets: [{ axis: "source", value: "ku", label: "KU" }],
       group_label: "Näringsgren",
     });
-    expect(qualifierFromFocus(focus, "scb/lisa/ku1astsni2002g")).toEqual({
+    expect(
+      qualifierFromFocus(focus, "scb/lisa/naringsgren-storsta-ku-sni2002g"),
+    ).toEqual({
       text: "KU",
       kind: "facets",
     });
@@ -1097,21 +1101,25 @@ describe("qualifierFromFocus (#670, graph-sourced #678)", () => {
     // focus node's own fqid IS the canonical identity, so the slug reads it; the
     // leaf arg is only the fallback when the focus carries no fqid.
     const focus = focusNode({
-      fqid: "scb/lisa/agi1astsni2007g",
+      fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
       facets: [],
       group_label: "Näringsgren",
     });
-    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
-      text: "agi1astsni2007g",
+    expect(
+      qualifierFromFocus(focus, "scb/lisa/naringsgren-storsta-agi-sni2007g"),
+    ).toEqual({
+      text: "naringsgren-storsta-agi-sni2007g",
       kind: "slug",
     });
     const focusB = focusNode({
-      fqid: "scb/lisa/ku1astsni",
+      fqid: "scb/lisa/naringsgren-storsta-ku",
       facets: [],
       group_label: "Näringsgren",
     });
-    expect(qualifierFromFocus(focusB, "scb/lisa/ku1astsni")).toEqual({
-      text: "ku1astsni",
+    expect(
+      qualifierFromFocus(focusB, "scb/lisa/naringsgren-storsta-ku"),
+    ).toEqual({
+      text: "naringsgren-storsta-ku",
       kind: "slug",
     });
   });
@@ -1126,7 +1134,9 @@ describe("qualifierFromFocus (#670, graph-sourced #678)", () => {
       facets: [],
       group_label: "Näringsgren",
     });
-    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
+    expect(
+      qualifierFromFocus(focus, "scb/lisa/naringsgren-storsta-agi-sni2007g"),
+    ).toEqual({
       text: "inkjan",
       kind: "slug",
     });
@@ -1140,8 +1150,10 @@ describe("qualifierFromFocus (#670, graph-sourced #678)", () => {
       facets: [],
       group_label: "Näringsgren",
     });
-    expect(qualifierFromFocus(focus, "scb/lisa/agi1astsni2007g")).toEqual({
-      text: "agi1astsni2007g",
+    expect(
+      qualifierFromFocus(focus, "scb/lisa/naringsgren-storsta-agi-sni2007g"),
+    ).toEqual({
+      text: "naringsgren-storsta-agi-sni2007g",
       kind: "slug",
     });
   });
@@ -1204,13 +1216,13 @@ describe("groupLinkFromFocus (#670, graph-sourced #678)", () => {
     key: "naringsgren",
   };
   const grouped = focusNode({
-    group_label: "Näringsgren, största förvärvskälla",
+    group_label: "Näringsgren",
     group_key: "naringsgren",
   });
 
   it("returns the focus group_label + the group-subject href from the leaf ref", () => {
     expect(groupLinkFromFocus(grouped, ref)).toEqual({
-      label: "Näringsgren, största förvärvskälla",
+      label: "Näringsgren",
       href: "/catalog/group/scb/lisa/naringsgren",
     });
   });
@@ -2556,6 +2568,26 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
     ]);
   });
 
+  it("can suppress row-level variant/coding filters when curated facets are authoritative", () => {
+    const bands = [
+      fband("A", [{ axis: "level", value: "grov", label: "Grov" }], {
+        variant: "ind",
+        valueSetLabel: "SNI 2002",
+      }),
+      fband("B", [{ axis: "level", value: "detalj", label: "Detaljerad" }], {
+        variant: "fam",
+        valueSetLabel: "SNI 2007",
+      }),
+    ];
+    const dims = pickerFilterDimensions(
+      bands,
+      [{ name: "level", label: "Level" }],
+      { includeRowDimensions: false },
+    );
+    expect(dims.map((d) => d.kind)).toEqual(["facet"]);
+    expect(dims[0].label).toBe("Level");
+  });
+
   it("a single-population, single-coding, single-axis group surfaces NO dimension", () => {
     const bands = [
       fband("C", [{ axis: "enhet", value: "ind", label: "Individ" }], {
@@ -3510,8 +3542,8 @@ describe("humanizeClassificationSlug (#668)", () => {
     expect(humanizeClassificationSlug("icd-10-se")).toBe("icd-10-se");
     expect(humanizeClassificationSlug("atc")).toBe("atc");
     // A trailing-suffix vintage isn't the clean form → verbatim.
-    expect(humanizeClassificationSlug("agi1astsni2007g")).toBe(
-      "agi1astsni2007g",
+    expect(humanizeClassificationSlug("naringsgren-storsta-agi-sni2007g")).toBe(
+      "naringsgren-storsta-agi-sni2007g",
     );
   });
 });

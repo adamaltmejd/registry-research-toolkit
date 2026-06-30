@@ -77,74 +77,223 @@ to = "scb/lisa/anninkf18"
 effective_year = 2018
 note = "Summa annan inkomst recut to the 2018 års definition"
 
-# ── LISA näringsgren: kontrolluppgift → arbetsgivardeklaration source switch (#375) ──
+# ── LISA näringsgren: SNI coding succession + KU → AGI source switch (#375/#931) ──
+#    The browser groups every LISA näringsgren variable under one concept group; SNI
+#    vintage changes are succession, not a facet. These edges cover the coding steps
+#    that are represented by distinct variable FQIDs. Coding changes inside a single
+#    variable's state timeline (for example the base huvudsaklig variables) stay in
+#    `variable_state` and do not get a separate variable-level edge.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-individ-sni92b"
+to = "scb/lisa/naringsgren-huvud-individ-sni2002b"
+effective_year = 2002
+note = "Huvudsaklig näringsgren, individ, begränsad nivå moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-individ-sni92g"
+to = "scb/lisa/naringsgren-huvud-individ-sni2002g"
+effective_year = 2002
+note = "Huvudsaklig näringsgren, individ, grov nivå moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-individ-sni2002g"
+to = "scb/lisa/naringsgren-huvud-individ-sni2007g"
+effective_year = 2007
+note = "Huvudsaklig näringsgren, individ, grov nivå moved from SNI2002 to SNI2007"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-arbetsstalle-sni92b"
+to = "scb/lisa/naringsgren-huvud-arbetsstalle-sni2002b"
+effective_year = 2002
+note = "Huvudsaklig näringsgren, arbetsställe, begränsad nivå moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-arbetsstalle-sni92g"
+to = "scb/lisa/naringsgren-huvud-arbetsstalle-sni2002g"
+effective_year = 2002
+note = "Huvudsaklig näringsgren, arbetsställe, grov nivå moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-arbetsstalle-sni2002g"
+to = "scb/lisa/naringsgren-huvud-arbetsstalle-sni2007g"
+effective_year = 2007
+note = "Huvudsaklig näringsgren, arbetsställe, grov nivå moved from SNI2002 to SNI2007"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-foretag-sni92b"
+to = "scb/lisa/naringsgren-huvud-foretag-sni2002b"
+effective_year = 2002
+note = "Huvudsaklig näringsgren, företag, begränsad nivå moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-foretag-sni92g"
+to = "scb/lisa/naringsgren-huvud-foretag-sni2002g"
+effective_year = 2002
+note = "Huvudsaklig näringsgren, företag, grov nivå moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-huvud-foretag-sni2002g"
+to = "scb/lisa/naringsgren-huvud-foretag-sni2007g"
+effective_year = 2007
+note = "Huvudsaklig näringsgren, företag, grov nivå moved from SNI2002 to SNI2007"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-storsta-ku-sni69"
+to = "scb/lisa/naringsgren-storsta-ku"
+effective_year = 1993
+note = "Näringsgren (rank 1, detalj) moved from SNI69 to the KU SNI92/SNI2002/SNI2007 timeline"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-storsta-ku-sni92b"
+to = "scb/lisa/naringsgren-storsta-ku-sni2002b"
+effective_year = 2002
+note = "Näringsgren (rank 1, begränsad nivå) moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-storsta-ku-sni92g"
+to = "scb/lisa/naringsgren-storsta-ku-sni2002g"
+effective_year = 2002
+note = "Näringsgren (rank 1, grov nivå) moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-storsta-ku-sni2002g"
+to = "scb/lisa/naringsgren-storsta-ku-sni2007g"
+effective_year = 2007
+note = "Näringsgren (rank 1, grov nivå) moved from SNI2002 to SNI2007"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni69"
+to = "scb/lisa/naringsgren-nast-storsta-ku"
+effective_year = 1993
+note = "Näringsgren (rank 2, detalj) moved from SNI69 to the KU SNI92/SNI2002/SNI2007 timeline"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni92b"
+to = "scb/lisa/naringsgren-nast-storsta-ku-sni2002b"
+effective_year = 2002
+note = "Näringsgren (rank 2, begränsad nivå) moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni92g"
+to = "scb/lisa/naringsgren-nast-storsta-ku-sni2002g"
+effective_year = 2002
+note = "Näringsgren (rank 2, grov nivå) moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni2002g"
+to = "scb/lisa/naringsgren-nast-storsta-ku-sni2007g"
+effective_year = 2007
+note = "Näringsgren (rank 2, grov nivå) moved from SNI2002 to SNI2007"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni69"
+to = "scb/lisa/naringsgren-tredje-storsta-ku"
+effective_year = 1993
+note = "Näringsgren (rank 3, detalj) moved from SNI69 to the KU SNI92/SNI2002/SNI2007 timeline"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni92b"
+to = "scb/lisa/naringsgren-tredje-storsta-ku-sni2002b"
+effective_year = 2002
+note = "Näringsgren (rank 3, begränsad nivå) moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni92g"
+to = "scb/lisa/naringsgren-tredje-storsta-ku-sni2002g"
+effective_year = 2002
+note = "Näringsgren (rank 3, grov nivå) moved from SNI92 to SNI2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni2002g"
+to = "scb/lisa/naringsgren-tredje-storsta-ku-sni2007g"
+effective_year = 2007
+note = "Näringsgren (rank 3, grov nivå) moved from SNI2002 to SNI2007"
+
 #    In 2019 SCB switched the income-source näringsgren (rank 1/2/3 förvärvskälla)
 #    from kontrolluppgift (KU, ≤2018) to arbetsgivardeklaration på individnivå
 #    (AGI, 2019+) — same definition + SNI 2007 value sets, clean disjoint handoff.
 #    A replaced_by succession per rank × granularity (detalj / grov / utökad).
-#    NOT modeled here: the parallel axes (granularity g/u/b, the individ/arbetsställe/
-#    företag panels, the rank definitions, the overlapping SNI vintages) — those are
-#    dimensional grouping for a concept-group follow-up, not succession edges.
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku1astsni"
-to = "scb/lisa/agi1astsni2007"
+from = "scb/lisa/naringsgren-storsta-ku"
+to = "scb/lisa/naringsgren-storsta-agi-sni2007"
 effective_year = 2019
 note = "Näringsgren (rank 1) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku1astsni2007g"
-to = "scb/lisa/agi1astsni2007g"
+from = "scb/lisa/naringsgren-storsta-ku-sni2007g"
+to = "scb/lisa/naringsgren-storsta-agi-sni2007g"
 effective_year = 2019
 note = "Näringsgren (rank 1, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku1astsni2007u"
-to = "scb/lisa/agi1astsni2007u"
+from = "scb/lisa/naringsgren-storsta-ku-sni2007u"
+to = "scb/lisa/naringsgren-storsta-agi-sni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 1, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku2astsni"
-to = "scb/lisa/agi2astsni2007"
+from = "scb/lisa/naringsgren-nast-storsta-ku"
+to = "scb/lisa/naringsgren-nast-storsta-agi-sni2007"
 effective_year = 2019
 note = "Näringsgren (rank 2) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku2astsni2007g"
-to = "scb/lisa/agi2astsni2007g"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni2007g"
+to = "scb/lisa/naringsgren-nast-storsta-agi-sni2007g"
 effective_year = 2019
 note = "Näringsgren (rank 2, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku2astsni2007u"
-to = "scb/lisa/agi2astsni2007u"
+from = "scb/lisa/naringsgren-nast-storsta-ku-sni2007u"
+to = "scb/lisa/naringsgren-nast-storsta-agi-sni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 2, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku3astsni"
-to = "scb/lisa/agi3astsni2007"
+from = "scb/lisa/naringsgren-tredje-storsta-ku"
+to = "scb/lisa/naringsgren-tredje-storsta-agi-sni2007"
 effective_year = 2019
 note = "Näringsgren (rank 3) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku3astsni2007g"
-to = "scb/lisa/agi3astsni2007g"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni2007g"
+to = "scb/lisa/naringsgren-tredje-storsta-agi-sni2007g"
 effective_year = 2019
 note = "Näringsgren (rank 3, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/ku3astsni2007u"
-to = "scb/lisa/agi3astsni2007u"
+from = "scb/lisa/naringsgren-tredje-storsta-ku-sni2007u"
+to = "scb/lisa/naringsgren-tredje-storsta-agi-sni2007u"
 effective_year = 2019
 note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 

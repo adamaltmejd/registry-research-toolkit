@@ -1979,6 +1979,88 @@ describe("ConceptGroupView per-column facet labels (#678 finding 4)", () => {
   });
 });
 
+describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
+  function dimensionNode(
+    overrides: Partial<ConceptGroupNodeData> = {},
+  ): ConceptGroupNodeData {
+    return node({
+      key: "dimensioned",
+      label: "Dimensioned group",
+      axes: [{ name: "level", label: "Level" }],
+      members: [
+        {
+          fqid: "scb/rams/old",
+          name: "Old",
+          facets: [{ axis: "level", value: "old", label: "Old level" }],
+          coverage: null,
+        },
+        {
+          fqid: "scb/rams/new",
+          name: "New",
+          facets: [{ axis: "level", value: "new", label: "New level" }],
+          coverage: null,
+        },
+      ],
+      ...overrides,
+    } as unknown as Partial<ConceptGroupNodeData>);
+  }
+
+  function dimensionGraph(): RelationshipGraph {
+    return graph([
+      vnode("scb/rams/old", [
+        gstate({
+          variant: "individer",
+          variant_label: "Individer",
+          delivery_column_name: "OLD",
+          value_set_version_label: "SNI 2002",
+        }),
+      ]),
+      vnode("scb/rams/new", [
+        gstate({
+          variant: "familj",
+          variant_label: "Familj",
+          delivery_column_name: "NEW",
+          value_set_version_label: "SNI 2007",
+        }),
+      ]),
+    ]);
+  }
+
+  async function filterLegends(): Promise<string[]> {
+    await vi.waitFor(() => {
+      if (document.querySelectorAll(".dim-filters fieldset").length === 0) {
+        throw new Error("dimension filters not yet rendered");
+      }
+    });
+    return [...document.querySelectorAll(".dim-filters fieldset legend")].map(
+      (el) => el.textContent?.trim() ?? "",
+    );
+  }
+
+  it("keeps row-level Population/Coding filters on non-LISA concept groups", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(dimensionNode());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
+
+    renderGroup({ provider: "scb", register: "rams", key: "dimensioned" });
+
+    expect(await filterLegends()).toEqual(["Level", "Population", "Coding"]);
+  });
+
+  it("shows only curated axes on the LISA näringsgren group page", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      dimensionNode({
+        register: "lisa",
+        key: "naringsgren",
+      }),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
+
+    renderGroup({ provider: "scb", register: "lisa", key: "naringsgren" });
+
+    expect(await filterLegends()).toEqual(["Level"]);
+  });
+});
+
 describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
   it("marks the band the validated ?member= hint names", async () => {
     // The backend echoes the validated focus slug on `node.member`; the band keyed by
@@ -2107,6 +2189,46 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     const rows = document.querySelectorAll(".col-row");
     expect(rows).toHaveLength(1);
     expect(rows[0].textContent).toContain("DINFnew");
+  });
+
+  it("keeps faceted succession predecessors selectable while still showing history", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "faceted-succession",
+        label: "Faceted succession",
+        axes: [{ name: "level", label: "Level" }],
+        members: [
+          {
+            fqid: "scb/iot/dispink-old",
+            name: "Disponibel inkomst familj",
+            facets: [{ axis: "level", value: "old", label: "Old level" }],
+            coverage: null,
+          },
+          {
+            fqid: "scb/iot/dispink-new",
+            name: "Disponibel inkomst familj 2004",
+            facets: [{ axis: "level", value: "new", label: "New level" }],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    router.navigate("/catalog/group/scb/iot/faceted-succession");
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "faceted-succession",
+    });
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFold/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("checkbox", { name: /DINFnew/ }))
+      .toBeVisible();
+    await expect.element(page.getByText("supersedes 1 edition")).toBeVisible();
   });
 
   it("surfaces the superseded predecessor as reachable HISTORY (a 'supersedes' disclosure)", async () => {

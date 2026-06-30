@@ -103,6 +103,7 @@ export interface PickerSelection {
 let {
   bands,
   axes = [],
+  includeRowDimensionFilters = true,
   window,
   canAdd,
   focusKey = null,
@@ -115,6 +116,10 @@ let {
    * on `axis.name` and display `axis.label`. Empty (the default — the binding leaf,
    * or an axis-less group) → no facet-dimension filters. */
   axes?: readonly GroupAxisModel[];
+  /** Whether to add built-in row-level Population/Coding filters after the curated
+   * facet axes. Group pages can disable these when succession/coding should remain
+   * row metadata, not a browse facet. */
+  includeRowDimensionFilters?: boolean;
   /** The active period window as an inclusive year pair, or null (no narrowing → no
    * column dims). Columns whose span doesn't overlap render dimmed (still selectable). */
   window: [number, number] | null;
@@ -159,7 +164,11 @@ $effect(() => {
 // single-population, single-coding, single-axis-value group surfaces none → the
 // controls collapse. Filtering is a CLIENT-SIDE LENS: it narrows which rows show,
 // never the selection or the commit.
-const dimensions = $derived(pickerFilterDimensions(bands, axes));
+const dimensions = $derived(
+  pickerFilterDimensions(bands, axes, {
+    includeRowDimensions: includeRowDimensionFilters,
+  }),
+);
 
 const anyFilterActive = $derived(
   Object.values(filterSelection).some((s) => s.size > 0),
