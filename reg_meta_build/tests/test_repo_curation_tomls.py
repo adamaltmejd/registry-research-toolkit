@@ -61,6 +61,33 @@ def test_repo_concept_groups_parses() -> None:
     # territory (the materializer fails fast); load-time shape is this gate.
     assert all(len(g.members) >= 2 for g in groups)
 
+    lisa_groups = {
+        g.key: g for g in groups if (g.provider, g.register) == ("scb", "lisa")
+    }
+    assert "naringsgren" in lisa_groups
+    assert "naringsgren-huvudsaklig-individ" not in lisa_groups
+    assert "naringsgren-huvudsaklig-arbetsstalle" not in lisa_groups
+    assert "naringsgren-huvudsaklig-foretag" not in lisa_groups
+
+    naringsgren = lisa_groups["naringsgren"]
+    assert [axis for axis, _label in naringsgren.axes] == [
+        "kalla",
+        "population",
+        "level",
+        "metod",
+    ]
+    assert {member.variable for member in naringsgren.members} >= {
+        "astsni-justerad",
+        "astsni2002b-justerad",
+        "astsni2002g-justerad",
+        "naringsgren-storsta-agi-sni2007g",
+    }
+    assert all(
+        axis != "edition"
+        for member in naringsgren.members
+        for axis, _value, _label in member.coords
+    )
+
 
 def test_repo_concept_groups_auto_parses() -> None:
     # `concept_groups.auto.toml` (#496) is the GENERATED, build-critical candidate
@@ -193,14 +220,15 @@ def test_repo_relations_parses() -> None:
     for node in parent:
         sizes[find(node)] = sizes.get(find(node), 0) + 1
     assert max(sizes.values()) <= _SAME_AS_MAX_COMPONENT
-    # 11 #375 variable succession edges + 2 #400 SSYK J16 succession edges
+    # 11 #375 variable succession edges + 21 #931 LISA SNI-coding succession edges
+    # + 2 #400 SSYK J16 succession edges
     # + 3 #579 classification split edges
     # + 2 #770 ICD/KS disease-classification succession edges
     # + 7 #814 iot disponibel-inkomst 2004-års-definition succession edges
     # + 1 #875 KSju lgrp → NgGr1 representation-grain succession edge
     # + 1 #846 RTB PNR → PersonNr representation-grain rename edge
     # + 2 #846 FRIDA firm-key variant-scoped gap-fill round-trip edges.
-    assert len(relations.replaced_by) == 29
+    assert len(relations.replaced_by) == 50
     assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
     ksju_edges = [
         e

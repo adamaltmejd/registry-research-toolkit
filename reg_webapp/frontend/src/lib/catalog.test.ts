@@ -1213,17 +1213,17 @@ describe("groupLinkFromFocus (#670, graph-sourced #678)", () => {
   const ref: BindingGroupRef = {
     provider: "scb",
     register: "lisa",
-    key: "naringsgren-storsta-agi-sni2007",
+    key: "naringsgren",
   };
   const grouped = focusNode({
-    group_label: "Näringsgren, största förvärvskälla",
-    group_key: "naringsgren-storsta-agi-sni2007",
+    group_label: "Näringsgren",
+    group_key: "naringsgren",
   });
 
   it("returns the focus group_label + the group-subject href from the leaf ref", () => {
     expect(groupLinkFromFocus(grouped, ref)).toEqual({
-      label: "Näringsgren, största förvärvskälla",
-      href: "/catalog/group/scb/lisa/naringsgren-storsta-agi-sni2007",
+      label: "Näringsgren",
+      href: "/catalog/group/scb/lisa/naringsgren",
     });
   });
 
@@ -2566,6 +2566,26 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
       "SNI 2002",
       "SNI 2007",
     ]);
+  });
+
+  it("can suppress row-level variant/coding filters when curated facets are authoritative", () => {
+    const bands = [
+      fband("A", [{ axis: "level", value: "grov", label: "Grov" }], {
+        variant: "ind",
+        valueSetLabel: "SNI 2002",
+      }),
+      fband("B", [{ axis: "level", value: "detalj", label: "Detaljerad" }], {
+        variant: "fam",
+        valueSetLabel: "SNI 2007",
+      }),
+    ];
+    const dims = pickerFilterDimensions(
+      bands,
+      [{ name: "level", label: "Level" }],
+      { includeRowDimensions: false },
+    );
+    expect(dims.map((d) => d.kind)).toEqual(["facet"]);
+    expect(dims[0].label).toBe("Level");
   });
 
   it("a single-population, single-coding, single-axis group surfaces NO dimension", () => {

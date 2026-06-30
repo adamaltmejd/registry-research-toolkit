@@ -356,7 +356,7 @@ describe("DocMentionsPanel (#402)", () => {
         group: {
           provider: "scb",
           register: "lisa",
-          key: "naringsgren-storsta-agi-sni2007",
+          key: "naringsgren",
         },
       }),
     });
@@ -383,7 +383,7 @@ describe("DocMentionsPanel (#402)", () => {
         group: {
           provider: "scb",
           register: "lisa",
-          key: "naringsgren-storsta-agi-sni2007",
+          key: "naringsgren",
         },
       }),
     });

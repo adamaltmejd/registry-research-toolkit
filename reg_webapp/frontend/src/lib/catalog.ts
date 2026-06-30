@@ -278,7 +278,7 @@ export function membersHaveUniqueCoords(
 
 // ── Member-distinguishing qualifier (#670, graph-sourced #678) ───────────────
 // A grouped binding leaf (`scb/lisa/naringsgren-storsta-agi-sni2007g`) shares
-// its concept `node.name` with ~31 siblings, so the header alone can't tell
+// its concept `node.name` with many siblings, so the header alone can't tell
 // members apart.
 // The #670 header qualifier + "member of ⟨group⟩" link now derive from the
 // relationship-graph FOCUS node (the `VariableGraphNode` whose `id === focus_id`)
@@ -1609,6 +1609,13 @@ export interface PickerBandFacets {
   facets?: GroupFacetModel[];
 }
 
+export interface PickerFilterOptions {
+  /** Whether to expose per-row variant/coding filters in addition to curated facet
+   * axes. Binding leaves keep these useful row dimensions; concept-group pages can
+   * disable them when the curated axes are the authoritative browse facets. */
+  includeRowDimensions?: boolean;
+}
+
 /** The filterable dimensions across the picker's bands (#908), in display order:
  * the declared facet axes first (curator-ordered via `axes`), then `variant`, then
  * `coding`. Each is emitted ONLY when it discriminates — ≥2 distinct values across
@@ -1617,6 +1624,7 @@ export interface PickerBandFacets {
 export function pickerFilterDimensions(
   bands: readonly PickerBandFacets[],
   axes: readonly GroupAxisModel[],
+  options: PickerFilterOptions = {},
 ): PickerDimension[] {
   const out: PickerDimension[] = [];
 
@@ -1651,46 +1659,48 @@ export function pickerFilterDimensions(
     }
   }
 
-  // Variant (population) — a per-ROW dimension keyed on the variant slug, displayed
-  // by its `variantLabel` (curator name, slug-fallback).
-  const variantSeen = new Map<string, string>();
-  for (const band of bands) {
-    for (const row of band.rows) {
-      if (!variantSeen.has(row.variant)) {
-        variantSeen.set(row.variant, row.variantLabel);
+  if (options.includeRowDimensions !== false) {
+    // Variant (population) — a per-ROW dimension keyed on the variant slug, displayed
+    // by its `variantLabel` (curator name, slug-fallback).
+    const variantSeen = new Map<string, string>();
+    for (const band of bands) {
+      for (const row of band.rows) {
+        if (!variantSeen.has(row.variant)) {
+          variantSeen.set(row.variant, row.variantLabel);
+        }
       }
     }
-  }
-  if (variantSeen.size >= 2) {
-    out.push({
-      kind: "variant",
-      key: "variant",
-      label: "Population",
-      values: [...variantSeen.entries()]
-        .map(([value, label]) => ({ value, label }))
-        .sort((a, b) => a.label.localeCompare(b.label)),
-    });
-  }
+    if (variantSeen.size >= 2) {
+      out.push({
+        kind: "variant",
+        key: "variant",
+        label: "Population",
+        values: [...variantSeen.entries()]
+          .map(([value, label]) => ({ value, label }))
+          .sort((a, b) => a.label.localeCompare(b.label)),
+      });
+    }
 
-  // Coding (value-set version) — a per-ROW dimension keyed on the label itself
-  // (it's display-only; empty labels — a code-less population — contribute none).
-  const codingSeen = new Set<string>();
-  for (const band of bands) {
-    for (const row of band.rows) {
-      if (row.valueSetLabel !== "") {
-        codingSeen.add(row.valueSetLabel);
+    // Coding (value-set version) — a per-ROW dimension keyed on the label itself
+    // (it's display-only; empty labels — a code-less population — contribute none).
+    const codingSeen = new Set<string>();
+    for (const band of bands) {
+      for (const row of band.rows) {
+        if (row.valueSetLabel !== "") {
+          codingSeen.add(row.valueSetLabel);
+        }
       }
     }
-  }
-  if (codingSeen.size >= 2) {
-    out.push({
-      kind: "coding",
-      key: "coding",
-      label: "Coding",
-      values: [...codingSeen]
-        .sort((a, b) => a.localeCompare(b))
-        .map((v) => ({ value: v, label: v })),
-    });
+    if (codingSeen.size >= 2) {
+      out.push({
+        kind: "coding",
+        key: "coding",
+        label: "Coding",
+        values: [...codingSeen]
+          .sort((a, b) => a.localeCompare(b))
+          .map((v) => ({ value: v, label: v })),
+      });
+    }
   }
 
   return out;

@@ -591,141 +591,435 @@ variable = "utvandringsdatum-9-numerisk"
 value = "9"
 label = "9:e"
 
-# LISA "huvudsaklig" näringsgren split (#488). 21 variables ALL named identically
-# "Näringsgren för statistiken, huvudsaklig" — the auto edge grouper lumped them
-# into ONE family (`ast-sni`), so a browsing user couldn't tell a person's industry
-# from a workplace's from a firm's. The disambiguation is the DELIVERY POPULATION:
-# the three source-column populations are distinct: individ (person), arbetsställe
-# (workplace), and företag (firm). Population is therefore the GROUP SPLIT (three
-# groups), NOT a facet axis. Within each group the single `edition` axis carries the
-# SNI vintage+granularity variant (1992/2002/2007 × b/g/u serie); #584's variable
-# vintage lift will later collapse the vintage dimension into succession, leaving
-# granularity on the axis. Curated `[[variable_group]]` precedence (#591) claims
-# these 21 FQIDs, dissolving the conflated auto edge group. Slugs are pinned in
-# fqid_slugs/scb.toml (#931) to concept-stem names rather than raw delivery prefixes.
+# LISA näringsgren (#488/#931): one register-local concept group. Population is a
+# facet (individ / arbetsställe / företag), not a group split; the ranked
+# förvärvskälla variables share the same group under the `Källa` axis. SNI edition
+# changes are temporal succession edges in curation/relations.toml, not a picker
+# facet. `Metod` separates the adjusted 2003 workplace variables from their standard
+# SNI2002 counterparts without overloading population/source/level. Multi-axis
+# groups are representation-grained, so multi-column variables list one member per
+# delivered column while keeping SNI out of the facet coordinates.
 
 [[variable_group]]
 register = "scb/lisa"
-key = "naringsgren-huvudsaklig-individ"
-label = "Näringsgren för statistiken, huvudsaklig — individ"
-axis = "edition"
+key = "naringsgren"
+label = "Näringsgren"
+axes = [
+  { axis = "kalla", label = "Källa" },
+  { axis = "population", label = "Population" },
+  { axis = "level", label = "Level" },
+  { axis = "metod", label = "Metod" },
+]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-individ"
-value = "0000"
-label = "Grundserie"
+delivery_column = "AstSNI69"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-individ"
+delivery_column = "AstSNI92"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-individ"
+delivery_column = "AstSNI2002"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-individ"
+delivery_column = "AstSNI2007"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-individ-sni92b"
-value = "1992b"
-label = "SNI92 (b)"
+delivery_column = "AstSNI92B"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-individ-sni92g"
-value = "1992g"
-label = "SNI92 (g)"
+delivery_column = "AstSNI92G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-individ-sni2002b"
-value = "2002b"
-label = "SNI2002 (b)"
+delivery_column = "Astsni2002B"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-individ-sni2002b"
+delivery_column = "AstSNI2002B"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-individ-sni2002g"
-value = "2002g"
-label = "SNI2002 (g)"
+delivery_column = "Astsni2002G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-individ-sni2002g"
+delivery_column = "AstSNI2002G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-individ-sni2007g"
-value = "2007g"
-label = "SNI2007 (g)"
+delivery_column = "AstSni2007G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-individ-sni2007g"
+delivery_column = "AstSNI2007G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-individ-sni2007u"
-value = "2007u"
-label = "SNI2007 (u)"
+delivery_column = "AstSni2007U"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
-[[variable_group]]
-register = "scb/lisa"
-key = "naringsgren-huvudsaklig-arbetsstalle"
-label = "Näringsgren för statistiken, huvudsaklig — arbetsställe"
-axis = "edition"
+[[variable_group.members]]
+variable = "naringsgren-huvud-individ-sni2007u"
+delivery_column = "AstSNI2007U"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-arbetsstalle"
-value = "0000"
-label = "Grundserie"
+delivery_column = "Ast_Sni92"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-arbetsstalle"
+delivery_column = "Ast_Sni2002"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-arbetsstalle"
+delivery_column = "Ast_Sni2007"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "astsni-justerad"
+delivery_column = "AstSNI2002J"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "justerad", label = "Justerad" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-arbetsstalle-sni92b"
-value = "1992b"
-label = "SNI92 (b)"
+delivery_column = "Ast_Sni92B"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-arbetsstalle-sni92g"
-value = "1992g"
-label = "SNI92 (g)"
+delivery_column = "Ast_Sni92G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-arbetsstalle-sni2002b"
-value = "2002b"
-label = "SNI2002 (b)"
+delivery_column = "Ast_Sni2002B"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "astsni2002b-justerad"
+delivery_column = "AstSNI2002BJ"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "justerad", label = "Justerad" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-arbetsstalle-sni2002g"
-value = "2002g"
-label = "SNI2002 (g)"
+delivery_column = "Ast_Sni2002G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "astsni2002g-justerad"
+delivery_column = "AstSNI2002GJ"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "justerad", label = "Justerad" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-arbetsstalle-sni2007g"
-value = "2007g"
-label = "SNI2007 (g)"
+delivery_column = "Ast_Sni2007G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-arbetsstalle-sni2007u"
-value = "2007u"
-label = "SNI2007 (u)"
-
-[[variable_group]]
-register = "scb/lisa"
-key = "naringsgren-huvudsaklig-foretag"
-label = "Näringsgren för statistiken, huvudsaklig — företag"
-axis = "edition"
+delivery_column = "Ast_Sni2007U"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "arbetsstalle", label = "Arbetsställe" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-foretag"
-value = "0000"
-label = "Grundserie"
+delivery_column = "Org_Sni92"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-foretag"
+delivery_column = "Org_Sni2002"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-huvud-foretag"
+delivery_column = "Org_Sni2007"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-foretag-sni92b"
-value = "1992b"
-label = "SNI92 (b)"
+delivery_column = "Org_Sni92B"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-foretag-sni92g"
-value = "1992g"
-label = "SNI92 (g)"
+delivery_column = "Org_Sni92G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-foretag-sni2002b"
-value = "2002b"
-label = "SNI2002 (b)"
+delivery_column = "Org_Sni2002B"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-foretag-sni2002g"
-value = "2002g"
-label = "SNI2002 (g)"
+delivery_column = "Org_Sni2002G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-foretag-sni2007g"
-value = "2007g"
-label = "SNI2007 (g)"
+delivery_column = "Org_Sni2007G"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 [[variable_group.members]]
 variable = "naringsgren-huvud-foretag-sni2007u"
-value = "2007u"
-label = "SNI2007 (u)"
+delivery_column = "Org_Sni2007U"
+coords = [{ axis = "kalla", value = "huvudsaklig", label = "Huvudsaklig" }, { axis = "population", value = "foretag", label = "Företag" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni69"
+delivery_column = "KU1AstSNI69"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku"
+delivery_column = "KU1AstSNI92"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku"
+delivery_column = "KU1AstSNI2002"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku"
+delivery_column = "KU1AstSNI2007"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni92b"
+delivery_column = "KU1AstSNI92B"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni92g"
+delivery_column = "KU1AstSNI92G"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2002b"
+delivery_column = "KU1Astsni2002B"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2002b"
+delivery_column = "KU1AstSNI2002B"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2002g"
+delivery_column = "KU1Astsni2002G"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2002g"
+delivery_column = "KU1AstSNI2002G"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2007g"
+delivery_column = "KU1AstSni2007G"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2007g"
+delivery_column = "KU1AstSNI2007G"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2007u"
+delivery_column = "KU1AstSni2007U"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-ku-sni2007u"
+delivery_column = "KU1AstSNI2007U"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-agi-sni2007"
+delivery_column = "AGI1AstSNI2007"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-agi-sni2007g"
+delivery_column = "AGI1AstSNI2007G"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-storsta-agi-sni2007u"
+delivery_column = "AGI1AstSNI2007U"
+coords = [{ axis = "kalla", value = "storsta", label = "Största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni69"
+delivery_column = "KU2AstSNI69"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku"
+delivery_column = "KU2AstSNI92"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku"
+delivery_column = "KU2AstSNI2002"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku"
+delivery_column = "KU2AstSNI2007"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni92b"
+delivery_column = "KU2AstSNI92B"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni92g"
+delivery_column = "KU2AstSNI92G"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni2002b"
+delivery_column = "KU2AstSNI2002B"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni2002g"
+delivery_column = "KU2AstSNI2002G"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni2007g"
+delivery_column = "KU2AstSni2007G"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni2007g"
+delivery_column = "KU2AstSNI2007G"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni2007u"
+delivery_column = "KU2AstSni2007U"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-ku-sni2007u"
+delivery_column = "KU2AstSNI2007U"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-agi-sni2007"
+delivery_column = "AGI2AstSNI2007"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-agi-sni2007g"
+delivery_column = "AGI2AstSNI2007G"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-nast-storsta-agi-sni2007u"
+delivery_column = "AGI2AstSNI2007U"
+coords = [{ axis = "kalla", value = "nast-storsta", label = "Näst största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni69"
+delivery_column = "KU3AstSNI69"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku"
+delivery_column = "KU3AstSNI92"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku"
+delivery_column = "KU3AstSNI2002"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku"
+delivery_column = "KU3AstSNI2007"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni92b"
+delivery_column = "KU3AstSNI92B"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni92g"
+delivery_column = "KU3AstSNI92G"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni2002b"
+delivery_column = "KU3AstSNI2002B"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "begransad", label = "Begränsad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni2002g"
+delivery_column = "KU3AstSNI2002G"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni2007g"
+delivery_column = "KU3AstSni2007G"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni2007g"
+delivery_column = "KU3AstSNI2007G"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni2007u"
+delivery_column = "KU3AstSni2007U"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-ku-sni2007u"
+delivery_column = "KU3AstSNI2007U"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-agi-sni2007"
+delivery_column = "AGI3AstSNI2007"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "detaljerad", label = "Detaljerad" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-agi-sni2007g"
+delivery_column = "AGI3AstSNI2007G"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "grov", label = "Grov" }, { axis = "metod", value = "standard", label = "Standard" }]
+
+[[variable_group.members]]
+variable = "naringsgren-tredje-storsta-agi-sni2007u"
+delivery_column = "AGI3AstSNI2007U"
+coords = [{ axis = "kalla", value = "tredje-storsta", label = "Tredje största" }, { axis = "population", value = "individ", label = "Individ" }, { axis = "level", value = "utokad", label = "Utökad" }, { axis = "metod", value = "standard", label = "Standard" }]
 
 # KSju (reg 195) näringsgren (#845): KSju has ONE register variant whose unit of
 # observation is the PERSON (population: sick employees), so every näringsgren

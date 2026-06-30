@@ -1224,7 +1224,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 
 describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   const groupedFqid = "scb/lisa/naringsgren-storsta-agi-sni2007g";
-  const groupedKey = "naringsgren-storsta-agi-sni2007";
+  const groupedKey = "naringsgren";
   const groupedNode = node(single, {
     fqid: groupedFqid,
     name: "Näringsgren, största förvärvskälla",
@@ -1241,7 +1241,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
         fqid: groupedFqid,
         label: "Näringsgren, största förvärvskälla",
         group_key: groupedKey,
-        group_label: "Näringsgren, största förvärvskälla",
+        group_label: "Näringsgren",
         ...over,
       },
       focusId,
@@ -1252,8 +1252,10 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     vi.mocked(getBindingGraph).mockResolvedValue(
       focusGraph({
         facets: [
-          { axis: "source", value: "agi", label: "AGI" },
-          { axis: "edition", value: "sni2007", label: "2007 SNI edition" },
+          { axis: "kalla", value: "storsta", label: "Största" },
+          { axis: "population", value: "individ", label: "Individ" },
+          { axis: "level", value: "grov", label: "Grov" },
+          { axis: "metod", value: "standard", label: "Standard" },
         ],
       }) as never,
     );
@@ -1269,19 +1271,19 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     // The qualifier is the focus node's facet labels (scope to the identity row —
     // the same facets also render inside the HistoryGraph cluster).
     await expect
-      .element(page.getByText("AGI · 2007 SNI edition").first())
+      .element(page.getByText("Största · Individ · Grov · Standard").first())
       .toBeVisible();
 
     // The context link targets the group subject route from `node.group`.
     const link = page.getByRole("link", {
-      name: "Näringsgren, största förvärvskälla",
+      name: "Näringsgren",
     });
     await expect.element(link.first()).toBeVisible();
     expect(
       document
         .querySelector(".member-identity .group-context a")
         ?.getAttribute("href"),
-    ).toBe("/catalog/group/scb/lisa/naringsgren-storsta-agi-sni2007");
+    ).toBe("/catalog/group/scb/lisa/naringsgren");
   });
 
   it("resolves the qualifier from the focus node even when it differs from the leaf fqid (same_as)", async () => {
@@ -1291,8 +1293,10 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       focusGraph({
         fqid: "scb/rams/inkjan",
         facets: [
-          { axis: "source", value: "agi", label: "AGI" },
-          { axis: "edition", value: "sni2007", label: "2007 SNI edition" },
+          { axis: "kalla", value: "storsta", label: "Största" },
+          { axis: "population", value: "individ", label: "Individ" },
+          { axis: "level", value: "grov", label: "Grov" },
+          { axis: "metod", value: "standard", label: "Standard" },
         ],
       }) as never,
     );
@@ -1306,7 +1310,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     });
 
     await expect
-      .element(page.getByText("AGI · 2007 SNI edition").first())
+      .element(page.getByText("Största · Individ · Grov · Standard").first())
       .toBeVisible();
     expect(
       document.querySelector(".member-identity code.qualifier.slug"),
@@ -1365,11 +1369,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     });
     expect(slugEl.textContent).toBe("naringsgren-storsta-agi-sni2007g");
     await expect
-      .element(
-        page
-          .getByRole("link", { name: "Näringsgren, största förvärvskälla" })
-          .first(),
-      )
+      .element(page.getByRole("link", { name: "Näringsgren" }).first())
       .toBeVisible();
   });
 

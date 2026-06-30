@@ -302,17 +302,17 @@ describe("HistoryGraph (#678)", () => {
       id: "a",
       fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
       label: "Näringsgren",
-      group_key: "naringsgren-storsta-agi-sni2007",
-      group_label: "Näringsgren, största förvärvskälla",
-      facets: [{ axis: "source", value: "agi", label: "AGI" }],
+      group_key: "naringsgren",
+      group_label: "Näringsgren",
+      facets: [{ axis: "kalla", value: "storsta", label: "Största" }],
     });
     const b = variableNode({
       id: "b",
       fqid: "scb/lisa/naringsgren-storsta-ku-sni2002g",
       label: "Näringsgren",
-      group_key: "naringsgren-storsta-agi-sni2007",
-      group_label: "Näringsgren, största förvärvskälla",
-      facets: [{ axis: "source", value: "ku", label: "KU" }],
+      group_key: "naringsgren",
+      group_label: "Näringsgren",
+      facets: [{ axis: "level", value: "grov", label: "Grov" }],
     });
     render(HistoryGraph, {
       graph: graph({ nodes: [a, b], focus_id: "a" }),
@@ -322,14 +322,14 @@ describe("HistoryGraph (#678)", () => {
     await expect
       .element(
         page.getByRole("heading", {
-          name: "Näringsgren, största förvärvskälla",
+          name: "Näringsgren",
           level: 4,
         }),
       )
       .toBeVisible();
     // Members are labelled by their facets within the cluster.
-    await expect.element(page.getByText("AGI").first()).toBeVisible();
-    await expect.element(page.getByText("KU").first()).toBeVisible();
+    await expect.element(page.getByText("Största").first()).toBeVisible();
+    await expect.element(page.getByText("Grov").first()).toBeVisible();
   });
 
   it("labels facet-less edge-group members by their LEAF SLUG (members share label)", async () => {
@@ -341,16 +341,16 @@ describe("HistoryGraph (#678)", () => {
       id: "a",
       fqid: "scb/lisa/naringsgren-storsta-agi-sni2007",
       label: "Näringsgren",
-      group_key: "naringsgren-storsta-agi-sni2007",
-      group_label: "Näringsgren, största förvärvskälla",
+      group_key: "naringsgren",
+      group_label: "Näringsgren",
       facets: [],
     });
     const b = variableNode({
       id: "b",
       fqid: "scb/lisa/naringsgren-storsta-ku-sni2002g",
       label: "Näringsgren",
-      group_key: "naringsgren-storsta-agi-sni2007",
-      group_label: "Näringsgren, största förvärvskälla",
+      group_key: "naringsgren",
+      group_label: "Näringsgren",
       facets: [],
     });
     render(HistoryGraph, {
@@ -399,16 +399,16 @@ describe("HistoryGraph (#678)", () => {
       id: "a",
       fqid: "scb/lisa/naringsgren-storsta-agi-sni2007",
       label: "Näringsgren",
-      group_key: "naringsgren-storsta-agi-sni2007",
-      group_label: "Näringsgren, största förvärvskälla",
+      group_key: "naringsgren",
+      group_label: "Näringsgren",
       facets: [],
     });
     const b = variableNode({
       id: "b",
       fqid: "scb/lisa/naringsgren-storsta-ku-sni2002g",
       label: "Näringsgren",
-      group_key: "naringsgren-storsta-agi-sni2007",
-      group_label: "Näringsgren, största förvärvskälla",
+      group_key: "naringsgren",
+      group_label: "Näringsgren",
       facets: [],
     });
     const edges: GraphEdge[] = [
