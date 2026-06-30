@@ -17,6 +17,7 @@ from .catalog import (
     VariableState,
 )
 from .db import db_path_from_args, default_db_dir, open_db
+from .doc_db import RelatedDocument, RelatedDocumentContent
 from .fqid import (
     Fqid,
     FqidError,
@@ -99,6 +100,8 @@ __all__ = [
     "parse_fqid",
     "Period",
     "RegisterSearchResult",
+    "RelatedDocument",
+    "RelatedDocumentContent",
     "resolve",
     "resolve_register_ids",
     "ResolvedClassification",
