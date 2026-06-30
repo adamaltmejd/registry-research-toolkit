@@ -35,6 +35,10 @@ function nextFrame(): Promise<void> {
   return new Promise((resolve) => requestAnimationFrame(() => resolve()));
 }
 
+function pillLabel(element: Element | null | undefined): string | null {
+  return element?.childNodes[0]?.textContent?.trim() ?? null;
+}
+
 beforeEach(() => {
   vi.mocked(search).mockReset();
   vi.mocked(docSearch).mockReset();
@@ -232,18 +236,26 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("näringsgren");
     await render(SearchView);
 
-    const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view .top-results .group-result-row[href='/catalog/group/scb/lcs/naringsgren']",
+    const row = document.querySelector<HTMLElement>(
+      ".search-view .top-results .group-result-row",
+    );
+    const groupLink = row?.querySelector<HTMLAnchorElement>(
+      "a.row-link[href='/catalog/group/scb/lcs/naringsgren']",
+    );
+    const registerPill = row?.querySelector<HTMLAnchorElement>(
+      ".register-context-chip[href='/catalog/scb/lcs']",
     );
     expect(row).not.toBeNull();
+    expect(groupLink).not.toBeNull();
     expect(row?.querySelector(".group-chip")?.textContent?.trim()).toBe(
       "Group",
     );
-    expect(row?.textContent).toContain("Näringsgren");
-    expect(row?.textContent).toContain("SCB: Labour Cost Survey (LCS)");
+    expect(groupLink?.textContent).toContain("Näringsgren");
+    expect(pillLabel(registerPill)).toBe("SCB: Labour Cost Survey (LCS)");
+    expect(registerPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
     expect(
       document.querySelector(
-        ".search-view .top-results a.leaf-row[href='/catalog/scb/lcs/naringsgren']",
+        ".search-view .top-results a.row-link[href='/catalog/scb/lcs/naringsgren']",
       ),
     ).toBeNull();
   });
@@ -301,18 +313,21 @@ describe("SearchView — typed result groups (#379)", () => {
     );
     expect(disclosure).not.toBeNull();
     expect(disclosure?.querySelector(".disclosure-icon")).not.toBeNull();
-    expect(
-      disclosure?.querySelector(".code-expression .code-system-chip")
-        ?.textContent,
-    ).toBe("ICD-10-SE");
+    const codeSystemPill = disclosure?.querySelector<HTMLAnchorElement>(
+      ".code-expression .code-system-chip[href='/catalog/class/icd-10-se']",
+    );
+    expect(pillLabel(codeSystemPill)).toBe("ICD-10-SE");
+    expect(codeSystemPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
     disclosure?.querySelector("summary")?.click();
     await nextFrame();
     await expect
       .element(page.getByRole("link", { name: /Sjukdomsdiagnos 1/ }))
       .toHaveAttribute("href", "/catalog/scb/ulf/ha0611m");
-    await expect
-      .element(page.getByRole("link", { name: /ICD-10-SE/ }))
-      .toHaveAttribute("href", "/catalog/class/icd-10-se");
+    expect(
+      disclosure?.querySelector(
+        ".owner-table a.owner-row[href='/catalog/class/icd-10-se']",
+      ),
+    ).not.toBeNull();
   });
 
   it("links single-owner code hits in top results", async () => {
@@ -345,15 +360,21 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("man");
     await render(SearchView);
 
-    const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view .top-results a.single-code-row[href='/catalog/scb/lisa/kon']",
+    const row = document.querySelector<HTMLElement>(
+      ".search-view .top-results .single-code-row",
+    );
+    const ownerLink = row?.querySelector<HTMLAnchorElement>(
+      ".single-owner-link[href='/catalog/scb/lisa/kon']",
+    );
+    const systemPill = row?.querySelector<HTMLAnchorElement>(
+      ".code-expression .code-system-chip[href='/catalog/class/sun2020']",
     );
     expect(row).not.toBeNull();
     expect(row?.textContent).toContain("1 = Man");
     expect(row?.textContent).not.toContain("Code system");
-    expect(
-      row?.querySelector(".code-expression .code-system-chip")?.textContent,
-    ).toBe("SUN2020");
+    expect(ownerLink).not.toBeNull();
+    expect(pillLabel(systemPill)).toBe("SUN2020");
+    expect(systemPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
   });
 
   it("shows delivery column names and operational definitions on variable hits", async () => {
@@ -911,12 +932,20 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("ink");
     await render(SearchView);
 
-    // The group itself is a normal row link to the first-class group page; no
+    // The group itself keeps a primary link to the first-class group page; no
     // inline disclosure is reintroduced in search results.
-    await expect
-      .element(page.getByRole("link", { name: /Disponibel inkomst.*Group/ }))
-      .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
-    await expect.element(page.getByText("SCB: LISA")).toBeVisible();
+    const row = document.querySelector<HTMLElement>(
+      ".search-view .group-result-row",
+    );
+    expect(
+      row?.querySelector<HTMLAnchorElement>(
+        "a.row-link[href='/catalog/group/scb/lisa/dispink']",
+      ),
+    ).not.toBeNull();
+    const registerPill = row?.querySelector<HTMLAnchorElement>(
+      ".register-context-chip[href='/catalog/scb/lisa']",
+    );
+    expect(pillLabel(registerPill)).toBe("SCB: LISA");
     await expect
       .element(page.getByText(/variables matched/))
       .not.toBeInTheDocument();
@@ -967,9 +996,11 @@ describe("SearchView — typed result groups (#379)", () => {
     setQuery("disp");
     await render(SearchView);
 
-    await expect
-      .element(page.getByRole("link", { name: /Disponibel inkomst.*Group/ }))
-      .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
+    expect(
+      document.querySelector(
+        ".search-view .group-result-row a.row-link[href='/catalog/group/scb/lisa/dispink']",
+      ),
+    ).not.toBeNull();
     await expect
       .element(page.getByRole("link", { name: /Disp 2019/ }))
       .not.toBeInTheDocument();
@@ -1617,18 +1648,20 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect.element(variablesHeading).toBeVisible();
     expect(document.querySelector(".search-view .heading-tag")).toBeNull();
 
-    const row = document.querySelector(
-      ".search-view a.leaf-row[href='/catalog/scb/lisa/kon']",
+    const link = document.querySelector<HTMLAnchorElement>(
+      ".search-view a.row-link[href='/catalog/scb/lisa/kon']",
     );
+    const row = link?.closest<HTMLElement>(".leaf-row");
     const variablePanel = row?.closest(".panel");
     expect(variablePanel).not.toBeNull();
     expect(row?.classList.contains("integrated-list-row")).toBe(true);
     expect(document.querySelector(".search-view .head-row")).toBeNull();
     expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
-    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
-      "SCB: LISA",
+    const registerPill = row?.querySelector<HTMLAnchorElement>(
+      ".register-context-chip[href='/catalog/scb/lisa']",
     );
+    expect(pillLabel(registerPill)).toBe("SCB: LISA");
   });
 
   it("omits the variable definition when it exactly repeats the variable name", async () => {
@@ -1657,16 +1690,18 @@ describe("SearchView — compact per-type tables (#808)", () => {
     setQuery("raks");
     await render(SearchView);
 
-    const row = document.querySelector<HTMLElement>(
-      ".search-view a.leaf-row[href='/catalog/scb/lisa/raks-andelutbbidrink']",
+    const link = document.querySelector<HTMLAnchorElement>(
+      ".search-view a.row-link[href='/catalog/scb/lisa/raks-andelutbbidrink']",
     );
+    const row = link?.closest<HTMLElement>(".leaf-row");
     expect(row).not.toBeNull();
     expect(row?.querySelector(".result-title")?.textContent).toContain(
       "Andel av den totala inkomsten",
     );
-    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
-      "SCB: LISA",
+    const registerPill = row?.querySelector<HTMLAnchorElement>(
+      ".register-context-chip[href='/catalog/scb/lisa']",
     );
+    expect(pillLabel(registerPill)).toBe("SCB: LISA");
   });
 
   it("makes each leaf a real catalog link (open-in-new-tab safe)", async () => {
@@ -1706,31 +1741,31 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(document.querySelectorAll(".search-view h3 .tag").length).toBe(0);
   });
 
-  it("makes a variable leaf row a whole-row subgrid link carrying column chips and muted register context (#808 a11y)", async () => {
-    // The headline redesign + a11y fix: a variable leaf row is ONE real link to
-    // the catalog node. Assert the <a> carries delivery-column chips plus muted
-    // register context and remains keyboard-focusable.
+  it("makes a variable leaf primary link focusable and register context separately navigable (#808 a11y)", async () => {
+    // Linked metadata pills mean the row can no longer be one nested anchor. Assert
+    // the primary variable name is still a real keyboard-focusable catalog link and
+    // the register context is its own link.
     vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
-    // The variable leaf row is an <a.leaf-row> to the variable's catalog node.
-    const row = document.querySelector<HTMLAnchorElement>(
-      ".search-view a.leaf-row[href='/catalog/scb/lisa/kon']",
+    const link = document.querySelector<HTMLAnchorElement>(
+      ".search-view a.row-link[href='/catalog/scb/lisa/kon']",
     );
+    const row = link?.closest<HTMLElement>(".leaf-row");
     expect(row).not.toBeNull();
-    expect(row?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
-    // KEYBOARD FOCUSABLE: focusing the anchor moves activeElement to it — the load-
-    // bearing proof (a `display:contents` <a> fails this, dropped from the tab order).
-    row?.focus();
-    expect(document.activeElement).toBe(row);
+    expect(link?.getAttribute("href")).toBe("/catalog/scb/lisa/kon");
+    link?.focus();
+    expect(document.activeElement).toBe(link);
     // The row carries delivery-column chips in the heading; register context is a
-    // muted detail, not a green pill.
+    // muted pill link, not a green register pill.
     expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
-    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
-      "SCB: LISA",
+    const registerPill = row?.querySelector<HTMLAnchorElement>(
+      ".register-context-chip[href='/catalog/scb/lisa']",
     );
+    expect(pillLabel(registerPill)).toBe("SCB: LISA");
+    expect(registerPill?.querySelector(".chip-arrow")?.textContent).toBe("↗");
   });
 
   it("makes a classification leaf row a keyboard-focusable whole-row link (#808 a11y)", async () => {
@@ -1930,12 +1965,14 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect
       .element(page.getByRole("link", { name: /After fold/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/after");
-    await expect
-      .element(page.getByRole("link", { name: /Disponibel inkomst.*Group/ }))
-      .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
+    expect(
+      document.querySelector(
+        ".search-view .group-result-row a.row-link[href='/catalog/group/scb/lisa/dispink']",
+      ),
+    ).not.toBeNull();
     const grid = document.querySelector(".search-view .cols-1");
     const groupLink = grid?.querySelector(
-      "a.group-result-row[href='/catalog/group/scb/lisa/dispink']",
+      ".group-result-row a.row-link[href='/catalog/group/scb/lisa/dispink']",
     );
     expect(
       groupLink,
@@ -2062,6 +2099,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       ".search-view a.single-code-row[href='/catalog/scb/lmed/atc']",
     );
     expect(row).not.toBeNull();
+    expect(row?.getAttribute("href")).toBe("/catalog/scb/lmed/atc");
     expect(row?.querySelector(".code-owner-single")?.textContent).toContain(
       "ATC-kod",
     );
@@ -2191,7 +2229,8 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await expect.element(page.getByText("Inkomst LINDA")).toBeVisible();
     await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
     expect(
-      document.querySelectorAll(".search-view a.group-result-row").length,
+      document.querySelectorAll(".search-view .group-result-row a.row-link")
+        .length,
     ).toBe(2);
     expect(
       document.querySelectorAll(".search-view details.concept-group").length,
@@ -2427,22 +2466,23 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
 
     // The classification group gets a linked code-system subsection heading.
     await expect
-      .element(page.getByRole("heading", { name: "SUN2020" }))
+      .element(page.getByRole("heading", { name: /SUN2020/ }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: "SUN2020" }))
+      .element(page.getByRole("link", { name: /SUN2020/ }))
       .toHaveAttribute("href", "/catalog/class/sun2020");
-    const systemHeading = document.querySelector<HTMLElement>(
-      ".code-system-heading a",
+    const systemPill = document.querySelector<HTMLAnchorElement>(
+      ".code-system-heading .code-system-chip[href='/catalog/class/sun2020']",
     );
     const firstCodeCell = document.querySelector<HTMLElement>(
       ".children.table.codes .code-cell",
     );
-    expect(systemHeading).not.toBeNull();
+    expect(systemPill).not.toBeNull();
+    expect(pillLabel(systemPill)).toBe("SUN2020");
     expect(firstCodeCell).not.toBeNull();
     expect(
       Math.abs(
-        Math.round(systemHeading?.getBoundingClientRect().left ?? 0) -
+        Math.round(systemPill?.getBoundingClientRect().left ?? 0) -
           Math.round(firstCodeCell?.getBoundingClientRect().left ?? 0),
       ),
     ).toBeLessThanOrEqual(1);
@@ -2457,8 +2497,10 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
       ),
     ).toBe(true);
     const headings = Array.from(
-      document.querySelectorAll<HTMLElement>(".code-system-heading"),
-    ).map((h) => h.textContent?.trim());
+      document.querySelectorAll<HTMLElement>(
+        ".code-system-heading .code-system-chip",
+      ),
+    ).map((h) => pillLabel(h));
     expect(headings).toEqual(["SUN2020"]);
   });
 

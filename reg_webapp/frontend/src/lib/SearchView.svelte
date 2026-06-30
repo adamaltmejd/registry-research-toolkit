@@ -390,15 +390,41 @@ function providerRegisterContext(
   return provider ? `${provider}: ${register}` : register;
 }
 
-function variableRegisterContext(v: VariableSearchResult): string | null {
-  return providerRegisterContext(v.fqid, v.register);
+type LinkedPill = {
+  label: string;
+  href: string | null;
+};
+
+function registerHrefFromFqid(fqid: string | null | undefined): string | null {
+  if (!fqid) {
+    return null;
+  }
+  const [provider, register] = fqidSegments(fqid);
+  return provider && register ? catalogHref(`${provider}/${register}`) : null;
 }
 
-function groupRegisterContext(result: ConceptGroupSearchResult): string | null {
+function providerRegisterPill(
+  fqid: string | null | undefined,
+  register: string | null | undefined,
+): LinkedPill | null {
+  const label = providerRegisterContext(fqid, register);
+  if (!label) {
+    return null;
+  }
+  return { label, href: registerHrefFromFqid(fqid) };
+}
+
+function variableRegisterPill(v: VariableSearchResult): LinkedPill | null {
+  return providerRegisterPill(v.fqid, v.register);
+}
+
+function groupRegisterPill(
+  result: ConceptGroupSearchResult,
+): LinkedPill | null {
   if (result.kind !== "variable") {
     return null;
   }
-  return providerRegisterContext(
+  return providerRegisterPill(
     sharedMemberRegisterFqid(result),
     result.register,
   );
@@ -700,11 +726,7 @@ function closeSearch(): void {
             {#each groupCodesBySystem(codeDisplayResults(renderedResults)) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">
-                  {#if system.href}
-                    <a href={system.href}>{system.label}</a>
-                  {:else}
-                    {system.label}
-                  {/if}
+                  {@render codeSystemPill(system.label, system.href)}
                 </h4>
                 <div class="children table codes" role="presentation">
                   <!-- Key by `code|index`, NOT the bare index: each code is a
@@ -813,26 +835,28 @@ function closeSearch(): void {
 
 {#snippet variableLeafRow(v: VariableSearchResult)}
   {@const detailParts = variableDetailParts(v)}
-  {@const context = variableRegisterContext(v)}
+  {@const context = variableRegisterPill(v)}
   {#if v.fqid}
-    <a class="leaf-row integrated-list-row" href={catalogHref(v.fqid)}>
+    <div class="leaf-row integrated-list-row">
       <span class="name-cell">
         <span class="result-title">
-          <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
+          <a class="row-link" href={catalogHref(v.fqid)}
+            >{v.name ?? leafSlug(v.fqid)}</a
+          >
           {@render variableMetaPills(v)}
-          {#if context}{@render registerContextPill(context)}{/if}
+          {#if context}{@render registerContextPill(context.label, context.href)}{/if}
         </span>
         {#if detailParts.length > 0}
           {@render detailLine(null, detailParts)}
         {/if}
       </span>
-    </a>
+    </div>
   {:else}
     <div class="leaf-row integrated-list-row plain">
       <span class="name-cell"><span class="result-title">
           <span class="row-link plain">{v.name ?? "—"}</span>
           {@render variableMetaPills(v)}
-          {#if context}{@render registerContextPill(context)}{/if}
+          {#if context}{@render registerContextPill(context.label, context.href)}{/if}
         </span>
         {#if detailParts.length > 0}
           {@render detailLine(null, detailParts)}
@@ -842,8 +866,14 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
-{#snippet registerContextPill(context: string)}
-  <span class="register-context-chip">{context}</span>
+{#snippet registerContextPill(context: string, href: string | null = null)}
+  {#if href}
+    <a class="register-context-chip pill-link" {href}
+      >{context}<span class="chip-arrow" aria-hidden="true">↗</span></a
+    >
+  {:else}
+    <span class="register-context-chip">{context}</span>
+  {/if}
 {/snippet}
 
 {#snippet detailLine(
@@ -969,19 +999,36 @@ function closeSearch(): void {
   </span>
 {/snippet}
 
-{#snippet singleOwnerLine(owner: CodeOwnerVariable)}
+{#snippet singleOwnerLine(
+  owner: CodeOwnerVariable,
+  href: string | null = null,
+)}
   {@const context = ownerRegisterContext(owner)}
-  <span class="owner-inline muted code-owner-single">
-    <span class="owner-name">
-      {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+  {#if href}
+    <a class="owner-inline muted code-owner-single single-owner-link" {href}>
+      <span class="owner-name">
+        {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+      </span>
+      {#if context}<span class="owner-context">{context}</span>{/if}
+    </a>
+  {:else}
+    <span class="owner-inline muted code-owner-single">
+      <span class="owner-name">
+        {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+      </span>
+      {#if context}<span class="owner-context">{context}</span>{/if}
     </span>
-    {#if context}<span class="owner-context">{context}</span>{/if}
-  </span>
+  {/if}
 {/snippet}
 
-{#snippet codeSystemPill(result: CodeSearchResult)}
-  {@const label = result.code_system ?? REGISTER_LOCAL_LABEL}
-  <span class="code-system-chip">{label}</span>
+{#snippet codeSystemPill(label: string, href: string | null = null)}
+  {#if href}
+    <a class="code-system-chip pill-link" {href}
+      >{label}<span class="chip-arrow" aria-hidden="true">↗</span></a
+    >
+  {:else}
+    <span class="code-system-chip">{label}</span>
+  {/if}
 {/snippet}
 
 {#snippet codeCells(
@@ -994,7 +1041,12 @@ function closeSearch(): void {
       <code class="code-cell mono">{result.code}</code>
       <span class="code-equals">=</span>
       <span class="code-label">{result.label}</span>
-      {#if showCodeSystemPill}{@render codeSystemPill(result)}{/if}
+      {#if showCodeSystemPill}
+        {@render codeSystemPill(
+          result.code_system ?? REGISTER_LOCAL_LABEL,
+          codeSystemHref(result),
+        )}
+      {/if}
     </span>
     {#if usage}<span class="usage-count muted">{usage}</span>{/if}
   </span>
@@ -1041,20 +1093,24 @@ function closeSearch(): void {
       <div class="owner-table">{@render ownerSubRows(result, true)}</div>
     </details>
   {:else if singleOwner?.fqid}
-    <a
-      class="code-row integrated-list-row single-code-row top-code-row"
-      href={catalogHref(singleOwner.fqid)}
-    >
-      {@render codeCells(result, true)}
-      {@render singleOwnerLine(singleOwner)}
-    </a>
+    {#if systemHref}
+      <div class="code-row integrated-list-row single-code-row top-code-row">
+        {@render codeCells(result, true)}
+        {@render singleOwnerLine(singleOwner, catalogHref(singleOwner.fqid))}
+      </div>
+    {:else}
+      <a
+        class="code-row integrated-list-row single-code-row top-code-row"
+        href={catalogHref(singleOwner.fqid)}
+      >
+        {@render codeCells(result, true)}
+        {@render singleOwnerLine(singleOwner)}
+      </a>
+    {/if}
   {:else if systemHref}
-    <a
-      class="code-row integrated-list-row single-code-row top-code-row"
-      href={systemHref}
-    >
+    <div class="code-row integrated-list-row single-code-row top-code-row">
       {@render codeCells(result, true)}
-    </a>
+    </div>
   {:else}
     <div class="code-row integrated-list-row single-code-row top-code-row">
       {@render codeCells(result, true)}
@@ -1068,33 +1124,39 @@ function closeSearch(): void {
      directly rather than putting a disclosure inside the results list. -->
 {#snippet conceptGroup(result: ConceptGroupSearchResult)}
   {@const href = conceptGroupHref(result)}
-  {@const context = groupRegisterContext(result)}
+  {@const context = groupRegisterPill(result)}
   {#if href}
-    <a class="leaf-row integrated-list-row group-result-row" href={href}>
+    <div class="leaf-row integrated-list-row group-result-row">
       <span class="name-cell">
         <span class="result-title">
-          <span class="row-link">{result.group_label}</span>
+          <a class="row-link" {href}>{result.group_label}</a>
           <span class="group-chip">Group</span>
-          {#if context}{@render registerContextPill(context)}{/if}
+          {#if context}{@render registerContextPill(context.label, context.href)}{/if}
         </span>
       </span>
-    </a>
+    </div>
   {:else}
     {#each result.members as member, i (`${member.fqid}|${i}`)}
-      {@const memberContext = providerRegisterContext(member.fqid, result.register)}
-      <a
+      {@const memberContext = providerRegisterPill(member.fqid, result.register)}
+      <div
         class="leaf-row integrated-list-row group-member-row"
-        href={catalogHref(member.fqid)}
       >
         <span class="name-cell">
           <span class="result-title">
-            <span class="row-link">{member.name ?? leafSlug(member.fqid)}</span>
+            <a class="row-link" href={catalogHref(member.fqid)}
+              >{member.name ?? leafSlug(member.fqid)}</a
+            >
             <span class="group-chip">Group</span>
-            {#if memberContext}{@render registerContextPill(memberContext)}{/if}
+            {#if memberContext}
+              {@render registerContextPill(
+                memberContext.label,
+                memberContext.href,
+              )}
+            {/if}
           </span>
           {@render detailLine(null, [result.group_label])}
         </span>
-      </a>
+      </div>
     {/each}
   {/if}
 {/snippet}
@@ -1267,7 +1329,12 @@ function closeSearch(): void {
      mobile canvas (#806); break them only when they can't fit. */
   .row-link {
     font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
     overflow-wrap: anywhere;
+  }
+  a.row-link:hover {
+    color: var(--accent-ink);
   }
   .row-link.plain {
     color: var(--text);
@@ -1548,25 +1615,27 @@ function closeSearch(): void {
   .code-system-chip {
     display: inline-flex;
     align-items: baseline;
+    gap: 0.2rem;
     line-height: 1.3;
     padding: 0 var(--space-1);
     border-radius: var(--radius-sm);
     max-width: 100%;
     overflow-wrap: anywhere;
+    text-decoration: none;
   }
   /* Mirrors RepresentationPicker's delivery-column chip: mono, purple/indigo
      variable hue, and no link affordance on the search-result metadata. */
   .col-chip {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--cat-var-ink);
     border: 1px solid color-mix(in srgb, var(--cat-var) 35%, transparent);
     background: color-mix(in srgb, var(--cat-var) 10%, var(--surface));
   }
   .group-chip {
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--cat-group-ink);
     border: 1px solid color-mix(in srgb, var(--cat-group) 35%, transparent);
     background: color-mix(in srgb, var(--cat-group) 10%, var(--surface));
@@ -1574,10 +1643,28 @@ function closeSearch(): void {
   .register-context-chip,
   .code-system-chip {
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-muted);
     border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
     background: color-mix(in srgb, var(--surface-sunken) 42%, var(--surface));
+  }
+  .pill-link {
+    cursor: pointer;
+  }
+  .pill-link .chip-arrow {
+    font-size: 1.1em;
+    line-height: 1;
+    opacity: 0.85;
+  }
+  .pill-link:hover,
+  .pill-link:focus-visible {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--border-strong) 75%, transparent);
+    background: color-mix(in srgb, var(--surface-sunken) 72%, var(--surface));
+  }
+  .pill-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .column-more {
     font-size: var(--text-sm);
@@ -1604,6 +1691,12 @@ function closeSearch(): void {
     font-size: var(--text-sm);
     text-align: right;
     white-space: nowrap;
+  }
+  .single-owner-link {
+    text-decoration: none;
+  }
+  .single-owner-link:hover {
+    color: var(--accent-ink);
   }
   .more {
     font-size: var(--text-sm);
