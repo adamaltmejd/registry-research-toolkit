@@ -1097,6 +1097,9 @@ function closeSearch(): void {
 {/snippet}
 
 <style>
+  .search-view {
+    --search-row-inline: calc(var(--space-4) + var(--space-1));
+  }
   .search-heading {
     display: flex;
     align-items: baseline;
@@ -1170,7 +1173,7 @@ function closeSearch(): void {
   }
   .code-system-heading {
     margin: 0;
-    padding: var(--space-2) var(--space-3) var(--space-1);
+    padding: var(--space-2) var(--search-row-inline) var(--space-1);
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     font-size: var(--text-sm);
@@ -1268,9 +1271,9 @@ function closeSearch(): void {
   }
   .children.table.codes,
   .children.table.top-results {
-    --code-row-inline: var(--space-3);
+    --code-row-inline: var(--search-row-inline);
     --code-disclosure-size: 0.65rem;
-    --code-disclosure-gap: 0.1rem;
+    --code-disclosure-gap: 0.5rem;
     --code-disclosure-left: calc(
       var(--code-row-inline) - var(--code-disclosure-size) -
         var(--code-disclosure-gap)
@@ -1428,7 +1431,7 @@ function closeSearch(): void {
   }
   .leaf-row > * {
     min-width: 0;
-    padding: var(--search-row-block) var(--space-3);
+    padding: var(--search-row-block) var(--search-row-inline);
     border-bottom: 1px solid var(--border);
   }
   .leaf-row:last-child > * {
