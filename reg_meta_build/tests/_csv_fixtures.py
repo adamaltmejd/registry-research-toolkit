@@ -146,6 +146,9 @@ def _var_row(
     regver_id: int = 110,
     data_type: str = "int",
     data_length: str = "1",
+    vardef: str = "A generic family label",
+    vardesc: str = "",
+    unit: str = "",
     varopdef: str = "",
     varsource: str = "",
 ) -> str:
@@ -160,10 +163,11 @@ def _var_row(
     to `year`. Pass a sub-annual phrasing (e.g. `"Höstterminen 2018"`) while
     keeping `year` a bare year so the approval dates stay well-formed.
 
-    `varopdef` sets the per-row `VariabelOperationell_definition` cell (default
-    empty) — used to verify each split sibling carries ITS column's operational
-    definition (#892). `varsource` sets `VariabelRegister_Källa` for source
-    attribution/coalescing regressions."""
+    `vardef`, `vardesc`, and `unit` set the variable-grain public metadata
+    fields. `varopdef` sets the per-row `VariabelOperationell_definition` cell
+    (default empty) — used to verify each split sibling carries ITS column's
+    operational definition (#892). `varsource` sets `VariabelRegister_Källa` for
+    source attribution/coalescing regressions."""
     return _ri_row(
         "TESTREG",
         "Testregistret",
@@ -185,14 +189,14 @@ def _var_row(
         "Person",
         "Fysisk person",
         varname,
-        "A generic family label",
-        "",
+        vardef,
+        vardesc,
         varopdef,
         "",
         "",
         varsource,
         "",
-        "",
+        unit,
         colname,
         data_type,
         data_length,
