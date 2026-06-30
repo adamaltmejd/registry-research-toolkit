@@ -8,10 +8,60 @@ from typing import TYPE_CHECKING
 # Shared FTS5 MATCH-expression builder (quoted prefix terms): same safety the
 # main `search` uses, so a raw user query with FTS operators can't raise on the
 # doc index either. Same-package internal helper.
+from .doc_db import RelatedDocument, RelatedDocumentContent
 from .queries import _fts_match_query
 
 if TYPE_CHECKING:
     import sqlite3
+
+
+_RELATED_DOCUMENT_COLUMNS = (
+    "title, filename, source_url, license, fetched, sha256, byte_size"
+)
+
+
+def _related_document_from_row(row: sqlite3.Row) -> RelatedDocument:
+    return RelatedDocument(
+        title=row["title"],
+        filename=row["filename"],
+        source_url=row["source_url"],
+        license=row["license"],
+        fetched=row["fetched"],
+        sha256=row["sha256"],
+        byte_size=row["byte_size"],
+    )
+
+
+def related_documents_for_register(
+    conn: sqlite3.Connection, register: str
+) -> tuple[RelatedDocument, ...]:
+    """List rehosted register-version related documents for one register."""
+    rows = conn.execute(
+        f"SELECT {_RELATED_DOCUMENT_COLUMNS} "
+        "FROM related_document "
+        "WHERE register = ? "
+        "ORDER BY id",
+        (register,),
+    ).fetchall()
+    return tuple(_related_document_from_row(row) for row in rows)
+
+
+def related_document_content(
+    conn: sqlite3.Connection, register: str, filename: str
+) -> RelatedDocumentContent | None:
+    """Fetch one rehosted related-document binary by its register-local filename."""
+    row = conn.execute(
+        f"SELECT {_RELATED_DOCUMENT_COLUMNS}, content "
+        "FROM related_document "
+        "WHERE register = ? AND filename = ?",
+        (register, filename),
+    ).fetchone()
+    if row is None:
+        return None
+    return RelatedDocumentContent(
+        **_related_document_from_row(row).model_dump(),
+        content=row["content"],
+    )
 
 
 def _add_tag_filter(

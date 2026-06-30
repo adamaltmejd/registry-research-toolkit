@@ -429,6 +429,12 @@ hard no-Pydantic rule applied only to `reg_monabundle`'s amalgamated bundle (now
 archived); reg_meta was never subject to it. See root CLAUDE.md "Stack" and
 ARCHITECTURE.md.
 
+When a caller constructs `Catalog` with a docs-DB connection, `ResolvedRegister` and
+`ResolvedVariable` also carry `related_documents`: register-version PDF metadata
+(`title`, `filename`, `source_url`, `license`, `fetched`, `sha256`, `byte_size`) read
+from `reg_meta_docs.db`. The list is metadata only; binary content is fetched by exact
+`(register, filename)` through `doc_queries.related_document_content`.
+
 **`search.py` — the typed search surface (#701).** `queries.search` builds its result
 rows as plain dicts through the internal pipeline and converts ONCE at the end into the
 `SearchResult` discriminated union (eight arms, each `type:`-literal-discriminated, each
@@ -964,7 +970,9 @@ files under `reg_meta_build/docs/`, source-of-truth for maintainers, and indexed
 separate SQLite database (`reg_meta_docs.db`) with its own `DOC_SCHEMA_VERSION`. The doc
 DB contains the FTS5 markdown index plus curated, rehostable register-version related
 documents. Docs are keyed to register and variable names, not numeric IDs, so doc
-updates and main-DB updates are independent.
+updates and main-DB updates are independent. Related-document rows expose metadata via
+the catalog when the caller supplies the docs connection; the PDF BLOB stays behind the
+docs query accessor so catalog browse payloads never inline binary content.
 
 End users never see the markdown files. The doc DB is distributed as a GitHub Release
 asset (`reg_meta_docs.db.zst`) parallel to the main DB asset, installed into the same

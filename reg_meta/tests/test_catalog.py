@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import sqlite3
 
 import pytest
 from _slugged_db import (
@@ -30,16 +30,44 @@ from reg_meta.catalog import (
     ValueSetMember,
     VariableEdition,
 )
+from reg_meta.doc_db import DOC_SCHEMA_VERSION
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import Fqid, FqidError
-
-if TYPE_CHECKING:
-    import sqlite3
+from reg_meta_build.doc_db import DOC_DDL
 
 
 @pytest.fixture
 def slugged_conn() -> sqlite3.Connection:
     return build_slugged_db()
+
+
+def _related_doc_conn(register: str = "lisa") -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(DOC_DDL)
+    conn.execute(
+        "INSERT INTO doc_meta (key, value) VALUES ('schema_version', ?)",
+        (DOC_SCHEMA_VERSION,),
+    )
+    conn.execute(
+        "INSERT INTO related_document ("
+        "register, title, filename, source_url, license, fetched, "
+        "sha256, byte_size, content"
+        ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            register,
+            "LISA manual",
+            "lisa_manual.pdf",
+            "https://example.test/lisa_manual.pdf",
+            "CC BY 4.0",
+            "2026-06-29",
+            "c" * 64,
+            7,
+            b"manual",
+        ),
+    )
+    conn.commit()
+    return conn
 
 
 class TestResolveProvider:
@@ -65,6 +93,14 @@ class TestResolveRegister:
         assert r.register_id == 1
         assert r.fqid.provider == "scb"
         assert r.name == "LISA"
+        assert r.related_documents == ()
+
+    def test_resolves_with_related_documents(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        r = Catalog(slugged_conn, doc_conn=_related_doc_conn()).resolve("scb/lisa")
+        assert isinstance(r, ResolvedRegister)
+        assert [doc.filename for doc in r.related_documents] == ["lisa_manual.pdf"]
 
     def test_wrong_provider_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
@@ -121,6 +157,14 @@ class TestResolveBinding:
         # picker shows in place of the slug). `_DEFAULT_VARIANT` names it "Individer
         # 15+"; the slug remains the add coordinate above.
         assert r.states[0].variant_label == "Individer 15+"
+        assert r.related_documents == ()
+
+    def test_resolves_register_related_documents(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        r = Catalog(slugged_conn, doc_conn=_related_doc_conn()).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert [doc.filename for doc in r.related_documents] == ["lisa_manual.pdf"]
 
     def test_variant_label_is_none_for_a_null_named_variant(self) -> None:
         # A NULL-named variant → variant_label None (the consumer falls back to the

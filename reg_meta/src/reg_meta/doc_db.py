@@ -11,6 +11,8 @@ from __future__ import annotations
 import sqlite3
 from typing import TYPE_CHECKING
 
+from pydantic import BaseModel, ConfigDict
+
 from .errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
@@ -24,6 +26,24 @@ DOCS_SOURCE_FILE = ".docs_source"
 # code starts reading a new column / meta key, major when tables or columns
 # are renamed or removed. Patch differences are ignored.
 DOC_SCHEMA_VERSION = "1.2.0"
+
+
+class _DocModel(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+
+class RelatedDocument(_DocModel):
+    title: str
+    filename: str
+    source_url: str
+    license: str
+    fetched: str
+    sha256: str
+    byte_size: int
+
+
+class RelatedDocumentContent(RelatedDocument):
+    content: bytes
 
 
 def doc_db_path(db_arg: str | None) -> Path:
