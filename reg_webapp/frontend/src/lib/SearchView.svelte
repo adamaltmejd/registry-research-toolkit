@@ -294,7 +294,7 @@ function groupMemberFqids(results: readonly SearchResult[]): Set<string> {
 }
 
 function displayResults(group: SearchGroup): SearchResult[] {
-  if (group.group !== "variables") {
+  if (group.group !== "variables" && group.group !== "top_results") {
     return [...group.results];
   }
   const groupedMembers = groupMemberFqids(group.results);
@@ -512,6 +512,21 @@ function secondaryClassificationOwners(
     }
     return catalogHref(owner.fqid) !== headingHref;
   });
+}
+
+function topClassificationOwners(
+  result: CodeSearchResult,
+): CodeOwnerClassification[] {
+  const systemOwner = codeSystemOwner(result);
+  if (systemOwner == null) {
+    return secondaryClassificationOwners(result);
+  }
+  return [
+    systemOwner,
+    ...secondaryClassificationOwners(result).filter(
+      (owner) => owner !== systemOwner,
+    ),
+  ];
 }
 
 function hasExpandableOwners(result: CodeSearchResult): boolean {
@@ -907,8 +922,13 @@ function closeSearch(): void {
      native <details> disclosure; one variable owner is a whole-row link with
      matched variable context inline; zero owners render as a plain
      Code · Label row. -->
-{#snippet ownerSubRows(result: CodeSearchResult)}
-  {@const classificationOwners = secondaryClassificationOwners(result)}
+{#snippet ownerSubRows(
+  result: CodeSearchResult,
+  includeCodeSystemOwner: boolean = false,
+)}
+  {@const classificationOwners = includeCodeSystemOwner
+    ? topClassificationOwners(result)
+    : secondaryClassificationOwners(result)}
   {#each result.variables as owner, i (i)}
     {@const context = ownerRegisterContext(owner)}
     {#if owner.fqid}
@@ -1026,7 +1046,7 @@ function closeSearch(): void {
           {@render codeSystemLinePlain(result)}
         </span>
       </summary>
-      <div class="owner-table">{@render ownerSubRows(result)}</div>
+      <div class="owner-table">{@render ownerSubRows(result, true)}</div>
     </details>
   {:else if singleOwner?.fqid}
     <a

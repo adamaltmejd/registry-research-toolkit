@@ -662,7 +662,7 @@ def test_top_results_exact_variable_beats_register_prior():
     register = RegisterSearchResult(
         fqid="scb/konj",
         name="Konjunktur",
-        rank=0.0,
+        rank=-1.0,
     )
     variable = VariableSearchResult(
         fqid="scb/lisa/kon",
@@ -714,7 +714,7 @@ def test_top_results_group_member_exact_match_gets_boost():
     register = RegisterSearchResult(
         fqid="scb/konj",
         name="Konjunktur",
-        rank=0.0,
+        rank=-1.0,
     )
     group = ConceptGroupSearchResult(
         kind="variable",
@@ -740,6 +740,31 @@ def test_top_results_group_member_exact_match_gets_boost():
     )
 
     assert top == [group, register]
+
+
+def test_top_results_keeps_golden_pins_first():
+    pin = RegisterSearchResult(
+        fqid="scb/aku",
+        name="Arbetskraftsundersökningarna",
+        rank=0.0,
+    )
+    exact = VariableSearchResult(
+        fqid="scb/rams/syss",
+        name="Sysselsättning",
+        register="RAMS",
+        rank=-10.0,
+    )
+
+    top = _best_bets(
+        "sysselsättning",
+        [
+            RegisterSearchGroup(total_count=1, results=[pin]),
+            VariableSearchGroup(total_count=1, results=[exact]),
+        ],
+        limit=2,
+    )
+
+    assert top == [pin, exact]
 
 
 def test_top_results_keep_same_key_groups_from_different_registers():

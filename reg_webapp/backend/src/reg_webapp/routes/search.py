@@ -265,6 +265,7 @@ def _top_candidate_key(result: SearchResult, group_order: int, row_order: int) -
 
 @dataclass(frozen=True)
 class _TopCandidate:
+    golden: bool
     score: int
     group_order: int
     row_order: int
@@ -287,6 +288,7 @@ def _best_bets(
         for row_order, result in enumerate(group.results):
             score = _best_bet_score(query, cast("SearchResult", result))
             candidate = _TopCandidate(
+                golden=_looks_like_golden_pin(cast("SearchResult", result)),
                 score=score,
                 group_order=group_order,
                 row_order=row_order,
@@ -295,15 +297,22 @@ def _best_bets(
             key = _top_candidate_key(candidate.result, group_order, row_order)
             current = by_key.get(key)
             if current is None or (
+                candidate.golden,
                 candidate.score,
                 -candidate.group_order,
                 -candidate.row_order,
-            ) > (current.score, -current.group_order, -current.row_order):
+            ) > (
+                current.golden,
+                current.score,
+                -current.group_order,
+                -current.row_order,
+            ):
                 by_key[key] = candidate
 
     ranked = sorted(
         by_key.values(),
         key=lambda candidate: (
+            not candidate.golden,
             -candidate.score,
             candidate.group_order,
             candidate.row_order,

@@ -187,7 +187,7 @@ describe("SearchView — typed result groups (#379)", () => {
       groups: [
         {
           group: "top_results",
-          total_count: 1,
+          total_count: 2,
           results: [
             {
               type: "group",
@@ -215,6 +215,16 @@ describe("SearchView — typed result groups (#379)", () => {
               ],
               rank: 0,
             },
+            {
+              type: "variable",
+              fqid: "scb/lcs/naringsgren",
+              name: "Näringsgren",
+              register: "Labour Cost Survey (LCS)",
+              delivery_column_names: [],
+              definition: null,
+              operational_definition: null,
+              rank: -1,
+            },
           ],
         },
       ],
@@ -231,6 +241,11 @@ describe("SearchView — typed result groups (#379)", () => {
     );
     expect(row?.textContent).toContain("Näringsgren");
     expect(row?.textContent).toContain("SCB: Labour Cost Survey (LCS)");
+    expect(
+      document.querySelector(
+        ".search-view .top-results a.leaf-row[href='/catalog/scb/lcs/naringsgren']",
+      ),
+    ).toBeNull();
   });
 
   it("shows code-system context on code hits in top results", async () => {
@@ -291,6 +306,9 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByRole("link", { name: /Sjukdomsdiagnos 1/ }))
       .toHaveAttribute("href", "/catalog/scb/ulf/ha0611m");
+    await expect
+      .element(page.getByRole("link", { name: /ICD-10-SE/ }))
+      .toHaveAttribute("href", "/catalog/class/icd-10-se");
   });
 
   it("links single-owner code hits in top results", async () => {
