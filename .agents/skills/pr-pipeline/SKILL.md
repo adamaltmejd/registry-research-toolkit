@@ -4,8 +4,8 @@ description: >-
   Registry Research Toolkit PR development pipeline. Use when asked to run the PR
   pipeline workflow, including prompts like "$pr-pipeline issue 510"; develop issue(s),
   take a ranked lane through implementation, open draft PRs with closing keywords, run
-  review/test/docs/visual gates, mark PRs ready, or continue toward merge when the user
-  explicitly asks for merge.
+  review/test/docs/visual gates, mark PRs ready, and record current-head merge-gate
+  evidence for chief-of-staff automerge.
 ---
 
 # Registry PR Pipeline
@@ -33,8 +33,9 @@ Agent-surface notes:
   new UI authoring, use the repo-local `frontend-design` skill before building. If the
   active Codex setup does not expose that repo-local skill, report the setup gap before
   authoring substantial new UI instead of silently substituting generic design prose.
-- Do not merge unless the user explicitly asked for merge/full pipeline or confirms at
-  the merge gate. Otherwise finish by marking the PR ready and reporting the gate state.
+- Do not merge. The `chief-of-staff` skill owns routine merge decisions and execution.
+  Finish by marking PRs ready, recording current-head merge-gate evidence, and reporting
+  the handoff state.
 
 ## Intake
 
@@ -126,7 +127,7 @@ Run focused verification as the work evolves:
    multi-agent tool before declaring subagents unavailable. Only fall back to an
    in-session `registry-code-review` checklist after discovery fails or the tool rejects
    the request; state what was tried and that it does not satisfy the independent review
-   gate. Stop before ready/merge until an external or subagent review signal is
+   gate. Stop before ready/handoff until an external or subagent review signal is
    available. Fix or explicitly dismiss every material finding with a reason. Beyond
    correctness, weigh reuse/simplification/altitude cleanup — a one-caller abstraction,
    a module duplicating a subsystem elsewhere, a library that subsumes the approach —
@@ -148,7 +149,7 @@ Run focused verification as the work evolves:
 7. Commit and push any review/doc fixes. Never use `--no-verify` or `-n`; fix hook
    failures.
 
-## Ready Or Merge Gate
+## Ready And Merge-Gate Handoff
 
 Mark the PR ready when the code is near-final — "ready" is what starts the Codex/Copilot
 auto-review, and it fires ONCE on the open→ready transition, NOT on later pushes (a new
@@ -167,7 +168,8 @@ CI runs on drafts, so time "ready" so the bot reviews code you won't churn:
 gh pr ready <pr>
 ```
 
-For merge, satisfy the repo gate:
+To mark a PR ready for `chief-of-staff` automerge, satisfy the repo gate and record
+durable evidence in the PR body:
 
 - independent review converged;
 - CI green;
@@ -179,14 +181,50 @@ For merge, satisfy the repo gate:
   webhooks — to a \~15-min ceiling), so launch it once per HEAD as a background task
   (the wait outlasts a 10-min foreground cap); `--once` is a single snapshot. Never
   conclude while it reports `reviewing`; after a new push, re-trigger with
-  `@codex review` and launch a fresh background poll;
+  `@codex review` and launch a fresh background poll. A `none` result can be handed to a
+  human with explanation, but it is not enough for `status: ready-to-merge` automerge
+  evidence;
 - real-data validation when build pipeline or DB content changed;
 - visual verification when rendered output changed: run
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` or
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>` on the assembled tree,
   inspect the screenshot, and run `web-design-reviewer` for the structured design pass
   when the active Codex setup exposes it;
-- stale-head check before and after merge.
+- stale-head check before recording the handoff; `chief-of-staff` re-checks it
+  immediately before and after merge.
+
+After the gate is complete, update the PR body while preserving the closing keywords and
+add or replace this block:
+
+```md
+<!-- pr-pipeline-merge-gate -->
+**PR Pipeline Merge Gate**
+- status: ready-to-merge
+- head: <sha>
+- closes: #<issue>[, #<issue>]
+- independent-review: pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed
+- codex-bot: <clean|exhausted>; `scripts/pr_review_status.py <pr> --once`
+- ci: pass; `gh pr checks <pr>`
+- tests: <commands run>
+- docs: <updated / not required>
+- visual: <not required / pass with durable PR-visible proof>
+- build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
+- stack: <none / after #pr / before #pr>
+<!-- /pr-pipeline-merge-gate -->
+```
+
+The current-head `status: ready-to-merge` block is the single chief-of-staff handoff
+indicator. Do not write it if any gate is missing, pending, stale, or only reported in
+the local chat transcript. Use `status: blocked` with the missing item, or leave the
+block incomplete and report what chief-of-staff must wait for. A later push makes the
+block stale; rerun the gate on the new head and refresh the block.
+
+Proof must survive a later chief-of-staff tick. For rendered changes, attach or comment
+the screenshot evidence on the PR; a local `/tmp/reg-webapp-shots/` path is useful in
+the authoring thread but is not durable merge evidence. For build-db, record the
+timestamped log path only if it is accessible to the future merge runner, otherwise
+summarize the completed command, validation result, and dbdiff in the PR body or a PR
+comment.
 
 Run the real `build-db` last and once for build-affecting work, using the `build-db`
 skill / `scripts/build_db_watch.py` so the run has a timestamped log, sparse progress,
@@ -226,8 +264,9 @@ rm -rf "$db_dir"
 ## Closeout
 
 Report what changed, PR number/status, verification commands, review findings fixed or
-dismissed, docs/test decisions, and any follow-up issues worth filing. Default to fixing
-doc drift inline — it's part of this PR; record a follow-up only when the fix needs its
-own scoped change, never as an escape hatch for a one-liner. Before proposing a new
-issue, search open and closed issues with
+dismissed, docs/test decisions, merge-gate block status, and any follow-up issues worth
+filing. For multi-PR pipelines, report the intended merge order, but leave execution to
+`chief-of-staff`. Default to fixing doc drift inline — it's part of this PR; record a
+follow-up only when the fix needs its own scoped change, never as an escape hatch for a
+one-liner. Before proposing a new issue, search open and closed issues with
 `gh issue list --state all --search "<keywords>"`.

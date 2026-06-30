@@ -1,6 +1,6 @@
 ---
 name: pr-pipeline
-description: "Drive a feature, fix, or request from intake to merge: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, and merge through the CLAUDE.md PR merge gate. The invoking session is the lead and owns all git. Usage: /pr-pipeline <issue number(s), a feature/problem description, or `next` to carve a fresh lane from the sequencing projection>"
+description: "Drive a feature, fix, or request from intake to merge-gate handoff: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, mark ready, and record current-head gate evidence for chief-of-staff automerge. The invoking session is the lead and owns git until handoff. Usage: /pr-pipeline <issue number(s), a feature/problem description, or `next` to carve a fresh lane from the sequencing projection>"
 argument-hint: "<issue number(s), a description, or `next` for a fresh lane>"
 disable-model-invocation: true
 ---
@@ -8,19 +8,20 @@ disable-model-invocation: true
 # PR pipeline (lead)
 
 **Only run when the user explicitly invokes `/pr-pipeline` (or clearly asks you to run
-this pipeline).** It opens PRs and MERGES them — never auto-start it because a
-conversation merely resembles issue work.
+this pipeline).** It opens PRs and records merge-gate evidence, but it does **not**
+merge — never auto-start it because a conversation merely resembles issue work.
 
 You are the **lead** for this request:
 
 > $ARGUMENTS
 
-You plan the work and own ALL git (stage / commit / push / open / merge). You dispatch
-**one-shot subagents** for the edits and run **`/code-review`** for the review step
-(Step C), then merge the result yourself. The role subagents live in `.claude/agents/`:
-`implementer`, `tester`, `docs-updater` — dispatch each with the `Agent` tool,
-`subagent_type` set to the role (this is what loads its `.md` system prompt + tool
-restrictions; omitting it gives a generic agent with the wrong prompt).
+You plan the work and own ALL git until handoff (stage / commit / push / open / PR body
+updates). You dispatch **one-shot subagents** for the edits and run **`/code-review`**
+for the review step (Step C), then leave merge execution to `/chief-of-staff`. The role
+subagents live in `.claude/agents/`: `implementer`, `tester`, `docs-updater` — dispatch
+each with the `Agent` tool, `subagent_type` set to the role (this is what loads its
+`.md` system prompt + tool restrictions; omitting it gives a generic agent with the
+wrong prompt).
 
 ## How dispatch works
 
@@ -52,7 +53,10 @@ tool result** — that IS its report.
   once on the assembled tree and confirm the real diff stays inside your partition.
   Reviews need no fan-out — `/code-review` parallelizes its own lenses.
 
-Run the PRs themselves **strictly serially** — one merged before the next starts.
+Run PR authoring **strictly serially** unless the planned PRs are explicitly
+file-disjoint and independent. A multi-PR pipeline can finish all PRs without merging;
+record stack/dependency order in each PR's gate block and leave execution to
+`/chief-of-staff`.
 
 ## Step 0 — plan (first, before any coding)
 
@@ -147,8 +151,8 @@ worktree-correct and never collides or leaks even under parallel fan-out (no
 `dev.sh smoke`/`shot` on the assembled tree** — the visual analog of the union Verify,
 and the merge-gate screenshot (Step E). When they report, validate the real diff,
 `git add -A`, commit, and push onto the draft PR's branch. Outward-facing `gh` actions
-(PR create / merge / comment) may be denied by the session's permission mode — if one is
-denied, surface it to the human, don't work around it.
+(PR create / comment / PR body update) may be denied by the session's permission mode —
+if one is denied, surface it to the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
@@ -203,11 +207,11 @@ docs-updater on the final code → commit its result. Do this AFTER review conve
 BEFORE the merge-gate hold, so the bot-review window runs against the true final HEAD (a
 docs push after the hold starts restarts it).
 
-**E · Merge.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full — independent review
-converged (your `/code-review` loop is the independent Claude pass) · CI green ·
-bot-review window settled · real-data validation for build-affecting work · **visual
-verification (`dev.sh smoke` / `dev.sh shot` screenshot) for UI changes** · stale-head
-check. For the bot-review window, run
+**E · Merge-gate handoff.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full —
+independent review converged (your `/code-review` loop is the independent Claude pass) ·
+CI green · bot-review window settled · real-data validation for build-affecting work ·
+**visual verification (`dev.sh smoke` / `dev.sh shot` screenshot) for UI changes** ·
+stale-head check. For the bot-review window, run
 **`uv run --no-project python scripts/pr_review_status.py <pr>`** — it computes Codex's
 signal on the **current HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`) and
 returns the verdict bodies in `messages` (no second `gh` call), so you don't re-derive
@@ -223,11 +227,40 @@ the login-sensitive `gh api` calls. Operate it like this:
   must be backgrounded; `--once` is the quick snapshot when you just want the current
   state.
 - **Act on the settled signal:** route `findings` to a fix (the suggestions are in
-  `messages` — no need to open the PR), merge-eligible on `clean`, treat `exhausted` as
-  end-of-wait (not a blocker), never conclude on `reviewing`/`none`. A new push
-  invalidates the verdict — re-trigger with `@codex review` and launch a fresh
-  background poll on the new HEAD.
+  `messages` — no need to open the PR), handoff-eligible on `clean`, treat `exhausted`
+  as end-of-wait (not a blocker) only when the independent review and other gates are
+  complete, never conclude on `reviewing`/`none`. A new push invalidates the verdict —
+  re-trigger with `@codex review` and launch a fresh background poll on the new HEAD.
 - Never key the window on CI going green — CI is a separate gate.
+
+When every gate passes, update the PR body while preserving the closing keywords and add
+or replace:
+
+```md
+<!-- pr-pipeline-merge-gate -->
+**PR Pipeline Merge Gate**
+- status: ready-to-merge
+- head: <sha>
+- closes: #<issue>[, #<issue>]
+- independent-review: pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed
+- codex-bot: <clean|exhausted>; `scripts/pr_review_status.py <pr> --once`
+- ci: pass; `gh pr checks <pr>`
+- tests: <commands run>
+- docs: <updated / not required>
+- visual: <not required / pass with durable PR-visible proof>
+- build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
+- stack: <none / after #pr / before #pr>
+<!-- /pr-pipeline-merge-gate -->
+```
+
+The current-head `status: ready-to-merge` block is the single chief-of-staff handoff
+indicator. Do not write it if any gate is missing, pending, stale, or only reported in
+the local chat transcript. A `none` Codex signal can be handed to a human with
+explanation, but it is not enough for automerge evidence. A later push makes the block
+stale; rerun the gate on the new head and refresh it. Proof must survive a later
+chief-of-staff tick: attach/comment screenshot evidence for rendered changes, and record
+build-db validation/dbdiff in the PR body or a PR comment unless the timestamped log is
+accessible to the future merge runner.
 
 Pipeline-specific operational notes the gate doesn't carry:
 
@@ -276,18 +309,13 @@ Pipeline-specific operational notes the gate doesn't carry:
   rm -rf "$db_dir"
   ```
 
-- Squash-merge matching the repo's `(#issue) (#PR)` title history. **Worktree caveat:**
-  `gh pr merge --squash --delete-branch` can fail its local post-merge
-  `git checkout main` even though GitHub merged — so don't trust its exit code. Confirm
-  the merge landed with `gh pr view <n> --json state,mergeCommit` (expect
-  `state == MERGED`); if the remote ref survived, delete it with
-  `git push origin --delete s/<slug>`. Delete the local branch with
-  `git branch -D s/<slug>` (after a squash, `-d` refuses) from the next PR's
-  `origin/main` checkout.
+- Do not merge. `/chief-of-staff` performs the squash merge after re-checking live head,
+  CI, Codex bot signal, mergeability, durable proof, and stack order. If a remote branch
+  should be deleted after merge, leave that to the merge owner.
 
-Before the next planned PR, fork off the freshly-merged base —
-`git fetch origin main && git checkout -b s/<next-slug> origin/main` (not
-`git checkout main`; see Step A).
+Before the next planned PR, fork from the correct base: `origin/main` for independent
+work, or the predecessor PR branch for a stacked dependency. Record the stack order in
+the gate block; do not require an earlier PR to merge before completing the next one.
 
 ## Conventions you enforce on dispatch
 
@@ -302,8 +330,9 @@ code, so the fix is always a subagent's.
 Before reporting, **re-verify the work is actually finished** — don't take the per-PR
 steps on trust:
 
-- **Merged & on main** — each planned PR shows `MERGED` and its changes are present on
-  `origin/main` (the stale-head check), and branches are cleaned up.
+- **Ready for chief-of-staff** — each planned PR is open and non-draft, with either a
+  current-head `pr-pipeline-merge-gate` block marked `status: ready-to-merge`, or a
+  named blocker.
 - **Docs current** — the change doesn't leave authored docs stale anywhere: the touched
   `<package>/DESIGN.md` (including its design-spec prose and any token/symbol it names),
   README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`, `ARCHITECTURE.md`. Step D
@@ -318,9 +347,10 @@ steps on trust:
 
 Then end with a **report**:
 
-1. **What shipped** — the PR breakdown you planned; per PR → merged / blocked, review
-   rounds, external/bot comments addressed, tester suggestions accepted/declined, roles
-   skipped (and why), and any fork you escalated to the human.
+1. **What is ready** — the PR breakdown you planned; per PR → ready for chief-of-staff /
+   blocked, intended merge order, review rounds, external/bot comments addressed, tester
+   suggestions accepted/declined, roles skipped (and why), and any fork you escalated to
+   the human.
 2. **Deferred / outstanding** — anything intentionally left out of scope, a finding
    dismissed as "later", a confirmed TODO/FIXME, or a doc left stale by design. Say
    "none" if there are none.

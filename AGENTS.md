@@ -303,6 +303,26 @@ concurrent dispatches skip that issue and anything touching its files. The draft
 the marker (no `in-progress` label); merging or closing it clears the claim. For a known
 multi-issue effort, open the drafts up front; open more as new work surfaces.
 
+**Chief-of-staff maintenance** — the recurring `chief-of-staff` tick owns routine issue
+maintenance. It may automatically apply evidence-backed tracker fixes: required labels,
+blocked/parked agreement, priority labels with explicit maintainer or dependency-graph
+evidence, parent/sub-issue wiring already stated in issue text, clear
+`Relationships`/`touches` repairs, and closing issues whose PR is merged and verified on
+`main`. It should stop and ask only for material conflicts: product direction, issue
+scope changes, new priorities without evidence, unparking deferred work without an
+explicit resume signal, partial/disputed closure, new issue creation, deleting
+substantive prose, or contradictions between labels, body, comments, and live PR state.
+It must run only from the canonical main checkout
+`/Users/adam/Code/registry-research-toolkit`, never from a worktree. Its startup gate
+is: verify the exact repo top-level, `test -d .git`, and branch `main`; run
+`git pull --ff-only` as the first sync action; re-verify the main checkout; and stop if
+`git status --short` is not empty. If any gate fails, report the condition and ask the
+user to fix it before relaunching. Actual implementation work always happens in separate
+worktrees; chief-of-staff coordinates issues/PRs and merges ready gated PRs from the
+main checkout. When a merge creates a required build/release boundary, such as DB
+content that dependent work needs published, chief-of-staff may invoke `/release minor`
+and then must follow the release workflow gates.
+
 # Git
 
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a
@@ -311,7 +331,16 @@ multi-issue effort, open the drafts up front; open more as new work surfaces.
 ## PR merge gate
 
 Green CI alone is never sufficient to merge. Scale the rest to the PR's size and risk
-(see `.claude/skills/pr-pipeline/SKILL.md` for the full pipeline version):
+(see the `pr-pipeline` skill for the full authoring/handoff version):
+
+**Merge ownership** — `pr-pipeline` owns authoring, review, verification, and the
+durable merge-gate handoff. It does **not** merge. The `chief-of-staff` skill owns
+routine merge decisions and execution. A recurring chief-of-staff tick may automatically
+squash-merge a PR only when the PR body contains a current-head
+`<!-- pr-pipeline-merge-gate -->` block with `status: ready-to-merge`, all required gate
+evidence is present, and the chief-of-staff re-checks the live PR head, CI, Codex bot
+signal, mergeability, and stack order immediately before merging. That body block is the
+single pipeline handoff signal; no separate ready-to-merge comment is required.
 
 - **Independent review** — every PR gets at least one review independent of its author.
   For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier
@@ -349,7 +378,10 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   poller also returns the verdict bodies in `messages`, so you read them without a
   second `gh` call. \~15 min with no signal is the ceiling — bots may skip a push
   entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
-  requested by commenting `@codex review`). Absence at the ceiling is not a blocker.
+  requested by commenting `@codex review`). Absence at the ceiling is not a blocker for
+  a human handoff, but it is not enough for an automatic `chief-of-staff` merge; leave
+  the PR's merge-gate block below `status: ready-to-merge` until the signal is `clean`
+  or an acceptable `exhausted` result with all other gates complete.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout. From a worktree,
@@ -376,10 +408,15 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   active agent surface does not expose a named design skill, report that setup gap and
   complete the manual rendered review; do not skip visual verification.
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
-  branch tip; after merging, confirm the PR's changes are actually present on main — the
-  GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing
-  the merge commit's tree to the branch tip works only when the base didn't advance in
-  between.)
+  branch tip and pass that SHA to `gh pr merge --match-head-commit`; after merging,
+  confirm the PR's changes are actually present on main — the GitHub API can capture a
+  stale head and silently drop just-pushed commits. (Comparing the merge commit's tree
+  to the branch tip works only when the base didn't advance in between.)
+- **Stacked PR branch safety**: before merging a stack predecessor, inspect open
+  successor PRs' `baseRefName` and `headRefName`. If a successor is based on the
+  predecessor branch, prevent branch deletion or retarget the successor immediately
+  after merge, then verify it remains open on the intended head. Never delete a branch
+  that is the head branch of another open PR.
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →
@@ -388,10 +425,10 @@ without the user invoking the skill, run the same shape — plan → implement �
 **starts the bot-review window** — Codex auto-reviews on the open/ready transition,
 never on a draft, so a PR handed back as a draft stalls the gate. Leave a PR draft only
 while it's genuinely still being built (the draft is also the in-flight claim). Once
-ready, you may poll and report the bot-review window (above). But **don't merge on your
-own initiative** — the *merge decision* is the human's (they invoke `/pr-pipeline`, or
-tell you to merge). `/pr-pipeline` is the flow that carries a PR through to merge, and
-it's user-invoked by design.
+ready, you may poll and report the bot-review window (above). Do **not** merge on your
+own initiative. If you want the recurring staff loop to auto-merge it, update the PR
+body with a current-head `pr-pipeline` merge-gate block marked `status: ready-to-merge`
+and leave execution to `chief-of-staff`.
 
 # Layout
 
