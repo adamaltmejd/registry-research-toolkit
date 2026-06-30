@@ -11,8 +11,26 @@ merges PRs with a current-head pipeline handoff, and recommends the next work to
 in separate worktrees. It also keeps a canonical-main `reg_webapp` dev preview available
 so freshly merged user-visible changes can be inspected immediately.
 
-This skill is designed for scheduled use. Run one tick to completion, then stop; `/loop`
-or another external automation owns the cadence.
+This skill is designed for scheduled use. For recurring use, prefer one heartbeat
+attached to a single existing chief-of-staff thread. Run one tick to completion, then
+stop; `/loop` or another external automation owns the cadence. Do not schedule detached
+cron/workspace jobs unless the user explicitly accepts multiple independent coordinator
+contexts.
+
+## Scheduling
+
+- Use one active heartbeat pointed at one existing chief-of-staff thread. The goal is
+  one continuing coordinator context, not a set of detached jobs.
+- Do not create detached cron/workspace jobs by default; they can run as independent
+  chiefs of staff and duplicate merge/recommendation decisions.
+- After creating or updating the automation, verify the persisted `kind`, `status`,
+  cadence, and `target_thread_id` before calling it active. If it remains cron-style,
+  paused, or missing the target thread, report that exact state and stop.
+- Keep the scheduled prompt minimal, e.g. `Run exactly one chief-of-staff tick`, so this
+  skill remains the source of truth.
+- If a heartbeat fires while the prior tick in that thread is still running, skip the
+  new tick and return `DONT_NOTIFY` with reason `previous tick still running`; do not
+  overlap issue maintenance, merge inspection, or recommendations.
 
 ## Startup Gate
 
@@ -37,27 +55,29 @@ new work, but it must not edit project code as part of the work itself.
 
 ## Tick
 
-1. Complete the startup gate above. Stop immediately if it fails.
-2. Ensure the canonical-main `reg_webapp` dev preview is running. Reuse a healthy
+1. If this is a heartbeat invocation and the previous tick in this thread is still
+   running, skip this tick with `DONT_NOTIFY`; do not overlap repo or GitHub mutations.
+2. Complete the startup gate above. Stop immediately if it fails.
+3. Ensure the canonical-main `reg_webapp` dev preview is running. Reuse a healthy
    existing preview unless the startup gate's `git pull --ff-only` moved `main`; do not
    start duplicate servers. Record the frontend URL. If preview startup fails, continue
    the tick and report the preview as unavailable with the concrete reason.
-3. Invoke `/issue-pulse` exactly once. Let it update only the lanes block; apply
+4. Invoke `/issue-pulse` exactly once. Let it update only the lanes block; apply
    structural issue maintenance afterward under this skill's maintenance policy.
-4. Build the operating picture:
+5. Build the operating picture:
    - run `uv run --no-project python scripts/plan_sequence.py --lane`;
    - read issue `#328` and current candidate issue bodies/comments;
    - inspect open PRs that close issues, especially drafts, ready PRs, and stacks;
    - read merge-gate handoff blocks from PR bodies with `gh pr view`, not from
      `scripts/pr_review_status.py`, which is only the Codex bot-review signal.
-5. Apply clear, evidence-backed issue maintenance automatically. If it changes
+6. Apply clear, evidence-backed issue maintenance automatically. If it changes
    lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
    `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
    not rely only on `plan_sequence.py --lane` after invalidating the ranked lanes.
-6. Merge ready PRs only through the automerge gate below. After each successful merge
+7. Merge ready PRs only through the automerge gate below. After each successful merge
    and local fast-forward, restart the preview so it serves the new `main`, then capture
    the merged feature summary and inspection link.
-7. If a merge or lane-affecting issue edit changed during the tick, rerun and follow the
+8. If a merge or lane-affecting issue edit changed during the tick, rerun and follow the
    `/issue-pulse` lane-staleness path before recommending work; do not rely only on
    `plan_sequence.py --lane` after invalidating ranked lanes. Then re-run the live lane
    floor and recommend the next safe `/pr-pipeline issue ...` commands or say to wait.
@@ -191,6 +211,15 @@ resolve contradictory live signals.
   the active-work budget is saturated, metadata is too stale to trust, or a
   release/merge gate must clear first. Do not pad to three.
 
+## Subagents
+
+For scheduled heartbeat ticks, default to no subagents: use direct `gh` calls and repo
+scripts first so the tick finishes predictably. Spawn subagents only when a material
+merge/recommendation ambiguity cannot be resolved quickly in the main context and the
+tick has enough time left to close them before returning. Manual/ad-hoc runs may use
+subagents more proactively for separable read-only checks, but never delegate live issue
+mutation.
+
 Return concise output:
 
 ```text
@@ -206,3 +235,15 @@ Recommended next:
 Issue maintenance: applied <...>; needs input <... or none>
 Watch: <blocked decision, pending release, stale review, or next trigger>
 ```
+
+## Heartbeat Decision
+
+- Use `DONT_NOTIFY` when there was no merge, no issue maintenance, no lane content or
+  recommendation change, no new actionable blocker, and active PR statuses are
+  materially unchanged.
+- Use `NOTIFY` when the tick merged or released work, changed issue metadata, re-ranked
+  or re-stamped lanes in a way that changes the free/active/recommended sets, found a
+  gate failure on a PR that looked ready, failed to refresh the preview after a merge,
+  or needs user input.
+- For skipped overlapping heartbeats, use `DONT_NOTIFY` with reason
+  `previous tick still running`.

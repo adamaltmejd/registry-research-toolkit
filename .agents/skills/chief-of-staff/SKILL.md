@@ -18,8 +18,11 @@ merges PRs that have a current-head pipeline handoff, and recommends the next wo
 user should launch in separate worktrees. It also keeps a canonical-main `reg_webapp`
 dev preview available so merged user-visible work can be inspected immediately.
 
-The skill is designed for scheduled use. Run one coordination tick to completion, then
-stop; external automation owns the cadence.
+The skill is designed for scheduled use. For recurring use, prefer one heartbeat
+attached to a single existing chief-of-staff thread. Run one coordination tick to
+completion, then stop; external automation owns the cadence. Do not schedule detached
+cron/workspace jobs unless the user explicitly accepts multiple independent coordinator
+contexts.
 
 It does not implement issue code or start `pr-pipeline`. Its product is a short
 operating picture, any safe merges or required release action, preview links for merged
@@ -27,6 +30,27 @@ user-facing changes, and exact recommendations for work the user should launch
 separately.
 
 Default epic is `328`.
+
+## Scheduling
+
+For recurring chief-of-staff use, maintain one active heartbeat pointed at one existing
+chief-of-staff thread. The goal is one continuing coordinator context, not a set of
+detached jobs.
+
+- Prefer a heartbeat automation whose `target_thread_id` is the chosen chief-of-staff
+  thread.
+- Do not create detached cron/workspace jobs by default; they can run as independent
+  chiefs of staff and duplicate merge/recommendation decisions. Use them only after the
+  user explicitly accepts that tradeoff.
+- After creating or updating the automation, verify the persisted state before calling
+  it active: `kind`, `status`, cadence, and `target_thread_id` must match the intended
+  heartbeat. If it remains cron-style, paused, or missing the target thread, report that
+  exact state and stop.
+- Keep the scheduled prompt minimal, e.g. `Run exactly one chief-of-staff tick`, so this
+  skill remains the source of truth.
+- If a heartbeat fires while the prior tick in that thread is still running, skip the
+  new tick and return `DONT_NOTIFY` with reason `previous tick still running`; do not
+  overlap issue maintenance, merge inspection, or recommendations.
 
 ## Startup Gate
 
@@ -52,16 +76,18 @@ recommend new work, but it must not edit project code as part of the work itself
 
 ## Tick
 
-1. Complete the startup gate above. Stop immediately if it fails.
-2. Ensure the canonical-main `reg_webapp` dev preview is running, following the Dev
+1. If this is a heartbeat invocation and the previous tick in this thread is still
+   running, skip this tick with `DONT_NOTIFY`; do not overlap repo or GitHub mutations.
+2. Complete the startup gate above. Stop immediately if it fails.
+3. Ensure the canonical-main `reg_webapp` dev preview is running, following the Dev
    Preview section below. Reuse a healthy existing preview; do not start duplicate
    servers unless the startup gate's `git pull --ff-only` moved `main`. Record the
    frontend URL for the final report.
-3. Invoke and follow the `issue-pulse` skill exactly for one heartbeat tick, including
+4. Invoke and follow the `issue-pulse` skill exactly for one heartbeat tick, including
    its tick-status, basis, restamp, re-rank, and refusal safeguards. Let `issue-pulse`
    write only its generated lanes block; apply structural issue maintenance afterward
    under this skill's maintenance policy.
-4. Build the current operating picture:
+5. Build the current operating picture:
    - Run `uv run --no-project python scripts/plan_sequence.py --lane` to get the live
      free, held, running, blocked, parked, and pending-release floor.
    - Read issue `#328` body and comments for current editorial intent.
@@ -76,7 +102,7 @@ recommend new work, but it must not edit project code as part of the work itself
    - Read candidate issue bodies and comments before recommending them. Fetch one issue
      per command; do not pass a space-separated issue list as one `gh issue view`
      identifier.
-5. Apply issue maintenance:
+6. Apply issue maintenance:
    - Treat `parked` as a first-class non-dispatch state.
    - Distinguish real blockers from polish: missing relationship links, stale `blocked`
      / `parked` labels, wrong area/type labels, missing `touches` blocks, and priority
@@ -88,10 +114,10 @@ recommend new work, but it must not edit project code as part of the work itself
      `Relationships`, `blocked`, or `parked`, rerun and follow the `issue-pulse`
      lane-staleness path before recommending work; do not rely only on
      `plan_sequence.py --lane` after invalidating the ranked lanes.
-6. Merge ready PRs, if any pass the automerge gate below. After every successful merge
+7. Merge ready PRs, if any pass the automerge gate below. After every successful merge
    and local fast-forward, restart the canonical-main dev preview so it serves the new
    `main`, then capture the merged feature summary and inspection link.
-7. Decide whether new pipelines should start:
+8. Decide whether new pipelines should start:
    - If a merge or lane-affecting issue edit changed during the tick, rerun and follow
      the `issue-pulse` lane-staleness path before recommending work; do not rely only on
      `plan_sequence.py --lane` after invalidating ranked lanes.
@@ -110,7 +136,7 @@ recommend new work, but it must not edit project code as part of the work itself
    - For every recommended issue, capture a one-sentence description of what it tackles
      from the issue body. If the body is too vague to support that, say so instead of
      inventing detail.
-8. Recommend commands only after the live floor and active PR claims agree.
+9. Recommend commands only after the live floor and active PR claims agree.
 
 ## Dev Preview
 
@@ -286,8 +312,13 @@ Next trigger: <PR merged, issue unparked, hygiene fix approved, or next tick>
 
 ## Subagents
 
-Use subagents for separable read-only checks when the environment exposes them and the
-tick is non-trivial:
+For scheduled heartbeat ticks, default to no subagents: use direct `gh` calls and repo
+scripts first so the tick finishes predictably. Spawn subagents only when a material
+merge/recommendation ambiguity cannot be resolved quickly in the main context and the
+tick has enough time left to close them before returning.
+
+For manual/ad-hoc runs, use subagents for separable read-only checks when the
+environment exposes them and the tick is non-trivial:
 
 - one subagent to audit open PR claims and likely conflicts;
 - one subagent to inspect candidate issue bodies/comments and stale metadata;
@@ -338,9 +369,25 @@ ones.
 Report checks that were not run. Do not claim a live check passed if it was skipped or
 failed.
 
+## Heartbeat Decision
+
+When invoked by a heartbeat, wrap the final report in the platform's heartbeat decision
+only when that surface expects it.
+
+- Use `DONT_NOTIFY` when there was no merge, no issue maintenance, no lane content or
+  recommendation change, no new actionable blocker, and active PR statuses are
+  materially unchanged. Keep the reason to one sentence.
+- Use `NOTIFY` when the tick merged or released work, changed issue metadata, re-ranked
+  or re-stamped lanes in a way that changes the free/active/recommended sets, found a
+  gate failure on a PR that looked ready, failed to refresh the preview after a merge,
+  or needs user input.
+- For skipped overlapping heartbeats, use `DONT_NOTIFY` with reason
+  `previous tick still running`.
+
 ## Guardrails
 
 - Run one tick and stop; external automation owns the cadence.
+- Do not run overlapping heartbeat ticks in the same chief-of-staff thread.
 - Do not start, claim, or implement `pr-pipeline` work from this skill.
 - Do not start duplicate `reg_webapp` main-checkout previews; reuse or restart the
   existing one.
