@@ -6,8 +6,8 @@ description: >-
   state, automatically merge ready PRs with current-head PR-pipeline handoff evidence,
   keep issue priorities or metadata current, keep the reg_webapp dev preview running,
   summarize merged user-visible features with preview links, prevent conflicting
-  pr-pipeline work, or recommend the next safe issue bundle or PR stack to start from a
-  separate worktree.
+  pr-pipeline work, send unblock follow-ups to stalled pr-pipeline sessions, or
+  recommend the next safe issue bundle or PR stack to start from a separate worktree.
 ---
 
 # Registry Chief Of Staff
@@ -132,7 +132,10 @@ recommend new work, but it must not edit project code as part of the work itself
 7. Merge ready PRs, if any pass the automerge gate below. After every successful merge
    and local fast-forward, restart the canonical-main dev preview so it serves the new
    `main`, then capture the merged feature summary and inspection link.
-8. Decide whether new pipelines should start:
+8. For PRs that do not merge, apply the Pipeline Follow-ups policy below before final
+   output. If the blocker is mechanical handoff work owned by the pipeline session, send
+   a precise follow-up to that session when the thread can be identified.
+9. Decide whether new pipelines should start:
    - If a merge or lane-affecting issue edit changed during the tick, rerun and follow
      the `issue-pulse` lane-staleness path before recommending work; do not rely only on
      `plan_sequence.py --lane` after invalidating ranked lanes.
@@ -151,7 +154,7 @@ recommend new work, but it must not edit project code as part of the work itself
    - For every recommended issue, capture a one-sentence description of what it tackles
      from the issue body. If the body is too vague to support that, say so instead of
      inventing detail.
-9. Recommend commands only after the live floor and active PR claims agree.
+10. Recommend commands only after the live floor and active PR claims agree.
 
 ## Dev Preview
 
@@ -270,6 +273,57 @@ If a PR is otherwise ready but the Codex bot has no current-head verdict, reques
 with `@codex review` only if the PR-pipeline block says the implementation is finished;
 then skip the merge until a later tick observes a settled signal.
 
+## Pipeline Follow-ups
+
+When a PR is close to merge-ready but blocked by mechanical pipeline handoff work, route
+that work back to the owning `pr-pipeline` session instead of only reporting the block.
+
+Send a pipeline follow-up when all of these are true:
+
+- the PR is open and appears to be owned by `pr-pipeline` or a trusted equivalent;
+- the current blocker is narrow, factual, and owned by the authoring pipeline, such as
+  local-only `/tmp` visual proof, missing PR-visible build-db proof, a stale or
+  incomplete merge-gate line, an unchanged draft/ready state after the pipeline says it
+  is finished, or a current-head gate evidence mismatch;
+- the requested work can be done without implementation changes unless explicitly
+  stated;
+- a likely owning thread can be identified from available thread tools by PR number,
+  issue number, branch name, worktree path, or recent thread title/history.
+
+Use thread tools when the agent surface exposes them:
+
+- search/list threads by PR number, issue number, branch, and worktree path;
+- send the message to the best matching existing pipeline thread;
+- do not create a new thread for an existing pipeline follow-up;
+- if the match is ambiguous, do not guess. Report the ambiguity and include the exact
+  message text the user or next tick should send.
+
+Make the follow-up prompt action-shaped and bounded:
+
+```text
+Chief-of-staff follow-up for PR #<pr> / issue #<issue>:
+
+The PR is blocked only because <specific blocker>. Please fix the handoff evidence
+without changing implementation code unless you discover the evidence is false.
+
+Do this on current head <sha>:
+1. <exact unblock step, e.g. post durable PR-visible visual proof with command, route,
+   viewport set, inspected result, and head SHA>.
+2. <update the merge-gate line/body to point to that durable proof>.
+3. Re-read PR #<pr> and confirm status/head/evidence still match.
+
+Do not merge; chief-of-staff owns merge execution.
+```
+
+Do not spam the same session. Send at most one follow-up for the same PR head and
+blocker unless the blocker changes, the PR head changes, or a later tick sees clear
+evidence that the prior request was missed after meaningful time has passed.
+
+Do not use follow-ups to make product calls, alter scope, request broad refactors, or
+ask a pipeline to bypass the merge gate. If the blocker is a real failed check, Codex
+finding, merge conflict, or code defect, tell the pipeline to fix that specific failure;
+if it is direction or priority ambiguity, ask the user instead.
+
 ## Issue Maintenance
 
 Keep the tracker current without asking for every mechanical edit. Evidence-backed
@@ -371,6 +425,10 @@ Issue maintenance:
 - applied: <specific metadata fixes or none>
 - needs input: <material conflict or none>
 
+Pipeline follow-ups:
+- sent: <PR/thread/blocker or none>
+- needed but not sent: <ambiguous thread or unsupported tool, plus blocker or none>
+
 Watch:
 - <blocked decision, pending release, stale review, or next trigger>
 ```
@@ -404,6 +462,8 @@ only when that surface expects it.
 - Run one tick and stop; external automation owns the cadence.
 - Do not run overlapping heartbeat ticks in the same chief-of-staff thread.
 - Do not start, claim, or implement `pr-pipeline` work from this skill.
+- Do not fix pipeline-owned implementation or handoff evidence directly when a precise
+  follow-up to the owning pipeline session can unblock it.
 - Do not start duplicate `reg_webapp` main-checkout previews; reuse or restart the
   existing one.
 - Do not merge without current-head PR-pipeline gate evidence plus fresh live checks.
