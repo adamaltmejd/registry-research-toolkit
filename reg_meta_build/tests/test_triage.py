@@ -2008,9 +2008,10 @@ class TestSplit:
         """Change 1 × Change 2 end-to-end: a var_id declared in Identifierare.csv
         that ALSO splits. The declared flag lands on the pre-split variable
         (`_populate_sensitivity_flags`, before triage) and must propagate to
-        every split sibling (`_inherited_flags`). var_id 303 (LopNr) is in the
-        default IDENTIFIERARE_ROWS; delivering it under two disjoint columns
-        (here in reg 1) splits it into siblings that must all stay flagged."""
+        every split sibling (`_inherited_variable_fields`). var_id 303 (LopNr) is
+        in the default IDENTIFIERARE_ROWS; delivering it under two disjoint
+        columns (here in reg 1) splits it into siblings that must all stay
+        flagged."""
         conn = _build(
             tmp_path,
             [
@@ -2026,6 +2027,66 @@ class TestSplit:
         assert all(r[0] == 1 for r in rows), (
             "a declared (Identifierare.csv) var_id must flag ALL its split siblings"
         )
+
+    def test_split_inherits_variable_level_metadata(self, tmp_path: Path) -> None:
+        """#797: split siblings keep shared variable-grain metadata.
+
+        `operational_definition` is intentionally not inherited here: #892
+        backfills it per owning split sibling from each delivery column's cvid.
+        """
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Hemkommun",
+                    cvid=9600,
+                    var_id=960,
+                    varname="SharedSplitVar",
+                    vardef="Shared definition",
+                    vardesc="Shared public description",
+                    unit="Namn",
+                    varsource="TESTREG",
+                    varopdef="Home municipality operation",
+                ),
+                _var_row(
+                    colname="Skolkommun",
+                    cvid=9601,
+                    var_id=960,
+                    varname="SharedSplitVar",
+                    vardef="Shared definition",
+                    vardesc="Shared public description",
+                    unit="Namn",
+                    varsource="TESTREG",
+                    varopdef="School municipality operation",
+                ),
+            ],
+        )
+        rows = conn.execute(
+            "SELECT DISTINCT vs.delivery_column_name, v.name, v.definition, "
+            "v.description, v.measurement_unit, v.source_register_text, "
+            "v.source_register_id, v.source_label, v.operational_definition "
+            "FROM variable v "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '960' "
+            "ORDER BY vs.delivery_column_name"
+        ).fetchall()
+        assert len(rows) == 2, "fixture should produce two split siblings"
+
+        for row in rows:
+            assert row["name"] == "SharedSplitVar"
+            assert row["definition"] == "Shared definition"
+            assert row["description"] == "Shared public description"
+            assert row["measurement_unit"] == "Namn"
+            assert row["source_register_text"] == "TESTREG"
+            assert row["source_register_id"] == 1
+            assert row["source_label"] == "TESTREG"
+
+        assert {
+            row["delivery_column_name"]: row["operational_definition"] for row in rows
+        } == {
+            "Hemkommun": "Home municipality operation",
+            "Skolkommun": "School municipality operation",
+        }
 
     def test_split_states_route_to_distinct_siblings(self, tmp_path: Path) -> None:
         conn = _build(

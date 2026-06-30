@@ -703,7 +703,8 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     # unika-only and silently dropped ~7 register-level declared identifiers).
     # Keyed on the source var_id (provider_key), so it lands on the one
     # pre-triage variable per var_id; the triage split then copies it to siblings
-    # (`_inherited_flags`). Orphan declared var_ids (no matching variable) no-op.
+    # (`_inherited_variable_fields`). Orphan declared var_ids (no matching
+    # variable) no-op.
     # Scoped to SCB registers: identifier_semantics + the numeric `provider_key`
     # are SCB-native (a non-SCB/SOS text provider_key would `CAST` to 0), so the
     # explicit provider scope keeps this correct independent of build order
@@ -1489,19 +1490,92 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                     container_lo, covered_to, container_gk = lo, hi, gk
 
 
-def _inherited_flags(
+@dataclass(frozen=True)
+class _InheritedVariableFields:
+    name: str | None
+    definition: str | None
+    description: str | None
+    source_register_text: str | None
+    measurement_unit: str | None
+    source_register_id: int | None
+    source_label: str | None
+    is_sensitive: int
+    is_identifier: int
+
+
+def _inherited_variable_fields(
     conn: sqlite3.Connection, orig_vid: int
-) -> tuple[str | None, int, int]:
-    """The `(name, is_sensitive, is_identifier)` a split sibling inherits from
-    its origin variable. The A1.2 sensitivity/identity flags are lifted
-    PRE-triage (`_populate_sensitivity_flags`), so siblings minted during the
-    split MUST copy them — otherwise the INSERT defaults both to 0 and the flag
-    survives only on the lex-first column."""
+) -> _InheritedVariableFields:
+    """Variable-grain fields a split sibling inherits from its origin variable.
+
+    `operational_definition` is deliberately excluded: it is cvid/column-grain
+    input that `_coalesce_variable_states` backfills onto each owning sibling
+    after triage.
+    """
     row = conn.execute(
-        "SELECT name, is_sensitive, is_identifier FROM variable WHERE variable_id = ?",
+        "SELECT name, definition, description, source_register_text, "
+        "measurement_unit, source_register_id, source_label, "
+        "is_sensitive, is_identifier "
+        "FROM variable WHERE variable_id = ?",
         (orig_vid,),
     ).fetchone()
-    return (row[0], row[1], row[2]) if row else (None, 0, 0)
+    return (
+        _InheritedVariableFields(
+            name=row[0],
+            definition=row[1],
+            description=row[2],
+            source_register_text=row[3],
+            measurement_unit=row[4],
+            source_register_id=row[5],
+            source_label=row[6],
+            is_sensitive=row[7],
+            is_identifier=row[8],
+        )
+        if row
+        else _InheritedVariableFields(
+            name=None,
+            definition=None,
+            description=None,
+            source_register_text=None,
+            measurement_unit=None,
+            source_register_id=None,
+            source_label=None,
+            is_sensitive=0,
+            is_identifier=0,
+        )
+    )
+
+
+def _insert_split_sibling_variable(
+    conn: sqlite3.Connection,
+    *,
+    register_id: int,
+    var_id: int,
+    shared: _InheritedVariableFields,
+) -> int:
+    cur = conn.execute(
+        "INSERT INTO variable "
+        "(register_id, provider_key, name, definition, description, "
+        "source_register_text, measurement_unit, source_register_id, "
+        "source_label, is_sensitive, is_identifier) "
+        "VALUES (?, CAST(? AS TEXT), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            register_id,
+            var_id,
+            shared.name,
+            shared.definition,
+            shared.description,
+            shared.source_register_text,
+            shared.measurement_unit,
+            shared.source_register_id,
+            shared.source_label,
+            shared.is_sensitive,
+            shared.is_identifier,
+        ),
+    )
+    new_vid = cur.lastrowid
+    assert new_vid is not None  # lastrowid is set after an INSERT
+    return new_vid
 
 
 def _apply_fold(
@@ -1705,24 +1779,15 @@ def _apply_split(
     `import_bug_suspect` pair is EXCLUDED from the fold; every other pair is
     foldable (see `_split_relation_kind`)."""
     # First column (lexically) keeps the original variable; the rest mint new
-    # sibling variables. Name + sensitivity/identity flags are shared: siblings
-    # are column-variants of ONE source var_id (same concept family), so a flag
-    # set on the pre-split variable applies to every sibling. `is_sensitive` /
-    # `is_identifier` are lifted PRE-triage (`_populate_sensitivity_flags`), so
-    # an INSERT that omitted them would default both to 0 and silently drop the
-    # flag on all but the lex-first column — the source of ~201 false-negative
-    # identifiers across the corpus (flags vs split ordering).
-    shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
+    # sibling variables. Metadata + sensitivity/identity flags are shared:
+    # siblings are column-variants of ONE source var_id (same concept family), so
+    # the origin variable's variable-grain fields apply to every sibling.
+    shared = _inherited_variable_fields(conn, orig_vid)
     sibling_vids = [orig_vid]
     for col in named_cols[1:]:
-        cur = conn.execute(
-            "INSERT INTO variable "
-            "(register_id, provider_key, name, is_sensitive, is_identifier) "
-            "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
-            (register_id, var_id, shared_name, shared_sensitive, shared_identifier),
+        new_vid = _insert_split_sibling_variable(
+            conn, register_id=register_id, var_id=var_id, shared=shared
         )
-        new_vid = cur.lastrowid
-        assert new_vid is not None  # lastrowid is set after an INSERT
         sibling_vids.append(new_vid)
         for gk in by_col[col]:
             res.assignments[gk] = new_vid
@@ -1759,29 +1824,24 @@ def _apply_clustered(
     hint); a singleton cluster is a plain split sibling. This generalizes
     `_apply_split`, which is the all-singletons special case.
 
-    The lexically-first cluster keeps `orig_vid`; the rest mint siblings with the
-    inherited name/sensitivity/identity flags (see `_apply_split` for why the
-    flags must be copied). The (N_clusters choose 2) sibling pairs feed the
+    The lexically-first cluster keeps `orig_vid`; the rest mint siblings with
+    inherited variable-grain fields (see `_apply_split`). The (N_clusters choose
+    2) sibling pairs feed the
     concept-group fold, GATED by the per-pair kind decided from each cluster's
     REPRESENTATIVE (lex-min) column via `_split_relation_kind` — so a non-foldable
     kind (`code_vs_label_pair` / `import_bug_suspect`) needs the two REPS to have
     co-delivered, and a non-rep cross-member co-delivery degrades to the foldable
     kind (an acceptable precision tradeoff)."""
     clusters_sorted = sorted(clusters, key=lambda c: min(c))
-    shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
+    shared = _inherited_variable_fields(conn, orig_vid)
     cluster_vids: list[int] = []
     for i, cluster_cols in enumerate(clusters_sorted):
         if i == 0:
             vid = orig_vid  # lex-first cluster keeps the original variable
         else:
-            cur = conn.execute(
-                "INSERT INTO variable "
-                "(register_id, provider_key, name, is_sensitive, is_identifier) "
-                "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
-                (register_id, var_id, shared_name, shared_sensitive, shared_identifier),
+            vid = _insert_split_sibling_variable(
+                conn, register_id=register_id, var_id=var_id, shared=shared
             )
-            vid = cur.lastrowid
-            assert vid is not None  # lastrowid is set after an INSERT
         cluster_vids.append(vid)
         for col in cluster_cols:
             for gk in by_col[col]:
@@ -1830,18 +1890,13 @@ def _split_off_non_contested(
     tracking; own-variable avoids the mis-attribution."""
     if not non_contested_cols:
         return
-    # Inherit name + sensitivity/identity flags from the origin (see _apply_split).
-    shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
+    # Inherit variable-grain fields from the origin (see _apply_split).
+    shared = _inherited_variable_fields(conn, orig_vid)
     vids = [orig_vid]
     for col in non_contested_cols:
-        cur = conn.execute(
-            "INSERT INTO variable "
-            "(register_id, provider_key, name, is_sensitive, is_identifier) "
-            "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
-            (register_id, var_id, shared_name, shared_sensitive, shared_identifier),
+        nvid = _insert_split_sibling_variable(
+            conn, register_id=register_id, var_id=var_id, shared=shared
         )
-        nvid = cur.lastrowid
-        assert nvid is not None
         vids.append(nvid)
         for gk in by_col[col]:
             res.assignments[gk] = nvid
