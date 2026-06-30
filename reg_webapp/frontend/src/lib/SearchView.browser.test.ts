@@ -84,7 +84,7 @@ describe("SearchView — typed result groups (#379)", () => {
           ],
         },
         {
-          group: "codes",
+          group: "register_value_sets",
           total_count: 1,
           results: [
             {
@@ -111,7 +111,7 @@ describe("SearchView — typed result groups (#379)", () => {
       "Registers",
       "Variables",
       "Classifications",
-      "Codes / values",
+      "Register-local value sets",
     ]) {
       await expect
         .element(page.getByRole("heading", { name: heading }))
@@ -514,7 +514,8 @@ describe("SearchView — typed result groups (#379)", () => {
         },
         { group: "variables", total_count: 0, results: [] },
         { group: "classifications", total_count: 0, results: [] },
-        { group: "codes", total_count: 0, results: [] },
+        { group: "classification_codes", total_count: 0, results: [] },
+        { group: "register_value_sets", total_count: 0, results: [] },
       ],
     } as unknown as SearchResponse);
     setQuery("kon");
@@ -583,7 +584,7 @@ describe("SearchView — typed result groups (#379)", () => {
       query: "11",
       groups: [
         {
-          group: "codes",
+          group: "register_value_sets",
           total_count: 1,
           results: [
             {
@@ -684,7 +685,7 @@ describe("SearchView — typed result groups (#379)", () => {
       query: "11",
       groups: [
         {
-          group: "codes",
+          group: "register_value_sets",
           total_count: 1,
           results: [
             {
@@ -725,7 +726,7 @@ describe("SearchView — typed result groups (#379)", () => {
       query: "sun",
       groups: [
         {
-          group: "codes",
+          group: "classification_codes",
           total_count: 1,
           results: [
             {
@@ -770,7 +771,7 @@ describe("SearchView — typed result groups (#379)", () => {
       query: "11",
       groups: [
         {
-          group: "codes",
+          group: "classification_codes",
           total_count: 1,
           results: [
             {
@@ -831,7 +832,7 @@ describe("SearchView — typed result groups (#379)", () => {
       query: "11",
       groups: [
         {
-          group: "codes",
+          group: "classification_codes",
           total_count: 1,
           results: [
             {
@@ -1378,7 +1379,8 @@ describe("SearchView — typed result groups (#379)", () => {
         { group: "registers", total_count: 0, results: [] },
         { group: "variables", total_count: 0, results: [] },
         { group: "classifications", total_count: 0, results: [] },
-        { group: "codes", total_count: 0, results: [] },
+        { group: "classification_codes", total_count: 0, results: [] },
+        { group: "register_value_sets", total_count: 0, results: [] },
       ],
     } as unknown as SearchResponse);
     setQuery("zzz");
@@ -1523,7 +1525,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
         ],
       },
       {
-        group: "codes",
+        group: "register_value_sets",
         total_count: 1,
         results: [
           {
@@ -2016,7 +2018,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       query: "man",
       groups: [
         {
-          group: "codes",
+          group: "classification_codes",
           total_count: 1,
           results: [
             {
@@ -2096,7 +2098,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       query: "dup",
       groups: [
         {
-          group: "codes",
+          group: "classification_codes",
           total_count: 2,
           results: [
             {
@@ -2362,17 +2364,17 @@ describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
 });
 
 describe("SearchView — codes grouped by code system (#393 item 3)", () => {
-  it("renders per-code-system subsections, curated first, Register-local trailing", async () => {
-    // Two SUN2020 codes and one register-local (null code_system). The codes are
-    // already item-2-ordered upstream; the view groups by code_system preserving
-    // first-appearance, so SUN2020 leads and Register-local trails.
+  it("renders classification code-system subsections and local value sets as separate groups", async () => {
+    // Two SUN2020 codes and one register-local value. The server now splits
+    // classification-owned codes from register-local value sets into separate
+    // top-level groups, so the view only nests classification code-system buckets.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "code",
       groups: [
         {
-          group: "codes",
-          total_count: 3,
+          group: "classification_codes",
+          total_count: 2,
           results: [
             {
               type: "code",
@@ -2398,6 +2400,12 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
               classification_count: 1,
               code_system: "SUN2020",
             },
+          ],
+        },
+        {
+          group: "register_value_sets",
+          total_count: 1,
+          results: [
             {
               type: "code",
               code: "9",
@@ -2417,31 +2425,36 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
     setQuery("code");
     await render(SearchView);
 
-    // Both subsection headings render.
+    // The classification group gets a linked code-system subsection heading.
     await expect
       .element(page.getByRole("heading", { name: "SUN2020" }))
       .toBeVisible();
     await expect
       .element(page.getByRole("link", { name: "SUN2020" }))
       .toHaveAttribute("href", "/catalog/class/sun2020");
+    // Register-local values render in their own bubble, not as a nested
+    // "Register-local" subsection under classification codes.
     await expect
-      .element(page.getByRole("heading", { name: "Register-local" }))
+      .element(page.getByRole("heading", { name: "Register-local value sets" }))
       .toBeVisible();
-    // The SUN2020 subsection appears BEFORE Register-local in the DOM (curated
-    // first; null/empty folds into the trailing bucket).
+    expect(
+      Array.from(document.querySelectorAll(".code-label")).some(
+        (label) => label.textContent?.trim() === "Local",
+      ),
+    ).toBe(true);
     const headings = Array.from(
       document.querySelectorAll<HTMLElement>(".code-system-heading"),
     ).map((h) => h.textContent?.trim());
-    expect(headings).toEqual(["SUN2020", "Register-local"]);
+    expect(headings).toEqual(["SUN2020"]);
   });
 
-  it("keeps the 'showing N of M' caption on the codes group header", async () => {
+  it("keeps the 'showing N of M' caption on the classification codes group header", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
       query: "code",
       groups: [
         {
-          group: "codes",
+          group: "classification_codes",
           total_count: 9,
           results: [
             {
