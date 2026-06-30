@@ -520,6 +520,114 @@ def test_variable_search_matches_delivery_column_name() -> None:
     assert rows[0].delivery_column_names == ("fedunsatreason_1",)
 
 
+def test_variable_search_folds_multiple_matched_delivery_columns() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="fedunsatreason_2",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "fedunsatreason", field="description", type="variable")
+
+    assert out.total_count == 1
+    assert len(out.results) == 1
+    assert str(out.results[0].fqid) == "scb/lisa/formal-utbildning"
+    assert out.results[0].delivery_column_names == (
+        "fedunsatreason_1",
+        "fedunsatreason_2",
+    )
+
+
+def test_variable_search_exact_column_token_shows_only_that_alias() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="fedunsatreason_2",
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "fedunsatreason_1", field="description", type="variable")
+
+    assert out.total_count == 1
+    assert len(out.results) == 1
+    assert out.results[0].delivery_column_names == ("fedunsatreason_1",)
+
+
+def test_variable_search_delivery_scope_drops_unheld_suffix_token_alias_hit() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    add_binding(
+        conn,
+        cvid=1002,
+        register_id=1,
+        register_variant_id=10,
+        regver_id=100,
+        var_id=32183,
+        delivery_column_name="fedunsatreason_2",
+    )
+    _rebuild_fts(conn)
+
+    out = search(
+        conn,
+        "fedunsatreason 1",
+        field="description",
+        type="variable",
+        fqids={"scb/lisa/formal-utbildning"},
+        delivery_column_scope={"scb/lisa/formal-utbildning": {"fedunsatreason_2"}},
+    )
+
+    assert out.total_count == 0
+    assert out.results == ()
+
+
+def test_variable_search_multi_alias_query_shows_only_matching_aliases() -> None:
+    conn = build_slugged_db(
+        variable=("Orsak till missnöje, formell utbildning", 32183, 1001, "Kol"),
+        delivery_column_name="fedunsatreason_1",
+        variable_slug="formal-utbildning",
+    )
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'formal-utbildning'"
+    ).fetchone()[0]
+    conn.executemany(
+        "INSERT INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, 10, ?)",
+        [(variable_id, "otheralias"), (variable_id, "zedalias")],
+    )
+    _rebuild_fts(conn)
+
+    out = search(conn, "fedunsatreason zedalias", field="description", type="variable")
+
+    assert out.total_count == 1
+    assert len(out.results) == 1
+    assert out.results[0].delivery_column_names == (
+        "fedunsatreason_1",
+        "zedalias",
+    )
+
+
 def test_variable_search_preserves_whitespace_delivery_column_name() -> None:
     conn = build_slugged_db(
         variable=("Annual expense", 32183, 1001, "Kol"),
@@ -565,7 +673,7 @@ def test_variable_search_reads_alias_table_when_fts_payload_is_legacy_text() -> 
     rows = out.results
     assert _types(rows) == {"variable"}
     assert str(rows[0].fqid) == "scb/lisa/formal-utbildning"
-    assert rows[0].delivery_column_names == ("fedunsatreason_1", "zedalias")
+    assert rows[0].delivery_column_names == ("fedunsatreason_1",)
 
 
 def test_variable_search_hydrates_delivery_aliases_for_displayed_page_only(

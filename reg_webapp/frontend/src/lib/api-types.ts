@@ -2213,7 +2213,9 @@ export interface components {
          *     register's display name (context for the omnibox). When the hit is a LONE
          *     member of a concept group (#322 — the family didn't fold because only one
          *     member matched), `concept_group`/`concept_group_label` annotate the family so
-         *     it stays discoverable; both None otherwise.
+         *     it stays discoverable; both None otherwise. `delivery_column_names` carries
+         *     the delivery aliases that matched the query when the query hit aliases, falling
+         *     back to display aliases for non-alias hits.
          */
         VariableSearchResult: {
             /** Concept Group */

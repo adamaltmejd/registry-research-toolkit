@@ -427,6 +427,50 @@ describe("SearchView — typed result groups (#379)", () => {
     expect(separators.every((separator) => !separator.hidden)).toBe(true);
   });
 
+  it("folds duplicate variable hits into one row with merged delivery column chips", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "fedunsatreason",
+      groups: [
+        {
+          group: "variables",
+          total_count: 2,
+          results: [
+            {
+              type: "variable",
+              fqid: "scb/aes/formal-utbildning",
+              name: "Orsak till missnöje, formell utbildning",
+              register: "AES",
+              definition: null,
+              operational_definition: null,
+              delivery_column_names: ["fedunsatreason_1"],
+            },
+            {
+              type: "variable",
+              fqid: "scb/aes/formal-utbildning",
+              name: "Orsak till missnöje, formell utbildning",
+              register: "AES",
+              definition: null,
+              operational_definition: null,
+              delivery_column_names: ["fedunsatreason_2"],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("fedunsatreason");
+    await render(SearchView);
+
+    const links = document.querySelectorAll<HTMLAnchorElement>(
+      ".search-view a.row-link[href='/catalog/scb/aes/formal-utbildning']",
+    );
+    expect(links).toHaveLength(1);
+    const columnPills = Array.from(
+      document.querySelectorAll<HTMLElement>(".search-view .col-chip"),
+    ).map((pill) => pill.textContent?.trim());
+    expect(columnPills).toEqual(["fedunsatreason_1", "fedunsatreason_2"]);
+  });
+
   it("hides variable detail separators when metadata wraps to new rows", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",

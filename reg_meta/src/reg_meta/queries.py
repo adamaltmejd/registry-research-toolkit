@@ -282,15 +282,51 @@ def _matches_fts_term(text: str | None, term: str) -> bool:
     return any(token.startswith(term) for token in _fts_terms(text))
 
 
-def _depends_on_unheld_delivery_alias(
-    row: dict[str, Any], terms: tuple[str, ...], held_columns: tuple[str, ...]
-) -> bool:
-    public_text = (
+def _variable_search_public_text(row: dict[str, Any]) -> tuple[str | None, ...]:
+    return (
         row.get("variable_name"),
         row.get("variable_definition"),
         row.get("variable_description"),
         row.get("variable_operational_definition"),
     )
+
+
+def _matched_delivery_column_names(
+    columns: Iterable[str],
+    terms: tuple[str, ...],
+    public_text: Iterable[str | None],
+) -> tuple[str, ...]:
+    if not terms:
+        return ()
+    public_values = tuple(public_text)
+    public_matches = {
+        term
+        for term in terms
+        if any(_matches_fts_term(text, term) for text in public_values)
+    }
+    alias_required_terms = frozenset(
+        term for term in terms if term not in public_matches
+    )
+    if not alias_required_terms:
+        return ()
+    matched_sets: list[tuple[str, frozenset[str]]] = []
+    for column in columns:
+        column_matches = frozenset(
+            term for term in alias_required_terms if _matches_fts_term(column, term)
+        )
+        if column_matches:
+            matched_sets.append((column, column_matches))
+    return tuple(
+        column
+        for column, matches in matched_sets
+        if not any(matches < other for _, other in matched_sets)
+    )
+
+
+def _depends_on_unheld_delivery_alias(
+    row: dict[str, Any], terms: tuple[str, ...], held_columns: tuple[str, ...]
+) -> bool:
+    public_text = _variable_search_public_text(row)
     held_set = frozenset(held_columns)
     unheld_columns = tuple(
         col for col in row.get("delivery_column_names", ()) if col not in held_set
@@ -327,7 +363,12 @@ def _filter_variable_delivery_scope(
         )
         if _depends_on_unheld_delivery_alias(row, terms, held_columns):
             continue
-        filtered.append({**row, "delivery_column_names": held_columns})
+        matched_columns = _matched_delivery_column_names(
+            held_columns, terms, _variable_search_public_text(row)
+        )
+        filtered.append(
+            {**row, "delivery_column_names": matched_columns or held_columns}
+        )
     return filtered
 
 
@@ -711,7 +752,7 @@ def search(
         variable_limit=code_variable_owner_limit,
     )
     if delivery_column_scope is None:
-        _annotate_variable_delivery_columns(conn, results)
+        _annotate_variable_delivery_columns(conn, results, query)
     # Strip fold-internal keys from the SHOWN page only — non-page rows are
     # discarded, so there's nothing to clean on them. (`_strip_internal_keys`
     # touches only `_INTERNAL_KEYS`, never `fts_rank`, so the sort above is safe.)
@@ -1058,9 +1099,14 @@ def _search_description_variables(
 
 
 def _annotate_variable_delivery_columns(
-    conn: sqlite3.Connection, page: list[dict[str, Any]]
+    conn: sqlite3.Connection, page: list[dict[str, Any]], query: str
 ) -> None:
-    """Attach delivery aliases to shown variable rows after pagination."""
+    """Attach delivery aliases to shown variable rows after pagination.
+
+    A delivery-column query shows the aliases that actually satisfied the query.
+    Name/definition hits fall back to the variable's display aliases so existing
+    non-column search rows keep their context without hydrating off-page rows.
+    """
     variable_ids = [
         r["_variable_id"]
         for r in page
@@ -1069,9 +1115,14 @@ def _annotate_variable_delivery_columns(
     if not variable_ids:
         return
     delivery_columns = _delivery_column_names_for_variables(conn, variable_ids)
+    terms = _fts_terms(query)
     for row in page:
         if row.get("type") == "variable" and "_variable_id" in row:
-            row["delivery_column_names"] = delivery_columns.get(row["_variable_id"], ())
+            columns = delivery_columns.get(row["_variable_id"], ())
+            matched_columns = _matched_delivery_column_names(
+                columns, terms, _variable_search_public_text(row)
+            )
+            row["delivery_column_names"] = matched_columns or columns
 
 
 def _delivery_column_names_for_variables(
