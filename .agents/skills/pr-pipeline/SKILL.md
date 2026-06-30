@@ -76,7 +76,10 @@ The PR body must contain `Closes #<issue>` for each issue the PR resolves. For s
 successors, set `base_ref` to the predecessor branch and pass `--base "$base_ref"`; do
 not let `gh pr create` default the child PR back to `main`. Use `--body-file`, not an
 inline heredoc. Supply `--title` (or `--fill` when appropriate) so the draft claim works
-in noninteractive agent runs.
+in noninteractive agent runs. For dependent successors, early draft creation is only a
+claim; before implementing or testing the successor, first update the predecessor branch
+with its real contract commits, then rebase or merge the successor branch onto that
+finalized predecessor branch and push the new successor head.
 
 If the user asked only for local implementation and not PR creation, skip the draft
 claim and say why.

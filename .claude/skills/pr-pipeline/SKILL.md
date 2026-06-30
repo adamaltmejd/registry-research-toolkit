@@ -139,12 +139,16 @@ into the successor PR. This marks the issue(s) **in-flight** (`running` in the
 sequencing projection) immediately, so a concurrent dispatch skips them and anything
 touching their files — it's how lanes stay non-colliding without a separate claim. Draft
 also holds bot review until you start it (Step B → "When to mark the PR ready"), and an
-inline `--body` heredoc can trip the permission classifier, so use `--body-file`. Then
-dispatch the implementer(s) with the scope + the FAST Verify only (lint / format / `ty`
-/ `pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your
-\~20-min merge-gate check (Step E). For a **frontend PR**, rendering is part of the loop
-too — cheap, unlike `build-db`: the implementer renders its change with the one-shot
-driver, `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` (or
+inline `--body` heredoc can trip the permission classifier, so use `--body-file`. For
+dependent successors, early draft creation is only a claim; before implementing or
+testing the successor, first update the predecessor branch with its real contract
+commits, then rebase or merge the successor branch onto that finalized predecessor
+branch and push the new successor head. Then dispatch the implementer(s) with the scope +
+the FAST Verify only (lint / format / `ty` / `pytest`); the real
+`reg-meta-build build-db` is NOT in their loop — it's your \~20-min merge-gate check
+(Step E). For a **frontend PR**, rendering is part of the loop too — cheap, unlike
+`build-db`: the implementer renders its change with the one-shot driver,
+`reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` (or
 `dev.sh smoke` for the catalog flow). That mode picks free ports, renders from the
 **worktree's own `.venv`**, and **tears the servers down on exit** — so it's
 worktree-correct and never collides or leaks even under parallel fan-out (no

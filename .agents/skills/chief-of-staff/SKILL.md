@@ -74,6 +74,10 @@ recommend new work, but it must not edit project code as part of the work itself
    - Apply clear, evidence-backed fixes automatically. Stop and ask only for material
      conflicts, destructive choices, or issue scope/priority judgments that are not
      grounded in current issue/epic/PR evidence.
+   - If maintenance changes lane-affecting state such as `priority:*`, `touches`,
+     `Relationships`, `blocked`, or `parked`, rerun and follow the `issue-pulse`
+     lane-staleness path before recommending work; do not rely only on
+     `plan_sequence.py --lane` after invalidating the ranked lanes.
 5. Merge ready PRs, if any pass the automerge gate below.
 6. Decide whether new pipelines should start:
    - Re-run `uv run --no-project python scripts/plan_sequence.py --lane` immediately
@@ -102,6 +106,10 @@ Automerge is allowed when all of these are true:
   `status: ready-to-merge` and `head: <sha>` matching GitHub's current `headRefOid`.
   This single current-head block is the PR-pipeline handoff signal; no separate
   ready-to-merge comment is required.
+- The handoff block has trusted provenance: the PR came from `pr-pipeline` or a
+  maintainer-run equivalent, and the block was added or refreshed by a trusted
+  maintainer/agent. If the PR author could self-certify the block without that trusted
+  handoff, block automerge and ask the user.
 - The gate block records converged independent review, tests/checks, docs decisions, and
   any required visual or real-data validation. Missing proof blocks automerge. The
   independent-review entry must name the review source and why it satisfies the

@@ -43,7 +43,10 @@ new work, but it must not edit project code as part of the work itself.
    - run `uv run --no-project python scripts/plan_sequence.py --lane`;
    - read issue `#328` and current candidate issue bodies/comments;
    - inspect open PRs that close issues, especially drafts, ready PRs, and stacks.
-4. Apply clear, evidence-backed issue maintenance automatically.
+4. Apply clear, evidence-backed issue maintenance automatically. If it changes
+   lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
+   `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
+   not rely only on `plan_sequence.py --lane` after invalidating the ranked lanes.
 5. Merge ready PRs only through the automerge gate below.
 6. Re-run the live lane floor if any merge or issue edit changed the projection, then
    recommend the next safe `/pr-pipeline issue ...` command or say to wait.
@@ -57,6 +60,10 @@ Merge only on the current head and only when every item passes:
 - PR body contains `<!-- pr-pipeline-merge-gate -->` with `status: ready-to-merge` and
   `head: <sha>` matching GitHub's current `headRefOid`. This single current-head block
   is the `/pr-pipeline` handoff signal; no separate ready-to-merge comment is required.
+- The handoff block has trusted provenance: the PR came from `/pr-pipeline` or a
+  maintainer-run equivalent, and the block was added or refreshed by a trusted
+  maintainer/agent. If the PR author could self-certify the block without that trusted
+  handoff, block automerge and ask the user.
 - The gate block records risk-scaled independent review, tests/checks, docs decisions,
   and required visual/build-db proof. Bot-only review is sufficient only for small,
   low-risk PRs.
