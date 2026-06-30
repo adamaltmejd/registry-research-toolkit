@@ -1,6 +1,6 @@
 ---
 name: chief-of-staff
-description: "Run one registry chief-of-staff tick: invoke /issue-pulse, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, run /release minor when a merge creates a required build/release boundary, and recommend the next safe /pr-pipeline lanes. Usage: /loop 30m /chief-of-staff"
+description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview running, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, report merged user-facing features with preview links, run /release minor when a merge creates a required build/release boundary, and recommend the next safe /pr-pipeline lanes. Usage: /loop 30m /chief-of-staff"
 ---
 
 # chief-of-staff — one coordination tick
@@ -8,7 +8,8 @@ description: "Run one registry chief-of-staff tick: invoke /issue-pulse, inspect
 The chief of staff is the repo's coordination agent: it keeps issue metadata and lane
 priorities current, understands active `/pr-pipeline` claims, prevents conflicting work,
 merges PRs with a current-head pipeline handoff, and recommends the next work to launch
-in separate worktrees.
+in separate worktrees. It also keeps a canonical-main `reg_webapp` dev preview available
+so freshly merged user-visible changes can be inspected immediately.
 
 This skill is designed for scheduled use. Run one tick to completion, then stop; `/loop`
 or another external automation owns the cadence.
@@ -37,23 +38,63 @@ new work, but it must not edit project code as part of the work itself.
 ## Tick
 
 1. Complete the startup gate above. Stop immediately if it fails.
-2. Invoke `/issue-pulse` exactly once. Let it update only the lanes block; apply
+2. Ensure the canonical-main `reg_webapp` dev preview is running. Reuse a healthy
+   existing preview; do not start duplicate servers. Record the frontend URL.
+3. Invoke `/issue-pulse` exactly once. Let it update only the lanes block; apply
    structural issue maintenance afterward under this skill's maintenance policy.
-3. Build the operating picture:
+4. Build the operating picture:
    - run `uv run --no-project python scripts/plan_sequence.py --lane`;
    - read issue `#328` and current candidate issue bodies/comments;
    - inspect open PRs that close issues, especially drafts, ready PRs, and stacks;
    - read merge-gate handoff blocks from PR bodies with `gh pr view`, not from
      `scripts/pr_review_status.py`, which is only the Codex bot-review signal.
-4. Apply clear, evidence-backed issue maintenance automatically. If it changes
+5. Apply clear, evidence-backed issue maintenance automatically. If it changes
    lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
    `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
    not rely only on `plan_sequence.py --lane` after invalidating the ranked lanes.
-5. Merge ready PRs only through the automerge gate below.
-6. If a merge or lane-affecting issue edit changed during the tick, rerun and follow the
+6. Merge ready PRs only through the automerge gate below. After each successful merge
+   and local fast-forward, restart or refresh the preview so it serves the new `main`,
+   then capture the merged feature summary and inspection link.
+7. If a merge or lane-affecting issue edit changed during the tick, rerun and follow the
    `/issue-pulse` lane-staleness path before recommending work; do not rely only on
    `plan_sequence.py --lane` after invalidating ranked lanes. Then re-run the live lane
-   floor and recommend the next safe `/pr-pipeline issue ...` command or say to wait.
+   floor and recommend the next safe `/pr-pipeline issue ...` commands or say to wait.
+   For every recommended issue, capture a one-sentence description of what it tackles
+   from the issue body. If the body is too vague to support that, say so instead of
+   inventing detail.
+
+## Dev Preview
+
+Keep one `reg_webapp` dev preview running from the canonical main checkout:
+
+- Prefer `.claude/launch.json` entry `reg-webapp`, which runs
+  `bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh preview` with `autoPort`, and
+  preserve the returned frontend URL.
+- If preview tooling is unavailable, run
+  `bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh` in a managed long-running
+  session and preserve the printed `frontend:` URL. Do not use `smoke` or `shot` for the
+  persistent preview; those modes auto-teardown.
+- Reuse a healthy existing main-checkout preview. Check the frontend URL and
+  `/api/context` before starting another server.
+- After each merge and fast-forward, restart or refresh the preview before reporting a
+  feature link. If refresh fails, report the failure; do not invent a working URL.
+- If the merged feature depends on unpublished DB content or a scratch build-db result,
+  the default preview may not show it. Say that explicitly and give the
+  `REG_META_DB=<scratch-db-dir> bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh`
+  form when a scratch DB is the right inspection target.
+
+For each merged PR, summarize what was added and where to see it:
+
+- Inspect the PR, closing issue, changed files, and merge diff; write one sentence about
+  the user-visible feature.
+- If visible in the SPA, link to the current preview URL plus the most specific real
+  route: `/`, `/catalog`, `/catalog/<fqid>`, `/catalog/group/...`, `/search?q=...`,
+  `/project`, or `/doc/<identifier>`.
+- Prefer routes named by the PR's visual proof, issue, tests, or changed component. If
+  no exact route is known, link to the narrowest stable entry point and say what to
+  click/search.
+- For internal-only, build-only, release-only, or tracker-only changes, say
+  `No preview page` and name the best verification surface instead.
 
 ## Automerge
 
@@ -136,13 +177,23 @@ resolve contradictory live signals.
 - Avoid overlapping `reg_meta_build` / build-db work while another open pipeline touches
   build, input-data, curation, or release surfaces.
 - Prefer a small coherent bundle or explicit stack over a broad backlog summary.
+- `Recommended next:` should list 1-3 `/pr-pipeline` launches, constrained by the free
+  lane set and current active work budget. Use `none` only when no safe launch is free,
+  the active-work budget is saturated, metadata is too stale to trust, or a
+  release/merge gate must clear first. Do not pad to three.
 
 Return concise output:
 
 ```text
-chief tick: <fresh/restamped/reranked>; <hygiene>; <active lanes>
-Merged: PR #<p> -> <merge sha>, or none
-Recommended next: /pr-pipeline issue <n>[,<m>] or none
+chief tick: <fresh/restamped/reranked>; <hygiene>; active <n>; free <n>
+Preview: <frontend URL or unavailable: reason>
+Active work: PR #<p> -> #<issue>: <status / risk>, or none
+Merged: PR #<p> -> #<issue>: <merge sha>; added <one-sentence feature summary>; see
+  <preview URL + route, or "No preview page: <verification surface>">, or none
+Recommended next:
+1. `/pr-pipeline issue <n>[,<m>]` - <lane label>; <shape>; <why / guardrail>.
+   #<n>: <one sentence describing what this issue tackles>.
+   #<m>: <one sentence describing what this issue tackles, if bundled>.
 Issue maintenance: applied <...>; needs input <... or none>
 Watch: <blocked decision, pending release, stale review, or next trigger>
 ```

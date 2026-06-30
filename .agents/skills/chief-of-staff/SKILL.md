@@ -4,8 +4,10 @@ description: >-
   Registry Research Toolkit chief-of-staff loop for recurring issue coordination. Use
   when asked to run or schedule a staff tick, combine issue-pulse and live PR claim
   state, automatically merge ready PRs with current-head PR-pipeline handoff evidence,
-  keep issue priorities or metadata current, prevent conflicting pr-pipeline work, or
-  recommend the next safe issue bundle or PR stack to start from a separate worktree.
+  keep issue priorities or metadata current, keep the reg_webapp dev preview running,
+  summarize merged user-visible features with preview links, prevent conflicting
+  pr-pipeline work, or recommend the next safe issue bundle or PR stack to start from a
+  separate worktree.
 ---
 
 # Registry Chief Of Staff
@@ -13,14 +15,16 @@ description: >-
 The chief of staff is the repo's coordination agent. It keeps the issue graph and lane
 priorities current, understands active PR-pipeline claims, prevents conflicting work,
 merges PRs that have a current-head pipeline handoff, and recommends the next work the
-user should launch in separate worktrees.
+user should launch in separate worktrees. It also keeps a canonical-main `reg_webapp`
+dev preview available so merged user-visible work can be inspected immediately.
 
 The skill is designed for scheduled use. Run one coordination tick to completion, then
 stop; external automation owns the cadence.
 
 It does not implement issue code or start `pr-pipeline`. Its product is a short
-operating picture, any safe merges or required release action, and exact recommendations
-for work the user should launch separately.
+operating picture, any safe merges or required release action, preview links for merged
+user-facing changes, and exact recommendations for work the user should launch
+separately.
 
 Default epic is `328`.
 
@@ -49,11 +53,14 @@ recommend new work, but it must not edit project code as part of the work itself
 ## Tick
 
 1. Complete the startup gate above. Stop immediately if it fails.
-2. Invoke and follow the `issue-pulse` skill exactly for one heartbeat tick, including
+2. Ensure the canonical-main `reg_webapp` dev preview is running, following the Dev
+   Preview section below. Reuse a healthy existing preview; do not start duplicate
+   servers. Record the frontend URL for the final report.
+3. Invoke and follow the `issue-pulse` skill exactly for one heartbeat tick, including
    its tick-status, basis, restamp, re-rank, and refusal safeguards. Let `issue-pulse`
    write only its generated lanes block; apply structural issue maintenance afterward
    under this skill's maintenance policy.
-3. Build the current operating picture:
+4. Build the current operating picture:
    - Run `uv run --no-project python scripts/plan_sequence.py --lane` to get the live
      free, held, running, blocked, parked, and pending-release floor.
    - Read issue `#328` body and comments for current editorial intent.
@@ -68,7 +75,7 @@ recommend new work, but it must not edit project code as part of the work itself
    - Read candidate issue bodies and comments before recommending them. Fetch one issue
      per command; do not pass a space-separated issue list as one `gh issue view`
      identifier.
-4. Apply issue maintenance:
+5. Apply issue maintenance:
    - Treat `parked` as a first-class non-dispatch state.
    - Distinguish real blockers from polish: missing relationship links, stale `blocked`
      / `parked` labels, wrong area/type labels, missing `touches` blocks, and priority
@@ -80,8 +87,10 @@ recommend new work, but it must not edit project code as part of the work itself
      `Relationships`, `blocked`, or `parked`, rerun and follow the `issue-pulse`
      lane-staleness path before recommending work; do not rely only on
      `plan_sequence.py --lane` after invalidating the ranked lanes.
-5. Merge ready PRs, if any pass the automerge gate below.
-6. Decide whether new pipelines should start:
+6. Merge ready PRs, if any pass the automerge gate below. After every successful merge
+   and local fast-forward, restart or refresh the canonical-main dev preview so it
+   serves the new `main`, then capture the merged feature summary and inspection link.
+7. Decide whether new pipelines should start:
    - If a merge or lane-affecting issue edit changed during the tick, rerun and follow
      the `issue-pulse` lane-staleness path before recommending work; do not rely only on
      `plan_sequence.py --lane` after invalidating ranked lanes.
@@ -97,7 +106,59 @@ recommend new work, but it must not edit project code as part of the work itself
      the same build, input-data, curation, or release surfaces.
    - Prefer a small coherent bundle or explicit sequential stack over a broad backlog
      summary.
-7. Recommend commands only after the live floor and active PR claims agree.
+   - For every recommended issue, capture a one-sentence description of what it tackles
+     from the issue body. If the body is too vague to support that, say so instead of
+     inventing detail.
+8. Recommend commands only after the live floor and active PR claims agree.
+
+## Dev Preview
+
+Keep one `reg_webapp` dev preview running from the canonical main checkout so the user
+can inspect freshly merged user-facing changes.
+
+- Prefer the existing preview launch config: `.claude/launch.json` entry `reg-webapp`,
+  which runs `bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh preview` with
+  `autoPort`. Use the agent surface's preview tools when available, because they return
+  the actual frontend URL.
+- If preview tools are unavailable, start the same checkout's helper in a managed
+  long-running session and preserve the printed `frontend:` URL:
+  `bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh`. The plain serve mode
+  auto-picks free backend/frontend ports and blocks. Do not use `smoke` or `shot` for
+  the persistent preview; those modes intentionally tear down the servers.
+- Reuse an existing healthy preview for `/Users/adam/Code/registry-research-toolkit`.
+  Before starting a new one, check whether the recorded frontend URL still responds and
+  whether `/api/context` works through it. Do not keep multiple main-checkout previews
+  alive just because the old URL was forgotten.
+- After any successful merge and fast-forward of local `main`, restart or refresh the
+  preview before reporting the feature link. A running Vite/FastAPI process may still
+  serve pre-merge code until restarted.
+- If the merged feature depends on unpublished DB content or a scratch build-db result,
+  the default preview may not show it. Say that explicitly and give the
+  `REG_META_DB=<scratch-db-dir> bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh`
+  form if a scratch DB is the right inspection target.
+- If the preview cannot be started or refreshed, do not block a safe merge solely for
+  preview availability. Report the merge, say the preview is unavailable, and give the
+  concrete startup failure or missing-tool reason.
+
+For each merged PR, report what the user can now inspect:
+
+- Inspect the PR title/body, closing issue body, changed files, and merge diff. Name the
+  user-visible feature in one sentence. Do not just repeat the PR title if it does not
+  say what changed.
+- When the change is visible in the SPA, include a full link using the current preview
+  base URL plus the most specific route that demonstrates it. Use the router's real
+  paths: `/`, `/catalog`, `/catalog/<fqid>`,
+  `/catalog/group/<provider>/<register>/<key>`, `/catalog/group/class/<key>`,
+  `/search?q=...`, `/project`, or `/doc/<identifier>`.
+- Prefer a route mentioned by the PR's visual proof, issue body, tests, or changed
+  component. If no exact route is identified, use the narrowest stable entry point
+  (`/catalog`, `/search`, or `/project`) and say what to click or search there.
+- For backend/API-only work with a visible SPA consumer, link to the consumer page, not
+  the raw API endpoint. For internal-only, build-only, release-only, or tracker-only
+  changes, say `No preview page` and name the best verification surface instead (CLI
+  command, API path, docs page, or issue/PR evidence).
+- If a route is plausible but unverified, mark it as unverified rather than presenting
+  it as confirmed. Never invent catalog FQIDs, query terms, or docs identifiers.
 
 ## Automerge
 
@@ -206,11 +267,9 @@ Use command-shaped recommendations:
 
 ```text
 Recommended:
-1. Start one new worktree for <lane label>.
-   Command: $pr-pipeline issue <n>[,<m>]
-   Shape: one PR / stacked PRs / sequential PRs
-   Why: <one line>
-   Guardrail: <claim, blocker, review, or build-db note>
+1. `$pr-pipeline issue <n>[,<m>]` - <lane label>; <shape>; <why / guardrail>.
+   #<n>: <one sentence describing what this issue tackles>.
+   #<m>: <one sentence describing what this issue tackles, if bundled>.
 ```
 
 If no new work should start:
@@ -235,21 +294,28 @@ Do not delegate live issue mutation. Reconcile subagent findings against the liv
 
 ## Output
 
-Keep output terse and operational. For quiet ticks, one line is enough.
+Keep output terse and operational. Be compact by grouping status into dense lines, not
+by dropping decision evidence. For quiet ticks, one line is enough.
 
 For active ticks, use this shape:
 
 ```text
-chief tick: <fresh/restamped/reranked>; <hygiene state>; <active lane count>
+chief tick: <fresh/restamped/reranked>; <hygiene state>; active <n>; free <n>
+Preview: <frontend URL or unavailable: reason>
 
 Active work:
 - PR #<p> -> #<issue>: <status / risk>
 
 Merged:
-- PR #<p> -> #<issue>: <merge sha>, or none
+- PR #<p> -> #<issue>: <merge sha>; added <one-sentence feature summary>; see
+  <preview URL + route, or "No preview page: <verification surface>">, or none
 
 Recommended next:
-- <exact $pr-pipeline command or "none">
+1. `$pr-pipeline issue <n>[,<m>]` - <lane label>; <shape>; <why / guardrail>.
+   #<n>: <one sentence describing what this issue tackles>.
+   #<m>: <one sentence describing what this issue tackles, if bundled>.
+2. `$pr-pipeline issue <n>` - <lane label>; <shape>; <why / guardrail>.
+   #<n>: <one sentence describing what this issue tackles>.
 
 Issue maintenance:
 - applied: <specific metadata fixes or none>
@@ -259,6 +325,12 @@ Watch:
 - <blocked decision, pending release, stale review, or next trigger>
 ```
 
+`Recommended next:` should list 1-3 pr-pipeline launches, constrained by the free lane
+set and current active work budget. Use `none` only when no safe launch is free, the
+active-work budget is saturated, metadata is too stale to trust, or a release/merge gate
+must clear first. Do not pad to three: one good recommendation is better than three weak
+ones.
+
 Report checks that were not run. Do not claim a live check passed if it was skipped or
 failed.
 
@@ -266,6 +338,8 @@ failed.
 
 - Run one tick and stop; external automation owns the cadence.
 - Do not start, claim, or implement `pr-pipeline` work from this skill.
+- Do not start duplicate `reg_webapp` main-checkout previews; reuse or restart the
+  existing one.
 - Do not merge without current-head PR-pipeline gate evidence plus fresh live checks.
 - Do not merge without a current-head `status: ready-to-merge` merge-gate block.
 - Do not merge PRs with unresolved findings, pending checks, draft status, stale heads,
@@ -273,6 +347,8 @@ failed.
 - Do not allow branch deletion to close or break a stacked successor PR.
 - Do not exceed the current active-work budget to keep agents busy.
 - Do not recommend parked/deferred issues, even if epic prose still mentions them.
+- Do not invent feature routes after a merge. Link only to real SPA routes or state that
+  no preview page exists.
 - Do not treat a clean hygiene script as proof that semantic relationships are current;
   read issue text when comments imply a blocker or dependency.
 - Do not hand-edit generated `plan-sequence` or `plan-lanes` markers; use the repo
