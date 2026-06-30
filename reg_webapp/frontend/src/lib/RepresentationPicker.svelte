@@ -1559,7 +1559,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   .col-chip {
     font-family: var(--font-mono);
     font-size: 0.82rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     padding: 0.05rem 0.4rem;
     border-radius: var(--radius-sm);

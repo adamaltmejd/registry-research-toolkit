@@ -533,15 +533,21 @@ export interface paths {
         /**
          * Get Search
          * @description Search registers, variables (concept-folded, #322), classifications, and
-         *     codes/values (#352) over the shipped FTS indexes. Each group is an independent
-         *     reg_meta `search()` call (register/variable/classification via the FTS
-         *     `field="description"` path; codes via the `field="value"` path) so each carries
-         *     its own `total_count` and per-group `limit`. A query with no usable token
-         *     returns the selected group(s) empty (total 0) — not a 422.
+         *     codes/values (#352) over the shipped FTS indexes. Each typed group is an
+         *     independent reg_meta `search()` call (register/variable/classification via the
+         *     FTS `field="description"` path; codes via the `field="value"` path) so each
+         *     carries its own `total_count` and per-group `limit`; the value surface is split
+         *     into classification codes and register-local value sets so each gets its own
+         *     page. The all-scope response prepends a `top_results` best-bets group built
+         *     from those same typed rows when multiple candidates compete (#393 items 6/7);
+         *     scoped responses emit only the requested typed surface (`type=value` emits the
+         *     two value groups). A query with no usable token returns the selected group(s)
+         *     empty (total 0) — not a 422.
          *
          *     ``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the
-         *     four-group register→variable→classification→code behavior; any single type runs
-         *     AND emits only that one group. Group ORDER is fixed for the ``all`` case.
+         *     optional top-results→register→variable→classification→value behavior; any
+         *     single type runs AND emits only that typed surface. Group ORDER is fixed for
+         *     the ``all`` case.
          *
          *     A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
          *     REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
@@ -756,6 +762,23 @@ export interface components {
              * @description The hierarchy depth, or None when the classification is flat.
              */
             level: number | null;
+        };
+        /**
+         * ClassificationCodeSearchGroup
+         * @description The `classification_codes` result group (#352/#393). `total_count` is the
+         *     result count before the per-group display limit (so the SPA can show
+         *     "showing N of M").
+         */
+        ClassificationCodeSearchGroup: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            group: "classification_codes";
+            /** Results */
+            results: components["schemas"]["CodeSearchResult"][];
+            /** Total Count */
+            total_count: number;
         };
         /**
          * ClassificationEdition
@@ -1085,22 +1108,6 @@ export interface components {
             register?: string | null;
         };
         /**
-         * CodeSearchGroup
-         * @description The `codes` result group (#352). `total_count` is the result count before
-         *     the per-group display limit (so the SPA can show "showing N of M").
-         */
-        CodeSearchGroup: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            group: "codes";
-            /** Results */
-            results: components["schemas"]["CodeSearchResult"][];
-            /** Total Count */
-            total_count: number;
-        };
-        /**
          * CodeSearchResult
          * @description A code/value hit (`value_code_fts` label match + code-shape match, #352).
          *     `code`/`label` are the SCB value pair; `variables`/`classifications` annotate
@@ -1128,9 +1135,8 @@ export interface components {
             /** Rank */
             rank: number;
             /**
-             * Type
-             * @default code
-             * @constant
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
             type: "code";
             /**
@@ -1783,11 +1789,26 @@ export interface components {
             /** Rank */
             rank: number;
             /**
-             * Type
-             * @default register
-             * @constant
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
             type: "register";
+        };
+        /**
+         * RegisterValueSetSearchGroup
+         * @description The `register_value_sets` result group (#352/#393): register-local value
+         *     codes with no owning classification.
+         */
+        RegisterValueSetSearchGroup: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            group: "register_value_sets";
+            /** Results */
+            results: components["schemas"]["CodeSearchResult"][];
+            /** Total Count */
+            total_count: number;
         };
         /**
          * RelationshipGraph
@@ -1873,7 +1894,7 @@ export interface components {
          */
         SearchResponse: {
             /** Groups */
-            groups: (components["schemas"]["RegisterSearchGroup"] | components["schemas"]["VariableSearchGroup"] | components["schemas"]["ClassificationSearchGroup"] | components["schemas"]["CodeSearchGroup"])[];
+            groups: (components["schemas"]["TopSearchGroup"] | components["schemas"]["RegisterSearchGroup"] | components["schemas"]["VariableSearchGroup"] | components["schemas"]["ClassificationSearchGroup"] | components["schemas"]["ClassificationCodeSearchGroup"] | components["schemas"]["RegisterValueSetSearchGroup"])[];
             /**
              * Kind
              * @default search
@@ -1917,6 +1938,23 @@ export interface components {
             binding: string;
             /** Successors */
             successors: components["schemas"]["VariableRef"][];
+        };
+        /**
+         * TopSearchGroup
+         * @description Cross-group best-bets (#393 item 6): the strongest rows from the typed
+         *     groups, scored with exact-match boosts and type priors. The original typed
+         *     groups remain unchanged below it.
+         */
+        TopSearchGroup: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            group: "top_results";
+            /** Results */
+            results: (components["schemas"]["RegisterSearchResult"] | components["schemas"]["VariableSearchResult"] | components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ClassificationSuccessionSearchResult"] | components["schemas"]["ConceptGroupSearchResult"] | components["schemas"]["CodeSearchResult"])[];
+            /** Total Count */
+            total_count: number;
         };
         /** ValidationError */
         ValidationError: {

@@ -23,8 +23,9 @@ import { router } from "./router.svelte";
 import { Panel } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
-// the four ORDERED, typed groups GET /api/search returns (registers / variables /
-// classifications / codes). Every leaf navigates via a plain internal <a> the
+// GET /api/search's top-results group plus the ordered typed groups
+// (registers / variables / classifications / classification codes /
+// register-local value sets). Every leaf navigates via a plain internal <a> the
 // shell's `use:link` intercepts — never `router.navigate` from here.
 //
 // #808 (round 3): the registers / variables / classifications groups render as a
@@ -76,7 +77,7 @@ const TYPE_TOGGLE: ReadonlyArray<{ value: SearchType; label: string }> = [
   { value: "register", label: "Registers" },
   { value: "variable", label: "Variables" },
   { value: "classification", label: "Classifications" },
-  { value: "value", label: "Codes" },
+  { value: "value", label: "Codes / values" },
 ];
 
 /** Route to the current query scoped to `type` (in-place replace — scope is a
@@ -121,9 +122,11 @@ function syncDetailSeparators(node: HTMLElement): {
         separator.hidden = true;
         continue;
       }
-      const previousTop = Math.round(previous.getBoundingClientRect().top);
-      const nextTop = Math.round(next.getBoundingClientRect().top);
-      separator.hidden = previousTop !== nextTop;
+      const previousRect = previous.getBoundingClientRect();
+      const nextRect = next.getBoundingClientRect();
+      const previousCenter = previousRect.top + previousRect.height / 2;
+      const nextCenter = nextRect.top + nextRect.height / 2;
+      separator.hidden = Math.abs(previousCenter - nextCenter) > 4;
     }
   };
 
@@ -168,8 +171,8 @@ const groups = $derived(results.data?.groups ?? []);
 // GROUP_HEADINGS entry — see the render guard below) must NOT count as a match:
 // its non-empty `results` render nothing, so without this a response carrying ONLY
 // an unknown group would blank the body (neither a group NOR "No matches"). Every
-// group the loop actually renders (registers/variables/classifications/codes) is a
-// GROUP_HEADINGS key, and successions ride INSIDE the classifications group's
+// group the loop actually renders is a GROUP_HEADINGS key, and successions ride
+// INSIDE the classifications group's
 // results (a `classification_succession` row, not a top-level group), so this
 // exclusion can never suppress "No matches" above rendered content.
 const noMatches = $derived(
@@ -184,10 +187,12 @@ const noMatches = $derived(
 // Per-group heading labels. Keep these as normal text headings; result type and
 // context live inside rows, not in heading badges.
 const GROUP_HEADINGS = {
+  top_results: { label: "Top results" },
   registers: { label: "Registers" },
   variables: { label: "Variables" },
   classifications: { label: "Classifications" },
-  codes: { label: "Codes / values" },
+  classification_codes: { label: "Classification codes" },
+  register_value_sets: { label: "Register-local value sets" },
 } as const;
 
 // Discriminate a variable/classification group's mixed results on `type`.
@@ -291,7 +296,7 @@ function groupMemberFqids(results: readonly SearchResult[]): Set<string> {
 }
 
 function displayResults(group: SearchGroup): SearchResult[] {
-  if (group.group !== "variables") {
+  if (group.group !== "variables" && group.group !== "top_results") {
     return [...group.results];
   }
   const groupedMembers = groupMemberFqids(group.results);
@@ -330,6 +335,17 @@ function codeDisplayResults(results: SearchResult[]): CodeSearchResult[] {
   return results as CodeSearchResult[];
 }
 
+function topResultKey(result: SearchResult, i: number): string {
+  if (isConceptGroup(result)) {
+    return `group|${result.kind}|${result.group_key}|${i}`;
+  }
+  if (result.type === "code") {
+    return `code|${result.code}|${result.label}|${result.code_system ?? ""}|${i}`;
+  }
+  const identity = "fqid" in result ? result.fqid : "";
+  return `${result.type}|${identity}|${i}`;
+}
+
 function normalizedDisplayText(value: string | null | undefined): string {
   return (value ?? "").trim().replace(/\s+/g, " ").toLocaleLowerCase("sv-SE");
 }
@@ -341,26 +357,90 @@ function isRepeatedDefinition(
   return normalizedDisplayText(name) === normalizedDisplayText(definition);
 }
 
+const PROVIDER_LABELS: Record<string, string> = {
+  fohm: "FoHM",
+  fk: "FK",
+  lakemedelsverket: "Lakemedelsverket",
+  pliktverket: "Pliktverket",
+  riksarkivet: "RA",
+  scb: "SCB",
+  sos: "SoS",
+  umu: "UMU",
+};
+
+function providerLabelFromFqid(fqid: string | null | undefined): string | null {
+  if (!fqid) {
+    return null;
+  }
+  const [provider] = fqidSegments(fqid);
+  if (!provider) {
+    return null;
+  }
+  return PROVIDER_LABELS[provider] ?? provider.toLocaleUpperCase("sv-SE");
+}
+
+function providerRegisterContext(
+  fqid: string | null | undefined,
+  register: string | null | undefined,
+): string | null {
+  const provider = providerLabelFromFqid(fqid);
+  if (!register) {
+    return provider;
+  }
+  return provider ? `${provider}: ${register}` : register;
+}
+
+type LinkedPill = {
+  label: string;
+  href: string | null;
+};
+
+function registerHrefFromFqid(fqid: string | null | undefined): string | null {
+  if (!fqid) {
+    return null;
+  }
+  const [provider, register] = fqidSegments(fqid);
+  return provider && register ? catalogHref(`${provider}/${register}`) : null;
+}
+
+function providerRegisterPill(
+  fqid: string | null | undefined,
+  register: string | null | undefined,
+): LinkedPill | null {
+  const label = providerRegisterContext(fqid, register);
+  if (!label) {
+    return null;
+  }
+  return { label, href: registerHrefFromFqid(fqid) };
+}
+
+function variableRegisterPill(v: VariableSearchResult): LinkedPill | null {
+  return providerRegisterPill(v.fqid, v.register);
+}
+
+function groupRegisterPill(
+  result: ConceptGroupSearchResult,
+): LinkedPill | null {
+  if (result.kind !== "variable") {
+    return null;
+  }
+  return providerRegisterPill(
+    sharedMemberRegisterFqid(result),
+    result.register,
+  );
+}
+
+function ownerRegisterContext(owner: CodeOwnerVariable): string | null {
+  return providerRegisterContext(owner.fqid, owner.register);
+}
+
 function variableDetailParts(v: VariableSearchResult): string[] {
   const definition = isRepeatedDefinition(v.name, v.definition)
     ? null
     : v.definition;
-  return [
-    v.register,
-    definition,
-    v.operational_definition
-      ? `Operational: ${v.operational_definition}`
-      : null,
-  ].filter((part): part is string => part != null && part !== "");
-}
-
-function groupDetailParts(result: ConceptGroupSearchResult): string[] {
-  if (result.kind === "variable") {
-    return [result.register].filter(
-      (part): part is string => part != null && part !== "",
-    );
-  }
-  return [];
+  return [definition, v.operational_definition].filter(
+    (part): part is string => part != null && part !== "",
+  );
 }
 
 // The registers / variables / classifications groups render the `.children.table`
@@ -369,14 +449,10 @@ function groupDetailParts(result: ConceptGroupSearchResult): string[] {
 // `fqid` / `group_key`) so a null/duplicate `fqid` can't collide and crash the
 // render (the #379/#391 each_key_duplicate lesson).
 
-// The codes group, bucketed by code system (#393 item 3). STABLE group-by on
-// `code_system`, preserving FIRST-APPEARANCE order — so the item-2 ranking (which
-// already floats classification-backed/curated codes to the front) decides which
-// systems lead. `null`/empty → a trailing "Register-local" bucket. `label` is the
-// subsection heading; `key` is a stable each-key (the raw code_system, or JS
-// `null` for the register-local bucket — a Map treats `null` as a distinct key
-// that can never collide with any real code_system string). Map iteration is
-// insertion order, so its values come back in first-appearance order directly.
+// Classification codes are bucketed by code system (#393 item 3). STABLE group-by
+// on `code_system`, preserving FIRST-APPEARANCE order. Register-local value sets
+// render in their own top-level group, so they do not need a nested
+// "Register-local" subsection heading.
 const REGISTER_LOCAL_LABEL = "Register-local";
 type CodeSystemBucket = {
   key: string | null;
@@ -386,6 +462,13 @@ type CodeSystemBucket = {
 };
 
 function codeSystemHref(result: CodeSearchResult): string | null {
+  const owner = codeSystemOwner(result);
+  return owner?.fqid ? catalogHref(owner.fqid) : null;
+}
+
+function codeSystemOwner(
+  result: CodeSearchResult,
+): CodeOwnerClassification | null {
   const owner =
     result.classifications.find(
       (classification) =>
@@ -396,7 +479,7 @@ function codeSystemHref(result: CodeSearchResult): string | null {
     result.classifications.find(
       (classification) => classification.fqid != null,
     );
-  return owner?.fqid ? catalogHref(owner.fqid) : null;
+  return owner ?? null;
 }
 
 function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
@@ -453,6 +536,21 @@ function secondaryClassificationOwners(
     }
     return catalogHref(owner.fqid) !== headingHref;
   });
+}
+
+function topClassificationOwners(
+  result: CodeSearchResult,
+): CodeOwnerClassification[] {
+  const systemOwner = codeSystemOwner(result);
+  if (systemOwner == null) {
+    return secondaryClassificationOwners(result);
+  }
+  return [
+    systemOwner,
+    ...secondaryClassificationOwners(result).filter(
+      (owner) => owner !== systemOwner,
+    ),
+  ];
 }
 
 function hasExpandableOwners(result: CodeSearchResult): boolean {
@@ -558,14 +656,30 @@ function closeSearch(): void {
       {@const heading = GROUP_HEADINGS[group.group]}
       {@const renderedResults = displayResults(group)}
       {#if renderedResults.length > 0 && heading}
-        {@const caption = showingOf(renderedResults.length, group.total_count)}
-        <div class="group">
+        {@const caption =
+          group.group === "top_results"
+            ? null
+            : showingOf(renderedResults.length, group.total_count)}
+        <div
+          class={group.group === "top_results"
+            ? "group top-results-group"
+            : "group"}
+        >
           <Panel title={heading.label} flush>
             {#snippet meta()}
               {#if caption}<span class="count">{caption}</span>{/if}
             {/snippet}
 
-          {#if group.group === "registers"}
+          {#if group.group === "top_results"}
+            <!-- Cross-group best bets (#393 items 6/7). Rows reuse the same typed
+                 snippets as the normal groups, so this remains a ranking/presentation
+                 layer over the canonical typed results rather than a second row model. -->
+            <div class="children table top-results" role="presentation">
+              {#each renderedResults as result, i (topResultKey(result, i))}
+                {@render topResult(result)}
+              {/each}
+            </div>
+          {:else if group.group === "registers"}
             <!-- Registers share the variables' one-column result shape: primary
                  line is the register name, secondary line is the muted
                  description. No split name/description columns. -->
@@ -604,29 +718,15 @@ function closeSearch(): void {
                 {/if}
               {/each}
             </div>
-          {:else if group.group === "codes"}
+          {:else if group.group === "classification_codes"}
             <!-- Per-code-system buckets (#393 item 3, #808 round 5). The bucket
                  heading NAMES the classification / value-set the codes come from
-                 (the null bucket → "Register-local"), so each code row need NOT
-                 repeat its owner classification. Classification-backed headings
-                 link to their classification page. The codes are already
-                 item-2-ordered (classification-backed first), and
-                 groupCodesBySystem preserves first-appearance order, so curated
-                 systems lead; null/empty code_system folds into the trailing
-                 "Register-local" bucket. Each bucket is a compact, code-FIRST list
-                 — the CODE is highlighted first, followed by the label and, for
-                 multi-variable hits, a MUTED variable-count summary. A code with
-                 multiple variable matches is a native <details> disclosure; a
-                 single variable match is shown as a muted detail line; a code with
-                 no variable matches is a plain Code · Label row. -->
+                 so each code row need NOT repeat its owner classification.
+                 Classification-backed headings link to their classification page. -->
             {#each groupCodesBySystem(codeDisplayResults(renderedResults)) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">
-                  {#if system.href}
-                    <a href={system.href}>{system.label}</a>
-                  {:else}
-                    {system.label}
-                  {/if}
+                  {@render codeSystemPill(system.label, system.href)}
                 </h4>
                 <div class="children table codes" role="presentation">
                   <!-- Key by `code|index`, NOT the bare index: each code is a
@@ -646,6 +746,16 @@ function closeSearch(): void {
                 </div>
               </div>
             {/each}
+          {:else if group.group === "register_value_sets"}
+            <!-- Register-local value-set codes have no owning classification, so
+                 the top-level group label is enough. Rows keep the same compact
+                 code-FIRST rendering and disclosure behavior as classification
+                 code buckets. -->
+            <div class="children table codes" role="presentation">
+              {#each codeDisplayResults(renderedResults) as result, i (`${result.code}|${i}`)}
+                {@render codeRow(result)}
+              {/each}
+            </div>
           {/if}
           </Panel>
         </div>
@@ -657,13 +767,18 @@ function closeSearch(): void {
 
 <!-- A LEAF register row: same one-column visual shape as variable rows. -->
 {#snippet registerLeafRow(r: RegisterSearchResult)}
+  {@const detailParts = r.purpose ? [r.purpose] : []}
+  {@const context = providerLabelFromFqid(r.fqid)}
   {#if r.fqid}
     <a class="leaf-row integrated-list-row" href={catalogHref(r.fqid)}>
       <span class="name-cell">
         <span class="result-title">
           <span class="row-link">{r.name ?? leafSlug(r.fqid)}</span>
+          {#if context}{@render registerContextPill(context)}{/if}
         </span>
-        {#if r.purpose}<span class="result-detail muted clamp-2">{r.purpose}</span>{/if}
+        {#if detailParts.length > 0}
+          {@render detailLine(null, detailParts, true)}
+        {/if}
       </span>
     </a>
   {:else}
@@ -672,9 +787,27 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link plain">{r.name ?? "—"}</span>
         </span>
-        {#if r.purpose}<span class="result-detail muted clamp-2">{r.purpose}</span>{/if}
+        {#if detailParts.length > 0}
+          {@render detailLine(null, detailParts, true)}
+        {/if}
       </span>
     </div>
+  {/if}
+{/snippet}
+
+{#snippet topResult(result: SearchResult)}
+  {#if result.type === "register"}
+    {@render registerLeafRow(result)}
+  {:else if result.type === "variable"}
+    {@render variableLeafRow(result)}
+  {:else if result.type === "classification"}
+    {@render classificationLeafRow(result)}
+  {:else if result.type === "classification_succession"}
+    {@render classificationSuccession(result)}
+  {:else if result.type === "group"}
+    {@render conceptGroup(result)}
+  {:else if result.type === "code"}
+    {@render topCodeRow(result)}
   {/if}
 {/snippet}
 
@@ -702,39 +835,61 @@ function closeSearch(): void {
 
 {#snippet variableLeafRow(v: VariableSearchResult)}
   {@const detailParts = variableDetailParts(v)}
+  {@const context = variableRegisterPill(v)}
   {#if v.fqid}
-    <a class="leaf-row integrated-list-row" href={catalogHref(v.fqid)}>
+    <div class="leaf-row integrated-list-row">
       <span class="name-cell">
         <span class="result-title">
-          <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
+          <a class="row-link" href={catalogHref(v.fqid)}
+            >{v.name ?? leafSlug(v.fqid)}</a
+          >
           {@render variableMetaPills(v)}
+          {#if context}{@render registerContextPill(context.label, context.href)}{/if}
         </span>
         {#if detailParts.length > 0}
-          {@render detailLine(detailParts)}
+          {@render detailLine(null, detailParts)}
         {/if}
       </span>
-    </a>
+    </div>
   {:else}
     <div class="leaf-row integrated-list-row plain">
       <span class="name-cell"><span class="result-title">
           <span class="row-link plain">{v.name ?? "—"}</span>
           {@render variableMetaPills(v)}
+          {#if context}{@render registerContextPill(context.label, context.href)}{/if}
         </span>
         {#if detailParts.length > 0}
-          {@render detailLine(detailParts)}
+          {@render detailLine(null, detailParts)}
         {/if}
       </span>
     </div>
   {/if}
 {/snippet}
 
-{#snippet detailLine(parts: string[])}
+{#snippet registerContextPill(context: string, href: string | null = null)}
+  {#if href}
+    <a class="register-context-chip pill-link" {href}
+      >{context}<span class="chip-arrow" aria-hidden="true">↗</span></a
+    >
+  {:else}
+    <span class="register-context-chip">{context}</span>
+  {/if}
+{/snippet}
+
+{#snippet detailLine(
+  context: string | null,
+  parts: string[],
+  clampParts: boolean = false,
+)}
   <span class="result-detail muted" use:syncDetailSeparators>
+    {#if context}
+      <span class="register-context-chip">{context}</span>
+    {/if}
     {#each parts as part, i (i)}
-      {#if i > 0}
+      {#if context || i > 0}
         <span class="detail-separator" aria-hidden="true">·</span>
       {/if}
-      <span>{part}</span>
+      <span class:clamp-2={clampParts}>{part}</span>
     {/each}
   </span>
 {/snippet}
@@ -802,16 +957,22 @@ function closeSearch(): void {
      native <details> disclosure; one variable owner is a whole-row link with
      matched variable context inline; zero owners render as a plain
      Code · Label row. -->
-{#snippet ownerSubRows(result: CodeSearchResult)}
-  {@const classificationOwners = secondaryClassificationOwners(result)}
+{#snippet ownerSubRows(
+  result: CodeSearchResult,
+  includeCodeSystemOwner: boolean = false,
+)}
+  {@const classificationOwners = includeCodeSystemOwner
+    ? topClassificationOwners(result)
+    : secondaryClassificationOwners(result)}
   {#each result.variables as owner, i (i)}
+    {@const context = ownerRegisterContext(owner)}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
-        {@render ownerInline(owner.name ?? leafSlug(owner.fqid), owner.register)}
+        {@render ownerInline(owner.name ?? leafSlug(owner.fqid), context)}
       </a>
     {:else}
       <div class="owner-row integrated-list-row plain">
-        {@render ownerInline(owner.name ?? "—", owner.register)}
+        {@render ownerInline(owner.name ?? "—", context)}
       </div>
     {/if}
   {/each}
@@ -838,22 +999,54 @@ function closeSearch(): void {
   </span>
 {/snippet}
 
-{#snippet singleOwnerLine(owner: CodeOwnerVariable)}
-  <span class="owner-inline muted code-owner-single">
-    <span class="owner-name">
-      {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+{#snippet singleOwnerLine(
+  owner: CodeOwnerVariable,
+  href: string | null = null,
+)}
+  {@const context = ownerRegisterContext(owner)}
+  {#if href}
+    <a class="owner-inline muted code-owner-single single-owner-link" {href}>
+      <span class="owner-name">
+        {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+      </span>
+      {#if context}<span class="owner-context">{context}</span>{/if}
+    </a>
+  {:else}
+    <span class="owner-inline muted code-owner-single">
+      <span class="owner-name">
+        {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
+      </span>
+      {#if context}<span class="owner-context">{context}</span>{/if}
     </span>
-    {#if owner.register}<span class="owner-context">{owner.register}</span>{/if}
-  </span>
+  {/if}
 {/snippet}
 
-{#snippet codeCells(result: CodeSearchResult)}
+{#snippet codeSystemPill(label: string, href: string | null = null)}
+  {#if href}
+    <a class="code-system-chip pill-link" {href}
+      >{label}<span class="chip-arrow" aria-hidden="true">↗</span></a
+    >
+  {:else}
+    <span class="code-system-chip">{label}</span>
+  {/if}
+{/snippet}
+
+{#snippet codeCells(
+  result: CodeSearchResult,
+  showCodeSystemPill: boolean = false,
+)}
   {@const usage = usageSummary(result)}
   <span class="code-cells">
     <span class="code-expression">
       <code class="code-cell mono">{result.code}</code>
       <span class="code-equals">=</span>
       <span class="code-label">{result.label}</span>
+      {#if showCodeSystemPill}
+        {@render codeSystemPill(
+          result.code_system ?? REGISTER_LOCAL_LABEL,
+          codeSystemHref(result),
+        )}
+      {/if}
     </span>
     {#if usage}<span class="usage-count muted">{usage}</span>{/if}
   </span>
@@ -866,7 +1059,9 @@ function closeSearch(): void {
         <span class="disclosure-icon" aria-hidden="true"></span>
         {@render codeCells(result)}
       </summary>
-      <div class="owner-table">{@render ownerSubRows(result)}</div>
+      <div class="owner-table">
+        {@render ownerSubRows(result)}
+      </div>
     </details>
   {:else if singleOwner?.fqid}
     <a
@@ -884,37 +1079,84 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
+{#snippet topCodeRow(result: CodeSearchResult)}
+  {@const singleOwner = singleVariableOwner(result)}
+  {@const systemHref = codeSystemHref(result)}
+  {#if hasExpandableOwners(result)}
+    <details class="code-row code-disclosure top-code-row">
+      <summary class="integrated-list-row code-summary top-code-summary">
+        <span class="disclosure-icon" aria-hidden="true"></span>
+        <span class="top-code-summary-body">
+          {@render codeCells(result, true)}
+        </span>
+      </summary>
+      <div class="owner-table">{@render ownerSubRows(result, true)}</div>
+    </details>
+  {:else if singleOwner?.fqid}
+    {#if systemHref}
+      <div class="code-row integrated-list-row single-code-row top-code-row">
+        {@render codeCells(result, true)}
+        {@render singleOwnerLine(singleOwner, catalogHref(singleOwner.fqid))}
+      </div>
+    {:else}
+      <a
+        class="code-row integrated-list-row single-code-row top-code-row"
+        href={catalogHref(singleOwner.fqid)}
+      >
+        {@render codeCells(result, true)}
+        {@render singleOwnerLine(singleOwner)}
+      </a>
+    {/if}
+  {:else if systemHref}
+    <div class="code-row integrated-list-row single-code-row top-code-row">
+      {@render codeCells(result, true)}
+    </div>
+  {:else}
+    <div class="code-row integrated-list-row single-code-row top-code-row">
+      {@render codeCells(result, true)}
+      {#if singleOwner}{@render singleOwnerLine(singleOwner)}{/if}
+    </div>
+  {/if}
+{/snippet}
+
 <!-- A concept-group family (#322): search stays flat. Prefer the first-class group
      subject page when its route is derivable; if not, emit the member leaf links
      directly rather than putting a disclosure inside the results list. -->
 {#snippet conceptGroup(result: ConceptGroupSearchResult)}
   {@const href = conceptGroupHref(result)}
-  {@const detailParts = groupDetailParts(result)}
+  {@const context = groupRegisterPill(result)}
   {#if href}
-    <a class="leaf-row integrated-list-row group-result-row" href={href}>
+    <div class="leaf-row integrated-list-row group-result-row">
       <span class="name-cell">
         <span class="result-title">
-          <span class="group-prefix">Group:</span>
-          <span class="row-link">{result.group_label}</span>
+          <a class="row-link" {href}>{result.group_label}</a>
+          <span class="group-chip">Group</span>
+          {#if context}{@render registerContextPill(context.label, context.href)}{/if}
         </span>
-        {#if detailParts.length > 0}
-          {@render detailLine(detailParts)}
-        {/if}
       </span>
-    </a>
+    </div>
   {:else}
     {#each result.members as member, i (`${member.fqid}|${i}`)}
-      <a
+      {@const memberContext = providerRegisterPill(member.fqid, result.register)}
+      <div
         class="leaf-row integrated-list-row group-member-row"
-        href={catalogHref(member.fqid)}
       >
         <span class="name-cell">
           <span class="result-title">
-            <span class="row-link">{member.name ?? leafSlug(member.fqid)}</span>
+            <a class="row-link" href={catalogHref(member.fqid)}
+              >{member.name ?? leafSlug(member.fqid)}</a
+            >
+            <span class="group-chip">Group</span>
+            {#if memberContext}
+              {@render registerContextPill(
+                memberContext.label,
+                memberContext.href,
+              )}
+            {/if}
           </span>
-          {@render detailLine([`Group: ${result.group_label}`])}
+          {@render detailLine(null, [result.group_label])}
         </span>
-      </a>
+      </div>
     {/each}
   {/if}
 {/snippet}
@@ -931,7 +1173,7 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link">{primaryLabel}</span>
         </span>
-        {@render detailLine([
+        {@render detailLine(null, [
           `matched ${result.matched_count} of ${editions.length} editions`,
         ])}
       </span>
@@ -942,7 +1184,7 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link plain">{primaryLabel}</span>
         </span>
-        {@render detailLine([
+        {@render detailLine(null, [
           `matched ${result.matched_count} of ${editions.length} editions`,
         ])}
       </span>
@@ -958,7 +1200,7 @@ function closeSearch(): void {
           <span class="result-title">
             <span class="row-link">{edition.name ?? edition.slug}</span>
           </span>
-          {@render detailLine([
+          {@render detailLine(null, [
             edition.effective_year == null
               ? "Edition"
               : `superseded ${edition.effective_year}`,
@@ -971,7 +1213,7 @@ function closeSearch(): void {
           <span class="result-title">
             <span class="row-link plain">{edition.name ?? edition.slug}</span>
           </span>
-          {@render detailLine([
+          {@render detailLine(null, [
             edition.effective_year == null
               ? "Edition"
               : `superseded ${edition.effective_year}`,
@@ -983,6 +1225,10 @@ function closeSearch(): void {
 {/snippet}
 
 <style>
+  .search-view {
+    --search-row-inline: calc(var(--space-4) + var(--space-1));
+    --search-subrow-gutter: 3px;
+  }
   .search-heading {
     display: flex;
     align-items: baseline;
@@ -1043,6 +1289,11 @@ function closeSearch(): void {
   .group {
     margin-bottom: 1.5rem;
   }
+  .top-results-group {
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
   .code-system {
     margin: 0;
   }
@@ -1050,8 +1301,10 @@ function closeSearch(): void {
     border-top: 1px solid var(--border);
   }
   .code-system-heading {
+    box-sizing: border-box;
     margin: 0;
-    padding: var(--space-2) var(--space-3) var(--space-1);
+    padding: var(--space-2) var(--search-row-inline) var(--space-1);
+    border-left: var(--search-subrow-gutter) solid transparent;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     font-size: var(--text-sm);
@@ -1076,7 +1329,12 @@ function closeSearch(): void {
      mobile canvas (#806); break them only when they can't fit. */
   .row-link {
     font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
     overflow-wrap: anywhere;
+  }
+  a.row-link:hover {
+    color: var(--accent-ink);
   }
   .row-link.plain {
     color: var(--text);
@@ -1135,7 +1393,8 @@ function closeSearch(): void {
        (below) so multi-line cells grow downward and still read top-down. */
     align-items: stretch;
   }
-  .children.table.cols-1 {
+  .children.table.cols-1,
+  .children.table.top-results {
     /* Full-width one-column result rows (registers, variables, classifications, groups). */
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1145,11 +1404,14 @@ function closeSearch(): void {
   .children.table.codes {
     display: flex;
     flex-direction: column;
-    --code-row-inline: 0.75rem;
-    --code-disclosure-gutter: 0.85rem;
-    --code-disclosure-gap: 0.45rem;
-    --code-text-start: calc(
-      var(--code-row-inline) + var(--code-disclosure-gutter) +
+  }
+  .children.table.codes,
+  .children.table.top-results {
+    --code-row-inline: var(--search-row-inline);
+    --code-disclosure-size: 0.65rem;
+    --code-disclosure-gap: 0.5rem;
+    --code-disclosure-left: calc(
+      var(--code-row-inline) - var(--code-disclosure-size) -
         var(--code-disclosure-gap)
     );
   }
@@ -1172,30 +1434,39 @@ function closeSearch(): void {
     overflow-wrap: anywhere;
   }
   .code-summary {
-    display: grid;
-    grid-template-columns: var(--code-disclosure-gutter) minmax(0, 1fr);
-    column-gap: var(--code-disclosure-gap);
-    align-items: baseline;
+    position: relative;
+    display: block;
+  }
+  .top-code-summary-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
   }
   .disclosure-icon {
+    position: absolute;
+    top: calc(var(--search-row-block) + 0.75em);
+    left: var(--code-disclosure-left);
     display: inline-grid;
     place-items: center;
-    width: 0.85rem;
-    height: 0.85rem;
+    width: var(--code-disclosure-size);
+    height: var(--code-disclosure-size);
     color: var(--text-muted);
+    pointer-events: none;
     transform-origin: 50% 50%;
+    transform: translateY(-50%);
     transition: transform var(--motion-fast) ease;
   }
   .disclosure-icon::before {
     content: "";
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.42rem;
+    height: 0.42rem;
     border-right: 1.5px solid currentColor;
     border-bottom: 1.5px solid currentColor;
     transform: rotate(-45deg);
   }
   .code-row[open] > summary .disclosure-icon {
-    transform: rotate(90deg);
+    transform: translateY(-50%) rotate(90deg);
   }
   /* A code DISCLOSURE row: <details>; its <summary> carries the collapsed cells.
      Non-disclosure rows carry `.code-cells` directly plus an optional muted owner
@@ -1216,7 +1487,7 @@ function closeSearch(): void {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
-    padding-left: var(--code-text-start);
+    padding-left: var(--code-row-inline);
     color: inherit;
     text-decoration: none;
   }
@@ -1235,15 +1506,17 @@ function closeSearch(): void {
     display: flex;
     flex-direction: column;
     margin: 0;
+    background: color-mix(in srgb, var(--surface-sunken) 60%, var(--surface));
   }
   .owner-row {
     display: flex;
     align-items: baseline;
+    box-sizing: border-box;
     color: inherit;
     text-decoration: none;
     overflow-wrap: anywhere;
-    padding: var(--search-row-block) var(--code-row-inline) var(--search-row-block)
-      var(--code-text-start);
+    padding: var(--search-row-block) var(--code-row-inline);
+    border-left: var(--search-subrow-gutter) solid var(--border-strong);
     border-bottom: 1px solid var(--border);
   }
   .owner-row > * {
@@ -1292,7 +1565,7 @@ function closeSearch(): void {
   }
   .leaf-row > * {
     min-width: 0;
-    padding: var(--search-row-block) var(--space-3);
+    padding: var(--search-row-block) var(--search-row-inline);
     border-bottom: 1px solid var(--border);
   }
   .leaf-row:last-child > * {
@@ -1336,31 +1609,65 @@ function closeSearch(): void {
     gap: 0.2rem 0.35rem;
     min-width: 0;
   }
-  .col-chip {
+  .col-chip,
+  .group-chip,
+  .register-context-chip,
+  .code-system-chip {
     display: inline-flex;
     align-items: baseline;
+    gap: 0.2rem;
     line-height: 1.3;
     padding: 0 var(--space-1);
     border-radius: var(--radius-sm);
     max-width: 100%;
     overflow-wrap: anywhere;
+    text-decoration: none;
   }
   /* Mirrors RepresentationPicker's delivery-column chip: mono, purple/indigo
      variable hue, and no link affordance on the search-result metadata. */
   .col-chip {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--cat-var-ink);
     border: 1px solid color-mix(in srgb, var(--cat-var) 35%, transparent);
     background: color-mix(in srgb, var(--cat-var) 10%, var(--surface));
   }
+  .group-chip {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--cat-group-ink);
+    border: 1px solid color-mix(in srgb, var(--cat-group) 35%, transparent);
+    background: color-mix(in srgb, var(--cat-group) 10%, var(--surface));
+  }
+  .register-context-chip,
+  .code-system-chip {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    background: color-mix(in srgb, var(--surface-sunken) 42%, var(--surface));
+  }
+  .pill-link {
+    cursor: pointer;
+  }
+  .pill-link .chip-arrow {
+    font-size: 1.1em;
+    line-height: 1;
+    opacity: 0.85;
+  }
+  .pill-link:hover,
+  .pill-link:focus-visible {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--border-strong) 75%, transparent);
+    background: color-mix(in srgb, var(--surface-sunken) 72%, var(--surface));
+  }
+  .pill-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
   .column-more {
     font-size: var(--text-sm);
-  }
-  .group-prefix {
-    color: var(--cat-group-ink);
-    font-weight: 600;
   }
   /* Code and label form one expression ("code = label") so the value reads as a
      paired token rather than two unrelated columns. */
@@ -1384,6 +1691,12 @@ function closeSearch(): void {
     font-size: var(--text-sm);
     text-align: right;
     white-space: nowrap;
+  }
+  .single-owner-link {
+    text-decoration: none;
+  }
+  .single-owner-link:hover {
+    color: var(--accent-ink);
   }
   .more {
     font-size: var(--text-sm);

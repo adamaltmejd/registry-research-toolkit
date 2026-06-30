@@ -16,6 +16,8 @@ as a bound parameter.
 from __future__ import annotations
 
 import re
+import unicodedata
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -24,11 +26,13 @@ from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 from reg_webapp import golden
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
+    ClassificationCodeSearchGroup,
     ClassificationSearchGroup,
-    CodeSearchGroup,
     RegisterSearchGroup,
+    RegisterValueSetSearchGroup,
     SearchGroup,
     SearchResponse,
+    TopSearchGroup,
     VariableSearchGroup,
 )
 from reg_webapp.query_input import validate_text_query
@@ -38,16 +42,22 @@ if TYPE_CHECKING:
         CodeSearchResult,
         RegisterSearchResult,
         SearchResult,
-        VariableSearchResult,
     )
 
     from reg_webapp.catalog_index import CatalogIndex
-    from reg_webapp.models import ClassificationSearchItem, VariableSearchItem
+    from reg_webapp.models import (
+        ClassificationSearchItem,
+        TopSearchItem,
+        VariableSearchItem,
+    )
 
 router = APIRouter(prefix="/api")
 
 _DEFAULT_LIMIT = 20
 _MAX_LIMIT = 50
+_TOP_RESULTS_LIMIT = 5
+_GROUP_LABEL_MATCH_BONUS = 50
+_GROUP_MATCHED_MEMBER_BONUS_CAP = 50
 
 # A "real" token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in FTS5 and would yield an empty phrase.
@@ -108,6 +118,240 @@ def _rank_codes(results: list[CodeSearchResult]) -> list[CodeSearchResult]:
         ),
         reverse=True,
     )
+
+
+def _fold_match_text(value: object) -> str:
+    text = str(value).strip().casefold()
+    decomposed = unicodedata.normalize("NFKD", text)
+    folded = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    return re.sub(r"\s+", " ", folded)
+
+
+def _fqid_leaf(value: object | None) -> str | None:
+    if value is None:
+        return None
+    parts = str(value).split("/")
+    return parts[-1] if parts and parts[-1] else None
+
+
+def _fqid_scope(value: object | None) -> str | None:
+    if value is None:
+        return None
+    parts = str(value).split("/")
+    return "/".join(parts[:2]) if len(parts) >= 2 and all(parts[:2]) else None
+
+
+def _candidate_identity_texts(result: SearchResult) -> tuple[str, ...]:
+    texts: list[object] = []
+    if result.type == "register":
+        texts.extend((result.fqid, _fqid_leaf(result.fqid), result.name))
+    elif result.type == "variable":
+        texts.extend((result.fqid, _fqid_leaf(result.fqid), result.name))
+        texts.extend(result.delivery_column_names)
+    elif result.type == "classification":
+        texts.extend(
+            (
+                result.fqid,
+                _fqid_leaf(result.fqid),
+                result.short_name,
+                result.name,
+                result.terminal_fqid,
+                _fqid_leaf(result.terminal_fqid),
+            )
+        )
+    elif result.type == "classification_succession":
+        texts.extend(
+            (result.fqid, _fqid_leaf(result.fqid), result.short_name, result.name)
+        )
+        for edition in result.editions:
+            texts.extend(
+                (edition.fqid, _fqid_leaf(edition.fqid), edition.slug, edition.name)
+            )
+    elif result.type == "group":
+        texts.extend(
+            (result.group_key, _fqid_leaf(result.group_key), result.group_label)
+        )
+        for member in result.members:
+            texts.extend(
+                (
+                    member.fqid,
+                    _fqid_leaf(member.fqid),
+                    member.name,
+                    member.delivery_column,
+                )
+            )
+            for facet in member.facets:
+                texts.extend((facet.value, facet.label))
+    elif result.type == "code":
+        texts.extend((result.code, result.label, result.code_system))
+    return tuple(_fold_match_text(text) for text in texts if text is not None)
+
+
+def _type_prior(result: SearchResult) -> int:
+    if result.type == "register":
+        return 40
+    if result.type == "variable":
+        return 30
+    if result.type == "group":
+        return 30 if result.kind == "variable" else 25
+    if result.type in ("classification", "classification_succession"):
+        return 25
+    if result.type == "code":
+        return 10
+    return 0
+
+
+def _group_authority_bonus(result: SearchResult) -> int:
+    if result.type != "group" or not result.label_matched:
+        return 0
+    matched = max(0, result.matched_count)
+    return _GROUP_LABEL_MATCH_BONUS + min(matched, _GROUP_MATCHED_MEMBER_BONUS_CAP)
+
+
+def _best_bet_score(query: str, result: SearchResult) -> int:
+    folded_query = _fold_match_text(query)
+    identity_texts = _candidate_identity_texts(result)
+    if not folded_query or not identity_texts:
+        return _type_prior(result)
+    exact = any(text == folded_query for text in identity_texts)
+    prefix = any(text.startswith(folded_query) for text in identity_texts)
+    return (
+        _type_prior(result)
+        + (1000 if exact else 0)
+        + (100 if prefix and not exact else 0)
+        + _group_authority_bonus(result)
+    )
+
+
+def _looks_like_golden_pin(result: SearchResult) -> bool:
+    """Golden pins are order-prepended with rank=0.0; keep them pinned when the
+    display pass applies best-bet scoring inside typed groups."""
+    return result.type in ("register", "classification") and result.rank == 0.0
+
+
+def _rank_display_results(
+    query: str, results: list[SearchResult]
+) -> list[SearchResult]:
+    """Apply the same query-sensitive best-bet score within one typed section.
+
+    Top results uses `_best_bet_score` to merge across typed groups. Reusing that
+    score inside each category keeps an exact/prefix hit from leading Top results
+    while sitting lower in its own category. Golden pins stay first because their
+    contract is stronger than FTS/order scoring.
+    """
+    return [
+        result
+        for _, result in sorted(
+            enumerate(results),
+            key=lambda item: (
+                _looks_like_golden_pin(item[1]),
+                _best_bet_score(query, item[1]),
+                -item[0],
+            ),
+            reverse=True,
+        )
+    ]
+
+
+def _top_candidate_key(result: SearchResult, group_order: int, row_order: int) -> str:
+    if result.type == "group":
+        if result.kind == "classification":
+            return f"group:{result.kind}:{result.group_key}"
+        scopes = sorted(
+            scope
+            for scope in {_fqid_scope(member.fqid) for member in result.members}
+            if scope is not None
+        )
+        scope_key = (
+            ",".join(scopes) if scopes else f"unresolved:{group_order}:{row_order}"
+        )
+        return f"group:{result.kind}:{scope_key}:{result.group_key}"
+    if result.type == "code":
+        return f"code:{result.code}:{result.label}:{result.code_system}"
+    fqid = getattr(result, "fqid", None)
+    if fqid is not None:
+        return f"{result.type}:{fqid}"
+    return f"{result.type}:unresolved:{group_order}:{row_order}"
+
+
+@dataclass(frozen=True)
+class _TopCandidate:
+    golden: bool
+    score: int
+    group_order: int
+    row_order: int
+    result: SearchResult
+
+
+def _grouped_variable_member_fqids(candidates: list[_TopCandidate]) -> set[str]:
+    fqids: set[str] = set()
+    for candidate in candidates:
+        result = candidate.result
+        if result.type == "group" and result.kind == "variable":
+            for member in result.members:
+                fqids.add(str(member.fqid))
+    return fqids
+
+
+def _best_bets(
+    query: str, groups: list[SearchGroup], *, limit: int
+) -> list[TopSearchItem]:
+    """Build the cross-group top-results page (#393 items 6/7) from the already
+    prepared typed groups.
+
+    This deliberately reuses the same typed rows the normal groups render. The
+    score is only a presentation ordering layer: exact identifier/name/code hits
+    outrank type priors, and type priors favor register → variable → classification
+    → code for broad topical terms. Ties preserve the stable group/result order.
+    """
+    by_key: dict[str, _TopCandidate] = {}
+    for group_order, group in enumerate(groups):
+        for row_order, result in enumerate(group.results):
+            score = _best_bet_score(query, cast("SearchResult", result))
+            candidate = _TopCandidate(
+                golden=_looks_like_golden_pin(cast("SearchResult", result)),
+                score=score,
+                group_order=group_order,
+                row_order=row_order,
+                result=cast("SearchResult", result),
+            )
+            key = _top_candidate_key(candidate.result, group_order, row_order)
+            current = by_key.get(key)
+            if current is None or (
+                candidate.golden,
+                candidate.score,
+                -candidate.group_order,
+                -candidate.row_order,
+            ) > (
+                current.golden,
+                current.score,
+                -current.group_order,
+                -current.row_order,
+            ):
+                by_key[key] = candidate
+
+    ranked = sorted(
+        by_key.values(),
+        key=lambda candidate: (
+            not candidate.golden,
+            -candidate.score,
+            candidate.group_order,
+            candidate.row_order,
+        ),
+    )
+    grouped_members = _grouped_variable_member_fqids(ranked)
+    visible_ranked = [
+        candidate
+        for candidate in ranked
+        if not (
+            candidate.result.type == "variable"
+            and candidate.result.fqid is not None
+            and str(candidate.result.fqid) in grouped_members
+        )
+    ]
+    return [
+        cast("TopSearchItem", candidate.result) for candidate in visible_ranked[:limit]
+    ]
 
 
 def _scope_to_fqids(
@@ -200,16 +444,17 @@ def _narrow_variable_leaf_columns(
         if result.type != "variable" or result.fqid is None:
             narrowed.append(result)
             continue
-        leaf = cast("VariableSearchResult", result)
-        held = index.held_columns(str(leaf.fqid))
-        if not held or not leaf.delivery_column_names:
-            narrowed.append(leaf)
+        held = index.held_columns(str(result.fqid))
+        if not held or not result.delivery_column_names:
+            narrowed.append(result)
             continue
         held_names = frozenset(col for col in held if col is not None)
         held_columns = tuple(
-            col for col in leaf.delivery_column_names if col in held_names
+            col for col in result.delivery_column_names if col in held_names
         )
-        narrowed.append(leaf.model_copy(update={"delivery_column_names": held_columns}))
+        narrowed.append(
+            result.model_copy(update={"delivery_column_names": held_columns})
+        )
     return narrowed
 
 
@@ -221,15 +466,21 @@ def get_search(
     req_type: str = Depends(_validated_type),
 ) -> SearchResponse:
     """Search registers, variables (concept-folded, #322), classifications, and
-    codes/values (#352) over the shipped FTS indexes. Each group is an independent
-    reg_meta `search()` call (register/variable/classification via the FTS
-    `field="description"` path; codes via the `field="value"` path) so each carries
-    its own `total_count` and per-group `limit`. A query with no usable token
-    returns the selected group(s) empty (total 0) — not a 422.
+    codes/values (#352) over the shipped FTS indexes. Each typed group is an
+    independent reg_meta `search()` call (register/variable/classification via the
+    FTS `field="description"` path; codes via the `field="value"` path) so each
+    carries its own `total_count` and per-group `limit`; the value surface is split
+    into classification codes and register-local value sets so each gets its own
+    page. The all-scope response prepends a `top_results` best-bets group built
+    from those same typed rows when multiple candidates compete (#393 items 6/7);
+    scoped responses emit only the requested typed surface (`type=value` emits the
+    two value groups). A query with no usable token returns the selected group(s)
+    empty (total 0) — not a 422.
 
     ``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the
-    four-group register→variable→classification→code behavior; any single type runs
-    AND emits only that one group. Group ORDER is fixed for the ``all`` case.
+    optional top-results→register→variable→classification→value behavior; any
+    single type runs AND emits only that typed surface. Group ORDER is fixed for
+    the ``all`` case.
 
     A FILTERED steward (``app.state.catalog_index`` present, #859) scopes the
     REGISTER and VARIABLE surfaces to the steward's held FQIDs — both the reg_meta
@@ -255,9 +506,9 @@ def get_search(
         else None
     )
 
-    # Groups are appended in the fixed register→variable→classification→code order
-    # so the `all` case keeps today's exact 4-group shape; a single-type scope emits
-    # just its one group.
+    # Typed groups are appended in the fixed register→variable→classification→value
+    # order. The all-scope top-results group is prepended after these typed groups
+    # are prepared; `type=value` emits the two value groups.
     groups: list[SearchGroup] = []
 
     # The empty-query / no-usable-token short-circuit: same group selection as the
@@ -270,7 +521,8 @@ def get_search(
         if want_classification:
             groups.append(ClassificationSearchGroup(total_count=0, results=[]))
         if want_value:
-            groups.append(CodeSearchGroup(total_count=0, results=[]))
+            groups.append(ClassificationCodeSearchGroup(total_count=0, results=[]))
+            groups.append(RegisterValueSetSearchGroup(total_count=0, results=[]))
         return SearchResponse(query=q, groups=groups)
 
     with catalog_conn(request) as conn:
@@ -312,7 +564,8 @@ def get_search(
                 RegisterSearchGroup(
                     total_count=reg.total_count + (len(reg_results) - len(reg.results)),
                     results=cast(
-                        "list[RegisterSearchResult]", list(reg_results[:limit])
+                        "list[RegisterSearchResult]",
+                        list(_rank_display_results(q, reg_results)[:limit]),
                     ),
                 )
             )
@@ -355,7 +608,10 @@ def get_search(
             groups.append(
                 VariableSearchGroup(
                     total_count=var_total,
-                    results=cast("list[VariableSearchItem]", list(var_results[:limit])),
+                    results=cast(
+                        "list[VariableSearchItem]",
+                        list(_rank_display_results(q, var_results)[:limit]),
+                    ),
                 )
             )
         if want_classification:
@@ -373,7 +629,8 @@ def get_search(
                 ClassificationSearchGroup(
                     total_count=cls.total_count + (len(cls_results) - len(cls.results)),
                     results=cast(
-                        "list[ClassificationSearchItem]", list(cls_results[:limit])
+                        "list[ClassificationSearchItem]",
+                        list(_rank_display_results(q, cls_results)[:limit]),
                     ),
                 )
             )
@@ -382,10 +639,9 @@ def get_search(
             # code-shape exact/prefix match, NOT the FTS description path. reg_meta
             # ranks (bm25 + rarity downweight) and annotates each hit with its
             # owning variables/classifications. Codes don't fold into concept
-            # groups. Golden-boost runs first (a no-op here — no `value` pins are
-            # supported, see reg_webapp.golden), THEN `_rank_codes` re-sorts the
-            # page so classification-backed codes lead (#393 item 2).
-            codes = reg_meta_search(
+            # groups. Split classification-owned codes from register-local value
+            # sets before pagination so neither bucket starves the other.
+            classification_codes = reg_meta_search(
                 conn,
                 q,
                 field="value",
@@ -393,21 +649,62 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
                 code_variable_owner_limit=None,
+                code_owner_scope="classification",
             )
-            boosted_codes = cast(
+            boosted_classification_codes = cast(
                 "list[CodeSearchResult]",
-                golden.apply_golden_boost(conn, q, "value", codes.results),
+                golden.apply_golden_boost(
+                    conn, q, "value", classification_codes.results
+                ),
             )
-            # Rank the FULL boosted set first (so a high-ranking net-new pin can lead),
-            # THEN cap the displayed page at `limit`; total_count still counts the full
-            # boosted set (incl. net-new) so the cap doesn't hide the true match volume.
-            code_results = _rank_codes(boosted_codes)[:limit]
+            classification_code_results = _rank_codes(boosted_classification_codes)[
+                :limit
+            ]
             groups.append(
-                CodeSearchGroup(
-                    total_count=codes.total_count
-                    + (len(boosted_codes) - len(codes.results)),
-                    results=code_results,
+                ClassificationCodeSearchGroup(
+                    total_count=classification_codes.total_count
+                    + (
+                        len(boosted_classification_codes)
+                        - len(classification_codes.results)
+                    ),
+                    results=classification_code_results,
                 )
+            )
+
+            register_values = reg_meta_search(
+                conn,
+                q,
+                field="value",
+                type="value",
+                limit=limit,
+                fold_groups=False,
+                code_variable_owner_limit=None,
+                code_owner_scope="register_local",
+            )
+            boosted_register_values = cast(
+                "list[CodeSearchResult]",
+                golden.apply_golden_boost(conn, q, "value", register_values.results),
+            )
+            register_value_results = _rank_codes(boosted_register_values)[:limit]
+            groups.append(
+                RegisterValueSetSearchGroup(
+                    total_count=register_values.total_count
+                    + (len(boosted_register_values) - len(register_values.results)),
+                    results=register_value_results,
+                )
+            )
+
+    if req_type == "all":
+        top_total = sum(len(group.results) for group in groups)
+        if top_total > 1:
+            top_limit = min(limit, _TOP_RESULTS_LIMIT)
+            best_bets = _best_bets(q, groups, limit=top_limit)
+            groups.insert(
+                0,
+                TopSearchGroup(
+                    total_count=top_total,
+                    results=best_bets,
+                ),
             )
 
     return SearchResponse(query=q, groups=groups)

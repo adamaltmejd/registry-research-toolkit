@@ -342,6 +342,34 @@
         "title": "ClassificationCode",
         "type": "object"
       },
+      "ClassificationCodeSearchGroup": {
+        "description": "The `classification_codes` result group (#352/#393). `total_count` is the\nresult count before the per-group display limit (so the SPA can show\n\"showing N of M\").",
+        "properties": {
+          "group": {
+            "const": "classification_codes",
+            "default": "classification_codes",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/CodeSearchResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "ClassificationCodeSearchGroup",
+        "type": "object"
+      },
       "ClassificationEdition": {
         "additionalProperties": false,
         "description": "One edition in a classification succession chain (#571), as returned by\n`Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge\nendpoint), this is a fully-hydrated node in the WHOLE chain \u2014 the webapp\nbrowse panel renders the complete edition timeline from a list of these.\n\n`slug` is the load-bearing identity (succession references the exact edition\nslug). Every chain edition is a LIVE `classification` row \u2014\n`reg_meta_build`'s validator (`validate.py`, the `classification_replaced_by`\ncheck) fails the build if any succession edge references a slug with no live\nrow, so a \"dead edition\" can't exist in a validated DB. `fqid` is None only on\na *malformed* slug (a lower-level slug-grammar concern, also build-prevented;\n`_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes\nfrom the live row. `effective_year` is the year on the\n`classification_replaced_by` edge that names this edition as `predecessor_slug`\n\u2014 i.e. the year this edition was superseded by its successor (None for the\nterminal, which has no outbound edge). `is_current` marks the\nterminal (head) edition \u2014 the one with no outbound successor; `is_self` marks\nthe edition the caller queried (resolved to its canonical live slug when the\nquery was a `same_as` alias).",
@@ -973,34 +1001,6 @@
           "fqid"
         ],
         "title": "CodeOwnerVariable",
-        "type": "object"
-      },
-      "CodeSearchGroup": {
-        "description": "The `codes` result group (#352). `total_count` is the result count before\nthe per-group display limit (so the SPA can show \"showing N of M\").",
-        "properties": {
-          "group": {
-            "const": "codes",
-            "default": "codes",
-            "title": "Group",
-            "type": "string"
-          },
-          "results": {
-            "items": {
-              "$ref": "#/components/schemas/CodeSearchResult"
-            },
-            "title": "Results",
-            "type": "array"
-          },
-          "total_count": {
-            "title": "Total Count",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "total_count",
-          "results"
-        ],
-        "title": "CodeSearchGroup",
         "type": "object"
       },
       "CodeSearchResult": {
@@ -2428,6 +2428,34 @@
         "title": "RegisterSearchResult",
         "type": "object"
       },
+      "RegisterValueSetSearchGroup": {
+        "description": "The `register_value_sets` result group (#352/#393): register-local value\ncodes with no owning classification.",
+        "properties": {
+          "group": {
+            "const": "register_value_sets",
+            "default": "register_value_sets",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/CodeSearchResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "RegisterValueSetSearchGroup",
+        "type": "object"
+      },
       "RelationshipGraph": {
         "additionalProperties": false,
         "description": "The relationship graph for a subject. ``nodes: []`` is the \"don't render\"\nsignal (the frontend gate is ``nodes.length === 0``): a lone variable with no\nsuccession / group siblings / meaningful representation boundary, or\na lone classification edition with no succession chain and no group context.\n``focus_id`` is the node matching the requested FQID (post same_as); None for\ngroup-addressed calls.",
@@ -2589,14 +2617,19 @@
             "items": {
               "discriminator": {
                 "mapping": {
+                  "classification_codes": "#/components/schemas/ClassificationCodeSearchGroup",
                   "classifications": "#/components/schemas/ClassificationSearchGroup",
-                  "codes": "#/components/schemas/CodeSearchGroup",
+                  "register_value_sets": "#/components/schemas/RegisterValueSetSearchGroup",
                   "registers": "#/components/schemas/RegisterSearchGroup",
+                  "top_results": "#/components/schemas/TopSearchGroup",
                   "variables": "#/components/schemas/VariableSearchGroup"
                 },
                 "propertyName": "group"
               },
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TopSearchGroup"
+                },
                 {
                   "$ref": "#/components/schemas/RegisterSearchGroup"
                 },
@@ -2607,7 +2640,10 @@
                   "$ref": "#/components/schemas/ClassificationSearchGroup"
                 },
                 {
-                  "$ref": "#/components/schemas/CodeSearchGroup"
+                  "$ref": "#/components/schemas/ClassificationCodeSearchGroup"
+                },
+                {
+                  "$ref": "#/components/schemas/RegisterValueSetSearchGroup"
                 }
               ]
             },
@@ -2698,6 +2734,64 @@
           "successors"
         ],
         "title": "SuccessorsResponse",
+        "type": "object"
+      },
+      "TopSearchGroup": {
+        "description": "Cross-group best-bets (#393 item 6): the strongest rows from the typed\ngroups, scored with exact-match boosts and type priors. The original typed\ngroups remain unchanged below it.",
+        "properties": {
+          "group": {
+            "const": "top_results",
+            "default": "top_results",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "classification": "#/components/schemas/ClassificationSearchResult",
+                  "classification_succession": "#/components/schemas/ClassificationSuccessionSearchResult",
+                  "code": "#/components/schemas/CodeSearchResult",
+                  "group": "#/components/schemas/ConceptGroupSearchResult",
+                  "register": "#/components/schemas/RegisterSearchResult",
+                  "variable": "#/components/schemas/VariableSearchResult"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/RegisterSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/VariableSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationSuccessionSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ConceptGroupSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeSearchResult"
+                }
+              ]
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "TopSearchGroup",
         "type": "object"
       },
       "ValidationError": {
@@ -4534,7 +4628,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each group is an independent\nreg_meta `search()` call (register/variable/classification via the FTS\n`field=\"description\"` path; codes via the `field=\"value\"` path) so each carries\nits own `total_count` and per-group `limit`. A query with no usable token\nreturns the selected group(s) empty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\nfour-group register\u2192variable\u2192classification\u2192code behavior; any single type runs\nAND emits only that one group. Group ORDER is fixed for the ``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.",
+        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each typed group is an\nindependent reg_meta `search()` call (register/variable/classification via the\nFTS `field=\"description\"` path; codes via the `field=\"value\"` path) so each\ncarries its own `total_count` and per-group `limit`; the value surface is split\ninto classification codes and register-local value sets so each gets its own\npage. The all-scope response prepends a `top_results` best-bets group built\nfrom those same typed rows when multiple candidates compete (#393 items 6/7);\nscoped responses emit only the requested typed surface (`type=value` emits the\ntwo value groups). A query with no usable token returns the selected group(s)\nempty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\noptional top-results\u2192register\u2192variable\u2192classification\u2192value behavior; any\nsingle type runs AND emits only that typed surface. Group ORDER is fixed for\nthe ``all`` case.\n\nA FILTERED steward (``app.state.catalog_index`` present, #859) scopes the\nREGISTER and VARIABLE surfaces to the steward's held FQIDs \u2014 both the reg_meta\nquery (the ``fqids`` allow-list, applied query-time so ``total_count`` is exact)\nand the golden boost (a boosted pin the steward does not hold is dropped). The\nCLASSIFICATION and VALUE/code surfaces are catalog-global and pass through\nunscoped. The ``global`` deployment (no index) is byte-for-byte unchanged.",
         "operationId": "get_search_api_search_get",
         "parameters": [
           {

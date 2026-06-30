@@ -513,19 +513,25 @@ export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────
-// `GET /api/search?q=` returns four ORDERED, typed result groups over the shipped
-// FTS indexes (registers / variables / classifications / codes). Each group's
-// `total_count` is the full match count BEFORE the per-request `limit`, so the SPA
-// renders "showing N of M". A concept-group row (`type:"group"`) is not an FQID,
-// but it can be linked to its fixed group route when the scope is derivable from
-// members; its `members` carry the real leaf FQIDs for fallback links. A `fqid`
-// can be `null` on any leaf (a hit with no resolvable catalog node).
+// `GET /api/search?q=` returns an optional cross-group best-bets group followed by
+// the typed result groups over the shipped FTS indexes (registers / variables /
+// classifications / classification codes / register-local value sets). Each
+// group's `total_count` is the full match count BEFORE the per-request `limit`,
+// so the SPA renders "showing N of M". A
+// concept-group row (`type:"group"`) is not an FQID, but it can be linked to its
+// fixed group route when the scope is derivable from members; its `members` carry
+// the real leaf FQIDs for fallback links. A `fqid` can be `null` on any leaf (a hit
+// with no resolvable catalog node).
 
 export type SearchResponse = Schemas["SearchResponse"];
+export type TopSearchGroup = Schemas["TopSearchGroup"];
 export type RegisterSearchGroup = Schemas["RegisterSearchGroup"];
 export type VariableSearchGroup = Schemas["VariableSearchGroup"];
 export type ClassificationSearchGroup = Schemas["ClassificationSearchGroup"];
-export type CodeSearchGroup = Schemas["CodeSearchGroup"];
+export type ClassificationCodeSearchGroup =
+  Schemas["ClassificationCodeSearchGroup"];
+export type RegisterValueSetSearchGroup =
+  Schemas["RegisterValueSetSearchGroup"];
 export type RegisterSearchResult = Schemas["RegisterSearchResult"];
 export type VariableSearchResult = Schemas["VariableSearchResult"];
 export type ClassificationSearchResult = Schemas["ClassificationSearchResult"];
@@ -550,8 +556,9 @@ export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
 const SEARCH_TIMEOUT_MS = 12_000;
 
 /** The scoped-search toggle values (#393 item 1). `all` (the default) returns the
- * four typed groups; any single value scopes the search to that one group. Mirrors
- * reg_meta's `SEARCH_TYPES` (the backend 422s an unknown value). */
+ * typed groups; `value` scopes the search to classification codes plus
+ * register-local value sets. Mirrors reg_meta's `SEARCH_TYPES` (the backend 422s
+ * an unknown value). */
 export type SearchType =
   | "all"
   | "register"

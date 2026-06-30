@@ -17,16 +17,31 @@ from pathlib import Path
 import pytest
 import reg_meta.db
 from fastapi.testclient import TestClient
+from reg_meta.catalog import ConceptGroupMember
 from reg_meta.queries import _code_system
-from reg_meta.search import CodeSearchResult, SearchResults, VariableSearchResult
+from reg_meta.search import (
+    CodeSearchResult,
+    ConceptGroupSearchResult,
+    RegisterSearchResult,
+    SearchResults,
+    VariableSearchResult,
+)
 from reg_webapp.app import create_app
 from reg_webapp.catalog_index import CatalogIndex
 from reg_webapp.golden import _Pin, apply_golden_boost
+from reg_webapp.models import (
+    RegisterSearchGroup,
+    RegisterValueSetSearchGroup,
+    VariableSearchGroup,
+)
 from reg_webapp.routes import search as search_route
 from reg_webapp.routes.search import (
+    _best_bet_score,
+    _best_bets,
     _has_searchable_token,
     _narrow_variable_leaf_columns,
     _rank_codes,
+    _rank_display_results,
     _validated_limit,
 )
 
@@ -67,7 +82,8 @@ def test_response_has_typed_groups(client):
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     }
     # Every group carries its own total_count + results list (the extensible
     # per-group envelope docs will reuse).
@@ -87,10 +103,13 @@ def test_type_register_returns_only_registers_group(client):
     assert "scb/lisa" in [r["fqid"] for r in g["results"]]
 
 
-def test_type_value_returns_only_codes_group(client):
+def test_type_value_returns_only_value_groups(client):
     body = client.get("/api/search", params={"q": "Man", "type": "value"}).json()
-    assert [g["group"] for g in body["groups"]] == ["codes"]
-    g = _group(body, "codes")
+    assert [g["group"] for g in body["groups"]] == [
+        "classification_codes",
+        "register_value_sets",
+    ]
+    g = _group(body, "classification_codes")
     assert any(r["label"] == "Man" for r in g["results"])
 
 
@@ -113,13 +132,15 @@ def test_invalid_type_is_422(client):
 
 
 def test_default_type_is_all_four_groups(client):
-    # No ?type= preserves today's exact four-group behavior (order included).
+    # No ?type= preserves the canonical typed groups when there is no useful
+    # cross-group top-results panel to show.
     body = client.get("/api/search", params={"q": "lisa"}).json()
     assert [g["group"] for g in body["groups"]] == [
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     ]
 
 
@@ -130,16 +151,21 @@ def test_type_all_explicit_matches_default(client):
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     ]
 
 
 def test_scoped_empty_query_returns_only_selected_empty_group(client):
-    # The empty-query short-circuit honors ?type= too — one empty group, not four.
+    # The empty-query short-circuit honors ?type= too — only the value groups,
+    # not the non-value groups.
     body = client.get("/api/search", params={"q": "", "type": "value"}).json()
-    assert [g["group"] for g in body["groups"]] == ["codes"]
-    assert body["groups"][0]["total_count"] == 0
-    assert body["groups"][0]["results"] == []
+    assert [g["group"] for g in body["groups"]] == [
+        "classification_codes",
+        "register_value_sets",
+    ]
+    assert all(g["total_count"] == 0 for g in body["groups"])
+    assert all(g["results"] == [] for g in body["groups"])
 
 
 def test_scoped_empty_query_non_value_scope(client):
@@ -198,20 +224,25 @@ def test_lone_old_edition_leaf_carries_terminal_fqid(client):
     assert hit["terminal_fqid"] == "class/sun2020"
 
 
-# ── codes group (#352) ───────────────────────────────────────────────────────
+# ── value/code groups (#352) ─────────────────────────────────────────────────
 
 
-def test_codes_group_always_present(client):
+def test_value_groups_always_present(client):
     # Present even when nothing matches (keep all groups in the envelope).
-    g = _group(client.get("/api/search", params={"q": "zzqq"}).json(), "codes")
-    assert g["total_count"] == 0
-    assert g["results"] == []
+    body = client.get("/api/search", params={"q": "zzqq"}).json()
+    for name in ("classification_codes", "register_value_sets"):
+        g = _group(body, name)
+        assert g["total_count"] == 0
+        assert g["results"] == []
 
 
 def test_code_label_hit_carries_owning_variable(client):
     # "Man" is a value label on the kon binding's value set (seeded in conftest)
     # → a code hit annotated with its owning variable.
-    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Man"}).json(),
+        "classification_codes",
+    )
     hit = next(r for r in g["results"] if r["label"] == "Man")
     assert hit["type"] == "code"
     assert hit["code"] == "1"
@@ -224,7 +255,10 @@ def test_code_label_hit_carries_owning_variable(client):
 def test_code_hit_carries_owning_classification(client):
     # The "Man" code is also linked to the sun2020 classification (seeded in
     # conftest) → the hit carries a non-empty classification owner + count.
-    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Man"}).json(),
+        "classification_codes",
+    )
     hit = next(r for r in g["results"] if r["label"] == "Man")
     assert hit["classification_count"] >= 1
     owner = next(c for c in hit["classifications"] if c["fqid"] == "class/sun2020")
@@ -236,22 +270,39 @@ def test_code_shaped_query_well_formed(client):
     # path. The fixture has no "0180" code, so this asserts the group stays
     # well-formed (no 500); the code-match resolution itself is covered by the
     # reg_meta query-layer unit test.
-    g = _group(client.get("/api/search", params={"q": "0180"}).json(), "codes")
-    assert isinstance(g["results"], list)
+    body = client.get("/api/search", params={"q": "0180"}).json()
+    assert isinstance(_group(body, "classification_codes")["results"], list)
+    assert isinstance(_group(body, "register_value_sets")["results"], list)
 
 
 def test_code_hit_carries_code_system(client):
     # The "Man" code is owned by the sun2020 classification (short_name SUN2020),
     # so its inferred `code_system` is that short_name (#393 item 3).
-    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Man"}).json(),
+        "classification_codes",
+    )
     hit = next(r for r in g["results"] if r["label"] == "Man")
     assert hit["code_system"] == "SUN2020"
+
+
+def test_c12_code_hit_uses_icd_code_system(client):
+    g = _group(
+        client.get("/api/search", params={"q": "C12"}).json(),
+        "classification_codes",
+    )
+    hit = next(r for r in g["results"] if r["label"] == "Malign tumör i tungbas")
+    assert hit["code_system"] == "ICD-10-SE"
+    assert [c["fqid"] for c in hit["classifications"]] == ["class/icd-10-se"]
 
 
 def test_register_local_code_has_null_code_system(client):
     # A code with NO owning classification (the kvinna_only value, seeded as a
     # register-local value with no classification owner) has code_system == null.
-    g = _group(client.get("/api/search", params={"q": "Kvinna"}).json(), "codes")
+    g = _group(
+        client.get("/api/search", params={"q": "Kvinna"}).json(),
+        "register_value_sets",
+    )
     hit = next(
         r for r in g["results"] if r["label"] == "Kvinna" and not r["classifications"]
     )
@@ -262,12 +313,12 @@ def test_register_local_code_has_null_code_system(client):
 
 
 def test_code_shaped_query_surfaces_owning_classification(client):
-    # 'C12' is a code-shaped query (digit + len>=3) owned by the sun2020
-    # classification (seeded in conftest), matching no classification NAME. The
-    # classifications group must surface sun2020 via code-containment, navigable.
+    # 'C12' is a code-shaped query (digit + len>=3) owned by ICD-10-SE
+    # (seeded in conftest), matching no classification NAME. The classifications
+    # group must surface ICD-10-SE via code-containment, navigable.
     g = _group(client.get("/api/search", params={"q": "C12"}).json(), "classifications")
     fqids = [r["fqid"] for r in g["results"] if r["type"] == "classification"]
-    assert "class/sun2020" in fqids
+    assert "class/icd-10-se" in fqids
     assert g["total_count"] >= 1
 
 
@@ -327,7 +378,8 @@ def test_empty_query_returns_empty_groups(client):
         "registers",
         "variables",
         "classifications",
-        "codes",
+        "classification_codes",
+        "register_value_sets",
     }
     assert all(g["total_count"] == 0 and g["results"] == [] for g in body["groups"])
 
@@ -508,7 +560,7 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
             raise AssertionError("value search must not build delivery-column scope")
 
     client.app.state.catalog_index = ExplodingIndex()
-    calls: list[int | None] = []
+    calls: list[tuple[int | None, str]] = []
 
     def fake_search(
         _conn,
@@ -519,21 +571,26 @@ def test_value_search_requests_full_code_owner_list(client, monkeypatch):
         limit=50,
         fold_groups=True,
         code_variable_owner_limit=None,
+        code_owner_scope="all",
     ):
         assert query == "needle"
         assert field == "value"
         assert type == "value"
         assert limit == 1
         assert not fold_groups
-        calls.append(code_variable_owner_limit)
-        return SearchResults(total_count=1, results=(_code("1", variable_count=250),))
+        calls.append((code_variable_owner_limit, code_owner_scope))
+        if code_owner_scope == "register_local":
+            return SearchResults(
+                total_count=1, results=(_code("1", variable_count=250),)
+            )
+        return SearchResults(total_count=0, results=())
 
     monkeypatch.setattr(search_route, "reg_meta_search", fake_search)
 
     body = client.get("/api/search?q=needle&type=value&limit=1").json()
-    group = _group(body, "codes")
+    group = _group(body, "register_value_sets")
 
-    assert calls == [None]
+    assert calls == [(None, "classification"), (None, "register_local")]
     assert group["total_count"] == 1
     assert group["results"][0]["variable_count"] == 250
 
@@ -612,6 +669,372 @@ def test_limit_param_clamped_end_to_end(client):
     body = client.get("/api/search", params={"q": "kon", "limit": 1}).json()
     for g in body["groups"]:
         assert len(g["results"]) <= 1
+
+
+# ── top-results / best-bets (#393 items 6/7) ────────────────────────────────
+
+
+def test_top_results_group_precedes_typed_groups(client):
+    body = client.get("/api/search", params={"q": "C12"}).json()
+    assert [g["group"] for g in body["groups"]][:2] == ["top_results", "registers"]
+    top = _group(body, "top_results")
+    assert top["total_count"] >= len(top["results"])
+    assert top["results"]
+
+
+def test_single_candidate_search_omits_top_results(client):
+    body = client.get("/api/search", params={"q": "lisa"}).json()
+    assert "top_results" not in [g["group"] for g in body["groups"]]
+
+
+def test_scoped_search_omits_top_results(client):
+    body = client.get("/api/search", params={"q": "lisa", "type": "register"}).json()
+    assert [g["group"] for g in body["groups"]] == ["registers"]
+
+
+def test_top_results_exact_variable_beats_register_prior():
+    register = RegisterSearchResult(
+        fqid="scb/konj",
+        name="Konjunktur",
+        rank=-1.0,
+    )
+    variable = VariableSearchResult(
+        fqid="scb/lisa/kon",
+        name="Kön",
+        register="LISA",
+        rank=0.0,
+    )
+
+    top = _best_bets(
+        "kon",
+        [
+            RegisterSearchGroup(total_count=1, results=[register]),
+            VariableSearchGroup(total_count=1, results=[variable]),
+        ],
+        limit=2,
+    )
+
+    assert [r.type for r in top] == ["variable", "register"]
+
+
+def test_top_results_type_priors_break_non_exact_ties():
+    register = RegisterSearchResult(
+        fqid="scb/rams",
+        name="RAMS",
+        rank=0.0,
+    )
+    variable = VariableSearchResult(
+        fqid="scb/rams/syss",
+        name="Sysselsättning",
+        register="RAMS",
+        rank=0.0,
+    )
+    code = _code("1", variable_count=1)
+
+    top = _best_bets(
+        "arbetsmarknad",
+        [
+            RegisterValueSetSearchGroup(total_count=1, results=[code]),
+            VariableSearchGroup(total_count=1, results=[variable]),
+            RegisterSearchGroup(total_count=1, results=[register]),
+        ],
+        limit=3,
+    )
+
+    assert [r.type for r in top] == ["register", "variable", "code"]
+
+
+def test_top_results_group_member_exact_match_gets_boost():
+    register = RegisterSearchResult(
+        fqid="scb/konj",
+        name="Konjunktur",
+        rank=-1.0,
+    )
+    group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="scb/lisa/demografi",
+        group_label="Demografi",
+        register="LISA",
+        member_count=2,
+        matched_count=1,
+        members=(
+            ConceptGroupMember(fqid="scb/lisa/kon", name="Kön", facets=()),
+            ConceptGroupMember(fqid="scb/lisa/alder", name="Ålder", facets=()),
+        ),
+        rank=0.0,
+    )
+
+    top = _best_bets(
+        "kon",
+        [
+            RegisterSearchGroup(total_count=1, results=[register]),
+            VariableSearchGroup(total_count=1, results=[group]),
+        ],
+        limit=2,
+    )
+
+    assert top == [group, register]
+
+
+def test_top_results_keeps_golden_pins_first():
+    pin = RegisterSearchResult(
+        fqid="scb/aku",
+        name="Arbetskraftsundersökningarna",
+        rank=0.0,
+    )
+    exact = VariableSearchResult(
+        fqid="scb/rams/syss",
+        name="Sysselsättning",
+        register="RAMS",
+        rank=-10.0,
+    )
+
+    top = _best_bets(
+        "sysselsättning",
+        [
+            RegisterSearchGroup(total_count=1, results=[pin]),
+            VariableSearchGroup(total_count=1, results=[exact]),
+        ],
+        limit=2,
+    )
+
+    assert top == [pin, exact]
+
+
+def test_top_results_keep_same_key_groups_from_different_registers():
+    iot_group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="tfoab",
+        group_label="Transfereringar",
+        register="IoT",
+        member_count=1,
+        matched_count=1,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/iot/tfoab01", name="Transfereringar", facets=()
+            ),
+        ),
+        rank=0.0,
+    )
+    lisa_group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="tfoab",
+        group_label="Transfereringar",
+        register="LISA",
+        member_count=1,
+        matched_count=1,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/lisa/tfoab01", name="Transfereringar", facets=()
+            ),
+        ),
+        rank=0.0,
+    )
+
+    top = _best_bets(
+        "transfereringar",
+        [VariableSearchGroup(total_count=2, results=[iot_group, lisa_group])],
+        limit=5,
+    )
+
+    assert top == [iot_group, lisa_group]
+
+
+def test_top_results_direct_group_label_match_beats_prefix_leaves():
+    leaves = [
+        VariableSearchResult(
+            fqid=f"scb/register-{i}/disponibel-inkomst",
+            name="Disponibel inkomst",
+            register=f"Register {i}",
+            rank=-10.0 - i,
+        )
+        for i in range(6)
+    ]
+    group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="disponibel-inkomst",
+        group_label="Disponibel inkomst",
+        register="IoT",
+        member_count=53,
+        matched_count=36,
+        label_matched=True,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/iot/disponibel-inkomst",
+                name="Disponibel inkomst",
+                facets=(),
+            ),
+        ),
+        rank=-12.0,
+    )
+
+    ranked = _rank_display_results("disponibel", [*leaves, group])
+    top = _best_bets(
+        "disponibel",
+        [VariableSearchGroup(total_count=7, results=ranked)],
+        limit=5,
+    )
+
+    assert ranked[0] == group
+    assert top[0] == group
+
+
+def test_top_results_deduplicates_group_members_before_limit():
+    member_leaves = [
+        VariableSearchResult(
+            fqid=f"scb/iot/disp-{i}",
+            name=f"Disponibel inkomst member {i}",
+            register="IoT",
+            rank=-10.0 - i,
+        )
+        for i in range(6)
+    ]
+    fillers = [
+        VariableSearchResult(
+            fqid=f"scb/lisa/disp-{i}",
+            name=f"Disponibel inkomst filler {i}",
+            register="LISA",
+            rank=-20.0 - i,
+        )
+        for i in range(5)
+    ]
+    group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="disponibel-inkomst",
+        group_label="Disponibel inkomst",
+        register="IoT",
+        member_count=len(member_leaves),
+        matched_count=len(member_leaves),
+        label_matched=True,
+        members=tuple(
+            ConceptGroupMember(fqid=leaf.fqid, name=leaf.name, facets=())
+            for leaf in member_leaves
+            if leaf.fqid is not None
+        ),
+        rank=-9.0,
+    )
+
+    top = _best_bets(
+        "disp",
+        [
+            VariableSearchGroup(
+                total_count=1 + len(member_leaves) + len(fillers),
+                results=[group, *member_leaves, *fillers],
+            )
+        ],
+        limit=5,
+    )
+
+    assert top == [group, *fillers[:4]]
+
+
+def test_top_results_exact_leaf_still_beats_group_authority_bonus():
+    exact = VariableSearchResult(
+        fqid="scb/lisa/kon",
+        name="Kön",
+        register="LISA",
+        rank=-10.0,
+    )
+    broad_group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="kontroll",
+        group_label="Kontroll",
+        register="IoT",
+        member_count=80,
+        matched_count=80,
+        label_matched=True,
+        members=(
+            ConceptGroupMember(fqid="scb/iot/kontroll", name="Kontroll", facets=()),
+        ),
+        rank=-9.0,
+    )
+
+    top = _best_bets(
+        "kon",
+        [VariableSearchGroup(total_count=2, results=[broad_group, exact])],
+        limit=2,
+    )
+
+    assert top == [exact, broad_group]
+
+
+def test_display_ranking_matches_best_bet_exact_boost():
+    broad = VariableSearchResult(
+        fqid="scb/lsum/ftgsni200",
+        name="Näringsgren, huvudsaklig",
+        register="LSUM",
+        rank=-10.0,
+    )
+    exact = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="naringsgren",
+        group_label="Näringsgren",
+        register="LCS",
+        member_count=2,
+        matched_count=2,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/lcs/naringsgren", name="Näringsgren", facets=()
+            ),
+            ConceptGroupMember(fqid="scb/lcs/sni", name="Näringsgren", facets=()),
+        ),
+        rank=-9.0,
+    )
+
+    ranked = _rank_display_results("näringsgren", [broad, exact])
+
+    assert ranked == [exact, broad]
+
+
+def test_display_ranking_keeps_golden_pins_first():
+    pin = RegisterSearchResult(
+        fqid="sos/par",
+        name="Patientregistret",
+        rank=0.0,
+    )
+    exact = RegisterSearchResult(
+        fqid="scb/diagnos",
+        name="Diagnos",
+        rank=-10.0,
+    )
+
+    ranked = _rank_display_results("diagnos", [pin, exact])
+
+    assert ranked == [pin, exact]
+
+
+def test_top_results_keeps_distinct_null_fqid_leaves():
+    first = VariableSearchResult(
+        fqid=None,
+        name="Unresolved first",
+        register="LISA",
+        rank=0.0,
+    )
+    second = VariableSearchResult(
+        fqid=None,
+        name="Unresolved second",
+        register="LISA",
+        rank=1.0,
+    )
+
+    top = _best_bets(
+        "unresolved",
+        [VariableSearchGroup(total_count=2, results=[first, second])],
+        limit=5,
+    )
+
+    assert top == [first, second]
+
+
+def test_best_bet_score_folds_diacritics_for_exact_matches():
+    variable = VariableSearchResult(
+        fqid="scb/lisa/kon",
+        name="Kön",
+        register="LISA",
+        rank=0.0,
+    )
+
+    assert _best_bet_score("kon", variable) >= 1000
 
 
 # ── golden-boost: curated-pin injection (#393 item 4 / #311) ─────────────────

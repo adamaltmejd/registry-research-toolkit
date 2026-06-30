@@ -536,9 +536,10 @@ class ValidationResultModel(BaseModel):
 # ── Global catalog search (#350; see DESIGN.md → Global catalog search) ──────
 # `GET /api/search` returns TYPED RESULT GROUPS over the shipped FTS5 indexes
 # (register_fts / variable_fts / classification_fts). THE GROUP LIST IS THE
-# EXTENSION POINT: codes (#352) DID join as a new arm of the `SearchGroup` union
-# (+ result model, own `group` literal) — the codes group is part of this
-# endpoint. Docs (#354) deliberately did NOT join: its separate-optional-DB +
+# EXTENSION POINT: value/code search (#352) DID join as two arms of the
+# `SearchGroup` union (+ result model, own `group` literals) — classification
+# codes and register-local value sets are part of this endpoint. Docs (#354)
+# deliberately did NOT join: its separate-optional-DB +
 # `ingested` degradation doesn't map onto a group's `total_count`/`results`
 # shape, so docs is served by the SEPARATE optional `GET /api/docs/search`
 # endpoint that the SPA consumes directly as a 5th group + the `/doc/<filename>`
@@ -596,22 +597,55 @@ class ClassificationSearchGroup(BaseModel):
     results: list[ClassificationSearchItem]
 
 
-class CodeSearchGroup(BaseModel):
-    """The `codes` result group (#352). `total_count` is the result count before
-    the per-group display limit (so the SPA can show "showing N of M")."""
+class ClassificationCodeSearchGroup(BaseModel):
+    """The `classification_codes` result group (#352/#393). `total_count` is the
+    result count before the per-group display limit (so the SPA can show
+    "showing N of M")."""
 
-    group: Literal["codes"] = "codes"
+    group: Literal["classification_codes"] = "classification_codes"
     total_count: int
     results: list[CodeSearchResult]
 
 
-# The extension seam: append `DocSearchGroup` (#354) arms here — each a new
-# `group` literal with its own result model — without touching the others.
+class RegisterValueSetSearchGroup(BaseModel):
+    """The `register_value_sets` result group (#352/#393): register-local value
+    codes with no owning classification."""
+
+    group: Literal["register_value_sets"] = "register_value_sets"
+    total_count: int
+    results: list[CodeSearchResult]
+
+
+TopSearchItem = Annotated[
+    RegisterSearchResult
+    | VariableSearchResult
+    | ClassificationSearchResult
+    | ClassificationSuccessionSearchResult
+    | ConceptGroupSearchResult
+    | CodeSearchResult,
+    Field(discriminator="type"),
+]
+
+
+class TopSearchGroup(BaseModel):
+    """Cross-group best-bets (#393 item 6): the strongest rows from the typed
+    groups, scored with exact-match boosts and type priors. The original typed
+    groups remain unchanged below it."""
+
+    group: Literal["top_results"] = "top_results"
+    total_count: int
+    results: list[TopSearchItem]
+
+
+# The extension seam: append new `group` literal arms here — each a new
+# `SearchGroup` member + result model — without touching the others.
 SearchGroup = Annotated[
-    RegisterSearchGroup
+    TopSearchGroup
+    | RegisterSearchGroup
     | VariableSearchGroup
     | ClassificationSearchGroup
-    | CodeSearchGroup,
+    | ClassificationCodeSearchGroup
+    | RegisterValueSetSearchGroup,
     Field(discriminator="group"),
 ]
 
