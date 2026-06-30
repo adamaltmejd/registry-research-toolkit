@@ -131,6 +131,13 @@ def _fqid_leaf(value: object | None) -> str | None:
     return parts[-1] if parts and parts[-1] else None
 
 
+def _fqid_scope(value: object | None) -> str | None:
+    if value is None:
+        return None
+    parts = str(value).split("/")
+    return "/".join(parts[:2]) if len(parts) >= 2 and all(parts[:2]) else None
+
+
 def _candidate_identity_texts(result: SearchResult) -> tuple[str, ...]:
     texts: list[object] = []
     if result.type == "register":
@@ -237,7 +244,17 @@ def _rank_display_results(
 
 def _top_candidate_key(result: SearchResult, group_order: int, row_order: int) -> str:
     if result.type == "group":
-        return f"group:{result.kind}:{result.group_key}"
+        if result.kind == "classification":
+            return f"group:{result.kind}:{result.group_key}"
+        scopes = sorted(
+            scope
+            for scope in {_fqid_scope(member.fqid) for member in result.members}
+            if scope is not None
+        )
+        scope_key = (
+            ",".join(scopes) if scopes else f"unresolved:{group_order}:{row_order}"
+        )
+        return f"group:{result.kind}:{scope_key}:{result.group_key}"
     if result.type == "code":
         return f"code:{result.code}:{result.label}:{result.code_system}"
     fqid = getattr(result, "fqid", None)

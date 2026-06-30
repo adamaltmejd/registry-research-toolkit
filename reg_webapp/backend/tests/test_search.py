@@ -742,6 +742,45 @@ def test_top_results_group_member_exact_match_gets_boost():
     assert top == [group, register]
 
 
+def test_top_results_keep_same_key_groups_from_different_registers():
+    iot_group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="tfoab",
+        group_label="Transfereringar",
+        register="IoT",
+        member_count=1,
+        matched_count=1,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/iot/tfoab01", name="Transfereringar", facets=()
+            ),
+        ),
+        rank=0.0,
+    )
+    lisa_group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="tfoab",
+        group_label="Transfereringar",
+        register="LISA",
+        member_count=1,
+        matched_count=1,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/lisa/tfoab01", name="Transfereringar", facets=()
+            ),
+        ),
+        rank=0.0,
+    )
+
+    top = _best_bets(
+        "transfereringar",
+        [VariableSearchGroup(total_count=2, results=[iot_group, lisa_group])],
+        limit=5,
+    )
+
+    assert top == [iot_group, lisa_group]
+
+
 def test_display_ranking_matches_best_bet_exact_boost():
     broad = VariableSearchResult(
         fqid="scb/lsum/ftgsni200",
