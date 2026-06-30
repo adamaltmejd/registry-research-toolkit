@@ -48,7 +48,12 @@ _PLAN_SPEC.loader.exec_module(_plan_sequence)
 
 
 def run_cmd(cmd: list[str]) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True)
+    except FileNotFoundError as exc:
+        raise SystemExit(
+            f"missing executable for cos-preflight command {cmd[0]!r}: {exc}"
+        ) from exc
 
 
 def require_canonical(canonical: Path | None) -> None:

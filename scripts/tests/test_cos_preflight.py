@@ -10,6 +10,8 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import pytest
+
 _SCRIPTS = Path(__file__).resolve().parents[1]
 _SPEC = importlib.util.spec_from_file_location(
     "cos_preflight", _SCRIPTS / "cos_preflight.py"
@@ -84,6 +86,18 @@ def test_checks_verdict_buckets() -> None:
         )
         == "passing"
     )
+
+
+def test_missing_executable_maps_to_setup_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def missing(_cmd, **_kwargs):
+        raise FileNotFoundError("gh")
+
+    monkeypatch.setattr(cpf.subprocess, "run", missing)
+
+    with pytest.raises(SystemExit, match="missing executable"):
+        cpf.run_cmd(["gh", "version"])
 
 
 def test_repeated_snapshot_is_idle() -> None:
