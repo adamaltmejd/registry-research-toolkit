@@ -283,6 +283,16 @@ class _TopCandidate:
     result: SearchResult
 
 
+def _grouped_variable_member_fqids(candidates: list[_TopCandidate]) -> set[str]:
+    fqids: set[str] = set()
+    for candidate in candidates:
+        result = candidate.result
+        if result.type == "group" and result.kind == "variable":
+            for member in result.members:
+                fqids.add(str(member.fqid))
+    return fqids
+
+
 def _best_bets(
     query: str, groups: list[SearchGroup], *, limit: int
 ) -> list[TopSearchItem]:
@@ -329,7 +339,19 @@ def _best_bets(
             candidate.row_order,
         ),
     )
-    return [cast("TopSearchItem", candidate.result) for candidate in ranked[:limit]]
+    grouped_members = _grouped_variable_member_fqids(ranked)
+    visible_ranked = [
+        candidate
+        for candidate in ranked
+        if not (
+            candidate.result.type == "variable"
+            and candidate.result.fqid is not None
+            and str(candidate.result.fqid) in grouped_members
+        )
+    ]
+    return [
+        cast("TopSearchItem", candidate.result) for candidate in visible_ranked[:limit]
+    ]
 
 
 def _scope_to_fqids(

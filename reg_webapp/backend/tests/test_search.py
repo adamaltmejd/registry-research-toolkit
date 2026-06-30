@@ -879,6 +879,55 @@ def test_top_results_direct_group_label_match_beats_prefix_leaves():
     assert top[0] == group
 
 
+def test_top_results_deduplicates_group_members_before_limit():
+    member_leaves = [
+        VariableSearchResult(
+            fqid=f"scb/iot/disp-{i}",
+            name=f"Disponibel inkomst member {i}",
+            register="IoT",
+            rank=-10.0 - i,
+        )
+        for i in range(6)
+    ]
+    fillers = [
+        VariableSearchResult(
+            fqid=f"scb/lisa/disp-{i}",
+            name=f"Disponibel inkomst filler {i}",
+            register="LISA",
+            rank=-20.0 - i,
+        )
+        for i in range(5)
+    ]
+    group = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="disponibel-inkomst",
+        group_label="Disponibel inkomst",
+        register="IoT",
+        member_count=len(member_leaves),
+        matched_count=len(member_leaves),
+        label_matched=True,
+        members=tuple(
+            ConceptGroupMember(fqid=leaf.fqid, name=leaf.name, facets=())
+            for leaf in member_leaves
+            if leaf.fqid is not None
+        ),
+        rank=-9.0,
+    )
+
+    top = _best_bets(
+        "disp",
+        [
+            VariableSearchGroup(
+                total_count=1 + len(member_leaves) + len(fillers),
+                results=[group, *member_leaves, *fillers],
+            )
+        ],
+        limit=5,
+    )
+
+    assert top == [group, *fillers[:4]]
+
+
 def test_top_results_exact_leaf_still_beats_group_authority_bonus():
     exact = VariableSearchResult(
         fqid="scb/lisa/kon",
