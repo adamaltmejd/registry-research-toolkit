@@ -2432,6 +2432,20 @@ describe("SearchView — codes grouped by code system (#393 item 3)", () => {
     await expect
       .element(page.getByRole("link", { name: "SUN2020" }))
       .toHaveAttribute("href", "/catalog/class/sun2020");
+    const systemHeading = document.querySelector<HTMLElement>(
+      ".code-system-heading a",
+    );
+    const firstCodeCell = document.querySelector<HTMLElement>(
+      ".children.table.codes .code-cell",
+    );
+    expect(systemHeading).not.toBeNull();
+    expect(firstCodeCell).not.toBeNull();
+    expect(
+      Math.abs(
+        Math.round(systemHeading?.getBoundingClientRect().left ?? 0) -
+          Math.round(firstCodeCell?.getBoundingClientRect().left ?? 0),
+      ),
+    ).toBeLessThanOrEqual(1);
     // Register-local values render in their own bubble, not as a nested
     // "Register-local" subsection under classification codes.
     await expect

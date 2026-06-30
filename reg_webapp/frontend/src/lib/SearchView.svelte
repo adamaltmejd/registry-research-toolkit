@@ -1239,8 +1239,10 @@ function closeSearch(): void {
     border-top: 1px solid var(--border);
   }
   .code-system-heading {
+    box-sizing: border-box;
     margin: 0;
-    padding: var(--space-2) var(--space-4) var(--space-1);
+    padding: var(--space-2) var(--search-row-inline) var(--space-1);
+    border-left: var(--search-subrow-gutter) solid transparent;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     font-size: var(--text-sm);
