@@ -274,10 +274,18 @@ def actionable_reasons(
         for pr in snapshot["prs"]
         if pr["gate"]["state"] == "current-ready" and not pr["draft"]
     ]
+    draft_ready = [
+        pr
+        for pr in snapshot["prs"]
+        if pr["gate"]["state"] == "current-ready" and pr["draft"]
+    ]
     stale = [pr for pr in snapshot["prs"] if pr["gate"]["state"] == "stale-ready"]
     if ready and (previous is None or previous.get("prs") != snapshot["prs"]):
         nums = ", ".join(f"#{pr['number']}" for pr in ready)
         reasons.append(f"ready merge-gate PR changed: {nums}")
+    if draft_ready and (previous is None or previous.get("prs") != snapshot["prs"]):
+        nums = ", ".join(f"#{pr['number']}" for pr in draft_ready)
+        reasons.append(f"draft PR has ready merge-gate block: {nums}")
     if stale and (previous is None or previous.get("prs") != snapshot["prs"]):
         nums = ", ".join(f"#{pr['number']}" for pr in stale)
         reasons.append(f"stale merge-gate PR changed: {nums}")

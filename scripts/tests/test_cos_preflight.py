@@ -175,6 +175,33 @@ def test_ready_gate_wakes_on_first_observation() -> None:
     assert cpf.actionable_reasons(snap, None) == ["ready merge-gate PR changed: #956"]
 
 
+def test_draft_ready_gate_wakes_on_first_observation() -> None:
+    snap = _snapshot(
+        prs=[
+            {
+                "number": 956,
+                "issues": [742],
+                "head": HEAD,
+                "draft": True,
+                "mergeable": "MERGEABLE",
+                "checks": "passing",
+                "check_runs": [],
+                "gate": {
+                    "state": "current-ready",
+                    "status": "ready-to-merge",
+                    "head": HEAD,
+                    "current": True,
+                },
+                "codex_signal": "clean",
+            }
+        ]
+    )
+
+    assert cpf.actionable_reasons(snap, None) == [
+        "draft PR has ready merge-gate block: #956"
+    ]
+
+
 def test_remote_main_change_wakes() -> None:
     previous = _snapshot(remote="old")
     snap = _snapshot(remote="new")
