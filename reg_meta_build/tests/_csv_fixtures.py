@@ -147,6 +147,7 @@ def _var_row(
     data_type: str = "int",
     data_length: str = "1",
     varopdef: str = "",
+    varsource: str = "",
 ) -> str:
     """A Registerinformation row for register TESTREG (register_id 1, variant
     register_variant_id 10), varying only the fields triage keys on. Shared by
@@ -161,7 +162,8 @@ def _var_row(
 
     `varopdef` sets the per-row `VariabelOperationell_definition` cell (default
     empty) — used to verify each split sibling carries ITS column's operational
-    definition (#892)."""
+    definition (#892). `varsource` sets `VariabelRegister_Källa` for source
+    attribution/coalescing regressions."""
     return _ri_row(
         "TESTREG",
         "Testregistret",
@@ -188,7 +190,7 @@ def _var_row(
         varopdef,
         "",
         "",
-        "",
+        varsource,
         "",
         "",
         colname,

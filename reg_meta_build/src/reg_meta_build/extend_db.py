@@ -588,8 +588,9 @@ def _insert_core_graph(
                     "INSERT INTO variable_state "
                     "(state_id, variable_id, register_variant_id, valid_from, "
                     " valid_to, data_type, data_length, delivery_column_name, "
-                    " value_set_id, value_set_version_label, classification_id) "
-                    "VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NULL, '', NULL)",
+                    " source_register_text, value_set_id, value_set_version_label, "
+                    " classification_id) "
+                    "VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NULL, NULL, '', NULL)",
                     (
                         state_id,
                         variable_id,

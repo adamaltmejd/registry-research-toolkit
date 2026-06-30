@@ -100,6 +100,46 @@ def _first_non_empty(current: str | None, candidate: str) -> str | None:
     return candidate or current
 
 
+_OPAQUE_SOURCE_CODE_RE = re.compile(r"^[A-Za-z]\d+[A-Za-z0-9]*$")
+
+
+def _is_opaque_source_code(value: str) -> bool:
+    """True for bare SCB source/questionnaire codes such as ``E22``.
+
+    These tokens are source metadata, not explanatory operational-definition prose.
+    """
+    return bool(_OPAQUE_SOURCE_CODE_RE.fullmatch(value.strip()))
+
+
+def _operational_definition_text(value: str) -> str:
+    return "" if _is_opaque_source_code(value) else value
+
+
+def _source_register_text(
+    variabelregister_kalla: str, operationell_definition: str
+) -> str:
+    opaque_code = (
+        operationell_definition
+        if _is_opaque_source_code(operationell_definition)
+        else ""
+    )
+    parts = [part for part in (variabelregister_kalla, opaque_code) if part]
+    if parts:
+        return " / ".join(parts)
+    return ""
+
+
+def _variable_source_register_text(variabelregister_kalla: str) -> str:
+    """Variable-grain source text eligible for source-register resolution.
+
+    Opaque operational-definition codes are state-grain questionnaire/source metadata,
+    not register-level lineage signals.
+    """
+    if variabelregister_kalla and not _is_opaque_source_code(variabelregister_kalla):
+        return variabelregister_kalla
+    return ""
+
+
 # SCB encodes the unika flag columns as '1'/'0' (and defensively 'Ja'/'Nej' —
 # see `_populate_sensitivity_flags`). Truthy wins so a sensitivity flag is
 # never dropped when two rows collapse onto one `unika_summary` PK.
@@ -233,8 +273,17 @@ def _import_registerinformation(
             variabelnamn = row["Variabelnamn"].strip()
             variabeldefinition = row["Variabeldefinition"].strip()
             variabelbeskrivning = row["Variabelbeskrivning"].strip()
-            operationell_definition = row["VariabelOperationell_definition"].strip()
             variabelregister_kalla = row["VariabelRegister_Källa"].strip()
+            raw_operationell_definition = row["VariabelOperationell_definition"].strip()
+            operationell_definition = _operational_definition_text(
+                raw_operationell_definition
+            )
+            source_register_text = _source_register_text(
+                variabelregister_kalla, raw_operationell_definition
+            )
+            variable_source_register_text = _variable_source_register_text(
+                variabelregister_kalla
+            )
             mattenhet = row["Mattenhet"].strip()
 
             registers.setdefault(
@@ -299,10 +348,13 @@ def _import_registerinformation(
                     "name": variabelnamn,
                     "definition": variabeldefinition,
                     "description": variabelbeskrivning,
-                    "source_register_text": variabelregister_kalla,
+                    "source_register_text": "",
+                    "_source_register_texts": set(),
                     "measurement_unit": mattenhet,
                 },
             )
+            if variable_source_register_text:
+                var["_source_register_texts"].add(variable_source_register_text)
             # Fill empty fields from later rows. Values are the trimmed
             # read-boundary locals above; `_first_non_empty` treats the
             # now-empty (was whitespace-only) values as empty, so a clean
@@ -312,7 +364,6 @@ def _import_registerinformation(
                 ("name", variabelnamn),
                 ("definition", variabeldefinition),
                 ("description", variabelbeskrivning),
-                ("source_register_text", variabelregister_kalla),
                 ("measurement_unit", mattenhet),
             ]:
                 var[tgt] = _first_non_empty(var[tgt], val)
@@ -339,10 +390,14 @@ def _import_registerinformation(
                     # first-non-empty across the cvid's rows below, since SCB may
                     # leave it blank on the first row and fill it on a later one.
                     "operational_definition": operationell_definition,
+                    "source_register_text": source_register_text,
                 },
             )
             inst["operational_definition"] = _first_non_empty(
                 inst["operational_definition"], operationell_definition
+            )
+            inst["source_register_text"] = _first_non_empty(
+                inst["source_register_text"], source_register_text
             )
 
             # Kolumnnamn (#364): trim at the read boundary like the name
@@ -389,9 +444,20 @@ def _import_registerinformation(
     _progress("Resolving source registers...")
     name_lookup, abbrev_lookup = _build_register_lookup(registers)
     for var in variables.values():
-        src_id, src_label = _resolve_source_register(
-            var["source_register_text"], name_lookup, abbrev_lookup
-        )
+        source_texts = sorted(var.pop("_source_register_texts"))
+        var["source_register_text"] = ""
+        src_id = None
+        src_label = None
+        resolved_sources = [
+            (text, *_resolve_source_register(text, name_lookup, abbrev_lookup))
+            for text in source_texts
+        ]
+        if len(resolved_sources) == 1:
+            var["source_register_text"], src_id, src_label = resolved_sources[0]
+        elif resolved_sources and all(item[1] is not None for item in resolved_sources):
+            resolved_ids = {item[1] for item in resolved_sources}
+            if len(resolved_ids) == 1:
+                var["source_register_text"], src_id, src_label = resolved_sources[0]
         var["source_register_id"] = src_id
         var["source_label"] = src_label
 
@@ -440,9 +506,10 @@ def _import_registerinformation(
     conn.executemany(
         "INSERT INTO variable_instance "
         "(cvid, register_id, register_variant_id, regver_id, var_id, variabelnamn, "
-        " data_type, data_length, operational_definition) "
+        " data_type, data_length, operational_definition, source_register_text) "
         "VALUES (:cvid, :register_id, :register_variant_id, :regver_id, "
-        ":var_id, :variabelnamn, :data_type, :data_length, :operational_definition)",
+        ":var_id, :variabelnamn, :data_type, :data_length, :operational_definition, "
+        ":source_register_text)",
         list(instances.values()),
     )
     # A2.7: cvid-grained alias staging; projected onto the shipped
@@ -785,6 +852,7 @@ class _StateGroup:
     data_length: str | None
     value_set_id: int | None
     value_set_version_label: str | None
+    source_register_text: str | None = None
     # grain is part of the *group key* (gkey position 7), not stored here.
     unika_min: int | None = None
     unika_max: int | None = None
@@ -870,7 +938,7 @@ class _StateGroup:
 # Build-time triage (see DESIGN.md → Build-time triage (SCB))
 # ─────────────────────────────────────────────────────────────────────────
 # The coalescer groups variable_instance rows into pre-triage states (one per
-# shape/grain/column 9-tuple). A single source `var_id` can carry several
+# shape/grain/column/source-text 10-tuple). A single source `var_id` can carry several
 # states that collide on the universal invariant key
 # (variable_id, register_variant_id, valid_from, value_set_version_label).
 # Triage resolves every such collision three ways so the uniqueness
@@ -963,6 +1031,16 @@ def _group_from_year(grp: _StateGroup) -> int | None:
     bucket. The coarser key only ever groups MORE rows together, so it can never
     under-protect the `(variable_id, register_variant_id, valid_from, label)` index."""
     return grp.regver_min if grp.regver_min is not None else grp.unika_min
+
+
+def _latest_regver_id(grp: _StateGroup) -> int:
+    """Latest raw SCB edition id observed for a coalesced state group."""
+    return max(grp.regvers, default=-1)
+
+
+def _source_only_same_column_drift(left: tuple, right: tuple) -> bool:
+    """True when two state gkeys differ only by source-register attribution."""
+    return left[:9] == right[:9] and (left[9] or "") != (right[9] or "")
 
 
 @dataclass
@@ -1283,14 +1361,14 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     path emits a contiguous `[min, max]` span, so there `[min, max]` subsumption
     is real emitted overlap; timeline partitions (distinct value sets) de-overlap
     per-year already and are left to the materializer (`_spans_overlap` gates
-    this). Within each fast-path partition, same-(column, value set, label)
-    groups are swept ascending by lower bound against a running "container": a
-    group fully inside the container is DROPPED (its coverage is redundant); a
-    group that starts inside it but extends past range-CLAMPS the container
-    (`res.clamped_to`) to end the year before this group begins, then becomes the
-    new container — never touching `regver_min`/valid_from, so the index keys
-    stay stable. Distinct value sets are the timeline/validator's domain and are
-    never reconciled here."""
+    this). Within each fast-path partition, same-(column, value set, emitted label,
+    source text) groups are swept ascending by lower bound against a running
+    "container": a group fully inside the container is DROPPED (its coverage is
+    redundant); a group that starts inside it but extends past range-CLAMPS the
+    container (`res.clamped_to`) to end the year before this group begins, then becomes
+    the new container — never touching `regver_min`/valid_from, so the index keys stay
+    stable. Distinct value sets are the timeline/validator's domain and are never
+    reconciled here."""
     scopes: dict[tuple, list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
         if gkey in res.dropped:
@@ -1311,25 +1389,34 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
             scope_gkeys,
             key=lambda gk: (
                 -(groups[gk].regver_max or -1),
+                -_latest_regver_id(groups[gk]),
                 tuple("" if x is None else str(x) for x in gk),
             ),
         )
         used: set[str] = set()
+        kept_by_label: dict[str, list[tuple]] = defaultdict(list)
         for gk in ordered:
             grp = groups[gk]
             preferred = _preferred_label(gk, grp, res)
-            if preferred and preferred not in used:
+            kept = kept_by_label[preferred]
+            if preferred not in used:
                 used.add(preferred)
                 res.labels[gk] = preferred
+                kept.append(gk)
+            elif any(_source_only_same_column_drift(gk, kept_gk) for kept_gk in kept):
+                # Source-only drift is state-grain provenance, not uninformative
+                # shape drift. Keep it for the timeline arbiter; same-period
+                # collisions collapse there by latest edition, while any
+                # existing interval-grain separation remains available.
+                res.labels[gk] = preferred
+                kept.append(gk)
             elif preferred:  # meaningful token already taken → disambiguate
                 n = 1
                 while f"{preferred}-{n}" in used:
                     n += 1
                 used.add(f"{preferred}-{n}")
                 res.labels[gk] = f"{preferred}-{n}"
-            elif "" not in used:  # first uninformative state keeps ''
-                used.add("")
-                res.labels[gk] = ""
+                kept_by_label[f"{preferred}-{n}"].append(gk)
             else:  # uninformative drift that can't be distinguished → drop
                 res.dropped.add(gk)
 
@@ -1348,20 +1435,28 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     for part_gkeys in fp_partitions.values():
         if len(part_gkeys) <= 1 or _spans_overlap(groups, part_gkeys):
             continue  # singleton, or a timeline partition the materializer owns
-        # Sub-group by (delivery column, value set, EMITTED label): only the SAME
-        # column carrying the SAME coding under the SAME emitted label can be
-        # temporal drift. `latest_alias` is the emitted `delivery_column_name`
-        # (None matches None). The label MUST be the materializer's emitted formula
-        # (`_append_state`: `res.labels.get(gk, value_set_version_label)`), NOT pass
-        # 1's grain-aware `_preferred_label`: the materializer never applies the
-        # grain token, so keying on it would wrongly merge distinct
-        # `value_set_version_label` vintages that share codes + grain (e.g.
-        # "SSYK2012"/"SSYK2012rev") and collapse one the materializer ships intact.
+        # Sub-group by (delivery column, value set, EMITTED label, source text):
+        # only the SAME column carrying the SAME coding under the SAME emitted label
+        # and source attribution can be temporal drift. `latest_alias` is the emitted
+        # `delivery_column_name` (None matches None). The label MUST be the
+        # materializer's emitted formula (`_append_state`: `res.labels.get(gk,
+        # value_set_version_label)`), NOT pass 1's grain-aware `_preferred_label`: the
+        # materializer never applies the grain token, so keying on it would wrongly
+        # merge distinct `value_set_version_label` vintages that share codes + grain
+        # (e.g. "SSYK2012"/"SSYK2012rev") and collapse one the materializer ships
+        # intact.
         subgroups: dict[tuple, list[tuple]] = defaultdict(list)
         for gk in part_gkeys:
             grp = groups[gk]
             emitted_label = res.labels.get(gk, grp.value_set_version_label or "")
-            subgroups[(grp.latest_alias, grp.value_set_id, emitted_label)].append(gk)
+            subgroups[
+                (
+                    grp.latest_alias,
+                    grp.value_set_id,
+                    emitted_label,
+                    grp.source_register_text or "",
+                )
+            ].append(gk)
 
         for sub_gkeys in subgroups.values():
             if len(sub_gkeys) <= 1:
@@ -1864,11 +1959,22 @@ def _resolve_year_winners(
     drafts from), not the raw source `value_set_version_label` (which a
     fold/collapse may relabel).
     """
+    source_texts_by_col: dict[str, set[str]] = defaultdict(set)
+    for gk in cands:
+        source_texts_by_col[gk[8]].add(groups[gk].source_register_text or "")
+    source_drift_cols = {
+        col
+        for col, source_texts in source_texts_by_col.items()
+        if len(source_texts) > 1
+    }
+
     hooks = SweepHooks(
         window=lambda gk: (groups[gk].claims[year].lo, groups[gk].claims[year].hi),
         column=lambda gk: gk[8],
         sort_key=_gk_sort_key,
-        coded=lambda gk: groups[gk].value_set_id is not None,
+        coded=lambda gk: (
+            groups[gk].value_set_id is not None or gk[8] in source_drift_cols
+        ),
         single_coding=lambda pool: _pool_single_coding(
             pool, groups, codes_fn, code_labels_fn
         ),
@@ -1888,12 +1994,17 @@ def _pool_single_coding(
 ) -> bool:
     """True iff this column-period pool is ONE drifted coding — the pool-level
     identity verdict (DESIGN.md → drift conflation). Mirrors the cascade's own
-    identity predicates verbatim: at most one distinct non-null value set; or
-    one source label across the coded groups; or every pairwise symmetric code
-    diff within `_COSMETIC_MAX_SYM` with no shared-code relabel. Deliberately
+    identity predicates verbatim, except source-register drift is state-grain
+    provenance and must keep interval ownership available: at most one distinct
+    non-null value set; or one source label across the coded groups; or every
+    pairwise symmetric code diff within `_COSMETIC_MAX_SYM` with no shared-code
+    relabel. Deliberately
     set-level, not a pairwise transitive closure — an A~B~C chain whose A↔C
     diff exceeds the threshold does NOT conflate, exactly as the cascade's
     cosmetic step refuses it."""
+    source_texts = {groups[gk].source_register_text or "" for gk in pool}
+    if len(source_texts) > 1:
+        return False
     vss = sorted({vs for gk in pool if (vs := groups[gk].value_set_id) is not None})
     if len(vss) <= 1:
         return True
@@ -2140,13 +2251,14 @@ def _shared_code_relabeled(
 
 def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tuple:
     """Deterministic representative among gkeys sharing a value set: the
-    latest-era group (highest `regver_max`), ties broken by the stringified gkey
-    (a raw gkey carries `value_set_id: int | None`, so a None-vs-int compare would
-    raise; stringify each element)."""
+    latest-era group (highest `regver_max`), then the latest raw SCB edition id,
+    then the stringified gkey (a raw gkey carries `value_set_id: int | None`, so a
+    None-vs-int compare would raise; stringify each element)."""
     return max(
         gkeys,
         key=lambda gk: (
             groups[gk].regver_max if groups[gk].regver_max is not None else -1,
+            _latest_regver_id(groups[gk]),
             tuple("" if x is None else str(x) for x in gk),
         ),
     )
@@ -2159,7 +2271,7 @@ def _coalesce_variable_states(
     """Coalesce `variable_instance` rows into `variable_state` (see reg_meta/DESIGN.md → Two-level variable model).
 
     Group key: `(register_id, register_variant_id, var_id, <type>, <length>,
-    value_set_id, value_set_version_label, grain, component)`.
+    value_set_id, value_set_version_label, grain, component, source_register_text)`.
 
     State-identity rule (#526): the VALUE SET anchors a valued variable's
     temporal state — SCB's per-delivery `data_type`/`data_length` are low-trust
@@ -2229,6 +2341,7 @@ def _coalesce_variable_states(
             "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
             "       vi.data_type, vi.data_length, vi.value_set_id, "
             "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
+            "       vi.source_register_text, "
             "       vi.variabelnamn, va.delivery_column_name, "
             "       rv.registerversionnamn, "
             "       rv.registerversion_senastgodkanddatum "
@@ -2324,10 +2437,10 @@ def _coalesce_variable_states(
     # Group accumulator: key → mutable `_StateGroup` (module scope; the
     # triage reads it). We iterate `rows` once and update the year-range
     # signals / latest alias in place. A dict rather than itertools.groupby
-    # because rows aren't pre-sorted and the key has 9 components (the trailing
-    # one is the column component above; grain stays at index 7).
+    # because rows aren't pre-sorted and the key has 10 components (the column
+    # component stays at index 8; grain stays at index 7).
     groups: dict[
-        tuple[int, int, int, str, str, int | None, str | None, str, str],
+        tuple[int, int, int, str, str, int | None, str | None, str, str, str],
         _StateGroup,
     ] = {}
     # Map (register_id, register_variant_id, kolumnnamn, variabelnamn) → set of
@@ -2350,7 +2463,7 @@ def _coalesce_variable_states(
 
     # cvid → its group key. A cvid belongs to exactly ONE group: every gkey
     # field is a cvid-level constant (register/variant/var_id/shape/value-set/
-    # label/grain) EXCEPT the trailing column component, and rule-2
+    # label/grain/source text) EXCEPT the column component, and rule-2
     # connectivity (the `cvid_anchor` union above) merges ALL of a cvid's
     # columns into one component — so every row a cvid contributes carries the
     # same gkey. After triage assigns each gkey a `variable_id`, this lets the
@@ -2405,6 +2518,7 @@ def _coalesce_variable_states(
             row["value_set_version_label"] or "",
             grain,
             component,
+            row["source_register_text"] or "",
         )
         cvid_gkey[row["cvid"]] = gkey  # idempotent: one cvid → one gkey
         grp = groups.get(gkey)
@@ -2417,6 +2531,7 @@ def _coalesce_variable_states(
                 data_length=row["data_length"],
                 value_set_id=row["value_set_id"],
                 value_set_version_label=row["value_set_version_label"],
+                source_register_text=row["source_register_text"] or None,
             )
             groups[gkey] = grp
 
@@ -2871,6 +2986,7 @@ def _coalesce_variable_states(
                 grp.data_type,
                 grp.data_length,
                 grp.latest_alias,
+                grp.source_register_text,
                 grp.value_set_id,
                 label,
             )
@@ -2939,8 +3055,19 @@ def _coalesce_variable_states(
     def _col_value_sets(gks: list[tuple]) -> set[int]:
         return {vs for gk in gks if (vs := groups[gk].value_set_id) is not None}
 
+    def _col_source_texts(gks: list[tuple]) -> set[str]:
+        return {groups[gk].source_register_text or "" for gk in gks}
+
+    def _needs_timeline(gks: list[tuple]) -> bool:
+        if _spans_overlap(groups, gks):
+            return True
+        by_col: dict[str, set[str]] = defaultdict(set)
+        for gk in gks:
+            by_col[gk[8]].add(groups[gk].source_register_text or "")
+        return any(len(texts) > 1 for texts in by_col.values())
+
     for (vid, rv), gkeys in by_vv.items():
-        if not _spans_overlap(groups, gkeys):
+        if not _needs_timeline(gkeys):
             for gk in gkeys:  # fast path
                 _emit_span(gk, groups[gk])
             continue
@@ -2965,7 +3092,10 @@ def _coalesce_variable_states(
         for col in {gk[8] for gk in yearless}:
             col_yl = [gk for gk in yearless if gk[8] == col]
             col_yb = [gk for gk in year_bearing if gk[8] == col]
-            if len(_col_value_sets(col_yl + col_yb)) <= 1:
+            if (
+                len(_col_value_sets(col_yl + col_yb)) <= 1
+                and len(_col_source_texts(col_yl + col_yb)) <= 1
+            ):
                 yearless_emit.update(col_yl)  # no conflict on this column
                 continue
             pin = None
@@ -3159,8 +3289,8 @@ def _coalesce_variable_states(
         conn.executemany(
             "INSERT INTO variable_state (variable_id, register_variant_id, "
             "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
-            "    value_set_id, value_set_version_label) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "    source_register_text, value_set_id, value_set_version_label) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             batch,
         )
 
@@ -4374,7 +4504,7 @@ class SCBAdapter:
         for row in self.conn.execute(
             "SELECT state_id, variable_id, register_variant_id, valid_from, "
             "       valid_to, data_type, data_length, delivery_column_name, "
-            "       value_set_id, value_set_version_label "
+            "       source_register_text, value_set_id, value_set_version_label "
             "FROM variable_state ORDER BY state_id"
         ):
             yield IRVariableState(
@@ -4386,8 +4516,9 @@ class SCBAdapter:
                 data_type=row[5],
                 data_length=row[6],
                 delivery_column_name=row[7],
-                value_set_id=row[8],
-                value_set_version_label=row[9],
+                source_register_text=row[8],
+                value_set_id=row[9],
+                value_set_version_label=row[10],
             )
 
     def _emit_variable_aliases(self) -> Iterator[IRObject]:

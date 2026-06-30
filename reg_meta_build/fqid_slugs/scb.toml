@@ -28887,6 +28887,7 @@ slug = "avdrag-bransle-metallurgiska-processer"
 slug = "avdrag-bransle-tag-skepp-luftfartyg"
 [variable."121.26412.v713-13"]
 slug = "lev-egenfb-ovrig-punktskatter"
+deprecated = true
 [variable."121.26486.v712-01"]
 slug = "lev-egenfb-bransle-nedsatt-skatt"
 [variable."121.26486.v713-105"]
@@ -28909,6 +28910,7 @@ slug = "avdrag-bransle-annat-andamal-dubbel"
 slug = "avdrag-bransle-framstallning-energi"
 [variable."121.26600.v718-49"]
 slug = "avdrag-bransle-forstorts-force-majeure"
+deprecated = true
 [variable."121.26699.v4571"]
 slug = "kontant-ersattning-agd-andel-2"
 [variable."121.26702.v4573"]
@@ -28967,6 +28969,7 @@ slug = "ingaende-lager-rating"
 slug = "arets-resultat-l27"
 [variable."121.30056.v701-24"]
 slug = "skatt-netto-energiskatt"
+deprecated = true
 [variable."121.3179.ftaxeg16"]
 slug = "ftaxeg-3"
 [variable."121.32695.btfpha1"]
@@ -29001,6 +29004,7 @@ slug = "skatt-betala-svavel"
 slug = "utgaende-lager-punktskatter-gas"
 [variable."121.39748.kolutg"]
 slug = "utgaende-lager-punktskatter"
+deprecated = true
 [variable."121.39748.ngasutg"]
 slug = "utgaende-lager-punktskatter-ngas"
 [variable."121.39748.ovrutg"]
@@ -29023,6 +29027,7 @@ slug = "ingaende-lager-punktskatter-rat"
 slug = "aterbetalningsberattigad-diesel-okt"
 [variable."121.39768.benatermng"]
 slug = "aterbetalningsberattigad-mangd-bransle"
+deprecated = true
 [variable."121.39768.gasvsfgmng"]
 slug = "aterbetalningsberattigad-mangd-gasvsfg"
 [variable."121.39768.gasvxar1mng"]

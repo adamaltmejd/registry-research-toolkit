@@ -164,7 +164,9 @@ intentional — resolve is for mapping known column headers, not discovery.
 Registers like LISA, FRIDA, LINDA, and STATIV are composites — most of their variables
 originate in source registers (RTB, RAMS, etc.). The `variable` table tracks this via
 `source_register_id` (FK to `register`) and `source_label` (display abbreviation or raw
-text). Unresolved sources remain as raw text for human review and surface in
+text) when the source attribution is stable at variable grain. Source codes or raw
+attribution text that varies by edition stays on `variable_state.source_register_text`.
+Unresolved stable sources remain as raw text for human review and surface in
 `get schema` (source column) and `get lineage` (consumer/source classification). The
 resolution rules used during build are documented in
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Source-register
@@ -526,21 +528,23 @@ validity ranges — so sub-annual and range queries are precise, not year-granul
 caller's 3-seg binding FQID `provider/register/slug`, preserved through a `same_as`
 traversal), `variable_id`, `register_id`, `provider_key`, the shared metadata (`name`,
 `definition`, `description`, `measurement_unit`, `is_sensitive`, `is_identifier`,
-`source_register_id`, `source_register_text`), `states` (tuple of `VariableState`,
-chronological ascending), the variable-grain edges `same_as` / `replaced_by` (OUTBOUND
-successors) / `lineage`, `via_same_as` (the traversal path when resolved via a `same_as`
-edge, else None), and `group` (the binding's owning concept group as a `BindingGroupRef`
-`(provider, register, key)`, None when ungrouped; #616).
+`source_register_id`, `source_register_text` when stable at variable grain), `states`
+(tuple of `VariableState`, chronological ascending), the variable-grain edges `same_as`
+/ `replaced_by` (OUTBOUND successors) / `lineage`, `via_same_as` (the traversal path
+when resolved via a `same_as` edge, else None), and `group` (the binding's owning
+concept group as a `BindingGroupRef` `(provider, register, key)`, None when ungrouped;
+#616).
 
 **`VariableState`** — one `variable_state` row tagged with its variant. Fields:
 `state_id`, `variant` (the `register_variant.slug`), `register_variant_id`, `valid_from`
 / `valid_to` (inclusive ISO dates), `data_type`, `data_length`, `delivery_column_name`
-(denormalized latest alias), `value_set_version_label` (NOT NULL, `''` = no
-discriminator), `value_set_id`, `value_set` (hydrated `(code, label)` tuple, None when
-the state has no value set), `is_identifier` (variable-grain flag denormalized onto
-every state via a JOIN — constant across all of a variable's states — so consumers
-holding only a `VariableState` (e.g. the `resolve_at` / `/states` paths) can read the
-authoritative identifier flag without needing the enclosing `ResolvedVariable`), and
+(denormalized latest alias), `source_register_text` (raw source attribution/code when it
+varies by state), `value_set_version_label` (NOT NULL, `''` = no discriminator),
+`value_set_id`, `value_set` (hydrated `(code, label)` tuple, None when the state has no
+value set), `is_identifier` (variable-grain flag denormalized onto every state via a
+JOIN — constant across all of a variable's states — so consumers holding only a
+`VariableState` (e.g. the `resolve_at` / `/states` paths) can read the authoritative
+identifier flag without needing the enclosing `ResolvedVariable`), and
 `classification_slug` (the classification family slug (see DESIGN.md → Classifications)
 for this state's value set, e.g. `lkf2007`; resolved per-state from
 `variable_state.classification_id` — varies across a variable's states; None for

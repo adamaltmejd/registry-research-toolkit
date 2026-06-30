@@ -2265,6 +2265,8 @@ export interface components {
             period_token?: string | null;
             /** Register Variant Id */
             register_variant_id: number;
+            /** Source Register Text */
+            source_register_text: string | null;
             /** State Id */
             state_id: number;
             /** Valid From */

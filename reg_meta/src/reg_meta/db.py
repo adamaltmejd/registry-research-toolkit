@@ -259,7 +259,14 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `variable_alias`. This makes SCB delivery column codes searchable without
 #   indexing FQID slugs. A 6.1.0 DB lacks the FTS column/view, so it is rejected
 #   via the minor-version gate.
-SCHEMA_VERSION = "6.2.0"
+# - 6.3.0 (#949): additive `variable_state.source_register_text` column — SCB
+#   source/questionnaire codes that vary by edition stay at state grain instead
+#   of collapsing to `variable.source_register_text`; code-like
+#   `VariabelOperationell_definition` values are no longer promoted to
+#   `variable.operational_definition` / `variable_fts` explanatory text. A
+#   6.2.0 DB lacks the state column, so it is rejected via the minor-version
+#   gate.
+SCHEMA_VERSION = "6.3.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -502,6 +502,10 @@ CREATE TABLE variable_instance (
     -- via the same ground-truth `variable_id` stamp that routes aliases. Dropped
     -- with this build-time-only table before ship.
     operational_definition TEXT,
+    -- Raw per-cvid source attribution. SCB may use the operational-definition
+    -- cell for opaque source/questionnaire codes (E22/E60); the importer routes
+    -- those here so they can be preserved at state grain.
+    source_register_text TEXT,
     classification_id INTEGER REFERENCES classification(id),
     -- value_set_id links to the cvid's deduplicated, year-projected code list.
     -- NULL when the cvid has no codes (sentinel-only or every union pair
@@ -577,6 +581,7 @@ CREATE TABLE variable_state (
     data_type TEXT,
     data_length TEXT,
     delivery_column_name TEXT,
+    source_register_text TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     -- Overlap discriminator (multi-vintage / grain / coding). NOT NULL
     -- DEFAULT '' so the uniqueness index below bites in the common
@@ -3090,11 +3095,12 @@ def _reinsert_core_graph_from_ir(
     conn.executemany(
         "INSERT INTO variable_state "
         "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
-        " data_type, data_length, delivery_column_name, value_set_id, "
+        " data_type, data_length, delivery_column_name, source_register_text, "
+        " value_set_id, "
         " value_set_version_label, classification_id) "
         "VALUES (:state_id, :variable_id, :register_variant_id, :valid_from, "
         " :valid_to, :data_type, :data_length, :delivery_column_name, "
-        " :value_set_id, :value_set_version_label, NULL)",
+        " :source_register_text, :value_set_id, :value_set_version_label, NULL)",
         [
             {
                 "state_id": s.state_id,
@@ -3107,6 +3113,7 @@ def _reinsert_core_graph_from_ir(
                 "data_type": s.data_type,
                 "data_length": s.data_length,
                 "delivery_column_name": s.delivery_column_name,
+                "source_register_text": s.source_register_text,
                 "value_set_id": s.value_set_id,
                 "value_set_version_label": s.value_set_version_label or "",
             }
@@ -3795,10 +3802,11 @@ def _resolve_curated_codeless_overlaps(
                 conn.execute(
                     "INSERT INTO variable_state (state_id, variable_id, "
                     "register_variant_id, valid_from, valid_to, data_type, "
-                    "data_length, delivery_column_name, value_set_id, "
+                    "data_length, delivery_column_name, source_register_text, "
+                    "value_set_id, "
                     "value_set_version_label, classification_id) "
                     "SELECT ?, variable_id, register_variant_id, ?, ?, data_type, "
-                    "data_length, delivery_column_name, NULL, "
+                    "data_length, delivery_column_name, source_register_text, NULL, "
                     "value_set_version_label, classification_id "
                     "FROM variable_state WHERE state_id = ?",
                     (twin_id, span_from, span_to, state_id),

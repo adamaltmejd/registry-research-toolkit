@@ -400,6 +400,10 @@ class VariableState(_CatalogModel):
     # Denormalized latest alias for the state (see DESIGN.md → Two-level variable model); full alias history lives in
     # `variable_alias`.
     delivery_column_name: str | None
+    # Raw source attribution/code for this state when SCB source metadata varies
+    # by edition. Variable-grain `ResolvedVariable.source_register_text` stays
+    # populated only when the source text is stable for the variable.
+    source_register_text: str | None
     # Overlap discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB); multi-vintage / grain / coding). NOT NULL
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.
     value_set_version_label: str
@@ -1563,7 +1567,8 @@ class Catalog:
         if register_variant_id is not None:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
-                "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
+                "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
+                "vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "rv.name AS variant_label "
@@ -1580,7 +1585,8 @@ class Catalog:
         else:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
-                "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
+                "vs.data_length, vs.delivery_column_name, vs.source_register_text, "
+                "vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
                 "rv.name AS variant_label "
@@ -1654,6 +1660,7 @@ class Catalog:
             data_type=row["data_type"],
             data_length=row["data_length"],
             delivery_column_name=row["delivery_column_name"],
+            source_register_text=row["source_register_text"],
             value_set_version_label=row["value_set_version_label"],
             value_set_id=row["value_set_id"],
             value_set=self._value_set_codes(row["value_set_id"]),
