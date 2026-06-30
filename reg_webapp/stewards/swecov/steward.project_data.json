@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0.0",
   "steward": "swecov",
-  "reg_meta_version": "reg_meta/v0.28.0",
+  "reg_meta_version": "reg_meta/v0.29.0",
   "name": "SWECOV holdings catalog",
   "sources": [
     {
@@ -9939,6 +9939,11 @@
           "representation": "PeOrgNr"
         },
         {
+          "variable": "scb/fou/orgnr-12",
+          "type": "id",
+          "representation": "PeorgNr"
+        },
+        {
           "variable": "scb/fou/referensar",
           "type": "numeric",
           "representation": "Ar"
@@ -9961,6 +9966,11 @@
           "representation": "PeOrgNr"
         },
         {
+          "variable": "scb/fou/orgnr-12",
+          "type": "id",
+          "representation": "PeorgNr"
+        },
+        {
           "variable": "scb/fou/referensar",
           "type": "numeric",
           "representation": "Ar"
@@ -9976,6 +9986,11 @@
           "variable": "scb/fou/orgnr-12",
           "type": "id",
           "representation": "PeOrgNr"
+        },
+        {
+          "variable": "scb/fou/orgnr-12",
+          "type": "id",
+          "representation": "PeorgNr"
         },
         {
           "variable": "scb/fou/referensar",
@@ -12320,6 +12335,11 @@
           "variable": "scb/gymnasieskola-elever/meritvarde-m2-ak9",
           "type": "numeric",
           "representation": "MeritVarde_M2_Ak9"
+        },
+        {
+          "variable": "scb/gymnasieskola-elever/personnr",
+          "type": "id",
+          "representation": "PersonNr"
         },
         {
           "variable": "scb/gymnasieskola-elever/personnr",
@@ -15722,7 +15742,7 @@
         },
         {
           "variable": "scb/it-anvandning/anpassa-produktmarkning",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSEU_DAPL"
         },
         {
@@ -15752,7 +15772,7 @@
         },
         {
           "variable": "scb/it-anvandning/anvander-erp-affarssystem",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITERP1"
         },
         {
@@ -15762,7 +15782,7 @@
         },
         {
           "variable": "scb/it-anvandning/anvander-mobilt-bredband-3g-4g",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "PMD"
         },
         {
@@ -15852,7 +15872,7 @@
         },
         {
           "variable": "scb/it-anvandning/awshm",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSEU"
         },
         {
@@ -15867,7 +15887,7 @@
         },
         {
           "variable": "scb/it-anvandning/awsww",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSHM"
         },
         {
@@ -15982,7 +16002,7 @@
         },
         {
           "variable": "scb/it-anvandning/brist-sprakkunskap",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSEU_DFL"
         },
         {
@@ -16107,12 +16127,12 @@
         },
         {
           "variable": "scb/it-anvandning/crman",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "CRMAN"
         },
         {
           "variable": "scb/it-anvandning/crmstr",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "CRMSTR"
         },
         {
@@ -16152,12 +16172,12 @@
         },
         {
           "variable": "scb/it-anvandning/e-aws-cmp",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "E_AWS_CMP"
         },
         {
           "variable": "scb/it-anvandning/e-aws-cown",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "E_AWS_COWN"
         },
         {
@@ -16217,7 +16237,7 @@
         },
         {
           "variable": "scb/it-anvandning/ehandel-bestallningar-webb-varlden",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSWW"
         },
         {
@@ -16382,7 +16402,7 @@
         },
         {
           "variable": "scb/it-anvandning/inv4s-pmp",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "INV4S_PMP"
         },
         {
@@ -16447,7 +16467,7 @@
         },
         {
           "variable": "scb/it-anvandning/it-ext",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "IT_EXT"
         },
         {
@@ -16462,7 +16482,7 @@
         },
         {
           "variable": "scb/it-anvandning/it-own",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "IT_OWN"
         },
         {
@@ -16472,12 +16492,12 @@
         },
         {
           "variable": "scb/it-anvandning/it-sakerhet-styrandedokument",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECPOL2"
         },
         {
           "variable": "scb/it-anvandning/it-sakrutin-uppdaterad",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECPREV"
         },
         {
@@ -16497,17 +16517,17 @@
         },
         {
           "variable": "scb/it-anvandning/itsec3ext",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITSEC3EXT"
         },
         {
           "variable": "scb/it-anvandning/itsec3own",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITSEC3OWN"
         },
         {
           "variable": "scb/it-anvandning/itsp2",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITSP2"
         },
         {
@@ -16532,22 +16552,22 @@
         },
         {
           "variable": "scb/it-anvandning/itsprcr2",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITSPRCR2"
         },
         {
           "variable": "scb/it-anvandning/itspt2",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITSPT2"
         },
         {
           "variable": "scb/it-anvandning/itspvac2",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITSPVAC2"
         },
         {
           "variable": "scb/it-anvandning/itust2",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "ITUST2"
         },
         {
@@ -16562,7 +16582,7 @@
         },
         {
           "variable": "scb/it-anvandning/leverans-returkostnader",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSEU_DHCD"
         },
         {
@@ -16647,7 +16667,7 @@
         },
         {
           "variable": "scb/it-anvandning/partner-restriktioner-eu",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSEU_DBP"
         },
         {
@@ -16672,12 +16692,12 @@
         },
         {
           "variable": "scb/it-anvandning/rbti",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "RBTI"
         },
         {
           "variable": "scb/it-anvandning/rbts",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "RBTS"
         },
         {
@@ -16737,17 +16757,17 @@
         },
         {
           "variable": "scb/it-anvandning/secawcont",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECAWCONT"
         },
         {
           "variable": "scb/it-anvandning/secawctp",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECAWCTP"
         },
         {
           "variable": "scb/it-anvandning/secawvtgi",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECAWVTGI"
         },
         {
@@ -16762,7 +16782,7 @@
         },
         {
           "variable": "scb/it-anvandning/secins",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECINS"
         },
         {
@@ -16772,7 +16792,7 @@
         },
         {
           "variable": "scb/it-anvandning/secmdenc",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMDENC"
         },
         {
@@ -16782,42 +16802,42 @@
         },
         {
           "variable": "scb/it-anvandning/secmlog",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMLOG"
         },
         {
           "variable": "scb/it-anvandning/secmnac",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMNAC"
         },
         {
           "variable": "scb/it-anvandning/secmosbu",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMOSBU"
         },
         {
           "variable": "scb/it-anvandning/secmrass",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMRASS"
         },
         {
           "variable": "scb/it-anvandning/secmspsw",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMSPSW"
         },
         {
           "variable": "scb/it-anvandning/secmtst",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMTST"
         },
         {
           "variable": "scb/it-anvandning/secmuibm",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMUIBM"
         },
         {
           "variable": "scb/it-anvandning/secmvpn",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "SECMVPN"
         },
         {
@@ -16847,7 +16867,7 @@
         },
         {
           "variable": "scb/it-anvandning/skickar-e-fakturor-ej-processas-auto",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "INV4S_EMP"
         },
         {
@@ -16857,7 +16877,7 @@
         },
         {
           "variable": "scb/it-anvandning/skickar-e-fakturor-processas-auto",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "INV4S_AP"
         },
         {
@@ -16917,7 +16937,7 @@
         },
         {
           "variable": "scb/it-anvandning/svar-losa-klagomal-rekl",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AWSEU_DRCD"
         },
         {
@@ -16957,17 +16977,17 @@
         },
         {
           "variable": "scb/it-anvandning/tog-emot-edi-bestallningar-eu",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AXSEU"
         },
         {
           "variable": "scb/it-anvandning/tog-emot-edi-bestallningar-sverige",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AXSHM"
         },
         {
           "variable": "scb/it-anvandning/tog-emot-edi-bestallningar-varlden",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "AXSWW"
         },
         {
@@ -17032,7 +17052,7 @@
         },
         {
           "variable": "scb/it-anvandning/webbplats-anpassat-innehall",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "WEBPER"
         },
         {
@@ -17047,7 +17067,7 @@
         },
         {
           "variable": "scb/it-anvandning/webbplats-bestallning-bokning",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "WEBORD"
         },
         {
@@ -17057,12 +17077,12 @@
         },
         {
           "variable": "scb/it-anvandning/webbplats-kundanpassa-produkt",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "WEBCTM"
         },
         {
           "variable": "scb/it-anvandning/webbplats-produktkatalog",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "WEBACC"
         },
         {
@@ -17072,7 +17092,7 @@
         },
         {
           "variable": "scb/it-anvandning/webot",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "WEBOT"
         },
         {
@@ -17410,7 +17430,7 @@
         },
         {
           "variable": "scb/ksju/sektor-organisation",
-          "type": "opaque",
+          "type": "numeric",
           "representation": "sektor"
         },
         {
@@ -17902,6 +17922,26 @@
           "representation": "Ast_SektorKod"
         },
         {
+          "variable": "scb/lisa/cfar-nummer",
+          "type": "id",
+          "representation": "CfarNr"
+        },
+        {
+          "variable": "scb/lisa/fad-arbetsstalle-id",
+          "type": "id",
+          "representation": "ArbstId"
+        },
+        {
+          "variable": "scb/lisa/institutionell-sektor",
+          "type": "opaque",
+          "representation": "Ast_SektorGrp"
+        },
+        {
+          "variable": "scb/lisa/kommun-for-arbetsstalle",
+          "type": "opaque",
+          "representation": "Ast_Kommun"
+        },
+        {
           "variable": "scb/lisa/naringsgren-huvud-arbetsstalle",
           "type": "opaque",
           "representation": "Ast_Sni2002"
@@ -17945,26 +17985,6 @@
           "variable": "scb/lisa/naringsgren-huvud-arbetsstalle-sni92g",
           "type": "opaque",
           "representation": "Ast_Sni92G"
-        },
-        {
-          "variable": "scb/lisa/cfar-nummer",
-          "type": "id",
-          "representation": "CfarNr"
-        },
-        {
-          "variable": "scb/lisa/fad-arbetsstalle-id",
-          "type": "id",
-          "representation": "ArbstId"
-        },
-        {
-          "variable": "scb/lisa/institutionell-sektor",
-          "type": "opaque",
-          "representation": "Ast_SektorGrp"
-        },
-        {
-          "variable": "scb/lisa/kommun-for-arbetsstalle",
-          "type": "opaque",
-          "representation": "Ast_Kommun"
         },
         {
           "variable": "scb/lisa/person-orgnr",
@@ -18259,6 +18279,51 @@
           "representation": "Ftg_Antal_anstallda"
         },
         {
+          "variable": "scb/lisa/naringsgren-huvud-foretag",
+          "type": "opaque",
+          "representation": "Org_Sni2002"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag",
+          "type": "opaque",
+          "representation": "Org_Sni2007"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag",
+          "type": "opaque",
+          "representation": "Org_Sni92"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2002b",
+          "type": "opaque",
+          "representation": "Org_Sni2002B"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2002g",
+          "type": "opaque",
+          "representation": "Org_Sni2002G"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2007g",
+          "type": "opaque",
+          "representation": "Org_Sni2007G"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2007u",
+          "type": "opaque",
+          "representation": "Org_Sni2007U"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni92b",
+          "type": "opaque",
+          "representation": "Org_Sni92B"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-foretag-sni92g",
+          "type": "opaque",
+          "representation": "Org_Sni92G"
+        },
+        {
           "variable": "scb/lisa/nettoinvesteringar-byggnader-mark",
           "type": "numeric",
           "representation": "Ftg_Nettoinv_byggnader_mark"
@@ -18347,51 +18412,6 @@
           "variable": "scb/lisa/org-sektorkod",
           "type": "opaque",
           "representation": "Org_SektorKod"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag",
-          "type": "opaque",
-          "representation": "Org_Sni2002"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag",
-          "type": "opaque",
-          "representation": "Org_Sni2007"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag",
-          "type": "opaque",
-          "representation": "Org_Sni92"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2002b",
-          "type": "opaque",
-          "representation": "Org_Sni2002B"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2002g",
-          "type": "opaque",
-          "representation": "Org_Sni2002G"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2007g",
-          "type": "opaque",
-          "representation": "Org_Sni2007G"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag-sni2007u",
-          "type": "opaque",
-          "representation": "Org_Sni2007U"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag-sni92b",
-          "type": "opaque",
-          "representation": "Org_Sni92B"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-foretag-sni92g",
-          "type": "opaque",
-          "representation": "Org_Sni92G"
         },
         {
           "variable": "scb/lisa/org-typ",
@@ -18584,16 +18604,6 @@
           "variable": "scb/lisa/arbetsstallenummer",
           "type": "id",
           "representation": "AstNr_LISA"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-individ",
-          "type": "opaque",
-          "representation": "AstSNI2002"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-individ",
-          "type": "opaque",
-          "representation": "AstSNI2007"
         },
         {
           "variable": "scb/lisa/barn-16-17-ar",
@@ -19056,6 +19066,16 @@
           "representation": "UnderHBidrMot"
         },
         {
+          "variable": "scb/lisa/naringsgren-huvud-individ",
+          "type": "opaque",
+          "representation": "AstSNI2002"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-individ",
+          "type": "opaque",
+          "representation": "AstSNI2007"
+        },
+        {
           "variable": "scb/lisa/pensioner-utlandskt-beskattade",
           "type": "numeric",
           "representation": "TPENSAU"
@@ -19453,26 +19473,6 @@
           "representation": "AstNr"
         },
         {
-          "variable": "scb/lisa/naringsgren-huvud-individ",
-          "type": "opaque",
-          "representation": "AstSNI2002"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-individ",
-          "type": "opaque",
-          "representation": "AstSNI2007"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-individ",
-          "type": "opaque",
-          "representation": "AstSNI69"
-        },
-        {
-          "variable": "scb/lisa/naringsgren-huvud-individ",
-          "type": "opaque",
-          "representation": "AstSNI92"
-        },
-        {
           "variable": "scb/lisa/barn-16-17-ar",
           "type": "numeric",
           "representation": "Barn16_17"
@@ -19806,6 +19806,26 @@
           "variable": "scb/lisa/loneinkomst",
           "type": "numeric",
           "representation": "DekLon"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-individ",
+          "type": "opaque",
+          "representation": "AstSNI2002"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-individ",
+          "type": "opaque",
+          "representation": "AstSNI2007"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-individ",
+          "type": "opaque",
+          "representation": "AstSNI69"
+        },
+        {
+          "variable": "scb/lisa/naringsgren-huvud-individ",
+          "type": "opaque",
+          "representation": "AstSNI92"
         },
         {
           "variable": "scb/lisa/person-orgnr",
@@ -20313,29 +20333,9 @@
           "representation": "AstNr"
         },
         {
-          "variable": "scb/rams/naringsgren-huvud",
-          "type": "opaque",
-          "representation": "AstSni92"
-        },
-        {
-          "variable": "scb/rams/naringsgren-huvud",
-          "type": "opaque",
-          "representation": "Astsni69"
-        },
-        {
-          "variable": "scb/rams/naringsgren-stat-huvud",
-          "type": "opaque",
-          "representation": "AstSni02"
-        },
-        {
-          "variable": "scb/rams/naringsgren-stat-huvud",
-          "type": "opaque",
-          "representation": "AstSni07"
-        },
-        {
-          "variable": "scb/rams/naringsgren-huvud-sni2002",
-          "type": "opaque",
-          "representation": "AstSni02"
+          "variable": "scb/rams/arbetsstallenummer",
+          "type": "id",
+          "representation": "Astnr"
         },
         {
           "variable": "scb/rams/belagenhetsadress-gata",
@@ -20348,9 +20348,19 @@
           "representation": "AstBen"
         },
         {
+          "variable": "scb/rams/benamning",
+          "type": "opaque",
+          "representation": "astben"
+        },
+        {
           "variable": "scb/rams/besokspostort",
           "type": "opaque",
           "representation": "AstBelOrt"
+        },
+        {
+          "variable": "scb/rams/besokspostort",
+          "type": "opaque",
+          "representation": "astbelort"
         },
         {
           "variable": "scb/rams/bgatunr",
@@ -20361,6 +20371,11 @@
           "variable": "scb/rams/cfar-nummer",
           "type": "id",
           "representation": "CfarNr"
+        },
+        {
+          "variable": "scb/rams/cfar-nummer",
+          "type": "id",
+          "representation": "cfarnr"
         },
         {
           "variable": "scb/rams/institutionell-sektor",
@@ -20383,9 +20398,49 @@
           "representation": "AstLan"
         },
         {
+          "variable": "scb/rams/lan-arbetsstalle",
+          "type": "opaque",
+          "representation": "astlan"
+        },
+        {
+          "variable": "scb/rams/naringsgren-huvud",
+          "type": "opaque",
+          "representation": "AstSni69"
+        },
+        {
+          "variable": "scb/rams/naringsgren-huvud",
+          "type": "opaque",
+          "representation": "AstSni92"
+        },
+        {
+          "variable": "scb/rams/naringsgren-huvud",
+          "type": "opaque",
+          "representation": "Astsni69"
+        },
+        {
+          "variable": "scb/rams/naringsgren-huvud-sni2002",
+          "type": "opaque",
+          "representation": "AstSni02"
+        },
+        {
+          "variable": "scb/rams/naringsgren-stat-huvud",
+          "type": "opaque",
+          "representation": "AstSni02"
+        },
+        {
+          "variable": "scb/rams/naringsgren-stat-huvud",
+          "type": "opaque",
+          "representation": "AstSni07"
+        },
+        {
           "variable": "scb/rams/person-orgnr",
           "type": "id",
           "representation": "PeOrgNr"
+        },
+        {
+          "variable": "scb/rams/person-orgnr",
+          "type": "id",
+          "representation": "peorgnr"
         },
         {
           "variable": "scb/rams/sektortillhorighet",
@@ -20437,6 +20492,11 @@
           "representation": "AntalSysS"
         },
         {
+          "variable": "scb/rams/antal-sysselsatta-foretag-syssreg",
+          "type": "numeric",
+          "representation": "AntalSyss"
+        },
+        {
           "variable": "scb/rams/antal-sysselsatta-foretaget",
           "type": "numeric",
           "representation": "AntalSyss"
@@ -20447,24 +20507,9 @@
           "representation": "AstNr"
         },
         {
-          "variable": "scb/rams/naringsgren-huvud",
-          "type": "opaque",
-          "representation": "AstSni69"
-        },
-        {
-          "variable": "scb/rams/naringsgren-huvud",
-          "type": "opaque",
-          "representation": "AstSni92"
-        },
-        {
-          "variable": "scb/rams/naringsgren-stat-huvud",
-          "type": "opaque",
-          "representation": "AstSni02"
-        },
-        {
-          "variable": "scb/rams/naringsgren-stat-huvud",
-          "type": "opaque",
-          "representation": "AstSni07"
+          "variable": "scb/rams/arbetsstallenummer",
+          "type": "id",
+          "representation": "Astnr"
         },
         {
           "variable": "scb/rams/cfar-nummer",
@@ -20492,43 +20537,6 @@
           "representation": "AstLan"
         },
         {
-          "variable": "scb/rams/person-orgnr",
-          "type": "id",
-          "representation": "PeorgNr"
-        },
-        {
-          "variable": "scb/rams/personnr",
-          "type": "id",
-          "representation": "PersonNr"
-        }
-      ]
-    },
-    {
-      "name": "scb.rams.jobbregistret",
-      "register_variant": "scb/rams/jobbregistret",
-      "period": "_default",
-      "bindings": [
-        {
-          "variable": "scb/rams/anstalld-fran-manad",
-          "type": "numeric",
-          "representation": "ManFran"
-        },
-        {
-          "variable": "scb/rams/anstalld-till-manad",
-          "type": "numeric",
-          "representation": "ManTill"
-        },
-        {
-          "variable": "scb/rams/antal-manader-loneutbetalning",
-          "type": "numeric",
-          "representation": "LonFInkAntMan"
-        },
-        {
-          "variable": "scb/rams/arbetsstallenummer",
-          "type": "id",
-          "representation": "AstNr"
-        },
-        {
           "variable": "scb/rams/naringsgren-huvud",
           "type": "opaque",
           "representation": "AstSni69"
@@ -20549,9 +20557,41 @@
           "representation": "AstSni07"
         },
         {
-          "variable": "scb/rams/naringsgren-stat-huvud-sni92",
+          "variable": "scb/rams/person-orgnr",
+          "type": "id",
+          "representation": "PeorgNr"
+        },
+        {
+          "variable": "scb/rams/personnr",
+          "type": "id",
+          "representation": "PersonNr"
+        }
+      ]
+    },
+    {
+      "name": "scb.rams.jobbregistret",
+      "register_variant": "scb/rams/jobbregistret",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "scb/rams/anstalld-fran-manad",
           "type": "opaque",
-          "representation": "AstSni92"
+          "representation": "ManFran"
+        },
+        {
+          "variable": "scb/rams/anstalld-till-manad",
+          "type": "opaque",
+          "representation": "ManTill"
+        },
+        {
+          "variable": "scb/rams/antal-manader-loneutbetalning",
+          "type": "numeric",
+          "representation": "LonFInkAntMan"
+        },
+        {
+          "variable": "scb/rams/arbetsstallenummer",
+          "type": "id",
+          "representation": "AstNr"
         },
         {
           "variable": "scb/rams/cfar-nummer",
@@ -20582,6 +20622,36 @@
           "variable": "scb/rams/lone-eller-foretagarinkomst-manad",
           "type": "numeric",
           "representation": "LonFInkApr"
+        },
+        {
+          "variable": "scb/rams/naringsgren-huvud",
+          "type": "opaque",
+          "representation": "AstSni69"
+        },
+        {
+          "variable": "scb/rams/naringsgren-huvud",
+          "type": "opaque",
+          "representation": "AstSni92"
+        },
+        {
+          "variable": "scb/rams/naringsgren-stat-huvud",
+          "type": "opaque",
+          "representation": "AstSni02"
+        },
+        {
+          "variable": "scb/rams/naringsgren-stat-huvud",
+          "type": "opaque",
+          "representation": "AstSni07"
+        },
+        {
+          "variable": "scb/rams/naringsgren-stat-huvud-sni92",
+          "type": "opaque",
+          "representation": "AstSni92"
+        },
+        {
+          "variable": "scb/rams/person-orgnr",
+          "type": "id",
+          "representation": "PeOrgNr"
         },
         {
           "variable": "scb/rams/person-orgnr",
@@ -21739,6 +21809,11 @@
           "variable": "scb/stativ/sokandekategori-grupp",
           "type": "opaque",
           "representation": "AfSokKat_Grupp"
+        },
+        {
+          "variable": "scb/stativ/sokandekategori-grupp",
+          "type": "opaque",
+          "representation": "AfSokKat_grupp"
         }
       ]
     },
@@ -23113,7 +23188,7 @@
         },
         {
           "variable": "scb/utbildningsanalyser/huvudman-distans",
-          "type": "numeric",
+          "type": "opaque",
           "representation": "hman"
         },
         {
