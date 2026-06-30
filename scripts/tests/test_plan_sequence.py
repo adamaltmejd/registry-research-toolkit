@@ -62,12 +62,19 @@ def test_closing_issue_numbers_from_body_parses_closing_clauses() -> None:
     body = """
     Implements the stacked successor.
 
-    Closes #101, owner/repo#102
+    Closes #101, owner/repo#102, and #106
     Resolves: #104 and owner/repo#105
     Related to #999
     Fixes #103
     """
-    assert ps.closing_issue_numbers_from_body(body) == {101, 102, 103, 104, 105}
+    assert ps.closing_issue_numbers_from_body(body, "owner/repo") == {
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+    }
 
 
 def test_closing_issue_numbers_from_body_ignores_non_closing_refs() -> None:
@@ -79,6 +86,14 @@ def test_closing_issue_numbers_from_body_ignores_non_closing_refs() -> None:
     assert ps.closing_issue_numbers_from_body(body) == {101}
 
 
+def test_closing_issue_numbers_from_body_ignores_other_repositories() -> None:
+    body = """
+    Closes other/repo#328, owner/repo#329, and #330
+    Fixes OWNER/REPO#331
+    """
+    assert ps.closing_issue_numbers_from_body(body, "owner/repo") == {329, 330, 331}
+
+
 def test_fetch_open_prs_by_issue_uses_body_fallback(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -88,13 +103,17 @@ def test_fetch_open_prs_by_issue_uses_body_fallback(
             {
                 "number": 7,
                 "closingIssuesReferences": [{"number": 101}],
-                "body": "Closes #102",
+                "body": "Closes #102, owner/repo#103, and other/repo#104",
             }
         ]
 
     monkeypatch.setattr(ps, "gh_json", fake_gh_json)
 
-    assert ps.fetch_open_prs_by_issue() == {101: [7], 102: [7]}
+    assert ps.fetch_open_prs_by_issue("owner/repo") == {
+        101: [7],
+        102: [7],
+        103: [7],
+    }
 
 
 # --- classify ------------------------------------------------------------------------

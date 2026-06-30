@@ -227,24 +227,32 @@ CLOSING_CLAUSE_RE = re.compile(
     r"(?im)\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s*:?\s+"
     r"("
     r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+"
-    r"(?:\s*(?:,|and)\s*(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+)*"
+    r"(?:(?:\s*,\s*(?:and\s+)?|\s+and\s+)"
+    r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+)*"
     r")"
 )
-ISSUE_REF_RE = re.compile(r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#(\d+)")
+ISSUE_REF_RE = re.compile(
+    r"(?:(?P<repo>[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+))?#(?P<number>\d+)"
+)
 
 
-def closing_issue_numbers_from_body(body: str | None) -> set[int]:
+def closing_issue_numbers_from_body(
+    body: str | None, current_repo: str | None = None
+) -> set[int]:
     """Issue numbers named by closing-keyword clauses in a PR body.
 
     GitHub's `closingIssuesReferences` only covers PRs whose base can close the issue.
     Stacked successor PRs often target a predecessor branch, but their draft still needs
     to hold the issue out of dispatch. Parse the body as a fallback for those claims.
     """
+    current = current_repo.casefold() if current_repo else None
     found: set[int] = set()
     for clause in CLOSING_CLAUSE_RE.finditer(body or ""):
-        found.update(
-            int(match.group(1)) for match in ISSUE_REF_RE.finditer(clause.group(1))
-        )
+        for match in ISSUE_REF_RE.finditer(clause.group(1)):
+            repo = match.group("repo")
+            if repo and (current is None or repo.casefold() != current):
+                continue
+            found.add(int(match.group("number")))
     return found
 
 
@@ -253,22 +261,25 @@ def epic_body(epic: int) -> str:
     return gh_json(["issue", "view", str(epic), "--json", "body"])["body"] or ""
 
 
-def fetch_open_prs_by_issue() -> dict[int, list[int]]:
+def fetch_open_prs_by_issue(current_repo: str | None = None) -> dict[int, list[int]]:
     prs = gh_json(["pr", "list", "--state", "open", "--limit", str(FETCH_CAP),
                    "--json", "number,body,closingIssuesReferences"])  # fmt: skip
     by_issue: dict[int, list[int]] = {}
     for pr in prs:
         numbers = {ref["number"] for ref in pr.get("closingIssuesReferences") or []}
-        numbers.update(closing_issue_numbers_from_body(pr.get("body")))
+        numbers.update(closing_issue_numbers_from_body(pr.get("body"), current_repo))
         for number in sorted(numbers):
             by_issue.setdefault(number, []).append(pr["number"])
     return by_issue
 
 
 def build_records(
-    issues: list[dict], open_numbers: set[int], parent_of: dict[int, int]
+    issues: list[dict],
+    open_numbers: set[int],
+    parent_of: dict[int, int],
+    current_repo: str | None = None,
 ) -> list[Rec]:
-    prs_by_issue = fetch_open_prs_by_issue()
+    prs_by_issue = fetch_open_prs_by_issue(current_repo)
     recs: list[Rec] = []
     for it in issues:
         num = it["number"]
@@ -903,7 +914,9 @@ def main() -> int:
     owner, name = repo_owner_name()
     _known, _issue_state, open_numbers = _h.fetch_number_states()
     parent_of = _h.fetch_parents(owner, name)
-    recs = build_records(_h.fetch_open_issues(), open_numbers, parent_of)
+    recs = build_records(
+        _h.fetch_open_issues(), open_numbers, parent_of, f"{owner}/{name}"
+    )
     work = [r for r in recs if not r.is_epic]
     ready_nums = {r.number for r in work if r.status == "ready"}
     running_nums = {r.number for r in work if r.status == "running"}
