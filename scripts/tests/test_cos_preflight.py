@@ -117,6 +117,21 @@ def test_missing_executable_maps_to_setup_error(
         cpf.run_cmd(["gh", "version"])
 
 
+def test_invalid_state_file_is_setup_error(tmp_path: Path) -> None:
+    state = tmp_path / "state.json"
+    state.write_text("{", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="invalid cos-preflight state file"):
+        cpf.load_state(state)
+
+
+def test_pr_fetch_cap_hit_is_setup_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cpf, "gh_json", lambda _args: [{"number": 1}])
+
+    with pytest.raises(SystemExit, match="open PR fetch hit"):
+        cpf.fetch_pr_summaries(1, "owner/repo")
+
+
 def test_repeated_snapshot_is_idle() -> None:
     snap = _snapshot(
         plan_exit=1,

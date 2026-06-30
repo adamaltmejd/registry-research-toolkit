@@ -45,6 +45,7 @@ assert _PLAN_SPEC and _PLAN_SPEC.loader
 _plan_sequence = importlib.util.module_from_spec(_PLAN_SPEC)
 sys.modules[_PLAN_SPEC.name] = _plan_sequence
 _PLAN_SPEC.loader.exec_module(_plan_sequence)
+DEFAULT_PR_FETCH_CAP = getattr(_plan_sequence, "FETCH_CAP", 5000)
 
 
 def run_cmd(cmd: list[str]) -> subprocess.CompletedProcess[str]:
@@ -231,6 +232,11 @@ def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
             "number,title,body,closingIssuesReferences,baseRefName,isDraft,mergeable,headRefOid,statusCheckRollup",
         ]
     )
+    if len(prs) >= limit:
+        raise SystemExit(
+            f"open PR fetch hit --pr-limit={limit}; increase the cap or paginate before "
+            "using cos-preflight for idle gating"
+        )
     summaries = [summarize_pr(pr, current_repo) for pr in prs]
     return sorted((s for s in summaries if s is not None), key=lambda s: s["number"])
 
@@ -292,7 +298,10 @@ def default_state_file() -> Path:
 def load_state(path: Path) -> dict[str, Any] | None:
     if not path.exists():
         return None
-    return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"invalid cos-preflight state file {path}: {exc}") from exc
 
 
 def write_state(path: Path, snapshot: dict[str, Any]) -> None:
@@ -321,7 +330,7 @@ def collect_snapshot(epic: int, pr_limit: int) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--epic", type=int, default=328)
-    ap.add_argument("--pr-limit", type=int, default=50)
+    ap.add_argument("--pr-limit", type=int, default=DEFAULT_PR_FETCH_CAP)
     ap.add_argument("--state-file", type=Path, default=default_state_file())
     ap.add_argument(
         "--canonical",
