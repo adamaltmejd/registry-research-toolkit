@@ -121,9 +121,11 @@ function syncDetailSeparators(node: HTMLElement): {
         separator.hidden = true;
         continue;
       }
-      const previousTop = Math.round(previous.getBoundingClientRect().top);
-      const nextTop = Math.round(next.getBoundingClientRect().top);
-      separator.hidden = previousTop !== nextTop;
+      const previousRect = previous.getBoundingClientRect();
+      const nextRect = next.getBoundingClientRect();
+      const previousCenter = previousRect.top + previousRect.height / 2;
+      const nextCenter = nextRect.top + nextRect.height / 2;
+      separator.hidden = Math.abs(previousCenter - nextCenter) > 4;
     }
   };
 
@@ -353,26 +355,67 @@ function isRepeatedDefinition(
   return normalizedDisplayText(name) === normalizedDisplayText(definition);
 }
 
+const PROVIDER_LABELS: Record<string, string> = {
+  fohm: "FoHM",
+  fk: "FK",
+  lakemedelsverket: "Lakemedelsverket",
+  pliktverket: "Pliktverket",
+  riksarkivet: "RA",
+  scb: "SCB",
+  sos: "SoS",
+  umu: "UMU",
+};
+
+function providerLabelFromFqid(fqid: string | null | undefined): string | null {
+  if (!fqid) {
+    return null;
+  }
+  const [provider] = fqidSegments(fqid);
+  if (!provider) {
+    return null;
+  }
+  return PROVIDER_LABELS[provider] ?? provider.toLocaleUpperCase("sv-SE");
+}
+
+function providerRegisterContext(
+  fqid: string | null | undefined,
+  register: string | null | undefined,
+): string | null {
+  const provider = providerLabelFromFqid(fqid);
+  if (!register) {
+    return provider;
+  }
+  return provider ? `${provider}: ${register}` : register;
+}
+
+function variableRegisterContext(v: VariableSearchResult): string | null {
+  return providerRegisterContext(v.fqid, v.register);
+}
+
+function groupRegisterContext(result: ConceptGroupSearchResult): string | null {
+  if (result.kind !== "variable") {
+    return null;
+  }
+  return providerRegisterContext(
+    sharedMemberRegisterFqid(result),
+    result.register,
+  );
+}
+
+function ownerRegisterContext(owner: CodeOwnerVariable): string | null {
+  return providerRegisterContext(owner.fqid, owner.register);
+}
+
 function variableDetailParts(v: VariableSearchResult): string[] {
   const definition = isRepeatedDefinition(v.name, v.definition)
     ? null
     : v.definition;
   return [
-    v.register,
     definition,
     v.operational_definition
       ? `Operational: ${v.operational_definition}`
       : null,
   ].filter((part): part is string => part != null && part !== "");
-}
-
-function groupDetailParts(result: ConceptGroupSearchResult): string[] {
-  if (result.kind === "variable") {
-    return [result.register].filter(
-      (part): part is string => part != null && part !== "",
-    );
-  }
-  return [];
 }
 
 // The registers / variables / classifications groups render the `.children.table`
@@ -692,13 +735,17 @@ function closeSearch(): void {
 
 <!-- A LEAF register row: same one-column visual shape as variable rows. -->
 {#snippet registerLeafRow(r: RegisterSearchResult)}
+  {@const detailParts = r.purpose ? [r.purpose] : []}
+  {@const context = providerLabelFromFqid(r.fqid)}
   {#if r.fqid}
     <a class="leaf-row integrated-list-row" href={catalogHref(r.fqid)}>
       <span class="name-cell">
         <span class="result-title">
           <span class="row-link">{r.name ?? leafSlug(r.fqid)}</span>
         </span>
-        {#if r.purpose}<span class="result-detail muted clamp-2">{r.purpose}</span>{/if}
+        {#if context || detailParts.length > 0}
+          {@render detailLine(context, detailParts, true)}
+        {/if}
       </span>
     </a>
   {:else}
@@ -707,7 +754,9 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link plain">{r.name ?? "—"}</span>
         </span>
-        {#if r.purpose}<span class="result-detail muted clamp-2">{r.purpose}</span>{/if}
+        {#if detailParts.length > 0}
+          {@render detailLine(null, detailParts, true)}
+        {/if}
       </span>
     </div>
   {/if}
@@ -753,6 +802,7 @@ function closeSearch(): void {
 
 {#snippet variableLeafRow(v: VariableSearchResult)}
   {@const detailParts = variableDetailParts(v)}
+  {@const context = variableRegisterContext(v)}
   {#if v.fqid}
     <a class="leaf-row integrated-list-row" href={catalogHref(v.fqid)}>
       <span class="name-cell">
@@ -760,8 +810,8 @@ function closeSearch(): void {
           <span class="row-link">{v.name ?? leafSlug(v.fqid)}</span>
           {@render variableMetaPills(v)}
         </span>
-        {#if detailParts.length > 0}
-          {@render detailLine(detailParts)}
+        {#if context || detailParts.length > 0}
+          {@render detailLine(context, detailParts)}
         {/if}
       </span>
     </a>
@@ -771,21 +821,28 @@ function closeSearch(): void {
           <span class="row-link plain">{v.name ?? "—"}</span>
           {@render variableMetaPills(v)}
         </span>
-        {#if detailParts.length > 0}
-          {@render detailLine(detailParts)}
+        {#if context || detailParts.length > 0}
+          {@render detailLine(context, detailParts)}
         {/if}
       </span>
     </div>
   {/if}
 {/snippet}
 
-{#snippet detailLine(parts: string[])}
+{#snippet detailLine(
+  context: string | null,
+  parts: string[],
+  clampParts: boolean = false,
+)}
   <span class="result-detail muted" use:syncDetailSeparators>
+    {#if context}
+      <span class="register-context-chip">{context}</span>
+    {/if}
     {#each parts as part, i (i)}
-      {#if i > 0}
+      {#if context || i > 0}
         <span class="detail-separator" aria-hidden="true">·</span>
       {/if}
-      <span>{part}</span>
+      <span class:clamp-2={clampParts}>{part}</span>
     {/each}
   </span>
 {/snippet}
@@ -856,13 +913,14 @@ function closeSearch(): void {
 {#snippet ownerSubRows(result: CodeSearchResult)}
   {@const classificationOwners = secondaryClassificationOwners(result)}
   {#each result.variables as owner, i (i)}
+    {@const context = ownerRegisterContext(owner)}
     {#if owner.fqid}
       <a class="owner-row integrated-list-row" href={catalogHref(owner.fqid)}>
-        {@render ownerInline(owner.name ?? leafSlug(owner.fqid), owner.register)}
+        {@render ownerInline(owner.name ?? leafSlug(owner.fqid), context)}
       </a>
     {:else}
       <div class="owner-row integrated-list-row plain">
-        {@render ownerInline(owner.name ?? "—", owner.register)}
+        {@render ownerInline(owner.name ?? "—", context)}
       </div>
     {/if}
   {/each}
@@ -890,11 +948,12 @@ function closeSearch(): void {
 {/snippet}
 
 {#snippet singleOwnerLine(owner: CodeOwnerVariable)}
+  {@const context = ownerRegisterContext(owner)}
   <span class="owner-inline muted code-owner-single">
     <span class="owner-name">
       {owner.name ?? (owner.fqid ? leafSlug(owner.fqid) : "—")}
     </span>
-    {#if owner.register}<span class="owner-context">{owner.register}</span>{/if}
+    {#if context}<span class="owner-context">{context}</span>{/if}
   </span>
 {/snippet}
 
@@ -1003,16 +1062,16 @@ function closeSearch(): void {
      directly rather than putting a disclosure inside the results list. -->
 {#snippet conceptGroup(result: ConceptGroupSearchResult)}
   {@const href = conceptGroupHref(result)}
-  {@const detailParts = groupDetailParts(result)}
+  {@const context = groupRegisterContext(result)}
   {#if href}
     <a class="leaf-row integrated-list-row group-result-row" href={href}>
       <span class="name-cell">
         <span class="result-title">
-          <span class="group-prefix">Group:</span>
           <span class="row-link">{result.group_label}</span>
+          <span class="group-chip">Group</span>
         </span>
-        {#if detailParts.length > 0}
-          {@render detailLine(detailParts)}
+        {#if context}
+          {@render detailLine(context, [])}
         {/if}
       </span>
     </a>
@@ -1025,8 +1084,11 @@ function closeSearch(): void {
         <span class="name-cell">
           <span class="result-title">
             <span class="row-link">{member.name ?? leafSlug(member.fqid)}</span>
+            <span class="group-chip">Group</span>
           </span>
-          {@render detailLine([`Group: ${result.group_label}`])}
+          {@render detailLine(providerRegisterContext(member.fqid, result.register), [
+            result.group_label,
+          ])}
         </span>
       </a>
     {/each}
@@ -1045,7 +1107,7 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link">{primaryLabel}</span>
         </span>
-        {@render detailLine([
+        {@render detailLine(null, [
           `matched ${result.matched_count} of ${editions.length} editions`,
         ])}
       </span>
@@ -1056,7 +1118,7 @@ function closeSearch(): void {
         <span class="result-title">
           <span class="row-link plain">{primaryLabel}</span>
         </span>
-        {@render detailLine([
+        {@render detailLine(null, [
           `matched ${result.matched_count} of ${editions.length} editions`,
         ])}
       </span>
@@ -1072,7 +1134,7 @@ function closeSearch(): void {
           <span class="result-title">
             <span class="row-link">{edition.name ?? edition.slug}</span>
           </span>
-          {@render detailLine([
+          {@render detailLine(null, [
             edition.effective_year == null
               ? "Edition"
               : `superseded ${edition.effective_year}`,
@@ -1085,7 +1147,7 @@ function closeSearch(): void {
           <span class="result-title">
             <span class="row-link plain">{edition.name ?? edition.slug}</span>
           </span>
-          {@render detailLine([
+          {@render detailLine(null, [
             edition.effective_year == null
               ? "Edition"
               : `superseded ${edition.effective_year}`,
@@ -1279,7 +1341,6 @@ function closeSearch(): void {
       var(--code-row-inline) - var(--code-disclosure-size) -
         var(--code-disclosure-gap)
     );
-    --code-owner-start: calc(var(--code-row-inline) + var(--space-4));
   }
   .code-cells {
     display: grid;
@@ -1381,8 +1442,7 @@ function closeSearch(): void {
     color: inherit;
     text-decoration: none;
     overflow-wrap: anywhere;
-    padding: var(--search-row-block) var(--code-row-inline) var(--search-row-block)
-      calc(var(--code-owner-start) - var(--search-subrow-gutter));
+    padding: var(--search-row-block) var(--code-row-inline);
     border-left: var(--search-subrow-gutter) solid var(--border-strong);
     border-bottom: 1px solid var(--border);
   }
@@ -1476,7 +1536,9 @@ function closeSearch(): void {
     gap: 0.2rem 0.35rem;
     min-width: 0;
   }
-  .col-chip {
+  .col-chip,
+  .group-chip,
+  .register-context-chip {
     display: inline-flex;
     align-items: baseline;
     line-height: 1.3;
@@ -1495,12 +1557,22 @@ function closeSearch(): void {
     border: 1px solid color-mix(in srgb, var(--cat-var) 35%, transparent);
     background: color-mix(in srgb, var(--cat-var) 10%, var(--surface));
   }
+  .group-chip {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--cat-group-ink);
+    border: 1px solid color-mix(in srgb, var(--cat-group) 35%, transparent);
+    background: color-mix(in srgb, var(--cat-group) 10%, var(--surface));
+  }
+  .register-context-chip {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    background: var(--surface-sunken);
+  }
   .column-more {
     font-size: var(--text-sm);
-  }
-  .group-prefix {
-    color: var(--cat-group-ink);
-    font-weight: 600;
   }
   /* Code and label form one expression ("code = label") so the value reads as a
      paired token rather than two unrelated columns. */

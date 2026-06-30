@@ -205,6 +205,36 @@ def _best_bet_score(query: str, result: SearchResult) -> int:
     )
 
 
+def _looks_like_golden_pin(result: SearchResult) -> bool:
+    """Golden pins are order-prepended with rank=0.0; keep them pinned when the
+    display pass applies best-bet scoring inside typed groups."""
+    return result.type in ("register", "classification") and result.rank == 0.0
+
+
+def _rank_display_results(
+    query: str, results: list[SearchResult]
+) -> list[SearchResult]:
+    """Apply the same query-sensitive best-bet score within one typed section.
+
+    Top results uses `_best_bet_score` to merge across typed groups. Reusing that
+    score inside each category keeps an exact/prefix hit from leading Top results
+    while sitting lower in its own category. Golden pins stay first because their
+    contract is stronger than FTS/order scoring.
+    """
+    return [
+        result
+        for _, result in sorted(
+            enumerate(results),
+            key=lambda item: (
+                _looks_like_golden_pin(item[1]),
+                _best_bet_score(query, item[1]),
+                -item[0],
+            ),
+            reverse=True,
+        )
+    ]
+
+
 def _top_candidate_key(result: SearchResult, group_order: int, row_order: int) -> str:
     if result.type == "group":
         return f"group:{result.kind}:{result.group_key}"
@@ -472,7 +502,8 @@ def get_search(
                 RegisterSearchGroup(
                     total_count=reg.total_count + (len(reg_results) - len(reg.results)),
                     results=cast(
-                        "list[RegisterSearchResult]", list(reg_results[:limit])
+                        "list[RegisterSearchResult]",
+                        list(_rank_display_results(q, reg_results)[:limit]),
                     ),
                 )
             )
@@ -515,7 +546,10 @@ def get_search(
             groups.append(
                 VariableSearchGroup(
                     total_count=var_total,
-                    results=cast("list[VariableSearchItem]", list(var_results[:limit])),
+                    results=cast(
+                        "list[VariableSearchItem]",
+                        list(_rank_display_results(q, var_results)[:limit]),
+                    ),
                 )
             )
         if want_classification:
@@ -533,7 +567,8 @@ def get_search(
                 ClassificationSearchGroup(
                     total_count=cls.total_count + (len(cls_results) - len(cls.results)),
                     results=cast(
-                        "list[ClassificationSearchItem]", list(cls_results[:limit])
+                        "list[ClassificationSearchItem]",
+                        list(_rank_display_results(q, cls_results)[:limit]),
                     ),
                 )
             )

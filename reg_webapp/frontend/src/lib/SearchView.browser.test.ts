@@ -118,11 +118,10 @@ describe("SearchView — typed result groups (#379)", () => {
         .toBeVisible();
     }
     // A register/variable/classification leaf links to its catalog node. The
-    // register leaf is the registers whole-row name link (exact "LISA"); the
-    // variable leaf is the whole-row grid link whose accessible name folds in the
-    // muted register/detail line and column chips, so match it by its /Kön/ name.
+    // whole-row link accessible names include muted context, so match the
+    // distinctive visible names plus context where needed.
     await expect
-      .element(page.getByRole("link", { name: "LISA", exact: true }))
+      .element(page.getByRole("link", { name: /LISA.*SCB/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa");
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
@@ -227,9 +226,11 @@ describe("SearchView — typed result groups (#379)", () => {
       ".search-view .top-results .group-result-row[href='/catalog/group/scb/lcs/naringsgren']",
     );
     expect(row).not.toBeNull();
-    expect(row?.textContent).toContain("Group:");
+    expect(row?.querySelector(".group-chip")?.textContent?.trim()).toBe(
+      "Group",
+    );
     expect(row?.textContent).toContain("Näringsgren");
-    expect(row?.textContent).toContain("Labour Cost Survey (LCS)");
+    expect(row?.textContent).toContain("SCB: Labour Cost Survey (LCS)");
   });
 
   it("shows code-system context on code hits in top results", async () => {
@@ -640,9 +641,11 @@ describe("SearchView — typed result groups (#379)", () => {
           ((codeRect?.top ?? 0) + (codeRect?.height ?? 0) / 2),
       ),
     ).toBeLessThanOrEqual(2);
-    expect(Math.round(ownerRect?.left ?? 0)).toBeGreaterThan(
-      Math.round(codeRect?.left ?? 0),
-    );
+    expect(
+      Math.abs(
+        Math.round(ownerRect?.left ?? 0) - Math.round(codeRect?.left ?? 0),
+      ),
+    ).toBeLessThanOrEqual(2);
     if (firstOwnerRow) {
       expect(getComputedStyle(firstOwnerRow).borderLeftWidth).toBe("3px");
     }
@@ -787,10 +790,10 @@ describe("SearchView — typed result groups (#379)", () => {
     // is not repeated inside the row because the heading is already linked.
     await page.getByText("Man").click();
     await expect
-      .element(page.getByRole("link", { name: /Kön LISA/ }))
+      .element(page.getByRole("link", { name: /Kön.*SCB: LISA/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
     await expect
-      .element(page.getByRole("link", { name: /Kön RAMS/ }))
+      .element(page.getByRole("link", { name: /Kön RAMS.*SCB: RAMS/ }))
       .toHaveAttribute("href", "/catalog/scb/rams/kon");
     expect(
       document.querySelector(
@@ -888,9 +891,9 @@ describe("SearchView — typed result groups (#379)", () => {
     // The group itself is a normal row link to the first-class group page; no
     // inline disclosure is reintroduced in search results.
     await expect
-      .element(page.getByRole("link", { name: /Group: Disponibel inkomst/ }))
+      .element(page.getByRole("link", { name: /Disponibel inkomst.*Group/ }))
       .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
-    await expect.element(page.getByText("LISA")).toBeVisible();
+    await expect.element(page.getByText("SCB: LISA")).toBeVisible();
     await expect
       .element(page.getByText(/variables matched/))
       .not.toBeInTheDocument();
@@ -942,7 +945,7 @@ describe("SearchView — typed result groups (#379)", () => {
     await render(SearchView);
 
     await expect
-      .element(page.getByRole("link", { name: /Group: Disponibel inkomst/ }))
+      .element(page.getByRole("link", { name: /Disponibel inkomst.*Group/ }))
       .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
     await expect
       .element(page.getByRole("link", { name: /Disp 2019/ }))
@@ -1324,7 +1327,7 @@ describe("SearchView — typed result groups (#379)", () => {
       .element(page.getByRole("heading", { name: "Registers" }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: "LISA", exact: true }))
+      .element(page.getByRole("link", { name: /LISA.*SCB/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa");
     // …and the unknown group is silently omitted (no heading, no row).
     await expect.element(page.getByText("Widget")).not.toBeInTheDocument();
@@ -1599,7 +1602,9 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(document.querySelector(".search-view .head-row")).toBeNull();
     expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
-    expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
+    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
+      "SCB: LISA",
+    );
   });
 
   it("omits the variable definition when it exactly repeats the variable name", async () => {
@@ -1636,7 +1641,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       "Andel av den totala inkomsten",
     );
     expect(row?.querySelector(".result-detail")?.textContent?.trim()).toBe(
-      "LISA",
+      "SCB: LISA",
     );
   });
 
@@ -1646,11 +1651,10 @@ describe("SearchView — compact per-type tables (#808)", () => {
     await render(SearchView);
 
     // Each leaf is a real <a href> to its catalog node (so middle-click /
-    // open-in-new-tab / screen readers get a link). The register leaf is the
-    // whole-row name link (exact "LISA"); the variable + classification leaves are
-    // whole-row grid links matched by their /Kön/ + /SUN/ names.
+    // open-in-new-tab / screen readers get a link). Whole-row link names include
+    // muted context, so match the distinctive visible names.
     await expect
-      .element(page.getByRole("link", { name: "LISA", exact: true }))
+      .element(page.getByRole("link", { name: /LISA.*SCB/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa");
     await expect
       .element(page.getByRole("link", { name: /Kön/ }))
@@ -1700,7 +1704,9 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // muted detail, not a green pill.
     expect(row?.querySelector(".register-pill")).toBeNull();
     expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
-    expect(row?.querySelector(".result-detail")?.textContent).toContain("LISA");
+    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
+      "SCB: LISA",
+    );
   });
 
   it("makes a classification leaf row a keyboard-focusable whole-row link (#808 a11y)", async () => {
@@ -1738,7 +1744,9 @@ describe("SearchView — compact per-type tables (#808)", () => {
     );
     expect(row).not.toBeNull();
     expect(row?.querySelector(".result-title")?.textContent).toContain("LISA");
-    expect(row?.querySelector(".result-detail")).toBeNull();
+    expect(row?.querySelector(".register-context-chip")?.textContent).toBe(
+      "SCB",
+    );
     row?.focus();
     expect(document.activeElement).toBe(row);
   });
@@ -1899,7 +1907,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
       .element(page.getByRole("link", { name: /After fold/ }))
       .toHaveAttribute("href", "/catalog/scb/lisa/after");
     await expect
-      .element(page.getByRole("link", { name: /Group: Disponibel inkomst/ }))
+      .element(page.getByRole("link", { name: /Disponibel inkomst.*Group/ }))
       .toHaveAttribute("href", "/catalog/group/scb/lisa/dispink");
     const grid = document.querySelector(".search-view .cols-1");
     const groupLink = grid?.querySelector(

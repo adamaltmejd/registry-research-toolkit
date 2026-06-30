@@ -41,6 +41,7 @@ from reg_webapp.routes.search import (
     _has_searchable_token,
     _narrow_variable_leaf_columns,
     _rank_codes,
+    _rank_display_results,
     _validated_limit,
 )
 
@@ -739,6 +740,51 @@ def test_top_results_group_member_exact_match_gets_boost():
     )
 
     assert top == [group, register]
+
+
+def test_display_ranking_matches_best_bet_exact_boost():
+    broad = VariableSearchResult(
+        fqid="scb/lsum/ftgsni200",
+        name="Näringsgren, huvudsaklig",
+        register="LSUM",
+        rank=-10.0,
+    )
+    exact = ConceptGroupSearchResult(
+        kind="variable",
+        group_key="naringsgren",
+        group_label="Näringsgren",
+        register="LCS",
+        member_count=2,
+        matched_count=2,
+        members=(
+            ConceptGroupMember(
+                fqid="scb/lcs/naringsgren", name="Näringsgren", facets=()
+            ),
+            ConceptGroupMember(fqid="scb/lcs/sni", name="Näringsgren", facets=()),
+        ),
+        rank=-9.0,
+    )
+
+    ranked = _rank_display_results("näringsgren", [broad, exact])
+
+    assert ranked == [exact, broad]
+
+
+def test_display_ranking_keeps_golden_pins_first():
+    pin = RegisterSearchResult(
+        fqid="sos/par",
+        name="Patientregistret",
+        rank=0.0,
+    )
+    exact = RegisterSearchResult(
+        fqid="scb/diagnos",
+        name="Diagnos",
+        rank=-10.0,
+    )
+
+    ranked = _rank_display_results("diagnos", [pin, exact])
+
+    assert ranked == [pin, exact]
 
 
 def test_top_results_keeps_distinct_null_fqid_leaves():
