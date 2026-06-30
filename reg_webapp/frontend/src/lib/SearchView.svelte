@@ -410,12 +410,9 @@ function variableDetailParts(v: VariableSearchResult): string[] {
   const definition = isRepeatedDefinition(v.name, v.definition)
     ? null
     : v.definition;
-  return [
-    definition,
-    v.operational_definition
-      ? `Operational: ${v.operational_definition}`
-      : null,
-  ].filter((part): part is string => part != null && part !== "");
+  return [definition, v.operational_definition].filter(
+    (part): part is string => part != null && part !== "",
+  );
 }
 
 // The registers / variables / classifications groups render the `.children.table`

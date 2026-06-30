@@ -364,9 +364,7 @@ describe("SearchView — typed result groups (#379)", () => {
     ).map((pill) => pill.textContent?.trim());
     expect(columnPills).toEqual(["fedunsatreason_1", "fedunsatreason_2"]);
     await expect
-      .element(
-        page.getByText("Operational: Formal education dissatisfaction reason"),
-      )
+      .element(page.getByText("Formal education dissatisfaction reason"))
       .toBeVisible();
     const root = document.querySelector<HTMLElement>(".search-view");
     expect(root).not.toBeNull();
