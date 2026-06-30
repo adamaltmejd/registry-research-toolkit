@@ -123,7 +123,14 @@ def run_plan_tick(epic: int) -> dict[str, Any]:
 def parse_merge_gate(body: str | None, head_oid: str) -> dict[str, str | bool | None]:
     match = MERGE_GATE_START_RE.search(body or "")
     if not match:
-        return {"state": "absent", "status": None, "head": None, "current": False}
+        return {
+            "state": "absent",
+            "status": None,
+            "head": None,
+            "current": False,
+            "block_hash": None,
+        }
+    block_hash = hashlib.sha256(match.group(0).encode()).hexdigest()
     fields = {
         m.group("key").lower(): m.group("value")
         for m in GATE_FIELD_RE.finditer(match.group(1))
@@ -137,7 +144,13 @@ def parse_merge_gate(body: str | None, head_oid: str) -> dict[str, str | bool | 
         state = "stale-ready"
     else:
         state = "present"
-    return {"state": state, "status": status, "head": head, "current": current}
+    return {
+        "state": state,
+        "status": status,
+        "head": head,
+        "current": current,
+        "block_hash": block_hash,
+    }
 
 
 def normalize_checks(checks: list[dict[str, Any]]) -> list[dict[str, str | None]]:
@@ -194,6 +207,7 @@ def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any] | Non
         "number": raw["number"],
         "title": raw.get("title") or "",
         "issues": sorted(closing),
+        "base": raw.get("baseRefName"),
         "head": raw["headRefOid"],
         "draft": bool(raw.get("isDraft")),
         "mergeable": raw.get("mergeable"),
@@ -211,12 +225,10 @@ def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
             "list",
             "--state",
             "open",
-            "--base",
-            "main",
             "--limit",
             str(limit),
             "--json",
-            "number,title,body,closingIssuesReferences,isDraft,mergeable,headRefOid,statusCheckRollup",
+            "number,title,body,closingIssuesReferences,baseRefName,isDraft,mergeable,headRefOid,statusCheckRollup",
         ]
     )
     summaries = [summarize_pr(pr, current_repo) for pr in prs]
@@ -248,6 +260,8 @@ def actionable_reasons(
         reasons.append("lanes need re-stamp")
     if NO_STATUS_CHANGES not in plan["report"]:
         reasons.append("issue projection changed")
+    if previous is None and snapshot["local_head"] != snapshot["remote_main"]:
+        reasons.append("origin/main changed")
 
     ready = [
         pr

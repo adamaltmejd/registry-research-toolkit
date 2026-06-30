@@ -24,7 +24,7 @@ _SPEC.loader.exec_module(cpf)
 HEAD = "abcdef1234567890"
 
 
-def _snapshot(*, plan_exit=0, plan_report=None, prs=None, remote="r1"):
+def _snapshot(*, plan_exit=0, plan_report=None, prs=None, remote="l1"):
     snap = {
         "version": 1,
         "observed_at": "2026-06-30T20:00:00+00:00",
@@ -52,6 +52,7 @@ def test_parse_merge_gate_current_ready() -> None:
 
     gate = cpf.parse_merge_gate(body, HEAD)
 
+    assert gate.pop("block_hash")
     assert gate == {
         "state": "current-ready",
         "status": "ready-to-merge",
@@ -69,6 +70,22 @@ def test_parse_merge_gate_stale_ready() -> None:
     """
 
     assert cpf.parse_merge_gate(body, HEAD)["state"] == "stale-ready"
+
+
+def test_merge_gate_hash_changes_on_evidence_edit() -> None:
+    body_a = f"""
+    <!-- pr-pipeline-merge-gate -->
+    - status: ready-to-merge
+    - head: {HEAD}
+    - ci: pass
+    <!-- /pr-pipeline-merge-gate -->
+    """
+    body_b = body_a.replace("- ci: pass", "- ci: pass; refreshed")
+
+    assert (
+        cpf.parse_merge_gate(body_a, HEAD)["block_hash"]
+        != cpf.parse_merge_gate(body_b, HEAD)["block_hash"]
+    )
 
 
 def test_checks_verdict_buckets() -> None:
@@ -148,3 +165,11 @@ def test_remote_main_change_wakes() -> None:
     snap = _snapshot(remote="new")
 
     assert cpf.actionable_reasons(snap, previous) == ["origin/main changed"]
+
+
+def test_first_snapshot_behind_origin_wakes() -> None:
+    snap = _snapshot(remote="new")
+    snap["local_head"] = "old"
+    snap["fingerprint"] = cpf.snapshot_fingerprint(snap)
+
+    assert cpf.actionable_reasons(snap, None) == ["origin/main changed"]
