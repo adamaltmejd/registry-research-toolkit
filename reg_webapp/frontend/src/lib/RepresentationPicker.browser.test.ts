@@ -113,6 +113,59 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(markers?.textContent).toContain("Individ");
   });
 
+  it("renders global select-all as an integrated row with selected and indeterminate states", async () => {
+    render(RepresentationPicker, {
+      bands: [
+        multiAxisBand(),
+        {
+          key: "scb/iot/other",
+          name: "Other income",
+          registerPrefix: "scb/iot",
+          rows: [row({ column: "DIN4", valueSetLabel: "kr" })],
+        } satisfies PickerBand,
+      ],
+      axes: [],
+      ...PROPS,
+    });
+    const selectAllRow = await vi.waitFor(() => {
+      const row = document.querySelector<HTMLLabelElement>(
+        ".col-list > .select-all-row > label.select-all",
+      );
+      if (!row) {
+        throw new Error("global select-all row not rendered");
+      }
+      return row;
+    });
+    expect(selectAllRow.classList.contains("integrated-list-row")).toBe(true);
+    expect(selectAllRow.classList.contains("row-btn")).toBe(true);
+
+    const selectAllBox =
+      selectAllRow.querySelector<HTMLInputElement>("input.cbox");
+    expect(selectAllBox).not.toBeNull();
+    expect(selectAllBox?.checked).toBe(false);
+    expect(selectAllBox?.indeterminate).toBe(false);
+
+    // Click the row label, not the checkbox itself: the full integrated row toggles.
+    selectAllRow.click();
+    await expect.element(page.getByText("4 columns selected")).toBeVisible();
+    expect(selectAllBox?.checked).toBe(true);
+    expect(selectAllBox?.indeterminate).toBe(false);
+    expect(selectAllRow.classList.contains("selected")).toBe(true);
+    const rowBoxes = [
+      ...document.querySelectorAll<HTMLInputElement>(
+        ".col-list .col-row .row-btn input.cbox",
+      ),
+    ];
+    expect(rowBoxes).toHaveLength(4);
+    expect(rowBoxes.every((box) => box.checked)).toBe(true);
+
+    rowBoxes[0].click();
+    await expect.element(page.getByText("3 columns selected")).toBeVisible();
+    expect(selectAllBox?.checked).toBe(false);
+    expect(selectAllBox?.indeterminate).toBe(true);
+    expect(selectAllRow.classList.contains("selected")).toBe(false);
+  });
+
   it("a single-value group surfaces NO filter controls", async () => {
     render(RepresentationPicker, {
       bands: [
