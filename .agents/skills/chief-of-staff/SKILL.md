@@ -61,6 +61,14 @@ shell precondition hook, so it always spends a model turn. Use:
 scripts/cos_scheduler_tick.sh --thread <chief-of-staff-thread-id>
 ```
 
+For an active terminal heartbeat that runs until the user presses Ctrl-C, use:
+
+```sh
+scripts/cos_scheduler_heartbeat.sh <chief-of-staff-thread-id>
+```
+
+It defaults to a 15-minute interval. Use `--interval <seconds>` to override it.
+
 The preflight exits `0` when idle, `10` when a real tick should run, and `2` on setup or
 tool errors. It records its snapshot in `.git/cos-preflight-state.json` by default and
 wakes only when repo/GitHub state changes enough to justify a COS tick: lane drift,
