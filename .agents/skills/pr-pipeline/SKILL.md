@@ -33,6 +33,9 @@ Agent-surface notes:
   evidence, and a PR that lacks this pass does not satisfy the visual gate.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
   new UI authoring, use the repo-local `frontend-design` skill before building.
+- Named review/design skills may be provided by the agent environment rather than this
+  repository's `.agents/skills/` tree. Do not downgrade a required gate because the
+  skill is not repo-local.
 - Do not merge. The `chief-of-staff` skill owns routine merge decisions and execution.
   Finish by marking PRs ready, recording current-head merge-gate evidence, and reporting
   the handoff state.
