@@ -133,11 +133,15 @@ Run focused verification as the work evolves:
    plus necessary issue context, not the author's intended fixes or conclusions. On
    Codex `multi_agent_v1`, omit `agent_type` (there is no review-specific role) and do
    not fork the full history. In-session `registry-code-review` is diagnostic and does
-   not satisfy the independent review gate. Stop before ready/handoff until the subagent
-   review has reported. Fix or explicitly dismiss every material finding with a reason.
-   Beyond correctness, weigh reuse/simplification/altitude cleanup — a one-caller
-   abstraction, a module duplicating a subsystem elsewhere, a library that subsumes the
-   approach — and route those cuts like any finding.
+   not satisfy the independent review gate. If the subagent launch fails or is rejected,
+   run the in-session diagnostic checklist if useful, record
+   `independent-review: blocked; subagent launch failed`, and do not mark the PR
+   ready-to-merge until a fresh subagent or other trusted independent review completes.
+   Stop before ready/handoff until the independent review has reported. Fix or
+   explicitly dismiss every material finding with a reason. Beyond correctness, weigh
+   reuse/simplification/altitude cleanup — a one-caller abstraction, a module
+   duplicating a subsystem elsewhere, a library that subsumes the approach — and route
+   those cuts like any finding.
 4. For rendered-output changes, run the formal visual gate in this order:
    - First, launch a fresh subagent running `web-design-reviewer` against the rendered
      app or the changed route(s). The reviewer must apply the skill's structured report

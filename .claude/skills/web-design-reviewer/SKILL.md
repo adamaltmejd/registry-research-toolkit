@@ -29,7 +29,8 @@ Required output for the PR gate:
 - screenshots or render proof inspected;
 - findings grouped by severity;
 - every finding fixed or dismissed with a reason;
-- a final reviewer result suitable for the PR body or a PR comment.
+- a final reviewer result suitable for the lead to publish in the PR body or a PR
+  comment.
 
 Manual screenshots, `bun` checks, or a lead-agent visual skim do not substitute for this
 reviewer pass.
@@ -64,11 +65,12 @@ REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot 
 ```
 
 Use `shot --all --viewport 1920x1080` for responsive screenshots unless the route is
-demonstrably desktop-only. Use `smoke` for catalog browsing or broad app-shell changes.
-Screenshots land in `/tmp/reg-webapp-shots/`; include these local paths in the reviewer
-report, but do not treat them as final gate proof. A later merge runner needs PR-visible
-proof, so the final note must include an attachment, PR comment, artifact, or other
-durable link for the screenshot/render evidence inspected.
+demonstrably desktop-only. Use `smoke` only as an additive broad-flow check for catalog
+browsing or app-shell changes; smoke alone captures the default desktop viewport and is
+not enough for the formal visual gate. Screenshots land in `/tmp/reg-webapp-shots/`;
+include these local paths and a concise proof payload in the reviewer report. The lead
+must publish that reviewer result and screenshot/render evidence in a PR body or comment
+before marking the merge gate ready.
 
 Browser automation should inspect screenshots and, when available, DOM/accessibility
 snapshots and console output. Do not rely on `bun run lint/check/test/build`; those do
@@ -118,7 +120,7 @@ PR", "intended clipping", or "route not affected by this diff".
 - Render command or URL: <command/URL>
 - Viewports: <tested viewports>
 - Local screenshots inspected: <paths under /tmp/reg-webapp-shots/ or other local paths>
-- PR-visible render proof: <attachment, PR comment, artifact, or durable link>
+- PR-visible render proof: <published attachment/comment/artifact/link, or pending lead publication>
 - Result: <pass / findings fixed / findings dismissed / blocked>
 
 ## Findings
@@ -135,6 +137,7 @@ PR", "intended clipping", or "route not affected by this diff".
 ## Final Gate Note
 
 web-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
-local_screenshots=<paths>; pr_visible_proof=<attachment/comment/artifact/link>;
+local_screenshots=<paths>;
+pr_visible_proof=<published attachment/comment/artifact/link or pending lead publication>;
 findings=<none / fixed / dismissed>.
 ```
