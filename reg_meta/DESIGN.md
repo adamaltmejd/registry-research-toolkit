@@ -945,9 +945,10 @@ recommendation, where `starred` flags it and `note` carries the one-line rationa
 curation can give and popularity can't). Curated from `reg_meta_build/tags.toml`,
 derived every build (regenerate-not-migrate); a discovery overlay that leaves identity
 untouched, same family as concept groups and delivery enrichment (package-root TOMLs).
-Ships EMPTY until curation content lands (machinery first). The webapp consumes
-memberships as catalog-node chips; tag-scoped search/facets and tag-backed search boost
-remain separate consumption work.
+The first committed content slice is SCB-heavy and intentionally small; synthetic builds
+and wheel installs can still materialize empty tag tables when the curation file is
+absent. The webapp consumes memberships as catalog-node chips; tag-scoped search/facets
+and tag-backed search boost remain separate consumption work.
 
 **API**: `Catalog.list_tags()` → `TagSummary` (slug, label, description, `member_count`,
 `starred_count`) is the vocabulary with counts; `tags_for_variable(fqid)` /

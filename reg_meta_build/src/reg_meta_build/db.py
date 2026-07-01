@@ -1117,7 +1117,8 @@ CREATE INDEX idx_concept_group_classification_group
 -- *across* providers/registers ("income", "health", …) for discovery without
 -- knowing the register. Curated from `tags.toml`; derived every build
 -- (regenerate-not-migrate); a presentation/discovery overlay that leaves identity
--- untouched. Tables ship EMPTY until curation content lands (machinery first).
+-- untouched. Missing curation files still materialize empty tables for synthetic
+-- builds and wheel installs; repo builds load the reviewed seed content.
 --
 -- ONE global vocabulary (a tag slug is globally unique — cross-register discovery
 -- is the whole point) + ONE polymorphic membership table spanning both grains:
@@ -4548,8 +4549,8 @@ def materialize(
         # Curated cross-register thematic tags (#311) — discovery overlay. Runs
         # after populate_variable_slugs (member FQIDs resolve off stored
         # register/variable slugs), same slug-dependent block as concept groups /
-        # delivery enrichment. Tables ship EMPTY until curation content lands; a
-        # dangling member reference fails the build LOUD (EXIT_CONFIG).
+        # delivery enrichment. A missing curation file materializes empty tables;
+        # a dangling member reference fails the build LOUD (EXIT_CONFIG).
         tag_counts = materialize_tags(
             conn,
             load_tags(repo_tags_path()),

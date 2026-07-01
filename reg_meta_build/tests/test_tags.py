@@ -3,8 +3,8 @@
 Covers the loader (`load_tags`: shape + exactly-one-grain + dedup validation),
 the materializer (`materialize_tags`: FQID resolution, dangling-ref fails LOUD,
 per-grain uniqueness + exactly-one-grain enforced by the DDL), and the validator
-closure check. Curation CONTENT is out of scope (tables ship empty) — these
-tests construct their own small `tags.toml` / `CuratedTag` fixtures.
+closure check. Tests use both small local fixtures and the committed seed
+`tags.toml`.
 """
 
 from __future__ import annotations
@@ -19,6 +19,7 @@ from reg_meta_build.tags import (
     TagMember,
     load_tags,
     materialize_tags,
+    repo_tags_path,
 )
 
 if TYPE_CHECKING:
@@ -69,6 +70,37 @@ description = "Income measures"
 
 def test_load_tags_empty_when_no_file() -> None:
     assert load_tags(None) == ()
+
+
+def test_repo_tags_toml_seeds_scb_subset() -> None:
+    tags = load_tags(repo_tags_path())
+    assert [tag.slug for tag in tags] == [
+        "income",
+        "employment",
+        "education",
+        "family-household",
+        "geography",
+    ]
+    assert all(any(member.starred for member in tag.members) for tag in tags)
+
+    refs = {
+        f"{member.provider}/{member.register}"
+        + (f"/{member.variable}" if member.variable is not None else "")
+        for tag in tags
+        for member in tag.members
+    }
+    assert {
+        "scb/lisa",
+        "scb/iot",
+        "scb/ureg",
+        "scb/hreg",
+        "scb/rams",
+        "scb/iot/disponibel-inkomst",
+        "scb/lisa/arbetsmarknadsstatus",
+        "scb/ureg/sun2020niva",
+        "scb/iot/familjetyp",
+        "scb/lisa/kommun-for-bostaden",
+    }.issubset(refs)
 
 
 @pytest.mark.parametrize(

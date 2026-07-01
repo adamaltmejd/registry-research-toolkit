@@ -171,8 +171,9 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   - #311 (curated thematic tags): additive `tag` (global vocabulary) +
 #     `tag_member` (polymorphic register/variable membership with rank/starred/
 #     note) tables — a cross-register discovery overlay, derived from `tags.toml`
-#     (regenerate-not-migrate). Ship EMPTY until curation content lands. A 5.3.0
-#     DB lacks both tables, so `Catalog.list_tags` / `tags_for_*` can't query it.
+#     (regenerate-not-migrate). Initially shipped empty; current builds may
+#     populate reviewed curated content. A 5.3.0 DB lacks both tables, so
+#     `Catalog.list_tags` / `tags_for_*` can't query it.
 #   - #371 (coverage covering index): additive
 #     `idx_variable_state_coverage` on `variable_state(variable_id, valid_from,
 #     valid_to)` so the #351 coverage aggregates (MIN/MAX span per variable /

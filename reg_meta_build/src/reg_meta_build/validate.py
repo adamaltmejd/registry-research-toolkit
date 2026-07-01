@@ -1283,7 +1283,7 @@ def _check_tags(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
     """#311 curated tag-layer structural closure (corpus-independent; NO volume
-    floor — tables ship EMPTY until curation content lands). Asserts:
+    floor — synthetic builds and wheel installs may still have empty tables). Asserts:
       - every `tag_member.tag_id` references an existing `tag`;
       - every member has EXACTLY ONE grain (the DDL CHECK, re-asserted);
       - every `register_id` / `variable_id` resolves to a live row."""

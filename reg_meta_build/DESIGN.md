@@ -2848,8 +2848,9 @@ scaffold; empty on missing file for wheel installs + synthetic builds).
 delivery enrichment, provider-gated; it resolves member FQIDs → ids and, UNLIKE delivery
 enrichment's lenient resolve, fails the build LOUD (`tags_unresolved`, EXIT_CONFIG) on a
 dangling reference — a tag is a curated structural overlay, so drift must be fixed, not
-dropped. Tables ship EMPTY until curation content lands (machinery first);
-`validate_built_db` runs a corpus-independent closure check
+dropped. The committed file starts as a small SCB-heavy seed and grows by reviewed
+entries; missing files still materialize empty tables for wheel installs and synthetic
+builds. `validate_built_db` runs a corpus-independent closure check
 (`tag_id`/`register_id`/`variable_id` resolve, exactly-one-grain holds) with NO volume
 floor.
 
