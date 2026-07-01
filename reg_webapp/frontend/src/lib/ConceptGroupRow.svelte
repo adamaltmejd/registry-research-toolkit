@@ -36,18 +36,22 @@ let {
   href,
   onpick,
   disabled = false,
+  showGroupKey,
 }: {
   group: ConceptGroup;
   noun?: string;
   href?: string;
   onpick?: (fqid: string) => void;
   disabled?: boolean;
+  showGroupKey?: boolean;
 } = $props();
 
 // Link mode only when a subject href is supplied AND we're not in pick mode
 // (pick mode must keep the inline member-pick buttons). The link reuses the same
-// summary content (label + count + group-key badge) the <summary> shows.
+// summary content as the <summary>, except browse links hide the noisy group-key
+// slug by default. Picker/detail disclosure rows keep that technical anchor.
 const asLink = $derived(href !== undefined && onpick === undefined);
+const rendersGroupKey = $derived(showGroupKey ?? !asLink);
 
 const axes = $derived(group.axes);
 // A 2D matrix only addresses TWO axes; a group with >2 axes (the iot
@@ -143,13 +147,17 @@ const faceted = $derived(group.members.some((m) => m.facets.length > 0));
        read as a pickable leaf FQID and confused a maintainer. The categorical
        `group` Tag tone (moss — concept groups) is exactly this anchor's
        identity: it reads as a grouping label, non-monospace, distinct from the
-       monospace leaf <code>s. Do NOT "restore" the code look. -->
-  <span class="group-key"><Tag tone="group">{group.key}</Tag></span>
+       monospace leaf <code>s. Do NOT "restore" the code look. Browse-link rows
+       omit it because the subject link + count already identify the row; picker
+       disclosure rows keep it as a technical anchor. -->
+  {#if rendersGroupKey}
+    <span class="group-key"><Tag tone="group">{group.key}</Tag></span>
+  {/if}
 {/snippet}
 
 {#if asLink}
   <!-- #673: the register-arm browse links to the group SUBJECT page instead of
-       expanding inline. Same summary content as the <details> summary, just a
+       expanding inline. Same summary structure as the <details> summary, just a
        link — one interactive element per row (no nested controls). -->
   <a class="group-link" {href}>{@render summaryLine()}</a>
 {:else}

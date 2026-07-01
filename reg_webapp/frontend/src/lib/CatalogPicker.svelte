@@ -645,6 +645,7 @@ function emitVariant(slug: string): void {
         <ConceptGroupRow
           group={row.group}
           disabled={resolving}
+          showGroupKey={true}
           onpick={(fqid) => void pickVariable(fqid)}
         />
       </div>

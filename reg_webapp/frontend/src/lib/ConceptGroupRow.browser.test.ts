@@ -46,15 +46,10 @@ describe("ConceptGroupRow (#673 M6)", () => {
       .element(page.getByRole("link", { name: /Inkomst/ }))
       .toHaveAttribute("href", "/catalog/group/scb/rams/ink");
     expect(container.querySelector("details.group")).toBeNull();
-    // The shared summary content still renders inside the link: the count and the
-    // group-key badge.
+    // The shared summary content still renders inside the link: the useful count
+    // stays, but browse-link rows omit the noisy group-key slug pill.
     await expect.element(page.getByText("2 variables")).toBeVisible();
-    // The group-key badge renders the key via the shared `Tag` primitive (#828),
-    // whose internal label markup adds surrounding whitespace — trim before the
-    // text assertion (the key STRING is what matters, not the Tag's layout nodes).
-    expect(container.querySelector(".group-key")?.textContent?.trim()).toBe(
-      "ink",
-    );
+    expect(container.querySelector(".group-key")).toBeNull();
   });
 
   it("pick-mode keeps the inline <details> + member buttons even when href is also passed", async () => {
@@ -68,6 +63,9 @@ describe("ConceptGroupRow (#673 M6)", () => {
     // there is no group-link.
     expect(container.querySelector("a.group-link")).toBeNull();
     expect(container.querySelector("details.group")).not.toBeNull();
+    expect(container.querySelector(".group-key")?.textContent?.trim()).toBe(
+      "ink",
+    );
     // The single-axis pick arm renders members as member-pick buttons (in the DOM
     // even while the <details> is collapsed).
     expect(
