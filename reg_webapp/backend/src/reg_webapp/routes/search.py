@@ -393,13 +393,9 @@ def _narrow_search_groups(
     `admitted_variable_fqids`. `member_count` is reset to the narrowed length.
 
     A group left with NO surviving member is DROPPED, and the returned `dropped` count
-    lets the caller decrement `total_count` for it.
-
-    simplify: best-effort total_count — the webapp only sees the displayed PAGE, so a
-    group whose only members are unheld representations of an otherwise-held FQID and
-    that falls BEYOND the page can't be adjusted (it never reaches here). The common
-    case keeps the group and only refines `members`, leaving `total_count` exact; the
-    drop-and-decrement only fires for a fully-unheld group ON the page.
+    lets the caller decrement `total_count` for it. The steward variable arm fetches
+    the full FQID-grain result set before this helper runs so dropped all-unheld groups
+    can be removed before the final display slice instead of shortening the page.
 
     Browse's `_narrow_group_members` operates on a DIFFERENT model
     (`ConceptGroupSummary` vs `ConceptGroupSearchResult`), so a thin search-local helper
@@ -585,7 +581,10 @@ def get_search(
                 type="variable",
                 fqids=fqids,
                 delivery_column_scope=delivery_column_scope,
-                limit=limit,
+                # reg_meta computes the full folded result set before slicing for
+                # exact `total_count`; filtered stewards need that full set here so
+                # column-grain group drops can be backfilled before the display slice.
+                limit=None if index is not None else limit,
             )
             var_results = golden.apply_golden_boost(conn, q, "variable", var.results)
             # #859: same boost re-filter as the register arm (drops unheld LEAF pins;
@@ -595,12 +594,12 @@ def get_search(
             # `fqids`-scoped hits; computed BEFORE column-grain narrowing so the
             # group-drop decrement is layered on the same base.
             var_total = var.total_count + (len(var_results) - len(var.results))
-            # #859: reg_meta narrowed group members at FQID grain, but #819
+            # #865: reg_meta narrowed group members at FQID grain, but #819
             # representation members share one FQID across `delivery_column`s — a steward
             # holding only some columns still sees the unheld representations. Refine each
             # group row's `members` at COLUMN grain (browse's `_narrow_group_members`
             # equivalent for the search model), dropping a group with no held member and
-            # decrementing total_count for it (best-effort — see `_narrow_search_groups`).
+            # decrementing total_count for the full post-filtered variable result set.
             if index is not None:
                 var_results = _narrow_variable_leaf_columns(var_results, index)
                 var_results, dropped = _narrow_search_groups(var_results, index)

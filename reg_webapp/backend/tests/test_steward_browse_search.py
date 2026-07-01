@@ -24,6 +24,7 @@ surfaces here.
 
 from __future__ import annotations
 
+import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
@@ -248,6 +249,135 @@ def global_client(catalog_db: Path) -> Iterator[TestClient]:
         yield client
 
 
+def _set_steward_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, steward_id: str = "ifau"
+) -> Path:
+    stewards = tmp_path / "stewards"
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(stewards))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", steward_id)
+    return stewards
+
+
+def _seed_partial_column_lineage(catalog_db: Path) -> dict[str, int]:
+    """Seed one two-column variable whose lineage/warnings attach to both states."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (9901, 1, '9901', 'Disponibel inkomst steward', 'disp')"
+        )
+        for col in ("CDISP", "CDISP5"):
+            conn.execute(
+                "INSERT INTO variable_alias "
+                "(variable_id, register_variant_id, delivery_column_name) "
+                "VALUES (9901, 10, ?)",
+                (col,),
+            )
+        cdisp_state = conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, data_type, "
+            "delivery_column_name) VALUES "
+            "(9901, 10, '1968-01-01', '2024-12-31', 'int', 'CDISP')"
+        ).lastrowid
+        cdisp5_state = conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, data_type, "
+            "delivery_column_name) VALUES "
+            "(9901, 10, '2020-01-01', '2024-12-31', 'int', 'CDISP5')"
+        ).lastrowid
+        syss_state = conn.execute(
+            "SELECT state_id FROM variable_state WHERE variable_id = "
+            "(SELECT variable_id FROM variable WHERE register_id = 2 AND slug = 'syss')"
+        ).fetchone()[0]
+        for state_id, col in ((cdisp_state, "CDISP"), (cdisp5_state, "CDISP5")):
+            conn.execute(
+                "INSERT INTO variable_state_lineage "
+                "(consumer_state_id, source_state_id, valid_from, valid_to) "
+                "VALUES (?, ?, '2020-01-01', '2024-12-31')",
+                (state_id, syss_state),
+            )
+            conn.execute(
+                "INSERT INTO variable_state_lineage_warning "
+                "(consumer_state_id, warning_kind, message) VALUES "
+                "(?, 'no_source_state', ?)",
+                (state_id, f"missing source for {col}"),
+            )
+        conn.commit()
+    return {"CDISP": cdisp_state, "CDISP5": cdisp5_state}
+
+
+def _seed_search_backfill_groups(catalog_db: Path) -> None:
+    """Seed one dropped and one kept representation group for the same search label."""
+    with sqlite3.connect(catalog_db) as conn:
+        lonfink_id = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'lonfink'"
+        ).fetchone()[0]
+        for group_id, key, col, value in (
+            (9902, "a-backfill-drop", "LonFinkFeb", "drop-a"),
+            (9903, "b-backfill-drop", "LonFinkFeb", "drop-b"),
+            (9904, "z-backfill-keep", "LonFinkJan", "keep"),
+        ):
+            conn.execute(
+                "INSERT INTO concept_group "
+                "(group_id, kind, register_id, group_key, label, source) "
+                "VALUES (?, 'variable', 1, ?, 'Backfill family', 'curated')",
+                (group_id, key),
+            )
+            conn.execute(
+                "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
+                "VALUES (?, 'rep', 0, 'Representation')",
+                (group_id,),
+            )
+            cur = conn.execute(
+                "INSERT INTO concept_group_variable "
+                "(group_id, variable_id, delivery_column_name) VALUES (?, ?, ?)",
+                (group_id, lonfink_id, col),
+            )
+            conn.execute(
+                "INSERT INTO concept_group_variable_facet "
+                "(member_id, axis, value, label) VALUES (?, 'rep', ?, ?)",
+                (cur.lastrowid, value, value),
+            )
+        conn.commit()
+
+
+def _seed_kon_same_register_alias(catalog_db: Path) -> None:
+    """Seed a same-register alias that resolves to the live `kon` variable."""
+    with sqlite3.connect(catalog_db) as conn:
+        for a, b in (
+            (("scb", "lisa", "kon-alias"), ("scb", "lisa", "kon")),
+            (("scb", "lisa", "kon"), ("scb", "lisa", "kon-alias")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as "
+                "(a_provider, a_register, a_variable, "
+                "b_provider, b_register, b_variable) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (*a, *b),
+            )
+        conn.commit()
+
+
+def _seed_unnamed_column_variable(catalog_db: Path) -> None:
+    """Seed a held variable whose only state has no delivery column name."""
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (9905, 1, '9905', 'Unnamed steward column', 'unnamed')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, data_type) "
+            "VALUES (9905, 10, '2017-01-01', '2019-12-31', 'int')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, data_type, "
+            "delivery_column_name) "
+            "VALUES (9905, 10, '2020-01-01', '2024-12-31', 'int', 'UNNAMED_NAMED')"
+        )
+        conn.commit()
+
+
 # ── BROWSE ──────────────────────────────────────────────────────────────────
 
 
@@ -437,6 +567,35 @@ def test_search_variable_leaf_drops_unheld_delivery_alias_hit(lonfink_jan_client
     assert grp["total_count"] == 0
 
 
+def test_search_backfills_after_all_unheld_group_drop(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _seed_search_backfill_groups(catalog_db)
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [
+                    {
+                        "variable": "scb/lisa/lonfink",
+                        "type": "numeric",
+                        "representation": "LonFinkJan",
+                    }
+                ],
+            }
+        ],
+    ) as client:
+        body = client.get("/api/search?q=Backfill&type=variable&limit=1").json()
+    grp = {g["group"]: g for g in body["groups"]}["variables"]
+    assert [r["group_key"] for r in grp["results"]] == ["z-backfill-keep"]
+    assert grp["total_count"] == 1
+
+
 def test_search_group_column_grain_passthrough_global(global_client):
     # Fix 2 is index-gated: the global deployment (no index) shows BOTH representation
     # members of the `lonefink-rep` group — the column-grain narrow must not fire.
@@ -536,6 +695,88 @@ def test_partial_column_hold_narrows_leaf_states(lonfink_jan_client):
     assert {s["delivery_column_name"] for s in period["states"]} == {"LonFinkJan"}
 
 
+def test_partial_column_hold_coverage_uses_held_column(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _seed_partial_column_lineage(catalog_db)
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2020,
+                "bindings": [
+                    {
+                        "variable": "scb/lisa/disp",
+                        "type": "numeric",
+                        "representation": "CDISP5",
+                    }
+                ],
+            }
+        ],
+    ) as client:
+        provider = client.get("/api/catalog/scb").json()
+        register = client.get("/api/catalog/scb/lisa").json()
+
+    lisa = next(c for c in provider["children"] if c["fqid"] == "scb/lisa")
+    assert lisa["coverage"] == {
+        "variable_count": 1,
+        "coverage_from": "2020-01-01",
+        "coverage_to": "2024-12-31",
+        "open_ended": False,
+    }
+
+    disp = next(c for c in register["children"] if c.get("fqid") == "scb/lisa/disp")
+    assert disp["coverage"] == {
+        "coverage_from": "2020-01-01",
+        "coverage_to": "2024-12-31",
+        "open_ended": False,
+        "state_count": 1,
+    }
+
+
+def test_unnamed_column_hold_coverage_uses_variable_fallback(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _seed_unnamed_column_variable(catalog_db)
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [{"variable": "scb/lisa/unnamed", "type": "numeric"}],
+            }
+        ],
+    ) as client:
+        provider = client.get("/api/catalog/scb").json()
+        register = client.get("/api/catalog/scb/lisa").json()
+
+    lisa = next(c for c in provider["children"] if c["fqid"] == "scb/lisa")
+    assert lisa["coverage"] == {
+        "variable_count": 1,
+        "coverage_from": "2017-01-01",
+        "coverage_to": "2019-12-31",
+        "open_ended": False,
+    }
+
+    unnamed = next(
+        c for c in register["children"] if c.get("fqid") == "scb/lisa/unnamed"
+    )
+    assert unnamed["coverage"] == {
+        "coverage_from": "2017-01-01",
+        "coverage_to": "2019-12-31",
+        "open_ended": False,
+        "state_count": 1,
+    }
+
+
 def test_all_unheld_concept_group_404s(steward_client):
     # gap 6 (nice-to-have): the `ink` group lives on scb/rams (members inkjan/inkfeb),
     # none held by the kon-only steward → the group subject 404s.
@@ -573,6 +814,41 @@ def test_global_binding_leaf_shows_full_embedded_edges(global_client):
     }
 
 
+def test_binding_graph_narrows_neighbor_nodes_to_held(steward_client):
+    body = steward_client.get("/api/catalog/scb/lisa/kon/graph").json()
+    node_ids = {n["id"] for n in body["nodes"]}
+    assert node_ids == {"scb/lisa/kon"}
+    assert body["edges"] == []
+    kon_node = next(n for n in body["nodes"] if n["id"] == "scb/lisa/kon")
+    assert kon_node["same_as"] == []
+
+
+def test_binding_graph_keeps_held_same_as_alias_focus(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _seed_kon_same_register_alias(catalog_db)
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [{"variable": "scb/lisa/kon-alias", "type": "numeric"}],
+            }
+        ],
+    ) as client:
+        body = client.get("/api/catalog/scb/lisa/kon-alias/graph").json()
+
+    assert body["focus_id"] == "scb/lisa/kon"
+    assert {n["id"] for n in body["nodes"]} == {"scb/lisa/kon"}
+    kon_node = body["nodes"][0]
+    assert {s["delivery_column_name"] for s in kon_node["states"]} == {"Kon"}
+    assert {r["fqid"] for r in kon_node["same_as"]} == {"scb/lisa/kon-alias"}
+
+
 # ── Codex round 2 — Fix A: /lineage narrows source edges to held ─────────────
 
 
@@ -591,6 +867,46 @@ def test_global_lineage_subendpoint_shows_source_edge(global_client):
     # unconditionally.
     body = global_client.get("/api/catalog/scb/lisa/kon/lineage").json()
     assert {e["source_fqid"] for e in body["lineage_edges"]} == {"scb/rams/syss"}
+
+
+def test_lineage_and_warnings_narrow_to_held_consumer_column(
+    catalog_db: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    states = _seed_partial_column_lineage(catalog_db)
+    stewards = _set_steward_env(tmp_path, monkeypatch)
+    with _booted(
+        stewards,
+        "ifau",
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2020,
+                "bindings": [
+                    {
+                        "variable": "scb/lisa/disp",
+                        "type": "numeric",
+                        "representation": "CDISP5",
+                    }
+                ],
+            },
+            {
+                "name": "rams",
+                "register_variant": "scb/rams/standard",
+                "period": 2020,
+                "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
+            },
+        ],
+    ) as client:
+        lineage = client.get("/api/catalog/scb/lisa/disp/lineage").json()
+        warnings = client.get("/api/catalog/scb/lisa/disp/lineage_warnings").json()
+
+    assert [e["consumer_state_id"] for e in lineage["lineage_edges"]] == [
+        states["CDISP5"]
+    ]
+    assert [w["consumer_state_id"] for w in warnings["lineage_warnings"]] == [
+        states["CDISP5"]
+    ]
 
 
 # ── Codex round 2 — Fix B: provider-page coverage scoped to held variables ────

@@ -250,37 +250,74 @@ def _filter_states_to_held(
     return [s for s in states if s.delivery_column_name in held]
 
 
+def _held_graph_node_columns(
+    node: VariableGraphNode, index: CatalogIndex, focus_fqid: str | None
+) -> frozenset[str | None]:
+    """Held columns for a graph node, accepting held same_as aliases as identity."""
+    candidate_fqids = {
+        str(fqid)
+        for fqid in (
+            node.fqid,
+            *(ref.fqid for ref in node.same_as if ref.fqid is not None),
+        )
+        if fqid is not None
+    }
+    if focus_fqid is not None:
+        candidate_fqids.add(focus_fqid)
+    held: set[str | None] = set()
+    for fqid in candidate_fqids:
+        held.update(index.held_columns(fqid))
+    return frozenset(held)
+
+
 def _narrow_graph_to_held(
-    graph: RelationshipGraph, index: CatalogIndex
+    graph: RelationshipGraph, index: CatalogIndex, focus_fqid: str | None = None
 ) -> RelationshipGraph:
-    """Narrow a concept-group graph's VARIABLE-node states to the steward's held
-    delivery columns (#678 picker fix), mirroring `_filter_states_to_held` on the
-    leaf/browse path. The group `/graph` route otherwise emits each member variable's
-    FULL, unfiltered state set (the node-set narrowing was deliberately deferred), so a
-    whole-variable group member — held only because the steward holds AT LEAST ONE of
-    its columns — would surface its NON-held columns as addable picker rows, regressing
-    the leaf path's column-grain scoping.
+    """Narrow a relationship graph to the steward's held variable nodes and delivery
+    columns (#865). Classification nodes pass through; variable nodes are kept when
+    their canonical FQID or a same_as alias is held, their `states` are reduced to held
+    delivery columns, and edges whose endpoint node was dropped are removed.
 
     Per variable node: keep a state iff its resolved `delivery_column_name` is in the
-    steward's `held_columns` for that node's FQID (the same `(fqid, resolved column)`
-    admission, #206). A node emptied of all states is DROPPED (the steward holds none
-    of its columns under this group). Classification nodes and edges pass through
-    unchanged (classifications are catalog-global, never steward-gated). Only invoked
-    for a FILTERED steward (`index is not None`); the `global` deployment never calls
-    it, so its graph is untouched. The `representation_run_id`s on surviving states may
-    skip values (a dropped run leaves a gap) — harmless: the run id groups ADJACENT
-    surviving states into render cells; it is not a dense sequence the consumers rely
-    on."""
+    steward's `held_columns` for that node's canonical FQID or a held same_as alias
+    (the same `(fqid, resolved column)` admission, #206). A variable node emptied of all
+    states is DROPPED. Same-as metadata is narrowed with the same held-FQID rule as leaf
+    refs, so a kept node does not retain an unheld alias chip. Only invoked for a
+    FILTERED steward (`index is not None`); the `global` deployment never calls it, so
+    its graph is untouched. The
+    `representation_run_id`s on surviving states may skip values (a dropped run leaves a
+    gap) — harmless: the run id groups ADJACENT surviving states into render cells; it
+    is not a dense sequence the consumers rely on."""
     kept_nodes: list = []
+    kept_ids: set[str] = set()
     for node in graph.nodes:
         if not isinstance(node, VariableGraphNode) or node.fqid is None:
             kept_nodes.append(node)
+            kept_ids.add(node.id)
             continue
-        held = index.held_columns(str(node.fqid))
+        held = _held_graph_node_columns(
+            node, index, focus_fqid if node.id == graph.focus_id else None
+        )
         states = [s for s in node.states if s.delivery_column_name in held]
         if states:
-            kept_nodes.append(node.model_copy(update={"states": states}))
-    return graph.model_copy(update={"nodes": kept_nodes})
+            kept_nodes.append(
+                node.model_copy(
+                    update={
+                        "states": states,
+                        "same_as": _narrow_refs_to_held(list(node.same_as), index),
+                    }
+                )
+            )
+            kept_ids.add(node.id)
+    kept_edges = [
+        edge
+        for edge in graph.edges
+        if edge.source in kept_ids and edge.target in kept_ids
+    ]
+    focus_id = graph.focus_id if graph.focus_id in kept_ids else None
+    return graph.model_copy(
+        update={"nodes": kept_nodes, "edges": kept_edges, "focus_id": focus_id}
+    )
 
 
 def _narrow_group_members(group, index: CatalogIndex):  # noqa: ANN001 — reg_meta ConceptGroupSummary
@@ -415,17 +452,78 @@ def _narrow_refs_to_held(refs: list, index: CatalogIndex) -> list:  # noqa: ANN0
     return [r for r in refs if r.fqid is not None and str(r.fqid) in admitted]
 
 
-def _narrow_lineage_to_held(edges: list, index: CatalogIndex) -> list:  # noqa: ANN001 — LineageEdge list
-    """Narrow a list of `LineageEdge`s to those whose SOURCE is a held binding
-    (#859). A `LineageEdge` references its source by `source_fqid` (not `fqid`),
-    so it narrows on that field; an edge with `source_fqid is None` (unaddressable
-    source) drops, mirroring `_narrow_refs_to_held`. Shared by the binding leaf
-    embed (`_binding_node`) and the standalone `/lineage` sub-endpoint
-    (`get_binding_lineage`) so the two narrowings can't drift."""
+def _narrow_lineage_to_held(
+    edges: list,  # noqa: ANN001 — LineageEdge list
+    index: CatalogIndex,
+    consumer_state_ids: frozenset[int],
+) -> list:
+    """Narrow `LineageEdge`s to held source bindings AND held consumer states
+    (#865). `source_fqid` keeps unheld source variables out; `consumer_state_id`
+    keeps lineage for unheld delivery columns of the held subject out. Shared by the
+    binding leaf embed and the standalone `/lineage` sub-endpoint so they agree."""
     admitted = index.admitted_variable_fqids
     return [
-        e for e in edges if e.source_fqid is not None and str(e.source_fqid) in admitted
+        e
+        for e in edges
+        if e.consumer_state_id in consumer_state_ids
+        and e.source_fqid is not None
+        and str(e.source_fqid) in admitted
     ]
+
+
+def _narrow_lineage_warnings_to_held(
+    warnings: list,
+    consumer_state_ids: frozenset[int],  # noqa: ANN001 — LineageWarning list
+) -> list:
+    """Narrow lineage warnings to held consumer states (#865)."""
+    return [w for w in warnings if w.consumer_state_id in consumer_state_ids]
+
+
+def _held_consumer_state_ids(
+    catalog: Catalog, parsed: Fqid, index: CatalogIndex
+) -> frozenset[int]:
+    """State IDs of `parsed` whose delivery columns the filtered steward holds."""
+    states = _filter_states_to_held(catalog.states(parsed), index, str(parsed))
+    return frozenset(s.state_id for s in states)
+
+
+def _coverage_from_rows(rows: list[VariableCoverage]) -> VariableCoverage | None:
+    """Aggregate per-column coverage rows into one browse-row coverage object."""
+    if not rows:
+        return None
+    froms = [r.coverage_from for r in rows if r.coverage_from is not None]
+    open_ended = any(r.open_ended for r in rows)
+    tos = [r.coverage_to for r in rows if r.coverage_to is not None]
+    return VariableCoverage(
+        coverage_from=min(froms) if froms else None,
+        coverage_to=(max(tos) if tos else None) if not open_ended else None,
+        open_ended=open_ended,
+        state_count=sum(r.state_count for r in rows),
+    )
+
+
+def _held_variable_coverage(
+    per_column: dict[tuple[str, str], VariableCoverage],
+    per_unnamed: dict[str, VariableCoverage],
+    variable_slug: str,
+    held_columns: frozenset[str | None],
+) -> VariableCoverage | None:
+    """Coverage for one held binding from held delivery-column rows only (#865).
+
+    A named held column with no per-column state row yields no coverage instead of
+    borrowing the whole-variable union; that mirrors representation-member coverage
+    and avoids overstating partial-column holdings. A genuinely unnamed held column
+    (`delivery_column_name is None`) has no `register_column_coverage` key, so it uses
+    the exact unnamed-column coverage row.
+    """
+    rows = [
+        per_column[(variable_slug, column)]
+        for column in held_columns
+        if column is not None and (variable_slug, column) in per_column
+    ]
+    if None in held_columns and variable_slug in per_unnamed:
+        rows.append(per_unnamed[variable_slug])
+    return _coverage_from_rows(rows)
 
 
 # ── reg_meta model → catalog node mappers (see DESIGN.md → Pydantic boundary) ──
@@ -469,13 +567,14 @@ def _binding_node(
     lineage = list(resolved.lineage)
     if index is not None:
         states = _filter_states_to_held(states, index, str(resolved.fqid))
+        consumer_state_ids = frozenset(s.state_id for s in states)
         # `same_as` carries `.fqid`; succession-chain editions carry a navigable
         # `.fqid` too, so the same held-FQID narrower applies to both.
         same_as = _narrow_refs_to_held(same_as, index)
         succession_chain = _narrow_refs_to_held(succession_chain, index)
-        # `LineageEdge` narrows on `source_fqid` (not `fqid`) — factored into the
-        # shared `_narrow_lineage_to_held` so the leaf embed and `/lineage` agree.
-        lineage = _narrow_lineage_to_held(lineage, index)
+        # `LineageEdge` narrows on held source FQID AND held consumer state IDs —
+        # factored into the shared helper so the leaf embed and `/lineage` agree.
+        lineage = _narrow_lineage_to_held(lineage, index, consumer_state_ids)
     return BindingNode(
         fqid=str(resolved.fqid),
         variable_id=resolved.variable_id,
@@ -625,28 +724,30 @@ def _classification_group_node(group) -> ClassificationGroupNode:
 
 
 def _held_register_coverage(
-    per_variable: dict[str, VariableCoverage], held_slugs: set[str]
+    per_column: dict[tuple[str, str], VariableCoverage],
+    per_unnamed: dict[str, VariableCoverage],
+    held_columns_by_slug: dict[str, frozenset[str | None]],
 ) -> RegisterCoverage | None:
-    """Recompute a register's `RegisterCoverage` from ONLY the steward's held
-    variables (#859), so a filtered steward's provider page doesn't overstate the
-    per-register `variable_count` / date span by aggregating over variables it
-    doesn't hold. `per_variable` is reg_meta's `register_variable_coverage` (keyed
-    by variable slug — a row per slugged variable, stateless ones at `state_count`
-    0); `held_slugs` are the leaf slugs of this register's held FQIDs.
+    """Recompute a register's `RegisterCoverage` from held delivery columns (#865),
+    so a filtered steward's provider page doesn't overstate a partial-column hold by
+    inheriting the whole-variable span. `variable_count` remains browse-grain: distinct
+    held variable slugs with coverage from a named held column or unnamed-column
+    fallback.
 
     Mirrors `provider_register_coverage`'s semantics exactly so the held-only number
-    is the same KIND of number, just over a subset:
-    - `variable_count` = held variables WITH a coverage row (≡ slugged variables —
-      the full aggregate's `COUNT(DISTINCT v.variable_id)` over slugged variables,
-      not variables-with-states: stateless variables still carry a row at count 0).
-    - the span = min `coverage_from` / max `coverage_to` over the held variables,
+    is the same KIND of number, just over held column coverage:
+    - `variable_count` = held variable slugs WITH at least one held coverage row.
+    - the span = min `coverage_from` / max `coverage_to` over those held variables,
       `open_ended` if ANY held variable is open-ended (its `coverage_to` is None +
       `open_ended` True, the open-ended sentinel reg_meta already mapped per row).
 
-    Returns None when NO held variable has a coverage row — a held register with no
-    held-variable coverage greys the hint (matching `_provider_response`'s `None`
-    for a missing register), NOT a fabricated zero."""
-    rows = [per_variable[s] for s in held_slugs if s in per_variable]
+    Returns None when NO held variable has coverage — a held register with no coverage
+    greys the hint, NOT a fabricated zero."""
+    rows: list[VariableCoverage] = []
+    for slug, held_columns in held_columns_by_slug.items():
+        cov = _held_variable_coverage(per_column, per_unnamed, slug, held_columns)
+        if cov is not None:
+            rows.append(cov)
     if not rows:
         return None
     froms = [r.coverage_from for r in rows if r.coverage_from is not None]
@@ -686,28 +787,30 @@ def _provider_response(
         def coverage_for(register_slug: str) -> RegisterCoverage | None:
             return coverage.get(register_slug)
     else:
-        # #859: a filtered steward must NOT inherit the full-register aggregate —
+        # #865: a filtered steward must NOT inherit the full-register aggregate —
         # `provider_register_coverage` counts EVERY variable in each register, so a
-        # held register would overstate `variable_count` (and possibly the span) by
-        # counting unheld variables. Recompute each held register's coverage from its
-        # HELD variables only (`register_variable_coverage`, keyed by variable slug,
-        # restricted to this register's held leaf slugs). The held FQIDs per register
-        # are derived ONCE from `admitted_variable_fqids`.
-        held_slugs_by_register: dict[str, set[str]] = {}
+        # held register would overstate spans for partial-column holds. Recompute each
+        # held register's coverage from its HELD delivery columns only
+        # (`register_column_coverage`, keyed by `(variable slug, delivery column)`). The
+        # held FQIDs per register are derived ONCE from `admitted_variable_fqids`.
+        held_columns_by_register: dict[str, dict[str, frozenset[str | None]]] = {}
         for fqid in index.admitted_variable_fqids:
             provider, register, variable = fqid.split("/")
-            held_slugs_by_register.setdefault(f"{provider}/{register}", set()).add(
+            held_columns_by_register.setdefault(f"{provider}/{register}", {})[
                 variable
-            )
+            ] = index.held_columns(fqid)
 
         def coverage_for(register_slug: str) -> RegisterCoverage | None:
-            held_slugs = held_slugs_by_register.get(f"{provider_slug}/{register_slug}")
-            if not held_slugs:
+            held_columns = held_columns_by_register.get(
+                f"{provider_slug}/{register_slug}"
+            )
+            if not held_columns:
                 return None
-            per_variable = catalog.register_variable_coverage(
+            per_column = catalog.register_column_coverage(provider_slug, register_slug)
+            per_unnamed = catalog.register_unnamed_column_coverage(
                 provider_slug, register_slug
             )
-            return _held_register_coverage(per_variable, held_slugs)
+            return _held_register_coverage(per_column, per_unnamed, held_columns)
 
     return ProviderResponse(
         fqid=str(resolved.fqid),
@@ -743,9 +846,32 @@ def _register_response(
         admitted = index.admitted_variable_fqids
         bindings = [b for b in bindings if str(b.fqid) in admitted]
         groups = _narrow_groups(groups, index)
-    # #351 per-variable coverage, keyed by variable slug — one GROUP BY (~9 ms on
-    # the worst real register, scb/ulf 7.3k vars), query-time behind ETag.
-    coverage = catalog.register_variable_coverage(provider_slug, register_slug)
+    # #351/#865 coverage, keyed by variable slug for global and by
+    # (variable slug, delivery column) for filtered stewards. The filtered path uses
+    # only held delivery-column rows so a partial-column steward does not inherit the
+    # whole-variable span/count.
+    if index is None:
+        variable_coverage = catalog.register_variable_coverage(
+            provider_slug, register_slug
+        )
+
+        def coverage_for(variable_slug: str) -> VariableCoverage | None:
+            return variable_coverage.get(variable_slug)
+
+    else:
+        column_coverage = catalog.register_column_coverage(provider_slug, register_slug)
+        unnamed_coverage = catalog.register_unnamed_column_coverage(
+            provider_slug, register_slug
+        )
+
+        def coverage_for(variable_slug: str) -> VariableCoverage | None:
+            held_columns = index.held_columns(
+                f"{provider_slug}/{register_slug}/{variable_slug}"
+            )
+            return _held_variable_coverage(
+                column_coverage, unnamed_coverage, variable_slug, held_columns
+            )
+
     # A register's children are its bindings PLUS a `variants` reference
     # stub (the declared A5.2 variant-browser slot — a link, not data).
     children: list[RegisterChild] = [
@@ -755,7 +881,7 @@ def _register_response(
             # b.fqid.variable is always set for a binding summary; the guard keeps
             # the dict key str-typed. reg_meta's `VariableCoverage` passes straight
             # through (#681).
-            coverage=coverage.get(b.fqid.variable) if b.fqid.variable else None,
+            coverage=coverage_for(b.fqid.variable) if b.fqid.variable else None,
         )
         for b in bindings
     ]
@@ -1106,10 +1232,8 @@ def get_concept_group_graph(
             status_code=404,
             detail=f"no concept group {key!r} in {provider}/{register}",
         )
-    # #678 picker fix: scope each member variable's states to the steward's held
-    # columns (the leaf path's column-grain narrowing, here applied to the graph the
-    # group picker consumes) so a whole-variable member never exposes NON-held columns
-    # as addable. Global (`index is None`) passes the full graph through unchanged.
+    # #865: scope the graph's variable nodes and their states to held columns. Global
+    # (`index is None`) passes the full graph through unchanged.
     if index is not None:
         graph = _narrow_graph_to_held(graph, index)
     return graph
@@ -1371,12 +1495,8 @@ def get_binding_graph(
     index = _index(request)
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
-        # #859: gate the SUBJECT binding (held-successor 301 / 404). DEFERRAL: the
-        # graph's NODE set (the variable's same_as/group union) is NOT
-        # narrowed to held — that traversal-narrowing is non-trivial and would
-        # balloon this diff, so a held steward subject renders its full reg_meta
-        # neighborhood. Tracked as a follow-up (see report); the subject gate alone
-        # already keeps an unheld binding's graph out of the steward.
+        # #865: gate the SUBJECT binding (held-successor 301 / 404), then narrow the
+        # graph's variable node set and states to held columns before returning.
         if index is not None:
             redirect = _require_admitted(
                 catalog, parsed, index, request, suffix="/graph"
@@ -1386,7 +1506,10 @@ def get_binding_graph(
         try:
             if parsed.kind is FqidKind.CLASSIFICATION:
                 return catalog.graph_for_classification_fqid(parsed)
-            return catalog.graph_for_fqid(parsed)
+            graph = catalog.graph_for_fqid(parsed)
+            if index is not None:
+                graph = _narrow_graph_to_held(graph, index, focus_fqid=str(parsed))
+            return graph
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/graph")
 
@@ -1415,11 +1538,12 @@ def get_binding_lineage(
             edges = catalog.lineage(parsed)
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/lineage")
-        # #859: narrow the returned edges to held SOURCES — the SAME narrowing the
-        # leaf embed applies in `_binding_node` (shared helper), so a held binding's
-        # `/lineage` doesn't leak an unheld source the leaf already drops.
+        # #865: narrow the returned edges to held source FQIDs AND held consumer
+        # state IDs — the SAME narrowing the leaf embed applies in `_binding_node`.
         if index is not None:
-            edges = _narrow_lineage_to_held(edges, index)
+            edges = _narrow_lineage_to_held(
+                edges, index, _held_consumer_state_ids(catalog, parsed, index)
+            )
     return LineageResponse(binding=str(parsed), lineage_edges=edges)
 
 
@@ -1449,6 +1573,10 @@ def get_binding_lineage_warnings(
         except RegMetaError as exc:
             return _redirect_or_4xx(
                 catalog, parsed, exc, request, suffix="/lineage_warnings"
+            )
+        if index is not None:
+            warnings = _narrow_lineage_warnings_to_held(
+                warnings, _held_consumer_state_ids(catalog, parsed, index)
             )
     return LineageWarningsResponse(binding=str(parsed), lineage_warnings=warnings)
 

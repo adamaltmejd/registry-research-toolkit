@@ -997,6 +997,39 @@ class Catalog:
             )
         return out
 
+    def register_unnamed_column_coverage(
+        self, provider_slug: str, register_slug: str
+    ) -> dict[str, VariableCoverage]:
+        """Coverage for states whose delivery-column name is NULL, keyed by slug.
+
+        `register_column_coverage` intentionally has no `(slug, None)` key because
+        representation members are keyed by named delivery columns. Filtered steward
+        coverage still needs exact coverage for a held unnamed column; using the
+        variable-level union would borrow named sibling states.
+        """
+        rows = self._conn.execute(
+            "SELECT v.slug AS slug, MIN(vs.valid_from) AS cov_from, "
+            "MAX(vs.valid_to) AS cov_to, COUNT(vs.state_id) AS nstates "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "  AND vs.delivery_column_name IS NULL "
+            "GROUP BY v.variable_id",
+            (provider_slug, register_slug),
+        ).fetchall()
+        out: dict[str, VariableCoverage] = {}
+        for r in rows:
+            cov_from, cov_to, open_ended = _coverage_bounds(r["cov_from"], r["cov_to"])
+            out[r["slug"]] = VariableCoverage(
+                coverage_from=cov_from,
+                coverage_to=cov_to,
+                open_ended=open_ended,
+                state_count=r["nstates"],
+            )
+        return out
+
     def provider_register_coverage(
         self, provider_slug: str
     ) -> dict[str, RegisterCoverage]:

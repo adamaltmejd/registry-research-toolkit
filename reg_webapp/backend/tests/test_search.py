@@ -495,7 +495,7 @@ def test_narrow_variable_leaf_columns_treats_none_as_concrete_column():
     assert kept[0].delivery_column_names == ("Kon",)
 
 
-def test_filtered_variable_search_passes_delivery_scope_into_bounded_query(
+def test_filtered_variable_search_passes_delivery_scope_into_full_backfill_query(
     client, monkeypatch
 ):
     index = CatalogIndex(
@@ -545,7 +545,7 @@ def test_filtered_variable_search_passes_delivery_scope_into_bounded_query(
     body = client.get("/api/search?q=needle&type=variable&limit=1").json()
     group = _group(body, "variables")
 
-    assert calls == [1]
+    assert calls == [None]
     assert group["total_count"] == 1
     assert [r["name"] for r in group["results"]] == ["needle variable"]
     assert group["results"][0]["delivery_column_names"] == ["Kon"]
