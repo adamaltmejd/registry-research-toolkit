@@ -71,3 +71,46 @@ def test_bindings_are_self_consistent(project: ProjectData) -> None:
             key = (source.register_variant, binding.variable, binding.representation)
             assert key not in seen, f"duplicate binding {key}"
             seen.add(key)
+
+
+def test_issue_428_sun_grouping_columns_are_flavor_bindings(
+    project: ProjectData,
+) -> None:
+    bindings = {
+        (source.register_variant, binding.variable, binding.representation)
+        for source in project.sources
+        for binding in source.bindings
+    }
+
+    assert {
+        (
+            "swecov/hreg-sun-groupings/_default",
+            "swecov/hreg-sun-groupings/sun2000inr3-amnegrupp",
+            "SUN2000Inr3_amnegrupp",
+        ),
+        (
+            "swecov/hreg-sun-groupings/_default",
+            "swecov/hreg-sun-groupings/sun2020inr3-amnegrupp",
+            "SUN2020Inr3_amnegrupp",
+        ),
+        (
+            "swecov/hreg-sun-groupings/_default",
+            "swecov/hreg-sun-groupings/sun2000inr3-lprog",
+            "SUN2000Inr3_lprog",
+        ),
+        (
+            "swecov/hreg-sun-groupings/_default",
+            "swecov/hreg-sun-groupings/sun2020inr3-lprog",
+            "SUN2020Inr3_lprog",
+        ),
+        (
+            "swecov/hreg-sun-groupings/_default",
+            "swecov/hreg-sun-groupings/sun2000niva-lprog",
+            "SUN2000Niva_lprog",
+        ),
+        (
+            "swecov/hreg-sun-groupings/_default",
+            "swecov/hreg-sun-groupings/sun2020niva-lprog",
+            "SUN2020Niva_lprog",
+        ),
+    } <= bindings

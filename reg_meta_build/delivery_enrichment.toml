@@ -2198,7 +2198,7 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 # variable_state columns is dropped (redundant no-op, not an alternate name).
 # The apply pass attaches each to every register_variant where the variable has
 # a state; INSERT OR IGNORE so an already-known column is a no-op.
-# 37 aliases across 4 registers.
+# 45 aliases across 5 registers.
 
 [[alias]]
 register = "scb/agi"
@@ -2211,9 +2211,29 @@ variable = "bostadsf-smahus-ul-ag-ea"
 delivery_column = "BOSTADSF_SMAHUS_ULAG_EA"
 
 [[alias]]
+register = "scb/gymnasieskola-betyg"
+variable = "kurs"
+delivery_column = "Amneskod_omkodad"
+
+[[alias]]
+register = "scb/gymnasieskola-betyg"
+variable = "kurs"
+delivery_column = "Kurskod_omkodad"
+
+[[alias]]
+register = "scb/fek"
+variable = "aktier-och-andelar"
+delivery_column = "AktierOchAndelar"
+
+[[alias]]
 register = "scb/fek"
 variable = "bidrag-for-verksamheten"
 delivery_column = "BidragForVerksamheten"
+
+[[alias]]
+register = "scb/fek"
+variable = "byggnader"
+delivery_column = "Byggnader"
 
 [[alias]]
 register = "scb/fek"
@@ -2242,6 +2262,16 @@ delivery_column = "KostnaderForOvrigaSocialaAvgifter"
 
 [[alias]]
 register = "scb/fek"
+variable = "kundfordringar"
+delivery_column = "Kundfordringar"
+
+[[alias]]
+register = "scb/fek"
+variable = "mark"
+delivery_column = "Mark"
+
+[[alias]]
+register = "scb/fek"
 variable = "medelantal-anstallda"
 delivery_column = "MedelantalAnstallda"
 
@@ -2262,6 +2292,11 @@ delivery_column = "OvrigaPersonalkostnader"
 
 [[alias]]
 register = "scb/fek"
+variable = "ovriga-kortfristiga-placeringar"
+delivery_column = "OvrigaKortfristigaPlaceringar"
+
+[[alias]]
+register = "scb/fek"
 variable = "pensionskostnader"
 delivery_column = "Pensionskostnader"
 
@@ -2279,6 +2314,11 @@ delivery_column = "Rorelseresultat"
 register = "scb/fek"
 variable = "rorelseresultat-fore-avskrivningar"
 delivery_column = "RorelseresultatForeAvskrivningar"
+
+[[alias]]
+register = "scb/fek"
+variable = "skatteskulder"
+delivery_column = "Skatteskulder"
 
 [[alias]]
 register = "scb/fek"

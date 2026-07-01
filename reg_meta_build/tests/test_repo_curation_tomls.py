@@ -210,6 +210,28 @@ def test_repo_delivery_enrichment_parses() -> None:
     assert all(a.provider and a.register and a.delivery_column for a in enr.aliases)
 
 
+def test_repo_delivery_enrichment_keeps_issue_428_aliases() -> None:
+    aliases = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml").aliases
+    triples = {
+        (f"{a.provider}/{a.register}", a.variable, a.delivery_column) for a in aliases
+    }
+
+    assert {
+        ("scb/gymnasieskola-betyg", "kurs", "Amneskod_omkodad"),
+        ("scb/gymnasieskola-betyg", "kurs", "Kurskod_omkodad"),
+        ("scb/fek", "aktier-och-andelar", "AktierOchAndelar"),
+        ("scb/fek", "byggnader", "Byggnader"),
+        ("scb/fek", "kundfordringar", "Kundfordringar"),
+        ("scb/fek", "mark", "Mark"),
+        (
+            "scb/fek",
+            "ovriga-kortfristiga-placeringar",
+            "OvrigaKortfristigaPlaceringar",
+        ),
+        ("scb/fek", "skatteskulder", "Skatteskulder"),
+    } <= triples
+
+
 def test_repo_delivery_enrichment_tracks_curated_lisa_sni_slugs() -> None:
     enr = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml")
     lisa_variables = {
