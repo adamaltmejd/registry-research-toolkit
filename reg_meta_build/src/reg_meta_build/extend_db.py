@@ -41,9 +41,13 @@ Inventory JSON contract
                 {
                   "key": "belopp", "name": "Belopp", "definition": null,
                   "description": "Transaktionsbelopp i SEK.",
-                  "column": "BELOPP", "data_type": "float",
                   "is_identifier": false, "is_sensitive": false,
-                  "valid_from": null, "valid_to": null
+                  "states": [
+                    {
+                      "column": "BELOPP", "data_type": "float",
+                      "valid_from": null, "valid_to": null
+                    }
+                  ]
                 }
               ]
             }
@@ -65,12 +69,14 @@ Operation kinds
    ``seed_providers``).
 2. **registers/variants/variables/states** (nested) — the steward-private core
    graph. Deterministically minted high-band ids; inserted via the same column
-   lists ``_reinsert_core_graph_from_ir`` uses. Each variable gets one
-   open-range ``variable_state`` carrying its delivery ``column``, and that
-   column also gets a ``variable_alias`` row (the ``variable_alias ⊇ state
-   columns`` invariant — an intrinsic part of defining the steward variable,
-   NOT an alias onto a global variable). The register's ``provider`` must be
-   defined in ``providers[]`` or already live in the DB.
+   lists ``_reinsert_core_graph_from_ir`` uses. Each variable owns one or more
+   ``variable_state`` rows carrying literal delivery ``column`` values, so a
+   steward delivery rename can be represented as one variable with multiple
+   states instead of duplicate variables. Every state's column also gets a
+   ``variable_alias`` row (the ``variable_alias ⊇ state columns`` invariant — an
+   intrinsic part of defining the steward variable, NOT an alias onto a global
+   variable). The register's ``provider`` must be defined in ``providers[]`` or
+   already live in the DB.
 
 Discipline
 ----------
@@ -159,17 +165,23 @@ class InvProvider:
 
 
 @dataclass(frozen=True)
+class InvState:
+    column: str
+    data_type: str | None
+    value_set_version_label: str
+    valid_from: str | None
+    valid_to: str | None
+
+
+@dataclass(frozen=True)
 class InvVariable:
     key: str
     name: str
-    column: str
     definition: str | None
     description: str | None
-    data_type: str | None
     is_identifier: bool
     is_sensitive: bool
-    valid_from: str | None
-    valid_to: str | None
+    states: tuple[InvState, ...]
 
 
 @dataclass(frozen=True)
@@ -269,10 +281,16 @@ _VARIABLE_KEYS = frozenset(
         "name",
         "definition",
         "description",
-        "column",
-        "data_type",
         "is_identifier",
         "is_sensitive",
+        "states",
+    }
+)
+_STATE_KEYS = frozenset(
+    {
+        "column",
+        "data_type",
+        "value_set_version_label",
         "valid_from",
         "valid_to",
     }
@@ -411,18 +429,60 @@ def _load_variable(obj: dict, variant_ctx: str, idx: int) -> InvVariable:
             "uses '.' as a segment separator).",
             "Rename the variable key so it has no dot.",
         )
+    states_raw = _list_of_dicts(obj.get("states"), f"{ctx}.states")
+    if not states_raw:
+        raise _cfg_error(
+            f"extend-db inventory {ctx} ({key}) needs at least one state.",
+            'Give `"states": [ { "column": "...", ... } ]`.',
+        )
+    states = tuple(_load_state(s, ctx, i) for i, s in enumerate(states_raw))
+    _reject_duplicate_state_keys(states, ctx)
     return InvVariable(
         key=key,
         name=_require_str(obj, "name", ctx),
-        column=_require_str(obj, "column", ctx),
         definition=_opt_str(obj, "definition", ctx),
         description=_opt_str(obj, "description", ctx),
-        data_type=_opt_str(obj, "data_type", ctx),
         is_identifier=_opt_bool(obj, "is_identifier", ctx),
         is_sensitive=_opt_bool(obj, "is_sensitive", ctx),
+        states=states,
+    )
+
+
+def _load_state(obj: dict, variable_ctx: str, idx: int) -> InvState:
+    ctx = f"{variable_ctx}.states[{idx}]"
+    _reject_unknown_keys(obj, _STATE_KEYS, ctx)
+    label = _opt_str(obj, "value_set_version_label", ctx) or ""
+    return InvState(
+        column=_require_str(obj, "column", ctx),
+        data_type=_opt_str(obj, "data_type", ctx),
+        value_set_version_label=label,
         valid_from=_opt_str(obj, "valid_from", ctx),
         valid_to=_opt_str(obj, "valid_to", ctx),
     )
+
+
+def _reject_duplicate_state_keys(states: tuple[InvState, ...], context: str) -> None:
+    """Mirror ``idx_variable_state_unique`` at the inventory boundary.
+
+    The DB uniqueness key is ``(variable_id, register_variant_id, valid_from,
+    value_set_version_label)``. ``variable_id`` and ``register_variant_id`` are fixed
+    by the containing variable, so the state list must not repeat the expanded
+    ``valid_from`` + discriminator pair.
+    """
+    seen: set[tuple[str, str]] = set()
+    for state in states:
+        valid_from, _valid_to = _expand_window(state.valid_from, state.valid_to)
+        key = (valid_from, state.value_set_version_label)
+        if key in seen:
+            label = state.value_set_version_label or "<empty>"
+            raise _cfg_error(
+                f"extend-db inventory {context} has duplicate state key "
+                f"(valid_from={valid_from!r}, value_set_version_label={label!r}).",
+                "Give the state a distinct valid_from or "
+                "`value_set_version_label`, matching variable_state's uniqueness "
+                "contract.",
+            )
+        seen.add(key)
 
 
 def _reject_duplicate_provider_slugs(providers: tuple[InvProvider, ...]) -> None:
@@ -582,34 +642,48 @@ def _insert_core_graph(
                 )
                 counts["variables"] += 1
 
-                state_id = mint("state", reg.provider, reg.key, variant.key, var.key)
-                valid_from, valid_to = _expand_window(var.valid_from, var.valid_to)
-                conn.execute(
-                    "INSERT INTO variable_state "
-                    "(state_id, variable_id, register_variant_id, valid_from, "
-                    " valid_to, data_type, data_length, delivery_column_name, "
-                    " source_register_text, value_set_id, value_set_version_label, "
-                    " classification_id) "
-                    "VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NULL, NULL, '', NULL)",
-                    (
-                        state_id,
-                        variable_id,
-                        register_variant_id,
+                for state in var.states:
+                    valid_from, valid_to = _expand_window(
+                        state.valid_from, state.valid_to
+                    )
+                    state_id = mint(
+                        "state",
+                        reg.provider,
+                        reg.key,
+                        variant.key,
+                        var.key,
+                        state.column,
                         valid_from,
-                        valid_to,
-                        var.data_type,
-                        var.column,
-                    ),
-                )
-                counts["states"] += 1
-                # Preserve the `variable_alias ⊇ state delivery columns`
-                # invariant: every state column is also an alias row.
-                conn.execute(
-                    "INSERT INTO variable_alias "
-                    "(variable_id, register_variant_id, delivery_column_name) "
-                    "VALUES (?, ?, ?)",
-                    (variable_id, register_variant_id, var.column),
-                )
+                        state.value_set_version_label,
+                    )
+                    conn.execute(
+                        "INSERT INTO variable_state "
+                        "(state_id, variable_id, register_variant_id, valid_from, "
+                        " valid_to, data_type, data_length, delivery_column_name, "
+                        " source_register_text, value_set_id, value_set_version_label, "
+                        " classification_id) "
+                        "VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NULL, NULL, ?, NULL)",
+                        (
+                            state_id,
+                            variable_id,
+                            register_variant_id,
+                            valid_from,
+                            valid_to,
+                            state.data_type,
+                            state.column,
+                            state.value_set_version_label,
+                        ),
+                    )
+                    counts["states"] += 1
+                    # Preserve the `variable_alias ⊇ state delivery columns`
+                    # invariant: every state column is also an alias row. A
+                    # recurring column across disjoint states needs only one alias.
+                    conn.execute(
+                        "INSERT OR IGNORE INTO variable_alias "
+                        "(variable_id, register_variant_id, delivery_column_name) "
+                        "VALUES (?, ?, ?)",
+                        (variable_id, register_variant_id, state.column),
+                    )
     return counts
 
 

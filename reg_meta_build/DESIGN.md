@@ -2718,9 +2718,11 @@ input, never mutated), then runs an insert-only overlay on the copy:
 2. **INSERT** the steward core graph (registers → variants → variables → states + the
    per-state alias row). All ids are deterministically minted via `id.mint()` in the
    high band `[2^62, 2^63)`. `variable.source_label` is set from the inventory's
-   `source_label` field for provenance. Each state's delivery column also inserts a
-   `variable_alias` row, preserving the `variable_alias ⊇ state delivery columns`
-   invariant.
+   `source_label` field for provenance. Each inventory variable has a non-empty `states`
+   array, so a steward delivery rename can stay one variable with multiple literal
+   delivery-column states. Each state's delivery column also inserts a `variable_alias`
+   row, preserving the `variable_alias ⊇ state delivery columns` invariant. Overlapping
+   states use `value_set_version_label` as the existing `variable_state` discriminator.
 3. **Slug** the new rows using `populate_slugs(strict=False)` for registers/variants
    (the steward TOML covers only the inserted rows; global rows keep their published
    slugs untouched) and `populate_variable_slugs(incremental=True)` for variables
@@ -2768,9 +2770,14 @@ No `SCHEMA_VERSION` bump — rows on existing tables only.
             {
               "key": "belopp", "name": "Belopp", "definition": null,
               "description": "Transaktionsbelopp i SEK.",
-              "column": "BELOPP", "data_type": "float",
               "is_identifier": false, "is_sensitive": false,
-              "valid_from": null, "valid_to": null
+              "states": [
+                {
+                  "column": "BELOPP", "data_type": "float",
+                  "value_set_version_label": "",
+                  "valid_from": null, "valid_to": null
+                }
+              ]
             }
           ]
         }
@@ -2784,9 +2791,12 @@ Top-level keys: `steward` and `source_label` (both required strings); `providers
 `registers` (both optional arrays). Any other top-level key is a structural defect.
 Per-level key sets are closed (`_reject_unknown_keys`); a variable `key` must not
 contain `.` (it becomes `variable.provider_key`, whose slug source-ID grammar uses `.`
-as a segment separator). An undeclared provider on a register, an inverted validity
-window, or `base == output` are all `EXIT_CONFIG` structural errors — the overlay's
-content is steward-only, so there is no lenient `unresolved` count.
+as a segment separator), and each variable needs at least one `states` entry. A state
+needs `column`, may carry `data_type` and validity bounds, and may set
+`value_set_version_label` to disambiguate overlapping same-start representation states.
+An undeclared provider on a register, an inverted validity window, a duplicate state
+uniqueness key, or `base == output` are all `EXIT_CONFIG` structural errors — the
+overlay's content is steward-only, so there is no lenient `unresolved` count.
 
 ### Per-steward slug snapshot
 
