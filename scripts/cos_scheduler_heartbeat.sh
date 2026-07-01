@@ -9,6 +9,9 @@ Usage: scripts/cos_scheduler_heartbeat.sh [options] THREAD_ID
 
 Run scripts/cos_scheduler_tick.sh in a foreground loop. The tick script still owns
 the deterministic preflight and wakes Codex only when repo/GitHub state changed.
+With the default app-server wake, the agent transcript is written to persisted Codex
+thread history, not this terminal; active Codex clients may need `codex resume THREAD_ID`
+or a relaunch to show the injected turn until live refresh is supported.
 
 Options:
   --interval SECONDS        Seconds between ticks (default: 900, or COS_INTERVAL_SECONDS).
@@ -16,6 +19,9 @@ Options:
   --thread ID               Codex chief-of-staff thread/session id to resume.
   --prompt TEXT             Prompt to send on wake.
   --state-file PATH         State file passed through to scripts/cos_scheduler_tick.sh.
+  --wake-backend NAME       Wake backend passed through to the tick script.
+  --app-wake-bin PATH       App-server wake helper passed through to the tick script.
+  --wake-timeout SECONDS    Max seconds passed through to app-server wakes.
   --codex-bin PATH          Codex executable path.
   --uv-bin PATH             uv executable path.
   --tick-bin PATH           Test hook: executable to use instead of cos_scheduler_tick.sh.
@@ -50,6 +56,9 @@ thread=""
 interval="${COS_INTERVAL_SECONDS:-900}"
 prompt=""
 state_file=""
+wake_backend=""
+app_wake_bin=""
+wake_timeout=""
 codex_bin=""
 uv_bin=""
 tick_bin="$script_dir/cos_scheduler_tick.sh"
@@ -80,6 +89,21 @@ while [[ $# -gt 0 ]]; do
 	--state-file)
 		need_value "$1" "${2:-}"
 		state_file="$2"
+		shift 2
+		;;
+	--wake-backend)
+		need_value "$1" "${2:-}"
+		wake_backend="$2"
+		shift 2
+		;;
+	--app-wake-bin)
+		need_value "$1" "${2:-}"
+		app_wake_bin="$2"
+		shift 2
+		;;
+	--wake-timeout)
+		need_value "$1" "${2:-}"
+		wake_timeout="$2"
 		shift 2
 		;;
 	--codex-bin)
@@ -144,6 +168,15 @@ while true; do
 	fi
 	if [[ -n "$state_file" ]]; then
 		tick_cmd+=(--state-file "$state_file")
+	fi
+	if [[ -n "$wake_backend" ]]; then
+		tick_cmd+=(--wake-backend "$wake_backend")
+	fi
+	if [[ -n "$app_wake_bin" ]]; then
+		tick_cmd+=(--app-wake-bin "$app_wake_bin")
+	fi
+	if [[ -n "$wake_timeout" ]]; then
+		tick_cmd+=(--wake-timeout "$wake_timeout")
 	fi
 	if [[ -n "$codex_bin" ]]; then
 		tick_cmd+=(--codex-bin "$codex_bin")

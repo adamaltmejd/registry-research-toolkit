@@ -12,11 +12,18 @@ Options:
   --thread ID               Codex chief-of-staff thread/session id to resume.
   --prompt TEXT             Prompt to send on wake.
   --state-file PATH         State file passed to scripts/cos_preflight.py.
+  --wake-backend NAME       Wake backend: app-server or exec (default: app-server).
+  --app-wake-bin PATH       Test hook: helper to use for app-server wakes.
+  --wake-timeout SECONDS    Max seconds to wait for app-server wake completion.
   --codex-bin PATH          Codex executable path.
   --uv-bin PATH             uv executable path.
   --preflight-bin PATH      Test hook: executable to use instead of cos_preflight.py.
   --no-canonical-check      Test hook: pass through to cos_preflight.py.
   -h, --help                Show this help.
+
+The default app-server wake writes to persisted Codex thread history without streaming
+the transcript in this terminal. Active Codex clients may need `codex resume THREAD_ID`
+or a relaunch to show the injected turn until live refresh is supported.
 EOF
 }
 
@@ -31,12 +38,17 @@ need_value() {
 	fi
 }
 
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
 repo="${COS_REPO:-/Users/adam/Code/registry-research-toolkit}"
 thread="${COS_THREAD_ID:-}"
 prompt="${COS_PROMPT:-}"
 codex_bin="${COS_CODEX_BIN:-codex}"
 uv_bin="${COS_UV_BIN:-uv}"
 preflight_bin="${COS_PREFLIGHT_BIN:-}"
+app_wake_bin="${COS_APP_WAKE_BIN:-$script_dir/cos_app_server_wake.py}"
+wake_backend="${COS_WAKE_BACKEND:-app-server}"
+wake_timeout="${COS_WAKE_TIMEOUT_SECONDS:-3600}"
 state_file=""
 dry_run=0
 no_canonical_check=0
@@ -67,6 +79,21 @@ while [[ $# -gt 0 ]]; do
 		state_file="$2"
 		shift 2
 		;;
+	--wake-backend)
+		need_value "$1" "${2:-}"
+		wake_backend="$2"
+		shift 2
+		;;
+	--app-wake-bin)
+		need_value "$1" "${2:-}"
+		app_wake_bin="$2"
+		shift 2
+		;;
+	--wake-timeout)
+		need_value "$1" "${2:-}"
+		wake_timeout="$2"
+		shift 2
+		;;
 	--codex-bin)
 		need_value "$1" "${2:-}"
 		codex_bin="$2"
@@ -95,6 +122,18 @@ while [[ $# -gt 0 ]]; do
 		;;
 	esac
 done
+
+case "$wake_backend" in
+app-server | exec)
+	;;
+*)
+	fail "--wake-backend must be app-server or exec; got $wake_backend"
+	;;
+esac
+
+if [[ ! "$wake_timeout" =~ ^[1-9][0-9]*$ ]]; then
+	fail "--wake-timeout must be a positive integer; got $wake_timeout"
+fi
 
 if [[ -z "$prompt" ]]; then
 	prompt="[\$chief-of-staff]($repo/.agents/skills/chief-of-staff/SKILL.md)"
@@ -139,18 +178,35 @@ case "$preflight_status" in
 	if [[ -z "$thread" ]]; then
 		fail "preflight requested wake but --thread or COS_THREAD_ID is missing"
 	fi
-	codex_cmd=("$codex_bin" exec -C "$repo" resume "$thread" "$prompt")
+	if [[ "$wake_backend" == "app-server" ]]; then
+		wake_cmd=(
+			"$uv_bin" run --no-project python "$app_wake_bin"
+			--repo "$repo"
+			--thread "$thread"
+			--prompt "$prompt"
+			--codex-bin "$codex_bin"
+			--timeout "$wake_timeout"
+		)
+	else
+		wake_cmd=("$codex_bin" exec -C "$repo" resume "$thread" "$prompt")
+	fi
 	if [[ "$dry_run" -eq 1 ]]; then
 		printf 'cos-scheduler: dry-run would run:'
-		printf ' %q' "${codex_cmd[@]}"
+		printf ' %q' "${wake_cmd[@]}"
 		printf '\n'
 		exit 10
 	fi
-	echo "cos-scheduler: waking chief-of-staff thread $thread" >&2
-	"${codex_cmd[@]}"
-	codex_status=$?
-	if [[ "$codex_status" -ne 0 ]]; then
-		exit "$codex_status"
+	: >"$stderr_file"
+	"${wake_cmd[@]}" 2>"$stderr_file"
+	wake_status=$?
+	if [[ "$wake_status" -eq 75 ]]; then
+		exit 0
+	fi
+	if [[ "$wake_status" -ne 0 ]]; then
+		if [[ -s "$stderr_file" ]]; then
+			cat "$stderr_file" >&2
+		fi
+		exit "$wake_status"
 	fi
 
 	: >"$stdout_file"
