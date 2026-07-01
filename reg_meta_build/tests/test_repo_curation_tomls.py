@@ -126,13 +126,26 @@ def test_repo_concept_groups_parses() -> None:
     }
 
     antal_barn = lisa_groups["antal-barn"]
+    assert antal_barn.label == "Antal hemmavarande barn per ålder"
     assert antal_barn.axes == (("alder", "Barnets ålder"),)
-    assert [member.variable for member in antal_barn.members] == [
-        f"antal-barn-{age}-ar" for age in range(22)
+    expected_antal_barn_members = [
+        *((f"antal-barn-{age}-ar", f"{age:02d}", f"{age} år") for age in range(22)),
+        ("barn0-3", "00-03", "0-3 år"),
+        ("barn4-6", "04-06", "4-6 år"),
+        ("barn7-10", "07-10", "7-10 år"),
+        ("barn11-15", "11-15", "11-15 år"),
+        ("barn-16-17-ar", "16-17", "16-17 år"),
+        ("barn-18-19-ar", "18-19", "18-19 år"),
+        ("barn18plus", "18-plus", "18 år och äldre"),
+        ("barn20plus", "20-plus", "20 år och äldre"),
     ]
-    assert [member.coords[0][1] for member in antal_barn.members] == [
-        f"{age:02d}" for age in range(22)
-    ]
+    assert [
+        (member.variable, member.coords[0][1], member.coords[0][2])
+        for member in antal_barn.members
+    ] == expected_antal_barn_members
+    assert [member.coords[0][0] for member in antal_barn.members] == ["alder"] * len(
+        expected_antal_barn_members
+    )
 
 
 def test_repo_concept_groups_auto_parses() -> None:

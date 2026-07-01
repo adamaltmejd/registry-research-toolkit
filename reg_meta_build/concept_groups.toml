@@ -384,14 +384,14 @@ variable = "ku3faman"
 delivery_column = "KU3FAman"
 coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "3", label = "tredje största förvärvskällan" }]
 
-# LISA `Antal barn` is a count by the child's exact age, not an ordinal slot
+# LISA `Antal barn` is a count by the child's age bucket, not an ordinal slot
 # battery. The checked-in auto worklist still shows the old `barn0`...`barn21`
-# slugs; the curated group pins the current variable slugs and names the axis
-# semantically.
+# slugs; the curated group pins the current variable slugs, plus the legacy
+# interval/open-ended buckets from older deliveries, and names the axis semantically.
 [[variable_group]]
 register = "scb/lisa"
 key = "antal-barn"
-label = "Antal hemmaboende barn per ålder"
+label = "Antal hemmavarande barn per ålder"
 axes = [{ axis = "alder", label = "Barnets ålder" }]
 
 [[variable_group.members]]
@@ -503,6 +503,46 @@ label = "20 år"
 variable = "antal-barn-21-ar"
 value = "21"
 label = "21 år"
+
+[[variable_group.members]]
+variable = "barn0-3"
+value = "00-03"
+label = "0-3 år"
+
+[[variable_group.members]]
+variable = "barn4-6"
+value = "04-06"
+label = "4-6 år"
+
+[[variable_group.members]]
+variable = "barn7-10"
+value = "07-10"
+label = "7-10 år"
+
+[[variable_group.members]]
+variable = "barn11-15"
+value = "11-15"
+label = "11-15 år"
+
+[[variable_group.members]]
+variable = "barn-16-17-ar"
+value = "16-17"
+label = "16-17 år"
+
+[[variable_group.members]]
+variable = "barn-18-19-ar"
+value = "18-19"
+label = "18-19 år"
+
+[[variable_group.members]]
+variable = "barn18plus"
+value = "18-plus"
+label = "18 år och äldre"
+
+[[variable_group.members]]
+variable = "barn20plus"
+value = "20-plus"
+label = "20 år och äldre"
 
 # LOVA repeated-event ordinal families (#374; spun out of #362.4). LOVA records
 # up to nine immigration/emigration events per person, each as a numbered series.
