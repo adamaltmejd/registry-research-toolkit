@@ -75552,6 +75552,2982 @@ slug = "ford1-text"  # source: kolumnnamn
 [variable."182.39021.forskamneomrtext"]
 slug = "forskamneomrtext"  # source: kolumnnamn
 
+[variable."182.graft:ACAT01"]
+slug = "acat01"  # source: kolumnnamn
+
+[variable."182.graft:ACAT02"]
+slug = "acat02"  # source: kolumnnamn
+
+[variable."182.graft:ACAT03"]
+slug = "acat03"  # source: kolumnnamn
+
+[variable."182.graft:ACAT04"]
+slug = "acat04"  # source: kolumnnamn
+
+[variable."182.graft:ACAT05"]
+slug = "acat05"  # source: kolumnnamn
+
+[variable."182.graft:ACAT06"]
+slug = "acat06"  # source: kolumnnamn
+
+[variable."182.graft:ACAT07"]
+slug = "acat07"  # source: kolumnnamn
+
+[variable."182.graft:ACAT08"]
+slug = "acat08"  # source: kolumnnamn
+
+[variable."182.graft:AI_FTEXI_F"]
+slug = "ai-ftexi-f"  # source: kolumnnamn
+
+[variable."182.graft:AI_FTEXI_M"]
+slug = "ai-ftexi-m"  # source: kolumnnamn
+
+[variable."182.graft:AI_FTE_F"]
+slug = "ai-fte-f"  # source: kolumnnamn
+
+[variable."182.graft:AI_FTE_M"]
+slug = "ai-fte-m"  # source: kolumnnamn
+
+[variable."182.graft:AI_IRD_CAP"]
+slug = "ai-ird-cap"  # source: kolumnnamn
+
+[variable."182.graft:AI_IRD_CUR_LC"]
+slug = "ai-ird-cur-lc"  # source: kolumnnamn
+
+[variable."182.graft:AI_IRD_CUR_LC_EXT"]
+slug = "ai-ird-cur-lc-ext"  # source: kolumnnamn
+
+[variable."182.graft:AI_IRD_CUR_O"]
+slug = "ai-ird-cur-o"  # source: kolumnnamn
+
+[variable."182.graft:AgKat"]
+slug = "agkat"  # source: kolumnnamn
+
+[variable."182.graft:Antal_man"]
+slug = "antal-man"  # source: kolumnnamn
+
+[variable."182.graft:BlNr"]
+slug = "blnr"  # source: kolumnnamn
+
+[variable."182.graft:DWEIGHT"]
+slug = "dweight"  # source: kolumnnamn
+
+[variable."182.graft:EGEN_FOU"]
+slug = "egen-fou"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_BES_GROUP"]
+slug = "erd-rec-bes-group"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_BES_UNAF"]
+slug = "erd-rec-bes-unaf"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_GOV"]
+slug = "erd-rec-gov"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_HES"]
+slug = "erd-rec-hes"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_PNP"]
+slug = "erd-rec-pnp"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_RI"]
+slug = "erd-rec-ri"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_ROW_BES_GROUP"]
+slug = "erd-rec-row-bes-group"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_ROW_BES_UNAF"]
+slug = "erd-rec-row-bes-unaf"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_ROW_GOV"]
+slug = "erd-rec-row-gov"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_ROW_HES"]
+slug = "erd-rec-row-hes"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_ROW_IO"]
+slug = "erd-rec-row-io"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_ROW_PNP"]
+slug = "erd-rec-row-pnp"  # source: kolumnnamn
+
+[variable."182.graft:ERD_REC_T"]
+slug = "erd-rec-t"  # source: kolumnnamn
+
+[variable."182.graft:FEStat"]
+slug = "festat"  # source: kolumnnamn
+
+[variable."182.graft:FETyp"]
+slug = "fetyp"  # source: kolumnnamn
+
+[variable."182.graft:FOU_UTGIFT"]
+slug = "fou-utgift"  # source: kolumnnamn
+
+[variable."182.graft:FTEXI_OCCUP_RSE_F"]
+slug = "ftexi-occup-rse-f"  # source: kolumnnamn
+
+[variable."182.graft:FTEXI_OCCUP_RSE_M"]
+slug = "ftexi-occup-rse-m"  # source: kolumnnamn
+
+[variable."182.graft:FTEXI_OCCUP_RSE_T"]
+slug = "ftexi-occup-rse-t"  # source: kolumnnamn
+
+[variable."182.graft:FTEXI_OCCUP_TXRSE_F"]
+slug = "ftexi-occup-txrse-f"  # source: kolumnnamn
+
+[variable."182.graft:FTEXI_OCCUP_TXRSE_M"]
+slug = "ftexi-occup-txrse-m"  # source: kolumnnamn
+
+[variable."182.graft:FTEXI_OCCUP_TXRSE_T"]
+slug = "ftexi-occup-txrse-t"  # source: kolumnnamn
+
+[variable."182.graft:FTEXI_OCCUP_T_T"]
+slug = "ftexi-occup-t-t"  # source: kolumnnamn
+
+[variable."182.graft:FTE_OCCUP_RSE_F"]
+slug = "fte-occup-rse-f"  # source: kolumnnamn
+
+[variable."182.graft:FTE_OCCUP_RSE_M"]
+slug = "fte-occup-rse-m"  # source: kolumnnamn
+
+[variable."182.graft:FTE_OCCUP_RSE_T"]
+slug = "fte-occup-rse-t"  # source: kolumnnamn
+
+[variable."182.graft:FTE_OCCUP_TXRSE_F"]
+slug = "fte-occup-txrse-f"  # source: kolumnnamn
+
+[variable."182.graft:FTE_OCCUP_TXRSE_M"]
+slug = "fte-occup-txrse-m"  # source: kolumnnamn
+
+[variable."182.graft:FTE_OCCUP_TXRSE_T"]
+slug = "fte-occup-txrse-t"  # source: kolumnnamn
+
+[variable."182.graft:FTE_OCCUP_T_T"]
+slug = "fte-occup-t-t"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE110_RSE"]
+slug = "fte-se110-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE110_TXRSE"]
+slug = "fte-se110-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE121_RSE"]
+slug = "fte-se121-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE121_TXRSE"]
+slug = "fte-se121-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE122_RSE"]
+slug = "fte-se122-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE122_TXRSE"]
+slug = "fte-se122-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE123_RSE"]
+slug = "fte-se123-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE123_TXRSE"]
+slug = "fte-se123-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE124_RSE"]
+slug = "fte-se124-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE124_TXRSE"]
+slug = "fte-se124-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE125_RSE"]
+slug = "fte-se125-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE125_TXRSE"]
+slug = "fte-se125-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE211_RSE"]
+slug = "fte-se211-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE211_TXRSE"]
+slug = "fte-se211-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE212_RSE"]
+slug = "fte-se212-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE212_TXRSE"]
+slug = "fte-se212-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE213_RSE"]
+slug = "fte-se213-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE213_TXRSE"]
+slug = "fte-se213-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE214_RSE"]
+slug = "fte-se214-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE214_TXRSE"]
+slug = "fte-se214-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE221_RSE"]
+slug = "fte-se221-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE221_TXRSE"]
+slug = "fte-se221-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE224_RSE"]
+slug = "fte-se224-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE224_TXRSE"]
+slug = "fte-se224-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE231_RSE"]
+slug = "fte-se231-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE231_TXRSE"]
+slug = "fte-se231-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE232_RSE"]
+slug = "fte-se232-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE232_TXRSE"]
+slug = "fte-se232-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE311_RSE"]
+slug = "fte-se311-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE311_TXRSE"]
+slug = "fte-se311-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE312_RSE"]
+slug = "fte-se312-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE312_TXRSE"]
+slug = "fte-se312-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE313_RSE"]
+slug = "fte-se313-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE313_TXRSE"]
+slug = "fte-se313-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE321_RSE"]
+slug = "fte-se321-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE321_TXRSE"]
+slug = "fte-se321-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE322_RSE"]
+slug = "fte-se322-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE322_TXRSE"]
+slug = "fte-se322-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE331_RSE"]
+slug = "fte-se331-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE331_TXRSE"]
+slug = "fte-se331-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE332_RSE"]
+slug = "fte-se332-rse"  # source: kolumnnamn
+
+[variable."182.graft:FTE_SE332_TXRSE"]
+slug = "fte-se332-txrse"  # source: kolumnnamn
+
+[variable."182.graft:FtgStat"]
+slug = "ftgstat"  # source: kolumnnamn
+
+[variable."182.graft:HCXI_OCCUP_RSE_F"]
+slug = "hcxi-occup-rse-f"  # source: kolumnnamn
+
+[variable."182.graft:HCXI_OCCUP_RSE_M"]
+slug = "hcxi-occup-rse-m"  # source: kolumnnamn
+
+[variable."182.graft:HCXI_OCCUP_RSE_T"]
+slug = "hcxi-occup-rse-t"  # source: kolumnnamn
+
+[variable."182.graft:HCXI_OCCUP_TXRSE_F"]
+slug = "hcxi-occup-txrse-f"  # source: kolumnnamn
+
+[variable."182.graft:HCXI_OCCUP_TXRSE_M"]
+slug = "hcxi-occup-txrse-m"  # source: kolumnnamn
+
+[variable."182.graft:HCXI_OCCUP_TXRSE_T"]
+slug = "hcxi-occup-txrse-t"  # source: kolumnnamn
+
+[variable."182.graft:HCXI_OCCUP_T_T"]
+slug = "hcxi-occup-t-t"  # source: kolumnnamn
+
+[variable."182.graft:HC_ISCED_ED8_F"]
+slug = "hc-isced-ed8-f"  # source: kolumnnamn
+
+[variable."182.graft:HC_ISCED_ED8_M"]
+slug = "hc-isced-ed8-m"  # source: kolumnnamn
+
+[variable."182.graft:HC_OCCUP_RSE_F"]
+slug = "hc-occup-rse-f"  # source: kolumnnamn
+
+[variable."182.graft:HC_OCCUP_RSE_M"]
+slug = "hc-occup-rse-m"  # source: kolumnnamn
+
+[variable."182.graft:HC_OCCUP_RSE_T"]
+slug = "hc-occup-rse-t"  # source: kolumnnamn
+
+[variable."182.graft:HC_OCCUP_TXRSE_F"]
+slug = "hc-occup-txrse-f"  # source: kolumnnamn
+
+[variable."182.graft:HC_OCCUP_TXRSE_M"]
+slug = "hc-occup-txrse-m"  # source: kolumnnamn
+
+[variable."182.graft:HC_OCCUP_TXRSE_T"]
+slug = "hc-occup-txrse-t"  # source: kolumnnamn
+
+[variable."182.graft:HC_OCCUP_T_T"]
+slug = "hc-occup-t-t"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE110_RSE"]
+slug = "hc-se110-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE110_TXRSE"]
+slug = "hc-se110-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE121_RSE"]
+slug = "hc-se121-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE121_TXRSE"]
+slug = "hc-se121-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE122_RSE"]
+slug = "hc-se122-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE122_TXRSE"]
+slug = "hc-se122-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE123_RSE"]
+slug = "hc-se123-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE123_TXRSE"]
+slug = "hc-se123-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE124_RSE"]
+slug = "hc-se124-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE124_TXRSE"]
+slug = "hc-se124-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE125_RSE"]
+slug = "hc-se125-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE125_TXRSE"]
+slug = "hc-se125-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE211_RSE"]
+slug = "hc-se211-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE211_TXRSE"]
+slug = "hc-se211-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE212_RSE"]
+slug = "hc-se212-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE212_TXRSE"]
+slug = "hc-se212-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE213_RSE"]
+slug = "hc-se213-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE213_TXRSE"]
+slug = "hc-se213-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE214_RSE"]
+slug = "hc-se214-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE214_TXRSE"]
+slug = "hc-se214-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE221_RSE"]
+slug = "hc-se221-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE221_TXRSE"]
+slug = "hc-se221-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE224_RSE"]
+slug = "hc-se224-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE224_TXRSE"]
+slug = "hc-se224-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE231_RSE"]
+slug = "hc-se231-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE231_TXRSE"]
+slug = "hc-se231-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE232_RSE"]
+slug = "hc-se232-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE232_TXRSE"]
+slug = "hc-se232-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE311_RSE"]
+slug = "hc-se311-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE311_TXRSE"]
+slug = "hc-se311-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE312_RSE"]
+slug = "hc-se312-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE312_TXRSE"]
+slug = "hc-se312-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE313_RSE"]
+slug = "hc-se313-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE313_TXRSE"]
+slug = "hc-se313-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE321_RSE"]
+slug = "hc-se321-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE321_TXRSE"]
+slug = "hc-se321-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE322_RSE"]
+slug = "hc-se322-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE322_TXRSE"]
+slug = "hc-se322-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE331_RSE"]
+slug = "hc-se331-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE331_TXRSE"]
+slug = "hc-se331-txrse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE332_RSE"]
+slug = "hc-se332-rse"  # source: kolumnnamn
+
+[variable."182.graft:HC_SE332_TXRSE"]
+slug = "hc-se332-txrse"  # source: kolumnnamn
+
+[variable."182.graft:INDU_MAIN_GRP"]
+slug = "indu-main-grp"  # source: kolumnnamn
+
+[variable."182.graft:IRD_AR"]
+slug = "ird-ar"  # source: kolumnnamn
+
+[variable."182.graft:IRD_BR"]
+slug = "ird-br"  # source: kolumnnamn
+
+[variable."182.graft:IRD_CAP_IPP"]
+slug = "ird-cap-ipp"  # source: kolumnnamn
+
+[variable."182.graft:IRD_CAP_LAND"]
+slug = "ird-cap-land"  # source: kolumnnamn
+
+[variable."182.graft:IRD_CAP_MACH"]
+slug = "ird-cap-mach"  # source: kolumnnamn
+
+[variable."182.graft:IRD_CAP_SOFT"]
+slug = "ird-cap-soft"  # source: kolumnnamn
+
+[variable."182.graft:IRD_COST_T"]
+slug = "ird-cost-t"  # source: kolumnnamn
+
+[variable."182.graft:IRD_CUR_LC"]
+slug = "ird-cur-lc"  # source: kolumnnamn
+
+[variable."182.graft:IRD_CUR_LC_EXT"]
+slug = "ird-cur-lc-ext"  # source: kolumnnamn
+
+[variable."182.graft:IRD_CUR_O"]
+slug = "ird-cur-o"  # source: kolumnnamn
+
+[variable."182.graft:IRD_ED"]
+slug = "ird-ed"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_BES_GROUP"]
+slug = "ird-fund-bes-group"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_BES_UNAF"]
+slug = "ird-fund-bes-unaf"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_EXCH"]
+slug = "ird-fund-exch"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_GOV_CIV"]
+slug = "ird-fund-gov-civ"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_GOV_DEF"]
+slug = "ird-fund-gov-def"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_GOV_FDN"]
+slug = "ird-fund-gov-fdn"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_GOV_LAR"]
+slug = "ird-fund-gov-lar"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_HES"]
+slug = "ird-fund-hes"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_INT"]
+slug = "ird-fund-int"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_PNP"]
+slug = "ird-fund-pnp"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_ROW_BES_GROUP"]
+slug = "ird-fund-row-bes-group"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_ROW_BES_UNAF"]
+slug = "ird-fund-row-bes-unaf"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_ROW_ECRFP"]
+slug = "ird-fund-row-ecrfp"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_ROW_ECXRFP"]
+slug = "ird-fund-row-ecxrfp"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_ROW_GOV"]
+slug = "ird-fund-row-gov"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_ROW_IO"]
+slug = "ird-fund-row-io"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_ROW_PNP"]
+slug = "ird-fund-row-pnp"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_TO"]
+slug = "ird-fund-to"  # source: kolumnnamn
+
+[variable."182.graft:IRD_FUND_TRF"]
+slug = "ird-fund-trf"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP1"]
+slug = "ird-indu-orient-cap1"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP10"]
+slug = "ird-indu-orient-cap10"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP11"]
+slug = "ird-indu-orient-cap11"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP12"]
+slug = "ird-indu-orient-cap12"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP13"]
+slug = "ird-indu-orient-cap13"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP14"]
+slug = "ird-indu-orient-cap14"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP15"]
+slug = "ird-indu-orient-cap15"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP16"]
+slug = "ird-indu-orient-cap16"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP17"]
+slug = "ird-indu-orient-cap17"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP18"]
+slug = "ird-indu-orient-cap18"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP2"]
+slug = "ird-indu-orient-cap2"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP3"]
+slug = "ird-indu-orient-cap3"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP4"]
+slug = "ird-indu-orient-cap4"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP5"]
+slug = "ird-indu-orient-cap5"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP6"]
+slug = "ird-indu-orient-cap6"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP7"]
+slug = "ird-indu-orient-cap7"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP8"]
+slug = "ird-indu-orient-cap8"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CAP9"]
+slug = "ird-indu-orient-cap9"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR1"]
+slug = "ird-indu-orient-cur1"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR10"]
+slug = "ird-indu-orient-cur10"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR11"]
+slug = "ird-indu-orient-cur11"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR12"]
+slug = "ird-indu-orient-cur12"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR13"]
+slug = "ird-indu-orient-cur13"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR14"]
+slug = "ird-indu-orient-cur14"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR15"]
+slug = "ird-indu-orient-cur15"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR16"]
+slug = "ird-indu-orient-cur16"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR17"]
+slug = "ird-indu-orient-cur17"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR18"]
+slug = "ird-indu-orient-cur18"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR2"]
+slug = "ird-indu-orient-cur2"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR3"]
+slug = "ird-indu-orient-cur3"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR4"]
+slug = "ird-indu-orient-cur4"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR5"]
+slug = "ird-indu-orient-cur5"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR6"]
+slug = "ird-indu-orient-cur6"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR7"]
+slug = "ird-indu-orient-cur7"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR8"]
+slug = "ird-indu-orient-cur8"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_CUR9"]
+slug = "ird-indu-orient-cur9"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE1"]
+slug = "ird-indu-orient-nace1"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE10"]
+slug = "ird-indu-orient-nace10"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE11"]
+slug = "ird-indu-orient-nace11"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE12"]
+slug = "ird-indu-orient-nace12"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE13"]
+slug = "ird-indu-orient-nace13"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE14"]
+slug = "ird-indu-orient-nace14"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE15"]
+slug = "ird-indu-orient-nace15"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE16"]
+slug = "ird-indu-orient-nace16"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE17"]
+slug = "ird-indu-orient-nace17"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE18"]
+slug = "ird-indu-orient-nace18"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE2"]
+slug = "ird-indu-orient-nace2"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE3"]
+slug = "ird-indu-orient-nace3"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE4"]
+slug = "ird-indu-orient-nace4"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE5"]
+slug = "ird-indu-orient-nace5"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE6"]
+slug = "ird-indu-orient-nace6"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE7"]
+slug = "ird-indu-orient-nace7"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE8"]
+slug = "ird-indu-orient-nace8"  # source: kolumnnamn
+
+[variable."182.graft:IRD_INDU_ORIENT_NACE9"]
+slug = "ird-indu-orient-nace9"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE110"]
+slug = "ird-se110"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE121"]
+slug = "ird-se121"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE122"]
+slug = "ird-se122"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE123"]
+slug = "ird-se123"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE124"]
+slug = "ird-se124"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE125"]
+slug = "ird-se125"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE211"]
+slug = "ird-se211"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE212"]
+slug = "ird-se212"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE213"]
+slug = "ird-se213"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE214"]
+slug = "ird-se214"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE221"]
+slug = "ird-se221"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE224"]
+slug = "ird-se224"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE231"]
+slug = "ird-se231"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE232"]
+slug = "ird-se232"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE311"]
+slug = "ird-se311"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE312"]
+slug = "ird-se312"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE313"]
+slug = "ird-se313"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE321"]
+slug = "ird-se321"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE322"]
+slug = "ird-se322"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE331"]
+slug = "ird-se331"  # source: kolumnnamn
+
+[variable."182.graft:IRD_SE332"]
+slug = "ird-se332"  # source: kolumnnamn
+
+[variable."182.graft:JEAnt"]
+slug = "jeant"  # source: kolumnnamn
+
+[variable."182.graft:JERel"]
+slug = "jerel"  # source: kolumnnamn
+
+[variable."182.graft:JurForm"]
+slug = "jurform"  # source: kolumnnamn
+
+[variable."182.graft:KommunSate"]
+slug = "kommunsate"  # source: kolumnnamn
+
+[variable."182.graft:LanSate"]
+slug = "lansate"  # source: kolumnnamn
+
+[variable."182.graft:NPOP"]
+slug = "npop"  # source: kolumnnamn
+
+[variable."182.graft:NRESP"]
+slug = "nresp"  # source: kolumnnamn
+
+[variable."182.graft:NSAMP"]
+slug = "nsamp"  # source: kolumnnamn
+
+[variable."182.graft:NgS1"]
+slug = "ngs1"  # source: kolumnnamn
+
+[variable."182.graft:Oms2"]
+slug = "oms2"  # source: kolumnnamn
+
+[variable."182.graft:PGA"]
+slug = "pga"  # source: kolumnnamn
+
+[variable."182.graft:PGAA"]
+slug = "pgaa"  # source: kolumnnamn
+
+[variable."182.graft:PGAA_I"]
+slug = "pgaa-i"  # source: kolumnnamn
+
+[variable."182.graft:PGAA_dk"]
+slug = "pgaa-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGAB"]
+slug = "pgab"  # source: kolumnnamn
+
+[variable."182.graft:PGAB_DK"]
+slug = "pgab-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGAB_i"]
+slug = "pgab-i"  # source: kolumnnamn
+
+[variable."182.graft:PGAC"]
+slug = "pgac"  # source: kolumnnamn
+
+[variable."182.graft:PGAC_I"]
+slug = "pgac-i"  # source: kolumnnamn
+
+[variable."182.graft:PGAC_dk"]
+slug = "pgac-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGA_DK"]
+slug = "pga-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGA_i"]
+slug = "pga-i"  # source: kolumnnamn
+
+[variable."182.graft:PGB"]
+slug = "pgb"  # source: kolumnnamn
+
+[variable."182.graft:PGB_DK"]
+slug = "pgb-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGB_i"]
+slug = "pgb-i"  # source: kolumnnamn
+
+[variable."182.graft:PGC"]
+slug = "pgc"  # source: kolumnnamn
+
+[variable."182.graft:PGC_I"]
+slug = "pgc-i"  # source: kolumnnamn
+
+[variable."182.graft:PGC_dk"]
+slug = "pgc-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGD"]
+slug = "pgd"  # source: kolumnnamn
+
+[variable."182.graft:PGD_DK"]
+slug = "pgd-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGD_i"]
+slug = "pgd-i"  # source: kolumnnamn
+
+[variable."182.graft:PGE"]
+slug = "pge"  # source: kolumnnamn
+
+[variable."182.graft:PGE_I"]
+slug = "pge-i"  # source: kolumnnamn
+
+[variable."182.graft:PGE_dk"]
+slug = "pge-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGF"]
+slug = "pgf"  # source: kolumnnamn
+
+[variable."182.graft:PGF_DK"]
+slug = "pgf-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGF_i"]
+slug = "pgf-i"  # source: kolumnnamn
+
+[variable."182.graft:PGG"]
+slug = "pgg"  # source: kolumnnamn
+
+[variable."182.graft:PGG_I"]
+slug = "pgg-i"  # source: kolumnnamn
+
+[variable."182.graft:PGG_dk"]
+slug = "pgg-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGH"]
+slug = "pgh"  # source: kolumnnamn
+
+[variable."182.graft:PGH_DK"]
+slug = "pgh-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGH_i"]
+slug = "pgh-i"  # source: kolumnnamn
+
+[variable."182.graft:PGI"]
+slug = "pgi"  # source: kolumnnamn
+
+[variable."182.graft:PGI_I"]
+slug = "pgi-i"  # source: kolumnnamn
+
+[variable."182.graft:PGI_dk"]
+slug = "pgi-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGJ"]
+slug = "pgj"  # source: kolumnnamn
+
+[variable."182.graft:PGJ_DK"]
+slug = "pgj-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGJ_i"]
+slug = "pgj-i"  # source: kolumnnamn
+
+[variable."182.graft:PGK"]
+slug = "pgk"  # source: kolumnnamn
+
+[variable."182.graft:PGK_I"]
+slug = "pgk-i"  # source: kolumnnamn
+
+[variable."182.graft:PGK_dk"]
+slug = "pgk-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGL"]
+slug = "pgl"  # source: kolumnnamn
+
+[variable."182.graft:PGL_DK"]
+slug = "pgl-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGL_i"]
+slug = "pgl-i"  # source: kolumnnamn
+
+[variable."182.graft:PGM"]
+slug = "pgm"  # source: kolumnnamn
+
+[variable."182.graft:PGM_I"]
+slug = "pgm-i"  # source: kolumnnamn
+
+[variable."182.graft:PGM_dk"]
+slug = "pgm-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGN"]
+slug = "pgn"  # source: kolumnnamn
+
+[variable."182.graft:PGN_DK"]
+slug = "pgn-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGN_i"]
+slug = "pgn-i"  # source: kolumnnamn
+
+[variable."182.graft:PGO"]
+slug = "pgo"  # source: kolumnnamn
+
+[variable."182.graft:PGO_I"]
+slug = "pgo-i"  # source: kolumnnamn
+
+[variable."182.graft:PGO_dk"]
+slug = "pgo-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGP"]
+slug = "pgp"  # source: kolumnnamn
+
+[variable."182.graft:PGP_DK"]
+slug = "pgp-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGP_i"]
+slug = "pgp-i"  # source: kolumnnamn
+
+[variable."182.graft:PGQ"]
+slug = "pgq"  # source: kolumnnamn
+
+[variable."182.graft:PGQ_I"]
+slug = "pgq-i"  # source: kolumnnamn
+
+[variable."182.graft:PGQ_dk"]
+slug = "pgq-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGR"]
+slug = "pgr"  # source: kolumnnamn
+
+[variable."182.graft:PGR_DK"]
+slug = "pgr-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGR_i"]
+slug = "pgr-i"  # source: kolumnnamn
+
+[variable."182.graft:PGS"]
+slug = "pgs"  # source: kolumnnamn
+
+[variable."182.graft:PGS_I"]
+slug = "pgs-i"  # source: kolumnnamn
+
+[variable."182.graft:PGS_dk"]
+slug = "pgs-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGT"]
+slug = "pgt"  # source: kolumnnamn
+
+[variable."182.graft:PGT_DK"]
+slug = "pgt-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGT_i"]
+slug = "pgt-i"  # source: kolumnnamn
+
+[variable."182.graft:PGU"]
+slug = "pgu"  # source: kolumnnamn
+
+[variable."182.graft:PGU_I"]
+slug = "pgu-i"  # source: kolumnnamn
+
+[variable."182.graft:PGU_dk"]
+slug = "pgu-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGV"]
+slug = "pgv"  # source: kolumnnamn
+
+[variable."182.graft:PGV_dk"]
+slug = "pgv-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGV_i"]
+slug = "pgv-i"  # source: kolumnnamn
+
+[variable."182.graft:PGW"]
+slug = "pgw"  # source: kolumnnamn
+
+[variable."182.graft:PGW_DK"]
+slug = "pgw-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGW_I"]
+slug = "pgw-i"  # source: kolumnnamn
+
+[variable."182.graft:PGX"]
+slug = "pgx"  # source: kolumnnamn
+
+[variable."182.graft:PGX_DK"]
+slug = "pgx-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGX_i"]
+slug = "pgx-i"  # source: kolumnnamn
+
+[variable."182.graft:PGY"]
+slug = "pgy"  # source: kolumnnamn
+
+[variable."182.graft:PGY_I"]
+slug = "pgy-i"  # source: kolumnnamn
+
+[variable."182.graft:PGY_dk"]
+slug = "pgy-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGZ"]
+slug = "pgz"  # source: kolumnnamn
+
+[variable."182.graft:PGZ_DK"]
+slug = "pgz-dk"  # source: kolumnnamn
+
+[variable."182.graft:PGZ_i"]
+slug = "pgz-i"  # source: kolumnnamn
+
+[variable."182.graft:Period"]
+slug = "period"  # source: kolumnnamn
+
+[variable."182.graft:SGrupp"]
+slug = "sgrupp"  # source: kolumnnamn
+
+[variable."182.graft:SUMDRIFT"]
+slug = "sumdrift"  # source: kolumnnamn
+
+[variable."182.graft:SUMINVEST"]
+slug = "suminvest"  # source: kolumnnamn
+
+[variable."182.graft:StatusKod"]
+slug = "statuskod"  # source: kolumnnamn
+
+[variable."182.graft:StatusTillaggKod"]
+slug = "statustillaggkod"  # source: kolumnnamn
+
+[variable."182.graft:TOTALA_DRIFTKOST"]
+slug = "totala-driftkost"  # source: kolumnnamn
+
+[variable."182.graft:TOTALA_INVESTKOST"]
+slug = "totala-investkost"  # source: kolumnnamn
+
+[variable."182.graft:UtsOmg"]
+slug = "utsomg"  # source: kolumnnamn
+
+[variable."182.graft:V002"]
+slug = "v002"  # source: kolumnnamn
+
+[variable."182.graft:V004"]
+slug = "v004"  # source: kolumnnamn
+
+[variable."182.graft:V005"]
+slug = "v005"  # source: kolumnnamn
+
+[variable."182.graft:V0205"]
+slug = "v0205"  # source: kolumnnamn
+
+[variable."182.graft:V0400"]
+slug = "v0400"  # source: kolumnnamn
+
+[variable."182.graft:V0410"]
+slug = "v0410"  # source: kolumnnamn
+
+[variable."182.graft:V0420"]
+slug = "v0420"  # source: kolumnnamn
+
+[variable."182.graft:V0430"]
+slug = "v0430"  # source: kolumnnamn
+
+[variable."182.graft:V0440"]
+slug = "v0440"  # source: kolumnnamn
+
+[variable."182.graft:V0450"]
+slug = "v0450"  # source: kolumnnamn
+
+[variable."182.graft:V0460"]
+slug = "v0460"  # source: kolumnnamn
+
+[variable."182.graft:V0470"]
+slug = "v0470"  # source: kolumnnamn
+
+[variable."182.graft:V0532"]
+slug = "v0532"  # source: kolumnnamn
+
+[variable."182.graft:V0533"]
+slug = "v0533"  # source: kolumnnamn
+
+[variable."182.graft:V0534"]
+slug = "v0534"  # source: kolumnnamn
+
+[variable."182.graft:V0535"]
+slug = "v0535"  # source: kolumnnamn
+
+[variable."182.graft:V0540"]
+slug = "v0540"  # source: kolumnnamn
+
+[variable."182.graft:V0542"]
+slug = "v0542"  # source: kolumnnamn
+
+[variable."182.graft:V0543"]
+slug = "v0543"  # source: kolumnnamn
+
+[variable."182.graft:V0544"]
+slug = "v0544"  # source: kolumnnamn
+
+[variable."182.graft:V0545"]
+slug = "v0545"  # source: kolumnnamn
+
+[variable."182.graft:V0546"]
+slug = "v0546"  # source: kolumnnamn
+
+[variable."182.graft:V0547"]
+slug = "v0547"  # source: kolumnnamn
+
+[variable."182.graft:V0548"]
+slug = "v0548"  # source: kolumnnamn
+
+[variable."182.graft:V0549"]
+slug = "v0549"  # source: kolumnnamn
+
+[variable."182.graft:V0550"]
+slug = "v0550"  # source: kolumnnamn
+
+[variable."182.graft:V0553"]
+slug = "v0553"  # source: kolumnnamn
+
+[variable."182.graft:V0557"]
+slug = "v0557"  # source: kolumnnamn
+
+[variable."182.graft:V0560"]
+slug = "v0560"  # source: kolumnnamn
+
+[variable."182.graft:V0570"]
+slug = "v0570"  # source: kolumnnamn
+
+[variable."182.graft:V0580"]
+slug = "v0580"  # source: kolumnnamn
+
+[variable."182.graft:V0590"]
+slug = "v0590"  # source: kolumnnamn
+
+[variable."182.graft:V0600"]
+slug = "v0600"  # source: kolumnnamn
+
+[variable."182.graft:V0610"]
+slug = "v0610"  # source: kolumnnamn
+
+[variable."182.graft:V0620"]
+slug = "v0620"  # source: kolumnnamn
+
+[variable."182.graft:V0630"]
+slug = "v0630"  # source: kolumnnamn
+
+[variable."182.graft:V0640"]
+slug = "v0640"  # source: kolumnnamn
+
+[variable."182.graft:V0650"]
+slug = "v0650"  # source: kolumnnamn
+
+[variable."182.graft:V0660"]
+slug = "v0660"  # source: kolumnnamn
+
+[variable."182.graft:V0670"]
+slug = "v0670"  # source: kolumnnamn
+
+[variable."182.graft:V0680"]
+slug = "v0680"  # source: kolumnnamn
+
+[variable."182.graft:V0690"]
+slug = "v0690"  # source: kolumnnamn
+
+[variable."182.graft:V0700"]
+slug = "v0700"  # source: kolumnnamn
+
+[variable."182.graft:V0710"]
+slug = "v0710"  # source: kolumnnamn
+
+[variable."182.graft:V0720"]
+slug = "v0720"  # source: kolumnnamn
+
+[variable."182.graft:V0730"]
+slug = "v0730"  # source: kolumnnamn
+
+[variable."182.graft:V0740"]
+slug = "v0740"  # source: kolumnnamn
+
+[variable."182.graft:V0750"]
+slug = "v0750"  # source: kolumnnamn
+
+[variable."182.graft:V0760"]
+slug = "v0760"  # source: kolumnnamn
+
+[variable."182.graft:V0770"]
+slug = "v0770"  # source: kolumnnamn
+
+[variable."182.graft:V097"]
+slug = "v097"  # source: kolumnnamn
+
+[variable."182.graft:V099"]
+slug = "v099"  # source: kolumnnamn
+
+[variable."182.graft:V101"]
+slug = "v101"  # source: kolumnnamn
+
+[variable."182.graft:V1011"]
+slug = "v1011"  # source: kolumnnamn
+
+[variable."182.graft:V1012"]
+slug = "v1012"  # source: kolumnnamn
+
+[variable."182.graft:V102"]
+slug = "v102"  # source: kolumnnamn
+
+[variable."182.graft:V103"]
+slug = "v103"  # source: kolumnnamn
+
+[variable."182.graft:V104"]
+slug = "v104"  # source: kolumnnamn
+
+[variable."182.graft:V105"]
+slug = "v105"  # source: kolumnnamn
+
+[variable."182.graft:V1061"]
+slug = "v1061"  # source: kolumnnamn
+
+[variable."182.graft:V1062"]
+slug = "v1062"  # source: kolumnnamn
+
+[variable."182.graft:V107"]
+slug = "v107"  # source: kolumnnamn
+
+[variable."182.graft:V108"]
+slug = "v108"  # source: kolumnnamn
+
+[variable."182.graft:V1091"]
+slug = "v1091"  # source: kolumnnamn
+
+[variable."182.graft:V1092"]
+slug = "v1092"  # source: kolumnnamn
+
+[variable."182.graft:V1101"]
+slug = "v1101"  # source: kolumnnamn
+
+[variable."182.graft:V1102"]
+slug = "v1102"  # source: kolumnnamn
+
+[variable."182.graft:V111"]
+slug = "v111"  # source: kolumnnamn
+
+[variable."182.graft:V112"]
+slug = "v112"  # source: kolumnnamn
+
+[variable."182.graft:V113"]
+slug = "v113"  # source: kolumnnamn
+
+[variable."182.graft:V1131"]
+slug = "v1131"  # source: kolumnnamn
+
+[variable."182.graft:V1132"]
+slug = "v1132"  # source: kolumnnamn
+
+[variable."182.graft:V114"]
+slug = "v114"  # source: kolumnnamn
+
+[variable."182.graft:V1141"]
+slug = "v1141"  # source: kolumnnamn
+
+[variable."182.graft:V1142"]
+slug = "v1142"  # source: kolumnnamn
+
+[variable."182.graft:V1151"]
+slug = "v1151"  # source: kolumnnamn
+
+[variable."182.graft:V1152"]
+slug = "v1152"  # source: kolumnnamn
+
+[variable."182.graft:V1161"]
+slug = "v1161"  # source: kolumnnamn
+
+[variable."182.graft:V1162"]
+slug = "v1162"  # source: kolumnnamn
+
+[variable."182.graft:V1171"]
+slug = "v1171"  # source: kolumnnamn
+
+[variable."182.graft:V1172"]
+slug = "v1172"  # source: kolumnnamn
+
+[variable."182.graft:V118"]
+slug = "v118"  # source: kolumnnamn
+
+[variable."182.graft:V119"]
+slug = "v119"  # source: kolumnnamn
+
+[variable."182.graft:V121"]
+slug = "v121"  # source: kolumnnamn
+
+[variable."182.graft:V1211"]
+slug = "v1211"  # source: kolumnnamn
+
+[variable."182.graft:V1212"]
+slug = "v1212"  # source: kolumnnamn
+
+[variable."182.graft:V122"]
+slug = "v122"  # source: kolumnnamn
+
+[variable."182.graft:V123"]
+slug = "v123"  # source: kolumnnamn
+
+[variable."182.graft:V124"]
+slug = "v124"  # source: kolumnnamn
+
+[variable."182.graft:V1241"]
+slug = "v1241"  # source: kolumnnamn
+
+[variable."182.graft:V1242"]
+slug = "v1242"  # source: kolumnnamn
+
+[variable."182.graft:V125"]
+slug = "v125"  # source: kolumnnamn
+
+[variable."182.graft:V126"]
+slug = "v126"  # source: kolumnnamn
+
+[variable."182.graft:V127"]
+slug = "v127"  # source: kolumnnamn
+
+[variable."182.graft:V128"]
+slug = "v128"  # source: kolumnnamn
+
+[variable."182.graft:V131"]
+slug = "v131"  # source: kolumnnamn
+
+[variable."182.graft:V132"]
+slug = "v132"  # source: kolumnnamn
+
+[variable."182.graft:V133"]
+slug = "v133"  # source: kolumnnamn
+
+[variable."182.graft:V134"]
+slug = "v134"  # source: kolumnnamn
+
+[variable."182.graft:V141"]
+slug = "v141"  # source: kolumnnamn
+
+[variable."182.graft:V142"]
+slug = "v142"  # source: kolumnnamn
+
+[variable."182.graft:V143"]
+slug = "v143"  # source: kolumnnamn
+
+[variable."182.graft:V144"]
+slug = "v144"  # source: kolumnnamn
+
+[variable."182.graft:V151"]
+slug = "v151"  # source: kolumnnamn
+
+[variable."182.graft:V152"]
+slug = "v152"  # source: kolumnnamn
+
+[variable."182.graft:V153"]
+slug = "v153"  # source: kolumnnamn
+
+[variable."182.graft:V154"]
+slug = "v154"  # source: kolumnnamn
+
+[variable."182.graft:V1570"]
+slug = "v1570"  # source: kolumnnamn
+
+[variable."182.graft:V1571"]
+slug = "v1571"  # source: kolumnnamn
+
+[variable."182.graft:V1572"]
+slug = "v1572"  # source: kolumnnamn
+
+[variable."182.graft:V1573"]
+slug = "v1573"  # source: kolumnnamn
+
+[variable."182.graft:V1580"]
+slug = "v1580"  # source: kolumnnamn
+
+[variable."182.graft:V1581"]
+slug = "v1581"  # source: kolumnnamn
+
+[variable."182.graft:V1582"]
+slug = "v1582"  # source: kolumnnamn
+
+[variable."182.graft:V1583"]
+slug = "v1583"  # source: kolumnnamn
+
+[variable."182.graft:V1590"]
+slug = "v1590"  # source: kolumnnamn
+
+[variable."182.graft:V1591"]
+slug = "v1591"  # source: kolumnnamn
+
+[variable."182.graft:V1592"]
+slug = "v1592"  # source: kolumnnamn
+
+[variable."182.graft:V1593"]
+slug = "v1593"  # source: kolumnnamn
+
+[variable."182.graft:V1600"]
+slug = "v1600"  # source: kolumnnamn
+
+[variable."182.graft:V1601"]
+slug = "v1601"  # source: kolumnnamn
+
+[variable."182.graft:V1602"]
+slug = "v1602"  # source: kolumnnamn
+
+[variable."182.graft:V1603"]
+slug = "v1603"  # source: kolumnnamn
+
+[variable."182.graft:V1610"]
+slug = "v1610"  # source: kolumnnamn
+
+[variable."182.graft:V1611"]
+slug = "v1611"  # source: kolumnnamn
+
+[variable."182.graft:V1612"]
+slug = "v1612"  # source: kolumnnamn
+
+[variable."182.graft:V1613"]
+slug = "v1613"  # source: kolumnnamn
+
+[variable."182.graft:V1620"]
+slug = "v1620"  # source: kolumnnamn
+
+[variable."182.graft:V1621"]
+slug = "v1621"  # source: kolumnnamn
+
+[variable."182.graft:V1622"]
+slug = "v1622"  # source: kolumnnamn
+
+[variable."182.graft:V1623"]
+slug = "v1623"  # source: kolumnnamn
+
+[variable."182.graft:V1630"]
+slug = "v1630"  # source: kolumnnamn
+
+[variable."182.graft:V1631"]
+slug = "v1631"  # source: kolumnnamn
+
+[variable."182.graft:V1632"]
+slug = "v1632"  # source: kolumnnamn
+
+[variable."182.graft:V1633"]
+slug = "v1633"  # source: kolumnnamn
+
+[variable."182.graft:V1640"]
+slug = "v1640"  # source: kolumnnamn
+
+[variable."182.graft:V1641"]
+slug = "v1641"  # source: kolumnnamn
+
+[variable."182.graft:V1642"]
+slug = "v1642"  # source: kolumnnamn
+
+[variable."182.graft:V1643"]
+slug = "v1643"  # source: kolumnnamn
+
+[variable."182.graft:V1650"]
+slug = "v1650"  # source: kolumnnamn
+
+[variable."182.graft:V1651"]
+slug = "v1651"  # source: kolumnnamn
+
+[variable."182.graft:V1652"]
+slug = "v1652"  # source: kolumnnamn
+
+[variable."182.graft:V1653"]
+slug = "v1653"  # source: kolumnnamn
+
+[variable."182.graft:V1660"]
+slug = "v1660"  # source: kolumnnamn
+
+[variable."182.graft:V1661"]
+slug = "v1661"  # source: kolumnnamn
+
+[variable."182.graft:V1662"]
+slug = "v1662"  # source: kolumnnamn
+
+[variable."182.graft:V1663"]
+slug = "v1663"  # source: kolumnnamn
+
+[variable."182.graft:V1670"]
+slug = "v1670"  # source: kolumnnamn
+
+[variable."182.graft:V1671"]
+slug = "v1671"  # source: kolumnnamn
+
+[variable."182.graft:V1672"]
+slug = "v1672"  # source: kolumnnamn
+
+[variable."182.graft:V1673"]
+slug = "v1673"  # source: kolumnnamn
+
+[variable."182.graft:V1680"]
+slug = "v1680"  # source: kolumnnamn
+
+[variable."182.graft:V1681"]
+slug = "v1681"  # source: kolumnnamn
+
+[variable."182.graft:V1682"]
+slug = "v1682"  # source: kolumnnamn
+
+[variable."182.graft:V1683"]
+slug = "v1683"  # source: kolumnnamn
+
+[variable."182.graft:V1690"]
+slug = "v1690"  # source: kolumnnamn
+
+[variable."182.graft:V1691"]
+slug = "v1691"  # source: kolumnnamn
+
+[variable."182.graft:V1692"]
+slug = "v1692"  # source: kolumnnamn
+
+[variable."182.graft:V1693"]
+slug = "v1693"  # source: kolumnnamn
+
+[variable."182.graft:V1700"]
+slug = "v1700"  # source: kolumnnamn
+
+[variable."182.graft:V1701"]
+slug = "v1701"  # source: kolumnnamn
+
+[variable."182.graft:V1702"]
+slug = "v1702"  # source: kolumnnamn
+
+[variable."182.graft:V1703"]
+slug = "v1703"  # source: kolumnnamn
+
+[variable."182.graft:V171"]
+slug = "v171"  # source: kolumnnamn
+
+[variable."182.graft:V1710"]
+slug = "v1710"  # source: kolumnnamn
+
+[variable."182.graft:V1711"]
+slug = "v1711"  # source: kolumnnamn
+
+[variable."182.graft:V1712"]
+slug = "v1712"  # source: kolumnnamn
+
+[variable."182.graft:V1713"]
+slug = "v1713"  # source: kolumnnamn
+
+[variable."182.graft:V172"]
+slug = "v172"  # source: kolumnnamn
+
+[variable."182.graft:V1720"]
+slug = "v1720"  # source: kolumnnamn
+
+[variable."182.graft:V1721"]
+slug = "v1721"  # source: kolumnnamn
+
+[variable."182.graft:V1722"]
+slug = "v1722"  # source: kolumnnamn
+
+[variable."182.graft:V1723"]
+slug = "v1723"  # source: kolumnnamn
+
+[variable."182.graft:V173"]
+slug = "v173"  # source: kolumnnamn
+
+[variable."182.graft:V1730"]
+slug = "v1730"  # source: kolumnnamn
+
+[variable."182.graft:V1731"]
+slug = "v1731"  # source: kolumnnamn
+
+[variable."182.graft:V1732"]
+slug = "v1732"  # source: kolumnnamn
+
+[variable."182.graft:V1733"]
+slug = "v1733"  # source: kolumnnamn
+
+[variable."182.graft:V1740"]
+slug = "v1740"  # source: kolumnnamn
+
+[variable."182.graft:V1741"]
+slug = "v1741"  # source: kolumnnamn
+
+[variable."182.graft:V1742"]
+slug = "v1742"  # source: kolumnnamn
+
+[variable."182.graft:V1743"]
+slug = "v1743"  # source: kolumnnamn
+
+[variable."182.graft:V1750"]
+slug = "v1750"  # source: kolumnnamn
+
+[variable."182.graft:V1751"]
+slug = "v1751"  # source: kolumnnamn
+
+[variable."182.graft:V1752"]
+slug = "v1752"  # source: kolumnnamn
+
+[variable."182.graft:V1753"]
+slug = "v1753"  # source: kolumnnamn
+
+[variable."182.graft:V1760"]
+slug = "v1760"  # source: kolumnnamn
+
+[variable."182.graft:V1761"]
+slug = "v1761"  # source: kolumnnamn
+
+[variable."182.graft:V1762"]
+slug = "v1762"  # source: kolumnnamn
+
+[variable."182.graft:V1763"]
+slug = "v1763"  # source: kolumnnamn
+
+[variable."182.graft:V1770"]
+slug = "v1770"  # source: kolumnnamn
+
+[variable."182.graft:V1771"]
+slug = "v1771"  # source: kolumnnamn
+
+[variable."182.graft:V1772"]
+slug = "v1772"  # source: kolumnnamn
+
+[variable."182.graft:V1773"]
+slug = "v1773"  # source: kolumnnamn
+
+[variable."182.graft:V1781"]
+slug = "v1781"  # source: kolumnnamn
+
+[variable."182.graft:V1782"]
+slug = "v1782"  # source: kolumnnamn
+
+[variable."182.graft:V1783"]
+slug = "v1783"  # source: kolumnnamn
+
+[variable."182.graft:V181"]
+slug = "v181"  # source: kolumnnamn
+
+[variable."182.graft:V191"]
+slug = "v191"  # source: kolumnnamn
+
+[variable."182.graft:V200"]
+slug = "v200"  # source: kolumnnamn
+
+[variable."182.graft:V203"]
+slug = "v203"  # source: kolumnnamn
+
+[variable."182.graft:V207"]
+slug = "v207"  # source: kolumnnamn
+
+[variable."182.graft:V210"]
+slug = "v210"  # source: kolumnnamn
+
+[variable."182.graft:V211"]
+slug = "v211"  # source: kolumnnamn
+
+[variable."182.graft:V212"]
+slug = "v212"  # source: kolumnnamn
+
+[variable."182.graft:V220"]
+slug = "v220"  # source: kolumnnamn
+
+[variable."182.graft:V221"]
+slug = "v221"  # source: kolumnnamn
+
+[variable."182.graft:V222"]
+slug = "v222"  # source: kolumnnamn
+
+[variable."182.graft:V230"]
+slug = "v230"  # source: kolumnnamn
+
+[variable."182.graft:V231"]
+slug = "v231"  # source: kolumnnamn
+
+[variable."182.graft:V232"]
+slug = "v232"  # source: kolumnnamn
+
+[variable."182.graft:V240"]
+slug = "v240"  # source: kolumnnamn
+
+[variable."182.graft:V241"]
+slug = "v241"  # source: kolumnnamn
+
+[variable."182.graft:V242"]
+slug = "v242"  # source: kolumnnamn
+
+[variable."182.graft:V250"]
+slug = "v250"  # source: kolumnnamn
+
+[variable."182.graft:V251"]
+slug = "v251"  # source: kolumnnamn
+
+[variable."182.graft:V252"]
+slug = "v252"  # source: kolumnnamn
+
+[variable."182.graft:V260"]
+slug = "v260"  # source: kolumnnamn
+
+[variable."182.graft:V261"]
+slug = "v261"  # source: kolumnnamn
+
+[variable."182.graft:V262"]
+slug = "v262"  # source: kolumnnamn
+
+[variable."182.graft:V270"]
+slug = "v270"  # source: kolumnnamn
+
+[variable."182.graft:V271"]
+slug = "v271"  # source: kolumnnamn
+
+[variable."182.graft:V272"]
+slug = "v272"  # source: kolumnnamn
+
+[variable."182.graft:V280"]
+slug = "v280"  # source: kolumnnamn
+
+[variable."182.graft:V281"]
+slug = "v281"  # source: kolumnnamn
+
+[variable."182.graft:V282"]
+slug = "v282"  # source: kolumnnamn
+
+[variable."182.graft:V291"]
+slug = "v291"  # source: kolumnnamn
+
+[variable."182.graft:V293"]
+slug = "v293"  # source: kolumnnamn
+
+[variable."182.graft:V294"]
+slug = "v294"  # source: kolumnnamn
+
+[variable."182.graft:V295"]
+slug = "v295"  # source: kolumnnamn
+
+[variable."182.graft:V296"]
+slug = "v296"  # source: kolumnnamn
+
+[variable."182.graft:V297"]
+slug = "v297"  # source: kolumnnamn
+
+[variable."182.graft:V301"]
+slug = "v301"  # source: kolumnnamn
+
+[variable."182.graft:V311"]
+slug = "v311"  # source: kolumnnamn
+
+[variable."182.graft:V321"]
+slug = "v321"  # source: kolumnnamn
+
+[variable."182.graft:V331"]
+slug = "v331"  # source: kolumnnamn
+
+[variable."182.graft:V341"]
+slug = "v341"  # source: kolumnnamn
+
+[variable."182.graft:V351"]
+slug = "v351"  # source: kolumnnamn
+
+[variable."182.graft:V361"]
+slug = "v361"  # source: kolumnnamn
+
+[variable."182.graft:V371"]
+slug = "v371"  # source: kolumnnamn
+
+[variable."182.graft:V381"]
+slug = "v381"  # source: kolumnnamn
+
+[variable."182.graft:V391"]
+slug = "v391"  # source: kolumnnamn
+
+[variable."182.graft:V401"]
+slug = "v401"  # source: kolumnnamn
+
+[variable."182.graft:V421"]
+slug = "v421"  # source: kolumnnamn
+
+[variable."182.graft:V431"]
+slug = "v431"  # source: kolumnnamn
+
+[variable."182.graft:V441"]
+slug = "v441"  # source: kolumnnamn
+
+[variable."182.graft:V451"]
+slug = "v451"  # source: kolumnnamn
+
+[variable."182.graft:V461"]
+slug = "v461"  # source: kolumnnamn
+
+[variable."182.graft:V471"]
+slug = "v471"  # source: kolumnnamn
+
+[variable."182.graft:V475"]
+slug = "v475"  # source: kolumnnamn
+
+[variable."182.graft:V479"]
+slug = "v479"  # source: kolumnnamn
+
+[variable."182.graft:V480"]
+slug = "v480"  # source: kolumnnamn
+
+[variable."182.graft:V481"]
+slug = "v481"  # source: kolumnnamn
+
+[variable."182.graft:V4811"]
+slug = "v4811"  # source: kolumnnamn
+
+[variable."182.graft:V4812"]
+slug = "v4812"  # source: kolumnnamn
+
+[variable."182.graft:V4813"]
+slug = "v4813"  # source: kolumnnamn
+
+[variable."182.graft:V4814"]
+slug = "v4814"  # source: kolumnnamn
+
+[variable."182.graft:V4815"]
+slug = "v4815"  # source: kolumnnamn
+
+[variable."182.graft:V4816"]
+slug = "v4816"  # source: kolumnnamn
+
+[variable."182.graft:V4817"]
+slug = "v4817"  # source: kolumnnamn
+
+[variable."182.graft:V4818"]
+slug = "v4818"  # source: kolumnnamn
+
+[variable."182.graft:V4819"]
+slug = "v4819"  # source: kolumnnamn
+
+[variable."182.graft:V482"]
+slug = "v482"  # source: kolumnnamn
+
+[variable."182.graft:V4820"]
+slug = "v4820"  # source: kolumnnamn
+
+[variable."182.graft:V483"]
+slug = "v483"  # source: kolumnnamn
+
+[variable."182.graft:V484"]
+slug = "v484"  # source: kolumnnamn
+
+[variable."182.graft:V485"]
+slug = "v485"  # source: kolumnnamn
+
+[variable."182.graft:V486"]
+slug = "v486"  # source: kolumnnamn
+
+[variable."182.graft:V487"]
+slug = "v487"  # source: kolumnnamn
+
+[variable."182.graft:V488"]
+slug = "v488"  # source: kolumnnamn
+
+[variable."182.graft:V489"]
+slug = "v489"  # source: kolumnnamn
+
+[variable."182.graft:V490"]
+slug = "v490"  # source: kolumnnamn
+
+[variable."182.graft:V491"]
+slug = "v491"  # source: kolumnnamn
+
+[variable."182.graft:V492"]
+slug = "v492"  # source: kolumnnamn
+
+[variable."182.graft:V493"]
+slug = "v493"  # source: kolumnnamn
+
+[variable."182.graft:V494"]
+slug = "v494"  # source: kolumnnamn
+
+[variable."182.graft:V495"]
+slug = "v495"  # source: kolumnnamn
+
+[variable."182.graft:V496"]
+slug = "v496"  # source: kolumnnamn
+
+[variable."182.graft:V497"]
+slug = "v497"  # source: kolumnnamn
+
+[variable."182.graft:V498"]
+slug = "v498"  # source: kolumnnamn
+
+[variable."182.graft:V499"]
+slug = "v499"  # source: kolumnnamn
+
+[variable."182.graft:V500"]
+slug = "v500"  # source: kolumnnamn
+
+[variable."182.graft:V501"]
+slug = "v501"  # source: kolumnnamn
+
+[variable."182.graft:V502"]
+slug = "v502"  # source: kolumnnamn
+
+[variable."182.graft:V503"]
+slug = "v503"  # source: kolumnnamn
+
+[variable."182.graft:V504"]
+slug = "v504"  # source: kolumnnamn
+
+[variable."182.graft:V505"]
+slug = "v505"  # source: kolumnnamn
+
+[variable."182.graft:V507"]
+slug = "v507"  # source: kolumnnamn
+
+[variable."182.graft:V509"]
+slug = "v509"  # source: kolumnnamn
+
+[variable."182.graft:V511"]
+slug = "v511"  # source: kolumnnamn
+
+[variable."182.graft:V512"]
+slug = "v512"  # source: kolumnnamn
+
+[variable."182.graft:V521"]
+slug = "v521"  # source: kolumnnamn
+
+[variable."182.graft:V522"]
+slug = "v522"  # source: kolumnnamn
+
+[variable."182.graft:V525"]
+slug = "v525"  # source: kolumnnamn
+
+[variable."182.graft:V526"]
+slug = "v526"  # source: kolumnnamn
+
+[variable."182.graft:V527"]
+slug = "v527"  # source: kolumnnamn
+
+[variable."182.graft:V531"]
+slug = "v531"  # source: kolumnnamn
+
+[variable."182.graft:V532"]
+slug = "v532"  # source: kolumnnamn
+
+[variable."182.graft:V536"]
+slug = "v536"  # source: kolumnnamn
+
+[variable."182.graft:V537"]
+slug = "v537"  # source: kolumnnamn
+
+[variable."182.graft:V539"]
+slug = "v539"  # source: kolumnnamn
+
+[variable."182.graft:V541"]
+slug = "v541"  # source: kolumnnamn
+
+[variable."182.graft:V542"]
+slug = "v542"  # source: kolumnnamn
+
+[variable."182.graft:V551"]
+slug = "v551"  # source: kolumnnamn
+
+[variable."182.graft:V552"]
+slug = "v552"  # source: kolumnnamn
+
+[variable."182.graft:V554"]
+slug = "v554"  # source: kolumnnamn
+
+[variable."182.graft:V555"]
+slug = "v555"  # source: kolumnnamn
+
+[variable."182.graft:V558"]
+slug = "v558"  # source: kolumnnamn
+
+[variable."182.graft:V559"]
+slug = "v559"  # source: kolumnnamn
+
+[variable."182.graft:V561"]
+slug = "v561"  # source: kolumnnamn
+
+[variable."182.graft:V562"]
+slug = "v562"  # source: kolumnnamn
+
+[variable."182.graft:V564"]
+slug = "v564"  # source: kolumnnamn
+
+[variable."182.graft:V565"]
+slug = "v565"  # source: kolumnnamn
+
+[variable."182.graft:V566"]
+slug = "v566"  # source: kolumnnamn
+
+[variable."182.graft:V567"]
+slug = "v567"  # source: kolumnnamn
+
+[variable."182.graft:V568"]
+slug = "v568"  # source: kolumnnamn
+
+[variable."182.graft:V571"]
+slug = "v571"  # source: kolumnnamn
+
+[variable."182.graft:V572"]
+slug = "v572"  # source: kolumnnamn
+
+[variable."182.graft:V581"]
+slug = "v581"  # source: kolumnnamn
+
+[variable."182.graft:V582"]
+slug = "v582"  # source: kolumnnamn
+
+[variable."182.graft:V591"]
+slug = "v591"  # source: kolumnnamn
+
+[variable."182.graft:V592"]
+slug = "v592"  # source: kolumnnamn
+
+[variable."182.graft:V602"]
+slug = "v602"  # source: kolumnnamn
+
+[variable."182.graft:V611"]
+slug = "v611"  # source: kolumnnamn
+
+[variable."182.graft:V612"]
+slug = "v612"  # source: kolumnnamn
+
+[variable."182.graft:V621"]
+slug = "v621"  # source: kolumnnamn
+
+[variable."182.graft:V622"]
+slug = "v622"  # source: kolumnnamn
+
+[variable."182.graft:V631"]
+slug = "v631"  # source: kolumnnamn
+
+[variable."182.graft:V632"]
+slug = "v632"  # source: kolumnnamn
+
+[variable."182.graft:V641"]
+slug = "v641"  # source: kolumnnamn
+
+[variable."182.graft:V642"]
+slug = "v642"  # source: kolumnnamn
+
+[variable."182.graft:V651"]
+slug = "v651"  # source: kolumnnamn
+
+[variable."182.graft:V652"]
+slug = "v652"  # source: kolumnnamn
+
+[variable."182.graft:V661"]
+slug = "v661"  # source: kolumnnamn
+
+[variable."182.graft:V662"]
+slug = "v662"  # source: kolumnnamn
+
+[variable."182.graft:V701"]
+slug = "v701"  # source: kolumnnamn
+
+[variable."182.graft:V7011"]
+slug = "v7011"  # source: kolumnnamn
+
+[variable."182.graft:V702"]
+slug = "v702"  # source: kolumnnamn
+
+[variable."182.graft:V811"]
+slug = "v811"  # source: kolumnnamn
+
+[variable."182.graft:V812"]
+slug = "v812"  # source: kolumnnamn
+
+[variable."182.graft:V813"]
+slug = "v813"  # source: kolumnnamn
+
+[variable."182.graft:V821"]
+slug = "v821"  # source: kolumnnamn
+
+[variable."182.graft:V822"]
+slug = "v822"  # source: kolumnnamn
+
+[variable."182.graft:V831"]
+slug = "v831"  # source: kolumnnamn
+
+[variable."182.graft:V832"]
+slug = "v832"  # source: kolumnnamn
+
+[variable."182.graft:V841"]
+slug = "v841"  # source: kolumnnamn
+
+[variable."182.graft:V842"]
+slug = "v842"  # source: kolumnnamn
+
+[variable."182.graft:V843"]
+slug = "v843"  # source: kolumnnamn
+
+[variable."182.graft:V9011"]
+slug = "v9011"  # source: kolumnnamn
+
+[variable."182.graft:V9012"]
+slug = "v9012"  # source: kolumnnamn
+
+[variable."182.graft:V9021"]
+slug = "v9021"  # source: kolumnnamn
+
+[variable."182.graft:V9022"]
+slug = "v9022"  # source: kolumnnamn
+
+[variable."182.graft:V9031"]
+slug = "v9031"  # source: kolumnnamn
+
+[variable."182.graft:V9032"]
+slug = "v9032"  # source: kolumnnamn
+
+[variable."182.graft:V9041"]
+slug = "v9041"  # source: kolumnnamn
+
+[variable."182.graft:V9042"]
+slug = "v9042"  # source: kolumnnamn
+
+[variable."182.graft:V9051"]
+slug = "v9051"  # source: kolumnnamn
+
+[variable."182.graft:V9052"]
+slug = "v9052"  # source: kolumnnamn
+
+[variable."182.graft:V9061"]
+slug = "v9061"  # source: kolumnnamn
+
+[variable."182.graft:V9062"]
+slug = "v9062"  # source: kolumnnamn
+
+[variable."182.graft:V9071"]
+slug = "v9071"  # source: kolumnnamn
+
+[variable."182.graft:V9072"]
+slug = "v9072"  # source: kolumnnamn
+
+[variable."182.graft:V9081"]
+slug = "v9081"  # source: kolumnnamn
+
+[variable."182.graft:V9082"]
+slug = "v9082"  # source: kolumnnamn
+
+[variable."182.graft:V9091"]
+slug = "v9091"  # source: kolumnnamn
+
+[variable."182.graft:V9092"]
+slug = "v9092"  # source: kolumnnamn
+
+[variable."182.graft:V911"]
+slug = "v911"  # source: kolumnnamn
+
+[variable."182.graft:V912"]
+slug = "v912"  # source: kolumnnamn
+
+[variable."182.graft:V9121"]
+slug = "v9121"  # source: kolumnnamn
+
+[variable."182.graft:V9122"]
+slug = "v9122"  # source: kolumnnamn
+
+[variable."182.graft:V9161"]
+slug = "v9161"  # source: kolumnnamn
+
+[variable."182.graft:V9162"]
+slug = "v9162"  # source: kolumnnamn
+
+[variable."182.graft:V9171"]
+slug = "v9171"  # source: kolumnnamn
+
+[variable."182.graft:V9172"]
+slug = "v9172"  # source: kolumnnamn
+
+[variable."182.graft:V9181"]
+slug = "v9181"  # source: kolumnnamn
+
+[variable."182.graft:V9182"]
+slug = "v9182"  # source: kolumnnamn
+
+[variable."182.graft:V9191"]
+slug = "v9191"  # source: kolumnnamn
+
+[variable."182.graft:V9192"]
+slug = "v9192"  # source: kolumnnamn
+
+[variable."182.graft:V9201"]
+slug = "v9201"  # source: kolumnnamn
+
+[variable."182.graft:V9202"]
+slug = "v9202"  # source: kolumnnamn
+
+[variable."182.graft:V921"]
+slug = "v921"  # source: kolumnnamn
+
+[variable."182.graft:V9211"]
+slug = "v9211"  # source: kolumnnamn
+
+[variable."182.graft:V9212"]
+slug = "v9212"  # source: kolumnnamn
+
+[variable."182.graft:V922"]
+slug = "v922"  # source: kolumnnamn
+
+[variable."182.graft:V9221"]
+slug = "v9221"  # source: kolumnnamn
+
+[variable."182.graft:V9222"]
+slug = "v9222"  # source: kolumnnamn
+
+[variable."182.graft:V9231"]
+slug = "v9231"  # source: kolumnnamn
+
+[variable."182.graft:V9232"]
+slug = "v9232"  # source: kolumnnamn
+
+[variable."182.graft:V9241"]
+slug = "v9241"  # source: kolumnnamn
+
+[variable."182.graft:V9242"]
+slug = "v9242"  # source: kolumnnamn
+
+[variable."182.graft:V9251"]
+slug = "v9251"  # source: kolumnnamn
+
+[variable."182.graft:V9252"]
+slug = "v9252"  # source: kolumnnamn
+
+[variable."182.graft:V9261"]
+slug = "v9261"  # source: kolumnnamn
+
+[variable."182.graft:V9262"]
+slug = "v9262"  # source: kolumnnamn
+
+[variable."182.graft:V9271"]
+slug = "v9271"  # source: kolumnnamn
+
+[variable."182.graft:V9272"]
+slug = "v9272"  # source: kolumnnamn
+
+[variable."182.graft:V930"]
+slug = "v930"  # source: kolumnnamn
+
+[variable."182.graft:V931"]
+slug = "v931"  # source: kolumnnamn
+
+[variable."182.graft:V932"]
+slug = "v932"  # source: kolumnnamn
+
+[variable."182.graft:V933"]
+slug = "v933"  # source: kolumnnamn
+
+[variable."182.graft:V934"]
+slug = "v934"  # source: kolumnnamn
+
+[variable."182.graft:V935"]
+slug = "v935"  # source: kolumnnamn
+
+[variable."182.graft:V936"]
+slug = "v936"  # source: kolumnnamn
+
+[variable."182.graft:V937"]
+slug = "v937"  # source: kolumnnamn
+
+[variable."182.graft:V939"]
+slug = "v939"  # source: kolumnnamn
+
+[variable."182.graft:V940"]
+slug = "v940"  # source: kolumnnamn
+
+[variable."182.graft:V941"]
+slug = "v941"  # source: kolumnnamn
+
+[variable."182.graft:V942"]
+slug = "v942"  # source: kolumnnamn
+
+[variable."182.graft:V943"]
+slug = "v943"  # source: kolumnnamn
+
+[variable."182.graft:V951"]
+slug = "v951"  # source: kolumnnamn
+
+[variable."182.graft:V952"]
+slug = "v952"  # source: kolumnnamn
+
+[variable."182.graft:V961"]
+slug = "v961"  # source: kolumnnamn
+
+[variable."182.graft:V962"]
+slug = "v962"  # source: kolumnnamn
+
+[variable."182.graft:V971"]
+slug = "v971"  # source: kolumnnamn
+
+[variable."182.graft:V972"]
+slug = "v972"  # source: kolumnnamn
+
+[variable."182.graft:V981"]
+slug = "v981"  # source: kolumnnamn
+
+[variable."182.graft:V982"]
+slug = "v982"  # source: kolumnnamn
+
+[variable."182.graft:V991"]
+slug = "v991"  # source: kolumnnamn
+
+[variable."182.graft:V992"]
+slug = "v992"  # source: kolumnnamn
+
+[variable."182.graft:VAR021"]
+slug = "var021"  # source: kolumnnamn
+
+[variable."182.graft:VAR022"]
+slug = "var022"  # source: kolumnnamn
+
+[variable."182.graft:VAR101"]
+slug = "var101"  # source: kolumnnamn
+
+[variable."182.graft:VAR171"]
+slug = "var171"  # source: kolumnnamn
+
+[variable."182.graft:VAR172"]
+slug = "var172"  # source: kolumnnamn
+
+[variable."182.graft:VAR1721"]
+slug = "var1721"  # source: kolumnnamn
+
+[variable."182.graft:VAR173"]
+slug = "var173"  # source: kolumnnamn
+
+[variable."182.graft:VAR181"]
+slug = "var181"  # source: kolumnnamn
+
+[variable."182.graft:VAR191"]
+slug = "var191"  # source: kolumnnamn
+
+[variable."182.graft:VAR201"]
+slug = "var201"  # source: kolumnnamn
+
+[variable."182.graft:VAR210"]
+slug = "var210"  # source: kolumnnamn
+
+[variable."182.graft:VAR211"]
+slug = "var211"  # source: kolumnnamn
+
+[variable."182.graft:VAR212"]
+slug = "var212"  # source: kolumnnamn
+
+[variable."182.graft:VAR220"]
+slug = "var220"  # source: kolumnnamn
+
+[variable."182.graft:VAR221"]
+slug = "var221"  # source: kolumnnamn
+
+[variable."182.graft:VAR222"]
+slug = "var222"  # source: kolumnnamn
+
+[variable."182.graft:VAR230"]
+slug = "var230"  # source: kolumnnamn
+
+[variable."182.graft:VAR231"]
+slug = "var231"  # source: kolumnnamn
+
+[variable."182.graft:VAR232"]
+slug = "var232"  # source: kolumnnamn
+
+[variable."182.graft:VAR240"]
+slug = "var240"  # source: kolumnnamn
+
+[variable."182.graft:VAR241"]
+slug = "var241"  # source: kolumnnamn
+
+[variable."182.graft:VAR242"]
+slug = "var242"  # source: kolumnnamn
+
+[variable."182.graft:VAR250"]
+slug = "var250"  # source: kolumnnamn
+
+[variable."182.graft:VAR251"]
+slug = "var251"  # source: kolumnnamn
+
+[variable."182.graft:VAR252"]
+slug = "var252"  # source: kolumnnamn
+
+[variable."182.graft:VAR260"]
+slug = "var260"  # source: kolumnnamn
+
+[variable."182.graft:VAR261"]
+slug = "var261"  # source: kolumnnamn
+
+[variable."182.graft:VAR262"]
+slug = "var262"  # source: kolumnnamn
+
+[variable."182.graft:VAR270"]
+slug = "var270"  # source: kolumnnamn
+
+[variable."182.graft:VAR271"]
+slug = "var271"  # source: kolumnnamn
+
+[variable."182.graft:VAR272"]
+slug = "var272"  # source: kolumnnamn
+
+[variable."182.graft:VAR280"]
+slug = "var280"  # source: kolumnnamn
+
+[variable."182.graft:VAR281"]
+slug = "var281"  # source: kolumnnamn
+
+[variable."182.graft:VAR282"]
+slug = "var282"  # source: kolumnnamn
+
+[variable."182.graft:VAR291"]
+slug = "var291"  # source: kolumnnamn
+
+[variable."182.graft:VAR293"]
+slug = "var293"  # source: kolumnnamn
+
+[variable."182.graft:VAR294"]
+slug = "var294"  # source: kolumnnamn
+
+[variable."182.graft:VAR295"]
+slug = "var295"  # source: kolumnnamn
+
+[variable."182.graft:VAR296"]
+slug = "var296"  # source: kolumnnamn
+
+[variable."182.graft:VAR297"]
+slug = "var297"  # source: kolumnnamn
+
+[variable."182.graft:VAR301"]
+slug = "var301"  # source: kolumnnamn
+
+[variable."182.graft:VAR311"]
+slug = "var311"  # source: kolumnnamn
+
+[variable."182.graft:VAR321"]
+slug = "var321"  # source: kolumnnamn
+
+[variable."182.graft:VAR331"]
+slug = "var331"  # source: kolumnnamn
+
+[variable."182.graft:VAR341"]
+slug = "var341"  # source: kolumnnamn
+
+[variable."182.graft:VAR351"]
+slug = "var351"  # source: kolumnnamn
+
+[variable."182.graft:VAR361"]
+slug = "var361"  # source: kolumnnamn
+
+[variable."182.graft:VAR371"]
+slug = "var371"  # source: kolumnnamn
+
+[variable."182.graft:VAR381"]
+slug = "var381"  # source: kolumnnamn
+
+[variable."182.graft:VAR391"]
+slug = "var391"  # source: kolumnnamn
+
+[variable."182.graft:VAR401"]
+slug = "var401"  # source: kolumnnamn
+
+[variable."182.graft:VAR421"]
+slug = "var421"  # source: kolumnnamn
+
+[variable."182.graft:VAR431"]
+slug = "var431"  # source: kolumnnamn
+
+[variable."182.graft:VAR441"]
+slug = "var441"  # source: kolumnnamn
+
+[variable."182.graft:VAR451"]
+slug = "var451"  # source: kolumnnamn
+
+[variable."182.graft:VAR461"]
+slug = "var461"  # source: kolumnnamn
+
+[variable."182.graft:VAR471"]
+slug = "var471"  # source: kolumnnamn
+
+[variable."182.graft:VAR485"]
+slug = "var485"  # source: kolumnnamn
+
+[variable."182.graft:VAR486"]
+slug = "var486"  # source: kolumnnamn
+
+[variable."182.graft:VAR487"]
+slug = "var487"  # source: kolumnnamn
+
+[variable."182.graft:VAR488"]
+slug = "var488"  # source: kolumnnamn
+
+[variable."182.graft:VAR489"]
+slug = "var489"  # source: kolumnnamn
+
+[variable."182.graft:VAR490"]
+slug = "var490"  # source: kolumnnamn
+
+[variable."182.graft:VAR491"]
+slug = "var491"  # source: kolumnnamn
+
+[variable."182.graft:VAR492"]
+slug = "var492"  # source: kolumnnamn
+
+[variable."182.graft:VAR493"]
+slug = "var493"  # source: kolumnnamn
+
+[variable."182.graft:VAR494"]
+slug = "var494"  # source: kolumnnamn
+
+[variable."182.graft:VAR495"]
+slug = "var495"  # source: kolumnnamn
+
+[variable."182.graft:VAR496"]
+slug = "var496"  # source: kolumnnamn
+
+[variable."182.graft:VAR497"]
+slug = "var497"  # source: kolumnnamn
+
+[variable."182.graft:VAR498"]
+slug = "var498"  # source: kolumnnamn
+
+[variable."182.graft:VAR499"]
+slug = "var499"  # source: kolumnnamn
+
+[variable."182.graft:VAR500"]
+slug = "var500"  # source: kolumnnamn
+
+[variable."182.graft:VAR501"]
+slug = "var501"  # source: kolumnnamn
+
+[variable."182.graft:VAR502"]
+slug = "var502"  # source: kolumnnamn
+
+[variable."182.graft:VAR503"]
+slug = "var503"  # source: kolumnnamn
+
+[variable."182.graft:VAR504"]
+slug = "var504"  # source: kolumnnamn
+
+[variable."182.graft:VAR509"]
+slug = "var509"  # source: kolumnnamn
+
+[variable."182.graft:VAR511"]
+slug = "var511"  # source: kolumnnamn
+
+[variable."182.graft:VAR512"]
+slug = "var512"  # source: kolumnnamn
+
+[variable."182.graft:VAR521"]
+slug = "var521"  # source: kolumnnamn
+
+[variable."182.graft:VAR522"]
+slug = "var522"  # source: kolumnnamn
+
+[variable."182.graft:VAR531"]
+slug = "var531"  # source: kolumnnamn
+
+[variable."182.graft:VAR532"]
+slug = "var532"  # source: kolumnnamn
+
+[variable."182.graft:VAR541"]
+slug = "var541"  # source: kolumnnamn
+
+[variable."182.graft:VAR542"]
+slug = "var542"  # source: kolumnnamn
+
+[variable."182.graft:VAR551"]
+slug = "var551"  # source: kolumnnamn
+
+[variable."182.graft:VAR552"]
+slug = "var552"  # source: kolumnnamn
+
+[variable."182.graft:VAR561"]
+slug = "var561"  # source: kolumnnamn
+
+[variable."182.graft:VAR562"]
+slug = "var562"  # source: kolumnnamn
+
+[variable."182.graft:VAR571"]
+slug = "var571"  # source: kolumnnamn
+
+[variable."182.graft:VAR572"]
+slug = "var572"  # source: kolumnnamn
+
+[variable."182.graft:VAR581"]
+slug = "var581"  # source: kolumnnamn
+
+[variable."182.graft:VAR582"]
+slug = "var582"  # source: kolumnnamn
+
+[variable."182.graft:VAR591"]
+slug = "var591"  # source: kolumnnamn
+
+[variable."182.graft:VAR592"]
+slug = "var592"  # source: kolumnnamn
+
+[variable."182.graft:VAR601"]
+slug = "var601"  # source: kolumnnamn
+
+[variable."182.graft:VAR602"]
+slug = "var602"  # source: kolumnnamn
+
+[variable."182.graft:VAR611"]
+slug = "var611"  # source: kolumnnamn
+
+[variable."182.graft:VAR612"]
+slug = "var612"  # source: kolumnnamn
+
+[variable."182.graft:VAR621"]
+slug = "var621"  # source: kolumnnamn
+
+[variable."182.graft:VAR622"]
+slug = "var622"  # source: kolumnnamn
+
+[variable."182.graft:VAR631"]
+slug = "var631"  # source: kolumnnamn
+
+[variable."182.graft:VAR632"]
+slug = "var632"  # source: kolumnnamn
+
+[variable."182.graft:VAR641"]
+slug = "var641"  # source: kolumnnamn
+
+[variable."182.graft:VAR642"]
+slug = "var642"  # source: kolumnnamn
+
+[variable."182.graft:VAR651"]
+slug = "var651"  # source: kolumnnamn
+
+[variable."182.graft:VAR652"]
+slug = "var652"  # source: kolumnnamn
+
+[variable."182.graft:VAR661"]
+slug = "var661"  # source: kolumnnamn
+
+[variable."182.graft:VAR662"]
+slug = "var662"  # source: kolumnnamn
+
+[variable."182.graft:VAR701"]
+slug = "var701"  # source: kolumnnamn
+
+[variable."182.graft:VAR702"]
+slug = "var702"  # source: kolumnnamn
+
+[variable."182.graft:VAR9012"]
+slug = "var9012"  # source: kolumnnamn
+
+[variable."182.graft:VAR9022"]
+slug = "var9022"  # source: kolumnnamn
+
+[variable."182.graft:VAR9032"]
+slug = "var9032"  # source: kolumnnamn
+
+[variable."182.graft:VAR9042"]
+slug = "var9042"  # source: kolumnnamn
+
+[variable."182.graft:VAR9052"]
+slug = "var9052"  # source: kolumnnamn
+
+[variable."182.graft:VAR9062"]
+slug = "var9062"  # source: kolumnnamn
+
+[variable."182.graft:VAR9072"]
+slug = "var9072"  # source: kolumnnamn
+
+[variable."182.graft:VAR9082"]
+slug = "var9082"  # source: kolumnnamn
+
+[variable."182.graft:VAR9092"]
+slug = "var9092"  # source: kolumnnamn
+
+[variable."182.graft:VAR9122"]
+slug = "var9122"  # source: kolumnnamn
+
+[variable."182.graft:VAR9132"]
+slug = "var9132"  # source: kolumnnamn
+
+[variable."182.graft:VAR9142"]
+slug = "var9142"  # source: kolumnnamn
+
+[variable."182.graft:VAR9152"]
+slug = "var9152"  # source: kolumnnamn
+
+[variable."182.graft:VAR9162"]
+slug = "var9162"  # source: kolumnnamn
+
+[variable."182.graft:VAR9172"]
+slug = "var9172"  # source: kolumnnamn
+
+[variable."182.graft:VAR9182"]
+slug = "var9182"  # source: kolumnnamn
+
+[variable."182.graft:VAR9192"]
+slug = "var9192"  # source: kolumnnamn
+
+[variable."182.graft:VAR9202"]
+slug = "var9202"  # source: kolumnnamn
+
+[variable."182.graft:VAR9212"]
+slug = "var9212"  # source: kolumnnamn
+
+[variable."182.graft:VAR9222"]
+slug = "var9222"  # source: kolumnnamn
+
+[variable."182.graft:VAR9232"]
+slug = "var9232"  # source: kolumnnamn
+
+[variable."182.graft:VAR9242"]
+slug = "var9242"  # source: kolumnnamn
+
+[variable."182.graft:VAR9252"]
+slug = "var9252"  # source: kolumnnamn
+
+[variable."182.graft:VAR9262"]
+slug = "var9262"  # source: kolumnnamn
+
+[variable."182.graft:VAR930"]
+slug = "var930"  # source: kolumnnamn
+
+[variable."182.graft:VAR931"]
+slug = "var931"  # source: kolumnnamn
+
+[variable."182.graft:VAR932"]
+slug = "var932"  # source: kolumnnamn
+
+[variable."182.graft:VAR933"]
+slug = "var933"  # source: kolumnnamn
+
+[variable."182.graft:VAR934"]
+slug = "var934"  # source: kolumnnamn
+
+[variable."182.graft:VAR935"]
+slug = "var935"  # source: kolumnnamn
+
+[variable."182.graft:VAR936"]
+slug = "var936"  # source: kolumnnamn
+
+[variable."182.graft:VAR937"]
+slug = "var937"  # source: kolumnnamn
+
+[variable."182.graft:VAR939"]
+slug = "var939"  # source: kolumnnamn
+
+[variable."182.graft:VAR940"]
+slug = "var940"  # source: kolumnnamn
+
+[variable."182.graft:VAR941"]
+slug = "var941"  # source: kolumnnamn
+
+[variable."182.graft:VAR942"]
+slug = "var942"  # source: kolumnnamn
+
+[variable."182.graft:VAR951"]
+slug = "var951"  # source: kolumnnamn
+
+[variable."182.graft:VAR952"]
+slug = "var952"  # source: kolumnnamn
+
+[variable."182.graft:VAR961"]
+slug = "var961"  # source: kolumnnamn
+
+[variable."182.graft:VAR962"]
+slug = "var962"  # source: kolumnnamn
+
+[variable."182.graft:VAR971"]
+slug = "var971"  # source: kolumnnamn
+
+[variable."182.graft:VAR972"]
+slug = "var972"  # source: kolumnnamn
+
+[variable."182.graft:VAR981"]
+slug = "var981"  # source: kolumnnamn
+
+[variable."182.graft:VAR982"]
+slug = "var982"  # source: kolumnnamn
+
+[variable."182.graft:VAR991"]
+slug = "var991"  # source: kolumnnamn
+
+[variable."182.graft:VAR992"]
+slug = "var992"  # source: kolumnnamn
+
+[variable."182.graft:VDEL1"]
+slug = "vdel1"  # source: kolumnnamn
+
+[variable."182.graft:VDEL2"]
+slug = "vdel2"  # source: kolumnnamn
+
+[variable."182.graft:XGrupp"]
+slug = "xgrupp"  # source: kolumnnamn
+
+[variable."182.graft:v003"]
+slug = "v003"  # source: kolumnnamn
+
+[variable."182.graft:v003FM"]
+slug = "v003fm"  # source: kolumnnamn
+
+[variable."182.graft:v003FY"]
+slug = "v003fy"  # source: kolumnnamn
+
+[variable."182.graft:v003TM"]
+slug = "v003tm"  # source: kolumnnamn
+
+[variable."182.graft:v003TY"]
+slug = "v003ty"  # source: kolumnnamn
+
+[variable."182.graft:v0400_1"]
+slug = "v0400-1"  # source: kolumnnamn
+
+[variable."182.graft:v0400_2"]
+slug = "v0400-2"  # source: kolumnnamn
+
+[variable."182.graft:v0400_3"]
+slug = "v0400-3"  # source: kolumnnamn
+
+[variable."182.graft:v0400_4"]
+slug = "v0400-4"  # source: kolumnnamn
+
+[variable."182.graft:v0400_5"]
+slug = "v0400-5"  # source: kolumnnamn
+
+[variable."182.graft:v0400_6"]
+slug = "v0400-6"  # source: kolumnnamn
+
+[variable."182.graft:v0400_7"]
+slug = "v0400-7"  # source: kolumnnamn
+
+[variable."182.graft:v0400_8"]
+slug = "v0400-8"  # source: kolumnnamn
+
+[variable."182.graft:v0403"]
+slug = "v0403"  # source: kolumnnamn
+
+[variable."182.graft:v0413"]
+slug = "v0413"  # source: kolumnnamn
+
+[variable."182.graft:v0423"]
+slug = "v0423"  # source: kolumnnamn
+
+[variable."182.graft:v0433"]
+slug = "v0433"  # source: kolumnnamn
+
+[variable."182.graft:v0443"]
+slug = "v0443"  # source: kolumnnamn
+
+[variable."182.graft:v0453"]
+slug = "v0453"  # source: kolumnnamn
+
+[variable."182.graft:v0463"]
+slug = "v0463"  # source: kolumnnamn
+
+[variable."182.graft:v0473"]
+slug = "v0473"  # source: kolumnnamn
+
+[variable."182.graft:v069"]
+slug = "v069"  # source: kolumnnamn
+
+[variable."182.graft:v1002"]
+slug = "v1002"  # source: kolumnnamn
+
+[variable."182.graft:v206"]
+slug = "v206"  # source: kolumnnamn
+
+[variable."182.graft:v208"]
+slug = "v208"  # source: kolumnnamn
+
+[variable."182.graft:v209"]
+slug = "v209"  # source: kolumnnamn
+
+[variable."182.graft:v570"]
+slug = "v570"  # source: kolumnnamn
+
+[variable."182.graft:v573"]
+slug = "v573"  # source: kolumnnamn
+
+[variable."182.graft:v7000"]
+slug = "v7000"  # source: kolumnnamn
+
+[variable."182.graft:v7012"]
+slug = "v7012"  # source: kolumnnamn
+
+[variable."182.graft:v7021"]
+slug = "v7021"  # source: kolumnnamn
+
+[variable."182.graft:v7022"]
+slug = "v7022"  # source: kolumnnamn
+
+[variable."182.graft:v851"]
+slug = "v851"  # source: kolumnnamn
+
+[variable."182.graft:v852"]
+slug = "v852"  # source: kolumnnamn
+
+[variable."182.graft:v853"]
+slug = "v853"  # source: kolumnnamn
+
+[variable."182.graft:v861"]
+slug = "v861"  # source: kolumnnamn
+
+[variable."182.graft:v862"]
+slug = "v862"  # source: kolumnnamn
+
+[variable."182.graft:v863"]
+slug = "v863"  # source: kolumnnamn
+
+[variable."182.graft:v864"]
+slug = "v864"  # source: kolumnnamn
+
+[variable."182.graft:v865"]
+slug = "v865"  # source: kolumnnamn
+
+[variable."182.graft:v866"]
+slug = "v866"  # source: kolumnnamn
+
+[variable."182.graft:v867"]
+slug = "v867"  # source: kolumnnamn
+
+[variable."182.graft:v868"]
+slug = "v868"  # source: kolumnnamn
+
+[variable."182.graft:v869"]
+slug = "v869"  # source: kolumnnamn
+
+[variable."182.graft:v913"]
+slug = "v913"  # source: kolumnnamn
+
+[variable."182.graft:v953"]
+slug = "v953"  # source: kolumnnamn
+
+[variable."182.graft:ÅRSVERKEN"]
+slug = "arsverken"  # source: kolumnnamn
+
+[variable."182.graft:ÅRSVERKEN_FORSK"]
+slug = "arsverken-forsk"  # source: kolumnnamn
+
 [variable."186.65.sun2000inr"]
 slug = "sun2000inr"  # source: kolumnnamn
 
@@ -80982,6 +83958,1947 @@ slug = "mpot-bortfallskod"  # source: kolumnnamn
 [variable."252.5016.sta-bortfallskod"]
 slug = "sta-bortfallskod"  # source: kolumnnamn
 
+[variable."257.graft:A"]
+slug = "a"  # source: kolumnnamn
+
+[variable."257.graft:AIA"]
+slug = "aia"  # source: kolumnnamn
+
+[variable."257.graft:Act"]
+slug = "act"  # source: kolumnnamn
+
+[variable."257.graft:Actin"]
+slug = "actin"  # source: kolumnnamn
+
+[variable."257.graft:AnstS"]
+slug = "ansts"  # source: kolumnnamn
+
+[variable."257.graft:BGrupp"]
+slug = "bgrupp"  # source: kolumnnamn
+
+[variable."257.graft:CEffect"]
+slug = "ceffect"  # source: kolumnnamn
+
+[variable."257.graft:CHG_1"]
+slug = "chg-1"  # source: kolumnnamn
+
+[variable."257.graft:CHG_2"]
+slug = "chg-2"  # source: kolumnnamn
+
+[variable."257.graft:CHG_3"]
+slug = "chg-3"  # source: kolumnnamn
+
+[variable."257.graft:CKNO_NO"]
+slug = "ckno-no"  # source: kolumnnamn
+
+[variable."257.graft:CONA1"]
+slug = "cona1"  # source: kolumnnamn
+
+[variable."257.graft:CONA2"]
+slug = "cona2"  # source: kolumnnamn
+
+[variable."257.graft:CONA31"]
+slug = "cona31"  # source: kolumnnamn
+
+[variable."257.graft:CONA32"]
+slug = "cona32"  # source: kolumnnamn
+
+[variable."257.graft:CONA4"]
+slug = "cona4"  # source: kolumnnamn
+
+[variable."257.graft:CONA5"]
+slug = "cona5"  # source: kolumnnamn
+
+[variable."257.graft:CONA6"]
+slug = "cona6"  # source: kolumnnamn
+
+[variable."257.graft:CONA7"]
+slug = "cona7"  # source: kolumnnamn
+
+[variable."257.graft:CONA8"]
+slug = "cona8"  # source: kolumnnamn
+
+[variable."257.graft:CONC_PRD_NO"]
+slug = "conc-prd-no"  # source: kolumnnamn
+
+[variable."257.graft:CONC_USR_NO"]
+slug = "conc-usr-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_EG_NO"]
+slug = "coop-eg-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_GOV_RI_NO"]
+slug = "coop-gov-ri-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_NPO_NO"]
+slug = "coop-npo-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_PRV_CLCU_NO"]
+slug = "coop-prv-clcu-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_PRV_CN_NO"]
+slug = "coop-prv-cn-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_PRV_COMP_NO"]
+slug = "coop-prv-comp-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_PRV_OTH_NO"]
+slug = "coop-prv-oth-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_PRV_SUPPL_NO"]
+slug = "coop-prv-suppl-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_PUB_CLCU_NO"]
+slug = "coop-pub-clcu-no"  # source: kolumnnamn
+
+[variable."257.graft:COOP_UNIV_NO"]
+slug = "coop-univ-no"  # source: kolumnnamn
+
+[variable."257.graft:ECOMKT"]
+slug = "ecomkt"  # source: kolumnnamn
+
+[variable."257.graft:ECOORG"]
+slug = "ecoorg"  # source: kolumnnamn
+
+[variable."257.graft:ECOPRC"]
+slug = "ecoprc"  # source: kolumnnamn
+
+[variable."257.graft:ECOPRD"]
+slug = "ecoprd"  # source: kolumnnamn
+
+[variable."257.graft:ECap"]
+slug = "ecap"  # source: kolumnnamn
+
+[variable."257.graft:EEmp02"]
+slug = "eemp02"  # source: kolumnnamn
+
+[variable."257.graft:EEnv"]
+slug = "eenv"  # source: kolumnnamn
+
+[variable."257.graft:EFlex"]
+slug = "eflex"  # source: kolumnnamn
+
+[variable."257.graft:ELbr"]
+slug = "elbr"  # source: kolumnnamn
+
+[variable."257.graft:EMPC"]
+slug = "empc"  # source: kolumnnamn
+
+[variable."257.graft:EMar"]
+slug = "emar"  # source: kolumnnamn
+
+[variable."257.graft:EMat"]
+slug = "emat"  # source: kolumnnamn
+
+[variable."257.graft:ENAGR"]
+slug = "enagr"  # source: kolumnnamn
+
+[variable."257.graft:ENCOST"]
+slug = "encost"  # source: kolumnnamn
+
+[variable."257.graft:ENDEM"]
+slug = "endem"  # source: kolumnnamn
+
+[variable."257.graft:ENEREG"]
+slug = "enereg"  # source: kolumnnamn
+
+[variable."257.graft:ENETX"]
+slug = "enetx"  # source: kolumnnamn
+
+[variable."257.graft:ENGRA"]
+slug = "engra"  # source: kolumnnamn
+
+[variable."257.graft:ENREGF"]
+slug = "enregf"  # source: kolumnnamn
+
+[variable."257.graft:ENREP"]
+slug = "enrep"  # source: kolumnnamn
+
+[variable."257.graft:ENREQU"]
+slug = "enrequ"  # source: kolumnnamn
+
+[variable."257.graft:ENVBF"]
+slug = "envbf"  # source: kolumnnamn
+
+[variable."257.graft:ENVBT"]
+slug = "envbt"  # source: kolumnnamn
+
+[variable."257.graft:ENVID"]
+slug = "envid"  # source: kolumnnamn
+
+[variable."257.graft:EQua"]
+slug = "equa"  # source: kolumnnamn
+
+[variable."257.graft:ERMacX"]
+slug = "ermacx"  # source: kolumnnamn
+
+[variable."257.graft:EROekX"]
+slug = "eroekx"  # source: kolumnnamn
+
+[variable."257.graft:ERRdExX"]
+slug = "errdexx"  # source: kolumnnamn
+
+[variable."257.graft:ERRdInX"]
+slug = "errdinx"  # source: kolumnnamn
+
+[variable."257.graft:ERTot"]
+slug = "ertot"  # source: kolumnnamn
+
+[variable."257.graft:ERange"]
+slug = "erange"  # source: kolumnnamn
+
+[variable."257.graft:EStd"]
+slug = "estd"  # source: kolumnnamn
+
+[variable."257.graft:ETurn02"]
+slug = "eturn02"  # source: kolumnnamn
+
+[variable."257.graft:ETurn04"]
+slug = "eturn04"  # source: kolumnnamn
+
+[variable."257.graft:ETurnIn"]
+slug = "eturnin"  # source: kolumnnamn
+
+[variable."257.graft:ETurnMar"]
+slug = "eturnmar"  # source: kolumnnamn
+
+[variable."257.graft:ETurnUng"]
+slug = "eturnung"  # source: kolumnnamn
+
+[variable."257.graft:EXP"]
+slug = "exp"  # source: kolumnnamn
+
+[variable."257.graft:EXPC"]
+slug = "expc"  # source: kolumnnamn
+
+[variable."257.graft:EcoCo"]
+slug = "ecoco"  # source: kolumnnamn
+
+[variable."257.graft:EcoEn"]
+slug = "ecoen"  # source: kolumnnamn
+
+[variable."257.graft:Effect"]
+slug = "effect"  # source: kolumnnamn
+
+[variable."257.graft:Effect2"]
+slug = "effect2"  # source: kolumnnamn
+
+[variable."257.graft:Eforco"]
+slug = "eforco"  # source: kolumnnamn
+
+[variable."257.graft:Efored"]
+slug = "efored"  # source: kolumnnamn
+
+[variable."257.graft:Eforqu"]
+slug = "eforqu"  # source: kolumnnamn
+
+[variable."257.graft:Eforsa"]
+slug = "eforsa"  # source: kolumnnamn
+
+[variable."257.graft:EnReg"]
+slug = "enreg"  # source: kolumnnamn
+
+[variable."257.graft:FAIa"]
+slug = "faia"  # source: kolumnnamn
+
+[variable."257.graft:FCo"]
+slug = "fco"  # source: kolumnnamn
+
+[variable."257.graft:FCoop"]
+slug = "fcoop"  # source: kolumnnamn
+
+[variable."257.graft:FEStat"]
+slug = "festat"  # source: kolumnnamn
+
+[variable."257.graft:FETyp"]
+slug = "fetyp"  # source: kolumnnamn
+
+[variable."257.graft:FEcoCo"]
+slug = "fecoco"  # source: kolumnnamn
+
+[variable."257.graft:FEcoEn"]
+slug = "fecoen"  # source: kolumnnamn
+
+[variable."257.graft:FEcoEnu"]
+slug = "fecoenu"  # source: kolumnnamn
+
+[variable."257.graft:FEcoMat"]
+slug = "fecomat"  # source: kolumnnamn
+
+[variable."257.graft:FEcoPol"]
+slug = "fecopol"  # source: kolumnnamn
+
+[variable."257.graft:FEcoPos"]
+slug = "fecopos"  # source: kolumnnamn
+
+[variable."257.graft:FEcoRea"]
+slug = "fecorea"  # source: kolumnnamn
+
+[variable."257.graft:FEcoRec"]
+slug = "fecorec"  # source: kolumnnamn
+
+[variable."257.graft:FEcoSub"]
+slug = "fecosub"  # source: kolumnnamn
+
+[variable."257.graft:FEffect"]
+slug = "feffect"  # source: kolumnnamn
+
+[variable."257.graft:FEforeff"]
+slug = "feforeff"  # source: kolumnnamn
+
+[variable."257.graft:FEnAgr"]
+slug = "fenagr"  # source: kolumnnamn
+
+[variable."257.graft:FEnDem"]
+slug = "fendem"  # source: kolumnnamn
+
+[variable."257.graft:FEnGra"]
+slug = "fengra"  # source: kolumnnamn
+
+[variable."257.graft:FEnReg"]
+slug = "fenreg"  # source: kolumnnamn
+
+[variable."257.graft:FEnRegF"]
+slug = "fenregf"  # source: kolumnnamn
+
+[variable."257.graft:FEnVid"]
+slug = "fenvid"  # source: kolumnnamn
+
+[variable."257.graft:FFAc"]
+slug = "ffac"  # source: kolumnnamn
+
+[variable."257.graft:FFR_2A"]
+slug = "ffr-2a"  # source: kolumnnamn
+
+[variable."257.graft:FFR_2C"]
+slug = "ffr-2c"  # source: kolumnnamn
+
+[variable."257.graft:FFR_2C2"]
+slug = "ffr-2c2"  # source: kolumnnamn
+
+[variable."257.graft:FFR_2D"]
+slug = "ffr-2d"  # source: kolumnnamn
+
+[variable."257.graft:FFR_2D2"]
+slug = "ffr-2d2"  # source: kolumnnamn
+
+[variable."257.graft:FFun"]
+slug = "ffun"  # source: kolumnnamn
+
+[variable."257.graft:FFunrtd"]
+slug = "ffunrtd"  # source: kolumnnamn
+
+[variable."257.graft:FGMTSUP"]
+slug = "fgmtsup"  # source: kolumnnamn
+
+[variable."257.graft:FGp"]
+slug = "fgp"  # source: kolumnnamn
+
+[variable."257.graft:FH1"]
+slug = "fh1"  # source: kolumnnamn
+
+[variable."257.graft:FH2"]
+slug = "fh2"  # source: kolumnnamn
+
+[variable."257.graft:FH3"]
+slug = "fh3"  # source: kolumnnamn
+
+[variable."257.graft:FHCon"]
+slug = "fhcon"  # source: kolumnnamn
+
+[variable."257.graft:FHo"]
+slug = "fho"  # source: kolumnnamn
+
+[variable."257.graft:FINMAR"]
+slug = "finmar"  # source: kolumnnamn
+
+[variable."257.graft:FINNOACT"]
+slug = "finnoact"  # source: kolumnnamn
+
+[variable."257.graft:FINPCS"]
+slug = "finpcs"  # source: kolumnnamn
+
+[variable."257.graft:FINPDT"]
+slug = "finpdt"  # source: kolumnnamn
+
+[variable."257.graft:FINSER"]
+slug = "finser"  # source: kolumnnamn
+
+[variable."257.graft:FINUN"]
+slug = "finun"  # source: kolumnnamn
+
+[variable."257.graft:FInPdgd"]
+slug = "finpdgd"  # source: kolumnnamn
+
+[variable."257.graft:FInaba"]
+slug = "finaba"  # source: kolumnnamn
+
+[variable."257.graft:FInonab"]
+slug = "finonab"  # source: kolumnnamn
+
+[variable."257.graft:FInong"]
+slug = "finong"  # source: kolumnnamn
+
+[variable."257.graft:FInpcsW"]
+slug = "finpcsw"  # source: kolumnnamn
+
+[variable."257.graft:FInpdsv"]
+slug = "finpdsv"  # source: kolumnnamn
+
+[variable."257.graft:FInpdtw"]
+slug = "finpdtw"  # source: kolumnnamn
+
+[variable."257.graft:FInpslg"]
+slug = "finpslg"  # source: kolumnnamn
+
+[variable."257.graft:FInpspd"]
+slug = "finpspd"  # source: kolumnnamn
+
+[variable."257.graft:FInpssu"]
+slug = "finpssu"  # source: kolumnnamn
+
+[variable."257.graft:FMareur"]
+slug = "fmareur"  # source: kolumnnamn
+
+[variable."257.graft:FMarloc"]
+slug = "fmarloc"  # source: kolumnnamn
+
+[variable."257.graft:FMarnat"]
+slug = "fmarnat"  # source: kolumnnamn
+
+[variable."257.graft:FMaroth"]
+slug = "fmaroth"  # source: kolumnnamn
+
+[variable."257.graft:FMkt"]
+slug = "fmkt"  # source: kolumnnamn
+
+[variable."257.graft:FMktDgp"]
+slug = "fmktdgp"  # source: kolumnnamn
+
+[variable."257.graft:FMktPdl"]
+slug = "fmktpdl"  # source: kolumnnamn
+
+[variable."257.graft:FMktPdp"]
+slug = "fmktpdp"  # source: kolumnnamn
+
+[variable."257.graft:FMktPri"]
+slug = "fmktpri"  # source: kolumnnamn
+
+[variable."257.graft:FNewFrm"]
+slug = "fnewfrm"  # source: kolumnnamn
+
+[variable."257.graft:FNewMkt"]
+slug = "fnewmkt"  # source: kolumnnamn
+
+[variable."257.graft:FOENV"]
+slug = "foenv"  # source: kolumnnamn
+
+[variable."257.graft:FOEXT"]
+slug = "foext"  # source: kolumnnamn
+
+[variable."257.graft:FOIMP"]
+slug = "foimp"  # source: kolumnnamn
+
+[variable."257.graft:FOLBR"]
+slug = "folbr"  # source: kolumnnamn
+
+[variable."257.graft:FOMAT"]
+slug = "fomat"  # source: kolumnnamn
+
+[variable."257.graft:FONRG"]
+slug = "fonrg"  # source: kolumnnamn
+
+[variable."257.graft:FOOPN"]
+slug = "foopn"  # source: kolumnnamn
+
+[variable."257.graft:FOPCS"]
+slug = "fopcs"  # source: kolumnnamn
+
+[variable."257.graft:FOPDT"]
+slug = "fopdt"  # source: kolumnnamn
+
+[variable."257.graft:FOREP"]
+slug = "forep"  # source: kolumnnamn
+
+[variable."257.graft:FOSTD"]
+slug = "fostd"  # source: kolumnnamn
+
+[variable."257.graft:FOcap"]
+slug = "focap"  # source: kolumnnamn
+
+[variable."257.graft:FOenmk"]
+slug = "foenmk"  # source: kolumnnamn
+
+[variable."257.graft:FOflex"]
+slug = "foflex"  # source: kolumnnamn
+
+[variable."257.graft:FOhes"]
+slug = "fohes"  # source: kolumnnamn
+
+[variable."257.graft:FOimks"]
+slug = "foimks"  # source: kolumnnamn
+
+[variable."257.graft:FOmktcg"]
+slug = "fomktcg"  # source: kolumnnamn
+
+[variable."257.graft:FOmktgm"]
+slug = "fomktgm"  # source: kolumnnamn
+
+[variable."257.graft:FOmkts"]
+slug = "fomkts"  # source: kolumnnamn
+
+[variable."257.graft:FOqua"]
+slug = "foqua"  # source: kolumnnamn
+
+[variable."257.graft:FOrange"]
+slug = "forange"  # source: kolumnnamn
+
+[variable."257.graft:FOrepl"]
+slug = "forepl"  # source: kolumnnamn
+
+[variable."257.graft:FOrg"]
+slug = "forg"  # source: kolumnnamn
+
+[variable."257.graft:FOrgBup"]
+slug = "forgbup"  # source: kolumnnamn
+
+[variable."257.graft:FOrgExr"]
+slug = "forgexr"  # source: kolumnnamn
+
+[variable."257.graft:FOrgWkp"]
+slug = "forgwkp"  # source: kolumnnamn
+
+[variable."257.graft:FOroabl"]
+slug = "foroabl"  # source: kolumnnamn
+
+[variable."257.graft:FOrocin"]
+slug = "forocin"  # source: kolumnnamn
+
+[variable."257.graft:FOroqua"]
+slug = "foroqua"  # source: kolumnnamn
+
+[variable."257.graft:FOrorco"]
+slug = "fororco"  # source: kolumnnamn
+
+[variable."257.graft:FOrored"]
+slug = "forored"  # source: kolumnnamn
+
+[variable."257.graft:FPAT"]
+slug = "fpat"  # source: kolumnnamn
+
+[variable."257.graft:FPro"]
+slug = "fpro"  # source: kolumnnamn
+
+[variable."257.graft:FRDCON"]
+slug = "frdcon"  # source: kolumnnamn
+
+[variable."257.graft:FRDPER"]
+slug = "frdper"  # source: kolumnnamn
+
+[variable."257.graft:FRIDX"]
+slug = "fridx"  # source: kolumnnamn
+
+[variable."257.graft:FRMARX"]
+slug = "frmarx"  # source: kolumnnamn
+
+[variable."257.graft:FRMacX"]
+slug = "frmacx"  # source: kolumnnamn
+
+[variable."257.graft:FROETX"]
+slug = "froetx"  # source: kolumnnamn
+
+[variable."257.graft:FRPREX"]
+slug = "frprex"  # source: kolumnnamn
+
+[variable."257.graft:FRRdExX"]
+slug = "frrdexx"  # source: kolumnnamn
+
+[variable."257.graft:FRRdInX"]
+slug = "frrdinx"  # source: kolumnnamn
+
+[variable."257.graft:FRTRX"]
+slug = "frtrx"  # source: kolumnnamn
+
+[variable."257.graft:FRTr"]
+slug = "frtr"  # source: kolumnnamn
+
+[variable."257.graft:FR_2A"]
+slug = "fr-2a"  # source: kolumnnamn
+
+[variable."257.graft:FR_2B"]
+slug = "fr-2b"  # source: kolumnnamn
+
+[variable."257.graft:FR_2C"]
+slug = "fr-2c"  # source: kolumnnamn
+
+[variable."257.graft:FR_2C2"]
+slug = "fr-2c2"  # source: kolumnnamn
+
+[variable."257.graft:FR_2D"]
+slug = "fr-2d"  # source: kolumnnamn
+
+[variable."257.graft:FR_2D2"]
+slug = "fr-2d2"  # source: kolumnnamn
+
+[variable."257.graft:FSCLI"]
+slug = "fscli"  # source: kolumnnamn
+
+[variable."257.graft:FSCOM"]
+slug = "fscom"  # source: kolumnnamn
+
+[variable."257.graft:FSCON"]
+slug = "fscon"  # source: kolumnnamn
+
+[variable."257.graft:FSENT"]
+slug = "fsent"  # source: kolumnnamn
+
+[variable."257.graft:FSEXB"]
+slug = "fsexb"  # source: kolumnnamn
+
+[variable."257.graft:FSGMT"]
+slug = "fsgmt"  # source: kolumnnamn
+
+[variable."257.graft:FSGRP"]
+slug = "fsgrp"  # source: kolumnnamn
+
+[variable."257.graft:FSNET"]
+slug = "fsnet"  # source: kolumnnamn
+
+[variable."257.graft:FSPAT"]
+slug = "fspat"  # source: kolumnnamn
+
+[variable."257.graft:FSPRO"]
+slug = "fspro"  # source: kolumnnamn
+
+[variable."257.graft:FSSUP"]
+slug = "fssup"  # source: kolumnnamn
+
+[variable."257.graft:FSUNI"]
+slug = "fsuni"  # source: kolumnnamn
+
+[variable."257.graft:FSource"]
+slug = "fsource"  # source: kolumnnamn
+
+[variable."257.graft:FTURNIMP"]
+slug = "fturnimp"  # source: kolumnnamn
+
+[variable."257.graft:FTURNNEW"]
+slug = "fturnnew"  # source: kolumnnamn
+
+[variable."257.graft:FTURNUNG"]
+slug = "fturnung"  # source: kolumnnamn
+
+[variable."257.graft:FTurnIn"]
+slug = "fturnin"  # source: kolumnnamn
+
+[variable."257.graft:FTurnMar"]
+slug = "fturnmar"  # source: kolumnnamn
+
+[variable."257.graft:FUND_INNO_NO"]
+slug = "fund-inno-no"  # source: kolumnnamn
+
+[variable."257.graft:FUND_NO"]
+slug = "fund-no"  # source: kolumnnamn
+
+[variable."257.graft:Fco11"]
+slug = "fco11"  # source: kolumnnamn
+
+[variable."257.graft:Fco12"]
+slug = "fco12"  # source: kolumnnamn
+
+[variable."257.graft:Fco13"]
+slug = "fco13"  # source: kolumnnamn
+
+[variable."257.graft:Fco14"]
+slug = "fco14"  # source: kolumnnamn
+
+[variable."257.graft:Fco15"]
+slug = "fco15"  # source: kolumnnamn
+
+[variable."257.graft:Fco21"]
+slug = "fco21"  # source: kolumnnamn
+
+[variable."257.graft:Fco22"]
+slug = "fco22"  # source: kolumnnamn
+
+[variable."257.graft:Fco23"]
+slug = "fco23"  # source: kolumnnamn
+
+[variable."257.graft:Fco24"]
+slug = "fco24"  # source: kolumnnamn
+
+[variable."257.graft:Fco25"]
+slug = "fco25"  # source: kolumnnamn
+
+[variable."257.graft:Fco31"]
+slug = "fco31"  # source: kolumnnamn
+
+[variable."257.graft:Fco32"]
+slug = "fco32"  # source: kolumnnamn
+
+[variable."257.graft:Fco33"]
+slug = "fco33"  # source: kolumnnamn
+
+[variable."257.graft:Fco34"]
+slug = "fco34"  # source: kolumnnamn
+
+[variable."257.graft:Fco35"]
+slug = "fco35"  # source: kolumnnamn
+
+[variable."257.graft:Fco41"]
+slug = "fco41"  # source: kolumnnamn
+
+[variable."257.graft:Fco42"]
+slug = "fco42"  # source: kolumnnamn
+
+[variable."257.graft:Fco43"]
+slug = "fco43"  # source: kolumnnamn
+
+[variable."257.graft:Fco44"]
+slug = "fco44"  # source: kolumnnamn
+
+[variable."257.graft:Fco45"]
+slug = "fco45"  # source: kolumnnamn
+
+[variable."257.graft:Fco51"]
+slug = "fco51"  # source: kolumnnamn
+
+[variable."257.graft:Fco52"]
+slug = "fco52"  # source: kolumnnamn
+
+[variable."257.graft:Fco53"]
+slug = "fco53"  # source: kolumnnamn
+
+[variable."257.graft:Fco54"]
+slug = "fco54"  # source: kolumnnamn
+
+[variable."257.graft:Fco55"]
+slug = "fco55"  # source: kolumnnamn
+
+[variable."257.graft:Fco61"]
+slug = "fco61"  # source: kolumnnamn
+
+[variable."257.graft:Fco62"]
+slug = "fco62"  # source: kolumnnamn
+
+[variable."257.graft:Fco63"]
+slug = "fco63"  # source: kolumnnamn
+
+[variable."257.graft:Fco64"]
+slug = "fco64"  # source: kolumnnamn
+
+[variable."257.graft:Fco65"]
+slug = "fco65"  # source: kolumnnamn
+
+[variable."257.graft:Fco71"]
+slug = "fco71"  # source: kolumnnamn
+
+[variable."257.graft:Fco72"]
+slug = "fco72"  # source: kolumnnamn
+
+[variable."257.graft:Fco73"]
+slug = "fco73"  # source: kolumnnamn
+
+[variable."257.graft:Fco74"]
+slug = "fco74"  # source: kolumnnamn
+
+[variable."257.graft:Fco75"]
+slug = "fco75"  # source: kolumnnamn
+
+[variable."257.graft:Fecap"]
+slug = "fecap"  # source: kolumnnamn
+
+[variable."257.graft:Feenv"]
+slug = "feenv"  # source: kolumnnamn
+
+[variable."257.graft:Feflex"]
+slug = "feflex"  # source: kolumnnamn
+
+[variable."257.graft:Felbr"]
+slug = "felbr"  # source: kolumnnamn
+
+[variable."257.graft:Femar"]
+slug = "femar"  # source: kolumnnamn
+
+[variable."257.graft:Femat"]
+slug = "femat"  # source: kolumnnamn
+
+[variable."257.graft:Femp02"]
+slug = "femp02"  # source: kolumnnamn
+
+[variable."257.graft:Femp04"]
+slug = "femp04"  # source: kolumnnamn
+
+[variable."257.graft:Femp08"]
+slug = "femp08"  # source: kolumnnamn
+
+[variable."257.graft:Fequa"]
+slug = "fequa"  # source: kolumnnamn
+
+[variable."257.graft:Ferange"]
+slug = "ferange"  # source: kolumnnamn
+
+[variable."257.graft:Festd"]
+slug = "festd"  # source: kolumnnamn
+
+[variable."257.graft:Fhbeg"]
+slug = "fhbeg"  # source: kolumnnamn
+
+[variable."257.graft:Fhcos"]
+slug = "fhcos"  # source: kolumnnamn
+
+[variable."257.graft:Fhdem"]
+slug = "fhdem"  # source: kolumnnamn
+
+[variable."257.graft:Fhdlay"]
+slug = "fhdlay"  # source: kolumnnamn
+
+[variable."257.graft:Fhdom"]
+slug = "fhdom"  # source: kolumnnamn
+
+[variable."257.graft:Fhfent"]
+slug = "fhfent"  # source: kolumnnamn
+
+[variable."257.graft:Fhfout"]
+slug = "fhfout"  # source: kolumnnamn
+
+[variable."257.graft:Fhinf"]
+slug = "fhinf"  # source: kolumnnamn
+
+[variable."257.graft:Fhmar"]
+slug = "fhmar"  # source: kolumnnamn
+
+[variable."257.graft:Fhpar"]
+slug = "fhpar"  # source: kolumnnamn
+
+[variable."257.graft:Fhper"]
+slug = "fhper"  # source: kolumnnamn
+
+[variable."257.graft:Fhprior"]
+slug = "fhprior"  # source: kolumnnamn
+
+[variable."257.graft:Fhtec"]
+slug = "fhtec"  # source: kolumnnamn
+
+[variable."257.graft:Fpmos"]
+slug = "fpmos"  # source: kolumnnamn
+
+[variable."257.graft:Frdeng"]
+slug = "frdeng"  # source: kolumnnamn
+
+[variable."257.graft:Frmac"]
+slug = "frmac"  # source: kolumnnamn
+
+[variable."257.graft:Frmar"]
+slug = "frmar"  # source: kolumnnamn
+
+[variable."257.graft:Froek"]
+slug = "froek"  # source: kolumnnamn
+
+[variable."257.graft:Froekx"]
+slug = "froekx"  # source: kolumnnamn
+
+[variable."257.graft:Frpre"]
+slug = "frpre"  # source: kolumnnamn
+
+[variable."257.graft:Frrdex"]
+slug = "frrdex"  # source: kolumnnamn
+
+[variable."257.graft:Frrdin"]
+slug = "frrdin"  # source: kolumnnamn
+
+[variable."257.graft:Frtot"]
+slug = "frtot"  # source: kolumnnamn
+
+[variable."257.graft:FtgStat"]
+slug = "ftgstat"  # source: kolumnnamn
+
+[variable."257.graft:Fturn02"]
+slug = "fturn02"  # source: kolumnnamn
+
+[variable."257.graft:Fturn04"]
+slug = "fturn04"  # source: kolumnnamn
+
+[variable."257.graft:Fturn08"]
+slug = "fturn08"  # source: kolumnnamn
+
+[variable."257.graft:G17a"]
+slug = "g17a"  # source: kolumnnamn
+
+[variable."257.graft:G17b"]
+slug = "g17b"  # source: kolumnnamn
+
+[variable."257.graft:G17c"]
+slug = "g17c"  # source: kolumnnamn
+
+[variable."257.graft:G17d"]
+slug = "g17d"  # source: kolumnnamn
+
+[variable."257.graft:G17e"]
+slug = "g17e"  # source: kolumnnamn
+
+[variable."257.graft:G17f"]
+slug = "g17f"  # source: kolumnnamn
+
+[variable."257.graft:G17g"]
+slug = "g17g"  # source: kolumnnamn
+
+[variable."257.graft:GMTSUP"]
+slug = "gmtsup"  # source: kolumnnamn
+
+[variable."257.graft:Gp_o"]
+slug = "gp-o"  # source: kolumnnamn
+
+[variable."257.graft:H1"]
+slug = "h1"  # source: kolumnnamn
+
+[variable."257.graft:H11"]
+slug = "h11"  # source: kolumnnamn
+
+[variable."257.graft:H12"]
+slug = "h12"  # source: kolumnnamn
+
+[variable."257.graft:H13"]
+slug = "h13"  # source: kolumnnamn
+
+[variable."257.graft:H18d"]
+slug = "h18d"  # source: kolumnnamn
+
+[variable."257.graft:H18h"]
+slug = "h18h"  # source: kolumnnamn
+
+[variable."257.graft:H18k"]
+slug = "h18k"  # source: kolumnnamn
+
+[variable."257.graft:H2"]
+slug = "h2"  # source: kolumnnamn
+
+[variable."257.graft:H21"]
+slug = "h21"  # source: kolumnnamn
+
+[variable."257.graft:H22"]
+slug = "h22"  # source: kolumnnamn
+
+[variable."257.graft:H23"]
+slug = "h23"  # source: kolumnnamn
+
+[variable."257.graft:H3"]
+slug = "h3"  # source: kolumnnamn
+
+[variable."257.graft:H31"]
+slug = "h31"  # source: kolumnnamn
+
+[variable."257.graft:H32"]
+slug = "h32"  # source: kolumnnamn
+
+[variable."257.graft:H33"]
+slug = "h33"  # source: kolumnnamn
+
+[variable."257.graft:H41"]
+slug = "h41"  # source: kolumnnamn
+
+[variable."257.graft:H42"]
+slug = "h42"  # source: kolumnnamn
+
+[variable."257.graft:H43"]
+slug = "h43"  # source: kolumnnamn
+
+[variable."257.graft:H51"]
+slug = "h51"  # source: kolumnnamn
+
+[variable."257.graft:H52"]
+slug = "h52"  # source: kolumnnamn
+
+[variable."257.graft:H53"]
+slug = "h53"  # source: kolumnnamn
+
+[variable."257.graft:H61"]
+slug = "h61"  # source: kolumnnamn
+
+[variable."257.graft:H62"]
+slug = "h62"  # source: kolumnnamn
+
+[variable."257.graft:H63"]
+slug = "h63"  # source: kolumnnamn
+
+[variable."257.graft:H71"]
+slug = "h71"  # source: kolumnnamn
+
+[variable."257.graft:H72"]
+slug = "h72"  # source: kolumnnamn
+
+[variable."257.graft:H73"]
+slug = "h73"  # source: kolumnnamn
+
+[variable."257.graft:H81"]
+slug = "h81"  # source: kolumnnamn
+
+[variable."257.graft:H82"]
+slug = "h82"  # source: kolumnnamn
+
+[variable."257.graft:H83"]
+slug = "h83"  # source: kolumnnamn
+
+[variable."257.graft:H91"]
+slug = "h91"  # source: kolumnnamn
+
+[variable."257.graft:H92"]
+slug = "h92"  # source: kolumnnamn
+
+[variable."257.graft:H93"]
+slug = "h93"  # source: kolumnnamn
+
+[variable."257.graft:HBeg"]
+slug = "hbeg"  # source: kolumnnamn
+
+[variable."257.graft:HCon"]
+slug = "hcon"  # source: kolumnnamn
+
+[variable."257.graft:HCos"]
+slug = "hcos"  # source: kolumnnamn
+
+[variable."257.graft:HDlay"]
+slug = "hdlay"  # source: kolumnnamn
+
+[variable."257.graft:HDom"]
+slug = "hdom"  # source: kolumnnamn
+
+[variable."257.graft:HFac2"]
+slug = "hfac2"  # source: kolumnnamn
+
+[variable."257.graft:HFout"]
+slug = "hfout"  # source: kolumnnamn
+
+[variable."257.graft:HInf"]
+slug = "hinf"  # source: kolumnnamn
+
+[variable."257.graft:HLDEM"]
+slug = "hldem"  # source: kolumnnamn
+
+[variable."257.graft:HMar"]
+slug = "hmar"  # source: kolumnnamn
+
+[variable."257.graft:HTec"]
+slug = "htec"  # source: kolumnnamn
+
+[variable."257.graft:I20c"]
+slug = "i20c"  # source: kolumnnamn
+
+[variable."257.graft:INITPS"]
+slug = "initps"  # source: kolumnnamn
+
+[variable."257.graft:INMAR"]
+slug = "inmar"  # source: kolumnnamn
+
+[variable."257.graft:INNA_IH_RND_FREQ"]
+slug = "inna-ih-rnd-freq"  # source: kolumnnamn
+
+[variable."257.graft:INNA_NO"]
+slug = "inna-no"  # source: kolumnnamn
+
+[variable."257.graft:INNO_PCS_NO"]
+slug = "inno-pcs-no"  # source: kolumnnamn
+
+[variable."257.graft:INNO_PRD_NNEW"]
+slug = "inno-prd-nnew"  # source: kolumnnamn
+
+[variable."257.graft:INNO_PRD_NO"]
+slug = "inno-prd-no"  # source: kolumnnamn
+
+[variable."257.graft:INOTHGD"]
+slug = "inothgd"  # source: kolumnnamn
+
+[variable."257.graft:INOTHPS"]
+slug = "inothps"  # source: kolumnnamn
+
+[variable."257.graft:INOTHSV"]
+slug = "inothsv"  # source: kolumnnamn
+
+[variable."257.graft:INPCS"]
+slug = "inpcs"  # source: kolumnnamn
+
+[variable."257.graft:INPCS_1"]
+slug = "inpcs-1"  # source: kolumnnamn
+
+[variable."257.graft:INPCS_2"]
+slug = "inpcs-2"  # source: kolumnnamn
+
+[variable."257.graft:INPCS_3"]
+slug = "inpcs-3"  # source: kolumnnamn
+
+[variable."257.graft:INPDT"]
+slug = "inpdt"  # source: kolumnnamn
+
+[variable."257.graft:INPDT_1"]
+slug = "inpdt-1"  # source: kolumnnamn
+
+[variable."257.graft:INPDT_2"]
+slug = "inpdt-2"  # source: kolumnnamn
+
+[variable."257.graft:INPDT_3"]
+slug = "inpdt-3"  # source: kolumnnamn
+
+[variable."257.graft:INSER"]
+slug = "inser"  # source: kolumnnamn
+
+[variable."257.graft:INSER_1"]
+slug = "inser-1"  # source: kolumnnamn
+
+[variable."257.graft:INSER_2"]
+slug = "inser-2"  # source: kolumnnamn
+
+[variable."257.graft:INSER_3"]
+slug = "inser-3"  # source: kolumnnamn
+
+[variable."257.graft:INTOGD"]
+slug = "intogd"  # source: kolumnnamn
+
+[variable."257.graft:INTOPS"]
+slug = "intops"  # source: kolumnnamn
+
+[variable."257.graft:INTOSV"]
+slug = "intosv"  # source: kolumnnamn
+
+[variable."257.graft:INUN"]
+slug = "inun"  # source: kolumnnamn
+
+[variable."257.graft:IPR_NO"]
+slug = "ipr-no"  # source: kolumnnamn
+
+[variable."257.graft:IPR_OUT_NO"]
+slug = "ipr-out-no"  # source: kolumnnamn
+
+[variable."257.graft:InItGd"]
+slug = "initgd"  # source: kolumnnamn
+
+[variable."257.graft:InItSv"]
+slug = "initsv"  # source: kolumnnamn
+
+[variable."257.graft:InOnab"]
+slug = "inonab"  # source: kolumnnamn
+
+[variable."257.graft:InPcsW"]
+slug = "inpcsw"  # source: kolumnnamn
+
+[variable."257.graft:InPdtg1"]
+slug = "inpdtg1"  # source: kolumnnamn
+
+[variable."257.graft:InPdtg2"]
+slug = "inpdtg2"  # source: kolumnnamn
+
+[variable."257.graft:InPdtg3"]
+slug = "inpdtg3"  # source: kolumnnamn
+
+[variable."257.graft:InPdtg4"]
+slug = "inpdtg4"  # source: kolumnnamn
+
+[variable."257.graft:InPdts1"]
+slug = "inpdts1"  # source: kolumnnamn
+
+[variable."257.graft:InPdts2"]
+slug = "inpdts2"  # source: kolumnnamn
+
+[variable."257.graft:InPdts3"]
+slug = "inpdts3"  # source: kolumnnamn
+
+[variable."257.graft:InPdts4"]
+slug = "inpdts4"  # source: kolumnnamn
+
+[variable."257.graft:InPdtw"]
+slug = "inpdtw"  # source: kolumnnamn
+
+[variable."257.graft:InPsdv1"]
+slug = "inpsdv1"  # source: kolumnnamn
+
+[variable."257.graft:InPsdv2"]
+slug = "inpsdv2"  # source: kolumnnamn
+
+[variable."257.graft:InPsdv3"]
+slug = "inpsdv3"  # source: kolumnnamn
+
+[variable."257.graft:InPsdv4"]
+slug = "inpsdv4"  # source: kolumnnamn
+
+[variable."257.graft:Inonab_o"]
+slug = "inonab-o"  # source: kolumnnamn
+
+[variable."257.graft:InpcsW_o"]
+slug = "inpcsw-o"  # source: kolumnnamn
+
+[variable."257.graft:Inpdgd_o"]
+slug = "inpdgd-o"  # source: kolumnnamn
+
+[variable."257.graft:Inpdsv_o"]
+slug = "inpdsv-o"  # source: kolumnnamn
+
+[variable."257.graft:Inpdtw_o"]
+slug = "inpdtw-o"  # source: kolumnnamn
+
+[variable."257.graft:Inpslg_o"]
+slug = "inpslg-o"  # source: kolumnnamn
+
+[variable."257.graft:Inpspd_o"]
+slug = "inpspd-o"  # source: kolumnnamn
+
+[variable."257.graft:Inpssu_o"]
+slug = "inpssu-o"  # source: kolumnnamn
+
+[variable."257.graft:JEAnt"]
+slug = "jeant"  # source: kolumnnamn
+
+[variable."257.graft:JERel"]
+slug = "jerel"  # source: kolumnnamn
+
+[variable."257.graft:JurForm"]
+slug = "jurform"  # source: kolumnnamn
+
+[variable."257.graft:KommunSate"]
+slug = "kommunsate"  # source: kolumnnamn
+
+[variable."257.graft:LGFIN"]
+slug = "lgfin"  # source: kolumnnamn
+
+[variable."257.graft:LGOTHO"]
+slug = "lgotho"  # source: kolumnnamn
+
+[variable."257.graft:LGREG"]
+slug = "lgreg"  # source: kolumnnamn
+
+[variable."257.graft:LGTEC"]
+slug = "lgtec"  # source: kolumnnamn
+
+[variable."257.graft:LILLAS"]
+slug = "lillas"  # source: kolumnnamn
+
+[variable."257.graft:LanSate"]
+slug = "lansate"  # source: kolumnnamn
+
+[variable."257.graft:MBrst"]
+slug = "mbrst"  # source: kolumnnamn
+
+[variable."257.graft:MFin"]
+slug = "mfin"  # source: kolumnnamn
+
+[variable."257.graft:MJbrt"]
+slug = "mjbrt"  # source: kolumnnamn
+
+[variable."257.graft:MMdcf"]
+slug = "mmdcf"  # source: kolumnnamn
+
+[variable."257.graft:MNFin"]
+slug = "mnfin"  # source: kolumnnamn
+
+[variable."257.graft:MTrem"]
+slug = "mtrem"  # source: kolumnnamn
+
+[variable."257.graft:Mareur_o"]
+slug = "mareur-o"  # source: kolumnnamn
+
+[variable."257.graft:Marloc_o"]
+slug = "marloc-o"  # source: kolumnnamn
+
+[variable."257.graft:Marnat_o"]
+slug = "marnat-o"  # source: kolumnnamn
+
+[variable."257.graft:Maroth_o"]
+slug = "maroth-o"  # source: kolumnnamn
+
+[variable."257.graft:MktDes"]
+slug = "mktdes"  # source: kolumnnamn
+
+[variable."257.graft:MktMet"]
+slug = "mktmet"  # source: kolumnnamn
+
+[variable."257.graft:NRMacX"]
+slug = "nrmacx"  # source: kolumnnamn
+
+[variable."257.graft:NROekX"]
+slug = "nroekx"  # source: kolumnnamn
+
+[variable."257.graft:NRRdExX"]
+slug = "nrrdexx"  # source: kolumnnamn
+
+[variable."257.graft:NRRdInX"]
+slug = "nrrdinx"  # source: kolumnnamn
+
+[variable."257.graft:Nace"]
+slug = "nace"  # source: kolumnnamn
+
+[variable."257.graft:NewFrm_o"]
+slug = "newfrm-o"  # source: kolumnnamn
+
+[variable."257.graft:NewMkt_o"]
+slug = "newmkt-o"  # source: kolumnnamn
+
+[variable."257.graft:NgS1"]
+slug = "ngs1"  # source: kolumnnamn
+
+[variable."257.graft:Nuts"]
+slug = "nuts"  # source: kolumnnamn
+
+[variable."257.graft:NyAnst_2014"]
+slug = "nyanst-2014"  # source: kolumnnamn
+
+[variable."257.graft:NyAnst_Ar_2016"]
+slug = "nyanst-ar-2016"  # source: kolumnnamn
+
+[variable."257.graft:NyOMS_2014"]
+slug = "nyoms-2014"  # source: kolumnnamn
+
+[variable."257.graft:NyOms_Ar_2016"]
+slug = "nyoms-ar-2016"  # source: kolumnnamn
+
+[variable."257.graft:OCap"]
+slug = "ocap"  # source: kolumnnamn
+
+[variable."257.graft:OENV"]
+slug = "oenv"  # source: kolumnnamn
+
+[variable."257.graft:OEXT"]
+slug = "oext"  # source: kolumnnamn
+
+[variable."257.graft:OEnmk"]
+slug = "oenmk"  # source: kolumnnamn
+
+[variable."257.graft:OFlex"]
+slug = "oflex"  # source: kolumnnamn
+
+[variable."257.graft:OHes"]
+slug = "ohes"  # source: kolumnnamn
+
+[variable."257.graft:OHesy"]
+slug = "ohesy"  # source: kolumnnamn
+
+[variable."257.graft:OIMP"]
+slug = "oimp"  # source: kolumnnamn
+
+[variable."257.graft:OImks"]
+slug = "oimks"  # source: kolumnnamn
+
+[variable."257.graft:OLBR"]
+slug = "olbr"  # source: kolumnnamn
+
+[variable."257.graft:OMAT"]
+slug = "omat"  # source: kolumnnamn
+
+[variable."257.graft:ONRG"]
+slug = "onrg"  # source: kolumnnamn
+
+[variable."257.graft:ONmoms"]
+slug = "onmoms"  # source: kolumnnamn
+
+[variable."257.graft:OOPN"]
+slug = "oopn"  # source: kolumnnamn
+
+[variable."257.graft:OPCS"]
+slug = "opcs"  # source: kolumnnamn
+
+[variable."257.graft:OPDT"]
+slug = "opdt"  # source: kolumnnamn
+
+[variable."257.graft:OQua"]
+slug = "oqua"  # source: kolumnnamn
+
+[variable."257.graft:OREP"]
+slug = "orep"  # source: kolumnnamn
+
+[variable."257.graft:ORange"]
+slug = "orange"  # source: kolumnnamn
+
+[variable."257.graft:ORei"]
+slug = "orei"  # source: kolumnnamn
+
+[variable."257.graft:ORepl"]
+slug = "orepl"  # source: kolumnnamn
+
+[variable."257.graft:ORme"]
+slug = "orme"  # source: kolumnnamn
+
+[variable."257.graft:OSTD"]
+slug = "ostd"  # source: kolumnnamn
+
+[variable."257.graft:Omktcg"]
+slug = "omktcg"  # source: kolumnnamn
+
+[variable."257.graft:Omktgm"]
+slug = "omktgm"  # source: kolumnnamn
+
+[variable."257.graft:Omkts"]
+slug = "omkts"  # source: kolumnnamn
+
+[variable."257.graft:Oms2"]
+slug = "oms2"  # source: kolumnnamn
+
+[variable."257.graft:OrgRel"]
+slug = "orgrel"  # source: kolumnnamn
+
+[variable."257.graft:OrgStr"]
+slug = "orgstr"  # source: kolumnnamn
+
+[variable."257.graft:OrgSys"]
+slug = "orgsys"  # source: kolumnnamn
+
+[variable."257.graft:OroAbl"]
+slug = "oroabl"  # source: kolumnnamn
+
+[variable."257.graft:OroCin"]
+slug = "orocin"  # source: kolumnnamn
+
+[variable."257.graft:OroQua"]
+slug = "oroqua"  # source: kolumnnamn
+
+[variable."257.graft:OroRco"]
+slug = "ororco"  # source: kolumnnamn
+
+[variable."257.graft:Orored"]
+slug = "orored"  # source: kolumnnamn
+
+[variable."257.graft:PAT"]
+slug = "pat"  # source: kolumnnamn
+
+[variable."257.graft:PBINN"]
+slug = "pbinn"  # source: kolumnnamn
+
+[variable."257.graft:PBNOCT"]
+slug = "pbnoct"  # source: kolumnnamn
+
+[variable."257.graft:PeOrgNrHe"]
+slug = "peorgnrhe"  # source: kolumnnamn
+
+[variable."257.graft:ProCp"]
+slug = "procp"  # source: kolumnnamn
+
+[variable."257.graft:RD"]
+slug = "rd"  # source: kolumnnamn
+
+[variable."257.graft:RDCON"]
+slug = "rdcon"  # source: kolumnnamn
+
+[variable."257.graft:RDPER"]
+slug = "rdper"  # source: kolumnnamn
+
+[variable."257.graft:RID"]
+slug = "rid"  # source: kolumnnamn
+
+[variable."257.graft:RIDX"]
+slug = "ridx"  # source: kolumnnamn
+
+[variable."257.graft:RMARX"]
+slug = "rmarx"  # source: kolumnnamn
+
+[variable."257.graft:ROET"]
+slug = "roet"  # source: kolumnnamn
+
+[variable."257.graft:ROETX"]
+slug = "roetx"  # source: kolumnnamn
+
+[variable."257.graft:RPREX"]
+slug = "rprex"  # source: kolumnnamn
+
+[variable."257.graft:RRDIN"]
+slug = "rrdin"  # source: kolumnnamn
+
+[variable."257.graft:RRdIn_o"]
+slug = "rrdin-o"  # source: kolumnnamn
+
+[variable."257.graft:RTRX"]
+slug = "rtrx"  # source: kolumnnamn
+
+[variable."257.graft:RTot"]
+slug = "rtot"  # source: kolumnnamn
+
+[variable."257.graft:Rdeng"]
+slug = "rdeng"  # source: kolumnnamn
+
+[variable."257.graft:SCLI"]
+slug = "scli"  # source: kolumnnamn
+
+[variable."257.graft:SCON"]
+slug = "scon"  # source: kolumnnamn
+
+[variable."257.graft:SDos"]
+slug = "sdos"  # source: kolumnnamn
+
+[variable."257.graft:SENT"]
+slug = "sent"  # source: kolumnnamn
+
+[variable."257.graft:SEXB"]
+slug = "sexb"  # source: kolumnnamn
+
+[variable."257.graft:SEnap"]
+slug = "senap"  # source: kolumnnamn
+
+[variable."257.graft:SGMT"]
+slug = "sgmt"  # source: kolumnnamn
+
+[variable."257.graft:SGRP"]
+slug = "sgrp"  # source: kolumnnamn
+
+[variable."257.graft:SGala"]
+slug = "sgala"  # source: kolumnnamn
+
+[variable."257.graft:SGrupp"]
+slug = "sgrupp"  # source: kolumnnamn
+
+[variable."257.graft:SMed"]
+slug = "smed"  # source: kolumnnamn
+
+[variable."257.graft:SMkr"]
+slug = "smkr"  # source: kolumnnamn
+
+[variable."257.graft:SMsdm"]
+slug = "smsdm"  # source: kolumnnamn
+
+[variable."257.graft:SNET"]
+slug = "snet"  # source: kolumnnamn
+
+[variable."257.graft:SPAT"]
+slug = "spat"  # source: kolumnnamn
+
+[variable."257.graft:SPRO"]
+slug = "spro"  # source: kolumnnamn
+
+[variable."257.graft:SWds"]
+slug = "swds"  # source: kolumnnamn
+
+[variable."257.graft:Sektor"]
+slug = "sektor"  # source: kolumnnamn
+
+[variable."257.graft:StatusKod"]
+slug = "statuskod"  # source: kolumnnamn
+
+[variable."257.graft:StatusTillaggKod"]
+slug = "statustillaggkod"  # source: kolumnnamn
+
+[variable."257.graft:StrA"]
+slug = "stra"  # source: kolumnnamn
+
+[variable."257.graft:StrB"]
+slug = "strb"  # source: kolumnnamn
+
+[variable."257.graft:TURN"]
+slug = "turn"  # source: kolumnnamn
+
+[variable."257.graft:TURNC"]
+slug = "turnc"  # source: kolumnnamn
+
+[variable."257.graft:TURNIMP"]
+slug = "turnimp"  # source: kolumnnamn
+
+[variable."257.graft:TURNNEW"]
+slug = "turnnew"  # source: kolumnnamn
+
+[variable."257.graft:TURNUNG"]
+slug = "turnung"  # source: kolumnnamn
+
+[variable."257.graft:TYPE"]
+slug = "type"  # source: kolumnnamn
+
+[variable."257.graft:Total"]
+slug = "total"  # source: kolumnnamn
+
+[variable."257.graft:Turn02"]
+slug = "turn02"  # source: kolumnnamn
+
+[variable."257.graft:Turn04"]
+slug = "turn04"  # source: kolumnnamn
+
+[variable."257.graft:Turn06"]
+slug = "turn06"  # source: kolumnnamn
+
+[variable."257.graft:Turn08"]
+slug = "turn08"  # source: kolumnnamn
+
+[variable."257.graft:Turn10"]
+slug = "turn10"  # source: kolumnnamn
+
+[variable."257.graft:Turn2010"]
+slug = "turn2010"  # source: kolumnnamn
+
+[variable."257.graft:Turn2012"]
+slug = "turn2012"  # source: kolumnnamn
+
+[variable."257.graft:Turn2014"]
+slug = "turn2014"  # source: kolumnnamn
+
+[variable."257.graft:Turn2016"]
+slug = "turn2016"  # source: kolumnnamn
+
+[variable."257.graft:Turn2018"]
+slug = "turn2018"  # source: kolumnnamn
+
+[variable."257.graft:Turn2020"]
+slug = "turn2020"  # source: kolumnnamn
+
+[variable."257.graft:TurnIn_o"]
+slug = "turnin-o"  # source: kolumnnamn
+
+[variable."257.graft:TurnMar_o"]
+slug = "turnmar-o"  # source: kolumnnamn
+
+[variable."257.graft:TurnPdt"]
+slug = "turnpdt"  # source: kolumnnamn
+
+[variable."257.graft:TurnUng_o"]
+slug = "turnung-o"  # source: kolumnnamn
+
+[variable."257.graft:UNIT"]
+slug = "unit"  # source: kolumnnamn
+
+[variable."257.graft:Vikt"]
+slug = "vikt"  # source: kolumnnamn
+
+[variable."257.graft:Weightnr"]
+slug = "weightnr"  # source: kolumnnamn
+
+[variable."257.graft:XGrupp"]
+slug = "xgrupp"  # source: kolumnnamn
+
+[variable."257.graft:cmco"]
+slug = "cmco"  # source: kolumnnamn
+
+[variable."257.graft:cmcpx"]
+slug = "cmcpx"  # source: kolumnnamn
+
+[variable."257.graft:cmctm"]
+slug = "cmctm"  # source: kolumnnamn
+
+[variable."257.graft:cmltad"]
+slug = "cmltad"  # source: kolumnnamn
+
+[variable."257.graft:cmpat"]
+slug = "cmpat"  # source: kolumnnamn
+
+[variable."257.graft:cmrcd"]
+slug = "cmrcd"  # source: kolumnnamn
+
+[variable."257.graft:cmsec"]
+slug = "cmsec"  # source: kolumnnamn
+
+[variable."257.graft:co11_o"]
+slug = "co11-o"  # source: kolumnnamn
+
+[variable."257.graft:co12_o"]
+slug = "co12-o"  # source: kolumnnamn
+
+[variable."257.graft:co13_o"]
+slug = "co13-o"  # source: kolumnnamn
+
+[variable."257.graft:co14_o"]
+slug = "co14-o"  # source: kolumnnamn
+
+[variable."257.graft:co21_o"]
+slug = "co21-o"  # source: kolumnnamn
+
+[variable."257.graft:co22_o"]
+slug = "co22-o"  # source: kolumnnamn
+
+[variable."257.graft:co23_o"]
+slug = "co23-o"  # source: kolumnnamn
+
+[variable."257.graft:co24_o"]
+slug = "co24-o"  # source: kolumnnamn
+
+[variable."257.graft:co31_o"]
+slug = "co31-o"  # source: kolumnnamn
+
+[variable."257.graft:co32_o"]
+slug = "co32-o"  # source: kolumnnamn
+
+[variable."257.graft:co33_o"]
+slug = "co33-o"  # source: kolumnnamn
+
+[variable."257.graft:co34_o"]
+slug = "co34-o"  # source: kolumnnamn
+
+[variable."257.graft:co41_o"]
+slug = "co41-o"  # source: kolumnnamn
+
+[variable."257.graft:co42_o"]
+slug = "co42-o"  # source: kolumnnamn
+
+[variable."257.graft:co43_o"]
+slug = "co43-o"  # source: kolumnnamn
+
+[variable."257.graft:co44_o"]
+slug = "co44-o"  # source: kolumnnamn
+
+[variable."257.graft:co51_o"]
+slug = "co51-o"  # source: kolumnnamn
+
+[variable."257.graft:co52_o"]
+slug = "co52-o"  # source: kolumnnamn
+
+[variable."257.graft:co53_o"]
+slug = "co53-o"  # source: kolumnnamn
+
+[variable."257.graft:co54_o"]
+slug = "co54-o"  # source: kolumnnamn
+
+[variable."257.graft:co61_o"]
+slug = "co61-o"  # source: kolumnnamn
+
+[variable."257.graft:co62_o"]
+slug = "co62-o"  # source: kolumnnamn
+
+[variable."257.graft:co63_o"]
+slug = "co63-o"  # source: kolumnnamn
+
+[variable."257.graft:co64_o"]
+slug = "co64-o"  # source: kolumnnamn
+
+[variable."257.graft:co71_o"]
+slug = "co71-o"  # source: kolumnnamn
+
+[variable."257.graft:co72_o"]
+slug = "co72-o"  # source: kolumnnamn
+
+[variable."257.graft:co73_o"]
+slug = "co73-o"  # source: kolumnnamn
+
+[variable."257.graft:co74_o"]
+slug = "co74-o"  # source: kolumnnamn
+
+[variable."257.graft:co_o"]
+slug = "co-o"  # source: kolumnnamn
+
+[variable."257.graft:ecap_o"]
+slug = "ecap-o"  # source: kolumnnamn
+
+[variable."257.graft:eenv_o"]
+slug = "eenv-o"  # source: kolumnnamn
+
+[variable."257.graft:eflex_o"]
+slug = "eflex-o"  # source: kolumnnamn
+
+[variable."257.graft:elbr_o"]
+slug = "elbr-o"  # source: kolumnnamn
+
+[variable."257.graft:emar_o"]
+slug = "emar-o"  # source: kolumnnamn
+
+[variable."257.graft:emat_o"]
+slug = "emat-o"  # source: kolumnnamn
+
+[variable."257.graft:emp02_o"]
+slug = "emp02-o"  # source: kolumnnamn
+
+[variable."257.graft:emp04_o"]
+slug = "emp04-o"  # source: kolumnnamn
+
+[variable."257.graft:ennweur"]
+slug = "ennweur"  # source: kolumnnamn
+
+[variable."257.graft:ennwoth"]
+slug = "ennwoth"  # source: kolumnnamn
+
+[variable."257.graft:equa_o"]
+slug = "equa-o"  # source: kolumnnamn
+
+[variable."257.graft:erange_o"]
+slug = "erange-o"  # source: kolumnnamn
+
+[variable."257.graft:estd_o"]
+slug = "estd-o"  # source: kolumnnamn
+
+[variable."257.graft:femp06"]
+slug = "femp06"  # source: kolumnnamn
+
+[variable."257.graft:fturn06"]
+slug = "fturn06"  # source: kolumnnamn
+
+[variable."257.graft:gocos"]
+slug = "gocos"  # source: kolumnnamn
+
+[variable."257.graft:gomkt"]
+slug = "gomkt"  # source: kolumnnamn
+
+[variable."257.graft:goprf"]
+slug = "goprf"  # source: kolumnnamn
+
+[variable."257.graft:goturn"]
+slug = "goturn"  # source: kolumnnamn
+
+[variable."257.graft:hbeg_o"]
+slug = "hbeg-o"  # source: kolumnnamn
+
+[variable."257.graft:hcon_o"]
+slug = "hcon-o"  # source: kolumnnamn
+
+[variable."257.graft:hcos_o"]
+slug = "hcos-o"  # source: kolumnnamn
+
+[variable."257.graft:hdem_o"]
+slug = "hdem-o"  # source: kolumnnamn
+
+[variable."257.graft:hdlay_o"]
+slug = "hdlay-o"  # source: kolumnnamn
+
+[variable."257.graft:hdom_o"]
+slug = "hdom-o"  # source: kolumnnamn
+
+[variable."257.graft:hfent_o"]
+slug = "hfent-o"  # source: kolumnnamn
+
+[variable."257.graft:hfout_o"]
+slug = "hfout-o"  # source: kolumnnamn
+
+[variable."257.graft:hinf_o"]
+slug = "hinf-o"  # source: kolumnnamn
+
+[variable."257.graft:hmar_o"]
+slug = "hmar-o"  # source: kolumnnamn
+
+[variable."257.graft:ho_o"]
+slug = "ho-o"  # source: kolumnnamn
+
+[variable."257.graft:hpar_o"]
+slug = "hpar-o"  # source: kolumnnamn
+
+[variable."257.graft:hper_o"]
+slug = "hper-o"  # source: kolumnnamn
+
+[variable."257.graft:hprior_o"]
+slug = "hprior-o"  # source: kolumnnamn
+
+[variable."257.graft:htec_o"]
+slug = "htec-o"  # source: kolumnnamn
+
+[variable."257.graft:infooff"]
+slug = "infooff"  # source: kolumnnamn
+
+[variable."257.graft:infoprifou"]
+slug = "infoprifou"  # source: kolumnnamn
+
+[variable."257.graft:obsamk"]
+slug = "obsamk"  # source: kolumnnamn
+
+[variable."257.graft:obscp"]
+slug = "obscp"  # source: kolumnnamn
+
+[variable."257.graft:obsdmk"]
+slug = "obsdmk"  # source: kolumnnamn
+
+[variable."257.graft:obsfin"]
+slug = "obsfin"  # source: kolumnnamn
+
+[variable."257.graft:obslde"]
+slug = "obslde"  # source: kolumnnamn
+
+[variable."257.graft:obspr"]
+slug = "obspr"  # source: kolumnnamn
+
+[variable."257.graft:obsprs"]
+slug = "obsprs"  # source: kolumnnamn
+
+[variable."257.graft:obsql"]
+slug = "obsql"  # source: kolumnnamn
+
+[variable."257.graft:obsreg"]
+slug = "obsreg"  # source: kolumnnamn
+
+[variable."257.graft:pbnoinn"]
+slug = "pbnoinn"  # source: kolumnnamn
+
+[variable."257.graft:pmos_o"]
+slug = "pmos-o"  # source: kolumnnamn
+
+[variable."257.graft:rdeng_o"]
+slug = "rdeng-o"  # source: kolumnnamn
+
+[variable."257.graft:rmac_o"]
+slug = "rmac-o"  # source: kolumnnamn
+
+[variable."257.graft:rmacx_o"]
+slug = "rmacx-o"  # source: kolumnnamn
+
+[variable."257.graft:rmar_o"]
+slug = "rmar-o"  # source: kolumnnamn
+
+[variable."257.graft:roek_o"]
+slug = "roek-o"  # source: kolumnnamn
+
+[variable."257.graft:roekx_o"]
+slug = "roekx-o"  # source: kolumnnamn
+
+[variable."257.graft:rpre_o"]
+slug = "rpre-o"  # source: kolumnnamn
+
+[variable."257.graft:rrdex_o"]
+slug = "rrdex-o"  # source: kolumnnamn
+
+[variable."257.graft:rrdexx_o"]
+slug = "rrdexx-o"  # source: kolumnnamn
+
+[variable."257.graft:rrdinx_o"]
+slug = "rrdinx-o"  # source: kolumnnamn
+
+[variable."257.graft:rtot_o"]
+slug = "rtot-o"  # source: kolumnnamn
+
+[variable."257.graft:rtr_o"]
+slug = "rtr-o"  # source: kolumnnamn
+
+[variable."257.graft:sclpr"]
+slug = "sclpr"  # source: kolumnnamn
+
+[variable."257.graft:sclpu"]
+slug = "sclpu"  # source: kolumnnamn
+
+[variable."257.graft:scom"]
+slug = "scom"  # source: kolumnnamn
+
+[variable."257.graft:sentg"]
+slug = "sentg"  # source: kolumnnamn
+
+[variable."257.graft:sins"]
+slug = "sins"  # source: kolumnnamn
+
+[variable."257.graft:sjou"]
+slug = "sjou"  # source: kolumnnamn
+
+[variable."257.graft:sni2002"]
+slug = "sni2002"  # source: kolumnnamn
+
+[variable."257.graft:ssup"]
+slug = "ssup"  # source: kolumnnamn
+
+[variable."257.graft:sswd"]
+slug = "sswd"  # source: kolumnnamn
+
+[variable."257.graft:stall"]
+slug = "stall"  # source: kolumnnamn
+
+[variable."257.graft:stexcos"]
+slug = "stexcos"  # source: kolumnnamn
+
+[variable."257.graft:stflex"]
+slug = "stflex"  # source: kolumnnamn
+
+[variable."257.graft:stihcos"]
+slug = "stihcos"  # source: kolumnnamn
+
+[variable."257.graft:stinnpd"]
+slug = "stinnpd"  # source: kolumnnamn
+
+[variable."257.graft:stmkeur"]
+slug = "stmkeur"  # source: kolumnnamn
+
+[variable."257.graft:stmkoth"]
+slug = "stmkoth"  # source: kolumnnamn
+
+[variable."257.graft:stmkt"]
+slug = "stmkt"  # source: kolumnnamn
+
+[variable."257.graft:suni"]
+slug = "suni"  # source: kolumnnamn
+
+[variable."257.graft:turn02_o"]
+slug = "turn02-o"  # source: kolumnnamn
+
+[variable."257.graft:turn04_o"]
+slug = "turn04-o"  # source: kolumnnamn
+
 [variable."258.28009.datf5g"]
 slug = "datf5g"  # source: kolumnnamn
 
@@ -81032,6 +85949,474 @@ slug = "utbniv"  # source: kolumnnamn
 
 [variable."258.779.utbniva"]
 slug = "utbniva"  # source: kolumnnamn
+
+[variable."258.graft:ADE"]
+slug = "ade"  # source: kolumnnamn
+
+[variable."258.graft:ADECU"]
+slug = "adecu"  # source: kolumnnamn
+
+[variable."258.graft:ADEFEDI"]
+slug = "adefedi"  # source: kolumnnamn
+
+[variable."258.graft:ADEFPRO"]
+slug = "adefpro"  # source: kolumnnamn
+
+[variable."258.graft:ADEFXML"]
+slug = "adefxml"  # source: kolumnnamn
+
+[variable."258.graft:ADEGOV"]
+slug = "adegov"  # source: kolumnnamn
+
+[variable."258.graft:ADEGOV1"]
+slug = "adegov1"  # source: kolumnnamn
+
+[variable."258.graft:ADEINFO"]
+slug = "adeinfo"  # source: kolumnnamn
+
+[variable."258.graft:ADEPAY"]
+slug = "adepay"  # source: kolumnnamn
+
+[variable."258.graft:ADEPAY1"]
+slug = "adepay1"  # source: kolumnnamn
+
+[variable."258.graft:ADESU"]
+slug = "adesu"  # source: kolumnnamn
+
+[variable."258.graft:ADETDOC"]
+slug = "adetdoc"  # source: kolumnnamn
+
+[variable."258.graft:AEBCLS"]
+slug = "aebcls"  # source: kolumnnamn
+
+[variable."258.graft:AEBEU"]
+slug = "aebeu"  # source: kolumnnamn
+
+[variable."258.graft:AEBHM"]
+slug = "aebhm"  # source: kolumnnamn
+
+[variable."258.graft:AEBWW"]
+slug = "aebww"  # source: kolumnnamn
+
+[variable."258.graft:AESELL"]
+slug = "aesell"  # source: kolumnnamn
+
+[variable."258.graft:AESHM"]
+slug = "aeshm"  # source: kolumnnamn
+
+[variable."258.graft:AESPEU"]
+slug = "aespeu"  # source: kolumnnamn
+
+[variable."258.graft:AESPHM"]
+slug = "aesphm"  # source: kolumnnamn
+
+[variable."258.graft:AESPWEB"]
+slug = "aespweb"  # source: kolumnnamn
+
+[variable."258.graft:AESPWW"]
+slug = "aespww"  # source: kolumnnamn
+
+[variable."258.graft:AESPXML"]
+slug = "aespxml"  # source: kolumnnamn
+
+[variable."258.graft:AESVALPCT"]
+slug = "aesvalpct"  # source: kolumnnamn
+
+[variable."258.graft:AgKat"]
+slug = "agkat"  # source: kolumnnamn
+
+[variable."258.graft:AnstS"]
+slug = "ansts"  # source: kolumnnamn
+
+[variable."258.graft:Ar"]
+slug = "ar"  # source: kolumnnamn
+
+[variable."258.graft:BGrupp"]
+slug = "bgrupp"  # source: kolumnnamn
+
+[variable."258.graft:BlNr"]
+slug = "blnr"  # source: kolumnnamn
+
+[variable."258.graft:DIGSIGN"]
+slug = "digsign"  # source: kolumnnamn
+
+[variable."258.graft:DOM"]
+slug = "dom"  # source: kolumnnamn
+
+[variable."258.graft:DOMANN"]
+slug = "domann"  # source: kolumnnamn
+
+[variable."258.graft:DOME"]
+slug = "dome"  # source: kolumnnamn
+
+[variable."258.graft:DOMHEM"]
+slug = "domhem"  # source: kolumnnamn
+
+[variable."258.graft:DOMS"]
+slug = "doms"  # source: kolumnnamn
+
+[variable."258.graft:EMPCUSEPCT"]
+slug = "empcusepct"  # source: kolumnnamn
+
+[variable."258.graft:EMPIACC3GPCT"]
+slug = "empiacc3gpct"  # source: kolumnnamn
+
+[variable."258.graft:EXTRA"]
+slug = "extra"  # source: kolumnnamn
+
+[variable."258.graft:FENr"]
+slug = "fenr"  # source: kolumnnamn
+
+[variable."258.graft:FEStat"]
+slug = "festat"  # source: kolumnnamn
+
+[variable."258.graft:FETyp"]
+slug = "fetyp"  # source: kolumnnamn
+
+[variable."258.graft:FtgStat"]
+slug = "ftgstat"  # source: kolumnnamn
+
+[variable."258.graft:GCOP"]
+slug = "gcop"  # source: kolumnnamn
+
+[variable."258.graft:GSOLNRG"]
+slug = "gsolnrg"  # source: kolumnnamn
+
+[variable."258.graft:HRS"]
+slug = "hrs"  # source: kolumnnamn
+
+[variable."258.graft:IBK"]
+slug = "ibk"  # source: kolumnnamn
+
+[variable."258.graft:IEDU"]
+slug = "iedu"  # source: kolumnnamn
+
+[variable."258.graft:IGOV2AL"]
+slug = "igov2al"  # source: kolumnnamn
+
+[variable."258.graft:IGOV2PRXCCS"]
+slug = "igov2prxccs"  # source: kolumnnamn
+
+[variable."258.graft:IGOV2PRXNAW"]
+slug = "igov2prxnaw"  # source: kolumnnamn
+
+[variable."258.graft:IGOV2PRXOTH"]
+slug = "igov2prxoth"  # source: kolumnnamn
+
+[variable."258.graft:IGOV2PRXXPS"]
+slug = "igov2prxxps"  # source: kolumnnamn
+
+[variable."258.graft:IGOVAL"]
+slug = "igoval"  # source: kolumnnamn
+
+[variable."258.graft:IGOVBCMP"]
+slug = "igovbcmp"  # source: kolumnnamn
+
+[variable."258.graft:IGOVBNAW"]
+slug = "igovbnaw"  # source: kolumnnamn
+
+[variable."258.graft:IGOVBPAP"]
+slug = "igovbpap"  # source: kolumnnamn
+
+[variable."258.graft:IGOVBSEC"]
+slug = "igovbsec"  # source: kolumnnamn
+
+[variable."258.graft:IGOVDCE"]
+slug = "igovdce"  # source: kolumnnamn
+
+[variable."258.graft:IGOVDCT"]
+slug = "igovdct"  # source: kolumnnamn
+
+[variable."258.graft:IGOVDSC"]
+slug = "igovdsc"  # source: kolumnnamn
+
+[variable."258.graft:IGOVDVAT"]
+slug = "igovdvat"  # source: kolumnnamn
+
+[variable."258.graft:IGOVFM"]
+slug = "igovfm"  # source: kolumnnamn
+
+[variable."258.graft:IGOVIF"]
+slug = "igovif"  # source: kolumnnamn
+
+[variable."258.graft:IGOVPR"]
+slug = "igovpr"  # source: kolumnnamn
+
+[variable."258.graft:IGOVRT"]
+slug = "igovrt"  # source: kolumnnamn
+
+[variable."258.graft:INTRA"]
+slug = "intra"  # source: kolumnnamn
+
+[variable."258.graft:INV3SBG"]
+slug = "inv3sbg"  # source: kolumnnamn
+
+[variable."258.graft:INVREC"]
+slug = "invrec"  # source: kolumnnamn
+
+[variable."258.graft:INVSND"]
+slug = "invsnd"  # source: kolumnnamn
+
+[variable."258.graft:ITERP"]
+slug = "iterp"  # source: kolumnnamn
+
+[variable."258.graft:JEAnt"]
+slug = "jeant"  # source: kolumnnamn
+
+[variable."258.graft:JERel"]
+slug = "jerel"  # source: kolumnnamn
+
+[variable."258.graft:JurForm"]
+slug = "jurform"  # source: kolumnnamn
+
+[variable."258.graft:KOM"]
+slug = "kom"  # source: kolumnnamn
+
+[variable."258.graft:KommunSate"]
+slug = "kommunsate"  # source: kolumnnamn
+
+[variable."258.graft:Lansate"]
+slug = "lansate"  # source: kolumnnamn
+
+[variable."258.graft:MAXSPD"]
+slug = "maxspd"  # source: kolumnnamn
+
+[variable."258.graft:MOB"]
+slug = "mob"  # source: kolumnnamn
+
+[variable."258.graft:OSOPEN"]
+slug = "osopen"  # source: kolumnnamn
+
+[variable."258.graft:Oms2"]
+slug = "oms2"  # source: kolumnnamn
+
+[variable."258.graft:Oms2_ny"]
+slug = "oms2-ny"  # source: kolumnnamn
+
+[variable."258.graft:OmsAr"]
+slug = "omsar"  # source: kolumnnamn
+
+[variable."258.graft:OmsMnKr"]
+slug = "omsmnkr"  # source: kolumnnamn
+
+[variable."258.graft:PHD"]
+slug = "phd"  # source: kolumnnamn
+
+[variable."258.graft:PHRS"]
+slug = "phrs"  # source: kolumnnamn
+
+[variable."258.graft:PMC"]
+slug = "pmc"  # source: kolumnnamn
+
+[variable."258.graft:PMD_APP"]
+slug = "pmd-app"  # source: kolumnnamn
+
+[variable."258.graft:PMD_DOC"]
+slug = "pmd-doc"  # source: kolumnnamn
+
+[variable."258.graft:PMD_EM"]
+slug = "pmd-em"  # source: kolumnnamn
+
+[variable."258.graft:PMD_OCOST"]
+slug = "pmd-ocost"  # source: kolumnnamn
+
+[variable."258.graft:PMD_OCP"]
+slug = "pmd-ocp"  # source: kolumnnamn
+
+[variable."258.graft:PMD_ONEED"]
+slug = "pmd-oneed"  # source: kolumnnamn
+
+[variable."258.graft:PMD_OOTH"]
+slug = "pmd-ooth"  # source: kolumnnamn
+
+[variable."258.graft:PMD_OSEC"]
+slug = "pmd-osec"  # source: kolumnnamn
+
+[variable."258.graft:PMD_OTEC"]
+slug = "pmd-otec"  # source: kolumnnamn
+
+[variable."258.graft:PMD_WEB"]
+slug = "pmd-web"  # source: kolumnnamn
+
+[variable."258.graft:PostNr"]
+slug = "postnr"  # source: kolumnnamn
+
+[variable."258.graft:Q13E_SCAN"]
+slug = "q13e-scan"  # source: kolumnnamn
+
+[variable."258.graft:Q13E_SIV"]
+slug = "q13e-siv"  # source: kolumnnamn
+
+[variable."258.graft:RA"]
+slug = "ra"  # source: kolumnnamn
+
+[variable."258.graft:RFAC"]
+slug = "rfac"  # source: kolumnnamn
+
+[variable."258.graft:RFASPRI"]
+slug = "rfaspri"  # source: kolumnnamn
+
+[variable."258.graft:RFID"]
+slug = "rfid"  # source: kolumnnamn
+
+[variable."258.graft:RFMC"]
+slug = "rfmc"  # source: kolumnnamn
+
+[variable."258.graft:RFPRI"]
+slug = "rfpri"  # source: kolumnnamn
+
+[variable."258.graft:RFPSDP"]
+slug = "rfpsdp"  # source: kolumnnamn
+
+[variable."258.graft:RMFC"]
+slug = "rmfc"  # source: kolumnnamn
+
+[variable."258.graft:RMPA"]
+slug = "rmpa"  # source: kolumnnamn
+
+[variable."258.graft:RMSM"]
+slug = "rmsm"  # source: kolumnnamn
+
+[variable."258.graft:SECCONT"]
+slug = "seccont"  # source: kolumnnamn
+
+[variable."258.graft:SECCTP"]
+slug = "secctp"  # source: kolumnnamn
+
+[variable."258.graft:SECICNFA"]
+slug = "secicnfa"  # source: kolumnnamn
+
+[variable."258.graft:SECIDD"]
+slug = "secidd"  # source: kolumnnamn
+
+[variable."258.graft:SECIUSA"]
+slug = "seciusa"  # source: kolumnnamn
+
+[variable."258.graft:SECIUSF"]
+slug = "seciusf"  # source: kolumnnamn
+
+[variable."258.graft:SECLOG"]
+slug = "seclog"  # source: kolumnnamn
+
+[variable."258.graft:SECOSBU"]
+slug = "secosbu"  # source: kolumnnamn
+
+[variable."258.graft:SECPOL"]
+slug = "secpol"  # source: kolumnnamn
+
+[variable."258.graft:SECPRO"]
+slug = "secpro"  # source: kolumnnamn
+
+[variable."258.graft:SECSPSW"]
+slug = "secspsw"  # source: kolumnnamn
+
+[variable."258.graft:SECUIHT"]
+slug = "secuiht"  # source: kolumnnamn
+
+[variable."258.graft:SECVTGI"]
+slug = "secvtgi"  # source: kolumnnamn
+
+[variable."258.graft:SGrupp"]
+slug = "sgrupp"  # source: kolumnnamn
+
+[variable."258.graft:SICU"]
+slug = "sicu"  # source: kolumnnamn
+
+[variable."258.graft:SICU2"]
+slug = "sicu2"  # source: kolumnnamn
+
+[variable."258.graft:SICUIPF"]
+slug = "sicuipf"  # source: kolumnnamn
+
+[variable."258.graft:SICUPDE"]
+slug = "sicupde"  # source: kolumnnamn
+
+[variable."258.graft:SIPUACC"]
+slug = "sipuacc"  # source: kolumnnamn
+
+[variable."258.graft:SIPUINV"]
+slug = "sipuinv"  # source: kolumnnamn
+
+[variable."258.graft:SISAACC"]
+slug = "sisaacc"  # source: kolumnnamn
+
+[variable."258.graft:SISADIST"]
+slug = "sisadist"  # source: kolumnnamn
+
+[variable."258.graft:SISAINV"]
+slug = "sisainv"  # source: kolumnnamn
+
+[variable."258.graft:SISAPROD"]
+slug = "sisaprod"  # source: kolumnnamn
+
+[variable."258.graft:SISU"]
+slug = "sisu"  # source: kolumnnamn
+
+[variable."258.graft:SISU2"]
+slug = "sisu2"  # source: kolumnnamn
+
+[variable."258.graft:SISUIPF"]
+slug = "sisuipf"  # source: kolumnnamn
+
+[variable."258.graft:SISUPDE"]
+slug = "sisupde"  # source: kolumnnamn
+
+[variable."258.graft:Sektor"]
+slug = "sektor"  # source: kolumnnamn
+
+[variable."258.graft:StatusKod"]
+slug = "statuskod"  # source: kolumnnamn
+
+[variable."258.graft:StatusTillaggKod"]
+slug = "statustillaggkod"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOMPR"]
+slug = "toppdompr"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOMPR_Annat"]
+slug = "toppdompr-annat"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_1"]
+slug = "toppdom-1"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_2"]
+slug = "toppdom-2"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_3"]
+slug = "toppdom-3"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_4"]
+slug = "toppdom-4"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_5"]
+slug = "toppdom-5"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_6"]
+slug = "toppdom-6"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_6a"]
+slug = "toppdom-6a"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_6b"]
+slug = "toppdom-6b"  # source: kolumnnamn
+
+[variable."258.graft:TOPPDOM_6c"]
+slug = "toppdom-6c"  # source: kolumnnamn
+
+[variable."258.graft:WEBCMP"]
+slug = "webcmp"  # source: kolumnnamn
+
+[variable."258.graft:WEBPAY"]
+slug = "webpay"  # source: kolumnnamn
+
+[variable."258.graft:WLAN"]
+slug = "wlan"  # source: kolumnnamn
+
+[variable."258.graft:XGrupp"]
+slug = "xgrupp"  # source: kolumnnamn
+
+[variable."258.graft:blankettnr"]
+slug = "blankettnr"  # source: kolumnnamn
 
 [variable."26.1819.gamsektorkod"]
 slug = "gamsektorkod"  # source: kolumnnamn

@@ -33,6 +33,8 @@ def _g(
     register: str = "lisa",
     variant: str = "individer-15plus",
     data_type: str = "",
+    is_identifier: bool = False,
+    is_sensitive: bool = False,
 ) -> CuratedGraft:
     return CuratedGraft(
         provider="scb",
@@ -41,6 +43,8 @@ def _g(
         column=column,
         description=description,
         data_type=data_type,
+        is_identifier=is_identifier,
+        is_sensitive=is_sensitive,
     )
 
 
@@ -70,12 +74,15 @@ class TestLoader:
             '[[graft]]\nregister = "scb/agi"\nvariant = "individuppgifter-agi"\n'
             'column = "DIST_HU_SAKNAS"\ndescription = "Saknas-flagga"\n\n'
             '[[graft]]\nregister = "scb/par"\nvariant = "v1"\ncolumn = "C"\n'
-            'description = "D"\ndata_type = "char"\n',
+            'description = "D"\ndata_type = "char"\nis_identifier = true\n',
         )
         grafts = load_variable_grafts(toml)
-        assert [(g.register, g.variant, g.column, g.data_type) for g in grafts] == [
-            ("agi", "individuppgifter-agi", "DIST_HU_SAKNAS", ""),
-            ("par", "v1", "C", "char"),
+        assert [
+            (g.register, g.variant, g.column, g.data_type, g.is_identifier)
+            for g in grafts
+        ] == [
+            ("agi", "individuppgifter-agi", "DIST_HU_SAKNAS", "", False),
+            ("par", "v1", "C", "char", True),
         ]
 
     @pytest.mark.parametrize(
@@ -88,6 +95,8 @@ class TestLoader:
             '[[graft]]\nregister = "agi"\nvariant = "v"\ncolumn = "C"\ndescription = "D"\n',  # 1-seg
             '[[graft]]\nregister = "scb/agi"\nvariant = "v"\ncolumn = "C"\n'
             'description = "D"\ndata_type = 7\n',  # non-string data_type
+            '[[graft]]\nregister = "scb/agi"\nvariant = "v"\ncolumn = "C"\n'
+            'description = "D"\nis_identifier = "false"\n',  # quoted bool
         ],
     )
     def test_malformed_fails(self, tmp_path: Path, body: str) -> None:
@@ -190,6 +199,19 @@ class TestMaterialize:
             "SELECT data_type FROM variable_state WHERE delivery_column_name = 'X'"
         ).fetchone()[0]
         assert dt == "char"
+
+    def test_identifier_sensitive_flags_kept(self) -> None:
+        conn = build_slugged_db()
+        materialize_grafts(
+            conn,
+            (_g("PeOrgNrHe", is_identifier=True, is_sensitive=True),),
+            providers=_SCB,
+        )
+        row = conn.execute(
+            "SELECT is_identifier, is_sensitive FROM variable "
+            "WHERE provider_key = 'graft:PeOrgNrHe'"
+        ).fetchone()
+        assert tuple(row) == (1, 1)
 
     def test_mints_in_scb_band_despite_high_ids(self) -> None:
         conn = build_slugged_db()

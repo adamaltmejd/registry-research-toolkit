@@ -48,9 +48,10 @@ residue below lands upstream — just regenerate against a fresh flavored DB. Th
 breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.25.0
 the catalog admits **67.0%** of physical columns. The residue is, by disposition:
 
-- **survey-wave items (FOU/CIS/IT, \~2,000)** — documented in SWECOV's delivery lists
-  but absent from reg_meta machine metadata; a follow-up **global graft** effort, not
-  steward flavor.
+- **survey-wave items (FOU/CIS/IT, \~2,000 before #856)** — documented in SWECOV's
+  delivery lists but absent from reg_meta machine metadata; handled as **global
+  grafts**, not steward flavor. The steward catalog picks them up after a fresh reg_meta
+  build/release and catalog regeneration.
 - **global-provider alias gaps** — holdings routed to a global provider/register
   (FOHM/FK #422, the Umeå/Läkemedelsverket/Pliktverket/Riksarkivet agencies #443, AGI
   employer-header and utrikeshandel-tjänster #444) where some delivery column names

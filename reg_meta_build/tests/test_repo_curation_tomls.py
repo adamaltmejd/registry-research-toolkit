@@ -15,6 +15,7 @@ real corpus and stays maintainer-build-only by design.
 
 from __future__ import annotations
 
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -373,6 +374,17 @@ def test_repo_variable_grafts_parses() -> None:
     # Load-time shape (2-segment FQID, non-empty variant/column/description,
     # unique triple); variant/column RESOLUTION is maintainer-build territory.
     assert all(g.provider and g.register and g.variant and g.column for g in grafts)
+
+
+def test_repo_variable_grafts_include_swecov_survey_wave_batch() -> None:
+    grafts = load_variable_grafts(_ROOT / "variable_grafts.toml")
+    counts = Counter((g.provider, g.register, g.variant) for g in grafts)
+    assert counts[("scb", "fou", "foretagssektorn")] == 992
+    assert counts[("scb", "innovation-foretag", "_default")] == 647
+    assert counts[("scb", "it-anvandning", "it-anvandning-i-foretag")] == 156
+    assert {"ACAT01", "ADECU", "AI_FTE_F"} <= {g.column for g in grafts}
+    peorgnrhe = next(g for g in grafts if g.column == "PeOrgNrHe")
+    assert peorgnrhe.is_identifier
 
 
 def test_repo_doc_sources_parses() -> None:
