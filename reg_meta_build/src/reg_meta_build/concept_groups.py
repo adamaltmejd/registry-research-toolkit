@@ -46,10 +46,12 @@ never claims an already-grouped member):
      A SINGLE-axis family (the legacy shape) declares one ``axis`` and attaches
      whole variables under it (e.g. the LISA agi{1,2,3} rank facet, or the LOVA
      invdatum/invland ordinal facet). A MULTI-axis family (#819) declares ordered
-     named ``axes`` and attaches ``(variable, delivery_column)`` REPRESENTATIONS,
-     each carrying a ``coords`` coordinate on every axis (the iot disposable-income
-     group over enhet × hushållsbegrepp × kapitalvinst, where one variable can hold
-     two coordinates via two delivery columns). The group's axes land in
+     named ``axes`` and attaches members with one ``coords`` coordinate on every
+     axis; members may be whole variables or ``(variable, delivery_column)``
+     REPRESENTATIONS (the iot disposable-income group over enhet ×
+     hushållsbegrepp × kapitalvinst, where one variable can hold two coordinates
+     via two delivery columns). An AXIS-LESS variable umbrella sets ``axes = []``
+     and attaches whole variables without coords. The group's axes land in
      ``concept_group_axis``; each member's per-axis coords in
      ``concept_group_variable_facet``.
    - ``[[accept]]`` (#496) — folds a candidate family from the generated,
@@ -194,7 +196,8 @@ class CuratedMember:
 class CuratedGroup:
     """One curated family the materializer applies. `axes` is the group's ordered
     named facet axes as `(axis, axis_label)` pairs (ordinal = index); a single-axis
-    family carries one, a multi-axis family (the iot disposable-income group) N.
+    family carries one, an axis-less umbrella carries zero, and a multi-axis
+    family (the iot disposable-income group) N.
     `origin` records how it was authored so `_apply_curated_groups` can tailor its
     EXIT_CONFIG remediations: a hand-authored `[[variable_group]]` (the default)
     points the maintainer at `concept_groups.toml`; an `[[accept]]`-resolved family
@@ -345,11 +348,11 @@ def _parse_group_axes(
 ) -> tuple[tuple[tuple[str, str], ...], set[str]]:
     """The group's ordered `(axis, axis_label)` pairs + the axis-name set, from
     EITHER the legacy single-axis shape (`axis = "..."` on the group) OR the
-    multi-axis shape (`axes = [{ axis, label }, …]`). Exactly one shape may be
-    present (a group with both is curation drift). The single-axis legacy form maps
-    to one axis whose label IS the axis name (`axes = ((axis, axis),)`), so every
-    existing `[[variable_group]]` and the whole `concept_groups.auto.toml`
-    round-trip unchanged."""
+    explicit `axes = [...]` shape. Exactly one shape may be present (a group with
+    both is curation drift). The single-axis legacy form maps to one axis whose
+    label IS the axis name (`axes = ((axis, axis),)`), so every existing
+    `[[variable_group]]` and the whole `concept_groups.auto.toml` round-trip
+    unchanged. `axes = []` is the explicit axis-less variable umbrella shape."""
     has_axes = entry.get("axes") is not None
     has_axis = entry.get("axis") is not None
     if has_axes and has_axis:
@@ -364,12 +367,13 @@ def _parse_group_axes(
         axis = _require_str(entry, "axis", f"group {key!r}")
         return _single_axis(axis), {axis}
     raw_axes = entry["axes"]
-    if not isinstance(raw_axes, list) or not raw_axes:
+    if not isinstance(raw_axes, list):
         raise curation_error(
             "concept_groups_invalid",
-            f"concept_groups group {key!r} `axes` must be a non-empty array of "
-            "`{ axis, label }` tables.",
-            'List the axes as `axes = [{ axis = "enhet", label = "Enhet" }, …]`.',
+            f"concept_groups group {key!r} `axes` must be an array of "
+            "`{ axis, label }` tables, or an empty array for an axis-less umbrella.",
+            'List axes as `axes = [{ axis = "enhet", label = "Enhet" }, …]`, '
+            "or use `axes = []` for an axis-less variable umbrella.",
         )
     axes: list[tuple[str, str]] = []
     axis_names: set[str] = set()
@@ -398,14 +402,15 @@ def _parse_member(
 ) -> CuratedMember:
     """One `[[variable_group.members]]` table → a `CuratedMember`, in EITHER shape:
 
+    - Axis-less: `variable` only → no coords, whole-variable member.
     - Legacy single-axis: `variable` + flat `value`/`label` → one coord on the
       group's single axis, `delivery_column = None` (a whole-variable member).
     - Multi-axis: `variable` + `delivery_column` + `coords = [{ axis, value, label
       }, …]` → one coord per declared axis.
 
     Validation (EXIT_CONFIG): every coord's `axis` is a declared group axis; every
-    declared axis has exactly one coord; a multi-axis member (>1 declared axis)
-    REQUIRES `delivery_column`."""
+    declared axis has exactly one coord; a multi-axis member can optionally name
+    `delivery_column` when the member is representation-grained."""
     if not isinstance(raw, dict):
         raise curation_error(
             "concept_groups_invalid",
@@ -413,6 +418,27 @@ def _parse_member(
             "Each member is a `[[variable_group.members]]` table.",
         )
     ref = _require_str(raw, "variable", f"group {key!r} member")
+    if not axes:
+        if (
+            raw.get("coords") is not None
+            or raw.get("value") is not None
+            or raw.get("label") is not None
+        ):
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} member {ref!r} cannot set facet "
+                "coords, `value`, or `label` because the group is axis-less.",
+                'For `axes = []`, list each member as `variable = "..."` only.',
+            )
+        if raw.get("delivery_column") is not None:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups group {key!r} member {ref!r} cannot set "
+                "`delivery_column` because the group is axis-less.",
+                "Axis-less variable umbrellas are whole-variable groups; drop "
+                "`delivery_column` or declare facet axes.",
+            )
+        return CuratedMember(variable=ref, delivery_column=None, coords=())
     multi_axis = len(axes) > 1 or raw.get("coords") is not None
     if not multi_axis:
         # Legacy single-axis member: flat value/label on the single axis.
@@ -428,12 +454,14 @@ def _parse_member(
                 ),
             ),
         )
-    delivery_column = raw.get("delivery_column")
-    if not isinstance(delivery_column, str) or not delivery_column.strip():
+    raw_delivery_column = raw.get("delivery_column")
+    if raw_delivery_column is not None and (
+        not isinstance(raw_delivery_column, str) or not raw_delivery_column.strip()
+    ):
         raise curation_error(
             "concept_groups_invalid",
             f"concept_groups group {key!r} member {ref!r} needs a non-empty "
-            "`delivery_column` (multi-axis members are representation-grained).",
+            "`delivery_column` when that field is present.",
             'Give `delivery_column = "CDISP"`.',
         )
     raw_coords = raw.get("coords")
@@ -487,7 +515,11 @@ def _parse_member(
             "Every member must declare a coord on every group axis.",
         )
     return CuratedMember(
-        variable=ref, delivery_column=delivery_column.strip(), coords=tuple(coords)
+        variable=ref,
+        delivery_column=raw_delivery_column.strip()
+        if isinstance(raw_delivery_column, str)
+        else None,
+        coords=tuple(coords),
     )
 
 
@@ -495,20 +527,23 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     """Parse the curated-family TOML. Empty when no file (synthetic test
     builds, wheel installs).
 
-    Two member shapes are accepted (#819). The LEGACY single-axis shape — `axis =
+    Three member shapes are accepted (#819). The LEGACY single-axis shape — `axis =
     "..."` on the group, flat `value`/`label` per member — is what the candidate
     generator emits and the whole `concept_groups.auto.toml` uses; it maps to a
-    one-axis group with whole-variable (`delivery_column = None`) members. The new
-    MULTI-AXIS shape — `axes = [{ axis, label }, …]` on the group, `delivery_column`
-    + `coords = [{ axis, value, label }, …]` per member — is hand-authored for
-    representation-grained families (the iot disposable-income group).
+    one-axis group with whole-variable (`delivery_column = None`) members. The
+    EXPLICIT-AXES shape — `axes = [{ axis, label }, …]` on the group, `coords =
+    [{ axis, value, label }, …]` per member — supports named-axis labels and
+    multi-axis groups; `delivery_column` is present only when the member is
+    representation-grained. The AXIS-LESS umbrella shape sets `axes = []` and
+    member tables list only `variable`.
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[variable_group]]`
     top-level; `register` is a 2-segment `provider/register` FQID; `key`/`label`
     non-empty; exactly one of `axis`/`axes`; each member sets `variable`; coords
-    cover every declared axis; `(variable, delivery_column)` unique within the
-    group; keys are unique. Reference RESOLUTION (register/variable/column exist)
-    happens at materialize time against the built DB, not here."""
+    cover every declared axis; axis-less members have no coords; `(variable,
+    delivery_column)` unique within the group; keys are unique. Reference
+    RESOLUTION (register/variable/column exist) happens at materialize time against
+    the built DB, not here."""
     # Shared scaffold (parse + top-level typo guard + array-of-tables +
     # per-entry table check) — see `_curation.load_curation_entries`.
     entries = load_curation_entries(

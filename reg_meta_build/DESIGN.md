@@ -2496,12 +2496,14 @@ already-grouped member:
    - `[[variable_group]]` — a hand-authored family with an exact member list. The
      **single-axis shape** (legacy, what the candidate generator emits) declares one
      `axis` and attaches whole variables under it, each carrying `value`/`label` (e.g.
-     the LISA `agi{1,2,3}` rank facet). The **multi-axis shape** (#819) declares ordered
-     named `axes = [{ axis, label }, …]` and attaches `(variable, delivery_column)`
-     REPRESENTATIONS, each carrying one `coords` coordinate per declared axis (e.g. the
-     iot disposable-income group over `enhet × hushållsbegrepp × kapitalvinst`, where
-     one variable holds two coordinates via two delivery columns). The group's axes land
-     in `concept_group_axis`; per-member-per-axis coordinates in
+     the LISA `agi{1,2,3}` rank facet). The explicit-axis shape declares ordered named
+     `axes = [{ axis, label }, …]` and attaches members with one `coords` coordinate per
+     declared axis; `delivery_column` is present only when the member is
+     representation-grained (e.g. the iot disposable-income group over
+     `enhet × hushållsbegrepp × kapitalvinst`, where one variable holds two coordinates
+     via two delivery columns). `axes = []` is the explicit axis-less variable umbrella
+     shape: member tables list only `variable` and carry no coords. The group's axes
+     land in `concept_group_axis`; per-member-per-axis coordinates in
      `concept_group_variable_facet`.
    - `[[accept]]` (#496) — fold a candidate family from the committed, **generated**
      `reg_meta_build/concept_groups.auto.toml` BY REFERENCE (`register` + `key`,

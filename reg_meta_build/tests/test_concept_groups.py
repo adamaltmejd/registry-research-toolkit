@@ -766,6 +766,60 @@ class TestCuratedGroups:
         assert _facets(conn, "vara") == [("rank", "1", "största")]
         assert _facets(conn, "varb") == [("rank", "2", "näst")]
 
+    def test_axisless_variable_umbrella_has_no_facets(self) -> None:
+        conn = build_slugged_db(classification=None)
+        add_variable(conn, register_id=1, var_id=702, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=703, name="B", slug="varb")
+        curated = _curated(
+            (
+                CuratedMember(variable="vara", delivery_column=None, coords=()),
+                CuratedMember(variable="varb", delivery_column=None, coords=()),
+            ),
+            key="umbrella",
+            axes=(),
+        )
+        counts = materialize_concept_groups(conn, (curated,), providers=_SCB)
+        assert counts["curated_groups"] == 1
+        group = _groups(conn)["umbrella"]
+        assert group["axes"] == []
+        assert group["members"] == ["vara", "varb"]
+        assert _facets(conn, "vara") == []
+
+    def test_multi_axis_whole_variable_member_has_facets_without_column(self) -> None:
+        conn = build_slugged_db(classification=None)
+        add_variable(conn, register_id=1, var_id=704, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=705, name="B", slug="varb")
+        curated = _curated(
+            (
+                CuratedMember(
+                    variable="vara",
+                    delivery_column=None,
+                    coords=(
+                        ("source", "a", "A"),
+                        ("rank", "1", "största"),
+                    ),
+                ),
+                CuratedMember(
+                    variable="varb",
+                    delivery_column=None,
+                    coords=(
+                        ("source", "b", "B"),
+                        ("rank", "2", "näst"),
+                    ),
+                ),
+            ),
+            key="multi-whole",
+            axes=(("source", "Källa"), ("rank", "Förvärvskälla")),
+        )
+        counts = materialize_concept_groups(conn, (curated,), providers=_SCB)
+        assert counts["curated_groups"] == 1
+        group = _groups(conn)["multi-whole"]
+        assert group["axes"] == [("source", "Källa"), ("rank", "Förvärvskälla")]
+        assert _facets(conn, "vara") == [
+            ("source", "a", "A"),
+            ("rank", "1", "största"),
+        ]
+
     def test_inactive_provider_is_skipped(self) -> None:
         conn = _month_family_db()
         add_variable(conn, register_id=1, var_id=730, name="A", slug="vara")
@@ -1395,6 +1449,110 @@ class TestLoader:
         assert groups[0].provider == "scb"
         assert groups[0].members[0].variable == "agi1ink"
         assert groups[0].members[1].variable == "extra"
+
+    def test_parses_axisless_variable_umbrella(self, tmp_path) -> None:
+        groups = self._load(
+            tmp_path,
+            """
+            [[variable_group]]
+            register = "scb/lisa"
+            key = "fam"
+            label = "Familj"
+            axes = []
+            [[variable_group.members]]
+            variable = "vara"
+            [[variable_group.members]]
+            variable = "varb"
+            """,
+        )
+        assert groups[0].axes == ()
+        assert groups[0].members == (
+            CuratedMember(variable="vara", delivery_column=None, coords=()),
+            CuratedMember(variable="varb", delivery_column=None, coords=()),
+        )
+
+    def test_parses_single_explicit_axis_with_flat_member_facets(
+        self, tmp_path
+    ) -> None:
+        groups = self._load(
+            tmp_path,
+            """
+            [[variable_group]]
+            register = "scb/lisa"
+            key = "fam"
+            label = "Familj"
+            axes = [{ axis = "rank", label = "Förvärvskälla" }]
+            [[variable_group.members]]
+            variable = "agi1ink"
+            value = "1"
+            label = "största"
+            [[variable_group.members]]
+            variable = "agi2ink"
+            value = "2"
+            label = "näst"
+            """,
+        )
+        assert groups[0].axes == (("rank", "Förvärvskälla"),)
+        assert groups[0].members[0].coords == (("rank", "1", "största"),)
+
+    def test_parses_multi_axis_whole_variable_member(self, tmp_path) -> None:
+        groups = self._load(
+            tmp_path,
+            """
+            [[variable_group]]
+            register = "scb/lisa"
+            key = "fam"
+            label = "Familj"
+            axes = [
+              { axis = "source", label = "Källa" },
+              { axis = "rank", label = "Förvärvskälla" },
+            ]
+            [[variable_group.members]]
+            variable = "agi1ink"
+            coords = [
+              { axis = "source", value = "agi", label = "AGI" },
+              { axis = "rank", value = "1", label = "största" },
+            ]
+            [[variable_group.members]]
+            variable = "ku1ink"
+            coords = [
+              { axis = "source", value = "ku", label = "KU" },
+              { axis = "rank", value = "1", label = "största" },
+            ]
+            """,
+        )
+        assert groups[0].members[0].delivery_column is None
+        assert groups[0].members[0].coords == (
+            ("source", "agi", "AGI"),
+            ("rank", "1", "största"),
+        )
+
+    @pytest.mark.parametrize(
+        "member_fields",
+        [
+            'value = "1"\nlabel = "x"',
+            'coords = [{ axis = "rank", value = "1", label = "x" }]',
+            'delivery_column = "COL"',
+        ],
+    )
+    def test_axisless_variable_umbrella_rejects_facet_fields(
+        self, tmp_path, member_fields: str
+    ) -> None:
+        text = f"""
+        [[variable_group]]
+        register = "scb/lisa"
+        key = "fam"
+        label = "Familj"
+        axes = []
+        [[variable_group.members]]
+        variable = "vara"
+        {member_fields}
+        [[variable_group.members]]
+        variable = "varb"
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.code == "concept_groups_invalid"
 
     @pytest.mark.parametrize(
         "text",
