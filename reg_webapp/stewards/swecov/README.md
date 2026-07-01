@@ -65,6 +65,8 @@ the catalog admits **67.0%** of physical columns. The residue is, by disposition
   retired), pending reg_meta co-delivery curation.
 
 Near-duplicate physical columns (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`,
-`Covid-19 antikroppar`/`Covid_19_antikroppar`) are kept **1:1, never merged** — each is
-a literal delivery column, and admission is column-based, so collapsing one would make
-the other un-orderable.
+`Covid-19 antikroppar`/`Covid_19_antikroppar`) must never be collapsed away: each
+literal delivery column remains orderable. Approved vintage-spelling groupings are
+represented as one steward variable with multiple `variable_state` / `variable_alias`
+rows in the flavored DB; uncurated pairs remain separate generated variables until the
+maintainer-local generator groups them.

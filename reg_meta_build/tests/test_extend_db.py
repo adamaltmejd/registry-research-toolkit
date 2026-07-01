@@ -75,24 +75,32 @@ def _base_inventory() -> dict:
                                 "name": "Belopp",
                                 "definition": None,
                                 "description": "Transaktionsbelopp i SEK.",
-                                "column": "BELOPP",
-                                "data_type": "float",
                                 "is_identifier": False,
                                 "is_sensitive": False,
-                                "valid_from": None,
-                                "valid_to": None,
+                                "states": [
+                                    {
+                                        "column": "BELOPP",
+                                        "data_type": "float",
+                                        "valid_from": None,
+                                        "valid_to": None,
+                                    }
+                                ],
                             },
                             {
                                 "key": "kontonr",
                                 "name": "Kontonummer",
                                 "definition": None,
                                 "description": None,
-                                "column": "KONTO",
-                                "data_type": "varchar",
                                 "is_identifier": True,
                                 "is_sensitive": True,
-                                "valid_from": "2018",
-                                "valid_to": None,
+                                "states": [
+                                    {
+                                        "column": "KONTO",
+                                        "data_type": "varchar",
+                                        "valid_from": "2018",
+                                        "valid_to": None,
+                                    }
+                                ],
                             },
                         ],
                     }
@@ -113,7 +121,7 @@ def _reg_stub(provider: str, key: str) -> dict:
             {
                 "key": "v",
                 "name": "V",
-                "variables": [{"key": "x", "name": "X", "column": "C"}],
+                "variables": [{"key": "x", "name": "X", "states": [{"column": "C"}]}],
             }
         ],
     }
@@ -128,6 +136,50 @@ def _steward_register_ids() -> dict[str, int]:
         "var_belopp": mint("variable", _BANK, "transaktioner", "_default", "belopp"),
         "var_kontonr": mint("variable", _BANK, "transaktioner", "_default", "kontonr"),
     }
+
+
+def _multistate_inventory() -> dict:
+    """One steward variable with two delivery-column states."""
+    inv = _base_inventory()
+    variables = inv["registers"][0]["variants"][0]["variables"]
+    variables[0]["states"] = [
+        {
+            "column": "BELOPP",
+            "data_type": "float",
+            "valid_from": "2018",
+            "valid_to": "2020",
+        },
+        {
+            "column": "BELOPP_SEK",
+            "data_type": "float",
+            "valid_from": "2021",
+            "valid_to": None,
+        },
+    ]
+    return inv
+
+
+def _overlapping_representation_inventory() -> dict:
+    """One steward variable with two co-existing delivery-column states."""
+    inv = _base_inventory()
+    variables = inv["registers"][0]["variants"][0]["variables"]
+    variables[0]["states"] = [
+        {
+            "column": "AVERAGE_SPENDING",
+            "data_type": "float",
+            "value_set_version_label": "average-spending",
+            "valid_from": None,
+            "valid_to": None,
+        },
+        {
+            "column": "AVERAGE_SPENDINGS",
+            "data_type": "float",
+            "value_set_version_label": "average-spendings",
+            "valid_from": None,
+            "valid_to": None,
+        },
+    ]
+    return inv
 
 
 def _write_steward_slug_dir(slug_dir: Path) -> None:
@@ -301,6 +353,55 @@ class TestOverlayInserts:
             (ids["var_belopp"],),
         ).fetchone()
         assert belopp_window == ("0001-01-01", "9999-12-31")
+
+    def test_variable_can_have_multiple_delivery_states(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        counts, out = _run_extend(tmp_path, global_db, _multistate_inventory())
+        assert counts["variables"] == 2
+        assert counts["states"] == 3
+
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        states = conn.execute(
+            "SELECT delivery_column_name, valid_from, valid_to, value_set_version_label "
+            "FROM variable_state WHERE variable_id = ? ORDER BY valid_from",
+            (ids["var_belopp"],),
+        ).fetchall()
+        assert states == [
+            ("BELOPP", "2018-01-01", "2020-12-31", ""),
+            ("BELOPP_SEK", "2021-01-01", "9999-12-31", ""),
+        ]
+        aliases = {
+            r[0]
+            for r in conn.execute(
+                "SELECT delivery_column_name FROM variable_alias WHERE variable_id = ?",
+                (ids["var_belopp"],),
+            )
+        }
+        assert aliases == {"BELOPP", "BELOPP_SEK"}
+
+    def test_overlapping_representations_use_state_discriminator(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        counts, out = _run_extend(
+            tmp_path, global_db, _overlapping_representation_inventory()
+        )
+        assert counts["variables"] == 2
+        assert counts["states"] == 3
+
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        states = conn.execute(
+            "SELECT delivery_column_name, value_set_version_label "
+            "FROM variable_state WHERE variable_id = ? "
+            "ORDER BY value_set_version_label",
+            (ids["var_belopp"],),
+        ).fetchall()
+        assert states == [
+            ("AVERAGE_SPENDING", "average-spending"),
+            ("AVERAGE_SPENDINGS", "average-spendings"),
+        ]
 
     def test_steward_provider_id_in_high_band(
         self, tmp_path: Path, global_db: Path
@@ -857,7 +958,7 @@ class TestLoader:
                                     {
                                         "key": "x",
                                         "name": "X",
-                                        "column": "C",
+                                        "states": [{"column": "C"}],
                                         "is_identifier": 1,
                                     }
                                 ],
@@ -919,6 +1020,47 @@ class TestLoader:
         with pytest.raises(RegMetaError) as exc:
             load_inventory(path)
         assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_variable_without_states_is_config_error(self, tmp_path: Path) -> None:
+        reg = _reg_stub("swedbank", "tx")
+        del reg["variants"][0]["variables"][0]["states"]
+        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_inventory(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_duplicate_state_uniqueness_key_is_config_error(
+        self, tmp_path: Path
+    ) -> None:
+        reg = _reg_stub("swedbank", "tx")
+        reg["variants"][0]["variables"][0]["states"] = [
+            {"column": "C1", "valid_from": "2020"},
+            {"column": "C2", "valid_from": "2020"},
+        ]
+        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_inventory(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "duplicate state key" in exc.value.message
+
+    def test_duplicate_state_valid_from_allowed_with_discriminator(
+        self, tmp_path: Path
+    ) -> None:
+        reg = _reg_stub("swedbank", "tx")
+        reg["variants"][0]["variables"][0]["states"] = [
+            {"column": "C1", "valid_from": "2020", "value_set_version_label": "c1"},
+            {"column": "C2", "valid_from": "2020", "value_set_version_label": "c2"},
+        ]
+        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        parsed = load_inventory(path)
+        states = parsed.registers[0].variants[0].variables[0].states
+        assert [s.value_set_version_label for s in states] == ["c1", "c2"]
 
     def test_steward_mismatch_fails(self, tmp_path: Path, global_db: Path) -> None:
         inv = {"steward": "other", "source_label": "x"}
