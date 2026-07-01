@@ -1729,14 +1729,17 @@ class Catalog:
         """Hydrate the state-local classification conformance warning, if any."""
         if row["conformance_status"] is None:
             return None
-        code_rows = self._conn.execute(
-            "SELECT vc.code, vc.label "
-            "FROM classification_conformance_code ccc "
-            "JOIN value_code vc ON vc.code_id = ccc.code_id "
-            "WHERE ccc.state_id = ? "
-            "ORDER BY vc.code, vc.label",
-            (row["state_id"],),
-        ).fetchall()
+        if row["nonconforming_code_count"] == 0:
+            code_rows = ()
+        else:
+            code_rows = self._conn.execute(
+                "SELECT vc.code, vc.label "
+                "FROM classification_conformance_code ccc "
+                "JOIN value_code vc ON vc.code_id = ccc.code_id "
+                "WHERE ccc.state_id = ? "
+                "ORDER BY vc.code, vc.label",
+                (row["state_id"],),
+            ).fetchall()
         return ClassificationConformance(
             declared_classification_slug=row["declared_classification_slug"],
             declared_classification_short_name=row[

@@ -833,6 +833,7 @@ def apply_classification_conformance_gate(conn: sqlite3.Connection) -> int:
 
     placeholders = ",".join("?" for _ in _CONFORMANCE_SENTINELS)
     for tmp in (
+        "_conformance_canon_kods",
         "_conformance_state_codes",
         "_conformance_state_kods",
         "_conformance_stats",
@@ -881,24 +882,32 @@ def apply_classification_conformance_gate(conn: sqlite3.Connection) -> int:
 
     conn.execute(
         """
+        CREATE TEMP TABLE _conformance_canon_kods AS
+        SELECT DISTINCT cc.classification_id, TRIM(vc.code) AS kod
+        FROM classification_code cc
+        JOIN value_code vc ON vc.code_id = cc.code_id
+        WHERE cc.is_valid = 1
+        """
+    )
+    conn.execute(
+        "CREATE UNIQUE INDEX _conformance_canon_kods_pk "
+        "ON _conformance_canon_kods(classification_id, kod)"
+    )
+
+    conn.execute(
+        """
         CREATE TEMP TABLE _conformance_stats AS
         SELECT
             vs.state_id,
             vs.classification_id AS declared_classification_id,
             COUNT(k.kod) AS checked_code_count,
-            COALESCE(SUM(
-                CASE WHEN EXISTS (
-                    SELECT 1
-                    FROM classification_code cc
-                    JOIN value_code canon ON canon.code_id = cc.code_id
-                    WHERE cc.classification_id = k.classification_id
-                      AND cc.is_valid = 1
-                      AND TRIM(canon.code) = k.kod
-                ) THEN 1 ELSE 0 END
-            ), 0) AS matched_code_count
+            COUNT(ck.kod) AS matched_code_count
         FROM variable_state vs
         JOIN classification cls ON cls.id = vs.classification_id
         LEFT JOIN _conformance_state_kods k ON k.state_id = vs.state_id
+        LEFT JOIN _conformance_canon_kods ck
+          ON ck.classification_id = k.classification_id
+         AND ck.kod = k.kod
         WHERE vs.classification_id IS NOT NULL
           AND vs.value_set_id IS NOT NULL
           AND cls.valid_code_count IS NOT NULL
@@ -946,14 +955,10 @@ def apply_classification_conformance_gate(conn: sqlite3.Connection) -> int:
         INSERT OR IGNORE INTO classification_conformance_code (state_id, code_id)
         SELECT sc.state_id, sc.code_id
         FROM _conformance_state_codes sc
-        WHERE NOT EXISTS (
-            SELECT 1
-            FROM classification_code cc
-            JOIN value_code canon ON canon.code_id = cc.code_id
-            WHERE cc.classification_id = sc.classification_id
-              AND cc.is_valid = 1
-              AND TRIM(canon.code) = sc.kod
-        )
+        LEFT JOIN _conformance_canon_kods ck
+          ON ck.classification_id = sc.classification_id
+         AND ck.kod = sc.kod
+        WHERE ck.kod IS NULL
         """
     )
 
@@ -985,6 +990,7 @@ def apply_classification_conformance_gate(conn: sqlite3.Connection) -> int:
 
     for tmp in (
         "_conformance_stats",
+        "_conformance_canon_kods",
         "_conformance_state_kods",
         "_conformance_state_codes",
     ):
