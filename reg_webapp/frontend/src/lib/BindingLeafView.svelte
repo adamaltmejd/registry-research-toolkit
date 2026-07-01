@@ -704,6 +704,10 @@ function commitSelected(selected: PickerSelection[]): void {
   .meta dt {
     font-weight: 600;
   }
+  .meta dd {
+    min-width: 0;
+    margin: 0;
+  }
   .tag-strip {
     display: flex;
     flex-wrap: wrap;
@@ -767,5 +771,14 @@ function commitSelected(selected: PickerSelection[]): void {
   }
   .add-confirm.already {
     color: var(--text-muted);
+  }
+  @media (max-width: 48rem) {
+    .meta {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+    .meta dt:not(:first-child) {
+      margin-top: var(--space-2);
+    }
   }
 </style>
