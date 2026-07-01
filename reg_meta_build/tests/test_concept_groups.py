@@ -1004,6 +1004,34 @@ class TestMultiAxisGroups:
             ("kapitalvinst", "exkl", "Exkl. kapitalvinst"),
         ]
 
+    def test_rejects_mixed_whole_and_representation_grain_per_variable(self) -> None:
+        conn = self._iot_db()
+        bad = self._group(
+            members=(
+                CuratedMember(
+                    variable="cdisp",
+                    delivery_column=None,
+                    coords=(
+                        ("enhet", "individ", "Individ"),
+                        ("hushallsbegrepp", "na", "—"),
+                        ("kapitalvinst", "alla", "Alla"),
+                    ),
+                ),
+                CuratedMember(
+                    variable="cdisp",
+                    delivery_column="CDISP",
+                    coords=(
+                        ("enhet", "individ", "Individ"),
+                        ("hushallsbegrepp", "na", "—"),
+                        ("kapitalvinst", "inkl", "Inkl. kapitalvinst"),
+                    ),
+                ),
+            )
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(conn, (bad,), providers=_SCB)
+        assert exc.value.code == "concept_groups_invalid"
+
     def test_bad_delivery_column_fails_fast(self) -> None:
         # A delivery column not in `variable_alias` is a curation typo → EXIT_CONFIG.
         conn = self._iot_db()
@@ -1526,6 +1554,36 @@ class TestLoader:
             ("source", "agi", "AGI"),
             ("rank", "1", "största"),
         )
+
+    def test_rejects_mixed_whole_and_representation_grain_per_variable(
+        self, tmp_path
+    ) -> None:
+        text = """
+        [[variable_group]]
+        register = "scb/lisa"
+        key = "fam"
+        label = "Familj"
+        axes = [
+          { axis = "source", label = "Källa" },
+          { axis = "rank", label = "Förvärvskälla" },
+        ]
+        [[variable_group.members]]
+        variable = "agi1ink"
+        coords = [
+          { axis = "source", value = "agi", label = "AGI" },
+          { axis = "rank", value = "all", label = "Alla" },
+        ]
+        [[variable_group.members]]
+        variable = "agi1ink"
+        delivery_column = "AGI1INK"
+        coords = [
+          { axis = "source", value = "agi", label = "AGI" },
+          { axis = "rank", value = "1", label = "största" },
+        ]
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.code == "concept_groups_invalid"
 
     @pytest.mark.parametrize(
         "member_fields",

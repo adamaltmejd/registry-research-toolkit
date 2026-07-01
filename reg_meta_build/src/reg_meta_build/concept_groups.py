@@ -523,6 +523,29 @@ def _parse_member(
     )
 
 
+def _reject_mixed_member_grain(members: tuple[CuratedMember, ...], key: str) -> None:
+    """A group may name a variable at whole-variable OR representation grain, not
+    both. Mixing `delivery_column = None` with concrete columns for one variable makes
+    the read surfaces ambiguous: one member claims all columns while the others claim
+    specific columns."""
+    by_variable: dict[str, set[bool]] = {}
+    for member in members:
+        by_variable.setdefault(member.variable, set()).add(
+            member.delivery_column is None
+        )
+    mixed = sorted(
+        variable for variable, grains in by_variable.items() if len(grains) > 1
+    )
+    if mixed:
+        raise curation_error(
+            "concept_groups_invalid",
+            f"concept_groups group {key!r} mixes whole-variable and "
+            f"delivery-column members for variable(s) {mixed}.",
+            "For each variable in one group, use either whole-variable members "
+            "or representation-grained members, not both.",
+        )
+
+
 def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     """Parse the curated-family TOML. Empty when no file (synthetic test
     builds, wheel installs).
@@ -606,6 +629,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                 )
             seen_refs.add(ref)
             members.append(member)
+        _reject_mixed_member_grain(tuple(members), key)
         out.append(
             CuratedGroup(
                 provider=parts[0],
@@ -1446,6 +1470,7 @@ def _apply_curated_groups(
             if is_accept
             else f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
         )
+        _reject_mixed_member_grain(g.members, g.key)
         # STRICT resolution via the shared lenient helper: same join as the two
         # pre-passes (so the reserved-key/member-id sets can't desync from what
         # this authoritative pass inserts, #651), but a None here is a build
