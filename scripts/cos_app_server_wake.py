@@ -27,6 +27,12 @@ APPROVAL_REQUEST_METHODS = {
     "tool/requestUserInput",
 }
 
+APPROVAL_POLICY_ALIASES = {
+    "unlessTrusted": "untrusted",
+    "onRequest": "on-request",
+    "onFailure": "on-failure",
+}
+
 OPT_OUT_NOTIFICATION_METHODS = [
     "item/agentMessage/delta",
     "item/reasoning/textDelta",
@@ -88,7 +94,11 @@ def _parse_args() -> argparse.Namespace:
         choices=["user", "auto_review", "guardian_subagent"],
         help="Approval reviewer for unattended turns. Defaults to auto_review.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    args.approval_policy = APPROVAL_POLICY_ALIASES.get(
+        args.approval_policy, args.approval_policy
+    )
+    return args
 
 
 def _send(
@@ -206,11 +216,7 @@ def _request(
     _send(proc, request_id, method, params)
     while True:
         payload = reader.read_json_line()
-        if payload.get("method") in APPROVAL_REQUEST_METHODS:
-            raise WakeError(
-                f"turn requested interactive approval via {payload['method']}; "
-                "the scheduler helper cannot answer that request"
-            )
+        _raise_on_unattended_request(payload)
         if payload.get("id") != request_id:
             continue
         if "error" in payload:
@@ -238,11 +244,7 @@ def _wait_for_turn_idle(
     while True:
         payload = reader.read_json_line()
         method = payload.get("method")
-        if method in APPROVAL_REQUEST_METHODS:
-            raise WakeError(
-                f"turn requested interactive approval via {method}; "
-                "the scheduler helper cannot answer that request"
-            )
+        _raise_on_unattended_request(payload)
         if method == "turn/completed":
             params = payload.get("params")
             turn = params.get("turn") if isinstance(params, dict) else None
@@ -265,6 +267,22 @@ def _wait_for_turn_idle(
             status_type = status.get("type")
             if status_type == "systemError":
                 raise WakeError(f"thread entered systemError: {status!r}")
+
+
+def _raise_on_unattended_request(payload: dict[str, Any]) -> None:
+    method = payload.get("method")
+    if not isinstance(method, str):
+        return
+    if method in APPROVAL_REQUEST_METHODS:
+        raise WakeError(
+            f"turn requested interactive approval via {method}; "
+            "the scheduler helper cannot answer that request"
+        )
+    if "id" in payload:
+        raise WakeError(
+            f"turn requested unsupported app-server request via {method}; "
+            "the scheduler helper cannot answer that request"
+        )
 
 
 def _turn_status_type(turn: dict[str, Any]) -> str:
