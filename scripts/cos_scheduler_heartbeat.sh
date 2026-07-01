@@ -11,7 +11,10 @@ Run scripts/cos_scheduler_tick.sh in a foreground loop. The tick script still ow
 the deterministic preflight and wakes Codex only when repo/GitHub state changed.
 With the default app-server wake, the agent transcript is written to persisted Codex
 thread history, not this terminal; active Codex clients may need `codex resume THREAD_ID`
-or a relaunch to show the injected turn until live refresh is supported.
+or a relaunch to show the injected turn until live refresh is supported. Do not run
+`codex resume THREAD_ID` while a tick wake is active; wait for the wake finished line.
+If a tick reports that the thread is already active and skipped the wake, do not resume
+until that active turn is idle.
 
 Options:
   --interval SECONDS        Seconds between ticks (default: 900, or COS_INTERVAL_SECONDS).

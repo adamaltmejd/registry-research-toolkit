@@ -46,13 +46,18 @@ wakes only when repo/GitHub state changes enough to justify a COS tick: lane dri
 issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
 merge-gate state changes. On Codex surfaces, the tested scheduler wrapper is
 `scripts/cos_scheduler_tick.sh --thread <codex-chief-of-staff-thread-id>`. By default it
-wakes the Codex thread through `codex app-server --stdio`, writes the agent transcript
-to persisted Codex thread history instead of the terminal, and commits preflight state
-only after the thread returns idle. Active Codex CLI or desktop views may need
+wakes the Codex thread through `codex app-server --stdio`, writes compact status/reason
+lines instead of raw preflight JSON, writes the agent transcript to persisted Codex
+thread history instead of the terminal, and commits preflight state only after the
+thread returns idle. Active Codex CLI or desktop views may need
 `codex resume <thread-id>` or a relaunch to show app-server-injected turns until those
-clients live-refresh them. Use `--wake-backend exec` only as a fallback; that path
-resumes the thread with `codex exec` while capturing Codex's progress stderr and leaving
-only the final agent stdout visible on success. The Codex-only foreground heartbeat is
+clients live-refresh them. Do not run `codex resume <thread-id>` while the scheduler
+says a wake is active; wait for `cos-scheduler: wake finished`, because attaching a
+client to the same active turn can interrupt it. If the scheduler reports that the
+thread is already active and skipped the wake, do not resume until that active turn is
+idle. Use `--wake-backend exec` only as a fallback; that path resumes the thread with
+`codex exec` while capturing Codex's progress stderr and leaving only the final agent
+stdout visible on success. The Codex-only foreground heartbeat is
 `scripts/cos_scheduler_heartbeat.sh <codex-chief-of-staff-thread-id>`; it defaults to a
 15-minute interval and runs until Ctrl-C. Do not use either Codex wrapper to resume a
 Claude `/loop` thread; pair the preflight with the scheduler/resume mechanism exposed by
