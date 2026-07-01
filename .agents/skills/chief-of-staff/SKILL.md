@@ -73,13 +73,15 @@ The preflight exits `0` when idle, `10` when a real tick should run, and `2` on 
 tool errors. It records its snapshot in `.git/cos-preflight-state.json` by default and
 wakes only when repo/GitHub state changes enough to justify a COS tick: lane drift,
 issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
-merge-gate state changes. The scheduler wrapper stays silent on idle and resumes the one
-COS thread only on exit `10` by running
-`codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`. The wrapper captures
-Codex's progress stream from stderr and leaves only the final agent stdout visible on a
-successful wake; it prints the captured stderr only when the wake fails. Use `--dry-run`
-while installing launchd/cron so a wake-worthy state prints the Codex command without
-spending an agent turn.
+merge-gate state changes. The scheduler wrapper stays silent on idle and wakes the one
+COS thread only on exit `10`. By default it uses `scripts/cos_app_server_wake.py`
+through `codex app-server --stdio` so the tick is posted into the existing Codex thread,
+the terminal does not stream the agent transcript, and preflight state is committed only
+after the thread returns idle. Use `--wake-backend exec` only as a fallback; that path
+runs `codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`, captures
+Codex's progress stream from stderr, and leaves only the final agent stdout visible on
+success. Use `--dry-run` while installing launchd/cron so a wake-worthy state prints the
+wake command without spending an agent turn.
 
 ## Startup Gate
 
