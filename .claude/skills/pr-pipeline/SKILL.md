@@ -86,9 +86,10 @@ record stack/dependency order in each PR's gate block and leave execution to
    into the smallest set of coherent, independently mergeable PRs; write a one-line
    scope for each; sequence by dependency.
 
-3. **Pick the roles per PR.** implementer ALWAYS runs; `/code-review` ALWAYS reviews and
-   `/simplify` runs on any non-trivial code diff (both Step C). The rest are conditional
-   — a role you won't use is one you must NOT dispatch:
+3. **Pick the roles per PR.** implementer ALWAYS runs; `/code-review` ALWAYS reviews.
+   For any non-trivial code diff, the lead also performs the dedicated simplification
+   pass in Step C. The rest are conditional — a role you won't use is one you must NOT
+   dispatch:
    - **tester** — only if behaviour changes (existing snapshot/idempotence tests already
      cover it → skip).
    - **docs-updater** — only if the diff drifts AUTHORED docs (a change that edits docs
@@ -109,9 +110,9 @@ record stack/dependency order in each PR's gate block and leave execution to
 
    Skipping a role is a decision you NAME in your closeout report, never a silent
    omission. A large *mechanical* change (even 100+ files) is still implementer +
-   `/code-review` only — a mechanical sweep has nothing for `/simplify` to cut, so
-   that's the one place the `/simplify` gate is a named skip (plus visual verification
-   if it touches rendered output).
+   `/code-review` only — a mechanical sweep has nothing for the simplification pass to
+   cut, so that's the one place the simplification gate is a named skip (plus visual
+   verification if it touches rendered output).
 
 4. **Settle forks up front.** Resolve any open fork (naming, schema, scope) with
    `AskUserQuestion` now — only you can reach the human.
@@ -191,15 +192,15 @@ on the fix delta. Repeat until a pass reports no further material findings. Safe
 valve: if it won't settle after a few rounds or keeps re-raising the same point, STOP
 and surface it via `AskUserQuestion` — never loop forever.
 
-Then run **`/simplify`** on any non-trivial code diff — the dedicated
-reuse/simplification/altitude pass, deeper than the cleanup lens `/code-review` already
-folds in (a one-caller abstraction, a module duplicating a subsystem elsewhere, a
-library that subsumes the approach). Run it **report-only** and route its cuts through a
-fresh implementer → re-verify → commit, deduping overlap with `/code-review`'s findings.
-Then **re-run `/code-review` on the simplify-fix range**
-(`git diff <pre-simplify>..HEAD`) — a simplification can touch a safety guard, and Step
-E's review must cover the final HEAD. A clean pass returns "lean already"; skip only a
-docs-only or trivial diff (name the skip).
+Then perform a dedicated simplification pass on any non-trivial code diff. This is a
+report-only review step, not a required slash-command dependency: look for one-caller
+abstractions, duplicated subsystem logic, an existing library or subsystem that subsumes
+the approach, over-broad scope, and accidental weakening of safety guards. Route any
+accepted cuts through a fresh implementer → re-verify → commit, deduping overlap with
+`/code-review`'s findings. Then **re-run `/code-review` on the simplification-fix
+range** (`git diff <pre-simplify>..HEAD`) — a simplification can touch a safety guard,
+and Step E's review must cover the final HEAD. A clean pass records "lean already"; skip
+only a docs-only or trivial diff (name the skip).
 
 **Frontend addendum.** For a PR that changes rendered output, run the formal visual
 review alongside `/code-review`: run **`/web-design-reviewer`** in a clean

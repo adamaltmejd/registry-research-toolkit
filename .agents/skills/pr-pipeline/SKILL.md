@@ -137,8 +137,7 @@ Run focused verification as the work evolves:
    review has reported. Fix or explicitly dismiss every material finding with a reason.
    Beyond correctness, weigh reuse/simplification/altitude cleanup — a one-caller
    abstraction, a module duplicating a subsystem elsewhere, a library that subsumes the
-   approach — and route those cuts like any finding. (There is no `/simplify` on this
-   surface; it is a Claude Code skill only.)
+   approach — and route those cuts like any finding.
 4. For rendered-output changes, run the formal visual gate in this order:
    - First, launch a fresh subagent running `web-design-reviewer` against the rendered
      app or the changed route(s). The reviewer must apply the skill's structured report
