@@ -778,11 +778,10 @@ export interface components {
          *
          *     `code`/`label` come from `value_code` (provider-native strings — these are
          *     PUBLIC classification codes, not row-level data). `level` is the optional
-         *     hierarchy depth (None when the classification is flat). `is_valid` is the
-         *     canonical/observed flag: True = canonical (in the classification's valid-codes
-         *     CSV), False = observed-only (seen in data, not canonical), None = no CSV exists
-         *     so validity is unknown (the whole edition has `is_valid=NULL`). It's surfaced
-         *     (not filtered) so the leaf can show the full code list with a validity hint.
+         *     hierarchy depth (None when the classification is flat). `is_valid` is True
+         *     for canonical CSV-backed rows and None when no canonical CSV exists for the
+         *     edition. Observed value-set codes that do not belong to the classification are
+         *     state-local conformance warnings, not classification codes.
          */
         ClassificationCode: {
             /**
@@ -792,7 +791,7 @@ export interface components {
             code: string;
             /**
              * Is Valid
-             * @description Canonical (True) / observed-only (False) / unknown (None — no canonical CSV exists for this edition).
+             * @description Canonical (True) / unknown (None — no canonical CSV exists for this edition).
              */
             is_valid: boolean | null;
             /**
@@ -822,6 +821,41 @@ export interface components {
             results: components["schemas"]["CodeSearchResult"][];
             /** Total Count */
             total_count: number;
+        };
+        /**
+         * ClassificationConformance
+         * @description Per-state value-set/classification conformance (#656).
+         *
+         *     `declared_classification_*` names the classification asserted by the source
+         *     value-set label. When `status == "severed"`, `VariableState.classification_slug`
+         *     is already None; this object preserves the original declaration plus the
+         *     coverage evidence explaining why the link was cleared.
+         */
+        ClassificationConformance: {
+            /** Checked Code Count */
+            checked_code_count: number;
+            /** Declared Classification Name */
+            declared_classification_name: string;
+            /** Declared Classification Short Name */
+            declared_classification_short_name: string;
+            /** Declared Classification Slug */
+            declared_classification_slug: string;
+            /** Matched Code Count */
+            matched_code_count: number;
+            /** Nonconforming Code Count */
+            nonconforming_code_count: number;
+            /**
+             * Nonconforming Codes
+             * @default []
+             */
+            nonconforming_codes: components["schemas"]["ValueSetMember"][];
+            /** Overlap */
+            overlap: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "kept" | "severed";
         };
         /**
          * ClassificationEdition
@@ -2341,6 +2375,7 @@ export interface components {
          *     subset whose validity range intersects the queried period.
          */
         VariableState: {
+            classification_conformance?: components["schemas"]["ClassificationConformance"] | null;
             /** Classification Slug */
             classification_slug: string | null;
             /** Data Length */

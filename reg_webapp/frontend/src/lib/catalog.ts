@@ -2082,6 +2082,7 @@ export interface ValueSetVariantUsage {
 export interface DistinctValueSet {
   key: string;
   classificationSlug: string | null;
+  classificationConformance: VariableStateModel["classification_conformance"];
   versionLabel: string;
   valueSet: NonNullable<VariableStateModel["value_set"]> | null;
   dataType: string | null;
@@ -2090,6 +2091,10 @@ export interface DistinctValueSet {
   variants: string[];
   overallSpan: ValueSetSpan;
 }
+
+type ClassificationConformanceModel = NonNullable<
+  VariableStateModel["classification_conformance"]
+>;
 
 function displayTechnicalValue(value: string): string {
   const trimmed = value.trim();
@@ -2222,6 +2227,60 @@ function valueSetDedupKey(s: VariableStateModel): string {
     : `id/${s.value_set_id ?? "none"}`;
 }
 
+function conformanceNeedsNotice(c: ClassificationConformanceModel): boolean {
+  return c.status === "severed" || c.nonconforming_code_count > 0;
+}
+
+function codeListKey(code: { code: string; label: string }): string {
+  return `${code.code}\u0000${code.label}`;
+}
+
+function representativeConformance(
+  states: VariableStateModel[],
+): VariableStateModel["classification_conformance"] {
+  const rows = states
+    .map((s) => s.classification_conformance)
+    .filter((c) => c != null);
+  const warningRows = rows.filter(conformanceNeedsNotice);
+  if (warningRows.length === 0) {
+    return rows[0] ?? null;
+  }
+  if (warningRows.length === 1) {
+    return warningRows[0];
+  }
+  const first = warningRows[0];
+  const nonconformingCodes = new Map<
+    string,
+    (typeof first.nonconforming_codes)[number]
+  >();
+  for (const row of warningRows) {
+    for (const code of row.nonconforming_codes) {
+      nonconformingCodes.set(codeListKey(code), code);
+    }
+  }
+  const checked = warningRows.reduce(
+    (sum, row) => sum + row.checked_code_count,
+    0,
+  );
+  const matched = warningRows.reduce(
+    (sum, row) => sum + row.matched_code_count,
+    0,
+  );
+  return {
+    ...first,
+    status: warningRows.some((row) => row.status === "severed")
+      ? "severed"
+      : "kept",
+    checked_code_count: checked,
+    matched_code_count: matched,
+    nonconforming_code_count: nonconformingCodes.size,
+    overlap: checked === 0 ? first.overlap : matched / checked,
+    nonconforming_codes: [...nonconformingCodes.values()].sort(
+      (a, b) => a.code.localeCompare(b.code) || a.label.localeCompare(b.label),
+    ),
+  };
+}
+
 /** Project a variable's multi-state set into DISTINCT value sets (#668), deduped
  * at TWO levels: classification value sets by `classification_slug`, others by
  * `value_set_id` (see `valueSetDedupKey` and the section header). First-seen order
@@ -2264,6 +2323,7 @@ export function distinctValueSets(
     return {
       key,
       classificationSlug: rep.classification_slug ?? null,
+      classificationConformance: representativeConformance(group),
       versionLabel: rep.value_set_version_label,
       valueSet: rep.value_set,
       dataType: rep.data_type,

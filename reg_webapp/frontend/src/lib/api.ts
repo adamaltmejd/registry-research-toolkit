@@ -311,8 +311,8 @@ export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
  * renders the whole chain synchronously from these. */
 export type ClassificationChainEdition = Schemas["ClassificationEdition"];
 /** One code/label entry in a classification edition's value set (#609), embedded
- * on `ClassificationNodeData.codes`. `is_valid` is canonical (true) / observed-only
- * (false) / unknown (null — no canonical CSV for the edition). */
+ * on `ClassificationNodeData.codes`. `is_valid` is canonical (true) / unknown
+ * (null — no canonical CSV for the edition). */
 export type ClassificationCodeModel = Schemas["ClassificationCode"];
 /** The resolved classification leaf the catch-all returns — carries its embedded
  * FULL succession chain (`edition_chain`, oldest first / terminal last), the

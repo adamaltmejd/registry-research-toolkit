@@ -266,7 +266,13 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `variable.operational_definition` / `variable_fts` explanatory text. A
 #   6.2.0 DB lacks the state column, so it is rejected via the minor-version
 #   gate.
-SCHEMA_VERSION = "6.3.0"
+# - 6.4.0 (#656): additive `classification_conformance` +
+#   `classification_conformance_code` tables. CSV-backed classification pages are
+#   canonical-only, while per-state value-set/classification mismatch evidence is
+#   stored at variable_state grain and low-overlap declared links are severed.
+#   A 6.3.0 DB lacks the warning/severance surface, so it is rejected via the
+#   minor-version gate.
+SCHEMA_VERSION = "6.4.0"
 DB_FILENAME = "reg_meta.db"
 
 

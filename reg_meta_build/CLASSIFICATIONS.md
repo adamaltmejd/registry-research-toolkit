@@ -1,7 +1,7 @@
 # Adding canonical code CSVs
 
 Maintainer guide for populating `valid_codes_file` for each classification. Background:
-see `DESIGN.md` § "Classifications" → "Canonical vs observed codes".
+see `DESIGN.md` § "Classifications" → "Canonical codes and state conformance".
 
 ## How it works
 
@@ -12,9 +12,10 @@ the top level, SOS CSVs under `sos/`). At build time:
 
 1. Every code in the CSV is ensured to exist in `value_code` (codes that never appeared
    in any register get inserted as canonical-but-unobserved).
-2. Every `classification_code` row is marked `is_valid = 1` (in CSV) or `is_valid = 0`
-   (observed-only noise).
+2. CSV-backed `classification_code` contains only canonical rows marked `is_valid = 1`.
 3. `classification.valid_code_count` is set to the canonical count.
+4. Observed non-canonical codes are recorded per affected state in
+   `classification_conformance` / `classification_conformance_code`.
 
 Without a CSV, every code carries `is_valid = NULL` ("validity unknown").
 
@@ -53,11 +54,11 @@ A01,Tyfoidfeber,Typhoid fever,A00-A09
 3. Add `valid_codes_file = "<short_name>.csv"` to the matching seed entry in
    `reg_meta_build/classifications.toml`.
 4. Run `reg-meta-build build-db --input-dir reg_meta_build/input_data/`. Build output
-   reports per-classification: canonical / observed-only / canonical-but-unobserved
-   counts.
+   reports per-classification canonical coverage and persisted per-state conformance
+   evidence for observed non-canonical codes.
 5. Spot-check with `reg-meta get classification <SHORT_NAME> --codes --only-valid` and
-   review observed-only and canonical-but-unobserved lists for data-quality issues
-   (mislabeled codes, truncated labels, etc.).
+   review conformance rows for data-quality issues (mislabeled codes, truncated labels,
+   etc.).
 
 ## Status overview
 
@@ -276,9 +277,10 @@ Notes:
   "Femsiffer" (5-digit).
 - SNI 69 has 113 1-/2-/3-digit prefix codes that don't appear in our register exports —
   surfaces as canonical-but-unobserved.
-- SNI 2007 has the largest observed-only set (\~3 200) because data carries codes in
-  many alt notations not in the canonical list (dotted `01.110`, ranges `102-103`,
-  letters from Avdelning) — most are real references in alt format, not noise.
+- SNI 2007 has the largest nonconforming observed set (\~3 200) because data carries
+  codes in many alt notations not in the canonical list (dotted `01.110`, ranges
+  `102-103`, letters from Avdelning) — most are real references in alt format, not
+  noise.
 
 ### SUN 1996, SEKTOR/INSEKT, JURFORM, AGARKAT — scraped from SCB Klassdb
 
@@ -308,8 +310,7 @@ Edge cases:
 - `SEKTOR2000` toml lists two vardemängdsversionen: the canonical
   `Standard för institutionell sektorindelning 2000` (53 observed 3-digit codes — match
   Delsektor) and a register-local `Sektor 2000` (23 codes with a different 1-2 digit
-  code scheme that mostly stays `is_valid=0`). The canonical CSV serves the standard
-  one.
+  code scheme recorded as nonconforming). The canonical CSV serves the standard one.
 - `JURFORM 2020` is identical to `JURFORM 2000` except code `84` changed from
   "Landsting" to "Regioner".
 - `AGARKAT` 2000 and 2020 differ only in code `30/3` Region(kontrollerade) rename.
@@ -373,7 +374,7 @@ codes.
 
 The "ISCED 2011 AES" vardemängd uses different padded codes (`000`, `200`, `300`, `302`,
 …) which appear to be SCB-specific. Only `100` matches the canonical set; the other 13
-stay as `is_valid=0`.
+are recorded as nonconforming for the affected state.
 
 ### UNESCO ISCED-F 2013
 
@@ -385,5 +386,5 @@ standard UNESCO and present in SCB data.
 
 The second vardemängd `ISCED F 2013` (with a trailing space in the source) carries 38
 codes mostly in Swedish (`Pedagogik och lärarutbildning`, etc.) — only 12 match UNESCO.
-This looks like a register-local mapping mislabelled as ISCED-F; left at `is_valid=0`
-for the non-matching codes.
+This looks like a register-local mapping mislabelled as ISCED-F; the non-matching codes
+are recorded as nonconforming for the affected state.

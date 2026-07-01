@@ -32,9 +32,19 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set: null,
     is_identifier: false,
     classification_slug: null,
+    classification_conformance: null,
     period_token: null,
     ...over,
   };
+}
+
+function normalizedText(selector: string): string {
+  return (
+    document
+      .querySelector(selector)
+      ?.textContent?.replace(/\s+/g, " ")
+      .trim() ?? ""
+  );
 }
 
 // A two-value-set fixture mirroring kommun: one classification value set (links
@@ -84,6 +94,74 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     const link = page.getByRole("link", { name: "= LKF 2007" });
     await expect.element(link).toBeVisible();
     expect(link.element().getAttribute("href")).toBe("/catalog/class/lkf2007");
+  });
+
+  it("warns on nonconforming codes while keeping a classification link", async () => {
+    render(ValueSetView, {
+      states: [
+        state({
+          ...classState,
+          classification_conformance: {
+            declared_classification_slug: "lkf2007",
+            declared_classification_short_name: "LKF2007",
+            declared_classification_name: "Kommun historisk",
+            status: "kept",
+            checked_code_count: 3,
+            matched_code_count: 2,
+            nonconforming_code_count: 1,
+            overlap: 2 / 3,
+            nonconforming_codes: [{ code: "X", label: "Extra code" }],
+          },
+        }),
+        plainState,
+      ],
+      narrowed: false,
+    });
+    expect(normalizedText(".conformance-notice")).toContain(
+      "kept, but 1 code is not part",
+    );
+    const summary = page.getByText("Nonconforming codes (1)");
+    await summary.click();
+    await expect.element(page.getByText("Extra code")).toBeVisible();
+  });
+
+  it("shows severed classification evidence on the plain value-set row", async () => {
+    render(ValueSetView, {
+      states: [
+        state({
+          value_set_id: 300,
+          value_set_version_label: "ISCED F 2013",
+          value_set: [
+            { code: "13", label: "Datavetenskap" },
+            { code: "1a", label: "Pedagogik" },
+          ],
+          classification_conformance: {
+            declared_classification_slug: "isced-f2013",
+            declared_classification_short_name: "ISCED-F 2013",
+            declared_classification_name: "ISCED-F 2013",
+            status: "severed",
+            checked_code_count: 25,
+            matched_code_count: 1,
+            nonconforming_code_count: 24,
+            overlap: 0.04,
+            nonconforming_codes: [{ code: "13", label: "Datavetenskap" }],
+          },
+        }),
+        plainState,
+      ],
+      narrowed: false,
+    });
+    expect(normalizedText(".conformance-notice")).toContain(
+      "severed: 4% of checked codes match",
+    );
+    await expect
+      .element(page.getByRole("link", { name: "= ISCED-F 2013" }))
+      .not.toBeInTheDocument();
+    expect(
+      [...document.querySelectorAll("summary")].filter(
+        (el) => el.textContent?.trim() === "Values (2)",
+      ).length,
+    ).toBeGreaterThanOrEqual(1);
   });
 
   it("a plain value set exposes its codes inline (expandable), not the classification link", async () => {

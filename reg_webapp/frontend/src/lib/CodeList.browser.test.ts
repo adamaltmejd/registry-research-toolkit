@@ -58,15 +58,16 @@ describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
     await expect.element(page.getByText("1 of 5")).toBeVisible();
   });
 
-  it("tags an is_valid=false code 'observed' and leaves a normal code untagged", async () => {
+  it("renders code rows without observed-only badges", async () => {
     await render(CodeList, {
       codes: [
         { code: "1", label: "Kanonisk", is_valid: true },
         { code: "X0", label: "Observerad", is_valid: false },
       ],
     });
-    await expect.element(page.getByText("observed")).toBeVisible();
-    expect(document.querySelectorAll(".code-row.observed")).toHaveLength(1);
+    await expect.element(page.getByText("Observerad")).toBeVisible();
+    await expect.element(page.getByText("observed")).not.toBeInTheDocument();
+    expect(document.querySelectorAll(".code-row.observed")).toHaveLength(0);
   });
 
   it("does not tag value-set members (no is_valid field)", async () => {

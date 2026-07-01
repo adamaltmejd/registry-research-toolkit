@@ -191,15 +191,14 @@ remain as public API and back the chain walk.)
 
 The classification leaf also embeds two further payloads inline for synchronous SPA
 render (#609): `codes` (reg_meta's `ClassificationCode`, embedded directly from
-`Catalog.classification_codes` — the resolved edition's value-set codes and labels, with
-`is_valid` = canonical/observed/unknown; omitted when empty) and `dimensions`
-(reg_meta's `ConceptGroupSummary`, embedded directly from
-`Catalog.classification_dimensions` — the curated umbrella group(s) the edition belongs
-to, reading `concept_group_classification`; omitted when empty). The SPA renders these
-as a code/label panel (shared `CodeList` viewer — the same component used for the
-variable value set, with a size-dependent filter: the search box appears only when the
-set reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets; #638) and a granularity
-cross-reference panel respectively.
+`Catalog.classification_codes` — the resolved edition's canonical value-set codes and
+labels; omitted when empty) and `dimensions` (reg_meta's `ConceptGroupSummary`, embedded
+directly from `Catalog.classification_dimensions` — the curated umbrella group(s) the
+edition belongs to, reading `concept_group_classification`; omitted when empty). The SPA
+renders these as a code/label panel (shared `CodeList` viewer — the same component used
+for the variable value set, with a size-dependent filter: the search box appears only
+when the set reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets; #638) and a
+granularity cross-reference panel respectively.
 
 **Variable succession is embedded too (#582).** The binding leaf node carries the **full
 variable succession chain** inline as `succession_chain` (reg_meta's `VariableEdition`,
@@ -1331,9 +1330,9 @@ form when the start is unknown (#658).
   multi-state view (and for the single value set in the detail mode), and
   `ClassificationCodesPanel` for the edition's codes. It owns a **size-dependent
   filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for
-  a handful) and a height-constrained scroll for the long LISA sets; the classification
-  side's per-code `is_valid` surfaces an "observed" tag (a variable member omits it, so
-  no tag shows — same component, fewer columns of signal).
+  a handful) and a height-constrained scroll for the long LISA sets. Classification
+  conformance warnings render on the variable value-set surface, not inside the shared
+  code list.
 
 - **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
   disclosure that demotes **backend/structural** fields below the user-facing ones: the

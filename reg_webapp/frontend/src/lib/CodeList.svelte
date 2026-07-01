@@ -1,15 +1,11 @@
 <script lang="ts">
 import { matchesFilter } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
-import { Tag } from "./ui";
 
 // The UNIFIED value-set / code viewer (#638 PR3). A variable's value set and a
 // classification's code list are the same thing — a code→label set (a value set
-// often IS a classification) — so they render IDENTICALLY here: the classification
-// list style (a <ul> of code rows), used for BOTH. The classification side carries
-// per-code `is_valid` (canonical vs observed-only) which surfaces as an "observed"
-// tag; a variable value-set member omits it, so no tag shows — same component,
-// fewer columns of signal.
+// often IS a classification) — so they render IDENTICALLY here: the
+// classification-list style (a <ul> of code rows), used for BOTH.
 //
 // Size-dependent filter (the maintainer's call): sizes vary wildly on both sides
 // (tiny classifications, huge LISA value sets), so the search box appears only once
@@ -20,9 +16,8 @@ import { Tag } from "./ui";
 // Defensive empty-guard only — callers already omit the surrounding section when
 // the set is empty; this just never crashes on `[]`.
 
-// A code→label set member. Covers BOTH shapes: classification codes
-// (`ClassificationCodeModel`, with `is_valid`) and variable value-set members
-// (`ValueSetMember`, which omit it). `is_valid === false` is "observed-only".
+// A code→label set member. Covers BOTH shapes: classification codes and variable
+// value-set members.
 interface Code {
   code: string;
   label: string;
@@ -73,21 +68,9 @@ const shown = $derived(
     <div class="code-scroll">
       <ul class="codes">
         {#each shown as code, i (i)}
-          <li class="code-row" class:observed={code.is_valid === false}>
+          <li class="code-row">
             <code class="code-key">{code.code}</code>
             <span class="code-label">{code.label}</span>
-            {#if code.is_valid === false}
-              <!-- Observed-only: seen in data but not in the canonical list. An
-                   informational qualifier (cooler than the brand, glyphed per the
-                   accent-vs-status rule) — meaning carried by the "observed" label,
-                   not hue alone. -->
-              <span title="Observed in data, not in the canonical list">
-                <Tag tone="info">
-                  {#snippet glyph()}i{/snippet}
-                  observed
-                </Tag>
-              </span>
-            {/if}
           </li>
         {/each}
       </ul>
@@ -132,10 +115,5 @@ const shown = $derived(
   }
   .code-label {
     flex: 1;
-  }
-  /* Observed-only codes are de-emphasised — the canonical list is the primary
-     signal; observed codes are supplementary. */
-  .code-row.observed .code-label {
-    color: var(--text-muted);
   }
 </style>

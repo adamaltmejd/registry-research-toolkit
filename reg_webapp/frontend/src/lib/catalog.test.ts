@@ -93,6 +93,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set: null,
     is_identifier: false,
     classification_slug: null,
+    classification_conformance: null,
     ...over,
   };
 }
@@ -3600,6 +3601,71 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
       "doda",
       "fodda",
     ]);
+  });
+
+  it("keeps warning-bearing conformance when classification states collapse", () => {
+    const cleanConformance = {
+      declared_classification_slug: "lkf1980",
+      declared_classification_short_name: "LKF1980",
+      declared_classification_name: "LKF 1980",
+      status: "kept" as const,
+      checked_code_count: 2,
+      matched_code_count: 2,
+      nonconforming_code_count: 0,
+      overlap: 1,
+      nonconforming_codes: [],
+    };
+    const warningConformance = {
+      ...cleanConformance,
+      checked_code_count: 3,
+      matched_code_count: 2,
+      nonconforming_code_count: 1,
+      overlap: 2 / 3,
+      nonconforming_codes: [{ code: "X", label: "Extra" }],
+    };
+    const laterWarningConformance = {
+      ...cleanConformance,
+      checked_code_count: 4,
+      matched_code_count: 3,
+      nonconforming_code_count: 1,
+      overlap: 3 / 4,
+      nonconforming_codes: [{ code: "Y", label: "Later extra" }],
+    };
+    const states = [
+      state({
+        value_set_id: 100,
+        classification_slug: "lkf1980",
+        classification_conformance: cleanConformance,
+        variant: "doda",
+        valid_from: "1980-01-01",
+      }),
+      state({
+        value_set_id: 101,
+        classification_slug: "lkf1980",
+        classification_conformance: warningConformance,
+        variant: "fodda",
+        valid_from: "1981-01-01",
+      }),
+      state({
+        value_set_id: 102,
+        classification_slug: "lkf1980",
+        classification_conformance: laterWarningConformance,
+        variant: "flytt",
+        valid_from: "1982-01-01",
+      }),
+    ];
+    const vs = distinctValueSets(states);
+    expect(vs).toHaveLength(1);
+    expect(vs[0].classificationConformance).toMatchObject({
+      status: "kept",
+      checked_code_count: 7,
+      matched_code_count: 5,
+      nonconforming_code_count: 2,
+      nonconforming_codes: [
+        { code: "X", label: "Extra" },
+        { code: "Y", label: "Later extra" },
+      ],
+    });
   });
 
   it("buckets a null value_set_id as its own 'no value set' entry", () => {

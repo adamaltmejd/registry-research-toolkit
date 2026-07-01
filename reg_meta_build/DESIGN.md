@@ -1013,14 +1013,14 @@ read — further columns are silently ignored. At build time:
 
 - Every CSV code is ensured to exist in `value_code` (canonical-but- unobserved codes
   get a fresh row with no `value_set_member` linkage).
-- Every `classification_code` row in that classification is marked `is_valid=1`
-  (canonical) or `is_valid=0` (observed-only).
+- Every CSV code is inserted into `classification_code` with `is_valid=1`; CSV-backed
+  classifications are canonical-only.
 - `classification.valid_code_count` caches the canonical count.
 
 The CLI surface (`get classification --codes --only-valid`, `is_valid` in JSON output)
-is documented in [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Canonical vs observed
-codes". See also [CLASSIFICATIONS.md](CLASSIFICATIONS.md) for the per-classification
-extraction recipes that produced the shipped CSVs.
+is documented in [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Canonical codes and
+state conformance". See also [CLASSIFICATIONS.md](CLASSIFICATIONS.md) for the
+per-classification extraction recipes that produced the shipped CSVs.
 
 The seed lives in the repo (alongside `DESIGN.md`) and is **not** bundled in any wheel —
 same status as `reg_meta_build/docs/`. End users receive the already-populated
@@ -1043,9 +1043,9 @@ or re-pointed — linkage is additive.
 
 **Algorithm (SQL temp tables; no Python row loops over \~60k value sets):**
 
-1. Build `_canon_codes` from `classification_code WHERE is_valid IS NOT 0` (covers both
-   CSV-canonical rows (`is_valid=1`) and no-CSV classifications whose observed codes are
-   their only code set (`is_valid NULL`)).
+1. Build `_canon_codes` from `classification_code WHERE is_valid IS NOT 0` (covers
+   CSV-canonical rows, plus no-CSV classifications whose observed codes are their only
+   code set and therefore carry `is_valid NULL`).
 
 2. Build `_vs_stats` per value set: distinct-code count `n_codes` and `dom_level` — the
    single digit-length when EVERY code is an all-digit string of that length, else NULL.
@@ -1154,9 +1154,8 @@ must triage them.
   curated tail is visible without logging row-level content.
 - **`is_valid IS NOT 0` includes `NULL`.** A no-CSV classification has `is_valid NULL`
   on all its codes; those observed codes are the only code set available and must
-  participate in containment. `IS NOT 0` preserves that: it matches `1` and `NULL`,
-  excludes `0` (observed-only codes of a CSV-backed classification that the canonical
-  CSV does not list).
+  participate in containment. CSV-backed classifications now have only `is_valid=1`
+  canonical rows.
 - **Vintage step uses aggregate span, not per-state period.**
   `_backfill_state_classifications` folds candidates to `min(classification_id)` per
   `(variable_id, value_set_id)` and applies ONE classification to ALL that pair's
