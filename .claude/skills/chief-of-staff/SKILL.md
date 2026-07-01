@@ -1,6 +1,6 @@
 ---
 name: chief-of-staff
-description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview running, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled /pr-pipeline sessions, report merged user-facing features with preview links, run /release minor when a merge creates a required build/release boundary, and recommend the next safe /pr-pipeline lanes. Usage: /loop 30m /chief-of-staff"
+description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview and default reg_meta DB install current, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled /pr-pipeline sessions, report merged user-facing features with preview links, run /release minor when a merge creates a required build/release boundary, and recommend the next safe /pr-pipeline lanes. Usage: /loop 30m /chief-of-staff"
 ---
 
 # chief-of-staff — one coordination tick
@@ -76,10 +76,12 @@ new work, but it must not edit project code as part of the work itself.
 1. If this is a heartbeat invocation and the previous tick in this thread is still
    running, skip this tick with `DONT_NOTIFY`; do not overlap repo or GitHub mutations.
 2. Complete the startup gate above. Stop immediately if it fails.
-3. Ensure the canonical-main `reg_webapp` dev preview is running. Reuse a healthy
-   existing preview unless the startup gate's `git pull --ff-only` moved `main`; do not
-   start duplicate servers. Record the frontend URL. If preview startup fails, continue
-   the tick and report the preview as unavailable with the concrete reason.
+3. Ensure the default `reg_meta` DB install is compatible with the checked-out code,
+   then ensure the canonical-main `reg_webapp` dev preview is running. Reuse a healthy
+   existing preview unless the startup gate's `git pull --ff-only` moved `main` or the
+   DB install was refreshed; do not start duplicate servers. Record the frontend URL. If
+   preview startup still fails after the DB-refresh path below, continue the tick and
+   report the preview as unavailable with the concrete reason.
 4. Invoke `/issue-pulse` exactly once. Let it update only the lanes block; apply
    structural issue maintenance afterward under this skill's maintenance policy.
 5. Build the operating picture:
@@ -110,6 +112,26 @@ new work, but it must not edit project code as part of the work itself.
 
 Keep one `reg_webapp` dev preview running from the canonical main checkout:
 
+- Treat the persistent default `reg_meta` DB install as maintained state for the
+  canonical preview. The default is `reg_meta.db.default_db_dir()` with no `REG_META_DB`
+  override (`$XDG_DATA_HOME/reg_meta` or `~/.local/share/reg_meta`).
+- Before starting or reusing the default preview on every tick, run
+  `env -u REG_META_DB uv run reg-meta update --yes` from the canonical checkout. This
+  updates missing or stale default DB/doc DB assets when a newer compatible release
+  exists and is safe to repeat. Do not wait for app startup to reveal doc-DB problems:
+  the webapp can start with docs disabled when the doc DB is missing or incompatible.
+- If the update installs or replaces either DB asset, restart any existing default
+  preview before reporting its URL. A healthy old process can still be serving against
+  the pre-update DB handles.
+- If preview startup fails because the default DB or doc DB is missing or schema-stale,
+  run `env -u REG_META_DB uv run reg-meta update --force --yes`, then retry the default
+  preview without `REG_META_DB`. The update command validates downloaded assets against
+  the checked-out `reg_meta` code before replacing existing files, so do not hand-edit,
+  delete, or rebuild the user cache directly.
+- Do not work around a stale default install by downloading release DBs to `/tmp` and
+  launching the ordinary preview with `REG_META_DB=/tmp/...`. Use a `/tmp` or scratch
+  `REG_META_DB` only when the merged feature explicitly depends on unpublished DB
+  content or the user asks to inspect a scratch build.
 - Prefer `.claude/launch.json` entry `reg-webapp`, which runs
   `bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh preview` with `autoPort`, and
   preserve the returned frontend URL.

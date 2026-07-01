@@ -1,6 +1,6 @@
 interface:
   display_name: "Registry Chief of Staff"
-  short_description: "Maintain issues, unblock pipelines, automerge gated PRs, and coordinate lanes"
-  default_prompt: "Use $chief-of-staff to run a registry staff tick: maintain issues, keep the reg_webapp dev preview running, send unblock follow-ups to stalled pr-pipeline sessions, merge ready gated PRs, report merged user-facing features with preview links, run release-minor when required, and recommend the next safe pr-pipeline lanes."
+  short_description: "Maintain issues, preview DBs, pipelines, gated PRs, and lanes"
+  default_prompt: "Use $chief-of-staff to run one registry staff tick: update preview DBs, check PR gates, merge ready PRs, and recommend lanes."
 policy:
   allow_implicit_invocation: true
