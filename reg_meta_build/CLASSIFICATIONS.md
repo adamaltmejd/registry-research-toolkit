@@ -384,7 +384,16 @@ version 3428 (UNESCO ISCED-F 2013 — 216 codes spanning broad/narrow/detailed f
 Education NFD, `0739` Architecture and construction NEC) were re-added since they're
 standard UNESCO and present in SCB data.
 
-The second vardemängd `ISCED F 2013` (with a trailing space in the source) carries 38
-codes mostly in Swedish (`Pedagogik och lärarutbildning`, etc.) — only 12 match UNESCO.
-This looks like a register-local mapping mislabelled as ISCED-F; the non-matching codes
-are recorded as nonconforming for the affected state.
+The second source label `ISCED F 2013` (with a trailing space in the source) is mixed by
+AES vintage. The 2016 `fedfield` / `nfefield` / `utbildningsinriktning-isced` states and
+the 2022 `utbildningsinriktning-isced` state use value set `6687`, the genuine ISCED-F
+broad list (`00`-`10`, `99`); all checked non-sentinel codes match and the link is kept.
+
+The 2022 `fedfield` / `nfefield` states are different value sets (`12235` / `12237`): a
+Swedish presentation recode numbered `1`-`20` (plus `1a`/`1b`/`1c` for the non-formal
+field set and sentinels `-1`/`-2`). It is not ISCED-F and should not be modelled as a
+separate classification. The only code-string collision is `10`, which means *Juridik
+och rättsvetenskap* in the AES recode but *Services* in ISCED-F broad. The conformance
+gate therefore severs those 2022 states after sentinel exclusion (`12235`: 1/20 = 5.0%;
+`12237`: 1/23 = 4.3%) while keeping the original source label as severance evidence on
+the value-set viewer.

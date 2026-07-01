@@ -1052,6 +1052,10 @@ valid_from = 2013
 url = "https://uis.unesco.org/en/topic/international-standard-classification-education-isced"
 vardemangdsversion = [
   "ISCED-F 2013 - Inriktning",
+  # Mixed source label: AES 2016/`utbildningsinriktning-isced` 2022 use the
+  # real ISCED-F broad value set, while AES 2022 `fedfield`/`nfefield` use a
+  # Swedish 1-20 recode under the same label. Keep the label here so the real
+  # states link; the classification-conformance gate severs the recode states.
   "ISCED F 2013 ",
 ]
 valid_codes_file = "isced-f2013.csv"
