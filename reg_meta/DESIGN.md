@@ -945,15 +945,17 @@ recommendation, where `starred` flags it and `note` carries the one-line rationa
 curation can give and popularity can't). Curated from `reg_meta_build/tags.toml`,
 derived every build (regenerate-not-migrate); a discovery overlay that leaves identity
 untouched, same family as concept groups and delivery enrichment (package-root TOMLs).
-Ships EMPTY until curation content lands (machinery first — webapp facets / search boost
-are a later PR).
+Ships EMPTY until curation content lands (machinery first). The webapp consumes
+memberships as catalog-node chips; tag-scoped search/facets and tag-backed search boost
+remain separate consumption work.
 
 **API**: `Catalog.list_tags()` → `TagSummary` (slug, label, description, `member_count`,
 `starred_count`) is the vocabulary with counts; `tags_for_variable(fqid)` /
 `tags_for_register(fqid)` → `TagMembership` (the tag's slug/label + this membership's
-`rank`/`starred`/`note`), ordered by rank then slug. Build-side derivation +
-dangling-reference fail-fast live in `reg_meta_build/tags.py` (see
-`reg_meta_build/DESIGN.md`).
+`rank`/`starred`/`note`), ordered by rank then slug. `Catalog.resolve()` embeds those
+memberships on resolved register and variable nodes so consumers do not reimplement the
+reverse lookup. Build-side derivation + dangling-reference fail-fast live in
+`reg_meta_build/tags.py` (see `reg_meta_build/DESIGN.md`).
 
 ## Storage optimization
 

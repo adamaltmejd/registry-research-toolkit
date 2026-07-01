@@ -26,7 +26,7 @@ import {
   rankFilter,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
-import { type Column, DataTable, EmptyState, Panel } from "./ui";
+import { type Column, DataTable, EmptyState, Panel, Tag } from "./ui";
 import VariantBrowser from "./VariantBrowser.svelte";
 
 // The provider arm renders its register list as a real DataTable: a Register
@@ -256,6 +256,13 @@ $effect(() => {
       )}
       <h2>{nodeLabel(node)}</h2>
       {#if node.purpose}<p class="purpose-text">{node.purpose}</p>{/if}
+      {#if node.tags && node.tags.length > 0}
+        <div class="tag-strip" aria-label="Thematic tags">
+          {#each node.tags as tag (tag.slug)}
+            <Tag tone="neutral">{tag.label}</Tag>
+          {/each}
+        </div>
+      {/if}
       {#if rows.length > 0}
         <!-- Counts stay in VARIABLE units after folding (a group row counts its
              members), so the "x of y" readout still reflects register size. -->
@@ -374,6 +381,12 @@ $effect(() => {
   .purpose-text {
     color: var(--text-muted);
     font-size: var(--text-sm);
+  }
+  .tag-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0.5rem 0 1rem;
   }
   /* Browse-list name links (inside DataTable cells) — the NAME is primary.
      Long-name breaking comes from DataTable's cell-level `overflow-wrap:

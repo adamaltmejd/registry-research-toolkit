@@ -877,6 +877,31 @@ describe("BindingLeafView representation picker (#678)", () => {
     }
   });
 
+  it("renders thematic tag chips and recommendation notes", async () => {
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single, {
+        tags: [
+          {
+            slug: "income",
+            label: "Income & earnings",
+            rank: 0,
+            starred: true,
+            note: "primary fixture measure",
+          },
+        ],
+      } as Partial<BindingNodeData>),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("Income & earnings")).toBeVisible();
+    await expect
+      .element(page.getByText("Recommended: primary fixture measure"))
+      .toBeVisible();
+  });
+
   it("demotes a single state's Data type / Delivery column into its own 'Technical details' disclosure (#638 PR4)", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",

@@ -599,6 +599,7 @@ def _binding_node(
         # ungrouped. Keyed on the RESOLVED variable's triple, so a same_as alias
         # reports its target's group (reg_meta sets it on `ResolvedVariable.group`).
         group=resolved.group,
+        tags=list(resolved.tags),
         via_same_as=(
             [str(f) for f in resolved.via_same_as]
             if resolved.via_same_as is not None
@@ -824,6 +825,7 @@ def _provider_response(
                 # keeps the dict key str-typed. reg_meta's `RegisterCoverage` passes
                 # straight through (#681).
                 coverage=coverage_for(r.fqid.register) if r.fqid.register else None,
+                tags=list(catalog.tags_for_register(r.fqid)),
             )
             for r in registers
         ],
@@ -890,6 +892,7 @@ def _register_response(
         fqid=str(resolved.fqid),
         name=resolved.name,
         purpose=resolved.purpose,
+        tags=list(resolved.tags),
         children=children,
         # #303 concept groups: grouped bindings ALSO stay in `children` (the flat
         # list is complete); the SPA folds members under the group rows. reg_meta's

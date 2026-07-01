@@ -171,6 +171,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
         "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
         "VALUES ('scb','lisa','kon','scb','rams','syss')"
     )
+    _seed_tags(src)
     _seed_kon_edges(src)
     _seed_succession_chain(src)
     _seed_concept_groups(src, add_variable)
@@ -207,6 +208,46 @@ def _rebuild_fts(src: sqlite3.Connection) -> None:
         "value_code_fts",
     ):
         src.execute(f"INSERT INTO {index}({index}) VALUES('rebuild')")
+
+
+def _seed_tags(src: sqlite3.Connection) -> None:
+    """Seed thematic tags so catalog routes exercise the #311 consumption path."""
+    from reg_meta_build.tags import (  # noqa: PLC0415 - test fixture setup
+        CuratedTag,
+        TagMember,
+        materialize_tags,
+    )
+
+    materialize_tags(
+        src,
+        (
+            CuratedTag(
+                slug="income",
+                label="Income & earnings",
+                description="Income measures and related recommendations.",
+                members=(
+                    TagMember(
+                        "scb",
+                        "lisa",
+                        "kon",
+                        rank=0,
+                        starred=True,
+                        note="fixture recommendation",
+                    ),
+                    TagMember("scb", "lisa", None, rank=1, starred=False, note=None),
+                ),
+            ),
+            CuratedTag(
+                slug="employment",
+                label="Employment",
+                description=None,
+                members=(
+                    TagMember("scb", "rams", None, rank=0, starred=False, note=None),
+                ),
+            ),
+        ),
+        providers=frozenset({"scb"}),
+    )
 
 
 def _seed_code_variable_map(src: sqlite3.Connection) -> None:

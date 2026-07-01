@@ -778,8 +778,9 @@ to emit a clean tagged union for the catch-all; `ConceptGroupNode` is a standalo
 schema used only by the group route. FQID fields serialize as plain `str` (`str(fqid)`),
 never nested models, so the codegen'd TS sees flat string fields. The binding **leaf**
 embeds the variable's FULL longitudinal record from one `Catalog.resolve` call (states,
-value sets, and the variable-grain `same_as` / `lineage` edges), plus the full variable
-`succession_chain` (#582, below). `lineage_warnings` are **omitted** —
+value sets, tag memberships, and the variable-grain `same_as` / `lineage` edges), plus
+the full variable `succession_chain` (#582, below). Register nodes likewise expose their
+tag memberships for compact thematic chips. `lineage_warnings` are **omitted** —
 `ResolvedVariable` doesn't carry them; they arrive via the `/lineage_warnings` endpoint.
 
 One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a

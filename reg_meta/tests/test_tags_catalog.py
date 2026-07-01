@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from _slugged_db import add_register, add_variable, build_slugged_db
-from reg_meta.catalog import Catalog
+from reg_meta.catalog import Catalog, ResolvedRegister, ResolvedVariable
 from reg_meta.fqid import Fqid
 from reg_meta_build.tags import CuratedTag, TagMember, materialize_tags
 
@@ -108,6 +108,21 @@ def test_tags_for_register_empty_for_untagged() -> None:
     # A register that exists but carries no register-grain tag membership.
     add_register(cat._conn, register_id=3, slug="bas", name="BAS")
     assert cat.tags_for_register(Fqid.register_fqid("scb", "bas")) == []
+
+
+def test_resolve_register_embeds_tags() -> None:
+    resolved = Catalog(_seeded_conn()).resolve(Fqid.register_fqid("scb", "lisa"))
+    assert isinstance(resolved, ResolvedRegister)
+    assert [m.slug for m in resolved.tags] == ["income"]
+    assert resolved.tags[0].label == "Income & earnings"
+
+
+def test_resolve_variable_embeds_tags() -> None:
+    resolved = Catalog(_seeded_conn()).resolve(Fqid.binding_fqid("scb", "lisa", "kon"))
+    assert isinstance(resolved, ResolvedVariable)
+    assert [m.slug for m in resolved.tags] == ["income"]
+    assert resolved.tags[0].starred is True
+    assert resolved.tags[0].note == "primary"
 
 
 def _multi_membership_tag(slug: str, label: str, member: TagMember) -> CuratedTag:

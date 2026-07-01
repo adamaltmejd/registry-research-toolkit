@@ -24,6 +24,7 @@ from reg_meta.catalog import (
     LineageEdge,
     LineageWarning,
     RegisterCoverage,
+    TagMembership,
     VariableCoverage,
     VariableEdition,
     VariableRef,
@@ -156,6 +157,7 @@ class RegisterNode(BaseModel):
     name: str | None = None
     purpose: str | None = None
     coverage: RegisterCoverage | None = None
+    tags: list[TagMembership] = Field(default_factory=list)
 
 
 class ClassificationNode(BaseModel):
@@ -277,6 +279,7 @@ class BindingNode(BaseModel):
     # list lives behind the group route. Defaulted (additive) per the #317 rule —
     # the SPA must tolerate one edge-cache generation of payloads missing it.
     group: BindingGroupRef | None = None
+    tags: list[TagMembership] = Field(default_factory=list)
     via_same_as: list[str] | None = None
 
 

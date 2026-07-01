@@ -76,6 +76,9 @@ def test_provider_node_lists_registers(client):
     child_fqids = {c["fqid"] for c in body["children"]}
     assert child_fqids == {"scb/lisa", "scb/rams"}
     assert all(c["kind"] == "register" for c in body["children"])
+    by_fqid = {c["fqid"]: c for c in body["children"]}
+    assert [tag["slug"] for tag in by_fqid["scb/lisa"]["tags"]] == ["income"]
+    assert [tag["slug"] for tag in by_fqid["scb/rams"]["tags"]] == ["employment"]
 
 
 def test_register_node_lists_bindings_and_variants_ref(client):
