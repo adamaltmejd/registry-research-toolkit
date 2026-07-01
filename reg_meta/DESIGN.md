@@ -689,20 +689,23 @@ seed at `reg_meta_build/classifications.toml` (exact match against
 and validation rules live in [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)
 § "Classification seed".
 
-### Canonical vs observed codes
+### Canonical codes and state conformance
 
-`classification_code.is_valid` distinguishes published canonical codes from codes that
-merely show up in the data. SCB's metadata exports contain plenty of noise (`*`, `***`,
-`0000`, `[BLANK]`, stray prefix levels) that has no place in an authoritative code list,
-but is also useful to keep around so a researcher seeing one of those values in a
-register can look it up.
+`classification_code` is the classification's definition. For CSV-backed classifications
+it contains only published canonical codes; observed value-set codes that merely show up
+in data are not attached to the classification page.
 
 Canonical codes come from per-classification CSVs ingested by the build (see
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Canonical code CSVs"). A
-classification with a CSV gets `classification_code.is_valid` populated as 1 (canonical)
-or 0 (observed-only) and `classification.valid_code_count` cached for that canonical
-count. Without a CSV, every `classification_code` row carries `is_valid=NULL` (validity
-unknown).
+classification with a CSV gets `classification_code.is_valid = 1` and
+`classification.valid_code_count` cached for that canonical count. Without a CSV, every
+`classification_code` row carries `is_valid=NULL` (validity unknown).
+
+The build records declared value-set mismatches at state grain in
+`classification_conformance` / `classification_conformance_code`: kept links can warn
+about a minority of nonconforming codes, and low-overlap links are severed while the
+original declared classification and overlap evidence remain visible on the variable's
+value-set viewer.
 
 The CLI exposes this via `get classification --codes --only-valid` and includes
 `is_valid` per code in JSON output (omitted when NULL).
@@ -743,11 +746,10 @@ classification leaf via `Catalog.classification_dimensions`, which reads
 `concept_group_classification` membership and returns the group(s) the edition belongs
 to as `ConceptGroupSummary` objects — the same type returned by
 `list_classification_groups()`. The value-set viewer (#609) renders this alongside
-`Catalog.classification_codes` (the resolved edition's `classification_code` rows,
-`is_valid` = canonical/observed/unknown). Prior editions (`sun1996`, 2000 editions) are
-not members — they are temporal predecessors of each dimension and appear in
-`classification_replaced_by` (the 2000→2020 steps auto-derived #571; `sun1996`'s 1→many
-split into the 2000 editions curated #579).
+`Catalog.classification_codes` (the resolved edition's canonical `classification_code`
+rows). Prior editions (`sun1996`, 2000 editions) are not members — they are temporal
+predecessors of each dimension and appear in `classification_replaced_by` (the 2000→2020
+steps auto-derived #571; `sun1996`'s 1→many split into the 2000 editions curated #579).
 
 **Presentation only, identity untouched.** A group is *not* an FQID kind and never
 becomes a binding/order/stats key — members keep their leaf FQIDs, and a binding's

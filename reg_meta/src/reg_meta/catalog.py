@@ -378,6 +378,25 @@ class ValueSetMember(_CatalogModel):
     label: str
 
 
+class ClassificationConformance(_CatalogModel):
+    """Per-state value-set/classification conformance (#656).
+
+    `declared_classification_*` names the classification asserted by the source
+    value-set label. When `status == "severed"`, `VariableState.classification_slug`
+    is already None; this object preserves the original declaration plus the
+    coverage evidence explaining why the link was cleared."""
+
+    declared_classification_slug: str
+    declared_classification_short_name: str
+    declared_classification_name: str
+    status: Literal["kept", "severed"]
+    checked_code_count: int
+    matched_code_count: int
+    nonconforming_code_count: int
+    overlap: float
+    nonconforming_codes: tuple[ValueSetMember, ...] = ()
+
+
 class VariableState(_CatalogModel):
     """One `variable_state` row (see DESIGN.md → Two-level variable model) — a variable's per-delivery shape, tagged
     with the **variant coordinate** it was delivered in. The longitudinal
@@ -425,6 +444,7 @@ class VariableState(_CatalogModel):
     # resolved per-state from `variable_state.classification_id` — it varies
     # across a variable's states. None for code-less / unclassified states.
     classification_slug: str | None
+    classification_conformance: ClassificationConformance | None = None
     # The coarsest exact display token for this window (#321/#681): the token
     # `period_token_for_bounds(valid_from, valid_to)` expands back to exactly
     # `(valid_from, valid_to)`, or the explicit `lo..hi` range for a non-grammar
@@ -614,11 +634,10 @@ class ClassificationCode(_CatalogModel):
 
     `code`/`label` come from `value_code` (provider-native strings — these are
     PUBLIC classification codes, not row-level data). `level` is the optional
-    hierarchy depth (None when the classification is flat). `is_valid` is the
-    canonical/observed flag: True = canonical (in the classification's valid-codes
-    CSV), False = observed-only (seen in data, not canonical), None = no CSV exists
-    so validity is unknown (the whole edition has `is_valid=NULL`). It's surfaced
-    (not filtered) so the leaf can show the full code list with a validity hint."""
+    hierarchy depth (None when the classification is flat). `is_valid` is True
+    for canonical CSV-backed rows and None when no canonical CSV exists for the
+    edition. Observed value-set codes that do not belong to the classification are
+    state-local conformance warnings, not classification codes."""
 
     code: str = Field(description="The provider-native value code (e.g. '3').")
     label: str = Field(description="The human label for the code.")
@@ -626,7 +645,7 @@ class ClassificationCode(_CatalogModel):
         description="The hierarchy depth, or None when the classification is flat."
     )
     is_valid: bool | None = Field(
-        description="Canonical (True) / observed-only (False) / unknown (None — no "
+        description="Canonical (True) / unknown (None — no "
         "canonical CSV exists for this edition)."
     )
 
@@ -1639,12 +1658,20 @@ class Catalog:
                 "vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
+                "ccf.status AS conformance_status, "
+                "ccf.checked_code_count, ccf.matched_code_count, "
+                "ccf.nonconforming_code_count, ccf.overlap, "
+                "dc.slug AS declared_classification_slug, "
+                "dc.short_name AS declared_classification_short_name, "
+                "dc.name AS declared_classification_name, "
                 "rv.name AS variant_label "
                 "FROM variable_state vs "
                 "JOIN variable v ON vs.variable_id = v.variable_id "
                 "JOIN register_variant rv "
                 "ON vs.register_variant_id = rv.register_variant_id "
                 "LEFT JOIN classification c ON vs.classification_id = c.id "
+                "LEFT JOIN classification_conformance ccf ON ccf.state_id = vs.state_id "
+                "LEFT JOIN classification dc ON dc.id = ccf.declared_classification_id "
                 "WHERE vs.variable_id = ? AND vs.register_variant_id = ? "
                 "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
                 "vs.state_id",
@@ -1657,12 +1684,20 @@ class Catalog:
                 "vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
                 "v.is_identifier, c.slug AS classification_slug, "
+                "ccf.status AS conformance_status, "
+                "ccf.checked_code_count, ccf.matched_code_count, "
+                "ccf.nonconforming_code_count, ccf.overlap, "
+                "dc.slug AS declared_classification_slug, "
+                "dc.short_name AS declared_classification_short_name, "
+                "dc.name AS declared_classification_name, "
                 "rv.name AS variant_label "
                 "FROM variable_state vs "
                 "JOIN variable v ON vs.variable_id = v.variable_id "
                 "JOIN register_variant rv "
                 "ON vs.register_variant_id = rv.register_variant_id "
                 "LEFT JOIN classification c ON vs.classification_id = c.id "
+                "LEFT JOIN classification_conformance ccf ON ccf.state_id = vs.state_id "
+                "LEFT JOIN classification dc ON dc.id = ccf.declared_classification_id "
                 "WHERE vs.variable_id = ? "
                 "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
                 "vs.register_variant_id, vs.state_id",
@@ -1687,6 +1722,36 @@ class Catalog:
             (value_set_id,),
         ).fetchall()
         return tuple(ValueSetMember(code=r["code"], label=r["label"]) for r in rows)
+
+    def _classification_conformance_for_state(
+        self, row: sqlite3.Row
+    ) -> ClassificationConformance | None:
+        """Hydrate the state-local classification conformance warning, if any."""
+        if row["conformance_status"] is None:
+            return None
+        code_rows = self._conn.execute(
+            "SELECT vc.code, vc.label "
+            "FROM classification_conformance_code ccc "
+            "JOIN value_code vc ON vc.code_id = ccc.code_id "
+            "WHERE ccc.state_id = ? "
+            "ORDER BY vc.code, vc.label",
+            (row["state_id"],),
+        ).fetchall()
+        return ClassificationConformance(
+            declared_classification_slug=row["declared_classification_slug"],
+            declared_classification_short_name=row[
+                "declared_classification_short_name"
+            ],
+            declared_classification_name=row["declared_classification_name"],
+            status=row["conformance_status"],
+            checked_code_count=row["checked_code_count"],
+            matched_code_count=row["matched_code_count"],
+            nonconforming_code_count=row["nonconforming_code_count"],
+            overlap=row["overlap"],
+            nonconforming_codes=tuple(
+                ValueSetMember(code=r["code"], label=r["label"]) for r in code_rows
+            ),
+        )
 
     @staticmethod
     def _period_token_for_window(valid_from: str, valid_to: str) -> str | None:
@@ -1734,6 +1799,7 @@ class Catalog:
             value_set=self._value_set_codes(row["value_set_id"]),
             is_identifier=bool(row["is_identifier"]),
             classification_slug=row["classification_slug"],
+            classification_conformance=self._classification_conformance_for_state(row),
             period_token=self._period_token_for_window(
                 row["valid_from"], row["valid_to"]
             ),
@@ -2422,10 +2488,10 @@ class Catalog:
         `same_as` like the other classification accessors, so an alias cites its
         resolved target's codes.
 
-        `is_valid` is surfaced, not filtered (canonical / observed-only / unknown);
-        the read side shows the full list with a validity hint rather than dropping
-        observed-only codes. Empty when the edition carries no `classification_code`
-        rows. The codes are PUBLIC classification codes, not row-level data."""
+        `is_valid` is canonical / unknown. Observed value-set mismatches are
+        state-local conformance warnings, not classification codes. Empty when the
+        edition carries no `classification_code` rows. The codes are PUBLIC
+        classification codes, not row-level data."""
         resolved = self._resolve_classification(self._coerce_classification_fqid(fqid))
         rows = self._conn.execute(
             "SELECT vc.code, vc.label, cc.level, cc.is_valid "

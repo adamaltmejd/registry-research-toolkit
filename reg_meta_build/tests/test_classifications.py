@@ -599,11 +599,11 @@ class TestPopulateClassifications:
 
     def test_valid_codes_csv_marks_codes(self, tmp_path: Path):
         """A canonical CSV with one observed code and one unobserved code
-        should mark observed=valid, observed-only-non-canonical=invalid, and
-        insert canonical-but-unobserved as a new value_code.
+        should keep the classification canonical-only and record the observed
+        non-canonical value-set code as state-local conformance evidence.
         """
         # CSV: '1' is observed (Man), 'Z' is canonical-but-unobserved.
-        # '2' (Kvinna) is observed-only — not in CSV → is_valid=0.
+        # '2' (Kvinna) is observed but not canonical → conformance warning.
         input_dir = _make_input_dir(tmp_path)
         cls_dir = input_dir / "classifications"
         cls_dir.mkdir()
@@ -638,12 +638,82 @@ class TestPopulateClassifications:
             "ORDER BY vc.code"
         ).fetchall()
         by_code = {r["code"]: r["is_valid"] for r in rows}
-        assert by_code == {"1": 1, "2": 0, "Z": 1}
+        assert by_code == {"1": 1, "Z": 1}
 
         cnt = conn.execute(
             "SELECT valid_code_count FROM classification WHERE short_name='TESTKON'"
         ).fetchone()[0]
         assert cnt == 2  # '1' and 'Z'
+
+        conf = conn.execute(
+            "SELECT cc.status, cc.checked_code_count, cc.matched_code_count, "
+            "cc.nonconforming_code_count, cc.overlap "
+            "FROM classification_conformance cc "
+            "JOIN variable_state vs ON vs.state_id = cc.state_id "
+            "JOIN classification c ON c.id = cc.declared_classification_id "
+            "WHERE c.short_name = 'TESTKON'"
+        ).fetchone()
+        assert conf is not None
+        assert conf["status"] == "kept"
+        assert conf["checked_code_count"] == 2
+        assert conf["matched_code_count"] == 1
+        assert conf["nonconforming_code_count"] == 1
+        assert conf["overlap"] == 0.5
+        warned_codes = conn.execute(
+            "SELECT vc.code, vc.label "
+            "FROM classification_conformance_code ccc "
+            "JOIN value_code vc ON vc.code_id = ccc.code_id "
+            "ORDER BY ccc.state_id, vc.code"
+        ).fetchall()
+        assert [(r["code"], r["label"]) for r in warned_codes] == [
+            ("2", "Kvinna"),
+            ("2", "Kvinna"),
+        ]
+
+    def test_low_overlap_declared_classification_is_severed(self, tmp_path: Path):
+        """A declared CSV-backed classification below the overlap floor is
+        cleared from variable_state but keeps durable conformance evidence."""
+        input_dir = _make_input_dir(tmp_path)
+        cls_dir = input_dir / "classifications"
+        cls_dir.mkdir()
+        (cls_dir / "testkon.csv").write_text(
+            "vardekod,vardebenamning\nZ,Other\n", encoding="utf-8"
+        )
+        seed_toml = (
+            '[[classification]]\nshort_name = "TESTKON"\nname = "Test"\n'
+            'valid_codes_file = "testkon.csv"\n'
+            'vardemangdsversion = ["Kön"]\n'
+        )
+        seed = tmp_path / "classifications.toml"
+        seed.write_text(seed_toml, encoding="utf-8")
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
+
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+        conn.row_factory = sqlite3.Row
+        state = conn.execute(
+            "SELECT vs.state_id, vs.classification_id "
+            "FROM variable_state vs "
+            "JOIN classification_conformance cc ON cc.state_id = vs.state_id "
+            "JOIN classification c ON c.id = cc.declared_classification_id "
+            "WHERE c.short_name = 'TESTKON'"
+        ).fetchone()
+        assert state is not None
+        assert state["classification_id"] is None
+        conf = conn.execute(
+            "SELECT status, checked_code_count, matched_code_count, "
+            "nonconforming_code_count, overlap "
+            "FROM classification_conformance WHERE state_id = ?",
+            (state["state_id"],),
+        ).fetchone()
+        assert dict(conf) == {
+            "status": "severed",
+            "checked_code_count": 2,
+            "matched_code_count": 0,
+            "nonconforming_code_count": 2,
+            "overlap": 0.0,
+        }
 
     def test_provider_seeded_canonical_only_clears_empty_guard(self, tmp_path: Path):
         """The SOS shape: a provider-tagged, active entry with valid_codes_file
@@ -792,14 +862,7 @@ class TestPopulateClassifications:
         assert row["is_valid"] == 1
 
     def test_valid_code_count_counts_distinct_vardekods(self, tmp_path: Path):
-        """valid_code_count should reflect canonical *codes*, not CC rows.
-
-        When value_code holds multiple labels for one vardekod (label drift in
-        observed data), step 6 marks every label variant as is_valid=1
-        (intentional — validity is per-code). The cached count must still
-        report the canonical CSV cardinality, so it uses COUNT(DISTINCT
-        vardekod) rather than COUNT(*).
-        """
+        """valid_code_count should reflect canonical *codes*, not observed label drift."""
         # Add a second-label variant for code "1": (1, "Man") observed AND
         # (1, "Manlig") observed via CVID 1001. Without the fix this inflates
         # valid_code_count from 2 to 3.
@@ -826,8 +889,8 @@ class TestPopulateClassifications:
 
         conn = sqlite3.connect(db_dir / "reg_meta.db")
         conn.row_factory = sqlite3.Row
-        # Sanity: three CC rows for TESTKON (one per distinct value_code:
-        # "1"/"Man", "1"/"Manlig", "2"/"Kvinna") all with is_valid=1.
+        # The classification stays canonical-only even though observed data also
+        # carries a second label for code "1".
         cc_rows = conn.execute(
             "SELECT vc.code, vc.label, cc.is_valid "
             "FROM classification_code cc "
@@ -838,10 +901,9 @@ class TestPopulateClassifications:
         ).fetchall()
         assert [(r["code"], r["label"], r["is_valid"]) for r in cc_rows] == [
             ("1", "Man", 1),
-            ("1", "Manlig", 1),
             ("2", "Kvinna", 1),
         ]
-        # valid_code_count must be 2 (distinct canonical vardekods) — NOT 3.
+        # valid_code_count is the canonical CSV cardinality.
         cnt = conn.execute(
             "SELECT valid_code_count FROM classification WHERE short_name='TESTKON'"
         ).fetchone()[0]

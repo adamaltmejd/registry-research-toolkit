@@ -48,16 +48,16 @@ describe("ClassificationCodesPanel — embedded value-set codes (#609)", () => {
     await expect.element(page.getByText("Eftergymnasial")).toBeVisible();
   });
 
-  it("tags observed-only (is_valid=false) codes and de-emphasises them", async () => {
+  it("does not render observed-only badges on classification codes", async () => {
     await render(ClassificationCodesPanel, {
       node: node([
         code({ code: "1", label: "Kanonisk", is_valid: true }),
         code({ code: "X0", label: "Observerad", is_valid: false }),
       ]),
     });
-    // The observed-only code carries the "observed" tag; the canonical one does not.
-    await expect.element(page.getByText("observed")).toBeVisible();
-    expect(document.querySelectorAll(".code-row.observed")).toHaveLength(1);
+    await expect.element(page.getByText("Observerad")).toBeVisible();
+    await expect.element(page.getByText("observed")).not.toBeInTheDocument();
+    expect(document.querySelectorAll(".code-row.observed")).toHaveLength(0);
   });
 
   it("does not tag codes when validity is unknown (is_valid=null)", async () => {

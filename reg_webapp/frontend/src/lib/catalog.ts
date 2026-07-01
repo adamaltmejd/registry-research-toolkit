@@ -2082,6 +2082,7 @@ export interface ValueSetVariantUsage {
 export interface DistinctValueSet {
   key: string;
   classificationSlug: string | null;
+  classificationConformance: VariableStateModel["classification_conformance"];
   versionLabel: string;
   valueSet: NonNullable<VariableStateModel["value_set"]> | null;
   dataType: string | null;
@@ -2264,6 +2265,9 @@ export function distinctValueSets(
     return {
       key,
       classificationSlug: rep.classification_slug ?? null,
+      classificationConformance:
+        group.find((s) => s.classification_conformance != null)
+          ?.classification_conformance ?? null,
       versionLabel: rep.value_set_version_label,
       valueSet: rep.value_set,
       dataType: rep.data_type,

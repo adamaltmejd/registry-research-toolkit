@@ -2057,7 +2057,7 @@ class TestResolvedVariableGroupRef:
 class TestClassificationCodes:
     """#609: `classification_codes(fqid)` returns ONE edition's value-set codes
     (code-ordered), scoped to the resolved edition (per `classification_id`), with
-    the canonical/observed/unknown `is_valid` flag surfaced (not filtered)."""
+    the canonical/unknown `is_valid` flag surfaced."""
 
     @staticmethod
     def _seed_codes(
@@ -2083,14 +2083,13 @@ class TestClassificationCodes:
 
     def test_returns_codes_code_ordered_with_validity(self) -> None:
         conn = build_slugged_db()  # seeds the live sun2020 (no codes yet)
-        # Inserted out of code order to prove the ORDER BY code; mixed validity.
+        # Inserted out of code order to prove the ORDER BY code.
         self._seed_codes(
             conn,
             "sun2020",
             [
                 ("3", "Eftergymnasial", 1, 1),
                 ("1", "Förgymnasial", 1, 1),
-                ("X0", "Observerad", 1, 0),
             ],
         )
         codes = Catalog(conn).classification_codes("class/sun2020")
@@ -2098,12 +2097,10 @@ class TestClassificationCodes:
         assert [(c.code, c.label) for c in codes] == [
             ("1", "Förgymnasial"),
             ("3", "Eftergymnasial"),
-            ("X0", "Observerad"),
         ]
         by_code = {c.code: c for c in codes}
-        # is_valid coerces 1/0 → True/False; observed-only is surfaced, not dropped.
+        # is_valid coerces 1 → True for canonical rows.
         assert by_code["1"].is_valid is True
-        assert by_code["X0"].is_valid is False
         assert by_code["1"].level == 1
 
     def test_null_is_valid_stays_none(self) -> None:

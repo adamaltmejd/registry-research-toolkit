@@ -225,6 +225,10 @@ function changeDateLabel(at: string): string {
 function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   return `changed ${changeDateLabel(change.at)}: ${change.notes.join("; ")}`;
 }
+
+function overlapPercent(overlap: number): string {
+  return `${Math.round(overlap * 100)}%`;
+}
 </script>
 
 <!-- The (code, label) viewer — the SAME rendering for the detail mode and a
@@ -238,6 +242,43 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
     filterLabel="Filter value set"
     filterPlaceholder="Filter value set…"
   />
+{/snippet}
+
+{#snippet conformanceNotice(conf: NonNullable<VariableStateModel["classification_conformance"]>)}
+  <div class:severed={conf.status === "severed"} class="conformance-notice">
+    {#if conf.status === "severed"}
+      <p>
+        Declared coding
+        <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
+          {humanizeClassificationSlug(conf.declared_classification_slug)}
+        </a>
+        severed: {overlapPercent(conf.overlap)} of checked codes match this
+        classification.
+      </p>
+    {:else if conf.nonconforming_code_count > 0}
+      <p>
+        Declared coding
+        <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
+          {humanizeClassificationSlug(conf.declared_classification_slug)}
+        </a>
+        kept, but {conf.nonconforming_code_count}
+        {conf.nonconforming_code_count === 1 ? "code is" : "codes are"} not part
+        of this classification.
+      </p>
+    {/if}
+    {#if conf.nonconforming_codes.length > 0}
+      <details>
+        <summary>
+          Nonconforming codes ({conf.nonconforming_codes.length})
+        </summary>
+        <CodeList
+          codes={conf.nonconforming_codes}
+          filterLabel="Filter nonconforming codes"
+          filterPlaceholder="Filter nonconforming codes…"
+        />
+      </details>
+    {/if}
+  </div>
 {/snippet}
 
 <!-- #668: which variants / period spans use a distinct value set — one line per
@@ -277,9 +318,18 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
       </a>
       classification.
     </p>
+    {#if vs.classificationConformance && vs.classificationConformance.nonconforming_code_count > 0}
+      {@render conformanceNotice(vs.classificationConformance)}
+    {/if}
   {:else if vs.valueSet && vs.valueSet.length > 0}
+    {#if vs.classificationConformance}
+      {@render conformanceNotice(vs.classificationConformance)}
+    {/if}
     {@render valueSetTable(vs.valueSet)}
   {:else}
+    {#if vs.classificationConformance}
+      {@render conformanceNotice(vs.classificationConformance)}
+    {/if}
     <p class="muted">No value set.</p>
   {/if}
 {/snippet}
@@ -308,6 +358,9 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
       </button>
     </div>
     {@render usage(vs)}
+    {#if vs.classificationConformance && (vs.classificationConformance.status === "severed" || vs.classificationConformance.nonconforming_code_count > 0)}
+      {@render conformanceNotice(vs.classificationConformance)}
+    {/if}
     {#if !vs.classificationSlug && vs.valueSet && vs.valueSet.length > 0}
       <!-- #310: inspect a plain value set's codes inline, without isolating. -->
       <details class="vs-codes">
@@ -359,6 +412,10 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
           {/if}
         </dl>
       </TechnicalDetails>
+    {/if}
+
+    {#if s.classification_conformance && (s.classification_conformance.status === "severed" || s.classification_conformance.nonconforming_code_count > 0)}
+      {@render conformanceNotice(s.classification_conformance)}
     {/if}
 
     {#if s.value_set && s.value_set.length > 0}
@@ -571,6 +628,29 @@ function technicalChangeLabel(change: ValueSetTechnicalChange): string {
   }
   .vs-classification {
     margin: var(--space-1) 0;
+  }
+  .conformance-notice {
+    margin: var(--space-1) 0;
+    padding: var(--space-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius-sm);
+    background: var(--warn-bg);
+    color: var(--text);
+    font-size: var(--text-sm);
+  }
+  .conformance-notice.severed {
+    border-left-color: var(--err);
+  }
+  .conformance-notice p {
+    margin: 0;
+  }
+  .conformance-notice details {
+    margin-top: var(--space-1);
+  }
+  .conformance-notice summary {
+    cursor: pointer;
+    color: var(--accent);
   }
   .vs-usage-heading {
     margin: var(--space-3) 0 0.3rem;

@@ -37,6 +37,7 @@ from .classification_links import (
     repo_classification_links_path,
 )
 from .classifications import (
+    apply_classification_conformance_gate,
     derive_supersedes_from_edges,
     link_value_set_classifications,
     populate_classifications,
@@ -735,9 +736,9 @@ CREATE TABLE classification (
     supersedes_id    INTEGER REFERENCES classification(id),
     code_count       INTEGER NOT NULL DEFAULT 0,
     -- Number of canonical codes when a valid_codes CSV was provided; NULL
-    -- otherwise. valid_code_count <= code_count is *not* invariant: canonical
-    -- codes that never appeared in any observed instance still count, but
-    -- observed-only noise codes inflate code_count.
+    -- otherwise. For CSV-backed classifications this equals the canonical-only
+    -- code_count; no-CSV classifications can still have code_count with unknown
+    -- validity.
     valid_code_count INTEGER,
     -- Slug carries the vintage (version baked in): 'sun2020',
     -- 'lkf2007'. The classification FQID is the 2-segment `class/<slug>` —
@@ -750,8 +751,9 @@ CREATE TABLE classification (
 );
 
 -- is_valid: 1 = canonical (listed in the classification's valid_codes CSV),
--- 0 = observed-only (seen in data but not in the CSV), NULL = no CSV exists
--- for this classification (validity unknown).
+-- NULL = no CSV exists for this classification (validity unknown). CSV-backed
+-- classifications are canonical-only; nonconforming observed value-set codes
+-- live on `classification_conformance_code`, keyed by variable_state.
 CREATE TABLE classification_code (
     classification_id INTEGER NOT NULL REFERENCES classification(id),
     code_id           INTEGER NOT NULL REFERENCES value_code(code_id),
@@ -760,6 +762,33 @@ CREATE TABLE classification_code (
     PRIMARY KEY (classification_id, code_id)
 ) WITHOUT ROWID;
 CREATE INDEX idx_classification_code_code ON classification_code(code_id);
+
+-- Per-state value-set/classification conformance (#656). A row exists only for
+-- a state whose value set declared a CSV-backed classification. `declared_*`
+-- preserves the source claim even when the coverage gate clears
+-- `variable_state.classification_id` below the overlap floor.
+CREATE TABLE classification_conformance (
+    state_id INTEGER PRIMARY KEY REFERENCES variable_state(state_id),
+    declared_classification_id INTEGER NOT NULL REFERENCES classification(id),
+    status TEXT NOT NULL CHECK (status IN ('kept', 'severed')),
+    checked_code_count INTEGER NOT NULL,
+    matched_code_count INTEGER NOT NULL,
+    nonconforming_code_count INTEGER NOT NULL,
+    overlap REAL NOT NULL CHECK (overlap >= 0.0 AND overlap <= 1.0)
+);
+CREATE INDEX idx_classification_conformance_declared
+    ON classification_conformance(declared_classification_id);
+
+-- The concrete value-set members that did not belong to the declared canonical
+-- classification. Stored instead of recomputed at read time so the UI warning
+-- exactly matches the build gate.
+CREATE TABLE classification_conformance_code (
+    state_id INTEGER NOT NULL REFERENCES classification_conformance(state_id),
+    code_id  INTEGER NOT NULL REFERENCES value_code(code_id),
+    PRIMARY KEY (state_id, code_id)
+) WITHOUT ROWID;
+CREATE INDEX idx_classification_conformance_code_code
+    ON classification_conformance_code(code_id);
 
 -- Enrichment tables
 CREATE TABLE value_code (
@@ -4781,6 +4810,9 @@ def materialize(
     # `classification_id` from the provider-blind `classification_candidate` table
     # (fed just above). It UPDATEs the IR-inserted `variable_state` rows unchanged.
     _backfill_state_classifications(conn)
+    row_counts["classification_conformance_severed"] = (
+        apply_classification_conformance_gate(conn)
+    )
 
     # Variable vintage succession (#584) — lift `classification_replaced_by`
     # edition edges (#571) to the variable grain through value-set bindings,

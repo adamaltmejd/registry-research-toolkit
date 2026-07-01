@@ -11,10 +11,12 @@
 #
 # Optional `valid_codes_file` points to a CSV under
 # reg_meta_build/input_data/classifications/ that lists the canonical (officially
-# published) codes for the classification. Each `classification_code` row is
-# then marked `is_valid=1` if its vardekod is in the CSV, else `is_valid=0`.
-# Codes that appear in the CSV but never in observed data are still inserted
-# as canonical-but-unobserved (queryable, no `value_set_member` linkage).
+# published) codes for the classification. CSV-backed classifications insert
+# only those canonical rows into `classification_code` (`is_valid=1`). Codes
+# that appear in the CSV but never in observed data are still inserted as
+# canonical-but-unobserved (queryable, no `value_set_member` linkage). Observed
+# non-canonical codes are recorded per affected state in the conformance tables
+# instead of being mixed into the canonical classification list.
 # Without the field, all codes for the classification carry `is_valid=NULL`
 # (validity unknown).
 #

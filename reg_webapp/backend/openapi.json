@@ -296,7 +296,7 @@
       },
       "ClassificationCode": {
         "additionalProperties": false,
-        "description": "One code/label entry in a classification edition's value set (#609), as\nreturned by `Catalog.classification_codes`. Keyed per EDITION\n(`classification_code.classification_id`) \u2014 every edition (slug) is its own\n`classification` row, so the codes are scoped to the resolved edition the leaf\nis viewing, not the whole succession chain.\n\n`code`/`label` come from `value_code` (provider-native strings \u2014 these are\nPUBLIC classification codes, not row-level data). `level` is the optional\nhierarchy depth (None when the classification is flat). `is_valid` is the\ncanonical/observed flag: True = canonical (in the classification's valid-codes\nCSV), False = observed-only (seen in data, not canonical), None = no CSV exists\nso validity is unknown (the whole edition has `is_valid=NULL`). It's surfaced\n(not filtered) so the leaf can show the full code list with a validity hint.",
+        "description": "One code/label entry in a classification edition's value set (#609), as\nreturned by `Catalog.classification_codes`. Keyed per EDITION\n(`classification_code.classification_id`) \u2014 every edition (slug) is its own\n`classification` row, so the codes are scoped to the resolved edition the leaf\nis viewing, not the whole succession chain.\n\n`code`/`label` come from `value_code` (provider-native strings \u2014 these are\nPUBLIC classification codes, not row-level data). `level` is the optional\nhierarchy depth (None when the classification is flat). `is_valid` is True\nfor canonical CSV-backed rows and None when no canonical CSV exists for the\nedition. Observed value-set codes that do not belong to the classification are\nstate-local conformance warnings, not classification codes.",
         "properties": {
           "code": {
             "description": "The provider-native value code (e.g. '3').",
@@ -312,7 +312,7 @@
                 "type": "null"
               }
             ],
-            "description": "Canonical (True) / observed-only (False) / unknown (None \u2014 no canonical CSV exists for this edition).",
+            "description": "Canonical (True) / unknown (None \u2014 no canonical CSV exists for this edition).",
             "title": "Is Valid"
           },
           "label": {
@@ -368,6 +368,68 @@
           "results"
         ],
         "title": "ClassificationCodeSearchGroup",
+        "type": "object"
+      },
+      "ClassificationConformance": {
+        "additionalProperties": false,
+        "description": "Per-state value-set/classification conformance (#656).\n\n`declared_classification_*` names the classification asserted by the source\nvalue-set label. When `status == \"severed\"`, `VariableState.classification_slug`\nis already None; this object preserves the original declaration plus the\ncoverage evidence explaining why the link was cleared.",
+        "properties": {
+          "checked_code_count": {
+            "title": "Checked Code Count",
+            "type": "integer"
+          },
+          "declared_classification_name": {
+            "title": "Declared Classification Name",
+            "type": "string"
+          },
+          "declared_classification_short_name": {
+            "title": "Declared Classification Short Name",
+            "type": "string"
+          },
+          "declared_classification_slug": {
+            "title": "Declared Classification Slug",
+            "type": "string"
+          },
+          "matched_code_count": {
+            "title": "Matched Code Count",
+            "type": "integer"
+          },
+          "nonconforming_code_count": {
+            "title": "Nonconforming Code Count",
+            "type": "integer"
+          },
+          "nonconforming_codes": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ValueSetMember"
+            },
+            "title": "Nonconforming Codes",
+            "type": "array"
+          },
+          "overlap": {
+            "title": "Overlap",
+            "type": "number"
+          },
+          "status": {
+            "enum": [
+              "kept",
+              "severed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "declared_classification_slug",
+          "declared_classification_short_name",
+          "declared_classification_name",
+          "status",
+          "checked_code_count",
+          "matched_code_count",
+          "nonconforming_code_count",
+          "overlap"
+        ],
+        "title": "ClassificationConformance",
         "type": "object"
       },
       "ClassificationEdition": {
@@ -3457,6 +3519,16 @@
         "additionalProperties": false,
         "description": "One `variable_state` row (see DESIGN.md \u2192 Two-level variable model) \u2014 a variable's per-delivery shape, tagged\nwith the **variant coordinate** it was delivered in. The longitudinal\n`ResolvedVariable.states` is a tuple of these; `resolve_at` returns the\nsubset whose validity range intersects the queried period.",
         "properties": {
+          "classification_conformance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClassificationConformance"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "classification_slug": {
             "anyOf": [
               {
