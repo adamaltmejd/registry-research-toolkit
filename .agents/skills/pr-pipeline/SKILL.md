@@ -114,7 +114,7 @@ Run focused verification as the work evolves:
   `bun run test`, `bun run build`, and regenerate API types only after backend contract
   changes. Headless checks never render a pixel. If the change alters rendered output
   (`reg_webapp/frontend/**`, or any view / component / style the SPA renders), render
-  while iterating with
+  while iterating from the repo root with
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`. Iteration screenshots do not
   satisfy the formal visual gate; that gate runs later as `web-design-reviewer` in a

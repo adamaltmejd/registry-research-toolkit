@@ -401,19 +401,18 @@ handoff, block automerge and ask the user.
   or any view / component / style the SPA renders). This is the UI analog of real-data
   validation — **required, not optional**, for rendered changes. Headless checks
   (`bun run lint/check/test/build`) never render a pixel, so green `bun` is not
-  sufficient: run the app and *look*. Easiest is the **one-shot driver** —
-  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` (or `dev.sh shot <route>` for
-  the changed views): it picks free ports, renders from THIS checkout's `.venv`
-  (worktree-correct), screenshots to `/tmp/reg-webapp-shots/`, and **tears the servers
-  down on exit** — no port collisions, no leaked servers. For interactive poking use
-  `preview_start` + `preview_snapshot` / `preview_click` / `preview_resize` (now
-  `autoPort` + `dev.sh preview`-backed, so it's collision-free across sessions and
-  serves the worktree's own code). Attach a screenshot as the proof, the same way a
-  build PR attaches its `build-db`. Also run the exposed design-review skill for a
-  structured quality pass (`/web-design-reviewer` on Claude Code; `web-design-reviewer`
-  on Codex), and use the exposed frontend-design skill when authoring new UI. If the
-  active agent surface does not expose a named design skill, report that setup gap and
-  complete the manual rendered review; do not skip visual verification.
+  sufficient. First run the structured design-review skill (`/web-design-reviewer` on
+  Claude Code; `web-design-reviewer` on Codex) in a clean session/subagent for layout,
+  responsive, accessibility, and consistency issues. Then run the app and *look* with
+  the **one-shot driver** — `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` (or
+  `dev.sh shot <route>` for the changed views): it picks free ports, renders from THIS
+  checkout's `.venv` (worktree-correct), screenshots to `/tmp/reg-webapp-shots/`, and
+  **tears the servers down on exit** — no port collisions, no leaked servers. For
+  interactive poking use `preview_start` + `preview_snapshot` / `preview_click` /
+  `preview_resize` (now `autoPort` + `dev.sh preview`-backed, so it's collision-free
+  across sessions and serves the worktree's own code). Attach or comment both the
+  `web-design-reviewer` result and screenshot evidence as PR-visible proof, the same way
+  a build PR attaches its `build-db`. Use `frontend-design` when authoring new UI.
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip and pass that SHA to `gh pr merge --match-head-commit`; after merging,
   fetch `origin main`, fast-forward the local main checkout with
