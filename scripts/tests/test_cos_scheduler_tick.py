@@ -18,7 +18,11 @@ def _exe(path: Path, body: str) -> Path:
 def test_idle_preflight_does_not_wake(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
-    preflight = _exe(tmp_path / "preflight", "#!/usr/bin/env bash\nexit 0\n")
+    preflight_log = tmp_path / "preflight.log"
+    preflight = _exe(
+        tmp_path / "preflight",
+        f"#!/usr/bin/env bash\nprintf '%s\\n' \"$@\" > {preflight_log}\nexit 0\n",
+    )
     codex_log = tmp_path / "codex.log"
     codex = _exe(
         tmp_path / "codex",
@@ -46,14 +50,23 @@ def test_idle_preflight_does_not_wake(tmp_path: Path) -> None:
     assert result.stdout == ""
     assert result.stderr == ""
     assert not codex_log.exists()
+    assert preflight_log.read_text(encoding="utf-8").splitlines() == [
+        "--canonical",
+        str(repo),
+    ]
 
 
 def test_wake_dry_run_prints_codex_resume_command(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
+    preflight_log = tmp_path / "preflight.log"
     preflight = _exe(
         tmp_path / "preflight",
-        "#!/usr/bin/env bash\nprintf '{\"wake\": true}\\n'\nexit 10\n",
+        f"""#!/usr/bin/env bash
+printf '%s\\n' "$@" > {preflight_log}
+printf '{{"wake": true}}\\n'
+exit 10
+""",
     )
 
     result = subprocess.run(
@@ -81,6 +94,11 @@ def test_wake_dry_run_prints_codex_resume_command(tmp_path: Path) -> None:
     assert "cos-scheduler: dry-run would run:" in result.stdout
     assert "exec -C" in result.stdout
     assert "resume thread-1" in result.stdout
+    assert preflight_log.read_text(encoding="utf-8").splitlines() == [
+        "--canonical",
+        str(repo),
+        "--dry-run",
+    ]
 
 
 def test_wake_invokes_codex_exec_resume(tmp_path: Path) -> None:

@@ -114,6 +114,11 @@ if [[ -n "$state_file" ]]; then
 fi
 if [[ "$no_canonical_check" -eq 1 ]]; then
 	preflight_cmd+=(--no-canonical-check)
+else
+	preflight_cmd+=(--canonical "$repo")
+fi
+if [[ "$dry_run" -eq 1 ]]; then
+	preflight_cmd+=(--dry-run)
 fi
 
 stdout_file="$(mktemp "${TMPDIR:-/tmp}/cos-preflight-out.XXXXXX")" ||
