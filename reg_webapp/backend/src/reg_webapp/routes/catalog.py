@@ -250,35 +250,54 @@ def _filter_states_to_held(
     return [s for s in states if s.delivery_column_name in held]
 
 
+def _held_graph_node_columns(
+    node: VariableGraphNode, index: CatalogIndex, focus_fqid: str | None
+) -> frozenset[str | None]:
+    """Held columns for a graph node, accepting held same_as aliases as identity."""
+    candidate_fqids = {
+        str(fqid)
+        for fqid in (
+            node.fqid,
+            *(ref.fqid for ref in node.same_as if ref.fqid is not None),
+        )
+        if fqid is not None
+    }
+    if focus_fqid is not None:
+        candidate_fqids.add(focus_fqid)
+    held: set[str | None] = set()
+    for fqid in candidate_fqids:
+        held.update(index.held_columns(fqid))
+    return frozenset(held)
+
+
 def _narrow_graph_to_held(
-    graph: RelationshipGraph, index: CatalogIndex
+    graph: RelationshipGraph, index: CatalogIndex, focus_fqid: str | None = None
 ) -> RelationshipGraph:
     """Narrow a relationship graph to the steward's held variable nodes and delivery
-    columns (#865). Classification nodes pass through; variable nodes are kept only
-    when their FQID is held, their `states` are reduced to held delivery columns, and
-    edges whose endpoint node was dropped are removed.
+    columns (#865). Classification nodes pass through; variable nodes are kept when
+    their canonical FQID or a same_as alias is held, their `states` are reduced to held
+    delivery columns, and edges whose endpoint node was dropped are removed.
 
     Per variable node: keep a state iff its resolved `delivery_column_name` is in the
-    steward's `held_columns` for that node's FQID (the same `(fqid, resolved column)`
-    admission, #206). A variable node emptied of all states is DROPPED. Same-as
-    metadata is narrowed with the same held-FQID rule as leaf refs, so a kept node does
-    not retain an unheld alias chip. Only invoked for a FILTERED steward (`index is not
-    None`); the `global` deployment never calls it, so its graph is untouched. The
+    steward's `held_columns` for that node's canonical FQID or a held same_as alias
+    (the same `(fqid, resolved column)` admission, #206). A variable node emptied of all
+    states is DROPPED. Same-as metadata is narrowed with the same held-FQID rule as leaf
+    refs, so a kept node does not retain an unheld alias chip. Only invoked for a
+    FILTERED steward (`index is not None`); the `global` deployment never calls it, so
+    its graph is untouched. The
     `representation_run_id`s on surviving states may skip values (a dropped run leaves a
     gap) — harmless: the run id groups ADJACENT surviving states into render cells; it
     is not a dense sequence the consumers rely on."""
     kept_nodes: list = []
     kept_ids: set[str] = set()
-    admitted = index.admitted_variable_fqids
     for node in graph.nodes:
         if not isinstance(node, VariableGraphNode) or node.fqid is None:
             kept_nodes.append(node)
             kept_ids.add(node.id)
             continue
-        fqid = str(node.fqid)
-        if fqid not in admitted:
-            continue
-        held = index.held_columns(fqid)
+        held = _held_graph_node_columns(
+            node, index, focus_fqid if node.id == graph.focus_id else None
+        )
         states = [s for s in node.states if s.delivery_column_name in held]
         if states:
             kept_nodes.append(
@@ -485,6 +504,7 @@ def _coverage_from_rows(rows: list[VariableCoverage]) -> VariableCoverage | None
 
 def _held_variable_coverage(
     per_column: dict[tuple[str, str], VariableCoverage],
+    per_unnamed: dict[str, VariableCoverage],
     variable_slug: str,
     held_columns: frozenset[str | None],
 ) -> VariableCoverage | None:
@@ -492,14 +512,17 @@ def _held_variable_coverage(
 
     A named held column with no per-column state row yields no coverage instead of
     borrowing the whole-variable union; that mirrors representation-member coverage
-    and avoids overstating partial-column holdings. `None` columns have no
-    `register_column_coverage` key, so they also yield no row here.
+    and avoids overstating partial-column holdings. A genuinely unnamed held column
+    (`delivery_column_name is None`) has no `register_column_coverage` key, so it uses
+    the exact unnamed-column coverage row.
     """
     rows = [
         per_column[(variable_slug, column)]
         for column in held_columns
         if column is not None and (variable_slug, column) in per_column
     ]
+    if None in held_columns and variable_slug in per_unnamed:
+        rows.append(per_unnamed[variable_slug])
     return _coverage_from_rows(rows)
 
 
@@ -702,27 +725,29 @@ def _classification_group_node(group) -> ClassificationGroupNode:
 
 def _held_register_coverage(
     per_column: dict[tuple[str, str], VariableCoverage],
+    per_unnamed: dict[str, VariableCoverage],
     held_columns_by_slug: dict[str, frozenset[str | None]],
 ) -> RegisterCoverage | None:
     """Recompute a register's `RegisterCoverage` from held delivery columns (#865),
     so a filtered steward's provider page doesn't overstate a partial-column hold by
     inheriting the whole-variable span. `variable_count` remains browse-grain: distinct
-    held variable slugs with at least one held-column coverage row.
+    held variable slugs with coverage from a named held column or unnamed-column
+    fallback.
 
     Mirrors `provider_register_coverage`'s semantics exactly so the held-only number
     is the same KIND of number, just over held column coverage:
-    - `variable_count` = held variable slugs WITH at least one held-column coverage row.
+    - `variable_count` = held variable slugs WITH at least one held coverage row.
     - the span = min `coverage_from` / max `coverage_to` over those held variables,
       `open_ended` if ANY held variable is open-ended (its `coverage_to` is None +
       `open_ended` True, the open-ended sentinel reg_meta already mapped per row).
 
-    Returns None when NO held variable has a coverage row — a held register with no
-    held-column coverage greys the hint, NOT a fabricated zero."""
-    rows = [
-        cov
-        for slug, held_columns in held_columns_by_slug.items()
-        if (cov := _held_variable_coverage(per_column, slug, held_columns)) is not None
-    ]
+    Returns None when NO held variable has coverage — a held register with no coverage
+    greys the hint, NOT a fabricated zero."""
+    rows: list[VariableCoverage] = []
+    for slug, held_columns in held_columns_by_slug.items():
+        cov = _held_variable_coverage(per_column, per_unnamed, slug, held_columns)
+        if cov is not None:
+            rows.append(cov)
     if not rows:
         return None
     froms = [r.coverage_from for r in rows if r.coverage_from is not None]
@@ -782,7 +807,10 @@ def _provider_response(
             if not held_columns:
                 return None
             per_column = catalog.register_column_coverage(provider_slug, register_slug)
-            return _held_register_coverage(per_column, held_columns)
+            per_unnamed = catalog.register_unnamed_column_coverage(
+                provider_slug, register_slug
+            )
+            return _held_register_coverage(per_column, per_unnamed, held_columns)
 
     return ProviderResponse(
         fqid=str(resolved.fqid),
@@ -832,12 +860,17 @@ def _register_response(
 
     else:
         column_coverage = catalog.register_column_coverage(provider_slug, register_slug)
+        unnamed_coverage = catalog.register_unnamed_column_coverage(
+            provider_slug, register_slug
+        )
 
         def coverage_for(variable_slug: str) -> VariableCoverage | None:
             held_columns = index.held_columns(
                 f"{provider_slug}/{register_slug}/{variable_slug}"
             )
-            return _held_variable_coverage(column_coverage, variable_slug, held_columns)
+            return _held_variable_coverage(
+                column_coverage, unnamed_coverage, variable_slug, held_columns
+            )
 
     # A register's children are its bindings PLUS a `variants` reference
     # stub (the declared A5.2 variant-browser slot — a link, not data).
@@ -1475,7 +1508,7 @@ def get_binding_graph(
                 return catalog.graph_for_classification_fqid(parsed)
             graph = catalog.graph_for_fqid(parsed)
             if index is not None:
-                graph = _narrow_graph_to_held(graph, index)
+                graph = _narrow_graph_to_held(graph, index, focus_fqid=str(parsed))
             return graph
         except RegMetaError as exc:
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/graph")

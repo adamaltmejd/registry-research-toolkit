@@ -1,5 +1,6 @@
 """Coverage aggregates over `variable_state` (#351): `Catalog`
-`register_variable_coverage` / `provider_register_coverage`.
+`register_variable_coverage` / `register_column_coverage` /
+`register_unnamed_column_coverage` / `provider_register_coverage`.
 
 Query-time aggregates (no materialized columns — see reg_webapp/DESIGN.md →
 Coverage aggregates). Covers the open-ended sentinel mapping, a finite window, and
@@ -155,6 +156,11 @@ def test_register_column_coverage_distinct_windows() -> None:
     # The NULL-delivery_column state contributes no per-column key for `disp`.
     assert ("disp", None) not in col_cov
     assert all(col is not None for _, col in col_cov)
+
+    unnamed_cov = Catalog(conn).register_unnamed_column_coverage("scb", "lisa")
+    assert unnamed_cov["disp"].state_count == 1
+    assert unnamed_cov["disp"].coverage_from == "1900-01-01"
+    assert unnamed_cov["disp"].coverage_to == "1967-12-31"
 
     # The variable-level union still spans every representation + the NULL state
     # (the fallback path for whole-variable / column-less members).
