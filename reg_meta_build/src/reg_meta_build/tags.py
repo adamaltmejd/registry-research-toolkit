@@ -16,11 +16,12 @@ is the whole point) + ONE polymorphic membership table:
   `starred` flags a recommended variable and `note` carries the one-line
   rationale curation can give (and popularity can't).
 
-MACHINERY ONLY (#311 PR2): the tables ship EMPTY until curation content lands
-(`tags.toml` absent or empty); webapp facets / tag chips / search boost are
-deferred to a later consumption PR. A *structural* defect in `tags.toml` (bad
-shape, duplicate member, dangling reference) fails the build (EXIT_CONFIG), like
-the other curation surfaces — curation drift must be fixed, not silently dropped.
+The committed `tags.toml` starts with a small SCB-heavy seed and can grow by
+reviewed entries. Wheel installs and synthetic test builds may still omit the
+file, in which case the tables materialize empty. A *structural* defect in
+`tags.toml` (bad shape, duplicate member, dangling reference) fails the build
+(EXIT_CONFIG), like the other curation surfaces — curation drift must be fixed,
+not silently dropped.
 """
 
 from __future__ import annotations

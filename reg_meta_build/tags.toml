@@ -1,0 +1,181 @@
+# Curated thematic tags (#311).
+#
+# This first content slice is intentionally small and SCB-heavy. It seeds broad
+# researcher-intent tags with high-confidence register memberships plus a few
+# starred variable picks that can later drive search boosts and recommendation
+# notes. References are exact FQIDs; no pattern inference.
+
+[[tag]]
+slug = "income"
+label = "Income"
+description = "Income, earnings, transfers, and economic resources."
+
+[[tag.member]]
+variable = "scb/iot/disponibel-inkomst"
+rank = 0
+starred = true
+note = "Broad IOT disposable-income measure for individual and household income work."
+
+[[tag.member]]
+variable = "scb/iot/sammanraknad-forvarvsinkomst"
+rank = 10
+starred = true
+note = "Core IOT earned-income measure before taxes and transfers."
+
+[[tag.member]]
+variable = "scb/lisa/loneink"
+rank = 20
+starred = true
+note = "Long-running LISA cash gross wage measure."
+
+[[tag.member]]
+register = "scb/iot"
+rank = 100
+
+[[tag.member]]
+register = "scb/lisa"
+rank = 110
+
+[[tag]]
+slug = "employment"
+label = "Employment"
+description = "Employment status, labor-market activity, occupation, and workplaces."
+
+[[tag.member]]
+variable = "scb/lisa/arbetsmarknadsstatus"
+rank = 0
+starred = true
+note = "Current LISA labor-market attachment measure."
+
+[[tag.member]]
+variable = "scb/lisa/arbetsstallenummer"
+rank = 10
+starred = true
+note = "Bridge from people to workplace tables in LISA."
+
+[[tag.member]]
+variable = "scb/rams/sysselsattningsstatus-november-agi"
+rank = 20
+starred = true
+note = "RAMS November employment-status measure for the AGI era."
+
+[[tag.member]]
+register = "scb/lisa"
+rank = 100
+
+[[tag.member]]
+register = "scb/rams"
+rank = 110
+
+[[tag]]
+slug = "education"
+label = "Education"
+description = "Educational attainment, education programs, study records, and degrees."
+
+[[tag.member]]
+variable = "scb/ureg/sun2020niva"
+rank = 0
+starred = true
+note = "UREG highest educational level in the current SUN 2020 nomenclature."
+
+[[tag.member]]
+variable = "scb/lisa/sun2020niva"
+rank = 10
+starred = true
+note = "LISA mirror of highest educational level for longitudinal studies."
+
+[[tag.member]]
+variable = "scb/hreg/utbildningsniva"
+rank = 20
+starred = true
+note = "HREG education-level measure for higher-education records."
+
+[[tag.member]]
+register = "scb/ureg"
+rank = 100
+
+[[tag.member]]
+register = "scb/hreg"
+rank = 110
+
+[[tag.member]]
+register = "scb/lisa"
+rank = 120
+
+[[tag]]
+slug = "family-household"
+label = "Family & household"
+description = "Family composition, household structure, and children in the household."
+
+[[tag.member]]
+variable = "scb/iot/familjetyp"
+rank = 0
+starred = true
+note = "IOT family-type measure for income-statistics household context."
+
+[[tag.member]]
+variable = "scb/iot/hushallstyp"
+rank = 10
+starred = true
+note = "IOT household-type measure for household composition."
+
+[[tag.member]]
+variable = "scb/lisa/familjetyp"
+rank = 20
+starred = true
+note = "LISA family-type measure for longitudinal population context."
+
+[[tag.member]]
+variable = "scb/lisa/barn0-3"
+rank = 30
+starred = true
+note = "LISA count of young children in the household."
+
+[[tag.member]]
+register = "scb/iot"
+rank = 100
+
+[[tag.member]]
+register = "scb/lisa"
+rank = 110
+
+[[tag]]
+slug = "geography"
+label = "Geography & place"
+description = "Residence, workplace, municipality, county, and education-place fields."
+
+[[tag.member]]
+variable = "scb/lisa/kommun-for-bostaden"
+rank = 0
+starred = true
+note = "LISA residence municipality."
+
+[[tag.member]]
+variable = "scb/lisa/kommun-for-arbetsstalle"
+rank = 10
+starred = true
+note = "LISA workplace municipality."
+
+[[tag.member]]
+variable = "scb/ureg/kommun"
+rank = 20
+starred = true
+note = "UREG municipality field for education records."
+
+[[tag.member]]
+variable = "scb/hreg/hemortskommun"
+rank = 30
+starred = true
+note = "HREG home municipality at application."
+
+[[tag.member]]
+register = "scb/lisa"
+rank = 100
+
+[[tag.member]]
+register = "scb/ureg"
+rank = 110
+
+[[tag.member]]
+register = "scb/hreg"
+rank = 120
