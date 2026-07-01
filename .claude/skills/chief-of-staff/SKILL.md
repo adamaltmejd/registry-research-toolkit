@@ -186,8 +186,10 @@ Merge only on the current head and only when every item passes:
 - The gate block records risk-scaled independent review, tests/checks, docs decisions,
   and required visual/build-db proof. Bot-only review is sufficient only for small,
   low-risk PRs.
-- Required visual/build-db proof is durable and PR-visible; local `/tmp` paths alone do
-  not pass a later tick.
+- Required visual/build-db proof is durable and PR-visible. For rendered-output PRs,
+  visual proof means both a `/web-design-reviewer` result and durable screenshot/render
+  evidence; screenshot-only proof blocks automerge. Local `/tmp` paths alone do not pass
+  a later tick.
 - `gh pr checks <pr>` is green on the current head.
 - `uv run --no-project python scripts/pr_review_status.py <pr> --once` is settled with
   `clean`, or `exhausted` with all other gates complete. `findings`, `reviewing`,
