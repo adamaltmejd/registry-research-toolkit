@@ -90,6 +90,7 @@ class ResolvedRegister(_CatalogModel):
     name: str
     purpose: str | None
     related_documents: tuple[RelatedDocument, ...] = ()
+    tags: tuple[TagMembership, ...] = ()
 
 
 class ResolvedClassification(_CatalogModel):
@@ -718,6 +719,7 @@ class ResolvedVariable(_CatalogModel):
     # member list lives behind `concept_group()`. Keyed on the RESOLVED variable's
     # triple (like the edges), so a same_as alias reports its target's group.
     group: BindingGroupRef | None = None
+    tags: tuple[TagMembership, ...] = ()
     # Traversal path (3-segment binding FQIDs) when resolved via `same_as`; None
     # on a direct hit.
     via_same_as: tuple[Fqid, ...] | None = None
@@ -1429,6 +1431,7 @@ class Catalog:
             name=row["name"],
             purpose=row["purpose"],
             related_documents=self._related_documents_for_register(fqid.register),
+            tags=tuple(self.tags_for_register(fqid)),
         )
 
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariable:
@@ -1535,9 +1538,10 @@ class Catalog:
         group = self._group_ref_for_variable(
             var["variable_id"], meta["provider_slug"], meta["register_slug"]
         )
+        canonical_fqid = Fqid.binding_fqid(*triple)
         return ResolvedVariable(
             fqid=fqid,
-            canonical_fqid=Fqid.binding_fqid(*triple),
+            canonical_fqid=canonical_fqid,
             variable_id=var["variable_id"],
             register_id=meta["register_id"],
             provider_key=meta["provider_key"],
@@ -1558,6 +1562,7 @@ class Catalog:
             replaced_by=edges["replaced_by"],
             lineage=edges["lineage"],
             group=group,
+            tags=tuple(self.tags_for_variable(canonical_fqid)),
             via_same_as=via_same_as,
         )
 

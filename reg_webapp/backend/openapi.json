@@ -207,6 +207,13 @@
             "title": "Succession Chain",
             "type": "array"
           },
+          "tags": {
+            "items": {
+              "$ref": "#/components/schemas/TagMembership"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
           "variable_id": {
             "title": "Variable Id",
             "type": "integer"
@@ -2317,6 +2324,13 @@
               }
             ],
             "title": "Purpose"
+          },
+          "tags": {
+            "items": {
+              "$ref": "#/components/schemas/TagMembership"
+            },
+            "title": "Tags",
+            "type": "array"
           }
         },
         "required": [
@@ -2398,6 +2412,13 @@
               }
             ],
             "title": "Purpose"
+          },
+          "tags": {
+            "items": {
+              "$ref": "#/components/schemas/TagMembership"
+            },
+            "title": "Tags",
+            "type": "array"
           }
         },
         "required": [
@@ -2873,6 +2894,48 @@
           "successors"
         ],
         "title": "SuccessorsResponse",
+        "type": "object"
+      },
+      "TagMembership": {
+        "additionalProperties": false,
+        "description": "A tag a register/variable belongs to (#311), from its side: the tag's\n`slug`/`label`, plus THIS membership's `rank` (curated order within the tag),\n`starred` (golden/recommended flag) and one-line `note` rationale.",
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "rank": {
+            "title": "Rank",
+            "type": "integer"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "starred": {
+            "title": "Starred",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "slug",
+          "label",
+          "rank",
+          "starred",
+          "note"
+        ],
+        "title": "TagMembership",
         "type": "object"
       },
       "TopSearchGroup": {

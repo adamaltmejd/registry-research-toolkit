@@ -496,6 +496,7 @@ def test_period_query_ignored_on_non_binding(client):
     body = resp.json()
     assert body["kind"] == "register"
     assert "states" not in body
+    assert [tag["slug"] for tag in body["tags"]] == ["income"]
 
 
 def test_no_period_query_returns_full_leaf(client):
@@ -504,6 +505,15 @@ def test_no_period_query_returns_full_leaf(client):
     body = resp.json()
     assert body["kind"] == "binding"
     assert "same_as" in body  # the full record, not the states envelope
+    assert body["tags"] == [
+        {
+            "slug": "income",
+            "label": "Income & earnings",
+            "rank": 0,
+            "starred": True,
+            "note": "fixture recommendation",
+        }
+    ]
 
 
 # ── ?value_set_version read-only browse-narrowing label filter ───────────────

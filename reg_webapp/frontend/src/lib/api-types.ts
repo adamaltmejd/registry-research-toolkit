@@ -729,6 +729,8 @@ export interface components {
             states: components["schemas"]["VariableState"][];
             /** Succession Chain */
             succession_chain?: components["schemas"]["VariableEdition"][];
+            /** Tags */
+            tags?: components["schemas"]["TagMembership"][];
             /** Variable Id */
             variable_id: number;
             /** Via Same As */
@@ -1807,6 +1809,8 @@ export interface components {
             name?: string | null;
             /** Purpose */
             purpose?: string | null;
+            /** Tags */
+            tags?: components["schemas"]["TagMembership"][];
         };
         /**
          * RegisterResponse
@@ -1835,6 +1839,8 @@ export interface components {
             name?: string | null;
             /** Purpose */
             purpose?: string | null;
+            /** Tags */
+            tags?: components["schemas"]["TagMembership"][];
         };
         /**
          * RegisterSearchGroup
@@ -2060,6 +2066,24 @@ export interface components {
             binding: string;
             /** Successors */
             successors: components["schemas"]["VariableRef"][];
+        };
+        /**
+         * TagMembership
+         * @description A tag a register/variable belongs to (#311), from its side: the tag's
+         *     `slug`/`label`, plus THIS membership's `rank` (curated order within the tag),
+         *     `starred` (golden/recommended flag) and one-line `note` rationale.
+         */
+        TagMembership: {
+            /** Label */
+            label: string;
+            /** Note */
+            note: string | null;
+            /** Rank */
+            rank: number;
+            /** Slug */
+            slug: string;
+            /** Starred */
+            starred: boolean;
         };
         /**
          * TopSearchGroup

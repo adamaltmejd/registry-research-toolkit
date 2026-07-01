@@ -89,6 +89,15 @@ function registerNode(): CatalogNode {
     kind: "register",
     fqid: "scb/lisa",
     name: "LISA",
+    tags: [
+      {
+        slug: "income",
+        label: "Income & earnings",
+        rank: 1,
+        starred: false,
+        note: null,
+      },
+    ],
     children: [
       { kind: "binding", fqid: "scb/lisa/v1", name: "Alpha" },
       { kind: "binding", fqid: "scb/lisa/v2", name: "Beta" },
@@ -231,6 +240,19 @@ describe("CatalogNodeView register arm", () => {
     expect(link).not.toBeNull();
     link?.focus();
     expect(document.activeElement).toBe(link);
+  });
+
+  it("renders thematic tags on the register page", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
+
+    await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("Income & earnings")).toBeVisible();
   });
 
   it("renders grouped variables as subject links in the Panel without the group-key pill", async () => {

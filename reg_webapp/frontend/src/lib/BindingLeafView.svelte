@@ -37,6 +37,7 @@ import RepresentationPicker, {
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import TechnicalDetails from "./TechnicalDetails.svelte";
+import { Tag } from "./ui";
 import ValueSetView from "./ValueSetView.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -445,6 +446,19 @@ function commitSelected(selected: PickerSelection[]): void {
     </p>
   {/if}
 
+  {#if node.tags && node.tags.length > 0}
+    <div class="tag-strip" aria-label="Thematic tags">
+      {#each node.tags as tag (tag.slug)}
+        <span class="tag-item">
+          <Tag tone="neutral">{tag.label}</Tag>
+          {#if tag.starred && tag.note}
+            <span class="tag-note">Recommended: {tag.note}</span>
+          {/if}
+        </span>
+      {/each}
+    </div>
+  {/if}
+
   <dl class="meta">
     {#if node.definition}
       <dt>Definition</dt>
@@ -692,6 +706,23 @@ function commitSelected(selected: PickerSelection[]): void {
   }
   .meta dt {
     font-weight: 600;
+  }
+  .tag-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0.75rem 0 1rem;
+  }
+  .tag-item {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .tag-note {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
   }
   .narrowed-note {
     font-weight: 400;
