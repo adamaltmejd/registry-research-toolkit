@@ -26,11 +26,13 @@ Agent-surface notes:
   branch/range plus necessary issue context. In-session `registry-code-review` is
   diagnostic, not independent review evidence. The GitHub bot-review window described by
   the repository guidance still applies.
-- For rendered-output PRs, run `web-design-reviewer` in a clean subagent session. Pass
-  the changed routes, PR/branch, and enough setup context for the reviewer to render the
-  app, inspect screenshots, and apply the skill's structured report; do not pass the
-  author's visual conclusions as evidence. Manual screenshots outside that reviewer pass
-  do not satisfy the visual gate.
+- For rendered-output PRs, run `reg-webapp-design-reviewer` in a clean subagent session.
+  On Codex `multi_agent_v1`, launch a fresh generic subagent and instruct it to invoke
+  the repo-local `reg-webapp-design-reviewer` skill by that exact name. Pass the changed
+  routes, PR/branch, and enough setup context for the reviewer to render the app,
+  inspect screenshots, and apply the skill's structured report; do not pass the author's
+  visual conclusions as evidence. Manual screenshots outside that reviewer pass do not
+  satisfy the visual gate.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
   new UI authoring, use the repo-local `frontend-design` skill before building.
 - Do not merge. The `chief-of-staff` skill owns routine merge decisions and execution.
@@ -114,8 +116,8 @@ Run focused verification as the work evolves:
   while iterating from the repo root with
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`. Iteration screenshots do not
-  satisfy the formal visual gate; that gate runs later as `web-design-reviewer` in a
-  clean subagent and includes screenshot/render inspection plus durable PR proof.
+  satisfy the formal visual gate; that gate runs later as `reg-webapp-design-reviewer`
+  in a clean subagent and includes screenshot/render inspection plus durable PR proof.
 - Build-affecting DB changes: fast tests first; real `reg-meta-build build-db` is a
   final gate on the truly final head.
 
@@ -143,11 +145,13 @@ Run focused verification as the work evolves:
    duplicating a subsystem elsewhere, a library that subsumes the approach — and route
    those cuts like any finding.
 4. For rendered-output changes, run the formal visual gate in this order:
-   - First, launch a fresh subagent running `web-design-reviewer` against the rendered
-     app or the changed route(s). The reviewer must apply the skill's structured report
-     workflow for layout, responsive, accessibility, and consistency issues. It can use
-     `run-reg-webapp` or an already-started preview URL, but its report must be separate
-     from the author's manual inspection.
+   - First, launch a fresh generic subagent running `reg-webapp-design-reviewer` against
+     the rendered app or the changed route(s). The subagent must invoke that repo-local
+     skill by exact name; do not run the formal reviewer pass in the lead session or use
+     a generic web-design reviewer. The reviewer must apply the skill's structured
+     report workflow for layout, responsive, accessibility, and consistency issues. It
+     can use `run-reg-webapp` or an already-started preview URL, but its report must be
+     separate from the author's manual inspection.
    - Route reviewer findings through the same fix / dismiss / re-review loop as
      code-review findings. Re-run the reviewer when fixes materially change the rendered
      surface.
@@ -205,8 +209,8 @@ durable evidence in the PR body:
   evidence;
 - real-data validation when build pipeline or DB content changed;
 - visual verification when rendered output changed: complete the clean-subagent
-  `web-design-reviewer` pass, including screenshot/render inspection on the assembled
-  tree and durable PR-visible proof;
+  `reg-webapp-design-reviewer` pass, including screenshot/render inspection on the
+  assembled tree and durable PR-visible proof;
 - stale-head check before recording the handoff; `chief-of-staff` re-checks it
   immediately before and after merge.
 
@@ -224,7 +228,7 @@ add or replace this block:
 - ci: pass; `gh pr checks <pr>`
 - tests: <commands run>
 - docs: <updated / not required>
-- visual: <not required / pass; web-design-reviewer result with durable PR-visible screenshot proof>
+- visual: <not required / pass; reg-webapp-design-reviewer result with durable PR-visible screenshot proof>
 - build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
 - stack: <none / after #pr / before #pr>
 <!-- /pr-pipeline-merge-gate -->
@@ -237,7 +241,7 @@ block incomplete and report what chief-of-staff must wait for. A later push make
 block stale; rerun the gate on the new head and refresh the block.
 
 Proof must survive a later chief-of-staff tick. For rendered changes, attach or comment
-the `web-design-reviewer` result with screenshot evidence on the PR; a local
+the `reg-webapp-design-reviewer` result with screenshot evidence on the PR; a local
 `/tmp/reg-webapp-shots/` path is useful in the authoring thread but is not durable merge
 evidence. For build-db, record the timestamped log path only if it is accessible to the
 future merge runner, otherwise summarize the completed command, validation result, and

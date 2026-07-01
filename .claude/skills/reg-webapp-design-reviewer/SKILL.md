@@ -1,14 +1,15 @@
 ---
-name: web-design-reviewer
+name: reg-webapp-design-reviewer
 description: >-
-  Registry Research Toolkit rendered-UI review skill. Use for `reg_webapp`
+  Registry Research Toolkit `reg_webapp` rendered-UI review skill. Use for repo-local
   rendered-output PR gates, pr-pipeline visual verification, screenshot-based layout
   review, responsive checks, accessibility visual checks, and UI regression review after
   implementation. This is the post-implementation reviewer counterpart to
-  `frontend-design`.
+  `frontend-design` and is deliberately named to avoid generic `web-design-reviewer`
+  skills.
 ---
 
-# Web Design Reviewer
+# Reg Webapp Design Reviewer
 
 Review rendered `reg_webapp` changes against the Registry Research Toolkit visual and
 accessibility contract. This is a post-implementation reviewer skill, not an authoring
@@ -19,7 +20,8 @@ after implementation for the rendered visual gate.
 
 For rendered-output PRs, run this skill in a clean subagent/session before the lead
 records the visual gate. The reviewer pass owns screenshot/render inspection and is the
-required visual evidence.
+required visual evidence. Invoke this repo-local skill by its full name,
+`reg-webapp-design-reviewer`; do not substitute a generic `web-design-reviewer` skill.
 
 Required output for the PR gate:
 
@@ -111,7 +113,7 @@ PR", "intended clipping", or "route not affected by this diff".
 ## Report Format
 
 ```markdown
-# Web Design Review Results
+# Reg Webapp Design Review Results
 
 ## Summary
 
@@ -136,7 +138,7 @@ PR", "intended clipping", or "route not affected by this diff".
 
 ## Final Gate Note
 
-web-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
+reg-webapp-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
 local_screenshots=<paths>;
 pr_visible_proof=<published attachment/comment/artifact/link or pending lead publication>;
 findings=<none / fixed / dismissed>.

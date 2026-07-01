@@ -268,9 +268,9 @@ Automerge is allowed when all of these are true:
   or tool errors block automerge.
 - Any required visual or build-db proof is durable and PR-visible, such as a PR comment,
   check summary, artifact link, or committed note. For rendered-output PRs, visual proof
-  means a `web-design-reviewer` subagent result that includes durable screenshot/render
-  evidence; screenshot-only proof blocks automerge. Local `/tmp` paths alone do not pass
-  a later staff tick.
+  means a `reg-webapp-design-reviewer` subagent result that includes durable
+  screenshot/render evidence; screenshot-only proof blocks automerge. Local `/tmp` paths
+  alone do not pass a later staff tick.
 - The stale-head check passes immediately before merging: GitHub's `headRefOid` equals
   the branch tip being merged, and the merge command uses `--match-head-commit` with
   that same SHA.

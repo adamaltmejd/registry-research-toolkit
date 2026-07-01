@@ -187,7 +187,7 @@ Merge only on the current head and only when every item passes:
   and required visual/build-db proof. Bot-only review is sufficient only for small,
   low-risk PRs.
 - Required visual/build-db proof is durable and PR-visible. For rendered-output PRs,
-  visual proof means a `/web-design-reviewer` result that includes durable
+  visual proof means a `/reg-webapp-design-reviewer` result that includes durable
   screenshot/render evidence; screenshot-only proof blocks automerge. Local `/tmp` paths
   alone do not pass a later tick.
 - `gh pr checks <pr>` is green on the current head.
