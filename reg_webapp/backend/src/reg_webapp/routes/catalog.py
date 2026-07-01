@@ -825,6 +825,7 @@ def _provider_response(
                 # keeps the dict key str-typed. reg_meta's `RegisterCoverage` passes
                 # straight through (#681).
                 coverage=coverage_for(r.fqid.register) if r.fqid.register else None,
+                tags=list(catalog.tags_for_register(r.fqid)),
             )
             for r in registers
         ],
