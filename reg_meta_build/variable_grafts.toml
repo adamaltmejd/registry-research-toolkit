@@ -9,12 +9,16 @@
 # build time (the pass runs before populate_variable_slugs);
 # source_label="swecov-graft"; data_type absent ⇒ NULL.
 #
-# 1889 grafts total. The #856 survey-wave block contributes 1809 unique
+# Existing delivery aliases in delivery_enrichment.toml are excluded here so
+# a delivered column resolves to one catalog variable, not both an alias and a
+# graft. Identifier-like grafts carry explicit boolean flags.
+#
+# 1875 grafts total. The #856 survey-wave block contributes 1795 unique
 # (register, variant, column) grafts after collapsing 1992 physical unresolved
-# SWECOV holdings across duplicate IT Mikro/Stora delivery columns. The survey
-# delivery lists document most residual wave items by code only, so those
-# entries deliberately use description=<column> to keep the orderable code as
-# the variable name until richer public labels exist.
+# SWECOV holdings and excluding 21 alias-covered physical holdings.
+# The survey delivery lists document most residual wave items by code only, so
+# those entries deliberately use description=<column> to keep the orderable code
+# as the variable name until richer public labels exist.
 
 [[graft]]
 register = "scb/agi"
@@ -366,8 +370,14 @@ description = "Antal_man"
 [[graft]]
 register = "scb/fou"
 variant = "foretagssektorn"
-column = "BGrupp"
-description = "BGrupp"
+column = "ÅRSVERKEN"
+description = "ÅRSVERKEN"
+
+[[graft]]
+register = "scb/fou"
+variant = "foretagssektorn"
+column = "ÅRSVERKEN_FORSK"
+description = "ÅRSVERKEN_FORSK"
 
 [[graft]]
 register = "scb/fou"
@@ -2396,12 +2406,6 @@ register = "scb/fou"
 variant = "foretagssektorn"
 column = "PGZ_i"
 description = "PGZ_i"
-
-[[graft]]
-register = "scb/fou"
-variant = "foretagssektorn"
-column = "Sektor"
-description = "Sektor"
 
 [[graft]]
 register = "scb/fou"
@@ -4638,18 +4642,6 @@ description = "v7000"
 [[graft]]
 register = "scb/fou"
 variant = "foretagssektorn"
-column = "v7001"
-description = "v7001"
-
-[[graft]]
-register = "scb/fou"
-variant = "foretagssektorn"
-column = "v7002"
-description = "v7002"
-
-[[graft]]
-register = "scb/fou"
-variant = "foretagssektorn"
 column = "V701"
 description = "V701"
 
@@ -6219,18 +6211,6 @@ variant = "foretagssektorn"
 column = "XGrupp"
 description = "XGrupp"
 
-[[graft]]
-register = "scb/fou"
-variant = "foretagssektorn"
-column = "ÅRSVERKEN"
-description = "ÅRSVERKEN"
-
-[[graft]]
-register = "scb/fou"
-variant = "foretagssektorn"
-column = "ÅRSVERKEN_FORSK"
-description = "ÅRSVERKEN_FORSK"
-
 
 [[graft]]
 register = "scb/grundskola-elever"
@@ -6847,30 +6827,6 @@ description = "EcoEn"
 [[graft]]
 register = "scb/innovation-foretag"
 variant = "_default"
-column = "ECOENO"
-description = "ECOENO"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOENU"
-description = "ECOENU"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOEXT"
-description = "ECOEXT"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOMAT"
-description = "ECOMAT"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
 column = "ECOMKT"
 description = "ECOMKT"
 
@@ -6883,18 +6839,6 @@ description = "ECOORG"
 [[graft]]
 register = "scb/innovation-foretag"
 variant = "_default"
-column = "ECOPOL"
-description = "ECOPOL"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOPOS"
-description = "ECOPOS"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
 column = "ECOPRC"
 description = "ECOPRC"
 
@@ -6903,30 +6847,6 @@ register = "scb/innovation-foretag"
 variant = "_default"
 column = "ECOPRD"
 description = "ECOPRD"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOREA"
-description = "ECOREA"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOREC"
-description = "ECOREC"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOREP"
-description = "ECOREP"
-
-[[graft]]
-register = "scb/innovation-foretag"
-variant = "_default"
-column = "ECOSUB"
-description = "ECOSUB"
 
 [[graft]]
 register = "scb/innovation-foretag"
@@ -9777,6 +9697,7 @@ register = "scb/innovation-foretag"
 variant = "_default"
 column = "PeOrgNrHe"
 description = "PeOrgNrHe"
+is_identifier = true
 
 [[graft]]
 register = "scb/innovation-foretag"

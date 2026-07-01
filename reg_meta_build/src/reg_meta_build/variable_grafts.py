@@ -26,6 +26,9 @@ Guards / discipline:
   here, just above the SCB maximum. (SOS grafts are out of scope for now.)
 * **No `SCHEMA_VERSION` bump** — rows on existing tables. Runs BEFORE
   `populate_variable_slugs`, so each graft auto-slugs from its delivery column.
+* **PII / identifier flags are explicit.** A grafted person/org-number
+  identifier must carry `is_identifier = true` (and `is_sensitive = true` when
+  applicable), or it would publish as ordinary text via the DDL defaults.
 """
 
 from __future__ import annotations
@@ -39,6 +42,7 @@ from ._curation import (
     curation_error,
     fold_column,
     load_curation_entries,
+    require_bool,
     require_str,
     resolve_register_variant_id,
 )
@@ -64,6 +68,8 @@ class CuratedGraft:
     column: str
     description: str
     data_type: str
+    is_identifier: bool
+    is_sensitive: bool
 
 
 def repo_variable_grafts_path() -> Path | None:
@@ -80,13 +86,20 @@ _require_str = functools.partial(
     prefix="variable_grafts",
     file_name="variable_grafts.toml",
 )
+_require_bool = functools.partial(
+    require_bool,
+    code="variable_grafts_invalid",
+    prefix="variable_grafts",
+    file_name="variable_grafts.toml",
+)
 
 
 def load_variable_grafts(path: Path | None) -> tuple[CuratedGraft, ...]:
     """Parse the graft TOML. Empty when no file (synthetic builds, wheel
     installs). Load-time validation (EXIT_CONFIG): only `[[graft]]`; `register`
     is a 2-segment `provider/register` FQID; `variant`/`column`/`description`
-    non-empty; `data_type` optional; each `(register, variant, column)` unique."""
+    non-empty; `data_type` optional; `is_identifier` / `is_sensitive` optional
+    strict booleans; each `(register, variant, column)` unique."""
     entries = load_curation_entries(
         path,
         entry_key="graft",
@@ -111,6 +124,7 @@ def load_variable_grafts(path: Path | None) -> tuple[CuratedGraft, ...]:
         variant = _require_str(entry, "variant", "[[graft]]")
         column = _require_str(entry, "column", "[[graft]]")
         description = _require_str(entry, "description", "[[graft]]")
+        ctx = f"{register_fqid}/{variant}/{column}"
         data_type = entry.get("data_type", "")
         if not isinstance(data_type, str):
             raise curation_error(
@@ -119,6 +133,8 @@ def load_variable_grafts(path: Path | None) -> tuple[CuratedGraft, ...]:
                 f"`data_type` must be a string, got {data_type!r}.",
                 "Give `data_type` as a string or omit it.",
             )
+        is_identifier = _require_bool(entry, "is_identifier", ctx)
+        is_sensitive = _require_bool(entry, "is_sensitive", ctx)
         key = (parts[0], parts[1], variant, fold_column(column))
         if key in seen:
             raise curation_error(
@@ -135,6 +151,8 @@ def load_variable_grafts(path: Path | None) -> tuple[CuratedGraft, ...]:
                 column=column,
                 description=description,
                 data_type=data_type.strip(),
+                is_identifier=is_identifier,
+                is_sensitive=is_sensitive,
             )
         )
     return tuple(out)
@@ -205,7 +223,8 @@ def materialize_grafts(
             )
         conn.execute(
             "INSERT INTO variable (variable_id, register_id, provider_key, name, "
-            "description, source_label) VALUES (?, ?, ?, ?, ?, ?)",
+            "description, source_label, is_identifier, is_sensitive) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 next_var,
                 register_id,
@@ -213,6 +232,8 @@ def materialize_grafts(
                 g.description,
                 g.description,
                 _GRAFT_SOURCE_LABEL,
+                int(g.is_identifier),
+                int(g.is_sensitive),
             ),
         )
         conn.execute(

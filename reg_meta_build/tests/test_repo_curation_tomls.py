@@ -357,10 +357,12 @@ def test_repo_variable_grafts_parses() -> None:
 def test_repo_variable_grafts_include_swecov_survey_wave_batch() -> None:
     grafts = load_variable_grafts(_ROOT / "variable_grafts.toml")
     counts = Counter((g.provider, g.register, g.variant) for g in grafts)
-    assert counts[("scb", "fou", "foretagssektorn")] == 996
-    assert counts[("scb", "innovation-foretag", "_default")] == 657
+    assert counts[("scb", "fou", "foretagssektorn")] == 992
+    assert counts[("scb", "innovation-foretag", "_default")] == 647
     assert counts[("scb", "it-anvandning", "it-anvandning-i-foretag")] == 156
     assert {"ACAT01", "ADECU", "AI_FTE_F"} <= {g.column for g in grafts}
+    peorgnrhe = next(g for g in grafts if g.column == "PeOrgNrHe")
+    assert peorgnrhe.is_identifier
 
 
 def test_repo_doc_sources_parses() -> None:
