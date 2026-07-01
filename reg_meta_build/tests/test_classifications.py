@@ -715,6 +715,141 @@ class TestPopulateClassifications:
             "overlap": 0.0,
         }
 
+    def test_mixed_label_vintages_keep_legit_broad_and_sever_recode(
+        self, tmp_path: Path
+    ):
+        """#657: one source label can contain both real and false ISCED-F states.
+
+        AES 2016 uses genuine ISCED-F broad codes under ``ISCED F 2013 ``; AES
+        2022 ``fedfield``/``nfefield`` reuse that label for a Swedish 1-20
+        presentation grouping. The gate must keep the broad-code vintage but
+        sever the recode, even though code ``10`` string-matches a canonical
+        ISCED-F broad code with a different meaning.
+        """
+        broad_codes = [
+            ("00", "Generell utbildning, bred"),
+            ("01", "Pedagogik och lärarutbildning"),
+            ("02", "Humaniora och konst"),
+            ("03", "Samhällsvetenskap, journalism, information"),
+            ("04", "Juridik, handel, administration"),
+            ("05", "Naturvetenskap, matematik och statistik"),
+            ("06", "Information och kommunikationsteknik (ICT)"),
+            ("07", "Teknik och tillverkning"),
+            ("08", "Lant- och skogsbruk samt djursjukvård"),
+            ("09", "Hälso- och sjukvård samt välfärd"),
+            ("10", "Tjänster"),
+            ("99", "Okänd inriktning"),
+        ]
+        recode_codes = [
+            ("1", "Allmän inriktning"),
+            ("1a", "Generellt/allmänt program"),
+            ("1b", "Läs- och räknekunskap"),
+            ("1c", "Personlig förmåga och utveckling"),
+            ("2", "Pedagogik och lärarutbildning"),
+            ("3", "Konst"),
+            ("4", "Humaniora (förutom språk)"),
+            ("5", "Främmande språk och språkvetenskap"),
+            ("6", "Svenska och litteraturvetenskap"),
+            ("7", "Samhälls- och beteendevetenskap"),
+            ("8", "Journalistik och information"),
+            ("9", "Företagsekonomi, handel och administration"),
+            ("10", "Juridik och rättsvetenskap"),
+            ("11", "Naturvetenskap och matematik"),
+            ("12", "Datoranvändning"),
+            (
+                "13",
+                "Datavetenskap och systemvetenskap samt informations- och "
+                "kommunikationsteknik (IKT)",
+            ),
+            ("14", "Teknik och teknisk industri, material och tillverkning"),
+            ("15", "Samhällsbyggnad och byggnadsteknik"),
+            ("16", "Lant- och skogsbruk samt djursjukvård"),
+            ("17", "Hälso- och sjukvård"),
+            ("18", "Socialt arbete och socialt omsorgsarbete"),
+            ("19", "Personliga tjänster, arbetsmiljö och renhållning"),
+            ("20", "Säkerhets- och transporttjänster"),
+        ]
+
+        rows = []
+        for cvid in ("1001", "1003"):
+            rows.extend(
+                PIPE.join(["ISCED F 2013 ", "1", code, label, cvid, ""])
+                for code, label in [("-2", "Ej tillämpligt"), ("-1", "Uppgift saknas")]
+                + broad_codes
+            )
+        rows.extend(
+            PIPE.join(["ISCED F 2013 ", "1", code, label, "1004", ""])
+            for code, label in [("-2", "Inte tillämpligt"), ("-1", "Uppgift saknas")]
+            + recode_codes
+        )
+
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, vardemangder_rows=rows)
+        cls_dir = input_dir / "classifications"
+        cls_dir.mkdir()
+        (cls_dir / "isced-f2013.csv").write_text(
+            "code,label\n"
+            + "\n".join(f"{code},{label}" for code, label in broad_codes)
+            + "\n",
+            encoding="utf-8",
+        )
+        seed = tmp_path / "classifications.toml"
+        seed.write_text(
+            '[[classification]]\nshort_name = "ISCED-F2013"\n'
+            'name = "ISCED Fields of Education and Training 2013"\n'
+            'valid_codes_file = "isced-f2013.csv"\n'
+            'vardemangdsversion = ["ISCED F 2013 "]\n',
+            encoding="utf-8",
+        )
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
+
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+        conn.row_factory = sqlite3.Row
+        states = conn.execute(
+            "SELECT vs.valid_from, vs.valid_to, vs.classification_id, "
+            "cc.status, cc.checked_code_count, cc.matched_code_count, "
+            "cc.nonconforming_code_count, cc.overlap "
+            "FROM variable_state vs "
+            "JOIN variable v ON v.variable_id = vs.variable_id "
+            "JOIN classification_conformance cc ON cc.state_id = vs.state_id "
+            "WHERE v.provider_key = '44' "
+            "ORDER BY vs.valid_from"
+        ).fetchall()
+        assert [r["valid_from"] for r in states] == ["2020-01-01", "2022-01-01"]
+
+        kept = states[0]
+        assert kept["valid_to"] == "2021-12-31"
+        assert kept["classification_id"] is not None
+        assert kept["status"] == "kept"
+        assert kept["checked_code_count"] == 12
+        assert kept["matched_code_count"] == 12
+        assert kept["nonconforming_code_count"] == 0
+        assert kept["overlap"] == 1.0
+
+        severed = states[1]
+        assert severed["classification_id"] is None
+        assert severed["status"] == "severed"
+        assert severed["checked_code_count"] == 23
+        assert severed["matched_code_count"] == 1
+        assert severed["nonconforming_code_count"] == 22
+        assert severed["overlap"] == pytest.approx(1 / 23)
+
+        nonconforming_codes = {
+            r["code"]
+            for r in conn.execute(
+                "SELECT vc.code "
+                "FROM classification_conformance_code ccc "
+                "JOIN value_code vc ON vc.code_id = ccc.code_id "
+                "JOIN variable_state vs ON vs.state_id = ccc.state_id "
+                "WHERE vs.valid_from = '2022-01-01'"
+            )
+        }
+        assert "10" not in nonconforming_codes  # same-code/different-label collision
+        assert {"-1", "-2"}.isdisjoint(nonconforming_codes)
+        assert {"1a", "13", "20"}.issubset(nonconforming_codes)
+
     def test_provider_seeded_canonical_only_clears_empty_guard(self, tmp_path: Path):
         """The SOS shape: a provider-tagged, active entry with valid_codes_file
         but NO vardemangdsversion seeds its canonical codes from the CSV

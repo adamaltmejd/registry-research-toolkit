@@ -1022,6 +1022,11 @@ is documented in [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Canonical co
 state conformance". See also [CLASSIFICATIONS.md](CLASSIFICATIONS.md) for the
 per-classification extraction recipes that produced the shipped CSVs.
 
+Source labels are not treated as authoritative once canonical codes are available: the
+same SCB `vardemangdsversion` string can cover both a real classification vintage and a
+register-local recode (AES `ISCED F 2013` is the motivating case), so the state-level
+conformance gate is the final arbiter of whether a declared link stays attached.
+
 The seed lives in the repo (alongside `DESIGN.md`) and is **not** bundled in any wheel —
 same status as `reg_meta_build/docs/`. End users receive the already-populated
 classification tables via the prebuilt DB asset.
