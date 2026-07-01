@@ -5,9 +5,10 @@ description: >-
   when asked to run or schedule a staff tick, combine issue-pulse and live PR claim
   state, automatically merge ready PRs with current-head PR-pipeline handoff evidence,
   keep issue priorities or metadata current, keep the reg_webapp dev preview running,
-  summarize merged user-visible features with preview links, prevent conflicting
-  pr-pipeline work, send unblock follow-ups to stalled pr-pipeline sessions, or
-  recommend the next safe issue bundle or PR stack to start from a separate worktree.
+  keep the default reg_meta DB install current for that preview, summarize merged
+  user-visible features with preview links, prevent conflicting pr-pipeline work, send
+  unblock follow-ups to stalled pr-pipeline sessions, or recommend the next safe issue
+  bundle or PR stack to start from a separate worktree.
 ---
 
 # Registry Chief Of Staff
@@ -97,10 +98,11 @@ recommend new work, but it must not edit project code as part of the work itself
 1. If this is a heartbeat invocation and the previous tick in this thread is still
    running, skip this tick with `DONT_NOTIFY`; do not overlap repo or GitHub mutations.
 2. Complete the startup gate above. Stop immediately if it fails.
-3. Ensure the canonical-main `reg_webapp` dev preview is running, following the Dev
+3. Ensure the default `reg_meta` DB install is compatible with the checked-out code,
+   then ensure the canonical-main `reg_webapp` dev preview is running, following the Dev
    Preview section below. Reuse a healthy existing preview; do not start duplicate
-   servers unless the startup gate's `git pull --ff-only` moved `main`. Record the
-   frontend URL for the final report.
+   servers unless the startup gate's `git pull --ff-only` moved `main` or the DB install
+   was refreshed. Record the frontend URL for the final report.
 4. Invoke and follow the `issue-pulse` skill exactly for one heartbeat tick, including
    its tick-status, basis, restamp, re-rank, and refusal safeguards. Let `issue-pulse`
    write only its generated lanes block; apply structural issue maintenance afterward
@@ -164,6 +166,26 @@ recommend new work, but it must not edit project code as part of the work itself
 Keep one `reg_webapp` dev preview running from the canonical main checkout so the user
 can inspect freshly merged user-facing changes.
 
+- Treat the persistent default `reg_meta` DB install as maintained state for the
+  canonical preview. The default is `reg_meta.db.default_db_dir()` with no `REG_META_DB`
+  override (`$XDG_DATA_HOME/reg_meta` or `~/.local/share/reg_meta`).
+- Before starting or reusing the default preview on every tick, run
+  `env -u REG_META_DB uv run reg-meta update --yes` from the canonical checkout. This
+  updates missing or stale default DB/doc DB assets when a newer compatible release
+  exists and is safe to repeat. Do not wait for app startup to reveal doc-DB problems:
+  the webapp can start with docs disabled when the doc DB is missing or incompatible.
+- If the update installs or replaces either DB asset, restart any existing default
+  preview before reporting its URL. A healthy old process can still be serving against
+  the pre-update DB handles.
+- If preview startup fails because the default DB or doc DB is missing or schema-stale,
+  run `env -u REG_META_DB uv run reg-meta update --force --yes`, then retry the default
+  preview without `REG_META_DB`. The update command validates downloaded assets against
+  the checked-out `reg_meta` code before replacing existing files, so do not hand-edit,
+  delete, or rebuild the user cache directly.
+- Do not work around a stale default install by downloading release DBs to `/tmp` and
+  launching the ordinary preview with `REG_META_DB=/tmp/...`. Use a `/tmp` or scratch
+  `REG_META_DB` only when the merged feature explicitly depends on unpublished DB
+  content or the user asks to inspect a scratch build.
 - Prefer the existing preview launch config: `.claude/launch.json` entry `reg-webapp`,
   which runs `bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh preview` with
   `autoPort`. Use the agent surface's preview tools when available, because they return
