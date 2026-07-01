@@ -2223,6 +2223,20 @@ function valueSetDedupKey(s: VariableStateModel): string {
     : `id/${s.value_set_id ?? "none"}`;
 }
 
+function representativeConformance(
+  states: VariableStateModel[],
+): VariableStateModel["classification_conformance"] {
+  const rows = states
+    .map((s) => s.classification_conformance)
+    .filter((c) => c != null);
+  return (
+    rows.find((c) => c.status === "severed") ??
+    rows.find((c) => c.nonconforming_code_count > 0) ??
+    rows[0] ??
+    null
+  );
+}
+
 /** Project a variable's multi-state set into DISTINCT value sets (#668), deduped
  * at TWO levels: classification value sets by `classification_slug`, others by
  * `value_set_id` (see `valueSetDedupKey` and the section header). First-seen order
@@ -2265,9 +2279,7 @@ export function distinctValueSets(
     return {
       key,
       classificationSlug: rep.classification_slug ?? null,
-      classificationConformance:
-        group.find((s) => s.classification_conformance != null)
-          ?.classification_conformance ?? null,
+      classificationConformance: representativeConformance(group),
       versionLabel: rep.value_set_version_label,
       valueSet: rep.value_set,
       dataType: rep.data_type,
