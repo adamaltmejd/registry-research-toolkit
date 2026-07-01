@@ -23,11 +23,6 @@ each with the `Agent` tool, `subagent_type` set to the role (this is what loads 
 `.md` system prompt + tool restrictions; omitting it gives a generic agent with the
 wrong prompt).
 
-Named workflow skills such as `/code-review`, `/simplify`, and `/web-design-reviewer`
-are agent-environment requirements. They do not need to live under this repository's
-`.claude/skills/` tree, and their absence from that tree is not a reason to downgrade a
-required gate.
-
 ## How dispatch works
 
 Each role is a **foreground one-shot**: `Agent(subagent_type: <role>, …)` with a short
