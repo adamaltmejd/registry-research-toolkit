@@ -117,9 +117,6 @@ if [[ "$no_canonical_check" -eq 1 ]]; then
 else
 	preflight_cmd+=(--canonical "$repo")
 fi
-if [[ "$dry_run" -eq 1 ]]; then
-	preflight_cmd+=(--dry-run)
-fi
 
 stdout_file="$(mktemp "${TMPDIR:-/tmp}/cos-preflight-out.XXXXXX")" ||
 	fail "could not create stdout temp file"
@@ -127,7 +124,8 @@ stderr_file="$(mktemp "${TMPDIR:-/tmp}/cos-preflight-err.XXXXXX")" ||
 	fail "could not create stderr temp file"
 trap 'rm -f "$stdout_file" "$stderr_file"' EXIT
 
-"${preflight_cmd[@]}" >"$stdout_file" 2>"$stderr_file"
+probe_cmd=("${preflight_cmd[@]}" --dry-run)
+"${probe_cmd[@]}" >"$stdout_file" 2>"$stderr_file"
 preflight_status=$?
 
 case "$preflight_status" in
@@ -150,7 +148,26 @@ case "$preflight_status" in
 	fi
 	echo "cos-scheduler: waking chief-of-staff thread $thread" >&2
 	"${codex_cmd[@]}"
-	exit $?
+	codex_status=$?
+	if [[ "$codex_status" -ne 0 ]]; then
+		exit "$codex_status"
+	fi
+
+	: >"$stdout_file"
+	: >"$stderr_file"
+	"${preflight_cmd[@]}" >"$stdout_file" 2>"$stderr_file"
+	commit_status=$?
+	if [[ "$commit_status" -eq 0 || "$commit_status" -eq 10 ]]; then
+		exit 0
+	fi
+	echo "cos-scheduler: wake succeeded but state commit failed" >&2
+	if [[ -s "$stderr_file" ]]; then
+		cat "$stderr_file" >&2
+	fi
+	if [[ -s "$stdout_file" ]]; then
+		cat "$stdout_file" >&2
+	fi
+	exit 2
 	;;
 2)
 	if [[ -s "$stderr_file" ]]; then

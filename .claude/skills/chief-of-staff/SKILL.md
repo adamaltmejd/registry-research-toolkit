@@ -37,18 +37,18 @@ outside the agent instead of waking this skill every time. The built-in heartbea
 shell precondition hook, so it always spends a model turn. Use:
 
 ```sh
-scripts/cos_scheduler_tick.sh --thread <chief-of-staff-thread-id>
+uv run --no-project python scripts/cos_preflight.py
 ```
 
 The preflight exits `0` when idle, `10` when a real tick should run, and `2` on setup or
 tool errors. It records its snapshot in `.git/cos-preflight-state.json` by default and
 wakes only when repo/GitHub state changes enough to justify a COS tick: lane drift,
 issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
-merge-gate state changes. The scheduler wrapper stays silent on idle and resumes the one
-COS thread only on exit `10` by running
-`codex exec -C <repo> resume <thread-id> '/chief-of-staff'`. Use `--dry-run` while
-installing launchd/cron so a wake-worthy state prints the Codex command without spending
-an agent turn.
+merge-gate state changes. On Codex surfaces, the tested scheduler wrapper is
+`scripts/cos_scheduler_tick.sh --thread <codex-chief-of-staff-thread-id>`, which resumes
+that Codex thread with `codex exec`. Do not use the Codex wrapper to resume a Claude
+`/loop` thread; pair the preflight with the scheduler/resume mechanism exposed by the
+Claude surface instead.
 
 ## Startup Gate
 

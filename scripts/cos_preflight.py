@@ -25,6 +25,7 @@ import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import Any
 
 WAKE_EXIT = 10
@@ -314,11 +315,21 @@ def load_state(path: Path) -> dict[str, Any] | None:
 
 def write_state(path: Path, snapshot: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f"{path.name}.tmp")
-    tmp.write_text(
-        json.dumps(snapshot, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
-    tmp.replace(path)
+    with NamedTemporaryFile(
+        "w",
+        dir=path.parent,
+        encoding="utf-8",
+        prefix=f"{path.name}.",
+        suffix=".tmp",
+        delete=False,
+    ) as fh:
+        tmp = Path(fh.name)
+        fh.write(json.dumps(snapshot, indent=2, sort_keys=True) + "\n")
+    try:
+        tmp.replace(path)
+    except OSError:
+        tmp.unlink(missing_ok=True)
+        raise
 
 
 def collect_snapshot(epic: int, pr_limit: int) -> dict[str, Any]:

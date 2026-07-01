@@ -53,6 +53,7 @@ def test_idle_preflight_does_not_wake(tmp_path: Path) -> None:
     assert preflight_log.read_text(encoding="utf-8").splitlines() == [
         "--canonical",
         str(repo),
+        "--dry-run",
     ]
 
 
@@ -104,9 +105,15 @@ exit 10
 def test_wake_invokes_codex_exec_resume(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
+    preflight_log = tmp_path / "preflight.log"
     preflight = _exe(
         tmp_path / "preflight",
-        "#!/usr/bin/env bash\nprintf '{\"wake\": true}\\n'\nexit 10\n",
+        f"""#!/usr/bin/env bash
+printf '%s\\n' "$@" >> {preflight_log}
+printf -- '---\\n' >> {preflight_log}
+printf '{{"wake": true}}\\n'
+exit 10
+""",
     )
     codex_log = tmp_path / "codex.log"
     codex = _exe(
@@ -143,6 +150,56 @@ def test_wake_invokes_codex_exec_resume(tmp_path: Path) -> None:
         "resume",
         "thread-1",
         "Run one COS tick",
+    ]
+    assert preflight_log.read_text(encoding="utf-8").splitlines() == [
+        "--canonical",
+        str(repo),
+        "--dry-run",
+        "---",
+        "--canonical",
+        str(repo),
+        "---",
+    ]
+
+
+def test_failed_wake_does_not_commit_preflight_state(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    preflight_log = tmp_path / "preflight.log"
+    preflight = _exe(
+        tmp_path / "preflight",
+        f"""#!/usr/bin/env bash
+printf '%s\\n' "$@" >> {preflight_log}
+printf -- '---\\n' >> {preflight_log}
+printf '{{"wake": true}}\\n'
+exit 10
+""",
+    )
+    codex = _exe(tmp_path / "codex", "#!/usr/bin/env bash\nexit 4\n")
+
+    result = subprocess.run(
+        [
+            str(SCRIPT),
+            "--repo",
+            str(repo),
+            "--thread",
+            "thread-1",
+            "--preflight-bin",
+            str(preflight),
+            "--codex-bin",
+            str(codex),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 4
+    assert preflight_log.read_text(encoding="utf-8").splitlines() == [
+        "--canonical",
+        str(repo),
+        "--dry-run",
+        "---",
     ]
 
 
