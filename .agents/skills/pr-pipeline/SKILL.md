@@ -26,11 +26,11 @@ Agent-surface notes:
   branch/range plus necessary issue context. In-session `registry-code-review` is
   diagnostic, not independent review evidence. The GitHub bot-review window described by
   the repository guidance still applies.
-- For rendered-output PRs, run `web-design-reviewer` in a clean subagent session before
-  the lead's own screenshot inspection. Pass the changed routes, PR/branch, and enough
-  setup context for the reviewer to apply the skill's structured report; do not pass the
-  author's visual conclusions as evidence. Manual screenshots alone are not reviewer
-  evidence, and a PR that lacks this pass does not satisfy the visual gate.
+- For rendered-output PRs, run `web-design-reviewer` in a clean subagent session. Pass
+  the changed routes, PR/branch, and enough setup context for the reviewer to render the
+  app, inspect screenshots, and apply the skill's structured report; do not pass the
+  author's visual conclusions as evidence. Manual screenshots outside that reviewer pass
+  do not satisfy the visual gate.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
   new UI authoring, use the repo-local `frontend-design` skill before building.
 - Do not merge. The `chief-of-staff` skill owns routine merge decisions and execution.
@@ -115,7 +115,7 @@ Run focused verification as the work evolves:
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`. Iteration screenshots do not
   satisfy the formal visual gate; that gate runs later as `web-design-reviewer` in a
-  clean subagent, followed by the lead's own screenshot inspection and durable PR proof.
+  clean subagent and includes screenshot/render inspection plus durable PR proof.
 - Build-affecting DB changes: fast tests first; real `reg-meta-build build-db` is a
   final gate on the truly final head.
 
@@ -148,13 +148,13 @@ Run focused verification as the work evolves:
    - Route reviewer findings through the same fix / dismiss / re-review loop as
      code-review findings. Re-run the reviewer when fixes materially change the rendered
      surface.
-   - Only after the reviewer pass converges, run the lead's own
-     `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` or
-     `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>` screenshot pass,
-     inspect the screenshots, and keep durable PR-visible proof. Do not set the
-     merge-gate status to `ready-to-merge` until both the reviewer pass and the lead
-     screenshot pass are complete. Headless `bun` checks or manual screenshots do not
-     substitute for the reviewer pass.
+   - The reviewer pass owns the screenshot/render inspection. It should use
+     `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`,
+     `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>`, or an
+     already-started preview URL, then include screenshot proof in the structured
+     report. Do not set the merge-gate status to `ready-to-merge` until that reviewer
+     result is complete and PR-visible. Headless `bun` checks or separate manual
+     screenshots do not substitute for the reviewer pass.
 5. Re-review substantial fixes until the review converges.
 6. Update authored docs wherever the diff made them stale — including the design-spec
    prose and any token/symbol it names: package `DESIGN.md`, README/CLI examples,
@@ -202,10 +202,8 @@ durable evidence in the PR body:
   evidence;
 - real-data validation when build pipeline or DB content changed;
 - visual verification when rendered output changed: complete the clean-subagent
-  `web-design-reviewer` pass first, then run
-  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` or
-  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>` on the assembled tree
-  and inspect the screenshot;
+  `web-design-reviewer` pass, including screenshot/render inspection on the assembled
+  tree and durable PR-visible proof;
 - stale-head check before recording the handoff; `chief-of-staff` re-checks it
   immediately before and after merge.
 
@@ -223,7 +221,7 @@ add or replace this block:
 - ci: pass; `gh pr checks <pr>`
 - tests: <commands run>
 - docs: <updated / not required>
-- visual: <not required / pass; web-design-reviewer subagent result + durable PR-visible screenshot proof>
+- visual: <not required / pass; web-design-reviewer result with durable PR-visible screenshot proof>
 - build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
 - stack: <none / after #pr / before #pr>
 <!-- /pr-pipeline-merge-gate -->
@@ -236,7 +234,7 @@ block incomplete and report what chief-of-staff must wait for. A later push make
 block stale; rerun the gate on the new head and refresh the block.
 
 Proof must survive a later chief-of-staff tick. For rendered changes, attach or comment
-both the `web-design-reviewer` result and screenshot evidence on the PR; a local
+the `web-design-reviewer` result with screenshot evidence on the PR; a local
 `/tmp/reg-webapp-shots/` path is useful in the authoring thread but is not durable merge
 evidence. For build-db, record the timestamped log path only if it is accessible to the
 future merge runner, otherwise summarize the completed command, validation result, and

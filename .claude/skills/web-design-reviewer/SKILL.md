@@ -1,83 +1,109 @@
 ---
 name: web-design-reviewer
 description: >-
-  Structured visual review for rendered web UI. Use for Registry Research Toolkit
-  `reg_webapp` rendered-output PRs, pr-pipeline visual gates, website design reviews,
-  layout/overflow checks, responsive checks, accessibility visual checks, and UI polish
-  reviews that require screenshots or browser inspection.
+  Registry Research Toolkit rendered-UI review skill. Use for `reg_webapp`
+  rendered-output PR gates, pr-pipeline visual verification, screenshot-based layout
+  review, responsive checks, accessibility visual checks, and UI regression review after
+  implementation. This is the post-implementation reviewer counterpart to
+  `frontend-design`.
 ---
 
 # Web Design Reviewer
 
-Run a structured visual-quality review against a rendered web app. In this repository,
-this skill is the required design-review pass for PRs that change rendered `reg_webapp`
-output. It is separate from the author's own screenshot inspection.
+Review rendered `reg_webapp` changes against the Registry Research Toolkit visual and
+accessibility contract. This is a post-implementation reviewer skill, not an authoring
+or design-planning skill. Use `frontend-design` before building new UI; use this skill
+after implementation for the rendered visual gate.
 
 ## Registry PR Gate Contract
 
 For rendered-output PRs, run this skill in a clean subagent/session before the lead
-agent's final screenshot inspection.
+records the visual gate. The reviewer pass owns screenshot/render inspection and is the
+required visual evidence.
 
 Required output for the PR gate:
 
 - changed route(s) or URL(s) reviewed;
+- exact render command or preview URL used;
 - viewports tested;
 - screenshots or render proof inspected;
 - findings grouped by severity;
 - every finding fixed or dismissed with a reason;
-- final reviewer result recorded in the PR body or a PR comment.
+- a final reviewer result suitable for the PR body or a PR comment.
 
 Manual screenshots, `bun` checks, or a lead-agent visual skim do not substitute for this
 reviewer pass.
 
-## Prerequisites
+## Inputs
 
-The target app must be running or runnable. For `reg_webapp`, prefer the repo helper:
+Start from the PR/branch/diff, issue, implementer notes, or route list. If no route is
+given, derive the smallest stable route from the changed files and nearby tests.
+
+Common routes:
+
+- `/`
+- `/catalog`
+- `/catalog/<fqid>`
+- `/catalog/group/<provider>/<register>/<key>`
+- `/catalog/group/class/<key>`
+- `/search?q=...`
+- `/project`
+- `/doc/<identifier>`
+
+If the rendered behavior depends on unreleased DB content, ask the lead for the scratch
+DB directory or use the PR's build-db output and pass it as `REG_META_DB`.
+
+## Rendering
+
+Prefer the one-shot helper from the repo root:
 
 ```sh
-reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all <route>
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke
+REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all <route>
 ```
 
-Use `dev.sh smoke` when the changed surface spans the catalog/project flow. The helper
-picks free ports, renders from the current checkout, writes screenshots under
-`/tmp/reg-webapp-shots/`, and tears down servers on exit.
+Use `shot --all` for responsive screenshots unless the route is demonstrably
+desktop-only. Use `smoke` for catalog browsing or broad app-shell changes. Screenshots
+land in `/tmp/reg-webapp-shots/`; include these paths in the report and provide a final
+gate note that can be copied into the PR. A later merge runner needs PR-visible proof,
+so the final note must say what screenshot/render evidence was inspected.
 
-Browser automation must be available for screenshots, page navigation, and viewport
-resizing. DOM snapshots are recommended when the tool surface supports them.
+Browser automation should inspect screenshots and, when available, DOM/accessibility
+snapshots and console output. Do not rely on `bun run lint/check/test/build`; those do
+not render pixels.
 
-## Review Workflow
+## Review Checklist
 
-1. Identify the changed rendered surface.
-   - Read the PR diff, issue, or implementer notes.
-   - Prefer exact routes named by the change.
-   - For `reg_webapp`, common stable routes include `/`, `/catalog`, `/search?q=...`,
-     `/project`, `/catalog/<fqid>`, and `/doc/<identifier>`.
+Check the app as a dense registry research tool, not a marketing site.
 
-2. Render and inspect the app.
-   - Capture screenshots for the changed route(s).
-   - Test at least mobile `375px`, tablet `768px`, desktop `1280px`, and wide `1920px`
-     when the layout is responsive.
-   - Retrieve a DOM/accessibility snapshot when available.
+- App shell: navigation, breadcrumbs, page titles, scroll containers, focus order.
+- Catalog/search surfaces: long FQIDs, register names, Swedish labels, code values,
+  filters, result density, empty/error/loading states.
+- Project authoring: form layout, validation findings, dirty/disabled states, keyboard
+  paths, popovers/dialogs, selected rows.
+- Layout: no unintended horizontal page overflow, overlap, clipping, unstable wrapping,
+  or clipped table/card content at mobile `375px`, tablet `768px`, desktop `1280px`, and
+  wide `1920px`.
+- Responsiveness: shared table-like results should keep headers accessible and become
+  deliberate stacked/card rows on narrow screens.
+- Accessibility visuals: visible focus rings, contrast, accessible names, label
+  association, status meaning conveyed by text/glyphs rather than color alone.
+- Design system: existing components and semantic tokens; no new one-off palettes,
+  hero-style sections, decorative gradients/orbs, heavy shadows, or oversized cards.
+- Render health: no blank screens, stuck `aria-busy="true"` loading states, obvious JS
+  errors, missing critical assets, or screenshots captured before content settled.
 
-3. Check visual quality.
-   - Layout: overflow, overlap, clipping, alignment, spacing, scroll behavior.
-   - Responsive behavior: mobile usability, breakpoint transitions, touch targets.
-   - Accessibility visuals: contrast, focus states, labels/alt text visible in the DOM
-     or accessibility tree.
-   - Consistency: typography, colors, density, component states, loading/empty/error
-     states.
-   - Console/render health: blank screens, visible JS errors, failed critical assets.
+## Findings And Fixes
 
-4. Report findings.
-   - Mark blockers as `P1`, meaningful UX defects as `P2`, and minor polish as `P3`.
-   - Include page/route, viewport, element, issue, and suggested source area.
-   - If no issues are found, say so explicitly and name the routes/viewports reviewed.
+Mark blockers as `P1`, meaningful UX defects as `P2`, and minor polish as `P3`.
 
-5. Fix or route fixes.
-   - If acting as the reviewer subagent, report findings to the lead; do not silently
-     rewrite broad UI.
-   - If also responsible for fixes, make the smallest source change, follow existing
-     design/components, then re-render the affected route and update the report.
+If acting as the reviewer subagent, report findings to the lead; do not silently rewrite
+broad UI. If explicitly responsible for fixes, make the smallest source change, follow
+existing components/tokens, then re-render the affected route and update the report.
+
+Dismiss a finding only with a concrete reason, such as "existing behavior outside this
+PR", "intended clipping", or "route not affected by this diff".
 
 ## Report Format
 
@@ -86,10 +112,11 @@ resizing. DOM snapshots are recommended when the tool surface supports them.
 
 ## Summary
 
-- Target: <URL or route(s)>
-- Framework/styling: <detected stack>
+- PR/branch: <PR number or branch>
+- Routes: <reviewed route(s)>
+- Render command or URL: <command/URL>
 - Viewports: <tested viewports>
-- Screenshots/render proof: <paths or PR-visible links>
+- Screenshots/render proof: <local paths and/or PR-visible links>
 - Result: <pass / findings fixed / findings dismissed / blocked>
 
 ## Findings
@@ -105,15 +132,6 @@ resizing. DOM snapshots are recommended when the tool surface supports them.
 
 ## Final Gate Note
 
-<One sentence suitable for PR body/comment, including whether the reviewer pass is
-complete and where screenshot proof lives.>
+web-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
+screenshots=<paths or PR-visible links>; findings=<none / fixed / dismissed>.
 ```
-
-## Fix Principles
-
-- Prefer existing components, spacing tokens, color tokens, and layout patterns.
-- Keep changes narrow to the affected route/component.
-- Do not hide overflow as a substitute for making content fit unless clipping is the
-  intended behavior.
-- Preserve keyboard focus visibility and accessible names.
-- Re-render after fixes; do not rely on headless checks alone.

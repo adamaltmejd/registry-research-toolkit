@@ -101,12 +101,11 @@ record stack/dependency order in each PR's gate block and leave execution to
      falsifying the record).
    - **visual verification** — required, not skippable, when the PR changes rendered
      output (`reg_webapp/frontend/**`, or any SPA-rendered view): headless `bun` checks
-     never render a pixel. The formal gate is two-part and ordered: a clean
-     `/web-design-reviewer` subagent/session applies the structured design review first,
-     then you run your own screenshot inspection on the assembled tree. Woven through
-     the pipeline (implementation renders in Step A; independent design review plus your
-     inspection runs in Step C; durable proof is recorded at Step E), not a headless
-     check.
+     never render a pixel. The formal gate is a clean `/web-design-reviewer`
+     subagent/session that renders the assembled tree, inspects screenshots, applies the
+     structured design review, and records durable proof at Step E. Implementation may
+     render while iterating in Step A, but those screenshots do not replace the reviewer
+     pass.
 
    Skipping a role is a decision you NAME in your closeout report, never a silent
    omission. A large *mechanical* change (even 100+ files) is still implementer +
@@ -203,16 +202,15 @@ E's review must cover the final HEAD. A clean pass returns "lean already"; skip 
 docs-only or trivial diff (name the skip).
 
 **Frontend addendum.** For a PR that changes rendered output, run the formal visual
-review alongside `/code-review`, in this order. First run **`/web-design-reviewer`** in
-a clean subagent/session against the rendered app or changed route(s); the reviewer
-applies its structured design-quality report (layout, responsive behavior,
-accessibility, consistency) without inheriting the author's visual conclusions. Route
-findings like `/code-review`'s, and re-run the reviewer when fixes materially change the
-rendered surface. Only after that pass converges, render the assembled tree
-(`/run-reg-webapp` + `preview_*`, or `dev.sh smoke` / `dev.sh shot <route>`) and perform
-your own screenshot inspection for the durable merge proof. Do not mark the visual gate
-ready-to-merge until both the reviewer pass and your screenshot pass are complete;
-manual screenshots are not a substitute for the reviewer pass. Authoring new UI is the
+review alongside `/code-review`: run **`/web-design-reviewer`** in a clean
+subagent/session against the rendered app or changed route(s). The reviewer applies its
+structured design-quality report (layout, responsive behavior, accessibility,
+consistency), renders/inspects screenshots via `/run-reg-webapp` + `preview_*` or
+`dev.sh smoke` / `dev.sh shot <route>`, and reports the screenshot proof without
+inheriting the author's visual conclusions. Route findings like `/code-review`'s, and
+re-run the reviewer when fixes materially change the rendered surface. Do not mark the
+visual gate ready-to-merge until that reviewer result is complete and PR-visible; manual
+screenshots outside the reviewer pass are not a substitute. Authoring new UI is the
 *implementer's* job (its prompt routes new-UI work through `frontend-design`), so here
 you review with `/web-design-reviewer`, not `/frontend-design`. When the rendered change
 depends on DB content not yet released (e.g. a build-curation PR earlier in the lane),
@@ -228,13 +226,12 @@ docs push after the hold starts restarts it).
 **E · Merge-gate handoff.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full —
 independent review converged (your `/code-review` loop is the independent Claude pass) ·
 CI green · bot-review window settled · real-data validation for build-affecting work ·
-**visual verification (clean `/web-design-reviewer` result plus `dev.sh smoke` /
-`dev.sh shot` screenshot) for UI changes** · stale-head check. For the bot-review
-window, run **`uv run --no-project python scripts/pr_review_status.py <pr>`** — it
-computes Codex's signal on the **current HEAD**
-(`clean`/`findings`/`reviewing`/`exhausted`/`none`) and returns the verdict bodies in
-`messages` (no second `gh` call), so you don't re-derive the login-sensitive `gh api`
-calls. Operate it like this:
+**visual verification (clean `/web-design-reviewer` result with screenshot/render proof)
+for UI changes** · stale-head check. For the bot-review window, run
+**`uv run --no-project python scripts/pr_review_status.py <pr>`** — it computes Codex's
+signal on the **current HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`) and
+returns the verdict bodies in `messages` (no second `gh` call), so you don't re-derive
+the login-sensitive `gh api` calls. Operate it like this:
 
 - **Launch it once per HEAD as a background task** (`Bash` with
   `run_in_background: true`) right after you mark ready (or after a new push +
@@ -266,7 +263,7 @@ or replace:
 - ci: pass; `gh pr checks <pr>`
 - tests: <commands run>
 - docs: <updated / not required>
-- visual: <not required / pass; web-design-reviewer subagent result + durable PR-visible screenshot proof>
+- visual: <not required / pass; web-design-reviewer result with durable PR-visible screenshot proof>
 - build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
 - stack: <none / after #pr / before #pr>
 <!-- /pr-pipeline-merge-gate -->
@@ -277,10 +274,9 @@ indicator. Do not write it if any gate is missing, pending, stale, or only repor
 the local chat transcript. A `none` Codex signal can be handed to a human with
 explanation, but it is not enough for automerge evidence. A later push makes the block
 stale; rerun the gate on the new head and refresh it. Proof must survive a later
-chief-of-staff tick: attach/comment both the `/web-design-reviewer` result and
-screenshot evidence for rendered changes, and record build-db validation/dbdiff in the
-PR body or a PR comment unless the timestamped log is accessible to the future merge
-runner.
+chief-of-staff tick: attach/comment the `/web-design-reviewer` result with screenshot
+evidence for rendered changes, and record build-db validation/dbdiff in the PR body or a
+PR comment unless the timestamped log is accessible to the future merge runner.
 
 Pipeline-specific operational notes the gate doesn't carry:
 
