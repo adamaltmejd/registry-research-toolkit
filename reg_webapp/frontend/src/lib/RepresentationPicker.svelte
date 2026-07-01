@@ -722,27 +722,30 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     <p class="no-match" role="status">No columns match the active filters.</p>
   {/if}
 
-  {#if bands.length > 1 && allKeys.length > 1}
-    <!-- Global select-all: grab every column of the concept (for the active period)
-         in one move. A header strip, not card chrome. Omitted when there's only ONE
-         variable — that variable's own select-all IS "select all columns", so a
-         global one would just duplicate it. -->
-    <div class="picker-head">
-      <label class="select-all">
-        <input
-          type="checkbox"
-          class="cbox"
-          checked={allSelected}
-          indeterminate={someSelected && !allSelected}
-          aria-label="Select all columns"
-          onchange={toggleAll}
-        />
-        <span>Select all columns</span>
-      </label>
-    </div>
-  {/if}
-
   <ul class="col-list integrated-list">
+    {#if bands.length > 1 && allKeys.length > 1}
+      <!-- Global select-all: grab every visible column of the concept in one move.
+           Rendered as the first integrated list row so hover, click-anywhere, and the
+           full-selection gutter match the column rows below. Omitted when there's only
+           ONE variable — that variable's own select-all IS "select all columns", so a
+           global one would just duplicate it. -->
+      <li class="select-all-row">
+        <label
+          class="select-all row-btn integrated-list-row"
+          class:selected={allSelected}
+        >
+          <input
+            type="checkbox"
+            class="cbox"
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
+            aria-label="Select all columns"
+            onchange={toggleAll}
+          />
+          <span>Select all columns</span>
+        </label>
+      </li>
+    {/if}
     {#each view as cluster (cluster.name)}
       {#if cluster.showHeading}
         <!-- The name-CLUSTER heading (#901): a heterogeneous group renders each
@@ -1237,20 +1240,6 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     overflow-wrap: anywhere;
   }
 
-  /* The global select-all strip — a quiet header, not a card. */
-  .picker-head {
-    padding: 0.4rem 0.75rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .select-all {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    cursor: pointer;
-  }
-
   /* ONE dense list — hairlines, no per-variable boxes. */
   .col-list {
     list-style: none;
@@ -1467,6 +1456,13 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   }
   .row-btn.dimmed:hover {
     opacity: 0.7;
+  }
+  .select-all-row .select-all {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .select-all-row .select-all.selected {
+    color: var(--text);
   }
 
   /* The shared checkbox visual — every box is now a real native <input> (the row's
