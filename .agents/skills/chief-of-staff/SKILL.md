@@ -75,7 +75,9 @@ wakes only when repo/GitHub state changes enough to justify a COS tick: lane dri
 issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
 merge-gate state changes. The scheduler wrapper stays silent on idle and resumes the one
 COS thread only on exit `10` by running
-`codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`. Use `--dry-run`
+`codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`. The wrapper captures
+Codex's progress stream from stderr and leaves only the final agent stdout visible on a
+successful wake; it prints the captured stderr only when the wake fails. Use `--dry-run`
 while installing launchd/cron so a wake-worthy state prints the Codex command without
 spending an agent turn.
 

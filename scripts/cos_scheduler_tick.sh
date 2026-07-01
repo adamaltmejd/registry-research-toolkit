@@ -146,10 +146,13 @@ case "$preflight_status" in
 		printf '\n'
 		exit 10
 	fi
-	echo "cos-scheduler: waking chief-of-staff thread $thread" >&2
-	"${codex_cmd[@]}"
+	: >"$stderr_file"
+	"${codex_cmd[@]}" 2>"$stderr_file"
 	codex_status=$?
 	if [[ "$codex_status" -ne 0 ]]; then
+		if [[ -s "$stderr_file" ]]; then
+			cat "$stderr_file" >&2
+		fi
 		exit "$codex_status"
 	fi
 

@@ -118,7 +118,11 @@ exit 10
     codex_log = tmp_path / "codex.log"
     codex = _exe(
         tmp_path / "codex",
-        f"#!/usr/bin/env bash\nprintf '%s\\n' \"$@\" > {codex_log}\n",
+        f"""#!/usr/bin/env bash
+printf '%s\\n' "$@" > {codex_log}
+printf 'codex progress\\n' >&2
+printf 'final COS report\\n'
+""",
     )
 
     result = subprocess.run(
@@ -142,7 +146,8 @@ exit 10
 
     assert result.returncode == 0
     assert '{"wake": true}' in result.stdout
-    assert "waking chief-of-staff thread thread-1" in result.stderr
+    assert "final COS report" in result.stdout
+    assert result.stderr == ""
     assert codex_log.read_text(encoding="utf-8").splitlines() == [
         "exec",
         "-C",
@@ -175,7 +180,10 @@ printf '{{"wake": true}}\\n'
 exit 10
 """,
     )
-    codex = _exe(tmp_path / "codex", "#!/usr/bin/env bash\nexit 4\n")
+    codex = _exe(
+        tmp_path / "codex",
+        "#!/usr/bin/env bash\necho codex failed >&2\nexit 4\n",
+    )
 
     result = subprocess.run(
         [
@@ -195,6 +203,7 @@ exit 10
     )
 
     assert result.returncode == 4
+    assert "codex failed" in result.stderr
     assert preflight_log.read_text(encoding="utf-8").splitlines() == [
         "--canonical",
         str(repo),

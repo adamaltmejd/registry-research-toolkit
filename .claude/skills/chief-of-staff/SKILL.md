@@ -46,7 +46,8 @@ wakes only when repo/GitHub state changes enough to justify a COS tick: lane dri
 issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
 merge-gate state changes. On Codex surfaces, the tested scheduler wrapper is
 `scripts/cos_scheduler_tick.sh --thread <codex-chief-of-staff-thread-id>`, which resumes
-that Codex thread with `codex exec`. The Codex-only foreground heartbeat is
+that Codex thread with `codex exec` while capturing Codex's progress stderr and leaving
+only the final agent stdout visible on success. The Codex-only foreground heartbeat is
 `scripts/cos_scheduler_heartbeat.sh <codex-chief-of-staff-thread-id>`; it defaults to a
 15-minute interval and runs until Ctrl-C. Do not use either Codex wrapper to resume a
 Claude `/loop` thread; pair the preflight with the scheduler/resume mechanism exposed by
