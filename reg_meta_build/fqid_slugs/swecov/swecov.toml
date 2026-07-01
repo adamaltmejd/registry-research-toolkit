@@ -8,12 +8,6 @@ slug = "adress-sarskilt-boende"
 [register_variant."7381462670892327153.6809303914707441732"]
 slug = "_default"
 
-[register."7305619320260718924"]
-slug = "hreg-sun-groupings"
-
-[register_variant."7305619320260718924.7086089060092714720"]
-slug = "_default"
-
 [register."4969117928487263745"]
 slug = "population"
 

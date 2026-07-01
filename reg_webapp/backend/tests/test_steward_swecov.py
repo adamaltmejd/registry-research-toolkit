@@ -73,7 +73,7 @@ def test_bindings_are_self_consistent(project: ProjectData) -> None:
             seen.add(key)
 
 
-def test_issue_428_sun_grouping_columns_are_flavor_bindings(
+def test_stale_hreg_grouping_source_is_removed(
     project: ProjectData,
 ) -> None:
     bindings = {
@@ -81,36 +81,33 @@ def test_issue_428_sun_grouping_columns_are_flavor_bindings(
         for source in project.sources
         for binding in source.bindings
     }
+    source_names = {source.name for source in project.sources}
 
+    assert "swecov.hreg-sun-groupings._default" not in source_names
+    assert not any(
+        variant == "swecov/hreg-sun-groupings/_default"
+        or variable.startswith("swecov/hreg-sun-groupings/")
+        for variant, variable, _representation in bindings
+    )
     assert {
         (
-            "swecov/hreg-sun-groupings/_default",
-            "swecov/hreg-sun-groupings/sun2000inr3-amnegrupp",
-            "SUN2000Inr3_amnegrupp",
+            "swecov/adress-sarskilt-boende/_default",
+            "swecov/adress-sarskilt-boende/personnr",
+            "personnr",
         ),
         (
-            "swecov/hreg-sun-groupings/_default",
-            "swecov/hreg-sun-groupings/sun2020inr3-amnegrupp",
-            "SUN2020Inr3_amnegrupp",
+            "swecov/adress-sarskilt-boende/_default",
+            "swecov/adress-sarskilt-boende/utdadr2",
+            "UtdAdr2",
         ),
         (
-            "swecov/hreg-sun-groupings/_default",
-            "swecov/hreg-sun-groupings/sun2000inr3-lprog",
-            "SUN2000Inr3_lprog",
+            "swecov/population/_default",
+            "swecov/population/personnr",
+            "PersonNr",
         ),
         (
-            "swecov/hreg-sun-groupings/_default",
-            "swecov/hreg-sun-groupings/sun2020inr3-lprog",
-            "SUN2020Inr3_lprog",
-        ),
-        (
-            "swecov/hreg-sun-groupings/_default",
-            "swecov/hreg-sun-groupings/sun2000niva-lprog",
-            "SUN2000Niva_lprog",
-        ),
-        (
-            "swecov/hreg-sun-groupings/_default",
-            "swecov/hreg-sun-groupings/sun2020niva-lprog",
-            "SUN2020Niva_lprog",
+            "swecov/population/_default",
+            "swecov/population/indexpop",
+            "IndexPop",
         ),
     } <= bindings
