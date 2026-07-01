@@ -74,13 +74,18 @@ tool errors. It records its snapshot in `.git/cos-preflight-state.json` by defau
 wakes only when repo/GitHub state changes enough to justify a COS tick: lane drift,
 issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
 merge-gate state changes. The scheduler wrapper stays silent on idle and wakes the one
-COS thread only on exit `10`. By default it uses `scripts/cos_app_server_wake.py`
+COS thread only on exit `10`. When a wake is needed, it prints compact status/reason
+lines instead of raw preflight JSON. By default it uses `scripts/cos_app_server_wake.py`
 through `codex app-server --stdio` so the tick is posted into the existing Codex thread,
 the terminal does not stream the agent transcript, and preflight state is committed only
 after the thread returns idle. This updates persisted thread history; active Codex CLI
 or desktop views may need `codex resume <thread-id>` or a relaunch to show the new turn
-until those clients live-refresh app-server-injected turns. Use `--wake-backend exec`
-only as a fallback; that path runs
+until those clients live-refresh app-server-injected turns. Do not run
+`codex resume <thread-id>` while the scheduler says a wake is active; wait for
+`cos-scheduler: wake finished`, because attaching a client to the same active turn can
+interrupt it. If the scheduler reports that the thread is already active and skipped the
+wake, do not resume until that active turn is idle. Use `--wake-backend exec` only as a
+fallback; that path runs
 `codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`, captures Codex's
 progress stream from stderr, and leaves only the final agent stdout visible on success.
 Use `--dry-run` while installing launchd/cron so a wake-worthy state prints the wake

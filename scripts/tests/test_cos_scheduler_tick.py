@@ -65,7 +65,7 @@ def test_wake_dry_run_prints_app_server_command(tmp_path: Path) -> None:
         tmp_path / "preflight",
         f"""#!/usr/bin/env bash
 printf '%s\\n' "$@" > {preflight_log}
-printf '{{"wake": true}}\\n'
+printf '{{"wake": true, "reasons": ["lanes need re-rank", "origin/main changed"]}}\\n'
 exit 10
 """,
     )
@@ -91,7 +91,11 @@ exit 10
     )
 
     assert result.returncode == 10
-    assert '{"wake": true}' in result.stdout
+    assert '{"wake": true}' not in result.stdout
+    assert (
+        "cos-scheduler: wake requested: lanes need re-rank; origin/main changed"
+        in result.stdout
+    )
     assert "cos-scheduler: dry-run would run:" in result.stdout
     assert "cos_app_server_wake.py" in result.stdout
     assert "--thread thread-1" in result.stdout
@@ -111,7 +115,7 @@ def test_wake_invokes_app_server_backend_by_default(tmp_path: Path) -> None:
         f"""#!/usr/bin/env bash
 printf '%s\\n' "$@" >> {preflight_log}
 printf -- '---\\n' >> {preflight_log}
-printf '{{"wake": true}}\\n'
+printf '{{"wake": true, "reasons": ["ready merge-gate PR changed: #969"]}}\\n'
 exit 10
 """,
     )
@@ -145,7 +149,14 @@ exit 10
     )
 
     assert result.returncode == 0
-    assert '{"wake": true}' in result.stdout
+    assert '{"wake": true}' not in result.stdout
+    assert (
+        "cos-scheduler: wake requested: ready merge-gate PR changed: #969"
+        in result.stdout
+    )
+    assert "waking thread thread-1 via app-server" in result.stdout
+    assert "do not run codex resume" in result.stdout
+    assert "wake finished; safe to relaunch" in result.stdout
     assert result.stderr == ""
     assert uv_log.read_text(encoding="utf-8").splitlines() == [
         "run",
@@ -183,7 +194,7 @@ def test_wake_invokes_codex_exec_resume(tmp_path: Path) -> None:
         f"""#!/usr/bin/env bash
 printf '%s\\n' "$@" >> {preflight_log}
 printf -- '---\\n' >> {preflight_log}
-printf '{{"wake": true}}\\n'
+printf '{{"wake": true, "reasons": ["open issue-closing PR state changed"]}}\\n'
 exit 10
 """,
     )
@@ -219,7 +230,13 @@ printf 'final COS report\\n'
     )
 
     assert result.returncode == 0
-    assert '{"wake": true}' in result.stdout
+    assert '{"wake": true}' not in result.stdout
+    assert (
+        "cos-scheduler: wake requested: open issue-closing PR state changed"
+        in result.stdout
+    )
+    assert "waking thread thread-1 via exec" in result.stdout
+    assert "wake finished; safe to relaunch" in result.stdout
     assert "final COS report" in result.stdout
     assert result.stderr == ""
     assert codex_log.read_text(encoding="utf-8").splitlines() == [
@@ -241,6 +258,57 @@ printf 'final COS report\\n'
     ]
 
 
+def test_busy_app_server_wake_warns_not_to_resume(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    preflight_log = tmp_path / "preflight.log"
+    preflight = _exe(
+        tmp_path / "preflight",
+        f"""#!/usr/bin/env bash
+printf '%s\\n' "$@" >> {preflight_log}
+printf -- '---\\n' >> {preflight_log}
+printf '{{"wake": true, "reasons": ["origin/main changed"]}}\\n'
+exit 10
+""",
+    )
+    uv = _exe(
+        tmp_path / "uv",
+        "#!/usr/bin/env bash\nexit 75\n",
+    )
+
+    result = subprocess.run(
+        [
+            str(SCRIPT),
+            "--repo",
+            str(repo),
+            "--thread",
+            "thread-1",
+            "--preflight-bin",
+            str(preflight),
+            "--uv-bin",
+            str(uv),
+            "--app-wake-bin",
+            "/tmp/fake-app-wake.py",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert '{"wake": true}' not in result.stdout
+    assert "cos-scheduler: wake requested: origin/main changed" in result.stdout
+    assert "thread thread-1 is already active; skipped wake" in result.stdout
+    assert "do not run codex resume until that active turn is idle" in result.stdout
+    assert "wake finished" not in result.stdout
+    assert preflight_log.read_text(encoding="utf-8").splitlines() == [
+        "--canonical",
+        str(repo),
+        "--dry-run",
+        "---",
+    ]
+
+
 def test_failed_wake_does_not_commit_preflight_state(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
@@ -250,7 +318,7 @@ def test_failed_wake_does_not_commit_preflight_state(tmp_path: Path) -> None:
         f"""#!/usr/bin/env bash
 printf '%s\\n' "$@" >> {preflight_log}
 printf -- '---\\n' >> {preflight_log}
-printf '{{"wake": true}}\\n'
+printf '{{"wake": true, "reasons": ["lanes need re-stamp"]}}\\n'
 exit 10
 """,
     )

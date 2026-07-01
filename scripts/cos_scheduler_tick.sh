@@ -23,7 +23,11 @@ Options:
 
 The default app-server wake writes to persisted Codex thread history without streaming
 the transcript in this terminal. Active Codex clients may need `codex resume THREAD_ID`
-or a relaunch to show the injected turn until live refresh is supported.
+or a relaunch to show the injected turn until live refresh is supported. Do not run
+`codex resume THREAD_ID` while this script says a wake is active; wait for the wake
+finished line first. If the thread is already active and the wake is skipped, do not
+resume until that active turn is idle.
+Wake-worthy preflight JSON is summarized as one terminal line; raw JSON stays internal.
 EOF
 }
 
@@ -35,6 +39,42 @@ fail() {
 need_value() {
 	if [[ $# -lt 2 || -z "$2" ]]; then
 		fail "$1 requires a value"
+	fi
+}
+
+print_preflight_summary() {
+	local json_file="$1"
+	local summary
+	if [[ ! -s "$json_file" ]]; then
+		echo "cos-scheduler: wake requested"
+		return
+	fi
+	if summary="$(python3 - "$json_file" <<'PY'
+import json
+import sys
+
+try:
+    with open(sys.argv[1], encoding="utf-8") as fh:
+        data = json.load(fh)
+except Exception:
+    print("cos-scheduler: wake requested")
+    raise SystemExit(0)
+
+reasons = data.get("reasons")
+if isinstance(reasons, list):
+    reasons = [str(reason) for reason in reasons if reason]
+else:
+    reasons = []
+
+if reasons:
+    print("cos-scheduler: wake requested: " + "; ".join(reasons))
+else:
+    print("cos-scheduler: wake requested")
+PY
+	)"; then
+		echo "$summary"
+	else
+		echo "cos-scheduler: wake requested"
 	fi
 }
 
@@ -172,9 +212,7 @@ case "$preflight_status" in
 	exit 0
 	;;
 10)
-	if [[ -s "$stdout_file" ]]; then
-		cat "$stdout_file"
-	fi
+	print_preflight_summary "$stdout_file"
 	if [[ -z "$thread" ]]; then
 		fail "preflight requested wake but --thread or COS_THREAD_ID is missing"
 	fi
@@ -196,10 +234,12 @@ case "$preflight_status" in
 		printf '\n'
 		exit 10
 	fi
+	echo "cos-scheduler: waking thread $thread via $wake_backend; do not run codex resume for this thread until this wake finishes"
 	: >"$stderr_file"
 	"${wake_cmd[@]}" 2>"$stderr_file"
 	wake_status=$?
 	if [[ "$wake_status" -eq 75 ]]; then
+		echo "cos-scheduler: thread $thread is already active; skipped wake; do not run codex resume until that active turn is idle"
 		exit 0
 	fi
 	if [[ "$wake_status" -ne 0 ]]; then
@@ -214,6 +254,7 @@ case "$preflight_status" in
 	"${preflight_cmd[@]}" >"$stdout_file" 2>"$stderr_file"
 	commit_status=$?
 	if [[ "$commit_status" -eq 0 || "$commit_status" -eq 10 ]]; then
+		echo "cos-scheduler: wake finished; safe to relaunch or run codex resume $thread"
 		exit 0
 	fi
 	echo "cos-scheduler: wake succeeded but state commit failed" >&2
