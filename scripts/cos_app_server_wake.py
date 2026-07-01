@@ -24,6 +24,7 @@ APPROVAL_REQUEST_METHODS = {
     "item/permissions/requestApproval",
     "item/tool/requestUserInput",
     "mcpServer/elicitation/request",
+    "tool/requestUserInput",
 }
 
 OPT_OUT_NOTIFICATION_METHODS = [
@@ -340,7 +341,7 @@ def wake_thread(args: argparse.Namespace) -> None:
         status_type = _status_type(thread)
         if status_type == "systemError":
             raise WakeError(f"thread {args.thread} is systemError")
-        if status_type != "idle":
+        if status_type not in {"idle", "unknown"}:
             raise WakeError(
                 f"thread {args.thread} is {status_type}; skipping overlapping wake",
                 THREAD_BUSY,

@@ -51,7 +51,6 @@ def test_app_server_wake_starts_turn_and_stays_quiet(tmp_path: Path) -> None:
                             "result": {{
                                 "thread": {{
                                     "id": request["params"]["threadId"],
-                                    "status": {{"type": "idle"}},
                                 }}
                             }},
                         }}
@@ -237,7 +236,7 @@ def test_app_server_wake_fails_on_interactive_approval_request(tmp_path: Path) -
                         json.dumps(
                             {
                                 "id": "approval-1",
-                                "method": "item/commandExecution/requestApproval",
+                                "method": "tool/requestUserInput",
                                 "params": {},
                             }
                         ),
