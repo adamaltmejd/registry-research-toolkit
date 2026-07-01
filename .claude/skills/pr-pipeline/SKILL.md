@@ -86,9 +86,9 @@ record stack/dependency order in each PR's gate block and leave execution to
    into the smallest set of coherent, independently mergeable PRs; write a one-line
    scope for each; sequence by dependency.
 
-3. **Pick the roles per PR.** implementer ALWAYS runs; `/code-review` ALWAYS reviews and
-   `/simplify` runs on any non-trivial code diff when available (both Step C). The rest
-   are conditional — a role you won't use is one you must NOT dispatch:
+3. **Pick the roles per PR.** implementer ALWAYS runs; `/code-review` ALWAYS reviews.
+   For any non-trivial code diff, the lead also runs `/simplify` in Step C. The rest are
+   conditional — a role you won't use is one you must NOT dispatch:
    - **tester** — only if behaviour changes (existing snapshot/idempotence tests already
      cover it → skip).
    - **docs-updater** — only if the diff drifts AUTHORED docs (a change that edits docs
@@ -101,9 +101,13 @@ record stack/dependency order in each PR's gate block and leave execution to
      falsifying the record).
    - **visual verification** — required, not skippable, when the PR changes rendered
      output (`reg_webapp/frontend/**`, or any SPA-rendered view): headless `bun` checks
-     never render a pixel. Woven through the pipeline (implementer renders in Step A,
-     you review in Step C, you own the authoritative render at the Step E gate), not a
-     one-shot subagent — the how-to lives in those steps.
+     never render a pixel. The formal gate is a clean `/reg-webapp-design-reviewer`
+     subagent/session that renders the assembled tree, inspects screenshots, applies the
+     structured design review, and records durable proof at Step E. The lead launches a
+     fresh generic `Agent` and tells it to invoke `/reg-webapp-design-reviewer`; do not
+     run the formal reviewer pass in the lead session or use the generic built-in
+     `/web-design-reviewer`. Implementation may render while iterating in Step A, but
+     those screenshots do not replace the reviewer pass.
 
    Skipping a role is a decision you NAME in your closeout report, never a silent
    omission. A large *mechanical* change (even 100+ files) is still implementer +
@@ -154,13 +158,15 @@ scope + the FAST Verify only (lint / format / `ty` / `pytest`); the real
 `dev.sh smoke` for the catalog flow). That mode picks free ports, renders from the
 **worktree's own `.venv`**, and **tears the servers down on exit** — so it's
 worktree-correct and never collides or leaks even under parallel fan-out (no
-`preview_start`/fixed-port hazards). Screenshots land in `/tmp/reg-webapp-shots/`;
-**look at them**. The **authoritative rendered proof is yours (the lead): a single
-`dev.sh smoke`/`shot` on the assembled tree** — the visual analog of the union Verify,
-and the merge-gate screenshot (Step E). When they report, validate the real diff,
-`git add -A`, commit, and push onto the draft PR's branch. Outward-facing `gh` actions
-(PR create / comment / PR body update) may be denied by the session's permission mode —
-if one is denied, surface it to the human, don't work around it.
+`preview_start`/fixed-port hazards). Screenshots land in `/tmp/reg-webapp-shots/`; use
+them to catch blank renders or obvious implementation failures, but do not count them as
+the formal visual gate. The authoritative rendered proof is the clean
+`/reg-webapp-design-reviewer` result in Step C, which owns the assembled-tree
+screenshot/render inspection and the durable PR-visible proof recorded for the merge
+gate (Step E). When they report, validate the real diff, `git add -A`, commit, and push
+onto the draft PR's branch. Outward-facing `gh` actions (PR create / comment / PR body
+update) may be denied by the session's permission mode — if one is denied, surface it to
+the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
@@ -187,24 +193,28 @@ on the fix delta. Repeat until a pass reports no further material findings. Safe
 valve: if it won't settle after a few rounds or keeps re-raising the same point, STOP
 and surface it via `AskUserQuestion` — never loop forever.
 
-Then run **`/simplify`** (a Claude-Code-only skill; if unavailable, do the same pass by
-hand — never block on a missing command) on any non-trivial code diff — the dedicated
-reuse/simplification/altitude pass, deeper than the cleanup lens `/code-review` already
-folds in (a one-caller abstraction, a module duplicating a subsystem elsewhere, a
-library that subsumes the approach). Run it **report-only** and route its cuts through a
-fresh implementer → re-verify → commit, deduping overlap with `/code-review`'s findings.
-Then **re-run `/code-review` on the simplify-fix range**
-(`git diff <pre-simplify>..HEAD`) — a simplification can touch a safety guard, and Step
-E's review must cover the final HEAD. A clean pass returns "lean already"; skip only a
-docs-only or trivial diff (name the skip).
+Then run **`/simplify`** on any non-trivial code diff. Run it report-only: look for
+one-caller abstractions, duplicated subsystem logic, an existing library or subsystem
+that subsumes the approach, over-broad scope, and accidental weakening of safety guards.
+Route any accepted cuts through a fresh implementer → re-verify → commit, deduping
+overlap with `/code-review`'s findings. Then **re-run `/code-review` on the
+simplification-fix range** (`git diff <pre-simplify>..HEAD`) — a simplification can
+touch a safety guard, and Step E's review must cover the final HEAD. A clean `/simplify`
+pass records "lean already"; skip only a docs-only or trivial diff (name the skip).
 
-**Frontend addendum.** For a PR that changes rendered output, run a **visual review**
-alongside `/code-review`: render the assembled tree (`/run-reg-webapp` + `preview_*`)
-and inspect the changed views, then run **`/web-design-reviewer`** for the structured
-design-quality pass (consistency / spacing / accessibility regressions the naked eye
-skims past). Authoring new UI is the *implementer's* job (its prompt routes new-UI work
-through `frontend-design`), so here you review with `/web-design-reviewer`, not
-`/frontend-design`. Route findings like `/code-review`'s. When the rendered change
+**Frontend addendum.** For a PR that changes rendered output, run the formal visual
+review alongside `/code-review`: launch a fresh generic `Agent` and tell it to run
+**`/reg-webapp-design-reviewer`** against the rendered app or changed route(s). The
+reviewer applies its structured design-quality report (layout, responsive behavior,
+accessibility, consistency), renders/inspects screenshots via `/run-reg-webapp` +
+`preview_*` or `dev.sh smoke` / `dev.sh shot <route>`, and reports the screenshot proof
+without inheriting the author's visual conclusions. Route findings like
+`/code-review`'s, and re-run the reviewer when fixes materially change the rendered
+surface. Do not mark the visual gate ready-to-merge until that reviewer result is
+complete and PR-visible; manual screenshots outside the reviewer pass are not a
+substitute. Authoring new UI is the *implementer's* job (its prompt routes new-UI work
+through `frontend-design`), so here you review with `/reg-webapp-design-reviewer`, not
+`/frontend-design` or the generic `/web-design-reviewer`. When the rendered change
 depends on DB content not yet released (e.g. a build-curation PR earlier in the lane),
 point the dev server at a scratch `build-db` via
 `REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp → "Verifying against
@@ -218,8 +228,8 @@ docs push after the hold starts restarts it).
 **E · Merge-gate handoff.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full —
 independent review converged (your `/code-review` loop is the independent Claude pass) ·
 CI green · bot-review window settled · real-data validation for build-affecting work ·
-**visual verification (`dev.sh smoke` / `dev.sh shot` screenshot) for UI changes** ·
-stale-head check. For the bot-review window, run
+**visual verification (clean `/reg-webapp-design-reviewer` result with screenshot/render
+proof) for UI changes** · stale-head check. For the bot-review window, run
 **`uv run --no-project python scripts/pr_review_status.py <pr>`** — it computes Codex's
 signal on the **current HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`) and
 returns the verdict bodies in `messages` (no second `gh` call), so you don't re-derive
@@ -255,7 +265,7 @@ or replace:
 - ci: pass; `gh pr checks <pr>`
 - tests: <commands run>
 - docs: <updated / not required>
-- visual: <not required / pass with durable PR-visible proof>
+- visual: <not required / pass; reg-webapp-design-reviewer result with durable PR-visible screenshot proof>
 - build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
 - stack: <none / after #pr / before #pr>
 <!-- /pr-pipeline-merge-gate -->
@@ -266,9 +276,10 @@ indicator. Do not write it if any gate is missing, pending, stale, or only repor
 the local chat transcript. A `none` Codex signal can be handed to a human with
 explanation, but it is not enough for automerge evidence. A later push makes the block
 stale; rerun the gate on the new head and refresh it. Proof must survive a later
-chief-of-staff tick: attach/comment screenshot evidence for rendered changes, and record
-build-db validation/dbdiff in the PR body or a PR comment unless the timestamped log is
-accessible to the future merge runner.
+chief-of-staff tick: attach/comment the `/reg-webapp-design-reviewer` result with
+screenshot evidence for rendered changes, and record build-db validation/dbdiff in the
+PR body or a PR comment unless the timestamped log is accessible to the future merge
+runner.
 
 Pipeline-specific operational notes the gate doesn't carry:
 

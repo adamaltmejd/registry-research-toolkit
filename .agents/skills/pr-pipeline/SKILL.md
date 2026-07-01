@@ -23,16 +23,18 @@ Agent-surface notes:
 - For review, run `registry-code-review` as the repo-scoped callable review workflow in
   a fresh subagent. On Codex `multi_agent_v1`, omit `agent_type` (there is no
   review-specific role), do not fork the full history, and pass only the PR number or
-  branch/range plus necessary issue context. If no subagent tool is preloaded, search
-  for a callable multi-agent tool before declaring subagents unavailable. Only fall back
-  to an in-session `registry-code-review` checklist after discovery fails or the tool
-  rejects the request; state what was tried. In-session review is diagnostic, not
-  independent review evidence. The GitHub bot-review window described by the repository
-  guidance still applies.
+  branch/range plus necessary issue context. In-session `registry-code-review` is
+  diagnostic, not independent review evidence. The GitHub bot-review window described by
+  the repository guidance still applies.
+- For rendered-output PRs, run `reg-webapp-design-reviewer` in a clean subagent session.
+  On Codex `multi_agent_v1`, launch a fresh generic subagent and instruct it to invoke
+  the repo-local `reg-webapp-design-reviewer` skill by that exact name. Pass the changed
+  routes, PR/branch, and enough setup context for the reviewer to render the app,
+  inspect screenshots, and apply the skill's structured report; do not pass the author's
+  visual conclusions as evidence. Manual screenshots outside that reviewer pass do not
+  satisfy the visual gate.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
-  new UI authoring, use the repo-local `frontend-design` skill before building. If the
-  active Codex setup does not expose that repo-local skill, report the setup gap before
-  authoring substantial new UI instead of silently substituting generic design prose.
+  new UI authoring, use the repo-local `frontend-design` skill before building.
 - Do not merge. The `chief-of-staff` skill owns routine merge decisions and execution.
   Finish by marking PRs ready, recording current-head merge-gate evidence, and reporting
   the handoff state.
@@ -110,11 +112,12 @@ Run focused verification as the work evolves:
 - Frontend: from `reg_webapp/frontend/`, use `bun run lint`, `bun run check`,
   `bun run test`, `bun run build`, and regenerate API types only after backend contract
   changes. Headless checks never render a pixel. If the change alters rendered output
-  (`reg_webapp/frontend/**`, or any view / component / style the SPA renders), return to
-  the repo root and run
-  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot   <changed-route>` or
-  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`, inspect
-  `/tmp/reg-webapp-shots/`, and keep the screenshot path for closeout / PR proof.
+  (`reg_webapp/frontend/**`, or any view / component / style the SPA renders), render
+  while iterating from the repo root with
+  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
+  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`. Iteration screenshots do not
+  satisfy the formal visual gate; that gate runs later as `reg-webapp-design-reviewer`
+  in a clean subagent and includes screenshot/render inspection plus durable PR proof.
 - Build-affecting DB changes: fast tests first; real `reg-meta-build build-db` is a
   final gate on the truly final head.
 
@@ -131,22 +134,34 @@ Run focused verification as the work evolves:
    subagent running `registry-code-review`, and pass only the PR number or branch/range
    plus necessary issue context, not the author's intended fixes or conclusions. On
    Codex `multi_agent_v1`, omit `agent_type` (there is no review-specific role) and do
-   not fork the full history. If no subagent tool is preloaded, search for a callable
-   multi-agent tool before declaring subagents unavailable. Only fall back to an
-   in-session `registry-code-review` checklist after discovery fails or the tool rejects
-   the request; state what was tried and that it does not satisfy the independent review
-   gate. Stop before ready/handoff until an external or subagent review signal is
-   available. Fix or explicitly dismiss every material finding with a reason. Beyond
-   correctness, weigh reuse/simplification/altitude cleanup — a one-caller abstraction,
-   a module duplicating a subsystem elsewhere, a library that subsumes the approach —
-   and route those cuts like any finding. (There is no `/simplify` on this surface; it
-   is a Claude Code skill only.)
-4. For rendered-output changes, run `web-design-reviewer` against the rendered app as
-   the structured design-quality pass when the skill is exposed in the active Codex
-   setup. If it is not exposed, report that setup gap and still complete the mandatory
-   manual visual review with the `run-reg-webapp` render; do not treat headless `bun`
-   checks as a substitute. Route design findings through the same fix / dismiss /
-   re-review loop as code-review findings.
+   not fork the full history. In-session `registry-code-review` is diagnostic and does
+   not satisfy the independent review gate. If the subagent launch fails or is rejected,
+   run the in-session diagnostic checklist if useful, record
+   `independent-review: blocked; subagent launch failed`, and do not mark the PR
+   ready-to-merge until a fresh subagent or other trusted independent review completes.
+   Stop before ready/handoff until the independent review has reported. Fix or
+   explicitly dismiss every material finding with a reason. Beyond correctness, weigh
+   reuse/simplification/altitude cleanup — a one-caller abstraction, a module
+   duplicating a subsystem elsewhere, a library that subsumes the approach — and route
+   those cuts like any finding.
+4. For rendered-output changes, run the formal visual gate in this order:
+   - First, launch a fresh generic subagent running `reg-webapp-design-reviewer` against
+     the rendered app or the changed route(s). The subagent must invoke that repo-local
+     skill by exact name; do not run the formal reviewer pass in the lead session or use
+     a generic web-design reviewer. The reviewer must apply the skill's structured
+     report workflow for layout, responsive, accessibility, and consistency issues. It
+     can use `run-reg-webapp` or an already-started preview URL, but its report must be
+     separate from the author's manual inspection.
+   - Route reviewer findings through the same fix / dismiss / re-review loop as
+     code-review findings. Re-run the reviewer when fixes materially change the rendered
+     surface.
+   - The reviewer pass owns the screenshot/render inspection. It should use
+     `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`,
+     `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>`, or an
+     already-started preview URL, then include screenshot proof in the structured
+     report. Do not set the merge-gate status to `ready-to-merge` until that reviewer
+     result is complete and PR-visible. Headless `bun` checks or separate manual
+     screenshots do not substitute for the reviewer pass.
 5. Re-review substantial fixes until the review converges.
 6. Update authored docs wherever the diff made them stale — including the design-spec
    prose and any token/symbol it names: package `DESIGN.md`, README/CLI examples,
@@ -193,11 +208,9 @@ durable evidence in the PR body:
   human with explanation, but it is not enough for `status: ready-to-merge` automerge
   evidence;
 - real-data validation when build pipeline or DB content changed;
-- visual verification when rendered output changed: run
-  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` or
-  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>` on the assembled tree,
-  inspect the screenshot, and run `web-design-reviewer` for the structured design pass
-  when the active Codex setup exposes it;
+- visual verification when rendered output changed: complete the clean-subagent
+  `reg-webapp-design-reviewer` pass, including screenshot/render inspection on the
+  assembled tree and durable PR-visible proof;
 - stale-head check before recording the handoff; `chief-of-staff` re-checks it
   immediately before and after merge.
 
@@ -215,7 +228,7 @@ add or replace this block:
 - ci: pass; `gh pr checks <pr>`
 - tests: <commands run>
 - docs: <updated / not required>
-- visual: <not required / pass with durable PR-visible proof>
+- visual: <not required / pass; reg-webapp-design-reviewer result with durable PR-visible screenshot proof>
 - build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
 - stack: <none / after #pr / before #pr>
 <!-- /pr-pipeline-merge-gate -->
@@ -228,11 +241,11 @@ block incomplete and report what chief-of-staff must wait for. A later push make
 block stale; rerun the gate on the new head and refresh the block.
 
 Proof must survive a later chief-of-staff tick. For rendered changes, attach or comment
-the screenshot evidence on the PR; a local `/tmp/reg-webapp-shots/` path is useful in
-the authoring thread but is not durable merge evidence. For build-db, record the
-timestamped log path only if it is accessible to the future merge runner, otherwise
-summarize the completed command, validation result, and dbdiff in the PR body or a PR
-comment.
+the `reg-webapp-design-reviewer` result with screenshot evidence on the PR; a local
+`/tmp/reg-webapp-shots/` path is useful in the authoring thread but is not durable merge
+evidence. For build-db, record the timestamped log path only if it is accessible to the
+future merge runner, otherwise summarize the completed command, validation result, and
+dbdiff in the PR body or a PR comment.
 
 Run the real `build-db` last and once for build-affecting work, using the `build-db`
 skill / `scripts/build_db_watch.py` so the run has a timestamped log, sparse progress,

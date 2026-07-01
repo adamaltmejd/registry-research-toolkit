@@ -139,6 +139,7 @@ Inspect the screenshots in `/tmp/reg-webapp-shots/`. If the rendering depends on
 unreleased DB content, use a scratch DB and pass `REG_META_DB="$db_dir"` to the same
 driver command.
 
-For `pr-pipeline`, this authoring pass does not replace `web-design-reviewer`; it
-precedes implementation. The reviewer still runs against a live rendered app or manual
-visual inspection after implementation.
+For `pr-pipeline`, this authoring pass does not replace `reg-webapp-design-reviewer`; it
+precedes implementation. After implementation, the required visual gate is a clean
+`reg-webapp-design-reviewer` pass against the rendered app with screenshot/render
+evidence; manual visual inspection does not replace it.

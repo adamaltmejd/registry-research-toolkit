@@ -66,8 +66,10 @@ the lead runs the authoritative union Verify on the assembled result.
      `dev.sh smoke` for the catalog flow). It uses free ports + the checkout's own
      `.venv` and tears the servers down on exit — so it's worktree-correct and safe even
      under parallel fan-out (no fixed-port collisions, no leaked servers). **Look at**
-     the screenshots in `/tmp/reg-webapp-shots/` and report them to the lead (who owns
-     the authoritative render on the assembled tree).
+     the screenshots in `/tmp/reg-webapp-shots/` and report them to the lead as
+     iteration evidence. The formal visual gate is the clean
+     `/reg-webapp-design-reviewer` pass on the assembled tree; do not present
+     implementer screenshots as authoritative merge-gate proof.
 4. **Self-simplify before reporting** (lazy authorship is the point). Re-read your OWN
    diff against the ladder and cut what's cuttable: a one-use abstraction → inline it; a
    re-pasted leaf → reuse the internal helper; a hand-rolled thing stdlib or an

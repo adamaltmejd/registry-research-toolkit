@@ -1,0 +1,6 @@
+interface:
+  display_name: "Reg Webapp Design Reviewer"
+  short_description: "Review reg_webapp screenshots for PR gates"
+  default_prompt: "Use $reg-webapp-design-reviewer to render and review reg_webapp UI routes before PR handoff."
+policy:
+  allow_implicit_invocation: true
