@@ -1,5 +1,11 @@
 <script lang="ts">
-import { getCatalogNode, isCatalogNode } from "./api";
+import {
+  type BindingChild,
+  type ClassificationNodeData,
+  type ConceptGroup,
+  getCatalogNode,
+  isCatalogNode,
+} from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
@@ -11,6 +17,7 @@ import {
   classGroupHref,
   countFoldedMembers,
   foldGroupedRows,
+  type GroupedRow,
   groupFilterKeys,
   groupHref,
   leafSlug,
@@ -19,7 +26,7 @@ import {
   rankFilter,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
-import { type Column, DataTable, EmptyState } from "./ui";
+import { type Column, DataTable, EmptyState, Panel } from "./ui";
 import VariantBrowser from "./VariantBrowser.svelte";
 
 // The provider arm renders its register list as a real DataTable: a Register
@@ -35,6 +42,102 @@ const registerColumns: Column<RegisterRow>[] = [
   { key: "name", label: "Register" },
   { key: "purpose", label: "Description" },
 ];
+
+type VariableBrowseRow =
+  | {
+      id: string;
+      kind: "group";
+      group: ConceptGroup;
+      label: string;
+      href: string;
+    }
+  | {
+      id: string;
+      kind: "leaf";
+      fqid: string;
+      label: string;
+    };
+
+const variableColumns: Column<VariableBrowseRow>[] = [
+  { key: "label", label: "Variable" },
+];
+
+type ClassificationBrowseRow =
+  | {
+      id: string;
+      kind: "group";
+      group: ConceptGroup;
+      label: string;
+      noun: string;
+      href: string;
+      shortName: "";
+    }
+  | {
+      id: string;
+      kind: "leaf";
+      fqid: string;
+      label: string;
+      shortName: string;
+    };
+
+const classificationColumns: Column<ClassificationBrowseRow>[] = [
+  { key: "label", label: "Classification" },
+  { key: "shortName", label: "Short name", align: "end" },
+];
+
+function variableBrowseRows(
+  rows: GroupedRow<BindingChild>[],
+  registerFqid: string,
+): VariableBrowseRow[] {
+  return rows.map((row) =>
+    row.kind === "group"
+      ? {
+          id: `group:${row.group.key}`,
+          kind: "group",
+          group: row.group,
+          label: row.group.label,
+          href: groupHref(registerFqid, row.group.key),
+        }
+      : {
+          id: row.item.fqid,
+          kind: "leaf",
+          fqid: row.item.fqid,
+          label: row.item.name ?? row.item.fqid,
+        },
+  );
+}
+
+function classificationBrowseRows(
+  rows: GroupedRow<ClassificationNodeData>[],
+): ClassificationBrowseRow[] {
+  return rows.map((row) =>
+    row.kind === "group"
+      ? {
+          id: `group:${row.group.key}`,
+          kind: "group",
+          group: row.group,
+          label: row.group.label,
+          noun: axisNoun(row.group.axes),
+          href: classGroupHref(row.group.key),
+          shortName: "",
+        }
+      : {
+          id: row.item.fqid,
+          kind: "leaf",
+          fqid: row.item.fqid,
+          label: row.item.name,
+          shortName: row.item.short_name,
+        },
+  );
+}
+
+function browseRowId(row: { id: string }): string {
+  return row.id;
+}
+
+function registerRowId(row: RegisterRow): string {
+  return row.fqid;
+}
 
 // Fetches and renders one catalog node by FQID path, switching on the `kind`
 // discriminator. The provider/register/classification browse fetch is a plain
@@ -109,7 +212,6 @@ $effect(() => {
         r.purpose,
       ])}
       <h2>{nodeLabel(node)}</h2>
-      <h3 class="section-eyebrow micro-label">Registers</h3>
       {#if node.children.length > 0}
         <FilterInput
           bind:value={filter}
@@ -119,22 +221,28 @@ $effect(() => {
           label="Filter registers"
         />
         {#if registers.length > 0}
-          <DataTable columns={registerColumns} rows={registers}>
-            {#snippet cell(register, column)}
-              {#if column.key === "name"}
-                <a class="row-link" href={catalogHref(register.fqid)} title={register.fqid}>
-                  {register.name ?? register.fqid}
-                </a>
-              {:else if register.purpose}
-                <span class="clamp-2">{register.purpose}</span>
-              {/if}
-            {/snippet}
-          </DataTable>
+          <Panel title="Registers" flush>
+            <DataTable columns={registerColumns} rows={registers} getRowId={registerRowId}>
+              {#snippet cell(register, column)}
+                {#if column.key === "name"}
+                  <a class="row-link" href={catalogHref(register.fqid)} title={register.fqid}>
+                    {register.name ?? register.fqid}
+                  </a>
+                {:else if register.purpose}
+                  <span class="clamp-2">{register.purpose}</span>
+                {/if}
+              {/snippet}
+            </DataTable>
+          </Panel>
         {:else}
-          <EmptyState title={`No registers match “${filter}”`} />
+          <Panel title="Registers">
+            <EmptyState title={`No registers match “${filter}”`} />
+          </Panel>
         {/if}
       {:else}
-        <EmptyState title="No registers." />
+        <Panel title="Registers">
+          <EmptyState title="No registers." />
+        </Panel>
       {/if}
     {:else if node.kind === "register"}
       <!-- #303 concept-group folding: grouped bindings render as one expandable
@@ -148,9 +256,6 @@ $effect(() => {
       )}
       <h2>{nodeLabel(node)}</h2>
       {#if node.purpose}<p class="purpose-text">{node.purpose}</p>{/if}
-      <!-- "Variables" is the researcher-facing label for this list; the code/API
-           term is "binding" (the addressable variable leaf) — display copy only. -->
-      <h3 class="section-eyebrow micro-label">Variables</h3>
       {#if rows.length > 0}
         <!-- Counts stay in VARIABLE units after folding (a group row counts its
              members), so the "x of y" readout still reflects register size. -->
@@ -162,34 +267,40 @@ $effect(() => {
           label="Filter variables"
         />
         {#if filteredRows.length > 0}
-          <ul class="children table single">
-            {#each filteredRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
-              {#if row.kind === "group"}
-                <!-- #673 (M6): a group row in the register arm LINKS to its
-                     subject page (register-only route) instead of expanding
-                     inline. The group row is a self-contained widget — it spans
-                     the table's columns (`.group-row`) and owns its own layout. -->
-                <li class="group-row">
+          {@const variableRows = variableBrowseRows(filteredRows, node.fqid)}
+          <Panel title="Variables" flush>
+            <DataTable
+              columns={variableColumns}
+              rows={variableRows}
+              getRowId={browseRowId}
+            >
+              {#snippet cell(row)}
+                {#if row.kind === "group"}
+                  <!-- #673 (M6): register-arm group rows link to their subject page.
+                       Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
                   <ConceptGroupRow
                     group={row.group}
                     noun="variables"
-                    href={groupHref(node.fqid, row.group.key)}
+                    href={row.href}
+                    showGroupKey={false}
                   />
-                </li>
-              {:else}
-                <li>
-                  <a href={catalogHref(row.item.fqid)} title={row.item.fqid}>
-                    <span class="label">{row.item.name ?? row.item.fqid}</span>
+                {:else}
+                  <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
+                    {row.label}
                   </a>
-                </li>
-              {/if}
-            {/each}
-          </ul>
+                {/if}
+              {/snippet}
+            </DataTable>
+          </Panel>
         {:else}
-          <EmptyState title={`No variables match “${filter}”`} />
+          <Panel title="Variables">
+            <EmptyState title={`No variables match “${filter}”`} />
+          </Panel>
         {/if}
       {:else}
-        <EmptyState title="No variables." />
+        <Panel title="Variables">
+          <EmptyState title="No variables." />
+        </Panel>
       {/if}
       <VariantBrowser registerFqid={node.fqid} />
     {:else if node.kind === "binding"}
@@ -207,35 +318,40 @@ $effect(() => {
            edition-chain panel. -->
       {@const clsRows = foldGroupedRows(node.children, node.groups)}
       <h2>{nodeLabel(node)}</h2>
-      <h3 class="section-eyebrow micro-label">Classifications</h3>
       {#if clsRows.length > 0}
-        <ul class="children table">
-          {#each clsRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
-            {#if row.kind === "group"}
-              <!-- #756: the classification-umbrella group now LINKS to its own
-                   first-class subject page (`classGroupHref`), like the register
-                   groups link to theirs (#673) — the row renders as a link, not the
-                   inline <details>. Spans the table columns + owns its layout
-                   (`.group-row`). -->
-              <li class="group-row">
-                <ConceptGroupRow
-                  group={row.group}
-                  noun={axisNoun(row.group.axes)}
-                  href={classGroupHref(row.group.key)}
-                />
-              </li>
-            {:else}
-              <li>
-                <a href={catalogHref(row.item.fqid)} title={row.item.short_name}>
-                  <span class="label">{row.item.name}</span>
-                  <code class="short-name">{row.item.short_name}</code>
-                </a>
-              </li>
-            {/if}
-          {/each}
-        </ul>
+        {@const classificationRows = classificationBrowseRows(clsRows)}
+        <Panel title="Classifications" flush>
+          <DataTable
+            columns={classificationColumns}
+            rows={classificationRows}
+            getRowId={browseRowId}
+          >
+            {#snippet cell(row, column)}
+              {#if column.key === "label"}
+                {#if row.kind === "group"}
+                  <!-- #756: classification-umbrella groups link to their subject page.
+                       Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
+                  <ConceptGroupRow
+                    group={row.group}
+                    noun={row.noun}
+                    href={row.href}
+                    showGroupKey={false}
+                  />
+                {:else}
+                  <a class="row-link" href={catalogHref(row.fqid)} title={row.shortName}>
+                    {row.label}
+                  </a>
+                {/if}
+              {:else if row.kind === "leaf"}
+                <code class="short-name">{row.shortName}</code>
+              {/if}
+            {/snippet}
+          </DataTable>
+        </Panel>
       {:else}
-        <EmptyState title="No classifications." />
+        <Panel title="Classifications">
+          <EmptyState title="No classifications." />
+        </Panel>
       {/if}
     {:else if node.kind === "classification"}
       <!-- #638 PR1: the classification leaf renders through the unified SubjectView
@@ -254,21 +370,14 @@ $effect(() => {
 {/if}
 
 <style>
-  /* The section eyebrow carries the shared `.micro-label` utility for its
-     tracked-uppercase styling; only its list-level spacing is local. It
-     differentiates the list LEVEL (registers under a provider vs variables under
-     a register vs classifications). */
-  .section-eyebrow {
-    margin: var(--space-4) 0 var(--space-2);
-  }
   /* The register's own subject text (register arm). */
   .purpose-text {
     color: var(--text-muted);
     font-size: var(--text-sm);
   }
-  /* A register-list name link (inside a DataTable cell) — the NAME is primary.
-     Long-name breaking now comes from DataTable's cell-level
-     `overflow-wrap: anywhere`, which inherits into this link (#832). */
+  /* Browse-list name links (inside DataTable cells) — the NAME is primary.
+     Long-name breaking comes from DataTable's cell-level `overflow-wrap:
+     anywhere`, which inherits into these links (#832). */
   .row-link {
     font-weight: 600;
   }
@@ -283,76 +392,9 @@ $effect(() => {
     overflow: hidden;
     color: var(--text-muted);
   }
-  .children {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  /* #673 (M5): a compact, column-aligned, scannable list. Rows are tight (one
-     text line each); the name forms a scannable left column, a secondary label
-     (a classification's short_name) aligns in its own column. A CSS grid on the
-     <ul> aligns columns ACROSS rows without per-row width guessing — one link per
-     row. The <li> is `display:contents` (a non-interactive wrapper) and the <a> is
-     a SUBGRID box (`display:grid` spanning `1 / -1` with `grid-template-columns:
-     subgrid`) so the <a>'s children land in the <ul>'s tracks while the <a> stays
-     a real, keyboard-FOCUSABLE element. (A `display:contents` <a> is dropped from
-     Chromium's sequential tab order — the #808 a11y defect this fixes.) The
-     variable list (register arm) has only the name column; the classification list
-     adds the short_name column. */
-  .children.table {
-    display: grid;
-    grid-template-columns: minmax(auto, max-content) auto;
-    row-gap: var(--space-1);
-    column-gap: var(--space-3);
-    align-items: baseline;
-  }
-  /* The variable arm (register) has only a name column, so a leaf contributes a
-     single grid item. Force one column — otherwise CSS auto-placement packs two
-     consecutive ungrouped variables into one row's two tracks. */
-  .children.table.single {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  /* A LEAF row's <li> dissolves into the grid (display:contents); its <a> is the
-     subgrid row spanning all columns, so the <a>'s children become the row's grid
-     cells — one focusable link per row, no nesting. */
-  .children.table li:not(.group-row) {
-    display: contents;
-  }
-  .children.table li:not(.group-row) > a {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: subgrid;
-    column-gap: var(--space-3);
-    align-items: baseline;
-  }
-  .children.table li:not(.group-row) > a > * {
-    min-width: 0;
-    padding: var(--space-1) 0;
-  }
-  /* #808 a11y: the leaf link is now a real focusable box (subgrid), so a visible
-     keyboard focus ring draws on it — the shared `--focus-ring` token, matching
-     DataTable's selectable rows. */
-  .children.table li:not(.group-row) > a:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-    border-radius: var(--radius-sm);
-  }
-  /* A GROUP row is a self-contained widget (ConceptGroupRow: link or <details>):
-     span the full list width and let it own its internal layout. */
-  .children.table li.group-row {
-    grid-column: 1 / -1;
-    padding: var(--space-1) 0;
-  }
-  .children .label {
-    font-weight: 600;
-    /* Break long compound variable/classification names rather than overflow the
-       mobile canvas (#806). */
-    overflow-wrap: anywhere;
-  }
   /* A classification's short_name is a meaningful human classification code (not
      a raw FQID), so it stays VISIBLE as a muted secondary label in column 2. */
   .short-name {
-    grid-column: 2;
     color: var(--text-muted);
     font-size: var(--text-sm);
     text-align: right;

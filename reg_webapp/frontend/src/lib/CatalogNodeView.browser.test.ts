@@ -97,6 +97,39 @@ function registerNode(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+function groupedRegisterNode(): CatalogNode {
+  return {
+    kind: "register",
+    fqid: "scb/lisa",
+    name: "LISA",
+    children: [
+      { kind: "binding", fqid: "scb/lisa/inkjan", name: "Inkomst januari" },
+      { kind: "binding", fqid: "scb/lisa/inkfeb", name: "Inkomst februari" },
+      { kind: "binding", fqid: "scb/lisa/kon", name: "Kön" },
+    ],
+    groups: [
+      {
+        key: "ink",
+        label: "Inkomst per månad",
+        source: "token",
+        axes: [{ name: "month", label: "month" }],
+        members: [
+          {
+            fqid: "scb/lisa/inkjan",
+            name: "Inkomst januari",
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+          },
+          {
+            fqid: "scb/lisa/inkfeb",
+            name: "Inkomst februari",
+            facets: [{ axis: "month", value: "02", label: "februari" }],
+          },
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
 });
@@ -123,6 +156,10 @@ describe("CatalogNodeView provider arm", () => {
     await expect
       .element(page.getByText("Longitudinal integration database"))
       .toBeVisible();
+
+    const table = container.querySelector("table.data-table");
+    expect(table).not.toBeNull();
+    expect(table?.closest(".panel")).not.toBeNull();
 
     // #806: the raw FQID <code> element is dropped — the link's name is identity.
     expect(container.querySelector("code")).toBeNull();
@@ -151,7 +188,7 @@ describe("CatalogNodeView provider arm", () => {
 });
 
 describe("CatalogNodeView register arm", () => {
-  it("renders each ungrouped variable on its own row (one per row)", async () => {
+  it("renders each ungrouped variable as a DataTable row inside a Panel", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
 
     const { container } = await render(CatalogNodeView, {
@@ -166,30 +203,17 @@ describe("CatalogNodeView register arm", () => {
       .element(page.getByRole("link", { name: "Alpha" }))
       .toBeVisible();
 
-    // The variable list is single-column: forcing the grid to one track stops CSS
-    // auto-placement from packing two consecutive ungrouped variables into one
-    // visual row (Codex P2). Assert the leaf `.label` spans each occupy a distinct
-    // row by their layout top.
-    const labels = Array.from(
-      container.querySelectorAll<HTMLElement>(".children .label"),
-    );
-    expect(labels.map((l) => l.textContent)).toEqual([
-      "Alpha",
-      "Beta",
-      "Gamma",
-    ]);
-    const tops = labels.map((l) => Math.round(l.getBoundingClientRect().top));
-    expect(new Set(tops).size).toBe(tops.length);
-
-    // The single-column marker class drives the one-track grid.
-    expect(container.querySelector("ul.children.table.single")).not.toBeNull();
+    const table = container.querySelector("table.data-table");
+    expect(table).not.toBeNull();
+    expect(table?.closest(".panel")).not.toBeNull();
+    expect(
+      [...container.querySelectorAll("tbody tr")].map((row) =>
+        row.textContent?.trim(),
+      ),
+    ).toEqual(["Alpha", "Beta", "Gamma"]);
   });
 
-  it("makes a variable leaf-row link keyboard-focusable, columns aligned via subgrid (#808 a11y)", async () => {
-    // The #808 a11y fix: a leaf row's <a> is a SUBGRID box (NOT display:contents),
-    // so it is a real, keyboard-focusable element while its cells still align to the
-    // <ul>'s grid tracks. Assert the anchor takes focus (the display:contents version
-    // was dropped from Chromium's tab order) AND its columns resolve to `subgrid`.
+  it("makes a variable leaf-row link keyboard-focusable inside the table cell", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
 
     const { container } = await render(CatalogNodeView, {
@@ -203,16 +227,31 @@ describe("CatalogNodeView register arm", () => {
       .element(page.getByRole("link", { name: "Alpha" }))
       .toBeVisible();
 
-    const link = container.querySelector<HTMLAnchorElement>(
-      ".children.table li:not(.group-row) > a",
-    );
+    const link = container.querySelector<HTMLAnchorElement>("tbody td a");
     expect(link).not.toBeNull();
-    const style = getComputedStyle(link as Element);
-    expect(style.display).toBe("grid");
-    expect(style.gridTemplateColumns).toContain("subgrid");
-    // Load-bearing proof: focusing the anchor moves activeElement to it.
     link?.focus();
     expect(document.activeElement).toBe(link);
+  });
+
+  it("renders grouped variables as subject links in the Panel without the group-key pill", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
+
+    const { container } = await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("link", { name: /Inkomst per månad/ }))
+      .toHaveAttribute("href", "/catalog/group/scb/lisa/ink");
+    await expect.element(page.getByText("2 variables")).toBeVisible();
+
+    const groupLink = container.querySelector("a.group-link");
+    expect(groupLink?.closest("table.data-table")).not.toBeNull();
+    expect(groupLink?.closest(".panel")).not.toBeNull();
+    expect(groupLink?.querySelector(".group-key")).toBeNull();
   });
 });
 
@@ -234,15 +273,18 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("link", { name: /SUN/ }))
       .toHaveAttribute("href", "/catalog/group/class/sun");
 
+    expect(document.querySelector("a.group-link .group-key")).toBeNull();
+    const table = document.querySelector("table.data-table");
+    expect(table).not.toBeNull();
+    expect(table?.closest(".panel")).not.toBeNull();
+
     // It must NOT fall back to the old inline disclosure (the pre-#756 behavior).
     expect(document.querySelector("details.group")).toBeNull();
   });
 
-  it("makes a classification leaf-row link keyboard-focusable with name + short_name aligned via subgrid (#808 a11y)", async () => {
-    // The two-column classification leaf row: the <a> is a subgrid box spanning both
-    // tracks (name in col 1, short_name in col 2), so it's keyboard-focusable AND
-    // its cells stay column-aligned. Use a root with an UNGROUPED classification leaf
-    // (the grouped one folds into the umbrella group row, which is a separate widget).
+  it("renders a classification leaf as a focusable link plus short_name column", async () => {
+    // Use a root with an UNGROUPED classification leaf (the grouped one folds into
+    // the umbrella group row, which is a separate widget).
     vi.mocked(getCatalogNode).mockResolvedValue({
       kind: "classification-root",
       fqid: "class",
@@ -269,23 +311,13 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("link", { name: /Anatomical/ }))
       .toBeVisible();
 
-    const link = document.querySelector<HTMLAnchorElement>(
-      ".children.table li:not(.group-row) > a",
-    );
+    const link = document.querySelector<HTMLAnchorElement>("tbody td a");
     expect(link).not.toBeNull();
-    const style = getComputedStyle(link as Element);
-    expect(style.display).toBe("grid");
-    expect(style.gridTemplateColumns).toContain("subgrid");
-    // The short_name cell lands in column 2 (distinct column), not stacked under the
-    // name — assert the two cells occupy different horizontal positions.
-    const label = link?.querySelector<HTMLElement>(".label");
-    const shortName = link?.querySelector<HTMLElement>(".short-name");
-    expect(label).not.toBeNull();
-    expect(shortName).not.toBeNull();
-    const labelLeft = label?.getBoundingClientRect().left ?? 0;
-    const shortLeft = shortName?.getBoundingClientRect().left ?? 0;
-    expect(shortLeft).toBeGreaterThan(labelLeft);
-    // Load-bearing proof: focusing the anchor moves activeElement to it.
+    const row = link?.closest("tr");
+    expect(row?.querySelectorAll("td")).toHaveLength(2);
+    expect(row?.querySelector("td:last-child")?.textContent?.trim()).toBe(
+      "ATC",
+    );
     link?.focus();
     expect(document.activeElement).toBe(link);
   });

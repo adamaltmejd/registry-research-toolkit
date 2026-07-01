@@ -540,7 +540,7 @@ describe("CatalogPicker", () => {
 
   it("folds grouped variables into one expandable family row (#322)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
-    await render(CatalogPicker, {
+    const { container } = await render(CatalogPicker, {
       mode: "variable",
       registerPrefix: "scb/lisa",
       period: null,
@@ -555,6 +555,9 @@ describe("CatalogPicker", () => {
     // a Command option.
     await expect.element(page.getByText("Inkomst per månad")).toBeVisible();
     await expect.element(page.getByText("3 variables")).toBeVisible();
+    expect(container.querySelector(".group-key")?.textContent?.trim()).toBe(
+      "ink",
+    );
     await expect
       .element(page.getByRole("option", { name: /Kön/ }))
       .toBeVisible();
