@@ -9,6 +9,9 @@ Usage: scripts/cos_scheduler_heartbeat.sh [options] THREAD_ID
 
 Run scripts/cos_scheduler_tick.sh in a foreground loop. The tick script still owns
 the deterministic preflight and wakes Codex only when repo/GitHub state changed.
+With the default app-server wake, the agent transcript is written to persisted Codex
+thread history, not this terminal; active Codex clients may need `codex resume THREAD_ID`
+or a relaunch to show the injected turn until live refresh is supported.
 
 Options:
   --interval SECONDS        Seconds between ticks (default: 900, or COS_INTERVAL_SECONDS).

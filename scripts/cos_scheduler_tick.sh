@@ -20,6 +20,10 @@ Options:
   --preflight-bin PATH      Test hook: executable to use instead of cos_preflight.py.
   --no-canonical-check      Test hook: pass through to cos_preflight.py.
   -h, --help                Show this help.
+
+The default app-server wake writes to persisted Codex thread history without streaming
+the transcript in this terminal. Active Codex clients may need `codex resume THREAD_ID`
+or a relaunch to show the injected turn until live refresh is supported.
 EOF
 }
 

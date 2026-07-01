@@ -77,11 +77,14 @@ merge-gate state changes. The scheduler wrapper stays silent on idle and wakes t
 COS thread only on exit `10`. By default it uses `scripts/cos_app_server_wake.py`
 through `codex app-server --stdio` so the tick is posted into the existing Codex thread,
 the terminal does not stream the agent transcript, and preflight state is committed only
-after the thread returns idle. Use `--wake-backend exec` only as a fallback; that path
-runs `codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`, captures
-Codex's progress stream from stderr, and leaves only the final agent stdout visible on
-success. Use `--dry-run` while installing launchd/cron so a wake-worthy state prints the
-wake command without spending an agent turn.
+after the thread returns idle. This updates persisted thread history; active Codex CLI
+or desktop views may need `codex resume <thread-id>` or a relaunch to show the new turn
+until those clients live-refresh app-server-injected turns. Use `--wake-backend exec`
+only as a fallback; that path runs
+`codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`, captures Codex's
+progress stream from stderr, and leaves only the final agent stdout visible on success.
+Use `--dry-run` while installing launchd/cron so a wake-worthy state prints the wake
+command without spending an agent turn.
 
 ## Startup Gate
 
