@@ -308,7 +308,7 @@ wheels = [
 
 [[package]]
 name = "reg-meta"
-version = "0.33.0"
+version = "0.34.0"
 source = { editable = "reg_meta" }
 dependencies = [
     { name = "pydantic" },
@@ -323,7 +323,7 @@ requires-dist = [
 
 [[package]]
 name = "reg-meta-build"
-version = "0.24.0"
+version = "0.25.0"
 source = { editable = "reg_meta_build" }
 dependencies = [
     { name = "openpyxl" },
