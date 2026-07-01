@@ -158,13 +158,13 @@ scope + the FAST Verify only (lint / format / `ty` / `pytest`); the real
 worktree-correct and never collides or leaks even under parallel fan-out (no
 `preview_start`/fixed-port hazards). Screenshots land in `/tmp/reg-webapp-shots/`; use
 them to catch blank renders or obvious implementation failures, but do not count them as
-the formal visual gate. The authoritative rendered proof is yours (the lead), after the
-clean `/web-design-reviewer` pass in Step C: a single `dev.sh smoke`/`shot` on the
-assembled tree, the visual analog of the union Verify, and the merge-gate screenshot
-(Step E). When they report, validate the real diff, `git add -A`, commit, and push onto
-the draft PR's branch. Outward-facing `gh` actions (PR create / comment / PR body
-update) may be denied by the session's permission mode — if one is denied, surface it to
-the human, don't work around it.
+the formal visual gate. The authoritative rendered proof is the clean
+`/web-design-reviewer` result in Step C, which owns the assembled-tree screenshot/render
+inspection and the durable PR-visible proof recorded for the merge gate (Step E). When
+they report, validate the real diff, `git add -A`, commit, and push onto the draft PR's
+branch. Outward-facing `gh` actions (PR create / comment / PR body update) may be denied
+by the session's permission mode — if one is denied, surface it to the human, don't work
+around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh

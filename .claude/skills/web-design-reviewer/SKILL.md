@@ -58,16 +58,17 @@ DB directory or use the PR's build-db output and pass it as `REG_META_DB`.
 Prefer the one-shot helper from the repo root:
 
 ```sh
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all <route>
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all --viewport 1920x1080 <route>
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke
-REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all <route>
+REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all --viewport 1920x1080 <route>
 ```
 
-Use `shot --all` for responsive screenshots unless the route is demonstrably
-desktop-only. Use `smoke` for catalog browsing or broad app-shell changes. Screenshots
-land in `/tmp/reg-webapp-shots/`; include these paths in the report and provide a final
-gate note that can be copied into the PR. A later merge runner needs PR-visible proof,
-so the final note must say what screenshot/render evidence was inspected.
+Use `shot --all --viewport 1920x1080` for responsive screenshots unless the route is
+demonstrably desktop-only. Use `smoke` for catalog browsing or broad app-shell changes.
+Screenshots land in `/tmp/reg-webapp-shots/`; include these local paths in the reviewer
+report, but do not treat them as final gate proof. A later merge runner needs PR-visible
+proof, so the final note must include an attachment, PR comment, artifact, or other
+durable link for the screenshot/render evidence inspected.
 
 Browser automation should inspect screenshots and, when available, DOM/accessibility
 snapshots and console output. Do not rely on `bun run lint/check/test/build`; those do
@@ -116,7 +117,8 @@ PR", "intended clipping", or "route not affected by this diff".
 - Routes: <reviewed route(s)>
 - Render command or URL: <command/URL>
 - Viewports: <tested viewports>
-- Screenshots/render proof: <local paths and/or PR-visible links>
+- Local screenshots inspected: <paths under /tmp/reg-webapp-shots/ or other local paths>
+- PR-visible render proof: <attachment, PR comment, artifact, or durable link>
 - Result: <pass / findings fixed / findings dismissed / blocked>
 
 ## Findings
@@ -133,5 +135,6 @@ PR", "intended clipping", or "route not affected by this diff".
 ## Final Gate Note
 
 web-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
-screenshots=<paths or PR-visible links>; findings=<none / fixed / dismissed>.
+local_screenshots=<paths>; pr_visible_proof=<attachment/comment/artifact/link>;
+findings=<none / fixed / dismissed>.
 ```
