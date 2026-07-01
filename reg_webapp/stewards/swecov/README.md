@@ -45,24 +45,28 @@ Output is deterministic (sources sorted by coordinate, bindings by variable+colu
 
 Coverage is bounded by what reg_meta currently mints, and **rises automatically** as the
 residue below lands upstream — just regenerate against a fresh flavored DB. The current
-breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.25.0
-the catalog admits **67.0%** of physical columns. The residue is, by disposition:
+breakdown lives in the untracked `derived/steward_coverage.json`; as of reg_meta 0.34.0
+the catalog admits **6,674 / 7,017 = 95.1%** of physical columns. The unresolved residue
+is 343 columns. By disposition:
 
-- **survey-wave items (FOU/CIS/IT, \~2,000 before #856)** — documented in SWECOV's
-  delivery lists but absent from reg_meta machine metadata; handled as **global
-  grafts**, not steward flavor. The steward catalog picks them up after a fresh reg_meta
-  build/release and catalog regeneration.
-- **global-provider alias gaps** — holdings routed to a global provider/register
-  (FOHM/FK #422, the Umeå/Läkemedelsverket/Pliktverket/Riksarkivet agencies #443, AGI
-  employer-header and utrikeshandel-tjänster #444) where some delivery column names
-  don't yet match reg_meta's — a global alias/onboarding follow-up, *not* flavor-routed
-  (scope follows what a fact is *about*, #365). The catalog picks them up as those
-  aliases land.
-- **excluded** — pure lookup / key-crosswalk tables with no catalogable variables: a
-  documented non-gap, kept out of the coverage denominator.
-- **pruned** — a handful of reg_meta columns with co-delivered value sets (SOS-PAR
-  `HDIA`/`ATCO`, AKU `Omb10b`): un-authorable by anyone (the value-set-version pin is
-  retired), pending reg_meta co-delivery curation.
+- **other (233 columns)** — provider/register-specific residue that still needs a global
+  onboarding, alias, or modeling decision before it can resolve.
+
+- **global-provider alias gaps (89 columns)** — holdings routed to a global
+  provider/register (FOHM/FK #422, the Umeå/Läkemedelsverket/Pliktverket/Riksarkivet
+  agencies #443, AGI employer-header and utrikeshandel-tjänster #444) where some
+  delivery column names don't yet match reg_meta's — a global alias/onboarding
+  follow-up, *not* flavor-routed (scope follows what a fact is *about*, #365). The
+  catalog picks them up as those aliases land.
+
+- **survey-wave global-graft follow-ups (21 columns)** — documented in SWECOV's delivery
+  lists but absent from reg_meta machine metadata; handled as **global grafts**, not
+  steward flavor. The steward catalog picks them up after a fresh reg_meta build/release
+  and catalog regeneration.
+
+Separately, the generator records 13 excluded pure lookup / key-crosswalk columns with
+no catalogable variables (documented non-gaps outside the coverage denominator), and 0
+pruned co-delivered value-set columns.
 
 Near-duplicate physical columns (`AVERAGE_SPENDING`/`AVERAGE_SPENDINGS`,
 `Covid-19 antikroppar`/`Covid_19_antikroppar`) must never be collapsed away: each
