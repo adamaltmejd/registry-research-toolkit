@@ -29928,6 +29928,43 @@
       ]
     },
     {
+      "name": "swecov.hreg-sun-groupings._default",
+      "register_variant": "swecov/hreg-sun-groupings/_default",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "swecov/hreg-sun-groupings/sun2000inr3-amnegrupp",
+          "type": "opaque",
+          "representation": "SUN2000Inr3_amnegrupp"
+        },
+        {
+          "variable": "swecov/hreg-sun-groupings/sun2000inr3-lprog",
+          "type": "opaque",
+          "representation": "SUN2000Inr3_lprog"
+        },
+        {
+          "variable": "swecov/hreg-sun-groupings/sun2000niva-lprog",
+          "type": "opaque",
+          "representation": "SUN2000Niva_lprog"
+        },
+        {
+          "variable": "swecov/hreg-sun-groupings/sun2020inr3-amnegrupp",
+          "type": "opaque",
+          "representation": "SUN2020Inr3_amnegrupp"
+        },
+        {
+          "variable": "swecov/hreg-sun-groupings/sun2020inr3-lprog",
+          "type": "opaque",
+          "representation": "SUN2020Inr3_lprog"
+        },
+        {
+          "variable": "swecov/hreg-sun-groupings/sun2020niva-lprog",
+          "type": "opaque",
+          "representation": "SUN2020Niva_lprog"
+        }
+      ]
+    },
+    {
       "name": "swecov.population._default",
       "register_variant": "swecov/population/_default",
       "period": "_default",

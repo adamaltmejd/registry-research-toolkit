@@ -307,6 +307,22 @@ class TestAliasLoader:
             load_delivery_enrichment(toml)
         assert exc.value.exit_code == EXIT_CONFIG
 
+    def test_same_variable_can_have_multiple_delivery_aliases(
+        self, tmp_path: Path
+    ) -> None:
+        toml = _write(
+            tmp_path / "delivery_enrichment.toml",
+            '[[alias]]\nregister = "scb/gymnasieskola-betyg"\n'
+            'variable = "kurs"\ndelivery_column = "Amneskod_omkodad"\n\n'
+            '[[alias]]\nregister = "scb/gymnasieskola-betyg"\n'
+            'variable = "kurs"\ndelivery_column = "Kurskod_omkodad"\n',
+        )
+        aliases = load_delivery_enrichment(toml).aliases
+        assert [(a.variable, a.delivery_column) for a in aliases] == [
+            ("kurs", "Amneskod_omkodad"),
+            ("kurs", "Kurskod_omkodad"),
+        ]
+
 
 class TestApplyAliases:
     def test_inserts_alias_on_variant_with_state(self) -> None:
