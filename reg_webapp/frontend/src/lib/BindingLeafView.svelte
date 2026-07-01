@@ -30,7 +30,6 @@ import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
 import RepresentationPicker, {
   type PickerSelection,
 } from "./RepresentationPicker.svelte";
@@ -292,7 +291,6 @@ function setResolution(next: {
 // this variable, at this variant, and (when several columns co-exist) this delivery
 // column.
 const registerPrefix = $derived(registerPrefixOf(node.fqid));
-const register = $derived(fqidSegments(node.fqid)[1]);
 
 // The deployment seed is ready once /api/context has populated BOTH fields (MINOR 3).
 // An implicit project created with an empty seed is never re-seeded, so the Add
@@ -650,8 +648,7 @@ function commitSelected(selected: PickerSelection[]): void {
 {/snippet}
 
 {#snippet docs()}
-  <RelatedDocumentsPanel {register} />
-  <!-- #402: "Mentioned in documentation" — a SIBLING of the lineage panels,
+  <!-- #402/#967: "Parsed documentation" — a SIBLING of the lineage panels,
        deliberately a separate component over a separate optional DB (its own
        failure domain; a docs error/timeout/absent-index never blanks the leaf). -->
   <DocMentionsPanel {node} />
@@ -706,6 +703,10 @@ function commitSelected(selected: PickerSelection[]): void {
   }
   .meta dt {
     font-weight: 600;
+  }
+  .meta dd {
+    min-width: 0;
+    margin: 0;
   }
   .tag-strip {
     display: flex;
@@ -770,5 +771,14 @@ function commitSelected(selected: PickerSelection[]): void {
   }
   .add-confirm.already {
     color: var(--text-muted);
+  }
+  @media (max-width: 48rem) {
+    .meta {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+    .meta dt:not(:first-child) {
+      margin-top: var(--space-2);
+    }
   }
 </style>

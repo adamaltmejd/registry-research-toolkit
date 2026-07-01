@@ -29,7 +29,7 @@ beforeEach(() => {
   vi.mocked(getRelatedDocuments).mockReset();
 });
 
-describe("RelatedDocumentsPanel (#742)", () => {
+describe("RelatedDocumentsPanel (#742/#967)", () => {
   it("shows an aria-busy loading line while the fetch is pending", async () => {
     vi.mocked(getRelatedDocuments).mockReturnValue(new Promise(() => {}));
     await render(RelatedDocumentsPanel, { register: "lisa" });
@@ -44,9 +44,9 @@ describe("RelatedDocumentsPanel (#742)", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Failed to load related documents");
+      .toHaveTextContent("Failed to load source documents");
     await expect
-      .element(page.getByRole("heading", { name: "Related documents" }))
+      .element(page.getByRole("heading", { name: "Source documents" }))
       .toBeVisible();
   });
 
@@ -57,16 +57,16 @@ describe("RelatedDocumentsPanel (#742)", () => {
     await render(RelatedDocumentsPanel, { register: "lisa" });
 
     await expect
-      .element(page.getByRole("heading", { name: "Related documents" }))
+      .element(page.getByRole("heading", { name: "Source documents" }))
       .not.toBeInTheDocument();
   });
 
-  it("omits the section when the register has no related documents", async () => {
+  it("omits the section when the register has no source documents", async () => {
     vi.mocked(getRelatedDocuments).mockResolvedValue(related());
     await render(RelatedDocumentsPanel, { register: "lisa" });
 
     await expect
-      .element(page.getByRole("heading", { name: "Related documents" }))
+      .element(page.getByRole("heading", { name: "Source documents" }))
       .not.toBeInTheDocument();
   });
 

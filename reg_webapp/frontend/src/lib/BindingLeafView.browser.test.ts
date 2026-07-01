@@ -27,8 +27,8 @@ import { router } from "./router.svelte";
 //      (#678) — the leaf's single `/graph` fetch feeds both the HistoryGraph
 //      renderer AND the header qualifier + "member of ⟨group⟩" link.
 //
-// The leaf + sibling-panel GETs (graph / lineage warnings / related docs /
-// mentioned-in-docs / the ?period resolve) are stubbed so nothing hits a real fetch;
+// The leaf + sibling-panel GETs (graph / lineage warnings / parsed docs / the
+// ?period resolve) are stubbed so nothing hits a real fetch;
 // the panels are independent failure domains, so an empty/rejecting stub never
 // blanks the picker under test.
 vi.mock("./api", async (importOriginal) => {
@@ -193,6 +193,40 @@ beforeEach(() => {
 const SEED = { regMetaVersion: "reg_meta/v1.0.0", steward: "global" } as const;
 
 describe("BindingLeafView representation picker (#678)", () => {
+  it("does not fetch or render register source documents on variable pages (#967)", async () => {
+    vi.mocked(getRelatedDocuments).mockResolvedValue({
+      kind: "related-documents",
+      ingested: true,
+      register: "lisa",
+      documents: [
+        {
+          title: "LISA source PDF",
+          filename: "lisa.pdf",
+          source_url: "https://www.scb.se/lisa",
+          license: "CC BY 4.0",
+          fetched: "2026-06-01",
+          sha256: "a".repeat(64),
+          byte_size: 1024,
+        },
+      ],
+    });
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Kön" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Source documents" }))
+      .not.toBeInTheDocument();
+    expect(getRelatedDocuments).not.toHaveBeenCalled();
+  });
+
   it("lists each representation row with its delivery column + period span", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",

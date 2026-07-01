@@ -6,9 +6,9 @@ import {
 } from "./api";
 import { asyncResource } from "./async.svelte";
 
-// Rehosted register-version PDFs for the binding leaf's register (#742). This is
-// authoritative register-level metadata, distinct from the fuzzy FTS mentions
-// in `DocMentionsPanel`.
+// Rehosted register-version PDFs for a register page (#742/#967). This is
+// authoritative register-level source metadata, distinct from the fuzzy FTS
+// mentions in `DocMentionsPanel`, and must not be inherited by variable pages.
 let { register }: { register: string } = $props();
 
 const resource = asyncResource((signal) =>
@@ -45,13 +45,13 @@ function sourceHost(doc: RelatedDocument): string {
 
 {#if show}
   <section class="related-docs" aria-labelledby="related-docs-heading">
-    <h3 id="related-docs-heading">Related documents</h3>
+    <h3 id="related-docs-heading">Source documents</h3>
 
     {#if resource.loading}
       <p class="muted" aria-busy="true">Loading…</p>
     {:else if resource.error}
       <p class="error" role="alert">
-        Failed to load related documents: {resource.error}
+        Failed to load source documents: {resource.error}
       </p>
     {:else}
       <ul class="documents">

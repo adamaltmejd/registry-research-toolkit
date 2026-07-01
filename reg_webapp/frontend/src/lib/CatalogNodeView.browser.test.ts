@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { CatalogNode } from "./api";
-import { getCatalogNode } from "./api";
+import { getCatalogNode, getRelatedDocuments } from "./api";
 import CatalogNodeView from "./CatalogNodeView.svelte";
 
 // CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
@@ -13,6 +13,7 @@ vi.mock("./api", async (importOriginal) => {
   return {
     ...actual,
     getCatalogNode: vi.fn(),
+    getRelatedDocuments: vi.fn(),
   };
 });
 
@@ -141,6 +142,13 @@ function groupedRegisterNode(): CatalogNode {
 
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getRelatedDocuments).mockReset();
+  vi.mocked(getRelatedDocuments).mockResolvedValue({
+    kind: "related-documents",
+    ingested: true,
+    register: "lisa",
+    documents: [],
+  });
 });
 
 describe("CatalogNodeView provider arm", () => {
@@ -255,6 +263,41 @@ describe("CatalogNodeView register arm", () => {
     await expect.element(page.getByText("Income & earnings")).toBeVisible();
   });
 
+  it("renders register-grain source documents on register pages (#967)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
+    vi.mocked(getRelatedDocuments).mockResolvedValue({
+      kind: "related-documents",
+      ingested: true,
+      register: "lisa",
+      documents: [
+        {
+          title: "LISA source PDF",
+          filename: "lisa.pdf",
+          source_url: "https://www.scb.se/lisa",
+          license: "CC BY 4.0",
+          fetched: "2026-06-01",
+          sha256: "a".repeat(64),
+          byte_size: 1024,
+        },
+      ],
+    });
+
+    await render(CatalogNodeView, {
+      fqidPath: "scb/lisa",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Source documents" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "LISA source PDF" }))
+      .toHaveAttribute("href", "/api/docs/file/lisa/lisa.pdf");
+    expect(getRelatedDocuments).toHaveBeenCalledWith("lisa", expect.anything());
+  });
+
   it("renders grouped variables as subject links in the Panel without the group-key pill", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
 
@@ -299,6 +342,12 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
     const table = document.querySelector("table.data-table");
     expect(table).not.toBeNull();
     expect(table?.closest(".panel")).not.toBeNull();
+    await expect
+      .element(page.getByRole("heading", { name: "Catalog-wide index" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("columnheader", { name: "Name", exact: true }))
+      .toBeVisible();
 
     // It must NOT fall back to the old inline disclosure (the pre-#756 behavior).
     expect(document.querySelector("details.group")).toBeNull();

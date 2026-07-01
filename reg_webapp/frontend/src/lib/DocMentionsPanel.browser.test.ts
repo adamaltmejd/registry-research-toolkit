@@ -68,11 +68,9 @@ describe("DocMentionsPanel (#402)", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Failed to load documentation mentions");
+      .toHaveTextContent("Failed to load parsed documentation");
     await expect
-      .element(
-        page.getByRole("heading", { name: "Mentioned in documentation" }),
-      )
+      .element(page.getByRole("heading", { name: "Parsed documentation" }))
       .toBeVisible();
   });
 
@@ -85,9 +83,7 @@ describe("DocMentionsPanel (#402)", () => {
     await render(DocMentionsPanel, { node: node() });
 
     await expect
-      .element(
-        page.getByRole("heading", { name: "Mentioned in documentation" }),
-      )
+      .element(page.getByRole("heading", { name: "Parsed documentation" }))
       .not.toBeInTheDocument();
   });
 
@@ -100,9 +96,7 @@ describe("DocMentionsPanel (#402)", () => {
     await render(DocMentionsPanel, { node: node() });
 
     await expect
-      .element(
-        page.getByRole("heading", { name: "Mentioned in documentation" }),
-      )
+      .element(page.getByRole("heading", { name: "Parsed documentation" }))
       .not.toBeInTheDocument();
   });
 
@@ -113,13 +107,11 @@ describe("DocMentionsPanel (#402)", () => {
     await render(DocMentionsPanel, { node: node() });
 
     await expect
-      .element(
-        page.getByRole("heading", { name: "Mentioned in documentation" }),
-      )
+      .element(page.getByRole("heading", { name: "Parsed documentation" }))
       .not.toBeInTheDocument();
   });
 
-  it("renders a hit with an encoded /doc href and a snippet as LITERAL TEXT (republication guard)", async () => {
+  it("renders a hit with encoded /doc and source-PDF hrefs plus a literal snippet (republication guard)", async () => {
     // The snippet may carry FTS markers; `{value}` auto-escapes. A `<b>` in the
     // snippet must surface as literal characters, not a parsed element — so no `<b>`
     // exists inside the mentions list. The filename carries a space to assert the
@@ -133,6 +125,8 @@ describe("DocMentionsPanel (#402)", () => {
             filename: "lisa kon.md",
             display_name: "LISA — Kön",
             snippet: "foo <b>bar</b>",
+            source_url: "https://www.scb.se/lisa-source.pdf",
+            source_title: "Full LISA PDF",
             fuzzy: true,
             tags: [],
           },
@@ -144,6 +138,9 @@ describe("DocMentionsPanel (#402)", () => {
     await expect
       .element(page.getByRole("link", { name: /LISA — Kön/ }))
       .toHaveAttribute("href", "/doc/lisa%20kon.md");
+    await expect
+      .element(page.getByRole("link", { name: "Source PDF: Full LISA PDF" }))
+      .toHaveAttribute("href", "https://www.scb.se/lisa-source.pdf");
     await expect.element(page.getByText("foo <b>bar</b>")).toBeVisible();
     expect(document.querySelector(".mentions b")).toBeNull();
   });
@@ -390,9 +387,7 @@ describe("DocMentionsPanel (#402)", () => {
 
     // The whole section is omitted (no heading), so the caption is absent too.
     await expect
-      .element(
-        page.getByRole("heading", { name: "Mentioned in documentation" }),
-      )
+      .element(page.getByRole("heading", { name: "Parsed documentation" }))
       .not.toBeInTheDocument();
     await expect
       .element(page.getByText(/shared concept name/i))

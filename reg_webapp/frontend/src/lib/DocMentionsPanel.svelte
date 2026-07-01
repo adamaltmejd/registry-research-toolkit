@@ -4,7 +4,7 @@ import { asyncResource } from "./async.svelte";
 import { fqidSegments, showingOf } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 
-// The binding-leaf "Mentioned in documentation" panel (#402). A SIBLING of
+// The binding-leaf "Parsed documentation" panel (#402/#967). A SIBLING of
 // LineagePanels — a deliberately SEPARATE component over a SEPARATE optional DB
 // (the docs FTS index), so it's an independent FAILURE DOMAIN: a docs fetch
 // error / timeout / absent index must NEVER blank or wedge the leaf (mirrors how
@@ -53,11 +53,22 @@ const show = $derived(
     !!resource.error ||
     (!!data && data.ingested && data.register_ingested && results.length > 0),
 );
+
+function sourceLabel(url: string, title?: string | null): string {
+  if (title) {
+    return `Source PDF: ${title}`;
+  }
+  try {
+    return `Source PDF: ${new URL(url).hostname}`;
+  } catch {
+    return "Source PDF";
+  }
+}
 </script>
 
 {#if show}
   <section class="doc-mentions" aria-labelledby="doc-mentions-heading">
-    <h3 id="doc-mentions-heading">Mentioned in documentation</h3>
+    <h3 id="doc-mentions-heading">Parsed documentation</h3>
 
     {#if resource.loading}
       <p class="muted" aria-busy="true">Loading…</p>
@@ -65,7 +76,7 @@ const show = $derived(
       <!-- Any docs failure (error / timeout / 5xx / network drop) stays INLINE —
            it never throws past this section and never blanks the leaf. -->
       <p class="error" role="alert">
-        Failed to load documentation mentions: {resource.error}
+        Failed to load parsed documentation: {resource.error}
       </p>
     {:else if data}
       {#if grouped}
@@ -108,6 +119,16 @@ const show = $derived(
                   >{:else if seg.emphasis === "em"}<em>{seg.text}</em
                   >{:else}{seg.text}{/if}{/each}</span
               >
+            {/if}
+            {#if r.source_url}
+              <a
+                class="source-link"
+                href={r.source_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {sourceLabel(r.source_url, r.source_title)}
+              </a>
             {/if}
           </li>
         {/each}
@@ -161,6 +182,10 @@ const show = $derived(
   .hit-detail {
     flex-basis: 100%;
     font-size: 0.9em;
+  }
+  .source-link {
+    flex-basis: 100%;
+    font-size: 0.85em;
   }
   /* The FTS matched-term highlight (`**…**` → <mark>): the accent tint already in
      the palette, NOT the browser default yellow, so it reads as one family with the
