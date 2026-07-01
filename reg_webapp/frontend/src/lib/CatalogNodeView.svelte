@@ -26,6 +26,7 @@ import {
   rankFilter,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
+import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
 import { type Column, DataTable, EmptyState, Panel, Tag } from "./ui";
 import VariantBrowser from "./VariantBrowser.svelte";
 
@@ -81,7 +82,7 @@ type ClassificationBrowseRow =
     };
 
 const classificationColumns: Column<ClassificationBrowseRow>[] = [
-  { key: "label", label: "Classification" },
+  { key: "label", label: "Name" },
   { key: "shortName", label: "Short name", align: "end" },
 ];
 
@@ -263,6 +264,7 @@ $effect(() => {
           {/each}
         </div>
       {/if}
+      <RelatedDocumentsPanel register={leafSlug(node.fqid)} />
       {#if rows.length > 0}
         <!-- Counts stay in VARIABLE units after folding (a group row counts its
              members), so the "x of y" readout still reflects register size. -->
@@ -327,7 +329,7 @@ $effect(() => {
       <h2>{nodeLabel(node)}</h2>
       {#if clsRows.length > 0}
         {@const classificationRows = classificationBrowseRows(clsRows)}
-        <Panel title="Classifications" flush>
+        <Panel title="Catalog-wide index" flush>
           <DataTable
             columns={classificationColumns}
             rows={classificationRows}
@@ -356,7 +358,7 @@ $effect(() => {
           </DataTable>
         </Panel>
       {:else}
-        <Panel title="Classifications">
+        <Panel title="Catalog-wide index">
           <EmptyState title="No classifications." />
         </Panel>
       {/if}

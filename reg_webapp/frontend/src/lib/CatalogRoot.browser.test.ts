@@ -6,8 +6,9 @@ import { getCatalogRoot } from "./api";
 import CatalogRoot from "./CatalogRoot.svelte";
 
 // CatalogRoot fetches the catalog root via `getCatalogRoot()` and lists every
-// provider. Mock that single GET (mirrors CatalogNodeView's api-mock style); keep
-// the rest of api.ts real (the type exports + path helpers `catalog.ts` uses).
+// top-level catalog section. Mock that single GET (mirrors CatalogNodeView's
+// api-mock style); keep the rest of api.ts real (the type exports + path helpers
+// `catalog.ts` uses).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
@@ -16,15 +17,16 @@ vi.mock("./api", async (importOriginal) => {
   };
 });
 
-// The catalog root with two provider children (`scb` / `sos`). Shaped like
-// RootResponse → ProviderNode children — the #806 root renders these as DataTable
-// links (name → catalog link) with the FQID code element dropped.
+// The catalog root with two provider children (`scb` / `sos`) plus the
+// classification-root sentinel. Shaped like RootResponse children — the #967/#976
+// root renders these as a multi-column DataTable index.
 function catalogRoot(): RootResponse {
   return {
     kind: "root",
     children: [
       { kind: "provider", fqid: "scb", name: "SCB" },
       { kind: "provider", fqid: "sos", name: "SoS" },
+      { kind: "classification-root", fqid: "class", name: "Classifications" },
     ],
   } as unknown as RootResponse;
 }
@@ -34,15 +36,33 @@ beforeEach(() => {
 });
 
 describe("CatalogRoot", () => {
-  it("renders each provider as a link by name with no FQID code element", async () => {
+  it("renders top-level catalog sections as a multi-column table", async () => {
     vi.mocked(getCatalogRoot).mockResolvedValue(catalogRoot());
 
     const { container } = await render(CatalogRoot, {});
 
-    // #806: each provider is a name link to its catalog page…
+    await expect
+      .element(page.getByRole("columnheader", { name: "Section" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("columnheader", { name: "Type" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("columnheader", { name: "Scope" }))
+      .toBeVisible();
+
+    // #806/#976: each section is a name link to its catalog page…
     await expect
       .element(page.getByRole("link", { name: "SCB" }))
       .toHaveAttribute("href", "/catalog/scb");
+    await expect
+      .element(page.getByRole("link", { name: "Classifications" }))
+      .toHaveAttribute("href", "/catalog/class");
+    expect(
+      [...container.querySelectorAll(".tag .label")].map((tag) =>
+        tag.textContent?.trim(),
+      ),
+    ).toEqual(["Provider", "Provider", "Classification"]);
 
     // …with the raw FQID <code> element dropped — the link's name is identity.
     expect(container.querySelector("code")).toBeNull();
@@ -53,9 +73,13 @@ describe("CatalogRoot", () => {
 
     await render(CatalogRoot, {});
 
-    const filterBox = page.getByRole("textbox", { name: /Filter providers/i });
+    const filterBox = page.getByRole("textbox", {
+      name: /Filter catalog sections/i,
+    });
     await filterBox.fill("zzz");
 
-    await expect.element(page.getByText(/No providers match/)).toBeVisible();
+    await expect
+      .element(page.getByText(/No catalog sections match/))
+      .toBeVisible();
   });
 });

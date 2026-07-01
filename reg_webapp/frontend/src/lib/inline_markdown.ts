@@ -1,6 +1,6 @@
 /**
  * Pure, dependency-free tokenizer for the SAFE inline-emphasis subset rendered in
- * the "Mentioned in documentation" snippets (`DocMentionsPanel.svelte`, #672). NO
+ * the "Parsed documentation" snippets (`DocMentionsPanel.svelte`, #672). NO
  * runes, NO markdown library — unit-testable in isolation (`inline_markdown.test.ts`).
  *
  * The input snippet mixes TWO emphasis sources, both spelled with `**`/`*`/`_`:
