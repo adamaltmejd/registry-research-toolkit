@@ -526,17 +526,23 @@ shows its study-window span without resolving every state:
 - **Provider-children** (`/api/catalog/{provider}` register nodes): per-register
   `coverage` — `variable_count` (slugged variables) + the span over all their states.
 
+For a filtered steward, the same payload fields are recomputed over the steward's held
+delivery columns (`Catalog.register_column_coverage` + `CatalogIndex.held_columns`) so a
+partial-column hold does not inherit the whole-variable coverage span/count. Named held
+columns without a per-column state row get `coverage = None`, matching representation
+members on concept-group pages.
+
 **Query-time, not materialized — measured first** (the #351 design decision). The
 aggregates are one GROUP BY over `variable_state` per listing, in reg_meta
-(`Catalog.register_variable_coverage` / `provider_register_coverage`). Measured on the
-real v0.11.0 DB: the worst register (scb/ulf, 7.3k variables) computes per-variable
-coverage in \~9 ms (\~60 ms end-to-end serializing all 7.3k binding nodes); the heaviest
-provider (scb, 238 registers) \~34 ms end-to-end. Both sit behind the ETag/edge cache,
-so build-time materialized columns (which would ride the batched Lane R schema bump) are
-NOT needed. The covering index `idx_variable_state_coverage` on
-`variable_state(variable_id, valid_from, valid_to)` (#371, the 5.4.0 schema cut) lets
-the grouped MIN/MAX span scan be satisfied index-only (no table b-tree lookup; EXPLAIN
-QUERY PLAN reports `USING COVERING INDEX`).
+(`Catalog.register_variable_coverage`, `register_column_coverage`, and
+`provider_register_coverage`). Measured on the real v0.11.0 DB: the worst register
+(scb/ulf, 7.3k variables) computes per-variable coverage in \~9 ms (\~60 ms end-to-end
+serializing all 7.3k binding nodes); the heaviest provider (scb, 238 registers) \~34 ms
+end-to-end. Both sit behind the ETag/edge cache, so build-time materialized columns
+(which would ride the batched Lane R schema bump) are NOT needed. The covering index
+`idx_variable_state_coverage` on `variable_state(variable_id, valid_from, valid_to)`
+(#371, the 5.4.0 schema cut) lets the grouped MIN/MAX span scan be satisfied index-only
+(no table b-tree lookup; EXPLAIN QUERY PLAN reports `USING COVERING INDEX`).
 
 - **Additive / payload-skew (#317)**: `coverage` is optional and the SPA doesn't read it
   yet — it must tolerate its presence AND absence. It's None on a node that wasn't
@@ -689,9 +695,9 @@ covers binding, register, and provider grains uniformly:
   successor);
 - a dead slug whose terminal successor is UNHELD or has no successor → **404**.
 
-The `/graph` sub-endpoint gates the subject binding but does NOT narrow the graph's node
-set (same_as/group neighborhood) to held — that traversal-narrowing is deferred as a
-follow-up.
+The `/graph` sub-endpoint gates the subject binding, then narrows variable graph nodes,
+their state lists, same-as metadata, and edges to held FQIDs/columns. Classification
+graphs remain catalog-global.
 
 *Classification pass-through (decision 2).* Classifications and codes are
 catalog-global. A steward `project_data` holds only variable bindings, so there is no
@@ -700,12 +706,13 @@ arm of search pass through unfiltered for all steward deployments.
 
 *Search.* `/api/search` passes `admitted_variable_fqids | held_register_fqids` as the
 `fqids` allow-list to `reg_meta.queries.search`. This restricts register and variable
-rows query-time (so `total_count` and paging are exact, including concept-group folding
-— a group surfaces only if ≥1 member is held, and its member list is narrowed to held
-members). Classification and value/code surfaces are unaffected. The golden-boost
-injection (`golden.apply_golden_boost`) is re-filtered for the same set after boost so a
-curated pin the steward does not hold is dropped. The `global` deployment (no index) is
-byte-for-byte unchanged.
+rows query-time at FQID grain. The webapp then refines variable groups at
+delivery-column grain; for filtered stewards it fetches the full FQID-grain variable
+result set once, drops all-unheld representation groups, and applies the display limit
+afterward so the shown page backfills correctly. Classification and value/code surfaces
+are unaffected. The golden-boost injection (`golden.apply_golden_boost`) is re-filtered
+for the same set after boost so a curated pin the steward does not hold is dropped. The
+`global` deployment (no index) is byte-for-byte unchanged.
 
 *Performance.* The derived projections (`admitted_variable_fqids`,
 `held_register_fqids`, `held_provider_slugs`, `_admitted_pairs`,
