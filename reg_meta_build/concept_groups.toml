@@ -3,9 +3,12 @@
 # kinds, both folded only when present (opt-in):
 #
 # 1. [[variable_group]] — a hand-authored family with an exact member list, NO
-#    name patterns: each member attaches a single variable
-#    (`variable = "<slug>"`) carrying its `value`/`label` on the family's single
-#    `axis`.
+#    name patterns. Single-axis families use `axis = "<name>"` or
+#    `axes = [{ axis = "<name>", label = "<display>" }]`, with each member carrying
+#    flat `value`/`label`. Multi-axis families use `axes = [...]` plus per-member
+#    `coords = [{ axis, value, label }, ...]`; add `delivery_column` only when the
+#    member is representation-grained. Axis-less variable umbrellas are explicit as
+#    `axes = []`, with member tables listing only `variable = "<slug>"`.
 #
 # 2. [[accept]] (#496) — fold a candidate family from the generated, committed
 #    concept_groups.auto.toml BY REFERENCE. The `concept-group-candidates`
@@ -271,6 +274,235 @@ label = "näst största förvärvskällan"
 variable = "agi3lonfink"
 value = "3"
 label = "tredje största förvärvskällan"
+
+# LISA ranked income-source families (#958). The AGI1/2/3 rows below are the same
+# concept observed at the largest / second-largest / third-largest income source;
+# the rank lives in source labels and operational definitions, so curate it as a
+# real facet instead of leaving three loose browse rows.
+[[variable_group]]
+register = "scb/lisa"
+key = "agijobbyrk"
+label = "Jobbets yrkesställning (AGI)"
+axes = [{ axis = "rank", label = "Förvärvskälla" }]
+
+[[variable_group.members]]
+variable = "agi1jobbyrk"
+value = "1"
+label = "största förvärvskällan"
+
+[[variable_group.members]]
+variable = "agi2jobbyrk"
+value = "2"
+label = "näst största förvärvskällan"
+
+[[variable_group.members]]
+variable = "agi3jobbyrk"
+value = "3"
+label = "tredje största förvärvskällan"
+
+[[variable_group]]
+register = "scb/lisa"
+key = "agilongarant"
+label = "Markering av erhållen lönegaranti (AGI)"
+axes = [{ axis = "rank", label = "Förvärvskälla" }]
+
+[[variable_group.members]]
+variable = "agi1longarant"
+value = "1"
+label = "största förvärvskällan"
+
+[[variable_group.members]]
+variable = "agi2longarant"
+value = "2"
+label = "näst största förvärvskällan"
+
+[[variable_group.members]]
+variable = "agi3longarant"
+value = "3"
+label = "tredje största förvärvskällan"
+
+[[variable_group]]
+register = "scb/lisa"
+key = "agisektorgrp"
+label = "Institutionell sektor (AGI)"
+axes = [{ axis = "rank", label = "Förvärvskälla" }]
+
+[[variable_group.members]]
+variable = "agi1sektorgrp"
+value = "1"
+label = "största förvärvskällan"
+
+[[variable_group.members]]
+variable = "agi2sektorgrp"
+value = "2"
+label = "näst största förvärvskällan"
+
+[[variable_group.members]]
+variable = "agi3sektorgrp"
+value = "3"
+label = "tredje största förvärvskällan"
+
+# AGI/KU FÅMANS rows share one concept and three rank levels. Keep them in one
+# group, but declare both source and rank so no two members occupy the same
+# facet coordinate.
+[[variable_group]]
+register = "scb/lisa"
+key = "faman"
+label = "Förekomst av delägarskap i fåmansaktiebolag"
+axes = [
+  { axis = "kalla", label = "Källa" },
+  { axis = "rank", label = "Förvärvskälla" },
+]
+
+[[variable_group.members]]
+variable = "agi1faman"
+delivery_column = "AGI1FAman"
+coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "1", label = "största förvärvskällan" }]
+
+[[variable_group.members]]
+variable = "agi2faman"
+delivery_column = "AGI2FAman"
+coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "2", label = "näst största förvärvskällan" }]
+
+[[variable_group.members]]
+variable = "agi3faman"
+delivery_column = "AGI3FAman"
+coords = [{ axis = "kalla", value = "agi", label = "AGI" }, { axis = "rank", value = "3", label = "tredje största förvärvskällan" }]
+
+[[variable_group.members]]
+variable = "ku1faman"
+delivery_column = "KU1FAman"
+coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "1", label = "största förvärvskällan" }]
+
+[[variable_group.members]]
+variable = "ku2faman"
+delivery_column = "KU2FAman"
+coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "2", label = "näst största förvärvskällan" }]
+
+[[variable_group.members]]
+variable = "ku3faman"
+delivery_column = "KU3FAman"
+coords = [{ axis = "kalla", value = "ku", label = "KU" }, { axis = "rank", value = "3", label = "tredje största förvärvskällan" }]
+
+# LISA `Antal barn` is a count by the child's exact age, not an ordinal slot
+# battery. The checked-in auto worklist still shows the old `barn0`...`barn21`
+# slugs; the curated group pins the current variable slugs and names the axis
+# semantically.
+[[variable_group]]
+register = "scb/lisa"
+key = "antal-barn"
+label = "Antal hemmaboende barn per ålder"
+axes = [{ axis = "alder", label = "Barnets ålder" }]
+
+[[variable_group.members]]
+variable = "antal-barn-0-ar"
+value = "00"
+label = "0 år"
+
+[[variable_group.members]]
+variable = "antal-barn-1-ar"
+value = "01"
+label = "1 år"
+
+[[variable_group.members]]
+variable = "antal-barn-2-ar"
+value = "02"
+label = "2 år"
+
+[[variable_group.members]]
+variable = "antal-barn-3-ar"
+value = "03"
+label = "3 år"
+
+[[variable_group.members]]
+variable = "antal-barn-4-ar"
+value = "04"
+label = "4 år"
+
+[[variable_group.members]]
+variable = "antal-barn-5-ar"
+value = "05"
+label = "5 år"
+
+[[variable_group.members]]
+variable = "antal-barn-6-ar"
+value = "06"
+label = "6 år"
+
+[[variable_group.members]]
+variable = "antal-barn-7-ar"
+value = "07"
+label = "7 år"
+
+[[variable_group.members]]
+variable = "antal-barn-8-ar"
+value = "08"
+label = "8 år"
+
+[[variable_group.members]]
+variable = "antal-barn-9-ar"
+value = "09"
+label = "9 år"
+
+[[variable_group.members]]
+variable = "antal-barn-10-ar"
+value = "10"
+label = "10 år"
+
+[[variable_group.members]]
+variable = "antal-barn-11-ar"
+value = "11"
+label = "11 år"
+
+[[variable_group.members]]
+variable = "antal-barn-12-ar"
+value = "12"
+label = "12 år"
+
+[[variable_group.members]]
+variable = "antal-barn-13-ar"
+value = "13"
+label = "13 år"
+
+[[variable_group.members]]
+variable = "antal-barn-14-ar"
+value = "14"
+label = "14 år"
+
+[[variable_group.members]]
+variable = "antal-barn-15-ar"
+value = "15"
+label = "15 år"
+
+[[variable_group.members]]
+variable = "antal-barn-16-ar"
+value = "16"
+label = "16 år"
+
+[[variable_group.members]]
+variable = "antal-barn-17-ar"
+value = "17"
+label = "17 år"
+
+[[variable_group.members]]
+variable = "antal-barn-18-ar"
+value = "18"
+label = "18 år"
+
+[[variable_group.members]]
+variable = "antal-barn-19-ar"
+value = "19"
+label = "19 år"
+
+[[variable_group.members]]
+variable = "antal-barn-20-ar"
+value = "20"
+label = "20 år"
+
+[[variable_group.members]]
+variable = "antal-barn-21-ar"
+value = "21"
+label = "21 år"
 
 # LOVA repeated-event ordinal families (#374; spun out of #362.4). LOVA records
 # up to nine immigration/emigration events per person, each as a numbered series.

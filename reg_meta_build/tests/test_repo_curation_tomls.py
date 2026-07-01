@@ -88,6 +88,51 @@ def test_repo_concept_groups_parses() -> None:
         for axis, _value, _label in member.coords
     )
 
+    expected_lisa_rank_groups = {
+        "agijobbyrk",
+        "agilongarant",
+        "agisektorgrp",
+    }
+    assert expected_lisa_rank_groups <= set(lisa_groups)
+    for key in expected_lisa_rank_groups:
+        group = lisa_groups[key]
+        assert group.axes == (("rank", "Förvärvskälla"),)
+        assert [member.coords[0][1] for member in group.members] == ["1", "2", "3"]
+
+    faman = lisa_groups["faman"]
+    assert faman.axes == (
+        ("kalla", "Källa"),
+        ("rank", "Förvärvskälla"),
+    )
+    assert {member.variable for member in faman.members} == {
+        "agi1faman",
+        "agi2faman",
+        "agi3faman",
+        "ku1faman",
+        "ku2faman",
+        "ku3faman",
+    }
+    assert {
+        tuple((axis, value) for axis, value, _label in member.coords)
+        for member in faman.members
+    } == {
+        (("kalla", "agi"), ("rank", "1")),
+        (("kalla", "agi"), ("rank", "2")),
+        (("kalla", "agi"), ("rank", "3")),
+        (("kalla", "ku"), ("rank", "1")),
+        (("kalla", "ku"), ("rank", "2")),
+        (("kalla", "ku"), ("rank", "3")),
+    }
+
+    antal_barn = lisa_groups["antal-barn"]
+    assert antal_barn.axes == (("alder", "Barnets ålder"),)
+    assert [member.variable for member in antal_barn.members] == [
+        f"antal-barn-{age}-ar" for age in range(22)
+    ]
+    assert [member.coords[0][1] for member in antal_barn.members] == [
+        f"{age:02d}" for age in range(22)
+    ]
+
 
 def test_repo_concept_groups_auto_parses() -> None:
     # `concept_groups.auto.toml` (#496) is the GENERATED, build-critical candidate
