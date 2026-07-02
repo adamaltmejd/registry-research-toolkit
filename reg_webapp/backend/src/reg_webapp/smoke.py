@@ -130,6 +130,15 @@ def _check_context(base_url: str, timeout: float) -> None:
     reg_meta_info = body["reg_meta"]
     if not isinstance(reg_meta_info, dict) or not reg_meta_info.get("schema_version"):
         raise SmokeError("/api/context reg_meta.schema_version is missing or empty")
+    if os.environ.get("REG_WEBAPP_FAIL_ON_STEWARD_DRIFT") == "1":
+        drift = body.get("catalog_drift_warnings") or []
+        if drift:
+            first = drift[0] if isinstance(drift[0], dict) else {}
+            detail = first.get("path") or first.get("code") or "first warning"
+            raise SmokeError(
+                f"/api/context reports {len(drift)} steward catalog drift warning(s); "
+                f"{detail}"
+            )
 
 
 def _check_catalog_walk(base_url: str, timeout: float) -> None:

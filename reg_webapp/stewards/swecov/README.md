@@ -5,6 +5,10 @@ SWECOV physically holds. Both files are **generated** — do not hand-edit. See
 `reg_webapp/DESIGN.md` → *Steward layering* for how the webapp consumes them and
 `reg_meta_build/DESIGN.md` → *Steward-flavored DB — extend-db* for the build side.
 
+SWECOV is kept in this repo as the proving steward while the steward workflow is tested
+pre-v1. Before release, move the SWECOV steward to its own steward repo/system and use
+that extracted shape as the copyable pattern for additional stewards.
+
 ## What this is
 
 A `project_data.json` (many `sources`, no `panels`) whose bindings admit SWECOV's

@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7
+
 # reg_webapp deployment image (REFACTOR_SPEC.md §6.5 — Deployment).
 #
 # Build context is the REPO ROOT (not reg_webapp/), because reg-webapp is a uv
@@ -8,9 +10,10 @@
 #   docker build -f reg_webapp/Dockerfile -t reg-webapp .
 #
 # Four baked-in stages: (1) bun builds the SPA, (2) a DB-bake stage fetches the
-# reg_meta release DB pair — isolated so app-code edits don't re-download it
-# (#290), (3) uv installs the Python backend + workspace deps, (4) a lean
-# runtime that serves the JSON API with uvicorn behind an entrypoint smoke gate.
+# reg_meta release DB pair and, for steward deployments, swaps in the private
+# flavored main DB — isolated so app-code edits don't re-download it (#290),
+# (3) uv installs the Python backend + workspace deps, (4) a lean runtime that
+# serves the JSON API with uvicorn behind an entrypoint smoke gate.
 #
 # Base images are pinned by tag (not :latest) for deterministic rebuilds. Bump
 # the tags deliberately; floating tags would make image content non-reproducible.
@@ -46,15 +49,18 @@ COPY reg_webapp/frontend/ ./
 RUN bun run gen:types && bun run build
 
 # ---------------------------------------------------------------------------
-# Stage 2 — regmeta-db: fetch + bake the reg_meta release DB pair.
+# Stage 2 — regmeta-db: fetch + bake the reg_meta DB pair.
 # ---------------------------------------------------------------------------
 # Isolated from the app-code stages (#290): its cache key covers only the
 # workspace skeleton (root pyproject + lockfile + member pyprojects/READMEs),
-# the reg_meta source tree, and REG_META_TAG — so backend/frontend edits reuse
-# the cached DB layer (~70 MB download, several hundred MB unpacked) instead of
-# re-fetching it on every build. `reg-meta update` (not raw curl) does the
-# fetch: it owns release resolution, asset naming, and zstd unpack, and tag
-# slashes (`reg_meta/vX.Y.Z`) make hand-built download URLs fragile.
+# the reg_meta source tree, REG_META_TAG, and REG_META_FLAVOR — so
+# backend/frontend edits reuse the cached DB layer (~70 MB download, several
+# hundred MB unpacked) instead of re-fetching it on every build. `reg-meta
+# update` (not raw curl) fetches the public release pair: it owns release
+# resolution, asset naming, and zstd unpack, and tag slashes (`reg_meta/vX.Y.Z`)
+# make hand-built download URLs fragile. A steward flavor then replaces only
+# `reg_meta.db` from a private zstd URL; `reg_meta_docs.db` stays the public
+# release asset for the same tag.
 FROM python:3.14.5-slim-bookworm AS regmeta-db
 COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /usr/local/bin/uv
 
@@ -97,11 +103,143 @@ RUN uv sync --frozen --no-dev --package reg-meta
 # every published reg_meta release is self-contained (release skill step 8
 # copies assets forward on code-only releases; an asset-less release broke
 # every main-push build in #343 and fails this RUN with exit 10).
-# ARG declared after the sync layer so a tag change re-runs only the bake.
+# REG_META_FLAVOR selects the main DB artifact:
+# - global: keep the public release DB fetched above;
+# - swecov: replace `reg_meta.db` with the private SWECOV flavored DB described
+#   by the BuildKit secret `swecov_reg_meta_db_zst_manifest`. The secret value is
+#   a JSON object with `tag`, `url`, and `sha256` for the zstd-compressed
+#   reg_meta.db generated from the same release tag. The ignored SWECOV inventory
+#   never enters the Docker context or image. Because BuildKit secrets are not
+#   cache-key material, SWECOV_REG_META_DB_REV must change when that manifest
+#   changes.
+#
+# ARGs declared after the sync layer so a tag/flavor change re-runs only the
+# bake.
 ARG REG_META_TAG=latest
+ARG REG_META_FLAVOR=global
+ARG SWECOV_REG_META_DB_REV=unset
 RUN /app/.venv/bin/reg-meta update --db /opt/reg_meta --tag "$REG_META_TAG" --yes \
     && test -f /opt/reg_meta/reg_meta.db \
     && test -f /opt/reg_meta/reg_meta_docs.db
+RUN --mount=type=secret,id=swecov_reg_meta_db_zst_manifest,required=false <<'EOF'
+set -eu
+case "$REG_META_FLAVOR" in
+    global)
+        ;;
+    swecov)
+        if [ -z "$SWECOV_REG_META_DB_REV" ] || [ "$SWECOV_REG_META_DB_REV" = "unset" ]; then
+            echo "FATAL: REG_META_FLAVOR=swecov requires non-default SWECOV_REG_META_DB_REV to bust Docker's secret-insensitive cache" >&2
+            exit 1
+        fi
+        secret=/run/secrets/swecov_reg_meta_db_zst_manifest
+        if [ ! -s "$secret" ]; then
+            echo "FATAL: REG_META_FLAVOR=swecov requires BuildKit secret swecov_reg_meta_db_zst_manifest" >&2
+            exit 1
+        fi
+        /app/.venv/bin/python - "$secret" "$REG_META_TAG" <<'PY'
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import sys
+import tempfile
+import urllib.request
+from pathlib import Path
+
+import zstandard
+
+from reg_meta.db import open_db
+
+secret_path = Path(sys.argv[1])
+tag = sys.argv[2]
+try:
+    manifest = json.loads(secret_path.read_text(encoding="utf-8"))
+except json.JSONDecodeError as exc:
+    raise SystemExit(
+        "FATAL: swecov_reg_meta_db_zst_manifest must be JSON with "
+        "`tag`, `url`, and `sha256`"
+    ) from exc
+if not isinstance(manifest, dict):
+    raise SystemExit("FATAL: swecov_reg_meta_db_zst_manifest must be a JSON object")
+url = manifest.get("url")
+expected_tag = manifest.get("tag")
+expected_sha256 = manifest.get("sha256")
+if not all(isinstance(v, str) and v for v in (url, expected_tag, expected_sha256)):
+    raise SystemExit(
+        "FATAL: swecov_reg_meta_db_zst_manifest requires non-empty string "
+        "`tag`, `url`, and `sha256`"
+    )
+if expected_tag != tag:
+    raise SystemExit(
+        "FATAL: SWECOV flavored DB manifest tag "
+        f"{expected_tag!r} does not match REG_META_TAG {tag!r}"
+    )
+
+db_dir = Path("/opt/reg_meta")
+dest = db_dir / "reg_meta.db"
+request = urllib.request.Request(url, headers={"User-Agent": "reg-webapp-build"})
+
+digest = hashlib.sha256()
+with urllib.request.urlopen(request, timeout=30) as response:
+    fd, compressed_name = tempfile.mkstemp(
+        prefix="swecov-reg_meta.", suffix=".db.zst", dir="/tmp"
+    )
+    with os.fdopen(fd, "wb") as compressed:
+        while chunk := response.read(1024 * 1024):
+            digest.update(chunk)
+            compressed.write(chunk)
+actual_sha256 = digest.hexdigest()
+if actual_sha256.lower() != expected_sha256.lower():
+    raise SystemExit(
+        "FATAL: SWECOV flavored DB sha256 mismatch: "
+        f"expected {expected_sha256.lower()}, got {actual_sha256}"
+    )
+
+compressed_path = Path(compressed_name)
+tmp_db = dest.with_suffix(".db.swecov.tmp")
+try:
+    with compressed_path.open("rb") as src, tmp_db.open("wb") as out:
+        zstandard.ZstdDecompressor().copy_stream(src, out)
+    conn = open_db(tmp_db)
+    try:
+        expected_overlay_providers = {
+            "arbetsformedlingen",
+            "region-stockholm",
+            "swecov",
+            "swedbank",
+        }
+        placeholders = ",".join("?" for _ in expected_overlay_providers)
+        present = {
+            row[0]
+            for row in conn.execute(
+                f"SELECT slug FROM provider WHERE slug IN ({placeholders})",
+                sorted(expected_overlay_providers),
+            )
+        }
+    finally:
+        conn.close()
+    if missing := sorted(expected_overlay_providers - present):
+        raise SystemExit(
+            "FATAL: SWECOV flavored DB is missing expected overlay provider(s): "
+            + ", ".join(missing)
+        )
+    tmp_db.replace(dest)
+    (db_dir / ".db_source").write_text(
+        json.dumps({"tag": tag, "flavor": "swecov"}) + "\n",
+        encoding="utf-8",
+    )
+finally:
+    compressed_path.unlink(missing_ok=True)
+    tmp_db.unlink(missing_ok=True)
+PY
+        ;;
+    *)
+        echo "FATAL: unknown REG_META_FLAVOR '$REG_META_FLAVOR' (expected global or swecov)" >&2
+        exit 1
+        ;;
+esac
+EOF
 
 # Read-only confinement of the baked WAL-mode DBs relies on `open_db`'s
 # `immutable=1` (#283) — no WAL checkpoint / sidecar cleanup needed here.
@@ -161,6 +299,8 @@ RUN groupadd --system app && useradd --system --gid app --home /app app
 
 WORKDIR /app
 
+ARG REG_WEBAPP_STEWARD=global
+
 # The venv + the editable member src trees its .pth files point at (uv installs
 # workspace members editable; the .pth entries reference /app/<member>/src). The
 # frozen --package sync installed exactly reg-webapp's dep closure — reg_meta,
@@ -204,7 +344,7 @@ ENV PATH="/app/.venv/bin:$PATH" \
     # point the loader at the copied configs (DESIGN.md → Steward layering).
     REG_WEBAPP_STEWARDS_DIR=/opt/reg_webapp/stewards \
     # Which steward this process serves (default `global` = full universe).
-    REG_WEBAPP_STEWARD=global \
+    REG_WEBAPP_STEWARD=$REG_WEBAPP_STEWARD \
     REG_WEBAPP_HOST=0.0.0.0 \
     REG_WEBAPP_PORT=8000
 

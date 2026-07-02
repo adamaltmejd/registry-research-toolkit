@@ -73,10 +73,11 @@ jobs:
         id: filter
         with:
           # `image` lists exactly what enters the Docker image (Dockerfile
-          # COPY surfaces + bake inputs) — NOT all of reg_webapp/**: edge/,
-          # .claude/, fly.toml and docs don't change image content, and an
-          # image deploy swaps the single prod machine (brief origin blip),
-          # so content-identical rebuilds are worth avoiding.
+          # COPY surfaces + bake inputs) plus Fly origin config that should
+          # force a redeploy. NOT all of reg_webapp/**: edge/, .claude/, and
+          # docs don't change image/origin content, and an image deploy swaps
+          # prod machines (brief origin blip), so content-identical rebuilds
+          # are worth avoiding.
           filters: |
             image:
               - "reg_webapp/backend/**"
@@ -84,6 +85,8 @@ jobs:
               - "reg_webapp/stewards/**"
               - "reg_webapp/Dockerfile"
               - "reg_webapp/docker-entrypoint.sh"
+              - "reg_webapp/fly.toml"
+              - "reg_webapp/fly.swecov.toml"
               - "reg_meta/**"
               - ".dockerignore"
               - ".github/workflows/container-build.yml"
@@ -296,6 +299,105 @@ jobs:
           cache-from: type=gha
           cache-to: ${{ github.event_name != 'pull_request' && 'type=gha,mode=max' || '' }}
 
+  build-swecov-image:
+    needs: [changes, schema-guard]
+    # PRs build only the public/global image: the SWECOV image needs the private
+    # flavored DB artifact manifest, which is deployment-secret state and not
+    # available to fork-safe PR builds. Main/dispatch builds fail loudly if the
+    # secret is missing or stamped to the wrong reg_meta tag rather than shipping
+    # the steward against the public global DB.
+    if: >-
+      !cancelled() && github.event_name != 'pull_request' &&
+      needs.schema-guard.result == 'success' &&
+      (needs.changes.outputs.image == 'true' ||
+      github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: docker/setup-buildx-action@v4.1.0
+      - name: Log in to registry.fly.io
+        if: needs.schema-guard.outputs.pending_bump != 'true'
+        uses: docker/login-action@v4.2.0
+        with:
+          registry: registry.fly.io
+          username: x
+          password: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+      - name: Check SWECOV DB artifact manifest
+        id: swecov-db
+        if: needs.schema-guard.outputs.pending_bump != 'true'
+        env:
+          REG_META_TAG: ${{ needs.schema-guard.outputs.tag }}
+          SWECOV_REG_META_DB_ZST: ${{ secrets.SWECOV_REG_META_DB_ZST }}
+        run: |
+          if [ -z "$SWECOV_REG_META_DB_ZST" ]; then
+            echo "::error::SWECOV_REG_META_DB_ZST must be a JSON manifest with tag, url, and sha256 for the private flavored reg_meta.db.zst artifact."
+            exit 1
+          fi
+          fingerprint=$(python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import sys
+
+          raw = os.environ["SWECOV_REG_META_DB_ZST"]
+          tag = os.environ["REG_META_TAG"]
+          try:
+              manifest = json.loads(raw)
+          except json.JSONDecodeError as exc:
+              print(f"::error::SWECOV_REG_META_DB_ZST is not valid JSON: {exc}", file=sys.stderr)
+              sys.exit(1)
+          if not isinstance(manifest, dict):
+              print("::error::SWECOV_REG_META_DB_ZST must be a JSON object.", file=sys.stderr)
+              sys.exit(1)
+          missing = [
+              key for key in ("tag", "url", "sha256")
+              if not isinstance(manifest.get(key), str) or not manifest[key]
+          ]
+          if missing:
+              print(
+                  "::error::SWECOV_REG_META_DB_ZST missing non-empty string key(s): "
+                  + ", ".join(missing),
+                  file=sys.stderr,
+              )
+              sys.exit(1)
+          if manifest["tag"] != tag:
+              print(
+                  f"::error::SWECOV artifact manifest tag {manifest['tag']!r} does not match bake tag {tag!r}.",
+                  file=sys.stderr,
+              )
+              sys.exit(1)
+          try:
+              int(manifest["sha256"], 16)
+          except ValueError:
+              print("::error::SWECOV artifact sha256 is not hexadecimal.", file=sys.stderr)
+              sys.exit(1)
+          if len(manifest["sha256"]) != 64:
+              print("::error::SWECOV artifact sha256 must be 64 hex characters.", file=sys.stderr)
+              sys.exit(1)
+          cache_key = {"tag": manifest["tag"], "sha256": manifest["sha256"].lower()}
+          print(hashlib.sha256(json.dumps(cache_key, sort_keys=True).encode()).hexdigest())
+          PY
+          )
+          echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
+      - if: needs.schema-guard.outputs.pending_bump != 'true'
+        uses: docker/build-push-action@v7.2.0
+        env:
+          SWECOV_REG_META_DB_ZST: ${{ secrets.SWECOV_REG_META_DB_ZST }}
+        with:
+          context: .
+          file: reg_webapp/Dockerfile
+          push: true
+          tags: registry.fly.io/reg-webapp-swecov:${{ env.IMAGE_TAG }}
+          build-args: |
+            REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
+            REG_META_FLAVOR=swecov
+            REG_WEBAPP_STEWARD=swecov
+            SWECOV_REG_META_DB_REV=${{ steps.swecov-db.outputs.fingerprint }}
+          secret-envs: |
+            swecov_reg_meta_db_zst_manifest=SWECOV_REG_META_DB_ZST
+
   deploy:
     needs: [build-image, wait-ci, schema-guard]
     # A pending schema bump (#448) leaves build-image GREEN with the bake skipped —
@@ -402,9 +504,85 @@ jobs:
               fi
             done
 
+  deploy-swecov:
+    needs: [build-swecov-image, wait-ci, schema-guard]
+    if: >-
+      !cancelled() && needs.build-swecov-image.result == 'success' &&
+      needs.schema-guard.outputs.pending_bump != 'true' &&
+      needs.wait-ci.result == 'success' &&
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: fly-deploy-swecov
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Skip unless HEAD of main
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
+          if [ "$main_sha" != "$GITHUB_SHA" ]; then
+            echo "::notice::skipping SWECOV deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: superfly/flyctl-actions/setup-flyctl@1.6
+        if: steps.head.outputs.skip != 'true'
+      - if: steps.head.outputs.skip != 'true'
+        run: >-
+          flyctl deploy
+          --config reg_webapp/fly.swecov.toml
+          --image registry.fly.io/reg-webapp-swecov:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          --ha=false
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+      - name: Prune old SWECOV registry tags
+        if: steps.head.outputs.skip != 'true'
+        continue-on-error: true
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+          DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+        run: |
+          set -euo pipefail
+          REPO_URL="https://registry.fly.io/v2/reg-webapp-swecov"
+          ACCEPT='Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
+          KEEP=10
+          auth="x:$FLY_API_TOKEN"
+          listing=""
+          for t in $(curl -fsS -u "$auth" "$REPO_URL/tags/list" | jq -r '.tags[]'); do
+            top_digest=$(curl -fsSI -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t" \
+              | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest" {print $2}')
+            manifest=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t")
+            if echo "$manifest" | jq -e '.manifests' >/dev/null; then
+              img=$(echo "$manifest" | jq -r '[.manifests[] | select(.platform.architecture != "unknown")][0].digest')
+              cfg=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$img" | jq -r '.config.digest')
+            else
+              cfg=$(echo "$manifest" | jq -r '.config.digest')
+            fi
+            created=$(curl -fsSL -u "$auth" "$REPO_URL/blobs/$cfg" | jq -r '.created')
+            listing+="$created $t $top_digest"$'\n'
+          done
+          kept=$(printf '%s' "$listing" | sort -r | head -n "$KEEP")
+          echo "Keeping $(printf '%s\n' "$kept" | wc -l | tr -d ' ') tags:"
+          printf '%s\n' "$kept"
+          kept_digests=$(printf '%s\n' "$kept" | awk '{print $3}')
+          printf '%s' "$listing" | sort -r | tail -n "+$((KEEP + 1))" \
+            | while read -r _ tag digest; do
+              if [ "$tag" = "$DEPLOYED_TAG" ]; then
+                echo "skip $tag (just deployed)"
+              elif printf '%s\n' "$kept_digests" | grep -qF "$digest"; then
+                echo "skip $tag (digest shared with a kept tag)"
+              else
+                echo "prune $tag"
+                curl -fsS -X DELETE -u "$auth" "$REPO_URL/manifests/$digest" \
+                  || echo "::warning::failed to delete $tag"
+              fi
+            done
+
   # Edge worker (SPA + /api passthrough) for catalog.swecov.se. Runs AFTER the
-  # origin deploy (deploy-skew guard): on a contract-changing push the SPA must
-  # not go live before the origin serves the new endpoints. `needs.deploy`
+  # global origin deploy (deploy-skew guard): on a contract-changing push the SPA
+  # must not go live before the origin serves the new endpoints. `needs.deploy`
   # being skipped (edge-only change → no image rebuild) is fine; a FAILED
   # image build/deploy blocks the edge ship. Image-affecting changes also run
   # this job even when nothing edge-side changed: the deploy ships a fresh
@@ -498,5 +676,71 @@ jobs:
           [ "${age:-0}" -le 600 ] || { echo "FATAL: edge HIT is ${age}s old — pre-deploy cache entry still reachable (#318 DEPLOY_VERSION cache-key versioning broken?)" >&2; exit 1; }
           etag=$(curl -sfo /dev/null -w '%header{etag}' "$url")
           code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
-          echo "If-None-Match → $code"
+          echo "If-None-Match -> $code"
+          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
+
+  # Edge worker (SPA + /api passthrough) for data.swecov.se. Separate Worker
+  # deployment from catalog.swecov.se so each origin can bump its own cache
+  # generation after its own Fly deploy succeeds.
+  edge-deploy-swecov:
+    needs: [changes, build-swecov-image, deploy-swecov, wait-ci, schema-guard]
+    if: >-
+      !cancelled() && github.event_name != 'pull_request' &&
+      needs.wait-ci.result == 'success' &&
+      needs.schema-guard.result == 'success' &&
+      needs.schema-guard.outputs.pending_bump != 'true' &&
+      needs.build-swecov-image.result != 'failure' &&
+      needs.deploy-swecov.result != 'failure' &&
+      (needs.changes.outputs.edge == 'true' ||
+      needs.changes.outputs.image == 'true' ||
+      github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: edge-deploy-swecov
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: "1.3.14"
+      - run: bun install --frozen-lockfile
+        working-directory: reg_webapp/frontend
+      - run: bun run gen:types && bun run build
+        working-directory: reg_webapp/frontend
+      - name: Skip unless HEAD of main
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
+          if [ "$main_sha" != "$GITHUB_SHA" ]; then
+            echo "::notice::skipping SWECOV edge deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.head.outputs.skip != 'true'
+        run: >-
+          bunx wrangler@4 deploy --config reg_webapp/edge/wrangler.swecov.jsonc
+          --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
+      - name: SWECOV edge cache probe (#220 + #318)
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          url="https://data.swecov.se/api/catalog"
+          curl -sfo /dev/null "$url"   # warm the colo
+          status=""
+          for _ in 1 2 3; do
+            sleep 2
+            status=$(curl -sfo /dev/null -w '%header{cf-cache-status}' "$url")
+            [ "$status" = "HIT" ] && break
+          done
+          echo "cf-cache-status: $status"
+          [ "$status" = "HIT" ] || { echo "FATAL: /api/* not edge-cached (Cache Rule missing?)" >&2; exit 1; }
+          age=$(curl -sfo /dev/null -w '%header{age}' "$url")
+          echo "age: ${age:-0}s"
+          [ "${age:-0}" -le 600 ] || { echo "FATAL: edge HIT is ${age}s old — pre-deploy cache entry still reachable (#318 DEPLOY_VERSION cache-key versioning broken?)" >&2; exit 1; }
+          etag=$(curl -sfo /dev/null -w '%header{etag}' "$url")
+          code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
+          echo "If-None-Match -> $code"
           [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }

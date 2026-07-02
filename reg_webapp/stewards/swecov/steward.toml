@@ -1,4 +1,4 @@
 id = "swecov"
 name = "SWECOV"
 long_name = "SWECOV register-data catalog"
-hostname = "swecov.example.org"
+hostname = "data.swecov.se"
