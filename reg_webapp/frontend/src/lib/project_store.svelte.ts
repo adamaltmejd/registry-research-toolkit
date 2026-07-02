@@ -665,12 +665,15 @@ export const projectStore = {
    * them here so autosave + the stable-id mirror fire/rebuild a SINGLE time. A null
    * draft is a no-op (the home screen). The batch is applied in order:
    *   (a) removes  — drop matching bindings (`bindingMatches` null-either-side rule);
-   *                  prune any source left with zero bindings;
    *   (b) adds     — find-or-create the source by `register_variant` ALONE, merge the
    *                  add's period into it (`mergePeriods` → the #307 list form on a
    *                  disjoint window), append the binding unless the duplicate guard
    *                  says it is already present;
-   *   (c) periodChanges — replace the matching source's `period` wholesale.
+   *   (c) periodChanges — replace the matching source's `period` wholesale;
+   *   (d) prune    — drop a source only when this batch removed from it AND it is now
+   *                  empty. Deferred to LAST (not folded into removes) so a remove+add
+   *                  of the SAME register_variant in one batch preserves the source's
+   *                  name/period/metadata instead of minting a fresh source.
    * The next draft + rebuilt id mirror are computed BEFORE assigning either, so the
    * replacement is atomic (like open/new) and `dirty`/autosave recompute once.
    */
@@ -680,28 +683,33 @@ export const projectStore = {
     }
     let sources: Source[] = Array.isArray(draft.sources) ? draft.sources : [];
 
-    // (a) removes → prune emptied sources.
+    // (a) removes → drop matching bindings, but do NOT prune emptied sources yet.
+    //     A single batch may remove a source's last binding AND re-add one for the
+    //     SAME register_variant (e.g. swapping a representation). Pruning inside this
+    //     loop would drop the source before (b) runs, so the add would mint a FRESH
+    //     newSource — losing the source's user-set name / period / panel-referenced
+    //     metadata. Defer the prune to a final scoped step (below) instead. Track the
+    //     removed register_variants so the prune only touches sources this batch
+    //     actually removed from (an adds-only batch never prunes a pre-existing empty
+    //     source; a removed-then-readded source is preserved by its non-zero count).
+    const removedVariants = new Set<string>();
     for (const remove of diff.removes ?? []) {
-      sources = sources
-        .map((s) =>
-          registerVariantOf(s) === remove.registerVariant
-            ? {
-                ...s,
-                bindings: (Array.isArray(s.bindings) ? s.bindings : []).filter(
-                  (b) =>
-                    !bindingMatches(
-                      b,
-                      remove.variable,
-                      remove.representation ?? null,
-                    ),
-                ),
-              }
-            : s,
-        )
-        // A source left with zero bindings is an empty extraction — prune it.
-        .filter(
-          (s) => (Array.isArray(s.bindings) ? s.bindings : []).length > 0,
-        );
+      removedVariants.add(remove.registerVariant);
+      sources = sources.map((s) =>
+        registerVariantOf(s) === remove.registerVariant
+          ? {
+              ...s,
+              bindings: (Array.isArray(s.bindings) ? s.bindings : []).filter(
+                (b) =>
+                  !bindingMatches(
+                    b,
+                    remove.variable,
+                    remove.representation ?? null,
+                  ),
+              ),
+            }
+          : s,
+      );
     }
 
     // (b) adds → find-or-create by register_variant ALONE + merge period.
@@ -745,6 +753,17 @@ export const projectStore = {
           : s,
       );
     }
+
+    // (d) prune → drop a source ONLY when this batch removed a binding from it AND it
+    //     is now empty. Scoping to `removedVariants` means a remove+add of the same
+    //     register_variant keeps the source (the add refilled it), while a remove-only
+    //     batch that empties a source still prunes it; a pre-existing empty source an
+    //     adds-only batch never touched is left alone.
+    sources = sources.filter(
+      (s) =>
+        !removedVariants.has(registerVariantOf(s)) ||
+        (Array.isArray(s.bindings) ? s.bindings : []).length > 0,
+    );
 
     // Atomic replacement: compute the next draft + rebuilt mirror BEFORE assigning
     // either (like open/new), so autosave + the id mirror fire/rebuild ONCE.
@@ -850,13 +869,37 @@ export const projectStore = {
     const variant = resolveSource
       ? variantSeg(registerVariantOf(resolveSource))
       : "";
+    // Capture the draft reference BEFORE the awaited resolve. new/open/restore all
+    // REPLACE the whole `draft` object, so if the user opens a different project or
+    // starts a New one DURING this fetch, `draft !== target` afterwards. Appending
+    // then (by re-reading `draft` + re-finding by register_variant) would land the
+    // binding in the WRONG (newly-opened) project that happens to share the variant.
+    // Discard the stale add — a no-op — instead. (The retired re-derivation engine
+    // had a generation guard for exactly this; this restores it for the single-pick
+    // path. `validate()`'s stale-response guard is the same idea for its POST.)
+    const target = draft;
     let resolution: BindingResolution;
     try {
       resolution = await resolveBindingAt(payload.variable, period, variant);
     } catch {
-      // A network/422 leaves the binding opaque (the validator is the authority);
-      // the add still lands so the pick isn't silently dropped.
+      // A network/422 leaves the binding unresolved (the validator is the
+      // authority); the add still lands so the pick isn't silently dropped.
+      if (draft !== target) {
+        return {
+          status: "already-present",
+          createdSource: false,
+          sourceName: "",
+        };
+      }
       resolution = { kind: "unresolved", reason: "no-states" };
+    }
+    if (draft !== target) {
+      // The draft was replaced mid-resolve — discard this add entirely.
+      return {
+        status: "already-present",
+        createdSource: false,
+        sourceName: "",
+      };
     }
     const fields = resolutionToFields(
       payload.variable,
@@ -926,25 +969,39 @@ function newSource(
 
 /** Map a `resolveBindingAt` result to a binding's FINAL fields (the #991 write-once
  * model — resolve once, write the concrete type/display/representation, no marker).
- * Honors the payload's `representation` and its null-when-unambiguous convention:
- *   - `derived` (a single representation) → the resolved type + display default;
- *     `representation` is the PAYLOAD's (a folded sequential rename commits null on
- *     purpose — never overwrite that null with a resolved column).
- *   - `ambiguous` + the payload pins one of the co-existing columns → that column's
- *     derived type + its `delivery_column_name` display + the pinned representation.
- *   - `ambiguous` (null / non-matching representation) OR `unresolved` → `opaque`
- *     with the payload's representation and no display default (the validator flags
- *     an ambiguous binding that omits a needed representation). */
+ * Honors the #991 null-when-unambiguous convention (issue #992): a representation is
+ * pinned ONLY for a pick among genuinely CO-EXISTING siblings.
+ *   - `derived` (exactly ONE delivery column at the (period, variant)) → the resolved
+ *     type + display default, and `representation: null` — unambiguous, so the payload
+ *     column is DROPPED (never pinned). Pinning it redundantly would break the
+ *     duplicate guard (two non-null-but-different reps of the same single-column
+ *     concept would each add a binding, accumulating duplicates) and would clobber a
+ *     folded sequential rename's intentional null (callers pass null there; a folded
+ *     rename resolves `derived` → null, letting per-year resolution pick the column).
+ *   - `ambiguous` + the payload pins one of the genuinely co-existing columns → that
+ *     column's derived type + its `delivery_column_name` display + the pinned
+ *     representation (the genuine co-existing case — the pin is load-bearing).
+ *   - `ambiguous` (null / non-matching representation) OR `unresolved` → type `""`
+ *     (NOT `"opaque"`). A resolve FAILURE / unresolved add must not synthesize a VALID
+ *     opaque binding: `"opaque"` passes the backend enum check, so a transient
+ *     network/500 would silently produce a valid binding with an arbitrary opaque type
+ *     and no signal that the add failed. `""` is NOT a valid ColumnType, so the backend
+ *     Validate flags it (`invalid_enum_value`) and it surfaces in the ValidationPanel —
+ *     the cart's error path — instead of passing silently. A GENUINELY-derived opaque
+ *     (`deriveType` in the derived / ambiguous-matched branches) is unaffected and
+ *     stays a real value; the empty sentinel is distinguishable from it. */
 function resolutionToFields(
   variable: string,
   resolution: BindingResolution,
   representation: string | null,
 ): Binding {
   if (resolution.kind === "derived") {
+    // A single delivery column is unambiguous → representation MUST be null (drop the
+    // payload column) per the #991 null-when-unambiguous convention (issue #992).
     const binding: Binding = {
       variable,
       type: resolution.type,
-      representation,
+      representation: null,
     };
     if (resolution.displayNameDefault != null) {
       binding.display_name = resolution.displayNameDefault;
@@ -967,8 +1024,10 @@ function resolutionToFields(
       };
     }
   }
-  // ambiguous (unpinned / non-matching) or unresolved → opaque, no display default.
-  return { variable, type: "opaque", representation };
+  // ambiguous (unpinned / non-matching) or unresolved → an INVALID blank type so the
+  // backend Validate flags the failed/unresolved add instead of passing a valid
+  // opaque binding silently (see the doc-comment above). No display default.
+  return { variable, type: "", representation };
 }
 
 // ── Autosave + load-at-init (the A5.4 persistence wiring) ────────────────────

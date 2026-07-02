@@ -227,10 +227,12 @@ describe("addFromCatalog (C1)", () => {
     expect(projectStore.draft?.sources[1]?.name).toBe("LISA_2");
   });
 
-  it("a created source with NO resolved period is left period-unset (opaque binding, no fetch)", async () => {
+  it("a created source with NO resolved period is left period-unset (blank-type binding, no fetch)", async () => {
     projectStore.newProject(SEED);
     // resolvedPeriod null → the source period stays unset; resolveBindingAt returns
-    // unresolved WITHOUT a fetch (period-unset) → the binding lands opaque.
+    // unresolved WITHOUT a fetch (period-unset) → the binding lands with a BLANK
+    // type (not "opaque") so the backend Validate flags the unresolved add rather
+    // than passing a silently-valid opaque binding (review Fix 4).
     const result = await projectStore.addFromCatalog(
       konPayload({ resolvedPeriod: null }),
       SEED,
@@ -243,7 +245,7 @@ describe("addFromCatalog (C1)", () => {
     expect(projectStore.draft?.sources[0].period).toBe("");
     expect(projectStore.draft?.sources[0].bindings[0]).toMatchObject({
       variable: "scb/lisa/kon",
-      type: "opaque",
+      type: "",
     });
     // No fetch — the period-unset short-circuit in resolveBindingAt.
     expect(getCatalogNode).not.toHaveBeenCalled();
@@ -284,9 +286,10 @@ describe("addFromCatalog (C1)", () => {
   it("collapse case: page pins a column but the SOURCE period is single-rep → re-add is a duplicate (MAJOR 2)", async () => {
     projectStore.newProject(SEED);
     // At the SOURCE's period the concept resolves to a SINGLE column (single-rep) —
-    // `resolveBindingAt` returns `derived` (representation null). The page saw it as
-    // multi-rep and pinned "Ssyk3", but a `derived` resolution keeps the PAYLOAD's
-    // representation ("Ssyk3") per the write-once mapping.
+    // `resolveBindingAt` returns `derived` (unambiguous). The page saw it as multi-rep
+    // and pinned "Ssyk3", but a `derived` resolution is UNAMBIGUOUS, so the mapping
+    // DROPS the payload column → representation null (review Fix 3, the #991
+    // null-when-unambiguous convention).
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([
         vstate({
@@ -303,11 +306,15 @@ describe("addFromCatalog (C1)", () => {
       SEED,
     );
     expect(a.status).toBe("added");
-    expect(projectStore.draft?.sources[0].bindings[0]?.representation).toBe(
-      "Ssyk3",
-    );
+    // Single-column derived add → representation null (unambiguous), NOT the pinned
+    // page column.
+    expect(
+      projectStore.draft?.sources[0].bindings[0]?.representation,
+    ).toBeNull();
 
-    // Re-adding with the SAME page-pinned column is a duplicate (exact match).
+    // Re-adding is a duplicate: the stored null representation matches ANY payload
+    // representation under the null-either-side rule (the page-pin-vs-source-derive
+    // desync the concept-level guard catches).
     const b = await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk3" }),
       SEED,
@@ -378,5 +385,37 @@ describe("addFromCatalog (C1)", () => {
     expect(binding?.representation).toBeNull();
     // The display default still comes from the resolved column.
     expect(binding).toMatchObject({ type: "numeric", display_name: "Lon86" });
+  });
+
+  it("discards a stale add when the draft is REPLACED during the awaited resolve (review Fix 1)", async () => {
+    projectStore.newProject(SEED);
+    // Hold the resolve open with a deferred promise so we can replace the draft
+    // MID-FLIGHT (the user opens a New project during the fetch). `getCatalogNode`
+    // is the seam `resolveBindingAt` awaits.
+    let resolveFetch: (value: StatesResponse) => void = () => {};
+    const pending = new Promise<StatesResponse>((res) => {
+      resolveFetch = res;
+    });
+    vi.mocked(getCatalogNode).mockReturnValue(pending);
+
+    const addPromise = projectStore.addFromCatalog(konPayload(), SEED);
+
+    // Replace the draft while the resolve is still pending — a brand-new project on
+    // the SAME register_variant (so a re-find by register_variant would otherwise
+    // land the binding in the WRONG project).
+    projectStore.newProject(SEED);
+    const replacedDraft = projectStore.draft;
+
+    // Let the resolve settle; the add must be discarded (no-op) rather than append
+    // into the replaced draft.
+    resolveFetch(
+      statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
+    );
+    const result = await addPromise;
+
+    expect(result.status).toBe("already-present");
+    // The new draft is untouched — no source was created and no binding landed.
+    expect(projectStore.draft).toBe(replacedDraft);
+    expect(projectStore.draft?.sources).toHaveLength(0);
   });
 });

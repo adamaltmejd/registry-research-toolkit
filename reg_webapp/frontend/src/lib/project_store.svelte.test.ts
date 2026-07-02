@@ -463,6 +463,83 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     ).toEqual(["scb/lisa/alder"]);
   });
 
+  it("remove+add of the SAME register_variant in one batch preserves the source (name + merged period, not a fresh source) — review Fix 2", () => {
+    projectStore.newProject(SEED);
+    // Seed a source with a single binding at 2015..2020, then give it a user-set name
+    // (so we can prove the source object survives the swap, not just its coordinate).
+    projectStore.applyStagedDiff({
+      adds: [
+        add(
+          "scb/lisa/v1",
+          "scb/lisa/ssyk",
+          { from: 2015, to: 2020 },
+          {
+            representation: "Ssyk3",
+          },
+        ),
+      ],
+    });
+    // Set a user name via the sources mutator (the store's public edit path).
+    const named = (projectStore.draft?.sources ?? []).map((s, i) =>
+      i === 0 ? { ...s, name: "My cohort" } : s,
+    );
+    projectStore.updateField("sources", named);
+    expect(projectStore.draft?.sources[0].name).toBe("My cohort");
+
+    // ONE batch that removes the source's ONLY binding AND adds a binding for the
+    // SAME register_variant (a representation swap). Pre-fix the removes phase would
+    // prune the emptied source immediately, so the add would mint a FRESH source and
+    // LOSE the user's name + the source's existing period. The deferred prune keeps
+    // the source: the add refills it.
+    projectStore.applyStagedDiff({
+      removes: [
+        {
+          registerVariant: "scb/lisa/v1",
+          variable: "scb/lisa/ssyk",
+          representation: "Ssyk3",
+        },
+      ],
+      adds: [
+        add(
+          "scb/lisa/v1",
+          "scb/lisa/ssyk",
+          { from: 2005, to: 2010 },
+          {
+            representation: "Ssyk4",
+          },
+        ),
+      ],
+    });
+
+    // Still ONE source, and it is the SAME source (user name preserved).
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].name).toBe("My cohort");
+    // Its period MERGED the add's disjoint window into the pre-existing one (the
+    // find-or-create found the still-present source), rather than resetting to just
+    // the add's window (which a fresh newSource would have done).
+    expect(projectStore.draft?.sources[0].period).toEqual([
+      { from: 2005, to: 2010 },
+      { from: 2015, to: 2020 },
+    ]);
+    // The old binding is gone, the new one landed.
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.representation),
+    ).toEqual(["Ssyk4"]);
+  });
+
+  it("a remove-only batch that empties a source still prunes it (review Fix 2)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    // Removing the sole binding with NO offsetting add prunes the emptied source.
+    projectStore.applyStagedDiff({
+      removes: [{ registerVariant: "scb/lisa/v1", variable: "scb/lisa/kon" }],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(0);
+  });
+
   it("a null-representation remove matches the variable's binding regardless of stored column", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
