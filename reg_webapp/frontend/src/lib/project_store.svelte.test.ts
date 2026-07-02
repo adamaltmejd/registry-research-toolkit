@@ -98,7 +98,7 @@ describe("checkVersionGate", () => {
   });
 
   it("is a NEUTRAL no-op (ok:true) for unrecognized in-range-ish versions", () => {
-    // Backend stays canonical: only v0.x is hard-rejected, everything else passes.
+    // Backend stays canonical: only schema 1.x is hard-rejected, everything else passes.
     expect(
       checkVersionGate({
         schema_version: "3.0.0",

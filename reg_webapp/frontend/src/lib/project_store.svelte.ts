@@ -16,7 +16,7 @@
  *     IndexedDB via `setPersistence`; the `storeSchemaVersion` constant gates a
  *     stored-schema mismatch (an A5.4 reject the in-memory stub never trips).
  *  3. `openError` — the blocking open-error channel. c-i sets it on a parse failure
- *     or a (currently no-op) gate failure; the v0.x reject reuses it.
+ *     or a schema-version gate failure.
  *
  * NOT a structural validator — the backend is canonical (see reg_webapp/DESIGN.md
  * → Pydantic boundary). The store only
