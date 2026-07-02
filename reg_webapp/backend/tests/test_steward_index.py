@@ -21,6 +21,7 @@ both pointed at a tmp stewards dir holding a minimal ``ifau`` catalog.
 
 from __future__ import annotations
 
+import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
@@ -38,6 +39,7 @@ from reg_schema.validation import ValidationIssue
 from reg_webapp.app import create_app
 from reg_webapp.catalog_index import CatalogIndex, build_catalog_index
 from reg_webapp.semantic import validate_semantic
+from reg_webapp.steward_catalog import StewardBootCatalog
 
 from reg_webapp.stewards import (
     StewardCatalogError,
@@ -85,6 +87,91 @@ def test_index_maps_variant_coord_to_bindings(catalog):
         "scb/rams": ("2019", "2019"),
     }
     assert index.drift_warnings == ()
+
+
+def test_steward_boot_catalog_matches_index_and_reuses_resolve_at(catalog):
+    """The startup adapter must preserve steward validation/index semantics while
+    avoiding the duplicate period-resolution pass during index construction."""
+
+    class CountingCatalog:
+        def __init__(self, wrapped: Catalog) -> None:
+            self.wrapped = wrapped
+            self.resolve_at_calls = 0
+            self.resolve_calls = 0
+
+        def __getattr__(self, name: str):
+            return getattr(self.wrapped, name)
+
+        def list_variants(self, provider_slug: str, register_slug: str):
+            return self.wrapped.list_variants(provider_slug, register_slug)
+
+        def resolve(self, fqid):
+            self.resolve_calls += 1
+            return self.wrapped.resolve(fqid)
+
+        def resolve_at(self, fqid, period, *, variant=None, value_set_version=None):
+            self.resolve_at_calls += 1
+            return self.wrapped.resolve_at(
+                fqid,
+                period,
+                variant=variant,
+                value_set_version=value_set_version,
+            )
+
+    project = ProjectData.model_validate(_steward_project(_CLEAN_SOURCES))
+    expected = build_catalog_index(
+        project,
+        validate_semantic(project, catalog, caller="steward").issues,
+        catalog,
+    )
+
+    counting = CountingCatalog(catalog)
+    boot_catalog = StewardBootCatalog(counting)
+    result = validate_semantic(project, boot_catalog, caller="steward")
+    actual = build_catalog_index(project, result.issues, boot_catalog)
+
+    assert result.ok and result.issues == ()
+    assert actual == expected
+    # Two exact source/binding/period keys in _CLEAN_SOURCES. Without the boot
+    # cache, build_catalog_index would resolve the same two keys again.
+    assert counting.resolve_at_calls == 2
+    # The categorical binding's value_set still resolves through the real catalog;
+    # variable bindings use the adapter's minimal semantic projection instead of
+    # full ResolvedVariable hydration.
+    assert counting.resolve_calls == 1
+
+
+def test_steward_boot_catalog_matches_same_as_replacement_hints(catalog_db):
+    conn = sqlite3.connect(catalog_db)
+    conn.row_factory = sqlite3.Row
+    try:
+        conn.execute(
+            "INSERT INTO variable_same_as "
+            "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
+            "VALUES ('scb', 'lisa', 'kon-alias', 'scb', 'lisa', 'kon')"
+        )
+        conn.commit()
+        catalog = Catalog(conn)
+        source = {
+            "name": "lisa",
+            "register_variant": "scb/lisa/individer-15plus",
+            "period": 2020,
+            "bindings": [{"variable": "scb/lisa/kon-alias", "type": "categorical"}],
+        }
+        project = ProjectData.model_validate(_steward_project([source]))
+
+        real_result = validate_semantic(project, catalog, caller="steward")
+        boot_catalog = StewardBootCatalog(catalog)
+        boot_result = validate_semantic(project, boot_catalog, caller="steward")
+
+        assert boot_result.issues == real_result.issues
+        assert [issue.code for issue in boot_result.issues] == ["variable_replaced"]
+        assert boot_result.issues[0].successor_fqid == "scb/rams/syss"
+        assert build_catalog_index(project, boot_result.issues, boot_catalog) == (
+            build_catalog_index(project, real_result.issues, catalog)
+        )
+    finally:
+        conn.close()
 
 
 # ── (b) membership probe (fqid_outside_steward_catalog backing) ────────────

@@ -18,11 +18,13 @@ which only exists once the lifespan opens it.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from time import perf_counter
+from typing import TYPE_CHECKING, cast
 
 from pydantic import ValidationError
 from reg_schema.project_data import ProjectData
@@ -30,6 +32,7 @@ from reg_schema.structural import validate_structural
 
 from .catalog_index import build_catalog_index
 from .semantic import validate_semantic
+from .steward_catalog import StewardBootCatalog
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
@@ -58,6 +61,8 @@ STEWARD_TOML = "steward.toml"
 STEWARD_PROJECT_DATA = "steward.project_data.json"
 
 DEFAULT_STEWARD_ID = "global"
+
+logger = logging.getLogger(__name__)
 
 
 def _selected_steward_id() -> str:
@@ -169,14 +174,18 @@ def load_catalog_index(
 
     base = (root or _stewards_dir()) / steward.id
     project_path = base / STEWARD_PROJECT_DATA
+    start = perf_counter()
     try:
         raw = json.loads(project_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise StewardCatalogError(
             f"{project_path}: could not read/parse steward catalog: {exc}"
         ) from exc
+    json_seconds = perf_counter() - start
 
+    phase_start = perf_counter()
     structural = validate_structural(raw)
+    structural_seconds = perf_counter() - phase_start
     if not structural.ok:
         errors = [i for i in structural.issues if i.level == "error"]
         raise StewardCatalogError(
@@ -190,6 +199,7 @@ def load_catalog_index(
     # Binding — so model_validate can still raise on a typo'd field. That's a broken
     # committed catalog (user error), so fail fast with a CLEAR StewardCatalogError,
     # not an opaque pydantic traceback out of the FastAPI lifespan.
+    phase_start = perf_counter()
     try:
         project = ProjectData.model_validate(raw)
     except ValidationError as exc:
@@ -197,6 +207,9 @@ def load_catalog_index(
             f"{project_path}: steward catalog passed structural validation but "
             f"failed model construction (an unrecognized or invalid field?): {exc}"
         ) from exc
+    model_seconds = perf_counter() - phase_start
+
+    boot_catalog = cast("Catalog", StewardBootCatalog(catalog))
 
     # Steward-caller mode: the three reg_meta-DRIFT codes downgrade
     # error→warning so the deployment boots through reg_meta evolution (those
@@ -205,7 +218,9 @@ def load_catalog_index(
     # must pin — means the committed catalog is genuinely INVALID: fail fast like a
     # structural break (CLAUDE.md), don't boot a catalog-with-errors as if valid
     # (that would admit the broken binding to the index and never surface it).
-    result = validate_semantic(project, catalog, caller="steward")
+    phase_start = perf_counter()
+    result = validate_semantic(project, boot_catalog, caller="steward")
+    semantic_seconds = perf_counter() - phase_start
     if not result.ok:
         errors = [i for i in result.issues if i.level == "error"]
         raise StewardCatalogError(
@@ -214,4 +229,20 @@ def load_catalog_index(
             "ambiguous binding's @<version>): "
             + "; ".join(f"{i.code}@{i.path}" for i in errors)
         )
-    return build_catalog_index(project, result.issues, catalog)
+    phase_start = perf_counter()
+    index = build_catalog_index(project, result.issues, boot_catalog)
+    index_seconds = perf_counter() - phase_start
+    logger.info(
+        "loaded steward catalog %s: json=%.3fs structural=%.3fs model=%.3fs "
+        "semantic=%.3fs index=%.3fs warnings=%d variants=%d bindings=%d",
+        steward.id,
+        json_seconds,
+        structural_seconds,
+        model_seconds,
+        semantic_seconds,
+        index_seconds,
+        sum(1 for issue in result.issues if issue.level == "warning"),
+        len(index.bindings_by_variant),
+        sum(len(bindings) for bindings in index.bindings_by_variant.values()),
+    )
+    return index
