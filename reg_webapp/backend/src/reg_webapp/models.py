@@ -260,6 +260,7 @@ class BindingNode(BaseModel):
     measurement_unit: str | None
     is_sensitive: bool
     is_identifier: bool
+    deprecated: bool = False
     source_register_id: int | None
     source_register_text: str | None
     states: list[VariableState]
@@ -541,6 +542,7 @@ class ValidationIssueModel(BaseModel):
     code: str
     path: str
     message: str
+    successor_fqid: str | None = None
 
 
 class ValidationResultModel(BaseModel):

@@ -256,16 +256,17 @@ def _check_schema_shape(
             result.ok(f"{required} present")
         else:
             result.fail(f"{required} missing")
-    # A2.6 added register_version / population / object_type; A2.7 adds
-    # variable_instance / variable_alias_build / variable_context to the
-    # dropped-before-ship set (build-time-only, like unika_summary).
+    for required in ("register_version", "population", "object_type"):
+        if required in tables:
+            result.ok(f"{required} present")
+        else:
+            result.fail(f"{required} missing")
+    # A2.7 adds variable_instance / variable_alias_build / variable_context to
+    # the dropped-before-ship set (build-time-only, like unika_summary).
     for absent in (
         "cvid_value_code",
         "value_item",
         "value_item_validity",
-        "register_version",
-        "population",
-        "object_type",
         "variable_instance",
         "variable_alias_build",
         "variable_context",

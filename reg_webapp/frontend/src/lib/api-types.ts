@@ -696,6 +696,11 @@ export interface components {
         BindingNode: {
             /** Definition */
             definition: string | null;
+            /**
+             * Deprecated
+             * @default false
+             */
+            deprecated: boolean;
             /** Description */
             description: string | null;
             /** Fqid */
@@ -1735,6 +1740,30 @@ export interface components {
             lineage_warnings: components["schemas"]["LineageWarning"][];
         };
         /**
+         * ObjectTypeMetadata
+         * @description SCB object-type prose for one register version (#799).
+         */
+        ObjectTypeMetadata: {
+            /** Definition */
+            definition: string | null;
+            /** Name */
+            name: string;
+        };
+        /**
+         * PopulationMetadata
+         * @description SCB population prose for one register version (#799).
+         */
+        PopulationMetadata: {
+            /** Comment */
+            comment: string | null;
+            /** Date Range */
+            date_range: string | null;
+            /** Definition */
+            definition: string | null;
+            /** Name */
+            name: string;
+        };
+        /**
          * PredecessorsResponse
          * @description `GET /api/catalog/{fqid}/predecessors` — inbound succession.
          */
@@ -1916,6 +1945,28 @@ export interface components {
             results: components["schemas"]["CodeSearchResult"][];
             /** Total Count */
             total_count: number;
+        };
+        /**
+         * RegisterVersionMetadata
+         * @description SCB register-version prose nested under a variant (#799).
+         */
+        RegisterVersionMetadata: {
+            /** Description */
+            description: string | null;
+            /** Measurement Information */
+            measurement_information: string | null;
+            /** Name */
+            name: string | null;
+            /**
+             * Object Types
+             * @default []
+             */
+            object_types: components["schemas"]["ObjectTypeMetadata"][];
+            /**
+             * Populations
+             * @default []
+             */
+            populations: components["schemas"]["PopulationMetadata"][];
         };
         /**
          * RelatedDocument
@@ -2158,6 +2209,8 @@ export interface components {
             message: string;
             /** Path */
             path: string;
+            /** Successor Fqid */
+            successor_fqid?: string | null;
         };
         /**
          * ValidationResultModel
@@ -2472,6 +2525,11 @@ export interface components {
             panel_time_key: string | string[] | null;
             /** Slug */
             slug: string;
+            /**
+             * Versions
+             * @default []
+             */
+            versions: components["schemas"]["RegisterVersionMetadata"][];
         };
         /**
          * VariantsRef

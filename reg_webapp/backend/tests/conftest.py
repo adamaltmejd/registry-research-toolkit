@@ -157,6 +157,22 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
         ("peorgnr", json.dumps(["ar", "kvartal"]), "row"),
     )
     add_version(src, regver_id=200, register_variant_id=20, name="2019")
+    src.execute(
+        "UPDATE register_version SET "
+        "registerversionbeskrivning = ?, "
+        "registerversionmatinformation = ? "
+        "WHERE regver_id = 200",
+        ("RAMS 2019 description", "RAMS measurement information"),
+    )
+    src.execute(
+        "INSERT INTO population (regver_id, name, definition, comment, date_range) "
+        "VALUES (200, 'Employees', 'People with employment income', "
+        "'Fixture population note', '2019')"
+    )
+    src.execute(
+        "INSERT INTO object_type (regver_id, name, definition) "
+        "VALUES (200, 'Person', 'Individual worker')"
+    )
     add_variable(src, register_id=2, var_id=77, name="Sysselsättning", slug="syss")
     add_state(
         src,

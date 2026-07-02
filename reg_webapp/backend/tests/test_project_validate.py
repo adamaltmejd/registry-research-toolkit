@@ -91,6 +91,18 @@ def test_unresolvable_fqid_is_200_not_4xx(client):
     assert ("fqid_unresolved", "error") in codes
 
 
+def test_variable_replaced_successor_fqid_serializes(client):
+    spec = _clean_spec()
+    spec["sources"][0]["period"] = 2020
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200
+    body = resp.json()
+    issue = next(i for i in body["issues"] if i["code"] == "variable_replaced")
+    assert issue["level"] == "info"
+    assert issue["successor_fqid"] == "scb/rams/syss"
+    assert body["ok"] is True
+
+
 def test_extra_key_is_unexpected_field_not_500(client):
     """A typo'd key on a CLOSED object (Binding, extra=forbid) now surfaces as the
     canonical structural code ``unexpected_field`` (reg_schema owns it) — the

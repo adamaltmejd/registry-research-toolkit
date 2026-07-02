@@ -536,12 +536,12 @@ validity ranges — so sub-annual and range queries are precise, not year-granul
 caller's 3-seg binding FQID `provider/register/slug`, preserved through a `same_as`
 traversal), `variable_id`, `register_id`, `provider_key`, the shared metadata (`name`,
 `definition`, `description`, `measurement_unit`, `is_sensitive`, `is_identifier`,
-`source_register_id`, `source_register_text` when stable at variable grain), `states`
-(tuple of `VariableState`, chronological ascending), the variable-grain edges `same_as`
-/ `replaced_by` (OUTBOUND successors) / `lineage`, `via_same_as` (the traversal path
-when resolved via a `same_as` edge, else None), and `group` (the binding's owning
-concept group as a `BindingGroupRef` `(provider, register, key)`, None when ungrouped;
-#616).
+`deprecated`, `source_register_id`, `source_register_text` when stable at variable
+grain), `states` (tuple of `VariableState`, chronological ascending), the variable-grain
+edges `same_as` / `replaced_by` (OUTBOUND successors) / `lineage`, `via_same_as` (the
+traversal path when resolved via a `same_as` edge, else None), and `group` (the
+binding's owning concept group as a `BindingGroupRef` `(provider, register, key)`, None
+when ungrouped; #616).
 
 **`VariableState`** — one `variable_state` row tagged with its variant. Fields:
 `state_id`, `variant` (the `register_variant.slug`), `register_variant_id`, `valid_from`
@@ -1001,10 +1001,10 @@ what shape they have"; two siblings answer the rest, and the boundary is a desig
 decision worth stating:
 
 - **The doc DB** answers "how to understand them" — free-form prose and narrative
-  metadata at variant level: methodology (SCB mätinformation), quality narratives (SOS
-  quality sheets), conceptual time-series breaks, long-form descriptions, legal text.
-  When content drifts over a register's life, the doc uses chronological Markdown
-  sections; the catalog does not try to model prose chronology.
+  metadata beyond the compact register/variant/version fields shipped in the catalog:
+  quality narratives (SOS quality sheets), conceptual time-series breaks, long-form
+  descriptions, legal text. When content drifts over a register's life beyond the
+  structured `register_version` rows, the doc uses chronological Markdown sections.
 - **The provenance DB** — a maintainer-only sibling SQLite artifact, not shipped to
   consumers — holds build artifacts: approval dates, workbook delivery metadata, source
   checksums, build manifests, and raw provider-side IDs not reused as universal IDs. Its
@@ -1197,14 +1197,14 @@ resolution turns strings back into entities.
 
 `registerrubrik` / `registervariantrubrik` are dropped (redundant with `name`);
 `variabelreferenstid`, `variabelhamtadfran`, `variabelextern_kommentar` are dropped or
-moved to docs; SCB `registerversion_*` (mätinformation, approval dates) go to docs /
-provenance.
+moved to docs. SCB `registerversionbeskrivning`, `registerversionmatinformation`,
+`population*`, and `objekttyp*` ship as read-only metadata under a register variant;
+approval dates stay provenance-only.
 
-**Population and object type are build-only.** SCB's `populationnamn` / `objekttypnamn`
-etc. land in scratch `population` / `object_type` tables that the build folds into
-`variable_state` validity windows and then **drops before ship** (alongside
-`register_version`, `variable_instance`). They are **not catalog entities** and have no
-FQID slot — do not query for them in the shipped DB.
+**Population and object type are metadata, not identities.** SCB's `populationnamn` /
+`objekttypnamn` etc. land in shipped `population` / `object_type` tables under
+`register_version`. They are nested on `VariantSummary.versions` for display, but they
+are **not catalog entities** and have no FQID slot.
 
 ## Explored and ruled out
 

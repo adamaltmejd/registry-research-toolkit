@@ -151,6 +151,42 @@ def test_value_set_missing(catalog):
     assert issue.path == "/sources/0/bindings/0/value_set"
 
 
+def test_variable_replaced_hint_after_effective_year(catalog):
+    source = {**_CLEAN_SOURCE, "period": 2020}
+    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    issue = next(i for i in result.issues if i.code == "variable_replaced")
+    assert issue.level == "info"
+    assert issue.path == "/sources/0/bindings/0/variable"
+    assert issue.successor_fqid == "scb/rams/syss"
+    assert "effective 2019" in issue.message
+    assert result.ok
+
+
+def test_variable_replaced_hint_skips_period_before_effective_year(catalog):
+    result = validate_semantic(_project([_CLEAN_SOURCE]), catalog, caller="researcher")
+    assert {i.code for i in result.issues} == set()
+    assert result.ok
+
+
+def test_deprecated_traversal_hint_for_deprecated_variable():
+    from _slugged_db import build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute("UPDATE variable SET deprecated = 1 WHERE slug = 'kon'")
+    conn.commit()
+    try:
+        result = validate_semantic(
+            _project([_CLEAN_SOURCE]), Catalog(conn), caller="researcher"
+        )
+    finally:
+        conn.close()
+    issue = next(i for i in result.issues if i.code == "deprecated_traversal")
+    assert issue.level == "info"
+    assert issue.path == "/sources/0/bindings/0/variable"
+    assert issue.successor_fqid is None
+    assert result.ok
+
+
 @pytest.mark.parametrize(
     ("source_patch", "code"),
     [
@@ -1522,15 +1558,17 @@ def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalo
 # compound-key-deduped union of every segment's states.
 
 
-def test_list_period_clean_resolves_without_issues(catalog):
-    # Both segments inside kon's single 2018+ state → no issues at all (the
-    # state intersecting both segments counts ONCE — no phantom drift info).
+def test_list_period_clean_resolves_with_replacement_hint(catalog):
+    # Both segments inside kon's single 2018+ state: the state intersecting both
+    # segments counts ONCE (no phantom drift info). The fixture's kon→syss
+    # succession is effective for the second segment, so the only issue is the
+    # non-blocking replacement hint.
     result = validate_semantic(
         _project([_kon_source([2018, {"from": 2019, "to": 2020}])]),
         catalog,
         caller="researcher",
     )
-    assert result.issues == ()
+    assert [i.code for i in result.issues] == ["variable_replaced"]
     assert result.ok
 
 
@@ -1603,7 +1641,8 @@ def test_list_period_steward_index_resolves_columns(catalog):
     # columns resolve per segment and union into the (FQID, column) pairs.
     project = _project([_kon_source([2018, {"from": 2019, "to": 2020}])])
     result = validate_semantic(project, catalog, caller="steward")
-    assert result.ok and result.issues == ()
+    assert result.ok
+    assert [i.code for i in result.issues] == ["variable_replaced"]
     index = build_catalog_index(project, result.issues, catalog)
     assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
         {("scb/lisa/kon", "Kon")}

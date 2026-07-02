@@ -1194,6 +1194,15 @@ def _curated_variable_slugs(
     return out
 
 
+def _curated_variable_deprecations(entries: list[SlugEntry]) -> set[tuple[str, str]]:
+    """Hand-curated deprecated variable markers, keyed (provider, source_id)."""
+    return {
+        (e.provider, e.source_id)
+        for e in entries
+        if e.kind == "variable" and e.deprecated and e.provider is not None
+    }
+
+
 def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
     """Every `SlugEntry` from the hand-curated ``<provider>.toml`` files in
     ``slug_dir`` — the reserved non-provider TOMLs and the generated
@@ -2031,6 +2040,7 @@ def populate_variable_slugs(
     # Curated overrides come from the hand-curated <provider>.toml only.
     curated_entries = iter_curated_provider_entries(slug_dir)
     curated = _curated_variable_slugs(curated_entries)
+    deprecated = _curated_variable_deprecations(curated_entries)
     # A hand-curated [variable] slug override must match a live variable — a
     # non-deprecated override for a missing (register, var) is a typo that would
     # otherwise be silently ignored (the variable auto-slugs under a different
@@ -2272,6 +2282,7 @@ def populate_variable_slugs(
             # reserve them so first-sight derivation can't collide with them.
             for variable_id, _reg, provider_key, name, kol, early_kol, n_cols in group:
                 source_id = _source_id(register_id, provider_key, variable_id)
+                is_deprecated = int((provider_slug, source_id) in deprecated)
                 curated_slug = curated.get((provider_slug, source_id))
                 if curated_slug is not None:
                     fixed, kind = curated_slug, "curated"
@@ -2296,8 +2307,9 @@ def populate_variable_slugs(
                     fixed, kind = auto.get(source_id), "auto_existing"
                 if fixed is not None:
                     conn.execute(
-                        "UPDATE variable SET slug = ? WHERE variable_id = ?",
-                        (fixed, variable_id),
+                        "UPDATE variable SET slug = ?, deprecated = ? "
+                        "WHERE variable_id = ?",
+                        (fixed, is_deprecated, variable_id),
                     )
                     used.add(fixed)
                     counts[kind] += 1
@@ -2404,8 +2416,9 @@ def populate_variable_slugs(
                     frozen_new_fallback.append((provider_slug, source_id, slug, kind))
                     continue
                 conn.execute(
-                    "UPDATE variable SET slug = ? WHERE variable_id = ?",
-                    (slug, variable_id),
+                    "UPDATE variable SET slug = ?, deprecated = ? "
+                    "WHERE variable_id = ?",
+                    (slug, int((provider_slug, source_id) in deprecated), variable_id),
                 )
                 used.add(slug)
                 auto[source_id] = slug

@@ -1523,6 +1523,18 @@ class TestPopulateVariableSlugs:
         assert counts["curated"] == 1
         assert counts["auto_new"] == 0
 
+    def test_deprecated_metadata_persists_without_slug_override(
+        self, tmp_path: Path
+    ) -> None:
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path, '[variable."1.44"]\ndeprecated = true\n')
+        populate_variable_slugs(conn, d)
+        row = conn.execute(
+            "SELECT slug, deprecated FROM variable WHERE provider_key = '44'"
+        ).fetchone()
+        assert row["slug"] == "kon"
+        assert row["deprecated"] == 1
+
     def test_stale_curated_override_rejected(self, tmp_path: Path) -> None:
         # A non-deprecated [variable] override for a (register, var) with no live
         # variable is a typo — fail rather than silently auto-slug the variable.

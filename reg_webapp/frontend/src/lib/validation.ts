@@ -213,6 +213,10 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The requested range has a sub-range no variable state covers",
     hint: "info",
   },
+  deprecated_traversal: {
+    label: "The binding resolves through deprecated catalog metadata",
+    hint: "info",
+  },
   variable_replaced: {
     label: "The binding has a replacement edge at/before this period",
     hint: "info",

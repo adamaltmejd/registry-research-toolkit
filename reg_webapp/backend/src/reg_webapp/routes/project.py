@@ -93,7 +93,11 @@ def _to_result_model(result: ValidationResult) -> ValidationResultModel:
         ok=result.ok,
         issues=[
             ValidationIssueModel(
-                level=i.level, code=i.code, path=i.path, message=i.message
+                level=i.level,
+                code=i.code,
+                path=i.path,
+                message=i.message,
+                successor_fqid=i.successor_fqid,
             )
             for i in result.issues
         ],

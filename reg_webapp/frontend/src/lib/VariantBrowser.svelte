@@ -1,6 +1,7 @@
 <script lang="ts">
 import { getRegisterVariants } from "./api";
 import { asyncResource } from "./async.svelte";
+import { KeyValue, type KeyValueRow } from "./ui";
 
 // The variant axis is a register SUB-RESOURCE (NOT an FQID path segment; see
 // reg_meta/DESIGN.md → Two-level variable model). A5.3a DISPLAYS the variants for
@@ -31,6 +32,47 @@ function showsDistinctGroup(
 ): boolean {
   return !!group && group.trim() !== (name ?? "").trim();
 }
+
+function rows(...rows: KeyValueRow[]): KeyValueRow[] {
+  return rows.filter((row) => row.value);
+}
+
+function versionRows(version: {
+  description?: string | null;
+  measurement_information?: string | null;
+}): KeyValueRow[] {
+  return rows(
+    { label: "Description", value: version.description ?? undefined },
+    {
+      label: "Measurement",
+      value: version.measurement_information ?? undefined,
+    },
+  );
+}
+
+function populationRows(population: {
+  name: string;
+  definition?: string | null;
+  comment?: string | null;
+  date_range?: string | null;
+}): KeyValueRow[] {
+  return rows(
+    { label: "Name", value: population.name },
+    { label: "Definition", value: population.definition ?? undefined },
+    { label: "Comment", value: population.comment ?? undefined },
+    { label: "Date range", value: population.date_range ?? undefined },
+  );
+}
+
+function objectTypeRows(objectType: {
+  name: string;
+  definition?: string | null;
+}): KeyValueRow[] {
+  return rows(
+    { label: "Name", value: objectType.name },
+    { label: "Definition", value: objectType.definition ?? undefined },
+  );
+}
 </script>
 
 <!-- #673/M4: render the section ONLY when there's a real (non-`_default`)
@@ -58,6 +100,40 @@ function showsDistinctGroup(
             </div>
             {#if variant.description}
               <p class="desc muted">{variant.description}</p>
+            {/if}
+            {#if variant.versions && variant.versions.length > 0}
+              <div class="version-list">
+                {#each variant.versions as version, index}
+                  {@const vRows = versionRows(version)}
+                  {@const populations = version.populations ?? []}
+                  {@const objectTypes = version.object_types ?? []}
+                  <section class="version-meta">
+                    <h4 class="version-title">
+                      <span class="micro-label">Version</span>
+                      <span class="version-name">{version.name ?? `#${index + 1}`}</span>
+                    </h4>
+                    {#if vRows.length > 0}
+                      <KeyValue rows={vRows} />
+                    {/if}
+                    {#if populations.length > 0}
+                      <div class="metadata-group">
+                        <h5 class="micro-label metadata-heading">Population</h5>
+                        {#each populations as population (population.name)}
+                          <KeyValue rows={populationRows(population)} />
+                        {/each}
+                      </div>
+                    {/if}
+                    {#if objectTypes.length > 0}
+                      <div class="metadata-group">
+                        <h5 class="micro-label metadata-heading">Object type</h5>
+                        {#each objectTypes as objectType (objectType.name)}
+                          <KeyValue rows={objectTypeRows(objectType)} />
+                        {/each}
+                      </div>
+                    {/if}
+                  </section>
+                {/each}
+              </div>
             {/if}
           </li>
         {/each}
@@ -99,5 +175,33 @@ function showsDistinctGroup(
   .desc {
     margin: 0.2rem 0 0 0.6rem;
     font-size: 0.9em;
+  }
+  .version-list {
+    margin: var(--space-3) 0 0 var(--space-2);
+    display: grid;
+    gap: var(--space-3);
+  }
+  .version-meta {
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--border);
+  }
+  .version-title {
+    margin: 0 0 var(--space-2);
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+  .version-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text);
+  }
+  .metadata-group {
+    margin-top: var(--space-3);
+    display: grid;
+    gap: var(--space-2);
+  }
+  .metadata-heading {
+    margin: 0;
   }
 </style>

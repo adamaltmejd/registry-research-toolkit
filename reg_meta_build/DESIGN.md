@@ -2019,6 +2019,10 @@ lives in `reg_schema` / `reg_meta.fqid`; this module (`fqid_slugs.py`) is the lo
 validator, populator, and snapshot machine. (There is no `register_version` slug surface
 — version left the FQID grammar.)
 
+`register_version`, `population`, and `object_type` rows still ship as compact read-only
+metadata for the register-variant browser. They remain outside the FQID slug surface: no
+slugs, no graph edges, and no addressable catalog nodes.
+
 **Registers, variants, and classifications are curated; variables auto-slug.** A
 first-sight variable's slug comes from a fallback chain (`populate_variable_slugs`),
 every candidate run through a per-register `_uniquify`, so the build **always** yields a

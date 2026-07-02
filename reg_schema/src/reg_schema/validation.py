@@ -40,6 +40,10 @@ class ValidationIssue:
     # whole-document issues. The SPA uses this to jump to the field.
     path: str
     message: str
+    # Optional structured successor hint for semantic succession findings. Kept
+    # as a scalar field (rather than a mutable dict payload) so the frozen issue
+    # remains hashable for set/equality-based tests.
+    successor_fqid: str | None = None
 
     def __post_init__(self) -> None:
         if self.level not in _VALID_LEVELS:
