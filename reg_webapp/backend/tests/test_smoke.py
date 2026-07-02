@@ -26,6 +26,7 @@ _GOOD_CONTEXT = {
     "steward": {"id": "global", "name": "Global"},
     "reg_meta": {"schema_version": "5.2.0", "import_date": "2026-06-10"},
     "webapp": {"version": "0.1.0"},
+    "catalog_drift_warnings": [],
 }
 _GOOD_ROOT = {
     "kind": "root",
@@ -103,6 +104,28 @@ def test_run_smoke_fails_on_empty_catalog() -> None:
 def test_run_smoke_fails_on_bad_context_shape() -> None:
     routes = {"/api/context": (200, {"steward": {"id": "global"}})}  # missing keys
     with _serve(routes) as base, pytest.raises(SmokeError, match="missing key"):
+        run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
+
+
+def test_run_smoke_can_fail_on_steward_drift(monkeypatch: pytest.MonkeyPatch) -> None:
+    context = {
+        **_GOOD_CONTEXT,
+        "steward": {"id": "swecov", "name": "SWECOV"},
+        "catalog_drift_warnings": [
+            {
+                "code": "fqid_unresolved",
+                "path": "/sources/0/bindings/0",
+                "message": "missing",
+            }
+        ],
+    }
+    routes = {
+        "/api/context": (200, context),
+        "/api/catalog": (200, _GOOD_ROOT),
+        "/api/catalog/scb": (200, _GOOD_PROVIDER),
+    }
+    monkeypatch.setenv("REG_WEBAPP_FAIL_ON_STEWARD_DRIFT", "1")
+    with _serve(routes) as base, pytest.raises(SmokeError, match="catalog drift"):
         run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
 
 

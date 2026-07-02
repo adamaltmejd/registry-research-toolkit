@@ -1,5 +1,6 @@
-// Edge router: backend paths pass through to the zone origin (Fly), everything
-// else is the SPA (static assets with single-page-application fallback).
+// Edge router: backend paths pass through to the incoming hostname's zone
+// origin (the matching Fly app), everything else is the SPA (static assets
+// with single-page-application fallback).
 //
 // `fetch(request)` on the same zone is a subrequest to the DNS origin — it does
 // NOT re-enter this worker, and it runs through Cloudflare's cache, so the

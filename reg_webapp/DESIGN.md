@@ -753,10 +753,13 @@ unexpected/typo'd field that survives structural but fails model construction) i
 because it's an author-time choice, not drift) also fails the boot — don't admit a
 broken binding to the index and never surface it.
 
-Adding a steward is a monorepo PR (drop a directory, register the hostname, rebuild).
-`REG_WEBAPP_STEWARD` selects which steward a process serves; `REG_WEBAPP_STEWARDS_DIR`
-overrides the on-disk root for a packaged wheel/Docker image (the `stewards/` sibling
-doesn't exist there). A real filtered steward catalog now ships:
+Pre-v1, adding a proving steward is a monorepo PR (drop a directory, register the
+hostname, rebuild). `REG_WEBAPP_STEWARD` selects which steward a process serves;
+`REG_WEBAPP_STEWARDS_DIR` overrides the on-disk root for a packaged wheel/Docker image
+(the `stewards/` sibling doesn't exist there). SWECOV is the first proving steward and
+stays in-repo while testing the model, but that is not the release distribution shape:
+before v1, extract SWECOV into its own steward repo/system and keep that system copyable
+for later steward deployments. A real filtered steward catalog now ships:
 `stewards/swecov/steward.project_data.json` (column-based admission against the flavored
 reg_meta DB; see `stewards/swecov/README.md` for provenance and coverage). Remaining:
 deploy wiring for the swecov hostname, the SPA catalog-authoring mode, a
@@ -1414,30 +1417,41 @@ and officially documents the Cloudflare-in-front topology
 (`fly.io/docs/networking/understanding-cloudflare`). Lock-in is nil: the artifact is the
 plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 
-- **App**: `reg-webapp-global` — a single always-on `shared-cpu-1x`/1GB machine in `arn`
+- **Apps**: `reg-webapp-global` serves `catalog.swecov.se`; `reg-webapp-swecov` serves
+  `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
   is throttled (\~8 MiB/s), so a cold boot re-reads the SQLite pair slowly — keep the OS
-  page cache warm rather than scale to zero (\~$6/mo). Config: `reg_webapp/fly.toml`;
-  `--ha=false` keeps the machine count at one.
+  page cache warm rather than scale to zero (\~$6/mo per app). Config:
+  `reg_webapp/fly.toml` / `reg_webapp/fly.swecov.toml`; `--ha=false` keeps each machine
+  count at one.
 - **Read-only SQLite on the ephemeral rootfs is the right model** — the DB pair is baked
   into the image and replaced with it. No volume, no LiteFS, nothing persists.
-- **Deploys**: one workflow (`container-build.yml`) owns both deploy surfaces, scoped by
-  a `changes` paths-filter job. Image-affecting main pushes (Dockerfile COPY surfaces +
-  bake inputs — NOT baked deps reg_schema, which need a manual `workflow_dispatch` —
-  decided 2026-06-11: that is the rule, not a gap) build, push to `registry.fly.io`
-  (SHA-tagged), and `flyctl deploy --image`. The bake build-arg is the RESOLVED newest
-  `reg_meta/v*` tag (never `latest` — a literal `latest` makes the bake layer's buildx
-  cache key insensitive to data-only releases and can even resurrect a stale cached
-  layer after a pinned dispatch). Nothing deploys without green CI: a `wait-ci` job
-  polls this commit's ci.yml run and both deploy jobs require its success — an image
-  that builds but fails lint/ty/pytest never ships. Both deploy jobs carry a
+- **Deploys**: one workflow (`container-build.yml`) owns both origin apps plus the edge
+  workers, scoped by a `changes` paths-filter job. Image-affecting main pushes
+  (Dockerfile COPY surfaces + bake inputs — NOT baked deps reg_schema, which need a
+  manual `workflow_dispatch` — decided 2026-06-11: that is the rule, not a gap) build,
+  push to `registry.fly.io` (SHA-tagged), and `flyctl deploy --image` each affected
+  origin. The bake build-arg is the RESOLVED newest `reg_meta/v*` tag (never `latest` —
+  a literal `latest` makes the bake layer's buildx cache key insensitive to data-only
+  releases and can even resurrect a stale cached layer after a pinned dispatch). The
+  global Fly app uses `FLY_API_TOKEN`; SWECOV uses the separate app-scoped
+  `FLY_API_TOKEN_SWECOV`. The SWECOV image also requires `SWECOV_REG_META_DB_ZST`, a
+  private JSON manifest with the flavored `reg_meta.db.zst` `tag`, `url`, and `sha256`;
+  CI checks that manifest tag against the baked `reg_meta/v*` tag, hashes tag+digest
+  into `SWECOV_REG_META_DB_REV`, and the Docker bake re-checks tag + downloaded digest
+  before replacing `reg_meta.db`. That keeps Docker's secret-insensitive cache from
+  reusing a stale flavor layer and stops a public-docs DB from being paired with a
+  mismatched private main DB. Nothing deploys without green CI: a `wait-ci` job polls
+  this commit's ci.yml run and the origin/edge deploy jobs require its success — an
+  image that builds but fails lint/ty/pytest never ships. Each deploy job carries a
   HEAD-of-main guard (GHA concurrency serializes by build-completion order, not commit
   order — without the guard an older commit's slow build could overwrite a newer deploy;
   it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
-  entrypoint smoke gate (container exits non-zero before ever serving) and fly.toml's
-  `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
-  `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
-  seconds.
+  entrypoint smoke gate (container exits non-zero before ever serving, and SWECOV sets
+  `REG_WEBAPP_FAIL_ON_STEWARD_DRIFT=1` so any steward catalog drift warning fails the
+  deploy) and fly.toml's `/api/context` HTTP check (flyctl reports failure if it never
+  passes). Rollback: `flyctl releases --image` lists history;
+  `flyctl deploy --image <old>` restores in seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
   `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
   higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)
@@ -1492,16 +1506,20 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   newest 10 tags and deletes older manifests via the registry v2 DELETE (supported by
   Fly — verified live 2026-06-11; buildx pushes OCI indexes, so age is read from the
   image config's `.created`, and a digest shared with any kept tag is never deleted).
-- **Cloudflare zone**: `catalog.swecov.se`, orange-cloud A/AAAA → the Fly app's shared
-  IPv4 + dedicated IPv6, plus a `_fly-ownership` TXT (proves ownership behind the proxy)
-  and a grey-cloud `_acme-challenge` CNAME (DNS-01 cert issuance — the reliable path
+- **Cloudflare zone**: `catalog.swecov.se` (global catalog) and `data.swecov.se` (SWECOV
+  flavor), orange-cloud A/AAAA → each hostname's matching Fly app shared IPv4 +
+  dedicated IPv6, plus `_fly-ownership` TXT records (prove ownership behind the proxy)
+  and grey-cloud `_acme-challenge` CNAMEs (DNS-01 cert issuance — the reliable path
   behind a proxy; never proxy a hostname pointing at `*.fly.dev`: Fly's edge has no cert
   for the custom SNI → 525). SSL mode Full (strict). No dedicated IPv4 — the free shared
   IPv4 works behind the proxy.
-- **Edge worker** (`reg_webapp/edge/`, Workers free plan): static-assets worker on
-  `catalog.swecov.se/*` serving the SPA `dist/` with `single-page-application` deep-link
-  fallback; backend paths (`/api/*`, `/openapi.json`, `/docs`) are `run_worker_first` +
-  `fetch(request)` passthrough to the zone origin (Fly), so the origin
+- **Edge workers** (`reg_webapp/edge/`, Workers free plan): static-assets workers on
+  `catalog.swecov.se/*` and `data.swecov.se/*` serving the SPA `dist/` with
+  `single-page-application` deep-link fallback. They use the same Worker source and SPA
+  assets, but separate Worker names/configs so each hostname gets an independent
+  `DEPLOY_VERSION` cache generation after its own Fly origin deploys. Backend paths
+  (`/api/*`, `/openapi.json`, `/docs`) are `run_worker_first` + `fetch(request)`
+  passthrough to the incoming hostname's zone origin (Fly), so the origin
   ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
   `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
   navigations without invoking the worker, shadowing `/api` deep-opens. The glob list
@@ -1899,10 +1917,10 @@ the authoring-UI presentation.
   from RTB/RAMS/FastPak/IoT and carry inbound lineage edges. How the catalog UI surfaces
   that origin when a user authors a LISA variable list — hover tooltip, inline note,
   "see also" panel — is undecided. The data is present; the question is purely UX.
-- **Per-steward repo autonomy.** v1 hosts every steward's config in this monorepo.
-  Stewards versioning their own catalogs in their own repos (if IFAU/SWECOV ever run
-  their own deployments) would reintroduce external-repo build wiring v1 sheds — not
-  needed until a steward asks.
+- **Per-steward repo autonomy.** SWECOV lives in this monorepo only as the proving
+  steward for pre-v1 testing. Before release, extract it to its own steward repo/system
+  and keep that shape reusable for later stewards; do not let the in-repo SWECOV
+  directory become the permanent distribution contract.
 - **Realign-patch lifecycle** (gated behind the unbuilt merged-mode realign flow).
   Whether the realign-review UI writes an accepted patch back into git automatically or
   just produces a new `project_data.json` the user replaces manually.

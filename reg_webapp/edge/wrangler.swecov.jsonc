@@ -1,0 +1,26 @@
+// Cloudflare edge worker for the reg_webapp `swecov` deployment (§11).
+//
+// Same Worker code and SPA assets as the global catalog, but a separate Worker
+// route/name so data.swecov.se gets its own DEPLOY_VERSION cache generation.
+// That keeps a failed SWECOV origin deploy from blocking the global edge bump,
+// and vice versa.
+//
+// Deploy (after building the SPA: `bun run gen:types && bun run build` in
+// reg_webapp/frontend/):
+//
+//   bunx wrangler deploy --config reg_webapp/edge/wrangler.swecov.jsonc \
+//     --var DEPLOY_VERSION:"$(git rev-parse HEAD)-manual-$(date +%s)"
+{
+  "name": "reg-webapp-swecov-edge",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "vars": { "DEPLOY_VERSION": "dev" },
+  "assets": {
+    "directory": "../frontend/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api", "/api/*", "/openapi.json", "/docs", "/docs/*"]
+  },
+  "routes": [{ "pattern": "data.swecov.se/*", "zone_name": "swecov.se" }],
+  "observability": { "enabled": true }
+}

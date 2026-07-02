@@ -109,17 +109,26 @@ unchanged.
 `reg_webapp/stewards/swecov/steward.project_data.json` is committed (column-based
 admission, 67.0% physical-column coverage; see `reg_webapp/stewards/swecov/README.md`).
 The `steward` subcommand of the untracked `input_data/swecov/build_catalog.py` generates
-it against the flavored reg_meta DB. Admission keying (#206) closed with that PR.
+it against the flavored reg_meta DB. Admission keying (#206) closed with that PR. SWECOV
+is the proving steward for pre-v1 testing, so its catalog/config live in this repo for
+now. That is not the release architecture: before v1 release, extract SWECOV to its own
+steward repo/system and make that system copyable for future stewards.
 
-Remaining (#365 PR4): deploy wiring for the swecov deployment — a hostname registered at
-Cloudflare (`steward.toml` currently carries a `swecov.example.org` placeholder), and a
-Docker image that bundles BOTH the committed catalog AND the **flavored** `extend-db` DB
-(`REG_META_DB` pointed at it). The catalog binds steward-only providers (`swedbank`,
+#365 PR4 wiring: `data.swecov.se` is the SWECOV hostname, served by a separate Fly app
+(`reg-webapp-swecov`) behind the same Cloudflare Workers pattern as the global catalog.
+The SWECOV Fly jobs use the app-scoped `FLY_API_TOKEN_SWECOV` secret, not the global
+app's `FLY_API_TOKEN`. The SWECOV image bundles BOTH the committed catalog and the
+**flavored** `extend-db` DB (`REG_META_DB` pointed at it). CI keeps the confidential
+flavor artifact out of git: the `SWECOV_REG_META_DB_ZST` secret is a private JSON
+manifest (`tag`, `url`, `sha256`) for the flavored `reg_meta.db.zst`; the bake refuses a
+tag/digest mismatch and leaves `reg_meta_docs.db` on the public release asset for the
+same `reg_meta/v*` tag. The catalog binds steward-only providers (`swedbank`,
 `region-*`, `swecov`, …) that the *global* release DB does not contain, so booting
 `REG_WEBAPP_STEWARD=swecov` against the plain global asset would drop every steward-only
-binding as drift — the flavored DB must ship as the deployment's reg_meta asset. The
-`ifau` steward catalog has not been authored yet. Order export exists in CSV form
-(default template) for all three.
+binding as drift — the flavored DB must ship as the deployment's reg_meta asset, and the
+SWECOV smoke gate fails on any steward catalog drift warning. The `ifau` steward catalog
+has not been authored yet. Order export exists in CSV form (default template) for all
+three.
 
 The SPA catalog-authoring mode (distinct from project authoring) and a `reg-meta-build`
 steward-diff CLI are **deferred post-v1**: steward catalogs are plain `ProjectData`
@@ -207,9 +216,10 @@ Carried from the testing strategy; the shipped categories are in
   `academic_term`, `quarter`) on the `{"period": …}` object form so the generator can
   impose chronological ordering. Schema is forward-compatible; not designed now.
   (Distinct from #207/#219.)
-- **Per-steward repo autonomy** — v1 hosts every steward config in this monorepo;
-  stewards versioning their own catalogs in their own repos would reintroduce
-  external-repo build wiring. Not until a steward asks.
+- **Per-steward repo autonomy** — SWECOV stays in this monorepo only as the proving
+  steward for pre-v1 testing. The v1 release target is an extracted SWECOV steward
+  repo/system whose build/deploy shape can be copied for later stewards, rather than
+  treating `reg_webapp/stewards/swecov/` as the permanent distribution model.
 - **Variable slug source on rename** — the auto-rule mints a new slug for later editions
   when SCB renames a column before a curator adds `same_as`. The behaviour is fine
   (rename = new variable by default); the curator review cadence is undecided. Overlaps
