@@ -302,16 +302,19 @@ rule as `gate.json`). The ledger answers "how many agents are busy" — it does 
 replace the draft-PR `Closes #N` claim, which stays the per-issue in-flight marker that
 sequencing consumes.
 
-- **Release at merge, and only at merge:** when every PR listed in a slot is merged or
-  closed, move the slot file to `pipeline-slots/done/<slug>.json` in the same breath as
-  archiving the PR's gate directory. Never release a slot for a lane that still has an
-  open PR, and never release one just because the pipeline handed off — unmerged work
-  still occupies budget by design.
+- **Release at merge, and only at merge:** when a slot lists at least one PR and every
+  listed PR is merged or closed, move the slot file to `pipeline-slots/done/<slug>.json`
+  in the same breath as archiving the PR's gate directory. Never release a slot for a
+  lane that still has an open PR, and never release one just because the pipeline handed
+  off — unmerged work still occupies budget by design. An **empty `prs` list is NOT
+  releasable** — it is a just-accepted lane whose drafts don't exist yet (registration
+  deliberately precedes draft creation), not a completed one.
 - **Stale slots** (the watcher's `stale slot:` emission, or a slot whose listed PRs are
-  all merged/closed but the file lingers): a slot whose PRs are all merged/closed is
-  mechanical cleanup — release it. A slot with no PR and no file update for a day needs
-  adjudication: check whether the pipeline session/worktree still exists and ask the
-  user rather than silently freeing budget an active agent may still be using.
+  all merged/closed but the file lingers): a slot with a non-empty `prs` list whose PRs
+  are all merged/closed is mechanical cleanup — release it. A slot with an empty `prs`
+  list and no file update for a day needs adjudication: check whether the pipeline
+  session/worktree still exists and ask the user rather than silently freeing budget an
+  active agent may still be using.
 - Registering a 4th slot is a deliberate human override, not an error — the ledger
   reflects reality; the watcher simply won't emit `dispatch:` until busy drops below
   budget.

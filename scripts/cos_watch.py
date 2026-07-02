@@ -48,6 +48,8 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
+import signal
 import subprocess
 import sys
 import time
@@ -69,10 +71,6 @@ DEFAULT_FAST_INTERVAL = 20.0
 DEFAULT_SLOW_INTERVAL = 600.0
 DEFAULT_SLOT_STALE_HOURS = 24.0
 DEFAULT_PROBE_TIMEOUT = 120.0
-
-
-def default_slots_root() -> Path:
-    return _cos_preflight.default_gate_root().parent / "pipeline-slots"
 
 
 def scan_slots(slots_root: Path) -> set[str]:
@@ -182,17 +180,23 @@ def probe_cmd(gate_dir: Path) -> list[str]:
 
 def run_probe(timeout: float, gate_dir: Path) -> tuple[int, str, str]:
     # The timeout bounds how long a hung gh/git call can block the fast tier; 124
-    # mirrors timeout(1)'s exit code.
+    # mirrors timeout(1)'s exit code. start_new_session + killpg reap the probe's OWN
+    # children (gh/git) too — killing just the python process would orphan the very
+    # network call that hung.
+    proc = subprocess.Popen(
+        probe_cmd(gate_dir),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    )
     try:
-        proc = subprocess.run(
-            probe_cmd(gate_dir),
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-        )
+        stdout, stderr = proc.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
+        os.killpg(proc.pid, signal.SIGKILL)
+        proc.wait()
         return 124, "", f"probe timed out after {int(timeout)}s"
-    return proc.returncode, proc.stdout, proc.stderr
+    return proc.returncode, stdout, stderr
 
 
 def emit(lines: list[str]) -> None:
@@ -243,8 +247,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--slots-dir",
         type=Path,
-        default=default_slots_root(),
-        help="pipeline-slot ledger root; overrides the XDG-derived default",
+        default=None,
+        help="pipeline-slot ledger root; defaults to the sibling of --gate-dir "
+        "(pipeline-slots next to merge-gates), so overriding the gate root keeps "
+        "both stores together",
     )
     ap.add_argument("--max-slots", type=int, default=DEFAULT_MAX_SLOTS)
     ap.add_argument("--fast-interval", type=float, default=DEFAULT_FAST_INTERVAL)
@@ -268,6 +274,11 @@ def main(argv: list[str] | None = None) -> int:
         help="fast tier only — no cos_preflight subprocess (tests, quick local checks)",
     )
     args = ap.parse_args(argv)
+    if args.slots_dir is None:
+        # Sibling of the gate root, so a --gate-dir override moves both stores
+        # together — the two tiers (and the probe, via probe_cmd's forwarding) must
+        # never read diverging state roots.
+        args.slots_dir = args.gate_dir.parent / "pipeline-slots"
     try:
         watch(args)
     except KeyboardInterrupt:

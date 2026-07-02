@@ -13,7 +13,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import sys
+import time
 from pathlib import Path
 
 _SCRIPTS = Path(__file__).resolve().parents[1]
@@ -209,6 +211,21 @@ def test_probe_wake_with_garbage_stdout_is_an_error_not_a_crash() -> None:
     assert lines == [
         f"preflight error (exit {cw._cos_preflight.WAKE_EXIT}): unexpected probe output"
     ]
+
+
+def test_main_derives_slots_dir_from_gate_dir(tmp_path: Path, capsys) -> None:
+    # With only --gate-dir overridden, the slot ledger defaults to its sibling —
+    # both stores move together. Observable via a stale slot in the derived dir.
+    gate_dir = tmp_path / "merge-gates"
+    gate_dir.mkdir(parents=True)
+    slot_path = _write_slot(tmp_path / "pipeline-slots", "lane-a")
+    aged = time.time() - 100_000  # > 24h
+    os.utime(slot_path, (aged, aged))
+
+    rc = cw.main(["--gate-dir", str(gate_dir), "--once", "--skip-probe"])
+
+    assert rc == 0
+    assert "stale slot: lane-a" in capsys.readouterr().out
 
 
 # --- main --once: combined fast tier end to end ---
