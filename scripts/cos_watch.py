@@ -28,7 +28,10 @@ Two tiers in one loop:
   own fingerprint. Exit-10 emissions are deliberately NOT deduped: the baseline only
   advances when a tick commits, so a re-emitted wake means the events are genuinely
   still unhandled (at-least-once), and a duplicate costs the agent one cheap idle
-  probe.
+  probe. The probe also snapshots the pipeline-slot ledger (via the --slots-dir /
+  --max-slots / --slot-stale-hours forwarded below), so slot transitions (freed /
+  dispatch / stale) are durably re-observed at-least-once even if a session missed the
+  fast-tier emission: fast tier = latency, probe = durability.
 
 The slot ledger lives next to the merge-gate store:
 $XDG_STATE_HOME/registry-research-toolkit/pipeline-slots/<slug>.json, one file per
@@ -66,30 +69,15 @@ sys.modules[_CGW_SPEC.name] = _cos_gate_watch
 _CGW_SPEC.loader.exec_module(_cos_gate_watch)
 _cos_preflight = _cos_gate_watch._cos_preflight
 
-DEFAULT_MAX_SLOTS = 3
+# Slot-ledger scan and its concurrency/staleness constants now live in cos_preflight
+# (so the durable probe snapshots the SAME ledger the fast tier watches). Reference
+# them here so the two tiers can never disagree on the scan rules or the budget.
+scan_slots = _cos_preflight.scan_slots
+DEFAULT_MAX_SLOTS = _cos_preflight.DEFAULT_MAX_SLOTS
+DEFAULT_SLOT_STALE_HOURS = _cos_preflight.DEFAULT_SLOT_STALE_HOURS
 DEFAULT_FAST_INTERVAL = 20.0
 DEFAULT_SLOW_INTERVAL = 600.0
-DEFAULT_SLOT_STALE_HOURS = 24.0
 DEFAULT_PROBE_TIMEOUT = 120.0
-
-
-def scan_slots(slots_root: Path) -> set[str]:
-    """Slugs of every valid pipeline-slot file (top level only; done/ is the archive).
-
-    Mirrors the gate protocol's read rules: a slot whose `slot` field disagrees with
-    its filename stem is absent; unreadable/corrupt files are skipped (slot files are
-    written atomically, so a torn read is transient).
-    """
-    slots: set[str] = set()
-    for path in sorted(slots_root.glob("*.json")):
-        loaded = _cos_preflight._read_json_tolerant(path, "pipeline-slot file")
-        if loaded is None:
-            continue
-        slot = loaded[1]
-        if not isinstance(slot, dict) or slot.get("slot") != path.stem:
-            continue
-        slots.add(path.stem)
-    return slots
 
 
 def slot_events(previous: set[str], current: set[str], max_slots: int) -> list[str]:
@@ -162,29 +150,45 @@ def probe_events(returncode: int, stdout: str, stderr: str) -> list[str]:
     return [f"preflight error (exit {returncode}): {tail}"]
 
 
-def probe_cmd(gate_dir: Path) -> list[str]:
+def probe_cmd(
+    gate_dir: Path, slots_dir: Path, max_slots: int, slot_stale_hours: float
+) -> list[str]:
     # --observe keeps the probe read-only: a watcher probe racing an active tick must
     # not replace the candidate file that tick will --commit. Observe mode also never
     # bootstraps a missing baseline — that is the arming session's job (the skill runs
     # one normal tick right after arming; its staging probe writes the baseline these
-    # observe probes compare against). --gate-dir is forwarded so both tiers read the
-    # SAME gate store when the default is overridden.
+    # observe probes compare against). --gate-dir / --slots-dir / --max-slots /
+    # --slot-stale-hours are all forwarded so the durable probe reads the SAME stores and
+    # thresholds the fast tier watches — the two tiers must never disagree on ledger
+    # location or the concurrency/staleness budget.
     return [
         sys.executable,
         str(Path(__file__).with_name("cos_preflight.py")),
         "--observe",
         "--gate-dir",
         str(gate_dir),
+        "--slots-dir",
+        str(slots_dir),
+        "--max-slots",
+        str(max_slots),
+        "--slot-stale-hours",
+        str(slot_stale_hours),
     ]
 
 
-def run_probe(timeout: float, gate_dir: Path) -> tuple[int, str, str]:
+def run_probe(
+    timeout: float,
+    gate_dir: Path,
+    slots_dir: Path,
+    max_slots: int,
+    slot_stale_hours: float,
+) -> tuple[int, str, str]:
     # The timeout bounds how long a hung gh/git call can block the fast tier; 124
     # mirrors timeout(1)'s exit code. start_new_session + killpg reap the probe's OWN
     # children (gh/git) too — killing just the python process would orphan the very
     # network call that hung.
     proc = subprocess.Popen(
-        probe_cmd(gate_dir),
+        probe_cmd(gate_dir, slots_dir, max_slots, slot_stale_hours),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -228,7 +232,17 @@ def watch(args: argparse.Namespace) -> None:
         seen_slots = current_slots
 
         if not args.skip_probe and time.monotonic() >= next_slow:
-            emit(probe_events(*run_probe(args.probe_timeout, args.gate_dir)))
+            emit(
+                probe_events(
+                    *run_probe(
+                        args.probe_timeout,
+                        args.gate_dir,
+                        args.slots_dir,
+                        args.max_slots,
+                        args.slot_stale_hours,
+                    )
+                )
+            )
             next_slow = time.monotonic() + args.slow_interval
 
         if args.once:
