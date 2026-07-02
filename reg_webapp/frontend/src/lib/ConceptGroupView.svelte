@@ -11,6 +11,7 @@ import {
   addWindowBounds,
   catalogHref,
   facetLabelJoin,
+  type PickerRepresentation,
   pickerRepresentations,
   pickerWindowYears,
   registerPrefixOf,
@@ -144,6 +145,43 @@ const sharedDescription = $derived(sharedMemberMeta("description"));
  * axis-less member — its name suffices). */
 function memberFacetLabel(member: ConceptGroupNodeMember): string | null {
   return member.facets.length > 0 ? facetLabelJoin(member.facets) : null;
+}
+
+function hasZeroStateCoverage(member: ConceptGroupNodeMember): boolean {
+  const coverage = member.coverage;
+  return (
+    member.delivery_column !== null &&
+    member.delivery_column !== undefined &&
+    coverage !== null &&
+    coverage !== undefined &&
+    coverage.state_count === 0 &&
+    coverage.coverage_from === null &&
+    coverage.coverage_to === null &&
+    !coverage.open_ended
+  );
+}
+
+function neverDeliveredRow(
+  deliveryColumn: string,
+  seed: PickerRepresentation | undefined,
+): PickerRepresentation {
+  const variant = seed?.variant ?? "_default";
+  return {
+    key: `${variant}::${deliveryColumn}`,
+    variant,
+    variantLabel: seed?.variantLabel ?? "default",
+    column: deliveryColumn,
+    representation: deliveryColumn,
+    from: "9999-12-31",
+    to: "0001-01-01",
+    windows: [],
+    period: "not delivered",
+    wirePeriod: null,
+    valueSetLabel: seed?.valueSetLabel ?? "",
+    codingsVary: false,
+    selectable: false,
+    renamedColumns: [],
+  };
 }
 
 /** The member's leaf-page href, carrying the active group `?period` when set (#678):
@@ -310,7 +348,11 @@ const bands = $derived.by((): PickerBand[] => {
   // such member per fqid wins. Distinct from the per-column path below, which is keyed
   // by delivery_column and so only sees members WITH a column.
   const bandFacetsByFqid = new Map<string, GroupFacetModel[]>();
+  const membersByFqid = new Map<string, ConceptGroupNodeMember[]>();
   for (const member of node.members) {
+    const membersForFqid = membersByFqid.get(member.fqid) ?? [];
+    membersForFqid.push(member);
+    membersByFqid.set(member.fqid, membersForFqid);
     // A whole-variable (null delivery_column) faceted member contributes its facets
     // band-level, then is skipped for the per-COLUMN maps (which key by column).
     if (member.delivery_column == null) {
@@ -362,6 +404,22 @@ const bands = $derived.by((): PickerBand[] => {
               s.delivery_column_name != null &&
               cols.has(s.delivery_column_name),
           );
+    const rows = pickerRepresentations(states);
+    const rowColumns = new Set(rows.map((r) => r.column));
+    const rowSeed = rows[0];
+    for (const groupMember of membersByFqid.get(member.fqid) ?? []) {
+      const deliveryColumn = groupMember.delivery_column;
+      if (
+        deliveryColumn === null ||
+        deliveryColumn === undefined ||
+        rowColumns.has(deliveryColumn) ||
+        !hasZeroStateCoverage(groupMember)
+      ) {
+        continue;
+      }
+      rows.push(neverDeliveredRow(deliveryColumn, rowSeed));
+      rowColumns.add(deliveryColumn);
+    }
     out.push({
       key: member.fqid,
       name: member.name ?? leafSlug(member.fqid),
@@ -391,7 +449,7 @@ const bands = $derived.by((): PickerBand[] => {
       // keeps the window the user narrowed the group to, instead of resetting the
       // leaf to full history.
       href: memberHref(member.fqid),
-      rows: pickerRepresentations(states),
+      rows,
       // The chain head carries its superseded predecessor editions as history (#902):
       // oldest-first, each a leaf-page link, so they stay reachable without being
       // co-equal selectable bands. Undefined for a member that heads no in-group chain.
@@ -438,6 +496,9 @@ const unionCoverage = $derived.by(() => {
   let openEnded = false;
   for (const band of bands) {
     for (const row of band.rows) {
+      if (row.selectable === false) {
+        continue;
+      }
       const lo = Number(row.from.slice(0, 4));
       if (Number.isFinite(lo) && row.from !== "0001-01-01") {
         from = from === null ? lo : Math.min(from, lo);
