@@ -46,7 +46,12 @@ All wake cadence lives in one deterministic script, `scripts/cos_watch.py`; the 
 never wakes idle. It makes no wake DECISIONS — the tick below is identical regardless of
 which emission woke the session; the watcher only changes WHEN a tick fires. Arm it ONCE
 per session, not per tick: first call `TaskList` and skip arming if a cos-watch monitor
-is already running; otherwise arm exactly one:
+is already running; otherwise arm exactly one. **Right after arming, run one normal tick
+(probe → handle → commit)**: the watcher's own probes are read-only (`--observe`) and
+never bootstrap a missing baseline, so this first staging probe is what establishes the
+baseline the watcher compares against — without it, previous-gated drift (e.g. a new
+review on a claimed PR) stays invisible until the safety-net heartbeat's tick writes
+one.
 
 ```text
 Monitor({

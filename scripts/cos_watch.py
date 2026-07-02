@@ -164,17 +164,28 @@ def probe_events(returncode: int, stdout: str, stderr: str) -> list[str]:
     return [f"preflight error (exit {returncode}): {tail}"]
 
 
-def run_probe(timeout: float) -> tuple[int, str, str]:
+def probe_cmd(gate_dir: Path) -> list[str]:
     # --observe keeps the probe read-only: a watcher probe racing an active tick must
-    # not replace the candidate file that tick will --commit. The timeout bounds how
-    # long a hung gh/git call can block the fast tier; 124 mirrors timeout(1)'s code.
+    # not replace the candidate file that tick will --commit. Observe mode also never
+    # bootstraps a missing baseline — that is the arming session's job (the skill runs
+    # one normal tick right after arming; its staging probe writes the baseline these
+    # observe probes compare against). --gate-dir is forwarded so both tiers read the
+    # SAME gate store when the default is overridden.
+    return [
+        sys.executable,
+        str(Path(__file__).with_name("cos_preflight.py")),
+        "--observe",
+        "--gate-dir",
+        str(gate_dir),
+    ]
+
+
+def run_probe(timeout: float, gate_dir: Path) -> tuple[int, str, str]:
+    # The timeout bounds how long a hung gh/git call can block the fast tier; 124
+    # mirrors timeout(1)'s exit code.
     try:
         proc = subprocess.run(
-            [
-                sys.executable,
-                str(Path(__file__).with_name("cos_preflight.py")),
-                "--observe",
-            ],
+            probe_cmd(gate_dir),
             capture_output=True,
             text=True,
             timeout=timeout,
@@ -213,7 +224,7 @@ def watch(args: argparse.Namespace) -> None:
         seen_slots = current_slots
 
         if not args.skip_probe and time.monotonic() >= next_slow:
-            emit(probe_events(*run_probe(args.probe_timeout)))
+            emit(probe_events(*run_probe(args.probe_timeout, args.gate_dir)))
             next_slow = time.monotonic() + args.slow_interval
 
         if args.once:

@@ -186,6 +186,15 @@ def test_probe_tool_error_without_stderr() -> None:
     assert cw.probe_events(2, "", "") == ["preflight error (exit 2): no stderr"]
 
 
+def test_probe_cmd_is_observe_only_and_forwards_gate_dir(tmp_path: Path) -> None:
+    # --observe: never touch the tick's candidate/baseline. --gate-dir: both tiers must
+    # read the SAME gate store when the default is overridden.
+    cmd = cw.probe_cmd(tmp_path / "gates")
+
+    assert "--observe" in cmd
+    assert cmd[cmd.index("--gate-dir") + 1] == str(tmp_path / "gates")
+
+
 def test_probe_timeout_maps_to_error_line() -> None:
     # run_probe reports a killed (hung) probe as exit 124 with a synthetic stderr; the
     # mapping must surface it, not swallow it.

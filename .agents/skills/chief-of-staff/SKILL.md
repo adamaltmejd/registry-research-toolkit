@@ -66,7 +66,12 @@ never wakes idle. It makes no wake DECISIONS — the tick below is identical reg
 which emission woke the session; the watcher only changes WHEN a tick fires. If the
 surface exposes a persistent background-monitor primitive that streams a command's
 stdout lines back into the session as events, arm it ONCE per session (check for an
-already-running cos-watch monitor first; never arm one per tick) with:
+already-running cos-watch monitor first; never arm one per tick). **Right after arming,
+run one normal tick (probe → handle → commit)**: the watcher's own probes are read-only
+(`--observe`) and never bootstrap a missing baseline, so this first staging probe is
+what establishes the baseline the watcher compares against — without it, previous-gated
+drift (e.g. a new review on a claimed PR) stays invisible until the safety-net
+heartbeat's tick writes one. Arm with:
 
 ```sh
 uv run --no-project python scripts/cos_watch.py
