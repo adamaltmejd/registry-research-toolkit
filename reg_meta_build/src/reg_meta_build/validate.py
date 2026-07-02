@@ -64,7 +64,10 @@ from reg_meta_build.db import (
     PROVIDER_ID_SOS,
 )
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
-from reg_meta_build.relations import _REPLACED_BY_NOTE_VINTAGE_LIFT
+from reg_meta_build.relations import (
+    _REPLACED_BY_NOTE_VINTAGE_LIFT,
+    _variable_vintage_stream_key,
+)
 
 # Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
 # mints into the high band). The global build's minted-id band check enforces
@@ -2084,6 +2087,14 @@ def _check_variable_replaced_by_vintage_lift(
     else:
         result.ok("vintage-lift edges resolve to live variable slugs")
 
+    stream_mismatches = _count_vintage_lift_stream_mismatches(conn, note)
+    if stream_mismatches:
+        result.fail(
+            f"{stream_mismatches} vintage-lift edge(s) cross slug-stream boundaries"
+        )
+    else:
+        result.ok("vintage-lift edges stay within slug-stream boundaries")
+
     n_edges = conn.execute(
         "SELECT COUNT(*) FROM variable_replaced_by WHERE note = ?", (note,)
     ).fetchone()[0]
@@ -2109,6 +2120,77 @@ def _check_variable_replaced_by_vintage_lift(
             f"(< {_MIN_VARIABLE_VINTAGE_LIFT_EDGES}) — vintage-lift derivation "
             "regression?"
         )
+
+
+def _count_vintage_lift_stream_mismatches(conn: sqlite3.Connection, note: str) -> int:
+    """Count derived variable edges that cannot be justified by a same-stream
+    adjacent classification edge (#592).
+
+    This is the real-corpus guard against false entangled-family links: the build
+    may mint extra derived edges now, but every one must connect predecessor and
+    successor variables whose slug stems agree after stripping only the adjacent
+    classification edge's digit-bearing vintage tokens."""
+    edges = conn.execute(
+        """
+        SELECT e.predecessor_provider, e.predecessor_register,
+               e.predecessor_variable, e.successor_provider,
+               e.successor_register, e.successor_variable,
+               pv.variable_id AS predecessor_id, pv.slug AS predecessor_slug,
+               sv.variable_id AS successor_id, sv.slug AS successor_slug
+        FROM variable_replaced_by e
+        JOIN provider pp ON pp.slug = e.predecessor_provider
+        JOIN register pr
+          ON pr.provider_id = pp.provider_id
+         AND pr.slug = e.predecessor_register
+        JOIN variable pv
+          ON pv.register_id = pr.register_id
+         AND pv.slug = e.predecessor_variable
+        JOIN provider sp ON sp.slug = e.successor_provider
+        JOIN register sr
+          ON sr.provider_id = sp.provider_id
+         AND sr.slug = e.successor_register
+        JOIN variable sv
+          ON sv.register_id = sr.register_id
+         AND sv.slug = e.successor_variable
+        WHERE e.note = ?
+        """,
+        (note,),
+    ).fetchall()
+    mismatches = 0
+    for edge in edges:
+        pairs = conn.execute(
+            """
+            SELECT DISTINCT pc.slug AS predecessor_class_slug,
+                            sc.slug AS successor_class_slug
+            FROM variable_state pvs
+            JOIN classification pc ON pc.id = pvs.classification_id
+            JOIN variable_state svs ON svs.variable_id = ?
+            JOIN classification sc ON sc.id = svs.classification_id
+            JOIN classification_replaced_by cr
+              ON cr.predecessor_slug = pc.slug
+             AND cr.successor_slug = sc.slug
+            WHERE pvs.variable_id = ?
+              AND pc.slug IS NOT NULL
+              AND sc.slug IS NOT NULL
+            """,
+            (edge["successor_id"], edge["predecessor_id"]),
+        ).fetchall()
+        if any(
+            _variable_vintage_stream_key(
+                edge["predecessor_slug"],
+                pair["predecessor_class_slug"],
+                pair["successor_class_slug"],
+            )
+            == _variable_vintage_stream_key(
+                edge["successor_slug"],
+                pair["predecessor_class_slug"],
+                pair["successor_class_slug"],
+            )
+            for pair in pairs
+        ):
+            continue
+        mismatches += 1
+    return mismatches
 
 
 def _check_representation_replaced_by(
