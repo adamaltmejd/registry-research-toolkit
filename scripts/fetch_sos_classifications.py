@@ -4,7 +4,8 @@
 Snapshot fetcher for the external code systems that Socialstyrelsen (SOS)
 registers reference via `Länk kodverk` but do NOT ship inline in their
 metadata workbooks: ICD-10-SE, KVÅ, ICF, KSI (all from the Swedish
-eHälsomyndigheten) and ATC (from Läkemedelsverket / the MPA NSL register).
+eHälsomyndigheten), ICD-11-SE (WHO's Swedish ICD-11 MMS release), and ATC
+(from Läkemedelsverket / the MPA NSL register).
 
 This is the SOS analog of `scripts/extract_lkf.py`: it is run on demand by a
 maintainer to refresh local snapshots, NOT fetched during `reg-meta-build
@@ -26,6 +27,10 @@ Two upstream mechanisms:
     used to live at socialstyrelsen.se/.../kodtextfiler/. Attachments are
     enumerated via the public REST API so we pick up version bumps without
     hardcoding query strings.
+
+  - WHO ICD-11 MMS: the ICD browser publishes a language-specific simple
+    tabulation zip per release. The Swedish `sv` file is the source for
+    `icd-11-se.csv`.
 
 Normalized output: one CSV per classification under `--out-dir`, columns
 `code,label,label_en,parent_code,valid_from,valid_to` (a faithful superset;
@@ -158,6 +163,17 @@ SOURCES: tuple[Source, ...] = (
         kind="ehalsa_tsv",
         attachment="icd-10-se.tsv",
         note="Multi-row per code (continuation rows for includes/excludes); grouped by Kod.",
+    ),
+    Source(
+        key="icd-11-se",
+        name="ICD-11 MMS – Swedish release",
+        publisher="WHO",
+        kind="who_icd11_simple_tabulation",
+        url="https://icdcdn.who.int/static/releasefiles/2026-01/SimpleTabulation-ICD-11-MMS-sv.zip",
+        note=(
+            "WHO ICD-11 MMS 2026-01 Swedish simple tabulation; categories with "
+            "ICD-11 codes only, Swedish labels plus TitleEN."
+        ),
     ),
     Source(
         key="kva",
@@ -429,6 +445,62 @@ def parse_tsv(tsv_bytes: bytes) -> list[Code]:
     ]
 
 
+def _strip_icd11_tabulation_prefix(title: str) -> str:
+    """Remove WHO simple-tabulation hierarchy bullets from a title."""
+    text = title.strip()
+    while text.startswith("- "):
+        text = text[2:].strip()
+    return text
+
+
+def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
+    """Parse WHO's ICD-11 MMS simple tabulation zip into `Code` rows.
+
+    The zip carries a TSV-like `.txt` with both `Title` (requested language) and
+    `TitleEN`. Chapters/blocks have no ICD-11 code; keep only category rows with
+    a non-empty `Code`.
+    """
+    with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zf:
+        member = next(
+            (
+                name
+                for name in zf.namelist()
+                if name.endswith(".txt") and "SimpleTabulation-ICD-11-MMS" in name
+            ),
+            None,
+        )
+        if member is None:
+            raise SystemExit("ICD-11: no SimpleTabulation .txt member found")
+        text = zf.read(member).decode("utf-8-sig")
+
+    rows = list(csv.DictReader(text.splitlines(), delimiter="\t"))
+    code_by_uri = {
+        (row.get("Linearization URI") or "").strip(): (row.get("Code") or "").strip()
+        for row in rows
+        if (row.get("Linearization URI") or "").strip()
+        and (row.get("Code") or "").strip()
+    }
+
+    out: list[Code] = []
+    seen: set[str] = set()
+    for row in rows:
+        if (row.get("ClassKind") or "").strip() != "category":
+            continue
+        code = (row.get("Code") or "").strip()
+        if not code:
+            continue
+        if code in seen:
+            raise SystemExit(f"ICD-11: duplicate code {code!r}")
+        seen.add(code)
+        label = _strip_icd11_tabulation_prefix(row.get("Title") or "")
+        label_en = _strip_icd11_tabulation_prefix(row.get("TitleEN") or "")
+        parent_code = code_by_uri.get((row.get("Parent") or "").strip(), "")
+        out.append(
+            Code(code=code, label=label, label_en=label_en, parent_code=parent_code)
+        )
+    return out
+
+
 def parse_xls(xls_bytes: bytes, src: Source) -> list[Code]:
     """Parse a legacy Socialstyrelsen `.xls` (BIFF) classification.
 
@@ -629,6 +701,18 @@ def write_csv(codes: list[Code], out_path: Path) -> None:
             )
 
 
+def source_location(src: Source) -> str:
+    if src.url:
+        return src.url
+    if src.attachment:
+        return f"{EHALSA_HOST}/.../{src.attachment}"
+    if src.merge_attachments:
+        return ", ".join(f"{EHALSA_HOST}/.../{a}" for a in src.merge_attachments)
+    if src.kind == "norddrg_api":
+        return f"{_NORDDRG_API}/Defdata/DownloadDefdata"
+    return "(source resolved by parser)"
+
+
 def fetch_source(src: Source, cache_dir: Path, out_dir: Path, *, force: bool) -> dict:
     _log(f"\n[{src.key}] {src.name}")
     if src.kind == "mpa_zip":
@@ -642,6 +726,11 @@ def fetch_source(src: Source, cache_dir: Path, out_dir: Path, *, force: bool) ->
         raw = download(url, cache_dir / src.attachment, force=force)
         codes = parse_tsv(raw)
         source_url = url
+    elif src.kind == "who_icd11_simple_tabulation":
+        assert src.url
+        raw = download(src.url, cache_dir / Path(src.url).name, force=force)
+        codes = parse_who_icd11_simple_tabulation(raw)
+        source_url = src.url
     elif src.kind == "ehalsa_tsv_merge":
         # Fetch each disjoint code space, then concatenate + dedup on the code
         # column (first attachment's row wins on a collision — KMÅ before KKÅ).
@@ -744,8 +833,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.list:
         for s in SOURCES:
-            loc = s.url or f"{EHALSA_HOST}/.../{s.attachment}"
-            print(f"{s.key:12s} {s.name}\n{'':12s} {loc}")
+            print(f"{s.key:12s} {s.name}\n{'':12s} {source_location(s)}")
         return 0
 
     selected = SOURCES

@@ -37,8 +37,8 @@ _REQUIRED_FIELDS = ("short_name", "name")
 _VALID_CODES_HEADERS = (("vardekod", "vardebenamning"), ("code", "label"))
 
 # level = number of digits for all-digit codes, NULL otherwise. Used in
-# multiple INSERTs against classification_code; keep the SQL identical so
-# canonical CSV rows and no-CSV observed rows agree on level.
+# multiple INSERTs against classification_code; keep the SQL identical anywhere
+# canonical CSV rows are inserted.
 _LEVEL_EXPR = (
     "CASE WHEN {col} GLOB '[0-9]*' AND NOT {col} GLOB '*[^0-9]*' "
     "THEN length({col}) ELSE NULL END"
@@ -326,16 +326,14 @@ def _progress(msg: str) -> None:
 def _resolve_valid_codes_paths(
     entries: list[dict[str, Any]], valid_codes_dir: Path | None
 ) -> dict[str, Path]:
-    """Return ``{short_name: resolved_path}`` for entries with a canonical CSV.
+    """Return ``{short_name: resolved_path}`` for each entry's canonical CSV.
 
     A seed entry with ``valid_codes_file`` set but no ``valid_codes_dir``
     available, or a missing/non-file path, is a build-stop error.
     """
     resolved: dict[str, Path] = {}
     for entry in entries:
-        rel = entry.get("valid_codes_file")
-        if rel is None:
-            continue
+        rel = entry["valid_codes_file"]
         if valid_codes_dir is None:
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
@@ -397,8 +395,6 @@ def _apply_valid_codes(
 
     Per-classification operations (the old hot path) are eliminated.
     """
-    if not csv_paths:
-        return
 
     def _step(msg: str) -> None:
         _progress(f"  [{time.strftime('%H:%M:%S')}] {msg}")
@@ -732,44 +728,10 @@ def populate_classifications(
             ),
         )
 
-    # Populate classification_code with the deduplicated union of observed codes
-    # only for classifications without a canonical CSV. CSV-backed
-    # classifications are canonical-only; observed value-set mismatches are
-    # recorded later by `apply_classification_conformance_gate`, not attached to
-    # the classification definition.
-    _progress("  Building classification_code junction...")
-    conn.execute("DROP TABLE IF EXISTS _csv_backed_classification")
-    conn.execute(
-        "CREATE TEMP TABLE _csv_backed_classification (cls_id INTEGER PRIMARY KEY)"
-    )
-    conn.executemany(
-        "INSERT INTO _csv_backed_classification (cls_id) VALUES (?)",
-        [(id_by_short[short],) for short in csv_paths],
-    )
-    conn.execute(
-        f"""
-        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
-        SELECT DISTINCT
-            vi.classification_id,
-            vsm.code_id,
-            {_LEVEL_EXPR.format(col="vc.code")},
-            NULL
-        FROM variable_instance vi
-        JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id
-        JOIN value_code vc ON vsm.code_id = vc.code_id
-        WHERE vi.classification_id IS NOT NULL
-          AND NOT EXISTS (
-              SELECT 1 FROM _csv_backed_classification b
-              WHERE b.cls_id = vi.classification_id
-          )
-        """
-    )
-    conn.execute("DROP TABLE IF EXISTS _csv_backed_classification")
-
     _apply_valid_codes(conn, csv_paths, id_by_short)
 
-    # Cache code_count for every classification; valid_code_count was set
-    # by _apply_valid_codes for classifications with a CSV (NULL otherwise).
+    # Cache code_count for every classification; valid_code_count was set by
+    # _apply_valid_codes and should equal code_count for every fresh build.
     conn.execute(
         """
         UPDATE classification
@@ -1073,10 +1035,9 @@ def _build_containment_temp_tables(conn: sqlite3.Connection) -> None:
     for tmp in ("_canon_codes", "_vs_codes", "_vs_stats", "_vs_cls", "_vs_label_agree"):
         conn.execute(f"DROP TABLE IF EXISTS {tmp}")
 
-    # 1. Canonical (cls_id, kod, level, label). is_valid IS NOT 0 keeps both the
-    # CSV-canonical rows (is_valid=1) and the no-CSV classifications (is_valid
-    # NULL — their observed codes are the only code set we have). TRIM mirrors the
-    # query-time rule and `_apply_valid_codes`.
+    # 1. Canonical (cls_id, kod, level, label). Every seeded classification is
+    # CSV-backed, so fresh builds only produce `is_valid = 1` rows. TRIM mirrors
+    # the query-time rule and `_apply_valid_codes`.
     conn.execute(
         "CREATE TEMP TABLE _canon_codes ("
         "  cls_id INTEGER NOT NULL,"
@@ -1091,7 +1052,7 @@ def _build_containment_temp_tables(conn: sqlite3.Connection) -> None:
         SELECT cc.classification_id, TRIM(vc.code), cc.level, TRIM(vc.label)
         FROM classification_code cc
         JOIN value_code vc ON cc.code_id = vc.code_id
-        WHERE cc.is_valid IS NOT 0
+        WHERE cc.is_valid = 1
         """
     )
     conn.execute("CREATE INDEX _canon_codes_kod ON _canon_codes(kod, level)")
@@ -1232,8 +1193,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     loops over the ~60k value sets):
 
       1. `_canon_codes`: canonical (cls_id, kod, level, label) from
-         `classification_code` where `is_valid IS NOT 0` (1 OR NULL; NULL = a
-         no-CSV classification whose observed codes ARE its code set).
+         `classification_code` where `is_valid = 1`.
       2. `_vs_codes` / `_vs_stats`: per value set, the distinct code strings, the
          distinct-code count `n_codes`, and `dom_level` = the single digit-length
          when EVERY code is an all-digit string of that length, else NULL.

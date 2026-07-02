@@ -125,6 +125,18 @@
       "n_retired": 0,
       "out_file": "mdc.csv",
       "fetched_at": "2026-06-09T15:09:15+00:00"
+    },
+    {
+      "key": "icd-11-se",
+      "name": "ICD-11 MMS – Swedish release",
+      "publisher": "WHO",
+      "source_url": "https://icdcdn.who.int/static/releasefiles/2026-01/SimpleTabulation-ICD-11-MMS-sv.zip",
+      "raw_sha256": "c8ca5e11887e512548291560c794335904bde13b433dcb04a722e159662531cd",
+      "raw_bytes": 4907911,
+      "n_codes": 35664,
+      "n_retired": 0,
+      "out_file": "icd-11-se.csv",
+      "fetched_at": "2026-07-02T06:36:26+00:00"
     }
   ]
 }

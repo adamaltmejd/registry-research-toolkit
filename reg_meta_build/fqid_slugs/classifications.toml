@@ -44,6 +44,9 @@ slug = "drg"
 [classification."ICD-10-SE"]
 slug = "icd-10-se"
 
+[classification."ICD-11-SE"]
+slug = "icd-11-se"
+
 [classification."ICD-8-KS68"]
 slug = "icd-8-ks68"
 
@@ -232,6 +235,9 @@ slug = "sni2002"
 
 [classification."SNI2007"]
 slug = "sni2007"
+
+[classification."SNI2025"]
+slug = "sni2025"
 
 [classification."SNI69"]
 slug = "sni1969"

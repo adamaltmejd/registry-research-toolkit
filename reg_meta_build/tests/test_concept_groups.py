@@ -683,6 +683,32 @@ class TestClassificationSuccession:
             ("ssyk1996", "ssyk2012", 2012, "derived:vintage_chain"),
         ]
 
+    def test_sni2025_extends_sni_year_tail_chain(self) -> None:
+        conn = build_slugged_db(classification=None)
+        _add_classification(
+            conn,
+            "SNI2002",
+            "Svensk standard för näringsgrensindelning 2002",
+            "sni2002",
+        )
+        _add_classification(
+            conn,
+            "SNI2007",
+            "Svensk standard för näringsgrensindelning 2007",
+            "sni2007",
+        )
+        _add_classification(
+            conn,
+            "SNI2025",
+            "Svensk standard för näringsgrensindelning 2025",
+            "sni2025",
+        )
+        assert derive_classification_succession(conn) == 2
+        assert _succession_edges(conn) == [
+            ("sni2002", "sni2007", 2007, "derived:vintage_chain"),
+            ("sni2007", "sni2025", 2025, "derived:vintage_chain"),
+        ]
+
     def test_year_mid_name_still_detected(self) -> None:
         # The label-agreement guard strips the mid-name year; detection is by
         # slug tail, so a year inside the name doesn't block the chain.

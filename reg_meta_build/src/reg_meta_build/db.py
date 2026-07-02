@@ -735,10 +735,8 @@ CREATE TABLE classification (
     url              TEXT,
     supersedes_id    INTEGER REFERENCES classification(id),
     code_count       INTEGER NOT NULL DEFAULT 0,
-    -- Number of canonical codes when a valid_codes CSV was provided; NULL
-    -- otherwise. For CSV-backed classifications this equals the canonical-only
-    -- code_count; no-CSV classifications can still have code_count with unknown
-    -- validity.
+    -- Number of canonical codes from the required valid_codes CSV. Fresh builds
+    -- keep this equal to the canonical-only code_count.
     valid_code_count INTEGER,
     -- Slug carries the vintage (version baked in): 'sun2020',
     -- 'lkf2007'. The classification FQID is the 2-segment `class/<slug>` —
@@ -750,10 +748,10 @@ CREATE TABLE classification (
     slug             TEXT UNIQUE
 );
 
--- is_valid: 1 = canonical (listed in the classification's valid_codes CSV),
--- NULL = no CSV exists for this classification (validity unknown). CSV-backed
--- classifications are canonical-only; nonconforming observed value-set codes
--- live on `classification_conformance_code`, keyed by variable_state.
+-- is_valid: 1 = canonical (listed in the classification's valid_codes CSV).
+-- Fresh builds do not emit unknown-validity classification_code rows;
+-- nonconforming observed value-set codes live on
+-- `classification_conformance_code`, keyed by variable_state.
 CREATE TABLE classification_code (
     classification_id INTEGER NOT NULL REFERENCES classification(id),
     code_id           INTEGER NOT NULL REFERENCES value_code(code_id),

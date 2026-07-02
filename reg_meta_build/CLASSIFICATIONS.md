@@ -17,7 +17,8 @@ the top level, SOS CSVs under `sos/`). At build time:
 4. Observed non-canonical codes are recorded per affected state in
    `classification_conformance` / `classification_conformance_code`.
 
-Without a CSV, every code carries `is_valid = NULL` ("validity unknown").
+Every declared classification must ship a CSV. Fresh builds no longer produce
+unknown-validity `classification_code` rows.
 
 ## CSV format
 
@@ -62,7 +63,7 @@ A01,Tyfoidfeber,Typhoid fever,A00-A09
 
 ## Status overview
 
-80 classifications (47 per-year LKF entries + 22 SCB-sourced others + 10 SOS code
+81 classifications (47 per-year LKF entries + 23 SCB-sourced others + 11 SOS code
 systems). All currently declared in `classifications.toml` ship with a
 `valid_codes_file`.
 
@@ -77,6 +78,7 @@ systems). All currently declared in `classifications.toml` ship with a
   | `SUN2020-INRIKTNING` | ✓      |        551 |    531 | from `sun-2020_niva_inriktning2.xlsx`                                       |
   | `SUN2020-GRUPP`      | ✓      |        231 |    229 | merged main + `sun2020grp_detalj.xlsx`                                      |
   | `SSYK2012`           | ✓      |      1 125 |    635 | from `ssyk-2012-koder.xlsx`; UTGÅR rows filtered                            |
+  | `SNI2025`            | ✓      |      1 882 |  1 882 | from `sni-2025.xlsx` + English labels from `sni-2025-eng-251022.xlsx`       |
   | `SNI2007`            | ✓      |      6 529 |  3 326 | from `sni2007.xlsx`                                                         |
   | `SNI2002`            | ✓      |      3 151 |  3 088 | from `sni2002.xlsx`                                                         |
   | `SNI92`              | ✓      |      3 131 |  3 051 | from `sni92.xlsx`                                                           |
@@ -111,6 +113,7 @@ URL, sha256, and counts.
   | ------------ | --------------: | --------------------------------------- | -------------------------------------------------------- |
   | `ATC`        |          16 264 | Läkemedelsverket (MPA)                  | Swedish ATC register; nightly zip                        |
   | `ICD-10-SE`  |          38 928 | Socialstyrelsen                         | Swedish ICD-10                                           |
+  | `ICD-11-SE`  |          35 664 | WHO                                     | Swedish ICD-11 MMS 2026-01 simple tabulation             |
   | `KVA`        |          13 548 | Socialstyrelsen                         | KVÅ – care measures (KMÅ medical + KKÅ surgical, merged) |
   | `ICF`        |           1 632 | Socialstyrelsen                         | Functioning, Disability and Health                       |
   | `KSI`        |           2 074 | Socialstyrelsen                         | Social Services Interventions                            |
@@ -133,14 +136,18 @@ manifest, so counts and hashes stay current.
 
 **Refresh caveat:** a bare run fetches all configured source keys, including
 `landskoder` (ISO-3166 country codes) — which we deliberately do NOT seed as a
-classification. To refresh only the 10 seeded keys without touching unrelated entries,
+classification. To refresh only the 11 seeded keys without touching unrelated entries,
 pass `--only` with the relevant key names:
 
 ```bash
 uv run python scripts/fetch_sos_classifications.py \
-    --only atc icd-10-se kva icf ksi \
+    --only atc icd-10-se icd-11-se kva icf ksi \
              icd-8 icd-9-ks87 ks87-p drg mdc
 ```
+
+**ICD-11-SE note:** no eHälsomyndigheten ICD-11 attachment is published on the
+classification files page as of 2026-07-02. The committed snapshot is therefore sourced
+from WHO's official ICD-11 MMS Swedish (`sv`) simple tabulation release for 2026-01.
 
 **DRG / MDC note:** both are drawn from the NordDRG system published by Socialstyrelsen
 in collaboration with the Nordic Casemix Centre.
@@ -250,6 +257,9 @@ Page:
 
 Source files (one XLSX per version):
 
+- `sni-2025.xlsx` ([download](https://www.scb.se/globalassets/sni-2025.xlsx)) and
+  English labels from `sni-2025-eng-251022.xlsx`
+  ([download](https://www.scb.se/globalassets/sni-2025-eng-251022.xlsx))
 - `sni2007.xlsx`
   ([download](https://www.scb.se/contentassets/d43b798da37140999abf883e206d0545/sni2007.xlsx))
 - `sni2002.xlsx`
@@ -269,6 +279,16 @@ Huvudgrupp/Avdelning, plus extras for SNI 69). Column structure varies across sh
 Extraction rule: find the column header starting with `Benämning` (some sheets have a
 trailing space) — the **flat code is in the column immediately to the left** regardless
 of sheet. Use that pair across all sheets to build the union.
+
+SNI 2025 has a cleaner five-sheet layout with Swedish and English workbooks in parallel:
+
+- Avdelning/Section: code col 0, label col 1; the range col is not a parent code.
+- Huvudgrupp/Division: code col 0, label col 1, parent col 2.
+- Grupp/Class/Detaljgrupp: official dotted code col 0, flat code col 1, label col 2,
+  parent col 3.
+
+Use the flat code, pair Swedish and English labels by code, and write
+`code,label,label_en,parent_code,valid_from,valid_to`.
 
 Notes:
 

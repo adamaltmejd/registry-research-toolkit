@@ -368,9 +368,10 @@ effective_year = 2000
 
 # ── ICD / KS disease-classification succession (#770) ──
 #    Sweden's disease classifications form a one-dimensional, linear succession:
-#      icd-8-ks68 (1969–1986) → icd-9-ks87 (1987–1996) → icd-10-se (1997–).
+#      icd-8-ks68 (1969–1986) → icd-9-ks87 (1987–1996) →
+#      icd-10-se (1997–) → icd-11-se (WHO Swedish MMS 2026-01 release).
 #    Modeled as classification-grain `replaced_by` so the chain collapses to its
-#    terminal (icd-10-se) in the classification-root browse, like SSYK/LKF/SNI/SUN.
+#    terminal (icd-11-se) in the classification-root browse, like SSYK/LKF/SNI/SUN.
 #    The trunk is kept strictly linear (no split nodes): the read-side terminal
 #    walk stops at any split, so a fork would collapse the chain to the wrong head.
 #    Classification grain → `class/<slug>`; `effective_year` = the successor's
@@ -388,6 +389,12 @@ type = "replaced_by"
 from = "class/icd-9-ks87"
 to = "class/icd-10-se"
 effective_year = 1997
+
+[[edge]]
+type = "replaced_by"
+from = "class/icd-10-se"
+to = "class/icd-11-se"
+effective_year = 2026
 
 # ── IoT disponibel inkomst: 2004 års definition redefinitions (#814, Part of #805) ──
 #    Channel-1 worked example. SCB recut "disponibel inkomst" to a 2004 base-year
