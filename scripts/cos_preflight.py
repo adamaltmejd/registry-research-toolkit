@@ -6,10 +6,18 @@ checks the small set of repo/GitHub signals that can make a tick useful and, whe
 state is unchanged, lets the session stop immediately without spending tokens.
 
 Two modes:
-  cos_preflight.py            probe (default): read the state file, take a fresh
-                              snapshot, compare. NEVER writes the state file.
-  cos_preflight.py --commit   write the current snapshot to the state file, print a
-                              one-line confirmation. Does not compare or print reasons.
+  cos_preflight.py            probe (default): read the committed baseline from the state
+                              file, take a fresh snapshot, compare, and always stage the
+                              snapshot as a CANDIDATE next to the state file. On first run
+                              (missing, corrupt, or version-mismatched state = no baseline)
+                              it also bootstraps: it writes the fresh snapshot DIRECTLY to
+                              the state file as the new baseline (in addition to the
+                              candidate). A steady-state probe with a live baseline NEVER
+                              writes the state file — only the candidate.
+  cos_preflight.py --commit   promote the staged candidate to the state file (a pure local
+                              file move — NO snapshot collection, no gh/git calls) and
+                              print a one-line confirmation. Errors (exit 2) if no
+                              candidate exists.
 
 Probe contract:
   exit 0  idle; no agent work needed
@@ -17,14 +25,18 @@ Probe contract:
   exit 2  tool/setup error; stderr explains what failed
 
 Commit contract:
-  exit 0  snapshot written; stdout one-line confirmation
-  exit 2  tool/setup error; stderr explains what failed
+  exit 0  candidate promoted; stdout one-line confirmation
+  exit 2  no candidate to promote, or a tool/setup error; stderr explains what failed
 
 The session loop is: probe (exit 0 → stop / exit 10 → do the tick) → `--commit` → probe
-again → if 10, keep working in the same tick. Committing only after a successful tick
-gives at-least-once semantics: a failed tick leaves the event uncommitted, so the next
-scheduled session re-observes it, instead of the old at-most-once behavior where writing
-at detection burned the event even when the tick that followed failed.
+again → if 10, keep working in the same tick. The probe writes what it observes to a
+candidate file; `--commit` only promotes that candidate, so an event that lands in the
+probe→commit window is caught by the post-tick re-probe (which refreshes the candidate)
+rather than absorbed silently into the committed baseline. Committing only after a
+successful tick gives at-least-once semantics: a failed tick leaves the baseline at the
+last committed candidate, so the next scheduled session re-observes the pending event,
+instead of the old at-most-once behavior where writing at detection burned the event even
+when the tick that followed failed.
 
 It does not make coordination decisions, edit issues, merge PRs, or run the dev
 preview. It only decides whether a real chief-of-staff tick is worth spending tokens on.
@@ -45,6 +57,9 @@ from tempfile import NamedTemporaryFile
 from typing import Any
 
 WAKE_EXIT = 10
+# Bump whenever the snapshot dict shape changes; load_state treats a mismatch as first-run
+# so a schema change re-baselines cleanly instead of comparing incompatible shapes.
+SNAPSHOT_VERSION = 2
 DEFAULT_CANONICAL = Path("/Users/adam/Code/registry-research-toolkit")
 PASSING_CONCLUSIONS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 MERGE_GATE_START_RE = re.compile(
@@ -54,12 +69,6 @@ MERGE_GATE_START_RE = re.compile(
 GATE_FIELD_RE = re.compile(r"^\s*[-*]?\s*(?P<key>status|head):\s*(?P<value>\S+)",
                            re.IGNORECASE | re.MULTILINE)  # fmt: skip
 NO_STATUS_CHANGES = "projection delta:\nno status changes"
-# plan_sequence.py --tick prints a deterministic `lanes: <verdict>` line on stderr and
-# encodes the same verdict in its exit code (0 fresh / 1 re-rank / 2 re-stamp). An
-# unhandled traceback also exits 1 (or a non-{0,1,2} code) but WITHOUT the sentinel, so
-# we accept 1/2 as a signal only when its sentinel is present; otherwise it's a tool
-# error. This stops a crash + its recovery from reading as two spurious wakes.
-PLAN_TICK_SENTINELS = {1: "lanes: stale (re-rank)", 2: "lanes: stale (re-stamp"}
 
 _PLAN_SPEC = importlib.util.spec_from_file_location(
     "plan_sequence", Path(__file__).with_name("plan_sequence.py")
@@ -69,6 +78,18 @@ _plan_sequence = importlib.util.module_from_spec(_PLAN_SPEC)
 sys.modules[_PLAN_SPEC.name] = _plan_sequence
 _PLAN_SPEC.loader.exec_module(_plan_sequence)
 DEFAULT_PR_FETCH_CAP = getattr(_plan_sequence, "FETCH_CAP", 5000)
+
+# plan_sequence.py --tick prints a deterministic `lanes: <verdict>` line on stderr and
+# encodes the same verdict in its exit code (1 re-rank / 2 re-stamp; 0 is fresh). An
+# unhandled traceback also exits 1 (or a non-{0,1,2} code) but WITHOUT the sentinel, so
+# we accept 1/2 as a signal only when its sentinel is present; otherwise it's a tool
+# error. This stops a crash + its recovery from reading as two spurious wakes. Derive the
+# sentinel strings from plan_sequence's own _FRESHNESS_MSG (matched by --tick's `lanes: `
+# prefix) so a rewording there can't misclassify a real verdict as a crash.
+PLAN_TICK_SENTINELS = {
+    _plan_sequence._FRESHNESS_EXIT[v]: f"lanes: {_plan_sequence._FRESHNESS_MSG[v]}"
+    for v in ("rerank", "restamp")
+}
 
 
 def run_cmd(cmd: list[str]) -> subprocess.CompletedProcess[str]:
@@ -239,7 +260,7 @@ def normalize_reviews(reviews: list[dict[str, Any]]) -> list[dict[str, str | Non
     return sorted(out, key=lambda r: (r["author"] or "", r["submitted_at"] or ""))
 
 
-def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any] | None:
+def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any]:
     body = raw.get("body") or ""
     closing = {ref["number"] for ref in raw.get("closingIssuesReferences") or []}
     closing.update(_plan_sequence.closing_issue_numbers_from_body(body, current_repo))
@@ -278,7 +299,10 @@ def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any] | Non
         "codex_signal": signal,
     }
     # A new review on an in-flight issue-closing PR is the chief's "send unblock
-    # follow-up" trigger even before the gate is current-ready, so surface it here.
+    # follow-up" trigger even before the gate is current-ready, so surface it here. This
+    # is only a cheap change-detector for review ACTIVITY: a Codex clean verdict shaped as
+    # a "Reviewed commit: <sha>" comment or a 👍 reaction is invisible here — reading that
+    # verdict stays the merge-gate poller's (scripts/pr_review_status.py) job.
     if closing:
         summary["reviews"] = normalize_reviews(raw.get("latestReviews") or [])
     return summary
@@ -303,9 +327,7 @@ def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
             "using cos-preflight for idle gating"
         )
     summaries = [summarize_pr(pr, current_repo) for pr in prs]
-    return sorted((s for s in summaries if s is not None), key=lambda s: s["number"])
-    # summarize_pr never returns None now (unclaimed PRs get a minimal entry), but the
-    # guard is cheap insurance if that changes.
+    return sorted(summaries, key=lambda s: s["number"])
 
 
 def snapshot_fingerprint(snapshot: dict[str, Any]) -> str:
@@ -354,22 +376,24 @@ def actionable_reasons(
 
     changed = _changed_pr_numbers(snapshot, previous)
 
-    def _named(pr: dict[str, Any], reason: str, bucket: list[str]) -> None:
-        if pr["number"] in changed:
-            bucket.append(reason)
-
     ready: list[str] = []
     draft_ready: list[str] = []
     stale: list[str] = []
+    named: set[int] = set()  # PRs already called out by a gate bucket below
     for pr in snapshot["prs"]:
-        gate = pr.get("gate", {})
-        num = f"#{pr['number']}"
-        if gate.get("state") == "current-ready" and not pr["draft"]:
-            _named(pr, num, ready)
-        elif gate.get("state") == "current-ready" and pr["draft"]:
-            _named(pr, num, draft_ready)
-        elif gate.get("state") == "stale-ready":
-            _named(pr, num, stale)
+        if pr["number"] not in changed:
+            continue
+        state = pr.get("gate", {}).get("state")
+        if state == "current-ready" and not pr["draft"]:
+            bucket = ready
+        elif state == "current-ready" and pr["draft"]:
+            bucket = draft_ready
+        elif state == "stale-ready":
+            bucket = stale
+        else:
+            continue
+        bucket.append(f"#{pr['number']}")
+        named.add(pr["number"])
     if ready:
         reasons.append(f"ready merge-gate PR changed: {', '.join(ready)}")
     if draft_ready:
@@ -380,7 +404,9 @@ def actionable_reasons(
     if previous:
         if previous.get("remote_main") != snapshot["remote_main"]:
             reasons.append("origin/main changed")
-        if changed:
+        # Generic fallback only for changed PRs no gate bucket already named — otherwise a
+        # gate-state change would emit both its specific reason and this redundant one.
+        if changed - named:
             reasons.append("open PR state changed")
 
     return sorted(dict.fromkeys(reasons))
@@ -390,32 +416,50 @@ def default_state_file() -> Path:
     return Path(".git") / "cos-preflight-state.json"
 
 
+def candidate_file(state_file: Path) -> Path:
+    return state_file.with_name(state_file.name + ".candidate")
+
+
 def load_state(path: Path) -> dict[str, Any] | None:
     if not path.exists():
         return None
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        state = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         # Self-heal: a truncated/corrupt state file is treated as first-run (warn, then
         # probe as if no prior snapshot). The cost is one extra wake; the alternative —
         # hard-stopping every run until someone hand-deletes the file — silently disables
-        # the whole gate.
+        # the whole gate. The first-run bootstrap re-baselines it cleanly.
         print(
             f"warning: ignoring corrupt cos-preflight state file {path} ({exc}); "
             "treating as first run",
             file=sys.stderr,
         )
         return None
+    if not isinstance(state, dict) or state.get("version") != SNAPSHOT_VERSION:
+        # A schema bump (SNAPSHOT_VERSION) changes the snapshot shape, so an old baseline
+        # can't be compared meaningfully. Treat it as first-run; the bootstrap re-baselines
+        # to the new shape instead of emitting one tick of spurious migration-noise reasons.
+        print(
+            f"warning: ignoring cos-preflight state file {path} with incompatible "
+            f"version {state.get('version') if isinstance(state, dict) else '?'!r} "
+            f"(expected {SNAPSHOT_VERSION}); treating as first run",
+            file=sys.stderr,
+        )
+        return None
+    return state
 
 
 def write_state(path: Path, snapshot: dict[str, Any]) -> None:
     parent = path.parent
-    if not parent.exists():
+    if not parent.is_dir():
         # Never mkdir(parents=True) here: with --no-canonical-check and a missing .git,
         # the default state path (.git/cos-preflight-state.json) would silently create a
-        # stray .git/ directory. Fail clearly instead.
+        # stray .git/ directory. Also refuse when .git is a FILE (a linked worktree): the
+        # parent isn't a real directory, so NamedTemporaryFile below would raise an
+        # uncaught NotADirectoryError and break the exit-2 contract. Fail clearly instead.
         raise SystemExit(
-            f"cos-preflight state directory {parent} does not exist; "
+            f"cos-preflight state directory {parent} is not a directory; "
             "run from the canonical checkout or pass an existing --state-file dir"
         )
     with NamedTemporaryFile(
@@ -435,10 +479,31 @@ def write_state(path: Path, snapshot: dict[str, Any]) -> None:
         raise
 
 
+def promote_candidate(state_file: Path) -> str:
+    """Promote the staged candidate to the state file — a pure local file move.
+
+    `--commit` calls this instead of re-collecting a snapshot, so an event that landed in
+    the probe→commit window is never silently absorbed into the committed baseline: it was
+    caught by the post-tick re-probe (which refreshes the candidate) and is only ever
+    committed by promoting whatever the last probe observed. Errors (exit 2) if no
+    candidate exists — that means no probe ran this tick, so there is nothing to commit.
+    """
+    candidate = candidate_file(state_file)
+    snapshot = load_state(candidate)
+    if snapshot is None:
+        raise SystemExit(
+            f"no cos-preflight candidate at {candidate} to commit; "
+            "run the probe (default mode) before --commit"
+        )
+    write_state(state_file, snapshot)
+    candidate.unlink(missing_ok=True)
+    return snapshot["fingerprint"]
+
+
 def collect_snapshot(epic: int, pr_limit: int) -> dict[str, Any]:
     current_repo = repo_name_with_owner()
     snapshot = {
-        "version": 1,
+        "version": SNAPSHOT_VERSION,
         "observed_at": datetime.now(UTC).isoformat(),
         "local_head": local_head_sha(),
         "remote_main": remote_main_sha(),
@@ -468,8 +533,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--commit",
         action="store_true",
-        help="write the current snapshot to the state file and exit (no comparison); "
-        "run after a successful tick so the observed events are marked handled",
+        help="promote the staged candidate to the state file and exit (no snapshot "
+        "collection); run after a successful tick so the observed events are marked "
+        "handled",
     )
     args = ap.parse_args(argv)
 
@@ -477,16 +543,34 @@ def main(argv: list[str] | None = None) -> int:
     try:
         require_canonical(canonical)
         if args.commit:
-            snapshot = collect_snapshot(args.epic, args.pr_limit)
-            write_state(args.state_file, snapshot)
+            # Promote only — no gh/git/plan calls. The candidate was staged by the probe.
+            fingerprint = promote_candidate(args.state_file)
             print(
-                f"committed cos-preflight snapshot {snapshot['fingerprint'][:12]} "
+                f"committed cos-preflight snapshot {fingerprint[:12]} "
                 f"to {args.state_file}"
             )
             return 0
-        # Probe: read prior state, snapshot fresh, compare. Never writes.
+        # Probe: read the committed baseline, snapshot fresh, compare, stage the candidate.
         previous = load_state(args.state_file)
         snapshot = collect_snapshot(args.epic, args.pr_limit)
+        # Always stage the candidate — including on the bootstrap path — so `--commit`'s
+        # no-candidate exit 2 can only ever mean "you never probed this tick", never "you
+        # bootstrapped". On a first-run bootstrap-and-wake tick, the end-of-tick `--commit`
+        # then promotes an identical snapshot (harmless no-op content-wise) instead of
+        # failing.
+        write_state(candidate_file(args.state_file), snapshot)
+        if previous is None:
+            # First run (no baseline: missing, corrupt, or version-mismatched state). Also
+            # write the snapshot DIRECTLY to the state file as the bootstrap baseline so
+            # steady state can begin — otherwise `previous` stays None forever and every
+            # delta-gated reason is permanently suppressed. Steady-state probes only stage
+            # the candidate above; they never touch the state file.
+            write_state(args.state_file, snapshot)
+            print(
+                f"bootstrap: wrote initial cos-preflight baseline "
+                f"{snapshot['fingerprint'][:12]} to {args.state_file}",
+                file=sys.stderr,
+            )
         reasons = actionable_reasons(snapshot, previous)
     except SystemExit as exc:
         message = exc.code if isinstance(exc.code, str) else ""

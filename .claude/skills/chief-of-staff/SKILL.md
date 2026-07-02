@@ -5,6 +5,10 @@ description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep th
 
 # chief-of-staff — one coordination tick
 
+**Only run when the user explicitly invokes `/chief-of-staff` (or the user-configured
+chief-of-staff heartbeat fires).** It merges PRs, edits issues, and runs releases —
+never auto-start it because a conversation merely resembles coordination or merge work.
+
 The chief of staff is the repo's coordination agent: it keeps issue metadata and lane
 priorities current, understands active `/pr-pipeline` claims, prevents conflicting work,
 merges PRs with a current-head pipeline handoff, and recommends the next work to launch
@@ -26,9 +30,15 @@ contexts.
   user explicitly accepts that tradeoff.
 - Keep the scheduled prompt minimal, e.g. `Run exactly one chief-of-staff tick`, so this
   skill remains the source of truth.
-- If a heartbeat fires while the prior tick in that thread is still running, skip the
-  new tick and return `DONT_NOTIFY` with reason `previous tick still running`; do not
-  overlap issue maintenance, merge inspection, or recommendations.
+- The session surface processes turns serially, so a heartbeat that fires mid-tick lands
+  as the NEXT turn once the active tick finishes; ticks never actually overlap. That
+  next turn just runs the preflight probe again — an idle probe is one cheap tool call —
+  and returns `DONT_NOTIFY` reason `idle` if nothing moved. Do not attempt to detect or
+  skip a "still-running" prior tick; there is no such state to detect.
+- After creating or updating the scheduled heartbeat, verify the persisted automation
+  actually targets the existing chief-of-staff thread with the intended cadence and an
+  active status. If it persisted as a detached/cron-style or paused job instead, report
+  that exact state and stop rather than leaving a mis-wired schedule running.
 
 ### In-session minimal tick
 
@@ -40,11 +50,14 @@ preflight decides whether the model actually does any work that tick:
 uv run --no-project python scripts/cos_preflight.py
 ```
 
-- **The session's FIRST action each tick is the preflight probe** (never writes state).
-  It records its snapshot in `.git/cos-preflight-state.json` and fires only when
-  repo/GitHub state moved enough to justify a tick: lane drift, issue-projection
-  movement, `origin/main` movement, or relevant issue-closing PR / merge-gate state
-  changes.
+- **The session's FIRST action each tick is the preflight probe.** It compares live
+  repo/GitHub state against the last committed baseline in
+  `.git/cos-preflight-state.json` and stages what it observed as a candidate next to
+  that file. A steady-state probe with an existing baseline never writes the baseline
+  itself; only `--commit` (or the first-run bootstrap, which writes the baseline
+  directly when none exists yet) does. It fires only when state moved enough to justify
+  a tick: lane drift, issue-projection movement, `origin/main` movement, or relevant
+  issue-closing PR / merge-gate state changes.
 
 - **Exit `0` (idle):** stop immediately with `DONT_NOTIFY` reason `idle`, spending
   nothing beyond that one tool call.
@@ -53,19 +66,27 @@ uv run --no-project python scripts/cos_preflight.py
 
 - **Exit `10` (wake):** run the full tick.
 
-- **At the END of a successful active tick**, commit the snapshot and probe once more:
+- **At the END of a successful active tick**, commit the staged candidate and probe once
+  more:
 
   ```sh
   uv run --no-project python scripts/cos_preflight.py --commit
   ```
 
-  The `--commit` run writes the snapshot; then run the plain probe again. If it exits
-  `10`, handle the new events in the same tick. Bound this: after roughly 3 loops,
-  finish and let the next heartbeat continue.
+  The `--commit` run promotes the candidate the probe staged (a pure local file move —
+  no gh/git calls); then run the plain probe again. If it exits `10`, handle the new
+  events in the same tick. Bound this: after roughly 3 loops, finish and let the next
+  heartbeat continue.
 
-- **At-least-once by design:** a tick that fails before `--commit` leaves state
-  uncommitted, so the next probe re-fires. Never run `--commit` before the work is
-  actually done.
+- **If `--commit` fails**, retry it once. If it still fails, report the tool error
+  (`NOTIFY`) and stop, naming the consequence: the baseline was not advanced, so the
+  next heartbeat re-wakes on the same events. Before re-sending any follow-up or feature
+  report those events would trigger next tick, re-check it against live state so a
+  duplicate isn't sent.
+
+- **At-least-once by design:** a tick that fails before `--commit` leaves the baseline
+  at the last committed candidate, so the next probe re-fires on the pending event.
+  Never run `--commit` before the work is actually done.
 
 ## Startup Gate
 
@@ -90,34 +111,32 @@ new work, but it must not edit project code as part of the work itself.
 
 ## Tick
 
-1. If this is a heartbeat invocation and the previous tick in this thread is still
-   running, skip this tick with `DONT_NOTIFY`; do not overlap repo or GitHub mutations.
-2. Complete the startup gate above. Stop immediately if it fails.
-3. Ensure the default `reg_meta` DB install is compatible with the checked-out code,
+1. Complete the startup gate above. Stop immediately if it fails.
+2. Ensure the default `reg_meta` DB install is compatible with the checked-out code,
    then ensure the canonical-main `reg_webapp` dev preview is running. Reuse a healthy
    existing preview unless the startup gate's `git pull --ff-only` moved `main` or the
    DB install was refreshed; do not start duplicate servers. Record the frontend URL. If
    preview startup still fails after the DB-refresh path below, continue the tick and
    report the preview as unavailable with the concrete reason.
-4. Invoke `/issue-pulse` exactly once. Let it update only the lanes block; apply
+3. Invoke `/issue-pulse` exactly once. Let it update only the lanes block; apply
    structural issue maintenance afterward under this skill's maintenance policy.
-5. Build the operating picture:
+4. Build the operating picture:
    - run `uv run --no-project python scripts/plan_sequence.py --lane`;
    - read issue `#328` and current candidate issue bodies/comments;
    - inspect open PRs that close issues, especially drafts, ready PRs, and stacks;
    - read merge-gate handoff blocks from PR bodies with `gh pr view`, not from
      `scripts/pr_review_status.py`, which is only the Codex bot-review signal.
-6. Apply clear, evidence-backed issue maintenance automatically. If it changes
+5. Apply clear, evidence-backed issue maintenance automatically. If it changes
    lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
    `parked`, rerun the `/issue-pulse` lane-staleness path before recommending work; do
    not rely only on `plan_sequence.py --lane` after invalidating the ranked lanes.
-7. Merge ready PRs only through the automerge gate below. After each successful merge
+6. Merge ready PRs only through the automerge gate below. After each successful merge
    and local fast-forward, restart the preview so it serves the new `main`, then capture
    the merged feature summary and inspection link.
-8. For PRs that do not merge, apply the Pipeline Follow-ups policy below before final
+7. For PRs that do not merge, apply the Pipeline Follow-ups policy below before final
    output. If the blocker is mechanical handoff work owned by the pipeline session, send
    a precise follow-up to that session when the thread can be identified.
-9. If a merge or lane-affecting issue edit changed during the tick, rerun and follow the
+8. If a merge or lane-affecting issue edit changed during the tick, rerun and follow the
    `/issue-pulse` lane-staleness path before recommending work; do not rely only on
    `plan_sequence.py --lane` after invalidating ranked lanes. Then re-run the live lane
    floor and recommend the next safe `/pr-pipeline issue ...` commands or say to wait.
@@ -362,8 +381,7 @@ failed.
 - Do not fix pipeline-owned implementation or handoff evidence directly when a precise
   follow-up to the owning pipeline session can unblock it.
 - Do not exceed the current active-work budget to keep agents busy.
-- Do not invent feature routes after a merge; link only to real SPA routes or state that
-  no preview page exists.
+- Do not invent feature routes after a merge (see the Dev Preview merged-PR link rules).
 - Do not treat a clean hygiene script as proof that semantic relationships are current;
   read issue text when comments imply a blocker or dependency.
 - Do not hand-edit generated `plan-sequence` / `plan-lanes` markers; go through
@@ -378,6 +396,5 @@ failed.
 - Use `NOTIFY` when the tick merged or released work, changed issue metadata, re-ranked
   or re-stamped lanes in a way that changes the free/active/recommended sets, found a
   gate failure on a PR that looked ready, failed to refresh the preview after a merge,
-  or needs user input.
-- For skipped overlapping heartbeats, use `DONT_NOTIFY` with reason
-  `previous tick still running`.
+  failed to `--commit` the preflight candidate, or needs user input.
+- For a heartbeat that lands after an idle probe, use `DONT_NOTIFY` with reason `idle`.

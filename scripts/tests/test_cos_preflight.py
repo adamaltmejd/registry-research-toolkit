@@ -1,8 +1,9 @@
 """Unit tests for scripts/cos_preflight.py.
 
-Pins the deterministic wake contract: probe never writes state, `--commit` writes it,
-unchanged snapshots stay idle, lane drift wakes, and per-PR merge-gate changes name only
-the PR(s) that actually moved.
+Pins the deterministic wake contract: the probe stages a candidate (and bootstraps a
+baseline on first run), a steady-state probe never writes the state file, `--commit`
+promotes the candidate without collecting a snapshot, unchanged snapshots stay idle, lane
+drift wakes, and per-PR merge-gate changes name only the PR(s) that actually moved.
 """
 
 from __future__ import annotations
@@ -28,7 +29,7 @@ HEAD = "abcdef1234567890"
 
 def _snapshot(*, plan_exit=0, plan_report=None, prs=None, remote="l1"):
     snap = {
-        "version": 1,
+        "version": cpf.SNAPSHOT_VERSION,
         "observed_at": "2026-06-30T20:00:00+00:00",
         "local_head": "l1",
         "remote_main": remote,
@@ -151,30 +152,47 @@ def _fake_plan_proc(returncode: int, stderr: str):
     return run
 
 
+def _plan_tick_stderr(verdict: str) -> str:
+    # Compose the fake plan-tick stderr from plan_sequence's own _FRESHNESS_MSG, so the
+    # tests pin the sentinel CONTRACT (cos_preflight must accept whatever wording
+    # plan_sequence emits) instead of retyping literals that can silently drift.
+    return (
+        "projection delta:\nno status changes\n"
+        f"lanes: {cpf._plan_sequence._FRESHNESS_MSG[verdict]}"
+    )
+
+
 def test_plan_tick_exit1_with_sentinel_is_signal(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(
-        cpf,
-        "run_cmd",
-        _fake_plan_proc(
-            1, "projection delta:\nno status changes\nlanes: stale (re-rank)"
-        ),
-    )
+    monkeypatch.setattr(cpf, "run_cmd", _fake_plan_proc(1, _plan_tick_stderr("rerank")))
     result = cpf.run_plan_tick(328)
     assert result["exit"] == 1
-    assert "lanes: stale (re-rank)" in result["report"]
+    assert cpf.PLAN_TICK_SENTINELS[1] in result["report"]
 
 
 def test_plan_tick_exit2_with_sentinel_is_signal(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(
-        cpf,
-        "run_cmd",
-        _fake_plan_proc(2, "lanes: stale (re-stamp — running-set-only; no re-rank)"),
+        cpf, "run_cmd", _fake_plan_proc(2, _plan_tick_stderr("restamp"))
     )
     assert cpf.run_plan_tick(328)["exit"] == 2
+
+
+def test_plan_tick_sentinels_derived_from_plan_sequence() -> None:
+    # Reword-resilience: the sentinel map is derived from plan_sequence's _FRESHNESS_MSG,
+    # not retyped, so a wording change there flows through instead of misclassifying a real
+    # verdict as a crash.
+    expected = {
+        cpf._plan_sequence._FRESHNESS_EXIT[
+            v
+        ]: f"lanes: {cpf._plan_sequence._FRESHNESS_MSG[v]}"
+        for v in ("rerank", "restamp")
+    }
+    assert expected == cpf.PLAN_TICK_SENTINELS
+    # The derivation actually consumed plan_sequence's wording, not a hardcoded copy.
+    assert cpf._plan_sequence._FRESHNESS_MSG["rerank"] in cpf.PLAN_TICK_SENTINELS[1]
 
 
 def test_plan_tick_exit1_without_sentinel_is_tool_error(
@@ -234,12 +252,36 @@ def test_missing_state_file_is_first_run(tmp_path: Path) -> None:
     assert cpf.load_state(tmp_path / "absent.json") is None
 
 
+def test_version_mismatch_state_is_first_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A schema bump makes an old baseline incomparable; load_state must treat it as
+    # first-run so the bootstrap re-baselines instead of comparing incompatible shapes.
+    state = tmp_path / "state.json"
+    stale = _snapshot()
+    stale["version"] = cpf.SNAPSHOT_VERSION - 1
+    cpf.write_state(state, stale)
+
+    assert cpf.load_state(state) is None
+    assert "incompatible version" in capsys.readouterr().err
+
+
 def test_write_state_refuses_to_create_missing_parent(tmp_path: Path) -> None:
     # Guards the --no-canonical-check + missing .git footgun: never conjure the dir.
     missing = tmp_path / "nope" / "state.json"
-    with pytest.raises(SystemExit, match="does not exist"):
+    with pytest.raises(SystemExit, match="is not a directory"):
         cpf.write_state(missing, _snapshot())
     assert not missing.parent.exists()
+
+
+def test_write_state_refuses_git_file_parent(tmp_path: Path) -> None:
+    # A linked worktree's `.git` is a FILE, not a dir. parent.exists() would pass and let
+    # NamedTemporaryFile raise an uncaught NotADirectoryError (breaking the exit-2
+    # contract); parent.is_dir() must reject it cleanly.
+    git_file = tmp_path / ".git"
+    git_file.write_text("gitdir: /elsewhere\n", encoding="utf-8")
+    with pytest.raises(SystemExit, match="is not a directory"):
+        cpf.write_state(git_file / "state.json", _snapshot())
 
 
 def test_write_state_round_trips(tmp_path: Path) -> None:
@@ -378,16 +420,26 @@ def test_latest_reviews_folded_into_issue_closing_pr() -> None:
 
 
 def test_new_review_wakes() -> None:
-    before = _snapshot(prs=[_ready_pr(reviews=[])])
+    # A claimed, not-yet-ready PR (gate absent → no named bucket): a new review lands, so
+    # the generic "open PR state changed" reason must fire.
+    plain_pr = {
+        "number": 956,
+        "claimed": True,
+        "draft": False,
+        "gate": {"state": "absent"},
+        "reviews": [],
+    }
+    before = _snapshot(prs=[dict(plain_pr)])
     after = _snapshot(
         prs=[
-            _ready_pr(
+            dict(
+                plain_pr,
                 reviews=[
                     {
                         "author": "chatgpt-codex-connector",
                         "submitted_at": "2026-07-01T00:00:00Z",
                     }
-                ]
+                ],
             )
         ]
     )
@@ -443,6 +495,42 @@ def test_gate_reason_names_only_changed_pr() -> None:
     assert "#956" not in " ".join(reasons)
 
 
+def test_generic_reason_suppressed_when_all_changed_prs_are_gate_named() -> None:
+    # A gate-state PR change already emits its specific named reason; the generic
+    # "open PR state changed" must NOT also fire for it.
+    previous = _snapshot(prs=[_ready_pr(957)])
+    snap = _snapshot(prs=[_ready_pr(957, codex_signal="findings")])
+
+    reasons = cpf.actionable_reasons(snap, previous)
+
+    assert reasons == ["ready merge-gate PR changed: #957"]
+    assert "open PR state changed" not in reasons
+
+
+def test_generic_reason_fires_for_non_gate_pr_change() -> None:
+    # An unclaimed (no-gate) PR that changes has no named bucket, so the generic reason is
+    # the only signal and must fire.
+    previous = _snapshot(prs=[])
+    snap = _snapshot(prs=[{"number": 999, "claimed": False, "draft": False}])
+
+    assert cpf.actionable_reasons(snap, previous) == ["open PR state changed"]
+
+
+def test_gate_named_and_non_gate_changes_emit_both_reasons() -> None:
+    # A gate PR AND an unclaimed PR both change: the gate PR gets its named reason, and the
+    # generic reason still fires for the non-gate PR that no bucket named.
+    unclaimed = {"number": 999, "claimed": False, "draft": False}
+    previous = _snapshot(prs=[_ready_pr(957), unclaimed])
+    snap = _snapshot(
+        prs=[_ready_pr(957, codex_signal="findings"), dict(unclaimed, draft=True)]
+    )
+
+    reasons = cpf.actionable_reasons(snap, previous)
+
+    assert "ready merge-gate PR changed: #957" in reasons
+    assert "open PR state changed" in reasons
+
+
 def test_remote_main_change_wakes() -> None:
     previous = _snapshot(remote="old")
     snap = _snapshot(remote="new")
@@ -458,71 +546,182 @@ def test_first_snapshot_behind_origin_wakes() -> None:
     assert cpf.actionable_reasons(snap, None) == ["origin/main changed"]
 
 
-# --- probe vs commit -----------------------------------------------------------
+# --- probe: bootstrap + candidate staging -------------------------------------
 
 
-def test_probe_never_writes_state(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    state = tmp_path / "state.json"
-    snap = _snapshot(remote="new")
+def _probe_env(monkeypatch: pytest.MonkeyPatch, snap: dict) -> None:
     monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
     monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap)
+
+
+def test_first_run_bootstraps_baseline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # No baseline exists: the probe writes the snapshot DIRECTLY to the state file so steady
+    # state can begin, evaluates first-run-visible reasons, and notes the bootstrap. It also
+    # stages the candidate, so a same-tick --commit has something to promote.
+    state = tmp_path / "state.json"
+    snap = _snapshot(remote="new")
+    _probe_env(monkeypatch, snap)
 
     rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
 
     assert rc == cpf.WAKE_EXIT  # first-run, behind origin → wakes
-    assert not state.exists()  # probe MUST NOT write
+    assert cpf.load_state(state) == snap  # bootstrap wrote the baseline
+    assert cpf.load_state(cpf.candidate_file(state)) == snap  # candidate staged too
+    assert "bootstrap" in capsys.readouterr().err
 
 
-def test_probe_idle_returns_zero_and_does_not_write(
+def test_bootstrap_then_wake_then_commit_exits_zero(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A first-run bootstrap-and-wake tick stages the candidate, so the end-of-tick
+    # --commit promotes an identical snapshot and exits 0 (harmless no-op) rather than
+    # failing with no-candidate exit 2.
+    state = tmp_path / "state.json"
+    snap = _snapshot(remote="new")
+    _probe_env(monkeypatch, snap)
+
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+
+    # --commit must NOT collect; it only promotes the staged candidate.
+    monkeypatch.setattr(
+        cpf, "collect_snapshot", lambda *_a: pytest.fail("--commit must not collect")
+    )
+    assert (
+        cpf.main(["--no-canonical-check", "--commit", "--state-file", str(state)]) == 0
+    )
+    assert cpf.load_state(state) == snap
+    assert not cpf.candidate_file(state).exists()  # candidate consumed
+
+
+def test_first_run_bootstrap_on_corrupt_state(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = tmp_path / "state.json"
+    state.write_text("{", encoding="utf-8")  # corrupt → no baseline
     snap = _snapshot()
-    cpf.write_state(state, snap)
-    state.write_text(state.read_text())  # ensure committed
-    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap)
+    _probe_env(monkeypatch, snap)
+
+    cpf.main(["--no-canonical-check", "--state-file", str(state)])
+
+    assert cpf.load_state(state) == snap  # re-baselined cleanly
+
+
+def test_first_run_bootstrap_on_version_mismatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = tmp_path / "state.json"
+    stale = _snapshot()
+    stale["version"] = cpf.SNAPSHOT_VERSION - 1
+    cpf.write_state(state, stale)
+    snap = _snapshot(remote="new")
+    _probe_env(monkeypatch, snap)
+
+    cpf.main(["--no-canonical-check", "--state-file", str(state)])
+
+    assert cpf.load_state(state) == snap  # re-baselined to the new shape
+
+
+def test_steady_state_probe_stages_candidate_without_writing_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # With a live baseline, an idle probe MUST NOT touch the state file; it only stages the
+    # observed snapshot as a candidate for a later --commit.
+    state = tmp_path / "state.json"
+    baseline = _snapshot()
+    cpf.write_state(state, baseline)
     before = state.read_text()
+    _probe_env(monkeypatch, baseline)
 
     rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
 
     assert rc == 0
-    assert state.read_text() == before
+    assert state.read_text() == before  # state file untouched
+    assert cpf.load_state(cpf.candidate_file(state)) == baseline  # candidate staged
 
 
-def test_commit_writes_state_and_exits_zero(
+# --- commit: promote candidate, never collect ---------------------------------
+
+
+def test_commit_promotes_candidate_without_collecting(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     state = tmp_path / "state.json"
-    snap = _snapshot()
+    candidate = cpf.candidate_file(state)
+    snap = _snapshot(remote="new")
+    cpf.write_state(candidate, snap)  # probe staged this earlier
     monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap)
+    # --commit must NOT collect a snapshot: any collector call is a bug.
+    monkeypatch.setattr(
+        cpf,
+        "collect_snapshot",
+        lambda *_a: pytest.fail("--commit must not collect a snapshot"),
+    )
 
     rc = cpf.main(["--no-canonical-check", "--commit", "--state-file", str(state)])
 
     assert rc == 0
-    assert cpf.load_state(state) == snap
+    assert cpf.load_state(state) == snap  # candidate promoted to baseline
+    assert not candidate.exists()  # candidate consumed
     assert "committed cos-preflight snapshot" in capsys.readouterr().out
 
 
-def test_commit_tool_error_returns_two(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_commit_without_candidate_returns_two(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    def boom(_e, _l):
-        raise SystemExit("gh exploded")
-
     monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
-    monkeypatch.setattr(cpf, "collect_snapshot", boom)
 
     rc = cpf.main(
-        ["--no-canonical-check", "--commit", "--state-file", str(tmp_path / "s.json")]
+        [
+            "--no-canonical-check",
+            "--commit",
+            "--state-file",
+            str(tmp_path / "state.json"),
+        ]
     )
+
     assert rc == 2
+    assert "no cos-preflight candidate" in capsys.readouterr().err
 
 
-def test_no_dry_run_flag() -> None:
-    # --dry-run is retired; probe is now the default no-write mode.
-    with pytest.raises(SystemExit):
-        cpf.main(["--no-canonical-check", "--dry-run"])
+# --- mid-tick event is caught by the post-tick re-probe ------------------------
+
+
+def test_mid_tick_event_is_caught(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The core two-phase win: an event that lands in the probe→commit window is NOT
+    # absorbed into the committed baseline. Sequence: baseline exists → probe observes a
+    # change (stages candidate, wakes) → tick runs → --commit promotes → an event lands →
+    # re-probe compares live-vs-just-committed and wakes again.
+    state = tmp_path / "state.json"
+    baseline = _snapshot()
+    cpf.write_state(state, baseline)
+    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+
+    # Probe 1: state moved (remote changed) → wake + stage candidate.
+    moved = _snapshot(remote="new")
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: moved)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+
+    # --commit promotes the candidate WITHOUT collecting (an event may land during it).
+    monkeypatch.setattr(
+        cpf, "collect_snapshot", lambda *_a: pytest.fail("commit must not collect")
+    )
+    assert (
+        cpf.main(["--no-canonical-check", "--commit", "--state-file", str(state)]) == 0
+    )
+    assert cpf.load_state(state) == moved  # baseline now == what probe 1 observed
+
+    # Re-probe: a further event landed → compares against the just-committed baseline and
+    # wakes; the mid-tick event is not burned.
+    later = _snapshot(remote="newer")
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: later)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
