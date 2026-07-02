@@ -31,7 +31,7 @@ import HistoryGraph from "./HistoryGraph.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
-  looksLikePeriod,
+  isStructurallyValidPeriodWire,
   nextResolutionQuery,
   periodFromWire,
   periodToWire,
@@ -376,7 +376,9 @@ const pickerWindow = $derived(
   pickerWindowYears(params.period ?? null, windowStore.value),
 );
 const activePickerPeriod = $derived(
-  params.period && !narrowedError && looksLikePeriod(params.period)
+  params.period &&
+    !narrowedError &&
+    isStructurallyValidPeriodWire(params.period)
     ? params.period
     : null,
 );

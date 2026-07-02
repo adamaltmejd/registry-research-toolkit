@@ -593,7 +593,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         },
       ],
     });
-    router.navigate("/catalog/scb/lisa/kon?period=not-a-period");
+    router.navigate("/catalog/scb/lisa/kon?period=2020,2019");
 
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",

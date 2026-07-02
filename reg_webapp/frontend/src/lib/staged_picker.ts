@@ -3,6 +3,7 @@ import {
   mergePeriods,
   type PeriodBounds,
   periodFromWire,
+  periodTokenForBounds,
   periodToWire,
   periodWireBounds,
 } from "./period";
@@ -111,6 +112,11 @@ function periodBoundsSegments(period: Period): PeriodBounds[] | null {
 
 function boundsOverlap(a: PeriodBounds, b: PeriodBounds): boolean {
   return a.from <= b.to && b.from <= a.to;
+}
+
+interface BoundedPeriodSegment {
+  wire: string;
+  bounds: PeriodBounds;
 }
 
 function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
@@ -273,16 +279,12 @@ export function periodChangesWithStagedAdds(
   }
   return changes.map((change) => {
     const addPeriod = addPeriods.get(change.registerVariant);
-    if (
-      addPeriod === undefined ||
-      !isYearMergeablePeriod(change.period) ||
-      !isYearMergeablePeriod(addPeriod)
-    ) {
+    if (addPeriod === undefined) {
       return change;
     }
     return {
       ...change,
-      period: mergePeriods(change.period, addPeriod),
+      period: periodReplacementCoveringAdd(change.period, addPeriod),
     };
   });
 }
@@ -294,7 +296,9 @@ export function finalSourcePeriodsForStagedAdds(
 ): Map<string, Period> {
   const periods = new Map<string, Period>();
   for (const source of existing) {
-    periods.set(source.registerVariant, source.period);
+    if (!periods.has(source.registerVariant)) {
+      periods.set(source.registerVariant, source.period);
+    }
   }
   for (const add of adds) {
     const current = periods.get(add.registerVariant);
@@ -307,6 +311,82 @@ export function finalSourcePeriodsForStagedAdds(
     periods.set(change.registerVariant, change.period);
   }
   return periods;
+}
+
+function periodReplacementCoveringAdd(
+  replacement: Period,
+  addPeriod: Period,
+): Period {
+  const replacementWire = periodToWire(replacement);
+  const addWire = periodToWire(addPeriod);
+  if (replacementWire === "_default") {
+    return replacement;
+  }
+  if (addWire === "_default") {
+    return addPeriod;
+  }
+  if (isYearMergeablePeriod(replacement) && isYearMergeablePeriod(addPeriod)) {
+    return mergePeriods(replacement, addPeriod);
+  }
+  return unionBoundedPeriodSegments(replacement, addPeriod) ?? replacement;
+}
+
+function boundedPeriodSegments(period: Period): BoundedPeriodSegment[] | null {
+  const wire = periodToWire(period);
+  if (!wire || wire === "_default") {
+    return null;
+  }
+  const segments: BoundedPeriodSegment[] = [];
+  for (const raw of wire.split(",")) {
+    const member = raw.trim();
+    const bounds = periodWireBounds(member);
+    if (!member || !bounds) {
+      return null;
+    }
+    segments.push({ wire: member, bounds });
+  }
+  return segments.length > 0 ? segments : null;
+}
+
+function unionBoundedPeriodSegments(
+  replacement: Period,
+  addPeriod: Period,
+): Period | null {
+  const replacementSegments = boundedPeriodSegments(replacement);
+  const addSegments = boundedPeriodSegments(addPeriod);
+  if (!replacementSegments || !addSegments) {
+    return null;
+  }
+  const sorted = [...replacementSegments, ...addSegments].sort(
+    (a, b) =>
+      a.bounds.from.localeCompare(b.bounds.from) ||
+      a.bounds.to.localeCompare(b.bounds.to) ||
+      a.wire.localeCompare(b.wire),
+  );
+  const merged: BoundedPeriodSegment[] = [];
+  for (const segment of sorted) {
+    const previous = merged.at(-1);
+    if (!previous) {
+      merged.push(segment);
+      continue;
+    }
+    if (previous.bounds.to < segment.bounds.from) {
+      merged.push(segment);
+      continue;
+    }
+    if (segment.bounds.to <= previous.bounds.to) {
+      continue;
+    }
+    previous.bounds = {
+      from: previous.bounds.from,
+      to: segment.bounds.to,
+    };
+    previous.wire = periodTokenForBounds(
+      previous.bounds.from,
+      previous.bounds.to,
+    );
+  }
+  return periodFromWire(merged.map((segment) => segment.wire).join(","));
 }
 
 function isYearMergeablePeriod(period: Period): boolean {
