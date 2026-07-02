@@ -22,11 +22,13 @@
 #                           of the SAME grain — both 3-segment variable OR both
 #                           2-segment classification (provider/slug). The build
 #                           writes BOTH directions; there is NO relation_kind
-#                           (identity is identity). The variable/classification
-#                           slug is NOT validated (slug-anchored, survives
-#                           renames); provider+register (or provider+class slug)
-#                           must exist. Generate a review worklist with
-#                           `reg-meta-build same-as-candidates`.
+#                           (identity is identity). Endpoint providers outside
+#                           the current build are skipped, but when both
+#                           providers are built the variable/classification
+#                           slugs must resolve live. Slug-anchored means the
+#                           authored FQID is the stored identity, not that
+#                           dangling endpoints are accepted. Generate a review
+#                           worklist with `reg-meta-build same-as-candidates`.
 #
 #   type = "replaced_by"  — directional SUCCESSION (`from` superseded by `to`).
 #                           NOT identity: the definitions differ across eras.

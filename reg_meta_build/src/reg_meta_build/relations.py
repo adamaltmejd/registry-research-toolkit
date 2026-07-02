@@ -52,6 +52,7 @@ from ._curation import (
     load_curation_entries,
     require_fqid,
     resolve_register_id,
+    resolve_variable_id,
 )
 
 if TYPE_CHECKING:
@@ -131,9 +132,9 @@ class CuratedSameAs:
     Both endpoints are either variable-grain (`a_provider/a_register/a_variable`,
     `b_*` the mirror) or classification-grain (`a_register`/`b_register` carry the
     classification slug, `a_variable`/`b_variable` are None). `grain` records
-    which. Endpoint resolution happens at materialize time against the built DB,
-    not at load; the variable/classification slug is NOT validated — same_as is
-    slug-anchored and survives renames."""
+    which. Endpoint resolution happens at materialize time against the built DB
+    for endpoint providers included in the build. Edges remain slug-anchored, but
+    an edge written by the build must resolve both endpoint slugs."""
 
     grain: FqidKind  # VARIABLE_BINDING or CLASSIFICATION
     a_provider: str
@@ -727,10 +728,9 @@ def materialize_same_as(
     `variable_same_as` / `classification_same_as`. Provider-gated (an edge whose
     endpoint provider isn't built is SKIPPED — a partial `--providers` build
     can't represent it, deferral not drift). Variable endpoints validate
-    provider+register existence (the variable slug is NOT checked — same_as is
-    slug-anchored); classification endpoints validate `(provider, slug)`
-    presence. The combined as-declared graph is cycle-checked and the
-    component-size guard refuses a runaway identity cluster, BOTH before any
+    provider+register+variable existence; classification endpoints validate
+    `(provider, slug)` presence. The combined as-declared graph is cycle-checked
+    and the component-size guard refuses a runaway identity cluster, BOTH before any
     INSERT. Returns `{"variable": n, "classification": n}` (one per pair; both
     directions written)."""
     var_edges: list[tuple[_VarKey, _VarKey]] = []
@@ -745,6 +745,20 @@ def materialize_same_as(
                 raise _unknown_same_as_endpoint(e.a_fqid(), "a", "register")
             if resolve_register_id(conn, e.b_provider, e.b_register) is None:
                 raise _unknown_same_as_endpoint(e.b_fqid(), "b", "register")
+            if (
+                resolve_variable_id(
+                    conn, e.a_provider, e.a_register, e.a_variable or ""
+                )
+                is None
+            ):
+                raise _unknown_same_as_endpoint(e.a_fqid(), "a", "variable")
+            if (
+                resolve_variable_id(
+                    conn, e.b_provider, e.b_register, e.b_variable or ""
+                )
+                is None
+            ):
+                raise _unknown_same_as_endpoint(e.b_fqid(), "b", "variable")
             a_key: _VarKey = (e.a_provider, e.a_register, e.a_variable or "")
             b_key: _VarKey = (e.b_provider, e.b_register, e.b_variable or "")
             var_edges.append((a_key, b_key))

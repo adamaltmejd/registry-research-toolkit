@@ -5,7 +5,7 @@ loaders. Layers:
   - `TestLoaderDispatch` — the `type` discriminator: unknown/missing type, and
     a field legal for one type rejected as foreign on another (a mis-typed edge).
   - `TestSameAsLoad` / `TestSameAsMaterialize` — same_as parse + materialize
-    (both directions, unknown-endpoint fail-fast, provider gate, cycle rejection,
+    (both directions, endpoint resolution fail-fast, provider gate, cycle rejection,
     the component-size guard, classification grain).
   - `TestReplacedByLoad` — replaced_by parse (grain, self-loop, effective_year).
   - `TestMovedEdges` — the real edges moved into the file load through the
@@ -284,21 +284,34 @@ class TestSameAsMaterialize:
         assert exc.value.code == "relations_same_as_unknown_endpoint"
         assert "nope" in exc.value.message
 
-    def test_variable_slug_not_validated(self) -> None:
-        # same_as is slug-anchored — a not-yet-present variable slug survives.
+    def test_unknown_variable_slug_fails_fast(self) -> None:
         conn = _cross_register_db()
-        counts = materialize_same_as(
-            conn, (_same_as_edge(b="scb/rams/renamed-tomorrow"),), providers=_SCB
-        )
-        assert counts["variable"] == 1
-        assert ("scb", "rams", "renamed-tomorrow") in {
-            (r[3], r[4], r[5]) for r in _same_as_rows(conn)
-        }
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as(
+                conn, (_same_as_edge(b="scb/rams/renamed-tomorrow"),), providers=_SCB
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_same_as_unknown_endpoint"
+        assert "scb/rams/renamed-tomorrow" in exc.value.message
+        assert "variable" in exc.value.message
+        assert _same_as_rows(conn) == []
 
     def test_out_of_build_provider_is_skipped(self) -> None:
         conn = _cross_register_db()
         counts = materialize_same_as(
             conn, (_same_as_edge(),), providers=frozenset({"sos"})
+        )
+        assert counts["variable"] == 0
+        assert _same_as_rows(conn) == []
+
+    def test_one_out_of_build_provider_is_skipped_before_variable_resolution(
+        self,
+    ) -> None:
+        conn = _cross_register_db()
+        counts = materialize_same_as(
+            conn,
+            (_same_as_edge(b="sos/rams/renamed-tomorrow"),),
+            providers=_SCB,
         )
         assert counts["variable"] == 0
         assert _same_as_rows(conn) == []
@@ -354,9 +367,19 @@ class TestSameAsMaterialize:
         conn = build_slugged_db(classification=None)
         add_register(conn, register_id=2, slug="rams", name="RAMS")
         n = _SAME_AS_MAX_COMPONENT + 1
+        for i in range(n):
+            register_id = 1 if i % 2 == 0 else 2
+            add_variable(
+                conn,
+                register_id=register_id,
+                var_id=900 + i,
+                name=f"Variable {i}",
+                slug=f"v{i}",
+            )
+        conn.commit()
 
         # Cross-register chain: even nodes in lisa, odd nodes in rams (so each
-        # edge is cross-register, the only kind same_as allows), all slug-anchored.
+        # edge is cross-register, the only kind same_as allows).
         def fqid(i: int) -> str:
             return f"scb/lisa/v{i}" if i % 2 == 0 else f"scb/rams/v{i}"
 

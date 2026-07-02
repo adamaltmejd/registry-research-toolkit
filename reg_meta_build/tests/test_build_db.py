@@ -1565,7 +1565,8 @@ class TestSameAsBuildIntegration:
             '[register."1"]\nslug = "testreg"\n'
             '[register."2"]\nslug = "otherreg"\n'
             '[register_variant."1.10"]\nslug = "individer"\n'
-            '[register_variant."2.20"]\nslug = "foretag"\n',
+            '[register_variant."2.20"]\nslug = "foretag"\n'
+            '[variable."1.100"]\nslug = "legacy-kon"\n',
             encoding="utf-8",
         )
         (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
@@ -1573,10 +1574,7 @@ class TestSameAsBuildIntegration:
     @staticmethod
     def _write_relations(tmp_path: Path) -> Path:
         """A curated `relations.toml` with one `type = "same_as"` edge from
-        TESTREG's real `kon` to a phantom slug `legacy-kon` (same_as is
-        slug-anchored — only provider+register must exist). Querying the phantom
-        under TESTREG misses directly and forces a BFS hop onto the real `kon`
-        row."""
+        TESTREG's real `kon` to the live synthetic `legacy-kon` slug."""
         path = tmp_path / "relations.toml"
         path.write_text(
             '[[edge]]\ntype = "same_as"\n'
@@ -1585,7 +1583,7 @@ class TestSameAsBuildIntegration:
         )
         return path
 
-    def test_end_to_end_resolves_via_same_as(
+    def test_end_to_end_exposes_same_as_edge(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         import reg_meta_build.db as _db
@@ -1618,17 +1616,13 @@ class TestSameAsBuildIntegration:
                 ("kon", "legacy-kon"),
                 ("legacy-kon", "kon"),
             ]
-            # Querying the phantom slug misses directly → BFS traverses to
-            # the real `kon` row. via_same_as carries the traversal path,
-            # confirming the build wired materialize_same_as into
-            # the resolver's data plane end-to-end.
-            r = Catalog(conn).resolve("scb/testreg/legacy-kon")
+            # The resolved live variable exposes the materialized same_as
+            # neighbor, confirming build_db wired materialize_same_as into the
+            # resolver's data plane end-to-end.
+            r = Catalog(conn).resolve("scb/testreg/kon")
             assert isinstance(r, ResolvedVariable)
-            assert r.via_same_as is not None
-            assert len(r.via_same_as) == 1
-            assert str(r.via_same_as[0]) == "scb/testreg/kon"
-            # Caller's FQID preserved on the returned record.
-            assert str(r.fqid) == "scb/testreg/legacy-kon"
+            assert [str(edge.fqid) for edge in r.same_as] == ["scb/testreg/legacy-kon"]
+            assert r.via_same_as is None
             # A2.5 longitudinal: the delivery column lives on the state, not the
             # (now-removed) per-edition binding.
             assert any(s.delivery_column_name == "Kon" for s in r.states)
