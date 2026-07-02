@@ -46,6 +46,7 @@ import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   committedPickerRows,
+  periodChangesWithStagedAdds,
   rowRegisterVariant,
   stagedRemoveForCommitted,
 } from "./staged_picker";
@@ -456,7 +457,10 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   projectStore.applyStagedDiff({
     adds,
     removes: payload.removes.map((r) => stagedRemoveForCommitted(r.committed)),
-    periodChange: payload.periodChanges,
+    periodChange: periodChangesWithStagedAdds(
+      payload.periodChanges,
+      candidates,
+    ),
   });
   applyOutcome = {
     added: payload.adds.length,

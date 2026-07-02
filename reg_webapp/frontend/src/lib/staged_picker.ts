@@ -1,5 +1,5 @@
 import type { PickerRepresentation } from "./catalog";
-import { periodFromWire, periodToWire } from "./period";
+import { mergePeriods, periodFromWire, periodToWire } from "./period";
 import type { Binding, Period, ProjectData, Source } from "./project_data";
 import type { StagedPeriodChange, StagedRemove } from "./project_store.svelte";
 
@@ -16,6 +16,11 @@ export interface PickerCommittedRow {
   representation: string | null;
   sourceName: string;
   sourcePeriod: Period;
+}
+
+export interface PickerAddPeriod {
+  registerVariant: string;
+  period: Period;
 }
 
 export function rowRegisterVariant(
@@ -142,4 +147,28 @@ export function stagedPeriodChanges(
     });
   }
   return [...changes.values()];
+}
+
+export function periodChangesWithStagedAdds(
+  changes: readonly StagedPeriodChange[],
+  adds: readonly PickerAddPeriod[],
+): StagedPeriodChange[] {
+  const addPeriods = new Map<string, Period>();
+  for (const add of adds) {
+    const current = addPeriods.get(add.registerVariant);
+    addPeriods.set(
+      add.registerVariant,
+      current === undefined ? add.period : mergePeriods(current, add.period),
+    );
+  }
+  return changes.map((change) => {
+    const addPeriod = addPeriods.get(change.registerVariant);
+    if (addPeriod === undefined) {
+      return change;
+    }
+    return {
+      ...change,
+      period: mergePeriods(change.period, addPeriod),
+    };
+  });
 }

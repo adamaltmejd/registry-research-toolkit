@@ -3,6 +3,7 @@ import type { PickerRepresentation } from "./catalog";
 import type { ProjectData } from "./project_data";
 import {
   committedPickerRows,
+  periodChangesWithStagedAdds,
   pickerRowKey,
   type StagedPickerBand,
 } from "./staged_picker";
@@ -114,5 +115,38 @@ describe("committedPickerRows", () => {
     expect(committed.get(pickerRowKey(b, rows[1]))).toEqual(
       expect.objectContaining({ representation: null }),
     );
+  });
+});
+
+describe("periodChangesWithStagedAdds", () => {
+  it("preserves same-variant staged add windows when a period change replaces the source period", () => {
+    expect(
+      periodChangesWithStagedAdds(
+        [
+          {
+            registerVariant: "scb/lisa/ind",
+            period: { from: 2012, to: 2014 },
+          },
+        ],
+        [
+          {
+            registerVariant: "scb/lisa/ind",
+            period: { from: 2018, to: 2020 },
+          },
+          {
+            registerVariant: "scb/lisa/arb",
+            period: 2020,
+          },
+        ],
+      ),
+    ).toEqual([
+      {
+        registerVariant: "scb/lisa/ind",
+        period: [
+          { from: 2012, to: 2014 },
+          { from: 2018, to: 2020 },
+        ],
+      },
+    ]);
   });
 });
