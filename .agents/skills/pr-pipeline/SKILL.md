@@ -10,6 +10,10 @@ description: >-
 
 # Registry PR Pipeline
 
+Only run when the user explicitly invokes this skill (or clearly asks you to run this
+pipeline). It opens PRs and records merge-gate evidence, but it does not merge — never
+auto-start it because a conversation merely resembles issue work.
+
 ## Scope
 
 Turn an issue, a lane, or a feature request into one or more tightly scoped PRs.
@@ -42,7 +46,8 @@ Agent-surface notes:
 ## Intake
 
 1. If the target is `next`, first run `plan-lanes`, pick the top coherent lane unless
-   there is a clear reason not to, and confirm non-trivial choices with the user.
+   there is a clear reason not to. The lanes are computed live, but you MUST confirm the
+   chosen lane with the human before opening any draft PRs (see Claim).
 2. Read issue bodies, comments, Relationships, the parent epic, blockers, linked PRs,
    repository guidance (`AGENTS.md`; `CLAUDE.md` is intentionally equivalent for agent
    surfaces that use it), relevant `<package>/DESIGN.md`, and affected code.
@@ -162,6 +167,12 @@ Run focused verification as the work evolves:
      report. Do not set the merge-gate status to `ready-to-merge` until that reviewer
      result is complete and PR-visible. Headless `bun` checks or separate manual
      screenshots do not substitute for the reviewer pass.
+   - When the rendered change depends on DB content not yet released (e.g. a
+     build-curation PR earlier in the lane), point the dev server at a scratch
+     `build-db` via
+     `REG_META_DB=<db_dir> reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>`
+     (see run-reg-webapp → "Verifying against unreleased DB content (custom DB)"). The
+     default preview will not show unreleased content.
 5. Re-review substantial fixes until the review converges.
 6. Update authored docs wherever the diff made them stale — including the design-spec
    prose and any token/symbol it names: package `DESIGN.md`, README/CLI examples,
@@ -290,4 +301,6 @@ filing. For multi-PR pipelines, report the intended merge order, but leave execu
 `chief-of-staff`. Default to fixing doc drift inline — it's part of this PR; record a
 follow-up only when the fix needs its own scoped change, never as an escape hatch for a
 one-liner. Before proposing a new issue, search open and closed issues with
-`gh issue list --state all --search "<keywords>"`.
+`gh issue list --state all --search "<keywords>"`. Do NOT file follow-up issues
+unprompted — list them and offer to file the ones the human picks; filing is the human's
+call.
