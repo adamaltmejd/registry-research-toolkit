@@ -613,6 +613,27 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
   });
 
+  it("does not clamp staged adds with a structurally invalid ?period", async () => {
+    router.navigate("/catalog/scb/lisa/kon?period=2020,2019");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Sni/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    expect(projectStore.draft?.sources[0]?.period).toEqual({
+      from: 2018,
+      to: 2020,
+    });
+  });
+
   // #902: a folded sequential RENAME commits `representation: null`, NOT the latest
   // column — the picker leads the row with the latest column (DINF86) for DISPLAY, but
   // pinning it over the union 1981–1995 window would break the earlier eras (DINF86

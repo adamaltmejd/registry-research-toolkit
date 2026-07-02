@@ -370,17 +370,18 @@ const committedRows = $derived(
   committedPickerRows(projectStore.draft, pickerBands),
 );
 
-/** The active period window to DIM against, as an inclusive year pair (a
- * `?period` wire wins, else the global study window), or null (no dimming). */
-const pickerWindow = $derived(
-  pickerWindowYears(params.period ?? null, windowStore.value),
-);
 const activePickerPeriod = $derived(
   params.period &&
     !narrowedError &&
     isStructurallyValidPeriodWire(params.period)
     ? params.period
     : null,
+);
+/** The active period window to DIM against, as an inclusive year pair (a
+ * structurally valid `?period` wire wins, else the global study window), or null
+ * (no dimming). */
+const pickerWindow = $derived(
+  pickerWindowYears(activePickerPeriod, windowStore.value),
 );
 
 /** The applied outcome (drives the inline confirmation). */
@@ -404,7 +405,7 @@ $effect(() => {
 
 function stagedAddCandidate(selection: PickerSelection) {
   const { band, row } = selection;
-  const addWindow = addWindowBounds(params.period ?? null, pickerWindow);
+  const addWindow = addWindowBounds(activePickerPeriod, pickerWindow);
   const addPeriod = rowAddPeriod(row, addWindow);
   return {
     selection,
