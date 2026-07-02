@@ -54,7 +54,7 @@ def _ready_pr(number=956, *, draft=False, head=HEAD, **overrides):
         "issues": [742],
         "head": head,
         "draft": draft,
-        "conflicting": False,
+        "mergeable": "MERGEABLE",  # gate PRs carry the verbatim tri-state
         "checks": "passing",
         "gate": {
             "state": "current-ready",
@@ -376,6 +376,37 @@ def test_conflicting_flip_changes_entry() -> None:
     )
     assert conflicting["conflicting"] is True
     assert ok != conflicting
+
+
+def _gate_raw_pr(*, mergeable, checks=None, status="present-only", **extra):
+    # A claimed PR that carries a merge-gate block (gate state != "absent") but is NOT
+    # current-ready, so summarize_pr does not fetch the Codex signal (no network).
+    body = (
+        f"Closes #742\n<!-- pr-pipeline-merge-gate -->\n"
+        f"- status: {status}\n- head: {HEAD}\n<!-- /pr-pipeline-merge-gate -->"
+    )
+    return _raw_pr(
+        mergeable=mergeable, checks=checks or [], closes_body=False, body=body, **extra
+    )
+
+
+def test_gate_pr_stores_verbatim_tristate_mergeability() -> None:
+    entry = cpf.summarize_pr(_gate_raw_pr(mergeable="UNKNOWN"), "owner/repo")
+    assert entry["gate"]["state"] != "absent"
+    assert entry["mergeable"] == "UNKNOWN"
+    assert "conflicting" not in entry  # gate PRs carry the tri-state, not the boolean
+
+
+def test_gate_pr_unknown_to_mergeable_wakes() -> None:
+    # A tick may defer a merge while mergeability is UNKNOWN; it must wake when GitHub
+    # resolves UNKNOWN→MERGEABLE. The verbatim tri-state makes that transition visible.
+    unknown = cpf.summarize_pr(_gate_raw_pr(mergeable="UNKNOWN"), "owner/repo")
+    resolved = cpf.summarize_pr(_gate_raw_pr(mergeable="MERGEABLE"), "owner/repo")
+
+    assert unknown != resolved  # entry moved → the snapshot fingerprint changes
+    before = _snapshot(prs=[unknown])
+    after = _snapshot(prs=[resolved])
+    assert "open PR state changed" in cpf.actionable_reasons(after, before)
 
 
 # --- unclaimed PRs -------------------------------------------------------------
@@ -735,11 +766,12 @@ def test_idle_first_run_bootstrap_on_version_mismatch(
     assert cpf.load_state(state) == snap  # re-baselined to the new shape
 
 
-def test_steady_state_probe_stages_candidate_without_writing_state(
+def test_idle_probe_without_drift_does_not_rewrite_state(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # With a live baseline, an idle probe MUST NOT touch the state file; it only stages the
-    # observed snapshot as a candidate for a later --commit.
+    # Fingerprint-equality idle probe: live state == baseline, so the auto-advance
+    # invariant must NOT rewrite the file (no spurious writes). It only stages the
+    # candidate.
     state = tmp_path / "state.json"
     baseline = _snapshot()
     cpf.write_state(state, baseline)
@@ -749,8 +781,82 @@ def test_steady_state_probe_stages_candidate_without_writing_state(
     rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
 
     assert rc == 0
-    assert state.read_text() == before  # state file untouched
+    assert state.read_text() == before  # state file untouched (fingerprints equal)
     assert cpf.load_state(cpf.candidate_file(state)) == baseline  # candidate staged
+
+
+def test_idle_probe_with_drift_advances_baseline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Idle follow-up probe whose live state drifted to a reason-free fingerprint: the
+    # invariant advances the baseline directly (safe — zero reasons, nothing to burn), so a
+    # later return to a previously-committed fingerprint is not suppressed forever.
+    state = tmp_path / "state.json"
+    baseline = _snapshot()  # remote == local_head, plan fresh, no PRs → idle
+    cpf.write_state(state, baseline)
+    # A reason-free drift: the plan_tick `basis` string is part of the fingerprint but is
+    # NOT evaluated by actionable_reasons (only plan exit/report are), so moving it shifts
+    # the fingerprint while zero actionable reasons fire.
+    drifted = _snapshot()
+    drifted["plan_tick"] = dict(drifted["plan_tick"], basis="drifted-basis")
+    drifted["fingerprint"] = cpf.snapshot_fingerprint(drifted)
+    assert drifted["fingerprint"] != baseline["fingerprint"]
+    _probe_env(monkeypatch, drifted)
+
+    rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
+
+    assert rc == 0  # idle
+    assert (
+        cpf.load_state(state) == drifted
+    )  # baseline advanced to the drifted fingerprint
+    assert "advanced idle" in capsys.readouterr().err
+
+
+def test_recurrence_after_idle_drift_still_wakes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # The Codex recurrence scenario end-to-end: wake at fp A → commit A → idle drift to a
+    # reason-free B advances the baseline → live state returns to exactly A → the probe
+    # WAKES again (not suppressed by the fingerprint-equality early return against A).
+    state = tmp_path / "state.json"
+    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+
+    # Baseline established at a benign idle fingerprint (idle bootstrap).
+    base = _snapshot()  # remote == local_head, plan fresh, no PRs → idle
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: base)
+    assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
+    capsys.readouterr()
+
+    # Probe wakes on a lane re-rank (fingerprint A) → commit A.
+    snap_a = _snapshot(
+        plan_exit=1,
+        plan_report="projection delta:\nno status changes\nlanes: stale (re-rank)",
+    )
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap_a)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+    fp_a = _probe_fingerprint(capsys)
+    _no_collect(monkeypatch)
+    assert (
+        cpf.main(["--no-canonical-check", "--commit", fp_a, "--state-file", str(state)])
+        == 0
+    )
+    assert cpf.load_state(state)["fingerprint"] == fp_a
+
+    # Idle drift to reason-free B (lanes repaired: plan fresh) → baseline advances to B.
+    snap_b = _snapshot()  # fresh plan, no PRs → idle; fingerprint differs from A
+    assert snap_b["fingerprint"] != fp_a
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap_b)
+    assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
+    assert cpf.load_state(state)["fingerprint"] == snap_b["fingerprint"]
+
+    # Wake condition recurs: live state returns to EXACTLY A. Because the baseline is now B,
+    # the fingerprint-equality early return does not fire, so the recurrence wakes.
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap_a)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
 
 
 # --- commit: fingerprint-bound, idempotent, never collects --------------------

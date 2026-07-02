@@ -5,18 +5,21 @@ This script is the first tool call of a scheduled chief-of-staff agent session: 
 checks the small set of repo/GitHub signals that can make a tick useful and, when the
 state is unchanged, lets the session stop immediately without spending tokens.
 
+Baseline-advance invariant: the probe auto-advances the baseline (writes the state file
+directly) whenever it observed NOTHING actionable and the observation moved — i.e. reasons
+empty AND (no baseline yet, or the fingerprint drifted). This is safe by construction: zero
+reasons means there are no events to burn. Observations WITH reasons advance the baseline
+ONLY via the fingerprint-bound `--commit`, so a crash before the end-of-tick commit
+re-fires. A steady-state probe whose fingerprint equals the baseline writes nothing.
+
 Two modes:
   cos_preflight.py             probe (default): read the committed baseline from the state
                                file, take a fresh snapshot, compare, and always stage the
-                               snapshot as a CANDIDATE next to the state file. On an IDLE
-                               first run (no baseline — missing, corrupt, or
-                               version-mismatched state — AND nothing to handle) it also
-                               bootstraps: writes the fresh snapshot DIRECTLY to the state
-                               file as the baseline. A WAKING first run stages only the
-                               candidate and lets the end-of-tick commit establish the
-                               baseline, so a crash mid-tick re-fires. A steady-state probe
-                               with a live baseline NEVER writes the state file — only the
-                               candidate.
+                               snapshot as a CANDIDATE next to the state file. Per the
+                               invariant above, a reason-free probe also advances the
+                               baseline directly (first-run bootstrap, or idle drift); a
+                               WAKING probe writes only the candidate and lets the
+                               end-of-tick commit establish the baseline.
   cos_preflight.py --commit F  promote the observed candidate (identified by the
                                fingerprint F the probe printed) to the state file via one
                                atomic rename and exit. No snapshot collection or network
@@ -295,15 +298,23 @@ def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any]:
         "base": raw.get("baseRefName"),
         "head": raw["headRefOid"],
         "draft": bool(raw.get("isDraft")),
-        # Only the CONFLICTING verdict is stable; GitHub's transient UNKNOWN↔MERGEABLE
-        # flapping would otherwise wake the chief on every recompute.
-        "conflicting": raw.get("mergeable") == "CONFLICTING",
         # Overall checks verdict only — the full per-check-run list would wake on every
         # individual check transition within one CI run.
         "checks": checks_verdict(raw.get("statusCheckRollup") or []),
         "gate": gate,
         "codex_signal": signal,
     }
+    if gate["state"] != "absent":
+        # PR carries a merge-gate block, so its mergeability IS load-bearing: a tick may
+        # have deferred the merge because mergeability was still UNKNOWN, and it must wake
+        # when GitHub resolves UNKNOWN→MERGEABLE. Store the verbatim tri-state. Flapping on
+        # gate PRs is rare and co-occurs with the remote_main wakes that recompute triggers.
+        summary["mergeable"] = raw.get("mergeable")
+    else:
+        # No gate block: mergeability isn't load-bearing, so keep only the stable
+        # CONFLICTING signal — GitHub's transient UNKNOWN↔MERGEABLE flapping would
+        # otherwise wake the chief on every recompute.
+        summary["conflicting"] = raw.get("mergeable") == "CONFLICTING"
     # A new review on an in-flight issue-closing PR is the chief's "send unblock
     # follow-up" trigger even before the gate is current-ready, so surface it here. This
     # is only a cheap change-detector for review ACTIVITY: a Codex clean verdict shaped as
@@ -594,22 +605,28 @@ def main(argv: list[str] | None = None) -> int:
         previous = load_state(args.state_file)
         snapshot = collect_snapshot(args.epic, args.pr_limit)
         reasons = actionable_reasons(snapshot, previous)
-        # Always stage the candidate — including on the bootstrap path — so a later
-        # `--commit <fp>` has the observed snapshot to promote; the fingerprint binding is
-        # what protects against promoting it out of order.
+        # Always stage the candidate — including on the auto-advance paths below — so a
+        # later `--commit <fp>` has the observed snapshot to promote; the fingerprint
+        # binding is what protects against promoting it out of order.
         write_state(candidate_file(args.state_file), snapshot)
-        if previous is None and not reasons:
-            # Idle first run (no baseline: missing, corrupt, or version-mismatched state,
-            # AND nothing to handle). Baseline directly so steady state can begin without
-            # spending a tick — there are no events to burn. A WAKING first run does NOT
-            # baseline here: it stages the candidate only and lets the end-of-tick
-            # `--commit <fp>` establish the baseline, so a crash before that commit re-fires
-            # next probe instead of going silently idle (at-least-once on the bootstrap
-            # paths too).
+        # Invariant: the probe auto-advances the baseline whenever it observed NOTHING
+        # actionable (reasons empty) and the observation moved (no baseline yet, or a
+        # fingerprint drift). This is safe by construction — zero reasons means there are
+        # no events to burn — and it closes two holes: (1) an idle first run bootstraps the
+        # baseline so steady state can begin; (2) an idle follow-up probe whose live state
+        # drifted to a reason-free fingerprint records that drift, so a later return to a
+        # previously-committed fingerprint is not suppressed forever by actionable_reasons'
+        # fingerprint-equality early return. A WAKING probe never writes the state file
+        # here: it stages the candidate only and advances the baseline exclusively via the
+        # fingerprint-bound `--commit <fp>`, so a crash before that commit re-fires.
+        if not reasons and (
+            previous is None or previous.get("fingerprint") != snapshot["fingerprint"]
+        ):
             write_state(args.state_file, snapshot)
+            label = "bootstrap: wrote initial" if previous is None else "advanced idle"
             print(
-                f"bootstrap: wrote initial cos-preflight baseline "
-                f"{snapshot['fingerprint'][:12]} to {args.state_file}",
+                f"{label} cos-preflight baseline {snapshot['fingerprint'][:12]} "
+                f"to {args.state_file}",
                 file=sys.stderr,
             )
     except SystemExit as exc:

@@ -72,14 +72,17 @@ uv run --no-project python scripts/cos_preflight.py
 - **The session's FIRST action each tick is the preflight probe.** It compares live
   repo/GitHub state against the last committed baseline in
   `.git/cos-preflight-state.json` and stages what it observed as a candidate next to
-  that file. A steady-state probe with an existing baseline never writes the baseline
-  itself. On a first run with no baseline it bootstraps the baseline directly ONLY when
-  the tick is idle (nothing to handle); a first run that WAKES stages the candidate only
-  and lets the end-of-tick commit establish the baseline, so a crash mid-tick re-fires
-  rather than silently going idle. The probe's stdout JSON includes a `fingerprint`
-  field — capture it; `--commit` needs it. The probe fires only when state moved enough
-  to justify a tick: lane drift, issue-projection movement, `origin/main` movement, or
-  relevant issue-closing PR / merge-gate state changes.
+  that file. Baseline-advance invariant: the probe auto-advances the baseline (writes
+  the state file directly) whenever it observed NOTHING actionable and the observation
+  moved — reasons empty AND (no baseline yet, or the fingerprint drifted). This is safe
+  because zero reasons means there are no events to burn, and it keeps an idle drift
+  from suppressing a later recurrence. An observation WITH reasons (a WAKING probe)
+  never writes the state file itself; its baseline advances only via the
+  fingerprint-bound `--commit`, so a crash before the end-of-tick commit re-fires. A
+  probe whose fingerprint equals the baseline writes nothing. The probe's stdout JSON
+  includes a `fingerprint` field — capture it; `--commit` needs it. The probe fires only
+  when state moved enough to justify a tick: lane drift, issue-projection movement,
+  `origin/main` movement, or relevant issue-closing PR / merge-gate state changes.
 
 - **Exit `0` (idle):** stop immediately with `DONT_NOTIFY` reason `idle`, spending
   nothing beyond that one tool call.
