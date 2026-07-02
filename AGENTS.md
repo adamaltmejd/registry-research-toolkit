@@ -416,7 +416,8 @@ handoff, block automerge and ask the user.
   `autoPort` + `dev.sh preview`-backed, so it's collision-free across sessions and
   serves the worktree's own code). Attach or comment the `reg-webapp-design-reviewer`
   result with screenshot/render evidence as PR-visible proof, the same way a build PR
-  attaches its `build-db`. Use `frontend-design` when authoring new UI.
+  attaches its `build-db`. Use the repo-local `reg-webapp-frontend-design` skill when
+  authoring new UI.
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip and pass that SHA to `gh pr merge --match-head-commit`; after merging,
   fetch `origin main`, fast-forward the local main checkout with

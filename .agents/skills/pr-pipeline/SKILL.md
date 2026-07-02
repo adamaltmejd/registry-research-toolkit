@@ -38,7 +38,8 @@ Agent-surface notes:
   visual conclusions as evidence. Manual screenshots outside that reviewer pass do not
   satisfy the visual gate.
 - Codex skills are invoked by their skill names, not by Claude slash-command syntax. For
-  new UI authoring, use the repo-local `frontend-design` skill before building.
+  new UI authoring, use the repo-local `reg-webapp-frontend-design` skill before
+  building.
 - Do not merge. The `chief-of-staff` skill owns routine merge decisions and execution.
   Finish by marking PRs ready, recording current-head merge-gate evidence, and reporting
   the handoff state.

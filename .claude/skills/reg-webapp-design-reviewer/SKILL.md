@@ -5,16 +5,16 @@ description: >-
   rendered-output PR gates, pr-pipeline visual verification, screenshot-based layout
   review, responsive checks, accessibility visual checks, and UI regression review after
   implementation. This is the post-implementation reviewer counterpart to
-  `frontend-design` and is deliberately named to avoid generic `web-design-reviewer`
-  skills.
+  `reg-webapp-frontend-design` and is deliberately named to avoid generic
+  `web-design-reviewer` skills.
 ---
 
 # Reg Webapp Design Reviewer
 
 Review rendered `reg_webapp` changes against the Registry Research Toolkit visual and
 accessibility contract. This is a post-implementation reviewer skill, not an authoring
-or design-planning skill. Use `frontend-design` before building new UI; use this skill
-after implementation for the rendered visual gate.
+or design-planning skill. Use `reg-webapp-frontend-design` before building new UI; use
+this skill after implementation for the rendered visual gate.
 
 ## Registry PR Gate Contract
 

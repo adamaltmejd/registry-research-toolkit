@@ -214,12 +214,12 @@ without inheriting the author's visual conclusions. Route findings like
 surface. Do not mark the visual gate ready-to-merge until that reviewer result is
 complete and PR-visible; manual screenshots outside the reviewer pass are not a
 substitute. Authoring new UI is the *implementer's* job (its prompt routes new-UI work
-through `frontend-design`), so here you review with `/reg-webapp-design-reviewer`, not
-`/frontend-design` or the generic `/web-design-reviewer`. When the rendered change
-depends on DB content not yet released (e.g. a build-curation PR earlier in the lane),
-point the dev server at a scratch `build-db` via
-`REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp → "Verifying against
-unreleased DB content (custom DB)").
+through `reg-webapp-frontend-design`), so here you review with
+`/reg-webapp-design-reviewer`, not `/reg-webapp-frontend-design` or the generic
+`/web-design-reviewer`. When the rendered change depends on DB content not yet released
+(e.g. a build-curation PR earlier in the lane), point the dev server at a scratch
+`build-db` via `REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp →
+"Verifying against unreleased DB content (custom DB)").
 
 **D · Docs.** Only if the diff drifted authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
