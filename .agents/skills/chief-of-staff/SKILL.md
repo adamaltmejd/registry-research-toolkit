@@ -97,8 +97,10 @@ session; the tiers only change WHEN a tick fires.
 
 Caveats: both tiers are session-scoped — a dead session kills the watcher and its timer
 together, which is exactly why the scheduled heartbeat must stay armed (it revives the
-loop from outside). The watcher is a local file poll on the single-maintainer machine's
-gate store; it makes no wake decisions and the preflight logic is unchanged.
+loop from outside). If the surface reports the watcher process exited, re-arm it on the
+next wake — or, if arming keeps failing, revert the heartbeat to 15-30 minutes. The
+watcher is a local file poll on the single-maintainer machine's gate store; it makes no
+wake decisions and the preflight logic is unchanged.
 
 ### In-session minimal tick
 

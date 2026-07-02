@@ -67,6 +67,9 @@ def scan_ready(gate_root: Path) -> dict[int, tuple[str, str]]:
             continue
         if gate.get("status") != "ready-to-merge":
             continue
+        # A ready gate missing head/updated is malformed, but still emits (as "None"):
+        # waking the tick to judge the malformed entry beats silently absorbing a
+        # handoff, and the dedupe key stays stable either way.
         ready[pr] = (str(gate.get("head")), str(gate.get("updated")))
     return ready
 
