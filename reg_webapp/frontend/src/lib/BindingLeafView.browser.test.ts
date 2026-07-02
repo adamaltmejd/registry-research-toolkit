@@ -541,7 +541,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(projectStore.draft?.sources).toHaveLength(0);
   });
 
-  it("applies an explicit period change through the same staged footer", async () => {
+  it("does not stage source period replacements from a partial leaf view", async () => {
     projectStore.applyStagedDiff({
       adds: [
         {
@@ -569,12 +569,14 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    await expect.element(page.getByText("1 period change")).toBeVisible();
-    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Apply staged changes" }))
+      .toBeDisabled();
 
     expect(projectStore.draft?.sources[0]?.period).toEqual({
-      from: 2012,
-      to: 2014,
+      from: 2010,
+      to: 2015,
     });
   });
 

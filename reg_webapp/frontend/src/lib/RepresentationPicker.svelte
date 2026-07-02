@@ -15,13 +15,13 @@ import {
   rowFacet,
   yearOf,
 } from "./catalog";
+import type { StagedPeriodChange } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import {
   nullBindingCommittedRowKeys,
   type PickerCommittedRow,
   pickerRowKey,
   type StagedPickerBand,
-  stagedPeriodChanges,
 } from "./staged_picker";
 import { Button, Tag } from "./ui";
 
@@ -117,7 +117,7 @@ export interface PickerRemoval {
 export interface PickerApplyPayload {
   adds: PickerSelection[];
   removes: PickerRemoval[];
-  periodChanges: ReturnType<typeof stagedPeriodChanges>;
+  periodChanges: StagedPeriodChange[];
 }
 
 type PickerApplyResult = boolean | undefined;
@@ -153,8 +153,9 @@ let {
   canAdd: boolean;
   /** Rows already present in the active project, keyed by `pickerRowKey`. */
   committedRows?: ReadonlyMap<string, PickerCommittedRow>;
-  /** The explicit `?period` value. When set and different from committed source
-   * periods, Apply stages source-period replacements in the same atomic diff. */
+  /** The explicit `?period` value. The picker uses it only as parent-supplied
+   * context; partial leaf/group views must not stage source-level period
+   * replacements because a source period applies to every binding on the source. */
   activePeriod?: string | null;
   /** The `band.key` of a band to visually MARK as the deep-link focus (#678): the
    * group page passes the `?member=` hint's band so a `?member=<slug>` deep link
@@ -463,9 +464,10 @@ const stagedRemoves = $derived.by((): PickerRemoval[] => {
   }
   return out;
 });
-const periodChanges = $derived(
-  stagedPeriodChanges(committedRows.values(), stagedRemoveKeys, activePeriod),
-);
+const periodChanges = $derived.by((): StagedPeriodChange[] => {
+  void activePeriod;
+  return [];
+});
 const selectedCount = $derived(stagedAdds.length);
 const removeCount = $derived(stagedRemoves.length);
 const periodChangeCount = $derived(periodChanges.length);

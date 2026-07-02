@@ -332,7 +332,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect.element(page.getByText("No staged changes")).toBeVisible();
   });
 
-  it("does not show Reset for a period-only staged change", async () => {
+  it("does not stage period-only source changes from a partial picker", async () => {
     const onapply = vi.fn();
     const band = multiAxisBand();
     const committedRows = committedRowsFor(band, band.rows[0]);
@@ -345,16 +345,14 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       onapply,
     });
 
-    await expect.element(page.getByText("1 period change")).toBeVisible();
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
     await expect
       .element(page.getByRole("button", { name: "Reset" }))
       .not.toBeInTheDocument();
     const apply = page.getByRole("button", { name: "Apply staged changes" });
-    await expect.element(apply).toBeEnabled();
-    await apply.click();
+    await expect.element(apply).toBeDisabled();
 
-    expect(onapply).toHaveBeenCalledTimes(1);
-    expect(onapply.mock.calls[0][0].periodChanges).toHaveLength(1);
+    expect(onapply).not.toHaveBeenCalled();
   });
 
   it("allows remove-only applies before add seed context is ready", async () => {

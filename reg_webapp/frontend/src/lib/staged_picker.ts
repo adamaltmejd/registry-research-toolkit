@@ -2,7 +2,6 @@ import type { PickerRepresentation } from "./catalog";
 import {
   type PeriodBounds,
   periodCoverageUnion,
-  periodFromWire,
   periodToWire,
   periodWireBounds,
 } from "./period";
@@ -228,35 +227,6 @@ export function nullBindingCommittedRowKeys(
     }
   }
   return keys.length > 0 ? keys : [target.key];
-}
-
-export function stagedPeriodChanges(
-  committed: Iterable<PickerCommittedRow>,
-  removedKeys: ReadonlySet<string>,
-  periodWire: string | null,
-): StagedPeriodChange[] {
-  if (!periodWire) {
-    return [];
-  }
-  const nextPeriod = periodFromWire(periodWire);
-  const nextWire = periodToWire(nextPeriod);
-  if (!nextWire) {
-    return [];
-  }
-  const changes = new Map<string, StagedPeriodChange>();
-  for (const row of committed) {
-    if (removedKeys.has(row.key)) {
-      continue;
-    }
-    if (periodToWire(row.sourcePeriod) === nextWire) {
-      continue;
-    }
-    changes.set(row.registerVariant, {
-      registerVariant: row.registerVariant,
-      period: nextPeriod,
-    });
-  }
-  return [...changes.values()];
 }
 
 export function periodChangesWithStagedAdds(
