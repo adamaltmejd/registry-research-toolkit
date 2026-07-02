@@ -25,6 +25,7 @@ import {
   isStructurallyValidPeriodWire,
   type PeriodGrain,
   periodFromWire,
+  periodToWire,
 } from "./period";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -37,8 +38,10 @@ import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   committedPickerRows,
+  finalSourcePeriodsForStagedAdds,
   periodChangesWithStagedAdds,
   rowRegisterVariant,
+  sourcePeriodsFromDraft,
   stagedRemoveForCommitted,
 } from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
@@ -591,13 +594,16 @@ function stagedAddCandidate(selection: PickerSelection) {
   };
 }
 
-async function stagedAdd(candidate: ReturnType<typeof stagedAddCandidate>) {
+async function stagedAdd(
+  candidate: ReturnType<typeof stagedAddCandidate>,
+  resolvePeriodWire: string | null,
+) {
   const { band, row } = candidate.selection;
   let resolution: BindingResolution;
   try {
     resolution = await resolveBindingAt(
       band.key,
-      candidate.periodWire,
+      resolvePeriodWire,
       row.variant,
     );
   } catch {
@@ -631,7 +637,21 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   }
   const target = projectStore.draft;
   const candidates = payload.adds.map(stagedAddCandidate);
-  const adds = await Promise.all(candidates.map(stagedAdd));
+  const finalPeriods = finalSourcePeriodsForStagedAdds(
+    sourcePeriodsFromDraft(target),
+    payload.periodChanges,
+    candidates,
+  );
+  const adds = await Promise.all(
+    candidates.map((candidate) =>
+      stagedAdd(
+        candidate,
+        periodToWire(
+          finalPeriods.get(candidate.registerVariant) ?? candidate.period,
+        ),
+      ),
+    ),
+  );
   if (projectStore.draft !== target) {
     return false;
   }
@@ -732,6 +752,11 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         activePeriod={activePickerPeriod}
         {focusKey}
         onapply={applyStaged}
+        onstagechange={(hasDiff) => {
+          if (hasDiff) {
+            applyOutcome = null;
+          }
+        }}
       />
     {/if}
 

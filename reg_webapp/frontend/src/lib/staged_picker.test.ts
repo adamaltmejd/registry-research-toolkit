@@ -3,6 +3,7 @@ import type { PickerRepresentation } from "./catalog";
 import type { ProjectData } from "./project_data";
 import {
   committedPickerRows,
+  finalSourcePeriodsForStagedAdds,
   nullBindingCommittedRowKeys,
   periodChangesWithStagedAdds,
   pickerRowKey,
@@ -275,6 +276,56 @@ describe("periodChangesWithStagedAdds", () => {
         period: "_default",
       },
     ]);
+  });
+});
+
+describe("finalSourcePeriodsForStagedAdds", () => {
+  it("resolves add bindings against the source period after merge/replacement", () => {
+    const periods = finalSourcePeriodsForStagedAdds(
+      [
+        {
+          registerVariant: "scb/lisa/ind",
+          period: 2000,
+        },
+      ],
+      [],
+      [
+        {
+          registerVariant: "scb/lisa/ind",
+          period: { from: 2010, to: 2015 },
+        },
+      ],
+    );
+
+    expect(periods.get("scb/lisa/ind")).toEqual([
+      2000,
+      { from: 2010, to: 2015 },
+    ]);
+  });
+
+  it("lets a same-batch period replacement define the final source period", () => {
+    const periods = finalSourcePeriodsForStagedAdds(
+      [
+        {
+          registerVariant: "scb/lisa/ind",
+          period: 2000,
+        },
+      ],
+      [
+        {
+          registerVariant: "scb/lisa/ind",
+          period: "_default",
+        },
+      ],
+      [
+        {
+          registerVariant: "scb/lisa/ind",
+          period: { from: 2010, to: 2015 },
+        },
+      ],
+    );
+
+    expect(periods.get("scb/lisa/ind")).toBe("_default");
   });
 });
 

@@ -132,6 +132,7 @@ let {
   activePeriod = null,
   focusKey = null,
   onapply,
+  onstagechange,
 }: {
   /** The variables, in render order. One element for the leaf; one per member for
    * the group page. */
@@ -166,6 +167,9 @@ let {
   onapply: (
     payload: PickerApplyPayload,
   ) => PickerApplyResult | Promise<PickerApplyResult>;
+  /** Notify the host when a user starts a new staged diff, so page-level applied
+   * confirmations do not sit beside conflicting staged status. */
+  onstagechange?: (hasDiff: boolean) => void;
 } = $props();
 
 /** The local staged diff. A key in `stagedAddKeys` means an uncommitted row will be
@@ -468,6 +472,12 @@ const periodChangeCount = $derived(periodChanges.length);
 const diffCount = $derived(selectedCount + removeCount + periodChangeCount);
 const rowDiffCount = $derived(selectedCount + removeCount);
 const canApply = $derived(diffCount > 0 && (selectedCount === 0 || canAdd));
+
+$effect(() => {
+  if (diffCount > 0) {
+    onstagechange?.(true);
+  }
+});
 
 async function commit(): Promise<void> {
   if (!canApply || applying) {

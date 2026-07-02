@@ -370,7 +370,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     );
   });
 
-  it("resolves a staged add against the picked row period, then merges the source period", async () => {
+  it("resolves a staged add against the final merged source period", async () => {
     projectStore.applyStagedDiff({
       adds: [
         {
@@ -407,8 +407,8 @@ describe("BindingLeafView representation picker (#678)", () => {
     await page.getByRole("button", { name: "Apply staged changes" }).click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(periods).toContain("2010..2015");
-    expect(periods).not.toContain("2000,2010..2015");
+    expect(periods).toContain("2000,2010..2015");
+    expect(periods).not.toContain("2010..2015");
     expect(projectStore.draft?.sources[0]).toEqual(
       expect.objectContaining({
         period: [2000, { from: 2010, to: 2015 }],
@@ -421,6 +421,40 @@ describe("BindingLeafView representation picker (#678)", () => {
         ]),
       }),
     );
+  });
+
+  it("clears the previous applied confirmation when a new staged diff starts", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResponse([
+        state({
+          variant: "individer",
+          delivery_column_name: "Kon",
+          data_type: "int",
+        }),
+      ]),
+    );
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await vi.waitFor(() => {
+      expect(document.querySelector(".add-confirm")?.textContent).toContain(
+        "+1 column",
+      );
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+
+    await expect.element(page.getByText("-1 column")).toBeVisible();
+    await vi.waitFor(() => {
+      expect(document.querySelector(".add-confirm")).toBeNull();
+    });
   });
 
   it("keeps staged keys visible when a draft edit makes async apply stale", async () => {

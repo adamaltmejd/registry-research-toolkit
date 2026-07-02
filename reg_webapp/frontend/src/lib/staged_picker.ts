@@ -29,6 +29,11 @@ export interface PickerAddPeriod {
   period: Period;
 }
 
+export interface PickerSourcePeriod {
+  registerVariant: string;
+  period: Period;
+}
+
 export function rowRegisterVariant(
   band: StagedPickerBand,
   row: PickerRepresentation,
@@ -180,6 +185,20 @@ export function committedPickerRows(
   return committed;
 }
 
+export function sourcePeriodsFromDraft(
+  draft: ProjectData | null,
+): PickerSourcePeriod[] {
+  const out: PickerSourcePeriod[] = [];
+  const sources: unknown[] = Array.isArray(draft?.sources) ? draft.sources : [];
+  for (const source of sources) {
+    const registerVariant = sourceRegisterVariant(source);
+    if (registerVariant) {
+      out.push({ registerVariant, period: sourcePeriod(source) });
+    }
+  }
+  return out;
+}
+
 export function stagedRemoveForCommitted(
   committed: PickerCommittedRow,
 ): StagedRemove {
@@ -266,6 +285,28 @@ export function periodChangesWithStagedAdds(
       period: mergePeriods(change.period, addPeriod),
     };
   });
+}
+
+export function finalSourcePeriodsForStagedAdds(
+  existing: Iterable<PickerSourcePeriod>,
+  changes: readonly StagedPeriodChange[],
+  adds: readonly PickerAddPeriod[],
+): Map<string, Period> {
+  const periods = new Map<string, Period>();
+  for (const source of existing) {
+    periods.set(source.registerVariant, source.period);
+  }
+  for (const add of adds) {
+    const current = periods.get(add.registerVariant);
+    periods.set(
+      add.registerVariant,
+      current === undefined ? add.period : mergePeriods(current, add.period),
+    );
+  }
+  for (const change of periodChangesWithStagedAdds(changes, adds)) {
+    periods.set(change.registerVariant, change.period);
+  }
+  return periods;
 }
 
 function isYearMergeablePeriod(period: Period): boolean {
