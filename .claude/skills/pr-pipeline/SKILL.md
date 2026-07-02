@@ -130,6 +130,17 @@ pick a colliding issue (see CLAUDE.md "Marking work in-flight"). If a new PR bec
 necessary mid-flight, open its draft the moment you know. Each PR's draft is opened in
 its Step A below; for a multi-PR lane, do all the known ones first.
 
+**Register the pipeline slot** at the same moment: write `pipeline-slots/<slug>.json`
+(`$XDG_STATE_HOME/registry-research-toolkit` root, default `~/.local/state/...`)
+atomically (temp file + rename), where `<slug>` is this pipeline's worktree name, with
+`{"slot": "<slug>", "issues": [<lane issues>], "prs": [<lane PR numbers>], "surface": "claude"}`.
+This is the machine-local concurrency ledger (max 3 parallel pipelines) that the
+chief-of-staff's watcher gates dispatch on; the `slot` field must match the filename
+stem or readers treat the file as absent. Update the file (atomically) as new PRs join
+the lane. Never release the slot yourself — the chief-of-staff moves it to
+`pipeline-slots/done/` when the lane's PRs are all merged/closed; a pipeline that
+self-releases at handoff would free budget its unmerged work still occupies.
+
 **A · Implement.** Branch off the correct remote base: `base_ref="main"` for independent
 work, or the predecessor branch name for a stacked successor. Run
 `git fetch origin "$base_ref:refs/remotes/origin/$base_ref" && git checkout -b s/<slug> "origin/$base_ref"`

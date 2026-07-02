@@ -40,59 +40,65 @@ contexts.
   active status. If it persisted as a detached/cron-style or paused job instead, report
   that exact state and stop rather than leaving a mis-wired schedule running.
 
-### Two-tier wake
+### Deterministic watcher
 
-The wake path has two tiers. Both fire the SAME tick — the preflight
-probe/baseline/`--commit` contract below is identical regardless of which tier woke the
-session; the tiers only change WHEN a tick fires.
+All wake cadence lives in one deterministic script, `scripts/cos_watch.py`; the agent
+never wakes idle. It makes no wake DECISIONS — the tick below is identical regardless of
+which emission woke the session; the watcher only changes WHEN a tick fires. Arm it ONCE
+per session, not per tick: first call `TaskList` and skip arming if a cos-watch monitor
+is already running; otherwise arm exactly one:
 
-- **Tier 1 — merge-gate watcher (event-driven merges).** The highest-value event — a
-  `/pr-pipeline` handoff writing `status: ready-to-merge` into the local gate store — is
-  a local file write, so it wakes the loop within seconds instead of waiting out the
-  heartbeat. When the loop is self-paced (`/loop` dynamic mode), arm the watcher ONCE
-  per session, not per tick: first call `TaskList` and skip arming if a gate-watch
-  monitor is already running; otherwise arm exactly one:
+```text
+Monitor({
+  command: "uv run --no-project python scripts/cos_watch.py",
+  description: "chief-of-staff wake watch",
+  persistent: true,
+  timeout_ms: 60000   // schema-required; ignored when persistent
+})
+```
 
-  ```text
-  Monitor({
-    command: "uv run --no-project python scripts/cos_gate_watch.py",
-    description: "merge-gate ready watch",
-    persistent: true,
-    timeout_ms: 60000   // schema-required; ignored when persistent
-  })
-  ```
+It runs two tiers in one loop (both stores live under
+`$XDG_STATE_HOME/registry-research-toolkit`, default `~/.local/state/...`):
 
-  The watcher polls the gate store (`merge-gates/pr-<N>/gate.json` under
-  `$XDG_STATE_HOME/registry-research-toolkit`, default `~/.local/state/...`) every
-  \~20s, locally with no network calls, and emits one line —
-  `ready gate: pr=<N> head=<sha12> updated=<iso>` — only when a gate BECOMES
-  ready-to-merge: a new handoff, a re-verification (`updated` bump), or a new `head`.
-  Steady-state ready gates, `status: blocked`, evidence-file writes, and self-serve
-  `build_db` running stamps never emit, so the watcher cannot thrash the loop; those
-  signals stay on the Tier-2 poll. On a watcher event, run a normal tick — starting with
-  the preflight probe, exactly as below — then re-arm the ScheduleWakeup fallback.
+- **Fast tier (\~20s, local, no network):** scans `merge-gates/pr-<N>/gate.json` and
+  emits `ready gate: pr=<N> head=<sha12> updated=<iso>` only when a gate BECOMES
+  ready-to-merge (new handoff, `updated` re-verification bump, or new `head`) — the
+  merge path wakes within seconds of a `/pr-pipeline` handoff. It also scans the
+  pipeline-slot ledger (`pipeline-slots/<slug>.json`, see Pipeline slots below) and
+  emits `slot freed: <slug>; busy <k>/<max>` transitions, one
+  `dispatch: <n> slot(s) free; recommend next pr-pipeline lanes` line when a freed slot
+  leaves the ledger below budget, and a once-per-onset `stale slot: <slug>; ...` line
+  for a slot file untouched for 24h. Steady-state ready gates, `status: blocked`,
+  evidence writes, slot claims, and self-serve `build_db` running stamps never emit —
+  the watcher cannot thrash the loop.
+- **Slow tier (\~10 min, remote):** runs the `cos_preflight.py` probe as a subprocess
+  and emits `wake: <reasons>` when it fires (exit 10) — remote GitHub drift, lanes
+  needing re-rank/re-stamp, issue-projection movement, `origin/main` movement. An idle
+  probe (exit 0) emits nothing, so idle costs zero agent turns. A probe tool failure
+  emits `preflight error (exit <rc>): ...` — investigate it; never treat watcher silence
+  plus an erroring probe as "all quiet". Exit-10 emissions are deliberately not deduped:
+  the baseline only advances when a tick commits, so a repeat means the events are
+  genuinely still unhandled.
 
-- **Tier 2 — slow hygiene poll (fallback heartbeat).** With the gate watcher armed,
-  stretch the ScheduleWakeup fallback to \~2700-3600s. This tier catches everything the
-  watcher deliberately ignores: remote GitHub drift (new PRs, CI results, Codex
-  verdicts, issue/label edits, `origin/main` movement), blocked gates, and in-flight
-  self-serve builds. It is explicitly NOT the merge path — merges no longer wait on it.
-  If arming the watcher failed, keep the heartbeat at the original 15-30 minutes; it is
-  then the only wake path, including for merges.
+On any emission, run a normal tick — starting with your own preflight probe, exactly as
+below. Do not schedule polling wakeups on top of the watcher; keep at most one long
+ScheduleWakeup (\~3600s) as a dead-monitor safety net, and on each wake re-arm it and
+verify (TaskList) the monitor is still alive — if the monitor reports the watcher
+process exited, re-arm the monitor; if arming keeps failing, fall back to a 15-30 min
+heartbeat, which is then the only wake path, including for merges.
 
-Caveats: both tiers are session-scoped — a dead session kills the watcher and the timer
-together, which is exactly why the ScheduleWakeup fallback must be re-armed on every
-wake (a fixed-cadence `/loop` or scheduled heartbeat revives the loop from outside). If
-the monitor reports the watcher process exited, re-arm it on that wake — or, if arming
-keeps failing, revert the heartbeat to 15-30 minutes. The watcher is a local file poll
-on the single-maintainer machine's gate store; it makes no wake decisions and the
-preflight logic is unchanged.
+Caveats: monitor and safety net are session-scoped — a dead session kills both, which is
+why an external fixed-cadence `/loop` or scheduled heartbeat is what revives the loop
+from outside. The watcher runs on the single-maintainer machine and must run from the
+canonical checkout (the probe verifies this itself; a wrong cwd surfaces as a
+`preflight error` emission). The preflight probe/baseline/`--commit` contract is
+unchanged.
 
 ### In-session minimal tick
 
-There is no external wake wrapper. A wake — a Tier-1 gate-watch event or the Tier-2
-heartbeat — resumes the one chief-of-staff session, and a deterministic preflight
-decides whether the model actually does any work that tick:
+There is no external wake wrapper. A watcher emission (or the safety-net heartbeat)
+resumes the one chief-of-staff session, and a deterministic preflight decides whether
+the model actually does any work that tick:
 
 ```sh
 uv run --no-project python scripts/cos_preflight.py
@@ -269,6 +275,32 @@ For each merged PR, summarize what was added and where to see it:
 - If a route is plausible but unverified, mark it as unverified rather than presenting
   it as confirmed. Never invent catalog FQIDs, query terms, or docs identifiers.
 
+## Pipeline slots
+
+The pipeline-slot ledger is the machine-local concurrency budget: at most **3** pipeline
+agents (Claude or Codex) run in parallel. One file per running pipeline at
+`pipeline-slots/<slug>.json` (`$XDG_STATE_HOME/registry-research-toolkit` root, default
+`~/.local/state/...`), written atomically by `/pr-pipeline` at lane claim with
+`{"slot": "<slug>", "issues": [...], "prs": [...], "surface": "claude"|"codex", ...}`. A
+file whose `slot` field disagrees with its filename stem is absent (same self-describing
+rule as `gate.json`). The ledger answers "how many agents are busy" — it does NOT
+replace the draft-PR `Closes #N` claim, which stays the per-issue in-flight marker that
+sequencing consumes.
+
+- **Release at merge, and only at merge:** when every PR listed in a slot is merged or
+  closed, move the slot file to `pipeline-slots/done/<slug>.json` in the same breath as
+  archiving the PR's gate directory. Never release a slot for a lane that still has an
+  open PR, and never release one just because the pipeline handed off — unmerged work
+  still occupies budget by design.
+- **Stale slots** (the watcher's `stale slot:` emission, or a slot whose listed PRs are
+  all merged/closed but the file lingers): a slot whose PRs are all merged/closed is
+  mechanical cleanup — release it. A slot with no PR and no file update for a day needs
+  adjudication: check whether the pipeline session/worktree still exists and ask the
+  user rather than silently freeing budget an active agent may still be using.
+- Registering a 4th slot is a deliberate human override, not an error — the ledger
+  reflects reality; the watcher simply won't emit `dispatch:` until busy drops below
+  budget.
+
 ## Automerge
 
 Merge only on the current head and only when every item passes:
@@ -322,8 +354,11 @@ After each merge, fetch `origin main`, fast-forward the local main checkout with
 `main`, not merely that GitHub reports a merge commit. Then move the merged PR's gate
 directory to `merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so
 this archive is the audit trail if the merge later shows a regression. Prune (delete)
-gate directories whose PR closed without merging. For a stack, re-check the next PR's
-head, checks, bot signal, mergeability, evidence, and gate entry before merging it.
+gate directories whose PR closed without merging. In the same breath, release the
+pipeline slot whose `prs` are now all merged/closed (see Pipeline slots) — that freed
+slot is what triggers the watcher's next `dispatch:` recommendation. For a stack,
+re-check the next PR's head, checks, bot signal, mergeability, evidence, and gate entry
+before merging it.
 
 ## Self-serve build-db verification
 
@@ -447,7 +482,9 @@ resolve contradictory live signals.
 
 - Do not recommend blocked, parked, held, pending-release, already claimed, or
   insufficiently described work.
-- Keep active concurrency small: default to 2-3 independent lanes maximum, and only one
+- The concurrency budget is the pipeline-slot ledger (see Pipeline slots): recommend at
+  most `3 - busy` new lanes, and none while the ledger shows 3 busy — the next
+  recommendation follows the merge that frees a slot. Within that budget, keep only one
   high-cost or build-affecting lane at a time.
 - Avoid overlapping `reg_meta_build` / build-db work while another open pipeline touches
   build, input-data, curation, or release surfaces.

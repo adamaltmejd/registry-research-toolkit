@@ -94,6 +94,18 @@ branch onto that finalized predecessor branch and push the new successor head.
 If the user asked only for local implementation and not PR creation, skip the draft
 claim and say why.
 
+**Register the pipeline slot** at the same moment as the draft claims: write
+`pipeline-slots/<slug>.json` (`$XDG_STATE_HOME/registry-research-toolkit` root, default
+`~/.local/state/...`) atomically (temp file + rename), where `<slug>` is this pipeline's
+worktree name, with
+`{"slot": "<slug>", "issues": [<lane issues>], "prs": [<lane PR numbers>], "surface": "codex"}`.
+This is the machine-local concurrency ledger (max 3 parallel pipelines) that the
+chief-of-staff's watcher gates dispatch on; the `slot` field must match the filename
+stem or readers treat the file as absent. Update the file (atomically) as new PRs join
+the lane. Never release the slot yourself — the chief-of-staff moves it to
+`pipeline-slots/done/` when the lane's PRs are all merged/closed; a pipeline that
+self-releases at handoff would free budget its unmerged work still occupies.
+
 ## Build
 
 Implement directly in the current checkout, keeping scope tight. Follow repo rules:
