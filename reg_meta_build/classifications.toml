@@ -9,16 +9,15 @@
 # verbatim — SCB's export contains many labels with stray whitespace, and
 # `get values` already exposes the raw string. Keep what you see here.
 #
-# Optional `valid_codes_file` points to a CSV under
-# reg_meta_build/input_data/classifications/ that lists the canonical (officially
-# published) codes for the classification. CSV-backed classifications insert
+# Required `valid_codes_file` points to a CSV under
+# reg_meta_build/input_data/classifications/ that lists the canonical
+# (officially published) codes for the classification. Classifications insert
 # only those canonical rows into `classification_code` (`is_valid=1`). Codes
 # that appear in the CSV but never in observed data are still inserted as
 # canonical-but-unobserved (queryable, no `value_set_member` linkage). Observed
 # non-canonical codes are recorded per affected state in the conformance tables
-# instead of being mixed into the canonical classification list.
-# Without the field, all codes for the classification carry `is_valid=NULL`
-# (validity unknown).
+# instead of being mixed into the canonical classification list. Fresh builds no
+# longer produce no-CSV / unknown-validity `classification_code` rows.
 #
 # Classification succession (which edition supersedes which) is NOT declared
 # here. It lives in `classification_replaced_by` — auto year-tail edition chains
@@ -29,7 +28,8 @@
 # no succession.
 #
 # Build-time invariants (violations fail the build loudly):
-#   - Every classification must resolve to >= 1 distinct value code
+#   - Every classification must declare `valid_codes_file` and resolve to >= 1
+#     distinct value code
 #   - A given `vardemangdsversion` string may belong to at most one classification
 #   - Every `valid_codes_file` must resolve to an existing CSV whose first two
 #     columns are `vardekod,vardebenamning` or `code,label`, with >= 1 row
@@ -39,9 +39,8 @@
 # Untagged entries are implicitly SCB-sourced. Classifications are shared standards:
 # e.g. `ICD-10-SE`/`ATC` are tagged `provider="sos"` but referenced via curated
 # `classification=` links by FOHM, FK, Läkemedelsverket, and Pliktverket. A
-# provider-tagged entry is seeded when its tag-provider is built OR a built provider
-# references it via a curated link; it is skipped only when neither holds. Untagged
-# entries are always seeded (#597).
+# provider-tagged entry is still seeded in every build; the tag only scopes
+# drift-demotion when its source provider is absent (#778).
 #
 # `vardemangdsversion` is OPTIONAL. When listed, drift checking is per-classification
 # on label-source: an unmatched string is a hard error when the classification's
@@ -332,6 +331,14 @@ vardemangdsversion = [
   "NR:s näringsgrensindelning SNI2007",
   "NR:s näringsgrensindelning SNI 2007, IVP2008",
 ]
+
+[[classification]]
+short_name = "SNI2025"
+name = "Svensk standard för näringsgrensindelning 2025"
+name_en = "Swedish Standard Industrial Classification 2025"
+publisher = "SCB"
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+valid_codes_file = "sni2025.csv"
 
 # ---------------------------------------------------------------------------
 # Geography — Län, kommuner och församlingar (LKF)
@@ -1061,7 +1068,7 @@ vardemangdsversion = [
 valid_codes_file = "isced-f2013.csv"
 
 # ===========================================================================
-# Socialstyrelsen (SOS) code systems — provider = "sos" gated
+# Socialstyrelsen (SOS) code systems — provider = "sos" label-source tag
 # ===========================================================================
 # Health / social-services code systems delivered with SOS register data. They
 # have canonical code CSVs (under input_data/classifications/sos/) but no SCB
@@ -1090,6 +1097,16 @@ provider = "sos"
 valid_from = 1997
 url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icd-10-se.tsv?version=1&modificationDate=1779615619577&api=v2"
 valid_codes_file = "sos/icd-10-se.csv"
+
+[[classification]]
+short_name = "ICD-11-SE"
+name = "ICD-11 för statistik över dödlighet och sjuklighet, svensk version"
+name_en = "ICD-11 for Mortality and Morbidity Statistics, Swedish version"
+publisher = "WHO"
+provider = "sos"
+valid_from = 2027
+url = "https://icdcdn.who.int/static/releasefiles/2026-01/SimpleTabulation-ICD-11-MMS-sv.zip"
+valid_codes_file = "sos/icd-11-se.csv"
 
 # KVÅ is published upstream as two disjoint code spaces — KMÅ (medical) and
 # KKÅ (surgical) — but SOS registers reference it as ONE åtgärd field mixing

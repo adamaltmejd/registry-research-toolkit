@@ -695,11 +695,10 @@ and validation rules live in [../reg_meta_build/DESIGN.md](../reg_meta_build/DES
 it contains only published canonical codes; observed value-set codes that merely show up
 in data are not attached to the classification page.
 
-Canonical codes come from per-classification CSVs ingested by the build (see
-[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Canonical code CSVs"). A
-classification with a CSV gets `classification_code.is_valid = 1` and
-`classification.valid_code_count` cached for that canonical count. Without a CSV, every
-`classification_code` row carries `is_valid=NULL` (validity unknown).
+Canonical codes come from required per-classification CSVs ingested by the build (see
+[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Canonical code CSVs").
+Fresh builds emit only canonical `classification_code.is_valid = 1` rows and cache
+`classification.valid_code_count` for that canonical count.
 
 The build records declared value-set mismatches at state grain in
 `classification_conformance` / `classification_conformance_code`: kept links can warn
@@ -708,7 +707,7 @@ original declared classification and overlap evidence remain visible on the vari
 value-set viewer.
 
 The CLI exposes this via `get classification --codes --only-valid` and includes
-`is_valid` per code in JSON output (omitted when NULL).
+`is_valid` per code in JSON output.
 
 Hierarchy is intentionally not encoded as `parent_code_id`. The `level` column captures
 the most useful filter ("top-level only"); deeper parent/child queries fall back to

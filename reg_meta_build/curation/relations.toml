@@ -366,15 +366,20 @@ from = "class/sun1996"
 to = "class/sun2000-grupp"
 effective_year = 2000
 
-# ── ICD / KS disease-classification succession (#770) ──
+# ── ICD / KS disease-classification succession (#770/#768) ──
 #    Sweden's disease classifications form a one-dimensional, linear succession:
 #      icd-8-ks68 (1969–1986) → icd-9-ks87 (1987–1996) → icd-10-se (1997–).
 #    Modeled as classification-grain `replaced_by` so the chain collapses to its
-#    terminal (icd-10-se) in the classification-root browse, like SSYK/LKF/SNI/SUN.
+#    terminal in the classification-root browse, like SSYK/LKF/SNI/SUN.
 #    The trunk is kept strictly linear (no split nodes): the read-side terminal
 #    walk stops at any split, so a fork would collapse the chain to the wrong head.
 #    Classification grain → `class/<slug>`; `effective_year` = the successor's
 #    valid_from. `note` is provenance-only (build stamps `curated:slug_toml`).
+#    ICD-11-SE is seeded from WHO's Swedish MMS 2026-01 release, but there is no
+#    icd-10-se → icd-11-se edge yet. Socialstyrelsen's first stated register
+#    transition is death causes from 2027, and the read-side catalog treats any
+#    outbound successor as current immediately (`effective_year` is display-only).
+#    A future edge in a 2026 DB would incorrectly make ICD-10-SE non-current.
 #    ks87-p (the contemporaneous primary-care variant of KS87) is intentionally
 #    NOT modeled here — it needs a variant/derived-from edge type, deferred.
 [[edge]]

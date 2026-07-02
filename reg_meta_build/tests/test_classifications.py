@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import sqlite3
@@ -892,6 +893,12 @@ class TestPopulateClassifications:
             "WHERE c.short_name = 'CANON' ORDER BY vc.code"
         ).fetchall()
         assert [(r["code"], r["is_valid"]) for r in codes] == [("A01", 1), ("B02", 1)]
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM classification_code WHERE is_valid IS NULL"
+            ).fetchone()[0]
+            == 0
+        )
         # Zero instances tagged: no observed variable_state points at CANON.
         tagged = conn.execute(
             "SELECT COUNT(*) FROM variable_state vs "
@@ -1271,46 +1278,6 @@ class _Graph:
             self.conn.execute(
                 "INSERT INTO classification_code "
                 "(classification_id, code_id, level, is_valid) VALUES (?, ?, ?, 1)",
-                (cls_id, code_id, level),
-            )
-
-    def add_no_csv_classification(
-        self,
-        cls_id: int,
-        short_name: str,
-        codes: list[tuple[str, str]],
-        supersedes_id: int | None = None,
-        valid_from: int | None = None,
-        valid_to: int | None = None,
-        slug: str | None = None,
-    ) -> None:
-        """Seed a classification with `is_valid=NULL` canonical rows — a no-CSV
-        shape where observed codes ARE the code set, so the detector's
-        `is_valid IS NOT 0` filter must keep them. No classification ships this
-        shape today (every classification now has a CSV); this is a defensive
-        guard for the NULL-tolerant filter, which we deliberately keep. Same
-        level rule and same `supersedes_id`/`valid_from`/`valid_to`/`slug` fields
-        as `add_classification`."""
-        self.conn.execute(
-            "INSERT INTO classification "
-            "(id, short_name, name, slug, supersedes_id, valid_from, valid_to) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (
-                cls_id,
-                short_name,
-                short_name,
-                slug if slug is not None else short_name.lower(),
-                supersedes_id,
-                valid_from,
-                valid_to,
-            ),
-        )
-        for code, label in codes:
-            code_id = self._intern_code(code, label)
-            level = len(code) if code.isdigit() else None
-            self.conn.execute(
-                "INSERT INTO classification_code "
-                "(classification_id, code_id, level, is_valid) VALUES (?, ?, ?, NULL)",
                 (cls_id, code_id, level),
             )
 
@@ -1722,25 +1689,6 @@ class TestLinkValueSetClassifications:
         # Counted as confident even though no row was emitted (guard held).
         assert counts["value_sets_linked"] == 1
         assert g.candidates() == [(926, 125, 99)]
-
-    def test_no_csv_null_is_valid_codes_still_link(self) -> None:
-        """A no-CSV classification carries `is_valid=NULL` canonical rows (its
-        observed codes ARE its code set). No classification ships this shape today
-        (every classification now has a CSV); this is a defensive-guard regression
-        test that the detector's NULL-tolerant `is_valid IS NOT 0` filter — which
-        we deliberately keep — still lets a value set enumerating those codes
-        link."""
-        from reg_meta_build.classifications import link_value_set_classifications
-
-        g = _Graph()
-        codes = _numeric_codes("ICD", 20, 4)
-        g.add_no_csv_classification(33, "ICD-10-SE", codes)
-        g.add_value_set(122, codes)
-        g.add_variable_state(923, 122)
-
-        counts = link_value_set_classifications(g.conn)
-        assert counts["value_sets_linked"] == 1
-        assert g.candidates() == [(923, 122, 33)]
 
     def test_alphanumeric_codes_dom_level_null_link(self) -> None:
         """ICD-shaped alphanumeric codes (`A01`, `B99`, not all-digit) give
@@ -3706,11 +3654,38 @@ class TestClassificationResidueCli:
 
 
 # ---------------------------------------------------------------------------
-# PR2: the merged kva.csv round-trips through populate_classifications
+# Repo CSV snapshots round-trip through the seed loader
 # ---------------------------------------------------------------------------
 
 
-class TestKvaMergedCsv:
+class TestRepoClassificationCsvSnapshots:
+    def test_icd11_and_sni2025_csvs_load_from_repo_seed(self):
+        from reg_meta_build.classifications import repo_seed_path
+
+        seed_path = repo_seed_path()
+        assert seed_path is not None
+        entries = {entry["short_name"]: entry for entry in load_seed(seed_path)}
+        cls_dir = seed_path.parent / "input_data" / "classifications"
+
+        assert entries["ICD-11-SE"]["valid_codes_file"] == "sos/icd-11-se.csv"
+        assert entries["ICD-11-SE"]["valid_from"] == 2027
+        assert "valid_to" not in entries["ICD-10-SE"]
+        icd11 = load_valid_codes(cls_dir / "sos" / "icd-11-se.csv")
+        assert icd11["1A00"] == "Kolera"
+        assert all(icd11.values())
+        with (cls_dir / "sos" / "icd-11-se.csv").open(encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        assert sum(1 for row in rows if row["parent_code"]) > 0
+
+        assert entries["SNI2025"]["valid_codes_file"] == "sni2025.csv"
+        assert "valid_from" not in entries["SNI2025"]
+        assert "valid_to" not in entries["SNI2007"]
+        sni2025 = load_valid_codes(cls_dir / "sni2025.csv")
+        assert sni2025["A"] == "Jordbruk, skogsbruk och fiske"
+        assert sni2025["01110"] == (
+            "Odling av spannmål (utom ris), baljväxter och oljeväxter"
+        )
+
     def test_kva_csv_round_trips_without_duplicate_codes(self, tmp_path: Path):
         """The real merged `sos/kva.csv` (KMÅ ∪ KKÅ, deduped on the 50 shared
         chapter headers) loads into ONE `KVA` classification with codes and
