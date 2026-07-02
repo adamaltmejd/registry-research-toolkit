@@ -272,6 +272,10 @@ function rowSelectable(row: PickerRepresentation): boolean {
   return row.selectable !== false;
 }
 
+function rowCanToggle(band: PickerBand, row: PickerRepresentation): boolean {
+  return rowSelectable(row) || committedRows.has(rowKey(band, row));
+}
+
 function rowChecked(band: PickerBand, row: PickerRepresentation): boolean {
   const key = rowKey(band, row);
   const committed = committedRows.has(key);
@@ -341,7 +345,7 @@ function setRowDesired(
 
 /** Toggle one column's desired project membership. */
 function toggleRow(band: PickerBand, row: PickerRepresentation): void {
-  if (applying || !rowSelectable(row)) {
+  if (applying || !rowCanToggle(band, row)) {
     return;
   }
   const adds = new Set(stagedAddKeys);
@@ -439,7 +443,7 @@ const stagedRemoves = $derived.by((): PickerRemoval[] => {
     for (const row of band.rows) {
       const key = rowKey(band, row);
       const committed = committedRows.get(key);
-      if (rowSelectable(row) && committed && stagedRemoveKeys.has(key)) {
+      if (committed && stagedRemoveKeys.has(key)) {
         out.push({ band, row, committed });
       }
     }
@@ -958,7 +962,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
         {@const band = v.band}
         {#if v.single}
           {@const row = band.rows[0]}
-          {@const checked = rowSelectable(row) && rowChecked(band, row)}
+          {@const checked = rowChecked(band, row)}
           {@const stage = rowStage(band, row)}
           {@const inWindow = representationInWindow(row, window)}
           <!-- The column's facet leads the quiet `.sub` context (#678) — but when the
@@ -998,7 +1002,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
               <input
                 type="checkbox"
                 class="cbox"
-                disabled={applying || !rowSelectable(row)}
+                disabled={applying || !rowCanToggle(band, row)}
                 checked={checked}
                 onchange={() => toggleRow(band, row)}
               />
@@ -1213,7 +1217,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
             {@render historyDisclosure(v.supersedes)}
           </li>
           {#each band.rows as row (row.key)}
-            {@const checked = rowSelectable(row) && rowChecked(band, row)}
+            {@const checked = rowChecked(band, row)}
             {@const stage = rowStage(band, row)}
             {@const inWindow = representationInWindow(row, window)}
             {@const label = v.rowLabels.get(row.key)}
@@ -1238,7 +1242,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                 <input
                   type="checkbox"
                   class="cbox"
-                  disabled={applying || !rowSelectable(row)}
+                  disabled={applying || !rowCanToggle(band, row)}
                   checked={checked}
                   onchange={() => toggleRow(band, row)}
                 />

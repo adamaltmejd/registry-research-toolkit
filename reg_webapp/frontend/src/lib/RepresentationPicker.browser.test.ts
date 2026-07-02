@@ -382,6 +382,48 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(onapply.mock.calls[0][0].removes).toHaveLength(1);
   });
 
+  it("allows committed nonselectable rows to be removed without allowing new adds", async () => {
+    const onapply = vi.fn();
+    const base = multiAxisBand();
+    const nonselectableCommitted = {
+      ...base.rows[0],
+      selectable: false,
+    };
+    const nonselectableUncommitted = {
+      ...base.rows[1],
+      selectable: false,
+    };
+    const band = {
+      ...base,
+      rows: [nonselectableCommitted, nonselectableUncommitted, base.rows[2]],
+    };
+    const committedRows = committedRowsFor(band, nonselectableCommitted);
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      committedRows,
+      onapply,
+    });
+
+    const committedCheckbox = page.getByRole("checkbox", { name: /DIN1/ });
+    await expect.element(committedCheckbox).toBeChecked();
+    await expect.element(committedCheckbox).toBeEnabled();
+    await expect
+      .element(page.getByRole("checkbox", { name: /DIN2/ }))
+      .toBeDisabled();
+
+    await committedCheckbox.click();
+    await expect.element(page.getByText("Will be removed")).toBeVisible();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await expect.element(apply).toBeEnabled();
+    await apply.click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].removes).toHaveLength(1);
+    expect(onapply.mock.calls[0][0].adds).toHaveLength(0);
+  });
+
   it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
     const onapply = vi.fn();
     render(RepresentationPicker, {

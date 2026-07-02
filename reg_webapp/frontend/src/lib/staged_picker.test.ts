@@ -70,18 +70,28 @@ describe("committedPickerRows", () => {
     );
   });
 
-  it("treats a null stored representation as present for same-variant rows", () => {
+  it("scopes a null stored representation to rows overlapping the source period", () => {
     const rows = [
       row({
-        key: "ind::DINF86",
-        column: "DINF86",
-        representation: "DINF86",
+        key: "ind::OLD",
+        column: "OLD",
+        representation: "OLD",
+        from: "1981-01-01",
+        to: "1985-12-31",
+        windows: [{ from: "1981-01-01", to: "1985-12-31" }],
+        period: "1981 - 1985",
+        wirePeriod: "1981..1985",
         renamedColumns: [],
       }),
       row({
-        key: "ind::DINF87",
-        column: "DINF87",
-        representation: "DINF87",
+        key: "ind::NEW",
+        column: "NEW",
+        representation: "NEW",
+        from: "1986-01-01",
+        to: "1995-12-31",
+        windows: [{ from: "1986-01-01", to: "1995-12-31" }],
+        period: "1986 - 1995",
+        wirePeriod: "1986..1995",
         renamedColumns: [],
       }),
     ];
@@ -112,8 +122,43 @@ describe("committedPickerRows", () => {
     expect(committed.get(pickerRowKey(b, rows[0]))).toEqual(
       expect.objectContaining({ representation: null }),
     );
-    expect(committed.get(pickerRowKey(b, rows[1]))).toEqual(
-      expect.objectContaining({ representation: null }),
+    expect(committed.has(pickerRowKey(b, rows[1]))).toBe(false);
+  });
+
+  it("skips malformed draft source slots instead of crashing", () => {
+    const r = row();
+    const b = band([r]);
+    const draft: ProjectData = {
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        null as never,
+        { register_variant: 17 } as never,
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/ind",
+          period: { from: 1981, to: 1985 },
+          bindings: [
+            null as never,
+            {
+              variable: "scb/lisa/dinf",
+              type: "numeric",
+              representation: "DINF83",
+            },
+          ],
+        },
+      ],
+    };
+
+    const committed = committedPickerRows(draft, [b]);
+
+    expect(committed.get(pickerRowKey(b, r))).toEqual(
+      expect.objectContaining({
+        representation: "DINF83",
+        variable: "scb/lisa/dinf",
+      }),
     );
   });
 });

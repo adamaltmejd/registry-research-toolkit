@@ -1,6 +1,12 @@
 import type { PickerRepresentation } from "./catalog";
-import { mergePeriods, periodFromWire, periodToWire } from "./period";
-import type { Binding, Period, ProjectData, Source } from "./project_data";
+import {
+  mergePeriods,
+  type PeriodBounds,
+  periodFromWire,
+  periodToWire,
+  periodWireBounds,
+} from "./period";
+import type { Period, ProjectData } from "./project_data";
 import type { StagedPeriodChange, StagedRemove } from "./project_store.svelte";
 
 export interface StagedPickerBand {
@@ -44,25 +50,86 @@ export function pickerRowKey(
   ].join("::");
 }
 
-function sourceRegisterVariant(source: Source): string {
-  return typeof source.register_variant === "string"
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function sourceRegisterVariant(source: unknown): string {
+  return isRecord(source) && typeof source.register_variant === "string"
     ? source.register_variant
     : "";
 }
 
-function bindingVariable(binding: Binding): string {
-  return typeof binding.variable === "string" ? binding.variable : "";
+function sourceBindings(source: unknown): unknown[] {
+  return isRecord(source) && Array.isArray(source.bindings)
+    ? source.bindings
+    : [];
 }
 
-function bindingRepresentation(binding: Binding): string | null {
-  return typeof binding.representation === "string"
+function sourceName(source: unknown): string {
+  return isRecord(source) && typeof source.name === "string" ? source.name : "";
+}
+
+function sourcePeriod(source: unknown): Period {
+  return isRecord(source) && "period" in source
+    ? (source.period as Period)
+    : "";
+}
+
+function bindingVariable(binding: unknown): string {
+  return isRecord(binding) && typeof binding.variable === "string"
+    ? binding.variable
+    : "";
+}
+
+function bindingRepresentation(binding: unknown): string | null {
+  return isRecord(binding) && typeof binding.representation === "string"
     ? binding.representation
     : null;
 }
 
+function periodBoundsSegments(period: Period): PeriodBounds[] | null {
+  const wire = periodToWire(period);
+  if (!wire) {
+    return null;
+  }
+  const segments: PeriodBounds[] = [];
+  for (const part of wire.split(",")) {
+    const bounds = periodWireBounds(part);
+    if (!bounds) {
+      return null;
+    }
+    segments.push(bounds);
+  }
+  return segments.length > 0 ? segments : null;
+}
+
+function boundsOverlap(a: PeriodBounds, b: PeriodBounds): boolean {
+  return a.from <= b.to && b.from <= a.to;
+}
+
+function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
+  return (row.windows.length > 0 ? row.windows : [row]).map((window) => ({
+    from: window.from,
+    to: window.to,
+  }));
+}
+
+function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
+  const sourceBounds = periodBoundsSegments(period);
+  if (!sourceBounds) {
+    return false;
+  }
+  const windows = rowWindowBounds(row);
+  return sourceBounds.some((sourceWindow) =>
+    windows.some((rowWindow) => boundsOverlap(sourceWindow, rowWindow)),
+  );
+}
+
 function rowMatchesBinding(
-  binding: Binding,
+  binding: unknown,
   row: PickerRepresentation,
+  sourcePeriod: Period,
 ): boolean {
   const representation = bindingRepresentation(binding);
   if (representation !== null) {
@@ -71,7 +138,7 @@ function rowMatchesBinding(
       row.renamedColumns.includes(representation)
     );
   }
-  return true;
+  return rowOverlapsPeriod(row, sourcePeriod);
 }
 
 export function committedPickerRows(
@@ -79,7 +146,7 @@ export function committedPickerRows(
   bands: readonly StagedPickerBand[],
 ): Map<string, PickerCommittedRow> {
   const committed = new Map<string, PickerCommittedRow>();
-  const sources = Array.isArray(draft?.sources) ? draft.sources : [];
+  const sources: unknown[] = Array.isArray(draft?.sources) ? draft.sources : [];
   for (const band of bands) {
     for (const row of band.rows) {
       const registerVariant = rowRegisterVariant(band, row);
@@ -89,10 +156,10 @@ export function committedPickerRows(
       if (!source) {
         continue;
       }
-      const binding = (
-        Array.isArray(source.bindings) ? source.bindings : []
-      ).find(
-        (b) => bindingVariable(b) === band.key && rowMatchesBinding(b, row),
+      const period = sourcePeriod(source);
+      const binding = sourceBindings(source).find(
+        (b) =>
+          bindingVariable(b) === band.key && rowMatchesBinding(b, row, period),
       );
       if (!binding) {
         continue;
@@ -102,8 +169,8 @@ export function committedPickerRows(
         registerVariant,
         variable: band.key,
         representation: bindingRepresentation(binding),
-        sourceName: typeof source.name === "string" ? source.name : "",
-        sourcePeriod: source.period as Period,
+        sourceName: sourceName(source),
+        sourcePeriod: period,
       });
     }
   }
