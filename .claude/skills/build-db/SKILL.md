@@ -29,11 +29,20 @@ The script:
 - uses the SCB value prestage cache by default when SCB is in the provider set;
 - writes `/tmp/<slug>.summary.json`.
 
-## Codex Polling
+## Running unattended
 
-Start the watcher once with `exec_command`. When it returns a running session id, poll
-that same session with `write_stdin` and `yield_time_ms=300000` (5 minutes). Do not use
-repeated `exec_command` probes or 30-second polling loops.
+The build is long; launch the watcher once and let it run to completion, then read
+`/tmp/<slug>.summary.json` and the log tail — never re-launch it to "check progress".
+
+- **Claude Code:** run the watcher with `Bash` and `run_in_background: true`. The
+  command exits when the build finishes, so you get exactly one completion notification;
+  then read the summary JSON and the log tail. Do NOT wrap the watcher in a subagent — a
+  subagent that backgrounds the build returns before it finishes, and its detached
+  process is not harness-tracked, so the completion notification never fires and the
+  result is lost (you end up hand-rolling a `pgrep` wait and parsing the log yourself).
+- **Codex:** start the watcher once with `exec_command`; when it returns a running
+  session id, poll that same session with `write_stdin` and `yield_time_ms=300000` (5
+  minutes). Do not use repeated `exec_command` probes or 30-second polling loops.
 
 Only report to the user on phase changes, failures, quiet-period health, completion, or
 explicit status requests.

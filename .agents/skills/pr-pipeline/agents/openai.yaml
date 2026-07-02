@@ -1,6 +1,6 @@
 interface:
   display_name: "Registry PR Pipeline"
   short_description: "Build registry issues into PRs with review and visual gates"
-  default_prompt: "Use $pr-pipeline issue 510 to build registry PRs, pass review and verification gates, and post the chief-of-staff ready-to-merge handoff."
+  default_prompt: "Use $pr-pipeline issue 510 to build registry PRs, pass review and verification gates, and record the local chief-of-staff ready-to-merge handoff."
 policy:
   allow_implicit_invocation: false

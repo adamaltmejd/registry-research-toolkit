@@ -338,16 +338,42 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
 
 **Merge ownership** — `pr-pipeline` owns authoring, review, verification, and the
 durable merge-gate handoff. It does **not** merge. The `chief-of-staff` skill owns
-routine merge decisions and execution. A recurring chief-of-staff tick may automatically
-squash-merge a PR only when the PR body contains a current-head
-`<!-- pr-pipeline-merge-gate -->` block with `status: ready-to-merge`, all required gate
-evidence is present, and the chief-of-staff re-checks the live PR head, CI, Codex bot
-signal, mergeability, and stack order immediately before merging. That body block is the
-single pipeline handoff signal; no separate ready-to-merge comment is required. The
-handoff block must have trusted provenance: the PR came from `pr-pipeline` or a trusted
-maintainer-run equivalent, and the block was added or refreshed by a trusted
-maintainer/agent. If the PR author could self-certify the block without that trusted
-handoff, block automerge and ask the user.
+routine merge decisions and execution.
+
+**Local merge-gate store** — the handoff signal lives on the maintainer's machine, not
+in the PR: `$XDG_STATE_HOME/registry-research-toolkit/merge-gates/pr-<N>/` (default
+`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/`), one directory per PR
+holding `gate.json` plus the evidence files it references (design-reviewer report and
+screenshots, `build-db` log, dbdiff output). All pipelines and the chief-of-staff run on
+this machine, so a local file is durable across worktree deletion, `git clean`, and
+reboots — which `/tmp` and worktree paths are not — and needs no GitHub attachment
+gymnastics. Do NOT post evidence to the PR (no evidence branches, no committed
+screenshots, no body blocks); the PR body carries only the description and closing
+keywords (which stay authoritative for issue closure — gate.json does not duplicate
+them). The `gate.json` contract: head-SHA-bound (`pr`, `head` full SHA, `status`
+`ready-to-merge` \| `blocked`, `updated`, `blocker` naming the missing item when
+blocked) plus a `gates` map with one line per repo gate; the expensive re-verifiable
+gates (`build_db`, `visual`) each record the head SHA they were verified on inside their
+line. Field-level worked example: the `pr-pipeline` skill. Write evidence files first
+and `gate.json` last, atomically (temp file + rename) — the preflight probe polls it and
+must never see a torn write; after repairing or adding evidence files, refresh
+`gate.json` (bump `updated`) so the byte-change wakes the next tick. Readers treat an
+entry whose `pr` field disagrees with its directory name as absent. A recurring
+chief-of-staff tick may automatically squash-merge a PR only when its gate entry has
+`status: ready-to-merge` with `head` matching the live `headRefOid` (and the
+`build_db`/`visual` per-gate SHAs matching that head where those gates apply), all
+required evidence files are present, and the chief-of-staff re-checks the live PR head,
+CI, Codex bot signal, mergeability, and stack order immediately before merging.
+Provenance is by construction: only local agents can write the store, so a fork PR can
+never self-certify — but never automerge a PR whose head branch is not in this
+repository, and treat a gate entry for such a PR as an error to surface. (Trust is
+machine-level and accepted as such for this single-maintainer repo: any code executed
+locally — a test run, a build — could write the store, exactly as it could previously
+have edited a PR body with the maintainer's credentials; the gate defends against
+process skew, not against malicious local code.) After a verified merge, the
+chief-of-staff archives the PR's gate directory under `merge-gates/merged/` — the PR
+carries no evidence, so the archive IS the audit trail for post-merge regressions; prune
+entries whose PR closed without merging.
 
 - **Independent review** — every PR gets at least one review independent of its author.
   For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier
@@ -387,8 +413,8 @@ handoff, block automerge and ask the user.
   entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
   requested by commenting `@codex review`). Absence at the ceiling is not a blocker for
   a human handoff, but it is not enough for an automatic `chief-of-staff` merge; leave
-  the PR's merge-gate block below `status: ready-to-merge` until the signal is `clean`
-  or an acceptable `exhausted` result with all other gates complete.
+  the PR's gate entry below `status: ready-to-merge` until the signal is `clean` or an
+  acceptable `exhausted` result with all other gates complete.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout. From a worktree,
@@ -396,7 +422,12 @@ handoff, block automerge and ask the user.
   `reg_meta_build/input_data/**` file, make that root an overlay: main checkout
   untracked seed plus the PR-head tracked inputs copied on top, with PR deletions /
   renames mirrored. A direct `--input-dir <main-checkout>/reg_meta_build/input_data/`
-  validates main's tracked inputs, not yours.
+  validates main's tracked inputs, not yours. Store the timestamped build log and any
+  dbdiff output in the PR's merge-gate directory. When a PR is otherwise merge-ready but
+  this gate's evidence is missing or stale (wrong head), the chief-of-staff runs the
+  verification itself — a throwaway worktree at the PR head, the same build/dbdiff, the
+  result written into the gate store — instead of routing a follow-up or asking the
+  user.
 - **Visual verification** when the PR changes rendered output (`reg_webapp/frontend/**`,
   or any view / component / style the SPA renders). This is the UI analog of real-data
   validation — **required, not optional**, for rendered changes. Headless checks
@@ -414,10 +445,11 @@ handoff, block automerge and ask the user.
   down on exit** — no port collisions, no leaked servers. For interactive poking use
   `preview_start` + `preview_snapshot` / `preview_click` / `preview_resize` (now
   `autoPort` + `dev.sh preview`-backed, so it's collision-free across sessions and
-  serves the worktree's own code). Attach or comment the `reg-webapp-design-reviewer`
-  result with screenshot/render evidence as PR-visible proof, the same way a build PR
-  attaches its `build-db`. Use the repo-local `reg-webapp-frontend-design` skill when
-  authoring new UI.
+  serves the worktree's own code). Copy the `reg-webapp-design-reviewer` report and its
+  screenshots into the PR's merge-gate directory as the durable proof, the same way a
+  build PR stores its `build-db` log there — never attach them to the PR or commit them
+  to the branch. Use the repo-local `reg-webapp-frontend-design` skill when authoring
+  new UI.
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip and pass that SHA to `gh pr merge --match-head-commit`; after merging,
   fetch `origin main`, fast-forward the local main checkout with
@@ -431,8 +463,8 @@ handoff, block automerge and ask the user.
   retarget the successor to `main` after the predecessor merge, then verify it remains
   open on the intended head. After retargeting, require the successor branch to be
   rebased or otherwise updated onto the new base, then regenerate checks, Codex bot
-  review, independent-review judgment, and the merge-gate block before automerging it.
-  Never delete a branch that is the head branch of another open PR.
+  review, independent-review judgment, and the gate entry before automerging it. Never
+  delete a branch that is the head branch of another open PR.
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →
@@ -442,8 +474,8 @@ without the user invoking the skill, run the same shape — plan → implement �
 never on a draft, so a PR handed back as a draft stalls the gate. Leave a PR draft only
 while it's genuinely still being built (the draft is also the in-flight claim). Once
 ready, you may poll and report the bot-review window (above). Do **not** merge on your
-own initiative. If you want the recurring staff loop to auto-merge it, update the PR
-body with a current-head `pr-pipeline` merge-gate block marked `status: ready-to-merge`
+own initiative. If you want the recurring staff loop to auto-merge it, write a
+current-head `gate.json` with `status: ready-to-merge` into the local merge-gate store
 and leave execution to `chief-of-staff`.
 
 # Layout

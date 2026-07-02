@@ -55,7 +55,7 @@ tool result** — that IS its report.
 
 Run PR authoring **strictly serially** unless the planned PRs are explicitly
 file-disjoint and independent. A multi-PR pipeline can finish all PRs without merging;
-record stack/dependency order in each PR's gate block and leave execution to
+record stack/dependency order in each PR's gate entry and leave execution to
 `/chief-of-staff`.
 
 ## Step 0 — plan (first, before any coding)
@@ -162,8 +162,8 @@ worktree-correct and never collides or leaks even under parallel fan-out (no
 them to catch blank renders or obvious implementation failures, but do not count them as
 the formal visual gate. The authoritative rendered proof is the clean
 `/reg-webapp-design-reviewer` result in Step C, which owns the assembled-tree
-screenshot/render inspection and the durable PR-visible proof recorded for the merge
-gate (Step E). When they report, validate the real diff, `git add -A`, commit, and push
+screenshot/render inspection and the durable proof copied into the local merge-gate
+store (Step E). When they report, validate the real diff, `git add -A`, commit, and push
 onto the draft PR's branch. Outward-facing `gh` actions (PR create / comment / PR body
 update) may be denied by the session's permission mode — if one is denied, surface it to
 the human, don't work around it.
@@ -212,14 +212,15 @@ accessibility, consistency), renders/inspects screenshots via `/run-reg-webapp` 
 without inheriting the author's visual conclusions. Route findings like
 `/code-review`'s, and re-run the reviewer when fixes materially change the rendered
 surface. Do not mark the visual gate ready-to-merge until that reviewer result is
-complete and PR-visible; manual screenshots outside the reviewer pass are not a
-substitute. Authoring new UI is the *implementer's* job (its prompt routes new-UI work
-through `reg-webapp-frontend-design`), so here you review with
-`/reg-webapp-design-reviewer`, not `/reg-webapp-frontend-design` or the generic
-`/web-design-reviewer`. When the rendered change depends on DB content not yet released
-(e.g. a build-curation PR earlier in the lane), point the dev server at a scratch
-`build-db` via `REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp →
-"Verifying against unreleased DB content (custom DB)").
+complete and its report + screenshots are copied into the PR's merge-gate directory
+(Step E); manual screenshots outside the reviewer pass are not a substitute. Authoring
+new UI is the *implementer's* job (its prompt routes new-UI work through
+`reg-webapp-frontend-design`), so here you review with `/reg-webapp-design-reviewer`,
+not `/reg-webapp-frontend-design` or the generic `/web-design-reviewer`. When the
+rendered change depends on DB content not yet released (e.g. a build-curation PR earlier
+in the lane), point the dev server at a scratch `build-db` via
+`REG_META_DB=<db_dir> dev.sh shot <route>` (see run-reg-webapp → "Verifying against
+unreleased DB content (custom DB)").
 
 **D · Docs.** Only if the diff drifted authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
@@ -252,36 +253,54 @@ the login-sensitive `gh api` calls. Operate it like this:
   re-trigger with `@codex review` and launch a fresh background poll on the new HEAD.
 - Never key the window on CI going green — CI is a separate gate.
 
-When every gate passes, update the PR body while preserving the closing keywords and add
-or replace:
+When every gate passes, write the handoff into the **local merge-gate store** (contract
+in CLAUDE.md "PR merge gate"; this template is the field-level worked example): create
+`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/` (`$XDG_STATE_HOME` root
+if set), copy the evidence files in FIRST (design-reviewer report + screenshots,
+`build-db` watcher log, dbdiff output — whatever the PR's gates required), then write
+`gate.json` last and atomically (write a temp file in the same directory and rename it
+over `gate.json` — the preflight probe polls this file and must never see a torn write):
 
-```md
-<!-- pr-pipeline-merge-gate -->
-**PR Pipeline Merge Gate**
-- status: ready-to-merge
-- head: <sha>
-- closes: #<issue>[, #<issue>]
-- independent-review: pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed
-- codex-bot: <clean|exhausted>; `scripts/pr_review_status.py <pr> --once`
-- ci: pass; `gh pr checks <pr>`
-- tests: <commands run>
-- docs: <updated / not required>
-- visual: <not required / pass; reg-webapp-design-reviewer result with durable PR-visible screenshot proof>
-- build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
-- stack: <none / after #pr / before #pr>
-<!-- /pr-pipeline-merge-gate -->
+```json
+{
+  "pr": <pr number — must match the directory name>,
+  "head": "<full head sha>",
+  "status": "ready-to-merge",
+  "updated": "<ISO-8601>",
+  "gates": {
+    "independent_review": "pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed",
+    "codex_bot": "<clean|exhausted>; scripts/pr_review_status.py <pr> --once",
+    "ci": "pass; gh pr checks <pr>",
+    "tests": "<commands run>",
+    "docs": "<updated / not required>",
+    "visual": "<not required / pass; head <sha verified>; see design-review.md + screenshots in this dir>",
+    "build_db": "<not required / pass; head <sha built>; see build-db.log, dbdiff.txt in this dir>",
+    "stack": "<none / after #pr / before #pr>"
+  },
+  "blocker": null
+}
 ```
 
-The current-head `status: ready-to-merge` block is the single chief-of-staff handoff
-indicator. Do not write it if any gate is missing, pending, stale, or only reported in
-the local chat transcript — use `status: blocked` with the missing item instead, or
-leave the block incomplete and report what chief-of-staff must wait for. A `none` Codex
-signal can be handed to a human with explanation, but it is not enough for automerge
-evidence. A later push makes the block stale; rerun the gate on the new head and refresh
-it. Proof must survive a later chief-of-staff tick: attach/comment the
-`/reg-webapp-design-reviewer` result with screenshot evidence for rendered changes, and
-record build-db validation/dbdiff in the PR body or a PR comment unless the timestamped
-log is accessible to the future merge runner.
+Issue closure is NOT restated here — the PR body's closing keywords stay authoritative.
+The `visual` and `build_db` lines each stamp the head SHA they were verified on: those
+gates are expensive, so a later push must be visibly distinguishable from "already
+verified on this head" (chief-of-staff refuses to merge when a per-gate SHA trails
+`head`).
+
+The current-head `status: ready-to-merge` gate entry is the single chief-of-staff
+handoff indicator — the PR body carries only the description and closing keywords, and
+evidence is NEVER posted to GitHub (no attachments, no evidence branches, no committed
+screenshots). Do not write `ready-to-merge` if any gate is missing, pending, stale, or
+only reported in the local chat transcript — write `status: blocked` with `blocker`
+naming the missing item instead, and report what chief-of-staff must wait for. A `none`
+Codex signal can be handed to a human with explanation, but it is not enough for
+automerge evidence. A later push makes the entry stale (its `head` no longer matches);
+rerun the gate on the new head and refresh it. Evidence must live IN the gate directory
+(copied, not symlinked): scratch and `/tmp` paths the watcher or reviewer wrote do not
+survive until a later chief-of-staff tick. Whenever you add or repair evidence files in
+an existing gate directory, also refresh `gate.json` (bump `updated`) — the preflight
+probe fingerprints only `gate.json`'s bytes, so an evidence-only change is invisible
+until the file moves.
 
 Pipeline-specific operational notes the gate doesn't carry:
 
@@ -323,20 +342,23 @@ Pipeline-specific operational notes the gate doesn't carry:
   tree.
 
   The watcher copies `reg_meta_build/fqid_slugs/` to scratch before passing
-  `--slug-dir`, so generated `*.auto.toml` files do not dirty the checkout. Remove the
-  scratch DB only after the post-build checks and any needed inspection are complete:
+  `--slug-dir`, so generated `*.auto.toml` files do not dirty the checkout. Copy the
+  watcher's timestamped log and any dbdiff output into the PR's merge-gate directory
+  (they are the `build_db` gate's evidence), then remove the scratch DB only after the
+  post-build checks and any needed inspection are complete:
 
   ```sh
   rm -rf "$db_dir"
   ```
 
 - Do not merge. `/chief-of-staff` performs the squash merge after re-checking live head,
-  CI, Codex bot signal, mergeability, durable proof, and stack order. If a remote branch
+  CI, Codex bot signal, mergeability, gate evidence, and stack order. If a remote branch
   should be deleted after merge, leave that to the merge owner.
 
 Before the next planned PR, fork from the correct base: `origin/main` for independent
 work, or the predecessor PR branch for a stacked dependency. Record the stack order in
-the gate block; do not require an earlier PR to merge before completing the next one.
+each PR's gate entry; do not require an earlier PR to merge before completing the next
+one.
 
 ## Conventions you enforce on dispatch
 
@@ -351,9 +373,10 @@ code, so the fix is always a subagent's.
 Before reporting, **re-verify the work is actually finished** — don't take the per-PR
 steps on trust:
 
-- **Ready for chief-of-staff** — each planned PR is open and non-draft, with either a
-  current-head `pr-pipeline-merge-gate` block marked `status: ready-to-merge`, or a
-  `status: blocked` block naming the missing item.
+- **Ready for chief-of-staff** — each planned PR is open and non-draft, with a
+  current-head `gate.json` in the local merge-gate store marked `status: ready-to-merge`
+  (evidence files present in its directory), or `status: blocked` with `blocker` naming
+  the missing item.
 - **Docs current** — the change doesn't leave authored docs stale anywhere: the touched
   `<package>/DESIGN.md` (including its design-spec prose and any token/symbol it names),
   README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`, `ARCHITECTURE.md`. Step D

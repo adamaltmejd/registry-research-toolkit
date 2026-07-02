@@ -31,8 +31,10 @@ Required output for the PR gate:
 - screenshots or render proof inspected;
 - findings grouped by severity;
 - every finding fixed or dismissed with a reason;
-- a final reviewer result suitable for the lead to publish in the PR body or a PR
-  comment.
+- a final reviewer result suitable for the lead to copy, with the screenshots, into the
+  PR's local merge-gate directory (`merge-gates/pr-<N>/` under the
+  `$XDG_STATE_HOME/registry-research-toolkit` root, default
+  `~/.local/state/registry-research-toolkit/`).
 
 Manual screenshots, `bun` checks, or a lead-agent visual skim do not substitute for this
 reviewer pass.
@@ -71,8 +73,9 @@ demonstrably desktop-only. Use `smoke` only as an additive broad-flow check for 
 browsing or app-shell changes; smoke alone captures the default desktop viewport and is
 not enough for the formal visual gate. Screenshots land in `/tmp/reg-webapp-shots/`;
 include these local paths and a concise proof payload in the reviewer report. The lead
-must publish that reviewer result and screenshot/render evidence in a PR body or comment
-before marking the merge gate ready.
+must copy that reviewer result and its screenshots into the PR's merge-gate directory
+before marking the merge gate ready — `/tmp/reg-webapp-shots/` is purged, so paths there
+are not durable evidence. Never attach evidence to the PR or commit it to the branch.
 
 Browser automation should inspect screenshots and, when available, DOM/accessibility
 snapshots and console output. Do not rely on `bun run lint/check/test/build`; those do
@@ -151,7 +154,7 @@ PR", "intended clipping", or "route not affected by this diff".
 - Render command or URL: <command/URL>
 - Viewports: <tested viewports>
 - Local screenshots inspected: <paths under /tmp/reg-webapp-shots/ or other local paths>
-- PR-visible render proof: <published attachment/comment/artifact/link, or pending lead publication>
+- Merge-gate proof: <files copied to the PR's merge-gate directory, or pending lead copy>
 - Result: <pass / findings fixed / findings dismissed / blocked>
 
 ## Findings
@@ -169,6 +172,6 @@ PR", "intended clipping", or "route not affected by this diff".
 
 reg-webapp-design-reviewer: <pass / blocked>; routes=<routes>; viewports=<viewports>;
 local_screenshots=<paths>;
-pr_visible_proof=<published attachment/comment/artifact/link or pending lead publication>;
+gate_proof=<files in the merge-gate directory or pending lead copy>;
 findings=<none / fixed / dismissed>.
 ```

@@ -26,11 +26,19 @@ sparse milestones plus quiet-period health, and runs `integrity_check`,
 `foreign_key_check`, key table counts, and optional dbdiff after a successful build. It
 uses the SCB value prestage cache by default when SCB is in the provider set.
 
-## Codex Polling
+## Running unattended
 
-Start the watcher once with `exec_command`. When it returns a running session id, poll
-that same session with `write_stdin` and `yield_time_ms=300000` (5 minutes). Do not use
-repeated `exec_command` probes or 30-second polling loops.
+The build is long; launch the watcher once and let it run to completion, then read
+`/tmp/<slug>.summary.json` and the log tail — never re-launch it to check progress.
+
+- Codex: start the watcher once with `exec_command`; when it returns a running session
+  id, poll that same session with `write_stdin` and `yield_time_ms=300000` (5 minutes).
+  Do not use repeated `exec_command` probes or 30-second polling loops.
+- Claude Code: run the watcher as a single backgrounded shell command
+  (`run_in_background`), which exits when the build finishes and yields exactly one
+  completion notification; then read the summary JSON and log tail. Do not wrap the
+  watcher in a subagent — a subagent that backgrounds the build returns before it
+  finishes, its detached process is not tracked, and the completion result is lost.
 
 Report only phase changes, failures, quiet-period health, completion, or explicit status
 requests.
