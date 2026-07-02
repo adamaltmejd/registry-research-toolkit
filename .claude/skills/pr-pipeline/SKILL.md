@@ -134,13 +134,19 @@ its Step A below; for a multi-PR lane, do all the known ones first.
 branch or draft-PR creation: write `pipeline-slots/<slug>.json`
 (`$XDG_STATE_HOME/registry-research-toolkit` root, default `~/.local/state/...`)
 atomically (temp file + rename), where `<slug>` is this pipeline's worktree name, with
-`{"slot": "<slug>", "issues": [<lane issues>], "prs": [], "surface": "claude"}`. This is
-the machine-local concurrency ledger (max 3 parallel pipelines) that the
+`{"slot": "<slug>", "issues": [<lane issues>], "prs": [], "surface": "claude", "session": "<session id>"}`.
+The schema carries **agent ownership** — `surface` (`claude`\|`codex`) plus `session`
+(this Claude session id when you can determine it, else `null`) — so the chief-of-staff
+messages the owning session directly from the ledger instead of a fuzzy thread search.
+This is the machine-local concurrency ledger (max 3 parallel pipelines) that the
 chief-of-staff's watcher gates dispatch on — registering before the drafts exist closes
 the window where an accepted lane is invisible to the budget and a concurrent
 chief-of-staff tick could recommend a colliding fourth lane. The `slot` field must match
-the filename stem or readers treat the file as absent. Update `prs` (atomically) as each
-draft PR opens and as new PRs join the lane. Never release the slot yourself — the
+the filename stem or readers treat the file as absent. **If a slot file for this slug
+already exists**, the chief-of-staff auto-dispatched this lane and pre-stamped its
+ownership (`surface`, `session`, `pid`); UPDATE it — refresh `issues`/`prs`, preserve
+those ownership fields — rather than overwriting blindly. Update `prs` (atomically) as
+each draft PR opens and as new PRs join the lane. Never release the slot yourself — the
 chief-of-staff moves it to `pipeline-slots/done/` when the lane's PRs are all
 merged/closed; a pipeline that self-releases at handoff would free budget its unmerged
 work still occupies.

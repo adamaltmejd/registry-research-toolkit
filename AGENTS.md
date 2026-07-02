@@ -306,7 +306,10 @@ lane additionally registers a **pipeline slot** —
 `$XDG_STATE_HOME/registry-research-toolkit/pipeline-slots/<worktree-slug>.json`, the
 machine-local concurrency ledger (max 3 parallel pipeline agents) the chief-of-staff's
 watcher gates dispatch on; the chief-of-staff releases the slot when the lane's PRs are
-all merged/closed (see the pr-pipeline and chief-of-staff skills for the protocol).
+all merged/closed. The slot file also carries **agent ownership** — `surface`
+(`claude`/`codex`) and the owning `session` id — so the chief-of-staff routes a
+follow-up straight to the owning session from the ledger instead of a fuzzy thread
+search (see the pr-pipeline and chief-of-staff skills for the protocol).
 
 **Chief-of-staff maintenance** — the recurring `chief-of-staff` tick owns routine issue
 maintenance. It may automatically apply evidence-backed tracker fixes: required labels,
@@ -328,8 +331,15 @@ condition and ask the user to fix it before relaunching. Actual implementation w
 always happens in separate worktrees; chief-of-staff coordinates issues/PRs and merges
 ready gated PRs from the main checkout. When a merge creates a required build/release
 boundary, such as DB content that dependent work needs published, chief-of-staff may
-invoke `/release minor` (`$release minor` on Codex surfaces) and then must follow the
-release workflow gates.
+invoke `/release minor` or `/release patch` (`$release minor` / `$release patch` on
+Codex surfaces) and then must follow the release workflow gates; a major release is not
+autonomous. With `/chief-of-staff auto` (opt-in per session) it may also auto-dispatch
+pr-pipeline lanes into free slots via `scripts/cos_dispatch.py`, gated by the
+`<state-root>/auto-dispatch.off` kill switch (present ⇒ fall back to recommending);
+merges in the maintainer-approval classes — a schema/DDL change, a build-affecting PR
+whose dbdiff delta exceeds what the PR/issue states, a change to the COS/merge-gate
+machinery itself, or deploy/infra work or a major release — always wait for the
+maintainer.
 
 # Git
 
