@@ -1,14 +1,30 @@
 #!/usr/bin/env python3
 """Cheap deterministic wake gate for the registry chief-of-staff loop.
 
-This script is meant to run from launchd, cron, or another non-agent scheduler. It
-checks the small set of repo/GitHub signals that can make a chief-of-staff tick useful
-and exits without waking an agent when the state is unchanged.
+This script is the first tool call of a scheduled chief-of-staff agent session: it
+checks the small set of repo/GitHub signals that can make a tick useful and, when the
+state is unchanged, lets the session stop immediately without spending tokens.
 
-Contract:
-  exit 0  idle; snapshot updated, no agent call needed
+Two modes:
+  cos_preflight.py            probe (default): read the state file, take a fresh
+                              snapshot, compare. NEVER writes the state file.
+  cos_preflight.py --commit   write the current snapshot to the state file, print a
+                              one-line confirmation. Does not compare or print reasons.
+
+Probe contract:
+  exit 0  idle; no agent work needed
   exit 10 wake; stdout JSON names the reasons to resume the COS thread
   exit 2  tool/setup error; stderr explains what failed
+
+Commit contract:
+  exit 0  snapshot written; stdout one-line confirmation
+  exit 2  tool/setup error; stderr explains what failed
+
+The session loop is: probe (exit 0 → stop / exit 10 → do the tick) → `--commit` → probe
+again → if 10, keep working in the same tick. Committing only after a successful tick
+gives at-least-once semantics: a failed tick leaves the event uncommitted, so the next
+scheduled session re-observes it, instead of the old at-most-once behavior where writing
+at detection burned the event even when the tick that followed failed.
 
 It does not make coordination decisions, edit issues, merge PRs, or run the dev
 preview. It only decides whether a real chief-of-staff tick is worth spending tokens on.
@@ -38,6 +54,12 @@ MERGE_GATE_START_RE = re.compile(
 GATE_FIELD_RE = re.compile(r"^\s*[-*]?\s*(?P<key>status|head):\s*(?P<value>\S+)",
                            re.IGNORECASE | re.MULTILINE)  # fmt: skip
 NO_STATUS_CHANGES = "projection delta:\nno status changes"
+# plan_sequence.py --tick prints a deterministic `lanes: <verdict>` line on stderr and
+# encodes the same verdict in its exit code (0 fresh / 1 re-rank / 2 re-stamp). An
+# unhandled traceback also exits 1 (or a non-{0,1,2} code) but WITHOUT the sentinel, so
+# we accept 1/2 as a signal only when its sentinel is present; otherwise it's a tool
+# error. This stops a crash + its recovery from reading as two spurious wakes.
+PLAN_TICK_SENTINELS = {1: "lanes: stale (re-rank)", 2: "lanes: stale (re-stamp"}
 
 _PLAN_SPEC = importlib.util.spec_from_file_location(
     "plan_sequence", Path(__file__).with_name("plan_sequence.py")
@@ -111,9 +133,12 @@ def run_plan_tick(epic: int) -> dict[str, Any]:
     proc = run_cmd(
         [sys.executable, "scripts/plan_sequence.py", "--tick", "--epic", str(epic)]
     )
+    sentinel = PLAN_TICK_SENTINELS.get(proc.returncode)
+    if sentinel is not None and sentinel not in proc.stderr:
+        # exit 1/2 without its sentinel is a crash exiting non-zero, not a re-rank/re-stamp
+        # signal — treat as a tool error so the traceback doesn't pollute the fingerprint.
+        raise SystemExit(proc.stderr.strip() or "plan_sequence.py --tick crashed")
     if proc.returncode not in {0, 1, 2}:
-        raise SystemExit(proc.stderr.strip() or "plan_sequence.py --tick failed")
-    if proc.returncode == 2 and "lanes: stale (re-stamp" not in proc.stderr:
         raise SystemExit(proc.stderr.strip() or "plan_sequence.py --tick failed")
     return {
         "exit": proc.returncode,
@@ -169,18 +194,26 @@ def normalize_checks(checks: list[dict[str, Any]]) -> list[dict[str, str | None]
     return sorted(out, key=lambda c: (c["workflow"] or "", c["name"] or ""))
 
 
+# Legacy commit statuses (StatusContext) expose only `state` and no `conclusion`; a
+# FAILURE/ERROR there must read as failing, not fall through the "still running" gate
+# below (COMPLETED/SUCCESS) into "pending".
+FAILING_STATES = {"FAILURE", "ERROR"}
+
+
 def checks_verdict(checks: list[dict[str, Any]]) -> str:
     normalized = normalize_checks(checks)
     if not normalized:
         return "none"
     for check in normalized:
+        if check["status"] in FAILING_STATES or (
+            (conclusion := check["conclusion"])
+            and conclusion not in PASSING_CONCLUSIONS
+        ):
+            return "failing"
+    for check in normalized:
         status = check["status"]
         if status and status not in {"COMPLETED", "SUCCESS"}:
             return "pending"
-    for check in normalized:
-        conclusion = check["conclusion"]
-        if conclusion and conclusion not in PASSING_CONCLUSIONS:
-            return "failing"
     return "passing"
 
 
@@ -193,31 +226,62 @@ def codex_signal(pr: int) -> str:
     return json.loads(proc.stdout)["signal"]
 
 
+def normalize_reviews(reviews: list[dict[str, Any]]) -> list[dict[str, str | None]]:
+    # Only the author login + submittedAt of each latest review — enough to see a new
+    # Codex/human verdict land on an in-flight PR without embedding the (churny) body.
+    out = [
+        {
+            "author": (review.get("author") or {}).get("login"),
+            "submitted_at": review.get("submittedAt"),
+        }
+        for review in reviews
+    ]
+    return sorted(out, key=lambda r: (r["author"] or "", r["submitted_at"] or ""))
+
+
 def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any] | None:
     body = raw.get("body") or ""
     closing = {ref["number"] for ref in raw.get("closingIssuesReferences") or []}
     closing.update(_plan_sequence.closing_issue_numbers_from_body(body, current_repo))
     gate = parse_merge_gate(body, raw["headRefOid"])
+
     if not closing and gate["state"] == "absent":
-        return None
+        # An unclaimed PR (no closing refs, no gate block): the chief still needs to know
+        # it exists so it can fix the missing `Closes #N` claim drift. Include it
+        # MINIMALLY — number + isDraft only. Deliberately NOT the head SHA, so routine
+        # pushes don't wake; only appearance / disappearance / draft-flip does.
+        return {
+            "number": raw["number"],
+            "claimed": False,
+            "draft": bool(raw.get("isDraft")),
+        }
 
     signal = None
     if gate["state"] == "current-ready":
         signal = codex_signal(raw["number"])
 
-    return {
+    summary: dict[str, Any] = {
         "number": raw["number"],
+        "claimed": True,
         "title": raw.get("title") or "",
         "issues": sorted(closing),
         "base": raw.get("baseRefName"),
         "head": raw["headRefOid"],
         "draft": bool(raw.get("isDraft")),
-        "mergeable": raw.get("mergeable"),
+        # Only the CONFLICTING verdict is stable; GitHub's transient UNKNOWN↔MERGEABLE
+        # flapping would otherwise wake the chief on every recompute.
+        "conflicting": raw.get("mergeable") == "CONFLICTING",
+        # Overall checks verdict only — the full per-check-run list would wake on every
+        # individual check transition within one CI run.
         "checks": checks_verdict(raw.get("statusCheckRollup") or []),
-        "check_runs": normalize_checks(raw.get("statusCheckRollup") or []),
         "gate": gate,
         "codex_signal": signal,
     }
+    # A new review on an in-flight issue-closing PR is the chief's "send unblock
+    # follow-up" trigger even before the gate is current-ready, so surface it here.
+    if closing:
+        summary["reviews"] = normalize_reviews(raw.get("latestReviews") or [])
+    return summary
 
 
 def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
@@ -230,7 +294,7 @@ def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
             "--limit",
             str(limit),
             "--json",
-            "number,title,body,closingIssuesReferences,baseRefName,isDraft,mergeable,headRefOid,statusCheckRollup",
+            "number,title,body,closingIssuesReferences,baseRefName,isDraft,mergeable,headRefOid,statusCheckRollup,latestReviews",
         ]
     )
     if len(prs) >= limit:
@@ -240,6 +304,8 @@ def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
         )
     summaries = [summarize_pr(pr, current_repo) for pr in prs]
     return sorted((s for s in summaries if s is not None), key=lambda s: s["number"])
+    # summarize_pr never returns None now (unclaimed PRs get a minimal entry), but the
+    # guard is cheap insurance if that changes.
 
 
 def snapshot_fingerprint(snapshot: dict[str, Any]) -> str:
@@ -251,6 +317,22 @@ def snapshot_fingerprint(snapshot: dict[str, Any]) -> str:
     }
     raw = json.dumps(stable, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _changed_pr_numbers(
+    snapshot: dict[str, Any], previous: dict[str, Any] | None
+) -> set[int]:
+    """PR numbers whose snapshot entry differs from the previous snapshot.
+
+    First run (no previous) counts every PR as changed. Otherwise a PR is changed if it
+    appeared, disappeared, or its entry moved — so a gate reason names only the PRs that
+    actually moved, not every PR in the map.
+    """
+    current = {pr["number"]: pr for pr in snapshot["prs"]}
+    if previous is None:
+        return set(current)
+    prior = {pr["number"]: pr for pr in previous.get("prs") or []}
+    return {n for n in current.keys() | prior.keys() if current.get(n) != prior.get(n)}
 
 
 def actionable_reasons(
@@ -270,32 +352,36 @@ def actionable_reasons(
     if previous is None and snapshot["local_head"] != snapshot["remote_main"]:
         reasons.append("origin/main changed")
 
-    ready = [
-        pr
-        for pr in snapshot["prs"]
-        if pr["gate"]["state"] == "current-ready" and not pr["draft"]
-    ]
-    draft_ready = [
-        pr
-        for pr in snapshot["prs"]
-        if pr["gate"]["state"] == "current-ready" and pr["draft"]
-    ]
-    stale = [pr for pr in snapshot["prs"] if pr["gate"]["state"] == "stale-ready"]
-    if ready and (previous is None or previous.get("prs") != snapshot["prs"]):
-        nums = ", ".join(f"#{pr['number']}" for pr in ready)
-        reasons.append(f"ready merge-gate PR changed: {nums}")
-    if draft_ready and (previous is None or previous.get("prs") != snapshot["prs"]):
-        nums = ", ".join(f"#{pr['number']}" for pr in draft_ready)
-        reasons.append(f"draft PR has ready merge-gate block: {nums}")
-    if stale and (previous is None or previous.get("prs") != snapshot["prs"]):
-        nums = ", ".join(f"#{pr['number']}" for pr in stale)
-        reasons.append(f"stale merge-gate PR changed: {nums}")
+    changed = _changed_pr_numbers(snapshot, previous)
+
+    def _named(pr: dict[str, Any], reason: str, bucket: list[str]) -> None:
+        if pr["number"] in changed:
+            bucket.append(reason)
+
+    ready: list[str] = []
+    draft_ready: list[str] = []
+    stale: list[str] = []
+    for pr in snapshot["prs"]:
+        gate = pr.get("gate", {})
+        num = f"#{pr['number']}"
+        if gate.get("state") == "current-ready" and not pr["draft"]:
+            _named(pr, num, ready)
+        elif gate.get("state") == "current-ready" and pr["draft"]:
+            _named(pr, num, draft_ready)
+        elif gate.get("state") == "stale-ready":
+            _named(pr, num, stale)
+    if ready:
+        reasons.append(f"ready merge-gate PR changed: {', '.join(ready)}")
+    if draft_ready:
+        reasons.append(f"draft PR has ready merge-gate block: {', '.join(draft_ready)}")
+    if stale:
+        reasons.append(f"stale merge-gate PR changed: {', '.join(stale)}")
 
     if previous:
         if previous.get("remote_main") != snapshot["remote_main"]:
             reasons.append("origin/main changed")
-        if previous.get("prs") != snapshot["prs"]:
-            reasons.append("open issue-closing PR state changed")
+        if changed:
+            reasons.append("open PR state changed")
 
     return sorted(dict.fromkeys(reasons))
 
@@ -310,11 +396,28 @@ def load_state(path: Path) -> dict[str, Any] | None:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        raise SystemExit(f"invalid cos-preflight state file {path}: {exc}") from exc
+        # Self-heal: a truncated/corrupt state file is treated as first-run (warn, then
+        # probe as if no prior snapshot). The cost is one extra wake; the alternative —
+        # hard-stopping every run until someone hand-deletes the file — silently disables
+        # the whole gate.
+        print(
+            f"warning: ignoring corrupt cos-preflight state file {path} ({exc}); "
+            "treating as first run",
+            file=sys.stderr,
+        )
+        return None
 
 
 def write_state(path: Path, snapshot: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    parent = path.parent
+    if not parent.exists():
+        # Never mkdir(parents=True) here: with --no-canonical-check and a missing .git,
+        # the default state path (.git/cos-preflight-state.json) would silently create a
+        # stray .git/ directory. Fail clearly instead.
+        raise SystemExit(
+            f"cos-preflight state directory {parent} does not exist; "
+            "run from the canonical checkout or pass an existing --state-file dir"
+        )
     with NamedTemporaryFile(
         "w",
         dir=path.parent,
@@ -360,19 +463,31 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--no-canonical-check",
         action="store_true",
-        help="skip the canonical checkout guard, for tests or local dry-runs",
+        help="skip the canonical checkout guard, for tests or local runs",
     )
-    ap.add_argument("--dry-run", action="store_true", help="do not write state")
+    ap.add_argument(
+        "--commit",
+        action="store_true",
+        help="write the current snapshot to the state file and exit (no comparison); "
+        "run after a successful tick so the observed events are marked handled",
+    )
     args = ap.parse_args(argv)
 
     canonical = None if args.no_canonical_check else args.canonical
     try:
         require_canonical(canonical)
+        if args.commit:
+            snapshot = collect_snapshot(args.epic, args.pr_limit)
+            write_state(args.state_file, snapshot)
+            print(
+                f"committed cos-preflight snapshot {snapshot['fingerprint'][:12]} "
+                f"to {args.state_file}"
+            )
+            return 0
+        # Probe: read prior state, snapshot fresh, compare. Never writes.
         previous = load_state(args.state_file)
         snapshot = collect_snapshot(args.epic, args.pr_limit)
         reasons = actionable_reasons(snapshot, previous)
-        if not args.dry_run:
-            write_state(args.state_file, snapshot)
     except SystemExit as exc:
         message = exc.code if isinstance(exc.code, str) else ""
         if message:

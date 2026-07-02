@@ -38,58 +38,53 @@ For recurring chief-of-staff use, maintain one active heartbeat pointed at one e
 chief-of-staff thread. The goal is one continuing coordinator context, not a set of
 detached jobs.
 
-- Prefer a heartbeat automation whose `target_thread_id` is the chosen chief-of-staff
-  thread.
+- Prefer a heartbeat that resumes the chosen chief-of-staff thread rather than starting
+  a fresh context each cadence.
 - Do not create detached cron/workspace jobs by default; they can run as independent
   chiefs of staff and duplicate merge/recommendation decisions. Use them only after the
   user explicitly accepts that tradeoff.
-- After creating or updating the automation, verify the persisted state before calling
-  it active: `kind`, `status`, cadence, and `target_thread_id` must match the intended
-  heartbeat. If it remains cron-style, paused, or missing the target thread, report that
-  exact state and stop.
 - Keep the scheduled prompt minimal, e.g. `Run exactly one chief-of-staff tick`, so this
   skill remains the source of truth.
 - If a heartbeat fires while the prior tick in that thread is still running, skip the
   new tick and return `DONT_NOTIFY` with reason `previous tick still running`; do not
   overlap issue maintenance, merge inspection, or recommendations.
 
-For high-frequency cadences such as every 15 minutes, prefer a deterministic preflight
-outside the agent instead of waking this skill every time. The built-in heartbeat has no
-shell precondition hook, so it always spends a model turn. Use:
+### In-session minimal tick
+
+There is no external wake wrapper. The surface's own scheduler resumes the one
+chief-of-staff thread on a cadence of roughly 15-30 minutes, and a deterministic
+preflight decides whether the model actually does any work that tick:
 
 ```sh
-scripts/cos_scheduler_tick.sh --thread <chief-of-staff-thread-id>
+uv run --no-project python scripts/cos_preflight.py
 ```
 
-For an active terminal heartbeat that runs until the user presses Ctrl-C, use:
+- **The session's FIRST action each tick is the preflight probe** (never writes state).
+  It records its snapshot in `.git/cos-preflight-state.json` and fires only when
+  repo/GitHub state moved enough to justify a tick: lane drift, issue-projection
+  movement, `origin/main` movement, or relevant issue-closing PR / merge-gate state
+  changes.
 
-```sh
-scripts/cos_scheduler_heartbeat.sh <chief-of-staff-thread-id>
-```
+- **Exit `0` (idle):** stop immediately with `DONT_NOTIFY` reason `idle`, spending
+  nothing beyond that one tool call.
 
-It defaults to a 15-minute interval. Use `--interval <seconds>` to override it.
+- **Exit `2` (tool error):** report the tool error and stop.
 
-The preflight exits `0` when idle, `10` when a real tick should run, and `2` on setup or
-tool errors. It records its snapshot in `.git/cos-preflight-state.json` by default and
-wakes only when repo/GitHub state changes enough to justify a COS tick: lane drift,
-issue-projection movement, `origin/main` movement, or relevant issue-closing PR /
-merge-gate state changes. The scheduler wrapper stays silent on idle and wakes the one
-COS thread only on exit `10`. When a wake is needed, it prints compact status/reason
-lines instead of raw preflight JSON. By default it uses `scripts/cos_app_server_wake.py`
-through `codex app-server --stdio` so the tick is posted into the existing Codex thread,
-the terminal does not stream the agent transcript, and preflight state is committed only
-after the thread returns idle. This updates persisted thread history; active Codex CLI
-or desktop views may need `codex resume <thread-id>` or a relaunch to show the new turn
-until those clients live-refresh app-server-injected turns. Do not run
-`codex resume <thread-id>` while the scheduler says a wake is active; wait for
-`cos-scheduler: wake finished`, because attaching a client to the same active turn can
-interrupt it. If the scheduler reports that the thread is already active and skipped the
-wake, do not resume until that active turn is idle. Use `--wake-backend exec` only as a
-fallback; that path runs
-`codex exec -C <repo> resume <thread-id> '[$chief-of-staff](...)'`, captures Codex's
-progress stream from stderr, and leaves only the final agent stdout visible on success.
-Use `--dry-run` while installing launchd/cron so a wake-worthy state prints the wake
-command without spending an agent turn.
+- **Exit `10` (wake):** run the full tick.
+
+- **At the END of a successful active tick**, commit the snapshot and probe once more:
+
+  ```sh
+  uv run --no-project python scripts/cos_preflight.py --commit
+  ```
+
+  The `--commit` run writes the snapshot; then run the plain probe again. If it exits
+  `10`, handle the new events in the same tick. Bound this: after roughly 3 loops,
+  finish and let the next heartbeat continue.
+
+- **At-least-once by design:** a tick that fails before `--commit` leaves state
+  uncommitted, so the next probe re-fires. Never run `--commit` before the work is
+  actually done.
 
 ## Startup Gate
 
@@ -265,10 +260,12 @@ Automerge is allowed when all of these are true:
   `status: ready-to-merge` and `head: <sha>` matching GitHub's current `headRefOid`.
   This single current-head block is the PR-pipeline handoff signal; no separate
   ready-to-merge comment is required.
-- The handoff block has trusted provenance: the PR came from `pr-pipeline` or a
-  maintainer-run equivalent, and the block was added or refreshed by a trusted
-  maintainer/agent. If the PR author could self-certify the block without that trusted
-  handoff, block automerge and ask the user.
+- The handoff block has trusted provenance. Check it concretely: the PR's head branch
+  lives in this repository (not a fork) AND the PR author is the maintainer or a known
+  agent identity operating for the maintainer; when in doubt, use GraphQL
+  `userContentEdits` to see who last edited the body. Any PR failing this check blocks
+  automerge — ask the user. The rationale: if the PR author could self-certify the block
+  without that trusted handoff, the gate means nothing.
 - The gate block records converged independent review, tests/checks, docs decisions, and
   any required visual or real-data validation. Missing proof blocks automerge. The
   independent-review entry must name the review source and why it satisfies the
