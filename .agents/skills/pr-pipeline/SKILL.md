@@ -231,18 +231,20 @@ durable evidence in the local merge-gate store:
 - stale-head check before recording the handoff; `chief-of-staff` re-checks it
   immediately before and after merge.
 
-After the gate is complete, write the handoff into the **local merge-gate store** (spec
-in AGENTS.md "PR merge gate"): create
-`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/` (`$XDG_STATE_HOME` root
-if set), copy the evidence files in (design-reviewer report + screenshots, `build-db`
-watcher log, dbdiff output — whatever the PR's gates required), and write `gate.json`:
+After the gate is complete, write the handoff into the **local merge-gate store**
+(contract in AGENTS.md "PR merge gate"; this template is the field-level worked
+example): create `~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/`
+(`$XDG_STATE_HOME` root if set), copy the evidence files in FIRST (design-reviewer
+report + screenshots, `build-db` watcher log, dbdiff output — whatever the PR's gates
+required), then write `gate.json` last and atomically (write a temp file in the same
+directory and rename it over `gate.json` — the preflight probe polls this file and must
+never see a torn write):
 
 ```json
 {
-  "pr": 989,
+  "pr": <pr number — must match the directory name>,
   "head": "<full head sha>",
   "status": "ready-to-merge",
-  "closes": [989],
   "updated": "<ISO-8601>",
   "gates": {
     "independent_review": "pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed",
@@ -250,13 +252,19 @@ watcher log, dbdiff output — whatever the PR's gates required), and write `gat
     "ci": "pass; gh pr checks <pr>",
     "tests": "<commands run>",
     "docs": "<updated / not required>",
-    "visual": "<not required / pass; see design-review.md + screenshots in this dir>",
-    "build_db": "<not required / pass; see build-db.log, dbdiff.txt in this dir>",
+    "visual": "<not required / pass; head <sha verified>; see design-review.md + screenshots in this dir>",
+    "build_db": "<not required / pass; head <sha built>; see build-db.log, dbdiff.txt in this dir>",
     "stack": "<none / after #pr / before #pr>"
   },
   "blocker": null
 }
 ```
+
+Issue closure is NOT restated here — the PR body's closing keywords stay authoritative.
+The `visual` and `build_db` lines each stamp the head SHA they were verified on: those
+gates are expensive, so a later push must be visibly distinguishable from "already
+verified on this head" (chief-of-staff refuses to merge when a per-gate SHA trails
+`head`).
 
 The current-head `status: ready-to-merge` gate entry is the single chief-of-staff
 handoff indicator — the PR body carries only the description and closing keywords, and
@@ -267,13 +275,18 @@ naming the missing item, and report what chief-of-staff must wait for. A later p
 makes the entry stale (its `head` no longer matches); rerun the gate on the new head and
 refresh it.
 
+The gate store lives on the maintainer's machine — a pipeline NOT running there (e.g. a
+sandboxed or cloud environment) must not write a sandbox-local gate path; it reports the
+completed gates in its handoff message and leaves the store write to a local session.
+
 Evidence must live IN the gate directory (copied, not symlinked): scratch and `/tmp`
 paths the watcher or reviewer wrote do not survive until a later chief-of-staff tick.
-For rendered changes, copy the `reg-webapp-design-reviewer` report and its screenshots
-into the gate directory; a local `/tmp/reg-webapp-shots/` path is useful in the
-authoring thread but is not durable merge evidence. For build-db, copy the watcher's
-timestamped log and any dbdiff output into the gate directory before removing the
-scratch DB.
+Whenever you add or repair evidence files in an existing gate directory, also refresh
+`gate.json` (bump `updated`) — the preflight probe fingerprints only `gate.json`'s
+bytes, so an evidence-only change is invisible until the file moves. For rendered
+changes, copy the `reg-webapp-design-reviewer` report and its screenshots into the gate
+directory; a local `/tmp/reg-webapp-shots/` path is useful in the authoring thread but
+is not durable merge evidence.
 
 Run the real `build-db` last and once for build-affecting work, using the `build-db`
 skill / `scripts/build_db_watch.py` so the run has a timestamped log, sparse progress,

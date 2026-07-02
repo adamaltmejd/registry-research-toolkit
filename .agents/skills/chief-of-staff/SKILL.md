@@ -289,10 +289,14 @@ and gate evidence; `chief-of-staff` owns the final merge decision and execution.
 Automerge is allowed when all of these are true:
 
 - The PR is open, non-draft, mergeable, and based on `main`.
-- The local gate store has `pr-<N>/gate.json` with `status: ready-to-merge` and `head`
-  matching GitHub's current `headRefOid`. This single current-head entry is the
-  PR-pipeline handoff signal; the PR body carries no gate block and no separate
-  ready-to-merge comment is required.
+- The local gate store has `pr-<N>/gate.json` with `status: ready-to-merge`, a `pr`
+  field matching the directory's PR number, and `head` matching GitHub's current
+  `headRefOid`. Where the `visual` / `build_db` gates apply, their per-gate head stamps
+  must also equal that head — a top-level `head` refresh with a trailing per-gate SHA
+  means the expensive gate was verified on an older head, and blocks automerge (the
+  `build_db` case is self-served below; a trailing `visual` SHA routes a follow-up).
+  This single current-head entry is the PR-pipeline handoff signal; the PR body carries
+  no gate block and no separate ready-to-merge comment is required.
 - Provenance is by construction — only agents on this machine can write the gate store,
   so a fork PR can never self-certify. The one concrete check: the PR's head branch
   lives in this repository (not a fork). A fork PR that somehow has a gate entry is an
@@ -333,8 +337,9 @@ gh pr merge <pr> --squash --match-head-commit <headRefOid>
 
 After each merge, fetch `origin main`, fast-forward the local main checkout with
 `git merge --ff-only origin/main`, and verify the PR's changes are actually present on
-`main`, not merely that GitHub reports a merge commit. Then delete the merged PR's gate
-directory (its evidence has served its purpose; history lives in git and the PR). Prune
+`main`, not merely that GitHub reports a merge commit. Then move the merged PR's gate
+directory to `merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so
+this archive is the audit trail if the merge later shows a regression. Prune (delete)
 gate directories whose PR closed without merging. For a stack, merge one PR at a time in
 dependency order, then re-check the next PR's head, mergeability, checks, Codex bot
 signal, and gate entry before merging it. Do not batch-merge a stack from stale
@@ -342,27 +347,40 @@ evidence.
 
 ### Self-serve build-db verification
 
-When a PR is otherwise merge-ready but its `build_db` gate is unmet — the line is
-missing, the evidence files are absent, or the entry was verified on a different head —
-run the verification yourself instead of routing a follow-up or asking the user. It is a
-script run, not implementation work, so it does not violate the no-code-edits rule:
+When a PR would merge except for its `build_db` gate — the line is missing, the evidence
+files are absent, or the `build_db` head stamp trails the current `head` while every
+other gate is current — run the verification yourself instead of routing a follow-up or
+asking the user. It is a script run, not implementation work, so it does not violate the
+no-code-edits rule. Scope guard: self-serve applies ONLY when `build_db` is the SOLE
+unmet gate. If the whole entry is stale (top-level `head` no longer matches the live
+`headRefOid`, so the other gates were also verified elsewhere), that is the
+"current-head gate mismatch" follow-up class — never repair it by bumping `head`
+yourself, which would launder review/visual verdicts onto a head they never covered.
 
+- Before launching, stamp the intent into `gate.json` (atomically, temp + rename): set
+  the `build_db` line to `running; started <ISO-8601>; log /tmp/<slug>.log`. This is
+  what makes an in-flight self-serve build survive a lost session — the byte-change is
+  fingerprinted, and any later tick reading `running` with no live watcher process knows
+  to harvest the log or relaunch, instead of the PR silently stalling.
 - Fetch the PR head and create a throwaway worktree at that exact SHA
   (`git fetch origin <headRefOid> && git worktree add <scratch-dir> <headRefOid>`) —
   never switch branches in the main checkout.
 - From that worktree, run `scripts/build_db_watch.py` (the `build-db` skill has the full
-  operating guide) as a background task with an absolute
-  `--input-dir <main-checkout>/reg_meta_build/input_data` — or the overlay root from the
-  repo merge-gate rules when the PR changes tracked `reg_meta_build/input_data/**` —
-  narrowing with `--providers` to the PR's affected providers, and
-  `--dbdiff-against <main-baseline-db>` when the PR claims content-neutrality or a small
-  inspected delta.
-- Copy the watcher log and dbdiff output into the PR's gate directory, update the
-  `build_db` line in `gate.json` (you are a trusted local writer), remove the scratch
-  worktree and DB, and proceed to merge on this or the next tick if everything else
-  still passes. A nonzero, unexplained dbdiff on a content-neutral claim is a finding:
-  set `status: blocked` with the diff summary as `blocker` and route THAT to the
-  pipeline.
+  operating guide, including the run-unattended rules) as a single backgrounded shell
+  command with an absolute `--input-dir <main-checkout>/reg_meta_build/input_data` — or
+  the overlay root from the repo merge-gate rules when the PR changes tracked
+  `reg_meta_build/input_data/**` — narrowing with `--providers` to the PR's affected
+  providers, and `--dbdiff-against <main-baseline-db>` when the PR claims
+  content-neutrality or a small inspected delta.
+- Copy the watcher log and dbdiff output into the PR's gate directory, then update the
+  `build_db` line (atomically) to `pass; head <sha built>; ...` naming the evidence
+  files — you are a trusted local writer, but only for the gate you actually verified:
+  never edit the other gates' lines or their head stamps. If the pipeline had left
+  `status: blocked` solely on the missing build, you may flip it to `ready-to-merge`
+  once your build passes and everything else is current-head. Remove the scratch
+  worktree and DB, and merge on this or the next tick if all other automerge items still
+  pass. A nonzero, unexplained dbdiff on a content-neutral claim is a finding: set
+  `status: blocked` with the diff summary as `blocker` and route THAT to the pipeline.
 - Guardrails: one build at a time; skip self-serve while another open pipeline is
   actively running build-affecting work (the existing lane guardrail), and let the tick
   end rather than blocking on the \~20-min build — the background task carries over.
@@ -416,10 +434,11 @@ The PR is blocked only because <specific blocker>. Please fix the handoff eviden
 without changing implementation code unless you discover the evidence is false.
 
 Do this on current head <sha>:
-1. <exact unblock step, e.g. copy the design-reviewer report + screenshots into
-   ~/.local/state/registry-research-toolkit/merge-gates/pr-<pr>/, naming command, route,
-   viewport set, inspected result, and head SHA>.
-2. <update gate.json's gate line and head to match>.
+1. <exact unblock step, e.g. copy the design-reviewer report + screenshots into the
+   PR's merge-gate directory `merge-gates/pr-<pr>/` (`$XDG_STATE_HOME` root, default
+   `~/.local/state/registry-research-toolkit/`), naming command, route, viewport set,
+   inspected result, and head SHA>.
+2. <update gate.json's gate line and head to match — atomically, and bump `updated`>.
 3. Re-check PR #<pr>'s live head and confirm status/head/evidence still match.
 
 Do not merge; chief-of-staff owns merge execution.

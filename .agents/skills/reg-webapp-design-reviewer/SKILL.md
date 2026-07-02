@@ -32,8 +32,9 @@ Required output for the PR gate:
 - findings grouped by severity;
 - every finding fixed or dismissed with a reason;
 - a final reviewer result suitable for the lead to copy, with the screenshots, into the
-  PR's local merge-gate directory
-  (`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/`).
+  PR's local merge-gate directory (`merge-gates/pr-<N>/` under the
+  `$XDG_STATE_HOME/registry-research-toolkit` root, default
+  `~/.local/state/registry-research-toolkit/`).
 
 Manual screenshots, `bun` checks, or a lead-agent visual skim do not substitute for this
 reviewer pass.

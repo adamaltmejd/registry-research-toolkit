@@ -253,18 +253,19 @@ the login-sensitive `gh api` calls. Operate it like this:
   re-trigger with `@codex review` and launch a fresh background poll on the new HEAD.
 - Never key the window on CI going green — CI is a separate gate.
 
-When every gate passes, write the handoff into the **local merge-gate store** (spec in
-CLAUDE.md "PR merge gate"): create
+When every gate passes, write the handoff into the **local merge-gate store** (contract
+in CLAUDE.md "PR merge gate"; this template is the field-level worked example): create
 `~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/` (`$XDG_STATE_HOME` root
-if set), copy the evidence files in (design-reviewer report + screenshots, `build-db`
-watcher log, dbdiff output — whatever the PR's gates required), and write `gate.json`:
+if set), copy the evidence files in FIRST (design-reviewer report + screenshots,
+`build-db` watcher log, dbdiff output — whatever the PR's gates required), then write
+`gate.json` last and atomically (write a temp file in the same directory and rename it
+over `gate.json` — the preflight probe polls this file and must never see a torn write):
 
 ```json
 {
-  "pr": 989,
+  "pr": <pr number — must match the directory name>,
   "head": "<full head sha>",
   "status": "ready-to-merge",
-  "closes": [989],
   "updated": "<ISO-8601>",
   "gates": {
     "independent_review": "pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed",
@@ -272,13 +273,19 @@ watcher log, dbdiff output — whatever the PR's gates required), and write `gat
     "ci": "pass; gh pr checks <pr>",
     "tests": "<commands run>",
     "docs": "<updated / not required>",
-    "visual": "<not required / pass; see design-review.md + screenshots in this dir>",
-    "build_db": "<not required / pass; see build-db.log, dbdiff.txt in this dir>",
+    "visual": "<not required / pass; head <sha verified>; see design-review.md + screenshots in this dir>",
+    "build_db": "<not required / pass; head <sha built>; see build-db.log, dbdiff.txt in this dir>",
     "stack": "<none / after #pr / before #pr>"
   },
   "blocker": null
 }
 ```
+
+Issue closure is NOT restated here — the PR body's closing keywords stay authoritative.
+The `visual` and `build_db` lines each stamp the head SHA they were verified on: those
+gates are expensive, so a later push must be visibly distinguishable from "already
+verified on this head" (chief-of-staff refuses to merge when a per-gate SHA trails
+`head`).
 
 The current-head `status: ready-to-merge` gate entry is the single chief-of-staff
 handoff indicator — the PR body carries only the description and closing keywords, and
@@ -290,7 +297,10 @@ Codex signal can be handed to a human with explanation, but it is not enough for
 automerge evidence. A later push makes the entry stale (its `head` no longer matches);
 rerun the gate on the new head and refresh it. Evidence must live IN the gate directory
 (copied, not symlinked): scratch and `/tmp` paths the watcher or reviewer wrote do not
-survive until a later chief-of-staff tick.
+survive until a later chief-of-staff tick. Whenever you add or repair evidence files in
+an existing gate directory, also refresh `gate.json` (bump `updated`) — the preflight
+probe fingerprints only `gate.json`'s bytes, so an evidence-only change is invisible
+until the file moves.
 
 Pipeline-specific operational notes the gate doesn't carry:
 

@@ -6,13 +6,15 @@ baseline only on an IDLE first run), a steady-state probe never writes the state
 fingerprint (idempotent on retry, refused when stale/mismatched), unchanged snapshots stay
 idle, lane drift wakes, and per-PR merge-gate changes name only the PR(s) that moved. The
 merge-gate handoff lives in the local gate store (pr-<N>/gate.json), so gate tests write
-those files into a tmp gate dir and pass it via --gate-dir / the gate_root parameter.
+those files into a tmp gate dir; unit tests pass it via the gate_root parameter and one
+main()-path test exercises the --gate-dir CLI flag end to end.
 """
 
 from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -46,7 +48,6 @@ def _gate(pr=956, *, status="ready-to-merge", head=HEAD, **extra) -> dict:
         "pr": pr,
         "head": head,
         "status": status,
-        "closes": [742],
         "updated": "2026-07-01T00:00:00+00:00",
         "gates": {"ci": "pass", "tests": "pass"},
         "blocker": None,
@@ -141,11 +142,54 @@ def test_read_merge_gate_corrupt_json_is_absent(
 ) -> None:
     # Self-heal: a corrupt gate.json warns and reads as absent (not exit 2) so one bad file
     # can't disable the whole idle gate.
-    (tmp_path / "pr-956").mkdir()
-    (tmp_path / "pr-956" / "gate.json").write_text("{", encoding="utf-8")
+    path = _write_gate(tmp_path, 956, _gate(956))
+    path.write_text("{", encoding="utf-8")
 
     assert cpf.read_merge_gate(tmp_path, 956, HEAD)["state"] == "absent"
     assert "corrupt merge-gate file" in capsys.readouterr().err
+
+
+@pytest.mark.skipif(
+    hasattr(os, "geteuid") and os.geteuid() == 0,
+    reason="root ignores file-mode bits, so chmod 0o000 stays readable",
+)
+def test_read_merge_gate_unreadable_is_absent(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Self-heal: an unreadable gate.json (OSError, not FileNotFoundError) warns and reads as
+    # absent rather than exiting 2 outside the probe contract.
+    path = _write_gate(tmp_path, 956, _gate(956))
+    path.chmod(0o000)
+    try:
+        assert cpf.read_merge_gate(tmp_path, 956, HEAD)["state"] == "absent"
+    finally:
+        path.chmod(0o644)  # let tmp_path teardown remove it
+    assert "unreadable merge-gate file" in capsys.readouterr().err
+
+
+def test_read_merge_gate_non_utf8_is_absent(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Regression: non-UTF-8 bytes raise UnicodeDecodeError (NOT JSONDecodeError). Catching
+    # ValueError (both are subclasses) keeps this a warn-and-absent self-heal instead of an
+    # uncaught traceback breaking the 0/10/2 exit contract.
+    path = _write_gate(tmp_path, 956, _gate(956))
+    path.write_bytes(b"\xff\xfe{")
+
+    assert cpf.read_merge_gate(tmp_path, 956, HEAD)["state"] == "absent"
+    assert "corrupt merge-gate file" in capsys.readouterr().err
+
+
+def test_read_merge_gate_non_dict_json_is_absent(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Valid JSON but the wrong shape (a list, not a dict): it can't certify a PR, so it
+    # reads as absent with the shape/pr warning.
+    path = _write_gate(tmp_path, 956, _gate(956))
+    path.write_text("[]", encoding="utf-8")
+
+    assert cpf.read_merge_gate(tmp_path, 956, HEAD)["state"] == "absent"
+    assert "unexpected" in capsys.readouterr().err
 
 
 def test_read_merge_gate_pr_mismatch_is_absent(
@@ -303,6 +347,26 @@ def test_corrupt_state_file_self_heals_as_first_run(
 
     assert cpf.load_state(state) is None
     assert "corrupt cos-preflight state file" in capsys.readouterr().err
+
+
+@pytest.mark.skipif(
+    hasattr(os, "geteuid") and os.geteuid() == 0,
+    reason="root ignores file-mode bits, so chmod 0o000 stays readable",
+)
+def test_unreadable_state_file_self_heals_as_first_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Regression: an unreadable state file (OSError) must self-heal to first-run like a
+    # corrupt one — before the shared loader, load_state did not catch OSError, so an
+    # unreadable state file crashed the probe outside the 0/10/2 exit contract.
+    state = tmp_path / "state.json"
+    cpf.write_state(state, _snapshot())
+    state.chmod(0o000)
+    try:
+        assert cpf.load_state(state) is None
+    finally:
+        state.chmod(0o644)  # let tmp_path teardown remove it
+    assert "unreadable cos-preflight state file" in capsys.readouterr().err
 
 
 def test_missing_state_file_is_first_run(tmp_path: Path) -> None:
@@ -732,6 +796,36 @@ def test_idle_first_run_bootstraps_baseline(
     assert cpf.load_state(state) == snap  # bootstrap wrote the baseline
     assert cpf.load_state(cpf.candidate_file(state)) == snap  # candidate staged too
     assert "bootstrap" in capsys.readouterr().err
+
+
+def test_gate_dir_flag_is_wired_into_collect_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # --gate-dir must reach collect_snapshot's gate_root arg. Every other probe test
+    # monkeypatches collect_snapshot with a lambda that DISCARDS that arg, so a mis-wiring
+    # (args.gate_dir dropped) would pass silently. Assert the received gate_root here.
+    state = tmp_path / "state.json"
+    gate_dir = tmp_path / "gates"
+    snap = _snapshot()
+    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+
+    def fake_collect(_epic, _pr_limit, gate_root):
+        assert gate_root == gate_dir
+        return snap
+
+    monkeypatch.setattr(cpf, "collect_snapshot", fake_collect)
+
+    rc = cpf.main(
+        [
+            "--no-canonical-check",
+            "--state-file",
+            str(state),
+            "--gate-dir",
+            str(gate_dir),
+        ]
+    )
+
+    assert rc == 0  # idle snapshot
 
 
 def test_waking_first_run_does_not_write_state(

@@ -180,6 +180,35 @@ def default_gate_root() -> Path:
     return base / "registry-research-toolkit" / "merge-gates"
 
 
+def _read_json_tolerant(path: Path, label: str) -> tuple[bytes, Any] | None:
+    # Shared self-heal loader for the on-disk JSON files (state file, merge-gate file).
+    # Returns (raw_bytes, parsed) or None on any read/decode failure — a missing file is
+    # None with no warning; an unreadable file (OSError) or undecodable/corrupt content
+    # warns then None. json.loads on bytes raises UnicodeDecodeError for non-UTF-8 input,
+    # and read_text raises it too; both are ValueError subclasses alongside JSONDecodeError,
+    # so catching ValueError covers corrupt-JSON AND bad-encoding without an uncaught
+    # traceback breaking the caller's exit contract. Callers keep their own shape checks
+    # (version sentinel; dict + pr-match) on the parsed value.
+    try:
+        raw_bytes = path.read_bytes()
+    except FileNotFoundError:
+        return None
+    except OSError as exc:
+        print(
+            f"warning: ignoring unreadable {label} {path} ({exc}); treating as absent",
+            file=sys.stderr,
+        )
+        return None
+    try:
+        return raw_bytes, json.loads(raw_bytes)
+    except ValueError as exc:
+        print(
+            f"warning: ignoring corrupt {label} {path} ({exc}); treating as absent",
+            file=sys.stderr,
+        )
+        return None
+
+
 def read_merge_gate(
     gate_root: Path, pr_number: int, head_oid: str
 ) -> dict[str, str | bool | None]:
@@ -194,28 +223,10 @@ def read_merge_gate(
         "gate_hash": None,
     }
     path = gate_root / f"pr-{pr_number}" / "gate.json"
-    try:
-        raw_bytes = path.read_bytes()
-    except FileNotFoundError:
+    loaded = _read_json_tolerant(path, "merge-gate file")
+    if loaded is None:
         return absent
-    except OSError as exc:
-        print(
-            f"warning: ignoring unreadable merge-gate file {path} ({exc}); "
-            "treating as absent",
-            file=sys.stderr,
-        )
-        return absent
-    try:
-        gate = json.loads(raw_bytes)
-    except json.JSONDecodeError as exc:
-        # Self-heal (matches load_state): a corrupt gate file warns and reads as absent
-        # rather than exit 2, so one bad file can't disable the whole idle gate.
-        print(
-            f"warning: ignoring corrupt merge-gate file {path} ({exc}); "
-            "treating as absent",
-            file=sys.stderr,
-        )
-        return absent
+    raw_bytes, gate = loaded
     if not isinstance(gate, dict) or gate.get("pr") != pr_number:
         print(
             f"warning: ignoring merge-gate file {path} whose shape/pr is unexpected "
@@ -489,21 +500,14 @@ def candidate_file(state_file: Path) -> Path:
 
 
 def load_state(path: Path) -> dict[str, Any] | None:
-    if not path.exists():
+    # Self-heal via the shared loader: a missing, unreadable, or truncated/corrupt state
+    # file is treated as first-run (warn, then probe as if no prior snapshot). The cost is
+    # one extra wake; the alternative — hard-stopping every run until someone hand-deletes
+    # the file — silently disables the whole gate. The first-run bootstrap re-baselines it.
+    loaded = _read_json_tolerant(path, "cos-preflight state file")
+    if loaded is None:
         return None
-    try:
-        state = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        # Self-heal: a truncated/corrupt state file is treated as first-run (warn, then
-        # probe as if no prior snapshot). The cost is one extra wake; the alternative —
-        # hard-stopping every run until someone hand-deletes the file — silently disables
-        # the whole gate. The first-run bootstrap re-baselines it cleanly.
-        print(
-            f"warning: ignoring corrupt cos-preflight state file {path} ({exc}); "
-            "treating as first run",
-            file=sys.stderr,
-        )
-        return None
+    state = loaded[1]
     if not isinstance(state, dict) or state.get("version") != SNAPSHOT_VERSION:
         # A schema bump (SNAPSHOT_VERSION) changes the snapshot shape, so an old baseline
         # can't be compared meaningfully. Treat it as first-run; the bootstrap re-baselines

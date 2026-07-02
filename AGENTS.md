@@ -349,18 +349,31 @@ this machine, so a local file is durable across worktree deletion, `git clean`, 
 reboots — which `/tmp` and worktree paths are not — and needs no GitHub attachment
 gymnastics. Do NOT post evidence to the PR (no evidence branches, no committed
 screenshots, no body blocks); the PR body carries only the description and closing
-keywords. `gate.json` is head-SHA-bound: `pr`, `head` (full SHA), `status`
-(`ready-to-merge` \| `blocked`), `closes`, `updated`, a `gates` map with one line per
-gate (independent_review, codex_bot, ci, tests, docs, visual, build_db, stack), and
-`blocker` naming the missing item when blocked. A recurring chief-of-staff tick may
-automatically squash-merge a PR only when its gate entry has `status: ready-to-merge`
-with `head` matching the live `headRefOid`, all required evidence files are present, and
-the chief-of-staff re-checks the live PR head, CI, Codex bot signal, mergeability, and
-stack order immediately before merging. Provenance is by construction: only local agents
-can write the store, so a fork PR can never self-certify — but never automerge a PR
-whose head branch is not in this repository, and treat a gate entry for such a PR as an
-error to surface. After a verified merge, the chief-of-staff deletes the PR's gate
-directory; prune entries whose PR closed without merging.
+keywords (which stay authoritative for issue closure — gate.json does not duplicate
+them). The `gate.json` contract: head-SHA-bound (`pr`, `head` full SHA, `status`
+`ready-to-merge` \| `blocked`, `updated`, `blocker` naming the missing item when
+blocked) plus a `gates` map with one line per repo gate; the expensive re-verifiable
+gates (`build_db`, `visual`) each record the head SHA they were verified on inside their
+line. Field-level worked example: the `pr-pipeline` skill. Write evidence files first
+and `gate.json` last, atomically (temp file + rename) — the preflight probe polls it and
+must never see a torn write; after repairing or adding evidence files, refresh
+`gate.json` (bump `updated`) so the byte-change wakes the next tick. Readers treat an
+entry whose `pr` field disagrees with its directory name as absent. A recurring
+chief-of-staff tick may automatically squash-merge a PR only when its gate entry has
+`status: ready-to-merge` with `head` matching the live `headRefOid` (and the
+`build_db`/`visual` per-gate SHAs matching that head where those gates apply), all
+required evidence files are present, and the chief-of-staff re-checks the live PR head,
+CI, Codex bot signal, mergeability, and stack order immediately before merging.
+Provenance is by construction: only local agents can write the store, so a fork PR can
+never self-certify — but never automerge a PR whose head branch is not in this
+repository, and treat a gate entry for such a PR as an error to surface. (Trust is
+machine-level and accepted as such for this single-maintainer repo: any code executed
+locally — a test run, a build — could write the store, exactly as it could previously
+have edited a PR body with the maintainer's credentials; the gate defends against
+process skew, not against malicious local code.) After a verified merge, the
+chief-of-staff archives the PR's gate directory under `merge-gates/merged/` — the PR
+carries no evidence, so the archive IS the audit trail for post-merge regressions; prune
+entries whose PR closed without merging.
 
 - **Independent review** — every PR gets at least one review independent of its author.
   For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier
