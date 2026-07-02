@@ -254,6 +254,24 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
   });
 
+  it("keeps staged rows when the parent rejects an async apply as stale", async () => {
+    const onapply = vi.fn().mockResolvedValue(false);
+    render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+  });
+
   it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
     const onapply = vi.fn();
     render(RepresentationPicker, {

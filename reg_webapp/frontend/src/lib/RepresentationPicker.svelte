@@ -119,6 +119,8 @@ export interface PickerApplyPayload {
   periodChanges: ReturnType<typeof stagedPeriodChanges>;
 }
 
+type PickerApplyResult = boolean | undefined;
+
 let {
   bands,
   axes = [],
@@ -158,8 +160,11 @@ let {
    * leaf, or no hint) marks nothing. */
   focusKey?: string | null;
   /** Commit the staged diff. The parent maps add rows to final `StagedAdd` payloads
-   * and calls `projectStore.applyStagedDiff` once. */
-  onapply: (payload: PickerApplyPayload) => void | Promise<void>;
+   * and calls `projectStore.applyStagedDiff` once. Return false when an async parent
+   * guard rejects the apply so local staging remains visible. */
+  onapply: (
+    payload: PickerApplyPayload,
+  ) => PickerApplyResult | Promise<PickerApplyResult>;
 } = $props();
 
 /** The local staged diff. A key in `stagedAddKeys` means an uncommitted row will be
@@ -449,13 +454,15 @@ async function commit(): Promise<void> {
   }
   applying = true;
   try {
-    await onapply({
+    const applied = await onapply({
       adds: stagedAdds,
       removes: stagedRemoves,
       periodChanges,
     });
-    stagedAddKeys = new Set<string>();
-    stagedRemoveKeys = new Set<string>();
+    if (applied !== false) {
+      stagedAddKeys = new Set<string>();
+      stagedRemoveKeys = new Set<string>();
+    }
   } finally {
     applying = false;
   }

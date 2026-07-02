@@ -3,7 +3,6 @@ import type { PickerRepresentation } from "./catalog";
 import type { ProjectData } from "./project_data";
 import {
   committedPickerRows,
-  finalAddPeriods,
   pickerRowKey,
   type StagedPickerBand,
 } from "./staged_picker";
@@ -68,31 +67,5 @@ describe("committedPickerRows", () => {
         variable: "scb/lisa/dinf",
       }),
     );
-  });
-});
-
-describe("finalAddPeriods", () => {
-  it("merges staged add periods with the existing landing source period", () => {
-    const draft: ProjectData = {
-      schema_version: "2.0.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-      name: "",
-      sources: [
-        {
-          name: "LISA",
-          register_variant: "scb/lisa/ind",
-          period: 2000,
-          bindings: [{ variable: "scb/lisa/other", type: "opaque" }],
-        },
-      ],
-    };
-
-    expect(
-      finalAddPeriods(draft, [
-        { registerVariant: "scb/lisa/ind", period: { from: 2010, to: 2015 } },
-        { registerVariant: "scb/lisa/ind", period: { from: 2018, to: 2020 } },
-      ]).get("scb/lisa/ind"),
-    ).toEqual([2000, { from: 2010, to: 2015 }, { from: 2018, to: 2020 }]);
   });
 });

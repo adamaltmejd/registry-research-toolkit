@@ -21,13 +21,8 @@ import {
   rowAddPeriod,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
-import {
-  looksLikePeriod,
-  type PeriodGrain,
-  periodFromWire,
-  periodToWire,
-} from "./period";
-import { type Period, regMetaReleaseTag } from "./project_data";
+import { looksLikePeriod, type PeriodGrain, periodFromWire } from "./period";
+import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import RepresentationPicker, {
   type PickerApplyPayload,
@@ -38,8 +33,6 @@ import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   committedPickerRows,
-  finalAddPeriods,
-  type PickerAddCandidate,
   rowRegisterVariant,
   stagedRemoveForCommitted,
 } from "./staged_picker";
@@ -581,31 +574,27 @@ $effect(() => {
   applyOutcome = null;
 });
 
-interface StagedSelectionAdd extends PickerAddCandidate {
-  selection: PickerSelection;
-}
-
-function stagedAddCandidate(selection: PickerSelection): StagedSelectionAdd {
+function stagedAddCandidate(selection: PickerSelection) {
   const { band, row } = selection;
   const addWindow = addWindowBounds(period ?? null, pickerWindow);
   const addPeriod = rowAddPeriod(row, addWindow);
   return {
     selection,
     registerVariant: rowRegisterVariant(band, row),
+    periodWire: addPeriod,
     period: periodFromWire(addPeriod),
   };
 }
 
-async function stagedAdd(
-  candidate: StagedSelectionAdd,
-  landingPeriods: ReadonlyMap<string, Period>,
-) {
+async function stagedAdd(candidate: ReturnType<typeof stagedAddCandidate>) {
   const { band, row } = candidate.selection;
-  const landingPeriod = landingPeriods.get(candidate.registerVariant);
-  const resolvePeriod = landingPeriod ? periodToWire(landingPeriod) : null;
   let resolution: BindingResolution;
   try {
-    resolution = await resolveBindingAt(band.key, resolvePeriod, row.variant);
+    resolution = await resolveBindingAt(
+      band.key,
+      candidate.periodWire,
+      row.variant,
+    );
   } catch {
     resolution = { kind: "unresolved" as const, reason: "no-states" as const };
   }
@@ -621,13 +610,13 @@ async function stagedAdd(
 }
 
 /** Apply the staged diff through ONE synchronous store mutation. */
-async function applyStaged(payload: PickerApplyPayload): Promise<void> {
+async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   if (
     payload.adds.length === 0 &&
     payload.removes.length === 0 &&
     payload.periodChanges.length === 0
   ) {
-    return;
+    return true;
   }
   if (projectStore.draft === null && payload.adds.length > 0) {
     projectStore.newProject({
@@ -637,12 +626,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<void> {
   }
   const target = projectStore.draft;
   const candidates = payload.adds.map(stagedAddCandidate);
-  const landingPeriods = finalAddPeriods(projectStore.draft, candidates);
-  const adds = await Promise.all(
-    candidates.map((candidate) => stagedAdd(candidate, landingPeriods)),
-  );
+  const adds = await Promise.all(candidates.map(stagedAdd));
   if (projectStore.draft !== target) {
-    return;
+    return false;
   }
   projectStore.applyStagedDiff({
     adds,
@@ -654,6 +640,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<void> {
     removed: payload.removes.length,
     periodChanged: payload.periodChanges.length,
   };
+  return true;
 }
 </script>
 

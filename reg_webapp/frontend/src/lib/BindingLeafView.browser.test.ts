@@ -370,7 +370,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     );
   });
 
-  it("resolves a staged add against the merged landing source period", async () => {
+  it("resolves a staged add against the picked row period, then merges the source period", async () => {
     projectStore.applyStagedDiff({
       adds: [
         {
@@ -407,7 +407,8 @@ describe("BindingLeafView representation picker (#678)", () => {
     await page.getByRole("button", { name: "Apply staged changes" }).click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(periods).toContain("2000,2010..2015");
+    expect(periods).toContain("2010..2015");
+    expect(periods).not.toContain("2000,2010..2015");
     expect(projectStore.draft?.sources[0]).toEqual(
       expect.objectContaining({
         period: [2000, { from: 2010, to: 2015 }],
@@ -420,6 +421,52 @@ describe("BindingLeafView representation picker (#678)", () => {
         ]),
       }),
     );
+  });
+
+  it("keeps staged keys visible when a draft edit makes async apply stale", async () => {
+    let resolveFetch: () => void = () => {
+      throw new Error("resolve fetch not started");
+    };
+    const resolveStarted = new Promise<void>((resolve) => {
+      vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+        if (params?.period === "2010..2015") {
+          resolve();
+          await new Promise<void>((done) => {
+            resolveFetch = done;
+          });
+          return statesResponse([
+            state({
+              variant: "individer",
+              delivery_column_name: "Kon",
+              data_type: "int",
+            }),
+          ]);
+        }
+        return statesResponse(pickerStates);
+      });
+    });
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await apply.click();
+    await resolveStarted;
+
+    projectStore.updateField("name", "edited during apply");
+    resolveFetch();
+
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(projectStore.draft?.name).toBe("edited during apply");
   });
 
   it("renders committed rows and applies a staged remove only on Apply", async () => {
