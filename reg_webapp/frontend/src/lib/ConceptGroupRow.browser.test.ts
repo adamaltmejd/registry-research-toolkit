@@ -126,10 +126,9 @@ describe("ConceptGroupRow (#673 M6)", () => {
 // ── The >2-axis navigator in the register-browse / picker row (#819 PR2) ──────
 // The matrix path DROPS members differing only on a 3rd axis (two delivery
 // columns of one variable collapse into one 2D cell). ConceptGroupRow renders in
-// register browse AND in the CatalogPicker (pick mode, `onpick` set), so the
-// data-loss bug hid most of the iot family from browse and made it UNSELECTABLE
-// from the project picker. The shared ConceptGroupNavigator must render here too,
-// in BOTH modes, dropping no member.
+// register browse AND in pick mode (`onpick` set), so the data-loss bug hid most
+// of the iot family from browse and made it UNSELECTABLE in pick mode. The shared
+// ConceptGroupNavigator must render here too, in BOTH modes, dropping no member.
 function threeAxisGroup(): ConceptGroup {
   return {
     key: "disponibel-inkomst",

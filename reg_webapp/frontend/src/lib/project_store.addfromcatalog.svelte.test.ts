@@ -316,6 +316,52 @@ describe("addFromCatalog (C1)", () => {
     expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
   });
 
+  it("an already-present add to a FOUND source is a TRUE no-op: period unchanged AND validation not cleared", async () => {
+    projectStore.newProject(SEED);
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
+    );
+    // First add creates+populates the source at period 2018.
+    await projectStore.addFromCatalog(konPayload(), SEED);
+    const periodBefore = projectStore.draft?.sources[0].period;
+    expect(periodBefore).toBe(2018);
+
+    // Establish a GREEN validation so we can prove the no-op does NOT clear it
+    // (setDraft would null `validation` and flip `validatedClean` off, disabling
+    // the order download while the UI reports "already there").
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      })),
+    );
+    await projectStore.validate();
+    expect(projectStore.validation?.ok).toBe(true);
+    expect(projectStore.validatedClean).toBe(true);
+
+    // Re-add the SAME (variable + representation) at a DIFFERENT (disjoint) period.
+    // A pre-fix found path would have merged the period AND cleared validation
+    // before the duplicate guard; the fix guards FIRST, so this is a zero-mutation
+    // no-op.
+    const result = await projectStore.addFromCatalog(
+      konPayload({ resolvedPeriod: "2019" }),
+      SEED,
+    );
+    expect(result).toEqual({
+      status: "already-present",
+      createdSource: false,
+      sourceName: "LISA",
+    });
+    // Period byte-identical (NOT widened to the [2018, 2019] merge).
+    expect(projectStore.draft?.sources[0].period).toBe(periodBefore);
+    // Validation survived — the download gate stays open.
+    expect(projectStore.validation?.ok).toBe(true);
+    expect(projectStore.validatedClean).toBe(true);
+    vi.unstubAllGlobals();
+  });
+
   it("keeps a folded-rename null representation null on a derived resolution (does not overwrite with a resolved column)", async () => {
     projectStore.newProject(SEED);
     // A folded sequential rename intentionally commits a NULL representation. The

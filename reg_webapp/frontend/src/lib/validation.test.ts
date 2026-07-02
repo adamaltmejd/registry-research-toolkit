@@ -176,15 +176,28 @@ describe("findingLocation (pointer → human location)", () => {
     });
   });
 
-  it("labels a source-level path with the source anchor + register_variant catalog link", () => {
+  it("labels a source-level path with the source anchor + REGISTER catalog link (2-seg prefix, #993)", () => {
     const loc = findingLocation("/sources/0/register_variant", sources);
-    // A source-level finding links to the register/variant catalog page (#991).
+    // A source-level finding links to the source's REGISTER page — the 2-seg
+    // provider/register prefix of the register_variant, NOT the 3-seg coordinate
+    // (a variant slug is a query axis, not a browsable node — its link is dead, #993).
     expect(loc).toEqual({
       label: "Source 'lisa_main'",
       anchorId: sourceAnchorId(0),
-      catalogHref: "/catalog/scb/lisa/v1",
-      catalogLabel: "scb/lisa/v1",
+      catalogHref: "/catalog/scb/lisa",
+      catalogLabel: "scb/lisa",
     });
+  });
+
+  it("omits the source-level catalog link when the register_variant has <2 segments (no register prefix)", () => {
+    // A register_variant with fewer than 2 segments has no valid register prefix —
+    // `registerPrefixOf` → "" — so the link is omitted (the no-catalog fallback).
+    const oneSeg = [{ name: "s", register_variant: "scb", bindings: [] }];
+    const loc = findingLocation("/sources/0/register_variant", oneSeg);
+    expect(loc?.label).toBe("Source 's'");
+    expect(loc?.anchorId).toBe(sourceAnchorId(0));
+    expect(loc?.catalogHref).toBeUndefined();
+    expect(loc?.catalogLabel).toBeUndefined();
   });
 
   it("falls back to the 1-based index when the source is unnamed, omitting the catalog link", () => {

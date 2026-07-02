@@ -78,7 +78,7 @@ describe("ValidationPanel — researcher-language findings", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/adeldag");
   });
 
-  it("links a source-level finding to the register/variant catalog page", async () => {
+  it("links a source-level finding to the REGISTER catalog page (2-seg prefix, #993)", async () => {
     await render(ValidationPanel, {
       result: {
         ok: false,
@@ -95,9 +95,11 @@ describe("ValidationPanel — researcher-language findings", () => {
       sources: SOURCES,
     });
 
+    // The source-level link targets the 2-seg provider/register page, NOT the
+    // 3-seg register_variant (a variant slug is a query axis, not a node — #993).
     const link = page.getByRole("link", { name: /Fix in catalog/ });
     await expect.element(link).toBeVisible();
-    await expect.element(link).toHaveAttribute("href", "/catalog/scb/lisa/v1");
+    await expect.element(link).toHaveAttribute("href", "/catalog/scb/lisa");
   });
 
   it("clicking the location label flashes the target binding card", async () => {

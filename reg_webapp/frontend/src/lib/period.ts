@@ -405,11 +405,10 @@ export function periodToWire(period: Period): string | null {
 }
 
 /** The INVERSE of `periodToWire`: shape a wire `?period` string (as the catalog
- * page's PeriodPicker holds it) into a structured `Source.period` the editor's
- * PeriodEditor models (C1 — catalog→project handoff period prefill). The mapping
- * mirrors PeriodEditor's mode inference so a prefilled source opens in the right
- * editor mode:
- *   - a bare integer year (`"2018"`) → the `number` arm (years mode, from=to);
+ * page's PeriodPicker holds it) into a structured `Source.period` (C1 —
+ * catalog→project handoff period prefill). The mapping picks the narrowest
+ * `Source.period` shape that round-trips the wire:
+ *   - a bare integer year (`"2018"`) → the `number` arm (from=to);
  *   - ANY 2-endpoint `from..to` range → the `{from, to}` object, each endpoint
  *     an integer year when it parses as one, else the token string verbatim
  *     (`"VT1992..2009"` → `{from: "VT1992", to: 2009}`). The OBJECT form is the
@@ -422,7 +421,7 @@ export function periodToWire(period: Period): string | null {
  *     the same scalar rules (a blank member rides through as the raw string);
  *   - anything else — a non-year token (`"HT2018"`, `"2019-03"`), a `_default`
  *     sentinel, or a malformed multi-`..` string — rides through as the raw
- *     string (token mode), which is exactly how PeriodEditor would model it.
+ *     single-token string.
  * A null/blank wire string yields `""` (the fresh-source unset period: PR B's
  * unresolved marker + amber hint then guide the user). ADVISORY shaping only — the
  * backend is the canonical period validator. */

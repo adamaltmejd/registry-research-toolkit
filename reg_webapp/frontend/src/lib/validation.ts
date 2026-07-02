@@ -19,7 +19,7 @@
  */
 
 import type { components } from "./api-types";
-import { catalogHref } from "./catalog";
+import { catalogHref, registerPrefixOf } from "./catalog";
 
 export type ValidationIssue = components["schemas"]["ValidationIssueModel"];
 export type ValidationResult = components["schemas"]["ValidationResultModel"];
@@ -52,8 +52,8 @@ export function parseJsonPointer(ptr: string): string[] | null {
  * later `~`→`~0` pass re-escapes into `~01`. This is the exact inverse of
  * `parseJsonPointer`'s `~1`→`/` then `~0`→`~` decode, so the two round-trip.
  * Numeric tokens (array indices) stringify. An EMPTY token array is the whole
- * document → `""`. The c-ii field-highlighting seam builds a field's pointer with
- * this and looks it up against the server's issue list via `issuesForPointer`. */
+ * document → `""`. Callers build a location's pointer with this and match it
+ * against the server's issue list (e.g. `issuesUnderPointer`). */
 export function jsonPointer(tokens: (string | number)[]): string {
   if (tokens.length === 0) {
     return "";
@@ -304,11 +304,20 @@ export function findingLocation(
       };
     }
   }
-  // A source-level issue points at the register/variant catalog page.
+  // A source-level issue points at the source's REGISTER page — the 2-seg
+  // `provider/register` prefix of the `register_variant`, NOT the 3-seg coordinate.
+  // A variant slug is a query axis, not a browsable catalog node, so a 3-seg
+  // `/catalog/<provider>/<register>/<variant>` link would be dead (#993). When the
+  // register_variant has fewer than 2 segments (`registerPrefixOf` → "") there is no
+  // valid register prefix, so the link is omitted (the no-catalog fallback).
   const rv = source?.register_variant;
+  const registerPrefix = typeof rv === "string" ? registerPrefixOf(rv) : "";
   const catalog =
-    typeof rv === "string" && rv.length > 0
-      ? { catalogHref: catalogHref(rv), catalogLabel: rv }
+    registerPrefix.length > 0
+      ? {
+          catalogHref: catalogHref(registerPrefix),
+          catalogLabel: registerPrefix,
+        }
       : {};
   return {
     label: sourceLabel,

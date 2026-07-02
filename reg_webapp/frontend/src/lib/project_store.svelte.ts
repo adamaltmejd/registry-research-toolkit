@@ -184,9 +184,9 @@ let draft = $state<ProjectData | null>(null);
 //
 // The `{#each}` blocks over `sources[]` / `bindings[]` need a STABLE key so Svelte
 // remounts the correct component instance on a middle-remove (an index key rebinds a
-// surviving instance to a shifted item, landing stale per-instance UI — an open
-// CatalogPicker, a BindingEditor `picking` flag, a PeriodEditor's seed — on the
-// WRONG item; see issue #200).
+// surviving instance to a shifted item, landing stale per-instance UI — a card's
+// expanded/error state seeded from the wrong item — on the WRONG item; see issue
+// #200).
 //
 // Stable ids must NEVER enter the serialized draft: `Source`/`Binding` are closed
 // objects (`extra="forbid"` in reg_schema/structural.py) — an injected `_uid` would
@@ -761,11 +761,13 @@ export const projectStore = {
    * time (the #991 write-once model — no client re-derivation engine). Steps:
    *   1. Pristine store → create the untitled project from `seed` (same as New).
    *   2. Find-or-create the source by `register_variant` ALONE (#992). On found:
-   *      merge `payload.resolvedPeriod` into its period (`mergePeriods` → the #307
-   *      list form on a disjoint window). On create: prefill the name (#312) + set
-   *      the period from the page's resolved period.
-   *   3. Duplicate guard: a source already carrying this fqid (+ representation) is a
-   *      no-op → `already-present`.
+   *      the duplicate guard runs FIRST (step 3) BEFORE any mutation; a non-duplicate
+   *      then merges `payload.resolvedPeriod` into its period (`mergePeriods` → the
+   *      #307 list form on a disjoint window). On create: prefill the name (#312) +
+   *      set the period from the page's resolved period.
+   *   3. Duplicate guard (found path only — a fresh source can't hold one): a source
+   *      already carrying this fqid (+ representation) is a TRUE no-op →
+   *      `already-present` with ZERO mutation (no period merge, no setDraft).
    *   4. Resolve ONCE at the SOURCE's (period, variant) and map the resolution to the
    *      binding's FINAL fields (`resolutionToFields`), then append in ONE mutation.
    * Because this is async, the fast-second-add duplicate guard relies on callers
@@ -792,6 +794,13 @@ export const projectStore = {
     //    the found source's period; a fresh source is prefilled from the page period.
     const sources = Array.isArray(draft.sources) ? draft.sources : [];
     const incomingPeriod = periodFromWire(payload.resolvedPeriod);
+
+    /** The landed source's name (read AFTER the create path's #312 prefill). */
+    const nameAt = (index: number): string => {
+      const name = draft?.sources?.[index]?.name;
+      return typeof name === "string" ? name : "";
+    };
+
     let sourceIndex = sources.findIndex(
       (s) => registerVariantOf(s) === payload.registerVariant,
     );
@@ -810,31 +819,24 @@ export const projectStore = {
       sourceIds = ids;
       createdSource = true;
     } else {
-      // Found: extend its period to cover the add's window (#992 period merge).
-      const merged = mergePeriods(
-        sources[sourceIndex].period as Period,
-        incomingPeriod,
-      );
+      // 3. Found: run the duplicate guard FIRST, against the found source, BEFORE
+      //    any period merge or setDraft. `already-present` documents a NO-OP, so a
+      //    duplicate must not widen the source's period (would pull in extra years)
+      //    nor clear `validation` (setDraft would flip `validatedClean` off and
+      //    disable the order download) — the UI would report "already there" while
+      //    silently mutating. Return with ZERO mutation. A fresh source (create
+      //    path) can't hold a duplicate, so the guard only matters here.
+      const found = sources[sourceIndex];
+      if (sourceHasBinding(found, payload.variable, payload.representation)) {
+        return {
+          status: "already-present",
+          createdSource: false,
+          sourceName: nameAt(sourceIndex),
+        };
+      }
+      // Not a duplicate: extend its period to cover the add's window (#992 merge).
+      const merged = mergePeriods(found.period as Period, incomingPeriod);
       setDraft(updateSource(draft, sourceIndex, { period: merged }));
-    }
-
-    /** The landed source's name (read AFTER the create path's #312 prefill). */
-    const nameAt = (index: number): string => {
-      const name = draft?.sources?.[index]?.name;
-      return typeof name === "string" ? name : "";
-    };
-
-    // 3. Duplicate guard against the (found/created) source.
-    const source = draft.sources?.[sourceIndex];
-    if (
-      source &&
-      sourceHasBinding(source, payload.variable, payload.representation)
-    ) {
-      return {
-        status: "already-present",
-        createdSource,
-        sourceName: nameAt(sourceIndex),
-      };
     }
 
     // 4. Resolve ONCE at the SOURCE's (period, variant) and write the FINAL fields.
