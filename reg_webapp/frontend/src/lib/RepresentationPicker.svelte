@@ -1688,10 +1688,17 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     background: var(--warn-bg);
     border-left-color: var(--warn);
   }
-  .row-btn.staged-remove .row-main {
+  .row-btn.staged-remove .primary,
+  .row-btn.staged-remove .col-chip,
+  .row-btn.staged-remove .facet-markers,
+  .row-btn.staged-remove .sub,
+  .row-btn.staged-remove .period {
     text-decoration: line-through;
     text-decoration-thickness: 1px;
     text-decoration-color: var(--warn);
+  }
+  .row-btn.staged-remove .row-main :global(.tag) {
+    text-decoration: none;
   }
   .row-btn.dimmed {
     opacity: 0.45;
