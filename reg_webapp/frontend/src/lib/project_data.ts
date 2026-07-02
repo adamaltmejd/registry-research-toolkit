@@ -106,8 +106,8 @@ export const COLUMN_TYPES = [
 ] as const;
 
 /** Seed for a new project (from `/api/context`): the canonical reg_meta release
- * tag (`reg_meta/v1.x.y` — derive it from the deployment's bare package version
- * with `regMetaReleaseTag`) + the deployment's steward id. `name` and `sources`
+ * tag (derive it from the deployment's bare package version with
+ * `regMetaReleaseTag`) + the deployment's steward id. `name` and `sources`
  * start empty. */
 export interface ProjectSeed {
   reg_meta_version: string;
@@ -115,8 +115,8 @@ export interface ProjectSeed {
 }
 
 /** Construct a fresh Model A skeleton. The version fields are seeded from
- * the deployment context so a new draft already carries the accepted version
- * range (`schema_version` 2.x + `reg_meta/v1.x.y`). */
+ * the deployment context; `schema_version` 2.x is the Model A gate, while
+ * `reg_meta_version` records the catalog release used by this deployment. */
 export function newProjectData(seed: ProjectSeed): ProjectData {
   return {
     schema_version: MODEL_A_SCHEMA_VERSION,
@@ -131,10 +131,8 @@ export function newProjectData(seed: ProjectSeed): ProjectData {
  * Format the deployment's bare reg_meta PACKAGE version
  * (`context.webapp.reg_meta_version`, e.g. `"1.0.0"`) into the canonical
  * project_data release-tag form (`"reg_meta/v1.0.0"`; see reg_meta/DESIGN.md →
- * Release tags and distribution) — Model A files require a v1.x reg_meta release
- * tag. The inverse of the
- * version gate's `regMetaDotted` strip. Empty in → empty out (the context
- * hasn't resolved yet; the seed is corrected on the next New).
+ * Release tags and distribution). Empty in → empty out (the context hasn't
+ * resolved yet; the seed is corrected on the next New).
  */
 export function regMetaReleaseTag(packageVersion: string): string {
   return packageVersion ? `reg_meta/v${packageVersion}` : "";

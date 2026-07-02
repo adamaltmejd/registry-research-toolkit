@@ -44,9 +44,9 @@ describe("newProjectData", () => {
 
 describe("regMetaReleaseTag", () => {
   it("prefixes a bare package version into the canonical reg_meta/v release tag", () => {
-    // A new project must carry a `reg_meta/v1.x.y` release tag (see
-    // reg_meta/DESIGN.md → Release tags and distribution), derived
-    // from the deployment's bare `context.webapp.reg_meta_version`.
+    // A new project carries the deployment's reg_meta release tag (see
+    // reg_meta/DESIGN.md → Release tags and distribution), derived from the
+    // bare `context.webapp.reg_meta_version`.
     expect(regMetaReleaseTag("1.0.0")).toBe("reg_meta/v1.0.0");
     expect(regMetaReleaseTag("1.9.4")).toBe("reg_meta/v1.9.4");
   });
