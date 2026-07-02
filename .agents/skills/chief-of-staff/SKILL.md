@@ -59,11 +59,54 @@ detached jobs.
   active status. If it persisted as a detached/cron-style or paused job instead, report
   that exact state and stop rather than leaving a mis-wired schedule running.
 
+### Two-tier wake
+
+The wake path has two tiers. Both fire the SAME tick — the preflight
+probe/baseline/`--commit` contract below is identical regardless of which tier woke the
+session; the tiers only change WHEN a tick fires.
+
+- **Tier 1 — merge-gate watcher (event-driven merges).** The highest-value event — a
+  PR-pipeline handoff writing `status: ready-to-merge` into the local gate store — is a
+  local file write, so it can wake the loop within seconds instead of waiting out the
+  heartbeat. If the surface exposes a persistent background-monitor primitive that
+  streams a command's stdout lines back into the session as events, arm it ONCE per
+  session (check for an already-running gate-watch monitor first; never arm one per
+  tick) with:
+
+  ```sh
+  uv run --no-project python scripts/cos_gate_watch.py
+  ```
+
+  The watcher polls the gate store (`merge-gates/pr-<N>/gate.json` under
+  `$XDG_STATE_HOME/registry-research-toolkit`, default `~/.local/state/...`) every
+  \~20s, locally with no network calls, and emits one line —
+  `ready gate: pr=<N> head=<sha12> updated=<iso>` — only when a gate BECOMES
+  ready-to-merge: a new handoff, a re-verification (`updated` bump), or a new `head`.
+  Steady-state ready gates, `status: blocked`, evidence-file writes, and self-serve
+  `build_db` running stamps never emit, so the watcher cannot thrash the loop; those
+  signals stay on the Tier-2 poll. On a watcher event, run a normal tick — starting with
+  the preflight probe, exactly as below.
+
+- **Tier 2 — slow hygiene poll (fallback heartbeat).** With the gate watcher armed,
+  stretch the scheduled heartbeat to roughly 45-60 minutes. This tier catches everything
+  the watcher deliberately ignores: remote GitHub drift (new PRs, CI results, Codex
+  verdicts, issue/label edits, `origin/main` movement), blocked gates, and in-flight
+  self-serve builds. It is explicitly NOT the merge path — merges no longer wait on it.
+  If the surface has no monitor primitive or arming failed, keep the heartbeat at the
+  original 15-30 minutes; it is then the only wake path, including for merges.
+
+Caveats: both tiers are session-scoped — a dead session kills the watcher and its timer
+together, which is exactly why the scheduled heartbeat must stay armed (it revives the
+loop from outside). If the surface reports the watcher process exited, re-arm it on the
+next wake — or, if arming keeps failing, revert the heartbeat to 15-30 minutes. The
+watcher is a local file poll on the single-maintainer machine's gate store; it makes no
+wake decisions and the preflight logic is unchanged.
+
 ### In-session minimal tick
 
-There is no external wake wrapper. The surface's own scheduler resumes the one
-chief-of-staff thread on a cadence of roughly 15-30 minutes, and a deterministic
-preflight decides whether the model actually does any work that tick:
+There is no external wake wrapper. A wake — a Tier-1 gate-watch event or the Tier-2
+heartbeat — resumes the one chief-of-staff thread, and a deterministic preflight decides
+whether the model actually does any work that tick:
 
 ```sh
 uv run --no-project python scripts/cos_preflight.py
