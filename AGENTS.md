@@ -54,9 +54,9 @@ state.
 
 ## Reuse first, build last
 
-Apply the global-CLAUDE.md ladder (no change → existing capability → stdlib/platform →
-installed dep → minimal new code → new dep; optimize for risk and maintenance, not line
-count) on every change. Two repo-specific notes:
+Apply the global-CLAUDE.md/AGENTS.md ladder (no change → existing capability →
+stdlib/platform → installed dep → minimal new code → new dep; optimize for risk and
+maintenance, not line count) on every change. Two repo-specific notes:
 
 - **The failure mode here is leaf-helper duplication, not new-module inflation.** A new
   adapter/route legitimately needs a new module, but a small format-agnostic leaf inside
@@ -403,10 +403,11 @@ handoff, block automerge and ask the user.
   (`bun run lint/check/test/build`) never render a pixel, so green `bun` is not
   sufficient. Run the structured repo design-review skill (`/reg-webapp-design-reviewer`
   on Claude Code; `reg-webapp-design-reviewer` on Codex) in a clean subagent/session for
-  layout, responsive, accessibility, and consistency issues. Dispatch a fresh reviewer
-  agent and instruct it to invoke that exact skill; do not run the formal reviewer pass
-  in the lead session or substitute a generic web reviewer. That reviewer pass runs the
-  app and *looks* with the **one-shot driver** —
+  layout, responsive, accessibility, and consistency issues. Dispatch a fresh generic
+  agent and instruct it to invoke that exact skill (not the Claude `reviewer` subagent —
+  it has no Skill tool, so it cannot); do not run the formal reviewer pass in the lead
+  session or substitute a generic web reviewer. That reviewer pass runs the app and
+  *looks* with the **one-shot driver** —
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` (or `dev.sh shot <route>` for
   the changed views): it picks free ports, renders from THIS checkout's `.venv`
   (worktree-correct), screenshots to `/tmp/reg-webapp-shots/`, and **tears the servers

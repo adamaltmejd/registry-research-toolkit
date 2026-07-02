@@ -200,7 +200,8 @@ Route any accepted cuts through a fresh implementer → re-verify → commit, de
 overlap with `/code-review`'s findings. Then **re-run `/code-review` on the
 simplification-fix range** (`git diff <pre-simplify>..HEAD`) — a simplification can
 touch a safety guard, and Step E's review must cover the final HEAD. A clean `/simplify`
-pass records "lean already"; skip only a docs-only or trivial diff (name the skip).
+pass records "lean already"; skip only a docs-only or trivial diff, or a large
+mechanical sweep (the Step 0.3 exemption) — always name the skip.
 
 **Frontend addendum.** For a PR that changes rendered output, run the formal visual
 review alongside `/code-review`: launch a fresh generic `Agent` and tell it to run
@@ -273,13 +274,14 @@ or replace:
 
 The current-head `status: ready-to-merge` block is the single chief-of-staff handoff
 indicator. Do not write it if any gate is missing, pending, stale, or only reported in
-the local chat transcript. A `none` Codex signal can be handed to a human with
-explanation, but it is not enough for automerge evidence. A later push makes the block
-stale; rerun the gate on the new head and refresh it. Proof must survive a later
-chief-of-staff tick: attach/comment the `/reg-webapp-design-reviewer` result with
-screenshot evidence for rendered changes, and record build-db validation/dbdiff in the
-PR body or a PR comment unless the timestamped log is accessible to the future merge
-runner.
+the local chat transcript — use `status: blocked` with the missing item instead, or
+leave the block incomplete and report what chief-of-staff must wait for. A `none` Codex
+signal can be handed to a human with explanation, but it is not enough for automerge
+evidence. A later push makes the block stale; rerun the gate on the new head and refresh
+it. Proof must survive a later chief-of-staff tick: attach/comment the
+`/reg-webapp-design-reviewer` result with screenshot evidence for rendered changes, and
+record build-db validation/dbdiff in the PR body or a PR comment unless the timestamped
+log is accessible to the future merge runner.
 
 Pipeline-specific operational notes the gate doesn't carry:
 
@@ -351,7 +353,7 @@ steps on trust:
 
 - **Ready for chief-of-staff** — each planned PR is open and non-draft, with either a
   current-head `pr-pipeline-merge-gate` block marked `status: ready-to-merge`, or a
-  named blocker.
+  `status: blocked` block naming the missing item.
 - **Docs current** — the change doesn't leave authored docs stale anywhere: the touched
   `<package>/DESIGN.md` (including its design-spec prose and any token/symbol it names),
   README / CLI help, docstrings, `CLAUDE.md`/`AGENTS.md`, `ARCHITECTURE.md`. Step D

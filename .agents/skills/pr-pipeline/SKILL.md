@@ -108,7 +108,10 @@ module instead of hoisted into `reg_meta_build`'s `_curation.py` / `db.py` or
 `reg_webapp`'s `query_input.py`; a large hoist that grows scope is a call to confirm
 with the user, not to do silently. Before review, re-read your own diff and cut what's
 cuttable — but never simplify away PII/MONA confinement, k-anonymity, determinism,
-JSON-contract validation, or anything requested.
+JSON-contract validation, or anything requested. This fold is deliberate: Codex has no
+dedicated simplify pass, so this self-review plus the review step's reuse/simplification
+lens is this surface's substitute for the Claude-side `/simplify` gate — do not "sync"
+that gate in from the Claude mirror as a separate step.
 
 Run focused verification as the work evolves:
 
