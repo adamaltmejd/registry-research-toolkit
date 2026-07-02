@@ -301,6 +301,34 @@ describe("periodChangesWithStagedAdds", () => {
       },
     ]);
   });
+
+  it("preserves multiple same-variant token add windows with a token period change", () => {
+    expect(
+      periodChangesWithStagedAdds(
+        [
+          {
+            registerVariant: "scb/lisa/ind",
+            period: "2020-Q1",
+          },
+        ],
+        [
+          {
+            registerVariant: "scb/lisa/ind",
+            period: "2020-Q2",
+          },
+          {
+            registerVariant: "scb/lisa/ind",
+            period: "2020-Q3",
+          },
+        ],
+      ),
+    ).toEqual([
+      {
+        registerVariant: "scb/lisa/ind",
+        period: ["2020-Q1", "2020-Q2", "2020-Q3"],
+      },
+    ]);
+  });
 });
 
 describe("finalSourcePeriodsForStagedAdds", () => {
@@ -374,6 +402,34 @@ describe("finalSourcePeriodsForStagedAdds", () => {
     );
 
     expect(periods.get("scb/lisa/ind")).toEqual([2000, 2010]);
+  });
+
+  it("keeps multiple same-variant token adds in the final source period", () => {
+    const periods = finalSourcePeriodsForStagedAdds(
+      [
+        {
+          registerVariant: "scb/lisa/ind",
+          period: "2020-Q1",
+        },
+      ],
+      [],
+      [
+        {
+          registerVariant: "scb/lisa/ind",
+          period: "2020-Q2",
+        },
+        {
+          registerVariant: "scb/lisa/ind",
+          period: "2020-Q3",
+        },
+      ],
+    );
+
+    expect(periods.get("scb/lisa/ind")).toEqual([
+      "2020-Q1",
+      "2020-Q2",
+      "2020-Q3",
+    ]);
   });
 });
 

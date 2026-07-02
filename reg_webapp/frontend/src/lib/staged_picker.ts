@@ -274,7 +274,9 @@ export function periodChangesWithStagedAdds(
     const current = addPeriods.get(add.registerVariant);
     addPeriods.set(
       add.registerVariant,
-      current === undefined ? add.period : mergePeriods(current, add.period),
+      current === undefined
+        ? add.period
+        : periodCoverageUnion(current, add.period),
     );
   }
   return changes.map((change) => {
@@ -304,7 +306,9 @@ export function finalSourcePeriodsForStagedAdds(
     const current = periods.get(add.registerVariant);
     periods.set(
       add.registerVariant,
-      current === undefined ? add.period : mergePeriods(current, add.period),
+      current === undefined
+        ? add.period
+        : periodCoverageUnion(current, add.period),
     );
   }
   for (const change of periodChangesWithStagedAdds(changes, adds)) {
@@ -317,18 +321,25 @@ function periodReplacementCoveringAdd(
   replacement: Period,
   addPeriod: Period,
 ): Period {
-  const replacementWire = periodToWire(replacement);
-  const addWire = periodToWire(addPeriod);
-  if (replacementWire === "_default") {
-    return replacement;
+  return periodCoverageUnion(replacement, addPeriod);
+}
+
+function periodCoverageUnion(existing: Period, incoming: Period): Period {
+  const existingWire = periodToWire(existing);
+  const incomingWire = periodToWire(incoming);
+  if (existingWire === "_default") {
+    return existing;
   }
-  if (addWire === "_default") {
-    return addPeriod;
+  if (incomingWire === "_default") {
+    return incoming;
   }
-  if (isYearMergeablePeriod(replacement) && isYearMergeablePeriod(addPeriod)) {
-    return mergePeriods(replacement, addPeriod);
+  if (isYearMergeablePeriod(existing) && isYearMergeablePeriod(incoming)) {
+    return mergePeriods(existing, incoming);
   }
-  return unionBoundedPeriodSegments(replacement, addPeriod) ?? replacement;
+  return (
+    unionBoundedPeriodSegments(existing, incoming) ??
+    mergePeriods(existing, incoming)
+  );
 }
 
 function boundedPeriodSegments(period: Period): BoundedPeriodSegment[] | null {
