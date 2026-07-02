@@ -23,6 +23,8 @@ case "$HOST" in
     *) PROBE_HOST="$HOST" ;;
 esac
 SMOKE_URL="http://${PROBE_HOST}:${PORT}"
+SMOKE_READY_DEADLINE="${REG_WEBAPP_SMOKE_READY_DEADLINE:-60}"
+SMOKE_TIMEOUT="${REG_WEBAPP_SMOKE_TIMEOUT:-10}"
 
 # Start uvicorn in the background so the smoke gate can probe the real serving
 # path (lifespan, baked-DB open, middleware) — not just an in-process app object.
@@ -48,7 +50,11 @@ trap cleanup EXIT INT TERM
 # /api/catalog. --server-pid lets the readiness wait fail FAST if uvicorn aborts
 # on a boot/lifespan failure (broken DB bake) instead of burning the full
 # deadline. Non-zero return halts the container (the trap reaps uvicorn).
-if ! python -m reg_webapp.smoke --base-url "$SMOKE_URL" --server-pid "$SERVER_PID"; then
+if ! python -m reg_webapp.smoke \
+    --base-url "$SMOKE_URL" \
+    --ready-deadline "$SMOKE_READY_DEADLINE" \
+    --timeout "$SMOKE_TIMEOUT" \
+    --server-pid "$SERVER_PID"; then
     echo "entrypoint: smoke gate failed — refusing to serve traffic" >&2
     exit 1
 fi

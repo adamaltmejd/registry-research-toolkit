@@ -118,17 +118,18 @@ steward repo/system and make that system copyable for future stewards.
 (`reg-webapp-swecov`) behind the same Cloudflare Workers pattern as the global catalog.
 The SWECOV Fly jobs use the app-scoped `FLY_API_TOKEN_SWECOV` secret, not the global
 app's `FLY_API_TOKEN`. The SWECOV image bundles BOTH the committed catalog and the
-**flavored** `extend-db` DB (`REG_META_DB` pointed at it). CI keeps the confidential
-flavor artifact out of git: the `SWECOV_REG_META_DB_ZST` secret is a private JSON
-manifest (`tag`, `url`, `sha256`) for the flavored `reg_meta.db.zst`; the bake refuses a
-tag/digest mismatch and leaves `reg_meta_docs.db` on the public release asset for the
-same `reg_meta/v*` tag. The catalog binds steward-only providers (`swedbank`,
-`region-*`, `swecov`, …) that the *global* release DB does not contain, so booting
-`REG_WEBAPP_STEWARD=swecov` against the plain global asset would drop every steward-only
-binding as drift — the flavored DB must ship as the deployment's reg_meta asset, and the
-SWECOV smoke gate fails on any steward catalog drift warning. The `ifau` steward catalog
-has not been authored yet. Order export exists in CSV form (default template) for all
-three.
+**flavored** `extend-db` DB (`REG_META_DB` pointed at it). CI keeps the generated flavor
+artifact out of git, but the SWECOV metadata is non-confidential for the current testing
+steward, so `reg_meta_swecov.db.zst` is a public GitHub release asset on the same
+`reg_meta/v*` tag as the public/global DB. The workflow synthesizes the BuildKit JSON
+manifest (`tag`, `url`, `sha256`), the bake refuses a tag/digest mismatch, and
+`reg_meta_docs.db` stays on the public release asset for that same tag. The catalog
+binds steward-only providers (`swedbank`, `region-*`, `swecov`, …) that the *global*
+release DB does not contain, so booting `REG_WEBAPP_STEWARD=swecov` against the plain
+global asset would drop every steward-only binding as drift — the flavored DB must ship
+as the deployment's reg_meta asset, and the SWECOV smoke gate fails on any steward
+catalog drift warning. The `ifau` steward catalog has not been authored yet. Order
+export exists in CSV form (default template) for all three.
 
 The SPA catalog-authoring mode (distinct from project authoring) and a `reg-meta-build`
 steward-diff CLI are **deferred post-v1**: steward catalogs are plain `ProjectData`
