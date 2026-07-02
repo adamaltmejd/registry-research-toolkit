@@ -264,7 +264,6 @@ $effect(() => {
           {/each}
         </div>
       {/if}
-      <RelatedDocumentsPanel register={leafSlug(node.fqid)} />
       {#if rows.length > 0}
         <!-- Counts stay in VARIABLE units after folding (a group row counts its
              members), so the "x of y" readout still reflects register size. -->
@@ -312,6 +311,7 @@ $effect(() => {
         </Panel>
       {/if}
       <VariantBrowser registerFqid={node.fqid} />
+      <RelatedDocumentsPanel register={leafSlug(node.fqid)} />
     {:else if node.kind === "binding"}
       <!-- Pass the full node down: this no-query browse fetch already resolved
            the variable's metadata + embedded edges + default states. BindingLeafView
@@ -329,7 +329,7 @@ $effect(() => {
       <h2>{nodeLabel(node)}</h2>
       {#if clsRows.length > 0}
         {@const classificationRows = classificationBrowseRows(clsRows)}
-        <Panel title="Catalog-wide index" flush>
+        <div class="classification-table">
           <DataTable
             columns={classificationColumns}
             rows={classificationRows}
@@ -356,11 +356,9 @@ $effect(() => {
               {/if}
             {/snippet}
           </DataTable>
-        </Panel>
+        </div>
       {:else}
-        <Panel title="Catalog-wide index">
-          <EmptyState title="No classifications." />
-        </Panel>
+        <EmptyState title="No classifications." />
       {/if}
     {:else if node.kind === "classification"}
       <!-- #638 PR1: the classification leaf renders through the unified SubjectView
@@ -413,5 +411,25 @@ $effect(() => {
     color: var(--text-muted);
     font-size: var(--text-sm);
     text-align: right;
+  }
+  .classification-table {
+    margin-top: var(--space-3);
+  }
+  /* The classification root page is an index whose visible heading is already
+     "Classifications"; keep DataTable's column semantics for assistive tech but
+     remove the visual header row and stacked-card micro-labels here only. */
+  .classification-table :global(thead) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  .classification-table :global(td:not(.first)::before) {
+    content: none;
   }
 </style>

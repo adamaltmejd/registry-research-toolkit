@@ -507,10 +507,11 @@ query logic beyond plumbing + the response policy.
   `RelatedDocumentsPanel` on register pages only, using the bare register slug. These
   are rehosted register/register-version source PDFs with provenance, not variable-level
   evidence, so `BindingLeafView.svelte` must not inherit them onto every variable page.
-  The panel is another independent docs failure domain: loading/error render inline;
-  absent docs DB, no curated rows, or an empty register result omits the whole section.
-  Each row links the title to `/api/docs/file/{register}/{filename}` and shows
-  `Källa: SCB · {license}` plus a source URL link.
+  It renders after the register's `VariantBrowser` so source PDFs stay at the end of the
+  register page. The panel is another independent docs failure domain: loading/error
+  render inline; absent docs DB, no curated rows, or an empty register result omits the
+  whole section. Each row links the title to `/api/docs/file/{register}/{filename}` and
+  shows `Källa: SCB · {license}` plus a source URL link.
 - **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.svelte`
   renders `DocMentionsPanel` in the `SubjectView` docs slot. These are fuzzy
   variable-aware parsed-doc matches from `/api/docs/for-variable`, not authoritative
