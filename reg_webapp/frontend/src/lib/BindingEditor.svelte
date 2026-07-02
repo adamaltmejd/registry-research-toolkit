@@ -36,9 +36,12 @@ const representation = $derived(strField("representation"));
       <code class="representation" title="Pinned delivery column">{representation}</code>
     {/if}
   </div>
+  <!-- Per-binding accessible name so a screen-reader controls list disambiguates
+       the delete buttons (visible text kept as the label prefix — label-in-name). -->
   <Button
     variant="danger"
     size="sm"
+    aria-label={`Remove binding ${variable || "(no variable)"}`}
     onclick={() => projectStore.removeBinding(sourceIndex, bindingIndex)}
   >
     Remove binding

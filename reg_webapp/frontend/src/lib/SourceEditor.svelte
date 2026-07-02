@@ -81,7 +81,14 @@ const metaRows = $derived([
         </Tag>
       {/if}
     </h3>
-    <Button variant="danger" size="sm" onclick={() => projectStore.removeSource(sourceIndex)}>
+    <!-- Per-source accessible name so a screen-reader controls list disambiguates
+         the delete buttons (visible text kept as the label prefix — label-in-name). -->
+    <Button
+      variant="danger"
+      size="sm"
+      aria-label={`Remove source ${source.name || "(unnamed source)"}`}
+      onclick={() => projectStore.removeSource(sourceIndex)}
+    >
       Remove source
     </Button>
   </header>
