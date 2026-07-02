@@ -18,13 +18,17 @@ Two tiers in one loop:
   slot leaves the ledger below --max-slots — new-lane recommendations follow a merge
   that freed budget; while all slots are busy the watcher stays silent on dispatch
   (merge and maintenance wakes still flow).
-- SLOW (default 600s, remote): run the cos_preflight.py probe as a subprocess. Exit 10
-  emits the probe's reasons; exit 0 (idle) emits nothing; anything else emits a
-  preflight-error line. The probe's baseline/candidate/--commit contract is untouched —
-  the woken tick still starts with its OWN probe and commits its own fingerprint.
-  Exit-10 emissions are deliberately NOT deduped: the baseline only advances when a
-  tick commits, so a re-emitted wake means the events are genuinely still unhandled
-  (at-least-once), and a duplicate costs the agent one cheap idle probe.
+- SLOW (default 600s, remote): run the cos_preflight.py probe as a READ-ONLY
+  subprocess (`--observe`, bounded by --probe-timeout so a hung gh/git call cannot
+  stall the fast tier). Exit 10 emits the probe's reasons; exit 0 (idle) emits
+  nothing; anything else (including a timeout, reported as exit 124) emits a
+  preflight-error line. Observe mode writes neither candidate nor baseline, so a
+  watcher probe racing an active tick can never break that tick's fingerprint-bound
+  --commit — the woken tick still starts with its OWN staging probe and commits its
+  own fingerprint. Exit-10 emissions are deliberately NOT deduped: the baseline only
+  advances when a tick commits, so a re-emitted wake means the events are genuinely
+  still unhandled (at-least-once), and a duplicate costs the agent one cheap idle
+  probe.
 
 The slot ledger lives next to the merge-gate store:
 $XDG_STATE_HOME/registry-research-toolkit/pipeline-slots/<slug>.json, one file per
@@ -64,6 +68,7 @@ DEFAULT_MAX_SLOTS = 3
 DEFAULT_FAST_INTERVAL = 20.0
 DEFAULT_SLOW_INTERVAL = 600.0
 DEFAULT_SLOT_STALE_HOURS = 24.0
+DEFAULT_PROBE_TIMEOUT = 120.0
 
 
 def default_slots_root() -> Path:
@@ -159,12 +164,23 @@ def probe_events(returncode: int, stdout: str, stderr: str) -> list[str]:
     return [f"preflight error (exit {returncode}): {tail}"]
 
 
-def run_probe() -> tuple[int, str, str]:
-    proc = subprocess.run(
-        [sys.executable, str(Path(__file__).with_name("cos_preflight.py"))],
-        capture_output=True,
-        text=True,
-    )
+def run_probe(timeout: float) -> tuple[int, str, str]:
+    # --observe keeps the probe read-only: a watcher probe racing an active tick must
+    # not replace the candidate file that tick will --commit. The timeout bounds how
+    # long a hung gh/git call can block the fast tier; 124 mirrors timeout(1)'s code.
+    try:
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(Path(__file__).with_name("cos_preflight.py")),
+                "--observe",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        return 124, "", f"probe timed out after {int(timeout)}s"
     return proc.returncode, proc.stdout, proc.stderr
 
 
@@ -197,7 +213,7 @@ def watch(args: argparse.Namespace) -> None:
         seen_slots = current_slots
 
         if not args.skip_probe and time.monotonic() >= next_slow:
-            emit(probe_events(*run_probe()))
+            emit(probe_events(*run_probe(args.probe_timeout)))
             next_slow = time.monotonic() + args.slow_interval
 
         if args.once:
@@ -223,6 +239,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--fast-interval", type=float, default=DEFAULT_FAST_INTERVAL)
     ap.add_argument("--slow-interval", type=float, default=DEFAULT_SLOW_INTERVAL)
     ap.add_argument("--slot-stale-hours", type=float, default=DEFAULT_SLOT_STALE_HOURS)
+    ap.add_argument(
+        "--probe-timeout",
+        type=float,
+        default=DEFAULT_PROBE_TIMEOUT,
+        help="seconds before a hung probe subprocess is killed (bounds how long the "
+        "fast tier can be blocked)",
+    )
     ap.add_argument(
         "--once",
         action="store_true",

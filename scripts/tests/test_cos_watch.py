@@ -186,6 +186,14 @@ def test_probe_tool_error_without_stderr() -> None:
     assert cw.probe_events(2, "", "") == ["preflight error (exit 2): no stderr"]
 
 
+def test_probe_timeout_maps_to_error_line() -> None:
+    # run_probe reports a killed (hung) probe as exit 124 with a synthetic stderr; the
+    # mapping must surface it, not swallow it.
+    lines = cw.probe_events(124, "", "probe timed out after 120s")
+
+    assert lines == ["preflight error (exit 124): probe timed out after 120s"]
+
+
 def test_probe_wake_with_garbage_stdout_is_an_error_not_a_crash() -> None:
     lines = cw.probe_events(cw._cos_preflight.WAKE_EXIT, "not json", "")
 

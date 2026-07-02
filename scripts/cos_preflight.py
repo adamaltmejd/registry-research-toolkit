@@ -12,7 +12,7 @@ reasons means there are no events to burn. Observations WITH reasons advance the
 ONLY via the fingerprint-bound `--commit`, so a crash before the end-of-tick commit
 re-fires. A steady-state probe whose fingerprint equals the baseline writes nothing.
 
-Two modes:
+Three modes:
   cos_preflight.py             probe (default): read the committed baseline from the state
                                file, take a fresh snapshot, compare, and always stage the
                                snapshot as a CANDIDATE next to the state file. Per the
@@ -20,6 +20,14 @@ Two modes:
                                baseline directly (first-run bootstrap, or idle drift); a
                                WAKING probe writes only the candidate and lets the
                                end-of-tick commit establish the baseline.
+  cos_preflight.py --observe   read-only probe: same snapshot/compare/exit codes, but
+                               writes NOTHING — no candidate staging, no idle baseline
+                               advance. For an external watcher (scripts/cos_watch.py)
+                               polling on the session's behalf: a mid-tick watcher probe
+                               must never replace the candidate the active tick will
+                               `--commit`, or the commit fails a fingerprint mismatch and
+                               strands handled events. The agent tick's own probe still
+                               stages and commits as usual.
   cos_preflight.py --commit F  promote the observed candidate (identified by the
                                fingerprint F the probe printed) to the state file via one
                                atomic rename and exit. No snapshot collection or network
@@ -636,7 +644,17 @@ def main(argv: list[str] | None = None) -> int:
         "but it does still verify the canonical checkout. Run after a successful tick so "
         "the observed events are marked handled",
     )
+    ap.add_argument(
+        "--observe",
+        action="store_true",
+        help="read-only probe: compute reasons against the committed baseline but write "
+        "nothing (no candidate staging, no idle baseline advance). For external "
+        "watchers polling on the session's behalf; the tick's own probe still stages",
+    )
     args = ap.parse_args(argv)
+    if args.commit is not None and args.observe:
+        print("--observe and --commit are mutually exclusive", file=sys.stderr)
+        return 2
 
     canonical = None if args.no_canonical_check else args.canonical
     try:
@@ -655,30 +673,40 @@ def main(argv: list[str] | None = None) -> int:
         previous = load_state(args.state_file)
         snapshot = collect_snapshot(args.epic, args.pr_limit, args.gate_dir)
         reasons = actionable_reasons(snapshot, previous)
-        # Always stage the candidate — including on the auto-advance paths below — so a
-        # later `--commit <fp>` has the observed snapshot to promote; the fingerprint
-        # binding is what protects against promoting it out of order.
-        write_state(candidate_file(args.state_file), snapshot)
-        # Invariant: the probe auto-advances the baseline whenever it observed NOTHING
-        # actionable (reasons empty) and the observation moved (no baseline yet, or a
-        # fingerprint drift). This is safe by construction — zero reasons means there are
-        # no events to burn — and it closes two holes: (1) an idle first run bootstraps the
-        # baseline so steady state can begin; (2) an idle follow-up probe whose live state
-        # drifted to a reason-free fingerprint records that drift, so a later return to a
-        # previously-committed fingerprint is not suppressed forever by actionable_reasons'
-        # fingerprint-equality early return. A WAKING probe never writes the state file
-        # here: it stages the candidate only and advances the baseline exclusively via the
-        # fingerprint-bound `--commit <fp>`, so a crash before that commit re-fires.
-        if not reasons and (
-            previous is None or previous.get("fingerprint") != snapshot["fingerprint"]
-        ):
-            write_state(args.state_file, snapshot)
-            label = "bootstrap: wrote initial" if previous is None else "advanced idle"
-            print(
-                f"{label} cos-preflight baseline {snapshot['fingerprint'][:12]} "
-                f"to {args.state_file}",
-                file=sys.stderr,
-            )
+        # --observe is a read-only probe: same snapshot/compare/exit codes, but it skips
+        # BOTH writes below — a watcher probe racing an active tick must not replace the
+        # candidate that tick will --commit (fingerprint mismatch would strand handled
+        # events). Unhandled events keep re-firing (baseline unmoved) until the agent's
+        # own staging probe + commit absorbs them.
+        if not args.observe:
+            # Always stage the candidate — including on the auto-advance paths below — so
+            # a later `--commit <fp>` has the observed snapshot to promote; the
+            # fingerprint binding is what protects against promoting it out of order.
+            write_state(candidate_file(args.state_file), snapshot)
+            # Invariant: the probe auto-advances the baseline whenever it observed NOTHING
+            # actionable (reasons empty) and the observation moved (no baseline yet, or a
+            # fingerprint drift). This is safe by construction — zero reasons means there
+            # are no events to burn — and it closes two holes: (1) an idle first run
+            # bootstraps the baseline so steady state can begin; (2) an idle follow-up
+            # probe whose live state drifted to a reason-free fingerprint records that
+            # drift, so a later return to a previously-committed fingerprint is not
+            # suppressed forever by actionable_reasons' fingerprint-equality early return.
+            # A WAKING probe never writes the state file here: it stages the candidate
+            # only and advances the baseline exclusively via the fingerprint-bound
+            # `--commit <fp>`, so a crash before that commit re-fires.
+            if not reasons and (
+                previous is None
+                or previous.get("fingerprint") != snapshot["fingerprint"]
+            ):
+                write_state(args.state_file, snapshot)
+                label = (
+                    "bootstrap: wrote initial" if previous is None else "advanced idle"
+                )
+                print(
+                    f"{label} cos-preflight baseline {snapshot['fingerprint'][:12]} "
+                    f"to {args.state_file}",
+                    file=sys.stderr,
+                )
     except SystemExit as exc:
         message = exc.code if isinstance(exc.code, str) else ""
         if message:

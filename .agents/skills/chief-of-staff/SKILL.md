@@ -86,21 +86,29 @@ It runs two tiers in one loop (both stores live under
   for a slot file untouched for 24h. Steady-state ready gates, `status: blocked`,
   evidence writes, slot claims, and self-serve `build_db` running stamps never emit —
   the watcher cannot thrash the loop.
-- **Slow tier (\~10 min, remote):** runs the `cos_preflight.py` probe as a subprocess
-  and emits `wake: <reasons>` when it fires (exit 10) — remote GitHub drift, lanes
-  needing re-rank/re-stamp, issue-projection movement, `origin/main` movement. An idle
-  probe (exit 0) emits nothing, so idle costs zero agent turns. A probe tool failure
-  emits `preflight error (exit <rc>): ...` — investigate it; never treat watcher silence
-  plus an erroring probe as "all quiet". Exit-10 emissions are deliberately not deduped:
-  the baseline only advances when a tick commits, so a repeat means the events are
-  genuinely still unhandled.
+- **Slow tier (\~10 min, remote):** runs the `cos_preflight.py` probe as a READ-ONLY
+  subprocess (`--observe`, bounded by a timeout so a hung `gh`/`git` call cannot stall
+  the fast tier) and emits `wake: <reasons>` when it fires (exit 10) — remote GitHub
+  drift, lanes needing re-rank/re-stamp, issue-projection movement, `origin/main`
+  movement. Observe mode writes neither candidate nor baseline, so a watcher probe
+  racing an active tick can never break that tick's fingerprint-bound `--commit`. An
+  idle probe (exit 0) emits nothing, so idle costs zero agent turns. A probe tool
+  failure or timeout emits `preflight error (exit <rc>): ...` — investigate it; never
+  treat watcher silence plus an erroring probe as "all quiet". Exit-10 emissions are
+  deliberately not deduped: the baseline only advances when a tick commits, so a repeat
+  means the events are genuinely still unhandled.
 
 On any emission, run a normal tick — starting with your own preflight probe, exactly as
-below. With the watcher armed, keep at most one long scheduled heartbeat (\~60 min) as a
-dead-monitor safety net, and on each wake verify the monitor is still alive — if the
-surface reports the watcher process exited, re-arm it; if the surface has no monitor
-primitive or arming keeps failing, fall back to a 15-30 min heartbeat, which is then the
-only wake path, including for merges.
+below. Slot-ledger emissions (`dispatch:`, `stale slot:`) are themselves the actionable
+input: the preflight does not snapshot the slot ledger, so an idle probe (exit `0`) does
+NOT make them no-ops — read the ledger, handle the slot action (recommend lanes within
+budget / adjudicate the stale slot), then stop. They are advisory and session-scoped;
+the durable truth is the ledger itself, which every full tick re-reads. With the watcher
+armed, keep at most one long scheduled heartbeat (\~60 min) as a dead-monitor safety
+net, and on each wake verify the monitor is still alive — if the surface reports the
+watcher process exited, re-arm it; if the surface has no monitor primitive or arming
+keeps failing, fall back to a 15-30 min heartbeat, which is then the only wake path,
+including for merges.
 
 Caveats: monitor and safety net are session-scoped — a dead session kills both, which is
 why an externally scheduled heartbeat is what revives the loop from outside. The watcher
@@ -134,7 +142,9 @@ uv run --no-project python scripts/cos_preflight.py
   `origin/main` movement, or relevant issue-closing PR / merge-gate state changes.
 
 - **Exit `0` (idle):** stop immediately with `DONT_NOTIFY` reason `idle`, spending
-  nothing beyond that one tool call.
+  nothing beyond that one tool call — unless the wake carried slot-ledger emissions
+  (`dispatch:` / `stale slot:`), which the preflight cannot see: handle those from the
+  emission text (see Deterministic watcher) before stopping.
 
 - **Exit `2` (tool error):** report the tool error and stop.
 
