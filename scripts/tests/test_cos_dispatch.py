@@ -220,7 +220,8 @@ def _args(tmp_path: Path, canonical: Path, **overrides):
 
     defaults = {
         "issues": "1011",
-        "surface": "codex",
+        "tier": "hard",
+        "surface": None,  # None = use the tier's implied surface (matches argparse)
         "slug": None,
         "worktree_root": None,
         "state_root": tmp_path / "state",
@@ -269,7 +270,7 @@ def test_validate_slug_rejects_non_stems(bad: str) -> None:
 
 def test_build_launch_argv_codex_pins_flags() -> None:
     argv = cd.build_launch_argv(
-        "codex", Path("/wt/lane"), [1011, 1012], Path("/state"), None
+        "codex", Path("/wt/lane"), [1011, 1012], Path("/state"), None, []
     )
     assert argv[0:2] == ["codex", "exec"]
     assert argv[argv.index("-C") + 1] == "/wt/lane"
@@ -278,16 +279,86 @@ def test_build_launch_argv_codex_pins_flags() -> None:
     assert argv[argv.index("--add-dir") + 1] == "/state"
     assert "--json" in argv
     assert argv[-1] == "$pr-pipeline 1011 1012"
+    # No profile flags → no model/effort pins.
+    assert "-m" not in argv
+
+
+def test_build_launch_argv_codex_layers_profile_flags_before_prompt() -> None:
+    argv = cd.build_launch_argv(
+        "codex",
+        Path("/wt/lane"),
+        [1011],
+        Path("/state"),
+        None,
+        ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"],
+    )
+    # Profile flags sit after --json and before the prompt (still the last arg).
+    assert argv[argv.index("-m") + 1] == "gpt-5.5"
+    assert argv[-1] == "$pr-pipeline 1011"
+    assert argv.index("--json") < argv.index("-m")
 
 
 def test_build_launch_argv_claude_uses_session_and_slash_prompt() -> None:
     argv = cd.build_launch_argv(
-        "claude", Path("/wt/lane"), [1011], Path("/state"), "SID-123"
+        "claude", Path("/wt/lane"), [1011], Path("/state"), "SID-123", []
     )
     assert argv[0] == "claude"
     assert argv[argv.index("--session-id") + 1] == "SID-123"
     assert "--dangerously-skip-permissions" in argv
     assert argv[argv.index("-p") + 1] == "/pr-pipeline 1011"
+    # No profile flags → no advisor pins.
+    assert "--advisor" not in argv
+
+
+def test_build_launch_argv_claude_layers_profile_flags() -> None:
+    argv = cd.build_launch_argv(
+        "claude",
+        Path("/wt/lane"),
+        [1011],
+        Path("/state"),
+        "SID-123",
+        ["--model", "claude-sonnet-5", "--effort", "high", "--advisor", "opus"],
+    )
+    assert argv[argv.index("--model") + 1] == "claude-sonnet-5"
+    assert argv[argv.index("--effort") + 1] == "high"
+    assert argv[argv.index("--advisor") + 1] == "opus"
+    assert argv[argv.index("-p") + 1] == "/pr-pipeline 1011"
+
+
+# --- resolve_profile: tier → (surface, flags), with the --surface override rule ---
+
+
+def test_resolve_profile_default_hard_is_codex_gpt55() -> None:
+    surface, flags = cd.resolve_profile("hard", None)
+    assert surface == "codex"
+    assert flags == ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"]
+
+
+def test_resolve_profile_easy_is_claude_sonnet_opus() -> None:
+    surface, flags = cd.resolve_profile("easy", None)
+    assert surface == "claude"
+    assert flags == [
+        "--model",
+        "claude-sonnet-5",
+        "--effort",
+        "high",
+        "--advisor",
+        "opus",
+    ]
+
+
+def test_resolve_profile_surface_restating_tier_keeps_profile() -> None:
+    assert cd.resolve_profile("hard", "codex") == (
+        "codex",
+        ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"],
+    )
+
+
+def test_resolve_profile_surface_contradicting_tier_drops_pins() -> None:
+    # easy tier (claude) overridden to codex → codex with AMBIENT defaults, no pins.
+    assert cd.resolve_profile("easy", "codex") == ("codex", [])
+    # hard tier (codex) overridden to claude → claude ambient, no advisor pins.
+    assert cd.resolve_profile("hard", "claude") == ("claude", [])
 
 
 def test_extract_session_id_from_thread_started() -> None:
@@ -399,6 +470,7 @@ def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     slug = "auto-codex-issue-1011"
     assert result["slot"] == slug
     assert result["surface"] == "codex"
+    assert result["tier"] == "hard"  # default tier
     assert result["session"] == "019f2334-4455-70a1-bc1b-2e86d5ecfccf"
     assert isinstance(result["pid"], int)
 
@@ -407,7 +479,7 @@ def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     assert worktree.is_dir()
     assert (worktree / "README.md").read_text(encoding="utf-8") == "seed\n"
 
-    # Stub recorded the pinned launch flags + cwd.
+    # Stub recorded the pinned launch flags + cwd + hard-tier profile pins.
     rec = _wait_for_record(record)
     assert rec["cwd"] == str(worktree)
     assert "workspace-write" in rec["argv"]
@@ -415,14 +487,17 @@ def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     assert "--add-dir" in rec["argv"]
     assert "--json" in rec["argv"]
     assert "$pr-pipeline 1011" in rec["argv"]
+    assert rec["argv"][rec["argv"].index("-m") + 1] == "gpt-5.5"
+    assert "model_reasoning_effort=xhigh" in rec["argv"]
 
-    # Slot file: shape + slot==stem + pid + dispatched.
+    # Slot file: shape + slot==stem + pid + dispatched + tier.
     slot_file = state / "pipeline-slots" / f"{slug}.json"
     slot = json.loads(slot_file.read_text(encoding="utf-8"))
     assert slot["slot"] == slug == slot_file.stem
     assert slot["issues"] == [1011]
     assert slot["prs"] == []
     assert slot["surface"] == "codex"
+    assert slot["tier"] == "hard"
     assert slot["session"] == "019f2334-4455-70a1-bc1b-2e86d5ecfccf"
     assert isinstance(slot["pid"], int)
     assert slot["dispatched"]
@@ -434,11 +509,14 @@ def test_happy_path_claude(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     canonical = _make_origin(tmp_path)
     record = _stub_bin(_hermetic_env, "claude")
     state = tmp_path / "state"
-    rc = cd.dispatch(_args(tmp_path, canonical, surface="claude", state_root=state))
+    # easy tier → claude surface with the blessed sonnet-5 + opus-advisor profile.
+    rc = cd.dispatch(_args(tmp_path, canonical, tier="easy", state_root=state))
 
     assert rc == 0
     result = json.loads(capsys.readouterr().out)
     slug = "auto-claude-issue-1011"
+    assert result["surface"] == "claude"
+    assert result["tier"] == "easy"
     session = result["session"]
     # Pre-generated uuid, known before launch and passed via --session-id.
     assert session and session == str(__import__("uuid").UUID(session))
@@ -447,11 +525,16 @@ def test_happy_path_claude(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     assert rec["argv"][rec["argv"].index("--session-id") + 1] == session
     assert "--dangerously-skip-permissions" in rec["argv"]
     assert "/pr-pipeline 1011" in rec["argv"]
+    # easy-tier profile pins.
+    assert rec["argv"][rec["argv"].index("--model") + 1] == "claude-sonnet-5"
+    assert rec["argv"][rec["argv"].index("--effort") + 1] == "high"
+    assert rec["argv"][rec["argv"].index("--advisor") + 1] == "opus"
 
     slot = json.loads(
         (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
     )
     assert slot["surface"] == "claude"
+    assert slot["tier"] == "easy"
     assert slot["session"] == session
 
 
@@ -514,21 +597,72 @@ def test_launch_failure_no_slot_and_names_worktree(
     assert not (state / "pipeline-slots" / f"{slug}.json").exists()
 
 
-def test_dry_run_no_side_effects(tmp_path: Path, capsys) -> None:
+def test_surface_override_contradicting_tier_drops_pins(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # easy tier (claude) forced onto codex → launches codex with AMBIENT defaults: the
+    # base pinned flags but NO model/effort/advisor profile pins.
     canonical = _make_origin(tmp_path)
+    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
-
-    rc = cd.dispatch(_args(tmp_path, canonical, state_root=state, dry_run=True))
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, tier="easy", surface="codex", state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+    )
 
     assert rc == 0
     result = json.loads(capsys.readouterr().out)
+    assert result["surface"] == "codex"
+    assert result["tier"] == "easy"  # tier recorded even though its pins were dropped
+
+    rec = _wait_for_record(record)
+    # Base flags present, but NONE of the tier's model/effort/advisor pins.
+    assert "workspace-write" in rec["argv"]
+    assert "$pr-pipeline 1011" in rec["argv"]
+    assert "-m" not in rec["argv"]
+    assert "gpt-5.5" not in rec["argv"]
+    assert "--model" not in rec["argv"]
+    assert "--advisor" not in rec["argv"]
+    assert "model_reasoning_effort=xhigh" not in rec["argv"]
+
+
+def test_dry_run_no_side_effects_reflects_tier(tmp_path: Path, capsys) -> None:
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+
+    # Default (hard) tier.
+    rc = cd.dispatch(_args(tmp_path, canonical, state_root=state, dry_run=True))
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
     assert result["launch_argv"][0] == "codex"
+    assert result["surface"] == "codex"
+    assert result["tier"] == "hard"
+    assert "gpt-5.5" in result["launch_argv"]
     assert result["slot_path"].endswith("auto-codex-issue-1011.json")
     # Zero side effects: no worktree, no slot file, no log dir.
     slug = "auto-codex-issue-1011"
     assert not (canonical / ".claude" / "worktrees" / slug).exists()
     assert not (state / "pipeline-slots").exists()
     assert not (state / "dispatch-logs").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_dry_run_easy_tier_reflects_claude_profile(tmp_path: Path, capsys) -> None:
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, tier="easy", state_root=state, dry_run=True)
+    )
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["launch_argv"][0] == "claude"
+    assert result["surface"] == "claude"
+    assert result["tier"] == "easy"
+    assert "claude-sonnet-5" in result["launch_argv"]
+    assert "opus" in result["launch_argv"]
+    assert result["slot_path"].endswith("auto-claude-issue-1011.json")
     _no_real_launch(tmp_path)
 
 
@@ -589,6 +723,33 @@ def test_non_repo_canonical_refused_before_any_git_mutation(
     assert rc == 2
     assert "not a git worktree" in capsys.readouterr().err
     assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_cli_default_tier_is_hard(tmp_path: Path, capsys) -> None:
+    # Through main()'s real argparse (not the _args helper): omitting --tier defaults to
+    # hard, so the resolved surface is codex with the gpt-5.5 xhigh profile.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+            "--dry-run",
+        ]
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["tier"] == "hard"
+    assert result["surface"] == "codex"
+    assert "gpt-5.5" in result["launch_argv"]
     _no_real_launch(tmp_path)
 
 

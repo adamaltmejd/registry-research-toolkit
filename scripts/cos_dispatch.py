@@ -34,6 +34,27 @@ Steps (fail-fast between each):
 Exit codes: 0 launched (or --dry-run OK); 2 usage/collision/tool error; 3 kill switch;
 4 no free slot budget.
 
+Launch profiles (`--tier`, default `hard`): each tier is ONE blessed launch profile —
+a surface plus the model/effort/advisor pins that are validated to work together, kept
+together in LAUNCH_PROFILES so the set can't drift apart:
+
+  hard (default): codex + `-m gpt-5.5 -c model_reasoning_effort=xhigh`. The default
+                  pipeline for everything non-trivial.
+  easy:           claude + `--model claude-sonnet-5 --effort high --advisor opus`. A
+                  cheaper Sonnet-5 main that escalates hard decisions to an Opus advisor.
+
+Rationale: small, straightforward lanes go to the cheaper Sonnet-5 pipeline (Opus advisor
+for the hard calls); everything else defaults to the Codex gpt-5.5 xhigh pipeline. The
+easy/hard CHOICE is the chief-of-staff's judgment at dispatch time — this script only
+encodes the profiles. The model+advisor stay paired in the profile because `claude` exits
+with an error on a rejected main/advisor pairing (Sonnet-5 main + Opus advisor is the
+accepted combo; requires Claude Code >= 2.1.98).
+
+`--surface` is an explicit override. When it CONTRADICTS the tier's implied surface, the
+launch runs on that surface with its AMBIENT defaults — NO model/effort/advisor pins, so
+we never invent an unblessed model combo. When `--surface` merely restates the tier's own
+surface (or is omitted), the tier's profile applies in full.
+
 Stores match the sibling cos_* scripts: --state-root defaults to the parent of
 cos_preflight.default_gate_root() ($XDG_STATE_HOME/registry-research-toolkit), so the
 pipeline-slots ledger, merge-gates, and dispatch logs all sit together and a --state-root
@@ -59,12 +80,44 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from types import ModuleType
 
-DEFAULT_SURFACE = "codex"
+DEFAULT_TIER = "hard"
+
+# The blessed launch profiles, kept in ONE place so surface + model/effort/advisor stay
+# together as a validated set (never composed ad hoc at a call site). Each value is
+# (surface, extra_flags): `surface` is the tier's implied dispatch surface; the flags are
+# the EXTRA launch flags layered on top of that surface's pinned base flags (see
+# build_launch_argv). The flags are validated to work together — notably the claude
+# main/advisor pairing, which `claude` rejects with an error if unblessed. An explicit
+# --surface that contradicts the tier surface drops the flags (see resolve_profile),
+# because the pins are only valid for their own surface.
+LAUNCH_PROFILES: dict[str, tuple[str, list[str]]] = {
+    "hard": ("codex", ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"]),
+    "easy": (
+        "claude",
+        ["--model", "claude-sonnet-5", "--effort", "high", "--advisor", "opus"],
+    ),
+}
+
 # Bounded poll for the codex thread id in its JSONL log. 30s ceiling; a null session is
 # a tolerated outcome (the chief falls back to fuzzy thread search), so this never blocks
 # the dispatch. Injectable via dispatch() args so the timeout test doesn't sleep 30s.
 DEFAULT_CODEX_ID_TIMEOUT = 30.0
 DEFAULT_CODEX_ID_POLL = 0.25
+
+
+def resolve_profile(tier: str, surface_override: str | None) -> tuple[str, list[str]]:
+    """Resolve (surface, extra_flags) from the tier and an optional --surface override.
+
+    - No override, or an override that restates the tier's own surface → the tier's full
+      profile (its surface + its validated model/effort/advisor flags).
+    - An override that CONTRADICTS the tier's surface → that surface with AMBIENT defaults
+      (empty flags): the tier's pins are only valid for the tier's own surface, and we do
+      not synthesize an unblessed model combo for the other one.
+    """
+    tier_surface, flags = LAUNCH_PROFILES[tier]
+    if surface_override is None or surface_override == tier_surface:
+        return tier_surface, list(flags)
+    return surface_override, []
 
 
 def _load_cos_preflight() -> ModuleType:
@@ -126,11 +179,15 @@ def build_launch_argv(
     issues: list[int],
     state_root: Path,
     session_id: str | None,
+    profile_flags: list[str],
 ) -> list[str]:
-    """The exact detached launch argv for the chosen surface.
+    """The exact detached launch argv for the chosen surface + tier profile flags.
 
     The pr-pipeline prompt is ONE string argument — `$pr-pipeline 1011 1012` (codex) /
-    `/pr-pipeline 1011 1012` (claude) — with issues space-separated.
+    `/pr-pipeline 1011 1012` (claude) — with issues space-separated. `profile_flags` are
+    the tier's validated model/effort/advisor pins (empty when a --surface override
+    contradicts the tier), inserted before the prompt but after the surface's own pinned
+    base flags.
     """
     issues_arg = " ".join(str(n) for n in issues)
     if surface == "codex":
@@ -146,6 +203,7 @@ def build_launch_argv(
             "--add-dir",
             str(state_root),
             "--json",
+            *profile_flags,
             f"$pr-pipeline {issues_arg}",
         ]
     # claude: the session id is pre-generated so we know it before launch.
@@ -154,6 +212,7 @@ def build_launch_argv(
         "claude",
         "--session-id",
         session_id,
+        *profile_flags,
         "-p",
         f"/pr-pipeline {issues_arg}",
         "--dangerously-skip-permissions",
@@ -259,6 +318,7 @@ def write_slot_file(
     slug: str,
     issues: list[int],
     surface: str,
+    tier: str,
     session_id: str | None,
     pid: int,
 ) -> None:
@@ -270,6 +330,7 @@ def write_slot_file(
         "issues": issues,
         "prs": [],
         "surface": surface,
+        "tier": tier,
         "session": session_id,
         "pid": pid,
         "dispatched": datetime.now(UTC).isoformat(),
@@ -328,7 +389,10 @@ def dispatch(
     _cos_preflight.require_canonical(canonical)
 
     issues = parse_issues(args.issues)
-    surface = args.surface
+    tier = args.tier
+    # The tier picks the surface and its blessed pins; an explicit --surface can override
+    # the surface (dropping the pins if it contradicts the tier). See resolve_profile.
+    surface, profile_flags = resolve_profile(tier, args.surface)
     slug = args.slug or default_slug(surface, issues)
     validate_slug(slug)
 
@@ -362,13 +426,21 @@ def dispatch(
     # A pre-generated uuid is the claude session id (known before launch); codex's is
     # parsed from its JSONL log after launch.
     pre_session = str(uuid.uuid4()) if surface == "claude" else None
-    argv = build_launch_argv(surface, worktree, issues, state_root, pre_session)
+    argv = build_launch_argv(
+        surface, worktree, issues, state_root, pre_session, profile_flags
+    )
 
     if args.dry_run:
-        # Checks 1–3 only; no worktree, no launch, no slot file, no log.
+        # Checks 1–3 only; no worktree, no launch, no slot file, no log. The argv already
+        # reflects the resolved tier profile; surface/tier are echoed for the operator.
         print(
             json.dumps(
-                {"launch_argv": argv, "slot_path": str(slot_path)},
+                {
+                    "launch_argv": argv,
+                    "slot_path": str(slot_path),
+                    "surface": surface,
+                    "tier": tier,
+                },
                 indent=2,
             )
         )
@@ -409,7 +481,7 @@ def dispatch(
 
     # 7. Slot file — written LAST, only after a successful launch, so a failed launch
     # never leaks a slot.
-    write_slot_file(slot_path, slug, issues, surface, session_id, pid)
+    write_slot_file(slot_path, slug, issues, surface, tier, session_id, pid)
 
     print(
         json.dumps(
@@ -417,6 +489,7 @@ def dispatch(
                 "slot": slug,
                 "worktree": str(worktree),
                 "surface": surface,
+                "tier": tier,
                 "session": session_id,
                 "pid": pid,
                 "log": str(log_path),
@@ -435,10 +508,19 @@ def main(argv: list[str] | None = None) -> int:
         help="comma-separated issue numbers for the pr-pipeline lane, e.g. 1011,1012",
     )
     ap.add_argument(
+        "--tier",
+        choices=tuple(LAUNCH_PROFILES),
+        default=DEFAULT_TIER,
+        help="launch profile (default: hard = codex gpt-5.5 xhigh; easy = claude "
+        "sonnet-5 + opus advisor). See the module docstring for the full profiles",
+    )
+    ap.add_argument(
         "--surface",
         choices=("codex", "claude"),
-        default=DEFAULT_SURFACE,
-        help="dispatch surface (default: codex, the maintainer's default)",
+        default=None,
+        help="explicit surface override; defaults to the --tier's implied surface. When "
+        "it CONTRADICTS the tier surface the launch runs on it with ambient defaults "
+        "(no model/effort/advisor pins)",
     )
     ap.add_argument(
         "--slug",
