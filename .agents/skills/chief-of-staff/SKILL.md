@@ -654,24 +654,43 @@ off through the normal merge-gate store, and the chief of staff still owns every
   ranking plus every guardrail — no blocked/parked/claimed/insufficiently-described
   work, at most `3 - busy` lanes, one build-affecting lane at a time.
 
+- **Pick a launch tier** with `--tier {easy,hard}` (default `hard`). Each tier is one
+  blessed launch profile — surface plus the model/effort/advisor pins validated to work
+  together:
+  - `hard` (default): codex, `-m gpt-5.5 -c model_reasoning_effort=xhigh` — the default
+    pipeline solver for everything non-trivial.
+  - `easy`: claude, `--model claude-sonnet-5 --effort high --advisor opus` — a cheaper
+    Sonnet-5 pipeline that escalates planning / stuck-error / completion decisions to an
+    Opus advisor.
+
+  The easy/hard CHOICE is YOUR judgment at dispatch time. **Choose `--tier easy` only
+  for a small, straightforward, low-risk lane:** a doc-only change, a small curated-TOML
+  addition, or a single-file fix with existing test coverage — with NO schema/DDL
+  surface, not build-affecting, no cross-package contract change, and not touching the
+  COS/merge-gate machinery. Everything else — and any lane you are unsure about — stays
+  `hard` (the default). `--surface` remains an explicit override; when it contradicts
+  the tier's implied surface the launch runs on that surface with its AMBIENT defaults
+  (no model/effort/advisor pins). The chosen `tier` is recorded in both the slot file
+  and the dispatch result JSON.
+
 - **Launch each lane** from the canonical checkout with:
 
   ```sh
-  uv run --no-project python scripts/cos_dispatch.py --issues <n[,m]> [--surface codex|claude] [--slug NAME]
+  uv run --no-project python scripts/cos_dispatch.py --issues <n[,m]> [--tier easy|hard] [--surface codex|claude] [--slug NAME]
   ```
 
-  `--surface` defaults to **codex**. The script is the deterministic launcher: it
-  re-checks the kill switch (exit `3`) and the slot budget (exit `4`), refuses a
-  slug/worktree collision (exit `2`), creates a fresh worktree off `origin/main`,
-  launches the agent DETACHED (codex:
-  `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --json '$pr-pipeline <issues>'`;
-  claude:
-  `claude --session-id <uuid> -p '/pr-pipeline <issues>' --dangerously-skip-permissions`),
+  The tier's implied surface is the default (no `--surface` needed). The script is the
+  deterministic launcher: it re-checks the kill switch (exit `3`) and the slot budget
+  (exit `4`), refuses a slug/worktree collision (exit `2`), creates a fresh worktree off
+  `origin/main`, launches the agent DETACHED with the resolved tier profile (hard/codex:
+  `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --json -m gpt-5.5 -c model_reasoning_effort=xhigh '$pr-pipeline <issues>'`;
+  easy/claude:
+  `claude --session-id <uuid> --model claude-sonnet-5 --effort high --advisor opus -p '/pr-pipeline <issues>' --dangerously-skip-permissions`),
   captures the session/thread id, and stamps the slot file with ownership (`surface`,
-  `session`, `pid`, `dispatched`) — written LAST, only after a successful launch, so a
-  failed launch never leaks a slot. Its stdout JSON (`slot`, `worktree`, `surface`,
-  `session`, `pid`, `log`) is what you report; dispatch logs live under
-  `<state-root>/dispatch-logs/<slug>.log`.
+  `tier`, `session`, `pid`, `dispatched`) — written LAST, only after a successful
+  launch, so a failed launch never leaks a slot. Its stdout JSON (`slot`, `worktree`,
+  `surface`, `tier`, `session`, `pid`, `log`) is what you report; dispatch logs live
+  under `<state-root>/dispatch-logs/<slug>.log`.
 
 - **Merge-approval classes still hold** (see Automerge): even in auto mode, a launched
   pipeline's PR only merges through the same gate, and the maintainer-approval classes

@@ -335,11 +335,12 @@ invoke `/release minor` or `/release patch` (`$release minor` / `$release patch`
 Codex surfaces) and then must follow the release workflow gates; a major release is not
 autonomous. With `/chief-of-staff auto` (opt-in per session) it may also auto-dispatch
 pr-pipeline lanes into free slots via `scripts/cos_dispatch.py`, gated by the
-`<state-root>/auto-dispatch.off` kill switch (present ⇒ fall back to recommending);
-merges in the maintainer-approval classes — a schema/DDL change, a build-affecting PR
-whose dbdiff delta exceeds what the PR/issue states, a change to the COS/merge-gate
-machinery itself, or deploy/infra work or a major release — always wait for the
-maintainer.
+`<state-root>/auto-dispatch.off` kill switch (present ⇒ fall back to recommending), at
+one of two launch tiers — `easy` (Sonnet 5 with an Opus advisor, for small low-risk
+lanes) or `hard` (Codex gpt-5.5 xhigh, the default). Merges in the maintainer-approval
+classes — a schema/DDL change, a build-affecting PR whose dbdiff delta exceeds what the
+PR/issue states, a change to the COS/merge-gate machinery itself, or deploy/infra work
+or a major release — always wait for the maintainer.
 
 # Git
 

@@ -144,12 +144,12 @@ the window where an accepted lane is invisible to the budget and a concurrent
 chief-of-staff tick could recommend a colliding fourth lane. The `slot` field must match
 the filename stem or readers treat the file as absent. **If a slot file for this slug
 already exists**, the chief-of-staff auto-dispatched this lane and pre-stamped its
-ownership (`surface`, `session`, `pid`); UPDATE it — refresh `issues`/`prs`, preserve
-those ownership fields — rather than overwriting blindly. Update `prs` (atomically) as
-each draft PR opens and as new PRs join the lane. Never release the slot yourself — the
-chief-of-staff moves it to `pipeline-slots/done/` when the lane's PRs are all
-merged/closed; a pipeline that self-releases at handoff would free budget its unmerged
-work still occupies.
+ownership (`surface`, `tier`, `session`, `pid`); UPDATE it — refresh `issues`/`prs`,
+preserve those ownership fields (including `tier`, which only auto dispatch sets) —
+rather than overwriting blindly. Update `prs` (atomically) as each draft PR opens and as
+new PRs join the lane. Never release the slot yourself — the chief-of-staff moves it to
+`pipeline-slots/done/` when the lane's PRs are all merged/closed; a pipeline that
+self-releases at handoff would free budget its unmerged work still occupies.
 
 **A · Implement.** Branch off the correct remote base: `base_ref="main"` for independent
 work, or the predecessor branch name for a stacked successor. Run
