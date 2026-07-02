@@ -301,7 +301,12 @@ ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the i
 claim: the sequencing view counts an open PR's `Closes #N` as work-in-progress, so
 concurrent dispatches skip that issue and anything touching its files. The draft PR is
 the marker (no `in-progress` label); merging or closing it clears the claim. For a known
-multi-issue effort, open the drafts up front; open more as new work surfaces.
+multi-issue effort, open the drafts up front; open more as new work surfaces. A pipeline
+lane additionally registers a **pipeline slot** —
+`$XDG_STATE_HOME/registry-research-toolkit/pipeline-slots/<worktree-slug>.json`, the
+machine-local concurrency ledger (max 3 parallel pipeline agents) the chief-of-staff's
+watcher gates dispatch on; the chief-of-staff releases the slot when the lane's PRs are
+all merged/closed (see the pr-pipeline and chief-of-staff skills for the protocol).
 
 **Chief-of-staff maintenance** — the recurring `chief-of-staff` tick owns routine issue
 maintenance. It may automatically apply evidence-backed tracker fixes: required labels,

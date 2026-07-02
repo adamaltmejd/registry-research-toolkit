@@ -846,6 +846,53 @@ def test_waking_first_run_does_not_write_state(
     assert "bootstrap" not in capsys.readouterr().err
 
 
+def test_observe_probe_leaves_candidate_and_baseline_untouched(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # The watcher (scripts/cos_watch.py) probes with --observe on the session's behalf.
+    # Racing an active tick, it must not replace the candidate that tick staged — the
+    # tick's later `--commit <its fingerprint>` would fail a mismatch and strand the
+    # handled events. Same exit codes as a normal probe, zero writes.
+    state = tmp_path / "state.json"
+    baseline = _snapshot()
+    cpf.write_state(state, baseline)
+    tick_candidate = _snapshot(prs=[_ready_pr()])  # staged by the active tick's probe
+    cpf.write_state(cpf.candidate_file(state), tick_candidate)
+    live = _snapshot(remote="moved")  # differs from baseline → wakes
+    _probe_env(monkeypatch, live)
+
+    rc = cpf.main(["--no-canonical-check", "--state-file", str(state), "--observe"])
+
+    assert rc == cpf.WAKE_EXIT
+    assert json.loads(capsys.readouterr().out)["reasons"] == ["origin/main changed"]
+    assert cpf.load_state(cpf.candidate_file(state)) == tick_candidate  # untouched
+    assert cpf.load_state(state) == baseline  # untouched
+
+
+def test_observe_idle_first_run_does_not_bootstrap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Observe mode never writes — not even the idle first-run bootstrap; that stays the
+    # agent probe's job.
+    state = tmp_path / "state.json"
+    _probe_env(monkeypatch, _snapshot())
+
+    rc = cpf.main(["--no-canonical-check", "--state-file", str(state), "--observe"])
+
+    assert rc == 0
+    assert not state.exists()
+    assert not cpf.candidate_file(state).exists()
+
+
+def test_observe_and_commit_are_mutually_exclusive(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    rc = cpf.main(["--no-canonical-check", "--observe", "--commit", "f" * 64])
+
+    assert rc == 2
+    assert "mutually exclusive" in capsys.readouterr().err
+
+
 def test_first_run_with_unclaimed_pr_wakes_and_does_not_bootstrap_idle(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

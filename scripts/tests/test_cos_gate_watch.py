@@ -1,12 +1,11 @@
 """Unit tests for scripts/cos_gate_watch.py.
 
-Pins the Tier-1 wake contract: a gate that becomes ready-to-merge emits exactly one
-line, keyed on (pr, head, updated) — so steady state never re-emits, while a
-re-verification (`updated` bump) or a new head does. `status: blocked` never emits, a
+Pins the fast-tier merge-gate wake contract: a gate that becomes ready-to-merge emits
+exactly one line, keyed on (pr, head, updated) — so steady state never re-emits, while
+a re-verification (`updated` bump) or a new head does. `status: blocked` never emits, a
 gate whose `pr` field disagrees with its directory name is absent per the gate
 protocol, corrupt/torn files are skipped without dying, and the merged/ archive is
-never scanned. The scan/diff functions are pure so the infinite watch loop stays a thin
-composition around them.
+never scanned. The scan/diff functions are pure; cos_watch.py's loop composes them.
 """
 
 from __future__ import annotations
@@ -172,16 +171,3 @@ def test_archived_gate_disappears_then_reappears_reemits(tmp_path: Path) -> None
     _write_gate(tmp_path, 956, _gate(956))
     lines, _ = _poll(tmp_path, seen)
     assert len(lines) == 1
-
-
-def test_main_once_prints_ready_gates_and_exits(tmp_path: Path, capsys) -> None:
-    _write_gate(tmp_path, 956, _gate(956))
-    _write_gate(tmp_path, 957, _gate(957, status="blocked"))
-
-    rc = cgw.main(["--gate-dir", str(tmp_path), "--once"])
-
-    assert rc == 0
-    out = capsys.readouterr().out.strip().splitlines()
-    assert out == [
-        f"ready gate: pr=956 head={HEAD[:12]} updated=2026-07-01T00:00:00+00:00"
-    ]
