@@ -34,7 +34,7 @@ import {
 } from "./api";
 import {
   type BindingResolution,
-  deriveType,
+  bindingFieldsFromResolution,
   resolveBindingAt,
   variantSeg,
 } from "./catalog";
@@ -830,7 +830,8 @@ let addChain: Promise<unknown> = Promise.resolve();
  *      already carrying this fqid (+ representation) is a TRUE no-op →
  *      `already-present` with ZERO mutation (no period merge, no setDraft).
  *   4. Resolve ONCE at the SOURCE's (period, variant) and map the resolution to the
- *      binding's FINAL fields (`resolutionToFields`), then append in ONE mutation.
+ *      binding's FINAL fields (`bindingFieldsFromResolution`), then append in ONE
+ *      mutation.
  * Serialization guarantees no concurrent add changes `draft` mid-flight, so each
  * serial add sees the prior committed draft for find-or-create and the
  * `draft !== target` guard fires only on a genuine open/New replacement.
@@ -944,7 +945,7 @@ async function realAddFromCatalog(
       sourceName: "",
     };
   }
-  const fields = resolutionToFields(
+  const fields = bindingFieldsFromResolution(
     payload.variable,
     resolution,
     payload.representation,
@@ -1004,69 +1005,6 @@ function newSource(
   // `siblings` yet, so an out-of-range index excludes nothing.
   const name = base ? uniqueSourceName(siblings, base, siblings.length) : "";
   return { name, register_variant: registerVariant, period, bindings };
-}
-
-/** Map a `resolveBindingAt` result to a binding's FINAL fields (the #991 write-once
- * model — resolve once, write the concrete type/display/representation, no marker).
- * Honors the #991 null-when-unambiguous convention (issue #992): a representation is
- * pinned ONLY for a pick among genuinely CO-EXISTING siblings.
- *   - `derived` (exactly ONE delivery column at the (period, variant)) → the resolved
- *     type + display default, and `representation: null` — unambiguous, so the payload
- *     column is DROPPED (never pinned). Pinning it redundantly would break the
- *     duplicate guard (two non-null-but-different reps of the same single-column
- *     concept would each add a binding, accumulating duplicates) and would clobber a
- *     folded sequential rename's intentional null (callers pass null there; a folded
- *     rename resolves `derived` → null, letting per-year resolution pick the column).
- *   - `ambiguous` + the payload pins one of the genuinely co-existing columns → that
- *     column's derived type + its `delivery_column_name` display + the pinned
- *     representation (the genuine co-existing case — the pin is load-bearing).
- *   - `ambiguous` (null / non-matching representation) OR `unresolved` → type `""`
- *     (NOT `"opaque"`). A resolve FAILURE / unresolved add must not synthesize a VALID
- *     opaque binding: `"opaque"` passes the backend enum check, so a transient
- *     network/500 would silently produce a valid binding with an arbitrary opaque type
- *     and no signal that the add failed. `""` is NOT a valid ColumnType, so the backend
- *     Validate flags it (`invalid_enum_value`) and it surfaces in the ValidationPanel —
- *     the cart's error path — instead of passing silently. A GENUINELY-derived opaque
- *     (`deriveType` in the derived / ambiguous-matched branches) is unaffected and
- *     stays a real value; the empty sentinel is distinguishable from it. */
-function resolutionToFields(
-  variable: string,
-  resolution: BindingResolution,
-  representation: string | null,
-): Binding {
-  if (resolution.kind === "derived") {
-    // A single delivery column is unambiguous → representation MUST be null (drop the
-    // payload column) per the #991 null-when-unambiguous convention (issue #992).
-    const binding: Binding = {
-      variable,
-      type: resolution.type,
-      representation: null,
-    };
-    if (resolution.displayNameDefault != null) {
-      binding.display_name = resolution.displayNameDefault;
-    }
-    return binding;
-  }
-  if (resolution.kind === "ambiguous") {
-    const chosen =
-      representation != null
-        ? resolution.states.find(
-            (s) => s.delivery_column_name === representation,
-          )
-        : undefined;
-    if (chosen) {
-      return {
-        variable,
-        type: deriveType(chosen),
-        display_name: chosen.delivery_column_name ?? representation,
-        representation,
-      };
-    }
-  }
-  // ambiguous (unpinned / non-matching) or unresolved → an INVALID blank type so the
-  // backend Validate flags the failed/unresolved add instead of passing a valid
-  // opaque binding silently (see the doc-comment above). No display default.
-  return { variable, type: "", representation };
 }
 
 // ── Autosave + load-at-init (the A5.4 persistence wiring) ────────────────────

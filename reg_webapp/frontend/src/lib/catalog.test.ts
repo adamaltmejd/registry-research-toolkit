@@ -2561,7 +2561,7 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
     ];
     const dims = pickerFilterDimensions(bands, []);
     expect(dims.map((d) => d.kind)).toEqual(["variant", "coding"]);
-    expect(dims[0].label).toBe("Population");
+    expect(dims[0].label).toBe("Variant");
     expect(dims[0].values.map((v) => v.value).sort()).toEqual(["fam", "ind"]);
     expect(dims[1].label).toBe("Coding");
     expect(dims[1].values.map((v) => v.value)).toEqual([
@@ -2624,7 +2624,7 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
       {
         kind: "variant",
         key: "variant",
-        label: "Population",
+        label: "Variant",
         values: [
           { value: "ind", label: "ind" },
           { value: "fam", label: "fam" },

@@ -69,7 +69,7 @@ const AXES: GroupAxisModel[] = [
 const PROPS = {
   window: null,
   canAdd: true,
-  onadd: vi.fn(),
+  onapply: vi.fn(),
 } as const;
 
 /** The delivery-column chips of the currently-visible column ROWS (not the filter
@@ -147,7 +147,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
     // Click the row label, not the checkbox itself: the full integrated row toggles.
     selectAllRow.click();
-    await expect.element(page.getByText("4 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+4 columns")).toBeVisible();
     expect(selectAllBox?.checked).toBe(true);
     expect(selectAllBox?.indeterminate).toBe(false);
     expect(selectAllRow.classList.contains("selected")).toBe(true);
@@ -160,7 +160,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(rowBoxes.every((box) => box.checked)).toBe(true);
 
     rowBoxes[0].click();
-    await expect.element(page.getByText("3 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+3 columns")).toBeVisible();
     expect(selectAllBox?.checked).toBe(false);
     expect(selectAllBox?.indeterminate).toBe(true);
     expect(selectAllRow.classList.contains("selected")).toBe(false);
@@ -215,12 +215,12 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("filtering is presentation-only: a hidden selected column still commits, flagged in the footer", async () => {
-    const onadd = vi.fn();
+    const onapply = vi.fn();
     render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
-      onadd,
+      onapply,
     });
     // Select DIN3 (carries enhet=fam, hush=h1) via its row checkbox.
     const din3 = await vi.waitFor(() => {
@@ -235,30 +235,32 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       return cb;
     });
     din3.click();
-    await expect.element(page.getByText("1 column selected")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
 
     // Now filter Enhet → "Individ" (ind): DIN3 (fam) is hidden.
     clickFilter("Individ");
     // The selection persists and the footer signals the hidden selection.
     await expect
-      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .element(page.getByText("+1 column (1 hidden by filters)"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
     // Committing still includes the hidden-but-selected DIN3.
-    await page.getByRole("button", { name: "Add to project" }).click();
-    expect(onadd).toHaveBeenCalledTimes(1);
-    const committed = onadd.mock.calls[0][0] as { row: PickerRepresentation }[];
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const committed = onapply.mock.calls[0][0].adds as {
+      row: PickerRepresentation;
+    }[];
     expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
   });
 
   it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
-    const onadd = vi.fn();
+    const onapply = vi.fn();
     render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
-      onadd,
+      onapply,
     });
     // Select DIN3 (enhet=fam, hush=h1) via its row checkbox.
     const din3 = await vi.waitFor(() => {
@@ -273,12 +275,12 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       return cb;
     });
     din3.click();
-    await expect.element(page.getByText("1 column selected")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
 
     // Filter Enhet → "Individ" (ind): DIN3 (fam) is now hidden but still selected.
     clickFilter("Individ");
     await expect
-      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .element(page.getByText("+1 column (1 hidden by filters)"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
@@ -288,19 +290,21 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     // Select all → adds the 2 visible rows; the hidden DIN3 stays selected (3 total).
     await selectAll.click();
     await expect
-      .element(page.getByText("3 columns selected (1 hidden by filters)"))
+      .element(page.getByText("+3 columns (1 hidden by filters)"))
       .toBeVisible();
     // Deselect all → clears the 2 visible rows only; the hidden DIN3 survives.
     await selectAll.click();
     await expect
-      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .element(page.getByText("+1 column (1 hidden by filters)"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
     // The surviving hidden selection still commits.
-    await page.getByRole("button", { name: "Add to project" }).click();
-    expect(onadd).toHaveBeenCalledTimes(1);
-    const committed = onadd.mock.calls[0][0] as { row: PickerRepresentation }[];
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const committed = onapply.mock.calls[0][0].adds as {
+      row: PickerRepresentation;
+    }[];
     expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
   });
 
