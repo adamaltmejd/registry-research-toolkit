@@ -18,13 +18,17 @@ import type { Column } from "./types";
 // row tabindex). List keyboard NAV is owned by Bits UI `Command` elsewhere —
 // this is selectable rows + visual states only, NOT a roving-tabindex grid.
 //
-// RESPONSIVE: at <=48rem the table stacks (each <tr> becomes a card, cells stack
-// with their column micro-label as a `::before` prefix). Because CSS `display`
-// changes strip native table roles in Firefox/Safari, the ARIA roles are set
-// EXPLICITLY and unconditionally (table/grid, rowgroup, row, columnheader/cell/
-// gridcell) so the stacked form keeps valid table semantics. The first column is
-// the primary title (no micro-label prefix); the `data-label` on each <td> feeds
-// the decorative prefix for the rest.
+// RESPONSIVE: at <=48rem the default table stacks (each <tr> becomes a card,
+// cells stack with their column micro-label as a `::before` prefix). The framed
+// variant keeps a visible header row and renders flat grid rows instead, so the
+// table surface does not contain card rows. Framed two-column tables collapse to
+// one visual column: the first column is the primary heading and the second cell
+// reads as secondary text underneath. Because CSS `display` changes strip native
+// table roles in Firefox/Safari, the ARIA roles are set EXPLICITLY and
+// unconditionally (table/grid, rowgroup, row, columnheader/cell/gridcell) so the
+// narrow forms keep valid table semantics. The first column is the primary title
+// (no micro-label prefix); the `data-label` on each <td> feeds the decorative
+// prefix for the rest.
 
 interface Props {
   columns: Column<Row>[];
@@ -101,6 +105,7 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
 <table
   class="data-table"
   class:framed
+  class:narrow-stack={framed && columns.length === 2}
   role={selectable ? "grid" : "table"}
   style={`--data-table-columns: ${columns.length}`}
 >
@@ -344,6 +349,56 @@ function onkeydown(event: KeyboardEvent, row: Row): void {
     }
     .framed thead th {
       display: block;
+      padding: var(--space-3);
+    }
+    .framed tbody tr {
+      display: grid;
+      grid-template-columns: repeat(var(--data-table-columns), minmax(0, 1fr));
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+    }
+    .framed tbody tr + tr {
+      margin-top: 0;
+    }
+    .framed td {
+      display: block;
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--border);
+    }
+    .framed tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .framed.narrow-stack thead tr,
+    .framed.narrow-stack tbody tr {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .framed.narrow-stack thead th:not(.first) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+    .framed.narrow-stack tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+    .framed.narrow-stack tbody tr:last-child {
+      border-bottom: 0;
+    }
+    .framed.narrow-stack td {
+      border-bottom: 0;
+    }
+    .framed.narrow-stack td.first {
+      padding-bottom: var(--space-1);
+    }
+    .framed.narrow-stack td:not(.first) {
+      padding-top: 0;
+      color: var(--text-muted);
     }
     .framed td:not(.first)::before {
       content: none;

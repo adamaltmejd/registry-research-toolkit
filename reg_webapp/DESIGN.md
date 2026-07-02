@@ -1065,8 +1065,10 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   grouped surface and its column headers should be the single top row. Do not wrap that
   case in `Panel` — a `Panel` title plus table headers creates duplicate heading rows.
   The framed variant keeps its header row visible at narrow widths and suppresses
-  repeated per-card column labels, so the surface still has exactly one visible heading
-  row.
+  repeated per-card column labels. It also keeps narrow rows flat inside the table
+  shell, not bordered/rounded cards; two-column framed tables collapse to one visual
+  column with the second cell as secondary text under the primary cell. The surface
+  still has exactly one visible heading row and one table layer.
 - **`DataTable` responsive stacking (≤48 rem).** At narrow widths each `<tr>` becomes a
   bordered card; cells stack vertically. The first column is the primary title (no
   micro-label prefix); non-primary cells show their column label as a CSS `::before`

@@ -52,6 +52,11 @@ const rows: Row[] = [
   { code: "2", label: "Woman", count: 98 },
 ];
 
+const twoColumnColumns: Column<Row>[] = [
+  { key: "code", label: "Register" },
+  { key: "label", label: "Description" },
+];
+
 describe("DataTable", () => {
   it("renders micro-label column headers with scope", async () => {
     const { container } = renderTable({ columns, rows });
@@ -179,6 +184,45 @@ describe("DataTable", () => {
         "tbody tr:first-child td:not(.first)",
       ) as HTMLElement;
       expect(getComputedStyle(labelCell, "::before").content).toBe("none");
+    } finally {
+      await page.viewport(1280, 800);
+    }
+  });
+
+  it("renders framed two-column narrow rows as flat one-column rows", async () => {
+    await page.viewport(600, 800);
+    try {
+      const { container } = renderTable({
+        columns: twoColumnColumns,
+        rows,
+        framed: true,
+      });
+      const firstRow = container.querySelector(
+        "tbody tr:first-child",
+      ) as HTMLElement;
+      const secondRow = container.querySelector(
+        "tbody tr:nth-child(2)",
+      ) as HTMLElement;
+      const firstCell = container.querySelector(
+        "tbody tr:first-child td:first-child",
+      ) as HTMLElement;
+      const secondCell = container.querySelector(
+        "tbody tr:first-child td:nth-child(2)",
+      ) as HTMLElement;
+      const hiddenHeader = container.querySelector(
+        "thead th:nth-child(2)",
+      ) as HTMLElement;
+
+      expect(getComputedStyle(firstRow).display).toBe("grid");
+      expect(
+        getComputedStyle(firstRow).gridTemplateColumns.split(" "),
+      ).toHaveLength(1);
+      expect(getComputedStyle(firstRow).borderRadius).toBe("0px");
+      expect(getComputedStyle(secondRow).marginTop).toBe("0px");
+      expect(getComputedStyle(firstRow).borderBottomStyle).toBe("solid");
+      expect(getComputedStyle(firstCell).borderBottomStyle).toBe("none");
+      expect(getComputedStyle(secondCell, "::before").content).toBe("none");
+      expect(getComputedStyle(hiddenHeader).position).toBe("absolute");
     } finally {
       await page.viewport(1280, 800);
     }
