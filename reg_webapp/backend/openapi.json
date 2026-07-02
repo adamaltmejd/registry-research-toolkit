@@ -1261,7 +1261,7 @@
       },
       "ConceptGroupNodeMember": {
         "additionalProperties": false,
-        "description": "A concept-group member on the group SUBJECT node \u2014 reg_meta's browse\n`ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window\n`coverage` (#351/#819; reg_meta's `VariableCoverage`, zipped on by the group\nroute from variable- or column-grain coverage as appropriate). `coverage` is None\nfor a member with no coverage row (a stateless variable, an alias-only\nrepresentation column, or a member whose leaf slug didn't match the register's\ncoverage map \u2014 defensive). Subclassing the frozen, `extra=\"forbid\"` reg_meta model\nto declare one new field is supported in Pydantic v2 \u2014 the subclass owns\n`coverage`.",
+        "description": "A concept-group member on the group SUBJECT node \u2014 reg_meta's browse\n`ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window\n`coverage` (#351/#819; reg_meta's `VariableCoverage`, zipped on by the group\nroute from variable- or column-grain coverage as appropriate). A member that is\nknown to have no states uses the zero-state `VariableCoverage` shape\n(`state_count == 0`, null bounds, not open-ended); `coverage` is None only when no\ncoverage enrichment could be attached. Subclassing the frozen, `extra=\"forbid\"`\nreg_meta model to declare one new field is supported in Pydantic v2 \u2014 the subclass\nowns `coverage`.",
         "properties": {
           "coverage": {
             "anyOf": [

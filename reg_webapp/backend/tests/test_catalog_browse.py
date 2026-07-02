@@ -341,13 +341,13 @@ def test_group_route_representation_members_per_column_coverage(catalog_db):
     assert by_col["CDISP5"]["coverage_to"] == "2024-12-31"
 
 
-def test_group_route_representation_member_without_state_row_has_no_coverage(
+def test_group_route_representation_member_without_state_row_has_zero_coverage(
     catalog_db,
 ):
     """#819: a representation member whose delivery column has NO `variable_state`
-    row gets `coverage = None`, NOT the variable's union — SCB keeps the full
-    `variable_alias` set apart from `variable_state`, so an alias-only column must
-    NOT borrow its sibling column's years (which would grey the slider wrongly).
+    row gets a zero-state coverage object, NOT `coverage = None` and NOT the variable's
+    union — SCB keeps the full `variable_alias` set apart from `variable_state`, so an
+    alias-only column must NOT borrow its sibling column's years.
     Seeds one variable with a single CDISP state row (1968–2024), then a group whose
     members are CDISP (delivered) and CDISP5 (alias-only, no state row)."""
     with sqlite3.connect(catalog_db) as conn:
@@ -385,10 +385,15 @@ def test_group_route_representation_member_without_state_row_has_no_coverage(
     with TestClient(create_app()) as client:
         body = client.get("/api/catalog/group/scb/rams/disprep2").json()
     by_col = {m["delivery_column"]: m["coverage"] for m in body["members"]}
-    # CDISP shows its window; CDISP5 (no state row) greys — coverage None, NOT the
-    # variable union (which would falsely deliver CDISP5 across 1968–2024).
+    # CDISP shows its window; CDISP5 (no state row) is known empty, not unknown, and
+    # not the variable union (which would falsely deliver CDISP5 across 1968–2024).
     assert by_col["CDISP"]["coverage_from"] == "1968-01-01"
-    assert by_col["CDISP5"] is None
+    assert by_col["CDISP5"] == {
+        "coverage_from": None,
+        "coverage_to": None,
+        "open_ended": False,
+        "state_count": 0,
+    }
 
 
 def test_group_route_unknown_key_404(client):

@@ -502,6 +502,14 @@ def _coverage_from_rows(rows: list[VariableCoverage]) -> VariableCoverage | None
     )
 
 
+_NO_STATE_COVERAGE = VariableCoverage(
+    coverage_from=None,
+    coverage_to=None,
+    open_ended=False,
+    state_count=0,
+)
+
+
 def _held_variable_coverage(
     per_column: dict[tuple[str, str], VariableCoverage],
     per_unnamed: dict[str, VariableCoverage],
@@ -662,12 +670,12 @@ def _concept_group_node(
     `register_column_coverage` (keyed by `(slug, delivery_column)`), so two
     representations sharing one variable (e.g. CDISP 1968– vs CDISP5 2020– on one
     `disponibel-inkomst` member) show DIFFERENT spans instead of both inheriting the
-    variable's union. A representation whose column has NO per-column window gets
-    `coverage = None` (greying the whole slider) — NOT the variable union: SCB keeps
-    the full historical `variable_alias` set apart from `variable_state`, so a column
-    with an alias but no state row would otherwise borrow its siblings' years and read
-    as delivered across spans it never had. `member_hint` is the validated `?member=`
-    focus slug, echoed for the SPA to highlight (None when absent/unrecognized — a bad hint is
+    variable's union. A representation whose column has NO per-column window gets the
+    zero-state coverage object — NOT `None` and NOT the variable union: SCB keeps the
+    full historical `variable_alias` set apart from `variable_state`, so a column with
+    an alias but no state row is known never-delivered, not unknown and not delivered
+    through its siblings' years. `member_hint` is the validated `?member=` focus slug,
+    echoed for the SPA to highlight (None when absent/unrecognized — a bad hint is
     ignored, keeping the group page first-class)."""
     coverage = catalog.register_variable_coverage(provider_slug, register_slug)
     column_coverage = catalog.register_column_coverage(provider_slug, register_slug)
@@ -677,12 +685,13 @@ def _concept_group_node(
         # `register_variable_coverage` returns (mirrors `_register_response`).
         leaf_slug = str(m.fqid).rsplit("/", 1)[-1]
         # #819: a representation member (delivery_column set) uses ONLY its
-        # per-column window — None when that column has no `variable_state` row, so
-        # the slider greys rather than borrowing the variable's union (a column can
-        # live in `variable_alias` without a state row). A whole-variable member
-        # (delivery_column None) uses the variable-level span.
+        # per-column window. #840: a missing per-column key is still a CURATED
+        # representation member, so serialize the zero-state coverage object rather
+        # than `None` (unknown) or the variable-level union.
         if m.delivery_column is not None:
-            member_cov = column_coverage.get((leaf_slug, m.delivery_column))
+            member_cov = column_coverage.get(
+                (leaf_slug, m.delivery_column), _NO_STATE_COVERAGE
+            )
         else:
             member_cov = coverage.get(leaf_slug)
         members.append(
