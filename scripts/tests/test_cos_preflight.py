@@ -395,11 +395,34 @@ def test_new_unclaimed_pr_wakes_once_but_push_does_not() -> None:
     previous = _snapshot(prs=[])
     with_pr = _snapshot(prs=[unclaimed])
 
-    # Appearance wakes.
-    assert cpf.actionable_reasons(with_pr, previous) == ["open PR state changed"]
+    # Appearance wakes with the unclaimed-PR named reason (not the generic one).
+    assert cpf.actionable_reasons(with_pr, previous) == [
+        "unclaimed open PR (no Closes, no gate block): #999"
+    ]
     # A push to it (no head SHA in the entry) leaves the entry unchanged → idle.
     same = _snapshot(prs=[dict(unclaimed)])
     assert cpf.actionable_reasons(same, with_pr) == []
+
+
+def test_first_run_unclaimed_pr_wakes_with_named_reason() -> None:
+    # On first run (no previous) every PR is `changed`; a pre-existing unclaimed PR must
+    # surface via its named reason, since the generic reason is previous-gated and would
+    # otherwise never fire here (the bug: idle bootstrap silently absorbing claim drift).
+    snap = _snapshot(prs=[{"number": 999, "claimed": False, "draft": False}])
+
+    assert cpf.actionable_reasons(snap, None) == [
+        "unclaimed open PR (no Closes, no gate block): #999"
+    ]
+
+
+def test_steady_state_new_unclaimed_pr_named_not_generic() -> None:
+    previous = _snapshot(prs=[])
+    snap = _snapshot(prs=[{"number": 999, "claimed": False, "draft": False}])
+
+    reasons = cpf.actionable_reasons(snap, previous)
+
+    assert reasons == ["unclaimed open PR (no Closes, no gate block): #999"]
+    assert "open PR state changed" not in reasons
 
 
 # --- latestReviews -------------------------------------------------------------
@@ -509,22 +532,39 @@ def test_generic_reason_suppressed_when_all_changed_prs_are_gate_named() -> None
     assert "open PR state changed" not in reasons
 
 
+def _claimed_nongate_pr(number=956, **overrides):
+    # A claimed PR whose gate state is not one of the named buckets (e.g. still under
+    # review): it hits no named bucket, so a change to it surfaces via the generic reason.
+    pr = {
+        "number": number,
+        "claimed": True,
+        "draft": False,
+        "gate": {"state": "present"},
+        "reviews": [],
+    }
+    pr.update(overrides)
+    return pr
+
+
 def test_generic_reason_fires_for_non_gate_pr_change() -> None:
-    # An unclaimed (no-gate) PR that changes has no named bucket, so the generic reason is
-    # the only signal and must fire.
-    previous = _snapshot(prs=[])
-    snap = _snapshot(prs=[{"number": 999, "claimed": False, "draft": False}])
+    # A claimed, not-yet-ready PR that changes has no named bucket, so the generic reason
+    # is the only signal and must fire.
+    previous = _snapshot(prs=[_claimed_nongate_pr()])
+    snap = _snapshot(prs=[_claimed_nongate_pr(reviews=[{"author": "x"}])])
 
     assert cpf.actionable_reasons(snap, previous) == ["open PR state changed"]
 
 
 def test_gate_named_and_non_gate_changes_emit_both_reasons() -> None:
-    # A gate PR AND an unclaimed PR both change: the gate PR gets its named reason, and the
-    # generic reason still fires for the non-gate PR that no bucket named.
-    unclaimed = {"number": 999, "claimed": False, "draft": False}
-    previous = _snapshot(prs=[_ready_pr(957), unclaimed])
+    # A gate PR AND a claimed non-gate PR both change: the gate PR gets its named reason,
+    # and the generic reason still fires for the non-gate PR that no bucket named.
+    plain = _claimed_nongate_pr(958)
+    previous = _snapshot(prs=[_ready_pr(957), plain])
     snap = _snapshot(
-        prs=[_ready_pr(957, codex_signal="findings"), dict(unclaimed, draft=True)]
+        prs=[
+            _ready_pr(957, codex_signal="findings"),
+            _claimed_nongate_pr(958, reviews=[{"author": "x"}]),
+        ]
     )
 
     reasons = cpf.actionable_reasons(snap, previous)
@@ -603,6 +643,25 @@ def test_waking_first_run_does_not_write_state(
     assert not state.exists()  # NO bootstrap on a waking first run
     assert cpf.load_state(cpf.candidate_file(state)) == snap  # candidate staged
     assert "bootstrap" not in capsys.readouterr().err
+
+
+def test_first_run_with_unclaimed_pr_wakes_and_does_not_bootstrap_idle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # The exact PR-987 bug: a first-run probe (which every install hits after the
+    # SNAPSHOT_VERSION bump) with a pre-existing unclaimed PR must WAKE on the named reason
+    # rather than silently idle-bootstrapping the claim drift into the baseline.
+    state = tmp_path / "state.json"
+    snap = _snapshot(prs=[{"number": 999, "claimed": False, "draft": False}])
+    _probe_env(monkeypatch, snap)
+
+    rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
+    out = capsys.readouterr()
+
+    assert rc == cpf.WAKE_EXIT
+    assert "unclaimed open PR (no Closes, no gate block): #999" in out.out
+    assert not state.exists()  # NOT idle-bootstrapped
+    assert "bootstrap" not in out.err
 
 
 def test_crashed_first_run_wake_refires_next_probe(

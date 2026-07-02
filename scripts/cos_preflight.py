@@ -385,19 +385,27 @@ def actionable_reasons(
     ready: list[str] = []
     draft_ready: list[str] = []
     stale: list[str] = []
-    named: set[int] = set()  # PRs already called out by a gate bucket below
+    unclaimed: list[str] = []
+    named: set[int] = set()  # PRs already called out by a named bucket below
     for pr in snapshot["prs"]:
         if pr["number"] not in changed:
             continue
-        state = pr.get("gate", {}).get("state")
-        if state == "current-ready" and not pr["draft"]:
-            bucket = ready
-        elif state == "current-ready" and pr["draft"]:
-            bucket = draft_ready
-        elif state == "stale-ready":
-            bucket = stale
+        if not pr.get("claimed", True):
+            # Unclaimed PR (no Closes ref, no gate block): its own named reason, so a
+            # first-run probe (where `changed` covers every PR) wakes for pre-existing
+            # claim drift instead of the generic reason silently absorbing it into the
+            # bootstrap baseline. The generic reason is previous-gated, so it can't.
+            bucket = unclaimed
         else:
-            continue
+            state = pr.get("gate", {}).get("state")
+            if state == "current-ready" and not pr["draft"]:
+                bucket = ready
+            elif state == "current-ready" and pr["draft"]:
+                bucket = draft_ready
+            elif state == "stale-ready":
+                bucket = stale
+            else:
+                continue
         bucket.append(f"#{pr['number']}")
         named.add(pr["number"])
     if ready:
@@ -406,12 +414,16 @@ def actionable_reasons(
         reasons.append(f"draft PR has ready merge-gate block: {', '.join(draft_ready)}")
     if stale:
         reasons.append(f"stale merge-gate PR changed: {', '.join(stale)}")
+    if unclaimed:
+        reasons.append(
+            f"unclaimed open PR (no Closes, no gate block): {', '.join(unclaimed)}"
+        )
 
     if previous:
         if previous.get("remote_main") != snapshot["remote_main"]:
             reasons.append("origin/main changed")
-        # Generic fallback only for changed PRs no gate bucket already named — otherwise a
-        # gate-state change would emit both its specific reason and this redundant one.
+        # Generic fallback only for changed PRs no named bucket already covered — otherwise
+        # a named-state change would emit both its specific reason and this redundant one.
         if changed - named:
             reasons.append("open PR state changed")
 
