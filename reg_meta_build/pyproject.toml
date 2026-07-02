@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reg-meta-build"
-version = "0.25.0"
+version = "0.26.0"
 description = "Builder for the reg_meta SQLite databases (main + docs)"
 readme = "README.md"
 requires-python = ">=3.14"

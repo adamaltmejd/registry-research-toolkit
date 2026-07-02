@@ -323,7 +323,7 @@ requires-dist = [
 
 [[package]]
 name = "reg-meta-build"
-version = "0.25.0"
+version = "0.26.0"
 source = { editable = "reg_meta_build" }
 dependencies = [
     { name = "openpyxl" },
