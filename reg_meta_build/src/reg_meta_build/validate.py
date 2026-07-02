@@ -1595,16 +1595,14 @@ _CG_MIN_EDGE_GROUPS = 1800
 # lkf chain and would false-fail.
 _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES = 40
 
-# Variable vintage-lift floor (#584, corpus only): the clean tier lifts same-name
-# families (one variable per edition) from `classification_replaced_by` editions to
-# the variable grain, ~32 derived edges on the current corpus (the issue estimated
-# ~53; the conservative bijection — gaps and edition-spanning variables excluded —
-# lands lower). A floor well under the measured count catches a regression that
-# silently stops lifting (classification-binding backfill drift, bijection-guard
-# inversion) without false-failing on legitimate corpus churn (the entangled tier
-# moving in/out). Synthetic builds carry no vintage classifications, so the floor is
-# corpus-gated; it is additionally gated on SCB being in the build (#595) — a non-SCB
-# `--providers` subset carries no SCB-derived lifts and would false-fail.
+# Variable vintage-lift floor (#584/#592, corpus only): the stream-guarded lift maps
+# same-name families from `classification_replaced_by` editions to the variable grain
+# only when predecessor/successor variables share a slug-stem stream. A floor well under
+# the measured count catches a regression that silently stops lifting
+# (classification-binding backfill drift, stream-guard inversion) without false-failing
+# on legitimate corpus churn. Synthetic builds carry no vintage classifications, so the
+# floor is corpus-gated; it is additionally gated on SCB being in the build (#595) — a
+# non-SCB `--providers` subset carries no SCB-derived lifts and would false-fail.
 _MIN_VARIABLE_VINTAGE_LIFT_EDGES = 25
 
 
@@ -2026,18 +2024,19 @@ def _check_variable_replaced_by_vintage_lift(
     *,
     corpus: bool,
 ) -> None:
-    """#584 derived variable vintage-succession invariants — the clean-tier lift
-    of `classification_replaced_by` editions to the variable grain (rows in
-    `variable_replaced_by` with `note = 'derived:classification_vintage_lift'`).
+    """#584/#592 derived variable vintage-succession invariants — the
+    stream-guarded lift of `classification_replaced_by` editions to the variable
+    grain (rows in `variable_replaced_by` with
+    `note = 'derived:classification_vintage_lift'`).
 
     Structural (always): every derived edge is directional and non-self
     (predecessor != successor) and both endpoints resolve to live, slugged
     variables (a derived edge MUST point at real variables — unlike a curated
     succession whose predecessor may be dead).
 
-    Corpus (real build only): the clean tier carries >=
+    Corpus (real build only): the stream-guarded lift carries >=
     `_MIN_VARIABLE_VINTAGE_LIFT_EDGES` derived edges, so a pass that silently
-    stops lifting (classification-binding backfill drift, bijection-guard
+    stops lifting (classification-binding backfill drift, stream-guard
     regression) fails the gate. Synthetic builds carry no vintage classifications,
     so this floor is corpus-gated."""
     result.section("[variable vintage lift]")
