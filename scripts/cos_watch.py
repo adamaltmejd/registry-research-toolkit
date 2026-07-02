@@ -154,7 +154,7 @@ def probe_events(returncode: int, stdout: str, stderr: str) -> list[str]:
             reasons = json.loads(stdout)["reasons"]
             return [f"wake: {'; '.join(reasons)}"]
         except ValueError, KeyError, TypeError:
-            return [f"preflight error (exit {returncode}): unparseable probe output"]
+            return [f"preflight error (exit {returncode}): unexpected probe output"]
     tail = stderr.strip().splitlines()[-1] if stderr.strip() else "no stderr"
     return [f"preflight error (exit {returncode}): {tail}"]
 

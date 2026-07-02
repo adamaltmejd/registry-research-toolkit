@@ -190,7 +190,7 @@ def test_probe_wake_with_garbage_stdout_is_an_error_not_a_crash() -> None:
     lines = cw.probe_events(cw._cos_preflight.WAKE_EXIT, "not json", "")
 
     assert lines == [
-        f"preflight error (exit {cw._cos_preflight.WAKE_EXIT}): unparseable probe output"
+        f"preflight error (exit {cw._cos_preflight.WAKE_EXIT}): unexpected probe output"
     ]
 
 
