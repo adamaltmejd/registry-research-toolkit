@@ -11,11 +11,10 @@ timeout → session=null), and --dry-run's zero-side-effect check-only path.
 Real subprocesses are used where the behavior IS the subprocess: a tmp git repo with an
 `origin` bare remote so `git fetch origin main` + `git worktree add … origin/main` run
 for real, and a stub `codex`/`claude` on a prepended PATH that records its argv+cwd and
-emits canned JSONL. The reused cos_preflight slot helpers (scan_slots, default_slots_root,
-DEFAULT_MAX_SLOTS) are being hoisted from cos_watch by a sibling change; a fixture stubs
-them onto the loaded module handle if the hoist hasn't landed yet, so this suite is
-independent of that ordering (the lead's post-assembly union verify runs against the real
-hoisted helpers).
+emits canned JSONL. cos_dispatch reuses the cos_preflight slot helpers (scan_slots,
+default_slots_root, DEFAULT_MAX_SLOTS), hoisted there from cos_watch on this branch;
+`test_reused_cos_preflight_helpers_are_the_real_hoist` pins that integration contract for
+real (no backfill fixture masks a missing hoist).
 
 HERMETICITY (post-incident, non-negotiable): a prior version's run_git ran git in the
 AMBIENT process cwd; when the pre-push hook re-ran the full suite with cwd = the real
@@ -115,40 +114,6 @@ def _hermetic_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return stub_bin
 
 
-@pytest.fixture(autouse=True)
-def _ensure_reused_helpers() -> None:
-    """Backfill the cos_preflight slot helpers the sibling hoist adds, if not present.
-
-    The contract pins reuse of cos_preflight.scan_slots / default_slots_root /
-    DEFAULT_MAX_SLOTS (hoisted from cos_watch by the parallel implementer). Until that
-    lands in this worktree, provide equivalents on the loaded module so the launcher and
-    these tests run; once the hoist lands, the real symbols take precedence (we only set
-    what's missing).
-    """
-    pre = cd._cos_preflight
-    if not hasattr(pre, "DEFAULT_MAX_SLOTS"):
-        pre.DEFAULT_MAX_SLOTS = 3
-    if not hasattr(pre, "default_slots_root"):
-        pre.default_slots_root = lambda: (
-            pre.default_gate_root().parent / "pipeline-slots"
-        )
-    if not hasattr(pre, "scan_slots"):
-
-        def _scan_slots(slots_root: Path) -> set[str]:
-            slots: set[str] = set()
-            for path in sorted(slots_root.glob("*.json")):
-                loaded = pre._read_json_tolerant(path, "pipeline-slot file")
-                if loaded is None:
-                    continue
-                slot = loaded[1]
-                if not isinstance(slot, dict) or slot.get("slot") != path.stem:
-                    continue
-                slots.add(path.stem)
-            return slots
-
-        pre.scan_slots = _scan_slots
-
-
 def _no_real_launch(tmp_path: Path) -> None:
     """Assert the fail-loud stub never recorded a real-binary invocation."""
     log = tmp_path / "stub-invocations.log"
@@ -158,13 +123,12 @@ def _no_real_launch(tmp_path: Path) -> None:
         )
 
 
-def _write_slot(slots_root: Path, slug: str) -> Path:
+def _write_slot(slots_root: Path, slug: str, override: dict | None = None) -> Path:
     slots_root.mkdir(parents=True, exist_ok=True)
     path = slots_root / f"{slug}.json"
-    path.write_text(
-        json.dumps({"slot": slug, "issues": [1], "prs": [], "surface": "codex"}),
-        encoding="utf-8",
-    )
+    payload = {"slot": slug, "issues": [1], "prs": [], "surface": "codex"}
+    payload.update(override or {})
+    path.write_text(json.dumps(payload), encoding="utf-8")
     return path
 
 
@@ -204,7 +168,9 @@ def _stub_bin(
     """Overwrite the fail-loud stub for `name` with a recording no-op that emits jsonl.
 
     Written into the SAME stub-bin dir the autouse fixture prepended to PATH, so it takes
-    precedence over the real binary. Records argv+cwd to <stub_bin>/<name>.record.
+    precedence over the real binary. Records argv+cwd — plus the GIT_* keys it inherited,
+    under `git_env`, so the scrub test can assert the child got none — to
+    <stub_bin>/<name>.record.
     """
     stub_bin.mkdir(parents=True, exist_ok=True)
     record = stub_bin / f"{name}.record"
@@ -212,7 +178,9 @@ def _stub_bin(
     body = (
         "#!/usr/bin/env python3\n"
         "import json, os, sys\n"
-        f"open({str(record)!r}, 'w').write(json.dumps({{'argv': sys.argv[1:], 'cwd': os.getcwd()}}))\n"
+        "git_env = sorted(k for k in os.environ if k.startswith('GIT_'))\n"
+        f"open({str(record)!r}, 'w').write(json.dumps("
+        "{'argv': sys.argv[1:], 'cwd': os.getcwd(), 'git_env': git_env}))\n"
         f"sys.stdout.write({jsonl!r})\n"
         "sys.stdout.flush()\n"
         f"sys.exit({exit_code})\n"
@@ -396,6 +364,36 @@ def test_poll_codex_session_id_timeout_returns_none(tmp_path: Path) -> None:
     log = tmp_path / "missing.log"
     # No id ever appears; a short timeout must return None fast (not sleep 30s).
     assert cd.poll_codex_session_id(log, timeout=0.05, poll_interval=0.01) is None
+
+
+# --- reuse contract: the hoisted cos_preflight slot helpers -------------------
+
+
+def test_reused_cos_preflight_helpers_are_the_real_hoist(tmp_path: Path) -> None:
+    # cos_dispatch reuses cos_preflight.scan_slots / default_slots_root / DEFAULT_MAX_SLOTS
+    # (hoisted there from cos_watch on this branch). This test FAILS if any of those symbols
+    # vanishes from cos_preflight — there is no backfill fixture to mask a missing hoist.
+    pre = cd._cos_preflight
+    assert callable(pre.scan_slots)
+    assert callable(pre.default_slots_root)
+    assert isinstance(pre.DEFAULT_MAX_SLOTS, int)
+    # Behavior parity on a shared tmp ledger: cos_dispatch's budget path (busy count via
+    # cos_preflight.scan_slots) and a direct scan_slots call must agree. The two module
+    # loads (this suite's `cpf` vs cos_dispatch's `_cos_preflight`) make `is`-identity
+    # fragile, so we pin parity-by-behavior instead.
+    slots_root = tmp_path / "pipeline-slots"
+    _write_slot(slots_root, "lane-a")
+    _write_slot(slots_root, "lane-b")
+    _write_slot(slots_root, "lane-x", {"slot": "wrong-stem"})  # rejected by both
+
+    direct = pre.scan_slots(slots_root)
+    assert direct == {"lane-a", "lane-b"}
+    # cos_dispatch reaches the same count through its own budget computation.
+    canonical = _make_origin(tmp_path)
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=tmp_path, max_slots=len(direct))
+    )
+    assert rc == 4  # busy == max via the same scan_slots the direct call used
 
 
 # --- guards: kill switch / budget / collision ---
@@ -785,3 +783,148 @@ def test_require_git_checkout_rejects_enclosing_repo_subdir(tmp_path: Path) -> N
         cd.require_git_checkout(subdir)
 
     assert "not a worktree root" in str(exc.value.code)
+
+
+# --- GIT_* scrub: the load-bearing hermeticity invariant ----------------------
+
+
+def test_hostile_git_env_is_scrubbed_from_children(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The live-incident invariant: even with GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE exported
+    # (as the pre-push hook does), (i) the script's own git ops still target the tmp
+    # canonical correctly, and (ii) the launched child receives NONE of those repo-targeting
+    # GIT_* vars. Deleting _scrubbed_env must fail this test.
+    #
+    # Build the origin FIRST — the fixture git calls (_git) inherit os.environ, so the
+    # hostile GIT_* must not be set until setup is done, or setup itself would be hijacked.
+    canonical = _make_origin(tmp_path)
+    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+
+    decoy = tmp_path / "decoy-repo"
+    decoy.mkdir()
+    monkeypatch.setenv("GIT_DIR", str(decoy / ".git"))
+    monkeypatch.setenv("GIT_WORK_TREE", str(decoy))
+    monkeypatch.setenv("GIT_INDEX_FILE", str(decoy / "index"))
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+    )
+
+    assert rc == 0
+    slug = "auto-codex-issue-1011"
+    # (i) The git ops still hit the tmp canonical: the worktree materialized off its
+    # origin/main with the seeded content, NOT the empty decoy.
+    worktree = canonical / ".claude" / "worktrees" / slug
+    assert (worktree / "README.md").read_text(encoding="utf-8") == "seed\n"
+    # (ii) The launched child inherited no repo-targeting GIT_* vars.
+    rec = _wait_for_record(record)
+    assert rec["git_env"] == []
+
+
+# --- slot-write failure AFTER launch (fix A) ----------------------------------
+
+
+def _wedge_slots_root(state: Path) -> Path:
+    """Make <state>/pipeline-slots un-creatable while leaving <state> a real dir.
+
+    The dispatch log lives under <state>/dispatch-logs (must be creatable so the launch
+    SUCCEEDS), but the slot write must fail. So keep state_root a dir and plant a regular
+    FILE at pipeline-slots: write_slot_file's mkdir(pipeline-slots, exist_ok=True) then
+    raises FileExistsError (an OSError) because the path exists but is not a dir. The
+    collision check (slot_path.exists() → False under a file) and budget check
+    (slots_root.is_dir() → False) both pass cleanly first.
+    """
+    state.mkdir(parents=True, exist_ok=True)
+    slots_root = state / "pipeline-slots"
+    slots_root.write_text("not a dir\n", encoding="utf-8")
+    return slots_root
+
+
+def test_slot_write_failure_after_launch_exits_2_no_tmp_leak(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # The agent is ALREADY launched when the final slot write runs. If that write fails,
+    # dispatch must convert to exit 2 (NOT crash with a traceback / exit 1) and name the pid
+    # + dispatch log so the orphan can be adjudicated. No *.tmp file may be left behind.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    slots_root = _wedge_slots_root(state)
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(
+            _args(tmp_path, canonical, state_root=state),
+            codex_id_timeout=5.0,
+            codex_id_poll=0.02,
+        )
+
+    message = str(exc.value.code)
+    assert "slot write failed" in message
+    assert "ALREADY LAUNCHED" in message
+    # Names the pid and the dispatch log for adjudication.
+    assert "pid=" in message
+    log_path = state / "dispatch-logs" / "auto-codex-issue-1011.log"
+    assert str(log_path) in message
+    # The launch DID happen (fix A is about a failure AFTER launch): the log exists.
+    assert log_path.exists()
+    # No stray *.tmp leaked: pipeline-slots is still the plain file we planted, and no
+    # sibling temp file was created next to it.
+    assert slots_root.is_file()
+    assert not list(state.glob("*.tmp"))
+
+
+def test_slot_write_failure_through_main_is_exit_2(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # Same failure through main()'s real argv path: the string-code SystemExit maps to
+    # exit 2 with the orphan-adjudication message on stderr, never a traceback/exit 1.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _wedge_slots_root(state)
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "slot write failed" in err
+    assert "pid=" in err
+
+
+# --- stale slot still consumes budget -----------------------------------------
+
+
+def test_stale_slot_still_consumes_budget(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # Staleness is an ADJUDICATION signal, not auto-reclaim: a stale slot still occupies a
+    # budget seat. 3 slots (one aged well past any stale threshold) → dispatch refuses with
+    # exit 4, exactly as if all three were fresh.
+    canonical = _make_origin(tmp_path)
+    slots = tmp_path / "state" / "pipeline-slots"
+    for slug in ("lane-a", "lane-b", "lane-c"):
+        _write_slot(slots, slug)
+    aged = time.time() - 100_000  # far past any reasonable stale threshold
+    os.utime(slots / "lane-c.json", (aged, aged))
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=tmp_path / "state", max_slots=3)
+    )
+
+    assert rc == 4
+    assert "no free slot budget: busy 3/3" in capsys.readouterr().out
+    _no_real_launch(tmp_path)

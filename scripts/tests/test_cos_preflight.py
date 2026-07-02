@@ -1489,3 +1489,74 @@ def test_mid_tick_event_is_caught(
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
+
+
+def test_slot_transition_through_probe_commit_reprobe_cycle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # The full "commit bound to observation" cycle (from #987/#1010) for the SLOT ledger,
+    # which today only pins the wake leg. A mid-tick reclaim must not be absorbed by the
+    # commit of the probe that never saw it, and the reclaim's later free must still wake.
+    #
+    #   baseline {a,b}
+    #     → live loses b            → probe WAKES (freed b + dispatch)  [stages candidate {a}]
+    #     → live reclaims c ({a,c}) → mid-tick claim lands before commit
+    #     → --commit <probe fp>     → baseline = {a} (what the PROBE saw, NOT {a,c})
+    #     → re-probe live {a,c}     → c is a silent claim (no reasons) → idle auto-advance
+    #                                 records baseline {a,c}, rc 0
+    #     → later probe live {a}    → c frees → WAKES again (the reclaim was not burned)
+    state = tmp_path / "state.json"
+    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+
+    baseline = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "b", "stale": False}]
+    )
+    cpf.write_state(state, baseline)
+
+    # Probe: b freed under budget → wake + stage candidate {a}.
+    freed_b = _snapshot(slots=[{"slug": "a", "stale": False}])
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: freed_b)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+    out = json.loads(capsys.readouterr().out)
+    # busy=1 ({a}) against the default max_slots=3 → 2 free.
+    assert out["reasons"] == ["dispatch: 2 slot(s) free", "pipeline slot freed: b"]
+    fp_freed = out["fingerprint"]
+
+    # Mid-tick reclaim: the live ledger changes AGAIN before commit — slot c registered.
+    # If --commit ever collected, the baseline would capture {a,c}; it must instead promote
+    # only what the probe observed ({a}).
+    reclaimed = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "c", "stale": False}]
+    )
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: reclaimed)
+    assert (
+        cpf.main(
+            ["--no-canonical-check", "--commit", fp_freed, "--state-file", str(state)]
+        )
+        == 0
+    )
+    assert (
+        cpf.load_state(state) == freed_b
+    )  # committed the PROBE's {a}, not the reclaim
+    assert cpf.load_state(state) != reclaimed
+
+    # Re-probe against the live reclaimed {a,c}: c is a NEW non-stale slug → a silent claim
+    # (zero reasons), so the idle auto-advance path records it into the baseline (rc 0).
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: reclaimed)
+    assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
+    err = capsys.readouterr().err
+    assert "advanced idle" in err
+    assert cpf.load_state(state) == reclaimed  # baseline now includes the claimed c
+
+    # Later probe: c frees ({a,c} → {a}). Because the baseline advanced to include c, its
+    # free is now visible and WAKES — the mid-tick reclaim was recorded, not burned.
+    c_frees = _snapshot(slots=[{"slug": "a", "stale": False}])
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: c_frees)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+    reasons = json.loads(capsys.readouterr().out)["reasons"]
+    assert "pipeline slot freed: c" in reasons
+    assert "dispatch: 2 slot(s) free" in reasons

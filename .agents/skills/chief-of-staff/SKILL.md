@@ -644,6 +644,11 @@ budget. In non-auto mode the recommend-only behavior above is unchanged. Auto mo
 changes only WHO launches — nothing about what may merge: auto-dispatched pipelines hand
 off through the normal merge-gate store, and the chief of staff still owns every merge.
 
+Dispatch lanes SEQUENTIALLY within the single coordinator session — never run two
+auto-mode loops concurrently. `cos_dispatch`'s budget and collision guards protect
+against re-dispatching the same lane, not against two dispatchers racing; the
+one-coordinator rule in Scheduling is what excludes that.
+
 - **Kill switch, checked immediately before every launch:**
   `$XDG_STATE_HOME/registry-research-toolkit/auto-dispatch.off` (default
   `~/.local/state/...`). Present ⇒ do NOT dispatch; fall back to recommending and report

@@ -13,7 +13,8 @@ operations is chosen so a failure never leaks a slot: the slot file is written L
 only after the agent process is spawned. A failure after the worktree is created leaks
 only the worktree, which the error names for adjudication.
 
-Steps (fail-fast between each):
+Steps (fail-fast between each). After arg/canonical validation (require_canonical,
+parse_issues, resolve_profile, slug validation — all exit 2):
   1. kill switch  — <state-root>/auto-dispatch.off present ⇒ refuse (exit 3).
   2. budget       — busy slots >= --max-slots ⇒ refuse (exit 4).
   3. collision    — slot file OR worktree dir already exists ⇒ refuse (exit 2).
@@ -136,9 +137,9 @@ def resolve_profile(tier: str, surface_override: str | None) -> tuple[str, list[
 def _load_cos_preflight() -> ModuleType:
     # Spec-load the sibling like cos_watch.py does, so we reuse its store-root and slot
     # leaf helpers (default_gate_root, default_slots_root, scan_slots, DEFAULT_MAX_SLOTS,
-    # require_canonical) instead of re-pasting them. Note: default_slots_root / scan_slots
-    # / DEFAULT_MAX_SLOTS are hoisted into cos_preflight by the sibling cos_watch work;
-    # this reference resolves at call time once that lands.
+    # require_canonical) instead of re-pasting them. These live in cos_preflight (the slot
+    # helpers were hoisted there from cos_watch on this branch); we depend on that module
+    # exporting them.
     spec = importlib.util.spec_from_file_location(
         "cos_preflight", Path(__file__).with_name("cos_preflight.py")
     )
@@ -342,8 +343,12 @@ def write_slot_file(
     session_id: str | None,
     pid: int,
 ) -> None:
-    # Atomic write (temp file in the same dir + rename), mirroring cos_preflight.write_state
-    # so scan_slots never sees a torn read. `slot` MUST equal the stem or readers drop it.
+    # Atomic write: temp file in the same dir + rename, so scan_slots never sees a torn
+    # read (same temp+rename mechanics as cos_preflight.write_state). `slot` MUST equal the
+    # stem or readers drop it. DELIBERATE divergence from write_state: we mkdir(parents=True)
+    # the ledger dir because the pipeline-slots root always lives under $XDG_STATE_HOME
+    # (never a .git-relative path), so there is no risk of conjuring a dir inside a missing
+    # checkout — unlike write_state, whose no-mkdir policy guards that exact footgun.
     slot_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "slot": slug,
@@ -503,8 +508,19 @@ def dispatch(
             )
 
     # 7. Slot file — written LAST, only after a successful launch, so a failed launch
-    # never leaks a slot.
-    write_slot_file(slot_path, slug, issues, surface, tier, session_id, pid)
+    # never leaks a slot. But the agent is ALREADY running here: if the write fails (e.g.
+    # an unwritable ledger dir) we must NOT crash with a traceback (exit 1) — that would
+    # violate the exit-2 contract and, worse, leave a running agent with no ledger entry.
+    # Convert to exit 2 with everything needed to adjudicate the orphan by hand.
+    try:
+        write_slot_file(slot_path, slug, issues, surface, tier, session_id, pid)
+    except OSError as exc:
+        raise SystemExit(
+            f"slot write failed: {exc} — agent ALREADY LAUNCHED and now unrecorded "
+            f"(pid={pid}, surface={surface}, session={session_id}, "
+            f"log={log_path}, worktree={worktree}, slot={slot_path}); "
+            "adjudicate the orphan and register or kill it manually"
+        ) from exc
 
     print(
         json.dumps(
