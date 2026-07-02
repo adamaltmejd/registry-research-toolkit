@@ -77,6 +77,23 @@ def _install_stub_bin(bindir: Path, names: tuple[str, ...], body: str) -> None:
         script.chmod(0o755)
 
 
+# Git-context env vars that override cwd-based repo discovery. The repo's pre-push hook
+# runs this suite with GIT_DIR / GIT_WORK_TREE (and, with the push workaround, more)
+# exported — every git subprocess then targets the HOOK's real worktree regardless of the
+# tmp cwd/-C the fixtures pass, which is exactly what clobbered the real index. The
+# fixture unsets them so the test process AND anything it spawns (fixture git calls, the
+# script under test) discover repos by cwd again, independent of how pytest was launched.
+_GIT_CONTEXT_ENV = (
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_COMMON_DIR",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_NAMESPACE",
+    "GIT_PREFIX",
+)
+
+
 @pytest.fixture(autouse=True)
 def _hermetic_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Sandbox EVERY test: harmless cwd + PATH where the real codex/claude are unreachable.
@@ -84,6 +101,8 @@ def _hermetic_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     Returns the stub-bin dir so a test can overwrite the fail-loud stubs with recording
     no-op stubs when it legitimately drives a launch. `git` stays reachable via the
     inherited real PATH appended after the stub dir, so the tmp-repo git ops still work.
+    Also unsets inherited GIT_* context vars so a pre-push-hook invocation can't hijack any
+    git call to the hook's repo (see _GIT_CONTEXT_ENV).
     """
     stub_bin = tmp_path / "stub-bin"
     _install_stub_bin(stub_bin, ("codex", "claude"), _FAIL_STUB_BODY)
@@ -91,6 +110,8 @@ def _hermetic_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("PATH", f"{stub_bin}{os.pathsep}{os.environ['PATH']}")
     monkeypatch.setenv("COS_STUB_RECORD", str(invocations))
+    for var in _GIT_CONTEXT_ENV:
+        monkeypatch.delenv(var, raising=False)
     return stub_bin
 
 

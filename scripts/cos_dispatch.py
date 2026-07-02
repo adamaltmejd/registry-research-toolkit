@@ -68,6 +68,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import time
@@ -103,6 +104,18 @@ LAUNCH_PROFILES: dict[str, tuple[str, list[str]]] = {
 # the dispatch. Injectable via dispatch() args so the timeout test doesn't sleep 30s.
 DEFAULT_CODEX_ID_TIMEOUT = 30.0
 DEFAULT_CODEX_ID_POLL = 0.25
+
+
+# Git-context env vars that override cwd-based repo discovery. A git hook (pre-push runs
+# our test suite) exports GIT_DIR / GIT_WORK_TREE / GIT_INDEX_FILE etc. into the child
+# environment; git then targets the HOOK's repo regardless of a subprocess's cwd or `-C`.
+# So passing an explicit cwd is NOT enough — every git call (and the launched agent, which
+# runs git internally) must run with these scrubbed. We drop all GIT_* keys wholesale:
+# none of git's config-affecting env vars belong in a fresh dispatch, and a blanket rule
+# can't miss a newly added repo-targeting var. (GIT_SSH/GIT_ASKPASS auth helpers live in
+# the user's shell config, not this exported hook set, so dropping them here is harmless.)
+def _scrubbed_env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
 
 
 def resolve_profile(tier: str, surface_override: str | None) -> tuple[str, list[str]]:
@@ -275,7 +288,13 @@ def run_git(cwd: Path, args: list[str]) -> None:
     caller happens to be in, which under --no-canonical-check would corrupt an unrelated
     checkout.
     """
-    proc = subprocess.run(["git", *args], cwd=str(cwd), capture_output=True, text=True)
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=str(cwd),
+        env=_scrubbed_env(),  # cwd is not enough: scrub inherited GIT_DIR/GIT_WORK_TREE
+        capture_output=True,
+        text=True,
+    )
     if proc.returncode != 0:
         tail = (
             proc.stderr.strip() or proc.stdout.strip() or f"git {' '.join(args)} failed"
@@ -297,6 +316,7 @@ def require_git_checkout(canonical: Path) -> None:
     """
     proc = subprocess.run(
         ["git", "-C", str(canonical), "rev-parse", "--show-toplevel"],
+        env=_scrubbed_env(),  # else an inherited GIT_DIR resolves the hook's repo, not canonical
         capture_output=True,
         text=True,
     )
@@ -357,7 +377,9 @@ def launch_detached(argv: list[str], worktree: Path, log_path: Path) -> int:
 
     start_new_session=True detaches it into its own process group so it survives this
     session ending (it re-parents to init on our exit). stdin is closed (codex exec
-    otherwise blocks reading stdin); stdout+stderr append to the per-slug log.
+    otherwise blocks reading stdin); stdout+stderr append to the per-slug log. The env is
+    GIT_*-scrubbed: the agent runs git in its own worktree, and an inherited GIT_DIR from a
+    dispatching hook would point every git call it makes at the wrong repo.
     """
     log_path.parent.mkdir(parents=True, exist_ok=True)
     log = log_path.open("a", encoding="utf-8")
@@ -365,6 +387,7 @@ def launch_detached(argv: list[str], worktree: Path, log_path: Path) -> int:
         proc = subprocess.Popen(
             argv,
             cwd=str(worktree),
+            env=_scrubbed_env(),
             stdin=subprocess.DEVNULL,
             stdout=log,
             stderr=subprocess.STDOUT,
