@@ -21,8 +21,13 @@ import {
   rowAddPeriod,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
-import { looksLikePeriod, type PeriodGrain, periodFromWire } from "./period";
-import { regMetaReleaseTag } from "./project_data";
+import {
+  looksLikePeriod,
+  type PeriodGrain,
+  periodFromWire,
+  periodToWire,
+} from "./period";
+import { type Period, regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import RepresentationPicker, {
   type PickerApplyPayload,
@@ -33,6 +38,8 @@ import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
 import {
   committedPickerRows,
+  finalAddPeriods,
+  type PickerAddCandidate,
   rowRegisterVariant,
   stagedRemoveForCommitted,
 } from "./staged_picker";
@@ -574,19 +581,37 @@ $effect(() => {
   applyOutcome = null;
 });
 
-async function stagedAdd(selection: PickerSelection) {
+interface StagedSelectionAdd extends PickerAddCandidate {
+  selection: PickerSelection;
+}
+
+function stagedAddCandidate(selection: PickerSelection): StagedSelectionAdd {
   const { band, row } = selection;
   const addWindow = addWindowBounds(period ?? null, pickerWindow);
   const addPeriod = rowAddPeriod(row, addWindow);
+  return {
+    selection,
+    registerVariant: rowRegisterVariant(band, row),
+    period: periodFromWire(addPeriod),
+  };
+}
+
+async function stagedAdd(
+  candidate: StagedSelectionAdd,
+  landingPeriods: ReadonlyMap<string, Period>,
+) {
+  const { band, row } = candidate.selection;
+  const landingPeriod = landingPeriods.get(candidate.registerVariant);
+  const resolvePeriod = landingPeriod ? periodToWire(landingPeriod) : null;
   let resolution: BindingResolution;
   try {
-    resolution = await resolveBindingAt(band.key, addPeriod, row.variant);
+    resolution = await resolveBindingAt(band.key, resolvePeriod, row.variant);
   } catch {
     resolution = { kind: "unresolved" as const, reason: "no-states" as const };
   }
   return {
-    registerVariant: rowRegisterVariant(band, row),
-    period: periodFromWire(addPeriod),
+    registerVariant: candidate.registerVariant,
+    period: candidate.period,
     binding: bindingFieldsFromResolution(
       band.key,
       resolution,
@@ -611,7 +636,11 @@ async function applyStaged(payload: PickerApplyPayload): Promise<void> {
     });
   }
   const target = projectStore.draft;
-  const adds = await Promise.all(payload.adds.map(stagedAdd));
+  const candidates = payload.adds.map(stagedAddCandidate);
+  const landingPeriods = finalAddPeriods(projectStore.draft, candidates);
+  const adds = await Promise.all(
+    candidates.map((candidate) => stagedAdd(candidate, landingPeriods)),
+  );
   if (projectStore.draft !== target) {
     return;
   }

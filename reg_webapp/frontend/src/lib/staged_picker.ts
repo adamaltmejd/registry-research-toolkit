@@ -1,5 +1,5 @@
 import type { PickerRepresentation } from "./catalog";
-import { periodFromWire, periodToWire } from "./period";
+import { mergePeriods, periodFromWire, periodToWire } from "./period";
 import type { Binding, Period, ProjectData, Source } from "./project_data";
 import type { StagedPeriodChange, StagedRemove } from "./project_store.svelte";
 
@@ -16,6 +16,11 @@ export interface PickerCommittedRow {
   representation: string | null;
   sourceName: string;
   sourcePeriod: Period;
+}
+
+export interface PickerAddCandidate {
+  registerVariant: string;
+  period: Period;
 }
 
 export function rowRegisterVariant(
@@ -62,9 +67,36 @@ function rowMatchesBinding(
 ): boolean {
   const representation = bindingRepresentation(binding);
   if (representation !== null) {
-    return representation === row.column;
+    return (
+      representation === row.column ||
+      row.renamedColumns.includes(representation)
+    );
   }
   return row.representation === null || variantRows.length === 1;
+}
+
+export function finalAddPeriods(
+  draft: ProjectData | null,
+  candidates: readonly PickerAddCandidate[],
+): Map<string, Period> {
+  const sources = Array.isArray(draft?.sources) ? draft.sources : [];
+  const sourcePeriods = new Map<string, Period>();
+  for (const source of sources) {
+    sourcePeriods.set(sourceRegisterVariant(source), source.period as Period);
+  }
+  const periods = new Map<string, Period>();
+  for (const candidate of candidates) {
+    const current =
+      periods.get(candidate.registerVariant) ??
+      sourcePeriods.get(candidate.registerVariant);
+    periods.set(
+      candidate.registerVariant,
+      current === undefined
+        ? candidate.period
+        : mergePeriods(current, candidate.period),
+    );
+  }
+  return periods;
 }
 
 export function committedPickerRows(

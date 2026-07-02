@@ -370,6 +370,58 @@ describe("BindingLeafView representation picker (#678)", () => {
     );
   });
 
+  it("resolves a staged add against the merged landing source period", async () => {
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/individer",
+          period: 2000,
+          binding: {
+            variable: "scb/lisa/other",
+            type: "opaque",
+          },
+        },
+      ],
+    });
+    const periods: (string | undefined)[] = [];
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      periods.push(params?.period);
+      return statesResponse([
+        state({
+          variant: "individer",
+          delivery_column_name: "Kon",
+          data_type: "int",
+        }),
+      ]);
+    });
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(periods).toContain("2000,2010..2015");
+    expect(projectStore.draft?.sources[0]).toEqual(
+      expect.objectContaining({
+        period: [2000, { from: 2010, to: 2015 }],
+        bindings: expect.arrayContaining([
+          expect.objectContaining({ variable: "scb/lisa/other" }),
+          expect.objectContaining({
+            variable: "scb/lisa/kon",
+            type: "numeric",
+          }),
+        ]),
+      }),
+    );
+  });
+
   it("renders committed rows and applies a staged remove only on Apply", async () => {
     projectStore.applyStagedDiff({
       adds: [

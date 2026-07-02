@@ -1,0 +1,98 @@
+import { describe, expect, it } from "vitest";
+import type { PickerRepresentation } from "./catalog";
+import type { ProjectData } from "./project_data";
+import {
+  committedPickerRows,
+  finalAddPeriods,
+  pickerRowKey,
+  type StagedPickerBand,
+} from "./staged_picker";
+
+function row(over: Partial<PickerRepresentation> = {}): PickerRepresentation {
+  return {
+    key: "ind::DINF86",
+    variant: "ind",
+    variantLabel: "ind",
+    column: "DINF86",
+    representation: null,
+    from: "1981-01-01",
+    to: "1995-12-31",
+    windows: [{ from: "1981-01-01", to: "1995-12-31" }],
+    period: "1981 - 1995",
+    wirePeriod: "1981..1995",
+    valueSetLabel: "",
+    codingsVary: false,
+    renamedColumns: ["DINF", "DINF83"],
+    ...over,
+  };
+}
+
+function band(rows: PickerRepresentation[]): StagedPickerBand {
+  return {
+    key: "scb/lisa/dinf",
+    registerPrefix: "scb/lisa",
+    rows,
+  };
+}
+
+describe("committedPickerRows", () => {
+  it("matches folded rename rows when a project pins a retired delivery column", () => {
+    const r = row();
+    const b = band([r]);
+    const draft: ProjectData = {
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/ind",
+          period: { from: 1981, to: 1985 },
+          bindings: [
+            {
+              variable: "scb/lisa/dinf",
+              type: "numeric",
+              representation: "DINF83",
+            },
+          ],
+        },
+      ],
+    };
+
+    const committed = committedPickerRows(draft, [b]);
+
+    expect(committed.get(pickerRowKey(b, r))).toEqual(
+      expect.objectContaining({
+        representation: "DINF83",
+        variable: "scb/lisa/dinf",
+      }),
+    );
+  });
+});
+
+describe("finalAddPeriods", () => {
+  it("merges staged add periods with the existing landing source period", () => {
+    const draft: ProjectData = {
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/ind",
+          period: 2000,
+          bindings: [{ variable: "scb/lisa/other", type: "opaque" }],
+        },
+      ],
+    };
+
+    expect(
+      finalAddPeriods(draft, [
+        { registerVariant: "scb/lisa/ind", period: { from: 2010, to: 2015 } },
+        { registerVariant: "scb/lisa/ind", period: { from: 2018, to: 2020 } },
+      ]).get("scb/lisa/ind"),
+    ).toEqual([2000, { from: 2010, to: 2015 }, { from: 2018, to: 2020 }]);
+  });
+});
