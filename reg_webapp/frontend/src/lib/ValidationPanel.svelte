@@ -103,11 +103,21 @@ const LEVEL_LABEL: Record<Level, string> = {
                 </div>
                 <p class="message">{issue.message}</p>
                 {#if loc}
-                  <!-- Click-to-locate: scrolls to + flashes the source/binding card
-                       instead of leaking the raw JSON pointer. -->
-                  <button type="button" class="locate" onclick={() => locate(loc.anchorId)}>
-                    {loc.label}
-                  </button>
+                  <div class="locators">
+                    <!-- Click-to-locate: scrolls to + flashes the source/binding card
+                         instead of leaking the raw JSON pointer. -->
+                    <button type="button" class="locate" onclick={() => locate(loc.anchorId)}>
+                      {loc.label}
+                    </button>
+                    {#if loc.catalogHref}
+                      <!-- The cart is read-only (#991): fixes happen on the catalog
+                           subject page, so link out to it. Omitted when the finding
+                           resolves no catalog coordinate (an unpicked row). -->
+                      <a class="catalog-link" href={loc.catalogHref}>
+                        Fix in catalog: <code>{loc.catalogLabel}</code>
+                      </a>
+                    {/if}
+                  </div>
                 {:else if issue.path}
                   <code class="path">{issue.path}</code>
                 {:else}
@@ -207,9 +217,19 @@ const LEVEL_LABEL: Record<Level, string> = {
   code.path {
     font-family: var(--font-mono);
   }
-  /* The locate trigger is interactive chrome → brand accent is correct here
-     (links/click-to-locate), not a status color. */
-  .locate {
+  /* The locate trigger + catalog link sit on one row (wrapping on narrow
+     viewports), separated so the "where" (locate) reads before the "fix it"
+     (catalog) affordance. */
+  .locators {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-3);
+  }
+  /* The locate trigger AND the catalog link are interactive chrome → brand accent
+     is correct here (links/click-to-locate), not a status color. */
+  .locate,
+  .catalog-link {
     font: inherit;
     font-size: var(--text-sm);
     padding: 0;
@@ -219,7 +239,13 @@ const LEVEL_LABEL: Record<Level, string> = {
     cursor: pointer;
     text-align: left;
   }
-  .locate:hover {
+  .locate:hover,
+  .catalog-link:hover {
     text-decoration: underline;
+  }
+  /* The catalog target is a machine FQID/coordinate → mono, like every identifier. */
+  .catalog-link code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
   }
 </style>

@@ -1,33 +1,29 @@
 <script lang="ts">
 import BindingEditor from "./BindingEditor.svelte";
-import CatalogPicker from "./CatalogPicker.svelte";
-import { registerPrefixOf, variantSeg } from "./catalog";
-import FieldIssues from "./FieldIssues.svelte";
-import PeriodEditor from "./PeriodEditor.svelte";
+import { variantDisplayLabel } from "./catalog";
 import { periodToWire } from "./period";
 import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { Button, EmptyState, Tag } from "./ui";
 import {
-  issuesForPointer,
   issuesUnderPointer,
   jsonPointer,
   sourceAnchorId,
   type ValidationIssue,
 } from "./validation";
 
-// Editable single source (see reg_schema/DESIGN.md → Two layers: models vs.
-// validator). Header carries a rolled-up error badge (every
-// issue under /sources/{i}); the fields edit name / register_variant / period /
-// bindings. Every edit funnels through the c-i store mutators — NO new store API.
+// READ-ONLY source card in the #991 data-order cart: the cart SHOWS what has been
+// picked (sources + bindings) and supports delete + navigate-out only — adding or
+// changing data happens in the catalog browser, not here. So this card DISPLAYS the
+// source's name / register_variant / period and offers "Remove source"; it carries
+// no inputs, pickers, or PeriodEditor. The header still rolls up all errors under
+// `/sources/{i}` as a badge (fixes are reached via the ValidationPanel's catalog
+// link). See reg_webapp/DESIGN.md and issue #991.
 const { sourceIndex, source, issues } = $props<{
   sourceIndex: number;
   source: Source;
   issues: ValidationIssue[];
 }>();
-
-// Whether the inline variant picker is expanded.
-let pickingVariant = $state(false);
 
 const sourcePtr = $derived(jsonPointer(["sources", sourceIndex]));
 const rolledUp = $derived(issuesUnderPointer(issues, sourcePtr));
@@ -36,8 +32,6 @@ const errorCount = $derived(rolledUp.filter((i) => i.level === "error").length);
 const registerVariant = $derived(
   typeof source.register_variant === "string" ? source.register_variant : "",
 );
-const registerPrefix = $derived(registerPrefixOf(registerVariant));
-const variant = $derived(variantSeg(registerVariant));
 
 // Defensive: a malformed opened spec may carry `bindings` as a non-array. Show an
 // inline note instead of the list (full-replace-with-guards, maintainer decision)
@@ -49,19 +43,9 @@ const bindingsMalformed = $derived(
   source.bindings !== undefined && !Array.isArray(source.bindings),
 );
 
-// The period as a wire string for the binding/variant pickers' resolve.
-const periodWire = $derived(periodToWire(source.period as Period));
-
-function ptr(field: string): string {
-  return jsonPointer(["sources", sourceIndex, field]);
-}
-
-function onPickVariant(registerVariant: string): void {
-  // C2: the picker emits the WHOLE 3-seg register_variant (it owns the register —
-  // either the hand-typed prefix or one the user browsed to). Set it directly.
-  projectStore.updateSource(sourceIndex, { register_variant: registerVariant });
-  pickingVariant = false;
-}
+// The period as a read-only display string (list-period aware — `periodToWire`
+// already joins list segments); null → the "(no period)" fallback.
+const periodDisplay = $derived(periodToWire(source.period as Period));
 </script>
 
 <!-- `id` is the click-to-locate anchor the ValidationPanel scrolls to (matched via
@@ -89,70 +73,20 @@ function onPickVariant(registerVariant: string): void {
     </Button>
   </header>
 
-  <div class="fields">
-    <label class="field">
-      <span class="field-label">Name</span>
-      <input
-        type="text"
-        value={source.name}
-        placeholder="Source name"
-        oninput={(e) => projectStore.updateSource(sourceIndex, { name: e.currentTarget.value })}
-      />
-      <FieldIssues issues={issuesForPointer(issues, ptr("name"))} />
-    </label>
-
-    <div class="field">
-      <span class="field-label">Register variant</span>
-      <!-- An editable text field (the researcher often knows the FQID): type the
-           full `provider/register/variant`, OR type the `provider/register` prefix
-           and use "Pick variant" to choose the variant slug from the catalog. -->
-      <div class="rv-row">
-        <input
-          type="text"
-          class="rv-input"
-          value={registerVariant}
-          placeholder="provider/register/variant"
-          oninput={(e) =>
-            projectStore.updateSource(sourceIndex, {
-              register_variant: e.currentTarget.value,
-            })}
-        />
-        <Button variant="default" size="sm" onclick={() => (pickingVariant = !pickingVariant)}>
-          {pickingVariant ? "Close" : "Pick variant"}
-        </Button>
-      </div>
-      <FieldIssues issues={issuesForPointer(issues, ptr("register_variant"))} />
-      {#if pickingVariant}
-        <!-- C2: the picker BROWSES providers → registers → variants when no valid
-             register prefix is hand-typed, and jumps straight to the variant list
-             when one is. It emits the WHOLE register_variant either way. -->
-        <CatalogPicker
-          mode="variant"
-          register={registerPrefix}
-          onpickVariant={onPickVariant}
-          oncancel={() => (pickingVariant = false)}
-        />
-      {/if}
-    </div>
-
-    <div class="field">
-      <PeriodEditor
-        period={source.period as Period}
-        issues={issuesForPointer(issues, ptr("period"))}
-        onchange={(p: Period) => projectStore.updateSource(sourceIndex, { period: p })}
-      />
-    </div>
-  </div>
+  <dl class="fields">
+    <dt>Register variant</dt>
+    <dd>
+      <!-- The register_variant is a machine FQID coordinate — mono, like every
+           identifier. Routed through `variantDisplayLabel` so #376's variant-family
+           labels swap in at one seam. -->
+      <code class="mono">{variantDisplayLabel(registerVariant)}</code>
+    </dd>
+    <dt>Period</dt>
+    <dd>{periodDisplay ?? "(no period)"}</dd>
+  </dl>
 
   <div class="bindings" aria-label="Bindings">
-    <div class="bindings-head">
-      <h4>Bindings ({bindings.length})</h4>
-      <Button variant="default" size="sm" onclick={() => projectStore.addBinding(sourceIndex)}>
-        Add binding
-      </Button>
-    </div>
-    <!-- empty_bindings is surfaced on the /sources/{i}/bindings pointer. -->
-    <FieldIssues issues={issuesForPointer(issues, ptr("bindings"))} />
+    <h4>Bindings ({bindings.length})</h4>
 
     {#if bindingsMalformed}
       <p class="error" role="alert">
@@ -163,19 +97,14 @@ function onPickVariant(registerVariant: string): void {
     {:else}
       <ul class="binding-list">
         <!-- Keyed by the store-owned STABLE client id (issue #200), not the index,
-             so a middle binding remove remounts the correct BindingEditor instance
-             (its `picking` flag / open CatalogPicker stay bound to the right
-             binding). The id lives only in the store, never in the draft. -->
+             so a middle binding remove remounts the correct BindingEditor instance.
+             The id lives only in the store, never in the draft. -->
         {#each bindings as binding, j (projectStore.bindingId(sourceIndex, j))}
           <li>
             <BindingEditor
               sourceIndex={sourceIndex}
               bindingIndex={j}
               binding={binding}
-              {registerPrefix}
-              period={periodWire}
-              {variant}
-              {issues}
             />
           </li>
         {/each}
@@ -222,46 +151,25 @@ function onPickVariant(registerVariant: string): void {
     align-items: baseline;
     gap: var(--space-2);
   }
+  /* Read-only key/value display of the source coordinate + period. */
   .fields {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-4);
+    margin: 0;
   }
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    max-width: 32rem;
-  }
-  .field-label {
+  .fields dt {
     font-weight: 600;
     font-size: var(--text-sm);
   }
-  .field input {
-    font: inherit;
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+  .fields dd {
+    margin: 0;
   }
-  .rv-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-  /* The register_variant is a machine FQID — mono, like every code/identifier. */
-  .rv-input {
-    flex: 1;
+  .mono {
     font-family: var(--font-mono);
   }
-  .bindings-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-3);
-    margin-bottom: var(--space-2);
-  }
-  .bindings-head h4 {
-    margin: 0;
+  .bindings h4 {
+    margin: 0 0 var(--space-2);
   }
   .binding-list {
     list-style: none;

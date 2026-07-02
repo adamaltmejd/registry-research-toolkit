@@ -596,6 +596,17 @@ export function variantSeg(registerVariant: string): string {
   return segs.length === 3 ? segs[2] : "";
 }
 
+/** The display label for a source's `register_variant` coordinate — the ONE place
+ * the cart renders a variant. Today it's the raw coordinate (rendered mono in the
+ * UI); this is the #376 variant-FAMILY fold seam — when family labels land, swap
+ * the mapping here so every cart row picks it up in one edit rather than
+ * re-deriving inline. */
+export function variantDisplayLabel(registerVariant: string): string {
+  // #376: family-label fold seam — resolve a family label here instead of the raw
+  // coordinate once #376 ships.
+  return registerVariant;
+}
+
 // ── Variable-state derivation (the CatalogPicker derive-on-pick) ─────────────
 
 // A LIGHT, advisory storage-token → ColumnType prefill for derive-on-pick

@@ -5,20 +5,24 @@ import SourceEditor from "./SourceEditor.svelte";
 import { Button, EmptyState, KeyValue, type KeyValueRow, Panel } from "./ui";
 import ValidationPanel from "./ValidationPanel.svelte";
 
-// The authoring surface. c-i shipped the minimal shell (home/new screen, top-level
-// fields, toolbar, open-error banner, ValidationPanel); c-ii (this) swaps the
-// read-only sources summary for the RICH editable list (SourceEditor /
-// BindingEditor / CatalogPicker + inline FieldIssues highlighting). The toolbar,
-// banners, name input, read-only steward/version/schema block, dirty indicator, and
-// ValidationPanel are UNCHANGED. This is:
+// The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
+// Under #991 the project IS the cart: it SHOWS what the researcher picked while
+// browsing (sources + bindings), and adding/changing data always happens in the
+// catalog browser. So this page is browse-only authoring: view the picked
+// sources/bindings, delete a source/binding, edit the project NAME, and
+// Open/Download the project_data.json + Validate / Download order CSV. Fixes for a
+// validation finding are reached via the ValidationPanel's outbound catalog link
+// (the catalog subject page is the only place a binding is (re-)picked). This is:
 //  - the home/new screen (draft == null): New / Open buttons,
-//  - the loaded-draft view: top-level fields, a dirty indicator, a toolbar
+//  - the loaded-draft view: the read-only steward/version/schema block + editable
+//    project name, a dirty indicator, a toolbar
 //    (New / Open / Download / Validate / Download order CSV),
-//    the open-error banner, the EDITABLE sources/bindings list, the ValidationPanel.
+//    the open-error banner, the READ-ONLY sources/bindings list, the ValidationPanel.
 //
 // `reg_meta_version` (bare package version) and `steward` (the deployment's
 // steward id) are seeded from the deployment context (passed by App.svelte) and
-// shown read-only in c-i; editing them (steward picker etc.) is c-ii.
+// shown read-only. (Auto-validate is a separate sibling, #994 — this page keeps the
+// manual Validate button and the validatedClean-gated order CSV download.)
 const { regMetaVersion, steward } = $props<{
   regMetaVersion: string;
   steward: string;
@@ -149,9 +153,10 @@ async function onFilePicked(event: Event): Promise<void> {
       </Button>
     </div>
 
-    <!-- Top-level fields. `name` is editable (the one field a researcher always
-         sets); `steward` / `reg_meta_version` are shown read-only in c-i (editing
-         them is c-ii — they gate the accepted version range / steward branding). -->
+    <!-- Top-level fields. `name` is the one editable field (the label a researcher
+         always sets); `steward` / `reg_meta_version` / `schema_version` are read-only
+         deployment-seed identifiers (they gate the accepted version range / steward
+         branding). -->
     <div class="fields">
       <label>
         <span>Name</span>
@@ -165,22 +170,18 @@ async function onFilePicked(event: Event): Promise<void> {
       <KeyValue rows={roRows} />
     </div>
 
-    <!-- Editable sources/bindings list (c-ii). Keyed by the store-owned STABLE
+    <!-- READ-ONLY sources/bindings cart (#991). Keyed by the store-owned STABLE
          client id (issue #200) — NOT the index — so a middle-remove remounts the
          correct SourceEditor instance instead of rebinding a survivor's stale UI
          state to a shifted source. The id lives only in the store, never in the
-         serialized draft. Each SourceEditor re-renders on every edit (the whole
-         draft swaps), acceptable at expected sizes. `issues` is the LAST /validate
-         result, echoed inline. -->
+         serialized draft. `issues` is the LAST /validate result, passed down so the
+         source/binding cards keep their locate-flash anchors + rolled-up error
+         badge. Adding data happens in the catalog browser, not here — so there is no
+         "Add source" affordance. -->
     <section aria-label="Sources">
       <Panel title="Sources ({sources.length})">
-        {#snippet meta()}
-          <Button variant="default" size="sm" onclick={() => projectStore.addSource()}>
-            Add source
-          </Button>
-        {/snippet}
         {#if sources.length === 0}
-          <EmptyState title="No sources yet. Add one to begin authoring." />
+          <EmptyState title="No sources yet. Browse the catalog to add data to your project." />
         {:else}
           <div class="source-list">
             {#each sources as source, i (projectStore.sourceId(i))}

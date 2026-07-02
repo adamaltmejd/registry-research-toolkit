@@ -9,7 +9,6 @@ import {
   bindingAnchorId,
   codeLabel,
   findingLocation,
-  issuesForPointer,
   issuesUnderPointer,
   jsonPointer,
   KNOWN_CODES,
@@ -123,22 +122,6 @@ describe("issuesUnderPointer (roll-up)", () => {
   });
 });
 
-describe("issuesForPointer", () => {
-  const issues = [
-    { level: "error" as const, code: "a", path: "/sources/0", message: "x" },
-    { level: "error" as const, code: "b", path: "/sources/0", message: "y" },
-    { level: "warning" as const, code: "c", path: "", message: "doc" },
-  ];
-
-  it("returns issues whose path matches exactly", () => {
-    expect(issuesForPointer(issues, "/sources/0")).toHaveLength(2);
-  });
-
-  it("matches the whole-document pointer (empty string)", () => {
-    expect(issuesForPointer(issues, "")).toEqual([issues[2]]);
-  });
-});
-
 describe("codeLabel / KNOWN_CODES", () => {
   it("returns the friendly label for a known code", () => {
     expect(codeLabel("unexpected_field")).toBe("Unexpected field");
@@ -172,35 +155,45 @@ describe("findingLocation (pointer → human location)", () => {
   const sources = [
     {
       name: "lisa_main",
+      register_variant: "scb/lisa/v1",
       bindings: [
         { variable: "scb/lisa/adeldag" },
         { variable: "scb/lisa/kon" },
       ],
     },
-    { name: "", bindings: [] }, // an unnamed source
+    { name: "", bindings: [] }, // an unnamed source, no register_variant
   ];
 
-  it("labels a binding path 'Source <name> → binding <fqid>' + binding anchor", () => {
+  it("labels a binding path 'Source <name> → binding <fqid>' + binding anchor + catalog link", () => {
     const loc = findingLocation("/sources/0/bindings/0/variable", sources);
+    // The cart is read-only, so a binding finding links out to the binding's
+    // catalog subject page (its variable FQID) for the fix (#991).
     expect(loc).toEqual({
       label: "Source 'lisa_main' → binding scb/lisa/adeldag",
       anchorId: bindingAnchorId(0, 0),
+      catalogHref: "/catalog/scb/lisa/adeldag",
+      catalogLabel: "scb/lisa/adeldag",
     });
   });
 
-  it("labels a source-level path with the source anchor", () => {
+  it("labels a source-level path with the source anchor + register_variant catalog link", () => {
     const loc = findingLocation("/sources/0/register_variant", sources);
+    // A source-level finding links to the register/variant catalog page (#991).
     expect(loc).toEqual({
       label: "Source 'lisa_main'",
       anchorId: sourceAnchorId(0),
+      catalogHref: "/catalog/scb/lisa/v1",
+      catalogLabel: "scb/lisa/v1",
     });
   });
 
-  it("falls back to the 1-based index when the source is unnamed", () => {
+  it("falls back to the 1-based index when the source is unnamed, omitting the catalog link", () => {
     const loc = findingLocation("/sources/1/bindings/0/variable", sources);
     // unnamed source → "Source 2"; out-of-range binding → "binding 1"
     expect(loc?.label).toBe("Source 2 → binding 1");
     expect(loc?.anchorId).toBe(bindingAnchorId(1, 0));
+    // No variable on the (absent) binding → no catalog target.
+    expect(loc?.catalogHref).toBeUndefined();
   });
 
   it("returns null for a whole-document or non-source path (raw-pointer fallback)", () => {
