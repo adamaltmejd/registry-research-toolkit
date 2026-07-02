@@ -485,21 +485,32 @@ function yearInt(raw: string): number | null {
 // mixed-grain sort is undefined — the documented footgun), so a period touching
 // any of those is REPLACED wholesale by the incoming window instead.
 
+/** One year endpoint as an int, accepting BOTH a year `number` and a
+ * numeric-string grammar year (`"2020"` → 2020 — the structural grammar +
+ * `periodToWire` accept string year endpoints, so `Source.period` validly carries
+ * them). A NON-year token string (`"HT2020"`, `"2020-Q3"`, `"_default"`) → null.
+ * `grammarYear` bounds the string arm to 19xx/20xx so a typo like `"202"` stays
+ * disqualifying. */
+function yearEndpointInt(value: number | string): number | null {
+  if (typeof value === "number") {
+    return Number.isInteger(value) ? value : null;
+  }
+  return grammarYear(value);
+}
+
 /** One year interval `[lo, hi]` (inclusive, ascending) a year-only period segment
- * denotes — or `null` when the segment is NOT pure year grammar (a token string,
- * `_default`, or a range with a non-year endpoint). A bare year int → `[y, y]`; a
- * `{from, to}` of two grammar years → that span. Strings are rejected outright:
- * even a numeric-looking `"2020"` is treated as token grammar here (year segments
- * ride the `number` arm — `periodFromWire` only ever emits int years). */
+ * denotes — or `null` when the segment is NOT pure year grammar (a non-year token
+ * string, `_default`, or a range with a non-year endpoint). A bare year int/string
+ * → `[y, y]`; a `{from, to}` of two grammar years (int OR numeric-string) → that
+ * span. A numeric-string year (`"2020"`) parses like the int form (both are valid
+ * `Source.period` year shapes); anything not a 19xx/20xx year disqualifies. */
 function yearIntervalOf(segment: PeriodSegment): [number, number] | null {
-  if (typeof segment === "number") {
-    return Number.isInteger(segment) ? [segment, segment] : null;
+  if (typeof segment === "number" || typeof segment === "string") {
+    const y = yearEndpointInt(segment);
+    return y === null ? null : [y, y];
   }
-  if (typeof segment === "string") {
-    return null; // token / `_default` — not year grammar
-  }
-  const from = typeof segment.from === "number" ? segment.from : null;
-  const to = typeof segment.to === "number" ? segment.to : null;
+  const from = yearEndpointInt(segment.from);
+  const to = yearEndpointInt(segment.to);
   if (from === null || to === null || from > to) {
     return null;
   }
@@ -529,6 +540,18 @@ function yearIntervalToSegment([lo, hi]: [number, number]): PeriodSegment {
   return lo === hi ? lo : { from: lo, to: hi };
 }
 
+/** Whether a period is the UNSET/empty value — the fresh-source no-period marker
+ * (`""`, what `periodFromWire(null)` yields) or an empty segment list (`[]`). Blank
+ * `{from,to}` endpoints ride the string/number arms, so this only tests the two
+ * true "no period" shapes; a set period with a blank endpoint is malformed, not
+ * unset, and is left to the caller's grammar handling. */
+function isEmptyPeriod(period: Period): boolean {
+  if (Array.isArray(period)) {
+    return period.length === 0;
+  }
+  return typeof period === "string" && period.trim() === "";
+}
+
 /**
  * Merge an `incoming` window into an `existing` source period (#992). When BOTH
  * are pure year grammar (year ints / year ranges, no tokens / `_default`),
@@ -540,6 +563,17 @@ function yearIntervalToSegment([lo, hi]: [number, number]): PeriodSegment {
  * user's most recent explicit window wins. Pure — unit-tested in `period.test.ts`.
  */
 export function mergePeriods(existing: Period, incoming: Period): Period {
+  // An UNSET incoming period must not wipe a valid existing one (a catalog row with
+  // no finite `resolvedPeriod` → `periodFromWire(null)` = ""), and a blank existing
+  // period adopts a set incoming one (a fresh/blank source takes the add's window).
+  // Precede the year-grammar coalesce: "" is a non-year string that would otherwise
+  // fall to the REPLACE arm and blank a valid period, invalidating every binding.
+  if (isEmptyPeriod(incoming)) {
+    return existing;
+  }
+  if (isEmptyPeriod(existing)) {
+    return incoming;
+  }
   const existingYears = yearIntervalsOf(existing);
   const incomingYears = yearIntervalsOf(incoming);
   if (existingYears === null || incomingYears === null) {

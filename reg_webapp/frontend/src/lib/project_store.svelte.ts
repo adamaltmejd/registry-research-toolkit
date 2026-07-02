@@ -322,7 +322,15 @@ export interface CatalogAddResult {
  * and matches any value; two non-null representations compare the exact delivery
  * column. The single match leaf shared by the duplicate guard (`sourceHasBinding`)
  * AND `applyStagedDiff`'s removes — so the two never drift on the null-either-side
- * semantics. `bVariable` must equal `variable` for a match. */
+ * semantics. `bVariable` must equal `variable` for a match.
+ *
+ * simplify: concept-level null-either-side dedup is NOT period-scoped — a genuinely
+ * co-existing column of a variable already stored with `representation: null` can be
+ * dropped when the source spans multiple periods (the null-as-only-column shortcut
+ * isn't scoped to the resolved period). Correct handling needs resolution-aware
+ * coexistence (the staged-add semantics owned by #995/#838); do NOT naively flip this
+ * rule — it would break the single-rep page-pin dedup (a page pinned R against a
+ * different single-rep period, documented in `sourceHasBinding`). */
 function bindingMatches(
   b: Binding,
   variable: string,
@@ -777,163 +785,194 @@ export const projectStore = {
    * Add a catalog variable-state to the project (C1 — catalog→project handoff).
    * The single store-level entry point the catalog page calls (it imports NO editor
    * component). ASYNC because it resolves the binding's final fields ONCE at pick
-   * time (the #991 write-once model — no client re-derivation engine). Steps:
-   *   1. Pristine store → create the untitled project from `seed` (same as New).
-   *   2. Find-or-create the source by `register_variant` ALONE (#992). On found:
-   *      the duplicate guard runs FIRST (step 3) BEFORE any mutation; a non-duplicate
-   *      then merges `payload.resolvedPeriod` into its period (`mergePeriods` → the
-   *      #307 list form on a disjoint window). On create: prefill the name (#312) +
-   *      set the period from the page's resolved period.
-   *   3. Duplicate guard (found path only — a fresh source can't hold one): a source
-   *      already carrying this fqid (+ representation) is a TRUE no-op →
-   *      `already-present` with ZERO mutation (no period merge, no setDraft).
-   *   4. Resolve ONCE at the SOURCE's (period, variant) and map the resolution to the
-   *      binding's FINAL fields (`resolutionToFields`), then append in ONE mutation.
-   * Because this is async, the fast-second-add duplicate guard relies on callers
-   * awaiting sequentially (the caller change is a later pass).
+   * time (the #991 write-once model — no client re-derivation engine).
+   *
+   * SERIALIZED at the store (`addChain`): the real body (`realAddFromCatalog`) runs
+   * strictly one-at-a-time, so two OVERLAPPING calls (the picker's Add button isn't
+   * awaited/disabled — a double-click on a multi-select can re-enter before the first
+   * resolve settles) can't interleave. Without serialization, the later call's
+   * pre-resolve `setDraft` (create/merge) changes `draft`, which trips the earlier
+   * call's `draft !== target` guard → the earlier call returns `already-present` and
+   * silently DROPS its binding. Chaining makes a later call's mutations start only
+   * after the earlier call has fully committed, so the `draft !== target` guard only
+   * ever fires on a genuine open/New replacement (see `realAddFromCatalog`).
    */
-  async addFromCatalog(
+  addFromCatalog(
     payload: CatalogAddPayload,
     seed: ProjectSeed,
   ): Promise<CatalogAddResult> {
-    // 1. Pristine store → create the untitled project (same path as New project).
-    if (draft == null) {
-      projectStore.newProject(seed);
-    }
-    if (draft == null) {
-      // newProject always sets the draft; this guards the type-narrowing only.
-      return {
-        status: "already-present",
-        createdSource: false,
-        sourceName: "",
-      };
-    }
-
-    // 2. Find-or-create by register_variant ALONE (#992). A disjoint window extends
-    //    the found source's period; a fresh source is prefilled from the page period.
-    const sources = Array.isArray(draft.sources) ? draft.sources : [];
-    const incomingPeriod = periodFromWire(payload.resolvedPeriod);
-
-    /** The landed source's name (read AFTER the create path's #312 prefill). */
-    const nameAt = (index: number): string => {
-      const name = draft?.sources?.[index]?.name;
-      return typeof name === "string" ? name : "";
-    };
-
-    let sourceIndex = sources.findIndex(
-      (s) => registerVariantOf(s) === payload.registerVariant,
-    );
-    let createdSource = false;
-    if (sourceIndex < 0) {
-      const created = newSource(
-        payload.registerVariant,
-        incomingPeriod,
-        sources,
-        [],
-      );
-      const next = { ...draft, sources: [...sources, created] };
-      sourceIndex = sources.length;
-      const ids = buildIds(next);
-      setDraft(next);
-      sourceIds = ids;
-      createdSource = true;
-    } else {
-      // 3. Found: run the duplicate guard FIRST, against the found source, BEFORE
-      //    any period merge or setDraft. `already-present` documents a NO-OP, so a
-      //    duplicate must not widen the source's period (would pull in extra years)
-      //    nor clear `validation` (setDraft would flip `validatedClean` off and
-      //    disable the order download) — the UI would report "already there" while
-      //    silently mutating. Return with ZERO mutation. A fresh source (create
-      //    path) can't hold a duplicate, so the guard only matters here.
-      const found = sources[sourceIndex];
-      if (sourceHasBinding(found, payload.variable, payload.representation)) {
-        return {
-          status: "already-present",
-          createdSource: false,
-          sourceName: nameAt(sourceIndex),
-        };
-      }
-      // Not a duplicate: extend its period to cover the add's window (#992 merge).
-      const merged = mergePeriods(found.period as Period, incomingPeriod);
-      setDraft(updateSource(draft, sourceIndex, { period: merged }));
-    }
-
-    // 4. Resolve ONCE at the SOURCE's (period, variant) and write the FINAL fields.
-    //    A found source's period may differ from the page's, so resolving at the
-    //    source's own period is correct (not trusting the page's representation
-    //    blindly). No marker/engine — the validator flags any residual drift.
-    const resolveSource = draft.sources?.[sourceIndex];
-    const period = resolveSource
-      ? periodToWire(resolveSource.period as Period)
-      : null;
-    const variant = resolveSource
-      ? variantSeg(registerVariantOf(resolveSource))
-      : "";
-    // Capture the draft reference BEFORE the awaited resolve. new/open/restore all
-    // REPLACE the whole `draft` object, so if the user opens a different project or
-    // starts a New one DURING this fetch, `draft !== target` afterwards. Appending
-    // then (by re-reading `draft` + re-finding by register_variant) would land the
-    // binding in the WRONG (newly-opened) project that happens to share the variant.
-    // Discard the stale add — a no-op — instead. (The retired re-derivation engine
-    // had a generation guard for exactly this; this restores it for the single-pick
-    // path. `validate()`'s stale-response guard is the same idea for its POST.)
-    const target = draft;
-    let resolution: BindingResolution;
-    try {
-      resolution = await resolveBindingAt(payload.variable, period, variant);
-    } catch {
-      // A network/422 leaves the binding unresolved (the validator is the
-      // authority); the add still lands so the pick isn't silently dropped.
-      if (draft !== target) {
-        return {
-          status: "already-present",
-          createdSource: false,
-          sourceName: "",
-        };
-      }
-      resolution = { kind: "unresolved", reason: "no-states" };
-    }
-    if (draft !== target) {
-      // The draft was replaced mid-resolve — discard this add entirely.
-      return {
-        status: "already-present",
-        createdSource: false,
-        sourceName: "",
-      };
-    }
-    const fields = resolutionToFields(
-      payload.variable,
-      resolution,
-      payload.representation,
-    );
-
-    // Re-find the source by variant before appending: the await window could have
-    // let a concurrent add shift indices (callers await sequentially, but this stays
-    // robust). Append the resolved binding in ONE mutation + rebuild the mirror once.
-    const landing = Array.isArray(draft.sources) ? draft.sources : [];
-    const landIndex = landing.findIndex(
-      (s) => registerVariantOf(s) === payload.registerVariant,
-    );
-    if (landIndex < 0) {
-      return { status: "already-present", createdSource, sourceName: "" };
-    }
-    const nextSources = landing.map((s, i) =>
-      i === landIndex
-        ? {
-            ...s,
-            bindings: [
-              ...(Array.isArray(s.bindings) ? s.bindings : []),
-              fields,
-            ],
-          }
-        : s,
-    );
-    const next = { ...draft, sources: nextSources };
-    setDraft(next);
-    sourceIds = buildIds(next);
-    return { status: "added", createdSource, sourceName: nameAt(landIndex) };
+    // Chain onto the tail so the real body runs after any in-flight add commits. The
+    // `.catch` resets the chain so a rejected add can't wedge the queue; the caller
+    // still sees the real result/rejection via `run` (a separate promise). Serial
+    // find-or-create then sees the prior committed draft (no concurrent `setDraft`).
+    const run = addChain.then(() => realAddFromCatalog(payload, seed));
+    addChain = run.catch(() => {});
+    return run;
   },
 };
+
+/** The serialization tail for `addFromCatalog` (module-level so it spans the
+ * singleton store). Each call chains its real body onto this so overlapping adds
+ * (an un-awaited double-click) run strictly one-at-a-time instead of interleaving
+ * their pre-resolve `setDraft` with each other's `draft !== target` guard. */
+let addChain: Promise<unknown> = Promise.resolve();
+
+/**
+ * The real `addFromCatalog` body (serialized behind `addChain` — see the store
+ * method). Steps:
+ *   1. Pristine store → create the untitled project from `seed` (same as New).
+ *   2. Find-or-create the source by `register_variant` ALONE (#992). On found:
+ *      the duplicate guard runs FIRST (step 3) BEFORE any mutation; a non-duplicate
+ *      then merges `payload.resolvedPeriod` into its period (`mergePeriods` → the
+ *      #307 list form on a disjoint window). On create: prefill the name (#312) +
+ *      set the period from the page's resolved period.
+ *   3. Duplicate guard (found path only — a fresh source can't hold one): a source
+ *      already carrying this fqid (+ representation) is a TRUE no-op →
+ *      `already-present` with ZERO mutation (no period merge, no setDraft).
+ *   4. Resolve ONCE at the SOURCE's (period, variant) and map the resolution to the
+ *      binding's FINAL fields (`resolutionToFields`), then append in ONE mutation.
+ * Serialization guarantees no concurrent add changes `draft` mid-flight, so each
+ * serial add sees the prior committed draft for find-or-create and the
+ * `draft !== target` guard fires only on a genuine open/New replacement.
+ */
+async function realAddFromCatalog(
+  payload: CatalogAddPayload,
+  seed: ProjectSeed,
+): Promise<CatalogAddResult> {
+  // 1. Pristine store → create the untitled project (same path as New project).
+  if (draft == null) {
+    projectStore.newProject(seed);
+  }
+  if (draft == null) {
+    // newProject always sets the draft; this guards the type-narrowing only.
+    return {
+      status: "already-present",
+      createdSource: false,
+      sourceName: "",
+    };
+  }
+
+  // 2. Find-or-create by register_variant ALONE (#992). A disjoint window extends
+  //    the found source's period; a fresh source is prefilled from the page period.
+  const sources = Array.isArray(draft.sources) ? draft.sources : [];
+  const incomingPeriod = periodFromWire(payload.resolvedPeriod);
+
+  /** The landed source's name (read AFTER the create path's #312 prefill). */
+  const nameAt = (index: number): string => {
+    const name = draft?.sources?.[index]?.name;
+    return typeof name === "string" ? name : "";
+  };
+
+  let sourceIndex = sources.findIndex(
+    (s) => registerVariantOf(s) === payload.registerVariant,
+  );
+  let createdSource = false;
+  if (sourceIndex < 0) {
+    const created = newSource(
+      payload.registerVariant,
+      incomingPeriod,
+      sources,
+      [],
+    );
+    const next = { ...draft, sources: [...sources, created] };
+    sourceIndex = sources.length;
+    const ids = buildIds(next);
+    setDraft(next);
+    sourceIds = ids;
+    createdSource = true;
+  } else {
+    // 3. Found: run the duplicate guard FIRST, against the found source, BEFORE
+    //    any period merge or setDraft. `already-present` documents a NO-OP, so a
+    //    duplicate must not widen the source's period (would pull in extra years)
+    //    nor clear `validation` (setDraft would flip `validatedClean` off and
+    //    disable the order download) — the UI would report "already there" while
+    //    silently mutating. Return with ZERO mutation. A fresh source (create
+    //    path) can't hold a duplicate, so the guard only matters here.
+    const found = sources[sourceIndex];
+    if (sourceHasBinding(found, payload.variable, payload.representation)) {
+      return {
+        status: "already-present",
+        createdSource: false,
+        sourceName: nameAt(sourceIndex),
+      };
+    }
+    // Not a duplicate: extend its period to cover the add's window (#992 merge).
+    const merged = mergePeriods(found.period as Period, incomingPeriod);
+    setDraft(updateSource(draft, sourceIndex, { period: merged }));
+  }
+
+  // 4. Resolve ONCE at the SOURCE's (period, variant) and write the FINAL fields.
+  //    A found source's period may differ from the page's, so resolving at the
+  //    source's own period is correct (not trusting the page's representation
+  //    blindly). No marker/engine — the validator flags any residual drift.
+  const resolveSource = draft.sources?.[sourceIndex];
+  const period = resolveSource
+    ? periodToWire(resolveSource.period as Period)
+    : null;
+  const variant = resolveSource
+    ? variantSeg(registerVariantOf(resolveSource))
+    : "";
+  // Capture the draft reference BEFORE the awaited resolve. new/open/restore all
+  // REPLACE the whole `draft` object, so if the user opens a different project or
+  // starts a New one DURING this fetch, `draft !== target` afterwards. Appending
+  // then (by re-reading `draft` + re-finding by register_variant) would land the
+  // binding in the WRONG (newly-opened) project that happens to share the variant.
+  // Discard the stale add — a no-op — instead. (The retired re-derivation engine
+  // had a generation guard for exactly this; this restores it for the single-pick
+  // path. `validate()`'s stale-response guard is the same idea for its POST.)
+  const target = draft;
+  let resolution: BindingResolution;
+  try {
+    resolution = await resolveBindingAt(payload.variable, period, variant);
+  } catch {
+    // A network/422 leaves the binding unresolved (the validator is the
+    // authority); the add still lands so the pick isn't silently dropped.
+    if (draft !== target) {
+      return {
+        status: "already-present",
+        createdSource: false,
+        sourceName: "",
+      };
+    }
+    resolution = { kind: "unresolved", reason: "no-states" };
+  }
+  if (draft !== target) {
+    // The draft was replaced mid-resolve — discard this add entirely.
+    return {
+      status: "already-present",
+      createdSource: false,
+      sourceName: "",
+    };
+  }
+  const fields = resolutionToFields(
+    payload.variable,
+    resolution,
+    payload.representation,
+  );
+
+  // Re-find the source by variant before appending: the await window could have
+  // let a concurrent add shift indices (callers await sequentially, but this stays
+  // robust). Append the resolved binding in ONE mutation + rebuild the mirror once.
+  const landing = Array.isArray(draft.sources) ? draft.sources : [];
+  const landIndex = landing.findIndex(
+    (s) => registerVariantOf(s) === payload.registerVariant,
+  );
+  if (landIndex < 0) {
+    return { status: "already-present", createdSource, sourceName: "" };
+  }
+  const nextSources = landing.map((s, i) =>
+    i === landIndex
+      ? {
+          ...s,
+          bindings: [...(Array.isArray(s.bindings) ? s.bindings : []), fields],
+        }
+      : s,
+  );
+  const next = { ...draft, sources: nextSources };
+  setDraft(next);
+  sourceIds = buildIds(next);
+  return { status: "added", createdSource, sourceName: nameAt(landIndex) };
+}
 
 // ── addFromCatalog / applyStagedDiff helpers ─────────────────────────────────
 

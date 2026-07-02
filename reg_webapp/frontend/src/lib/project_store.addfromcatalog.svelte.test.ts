@@ -387,44 +387,69 @@ describe("addFromCatalog (C1)", () => {
     expect(binding).toMatchObject({ type: "numeric", display_name: "Lon86" });
   });
 
-  it("discards a stale add when the draft is REPLACED mid-resolve, even when the replacement HAS a matching source (review Fix 1)", async () => {
+  it("discards a stale add when the draft is REPLACED mid-resolve via openFromFile, even when the replacement HAS a matching source (review Fix 1)", async () => {
     // The load-bearing case the `draft !== target` guard exists for: the
     // replacement draft ALREADY carries a source on the SAME register_variant as
     // the in-flight add, so the post-await re-find (`landIndex`) SUCCEEDS. Without
     // the guard, the stale binding would append into the WRONG (replaced) project's
     // matching source. An empty replacement draft would be caught by the pre-existing
     // `landIndex < 0` early return instead, so it can't discriminate the guard.
+    //
+    // Since `addFromCatalog` is now SERIALIZED at the store (`addChain`), a second
+    // `addFromCatalog` can no longer replace the draft mid-resolve — it would queue
+    // behind the in-flight (never-resolving) add and deadlock the whole file. The
+    // guard is now reachable ONLY via a SYNCHRONOUS-path draft replacement
+    // (`newProject` / `openFromFile`), which runs OUTSIDE `addChain`. We drive the
+    // replacement through `openFromFile` here: it directly swaps `draft` for a
+    // parsed fixture that carries a matching source, so the re-find succeeds and
+    // only the `draft !== target` guard prevents the stale binding from landing.
     projectStore.newProject(SEED); // draft A — the project the stale add starts against.
 
     // Hold the in-flight resolve open with a deferred promise so we can replace the
     // draft MID-FLIGHT. `getCatalogNode` is the seam `resolveBindingAt` awaits; only
-    // THIS first call is deferred — the later populate of draft B resolves normally.
+    // THIS first call is deferred — nothing else in this test resolves through it.
     let resolveFetch: (value: StatesResponse) => void = () => {};
     const pending = new Promise<StatesResponse>((res) => {
       resolveFetch = res;
     });
     vi.mocked(getCatalogNode).mockReturnValueOnce(pending);
 
-    // Start the add of scb/lisa/lon on the scb/lisa/v1 variant against draft A; it
-    // captures `target = A` and blocks on the pending resolve.
+    // Start the add of scb/lisa/lon on the scb/lisa/v1 variant against draft A. A's
+    // scb/lisa/v1 source is created synchronously (find-or-create) BEFORE the await,
+    // then the body captures `target = A` and blocks on the pending resolve.
     const addPromise = projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/lon" }),
       SEED,
     );
 
-    // Replace the draft MID-FLIGHT with a brand-new project B, then populate B with a
-    // source on the SAME register_variant (scb/lisa/v1) carrying a DIFFERENT variable
-    // (kon). This resolve settles immediately (the once-mock above is exhausted).
-    // The mutators REPLACE the draft object (immutable spread), so capture B's
-    // identity AFTER the populate add — that is the object the in-flight add must not
-    // touch.
-    projectStore.newProject(SEED); // draft B
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
+    // Replace the draft MID-FLIGHT by opening a VALID project file B (passes the
+    // version gate: schema_version 2.0.0 + reg_meta/v1.0.0). B ALREADY carries a
+    // source on the SAME register_variant (scb/lisa/v1) with ONE existing binding
+    // (kon). `openFromFile` runs OUTSIDE `addChain` and directly replaces `draft`,
+    // so there is no deadlock. The replacement is what trips `draft !== target`.
+    const fixtureB = {
+      schema_version: "2.0.0",
+      steward: "global",
+      reg_meta_version: "reg_meta/v1.0.0",
+      name: "opened-B",
+      sources: [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/v1",
+          period: 2018,
+          bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+        },
+      ],
+    };
+    await projectStore.openFromFile(
+      new File([JSON.stringify(fixtureB)], "project_data.json", {
+        type: "application/json",
+      }),
     );
-    await projectStore.addFromCatalog(konPayload(), SEED);
     const replacedDraft = projectStore.draft;
-    // B now has one scb/lisa/v1 source with exactly one binding (kon).
+    // B loaded cleanly: one scb/lisa/v1 source with exactly one binding (kon).
+    expect(projectStore.openError).toBeNull();
+    expect(replacedDraft?.name).toBe("opened-B");
     expect(replacedDraft?.sources).toHaveLength(1);
     expect(replacedDraft?.sources[0].register_variant).toBe("scb/lisa/v1");
     expect(replacedDraft?.sources[0].bindings).toHaveLength(1);
@@ -448,5 +473,62 @@ describe("addFromCatalog (C1)", () => {
     expect(projectStore.draft?.sources[0].bindings[0]?.variable).toBe(
       "scb/lisa/kon",
     );
+  });
+
+  it("serializes two OVERLAPPING adds (un-awaited double-click) so NEITHER binding is dropped (Fix 3)", async () => {
+    // Two adds of DIFFERENT variables on the SAME register_variant, fired WITHOUT
+    // awaiting the first — the picker's Add button isn't awaited/disabled, so a
+    // double-click can re-enter before the first resolve settles. Both resolves are
+    // held open (deferred) so the two calls' bodies would interleave without the
+    // store-level `addChain` serialization. Un-serialized, the second call's
+    // pre-resolve `setDraft` (find-or-create) replaces `draft`, tripping the FIRST
+    // call's `draft !== target` guard → the first returns already-present and DROPS
+    // its binding. Serialized, the second body doesn't start until the first commits,
+    // so BOTH bindings land.
+    projectStore.newProject(SEED);
+    await projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/kon", resolvedPeriod: "2018" }),
+      SEED,
+    );
+    vi.mocked(getCatalogNode).mockClear();
+
+    // Two deferred resolves (one per add). Fire both adds WITHOUT awaiting.
+    let resolveA: (value: StatesResponse) => void = () => {};
+    let resolveB: (value: StatesResponse) => void = () => {};
+    const pendingA = new Promise<StatesResponse>((res) => {
+      resolveA = res;
+    });
+    const pendingB = new Promise<StatesResponse>((res) => {
+      resolveB = res;
+    });
+    vi.mocked(getCatalogNode)
+      .mockReturnValueOnce(pendingA)
+      .mockReturnValueOnce(pendingB);
+
+    const addA = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/lon", resolvedPeriod: "2018" }),
+      SEED,
+    );
+    const addB = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/civilstand", resolvedPeriod: "2018" }),
+      SEED,
+    );
+
+    // Settle both resolves; serialization runs A fully before B starts.
+    resolveA(
+      statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
+    );
+    resolveB(
+      statesResp([vstate({ delivery_column_name: "Civ", value_set_id: 7 })]),
+    );
+    const [rA, rB] = await Promise.all([addA, addB]);
+
+    // BOTH adds landed — neither silently dropped by a `draft !== target` false trip.
+    expect(rA.status).toBe("added");
+    expect(rB.status).toBe("added");
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
+    ).toEqual(["scb/lisa/kon", "scb/lisa/lon", "scb/lisa/civilstand"]);
   });
 });

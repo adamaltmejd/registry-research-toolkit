@@ -969,4 +969,40 @@ describe("mergePeriods (#992 find-or-create period extension)", () => {
       2020,
     );
   });
+
+  it("COALESCES a numeric-STRING year against an incoming year (Fix 1)", () => {
+    // `Source.period` validly carries year tokens as strings ("2020"); they must
+    // coalesce like the int form, NOT fall to REPLACE and drop the existing
+    // coverage. 2020 + adjacent 2021 fuse to one range (proves it did NOT replace).
+    expect(mergePeriods("2020", 2021)).toEqual({ from: 2020, to: 2021 });
+    // A DISJOINT string year + incoming → the #307 list form (coalesced, not
+    // replaced): opening a file with period "2020" and adding 2022 keeps both.
+    expect(mergePeriods("2020", 2022)).toEqual([2020, 2022]);
+    // A `{from,to}` with numeric-string endpoints parses both endpoints.
+    expect(mergePeriods({ from: "2018", to: "2020" }, 2019)).toEqual({
+      from: 2018,
+      to: 2020,
+    });
+  });
+
+  it("STILL replaces when a string is a NON-year token (Fix 1 boundary)", () => {
+    // A 4-digit-year string coalesces, but a term/quarter token still disqualifies.
+    expect(mergePeriods("HT2020", 2018)).toBe(2018);
+  });
+
+  it("an UNSET incoming period does NOT wipe a valid existing period (Fix 2)", () => {
+    // `periodFromWire(null)` yields "" — a catalog row with no finite period must
+    // not blank the existing period (that would invalidate every binding).
+    expect(mergePeriods(2020, "")).toBe(2020);
+    expect(mergePeriods([], 2020)).toBe(2020); // empty-list existing is unset too
+  });
+
+  it("a blank EXISTING period adopts a set incoming period (Fix 2)", () => {
+    // A fresh/blank source takes the add's window.
+    expect(mergePeriods("", 2020)).toBe(2020);
+    expect(mergePeriods("", { from: 2010, to: 2015 })).toEqual({
+      from: 2010,
+      to: 2015,
+    });
+  });
 });
