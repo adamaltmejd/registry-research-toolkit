@@ -76,7 +76,6 @@ import time
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -343,12 +342,13 @@ def write_slot_file(
     session_id: str | None,
     pid: int,
 ) -> None:
-    # Atomic write: temp file in the same dir + rename, so scan_slots never sees a torn
-    # read (same temp+rename mechanics as cos_preflight.write_state). `slot` MUST equal the
-    # stem or readers drop it. DELIBERATE divergence from write_state: we mkdir(parents=True)
-    # the ledger dir because the pipeline-slots root always lives under $XDG_STATE_HOME
-    # (never a .git-relative path), so there is no risk of conjuring a dir inside a missing
-    # checkout — unlike write_state, whose no-mkdir policy guards that exact footgun.
+    # The torn-write guarantee (temp file + rename, so scan_slots never sees a partial
+    # read) is the shared cos_preflight._atomic_write_json leaf. `slot` MUST equal the stem
+    # or readers drop it. DELIBERATE divergence from write_state's pre-step: we
+    # mkdir(parents=True) the ledger dir because the pipeline-slots root always lives under
+    # $XDG_STATE_HOME (never a .git-relative path), so there is no risk of conjuring a dir
+    # inside a missing checkout — unlike write_state, whose no-mkdir policy guards that
+    # exact footgun. Only the parent-dir policy diverges; the write+rename tail is shared.
     slot_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "slot": slug,
@@ -360,21 +360,7 @@ def write_slot_file(
         "pid": pid,
         "dispatched": datetime.now(UTC).isoformat(),
     }
-    with NamedTemporaryFile(
-        "w",
-        dir=slot_path.parent,
-        encoding="utf-8",
-        prefix=f"{slot_path.name}.",
-        suffix=".tmp",
-        delete=False,
-    ) as fh:
-        tmp = Path(fh.name)
-        fh.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-    try:
-        tmp.replace(slot_path)
-    except OSError:
-        tmp.unlink(missing_ok=True)
-        raise
+    _cos_preflight._atomic_write_json(slot_path, payload)
 
 
 def launch_detached(argv: list[str], worktree: Path, log_path: Path) -> int:
@@ -427,10 +413,7 @@ def dispatch(
     state_root: Path = args.state_root
     slots_root = state_root / "pipeline-slots"
     slot_path = slots_root / f"{slug}.json"
-    worktree_root: Path = args.worktree_root or (
-        args.canonical / ".claude" / "worktrees"
-    )
-    worktree = worktree_root / slug
+    worktree = args.canonical / ".claude" / "worktrees" / slug
     log_path = state_root / "dispatch-logs" / f"{slug}.log"
 
     # 1. Kill switch.
@@ -565,12 +548,6 @@ def main(argv: list[str] | None = None) -> int:
         "--slug",
         default=None,
         help="slot/worktree slug; defaults to auto-<surface>-issue-<first issue>",
-    )
-    ap.add_argument(
-        "--worktree-root",
-        type=Path,
-        default=None,
-        help="parent dir for the created worktree; defaults to <canonical>/.claude/worktrees",
     )
     ap.add_argument(
         "--state-root",

@@ -650,6 +650,30 @@ def load_state(path: Path) -> dict[str, Any] | None:
     return state
 
 
+def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
+    # The shared torn-write guard: write a temp file in the SAME dir (so the rename is a
+    # cheap intra-directory atomic swap) then rename over `path`, so a concurrent reader
+    # (scan_slots / load_state) never sees a partial write. On a rename failure the temp
+    # file is unlinked so no *.tmp is leaked. Callers own their divergent pre-steps (the
+    # parent-dir policy) — this is only the write+rename tail. json.dumps(indent=2,
+    # sort_keys=True) + a trailing newline is the on-disk format both callers commit to.
+    with NamedTemporaryFile(
+        "w",
+        dir=path.parent,
+        encoding="utf-8",
+        prefix=f"{path.name}.",
+        suffix=".tmp",
+        delete=False,
+    ) as fh:
+        tmp = Path(fh.name)
+        fh.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    try:
+        tmp.replace(path)
+    except OSError:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
 def write_state(path: Path, snapshot: dict[str, Any]) -> None:
     parent = path.parent
     if not parent.is_dir():
@@ -662,21 +686,7 @@ def write_state(path: Path, snapshot: dict[str, Any]) -> None:
             f"cos-preflight state directory {parent} is not a directory; "
             "run from the canonical checkout or pass an existing --state-file dir"
         )
-    with NamedTemporaryFile(
-        "w",
-        dir=path.parent,
-        encoding="utf-8",
-        prefix=f"{path.name}.",
-        suffix=".tmp",
-        delete=False,
-    ) as fh:
-        tmp = Path(fh.name)
-        fh.write(json.dumps(snapshot, indent=2, sort_keys=True) + "\n")
-    try:
-        tmp.replace(path)
-    except OSError:
-        tmp.unlink(missing_ok=True)
-        raise
+    _atomic_write_json(path, snapshot)
 
 
 def promote_candidate(state_file: Path, fingerprint: str) -> tuple[str, bool]:

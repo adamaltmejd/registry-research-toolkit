@@ -212,7 +212,6 @@ def _args(tmp_path: Path, canonical: Path, **overrides):
         "tier": "hard",
         "surface": None,  # None = use the tier's implied surface (matches argparse)
         "slug": None,
-        "worktree_root": None,
         "state_root": tmp_path / "state",
         "max_slots": 3,
         "canonical": canonical,
