@@ -1,8 +1,10 @@
-// C1 (catalog→project handoff) STORE-level tests for addFromCatalog: find-vs-create
-// source, the duplicate guard, the period prefill on a created source, and the
-// derive-at-source-period applied through the shared resolveBindingAt path. Mocks
-// `./api`'s getCatalogNode (the resolve the shared path fetches) so a derive returns
-// canned states; drives the real store and asserts the draft + per-binding marker.
+// C1 (catalog→project handoff) STORE-level tests for addFromCatalog: find-or-create
+// source by register_variant ALONE (#992), the concept-level duplicate guard, the
+// period merge on a found source, the period prefill + #312 name prefill on a created
+// source, and the resolve-ONCE → final-fields mapping (the #991 write-once model — no
+// re-derivation engine). Mocks `./api`'s getCatalogNode (the resolve the shared
+// `resolveBindingAt` path fetches) so a derive returns canned states; drives the real
+// (now async) store and asserts the committed draft.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { StatesResponse, VariableStateModel } from "./api";
 import { getCatalogNode } from "./api";
@@ -58,7 +60,7 @@ beforeEach(() => {
 });
 
 describe("addFromCatalog (C1)", () => {
-  it("creates the untitled project implicitly when the store is pristine, then adds + derives", async () => {
+  it("creates the untitled project implicitly when the store is pristine, then adds + resolves", async () => {
     // The very first add runs against the module's initial null draft (pristine).
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([
@@ -69,7 +71,7 @@ describe("addFromCatalog (C1)", () => {
       ]),
     );
 
-    const result = projectStore.addFromCatalog(konPayload(), SEED);
+    const result = await projectStore.addFromCatalog(konPayload(), SEED);
     expect(result).toEqual({
       status: "added",
       createdSource: true,
@@ -89,17 +91,12 @@ describe("addFromCatalog (C1)", () => {
     expect(source?.period).toBe(2018);
     expect(source?.name).toBe("LISA");
 
-    // The binding was appended with the variable; the derive lands the type +
-    // display name from the resolved state (categorical, "Kon").
-    expect(source?.bindings[0]?.variable).toBe("scb/lisa/kon");
-    await vi.waitFor(() => {
-      expect(projectStore.draft?.sources[0].bindings[0]?.type).toBe(
-        "categorical",
-      );
-      expect(projectStore.draft?.sources[0].bindings[0]?.display_name).toBe(
-        "Kon",
-      );
-      expect(projectStore.bindingDerivation(0, 0)?.status).toBe("derived");
+    // The binding was appended with the FINAL resolved fields (type + display name
+    // from the resolved state — categorical, "Kon").
+    expect(source?.bindings[0]).toMatchObject({
+      variable: "scb/lisa/kon",
+      type: "categorical",
+      display_name: "Kon",
     });
 
     // The resolve hit the SOURCE's (period, variant).
@@ -110,20 +107,15 @@ describe("addFromCatalog (C1)", () => {
   });
 
   it("appends into an EXISTING matching source (a second variable from the same variant)", async () => {
-    // Project already has the kon source (from the previous test's pristine create —
-    // but tests must be order-independent, so build it explicitly here).
     projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      register_variant: "scb/lisa/v1",
-      period: 2018,
-    });
+    await projectStore.addFromCatalog(konPayload(), SEED);
+    vi.mocked(getCatalogNode).mockClear();
 
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
     );
 
-    const result = projectStore.addFromCatalog(
+    const result = await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/lon" }),
       SEED,
     );
@@ -134,45 +126,31 @@ describe("addFromCatalog (C1)", () => {
       sourceName: "LISA",
     });
     expect(projectStore.draft?.sources).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].bindings[0]?.variable).toBe(
-      "scb/lisa/lon",
-    );
-    await vi.waitFor(() =>
-      expect(projectStore.draft?.sources[0].bindings[0]?.type).toBe("numeric"),
-    );
+    expect(projectStore.draft?.sources[0].bindings).toHaveLength(2);
+    expect(projectStore.draft?.sources[0].bindings[1]).toMatchObject({
+      variable: "scb/lisa/lon",
+      type: "numeric",
+    });
   });
 
   it("the duplicate guard refuses a second add of the same fqid (already in project)", async () => {
     projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      register_variant: "scb/lisa/v1",
-      period: 2018,
-    });
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
     );
 
-    const first = projectStore.addFromCatalog(konPayload(), SEED);
+    const first = await projectStore.addFromCatalog(konPayload(), SEED);
     expect(first.status).toBe("added");
-    await vi.waitFor(() =>
-      expect(projectStore.draft?.sources[0].bindings).toHaveLength(1),
-    );
+    expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
 
     // Adding the SAME variable again is a no-op → already-present.
-    const second = projectStore.addFromCatalog(konPayload(), SEED);
+    const second = await projectStore.addFromCatalog(konPayload(), SEED);
     expect(second.status).toBe("already-present");
     expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
   });
 
   it("a representation-specific add only collides with the SAME representation", async () => {
     projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      register_variant: "scb/lisa/v1",
-      period: 2018,
-    });
     // The resolve sees two co-existing columns (ambiguous); the page pinned Ssyk3.
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([
@@ -193,32 +171,32 @@ describe("addFromCatalog (C1)", () => {
       ]),
     );
 
-    const a = projectStore.addFromCatalog(
+    const a = await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk3" }),
       SEED,
     );
     expect(a.status).toBe("added");
-    await vi.waitFor(() =>
-      expect(projectStore.draft?.sources[0].bindings[0]?.representation).toBe(
-        "Ssyk3",
-      ),
-    );
+    expect(projectStore.draft?.sources[0].bindings[0]).toMatchObject({
+      representation: "Ssyk3",
+      // The ambiguous resolution pinned the chosen column → its derived type +
+      // delivery-column display name.
+      type: "categorical",
+      display_name: "Ssyk3",
+    });
 
     // The OTHER representation (Ssyk4) is a distinct extraction → added, not a dup.
-    const b = projectStore.addFromCatalog(
+    const b = await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk4" }),
       SEED,
     );
     expect(b.status).toBe("added");
     expect(projectStore.draft?.sources[0].bindings).toHaveLength(2);
-    await vi.waitFor(() =>
-      expect(projectStore.draft?.sources[0].bindings[1]?.representation).toBe(
-        "Ssyk4",
-      ),
+    expect(projectStore.draft?.sources[0].bindings[1]?.representation).toBe(
+      "Ssyk4",
     );
 
     // Re-adding Ssyk3 IS a duplicate now.
-    const c = projectStore.addFromCatalog(
+    const c = await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk3" }),
       SEED,
     );
@@ -229,17 +207,18 @@ describe("addFromCatalog (C1)", () => {
     projectStore.newProject(SEED);
     // A user-named source already holds "LISA" (a different variant, so the
     // catalog add creates a NEW source rather than appending).
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      name: "LISA",
-      register_variant: "scb/lisa/v2",
-      period: 2018,
-    });
+    await projectStore.addFromCatalog(
+      konPayload({ registerVariant: "scb/lisa/v2", variable: "scb/lisa/kon" }),
+      SEED,
+    );
+    expect(projectStore.draft?.sources[0]?.name).toBe("LISA");
+    vi.mocked(getCatalogNode).mockClear();
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
     );
 
-    const result = projectStore.addFromCatalog(konPayload(), SEED);
+    // A DIFFERENT variant → a new source; its prefill collides with LISA → LISA_2.
+    const result = await projectStore.addFromCatalog(konPayload(), SEED);
     expect(result).toEqual({
       status: "added",
       createdSource: true,
@@ -248,11 +227,13 @@ describe("addFromCatalog (C1)", () => {
     expect(projectStore.draft?.sources[1]?.name).toBe("LISA_2");
   });
 
-  it("a created source with NO resolved period is left period-unset (the binding marks unresolved)", async () => {
+  it("a created source with NO resolved period is left period-unset (blank-type binding, no fetch)", async () => {
     projectStore.newProject(SEED);
     // resolvedPeriod null → the source period stays unset; resolveBindingAt returns
-    // unresolved WITHOUT a fetch (period-unset).
-    const result = projectStore.addFromCatalog(
+    // unresolved WITHOUT a fetch (period-unset) → the binding lands with a BLANK
+    // type (not "opaque") so the backend Validate flags the unresolved add rather
+    // than passing a silently-valid opaque binding (review Fix 4).
+    const result = await projectStore.addFromCatalog(
       konPayload({ resolvedPeriod: null }),
       SEED,
     );
@@ -262,95 +243,53 @@ describe("addFromCatalog (C1)", () => {
       sourceName: "LISA",
     });
     expect(projectStore.draft?.sources[0].period).toBe("");
-    await vi.waitFor(() => {
-      expect(projectStore.bindingDerivation(0, 0)?.status).toBe("unresolved");
-      expect(projectStore.bindingDerivation(0, 0)?.reason).toBe("period-unset");
+    expect(projectStore.draft?.sources[0].bindings[0]).toMatchObject({
+      variable: "scb/lisa/kon",
+      type: "",
     });
     // No fetch — the period-unset short-circuit in resolveBindingAt.
     expect(getCatalogNode).not.toHaveBeenCalled();
   });
 
-  it("a DIFFERENT page period (same variant) lands in its OWN periodized source, not an existing differing-period source (#678 finding 2)", async () => {
+  it("find-or-create by register_variant ALONE: a same-variant add MERGES its window into the existing source (#992)", async () => {
     projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      register_variant: "scb/lisa/v1",
-      period: 2010, // an existing source at 2010
-    });
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
     );
 
-    // The add carries period 2018. The source identity is (register_variant,
-    // period), so 2018 ≠ the existing source's 2010 → a NEW source is created at
-    // 2018 (matching on register_variant alone would have wrongly attached + derived
-    // it against 2010).
-    const result = projectStore.addFromCatalog(
+    // An existing source at 2010 + an add of a DIFFERENT variable of the SAME
+    // variant at a disjoint 2018 window: keyed on register_variant ALONE, the add
+    // lands on the SAME source and EXTENDS its period to the #307 list form (no
+    // second source — the #992 behavior change from the old (variant, period) key).
+    await projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/kon", resolvedPeriod: "2010" }),
+      SEED,
+    );
+    await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/lon", resolvedPeriod: "2018" }),
       SEED,
     );
-    expect(result.createdSource).toBe(true);
-    expect(projectStore.draft?.sources).toHaveLength(2);
-    expect(projectStore.draft?.sources[1]?.register_variant).toBe(
-      "scb/lisa/v1",
-    );
-    expect(projectStore.draft?.sources[1]?.period).toBe(2018);
-    await vi.waitFor(() =>
-      expect(projectStore.draft?.sources[1].bindings[0]?.type).toBe("numeric"),
-    );
-    // The new source's binding derives against its OWN period (2018).
-    expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa/lon", {
-      period: "2018",
+
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].period).toEqual([2010, 2018]);
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
+    ).toEqual(["scb/lisa/kon", "scb/lisa/lon"]);
+    // The SECOND add's binding resolves at the source's MERGED period (the wire of
+    // the [2010, 2018] list) — the resolve reflects the extended coordinate.
+    expect(getCatalogNode).toHaveBeenLastCalledWith("scb/lisa/lon", {
+      period: "2010,2018",
       variant: "v1",
     });
   });
 
-  it("two same-variant rows with DIFFERENT spans each land in their own correctly-periodized source (#678 finding 2)", async () => {
-    projectStore.newProject(SEED);
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResp([vstate({ delivery_column_name: "Col", data_type: "int" })]),
-    );
-
-    // Two columns of the SAME register variant, different spans (a 2002–2006 column
-    // and its 2007–2015 successor). Each is its own representation → its own source.
-    const a = projectStore.addFromCatalog(
-      konPayload({
-        variable: "scb/lisa/lon",
-        representation: "ColA",
-        resolvedPeriod: "2002..2006",
-      }),
-      SEED,
-    );
-    const b = projectStore.addFromCatalog(
-      konPayload({
-        variable: "scb/lisa/lon",
-        representation: "ColB",
-        resolvedPeriod: "2007..2015",
-      }),
-      SEED,
-    );
-    expect(a.status).toBe("added");
-    expect(b.status).toBe("added");
-    // TWO sources, each carrying its own span — NOT both bindings on one source
-    // derived against the first row's period.
-    expect(projectStore.draft?.sources).toHaveLength(2);
-    const periods = projectStore.draft?.sources.map((s) => s.period);
-    expect(periods).toEqual([
-      { from: 2002, to: 2006 },
-      { from: 2007, to: 2015 },
-    ]);
-  });
-
   it("collapse case: page pins a column but the SOURCE period is single-rep → re-add is a duplicate (MAJOR 2)", async () => {
     projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      register_variant: "scb/lisa/v1",
-      period: 2018,
-    });
     // At the SOURCE's period the concept resolves to a SINGLE column (single-rep) —
-    // the single-rep derive clears `representation` to null, even though the PAGE saw
-    // it as multi-rep and pinned "Ssyk3".
+    // `resolveBindingAt` returns `derived` (unambiguous). The page saw it as multi-rep
+    // and pinned "Ssyk3", but a `derived` resolution is UNAMBIGUOUS, so the mapping
+    // DROPS the payload column → representation null (review Fix 3, the #991
+    // null-when-unambiguous convention).
     vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([
         vstate({
@@ -362,102 +301,234 @@ describe("addFromCatalog (C1)", () => {
       ]),
     );
 
-    const a = projectStore.addFromCatalog(
+    const a = await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk3" }),
       SEED,
     );
     expect(a.status).toBe("added");
-    // The single-rep derive lands → representation cleared to null on the binding.
-    await vi.waitFor(() =>
-      expect(
-        projectStore.draft?.sources[0].bindings[0]?.representation,
-      ).toBeNull(),
-    );
+    // Single-column derived add → representation null (unambiguous), NOT the pinned
+    // page column.
+    expect(
+      projectStore.draft?.sources[0].bindings[0]?.representation,
+    ).toBeNull();
 
-    // Re-adding with the SAME page-pinned column R must be caught as a duplicate: the
-    // stored representation is null ("the only column"), so any payload R collapses to
-    // it — no second binding (the desync the concept-level guard fixes).
-    const b = projectStore.addFromCatalog(
+    // Re-adding is a duplicate: the stored null representation matches ANY payload
+    // representation under the null-either-side rule (the page-pin-vs-source-derive
+    // desync the concept-level guard catches).
+    const b = await projectStore.addFromCatalog(
       konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk3" }),
       SEED,
     );
     expect(b.status).toBe("already-present");
     expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
   });
-});
 
-// ── Staleness: a catalog-add derive must not clobber a newer period re-derive ──
-// MAJOR 1: the add-derive now runs through the guarded rederiveSource pass (gen +
-// identity re-check). A deterministic interleave with deferred mocks proves a stale
-// add-derive at the OLD period is discarded once a period change starts a fresh pass.
-
-/** A controllable getCatalogNode mock: each call returns a promise settled by hand.
- * `release(i, states)` settles the i-th call (in call order). */
-function deferredResolveMock() {
-  const settles: ((v: StatesResponse) => void)[] = [];
-  vi.mocked(getCatalogNode).mockImplementation(
-    () =>
-      new Promise<StatesResponse>((resolve) => {
-        settles.push(resolve);
-      }) as unknown as ReturnType<typeof getCatalogNode>,
-  );
-  return {
-    get count() {
-      return settles.length;
-    },
-    release(i: number, column: string, dataType = "int") {
-      settles[i](
-        statesResp([
-          vstate({ delivery_column_name: column, data_type: dataType }),
-        ]),
-      );
-    },
-  };
-}
-
-describe("addFromCatalog staleness (MAJOR 1)", () => {
-  it("a stale add-derive at the OLD period does NOT overwrite a newer period re-derive", async () => {
+  it("an already-present add to a FOUND source is a TRUE no-op: period unchanged AND validation not cleared", async () => {
     projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      register_variant: "scb/lisa/v1",
-      period: 2010, // the source starts at 2010
-    });
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
+    );
+    // First add creates+populates the source at period 2018.
+    await projectStore.addFromCatalog(konPayload(), SEED);
+    const periodBefore = projectStore.draft?.sources[0].period;
+    expect(periodBefore).toBe(2018);
 
-    const mock = deferredResolveMock();
+    // Establish a GREEN validation so we can prove the no-op does NOT clear it
+    // (setDraft would null `validation` and flip `validatedClean` off, disabling
+    // the order download while the UI reports "already there").
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, issues: [] }),
+      })),
+    );
+    await projectStore.validate();
+    expect(projectStore.validation?.ok).toBe(true);
+    expect(projectStore.validatedClean).toBe(true);
 
-    // Add a variable → the guarded add-derive dispatches a resolve at period 2010
-    // (held by the deferred mock).
-    projectStore.addFromCatalog(
-      konPayload({ variable: "scb/lisa/lon", resolvedPeriod: "2010" }),
+    // Re-add the SAME (variable + representation) at a DIFFERENT (disjoint) period.
+    // A pre-fix found path would have merged the period AND cleared validation
+    // before the duplicate guard; the fix guards FIRST, so this is a zero-mutation
+    // no-op.
+    const result = await projectStore.addFromCatalog(
+      konPayload({ resolvedPeriod: "2019" }),
       SEED,
     );
-    await vi.waitFor(() => expect(mock.count).toBe(1));
+    expect(result).toEqual({
+      status: "already-present",
+      createdSource: false,
+      sourceName: "LISA",
+    });
+    // Period byte-identical (NOT widened to the [2018, 2019] merge).
+    expect(projectStore.draft?.sources[0].period).toBe(periodBefore);
+    // Validation survived — the download gate stays open.
+    expect(projectStore.validation?.ok).toBe(true);
+    expect(projectStore.validatedClean).toBe(true);
+    vi.unstubAllGlobals();
+  });
 
-    // The user edits the source period to 2018 → a NEW guarded rederive pass starts
-    // (bumps the source's gen), dispatching a second resolve at 2018.
-    projectStore.updateSource(0, { period: 2018 });
-    await vi.waitFor(() => expect(mock.count).toBe(2));
+  it("keeps a folded-rename null representation null on a derived resolution (does not overwrite with a resolved column)", async () => {
+    projectStore.newProject(SEED);
+    // A folded sequential rename intentionally commits a NULL representation. The
+    // resolve is `derived` (single column) with a delivery column "Lon86" — the
+    // mapping must NOT overwrite the payload's null representation with it.
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResp([vstate({ delivery_column_name: "Lon86", data_type: "int" })]),
+    );
+    await projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/lon", representation: null }),
+      SEED,
+    );
+    const binding = projectStore.draft?.sources[0].bindings[0];
+    expect(binding?.representation).toBeNull();
+    // The display default still comes from the resolved column.
+    expect(binding).toMatchObject({ type: "numeric", display_name: "Lon86" });
+  });
 
-    // The 2018 pass lands FIRST with its derived type + display "Lon2018".
-    mock.release(1, "Lon2018");
-    await vi.waitFor(() =>
-      expect(projectStore.draft?.sources[0].bindings[0]?.display_name).toBe(
-        "Lon2018",
-      ),
+  it("discards a stale add when the draft is REPLACED mid-resolve via openFromFile, even when the replacement HAS a matching source (review Fix 1)", async () => {
+    // The load-bearing case the `draft !== target` guard exists for: the
+    // replacement draft ALREADY carries a source on the SAME register_variant as
+    // the in-flight add, so the post-await re-find (`landIndex`) SUCCEEDS. Without
+    // the guard, the stale binding would append into the WRONG (replaced) project's
+    // matching source. An empty replacement draft would be caught by the pre-existing
+    // `landIndex < 0` early return instead, so it can't discriminate the guard.
+    //
+    // Since `addFromCatalog` is now SERIALIZED at the store (`addChain`), a second
+    // `addFromCatalog` can no longer replace the draft mid-resolve — it would queue
+    // behind the in-flight (never-resolving) add and deadlock the whole file. The
+    // guard is now reachable ONLY via a SYNCHRONOUS-path draft replacement
+    // (`newProject` / `openFromFile`), which runs OUTSIDE `addChain`. We drive the
+    // replacement through `openFromFile` here: it directly swaps `draft` for a
+    // parsed fixture that carries a matching source, so the re-find succeeds and
+    // only the `draft !== target` guard prevents the stale binding from landing.
+    projectStore.newProject(SEED); // draft A — the project the stale add starts against.
+
+    // Hold the in-flight resolve open with a deferred promise so we can replace the
+    // draft MID-FLIGHT. `getCatalogNode` is the seam `resolveBindingAt` awaits; only
+    // THIS first call is deferred — nothing else in this test resolves through it.
+    let resolveFetch: (value: StatesResponse) => void = () => {};
+    const pending = new Promise<StatesResponse>((res) => {
+      resolveFetch = res;
+    });
+    vi.mocked(getCatalogNode).mockReturnValueOnce(pending);
+
+    // Start the add of scb/lisa/lon on the scb/lisa/v1 variant against draft A. A's
+    // scb/lisa/v1 source is created synchronously (find-or-create) BEFORE the await,
+    // then the body captures `target = A` and blocks on the pending resolve.
+    const addPromise = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/lon" }),
+      SEED,
     );
 
-    // Now the STALE 2010 add-derive lands LAST with a DIFFERENT column — the gen guard
-    // must discard it so it can't overwrite the fresher 2018 derivation.
-    mock.release(0, "Lon2010");
-    await Promise.resolve();
-    await Promise.resolve();
-
-    expect(projectStore.draft?.sources[0].bindings[0]?.display_name).toBe(
-      "Lon2018",
+    // Replace the draft MID-FLIGHT by opening a VALID project file B (passes the
+    // version gate: schema_version 2.0.0 + reg_meta/v1.0.0). B ALREADY carries a
+    // source on the SAME register_variant (scb/lisa/v1) with ONE existing binding
+    // (kon). `openFromFile` runs OUTSIDE `addChain` and directly replaces `draft`,
+    // so there is no deadlock. The replacement is what trips `draft !== target`.
+    const fixtureB = {
+      schema_version: "2.0.0",
+      steward: "global",
+      reg_meta_version: "reg_meta/v1.0.0",
+      name: "opened-B",
+      sources: [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/v1",
+          period: 2018,
+          bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+        },
+      ],
+    };
+    await projectStore.openFromFile(
+      new File([JSON.stringify(fixtureB)], "project_data.json", {
+        type: "application/json",
+      }),
     );
-    // The provenance period reflects the WINNING (2018) pass, not the stale 2010 one.
-    expect(projectStore.bindingDerivation(0, 0)?.period).toBe("2018");
-    expect(projectStore.bindingDerivation(0, 0)?.status).toBe("derived");
+    const replacedDraft = projectStore.draft;
+    // B loaded cleanly: one scb/lisa/v1 source with exactly one binding (kon).
+    expect(projectStore.openError).toBeNull();
+    expect(replacedDraft?.name).toBe("opened-B");
+    expect(replacedDraft?.sources).toHaveLength(1);
+    expect(replacedDraft?.sources[0].register_variant).toBe("scb/lisa/v1");
+    expect(replacedDraft?.sources[0].bindings).toHaveLength(1);
+
+    // Now let the STALE resolve settle. The re-find WOULD succeed (B has a matching
+    // scb/lisa/v1 source), so only the `draft !== target` guard stops the stale lon
+    // binding from landing in B.
+    resolveFetch(
+      statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
+    );
+    const result = await addPromise;
+
+    // The stale add is discarded (no-op).
+    expect(result.status).toBe("already-present");
+    // B is untouched: still the same draft, its scb/lisa/v1 source did NOT gain the
+    // stale lon binding (still exactly one binding — kon). Removing the guard makes
+    // this assertion FAIL: landIndex would find B's source and append lon → 2 bindings.
+    expect(projectStore.draft).toBe(replacedDraft);
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].bindings[0]?.variable).toBe(
+      "scb/lisa/kon",
+    );
+  });
+
+  it("serializes two OVERLAPPING adds (un-awaited double-click) so NEITHER binding is dropped (Fix 3)", async () => {
+    // Two adds of DIFFERENT variables on the SAME register_variant, fired WITHOUT
+    // awaiting the first — the picker's Add button isn't awaited/disabled, so a
+    // double-click can re-enter before the first resolve settles. Both resolves are
+    // held open (deferred) so the two calls' bodies would interleave without the
+    // store-level `addChain` serialization. Un-serialized, the second call's
+    // pre-resolve `setDraft` (find-or-create) replaces `draft`, tripping the FIRST
+    // call's `draft !== target` guard → the first returns already-present and DROPS
+    // its binding. Serialized, the second body doesn't start until the first commits,
+    // so BOTH bindings land.
+    projectStore.newProject(SEED);
+    await projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/kon", resolvedPeriod: "2018" }),
+      SEED,
+    );
+    vi.mocked(getCatalogNode).mockClear();
+
+    // Two deferred resolves (one per add). Fire both adds WITHOUT awaiting.
+    let resolveA: (value: StatesResponse) => void = () => {};
+    let resolveB: (value: StatesResponse) => void = () => {};
+    const pendingA = new Promise<StatesResponse>((res) => {
+      resolveA = res;
+    });
+    const pendingB = new Promise<StatesResponse>((res) => {
+      resolveB = res;
+    });
+    vi.mocked(getCatalogNode)
+      .mockReturnValueOnce(pendingA)
+      .mockReturnValueOnce(pendingB);
+
+    const addA = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/lon", resolvedPeriod: "2018" }),
+      SEED,
+    );
+    const addB = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/civilstand", resolvedPeriod: "2018" }),
+      SEED,
+    );
+
+    // Settle both resolves; serialization runs A fully before B starts.
+    resolveA(
+      statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
+    );
+    resolveB(
+      statesResp([vstate({ delivery_column_name: "Civ", value_set_id: 7 })]),
+    );
+    const [rA, rB] = await Promise.all([addA, addB]);
+
+    // BOTH adds landed — neither silently dropped by a `draft !== target` false trip.
+    expect(rA.status).toBe("added");
+    expect(rB.status).toBe("added");
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
+    ).toEqual(["scb/lisa/kon", "scb/lisa/lon", "scb/lisa/civilstand"]);
   });
 });

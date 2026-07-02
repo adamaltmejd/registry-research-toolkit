@@ -9,8 +9,8 @@ import { DATA_BROWSER_LABEL } from "./catalog";
 import { router } from "./router.svelte";
 
 // Stub ONLY the catalog-root GET (the shell's provider-facet fetch); keep the
-// rest of api.ts real — mirrors CatalogPicker / SearchOmnibox's partial-mock
-// pattern (override the GET, leave types + helpers intact).
+// rest of api.ts real — mirrors SearchOmnibox's partial-mock pattern (override
+// the GET, leave types + helpers intact).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return { ...actual, getCatalogRoot: vi.fn() };

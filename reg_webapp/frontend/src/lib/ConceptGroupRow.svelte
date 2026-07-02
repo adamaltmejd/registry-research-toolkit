@@ -19,9 +19,9 @@ import { Tag } from "./ui";
 // siblings, NO facets — names usually shared, so the slug is the signal).
 //
 // Two member-action modes (#322): browse (default) renders members as
-// catalogHref links; pick mode (`onpick` set — the CatalogPicker's variable
-// list) renders them as buttons that emit the member FQID instead of
-// navigating. `disabled` greys the buttons while the picker resolves.
+// catalogHref links; pick mode (`onpick` set) renders them as buttons that emit
+// the member FQID instead of navigating. `disabled` greys the buttons while a
+// pick resolves.
 //
 // `href` (#673/#756): in the REGISTER-arm browse AND the classification-umbrella
 // arm, the row LINKS to the group's own subject page instead of expanding inline

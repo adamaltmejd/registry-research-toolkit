@@ -284,12 +284,13 @@ for two facet axes, chips for faceted members — months/vintages in single-axis
 groups, curated labels in axis-less classification umbrellas — and a plain member list
 for edge groups), ungrouped leaves render as before, and the type-to-filter matches a
 group on its label/key OR any member's name/FQID (`groupMatchesFilter`) so member
-searches still surface the folded group. The CatalogPicker's variable list folds the
-same way (#322): `ConceptGroupRow` takes an optional `onpick` that renders members as
-pick buttons instead of catalogHref links, and the picker's `rankFilter` ranks a group
-row on `groupFilterKeys` (the shared match set behind `groupMatchesFilter`); a picked
-member rides the same derive-on-pick path as a leaf row. `foldGroupedRows` tolerates a
-stale pre-`groups` edge-cached payload (#317) by degrading to the flat list.
+searches still surface the folded group. `ConceptGroupRow` takes an optional `onpick`
+that renders members as pick buttons instead of catalogHref links (#322) — a browse/pick
+mode switch, currently dormant since the #991 cart model retired the only `onpick`
+consumer (`CatalogPicker.svelte`; picking now happens from the catalog subject page's
+own picker, see § The picker — slice axis × time axis, which does not use
+`ConceptGroupRow`'s pick mode). `foldGroupedRows` tolerates a stale pre-`groups`
+edge-cached payload (#317) by degrading to the flat list.
 
 **`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries (`consumer_state_id`,
 `source_state_id`, the validity intersection, `source_fqid`). A richer per-source-state
@@ -902,7 +903,11 @@ was never MONA-constrained — the adoption gap was purely historical.
 - `CatalogPicker.svelte` filtered lists (variant / provider / register / leaf variables)
   migrated to **Bits UI `Command`**: single tab-stop, arrow-key nav, `role="listbox"` /
   `role="option"` ARIA. `rankFilter` stays the single source of truth (`Command`'s own
-  scorer is disabled via `shouldFilter={false}`).
+  scorer is disabled via `shouldFilter={false}`). **Superseded by the #991 cart model
+  (#992/#993)**: `CatalogPicker.svelte` was deleted — `/project` is a read-only cart
+  now, and authoring moved to the catalog subject page's own picker (see § The picker —
+  slice axis × time axis). The friction note below is retained as a still-relevant
+  caveat about `Command` + `ConceptGroupRow`, not as documentation of a live component.
 
 ### CatalogPicker / Command friction (relevant to #664/#666)
 
@@ -1050,9 +1055,9 @@ The recurring visual units live in `frontend/src/lib/ui/` (shipped in #804, expo
 `Skeleton`, and `EmptyState`. `AppShell` shipped in #803 (rail + topbar command bar —
 see § Surface & layout language). Behavior comes from Bits UI (`Command`, `Dialog`,
 `Combobox`, etc.); styling is scoped CSS reading **only** semantic tokens. The #689
-`CatalogPicker` `Command` keyboard-split caveat (folded `ConceptGroupRow` →
-`role="presentation"`) still stands and is relevant where these primitives meet grouped
-lists.
+`Command` + folded-`ConceptGroupRow` keyboard-split caveat (`role="presentation"`,
+originally observed in the now-deleted `CatalogPicker` — see § CatalogPicker / Command
+friction) still stands wherever a future `Command`-hosted list meets grouped rows.
 
 Load-bearing decisions downstream children (#806–#809) must not re-litigate:
 
@@ -1729,6 +1734,54 @@ the edge.
   buckets under one shared key (fail closed). Buckets are per-process (lost on restart,
   not shared across replicas) — sufficient as the origin backstop behind the edge
   limiter; a shared store (Redis) is a scale-out concern, not v1.
+
+## Browse-only authoring: the data-order cart model (#991, #992/#993)
+
+The project editor was rebuilt around one rule: **the catalog is the only authoring
+surface**. `/project` is a read-only **cart** — `ProjectEditor` / `SourceEditor` /
+`BindingEditor` display each source's variant coordinate, period, and bindings
+(variable, pinned representation) and offer only delete-per-row, the project's own name,
+and the Open/Download/Validate/Order actions. There is no in-cart field editing: a wrong
+variable, period, or representation gets fixed by picking again from the catalog subject
+page, not by editing the cart row. `CatalogPicker.svelte`, `PeriodEditor.svelte`, and
+`FieldIssues.svelte` — the in-cart editing UI — were deleted along with the store
+methods that only existed to serve them (`addSource`, `addBinding`, `updateSource`,
+`updateBinding`, `applyPickedBinding`, `bindingDerivation`).
+
+This retires the \~400-line client-side **re-derivation engine** (`bindingDerivations` /
+`rederiveGen` / `rederiveSource` / `applyResolution` / `applyDerivedResult` and the
+per-binding `BindingDerivation` provenance markers) that used to re-resolve every
+binding whenever its source's period or variant changed, with a clobber-vs-keep
+heuristic to decide whether a re-derived value should overwrite an author's edit. Under
+the cart model every field is **written once, at pick time**: `addFromCatalog` resolves
+the catalog's `(period, variant)` exactly once and writes the final `type` /
+`display_name` / `representation` — nothing re-derives afterwards, so there is no
+provenance state to track and no clobber decision to get wrong. A source's bindings can
+go stale relative to its period after the fact (e.g. the author widens the period); that
+drift is the **server validator's job** to surface (`period_outside_state_validity` /
+`binding_state_drifts_within_period`, see § Semantic validation) — the auto-validate
+flow that will run this on every edit is the sibling #994 (not yet landed as of
+#992/#993). `ValidationPanel` carries a "Fix in catalog" link on each finding that
+resolves a catalog coordinate, so the remediation path is always back to the catalog,
+never a cart-side patch.
+
+The commit primitive is `applyStagedDiff({adds, removes, periodChange})` — the
+browse-and-stage flow accumulates a user's picks/removes as a diff and commits it in
+**one atomic synchronous store mutation**, so autosave and the stable-id mirror fire/
+rebuild once per commit rather than once per pick (this is the write path the #995
+multi-select consumer commits through). Find-or-create for a staged add keys on
+`register_variant` **alone** — not `(register_variant, period)` — so two picks against
+the same variant land in the same source regardless of period; a disjoint window is
+folded into the existing source's period via `mergePeriods` (`period.ts`) rather than
+minting a second source: when both periods are pure year grammar it coalesces into the
+sorted, disjoint #307 list form (adjacency-merging touching/overlapping intervals),
+otherwise (either side is token grammar or `_default`) it REPLACES with the incoming
+period, since mixed-grain union has no defined sort. `addFromCatalog` (the async
+catalog→project handoff, still store-owned so the catalog page never imports an editor
+component) applies the same find-or-create + `mergePeriods` merge outside the
+staged-diff path for the single-pick case. `updateField` (the project's own `name` /
+`window`) and `removeSource`/`removeBinding` are the only other mutators the cart UI
+calls — a source's own name and period are no longer directly editable in the cart.
 
 ## Browser storage + project-file persistence (the SPA store)
 

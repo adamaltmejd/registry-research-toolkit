@@ -364,17 +364,20 @@ $effect(() => {
   addOutcome = null;
 });
 
-/** Commit each selected representation through the store (synchronous appends;
- * the guarded derive lands per binding afterwards) and record the aggregate
+/** Commit each selected representation through the store and record the aggregate
  * outcome for the inline confirmation. The leaf passes a SINGLE band, so every
  * selection's `band.key` is this variable's fqid. The committed period is the row's
  * span INTERSECTED with the active period window (`rowAddPeriod`) — so a `?period`
  * the user narrowed to is honored (not widened to the row's full history) and an
  * open-ended row lands a finite, resolvable period rather than period-unset (#678).
- * The period also keys `addFromCatalog`'s find-or-create, so two rows of the SAME
- * register variant with DIFFERENT spans each land in their OWN correctly-periodized
- * source (#678). */
-function commitSelected(selected: PickerSelection[]): void {
+ * Under #992 find-or-create keys on `register_variant` ALONE: two rows of the SAME
+ * register variant with DIFFERENT spans MERGE into ONE source whose period extends to
+ * the #307 list form (`mergePeriods`), not two separate sources. `addFromCatalog` is
+ * now ASYNC (it resolves each binding's final fields once at pick time), so AWAIT each
+ * call SEQUENTIALLY — the sequential ordering is load-bearing: it preserves the
+ * store's duplicate guard against a same-variant double-add (a `Promise.all` would
+ * race two adds of the same variant past the guard). */
+async function commitSelected(selected: PickerSelection[]): Promise<void> {
   if (selected.length === 0) {
     return;
   }
@@ -385,7 +388,7 @@ function commitSelected(selected: PickerSelection[]): void {
   const addWindow = addWindowBounds(params.period ?? null, pickerWindow);
   for (const { row } of selected) {
     const addPeriod = rowAddPeriod(row, addWindow);
-    const result = projectStore.addFromCatalog(
+    const result = await projectStore.addFromCatalog(
       {
         registerVariant: `${registerPrefix}/${row.variant}`,
         variable: node.fqid,

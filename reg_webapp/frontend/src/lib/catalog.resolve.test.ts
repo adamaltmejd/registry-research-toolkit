@@ -1,6 +1,6 @@
 // Unit tests for the SHARED binding-resolution path (catalog.resolveBindingAt) —
-// the single source of truth for the CatalogPicker derive-on-pick AND the store's
-// re-derive-on-(period/variant)-change (B2). Mocks `./api`'s getCatalogNode so the
+// the single source of truth for the store's resolve-once-at-pick-time
+// (`addFromCatalog`, the #991 write-once model). Mocks `./api`'s getCatalogNode so the
 // resolve branches (period-unset / no-states / derived / ambiguous) are covered
 // without a backend. Kept out of the PURE catalog.test.ts so that file needs no
 // module mock.

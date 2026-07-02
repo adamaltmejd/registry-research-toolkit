@@ -4,6 +4,7 @@ import {
   grainOfToken,
   intersectCoverageWindow,
   looksLikePeriod,
+  mergePeriods,
   nextResolutionQuery,
   notDeliveredGaps,
   periodFieldFromQuery,
@@ -892,5 +893,116 @@ describe("sameYearWindow", () => {
     expect(sameYearWindow(null, null)).toBe(true);
     expect(sameYearWindow({ from: 2000, to: 2010 }, null)).toBe(false);
     expect(sameYearWindow(null, { from: 2000, to: 2010 })).toBe(false);
+  });
+});
+
+describe("mergePeriods (#992 find-or-create period extension)", () => {
+  it("coalesces two disjoint year points into a sorted, disjoint list", () => {
+    // 2010 + 2018 → the #307 list form, earlier-first.
+    expect(mergePeriods(2018, 2010)).toEqual([2010, 2018]);
+  });
+
+  it("coalesces disjoint year RANGES into a sorted, non-overlapping list", () => {
+    expect(
+      mergePeriods({ from: 2015, to: 2020 }, { from: 2005, to: 2010 }),
+    ).toEqual([
+      { from: 2005, to: 2010 },
+      { from: 2015, to: 2020 },
+    ]);
+  });
+
+  it("merges OVERLAPPING year ranges into one span", () => {
+    expect(
+      mergePeriods({ from: 2005, to: 2012 }, { from: 2010, to: 2020 }),
+    ).toEqual({ from: 2005, to: 2020 });
+  });
+
+  it("adjacency-merges TOUCHING year ranges (a 0-year gap) into one span", () => {
+    // 2010..2011 then 2012..2013 fuse (gap of 0 years).
+    expect(
+      mergePeriods({ from: 2010, to: 2011 }, { from: 2012, to: 2013 }),
+    ).toEqual({ from: 2010, to: 2013 });
+  });
+
+  it("collapses a lone merged interval to a scalar year (not a 1-element list)", () => {
+    // A point year absorbed into an adjacent range → a single {from,to}; a lone
+    // point stays a bare number.
+    expect(mergePeriods(2010, 2010)).toBe(2010);
+    expect(mergePeriods(2010, { from: 2011, to: 2013 })).toEqual({
+      from: 2010,
+      to: 2013,
+    });
+  });
+
+  it("coalesces an existing LIST with an incoming window", () => {
+    expect(
+      mergePeriods(
+        [
+          { from: 2005, to: 2010 },
+          { from: 2015, to: 2020 },
+        ],
+        { from: 2011, to: 2014 },
+      ),
+    ).toEqual({ from: 2005, to: 2020 });
+  });
+
+  it("REPLACES with incoming when EITHER side uses token grammar", () => {
+    // A token (`HT2020`) can't be coalesced with a year — a mixed-grain sort is
+    // undefined, so the incoming window wins wholesale.
+    expect(mergePeriods("HT2020", 2018)).toBe(2018);
+    expect(mergePeriods(2018, "HT2020")).toBe("HT2020");
+    expect(mergePeriods("VT2020", "HT2021")).toBe("HT2021");
+  });
+
+  it("REPLACES with incoming when EITHER side is _default", () => {
+    expect(mergePeriods("_default", { from: 2010, to: 2015 })).toEqual({
+      from: 2010,
+      to: 2015,
+    });
+    expect(mergePeriods(2010, "_default")).toBe("_default");
+  });
+
+  it("REPLACES when a range endpoint is a non-year token (mixed grammar)", () => {
+    // A `{from: "VT1992", to: 2009}` range has a token endpoint → not pure year
+    // grammar → replace with incoming.
+    expect(mergePeriods({ from: "VT1992", to: 2009 } as never, 2020)).toBe(
+      2020,
+    );
+  });
+
+  it("COALESCES a numeric-STRING year against an incoming year (Fix 1)", () => {
+    // `Source.period` validly carries year tokens as strings ("2020"); they must
+    // coalesce like the int form, NOT fall to REPLACE and drop the existing
+    // coverage. 2020 + adjacent 2021 fuse to one range (proves it did NOT replace).
+    expect(mergePeriods("2020", 2021)).toEqual({ from: 2020, to: 2021 });
+    // A DISJOINT string year + incoming → the #307 list form (coalesced, not
+    // replaced): opening a file with period "2020" and adding 2022 keeps both.
+    expect(mergePeriods("2020", 2022)).toEqual([2020, 2022]);
+    // A `{from,to}` with numeric-string endpoints parses both endpoints.
+    expect(mergePeriods({ from: "2018", to: "2020" }, 2019)).toEqual({
+      from: 2018,
+      to: 2020,
+    });
+  });
+
+  it("STILL replaces when a string is a NON-year token (Fix 1 boundary)", () => {
+    // A 4-digit-year string coalesces, but a term/quarter token still disqualifies.
+    expect(mergePeriods("HT2020", 2018)).toBe(2018);
+  });
+
+  it("an UNSET incoming period does NOT wipe a valid existing period (Fix 2)", () => {
+    // `periodFromWire(null)` yields "" — a catalog row with no finite period must
+    // not blank the existing period (that would invalidate every binding).
+    expect(mergePeriods(2020, "")).toBe(2020);
+    expect(mergePeriods([], 2020)).toBe(2020); // empty-list existing is unset too
+  });
+
+  it("a blank EXISTING period adopts a set incoming period (Fix 2)", () => {
+    // A fresh/blank source takes the add's window.
+    expect(mergePeriods("", 2020)).toBe(2020);
+    expect(mergePeriods("", { from: 2010, to: 2015 })).toEqual({
+      from: 2010,
+      to: 2015,
+    });
   });
 });

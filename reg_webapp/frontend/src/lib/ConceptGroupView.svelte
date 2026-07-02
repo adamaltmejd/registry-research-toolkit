@@ -566,11 +566,16 @@ $effect(() => {
  * (the variable). The committed period is the row's span INTERSECTED with the active
  * period window (`rowAddPeriod`) — so a `?period` the user narrowed to is honored
  * (not widened to the row's full history) and an open-ended row lands a finite,
- * resolvable period rather than period-unset (#678). The period also keys
- * `addFromCatalog`'s find-or-create, so two rows of the SAME register variant with
- * DIFFERENT spans each land in their OWN correctly-periodized source (#678).
- * Aggregates into the existing `addOutcome` confirmation. */
-function commitSelected(selected: PickerSelection[]): void {
+ * resolvable period rather than period-unset (#678). Under #992 find-or-create keys
+ * on `register_variant` ALONE: two rows of the SAME register variant with DIFFERENT
+ * spans MERGE into ONE source whose period is extended to the #307 list form
+ * (`mergePeriods`), not two separate sources. `addFromCatalog` is now ASYNC (it
+ * resolves each binding's final fields once at pick time), so AWAIT each call
+ * SEQUENTIALLY — the sequential ordering is load-bearing: it preserves the store's
+ * duplicate guard against a same-variant double-add (a `Promise.all` would race two
+ * adds of the same variant past the guard). Aggregates into the `addOutcome`
+ * confirmation. */
+async function commitSelected(selected: PickerSelection[]): Promise<void> {
   if (selected.length === 0) {
     return;
   }
@@ -581,7 +586,7 @@ function commitSelected(selected: PickerSelection[]): void {
   const addWindow = addWindowBounds(period ?? null, pickerWindow);
   for (const { band, row } of selected) {
     const addPeriod = rowAddPeriod(row, addWindow);
-    const result = projectStore.addFromCatalog(
+    const result = await projectStore.addFromCatalog(
       {
         registerVariant: `${registerPrefixOf(band.key)}/${row.variant}`,
         variable: band.key,

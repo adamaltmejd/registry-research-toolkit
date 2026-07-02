@@ -314,7 +314,14 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("selecting rows + Add commits the right addFromCatalog payloads", async () => {
-    const spy = vi.spyOn(projectStore, "addFromCatalog");
+    // addFromCatalog is ASYNC — stub it (calling through hits the unmocked resolve
+    // fetch); commitSelected awaits each call sequentially, so the confirmation
+    // settling is the signal both adds ran.
+    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
+      status: "added",
+      createdSource: true,
+      sourceName: "LISA",
+    });
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
@@ -328,6 +335,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect.element(page.getByText("2 columns selected")).toBeVisible();
     await page.getByRole("button", { name: "Add to project" }).click();
 
+    await expect.element(page.getByText(/Added 2 columns/)).toBeVisible();
     expect(spy).toHaveBeenCalledTimes(2);
     const payloads = spy.mock.calls.map((c) => c[0]);
     expect(payloads).toEqual(
@@ -380,7 +388,11 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "1995-12-31",
       }),
     ];
-    const spy = vi.spyOn(projectStore, "addFromCatalog");
+    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
+      status: "added",
+      createdSource: true,
+      sourceName: "LISA",
+    });
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(renameStates),
@@ -393,6 +405,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await page.getByRole("checkbox", { name: /DINF86/ }).click();
     await page.getByRole("button", { name: "Add to project" }).click();
 
+    await expect.element(page.getByText(/Added to project/)).toBeVisible();
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy.mock.calls[0][0]).toEqual(
       expect.objectContaining({
@@ -414,7 +427,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     } as never);
     // Kon spans 2010–2015; narrow to 2012..2014.
     router.navigate("/catalog/scb/lisa/kon?period=2012..2014");
-    const spy = vi.spyOn(projectStore, "addFromCatalog");
+    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
+      status: "added",
+      createdSource: true,
+      sourceName: "LISA",
+    });
 
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
@@ -429,6 +446,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await kon.click();
     await page.getByRole("button", { name: "Add to project" }).click();
 
+    await expect.element(page.getByText(/Added to project/)).toBeVisible();
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy.mock.calls[0][0]).toEqual(
       expect.objectContaining({

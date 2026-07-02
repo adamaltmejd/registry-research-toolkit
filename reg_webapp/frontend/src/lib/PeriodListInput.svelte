@@ -22,7 +22,7 @@ import {
 // current list, or null while the list is EMPTY — the surface decides what
 // that means (the editor shows its amber "incomplete" hint).
 //
-// Local state is seeded ONCE at mount from `value` (the PeriodEditor
+// Local state is seeded ONCE at mount from `value` (the shared period-input
 // doctrine); the picker controls KEEP their values after Add — adjusting one
 // endpoint for the next segment beats re-picking the grain every time —
 // with Add disabled until the controls re-emit (no double-click duplicates).

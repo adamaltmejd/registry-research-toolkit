@@ -596,6 +596,17 @@ export function variantSeg(registerVariant: string): string {
   return segs.length === 3 ? segs[2] : "";
 }
 
+/** The display label for a source's `register_variant` coordinate — the ONE place
+ * the cart renders a variant. Today it's the raw coordinate (rendered mono in the
+ * UI); this is the #376 variant-FAMILY fold seam — when family labels land, swap
+ * the mapping here so every cart row picks it up in one edit rather than
+ * re-deriving inline. */
+export function variantDisplayLabel(registerVariant: string): string {
+  // #376: family-label fold seam — resolve a family label here instead of the raw
+  // coordinate once #376 ships.
+  return registerVariant;
+}
+
 // ── Variable-state derivation (the CatalogPicker derive-on-pick) ─────────────
 
 // A LIGHT, advisory storage-token → ColumnType prefill for derive-on-pick
@@ -2709,28 +2720,6 @@ export type BindingResolution =
     }
   | { kind: "ambiguous"; fqid: string; states: VariableStateModel[] }
   | { kind: "unresolved"; reason: UnresolvedReason };
-
-/** The payload the CatalogPicker hands back on a pick (the BindingEditor applies it
- * through the store). It carries the ground-truth resolution `kind` from
- * `resolveBindingAt` so the consumer NEVER re-infers status from value tells (a
- * genuinely-derived `opaque` with a null delivery column would otherwise be
- * mislabeled "unresolved"). `unresolvedReason` rides along only when the resolve
- * could not produce a type (period unset / no covering state) — the opaque
- * fallback the picker wrote. */
-export interface PickedVariable {
-  variable: string;
-  type: string;
-  displayNameDefault: string | null;
-  // The chosen REPRESENTATION (delivery column) when the concept has >1 at the
-  // period; null/undefined when there is a single representation.
-  representation?: string | null;
-  /** Ground truth from `resolveBindingAt`: `derived` (a real type was resolved) or
-   * `unresolved` (the opaque fallback). `ambiguous` never reaches a pick — the
-   * picker's chooser resolves it to a concrete representation (`derived`) first. */
-  resolution: "derived" | "unresolved";
-  /** Why unresolved (only when `resolution === "unresolved"`). */
-  unresolvedReason?: UnresolvedReason;
-}
 
 /**
  * Resolve `fqid` at the source's (`period`, `variant`) through the catalog

@@ -1,376 +1,83 @@
 <script lang="ts">
-import CatalogPicker from "./CatalogPicker.svelte";
-import type { PickedVariable } from "./catalog";
-import FieldIssues from "./FieldIssues.svelte";
-import { type Binding, COLUMN_TYPES } from "./project_data";
+import type { Binding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { Button } from "./ui";
-import {
-  bindingAnchorId,
-  issuesForPointer,
-  jsonPointer,
-  type ValidationIssue,
-} from "./validation";
+import { bindingAnchorId } from "./validation";
 
-// Editable single binding (see reg_schema/DESIGN.md → Two layers: models vs.
-// validator). DERIVE CORE + ADVANCED DISCLOSURE (maintainer
-// decision): the common fields (variable / type / display_name) are the surface;
-// the rare type-conditional overrides hide in an Advanced disclosure.
-//
-// Per the Pydantic boundary (see reg_webapp/DESIGN.md → Pydantic boundary), every
-// edit funnels through the c-i store mutators (updateBinding /
-// removeBinding) — NO new store API. NEVER bind:value on the immutable draft;
-// mirror c-i's name input EXACTLY (value=… + oninput=… → mutator).
-const {
-  sourceIndex,
-  bindingIndex,
-  binding,
-  registerPrefix,
-  period,
-  variant,
-  issues,
-} = $props<{
+// READ-ONLY binding row in the #991 data-order cart: it DISPLAYS the picked
+// variable (+ the pinned representation when set) and offers "Remove binding" only.
+// Editing a binding — variable, type, display_name, representation — happens by
+// re-picking in the catalog browser (the cart shows the cart, it doesn't edit it).
+// See reg_webapp/DESIGN.md and issue #991.
+const { sourceIndex, bindingIndex, binding } = $props<{
   sourceIndex: number;
   bindingIndex: number;
   binding: Binding;
-  registerPrefix: string; // first 2 segs of the source's register_variant
-  period: string | null; // the source's period as a wire string (null → can't resolve)
-  variant: string; // 3rd seg of register_variant
-  issues: ValidationIssue[];
 }>();
 
-// Whether the inline variable picker is expanded.
-let picking = $state(false);
-
-// The pointer to a binding field, for the inline FieldIssues lookup.
-function ptr(field: string): string {
-  return jsonPointer(["sources", sourceIndex, "bindings", bindingIndex, field]);
-}
-
-// DERIVE-ON-PICK: apply the picked variable + the derived type + the display_name
-// default (overridable). The variable is a bare 3-segment FQID (no @version pin).
-// When the concept has several co-existing delivery columns at the period, the
-// picker's chooser supplies a `representation` (the chosen column) — set it; else
-// clear any stale one. Only set display_name when the resolve gave a default.
-//
-// B2: funnel through `applyPickedBinding`, which records the derived snapshot
-// (provenance) so a LATER period/variant change can re-derive without clobbering
-// the user's hand-edits. The picker emits the ground-truth resolution KIND
-// (`derived` / `unresolved`) from resolveBindingAt, so we mark the row directly
-// from it — NEVER re-inferring status from value tells (a genuinely-derived
-// opaque/null-column state would otherwise be mislabeled "unresolved").
-function onPickVariable(picked: PickedVariable): void {
-  projectStore.applyPickedBinding(sourceIndex, bindingIndex, {
-    variable: picked.variable,
-    type: picked.type,
-    displayNameDefault: picked.displayNameDefault,
-    representation: picked.representation,
-    status: picked.resolution,
-    reason: picked.unresolvedReason,
-  });
-  picking = false;
-}
-
-// An override field (display_name or an advanced subtype/format): blank → null
-// (clears the field, so the backend resolves/ignores it). display_name funnels
-// through here too — it's just the non-advanced override.
-function onAdvanced(field: keyof Binding, value: string): void {
-  projectStore.updateBinding(sourceIndex, bindingIndex, {
-    [field]: value === "" ? null : value,
-  });
-}
-
-// A binding field coerced to a string for an input value (non-string → "").
+// A binding field coerced to a display string (non-string → "").
 function strField(field: keyof Binding): string {
   const v = binding[field];
   return typeof v === "string" ? v : "";
 }
-const type = $derived(strField("type"));
-const displayName = $derived(strField("display_name"));
-
-// B2: the derivation marker. The store re-derives this binding when the source's
-// (period, variant) changes; the resulting status drives an honest row marker —
-// "unresolved" (period unset / no data here), "ambiguous" (re-pick a
-// representation), or a non-blocking "mismatch" hint when a hand-edited field now
-// re-derives differently. `null` (never derived) shows nothing. The validator
-// stays the authority; these are advisory cues, NOT a red error wall.
-const derivation = $derived(
-  projectStore.bindingDerivation(sourceIndex, bindingIndex),
-);
-
-/** The human marker text for the current derivation status (null → no marker). */
-const derivationMarker = $derived.by(() => {
-  const d = derivation;
-  if (!d) {
-    return null;
-  }
-  if (d.status === "unresolved") {
-    return {
-      level: "unresolved" as const,
-      text:
-        d.reason === "period-unset"
-          ? "Set the source period to resolve type."
-          : "No data for this period / variant — type couldn't be resolved.",
-    };
-  }
-  if (d.status === "ambiguous") {
-    return {
-      level: "unresolved" as const,
-      text: d.detail ?? "Several representations now co-exist — re-pick one.",
-    };
-  }
-  if (d.status === "error") {
-    return {
-      level: "unresolved" as const,
-      text: `Couldn't re-resolve: ${d.detail ?? "request failed"}.`,
-    };
-  }
-  // status === "derived": only surface a marker when a hand-edit diverged from the
-  // freshly-derived value (non-blocking).
-  if (d.mismatch) {
-    return {
-      level: "mismatch" as const,
-      text:
-        d.mismatch.field === "type"
-          ? `reg_meta now derives type "${d.mismatch.derived}" here; you kept "${type}".`
-          : `reg_meta now suggests display name "${d.mismatch.derived}"; you kept yours.`,
-    };
-  }
-  return null;
-});
+const variable = $derived(strField("variable"));
+const representation = $derived(strField("representation"));
 </script>
 
 <!-- `id` is the click-to-locate anchor the ValidationPanel scrolls to (matched via
      `bindingAnchorId`); `.locate-flash` (defined globally in SourceEditor) briefly
      highlights it. -->
 <div class="binding" id={bindingAnchorId(sourceIndex, bindingIndex)}>
-  <div class="binding-grid">
-    <!-- variable: read-ish + a Pick button (the derive-on-pick entry point). -->
-    <div class="field variable">
-      <span class="field-label">Variable</span>
-      <div class="variable-row">
-        <code class="variable-value">{binding.variable || "(no variable)"}</code>
-        <Button variant="default" size="sm" onclick={() => (picking = !picking)}>
-          {picking ? "Close" : "Pick variable"}
-        </Button>
-      </div>
-      <FieldIssues issues={issuesForPointer(issues, ptr("variable"))} />
-      {#if derivationMarker}
-        <!-- B2: the derivation marker — an honest cue that the binding's type isn't
-             really resolved (unresolved) or that a hand-edit now disagrees with
-             reg_meta (mismatch). Advisory; the backend Validate is the authority. -->
-        <p
-          class="derive-marker {derivationMarker.level}"
-          role={derivationMarker.level === "unresolved" ? "status" : undefined}
-        >
-          {derivationMarker.text}
-        </p>
-      {/if}
-    </div>
-
-    <!-- type: the 6 ColumnType values, prefilled from the pick, overridable. -->
-    <div class="field">
-      <span class="field-label">Type</span>
-      <select
-        value={type}
-        onchange={(e) =>
-          projectStore.updateBinding(sourceIndex, bindingIndex, {
-            type: e.currentTarget.value,
-          })}
-      >
-        {#if !COLUMN_TYPES.includes(type as (typeof COLUMN_TYPES)[number])}
-          <!-- An unknown/blank type round-trips as a disabled option so we never
-               silently drop a malformed value (the backend flags it). -->
-          <option value={type} disabled>{type || "(unset)"}</option>
-        {/if}
-        {#each COLUMN_TYPES as ct (ct)}
-          <option value={ct}>{ct}</option>
-        {/each}
-      </select>
-      <FieldIssues issues={issuesForPointer(issues, ptr("type"))} />
-    </div>
-
-    <!-- display_name: defaults to the picked delivery_column_name, overridable. -->
-    <div class="field">
-      <span class="field-label">Display name</span>
-      <input
-        type="text"
-        value={displayName}
-        placeholder="(resolved from reg_meta)"
-        oninput={(e) => onAdvanced("display_name", e.currentTarget.value)}
-      />
-      <FieldIssues issues={issuesForPointer(issues, ptr("display_name"))} />
-    </div>
+  <div class="binding-body">
+    <!-- The variable + its pinned representation are machine FQIDs/identifiers →
+         mono, like every code/identifier (DESIGN.md). -->
+    <code class="variable-value">{variable || "(no variable)"}</code>
+    {#if representation}
+      <code class="representation" title="Pinned delivery column">{representation}</code>
+    {/if}
   </div>
-
-  {#if picking}
-    <CatalogPicker
-      mode="variable"
-      {registerPrefix}
-      {period}
-      {variant}
-      onpickVariable={onPickVariable}
-      oncancel={() => (picking = false)}
-    />
-  {/if}
-
-  <!-- Advanced overrides: type-CONDITIONAL (only the field owning the chosen type
-       renders, to avoid subtype_on_wrong_type). All optional / rarely set. -->
-  <details class="advanced">
-    <summary>Advanced</summary>
-    <div class="advanced-fields">
-      {#if type === "id"}
-        <label>
-          <span>id_subtype</span>
-          <select
-            value={strField("id_subtype")}
-            onchange={(e) => onAdvanced("id_subtype", e.currentTarget.value)}
-          >
-            <option value="">(unset)</option>
-            <option value="integer">integer</option>
-            <option value="string">string</option>
-          </select>
-          <FieldIssues issues={issuesForPointer(issues, ptr("id_subtype"))} />
-        </label>
-      {:else if type === "numeric"}
-        <label>
-          <span>numeric_subtype</span>
-          <select
-            value={strField("numeric_subtype")}
-            onchange={(e) => onAdvanced("numeric_subtype", e.currentTarget.value)}
-          >
-            <option value="">(unset)</option>
-            <option value="integer">integer</option>
-            <option value="double">double</option>
-          </select>
-          <FieldIssues issues={issuesForPointer(issues, ptr("numeric_subtype"))} />
-        </label>
-      {:else if type === "date"}
-        <label>
-          <span>date_format</span>
-          <input
-            type="text"
-            value={strField("date_format")}
-            placeholder="%Y-%m-%d"
-            oninput={(e) => onAdvanced("date_format", e.currentTarget.value)}
-          />
-          <FieldIssues issues={issuesForPointer(issues, ptr("date_format"))} />
-        </label>
-      {:else if type === "datetime"}
-        <label>
-          <span>datetime_format</span>
-          <input
-            type="text"
-            value={strField("datetime_format")}
-            placeholder="%Y-%m-%d %H:%M:%S"
-            oninput={(e) => onAdvanced("datetime_format", e.currentTarget.value)}
-          />
-          <FieldIssues issues={issuesForPointer(issues, ptr("datetime_format"))} />
-        </label>
-      {:else if type === "categorical"}
-        <label>
-          <span>value_set</span>
-          <input
-            type="text"
-            value={strField("value_set")}
-            placeholder="class/<slug>"
-            oninput={(e) => onAdvanced("value_set", e.currentTarget.value)}
-          />
-          <FieldIssues issues={issuesForPointer(issues, ptr("value_set"))} />
-        </label>
-      {:else}
-        <p class="muted">No type-specific overrides for <code>{type || "(unset)"}</code>.</p>
-      {/if}
-    </div>
-  </details>
-
-  <div class="remove-row">
-    <Button
-      variant="danger"
-      size="sm"
-      onclick={() => projectStore.removeBinding(sourceIndex, bindingIndex)}
-    >
-      Remove binding
-    </Button>
-  </div>
+  <!-- Per-binding accessible name so a screen-reader controls list disambiguates
+       the delete buttons (visible text kept as the label prefix — label-in-name). -->
+  <Button
+    variant="danger"
+    size="sm"
+    aria-label={`Remove binding ${variable || "(no variable)"}`}
+    onclick={() => projectStore.removeBinding(sourceIndex, bindingIndex)}
+  >
+    Remove binding
+  </Button>
 </div>
 
 <style>
   .binding {
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: var(--space-3);
+    padding: var(--space-2) var(--space-3);
     display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
     scroll-margin-top: var(--space-4);
   }
-  .binding-grid {
+  .binding-body {
     display: flex;
+    align-items: baseline;
     flex-wrap: wrap;
-    gap: var(--space-3) 1.25rem;
-  }
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-  .field.variable {
-    flex: 1 1 18rem;
-  }
-  .field-label {
-    font-weight: 600;
-    font-size: var(--text-micro);
-  }
-  .variable-row {
-    display: flex;
-    align-items: center;
     gap: var(--space-2);
+    min-width: 0;
   }
   /* The variable is a machine FQID — mono, like every code/identifier. */
   .variable-value {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
   }
-  select,
-  input {
-    font: inherit;
-    padding: var(--space-1) var(--space-2);
+  /* The pinned representation (delivery column) is a subtler mono chip. */
+  .representation {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--text-muted);
+    padding: 0.05rem var(--space-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-  }
-  .remove-row {
-    align-self: flex-start;
-  }
-  .advanced summary {
-    cursor: pointer;
-    font-size: var(--text-micro);
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-  .advanced-fields {
-    margin-top: var(--space-2);
-  }
-  .advanced-fields label {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    max-width: 18rem;
-    font-size: var(--text-micro);
-  }
-  /* B2 markers. `unresolved` is the stronger cue (the type isn't real yet) —
-     amber, like the period-incomplete hint; `mismatch` is a quieter advisory
-     (the value is the user's choice, we just note reg_meta disagrees). Neither is
-     red: red is reserved for the backend's validation errors (<FieldIssues>). */
-  .derive-marker {
-    font-size: var(--text-micro);
-    margin: 0.1rem 0 0;
-  }
-  .derive-marker.unresolved {
-    color: var(--warn);
-    font-weight: 600;
-  }
-  .derive-marker.mismatch {
-    color: var(--text-muted);
   }
 </style>

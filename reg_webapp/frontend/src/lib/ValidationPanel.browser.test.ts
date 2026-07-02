@@ -12,6 +12,7 @@ import { bindingAnchorId, sourceAnchorId } from "./validation";
 const SOURCES = [
   {
     name: "lisa_main",
+    register_variant: "scb/lisa/v1",
     bindings: [{ variable: "scb/lisa/adeldag" }],
   },
 ];
@@ -59,6 +60,46 @@ describe("ValidationPanel — researcher-language findings", () => {
     );
     // …and the message never leaks a dataclass repr.
     expect(document.body.textContent).not.toContain("PeriodRange");
+  });
+
+  it("links out to the binding's catalog subject page (read-only cart fixes happen in the browser, #991)", async () => {
+    await render(ValidationPanel, {
+      result: DRIFT_RESULT,
+      requestError: null,
+      sources: SOURCES,
+    });
+
+    // The binding-level finding carries an outbound catalog link to its variable's
+    // subject page — the only place the binding is re-picked.
+    const link = page.getByRole("link", { name: /Fix in catalog/ });
+    await expect.element(link).toBeVisible();
+    await expect
+      .element(link)
+      .toHaveAttribute("href", "/catalog/scb/lisa/adeldag");
+  });
+
+  it("links a source-level finding to the REGISTER catalog page (2-seg prefix, #993)", async () => {
+    await render(ValidationPanel, {
+      result: {
+        ok: false,
+        issues: [
+          {
+            level: "error" as const,
+            code: "empty_bindings",
+            path: "/sources/0/bindings",
+            message: "source has no bindings",
+          },
+        ],
+      },
+      requestError: null,
+      sources: SOURCES,
+    });
+
+    // The source-level link targets the 2-seg provider/register page, NOT the
+    // 3-seg register_variant (a variant slug is a query axis, not a node — #993).
+    const link = page.getByRole("link", { name: /Fix in catalog/ });
+    await expect.element(link).toBeVisible();
+    await expect.element(link).toHaveAttribute("href", "/catalog/scb/lisa");
   });
 
   it("clicking the location label flashes the target binding card", async () => {

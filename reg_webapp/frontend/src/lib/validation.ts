@@ -19,6 +19,7 @@
  */
 
 import type { components } from "./api-types";
+import { catalogHref, registerPrefixOf } from "./catalog";
 
 export type ValidationIssue = components["schemas"]["ValidationIssueModel"];
 export type ValidationResult = components["schemas"]["ValidationResultModel"];
@@ -51,8 +52,8 @@ export function parseJsonPointer(ptr: string): string[] | null {
  * later `~`→`~0` pass re-escapes into `~01`. This is the exact inverse of
  * `parseJsonPointer`'s `~1`→`/` then `~0`→`~` decode, so the two round-trip.
  * Numeric tokens (array indices) stringify. An EMPTY token array is the whole
- * document → `""`. The c-ii field-highlighting seam builds a field's pointer with
- * this and looks it up against the server's issue list via `issuesForPointer`. */
+ * document → `""`. Callers build a location's pointer with this and match it
+ * against the server's issue list (e.g. `issuesUnderPointer`). */
 export function jsonPointer(tokens: (string | number)[]): string {
   if (tokens.length === 0) {
     return "";
@@ -62,18 +63,8 @@ export function jsonPointer(tokens: (string | number)[]): string {
     .join("/")}`;
 }
 
-/** The issues whose `path` is exactly `ptr` (the c-ii field-highlighting lookup;
- * c-i uses it for a per-location grouping if needed). A whole-document issue has
- * `path === ""`. */
-export function issuesForPointer(
-  issues: ValidationIssue[],
-  ptr: string,
-): ValidationIssue[] {
-  return issues.filter((issue) => issue.path === ptr);
-}
-
 /**
- * Every issue AT `prefix` OR BELOW it — the c-ii ROLL-UP lookup so a source/binding
+ * Every issue AT `prefix` OR BELOW it — the ROLL-UP lookup so a source/binding
  * header can badge all errors under its subtree (`/sources/{i}` rolls up
  * `/sources/{i}/bindings/0/type`, `/sources/{i}/name`, …). A descendant is matched
  * by `path === prefix` (exact) OR `path.startsWith(prefix + "/")` — the trailing
@@ -241,23 +232,38 @@ export function bindingAnchorId(
 
 /** A user-facing LOCATION for a finding, derived from its RFC-6901 `path` plus the
  * draft's sources — the summary list speaks "Source 'lisa_main' → binding
- * scb/lisa/adeldag" instead of leaking the raw pointer, and carries the DOM-anchor
- * id so a click scrolls to the relevant card.
+ * scb/lisa/adeldag" instead of leaking the raw pointer, carries the DOM-anchor id so
+ * a click scrolls to the relevant card, AND — since the cart is read-only and fixes
+ * happen in the catalog browser (#991) — an outbound `catalogHref` to the subject
+ * page where the offending binding/source can actually be re-picked.
  *
  * `anchorId` is the deepest card the path reaches (binding card if the path dives
  * into `/bindings/{j}`, else the source card). `label` names the source by its
  * authored `name` (falling back to the index when unnamed / out of range) and, for
- * a binding path, appends the binding's `variable` FQID. A whole-document path
- * (`""`) or a non-`/sources/...` path (e.g. a top-level `/name`) has no card to
- * locate → `null`, and the panel falls back to showing the raw pointer. */
+ * a binding path, appends the binding's `variable` FQID. `catalogHref`/`catalogLabel`
+ * point at the catalog subject page: the binding's `variable` FQID for a binding
+ * path, the source's `register_variant` for a source path — both omitted (undefined)
+ * when the coordinate is missing/blank (a fresh unpicked row) so the panel just
+ * skips the link. A whole-document path (`""`) or a non-`/sources/...` path (e.g. a
+ * top-level `/name`) has no card to locate → `null`, and the panel falls back to
+ * showing the raw pointer. */
 export interface FindingLocation {
   label: string;
   anchorId: string;
+  /** The catalog subject page for the located binding/source, when its
+   * variable/register_variant coordinate is resolvable — the read-only cart's
+   * "fix it in the browser" outbound link (#991). Omitted otherwise. */
+  catalogHref?: string;
+  catalogLabel?: string;
 }
 
 export function findingLocation(
   path: string,
-  sources: readonly { name?: unknown; bindings?: unknown }[],
+  sources: readonly {
+    name?: unknown;
+    register_variant?: unknown;
+    bindings?: unknown;
+  }[],
 ): FindingLocation | null {
   const tokens = parseJsonPointer(path);
   // Only /sources/<i>[/bindings/<j>/...] paths name a locatable card.
@@ -285,11 +291,37 @@ export function findingLocation(
         typeof variable === "string" && variable.length > 0
           ? `binding ${variable}`
           : `binding ${bIdx + 1}`;
+      // The binding's own variable FQID is its catalog subject page; a fresh row
+      // with no variable yet has no target → omit the link.
+      const catalog =
+        typeof variable === "string" && variable.length > 0
+          ? { catalogHref: catalogHref(variable), catalogLabel: variable }
+          : {};
       return {
         label: `${sourceLabel} → ${bindingLabel}`,
         anchorId: bindingAnchorId(sIdx, bIdx),
+        ...catalog,
       };
     }
   }
-  return { label: sourceLabel, anchorId: sourceAnchorId(sIdx) };
+  // A source-level issue points at the source's REGISTER page — the 2-seg
+  // `provider/register` prefix of the `register_variant`, NOT the 3-seg coordinate.
+  // A variant slug is a query axis, not a browsable catalog node, so a 3-seg
+  // `/catalog/<provider>/<register>/<variant>` link would be dead (#993). When the
+  // register_variant has fewer than 2 segments (`registerPrefixOf` → "") there is no
+  // valid register prefix, so the link is omitted (the no-catalog fallback).
+  const rv = source?.register_variant;
+  const registerPrefix = typeof rv === "string" ? registerPrefixOf(rv) : "";
+  const catalog =
+    registerPrefix.length > 0
+      ? {
+          catalogHref: catalogHref(registerPrefix),
+          catalogLabel: registerPrefix,
+        }
+      : {};
+  return {
+    label: sourceLabel,
+    anchorId: sourceAnchorId(sIdx),
+    ...catalog,
+  };
 }
