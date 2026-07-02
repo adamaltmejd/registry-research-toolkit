@@ -136,7 +136,9 @@ new work, but it must not edit project code as part of the work itself.
    - run `uv run --no-project python scripts/plan_sequence.py --lane`;
    - read issue `#328` and current candidate issue bodies/comments;
    - inspect open PRs that close issues, especially drafts, ready PRs, and stacks;
-   - read merge-gate handoff blocks from PR bodies with `gh pr view`, not from
+   - read merge-gate handoff entries from the local gate store
+     (`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/gate.json`;
+     `$XDG_STATE_HOME` root if set) — not from PR bodies, and not from
      `scripts/pr_review_status.py`, which is only the Codex bot-review signal.
 5. Apply clear, evidence-backed issue maintenance automatically. If it changes
    lane-affecting state such as `priority:*`, `touches`, `Relationships`, `blocked`, or
@@ -226,23 +228,21 @@ Merge only on the current head and only when every item passes:
 - PR is open, non-draft, mergeable, and based on `main`, with no higher-level sequencing
   reason to wait: stacked predecessor unmerged, conflicting active PR, pending release
   coordination, or a maintainer stop note.
-- PR body contains `<!-- pr-pipeline-merge-gate -->` with `status: ready-to-merge` and
-  `head: <sha>` matching GitHub's current `headRefOid`. This single current-head block
-  is the `/pr-pipeline` handoff signal; no separate ready-to-merge comment is required.
-- The handoff block has trusted provenance. Check it concretely: the PR's head branch
-  lives in this repository (not a fork) AND the PR author is the maintainer or a known
-  agent identity operating for the maintainer; when in doubt, use GraphQL
-  `userContentEdits` to see who last edited the body. Any PR failing this check blocks
-  automerge — ask the user. The rationale: if the PR author could self-certify the block
-  without that trusted handoff, the gate means nothing.
-- The gate block records converged independent review, tests/checks, docs decisions, and
-  required visual/build-db proof. The independent-review entry must name the review
+- The local gate store has `pr-<N>/gate.json` with `status: ready-to-merge` and `head`
+  matching GitHub's current `headRefOid`. This single current-head entry is the
+  `/pr-pipeline` handoff signal; PR bodies carry no gate block and no ready-to-merge
+  comment is required. Provenance is by construction — only agents on this machine can
+  write the store — but never automerge a PR whose head branch is not in this repository
+  (a fork PR with a gate entry is an error to surface, not a merge candidate).
+- The gate entry records converged independent review, tests/checks, docs decisions, and
+  required visual/build-db results. The independent_review line must name the review
   source and why it satisfies the risk-scaled repo gate; bot-only review is sufficient
   only for small, low-risk PRs.
-- Required visual/build-db proof is durable and PR-visible. For rendered-output PRs,
-  visual proof means a `/reg-webapp-design-reviewer` result that includes durable
-  screenshot/render evidence; screenshot-only proof blocks automerge. Local `/tmp` paths
-  alone do not pass a later tick.
+- Required visual/build-db evidence files are present in the PR's gate directory. For
+  rendered-output PRs, visual proof means a `/reg-webapp-design-reviewer` report with
+  its screenshots in the gate directory; screenshots without the reviewer report block
+  automerge. References to scratch or `/tmp` paths instead of files in the gate
+  directory do not count — the artifacts must be there.
 - `gh pr checks <pr>` is green on the current head.
 - `uv run --no-project python scripts/pr_review_status.py <pr> --once` is settled with
   `clean`, or `exhausted` with all other gates complete. `findings`, `reviewing`,
@@ -266,9 +266,40 @@ gh pr merge <pr> --squash --match-head-commit <headRefOid>
 
 After each merge, fetch `origin main`, fast-forward the local main checkout with
 `git merge --ff-only origin/main`, and verify the PR's changes are actually present on
-`main`, not merely that GitHub reports a merge commit. For a stack, re-check the next
-PR's head, checks, bot signal, mergeability, durable proof, and gate block before
-merging it.
+`main`, not merely that GitHub reports a merge commit. Then delete the merged PR's gate
+directory (its evidence has served its purpose; history lives in git and the PR). Prune
+gate directories whose PR closed without merging. For a stack, re-check the next PR's
+head, checks, bot signal, mergeability, evidence, and gate entry before merging it.
+
+## Self-serve verification
+
+When a PR is otherwise merge-ready but its `build_db` gate is unmet — the line is
+missing, the evidence files are absent, or the entry was verified on a different head —
+run the verification yourself instead of routing a follow-up or asking the user. It is a
+script run, not implementation work, so it does not violate the no-code-edits rule:
+
+- Fetch the PR head and create a throwaway worktree at that exact SHA
+  (`git fetch origin <headRefOid> && git worktree add <scratch-dir> <headRefOid>`) —
+  never switch branches in the main checkout.
+- From that worktree, run `scripts/build_db_watch.py` (the `build-db` skill has the full
+  operating guide) as a background task with an absolute
+  `--input-dir <main-checkout>/reg_meta_build/input_data` — or the overlay root from the
+  repo merge-gate rules when the PR changes tracked `reg_meta_build/input_data/**` —
+  narrowing with `--providers` to the PR's affected providers, and
+  `--dbdiff-against <main-baseline-db>` when the PR claims content-neutrality or a small
+  inspected delta.
+- Copy the watcher log and dbdiff output into the PR's gate directory, update the
+  `build_db` line in `gate.json` (you are a trusted local writer), remove the scratch
+  worktree and DB, and proceed to merge on this or the next tick if everything else
+  still passes. A nonzero, unexplained dbdiff on a content-neutral claim is a finding:
+  set `status: blocked` with the diff summary as `blocker` and route THAT to the
+  pipeline.
+- Guardrails: one build at a time; skip self-serve while another open pipeline is
+  actively running build-affecting work (the existing lane guardrail), and let the tick
+  end rather than blocking on the \~20-min build — the background task carries over.
+
+Visual-gate gaps are NOT self-served: a missing `/reg-webapp-design-reviewer` result is
+pipeline-owned work — route a follow-up.
 
 If the merge creates a required build/release boundary, such as DB content that must be
 published before dependent work can proceed, invoke `/release minor`. Let the release
@@ -276,7 +307,7 @@ skill resolve package scope and run its own gates; stop if it requests input or 
 required bump is not a minor release.
 
 If a ready PR lacks a current-head Codex verdict, comment `@codex review` only when the
-gate block shows implementation is finished, then skip the merge until a later tick
+gate entry shows implementation is finished, then skip the merge until a later tick
 observes a settled signal.
 
 ## Pipeline Follow-ups
@@ -285,9 +316,11 @@ When a PR is close to merge-ready but blocked by mechanical pipeline handoff wor
 that work back to the owning `/pr-pipeline` session instead of only reporting the block.
 
 Send a pipeline follow-up when the PR is open, trusted, and blocked by a narrow
-pipeline-owned item such as local-only `/tmp` visual proof, missing PR-visible build-db
-proof, stale/incomplete merge-gate evidence, unchanged draft/ready state after finished
-work, or a current-head gate mismatch.
+pipeline-owned item such as a missing or incomplete gate entry after finished work,
+visual evidence absent from the gate directory, unchanged draft/ready state after
+finished work, or a current-head gate mismatch after new pushes. Do NOT route a
+follow-up for a missing/stale `build_db` gate — that is self-served (see Self-serve
+verification above).
 
 Use thread tools when exposed: search/list by PR number, issue number, branch, worktree,
 or recent title/history; send to the best matching existing pipeline thread; do not
@@ -295,7 +328,7 @@ create a new thread; if the match is ambiguous, report that and include the exac
 message text to send.
 
 The message must name the PR, issue, current head SHA, specific blocker, exact unblock
-steps, required PR-visible evidence, and
+steps, required gate-directory evidence, and
 `Do not merge; chief-of-staff owns merge execution.` Do not request implementation
 changes unless the evidence proves false. Avoid repeat messages for the same PR head and
 blocker unless the blocker/head changes or clear evidence shows the prior request was
@@ -310,10 +343,11 @@ The PR is blocked only because <specific blocker>. Please fix the handoff eviden
 without changing implementation code unless you discover the evidence is false.
 
 Do this on current head <sha>:
-1. <exact unblock step, e.g. post durable PR-visible visual proof with command, route,
+1. <exact unblock step, e.g. copy the design-reviewer report + screenshots into
+   ~/.local/state/registry-research-toolkit/merge-gates/pr-<pr>/, naming command, route,
    viewport set, inspected result, and head SHA>.
-2. <update the merge-gate line/body to point to that durable proof>.
-3. Re-read PR #<pr> and confirm status/head/evidence still match.
+2. <update gate.json's gate line and head to match>.
+3. Re-check PR #<pr>'s live head and confirm status/head/evidence still match.
 
 Do not merge; chief-of-staff owns merge execution.
 ```
@@ -391,7 +425,8 @@ failed.
 ## Guardrails
 
 - Do not fix pipeline-owned implementation or handoff evidence directly when a precise
-  follow-up to the owning pipeline session can unblock it.
+  follow-up to the owning pipeline session can unblock it — except the `build_db` gate,
+  which is self-served (see Self-serve verification).
 - Do not exceed the current active-work budget to keep agents busy.
 - Do not invent feature routes after a merge (see the Dev Preview merged-PR link rules).
 - Do not treat a clean hygiene script as proof that semantic relationships are current;

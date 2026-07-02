@@ -4,7 +4,9 @@ Pins the deterministic wake contract: the probe stages a candidate (and bootstra
 baseline only on an IDLE first run), a steady-state probe never writes the state file,
 `--commit <fingerprint>` promotes the observed candidate via an atomic rename bound to that
 fingerprint (idempotent on retry, refused when stale/mismatched), unchanged snapshots stay
-idle, lane drift wakes, and per-PR merge-gate changes name only the PR(s) that moved.
+idle, lane drift wakes, and per-PR merge-gate changes name only the PR(s) that moved. The
+merge-gate handoff lives in the local gate store (pr-<N>/gate.json), so gate tests write
+those files into a tmp gate dir and pass it via --gate-dir / the gate_root parameter.
 """
 
 from __future__ import annotations
@@ -27,6 +29,30 @@ sys.modules[_SPEC.name] = cpf
 _SPEC.loader.exec_module(cpf)
 
 HEAD = "abcdef1234567890"
+
+
+def _write_gate(gate_root: Path, pr: int, gate: dict) -> Path:
+    # Materialize a gate entry the way pr-pipeline/chief-of-staff would: gate_root/pr-<N>/
+    # gate.json. Returns the path so tests can mutate/corrupt it in place.
+    d = gate_root / f"pr-{pr}"
+    d.mkdir(parents=True, exist_ok=True)
+    path = d / "gate.json"
+    path.write_text(json.dumps(gate), encoding="utf-8")
+    return path
+
+
+def _gate(pr=956, *, status="ready-to-merge", head=HEAD, **extra) -> dict:
+    gate = {
+        "pr": pr,
+        "head": head,
+        "status": status,
+        "closes": [742],
+        "updated": "2026-07-01T00:00:00+00:00",
+        "gates": {"ci": "pass", "tests": "pass"},
+        "blocker": None,
+    }
+    gate.update(extra)
+    return gate
 
 
 def _snapshot(*, plan_exit=0, plan_report=None, prs=None, remote="l1"):
@@ -69,17 +95,12 @@ def _ready_pr(number=956, *, draft=False, head=HEAD, **overrides):
     return pr
 
 
-def test_parse_merge_gate_current_ready() -> None:
-    body = f"""
-    <!-- pr-pipeline-merge-gate -->
-    - status: ready-to-merge
-    - head: {HEAD}
-    <!-- /pr-pipeline-merge-gate -->
-    """
+def test_read_merge_gate_current_ready(tmp_path: Path) -> None:
+    _write_gate(tmp_path, 956, _gate(956, head=HEAD))
 
-    gate = cpf.parse_merge_gate(body, HEAD)
+    gate = cpf.read_merge_gate(tmp_path, 956, HEAD)
 
-    assert gate.pop("block_hash")
+    assert gate.pop("gate_hash")
     assert gate == {
         "state": "current-ready",
         "status": "ready-to-merge",
@@ -88,31 +109,65 @@ def test_parse_merge_gate_current_ready() -> None:
     }
 
 
-def test_parse_merge_gate_stale_ready() -> None:
-    body = """
-    <!-- pr-pipeline-merge-gate -->
-    - status: ready-to-merge
-    - head: old
-    <!-- /pr-pipeline-merge-gate -->
-    """
+def test_read_merge_gate_stale_ready(tmp_path: Path) -> None:
+    # ready-to-merge but the stored head doesn't match the live head → stale.
+    _write_gate(tmp_path, 956, _gate(956, head="old"))
 
-    assert cpf.parse_merge_gate(body, HEAD)["state"] == "stale-ready"
+    assert cpf.read_merge_gate(tmp_path, 956, HEAD)["state"] == "stale-ready"
 
 
-def test_merge_gate_hash_changes_on_evidence_edit() -> None:
-    body_a = f"""
-    <!-- pr-pipeline-merge-gate -->
-    - status: ready-to-merge
-    - head: {HEAD}
-    - ci: pass
-    <!-- /pr-pipeline-merge-gate -->
-    """
-    body_b = body_a.replace("- ci: pass", "- ci: pass; refreshed")
+def test_read_merge_gate_blocked_is_present(tmp_path: Path) -> None:
+    # Any non-ready status with a current head is `present`, not absent.
+    _write_gate(tmp_path, 956, _gate(956, status="blocked", blocker="codex_bot"))
 
-    assert (
-        cpf.parse_merge_gate(body_a, HEAD)["block_hash"]
-        != cpf.parse_merge_gate(body_b, HEAD)["block_hash"]
-    )
+    gate = cpf.read_merge_gate(tmp_path, 956, HEAD)
+    assert gate["state"] == "present"
+    assert gate["status"] == "blocked"
+
+
+def test_read_merge_gate_absent_when_no_file(tmp_path: Path) -> None:
+    gate = cpf.read_merge_gate(tmp_path, 956, HEAD)
+    assert gate == {
+        "state": "absent",
+        "status": None,
+        "head": None,
+        "current": False,
+        "gate_hash": None,
+    }
+
+
+def test_read_merge_gate_corrupt_json_is_absent(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Self-heal: a corrupt gate.json warns and reads as absent (not exit 2) so one bad file
+    # can't disable the whole idle gate.
+    (tmp_path / "pr-956").mkdir()
+    (tmp_path / "pr-956" / "gate.json").write_text("{", encoding="utf-8")
+
+    assert cpf.read_merge_gate(tmp_path, 956, HEAD)["state"] == "absent"
+    assert "corrupt merge-gate file" in capsys.readouterr().err
+
+
+def test_read_merge_gate_pr_mismatch_is_absent(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A gate.json whose `pr` field doesn't match its directory's PR number is treated as
+    # absent (a misplaced/stale file must not certify the wrong PR).
+    _write_gate(tmp_path, 956, _gate(957))  # dir says 956, body says 957
+
+    assert cpf.read_merge_gate(tmp_path, 956, HEAD)["state"] == "absent"
+    assert "unexpected" in capsys.readouterr().err
+
+
+def test_merge_gate_hash_changes_on_evidence_edit(tmp_path: Path) -> None:
+    # An edit to a gates line changes the raw bytes, so gate_hash (and thus the snapshot
+    # fingerprint) moves and wakes the chief.
+    path = _write_gate(tmp_path, 956, _gate(956, gates={"ci": "pass"}))
+    hash_a = cpf.read_merge_gate(tmp_path, 956, HEAD)["gate_hash"]
+    path.write_text(json.dumps(_gate(956, gates={"ci": "pass; refreshed"})), "utf-8")
+    hash_b = cpf.read_merge_gate(tmp_path, 956, HEAD)["gate_hash"]
+
+    assert hash_a and hash_b and hash_a != hash_b
 
 
 def test_checks_verdict_buckets() -> None:
@@ -293,14 +348,23 @@ def test_write_state_round_trips(tmp_path: Path) -> None:
     assert cpf.load_state(state) == snap
 
 
-def test_pr_fetch_cap_hit_is_setup_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_pr_fetch_cap_hit_is_setup_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.setattr(cpf, "gh_json", lambda _args: [{"number": 1}])
 
     with pytest.raises(SystemExit, match="open PR fetch hit"):
-        cpf.fetch_pr_summaries(1, "owner/repo")
+        cpf.fetch_pr_summaries(1, "owner/repo", tmp_path)
 
 
 # --- snapshot noise collapse ---------------------------------------------------
+
+
+@pytest.fixture
+def gates(tmp_path: Path) -> Path:
+    # A fresh empty gate store: PRs with no gate file read as gate-absent, matching the
+    # common "claimed PR, no gate yet" case. Tests that want a gate entry write one into it.
+    return tmp_path
 
 
 def _raw_pr(number=956, *, mergeable="MERGEABLE", checks, closes_body=True, **extra):
@@ -323,7 +387,7 @@ def _raw_pr(number=956, *, mergeable="MERGEABLE", checks, closes_body=True, **ex
     return raw
 
 
-def test_per_check_run_churn_does_not_change_entry() -> None:
+def test_per_check_run_churn_does_not_change_entry(gates: Path) -> None:
     # Two snapshots with the SAME overall verdict (pending) but different individual
     # check-run transitions — the entry must not move, so per-check churn never wakes.
     a = cpf.summarize_pr(
@@ -334,6 +398,7 @@ def test_per_check_run_churn_does_not_change_entry() -> None:
             ]
         ),
         "owner/repo",
+        gates,
     )
     b = cpf.summarize_pr(
         _raw_pr(
@@ -343,6 +408,7 @@ def test_per_check_run_churn_does_not_change_entry() -> None:
             ]
         ),
         "owner/repo",
+        gates,
     )
     assert a["checks"] == b["checks"] == "pending"
     assert a == b
@@ -357,51 +423,61 @@ def test_per_check_run_churn_does_not_change_entry() -> None:
             ]
         ),
         "owner/repo",
+        gates,
     )
     assert a["checks"] != passing["checks"]
     assert a != passing
 
 
-def test_mergeable_unknown_flap_is_invisible() -> None:
-    unknown = cpf.summarize_pr(_raw_pr(mergeable="UNKNOWN", checks=[]), "owner/repo")
-    ok = cpf.summarize_pr(_raw_pr(mergeable="MERGEABLE", checks=[]), "owner/repo")
+def test_mergeable_unknown_flap_is_invisible(gates: Path) -> None:
+    unknown = cpf.summarize_pr(
+        _raw_pr(mergeable="UNKNOWN", checks=[]), "owner/repo", gates
+    )
+    ok = cpf.summarize_pr(
+        _raw_pr(mergeable="MERGEABLE", checks=[]), "owner/repo", gates
+    )
     assert unknown == ok
     assert unknown["conflicting"] is False
 
 
-def test_conflicting_flip_changes_entry() -> None:
-    ok = cpf.summarize_pr(_raw_pr(mergeable="MERGEABLE", checks=[]), "owner/repo")
+def test_conflicting_flip_changes_entry(gates: Path) -> None:
+    ok = cpf.summarize_pr(
+        _raw_pr(mergeable="MERGEABLE", checks=[]), "owner/repo", gates
+    )
     conflicting = cpf.summarize_pr(
-        _raw_pr(mergeable="CONFLICTING", checks=[]), "owner/repo"
+        _raw_pr(mergeable="CONFLICTING", checks=[]), "owner/repo", gates
     )
     assert conflicting["conflicting"] is True
     assert ok != conflicting
 
 
-def _gate_raw_pr(*, mergeable, checks=None, status="present-only", **extra):
-    # A claimed PR that carries a merge-gate block (gate state != "absent") but is NOT
-    # current-ready, so summarize_pr does not fetch the Codex signal (no network).
-    body = (
-        f"Closes #742\n<!-- pr-pipeline-merge-gate -->\n"
-        f"- status: {status}\n- head: {HEAD}\n<!-- /pr-pipeline-merge-gate -->"
-    )
-    return _raw_pr(
-        mergeable=mergeable, checks=checks or [], closes_body=False, body=body, **extra
-    )
+def _gate_pr(
+    gate_root: Path, *, mergeable, checks=None, status="present-only", **extra
+):
+    # A claimed PR that carries a gate entry (gate state != "absent") but is NOT
+    # current-ready, so summarize_pr does not fetch the Codex signal (no network). The
+    # closing ref still comes from the body; the gate lives in the local store.
+    number = extra.get("number", 956)
+    _write_gate(gate_root, number, _gate(number, status=status, head=HEAD))
+    return _raw_pr(mergeable=mergeable, checks=checks or [], closes_body=True, **extra)
 
 
-def test_gate_pr_stores_verbatim_tristate_mergeability() -> None:
-    entry = cpf.summarize_pr(_gate_raw_pr(mergeable="UNKNOWN"), "owner/repo")
+def test_gate_pr_stores_verbatim_tristate_mergeability(gates: Path) -> None:
+    entry = cpf.summarize_pr(_gate_pr(gates, mergeable="UNKNOWN"), "owner/repo", gates)
     assert entry["gate"]["state"] != "absent"
     assert entry["mergeable"] == "UNKNOWN"
     assert "conflicting" not in entry  # gate PRs carry the tri-state, not the boolean
 
 
-def test_gate_pr_unknown_to_mergeable_wakes() -> None:
+def test_gate_pr_unknown_to_mergeable_wakes(gates: Path) -> None:
     # A tick may defer a merge while mergeability is UNKNOWN; it must wake when GitHub
     # resolves UNKNOWN→MERGEABLE. The verbatim tri-state makes that transition visible.
-    unknown = cpf.summarize_pr(_gate_raw_pr(mergeable="UNKNOWN"), "owner/repo")
-    resolved = cpf.summarize_pr(_gate_raw_pr(mergeable="MERGEABLE"), "owner/repo")
+    unknown = cpf.summarize_pr(
+        _gate_pr(gates, mergeable="UNKNOWN"), "owner/repo", gates
+    )
+    resolved = cpf.summarize_pr(
+        _gate_pr(gates, mergeable="MERGEABLE"), "owner/repo", gates
+    )
 
     assert unknown != resolved  # entry moved → the snapshot fingerprint changes
     before = _snapshot(prs=[unknown])
@@ -412,9 +488,9 @@ def test_gate_pr_unknown_to_mergeable_wakes() -> None:
 # --- unclaimed PRs -------------------------------------------------------------
 
 
-def test_unclaimed_pr_is_minimal_entry() -> None:
+def test_unclaimed_pr_is_minimal_entry(gates: Path) -> None:
     entry = cpf.summarize_pr(
-        _raw_pr(number=999, checks=[], closes_body=False), "owner/repo"
+        _raw_pr(number=999, checks=[], closes_body=False), "owner/repo", gates
     )
     assert entry == {"number": 999, "claimed": False, "draft": False}
     # Deliberately no head SHA, so routine pushes to it don't wake.
@@ -428,7 +504,7 @@ def test_new_unclaimed_pr_wakes_once_but_push_does_not() -> None:
 
     # Appearance wakes with the unclaimed-PR named reason (not the generic one).
     assert cpf.actionable_reasons(with_pr, previous) == [
-        "unclaimed open PR (no Closes, no gate block): #999"
+        "unclaimed open PR (no Closes, no gate entry): #999"
     ]
     # A push to it (no head SHA in the entry) leaves the entry unchanged → idle.
     same = _snapshot(prs=[dict(unclaimed)])
@@ -442,7 +518,7 @@ def test_first_run_unclaimed_pr_wakes_with_named_reason() -> None:
     snap = _snapshot(prs=[{"number": 999, "claimed": False, "draft": False}])
 
     assert cpf.actionable_reasons(snap, None) == [
-        "unclaimed open PR (no Closes, no gate block): #999"
+        "unclaimed open PR (no Closes, no gate entry): #999"
     ]
 
 
@@ -452,14 +528,14 @@ def test_steady_state_new_unclaimed_pr_named_not_generic() -> None:
 
     reasons = cpf.actionable_reasons(snap, previous)
 
-    assert reasons == ["unclaimed open PR (no Closes, no gate block): #999"]
+    assert reasons == ["unclaimed open PR (no Closes, no gate entry): #999"]
     assert "open PR state changed" not in reasons
 
 
 # --- latestReviews -------------------------------------------------------------
 
 
-def test_latest_reviews_folded_into_issue_closing_pr() -> None:
+def test_latest_reviews_folded_into_issue_closing_pr(gates: Path) -> None:
     raw = _raw_pr(
         checks=[],
         latestReviews=[
@@ -469,7 +545,7 @@ def test_latest_reviews_folded_into_issue_closing_pr() -> None:
             },
         ],
     )
-    entry = cpf.summarize_pr(raw, "owner/repo")
+    entry = cpf.summarize_pr(raw, "owner/repo", gates)
     assert entry["reviews"] == [
         {"author": "chatgpt-codex-connector", "submitted_at": "2026-07-01T00:00:00Z"}
     ]
@@ -533,7 +609,7 @@ def test_draft_ready_gate_wakes_on_first_observation() -> None:
     snap = _snapshot(prs=[_ready_pr(draft=True)])
 
     assert cpf.actionable_reasons(snap, None) == [
-        "draft PR has ready merge-gate block: #956"
+        "draft PR has ready merge-gate entry: #956"
     ]
 
 
@@ -624,7 +700,7 @@ def test_first_snapshot_behind_origin_wakes() -> None:
 
 def _probe_env(monkeypatch: pytest.MonkeyPatch, snap: dict) -> None:
     monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap)
 
 
 def _no_collect(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -690,7 +766,7 @@ def test_first_run_with_unclaimed_pr_wakes_and_does_not_bootstrap_idle(
     out = capsys.readouterr()
 
     assert rc == cpf.WAKE_EXIT
-    assert "unclaimed open PR (no Closes, no gate block): #999" in out.out
+    assert "unclaimed open PR (no Closes, no gate entry): #999" in out.out
     assert not state.exists()  # NOT idle-bootstrapped
     assert "bootstrap" not in out.err
 
@@ -823,7 +899,7 @@ def test_recurrence_after_idle_drift_still_wakes(
 
     # Baseline established at a benign idle fingerprint (idle bootstrap).
     base = _snapshot()  # remote == local_head, plan fresh, no PRs → idle
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: base)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: base)
     assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
     capsys.readouterr()
 
@@ -832,7 +908,7 @@ def test_recurrence_after_idle_drift_still_wakes(
         plan_exit=1,
         plan_report="projection delta:\nno status changes\nlanes: stale (re-rank)",
     )
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap_a)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap_a)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
@@ -847,13 +923,13 @@ def test_recurrence_after_idle_drift_still_wakes(
     # Idle drift to reason-free B (lanes repaired: plan fresh) → baseline advances to B.
     snap_b = _snapshot()  # fresh plan, no PRs → idle; fingerprint differs from A
     assert snap_b["fingerprint"] != fp_a
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap_b)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap_b)
     assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
     assert cpf.load_state(state)["fingerprint"] == snap_b["fingerprint"]
 
     # Wake condition recurs: live state returns to EXACTLY A. Because the baseline is now B,
     # the fingerprint-equality early return does not fire, so the recurrence wakes.
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap_a)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap_a)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
@@ -968,7 +1044,7 @@ def test_mid_tick_event_is_caught(
 
     # Probe 1: state moved (remote changed) → wake + stage candidate.
     probed = _snapshot(remote="new")
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: probed)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: probed)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
@@ -978,7 +1054,7 @@ def test_mid_tick_event_is_caught(
     # mid-window snapshot. If --commit ever collected, the committed baseline would be this
     # one; it must instead be exactly what probe 1 observed.
     mid_window = _snapshot(remote="mid-window")
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: mid_window)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: mid_window)
     assert (
         cpf.main(["--no-canonical-check", "--commit", fp, "--state-file", str(state)])
         == 0
@@ -988,7 +1064,7 @@ def test_mid_tick_event_is_caught(
 
     # Re-probe: the mid-window event compares against the just-committed baseline and
     # wakes; it was not burned.
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: mid_window)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: mid_window)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )

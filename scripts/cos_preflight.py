@@ -57,7 +57,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
-import re
+import os
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -68,15 +68,9 @@ from typing import Any
 WAKE_EXIT = 10
 # Bump whenever the snapshot dict shape changes; load_state treats a mismatch as first-run
 # so a schema change re-baselines cleanly instead of comparing incompatible shapes.
-SNAPSHOT_VERSION = 2
+SNAPSHOT_VERSION = 3
 DEFAULT_CANONICAL = Path("/Users/adam/Code/registry-research-toolkit")
 PASSING_CONCLUSIONS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
-MERGE_GATE_START_RE = re.compile(
-    r"<!--\s*pr-pipeline-merge-gate\s*-->(.*?)(?:<!--\s*/pr-pipeline-merge-gate\s*-->|$)",
-    re.IGNORECASE | re.DOTALL,
-)
-GATE_FIELD_RE = re.compile(r"^\s*[-*]?\s*(?P<key>status|head):\s*(?P<value>\S+)",
-                           re.IGNORECASE | re.MULTILINE)  # fmt: skip
 NO_STATUS_CHANGES = "projection delta:\nno status changes"
 
 _PLAN_SPEC = importlib.util.spec_from_file_location(
@@ -177,23 +171,62 @@ def run_plan_tick(epic: int) -> dict[str, Any]:
     }
 
 
-def parse_merge_gate(body: str | None, head_oid: str) -> dict[str, str | bool | None]:
-    match = MERGE_GATE_START_RE.search(body or "")
-    if not match:
-        return {
-            "state": "absent",
-            "status": None,
-            "head": None,
-            "current": False,
-            "block_hash": None,
-        }
-    block_hash = hashlib.sha256(match.group(0).encode()).hexdigest()
-    fields = {
-        m.group("key").lower(): m.group("value")
-        for m in GATE_FIELD_RE.finditer(match.group(1))
+def default_gate_root() -> Path:
+    # Local gate store root: $XDG_STATE_HOME/registry-research-toolkit/merge-gates, or the
+    # XDG default ~/.local/state/... when XDG_STATE_HOME is unset. All pipelines run on this
+    # machine, so a local file is durable across worktree deletion / git clean / reboots.
+    xdg = os.environ.get("XDG_STATE_HOME")
+    base = Path(xdg) if xdg else Path.home() / ".local" / "state"
+    return base / "registry-research-toolkit" / "merge-gates"
+
+
+def read_merge_gate(
+    gate_root: Path, pr_number: int, head_oid: str
+) -> dict[str, str | bool | None]:
+    # The merge-gate handoff lives in the local gate store (pr-<N>/gate.json), not the PR
+    # body. Returns the same shape summarize_pr consumes; gate_hash fingerprints the raw
+    # bytes so an evidence/status edit changes it and wakes the chief.
+    absent: dict[str, str | bool | None] = {
+        "state": "absent",
+        "status": None,
+        "head": None,
+        "current": False,
+        "gate_hash": None,
     }
-    status = fields.get("status")
-    head = fields.get("head")
+    path = gate_root / f"pr-{pr_number}" / "gate.json"
+    try:
+        raw_bytes = path.read_bytes()
+    except FileNotFoundError:
+        return absent
+    except OSError as exc:
+        print(
+            f"warning: ignoring unreadable merge-gate file {path} ({exc}); "
+            "treating as absent",
+            file=sys.stderr,
+        )
+        return absent
+    try:
+        gate = json.loads(raw_bytes)
+    except json.JSONDecodeError as exc:
+        # Self-heal (matches load_state): a corrupt gate file warns and reads as absent
+        # rather than exit 2, so one bad file can't disable the whole idle gate.
+        print(
+            f"warning: ignoring corrupt merge-gate file {path} ({exc}); "
+            "treating as absent",
+            file=sys.stderr,
+        )
+        return absent
+    if not isinstance(gate, dict) or gate.get("pr") != pr_number:
+        print(
+            f"warning: ignoring merge-gate file {path} whose shape/pr is unexpected "
+            f"(pr={gate.get('pr') if isinstance(gate, dict) else '?'!r}, "
+            f"expected {pr_number}); treating as absent",
+            file=sys.stderr,
+        )
+        return absent
+    gate_hash = hashlib.sha256(raw_bytes).hexdigest()
+    status = gate.get("status")
+    head = gate.get("head")
     current = bool(head and head == head_oid)
     if status == "ready-to-merge" and current:
         state = "current-ready"
@@ -206,7 +239,7 @@ def parse_merge_gate(body: str | None, head_oid: str) -> dict[str, str | bool | 
         "status": status,
         "head": head,
         "current": current,
-        "block_hash": block_hash,
+        "gate_hash": gate_hash,
     }
 
 
@@ -269,14 +302,18 @@ def normalize_reviews(reviews: list[dict[str, Any]]) -> list[dict[str, str | Non
     return sorted(out, key=lambda r: (r["author"] or "", r["submitted_at"] or ""))
 
 
-def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any]:
+def summarize_pr(
+    raw: dict[str, Any], current_repo: str, gate_root: Path
+) -> dict[str, Any]:
+    # The closing refs still come from the PR body (only the GATE moved to the local
+    # store); the gate entry is now read from gate_root/pr-<N>/gate.json.
     body = raw.get("body") or ""
     closing = {ref["number"] for ref in raw.get("closingIssuesReferences") or []}
     closing.update(_plan_sequence.closing_issue_numbers_from_body(body, current_repo))
-    gate = parse_merge_gate(body, raw["headRefOid"])
+    gate = read_merge_gate(gate_root, raw["number"], raw["headRefOid"])
 
     if not closing and gate["state"] == "absent":
-        # An unclaimed PR (no closing refs, no gate block): the chief still needs to know
+        # An unclaimed PR (no closing refs, no gate entry): the chief still needs to know
         # it exists so it can fix the missing `Closes #N` claim drift. Include it
         # MINIMALLY — number + isDraft only. Deliberately NOT the head SHA, so routine
         # pushes don't wake; only appearance / disappearance / draft-flip does.
@@ -305,13 +342,13 @@ def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any]:
         "codex_signal": signal,
     }
     if gate["state"] != "absent":
-        # PR carries a merge-gate block, so its mergeability IS load-bearing: a tick may
-        # have deferred the merge because mergeability was still UNKNOWN, and it must wake
-        # when GitHub resolves UNKNOWN→MERGEABLE. Store the verbatim tri-state. Flapping on
-        # gate PRs is rare and co-occurs with the remote_main wakes that recompute triggers.
+        # PR carries a gate entry, so its mergeability IS load-bearing: a tick may have
+        # deferred the merge because mergeability was still UNKNOWN, and it must wake when
+        # GitHub resolves UNKNOWN→MERGEABLE. Store the verbatim tri-state. Flapping on gate
+        # PRs is rare and co-occurs with the remote_main wakes that recompute triggers.
         summary["mergeable"] = raw.get("mergeable")
     else:
-        # No gate block: mergeability isn't load-bearing, so keep only the stable
+        # No gate entry: mergeability isn't load-bearing, so keep only the stable
         # CONFLICTING signal — GitHub's transient UNKNOWN↔MERGEABLE flapping would
         # otherwise wake the chief on every recompute.
         summary["conflicting"] = raw.get("mergeable") == "CONFLICTING"
@@ -325,7 +362,9 @@ def summarize_pr(raw: dict[str, Any], current_repo: str) -> dict[str, Any]:
     return summary
 
 
-def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
+def fetch_pr_summaries(
+    limit: int, current_repo: str, gate_root: Path
+) -> list[dict[str, Any]]:
     prs = gh_json(
         [
             "pr",
@@ -343,7 +382,7 @@ def fetch_pr_summaries(limit: int, current_repo: str) -> list[dict[str, Any]]:
             f"open PR fetch hit --pr-limit={limit}; increase the cap or paginate before "
             "using cos-preflight for idle gating"
         )
-    summaries = [summarize_pr(pr, current_repo) for pr in prs]
+    summaries = [summarize_pr(pr, current_repo, gate_root) for pr in prs]
     return sorted(summaries, key=lambda s: s["number"])
 
 
@@ -402,7 +441,7 @@ def actionable_reasons(
         if pr["number"] not in changed:
             continue
         if not pr.get("claimed", True):
-            # Unclaimed PR (no Closes ref, no gate block): its own named reason, so a
+            # Unclaimed PR (no Closes ref, no gate entry): its own named reason, so a
             # first-run probe (where `changed` covers every PR) wakes for pre-existing
             # claim drift instead of the generic reason silently absorbing it into the
             # bootstrap baseline. The generic reason is previous-gated, so it can't.
@@ -422,12 +461,12 @@ def actionable_reasons(
     if ready:
         reasons.append(f"ready merge-gate PR changed: {', '.join(ready)}")
     if draft_ready:
-        reasons.append(f"draft PR has ready merge-gate block: {', '.join(draft_ready)}")
+        reasons.append(f"draft PR has ready merge-gate entry: {', '.join(draft_ready)}")
     if stale:
         reasons.append(f"stale merge-gate PR changed: {', '.join(stale)}")
     if unclaimed:
         reasons.append(
-            f"unclaimed open PR (no Closes, no gate block): {', '.join(unclaimed)}"
+            f"unclaimed open PR (no Closes, no gate entry): {', '.join(unclaimed)}"
         )
 
     if previous:
@@ -548,7 +587,7 @@ def promote_candidate(state_file: Path, fingerprint: str) -> tuple[str, bool]:
     )
 
 
-def collect_snapshot(epic: int, pr_limit: int) -> dict[str, Any]:
+def collect_snapshot(epic: int, pr_limit: int, gate_root: Path) -> dict[str, Any]:
     current_repo = repo_name_with_owner()
     snapshot = {
         "version": SNAPSHOT_VERSION,
@@ -556,7 +595,7 @@ def collect_snapshot(epic: int, pr_limit: int) -> dict[str, Any]:
         "local_head": local_head_sha(),
         "remote_main": remote_main_sha(),
         "plan_tick": run_plan_tick(epic),
-        "prs": fetch_pr_summaries(pr_limit, current_repo),
+        "prs": fetch_pr_summaries(pr_limit, current_repo, gate_root),
     }
     snapshot["fingerprint"] = snapshot_fingerprint(snapshot)
     return snapshot
@@ -567,6 +606,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--epic", type=int, default=328)
     ap.add_argument("--pr-limit", type=int, default=DEFAULT_PR_FETCH_CAP)
     ap.add_argument("--state-file", type=Path, default=default_state_file())
+    ap.add_argument(
+        "--gate-dir",
+        type=Path,
+        default=default_gate_root(),
+        help="local merge-gate store root (pr-<N>/gate.json lives under it); overrides "
+        "the XDG-derived default, for tests and non-default setups",
+    )
     ap.add_argument(
         "--canonical",
         type=Path,
@@ -603,7 +649,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         # Probe: read the committed baseline, snapshot fresh, compare, stage the candidate.
         previous = load_state(args.state_file)
-        snapshot = collect_snapshot(args.epic, args.pr_limit)
+        snapshot = collect_snapshot(args.epic, args.pr_limit, args.gate_dir)
         reasons = actionable_reasons(snapshot, previous)
         # Always stage the candidate — including on the auto-advance paths below — so a
         # later `--commit <fp>` has the observed snapshot to promote; the fingerprint

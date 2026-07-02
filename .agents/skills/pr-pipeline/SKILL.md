@@ -126,7 +126,8 @@ Run focused verification as the work evolves:
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` or
   `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke`. Iteration screenshots do not
   satisfy the formal visual gate; that gate runs later as `reg-webapp-design-reviewer`
-  in a clean subagent and includes screenshot/render inspection plus durable PR proof.
+  in a clean subagent and includes screenshot/render inspection plus durable proof
+  copied into the local merge-gate store.
 - Build-affecting DB changes: fast tests first; real `reg-meta-build build-db` is a
   final gate on the truly final head.
 
@@ -169,8 +170,9 @@ Run focused verification as the work evolves:
      `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>`, or an
      already-started preview URL, then include screenshot proof in the structured
      report. Do not set the merge-gate status to `ready-to-merge` until that reviewer
-     result is complete and PR-visible. Headless `bun` checks or separate manual
-     screenshots do not substitute for the reviewer pass.
+     result is complete and its report + screenshots are copied into the PR's merge-gate
+     directory (see Ready And Merge-Gate Handoff). Headless `bun` checks or separate
+     manual screenshots do not substitute for the reviewer pass.
    - When the rendered change depends on DB content not yet released (e.g. a
      build-curation PR earlier in the lane), point the dev server at a scratch
      `build-db` via
@@ -207,7 +209,7 @@ gh pr ready <pr>
 ```
 
 To mark a PR ready for `chief-of-staff` automerge, satisfy the repo gate and record
-durable evidence in the PR body:
+durable evidence in the local merge-gate store:
 
 - independent review converged;
 - CI green;
@@ -225,42 +227,53 @@ durable evidence in the PR body:
 - real-data validation when build pipeline or DB content changed;
 - visual verification when rendered output changed: complete the clean-subagent
   `reg-webapp-design-reviewer` pass, including screenshot/render inspection on the
-  assembled tree and durable PR-visible proof;
+  assembled tree and its report + screenshots copied into the PR's merge-gate directory;
 - stale-head check before recording the handoff; `chief-of-staff` re-checks it
   immediately before and after merge.
 
-After the gate is complete, update the PR body while preserving the closing keywords and
-add or replace this block:
+After the gate is complete, write the handoff into the **local merge-gate store** (spec
+in AGENTS.md "PR merge gate"): create
+`~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/` (`$XDG_STATE_HOME` root
+if set), copy the evidence files in (design-reviewer report + screenshots, `build-db`
+watcher log, dbdiff output — whatever the PR's gates required), and write `gate.json`:
 
-```md
-<!-- pr-pipeline-merge-gate -->
-**PR Pipeline Merge Gate**
-- status: ready-to-merge
-- head: <sha>
-- closes: #<issue>[, #<issue>]
-- independent-review: pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed
-- codex-bot: <clean|exhausted>; `scripts/pr_review_status.py <pr> --once`
-- ci: pass; `gh pr checks <pr>`
-- tests: <commands run>
-- docs: <updated / not required>
-- visual: <not required / pass; reg-webapp-design-reviewer result with durable PR-visible screenshot proof>
-- build-db: <not required / pass with durable PR-visible proof or dbdiff summary>
-- stack: <none / after #pr / before #pr>
-<!-- /pr-pipeline-merge-gate -->
+```json
+{
+  "pr": 989,
+  "head": "<full head sha>",
+  "status": "ready-to-merge",
+  "closes": [989],
+  "updated": "<ISO-8601>",
+  "gates": {
+    "independent_review": "pass; <review source>; risk=<small|larger>; why sufficient; findings fixed/dismissed",
+    "codex_bot": "<clean|exhausted>; scripts/pr_review_status.py <pr> --once",
+    "ci": "pass; gh pr checks <pr>",
+    "tests": "<commands run>",
+    "docs": "<updated / not required>",
+    "visual": "<not required / pass; see design-review.md + screenshots in this dir>",
+    "build_db": "<not required / pass; see build-db.log, dbdiff.txt in this dir>",
+    "stack": "<none / after #pr / before #pr>"
+  },
+  "blocker": null
+}
 ```
 
-The current-head `status: ready-to-merge` block is the single chief-of-staff handoff
-indicator. Do not write it if any gate is missing, pending, stale, or only reported in
-the local chat transcript. Use `status: blocked` with the missing item, or leave the
-block incomplete and report what chief-of-staff must wait for. A later push makes the
-block stale; rerun the gate on the new head and refresh the block.
+The current-head `status: ready-to-merge` gate entry is the single chief-of-staff
+handoff indicator — the PR body carries only the description and closing keywords, and
+evidence is NEVER posted to GitHub (no attachments, no evidence branches, no committed
+screenshots). Do not write `ready-to-merge` if any gate is missing, pending, stale, or
+only reported in the local chat transcript — write `status: blocked` with `blocker`
+naming the missing item, and report what chief-of-staff must wait for. A later push
+makes the entry stale (its `head` no longer matches); rerun the gate on the new head and
+refresh it.
 
-Proof must survive a later chief-of-staff tick. For rendered changes, attach or comment
-the `reg-webapp-design-reviewer` result with screenshot evidence on the PR; a local
-`/tmp/reg-webapp-shots/` path is useful in the authoring thread but is not durable merge
-evidence. For build-db, record the timestamped log path only if it is accessible to the
-future merge runner, otherwise summarize the completed command, validation result, and
-dbdiff in the PR body or a PR comment.
+Evidence must live IN the gate directory (copied, not symlinked): scratch and `/tmp`
+paths the watcher or reviewer wrote do not survive until a later chief-of-staff tick.
+For rendered changes, copy the `reg-webapp-design-reviewer` report and its screenshots
+into the gate directory; a local `/tmp/reg-webapp-shots/` path is useful in the
+authoring thread but is not durable merge evidence. For build-db, copy the watcher's
+timestamped log and any dbdiff output into the gate directory before removing the
+scratch DB.
 
 Run the real `build-db` last and once for build-affecting work, using the `build-db`
 skill / `scripts/build_db_watch.py` so the run has a timestamped log, sparse progress,
@@ -291,7 +304,9 @@ uv run --no-project python scripts/build_db_watch.py \
   --input-dir "$input_dir"
 ```
 
-Clean scratch outputs afterward:
+Copy the watcher's timestamped log and any dbdiff output into the PR's merge-gate
+directory (they are the `build_db` gate's evidence), then clean scratch outputs
+afterward:
 
 ```sh
 rm -rf "$db_dir"
@@ -300,7 +315,7 @@ rm -rf "$db_dir"
 ## Closeout
 
 Report what changed, PR number/status, verification commands, review findings fixed or
-dismissed, docs/test decisions, merge-gate block status, and any follow-up issues worth
+dismissed, docs/test decisions, merge-gate entry status, and any follow-up issues worth
 filing. For multi-PR pipelines, report the intended merge order, but leave execution to
 `chief-of-staff`. Default to fixing doc drift inline — it's part of this PR; record a
 follow-up only when the fix needs its own scoped change, never as an escape hatch for a
