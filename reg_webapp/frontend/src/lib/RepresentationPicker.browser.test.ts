@@ -293,6 +293,45 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     await expect.element(page.getByText("+1 column")).toBeVisible();
   });
 
+  it("freezes staging controls while Apply is pending", async () => {
+    let finishApply: () => void = () => {
+      throw new Error("apply did not start");
+    };
+    const applyStarted = new Promise<void>((started) => {
+      const onapply = vi.fn().mockImplementation(
+        () =>
+          new Promise<void>((resolve) => {
+            finishApply = resolve;
+            started();
+          }),
+      );
+      render(RepresentationPicker, {
+        bands: [multiAxisBand()],
+        axes: AXES,
+        ...PROPS,
+        onapply,
+      });
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await applyStarted;
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /DIN2/ }))
+      .toBeDisabled();
+    await expect
+      .element(page.getByRole("checkbox", { name: /Select all columns of/ }))
+      .toBeDisabled();
+    await expect
+      .element(page.getByRole("button", { name: "Reset" }))
+      .toBeDisabled();
+
+    finishApply();
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+  });
+
   it("does not show Reset for a period-only staged change", async () => {
     const onapply = vi.fn();
     const band = multiAxisBand();

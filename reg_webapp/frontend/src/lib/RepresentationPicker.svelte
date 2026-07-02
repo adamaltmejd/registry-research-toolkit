@@ -341,7 +341,7 @@ function setRowDesired(
 
 /** Toggle one column's desired project membership. */
 function toggleRow(band: PickerBand, row: PickerRepresentation): void {
-  if (!rowSelectable(row)) {
+  if (applying || !rowSelectable(row)) {
     return;
   }
   const adds = new Set(stagedAddKeys);
@@ -364,6 +364,9 @@ function someOfBandSelected(band: PickerBand): boolean {
 /** Select or clear every column of one variable in a single move (the per-variable
  * "select all columns of <identity>" affordance). */
 function toggleBand(band: PickerBand): void {
+  if (applying) {
+    return;
+  }
   const adds = new Set(stagedAddKeys);
   const removes = new Set(stagedRemoveKeys);
   const select = !allOfBandSelected(band);
@@ -407,6 +410,9 @@ const someSelected = $derived(
 /** Select or clear every VISIBLE column in one move — leaving any hidden-but-selected
  * row's selection untouched (clear removes only the visible keys). */
 function toggleAll(): void {
+  if (applying) {
+    return;
+  }
   const adds = new Set(stagedAddKeys);
   const removes = new Set(stagedRemoveKeys);
   for (const { band, row } of allVisibleRows) {
@@ -929,6 +935,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
             checked={allSelected}
             indeterminate={someSelected && !allSelected}
             aria-label="Select all columns"
+            disabled={applying}
             onchange={toggleAll}
           />
           <span>Select all columns</span>
@@ -991,7 +998,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
               <input
                 type="checkbox"
                 class="cbox"
-                disabled={!rowSelectable(row)}
+                disabled={applying || !rowSelectable(row)}
                 checked={checked}
                 onchange={() => toggleRow(band, row)}
               />
@@ -1170,6 +1177,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                   indeterminate={someOfBandSelected(band) &&
                     !allOfBandSelected(band)}
                   aria-label={`Select all columns of ${v.primary.text}`}
+                  disabled={applying}
                   onchange={() => toggleBand(band)}
                 />
                 <!-- The title + description share ONE wrapping line: when they fit they
@@ -1230,7 +1238,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                 <input
                   type="checkbox"
                   class="cbox"
-                  disabled={!rowSelectable(row)}
+                  disabled={applying || !rowSelectable(row)}
                   checked={checked}
                   onchange={() => toggleRow(band, row)}
                 />
