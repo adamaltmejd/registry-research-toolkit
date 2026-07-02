@@ -351,9 +351,9 @@ $effect(() => {
       <!-- #516 umbrella folding: e.g. group:sun renders as ONE group row
            expanding to its dimension members; #771 one-dimensional succession
            families render as stable family rows; remaining ungrouped
-           classifications stay leaves. Children are terminal editions only (the
-           backend drops superseded ones and family terminals) — superseded
-           editions are reached via a leaf/family edition-chain panel. -->
+           classifications stay leaves. The backend drops superseded editions
+           and every edition represented by a family row — those editions are
+           reached via a leaf/family edition-chain panel. -->
       {@const clsRows = foldGroupedRows(node.children, node.groups)}
       {@const familyNodes = node.families ?? []}
       <h2>{nodeLabel(node)}</h2>

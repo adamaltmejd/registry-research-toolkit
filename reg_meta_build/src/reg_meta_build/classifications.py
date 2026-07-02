@@ -20,6 +20,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from reg_meta.db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from .concept_groups import classification_slug_stem
@@ -960,7 +961,11 @@ def apply_classification_conformance_gate(conn: sqlite3.Connection) -> int:
     return severed
 
 
-def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
+def derive_supersedes_from_edges(
+    conn: sqlite3.Connection,
+    *,
+    as_of_year: int = CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
+) -> int:
     """Project `classification.supersedes_id` from `classification_replaced_by`.
 
     `classification_replaced_by` is the single canonical succession surface — fed
@@ -979,8 +984,11 @@ def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
     materialized and AFTER `populate_slugs` (the join needs non-NULL slugs), and
     BEFORE `link_value_set_classifications` — its `_chain_root` recursive CTE
     walks `supersedes_id`. Resets `supersedes_id` to NULL first so the projection
-    is a pure function of the edge table (no stale carry-over). Returns the count
-    of classifications that gained a non-NULL `supersedes_id`.
+    is a pure function of the active edge table (no stale carry-over). Future-dated
+    edges remain visible in `classification_replaced_by`, but do not activate this
+    currentness pointer until the DB release policy's as-of year reaches the edge's
+    `effective_year`. Returns the count of classifications that gained a non-NULL
+    `supersedes_id`.
     """
     conn.execute("UPDATE classification SET supersedes_id = NULL")
     cur = conn.execute(
@@ -991,6 +999,7 @@ def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
             FROM classification_replaced_by e
             JOIN classification p ON p.slug = e.predecessor_slug
             WHERE e.successor_slug = c.slug
+              AND (e.effective_year IS NULL OR e.effective_year <= ?)
             ORDER BY e.predecessor_slug
             LIMIT 1
         )
@@ -998,11 +1007,13 @@ def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
           AND EXISTS (
               SELECT 1 FROM classification_replaced_by e
               WHERE e.successor_slug = c.slug
+                AND (e.effective_year IS NULL OR e.effective_year <= ?)
           )
-        """
+        """,
+        (as_of_year, as_of_year),
     )
     n_set = cur.rowcount if cur.rowcount is not None and cur.rowcount >= 0 else 0
-    _progress(f"  {n_set:,} classification supersedes_id derived from edges")
+    _progress(f"  {n_set:,} classification supersedes_id derived from active edges")
     return n_set
 
 

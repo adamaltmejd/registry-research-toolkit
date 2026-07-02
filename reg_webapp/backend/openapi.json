@@ -446,7 +446,7 @@
       },
       "ClassificationEdition": {
         "additionalProperties": false,
-        "description": "One edition in a classification succession chain (#571), as returned by\n`Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge\nendpoint), this is a fully-hydrated node in the WHOLE chain \u2014 the webapp\nbrowse panel renders the complete edition timeline from a list of these.\n\n`slug` is the load-bearing identity (succession references the exact edition\nslug). Every chain edition is a LIVE `classification` row \u2014\n`reg_meta_build`'s validator (`validate.py`, the `classification_replaced_by`\ncheck) fails the build if any succession edge references a slug with no live\nrow, so a \"dead edition\" can't exist in a validated DB. `fqid` is None only on\na *malformed* slug (a lower-level slug-grammar concern, also build-prevented;\n`_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes\nfrom the live row. `effective_year` is the year on the\n`classification_replaced_by` edge that names this edition as `predecessor_slug`\n\u2014 i.e. the year this edition was superseded by its successor (None for the\nterminal, which has no outbound edge). `is_current` marks the\nterminal (head) edition \u2014 the one with no outbound successor; `is_self` marks\nthe edition the caller queried (resolved to its canonical live slug when the\nquery was a `same_as` alias).",
+        "description": "One edition in a classification succession chain (#571), as returned by\n`Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge\nendpoint), this is a fully-hydrated node in the WHOLE chain \u2014 the webapp\nbrowse panel renders the complete edition timeline from a list of these.\n\n`slug` is the load-bearing identity (succession references the exact edition\nslug). Every chain edition is a LIVE `classification` row \u2014\n`reg_meta_build`'s validator (`validate.py`, the `classification_replaced_by`\ncheck) fails the build if any succession edge references a slug with no live\nrow, so a \"dead edition\" can't exist in a validated DB. `fqid` is None only on\na *malformed* slug (a lower-level slug-grammar concern, also build-prevented;\n`_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes\nfrom the live row. `effective_year` is the year on the outbound\n`classification_replaced_by` edge by which this edition is superseded; it can\nbe future-dated. `is_current` marks started editions with no active outbound\nsuccessor as of the DB's classification succession policy year; `is_self` marks\nthe edition the caller queried (resolved to its canonical live slug when the\nquery was a `same_as` alias).",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -457,7 +457,7 @@
                 "type": "null"
               }
             ],
-            "description": "The year on the succession edge naming this edition as the predecessor \u2014 i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.",
+            "description": "The year on the succession edge naming this edition as the predecessor \u2014 i.e. the year it is superseded by its successor. Future successor edges can coexist with `is_current=True` before their policy year.",
             "title": "Effective Year"
           },
           "fqid": {
@@ -473,7 +473,7 @@
             "title": "Fqid"
           },
           "is_current": {
-            "description": "True for a terminal (current) edition \u2014 no outbound successor. A 1-to-many split root's chain has MULTIPLE such editions (one per branch tip); a linear chain has exactly one.",
+            "description": "True for a started edition with no active outbound successor as of the DB's classification succession policy year. A 1-to-many split root's chain can have MULTIPLE such editions (one per active branch tip).",
             "title": "Is Current",
             "type": "boolean"
           },

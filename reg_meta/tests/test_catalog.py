@@ -1205,11 +1205,17 @@ class TestEdgeAccessors:
 
     @staticmethod
     def _seed_classification(
-        conn: sqlite3.Connection, *, slug: str, short_name: str, name: str
+        conn: sqlite3.Connection,
+        *,
+        slug: str,
+        short_name: str,
+        name: str,
+        valid_from: int | None = None,
     ) -> None:
         conn.execute(
-            "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
-            (short_name, name, slug),
+            "INSERT INTO classification (short_name, name, slug, valid_from) "
+            "VALUES (?, ?, ?, ?)",
+            (short_name, name, slug, valid_from),
         )
         conn.commit()
 
@@ -1283,6 +1289,41 @@ class TestEdgeAccessors:
         assert current.slug == "sun2020"
         assert sum(e.is_current for e in chain) == 1
         assert sum(e.is_self for e in chain) == 1
+
+    def test_classification_chain_future_successor_waits_for_as_of_year(self) -> None:
+        conn = build_slugged_db(classification=None)
+        self._seed_classification(
+            conn,
+            slug="icd-10-se",
+            short_name="ICD-10-SE",
+            name="ICD-10-SE",
+            valid_from=1997,
+        )
+        self._seed_classification(
+            conn,
+            slug="icd-11-se",
+            short_name="ICD-11-SE",
+            name="ICD-11-SE",
+            valid_from=2027,
+        )
+        self._seed_classification_replaced_by(
+            conn,
+            predecessor="icd-10-se",
+            successor="icd-11-se",
+            effective_year=2027,
+        )
+
+        chain_2026 = Catalog(conn, classification_as_of_year=2026).classification_chain(
+            "class/icd-10-se"
+        )
+        assert [e.slug for e in chain_2026] == ["icd-10-se", "icd-11-se"]
+        assert [e.effective_year for e in chain_2026] == [2027, None]
+        assert [e.slug for e in chain_2026 if e.is_current] == ["icd-10-se"]
+
+        chain_2027 = Catalog(conn, classification_as_of_year=2027).classification_chain(
+            "class/icd-10-se"
+        )
+        assert [e.slug for e in chain_2027 if e.is_current] == ["icd-11-se"]
 
     def test_classification_chain_standalone_returns_single_self_current(self) -> None:
         # sun2020 has no succession edges → a one-edition chain, both is_self and
@@ -2442,12 +2483,16 @@ class TestResolveTerminalSuccessor:
 
     @staticmethod
     def _add_class_edge(
-        conn: sqlite3.Connection, predecessor: str, successor: str
+        conn: sqlite3.Connection,
+        predecessor: str,
+        successor: str,
+        effective_year: int | None = None,
     ) -> None:
         conn.execute(
             "INSERT INTO classification_replaced_by "
-            "(predecessor_slug, successor_slug, note) VALUES (?,?,'derived:test')",
-            (predecessor, successor),
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES (?, ?, ?, 'derived:test')",
+            (predecessor, successor, effective_year),
         )
         conn.commit()
 
@@ -2465,6 +2510,24 @@ class TestResolveTerminalSuccessor:
         # sun2020 is the live, edge-free classification → genuinely unknown.
         conn = build_slugged_db()
         assert Catalog(conn).resolve_terminal_successor("class/sun2020") is None
+
+    def test_classification_future_successor_not_terminal_until_as_of_year(
+        self,
+    ) -> None:
+        conn = build_slugged_db()
+        self._add_class_edge(conn, "icd-10-se", "icd-11-se", effective_year=2027)
+
+        assert (
+            Catalog(conn, classification_as_of_year=2026).resolve_terminal_successor(
+                "class/icd-10-se"
+            )
+            is None
+        )
+        terminal = Catalog(
+            conn, classification_as_of_year=2027
+        ).resolve_terminal_successor("class/icd-10-se")
+        assert terminal is not None
+        assert str(terminal) == "class/icd-11-se"
 
     def test_classification_cycle_guard_terminates(self) -> None:
         # Malformed double-rename loop A→B→A: terminate and land on B.

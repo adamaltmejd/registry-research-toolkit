@@ -938,13 +938,13 @@ def _classification_root_response(
     classification with a NULL slug isn't FQID-addressable, so it's excluded from
     children and group members alike (symmetric with `list_registers`'s slug filter).
 
-    Only TERMINAL editions surface as children: a row whose `superseded_by`
-    is set (a successor exists) is a superseded edition and is dropped here.
-    Superseded editions are reached by drilling into a terminal leaf's
-    edition-chain panel (ClassificationLineagePanels, incl. the #605 split-root
-    fan-out) or by direct URL. One-dimensional succession families (SSYK/ICD/LKF/SNI)
-    replace their bare terminal edition children with a family row, so the root
-    reads as a concept entrypoint rather than only the current edition. Group members
+    Bare children exclude superseded editions (`superseded_by` set) and every
+    edition represented by a one-dimensional succession family row. Superseded
+    and future family editions are reached through the family/leaf edition-chain
+    panels (ClassificationLineagePanels, incl. the #605 split-root fan-out) or by
+    direct URL. One-dimensional succession families (SSYK/ICD/LKF/SNI) replace
+    their bare edition children with a family row, so the root reads as a concept
+    entrypoint rather than only the current edition. Group members
     are themselves terminal (the 2020 SUN editions + the version-independent nivå
     aggregates), so they stay in `children` and the SPA folds them under the group
     row."""
@@ -954,11 +954,11 @@ def _classification_root_response(
         _classification_family_node(family)
         for family in catalog.list_classification_families()
     ]
-    family_current_fqids = {
+    family_edition_fqids = {
         str(edition.fqid)
         for family in families
         for edition in family.editions
-        if edition.is_current and edition.fqid is not None
+        if edition.fqid is not None
     }
     children: list[ClassificationNode] = []
     for row in rows:
@@ -969,7 +969,7 @@ def _classification_root_response(
         # newer edition supersedes this one ⇒ not a current edition, skip it.
         if row.get("superseded_by"):
             continue
-        if str(Fqid.classification_fqid(slug)) in family_current_fqids:
+        if str(Fqid.classification_fqid(slug)) in family_edition_fqids:
             continue
         children.append(
             ClassificationNode(

@@ -17,6 +17,11 @@ from pathlib import Path
 
 from .errors import EXIT_CONFIG, RegMetaError
 
+CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY = "classification_succession_as_of_year"
+# Release-time policy for future-dated classification succession. Bump deliberately
+# when a new DB release should activate a future classification hand-off.
+CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
+
 # SCHEMA_VERSION bump history (Model A migration). Each entry pins the
 # refactor stage that justified the bump and what becomes
 # incompatible. `_check_schema_compat` rejects DBs with a different
@@ -429,6 +434,28 @@ def open_db(
 def get_manifest(conn: sqlite3.Connection) -> dict[str, str]:
     rows = conn.execute("SELECT key, value FROM import_manifest").fetchall()
     return {row["key"]: row["value"] for row in rows}
+
+
+def classification_succession_edge_is_active(
+    effective_year: int | None, as_of_year: int
+) -> bool:
+    return effective_year is None or effective_year <= as_of_year
+
+
+def classification_succession_as_of_year(conn: sqlite3.Connection) -> int:
+    try:
+        row = conn.execute(
+            "SELECT value FROM import_manifest WHERE key = ?",
+            (CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,),
+        ).fetchone()
+    except sqlite3.Error:
+        return CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+    if row is None:
+        return CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+    try:
+        return int(row["value"] if isinstance(row, sqlite3.Row) else row[0])
+    except TypeError, ValueError, IndexError, KeyError:
+        return CLASSIFICATION_SUCCESSION_AS_OF_YEAR
 
 
 def utc_now() -> str:

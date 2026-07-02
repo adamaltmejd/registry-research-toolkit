@@ -24,8 +24,10 @@
 # (`derive_classification_succession`) plus curated cross-stem edges in
 # `curation/relations.toml` (`type = "replaced_by"`, `class/<slug>`). The
 # `classification.supersedes_id` column is a DERIVED back-pointer projected from
-# that edge table at build time (`derive_supersedes_from_edges`); the seed sets
-# no succession.
+# the active subset of that edge table at build time (`derive_supersedes_from_edges`);
+# future-dated edges remain visible in `classification_replaced_by` until the DB
+# manifest's classification succession as-of year activates them. The seed sets no
+# succession.
 #
 # Build-time invariants (violations fail the build loudly):
 #   - Every classification must declare `valid_codes_file` and resolve to >= 1

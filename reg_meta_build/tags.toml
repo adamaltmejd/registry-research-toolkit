@@ -37,6 +37,57 @@ register = "scb/lisa"
 rank = 110
 
 [[tag]]
+slug = "economic-assistance-amount"
+label = "Economic assistance amount"
+description = "Amount variables for economic assistance across registers."
+
+[[tag.member]]
+variable = "scb/ekonomiskt-bistand/utbetalt-belopp-till-hushallet"
+rank = 0
+starred = true
+note = "SCB household-level economic-assistance amount."
+
+[[tag.member]]
+variable = "sos/ekb/ekbbelopp"
+rank = 10
+starred = true
+note = "SOS EKB economic-assistance amount."
+
+[[tag]]
+slug = "economic-assistance-months"
+label = "Economic assistance months"
+description = "Month-count variables for economic assistance across registers."
+
+[[tag.member]]
+variable = "scb/ekonomiskt-bistand/antmanad"
+rank = 0
+starred = true
+note = "SCB count of months with economic assistance."
+
+[[tag.member]]
+variable = "sos/ekb/ekbantmanad"
+rank = 10
+starred = true
+note = "SOS EKB count of months with economic assistance."
+
+[[tag]]
+slug = "earned-income"
+label = "Earned income"
+description = "Earned-income measures across longitudinal labor registers."
+
+[[tag.member]]
+variable = "scb/lisa/sammanraknad-forvarvsinkomst"
+rank = 0
+starred = true
+note = "LISA summed earned income."
+
+[[tag.member]]
+variable = "scb/rams/arbink"
+rank = 10
+starred = true
+note = "RAMS earned-income measure."
+
+[[tag]]
 slug = "employment"
 label = "Employment"
 description = "Employment status, labor-market activity, occupation, and workplaces."
