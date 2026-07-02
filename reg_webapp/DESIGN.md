@@ -1445,23 +1445,23 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   a literal `latest` makes the bake layer's buildx cache key insensitive to data-only
   releases and can even resurrect a stale cached layer after a pinned dispatch). The
   global Fly app uses `FLY_API_TOKEN`; SWECOV uses the separate app-scoped
-  `FLY_API_TOKEN_SWECOV`. The SWECOV image also requires `SWECOV_REG_META_DB_ZST`, a
-  private JSON manifest with the flavored `reg_meta.db.zst` `tag`, `url`, and `sha256`;
-  CI checks that manifest tag against the baked `reg_meta/v*` tag, hashes tag+digest
-  into `SWECOV_REG_META_DB_REV`, and the Docker bake re-checks tag + downloaded digest
-  before replacing `reg_meta.db`. That keeps Docker's secret-insensitive cache from
-  reusing a stale flavor layer and stops a public-docs DB from being paired with a
-  mismatched private main DB. Nothing deploys without green CI: a `wait-ci` job polls
-  this commit's ci.yml run and the origin/edge deploy jobs require its success — an
-  image that builds but fails lint/ty/pytest never ships. Each deploy job carries a
-  HEAD-of-main guard (GHA concurrency serializes by build-completion order, not commit
-  order — without the guard an older commit's slow build could overwrite a newer deploy;
-  it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
-  entrypoint smoke gate (container exits non-zero before ever serving, and SWECOV sets
-  `REG_WEBAPP_FAIL_ON_STEWARD_DRIFT=1` so any steward catalog drift warning fails the
-  deploy) and fly.toml's `/api/context` HTTP check (flyctl reports failure if it never
-  passes). Rollback: `flyctl releases --image` lists history;
-  `flyctl deploy --image <old>` restores in seconds.
+  `FLY_API_TOKEN_SWECOV`. The SWECOV image also requires a matching
+  `reg_meta_swecov.db.zst` asset on the resolved `reg_meta/v*` release. CI synthesizes
+  the BuildKit JSON manifest (`tag`, `url`, `sha256`) from that release asset, hashes
+  tag+digest into `SWECOV_REG_META_DB_REV`, and the Docker bake re-checks tag +
+  downloaded digest before replacing `reg_meta.db`. That keeps Docker's
+  secret-insensitive cache from reusing a stale flavor layer and stops a public-docs DB
+  from being paired with a mismatched private main DB. Nothing deploys without green CI:
+  a `wait-ci` job polls this commit's ci.yml run and the origin/edge deploy jobs require
+  its success — an image that builds but fails lint/ty/pytest never ships. Each deploy
+  job carries a HEAD-of-main guard (GHA concurrency serializes by build-completion
+  order, not commit order — without the guard an older commit's slow build could
+  overwrite a newer deploy; it also makes non-main dispatches deploy-inert). Two gates
+  guard a bad image: the entrypoint smoke gate (container exits non-zero before ever
+  serving, and SWECOV sets `REG_WEBAPP_FAIL_ON_STEWARD_DRIFT=1` so any steward catalog
+  drift warning fails the deploy) and fly.toml's `/api/context` HTTP check (flyctl
+  reports failure if it never passes). Rollback: `flyctl releases --image` lists
+  history; `flyctl deploy --image <old>` restores in seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
   `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
   higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)

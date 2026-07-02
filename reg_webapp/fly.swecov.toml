@@ -10,11 +10,12 @@
 #     --build-arg "SWECOV_REG_META_DB_REV=$swecov_rev" \
 #     --build-secret "swecov_reg_meta_db_zst_manifest=$swecov_manifest"
 #
-# The BuildKit secret is a private JSON manifest:
+# The BuildKit secret is a JSON manifest:
 # {"tag":"reg_meta/vX.Y.Z","url":"https://.../reg_meta.db.zst","sha256":"..."}.
-# CI passes it from SWECOV_REG_META_DB_ZST. The Docker bake refuses a manifest
-# whose tag disagrees with REG_META_TAG or whose downloaded zstd digest disagrees
-# with sha256.
+# CI derives it from the `reg_meta_swecov.db.zst` release asset for the same
+# resolved reg_meta/v* tag. The Docker bake refuses a manifest whose tag
+# disagrees with REG_META_TAG or whose downloaded zstd digest disagrees with
+# sha256.
 
 app = "reg-webapp-swecov"
 primary_region = "arn" # Stockholm — the user base is Swedish register researchers.
@@ -30,6 +31,10 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
 [env]
   REG_WEBAPP_STEWARD = "swecov"
   REG_WEBAPP_FAIL_ON_STEWARD_DRIFT = "1"
+  # SWECOV builds a filtered steward catalog index at startup. Local cold boot
+  # against the 426 MiB flavored DB measured about 160s on 2026-07-02; keep
+  # the entrypoint smoke gate aligned with Fly's health-check grace.
+  REG_WEBAPP_SMOKE_READY_DEADLINE = "420"
 
 [http_service]
   internal_port = 8000
@@ -43,7 +48,7 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   [[http_service.checks]]
     interval = "30s"
     timeout = "5s"
-    grace_period = "60s"
+    grace_period = "420s"
     method = "GET"
     path = "/api/context"
 
