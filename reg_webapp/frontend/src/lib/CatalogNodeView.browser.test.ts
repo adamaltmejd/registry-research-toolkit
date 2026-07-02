@@ -393,10 +393,13 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
     expect(document.querySelector("a.group-link .group-key")).toBeNull();
     const table = document.querySelector("table.data-table");
     expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.closest(".panel")).not.toBeNull();
     expect(table?.closest(".classification-table")).not.toBeNull();
     await expect
       .element(page.getByRole("heading", { name: "Classifications" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Classification systems" }))
       .toBeVisible();
     expect(document.body.textContent).not.toContain("Catalog-wide index");
     const tableHead = table?.querySelector("thead");

@@ -330,32 +330,34 @@ $effect(() => {
       {#if clsRows.length > 0}
         {@const classificationRows = classificationBrowseRows(clsRows)}
         <div class="classification-table">
-          <DataTable
-            columns={classificationColumns}
-            rows={classificationRows}
-            getRowId={browseRowId}
-          >
-            {#snippet cell(row, column)}
-              {#if column.key === "label"}
-                {#if row.kind === "group"}
-                  <!-- #756: classification-umbrella groups link to their subject page.
-                       Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
-                  <ConceptGroupRow
-                    group={row.group}
-                    noun={row.noun}
-                    href={row.href}
-                    showGroupKey={false}
-                  />
-                {:else}
-                  <a class="row-link" href={catalogHref(row.fqid)} title={row.shortName}>
-                    {row.label}
-                  </a>
+          <Panel title="Classification systems" flush>
+            <DataTable
+              columns={classificationColumns}
+              rows={classificationRows}
+              getRowId={browseRowId}
+            >
+              {#snippet cell(row, column)}
+                {#if column.key === "label"}
+                  {#if row.kind === "group"}
+                    <!-- #756: classification-umbrella groups link to their subject page.
+                         Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
+                    <ConceptGroupRow
+                      group={row.group}
+                      noun={row.noun}
+                      href={row.href}
+                      showGroupKey={false}
+                    />
+                  {:else}
+                    <a class="row-link" href={catalogHref(row.fqid)} title={row.shortName}>
+                      {row.label}
+                    </a>
+                  {/if}
+                {:else if row.kind === "leaf"}
+                  <code class="short-name">{row.shortName}</code>
                 {/if}
-              {:else if row.kind === "leaf"}
-                <code class="short-name">{row.shortName}</code>
-              {/if}
-            {/snippet}
-          </DataTable>
+              {/snippet}
+            </DataTable>
+          </Panel>
         </div>
       {:else}
         <EmptyState title="No classifications." />

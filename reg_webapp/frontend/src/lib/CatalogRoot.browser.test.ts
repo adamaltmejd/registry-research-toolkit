@@ -19,7 +19,7 @@ vi.mock("./api", async (importOriginal) => {
 
 // The catalog root with two provider children (`scb` / `sos`) plus the
 // classification-root sentinel. Shaped like RootResponse children — the root
-// renders these as a plain navigation table.
+// renders these as a simplified framed navigation table.
 function catalogRoot(): RootResponse {
   return {
     kind: "root",
@@ -54,7 +54,10 @@ describe("CatalogRoot", () => {
       .toHaveAttribute("href", "/catalog/class");
 
     const table = container.querySelector("table.data-table");
-    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.closest(".panel")).not.toBeNull();
+    await expect
+      .element(page.getByRole("heading", { name: "Providers" }))
+      .toBeVisible();
     expect(table?.querySelectorAll("thead tr")).toHaveLength(1);
     expect(
       [...(table?.querySelectorAll("thead th") ?? [])].map((th) =>
