@@ -1784,9 +1784,9 @@ def derive_variable_vintage_succession(
     and `grov-*` never links to `utokad-*`. A stream with more than one variable
     on either side is skipped rather than guessed.
 
-    Interval-native variables (#271, no lift owed) still do not mint a self-edge:
-    a single variable spanning >1 chained edition across its own states already
-    carries the lineage in ONE `variable_id`.
+    Interval-native variables (#271, no lift owed) stay out of all lifted
+    candidate pairs: a single variable spanning >1 chained edition across its
+    own states already carries the lineage in ONE `variable_id`.
 
     Dedup: an edge already in `variable_replaced_by` (curated #375/#440 or auto
     `timeseries_event`) WINS — `INSERT OR IGNORE` against the PK leaves it
@@ -1811,13 +1811,16 @@ def derive_variable_vintage_succession(
         chain_slugs.add(pred)
         chain_slugs.add(succ)
 
-    # Per (register_id, variable.name) family: edition_slug → {variable_id}.
-    # Built from the live state→classification bindings, restricted to chained
-    # editions. Entangled cross-product families intentionally stay under this
-    # coarse human name; the adjacent-edge loop below partitions them by a
-    # slug-stem stream key only when the old clean bijection guard would have
-    # skipped the family whole.
+    # Per (register_id, variable.name) family: edition_slug → {variable_id}, and
+    # variable_id → {edition_slug}. Built from the live state→classification
+    # bindings, restricted to chained editions. Entangled cross-product families
+    # intentionally stay under this coarse human name; the adjacent-edge loop
+    # below partitions them by a slug-stem stream key only when the old clean
+    # bijection guard would have skipped the family whole. The reverse map keeps
+    # interval-native variables (one variable_id spanning >1 chained edition)
+    # out of all candidate pairs.
     family_edition_vars: dict[tuple[int, str], dict[str, set[int]]] = {}
+    family_var_editions: dict[tuple[int, str], dict[int, set[str]]] = {}
     variable_slug_of: dict[int, str] = {}
     rows = conn.execute(
         "SELECT DISTINCT v.register_id, v.name, vs.variable_id, v.slug, c.slug "
@@ -1836,6 +1839,9 @@ def derive_variable_vintage_succession(
         family_edition_vars.setdefault(key, {}).setdefault(
             classification_slug, set()
         ).add(variable_id)
+        family_var_editions.setdefault(key, {}).setdefault(variable_id, set()).add(
+            classification_slug
+        )
         variable_slug_of[variable_id] = variable_slug
 
     # Resolve a variable_id to its FQID slug tuple (provider, register, variable)
@@ -1854,17 +1860,26 @@ def derive_variable_vintage_succession(
     pending: list[tuple[str, str, str, str, str, str, int | None]] = []
     for key in sorted(family_edition_vars):
         edition_vars = family_edition_vars[key]
+        var_editions = family_var_editions[key]
         # Walk each classification edge whose BOTH endpoints are bound in this
-        # family. The clean tier remains the fast path: exactly one variable on
-        # each side mints the same edge as #584. When either side has several
-        # variables, partition by a slug-stem key with only the adjacent edge's
-        # digit-bearing vintage tokens stripped. Ambiguous streams (more than one
-        # variable on either side) are skipped rather than guessed.
+        # family. Variables already bound to multiple chained editions are
+        # interval-native and never participate. The clean tier remains the fast
+        # path: exactly one remaining variable on each side mints the same edge
+        # as #584. When either side has several variables, partition by a
+        # slug-stem key with only the adjacent edge's digit-bearing vintage
+        # tokens stripped. Ambiguous streams (more than one variable on either
+        # side) are skipped rather than guessed.
         for pred_slug, succ_slug, year in edition_edges:
             if pred_slug not in edition_vars or succ_slug not in edition_vars:
                 continue
-            pred_vids = edition_vars[pred_slug]
-            succ_vids = edition_vars[succ_slug]
+            pred_vids = {
+                vid for vid in edition_vars[pred_slug] if len(var_editions[vid]) == 1
+            }
+            succ_vids = {
+                vid for vid in edition_vars[succ_slug] if len(var_editions[vid]) == 1
+            }
+            if not pred_vids or not succ_vids:
+                continue
             if len(pred_vids) == 1 and len(succ_vids) == 1:
                 candidate_pairs = [(next(iter(pred_vids)), next(iter(succ_vids)))]
             else:

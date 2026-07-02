@@ -1979,6 +1979,44 @@ class TestVariableVintageSuccession:
         assert n == 0
         assert _lift_rows(conn) == []
 
+    def test_interval_native_variable_is_not_paired_with_neighbor(self) -> None:
+        # A chain-spanning variable is interval-native even when the same-name
+        # family has another variable on one edition. It must not be paired with
+        # that neighbor; the real corpus has municipality columns in this shape,
+        # where a false lift would close a reversed source edge into a cycle.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Kommun", slug="u-ukom")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-ukom",
+            register_variant_id=10,
+            valid_from="2002-01-01",
+            valid_to="2006-12-31",
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-ukom",
+            register_variant_id=10,
+            valid_from="2007-01-01",
+            valid_to="9999-12-31",
+            classification_id=_cid(conn, "sni2007"),
+        )
+        add_variable(conn, register_id=1, var_id=2, name="Kommun", slug="u-hkom")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-hkom",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0
+        assert _lift_rows(conn) == []
+
     def test_existing_curated_edge_wins_no_duplicate(self) -> None:
         # A pre-existing edge on the same PK (curated #375/#440 or auto
         # timeseries_event) WINS — the lift's INSERT OR IGNORE leaves it untouched
