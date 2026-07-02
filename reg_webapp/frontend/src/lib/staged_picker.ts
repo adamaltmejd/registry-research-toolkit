@@ -90,7 +90,7 @@ function bindingRepresentation(binding: unknown): string | null {
 
 function periodBoundsSegments(period: Period): PeriodBounds[] | null {
   const wire = periodToWire(period);
-  if (!wire) {
+  if (!wire || wire === "_default") {
     return null;
   }
   const segments: PeriodBounds[] = [];
@@ -116,6 +116,9 @@ function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
 }
 
 function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
+  if (periodToWire(period) === "_default") {
+    return true;
+  }
   const sourceBounds = periodBoundsSegments(period);
   if (!sourceBounds) {
     return false;
