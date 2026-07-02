@@ -222,19 +222,22 @@ $effect(() => {
           label="Filter registers"
         />
         {#if registers.length > 0}
-          <Panel title="Registers" flush>
-            <DataTable columns={registerColumns} rows={registers} getRowId={registerRowId}>
-              {#snippet cell(register, column)}
-                {#if column.key === "name"}
-                  <a class="row-link" href={catalogHref(register.fqid)} title={register.fqid}>
-                    {register.name ?? register.fqid}
-                  </a>
-                {:else if register.purpose}
-                  <span class="clamp-2">{register.purpose}</span>
-                {/if}
-              {/snippet}
-            </DataTable>
-          </Panel>
+          <DataTable
+            framed
+            columns={registerColumns}
+            rows={registers}
+            getRowId={registerRowId}
+          >
+            {#snippet cell(register, column)}
+              {#if column.key === "name"}
+                <a class="row-link" href={catalogHref(register.fqid)} title={register.fqid}>
+                  {register.name ?? register.fqid}
+                </a>
+              {:else if register.purpose}
+                <span class="clamp-2">{register.purpose}</span>
+              {/if}
+            {/snippet}
+          </DataTable>
         {:else}
           <Panel title="Registers">
             <EmptyState title={`No registers match “${filter}”`} />
@@ -276,30 +279,24 @@ $effect(() => {
         />
         {#if filteredRows.length > 0}
           {@const variableRows = variableBrowseRows(filteredRows, node.fqid)}
-          <Panel title="Variables" flush>
-            <DataTable
-              columns={variableColumns}
-              rows={variableRows}
-              getRowId={browseRowId}
-            >
-              {#snippet cell(row)}
-                {#if row.kind === "group"}
-                  <!-- #673 (M6): register-arm group rows link to their subject page.
-                       Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
-                  <ConceptGroupRow
-                    group={row.group}
-                    noun="variables"
-                    href={row.href}
-                    showGroupKey={false}
-                  />
-                {:else}
-                  <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
-                    {row.label}
-                  </a>
-                {/if}
-              {/snippet}
-            </DataTable>
-          </Panel>
+          <DataTable framed columns={variableColumns} rows={variableRows} getRowId={browseRowId}>
+            {#snippet cell(row)}
+              {#if row.kind === "group"}
+                <!-- #673 (M6): register-arm group rows link to their subject page.
+                     Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
+                <ConceptGroupRow
+                  group={row.group}
+                  noun="variables"
+                  href={row.href}
+                  showGroupKey={false}
+                />
+              {:else}
+                <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
+                  {row.label}
+                </a>
+              {/if}
+            {/snippet}
+          </DataTable>
         {:else}
           <Panel title="Variables">
             <EmptyState title={`No variables match “${filter}”`} />

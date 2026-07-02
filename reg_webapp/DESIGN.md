@@ -1061,6 +1061,12 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   roving-tabindex grid — list keyboard navigation belongs to Bits UI `Command`
   elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
   table (`role="table"`).
+- **`DataTable` framed surface.** Use `framed` when the table itself is the whole
+  grouped surface and its column headers should be the single top row. Do not wrap that
+  case in `Panel` — a `Panel` title plus table headers creates duplicate heading rows.
+  The framed variant keeps its header row visible at narrow widths and suppresses
+  repeated per-card column labels, so the surface still has exactly one visible heading
+  row.
 - **`DataTable` responsive stacking (≤48 rem).** At narrow widths each `<tr>` becomes a
   bordered card; cells stack vertically. The first column is the primary title (no
   micro-label prefix); non-primary cells show their column label as a CSS `::before`

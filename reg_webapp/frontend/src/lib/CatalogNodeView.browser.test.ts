@@ -196,7 +196,14 @@ describe("CatalogNodeView provider arm", () => {
 
     const table = container.querySelector("table.data-table");
     expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).not.toBeNull();
+    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.classList.contains("framed")).toBe(true);
+    await expect
+      .element(page.getByRole("columnheader", { name: "Register" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("columnheader", { name: "Description" }))
+      .toBeVisible();
 
     // #806: the raw FQID <code> element is dropped — the link's name is identity.
     expect(container.querySelector("code")).toBeNull();
@@ -225,7 +232,7 @@ describe("CatalogNodeView provider arm", () => {
 });
 
 describe("CatalogNodeView register arm", () => {
-  it("renders each ungrouped variable as a DataTable row inside a Panel", async () => {
+  it("renders each ungrouped variable as a framed DataTable row", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
 
     const { container } = await render(CatalogNodeView, {
@@ -242,7 +249,11 @@ describe("CatalogNodeView register arm", () => {
 
     const table = container.querySelector("table.data-table");
     expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).not.toBeNull();
+    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.classList.contains("framed")).toBe(true);
+    await expect
+      .element(page.getByRole("columnheader", { name: "Variable" }))
+      .toBeVisible();
     expect(
       [...container.querySelectorAll("tbody tr")].map((row) =>
         row.textContent?.trim(),
@@ -350,7 +361,7 @@ describe("CatalogNodeView register arm", () => {
     expect(getRelatedDocuments).toHaveBeenCalledWith("lisa", expect.anything());
   });
 
-  it("renders grouped variables as subject links in the Panel without the group-key pill", async () => {
+  it("renders grouped variables as framed table subject links without the group-key pill", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
 
     const { container } = await render(CatalogNodeView, {
@@ -367,7 +378,10 @@ describe("CatalogNodeView register arm", () => {
 
     const groupLink = container.querySelector("a.group-link");
     expect(groupLink?.closest("table.data-table")).not.toBeNull();
-    expect(groupLink?.closest(".panel")).not.toBeNull();
+    expect(
+      groupLink?.closest("table.data-table")?.classList.contains("framed"),
+    ).toBe(true);
+    expect(groupLink?.closest(".panel")).toBeNull();
     expect(groupLink?.querySelector(".group-key")).toBeNull();
   });
 });

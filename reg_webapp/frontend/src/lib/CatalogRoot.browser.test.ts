@@ -54,10 +54,8 @@ describe("CatalogRoot", () => {
       .toHaveAttribute("href", "/catalog/class");
 
     const table = container.querySelector("table.data-table");
-    expect(table?.closest(".panel")).not.toBeNull();
-    await expect
-      .element(page.getByRole("heading", { name: "Providers" }))
-      .toBeVisible();
+    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.classList.contains("framed")).toBe(true);
     expect(table?.querySelectorAll("thead tr")).toHaveLength(1);
     expect(
       [...(table?.querySelectorAll("thead th") ?? [])].map((th) =>

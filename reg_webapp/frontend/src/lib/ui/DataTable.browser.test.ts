@@ -34,6 +34,7 @@ interface TableProps<R extends object> {
   getRowId?: (row: R) => string;
   selectedId?: string;
   onselect?: (row: R) => void;
+  framed?: boolean;
 }
 
 function renderTable<R extends object>(props: TableProps<R>) {
@@ -158,6 +159,26 @@ describe("DataTable", () => {
       // jsdom-free: a real engine resolves `start`/`left` per the LTR doc dir.
       const align = getComputedStyle(countCell).textAlign;
       expect(["left", "start"]).toContain(align);
+    } finally {
+      await page.viewport(1280, 800);
+    }
+  });
+
+  it("keeps one visible header row for framed tables in the narrow layout", async () => {
+    await page.viewport(600, 800);
+    try {
+      const { container } = renderTable({ columns, rows, framed: true });
+      const table = container.querySelector("table.data-table");
+      expect(table).toHaveClass("framed");
+
+      const thead = container.querySelector("thead") as HTMLElement;
+      expect(getComputedStyle(thead).position).toBe("static");
+      expect(thead.getBoundingClientRect().height).toBeGreaterThan(0);
+
+      const labelCell = container.querySelector(
+        "tbody tr:first-child td:not(.first)",
+      ) as HTMLElement;
+      expect(getComputedStyle(labelCell, "::before").content).toBe("none");
     } finally {
       await page.viewport(1280, 800);
     }

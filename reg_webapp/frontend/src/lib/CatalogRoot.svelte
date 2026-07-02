@@ -3,7 +3,7 @@ import { getCatalogRoot } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, DATA_BROWSER_LABEL, matchesFilter } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
-import { type Column, DataTable, EmptyState, Panel } from "./ui";
+import { type Column, DataTable, EmptyState } from "./ui";
 
 // The catalog root: every provider plus the classification-root sentinel
 // (`class`). Children are a `kind`-tagged union (`provider` | `classification-
@@ -50,15 +50,13 @@ const columns: Column<RootRow>[] = [{ key: "name", label: "Name" }];
       label="Filter catalog sections"
     />
     {#if filtered.length > 0}
-      <Panel title="Providers" flush>
-        <DataTable {columns} rows={filtered}>
-          {#snippet cell(row)}
-            <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
-              {row.name ?? row.fqid}
-            </a>
-          {/snippet}
-        </DataTable>
-      </Panel>
+      <DataTable framed {columns} rows={filtered}>
+        {#snippet cell(row)}
+          <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
+            {row.name ?? row.fqid}
+          </a>
+        {/snippet}
+      </DataTable>
     {:else}
       <EmptyState title={`No catalog sections match “${filter}”`} />
     {/if}
