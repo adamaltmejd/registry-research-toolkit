@@ -301,12 +301,13 @@ jobs:
 
   build-swecov-image:
     needs: [changes, schema-guard]
-    # PRs build only the public/global image: the SWECOV image needs the private
-    # flavored DB release artifact, which is deployment state and not available
-    # to fork-safe PR builds. Main/dispatch builds resolve it from the same
-    # reg_meta/v* tag as the public/global DB and fail loudly if that release has
-    # no matching SWECOV artifact rather than shipping the steward against the
-    # public global DB.
+    # PRs build only the public/global image: the SWECOV image needs the flavored
+    # DB release artifact, which is deployment state and not available to
+    # fork-safe PR builds. SWECOV metadata is non-confidential for the current
+    # testing steward, so the artifact lives on the public reg_meta/v* release
+    # beside the global DB. Main/dispatch builds resolve it from that same tag
+    # and fail loudly if the release has no matching SWECOV artifact rather than
+    # shipping the steward against the public global DB.
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
       needs.schema-guard.result == 'success' &&

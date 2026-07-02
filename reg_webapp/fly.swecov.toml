@@ -3,7 +3,7 @@
 # Deploy from the REPO ROOT — the Dockerfile needs the whole uv workspace as
 # build context (see reg_webapp/Dockerfile header):
 #
-#   swecov_manifest="$(cat /path/to/private-swecov-reg_meta.db.zst.json)"
+#   swecov_manifest="$(cat /path/to/swecov-reg_meta.db.zst.json)"
 #   swecov_rev="$(printf '%s' "$swecov_manifest" | shasum -a 256 | awk '{print $1}')"
 #   fly deploy . --config reg_webapp/fly.swecov.toml --ha=false \
 #     --build-arg REG_META_TAG=reg_meta/vX.Y.Z \
@@ -41,7 +41,7 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   force_https = true
   # Same always-on single-machine topology as the global catalog deployment:
   # Cloudflare edge caching absorbs reads, while the warm page cache keeps the
-  # private flavored SQLite DB responsive.
+  # flavored SQLite DB responsive.
   auto_stop_machines = "off"
   auto_start_machines = true
 

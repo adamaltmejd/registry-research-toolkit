@@ -118,10 +118,11 @@ steward repo/system and make that system copyable for future stewards.
 (`reg-webapp-swecov`) behind the same Cloudflare Workers pattern as the global catalog.
 The SWECOV Fly jobs use the app-scoped `FLY_API_TOKEN_SWECOV` secret, not the global
 app's `FLY_API_TOKEN`. The SWECOV image bundles BOTH the committed catalog and the
-**flavored** `extend-db` DB (`REG_META_DB` pointed at it). CI keeps the confidential
-flavor artifact out of git by resolving `reg_meta_swecov.db.zst` from the same
-`reg_meta/v*` release tag as the public/global DB; the workflow synthesizes the BuildKit
-JSON manifest (`tag`, `url`, `sha256`), the bake refuses a tag/digest mismatch, and
+**flavored** `extend-db` DB (`REG_META_DB` pointed at it). CI keeps the generated flavor
+artifact out of git, but the SWECOV metadata is non-confidential for the current testing
+steward, so `reg_meta_swecov.db.zst` is a public GitHub release asset on the same
+`reg_meta/v*` tag as the public/global DB. The workflow synthesizes the BuildKit JSON
+manifest (`tag`, `url`, `sha256`), the bake refuses a tag/digest mismatch, and
 `reg_meta_docs.db` stays on the public release asset for that same tag. The catalog
 binds steward-only providers (`swedbank`, `region-*`, `swecov`, …) that the *global*
 release DB does not contain, so booting `REG_WEBAPP_STEWARD=swecov` against the plain
