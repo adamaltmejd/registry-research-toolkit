@@ -6,17 +6,17 @@
  * This file is the A5.4 SEAM. Three deliberately-real-but-minimal mechanisms are
  * wired here so A5.4 is a drop-in extension, never a refactor:
  *
- *  1. `checkVersionGate` — the version-acceptance function. ACCEPTS the Model A
- *     range (schema_version major 2, reg_meta_version `reg_meta/v1.x.y`), HARD-rejects
- *     v0.x (schema_version 1.x OR reg_meta/v0.x.y → a blocking `{ok:false, reason}`,
- *     A5.4), and is a NEUTRAL no-op (`{ok:true}`) for everything else.
+ *  1. `checkVersionGate` — the version-acceptance function. ACCEPTS Model A
+ *     projects by `schema_version` major 2, HARD-rejects schema major 1
+ *     (pre-Model-A → a blocking `{ok:false, reason}`, A5.4), and is a NEUTRAL
+ *     no-op (`{ok:true}`) for everything else.
  *  2. `ProjectPersistence` — the autosave interface. c-i ships an in-memory Map
  *     stub (`InMemoryPersistence`) with a DEBOUNCED autosave `$effect` over the
  *     draft + a load-at-init (returns null → no restore). A5.4 swaps the impl for
  *     IndexedDB via `setPersistence`; the `storeSchemaVersion` constant gates a
  *     stored-schema mismatch (an A5.4 reject the in-memory stub never trips).
  *  3. `openError` — the blocking open-error channel. c-i sets it on a parse failure
- *     or a (currently no-op) gate failure; the v0.x reject reuses it.
+ *     or a schema-version gate failure.
  *
  * NOT a structural validator — the backend is canonical (see reg_webapp/DESIGN.md
  * → Pydantic boundary). The store only
@@ -77,42 +77,29 @@ export interface VersionGateResult {
 }
 
 /** Pull the integer MAJOR out of a dotted version string (`"2.0.0"` → 2), or
- * `null` when it has no leading integer. Tolerant of a `reg_meta/vX.Y.Z` prefix
- * (caller strips that first). */
+ * `null` when it has no leading integer. */
 function majorOf(version: string): number | null {
   const match = /^(\d+)\./.exec(version);
   return match ? Number(match[1]) : null;
 }
 
-/** Strip the `reg_meta/v` prefix off a `reg_meta_version` to expose the dotted
- * version (`"reg_meta/v1.0.0"` → `"1.0.0"`), or `null` when it isn't that shape. */
-function regMetaDotted(regMetaVersion: string): string | null {
-  const match = /^reg_meta\/v(\d+\.\d+\.\d+.*)$/.exec(regMetaVersion);
-  return match ? match[1] : null;
-}
-
 /**
  * THE A5.4 SEAM. Decide whether an opened project_data dict is loadable by version.
  *
- * ACCEPTS the Model A range: `schema_version` major 2 AND `reg_meta_version` of
- * the form `reg_meta/v1.x.y` (major 1). HARD-rejects v0.x: a
- * `schema_version` major 1 OR a `reg_meta/v0.x.y` returns `{ok:false, reason}`
- * — no migration, pre-v1 policy. Anything else is
- * a NEUTRAL no-op (`{ok:true}`): it lets unrecognized versions through so the
- * backend remains the canonical authority.
+ * ACCEPTS Model A projects by `schema_version` major 2. HARD-rejects schema major
+ * 1 as pre-Model-A — no migration, pre-v1 policy. The reg_meta package may still
+ * be `reg_meta/v0.x.y` while the schema is Model A, so reg_meta major is not a
+ * pre-Model-A signal. Anything else is a NEUTRAL no-op (`{ok:true}`): it lets
+ * unrecognized versions through so the backend remains the canonical authority.
  */
 export function checkVersionGate(parsed: ProjectDataBody): VersionGateResult {
   const schemaVersion =
     typeof parsed.schema_version === "string" ? parsed.schema_version : "";
-  const regMetaVersion =
-    typeof parsed.reg_meta_version === "string" ? parsed.reg_meta_version : "";
 
   const schemaMajor = majorOf(schemaVersion);
-  const dotted = regMetaDotted(regMetaVersion);
-  const regMetaMajor = dotted ? majorOf(dotted) : null;
 
-  // v0.x hard-reject: pre-Model-A files. No migration — pre-v1 policy.
-  if (schemaMajor === 1 || regMetaMajor === 0) {
+  // schema_version 1.x hard-reject: pre-Model-A files. No migration — pre-v1 policy.
+  if (schemaMajor === 1) {
     return {
       ok: false,
       reason:
@@ -120,13 +107,13 @@ export function checkVersionGate(parsed: ProjectDataBody): VersionGateResult {
     };
   }
 
-  // Accept the Model A range explicitly (the documented happy path).
-  if (schemaMajor === 2 && regMetaMajor === 1) {
+  // Accept the Model A schema range explicitly (the documented happy path).
+  if (schemaMajor === 2) {
     return { ok: true };
   }
 
   // Neutral no-op for everything else in c-i: do not block. The backend is the
-  // canonical validator; the SPA's version gate only HARD-rejects v0.x (A5.4).
+  // canonical validator; the SPA's version gate only HARD-rejects schema 1.x (A5.4).
   return { ok: true };
 }
 

@@ -16,8 +16,8 @@ const SEED = {
 };
 
 // A Model-A-versioned but structurally malformed spec (non-array `sources`). The
-// version gate accepts it (schema_version 2.x + reg_meta/v1.x), so it loads — and
-// the editor must render rather than crash (the backend diagnoses the structure).
+// version gate accepts it by schema_version 2.x, so it loads — and the editor must
+// render rather than crash (the backend diagnoses the structure).
 const MALFORMED = JSON.stringify({
   schema_version: "2.0.0",
   steward: "global",

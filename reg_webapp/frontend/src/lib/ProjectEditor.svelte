@@ -39,8 +39,8 @@ let fileInput: HTMLInputElement;
 function onNew(): void {
   // c-i: a new project seeds this deployment's reg_meta release tag + its own
   // steward id (both from /api/context); the steward PICKER is c-ii. The
-  // accepted version range is baked into the skeleton (`schema_version` 2.0.0 +
-  // the `reg_meta/v1.x` release tag derived from the bare package version).
+  // Model A schema gate is baked into the skeleton (`schema_version` 2.0.0);
+  // the release tag records the deployment's current catalog package.
   projectStore.newProject({
     reg_meta_version: regMetaReleaseTag(regMetaVersion),
     steward,
@@ -155,7 +155,7 @@ async function onFilePicked(event: Event): Promise<void> {
 
     <!-- Top-level fields. `name` is the one editable field (the label a researcher
          always sets); `steward` / `reg_meta_version` / `schema_version` are read-only
-         deployment-seed identifiers (they gate the accepted version range / steward
+         deployment-seed identifiers (schema gates Model A; steward controls
          branding). -->
     <div class="fields">
       <label>

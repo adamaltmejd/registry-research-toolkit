@@ -423,7 +423,7 @@ describe("addFromCatalog (C1)", () => {
     );
 
     // Replace the draft MID-FLIGHT by opening a VALID project file B (passes the
-    // version gate: schema_version 2.0.0 + reg_meta/v1.0.0). B ALREADY carries a
+    // schema-version gate). B ALREADY carries a
     // source on the SAME register_variant (scb/lisa/v1) with ONE existing binding
     // (kon). `openFromFile` runs OUTSIDE `addChain` and directly replaces `draft`,
     // so there is no deadlock. The replacement is what trips `draft !== target`.

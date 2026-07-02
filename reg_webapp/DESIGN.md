@@ -1829,12 +1829,13 @@ rune store holding one draft per session.
   only on a match, else discards the stale-schema draft. This is the store's record
   shape, bumped only when the persisted shape changes.
 - **Project-file version gate.** Model A files carry `schema_version` MAJOR **2**
-  (reg_schema `2.0.0`) and `reg_meta_version` of the form `reg_meta/v1.x.y`. The SPA
-  **hard-rejects** a file whose `schema_version` major is **1** OR whose
-  `reg_meta_version` is `reg_meta/v0.x` (pre-Model-A) with a blocking open-error — no
-  migration, pre-v1 policy. (`schema_version` major 1 is the *rejected* pre-Model-A
-  value, not Model A.) Any other version is a neutral no-op: the backend stays the
-  canonical validator.
+  (reg_schema `2.0.0`) plus the deployment's `reg_meta_version` release tag. The SPA
+  **hard-rejects** a file whose `schema_version` major is **1** (pre-Model-A) with a
+  blocking open-error — no migration, pre-v1 policy. The `reg_meta` package may still be
+  `reg_meta/v0.x` while the schema is Model A, so `reg_meta_version` major is not a
+  pre-Model-A signal. (`schema_version` major 1 is the *rejected* pre-Model-A value, not
+  Model A.) Any other version is a neutral no-op: the backend stays the canonical
+  validator.
 - **Unsaved-changes warning.** A `dirty` flag derives from the draft diverging from the
   last DOWNLOAD baseline (`lastDownloaded`); a `beforeunload` listener prompts on a
   tab/window close with a dirty draft. The store drives the write endpoints (validate /

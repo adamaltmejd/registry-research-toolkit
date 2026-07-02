@@ -55,7 +55,7 @@ afterEach(() => {
 });
 
 describe("checkVersionGate", () => {
-  it("accepts the Model A range (schema_version 2.x + reg_meta/v1.x.y)", () => {
+  it("accepts the Model A schema range", () => {
     expect(
       checkVersionGate({
         schema_version: "2.0.0",
@@ -70,19 +70,19 @@ describe("checkVersionGate", () => {
     ).toEqual({ ok: true });
   });
 
+  it("accepts Model A files with the current pre-v1 reg_meta release major", () => {
+    expect(
+      checkVersionGate({
+        schema_version: "2.0.0",
+        reg_meta_version: "reg_meta/v0.34.0",
+      }),
+    ).toEqual({ ok: true });
+  });
+
   it("hard-rejects schema_version 1.x (pre-Model-A)", () => {
     const gate = checkVersionGate({
       schema_version: "1.2.0",
       reg_meta_version: "reg_meta/v1.0.0",
-    });
-    expect(gate.ok).toBe(false);
-    expect(gate.reason).toMatch(/Model A|re-author/i);
-  });
-
-  it("hard-rejects reg_meta/v0.x (pre-Model-A) even with a 2.x schema", () => {
-    const gate = checkVersionGate({
-      schema_version: "2.0.0",
-      reg_meta_version: "reg_meta/v0.9.0",
     });
     expect(gate.ok).toBe(false);
     expect(gate.reason).toMatch(/Model A|re-author/i);
@@ -98,7 +98,7 @@ describe("checkVersionGate", () => {
   });
 
   it("is a NEUTRAL no-op (ok:true) for unrecognized in-range-ish versions", () => {
-    // Backend stays canonical: only v0.x is hard-rejected, everything else passes.
+    // Backend stays canonical: only schema 1.x is hard-rejected, everything else passes.
     expect(
       checkVersionGate({
         schema_version: "3.0.0",
@@ -126,6 +126,21 @@ describe("newProject", () => {
     expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v1.0.0");
     expect(projectStore.dirty).toBe(false);
     expect(projectStore.openError).toBeNull();
+  });
+
+  it("round-trips a fresh current pre-v1 reg_meta seed through openFromFile", async () => {
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v0.34.0",
+      steward: "global",
+    });
+    const raw = JSON.stringify(projectStore.draft);
+
+    await projectStore.openFromFile(jsonFile(raw));
+
+    expect(projectStore.openError).toBeNull();
+    expect(projectStore.draft?.schema_version).toBe("2.0.0");
+    expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v0.34.0");
+    expect(projectStore.dirty).toBe(false);
   });
 });
 
