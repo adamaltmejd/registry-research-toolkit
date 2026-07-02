@@ -94,10 +94,39 @@ Check the app as a dense registry research tool, not a marketing site.
   deliberate stacked/card rows on narrow screens.
 - Accessibility visuals: visible focus rings, contrast, accessible names, label
   association, status meaning conveyed by text/glyphs rather than color alone.
-- Design system: existing components and semantic tokens; no new one-off palettes,
-  hero-style sections, decorative gradients/orbs, heavy shadows, or oversized cards.
+- Design system: styling consistency and component reuse per the section below; no new
+  one-off palettes, hero-style sections, decorative gradients/orbs, heavy shadows, or
+  oversized cards.
 - Render health: no blank screens, stuck `aria-busy="true"` loading states, obvious JS
   errors, missing critical assets, or screenshots captured before content settled.
+
+## Styling Consistency And Component Reuse
+
+The coherence baseline is the repo design system, not general taste. Before judging
+consistency, read the "Visual language (design system)" section of
+`reg_webapp/DESIGN.md`, the semantic tokens in `reg_webapp/frontend/src/tokens.css`, and
+the shared primitives in `reg_webapp/frontend/src/lib/ui/` (Breadcrumbs, Button,
+DataTable, EmptyState, KeyValue, Panel, Skeleton, Tag, plus `utilities.css`:
+`.micro-label`, `.visually-hidden`).
+
+Screenshots alone cannot catch token bypass, so also read the PR's frontend diff:
+
+- Component reuse: changed views compose the existing `lib/ui` primitives. A hand-rolled
+  near-duplicate of an existing primitive — a bespoke table, button, tag, empty state,
+  or key-value list — is at least a `P2`.
+- Behavior layer: a11y-critical widgets (comboboxes, menus, dialogs, popovers, sliders)
+  come from Bits UI (`bits-ui`, the sanctioned headless-primitives dep — see
+  `reg_webapp/DESIGN.md` § UI primitives), styled with scoped CSS reading semantic
+  tokens. A hand-rolled widget Bits UI covers is at least a `P2`; so is a Bits UI usage
+  that ships its own one-off visual styling instead of tokens.
+- Token discipline: flag raw hex/rgb/oklch colors, one-off px spacing/radius/shadow
+  values, or new font stacks where a semantic token exists (`--surface*`, `--border*`,
+  `--accent*`, `--text-*`, `--space-*`, `--radius*`, `--font-*`, `--micro-label-*`,
+  `--focus-ring`, `--elevation-*`). A hardcoded value can render identically today and
+  still break the light-first, dark-ready token contract.
+- Cross-route coherence: render at least one untouched sibling route alongside the
+  changed route and compare type scale, spacing rhythm, and table/card/tag treatment;
+  flag divergence from surrounding pages, not just defects within the changed route.
 
 ## Findings And Fixes
 
