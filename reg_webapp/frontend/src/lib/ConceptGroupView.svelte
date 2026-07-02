@@ -21,7 +21,11 @@ import {
   rowAddPeriod,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
-import { looksLikePeriod, type PeriodGrain, periodFromWire } from "./period";
+import {
+  isStructurallyValidPeriodWire,
+  type PeriodGrain,
+  periodFromWire,
+} from "./period";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import RepresentationPicker, {
@@ -494,7 +498,7 @@ const focusKey = $derived.by((): string | null => {
 // binding leaf's `pickerWindow`).
 const period = $derived(router.getQueryParam("period"));
 const activePickerPeriod = $derived(
-  period && looksLikePeriod(period) ? period : null,
+  period && isStructurallyValidPeriodWire(period) ? period : null,
 );
 
 // Members are year-grain coverage, so the picker offers only the year grain.
@@ -537,7 +541,7 @@ const unionCoverage = $derived.by(() => {
  * wire wins, else the global study window), or null (no dimming). Mirrors the
  * binding leaf's `pickerWindow`. */
 const pickerWindow = $derived(
-  pickerWindowYears(period ?? null, windowStore.value),
+  pickerWindowYears(activePickerPeriod, windowStore.value),
 );
 
 /** Write `?period` to the group URL (preserving the pathname + any `?member=` focus
@@ -577,7 +581,7 @@ $effect(() => {
 
 function stagedAddCandidate(selection: PickerSelection) {
   const { band, row } = selection;
-  const addWindow = addWindowBounds(period ?? null, pickerWindow);
+  const addWindow = addWindowBounds(activePickerPeriod, pickerWindow);
   const addPeriod = rowAddPeriod(row, addWindow);
   return {
     selection,

@@ -135,6 +135,45 @@ export function looksLikePeriod(raw: string): boolean {
   return looksLikeSegment(value);
 }
 
+function periodSegmentBounds(segment: string): PeriodBounds | null {
+  const endpoints = periodRangeEndpoints(segment) ?? [
+    segment.trim(),
+    segment.trim(),
+  ];
+  const lo = periodTokenBounds(endpoints[0]);
+  const hi = periodTokenBounds(endpoints[1]);
+  if (!lo || !hi || lo.from > hi.to) {
+    return null;
+  }
+  return { from: lo.from, to: hi.to };
+}
+
+/** Strict client-side mirror for places that write `?period` directly into
+ * project_data. Unlike `looksLikePeriod`, this enforces the backend's list-level
+ * sorted/non-overlap invariant so grammar-looking values such as `2020,2019`
+ * stay presentation-only until the user fixes them. */
+export function isStructurallyValidPeriodWire(raw: string): boolean {
+  const value = raw.trim();
+  if (!looksLikePeriod(value)) {
+    return false;
+  }
+  if (value === DEFAULT_SENTINEL) {
+    return true;
+  }
+  let previousTo: string | null = null;
+  for (const member of value.split(LIST_SEP)) {
+    const bounds = periodSegmentBounds(member.trim());
+    if (!bounds) {
+      return false;
+    }
+    if (previousTo !== null && bounds.from <= previousTo) {
+      return false;
+    }
+    previousTo = bounds.to;
+  }
+  return true;
+}
+
 // ── Token bounds (advisory mirror of `reg_meta.fqid` interval semantics) ────
 // The #306 one-click add needs CLIENT-side window math (clip register-variant
 // validity windows to the user's range to tell succession from co-existence).

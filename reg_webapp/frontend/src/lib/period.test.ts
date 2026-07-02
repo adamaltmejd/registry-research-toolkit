@@ -3,6 +3,7 @@ import {
   clampYearWindow,
   grainOfToken,
   intersectCoverageWindow,
+  isStructurallyValidPeriodWire,
   looksLikePeriod,
   mergePeriods,
   nextResolutionQuery,
@@ -280,6 +281,21 @@ describe("looksLikePeriod (advisory period grammar)", () => {
     // Guard the contract: the helper returns a boolean (never throws), so the
     // picker can show a hint without blocking submit.
     expect(typeof looksLikePeriod("definitely not a period")).toBe("boolean");
+  });
+});
+
+describe("isStructurallyValidPeriodWire", () => {
+  it("accepts sorted non-overlapping period wires and the default sentinel", () => {
+    expect(isStructurallyValidPeriodWire("2020")).toBe(true);
+    expect(isStructurallyValidPeriodWire("2019-03..2019-06")).toBe(true);
+    expect(isStructurallyValidPeriodWire("2005..2010,2015..2020")).toBe(true);
+    expect(isStructurallyValidPeriodWire("_default")).toBe(true);
+  });
+
+  it("rejects grammar-looking lists that are unsorted or overlapping", () => {
+    expect(isStructurallyValidPeriodWire("2020,2019")).toBe(false);
+    expect(isStructurallyValidPeriodWire("2010..2020,2020..2021")).toBe(false);
+    expect(isStructurallyValidPeriodWire("2020..2019")).toBe(false);
   });
 });
 

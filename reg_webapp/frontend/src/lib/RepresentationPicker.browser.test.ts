@@ -424,6 +424,44 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(onapply.mock.calls[0][0].adds).toHaveLength(0);
   });
 
+  it("stages all rows backed by the same null binding when one is removed", async () => {
+    const onapply = vi.fn();
+    const band = multiAxisBand();
+    const committedRows = new Map<string, PickerCommittedRow>(
+      band.rows.slice(0, 2).map((r) => {
+        const key = pickerRowKey(band, r);
+        return [
+          key,
+          {
+            key,
+            registerVariant: `${band.registerPrefix}/${r.variant}`,
+            variable: band.key,
+            representation: null,
+            sourceName: "Source",
+            sourcePeriod: "_default",
+          },
+        ];
+      }),
+    );
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      committedRows,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+
+    await expect.element(page.getByText("-2 columns")).toBeVisible();
+    expect(
+      document.querySelectorAll(".col-list .row-btn.staged-remove"),
+    ).toHaveLength(2);
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].removes).toHaveLength(2);
+  });
+
   it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
     const onapply = vi.fn();
     render(RepresentationPicker, {

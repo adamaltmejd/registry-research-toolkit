@@ -369,6 +369,37 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     );
   });
 
+  it("does not stage a source period replacement for an invalid group ?period list", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/rams/individer",
+          period: { from: 2010, to: 2015 },
+          binding: {
+            variable: "scb/rams/inkjan",
+            type: "numeric",
+            representation: null,
+          },
+        },
+      ],
+    });
+    router.navigate("/catalog/group/scb/rams/ink?period=2020,2019");
+
+    renderGroup();
+
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Apply staged changes" }))
+      .toBeDisabled();
+    expect(projectStore.draft?.sources[0]?.period).toEqual({
+      from: 2010,
+      to: 2015,
+    });
+  });
+
   it("a MULTI-column member renders a thin subheading over its column rows (all visible)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());

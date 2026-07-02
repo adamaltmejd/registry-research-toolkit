@@ -190,6 +190,27 @@ export function stagedRemoveForCommitted(
   };
 }
 
+export function nullBindingCommittedRowKeys(
+  committed: Iterable<PickerCommittedRow>,
+  target: PickerCommittedRow,
+): string[] {
+  if (target.representation !== null) {
+    return [target.key];
+  }
+  const keys: string[] = [];
+  for (const row of committed) {
+    if (
+      row.representation === null &&
+      row.registerVariant === target.registerVariant &&
+      row.variable === target.variable &&
+      periodToWire(row.sourcePeriod) === periodToWire(target.sourcePeriod)
+    ) {
+      keys.push(row.key);
+    }
+  }
+  return keys.length > 0 ? keys : [target.key];
+}
+
 export function stagedPeriodChanges(
   committed: Iterable<PickerCommittedRow>,
   removedKeys: ReadonlySet<string>,
@@ -233,12 +254,32 @@ export function periodChangesWithStagedAdds(
   }
   return changes.map((change) => {
     const addPeriod = addPeriods.get(change.registerVariant);
-    if (addPeriod === undefined) {
+    if (
+      addPeriod === undefined ||
+      !isYearMergeablePeriod(change.period) ||
+      !isYearMergeablePeriod(addPeriod)
+    ) {
       return change;
     }
     return {
       ...change,
       period: mergePeriods(change.period, addPeriod),
     };
+  });
+}
+
+function isYearMergeablePeriod(period: Period): boolean {
+  const wire = periodToWire(period);
+  if (!wire) {
+    return false;
+  }
+  return wire.split(",").every((segment) => {
+    const endpoints = segment.includes("..")
+      ? segment.split("..")
+      : [segment, segment];
+    return (
+      endpoints.length === 2 &&
+      endpoints.every((endpoint) => /^\d{4}$/.test(endpoint.trim()))
+    );
   });
 }

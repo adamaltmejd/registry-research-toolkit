@@ -17,6 +17,7 @@ import {
 } from "./catalog";
 import { router } from "./router.svelte";
 import {
+  nullBindingCommittedRowKeys,
   type PickerCommittedRow,
   pickerRowKey,
   type StagedPickerBand,
@@ -327,11 +328,19 @@ function setRowDesired(
 ): void {
   const key = rowKey(band, row);
   if (committedRows.has(key)) {
+    const committed = committedRows.get(key);
+    const removeKeys = committed
+      ? nullBindingCommittedRowKeys(committedRows.values(), committed)
+      : [key];
     nextAdds.delete(key);
     if (desired) {
-      nextRemoves.delete(key);
+      for (const removeKey of removeKeys) {
+        nextRemoves.delete(removeKey);
+      }
     } else {
-      nextRemoves.add(key);
+      for (const removeKey of removeKeys) {
+        nextRemoves.add(removeKey);
+      }
     }
   } else {
     nextRemoves.delete(key);

@@ -3,6 +3,7 @@ import type { PickerRepresentation } from "./catalog";
 import type { ProjectData } from "./project_data";
 import {
   committedPickerRows,
+  nullBindingCommittedRowKeys,
   periodChangesWithStagedAdds,
   pickerRowKey,
   type StagedPickerBand,
@@ -249,6 +250,72 @@ describe("periodChangesWithStagedAdds", () => {
           { from: 2018, to: 2020 },
         ],
       },
+    ]);
+  });
+
+  it("preserves default period replacements instead of narrowing them to staged adds", () => {
+    expect(
+      periodChangesWithStagedAdds(
+        [
+          {
+            registerVariant: "scb/lisa/ind",
+            period: "_default",
+          },
+        ],
+        [
+          {
+            registerVariant: "scb/lisa/ind",
+            period: { from: 2018, to: 2020 },
+          },
+        ],
+      ),
+    ).toEqual([
+      {
+        registerVariant: "scb/lisa/ind",
+        period: "_default",
+      },
+    ]);
+  });
+});
+
+describe("nullBindingCommittedRowKeys", () => {
+  it("returns every committed row backed by the same null binding", () => {
+    const rows = [
+      row({ key: "ind::OLD", column: "OLD", representation: "OLD" }),
+      row({ key: "ind::NEW", column: "NEW", representation: "NEW" }),
+      row({ key: "arb::OTHER", variant: "arb", column: "OTHER" }),
+    ];
+    const b = band(rows);
+    const committed = [
+      {
+        key: pickerRowKey(b, rows[0]),
+        registerVariant: "scb/lisa/ind",
+        variable: "scb/lisa/dinf",
+        representation: null,
+        sourceName: "LISA",
+        sourcePeriod: "_default",
+      },
+      {
+        key: pickerRowKey(b, rows[1]),
+        registerVariant: "scb/lisa/ind",
+        variable: "scb/lisa/dinf",
+        representation: null,
+        sourceName: "LISA",
+        sourcePeriod: "_default",
+      },
+      {
+        key: pickerRowKey(b, rows[2]),
+        registerVariant: "scb/lisa/arb",
+        variable: "scb/lisa/dinf",
+        representation: null,
+        sourceName: "LISA",
+        sourcePeriod: "_default",
+      },
+    ];
+
+    expect(nullBindingCommittedRowKeys(committed, committed[0])).toEqual([
+      pickerRowKey(b, rows[0]),
+      pickerRowKey(b, rows[1]),
     ]);
   });
 });
