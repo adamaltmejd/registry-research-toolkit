@@ -667,12 +667,14 @@ non-numeric codes like ICD letters).
 
 The `supersedes link` (the `supersedes_id` FK / `supersedes` short_name surfaced by
 `list/get classification`, and its reverse `superseded_by` back-pointer) is a **derived
-projection** of `classification_replaced_by`, the single canonical succession surface
-(#579), not a separately-curated field. The read side trusts it as-is. Because a
-predecessor can fan out to several successors (the `sun1996` → 2000
-nivå/inriktning/grupp split), `superseded_by` is a `GROUP_CONCAT` over all rows whose
-`supersedes_id` points back — `superseded_by(sun1996)` returns all three 2000
-dimensions. See `reg_meta_build/DESIGN.md` → "Classification succession".
+projection** of the active subset of `classification_replaced_by`, the single canonical
+succession surface (#579), not a separately-curated field. Future-dated edges remain in
+the edge table and become active only when the DB manifest's classification succession
+as-of year reaches their `effective_year`; read-side currentness and terminal redirects
+use that same policy. Because a predecessor can fan out to several successors (the
+`sun1996` → 2000 nivå/inriktning/grupp split), `superseded_by` is a `GROUP_CONCAT` over
+all rows whose `supersedes_id` points back — `superseded_by(sun1996)` returns all three
+2000 dimensions. See `reg_meta_build/DESIGN.md` → "Classification succession".
 
 The FK lives on `variable_state` (per-era), not on `variable`. SCB's data model already
 places the classification label (`value_set_version_label`) per era, and many headline

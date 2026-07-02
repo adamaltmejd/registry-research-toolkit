@@ -466,6 +466,50 @@ class TestClassificationSuccessionFold:
         assert str(results[0].fqid) == "class/ssyk2001"
         assert str(results[0].terminal_fqid) == "class/ssyk2012"
 
+    def test_future_successor_does_not_fold_until_as_of_year(self) -> None:
+        conn = build_slugged_db()
+        name = "Svensk sjukdomsklassifikation"
+        _add_classification(
+            conn, cid=81, short_name="ICD-10-SE", name=name, slug="icd-10-se"
+        )
+        _add_classification(
+            conn, cid=82, short_name="ICD-11-SE", name=name, slug="icd-11-se"
+        )
+        _add_succession_edge(
+            conn,
+            predecessor="icd-10-se",
+            successor="icd-11-se",
+            effective_year=2027,
+        )
+        conn.commit()
+        _rebuild_fts(conn)
+
+        before = search(
+            conn,
+            "sjukdomsklassifikation",
+            field="description",
+            classification_as_of_year=2026,
+        ).results
+        assert [r.type for r in before] == ["classification", "classification"]
+        assert {str(r.fqid) for r in before} == {
+            "class/icd-10-se",
+            "class/icd-11-se",
+        }
+        assert all(r.terminal_fqid is None for r in before)
+
+        after = search(
+            conn,
+            "sjukdomsklassifikation",
+            field="description",
+            classification_as_of_year=2027,
+        ).results
+        assert [r.type for r in after] == ["classification_succession"]
+        assert str(after[0].fqid) == "class/icd-11-se"
+        assert [edition.slug for edition in after[0].editions] == [
+            "icd-11-se",
+            "icd-10-se",
+        ]
+
     def test_collapsed_terminal_then_folds_into_umbrella_group(self) -> None:
         """The interaction: editions collapse to their terminal FIRST, then the
         terminal editions fold into a curated SUN-style umbrella group (#516)."""

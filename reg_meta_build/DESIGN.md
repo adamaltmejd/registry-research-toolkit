@@ -1004,7 +1004,10 @@ Build-time invariants (violations fail `reg-meta-build build-db` loudly, exit 10
 The seed declares **no succession**. Which classification edition supersedes which lives
 in `classification_replaced_by` (auto year-tail chains + curated `relations.toml`
 edges); `classification.supersedes_id` is a derived back-pointer projected from that
-edge table at build time — see "Classification succession" below.
+edge table's active subset at build time. Future-dated edges stay in
+`classification_replaced_by`, but do not flip currentness until the DB manifest's
+classification succession as-of year reaches their `effective_year`; see "Classification
+succession" below.
 
 ### Canonical code CSVs
 
@@ -2492,9 +2495,9 @@ already-grouped member:
    the auto year-tail edges above plus curated cross-stem edges from `relations.toml`
    (`type = "replaced_by"`, `class/<slug>` — e.g. the `sun1996` → `sun2000-niva` /
    `sun2000-inriktning` / `sun2000-grupp` 1→many split the same-stem rule can't
-   produce). `classification.supersedes_id` is a DERIVED back-pointer projected from
-   that edge table by `derive_supersedes_from_edges` (runs after the auto + curated
-   edges land, before `link_value_set_classifications` reads it); the
+   produce). `classification.supersedes_id` is a DERIVED back-pointer projected from the
+   active subset of that edge table by `derive_supersedes_from_edges` (runs after the
+   auto + curated edges land, before `link_value_set_classifications` reads it); the
    `classifications.toml` seed no longer declares succession. The
    `concept_group_classification` table and `kind='classification'` machinery hold the
    curated umbrella groups — `group:sun` being the first, added by #516 (see below). The

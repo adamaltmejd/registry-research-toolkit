@@ -19,7 +19,12 @@ from typing import TYPE_CHECKING, Literal, TypeVar, cast
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .db import db_path_from_args, open_db
+from .db import (
+    classification_succession_as_of_year,
+    classification_succession_edge_is_active,
+    db_path_from_args,
+    open_db,
+)
 from .doc_db import (
     RelatedDocument,  # noqa: TC001 - Pydantic resolves model fields at runtime.
 )
@@ -566,11 +571,10 @@ class ClassificationEdition(_CatalogModel):
     row, so a "dead edition" can't exist in a validated DB. `fqid` is None only on
     a *malformed* slug (a lower-level slug-grammar concern, also build-prevented;
     `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes
-    from the live row. `effective_year` is the year on the
-    `classification_replaced_by` edge that names this edition as `predecessor_slug`
-    — i.e. the year this edition was superseded by its successor (None for the
-    terminal, which has no outbound edge). `is_current` marks the
-    terminal (head) edition — the one with no outbound successor; `is_self` marks
+    from the live row. `effective_year` is the year on the outbound
+    `classification_replaced_by` edge by which this edition is superseded; it can
+    be future-dated. `is_current` marks started editions with no active outbound
+    successor as of the DB's classification succession policy year; `is_self` marks
     the edition the caller queried (resolved to its canonical live slug when the
     query was a `same_as` alias)."""
 
@@ -585,8 +589,8 @@ class ClassificationEdition(_CatalogModel):
     )
     effective_year: int | None = Field(
         description="The year on the succession edge naming this edition as the "
-        "predecessor — i.e. the year it was superseded by its successor; None for "
-        "the terminal (head) edition, which has no outbound edge."
+        "predecessor — i.e. the year it is superseded by its successor. Future "
+        "successor edges can coexist with `is_current=True` before their policy year."
     )
     version_year: int | None = Field(
         description="The edition's OWN point-in-time vintage year, read off the "
@@ -596,9 +600,9 @@ class ClassificationEdition(_CatalogModel):
         "whether it has a successor. None when the row carries no `valid_from`."
     )
     is_current: bool = Field(
-        description="True for a terminal (current) edition — no outbound successor. "
-        "A 1-to-many split root's chain has MULTIPLE such editions (one per branch "
-        "tip); a linear chain has exactly one."
+        description="True for a started edition with no active outbound successor "
+        "as of the DB's classification succession policy year. A 1-to-many split "
+        "root's chain can have MULTIPLE such editions (one per active branch tip)."
     )
     is_self: bool = Field(
         description="True for the edition the caller queried (resolved to its "
@@ -873,10 +877,19 @@ class Catalog:
     """FQID resolution against an open reg_meta SQLite connection."""
 
     def __init__(
-        self, conn: sqlite3.Connection, doc_conn: sqlite3.Connection | None = None
+        self,
+        conn: sqlite3.Connection,
+        doc_conn: sqlite3.Connection | None = None,
+        *,
+        classification_as_of_year: int | None = None,
     ) -> None:
         self._conn = conn
         self._doc_conn = doc_conn
+        self._classification_as_of_year = (
+            classification_as_of_year
+            if classification_as_of_year is not None
+            else classification_succession_as_of_year(conn)
+        )
         # Source-side keys present in `variable_same_as` / `classification_same_as`.
         # Loaded lazily on first miss; same_as graphs are curator-curated and
         # tiny (tens of entries), and the common case is "no edge for this
@@ -887,12 +900,16 @@ class Catalog:
 
     @classmethod
     def open(
-        cls, db_arg: str | Path | None = None, *, with_docs: bool = False
+        cls,
+        db_arg: str | Path | None = None,
+        *,
+        with_docs: bool = False,
+        classification_as_of_year: int | None = None,
     ) -> Catalog:
         path = db_path_from_args(str(db_arg) if db_arg is not None else None)
         conn = open_db(path)
         if not with_docs:
-            return cls(conn)
+            return cls(conn, classification_as_of_year=classification_as_of_year)
         try:
             from .doc_db import ensure_doc_db
 
@@ -900,7 +917,11 @@ class Catalog:
         except Exception:
             conn.close()
             raise
-        return cls(conn, doc_conn=doc_conn)
+        return cls(
+            conn,
+            doc_conn=doc_conn,
+            classification_as_of_year=classification_as_of_year,
+        )
 
     def close(self) -> None:
         self._conn.close()
@@ -2612,9 +2633,10 @@ class Catalog:
         ONE successor walks linearly as before; a node with >1 successor recurses into
         ALL of them. The closure is a DFS visiting each node's successors in
         `ORDER BY successor_slug` (deterministic), emitting each branch's editions in
-        vintage (traversal) order before descending the next branch. Every terminal in
-        the closure (a node with no outbound successor) is `is_current=True` — so a
-        split root's chain has MULTIPLE current editions, one per branch tip.
+        vintage (traversal) order before descending the next branch. Every started
+        node with no ACTIVE outbound successor is `is_current=True` — so a split
+        root's chain can have MULTIPLE current editions, one per active branch tip.
+        Future-dated successors stay visible in the chain before they are active.
 
         The BACKWARD walk stays deterministic-first — each classification has ≤1
         predecessor (no merges exist in the corpus), so the `[0]` predecessor IS the
@@ -2634,9 +2656,9 @@ class Catalog:
             `is_self`) is anchored on the canonical edition, not the alias. A slug
             that resolves to no live row falls back to itself — succession tolerates
             dead slugs.
-          - full walk: forward to every terminal (the chain ends with no outbound
-            successor) and backward to the root, assembling every edition on the
-            queried node's forward closure + backward path.
+          - full walk: forward over every successor branch and backward to the root,
+            assembling every edition on the queried node's forward closure +
+            backward path.
 
         Every chain endpoint is a live `classification` row — `reg_meta_build`'s
         validator (`validate.py`, the `classification_replaced_by` check) fails the
@@ -2650,10 +2672,12 @@ class Catalog:
         `catalog` (catalog is the lower layer — importing back would be circular).
 
         `effective_year` per edition is the year on the OUTBOUND edge by which that
-        edition was superseded by its successor on the path (the terminal, with no
-        outbound edge, gets None). A SPLIT node's outbound edges may disagree; we read
-        the deterministic-first edge `[0]`'s year (in the #579 split the three edges
-        share the same year, so the pick is moot, but the rule is deterministic)."""
+        edition is superseded by its successor on the path. A future-dated successor
+        therefore leaves its predecessor current before the policy year while still
+        displaying that upcoming `effective_year`. A SPLIT node's outbound edges may
+        disagree; we read the deterministic-first edge `[0]`'s year (in the #579
+        split the three edges share the same year, so the pick is moot, but the rule
+        is deterministic)."""
         queried = self._parse_classification(fqid)
         canonical = self._canonical_classification_slug(queried)
         seen = {canonical}
@@ -2687,14 +2711,20 @@ class Catalog:
             (canonical, canonical_year),
             *forward,
         ]
-        # Terminals = nodes with no outbound successor (in the closure + canonical
-        # when it is itself childless). A split root has MULTIPLE terminals.
+        row_by_slug = self._classification_chain_rows(s for s, _ in ordered)
+        # Current terminals = started nodes with no ACTIVE outbound successor. Future
+        # successors remain visible in the historical chain, but do not make their
+        # predecessor non-current until the DB's manifest as-of year reaches the
+        # edge year. A split root can still have MULTIPLE current terminals.
         terminals = {
             slug
             for slug, _ in ordered
-            if not self._classification_successor_edges(slug)
+            if self._classification_edition_started(slug, row_by_slug)
+            and not any(
+                self._classification_successor_edge_is_active(edge)
+                for edge in self._classification_successor_edges(slug)
+            )
         }
-        row_by_slug = self._classification_chain_rows(s for s, _ in ordered)
         editions: list[ClassificationEdition] = []
         for slug, year in ordered:
             # The chain invariant is every slug is a live row (validate.py fails the
@@ -2826,6 +2856,26 @@ class Catalog:
             out.append((edge.slug, child_year))
             out.extend(self._classification_forward_closure(edge.slug, seen))
         return out
+
+    def _classification_successor_edge_is_active(self, edge: ClassificationRef) -> bool:
+        return classification_succession_edge_is_active(
+            edge.effective_year, self._classification_as_of_year
+        )
+
+    def _classification_edition_started(
+        self, slug: str, row_by_slug: dict[str, sqlite3.Row]
+    ) -> bool:
+        row = row_by_slug.get(slug)
+        if row is not None and row["valid_from"] is not None:
+            return row["valid_from"] <= self._classification_as_of_year
+        inbound_years = [
+            edge.effective_year
+            for edge in self._classification_predecessor_edges(slug)
+            if edge.effective_year is not None
+        ]
+        return (
+            not inbound_years or min(inbound_years) <= self._classification_as_of_year
+        )
 
     def _canonical_classification_slug(self, slug: str) -> str:
         """Resolve a (possibly `same_as`-aliased) classification slug to the
@@ -3086,8 +3136,10 @@ class Catalog:
         slug — the walk needs no effective_year/note."""
         row = self._conn.execute(
             "SELECT successor_slug FROM classification_replaced_by "
-            "WHERE predecessor_slug = ? ORDER BY successor_slug LIMIT 1",
-            (slug,),
+            "WHERE predecessor_slug = ? "
+            "AND (effective_year IS NULL OR effective_year <= ?) "
+            "ORDER BY successor_slug LIMIT 1",
+            (slug, self._classification_as_of_year),
         ).fetchone()
         if row is None:
             return None

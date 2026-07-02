@@ -21,6 +21,8 @@ from datetime import date, timedelta
 from typing import TYPE_CHECKING, Any, Literal
 
 from reg_meta.db import (
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
     DB_FILENAME,
     SCHEMA_VERSION,
     register_py_lower,
@@ -4622,7 +4624,9 @@ def materialize(
         # then — the projection would no-op). Runs BEFORE
         # `link_value_set_classifications` below, whose `_chain_root` recursive CTE
         # walks `supersedes_id`.
-        n_supersedes = derive_supersedes_from_edges(conn)
+        n_supersedes = derive_supersedes_from_edges(
+            conn, as_of_year=CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+        )
         row_counts["classification_supersedes_derived"] = n_supersedes
 
     # Lineage edges. Runs *after* populate_variable_slugs so
@@ -5219,6 +5223,9 @@ def build_db(
         manifest_data = {
             "schema_version": SCHEMA_VERSION,
             "import_date": utc_now(),
+            CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY: (
+                CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+            ),
             "input_dir": str(input_dir),
             "source_checksums": source_checksums,
             "row_counts": row_counts,

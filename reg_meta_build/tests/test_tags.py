@@ -76,6 +76,9 @@ def test_repo_tags_toml_seeds_scb_subset() -> None:
     tags = load_tags(repo_tags_path())
     assert [tag.slug for tag in tags] == [
         "income",
+        "economic-assistance-amount",
+        "economic-assistance-months",
+        "earned-income",
         "employment",
         "education",
         "family-household",
@@ -96,6 +99,12 @@ def test_repo_tags_toml_seeds_scb_subset() -> None:
         "scb/hreg",
         "scb/rams",
         "scb/iot/disponibel-inkomst",
+        "scb/ekonomiskt-bistand/utbetalt-belopp-till-hushallet",
+        "sos/ekb/ekbbelopp",
+        "scb/ekonomiskt-bistand/antmanad",
+        "sos/ekb/ekbantmanad",
+        "scb/lisa/sammanraknad-forvarvsinkomst",
+        "scb/rams/arbink",
         "scb/lisa/arbetsmarknadsstatus",
         "scb/ureg/sun2020niva",
         "scb/iot/familjetyp",

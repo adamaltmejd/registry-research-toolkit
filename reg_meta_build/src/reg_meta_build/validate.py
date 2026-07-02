@@ -54,7 +54,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta.catalog import _decode_panel_entity_key
-from reg_meta.db import open_db
+from reg_meta.db import classification_succession_as_of_year, open_db
 
 from reg_meta_build.canonical_attach import CANONICAL_ATTACH_SOURCE_LABEL
 from reg_meta_build.db import (
@@ -1943,8 +1943,10 @@ def _check_classification_replaced_by(
     else:
         result.ok("succession edges resolve to live classification slugs")
 
+    as_of_year = classification_succession_as_of_year(conn)
     # #579: `classification.supersedes_id` is a DERIVED projection of this table
-    # (`derive_supersedes_from_edges`), not a seed field — so the two must agree.
+    # (`derive_supersedes_from_edges`), not a seed field — so the two must agree
+    # for edges active as of the DB's release-time classification policy year.
     # (1) every non-NULL supersedes_id must back onto an edge whose
     # predecessor_slug/successor_slug match the classification pair; (2) every
     # classification that IS a successor of an edge whose predecessor RESOLVES to a
@@ -1961,8 +1963,10 @@ def _check_classification_replaced_by(
         WHERE NOT EXISTS (
             SELECT 1 FROM classification_replaced_by e
             WHERE e.predecessor_slug = p.slug AND e.successor_slug = c.slug
+              AND (e.effective_year IS NULL OR e.effective_year <= ?)
         )
-        """
+        """,
+        (as_of_year,),
     ).fetchone()[0]
     missing_ptr = conn.execute(
         """
@@ -1972,8 +1976,10 @@ def _check_classification_replaced_by(
               SELECT 1 FROM classification_replaced_by e
               JOIN classification p ON p.slug = e.predecessor_slug
               WHERE e.successor_slug = c.slug
+                AND (e.effective_year IS NULL OR e.effective_year <= ?)
           )
-        """
+        """,
+        (as_of_year,),
     ).fetchone()[0]
     if orphan_ptr or missing_ptr:
         result.fail(
@@ -1982,7 +1988,7 @@ def _check_classification_replaced_by(
             f"{missing_ptr} successor(s) missing a derived pointer)"
         )
     else:
-        result.ok("supersedes_id is a faithful projection of succession edges")
+        result.ok("supersedes_id is a faithful projection of active succession edges")
 
     n_edges = conn.execute(
         "SELECT COUNT(*) FROM classification_replaced_by"

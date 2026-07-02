@@ -151,10 +151,10 @@ from WHO's official ICD-11 MMS Swedish (`sv`) simple tabulation release for 2026
 Some categories in that release have `TitleEN` but no Swedish `Title`; the committed CSV
 falls back to the English title for the display label instead of emitting blank labels.
 `valid_from=2027` follows Socialstyrelsen's first stated register transition (death
-causes from 2027-01-01); ICD-10-SE remains open-ended until the health-data transition
-can be modeled safely. The ICD-10-SE → ICD-11-SE `replaced_by` edge is also deferred:
-the catalog currently treats any successor as the current edition immediately, so a
-future-dated edge would make ICD-10-SE non-current in 2026 builds.
+causes from 2027-01-01); the ICD-10-SE → ICD-11-SE `replaced_by` edge is future-dated
+with `effective_year=2027`. Catalog currentness and terminal redirects use the DB
+manifest's classification succession as-of year, so 2026 builds keep ICD-10-SE current
+while still exposing the upcoming ICD-11-SE edge.
 
 **DRG / MDC note:** both are drawn from the NordDRG system published by Socialstyrelsen
 in collaboration with the Nordic Casemix Centre.

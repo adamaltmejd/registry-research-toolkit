@@ -879,18 +879,17 @@ export interface components {
          *     row, so a "dead edition" can't exist in a validated DB. `fqid` is None only on
          *     a *malformed* slug (a lower-level slug-grammar concern, also build-prevented;
          *     `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes
-         *     from the live row. `effective_year` is the year on the
-         *     `classification_replaced_by` edge that names this edition as `predecessor_slug`
-         *     — i.e. the year this edition was superseded by its successor (None for the
-         *     terminal, which has no outbound edge). `is_current` marks the
-         *     terminal (head) edition — the one with no outbound successor; `is_self` marks
+         *     from the live row. `effective_year` is the year on the outbound
+         *     `classification_replaced_by` edge by which this edition is superseded; it can
+         *     be future-dated. `is_current` marks started editions with no active outbound
+         *     successor as of the DB's classification succession policy year; `is_self` marks
          *     the edition the caller queried (resolved to its canonical live slug when the
          *     query was a `same_as` alias).
          */
         ClassificationEdition: {
             /**
              * Effective Year
-             * @description The year on the succession edge naming this edition as the predecessor — i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.
+             * @description The year on the succession edge naming this edition as the predecessor — i.e. the year it is superseded by its successor. Future successor edges can coexist with `is_current=True` before their policy year.
              */
             effective_year: number | null;
             /**
@@ -900,7 +899,7 @@ export interface components {
             fqid: string | null;
             /**
              * Is Current
-             * @description True for a terminal (current) edition — no outbound successor. A 1-to-many split root's chain has MULTIPLE such editions (one per branch tip); a linear chain has exactly one.
+             * @description True for a started edition with no active outbound successor as of the DB's classification succession policy year. A 1-to-many split root's chain can have MULTIPLE such editions (one per active branch tip).
              */
             is_current: boolean;
             /**

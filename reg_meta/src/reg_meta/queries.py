@@ -13,6 +13,7 @@ import unicodedata
 from typing import TYPE_CHECKING, Any
 
 from .catalog import Catalog, ConceptGroupMember, GroupFacet
+from .db import classification_succession_as_of_year
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import Fqid, try_emit
 from .search import (
@@ -480,6 +481,7 @@ def search(
     fold_groups: bool = True,
     code_variable_owner_limit: int | None = _CODE_OWNERS_PER_HIT,
     code_owner_scope: str = "all",
+    classification_as_of_year: int | None = None,
 ) -> SearchResults:
     """Search across registers, variables, and classifications.
 
@@ -541,6 +543,10 @@ def search(
     owned by variables but no classification), or ``"all"``. It is ignored by
     non-value surfaces. Filtering happens before pagination so split callers get
     independent pages and counts.
+
+    ``classification_as_of_year`` overrides the DB manifest's classification
+    succession policy year for tests and controlled release checks. ``None`` uses
+    the committed DB policy.
 
     ``limit=None`` returns the full result set after ``offset``. Returns a
     `SearchResults` (`total_count` + the sliced, folded `results` tuple of typed
@@ -726,7 +732,9 @@ def search(
         # concept_group members, so they need a separate fold. Once collapsed to
         # their terminal, the curated SUN-style umbrella group (#516) then folds
         # the terminals into `group:sun` cleanly below.
-        all_results = _fold_classification_succession(conn, all_results)
+        all_results = _fold_classification_succession(
+            conn, all_results, classification_as_of_year=classification_as_of_year
+        )
         all_results = _fold_concept_groups(
             conn,
             all_results,
@@ -1844,29 +1852,36 @@ def _group_member_state_in_years(
     )
 
 
-def _terminal_classification_slug(conn: sqlite3.Connection, slug: str) -> str:
+def _terminal_classification_slug(
+    conn: sqlite3.Connection, slug: str, *, as_of_year: int | None = None
+) -> str:
     """Walk `classification_replaced_by` (#571) from a classification edition slug
-    to its TERMINAL (current) successor — the chain end with no outbound edge —
-    and return that slug. Returns the input unchanged when it's already terminal.
+    to its ACTIVE terminal/current successor — the chain end with no active outbound
+    edge as of the DB's classification succession policy year — and return that
+    slug. Returns the input unchanged when it's already active-terminal.
 
     STOP AT A SPLIT (#604): a 1→many split predecessor (e.g. `sun1996` →
     {`sun2000-niva`, `sun2000-inriktning`, `sun2000-grupp`}) has NO single terminal
     — the chain branches into several distinct current editions. The walk stops at
-    such a node and returns IT as its own terminal, rather than arbitrarily
+    such a node and returns IT as its own active terminal, rather than arbitrarily
     following the lexicographically-first branch (which would mislabel a `sun1996`
     hit with a single branch's terminal). A node with exactly ONE successor is a
     plain rename — walk to it (a linear chain still collapses to its real terminal).
     `seen` cycle guard mirrors `Catalog._walk_terminal`."""
     seen = {slug}
     current = slug
+    policy_year = (
+        classification_succession_as_of_year(conn) if as_of_year is None else as_of_year
+    )
     while True:
         rows = conn.execute(
             "SELECT successor_slug FROM classification_replaced_by "
-            "WHERE predecessor_slug = ?",
-            (current,),
+            "WHERE predecessor_slug = ? "
+            "AND (effective_year IS NULL OR effective_year <= ?)",
+            (current, policy_year),
         ).fetchall()
-        # No outbound edge → terminal. >1 outbound edge → a split; the node is its
-        # own terminal (the chain branches, no single current edition).
+        # No active outbound edge → terminal. >1 active outbound edge → a split;
+        # the node is its own terminal (the chain branches, no single current edition).
         if len(rows) != 1:
             break
         successor = rows[0]["successor_slug"]
@@ -1878,7 +1893,10 @@ def _terminal_classification_slug(conn: sqlite3.Connection, slug: str) -> str:
 
 
 def _fold_classification_succession(
-    conn: sqlite3.Connection, results: list[dict[str, Any]]
+    conn: sqlite3.Connection,
+    results: list[dict[str, Any]],
+    *,
+    classification_as_of_year: int | None = None,
 ) -> list[dict[str, Any]]:
     """Collapse classification EDITION hits sharing a succession chain (#571) into
     one row for the chain's TERMINAL (current) edition, carrying the non-terminal
@@ -1907,6 +1925,11 @@ def _fold_classification_succession(
     }
     if not cids:
         return results
+    policy_year = (
+        classification_succession_as_of_year(conn)
+        if classification_as_of_year is None
+        else classification_as_of_year
+    )
     placeholders = ",".join("?" * len(cids))
     slug_by_id = {
         row["id"]: row["slug"]
@@ -1927,7 +1950,7 @@ def _fold_classification_succession(
         slug = slug_by_id.get(cid) if cid is not None else None
         if slug is None:
             continue  # NULL-slug classification isn't a succession participant
-        terminal = _terminal_classification_slug(conn, slug)
+        terminal = _terminal_classification_slug(conn, slug, as_of_year=policy_year)
         buckets.setdefault(terminal, []).append(r)
         terminal_by_hit[id(r)] = terminal
 

@@ -618,6 +618,43 @@ def test_classification_root_replaces_successor_terminal_with_family(catalog_db)
     assert [edition["is_current"] for edition in family["editions"]] == [False, True]
 
 
+def test_classification_root_replaces_future_successor_family(catalog_db):
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "UPDATE classification SET valid_from = 1997 WHERE slug = 'icd-10-se'"
+        )
+        conn.execute(
+            "INSERT INTO classification "
+            "(short_name, name, slug, valid_from) "
+            "VALUES ('ICD-11-SE', 'ICD-11-SE', 'icd-11-se', 2027)"
+        )
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('icd-10-se', 'icd-11-se', 2027, 'curated:test')"
+        )
+
+    with TestClient(create_app()) as local_client:
+        root = local_client.get("/api/catalog/class").json()
+        family = local_client.get("/api/catalog/group/class/icd").json()
+
+    families = {item["key"]: item for item in root["families"]}
+    assert families["icd"] == {
+        "kind": "classification-family",
+        "key": "icd",
+        "label": "ICD",
+        "editions": family["editions"],
+    }
+    child_fqids = {c["fqid"] for c in root["children"]}
+    assert "class/icd-10-se" not in child_fqids
+    assert "class/icd-11-se" not in child_fqids
+    assert [edition["slug"] for edition in family["editions"]] == [
+        "icd-10-se",
+        "icd-11-se",
+    ]
+    assert [edition["is_current"] for edition in family["editions"]] == [True, False]
+
+
 def test_classification_leaf_resolves(client):
     resp = client.get("/api/catalog/class/sun2020")
     assert resp.status_code == 200

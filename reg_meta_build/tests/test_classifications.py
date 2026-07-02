@@ -3877,7 +3877,11 @@ class TestDeriveSupersedesFromEdges:
     (#579), not a seed field. The function reads slug-anchored edges and writes
     each successor's predecessor id back onto `classification.supersedes_id`."""
 
-    def _conn(self, edges: list[tuple[str, str]], slugs: list[str]):
+    def _conn(
+        self,
+        edges: list[tuple[str, str] | tuple[str, str, int | None]],
+        slugs: list[str],
+    ):
         """Minimal schema: `classification` (id/slug/supersedes_id) plus the
         slug-anchored `classification_replaced_by` edge table. Insert one
         classification per slug, then the edges, leaving supersedes_id unset."""
@@ -3908,8 +3912,8 @@ class TestDeriveSupersedesFromEdges:
             )
         conn.executemany(
             "INSERT INTO classification_replaced_by "
-            "(predecessor_slug, successor_slug) VALUES (?, ?)",
-            edges,
+            "(predecessor_slug, successor_slug, effective_year) VALUES (?, ?, ?)",
+            [(edge[0], edge[1], edge[2] if len(edge) == 3 else None) for edge in edges],
         )
         return conn
 
@@ -3932,6 +3936,25 @@ class TestDeriveSupersedesFromEdges:
         n = derive_supersedes_from_edges(conn)
         assert n == 1
         assert self._supersedes(conn) == {"ssyk1996": None, "ssyk2012": "ssyk1996"}
+
+    def test_future_edge_waits_for_as_of_year(self):
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        conn = self._conn(
+            edges=[("icd-10-se", "icd-11-se", 2027)],
+            slugs=["icd-10-se", "icd-11-se"],
+        )
+
+        n_2026 = derive_supersedes_from_edges(conn, as_of_year=2026)
+        assert n_2026 == 0
+        assert self._supersedes(conn) == {"icd-10-se": None, "icd-11-se": None}
+
+        n_2027 = derive_supersedes_from_edges(conn, as_of_year=2027)
+        assert n_2027 == 1
+        assert self._supersedes(conn) == {
+            "icd-10-se": None,
+            "icd-11-se": "icd-10-se",
+        }
 
     def test_one_to_many_split_sun1996(self):
         """The curated #579 sun1996 split: ONE predecessor fans out to THREE
