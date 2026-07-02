@@ -167,22 +167,11 @@ function sourcesArray(draft: ProjectData): Source[] {
   return Array.isArray(draft.sources) ? draft.sources : [];
 }
 
-/** Append an empty source skeleton. */
-export function addSource(draft: ProjectData): ProjectData {
-  const source: Source = {
-    name: "",
-    register_variant: "",
-    period: "",
-    bindings: [],
-  };
-  return { ...draft, sources: [...sourcesArray(draft), source] };
-}
-
 // ── Source-name prefill (#312) ──────────────────────────────────────────────
 // Source names are panel-key join handles (reg_schema panels join on source
 // name), so a prefill must be unique among the draft's sources. The prefill is
-// advisory: it only ever replaces an empty name or one IT previously wrote
-// (tracked by shape, see `isPrefilledSourceName`) — never a user-entered name.
+// advisory: it only ever replaces an empty name — never a user-entered name; the
+// catalog add's create path (`newSource` in the store) is its single caller.
 
 /** Default source name for a register_variant coordinate: the register slug
  * (segment 2 of `provider/register/variant`) uppercased — `scb/lisa/v1` →
@@ -191,28 +180,6 @@ export function addSource(draft: ProjectData): ProjectData {
 export function defaultSourceName(registerVariant: string): string {
   const slug = registerVariant.split("/")[1] ?? "";
   return slug.toUpperCase();
-}
-
-/** Whether `name` is one the prefill could have produced for `registerVariant`
- * — empty, the default, or the default with a `_<n>` uniqueness suffix. The
- * "untouched" test: a variant change may overwrite such a name with the new
- * default, while anything user-entered survives. */
-export function isPrefilledSourceName(
-  name: string,
-  registerVariant: string,
-): boolean {
-  if (name === "") {
-    return true;
-  }
-  const base = defaultSourceName(registerVariant);
-  if (!base) {
-    return false;
-  }
-  return (
-    name === base ||
-    (name.startsWith(`${base}_`) &&
-      /^[0-9]+$/.test(name.slice(base.length + 1)))
-  );
 }
 
 /** `base` if no OTHER source (case-sensitive, as the schema compares) already
@@ -263,18 +230,6 @@ export function updateSource(
 
 // ── Immutable binding edits ─────────────────────────────────────────────────
 
-/** Append an empty binding to the source at `sourceIndex`. */
-export function addBinding(
-  draft: ProjectData,
-  sourceIndex: number,
-): ProjectData {
-  const binding: Binding = { variable: "", type: "" };
-  return updateSourceBindings(draft, sourceIndex, (bindings) => [
-    ...bindings,
-    binding,
-  ]);
-}
-
 /** Remove the binding at `bindingIndex` from the source at `sourceIndex`. */
 export function removeBinding(
   draft: ProjectData,
@@ -283,19 +238,6 @@ export function removeBinding(
 ): ProjectData {
   return updateSourceBindings(draft, sourceIndex, (bindings) =>
     bindings.filter((_, i) => i !== bindingIndex),
-  );
-}
-
-/** Patch the binding at `bindingIndex` (shallow merge — preserves its unmapped
- * keys). */
-export function updateBinding(
-  draft: ProjectData,
-  sourceIndex: number,
-  bindingIndex: number,
-  patch: Partial<Binding>,
-): ProjectData {
-  return updateSourceBindings(draft, sourceIndex, (bindings) =>
-    bindings.map((b, i) => (i === bindingIndex ? { ...b, ...patch } : b)),
   );
 }
 

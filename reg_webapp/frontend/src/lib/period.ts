@@ -477,6 +477,95 @@ function yearInt(raw: string): number | null {
   return /^(?:19|20)\d{2}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
 }
 
+// ── Period merge (#992 find-or-create by variant) ────────────────────────────
+// Under the #991 data-order model a source is keyed by `register_variant` ALONE
+// (not `(variant, period)`), so a second add of the same variant with a DISJOINT
+// window EXTENDS the source's period into the #307 interrupted-series list form
+// rather than minting a duplicate source. This is pure year-grammar arithmetic;
+// the token/sub-annual/`_default` grammars are NOT coalesceable here (a
+// mixed-grain sort is undefined — the documented footgun), so a period touching
+// any of those is REPLACED wholesale by the incoming window instead.
+
+/** One year interval `[lo, hi]` (inclusive, ascending) a year-only period segment
+ * denotes — or `null` when the segment is NOT pure year grammar (a token string,
+ * `_default`, or a range with a non-year endpoint). A bare year int → `[y, y]`; a
+ * `{from, to}` of two grammar years → that span. Strings are rejected outright:
+ * even a numeric-looking `"2020"` is treated as token grammar here (year segments
+ * ride the `number` arm — `periodFromWire` only ever emits int years). */
+function yearIntervalOf(segment: PeriodSegment): [number, number] | null {
+  if (typeof segment === "number") {
+    return Number.isInteger(segment) ? [segment, segment] : null;
+  }
+  if (typeof segment === "string") {
+    return null; // token / `_default` — not year grammar
+  }
+  const from = typeof segment.from === "number" ? segment.from : null;
+  const to = typeof segment.to === "number" ? segment.to : null;
+  if (from === null || to === null || from > to) {
+    return null;
+  }
+  return [from, to];
+}
+
+/** The year intervals of a whole period, or `null` when ANY segment is not pure
+ * year grammar (so the caller falls back to REPLACE — a single token/`_default`
+ * poisons the coalesce, same all-or-nothing rule as `periodWireBounds`). */
+function yearIntervalsOf(period: Period): [number, number][] | null {
+  const segments = Array.isArray(period) ? period : [period];
+  const intervals: [number, number][] = [];
+  for (const seg of segments) {
+    const interval = yearIntervalOf(seg);
+    if (interval === null) {
+      return null;
+    }
+    intervals.push(interval);
+  }
+  return intervals;
+}
+
+/** One inclusive year interval → its structured segment: a point year (`lo === hi`)
+ * collapses to the bare `number` arm, else the `{from, to}` range object (the only
+ * range shape `Source.period` accepts — see `segmentFromWire`). */
+function yearIntervalToSegment([lo, hi]: [number, number]): PeriodSegment {
+  return lo === hi ? lo : { from: lo, to: hi };
+}
+
+/**
+ * Merge an `incoming` window into an `existing` source period (#992). When BOTH
+ * are pure year grammar (year ints / year ranges, no tokens / `_default`),
+ * coalesce their intervals into a single sorted-ascending, non-overlapping,
+ * adjacency-merged list (reg_schema requires list periods sorted + disjoint) — a
+ * lone surviving interval collapses to a scalar, matching how `periodFromWire`
+ * represents a single segment. When EITHER side uses token grammar or `_default`,
+ * a coalesce is undefined (mixed-grain sort), so REPLACE with `incoming` — the
+ * user's most recent explicit window wins. Pure — unit-tested in `period.test.ts`.
+ */
+export function mergePeriods(existing: Period, incoming: Period): Period {
+  const existingYears = yearIntervalsOf(existing);
+  const incomingYears = yearIntervalsOf(incoming);
+  if (existingYears === null || incomingYears === null) {
+    return incoming;
+  }
+  const sorted = [...existingYears, ...incomingYears].sort(
+    (a, b) => a[0] - b[0] || a[1] - b[1],
+  );
+  const merged: [number, number][] = [];
+  for (const [lo, hi] of sorted) {
+    const open = merged.at(-1);
+    // Adjacency-merge: overlapping OR touching (a gap of 0 years — `2010..2011`
+    // then `2012..2013` fuse) collapse; a real gap (`lo > open.hi + 1`) splits.
+    if (open && lo <= open[1] + 1) {
+      if (hi > open[1]) {
+        open[1] = hi;
+      }
+    } else {
+      merged.push([lo, hi]);
+    }
+  }
+  const segments = merged.map(yearIntervalToSegment);
+  return segments.length === 1 ? segments[0] : segments;
+}
+
 // ── Query-string builder ─────────────────────────────────────────────────────
 
 /** Build a `?query` string from the resolution params, omitting undefined /

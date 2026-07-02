@@ -4,6 +4,7 @@ import {
   initPersistence,
   type ProjectPersistence,
   projectStore,
+  type StagedAdd,
   setPersistence,
   storeSchemaVersion,
 } from "./project_store.svelte";
@@ -15,6 +16,21 @@ const SEED = {
   reg_meta_version: "reg_meta/v1.0.0",
   steward: "global" as const,
 };
+
+/** A staged add of `variable` on `registerVariant` at `period`, with a concrete
+ * (already-resolved) type — the #991 write-once shape `applyStagedDiff` commits. */
+function add(
+  registerVariant: string,
+  variable: string,
+  period: StagedAdd["period"],
+  over: Partial<StagedAdd["binding"]> = {},
+): StagedAdd {
+  return {
+    registerVariant,
+    period,
+    binding: { variable, type: "categorical", ...over },
+  };
+}
 
 /** Build a File from a string for `openFromFile` (jsdom provides `File`/`Blob`,
  * and `File.prototype.text()` resolves the contents). */
@@ -137,8 +153,10 @@ describe("dirty flag", () => {
     await projectStore.validate();
     expect(projectStore.validation?.ok).toBe(true);
     expect(projectStore.validatedClean).toBe(true);
-    // An edit must invalidate it so the order download gate re-closes.
-    projectStore.addSource();
+    // A staged-diff edit must invalidate it so the order download gate re-closes.
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
+    });
     expect(projectStore.validation).toBeNull();
     expect(projectStore.validatedClean).toBe(false);
   });
@@ -337,27 +355,216 @@ describe("persistence wiring (the A5.4 swap point)", () => {
   });
 });
 
+describe("applyStagedDiff (#992 — one atomic commit path)", () => {
+  it("adds find-or-create by register_variant ALONE (a second add of the same variant appends, not a new source)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/kon", 2018),
+        add("scb/lisa/v1", "scb/lisa/alder", 2018, { type: "numeric" }),
+      ],
+    });
+    // Both bindings land on ONE source (keyed on the variant), not two.
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].register_variant).toBe("scb/lisa/v1");
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
+    ).toEqual(["scb/lisa/kon", "scb/lisa/alder"]);
+    // The #312 name prefill fired on the created source.
+    expect(projectStore.draft?.sources[0].name).toBe("LISA");
+  });
+
+  it("commits the write-once final fields verbatim (type + display_name + representation)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, {
+          type: "categorical",
+          display_name: "Ssyk3",
+          representation: "Ssyk3",
+        }),
+      ],
+    });
+    const binding = projectStore.draft?.sources[0].bindings[0];
+    expect(binding).toMatchObject({
+      variable: "scb/lisa/ssyk",
+      type: "categorical",
+      display_name: "Ssyk3",
+      representation: "Ssyk3",
+    });
+  });
+
+  it("merges a disjoint year window into the existing source's period (coalesce, sorted, disjoint)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/kon", { from: 2015, to: 2020 }),
+        // A later disjoint window EXTENDS the source period to the #307 list form.
+        add("scb/lisa/v1", "scb/lisa/alder", { from: 2005, to: 2010 }),
+      ],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    // Sorted ascending, non-overlapping — the earlier window sorts first.
+    expect(projectStore.draft?.sources[0].period).toEqual([
+      { from: 2005, to: 2010 },
+      { from: 2015, to: 2020 },
+    ]);
+  });
+
+  it("adjacency-merges touching year windows into one span", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/kon", { from: 2010, to: 2011 }),
+        add("scb/lisa/v1", "scb/lisa/alder", { from: 2012, to: 2013 }),
+      ],
+    });
+    // 2010..2011 + 2012..2013 have a 0-year gap → fuse into one 2010..2013 span.
+    expect(projectStore.draft?.sources[0].period).toEqual({
+      from: 2010,
+      to: 2013,
+    });
+  });
+
+  it("REPLACES a token-grammar period wholesale (a mixed-grain sort is undefined)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [add("scb/hst/v1", "scb/hst/kon", "HT2020")],
+    });
+    // A second add with a DIFFERENT token replaces (never coalesces) the period.
+    projectStore.applyStagedDiff({
+      adds: [add("scb/hst/v1", "scb/hst/alder", "VT2021")],
+    });
+    expect(projectStore.draft?.sources[0].period).toBe("VT2021");
+  });
+
+  it("removes drop matching bindings and prune sources left empty", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/kon", 2018),
+        add("scb/lisa/v1", "scb/lisa/alder", 2018),
+        add("scb/rtb/v1", "scb/rtb/fodelsear", 2018),
+      ],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(2);
+    // Remove one binding of LISA (source survives) + the sole RTB binding (source
+    // pruned).
+    projectStore.applyStagedDiff({
+      removes: [
+        { registerVariant: "scb/lisa/v1", variable: "scb/lisa/kon" },
+        { registerVariant: "scb/rtb/v1", variable: "scb/rtb/fodelsear" },
+      ],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].register_variant).toBe("scb/lisa/v1");
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
+    ).toEqual(["scb/lisa/alder"]);
+  });
+
+  it("a null-representation remove matches the variable's binding regardless of stored column", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
+      ],
+    });
+    // The remove carries NO representation → the null-either-side rule matches the
+    // stored Ssyk3 binding and drops it (pruning the emptied source).
+    projectStore.applyStagedDiff({
+      removes: [{ registerVariant: "scb/lisa/v1", variable: "scb/lisa/ssyk" }],
+    });
+    expect(projectStore.draft?.sources).toHaveLength(0);
+  });
+
+  it("periodChange replaces the matching source's period wholesale", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
+    });
+    projectStore.applyStagedDiff({
+      periodChange: [
+        { registerVariant: "scb/lisa/v1", period: { from: 2010, to: 2020 } },
+      ],
+    });
+    expect(projectStore.draft?.sources[0].period).toEqual({
+      from: 2010,
+      to: 2020,
+    });
+  });
+
+  it("commits the whole batch in ONE mutation (id mirror rebuilt once, autosave fires once)", async () => {
+    vi.useFakeTimers();
+    const saves: unknown[] = [];
+    setPersistence({
+      save: (_k, d) => {
+        saves.push(d);
+        return Promise.resolve();
+      },
+      load: () => Promise.resolve(null),
+    });
+    projectStore.newProject(SEED);
+    const stop = $effect.root(() => {
+      initPersistence();
+    });
+    await vi.advanceTimersByTimeAsync(600);
+    saves.length = 0; // ignore the newProject autosave
+
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/kon", 2018),
+        add("scb/rtb/v1", "scb/rtb/fodelsear", 2018),
+      ],
+    });
+    // Both sources exist with fresh, distinct stable ids (the mirror rebuilt once).
+    expect(projectStore.sourceId(0)).toMatch(/^c\d+$/);
+    expect(projectStore.sourceId(1)).toMatch(/^c\d+$/);
+    expect(projectStore.sourceId(0)).not.toBe(projectStore.sourceId(1));
+    expect(projectStore.bindingId(0, 0)).toBeTruthy();
+
+    // The debounced autosave collapses the single batch mutation into ONE write.
+    await vi.advanceTimersByTimeAsync(600);
+    expect(saves).toHaveLength(1);
+    vi.useRealTimers();
+    stop();
+  });
+
+  it("an empty diff preserves the draft content (no throw)", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
+    });
+    const before = structuredClone($state.snapshot(projectStore.draft));
+    // An empty diff commits a fresh draft object but leaves the content identical.
+    projectStore.applyStagedDiff({});
+    expect($state.snapshot(projectStore.draft)).toEqual(before);
+  });
+});
+
 describe("stable client-side ids (issue #200)", () => {
-  // A 3-source draft, each with 2 bindings, so a MIDDLE remove is meaningful.
+  // A 3-source draft, each with 2 bindings, so a MIDDLE remove is meaningful. Built
+  // through the atomic staged-diff commit path (the store's structural entry point).
   function seedThreeSources(): void {
     projectStore.newProject(SEED);
+    const adds: StagedAdd[] = [];
     for (let s = 0; s < 3; s++) {
-      projectStore.addSource();
-      projectStore.updateSource(s, { name: `s${s}` });
-      projectStore.addBinding(s);
-      projectStore.addBinding(s);
-      projectStore.updateBinding(s, 0, { variable: `s${s}b0` });
-      projectStore.updateBinding(s, 1, { variable: `s${s}b1` });
+      adds.push(add(`scb/r${s}/v1`, `s${s}b0`, 2018));
+      adds.push(add(`scb/r${s}/v1`, `s${s}b1`, 2018));
     }
+    projectStore.applyStagedDiff({ adds });
   }
 
   it("keeps a survivor's id stable across a MIDDLE source remove (no rebind to a shifted item)", () => {
     seedThreeSources();
     const id0 = projectStore.sourceId(0);
     const id2 = projectStore.sourceId(2);
-    // Remove the middle source. The last source shifts down to index 1.
+    // Remove the middle source (drop both its bindings → the source is pruned). The
+    // last source shifts down to index 1.
     projectStore.removeSource(1);
-    expect(projectStore.draft?.sources?.[1]?.name).toBe("s2");
+    expect(projectStore.draft?.sources?.[1]?.register_variant).toBe(
+      "scb/r2/v1",
+    );
     // The shifted survivor MUST carry its own id (id2), not the index-1 id it now
     // sits at — that stability is what remounts the right component instance.
     expect(projectStore.sourceId(0)).toBe(id0);
@@ -366,26 +573,18 @@ describe("stable client-side ids (issue #200)", () => {
 
   it("keeps a survivor binding's id stable across a MIDDLE binding remove", () => {
     projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.addBinding(0);
-    projectStore.addBinding(0);
-    projectStore.addBinding(0);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "b0", 2018),
+        add("scb/lisa/v1", "b1", 2018),
+        add("scb/lisa/v1", "b2", 2018),
+      ],
+    });
     const b0 = projectStore.bindingId(0, 0);
     const b2 = projectStore.bindingId(0, 2);
     projectStore.removeBinding(0, 1);
     expect(projectStore.bindingId(0, 0)).toBe(b0);
     expect(projectStore.bindingId(0, 1)).toBe(b2);
-  });
-
-  it("leaves a survivor's id UNCHANGED across an unrelated edit (one stable identity per item)", () => {
-    seedThreeSources();
-    const id1 = projectStore.sourceId(1);
-    const b1 = projectStore.bindingId(1, 1);
-    // An immutable edit replaces the source/binding object but must NOT churn its id.
-    projectStore.updateSource(0, { name: "renamed" });
-    projectStore.updateBinding(1, 1, { type: "categorical" });
-    expect(projectStore.sourceId(1)).toBe(id1);
-    expect(projectStore.bindingId(1, 1)).toBe(b1);
   });
 
   it("seeds ids for an OPENED file's sources + bindings", async () => {
@@ -463,35 +662,11 @@ describe("stable client-side ids (issue #200)", () => {
       expect(projectStore.sourceId(0)).not.toBe(projectStore.sourceId(1));
     });
 
-    it("addSource on a malformed non-array `sources` coerces to [] (no char-spread, mirror stays consistent)", async () => {
-      // The supported malformed fixture: `sources: "not-an-array"`. addSource must
-      // NOT spread the string into 13 single-char "sources"; it coerces to [] then
-      // appends one — and the store mirror appends exactly one id to match.
-      const raw = {
-        schema_version: "2.0.0",
-        steward: "global",
-        reg_meta_version: "reg_meta/v1.0.0",
-        name: "malformed-sources",
-        sources: "not-an-array",
-      };
-      await projectStore.openFromFile(jsonFile(JSON.stringify(raw)));
-      // The malformed value is loaded verbatim (the SPA is not the validator).
-      expect(projectStore.draft?.sources as unknown).toBe("not-an-array");
-
-      projectStore.addSource();
-      // Coerced: exactly ONE well-formed source now (not 14 char-sources).
-      const sources = projectStore.draft?.sources as unknown;
-      expect(Array.isArray(sources)).toBe(true);
-      expect((sources as unknown[]).length).toBe(1);
-      // The mirror matches: one source id, distinct from the index fallback.
-      expect(projectStore.sourceId(0)).toMatch(/^c\d+$/);
-      expect(projectStore.sourceId(1)).toBe("i1"); // out of range → index fallback
-    });
-
     it("updateField('sources', …) rebuilds the mirror so it can't desync (review #280)", () => {
       projectStore.newProject(SEED);
-      projectStore.addSource();
-      projectStore.addSource();
+      projectStore.applyStagedDiff({
+        adds: [add("scb/lisa/v1", "a", 2018), add("scb/rtb/v1", "b", 2018)],
+      });
       const beforeId0 = projectStore.sourceId(0);
       // A wholesale `sources` replacement via updateField must rebuild the mirror to
       // the NEW array's shape (here: shrink 2 → 1), not keep the stale 2-entry mirror.
@@ -547,8 +722,12 @@ describe("stable client-side ids (issue #200)", () => {
       expect(bodies).toHaveLength(1);
       assertNoIdLeak(bodies[0]);
       // The real source/binding content IS there (not an empty body that also passes).
-      const sent = bodies[0] as { sources: { name: string }[] };
-      expect(sent.sources.map((s) => s.name)).toEqual(["s0", "s1", "s2"]);
+      const sent = bodies[0] as { sources: { register_variant: string }[] };
+      expect(sent.sources.map((s) => s.register_variant)).toEqual([
+        "scb/r0/v1",
+        "scb/r1/v1",
+        "scb/r2/v1",
+      ]);
     });
 
     it("the /order POST body carries no client id", async () => {
@@ -581,75 +760,5 @@ describe("stable client-side ids (issue #200)", () => {
         assertNoIdLeak(body);
       }
     });
-  });
-});
-
-describe("source-name prefill on register_variant change (#312)", () => {
-  it("prefills the name from the register slug when the variant is set", () => {
-    projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
-    expect(projectStore.draft?.sources[0]?.name).toBe("LISA");
-  });
-
-  it("follows a variant change while the name is still the prefill", () => {
-    projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
-    projectStore.updateSource(0, { register_variant: "scb/rtb/v1" });
-    expect(projectStore.draft?.sources[0]?.name).toBe("RTB");
-  });
-
-  it("clears a prefilled name when the variant loses its register segment", () => {
-    projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
-    projectStore.updateSource(0, { register_variant: "scb" });
-    expect(projectStore.draft?.sources[0]?.name).toBe("");
-  });
-
-  it("never clobbers a user-entered name", () => {
-    projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, { name: "my handle" });
-    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
-    expect(projectStore.draft?.sources[0]?.name).toBe("my handle");
-  });
-
-  it("an explicit name in the same patch wins over the prefill", () => {
-    projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, {
-      register_variant: "scb/lisa/v1",
-      name: "explicit",
-    });
-    expect(projectStore.draft?.sources[0]?.name).toBe("explicit");
-  });
-
-  it("suffixes _2 when another source already took the default", () => {
-    projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
-    projectStore.addSource();
-    projectStore.updateSource(1, { register_variant: "scb/lisa/v2" });
-    expect(projectStore.draft?.sources[0]?.name).toBe("LISA");
-    expect(projectStore.draft?.sources[1]?.name).toBe("LISA_2");
-  });
-});
-
-describe("source-name prefill no-op guard (#312, Codex P2)", () => {
-  it("re-applying the SAME variant does not recompute a suffixed name", () => {
-    projectStore.newProject(SEED);
-    projectStore.addSource();
-    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" }); // LISA
-    projectStore.addSource();
-    projectStore.updateSource(1, { register_variant: "scb/lisa/v2" }); // LISA_2
-    projectStore.addSource();
-    projectStore.updateSource(2, { register_variant: "scb/lisa/v3" }); // LISA_3
-    projectStore.removeSource(1); // frees LISA_2
-    // Re-picking the same variant on the (now index-1) LISA_3 source must NOT
-    // rename it to the freed LISA_2 slot.
-    projectStore.updateSource(1, { register_variant: "scb/lisa/v3" });
-    expect(projectStore.draft?.sources[1]?.name).toBe("LISA_3");
   });
 });
