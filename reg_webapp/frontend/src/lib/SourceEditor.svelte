@@ -4,7 +4,7 @@ import { variantDisplayLabel } from "./catalog";
 import { periodToWire } from "./period";
 import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { Button, EmptyState, Tag } from "./ui";
+import { Button, EmptyState, KeyValue, type KeyValueRow, Tag } from "./ui";
 import {
   issuesUnderPointer,
   jsonPointer,
@@ -46,6 +46,19 @@ const bindingsMalformed = $derived(
 // The period as a read-only display string (list-period aware — `periodToWire`
 // already joins list segments); null → the "(no period)" fallback.
 const periodDisplay = $derived(periodToWire(source.period as Period));
+
+// The read-only coordinate rows, rendered through the shared KeyValue primitive
+// (#804) — same metadata-row styling ProjectEditor uses. The register_variant is a
+// machine FQID coordinate (mono), routed through `variantDisplayLabel` so #376's
+// variant-family labels swap in at one seam.
+const metaRows = $derived([
+  {
+    label: "Register variant",
+    value: variantDisplayLabel(registerVariant),
+    mono: true,
+  },
+  { label: "Period", value: periodDisplay ?? "(no period)" },
+] satisfies KeyValueRow[]);
 </script>
 
 <!-- `id` is the click-to-locate anchor the ValidationPanel scrolls to (matched via
@@ -73,17 +86,7 @@ const periodDisplay = $derived(periodToWire(source.period as Period));
     </Button>
   </header>
 
-  <dl class="fields">
-    <dt>Register variant</dt>
-    <dd>
-      <!-- The register_variant is a machine FQID coordinate — mono, like every
-           identifier. Routed through `variantDisplayLabel` so #376's variant-family
-           labels swap in at one seam. -->
-      <code class="mono">{variantDisplayLabel(registerVariant)}</code>
-    </dd>
-    <dt>Period</dt>
-    <dd>{periodDisplay ?? "(no period)"}</dd>
-  </dl>
+  <KeyValue rows={metaRows} />
 
   <div class="bindings" aria-label="Bindings">
     <h4>Bindings ({bindings.length})</h4>
@@ -150,23 +153,6 @@ const periodDisplay = $derived(periodToWire(source.period as Period));
     display: flex;
     align-items: baseline;
     gap: var(--space-2);
-  }
-  /* Read-only key/value display of the source coordinate + period. */
-  .fields {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: var(--space-1) var(--space-4);
-    margin: 0;
-  }
-  .fields dt {
-    font-weight: 600;
-    font-size: var(--text-sm);
-  }
-  .fields dd {
-    margin: 0;
-  }
-  .mono {
-    font-family: var(--font-mono);
   }
   .bindings h4 {
     margin: 0 0 var(--space-2);
