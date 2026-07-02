@@ -98,9 +98,19 @@ describe("VariantBrowser — name/display_group dedupe (D1.4)", () => {
                   comment: "Fixture population note",
                   date_range: "2019",
                 },
+                {
+                  name: "Employees",
+                  definition: "People with employment income, second frame",
+                  comment: "Repeated name should not duplicate a Svelte key",
+                  date_range: "2020",
+                },
               ],
               object_types: [
                 { name: "Person", definition: "Individual worker" },
+                {
+                  name: "Person",
+                  definition: "Individual worker, second frame",
+                },
               ],
             },
           ],
@@ -118,11 +128,17 @@ describe("VariantBrowser — name/display_group dedupe (D1.4)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Population" }))
       .toBeVisible();
-    await expect.element(page.getByText("Employees")).toBeVisible();
+    expect(await page.getByText("Employees").all()).toHaveLength(2);
+    await expect
+      .element(page.getByText("People with employment income, second frame"))
+      .toBeVisible();
     await expect
       .element(page.getByRole("heading", { name: "Object type" }))
       .toBeVisible();
-    await expect.element(page.getByText("Person")).toBeVisible();
+    expect(await page.getByText("Person").all()).toHaveLength(2);
+    await expect
+      .element(page.getByText("Individual worker, second frame"))
+      .toBeVisible();
   });
 });
 

@@ -118,7 +118,7 @@ function objectTypeRows(objectType: {
                     {#if populations.length > 0}
                       <div class="metadata-group">
                         <h5 class="micro-label metadata-heading">Population</h5>
-                        {#each populations as population (population.name)}
+                        {#each populations as population}
                           <KeyValue rows={populationRows(population)} />
                         {/each}
                       </div>
@@ -126,7 +126,7 @@ function objectTypeRows(objectType: {
                     {#if objectTypes.length > 0}
                       <div class="metadata-group">
                         <h5 class="micro-label metadata-heading">Object type</h5>
-                        {#each objectTypes as objectType (objectType.name)}
+                        {#each objectTypes as objectType}
                           <KeyValue rows={objectTypeRows(objectType)} />
                         {/each}
                       </div>

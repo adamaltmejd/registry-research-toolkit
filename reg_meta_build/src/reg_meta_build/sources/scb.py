@@ -411,22 +411,22 @@ def _import_registerinformation(
             kolumnnamn = row["Kolumnnamn"].strip()
             if kolumnnamn:
                 aliases.add((cvid, kolumnnamn))
-            populations.add(
-                (
-                    rveid,
-                    row["Populationnamn"].strip(),
-                    row["Populationdefinition"].strip(),
-                    row["Populationkommentar"].strip(),
-                    row["Populationdatum"].strip(),
-                )
+            population = (
+                rveid,
+                row["Populationnamn"].strip(),
+                row["Populationdefinition"].strip(),
+                row["Populationkommentar"].strip(),
+                row["Populationdatum"].strip(),
             )
-            object_types.add(
-                (
-                    rveid,
-                    row["Objekttypnamn"].strip(),
-                    row["Objekttypdefinition"].strip(),
-                )
+            if any(population[1:]):
+                populations.add(population)
+            object_type = (
+                rveid,
+                row["Objekttypnamn"].strip(),
+                row["Objekttypdefinition"].strip(),
             )
+            if any(object_type[1:]):
+                object_types.add(object_type)
 
             unika_join.setdefault(
                 (

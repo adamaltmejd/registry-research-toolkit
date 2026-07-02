@@ -274,8 +274,15 @@ def _variants_catalog() -> Catalog:
         "'Fixture population note', '2019')"
     )
     conn.execute(
+        "INSERT INTO population (regver_id, name, definition, comment, date_range) "
+        "VALUES (201, '', '', '', '')"
+    )
+    conn.execute(
         "INSERT INTO object_type (regver_id, name, definition) "
         "VALUES (201, 'Person', 'Individual worker')"
+    )
+    conn.execute(
+        "INSERT INTO object_type (regver_id, name, definition) VALUES (201, '', '')"
     )
     conn.commit()
     return Catalog(conn)

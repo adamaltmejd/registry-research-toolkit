@@ -393,6 +393,11 @@ class VariantSummary(_CatalogModel):
     versions: tuple[RegisterVersionMetadata, ...] = ()
 
 
+def _has_text(*values: str | None) -> bool:
+    """True when at least one provider-native metadata field carries display text."""
+    return any(value not in (None, "") for value in values)
+
+
 def _decode_panel_entity_key(raw: str | None) -> str | tuple[str, ...] | None:
     """Decode a stored panel key (A4.4c): a JSON-array string → tuple
     (composite key), any other string → itself (simple bare slug / "period"),
@@ -1209,6 +1214,10 @@ class Catalog:
             "ORDER BY regver_id, name",
             regver_ids,
         ).fetchall():
+            if not _has_text(
+                row["name"], row["definition"], row["comment"], row["date_range"]
+            ):
+                continue
             populations[row["regver_id"]].append(
                 PopulationMetadata(
                     name=row["name"],
@@ -1227,6 +1236,8 @@ class Catalog:
             "ORDER BY regver_id, name",
             regver_ids,
         ).fetchall():
+            if not _has_text(row["name"], row["definition"]):
+                continue
             object_types[row["regver_id"]].append(
                 ObjectTypeMetadata(
                     name=row["name"],
