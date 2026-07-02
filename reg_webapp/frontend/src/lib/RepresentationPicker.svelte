@@ -447,9 +447,11 @@ const selectedCount = $derived(stagedAdds.length);
 const removeCount = $derived(stagedRemoves.length);
 const periodChangeCount = $derived(periodChanges.length);
 const diffCount = $derived(selectedCount + removeCount + periodChangeCount);
+const rowDiffCount = $derived(selectedCount + removeCount);
+const canApply = $derived(diffCount > 0 && (selectedCount === 0 || canAdd));
 
 async function commit(): Promise<void> {
-  if (diffCount === 0 || !canAdd || applying) {
+  if (!canApply || applying) {
     return;
   }
   applying = true;
@@ -1298,7 +1300,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
 
   <div class="picker-footer">
     <span class="count" role="status">{footerLabel}</span>
-    {#if diffCount > 0}
+    {#if rowDiffCount > 0}
       <Button
         type="button"
         variant="default"
@@ -1314,7 +1316,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
       variant="primary"
       size="sm"
       aria-label="Apply staged changes"
-      disabled={diffCount === 0 || !canAdd || applying}
+      disabled={!canApply || applying}
       onclick={commit}
     >
       {applying ? "Applying..." : "Apply"}

@@ -6,6 +6,7 @@ import type { PickerRepresentation } from "./catalog";
 import RepresentationPicker, {
   type PickerBand,
 } from "./RepresentationPicker.svelte";
+import { type PickerCommittedRow, pickerRowKey } from "./staged_picker";
 
 // RepresentationPicker drives the concept-group column picker. #908 adds
 // dimension-type marking (per-row axis markers) + per-dimension filter controls
@@ -71,6 +72,26 @@ const PROPS = {
   canAdd: true,
   onapply: vi.fn(),
 } as const;
+
+function committedRowsFor(
+  band: PickerBand,
+  row: PickerRepresentation,
+): Map<string, PickerCommittedRow> {
+  const key = pickerRowKey(band, row);
+  return new Map([
+    [
+      key,
+      {
+        key,
+        registerVariant: `${band.registerPrefix}/${row.variant}`,
+        variable: band.key,
+        representation: row.representation,
+        sourceName: "Source",
+        sourcePeriod: 2000,
+      },
+    ],
+  ]);
+}
 
 /** The delivery-column chips of the currently-visible column ROWS (not the filter
  * fieldsets). */
@@ -270,6 +291,56 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(onapply).toHaveBeenCalledTimes(1);
     await expect.element(page.getByText("Will be added")).toBeVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
+  });
+
+  it("does not show Reset for a period-only staged change", async () => {
+    const onapply = vi.fn();
+    const band = multiAxisBand();
+    const committedRows = committedRowsFor(band, band.rows[0]);
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      activePeriod: "2001",
+      committedRows,
+      onapply,
+    });
+
+    await expect.element(page.getByText("1 period change")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Reset" }))
+      .not.toBeInTheDocument();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await expect.element(apply).toBeEnabled();
+    await apply.click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].periodChanges).toHaveLength(1);
+  });
+
+  it("allows remove-only applies before add seed context is ready", async () => {
+    const onapply = vi.fn();
+    const band = multiAxisBand();
+    const committedRows = committedRowsFor(band, band.rows[0]);
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      canAdd: false,
+      committedRows,
+      onapply,
+    });
+
+    const rowCheckbox = page.getByRole("checkbox", { name: /DIN1/ });
+    await expect.element(rowCheckbox).toBeChecked();
+    await rowCheckbox.click();
+    await expect.element(page.getByText("Will be removed")).toBeVisible();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await expect.element(apply).toBeEnabled();
+    await apply.click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].removes).toHaveLength(1);
   });
 
   it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {

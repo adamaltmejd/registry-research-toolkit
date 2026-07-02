@@ -68,4 +68,51 @@ describe("committedPickerRows", () => {
       }),
     );
   });
+
+  it("treats a null stored representation as present for same-variant rows", () => {
+    const rows = [
+      row({
+        key: "ind::DINF86",
+        column: "DINF86",
+        representation: "DINF86",
+        renamedColumns: [],
+      }),
+      row({
+        key: "ind::DINF87",
+        column: "DINF87",
+        representation: "DINF87",
+        renamedColumns: [],
+      }),
+    ];
+    const b = band(rows);
+    const draft: ProjectData = {
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/ind",
+          period: { from: 1981, to: 1985 },
+          bindings: [
+            {
+              variable: "scb/lisa/dinf",
+              type: "numeric",
+              representation: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    const committed = committedPickerRows(draft, [b]);
+
+    expect(committed.get(pickerRowKey(b, rows[0]))).toEqual(
+      expect.objectContaining({ representation: null }),
+    );
+    expect(committed.get(pickerRowKey(b, rows[1]))).toEqual(
+      expect.objectContaining({ representation: null }),
+    );
+  });
 });

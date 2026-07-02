@@ -58,7 +58,6 @@ function bindingRepresentation(binding: Binding): string | null {
 function rowMatchesBinding(
   binding: Binding,
   row: PickerRepresentation,
-  variantRows: readonly PickerRepresentation[],
 ): boolean {
   const representation = bindingRepresentation(binding);
   if (representation !== null) {
@@ -67,7 +66,7 @@ function rowMatchesBinding(
       row.renamedColumns.includes(representation)
     );
   }
-  return row.representation === null || variantRows.length === 1;
+  return true;
 }
 
 export function committedPickerRows(
@@ -85,13 +84,10 @@ export function committedPickerRows(
       if (!source) {
         continue;
       }
-      const variantRows = band.rows.filter((r) => r.variant === row.variant);
       const binding = (
         Array.isArray(source.bindings) ? source.bindings : []
       ).find(
-        (b) =>
-          bindingVariable(b) === band.key &&
-          rowMatchesBinding(b, row, variantRows),
+        (b) => bindingVariable(b) === band.key && rowMatchesBinding(b, row),
       );
       if (!binding) {
         continue;
