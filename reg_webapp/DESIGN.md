@@ -507,10 +507,11 @@ query logic beyond plumbing + the response policy.
   `RelatedDocumentsPanel` on register pages only, using the bare register slug. These
   are rehosted register/register-version source PDFs with provenance, not variable-level
   evidence, so `BindingLeafView.svelte` must not inherit them onto every variable page.
-  The panel is another independent docs failure domain: loading/error render inline;
-  absent docs DB, no curated rows, or an empty register result omits the whole section.
-  Each row links the title to `/api/docs/file/{register}/{filename}` and shows
-  `Källa: SCB · {license}` plus a source URL link.
+  It renders after the register's `VariantBrowser` so source PDFs stay at the end of the
+  register page. The panel is another independent docs failure domain: loading/error
+  render inline; absent docs DB, no curated rows, or an empty register result omits the
+  whole section. Each row links the title to `/api/docs/file/{register}/{filename}` and
+  shows `Källa: SCB · {license}` plus a source URL link.
 - **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.svelte`
   renders `DocMentionsPanel` in the `SubjectView` docs slot. These are fuzzy
   variable-aware parsed-doc matches from `/api/docs/for-variable`, not authoritative
@@ -1060,6 +1061,14 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   roving-tabindex grid — list keyboard navigation belongs to Bits UI `Command`
   elsewhere. API: `getRowId` + `selectedId` + `onselect`; omit them for a plain static
   table (`role="table"`).
+- **`DataTable` framed surface.** Use `framed` when the table itself is the whole
+  grouped surface and its column headers should be the single top row. Do not wrap that
+  case in `Panel` — a `Panel` title plus table headers creates duplicate heading rows.
+  The framed variant keeps its header row visible at narrow widths and suppresses
+  repeated per-card column labels. It also keeps narrow rows flat inside the table
+  shell, not bordered/rounded cards; two-column framed tables collapse to one visual
+  column with the second cell as secondary text under the primary cell. The surface
+  still has exactly one visible heading row and one table layer.
 - **`DataTable` responsive stacking (≤48 rem).** At narrow widths each `<tr>` becomes a
   bordered card; cells stack vertically. The first column is the primary title (no
   micro-label prefix); non-primary cells show their column label as a CSS `::before`

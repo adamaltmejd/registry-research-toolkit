@@ -2,7 +2,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { CatalogNode } from "./api";
-import { getCatalogNode, getRelatedDocuments } from "./api";
+import {
+  getCatalogNode,
+  getRegisterVariants,
+  getRelatedDocuments,
+} from "./api";
 import CatalogNodeView from "./CatalogNodeView.svelte";
 
 // CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
@@ -13,6 +17,7 @@ vi.mock("./api", async (importOriginal) => {
   return {
     ...actual,
     getCatalogNode: vi.fn(),
+    getRegisterVariants: vi.fn(),
     getRelatedDocuments: vi.fn(),
   };
 });
@@ -142,7 +147,22 @@ function groupedRegisterNode(): CatalogNode {
 
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getRegisterVariants).mockReset();
   vi.mocked(getRelatedDocuments).mockReset();
+  vi.mocked(getRegisterVariants).mockResolvedValue({
+    register: "scb/lisa",
+    variants: [
+      {
+        slug: "_default",
+        name: null,
+        display_group: null,
+        description: null,
+        panel_entity_key: null,
+        panel_time_grain: null,
+        panel_time_key: null,
+      },
+    ],
+  });
   vi.mocked(getRelatedDocuments).mockResolvedValue({
     kind: "related-documents",
     ingested: true,
@@ -176,7 +196,14 @@ describe("CatalogNodeView provider arm", () => {
 
     const table = container.querySelector("table.data-table");
     expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).not.toBeNull();
+    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.classList.contains("framed")).toBe(true);
+    await expect
+      .element(page.getByRole("columnheader", { name: "Register" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("columnheader", { name: "Description" }))
+      .toBeVisible();
 
     // #806: the raw FQID <code> element is dropped — the link's name is identity.
     expect(container.querySelector("code")).toBeNull();
@@ -205,7 +232,7 @@ describe("CatalogNodeView provider arm", () => {
 });
 
 describe("CatalogNodeView register arm", () => {
-  it("renders each ungrouped variable as a DataTable row inside a Panel", async () => {
+  it("renders each ungrouped variable as a framed DataTable row", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
 
     const { container } = await render(CatalogNodeView, {
@@ -222,7 +249,11 @@ describe("CatalogNodeView register arm", () => {
 
     const table = container.querySelector("table.data-table");
     expect(table).not.toBeNull();
-    expect(table?.closest(".panel")).not.toBeNull();
+    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.classList.contains("framed")).toBe(true);
+    await expect
+      .element(page.getByRole("columnheader", { name: "Variable" }))
+      .toBeVisible();
     expect(
       [...container.querySelectorAll("tbody tr")].map((row) =>
         row.textContent?.trim(),
@@ -265,6 +296,20 @@ describe("CatalogNodeView register arm", () => {
 
   it("renders register-grain source documents on register pages (#967)", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      register: "scb/lisa",
+      variants: [
+        {
+          slug: "combined",
+          name: "Combined register",
+          display_group: null,
+          description: null,
+          panel_entity_key: null,
+          panel_time_grain: null,
+          panel_time_key: null,
+        },
+      ],
+    });
     vi.mocked(getRelatedDocuments).mockResolvedValue({
       kind: "related-documents",
       ingested: true,
@@ -293,12 +338,30 @@ describe("CatalogNodeView register arm", () => {
       .element(page.getByRole("heading", { name: "Source documents" }))
       .toBeVisible();
     await expect
+      .element(page.getByRole("heading", { name: "Variants" }))
+      .toBeVisible();
+    await expect
       .element(page.getByRole("link", { name: "LISA source PDF" }))
       .toHaveAttribute("href", "/api/docs/file/lisa/lisa.pdf");
+    const variants = document
+      .querySelector("#variants-heading")
+      ?.closest("section");
+    const sourceDocs = document
+      .querySelector("#related-docs-heading")
+      ?.closest("section");
+    expect(variants).not.toBeNull();
+    expect(sourceDocs).not.toBeNull();
+    if (!variants || !sourceDocs) {
+      throw new Error("Expected variants and source documents sections");
+    }
+    expect(
+      variants.compareDocumentPosition(sourceDocs) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(getRelatedDocuments).toHaveBeenCalledWith("lisa", expect.anything());
   });
 
-  it("renders grouped variables as subject links in the Panel without the group-key pill", async () => {
+  it("renders grouped variables as framed table subject links without the group-key pill", async () => {
     vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
 
     const { container } = await render(CatalogNodeView, {
@@ -315,7 +378,10 @@ describe("CatalogNodeView register arm", () => {
 
     const groupLink = container.querySelector("a.group-link");
     expect(groupLink?.closest("table.data-table")).not.toBeNull();
-    expect(groupLink?.closest(".panel")).not.toBeNull();
+    expect(
+      groupLink?.closest("table.data-table")?.classList.contains("framed"),
+    ).toBe(true);
+    expect(groupLink?.closest(".panel")).toBeNull();
     expect(groupLink?.querySelector(".group-key")).toBeNull();
   });
 });
@@ -342,12 +408,17 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
     const table = document.querySelector("table.data-table");
     expect(table).not.toBeNull();
     expect(table?.closest(".panel")).not.toBeNull();
+    expect(table?.closest(".classification-table")).not.toBeNull();
     await expect
-      .element(page.getByRole("heading", { name: "Catalog-wide index" }))
+      .element(page.getByRole("heading", { name: "Classifications" }))
       .toBeVisible();
     await expect
-      .element(page.getByRole("columnheader", { name: "Name", exact: true }))
+      .element(page.getByRole("heading", { name: "Classification systems" }))
       .toBeVisible();
+    expect(document.body.textContent).not.toContain("Catalog-wide index");
+    const tableHead = table?.querySelector("thead");
+    expect(tableHead).not.toBeNull();
+    expect(getComputedStyle(tableHead as Element).position).toBe("absolute");
 
     // It must NOT fall back to the old inline disclosure (the pre-#756 behavior).
     expect(document.querySelector("details.group")).toBeNull();

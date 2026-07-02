@@ -18,8 +18,8 @@ vi.mock("./api", async (importOriginal) => {
 });
 
 // The catalog root with two provider children (`scb` / `sos`) plus the
-// classification-root sentinel. Shaped like RootResponse children — the #967/#976
-// root renders these as a multi-column DataTable index.
+// classification-root sentinel. Shaped like RootResponse children — the root
+// renders these as a simplified framed navigation table.
 function catalogRoot(): RootResponse {
   return {
     kind: "root",
@@ -36,19 +36,13 @@ beforeEach(() => {
 });
 
 describe("CatalogRoot", () => {
-  it("renders top-level catalog sections as a multi-column table", async () => {
+  it("renders top-level catalog sections as a single-column navigation table", async () => {
     vi.mocked(getCatalogRoot).mockResolvedValue(catalogRoot());
 
     const { container } = await render(CatalogRoot, {});
 
     await expect
-      .element(page.getByRole("columnheader", { name: "Section" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("columnheader", { name: "Type" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("columnheader", { name: "Scope" }))
+      .element(page.getByRole("columnheader", { name: "Name" }))
       .toBeVisible();
 
     // #806/#976: each section is a name link to its catalog page…
@@ -58,11 +52,21 @@ describe("CatalogRoot", () => {
     await expect
       .element(page.getByRole("link", { name: "Classifications" }))
       .toHaveAttribute("href", "/catalog/class");
+
+    const table = container.querySelector("table.data-table");
+    expect(table?.closest(".panel")).toBeNull();
+    expect(table?.classList.contains("framed")).toBe(true);
+    expect(table?.querySelectorAll("thead tr")).toHaveLength(1);
     expect(
-      [...container.querySelectorAll(".tag .label")].map((tag) =>
-        tag.textContent?.trim(),
+      [...(table?.querySelectorAll("thead th") ?? [])].map((th) =>
+        th.textContent?.trim(),
       ),
-    ).toEqual(["Provider", "Provider", "Classification"]);
+    ).toEqual(["Name"]);
+    expect(container.querySelector("thead")?.textContent).not.toContain("Type");
+    expect(container.querySelector("thead")?.textContent).not.toContain(
+      "Scope",
+    );
+    expect(container.querySelector(".tag")).toBeNull();
 
     // …with the raw FQID <code> element dropped — the link's name is identity.
     expect(container.querySelector("code")).toBeNull();

@@ -34,6 +34,7 @@ interface TableProps<R extends object> {
   getRowId?: (row: R) => string;
   selectedId?: string;
   onselect?: (row: R) => void;
+  framed?: boolean;
 }
 
 function renderTable<R extends object>(props: TableProps<R>) {
@@ -49,6 +50,11 @@ const columns: Column<Row>[] = [
 const rows: Row[] = [
   { code: "1", label: "Man", count: 120 },
   { code: "2", label: "Woman", count: 98 },
+];
+
+const twoColumnColumns: Column<Row>[] = [
+  { key: "code", label: "Register" },
+  { key: "label", label: "Description" },
 ];
 
 describe("DataTable", () => {
@@ -158,6 +164,65 @@ describe("DataTable", () => {
       // jsdom-free: a real engine resolves `start`/`left` per the LTR doc dir.
       const align = getComputedStyle(countCell).textAlign;
       expect(["left", "start"]).toContain(align);
+    } finally {
+      await page.viewport(1280, 800);
+    }
+  });
+
+  it("keeps one visible header row for framed tables in the narrow layout", async () => {
+    await page.viewport(600, 800);
+    try {
+      const { container } = renderTable({ columns, rows, framed: true });
+      const table = container.querySelector("table.data-table");
+      expect(table).toHaveClass("framed");
+
+      const thead = container.querySelector("thead") as HTMLElement;
+      expect(getComputedStyle(thead).position).toBe("static");
+      expect(thead.getBoundingClientRect().height).toBeGreaterThan(0);
+
+      const labelCell = container.querySelector(
+        "tbody tr:first-child td:not(.first)",
+      ) as HTMLElement;
+      expect(getComputedStyle(labelCell, "::before").content).toBe("none");
+    } finally {
+      await page.viewport(1280, 800);
+    }
+  });
+
+  it("renders framed two-column narrow rows as flat one-column rows", async () => {
+    await page.viewport(600, 800);
+    try {
+      const { container } = renderTable({
+        columns: twoColumnColumns,
+        rows,
+        framed: true,
+      });
+      const firstRow = container.querySelector(
+        "tbody tr:first-child",
+      ) as HTMLElement;
+      const secondRow = container.querySelector(
+        "tbody tr:nth-child(2)",
+      ) as HTMLElement;
+      const firstCell = container.querySelector(
+        "tbody tr:first-child td:first-child",
+      ) as HTMLElement;
+      const secondCell = container.querySelector(
+        "tbody tr:first-child td:nth-child(2)",
+      ) as HTMLElement;
+      const hiddenHeader = container.querySelector(
+        "thead th:nth-child(2)",
+      ) as HTMLElement;
+
+      expect(getComputedStyle(firstRow).display).toBe("grid");
+      expect(
+        getComputedStyle(firstRow).gridTemplateColumns.split(" "),
+      ).toHaveLength(1);
+      expect(getComputedStyle(firstRow).borderRadius).toBe("0px");
+      expect(getComputedStyle(secondRow).marginTop).toBe("0px");
+      expect(getComputedStyle(firstRow).borderBottomStyle).toBe("solid");
+      expect(getComputedStyle(firstCell).borderBottomStyle).toBe("none");
+      expect(getComputedStyle(secondCell, "::before").content).toBe("none");
+      expect(getComputedStyle(hiddenHeader).position).toBe("absolute");
     } finally {
       await page.viewport(1280, 800);
     }
