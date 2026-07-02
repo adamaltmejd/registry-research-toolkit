@@ -638,6 +638,96 @@ export function mergePeriods(existing: Period, incoming: Period): Period {
   return segments.length === 1 ? segments[0] : segments;
 }
 
+interface BoundedPeriodSegment {
+  wire: string;
+  bounds: PeriodBounds;
+}
+
+/** Extend source-period coverage to include both periods. This keeps
+ * `mergePeriods`' token/default replacement contract for callers that really want
+ * "latest explicit period wins", while staged source accumulation can preserve
+ * every selected token/list window it resolves bindings against. */
+export function periodCoverageUnion(
+  existing: Period,
+  incoming: Period,
+): Period {
+  const existingWire = periodToWire(existing);
+  const incomingWire = periodToWire(incoming);
+  if (existingWire === DEFAULT_SENTINEL) {
+    return existing;
+  }
+  if (incomingWire === DEFAULT_SENTINEL) {
+    return incoming;
+  }
+  const existingYears = yearIntervalsOf(existing);
+  const incomingYears = yearIntervalsOf(incoming);
+  if (existingYears !== null && incomingYears !== null) {
+    return mergePeriods(existing, incoming);
+  }
+  return (
+    unionBoundedPeriodSegments(existing, incoming) ??
+    mergePeriods(existing, incoming)
+  );
+}
+
+function boundedPeriodSegments(period: Period): BoundedPeriodSegment[] | null {
+  const wire = periodToWire(period);
+  if (!wire || wire === DEFAULT_SENTINEL) {
+    return null;
+  }
+  const segments: BoundedPeriodSegment[] = [];
+  for (const raw of wire.split(LIST_SEP)) {
+    const member = raw.trim();
+    const bounds = periodWireBounds(member);
+    if (!member || !bounds) {
+      return null;
+    }
+    segments.push({ wire: member, bounds });
+  }
+  return segments.length > 0 ? segments : null;
+}
+
+function unionBoundedPeriodSegments(
+  existing: Period,
+  incoming: Period,
+): Period | null {
+  const existingSegments = boundedPeriodSegments(existing);
+  const incomingSegments = boundedPeriodSegments(incoming);
+  if (!existingSegments || !incomingSegments) {
+    return null;
+  }
+  const sorted = [...existingSegments, ...incomingSegments].sort(
+    (a, b) =>
+      a.bounds.from.localeCompare(b.bounds.from) ||
+      a.bounds.to.localeCompare(b.bounds.to) ||
+      a.wire.localeCompare(b.wire),
+  );
+  const merged: BoundedPeriodSegment[] = [];
+  for (const segment of sorted) {
+    const previous = merged.at(-1);
+    if (!previous) {
+      merged.push(segment);
+      continue;
+    }
+    if (previous.bounds.to < segment.bounds.from) {
+      merged.push(segment);
+      continue;
+    }
+    if (segment.bounds.to <= previous.bounds.to) {
+      continue;
+    }
+    previous.bounds = {
+      from: previous.bounds.from,
+      to: segment.bounds.to,
+    };
+    previous.wire = periodTokenForBounds(
+      previous.bounds.from,
+      previous.bounds.to,
+    );
+  }
+  return periodFromWire(merged.map((segment) => segment.wire).join(LIST_SEP));
+}
+
 // ── Query-string builder ─────────────────────────────────────────────────────
 
 /** Build a `?query` string from the resolution params, omitting undefined /

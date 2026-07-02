@@ -426,16 +426,40 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     });
   });
 
-  it("REPLACES a token-grammar period wholesale (a mixed-grain sort is undefined)", () => {
+  it("preserves token-grammar add windows as source-period coverage", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
       adds: [add("scb/hst/v1", "scb/hst/kon", "HT2020")],
     });
-    // A second add with a DIFFERENT token replaces (never coalesces) the period.
+    // A second add with a DIFFERENT token extends the source period so the saved
+    // source still covers every binding that was resolved for it.
     projectStore.applyStagedDiff({
       adds: [add("scb/hst/v1", "scb/hst/alder", "VT2021")],
     });
-    expect(projectStore.draft?.sources[0].period).toBe("VT2021");
+    expect(projectStore.draft?.sources[0].period).toEqual(["HT2020", "VT2021"]);
+  });
+
+  it("preserves every same-batch token add window in the committed source period", () => {
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/hst/v1", "scb/hst/kon", "2020-Q1"),
+        add("scb/hst/v1", "scb/hst/alder", "2020-Q2"),
+        add("scb/hst/v1", "scb/hst/inkomst", "2020-Q3", {
+          type: "numeric",
+        }),
+      ],
+    });
+
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].period).toEqual([
+      "2020-Q1",
+      "2020-Q2",
+      "2020-Q3",
+    ]);
+    expect(
+      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
+    ).toEqual(["scb/hst/kon", "scb/hst/alder", "scb/hst/inkomst"]);
   });
 
   it("removes drop matching bindings and prune sources left empty", () => {

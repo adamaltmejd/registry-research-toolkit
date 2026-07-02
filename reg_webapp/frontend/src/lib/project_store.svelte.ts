@@ -38,7 +38,7 @@ import {
   resolveBindingAt,
   variantSeg,
 } from "./catalog";
-import { mergePeriods, periodFromWire, periodToWire } from "./period";
+import { periodCoverageUnion, periodFromWire, periodToWire } from "./period";
 import {
   type Binding,
   defaultSourceName,
@@ -381,7 +381,7 @@ function registerVariantOf(source: Source): string {
 // commits them in ONE synchronous store mutation (`applyStagedDiff`) so autosave
 // + the stable-id mirror fire/rebuild a single time. Find-or-create keys on
 // `register_variant` ALONE (a new disjoint window EXTENDS the source's period to
-// the #307 list form via `mergePeriods` rather than minting a second source).
+// the #307 list form rather than minting a second source).
 
 /** A binding to add (already-resolved final fields — the #991 write-once model). */
 export interface StagedBinding {
@@ -391,8 +391,8 @@ export interface StagedBinding {
   representation?: string | null;
 }
 
-/** Add a binding to a source found-or-created by `registerVariant`, merging
- * `period` into the found source's period (`mergePeriods`). */
+/** Add a binding to a source found-or-created by `registerVariant`, extending the
+ * found source's period to cover `period`. */
 export interface StagedAdd {
   registerVariant: string;
   period: Period;
@@ -673,10 +673,9 @@ export const projectStore = {
    * them here so autosave + the stable-id mirror fire/rebuild a SINGLE time. A null
    * draft is a no-op (the home screen). The batch is applied in order:
    *   (a) removes  — drop matching bindings (`bindingMatches` null-either-side rule);
-   *   (b) adds     — find-or-create the source by `register_variant` ALONE, merge the
-   *                  add's period into it (`mergePeriods` → the #307 list form on a
-   *                  disjoint window), append the binding unless the duplicate guard
-   *                  says it is already present;
+   *   (b) adds     — find-or-create the source by `register_variant` ALONE, extend the
+   *                  source period to cover the add's period, append the binding
+   *                  unless the duplicate guard says it is already present;
    *   (c) periodChanges — replace the matching source's `period` wholesale;
    *   (d) prune    — drop a source only when this batch removed from it AND it is now
    *                  empty. Deferred to LAST (not folded into removes) so a remove+add
@@ -746,7 +745,7 @@ export const projectStore = {
         i === idx
           ? {
               ...s,
-              period: mergePeriods(s.period as Period, add.period),
+              period: periodCoverageUnion(s.period as Period, add.period),
               bindings: isDup ? existing : [...existing, binding],
             }
           : s,
@@ -823,9 +822,8 @@ let addChain: Promise<unknown> = Promise.resolve();
  *   1. Pristine store → create the untitled project from `seed` (same as New).
  *   2. Find-or-create the source by `register_variant` ALONE (#992). On found:
  *      the duplicate guard runs FIRST (step 3) BEFORE any mutation; a non-duplicate
- *      then merges `payload.resolvedPeriod` into its period (`mergePeriods` → the
- *      #307 list form on a disjoint window). On create: prefill the name (#312) +
- *      set the period from the page's resolved period.
+ *      then extends the source period to cover `payload.resolvedPeriod`. On create:
+ *      prefill the name (#312) + set the period from the page's resolved period.
  *   3. Duplicate guard (found path only — a fresh source can't hold one): a source
  *      already carrying this fqid (+ representation) is a TRUE no-op →
  *      `already-present` with ZERO mutation (no period merge, no setDraft).
@@ -898,7 +896,7 @@ async function realAddFromCatalog(
       };
     }
     // Not a duplicate: extend its period to cover the add's window (#992 merge).
-    const merged = mergePeriods(found.period as Period, incomingPeriod);
+    const merged = periodCoverageUnion(found.period as Period, incomingPeriod);
     setDraft(updateSource(draft, sourceIndex, { period: merged }));
   }
 
