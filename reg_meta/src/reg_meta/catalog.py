@@ -46,6 +46,24 @@ if TYPE_CHECKING:
 # `resolve_terminal_successor`).
 _SuccTuple = TypeVar("_SuccTuple", tuple[str, str, str], tuple[str, str], tuple[str])
 
+_CLASSIFICATION_FAMILY_LABELS = {
+    "icd": "ICD",
+    "lkf": "LKF",
+    "sni": "SNI",
+    "ssyk": "SSYK",
+}
+
+
+def _classification_family_key(slug: str) -> str | None:
+    """Stable browse-family key for one-dimensional succession chains."""
+    for key in _CLASSIFICATION_FAMILY_LABELS:
+        if slug == key or slug.startswith(f"{key}-"):
+            return key
+        suffix = slug.removeprefix(key)
+        if suffix != slug and suffix[:1].isdigit():
+            return key
+    return None
+
 
 class _CatalogModel(BaseModel):
     """Frozen Pydantic base for the catalog return surface (#681): the
@@ -554,6 +572,19 @@ class ClassificationEdition(_CatalogModel):
         description="True for the edition the caller queried (resolved to its "
         "canonical live slug when the query was a same_as alias)."
     )
+
+
+class ClassificationFamilySummary(_CatalogModel):
+    """Stable browse entrypoint for a one-dimensional classification succession family.
+
+    Families are derived from `classification_replaced_by`, not stored as concept
+    groups. `key` is the route identity (`/catalog/group/class/<key>`), while
+    `editions` is the same fully hydrated chain surface classification leaves use.
+    """
+
+    key: str
+    label: str
+    editions: tuple[ClassificationEdition, ...]
 
 
 class VariableEdition(_CatalogModel):
@@ -1341,6 +1372,89 @@ class Catalog:
         for g in self.list_classification_groups():
             if g.key == key:
                 return g
+        return None
+
+    def list_classification_families(self) -> list[ClassificationFamilySummary]:
+        """Derived one-dimensional classification succession families (#771).
+
+        This is deliberately outside `concept_group`: a family key is browse identity
+        over `classification_replaced_by`, not group membership. Only known
+        one-dimensional families get stable route keys; multi-dimensional umbrellas
+        such as SUN stay on the curated classification-group surface.
+        """
+        rows = self._conn.execute(
+            "SELECT predecessor_slug, successor_slug "
+            "FROM classification_replaced_by "
+            "ORDER BY predecessor_slug, successor_slug"
+        ).fetchall()
+        parent: dict[str, str] = {}
+        successors: set[str] = set()
+
+        def find(slug: str) -> str:
+            parent.setdefault(slug, slug)
+            while parent[slug] != slug:
+                parent[slug] = parent[parent[slug]]
+                slug = parent[slug]
+            return slug
+
+        def union(left: str, right: str) -> None:
+            left_root = find(left)
+            right_root = find(right)
+            if left_root != right_root:
+                parent[right_root] = left_root
+
+        for row in rows:
+            predecessor = row["predecessor_slug"]
+            successor = row["successor_slug"]
+            successors.add(successor)
+            union(predecessor, successor)
+
+        components: dict[str, set[str]] = {}
+        for slug in list(parent):
+            components.setdefault(find(slug), set()).add(slug)
+
+        slugs_by_key: dict[str, set[str]] = {}
+        for slugs in components.values():
+            keys = {
+                key
+                for slug in slugs
+                if (key := _classification_family_key(slug)) is not None
+            }
+            if keys:
+                key = sorted(keys)[0]
+                slugs_by_key.setdefault(key, set()).update(slugs)
+
+        families: list[ClassificationFamilySummary] = []
+        for key, slugs in sorted(slugs_by_key.items()):
+            roots = sorted(slug for slug in slugs if slug not in successors)
+            anchors = roots or sorted(slugs)
+            editions: list[ClassificationEdition] = []
+            seen: set[str] = set()
+            for anchor in anchors:
+                for edition in self.classification_chain(
+                    Fqid.classification_fqid(anchor)
+                ):
+                    if edition.slug in seen:
+                        continue
+                    if _classification_family_key(edition.slug) != key:
+                        continue
+                    seen.add(edition.slug)
+                    editions.append(edition)
+            if editions:
+                families.append(
+                    ClassificationFamilySummary(
+                        key=key,
+                        label=_CLASSIFICATION_FAMILY_LABELS[key],
+                        editions=tuple(editions),
+                    )
+                )
+        return families
+
+    def classification_family(self, key: str) -> ClassificationFamilySummary | None:
+        """The one derived classification succession family addressed by `key`."""
+        for family in self.list_classification_families():
+            if family.key == key:
+                return family
         return None
 
     def list_tags(self) -> list[TagSummary]:

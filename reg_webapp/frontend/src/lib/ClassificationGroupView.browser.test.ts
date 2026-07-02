@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { ClassificationGroupNodeData } from "./api";
+import type {
+  ClassificationFamilyNodeData,
+  ClassificationGroupNodeData,
+} from "./api";
 import { ApiError, getClassificationGroup } from "./api";
 import ClassificationGroupView from "./ClassificationGroupView.svelte";
 import { router } from "./router.svelte";
@@ -41,6 +44,37 @@ function node(
     ],
     ...overrides,
   } as unknown as ClassificationGroupNodeData;
+}
+
+function familyNode(
+  overrides: Partial<ClassificationFamilyNodeData> = {},
+): ClassificationFamilyNodeData {
+  return {
+    kind: "classification-family",
+    key: "ssyk",
+    label: "SSYK",
+    editions: [
+      {
+        slug: "ssyk1996",
+        fqid: "class/ssyk1996",
+        name: "SSYK 1996",
+        effective_year: 2012,
+        version_year: 1996,
+        is_current: false,
+        is_self: false,
+      },
+      {
+        slug: "ssyk2012",
+        fqid: "class/ssyk2012",
+        name: "SSYK 2012",
+        effective_year: null,
+        version_year: 2012,
+        is_current: true,
+        is_self: false,
+      },
+    ],
+    ...overrides,
+  } as unknown as ClassificationFamilyNodeData;
 }
 
 beforeEach(() => {
@@ -102,7 +136,24 @@ describe("ClassificationGroupView (#756)", () => {
     await render(ClassificationGroupView, { key: "nope" });
 
     await expect
-      .element(page.getByText(/Not found: classification group/))
+      .element(page.getByText(/Not found: classification group or family/))
       .toBeVisible();
+  });
+
+  it("renders a succession family as an edition-chain subject page", async () => {
+    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
+
+    await render(ClassificationGroupView, { key: "ssyk" });
+
+    await expect
+      .element(page.getByRole("heading", { name: "SSYK", level: 2 }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /SSYK 1996/ }))
+      .toHaveAttribute("href", "/catalog/class/ssyk1996");
+    await expect
+      .element(page.getByRole("link", { name: /SSYK 2012/ }))
+      .toHaveAttribute("href", "/catalog/class/ssyk2012");
+    await expect.element(page.getByText(/ssyk2012 - current/)).toBeVisible();
   });
 });

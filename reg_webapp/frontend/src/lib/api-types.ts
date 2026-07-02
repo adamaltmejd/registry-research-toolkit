@@ -37,16 +37,17 @@ export interface paths {
         };
         /**
          * Get Classification Group
-         * @description The classification umbrella group addressed by `key` (#756, e.g. the SUN
-         *     umbrella `sun`) — a browsable subject (all members selected), mirroring the
-         *     register-scoped `get_concept_group` but for catalog-global classification
-         *     umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
-         *     classification group has that key.
+         * @description The classification subject addressed by `key`.
          *
-         *     By-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped
-         *     the reg_meta accessor; #756 did this filter inline here to avoid a release). The
-         *     accessor is the single source of truth for the class-by-key filter — the route
-         *     no longer re-pastes the `list_classification_groups()` loop.
+         *     A key can name either a curated umbrella group (#756, e.g. SUN) or a derived
+         *     one-dimensional succession family (#771, e.g. SSYK/ICD). The two are distinct
+         *     response `kind`s because an umbrella is concept-group membership, while a
+         *     family is browse identity over `classification_replaced_by`. 404 when neither
+         *     surface has that key.
+         *
+         *     By-key group resolution delegates to `Catalog.classification_group(key)` (#761
+         *     shipped the reg_meta accessor; #756 did this filter inline here to avoid a
+         *     release). Family resolution delegates to `Catalog.classification_family(key)`.
          *
          *     No provider/register/key is slug-validated: `class` is a fixed literal in the
          *     path, and `key` is a derivation key (not a slug). So there is no
@@ -919,6 +920,27 @@ export interface components {
             version_year: number | null;
         };
         /**
+         * ClassificationFamilyNode
+         * @description A one-dimensional classification succession family as a browsable subject.
+         *
+         *     Served from the same stable `/catalog/group/class/{key}` route as curated
+         *     classification umbrellas, but kept as a distinct `kind`: it is browse identity
+         *     over `classification_replaced_by`, not concept-group membership.
+         */
+        ClassificationFamilyNode: {
+            /** Editions */
+            editions: components["schemas"]["ClassificationEdition"][];
+            /** Key */
+            key: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "classification-family";
+            /** Label */
+            label: string;
+        };
+        /**
          * ClassificationGraphNode
          * @description A classification-edition node: time is a POINT (``version_year``), never an
          *     interval — an edition is not "dead" after its successor. ``is_current`` marks a
@@ -969,9 +991,8 @@ export interface components {
             /** Key */
             key: string;
             /**
-             * Kind
-             * @default classification-group
-             * @constant
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
             kind: "classification-group";
             /** Label */
@@ -1043,6 +1064,8 @@ export interface components {
         ClassificationRootResponse: {
             /** Children */
             children: components["schemas"]["ClassificationNode"][];
+            /** Families */
+            families?: components["schemas"]["ClassificationFamilyNode"][];
             /**
              * Fqid
              * @default class
@@ -2545,7 +2568,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ClassificationGroupNode"];
+                    "application/json": components["schemas"]["ClassificationGroupNode"] | components["schemas"]["ClassificationFamilyNode"];
                 };
             };
             /** @description Validation Error */

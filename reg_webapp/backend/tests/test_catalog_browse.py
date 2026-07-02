@@ -576,6 +576,48 @@ def test_classification_root_drops_superseded_and_folds_dimension_group(client):
     assert "class/sun2000" not in child_fqids
 
 
+def test_classification_root_replaces_successor_terminal_with_family(catalog_db):
+    with sqlite3.connect(catalog_db) as conn:
+        conn.execute(
+            "INSERT INTO classification (id, short_name, name, slug) "
+            "VALUES (70, 'SSYK1996', 'SSYK 1996', 'ssyk1996')"
+        )
+        conn.execute(
+            "INSERT INTO classification (id, short_name, name, slug) "
+            "VALUES (71, 'SSYK2012', 'SSYK 2012', 'ssyk2012')"
+        )
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('ssyk1996', 'ssyk2012', 2012, 'derived:test')"
+        )
+        conn.execute(
+            "UPDATE classification SET supersedes_id = 70 WHERE slug = 'ssyk2012'"
+        )
+
+    with TestClient(create_app()) as local_client:
+        root = local_client.get("/api/catalog/class").json()
+        family = local_client.get("/api/catalog/group/class/ssyk").json()
+
+    families = {item["key"]: item for item in root["families"]}
+    assert families["ssyk"] == {
+        "kind": "classification-family",
+        "key": "ssyk",
+        "label": "SSYK",
+        "editions": family["editions"],
+    }
+    child_fqids = {c["fqid"] for c in root["children"]}
+    assert "class/ssyk1996" not in child_fqids
+    assert "class/ssyk2012" not in child_fqids
+    assert family["kind"] == "classification-family"
+    assert family["key"] == "ssyk"
+    assert [edition["slug"] for edition in family["editions"]] == [
+        "ssyk1996",
+        "ssyk2012",
+    ]
+    assert [edition["is_current"] for edition in family["editions"]] == [False, True]
+
+
 def test_classification_leaf_resolves(client):
     resp = client.get("/api/catalog/class/sun2020")
     assert resp.status_code == 200
