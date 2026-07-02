@@ -4,9 +4,13 @@ Pins the auto-dispatch launcher's contract: the ordered guards (kill switch → 
 collision), the exact per-surface launch argv (codex `$pr-pipeline …` with the pinned
 sandbox flags; claude `/pr-pipeline …` with a pre-generated --session-id), that the
 worktree is materialized off a freshly fetched origin/main, that the slot file is
-written LAST with slot==stem shape (so scan_slots accepts it) and only after a
-successful launch, codex session-id capture from the JSONL log (plus its bounded-poll
-timeout → session=null), and --dry-run's zero-side-effect check-only path.
+written with slot==stem shape (so scan_slots accepts it) promptly after a successful
+launch, codex session-id capture from the JSONL log (plus its bounded-poll timeout →
+session=null), and --dry-run's zero-side-effect check-only path. Two review-hardening
+invariants: the codex session merge preserves a fast child pipeline's concurrently-written
+`prs` (only `session` is stamped; a vanished/invalid slot falls back to a full rewrite),
+and the id poll parses only bytes past the pre-launch log offset so a reused per-slug log
+can't leak a prior run's stale thread id.
 
 Real subprocesses are used where the behavior IS the subprocess: a tmp git repo with an
 `origin` bare remote so `git fetch origin main` + `git worktree add … origin/main` run
@@ -927,3 +931,217 @@ def test_stale_slot_still_consumes_budget(
     assert rc == 4
     assert "no free slot budget: busy 3/3" in capsys.readouterr().out
     _no_real_launch(tmp_path)
+
+
+# --- codex session merge does not clobber the child's claim (finding 1) -------
+
+
+def _stub_bin_child_claims(
+    stub_bin: Path, name: str, slot_path: Path, prs: list
+) -> Path:
+    """A codex stub that mimics the child pipeline registering PRs during the id poll.
+
+    It waits for the parent's step-6 ownership write to land (the slot file appears),
+    merges `prs` into that file (its fresher claim), and ONLY THEN emits the thread id —
+    so by the time poll_codex_session_id resolves, the child's prs are already on disk.
+    dispatch's step-7 merge must preserve those prs while stamping the polled session.
+    """
+    stub_bin.mkdir(parents=True, exist_ok=True)
+    record = stub_bin / f"{name}.record"
+    script = stub_bin / name
+    body = (
+        "#!/usr/bin/env python3\n"
+        "import json, os, sys, time\n"
+        f"slot = {str(slot_path)!r}\n"
+        f"prs = {prs!r}\n"
+        "deadline = time.monotonic() + 5.0\n"
+        "while time.monotonic() < deadline:\n"
+        "    try:\n"
+        "        cur = json.loads(open(slot).read())\n"
+        "        break\n"
+        "    except (OSError, ValueError):\n"
+        "        time.sleep(0.01)\n"
+        "else:\n"
+        "    cur = {}\n"
+        "cur['prs'] = prs\n"
+        "open(slot, 'w').write(json.dumps(cur))\n"
+        f"open({str(record)!r}, 'w').write(json.dumps("
+        "{'argv': sys.argv[1:], 'cwd': os.getcwd()}))\n"
+        "sys.stdout.write("
+        '\'{"type":"thread.started","thread_id":"child-thread-42"}\' + chr(10))\n'
+        "sys.stdout.flush()\n"
+        "sys.exit(0)\n"
+    )
+    script.write_text(body, encoding="utf-8")
+    script.chmod(0o755)
+    return record
+
+
+def test_codex_child_prs_survive_session_merge(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # The child pipeline can register drafts/PRs into the SAME slot during the id-poll
+    # window. dispatch's step-7 merge must stamp the polled session WITHOUT clobbering
+    # those prs: the final slot has BOTH the child's prs and the polled session.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    slug = "auto-codex-issue-1011"
+    slot_path = state / "pipeline-slots" / f"{slug}.json"
+    _stub_bin_child_claims(_hermetic_env, "codex", slot_path, [4242])
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["session"] == "child-thread-42"
+    slot = json.loads(slot_path.read_text(encoding="utf-8"))
+    # The child's prs survived; the polled session was merged in.
+    assert slot["prs"] == [4242]
+    assert slot["session"] == "child-thread-42"
+    # Ownership fields still intact.
+    assert slot["slot"] == slug
+    assert slot["surface"] == "codex"
+    assert slot["tier"] == "hard"
+
+
+def test_merge_session_into_slot_vanished_file_rewrites_full_payload(
+    tmp_path: Path,
+) -> None:
+    # If the slot file vanished/became unreadable before the merge, merge_session_into_slot
+    # falls back to a full ownership rewrite from its own known-good values — the slot must
+    # exist for the launched agent.
+    slot_path = tmp_path / "pipeline-slots" / "auto-codex-issue-1011.json"
+    slot_path.parent.mkdir(parents=True)
+    # File does not exist at all.
+    cd.merge_session_into_slot(
+        slot_path, "auto-codex-issue-1011", [1011], "codex", "hard", "sid-9", 555
+    )
+    slot = json.loads(slot_path.read_text(encoding="utf-8"))
+    assert slot["slot"] == "auto-codex-issue-1011"
+    assert slot["issues"] == [1011]
+    assert slot["prs"] == []
+    assert slot["surface"] == "codex"
+    assert slot["tier"] == "hard"
+    assert slot["session"] == "sid-9"
+    assert slot["pid"] == 555
+    assert slot["dispatched"]
+
+
+def test_merge_session_into_slot_invalid_json_rewrites_full_payload(
+    tmp_path: Path,
+) -> None:
+    # A torn/garbage slot file is treated like a vanished one: full rewrite, not a crash.
+    slot_path = tmp_path / "pipeline-slots" / "auto-codex-issue-1011.json"
+    slot_path.parent.mkdir(parents=True)
+    slot_path.write_text("{ not json", encoding="utf-8")
+    cd.merge_session_into_slot(
+        slot_path, "auto-codex-issue-1011", [1011], "codex", "hard", None, 777
+    )
+    slot = json.loads(slot_path.read_text(encoding="utf-8"))
+    assert slot["session"] is None
+    assert slot["pid"] == 777
+    assert slot["prs"] == []
+
+
+# --- reused per-slug log must not leak a prior run's thread id (finding 2) -----
+
+
+def test_poll_codex_session_id_skips_stale_prefix(tmp_path: Path) -> None:
+    # A per-slug dispatch log reused from a prior run holds an OLD thread.started; the poll
+    # started past that offset must return the NEW id, never the stale one.
+    log = tmp_path / "auto-codex-issue-1011.log"
+    old = '{"type":"thread.started","thread_id":"OLD-run-id"}\n'
+    log.write_text(old, encoding="utf-8")
+    offset = len(old.encode("utf-8"))
+    with log.open("a", encoding="utf-8") as fh:
+        fh.write('{"type":"thread.started","thread_id":"NEW-run-id"}\n')
+    got = cd.poll_codex_session_id(
+        log, timeout=0.2, poll_interval=0.01, start_offset=offset
+    )
+    assert got == "NEW-run-id"
+
+
+def test_poll_codex_session_id_no_new_id_returns_none_not_stale(tmp_path: Path) -> None:
+    # Reused log with an old id, but THIS run appends nothing with an id → session null,
+    # NOT the old id (which lives before the offset).
+    log = tmp_path / "auto-codex-issue-1011.log"
+    old = '{"type":"thread.started","thread_id":"OLD-run-id"}\n'
+    log.write_text(old, encoding="utf-8")
+    offset = len(old.encode("utf-8"))
+    with log.open("a", encoding="utf-8") as fh:
+        fh.write('{"type":"turn.started"}\n')  # no id this run
+    got = cd.poll_codex_session_id(
+        log, timeout=0.05, poll_interval=0.01, start_offset=offset
+    )
+    assert got is None
+
+
+def test_reused_log_dispatch_records_new_id_not_stale(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # End-to-end: pre-seed the per-slug dispatch log with a PRIOR run's thread.started, then
+    # dispatch with a stub emitting a NEW id. The pre-launch offset scopes the poll to this
+    # run's bytes, so the slot records the new id, not the stale one.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    slug = "auto-codex-issue-1011"
+    log_path = state / "dispatch-logs" / f"{slug}.log"
+    log_path.parent.mkdir(parents=True)
+    log_path.write_text(
+        '{"type":"thread.started","thread_id":"STALE-prior-run"}\n', encoding="utf-8"
+    )
+    _stub_bin(
+        _hermetic_env,
+        "codex",
+        jsonl='{"type":"thread.started","thread_id":"fresh-run-id"}\n',
+    )
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["session"] == "fresh-run-id"
+    slot = json.loads(
+        (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
+    )
+    assert slot["session"] == "fresh-run-id"
+
+
+def test_reused_log_dispatch_no_new_id_records_null_not_stale(
+    tmp_path: Path, capsys, _hermetic_env: Path
+) -> None:
+    # Reused log with a prior id, but this run's stub emits NO id → session null, not the
+    # stale prior id.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    slug = "auto-codex-issue-1011"
+    log_path = state / "dispatch-logs" / f"{slug}.log"
+    log_path.parent.mkdir(parents=True)
+    log_path.write_text(
+        '{"type":"thread.started","thread_id":"STALE-prior-run"}\n', encoding="utf-8"
+    )
+    _stub_bin(_hermetic_env, "codex", jsonl='{"type":"turn.started"}\n')
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=0.15,
+        codex_id_poll=0.02,
+    )
+
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert "no codex session id" in captured.err
+    result = json.loads(captured.out)
+    assert result["session"] is None
+    slot = json.loads(
+        (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
+    )
+    assert slot["session"] is None

@@ -9,9 +9,10 @@ launches a detached pr-pipeline agent (codex or claude) on the given issues.
 
 It is deliberately dumb about WHICH lane to run — the agent (or /plan-lanes) picks the
 issues; this script just performs the launch atomically and records the claim. Order of
-operations is chosen so a failure never leaks a slot: the slot file is written LAST,
-only after the agent process is spawned. A failure after the worktree is created leaks
-only the worktree, which the error names for adjudication.
+operations is chosen so a failure never leaks a slot: the slot file is written only after
+the agent process is spawned, and it is written promptly so the unrecorded window is
+tiny. A failure after the worktree is created leaks only the worktree, which the error
+names for adjudication.
 
 Steps (fail-fast between each). After arg/canonical validation (require_canonical,
 parse_issues, resolve_profile, slug validation — all exit 2):
@@ -22,15 +23,26 @@ parse_issues, resolve_profile, slug validation — all exit 2):
                     origin/main`, run in the canonical checkout. `wt/<slug>` is only the
                     placeholder branch git requires; the pipeline skill creates its real
                     `s/<slug>` branch from inside the worktree.
-  5. launch       — spawn the agent DETACHED (start_new_session=True, stdin closed,
-                    stdout+stderr appended to <state-root>/dispatch-logs/<slug>.log). We
-                    do not wait; the process re-parents when this session exits.
-  6. session id   — claude: the uuid4 we pre-generated. codex: parsed from the JSONL log
-                    (first event carrying a thread/session id) with a bounded poll; on
-                    timeout, session=null (the chief's fuzzy-thread-search fallback
-                    covers it) plus a stderr warning.
-  7. slot file    — atomic write of <state-root>/pipeline-slots/<slug>.json. The `slot`
-                    field MUST equal the filename stem or scan_slots treats it as absent.
+  5. launch       — capture the dispatch-log byte offset, then spawn the agent DETACHED
+                    (start_new_session=True, stdin closed, stdout+stderr appended to
+                    <state-root>/dispatch-logs/<slug>.log). We do not wait; the process
+                    re-parents when this session exits. The pre-launch offset scopes the
+                    later codex-id poll to THIS run's log bytes, so a reused per-slug log
+                    from a prior dispatch can't yield a stale thread id.
+  6. slot file    — atomic write of <state-root>/pipeline-slots/<slug>.json IMMEDIATELY
+                    after a successful launch (session=null for codex, the pre-generated
+                    uuid for claude). The `slot` field MUST equal the filename stem or
+                    scan_slots treats it as absent. A write failure here (agent already
+                    running) becomes exit 2 naming the orphan, never a traceback.
+  7. session id   — codex only: poll the JSONL log (bytes past the step-5 offset) for the
+                    first event carrying a thread/session id, bounded; on timeout,
+                    session=null (the chief's fuzzy-thread-search fallback covers it) plus
+                    a stderr warning. Then RE-READ the slot file and merge-update ONLY the
+                    `session` field, preserving any issues/prs a fast child pipeline wrote
+                    during the poll window (its claim is fresher); a vanished/invalid file
+                    falls back to a full rewrite. A merge-update failure after the step-6
+                    write is a stderr warning but still exit 0 — the slot exists, only the
+                    session enrichment failed. claude's session is already final at step 6.
 
 Exit codes: 0 launched (or --dry-run OK); 2 usage/collision/tool error; 3 kill switch;
 4 no free slot budget.
@@ -257,10 +269,27 @@ def _extract_session_id(line: str) -> str | None:
     return None
 
 
+def log_size(log_path: Path) -> int:
+    """Byte size of the dispatch log, or 0 if it does not exist yet.
+
+    Captured immediately BEFORE launch so poll_codex_session_id parses only bytes this run
+    appended — dispatch logs are append-only and keyed by slug, so a retried dispatch with
+    the same slug would otherwise re-read a PRIOR run's `thread.started` and return its
+    stale id. Reading only past the pre-launch offset scopes the parse to this launch.
+    """
+    try:
+        return log_path.stat().st_size
+    except FileNotFoundError:
+        return 0
+
+
 def poll_codex_session_id(
-    log_path: Path, timeout: float, poll_interval: float
+    log_path: Path, timeout: float, poll_interval: float, start_offset: int = 0
 ) -> str | None:
     """Tail the JSONL dispatch log for the codex thread id, bounded by timeout.
+
+    Only bytes at or after `start_offset` (the log size captured just before launch) are
+    parsed, so a reused per-slug log from a prior dispatch can't yield a stale thread id.
 
     Returns the id, or None if none appeared within `timeout` (the caller warns and
     records session=null; the chief's fuzzy thread search covers a null session).
@@ -268,7 +297,9 @@ def poll_codex_session_id(
     deadline = time.monotonic() + timeout
     while True:
         try:
-            text = log_path.read_text(encoding="utf-8", errors="replace")
+            with log_path.open("r", encoding="utf-8", errors="replace") as fh:
+                fh.seek(start_offset)
+                text = fh.read()
         except FileNotFoundError:
             text = ""
         for line in text.splitlines():
@@ -349,6 +380,12 @@ def write_slot_file(
     # $XDG_STATE_HOME (never a .git-relative path), so there is no risk of conjuring a dir
     # inside a missing checkout — unlike write_state, whose no-mkdir policy guards that
     # exact footgun. Only the parent-dir policy diverges; the write+rename tail is shared.
+    #
+    # `prs: []` here is the OWNERSHIP registration written immediately after launch, before
+    # the child pipeline claims anything; the child (pr-pipeline SKILL.md) then updates the
+    # SAME file with its drafts/PRs. For codex we later merge only the resolved `session`
+    # into whatever the child has since written — see merge_session_into_slot — so this
+    # empty list is never used to clobber a fresher child claim.
     slot_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "slot": slug,
@@ -361,6 +398,39 @@ def write_slot_file(
         "dispatched": datetime.now(UTC).isoformat(),
     }
     _cos_preflight._atomic_write_json(slot_path, payload)
+
+
+def merge_session_into_slot(
+    slot_path: Path,
+    slug: str,
+    issues: list[int],
+    surface: str,
+    tier: str,
+    session_id: str | None,
+    pid: int,
+) -> None:
+    """Enrich the codex slot with its polled session id WITHOUT clobbering the child claim.
+
+    Between the initial ownership write (write_slot_file) and the codex session id
+    resolving (up to the poll ceiling), a fast child pipeline may already have registered
+    drafts/PRs into the SAME slot file (see pr-pipeline SKILL.md). Its claim is fresher, so
+    we RE-READ the file and merge-update ONLY the `session` field, preserving whatever
+    `issues`/`prs`/other fields it now carries. If the file vanished or is unreadable/
+    invalid (torn write, someone deleted it), we fall back to rewriting the full ownership
+    payload from our own known-good values — the slot must exist for the launched agent.
+
+    Written atomically (temp + rename) via the shared leaf, same as the initial write.
+    """
+    try:
+        existing = json.loads(slot_path.read_text(encoding="utf-8"))
+        if not isinstance(existing, dict):
+            raise ValueError("slot file is not a JSON object")
+    except OSError, ValueError:
+        # Vanished / torn / invalid: rewrite the full ownership payload from our values.
+        write_slot_file(slot_path, slug, issues, surface, tier, session_id, pid)
+        return
+    existing["session"] = session_id
+    _cos_preflight._atomic_write_json(slot_path, existing)
 
 
 def launch_detached(argv: list[str], worktree: Path, log_path: Path) -> int:
@@ -470,6 +540,9 @@ def dispatch(
 
     # 5. Launch detached. A launch failure after the worktree exists leaks only the
     # worktree (named in the error for adjudication); NO slot file is written.
+    # Capture the pre-launch log offset FIRST so the codex-id poll parses only bytes THIS
+    # launch appends — a reused per-slug log from a prior dispatch mustn't yield a stale id.
+    log_offset = log_size(log_path)
     try:
         pid = launch_detached(argv, worktree, log_path)
     except SystemExit as exc:
@@ -477,24 +550,20 @@ def dispatch(
             f"{exc.code} (worktree left at {worktree} for adjudication)"
         ) from exc
 
-    # 6. Session id.
-    if surface == "claude":
-        session_id = pre_session
-    else:
-        session_id = poll_codex_session_id(log_path, codex_id_timeout, codex_id_poll)
-        if session_id is None:
-            print(
-                f"warning: no codex session id in {log_path} after "
-                f"{int(codex_id_timeout)}s; recording session=null "
-                "(fuzzy thread search will recover it)",
-                file=sys.stderr,
-            )
-
-    # 7. Slot file — written LAST, only after a successful launch, so a failed launch
-    # never leaks a slot. But the agent is ALREADY running here: if the write fails (e.g.
-    # an unwritable ledger dir) we must NOT crash with a traceback (exit 1) — that would
-    # violate the exit-2 contract and, worse, leave a running agent with no ledger entry.
-    # Convert to exit 2 with everything needed to adjudicate the orphan by hand.
+    # 6. Slot file — written IMMEDIATELY after a successful launch (not last), so a failed
+    # launch never leaks a slot AND the unrecorded window between launch and registration is
+    # as small as possible. The child pipeline is told to create/update this SAME slot file
+    # at its lane claim; writing our ownership record now (session=null for codex, the
+    # pre-generated uuid for claude) preserves the "slot only after launch" invariant while
+    # letting a fast child register its drafts/prs into it during the codex id poll (step 7).
+    #
+    # The agent is ALREADY running here: if the write fails (e.g. an unwritable ledger dir)
+    # we must NOT crash with a traceback (exit 1) — that would violate the exit-2 contract
+    # and leave a running agent with no ledger entry. Convert to exit 2 with everything
+    # needed to adjudicate the orphan by hand.
+    session_id = (
+        pre_session  # claude: final; codex: null placeholder, enriched in step 7
+    )
     try:
         write_slot_file(slot_path, slug, issues, surface, tier, session_id, pid)
     except OSError as exc:
@@ -504,6 +573,35 @@ def dispatch(
             f"log={log_path}, worktree={worktree}, slot={slot_path}); "
             "adjudicate the orphan and register or kill it manually"
         ) from exc
+
+    # 7. Codex session id — poll the log (only bytes past log_offset) for the thread id,
+    # then MERGE it into the slot's `session` field without clobbering whatever the child
+    # pipeline may have written into issues/prs during the poll window (its claim is
+    # fresher). A merge-update failure AFTER a successful step-6 write is non-fatal: the
+    # slot exists (budget is accounted, the agent is recorded), only the session enrichment
+    # failed — warn on stderr but still exit 0. claude's session is already final in step 6.
+    if surface == "codex":
+        session_id = poll_codex_session_id(
+            log_path, codex_id_timeout, codex_id_poll, start_offset=log_offset
+        )
+        if session_id is None:
+            print(
+                f"warning: no codex session id in {log_path} after "
+                f"{int(codex_id_timeout)}s; recording session=null "
+                "(fuzzy thread search will recover it)",
+                file=sys.stderr,
+            )
+        try:
+            merge_session_into_slot(
+                slot_path, slug, issues, surface, tier, session_id, pid
+            )
+        except OSError as exc:
+            print(
+                f"warning: could not enrich slot {slot_path} with codex session "
+                f"{session_id!r}: {exc}; slot is registered but its session field may be "
+                "stale (fuzzy thread search will recover the id)",
+                file=sys.stderr,
+            )
 
     print(
         json.dumps(

@@ -1,6 +1,6 @@
 ---
 name: chief-of-staff
-description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview and default reg_meta DB install current, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled /pr-pipeline sessions, report merged user-facing features with preview links, run /release minor when a merge creates a required build/release boundary, recommend the next safe /pr-pipeline lanes, and — in opt-in `auto` mode — auto-dispatch those lanes into free slots. Usage: /loop 30m /chief-of-staff [auto]"
+description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview and default reg_meta DB install current, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled /pr-pipeline sessions, report merged user-facing features with preview links, run /release minor or /release patch when a merge creates a required build/release boundary, recommend the next safe /pr-pipeline lanes, and — in opt-in `auto` mode — auto-dispatch those lanes into free slots. Usage: /loop 30m /chief-of-staff [auto]"
 ---
 
 # chief-of-staff — one coordination tick
@@ -317,15 +317,20 @@ marker that sequencing consumes.
 - **Stale slots** (the watcher's `stale slot:` emission, or a slot whose listed PRs are
   all merged/closed but the file lingers): a slot with a non-empty `prs` list whose PRs
   are all merged/closed is mechanical cleanup — release it. Otherwise, an
-  auto-dispatched slot carries a `pid`, so check process liveness first with
-  `kill -0 <pid>`: alive means the lane is still running — leave it; dead with open PRs
-  or an incomplete gate — send a resume follow-up via the recorded `session` (see
-  Pipeline Follow-ups); dead with an empty `prs` list and no registration activity —
-  releasable under the empty-`prs` adjudication (the `pid` evidence informs the call). A
-  slot with an empty `prs` list and no `pid`, no file update for a day, still needs
-  adjudication: check whether the pipeline session/worktree still exists and ask the
-  user when it is genuinely ambiguous, rather than silently freeing budget an active
-  agent may still be using.
+  auto-dispatched slot carries a `pid`, so check process liveness first — but liveness
+  requires pid EXISTENCE **and** IDENTITY, never `kill -0 <pid>` alone: after the agent
+  exits the OS can recycle its pid, so a bare existence check lets a dead lane squat on
+  budget forever. Confirm `ps -p <pid> -o command=` still looks like the recorded
+  surface's agent (a `codex exec` / `claude` invocation naming this lane), corroborated
+  by recent dispatch-log or slot-file activity; a pid that exists but doesn't match is
+  treated as DEAD. Alive-and-matching means the lane is still running — leave it; dead
+  (gone, or a mismatched recycled pid) with open PRs or an incomplete gate — send a
+  resume follow-up via the recorded `session` (see Pipeline Follow-ups); dead with an
+  empty `prs` list and no registration activity — releasable under the empty-`prs`
+  adjudication (the `pid` evidence informs the call). A slot with an empty `prs` list
+  and no `pid`, no file update for a day, still needs adjudication: check whether the
+  pipeline session/worktree still exists and ask the user when it is genuinely
+  ambiguous, rather than silently freeing budget an active agent may still be using.
 - Registering a 4th slot is a deliberate human override, not an error — the ledger
   reflects reality; the watcher simply won't emit `dispatch:` until busy drops below
   budget.
