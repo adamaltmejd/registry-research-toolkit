@@ -356,6 +356,32 @@ def _tag_membership(row: sqlite3.Row) -> TagMembership:
 # (composite), the `panel_time_key` ("period", a variable-slug, or a tuple of
 # slugs (composite)), and the `panel_time_grain` ('delivery'/'row'). Most
 # variants carry no panel data → all three are None.
+class PopulationMetadata(_CatalogModel):
+    """SCB population prose for one register version (#799)."""
+
+    name: str
+    definition: str | None
+    comment: str | None
+    date_range: str | None
+
+
+class ObjectTypeMetadata(_CatalogModel):
+    """SCB object-type prose for one register version (#799)."""
+
+    name: str
+    definition: str | None
+
+
+class RegisterVersionMetadata(_CatalogModel):
+    """SCB register-version prose nested under a variant (#799)."""
+
+    name: str | None
+    description: str | None
+    measurement_information: str | None
+    populations: tuple[PopulationMetadata, ...] = ()
+    object_types: tuple[ObjectTypeMetadata, ...] = ()
+
+
 class VariantSummary(_CatalogModel):
     slug: str
     name: str | None
@@ -364,6 +390,12 @@ class VariantSummary(_CatalogModel):
     panel_entity_key: str | tuple[str, ...] | None
     panel_time_key: str | tuple[str, ...] | None
     panel_time_grain: str | None
+    versions: tuple[RegisterVersionMetadata, ...] = ()
+
+
+def _has_text(*values: str | None) -> bool:
+    """True when at least one provider-native metadata field carries display text."""
+    return any(value not in (None, "") for value in values)
 
 
 def _decode_panel_entity_key(raw: str | None) -> str | tuple[str, ...] | None:
@@ -733,6 +765,7 @@ class ResolvedVariable(_CatalogModel):
     measurement_unit: str | None
     is_sensitive: bool
     is_identifier: bool
+    deprecated: bool = False
     source_register_id: int | None
     source_register_text: str | None
     related_documents: tuple[RelatedDocument, ...] = ()
@@ -1123,7 +1156,8 @@ class Catalog:
         slug — the synthesized variant for LSS/BU/SOL etc.; see DESIGN.md → Two-level variable model — so it is
         returned, not filtered.)"""
         rows = self._conn.execute(
-            "SELECT rv.slug, rv.name, rv.description, rv.display_group, "
+            "SELECT rv.register_variant_id, rv.slug, rv.name, rv.description, "
+            "rv.display_group, "
             "rv.panel_entity_key, rv.panel_time_key, rv.panel_time_grain "
             "FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
@@ -1132,6 +1166,9 @@ class Catalog:
             "ORDER BY rv.slug",
             (provider_slug, register_slug),
         ).fetchall()
+        versions_by_variant = self._register_version_metadata_by_variant(
+            [r["register_variant_id"] for r in rows]
+        )
         return [
             VariantSummary(
                 slug=r["slug"],
@@ -1143,9 +1180,83 @@ class Catalog:
                 # reused for the (now-composite-capable) time key too.
                 panel_time_key=_decode_panel_entity_key(r["panel_time_key"]),
                 panel_time_grain=r["panel_time_grain"],
+                versions=versions_by_variant.get(r["register_variant_id"], ()),
             )
             for r in rows
         ]
+
+    def _register_version_metadata_by_variant(
+        self, register_variant_ids: list[int]
+    ) -> dict[int, tuple[RegisterVersionMetadata, ...]]:
+        """Version-scoped metadata for the variant browser (#799)."""
+        if not register_variant_ids:
+            return {}
+        placeholders = ",".join("?" for _ in register_variant_ids)
+        version_rows = self._conn.execute(
+            "SELECT regver_id, register_variant_id, registerversionnamn, "
+            "registerversionbeskrivning, registerversionmatinformation "
+            "FROM register_version "
+            f"WHERE register_variant_id IN ({placeholders}) "
+            "ORDER BY register_variant_id, registerversionnamn, regver_id",
+            register_variant_ids,
+        ).fetchall()
+        if not version_rows:
+            return {}
+        regver_ids = [r["regver_id"] for r in version_rows]
+        regver_placeholders = ",".join("?" for _ in regver_ids)
+        populations: dict[int, list[PopulationMetadata]] = {
+            rid: [] for rid in regver_ids
+        }
+        for row in self._conn.execute(
+            "SELECT regver_id, name, definition, comment, date_range "
+            "FROM population "
+            f"WHERE regver_id IN ({regver_placeholders}) "
+            "ORDER BY regver_id, name",
+            regver_ids,
+        ).fetchall():
+            if not _has_text(
+                row["name"], row["definition"], row["comment"], row["date_range"]
+            ):
+                continue
+            populations[row["regver_id"]].append(
+                PopulationMetadata(
+                    name=row["name"],
+                    definition=row["definition"],
+                    comment=row["comment"],
+                    date_range=row["date_range"],
+                )
+            )
+        object_types: dict[int, list[ObjectTypeMetadata]] = {
+            rid: [] for rid in regver_ids
+        }
+        for row in self._conn.execute(
+            "SELECT regver_id, name, definition "
+            "FROM object_type "
+            f"WHERE regver_id IN ({regver_placeholders}) "
+            "ORDER BY regver_id, name",
+            regver_ids,
+        ).fetchall():
+            if not _has_text(row["name"], row["definition"]):
+                continue
+            object_types[row["regver_id"]].append(
+                ObjectTypeMetadata(
+                    name=row["name"],
+                    definition=row["definition"],
+                )
+            )
+        out: dict[int, list[RegisterVersionMetadata]] = {}
+        for row in version_rows:
+            regver_id = row["regver_id"]
+            out.setdefault(row["register_variant_id"], []).append(
+                RegisterVersionMetadata(
+                    name=row["registerversionnamn"],
+                    description=row["registerversionbeskrivning"],
+                    measurement_information=row["registerversionmatinformation"],
+                    populations=tuple(populations[regver_id]),
+                    object_types=tuple(object_types[regver_id]),
+                )
+            )
+        return {variant_id: tuple(items) for variant_id, items in out.items()}
 
     def list_concept_groups(
         self, provider_slug: str, register_slug: str
@@ -1666,6 +1777,7 @@ class Catalog:
             measurement_unit=meta["measurement_unit"],
             is_sensitive=bool(meta["is_sensitive"]),
             is_identifier=bool(meta["is_identifier"]),
+            deprecated=bool(meta["deprecated"]),
             source_register_id=meta["source_register_id"],
             source_register_text=meta["source_register_text"],
             related_documents=self._related_documents_for_register(
@@ -1735,7 +1847,7 @@ class Catalog:
         row = self._conn.execute(
             "SELECT v.register_id, v.provider_key, v.slug, v.name, v.definition, "
             "v.description, v.operational_definition, "
-            "v.measurement_unit, v.is_sensitive, v.is_identifier, "
+            "v.measurement_unit, v.is_sensitive, v.is_identifier, v.deprecated, "
             "v.source_register_id, v.source_register_text, "
             "r.slug AS register_slug, p.slug AS provider_slug "
             "FROM variable v "

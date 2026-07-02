@@ -197,6 +197,7 @@ beforeEach(() => {
         panel_entity_key: null,
         panel_time_grain: null,
         panel_time_key: null,
+        versions: [],
       },
     ],
   });
@@ -344,6 +345,7 @@ describe("CatalogNodeView register arm", () => {
           panel_entity_key: null,
           panel_time_grain: null,
           panel_time_key: null,
+          versions: [],
         },
       ],
     });

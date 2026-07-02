@@ -78,6 +78,68 @@ describe("VariantBrowser — name/display_group dedupe (D1.4)", () => {
       .element(page.getByText("KUAGG aggregat", { exact: true }))
       .toBeVisible();
   });
+
+  it("renders register-version population and object-type metadata", async () => {
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [
+        {
+          slug: "standard",
+          name: "Standard",
+          display_group: null,
+          versions: [
+            {
+              name: "2019",
+              description: "RAMS 2019 description",
+              measurement_information: "RAMS measurement information",
+              populations: [
+                {
+                  name: "Employees",
+                  definition: "People with employment income",
+                  comment: "Fixture population note",
+                  date_range: "2019",
+                },
+                {
+                  name: "Employees",
+                  definition: "People with employment income, second frame",
+                  comment: "Repeated name should not duplicate a Svelte key",
+                  date_range: "2020",
+                },
+              ],
+              object_types: [
+                { name: "Person", definition: "Individual worker" },
+                {
+                  name: "Person",
+                  definition: "Individual worker, second frame",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as VariantsResponse);
+
+    await render(VariantBrowser, { registerFqid: "scb/rams" });
+
+    await expect.element(page.getByText("Version")).toBeVisible();
+    await expect.element(page.getByText("RAMS 2019 description")).toBeVisible();
+    await expect
+      .element(page.getByText("RAMS measurement information"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Population" }))
+      .toBeVisible();
+    expect(await page.getByText("Employees").all()).toHaveLength(2);
+    await expect
+      .element(page.getByText("People with employment income, second frame"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Object type" }))
+      .toBeVisible();
+    expect(await page.getByText("Person").all()).toHaveLength(2);
+    await expect
+      .element(page.getByText("Individual worker, second frame"))
+      .toBeVisible();
+  });
 });
 
 describe("VariantBrowser — hide the section without a real variant (#673/M4)", () => {

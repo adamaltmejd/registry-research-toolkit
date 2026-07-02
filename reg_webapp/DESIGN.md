@@ -137,6 +137,11 @@ error, not a 500); an absent binding → 404. A register node's children include
 `variants` reference (`VariantsRef`) so the variant browser has a stable slot in the
 discriminated union without the variant being an FQID.
 
+The `/variants` payload includes the variant's compact display metadata plus nested
+`versions` with register-version description/measurement prose and population/object
+type rows. The SPA renders that prose under each real variant; `_default`-only and empty
+variant lists still suppress the whole variant section.
+
 Plus two **concept-group subject routes**, both declared above the catch-all:
 
 - `GET /catalog/group/{provider}/{register}/{key}` (#617/#616) — a FIXED 4-seg shape
@@ -1658,6 +1663,11 @@ Rules, walking each source's `register_variant` + every binding:
   never sees the list form; since #340 the catalog `?period=` query accepts the comma
   wire by doing the same per-segment resolve + union in the route (see The `?period`
   query above).
+- Resolved variable metadata can emit non-blocking hints. `deprecated_traversal` (info)
+  fires when the binding resolves to a variable marked deprecated; the binding remains
+  valid. `variable_replaced` (info) fires when a `variable_replaced_by` edge is
+  effective at or before the requested period and carries `successor_fqid` when the
+  successor resolves to a binding FQID.
 - The binding's `value_set` (a `class/<slug>` FQID) resolves to a known classification →
   else `value_set_missing` (error).
 

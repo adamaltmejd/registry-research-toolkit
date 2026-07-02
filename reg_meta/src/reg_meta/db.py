@@ -273,7 +273,14 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   stored at variable_state grain and low-overlap declared links are severed.
 #   A 6.3.0 DB lacks the warning/severance surface, so it is rejected via the
 #   minor-version gate.
-SCHEMA_VERSION = "6.4.0"
+# - 6.5.0 (#451/#799): additive catalog metadata surface. `variable.deprecated`
+#   persists curated slug-TOML deprecation markers so the semantic validator can
+#   emit deprecated-binding hints. The SCB register-version metadata tables
+#   (`register_version`, `population`, `object_type`) are no longer dropped before
+#   ship; they preserve version-scoped register/variant population and object-type
+#   prose for the catalog UI. A 6.4.0 DB lacks the variable flag and shipped
+#   metadata tables, so it is rejected via the minor-version gate.
+SCHEMA_VERSION = "6.5.0"
 DB_FILENAME = "reg_meta.db"
 
 

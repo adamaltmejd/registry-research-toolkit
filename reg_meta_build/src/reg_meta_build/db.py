@@ -352,13 +352,12 @@ CREATE TABLE register_variant (
     panel_time_grain TEXT CHECK (panel_time_grain IN ('delivery', 'row'))
 );
 
--- A2.6: BUILD-TIME-ONLY (dropped before ship, like `unika_summary`). The
--- coalescer reads `registerversionnamn` for the variable_state valid_from/to
--- year fallback, and the lineage linkers derive a per-edition period from it;
--- both run before `DROP TABLE register_version`. The FQID grammar no longer
--- has a version segment (see reg_meta/DESIGN.md → FQID grammar), so this table carries NO `slug` column — period
--- is a delivery coordinate, not identity. Per-edition prose/artifacts move to
--- the provenance DB (A4.2, deferred); nothing in the shipped catalog reads it.
+-- Register-version metadata. The FQID grammar has no version segment (see
+-- reg_meta/DESIGN.md → FQID grammar), so this table carries NO `slug` column:
+-- period is a delivery coordinate, not identity. The coalescer also reads
+-- `registerversionnamn` for the variable_state valid_from/to year fallback, and
+-- the lineage linkers derive a per-edition period from it. Since #799, the
+-- shipped catalog keeps the prose fields for register/variant metadata display.
 CREATE TABLE register_version (
     regver_id INTEGER PRIMARY KEY,
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
@@ -370,11 +369,8 @@ CREATE TABLE register_version (
     registerversion_senastgodkanddatum TEXT
 );
 
--- A2.6: BUILD-TIME-ONLY, dropped before ship together with `register_version`
--- (they FK it). Write-only debug tables — nothing in the shipped catalog or the
--- query layer reads them; their content belongs in the provenance DB (see
--- DESIGN.md → Provenance DB sibling). Kept build-time only because the importer still populates them from the
--- same Registerinformation.csv pass.
+-- Population and object-type prose scoped to a register version (#799). These
+-- are shipped read-only catalog metadata, not FQID-addressable entities.
 CREATE TABLE population (
     regver_id INTEGER NOT NULL REFERENCES register_version(regver_id),
     -- Universal-vocabulary rename. `populationdatum` is a free-text date range, not a parsed
@@ -426,6 +422,9 @@ CREATE TABLE variable (
     measurement_unit TEXT,
     source_register_id INTEGER REFERENCES register(register_id),
     source_label TEXT,
+    -- Curated slug-TOML marker for retired/deprecated variables that should
+    -- remain resolvable but produce semantic authoring hints.
+    deprecated INTEGER NOT NULL DEFAULT 0,
     -- A1.2: sensitivity flags lifted from unika_summary so A2.1 can drop that
     -- table cleanly. Populated by `_populate_sensitivity_flags` after
     -- unika_summary import. SCB ships `kanslig_variabel` and
@@ -4869,20 +4868,9 @@ def materialize(
         "classification_candidate (A2.7/A4.4e)."
     )
 
-    # A2.6: drop the build-only register-edition tables before ship (mirrors
-    # the `unika_summary` drop above). `register_version` fed the coalescer's
-    # valid_from/to year fallback and the lineage linkers (`*_replaced_by`,
-    # `link_variable_state_lineage`), all of which ran above; `population` /
-    # `object_type` are write-only debug tables nothing in the shipped
-    # catalog reads. The FQID grammar no longer has a version segment,
-    # so none of these belong in the shipped DB. Drop order is FK-safe:
-    # children (`population`, `object_type` FK `register_version`) first,
-    # then the parent — `PRAGMA foreign_key_check` (below) flags children of
-    # a dropped parent, so leaving them would fail the build.
-    conn.execute("DROP TABLE population")
-    conn.execute("DROP TABLE object_type")
-    conn.execute("DROP TABLE register_version")
-    _progress("Dropped register_version + population + object_type (A2.6).")
+    # #799: keep register-version / population / object-type prose in the shipped
+    # catalog. These tables are not FQID-addressable, but they carry the native
+    # SCB register/variant context researchers need on the subject page.
 
     _t = time.perf_counter()
     _populate_fts(conn)
@@ -5280,8 +5268,7 @@ def build_db(
         conn.commit()
 
         # A2.1: VACUUM reclaims the pages freed by the build-time-only `DROP
-        # TABLE`s above — `unika_summary` (A2.1), `register_version` +
-        # `population` + `object_type` (A2.6), plus `variable_instance` +
+        # TABLE`s above — `unika_summary` (A2.1), `variable_instance` +
         # `variable_alias_build` (A2.7) + `classification_candidate` (A4.4e) —
         # so the shipped DB doesn't carry
         # a fat freelist. `validate.py` flags

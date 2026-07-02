@@ -304,6 +304,27 @@ def test_variants_endpoint_serializes_composite_time_key(client):
     assert qtr["panel_time_grain"] == "row"
 
 
+def test_variants_endpoint_serializes_version_metadata(client):
+    variants = client.get("/api/catalog/scb/rams/variants").json()["variants"]
+    std = next(v for v in variants if v["slug"] == "standard")
+    assert std["versions"] == [
+        {
+            "name": "2019",
+            "description": "RAMS 2019 description",
+            "measurement_information": "RAMS measurement information",
+            "populations": [
+                {
+                    "name": "Employees",
+                    "definition": "People with employment income",
+                    "comment": "Fixture population note",
+                    "date_range": "2019",
+                }
+            ],
+            "object_types": [{"name": "Person", "definition": "Individual worker"}],
+        }
+    ]
+
+
 def test_variants_unknown_register_404(client):
     # A typo'd register is a 404, NOT a 200 with an empty list (the resolve guards
     # it before list_variants, so an absent register isn't silently empty).

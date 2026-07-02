@@ -202,6 +202,17 @@ class TestResolveBinding:
             == "Avser personens registrerade kön vid årets slut."
         )
 
+    def test_deprecated_flag_flows_through_resolve(self) -> None:
+        conn = build_slugged_db()
+        r = Catalog(conn).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert r.deprecated is False
+        conn.execute("UPDATE variable SET deprecated = 1 WHERE slug = 'kon'")
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert r.deprecated is True
+
     def test_unknown_variable_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
             Catalog(slugged_conn).resolve("scb/lisa/nonexistent")

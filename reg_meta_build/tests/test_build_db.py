@@ -168,11 +168,9 @@ class TestBuildDb:
         count = db_conn.execute("SELECT COUNT(*) FROM register_variant").fetchone()[0]
         assert count == 2  # variant 10 and variant 20
 
-    def test_register_version_tables_dropped(self, db_conn: sqlite3.Connection):
-        # A2.6: register_version (+ its FK children population/object_type) are
-        # build-time-only and DROPped before ship (like unika_summary). The
-        # coalescer's year fallback + the lineage linkers consume register_version
-        # earlier in the build; nothing in the shipped catalog reads it.
+    def test_register_version_metadata_tables_ship(self, db_conn: sqlite3.Connection):
+        # #799: register_version plus its population/object_type children are
+        # shipped read-only metadata for the register/variant catalog page.
         present = {
             r[0]
             for r in db_conn.execute(
@@ -180,7 +178,36 @@ class TestBuildDb:
                 "AND name IN ('register_version', 'population', 'object_type')"
             ).fetchall()
         }
-        assert present == set()
+        assert present == {"register_version", "population", "object_type"}
+
+    def test_register_version_metadata_values_ship(self, db_conn: sqlite3.Connection):
+        version = db_conn.execute(
+            "SELECT registerversionnamn, registerversionbeskrivning, "
+            "registerversionmatinformation "
+            "FROM register_version WHERE regver_id = 100"
+        ).fetchone()
+        assert dict(version) == {
+            "registerversionnamn": "2020",
+            "registerversionbeskrivning": "Version 2020",
+            "registerversionmatinformation": "",
+        }
+        population = db_conn.execute(
+            "SELECT name, definition, comment, date_range FROM population "
+            "WHERE regver_id = 100"
+        ).fetchone()
+        assert dict(population) == {
+            "name": "Hela befolkningen",
+            "definition": "Alla personer",
+            "comment": "",
+            "date_range": "2020-12-31",
+        }
+        object_type = db_conn.execute(
+            "SELECT name, definition FROM object_type WHERE regver_id = 100"
+        ).fetchone()
+        assert dict(object_type) == {
+            "name": "Person",
+            "definition": "Fysisk person",
+        }
 
     def test_variable_count(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0]

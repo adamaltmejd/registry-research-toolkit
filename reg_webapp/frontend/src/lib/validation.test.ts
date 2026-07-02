@@ -145,6 +145,8 @@ describe("codeLabel / KNOWN_CODES", () => {
       "value_set_missing",
       "fqid_outside_steward_catalog",
       "representation_outside_steward_catalog",
+      "deprecated_traversal",
+      "variable_replaced",
     ]) {
       expect(KNOWN_CODES[code]).toBeDefined();
     }

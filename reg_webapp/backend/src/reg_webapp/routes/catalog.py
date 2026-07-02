@@ -596,6 +596,7 @@ def _binding_node(
         measurement_unit=resolved.measurement_unit,
         is_sensitive=resolved.is_sensitive,
         is_identifier=resolved.is_identifier,
+        deprecated=resolved.deprecated,
         source_register_id=resolved.source_register_id,
         source_register_text=resolved.source_register_text,
         # `ResolvedVariable`'s edge collections are tuples (frozen model); the

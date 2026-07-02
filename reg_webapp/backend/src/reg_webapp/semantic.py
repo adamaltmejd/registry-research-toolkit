@@ -137,6 +137,8 @@ def _issue(
     caller: Caller,
     path: str,
     message: str,
+    *,
+    successor_fqid: str | None = None,
 ) -> ValidationIssue:
     """Build an issue, applying the steward error→warning downgrade.
 
@@ -145,7 +147,13 @@ def _issue(
     level = base_level
     if caller == "steward" and base_level == "error" and code in _STEWARD_DOWNGRADED:
         level = "warning"
-    return ValidationIssue(level=level, code=code, path=path, message=message)
+    return ValidationIssue(
+        level=level,
+        code=code,
+        path=path,
+        message=message,
+        successor_fqid=successor_fqid,
+    )
 
 
 def _check_source(
@@ -336,6 +344,34 @@ def _period_segment_bounds(period: int | str | PeriodRange) -> tuple[str, str] |
     return lo, _snap_to_real_month_end(hi)
 
 
+def _period_end_year(period: SchemaPeriod) -> int | None:
+    """Latest requested year for replacement-hint gating.
+
+    ``None`` means `_default`/full-history: any dated successor is relevant.
+    """
+    if period == "_default":
+        return None
+    if isinstance(period, tuple):
+        ends = [_period_end_year(segment) for segment in period]
+        finite = [end for end in ends if end is not None]
+        return max(finite) if finite else None
+    if isinstance(period, int):
+        return period
+    if isinstance(period, str):
+        _lo, hi = period_token_to_bounds(period)
+        return int(hi[:4])
+    _lo, hi = _requested_range_bounds(period)
+    return int(hi[:4])
+
+
+def _replacement_applies(effective_year: int | None, period: SchemaPeriod) -> bool:
+    """Whether a succession edge is effective by the requested period."""
+    if effective_year is None:
+        return period == "_default"
+    end_year = _period_end_year(period)
+    return end_year is None or effective_year <= end_year
+
+
 def _state_union_bounds(states) -> tuple[str, str]:  # noqa: ANN001 — reg_meta states
     """Inclusive ISO bounds spanning a non-empty set of variable states."""
     return min(s.valid_from for s in states), max(s.valid_to for s in states)
@@ -482,7 +518,7 @@ def _check_binding(
         )
         return
     try:
-        catalog.resolve(parsed)
+        resolved = catalog.resolve(parsed)
     except RegMetaError:
         issues.append(
             _issue(
@@ -499,6 +535,8 @@ def _check_binding(
         # on its own, so validate it before returning.
         _check_value_set(binding, bbase, catalog, caller, issues)
         return
+
+    _check_binding_hints(binding, source, var_path, resolved, caller, issues)
 
     resolved_columns = _check_binding_period(
         binding,
@@ -526,6 +564,52 @@ def _check_binding(
             binding.variable, var_path, resolved_columns, index, caller, issues
         )
     _check_value_set(binding, bbase, catalog, caller, issues)
+
+
+def _check_binding_hints(
+    binding: Binding,
+    source: Source,
+    var_path: str,
+    resolved,  # noqa: ANN001 — binding FQID resolves to reg_meta.ResolvedVariable
+    caller: Caller,
+    issues: list[ValidationIssue],
+) -> None:
+    """Non-blocking semantic hints that require resolved variable metadata."""
+    if resolved.deprecated:
+        issues.append(
+            _issue(
+                "deprecated_traversal",
+                "info",
+                caller,
+                var_path,
+                f"binding {binding.variable!r} resolves to a deprecated catalog "
+                "variable; prefer a current successor when one is available",
+            )
+        )
+
+    for successor in resolved.replaced_by:
+        if not _replacement_applies(successor.effective_year, source.period):
+            continue
+        successor_fqid = str(successor.fqid) if successor.fqid is not None else None
+        effective = (
+            f" effective {successor.effective_year}"
+            if successor.effective_year is not None
+            else ""
+        )
+        target = successor_fqid or (
+            f"{successor.provider}/{successor.register_name}/{successor.variable}"
+        )
+        issues.append(
+            _issue(
+                "variable_replaced",
+                "info",
+                caller,
+                var_path,
+                f"binding {binding.variable!r} has replacement {target!r}{effective} "
+                f"by requested period {period_display(source.period)}",
+                successor_fqid=successor_fqid,
+            )
+        )
 
 
 def _check_binding_period(

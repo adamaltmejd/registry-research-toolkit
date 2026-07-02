@@ -261,6 +261,29 @@ def _variants_catalog() -> Catalog:
             ),
         ],
     )
+    conn.execute(
+        "INSERT INTO register_version "
+        "(regver_id, register_variant_id, registerversionnamn, "
+        "registerversionbeskrivning, registerversionmatinformation) "
+        "VALUES (201, 21, '2019', 'RAMS 2019 description', "
+        "'RAMS measurement information')"
+    )
+    conn.execute(
+        "INSERT INTO population (regver_id, name, definition, comment, date_range) "
+        "VALUES (201, 'Employees', 'People with employment income', "
+        "'Fixture population note', '2019')"
+    )
+    conn.execute(
+        "INSERT INTO population (regver_id, name, definition, comment, date_range) "
+        "VALUES (201, '', '', '', '')"
+    )
+    conn.execute(
+        "INSERT INTO object_type (regver_id, name, definition) "
+        "VALUES (201, 'Person', 'Individual worker')"
+    )
+    conn.execute(
+        "INSERT INTO object_type (regver_id, name, definition) VALUES (201, '', '')"
+    )
     conn.commit()
     return Catalog(conn)
 
@@ -323,6 +346,26 @@ class TestListVariants:
         assert q.panel_entity_key == "peorgnr"
         assert q.panel_time_key == ("ar", "kvartal")
         assert q.panel_time_grain == "row"
+
+    def test_carries_register_version_population_object_type_metadata(self) -> None:
+        std = next(
+            v
+            for v in _variants_catalog().list_variants("scb", "rams")
+            if v.slug == "standard"
+        )
+        assert len(std.versions) == 1
+        version = std.versions[0]
+        assert version.name == "2019"
+        assert version.description == "RAMS 2019 description"
+        assert version.measurement_information == "RAMS measurement information"
+        assert len(version.populations) == 1
+        assert version.populations[0].name == "Employees"
+        assert version.populations[0].definition == "People with employment income"
+        assert version.populations[0].comment == "Fixture population note"
+        assert version.populations[0].date_range == "2019"
+        assert len(version.object_types) == 1
+        assert version.object_types[0].name == "Person"
+        assert version.object_types[0].definition == "Individual worker"
 
     def test_excludes_null_slug_variants(self) -> None:
         # rams has 4 register_variants but only 3 are slugged/browse-addressable.
