@@ -1775,14 +1775,14 @@ def derive_variable_vintage_succession(
     `concept_groups.derive_classification_succession`.
 
     Family key = `(register_id, variable.name)`. The original **clean tier** still
-    fires when an adjacent classification edge maps 1:1 to variables in a family.
-    The entangled tier (#592) handles the cross-product families where one edition
-    binds several variables by deriving a stream key from the variable slug with
-    the adjacent classification edge's digit-bearing vintage tokens stripped. That
-    keeps parallel axes (population / parental role / level / grain) in the key,
-    so `fars-*` never links to `mors-*`, `individ-*` never links to `foretag-*`,
-    and `grov-*` never links to `utokad-*`. A stream with more than one variable
-    on either side is skipped rather than guessed.
+    fires when an adjacent classification edge maps 1:1 to variables in a family,
+    but it must pass the same slug-stream guard as the entangled tier (#592). The
+    stream key removes the adjacent classification edge's digit-bearing vintage
+    tokens from the variable slug. That keeps parallel axes (population /
+    parental role / level / grain) in the key, so `fars-*` never links to
+    `mors-*`, `individ-*` never links to `foretag-*`, and `grov-*` never links to
+    `utokad-*`. A stream with more than one variable on either side is skipped
+    rather than guessed.
 
     Interval-native variables (#271, no lift owed) stay out of all lifted
     candidate pairs: a single variable spanning >1 chained edition across its
@@ -1864,9 +1864,9 @@ def derive_variable_vintage_succession(
         # Walk each classification edge whose BOTH endpoints are bound in this
         # family. Variables already bound to multiple chained editions are
         # interval-native and never participate. The clean tier remains the fast
-        # path: exactly one remaining variable on each side mints the same edge
-        # as #584. When either side has several variables, partition by a
-        # slug-stem key with only the adjacent edge's digit-bearing vintage
+        # path: exactly one remaining same-stream variable on each side mints the
+        # same edge as #584. When either side has several variables, partition by
+        # a slug-stem key with only the adjacent edge's digit-bearing vintage
         # tokens stripped. Ambiguous streams (more than one variable on either
         # side) are skipped rather than guessed.
         for pred_slug, succ_slug, year in edition_edges:
@@ -1881,7 +1881,16 @@ def derive_variable_vintage_succession(
             if not pred_vids or not succ_vids:
                 continue
             if len(pred_vids) == 1 and len(succ_vids) == 1:
-                candidate_pairs = [(next(iter(pred_vids)), next(iter(succ_vids)))]
+                pred_vid = next(iter(pred_vids))
+                succ_vid = next(iter(succ_vids))
+                if _variable_vintage_stream_key(
+                    variable_slug_of[pred_vid], pred_slug, succ_slug
+                ) == _variable_vintage_stream_key(
+                    variable_slug_of[succ_vid], pred_slug, succ_slug
+                ):
+                    candidate_pairs = [(pred_vid, succ_vid)]
+                else:
+                    candidate_pairs = []
             else:
                 pred_by_stream: dict[tuple[str, ...], set[int]] = {}
                 succ_by_stream: dict[tuple[str, ...], set[int]] = {}

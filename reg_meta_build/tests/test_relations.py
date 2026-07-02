@@ -1832,6 +1832,32 @@ class TestVariableVintageSuccession:
         assert n == 1
         assert _lift_rows(conn) == [("sni-2002", "sni-2007", 2007)]
 
+    def test_clean_pair_with_different_streams_mints_nothing(self) -> None:
+        # Same-name and 1:1 by edition is not enough after #592: non-vintage
+        # slug tokens still define separate streams, so this clean-looking pair
+        # would fail the real-corpus stream guard and must be skipped at source.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Kommun", slug="u-ukom")
+        add_variable(conn, register_id=1, var_id=2, name="Kommun", slug="u-hkom")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-ukom",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-hkom",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0
+        assert _lift_rows(conn) == []
+
     def test_three_edition_chain_mints_adjacent_edges(self) -> None:
         # Adjacent-chain (NOT predecessor→latest): a 3-edition family → 2 edges.
         conn = _vintage_db()

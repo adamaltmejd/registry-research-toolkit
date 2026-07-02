@@ -108,9 +108,9 @@ into seven families:
   classification-vintage lift (`note = 'derived:classification_vintage_lift'`, #584)
   derives edges by lifting `classification_replaced_by` edition chains to the variable
   grain through value-set bindings. It handles the clean 1:1 same-name families and,
-  since #592, entangled cross-product families by partitioning a same-name family with a
-  conservative slug-stem stream key that strips only digit-bearing vintage tokens. The
-  lift runs AFTER the other two passes and re-runs
+  since #592, entangled cross-product families only when the predecessor/successor
+  variables share a conservative slug-stem stream key that strips only digit-bearing
+  vintage tokens. The lift runs AFTER the other two passes and re-runs
   `reject_replaced_by_cycles` over the full combined graph, because a pre-existing
   reversed edge plus a newly inserted lift edge can close a cycle the earlier checks
   could not see. All three share traversal helpers; their authoring surfaces must not
@@ -2505,10 +2505,10 @@ already-grouped member:
    curated umbrella groups — `group:sun` being the first, added by #516 (see below). The
    variable-grain counterpart is derived by `derive_variable_vintage_succession` (#584):
    it lifts those `classification_replaced_by` edition edges through value-set bindings
-   to mint `variable_replaced_by` edges. The clean tier mints the 1:1 same-name families;
-   #592 extends the same pass to entangled cross-product families by matching only
-   variables whose slug stems agree after the adjacent classification edge's
-   digit-bearing vintage tokens are removed.
+   to mint `variable_replaced_by` edges. The clean tier still handles 1:1 same-name
+   families, but #592 applies the same slug-stem stream guard there and in entangled
+   cross-product families: only variables whose slug stems agree after the adjacent
+   classification edge's digit-bearing vintage tokens are removed are matched.
 
 2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
    `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
