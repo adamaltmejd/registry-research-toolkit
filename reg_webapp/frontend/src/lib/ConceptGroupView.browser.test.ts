@@ -448,6 +448,69 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .toBeVisible();
   });
 
+  it("renders alias-only representation members as not-delivered disabled rows (#840)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        key: "disprep",
+        label: "Disponibel inkomst",
+        source: "curated",
+        axes: [{ name: "rep", label: "Representation" }],
+        members: [
+          {
+            fqid: "scb/rams/disp",
+            name: "Disponibel inkomst",
+            delivery_column: "CDISP",
+            facets: [{ axis: "rep", value: "incl", label: "Inkl." }],
+            coverage: {
+              coverage_from: "1968-01-01",
+              coverage_to: "2024-12-31",
+              open_ended: false,
+              state_count: 1,
+            },
+          },
+          {
+            fqid: "scb/rams/disp",
+            name: "Disponibel inkomst",
+            delivery_column: "CDISP5",
+            facets: [{ axis: "rep", value: "excl", label: "Exkl." }],
+            coverage: {
+              coverage_from: null,
+              coverage_to: null,
+              open_ended: false,
+              state_count: 0,
+            },
+          },
+        ],
+      }),
+    );
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+      graph([
+        vnode("scb/rams/disp", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "CDISP",
+            valid_from: "1968-01-01",
+            valid_to: "2024-12-31",
+          }),
+        ]),
+      ]),
+    );
+
+    renderGroup({ key: "disprep" });
+
+    const delivered = page.getByRole("checkbox", { name: /^CDISP(?!5)/ });
+    const aliasOnly = page.getByRole("checkbox", { name: /CDISP5/ });
+    await expect.element(delivered).toBeVisible();
+    await expect.element(delivered).toBeEnabled();
+    await expect.element(aliasOnly).toBeVisible();
+    await expect.element(aliasOnly).toBeDisabled();
+    await expect
+      .element(page.getByText("not delivered", { exact: true }))
+      .toBeVisible();
+    const rowBtn = aliasOnly.element().closest(".row-btn");
+    expect(rowBtn?.classList.contains("dimmed")).toBe(true);
+  });
+
   it("dims a column whose span does not overlap the active period window", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());

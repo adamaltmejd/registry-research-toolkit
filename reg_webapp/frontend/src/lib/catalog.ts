@@ -919,6 +919,10 @@ export interface PickerRepresentation {
   wirePeriod: string | null;
   valueSetLabel: string;
   codingsVary: boolean;
+  /** False for a known representation member that has no delivery states (e.g.
+   * an alias-only concept-group member). It remains visible and dimmed so the
+   * user can see the curated cell exists, but it cannot be selected or added. */
+  selectable?: boolean;
   /** The SUPERSEDED delivery-column names this row folds, when it is a collapsed
    * SEQUENTIAL RENAME (#902): one variable+variant's columns delivered over
    * NON-overlapping eras (`DINF` → `DINF83` → `DINF84` → `DINF86`) are ONE evolving
@@ -2007,9 +2011,12 @@ export function pickerWindowYears(
  * an unparseable bound (neither year resolves) is treated as in-window — never
  * dim a row we can't place. */
 export function representationInWindow(
-  row: { from: string; to: string },
+  row: { from: string; to: string; selectable?: boolean },
   window: [number, number] | null,
 ): boolean {
+  if (row.selectable === false) {
+    return false;
+  }
   if (!window) {
     return true;
   }

@@ -227,8 +227,16 @@ function selKey(bandKey: string, rowKey: string): string {
   return `${bandKey}::${rowKey}`;
 }
 
+function rowSelectable(row: PickerRepresentation): boolean {
+  return row.selectable !== false;
+}
+
 /** Toggle one column's selection. Reassigns the Set so `$state` stays reactive. */
-function toggleRow(bandKey: string, rowKey: string): void {
+function toggleRow(bandKey: string, row: PickerRepresentation): void {
+  if (!rowSelectable(row)) {
+    return;
+  }
+  const rowKey = row.key;
   const sel = selKey(bandKey, rowKey);
   const next = new Set(selectedKeys);
   if (next.has(sel)) {
@@ -242,13 +250,16 @@ function toggleRow(bandKey: string, rowKey: string): void {
 /** Whether EVERY column of a variable is selected — the variable-level "select all"
  * checked state (and the indeterminate complement: some-but-not-all). */
 function allOfBandSelected(band: PickerBand): boolean {
+  const rows = band.rows.filter(rowSelectable);
   return (
-    band.rows.length > 0 &&
-    band.rows.every((r) => selectedKeys.has(selKey(band.key, r.key)))
+    rows.length > 0 &&
+    rows.every((r) => selectedKeys.has(selKey(band.key, r.key)))
   );
 }
 function someOfBandSelected(band: PickerBand): boolean {
-  return band.rows.some((r) => selectedKeys.has(selKey(band.key, r.key)));
+  return band.rows
+    .filter(rowSelectable)
+    .some((r) => selectedKeys.has(selKey(band.key, r.key)));
 }
 
 /** Select or clear every column of one variable in a single move (the per-variable
@@ -257,6 +268,9 @@ function toggleBand(band: PickerBand): void {
   const next = new Set(selectedKeys);
   const select = !allOfBandSelected(band);
   for (const r of band.rows) {
+    if (!rowSelectable(r)) {
+      continue;
+    }
     const sel = selKey(band.key, r.key);
     if (select) {
       next.add(sel);
@@ -277,7 +291,9 @@ let hoveredBandKey = $state<string | null>(null);
  * a presentation lens — it must not let "select all" grab a row the user has filtered
  * out of view). A hidden row's own selection persists in `selectedKeys` regardless. */
 const allKeys = $derived(
-  filteredBands.flatMap((b) => b.rows.map((r) => selKey(b.key, r.key))),
+  filteredBands.flatMap((b) =>
+    b.rows.filter(rowSelectable).map((r) => selKey(b.key, r.key)),
+  ),
 );
 const allSelected = $derived(
   allKeys.length > 0 && allKeys.every((k) => selectedKeys.has(k)),
@@ -306,7 +322,7 @@ const selected = $derived.by((): PickerSelection[] => {
   const out: PickerSelection[] = [];
   for (const band of bands) {
     for (const row of band.rows) {
-      if (selectedKeys.has(selKey(band.key, row.key))) {
+      if (rowSelectable(row) && selectedKeys.has(selKey(band.key, row.key))) {
         out.push({ band, row });
       }
     }
@@ -762,7 +778,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
         {@const band = v.band}
         {#if v.single}
           {@const row = band.rows[0]}
-          {@const checked = selectedKeys.has(selKey(band.key, row.key))}
+          {@const checked =
+            rowSelectable(row) && selectedKeys.has(selKey(band.key, row.key))}
           {@const inWindow = representationInWindow(row, window)}
           <!-- The column's facet leads the quiet `.sub` context (#678) — but when the
                band's PRIMARY already IS that facet (#901 facet-led single-column band,
@@ -798,8 +815,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
               <input
                 type="checkbox"
                 class="cbox"
+                disabled={!rowSelectable(row)}
                 checked={checked}
-                onchange={() => toggleRow(band.key, row.key)}
+                onchange={() => toggleRow(band.key, row)}
               />
               <span class="row-main">
                 <span class="primary-line">
@@ -1008,7 +1026,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
             {@render historyDisclosure(v.supersedes)}
           </li>
           {#each band.rows as row (row.key)}
-            {@const checked = selectedKeys.has(selKey(band.key, row.key))}
+            {@const checked =
+              rowSelectable(row) && selectedKeys.has(selKey(band.key, row.key))}
             {@const inWindow = representationInWindow(row, window)}
             {@const label = v.rowLabels.get(row.key)}
             {@const facet = band.facetByColumn?.[row.column]}
@@ -1029,8 +1048,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                 <input
                   type="checkbox"
                   class="cbox"
+                  disabled={!rowSelectable(row)}
                   checked={checked}
-                  onchange={() => toggleRow(band.key, row.key)}
+                  onchange={() => toggleRow(band.key, row)}
                 />
                 <span class="row-main">
                   {#if label?.primary.mono}

@@ -535,10 +535,16 @@ shows its study-window span without resolving every state:
 For a filtered steward, the same payload fields are recomputed over the steward's held
 delivery columns (`Catalog.register_column_coverage` + `CatalogIndex.held_columns`) so a
 partial-column hold does not inherit the whole-variable coverage span/count. Named held
-columns without a per-column state row get `coverage = None`, matching representation
-members on concept-group pages; held unnamed columns use
+columns without a per-column state row get `coverage = None`; held unnamed columns use
 `Catalog.register_unnamed_column_coverage` because `register_column_coverage` has no
 NULL delivery-column key.
+
+Register-scoped concept-group subject pages also use `register_column_coverage` for
+representation members, but a missing per-column key is a known curated member with no
+`variable_state` row, not absent enrichment. Those members serialize the existing
+zero-state `VariableCoverage` shape (`state_count == 0`, null bounds, not open-ended)
+instead of `coverage = None`, so downstream period lenses can distinguish "never
+delivered" from "unknown".
 
 **Query-time, not materialized — measured first** (the #351 design decision). The
 aggregates are one GROUP BY over `variable_state` per listing, in reg_meta

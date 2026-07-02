@@ -1296,12 +1296,12 @@ export interface components {
          * @description A concept-group member on the group SUBJECT node — reg_meta's browse
          *     `ConceptGroupMember` (fqid + name + facets) PLUS the per-member study-window
          *     `coverage` (#351/#819; reg_meta's `VariableCoverage`, zipped on by the group
-         *     route from variable- or column-grain coverage as appropriate). `coverage` is None
-         *     for a member with no coverage row (a stateless variable, an alias-only
-         *     representation column, or a member whose leaf slug didn't match the register's
-         *     coverage map — defensive). Subclassing the frozen, `extra="forbid"` reg_meta model
-         *     to declare one new field is supported in Pydantic v2 — the subclass owns
-         *     `coverage`.
+         *     route from variable- or column-grain coverage as appropriate). A member that is
+         *     known to have no states uses the zero-state `VariableCoverage` shape
+         *     (`state_count == 0`, null bounds, not open-ended); `coverage` is None only when no
+         *     coverage enrichment could be attached. Subclassing the frozen, `extra="forbid"`
+         *     reg_meta model to declare one new field is supported in Pydantic v2 — the subclass
+         *     owns `coverage`.
          */
         ConceptGroupNodeMember: {
             coverage?: components["schemas"]["VariableCoverage"] | null;
