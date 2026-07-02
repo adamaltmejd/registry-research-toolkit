@@ -16,6 +16,20 @@ DEFAULT_MAX_SLOTS) are being hoisted from cos_watch by a sibling change; a fixtu
 them onto the loaded module handle if the hoist hasn't landed yet, so this suite is
 independent of that ordering (the lead's post-assembly union verify runs against the real
 hoisted helpers).
+
+HERMETICITY (post-incident, non-negotiable): a prior version's run_git ran git in the
+AMBIENT process cwd; when the pre-push hook re-ran the full suite with cwd = the real
+worktree, cos_dispatch's git ops mutated the real repo and launched the REAL codex agent.
+Two autouse guardrails now make that class impossible regardless of any single bug:
+  1. `_hermetic_env` chdir's every test into tmp_path (so an ambient-cwd subprocess lands
+     in a harmless empty dir) and prepends a stub-bin with `codex` AND `claude` that FAIL
+     LOUDLY (exit 97, record the invocation) — the real binaries are unreachable even if a
+     test forgets its own stub. Tests that legitimately launch overwrite those stubs with
+     recording no-op stubs in the SAME dir.
+  2. Every dispatch/main invocation passes an explicit `--canonical <tmp>` /
+     `canonical=<tmp>` under tmp_path — never the real DEFAULT_CANONICAL.
+Combined with cos_dispatch's own require_git_checkout guard, a stray canonical can only
+fail fast, never escape.
 """
 
 from __future__ import annotations
@@ -38,6 +52,46 @@ assert _SPEC and _SPEC.loader
 cd = importlib.util.module_from_spec(_SPEC)
 sys.modules[_SPEC.name] = cd
 _SPEC.loader.exec_module(cd)
+
+# A stub codex/claude that FAILS LOUDLY if invoked, recording the attempt. Any test that
+# reaches a real launch without installing its own stub trips this instead of the real
+# binary. Exit 97 is a distinctive sentinel so an accidental invocation is obvious.
+_FAIL_STUB_BODY = (
+    "#!/usr/bin/env python3\n"
+    "import json, os, sys\n"
+    "rec = os.environ.get('COS_STUB_RECORD')\n"
+    "if rec:\n"
+    "    with open(rec, 'a') as fh:\n"
+    "        fh.write(json.dumps({'name': os.path.basename(sys.argv[0]), "
+    "'argv': sys.argv[1:], 'cwd': os.getcwd()}) + chr(10))\n"
+    "sys.stderr.write('UNEXPECTED real-binary invocation in test: ' + ' '.join(sys.argv) + chr(10))\n"
+    "sys.exit(97)\n"
+)
+
+
+def _install_stub_bin(bindir: Path, names: tuple[str, ...], body: str) -> None:
+    bindir.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        script = bindir / name
+        script.write_text(body, encoding="utf-8")
+        script.chmod(0o755)
+
+
+@pytest.fixture(autouse=True)
+def _hermetic_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Sandbox EVERY test: harmless cwd + PATH where the real codex/claude are unreachable.
+
+    Returns the stub-bin dir so a test can overwrite the fail-loud stubs with recording
+    no-op stubs when it legitimately drives a launch. `git` stays reachable via the
+    inherited real PATH appended after the stub dir, so the tmp-repo git ops still work.
+    """
+    stub_bin = tmp_path / "stub-bin"
+    _install_stub_bin(stub_bin, ("codex", "claude"), _FAIL_STUB_BODY)
+    invocations = tmp_path / "stub-invocations.log"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("PATH", f"{stub_bin}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("COS_STUB_RECORD", str(invocations))
+    return stub_bin
 
 
 @pytest.fixture(autouse=True)
@@ -74,6 +128,15 @@ def _ensure_reused_helpers() -> None:
         pre.scan_slots = _scan_slots
 
 
+def _no_real_launch(tmp_path: Path) -> None:
+    """Assert the fail-loud stub never recorded a real-binary invocation."""
+    log = tmp_path / "stub-invocations.log"
+    if log.exists():
+        raise AssertionError(
+            f"a real codex/claude launch was attempted: {log.read_text()!r}"
+        )
+
+
 def _write_slot(slots_root: Path, slug: str) -> Path:
     slots_root.mkdir(parents=True, exist_ok=True)
     path = slots_root / f"{slug}.json"
@@ -84,39 +147,47 @@ def _write_slot(slots_root: Path, slug: str) -> Path:
     return path
 
 
+_GIT_ENV = {
+    "GIT_AUTHOR_NAME": "t",
+    "GIT_AUTHOR_EMAIL": "t@t",
+    "GIT_COMMITTER_NAME": "t",
+    "GIT_COMMITTER_EMAIL": "t@t",
+}
+
+
+def _git(cwd: Path, *args: str) -> None:
+    # Every fixture git call runs with an EXPLICIT cwd under tmp_path (never the ambient
+    # process cwd) so setup can't touch a repo outside the sandbox.
+    subprocess.run(
+        ["git", *args], cwd=str(cwd), check=True, env={**os.environ, **_GIT_ENV}
+    )
+
+
 def _make_origin(tmp_path: Path) -> Path:
-    """A canonical checkout with an `origin` bare remote carrying a `main` branch."""
+    """A canonical checkout (worktree root) with an `origin` bare remote + `main` branch."""
     bare = tmp_path / "origin.git"
-    subprocess.run(["git", "init", "--bare", "-b", "main", str(bare)], check=True)
     canonical = tmp_path / "canonical"
-    subprocess.run(["git", "clone", str(bare), str(canonical)], check=True)
-    env = {
-        **os.environ,
-        "GIT_AUTHOR_NAME": "t",
-        "GIT_AUTHOR_EMAIL": "t@t",
-        "GIT_COMMITTER_NAME": "t",
-        "GIT_COMMITTER_EMAIL": "t@t",
-    }
+    canonical.mkdir()
+    _git(tmp_path, "init", "--bare", "-b", "main", str(bare))
+    _git(tmp_path, "clone", str(bare), str(canonical))
     (canonical / "README.md").write_text("seed\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(canonical), "add", "."], check=True, env=env)
-    subprocess.run(
-        ["git", "-C", str(canonical), "commit", "-m", "seed"], check=True, env=env
-    )
-    subprocess.run(
-        ["git", "-C", str(canonical), "push", "origin", "main"], check=True, env=env
-    )
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "seed")
+    _git(canonical, "push", "origin", "main")
     return canonical
 
 
 def _stub_bin(
-    tmp_path: Path, name: str, *, jsonl: str = "", exit_code: int = 0
+    stub_bin: Path, name: str, *, jsonl: str = "", exit_code: int = 0
 ) -> Path:
-    """A stub codex/claude that records argv+cwd to <bin>/<name>.record and emits jsonl."""
-    bindir = tmp_path / "bin"
-    bindir.mkdir(exist_ok=True)
-    record = bindir / f"{name}.record"
-    script = bindir / name
-    # Python stub: dump argv + cwd as JSON to the record file, print canned JSONL, exit.
+    """Overwrite the fail-loud stub for `name` with a recording no-op that emits jsonl.
+
+    Written into the SAME stub-bin dir the autouse fixture prepended to PATH, so it takes
+    precedence over the real binary. Records argv+cwd to <stub_bin>/<name>.record.
+    """
+    stub_bin.mkdir(parents=True, exist_ok=True)
+    record = stub_bin / f"{name}.record"
+    script = stub_bin / name
     body = (
         "#!/usr/bin/env python3\n"
         "import json, os, sys\n"
@@ -250,6 +321,7 @@ def test_kill_switch_refuses(tmp_path: Path, capsys) -> None:
     assert "kill switch" in capsys.readouterr().out
     # No side effects.
     assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
 
 
 def test_full_budget_refuses(tmp_path: Path, capsys) -> None:
@@ -262,6 +334,7 @@ def test_full_budget_refuses(tmp_path: Path, capsys) -> None:
 
     assert rc == 4
     assert "no free slot budget: busy 3/3" in capsys.readouterr().out
+    _no_real_launch(tmp_path)
 
 
 def test_slot_collision_maps_to_exit_2(tmp_path: Path, capsys) -> None:
@@ -283,6 +356,7 @@ def test_slot_collision_maps_to_exit_2(tmp_path: Path, capsys) -> None:
 
     assert rc == 2
     assert "collision" in capsys.readouterr().err
+    _no_real_launch(tmp_path)
 
 
 def test_worktree_collision_maps_to_exit_2(tmp_path: Path, capsys) -> None:
@@ -304,25 +378,21 @@ def test_worktree_collision_maps_to_exit_2(tmp_path: Path, capsys) -> None:
 
     assert rc == 2
     assert "worktree collision" in capsys.readouterr().err
+    _no_real_launch(tmp_path)
 
 
 # --- happy paths ---
 
 
-def test_happy_path_codex(tmp_path: Path, capsys) -> None:
+def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     canonical = _make_origin(tmp_path)
-    record = _stub_bin(tmp_path, "codex", jsonl=_CODEX_JSONL)
+    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
-    old_path = os.environ["PATH"]
-    os.environ["PATH"] = f"{tmp_path / 'bin'}{os.pathsep}{old_path}"
-    try:
-        rc = cd.dispatch(
-            _args(tmp_path, canonical, state_root=state),
-            codex_id_timeout=5.0,
-            codex_id_poll=0.02,
-        )
-    finally:
-        os.environ["PATH"] = old_path
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+    )
 
     assert rc == 0
     result = json.loads(capsys.readouterr().out)
@@ -360,16 +430,11 @@ def test_happy_path_codex(tmp_path: Path, capsys) -> None:
     assert cd._cos_preflight.scan_slots(state / "pipeline-slots") == {slug}
 
 
-def test_happy_path_claude(tmp_path: Path, capsys) -> None:
+def test_happy_path_claude(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     canonical = _make_origin(tmp_path)
-    record = _stub_bin(tmp_path, "claude")
+    record = _stub_bin(_hermetic_env, "claude")
     state = tmp_path / "state"
-    old_path = os.environ["PATH"]
-    os.environ["PATH"] = f"{tmp_path / 'bin'}{os.pathsep}{old_path}"
-    try:
-        rc = cd.dispatch(_args(tmp_path, canonical, surface="claude", state_root=state))
-    finally:
-        os.environ["PATH"] = old_path
+    rc = cd.dispatch(_args(tmp_path, canonical, surface="claude", state_root=state))
 
     assert rc == 0
     result = json.loads(capsys.readouterr().out)
@@ -391,22 +456,17 @@ def test_happy_path_claude(tmp_path: Path, capsys) -> None:
 
 
 def test_codex_id_timeout_yields_null_session_but_writes_slot(
-    tmp_path: Path, capsys
+    tmp_path: Path, capsys, _hermetic_env: Path
 ) -> None:
     canonical = _make_origin(tmp_path)
     # Stub emits NO id line, so the poll times out.
-    _stub_bin(tmp_path, "codex", jsonl='{"type":"turn.started"}\n')
+    _stub_bin(_hermetic_env, "codex", jsonl='{"type":"turn.started"}\n')
     state = tmp_path / "state"
-    old_path = os.environ["PATH"]
-    os.environ["PATH"] = f"{tmp_path / 'bin'}{os.pathsep}{old_path}"
-    try:
-        rc = cd.dispatch(
-            _args(tmp_path, canonical, state_root=state),
-            codex_id_timeout=0.1,
-            codex_id_poll=0.02,
-        )
-    finally:
-        os.environ["PATH"] = old_path
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=0.1,
+        codex_id_poll=0.02,
+    )
 
     assert rc == 0
     captured = capsys.readouterr()
@@ -422,12 +482,15 @@ def test_codex_id_timeout_yields_null_session_but_writes_slot(
     assert slot["session"] is None
 
 
-def test_launch_failure_no_slot_and_names_worktree(tmp_path: Path) -> None:
+def test_launch_failure_no_slot_and_names_worktree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     canonical = _make_origin(tmp_path)
-    # Force an OSError at spawn by making `codex` unresolvable: a PATH that has `git`
-    # (so the worktree still gets created) but no `codex`. A detached no-wait launch can
-    # only fail-fast on a spawn error, not on a post-spawn nonzero exit, so a missing
-    # executable is the launch-failure case that must NOT leak a slot.
+    # Force an OSError at spawn by making `codex` unresolvable: a PATH with ONLY `git`
+    # (so the worktree still gets created) and no codex/claude at all — not even the
+    # fail-loud stub. A detached no-wait launch can only fail-fast on a spawn error, not
+    # on a post-spawn nonzero exit, so a missing executable is the launch-failure case
+    # that must NOT leak a slot. monkeypatch.setenv keeps the swap test-local + reverted.
     state = tmp_path / "state"
     gitonly_bin = tmp_path / "gitonly"
     gitonly_bin.mkdir()
@@ -435,13 +498,10 @@ def test_launch_failure_no_slot_and_names_worktree(tmp_path: Path) -> None:
         ["which", "git"], capture_output=True, text=True, check=True
     ).stdout.strip()
     (gitonly_bin / "git").symlink_to(git_real)
-    old_path = os.environ["PATH"]
-    os.environ["PATH"] = str(gitonly_bin)
-    try:
-        with pytest.raises(SystemExit) as exc:
-            cd.dispatch(_args(tmp_path, canonical, state_root=state))
-    finally:
-        os.environ["PATH"] = old_path
+    monkeypatch.setenv("PATH", str(gitonly_bin))
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(_args(tmp_path, canonical, state_root=state))
 
     message = str(exc.value.code)
     assert "failed to launch" in message
@@ -469,10 +529,47 @@ def test_dry_run_no_side_effects(tmp_path: Path, capsys) -> None:
     assert not (canonical / ".claude" / "worktrees" / slug).exists()
     assert not (state / "pipeline-slots").exists()
     assert not (state / "dispatch-logs").exists()
+    _no_real_launch(tmp_path)
 
 
-def test_git_failure_fails_fast(tmp_path: Path, capsys) -> None:
-    # A non-repo canonical dir: `git fetch origin main` fails, exit 2, no slot file.
+def test_git_failure_fails_fast_no_launch(tmp_path: Path, capsys) -> None:
+    # A REAL tmp repo (satisfies require_git_checkout) but with NO origin remote, so
+    # `git fetch origin main` genuinely fails. Must exit 2, write no slot, and — the
+    # incident's core lesson — NEVER reach the launch step (no codex/claude invoked).
+    canonical = tmp_path / "canonical"
+    canonical.mkdir()
+    _git(canonical, "init", "-b", "main")
+    (canonical / "seed").write_text("x\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "seed")
+    state = tmp_path / "state"
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    assert "git" in capsys.readouterr().err
+    assert not (state / "pipeline-slots").exists()
+    # The launch step was never reached: the fail-loud stub recorded nothing.
+    _no_real_launch(tmp_path)
+
+
+def test_non_repo_canonical_refused_before_any_git_mutation(
+    tmp_path: Path, capsys
+) -> None:
+    # require_git_checkout belt-and-braces: a canonical that is NOT a git worktree (an
+    # empty dir) is refused BEFORE fetch/worktree-add, so `git -C` can never walk up into
+    # an unintended enclosing repo. This is the direct guard against the incident's
+    # ambient-cwd escape.
     canonical = tmp_path / "not-a-repo"
     canonical.mkdir()
     state = tmp_path / "state"
@@ -486,11 +583,23 @@ def test_git_failure_fails_fast(tmp_path: Path, capsys) -> None:
             "--canonical",
             str(canonical),
             "--no-canonical-check",
-            "--worktree-root",
-            str(tmp_path / "wts"),
         ]
     )
 
     assert rc == 2
-    assert "git" in capsys.readouterr().err
+    assert "not a git worktree" in capsys.readouterr().err
     assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_require_git_checkout_rejects_enclosing_repo_subdir(tmp_path: Path) -> None:
+    # A subdir INSIDE a repo (not the worktree root) must be rejected: git would resolve
+    # its toplevel to the enclosing repo, exactly the unintended-target class.
+    canonical = _make_origin(tmp_path)
+    subdir = canonical / "nested"
+    subdir.mkdir()
+
+    with pytest.raises(SystemExit) as exc:
+        cd.require_git_checkout(subdir)
+
+    assert "not a worktree root" in str(exc.value.code)

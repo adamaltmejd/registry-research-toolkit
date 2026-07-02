@@ -224,6 +224,36 @@ def run_git(cwd: Path, args: list[str]) -> None:
         raise SystemExit(f"git {' '.join(args)} failed: {tail}")
 
 
+def require_git_checkout(canonical: Path) -> None:
+    """Refuse (exit 2) unless `canonical` is itself a git worktree root.
+
+    Belt-and-braces before the mutating fetch/worktree-add: git's `-C <dir>` walks UP to
+    the nearest enclosing repo, so a `canonical` that is NOT a checkout (an empty dir, a
+    stray path) would silently target whatever repo sits above it — the exact class of
+    accident that let a test's throwaway path resolve to the real checkout. Requiring the
+    resolved `show-toplevel` to EQUAL `canonical` (true for a main checkout and for a
+    linked worktree root, both valid dispatch origins) rejects that: an ambient parent
+    repo has a different toplevel, and a non-repo dir makes rev-parse fail outright. This
+    does not weaken the production contract — the real canonical checkout satisfies it.
+    """
+    proc = subprocess.run(
+        ["git", "-C", str(canonical), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+    )
+    toplevel = proc.stdout.strip()
+    if proc.returncode != 0 or not toplevel:
+        raise SystemExit(
+            f"canonical checkout {canonical} is not a git worktree "
+            f"({proc.stderr.strip() or 'rev-parse failed'})"
+        )
+    if Path(toplevel).resolve() != canonical.resolve():
+        raise SystemExit(
+            f"canonical checkout {canonical} is not a worktree root; git resolved it to "
+            f"the enclosing repo {toplevel} — refusing to operate on an unintended repo"
+        )
+
+
 def write_slot_file(
     slot_path: Path,
     slug: str,
@@ -346,6 +376,9 @@ def dispatch(
 
     # 4. Worktree — placeholder wt/<slug> branch off a freshly fetched origin/main.
     canonical_repo: Path = args.canonical
+    # Guard the mutating git ops: confirm canonical is a worktree ROOT so `git -C` can't
+    # walk up into an unintended enclosing repo (see require_git_checkout).
+    require_git_checkout(canonical_repo)
     run_git(canonical_repo, ["fetch", "origin", "main"])
     run_git(
         canonical_repo,
