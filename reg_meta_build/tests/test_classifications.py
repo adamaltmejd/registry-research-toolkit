@@ -3667,10 +3667,14 @@ class TestRepoClassificationCsvSnapshots:
         cls_dir = seed_path.parent / "input_data" / "classifications"
 
         assert entries["ICD-11-SE"]["valid_codes_file"] == "sos/icd-11-se.csv"
+        assert entries["ICD-11-SE"]["valid_from"] == 2027
+        assert "valid_to" not in entries["ICD-10-SE"]
         icd11 = load_valid_codes(cls_dir / "sos" / "icd-11-se.csv")
         assert icd11["1A00"] == "Kolera"
+        assert all(icd11.values())
 
         assert entries["SNI2025"]["valid_codes_file"] == "sni2025.csv"
+        assert "valid_to" not in entries["SNI2007"]
         sni2025 = load_valid_codes(cls_dir / "sni2025.csv")
         assert sni2025["A"] == "Jordbruk, skogsbruk och fiske"
         assert sni2025["01110"] == (

@@ -492,8 +492,8 @@ def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
         if code in seen:
             raise SystemExit(f"ICD-11: duplicate code {code!r}")
         seen.add(code)
-        label = _strip_icd11_tabulation_prefix(row.get("Title") or "")
         label_en = _strip_icd11_tabulation_prefix(row.get("TitleEN") or "")
+        label = _strip_icd11_tabulation_prefix(row.get("Title") or "") or label_en
         parent_code = code_by_uri.get((row.get("Parent") or "").strip(), "")
         out.append(
             Code(code=code, label=label, label_en=label_en, parent_code=parent_code)

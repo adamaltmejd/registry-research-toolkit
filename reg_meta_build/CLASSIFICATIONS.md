@@ -148,6 +148,11 @@ uv run python scripts/fetch_sos_classifications.py \
 **ICD-11-SE note:** no eHälsomyndigheten ICD-11 attachment is published on the
 classification files page as of 2026-07-02. The committed snapshot is therefore sourced
 from WHO's official ICD-11 MMS Swedish (`sv`) simple tabulation release for 2026-01.
+Some categories in that release have `TitleEN` but no Swedish `Title`; the committed CSV
+falls back to the English title for the display label instead of emitting blank labels.
+`valid_from=2027` follows Socialstyrelsen's first stated register transition (death
+causes from 2027-01-01); ICD-10-SE remains open-ended until the health-data transition
+can be modeled safely.
 
 **DRG / MDC note:** both are drawn from the NordDRG system published by Socialstyrelsen
 in collaboration with the Nordic Casemix Centre.
@@ -289,6 +294,11 @@ SNI 2025 has a cleaner five-sheet layout with Swedish and English workbooks in p
 
 Use the flat code, pair Swedish and English labels by code, and write
 `code,label,label_en,parent_code,valid_from,valid_to`.
+
+SCB states that SNI 2025 applies in society from 2025-12-08 and that statistics products
+move over during the following years. Keep SNI2007 open-ended in the seed until
+product-specific last-use dates are available; the SNI2007 → SNI2025 successor edge
+still records the edition relationship.
 
 Notes:
 

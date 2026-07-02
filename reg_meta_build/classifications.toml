@@ -309,7 +309,6 @@ name = "Svensk standard för näringsgrensindelning 2007"
 name_en = "Swedish Standard Industrial Classification 2007"
 publisher = "SCB"
 valid_from = 2008
-valid_to = 2024
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
 valid_codes_file = "sni2007.csv"
 vardemangdsversion = [
@@ -1097,7 +1096,6 @@ name_en = "International Statistical Classification of Diseases, Swedish version
 publisher = "Socialstyrelsen"
 provider = "sos"
 valid_from = 1997
-valid_to = 2025
 url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icd-10-se.tsv?version=1&modificationDate=1779615619577&api=v2"
 valid_codes_file = "sos/icd-10-se.csv"
 
@@ -1107,7 +1105,7 @@ name = "ICD-11 för statistik över dödlighet och sjuklighet, svensk version"
 name_en = "ICD-11 for Mortality and Morbidity Statistics, Swedish version"
 publisher = "WHO"
 provider = "sos"
-valid_from = 2026
+valid_from = 2027
 url = "https://icdcdn.who.int/static/releasefiles/2026-01/SimpleTabulation-ICD-11-MMS-sv.zip"
 valid_codes_file = "sos/icd-11-se.csv"
 
