@@ -387,35 +387,66 @@ describe("addFromCatalog (C1)", () => {
     expect(binding).toMatchObject({ type: "numeric", display_name: "Lon86" });
   });
 
-  it("discards a stale add when the draft is REPLACED during the awaited resolve (review Fix 1)", async () => {
-    projectStore.newProject(SEED);
-    // Hold the resolve open with a deferred promise so we can replace the draft
-    // MID-FLIGHT (the user opens a New project during the fetch). `getCatalogNode`
-    // is the seam `resolveBindingAt` awaits.
+  it("discards a stale add when the draft is REPLACED mid-resolve, even when the replacement HAS a matching source (review Fix 1)", async () => {
+    // The load-bearing case the `draft !== target` guard exists for: the
+    // replacement draft ALREADY carries a source on the SAME register_variant as
+    // the in-flight add, so the post-await re-find (`landIndex`) SUCCEEDS. Without
+    // the guard, the stale binding would append into the WRONG (replaced) project's
+    // matching source. An empty replacement draft would be caught by the pre-existing
+    // `landIndex < 0` early return instead, so it can't discriminate the guard.
+    projectStore.newProject(SEED); // draft A — the project the stale add starts against.
+
+    // Hold the in-flight resolve open with a deferred promise so we can replace the
+    // draft MID-FLIGHT. `getCatalogNode` is the seam `resolveBindingAt` awaits; only
+    // THIS first call is deferred — the later populate of draft B resolves normally.
     let resolveFetch: (value: StatesResponse) => void = () => {};
     const pending = new Promise<StatesResponse>((res) => {
       resolveFetch = res;
     });
-    vi.mocked(getCatalogNode).mockReturnValue(pending);
+    vi.mocked(getCatalogNode).mockReturnValueOnce(pending);
 
-    const addPromise = projectStore.addFromCatalog(konPayload(), SEED);
+    // Start the add of scb/lisa/lon on the scb/lisa/v1 variant against draft A; it
+    // captures `target = A` and blocks on the pending resolve.
+    const addPromise = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/lon" }),
+      SEED,
+    );
 
-    // Replace the draft while the resolve is still pending — a brand-new project on
-    // the SAME register_variant (so a re-find by register_variant would otherwise
-    // land the binding in the WRONG project).
-    projectStore.newProject(SEED);
-    const replacedDraft = projectStore.draft;
-
-    // Let the resolve settle; the add must be discarded (no-op) rather than append
-    // into the replaced draft.
-    resolveFetch(
+    // Replace the draft MID-FLIGHT with a brand-new project B, then populate B with a
+    // source on the SAME register_variant (scb/lisa/v1) carrying a DIFFERENT variable
+    // (kon). This resolve settles immediately (the once-mock above is exhausted).
+    // The mutators REPLACE the draft object (immutable spread), so capture B's
+    // identity AFTER the populate add — that is the object the in-flight add must not
+    // touch.
+    projectStore.newProject(SEED); // draft B
+    vi.mocked(getCatalogNode).mockResolvedValue(
       statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
+    );
+    await projectStore.addFromCatalog(konPayload(), SEED);
+    const replacedDraft = projectStore.draft;
+    // B now has one scb/lisa/v1 source with exactly one binding (kon).
+    expect(replacedDraft?.sources).toHaveLength(1);
+    expect(replacedDraft?.sources[0].register_variant).toBe("scb/lisa/v1");
+    expect(replacedDraft?.sources[0].bindings).toHaveLength(1);
+
+    // Now let the STALE resolve settle. The re-find WOULD succeed (B has a matching
+    // scb/lisa/v1 source), so only the `draft !== target` guard stops the stale lon
+    // binding from landing in B.
+    resolveFetch(
+      statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
     );
     const result = await addPromise;
 
+    // The stale add is discarded (no-op).
     expect(result.status).toBe("already-present");
-    // The new draft is untouched — no source was created and no binding landed.
+    // B is untouched: still the same draft, its scb/lisa/v1 source did NOT gain the
+    // stale lon binding (still exactly one binding — kon). Removing the guard makes
+    // this assertion FAIL: landIndex would find B's source and append lon → 2 bindings.
     expect(projectStore.draft).toBe(replacedDraft);
-    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
+    expect(projectStore.draft?.sources[0].bindings[0]?.variable).toBe(
+      "scb/lisa/kon",
+    );
   });
 });
