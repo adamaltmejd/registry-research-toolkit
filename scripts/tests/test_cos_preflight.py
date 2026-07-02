@@ -1,14 +1,16 @@
 """Unit tests for scripts/cos_preflight.py.
 
 Pins the deterministic wake contract: the probe stages a candidate (and bootstraps a
-baseline on first run), a steady-state probe never writes the state file, `--commit`
-promotes the candidate without collecting a snapshot, unchanged snapshots stay idle, lane
-drift wakes, and per-PR merge-gate changes name only the PR(s) that actually moved.
+baseline only on an IDLE first run), a steady-state probe never writes the state file,
+`--commit <fingerprint>` promotes the observed candidate via an atomic rename bound to that
+fingerprint (idempotent on retry, refused when stale/mismatched), unchanged snapshots stay
+idle, lane drift wakes, and per-PR merge-gate changes name only the PR(s) that moved.
 """
 
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -554,30 +556,60 @@ def _probe_env(monkeypatch: pytest.MonkeyPatch, snap: dict) -> None:
     monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: snap)
 
 
-def test_first_run_bootstraps_baseline(
+def _no_collect(monkeypatch: pytest.MonkeyPatch) -> None:
+    # --commit must never collect a snapshot or hit the network — a call is a bug.
+    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+    monkeypatch.setattr(
+        cpf, "collect_snapshot", lambda *_a: pytest.fail("--commit must not collect")
+    )
+
+
+def _probe_fingerprint(capsys: pytest.CaptureFixture[str]) -> str:
+    # The commit fingerprint the loop passes to `--commit` comes from the probe's own
+    # result JSON on stdout.
+    return json.loads(capsys.readouterr().out)["fingerprint"]
+
+
+def test_idle_first_run_bootstraps_baseline(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    # No baseline exists: the probe writes the snapshot DIRECTLY to the state file so steady
-    # state can begin, evaluates first-run-visible reasons, and notes the bootstrap. It also
-    # stages the candidate, so a same-tick --commit has something to promote.
+    # No baseline AND nothing to handle: the probe baselines the state file directly (safe —
+    # no events to burn) and stages the candidate too.
     state = tmp_path / "state.json"
-    snap = _snapshot(remote="new")
+    snap = _snapshot()  # remote == local_head, plan fresh, no PRs → idle
     _probe_env(monkeypatch, snap)
 
     rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
 
-    assert rc == cpf.WAKE_EXIT  # first-run, behind origin → wakes
+    assert rc == 0  # idle
     assert cpf.load_state(state) == snap  # bootstrap wrote the baseline
     assert cpf.load_state(cpf.candidate_file(state)) == snap  # candidate staged too
     assert "bootstrap" in capsys.readouterr().err
 
 
-def test_bootstrap_then_wake_then_commit_exits_zero(
+def test_waking_first_run_does_not_write_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # No baseline but the first-run reasons WAKE: the probe must NOT baseline the state file
+    # (a crash before the end-of-tick commit would then burn these events). It stages only
+    # the candidate; the baseline is established by the later `--commit <fp>`.
+    state = tmp_path / "state.json"
+    snap = _snapshot(remote="new")  # first-run behind origin → wakes
+    _probe_env(monkeypatch, snap)
+
+    rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
+
+    assert rc == cpf.WAKE_EXIT
+    assert not state.exists()  # NO bootstrap on a waking first run
+    assert cpf.load_state(cpf.candidate_file(state)) == snap  # candidate staged
+    assert "bootstrap" not in capsys.readouterr().err
+
+
+def test_crashed_first_run_wake_refires_next_probe(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # A first-run bootstrap-and-wake tick stages the candidate, so the end-of-tick
-    # --commit promotes an identical snapshot and exits 0 (harmless no-op) rather than
-    # failing with no-candidate exit 2.
+    # At-least-once on the bootstrap path: a waking first run whose tick crashes before
+    # --commit left no baseline, so the next probe re-observes the same first-run wake.
     state = tmp_path / "state.json"
     snap = _snapshot(remote="new")
     _probe_env(monkeypatch, snap)
@@ -585,24 +617,43 @@ def test_bootstrap_then_wake_then_commit_exits_zero(
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
+    assert not state.exists()  # tick "crashes" here — no commit ran
 
-    # --commit must NOT collect; it only promotes the staged candidate.
-    monkeypatch.setattr(
-        cpf, "collect_snapshot", lambda *_a: pytest.fail("--commit must not collect")
-    )
+    # Next probe: still first-run (no baseline), so it wakes again — events not burned.
     assert (
-        cpf.main(["--no-canonical-check", "--commit", "--state-file", str(state)]) == 0
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
-    assert cpf.load_state(state) == snap
+
+
+def test_waking_first_run_then_commit_establishes_baseline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # The intended happy path for a waking first run: probe (wake, stage candidate) →
+    # --commit <fp> establishes the baseline from the staged candidate.
+    state = tmp_path / "state.json"
+    snap = _snapshot(remote="new")
+    _probe_env(monkeypatch, snap)
+
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+    fp = _probe_fingerprint(capsys)
+
+    _no_collect(monkeypatch)
+    assert (
+        cpf.main(["--no-canonical-check", "--commit", fp, "--state-file", str(state)])
+        == 0
+    )
+    assert cpf.load_state(state) == snap  # baseline established
     assert not cpf.candidate_file(state).exists()  # candidate consumed
 
 
-def test_first_run_bootstrap_on_corrupt_state(
+def test_idle_first_run_bootstrap_on_corrupt_state(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = tmp_path / "state.json"
     state.write_text("{", encoding="utf-8")  # corrupt → no baseline
-    snap = _snapshot()
+    snap = _snapshot()  # idle
     _probe_env(monkeypatch, snap)
 
     cpf.main(["--no-canonical-check", "--state-file", str(state)])
@@ -610,14 +661,14 @@ def test_first_run_bootstrap_on_corrupt_state(
     assert cpf.load_state(state) == snap  # re-baselined cleanly
 
 
-def test_first_run_bootstrap_on_version_mismatch(
+def test_idle_first_run_bootstrap_on_version_mismatch(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = tmp_path / "state.json"
     stale = _snapshot()
     stale["version"] = cpf.SNAPSHOT_VERSION - 1
     cpf.write_state(state, stale)
-    snap = _snapshot(remote="new")
+    snap = _snapshot()  # idle first-run (mismatch treated as no baseline)
     _probe_env(monkeypatch, snap)
 
     cpf.main(["--no-canonical-check", "--state-file", str(state)])
@@ -643,85 +694,136 @@ def test_steady_state_probe_stages_candidate_without_writing_state(
     assert cpf.load_state(cpf.candidate_file(state)) == baseline  # candidate staged
 
 
-# --- commit: promote candidate, never collect ---------------------------------
+# --- commit: fingerprint-bound, idempotent, never collects --------------------
 
 
-def test_commit_promotes_candidate_without_collecting(
+def test_commit_promotes_matching_candidate(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     state = tmp_path / "state.json"
     candidate = cpf.candidate_file(state)
     snap = _snapshot(remote="new")
     cpf.write_state(candidate, snap)  # probe staged this earlier
-    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
-    # --commit must NOT collect a snapshot: any collector call is a bug.
-    monkeypatch.setattr(
-        cpf,
-        "collect_snapshot",
-        lambda *_a: pytest.fail("--commit must not collect a snapshot"),
-    )
-
-    rc = cpf.main(["--no-canonical-check", "--commit", "--state-file", str(state)])
-
-    assert rc == 0
-    assert cpf.load_state(state) == snap  # candidate promoted to baseline
-    assert not candidate.exists()  # candidate consumed
-    assert "committed cos-preflight snapshot" in capsys.readouterr().out
-
-
-def test_commit_without_candidate_returns_two(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+    _no_collect(monkeypatch)
 
     rc = cpf.main(
         [
             "--no-canonical-check",
             "--commit",
+            snap["fingerprint"],
             "--state-file",
-            str(tmp_path / "state.json"),
+            str(state),
         ]
     )
 
+    assert rc == 0
+    assert cpf.load_state(state) == snap  # candidate promoted to baseline
+    assert not candidate.exists()  # candidate consumed by the rename
+    assert "committed cos-preflight snapshot" in capsys.readouterr().out
+
+
+def test_commit_wrong_fingerprint_refuses_and_leaves_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A candidate is staged, but the caller passes a fingerprint it did not observe (e.g. a
+    # stale/abandoned candidate from an earlier tick). Refuse (exit 2); do not promote.
+    state = tmp_path / "state.json"
+    baseline = _snapshot()
+    cpf.write_state(state, baseline)
+    stale_candidate = _snapshot(remote="abandoned")
+    cpf.write_state(cpf.candidate_file(state), stale_candidate)
+    _no_collect(monkeypatch)
+
+    rc = cpf.main(
+        ["--no-canonical-check", "--commit", "deadbeef", "--state-file", str(state)]
+    )
+
     assert rc == 2
-    assert "no cos-preflight candidate" in capsys.readouterr().err
+    assert "does not match" in capsys.readouterr().err
+    assert cpf.load_state(state) == baseline  # state file untouched
+    assert cpf.candidate_file(state).exists()  # candidate left in place
+
+
+def test_commit_idempotent_when_baseline_already_matches(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Lost-result retry: a prior --commit landed (baseline == fp) but its output was lost,
+    # so no candidate remains. Retrying with the same fingerprint is an idempotent success.
+    state = tmp_path / "state.json"
+    committed = _snapshot(remote="new")
+    cpf.write_state(state, committed)  # already committed; no candidate
+    _no_collect(monkeypatch)
+
+    rc = cpf.main(
+        [
+            "--no-canonical-check",
+            "--commit",
+            committed["fingerprint"],
+            "--state-file",
+            str(state),
+        ]
+    )
+
+    assert rc == 0
+    assert "already committed" in capsys.readouterr().out
+    assert cpf.load_state(state) == committed
+
+
+def test_commit_no_candidate_and_no_baseline_match_returns_two(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # No candidate and the baseline (if any) doesn't match the fingerprint: genuinely
+    # nothing observed this was ever staged → exit 2.
+    state = tmp_path / "state.json"
+    _no_collect(monkeypatch)
+
+    rc = cpf.main(
+        ["--no-canonical-check", "--commit", "deadbeef", "--state-file", str(state)]
+    )
+
+    assert rc == 2
+    assert "no staged candidate" in capsys.readouterr().err
 
 
 # --- mid-tick event is caught by the post-tick re-probe ------------------------
 
 
 def test_mid_tick_event_is_caught(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     # The core two-phase win: an event that lands in the probe→commit window is NOT
     # absorbed into the committed baseline. Sequence: baseline exists → probe observes a
-    # change (stages candidate, wakes) → tick runs → --commit promotes → an event lands →
-    # re-probe compares live-vs-just-committed and wakes again.
+    # change (stages candidate, wakes) → tick runs → an event LANDS during the commit
+    # phase → --commit still promotes only what the PROBE observed → re-probe compares
+    # live-vs-just-committed and wakes again.
     state = tmp_path / "state.json"
     baseline = _snapshot()
     cpf.write_state(state, baseline)
     monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
 
     # Probe 1: state moved (remote changed) → wake + stage candidate.
-    moved = _snapshot(remote="new")
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: moved)
+    probed = _snapshot(remote="new")
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: probed)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
+    fp = _probe_fingerprint(capsys)
 
-    # --commit promotes the candidate WITHOUT collecting (an event may land during it).
-    monkeypatch.setattr(
-        cpf, "collect_snapshot", lambda *_a: pytest.fail("commit must not collect")
-    )
+    # A DIFFERENT event lands during the commit phase: collect_snapshot now RETURNS the
+    # mid-window snapshot. If --commit ever collected, the committed baseline would be this
+    # one; it must instead be exactly what probe 1 observed.
+    mid_window = _snapshot(remote="mid-window")
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: mid_window)
     assert (
-        cpf.main(["--no-canonical-check", "--commit", "--state-file", str(state)]) == 0
+        cpf.main(["--no-canonical-check", "--commit", fp, "--state-file", str(state)])
+        == 0
     )
-    assert cpf.load_state(state) == moved  # baseline now == what probe 1 observed
+    assert cpf.load_state(state) == probed  # committed what the PROBE observed
+    assert cpf.load_state(state) != mid_window  # NOT what was live at commit time
 
-    # Re-probe: a further event landed → compares against the just-committed baseline and
-    # wakes; the mid-tick event is not burned.
-    later = _snapshot(remote="newer")
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: later)
+    # Re-probe: the mid-window event compares against the just-committed baseline and
+    # wakes; it was not burned.
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l: mid_window)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )

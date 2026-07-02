@@ -6,18 +6,21 @@ checks the small set of repo/GitHub signals that can make a tick useful and, whe
 state is unchanged, lets the session stop immediately without spending tokens.
 
 Two modes:
-  cos_preflight.py            probe (default): read the committed baseline from the state
-                              file, take a fresh snapshot, compare, and always stage the
-                              snapshot as a CANDIDATE next to the state file. On first run
-                              (missing, corrupt, or version-mismatched state = no baseline)
-                              it also bootstraps: it writes the fresh snapshot DIRECTLY to
-                              the state file as the new baseline (in addition to the
-                              candidate). A steady-state probe with a live baseline NEVER
-                              writes the state file — only the candidate.
-  cos_preflight.py --commit   promote the staged candidate to the state file (a pure local
-                              file move — NO snapshot collection, no gh/git calls) and
-                              print a one-line confirmation. Errors (exit 2) if no
-                              candidate exists.
+  cos_preflight.py             probe (default): read the committed baseline from the state
+                               file, take a fresh snapshot, compare, and always stage the
+                               snapshot as a CANDIDATE next to the state file. On an IDLE
+                               first run (no baseline — missing, corrupt, or
+                               version-mismatched state — AND nothing to handle) it also
+                               bootstraps: writes the fresh snapshot DIRECTLY to the state
+                               file as the baseline. A WAKING first run stages only the
+                               candidate and lets the end-of-tick commit establish the
+                               baseline, so a crash mid-tick re-fires. A steady-state probe
+                               with a live baseline NEVER writes the state file — only the
+                               candidate.
+  cos_preflight.py --commit F  promote the observed candidate (identified by the
+                               fingerprint F the probe printed) to the state file via one
+                               atomic rename and exit. No snapshot collection or network
+                               calls, but it DOES still verify the canonical checkout.
 
 Probe contract:
   exit 0  idle; no agent work needed
@@ -25,18 +28,21 @@ Probe contract:
   exit 2  tool/setup error; stderr explains what failed
 
 Commit contract:
-  exit 0  candidate promoted; stdout one-line confirmation
-  exit 2  no candidate to promote, or a tool/setup error; stderr explains what failed
+  exit 0  candidate promoted (or already committed — idempotent); one-line confirmation
+  exit 2  fingerprint mismatch, no staged candidate, canonical-checkout failure, or a
+          tool/setup error; stderr explains what failed
 
-The session loop is: probe (exit 0 → stop / exit 10 → do the tick) → `--commit` → probe
-again → if 10, keep working in the same tick. The probe writes what it observes to a
-candidate file; `--commit` only promotes that candidate, so an event that lands in the
-probe→commit window is caught by the post-tick re-probe (which refreshes the candidate)
-rather than absorbed silently into the committed baseline. Committing only after a
-successful tick gives at-least-once semantics: a failed tick leaves the baseline at the
-last committed candidate, so the next scheduled session re-observes the pending event,
-instead of the old at-most-once behavior where writing at detection burned the event even
-when the tick that followed failed.
+The session loop is: probe (exit 0 → stop / exit 10 → do the tick) → `--commit <fp>`
+using the fingerprint from THAT probe's output → probe again → if 10, handle and
+`--commit` the new fingerprint, and so on. Every round ends with its own commit; the last
+batch must be committed too or it re-wakes as duplicate work. The probe writes what it
+observes to a candidate file; `--commit` only promotes the candidate whose fingerprint the
+caller observed, so an event that lands in the probe→commit window is caught by the
+post-tick re-probe (which refreshes the candidate) rather than absorbed silently into the
+committed baseline. Committing only after a successful tick gives at-least-once semantics:
+a failed tick leaves the baseline at the last committed candidate, so the next scheduled
+session re-observes the pending event, instead of the old at-most-once behavior where
+writing at detection burned the event even when the tick that followed failed.
 
 It does not make coordination decisions, edit issues, merge PRs, or run the dev
 preview. It only decides whether a real chief-of-staff tick is worth spending tokens on.
@@ -479,25 +485,44 @@ def write_state(path: Path, snapshot: dict[str, Any]) -> None:
         raise
 
 
-def promote_candidate(state_file: Path) -> str:
-    """Promote the staged candidate to the state file — a pure local file move.
+def promote_candidate(state_file: Path, fingerprint: str) -> tuple[str, bool]:
+    """Promote the observed candidate to the state file, bound to `fingerprint`.
 
-    `--commit` calls this instead of re-collecting a snapshot, so an event that landed in
-    the probe→commit window is never silently absorbed into the committed baseline: it was
-    caught by the post-tick re-probe (which refreshes the candidate) and is only ever
-    committed by promoting whatever the last probe observed. Errors (exit 2) if no
-    candidate exists — that means no probe ran this tick, so there is nothing to commit.
+    `--commit <fingerprint>` passes the `fingerprint` the probe printed in its result JSON,
+    so the promotion is bound to what the caller actually observed. Two holes this closes:
+
+    1. A candidate left by an ABANDONED tick (crash / loop-bound exit with events
+       unhandled) persists on disk. A later mis-ordered `--commit` run before any probe
+       would otherwise promote it and burn events no tick processed. Refusing to promote a
+       candidate whose fingerprint the caller didn't observe blocks that.
+    2. A `--commit` that succeeded then lost its result (tool timeout after the rename)
+       leaves the baseline already at `fingerprint` with no candidate. Treating that as an
+       idempotent success (exit 0, "already committed") makes retry-once always safe
+       instead of a false "no candidate" failure.
+
+    Returns (fingerprint, already_committed). Promotion is a single atomic rename
+    (candidate.replace(state_file)) — no separate write+unlink, so there is no partial
+    state to lose. Raises SystemExit (exit 2) on a mismatch or a genuine missing candidate.
     """
     candidate = candidate_file(state_file)
-    snapshot = load_state(candidate)
-    if snapshot is None:
-        raise SystemExit(
-            f"no cos-preflight candidate at {candidate} to commit; "
-            "run the probe (default mode) before --commit"
-        )
-    write_state(state_file, snapshot)
-    candidate.unlink(missing_ok=True)
-    return snapshot["fingerprint"]
+    staged = load_state(candidate)
+    if staged is not None:
+        if staged["fingerprint"] != fingerprint:
+            raise SystemExit(
+                f"staged candidate {staged['fingerprint'][:12]} does not match "
+                f"--commit fingerprint {fingerprint[:12]}; re-run the probe"
+            )
+        candidate.replace(state_file)  # atomic: no partial write+unlink window
+        return fingerprint, False
+    # No candidate. If the baseline already IS this fingerprint, a prior --commit landed
+    # and only its result was lost — idempotent success. Otherwise nothing observed this
+    # was ever staged, so there is nothing to commit.
+    baseline = load_state(state_file)
+    if baseline is not None and baseline["fingerprint"] == fingerprint:
+        return fingerprint, True
+    raise SystemExit(
+        f"no staged candidate at {candidate}; run the probe before --commit"
+    )
 
 
 def collect_snapshot(epic: int, pr_limit: int) -> dict[str, Any]:
@@ -532,46 +557,49 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument(
         "--commit",
-        action="store_true",
-        help="promote the staged candidate to the state file and exit (no snapshot "
-        "collection); run after a successful tick so the observed events are marked "
-        "handled",
+        metavar="FINGERPRINT",
+        help="promote the observed candidate (identified by the FINGERPRINT the probe "
+        "printed) to the state file and exit; no snapshot collection or network calls, "
+        "but it does still verify the canonical checkout. Run after a successful tick so "
+        "the observed events are marked handled",
     )
     args = ap.parse_args(argv)
 
     canonical = None if args.no_canonical_check else args.canonical
     try:
         require_canonical(canonical)
-        if args.commit:
-            # Promote only — no gh/git/plan calls. The candidate was staged by the probe.
-            fingerprint = promote_candidate(args.state_file)
+        if args.commit is not None:
+            # Promote only — no snapshot collection / network. Bound to the observed
+            # fingerprint so a stale abandoned candidate can't be promoted and a lost-result
+            # retry is idempotent.
+            fingerprint, already = promote_candidate(args.state_file, args.commit)
+            verb = "already committed" if already else "committed"
             print(
-                f"committed cos-preflight snapshot {fingerprint[:12]} "
-                f"to {args.state_file}"
+                f"{verb} cos-preflight snapshot {fingerprint[:12]} to {args.state_file}"
             )
             return 0
         # Probe: read the committed baseline, snapshot fresh, compare, stage the candidate.
         previous = load_state(args.state_file)
         snapshot = collect_snapshot(args.epic, args.pr_limit)
-        # Always stage the candidate — including on the bootstrap path — so `--commit`'s
-        # no-candidate exit 2 can only ever mean "you never probed this tick", never "you
-        # bootstrapped". On a first-run bootstrap-and-wake tick, the end-of-tick `--commit`
-        # then promotes an identical snapshot (harmless no-op content-wise) instead of
-        # failing.
+        reasons = actionable_reasons(snapshot, previous)
+        # Always stage the candidate — including on the bootstrap path — so a later
+        # `--commit <fp>` has the observed snapshot to promote; the fingerprint binding is
+        # what protects against promoting it out of order.
         write_state(candidate_file(args.state_file), snapshot)
-        if previous is None:
-            # First run (no baseline: missing, corrupt, or version-mismatched state). Also
-            # write the snapshot DIRECTLY to the state file as the bootstrap baseline so
-            # steady state can begin — otherwise `previous` stays None forever and every
-            # delta-gated reason is permanently suppressed. Steady-state probes only stage
-            # the candidate above; they never touch the state file.
+        if previous is None and not reasons:
+            # Idle first run (no baseline: missing, corrupt, or version-mismatched state,
+            # AND nothing to handle). Baseline directly so steady state can begin without
+            # spending a tick — there are no events to burn. A WAKING first run does NOT
+            # baseline here: it stages the candidate only and lets the end-of-tick
+            # `--commit <fp>` establish the baseline, so a crash before that commit re-fires
+            # next probe instead of going silently idle (at-least-once on the bootstrap
+            # paths too).
             write_state(args.state_file, snapshot)
             print(
                 f"bootstrap: wrote initial cos-preflight baseline "
                 f"{snapshot['fingerprint'][:12]} to {args.state_file}",
                 file=sys.stderr,
             )
-        reasons = actionable_reasons(snapshot, previous)
     except SystemExit as exc:
         message = exc.code if isinstance(exc.code, str) else ""
         if message:

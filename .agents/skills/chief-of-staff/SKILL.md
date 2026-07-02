@@ -73,10 +73,13 @@ uv run --no-project python scripts/cos_preflight.py
   repo/GitHub state against the last committed baseline in
   `.git/cos-preflight-state.json` and stages what it observed as a candidate next to
   that file. A steady-state probe with an existing baseline never writes the baseline
-  itself; only `--commit` (or the first-run bootstrap, which writes the baseline
-  directly when none exists yet) does. It fires only when state moved enough to justify
-  a tick: lane drift, issue-projection movement, `origin/main` movement, or relevant
-  issue-closing PR / merge-gate state changes.
+  itself. On a first run with no baseline it bootstraps the baseline directly ONLY when
+  the tick is idle (nothing to handle); a first run that WAKES stages the candidate only
+  and lets the end-of-tick commit establish the baseline, so a crash mid-tick re-fires
+  rather than silently going idle. The probe's stdout JSON includes a `fingerprint`
+  field — capture it; `--commit` needs it. The probe fires only when state moved enough
+  to justify a tick: lane drift, issue-projection movement, `origin/main` movement, or
+  relevant issue-closing PR / merge-gate state changes.
 
 - **Exit `0` (idle):** stop immediately with `DONT_NOTIFY` reason `idle`, spending
   nothing beyond that one tool call.
@@ -85,23 +88,29 @@ uv run --no-project python scripts/cos_preflight.py
 
 - **Exit `10` (wake):** run the full tick.
 
-- **At the END of a successful active tick**, commit the staged candidate and probe once
-  more:
+- **Each round of the tick ends with its OWN commit.** The loop body is: probe → do the
+  work → commit that probe's fingerprint → probe again → if it exits `10`, handle the
+  new events and commit the NEW fingerprint → repeat:
 
   ```sh
-  uv run --no-project python scripts/cos_preflight.py --commit
+  uv run --no-project python scripts/cos_preflight.py --commit <fingerprint-from-that-probe>
   ```
 
-  The `--commit` run promotes the candidate the probe staged (a pure local file move —
-  no gh/git calls); then run the plain probe again. If it exits `10`, handle the new
-  events in the same tick. Bound this: after roughly 3 loops, finish and let the next
-  heartbeat continue.
+  `--commit` promotes (via an atomic rename) the candidate whose fingerprint you
+  observed — no snapshot collection or network calls, though it does still verify the
+  canonical checkout. Bound the loop: after roughly 3 rounds, finish and let the next
+  heartbeat continue — but the LAST round's events must still be committed, or they
+  re-wake next heartbeat as duplicate work.
 
-- **If `--commit` fails**, retry it once. If it still fails, report the tool error
-  (`NOTIFY`) and stop, naming the consequence: the baseline was not advanced, so the
-  next heartbeat re-wakes on the same events. Before re-sending any follow-up or feature
-  report those events would trigger next tick, re-check it against live state so a
-  duplicate isn't sent.
+- **If `--commit` fails**, retry it once — retry is always safe here: promotion is bound
+  to the fingerprint you observed, and a `--commit` that succeeded but lost its result
+  reports `already committed` (exit 0) on retry, resolving the lost-result case
+  automatically. A persistent exit 2 means the baseline genuinely did not advance (a
+  `fingerprint mismatch` from a stale candidate, `no staged candidate`, or a
+  canonical-checkout failure): report the tool error (`NOTIFY`) and stop, naming that
+  the next heartbeat re-wakes on the same events. Before re-sending any follow-up or
+  feature report those events would trigger next tick, re-check it against live state so
+  a duplicate isn't sent.
 
 - **At-least-once by design:** a tick that fails before `--commit` leaves the baseline
   at the last committed candidate, so the next probe re-fires on the pending event.
