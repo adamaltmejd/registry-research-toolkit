@@ -1048,9 +1048,9 @@ or re-pointed — linkage is additive.
 
 **Algorithm (SQL temp tables; no Python row loops over \~60k value sets):**
 
-1. Build `_canon_codes` from `classification_code WHERE is_valid IS NOT 0` (covers
-   CSV-canonical rows, plus no-CSV classifications whose observed codes are their only
-   code set and therefore carry `is_valid NULL`).
+1. Build `_canon_codes` from `classification_code WHERE is_valid = 1`. Every declared
+   classification ships a canonical CSV, so fresh builds expose only published canonical
+   rows through this detector.
 
 2. Build `_vs_stats` per value set: distinct-code count `n_codes` and `dom_level` — the
    single digit-length when EVERY code is an all-digit string of that length, else NULL.
@@ -1157,10 +1157,10 @@ must triage them.
   set is rescued only if its labels also agree. The unconfident residue (single-family
   below threshold and multi-family ambiguous) feeds the vintage step; drift in the
   curated tail is visible without logging row-level content.
-- **`is_valid IS NOT 0` includes `NULL`.** A no-CSV classification has `is_valid NULL`
-  on all its codes; those observed codes are the only code set available and must
-  participate in containment. CSV-backed classifications now have only `is_valid=1`
-  canonical rows.
+- **Containment uses only canonical rows.** Every classification ships a required
+  `valid_codes_file`; fresh builds produce only `is_valid=1` classification-code rows.
+  Observed non-canonical codes stay in the conformance tables instead of broadening the
+  classification definition.
 - **Vintage step uses aggregate span, not per-state period.**
   `_backfill_state_classifications` folds candidates to `min(classification_id)` per
   `(variable_id, value_set_id)` and applies ONE classification to ALL that pair's
