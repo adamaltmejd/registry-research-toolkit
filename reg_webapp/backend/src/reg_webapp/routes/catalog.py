@@ -76,7 +76,9 @@ from reg_webapp.models import (
     BindingChild,
     BindingNode,
     CatalogNode,
+    ClassificationFamilyNode,
     ClassificationGroupNode,
+    ClassificationGroupSubject,
     ClassificationNode,
     ClassificationRootNode,
     ClassificationRootResponse,
@@ -733,6 +735,15 @@ def _classification_group_node(group) -> ClassificationGroupNode:
     )
 
 
+def _classification_family_node(family) -> ClassificationFamilyNode:  # noqa: ANN001
+    """Map a derived classification succession family (#771) onto its subject node."""
+    return ClassificationFamilyNode(
+        key=family.key,
+        label=family.label,
+        editions=list(family.editions),
+    )
+
+
 def _held_register_coverage(
     per_column: dict[tuple[str, str], VariableCoverage],
     per_unnamed: dict[str, VariableCoverage],
@@ -914,26 +925,40 @@ def _classification_root_response(
     conn: sqlite3.Connection,
 ) -> ClassificationRootResponse:
     """The `class` (1 seg) classification-root: the CURRENT/TERMINAL
-    classifications as children, plus the #303/#516 umbrella groups. The
+    classifications as children, derived succession families, plus the #303/#516
+    umbrella groups. The
     CHILDREN list still reuses `reg_meta.queries.list_classifications` (LOCKED
     — the children enumeration grew no Catalog method); the GROUPS come from
-    `Catalog.list_classification_groups`, the reg_meta-owned read surface for
-    the concept-group layer — a `Catalog(conn)` wrapper over the request
-    connection. The wrapper is construction-only (no connection ownership);
-    `close()` is never called on it — the connection stays owned by the
-    handler's `_catalog_conn` contextmanager. A classification with a NULL
-    slug isn't FQID-addressable, so it's excluded from children and group
-    members alike (symmetric with `list_registers`'s slug filter).
+    `Catalog.list_classification_groups`, and FAMILIES come from
+    `Catalog.list_classification_families` over `classification_replaced_by` — a
+    `Catalog(conn)` wrapper over the request connection. The wrapper is
+    construction-only (no connection ownership); `close()` is never called on it —
+    the connection stays owned by the handler's `_catalog_conn` contextmanager. A
+    classification with a NULL slug isn't FQID-addressable, so it's excluded from
+    children and group members alike (symmetric with `list_registers`'s slug filter).
 
     Only TERMINAL editions surface as children: a row whose `superseded_by`
     is set (a successor exists) is a superseded edition and is dropped here.
     Superseded editions are reached by drilling into a terminal leaf's
     edition-chain panel (ClassificationLineagePanels, incl. the #605 split-root
-    fan-out) or by direct URL. This is generic — lkf (47 editions) / ssyk / sni
-    each collapse to their current edition too. Group members are themselves
-    terminal (the 2020 SUN editions + the version-independent nivå aggregates),
-    so they stay in `children` and the SPA folds them under the group row."""
+    fan-out) or by direct URL. One-dimensional succession families (SSYK/ICD/LKF/SNI)
+    replace their bare terminal edition children with a family row, so the root
+    reads as a concept entrypoint rather than only the current edition. Group members
+    are themselves terminal (the 2020 SUN editions + the version-independent nivå
+    aggregates), so they stay in `children` and the SPA folds them under the group
+    row."""
     rows = list_classifications(conn)
+    catalog = Catalog(conn)
+    families = [
+        _classification_family_node(family)
+        for family in catalog.list_classification_families()
+    ]
+    family_current_fqids = {
+        str(edition.fqid)
+        for family in families
+        for edition in family.editions
+        if edition.is_current and edition.fqid is not None
+    }
     children: list[ClassificationNode] = []
     for row in rows:
         slug = row.get("slug")
@@ -942,6 +967,8 @@ def _classification_root_response(
         # superseded_by is a GROUP_CONCAT of successor short_names; truthy ⇒ a
         # newer edition supersedes this one ⇒ not a current edition, skip it.
         if row.get("superseded_by"):
+            continue
+        if str(Fqid.classification_fqid(slug)) in family_current_fqids:
             continue
         children.append(
             ClassificationNode(
@@ -954,8 +981,10 @@ def _classification_root_response(
     # #516). Grouped classifications ALSO stay in `children`; the SPA folds them.
     # Members are terminal editions, so the superseded-by filter above keeps them.
     # reg_meta's `ConceptGroupSummary` list passes straight through (#681).
-    groups = Catalog(conn).list_classification_groups()
-    return ClassificationRootResponse(children=children, groups=groups)
+    groups = catalog.list_classification_groups()
+    return ClassificationRootResponse(
+        children=children, groups=groups, families=families
+    )
 
 
 def _catalog_url(fqid: Fqid) -> str:
@@ -1251,25 +1280,29 @@ def get_concept_group_graph(
     return graph
 
 
-# The classification-group SUBJECT route (#756) — the classification sibling of
-# the register-scoped `get_concept_group` below. Declared IMMEDIATELY ABOVE it (and
-# thus above the greedy catch-all) so the LITERAL `class` segment is matched before
-# the register route's `{provider}` param could capture it: `/catalog/group/class/sun`
-# resolves here, NOT as a register group with provider=`class`. The `class` literal
-# is fixed in the path (no provider/register to slug-validate), and `key` is the
-# group's derivation key (NOT slug-validated — an unknown key is a clean 404).
-@router.get("/catalog/group/class/{key:path}", response_model=ClassificationGroupNode)
-def get_classification_group(request: Request, key: str) -> ClassificationGroupNode:
-    """The classification umbrella group addressed by `key` (#756, e.g. the SUN
-    umbrella `sun`) — a browsable subject (all members selected), mirroring the
-    register-scoped `get_concept_group` but for catalog-global classification
-    umbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no
-    classification group has that key.
+# The classification-group/family SUBJECT route (#756/#771) — the classification
+# sibling of the register-scoped `get_concept_group` below. Declared IMMEDIATELY
+# ABOVE it (and thus above the greedy catch-all) so the LITERAL `class` segment is
+# matched before the register route's `{provider}` param could capture it:
+# `/catalog/group/class/sun` resolves here, NOT as a register group with
+# provider=`class`. The `class` literal is fixed in the path (no provider/register
+# to slug-validate), and `key` is a derivation key (NOT slug-validated — an unknown
+# key is a clean 404).
+@router.get(
+    "/catalog/group/class/{key:path}", response_model=ClassificationGroupSubject
+)
+def get_classification_group(request: Request, key: str) -> ClassificationGroupSubject:
+    """The classification subject addressed by `key`.
 
-    By-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped
-    the reg_meta accessor; #756 did this filter inline here to avoid a release). The
-    accessor is the single source of truth for the class-by-key filter — the route
-    no longer re-pastes the `list_classification_groups()` loop.
+    A key can name either a curated umbrella group (#756, e.g. SUN) or a derived
+    one-dimensional succession family (#771, e.g. SSYK/ICD). The two are distinct
+    response `kind`s because an umbrella is concept-group membership, while a
+    family is browse identity over `classification_replaced_by`. 404 when neither
+    surface has that key.
+
+    By-key group resolution delegates to `Catalog.classification_group(key)` (#761
+    shipped the reg_meta accessor; #756 did this filter inline here to avoid a
+    release). Family resolution delegates to `Catalog.classification_family(key)`.
 
     No provider/register/key is slug-validated: `class` is a fixed literal in the
     path, and `key` is a derivation key (not a slug). So there is no
@@ -1277,12 +1310,16 @@ def get_classification_group(request: Request, key: str) -> ClassificationGroupN
     — just open the connection (mirroring the register route's per-request model)
     and resolve."""
     with _catalog_conn(request) as conn:
-        group = Catalog(conn).classification_group(key)
-        if group is None:
-            raise HTTPException(
-                status_code=404, detail=f"no classification group {key!r}"
-            )
-        return _classification_group_node(group)
+        catalog = Catalog(conn)
+        group = catalog.classification_group(key)
+        if group is not None:
+            return _classification_group_node(group)
+        family = catalog.classification_family(key)
+        if family is not None:
+            return _classification_family_node(family)
+    raise HTTPException(
+        status_code=404, detail=f"no classification group or family {key!r}"
+    )
 
 
 # The concept-group SUBJECT route (#617). A FIXED 4-seg shape with a literal

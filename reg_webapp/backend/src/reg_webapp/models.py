@@ -305,6 +305,20 @@ class RegisterResponse(RegisterNode):
     groups: list[ConceptGroupSummary] = []
 
 
+class ClassificationFamilyNode(BaseModel):
+    """A one-dimensional classification succession family as a browsable subject.
+
+    Served from the same stable `/catalog/group/class/{key}` route as curated
+    classification umbrellas, but kept as a distinct `kind`: it is browse identity
+    over `classification_replaced_by`, not concept-group membership.
+    """
+
+    kind: Literal["classification-family"] = "classification-family"
+    key: str
+    label: str
+    editions: list[ClassificationEdition]
+
+
 class ClassificationRootResponse(ClassificationRootNode):
     """`GET /api/catalog/class` — the classification-root + every classification
     as children, plus the derived vintage `groups` (#303; grouped
@@ -312,6 +326,7 @@ class ClassificationRootResponse(ClassificationRootNode):
 
     children: list[ClassificationNode]
     groups: list[ConceptGroupSummary] = []
+    families: list[ClassificationFamilyNode] = Field(default_factory=list)
 
 
 class RootResponse(BaseModel):
@@ -401,6 +416,11 @@ class ClassificationGroupNode(BaseModel):
     # `ConceptGroupMember`) — the SPA matches on `name`, displays `label`.
     axes: list[GroupAxis]
     members: list[ConceptGroupMember]
+
+
+ClassificationGroupSubject = Annotated[
+    ClassificationGroupNode | ClassificationFamilyNode, Field(discriminator="kind")
+]
 
 
 # The catch-all `/api/catalog/{fqid:path}` returns one of these, discriminated

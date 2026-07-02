@@ -519,6 +519,39 @@
         "title": "ClassificationEdition",
         "type": "object"
       },
+      "ClassificationFamilyNode": {
+        "description": "A one-dimensional classification succession family as a browsable subject.\n\nServed from the same stable `/catalog/group/class/{key}` route as curated\nclassification umbrellas, but kept as a distinct `kind`: it is browse identity\nover `classification_replaced_by`, not concept-group membership.",
+        "properties": {
+          "editions": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationEdition"
+            },
+            "title": "Editions",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "kind": {
+            "const": "classification-family",
+            "default": "classification-family",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "editions"
+        ],
+        "title": "ClassificationFamilyNode",
+        "type": "object"
+      },
       "ClassificationGraphNode": {
         "additionalProperties": false,
         "description": "A classification-edition node: time is a POINT (``version_year``), never an\ninterval \u2014 an edition is not \"dead\" after its successor. ``is_current`` marks a\nterminal (head) edition.",
@@ -744,6 +777,13 @@
               "$ref": "#/components/schemas/ClassificationNode"
             },
             "title": "Children",
+            "type": "array"
+          },
+          "families": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationFamilyNode"
+            },
+            "title": "Families",
             "type": "array"
           },
           "fqid": {
@@ -3933,7 +3973,7 @@
     },
     "/api/catalog/group/class/{key}": {
       "get": {
-        "description": "The classification umbrella group addressed by `key` (#756, e.g. the SUN\numbrella `sun`) \u2014 a browsable subject (all members selected), mirroring the\nregister-scoped `get_concept_group` but for catalog-global classification\numbrellas (`register_id NULL`, members carry `class/<slug>` FQIDs). 404 when no\nclassification group has that key.\n\nBy-key resolution delegates to `Catalog.classification_group(key)` (#761 shipped\nthe reg_meta accessor; #756 did this filter inline here to avoid a release). The\naccessor is the single source of truth for the class-by-key filter \u2014 the route\nno longer re-pastes the `list_classification_groups()` loop.\n\nNo provider/register/key is slug-validated: `class` is a fixed literal in the\npath, and `key` is a derivation key (not a slug). So there is no\n`Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)\n\u2014 just open the connection (mirroring the register route's per-request model)\nand resolve.",
+        "description": "The classification subject addressed by `key`.\n\nA key can name either a curated umbrella group (#756, e.g. SUN) or a derived\none-dimensional succession family (#771, e.g. SSYK/ICD). The two are distinct\nresponse `kind`s because an umbrella is concept-group membership, while a\nfamily is browse identity over `classification_replaced_by`. 404 when neither\nsurface has that key.\n\nBy-key group resolution delegates to `Catalog.classification_group(key)` (#761\nshipped the reg_meta accessor; #756 did this filter inline here to avoid a\nrelease). Family resolution delegates to `Catalog.classification_family(key)`.\n\nNo provider/register/key is slug-validated: `class` is a fixed literal in the\npath, and `key` is a derivation key (not a slug). So there is no\n`Fqid.register_fqid` pre-check (unlike `get_concept_group` / `get_register_variants`)\n\u2014 just open the connection (mirroring the register route's per-request model)\nand resolve.",
         "operationId": "get_classification_group_api_catalog_group_class__key__get",
         "parameters": [
           {
@@ -3951,7 +3991,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClassificationGroupNode"
+                  "discriminator": {
+                    "mapping": {
+                      "classification-family": "#/components/schemas/ClassificationFamilyNode",
+                      "classification-group": "#/components/schemas/ClassificationGroupNode"
+                    },
+                    "propertyName": "kind"
+                  },
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ClassificationGroupNode"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClassificationFamilyNode"
+                    }
+                  ],
+                  "title": "Response Get Classification Group Api Catalog Group Class  Key  Get"
                 }
               }
             },

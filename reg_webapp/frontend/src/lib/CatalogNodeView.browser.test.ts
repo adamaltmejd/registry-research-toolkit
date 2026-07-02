@@ -60,6 +60,43 @@ function classificationRoot(): CatalogNode {
   } as unknown as CatalogNode;
 }
 
+function classificationRootWithFamily(): CatalogNode {
+  return {
+    kind: "classification-root",
+    fqid: "class",
+    name: "Classifications",
+    children: [],
+    groups: [],
+    families: [
+      {
+        kind: "classification-family",
+        key: "ssyk",
+        label: "SSYK",
+        editions: [
+          {
+            slug: "ssyk1996",
+            fqid: "class/ssyk1996",
+            name: "SSYK 1996",
+            effective_year: 2012,
+            version_year: 1996,
+            is_current: false,
+            is_self: false,
+          },
+          {
+            slug: "ssyk2012",
+            fqid: "class/ssyk2012",
+            name: "SSYK 2012",
+            effective_year: null,
+            version_year: 2012,
+            is_current: true,
+            is_self: false,
+          },
+        ],
+      },
+    ],
+  } as unknown as CatalogNode;
+}
+
 // A provider node (`scb`) with two register children: `scb/lisa` (named, with a
 // purpose blurb) and `scb/lev` (named, null purpose). Shaped like ProviderResponse
 // → RegisterNode children — the #806 provider arm renders these as DataTable links
@@ -462,5 +499,21 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
     );
     link?.focus();
     expect(document.activeElement).toBe(link);
+  });
+
+  it("renders a classification succession family as a stable concept link", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(classificationRootWithFamily());
+
+    await render(CatalogNodeView, {
+      fqidPath: "class",
+      regMetaVersion: "test",
+      steward: "global",
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByRole("link", { name: "SSYK" }))
+      .toHaveAttribute("href", "/catalog/group/class/ssyk");
+    await expect.element(page.getByText("ssyk2012")).toBeVisible();
   });
 });

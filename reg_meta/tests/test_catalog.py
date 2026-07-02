@@ -1202,6 +1202,37 @@ class TestEdgeAccessors:
         )
         conn.commit()
 
+    def test_classification_families_derive_known_one_dimensional_successions(
+        self,
+    ) -> None:
+        conn = build_slugged_db(classification=None)
+        for slug, short_name in (
+            ("ssyk1996", "SSYK1996"),
+            ("ssyk2012", "SSYK2012"),
+            ("sun1996", "SUN1996"),
+            ("sun2020", "SUN2020"),
+        ):
+            self._seed_classification(conn, slug=slug, short_name=short_name, name=slug)
+        self._seed_classification_replaced_by(
+            conn, predecessor="ssyk1996", successor="ssyk2012", effective_year=2012
+        )
+        self._seed_classification_replaced_by(
+            conn, predecessor="sun1996", successor="sun2020", effective_year=2020
+        )
+
+        families = Catalog(conn).list_classification_families()
+
+        assert [family.key for family in families] == ["ssyk"]
+        family = Catalog(conn).classification_family("ssyk")
+        assert family is not None
+        assert family.label == "SSYK"
+        assert [edition.slug for edition in family.editions] == [
+            "ssyk1996",
+            "ssyk2012",
+        ]
+        assert [edition.is_current for edition in family.editions] == [False, True]
+        assert Catalog(conn).classification_family("sun") is None
+
     def test_classification_chain_multi_hop_ordered_oldest_first(self) -> None:
         # sun1996 → sun2000 → sun2020 (the live terminal). All three editions are
         # LIVE `classification` rows — the validator forbids succession edges to

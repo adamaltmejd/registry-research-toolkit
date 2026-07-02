@@ -272,6 +272,12 @@ export type ConceptGroupNodeMember = Schemas["ConceptGroupNodeMember"];
  * classification umbrellas have no register scope or study-window. Its OWN
  * response type, NOT an arm of the catch-all `CatalogNode` union. */
 export type ClassificationGroupNodeData = Schemas["ClassificationGroupNode"];
+/** A derived one-dimensional classification succession family (#771), returned by
+ * `/catalog/group/class/<key>` with `kind: "classification-family"`. */
+export type ClassificationFamilyNodeData = Schemas["ClassificationFamilyNode"];
+export type ClassificationGroupSubjectData =
+  | ClassificationGroupNodeData
+  | ClassificationFamilyNodeData;
 /** The concept group a binding belongs to (#616), as `(provider, register,
  * key)` — carried on `BindingNode.group` (null when ungrouped) so a member page
  * links to its group subject without a second fetch. */
@@ -422,8 +428,8 @@ export function getConceptGroup(
  * catalog-global). A 404 (unknown key) surfaces as an `ApiError`. */
 export function getClassificationGroup(
   key: string,
-): Promise<ClassificationGroupNodeData> {
-  return apiGet<ClassificationGroupNodeData>(classificationGroupPath(key));
+): Promise<ClassificationGroupSubjectData> {
+  return apiGet<ClassificationGroupSubjectData>(classificationGroupPath(key));
 }
 
 // ── Binding sub-endpoints ───────────────────────────────────────────────────

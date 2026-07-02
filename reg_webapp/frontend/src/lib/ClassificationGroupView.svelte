@@ -1,5 +1,6 @@
 <script lang="ts">
 import {
+  type ClassificationFamilyNodeData,
   type ClassificationGroupNodeData,
   getClassificationGroup,
 } from "./api";
@@ -37,6 +38,12 @@ function memberLabel(
 ): string {
   return member.facets[0]?.label ?? member.name ?? leafSlug(member.fqid);
 }
+
+function editionLabel(
+  edition: ClassificationFamilyNodeData["editions"][number],
+): string {
+  return edition.name ?? edition.slug;
+}
 </script>
 
 {#if resource.loading}
@@ -44,11 +51,51 @@ function memberLabel(
 {:else if resource.error}
   <p class="error" role="alert">
     {#if resource.status === 404}
-      Not found: classification group <code>{key}</code>
+      Not found: classification group or family <code>{key}</code>
     {:else}
       {resource.error}
     {/if}
   </p>
+{:else if node?.kind === "classification-family"}
+  {#snippet description()}
+    <TechnicalDetails>
+      <dl class="meta">
+        <dt>Family</dt>
+        <dd><code>{node.key}</code></dd>
+        <dt>Editions</dt>
+        <dd>{node.editions.length}</dd>
+      </dl>
+    </TechnicalDetails>
+  {/snippet}
+
+  {#snippet picker()}
+    <section class="member-selector" aria-labelledby="editions-heading">
+      <h3 id="editions-heading">Editions</h3>
+      <ul class="facet-chips">
+        {#each node.editions as edition (edition.slug)}
+          <li>
+            {#if edition.fqid}
+              <a class="chip edition-chip" href={catalogHref(edition.fqid)} title={edition.slug}>
+                <span>{editionLabel(edition)}</span>
+                <span class="edition-meta">
+                  {edition.slug}{edition.is_current ? " - current" : ""}
+                </span>
+              </a>
+            {:else}
+              <span class="chip edition-chip">
+                <span>{editionLabel(edition)}</span>
+                <span class="edition-meta">
+                  {edition.slug}{edition.is_current ? " - current" : ""}
+                </span>
+              </span>
+            {/if}
+          </li>
+        {/each}
+      </ul>
+    </section>
+  {/snippet}
+
+  <SubjectView title={node.label} {description} {picker} />
 {:else if node}
   {#snippet description()}
     <!-- Key, axes, and source are build-derivation metadata, not researcher-facing
@@ -121,6 +168,18 @@ function memberLabel(
     border-radius: 1rem;
     padding: 0.1em 0.5em;
     text-decoration: none;
+  }
+  .edition-chip {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    max-width: 24rem;
+  }
+  .edition-meta {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    overflow-wrap: anywhere;
   }
   /* Keyboard focus on a member chip link: the shared --focus-ring (#808/#828). */
   .chip:focus-visible {

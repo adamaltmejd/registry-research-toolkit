@@ -1,6 +1,7 @@
 <script lang="ts">
 import {
   type BindingChild,
+  type ClassificationFamilyNodeData,
   type ClassificationNodeData,
   type ConceptGroup,
   getCatalogNode,
@@ -66,6 +67,14 @@ const variableColumns: Column<VariableBrowseRow>[] = [
 type ClassificationBrowseRow =
   | {
       id: string;
+      kind: "family";
+      family: ClassificationFamilyNodeData;
+      label: string;
+      href: string;
+      shortName: string;
+    }
+  | {
+      id: string;
       kind: "group";
       group: ConceptGroup;
       label: string;
@@ -83,7 +92,7 @@ type ClassificationBrowseRow =
 
 const classificationColumns: Column<ClassificationBrowseRow>[] = [
   { key: "label", label: "Name" },
-  { key: "shortName", label: "Short name", align: "end" },
+  { key: "shortName", label: "Current edition", align: "end" },
 ];
 
 function variableBrowseRows(
@@ -110,26 +119,48 @@ function variableBrowseRows(
 
 function classificationBrowseRows(
   rows: GroupedRow<ClassificationNodeData>[],
+  families: ClassificationFamilyNodeData[],
 ): ClassificationBrowseRow[] {
-  return rows.map((row) =>
-    row.kind === "group"
-      ? {
-          id: `group:${row.group.key}`,
-          kind: "group",
-          group: row.group,
-          label: row.group.label,
-          noun: axisNoun(row.group.axes),
-          href: classGroupHref(row.group.key),
-          shortName: "",
-        }
-      : {
-          id: row.item.fqid,
-          kind: "leaf",
-          fqid: row.item.fqid,
-          label: row.item.name,
-          shortName: row.item.short_name,
-        },
+  const familyRows: ClassificationBrowseRow[] = families.map((family) => ({
+    id: `family:${family.key}`,
+    kind: "family",
+    family,
+    label: family.label,
+    href: classGroupHref(family.key),
+    shortName: familyCurrentLabel(family),
+  }));
+  const itemRows: ClassificationBrowseRow[] = rows.map(
+    (row): ClassificationBrowseRow =>
+      row.kind === "group"
+        ? {
+            id: `group:${row.group.key}`,
+            kind: "group",
+            group: row.group,
+            label: row.group.label,
+            noun: axisNoun(row.group.axes),
+            href: classGroupHref(row.group.key),
+            shortName: "",
+          }
+        : {
+            id: row.item.fqid,
+            kind: "leaf",
+            fqid: row.item.fqid,
+            label: row.item.name,
+            shortName: row.item.short_name,
+          },
   );
+  return [...familyRows, ...itemRows];
+}
+
+function familyCurrentLabel(family: ClassificationFamilyNodeData): string {
+  const current = family.editions.filter((edition) => edition.is_current);
+  if (current.length === 1) {
+    return current[0]?.slug ?? "";
+  }
+  if (current.length > 1) {
+    return `${current.length} current`;
+  }
+  return `${family.editions.length} editions`;
 }
 
 function browseRowId(row: { id: string }): string {
@@ -318,14 +349,16 @@ $effect(() => {
       <BindingLeafView {fqidPath} {node} {regMetaVersion} {steward} {vintageYear} />
     {:else if node.kind === "classification-root"}
       <!-- #516 umbrella folding: e.g. group:sun renders as ONE group row
-           expanding to its dimension members; ungrouped classifications stay
-           leaves. Children are terminal editions only (the backend drops
-           superseded ones) — superseded editions are reached via a leaf's
-           edition-chain panel. -->
+           expanding to its dimension members; #771 one-dimensional succession
+           families render as stable family rows; remaining ungrouped
+           classifications stay leaves. Children are terminal editions only (the
+           backend drops superseded ones and family terminals) — superseded
+           editions are reached via a leaf/family edition-chain panel. -->
       {@const clsRows = foldGroupedRows(node.children, node.groups)}
+      {@const familyNodes = node.families ?? []}
       <h2>{nodeLabel(node)}</h2>
-      {#if clsRows.length > 0}
-        {@const classificationRows = classificationBrowseRows(clsRows)}
+      {#if clsRows.length > 0 || familyNodes.length > 0}
+        {@const classificationRows = classificationBrowseRows(clsRows, familyNodes)}
         <div class="classification-table">
           <Panel title="Classification systems" flush>
             <DataTable
@@ -335,7 +368,11 @@ $effect(() => {
             >
               {#snippet cell(row, column)}
                 {#if column.key === "label"}
-                  {#if row.kind === "group"}
+                  {#if row.kind === "family"}
+                    <a class="row-link" href={row.href} title={`${row.family.editions.length} editions`}>
+                      {row.label}
+                    </a>
+                  {:else if row.kind === "group"}
                     <!-- #756: classification-umbrella groups link to their subject page.
                          Browse-link rows omit the slug pill; picker disclosure rows keep it. -->
                     <ConceptGroupRow
@@ -351,6 +388,8 @@ $effect(() => {
                   {/if}
                 {:else if row.kind === "leaf"}
                   <code class="short-name">{row.shortName}</code>
+                {:else if row.kind === "family"}
+                  <span class="short-name">{row.shortName}</span>
                 {/if}
               {/snippet}
             </DataTable>
