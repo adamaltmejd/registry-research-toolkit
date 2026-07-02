@@ -40,11 +40,57 @@ contexts.
   active status. If it persisted as a detached/cron-style or paused job instead, report
   that exact state and stop rather than leaving a mis-wired schedule running.
 
+### Two-tier wake
+
+The wake path has two tiers. Both fire the SAME tick — the preflight
+probe/baseline/`--commit` contract below is identical regardless of which tier woke the
+session; the tiers only change WHEN a tick fires.
+
+- **Tier 1 — merge-gate watcher (event-driven merges).** The highest-value event — a
+  `/pr-pipeline` handoff writing `status: ready-to-merge` into the local gate store — is
+  a local file write, so it wakes the loop within seconds instead of waiting out the
+  heartbeat. When the loop is self-paced (`/loop` dynamic mode), arm the watcher ONCE
+  per session, not per tick: first call `TaskList` and skip arming if a gate-watch
+  monitor is already running; otherwise arm exactly one:
+
+  ```text
+  Monitor({
+    command: "uv run --no-project python scripts/cos_gate_watch.py",
+    description: "merge-gate ready watch",
+    persistent: true,
+    timeout_ms: 60000   // schema-required; ignored when persistent
+  })
+  ```
+
+  The watcher polls the gate store (`merge-gates/pr-<N>/gate.json` under
+  `$XDG_STATE_HOME/registry-research-toolkit`, default `~/.local/state/...`) every
+  \~20s, locally with no network calls, and emits one line —
+  `ready gate: pr=<N> head=<sha12> updated=<iso>` — only when a gate BECOMES
+  ready-to-merge: a new handoff, a re-verification (`updated` bump), or a new `head`.
+  Steady-state ready gates, `status: blocked`, evidence-file writes, and self-serve
+  `build_db` running stamps never emit, so the watcher cannot thrash the loop; those
+  signals stay on the Tier-2 poll. On a watcher event, run a normal tick — starting with
+  the preflight probe, exactly as below — then re-arm the ScheduleWakeup fallback.
+
+- **Tier 2 — slow hygiene poll (fallback heartbeat).** With the gate watcher armed,
+  stretch the ScheduleWakeup fallback to \~2700-3600s. This tier catches everything the
+  watcher deliberately ignores: remote GitHub drift (new PRs, CI results, Codex
+  verdicts, issue/label edits, `origin/main` movement), blocked gates, and in-flight
+  self-serve builds. It is explicitly NOT the merge path — merges no longer wait on it.
+  If arming the watcher failed, keep the heartbeat at the original 15-30 minutes; it is
+  then the only wake path, including for merges.
+
+Caveats: both tiers are session-scoped — a dead session kills the watcher and the timer
+together, which is exactly why the ScheduleWakeup fallback must be re-armed on every
+wake (a fixed-cadence `/loop` or scheduled heartbeat revives the loop from outside). The
+watcher is a local file poll on the single-maintainer machine's gate store; it makes no
+wake decisions and the preflight logic is unchanged.
+
 ### In-session minimal tick
 
-There is no external wake wrapper. A scheduled heartbeat (`/loop` on a cadence of
-roughly 15-30 minutes) resumes the one chief-of-staff session, and a deterministic
-preflight decides whether the model actually does any work that tick:
+There is no external wake wrapper. A wake — a Tier-1 gate-watch event or the Tier-2
+heartbeat — resumes the one chief-of-staff session, and a deterministic preflight
+decides whether the model actually does any work that tick:
 
 ```sh
 uv run --no-project python scripts/cos_preflight.py
