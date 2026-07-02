@@ -474,12 +474,15 @@ def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
         text = zf.read(member).decode("utf-8-sig")
 
     rows = list(csv.DictReader(text.splitlines(), delimiter="\t"))
-    code_by_uri = {
-        (row.get("Linearization URI") or "").strip(): (row.get("Code") or "").strip()
-        for row in rows
-        if (row.get("Linearization URI") or "").strip()
-        and (row.get("Code") or "").strip()
-    }
+    code_by_uri: dict[str, str] = {}
+    for row in rows:
+        code = (row.get("Code") or "").strip()
+        if not code:
+            continue
+        for field in ("Linearization URI", "Foundation URI"):
+            uri = (row.get(field) or "").strip()
+            if uri:
+                code_by_uri[uri] = code
 
     out: list[Code] = []
     seen: set[str] = set()

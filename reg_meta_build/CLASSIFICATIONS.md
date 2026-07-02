@@ -152,7 +152,9 @@ Some categories in that release have `TitleEN` but no Swedish `Title`; the commi
 falls back to the English title for the display label instead of emitting blank labels.
 `valid_from=2027` follows Socialstyrelsen's first stated register transition (death
 causes from 2027-01-01); ICD-10-SE remains open-ended until the health-data transition
-can be modeled safely.
+can be modeled safely. The ICD-10-SE → ICD-11-SE `replaced_by` edge is also deferred:
+the catalog currently treats any successor as the current edition immediately, so a
+future-dated edge would make ICD-10-SE non-current in 2026 builds.
 
 **DRG / MDC note:** both are drawn from the NordDRG system published by Socialstyrelsen
 in collaboration with the Nordic Casemix Centre.
@@ -297,8 +299,9 @@ Use the flat code, pair Swedish and English labels by code, and write
 
 SCB states that SNI 2025 applies in society from 2025-12-08 and that statistics products
 move over during the following years. Keep SNI2007 open-ended in the seed until
-product-specific last-use dates are available; the SNI2007 → SNI2025 successor edge
-still records the edition relationship.
+product-specific last-use dates are available, and keep SNI2025 without a global
+`valid_from` so it cannot steal open-ended SNI2007 auto-link candidates. The derived
+SNI2007 → SNI2025 successor edge still records the edition relationship.
 
 Notes:
 

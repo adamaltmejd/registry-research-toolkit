@@ -1632,12 +1632,12 @@ class TestMovedEdges:
         # LISA SNI-coding succession edges + 2 variable replaced_by (the #400
         # SSYK 96 → SSYK 2012 J16 succession) + 3
         # classification replaced_by (the #579 sun1996 → niva/inriktning/grupp
-        # split) + 3 #770/#768 ICD/KS disease-classification succession edges + 7
+        # split) + 2 #770 ICD/KS disease-classification succession edges + 7
         # #814 iot disponibel-inkomst 2004-års-definition succession edges + 1
         # #875 KSju lgrp → NgGr1 representation-grain succession edge + 1
         # #846 RTB PNR → PersonNr representation-grain rename edge + 2 #846 FRIDA
         # firm-key variant-scoped gap-fill round-trip edges.
-        assert len(rel.replaced_by) == 51
+        assert len(rel.replaced_by) == 50
         # #508 (615) + #737 (232) = 847 curated same_as identity edges; all
         # variable-grain with a non-empty note; max connected component stays
         # ≤32 FQIDs.

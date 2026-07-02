@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import sqlite3
@@ -3672,8 +3673,12 @@ class TestRepoClassificationCsvSnapshots:
         icd11 = load_valid_codes(cls_dir / "sos" / "icd-11-se.csv")
         assert icd11["1A00"] == "Kolera"
         assert all(icd11.values())
+        with (cls_dir / "sos" / "icd-11-se.csv").open(encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        assert sum(1 for row in rows if row["parent_code"]) > 0
 
         assert entries["SNI2025"]["valid_codes_file"] == "sni2025.csv"
+        assert "valid_from" not in entries["SNI2025"]
         assert "valid_to" not in entries["SNI2007"]
         sni2025 = load_valid_codes(cls_dir / "sni2025.csv")
         assert sni2025["A"] == "Jordbruk, skogsbruk och fiske"

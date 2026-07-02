@@ -337,7 +337,6 @@ short_name = "SNI2025"
 name = "Svensk standard för näringsgrensindelning 2025"
 name_en = "Swedish Standard Industrial Classification 2025"
 publisher = "SCB"
-valid_from = 2025
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
 valid_codes_file = "sni2025.csv"
 
