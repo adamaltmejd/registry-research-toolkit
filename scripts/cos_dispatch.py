@@ -238,24 +238,43 @@ def _touches_visual_surface(touches: list[str]) -> bool:
     A minimal single-target specialization of plan_sequence.touches_overlap's glob-aware
     logic (spec-loading all of plan_sequence just for that one function is heavy, and here
     we only test each entry against ONE fixed target, not arbitrary pairs). Mirrors that
-    module's conservative "over- rather than under-detect" stance:
-      - a literal entry hits if it IS the prefix or nests under it (prefix/…);
-      - a glob entry hits if its fixed literal prefix nests with reg_webapp/frontend either
-        way — i.e. its wildcard could expand to a path under the surface (e.g.
-        `reg_webapp/**` covers the frontend tree), mirroring how touches_overlap treats a
-        glob whose fixed prefix is an ancestor of the other side.
+    module's conservative "over- rather than under-detect" stance, but the LITERAL and GLOB
+    cases need different prefix relations:
+      - a LITERAL entry hits on the exact path-boundary relation — it IS the surface or
+        nests under it (surface/…) OR the surface nests under it (an ancestor dir). The
+        boundary is strict on purpose: a plain-string prefix would mis-hit look-alikes
+        like `reg_webapp/frontend_notes.md` (not a child), so literals keep the `== / +"/"`
+        component tests unchanged.
+      - a GLOB entry tests its FIXED (pre-wildcard) prefix with PLAIN string-prefix
+        relations, because the wildcard can complete a partial path component: e.g.
+        `reg_webapp/fronten[dt]/x.svelte` has fixed prefix `reg_webapp/fronten`, which the
+        char-class can expand to `reg_webapp/frontend/…`. So a glob hits if the surface
+        string-starts-with the fixed prefix (covers the empty / leading-wildcard prefix
+        too — everything starts with ""), or the fixed prefix equals the surface, or the
+        fixed prefix roots deeper inside the surface (`surface/…`). This DELIBERATELY
+        over-detects a glob whose fixed prefix stops mid-component before the surface (e.g.
+        `reg_webapp/fronten*` matches even though the wildcard need not land in `frontend`)
+        — acceptable per the over-rather-than-under-detect stance.
     """
     for raw in touches:
         entry = raw.rstrip("/")
-        # The fixed (pre-wildcard) part of the entry is what must share a lineage with the
-        # surface; for a literal entry that's the whole thing.
         cut = min((entry.find(c) for c in "*?[" if c in entry), default=len(entry))
         prefix = entry[:cut].rstrip("/")
-        if not prefix:
-            # A leading-wildcard glob (e.g. `**/foo.svelte`) could match anywhere, so it
-            # could match under the surface — serialize/refuse when unsure.
-            return True
-        if (
+        if cut < len(entry):
+            # GLOB entry: the wildcard can complete a partial path component, so compare its
+            # fixed prefix to the surface with plain string-prefix relations (not the strict
+            # path-boundary test). `startswith(prefix)` on the surface covers the empty /
+            # leading-wildcard prefix too — every string starts with "". Over-detects a glob
+            # whose fixed prefix stops mid-component (per the conservative stance above).
+            if (
+                _VISUAL_SURFACE_PREFIX.startswith(prefix)
+                or prefix == _VISUAL_SURFACE_PREFIX
+                or prefix.startswith(_VISUAL_SURFACE_PREFIX + "/")
+            ):
+                return True
+        elif (
+            # LITERAL entry: strict path-boundary relation so a prefix look-alike
+            # (reg_webapp/frontend_notes.md) can't mis-hit.
             prefix == _VISUAL_SURFACE_PREFIX
             or prefix.startswith(_VISUAL_SURFACE_PREFIX + "/")
             or _VISUAL_SURFACE_PREFIX.startswith(prefix + "/")

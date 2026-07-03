@@ -1660,13 +1660,26 @@ def test_dry_run_skips_author_check(
     [
         (["reg_webapp/frontend/src/App.svelte"], True),  # literal under the surface
         (["reg_webapp/frontend"], True),  # the surface dir itself
+        (
+            ["reg_webapp/frontend/"],
+            True,
+        ),  # trailing slash → .rstrip("/") still the surface
+        (["reg_webapp"], True),  # literal ancestor dir of the surface
         (["reg_webapp/frontend/**"], True),  # glob rooted at the surface
         (["reg_webapp/**"], True),  # ancestor glob whose wildcard covers the surface
+        # A wildcard mid-component: the fixed prefix `reg_webapp/fronten` stops inside the
+        # `frontend` component, and the char-class could complete it to `frontend/…`. The
+        # pre-fix literal path-boundary check missed this (fixed bug); a glob now uses plain
+        # string-prefix relations so it hits.
+        (["reg_webapp/fronten[dt]/x.svelte"], True),
         (["**/foo.svelte"], True),  # leading-wildcard glob → could match anywhere
         (["reg_webapp/backend/api.py"], False),  # sibling tree, not the surface
         (["reg_meta/db.py", "scripts/cos_dispatch.py"], False),  # unrelated
         ([], False),  # no touches → no signal
-        (["reg_webapp/frontend_notes.md"], False),  # prefix look-alike, not a child
+        (
+            ["reg_webapp/frontend_notes.md"],
+            False,
+        ),  # literal prefix look-alike, not a child
     ],
 )
 def test_touches_visual_surface(touches: list[str], hits: bool) -> None:
@@ -1856,3 +1869,44 @@ def test_dry_run_skips_visual_guard(
 
     assert rc == 0
     assert json.loads(capsys.readouterr().out)["surface"] == "codex"
+
+
+def test_author_gate_runs_before_visual_gate(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Ordering pin: step 3b (author gate) runs STRICTLY BEFORE step 3c (visual gate). An
+    # untrusted issue must be rejected on authorship before the visual guard ever fetches
+    # its body — so a stranger's crafted `touches` block never drives a network read. Stub
+    # the author gate to refuse (SystemExit) and make the visual guard's body fetch a
+    # fail-loud boom; dispatch on codex must exit 2 with boom never called.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+
+    def refuse(issues: list[int]) -> None:
+        raise SystemExit("author gate refused")
+
+    def boom(number: int) -> str | None:
+        raise AssertionError("visual guard ran before the author gate")
+
+    monkeypatch.setattr(cd, "require_maintainer_authored", refuse)
+    monkeypatch.setattr(cd, "require_no_visual_lane_on_codex", _REAL_REQUIRE_NO_VISUAL)
+    monkeypatch.setattr(cd._gh_issue, "maintainer_body", boom)
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    assert "author gate refused" in capsys.readouterr().err
+    # No side effects, and the visual guard's body fetch was never reached.
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
