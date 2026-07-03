@@ -41,6 +41,8 @@ from reg_meta.search import (
     VariableSearchResult,
 )
 
+from reg_meta import ClassificationDerivedFromRef  # noqa: TC001
+
 
 class StewardInfo(BaseModel):
     """Deployment identity + branding, from ``steward.toml``."""
@@ -189,6 +191,10 @@ class ClassificationNode(BaseModel):
     # existing concept-group table; reuses the browse `ConceptGroupSummary`. Empty
     # for an ungrouped classification (the common case).
     dimensions: list[ConceptGroupSummary] = Field(default_factory=list)
+    # #779: non-temporal classification derivation refs. These are see-also links
+    # distinct from `edition_chain` / succession.
+    derived_from: list[ClassificationDerivedFromRef] = Field(default_factory=list)
+    derivatives: list[ClassificationDerivedFromRef] = Field(default_factory=list)
 
 
 class BindingChild(BaseModel):

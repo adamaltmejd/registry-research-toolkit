@@ -31,6 +31,8 @@ function node(
       { code: "3", label: "Eftergymnasial", level: 1, is_valid: true },
     ],
     dimensions: [],
+    derived_from: [],
+    derivatives: [],
     ...overrides,
   } as unknown as ClassificationNodeData;
 }
@@ -134,5 +136,50 @@ describe("ClassificationLeafView (#638 shell)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Codes" }))
       .not.toBeInTheDocument();
+  });
+
+  it("renders non-temporal derived-from classification references", async () => {
+    await render(ClassificationLeafView, {
+      node: node({
+        fqid: "class/ks87-p",
+        name: "Klassifikation av sjukdomar 1987, primärvård",
+        short_name: "KS87-P",
+        derived_from: [
+          {
+            fqid: "class/icd-9-ks87",
+            slug: "icd-9-ks87",
+            short_name: "ICD-9-KS87",
+            name: "Klassifikation av sjukdomar 1987",
+            note: "Primary-care setting variant of ICD-9-KS87",
+          },
+        ],
+        derivatives: [
+          {
+            fqid: "class/ks87-p-extra",
+            slug: "ks87-p-extra",
+            short_name: "KS87-P extra",
+            name: "Extra derived classification",
+            note: null,
+          },
+        ],
+      }),
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Related classifications" }))
+      .toBeVisible();
+    await expect.element(page.getByText("Derived from")).toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "ICD-9-KS87" }))
+      .toHaveAttribute("href", "/catalog/class/icd-9-ks87");
+    await expect
+      .element(page.getByText("Primary-care setting variant of ICD-9-KS87"))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Derived classifications"))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "KS87-P extra" }))
+      .toHaveAttribute("href", "/catalog/class/ks87-p-extra");
   });
 });

@@ -444,6 +444,54 @@
         "title": "ClassificationConformance",
         "type": "object"
       },
+      "ClassificationDerivedFromRef": {
+        "additionalProperties": false,
+        "description": "A non-temporal classification derivation endpoint (#779).\n\nUsed for links such as KS87-P -> ICD-9-KS87, where the relationship is a\ncontemporaneous setting variant rather than edition succession. `note` is\ncurator-facing relation text from `classification_derived_from`, not\nprovenance for a temporal chain.",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "short_name": {
+            "title": "Short Name",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid",
+          "slug",
+          "short_name",
+          "name"
+        ],
+        "title": "ClassificationDerivedFromRef",
+        "type": "object"
+      },
       "ClassificationEdition": {
         "additionalProperties": false,
         "description": "One edition in a classification succession chain (#571), as returned by\n`Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge\nendpoint), this is a fully-hydrated node in the WHOLE chain \u2014 the webapp\nbrowse panel renders the complete edition timeline from a list of these.\n\n`slug` is the load-bearing identity (succession references the exact edition\nslug). Every chain edition is a LIVE `classification` row \u2014\n`reg_meta_build`'s validator (`validate.py`, the `classification_replaced_by`\ncheck) fails the build if any succession edge references a slug with no live\nrow, so a \"dead edition\" can't exist in a validated DB. `fqid` is None only on\na *malformed* slug (a lower-level slug-grammar concern, also build-prevented;\n`_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes\nfrom the live row. `effective_year` is the year on the outbound\n`classification_replaced_by` edge by which this edition is superseded; it can\nbe future-dated. `is_current` marks started editions with no active outbound\nsuccessor as of the DB's classification succession policy year; `is_self` marks\nthe edition the caller queried (resolved to its canonical live slug when the\nquery was a `same_as` alias).",
@@ -694,6 +742,20 @@
               "$ref": "#/components/schemas/ClassificationCode"
             },
             "title": "Codes",
+            "type": "array"
+          },
+          "derivatives": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationDerivedFromRef"
+            },
+            "title": "Derivatives",
+            "type": "array"
+          },
+          "derived_from": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationDerivedFromRef"
+            },
+            "title": "Derived From",
             "type": "array"
           },
           "dimensions": {

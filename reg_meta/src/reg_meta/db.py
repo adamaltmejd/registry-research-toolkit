@@ -290,7 +290,11 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   same-period multi-response columns instead of only collapsing to one
 #   variable-level value. A 6.5.0 DB lacks the state column, so it is rejected
 #   via the minor-version gate.
-SCHEMA_VERSION = "6.6.0"
+# - 6.7.0 (#779): additive `classification_derived_from` table for non-temporal
+#   classification relationships such as KS87-P deriving from ICD-9-KS87. This is
+#   deliberately separate from `classification_replaced_by` so terminal walks and
+#   variable-vintage lifting continue to read only temporal edition succession.
+SCHEMA_VERSION = "6.7.0"
 DB_FILENAME = "reg_meta.db"
 
 

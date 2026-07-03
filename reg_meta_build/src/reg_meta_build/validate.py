@@ -226,6 +226,7 @@ def validate_built_db(
         _check_sos_stateless_variables(conn, result, tables)
         _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_classification_replaced_by(conn, result, tables, corpus=corpus)
+        _check_classification_derived_from(conn, result, tables, corpus=corpus)
         _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
@@ -2015,6 +2016,53 @@ def _check_classification_replaced_by(
             f"(< {_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES}) — vintage-chain "
             "derivation regression?"
         )
+
+
+def _check_classification_derived_from(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    corpus: bool,
+) -> None:
+    """#779 non-temporal classification derivation invariants.
+
+    These edges are see-also / variant links, not edition succession. Keep the
+    structural checks separate from `_check_classification_replaced_by` so a future
+    regression cannot silently route `derived_from` through terminal walks."""
+    result.section("[classification derived_from]")
+    if "classification_derived_from" not in tables:
+        result.fail("classification_derived_from missing (schema 6.7.0 #779 table)")
+        return
+
+    self_loops = conn.execute(
+        "SELECT COUNT(*) FROM classification_derived_from "
+        "WHERE derived_slug = source_slug"
+    ).fetchone()[0]
+    if self_loops:
+        result.fail(f"{self_loops} self-derived classification edge(s)")
+    else:
+        result.ok("no self-derived classification edges")
+
+    dangling = conn.execute(
+        "SELECT COUNT(*) FROM classification_derived_from e "
+        "WHERE NOT EXISTS (SELECT 1 FROM classification c WHERE c.slug = e.derived_slug) "
+        "   OR NOT EXISTS (SELECT 1 FROM classification c WHERE c.slug = e.source_slug)"
+    ).fetchone()[0]
+    if dangling:
+        result.fail(
+            f"{dangling} derived_from edge(s) reference an unknown classification slug"
+        )
+    else:
+        result.ok("derived_from edges resolve to live classification slugs")
+
+    n_edges = conn.execute(
+        "SELECT COUNT(*) FROM classification_derived_from"
+    ).fetchone()[0]
+    if corpus:
+        result.ok(f"{n_edges} classification derived_from edge(s)")
+    else:
+        result.info(f"{n_edges} classification derived_from edge(s)")
 
 
 def _check_variable_replaced_by_vintage_lift(

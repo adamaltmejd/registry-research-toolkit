@@ -1559,17 +1559,26 @@ class TestSameAsBuildIntegration:
             r[0]
             for r in db_conn.execute(
                 "SELECT name FROM sqlite_master WHERE type = 'table' "
-                "AND name IN ('variable_same_as', 'classification_same_as')"
+                "AND name IN ("
+                "'variable_same_as', 'classification_same_as', "
+                "'classification_derived_from')"
             ).fetchall()
         }
-        assert tables == {"variable_same_as", "classification_same_as"}
+        assert tables == {
+            "variable_same_as",
+            "classification_same_as",
+            "classification_derived_from",
+        }
         var_count = db_conn.execute("SELECT COUNT(*) FROM variable_same_as").fetchone()[
             0
         ]
         cls_count = db_conn.execute(
             "SELECT COUNT(*) FROM classification_same_as"
         ).fetchone()[0]
-        assert (var_count, cls_count) == (0, 0)
+        derived_count = db_conn.execute(
+            "SELECT COUNT(*) FROM classification_derived_from"
+        ).fetchone()[0]
+        assert (var_count, cls_count, derived_count) == (0, 0, 0)
 
     def test_empty_same_as_emits_no_manifest_keys(
         self, db_conn: sqlite3.Connection
@@ -1584,6 +1593,7 @@ class TestSameAsBuildIntegration:
         row_counts = json.loads(row[0])
         assert "variable_same_as_curated" not in row_counts
         assert "classification_same_as_curated" not in row_counts
+        assert "classification_derived_from_curated" not in row_counts
 
     @staticmethod
     def _write_slug_dir(slug_dir: Path) -> None:

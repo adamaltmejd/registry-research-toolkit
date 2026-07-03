@@ -20,6 +20,7 @@ from reg_meta.catalog import (
     BindingGroupRef,
     Catalog,
     ClassificationCode,
+    ClassificationDerivedFromRef,
     ClassificationEdition,
     ClassificationRef,
     GroupAxis,
@@ -1176,6 +1177,21 @@ class TestEdgeAccessors:
         )
         conn.commit()
 
+    @staticmethod
+    def _seed_classification_derived_from(
+        conn: sqlite3.Connection,
+        *,
+        derived: str,
+        source: str,
+        note: str | None = "variant edge",
+    ) -> None:
+        conn.execute(
+            "INSERT INTO classification_derived_from "
+            "(derived_slug, source_slug, note) VALUES (?, ?, ?)",
+            (derived, source, note),
+        )
+        conn.commit()
+
     def test_classification_successors(self) -> None:
         # sun2000 (predecessor) → sun2020 (successor); sun2020 is the live default
         # classification from build_slugged_db.
@@ -1223,6 +1239,57 @@ class TestEdgeAccessors:
         r = Catalog(conn).resolve("class/sun2020")
         assert isinstance(r, ResolvedClassification)
         assert r.replaced_by == ()
+
+    def test_classification_derived_from_refs_are_embedded(self) -> None:
+        conn = build_slugged_db()
+        self._seed_classification(
+            conn,
+            slug="ks87-p",
+            short_name="KS87-P",
+            name="Klassifikation av sjukdomar 1987, primärvård",
+        )
+        self._seed_classification_derived_from(
+            conn,
+            derived="ks87-p",
+            source="sun2020",
+            note="Primary-care setting variant",
+        )
+
+        resolved = Catalog(conn).resolve("class/ks87-p")
+
+        assert isinstance(resolved, ResolvedClassification)
+        assert len(resolved.derived_from) == 1
+        ref = resolved.derived_from[0]
+        assert isinstance(ref, ClassificationDerivedFromRef)
+        assert ref.slug == "sun2020"
+        assert str(ref.fqid) == "class/sun2020"
+        assert ref.short_name == "SUN2020"
+        assert ref.name == "Svensk utbildningsnomenklatur"
+        assert ref.note == "Primary-care setting variant"
+        assert resolved.derivatives == ()
+
+    def test_classification_derivatives_use_source_index(self) -> None:
+        conn = build_slugged_db()
+        self._seed_classification(
+            conn,
+            slug="ks87-p",
+            short_name="KS87-P",
+            name="Klassifikation av sjukdomar 1987, primärvård",
+        )
+        self._seed_classification_derived_from(
+            conn,
+            derived="ks87-p",
+            source="sun2020",
+            note="Primary-care setting variant",
+        )
+
+        refs = Catalog(conn).classification_derivatives("class/sun2020")
+
+        assert [r.slug for r in refs] == ["ks87-p"]
+        assert refs[0].short_name == "KS87-P"
+        assert Catalog(conn).classification_derived_from("class/ks87-p")[0].slug == (
+            "sun2020"
+        )
 
     def test_classification_edges_tolerate_dead_predecessor(self) -> None:
         # Succession edges reference the literal slug — a DEAD predecessor edition

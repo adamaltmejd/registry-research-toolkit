@@ -866,6 +866,27 @@ export interface components {
             status: "kept" | "severed";
         };
         /**
+         * ClassificationDerivedFromRef
+         * @description A non-temporal classification derivation endpoint (#779).
+         *
+         *     Used for links such as KS87-P -> ICD-9-KS87, where the relationship is a
+         *     contemporaneous setting variant rather than edition succession. `note` is
+         *     curator-facing relation text from `classification_derived_from`, not
+         *     provenance for a temporal chain.
+         */
+        ClassificationDerivedFromRef: {
+            /** Fqid */
+            fqid: string | null;
+            /** Name */
+            name: string;
+            /** Note */
+            note?: string | null;
+            /** Short Name */
+            short_name: string;
+            /** Slug */
+            slug: string;
+        };
+        /**
          * ClassificationEdition
          * @description One edition in a classification succession chain (#571), as returned by
          *     `Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge
@@ -1016,6 +1037,10 @@ export interface components {
         ClassificationNode: {
             /** Codes */
             codes?: components["schemas"]["ClassificationCode"][];
+            /** Derivatives */
+            derivatives?: components["schemas"]["ClassificationDerivedFromRef"][];
+            /** Derived From */
+            derived_from?: components["schemas"]["ClassificationDerivedFromRef"][];
             /** Dimensions */
             dimensions?: components["schemas"]["ConceptGroupSummary"][];
             /** Edition Chain */
