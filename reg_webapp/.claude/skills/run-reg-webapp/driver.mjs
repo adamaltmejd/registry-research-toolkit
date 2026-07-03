@@ -53,7 +53,47 @@ function resolveViewport(spec) {
 const viewport = resolveViewport(process.env.REG_WEBAPP_VIEWPORT);
 
 const [cmd = "smoke", ...rest] = process.argv.slice(2);
-const browser = await chromium.launch();
+
+// Two chromium.launch failure classes are worth a retry before we give up (issue #1049):
+//   1. A TRANSIENT MachPortRendezvous name collision — a crashed prior attempt plus PID
+//      reuse leaves a stale rendezvous name, so the very next multi-process launch fails
+//      but an immediate retry at FULL fidelity heals it. Retry once in normal mode first.
+//   2. A sandboxed agent shell (codex `-s workspace-write` seatbelt, Claude Code's
+//      sandboxed Bash — same seatbelt profile design) denies multi-process Chromium's
+//      Mach `bootstrap_check_in … (1100)`: those seatbelts have no mach-register grant, so
+//      the renderer/GPU child process rendezvous can't complete. `--single-process` skips
+//      the Mach rendezvous entirely (one process, no children to register) and is
+//      empirically proven to launch under the real codex seatbelt. This is a hard,
+//      deterministic block, not a transient one, so it needs the arg change, not a plain
+//      retry. Caveat: `--single-process` is unsupported/best-effort per Chromium — revisit
+//      on Playwright bumps in case the flag's behavior changes.
+const SINGLE_PROCESS_ARGS = [
+  "--single-process",
+  "--no-sandbox",
+  "--disable-gpu",
+  "--disable-crash-reporter",
+];
+async function launchBrowser() {
+  try {
+    return await chromium.launch();
+  } catch {
+    // Stage 1: retry once in normal (multi-process) mode to heal a transient rendezvous
+    // collision at full fidelity.
+    console.error(
+      "driver: normal relaunch after failed launch (transient Mach-port collision?)",
+    );
+    try {
+      return await chromium.launch();
+    } catch {
+      // Stage 2: retry once in single-process mode for the sandboxed-shell seatbelt denial.
+      console.error(
+        "driver: single-process fallback engaged (sandboxed shell, issue #1049)",
+      );
+      return await chromium.launch({ args: SINGLE_PROCESS_ARGS });
+    }
+  }
+}
+const browser = await launchBrowser();
 const page = await browser.newPage({
   viewport: { width: viewport.width, height: viewport.height },
 });

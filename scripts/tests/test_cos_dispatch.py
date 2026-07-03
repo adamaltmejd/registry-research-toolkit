@@ -125,11 +125,11 @@ _REAL_REQUIRE_MAINTAINER = cd.require_maintainer_authored
 def _stub_author_check(monkeypatch: pytest.MonkeyPatch) -> None:
     """No-op the maintainer-author gate by default so existing tests don't hit live `gh`.
 
-    dispatch() now calls require_maintainer_authored() (a read-only `gh issue view` per
-    issue) before the worktree step. The launch-reaching tests here don't model issue
-    authorship, so default them to "all maintainer-authored"; the dedicated author-check
-    tests below override this with the real function (_REAL_REQUIRE_MAINTAINER) over a
-    stubbed gh_issue surface to exercise refuse/proceed.
+    dispatch() calls require_maintainer_authored() (a read-only `gh issue view` per issue)
+    before the worktree step. The launch-reaching tests here don't model issue authorship,
+    so default them to "all maintainer-authored"; the dedicated author-check tests below
+    override this with the real function (_REAL_REQUIRE_MAINTAINER) over a stubbed gh_issue
+    surface to exercise refuse/proceed.
     """
     monkeypatch.setattr(cd, "require_maintainer_authored", lambda issues: None)
 
@@ -333,17 +333,33 @@ def test_validate_slug_rejects_non_stems(bad: str) -> None:
 
 def test_build_launch_argv_codex_pins_flags() -> None:
     argv = cd.build_launch_argv(
-        "codex", Path("/wt/lane"), [1011, 1012], Path("/state"), None, []
+        "codex",
+        Path("/wt/lane"),
+        [1011, 1012],
+        Path("/state"),
+        None,
+        [],
+        Path("/canon"),
     )
     assert argv[0:2] == ["codex", "exec"]
     assert argv[argv.index("-C") + 1] == "/wt/lane"
     assert argv[argv.index("-s") + 1] == "workspace-write"
     assert argv[argv.index("-c") + 1] == "approval_policy=never"
-    assert argv[argv.index("--add-dir") + 1] == "/state"
     assert "--json" in argv
     assert argv[-1] == "$pr-pipeline 1011 1012"
     # No profile flags → no model/effort pins.
     assert "-m" not in argv
+
+
+def test_build_launch_argv_codex_grants_state_root_and_canonical_gitdir() -> None:
+    # Two --add-dir grants (#1050): the state root AND the canonical checkout's .git, so
+    # the linked worktree's writable git state (which lives under <canonical>/.git, outside
+    # the sandboxed cwd) is inside the workspace-write set.
+    argv = cd.build_launch_argv(
+        "codex", Path("/wt/lane"), [1011], Path("/state"), None, [], Path("/canon")
+    )
+    add_dirs = [argv[i + 1] for i, a in enumerate(argv) if a == "--add-dir"]
+    assert add_dirs == ["/state", "/canon/.git"]
 
 
 def test_build_launch_argv_codex_layers_profile_flags_before_prompt() -> None:
@@ -354,6 +370,7 @@ def test_build_launch_argv_codex_layers_profile_flags_before_prompt() -> None:
         Path("/state"),
         None,
         ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"],
+        Path("/canon"),
     )
     # Profile flags sit after --json and before the prompt (still the last arg).
     assert argv[argv.index("-m") + 1] == "gpt-5.5"
@@ -363,7 +380,13 @@ def test_build_launch_argv_codex_layers_profile_flags_before_prompt() -> None:
 
 def test_build_launch_argv_claude_uses_session_and_slash_prompt() -> None:
     argv = cd.build_launch_argv(
-        "claude", Path("/wt/lane"), [1011], Path("/state"), "SID-123", []
+        "claude",
+        Path("/wt/lane"),
+        [1011],
+        Path("/state"),
+        "SID-123",
+        [],
+        Path("/canon"),
     )
     assert argv[0] == "claude"
     assert argv[argv.index("--session-id") + 1] == "SID-123"
@@ -381,6 +404,7 @@ def test_build_launch_argv_claude_layers_profile_flags() -> None:
         Path("/state"),
         "SID-123",
         ["--model", "claude-sonnet-5", "--effort", "high", "--advisor", "opus"],
+        Path("/canon"),
     )
     assert argv[argv.index("--model") + 1] == "claude-sonnet-5"
     assert argv[argv.index("--effort") + 1] == "high"
@@ -452,9 +476,9 @@ def test_reused_cos_preflight_helpers_are_the_real_hoist(tmp_path: Path) -> None
     assert callable(pre.default_slots_root)
     assert isinstance(pre.DEFAULT_MAX_SLOTS, int)
     # Behavior parity on a shared tmp ledger: cos_dispatch's budget path (busy count via
-    # cos_preflight.scan_slots) and a direct scan_slots call must agree. The two module
-    # loads (this suite's `cpf` vs cos_dispatch's `_cos_preflight`) make `is`-identity
-    # fragile, so we pin parity-by-behavior instead.
+    # cos_preflight.scan_slots) and a direct scan_slots call must agree. We pin
+    # parity-by-behavior rather than identity — the reuse contract is that the same
+    # scan_slots logic drives both paths, not merely that they share a module object.
     slots_root = tmp_path / "pipeline-slots"
     _write_slot(slots_root, "lane-a")
     _write_slot(slots_root, "lane-b")
@@ -579,7 +603,12 @@ def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     assert rec["cwd"] == str(worktree)
     assert "workspace-write" in rec["argv"]
     assert "approval_policy=never" in rec["argv"]
-    assert "--add-dir" in rec["argv"]
+    # Both --add-dir grants: the state root AND the canonical checkout's .git (#1050), so
+    # the linked worktree's writable git state is inside the workspace-write set.
+    add_dirs = [
+        rec["argv"][i + 1] for i, a in enumerate(rec["argv"]) if a == "--add-dir"
+    ]
+    assert add_dirs == [str(state), str(canonical / ".git")]
     assert "--json" in rec["argv"]
     assert "$pr-pipeline 1011" in rec["argv"]
     assert rec["argv"][rec["argv"].index("-m") + 1] == "gpt-5.5"

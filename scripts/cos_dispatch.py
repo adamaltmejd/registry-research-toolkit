@@ -26,9 +26,12 @@ parse_issues, resolve_profile, slug validation — all exit 2):
                     origin/main`, run in the canonical checkout. `wt/<slug>` is only the
                     placeholder branch git requires; the pipeline skill creates its real
                     `s/<slug>` branch from inside the worktree.
-  5. launch       — capture the dispatch-log byte offset, then spawn the agent DETACHED
-                    (start_new_session=True, stdin closed, stdout+stderr appended to
-                    <state-root>/dispatch-logs/<slug>.log; the child env carries the
+  5. launch       — capture the dispatch-log byte offset, then spawn the agent DETACHED.
+                    The codex argv runs `-s workspace-write` with TWO `--add-dir` grants —
+                    <state-root> AND <canonical>/.git, the latter because the linked
+                    worktree's writable git state (index/HEAD/refs/objects) lives under the
+                    canonical checkout's git dir, outside the sandboxed cwd (#1050); see
+                    build_launch_argv. The child env carries the
                     --state-root override as XDG_STATE_HOME so its ledger/gate writes land
                     under the same root). We do not wait; the process re-parents when this
                     session exits. Then a short HEALTH CHECK: wait a grace window and poll —
@@ -259,6 +262,7 @@ def build_launch_argv(
     state_root: Path,
     session_id: str | None,
     profile_flags: list[str],
+    canonical: Path,
 ) -> list[str]:
     """The exact detached launch argv for the chosen surface + tier profile flags.
 
@@ -267,6 +271,16 @@ def build_launch_argv(
     the tier's validated model/effort/advisor pins (empty when a --surface override
     contradicts the tier), inserted before the prompt but after the surface's own pinned
     base flags.
+
+    codex runs `-s workspace-write`, whose writable set is {the `-C` cwd (the linked
+    worktree), each `--add-dir`}. Two grants are needed, not one:
+      - <state_root> so the child's ledger/gate writes land under the dispatch state root.
+      - <canonical>/.git — the worktree is a LINKED worktree, so its `.git` is a FILE
+        pointing at `<canonical>/.git/worktrees/<slug>`, and every writable git object
+        (index, HEAD, refs, logs, packed-refs) lives under the canonical checkout's git
+        dir, OUTSIDE the worktree cwd. Without this grant every ref/index/object write the
+        pipeline makes is denied by the sandbox (#1050). `--add-dir` is repeatable
+        (codex 0.142.5). claude is unsandboxed and needs no equivalent.
     """
     issues_arg = " ".join(str(n) for n in issues)
     if surface == "codex":
@@ -281,6 +295,8 @@ def build_launch_argv(
             "approval_policy=never",
             "--add-dir",
             str(state_root),
+            "--add-dir",
+            str(canonical / ".git"),  # linked worktree's writable git state lives here
             "--json",
             *profile_flags,
             f"$pr-pipeline {issues_arg}",
@@ -671,7 +687,13 @@ def dispatch(
     # parsed from its JSONL log after launch.
     pre_session = str(uuid.uuid4()) if surface == "claude" else None
     argv = build_launch_argv(
-        surface, worktree, issues, state_root, pre_session, profile_flags
+        surface,
+        worktree,
+        issues,
+        state_root,
+        pre_session,
+        profile_flags,
+        args.canonical,
     )
 
     if args.dry_run:
