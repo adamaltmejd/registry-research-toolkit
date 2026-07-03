@@ -220,11 +220,16 @@ _VISUAL_SURFACE_PREFIX = "reg_webapp/frontend"
 def _touches_visual_surface(touches: list[str]) -> bool:
     """Whether any `touches` entry could edit a file under reg_webapp/frontend/**.
 
-    A minimal single-target specialization of plan_sequence.touches_overlap's glob-aware
-    logic (spec-loading all of plan_sequence just for that one function is heavy, and here
-    we only test each entry against ONE fixed target, not arbitrary pairs). Mirrors that
-    module's conservative "over- rather than under-detect" stance, but the LITERAL and GLOB
-    cases need different prefix relations:
+    NOT reused from plan_sequence.touches_overlap despite the cheap sys.modules-guarded
+    load: touches_overlap's fnmatch semantics UNDER-detect entries whose wildcard completes
+    a partial path component — `_pair_overlap("reg_webapp/fronten[dt]/x.svelte",
+    "reg_webapp/frontend")` is False, since fnmatch literal-matches pattern-against-string
+    and never expands the char-class to finish `fronten` into `frontend`. That's tolerable
+    for its lane-conflict use (a miss merely fails to serialize two lanes) but WRONG here:
+    a missed hit silently dispatches a lane whose visual merge gate codex cannot run, while
+    a false hit only costs relaunching the dispatch on claude. The failure asymmetry demands
+    OVER-detection, so this guard deliberately diverges — it is a policy fork, not a
+    load-cost convenience fork. The LITERAL and GLOB cases need different prefix relations:
       - a LITERAL entry hits on the exact path-boundary relation — it IS the surface or
         nests under it (surface/…) OR the surface nests under it (an ancestor dir). The
         boundary is strict on purpose: a plain-string prefix would mis-hit look-alikes
