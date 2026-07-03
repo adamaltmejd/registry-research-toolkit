@@ -119,12 +119,10 @@ if TYPE_CHECKING:
 DEFAULT_TIER = "hard"
 RUN_STARTED_TYPE = "cos.run.started"
 MAIN_FETCH_REFSPEC = "+refs/heads/main:refs/remotes/origin/main"
-_CLOSING_KEYWORD_RE = re.compile(
-    r"^\s*(?:[-*]\s*)?(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)"
-    r"\s+#(?P<number>\d+)\b",
-    re.IGNORECASE | re.MULTILINE,
+_CLOSING_LINE_RE = re.compile(
+    r"^\s*(?:[-*]\s*)?(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b",
+    re.IGNORECASE,
 )
-
 # The blessed launch profiles, kept in ONE place so surface + model/effort/advisor stay
 # together as a validated set (never composed ad hoc at a call site). Each value is
 # (surface, extra_flags): `surface` is the tier's implied dispatch surface; the flags are
@@ -210,6 +208,7 @@ def _load_gh() -> ModuleType:
 _gh = _load_gh()
 _cos_preflight = _gh.load_sibling("cos_preflight")
 _gh_issue = _gh.load_sibling("gh_issue")
+_plan_sequence = _gh.load_sibling("plan_sequence")
 
 
 def require_maintainer_authored(issues: list[int]) -> None:
@@ -300,14 +299,19 @@ def _closing_issue_numbers(
     *,
     repository_name_with_owner: str | None = None,
 ) -> list[int]:
-    """Closing issue refs from local body keywords plus same-repo GitHub refs."""
+    """Closing issue refs from local body clauses plus same-repo GitHub refs."""
     seen: set[int] = set()
     issues: list[int] = []
-    for match in _CLOSING_KEYWORD_RE.finditer(body):
-        number = int(match.group("number"))
-        if number not in seen:
-            seen.add(number)
-            issues.append(number)
+    closing_body = "\n".join(
+        line for line in body.splitlines() if _CLOSING_LINE_RE.match(line)
+    )
+    for number in sorted(
+        _plan_sequence.closing_issue_numbers_from_body(
+            closing_body, repository_name_with_owner
+        )
+    ):
+        seen.add(number)
+        issues.append(number)
     if refs:
         for ref in refs:
             if not isinstance(ref, dict) or not _ref_matches_repository(
@@ -349,7 +353,7 @@ def resolve_continue_pr(pr: int) -> dict:
             "view",
             str(pr),
             "--json",
-            "number,title,body,baseRefName,headRefName,headRepository,headRepositoryOwner,isCrossRepository,closingIssuesReferences",
+            "number,title,body,state,baseRefName,headRefName,headRepository,headRepositoryOwner,isCrossRepository,closingIssuesReferences",
         ],
         capture_output=True,
         text=True,
@@ -362,6 +366,11 @@ def resolve_continue_pr(pr: int) -> dict:
         data = json.loads(proc.stdout)
     except ValueError as exc:
         raise SystemExit(f"could not parse PR #{pr} metadata from gh") from exc
+    state = data.get("state")
+    if state != "OPEN":
+        raise SystemExit(
+            f"refusing to continue PR #{pr}: state is {state or 'unknown'}"
+        )
     if data.get("isCrossRepository"):
         raise SystemExit(
             f"refusing to continue fork PR #{pr}; head branch is not local"
@@ -700,7 +709,7 @@ def prepare_continue_worktree(
     if worktree.exists():
         ensure_existing_continue_worktree(worktree, branch)
     elif branch_exists(canonical, branch):
-        run_git(canonical, ["worktree", "add", "--force", str(worktree), branch])
+        run_git(canonical, ["worktree", "add", str(worktree), branch])
     else:
         run_git(
             canonical,

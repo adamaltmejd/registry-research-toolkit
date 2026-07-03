@@ -365,6 +365,17 @@ def test_closing_issue_numbers_uses_github_refs_for_same_line_closures() -> None
     assert got == [10, 123]
 
 
+def test_closing_issue_numbers_parses_body_multi_references_without_github_refs() -> (
+    None
+):
+    got = cd._closing_issue_numbers(
+        "Closes #101, owner/repo#102, and #106\nFixes OWNER/REPO#107",
+        None,
+        repository_name_with_owner="owner/repo",
+    )
+    assert got == [101, 102, 106, 107]
+
+
 def test_closing_issue_numbers_filters_github_refs_to_local_repo() -> None:
     got = cd._closing_issue_numbers(
         "Closes #10",
@@ -405,6 +416,18 @@ def test_closing_issue_numbers_ignores_negated_prose() -> None:
         "Closes #1052\n"
     )
     assert cd._closing_issue_numbers(body, None) == [1052]
+
+
+def test_resolve_continue_pr_refuses_closed_pr(
+    tmp_path: Path, _hermetic_env: Path
+) -> None:
+    _stub_bin(_hermetic_env, "gh", jsonl=json.dumps({"state": "CLOSED"}))
+
+    with pytest.raises(SystemExit) as exc:
+        cd.resolve_continue_pr(4242)
+
+    assert "state is CLOSED" in str(exc.value.code)
+    _no_real_launch(tmp_path)
 
 
 def test_build_launch_argv_codex_pins_flags() -> None:
@@ -1106,6 +1129,23 @@ def test_continue_pr_rebases_onto_stacked_pr_base_branch(
     rec = _wait_for_record(record)
     assert f"`origin/{base_branch}`" in rec["argv"][-1]
     assert json.loads(capsys.readouterr().out)["mode"] == "continue"
+
+
+def test_continue_pr_refuses_branch_checked_out_in_another_worktree(
+    tmp_path: Path,
+) -> None:
+    canonical = _make_origin(tmp_path)
+    branch = "codex/existing-pr"
+    _push_branch(canonical, branch)
+    other = tmp_path / "other-worktree"
+    _git(canonical, "worktree", "add", str(other), branch)
+    target = canonical / ".claude" / "worktrees" / "continue-codex-pr-4242"
+
+    with pytest.raises(SystemExit) as exc:
+        cd.prepare_continue_worktree(canonical, target, branch, "main", rebase=False)
+
+    assert "git worktree add" in str(exc.value.code)
+    assert not target.exists()
 
 
 def test_continue_pr_refuses_existing_live_slot_for_pr(
