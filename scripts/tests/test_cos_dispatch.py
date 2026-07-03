@@ -6,11 +6,15 @@ sandbox flags; claude `/pr-pipeline …` with a pre-generated --session-id), tha
 worktree is materialized off a freshly fetched origin/main, that the slot file is
 written with slot==stem shape (so scan_slots accepts it) promptly after a successful
 launch, codex session-id capture from the JSONL log (plus its bounded-poll timeout →
-session=null), and --dry-run's zero-side-effect check-only path. Two review-hardening
-invariants: the codex session merge preserves a fast child pipeline's concurrently-written
-`prs` (only `session` is stamped; a vanished/invalid slot falls back to a full rewrite),
-and the id poll parses only bytes past the pre-launch log offset so a reused per-slug log
-can't leak a prior run's stale thread id.
+session=null), and --dry-run's zero-side-effect check-only path. Review-hardening
+invariants: the codex session merge AND the initial ownership write both overlay only
+their own fields, preserving a fast child pipeline's concurrently-written `prs` (a
+vanished/invalid slot falls back to a full write); the id poll parses only bytes past the
+pre-launch log offset so a reused per-slug log can't leak a prior run's stale thread id; a
+child that exits within the post-spawn grace window is a launch failure (exit 2, no slot);
+a dispatch-log setup OSError becomes the exit-2 orphan path (never a traceback); and a
+standard `.../registry-research-toolkit` --state-root is propagated to the child as
+XDG_STATE_HOME (a non-standard root warns and stays ambient).
 
 Real subprocesses are used where the behavior IS the subprocess: a tmp git repo with an
 `origin` bare remote so `git fetch origin main` + `git worktree add … origin/main` run
@@ -127,6 +131,52 @@ def _no_real_launch(tmp_path: Path) -> None:
         )
 
 
+# A healthy child must OUTLIVE dispatch's post-spawn launch-grace window (a child that exits
+# inside it is treated as a launch failure). Tests run dispatch with a tiny injectable grace
+# (_TEST_GRACE); the recording stubs linger a hair longer so they survive the health check
+# without adding real seconds to the suite. Both are ~milliseconds.
+_TEST_GRACE = 0.05
+_TEST_GRACE_POLL = 0.01
+_STUB_LINGER = (
+    0.3  # comfortably past _TEST_GRACE + a few polls; the stub is detached anyway
+)
+# Launch-failure tests need a grace CEILING long enough to actually observe the child's
+# instant exit — Python interpreter startup alone can exceed _TEST_GRACE, so a 0.05s ceiling
+# would elapse before the child even finishes exiting. The health check returns the instant
+# it sees proc.poll() != None, so a generous ceiling costs only the real ~startup+exit time
+# (~100ms), NOT the full ceiling — the suite stays fast.
+_FAIL_GRACE = 3.0
+
+
+def _patch_fast_grace(
+    monkeypatch: pytest.MonkeyPatch, grace: float = _TEST_GRACE
+) -> None:
+    """Pin launch_detached's grace, for tests that reach launch via main().
+
+    dispatch() takes launch_grace as a kwarg, but main() calls dispatch() with production
+    defaults (a 1s grace) and reads only argv — so a main()-path launch test can't inject the
+    grace. Wrap launch_detached to pin `grace` regardless, keeping the suite fast: a healthy
+    launch pays the full (tiny) grace, while an instant-exit failure returns as soon as
+    proc.poll() fires, so a generous ceiling (_FAIL_GRACE) costs only the real exit time.
+    """
+    real = cd.launch_detached
+    pinned_grace = grace
+
+    def fast(argv, worktree, log_path, state_root, *, grace=None, grace_poll=None):
+        # Ignore the grace dispatch() passes (main() gives it the 1s production default) and
+        # force the pinned test grace instead.
+        return real(
+            argv,
+            worktree,
+            log_path,
+            state_root,
+            grace=pinned_grace,
+            grace_poll=_TEST_GRACE_POLL,
+        )
+
+    monkeypatch.setattr(cd, "launch_detached", fast)
+
+
 def _write_slot(slots_root: Path, slug: str, override: dict | None = None) -> Path:
     slots_root.mkdir(parents=True, exist_ok=True)
     path = slots_root / f"{slug}.json"
@@ -167,26 +217,35 @@ def _make_origin(tmp_path: Path) -> Path:
 
 
 def _stub_bin(
-    stub_bin: Path, name: str, *, jsonl: str = "", exit_code: int = 0
+    stub_bin: Path,
+    name: str,
+    *,
+    jsonl: str = "",
+    exit_code: int = 0,
+    linger: float = _STUB_LINGER,
 ) -> Path:
     """Overwrite the fail-loud stub for `name` with a recording no-op that emits jsonl.
 
     Written into the SAME stub-bin dir the autouse fixture prepended to PATH, so it takes
     precedence over the real binary. Records argv+cwd — plus the GIT_* keys it inherited,
-    under `git_env`, so the scrub test can assert the child got none — to
-    <stub_bin>/<name>.record.
+    under `git_env`, so the scrub test can assert the child got none — plus XDG_STATE_HOME
+    (so the state-root propagation test can assert it) to <stub_bin>/<name>.record. It
+    records/emits FIRST, then lingers so it outlives dispatch's launch-grace health check
+    (pass linger=0 to model an instant-exit launch failure).
     """
     stub_bin.mkdir(parents=True, exist_ok=True)
     record = stub_bin / f"{name}.record"
     script = stub_bin / name
     body = (
         "#!/usr/bin/env python3\n"
-        "import json, os, sys\n"
+        "import json, os, sys, time\n"
         "git_env = sorted(k for k in os.environ if k.startswith('GIT_'))\n"
-        f"open({str(record)!r}, 'w').write(json.dumps("
-        "{'argv': sys.argv[1:], 'cwd': os.getcwd(), 'git_env': git_env}))\n"
+        f"open({str(record)!r}, 'w').write(json.dumps({{'argv': sys.argv[1:], "
+        "'cwd': os.getcwd(), 'git_env': git_env, "
+        "'xdg_state_home': os.environ.get('XDG_STATE_HOME')}))\n"
         f"sys.stdout.write({jsonl!r})\n"
         "sys.stdout.flush()\n"
+        f"time.sleep({linger!r})\n"
         f"sys.exit({exit_code})\n"
     )
     script.write_text(body, encoding="utf-8")
@@ -485,6 +544,8 @@ def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
         _args(tmp_path, canonical, state_root=state),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
     )
 
     assert rc == 0
@@ -532,7 +593,11 @@ def test_happy_path_claude(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     record = _stub_bin(_hermetic_env, "claude")
     state = tmp_path / "state"
     # easy tier → claude surface with the blessed sonnet-5 + opus-advisor profile.
-    rc = cd.dispatch(_args(tmp_path, canonical, tier="easy", state_root=state))
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, tier="easy", state_root=state),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
 
     assert rc == 0
     result = json.loads(capsys.readouterr().out)
@@ -571,6 +636,8 @@ def test_codex_id_timeout_yields_null_session_but_writes_slot(
         _args(tmp_path, canonical, state_root=state),
         codex_id_timeout=0.1,
         codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
     )
 
     assert rc == 0
@@ -631,6 +698,8 @@ def test_surface_override_contradicting_tier_drops_pins(
         _args(tmp_path, canonical, tier="easy", surface="codex", state_root=state),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
     )
 
     assert rc == 0
@@ -815,6 +884,8 @@ def test_hostile_git_env_is_scrubbed_from_children(
         _args(tmp_path, canonical, state_root=state),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
     )
 
     assert rc == 0
@@ -863,6 +934,8 @@ def test_slot_write_failure_after_launch_exits_2_no_tmp_leak(
             _args(tmp_path, canonical, state_root=state),
             codex_id_timeout=5.0,
             codex_id_poll=0.02,
+            launch_grace=_TEST_GRACE,
+            launch_grace_poll=_TEST_GRACE_POLL,
         )
 
     message = str(exc.value.code)
@@ -881,7 +954,7 @@ def test_slot_write_failure_after_launch_exits_2_no_tmp_leak(
 
 
 def test_slot_write_failure_through_main_is_exit_2(
-    tmp_path: Path, capsys, _hermetic_env: Path
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     # Same failure through main()'s real argv path: the string-code SystemExit maps to
     # exit 2 with the orphan-adjudication message on stderr, never a traceback/exit 1.
@@ -889,6 +962,9 @@ def test_slot_write_failure_through_main_is_exit_2(
     _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
     _wedge_slots_root(state)
+    _patch_fast_grace(
+        monkeypatch
+    )  # main() can't inject grace; keep the health check fast
 
     rc = cd.main(
         [
@@ -993,6 +1069,8 @@ def test_codex_child_prs_survive_session_merge(
         _args(tmp_path, canonical, state_root=state),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
     )
 
     assert rc == 0
@@ -1104,6 +1182,8 @@ def test_reused_log_dispatch_records_new_id_not_stale(
         _args(tmp_path, canonical, state_root=state),
         codex_id_timeout=5.0,
         codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
     )
 
     assert rc == 0
@@ -1134,6 +1214,8 @@ def test_reused_log_dispatch_no_new_id_records_null_not_stale(
         _args(tmp_path, canonical, state_root=state),
         codex_id_timeout=0.15,
         codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
     )
 
     assert rc == 0
@@ -1145,3 +1227,210 @@ def test_reused_log_dispatch_no_new_id_records_null_not_stale(
         (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
     )
     assert slot["session"] is None
+
+
+# --- immediate launch-failure detection (finding 1) ---------------------------
+
+
+@pytest.mark.parametrize("exit_code", [1, 0])
+def test_instant_child_exit_is_launch_failure_no_slot(
+    tmp_path: Path, _hermetic_env: Path, exit_code: int
+) -> None:
+    # Popen succeeding says nothing about viability: a child that exits within the grace
+    # window (a rejected pinned flag, missing auth, bad config) is a launch FAILURE. Either
+    # exit status inside the window counts — a real pipeline runs for minutes, so even a
+    # clean rc=0 that fast is failure. dispatch must exit 2 naming the rc, the dispatch log
+    # (which holds the child's stderr), and the leaked worktree — and write NO slot.
+    canonical = _make_origin(tmp_path)
+    # linger=0 → the stub records/emits, then exits immediately inside the grace window.
+    _stub_bin(
+        _hermetic_env, "codex", jsonl=_CODEX_JSONL, exit_code=exit_code, linger=0.0
+    )
+    state = tmp_path / "state"
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(
+            _args(tmp_path, canonical, state_root=state),
+            codex_id_timeout=5.0,
+            codex_id_poll=0.02,
+            launch_grace=_FAIL_GRACE,  # ceiling; the check returns as soon as the child exits
+            launch_grace_poll=_TEST_GRACE_POLL,
+        )
+
+    message = str(exc.value.code)
+    assert "exited immediately" in message
+    assert f"rc={exit_code}" in message
+    slug = "auto-codex-issue-1011"
+    worktree = canonical / ".claude" / "worktrees" / slug
+    log_path = state / "dispatch-logs" / f"{slug}.log"
+    # Names the dispatch log (child stderr) and the leaked worktree for adjudication.
+    assert str(log_path) in message
+    assert str(worktree) in message
+    # NO slot file written: the dead slot must not squat on budget.
+    assert not (state / "pipeline-slots" / f"{slug}.json").exists()
+
+
+def test_instant_child_exit_through_main_is_exit_2(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Same failure through main()'s argv path: string-code SystemExit → exit 2 on stderr,
+    # never a traceback.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL, exit_code=3, linger=0.0)
+    state = tmp_path / "state"
+    _patch_fast_grace(monkeypatch, grace=_FAIL_GRACE)
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "exited immediately" in err
+    assert "rc=3" in err
+    assert not (state / "pipeline-slots" / "auto-codex-issue-1011.json").exists()
+
+
+# --- initial slot write merges a pre-existing child claim (finding 2) ---------
+
+
+def test_initial_slot_write_preserves_pre_existing_child_claim(tmp_path: Path) -> None:
+    # If the detached child reaches its register-slot step BEFORE the parent's initial
+    # ownership write, that write must NOT clobber the child's fresher record. write_slot_file
+    # is an overlay: the child's prs survive, and the parent's ownership fields are stamped.
+    state = tmp_path / "state"
+    slug = "auto-codex-issue-1011"
+    slot_path = state / "pipeline-slots" / f"{slug}.json"
+    # Pre-create the child's claim (with prs) before the parent's initial write.
+    slot_path.parent.mkdir(parents=True)
+    slot_path.write_text(
+        json.dumps({"slot": slug, "issues": [1011], "prs": [4242], "surface": "codex"}),
+        encoding="utf-8",
+    )
+
+    cd.write_slot_file(slot_path, slug, [1011], "codex", "hard", "sid-1", 999)
+
+    slot = json.loads(slot_path.read_text(encoding="utf-8"))
+    # The child's fresher prs survived the initial ownership write.
+    assert slot["prs"] == [4242]
+    # The parent's ownership fields are present.
+    assert slot["slot"] == slug
+    assert slot["surface"] == "codex"
+    assert slot["tier"] == "hard"
+    assert slot["session"] == "sid-1"
+    assert slot["pid"] == 999
+    assert slot["dispatched"]
+
+
+def test_initial_slot_write_full_payload_when_absent(tmp_path: Path) -> None:
+    # No pre-existing slot → the initial write lays down the full ownership payload.
+    slot_path = tmp_path / "pipeline-slots" / "auto-codex-issue-1011.json"
+    slot_path.parent.mkdir(parents=True)
+    cd.write_slot_file(
+        slot_path, "auto-codex-issue-1011", [1011], "codex", "hard", None, 555
+    )
+    slot = json.loads(slot_path.read_text(encoding="utf-8"))
+    assert slot["prs"] == []
+    assert slot["issues"] == [1011]
+    assert slot["session"] is None
+    assert slot["pid"] == 555
+
+
+# --- --state-root propagation to the child (finding 3) ------------------------
+
+
+def test_state_root_propagated_as_xdg_state_home(
+    tmp_path: Path, _hermetic_env: Path
+) -> None:
+    # A standard '.../registry-research-toolkit' --state-root is propagated to the child as
+    # XDG_STATE_HOME=<parent>, so the child re-derives exactly this override for its own
+    # ledger/gate stores instead of splitting them into the ambient store.
+    canonical = _make_origin(tmp_path)
+    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "xdg" / "registry-research-toolkit"
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    rec = _wait_for_record(record)
+    assert rec["xdg_state_home"] == str(state.parent)
+
+
+def test_non_standard_state_root_warns_and_leaves_xdg_ambient(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A non-standard --state-root name can't reconstruct a matching XDG_STATE_HOME, so we
+    # leave the child's XDG ambient and warn on stderr. Pin the ambient XDG to a known value
+    # to prove we did NOT override it.
+    canonical = _make_origin(tmp_path)
+    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "weird-state-root"
+    monkeypatch.setenv("XDG_STATE_HOME", "/ambient/xdg")
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "not a" in err and "registry-research-toolkit" in err
+    rec = _wait_for_record(record)
+    # No override: the child kept the ambient XDG_STATE_HOME.
+    assert rec["xdg_state_home"] == "/ambient/xdg"
+
+
+# --- dispatch-log setup failure → exit 2 (finding 4) --------------------------
+
+
+def test_dispatch_log_setup_failure_exits_2_names_worktree(
+    tmp_path: Path, _hermetic_env: Path
+) -> None:
+    # If opening <state>/dispatch-logs/<slug>.log fails after the worktree exists (here:
+    # dispatch-logs wedged as a regular FILE so mkdir raises), the OSError must become the
+    # exit-2 orphan-adjudication path naming the leaked worktree — never a traceback (exit 1).
+    # No process is launched (the failure precedes spawn) and no slot is written.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    # Wedge dispatch-logs as a regular file: log_path.parent.mkdir(exist_ok=True) then
+    # raises FileExistsError. Keep pipeline-slots creatable so we prove the slot is absent
+    # because the launch never happened, not because the slot write itself failed.
+    (state / "dispatch-logs").parent.mkdir(parents=True, exist_ok=True)
+    (state / "dispatch-logs").write_text("not a dir\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(
+            _args(tmp_path, canonical, state_root=state),
+            launch_grace=_TEST_GRACE,
+            launch_grace_poll=_TEST_GRACE_POLL,
+        )
+
+    message = str(exc.value.code)
+    assert "dispatch log" in message
+    slug = "auto-codex-issue-1011"
+    worktree = canonical / ".claude" / "worktrees" / slug
+    assert str(worktree) in message
+    # No process was launched (failure precedes spawn): the fail-loud/recording stub for
+    # codex was never invoked.
+    _no_real_launch(tmp_path)
+    assert not (_hermetic_env / "codex.record").exists()
+    # No slot written.
+    assert not (state / "pipeline-slots" / f"{slug}.json").exists()
