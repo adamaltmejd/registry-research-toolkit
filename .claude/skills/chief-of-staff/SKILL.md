@@ -53,21 +53,19 @@ contexts.
 All wake cadence lives in one deterministic script, `scripts/cos_watch.py`; the agent
 never wakes idle. It makes no wake DECISIONS — the tick below is identical regardless of
 which emission woke the session; the watcher only changes WHEN a tick fires. Arm it ONCE
-per session, not per tick: first call `TaskList` and skip arming if a cos-watch monitor
-is already running; otherwise arm exactly one. **Right after arming, run one normal tick
-(probe → handle → commit)**: the watcher's own probes are read-only (`--observe`) and
-never bootstrap a missing baseline, so this first staging probe is what establishes the
-baseline the watcher compares against — without it, previous-gated drift (e.g. a new
-review on a claimed PR) stays invisible until the safety-net heartbeat's tick writes
-one.
+per session, not per tick, using the current surface's supported persistent-command
+primitive. Before arming, inspect active background commands/monitors if the surface
+supports that and skip arming when a `cos_watch.py` command is already running. If the
+surface has no persistent-command primitive, do not fake one; fall back to a 15-30 min
+heartbeat. **Right after arming, run one normal tick (probe → handle → commit)**: the
+watcher's own probes are read-only (`--observe`) and never bootstrap a missing baseline,
+so this first staging probe is what establishes the baseline the watcher compares
+against — without it, previous-gated drift (e.g. a new review on a claimed PR) stays
+invisible until the safety-net heartbeat's tick writes one. The command to run
+persistently is:
 
-```text
-Monitor({
-  command: "uv run --no-project python scripts/cos_watch.py",
-  description: "chief-of-staff wake watch",
-  persistent: true,
-  timeout_ms: 60000   // schema-required; ignored when persistent
-})
+```sh
+uv run --no-project python scripts/cos_watch.py
 ```
 
 It runs two tiers in one loop (both stores live under
@@ -105,10 +103,11 @@ transition against its baseline and wakes on it (exit `10`); an idle probe (exit
 after a `dispatch:` / `stale slot:` emission means a prior tick already committed that
 transition, so it is a genuine no-op — stop. The durable truth is the ledger itself,
 which every full tick re-reads. Do not schedule polling wakeups on top of the watcher;
-keep at most one long ScheduleWakeup (\~3600s) as a dead-monitor safety net, and on each
-wake re-arm it and verify (TaskList) the monitor is still alive — if the monitor reports
-the watcher process exited, re-arm the monitor; if arming keeps failing, fall back to a
-15-30 min heartbeat, which is then the only wake path, including for merges.
+keep at most one long safety-net heartbeat (\~3600s) for dead-monitor recovery. On each
+safety-net wake, renew the safety net and, when the surface can inspect persistent
+commands, verify the watcher is still alive. If the watcher exited, re-arm it; if arming
+keeps failing, fall back to a 15-30 min heartbeat, which is then the only wake path,
+including for merges.
 
 Caveats: monitor and safety net are session-scoped — a dead session kills both, which is
 why an external fixed-cadence `/loop` or scheduled heartbeat is what revives the loop

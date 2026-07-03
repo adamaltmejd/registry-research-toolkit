@@ -7,7 +7,7 @@ lane it decides to dispatch, instead of only recommending commands. The script i
 side-effecting half of that decision: it claims a slot, materializes a worktree, and
 launches a detached pr-pipeline agent (codex or claude). The default `--issues` mode
 starts a fresh lane from `origin/main`; `--continue-pr` resumes an existing same-repo PR
-branch in a fresh agent after rebasing it onto `origin/main` by default.
+branch in a fresh agent after rebasing it onto the PR base branch by default.
 
 It is deliberately dumb about WHICH lane to run — the agent (or /plan-lanes) picks the
 issues; this script just performs the launch atomically and records the claim. Order of
@@ -27,9 +27,9 @@ target resolution, resolve_profile, slug validation — all exit 2):
                     (exit 2) before any side effect. Skipped under --dry-run (its
                     no-network contract).
   4. worktree     — fresh mode fetches origin/main and `git worktree add -b wt/<slug> …
-                    origin/main`. Continue mode fetches origin/main plus the PR branch,
-                    creates or reuses a clean worktree on that branch, and rebases onto
-                    origin/main unless --no-rebase is set.
+                    origin/main`. Continue mode fetches origin/main plus the PR head and
+                    base branches, creates or reuses a clean worktree on the PR branch,
+                    and rebases onto the PR base unless --no-rebase is set.
   5. launch       — append a `cos.run.started` JSON sentinel to the per-slug dispatch
                     log, then spawn the agent DETACHED.
                     The codex argv runs `-s workspace-write` with TWO `--add-dir` grants —
@@ -273,7 +273,7 @@ def validate_slug(slug: str) -> None:
 
 
 def _closing_issue_numbers(body: str, refs: list[dict] | None) -> list[int]:
-    """Closing issue refs from strict body keywords, falling back to GitHub JSON."""
+    """Closing issue refs from strict body keywords plus GitHub's complete refs."""
     seen: set[int] = set()
     issues: list[int] = []
     for match in _CLOSING_KEYWORD_RE.finditer(body):
@@ -281,8 +281,6 @@ def _closing_issue_numbers(body: str, refs: list[dict] | None) -> list[int]:
         if number not in seen:
             seen.add(number)
             issues.append(number)
-    if issues:
-        return issues
     if refs:
         for ref in refs:
             number = ref.get("number") if isinstance(ref, dict) else None
@@ -306,7 +304,7 @@ def resolve_continue_pr(pr: int) -> dict:
             "view",
             str(pr),
             "--json",
-            "number,title,body,headRefName,isCrossRepository,closingIssuesReferences",
+            "number,title,body,baseRefName,headRefName,isCrossRepository,closingIssuesReferences",
         ],
         capture_output=True,
         text=True,
@@ -326,6 +324,9 @@ def resolve_continue_pr(pr: int) -> dict:
     branch = data.get("headRefName")
     if not isinstance(branch, str) or not branch:
         raise SystemExit(f"PR #{pr} has no resolvable head branch")
+    base_branch = data.get("baseRefName")
+    if not isinstance(base_branch, str) or not base_branch:
+        raise SystemExit(f"PR #{pr} has no resolvable base branch")
     issues = _closing_issue_numbers(
         str(data.get("body") or ""), data.get("closingIssuesReferences")
     )
@@ -336,6 +337,7 @@ def resolve_continue_pr(pr: int) -> dict:
     return {
         "pr": pr,
         "branch": branch,
+        "base_branch": base_branch,
         "issues": issues,
         "title": str(data.get("title") or ""),
     }
@@ -366,7 +368,7 @@ def read_brief(path: Path | None) -> str:
 
 
 def continuation_prompt(
-    surface: str, pr: int, issues: list[int], branch: str, brief: str
+    surface: str, pr: int, issues: list[int], branch: str, base_branch: str, brief: str
 ) -> str:
     prefix = "$pr-pipeline" if surface == "codex" else "/pr-pipeline"
     issue_text = ", ".join(f"#{issue}" for issue in issues) or "none"
@@ -379,7 +381,7 @@ def continuation_prompt(
         ),
         (
             "The branch has been checked out from the PR head and rebased onto "
-            "`origin/main` unless this dispatch used `--no-rebase`. Inspect the "
+            f"`origin/{base_branch}` unless this dispatch used `--no-rebase`. Inspect the "
             "current diff, fix the requested follow-up, run the relevant gates, "
             "push this same branch, and refresh the existing PR's merge-gate handoff."
         ),
@@ -604,9 +606,9 @@ def ensure_existing_continue_worktree(worktree: Path, branch: str) -> None:
     ensure_clean_worktree(worktree)
 
 
-def rebase_onto_main(worktree: Path) -> None:
+def rebase_onto(worktree: Path, base_ref: str) -> None:
     proc = subprocess.run(
-        ["git", "rebase", "origin/main"],
+        ["git", "rebase", base_ref],
         cwd=str(worktree),
         env=_scrubbed_env(),
         capture_output=True,
@@ -621,14 +623,15 @@ def rebase_onto_main(worktree: Path) -> None:
         capture_output=True,
         text=True,
     )
-    tail = proc.stderr.strip() or proc.stdout.strip() or "git rebase origin/main failed"
-    raise SystemExit(f"git rebase origin/main failed and was aborted: {tail}")
+    tail = proc.stderr.strip() or proc.stdout.strip() or f"git rebase {base_ref} failed"
+    raise SystemExit(f"git rebase {base_ref} failed and was aborted: {tail}")
 
 
 def prepare_continue_worktree(
     canonical: Path,
     worktree: Path,
     branch: str,
+    base_branch: str,
     *,
     rebase: bool,
 ) -> None:
@@ -637,6 +640,15 @@ def prepare_continue_worktree(
         canonical,
         ["fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}"],
     )
+    if base_branch != "main":
+        run_git(
+            canonical,
+            [
+                "fetch",
+                "origin",
+                f"+refs/heads/{base_branch}:refs/remotes/origin/{base_branch}",
+            ],
+        )
     if worktree.exists():
         ensure_existing_continue_worktree(worktree, branch)
     elif branch_exists(canonical, branch):
@@ -663,7 +675,7 @@ def prepare_continue_worktree(
             "without manual reconciliation"
         )
     if rebase:
-        rebase_onto_main(worktree)
+        rebase_onto(worktree, f"refs/remotes/origin/{base_branch}")
         ensure_clean_worktree(worktree)
 
 
@@ -946,23 +958,16 @@ def dispatch(
         issues = parse_issues(args.issues)
         prs: list[int] = []
         pr_branch = None
+        pr_base_branch = None
         prompt = None
         slug = args.slug or default_slug(surface, issues)
     else:
         mode = "continue"
-        if not args.dry_run:
-            require_maintainer_authored([continue_pr])
-        pr_info = resolve_continue_pr(continue_pr)
-        issues = list(pr_info["issues"])
+        issues = []
         prs = [continue_pr]
-        pr_branch = str(pr_info["branch"])
-        prompt = continuation_prompt(
-            surface,
-            continue_pr,
-            issues,
-            pr_branch,
-            read_brief(brief_file),
-        )
+        pr_branch = None
+        pr_base_branch = None
+        prompt = None
         slug = args.slug or default_continue_slug(surface, continue_pr)
     validate_slug(slug)
 
@@ -995,6 +1000,22 @@ def dispatch(
         raise SystemExit(f"slot collision: {slot_path} already exists")
     if mode == "fresh" and worktree.exists():
         raise SystemExit(f"worktree collision: {worktree} already exists")
+
+    if continue_pr is not None:
+        if not args.dry_run:
+            require_maintainer_authored([continue_pr])
+        pr_info = resolve_continue_pr(continue_pr)
+        issues = list(pr_info["issues"])
+        pr_branch = str(pr_info["branch"])
+        pr_base_branch = str(pr_info.get("base_branch") or "main")
+        prompt = continuation_prompt(
+            surface,
+            continue_pr,
+            issues,
+            pr_branch,
+            pr_base_branch,
+            read_brief(brief_file),
+        )
 
     # A pre-generated uuid is the claude session id (known before launch); codex's is
     # parsed from its JSONL log after launch.
@@ -1040,7 +1061,7 @@ def dispatch(
     require_maintainer_authored(issues)
 
     # 4. Worktree — fresh mode creates a placeholder wt/<slug> branch off origin/main;
-    # continue mode materializes or reuses the PR branch and rebases it onto origin/main.
+    # continue mode materializes or reuses the PR branch and rebases it onto the PR base.
     canonical_repo: Path = args.canonical
     # Guard the mutating git ops: confirm canonical is a worktree ROOT so `git -C` can't
     # walk up into an unintended enclosing repo (see require_git_checkout).
@@ -1060,10 +1081,12 @@ def dispatch(
         )
     else:
         assert pr_branch is not None
+        assert pr_base_branch is not None
         prepare_continue_worktree(
             canonical_repo,
             worktree,
             pr_branch,
+            pr_base_branch,
             rebase=not no_rebase,
         )
 
@@ -1208,7 +1231,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--no-rebase",
         action="store_true",
-        help="with --continue-pr, skip the default rebase onto origin/main",
+        help="with --continue-pr, skip the default rebase onto the PR base branch",
     )
     ap.add_argument(
         "--tier",

@@ -349,12 +349,20 @@ def test_validate_slug_rejects_non_stems(bad: str) -> None:
         cd.validate_slug(bad)
 
 
-def test_closing_issue_numbers_prefers_strict_body_and_dedupes() -> None:
+def test_closing_issue_numbers_merges_strict_body_with_github_refs() -> None:
     got = cd._closing_issue_numbers(
         "Closes #11\nFixes #12\nresolved #11\nThis PR leaves #13 open",
         [{"number": 10}, {"number": 12}],
     )
-    assert got == [11, 12]
+    assert got == [11, 12, 10]
+
+
+def test_closing_issue_numbers_uses_github_refs_for_same_line_closures() -> None:
+    got = cd._closing_issue_numbers(
+        "Resolves #10, resolves #123",
+        [{"number": 10}, {"number": 123}],
+    )
+    assert got == [10, 123]
 
 
 def test_closing_issue_numbers_falls_back_to_github_refs() -> None:
@@ -566,6 +574,33 @@ def test_kill_switch_refuses(tmp_path: Path, capsys) -> None:
     assert rc == 3
     assert "kill switch" in capsys.readouterr().out
     # No side effects.
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_continue_pr_kill_switch_refuses_before_pr_lookup(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    state.mkdir(parents=True)
+    (state / "auto-dispatch.off").write_text("", encoding="utf-8")
+
+    def should_not_resolve(pr: int) -> dict:
+        raise AssertionError("PR metadata was read before the kill switch")
+
+    def should_not_author_check(numbers: list[int]) -> None:
+        raise AssertionError("author gate ran before the kill switch")
+
+    monkeypatch.setattr(cd, "resolve_continue_pr", should_not_resolve)
+    monkeypatch.setattr(cd, "require_maintainer_authored", should_not_author_check)
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state)
+    )
+
+    assert rc == 3
+    assert "kill switch" in capsys.readouterr().out
     assert not (state / "pipeline-slots").exists()
     _no_real_launch(tmp_path)
 
@@ -978,6 +1013,74 @@ def test_continue_pr_happy_path_rebases_branch_and_records_pr(
     assert sentinel["type"] == "cos.run.started"
     assert sentinel["mode"] == "continue"
     assert sentinel["prs"] == [4242]
+
+
+def test_continue_pr_rebases_onto_stacked_pr_base_branch(
+    tmp_path: Path,
+    capsys,
+    _hermetic_env: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    canonical = _make_origin(tmp_path)
+    base_branch = "codex/base-pr"
+    branch = "codex/successor-pr"
+
+    _git(canonical, "switch", "-c", base_branch)
+    (canonical / "base.txt").write_text("base\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "seed base")
+    _git(canonical, "push", "-u", "origin", base_branch)
+
+    _git(canonical, "switch", "-c", branch)
+    (canonical / "branch.txt").write_text("successor\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "seed successor")
+    _git(canonical, "push", "-u", "origin", branch)
+
+    _git(canonical, "switch", base_branch)
+    (canonical / "base-new.txt").write_text("base advanced\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "advance base")
+    _git(canonical, "push", "origin", base_branch)
+
+    _git(canonical, "switch", "main")
+    (canonical / "main-only.txt").write_text("main advanced\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "advance main")
+    _git(canonical, "push", "origin", "main")
+
+    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    monkeypatch.setattr(
+        cd,
+        "resolve_continue_pr",
+        lambda pr: {
+            "pr": pr,
+            "branch": branch,
+            "base_branch": base_branch,
+            "issues": [1011],
+            "title": "Stacked PR",
+        },
+    )
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    slug = "continue-codex-pr-4242"
+    worktree = canonical / ".claude" / "worktrees" / slug
+    assert (worktree / "branch.txt").read_text(encoding="utf-8") == "successor\n"
+    assert (worktree / "base-new.txt").read_text(encoding="utf-8") == "base advanced\n"
+    assert not (worktree / "main-only.txt").exists()
+
+    rec = _wait_for_record(record)
+    assert f"`origin/{base_branch}`" in rec["argv"][-1]
+    assert json.loads(capsys.readouterr().out)["mode"] == "continue"
 
 
 def test_continue_pr_refuses_existing_live_slot_for_pr(
