@@ -27,6 +27,7 @@ import {
   rowAddPeriod,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
+import HistoryGraph from "./HistoryGraph.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
@@ -242,16 +243,17 @@ const valueSetScope = $derived.by(() => {
 });
 
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
-// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode
-// AND the #670 header identity (qualifier + group link), derived from the graph
-// FOCUS node — no separate `/dimensions` request. Read `fqidPath`
+// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the restored HistoryGraph,
+// the additive picker graph mode, AND the #670 header identity (qualifier + group
+// link), derived from the graph FOCUS node — no separate `/dimensions` request. Read
+// `fqidPath`
 // synchronously inside `fn` so the resource refetches when the leaf changes (same
 // pattern as `periodResource`).
 //
 // FAILURE-DOMAIN isolation: this resource is independent of `node`, so a graph
-// error / empty / timeout NEVER blanks the leaf — the picker falls back to the list,
-// and the header just omits the qualifier/link (both gate on a RESOLVED, non-empty
-// graph; additive).
+// error / empty / timeout NEVER blanks the leaf — the HistoryGraph omits itself, the
+// picker falls back to the list, and the header just omits the qualifier/link (both
+// gate on a RESOLVED, non-empty graph; additive).
 const graphResource = asyncResource(() => getBindingGraph(fqidPath));
 const graph = $derived(graphResource.data);
 // The graph has RESOLVED (a settled fetch with a payload) — the gate the header
@@ -718,10 +720,18 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 {/snippet}
 
 {#snippet relationships()}
+  <!-- #904 Option B: keep the standalone history graph for every leaf case it
+       covered before the picker graph experiment. The picker graph mode is now a
+       strictly-gated enhancement for clean selectable cases; this graph remains the
+       source of succession/group context for no-column and otherwise ambiguous
+       leaves. -->
+  {#if graphReady && graph}
+    <HistoryGraph {graph} {vintageYear} />
+  {/if}
+
   <!-- The two NON-graph affordances the #761 payload doesn't carry — provenance
        (lineage edges + source register) and the fetched lineage warnings — live
-       here on the binding leaf. Succession / representation history is rendered
-       by the picker graph mode when the graph is small enough (#904). -->
+       here on the binding leaf. -->
   <LineageDetails {fqidPath} {node} />
 {/snippet}
 

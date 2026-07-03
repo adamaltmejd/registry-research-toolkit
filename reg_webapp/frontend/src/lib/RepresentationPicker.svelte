@@ -702,13 +702,6 @@ function graphNodeMatchesKey(
   return key != null && graphNodeFqids(node).includes(key);
 }
 
-function graphHasSelectableNode(g: RelationshipGraph): boolean {
-  const keys = new Set(bands.map((b) => b.key));
-  return variableGraphNodes(g).some((n) =>
-    graphNodeFqids(n).some((fqid) => keys.has(fqid)),
-  );
-}
-
 interface GraphCellCandidate {
   band: PickerBand;
   row: PickerRepresentation;
@@ -763,38 +756,6 @@ function graphCellCandidates(
     .filter((candidate) => candidate.columns.length > 0);
 }
 
-function graphCellsAreRepresentable(g: RelationshipGraph): boolean {
-  for (const node of variableGraphNodes(g)) {
-    const band = graphBandForNode(node);
-    if (!band) {
-      if (graphMemberHrefs == null || graphMemberHrefForNode(node) != null) {
-        continue;
-      }
-      if (cellsOf(node).length > 0) {
-        return false;
-      }
-      continue;
-    }
-    for (const cell of cellsOf(node)) {
-      const matches = graphCellCandidates(band, cell);
-      if (matches.length === 0) {
-        if (graphMemberHrefs != null) {
-          return false;
-        }
-        continue;
-      }
-      if (matches.length !== 1 || matches[0].columns.length !== 1) {
-        // Same-run alias multiplexing (for example monthly-family columns sharing one
-        // state/run), or a run whose member column cannot be singled out, is real
-        // selectable surface but not representable as one graph checkbox. Let the
-        // list render every row instead of hiding choices or leaking non-members.
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
 function graphFocusIsNavigable(g: RelationshipGraph): boolean {
   if (focusKey == null || graphMemberHrefs == null) {
     return true;
@@ -807,6 +768,64 @@ function graphFocusIsNavigable(g: RelationshipGraph): boolean {
   }
   const focusedBand = graphBandForNode(focusedNode);
   return focusedBand?.href != null;
+}
+
+/** Strict additive graph-mode gate (#904 Option B): the graph picker renders only
+ * when it is a lossless, one-to-one projection of the selectable list surface. Any
+ * empty band, missing band node, unmatched row, non-member graph cell, shared-run
+ * multi-column cell, or #908 declared/filterable dimension falls back to the list.
+ * The standalone HistoryGraph still carries graph context for those ambiguous cases. */
+function graphCoversEveryPickerRow(g: RelationshipGraph): boolean {
+  if (bands.length === 0 || axes.length > 0 || dimensions.length > 0) {
+    return false;
+  }
+  const nodes = variableGraphNodes(g);
+  const bandNodes = new Map<string, VariableGraphNode>();
+  const usedNodeIds = new Set<string>();
+  for (const band of bands) {
+    if (band.rows.length === 0) {
+      return false;
+    }
+    const matches = nodes.filter((node) => graphNodeMatchesKey(node, band.key));
+    if (matches.length !== 1) {
+      return false;
+    }
+    if (usedNodeIds.has(matches[0].id)) {
+      return false;
+    }
+    usedNodeIds.add(matches[0].id);
+    bandNodes.set(band.key, matches[0]);
+  }
+
+  for (const node of nodes) {
+    const band = graphBandForNode(node);
+    if (!band && cellsOf(node).length > 0) {
+      return false;
+    }
+  }
+
+  const coveredRows = new Set<string>();
+  for (const band of bands) {
+    const node = bandNodes.get(band.key);
+    if (!node) {
+      return false;
+    }
+    for (const cell of cellsOf(node)) {
+      const matches = graphCellCandidates(band, cell);
+      if (
+        matches.length !== 1 ||
+        matches[0].columns.length !== 1 ||
+        cell.columns.length !== 1 ||
+        matches[0].columns[0] !== cell.columns[0]
+      ) {
+        return false;
+      }
+      coveredRows.add(rowKey(matches[0].band, matches[0].row));
+    }
+  }
+  return bands.every((band) =>
+    band.rows.every((row) => coveredRows.has(rowKey(band, row))),
+  );
 }
 
 function graphFitsPicker(g: RelationshipGraph): boolean {
@@ -822,8 +841,7 @@ function graphFitsPicker(g: RelationshipGraph): boolean {
     g.nodes.length <= GRAPH_MAX_NODES &&
     g.edges.length <= GRAPH_MAX_EDGES &&
     cellCount <= GRAPH_MAX_CELLS &&
-    graphHasSelectableNode(g) &&
-    graphCellsAreRepresentable(g) &&
+    graphCoversEveryPickerRow(g) &&
     graphFocusIsNavigable(g)
   );
 }

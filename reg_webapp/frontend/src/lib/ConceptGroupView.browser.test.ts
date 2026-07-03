@@ -1973,7 +1973,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     ).toHaveLength(1);
   });
 
-  it("graph mode renders a disabled row for a member with no graph state", async () => {
+  it("list fallback renders a disabled row for a member with no graph state", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(
       node({
         members: [
@@ -2026,21 +2026,16 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     renderGroup();
 
-    const emptyCell = await vi.waitFor(() => {
-      const cell = [
-        ...document.querySelectorAll<HTMLElement>(".graph-cell"),
-      ].find((el) => el.textContent?.includes("EmptyCol"));
-      if (!cell) {
-        throw new Error("EmptyCol graph row not rendered");
-      }
-      return cell;
-    });
-    expect(emptyCell.classList.contains("unavailable")).toBe(true);
-    expect(emptyCell.textContent).toContain("not delivered");
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    const emptyRow = page.getByRole("checkbox", { name: /EmptyCol/ });
+    await expect.element(emptyRow).toBeVisible();
+    await expect.element(emptyRow).toBeDisabled();
+    await expect
+      .element(page.getByText("not delivered", { exact: true }))
+      .toBeVisible();
     await expect
       .element(page.getByRole("checkbox", { name: /LiveCol/ }))
       .toBeVisible();
-    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
   });
 
   it("a WHOLE-VARIABLE member (null delivery_column) exposes ALL the variable's columns", async () => {
@@ -2449,7 +2444,7 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     expect(document.querySelectorAll(".focused")).toHaveLength(0);
   });
 
-  it("keeps a focused graph member navigable from the picker", async () => {
+  it("keeps a focused member navigable from the list fallback", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
     vi.mocked(getConceptGroupGraph).mockResolvedValue({
       ...twoSingleColGraph(),
@@ -2470,15 +2465,15 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
 
     const focusedLink = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
-        '.graph-lane.focused a.graph-name[href="/catalog/scb/rams/inkfeb"]',
+        '.col-row.single.focused a.col-chip.link[href="/catalog/scb/rams/inkfeb"]',
       );
       if (!el) {
-        throw new Error("focused graph member link not yet rendered");
+        throw new Error("focused member link not yet rendered");
       }
       return el;
     });
     expect(focusedLink.getAttribute("href")).toBe("/catalog/scb/rams/inkfeb");
-    expect(document.querySelector(".graph-picker")).not.toBeNull();
+    expect(document.querySelector(".graph-picker")).toBeNull();
   });
 
   it("falls back when the focused member is absent from a partial graph payload", async () => {
@@ -2607,12 +2602,21 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       .toBeVisible();
     // …but the superseded predecessor's column is NOT a co-equal selectable band.
     expect(document.querySelector('input[aria-label*="DINFold"]')).toBeNull();
-    // Exactly ONE selectable graph cell remains (the predecessor folded away).
-    expect(document.querySelector(".graph-picker")).not.toBeNull();
-    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
+    // Graph mode is strictly additive now; folded predecessor cells fall back to the
+    // list, with the predecessor reachable through the history disclosure.
+    expect(document.querySelector(".graph-picker")).toBeNull();
     expect(
-      document.querySelector(".graph-cell.unavailable")?.textContent,
-    ).toContain("DINFold");
+      document.querySelectorAll(".col-list .row-btn input.cbox"),
+    ).toHaveLength(1);
+    const historyText =
+      document.querySelector("details.history")?.textContent ?? "";
+    expect(historyText).toContain("supersedes 1");
+    expect(historyText).toContain("edition");
+    expect(
+      document.querySelector<HTMLAnchorElement>(
+        'a.history-link[href="/catalog/scb/iot/dispink-old"]',
+      )?.textContent,
+    ).toContain("Disponibel inkomst familj");
   });
 
   it("keeps faceted succession predecessors selectable while still showing history", async () => {
@@ -2652,11 +2656,14 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     await expect
       .element(page.getByRole("checkbox", { name: /DINFnew/ }))
       .toBeVisible();
-    expect(document.querySelector(".graph-picker")).not.toBeNull();
-    expect(document.querySelector(".graph-edge")).not.toBeNull();
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    const historyText =
+      document.querySelector("details.history")?.textContent ?? "";
+    expect(historyText).toContain("supersedes 1");
+    expect(historyText).toContain("edition");
   });
 
-  it("surfaces the superseded predecessor as reachable graph history", async () => {
+  it("surfaces the superseded predecessor as reachable list history", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
@@ -2667,28 +2674,24 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       key: "disponibel-inkomst",
     });
 
-    // The predecessor stays visible as graph history…
-    const predecessor = await vi.waitFor(() => {
-      const el = document.querySelector(".graph-cell.unavailable");
-      if (!el) {
-        throw new Error("history cell not yet rendered");
+    // The predecessor stays reachable as list history, with its supersession year, and
+    // is NOT a co-equal selection target.
+    await vi.waitFor(() => {
+      if (!document.querySelector("details.history")) {
+        throw new Error("history disclosure not yet rendered");
       }
-      return el;
     });
-    expect(predecessor.textContent).toContain("DINFold");
-    // …whose lane links to the predecessor's own leaf page (still reachable), with its
-    // supersession year on the edge label, and is NOT a co-equal selection target.
     const link = document.querySelector<HTMLAnchorElement>(
-      '.graph-gutter a[href="/catalog/scb/iot/dispink-old"]',
+      'a.history-link[href="/catalog/scb/iot/dispink-old"]',
     );
     expect(link?.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
     expect(link?.textContent).toContain("Disponibel inkomst familj");
-    expect(document.querySelector(".graph-reason")?.textContent).toContain(
+    expect(document.querySelector(".history-until")?.textContent).toContain(
       "2005",
     );
   });
 
-  it("preserves ?period on folded predecessor graph history links", async () => {
+  it("preserves ?period on folded predecessor history links", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
     router.navigate(
@@ -2703,7 +2706,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
 
     const link = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
-        '.graph-gutter a[href="/catalog/scb/iot/dispink-old?period=2010..2012"]',
+        'a.history-link[href="/catalog/scb/iot/dispink-old?period=2010..2012"]',
       );
       if (!el) {
         throw new Error("period-carrying predecessor link not yet rendered");
@@ -2866,28 +2869,26 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       key: "disponibel-inkomst",
     });
 
-    // Exactly ONE selectable graph cell remains — the chain head C (A and B folded away).
+    // Exactly ONE selectable list row remains — the chain head C (A and B folded away).
     await expect
       .element(page.getByRole("checkbox", { name: /DINC/ }))
       .toBeVisible();
-    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
-    const unavailable = [
-      ...document.querySelectorAll(".graph-cell.unavailable"),
-    ].map((el) => el.textContent ?? "");
-    expect(unavailable.join(" ")).toContain("DINA");
-    expect(unavailable.join(" ")).toContain("DINB");
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(
+      document.querySelectorAll(".col-list .row-btn input.cbox"),
+    ).toHaveLength(1);
+    expect(document.querySelector('input[aria-label*="DINA"]')).toBeNull();
+    expect(document.querySelector('input[aria-label*="DINB"]')).toBeNull();
 
-    // The graph surfaces BOTH predecessors transitively…
-    expect(document.querySelectorAll(".graph-edge")).toHaveLength(2);
-    // …oldest-first in the lane links: A before B.
+    // The history disclosure surfaces BOTH predecessors transitively, oldest-first.
     const links = await vi.waitFor(() => {
       const found = ["dispink-a", "dispink-b"].map((slug) =>
         document.querySelector<HTMLAnchorElement>(
-          `.graph-gutter a[href="/catalog/scb/iot/${slug}"]`,
+          `a.history-link[href="/catalog/scb/iot/${slug}"]`,
         ),
       );
       if (found.some((link) => link === null)) {
-        throw new Error("predecessor graph links not yet rendered");
+        throw new Error("predecessor history links not yet rendered");
       }
       return found as HTMLAnchorElement[];
     });
@@ -2912,18 +2913,18 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
       key: "disponibel-inkomst",
     });
 
-    // The predecessor still renders as graph history…
+    // The predecessor still renders as list history…
     const link = await vi.waitFor(() => {
       const el = document.querySelector<HTMLAnchorElement>(
-        '.graph-gutter a[href="/catalog/scb/iot/dispink-old"]',
+        'a.history-link[href="/catalog/scb/iot/dispink-old"]',
       );
       if (!el) {
-        throw new Error("history lane link not yet rendered");
+        throw new Error("history link not yet rendered");
       }
       return el;
     });
     expect(link.getAttribute("href")).toBe("/catalog/scb/iot/dispink-old");
     // …but with NO year label when the edge carries no effective year.
-    expect(document.querySelector(".graph-reason")).toBeNull();
+    expect(document.querySelector(".history-until")).toBeNull();
   });
 });

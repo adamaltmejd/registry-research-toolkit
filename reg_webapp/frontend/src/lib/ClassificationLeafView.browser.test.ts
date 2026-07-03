@@ -74,6 +74,51 @@ describe("ClassificationLeafView (#638 shell)", () => {
     await expect.element(page.getByText("Förgymnasial")).toBeVisible();
   });
 
+  it("renders the classification HistoryGraph when the graph fetch has editions", async () => {
+    vi.mocked(getBindingGraph).mockResolvedValue({
+      nodes: [
+        {
+          kind: "classification",
+          id: "sun1996",
+          fqid: "class/sun1996",
+          label: "SUN 1996",
+          group_key: "sun",
+          version_year: 1996,
+          is_current: false,
+        },
+        {
+          kind: "classification",
+          id: "sun2020",
+          fqid: "class/sun2020",
+          label: "SUN 2020",
+          group_key: "sun",
+          version_year: 2020,
+          is_current: true,
+        },
+      ],
+      edges: [
+        {
+          id: "sun1996-sun2020",
+          kind: "succession",
+          source: "sun1996",
+          target: "sun2020",
+          label: null,
+          effective_year: 2020,
+        },
+      ],
+      focus_id: "sun2020",
+    } as never);
+
+    await render(ClassificationLeafView, { node: node() });
+
+    await expect
+      .element(page.getByRole("heading", { name: "History" }))
+      .toBeVisible();
+    expect(
+      document.querySelector('a.name-link[href="/catalog/class/sun1996"]'),
+    ).not.toBeNull();
+  });
+
   it("omits the codes panel when the edition carries no codes", async () => {
     await render(ClassificationLeafView, { node: node({ codes: [] }) });
 

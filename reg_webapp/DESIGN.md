@@ -1228,7 +1228,7 @@ Per-kind mapping into the five sections:
   | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                         | shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
   | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project                | — (#906 adds the compact edition DAG)     | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                          |
   | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                  | `ClassificationCodesPanel` (`CodeList`)   | —                                                                                                              |
-  | relationships | `LineageDetails` (provenance/warnings)                                                                   | — (#906)                                  | — (members live in the picker)                                                                                 |
+  | relationships | `HistoryGraph` (succession/group context) + `LineageDetails` (provenance/warnings)                       | `HistoryGraph`                            | — (members live in the picker)                                                                                 |
   | docs          | `DocMentionsPanel`                                                                                       | —                                         | —                                                                                                              |
 
 **#670 — member identity and fetch ownership.** For a grouped variable,
@@ -1238,9 +1238,11 @@ of ⟨group⟩" context link directly under the header — both additive and gat
 resolved `/graph` fetch. The fetch itself is owned by `BindingLeafView`, which derives
 the qualifier (`qualifierFromFocus`) and group link (`groupLinkFromFocus`) from the
 graph focus node's `facets` / `group_label` — no separate `/dimensions` request. The
-same `/graph` fetch feeds `RepresentationPicker`'s graph/time-band mode; failure domain
-is unchanged — a graph error omits the header qualifier and falls the picker back to the
-compact list without affecting the rest of the leaf.
+same `/graph` fetch feeds the standalone `HistoryGraph` and, only when it is a lossless
+projection of the picker rows, `RepresentationPicker`'s graph/time-band mode; failure
+domain is unchanged — a graph error omits the header qualifier, omits the standalone
+graph, and falls the picker back to the compact list without affecting the rest of the
+leaf.
 
 ### The picker — slice axis × time axis
 
@@ -1255,8 +1257,9 @@ kind:
   unambiguous variable.
 
 - **Classification** — editions (`sun1996` → `sun2000` → …) are the slice, but there is
-  **deliberately no picker yet**. The old year-axis `HistoryGraph` is retired; #906 owns
-  the compact non-timeline edition DAG inside the picker surface.
+  **deliberately no picker yet**. The standalone `HistoryGraph` remains the current
+  rendered succession surface for classification leaves; #906 owns any future compact
+  non-timeline edition DAG inside the picker surface.
 
 - **Concept group** — the **column / representation picker** (`RepresentationPicker`,
   #678): one compact band per member variable, each listing that variable's delivery
@@ -1277,9 +1280,11 @@ kind:
   are invisible. Filtering is a client-side presentation lens: a hidden-but-selected row
   still commits, and the footer signals this. The filter logic mirrors the #819
   `ConceptGroupNavigator`: OR within a dimension, AND across. When the group's graph is
-  edge-bearing and small enough to draw cleanly, the same picker switches to graph /
-  time-band mode instead of the list; dense graphs and edge-less sets remain on the
-  compact list.
+  edge-bearing, small enough to draw cleanly, has no declared facet axes or other
+  filterable dimensions, and maps every graph cell one-to-one to the visible picker
+  rows, the same picker may switch to graph / time-band mode instead of the list; dense,
+  edge-less, faceted, folded, empty, or otherwise ambiguous sets remain on the compact
+  list.
 
   Two **succession-collapse** folds ship in #902, both client-side and purely
   presentational:
@@ -1307,11 +1312,14 @@ kind:
     `successionFold`) and requires no API change.
 
   The **graph/time-band render mode** (#904) consumes the same `RelationshipGraph`
-  payload and the same picker rows. It is enabled only when the graph has succession
-  edges and stays under conservative node/edge/cell limits; otherwise the compact list
-  is the authoritative picker. A variable leaf passes its full group graph, but only the
-  viewed variable's band is selectable; sibling members stay visible and muted. A group
-  page passes all member bands, so the graph cells remain the add/remove surface.
+  payload and the same picker rows. It is strictly additive: it is enabled only when the
+  graph has succession edges, stays under conservative node/edge/cell limits, every
+  picker band has graph coverage, every picker row is represented, every graph cell maps
+  to exactly one member column, and no #908 filter strip would be hidden. Otherwise the
+  compact list is the authoritative picker. A variable leaf still passes its graph so
+  `HistoryGraph` can render succession/group context, but the picker graph falls back as
+  soon as sibling/predecessor cells or no-column states cannot be represented without
+  loss.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section),
 but it does a different job per kind:
@@ -1382,16 +1390,18 @@ form when the start is unknown (#658).
   styling consistent across the three call sites; callers omit it entirely when there's
   nothing to demote.
 
-### Why the picker graph replaces the standalone history graph (#904)
+### Why the picker graph is additive to the standalone history graph (#904)
 
-`RepresentationPicker` graph mode renders variable and concept-group history over the
-same `RelationshipGraph` wire shape and the same picker row model. Variable nodes lay
-out as horizontal representation-run cells along the shared time axis; each cell maps
-back to a selectable picker row by variant + delivery column, including #902's folded
-rename rows. Succession edges draw on the left rail; `LineageDetails` carries the
-variable-only non-graph residue (`variable_state_lineage` provenance edges +
-`/lineage_warnings`). Classification succession is not a year-axis timeline anymore:
-#906 owns the compact edition DAG inside the picker surface.
+`RepresentationPicker` graph mode renders only the clean subset of variable and
+concept-group history where the `RelationshipGraph` wire shape can be projected onto the
+same picker row model without dropping rows, leaking non-member columns, or hiding #908
+filters. Variable nodes lay out as horizontal representation-run cells along the shared
+time axis; each cell maps back to a selectable picker row by variant + delivery column,
+including #902's folded rename rows when that mapping is one-to-one. Succession edges
+draw on the left rail; `LineageDetails` carries the variable-only non-graph residue
+(`variable_state_lineage` provenance edges + `/lineage_warnings`). The standalone
+`HistoryGraph` remains the authoritative rendered graph context for leaf history,
+including no-column variables and classification succession.
 
 ### Rejected alternatives + the viz-dependency trigger (#667 spike)
 

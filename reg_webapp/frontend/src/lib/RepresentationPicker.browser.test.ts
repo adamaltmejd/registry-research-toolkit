@@ -252,6 +252,12 @@ describe("RepresentationPicker graph mode (#904)", () => {
           registerPrefix: "scb/lisa",
           rows: [row({ column: "AliasCol" })],
         } satisfies PickerBand,
+        {
+          key: successorFqid,
+          name: "Successor",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "NextCol" })],
+        } satisfies PickerBand,
       ],
       graph: graph({
         nodes: [
@@ -296,7 +302,68 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("AliasCol");
   });
 
-  it("keeps sibling graph nodes visible but unavailable on a leaf-only picker", async () => {
+  it("falls back when one same_as graph node matches multiple picker bands", async () => {
+    const aliasFqid = "scb/lisa/alias";
+    const canonicalFqid = "scb/lisa/canonical";
+    const successorFqid = "scb/lisa/successor";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: canonicalFqid,
+          name: "Canonical",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "AliasCol" })],
+        } satisfies PickerBand,
+        {
+          key: aliasFqid,
+          name: "Alias leaf",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "AliasCol" })],
+        } satisfies PickerBand,
+        {
+          key: successorFqid,
+          name: "Successor",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "NextCol" })],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(canonicalFqid, {
+            label: "Canonical",
+            states: [graphState({ delivery_column_name: "AliasCol" })],
+            same_as: [{ fqid: aliasFqid, register: "lisa_old" }],
+          }),
+          graphNode(successorFqid, {
+            label: "Successor",
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NextCol",
+                valid_from: "2011-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(canonicalFqid, successorFqid)],
+        focus_id: canonicalFqid,
+      }),
+      ...PROPS,
+      focusKey: aliasFqid,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["AliasCol", "AliasCol", "NextCol"]);
+  });
+
+  it("falls back when a leaf graph includes sibling cells outside the picker band", async () => {
     const fixture = smallSuccessionFixture();
     render(RepresentationPicker, {
       bands: [fixture.bands[0]],
@@ -305,15 +372,13 @@ describe("RepresentationPicker graph mode (#904)", () => {
     });
 
     await vi.waitFor(() => {
-      if (!document.querySelector(".graph-picker")) {
-        throw new Error("graph picker not rendered");
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
       }
     });
-    expect(document.querySelectorAll(".graph-lane.muted")).toHaveLength(1);
-    expect(document.querySelectorAll(".graph-cell.unavailable")).toHaveLength(
-      1,
-    );
-    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["Acol"]);
+    expect(document.body.textContent).not.toContain("Bcol");
   });
 
   it("dims folded graph cells by the cell's era, not the folded row span", async () => {
@@ -340,6 +405,12 @@ describe("RepresentationPicker graph mode (#904)", () => {
               period: "1990 – 2020",
             }),
           ],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "OTHER" })],
         } satisfies PickerBand,
       ],
       graph: graph({
@@ -415,6 +486,12 @@ describe("RepresentationPicker graph mode (#904)", () => {
             }),
           ],
         } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "NEXT" })],
+        } satisfies PickerBand,
       ],
       graph: graph({
         nodes: [
@@ -479,6 +556,12 @@ describe("RepresentationPicker graph mode (#904)", () => {
             }),
           ],
         } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "OTHER" })],
+        } satisfies PickerBand,
       ],
       graph: graph({
         nodes: [
@@ -518,7 +601,7 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("NEW");
   });
 
-  it("shows the matched member column when a graph run also carries a non-member column", async () => {
+  it("falls back when a graph run also carries a non-member column", async () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
     const bFqid = "scb/lisa/b";
@@ -569,24 +652,12 @@ describe("RepresentationPicker graph mode (#904)", () => {
     });
 
     await vi.waitFor(() => {
-      if (!document.querySelector(".graph-picker")) {
-        throw new Error("graph picker not rendered");
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
       }
     });
-    await expect
-      .element(page.getByRole("checkbox", { name: /^MEMBER\b/ }))
-      .toBeVisible();
-    const memberCell = await vi.waitFor(() => {
-      const cell = [
-        ...document.querySelectorAll<HTMLElement>(".graph-cell"),
-      ].find((el) => el.textContent?.includes("MEMBER"));
-      if (!cell) {
-        throw new Error("MEMBER graph cell not rendered");
-      }
-      return cell;
-    });
-    expect(memberCell.getAttribute("title")).toBe("MEMBER · 2000 – 2010");
-    expect(memberCell.getAttribute("title")).not.toContain("HIDDEN");
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["MEMBER", "NEXT"]);
     expect(document.body.textContent).not.toContain("HIDDEN");
 
     await page.getByRole("checkbox", { name: /^MEMBER\b/ }).click();
@@ -615,6 +686,12 @@ describe("RepresentationPicker graph mode (#904)", () => {
               period: "1990 – 2020",
             }),
           ],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "OTHER" })],
         } satisfies PickerBand,
       ],
       graph: graph({
@@ -705,6 +782,163 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".col-list")).not.toBeNull();
     expect(visibleColumns()).toEqual(["MEMBER"]);
     expect(document.body.textContent).not.toContain("HIDDEN");
+  });
+
+  it("falls back when a picker row has no graph cell coverage", async () => {
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({ column: "MEMBER" }),
+            row({
+              column: "OMITTED",
+              selectable: false,
+              period: "not delivered",
+              wirePeriod: null,
+            }),
+          ],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "B",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "NEXT" })],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [graphState({ delivery_column_name: "MEMBER" })],
+          }),
+          graphNode(bFqid, {
+            states: [graphState({ delivery_column_name: "NEXT" })],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["MEMBER", "OMITTED", "NEXT"]);
+    await expect
+      .element(page.getByRole("checkbox", { name: /OMITTED/ }))
+      .toBeDisabled();
+    await expect
+      .element(page.getByText("not delivered", { exact: true }))
+      .toBeVisible();
+  });
+
+  it("falls back when #908 dimensions would be hidden by graph mode", async () => {
+    const band = multiAxisBand();
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      graph: graph({
+        nodes: [
+          graphNode(band.key, {
+            states: [
+              graphState({ delivery_column_name: "DIN1" }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "DIN2",
+              }),
+              graphState({
+                state_id: 3,
+                representation_run_id: 3,
+                delivery_column_name: "DIN3",
+              }),
+            ],
+          }),
+          graphNode("scb/iot/next", {
+            states: [
+              graphState({
+                state_id: 4,
+                representation_run_id: 4,
+                delivery_column_name: "NEXT",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(band.key, "scb/iot/next")],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await expect
+      .element(page.getByRole("group", { name: /Filter columns/ }))
+      .toBeVisible();
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["DIN1", "DIN2", "DIN3"]);
+  });
+
+  it("falls back when a declared #908 facet axis has only one value", async () => {
+    const aFqid = "scb/iot/dispink";
+    const bFqid = "scb/iot/next";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Disponibel inkomst",
+          registerPrefix: "scb/iot",
+          rows: [row({ column: "DIN1", valueSetLabel: "kr" })],
+          facetsByColumn: {
+            DIN1: [{ axis: "enhet", value: "ind", label: "Individ" }],
+          },
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "Next",
+          registerPrefix: "scb/iot",
+          rows: [row({ column: "NEXT" })],
+        } satisfies PickerBand,
+      ],
+      axes: [{ name: "enhet", label: "Enhet" }],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [graphState({ delivery_column_name: "DIN1" })],
+          }),
+          graphNode(bFqid, {
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEXT",
+                valid_from: "2011-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: null,
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns()).toEqual(["DIN1", "NEXT"]);
+    expect(document.body.textContent).toContain("Enhet");
+    expect(document.body.textContent).toContain("Individ");
   });
 
   it("falls back to the compact list when one graph run has several selectable columns", async () => {
