@@ -25,7 +25,7 @@ import { router } from "./router.svelte";
 //      `addFromCatalog` payloads; out-of-window rows dim; empty selection / no
 //      seed disables Add.
 //   2. the #670 member identity, now derived from the relationship-graph FOCUS node
-//      (#678) — the leaf's single `/graph` fetch feeds both the HistoryGraph
+//      (#678/#904) — the leaf's single `/graph` fetch feeds both the picker graph
 //      renderer AND the header qualifier + "member of ⟨group⟩" link.
 //
 // The leaf + sibling-panel GETs (graph / lineage warnings / parsed docs / the
@@ -170,7 +170,7 @@ beforeEach(() => {
       ),
     );
   });
-  // The graph fetch: an EMPTY graph by default (no nodes) → the HistoryGraph omits
+  // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
   // itself and the header derives no qualifier. Member-identity cases override it.
   vi.mocked(getBindingGraph).mockReset();
   vi.mocked(getBindingGraph).mockResolvedValue({
@@ -1627,7 +1627,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     });
 
     // The qualifier is the focus node's facet labels (scope to the identity row —
-    // the same facets also render inside the HistoryGraph cluster).
+    // the same facets also render inside the picker graph cluster when graph mode is on).
     await expect
       .element(page.getByText("Största · Individ · Grov · Standard").first())
       .toBeVisible();

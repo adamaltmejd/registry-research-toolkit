@@ -13,7 +13,7 @@ import {
   resolveEdges,
   type YearScale,
   yearScaleOf,
-} from "./history_graph";
+} from "./picker_graph";
 
 function state(over: Partial<GraphState> = {}): GraphState {
   return {
@@ -90,6 +90,7 @@ describe("cellsOf — representation-run grouping", () => {
     expect(cells).toHaveLength(1);
     expect(cells[0].label).toBe("1-siffrig");
     expect(cells[0].window).toBe("2010 – 2011");
+    expect(cells[0].columns).toEqual(["Col"]);
   });
 
   it("opens a NEW cell at each representation_run_id change (2 runs → 2 cells)", () => {

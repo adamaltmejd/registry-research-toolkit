@@ -1,10 +1,17 @@
 <script lang="ts">
-import type { GroupAxisModel, GroupFacetModel } from "./api";
+import type {
+  GroupAxisModel,
+  GroupFacetModel,
+  RelationshipGraph,
+  VariableGraphNode,
+} from "./api";
 import {
   type BandIdentity,
   type BandLabel,
+  catalogHref,
   clusterBands,
   encodeCodesParam,
+  facetLabelJoin,
   leafSlug,
   type PickerDimension,
   type PickerRepresentation,
@@ -15,6 +22,21 @@ import {
   rowFacet,
   yearOf,
 } from "./catalog";
+import {
+  axisTicks,
+  CELL_MIN_W,
+  cellsOf,
+  clustersOf,
+  type NodeCluster,
+  PX_PER_YEAR,
+  type RenderNode,
+  type ResolvedEdge,
+  type RunCell,
+  resolveEdges,
+  type VariableLane,
+  type YearScale,
+  yearScaleOf,
+} from "./picker_graph";
 import type { StagedPeriodChange } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import {
@@ -131,6 +153,8 @@ let {
   committedRows = new Map<string, PickerCommittedRow>(),
   activePeriod = null,
   focusKey = null,
+  graph = null,
+  vintageYear,
   onapply,
   onstagechange,
 }: {
@@ -162,6 +186,11 @@ let {
    * renders with that member highlighted, restoring the focus affordance. Null (the
    * leaf, or no hint) marks nothing. */
   focusKey?: string | null;
+  /** Optional relationship graph for the graph/time-band picker mode (#904). When
+   * absent, too large, or edge-less, the picker renders the compact list fallback. */
+  graph?: RelationshipGraph | null;
+  /** Catalog vintage ceiling for open-ended graph cells. */
+  vintageYear?: number;
   /** Commit the staged diff. The parent maps add rows to final `StagedAdd` payloads
    * and calls `projectStore.applyStagedDiff` once. Return false when an async parent
    * guard rejects the apply so local staging remains visible. */
@@ -633,6 +662,262 @@ const view = $derived(
   })),
 );
 
+// ── Graph/time-band mode (#904) ──────────────────────────────────────────────
+// The picker has two render modes:
+//   - graph mode for small edge-bearing variable graphs, where succession context is
+//     load-bearing and the cells remain selectable;
+//   - the existing compact list for large, edge-less, or infeasible graphs.
+// Keep this threshold deliberately conservative: the known dense `disponibel-inkomst`
+// group (~53 members) must fall back to the list.
+const GRAPH_MAX_NODES = 18;
+const GRAPH_MAX_EDGES = 24;
+const GRAPH_MAX_CELLS = 48;
+const GRAPH_GUTTER_W = 188;
+const GRAPH_TRACK_MIN = 360;
+const GRAPH_TRACK_PAD = 14;
+const GRAPH_LANE_BASE_H = 58;
+const GRAPH_ROW_H = 46;
+const GRAPH_CELL_H = 40;
+
+function variableGraphNodes(g: RelationshipGraph): VariableGraphNode[] {
+  return g.nodes.filter((n): n is VariableGraphNode => n.kind === "variable");
+}
+
+function graphHasSelectableNode(g: RelationshipGraph): boolean {
+  const keys = new Set(bands.map((b) => b.key));
+  return variableGraphNodes(g).some((n) => n.fqid != null && keys.has(n.fqid));
+}
+
+function graphCellsAreUnambiguous(g: RelationshipGraph): boolean {
+  for (const node of variableGraphNodes(g)) {
+    const band = graphBandForNode(node);
+    if (!band) {
+      continue;
+    }
+    for (const cell of cellsOf(node)) {
+      const matches = band.rows.filter((candidate) =>
+        rowMatchesCell(candidate, cell),
+      );
+      if (matches.length > 1) {
+        // Same-run alias multiplexing (for example monthly-family columns sharing one
+        // state/run) is real selectable surface, but not representable as one graph
+        // checkbox. Let the list render every row instead of hiding choices.
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function graphFitsPicker(g: RelationshipGraph): boolean {
+  const variableNodes = variableGraphNodes(g);
+  const cellCount = variableNodes.reduce(
+    (n, node) => n + cellsOf(node).length,
+    0,
+  );
+  const resolvedEdgeCount = resolveEdges(g).length;
+  return (
+    resolvedEdgeCount > 0 &&
+    g.nodes.length === variableNodes.length &&
+    g.nodes.length <= GRAPH_MAX_NODES &&
+    g.edges.length <= GRAPH_MAX_EDGES &&
+    cellCount <= GRAPH_MAX_CELLS &&
+    graphHasSelectableNode(g) &&
+    graphCellsAreUnambiguous(g)
+  );
+}
+
+const useGraphMode = $derived(graph != null && graphFitsPicker(graph));
+const graphScale = $derived<YearScale | null>(
+  useGraphMode && graph ? yearScaleOf(graph, vintageYear) : null,
+);
+const graphTrackInnerW = $derived(
+  graphScale
+    ? Math.max(
+        GRAPH_TRACK_MIN,
+        (graphScale.maxYear - graphScale.minYear) * PX_PER_YEAR,
+      )
+    : GRAPH_TRACK_MIN,
+);
+const graphTrackW = $derived(graphTrackInnerW + GRAPH_TRACK_PAD * 2);
+const graphTicks = $derived(graphScale ? axisTicks(graphScale) : []);
+
+function graphX(year: number): number {
+  if (!graphScale || !Number.isFinite(year)) {
+    return GRAPH_TRACK_PAD;
+  }
+  const span = graphScale.maxYear - graphScale.minYear || 1;
+  return (
+    GRAPH_TRACK_PAD + ((year - graphScale.minYear) / span) * graphTrackInnerW
+  );
+}
+
+interface GraphLaneBox {
+  rn: RenderNode;
+  top: number;
+  height: number;
+  center: number;
+}
+
+interface GraphRenderCluster {
+  cluster: NodeCluster;
+  edges: ResolvedEdge[];
+  lanes: GraphLaneBox[];
+  byId: Map<string, GraphLaneBox>;
+  height: number;
+}
+
+function graphLaneHeight(rn: RenderNode): number {
+  if (rn.kind === "variable" && rn.rowCount > 1) {
+    return GRAPH_LANE_BASE_H + (rn.rowCount - 1) * GRAPH_ROW_H;
+  }
+  return GRAPH_LANE_BASE_H;
+}
+
+const graphClusters = $derived.by((): GraphRenderCluster[] => {
+  if (!useGraphMode || !graph) {
+    return [];
+  }
+  const clusters = clustersOf(graph, graphScale);
+  const out = clusters.map((cluster) => {
+    let top = 0;
+    const lanes = cluster.nodes.map((rn) => {
+      const height = graphLaneHeight(rn);
+      const box = { rn, top, height, center: top + height / 2 };
+      top += height;
+      return box;
+    });
+    return {
+      cluster,
+      edges: [] as ResolvedEdge[],
+      lanes,
+      byId: new Map(lanes.map((l) => [l.rn.node.id, l])),
+      height: top,
+    };
+  });
+  const clusterOfNode = new Map<string, number>();
+  out.forEach((rc, i) => {
+    for (const rn of rc.cluster.nodes) {
+      clusterOfNode.set(rn.node.id, i);
+    }
+  });
+  for (const edge of resolveEdges(graph)) {
+    const source = clusterOfNode.get(edge.source.id);
+    const target = clusterOfNode.get(edge.target.id);
+    if (source !== undefined && source === target) {
+      out[source].edges.push(edge);
+    }
+  }
+  return out;
+});
+
+function graphCellTop(
+  laneHeight: number,
+  row: number,
+  rowCount: number,
+): number {
+  if (rowCount <= 1) {
+    return (laneHeight - GRAPH_CELL_H) / 2;
+  }
+  const inset = (GRAPH_LANE_BASE_H - GRAPH_CELL_H) / 2;
+  return inset + row * GRAPH_ROW_H;
+}
+
+function graphBandForNode(node: VariableGraphNode): PickerBand | null {
+  if (node.fqid == null) {
+    return null;
+  }
+  return bands.find((b) => b.key === node.fqid) ?? null;
+}
+
+function rowMatchesCell(row: PickerRepresentation, cell: RunCell): boolean {
+  if (row.variant !== cell.variant) {
+    return false;
+  }
+  const columns = new Set(cell.columns);
+  return (
+    columns.has(row.column) ||
+    row.renamedColumns.some((col) => columns.has(col))
+  );
+}
+
+function graphCellMatch(
+  lane: VariableLane,
+  cell: RunCell,
+): { band: PickerBand; row: PickerRepresentation } | null {
+  const band = graphBandForNode(lane.node);
+  if (!band) {
+    return null;
+  }
+  const row = band.rows.find((candidate) => rowMatchesCell(candidate, cell));
+  return row ? { band, row } : null;
+}
+
+function graphCellColumn(cell: RunCell, row: PickerRepresentation): string {
+  return cell.columns[0] ?? row.column;
+}
+
+function graphRenameHint(cell: RunCell, row: PickerRepresentation): string[] {
+  return graphCellColumn(cell, row) === row.column ? row.renamedColumns : [];
+}
+
+function graphNodeFocused(rn: RenderNode): boolean {
+  return (
+    rn.node.id === graph?.focus_id ||
+    (focusKey != null &&
+      rn.node.kind === "variable" &&
+      rn.node.fqid === focusKey)
+  );
+}
+
+function graphNodeMuted(rn: RenderNode): boolean {
+  return rn.kind === "variable" && graphBandForNode(rn.node) == null;
+}
+
+function graphNodeLabel(rn: RenderNode): string {
+  if (rn.kind !== "variable") {
+    return rn.node.label;
+  }
+  if (rn.node.facets.length > 0) {
+    return facetLabelJoin(rn.node.facets);
+  }
+  if (rn.node.group_label != null && rn.node.fqid) {
+    return leafSlug(rn.node.fqid);
+  }
+  return rn.node.label;
+}
+
+function graphNodeHref(rn: RenderNode): string | null {
+  if (graphNodeFocused(rn) || rn.node.fqid == null) {
+    return null;
+  }
+  if (rn.kind === "variable") {
+    return graphBandForNode(rn.node)?.href ?? catalogHref(rn.node.fqid);
+  }
+  return catalogHref(rn.node.fqid);
+}
+
+function graphEdgeLabel(edge: ResolvedEdge): string | null {
+  if (edge.edge.effective_year != null) {
+    return edge.edge.label
+      ? `${edge.edge.label} → ${edge.edge.effective_year}`
+      : `→ ${edge.edge.effective_year}`;
+  }
+  return edge.edge.label;
+}
+
+function graphLaneA11y(rn: RenderNode): string {
+  if (rn.kind !== "variable") {
+    return rn.node.label;
+  }
+  if (rn.cells.length === 0) {
+    return "no delivered state rows";
+  }
+  return rn.cells
+    .map((cell) => `${cell.label}, ${cell.window}, ${cell.variant}`)
+    .join("; ");
+}
+
 /** A row's facet DIMENSION markers (#908): one `{ axis, value }` per declared axis
  * the row's column carries a facet on (axis = the curator label, value = the facet
  * label), in `axes` order. Generalizes the quiet single facet line into an
@@ -915,34 +1200,277 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   </fieldset>
 {/snippet}
 
+{#snippet graphPicker()}
+  <div class="graph-picker" role="group" aria-label="Graph column picker">
+    {#each graphClusters as { cluster, edges: cEdges, lanes, byId, height: stackH }, ci (cluster.groupKey ?? `u${ci}`)}
+      <div class="graph-cluster">
+        {#if cluster.label}
+          <h3 class="graph-cluster-heading">{cluster.label}</h3>
+        {/if}
+
+        <div
+          class="graph-timeline"
+          role="group"
+          aria-label={cluster.label
+            ? `Graph picker for ${cluster.label}: ${cluster.nodes.length} variables`
+            : `Graph picker: ${cluster.nodes.length} variables`}
+        >
+          <div
+            class="graph-grid"
+            style={`--graph-track-w:${graphTrackW}px; --graph-gutter-w:${GRAPH_GUTTER_W}px;`}
+          >
+            {#if graphScale}
+              <div class="graph-axis-row" aria-hidden="true">
+                <div class="graph-axis-gutter"></div>
+                <div class="graph-axis-track">
+                  {#each graphTicks as tick (tick.year)}
+                    <span class="graph-tick" style={`left:${graphX(tick.year)}px`}
+                      >{tick.label}</span
+                    >
+                  {/each}
+                </div>
+              </div>
+            {/if}
+
+            <div class="graph-lanes" style={`height:${stackH}px`}>
+              {#if graphScale}
+                <div class="graph-gridlines" aria-hidden="true">
+                  {#each graphTicks as tick (tick.year)}
+                    <span
+                      class="graph-gridline"
+                      style={`left:${graphX(tick.year)}px`}
+                    ></span>
+                  {/each}
+                </div>
+              {/if}
+
+              <svg
+                class="graph-connectors"
+                width={graphTrackW}
+                height={stackH}
+                aria-hidden="true"
+              >
+                <defs>
+                  <marker
+                    id={`picker-arrow-${ci}`}
+                    viewBox="0 0 8 8"
+                    refX="6"
+                    refY="4"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,4 L0,8 z" class="graph-arrow-head" />
+                  </marker>
+                </defs>
+                {#each cEdges as edge (edge.edge.id)}
+                  {@const source = byId.get(edge.source.id)}
+                  {@const target = byId.get(edge.target.id)}
+                  {#if source && target}
+                    <line
+                      x1={GRAPH_GUTTER_W - 10}
+                      y1={source.center}
+                      x2={GRAPH_GUTTER_W - 10}
+                      y2={target.center}
+                      class="graph-edge"
+                      marker-end={`url(#picker-arrow-${ci})`}
+                    />
+                  {/if}
+                {/each}
+              </svg>
+
+              {#each cEdges as edge (edge.edge.id)}
+                {@const source = byId.get(edge.source.id)}
+                {@const target = byId.get(edge.target.id)}
+                {@const label = graphEdgeLabel(edge)}
+                {#if label && source && target}
+                  <div
+                    class="graph-reason"
+                    style={`top:${(source.center + target.center) / 2}px; left:${GRAPH_GUTTER_W + 6}px`}
+                    title={label}
+                    aria-hidden="true"
+                  >
+                    {label}
+                  </div>
+                {/if}
+              {/each}
+
+              {#each lanes as { rn, top, height } (rn.node.id)}
+                {@const focused = graphNodeFocused(rn)}
+                {@const muted = graphNodeMuted(rn)}
+                {@const href = graphNodeHref(rn)}
+                <div
+                  class="graph-lane"
+                  class:focused
+                  class:muted
+                  style={`top:${top}px; height:${height}px`}
+                >
+                  <div class="graph-gutter">
+                    <span class="graph-marker" class:focused></span>
+                    <span class="graph-gutter-text">
+                      {#if href}
+                        <a class="graph-name" {href} title={rn.node.label}
+                          >{graphNodeLabel(rn)}</a
+                        >
+                      {:else}
+                        <span class="graph-name" title={rn.node.label}
+                          >{graphNodeLabel(rn)}</span
+                        >
+                      {/if}
+                      {#if rn.kind === "variable" && rn.node.fqid}
+                        <span class="graph-slug">{leafSlug(rn.node.fqid)}</span>
+                      {/if}
+                      {#if focused}
+                        <span class="graph-viewed">viewed</span>
+                      {/if}
+                      <span class="visually-hidden">{graphLaneA11y(rn)}</span>
+                    </span>
+                    {#if rn.kind === "variable" && rn.node.same_as.length > 0}
+                      <span class="graph-same-as">
+                        <span class="graph-sa-prefix">also in</span>
+                        {#each rn.node.same_as as sa (sa.fqid)}
+                          <a class="graph-sa-chip" href={catalogHref(sa.fqid)}
+                            >{sa.register}</a
+                          >
+                        {/each}
+                      </span>
+                    {/if}
+                  </div>
+
+                  <div class="graph-track" style={`width:${graphTrackW}px`}>
+                    {#if rn.kind === "variable"}
+                      {#each rn.cells as cell, i (cell.runId)}
+                        {@const match = graphCellMatch(rn, cell)}
+                        {@const left = graphScale
+                          ? graphX(cell.fromYear)
+                          : GRAPH_TRACK_PAD + i * (CELL_MIN_W + 8)}
+                        {@const width = graphScale
+                          ? Math.max(
+                              CELL_MIN_W,
+                              graphX(cell.toYear) - graphX(cell.fromYear),
+                            )
+                          : CELL_MIN_W}
+                        {@const cellTopValue = graphCellTop(
+                          height,
+                          cell.row,
+                          rn.rowCount,
+                        )}
+                        {#if match}
+                          {@const band = match.band}
+                          {@const row = match.row}
+                          {@const checked = rowChecked(band, row)}
+                          {@const stage = rowStage(band, row)}
+                          {@const inWindow = representationInWindow(row, window)}
+                          <label
+                            class="graph-cell"
+                            class:selected={checked}
+                            class:committed={stage === "committed"}
+                            class:staged-add={stage === "staged-add"}
+                            class:staged-remove={stage === "staged-remove"}
+                            class:dimmed={!inWindow}
+                            class:open-start={cell.openStart}
+                            class:open-end={cell.openEnd}
+                            style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
+                            title={`${cell.label} · ${cell.window}`}
+                          >
+                            <input
+                              type="checkbox"
+                              class="cbox"
+                              disabled={applying || !rowCanToggle(band, row)}
+                              checked={checked}
+                              onchange={() => toggleRow(band, row)}
+                            />
+                            <span class="graph-cell-main">
+                              {@render colChip(graphCellColumn(cell, row))}
+                              {#if row.valueSetLabel}
+                                <span class="graph-cell-sub">{row.valueSetLabel}</span>
+                              {/if}
+                              {@render renameHint(graphRenameHint(cell, row))}
+                            </span>
+                            {#if stage !== "none"}
+                              {@render stageTag(stage)}
+                            {/if}
+                            {#if row.codingsVary}
+                              {@render codingsVaryNudge(band, row)}
+                            {/if}
+                            {#if inWindow}
+                              {@render lateWarn(row)}
+                            {/if}
+                            <span class="graph-cell-window">{cell.window}</span>
+                          </label>
+                        {:else}
+                          <div
+                            class="graph-cell unavailable"
+                            class:open-start={cell.openStart}
+                            class:open-end={cell.openEnd}
+                            style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
+                            title={`${cell.label} · ${cell.window}`}
+                          >
+                            <span class="graph-cell-main">
+                              <span class="graph-unavailable-label">{cell.label}</span>
+                            </span>
+                            <span class="graph-cell-window">{cell.window}</span>
+                          </div>
+                        {/if}
+                      {/each}
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+            </div>
+          </div>
+        </div>
+
+        {#if cEdges.length > 0}
+          <ul class="graph-fallback">
+            {#each cEdges as edge (edge.edge.id)}
+              {@const source = byId.get(edge.source.id)?.rn}
+              {@const target = byId.get(edge.target.id)?.rn}
+              <li>
+                {source ? graphNodeLabel(source) : edge.source.label}
+                →
+                {target ? graphNodeLabel(target) : edge.target.label}
+                {#if graphEdgeLabel(edge)}({graphEdgeLabel(edge)}){/if}
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
+    {/each}
+  </div>
+{/snippet}
+
 <div class="rep-picker">
-  {#if dimensions.length > 0}
-    <!-- The per-dimension filters sit ABOVE the column list (#908): narrow a large
+  {#if useGraphMode}
+    {@render graphPicker()}
+  {:else}
+    {#if dimensions.length > 0}
+      <!-- The per-dimension filters sit ABOVE the column list (#908): narrow a large
          multi-axis group to one axis value / population / coding. Each dimension is
          shown only when it discriminates (≥2 distinct values), so a single-axis-value
          group surfaces no control. -->
-    <div class="dim-filters" role="group" aria-label="Filter columns by dimension">
-      {#each dimensions as dim (dim.key)}
-        {@render dimFilter(dim)}
-      {/each}
-      <div class="dim-filters-status">
-        <span class="showing" aria-live="polite"
-          >Showing {visibleRows} of {totalRows} columns</span
-        >
-        {#if anyFilterActive}
-          <button type="button" class="clear-filters" onclick={clearFilters}>
-            Clear filters
-          </button>
-        {/if}
+      <div class="dim-filters" role="group" aria-label="Filter columns by dimension">
+        {#each dimensions as dim (dim.key)}
+          {@render dimFilter(dim)}
+        {/each}
+        <div class="dim-filters-status">
+          <span class="showing" aria-live="polite"
+            >Showing {visibleRows} of {totalRows} columns</span
+          >
+          {#if anyFilterActive}
+            <button type="button" class="clear-filters" onclick={clearFilters}>
+              Clear filters
+            </button>
+          {/if}
+        </div>
       </div>
-    </div>
-  {/if}
+    {/if}
 
-  {#if anyFilterActive && filteredBands.length === 0}
-    <p class="no-match" role="status">No columns match the active filters.</p>
-  {/if}
+    {#if anyFilterActive && filteredBands.length === 0}
+      <p class="no-match" role="status">No columns match the active filters.</p>
+    {/if}
 
-  <ul class="col-list integrated-list">
+    <ul class="col-list integrated-list">
     {#if bands.length > 1 && allKeys.length > 1}
       <!-- Global select-all: grab every visible column of the concept in one move.
            Rendered as the first integrated list row so hover, click-anywhere, and the
@@ -1329,7 +1857,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
         {/if}
       {/each}
     {/each}
-  </ul>
+    </ul>
+  {/if}
 
   <div class="picker-footer">
     <span class="count" role="status">{footerLabel}</span>
@@ -1365,6 +1894,350 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     border-radius: 6px;
     background: var(--surface);
     overflow: hidden;
+  }
+
+  /* ── Graph/time-band mode (#904) ───────────────────────────────────────────
+     Small edge-bearing graphs render as the picker itself: variable lanes in the
+     sticky gutter, selectable representation cells on the year axis, and succession
+     edges on the rail. Large/no-edge graphs fall back to the compact list above. */
+  .graph-picker {
+    display: flex;
+    flex-direction: column;
+  }
+  .graph-cluster + .graph-cluster {
+    border-top: 1px solid var(--border);
+  }
+  .graph-cluster-heading {
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-sunken);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .graph-timeline {
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: var(--surface);
+  }
+  .graph-grid {
+    min-width: 100%;
+    width: max-content;
+  }
+  .graph-axis-row {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    height: 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .graph-axis-gutter {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    flex: 0 0 var(--graph-gutter-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+  }
+  .graph-axis-track {
+    position: relative;
+    flex: 0 0 var(--graph-track-w);
+    width: var(--graph-track-w);
+  }
+  .graph-tick {
+    position: absolute;
+    top: 7px;
+    transform: translateX(-50%);
+    font-size: var(--text-micro);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .graph-lanes {
+    position: relative;
+  }
+  .graph-gridlines {
+    position: absolute;
+    inset: 0;
+    left: var(--graph-gutter-w);
+    pointer-events: none;
+  }
+  .graph-gridline {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: color-mix(in srgb, var(--border) 35%, transparent);
+  }
+  .graph-connectors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .graph-edge {
+    stroke: var(--viz-edge-succession);
+    stroke-width: 1.5;
+  }
+  .graph-arrow-head {
+    fill: var(--viz-edge-succession);
+  }
+  .graph-reason {
+    position: absolute;
+    z-index: 2;
+    transform: translateY(-50%);
+    max-width: 220px;
+    padding: 0 5px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--surface) 90%, transparent);
+    color: var(--text-muted);
+    font-size: var(--text-micro);
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .graph-lane {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: stretch;
+  }
+  .graph-lane.focused {
+    background: var(--accent-bg);
+  }
+  .graph-lane.muted {
+    opacity: 0.45;
+  }
+  .graph-gutter {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    flex: 0 0 var(--graph-gutter-w);
+    width: var(--graph-gutter-w);
+    max-width: var(--graph-gutter-w);
+    min-width: 0;
+    box-sizing: border-box;
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+  }
+  .graph-lane.focused .graph-gutter {
+    background: var(--accent-bg);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .graph-marker {
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    z-index: 2;
+    width: 9px;
+    height: 9px;
+    border: 1.5px solid var(--text-muted);
+    border-radius: 50%;
+    background: var(--surface);
+    transform: translateY(-50%);
+  }
+  .graph-marker.focused {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .graph-gutter-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .graph-name {
+    color: var(--text);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  a.graph-name:hover {
+    color: var(--accent);
+  }
+  a.graph-name:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
+  .graph-slug {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .graph-viewed {
+    align-self: flex-start;
+    margin-top: 1px;
+    padding: 0 4px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent-ink);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .graph-same-as {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 3px;
+    margin-top: 2px;
+  }
+  .graph-sa-prefix {
+    color: var(--text-muted);
+    font-size: 0.62rem;
+  }
+  .graph-sa-chip {
+    padding: 0 4px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-bg);
+    color: var(--accent-ink);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+  .graph-track {
+    position: relative;
+    flex: 0 0 auto;
+  }
+  .graph-cell {
+    position: absolute;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    cursor: pointer;
+  }
+  .graph-cell:hover {
+    z-index: 4;
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+  .graph-cell.selected {
+    background: var(--accent-bg);
+    border-left-color: var(--accent);
+  }
+  .graph-cell.committed:not(.selected) {
+    background: var(--surface);
+  }
+  .graph-cell.staged-add {
+    background: var(--ok-bg);
+    border-left-color: var(--ok);
+  }
+  .graph-cell.staged-remove {
+    background: var(--warn-bg);
+    border-left-color: var(--warn);
+  }
+  .graph-cell.staged-remove .graph-cell-main,
+  .graph-cell.staged-remove .graph-cell-window,
+  .graph-cell.staged-remove .col-chip {
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--warn);
+  }
+  .graph-cell.dimmed,
+  .graph-cell.unavailable {
+    opacity: 0.45;
+  }
+  .graph-cell.dimmed:hover {
+    opacity: 0.7;
+  }
+  .graph-cell.unavailable {
+    cursor: default;
+    color: var(--text-muted);
+  }
+  .graph-cell.open-end {
+    border-right-color: transparent;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 calc(100% - 28px),
+      transparent
+    );
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+  .graph-cell.open-start {
+    border-left-color: transparent;
+    -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 22px), transparent);
+    mask-image: linear-gradient(to left, #000 calc(100% - 22px), transparent);
+  }
+  .graph-cell.open-start.open-end {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent),
+      linear-gradient(to left, #000 calc(100% - 22px), transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent),
+      linear-gradient(to left, #000 calc(100% - 22px), transparent);
+    mask-composite: intersect;
+  }
+  .graph-cell-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .graph-cell-sub,
+  .graph-cell-window,
+  .graph-unavailable-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .graph-cell-sub,
+  .graph-cell-window {
+    color: var(--text-muted);
+    font-size: var(--text-micro);
+    font-variant-numeric: tabular-nums;
+  }
+  .graph-unavailable-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .graph-cell :global(.tag),
+  .graph-cell .codings-vary,
+  .graph-cell .late-warn {
+    flex: 0 0 auto;
+  }
+  .graph-fallback {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   /* ── Per-dimension filters (#908) ───────────────────────────────────────────

@@ -1,7 +1,8 @@
 /**
  * Pure projection of the relationship-graph contract (#761/#792) into the shapes
- * the `HistoryGraph.svelte` renderer (#678) draws — no runes, unit-tested in
- * `history_graph.test.ts`. The renderer stays presentational over these.
+ * the `RepresentationPicker.svelte` graph mode (#904) draws — no runes,
+ * unit-tested in `picker_graph.test.ts`. The renderer stays presentational over
+ * these.
  *
  * Two node kinds, two substrates:
  *  - a VARIABLE node → a time axis of CELLS, one per `representation_run_id`
@@ -33,8 +34,8 @@ import {
 // ── Track geometry (shared with the renderer) ───────────────────────────────
 // The single source for the year→px scale density and a cell's minimum rendered
 // width. Both the pure layout (sub-row packing must respect the rendered width,
-// not raw year span — #794 P3) and `HistoryGraph.svelte` (positioning cells) read
-// these, so they live here and the component imports them.
+// not raw year span — #794 P3) and `RepresentationPicker.svelte` (positioning cells)
+// read these, so they live here and the component imports them.
 
 /** Horizontal density of the year scale (px per year). */
 export const PX_PER_YEAR = 19;
@@ -63,6 +64,10 @@ export interface RunCell {
   runId: number;
   label: string;
   variant: string;
+  /** Delivery columns covered by this cell's run. A sequential rename cell can cover
+   * an older column while the picker row that toggles it is the folded latest-era
+   * row, so graph mode uses this to map cells back to picker rows. */
+  columns: string[];
   window: string;
   fromYear: number;
   toYear: number;
@@ -138,7 +143,12 @@ function cellLabel(rep: GraphState): string {
  * graph-wide scale is known.) */
 export function cellsOf(node: VariableGraphNode): RunCell[] {
   const cells: RunCell[] = [];
-  let open: { rep: GraphState; from: string; to: string } | null = null;
+  let open: {
+    rep: GraphState;
+    from: string;
+    to: string;
+    columns: Set<string>;
+  } | null = null;
   const flush = () => {
     if (open) {
       const openStart = open.from === YEARLESS_VALID_FROM;
@@ -147,6 +157,7 @@ export function cellsOf(node: VariableGraphNode): RunCell[] {
         runId: open.rep.representation_run_id,
         label: cellLabel(open.rep),
         variant: open.rep.variant,
+        columns: [...open.columns],
         window: formatWindow(open.from, open.to),
         // A bound's year, or NaN for the open/unknown sentinels (resolved against
         // the scale later). yearOf returns null for an edge/blank bound — treat
@@ -173,9 +184,19 @@ export function cellsOf(node: VariableGraphNode): RunCell[] {
       if (to > open.to) {
         open.to = to;
       }
+      if (s.delivery_column_name) {
+        open.columns.add(s.delivery_column_name);
+      }
     } else {
       flush();
-      open = { rep: s, from, to };
+      open = {
+        rep: s,
+        from,
+        to,
+        columns: new Set(
+          s.delivery_column_name ? [s.delivery_column_name] : [],
+        ),
+      };
     }
   }
   flush();

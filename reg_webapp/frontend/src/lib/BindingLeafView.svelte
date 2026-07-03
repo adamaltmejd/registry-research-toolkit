@@ -27,7 +27,6 @@ import {
   rowAddPeriod,
 } from "./catalog";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
-import HistoryGraph from "./HistoryGraph.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
@@ -242,17 +241,17 @@ const valueSetScope = $derived.by(() => {
   ];
 });
 
-// ── The relationship-graph fetch (#678) ─────────────────────────────────────
-// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the HistoryGraph
-// renderer AND the #670 header identity (qualifier + group link), derived from
-// the graph FOCUS node — no separate `/dimensions` request. Read `fqidPath`
+// ── The relationship-graph fetch (#678/#904) ────────────────────────────────
+// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode
+// AND the #670 header identity (qualifier + group link), derived from the graph
+// FOCUS node — no separate `/dimensions` request. Read `fqidPath`
 // synchronously inside `fn` so the resource refetches when the leaf changes (same
 // pattern as `periodResource`).
 //
 // FAILURE-DOMAIN isolation: this resource is independent of `node`, so a graph
-// error / empty / timeout NEVER blanks the leaf — the HistoryGraph section omits
-// the graph, and the header just omits the qualifier/link (both gate on a
-// RESOLVED, non-empty graph; additive).
+// error / empty / timeout NEVER blanks the leaf — the picker falls back to the list,
+// and the header just omits the qualifier/link (both gate on a RESOLVED, non-empty
+// graph; additive).
 const graphResource = asyncResource(() => getBindingGraph(fqidPath));
 const graph = $derived(graphResource.data);
 // The graph has RESOLVED (a settled fetch with a payload) — the gate the header
@@ -607,6 +606,8 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       canAdd={seedReady}
       {committedRows}
       activePeriod={activePickerPeriod}
+      graph={graphReady ? graph : null}
+      {vintageYear}
       onapply={applyStaged}
       onstagechange={(hasDiff) => {
         if (hasDiff) {
@@ -717,21 +718,10 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 {/snippet}
 
 {#snippet relationships()}
-  <!-- #678: the unified history-graph view over the relationship-graph contract
-       (#761/#792) — succession / groups (Fork B) / same_as / focus
-       highlight, drawn as SVG. Omits itself on an empty graph (`nodes: []`) or
-       while the fetch is unresolved/errored (its own failure domain — never
-       blanks the leaf). It REPLACES the retired Dimensions + Lineage panels. -->
-  {#if graphReady && graph}
-    <!-- vintageYear is the open-ended ceiling for the shared time axis: an
-         open-ended cell ("still delivered") extends to the catalog vintage rather
-         than ballooning the scale (#678 rework). -->
-    <HistoryGraph {graph} {vintageYear} />
-  {/if}
-
   <!-- The two NON-graph affordances the #761 payload doesn't carry — provenance
        (lineage edges + source register) and the fetched lineage warnings — live
-       here on the binding leaf (succession is a graph edge now). -->
+       here on the binding leaf. Succession / representation history is rendered
+       by the picker graph mode when the graph is small enough (#904). -->
   <LineageDetails {fqidPath} {node} />
 {/snippet}
 

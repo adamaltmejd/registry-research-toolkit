@@ -8,7 +8,7 @@ import LineageDetails from "./LineageDetails.svelte";
 // LineageDetails (#678) re-homes the two NON-graph affordances off the retired
 // LineagePanels: PROVENANCE (the embedded `lineage[]` edges + the variable's
 // source register) and the FETCHED lineage warnings. Succession is NOT
-// here — it's a graph edge now (HistoryGraph). These port the relevant cases:
+// here — it's a graph edge now (the picker graph mode). These port the relevant cases:
 // omit-when-empty, the provenance list, the source-register line, the warnings
 // loading/error/empty/data states, and failure isolation.
 

@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { GroupAxisModel } from "./api";
+import type {
+  GraphEdge,
+  GraphState,
+  GroupAxisModel,
+  RelationshipGraph,
+  VariableGraphNode,
+} from "./api";
 import type { PickerRepresentation } from "./catalog";
 import RepresentationPicker, {
   type PickerBand,
@@ -29,6 +35,57 @@ function row(over: Partial<PickerRepresentation>): PickerRepresentation {
     codingsVary: false,
     renamedColumns: [],
     ...over,
+  };
+}
+
+function graphState(over: Partial<GraphState> = {}): GraphState {
+  return {
+    state_id: 1,
+    variant: "v",
+    variant_label: null,
+    representation_run_id: 1,
+    valid_from: "2000-01-01",
+    valid_to: "2010-12-31",
+    value_set_id: null,
+    value_set_version_label: "",
+    classification_slug: null,
+    delivery_column_name: "Col",
+    ...over,
+  };
+}
+
+function graphNode(
+  fqid: string,
+  over: Partial<VariableGraphNode> = {},
+): VariableGraphNode {
+  return {
+    kind: "variable",
+    id: fqid,
+    fqid,
+    label: fqid.split("/").at(-1) ?? fqid,
+    group_key: "group",
+    group_label: "Concept group",
+    definition: null,
+    description: null,
+    operational_definition: null,
+    facets: [],
+    states: [graphState({ delivery_column_name: "Col" })],
+    same_as: [],
+    ...over,
+  };
+}
+
+function graph(over: Partial<RelationshipGraph> = {}): RelationshipGraph {
+  return { nodes: [], edges: [], focus_id: null, ...over };
+}
+
+function edge(source: string, target: string): GraphEdge {
+  return {
+    id: `${source}->${target}`,
+    kind: "succession",
+    source,
+    target,
+    label: null,
   };
 }
 
@@ -112,6 +169,256 @@ function clickFilter(value: string): void {
   }
   pill.click();
 }
+
+describe("RepresentationPicker graph mode (#904)", () => {
+  function smallSuccessionFixture() {
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    const aBand = {
+      key: aFqid,
+      name: "A",
+      registerPrefix: "scb/lisa",
+      rows: [row({ column: "Acol" })],
+    } satisfies PickerBand;
+    const bBand = {
+      key: bFqid,
+      name: "B",
+      registerPrefix: "scb/lisa",
+      rows: [row({ column: "Bcol" })],
+    } satisfies PickerBand;
+    const nodes = [
+      graphNode(aFqid, {
+        label: "A",
+        states: [graphState({ delivery_column_name: "Acol" })],
+      }),
+      graphNode(bFqid, {
+        label: "B",
+        states: [
+          graphState({
+            state_id: 2,
+            representation_run_id: 2,
+            delivery_column_name: "Bcol",
+            valid_from: "2011-01-01",
+            valid_to: "9999-12-31",
+          }),
+        ],
+      }),
+    ];
+    return {
+      bands: [aBand, bBand],
+      graph: graph({
+        nodes,
+        edges: [edge(aFqid, bFqid)],
+        focus_id: aFqid,
+      }),
+    };
+  }
+
+  it("uses the graph/time-band picker for a small edge-bearing variable graph", async () => {
+    const onapply = vi.fn();
+    const fixture = smallSuccessionFixture();
+    render(RepresentationPicker, {
+      bands: fixture.bands,
+      graph: fixture.graph,
+      ...PROPS,
+      onapply,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    expect(document.querySelector(".col-list")).toBeNull();
+    expect(document.querySelector(".graph-edge")).not.toBeNull();
+
+    await page.getByRole("checkbox", { name: /Acol/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("Acol");
+  });
+
+  it("keeps sibling graph nodes visible but unavailable on a leaf-only picker", async () => {
+    const fixture = smallSuccessionFixture();
+    render(RepresentationPicker, {
+      bands: [fixture.bands[0]],
+      graph: fixture.graph,
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".graph-picker")) {
+        throw new Error("graph picker not rendered");
+      }
+    });
+    expect(document.querySelectorAll(".graph-lane.muted")).toHaveLength(1);
+    expect(document.querySelectorAll(".graph-cell.unavailable")).toHaveLength(
+      1,
+    );
+    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
+  });
+
+  it("shows each rename era's delivered column while toggling the folded row", async () => {
+    const onapply = vi.fn();
+    const aFqid = "scb/lisa/a";
+    const bFqid = "scb/lisa/b";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "A",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({
+              column: "NEW",
+              representation: null,
+              renamedColumns: ["OLD"],
+              from: "1990-01-01",
+              to: "2020-12-31",
+              period: "1990 – 2020",
+            }),
+          ],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                state_id: 1,
+                representation_run_id: 1,
+                delivery_column_name: "OLD",
+                valid_from: "1990-01-01",
+                valid_to: "1999-12-31",
+              }),
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEW",
+                valid_from: "2000-01-01",
+                valid_to: "2020-12-31",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [graphState({ delivery_column_name: "OTHER" })],
+          }),
+        ],
+        edges: [edge(bFqid, aFqid)],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /^OLD\b/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("NEW");
+  });
+
+  it("falls back to the compact list when one graph run has several selectable columns", async () => {
+    const onapply = vi.fn();
+    const aFqid = "scb/lisa/monthly";
+    const bFqid = "scb/lisa/successor";
+    render(RepresentationPicker, {
+      bands: [
+        {
+          key: aFqid,
+          name: "Monthly family",
+          registerPrefix: "scb/lisa",
+          rows: [
+            row({ column: "JAN", period: "2000 – 2010" }),
+            row({ column: "FEB", period: "2000 – 2010" }),
+          ],
+        } satisfies PickerBand,
+        {
+          key: bFqid,
+          name: "Successor",
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: "NEXT" })],
+        } satisfies PickerBand,
+      ],
+      graph: graph({
+        nodes: [
+          graphNode(aFqid, {
+            states: [
+              graphState({
+                state_id: 1,
+                representation_run_id: 1,
+                delivery_column_name: "JAN",
+              }),
+              graphState({
+                state_id: 1,
+                representation_run_id: 1,
+                delivery_column_name: "FEB",
+              }),
+            ],
+          }),
+          graphNode(bFqid, {
+            states: [
+              graphState({
+                state_id: 2,
+                representation_run_id: 2,
+                delivery_column_name: "NEXT",
+                valid_from: "2011-01-01",
+                valid_to: "9999-12-31",
+              }),
+            ],
+          }),
+        ],
+        edges: [edge(aFqid, bFqid)],
+        focus_id: aFqid,
+      }),
+      ...PROPS,
+      onapply,
+    });
+
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(document.querySelector(".col-list")).not.toBeNull();
+    await page.getByRole("checkbox", { name: /FEB/ }).click();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].adds[0].row.column).toBe("FEB");
+  });
+
+  it("falls back to the compact list when the graph is too large to draw cleanly", async () => {
+    const nodes = Array.from({ length: 19 }, (_, i) => {
+      const fqid = `scb/lisa/v${i}`;
+      return graphNode(fqid, {
+        states: [graphState({ delivery_column_name: `C${i}` })],
+      });
+    });
+    const bands = nodes.map(
+      (node, i) =>
+        ({
+          key: node.fqid as string,
+          name: node.label,
+          registerPrefix: "scb/lisa",
+          rows: [row({ column: `C${i}` })],
+        }) satisfies PickerBand,
+    );
+    render(RepresentationPicker, {
+      bands,
+      graph: graph({
+        nodes,
+        edges: [edge(nodes[0].id, nodes[1].id)],
+      }),
+      ...PROPS,
+    });
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+    expect(visibleColumns().slice(0, 2)).toEqual(["C0", "C1"]);
+  });
+});
 
 describe("RepresentationPicker dimension marking + filters (#908)", () => {
   it("renders a filter fieldset per discriminating dimension, naming its kind", async () => {

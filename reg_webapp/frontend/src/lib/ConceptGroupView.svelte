@@ -751,6 +751,8 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         {committedRows}
         activePeriod={activePickerPeriod}
         {focusKey}
+        {graph}
+        {vintageYear}
         onapply={applyStaged}
         onstagechange={(hasDiff) => {
           if (hasDiff) {
