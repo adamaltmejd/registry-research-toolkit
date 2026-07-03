@@ -390,6 +390,9 @@ def dispatch_view(records: list[Rec]) -> str:
         # live ready set).
         f"Candidate set ({len(free)}) — rank ONLY these; any other number is "
         "contamination: " + " ".join(f"#{n}" for n in sorted(r.number for r in free)),
+        "Declared open blockers among candidates: none. If a candidate body still names "
+        "`Blocked by #N` / `Depends on #N`, that target was not open in this fetch; "
+        "do not infer open-blocker status from floor absence.",
         "",
     ]
     by_area: dict[str, list[Rec]] = {}

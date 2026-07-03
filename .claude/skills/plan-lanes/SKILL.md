@@ -81,7 +81,14 @@ serialize across lanes) — never call them parallel-safe.
    non-maintainer comments are stripped, so untrusted text never enters ranking). You're
    hunting for the four things the floor can't see (above): implicit blockers, semantic
    conflicts, coherence, and stale/missing `touches`. This read informs *ordering and
-   grouping*; it never adds a number the floor didn't list.
+   grouping*; it never adds a number the floor didn't list. Trust the floor's declared
+   blocker state: a floor candidate has no `blocked` label and no open declared
+   `Blocked by` / `Depends on` target in the fetch that produced the floor. A prose
+   relationship whose target is absent from the candidate set is not proof that the
+   target is pending; it may be closed/satisfied. If blocker state matters, resolve the
+   named target with `gh_issue.py view <target>` and hold the candidate only when that
+   trusted JSON's `state` shows an open blocker or you found a genuinely implicit
+   blocker outside the declared relationships.
 
 3. **Compose lanes.** A **lane** is a coherent unit of work to hand to one
    `/pr-pipeline` run — one issue, or a few that belong together (a lane may span
@@ -111,8 +118,10 @@ serialize across lanes) — never call them parallel-safe.
    drop any that isn't (it came from the narrative: a shipped/closed/blocked issue); (b)
    every number on that line is **accounted for** — either ranked in a lane, or, if step
    2 revealed it's actually blocked/not-ready despite being on the floor (an implicit
-   blocker the `touches` floor couldn't see), moved to the **Held/Notes** line with a
-   one-line reason. Never silently drop a floor number, and never force a
+   blocker the `touches` floor couldn't see, or a blocker target you state-checked as
+   open), moved to the **Held/Notes** line with a one-line reason. Never treat a blocker
+   target's absence from the floor as evidence that it is open; floor absence also
+   covers closed work. Never silently drop a floor number, and never force a
    discovered-blocked one into a ranked lane — `/pr-pipeline next` would dispatch it as
    runnable. Each of the `N` candidate numbers must appear **exactly once**, across your
    ranked lanes plus the Held/Notes lines. The anti-contamination ban binds the **ranked

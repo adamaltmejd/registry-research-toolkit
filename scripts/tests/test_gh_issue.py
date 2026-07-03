@@ -157,11 +157,17 @@ def test_view_maintainer_issue_prints_json(
 ) -> None:
     _stub_view(
         monkeypatch,
-        {"number": 328, "title": "epic", "body": "plan", "author": {"login": MAINT}},
+        {
+            "number": 328,
+            "title": "epic",
+            "state": "OPEN",
+            "body": "plan",
+            "author": {"login": MAINT},
+        },
     )
     assert gi.main(["view", "328"]) == gi.EXIT_OK
     out = json.loads(capsys.readouterr().out)
-    assert out == {"number": 328, "title": "epic", "body": "plan"}
+    assert out == {"number": 328, "title": "epic", "state": "OPEN", "body": "plan"}
 
 
 def test_view_non_maintainer_issue_refuses(
@@ -258,6 +264,7 @@ def test_view_comments_requests_comments_field(
 
     monkeypatch.setattr(gi._gh.subprocess, "run", fake_run)
     gi.main(["view", "1", "--comments"])
+    assert "state" in captured["cmd"][-1]
     assert "comments" in captured["cmd"][-1]
 
 

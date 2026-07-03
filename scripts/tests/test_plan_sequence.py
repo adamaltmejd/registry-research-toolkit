@@ -795,6 +795,19 @@ def test_dispatch_view_candidate_set_excludes_held() -> None:
     assert line.endswith(": #2")  # held #1 is not a candidate
 
 
+def test_dispatch_view_declares_candidate_blockers_are_not_open() -> None:
+    # Regression for #1033: a ready-floor candidate can retain historical blocker prose
+    # whose target is closed. The lane ranker must not treat the target's absence from the
+    # candidate floor as proof that it is still pending.
+    recs = [
+        _rec(1, area="cross-package", relationships=[("blocked by", 99)]),
+    ]
+    view = ps.dispatch_view(recs)
+    assert _candidate_line(view).endswith(": #1")
+    assert "Declared open blockers among candidates: none" in view
+    assert "do not infer open-blocker status from floor absence" in view
+
+
 def test_dispatch_view_holds_issues_touching_in_flight() -> None:
     recs = [
         _rec(9, area="reg_webapp", open_prs=[100], touches=["shared.py"]),  # in-flight
