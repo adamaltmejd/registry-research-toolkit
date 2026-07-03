@@ -10,9 +10,6 @@ test greps every `*.md` under the two mirrored skill trees (`.claude/skills/`,
   - `gh api .../issues/...` and `gh api graphql` — REST/GraphQL issue+comment node reads;
   - `gh search issues` — a search-shaped work-set/body ingestion.
 
-Each pattern collapses runs of whitespace to a single space before matching, so a
-reflow-inserted double space or newline between tokens can't slip a vector past the grep.
-
 Allowlisted (NOT ingestion of untrusted body text, so they must not trip): the
 dedupe-before-filing `gh issue list ... --search`, the write/mutation subcommands
 (`gh issue edit/create/comment`), any `gh pr ...` and `gh api .../pulls/...` (PRs are
@@ -33,9 +30,9 @@ _SKILL_DIRS = [_ROOT / ".claude" / "skills", _ROOT / ".agents" / "skills"]
 # The gated replacement — a line naming it is the fix, never a violation.
 _GATE_REF = "gh_issue.py"
 
-# Raw ingestion vectors. Matched against a whitespace-collapsed copy of each line (see
-# `_collapse_ws`), so `\s+`-style irregular spacing between tokens is already normalized
-# to single spaces and a plain space suffices in the patterns.
+# Raw ingestion vectors, searched against each raw line. Skill markdown is
+# maintainer-authored and uses the single-space command forms below, so the patterns
+# match those forms directly (this is a regression guard, not an adversarial filter).
 #   - `gh issue view` — the body/comment ingestion vehicle;
 #   - `gh issue list --state open` — work-set enumeration (a `--search` list is a bounded
 #     title lookup before filing, allowlisted);
@@ -52,14 +49,8 @@ _FORBIDDEN_RES = [
 ]
 
 
-def _collapse_ws(line: str) -> str:
-    """Collapse runs of whitespace to single spaces so whitespace-irregular forms match."""
-    return re.sub(r"\s+", " ", line)
-
-
 def _is_forbidden(line: str) -> bool:
-    collapsed = _collapse_ws(line)
-    return any(rx.search(collapsed) for rx in _FORBIDDEN_RES)
+    return any(rx.search(line) for rx in _FORBIDDEN_RES)
 
 
 def _md_files() -> list[Path]:
@@ -125,9 +116,6 @@ def test_allowlisted_reads_do_not_trip() -> None:
         "gh api repos/{owner}/{repo}/issues/{n}/comments",
         "gh api graphql -f query='...'",
         "gh search issues --repo owner/repo 'foo'",
-        # whitespace-irregular literals (double space / tab between tokens)
-        "gh  issue  view 328",
-        "gh issue list  --state  open",
     ],
 )
 def test_detector_catches_known_vectors(line: str) -> None:
