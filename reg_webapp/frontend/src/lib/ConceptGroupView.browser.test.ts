@@ -1902,7 +1902,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     ).toHaveLength(1);
   });
 
-  it("graph mode does not leak filtered non-member states as unavailable cells", async () => {
+  it("falls back instead of leaking filtered non-member states as graph cells", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(
       node({
         members: [
@@ -1959,15 +1959,18 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     renderGroup();
 
     await vi.waitFor(() => {
-      if (!document.querySelector(".graph-picker")) {
-        throw new Error("graph picker not rendered");
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
       }
     });
+    expect(document.querySelector(".graph-picker")).toBeNull();
     await expect
       .element(page.getByRole("checkbox", { name: /IncA/ }))
       .toBeVisible();
     expect(document.body.textContent).not.toContain("IncExtra");
-    expect(document.querySelectorAll(".graph-cell input.cbox")).toHaveLength(1);
+    expect(
+      document.querySelectorAll('.col-list input[type="checkbox"]'),
+    ).toHaveLength(1);
   });
 
   it("graph mode renders a disabled row for a member with no graph state", async () => {
@@ -2445,6 +2448,76 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     });
     expect(document.querySelectorAll(".focused")).toHaveLength(0);
   });
+
+  it("keeps a focused graph member navigable from the picker", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      ...twoSingleColGraph(),
+      edges: [
+        {
+          id: "succession:scb/rams/inkjan->scb/rams/inkfeb",
+          kind: "succession",
+          source: "scb/rams/inkjan",
+          target: "scb/rams/inkfeb",
+          label: null,
+          effective_year: 2018,
+        },
+      ],
+    });
+    router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
+
+    renderGroup();
+
+    const focusedLink = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        '.graph-lane.focused a.graph-name[href="/catalog/scb/rams/inkfeb"]',
+      );
+      if (!el) {
+        throw new Error("focused graph member link not yet rendered");
+      }
+      return el;
+    });
+    expect(focusedLink.getAttribute("href")).toBe("/catalog/scb/rams/inkfeb");
+    expect(document.querySelector(".graph-picker")).not.toBeNull();
+  });
+
+  it("falls back when the focused member is absent from a partial graph payload", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
+    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+      nodes: [
+        vnode("scb/rams/inkjan", [
+          gstate({
+            variant: "individer",
+            delivery_column_name: "Inkjan",
+            valid_from: "2010-01-01",
+            valid_to: "2015-12-31",
+          }),
+        ]),
+        vnode("scb/rams/side", []),
+      ],
+      edges: [
+        {
+          id: "succession:scb/rams/inkjan->scb/rams/side",
+          kind: "succession",
+          source: "scb/rams/inkjan",
+          target: "scb/rams/side",
+          label: null,
+          effective_year: 2018,
+        },
+      ],
+      focus_id: null,
+    });
+    router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
+
+    renderGroup();
+
+    await vi.waitFor(() => {
+      if (!document.querySelector(".col-list")) {
+        throw new Error("list fallback not rendered");
+      }
+    });
+    expect(document.querySelector(".graph-picker")).toBeNull();
+  });
 });
 
 describe("ConceptGroupView inter-variable succession fold (#902)", () => {
@@ -2612,6 +2685,33 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     expect(link?.textContent).toContain("Disponibel inkomst familj");
     expect(document.querySelector(".graph-reason")?.textContent).toContain(
       "2005",
+    );
+  });
+
+  it("preserves ?period on folded predecessor graph history links", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    router.navigate(
+      "/catalog/group/scb/iot/disponibel-inkomst?period=2010..2012",
+    );
+
+    renderGroup({
+      provider: "scb",
+      register: "iot",
+      key: "disponibel-inkomst",
+    });
+
+    const link = await vi.waitFor(() => {
+      const el = document.querySelector<HTMLAnchorElement>(
+        '.graph-gutter a[href="/catalog/scb/iot/dispink-old?period=2010..2012"]',
+      );
+      if (!el) {
+        throw new Error("period-carrying predecessor link not yet rendered");
+      }
+      return el;
+    });
+    expect(link.getAttribute("href")).toBe(
+      "/catalog/scb/iot/dispink-old?period=2010..2012",
     );
   });
 

@@ -350,7 +350,7 @@ describe("clustersOf — sub-row packing on the shared axis", () => {
   it("packs cells whose RENDERED widths overlap to separate rows (min-width footprint)", () => {
     // #794 P3: two SHORT runs only ~1 raw year apart (one ending 2010, the next
     // starting 2011) don't overlap in raw years — but the renderer floors each cell
-    // to CELL_MIN_W (~3.4 years wide at PX_PER_YEAR), so they paint overlapping.
+    // to CELL_MIN_W (~6.7 years wide at PX_PER_YEAR), so they paint overlapping.
     // Packing must respect the rendered footprint and push them to distinct rows.
     const node = variableNode({
       id: "v",
@@ -376,7 +376,7 @@ describe("clustersOf — sub-row packing on the shared axis", () => {
     )[0].nodes[0];
     expect(lane.kind).toBe("variable");
     if (lane.kind === "variable") {
-      // The first cell's padded footprint (2009 + ~3.4 ≈ 2012.4) covers 2011, so the
+      // The first cell's padded footprint (2009 + ~6.7 ≈ 2015.7) covers 2011, so the
       // second can't share row 0.
       expect(lane.rowCount).toBe(2);
       expect(lane.cells.map((c) => c.row)).toEqual([0, 1]);
@@ -385,9 +385,9 @@ describe("clustersOf — sub-row packing on the shared axis", () => {
 
   it("does NOT over-split a short cell whose footprint clears the next cell's start", () => {
     // Guard against the min-width fix splitting genuinely non-overlapping cells: a
-    // single-year run at 2000 (footprint ends ~2003.4) and the next starting 2005
-    // clear each other → one row. (The first cell ends 2000 but its ~3.4-year
-    // footprint still ends before 2005.)
+    // single-year run at 2000 (footprint ends ~2006.7) and the next starting 2008
+    // clear each other → one row. (The first cell ends 2000 but its ~6.7-year
+    // footprint still ends before 2008.)
     const node = variableNode({
       id: "v",
       states: [
@@ -400,8 +400,8 @@ describe("clustersOf — sub-row packing on the shared axis", () => {
         state({
           representation_run_id: 2,
           value_set_version_label: "b",
-          valid_from: "2005-01-01",
-          valid_to: "2005-12-31",
+          valid_from: "2008-01-01",
+          valid_to: "2008-12-31",
         }),
       ],
     });

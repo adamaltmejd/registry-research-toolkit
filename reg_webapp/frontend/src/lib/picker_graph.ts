@@ -39,9 +39,10 @@ import {
 
 /** Horizontal density of the year scale (px per year). */
 export const PX_PER_YEAR = 19;
-/** A cell's minimum rendered width (px) — a sub-year run still shows its label, so
- * it occupies this even when its year span is ~0. */
-export const CELL_MIN_W = 64;
+/** A cell's minimum rendered width (px) — a sub-year run still has to fit the
+ * checkbox, delivery-column chip, and year text, so it occupies this even when its
+ * year span is ~0. */
+export const CELL_MIN_W = 128;
 /** A cell's minimum footprint expressed in YEARS (its px floor ÷ the year scale).
  * Two cells closer than this in year-space render overlapping even when their raw
  * year windows don't, so packing treats this as the effective span. */
@@ -304,7 +305,7 @@ export function clampCellsToScale(
 
 /** A cell's RENDERED end on the year axis: the later of its `toYear` and its start
  * plus the minimum-width footprint (`CELL_MIN_YEARS`). The renderer floors every
- * cell to `CELL_MIN_W` px, so a short run (e.g. one year) actually paints ~3.4
+ * cell to `CELL_MIN_W` px, so a short run (e.g. one year) actually paints ~6.7
  * years wide — packing must reserve that footprint or two visually-overlapping
  * runs (one ending 2010, the next starting 2011) wrongly share a row (#794 P3). */
 function renderedEnd(cell: RunCell): number {

@@ -154,6 +154,7 @@ let {
   activePeriod = null,
   focusKey = null,
   graph = null,
+  graphMemberHrefs = null,
   vintageYear,
   onapply,
   onstagechange,
@@ -189,6 +190,10 @@ let {
   /** Optional relationship graph for the graph/time-band picker mode (#904). When
    * absent, too large, or edge-less, the picker renders the compact list fallback. */
   graph?: RelationshipGraph | null;
+  /** Explicit group-member leaf links keyed by member fqid. Group pages pass this so
+   * graph mode can distinguish folded members (history) from unrelated graph neighbors
+   * that must not leak into the picker. The binding leaf leaves it null. */
+  graphMemberHrefs?: Readonly<Record<string, string>> | null;
   /** Catalog vintage ceiling for open-ended graph cells. */
   vintageYear?: number;
   /** Commit the staged diff. The parent maps add rows to final `StagedAdd` payloads
@@ -704,25 +709,104 @@ function graphHasSelectableNode(g: RelationshipGraph): boolean {
   );
 }
 
-function graphCellsAreUnambiguous(g: RelationshipGraph): boolean {
+interface GraphCellCandidate {
+  band: PickerBand;
+  row: PickerRepresentation;
+  columns: string[];
+}
+
+interface GraphCellMatch {
+  band: PickerBand;
+  row: PickerRepresentation;
+  column: string;
+}
+
+function graphMemberHrefForNode(node: VariableGraphNode): string | null {
+  if (graphMemberHrefs == null) {
+    return null;
+  }
+  for (const fqid of graphNodeFqids(node)) {
+    const href = graphMemberHrefs[fqid];
+    if (href) {
+      return href;
+    }
+  }
+  return null;
+}
+
+function cellMatchedColumns(
+  row: PickerRepresentation,
+  cell: RunCell,
+): string[] {
+  if (row.variant !== cell.variant) {
+    return [];
+  }
+  const columns = new Set(cell.columns);
+  const out: string[] = [];
+  if (columns.has(row.column)) {
+    out.push(row.column);
+  }
+  for (const col of row.renamedColumns) {
+    if (columns.has(col)) {
+      out.push(col);
+    }
+  }
+  return [...new Set(out)];
+}
+
+function graphCellCandidates(
+  band: PickerBand,
+  cell: RunCell,
+): GraphCellCandidate[] {
+  return band.rows
+    .map((row) => ({ band, row, columns: cellMatchedColumns(row, cell) }))
+    .filter((candidate) => candidate.columns.length > 0);
+}
+
+function graphCellsAreRepresentable(g: RelationshipGraph): boolean {
   for (const node of variableGraphNodes(g)) {
     const band = graphBandForNode(node);
     if (!band) {
+      if (graphMemberHrefs == null || graphMemberHrefForNode(node) != null) {
+        continue;
+      }
+      if (cellsOf(node).length > 0) {
+        return false;
+      }
       continue;
     }
     for (const cell of cellsOf(node)) {
-      const matches = band.rows.filter((candidate) =>
-        rowMatchesCell(candidate, cell),
-      );
-      if (matches.length > 1) {
+      const matches = graphCellCandidates(band, cell);
+      if (matches.length === 0) {
+        if (graphMemberHrefs != null) {
+          return false;
+        }
+        continue;
+      }
+      if (matches.length !== 1 || matches[0].columns.length !== 1) {
         // Same-run alias multiplexing (for example monthly-family columns sharing one
-        // state/run) is real selectable surface, but not representable as one graph
-        // checkbox. Let the list render every row instead of hiding choices.
+        // state/run), or a run whose member column cannot be singled out, is real
+        // selectable surface but not representable as one graph checkbox. Let the
+        // list render every row instead of hiding choices or leaking non-members.
         return false;
       }
     }
   }
   return true;
+}
+
+function graphFocusIsNavigable(g: RelationshipGraph): boolean {
+  if (focusKey == null || graphMemberHrefs == null) {
+    return true;
+  }
+  const focusedNode = variableGraphNodes(g).find((node) =>
+    graphNodeMatchesKey(node, focusKey),
+  );
+  if (!focusedNode) {
+    return false;
+  }
+  const focusedBand = graphBandForNode(focusedNode);
+  return focusedBand?.href != null;
 }
 
 function graphFitsPicker(g: RelationshipGraph): boolean {
@@ -739,7 +823,8 @@ function graphFitsPicker(g: RelationshipGraph): boolean {
     g.edges.length <= GRAPH_MAX_EDGES &&
     cellCount <= GRAPH_MAX_CELLS &&
     graphHasSelectableNode(g) &&
-    graphCellsAreUnambiguous(g)
+    graphCellsAreRepresentable(g) &&
+    graphFocusIsNavigable(g)
   );
 }
 
@@ -851,27 +936,19 @@ function graphBandForNode(node: VariableGraphNode): PickerBand | null {
   return null;
 }
 
-function rowMatchesCell(row: PickerRepresentation, cell: RunCell): boolean {
-  if (row.variant !== cell.variant) {
-    return false;
-  }
-  const columns = new Set(cell.columns);
-  return (
-    columns.has(row.column) ||
-    row.renamedColumns.some((col) => columns.has(col))
-  );
-}
-
 function graphCellMatch(
   lane: VariableLane,
   cell: RunCell,
-): { band: PickerBand; row: PickerRepresentation } | null {
+): GraphCellMatch | null {
   const band = graphBandForNode(lane.node);
   if (!band) {
     return null;
   }
-  const row = band.rows.find((candidate) => rowMatchesCell(candidate, cell));
-  return row ? { band, row } : null;
+  const matches = graphCellCandidates(band, cell);
+  if (matches.length !== 1 || matches[0].columns.length !== 1) {
+    return null;
+  }
+  return { band, row: matches[0].row, column: matches[0].columns[0] };
 }
 
 function graphCellInWindow(cell: RunCell): boolean {
@@ -895,7 +972,7 @@ type GraphLaneItem =
   | {
       kind: "cell";
       cell: RunCell;
-      match: { band: PickerBand; row: PickerRepresentation } | null;
+      match: GraphCellMatch | null;
       index: number;
       rowIndex: number;
     }
@@ -918,7 +995,10 @@ function graphLaneItems(rn: RenderNode): GraphLaneItem[] {
     if (match) {
       matchedRows.add(rowKey(match.band, match.row));
       items.push({ kind: "cell", cell, match, index, rowIndex: cell.row });
-    } else if (!band) {
+    } else if (
+      !band &&
+      (graphMemberHrefs == null || graphMemberHrefForNode(rn.node) != null)
+    ) {
       items.push({
         kind: "cell",
         cell,
@@ -979,12 +1059,19 @@ function graphLaneItemWidth(item: GraphLaneItem): number {
     : CELL_MIN_W;
 }
 
-function graphCellColumn(cell: RunCell, row: PickerRepresentation): string {
-  return cell.columns[0] ?? row.column;
+function graphCellSubLabel(cell: RunCell, column: string): string {
+  return cell.label === column || cell.columns.includes(cell.label)
+    ? ""
+    : cell.label;
 }
 
-function graphRenameHint(cell: RunCell, row: PickerRepresentation): string[] {
-  return graphCellColumn(cell, row) === row.column ? row.renamedColumns : [];
+function graphCellTitle(cell: RunCell, column: string): string {
+  const sub = graphCellSubLabel(cell, column);
+  return [column, sub || null, cell.window].filter(Boolean).join(" · ");
+}
+
+function graphRenameHint(match: GraphCellMatch): string[] {
+  return match.column === match.row.column ? match.row.renamedColumns : [];
 }
 
 function graphNodeFocused(rn: RenderNode): boolean {
@@ -1014,11 +1101,18 @@ function graphNodeLabel(rn: RenderNode): string {
 }
 
 function graphNodeHref(rn: RenderNode): string | null {
-  if (graphNodeFocused(rn) || rn.node.fqid == null) {
-    return null;
-  }
   if (rn.kind === "variable") {
-    return graphBandForNode(rn.node)?.href ?? catalogHref(rn.node.fqid);
+    const band = graphBandForNode(rn.node);
+    if (band?.href) {
+      return band.href;
+    }
+    const memberHref = graphMemberHrefForNode(rn.node);
+    if (memberHref) {
+      return memberHref;
+    }
+  }
+  if (rn.node.id === graph?.focus_id || rn.node.fqid == null) {
+    return null;
   }
   return catalogHref(rn.node.fqid);
 }
@@ -1041,11 +1135,23 @@ function graphLaneA11y(rn: RenderNode): string {
     return "no delivered state rows";
   }
   return items
-    .map((item) =>
-      item.kind === "cell"
-        ? `${item.cell.label}, ${item.cell.window}, ${item.cell.variant}`
-        : `${item.row.column}, ${item.row.period}, ${item.row.variant}`,
-    )
+    .map((item) => {
+      if (item.kind === "row") {
+        return `${item.row.column}, ${item.row.period}, ${item.row.variant}`;
+      }
+      if (item.match) {
+        const sub = graphCellSubLabel(item.cell, item.match.column);
+        return [
+          item.match.column,
+          sub || null,
+          item.cell.window,
+          item.cell.variant,
+        ]
+          .filter(Boolean)
+          .join(", ");
+      }
+      return `${item.cell.label}, ${item.cell.window}, ${item.cell.variant}`;
+    })
     .join("; ");
 }
 
@@ -1481,10 +1587,12 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                         {#if item.kind === "cell" && item.match}
                           {@const band = item.match.band}
                           {@const row = item.match.row}
+                          {@const column = item.match.column}
                           {@const cell = item.cell}
                           {@const checked = rowChecked(band, row)}
                           {@const stage = rowStage(band, row)}
                           {@const inWindow = graphCellInWindow(cell)}
+                          {@const cellSub = graphCellSubLabel(cell, column)}
                           <label
                             class="graph-cell"
                             class:selected={checked}
@@ -1495,7 +1603,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                             class:open-start={cell.openStart}
                             class:open-end={cell.openEnd}
                             style={`left:${left}px; width:${width}px; top:${cellTopValue}px`}
-                            title={`${cell.label} · ${cell.window}`}
+                            title={graphCellTitle(cell, column)}
                           >
                             <input
                               type="checkbox"
@@ -1505,11 +1613,11 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                               onchange={() => toggleRow(band, row)}
                             />
                             <span class="graph-cell-main">
-                              {@render colChip(graphCellColumn(cell, row))}
-                              {#if row.valueSetLabel}
-                                <span class="graph-cell-sub">{row.valueSetLabel}</span>
+                              {@render colChip(column)}
+                              {#if cellSub}
+                                <span class="graph-cell-sub">{cellSub}</span>
                               {/if}
-                              {@render renameHint(graphRenameHint(cell, row))}
+                              {@render renameHint(graphRenameHint(item.match))}
                             </span>
                             {#if stage !== "none"}
                               {@render stageTag(stage)}
