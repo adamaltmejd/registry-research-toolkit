@@ -135,7 +135,10 @@ def test_is_own_pr(pr: dict, own: bool) -> None:
 
 
 def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
-    """Stub `gh issue view`: payload=None models a non-zero exit (PR / missing issue)."""
+    """Stub `gh issue view`: payload=None models a non-zero exit (a genuinely missing
+    number). A PR number does NOT error — it resolves with returncode 0 and a payload —
+    so a PR case is modelled by passing a PR-shaped payload, never by payload=None.
+    """
 
     def fake_run(cmd, capture_output, text):
         if payload is None:
@@ -144,7 +147,9 @@ def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
             returncode=0, stdout=json.dumps(payload), stderr=""
         )
 
-    monkeypatch.setattr(gi.subprocess, "run", fake_run)
+    # `_fetch_issue` now routes through the shared `_gh.gh_issue_view_or_none`, which runs
+    # `_gh.subprocess.run` — patch there, not `gi.subprocess`.
+    monkeypatch.setattr(gi._gh.subprocess, "run", fake_run)
 
 
 def test_view_maintainer_issue_prints_json(
@@ -172,12 +177,35 @@ def test_view_non_maintainer_issue_refuses(
     assert "not maintainer-authored" in captured.err
 
 
-def test_view_missing_or_pr_refuses(
+def test_view_missing_number_refuses(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    _stub_view(monkeypatch, None)  # non-zero exit → treated as untrusted/absent
+    # A genuinely missing number → `gh issue view` exits non-zero → None → refused.
+    _stub_view(monkeypatch, None)
     assert gi.main(["view", "1"]) == gi.EXIT_REFUSED
     assert capsys.readouterr().out == ""
+
+
+def test_view_non_maintainer_pr_refuses(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A PR number does NOT error — `gh issue view` resolves it with exit 0. So the PR case
+    # reaches the author gate exactly like an issue: a stranger's fork PR (non-maintainer
+    # author) is refused there, NOT because it "can't reach here". This is the test that
+    # proves authorship — not issue-vs-PR — is the trust boundary.
+    _stub_view(
+        monkeypatch,
+        {
+            "number": 1024,
+            "title": "pr",
+            "body": "evil",
+            "author": {"login": "stranger"},
+        },
+    )
+    assert gi.main(["view", "1024"]) == gi.EXIT_REFUSED
+    captured = capsys.readouterr()
+    assert captured.out == ""  # nothing surfaced
+    assert "not maintainer-authored" in captured.err
 
 
 def test_view_comments_strips_non_maintainer(
@@ -228,7 +256,7 @@ def test_view_comments_requests_comments_field(
             stderr="",
         )
 
-    monkeypatch.setattr(gi.subprocess, "run", fake_run)
+    monkeypatch.setattr(gi._gh.subprocess, "run", fake_run)
     gi.main(["view", "1", "--comments"])
     assert "comments" in captured["cmd"][-1]
 

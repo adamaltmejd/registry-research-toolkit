@@ -26,9 +26,10 @@ Stdlib only. Loadable two ways, matching the sibling scripts:
     swap in the gated `fetch_open_issues`);
   - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`.
 
-Reuses `_gh.py`'s process primitives and `check_issue_hygiene.py`'s `FETCH_CAP` /
-truncation warning (loaded via the same spec idiom) rather than re-pasting them — leaf
-duplication is this repo's named anti-pattern.
+Reuses `_gh.py`'s process primitives, corpus-fetch cap + truncation warning
+(`FETCH_CAP` / `_warn_if_truncated`), and the non-zero-tolerant single-issue view
+primitive (`gh_issue_view_or_none`) rather than re-pasting them — leaf duplication is
+this repo's named anti-pattern.
 """
 
 from __future__ import annotations
@@ -37,12 +38,11 @@ import argparse
 import importlib.util
 import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
-# gh/git process primitives (shared _gh module) and the corpus-fetch cap + truncation
-# warning (check_issue_hygiene) are loaded via spec so they resolve under
+# gh/git process primitives plus the shared corpus-fetch cap + truncation warning live in
+# the _gh module, loaded via spec so they resolve under
 # `uv run --no-project python scripts/gh_issue.py` and spec-loaded pytest alike — the same
 # idiom plan_sequence.py uses. Importing FETCH_CAP rather than redefining it keeps the cap
 # single-sourced.
@@ -53,17 +53,10 @@ assert _GHSPEC and _GHSPEC.loader
 _gh = importlib.util.module_from_spec(_GHSPEC)
 _GHSPEC.loader.exec_module(_gh)
 
-_HSPEC = importlib.util.spec_from_file_location(
-    "check_issue_hygiene", Path(__file__).with_name("check_issue_hygiene.py")
-)
-assert _HSPEC and _HSPEC.loader
-_h = importlib.util.module_from_spec(_HSPEC)
-_HSPEC.loader.exec_module(_h)
-
 gh_json = _gh.gh_json
 repo_owner_name = _gh.repo_owner_name
-FETCH_CAP = _h.FETCH_CAP
-_warn_if_truncated = _h._warn_if_truncated
+FETCH_CAP = _gh.FETCH_CAP
+_warn_if_truncated = _gh._warn_if_truncated
 
 EXIT_OK = 0
 EXIT_USAGE = 2
@@ -134,30 +127,31 @@ def is_own_pr(pr: dict) -> bool:
 
 
 def _fetch_issue(number: int, comments: bool) -> dict | None:
-    """The raw `gh issue view` payload for #number, or None if it isn't an issue.
+    """The raw `gh issue view` payload for #number, or None if the number doesn't exist.
 
-    `gh issue view` resolves a PR number too and errors on a missing one; a non-zero exit
-    (PR / missing) returns None so the caller refuses rather than surfacing PR text here.
+    A non-zero exit (a missing number) returns None. But a zero exit is NOT proof of an
+    issue: `gh issue view` silently resolves a PR number too, returning its payload with
+    exit 0 — so a maintainer PR arrives here as trusted content and a stranger's fork PR
+    arrives as untrusted content, exactly like issues. That's fine: the trust boundary is
+    NOT "is this an issue" — it's `view`'s `_is_maintainer` author check. This function
+    only forwards the payload; whether to surface it is decided there.
     """
     fields = "number,title,body,author" + (",comments" if comments else "")
-    proc = subprocess.run(
-        ["gh", "issue", "view", str(number), "--json", fields],
-        capture_output=True,
-        text=True,
-    )
-    if proc.returncode != 0:
-        return None
-    return json.loads(proc.stdout)
+    return _gh.gh_issue_view_or_none(number, fields)
 
 
 def view(number: int, comments: bool) -> tuple[int, str]:
     """Gate a single `issue view` read. Returns (exit_code, stdout_text).
 
-    Refuses (exit 3, no stdout) when the issue is missing, is a PR, or is NOT maintainer-
-    authored — the untrusted body/comments are never surfaced. When maintainer-authored,
-    returns JSON `{number,title,body[,comments]}` with `comments` (present only when
-    requested) filtered to maintainer-authored entries (fail-closed: non-maintainer and
-    author-less comments dropped).
+    Authorship is the sole trust gate. Refuses (exit 3, no stdout) when the number is
+    missing OR its content is not maintainer-authored — the untrusted body/comments are
+    never surfaced. `gh issue view` may resolve a PR number, and that is harmless here: a
+    non-maintainer PR (e.g. a stranger's fork PR) is refused by the same `_is_maintainer`
+    author check as any non-maintainer issue, and a maintainer-authored PR is trusted
+    content just like a maintainer issue. When maintainer-authored, returns JSON
+    `{number,title,body[,comments]}` with `comments` (present only when requested)
+    filtered to maintainer-authored entries (fail-closed: non-maintainer and author-less
+    comments dropped).
     """
     maintainer = maintainer_login()
     data = _fetch_issue(number, comments)

@@ -40,8 +40,6 @@ import importlib.util
 import json
 import os
 import re
-import subprocess
-import sys
 from pathlib import Path
 
 # gh/git process primitives live in the shared _gh module (loaded via spec so it resolves
@@ -56,6 +54,11 @@ _GHSPEC.loader.exec_module(_gh)
 run = _gh.run
 gh_json = _gh.gh_json
 repo_owner_name = _gh.repo_owner_name
+# Corpus-fetch plumbing now lives in _gh (domain-neutral, shared with gh_issue.py).
+# Re-exported so existing `_h.FETCH_CAP` / `_h._warn_if_truncated` importers
+# (plan_sequence.py) keep resolving unchanged.
+FETCH_CAP = _gh.FETCH_CAP
+_warn_if_truncated = _gh._warn_if_truncated
 
 AREA_LABELS = {
     "reg_meta",
@@ -152,19 +155,6 @@ def parse_touches(body: str) -> list[str]:
     return globs
 
 
-FETCH_CAP = (
-    5000  # well above the live corpus; a hit is reported, never silently dropped
-)
-
-
-def _warn_if_truncated(rows: list, what: str) -> None:
-    if len(rows) >= FETCH_CAP:
-        sys.stderr.write(
-            f"warning: {what} fetch hit the {FETCH_CAP} cap; results may be "
-            f"truncated — raise FETCH_CAP or paginate\n"
-        )
-
-
 def fetch_open_issues() -> list[dict]:
     rows = gh_json(["issue", "list", "--state", "open", "--limit", str(FETCH_CAP),
                     "--json", "number,title,labels,body"])  # fmt: skip
@@ -177,23 +167,12 @@ def fetch_one_open_issue(number: int) -> dict | None:
 
     Fetched directly so one issue's body/labels don't require listing the whole corpus.
     The caller still gates on `issue_state` (PR-excluding) before trusting OPEN here —
-    `gh issue view` resolves a PR number too.
+    `gh issue view` resolves a PR number too. Shares _gh's non-zero-tolerant view
+    primitive; keeps its own `state == "OPEN"` post-filter and field set.
     """
-    proc = subprocess.run(
-        [
-            "gh",
-            "issue",
-            "view",
-            str(number),
-            "--json",
-            "number,title,labels,body,state",
-        ],  # fmt: skip
-        capture_output=True,
-        text=True,
-    )
-    if proc.returncode != 0:  # not an issue (a PR, or it doesn't exist)
+    data = _gh.gh_issue_view_or_none(number, "number,title,labels,body,state")
+    if data is None:  # not an issue (a PR, or it doesn't exist)
         return None
-    data = json.loads(proc.stdout)
     return data if data.get("state") == "OPEN" else None
 
 
