@@ -729,6 +729,52 @@ def test_fork_pr_never_reaches_ready_bucket() -> None:
     assert not any("ready merge-gate" in r or "stale merge-gate" in r for r in reasons)
 
 
+def test_fork_pr_missing_author_degrades_to_none(gates: Path) -> None:
+    # A fork raw PR whose `author` is None (GitHub can return a null author for a
+    # deleted/ghost account) must summarize with author: None rather than raise — pins the
+    # `raw.get("author") or {}` guard in summarize_pr.
+    entry = cpf.summarize_pr(_fork_raw(1200, author=None), "owner/repo", gates)
+
+    assert entry == {
+        "number": 1200,
+        "fork": True,
+        "author": None,
+        "draft": False,
+    }
+
+
+def test_fork_pr_summary_feeds_actionable_reasons_end_to_end(gates: Path) -> None:
+    # End-to-end key-shape contract between summarize_pr and actionable_reasons: run a fork
+    # raw PR through summarize_pr, place the entry in a snapshot, and assert the named fork
+    # reason fires — so the `fork`/`gate_present`/`number` keys summarize_pr emits are
+    # exactly the ones actionable_reasons buckets on (a key rename on either side breaks it).
+    plain = cpf.summarize_pr(_fork_raw(1200), "owner/repo", gates)
+    assert cpf.actionable_reasons(_snapshot(prs=[plain]), None) == [
+        "fork PR present (text ignored): #1200"
+    ]
+
+    # gate_present variant: a fork carrying a (provenance-error) gate entry must feed the
+    # "refuse and investigate" reason instead, through the same summarize_pr → snapshot →
+    # actionable_reasons path.
+    _write_gate(gates, 1200, _gate(1200, head=HEAD))
+    gated = cpf.summarize_pr(_fork_raw(1200), "owner/repo", gates)
+    assert gated["gate_present"] is True
+    assert cpf.actionable_reasons(_snapshot(prs=[gated]), None) == [
+        "fork PR with merge-gate entry: #1200; refuse and investigate"
+    ]
+
+
+def test_fork_pr_replaced_by_own_pr_same_number_wakes() -> None:
+    # A fork entry for number N in the previous snapshot, replaced by an own-branch
+    # (claimed, ready-style) entry for the SAME N in the current snapshot: the entries
+    # differ, so _changed_pr_numbers marks N changed and actionable_reasons must be
+    # non-empty — the fork→own number-reuse transition can't read as idle.
+    previous = _snapshot(prs=[{"number": 956, "fork": True, "author": "x"}])
+    snap = _snapshot(prs=[_ready_pr(956)])
+
+    assert cpf.actionable_reasons(snap, previous) != []
+
+
 # --- latestReviews -------------------------------------------------------------
 
 
