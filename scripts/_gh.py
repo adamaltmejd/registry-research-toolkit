@@ -67,7 +67,10 @@ def load_sibling(name: str) -> ModuleType:
     object is returned instead of a second, divergent copy — so a monkeypatch or attribute
     read through one consumer is visible through every other. Registers the fresh module in
     `sys.modules` BEFORE exec, so a self-referential construct (e.g. `@dataclass`, which
-    resolves `sys.modules[__module__]` during class build) resolves during load.
+    resolves `sys.modules[__module__]` during class build) resolves during load. If exec
+    raises, the half-initialized module is popped back out of `sys.modules` (mirroring
+    CPython's import machinery) so a later caller re-attempts a clean load rather than
+    getting the broken instance back through the guard.
     """
     existing = sys.modules.get(name)
     if existing is not None:
@@ -78,7 +81,14 @@ def load_sibling(name: str) -> ModuleType:
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
-    spec.loader.exec_module(module)
+    try:
+        spec.loader.exec_module(module)
+    except BaseException:
+        # A failed exec leaves a half-initialized module registered; drop it (mirroring
+        # CPython's import machinery) so a later caller re-attempts a clean load instead of
+        # getting the broken instance back through the sys.modules guard.
+        sys.modules.pop(name, None)
+        raise
     return module
 
 

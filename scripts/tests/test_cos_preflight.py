@@ -311,6 +311,10 @@ def test_siblings_are_single_instances() -> None:
     assert cpf._plan_sequence._gh is cpf._gh
     # plan_sequence loads gh_issue too; it must be the same one cos_preflight holds.
     assert cpf._plan_sequence.gh_issue is cpf.gh_issue
+    # plan_sequence also loads check_issue_hygiene (bound as ._h); its own test module must
+    # register the same instance so the two spec-loads don't diverge into separate Findings
+    # classes depending on which ran first in the pytest process.
+    assert cpf._plan_sequence._h is cpf._gh.load_sibling("check_issue_hygiene")
 
 
 def test_plan_tick_exit1_without_sentinel_is_tool_error(
