@@ -19,6 +19,9 @@ parse_issues, resolve_profile, slug validation — all exit 2):
   1. kill switch  — <state-root>/auto-dispatch.off present ⇒ refuse (exit 3).
   2. budget       — busy slots >= --max-slots ⇒ refuse (exit 4).
   3. collision    — slot file OR worktree dir already exists ⇒ refuse (exit 2).
+  3b. author check — each --issues number must be maintainer-authored
+                    (gh_issue.is_maintainer_authored); refuse (exit 2) before any side
+                    effect. Skipped under --dry-run (its no-network contract).
   4. worktree     — `git fetch origin main` then `git worktree add -b wt/<slug> …
                     origin/main`, run in the canonical checkout. `wt/<slug>` is only the
                     placeholder branch git requires; the pipeline skill creates its real
@@ -184,6 +187,45 @@ def _load_cos_preflight() -> ModuleType:
 
 
 _cos_preflight = _load_cos_preflight()
+
+
+def _load_gh_issue() -> ModuleType:
+    # Spec-load the sibling maintainer-author trust gate, same importlib idiom as
+    # cos_preflight above, so the dispatch chokepoint reuses its public author check
+    # (is_maintainer_authored) instead of re-implementing it.
+    spec = importlib.util.spec_from_file_location(
+        "gh_issue", Path(__file__).with_name("gh_issue.py")
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_gh_issue = _load_gh_issue()
+
+
+def require_maintainer_authored(issues: list[int]) -> None:
+    """Refuse (SystemExit) unless every issue is maintainer-authored — defense in depth.
+
+    The dispatch path launches a permission-bypassed pr-pipeline on `--issues`; those
+    issues' text becomes the lane's "spec". This repo is public, so a stranger's issue is
+    untrusted — gating authorship here at the chokepoint (in addition to the pipeline's own
+    trust-gate reads) means a non-maintainer or missing issue never reaches a launch. Reuses
+    gh_issue's public author check rather than re-deriving it. Read-only network I/O (`gh
+    issue view` per issue), run before any side effect.
+
+    A maintainer-authored PR number passes too: the trust boundary is authorship, not
+    issue-ness (`gh issue view` resolves a PR number — see gh_issue.is_maintainer_authored).
+    """
+    for number in issues:
+        if not _gh_issue.is_maintainer_authored(number):
+            raise SystemExit(
+                f"issue #{number} is not maintainer-authored "
+                f"(author != {_gh_issue.maintainer_login()}); "
+                "refusing to dispatch a pipeline on untrusted issue content"
+            )
 
 
 def default_state_root() -> Path:
@@ -657,6 +699,14 @@ def dispatch(
             )
         )
         return 0
+
+    # 3b. Author check — defense in depth: refuse to launch a pipeline on any issue that is
+    # not maintainer-authored. Read-only network I/O, run BEFORE the first side effect (the
+    # worktree). Deliberately AFTER the --dry-run return: dry-run promises zero side effects
+    # AND no network, and its check-only tests do not stub `gh` — so a live author lookup
+    # there would break that contract. Dry-run still surfaces the resolved argv/slot; the
+    # author gate is a launch-path guard, so gating it here loses nothing for the preview.
+    require_maintainer_authored(issues)
 
     # 4. Worktree — placeholder wt/<slug> branch off a freshly fetched origin/main.
     canonical_repo: Path = args.canonical

@@ -122,6 +122,25 @@ def _hermetic_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return stub_bin
 
 
+# The real author gate, captured before the autouse no-op below replaces it, so the
+# dedicated author-check tests can restore the genuine function (they stub gh_issue's
+# surface underneath it).
+_REAL_REQUIRE_MAINTAINER = cd.require_maintainer_authored
+
+
+@pytest.fixture(autouse=True)
+def _stub_author_check(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No-op the maintainer-author gate by default so existing tests don't hit live `gh`.
+
+    dispatch() now calls require_maintainer_authored() (a read-only `gh issue view` per
+    issue) before the worktree step. The launch-reaching tests here don't model issue
+    authorship, so default them to "all maintainer-authored"; the dedicated author-check
+    tests below override this with the real function (_REAL_REQUIRE_MAINTAINER) over a
+    stubbed gh_issue surface to exercise refuse/proceed.
+    """
+    monkeypatch.setattr(cd, "require_maintainer_authored", lambda issues: None)
+
+
 def _no_real_launch(tmp_path: Path) -> None:
     """Assert the fail-loud stub never recorded a real-binary invocation."""
     log = tmp_path / "stub-invocations.log"
@@ -1434,3 +1453,175 @@ def test_dispatch_log_setup_failure_exits_2_names_worktree(
     assert not (_hermetic_env / "codex.record").exists()
     # No slot written.
     assert not (state / "pipeline-slots" / f"{slug}.json").exists()
+
+
+# --- maintainer-author gate at the dispatch chokepoint (#1026 / #1028) ---------
+
+
+_MAINT = "adamaltmejd"
+
+
+def _stub_gh_author(
+    monkeypatch: pytest.MonkeyPatch, authors: dict[int, str | None]
+) -> None:
+    """Drive the REAL require_maintainer_authored via a stubbed gh_issue surface.
+
+    Overrides the autouse no-op so the real author gate runs, and stubs gh_issue's PUBLIC
+    surface (`maintainer_login` for the error message + `is_maintainer_authored` for the
+    verdict) — no live `gh`, and no reach into the privates the gate no longer touches.
+    `authors` maps issue number → author login, None to model a null author, or omission
+    to model a missing issue number; each resolves the same fail-closed bool the real
+    is_maintainer_authored would.
+    """
+    monkeypatch.setattr(cd, "require_maintainer_authored", _REAL_REQUIRE_MAINTAINER)
+    monkeypatch.setattr(cd._gh_issue, "maintainer_login", lambda: _MAINT)
+
+    def fake_is_authored(number: int) -> bool:
+        login = authors.get(number)  # absent OR null author → not maintainer-authored
+        return login is not None and login.casefold() == _MAINT.casefold()
+
+    monkeypatch.setattr(cd._gh_issue, "is_maintainer_authored", fake_is_authored)
+
+
+@pytest.mark.parametrize("bad_author", ["stranger", None])
+def test_non_maintainer_issue_refuses_before_side_effects(
+    tmp_path: Path,
+    capsys,
+    _hermetic_env: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    bad_author: str | None,
+) -> None:
+    # A non-maintainer (or null-author) issue must refuse with exit 2 naming the issue,
+    # BEFORE any side effect: no worktree, no slot, no launch. bad_author=None models a
+    # null author (fail-closed); the parametrize also covers a stranger login.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _stub_gh_author(monkeypatch, {1011: bad_author})
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    assert "#1011 is not maintainer-authored" in capsys.readouterr().err
+    slug = "auto-codex-issue-1011"
+    # No side effects: no worktree, no slot, no real launch.
+    assert not (canonical / ".claude" / "worktrees" / slug).exists()
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_missing_issue_refuses(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A missing issue number (gh view non-zero → None) is refused just like a stranger's.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    _stub_gh_author(monkeypatch, {})  # 1011 absent → _fetch_issue returns None
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    assert "#1011 is not maintainer-authored" in capsys.readouterr().err
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_one_bad_issue_in_lane_refuses_whole_dispatch(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A multi-issue lane is refused if ANY issue fails the author check — and the error
+    # names the offending one, not the maintainer-authored sibling.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _stub_gh_author(monkeypatch, {1011: _MAINT, 1012: "stranger"})
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011,1012",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "#1012 is not maintainer-authored" in err
+    assert "#1011" not in err
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_all_maintainer_issues_proceed_to_launch(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # When every lane issue is maintainer-authored, the real author gate passes and the
+    # dispatch proceeds to a normal launch + slot write.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _stub_gh_author(
+        monkeypatch, {1011: _MAINT, 1012: _MAINT.upper()}
+    )  # case-insensitive
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, issues="1011,1012", state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    slug = "auto-codex-issue-1011"
+    assert (canonical / ".claude" / "worktrees" / slug).is_dir()
+    slot = json.loads(
+        (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
+    )
+    assert slot["issues"] == [1011, 1012]
+
+
+def test_dry_run_skips_author_check(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # --dry-run promises zero side effects AND no network: the author gate (read-only `gh`)
+    # must NOT run in dry-run. Wire the real gate but make is_maintainer_authored raise if
+    # called, then prove dry-run still returns 0 without touching it.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    monkeypatch.setattr(cd, "require_maintainer_authored", _REAL_REQUIRE_MAINTAINER)
+    monkeypatch.setattr(cd._gh_issue, "maintainer_login", lambda: _MAINT)
+
+    def boom(number: int) -> bool:
+        raise AssertionError("author check ran during --dry-run (network I/O)")
+
+    monkeypatch.setattr(cd._gh_issue, "is_maintainer_authored", boom)
+
+    rc = cd.dispatch(_args(tmp_path, canonical, state_root=state, dry_run=True))
+
+    assert rc == 0
+    assert json.loads(capsys.readouterr().out)["surface"] == "codex"

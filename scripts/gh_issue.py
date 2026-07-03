@@ -15,7 +15,10 @@ merely forwarded arbitrary `gh` invocations could not soundly filter — `gh api
 this gate can't enumerate, so a "filter everything gh returns" promise would be a lie the
 first time an un-modelled shape slipped through. Instead this exposes exactly the two
 ingestion reads the automation needs (`fetch_open_issues` for the work-set,
-`view <n> [--comments]` for a single issue) and gates each on maintainer authorship.
+`view <n> [--comments]` for a single issue), each gated on maintainer authorship, plus a
+small non-content utility surface that authenticates the trusted login WITHOUT surfacing
+any issue/PR text — the `maintainer-login` CLI and the `is_maintainer_authored(n)`
+predicate (returns only a bool, never the body/comments).
 
 **Fail-closed** everywhere: a row/issue/comment with a missing, None, or non-maintainer
 author is DROPPED, never surfaced. A drop is counted to stderr (observability — the gate
@@ -24,7 +27,8 @@ never *silently* discards), but the untrusted content itself is never printed.
 Stdlib only. Loadable two ways, matching the sibling scripts:
   - as an importable module via `importlib` spec (plan_sequence.py loads it this way to
     swap in the gated `fetch_open_issues`);
-  - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`.
+  - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`
+    or `... maintainer-login` (print the trusted maintainer login, for author checks).
 
 Reuses `_gh.py`'s process primitives, corpus-fetch cap + truncation warning
 (`FETCH_CAP` / `_warn_if_truncated`), and the non-zero-tolerant single-issue view
@@ -140,6 +144,20 @@ def _fetch_issue(number: int, comments: bool) -> dict | None:
     return _gh.gh_issue_view_or_none(number, fields)
 
 
+def is_maintainer_authored(number: int) -> bool:
+    """Whether issue/PR #number exists AND is authored by the maintainer.
+
+    The public author-check the cross-script consumers use (e.g. cos_dispatch's dispatch
+    chokepoint) instead of composing the private `_fetch_issue` + `_is_maintainer`
+    themselves. Fail-closed: a missing number (`_fetch_issue` → None) or a
+    missing/None/non-maintainer author → False. Inherits `_fetch_issue`'s caveat that
+    `gh issue view` resolves a PR number too, so a maintainer-authored PR passes exactly
+    like a maintainer issue (authorship, not issue-ness, is the trust boundary).
+    """
+    data = _fetch_issue(number, comments=False)
+    return data is not None and _is_maintainer(data, maintainer_login())
+
+
 def view(number: int, comments: bool) -> tuple[int, str]:
     """Gate a single `issue view` read. Returns (exit_code, stdout_text).
 
@@ -182,10 +200,18 @@ def main(argv: list[str] | None = None) -> int:
     v.add_argument("number", type=int, help="issue number")
     v.add_argument("--comments", action="store_true",
                    help="include maintainer-authored comments")  # fmt: skip
+    sub.add_parser(
+        "maintainer-login",
+        help="print the trusted maintainer login (for PR-comment author checks)",
+    )
     try:
         args = ap.parse_args(argv)
     except SystemExit:
         return EXIT_USAGE
+
+    if args.cmd == "maintainer-login":
+        print(maintainer_login())
+        return EXIT_OK
 
     code, text = view(args.number, args.comments)
     if text:
