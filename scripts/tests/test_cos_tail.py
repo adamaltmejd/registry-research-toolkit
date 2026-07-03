@@ -311,6 +311,16 @@ def test_lane_is_plain_ignores_claude_run_sentinel(tmp_path: Path) -> None:
     assert ct.lane_is_plain(None, plain_log) is True
 
 
+def test_lane_is_plain_uses_codex_run_sentinel_without_slot(tmp_path: Path) -> None:
+    codex_log = tmp_path / "done-codex.log"
+    codex_log.write_text(
+        '{"type":"cos.run.started","slug":"done-codex","surface":"codex"}\n'
+        '{"type":"item.completed","item":{"type":"agent_message","text":"done"}}\n',
+        encoding="utf-8",
+    )
+    assert ct.lane_is_plain(None, codex_log) is False
+
+
 def test_follow_from_run_start_skips_prior_runs(tmp_path: Path, capsys) -> None:
     logs_root = tmp_path / "dispatch-logs"
     logs_root.mkdir(parents=True)

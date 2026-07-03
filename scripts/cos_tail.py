@@ -400,6 +400,8 @@ def lane_is_plain(surface: str | None, log_path: Path) -> bool:
                 continue
             if event.get("surface") == "claude":
                 return True
+            if event.get("surface") == "codex":
+                return False
             continue
         return False
     return True

@@ -685,7 +685,8 @@ tick has enough time left to close them before returning. Manual/ad-hoc runs may
 subagents more proactively for separable read-only checks, but never delegate live issue
 mutation.
 
-Return concise output:
+Return concise output. Use `$pr-pipeline` on Codex and `/pr-pipeline` on Claude for
+`<pipeline-command>`:
 
 ```text
 chief tick: <fresh/restamped/reranked>; <hygiene>; active <n>; free <n>
@@ -694,7 +695,7 @@ Active work: PR #<p> -> #<issue>: <status / risk>, or none
 Merged: PR #<p> -> #<issue>: <merge sha>; added <one-sentence feature summary>; see
   <preview URL + route, or "No preview page: <verification surface>">, or none
 Recommended next:
-1. `/pr-pipeline issue <n>[,<m>]` - <lane label>; <shape>; <why / guardrail>.
+1. `<pipeline-command> issue <n>[,<m>]` - <lane label>; <shape>; <why / guardrail>.
    #<n>: <one sentence describing what this issue tackles>.
    #<m>: <one sentence describing what this issue tackles, if bundled>.
 Issue maintenance: applied <...>; needs input <... or none>

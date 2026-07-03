@@ -428,6 +428,21 @@ def read_brief(path: Path | None) -> str:
         raise SystemExit(f"could not read --brief-file {path}: {exc}") from exc
 
 
+def dry_run_continuation_prompt(surface: str, pr: int, brief: str) -> str:
+    prefix = "$pr-pipeline" if surface == "codex" else "/pr-pipeline"
+    parts = [
+        f"{prefix} continue PR #{pr}",
+        (
+            f"Dry-run preview for continuing PR #{pr}. Live dispatch will verify the "
+            "PR is maintainer-authored, open, same-repository, and has closing issue "
+            "references before it reads PR body metadata or launches an agent."
+        ),
+    ]
+    if brief:
+        parts.append(f"Continuation brief:\n{brief}")
+    return "\n\n".join(parts)
+
+
 def continuation_prompt(
     surface: str,
     pr: int,
@@ -1084,21 +1099,28 @@ def dispatch(
         raise SystemExit(f"worktree collision: {worktree} already exists")
 
     if continue_pr is not None:
-        if not args.dry_run:
+        if args.dry_run:
+            # Dry-run is a no-network preview. Do not read PR body metadata here;
+            # live dispatch does the maintainer/same-repo/open/closing-ref gates before launch.
+            issues = []
+            prompt = dry_run_continuation_prompt(
+                surface, continue_pr, read_brief(brief_file)
+            )
+        else:
             require_maintainer_authored([continue_pr])
-        pr_info = resolve_continue_pr(continue_pr)
-        issues = list(pr_info["issues"])
-        pr_branch = str(pr_info["branch"])
-        pr_base_branch = str(pr_info.get("base_branch") or "main")
-        prompt = continuation_prompt(
-            surface,
-            continue_pr,
-            issues,
-            pr_branch,
-            pr_base_branch,
-            read_brief(brief_file),
-            rebase=not no_rebase,
-        )
+            pr_info = resolve_continue_pr(continue_pr)
+            issues = list(pr_info["issues"])
+            pr_branch = str(pr_info["branch"])
+            pr_base_branch = str(pr_info.get("base_branch") or "main")
+            prompt = continuation_prompt(
+                surface,
+                continue_pr,
+                issues,
+                pr_branch,
+                pr_base_branch,
+                read_brief(brief_file),
+                rebase=not no_rebase,
+            )
 
     # A pre-generated uuid is the claude session id (known before launch); codex's is
     # parsed from its JSONL log after launch.

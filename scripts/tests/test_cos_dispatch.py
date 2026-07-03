@@ -1021,22 +1021,17 @@ def test_dry_run_easy_tier_reflects_claude_profile(tmp_path: Path, capsys) -> No
     _no_real_launch(tmp_path)
 
 
-def test_continue_pr_dry_run_uses_existing_pr_prompt(
+def test_continue_pr_dry_run_uses_metadata_free_prompt(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     canonical = _make_origin(tmp_path)
     brief = tmp_path / "brief.md"
     brief.write_text("Fix the current-head review finding.", encoding="utf-8")
-    monkeypatch.setattr(
-        cd,
-        "resolve_continue_pr",
-        lambda pr: {
-            "pr": pr,
-            "branch": "codex/existing-pr",
-            "issues": [1011],
-            "title": "Existing PR",
-        },
-    )
+
+    def should_not_resolve(_pr: int) -> None:
+        raise AssertionError("dry-run read PR metadata")
+
+    monkeypatch.setattr(cd, "resolve_continue_pr", should_not_resolve)
 
     rc = cd.dispatch(
         _args(
@@ -1052,13 +1047,14 @@ def test_continue_pr_dry_run_uses_existing_pr_prompt(
     assert rc == 0
     result = json.loads(capsys.readouterr().out)
     assert result["mode"] == "continue"
-    assert result["issues"] == [1011]
+    assert result["issues"] == []
     assert result["prs"] == [4242]
     assert result["slot_path"].endswith("continue-codex-pr-4242.json")
     prompt = result["launch_argv"][-1]
     assert "$pr-pipeline continue PR #4242" in prompt
-    assert "Do NOT restart" in prompt
-    assert "git push --force-with-lease origin HEAD:codex/existing-pr" in prompt
+    assert "Dry-run preview" in prompt
+    assert "closing issue references" in prompt
+    assert "git push --force-with-lease" not in prompt
     assert "Fix the current-head review finding." in prompt
     assert not (canonical / ".claude" / "worktrees" / "continue-codex-pr-4242").exists()
     _no_real_launch(tmp_path)
