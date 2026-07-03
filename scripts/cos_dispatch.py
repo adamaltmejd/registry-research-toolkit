@@ -186,6 +186,43 @@ def _load_cos_preflight() -> ModuleType:
 _cos_preflight = _load_cos_preflight()
 
 
+def _load_gh_issue() -> ModuleType:
+    # Spec-load the sibling maintainer-author trust gate, same importlib idiom as
+    # cos_preflight above, so the dispatch chokepoint reuses its author check
+    # (_fetch_issue + _is_maintainer + maintainer_login) instead of re-implementing it.
+    spec = importlib.util.spec_from_file_location(
+        "gh_issue", Path(__file__).with_name("gh_issue.py")
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_gh_issue = _load_gh_issue()
+
+
+def require_maintainer_authored(issues: list[int]) -> None:
+    """Refuse (SystemExit) unless every issue is maintainer-authored — defense in depth.
+
+    The dispatch path launches a permission-bypassed pr-pipeline on `--issues`; those
+    issues' text becomes the lane's "spec". This repo is public, so a stranger's issue is
+    untrusted — gating authorship here at the chokepoint (in addition to the pipeline's own
+    trust-gate reads) means a non-maintainer or missing issue never reaches a launch. Reuses
+    gh_issue's author check rather than re-deriving it. Read-only network I/O (`gh issue
+    view` per issue), run before any side effect.
+    """
+    maintainer = _gh_issue.maintainer_login()
+    for number in issues:
+        data = _gh_issue._fetch_issue(number, comments=False)
+        if data is None or not _gh_issue._is_maintainer(data, maintainer):
+            raise SystemExit(
+                f"issue #{number} is not maintainer-authored (author != {maintainer}); "
+                "refusing to dispatch a pipeline on untrusted issue content"
+            )
+
+
 def default_state_root() -> Path:
     # Parent of the merge-gate root: $XDG_STATE_HOME/registry-research-toolkit. The slot
     # ledger, gate store, and dispatch logs all live under it, so a --state-root override
@@ -657,6 +694,14 @@ def dispatch(
             )
         )
         return 0
+
+    # 3b. Author check — defense in depth: refuse to launch a pipeline on any issue that is
+    # not maintainer-authored. Read-only network I/O, run BEFORE the first side effect (the
+    # worktree). Deliberately AFTER the --dry-run return: dry-run promises zero side effects
+    # AND no network, and its check-only tests do not stub `gh` — so a live author lookup
+    # there would break that contract. Dry-run still surfaces the resolved argv/slot; the
+    # author gate is a launch-path guard, so gating it here loses nothing for the preview.
+    require_maintainer_authored(issues)
 
     # 4. Worktree — placeholder wt/<slug> branch off a freshly fetched origin/main.
     canonical_repo: Path = args.canonical

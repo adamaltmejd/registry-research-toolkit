@@ -24,7 +24,8 @@ never *silently* discards), but the untrusted content itself is never printed.
 Stdlib only. Loadable two ways, matching the sibling scripts:
   - as an importable module via `importlib` spec (plan_sequence.py loads it this way to
     swap in the gated `fetch_open_issues`);
-  - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`.
+  - as a CLI: `uv run --no-project python scripts/gh_issue.py view <n> [--comments]`
+    or `... maintainer-login` (print the trusted maintainer login, for author checks).
 
 Reuses `_gh.py`'s process primitives, corpus-fetch cap + truncation warning
 (`FETCH_CAP` / `_warn_if_truncated`), and the non-zero-tolerant single-issue view
@@ -181,10 +182,18 @@ def main(argv: list[str] | None = None) -> int:
     v.add_argument("number", type=int, help="issue number")
     v.add_argument("--comments", action="store_true",
                    help="include maintainer-authored comments")  # fmt: skip
+    sub.add_parser(
+        "maintainer-login",
+        help="print the trusted maintainer login (for PR-comment author checks)",
+    )
     try:
         args = ap.parse_args(argv)
     except SystemExit:
         return EXIT_USAGE
+
+    if args.cmd == "maintainer-login":
+        print(maintainer_login())
+        return EXIT_OK
 
     code, text = view(args.number, args.comments)
     if text:

@@ -264,3 +264,15 @@ def test_view_comments_requests_comments_field(
 def test_cli_usage_error_exits_2() -> None:
     assert gi.main([]) == gi.EXIT_USAGE  # no subcommand
     assert gi.main(["bogus"]) == gi.EXIT_USAGE
+
+
+# --- maintainer-login subcommand -----------------------------------------------------
+
+
+def test_maintainer_login_subcommand_prints_login(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # The env override (autouse fixture) pins the login; the subcommand prints exactly it,
+    # so skill text can name one deterministic command for the author check.
+    assert gi.main(["maintainer-login"]) == gi.EXIT_OK
+    assert capsys.readouterr().out.strip() == MAINT
