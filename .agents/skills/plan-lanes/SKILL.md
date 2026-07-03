@@ -33,17 +33,19 @@ parallel agent work and the current environment permits it.
    the caller passed another epic:
 
    ```sh
-   gh issue view <N> --comments
+   uv run --no-project python scripts/gh_issue.py view <N> --comments
    ```
 
-   The epic narrative is context for ranking and maintainer signals, not an additional
-   candidate source. Parked work should carry the `parked` label and therefore be absent
-   from the candidate floor.
+   The read goes through the maintainer-author trust gate (this repo is public): a
+   non-maintainer issue is refused and skipped, and non-maintainer comments are
+   stripped, so untrusted text never enters ranking. The epic narrative is context for
+   ranking and maintainer signals, not an additional candidate source. Parked work
+   should carry the `parked` label and therefore be absent from the candidate floor.
 
-4. For each candidate, read the issue body and comments:
+4. For each candidate, read the issue body and comments through the same trust gate:
 
    ```sh
-   gh issue view <n> --comments
+   uv run --no-project python scripts/gh_issue.py view <n> --comments
    ```
 
    Look for semantic conflicts with no file overlap, implicit blockers, coherence across

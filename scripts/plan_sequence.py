@@ -77,6 +77,17 @@ assert _GHSPEC and _GHSPEC.loader
 _gh = importlib.util.module_from_spec(_GHSPEC)
 _GHSPEC.loader.exec_module(_gh)
 
+# The maintainer-author trust gate: this repo is public, so the ingestion set must only
+# ever carry maintainer-authored issue text (a stranger's issue is a prompt-injection
+# surface). gh_issue.fetch_open_issues drops non-maintainer rows; is_own_pr drops fork PRs
+# from the running-claim computation. Loaded via the same spec idiom.
+_GISPEC = importlib.util.spec_from_file_location(
+    "gh_issue", Path(__file__).with_name("gh_issue.py")
+)
+assert _GISPEC and _GISPEC.loader
+gh_issue = importlib.util.module_from_spec(_GISPEC)
+_GISPEC.loader.exec_module(gh_issue)
+
 AREA_LABELS = _h.AREA_LABELS
 PRIORITY_LABELS = _h.PRIORITY_LABELS
 BLOCKING_KEYWORDS = _h.BLOCKING_KEYWORDS
@@ -263,9 +274,14 @@ def epic_body(epic: int) -> str:
 
 def fetch_open_prs_by_issue(current_repo: str | None = None) -> dict[int, list[int]]:
     prs = gh_json(["pr", "list", "--state", "open", "--limit", str(FETCH_CAP),
-                   "--json", "number,body,closingIssuesReferences"])  # fmt: skip
+                   "--json", "number,body,closingIssuesReferences,isCrossRepository"])  # fmt: skip
     by_issue: dict[int, list[int]] = {}
     for pr in prs:
+        # A fork PR's `Closes #N` is an untrusted claim on this repo's issues (a stranger
+        # could otherwise hold an issue out of dispatch by opening a fork PR). Only count
+        # own-branch PRs into the running-claim set; skip forks entirely.
+        if not gh_issue.is_own_pr(pr):
+            continue
         numbers = {ref["number"] for ref in pr.get("closingIssuesReferences") or []}
         numbers.update(closing_issue_numbers_from_body(pr.get("body"), current_repo))
         for number in sorted(numbers):
@@ -915,7 +931,7 @@ def main() -> int:
     _known, _issue_state, open_numbers = _h.fetch_number_states()
     parent_of = _h.fetch_parents(owner, name)
     recs = build_records(
-        _h.fetch_open_issues(), open_numbers, parent_of, f"{owner}/{name}"
+        gh_issue.fetch_open_issues(), open_numbers, parent_of, f"{owner}/{name}"
     )
     work = [r for r in recs if not r.is_epic]
     ready_nums = {r.number for r in work if r.status == "ready"}

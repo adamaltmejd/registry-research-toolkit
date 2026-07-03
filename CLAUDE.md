@@ -296,6 +296,15 @@ since the last `reg_meta_build/v*` tag, i.e. a release is pending). The write-ca
 refresh lives in a **separate** workflow (`plan-sequence.yml`, `issues:write`) so the
 hygiene job's read-only guarantee stays intact.
 
+**Ingestion trust gate** — this repo is public, so automation reads issue/PR content
+**only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:
+issues/comments not authored by the maintainer, and fork-PR `Closes #N` claims, are
+dropped rather than surfaced to a model or rendered into the epic body / candidate
+floor. `plan_sequence.py`'s candidate floor and fork-PR closing-claim path route through
+it, and the skills read issues via `gh_issue.py view`. Raw `gh issue view` /
+`gh issue list --state open` (and `gh api .../issues`, `gh search issues`) model-reads
+in skill files are forbidden, enforced by `scripts/tests/test_skill_gh_reads.py`.
+
 **Marking work in-flight** — when you start developing an issue — in `/pr-pipeline` **or
 ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the in-flight
 claim: the sequencing view counts an open PR's `Closes #N` as work-in-progress, so
