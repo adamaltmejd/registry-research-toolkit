@@ -240,6 +240,90 @@ def test_follower_drain_discards_torn_suffix(tmp_path: Path) -> None:
     assert follower.drain_tail() is None  # a fragment, not a line
 
 
+def test_multiline_command_collapses_to_bounded_headline() -> None:
+    heredoc = "python - <<'EOF'\n" + "x = 1\n" * 80 + "EOF"
+    rendered = _render(
+        _item(
+            {
+                "type": "command_execution",
+                "command": heredoc,
+                "aggregated_output": "",
+                "exit_code": 0,
+                "status": "completed",
+            }
+        )
+    )
+    assert rendered is not None
+    assert "\n" not in rendered  # one-line contract holds for heredocs
+    assert len(rendered) < ct.MAX_COMMAND_CHARS + 20
+    assert "…" in rendered
+
+
+def test_current_run_offset_finds_last_run(tmp_path: Path) -> None:
+    log = tmp_path / "lane.log"
+    run1 = b'{"type":"thread.started","thread_id":"a"}\n{"type":"turn.started"}\n'
+    run2 = b'{"type":"thread.started","thread_id":"b"}\n'
+    log.write_bytes(run1 + run2)
+    assert ct.current_run_offset(log) == len(run1)
+    log.write_bytes(run1)  # single run: current run starts at 0
+    assert ct.current_run_offset(log) == 0
+    assert ct.current_run_offset(tmp_path / "missing.log") == 0
+
+
+def test_follow_from_run_start_skips_prior_runs(tmp_path: Path, capsys) -> None:
+    logs_root = tmp_path / "dispatch-logs"
+    logs_root.mkdir(parents=True)
+    msg = '{"type":"item.completed","item":{"type":"agent_message","text":"%s"}}'
+    (logs_root / "reused.log").write_text(
+        '{"type":"thread.started","thread_id":"a"}\n' + msg % "old-run" + "\n"
+        '{"type":"thread.started","thread_id":"b"}\n' + msg % "new-run" + "\n",
+        encoding="utf-8",
+    )
+    rc = ct.main(
+        ["--state-root", str(tmp_path), "--no-color", "follow", "reused"]
+        + ["--from-run-start"]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "new-run" in out
+    assert "old-run" not in out  # a reused slug's prior run is not replayed
+
+
+def test_claude_lane_passes_json_looking_lines_through(tmp_path: Path, capsys) -> None:
+    # claude -p logs are plain text; a line that happens to be valid JSON must not
+    # be parsed as a codex event (which would suppress or reshape it).
+    slots_root = tmp_path / "pipeline-slots"
+    logs_root = tmp_path / "dispatch-logs"
+    logs_root.mkdir(parents=True)
+    _write_slot(slots_root, "claude-lane", surface="claude")
+    (logs_root / "claude-lane.log").write_text(
+        'plain narration\n{"type":"item.started"}\n', encoding="utf-8"
+    )
+    renderer = ct.Renderer(color=False)
+    followers: dict[str, ct.LogFollower] = {}
+    ct._follow_all_tick(
+        slots_root,
+        logs_root,
+        renderer,
+        followers,
+        {},
+        {},
+        raw=False,
+        startup_mode="start",
+    )
+    out = capsys.readouterr().out
+    assert '{"type":"item.started"}' in out  # verbatim, not suppressed
+
+
+def test_list_slots_tolerates_malformed_optional_fields(tmp_path: Path) -> None:
+    slots_root = tmp_path / "pipeline-slots"
+    _write_slot(slots_root, "bad-fields", issues=1011, prs="42")
+    slots = ct.list_slots(slots_root)
+    assert slots[0].issues == () and slots[0].prs == ()
+    # status must render, not crash, on the malformed ledger entry
+    assert "bad-fields" in ct.status_table(slots, tmp_path / "dispatch-logs", now=0.0)
+
+
 def test_tmux_session_identity_per_state_root(tmp_path: Path) -> None:
     assert ct.tmux_session(None) == "cos"
     override = ct.tmux_session(tmp_path)
@@ -384,6 +468,7 @@ def test_follow_all_tick_prunes_and_resumes_reused_slug(tmp_path: Path, capsys) 
     renderer = ct.Renderer(color=False)
     followers: dict[str, ct.LogFollower] = {}
     resume_pos: dict[str, int] = {}
+    plain_lanes: dict[str, bool] = {}
 
     def tick() -> str:
         ct._follow_all_tick(
@@ -392,8 +477,9 @@ def test_follow_all_tick_prunes_and_resumes_reused_slug(tmp_path: Path, capsys) 
             renderer,
             followers,
             resume_pos,
+            plain_lanes,
             raw=True,
-            hot_join=False,
+            startup_mode="start",
         )
         return capsys.readouterr().out
 

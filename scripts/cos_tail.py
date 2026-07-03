@@ -54,6 +54,7 @@ _CP_SPEC.loader.exec_module(_cos_preflight)
 
 DEFAULT_INTERVAL = 2.0
 FAIL_TAIL_LINES = 20
+MAX_COMMAND_CHARS = 160
 TMUX_SESSION = "cos"
 LANE_TITLE_PREFIX = "lane:"
 DONE_TITLE_PREFIX = "done:"
@@ -107,13 +108,22 @@ def list_slots(slots_root: Path) -> list[Slot]:
                 slug=slug,
                 surface=str(data.get("surface") or "?"),
                 tier=str(data.get("tier") or "?"),
-                issues=tuple(n for n in data.get("issues") or [] if isinstance(n, int)),
-                prs=tuple(n for n in data.get("prs") or [] if isinstance(n, int)),
+                issues=_int_tuple(data.get("issues")),
+                prs=_int_tuple(data.get("prs")),
                 session=data.get("session"),
                 dispatched=str(data.get("dispatched") or "?"),
             )
         )
     return slots
+
+
+def _int_tuple(value: Any) -> tuple[int, ...]:
+    # Slot files come from multiple agents and manual adjudication; a malformed
+    # optional field (e.g. `"issues": 1011`) must degrade one display cell, never
+    # crash the viewer for the whole ledger.
+    if not isinstance(value, list):
+        return ()
+    return tuple(n for n in value if isinstance(n, int))
 
 
 def log_age(log_path: Path, now: float) -> str:
@@ -251,6 +261,11 @@ class Renderer:
 
     def _render_command(self, item: dict[str, Any]) -> str:
         command = strip_shell_wrapper(str(item.get("command") or "?"))
+        # Heredocs/multi-line snippets must not break the one-line contract: collapse
+        # to a single bounded headline; the full text is in the log (--raw).
+        command = " ".join(part.strip() for part in command.split("\n") if part.strip())
+        if len(command) > MAX_COMMAND_CHARS:
+            command = command[: MAX_COMMAND_CHARS - 2] + " …"
         exit_code = item.get("exit_code")
         rc = "?" if exit_code is None else str(exit_code)
         head = self._c(_DIM, f"$ {command} → rc={rc}")
@@ -327,6 +342,45 @@ class LogFollower:
         return tail.decode("utf-8", errors="replace") if tail.strip() else None
 
 
+CODEX_RUN_MARKER = b'{"type":"thread.started"'
+
+
+def current_run_offset(log_path: Path) -> int:
+    """Byte offset where the append-only per-slug log's CURRENT run begins.
+
+    A retried dispatch reuses the slug and appends a whole new run, so replaying
+    from byte 0 would show a prior run's commands/failures as if they were current.
+    Each codex run opens with a thread.started event; the last marker starts the
+    current run. Logs without the marker (claude lanes, fresh files) start at 0.
+    """
+    try:
+        data = log_path.read_bytes()
+    except OSError:
+        return 0
+    idx = data.rfind(b"\n" + CODEX_RUN_MARKER)
+    return idx + 1 if idx >= 0 else 0
+
+
+def lane_is_plain(surface: str | None, log_path: Path) -> bool:
+    """True when the lane's log should pass through verbatim instead of rendering.
+
+    codex lanes emit `codex exec --json` events; claude lanes emit plain `claude -p`
+    text, and running it through the event renderer would eat any output line that
+    happens to be valid JSON (an object without a codex `type` renders as nothing).
+    An unknown surface (done lane, malformed slot) is sniffed from the log's head.
+    """
+    if surface == "codex":
+        return False
+    if surface == "claude":
+        return True
+    try:
+        with log_path.open("rb") as fh:
+            head = fh.readline(4096)
+    except OSError:
+        return False
+    return not head.lstrip().startswith(b'{"type":')
+
+
 def follow_one(
     slug: str,
     slots_root: Path,
@@ -334,7 +388,7 @@ def follow_one(
     renderer: Renderer,
     *,
     raw: bool,
-    from_start: bool,
+    start_mode: str,
     interval: float,
 ) -> int:
     log_path = logs_root / f"{slug}.log"
@@ -346,8 +400,10 @@ def follow_one(
             file=sys.stderr,
         )
         return 2
+    slot_surface: str | None = None
     for slot in list_slots(slots_root):
         if slot.slug == slug:
+            slot_surface = slot.surface
             issues = ",".join(f"#{n}" for n in slot.issues) or "-"
             prs = ",".join(f"#{n}" for n in slot.prs) or "-"
             print(
@@ -358,16 +414,19 @@ def follow_one(
                 )
             )
             break
+    plain = raw or lane_is_plain(slot_surface, log_path)
 
     def emit(lines: list[str]) -> None:
         for line in lines:
-            rendered = line if raw else renderer.render(line)
+            rendered = line if plain else renderer.render(line)
             if rendered is not None:
                 print(rendered, flush=True)
 
     follower = LogFollower(log_path)
-    if not from_start:
+    if start_mode == "tail":
         follower.skip_to_end()
+    elif start_mode == "run-start":
+        follower.pos = current_run_offset(log_path)
     while True:
         emit(follower.poll())
         if slug not in _cos_preflight.scan_slots(slots_root):
@@ -391,11 +450,12 @@ def follow_all(
     renderer: Renderer,
     *,
     raw: bool,
-    from_start: bool,
+    start_mode: str,
     interval: float,
 ) -> int:
     followers: dict[str, LogFollower] = {}
     resume_pos: dict[str, int] = {}
+    plain_lanes: dict[str, bool] = {}
     first_scan = True
     while True:
         _follow_all_tick(
@@ -404,8 +464,9 @@ def follow_all(
             renderer,
             followers,
             resume_pos,
+            plain_lanes,
             raw=raw,
-            hot_join=first_scan and not from_start,
+            startup_mode=start_mode if first_scan else None,
         )
         first_scan = False
         time.sleep(interval)
@@ -417,35 +478,44 @@ def _follow_all_tick(
     renderer: Renderer,
     followers: dict[str, LogFollower],
     resume_pos: dict[str, int],
+    plain_lanes: dict[str, bool],
     *,
     raw: bool,
-    hot_join: bool,
+    startup_mode: str | None,
 ) -> None:
-    """One discovery/emit/prune pass of follow --all (split out for testability)."""
+    """One discovery/emit/prune pass of follow --all (split out for testability).
+
+    `startup_mode` is the user's start mode on the first tick and None afterwards —
+    a lane discovered mid-watch always starts at its current run's offset.
+    """
 
     def emit(slug: str, lines: list[str]) -> None:
         prefix = renderer._c(_DIM, f"[{short_slug(slug)}]")
         for line in lines:
-            rendered = line if raw else renderer.render(line)
+            rendered = line if plain_lanes.get(slug, raw) else renderer.render(line)
             if rendered is None:
                 continue
             for out_line in rendered.splitlines():
                 print(f"{prefix} {out_line}", flush=True)
 
-    live = _cos_preflight.scan_slots(slots_root)
+    live_slots = list_slots(slots_root)
+    live = {slot.slug for slot in live_slots}
+    surfaces = {slot.slug: slot.surface for slot in live_slots}
     for slug in sorted(live):
         if slug not in followers:
-            follower = LogFollower(logs_root / f"{slug}.log")
+            log_path = logs_root / f"{slug}.log"
+            follower = LogFollower(log_path)
+            mode = startup_mode if startup_mode is not None else "run-start"
             if slug in resume_pos:
-                # Slug reuse: the per-slug log is append-only, so resume past the
-                # prior run's bytes instead of replaying or skipping the new run.
+                # Slug reuse seen by THIS process: resume exactly past the prior
+                # run's bytes in the append-only log.
                 follower.pos = resume_pos[slug]
-            elif hot_join:
+            elif mode == "tail":
                 follower.skip_to_end()
-            # A lane discovered mid-watch has a just-started log: replay it in full
-            # (hot_join only covers lanes already live at startup without
-            # --from-start).
+            elif mode == "run-start":
+                follower.pos = current_run_offset(log_path)
             followers[slug] = follower
+            plain_lanes[slug] = raw or lane_is_plain(surfaces.get(slug), log_path)
             print(renderer._c(_BOLD, f"== following {slug} =="), flush=True)
     for slug, follower in list(followers.items()):
         emit(slug, follower.poll())
@@ -463,6 +533,7 @@ def _follow_all_tick(
             )
             resume_pos[slug] = follower.pos
             del followers[slug]
+            plain_lanes.pop(slug, None)
 
 
 # ---------------------------------------------------------------------------
@@ -546,7 +617,9 @@ def manage(args: argparse.Namespace) -> int:
             panes[pane_id] = title
         spawn, retire = plan_pane_actions(live, panes)
         for slug in spawn:
-            follow_cmd = _self_argv(args, "follow", slug, "--from-start")
+            # --from-run-start, not --from-start: the per-slug log is append-only,
+            # so a reused slug's pane must not replay prior runs as if current.
+            follow_cmd = _self_argv(args, "follow", slug, "--from-run-start")
             pane_id = _tmux(
                 "split-window",
                 "-d",
@@ -640,10 +713,17 @@ def build_parser() -> argparse.ArgumentParser:
     follow.add_argument(
         "--all", action="store_true", help="every live lane, prefix-multiplexed"
     )
-    follow.add_argument(
+    start = follow.add_mutually_exclusive_group()
+    start.add_argument(
         "--from-start",
         action="store_true",
         help="replay the log from the beginning instead of tailing new events",
+    )
+    start.add_argument(
+        "--from-run-start",
+        action="store_true",
+        help="replay from the CURRENT run's start in the append-only per-slug log "
+        "(what the tmux panes use — a reused slug does not replay prior runs)",
     )
     follow.add_argument(
         "--raw", action="store_true", help="print log lines verbatim (no rendering)"
@@ -673,9 +753,15 @@ def main(argv: list[str] | None = None) -> int:
         if args.all == (args.slug is not None):
             print("error: follow takes exactly one of <slug> or --all", file=sys.stderr)
             return 2
+        if args.from_start:
+            start_mode = "start"
+        elif args.from_run_start:
+            start_mode = "run-start"
+        else:
+            start_mode = "tail"
         common = {
             "raw": args.raw,
-            "from_start": args.from_start,
+            "start_mode": start_mode,
             "interval": args.interval,
         }
         if args.all:
