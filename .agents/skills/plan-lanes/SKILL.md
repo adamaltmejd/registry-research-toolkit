@@ -49,12 +49,21 @@ parallel agent work and the current environment permits it.
    ```
 
    Look for semantic conflicts with no file overlap, implicit blockers, coherence across
-   issues, stale or missing `touches`, priority/status labels, and relationships.
+   issues, stale or missing `touches`, priority/status labels, and relationships. Trust
+   the floor's declared blocker state: a floor candidate has no `blocked` label and no
+   open declared `Blocked by` / `Depends on` target in the fetch that produced the
+   floor. A prose relationship whose target is absent from the candidate set is not
+   proof that the target is pending; it may be closed/satisfied. If blocker state
+   matters, resolve the named target with `gh_issue.py view <target>` and hold the
+   candidate only when that trusted JSON's `state` shows an open blocker or you found a
+   genuinely implicit blocker outside the declared relationships.
 
 5. Compose small coherent lanes. Never downgrade a script-declared must-serialize group
    to parallel-safe. If a candidate is actually blocked or parked despite appearing in
    the floor, place it in Held/Notes with a one-line reason and flag the missing
-   `blocked`/`parked` label rather than ranking it.
+   `blocked`/`parked` label rather than ranking it. Do not hold a candidate merely
+   because a blocker target is absent from the floor; floor absence also covers closed
+   work.
 
 6. Rank by priority bucket first: any `priority:high` member beats normal;
    `priority:low`-only lanes go last. Within a bucket, prefer unblocking power,

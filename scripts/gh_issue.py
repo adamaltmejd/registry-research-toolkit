@@ -136,7 +136,7 @@ def _fetch_issue(number: int, comments: bool) -> dict | None:
     NOT "is this an issue" — it's `view`'s `_is_maintainer` author check. This function
     only forwards the payload; whether to surface it is decided there.
     """
-    fields = "number,title,body,author" + (",comments" if comments else "")
+    fields = "number,title,state,body,author" + (",comments" if comments else "")
     return _gh.gh_issue_view_or_none(number, fields)
 
 
@@ -149,7 +149,7 @@ def view(number: int, comments: bool) -> tuple[int, str]:
     non-maintainer PR (e.g. a stranger's fork PR) is refused by the same `_is_maintainer`
     author check as any non-maintainer issue, and a maintainer-authored PR is trusted
     content just like a maintainer issue. When maintainer-authored, returns JSON
-    `{number,title,body[,comments]}` with `comments` (present only when requested)
+    `{number,title,state,body[,comments]}` with `comments` (present only when requested)
     filtered to maintainer-authored entries (fail-closed: non-maintainer and author-less
     comments dropped).
     """
@@ -164,6 +164,7 @@ def view(number: int, comments: bool) -> tuple[int, str]:
     out: dict = {
         "number": data.get("number"),
         "title": data.get("title"),
+        "state": data.get("state"),
         "body": data.get("body"),
     }
     if comments:
