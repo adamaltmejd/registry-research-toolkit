@@ -420,16 +420,19 @@ gh pr merge <pr> --squash --match-head-commit <headRefOid>
 After each merge, fetch `origin main`, fast-forward the local main checkout with
 `git merge --ff-only origin/main`, and verify the PR's changes are actually present on
 `main`, not merely that GitHub reports a merge commit. **Then, if the gate directory has
-`followups.md`, file the lane's follow-ups** (before archiving the gate directory): for
-each `## <title>` entry, skip any marked "covered by existing #N — do not file"; for the
-rest, invoke `/file-issue` (the `Skill` tool) with the entry — it re-runs the dedupe
-search and files each genuinely-new one (an entry whose fresh search now matches an
-existing issue is not filed). Collect the filed issue numbers for the tick report's
-`Follow-ups filed:` line. If `/file-issue` refuses (missing hygiene) or an entry is
-malformed, report it — never silently drop a follow-up. Then move the merged PR's gate
-directory to `merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so
-this archive is the audit trail if the merge later shows a regression. Prune (delete)
-gate directories whose PR closed without merging — but before deleting one, check for a
+`followups.md`, file the lane's follow-ups** (before archiving the gate directory):
+split the file into entries on its top-level `## <title>` headings — the ready-to-file
+body lives inside each entry's four-backtick ````` ````markdown ````` fence, so
+`## Problem` / `## Relationships` headings inside a body don't split the entry. Skip any
+entry marked "covered by existing #N — do not file"; for the rest, invoke `/file-issue`
+(the `Skill` tool) with the entry — it re-runs the dedupe search and files each
+genuinely-new one (an entry whose fresh search now matches an existing issue is not
+filed). Collect the filed issue numbers for the tick report's `Follow-ups filed:` line.
+If `/file-issue` refuses (missing hygiene) or an entry is malformed, report it — never
+silently drop a follow-up. Then move the merged PR's gate directory to
+`merge-gates/merged/pr-<N>/` — the PR deliberately carries no evidence, so this archive
+is the audit trail if the merge later shows a regression. Prune (delete) gate
+directories whose PR closed without merging — but before deleting one, check for a
 `followups.md`, and if present with unprocessed entries, file them via `/file-issue` (or
 report them) rather than silently dropping them, since a lane's final PR can close
 without merging. In the same breath, release the pipeline slot whose `prs` are now all

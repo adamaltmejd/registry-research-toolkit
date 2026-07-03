@@ -326,13 +326,21 @@ merge via the `file-issue` skill. Write it into the gate directory alongside the
 evidence, BEFORE `gate.json` (adding or refreshing it bumps `updated`), like every other
 evidence file. For a **multi-PR lane, write ONE `followups.md`** into the FINAL PR (in
 merge order) of the lane, not into every PR. Format: one `## <proposed issue title>`
-section per follow-up, each containing the proposed labels (one area + one type, per the
-Issue tracker rules), the dedupe search already performed
-(`gh issue list --state all --search "<keywords>"` and its outcome), a `Relationships`
-line set (`Follow-up to #N`, `Part of #<epic>`, any `Blocked by`), and the ready-to-file
-body (house skeleton, including a `touches` block when it will change code). An entry
-whose dedupe search matched an existing issue instead records **"covered by existing #N
-— do not file"** rather than a body.
+heading per follow-up, followed by the entry's plain-line metadata — the proposed labels
+(one area + one type, per the Issue tracker rules; plus `blocked` / `priority:*` /
+`parked` if they apply), the dedupe search already performed
+(`gh issue list --state all --search "<keywords>"` and its outcome), and a
+`Relationships` line set that MUST include `Follow-up to #N` (the machine-readable edge
+back to this PR's issue; `Part of #<epic>` is additional parent wiring, never a
+substitute origin), plus any `Blocked by`. The ready-to-file body (house skeleton,
+including a three-backtick `touches` block when it will change code) goes LAST, wrapped
+in a **four-backtick** ````` ````markdown ````` fence — the outer fence must be four
+backticks because the body itself contains a three-backtick fence (four-tick nesting is
+demonstrated in AGENTS.md's Issue tracker section). Only the body is fenced; the
+metadata stays as plain lines. This keeps `## Problem` / `## Relationships` headings
+inside the body from being mistaken for entry delimiters, so the entry split can safely
+key on `##` headings. An entry whose dedupe search matched an existing issue records
+**"covered by existing #N — do not file"** in place of the fenced body.
 
 Run the real `build-db` last and once for build-affecting work, using the `build-db`
 skill / `scripts/build_db_watch.py` so the run has a timestamped log, sparse progress,
