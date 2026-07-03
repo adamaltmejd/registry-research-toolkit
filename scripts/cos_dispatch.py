@@ -375,7 +375,7 @@ def resolve_continue_pr(pr: int) -> dict:
         raise SystemExit(
             f"refusing to continue PR #{pr}: state is {state or 'unknown'}"
         )
-    if data.get("isCrossRepository"):
+    if data.get("isCrossRepository") is not False:
         raise SystemExit(
             f"refusing to continue fork PR #{pr}; head branch is not local"
         )

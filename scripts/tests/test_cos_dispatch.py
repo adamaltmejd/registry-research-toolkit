@@ -443,6 +443,30 @@ def test_resolve_continue_pr_refuses_closed_pr(
     _no_real_launch(tmp_path)
 
 
+@pytest.mark.parametrize("cross_repository", [None, "missing"])
+def test_resolve_continue_pr_refuses_unknown_cross_repo_state(
+    tmp_path: Path,
+    _hermetic_env: Path,
+    cross_repository: object,
+) -> None:
+    payload: dict[str, object] = {
+        "state": "OPEN",
+        "headRefName": "codex/existing-pr",
+        "baseRefName": "main",
+        "headRepository": {"nameWithOwner": "adamaltmejd/registry-research-toolkit"},
+        "closingIssuesReferences": [{"number": 1011}],
+    }
+    if cross_repository != "missing":
+        payload["isCrossRepository"] = cross_repository
+    _stub_bin(_hermetic_env, "gh", jsonl=json.dumps(payload))
+
+    with pytest.raises(SystemExit) as exc:
+        cd.resolve_continue_pr(4242)
+
+    assert "refusing to continue fork PR #4242" in str(exc.value.code)
+    _no_real_launch(tmp_path)
+
+
 def test_resolve_continue_pr_scrubs_git_env(
     tmp_path: Path, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
