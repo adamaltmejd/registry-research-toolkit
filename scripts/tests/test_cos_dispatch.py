@@ -115,23 +115,26 @@ def _hermetic_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return stub_bin
 
 
-# The real author gate, captured before the autouse no-op below replaces it, so the
-# dedicated author-check tests can restore the genuine function (they stub gh_issue's
-# surface underneath it).
+# The real author + visual-lane gates, captured before the autouse no-ops below replace
+# them, so the dedicated gate tests can restore the genuine functions (they stub the
+# gh_issue surface underneath them).
 _REAL_REQUIRE_MAINTAINER = cd.require_maintainer_authored
+_REAL_REQUIRE_NO_VISUAL = cd.require_no_visual_lane_on_codex
 
 
 @pytest.fixture(autouse=True)
 def _stub_author_check(monkeypatch: pytest.MonkeyPatch) -> None:
-    """No-op the maintainer-author gate by default so existing tests don't hit live `gh`.
+    """No-op the pre-launch network gates by default so existing tests don't hit live `gh`.
 
-    dispatch() now calls require_maintainer_authored() (a read-only `gh issue view` per
-    issue) before the worktree step. The launch-reaching tests here don't model issue
-    authorship, so default them to "all maintainer-authored"; the dedicated author-check
-    tests below override this with the real function (_REAL_REQUIRE_MAINTAINER) over a
-    stubbed gh_issue surface to exercise refuse/proceed.
+    dispatch() now calls two read-only-network guards before the worktree step: the
+    maintainer-author gate (require_maintainer_authored, a `gh issue view` per issue) and
+    the codex visual-lane routing guard (require_no_visual_lane_on_codex, a body fetch per
+    issue). The launch-reaching tests here model neither, so default both to pass; the
+    dedicated gate tests below restore the real functions (_REAL_REQUIRE_*) over a stubbed
+    gh_issue surface to exercise refuse/proceed.
     """
     monkeypatch.setattr(cd, "require_maintainer_authored", lambda issues: None)
+    monkeypatch.setattr(cd, "require_no_visual_lane_on_codex", lambda issues: None)
 
 
 def _no_real_launch(tmp_path: Path) -> None:
@@ -333,17 +336,33 @@ def test_validate_slug_rejects_non_stems(bad: str) -> None:
 
 def test_build_launch_argv_codex_pins_flags() -> None:
     argv = cd.build_launch_argv(
-        "codex", Path("/wt/lane"), [1011, 1012], Path("/state"), None, []
+        "codex",
+        Path("/wt/lane"),
+        [1011, 1012],
+        Path("/state"),
+        None,
+        [],
+        Path("/canon"),
     )
     assert argv[0:2] == ["codex", "exec"]
     assert argv[argv.index("-C") + 1] == "/wt/lane"
     assert argv[argv.index("-s") + 1] == "workspace-write"
     assert argv[argv.index("-c") + 1] == "approval_policy=never"
-    assert argv[argv.index("--add-dir") + 1] == "/state"
     assert "--json" in argv
     assert argv[-1] == "$pr-pipeline 1011 1012"
     # No profile flags → no model/effort pins.
     assert "-m" not in argv
+
+
+def test_build_launch_argv_codex_grants_state_root_and_canonical_gitdir() -> None:
+    # Two --add-dir grants (#1050): the state root AND the canonical checkout's .git, so
+    # the linked worktree's writable git state (which lives under <canonical>/.git, outside
+    # the sandboxed cwd) is inside the workspace-write set.
+    argv = cd.build_launch_argv(
+        "codex", Path("/wt/lane"), [1011], Path("/state"), None, [], Path("/canon")
+    )
+    add_dirs = [argv[i + 1] for i, a in enumerate(argv) if a == "--add-dir"]
+    assert add_dirs == ["/state", "/canon/.git"]
 
 
 def test_build_launch_argv_codex_layers_profile_flags_before_prompt() -> None:
@@ -354,6 +373,7 @@ def test_build_launch_argv_codex_layers_profile_flags_before_prompt() -> None:
         Path("/state"),
         None,
         ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"],
+        Path("/canon"),
     )
     # Profile flags sit after --json and before the prompt (still the last arg).
     assert argv[argv.index("-m") + 1] == "gpt-5.5"
@@ -363,7 +383,13 @@ def test_build_launch_argv_codex_layers_profile_flags_before_prompt() -> None:
 
 def test_build_launch_argv_claude_uses_session_and_slash_prompt() -> None:
     argv = cd.build_launch_argv(
-        "claude", Path("/wt/lane"), [1011], Path("/state"), "SID-123", []
+        "claude",
+        Path("/wt/lane"),
+        [1011],
+        Path("/state"),
+        "SID-123",
+        [],
+        Path("/canon"),
     )
     assert argv[0] == "claude"
     assert argv[argv.index("--session-id") + 1] == "SID-123"
@@ -381,6 +407,7 @@ def test_build_launch_argv_claude_layers_profile_flags() -> None:
         Path("/state"),
         "SID-123",
         ["--model", "claude-sonnet-5", "--effort", "high", "--advisor", "opus"],
+        Path("/canon"),
     )
     assert argv[argv.index("--model") + 1] == "claude-sonnet-5"
     assert argv[argv.index("--effort") + 1] == "high"
@@ -579,7 +606,12 @@ def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     assert rec["cwd"] == str(worktree)
     assert "workspace-write" in rec["argv"]
     assert "approval_policy=never" in rec["argv"]
-    assert "--add-dir" in rec["argv"]
+    # Both --add-dir grants: the state root AND the canonical checkout's .git (#1050), so
+    # the linked worktree's writable git state is inside the workspace-write set.
+    add_dirs = [
+        rec["argv"][i + 1] for i, a in enumerate(rec["argv"]) if a == "--add-dir"
+    ]
+    assert add_dirs == [str(state), str(canonical / ".git")]
     assert "--json" in rec["argv"]
     assert "$pr-pipeline 1011" in rec["argv"]
     assert rec["argv"][rec["argv"].index("-m") + 1] == "gpt-5.5"
@@ -1613,6 +1645,212 @@ def test_dry_run_skips_author_check(
         raise AssertionError("author check ran during --dry-run (network I/O)")
 
     monkeypatch.setattr(cd._gh_issue, "is_maintainer_authored", boom)
+
+    rc = cd.dispatch(_args(tmp_path, canonical, state_root=state, dry_run=True))
+
+    assert rc == 0
+    assert json.loads(capsys.readouterr().out)["surface"] == "codex"
+
+
+# --- visual-lane routing guard: codex can't run the browser gate (#1049) -------
+
+
+@pytest.mark.parametrize(
+    "touches, hits",
+    [
+        (["reg_webapp/frontend/src/App.svelte"], True),  # literal under the surface
+        (["reg_webapp/frontend"], True),  # the surface dir itself
+        (["reg_webapp/frontend/**"], True),  # glob rooted at the surface
+        (["reg_webapp/**"], True),  # ancestor glob whose wildcard covers the surface
+        (["**/foo.svelte"], True),  # leading-wildcard glob → could match anywhere
+        (["reg_webapp/backend/api.py"], False),  # sibling tree, not the surface
+        (["reg_meta/db.py", "scripts/cos_dispatch.py"], False),  # unrelated
+        ([], False),  # no touches → no signal
+        (["reg_webapp/frontend_notes.md"], False),  # prefix look-alike, not a child
+    ],
+)
+def test_touches_visual_surface(touches: list[str], hits: bool) -> None:
+    assert cd._touches_visual_surface(touches) is hits
+
+
+def _stub_visual_bodies(
+    monkeypatch: pytest.MonkeyPatch, bodies: dict[int, str | None]
+) -> None:
+    """Drive the REAL require_no_visual_lane_on_codex via a stubbed maintainer_body.
+
+    Restores the real guard (over the autouse no-op) and stubs gh_issue.maintainer_body so
+    each issue resolves to a canned body (None models a missing/non-maintainer/body-less
+    issue → no signal). parse_touches stays REAL — the guard must parse a real fenced block.
+    """
+    monkeypatch.setattr(cd, "require_no_visual_lane_on_codex", _REAL_REQUIRE_NO_VISUAL)
+    monkeypatch.setattr(cd._gh_issue, "maintainer_body", lambda n: bodies.get(n))
+
+
+def _touches_body(*paths: str) -> str:
+    inner = "\n".join(paths)
+    return f"Some issue prose.\n\n```touches\n{inner}\n```\n"
+
+
+def test_codex_visual_lane_refused_before_side_effects(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # codex surface + an issue whose touches hit reg_webapp/frontend/** → refuse (exit 2),
+    # naming the issue and pointing at the claude surface, BEFORE any side effect.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _stub_visual_bodies(
+        monkeypatch, {1011: _touches_body("reg_webapp/frontend/src/App.svelte")}
+    )
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "#1011" in err
+    assert "reg_webapp/frontend" in err
+    assert "claude" in err  # actionable: directs to the claude surface
+    slug = "auto-codex-issue-1011"
+    # No side effects: no worktree, no slot, no real launch.
+    assert not (canonical / ".claude" / "worktrees" / slug).exists()
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_codex_ancestor_glob_touches_refused(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A glob-y touches entry that covers the frontend tree (reg_webapp/**) → refusal, since
+    # its wildcard could expand under the surface.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _stub_visual_bodies(monkeypatch, {1011: _touches_body("reg_webapp/**")})
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    assert "#1011" in capsys.readouterr().err
+    assert not (state / "pipeline-slots").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_codex_one_visual_issue_in_lane_names_only_the_offender(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A multi-issue codex lane is refused if ANY issue touches the visual surface; the
+    # error names the offender, not the backend-only sibling.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _stub_visual_bodies(
+        monkeypatch,
+        {
+            1011: _touches_body("reg_webapp/backend/api.py"),
+            1012: _touches_body("reg_webapp/frontend/src/lib/ui/Foo.svelte"),
+        },
+    )
+
+    rc = cd.main(
+        [
+            "--issues",
+            "1011,1012",
+            "--state-root",
+            str(state),
+            "--canonical",
+            str(canonical),
+            "--no-canonical-check",
+        ]
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "#1012" in err
+    assert "#1011" not in err
+    _no_real_launch(tmp_path)
+
+
+def test_codex_non_frontend_touches_proceeds(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # codex surface + non-frontend touches → the guard passes and the dispatch launches.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    _stub_visual_bodies(monkeypatch, {1011: _touches_body("reg_meta/db.py")})
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    slug = "auto-codex-issue-1011"
+    assert (canonical / ".claude" / "worktrees" / slug).is_dir()
+
+
+def test_claude_visual_lane_not_blocked(
+    tmp_path: Path, capsys, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The guard is codex-only: a claude launch on a frontend-touching lane proceeds (claude
+    # is unsandboxed and CAN run the visual gate). maintainer_body raises if called, proving
+    # the guard is never reached on the claude surface.
+    canonical = _make_origin(tmp_path)
+    _stub_bin(_hermetic_env, "claude")
+    state = tmp_path / "state"
+    monkeypatch.setattr(cd, "require_no_visual_lane_on_codex", _REAL_REQUIRE_NO_VISUAL)
+
+    def boom(number: int) -> str | None:
+        raise AssertionError("visual guard ran on the claude surface")
+
+    monkeypatch.setattr(cd._gh_issue, "maintainer_body", boom)
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, tier="easy", state_root=state),
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    assert json.loads(capsys.readouterr().out)["surface"] == "claude"
+
+
+def test_dry_run_skips_visual_guard(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # --dry-run promises no network: the visual guard (body fetch per issue) must NOT run.
+    # Wire the real guard but make maintainer_body raise; dry-run still returns 0 untouched.
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    monkeypatch.setattr(cd, "require_no_visual_lane_on_codex", _REAL_REQUIRE_NO_VISUAL)
+
+    def boom(number: int) -> str | None:
+        raise AssertionError("visual guard ran during --dry-run (network I/O)")
+
+    monkeypatch.setattr(cd._gh_issue, "maintainer_body", boom)
 
     rc = cd.dispatch(_args(tmp_path, canonical, state_root=state, dry_run=True))
 

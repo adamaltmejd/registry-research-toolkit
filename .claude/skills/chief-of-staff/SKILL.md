@@ -628,6 +628,13 @@ one-coordinator rule in Scheduling is what excludes that.
   (no model/effort/advisor pins). The chosen `tier` is recorded in both the slot file
   and the dispatch result JSON.
 
+  A lane touching `reg_webapp/frontend/**` (or otherwise needing the rendered-UI visual
+  merge gate) MUST launch on a **claude surface** (`--tier easy`, or
+  `--surface claude`): codex's seatbelt cannot launch the browser that gate requires, so
+  the lane would be unmergeable there. `cos_dispatch` enforces this — it REFUSES a
+  codex-surface launch (exit `2`) when any lane issue's `touches` block hits that
+  surface, naming the issue and directing you to claude.
+
 - **Launch each lane** from the canonical checkout with:
 
   ```sh
@@ -638,8 +645,9 @@ one-coordinator rule in Scheduling is what excludes that.
   deterministic launcher: it re-checks the kill switch (exit `3`) and the slot budget
   (exit `4`), refuses a slug/worktree collision (exit `2`), creates a fresh worktree off
   `origin/main`, launches the agent DETACHED with the resolved tier profile (hard/codex:
-  `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --json -m gpt-5.5 -c model_reasoning_effort=xhigh '$pr-pipeline <issues>'`;
-  easy/claude:
+  `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --add-dir <canonical>/.git --json -m gpt-5.5 -c model_reasoning_effort=xhigh '$pr-pipeline <issues>'`
+  — the second `--add-dir` grants the linked worktree's writable git state, which lives
+  under the canonical checkout's `.git`, outside the sandboxed cwd; easy/claude:
   `claude --session-id <uuid> --model claude-sonnet-5 --effort high --advisor opus -p '/pr-pipeline <issues>' --dangerously-skip-permissions`),
   captures the session/thread id, and stamps the slot file with ownership (`surface`,
   `tier`, `session`, `pid`, `dispatched`) — written LAST, only after a successful
