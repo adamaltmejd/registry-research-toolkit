@@ -10,14 +10,14 @@ session=null), and --dry-run's zero-side-effect check-only path. Review-hardenin
 invariants: the codex session merge AND the initial ownership write both overlay only
 their own fields, preserving a fast child pipeline's concurrently-written `prs` (a
 vanished/invalid slot falls back to a full write); the id poll parses only bytes past the
-pre-launch log offset so a reused per-slug log can't leak a prior run's stale thread id; a
+`cos.run.started` sentinel so a reused per-slug log can't leak a prior run's stale thread id; a
 child that exits within the post-spawn grace window is a launch failure (exit 2, no slot);
 a dispatch-log setup OSError becomes the exit-2 orphan path (never a traceback); and a
 standard `.../registry-research-toolkit` --state-root is propagated to the child as
 XDG_STATE_HOME (a non-standard root warns and stays ambient).
 
 Real subprocesses are used where the behavior IS the subprocess: a tmp git repo with an
-`origin` bare remote so `git fetch origin main` + `git worktree add … origin/main` run
+`origin` bare remote so the explicit main fetch + `git worktree add … origin/main` run
 for real, and a stub `codex`/`claude` on a prepended PATH that records its argv+cwd and
 emits canned JSONL. cos_dispatch reuses the cos_preflight slot helpers (scan_slots,
 default_slots_root, DEFAULT_MAX_SLOTS), hoisted there from cos_watch on this branch;
@@ -221,11 +221,22 @@ def _make_origin(tmp_path: Path) -> Path:
     canonical.mkdir()
     _git(tmp_path, "init", "--bare", "-b", "main", str(bare))
     _git(tmp_path, "clone", str(bare), str(canonical))
+    _git(canonical, "config", "user.name", _GIT_ENV["GIT_AUTHOR_NAME"])
+    _git(canonical, "config", "user.email", _GIT_ENV["GIT_AUTHOR_EMAIL"])
     (canonical / "README.md").write_text("seed\n", encoding="utf-8")
     _git(canonical, "add", ".")
     _git(canonical, "commit", "-m", "seed")
     _git(canonical, "push", "origin", "main")
     return canonical
+
+
+def _push_branch(canonical: Path, branch: str, filename: str = "branch.txt") -> None:
+    _git(canonical, "switch", "-c", branch)
+    (canonical / filename).write_text(f"{branch}\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", f"seed {branch}")
+    _git(canonical, "push", "-u", "origin", branch)
+    _git(canonical, "switch", "main")
 
 
 def _stub_bin(
@@ -284,6 +295,9 @@ def _args(tmp_path: Path, canonical: Path, **overrides):
 
     defaults = {
         "issues": "1011",
+        "continue_pr": None,
+        "brief_file": None,
+        "no_rebase": False,
         "tier": "hard",
         "surface": None,  # None = use the tier's implied surface (matches argparse)
         "slug": None,
@@ -325,10 +339,39 @@ def test_default_slug_shape() -> None:
     assert cd.default_slug("codex", [1011, 1012]) == "auto-codex-issue-1011"
 
 
+def test_default_continue_slug_shape() -> None:
+    assert cd.default_continue_slug("codex", 4242) == "continue-codex-pr-4242"
+
+
 @pytest.mark.parametrize("bad", ["", "a/b", "..", ".", "x/../y"])
 def test_validate_slug_rejects_non_stems(bad: str) -> None:
     with pytest.raises(SystemExit):
         cd.validate_slug(bad)
+
+
+def test_closing_issue_numbers_prefers_strict_body_and_dedupes() -> None:
+    got = cd._closing_issue_numbers(
+        "Closes #11\nFixes #12\nresolved #11\nThis PR leaves #13 open",
+        [{"number": 10}, {"number": 12}],
+    )
+    assert got == [11, 12]
+
+
+def test_closing_issue_numbers_falls_back_to_github_refs() -> None:
+    got = cd._closing_issue_numbers(
+        "PR body without closing keywords", [{"number": 10}]
+    )
+    assert got == [10]
+
+
+def test_closing_issue_numbers_ignores_negated_prose() -> None:
+    body = (
+        "This PR does not close #1056.\n"
+        "The remaining #1056 mirror work is blocked.\n"
+        "- Refs #1056\n"
+        "Closes #1052\n"
+    )
+    assert cd._closing_issue_numbers(body, None) == [1052]
 
 
 def test_build_launch_argv_codex_pins_flags() -> None:
@@ -410,6 +453,21 @@ def test_build_launch_argv_claude_layers_profile_flags() -> None:
     assert argv[argv.index("--effort") + 1] == "high"
     assert argv[argv.index("--advisor") + 1] == "opus"
     assert argv[argv.index("-p") + 1] == "/pr-pipeline 1011"
+
+
+def test_build_launch_argv_accepts_continuation_prompt() -> None:
+    prompt = "$pr-pipeline continue PR #4242\nContinue the existing PR."
+    argv = cd.build_launch_argv(
+        "codex",
+        Path("/wt/lane"),
+        [1011],
+        Path("/state"),
+        None,
+        [],
+        Path("/canon"),
+        prompt=prompt,
+    )
+    assert argv[-1] == prompt
 
 
 # --- resolve_profile: tier → (surface, flags), with the --surface override rule ---
@@ -628,6 +686,19 @@ def test_happy_path_codex(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     # scan_slots accepts it.
     assert cd._cos_preflight.scan_slots(state / "pipeline-slots") == {slug}
 
+    log_lines = (
+        (state / "dispatch-logs" / f"{slug}.log")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    sentinel = json.loads(log_lines[0])
+    assert sentinel["type"] == "cos.run.started"
+    assert sentinel["slug"] == slug
+    assert sentinel["issues"] == [1011]
+    assert sentinel["prs"] == []
+    assert sentinel["mode"] == "fresh"
+    assert json.loads(log_lines[1])["type"] == "thread.started"
+
 
 def test_happy_path_claude(tmp_path: Path, capsys, _hermetic_env: Path) -> None:
     canonical = _make_origin(tmp_path)
@@ -798,9 +869,172 @@ def test_dry_run_easy_tier_reflects_claude_profile(tmp_path: Path, capsys) -> No
     _no_real_launch(tmp_path)
 
 
+def test_continue_pr_dry_run_uses_existing_pr_prompt(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    canonical = _make_origin(tmp_path)
+    brief = tmp_path / "brief.md"
+    brief.write_text("Fix the current-head review finding.", encoding="utf-8")
+    monkeypatch.setattr(
+        cd,
+        "resolve_continue_pr",
+        lambda pr: {
+            "pr": pr,
+            "branch": "codex/existing-pr",
+            "issues": [1011],
+            "title": "Existing PR",
+        },
+    )
+
+    rc = cd.dispatch(
+        _args(
+            tmp_path,
+            canonical,
+            issues=None,
+            continue_pr=4242,
+            brief_file=brief,
+            dry_run=True,
+        )
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["mode"] == "continue"
+    assert result["issues"] == [1011]
+    assert result["prs"] == [4242]
+    assert result["slot_path"].endswith("continue-codex-pr-4242.json")
+    prompt = result["launch_argv"][-1]
+    assert "$pr-pipeline continue PR #4242" in prompt
+    assert "Do NOT restart" in prompt
+    assert "Fix the current-head review finding." in prompt
+    assert not (canonical / ".claude" / "worktrees" / "continue-codex-pr-4242").exists()
+    _no_real_launch(tmp_path)
+
+
+def test_continue_pr_happy_path_rebases_branch_and_records_pr(
+    tmp_path: Path,
+    capsys,
+    _hermetic_env: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    canonical = _make_origin(tmp_path)
+    branch = "codex/existing-pr"
+    _push_branch(canonical, branch)
+    # Advance main after the PR branch so the default continue path must rebase.
+    (canonical / "main-only.txt").write_text("main advanced\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "advance main")
+    _git(canonical, "push", "origin", "main")
+    record = _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
+    state = tmp_path / "state"
+    monkeypatch.setattr(
+        cd,
+        "resolve_continue_pr",
+        lambda pr: {
+            "pr": pr,
+            "branch": branch,
+            "issues": [1011],
+            "title": "Existing PR",
+        },
+    )
+
+    rc = cd.dispatch(
+        _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state),
+        codex_id_timeout=5.0,
+        codex_id_poll=0.02,
+        launch_grace=_TEST_GRACE,
+        launch_grace_poll=_TEST_GRACE_POLL,
+    )
+
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    slug = "continue-codex-pr-4242"
+    worktree = canonical / ".claude" / "worktrees" / slug
+    assert result["slot"] == slug
+    assert result["mode"] == "continue"
+    assert result["prs"] == [4242]
+    assert cd.git_output(worktree, ["branch", "--show-current"]) == branch
+    assert (worktree / "branch.txt").read_text(encoding="utf-8") == f"{branch}\n"
+    assert (worktree / "main-only.txt").read_text(encoding="utf-8") == "main advanced\n"
+
+    rec = _wait_for_record(record)
+    assert rec["cwd"] == str(worktree)
+    assert "Continue PR #4242" in rec["argv"][-1]
+
+    slot = json.loads(
+        (state / "pipeline-slots" / f"{slug}.json").read_text(encoding="utf-8")
+    )
+    assert slot["mode"] == "continue"
+    assert slot["issues"] == [1011]
+    assert slot["prs"] == [4242]
+    assert slot["session"] == "019f2334-4455-70a1-bc1b-2e86d5ecfccf"
+
+    log_lines = (
+        (state / "dispatch-logs" / f"{slug}.log")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    sentinel = json.loads(log_lines[0])
+    assert sentinel["type"] == "cos.run.started"
+    assert sentinel["mode"] == "continue"
+    assert sentinel["prs"] == [4242]
+
+
+def test_continue_pr_refuses_existing_live_slot_for_pr(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    canonical = _make_origin(tmp_path)
+    state = tmp_path / "state"
+    _write_slot(
+        state / "pipeline-slots",
+        "busy-pr",
+        {"prs": [4242], "issues": [1011], "slot": "busy-pr"},
+    )
+    monkeypatch.setattr(
+        cd,
+        "resolve_continue_pr",
+        lambda pr: {
+            "pr": pr,
+            "branch": "codex/existing-pr",
+            "issues": [1011],
+            "title": "Existing PR",
+        },
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(
+            _args(tmp_path, canonical, issues=None, continue_pr=4242, state_root=state)
+        )
+
+    assert "already claimed by live slot busy-pr" in str(exc.value.code)
+    _no_real_launch(tmp_path)
+
+
+def test_continue_pr_author_gate_runs_before_pr_body_read(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    canonical = _make_origin(tmp_path)
+
+    def refuse(numbers: list[int]) -> None:
+        assert numbers == [4242]
+        raise SystemExit("not trusted")
+
+    def should_not_read_pr(pr: int) -> dict:
+        raise AssertionError("PR body was read before author gate")
+
+    monkeypatch.setattr(cd, "require_maintainer_authored", refuse)
+    monkeypatch.setattr(cd, "resolve_continue_pr", should_not_read_pr)
+
+    with pytest.raises(SystemExit) as exc:
+        cd.dispatch(_args(tmp_path, canonical, issues=None, continue_pr=4242))
+
+    assert str(exc.value.code) == "not trusted"
+    _no_real_launch(tmp_path)
+
+
 def test_git_failure_fails_fast_no_launch(tmp_path: Path, capsys) -> None:
     # A REAL tmp repo (satisfies require_git_checkout) but with NO origin remote, so
-    # `git fetch origin main` genuinely fails. Must exit 2, write no slot, and — the
+    # Fetching origin/main genuinely fails. Must exit 2, write no slot, and — the
     # incident's core lesson — NEVER reach the launch step (no codex/claude invoked).
     canonical = tmp_path / "canonical"
     canonical.mkdir()
@@ -1447,7 +1681,8 @@ def test_dispatch_log_setup_failure_exits_2_names_worktree(
     # If opening <state>/dispatch-logs/<slug>.log fails after the worktree exists (here:
     # dispatch-logs wedged as a regular FILE so mkdir raises), the OSError must become the
     # exit-2 orphan-adjudication path naming the leaked worktree — never a traceback (exit 1).
-    # No process is launched (the failure precedes spawn) and no slot is written.
+    # The run sentinel is the first dispatch-log write, so no process is launched and no
+    # slot is written.
     canonical = _make_origin(tmp_path)
     _stub_bin(_hermetic_env, "codex", jsonl=_CODEX_JSONL)
     state = tmp_path / "state"
@@ -1465,7 +1700,7 @@ def test_dispatch_log_setup_failure_exits_2_names_worktree(
         )
 
     message = str(exc.value.code)
-    assert "dispatch log" in message
+    assert "run sentinel" in message
     slug = "auto-codex-issue-1011"
     worktree = canonical / ".claude" / "worktrees" / slug
     assert str(worktree) in message
