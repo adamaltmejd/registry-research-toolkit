@@ -76,6 +76,61 @@ def test_parse_frontmatter_literal_block_scalar() -> None:
     assert meta["variable"] == "Test"
 
 
+def test_parse_frontmatter_plain_multiline_flow_scalar() -> None:
+    """A plain (no ``>``/``|``) wrapped value folds its continuation lines.
+
+    Regression: panache emits a bare indented continuation for a long value with
+    no quote-forcing characters; the parser must fold it, not truncate to the
+    first physical line.
+    """
+    text = (
+        "---\n"
+        "variable: Test\n"
+        "display_name: Ett långt namn som är\n"
+        "  väldigt långt och bryts över rader\n"
+        "tags:\n"
+        "  - type/variable\n"
+        "---\n\nBody.\n"
+    )
+    meta, body = parse_frontmatter(text)
+    assert (
+        meta["display_name"]
+        == "Ett långt namn som är väldigt långt och bryts över rader"
+    )
+    # Keys after the plain-flow scalar and existing behavior must still parse.
+    assert meta["variable"] == "Test"
+    assert meta["tags"] == ["type/variable"]
+    assert body == "Body.\n"
+
+
+def test_parse_frontmatter_committed_lisa_shape() -> None:
+    """Golden-style: a real committed lisa ``>-`` frontmatter parses fully.
+
+    Mirrors reg_meta_build/docs/lisa/KU2AstSNI2007G.md so a change in the
+    generator's block-scalar output surfaces here.
+    """
+    text = (
+        "---\n"
+        "variable: KU2AstSNI2007G\n"
+        "display_name: >-\n"
+        "  Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, näst största förvärvskälla),\n"
+        "  grov nivå\n"
+        "tags:\n"
+        "  - topic/identifier\n"
+        "  - type/variable\n"
+        'source: "lisa-bakgrundsfakta-1990-2017"\n'
+        "---\n\nBody.\n"
+    )
+    meta, _ = parse_frontmatter(text)
+    assert meta["display_name"] == (
+        "Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, näst största "
+        "förvärvskälla), grov nivå"
+    )
+    assert meta["variable"] == "KU2AstSNI2007G"
+    assert meta["tags"] == ["topic/identifier", "type/variable"]
+    assert meta["source"] == "lisa-bakgrundsfakta-1990-2017"
+
+
 def test_parse_frontmatter_same_line_scalars_and_list_unchanged() -> None:
     """Same-line quoted/unquoted scalars and simple lists parse as before."""
     text = (
