@@ -9,7 +9,7 @@ default_install_hook_types: [pre-commit, pre-push, post-checkout]
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.18
+    rev: v0.15.20
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -30,7 +30,7 @@ repos:
       # pass_filenames: false. files gate skips doc-only commits.
       - id: ty
         name: ty check
-        entry: uvx --from ty==0.0.51 ty check
+        entry: uvx --from ty==0.0.54 ty check
         language: system
         pass_filenames: false
         files: \.py$
@@ -42,14 +42,14 @@ repos:
       # files gate skips non-doc commits. CI runs via `pre-commit run --all-files`.
       - id: panache-format
         name: panache format --check
-        entry: uvx --from panache-cli==2.57.0 panache format --check .
+        entry: uvx --from panache-cli==2.59.0 panache format --check .
         language: system
         pass_filenames: false
         files: \.md$
         stages: [pre-commit]
       - id: panache-lint
         name: panache lint --check
-        entry: uvx --from panache-cli==2.57.0 panache lint --check .
+        entry: uvx --from panache-cli==2.59.0 panache lint --check .
         language: system
         pass_filenames: false
         files: \.md$

@@ -1,6 +1,8 @@
 ---
 variable: KU3AstSNI92G
-display_name: "Arbetsställets näringsgren, SNI92, grov nivå (10grupper) (tredje största förvärvskälla)"
+display_name: >-
+  Arbetsställets näringsgren, SNI92, grov nivå (10grupper) (tredje största
+  förvärvskälla)
 tags:
   - topic/identifier
   - type/variable

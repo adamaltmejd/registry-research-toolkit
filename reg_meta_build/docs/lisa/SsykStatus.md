@@ -1,6 +1,8 @@
 ---
 variable: SsykStatus
-display_name: "Yrkets överensstämmelse med det jobb som valts som huvudsaklig verksamhet under november"
+display_name: >-
+  Yrkets överensstämmelse med det jobb som valts som huvudsaklig verksamhet under
+  november
 tags:
   - topic/employment
   - type/variable

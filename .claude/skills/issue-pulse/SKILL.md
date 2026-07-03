@@ -1,6 +1,10 @@
 ---
 name: issue-pulse
-description: "One heartbeat of the issue-tracker — refresh the generated sequencing projection in the epic body, check for drift (stale labels, done-but-open, merged-but-unreleased build content), and surface what changed plus propose fixes. Built to run on a cadence via /loop. Usage: /loop [interval] /issue-pulse"
+description: >-
+  One heartbeat of the issue-tracker — refresh the generated sequencing projection in
+  the epic body, check for drift (stale labels, done-but-open, merged-but-unreleased
+  build content), and surface what changed plus propose fixes. Built to run on a cadence
+  via /loop. Usage: /loop [interval] /issue-pulse
 argument-hint: "[epic-number, default 328]"
 ---
 

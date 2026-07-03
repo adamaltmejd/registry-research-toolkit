@@ -1,6 +1,8 @@
 ---
 variable: Raks_AndelForvink
-display_name: "RAKS_AndelForTidInk RAKS_AndelAldPensInk RAKS_AndelStudInk RAKS_AndelUtbBidrInk RAKS_AndelVardInk RAKS_AndelSjukInk RAKS_AndelEkBisInk"
+display_name: >-
+  RAKS_AndelForTidInk RAKS_AndelAldPensInk RAKS_AndelStudInk RAKS_AndelUtbBidrInk
+  RAKS_AndelVardInk RAKS_AndelSjukInk RAKS_AndelEkBisInk
 tags:
   - topic/activity-status
   - type/variable

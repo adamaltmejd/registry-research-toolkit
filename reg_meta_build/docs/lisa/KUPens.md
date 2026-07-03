@@ -1,6 +1,8 @@
 ---
 variable: KUPens
-display_name: "Tjänstepension enligt ett individuellt tecknat tjänstepensionsavtal mellan arbetsgivare och arbetstagare"
+display_name: >-
+  Tjänstepension enligt ett individuellt tecknat tjänstepensionsavtal mellan
+  arbetsgivare och arbetstagare
 tags:
   - topic/income
   - topic/social-insurance

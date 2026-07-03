@@ -1,6 +1,8 @@
 ---
 variable: SjukSum_Bdag_MiDAS
-display_name: "Summerar bruttodagar för ersättningsslagen sjuk-,rehabiliterings- och arbetsskadesjukpenning"
+display_name: >-
+  Summerar bruttodagar för ersättningsslagen sjuk-,rehabiliterings- och
+  arbetsskadesjukpenning
 tags:
   - topic/employment
   - topic/social-insurance

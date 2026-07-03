@@ -1,6 +1,11 @@
 ---
 name: plan-sequence
-description: "Generate the issue-tracker sequencing projection — ready / running / blocked / parallel-safe + pending-release — from labels, Relationships, native sub-issues, `touches` globs, and open PRs, and splice it into the epic body (overwriting only the generated region). Use when asked to refresh the sequencing plan, update the epic, or see what's ready/blocked/parallel. Usage: /plan-sequence [epic-number]"
+description: >-
+  Generate the issue-tracker sequencing projection — ready / running / blocked /
+  parallel-safe + pending-release — from labels, Relationships, native sub-issues,
+  `touches` globs, and open PRs, and splice it into the epic body (overwriting only the
+  generated region). Use when asked to refresh the sequencing plan, update the epic, or
+  see what's ready/blocked/parallel. Usage: /plan-sequence [epic-number]
 argument-hint: "[epic-number, default 328]"
 disable-model-invocation: true
 ---

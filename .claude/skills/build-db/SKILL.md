@@ -1,6 +1,11 @@
 ---
 name: build-db
-description: "Run and investigate Registry Research Toolkit `reg-meta-build build-db` rebuilds. Use when asked to run a real metadata DB rebuild, verify build-affecting PRs with the maintainer seed, use or refresh the SCB value prestage cache, compare rebuilt DB content with dbdiff, profile slow build phases, capture build logs, or perform post-build SQLite/invariant checks."
+description: >-
+  Run and investigate Registry Research Toolkit `reg-meta-build build-db` rebuilds. Use
+  when asked to run a real metadata DB rebuild, verify build-affecting PRs with the
+  maintainer seed, use or refresh the SCB value prestage cache, compare rebuilt DB
+  content with dbdiff, profile slow build phases, capture build logs, or perform
+  post-build SQLite/invariant checks.
 ---
 
 # Build DB

@@ -1,6 +1,12 @@
 ---
 name: plan-lanes
-description: "Compose the ready issues into ranked, parallel-safe candidate lanes — the agentic layer over `plan_sequence.py --lane`: it reads the issue bodies to add what set-intersection over `touches` can't (semantic conflicts, implicit blockers, what coheres into one PR-stream), then ranks. Runs forked so callers (issue-pulse, /pr-pipeline next, or you) get the ranked lanes back without the corpus-reading bloating their context."
+description: >-
+  Compose the ready issues into ranked, parallel-safe candidate lanes — the agentic
+  layer over `plan_sequence.py --lane`: it reads the issue bodies to add what
+  set-intersection over `touches` can't (semantic conflicts, implicit blockers, what
+  coheres into one PR-stream), then ranks. Runs forked so callers (issue-pulse,
+  /pr-pipeline next, or you) get the ranked lanes back without the corpus-reading
+  bloating their context.
 argument-hint: "[epic-number, default 328]"
 context: fork
 agent: Explore

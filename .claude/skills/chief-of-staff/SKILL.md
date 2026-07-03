@@ -1,6 +1,14 @@
 ---
 name: chief-of-staff
-description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview and default reg_meta DB install current, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled /pr-pipeline sessions, report merged user-facing features with preview links, run /release minor or /release patch when a merge creates a required build/release boundary, recommend the next safe /pr-pipeline lanes, and — in opt-in `auto` mode — auto-dispatch those lanes into free slots. Usage: /loop 30m /chief-of-staff [auto]"
+description: >-
+  Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev
+  preview and default reg_meta DB install current, inspect live issue and PR claim
+  state, automatically maintain issue metadata/priorities, squash-merge PRs with
+  current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled
+  /pr-pipeline sessions, report merged user-facing features with preview links, run
+  /release minor or /release patch when a merge creates a required build/release
+  boundary, recommend the next safe /pr-pipeline lanes, and — in opt-in `auto` mode —
+  auto-dispatch those lanes into free slots. Usage: /loop 30m /chief-of-staff [auto]
 ---
 
 # chief-of-staff — one coordination tick

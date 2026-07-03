@@ -45,9 +45,9 @@ Update where the diff makes them stale or incomplete:
 ## Workflow
 
 1. Read the PR diff and identify which docs it makes stale.
-2. Update them. Run `uvx --from panache-cli==2.57.0 panache format .` then
-   `uvx --from panache-cli==2.57.0 panache lint --check .` on touched markdown; if you
+2. Update them. Run `uvx --from panache-cli==2.59.0 panache format .` then
+   `uvx --from panache-cli==2.59.0 panache lint --check .` on touched markdown; if you
    edited docstrings or any `.py`, also run the package Verify (`uv run ruff check`,
-   `uvx --from ty==0.0.51 ty check`, `uv run python -m pytest <pkg>/`).
+   `uvx --from ty==0.0.54 ty check`, `uv run python -m pytest <pkg>/`).
 3. **End your turn with** which docs you updated and why (+ files touched) — or "no doc
    update needed". Do NOT run git — the lead commits and pushes your edits.
