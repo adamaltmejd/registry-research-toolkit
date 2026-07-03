@@ -238,14 +238,17 @@ def fetch_number_states() -> tuple[set[int], dict[int, str], set[int]]:
     PR-excluding authority for the `--issue` gate. `open_numbers` — open issues AND open
     PRs, since `Blocked by #<open PR>` is a real blocker (blocked until the PR merges).
     """
-    issues = gh_json(["issue", "list", "--state", "all", "--limit", str(FETCH_CAP),
-                      "--json", "number,state"])  # fmt: skip
-    prs = gh_json(["pr", "list", "--state", "all", "--limit", str(FETCH_CAP),
-                   "--json", "number,state"])  # fmt: skip
-    _warn_if_truncated(issues, "issues")
-    _warn_if_truncated(prs, "PRs")
-    issue_state = {i["number"]: i["state"] for i in issues}
-    pr_state = {p["number"]: p["state"] for p in prs}
+    owner, name = repo_owner_name()
+    per_page = max(1, min(FETCH_CAP, 100))
+    rows = _gh.gh_api_paginated(
+        f"repos/{owner}/{name}/issues?state=all&per_page={per_page}"
+    )
+    issue_state = {
+        row["number"]: row["state"].upper() for row in rows if "pull_request" not in row
+    }
+    pr_state = {
+        row["number"]: row["state"].upper() for row in rows if "pull_request" in row
+    }
     known = set(issue_state) | set(pr_state)
     open_numbers = {n for n, s in (issue_state | pr_state).items() if s == "OPEN"}
     return known, issue_state, open_numbers

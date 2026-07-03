@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Shared `gh`/`git` process primitives for the scripts/ tooling.
 
-`run` (checked subprocess → stdout), `gh_json` (run + JSON-decode), and `repo_owner_name`
-(owner/name from $GITHUB_REPOSITORY, else `gh repo view`) are the thin, domain-neutral
-wrappers every gh-driven script in here needs. They were born in `check_issue_hygiene.py`
-and reused by `plan_sequence.py`; `pr_review_status.py` is the third consumer — the trigger
-the note in `plan_sequence.py` named for lifting them into a shared module. The
-issue-domain parsers (label sets, the relationship/touches regexes) stay in
-`check_issue_hygiene.py`, still shared by only two consumers.
+`run` (checked subprocess → stdout), `gh_json` (run + JSON-decode),
+`gh_api_paginated` (paginated gh-api array flattening), and `repo_owner_name`
+(owner/name from $GITHUB_REPOSITORY, else `gh repo view`) are the thin,
+domain-neutral wrappers every gh-driven script in here needs. The original process
+wrappers were born in `check_issue_hygiene.py` and reused by `plan_sequence.py`;
+`pr_review_status.py` is the third consumer — the trigger the note in `plan_sequence.py`
+named for lifting them into a shared module. The issue-domain parsers (label sets, the
+relationship/touches regexes) stay in `check_issue_hygiene.py`, still shared by only two
+consumers.
 
 `run_tolerant` is the non-zero-tolerant counterpart to `run`: it hands back the
 `CompletedProcess` (a non-zero exit is a signal the caller inspects, not a fatal error)
@@ -118,6 +120,17 @@ def run_tolerant(cmd: list[str]) -> subprocess.CompletedProcess[str]:
 
 def gh_json(args: list[str]) -> Any:
     return json.loads(run(["gh", *args]))
+
+
+def gh_api_paginated(endpoint: str) -> list[dict[str, Any]]:
+    """All rows from a paginated `gh api` array endpoint, flattened.
+
+    Plain `gh api --paginate` emits one JSON array per page, which is not one valid JSON
+    document once the result spans pages. `--slurp` wraps those page arrays in an outer
+    array; flatten that shape so callers do not re-implement the same pagination glue.
+    """
+    pages = gh_json(["api", "--paginate", "--slurp", endpoint])
+    return [row for page in pages for row in page]
 
 
 def gh_issue_view_or_none(number: int, fields: str) -> dict | None:

@@ -220,6 +220,37 @@ def test_blocked_by_open_pr_counts_as_blocker() -> None:
     assert _has(items, "WARN", "blocker")
 
 
+# --- fetch_number_states ------------------------------------------------------------
+
+
+def test_fetch_number_states_paginates_issue_pr_number_space(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Regression for #1053: FETCH_CAP is only the per-page sanity ceiling here. Rows past
+    # the old hard cap must still be visible, or an open blocker can be misclassified as
+    # absent/closed under an issue/PR spam flood.
+    captured: list[str] = []
+
+    def fake_paginated(endpoint: str) -> list[dict[str, object]]:
+        captured.append(endpoint)
+        return [
+            {"number": 1, "state": "open"},
+            {"number": 2, "state": "closed"},
+            {"number": 50, "state": "open", "pull_request": {"url": "u"}},
+        ]
+
+    monkeypatch.setattr(h, "FETCH_CAP", 2)
+    monkeypatch.setattr(h, "repo_owner_name", lambda: ("owner", "repo"))
+    monkeypatch.setattr(h._gh, "gh_api_paginated", fake_paginated)
+
+    known, issue_state, open_numbers = h.fetch_number_states()
+
+    assert captured == ["repos/owner/repo/issues?state=all&per_page=2"]
+    assert known == {1, 2, 50}
+    assert issue_state == {1: "OPEN", 2: "CLOSED"}
+    assert open_numbers == {1, 50}
+
+
 def test_part_of_without_native_parent_warns() -> None:
     items = _check(labels=("reg_meta", "bug"), body="Part of #5", known={1, 5})
     assert _has(items, "WARN", "Part of #5")
