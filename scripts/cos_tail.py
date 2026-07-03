@@ -357,8 +357,11 @@ def current_run_offset(log_path: Path) -> int:
         data = log_path.read_bytes()
     except OSError:
         return 0
-    idx = data.rfind(b"\n" + CODEX_RUN_MARKER)
-    return idx + 1 if idx >= 0 else 0
+    # Unanchored on purpose: a retry can append its marker directly after a prior
+    # run's unterminated final byte, so requiring a preceding newline would miss the
+    # new run and replay the old one. The raw marker bytes cannot occur inside a
+    # JSON string value (its quotes would be escaped), so a hit is a real event.
+    return max(data.rfind(CODEX_RUN_MARKER), 0)
 
 
 def lane_is_plain(surface: str | None, log_path: Path) -> bool:
@@ -375,10 +378,12 @@ def lane_is_plain(surface: str | None, log_path: Path) -> bool:
         return True
     try:
         with log_path.open("rb") as fh:
-            head = fh.readline(4096)
+            head = fh.read(16384)
     except OSError:
         return False
-    return not head.lstrip().startswith(b'{"type":')
+    # stdout+stderr share the dispatch log, so startup warnings can precede the
+    # first JSON event — classify on any JSON-looking line in the head, not line 1.
+    return not any(line.lstrip().startswith(b'{"type":') for line in head.splitlines())
 
 
 def follow_one(

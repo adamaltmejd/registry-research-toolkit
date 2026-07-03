@@ -268,6 +268,26 @@ def test_current_run_offset_finds_last_run(tmp_path: Path) -> None:
     log.write_bytes(run1)  # single run: current run starts at 0
     assert ct.current_run_offset(log) == 0
     assert ct.current_run_offset(tmp_path / "missing.log") == 0
+    # A retry can append its marker right after a prior run's UNTERMINATED tail;
+    # the marker must be found without a preceding newline.
+    torn = b'{"type":"thread.started","thread_id":"a"}\ntorn-final-no-newline'
+    log.write_bytes(torn + run2)
+    assert ct.current_run_offset(log) == len(torn)
+
+
+def test_lane_is_plain_sniffs_past_leading_stderr(tmp_path: Path) -> None:
+    codex_log = tmp_path / "codex.log"
+    codex_log.write_bytes(
+        b"Reading additional input from stdin...\n"
+        b"warning: VIRTUAL_ENV mismatch\n"
+        b'{"type":"thread.started","thread_id":"a"}\n'
+    )
+    assert ct.lane_is_plain(None, codex_log) is False  # stderr prologue, still codex
+    plain_log = tmp_path / "plain.log"
+    plain_log.write_bytes(b"just narration\nmore text\n")
+    assert ct.lane_is_plain(None, plain_log) is True
+    assert ct.lane_is_plain("codex", plain_log) is False  # surface wins over sniff
+    assert ct.lane_is_plain("claude", codex_log) is True
 
 
 def test_follow_from_run_start_skips_prior_runs(tmp_path: Path, capsys) -> None:
