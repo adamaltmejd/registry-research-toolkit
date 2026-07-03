@@ -1247,15 +1247,12 @@ leaf.
 The picker section carries up to two orthogonal controls. The **slice axis** differs per
 kind:
 
-- **Variable** — the slice is the `register_variant` (population). When ≥2 register
-  variants co-exist for the chosen period, `buildAddPlan` (`catalog.ts`) returns
-  `choose-variant` and the picker renders a **proactive population selector** that
-  **gates the "Add to project" button** (#638 PR2b — the *variant-resolution gate*): the
-  user resolves the population *before* committing, not in a post-click modal. A pure
-  time-sequential succession (one variant retiring into the next) is NOT a choice — it
-  auto-splits into one source per segment — so the selector is invisible for an
-  unambiguous variable. (The *representation* / delivery-column choice stays a
-  post-click chooser; it is per-segment and a succession split can carry several.)
+- **Variable** — the slice is the `register_variant` (variant/population). The
+  subject-page picker lists concrete variant + delivery-column rows over the full state
+  history and stages row adds/removes until the footer applies one project diff (#995).
+  A pure time-sequential succession (one variant retiring into the next) is NOT a choice
+  — it auto-splits into one source per segment — so the selector is invisible for an
+  unambiguous variable.
 
 - **Classification** — editions (`sun1996` → `sun2000` → …) are the slice, but there is
   **deliberately no picker**. Editions switch via the succession edges in `HistoryGraph`
@@ -1270,18 +1267,17 @@ kind:
   member's leaf page. When the group spans more than one distinct concept name,
   `clusterBands` (#901) groups the bands under `<h3>` name-cluster headings — each name
   renders once and each band leads with its within-cluster distinguisher (facet,
-  delivery column, or member slug) rather than the repeated name. One shared
-  cross-variable selection basket and a single "Add to project" footer span all bands.
-  Each picker row is marked with the **kind** of dimension that distinguishes it from
-  its siblings — a `facet` (a #819 `GroupAxis` value, per member), `variant`
-  (population), or `coding` (value-set version label) — and a **per-dimension filter
-  strip** lets the user narrow a large multi-axis group to one axis value (#908,
-  `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in `catalog.ts`). A
-  dimension surfaces as a filter only when it discriminates (≥2 distinct values across
-  all visible rows); single-value dimensions are invisible. Filtering is a client-side
-  presentation lens: a hidden-but-selected row still commits, and the footer signals
-  this. The filter logic mirrors the #819 `ConceptGroupNavigator`: OR within a
-  dimension, AND across.
+  delivery column, or member slug) rather than the repeated name. One shared staged diff
+  and a single "Apply" footer span all bands. Each picker row is marked with the
+  **kind** of dimension that distinguishes it from its siblings — a `facet` (a #819
+  `GroupAxis` value, per member), `variant` (variant/population), or `coding` (value-set
+  version label) — and a **per-dimension filter strip** lets the user narrow a large
+  multi-axis group to one axis value (#908, `pickerFilterDimensions` / `pickerRowPasses`
+  / `PickerDimension` in `catalog.ts`). A dimension surfaces as a filter only when it
+  discriminates (≥2 distinct values across all visible rows); single-value dimensions
+  are invisible. Filtering is a client-side presentation lens: a hidden-but-selected row
+  still commits, and the footer signals this. The filter logic mirrors the #819
+  `ConceptGroupNavigator`: OR within a dimension, AND across.
 
   Two **succession-collapse** folds ship in #902, both client-side and purely
   presentational:
@@ -1783,12 +1779,13 @@ This retires the \~400-line client-side **re-derivation engine** (`bindingDeriva
 per-binding `BindingDerivation` provenance markers) that used to re-resolve every
 binding whenever its source's period or variant changed, with a clobber-vs-keep
 heuristic to decide whether a re-derived value should overwrite an author's edit. Under
-the cart model every field is **written once, at pick time**: `addFromCatalog` resolves
-the catalog's `(period, variant)` exactly once and writes the final `type` /
-`display_name` / `representation` — nothing re-derives afterwards, so there is no
-provenance state to track and no clobber decision to get wrong. A source's bindings can
-go stale relative to its period after the fact (e.g. the author widens the period); that
-drift is the **server validator's job** to surface (`period_outside_state_validity` /
+the cart model every field is **written once, at pick time**: the subject-page picker
+stages concrete `(period, variant, representation)` rows with final `type` /
+`display_name` / `representation`, then `applyStagedDiff` commits the diff in one
+mutation. Nothing re-derives afterwards, so there is no provenance state to track and no
+clobber decision to get wrong. A source's bindings can go stale relative to its period
+after the fact (e.g. the author widens the period); that drift is the **server
+validator's job** to surface (`period_outside_state_validity` /
 `binding_state_drifts_within_period`, see § Semantic validation) — the auto-validate
 flow that will run this on every edit is the sibling #994 (not yet landed as of
 #992/#993). `ValidationPanel` carries a "Fix in catalog" link on each finding that
@@ -1806,12 +1803,12 @@ folded into the existing source's period via `mergePeriods` (`period.ts`) rather
 minting a second source: when both periods are pure year grammar it coalesces into the
 sorted, disjoint #307 list form (adjacency-merging touching/overlapping intervals),
 otherwise (either side is token grammar or `_default`) it REPLACES with the incoming
-period, since mixed-grain union has no defined sort. `addFromCatalog` (the async
-catalog→project handoff, still store-owned so the catalog page never imports an editor
-component) applies the same find-or-create + `mergePeriods` merge outside the
-staged-diff path for the single-pick case. `updateField` (the project's own `name` /
-`window`) and `removeSource`/`removeBinding` are the only other mutators the cart UI
-calls — a source's own name and period are no longer directly editable in the cart.
+period, since mixed-grain union has no defined sort. `addFromCatalog` remains the
+store-owned single-pick handoff and applies the same find-or-create + `mergePeriods`
+merge outside the staged-diff path; subject-page picker views use `applyStagedDiff`.
+`updateField` (the project's own `name` / `window`) and `removeSource`/`removeBinding`
+are the only other mutators the cart UI calls — a source's own name and period are no
+longer directly editable in the cart.
 
 ## Browser storage + project-file persistence (the SPA store)
 

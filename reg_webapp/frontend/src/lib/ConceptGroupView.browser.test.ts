@@ -5,9 +5,11 @@ import type {
   ConceptGroupNodeData,
   GraphState,
   RelationshipGraph,
+  StatesResponse,
   VariableGraphNode,
+  VariableStateModel,
 } from "./api";
-import { getConceptGroup, getConceptGroupGraph } from "./api";
+import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
 import ConceptGroupView from "./ConceptGroupView.svelte";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
@@ -26,6 +28,7 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
+    getCatalogNode: vi.fn(),
     getConceptGroup: vi.fn(),
     getConceptGroupGraph: vi.fn(),
   };
@@ -113,6 +116,50 @@ function node(
   } as unknown as ConceptGroupNodeData;
 }
 
+function vstate(over: Partial<VariableStateModel>): VariableStateModel {
+  return {
+    state_id: 1,
+    variant: "individer",
+    variant_label: null,
+    register_variant_id: 1,
+    valid_from: "2010-01-01",
+    valid_to: "2015-12-31",
+    data_type: "int",
+    data_length: null,
+    delivery_column_name: null,
+    source_register_text: null,
+    value_set_version_label: "",
+    value_set_id: null,
+    value_set: null,
+    is_identifier: false,
+    classification_slug: null,
+    ...over,
+  };
+}
+
+function statesResponse(states: VariableStateModel[]): StatesResponse {
+  return { states } as unknown as StatesResponse;
+}
+
+function mockResolveColumns(
+  columnsByFqid: Record<string, readonly string[]>,
+): void {
+  vi.mocked(getCatalogNode).mockImplementation(async (fqid, params) => {
+    const columns = columnsByFqid[fqid] ?? [];
+    const variant =
+      typeof params?.variant === "string" ? params.variant : "individer";
+    return statesResponse(
+      columns.map((column, index) =>
+        vstate({
+          state_id: index + 1,
+          variant,
+          delivery_column_name: column,
+        }),
+      ),
+    );
+  });
+}
+
 /** A two-member graph, ONE column each: inkjan delivers `Inkjan` (2010–2015),
  * inkfeb delivers `Inkfeb` (2018–2020). Each single-column member renders as ONE
  * compact row (no subheading). */
@@ -176,6 +223,8 @@ function twoMultiColGraph(): RelationshipGraph {
 }
 
 beforeEach(() => {
+  vi.mocked(getCatalogNode).mockReset();
+  mockResolveColumns({});
   vi.mocked(getConceptGroup).mockReset();
   vi.mocked(getConceptGroupGraph).mockReset();
   // Default: an empty graph (overridden per case).
@@ -243,17 +292,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .toBeVisible();
   });
 
-  it("selecting columns across two members + Add commits the right per-member payloads", async () => {
+  it("selecting columns across two members + Apply commits the right staged diff", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
-    // addFromCatalog is now ASYNC — stub it to resolve immediately (calling through
-    // would hit the unmocked resolveBindingAt fetch); commitSelected awaits each
-    // call sequentially, so the confirmation ("Added 2 columns") settling is the
-    // signal both adds ran.
-    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
-      status: "added",
-      createdSource: true,
-      sourceName: "RAMS",
+    mockResolveColumns({
+      "scb/rams/inkjan": ["Inkjan"],
+      "scb/rams/inkfeb": ["Inkfeb"],
     });
 
     renderGroup();
@@ -268,30 +312,29 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
     // ONE shared footer spanning the whole list: the cross-variable count, in
     // "column" terms.
-    await expect.element(page.getByText("2 columns selected")).toBeVisible();
-    await page.getByRole("button", { name: "Add to project" }).click();
+    await expect.element(page.getByText("+2 columns")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
 
-    // The confirmation settles only after both awaited adds complete.
-    await expect.element(page.getByText(/Added 2 columns/)).toBeVisible();
-    expect(spy).toHaveBeenCalledTimes(2);
-    const payloads = spy.mock.calls.map((c) => c[0]);
-    expect(payloads).toEqual(
+    await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
+    expect(projectStore.draft?.sources).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          registerVariant: "scb/rams/individer",
-          variable: "scb/rams/inkjan",
-          representation: "Inkjan",
-          resolvedPeriod: "2010..2015",
-        }),
-        expect.objectContaining({
-          registerVariant: "scb/rams/individer",
-          variable: "scb/rams/inkfeb",
-          representation: "Inkfeb",
-          resolvedPeriod: "2018..2020",
+          register_variant: "scb/rams/individer",
+          bindings: expect.arrayContaining([
+            expect.objectContaining({
+              variable: "scb/rams/inkjan",
+              type: "numeric",
+              representation: null,
+            }),
+            expect.objectContaining({
+              variable: "scb/rams/inkfeb",
+              type: "numeric",
+              representation: null,
+            }),
+          ]),
         }),
       ]),
     );
-    spy.mockRestore();
   });
 
   // #678 finding 3: an active ?period is HONORED on add (the committed source carries
@@ -299,15 +342,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   it("commits the row span INTERSECTED with the active ?period, not the full span", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
     // inkjan spans 2010–2015; narrow the group to 2012..2014.
     router.navigate("/catalog/group/scb/rams/ink?period=2012..2014");
-    // Async addFromCatalog — stub it (calling through hits the unmocked resolve
-    // fetch); the confirmation settling signals the awaited add ran.
-    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
-      status: "added",
-      createdSource: true,
-      sourceName: "RAMS",
-    });
 
     renderGroup();
 
@@ -315,24 +352,58 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     const jan = page.getByRole("checkbox", { name: /Inkjan/ });
     await expect.element(jan).toBeVisible();
     await jan.click();
-    await page.getByRole("button", { name: "Add to project" }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
 
-    await expect.element(page.getByText(/Added to project/)).toBeVisible();
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0][0]).toEqual(
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]).toEqual(
       expect.objectContaining({
-        variable: "scb/rams/inkjan",
-        // The committed period is the intersection 2012..2014, NOT the row's full
-        // 2010..2015 span.
-        resolvedPeriod: "2012..2014",
+        period: { from: 2012, to: 2014 },
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/rams/inkjan",
+            type: "numeric",
+            representation: null,
+          }),
+        ],
       }),
     );
-    spy.mockRestore();
+  });
+
+  it("does not stage a source period replacement for an invalid group ?period list", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/rams/individer",
+          period: { from: 2010, to: 2015 },
+          binding: {
+            variable: "scb/rams/inkjan",
+            type: "numeric",
+            representation: null,
+          },
+        },
+      ],
+    });
+    router.navigate("/catalog/group/scb/rams/ink?period=2020,2019");
+
+    renderGroup();
+
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Apply staged changes" }))
+      .toBeDisabled();
+    expect(projectStore.draft?.sources[0]?.period).toEqual({
+      from: 2010,
+      to: 2015,
+    });
   });
 
   it("a MULTI-column member renders a thin subheading over its column rows (all visible)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
+    mockResolveColumns({ "scb/rams/inkjan": ["InkjanA", "InkjanB"] });
 
     renderGroup();
 
@@ -367,13 +438,6 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   it("a per-variable select-all grabs every column of that variable", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
-    // Async addFromCatalog — stub it so the awaited commit doesn't hit the unmocked
-    // resolve fetch; wait for the confirmation before asserting the call count.
-    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
-      status: "added",
-      createdSource: true,
-      sourceName: "RAMS",
-    });
 
     renderGroup();
 
@@ -394,7 +458,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     janSelectAll.click();
 
     // Both inkjan columns selected; inkfeb's are not (per-variable scope).
-    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+2 columns")).toBeVisible();
     await expect
       .element(page.getByRole("checkbox", { name: /InkjanA/ }))
       .toBeChecked();
@@ -402,13 +466,41 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .element(page.getByRole("checkbox", { name: /InkfebA/ }))
       .not.toBeChecked();
 
-    await page.getByRole("button", { name: "Add to project" }).click();
-    await expect.element(page.getByText(/Added 2 columns/)).toBeVisible();
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(
-      spy.mock.calls.every((c) => c[0].variable === "scb/rams/inkjan"),
-    ).toBe(true);
-    spy.mockRestore();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
+    const variables =
+      projectStore.draft?.sources.flatMap((s) =>
+        s.bindings.map((b) => b.variable),
+      ) ?? [];
+    expect(variables).toEqual(["scb/rams/inkjan", "scb/rams/inkjan"]);
+  });
+
+  it("resolves graph-sourced add fields before writing the staged diff", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResponse([
+        vstate({
+          delivery_column_name: "Inkjan",
+          data_type: "bigint",
+          value_set_id: null,
+        }),
+      ]),
+    );
+
+    renderGroup();
+
+    await page.getByRole("checkbox", { name: /Inkjan/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual(
+      expect.objectContaining({
+        variable: "scb/rams/inkjan",
+        type: "numeric",
+        representation: null,
+      }),
+    );
   });
 
   it("the global select-all grabs every column of the concept", async () => {
@@ -429,7 +521,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     all.click();
 
     // Every column across both variables is selected.
-    await expect.element(page.getByText("4 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+4 columns")).toBeVisible();
     for (const name of [/InkjanA/, /InkjanB/, /InkfebA/, /InkfebB/]) {
       await expect.element(page.getByRole("checkbox", { name })).toBeChecked();
     }
@@ -727,12 +819,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(document.querySelector(".late-warn")).toBeNull();
   });
 
-  it("keeps Add seed-gated (disabled) until a column is selected", async () => {
+  it("keeps Apply seed-gated (disabled) until a column is selected", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
 
     renderGroup();
-    const add = page.getByRole("button", { name: "Add to project" });
+    const add = page.getByRole("button", { name: "Apply staged changes" });
     await expect.element(add).toBeVisible();
     await expect.element(add).toBeDisabled();
     await page.getByRole("checkbox", { name: /Inkjan/ }).click();
@@ -1242,7 +1334,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // Click the label itself (not the title link inside it).
     inkjanRow.click();
 
-    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+2 columns")).toBeVisible();
     await expect
       .element(page.getByRole("checkbox", { name: /InkjanA/ }))
       .toBeChecked();
@@ -1370,9 +1462,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // Clicking the DESCRIPTION (part of the select-all label, not the chip-link)
     // toggles ALL the variable's columns.
     (context as HTMLElement).click();
-    await expect.element(page.getByText("2 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+2 columns")).toBeVisible();
     // Both column ROW checkboxes are checked. Scope to the column-list row checkboxes:
-    // a two-variant single-column member also surfaces a Population FILTER (#908) whose
+    // a two-variant single-column member also surfaces a Variant FILTER (#908) whose
     // pill checkboxes carry the same variant text, so a bare role+name query would be
     // ambiguous; the row checkbox is the `.cbox` inside `.col-list .row-btn`.
     const rowChecked = [
@@ -1463,7 +1555,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     titleLink.dispatchEvent(evt);
 
     // No column got selected — the nav link did not toggle the band.
-    await expect.element(page.getByText("0 columns selected")).toBeVisible();
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
     expect(
       document.querySelector<HTMLInputElement>(
         'input[aria-label="Select all columns of inkjan"]',
@@ -1926,7 +2018,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     expect(evt.defaultPrevented).toBe(true);
     expect(navSpy).toHaveBeenCalledWith("/catalog/scb/rams/inkjan");
     // The click did NOT toggle the row's selection.
-    await expect.element(page.getByText("0 columns selected")).toBeVisible();
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
 
     navSpy.mockRestore();
   });
@@ -2123,13 +2215,13 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
     );
   }
 
-  it("keeps row-level Population/Coding filters on non-LISA concept groups", async () => {
+  it("keeps row-level Variant/Coding filters on non-LISA concept groups", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(dimensionNode());
     vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
 
     renderGroup({ provider: "scb", register: "rams", key: "dimensioned" });
 
-    expect(await filterLegends()).toEqual(["Level", "Population", "Coding"]);
+    expect(await filterLegends()).toEqual(["Level", "Variant", "Coding"]);
   });
 
   it("does not turn coding labels into filters on axis-less variable groups", async () => {

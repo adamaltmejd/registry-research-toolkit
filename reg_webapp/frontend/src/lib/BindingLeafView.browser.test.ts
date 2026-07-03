@@ -4,6 +4,7 @@ import { render } from "vitest-browser-svelte";
 import type {
   BindingNodeData,
   RelationshipGraph,
+  StatesResponse,
   VariableGraphNode,
   VariableStateModel,
 } from "./api";
@@ -94,6 +95,10 @@ function node(
   } as unknown as BindingNodeData;
 }
 
+function statesResponse(states: VariableStateModel[]): StatesResponse {
+  return { states } as unknown as StatesResponse;
+}
+
 /** A relationship graph whose focus node is a variable carrying the given facets +
  * group label — the #670 header-identity source. `focusFqid` is the focus node's
  * own fqid (may differ from the leaf's under a same_as alias). */
@@ -156,6 +161,15 @@ const singleWithStructural = [
 
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+    const variant =
+      typeof params?.variant === "string" ? params.variant : undefined;
+    return statesResponse(
+      pickerStates.filter(
+        (s) => variant === undefined || s.variant === variant,
+      ),
+    );
+  });
   // The graph fetch: an EMPTY graph by default (no nodes) → the HistoryGraph omits
   // itself and the header derives no qualifier. Member-identity cases override it.
   vi.mocked(getBindingGraph).mockReset();
@@ -257,7 +271,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(spans).toEqual(["2010 – 2015", "2018 – 2020"]);
   });
 
-  it("Add is disabled with no selection, enabled once a row is selected", async () => {
+  it("Apply is disabled with no diff, enabled once a row is staged", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
@@ -266,14 +280,14 @@ describe("BindingLeafView representation picker (#678)", () => {
       vintageYear: 2024,
     });
 
-    const add = page.getByRole("button", { name: "Add to project" });
+    const add = page.getByRole("button", { name: "Apply staged changes" });
     await expect.element(add).toBeDisabled();
 
     const konRow = page.getByRole("checkbox", { name: /Kon/ });
     await konRow.click();
     await expect.element(konRow).toBeChecked();
     await expect.element(add).toBeEnabled();
-    await expect.element(page.getByText("1 column selected")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
   });
 
   it("a partially-selected variable's select-all is INDETERMINATE with no accent fill (#678)", async () => {
@@ -313,15 +327,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
   });
 
-  it("selecting rows + Add commits the right addFromCatalog payloads", async () => {
-    // addFromCatalog is ASYNC — stub it (calling through hits the unmocked resolve
-    // fetch); commitSelected awaits each call sequentially, so the confirmation
-    // settling is the signal both adds ran.
-    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
-      status: "added",
-      createdSource: true,
-      sourceName: "LISA",
-    });
+  it("selecting rows + Apply commits the right staged diff", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
@@ -332,29 +338,302 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     await page.getByRole("checkbox", { name: /Sni/ }).click();
-    await expect.element(page.getByText("2 columns selected")).toBeVisible();
-    await page.getByRole("button", { name: "Add to project" }).click();
+    await expect.element(page.getByText("+2 columns")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
 
-    await expect.element(page.getByText(/Added 2 columns/)).toBeVisible();
-    expect(spy).toHaveBeenCalledTimes(2);
-    const payloads = spy.mock.calls.map((c) => c[0]);
-    expect(payloads).toEqual(
+    await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
+    expect(projectStore.draft?.sources).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          registerVariant: "scb/lisa/individer",
-          variable: "scb/lisa/kon",
-          representation: "Kon",
-          resolvedPeriod: "2010..2015",
+          register_variant: "scb/lisa/individer",
+          period: { from: 2010, to: 2015 },
+          bindings: [
+            expect.objectContaining({
+              variable: "scb/lisa/kon",
+              representation: null,
+              display_name: "Kon",
+            }),
+          ],
         }),
         expect.objectContaining({
-          registerVariant: "scb/lisa/arbetsstallen",
-          variable: "scb/lisa/kon",
-          representation: "Sni",
-          resolvedPeriod: "2018..2020",
+          register_variant: "scb/lisa/arbetsstallen",
+          period: { from: 2018, to: 2020 },
+          bindings: [
+            expect.objectContaining({
+              variable: "scb/lisa/kon",
+              representation: null,
+              display_name: "Sni",
+            }),
+          ],
         }),
       ]),
     );
-    spy.mockRestore();
+  });
+
+  it("resolves a staged add against the final merged source period", async () => {
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/individer",
+          period: 2000,
+          binding: {
+            variable: "scb/lisa/other",
+            type: "opaque",
+          },
+        },
+      ],
+    });
+    const periods: (string | undefined)[] = [];
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      periods.push(params?.period);
+      return statesResponse([
+        state({
+          variant: "individer",
+          delivery_column_name: "Kon",
+          data_type: "int",
+        }),
+      ]);
+    });
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(periods).toContain("2000,2010..2015");
+    expect(periods).not.toContain("2010..2015");
+    expect(projectStore.draft?.sources[0]).toEqual(
+      expect.objectContaining({
+        period: [2000, { from: 2010, to: 2015 }],
+        bindings: expect.arrayContaining([
+          expect.objectContaining({ variable: "scb/lisa/other" }),
+          expect.objectContaining({
+            variable: "scb/lisa/kon",
+            type: "numeric",
+          }),
+        ]),
+      }),
+    );
+  });
+
+  it("clears the previous applied confirmation when a new staged diff starts", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResponse([
+        state({
+          variant: "individer",
+          delivery_column_name: "Kon",
+          data_type: "int",
+        }),
+      ]),
+    );
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await vi.waitFor(() => {
+      expect(document.querySelector(".add-confirm")?.textContent).toContain(
+        "+1 column",
+      );
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+
+    await expect.element(page.getByText("-1 column")).toBeVisible();
+    await vi.waitFor(() => {
+      expect(document.querySelector(".add-confirm")).toBeNull();
+    });
+  });
+
+  it("keeps staged keys visible when a draft edit makes async apply stale", async () => {
+    let resolveFetch: () => void = () => {
+      throw new Error("resolve fetch not started");
+    };
+    const resolveStarted = new Promise<void>((resolve) => {
+      vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+        if (params?.period === "2010..2015") {
+          resolve();
+          await new Promise<void>((done) => {
+            resolveFetch = done;
+          });
+          return statesResponse([
+            state({
+              variant: "individer",
+              delivery_column_name: "Kon",
+              data_type: "int",
+            }),
+          ]);
+        }
+        return statesResponse(pickerStates);
+      });
+    });
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await apply.click();
+    await resolveStarted;
+
+    projectStore.updateField("name", "edited during apply");
+    resolveFetch();
+
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(projectStore.draft?.name).toBe("edited during apply");
+  });
+
+  it("renders committed rows and applies a staged remove only on Apply", async () => {
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/individer",
+          period: { from: 2010, to: 2015 },
+          binding: {
+            variable: "scb/lisa/kon",
+            type: "opaque",
+            display_name: "Kon",
+            representation: "Kon",
+          },
+        },
+      ],
+    });
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    const kon = page.getByRole("checkbox", { name: /Kon/ });
+    await expect.element(kon).toBeChecked();
+    await expect.element(page.getByText("In project")).toBeVisible();
+
+    await kon.click();
+    await expect.element(kon).not.toBeChecked();
+    await expect.element(page.getByText("Will be removed")).toBeVisible();
+    await expect.element(page.getByText("-1 column")).toBeVisible();
+    expect(projectStore.draft?.sources).toHaveLength(1);
+
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await expect.element(page.getByText(/-1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources).toHaveLength(0);
+  });
+
+  it("does not stage source period replacements from a partial leaf view", async () => {
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/individer",
+          period: { from: 2010, to: 2015 },
+          binding: {
+            variable: "scb/lisa/kon",
+            type: "opaque",
+            display_name: "Kon",
+            representation: "Kon",
+          },
+        },
+      ],
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue({
+      states: pickerStates,
+    } as never);
+    router.navigate("/catalog/scb/lisa/kon?period=2012..2014");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Apply staged changes" }))
+      .toBeDisabled();
+
+    expect(projectStore.draft?.sources[0]?.period).toEqual({
+      from: 2010,
+      to: 2015,
+    });
+  });
+
+  it("does not stage a source period replacement for an invalid ?period", async () => {
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/individer",
+          period: { from: 2010, to: 2015 },
+          binding: {
+            variable: "scb/lisa/kon",
+            type: "opaque",
+            display_name: "Kon",
+            representation: "Kon",
+          },
+        },
+      ],
+    });
+    router.navigate("/catalog/scb/lisa/kon?period=2020,2019");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Apply staged changes" }))
+      .toBeDisabled();
+    expect(projectStore.draft?.sources[0]?.period).toEqual({
+      from: 2010,
+      to: 2015,
+    });
+  });
+
+  it("does not clamp staged adds with a structurally invalid ?period", async () => {
+    router.navigate("/catalog/scb/lisa/kon?period=2020,2019");
+
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    await page.getByRole("checkbox", { name: /Sni/ }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+    expect(projectStore.draft?.sources[0]?.period).toEqual({
+      from: 2018,
+      to: 2020,
+    });
   });
 
   // #902: a folded sequential RENAME commits `representation: null`, NOT the latest
@@ -388,11 +667,6 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "1995-12-31",
       }),
     ];
-    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
-      status: "added",
-      createdSource: true,
-      sourceName: "LISA",
-    });
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(renameStates),
@@ -403,20 +677,22 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     // ONE folded row, led by the latest column DINF86 (the display identity / chip).
     await page.getByRole("checkbox", { name: /DINF86/ }).click();
-    await page.getByRole("button", { name: "Add to project" }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
 
-    await expect.element(page.getByText(/Added to project/)).toBeVisible();
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0][0]).toEqual(
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]).toEqual(
       expect.objectContaining({
-        registerVariant: "scb/lisa/individer",
-        variable: "scb/lisa/kon",
-        // NOT "DINF86" — the rename fold commits null so resolution picks per year.
-        representation: null,
-        resolvedPeriod: "1981..1995",
+        register_variant: "scb/lisa/individer",
+        period: { from: 1981, to: 1995 },
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/lisa/kon",
+            // NOT "DINF86" — the rename fold commits null so resolution picks per year.
+            representation: null,
+          }),
+        ],
       }),
     );
-    spy.mockRestore();
   });
 
   // #678 finding 3: an active ?period is HONORED on add — the committed period is
@@ -427,12 +703,6 @@ describe("BindingLeafView representation picker (#678)", () => {
     } as never);
     // Kon spans 2010–2015; narrow to 2012..2014.
     router.navigate("/catalog/scb/lisa/kon?period=2012..2014");
-    const spy = vi.spyOn(projectStore, "addFromCatalog").mockResolvedValue({
-      status: "added",
-      createdSource: true,
-      sourceName: "LISA",
-    });
-
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
@@ -444,19 +714,20 @@ describe("BindingLeafView representation picker (#678)", () => {
     const kon = page.getByRole("checkbox", { name: /Kon/ });
     await expect.element(kon).toBeVisible();
     await kon.click();
-    await page.getByRole("button", { name: "Add to project" }).click();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
 
-    await expect.element(page.getByText(/Added to project/)).toBeVisible();
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0][0]).toEqual(
+    await expect.element(page.getByText(/\+1 column/)).toBeVisible();
+    expect(projectStore.draft?.sources[0]).toEqual(
       expect.objectContaining({
-        variable: "scb/lisa/kon",
-        representation: "Kon",
-        // The intersection 2012..2014, NOT the row's full 2010..2015 span.
-        resolvedPeriod: "2012..2014",
+        period: { from: 2012, to: 2014 },
+        bindings: [
+          expect.objectContaining({
+            variable: "scb/lisa/kon",
+            representation: null,
+          }),
+        ],
       }),
     );
-    spy.mockRestore();
   });
 
   it("dims rows whose span does not overlap the active period window", async () => {
@@ -550,20 +821,20 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     // Each row shows the varying POPULATION (not the repeated column) as its primary.
     // (Asserted on the column-list row primaries — a two-variant leaf now also surfaces
-    // a Population FILTER (#908) whose pill checkboxes carry the same variant text, so a
+    // a Variant FILTER (#908) whose pill checkboxes carry the same variant text, so a
     // bare role+name checkbox query would be ambiguous.)
     const rowPrimaries = [
       ...document.querySelectorAll(".col-row.nested .primary"),
     ].map((el) => el.textContent?.trim());
     expect(rowPrimaries).toContain("lastbilar");
     expect(rowPrimaries).toContain("bussar");
-    // The two populations discriminate, so the leaf surfaces the #908 Population
+    // The two variants discriminate, so the leaf surfaces the #908 Variant
     // FILTER fieldset (the leaf surface of #908 the picker exposes for a varying-
     // population variable).
     const filterLegends = [
       ...document.querySelectorAll(".dim-filters .dim-filter legend"),
     ].map((el) => el.textContent?.trim());
-    expect(filterLegends).toContain("Population");
+    expect(filterLegends).toContain("Variant");
     // The constant column is NOT repeated as a per-row label (the populations are the
     // row primaries; no nested row's primary/chip is the column).
     expect(
@@ -987,7 +1258,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(stateTech?.textContent).not.toContain("Value-set version");
   });
 
-  it("Add stays seed-gated (disabled) even when a row is selected, until the seed is present", async () => {
+  it("Apply stays seed-gated (disabled) even when a row is staged, until the seed is present", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
       node: node(pickerStates),
@@ -995,9 +1266,9 @@ describe("BindingLeafView representation picker (#678)", () => {
       steward: "",
       vintageYear: 2024,
     });
-    const add = page.getByRole("button", { name: "Add to project" });
+    const add = page.getByRole("button", { name: "Apply staged changes" });
     await expect.element(add).toBeDisabled();
-    // Selecting a row must NOT enable Add while the seed is absent.
+    // Selecting a row must NOT enable Apply while the seed is absent.
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     await expect.element(add).toBeDisabled();
   });
@@ -1049,12 +1320,12 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .toBeVisible();
     // The picker lists representations over the FULL history (the period window
     // only dims). inA/inB share (individer, Kon) → ONE representation → a single-rep
-    // leaf renders FLAT, led by its COLUMN ("Kon"). Selecting it enables Add.
+    // leaf renders FLAT, led by its COLUMN ("Kon"). Selecting it enables Apply.
     const konRow = page.getByRole("checkbox", { name: /Kon/ });
     await expect.element(konRow).toBeVisible();
     await konRow.click();
     await expect
-      .element(page.getByRole("button", { name: "Add to project" }))
+      .element(page.getByRole("button", { name: "Apply staged changes" }))
       .toBeEnabled();
   });
 
@@ -1254,10 +1525,10 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .element(page.getByText(/Could not load full period value-set context/))
       .toBeVisible();
     // The picker is independent of the scope-fetch failure: its rows come from
-    // `node.states`, so selecting one still enables Add.
+    // `node.states`, so selecting one still enables Apply.
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     await expect
-      .element(page.getByRole("button", { name: "Add to project" }))
+      .element(page.getByRole("button", { name: "Apply staged changes" }))
       .toBeEnabled();
   });
 

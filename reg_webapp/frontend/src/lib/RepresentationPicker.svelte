@@ -15,10 +15,18 @@ import {
   rowFacet,
   yearOf,
 } from "./catalog";
+import type { StagedPeriodChange } from "./project_store.svelte";
 import { router } from "./router.svelte";
+import {
+  nullBindingCommittedRowKeys,
+  type PickerCommittedRow,
+  pickerRowKey,
+  type StagedPickerBand,
+} from "./staged_picker";
+import { Button, Tag } from "./ui";
 
 // The direct COLUMN picker (#678 redesign): ONE compact, integrated list of a
-// concept's delivery columns with a shared selection basket and a single "Add"
+// concept's delivery columns with a staged diff and a single "Apply"
 // footer. The binding leaf passes its single variable; the concept-group page passes
 // one entry per member variable — and the two render essentially identically (the
 // user is selecting a CONCEPT's columns, not reasoning about the underlying
@@ -26,8 +34,8 @@ import { router } from "./router.svelte";
 // visible. A multi-column variable gets a thin subheading row (its distinguishing
 // identity + a "select all" toggle) over its column rows; a single-column variable
 // collapses to ONE selectable row. Thin + presentational: the parent owns the data
-// (enumerates each variable's `rows`) and the store wiring (`onadd`); this owns the
-// cross-variable selection + the layout.
+// (enumerates each variable's `rows`) and the store wiring (`onapply`); this owns the
+// cross-variable staging + the layout.
 
 /** One variable the picker lists — its identity + its delivery-column rows. `key` is
  * GLOBALLY unique (the member fqid for a group, the leaf fqid for the leaf) so it
@@ -93,12 +101,26 @@ export interface PickerBand {
   }[];
 }
 
-/** A committed selection — the variable it belongs to plus the picked column, so the
- * parent's `onadd` maps each to the right per-variable `addFromCatalog`. */
+/** A staged add — the variable it belongs to plus the picked column, so the parent can
+ * write the final project binding in one `applyStagedDiff` mutation. */
 export interface PickerSelection {
   band: PickerBand;
   row: PickerRepresentation;
 }
+
+export interface PickerRemoval {
+  band: PickerBand;
+  row: PickerRepresentation;
+  committed: PickerCommittedRow;
+}
+
+export interface PickerApplyPayload {
+  adds: PickerSelection[];
+  removes: PickerRemoval[];
+  periodChanges: StagedPeriodChange[];
+}
+
+type PickerApplyResult = boolean | undefined;
 
 let {
   bands,
@@ -106,8 +128,11 @@ let {
   includeRowDimensionFilters = true,
   window,
   canAdd,
+  committedRows = new Map<string, PickerCommittedRow>(),
+  activePeriod = null,
   focusKey = null,
-  onadd,
+  onapply,
+  onstagechange,
 }: {
   /** The variables, in render order. One element for the leaf; one per member for
    * the group page. */
@@ -126,36 +151,59 @@ let {
   /** Whether the Add action is permitted (the deployment seed is ready). When false
    * the button stays disabled regardless of selection. */
   canAdd: boolean;
+  /** Rows already present in the active project, keyed by `pickerRowKey`. */
+  committedRows?: ReadonlyMap<string, PickerCommittedRow>;
+  /** The explicit `?period` value. The picker uses it only as parent-supplied
+   * context; partial leaf/group views must not stage source-level period
+   * replacements because a source period applies to every binding on the source. */
+  activePeriod?: string | null;
   /** The `band.key` of a band to visually MARK as the deep-link focus (#678): the
    * group page passes the `?member=` hint's band so a `?member=<slug>` deep link
    * renders with that member highlighted, restoring the focus affordance. Null (the
    * leaf, or no hint) marks nothing. */
   focusKey?: string | null;
-  /** Commit the selected columns across all variables. The parent maps each
-   * `{ band, row }` to an `addFromCatalog` call and renders the confirmation. */
-  onadd: (selected: PickerSelection[]) => void;
+  /** Commit the staged diff. The parent maps add rows to final `StagedAdd` payloads
+   * and calls `projectStore.applyStagedDiff` once. Return false when an async parent
+   * guard rejects the apply so local staging remains visible. */
+  onapply: (
+    payload: PickerApplyPayload,
+  ) => PickerApplyResult | Promise<PickerApplyResult>;
+  /** Notify the host when a user starts a new staged diff, so page-level applied
+   * confirmations do not sit beside conflicting staged status. */
+  onstagechange?: (hasDiff: boolean) => void;
 } = $props();
 
-/** The cross-variable selection — namespaced keys `${band.key}::${row.key}` so two
- * variables sharing a `(variant, column)` row key never collide. Reassigned (not
- * mutated) so the `$state` Set is reactive. Reset when the variable set changes
- * underneath (a re-enumeration / a different group) so a stale key can never commit
- * a vanished column. */
-let selectedKeys = $state(new Set<string>());
+/** The local staged diff. A key in `stagedAddKeys` means an uncommitted row will be
+ * added; a key in `stagedRemoveKeys` means a committed row will be removed. Desired
+ * checkbox state is derived from committed project state plus these two sets. */
+let stagedAddKeys = $state(new Set<string>());
+let stagedRemoveKeys = $state(new Set<string>());
+let applying = $state(false);
 /** The active filter selection (#908): dimension key → set of selected values. An
  * empty / absent set imposes no constraint (the initial all-empty state shows every
  * row). Reassigned (not mutated) so the `$state` record/Set stay reactive. Reset
- * alongside `selectedKeys` when the band set changes (the effect below). */
+ * alongside staged row keys when the band set changes (the effect below). */
 let filterSelection = $state<Record<string, Set<string>>>({});
 const bandsSignature = $derived(
   bands.map((b) => `${b.key}:${b.rows.map((r) => r.key).join(",")}`).join("|"),
 );
+const committedSignature = $derived(
+  [...committedRows.values()]
+    .map((r) => `${r.key}:${r.registerVariant}:${r.representation ?? ""}`)
+    .join("|"),
+);
 $effect(() => {
   void bandsSignature;
-  selectedKeys = new Set<string>();
+  stagedAddKeys = new Set<string>();
+  stagedRemoveKeys = new Set<string>();
   // Reset the filters too (#908): a stale axis value from a different group could
   // otherwise hide everything in the new one.
   filterSelection = {};
+});
+$effect(() => {
+  void committedSignature;
+  stagedAddKeys = new Set<string>();
+  stagedRemoveKeys = new Set<string>();
 });
 
 // ── Dimension marking + per-dimension filters (#908) ─────────────────────────
@@ -222,63 +270,132 @@ const visibleRows = $derived(
   filteredBands.reduce((n, b) => n + b.rows.length, 0),
 );
 
-/** The namespaced selection key for a variable's column row. */
-function selKey(bandKey: string, rowKey: string): string {
-  return `${bandKey}::${rowKey}`;
+function rowKey(band: PickerBand, row: PickerRepresentation): string {
+  return pickerRowKey(band as StagedPickerBand, row);
 }
 
 function rowSelectable(row: PickerRepresentation): boolean {
   return row.selectable !== false;
 }
 
-/** Toggle one column's selection. Reassigns the Set so `$state` stays reactive. */
-function toggleRow(bandKey: string, row: PickerRepresentation): void {
-  if (!rowSelectable(row)) {
+function rowCanToggle(band: PickerBand, row: PickerRepresentation): boolean {
+  return rowSelectable(row) || committedRows.has(rowKey(band, row));
+}
+
+function rowChecked(band: PickerBand, row: PickerRepresentation): boolean {
+  const key = rowKey(band, row);
+  const committed = committedRows.has(key);
+  return committed ? !stagedRemoveKeys.has(key) : stagedAddKeys.has(key);
+}
+
+type RowStage = "none" | "committed" | "staged-add" | "staged-remove";
+
+function rowStage(band: PickerBand, row: PickerRepresentation): RowStage {
+  const key = rowKey(band, row);
+  if (stagedAddKeys.has(key)) {
+    return "staged-add";
+  }
+  if (stagedRemoveKeys.has(key)) {
+    return "staged-remove";
+  }
+  return committedRows.has(key) ? "committed" : "none";
+}
+
+function rowStageLabel(stage: RowStage): string {
+  if (stage === "committed") {
+    return "In project";
+  }
+  if (stage === "staged-add") {
+    return "Will be added";
+  }
+  if (stage === "staged-remove") {
+    return "Will be removed";
+  }
+  return "";
+}
+
+function rowStageGlyph(stage: RowStage): string {
+  if (stage === "staged-add") {
+    return "+";
+  }
+  if (stage === "staged-remove") {
+    return "-";
+  }
+  return "i";
+}
+
+function setRowDesired(
+  nextAdds: Set<string>,
+  nextRemoves: Set<string>,
+  band: PickerBand,
+  row: PickerRepresentation,
+  desired: boolean,
+): void {
+  const key = rowKey(band, row);
+  if (committedRows.has(key)) {
+    const committed = committedRows.get(key);
+    const removeKeys = committed
+      ? nullBindingCommittedRowKeys(committedRows.values(), committed)
+      : [key];
+    nextAdds.delete(key);
+    if (desired) {
+      for (const removeKey of removeKeys) {
+        nextRemoves.delete(removeKey);
+      }
+    } else {
+      for (const removeKey of removeKeys) {
+        nextRemoves.add(removeKey);
+      }
+    }
+  } else {
+    nextRemoves.delete(key);
+    if (desired) {
+      nextAdds.add(key);
+    } else {
+      nextAdds.delete(key);
+    }
+  }
+}
+
+/** Toggle one column's desired project membership. */
+function toggleRow(band: PickerBand, row: PickerRepresentation): void {
+  if (applying || !rowCanToggle(band, row)) {
     return;
   }
-  const rowKey = row.key;
-  const sel = selKey(bandKey, rowKey);
-  const next = new Set(selectedKeys);
-  if (next.has(sel)) {
-    next.delete(sel);
-  } else {
-    next.add(sel);
-  }
-  selectedKeys = next;
+  const adds = new Set(stagedAddKeys);
+  const removes = new Set(stagedRemoveKeys);
+  setRowDesired(adds, removes, band, row, !rowChecked(band, row));
+  stagedAddKeys = adds;
+  stagedRemoveKeys = removes;
 }
 
 /** Whether EVERY column of a variable is selected — the variable-level "select all"
  * checked state (and the indeterminate complement: some-but-not-all). */
 function allOfBandSelected(band: PickerBand): boolean {
   const rows = band.rows.filter(rowSelectable);
-  return (
-    rows.length > 0 &&
-    rows.every((r) => selectedKeys.has(selKey(band.key, r.key)))
-  );
+  return rows.length > 0 && rows.every((r) => rowChecked(band, r));
 }
 function someOfBandSelected(band: PickerBand): boolean {
-  return band.rows
-    .filter(rowSelectable)
-    .some((r) => selectedKeys.has(selKey(band.key, r.key)));
+  return band.rows.filter(rowSelectable).some((r) => rowChecked(band, r));
 }
 
 /** Select or clear every column of one variable in a single move (the per-variable
  * "select all columns of <identity>" affordance). */
 function toggleBand(band: PickerBand): void {
-  const next = new Set(selectedKeys);
+  if (applying) {
+    return;
+  }
+  const adds = new Set(stagedAddKeys);
+  const removes = new Set(stagedRemoveKeys);
   const select = !allOfBandSelected(band);
   for (const r of band.rows) {
     if (!rowSelectable(r)) {
       continue;
     }
-    const sel = selKey(band.key, r.key);
-    if (select) {
-      next.add(sel);
-    } else {
-      next.delete(sel);
-    }
+    setRowDesired(adds, removes, band, r, select);
   }
-  selectedKeys = next;
+  stagedAddKeys = adds;
+  stagedRemoveKeys = removes;
 }
 
 /** The variable currently hovered at the SUBHEADING level — its column rows get the
@@ -289,53 +406,104 @@ let hoveredBandKey = $state<string | null>(null);
 /** Every VISIBLE column key — the global select-all target (#908): select-all acts
  * on the rows the active filters leave showing, never the hidden ones (filtering is
  * a presentation lens — it must not let "select all" grab a row the user has filtered
- * out of view). A hidden row's own selection persists in `selectedKeys` regardless. */
+ * out of view). A hidden row's staged state persists regardless. */
 const allKeys = $derived(
   filteredBands.flatMap((b) =>
-    b.rows.filter(rowSelectable).map((r) => selKey(b.key, r.key)),
+    b.rows.filter(rowSelectable).map((r) => rowKey(b, r)),
+  ),
+);
+const allVisibleRows = $derived(
+  filteredBands.flatMap((b) =>
+    b.rows.filter(rowSelectable).map((r) => ({ band: b, row: r })),
   ),
 );
 const allSelected = $derived(
-  allKeys.length > 0 && allKeys.every((k) => selectedKeys.has(k)),
+  allVisibleRows.length > 0 &&
+    allVisibleRows.every(({ band, row }) => rowChecked(band, row)),
 );
-const someSelected = $derived(allKeys.some((k) => selectedKeys.has(k)));
+const someSelected = $derived(
+  allVisibleRows.some(({ band, row }) => rowChecked(band, row)),
+);
 
 /** Select or clear every VISIBLE column in one move — leaving any hidden-but-selected
  * row's selection untouched (clear removes only the visible keys). */
 function toggleAll(): void {
-  const next = new Set(selectedKeys);
-  if (allSelected) {
-    for (const k of allKeys) {
-      next.delete(k);
-    }
-  } else {
-    for (const k of allKeys) {
-      next.add(k);
-    }
+  if (applying) {
+    return;
   }
-  selectedKeys = next;
+  const adds = new Set(stagedAddKeys);
+  const removes = new Set(stagedRemoveKeys);
+  for (const { band, row } of allVisibleRows) {
+    setRowDesired(adds, removes, band, row, !allSelected);
+  }
+  stagedAddKeys = adds;
+  stagedRemoveKeys = removes;
 }
 
-/** The selected columns across all variables, in variable-then-column order — the
- * commit payload. A namespaced key that no longer resolves is skipped. */
-const selected = $derived.by((): PickerSelection[] => {
+const stagedAdds = $derived.by((): PickerSelection[] => {
   const out: PickerSelection[] = [];
   for (const band of bands) {
     for (const row of band.rows) {
-      if (rowSelectable(row) && selectedKeys.has(selKey(band.key, row.key))) {
+      if (rowSelectable(row) && stagedAddKeys.has(rowKey(band, row))) {
         out.push({ band, row });
       }
     }
   }
   return out;
 });
-const selectedCount = $derived(selected.length);
+const stagedRemoves = $derived.by((): PickerRemoval[] => {
+  const out: PickerRemoval[] = [];
+  for (const band of bands) {
+    for (const row of band.rows) {
+      const key = rowKey(band, row);
+      const committed = committedRows.get(key);
+      if (committed && stagedRemoveKeys.has(key)) {
+        out.push({ band, row, committed });
+      }
+    }
+  }
+  return out;
+});
+const periodChanges = $derived.by((): StagedPeriodChange[] => {
+  void activePeriod;
+  return [];
+});
+const selectedCount = $derived(stagedAdds.length);
+const removeCount = $derived(stagedRemoves.length);
+const periodChangeCount = $derived(periodChanges.length);
+const diffCount = $derived(selectedCount + removeCount + periodChangeCount);
+const rowDiffCount = $derived(selectedCount + removeCount);
+const canApply = $derived(diffCount > 0 && (selectedCount === 0 || canAdd));
 
-function commit(): void {
-  if (selectedCount === 0 || !canAdd) {
+$effect(() => {
+  if (diffCount > 0) {
+    onstagechange?.(true);
+  }
+});
+
+async function commit(): Promise<void> {
+  if (!canApply || applying) {
     return;
   }
-  onadd(selected);
+  applying = true;
+  try {
+    const applied = await onapply({
+      adds: stagedAdds,
+      removes: stagedRemoves,
+      periodChanges,
+    });
+    if (applied !== false) {
+      stagedAddKeys = new Set<string>();
+      stagedRemoveKeys = new Set<string>();
+    }
+  } finally {
+    applying = false;
+  }
+}
+
+function resetStaging(): void {
+  stagedAddKeys = new Set<string>();
+  stagedRemoveKeys = new Set<string>();
 }
 
 /** The DISTINCT delivery columns a variable's rows address. A member whose rows all
@@ -498,20 +666,37 @@ const hiddenSelectedCount = $derived.by((): number => {
   }
   const visible = new Set(allKeys);
   let n = 0;
-  for (const { band, row } of selected) {
-    if (!visible.has(selKey(band.key, row.key))) {
+  for (const { band, row } of [...stagedAdds, ...stagedRemoves]) {
+    if (!visible.has(rowKey(band, row))) {
       n += 1;
     }
   }
   return n;
 });
 
-const footerLabel = $derived(
-  `${selectedCount} ${selectedCount === 1 ? "column" : "columns"} selected` +
+const footerLabel = $derived.by(() => {
+  const parts: string[] = [];
+  if (selectedCount > 0) {
+    parts.push(
+      `+${selectedCount} ${selectedCount === 1 ? "column" : "columns"}`,
+    );
+  }
+  if (removeCount > 0) {
+    parts.push(`-${removeCount} ${removeCount === 1 ? "column" : "columns"}`);
+  }
+  if (periodChangeCount > 0) {
+    parts.push(
+      `${periodChangeCount} ${periodChangeCount === 1 ? "period change" : "period changes"}`,
+    );
+  }
+  const label = parts.length > 0 ? parts.join(" · ") : "No staged changes";
+  return (
+    label +
     (hiddenSelectedCount > 0
       ? ` (${hiddenSelectedCount} hidden by filters)`
-      : ""),
-);
+      : "")
+  );
+});
 
 /** Navigate an in-picker identity link (the column chip / subhead title) through
  * the SPA ROUTER. The link sits inside a <label> wrapping the row's checkbox, so a
@@ -665,6 +850,25 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   {/if}
 {/snippet}
 
+{#snippet stageTag(stage: RowStage)}
+  {#if stage === "committed"}
+    <Tag tone="info">
+      {#snippet glyph()}{rowStageGlyph(stage)}{/snippet}
+      {rowStageLabel(stage)}
+    </Tag>
+  {:else if stage === "staged-add"}
+    <Tag tone="ok">
+      {#snippet glyph()}{rowStageGlyph(stage)}{/snippet}
+      {rowStageLabel(stage)}
+    </Tag>
+  {:else}
+    <Tag tone="warn">
+      {#snippet glyph()}{rowStageGlyph(stage)}{/snippet}
+      {rowStageLabel(stage)}
+    </Tag>
+  {/if}
+{/snippet}
+
 <!-- The "codings vary" nudge (#905): a quiet DEEP LINK (no longer a passive span) to
      the value-set viewer focused on this column's coding (`?codes=<column>` +
      `#states-heading`). A nudge, not a control — token-styled, must not dominate the
@@ -756,6 +960,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
             checked={allSelected}
             indeterminate={someSelected && !allSelected}
             aria-label="Select all columns"
+            disabled={applying}
             onchange={toggleAll}
           />
           <span>Select all columns</span>
@@ -778,8 +983,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
         {@const band = v.band}
         {#if v.single}
           {@const row = band.rows[0]}
-          {@const checked =
-            rowSelectable(row) && selectedKeys.has(selKey(band.key, row.key))}
+          {@const checked = rowChecked(band, row)}
+          {@const stage = rowStage(band, row)}
           {@const inWindow = representationInWindow(row, window)}
           <!-- The column's facet leads the quiet `.sub` context (#678) — but when the
                band's PRIMARY already IS that facet (#901 facet-led single-column band,
@@ -808,6 +1013,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
             <label
               class="row-btn integrated-list-row"
               class:selected={checked}
+              class:committed={stage === "committed"}
+              class:staged-add={stage === "staged-add"}
+              class:staged-remove={stage === "staged-remove"}
               class:dimmed={!inWindow}
             >
               <!-- No aria-label: the wrapping <label>'s text content (the column chip +
@@ -815,9 +1023,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
               <input
                 type="checkbox"
                 class="cbox"
-                disabled={!rowSelectable(row)}
+                disabled={applying || !rowCanToggle(band, row)}
                 checked={checked}
-                onchange={() => toggleRow(band.key, row)}
+                onchange={() => toggleRow(band, row)}
               />
               <span class="row-main">
                 <span class="primary-line">
@@ -842,6 +1050,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                   {#if band.isSensitive}
                     <span class="badge sensitive" title="Sensitive">sensitive</span
                     >
+                  {/if}
+                  {#if stage !== "none"}
+                    {@render stageTag(stage)}
                   {/if}
                 </span>
                 <!-- #908: the per-axis facet markers — each an axis-named dimension
@@ -991,6 +1202,7 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                   indeterminate={someOfBandSelected(band) &&
                     !allOfBandSelected(band)}
                   aria-label={`Select all columns of ${v.primary.text}`}
+                  disabled={applying}
                   onchange={() => toggleBand(band)}
                 />
                 <!-- The title + description share ONE wrapping line: when they fit they
@@ -1026,8 +1238,8 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
             {@render historyDisclosure(v.supersedes)}
           </li>
           {#each band.rows as row (row.key)}
-            {@const checked =
-              rowSelectable(row) && selectedKeys.has(selKey(band.key, row.key))}
+            {@const checked = rowChecked(band, row)}
+            {@const stage = rowStage(band, row)}
             {@const inWindow = representationInWindow(row, window)}
             {@const label = v.rowLabels.get(row.key)}
             {@const facet = band.facetByColumn?.[row.column]}
@@ -1040,6 +1252,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
               <label
                 class="row-btn integrated-list-row"
                 class:selected={checked}
+                class:committed={stage === "committed"}
+                class:staged-add={stage === "staged-add"}
+                class:staged-remove={stage === "staged-remove"}
                 class:dimmed={!inWindow}
                 class:band-hover={hoveredBandKey === band.key}
               >
@@ -1048,9 +1263,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                 <input
                   type="checkbox"
                   class="cbox"
-                  disabled={!rowSelectable(row)}
+                  disabled={applying || !rowCanToggle(band, row)}
                   checked={checked}
-                  onchange={() => toggleRow(band.key, row)}
+                  onchange={() => toggleRow(band, row)}
                 />
                 <span class="row-main">
                   {#if label?.primary.mono}
@@ -1088,6 +1303,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
                         .join(" · ")}</span
                     >
                   {/if}
+                  {#if stage !== "none"}
+                    {@render stageTag(stage)}
+                  {/if}
                   {@render renameHint(row.renamedColumns)}
                 </span>
                 <!-- The codings-vary nudge (#905 deep link) sits BEFORE the period so
@@ -1115,14 +1333,27 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
 
   <div class="picker-footer">
     <span class="count" role="status">{footerLabel}</span>
-    <button
+    {#if rowDiffCount > 0}
+      <Button
+        type="button"
+        variant="default"
+        size="sm"
+        disabled={applying}
+        onclick={resetStaging}
+      >
+        Reset
+      </Button>
+    {/if}
+    <Button
       type="button"
-      class="add-to-project"
-      disabled={selectedCount === 0 || !canAdd}
+      variant="primary"
+      size="sm"
+      aria-label="Apply staged changes"
+      disabled={!canApply || applying}
       onclick={commit}
     >
-      Add to project
-    </button>
+      {applying ? "Applying..." : "Apply"}
+    </Button>
   </div>
 </div>
 
@@ -1471,6 +1702,29 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     background: var(--accent-bg);
     border-left-color: var(--accent);
   }
+  .row-btn.committed:not(.selected) {
+    background: var(--surface);
+  }
+  .row-btn.staged-add {
+    background: var(--ok-bg);
+    border-left-color: var(--ok);
+  }
+  .row-btn.staged-remove {
+    background: var(--warn-bg);
+    border-left-color: var(--warn);
+  }
+  .row-btn.staged-remove .primary,
+  .row-btn.staged-remove .col-chip,
+  .row-btn.staged-remove .facet-markers,
+  .row-btn.staged-remove .sub,
+  .row-btn.staged-remove .period {
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--warn);
+  }
+  .row-btn.staged-remove .row-main :global(.tag) {
+    text-decoration: none;
+  }
   .row-btn.dimmed {
     opacity: 0.45;
   }
@@ -1638,6 +1892,9 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
     color: var(--text-muted);
     overflow-wrap: anywhere;
   }
+  .row-main :global(.tag) {
+    align-self: flex-start;
+  }
   /* The operational-definition line (#892/#932): a member's per-variable distinguishing
      text, on its own quiet line. In `.row-main` (single row, a flex column) it sits below
      the identity naturally; inside `.subhead-body` (a wrapping flex row) `flex-basis:100%`
@@ -1769,22 +2026,6 @@ function codingsVaryHref(band: PickerBand, row: PickerRepresentation): string {
   .count {
     font-size: 0.85rem;
     color: var(--text-muted);
-  }
-  .add-to-project {
-    font: inherit;
-    font-size: 0.9rem;
-    padding: 0.35rem 0.9rem;
-    border: 1px solid var(--accent);
-    border-radius: 4px;
-    background: var(--accent-bg);
-    color: var(--accent-ink);
-    cursor: pointer;
-  }
-  .add-to-project:hover:enabled {
-    background: var(--surface);
-  }
-  .add-to-project:disabled {
-    opacity: 0.5;
-    cursor: default;
+    margin-right: auto;
   }
 </style>

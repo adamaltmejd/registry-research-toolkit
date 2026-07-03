@@ -9,24 +9,41 @@ import {
 import { asyncResource } from "./async.svelte";
 import {
   addWindowBounds,
+  type BindingResolution,
+  bindingFieldsFromResolution,
   catalogHref,
   facetLabelJoin,
   type PickerRepresentation,
   pickerRepresentations,
   pickerWindowYears,
   registerPrefixOf,
+  resolveBindingAt,
   rowAddPeriod,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
-import type { PeriodGrain } from "./period";
+import {
+  isStructurallyValidPeriodWire,
+  type PeriodGrain,
+  periodFromWire,
+  periodToWire,
+} from "./period";
 import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import RepresentationPicker, {
+  type PickerApplyPayload,
   type PickerBand,
   type PickerSelection,
 } from "./RepresentationPicker.svelte";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
+import {
+  committedPickerRows,
+  finalSourcePeriodsForStagedAdds,
+  periodChangesWithStagedAdds,
+  rowRegisterVariant,
+  sourcePeriodsFromDraft,
+  stagedRemoveForCommitted,
+} from "./staged_picker";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -34,8 +51,8 @@ import { windowStore } from "./window.svelte";
 // register, key) — its members + facets — AND the group's relationship graph (the
 // union of its members' variable nodes, each carrying that variable's states). It
 // renders the members as a vertical stack of REPRESENTATION BANDS (one per member
-// variable, each its own adaptive representation rows) under ONE shared selection
-// basket and ONE "Add" footer — the group→variable→representation nesting (#678).
+// variable, each its own adaptive representation rows) under ONE shared staged diff
+// and ONE "Apply" footer — the group→variable→representation nesting (#678/#995).
 //
 // Renders through the unified SubjectView shell (#638 PR1), same as the binding +
 // classification leaves. A group fills two of the shell's sections — the
@@ -462,6 +479,7 @@ const bands = $derived.by((): PickerBand[] => {
   }
   return out;
 });
+const committedRows = $derived(committedPickerRows(projectStore.draft, bands));
 
 /** The `band.key` (member fqid) the `?member=` focus hint names, for the picker's
  * deep-link highlight (#678). The backend echoes the VALIDATED member slug on
@@ -482,6 +500,9 @@ const focusKey = $derived.by((): string | null => {
 // so the value triggers NO refetch; it just narrows the dim window (mirrors the
 // binding leaf's `pickerWindow`).
 const period = $derived(router.getQueryParam("period"));
+const activePickerPeriod = $derived(
+  period && isStructurallyValidPeriodWire(period) ? period : null,
+);
 
 // Members are year-grain coverage, so the picker offers only the year grain.
 const grains: PeriodGrain[] = ["year"];
@@ -523,7 +544,7 @@ const unionCoverage = $derived.by(() => {
  * wire wins, else the global study window), or null (no dimming). Mirrors the
  * binding leaf's `pickerWindow`. */
 const pickerWindow = $derived(
-  pickerWindowYears(period ?? null, windowStore.value),
+  pickerWindowYears(activePickerPeriod, windowStore.value),
 );
 
 /** Write `?period` to the group URL (preserving the pathname + any `?member=` focus
@@ -542,15 +563,15 @@ function writePeriod(next: string | null): void {
   router.navigate(window.location.pathname + (query ? `?${query}` : ""));
 }
 
-// ── Add to project ───────────────────────────────────────────────────────────
+// ── Staged add/remove to project ─────────────────────────────────────────────
 // The deployment seed is ready once /api/context has populated BOTH fields.
 const seedReady = $derived(regMetaVersion !== "" && steward !== "");
 
-/** The committed outcome (drives the inline confirmation): the sources bindings
- * landed in (created or found) and how many were already present. */
-let addOutcome = $state<{
-  added: { name: string; period: string | null }[];
-  already: number;
+/** The applied outcome (drives the inline confirmation). */
+let applyOutcome = $state<{
+  added: number;
+  removed: number;
+  periodChanged: number;
 } | null>(null);
 
 // A fresh period / member refine or a group change clears the stale confirmation.
@@ -558,53 +579,96 @@ $effect(() => {
   void period;
   void memberHint;
   void key;
-  addOutcome = null;
+  applyOutcome = null;
 });
 
-/** Commit each selected representation across all bands through the store, one
- * `addFromCatalog` per picked row. Each selection's `band.key` is the member fqid
- * (the variable). The committed period is the row's span INTERSECTED with the active
- * period window (`rowAddPeriod`) — so a `?period` the user narrowed to is honored
- * (not widened to the row's full history) and an open-ended row lands a finite,
- * resolvable period rather than period-unset (#678). Under #992 find-or-create keys
- * on `register_variant` ALONE: two rows of the SAME register variant with DIFFERENT
- * spans MERGE into ONE source whose period is extended to the #307 list form
- * (`mergePeriods`), not two separate sources. `addFromCatalog` is now ASYNC (it
- * resolves each binding's final fields once at pick time), so AWAIT each call
- * SEQUENTIALLY — the sequential ordering is load-bearing: it preserves the store's
- * duplicate guard against a same-variant double-add (a `Promise.all` would race two
- * adds of the same variant past the guard). Aggregates into the `addOutcome`
- * confirmation. */
-async function commitSelected(selected: PickerSelection[]): Promise<void> {
-  if (selected.length === 0) {
-    return;
-  }
-  const added: { name: string; period: string | null }[] = [];
-  let already = 0;
-  // The active window as EXACT ISO bounds — a sub-annual `?period` (`2020-Q1`) is
-  // honored at its real grain on Add, not collapsed to the outer year (#678 finding).
-  const addWindow = addWindowBounds(period ?? null, pickerWindow);
-  for (const { band, row } of selected) {
-    const addPeriod = rowAddPeriod(row, addWindow);
-    const result = await projectStore.addFromCatalog(
-      {
-        registerVariant: `${registerPrefixOf(band.key)}/${row.variant}`,
-        variable: band.key,
-        // `row.representation` (NOT `row.column`): a folded sequential rename commits
-        // null so resolution picks the right column per year; an ordinary / parallel
-        // column commits its own column (#902).
-        representation: row.representation,
-        resolvedPeriod: addPeriod,
-      },
-      { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
+function stagedAddCandidate(selection: PickerSelection) {
+  const { band, row } = selection;
+  const addWindow = addWindowBounds(activePickerPeriod, pickerWindow);
+  const addPeriod = rowAddPeriod(row, addWindow);
+  return {
+    selection,
+    registerVariant: rowRegisterVariant(band, row),
+    periodWire: addPeriod,
+    period: periodFromWire(addPeriod),
+  };
+}
+
+async function stagedAdd(
+  candidate: ReturnType<typeof stagedAddCandidate>,
+  resolvePeriodWire: string | null,
+) {
+  const { band, row } = candidate.selection;
+  let resolution: BindingResolution;
+  try {
+    resolution = await resolveBindingAt(
+      band.key,
+      resolvePeriodWire,
+      row.variant,
     );
-    if (result.status === "added") {
-      added.push({ name: result.sourceName, period: addPeriod });
-    } else {
-      already += 1;
-    }
+  } catch {
+    resolution = { kind: "unresolved" as const, reason: "no-states" as const };
   }
-  addOutcome = { added, already };
+  return {
+    registerVariant: candidate.registerVariant,
+    period: candidate.period,
+    binding: bindingFieldsFromResolution(
+      band.key,
+      resolution,
+      row.representation,
+    ),
+  };
+}
+
+/** Apply the staged diff through ONE synchronous store mutation. */
+async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
+  if (
+    payload.adds.length === 0 &&
+    payload.removes.length === 0 &&
+    payload.periodChanges.length === 0
+  ) {
+    return true;
+  }
+  if (projectStore.draft === null && payload.adds.length > 0) {
+    projectStore.newProject({
+      reg_meta_version: regMetaReleaseTag(regMetaVersion),
+      steward,
+    });
+  }
+  const target = projectStore.draft;
+  const candidates = payload.adds.map(stagedAddCandidate);
+  const finalPeriods = finalSourcePeriodsForStagedAdds(
+    sourcePeriodsFromDraft(target),
+    payload.periodChanges,
+    candidates,
+  );
+  const adds = await Promise.all(
+    candidates.map((candidate) =>
+      stagedAdd(
+        candidate,
+        periodToWire(
+          finalPeriods.get(candidate.registerVariant) ?? candidate.period,
+        ),
+      ),
+    ),
+  );
+  if (projectStore.draft !== target) {
+    return false;
+  }
+  projectStore.applyStagedDiff({
+    adds,
+    removes: payload.removes.map((r) => stagedRemoveForCommitted(r.committed)),
+    periodChange: periodChangesWithStagedAdds(
+      payload.periodChanges,
+      candidates,
+    ),
+  });
+  applyOutcome = {
+    added: payload.adds.length,
+    removed: payload.removes.length,
+    periodChanged: payload.periodChanges.length,
+  };
+  return true;
 }
 </script>
 
@@ -674,8 +738,8 @@ async function commitSelected(selected: PickerSelection[]): Promise<void> {
     />
 
     <!-- The nested REPRESENTATION PICKER (#678 inc 2): one band per member variable,
-         each with its own adaptive representation rows, under ONE shared selection
-         basket and ONE "Add" footer. The period window only DIMS out-of-window rows
+         each with its own adaptive representation rows, under ONE shared staged diff
+         and ONE "Apply" footer. The period window only DIMS out-of-window rows
          (`pickerWindow`); `seedReady` gates the commit. -->
     {#if bands.length > 0}
       <RepresentationPicker
@@ -684,33 +748,41 @@ async function commitSelected(selected: PickerSelection[]): Promise<void> {
         includeRowDimensionFilters={!suppressRowDimensionFilters}
         window={pickerWindow}
         canAdd={seedReady}
+        {committedRows}
+        activePeriod={activePickerPeriod}
         {focusKey}
-        onadd={commitSelected}
+        onapply={applyStaged}
+        onstagechange={(hasDiff) => {
+          if (hasDiff) {
+            applyOutcome = null;
+          }
+        }}
       />
     {/if}
 
-    {#if addOutcome}
+    {#if applyOutcome}
       <p class="page-add">
-        {#if addOutcome.added.length === 0}
-          <span class="add-confirm already" role="status"
-            >Already in project</span
-          >
-        {:else}
-          <span class="add-confirm" role="status">
-            {#if addOutcome.added.length === 1}
-              Added to project ({addOutcome.added[0].name})
-            {:else}
-              Added {addOutcome.added.length} columns:
-              {addOutcome.added
-                .map((a) => (a.period ? `${a.name} (${a.period})` : a.name))
-                .join(", ")}
-            {/if}
-            {#if addOutcome.already > 0}
-              · {addOutcome.already} already in project
-            {/if}
-            — <a href="/project">view</a>
-          </span>
-        {/if}
+        <span class="add-confirm" role="status">
+          Applied
+          {[
+            applyOutcome.added > 0
+              ? `+${applyOutcome.added} ${applyOutcome.added === 1 ? "column" : "columns"}`
+              : null,
+            applyOutcome.removed > 0
+              ? `-${applyOutcome.removed} ${applyOutcome.removed === 1 ? "column" : "columns"}`
+              : null,
+            applyOutcome.periodChanged > 0
+              ? `${applyOutcome.periodChanged} ${
+                  applyOutcome.periodChanged === 1
+                    ? "period change"
+                    : "period changes"
+                }`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+          — <a href="/project">view</a>
+        </span>
       </p>
     {/if}
   {/snippet}
@@ -740,8 +812,5 @@ async function commitSelected(selected: PickerSelection[]): Promise<void> {
   .add-confirm {
     font-size: var(--text-sm);
     color: var(--accent);
-  }
-  .add-confirm.already {
-    color: var(--text-muted);
   }
 </style>

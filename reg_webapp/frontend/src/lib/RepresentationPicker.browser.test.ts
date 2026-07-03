@@ -6,6 +6,7 @@ import type { PickerRepresentation } from "./catalog";
 import RepresentationPicker, {
   type PickerBand,
 } from "./RepresentationPicker.svelte";
+import { type PickerCommittedRow, pickerRowKey } from "./staged_picker";
 
 // RepresentationPicker drives the concept-group column picker. #908 adds
 // dimension-type marking (per-row axis markers) + per-dimension filter controls
@@ -69,8 +70,28 @@ const AXES: GroupAxisModel[] = [
 const PROPS = {
   window: null,
   canAdd: true,
-  onadd: vi.fn(),
+  onapply: vi.fn(),
 } as const;
+
+function committedRowsFor(
+  band: PickerBand,
+  row: PickerRepresentation,
+): Map<string, PickerCommittedRow> {
+  const key = pickerRowKey(band, row);
+  return new Map([
+    [
+      key,
+      {
+        key,
+        registerVariant: `${band.registerPrefix}/${row.variant}`,
+        variable: band.key,
+        representation: row.representation,
+        sourceName: "Source",
+        sourcePeriod: 2000,
+      },
+    ],
+  ]);
+}
 
 /** The delivery-column chips of the currently-visible column ROWS (not the filter
  * fieldsets). */
@@ -147,7 +168,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
 
     // Click the row label, not the checkbox itself: the full integrated row toggles.
     selectAllRow.click();
-    await expect.element(page.getByText("4 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+4 columns")).toBeVisible();
     expect(selectAllBox?.checked).toBe(true);
     expect(selectAllBox?.indeterminate).toBe(false);
     expect(selectAllRow.classList.contains("selected")).toBe(true);
@@ -160,7 +181,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     expect(rowBoxes.every((box) => box.checked)).toBe(true);
 
     rowBoxes[0].click();
-    await expect.element(page.getByText("3 columns selected")).toBeVisible();
+    await expect.element(page.getByText("+3 columns")).toBeVisible();
     expect(selectAllBox?.checked).toBe(false);
     expect(selectAllBox?.indeterminate).toBe(true);
     expect(selectAllRow.classList.contains("selected")).toBe(false);
@@ -215,12 +236,12 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
   });
 
   it("filtering is presentation-only: a hidden selected column still commits, flagged in the footer", async () => {
-    const onadd = vi.fn();
+    const onapply = vi.fn();
     render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
-      onadd,
+      onapply,
     });
     // Select DIN3 (carries enhet=fam, hush=h1) via its row checkbox.
     const din3 = await vi.waitFor(() => {
@@ -235,30 +256,217 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       return cb;
     });
     din3.click();
-    await expect.element(page.getByText("1 column selected")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
 
     // Now filter Enhet → "Individ" (ind): DIN3 (fam) is hidden.
     clickFilter("Individ");
     // The selection persists and the footer signals the hidden selection.
     await expect
-      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .element(page.getByText("+1 column (1 hidden by filters)"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
     // Committing still includes the hidden-but-selected DIN3.
-    await page.getByRole("button", { name: "Add to project" }).click();
-    expect(onadd).toHaveBeenCalledTimes(1);
-    const committed = onadd.mock.calls[0][0] as { row: PickerRepresentation }[];
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const committed = onapply.mock.calls[0][0].adds as {
+      row: PickerRepresentation;
+    }[];
     expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
   });
 
-  it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
-    const onadd = vi.fn();
+  it("keeps staged rows when the parent rejects an async apply as stale", async () => {
+    const onapply = vi.fn().mockResolvedValue(false);
     render(RepresentationPicker, {
       bands: [multiAxisBand()],
       axes: AXES,
       ...PROPS,
-      onadd,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
+  });
+
+  it("freezes staging controls while Apply is pending", async () => {
+    let finishApply: () => void = () => {
+      throw new Error("apply did not start");
+    };
+    const applyStarted = new Promise<void>((started) => {
+      const onapply = vi.fn().mockImplementation(
+        () =>
+          new Promise<void>((resolve) => {
+            finishApply = resolve;
+            started();
+          }),
+      );
+      render(RepresentationPicker, {
+        bands: [multiAxisBand()],
+        axes: AXES,
+        ...PROPS,
+        onapply,
+      });
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+    await expect.element(page.getByText("Will be added")).toBeVisible();
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    await applyStarted;
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /DIN2/ }))
+      .toBeDisabled();
+    await expect
+      .element(page.getByRole("checkbox", { name: /Select all columns of/ }))
+      .toBeDisabled();
+    await expect
+      .element(page.getByRole("button", { name: "Reset" }))
+      .toBeDisabled();
+
+    finishApply();
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+  });
+
+  it("does not stage period-only source changes from a partial picker", async () => {
+    const onapply = vi.fn();
+    const band = multiAxisBand();
+    const committedRows = committedRowsFor(band, band.rows[0]);
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      activePeriod: "2001",
+      committedRows,
+      onapply,
+    });
+
+    await expect.element(page.getByText("No staged changes")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: "Reset" }))
+      .not.toBeInTheDocument();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await expect.element(apply).toBeDisabled();
+
+    expect(onapply).not.toHaveBeenCalled();
+  });
+
+  it("allows remove-only applies before add seed context is ready", async () => {
+    const onapply = vi.fn();
+    const band = multiAxisBand();
+    const committedRows = committedRowsFor(band, band.rows[0]);
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      canAdd: false,
+      committedRows,
+      onapply,
+    });
+
+    const rowCheckbox = page.getByRole("checkbox", { name: /DIN1/ });
+    await expect.element(rowCheckbox).toBeChecked();
+    await rowCheckbox.click();
+    await expect.element(page.getByText("Will be removed")).toBeVisible();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await expect.element(apply).toBeEnabled();
+    await apply.click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].removes).toHaveLength(1);
+  });
+
+  it("allows committed nonselectable rows to be removed without allowing new adds", async () => {
+    const onapply = vi.fn();
+    const base = multiAxisBand();
+    const nonselectableCommitted = {
+      ...base.rows[0],
+      selectable: false,
+    };
+    const nonselectableUncommitted = {
+      ...base.rows[1],
+      selectable: false,
+    };
+    const band = {
+      ...base,
+      rows: [nonselectableCommitted, nonselectableUncommitted, base.rows[2]],
+    };
+    const committedRows = committedRowsFor(band, nonselectableCommitted);
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      committedRows,
+      onapply,
+    });
+
+    const committedCheckbox = page.getByRole("checkbox", { name: /DIN1/ });
+    await expect.element(committedCheckbox).toBeChecked();
+    await expect.element(committedCheckbox).toBeEnabled();
+    await expect
+      .element(page.getByRole("checkbox", { name: /DIN2/ }))
+      .toBeDisabled();
+
+    await committedCheckbox.click();
+    await expect.element(page.getByText("Will be removed")).toBeVisible();
+    const apply = page.getByRole("button", { name: "Apply staged changes" });
+    await expect.element(apply).toBeEnabled();
+    await apply.click();
+
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].removes).toHaveLength(1);
+    expect(onapply.mock.calls[0][0].adds).toHaveLength(0);
+  });
+
+  it("stages all rows backed by the same null binding when one is removed", async () => {
+    const onapply = vi.fn();
+    const band = multiAxisBand();
+    const committedRows = new Map<string, PickerCommittedRow>(
+      band.rows.slice(0, 2).map((r) => {
+        const key = pickerRowKey(band, r);
+        return [
+          key,
+          {
+            key,
+            registerVariant: `${band.registerPrefix}/${r.variant}`,
+            variable: band.key,
+            representation: null,
+            sourceName: "Source",
+            sourcePeriod: "_default",
+          },
+        ];
+      }),
+    );
+    render(RepresentationPicker, {
+      bands: [band],
+      axes: AXES,
+      ...PROPS,
+      committedRows,
+      onapply,
+    });
+
+    await page.getByRole("checkbox", { name: /DIN1/ }).click();
+
+    await expect.element(page.getByText("-2 columns")).toBeVisible();
+    expect(
+      document.querySelectorAll(".col-list .row-btn.staged-remove"),
+    ).toHaveLength(2);
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    expect(onapply.mock.calls[0][0].removes).toHaveLength(2);
+  });
+
+  it("toggle-all acts on visible rows only: a hidden-but-selected row survives select-all then deselect-all", async () => {
+    const onapply = vi.fn();
+    render(RepresentationPicker, {
+      bands: [multiAxisBand()],
+      axes: AXES,
+      ...PROPS,
+      onapply,
     });
     // Select DIN3 (enhet=fam, hush=h1) via its row checkbox.
     const din3 = await vi.waitFor(() => {
@@ -273,12 +481,12 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       return cb;
     });
     din3.click();
-    await expect.element(page.getByText("1 column selected")).toBeVisible();
+    await expect.element(page.getByText("+1 column")).toBeVisible();
 
     // Filter Enhet → "Individ" (ind): DIN3 (fam) is now hidden but still selected.
     clickFilter("Individ");
     await expect
-      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .element(page.getByText("+1 column (1 hidden by filters)"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
@@ -288,19 +496,21 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
     // Select all → adds the 2 visible rows; the hidden DIN3 stays selected (3 total).
     await selectAll.click();
     await expect
-      .element(page.getByText("3 columns selected (1 hidden by filters)"))
+      .element(page.getByText("+3 columns (1 hidden by filters)"))
       .toBeVisible();
     // Deselect all → clears the 2 visible rows only; the hidden DIN3 survives.
     await selectAll.click();
     await expect
-      .element(page.getByText("1 column selected (1 hidden by filters)"))
+      .element(page.getByText("+1 column (1 hidden by filters)"))
       .toBeVisible();
     expect(visibleColumns()).toEqual(["DIN1", "DIN2"]);
 
     // The surviving hidden selection still commits.
-    await page.getByRole("button", { name: "Add to project" }).click();
-    expect(onadd).toHaveBeenCalledTimes(1);
-    const committed = onadd.mock.calls[0][0] as { row: PickerRepresentation }[];
+    await page.getByRole("button", { name: "Apply staged changes" }).click();
+    expect(onapply).toHaveBeenCalledTimes(1);
+    const committed = onapply.mock.calls[0][0].adds as {
+      row: PickerRepresentation;
+    }[];
     expect(committed.map((s) => s.row.column)).toEqual(["DIN3"]);
   });
 

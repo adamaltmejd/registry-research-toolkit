@@ -135,6 +135,45 @@ export function looksLikePeriod(raw: string): boolean {
   return looksLikeSegment(value);
 }
 
+function periodSegmentBounds(segment: string): PeriodBounds | null {
+  const endpoints = periodRangeEndpoints(segment) ?? [
+    segment.trim(),
+    segment.trim(),
+  ];
+  const lo = periodTokenBounds(endpoints[0]);
+  const hi = periodTokenBounds(endpoints[1]);
+  if (!lo || !hi || lo.from > hi.to) {
+    return null;
+  }
+  return { from: lo.from, to: hi.to };
+}
+
+/** Strict client-side mirror for places that write `?period` directly into
+ * project_data. Unlike `looksLikePeriod`, this enforces the backend's list-level
+ * sorted/non-overlap invariant so grammar-looking values such as `2020,2019`
+ * stay presentation-only until the user fixes them. */
+export function isStructurallyValidPeriodWire(raw: string): boolean {
+  const value = raw.trim();
+  if (!looksLikePeriod(value)) {
+    return false;
+  }
+  if (value === DEFAULT_SENTINEL) {
+    return true;
+  }
+  let previousTo: string | null = null;
+  for (const member of value.split(LIST_SEP)) {
+    const bounds = periodSegmentBounds(member.trim());
+    if (!bounds) {
+      return false;
+    }
+    if (previousTo !== null && bounds.from <= previousTo) {
+      return false;
+    }
+    previousTo = bounds.to;
+  }
+  return true;
+}
+
 // ── Token bounds (advisory mirror of `reg_meta.fqid` interval semantics) ────
 // The #306 one-click add needs CLIENT-side window math (clip register-variant
 // validity windows to the user's range to tell succession from co-existence).
@@ -597,6 +636,96 @@ export function mergePeriods(existing: Period, incoming: Period): Period {
   }
   const segments = merged.map(yearIntervalToSegment);
   return segments.length === 1 ? segments[0] : segments;
+}
+
+interface BoundedPeriodSegment {
+  wire: string;
+  bounds: PeriodBounds;
+}
+
+/** Extend source-period coverage to include both periods. This keeps
+ * `mergePeriods`' token/default replacement contract for callers that really want
+ * "latest explicit period wins", while staged source accumulation can preserve
+ * every selected token/list window it resolves bindings against. */
+export function periodCoverageUnion(
+  existing: Period,
+  incoming: Period,
+): Period {
+  const existingWire = periodToWire(existing);
+  const incomingWire = periodToWire(incoming);
+  if (existingWire === DEFAULT_SENTINEL) {
+    return existing;
+  }
+  if (incomingWire === DEFAULT_SENTINEL) {
+    return incoming;
+  }
+  const existingYears = yearIntervalsOf(existing);
+  const incomingYears = yearIntervalsOf(incoming);
+  if (existingYears !== null && incomingYears !== null) {
+    return mergePeriods(existing, incoming);
+  }
+  return (
+    unionBoundedPeriodSegments(existing, incoming) ??
+    mergePeriods(existing, incoming)
+  );
+}
+
+function boundedPeriodSegments(period: Period): BoundedPeriodSegment[] | null {
+  const wire = periodToWire(period);
+  if (!wire || wire === DEFAULT_SENTINEL) {
+    return null;
+  }
+  const segments: BoundedPeriodSegment[] = [];
+  for (const raw of wire.split(LIST_SEP)) {
+    const member = raw.trim();
+    const bounds = periodWireBounds(member);
+    if (!member || !bounds) {
+      return null;
+    }
+    segments.push({ wire: member, bounds });
+  }
+  return segments.length > 0 ? segments : null;
+}
+
+function unionBoundedPeriodSegments(
+  existing: Period,
+  incoming: Period,
+): Period | null {
+  const existingSegments = boundedPeriodSegments(existing);
+  const incomingSegments = boundedPeriodSegments(incoming);
+  if (!existingSegments || !incomingSegments) {
+    return null;
+  }
+  const sorted = [...existingSegments, ...incomingSegments].sort(
+    (a, b) =>
+      a.bounds.from.localeCompare(b.bounds.from) ||
+      a.bounds.to.localeCompare(b.bounds.to) ||
+      a.wire.localeCompare(b.wire),
+  );
+  const merged: BoundedPeriodSegment[] = [];
+  for (const segment of sorted) {
+    const previous = merged.at(-1);
+    if (!previous) {
+      merged.push(segment);
+      continue;
+    }
+    if (previous.bounds.to < segment.bounds.from) {
+      merged.push(segment);
+      continue;
+    }
+    if (segment.bounds.to <= previous.bounds.to) {
+      continue;
+    }
+    previous.bounds = {
+      from: previous.bounds.from,
+      to: segment.bounds.to,
+    };
+    previous.wire = periodTokenForBounds(
+      previous.bounds.from,
+      previous.bounds.to,
+    );
+  }
+  return periodFromWire(merged.map((segment) => segment.wire).join(LIST_SEP));
 }
 
 // ── Query-string builder ─────────────────────────────────────────────────────

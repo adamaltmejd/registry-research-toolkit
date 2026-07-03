@@ -31,6 +31,7 @@ import {
   periodWireBounds,
   VALUE_SET_VERSION_NONE,
 } from "./period";
+import type { Binding } from "./project_data";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -651,7 +652,14 @@ const ID_TOKENS = new Set(["identifierare", "uniqueidentifier"]);
  * derive-on-pick. A state carrying a value set is categorical; otherwise the
  * leading `data_type` token decides; unrecognized → "opaque". ALWAYS overridable
  * via the BindingEditor's `<select>` — the backend stays canonical. */
-export function deriveType(state: VariableStateModel | undefined): string {
+interface TypeDerivationState {
+  data_type?: string | null;
+  is_identifier?: boolean;
+  value_set_id?: number | null;
+  value_set?: unknown[] | null;
+}
+
+export function deriveType(state: TypeDerivationState | undefined): string {
   if (!state) {
     return "opaque";
   }
@@ -1689,7 +1697,7 @@ export function pickerFilterDimensions(
       out.push({
         kind: "variant",
         key: "variant",
-        label: "Population",
+        label: "Variant",
         values: [...variantSeen.entries()]
           .map(([value, label]) => ({ value, label }))
           .sort((a, b) => a.label.localeCompare(b.label)),
@@ -2760,4 +2768,52 @@ export async function resolveBindingAt(
     displayNameDefault: first.delivery_column_name ?? null,
     representation: null,
   };
+}
+
+/** Map a `resolveBindingAt` result to a binding's FINAL fields (the #991 write-once
+ * model — resolve once, write the concrete type/display/representation, no marker).
+ * Honors the #991 null-when-unambiguous convention (issue #992): a representation is
+ * pinned ONLY for a pick among genuinely CO-EXISTING siblings.
+ *   - `derived` (exactly ONE delivery column at the (period, variant)) → the resolved
+ *     type + display default, and `representation: null` — unambiguous, so the payload
+ *     column is DROPPED (never pinned).
+ *   - `ambiguous` + the payload pins one of the genuinely co-existing columns → that
+ *     column's derived type + its `delivery_column_name` display + the pinned
+ *     representation.
+ *   - `ambiguous` (null / non-matching representation) OR `unresolved` → type `""`
+ *     (NOT `"opaque"`). A resolve failure / unresolved add must not synthesize a valid
+ *     opaque binding; the backend validator must flag it instead. */
+export function bindingFieldsFromResolution(
+  variable: string,
+  resolution: BindingResolution,
+  representation: string | null,
+): Binding {
+  if (resolution.kind === "derived") {
+    const binding: Binding = {
+      variable,
+      type: resolution.type,
+      representation: null,
+    };
+    if (resolution.displayNameDefault != null) {
+      binding.display_name = resolution.displayNameDefault;
+    }
+    return binding;
+  }
+  if (resolution.kind === "ambiguous") {
+    const chosen =
+      representation != null
+        ? resolution.states.find(
+            (s) => s.delivery_column_name === representation,
+          )
+        : undefined;
+    if (chosen) {
+      return {
+        variable,
+        type: deriveType(chosen),
+        display_name: chosen.delivery_column_name ?? representation,
+        representation,
+      };
+    }
+  }
+  return { variable, type: "", representation };
 }
