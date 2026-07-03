@@ -85,6 +85,126 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(2);
   });
 
+  it("shows state operational definitions when parallel columns share one value set (#736)", async () => {
+    const states = [
+      state({
+        state_id: 10,
+        value_set_id: 500,
+        value_set_version_label: "vald/inte vald",
+        delivery_column_name: "fedunsatreason_1",
+        operational_definition: "Education was not relevant to work",
+        value_set: [
+          { code: "0", label: "Inte vald" },
+          { code: "1", label: "Vald" },
+        ],
+      }),
+      state({
+        state_id: 11,
+        value_set_id: 500,
+        value_set_version_label: "vald/inte vald",
+        delivery_column_name: "fedunsatreason_2",
+        operational_definition: "Education was too theoretical",
+        value_set: [
+          { code: "0", label: "Inte vald" },
+          { code: "1", label: "Vald" },
+        ],
+      }),
+    ];
+
+    render(ValueSetView, { states, narrowed: false });
+
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
+    await expect.element(page.getByText("fedunsatreason_1")).toBeVisible();
+    await expect
+      .element(page.getByText("Education was not relevant to work"))
+      .toBeVisible();
+    await expect.element(page.getByText("fedunsatreason_2")).toBeVisible();
+    await expect
+      .element(page.getByText("Education was too theoretical"))
+      .toBeVisible();
+  });
+
+  it("renders expanded state definitions with duplicate source state ids (#736)", async () => {
+    const states = [
+      state({
+        state_id: 20,
+        value_set_id: 600,
+        value_set_version_label: "expanded",
+        delivery_column_name: "month_jan",
+        operational_definition: "January expanded state",
+        valid_from: "2020-01-01",
+        valid_to: "2020-01-31",
+        value_set: [
+          { code: "0", label: "No" },
+          { code: "1", label: "Yes" },
+        ],
+      }),
+      state({
+        state_id: 20,
+        value_set_id: 600,
+        value_set_version_label: "expanded",
+        delivery_column_name: "month_feb",
+        operational_definition: "February expanded state",
+        valid_from: "2020-02-01",
+        valid_to: "2020-02-29",
+        value_set: [
+          { code: "0", label: "No" },
+          { code: "1", label: "Yes" },
+        ],
+      }),
+    ];
+
+    render(ValueSetView, { states, narrowed: false });
+
+    expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
+    await expect.element(page.getByText("month_jan")).toBeVisible();
+    await expect
+      .element(page.getByText("January expanded state"))
+      .toBeVisible();
+    await expect.element(page.getByText("month_feb")).toBeVisible();
+    await expect
+      .element(page.getByText("February expanded state"))
+      .toBeVisible();
+  });
+
+  it("disambiguates repeated definition column labels by state window (#736)", async () => {
+    const states = [
+      state({
+        state_id: 30,
+        value_set_id: 700,
+        value_set_version_label: "stable",
+        delivery_column_name: "reason",
+        operational_definition: "Early definition",
+        valid_from: "2010-01-01",
+        valid_to: "2010-12-31",
+        value_set: [
+          { code: "0", label: "No" },
+          { code: "1", label: "Yes" },
+        ],
+      }),
+      state({
+        state_id: 31,
+        value_set_id: 700,
+        value_set_version_label: "stable",
+        delivery_column_name: "reason",
+        operational_definition: "Later definition",
+        valid_from: "2011-01-01",
+        valid_to: "2011-12-31",
+        value_set: [
+          { code: "0", label: "No" },
+          { code: "1", label: "Yes" },
+        ],
+      }),
+    ];
+
+    render(ValueSetView, { states, narrowed: false });
+
+    await expect.element(page.getByText("reason (2010)")).toBeVisible();
+    await expect.element(page.getByText("Early definition")).toBeVisible();
+    await expect.element(page.getByText("reason (2011)")).toBeVisible();
+    await expect.element(page.getByText("Later definition")).toBeVisible();
+  });
+
   it("a classification value set shows the '= LKF ⟨vintage⟩' link, NOT a code dump", async () => {
     render(ValueSetView, {
       states: [classState, plainState],

@@ -854,6 +854,8 @@ class _StateGroup:
     value_set_id: int | None
     value_set_version_label: str | None
     source_register_text: str | None = None
+    operational_definition: str | None = None
+    operational_definition_conflict: bool = False
     # grain is part of the *group key* (gkey position 7), not stored here.
     unika_min: int | None = None
     unika_max: int | None = None
@@ -2396,7 +2398,7 @@ def _coalesce_variable_states(
             "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
             "       vi.data_type, vi.data_length, vi.value_set_id, "
             "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
-            "       vi.source_register_text, "
+            "       vi.source_register_text, vi.operational_definition, "
             "       vi.variabelnamn, va.delivery_column_name, "
             "       rv.registerversionnamn, "
             "       rv.registerversion_senastgodkanddatum "
@@ -2589,6 +2591,13 @@ def _coalesce_variable_states(
                 source_register_text=row["source_register_text"] or None,
             )
             groups[gkey] = grp
+
+        opdef = row["operational_definition"]
+        if opdef:
+            if grp.operational_definition is None:
+                grp.operational_definition = opdef
+            elif grp.operational_definition != opdef:
+                grp.operational_definition_conflict = True
 
         # Editions this group was delivered in — the contested gate buckets
         # by edition, not year (regver_id is NOT NULL on variable_instance).
@@ -2874,14 +2883,12 @@ def _coalesce_variable_states(
             "ON variable_instance(variable_id, cvid)"
         )
 
-    # #892: attribute each cvid's operational definition to its OWNING (post-split
-    # sibling) variable. The cvid→variable_id stamp above is the SAME ground-truth
-    # routing `_emit_variable_aliases` uses, so a parallel-column split sends each
-    # sibling ITS column's operational definition (the per-column distinguishing
-    # meaning). A sibling spanning several cvids/editions aggregates first-non-empty
-    # (deterministic min(cvid) tiebreak for the SQL aggregate). Written to the
-    # `variable` table here, NOT folded into `description` (kept DISTINCT). NULL
-    # when the variable's cvids carry no operational definition (UPDATE skips it).
+    # #892/#736: attribute cvid operational definitions after triage. The state
+    # rows above carry each group's per-column text. The variable-level column is
+    # only a shared/canonical summary: write it when all non-empty cvid texts for
+    # the owning variable agree. If parallel same-period members disagree, leaving
+    # `variable.operational_definition` NULL avoids presenting one member's text
+    # as a fact about the whole variable.
     with _stage_timer("scb:coalesce:backfill_operational_definitions"):
         conn.execute(
             "UPDATE variable SET operational_definition = ("
@@ -2890,11 +2897,12 @@ def _coalesce_variable_states(
             "    AND COALESCE(vi.operational_definition, '') <> ''"
             "  ORDER BY vi.cvid LIMIT 1"
             ") "
-            "WHERE EXISTS ("
-            "  SELECT 1 FROM variable_instance vi"
+            "WHERE ("
+            "  SELECT COUNT(DISTINCT vi.operational_definition)"
+            "  FROM variable_instance vi"
             "  WHERE vi.variable_id = variable.variable_id"
             "    AND COALESCE(vi.operational_definition, '') <> ''"
-            ")"
+            ") = 1"
         )
 
     batch: list[tuple] = []
@@ -3042,6 +3050,9 @@ def _coalesce_variable_states(
                 grp.data_length,
                 grp.latest_alias,
                 grp.source_register_text,
+                None
+                if grp.operational_definition_conflict
+                else grp.operational_definition,
                 grp.value_set_id,
                 label,
             )
@@ -3344,8 +3355,9 @@ def _coalesce_variable_states(
         conn.executemany(
             "INSERT INTO variable_state (variable_id, register_variant_id, "
             "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
-            "    source_register_text, value_set_id, value_set_version_label) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "    source_register_text, operational_definition, value_set_id, "
+            "    value_set_version_label) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             batch,
         )
 
@@ -4559,21 +4571,25 @@ class SCBAdapter:
         for row in self.conn.execute(
             "SELECT state_id, variable_id, register_variant_id, valid_from, "
             "       valid_to, data_type, data_length, delivery_column_name, "
-            "       source_register_text, value_set_id, value_set_version_label "
+            "       source_register_text, operational_definition, value_set_id, "
+            "       value_set_version_label "
             "FROM variable_state ORDER BY state_id"
         ):
-            yield IRVariableState(
-                state_id=row[0],
-                variable_id=row[1],
-                register_variant_id=row[2],
-                valid_from=row[3],
-                valid_to=row[4],
-                data_type=row[5],
-                data_length=row[6],
-                delivery_column_name=row[7],
-                source_register_text=row[8],
-                value_set_id=row[9],
-                value_set_version_label=row[10],
+            yield IRVariableState.model_validate(
+                {
+                    "state_id": row[0],
+                    "variable_id": row[1],
+                    "register_variant_id": row[2],
+                    "valid_from": row[3],
+                    "valid_to": row[4],
+                    "data_type": row[5],
+                    "data_length": row[6],
+                    "delivery_column_name": row[7],
+                    "source_register_text": row[8],
+                    "operational_definition": row[9],
+                    "value_set_id": row[10],
+                    "value_set_version_label": row[11],
+                }
             )
 
     def _emit_variable_aliases(self) -> Iterator[IRObject]:

@@ -218,6 +218,43 @@ function usageChanges(
   return usage.spans.flatMap((span) => span.changes ?? []);
 }
 
+function definitionStates(
+  usage: DistinctValueSet["usages"][number],
+): VariableStateModel[] {
+  return usage.states.filter((s) => s.operational_definition);
+}
+
+function repeatedDefinitionLabels(states: VariableStateModel[]): Set<string> {
+  const counts = new Map<string, number>();
+  for (const state of states) {
+    const label = state.delivery_column_name ?? formatStateWindow(state);
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+  }
+  return new Set(
+    [...counts.entries()]
+      .filter(([, count]) => count > 1)
+      .map(([label]) => label),
+  );
+}
+
+function stateDefinitionLabel(
+  s: VariableStateModel,
+  repeated: Set<string>,
+): string {
+  const label = s.delivery_column_name ?? formatStateWindow(s);
+  return repeated.has(label) ? `${label} (${formatStateWindow(s)})` : label;
+}
+
+function stateDefinitionKey(s: VariableStateModel): string {
+  return [
+    s.state_id,
+    s.delivery_column_name ?? "",
+    s.valid_from,
+    s.valid_to,
+    s.value_set_version_label ?? "",
+  ].join("|");
+}
+
 function changeDateLabel(at: string): string {
   return /^\d{4}-01-01$/.test(at) ? at.slice(0, 4) : at;
 }
@@ -289,6 +326,8 @@ function overlapPercent(overlap: number): string {
   <ul class="vs-usage">
     {#each vs.usages as u (u.variant)}
       {@const changes = usageChanges(u)}
+      {@const definedStates = definitionStates(u)}
+      {@const repeatedLabels = repeatedDefinitionLabels(definedStates)}
       <li>
         <code class="vs-usage-variant">{u.variant}</code>
         <span class="muted vs-usage-spans">
@@ -300,6 +339,22 @@ function overlapPercent(overlap: number): string {
               <span class="vs-change">{technicalChangeLabel(change)}</span>
             {/each}
           </span>
+        {/if}
+        {#if definedStates.length > 0}
+          <dl class="state-definitions">
+            {#each definedStates as s (stateDefinitionKey(s))}
+              <div>
+                <dt>
+                  {#if s.delivery_column_name}
+                    <code>{stateDefinitionLabel(s, repeatedLabels)}</code>
+                  {:else}
+                    {stateDefinitionLabel(s, repeatedLabels)}
+                  {/if}
+                </dt>
+                <dd>{s.operational_definition}</dd>
+              </div>
+            {/each}
+          </dl>
         {/if}
       </li>
     {/each}
@@ -391,6 +446,10 @@ function overlapPercent(overlap: number): string {
       <dd title={windowTitle(s.valid_from, s.valid_to)}>{formatStateWindow(s)}</dd>
       <dt class="micro-label">Value-set version</dt>
       <dd>{s.value_set_version_label || "(no version)"}</dd>
+      {#if s.operational_definition}
+        <dt class="micro-label">Operational definition</dt>
+        <dd>{s.operational_definition}</dd>
+      {/if}
     </dl>
 
     <!-- #638 PR4: Data type and Delivery column are STRUCTURAL backend fields
@@ -614,6 +673,34 @@ function overlapPercent(overlap: number): string {
   }
   .vs-change {
     font-size: 0.9em;
+  }
+  .state-definitions {
+    flex-basis: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem var(--space-2);
+    margin: 0;
+    color: var(--text);
+  }
+  .state-definitions div {
+    display: contents;
+  }
+  .state-definitions dt {
+    min-width: 0;
+  }
+  .state-definitions dd {
+    min-width: 0;
+    margin: 0;
+    color: var(--text-muted);
+  }
+  .state-definitions code,
+  .state-definitions dd {
+    overflow-wrap: anywhere;
+  }
+  @media (min-width: 42rem) {
+    .state-definitions {
+      grid-template-columns: minmax(8rem, 16rem) minmax(0, 1fr);
+    }
   }
   .vs-codes {
     margin-top: 0.1rem;

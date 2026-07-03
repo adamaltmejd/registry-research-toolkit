@@ -285,7 +285,12 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   ship; they preserve version-scoped register/variant population and object-type
 #   prose for the catalog UI. A 6.4.0 DB lacks the variable flag and shipped
 #   metadata tables, so it is rejected via the minor-version gate.
-SCHEMA_VERSION = "6.5.0"
+# - 6.6.0 (#736): additive `variable_state.operational_definition` column —
+#   SCB's per-column operational definition stays at state grain for parallel
+#   same-period multi-response columns instead of only collapsing to one
+#   variable-level value. A 6.5.0 DB lacks the state column, so it is rejected
+#   via the minor-version gate.
+SCHEMA_VERSION = "6.6.0"
 DB_FILENAME = "reg_meta.db"
 
 

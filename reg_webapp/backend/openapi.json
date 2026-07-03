@@ -3836,6 +3836,17 @@
             "title": "Is Identifier",
             "type": "boolean"
           },
+          "operational_definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operational Definition"
+          },
           "period_token": {
             "anyOf": [
               {

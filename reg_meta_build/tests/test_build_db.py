@@ -2002,17 +2002,14 @@ class TestOperationalDefinition:
         finally:
             conn.close()
 
-    def test_within_sibling_tiebreak_is_min_cvid(self, tmp_path: Path):
+    def test_disagreeing_ops_do_not_become_variable_summary(self, tmp_path: Path):
         """One (non-split) sibling spanning several cvids that each carry a
-        DIFFERENT non-empty operational definition: the materialized
-        `variable.operational_definition` is the min-cvid one.
+        DIFFERENT non-empty operational definition must NOT pick an arbitrary
+        `variable.operational_definition`.
 
-        `_coalesce_variable_states` resolves this with
-        `ORDER BY vi.cvid LIMIT 1` over the non-empty ops — a deterministic
-        first-non-empty tiebreak. The split test covers DISTINCT ops routing to
-        DIFFERENT siblings; this one locks the WITHIN-sibling collapse, which no
-        other test exercises. Same delivery column across both editions (no
-        disjoint-stem split), so the two cvids land on ONE sibling.
+        #736 moved member-specific text to `variable_state`; the variable-level
+        column is now only a shared summary. Same delivery column across both
+        editions (no disjoint-stem split), so the two cvids land on ONE sibling.
         """
         # Same delivery column, same edition (year/regver) → ONE sibling spanning
         # two cvids. Distinct regver_id keeps the two rows as separate
@@ -2050,12 +2047,17 @@ class TestOperationalDefinition:
             # Precondition: ONE sibling (same column → no split), spanning the
             # two cvids.
             rows = conn.execute(
-                "SELECT operational_definition FROM variable "
+                "SELECT variable_id, operational_definition FROM variable "
                 "WHERE register_id = 1 AND provider_key = '921'"
             ).fetchall()
             assert len(rows) == 1, "same-column editions must collapse to ONE sibling"
-            # The min-cvid op (9311) wins the deterministic tiebreak.
-            assert rows[0]["operational_definition"] == "Op def carrier alpha"
+            assert rows[0]["operational_definition"] is None
+            state_ops = conn.execute(
+                "SELECT operational_definition FROM variable_state "
+                "WHERE variable_id = ?",
+                (rows[0]["variable_id"],),
+            ).fetchall()
+            assert [r["operational_definition"] for r in state_ops] == [None]
         finally:
             conn.close()
 
