@@ -342,15 +342,22 @@ def follow_one(
     follower = LogFollower(log_path)
     if not from_start:
         follower.skip_to_end()
-    ended_notice = False
     while True:
         for line in follower.poll():
             rendered = line if raw else renderer.render(line)
             if rendered is not None:
                 print(rendered, flush=True)
-        if not ended_notice and slug not in _cos_preflight.scan_slots(slots_root):
+        if slug not in _cos_preflight.scan_slots(slots_root):
+            # Lane over: drain what the poll above may have raced, then EXIT — a
+            # follower that lingers would hold a process per done lane and, on slug
+            # reuse (dispatch logs are per-slug, append-only), print the NEXT run's
+            # log into a pane titled done:. remain-on-exit keeps the scrollback.
+            for line in follower.poll():
+                rendered = line if raw else renderer.render(line)
+                if rendered is not None:
+                    print(rendered, flush=True)
             print(renderer._c(_DIM, f"— slot {slug} released (lane ended)"), flush=True)
-            ended_notice = True
+            return 0
         time.sleep(interval)
 
 

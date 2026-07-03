@@ -310,6 +310,26 @@ def test_follow_requires_exactly_one_target(tmp_path: Path, capsys) -> None:
     assert "exactly one" in capsys.readouterr().err
 
 
+def test_follow_exits_after_lane_release(tmp_path: Path, capsys) -> None:
+    # A released lane's follower must render the full log, note the release, and
+    # EXIT — a lingering follower would print a reused slug's next run into a
+    # done: pane (Codex P2 on #1047).
+    logs_root = tmp_path / "dispatch-logs"
+    logs_root.mkdir(parents=True)
+    (logs_root / "gone-lane.log").write_text(
+        '{"type":"item.completed","item":{"type":"agent_message","text":"done"}}\n',
+        encoding="utf-8",
+    )
+    rc = ct.main(
+        ["--state-root", str(tmp_path), "--no-color", "follow", "gone-lane"]
+        + ["--from-start"]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "done" in out
+    assert "released (lane ended)" in out
+
+
 def test_status_command_smoke(tmp_path: Path, capsys) -> None:
     _write_slot(tmp_path / "pipeline-slots", "auto-codex-issue-7")
     assert ct.main(["--state-root", str(tmp_path), "--no-color", "status"]) == 0
