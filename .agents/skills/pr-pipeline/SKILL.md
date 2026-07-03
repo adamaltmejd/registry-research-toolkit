@@ -267,9 +267,10 @@ After the gate is complete, write the handoff into the **local merge-gate store*
 example): create `~/.local/state/registry-research-toolkit/merge-gates/pr-<N>/`
 (`$XDG_STATE_HOME` root if set), copy the evidence files in FIRST (design-reviewer
 report + screenshots, `build-db` watcher log, dbdiff output — whatever the PR's gates
-required), then write `gate.json` last and atomically (write a temp file in the same
-directory and rename it over `gate.json` — the preflight probe polls this file and must
-never see a torn write):
+required, plus `followups.md` if the lane has follow-ups, per the contract below), then
+write `gate.json` last and atomically (write a temp file in the same directory and
+rename it over `gate.json` — the preflight probe polls this file and must never see a
+torn write):
 
 ```json
 {
@@ -319,6 +320,20 @@ changes, copy the `reg-webapp-design-reviewer` report and its screenshots into t
 directory; a local `/tmp/reg-webapp-shots/` path is useful in the authoring thread but
 is not durable merge evidence.
 
+When the lane has follow-ups (see Closeout), persist them as a `followups.md` evidence
+file so a detached / auto-dispatched run loses nothing — chief-of-staff files them at
+merge via the `file-issue` skill. Write it into the gate directory alongside the other
+evidence, BEFORE `gate.json` (adding or refreshing it bumps `updated`), like every other
+evidence file. For a **multi-PR lane, write ONE `followups.md`** into the FINAL PR (in
+merge order) of the lane, not into every PR. Format: one `## <proposed issue title>`
+section per follow-up, each containing the proposed labels (one area + one type, per the
+Issue tracker rules), the dedupe search already performed
+(`gh issue list --state all --search "<keywords>"` and its outcome), a `Relationships`
+line set (`Follow-up to #N`, `Part of #<epic>`, any `Blocked by`), and the ready-to-file
+body (house skeleton, including a `touches` block when it will change code). An entry
+whose dedupe search matched an existing issue instead records **"covered by existing #N
+— do not file"** rather than a body.
+
 Run the real `build-db` last and once for build-affecting work, using the `build-db`
 skill / `scripts/build_db_watch.py` so the run has a timestamped log, sparse progress,
 post-build SQLite checks, and long-session polling. Use the main checkout's untracked
@@ -364,6 +379,12 @@ filing. For multi-PR pipelines, report the intended merge order, but leave execu
 `chief-of-staff`. Default to fixing doc drift inline — it's part of this PR; record a
 follow-up only when the fix needs its own scoped change, never as an escape hatch for a
 one-liner. Before proposing a new issue, search open and closed issues with
-`gh issue list --state all --search "<keywords>"`. Do NOT file follow-up issues
-unprompted — list them and offer to file the ones the human picks; filing is the human's
-call.
+`gh issue list --state all --search "<keywords>"`, and draft it to the AGENTS.md Issue
+tracker conventions (a `<type>(<package>):` title, area + type labels, a `Relationships`
+block wiring it to its origin, and a `touches` block when it will change code). The
+pipeline **never files directly**. It ALWAYS persists these drafts to the lane's
+final-PR `followups.md` (see the merge-gate handoff contract) — so a detached /
+auto-dispatched run loses nothing and chief-of-staff files them at merge via the
+`file-issue` skill. In an **interactive** session, additionally list them and offer to
+file the ones the human picks immediately via `file-issue`. Say "none" (and write no
+`followups.md`) when the change is fully self-contained.
