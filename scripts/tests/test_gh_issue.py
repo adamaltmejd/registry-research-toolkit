@@ -266,6 +266,66 @@ def test_cli_usage_error_exits_2() -> None:
     assert gi.main(["bogus"]) == gi.EXIT_USAGE
 
 
+# --- is_maintainer_authored (public predicate, fail-closed) --------------------------
+
+
+def test_is_maintainer_authored_true_for_maintainer(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_view(
+        monkeypatch,
+        {"number": 328, "title": "epic", "body": "plan", "author": {"login": MAINT}},
+    )
+    assert gi.is_maintainer_authored(328) is True
+
+
+def test_is_maintainer_authored_case_insensitive(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_view(
+        monkeypatch,
+        {"number": 5, "title": "t", "body": "b", "author": {"login": MAINT.upper()}},
+    )
+    assert gi.is_maintainer_authored(5) is True
+
+
+def test_is_maintainer_authored_false_for_stranger(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_view(
+        monkeypatch,
+        {"number": 9, "title": "x", "body": "evil", "author": {"login": "stranger"}},
+    )
+    assert gi.is_maintainer_authored(9) is False
+
+
+def test_is_maintainer_authored_false_for_missing_number(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A non-zero `gh issue view` (genuinely missing number) → _fetch_issue None → False.
+    _stub_view(monkeypatch, None)
+    assert gi.is_maintainer_authored(1) is False
+
+
+def test_is_maintainer_authored_false_for_null_author(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_view(monkeypatch, {"number": 7, "title": "t", "body": "b", "author": None})
+    assert gi.is_maintainer_authored(7) is False
+
+
+def test_is_maintainer_authored_true_for_maintainer_pr(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # `gh issue view` resolves a PR number too (exit 0 + payload): a maintainer-authored PR
+    # passes exactly like a maintainer issue — authorship, not issue-ness, is the boundary.
+    _stub_view(
+        monkeypatch,
+        {"number": 1024, "title": "pr", "body": "b", "author": {"login": MAINT}},
+    )
+    assert gi.is_maintainer_authored(1024) is True
+
+
 # --- maintainer-login subcommand -----------------------------------------------------
 
 

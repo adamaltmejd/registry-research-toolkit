@@ -1466,20 +1466,21 @@ def _stub_gh_author(
 ) -> None:
     """Drive the REAL require_maintainer_authored via a stubbed gh_issue surface.
 
-    Overrides the autouse no-op so the real author gate runs, and stubs gh_issue's
-    maintainer_login + _fetch_issue (no live `gh`). `authors` maps issue number → author
-    login, or None to model a missing issue (a non-zero `gh issue view`).
+    Overrides the autouse no-op so the real author gate runs, and stubs gh_issue's PUBLIC
+    surface (`maintainer_login` for the error message + `is_maintainer_authored` for the
+    verdict) — no live `gh`, and no reach into the privates the gate no longer touches.
+    `authors` maps issue number → author login, None to model a null author, or omission
+    to model a missing issue number; each resolves the same fail-closed bool the real
+    is_maintainer_authored would.
     """
     monkeypatch.setattr(cd, "require_maintainer_authored", _REAL_REQUIRE_MAINTAINER)
     monkeypatch.setattr(cd._gh_issue, "maintainer_login", lambda: _MAINT)
 
-    def fake_fetch(number: int, comments: bool = False):
-        login = authors.get(number, "__missing__")
-        if login == "__missing__":
-            return None  # models a genuinely missing issue number
-        return {"number": number, "author": {"login": login} if login else None}
+    def fake_is_authored(number: int) -> bool:
+        login = authors.get(number)  # absent OR null author → not maintainer-authored
+        return login is not None and login.casefold() == _MAINT.casefold()
 
-    monkeypatch.setattr(cd._gh_issue, "_fetch_issue", fake_fetch)
+    monkeypatch.setattr(cd._gh_issue, "is_maintainer_authored", fake_is_authored)
 
 
 @pytest.mark.parametrize("bad_author", ["stranger", None])
@@ -1608,17 +1609,17 @@ def test_dry_run_skips_author_check(
     tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     # --dry-run promises zero side effects AND no network: the author gate (read-only `gh`)
-    # must NOT run in dry-run. Wire the real gate but make _fetch_issue raise if called,
-    # then prove dry-run still returns 0 without touching it.
+    # must NOT run in dry-run. Wire the real gate but make is_maintainer_authored raise if
+    # called, then prove dry-run still returns 0 without touching it.
     canonical = _make_origin(tmp_path)
     state = tmp_path / "state"
     monkeypatch.setattr(cd, "require_maintainer_authored", _REAL_REQUIRE_MAINTAINER)
     monkeypatch.setattr(cd._gh_issue, "maintainer_login", lambda: _MAINT)
 
-    def boom(number: int, comments: bool = False):
+    def boom(number: int) -> bool:
         raise AssertionError("author check ran during --dry-run (network I/O)")
 
-    monkeypatch.setattr(cd._gh_issue, "_fetch_issue", boom)
+    monkeypatch.setattr(cd._gh_issue, "is_maintainer_authored", boom)
 
     rc = cd.dispatch(_args(tmp_path, canonical, state_root=state, dry_run=True))
 

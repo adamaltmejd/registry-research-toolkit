@@ -19,6 +19,9 @@ parse_issues, resolve_profile, slug validation — all exit 2):
   1. kill switch  — <state-root>/auto-dispatch.off present ⇒ refuse (exit 3).
   2. budget       — busy slots >= --max-slots ⇒ refuse (exit 4).
   3. collision    — slot file OR worktree dir already exists ⇒ refuse (exit 2).
+  3b. author check — each --issues number must be maintainer-authored
+                    (gh_issue.is_maintainer_authored); refuse (exit 2) before any side
+                    effect. Skipped under --dry-run (its no-network contract).
   4. worktree     — `git fetch origin main` then `git worktree add -b wt/<slug> …
                     origin/main`, run in the canonical checkout. `wt/<slug>` is only the
                     placeholder branch git requires; the pipeline skill creates its real
@@ -188,8 +191,8 @@ _cos_preflight = _load_cos_preflight()
 
 def _load_gh_issue() -> ModuleType:
     # Spec-load the sibling maintainer-author trust gate, same importlib idiom as
-    # cos_preflight above, so the dispatch chokepoint reuses its author check
-    # (_fetch_issue + _is_maintainer + maintainer_login) instead of re-implementing it.
+    # cos_preflight above, so the dispatch chokepoint reuses its public author check
+    # (is_maintainer_authored) instead of re-implementing it.
     spec = importlib.util.spec_from_file_location(
         "gh_issue", Path(__file__).with_name("gh_issue.py")
     )
@@ -210,15 +213,17 @@ def require_maintainer_authored(issues: list[int]) -> None:
     issues' text becomes the lane's "spec". This repo is public, so a stranger's issue is
     untrusted — gating authorship here at the chokepoint (in addition to the pipeline's own
     trust-gate reads) means a non-maintainer or missing issue never reaches a launch. Reuses
-    gh_issue's author check rather than re-deriving it. Read-only network I/O (`gh issue
-    view` per issue), run before any side effect.
+    gh_issue's public author check rather than re-deriving it. Read-only network I/O (`gh
+    issue view` per issue), run before any side effect.
+
+    A maintainer-authored PR number passes too: the trust boundary is authorship, not
+    issue-ness (`gh issue view` resolves a PR number — see gh_issue.is_maintainer_authored).
     """
-    maintainer = _gh_issue.maintainer_login()
     for number in issues:
-        data = _gh_issue._fetch_issue(number, comments=False)
-        if data is None or not _gh_issue._is_maintainer(data, maintainer):
+        if not _gh_issue.is_maintainer_authored(number):
             raise SystemExit(
-                f"issue #{number} is not maintainer-authored (author != {maintainer}); "
+                f"issue #{number} is not maintainer-authored "
+                f"(author != {_gh_issue.maintainer_login()}); "
                 "refusing to dispatch a pipeline on untrusted issue content"
             )
 
