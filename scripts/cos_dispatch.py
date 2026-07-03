@@ -819,8 +819,7 @@ def prepare_continue_worktree(
             "refusing to continue without manual reconciliation"
         )
     if rebase:
-        if head == remote_tip:
-            rebase_onto(worktree, base_ref)
+        rebase_onto(worktree, base_ref)
         ensure_clean_worktree(worktree)
 
 

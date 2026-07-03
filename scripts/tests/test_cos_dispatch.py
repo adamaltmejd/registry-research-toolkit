@@ -1151,6 +1151,36 @@ def test_continue_pr_reuses_clean_rebased_worktree(
     assert (target / "main-only.txt").read_text(encoding="utf-8") == "main advanced\n"
 
 
+def test_continue_pr_reuses_rebased_worktree_after_base_advances(
+    tmp_path: Path,
+) -> None:
+    canonical = _make_origin(tmp_path)
+    branch = "codex/existing-pr"
+    _push_branch(canonical, branch)
+    (canonical / "main-only.txt").write_text("main advanced\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "advance main")
+    _git(canonical, "push", "origin", "main")
+    target = canonical / ".claude" / "worktrees" / "continue-codex-pr-4242"
+
+    cd.prepare_continue_worktree(canonical, target, branch, "main", rebase=True)
+    first_rebased_head = cd.git_output(target, ["rev-parse", "HEAD"])
+
+    (canonical / "main-later.txt").write_text("main advanced again\n", encoding="utf-8")
+    _git(canonical, "add", ".")
+    _git(canonical, "commit", "-m", "advance main again")
+    _git(canonical, "push", "origin", "main")
+
+    cd.prepare_continue_worktree(canonical, target, branch, "main", rebase=True)
+
+    assert cd.git_output(target, ["rev-parse", "HEAD"]) != first_rebased_head
+    assert (target / "branch.txt").read_text(encoding="utf-8") == f"{branch}\n"
+    assert (target / "main-only.txt").read_text(encoding="utf-8") == "main advanced\n"
+    assert (target / "main-later.txt").read_text(encoding="utf-8") == (
+        "main advanced again\n"
+    )
+
+
 def test_continue_pr_rebases_onto_stacked_pr_base_branch(
     tmp_path: Path,
     capsys,
