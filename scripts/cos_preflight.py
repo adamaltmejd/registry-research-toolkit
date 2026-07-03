@@ -55,6 +55,22 @@ a failed tick leaves the baseline at the last committed candidate, so the next s
 session re-observes the pending event, instead of the old at-most-once behavior where
 writing at detection burned the event even when the tick that followed failed.
 
+The snapshot also carries the pipeline-slot ledger (`slots`: a sorted list of
+`{"slug", "stale"}`, stale = the slot file's mtime is older than the stale threshold at
+observation time). Only slot MEMBERSHIP and staleness are fingerprinted — slot-file
+contents (prs/issues/ownership) are deliberately excluded, so a draft PR opening or an
+ownership stamp inside a slot never wakes the chief. Three slot reasons ride the same
+probe/--commit durability as the PR/gate events: `pipeline slot freed: <slugs>` (a slug
+left the ledger; previous-gated, no freed reason on first run), `dispatch: <n> slot(s)
+free` (fires only on a freed transition that leaves the ledger under --max-slots, never
+on a merely under-budget steady state), and `stale pipeline slot: <slug>; adjudicate or
+release` (a stale slot that is new or just flipped fresh→stale; wakes on first run too,
+since it is standing adjudication state). A slot claim (a new non-stale slug) and a
+stale→fresh flip are silent: the fingerprint moves with zero reasons, absorbed by the
+idle auto-advance path. The watcher's fast tier (cos_watch.py) sees the same ledger
+transitions from emission text alone for low latency; this probe re-observes them
+durably (at-least-once) even if a session misses a fast-tier emission.
+
 It does not make coordination decisions, edit issues, merge PRs, or run the dev
 preview. It only decides whether a real chief-of-staff tick is worth spending tokens on.
 """
@@ -76,10 +92,15 @@ from typing import Any
 WAKE_EXIT = 10
 # Bump whenever the snapshot dict shape changes; load_state treats a mismatch as first-run
 # so a schema change re-baselines cleanly instead of comparing incompatible shapes.
-SNAPSHOT_VERSION = 3
+SNAPSHOT_VERSION = 4
 DEFAULT_CANONICAL = Path("/Users/adam/Code/registry-research-toolkit")
 PASSING_CONCLUSIONS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 NO_STATUS_CHANGES = "projection delta:\nno status changes"
+# Pipeline-slot ledger defaults. The ledger lives next to the merge-gate store (see
+# default_slots_root); cos_watch.py's fast tier references these same constants so the
+# two tiers can never disagree on the concurrency budget or the staleness threshold.
+DEFAULT_MAX_SLOTS = 3
+DEFAULT_SLOT_STALE_HOURS = 24.0
 
 _PLAN_SPEC = importlib.util.spec_from_file_location(
     "plan_sequence", Path(__file__).with_name("plan_sequence.py")
@@ -186,6 +207,31 @@ def default_gate_root() -> Path:
     xdg = os.environ.get("XDG_STATE_HOME")
     base = Path(xdg) if xdg else Path.home() / ".local" / "state"
     return base / "registry-research-toolkit" / "merge-gates"
+
+
+def default_slots_root() -> Path:
+    # The pipeline-slot ledger lives next to the merge-gate store (its sibling under the
+    # same registry-research-toolkit state root), so a --gate-dir override moves both.
+    return default_gate_root().parent / "pipeline-slots"
+
+
+def scan_slots(slots_root: Path) -> set[str]:
+    """Slugs of every valid pipeline-slot file (top level only; done/ is the archive).
+
+    Mirrors the gate protocol's read rules: a slot whose `slot` field disagrees with
+    its filename stem is absent; unreadable/corrupt files are skipped (slot files are
+    written atomically, so a torn read is transient); a missing root scans as empty.
+    """
+    slots: set[str] = set()
+    for path in sorted(slots_root.glob("*.json")):
+        loaded = _read_json_tolerant(path, "pipeline-slot file")
+        if loaded is None:
+            continue
+        slot = loaded[1]
+        if not isinstance(slot, dict) or slot.get("slot") != path.stem:
+            continue
+        slots.add(path.stem)
+    return slots
 
 
 def _read_json_tolerant(path: Path, label: str) -> tuple[bytes, Any] | None:
@@ -405,12 +451,35 @@ def fetch_pr_summaries(
     return sorted(summaries, key=lambda s: s["number"])
 
 
+def collect_slots(slots_root: Path, stale_seconds: float) -> list[dict[str, Any]]:
+    """Snapshot the pipeline-slot ledger as a sorted list of {"slug", "stale"}.
+
+    Deliberately records ONLY membership + staleness, never the slot file's contents
+    (prs/issues/ownership): a draft PR opening or an ownership stamp inside a slot must
+    not wake the chief — that is fast-tier / tick-body concern, not a wake signal. Stale
+    means the slot file's mtime is older than the threshold at observation time; a slot
+    whose file vanishes between scan_slots and the stat (racy release) is dropped.
+    """
+    now = datetime.now(UTC).timestamp()
+    slots: list[dict[str, Any]] = []
+    for slug in sorted(scan_slots(slots_root)):
+        try:
+            mtime = (slots_root / f"{slug}.json").stat().st_mtime
+        except OSError:
+            continue
+        slots.append({"slug": slug, "stale": now - mtime >= stale_seconds})
+    return slots
+
+
 def snapshot_fingerprint(snapshot: dict[str, Any]) -> str:
     stable = {
         "local_head": snapshot["local_head"],
         "remote_main": snapshot["remote_main"],
         "plan_tick": snapshot["plan_tick"],
         "prs": snapshot["prs"],
+        # Slot membership + staleness only (collect_slots excludes slot-file contents),
+        # so slot transitions ride the same fingerprint/--commit durability as PRs.
+        "slots": snapshot["slots"],
     }
     raw = json.dumps(stable, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(raw.encode()).hexdigest()
@@ -430,6 +499,55 @@ def _changed_pr_numbers(
         return set(current)
     prior = {pr["number"]: pr for pr in previous.get("prs") or []}
     return {n for n in current.keys() | prior.keys() if current.get(n) != prior.get(n)}
+
+
+def _slot_reasons(
+    snapshot: dict[str, Any], previous: dict[str, Any] | None
+) -> list[str]:
+    """Freed / dispatch / stale-onset reasons from the slot-ledger delta.
+
+    Mirrors slot_events in cos_watch.py so the durable (probe) and low-latency (fast
+    tier) paths agree: freed keys on a slug leaving the ledger (previous-gated — no
+    freed reason on first run), dispatch keys on a freed TRANSITION that leaves the
+    ledger under max_slots (never on a merely under-budget steady state), and stale
+    onset keys on a stale slot that is new or just flipped fresh→stale (waking on first
+    run too, since it is standing adjudication state). A claim (new non-stale slug) and
+    a stale→fresh flip emit nothing — the fingerprint moved, and the idle auto-advance
+    path absorbs it.
+    """
+    max_slots = snapshot["max_slots"]
+    current = {s["slug"]: s for s in snapshot["slots"]}
+    prior = (
+        {s["slug"]: s for s in previous.get("slots") or []}
+        if previous is not None
+        else {}
+    )
+
+    reasons: list[str] = []
+    # Freed: a slug present before, gone now. Previous-gated — on first run `prior` is
+    # empty so nothing reads as freed (same rationale as the origin/main first-run gate).
+    freed = sorted(prior.keys() - current.keys()) if previous is not None else []
+    if freed:
+        reasons.append(f"pipeline slot freed: {', '.join(freed)}")
+        # Dispatch keys on the freed TRANSITION, not on merely being under budget, so an
+        # idle under-budget steady state never re-recommends. max_slots is a
+        # comparison-time input, intentionally NOT part of the fingerprint.
+        if len(current) < max_slots:
+            reasons.append(f"dispatch: {max_slots - len(current)} slot(s) free")
+
+    # Stale onset: a current slot that is stale AND whose entry is new (first appearance,
+    # incl. first run) or just flipped fresh→stale. A stale→fresh flip changes the entry
+    # but emits nothing (the fingerprint move is absorbed by idle auto-advance).
+    onset = sorted(
+        slug
+        for slug, entry in current.items()
+        if entry["stale"] and prior.get(slug) != entry
+    )
+    if onset:
+        reasons.append(
+            f"stale pipeline slot: {', '.join(onset)}; adjudicate or release"
+        )
+    return reasons
 
 
 def actionable_reasons(
@@ -496,6 +614,8 @@ def actionable_reasons(
         if changed - named:
             reasons.append("open PR state changed")
 
+    reasons.extend(_slot_reasons(snapshot, previous))
+
     return sorted(dict.fromkeys(reasons))
 
 
@@ -530,6 +650,30 @@ def load_state(path: Path) -> dict[str, Any] | None:
     return state
 
 
+def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
+    # The shared torn-write guard: write a temp file in the SAME dir (so the rename is a
+    # cheap intra-directory atomic swap) then rename over `path`, so a concurrent reader
+    # (scan_slots / load_state) never sees a partial write. On a rename failure the temp
+    # file is unlinked so no *.tmp is leaked. Callers own their divergent pre-steps (the
+    # parent-dir policy) — this is only the write+rename tail. json.dumps(indent=2,
+    # sort_keys=True) + a trailing newline is the on-disk format both callers commit to.
+    with NamedTemporaryFile(
+        "w",
+        dir=path.parent,
+        encoding="utf-8",
+        prefix=f"{path.name}.",
+        suffix=".tmp",
+        delete=False,
+    ) as fh:
+        tmp = Path(fh.name)
+        fh.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    try:
+        tmp.replace(path)
+    except OSError:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
 def write_state(path: Path, snapshot: dict[str, Any]) -> None:
     parent = path.parent
     if not parent.is_dir():
@@ -542,21 +686,7 @@ def write_state(path: Path, snapshot: dict[str, Any]) -> None:
             f"cos-preflight state directory {parent} is not a directory; "
             "run from the canonical checkout or pass an existing --state-file dir"
         )
-    with NamedTemporaryFile(
-        "w",
-        dir=path.parent,
-        encoding="utf-8",
-        prefix=f"{path.name}.",
-        suffix=".tmp",
-        delete=False,
-    ) as fh:
-        tmp = Path(fh.name)
-        fh.write(json.dumps(snapshot, indent=2, sort_keys=True) + "\n")
-    try:
-        tmp.replace(path)
-    except OSError:
-        tmp.unlink(missing_ok=True)
-        raise
+    _atomic_write_json(path, snapshot)
 
 
 def promote_candidate(state_file: Path, fingerprint: str) -> tuple[str, bool]:
@@ -599,7 +729,14 @@ def promote_candidate(state_file: Path, fingerprint: str) -> tuple[str, bool]:
     )
 
 
-def collect_snapshot(epic: int, pr_limit: int, gate_root: Path) -> dict[str, Any]:
+def collect_snapshot(
+    epic: int,
+    pr_limit: int,
+    gate_root: Path,
+    slots_root: Path,
+    max_slots: int,
+    slot_stale_hours: float,
+) -> dict[str, Any]:
     current_repo = repo_name_with_owner()
     snapshot = {
         "version": SNAPSHOT_VERSION,
@@ -608,6 +745,11 @@ def collect_snapshot(epic: int, pr_limit: int, gate_root: Path) -> dict[str, Any
         "remote_main": remote_main_sha(),
         "plan_tick": run_plan_tick(epic),
         "prs": fetch_pr_summaries(pr_limit, current_repo, gate_root),
+        "slots": collect_slots(slots_root, slot_stale_hours * 3600),
+        # max_slots is a comparison-time input for _slot_reasons' dispatch gate, carried
+        # on the snapshot but deliberately kept OUT of snapshot_fingerprint's stable set:
+        # a budget change must not by itself move the fingerprint or burn events.
+        "max_slots": max_slots,
     }
     snapshot["fingerprint"] = snapshot_fingerprint(snapshot)
     return snapshot
@@ -624,6 +766,27 @@ def main(argv: list[str] | None = None) -> int:
         default=default_gate_root(),
         help="local merge-gate store root (pr-<N>/gate.json lives under it); overrides "
         "the XDG-derived default, for tests and non-default setups",
+    )
+    ap.add_argument(
+        "--slots-dir",
+        type=Path,
+        default=None,
+        help="pipeline-slot ledger root; defaults to the sibling of --gate-dir "
+        "(pipeline-slots next to merge-gates), so overriding the gate root moves both "
+        "stores together — the same sibling rule cos_watch.py uses",
+    )
+    ap.add_argument(
+        "--max-slots",
+        type=int,
+        default=DEFAULT_MAX_SLOTS,
+        help="pipeline concurrency budget; the dispatch reason fires only when a freed "
+        "slot leaves the ledger below this. Comparison-time input, not fingerprinted",
+    )
+    ap.add_argument(
+        "--slot-stale-hours",
+        type=float,
+        default=DEFAULT_SLOT_STALE_HOURS,
+        help="a slot untouched for longer than this is stale (adjudicate or release)",
     )
     ap.add_argument(
         "--canonical",
@@ -655,6 +818,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.commit is not None and args.observe:
         print("--observe and --commit are mutually exclusive", file=sys.stderr)
         return 2
+    if args.slots_dir is None:
+        # Sibling of the gate root, so a --gate-dir override moves both stores together
+        # (the same rule cos_watch.py applies). --commit ignores this — no snapshot.
+        args.slots_dir = args.gate_dir.parent / "pipeline-slots"
 
     canonical = None if args.no_canonical_check else args.canonical
     try:
@@ -671,7 +838,14 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         # Probe: read the committed baseline, snapshot fresh, compare, stage the candidate.
         previous = load_state(args.state_file)
-        snapshot = collect_snapshot(args.epic, args.pr_limit, args.gate_dir)
+        snapshot = collect_snapshot(
+            args.epic,
+            args.pr_limit,
+            args.gate_dir,
+            args.slots_dir,
+            args.max_slots,
+            args.slot_stale_hours,
+        )
         reasons = actionable_reasons(snapshot, previous)
         # --observe is a read-only probe: same snapshot/compare/exit codes, but it skips
         # BOTH writes below — a watcher probe racing an active tick must not replace the

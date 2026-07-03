@@ -1,6 +1,6 @@
 ---
 name: release
-description: "Create and publish a release. Usage: /release [package] <patch|minor|major>; chief-of-staff may invoke /release minor after an authorized build/release boundary"
+description: "Create and publish a release. Usage: /release [package] <patch|minor|major>; chief-of-staff may invoke /release minor or /release patch after an authorized build/release boundary"
 disable-model-invocation: false
 argument-hint: "[package] <patch|minor|major>"
 ---
@@ -12,10 +12,10 @@ Create and publish a release for one or both PyPI packages.
 **Never start a release unless the user explicitly asks for one.** This skill may be
 invoked via `/release` or merely referenced in conversation — either way, do not proceed
 without clear intent to release. Exception: if `chief-of-staff` invokes exactly
-`/release minor` after merging a PR that creates a required build/release boundary,
-treat that handoff as explicit user authorization for a minor release. Stop and ask if
-the package or bump level is ambiguous; **major bumps require explicit confirmation**
-after showing the current and planned versions.
+`/release minor` or `/release patch` after merging a PR that creates a required
+build/release boundary, treat that handoff as explicit user authorization for that minor
+or patch release. Stop and ask if the package or bump level is ambiguous; **major bumps
+require explicit confirmation** after showing the current and planned versions.
 
 ## Packages
 

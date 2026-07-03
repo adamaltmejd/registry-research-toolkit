@@ -17,6 +17,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -56,7 +57,9 @@ def _gate(pr=956, *, status="ready-to-merge", head=HEAD, **extra) -> dict:
     return gate
 
 
-def _snapshot(*, plan_exit=0, plan_report=None, prs=None, remote="l1"):
+def _snapshot(
+    *, plan_exit=0, plan_report=None, prs=None, remote="l1", slots=None, max_slots=3
+):
     snap = {
         "version": cpf.SNAPSHOT_VERSION,
         "observed_at": "2026-06-30T20:00:00+00:00",
@@ -69,6 +72,8 @@ def _snapshot(*, plan_exit=0, plan_report=None, prs=None, remote="l1"):
             or "projection delta:\nno status changes\nlanes: fresh",
         },
         "prs": prs or [],
+        "slots": slots or [],
+        "max_slots": max_slots,
     }
     snap["fingerprint"] = cpf.snapshot_fingerprint(snap)
     return snap
@@ -759,12 +764,200 @@ def test_first_snapshot_behind_origin_wakes() -> None:
     assert cpf.actionable_reasons(snap, None) == ["origin/main changed"]
 
 
+# --- pipeline-slot ledger: scan + snapshot -------------------------------------
+
+
+def _write_slot(slots_root: Path, slug: str, slot: dict | None = None) -> Path:
+    slots_root.mkdir(parents=True, exist_ok=True)
+    path = slots_root / f"{slug}.json"
+    payload = {"slot": slug, "issues": [994], "prs": [1010], "surface": "claude"}
+    payload.update(slot or {})
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return path
+
+
+def test_scan_slots_reads_valid_slots(tmp_path: Path) -> None:
+    _write_slot(tmp_path, "lane-a")
+    _write_slot(tmp_path, "lane-b")
+
+    assert cpf.scan_slots(tmp_path) == {"lane-a", "lane-b"}
+
+
+def test_scan_slots_slot_field_stem_mismatch_ignored(tmp_path: Path) -> None:
+    _write_slot(tmp_path, "lane-a", {"slot": "other-name"})
+
+    assert cpf.scan_slots(tmp_path) == set()
+
+
+def test_scan_slots_corrupt_file_skipped(tmp_path: Path) -> None:
+    path = _write_slot(tmp_path, "lane-a")
+    path.write_text("{ torn", encoding="utf-8")
+    _write_slot(tmp_path, "lane-b")
+
+    assert cpf.scan_slots(tmp_path) == {"lane-b"}
+
+
+def test_scan_slots_done_archive_not_scanned(tmp_path: Path) -> None:
+    _write_slot(tmp_path / "done", "lane-a")
+
+    assert cpf.scan_slots(tmp_path) == set()
+
+
+def test_scan_slots_missing_root_is_empty(tmp_path: Path) -> None:
+    assert cpf.scan_slots(tmp_path / "does-not-exist") == set()
+
+
+def test_default_slots_root_is_gate_root_sibling() -> None:
+    assert cpf.default_slots_root() == cpf.default_gate_root().parent / "pipeline-slots"
+
+
+def test_collect_slots_marks_stale_by_mtime(tmp_path: Path) -> None:
+    fresh = _write_slot(tmp_path, "fresh")
+    stale = _write_slot(tmp_path, "stale")
+    aged = time.time() - 100_000  # well past any reasonable threshold
+    os.utime(stale, (aged, aged))
+
+    slots = cpf.collect_slots(tmp_path, stale_seconds=24 * 3600)
+
+    assert slots == [
+        {"slug": "fresh", "stale": False},
+        {"slug": "stale", "stale": True},
+    ]
+    # Sorted by slug and free of slot-file contents (prs/issues/surface excluded).
+    assert all(set(s) == {"slug", "stale"} for s in slots)
+    assert fresh.exists()  # sanity: fresh slot was not touched
+
+
+def test_slots_in_fingerprint(tmp_path: Path) -> None:
+    # Slot membership/staleness IS fingerprinted, so a transition moves the fingerprint.
+    empty = _snapshot(slots=[])
+    with_slot = _snapshot(slots=[{"slug": "lane-a", "stale": False}])
+    assert empty["fingerprint"] != with_slot["fingerprint"]
+
+
+def test_slot_content_churn_does_not_change_fingerprint() -> None:
+    # collect_slots records only slug + stale, so a slot file's prs/ownership edit (same
+    # membership + staleness) never changes the snapshot the fingerprint is taken over.
+    a = _snapshot(slots=[{"slug": "lane-a", "stale": False}])
+    b = _snapshot(slots=[{"slug": "lane-a", "stale": False}])
+    assert a["fingerprint"] == b["fingerprint"]
+
+
+def test_max_slots_not_in_fingerprint() -> None:
+    # max_slots is a comparison-time input for the dispatch gate, deliberately excluded
+    # from the fingerprint: a budget change alone must not move it or burn events.
+    a = _snapshot(slots=[{"slug": "lane-a", "stale": False}], max_slots=3)
+    b = _snapshot(slots=[{"slug": "lane-a", "stale": False}], max_slots=5)
+    assert a["fingerprint"] == b["fingerprint"]
+
+
+# --- pipeline-slot ledger: freed / dispatch / stale reasons --------------------
+
+
+def test_slot_freed_previous_gated_none_on_first_run() -> None:
+    # A pre-existing slot on first run (no previous) never reads as freed — same
+    # previous-gating as origin/main. A non-stale claim is silent, so this is idle.
+    snap = _snapshot(slots=[{"slug": "lane-a", "stale": False}])
+
+    assert cpf.actionable_reasons(snap, None) == []
+
+
+def test_slot_freed_and_dispatch_under_budget() -> None:
+    previous = _snapshot(
+        slots=[
+            {"slug": "a", "stale": False},
+            {"slug": "b", "stale": False},
+            {"slug": "c", "stale": False},
+        ]
+    )
+    snap = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "b", "stale": False}]
+    )
+
+    reasons = cpf.actionable_reasons(snap, previous)
+
+    assert reasons == ["dispatch: 1 slot(s) free", "pipeline slot freed: c"]
+
+
+def test_slot_freed_over_budget_no_dispatch() -> None:
+    # 4 registered (a human override past max), one freed → still at max: freed reason
+    # fires, but no dispatch (an over-budget ledger frees down to max without recommending).
+    previous = _snapshot(
+        slots=[{"slug": s, "stale": False} for s in ("a", "b", "c", "d")], max_slots=3
+    )
+    snap = _snapshot(
+        slots=[{"slug": s, "stale": False} for s in ("a", "b", "c")], max_slots=3
+    )
+
+    reasons = cpf.actionable_reasons(snap, previous)
+
+    assert reasons == ["pipeline slot freed: d"]
+    assert not any(r.startswith("dispatch") for r in reasons)
+
+
+def test_multiple_freed_slots_one_dispatch() -> None:
+    previous = _snapshot(slots=[{"slug": s, "stale": False} for s in ("a", "b", "c")])
+    snap = _snapshot(slots=[{"slug": "a", "stale": False}])
+
+    reasons = cpf.actionable_reasons(snap, previous)
+
+    assert reasons == ["dispatch: 2 slot(s) free", "pipeline slot freed: b, c"]
+
+
+def test_slot_claim_is_silent() -> None:
+    # A new non-stale slug appearing is a claim, not a wake: fingerprint moves, no reason,
+    # so the idle auto-advance path absorbs it (asserted at the probe level below).
+    previous = _snapshot(slots=[{"slug": "a", "stale": False}])
+    snap = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "b", "stale": False}]
+    )
+
+    assert cpf.actionable_reasons(snap, previous) == []
+
+
+def test_stale_onset_wakes_on_first_run() -> None:
+    # A stale slot is standing adjudication state: it must wake on first run too (no
+    # previous), unlike freed which is previous-gated.
+    snap = _snapshot(slots=[{"slug": "lane-a", "stale": True}])
+
+    assert cpf.actionable_reasons(snap, None) == [
+        "stale pipeline slot: lane-a; adjudicate or release"
+    ]
+
+
+def test_stale_onset_wakes_on_fresh_to_stale_flip() -> None:
+    previous = _snapshot(slots=[{"slug": "lane-a", "stale": False}])
+    snap = _snapshot(slots=[{"slug": "lane-a", "stale": True}])
+
+    assert cpf.actionable_reasons(snap, previous) == [
+        "stale pipeline slot: lane-a; adjudicate or release"
+    ]
+
+
+def test_stale_slot_steady_state_is_silent() -> None:
+    # Already-emitted staleness (entry unchanged) does not re-fire: keyed on the entry, so
+    # a steady stale slot only wakes once at onset.
+    prev_and_now = _snapshot(slots=[{"slug": "lane-a", "stale": True}])
+
+    assert cpf.actionable_reasons(prev_and_now, prev_and_now) == []
+
+
+def test_stale_to_fresh_flip_is_silent() -> None:
+    # A touched slot (stale→fresh) changes the entry, so the fingerprint moves — but it
+    # emits NO reason; the idle auto-advance path absorbs the zero-reason drift.
+    previous = _snapshot(slots=[{"slug": "lane-a", "stale": True}])
+    snap = _snapshot(slots=[{"slug": "lane-a", "stale": False}])
+
+    assert snap["fingerprint"] != previous["fingerprint"]
+    assert cpf.actionable_reasons(snap, previous) == []
+
+
 # --- probe: bootstrap + candidate staging -------------------------------------
 
 
 def _probe_env(monkeypatch: pytest.MonkeyPatch, snap: dict) -> None:
     monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: snap)
 
 
 def _no_collect(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -798,19 +991,60 @@ def test_idle_first_run_bootstraps_baseline(
     assert "bootstrap" in capsys.readouterr().err
 
 
-def test_gate_dir_flag_is_wired_into_collect_snapshot(
+def test_probe_flags_are_wired_into_collect_snapshot(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # --gate-dir must reach collect_snapshot's gate_root arg. Every other probe test
-    # monkeypatches collect_snapshot with a lambda that DISCARDS that arg, so a mis-wiring
-    # (args.gate_dir dropped) would pass silently. Assert the received gate_root here.
+    # --gate-dir / --slots-dir / --max-slots / --slot-stale-hours must all reach
+    # collect_snapshot's args. Every other probe test monkeypatches collect_snapshot with
+    # a lambda that DISCARDS them, so a mis-wiring would pass silently. Assert them here.
     state = tmp_path / "state.json"
     gate_dir = tmp_path / "gates"
+    slots_dir = tmp_path / "slots"
     snap = _snapshot()
     monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
 
-    def fake_collect(_epic, _pr_limit, gate_root):
+    def fake_collect(
+        _epic, _pr_limit, gate_root, slots_root, max_slots, slot_stale_hours
+    ):
         assert gate_root == gate_dir
+        assert slots_root == slots_dir
+        assert max_slots == 5
+        assert slot_stale_hours == 12.0
+        return snap
+
+    monkeypatch.setattr(cpf, "collect_snapshot", fake_collect)
+
+    rc = cpf.main(
+        [
+            "--no-canonical-check",
+            "--state-file",
+            str(state),
+            "--gate-dir",
+            str(gate_dir),
+            "--slots-dir",
+            str(slots_dir),
+            "--max-slots",
+            "5",
+            "--slot-stale-hours",
+            "12",
+        ]
+    )
+
+    assert rc == 0  # idle snapshot
+
+
+def test_slots_dir_defaults_to_gate_dir_sibling(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # With only --gate-dir overridden, --slots-dir derives as its sibling (pipeline-slots
+    # next to merge-gates), so both stores move together — matching cos_watch.py's rule.
+    state = tmp_path / "state.json"
+    gate_dir = tmp_path / "merge-gates"
+    snap = _snapshot()
+    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+
+    def fake_collect(_epic, _pr_limit, gate_root, slots_root, _max, _stale):
+        assert slots_root == tmp_path / "pipeline-slots"
         return snap
 
     monkeypatch.setattr(cpf, "collect_snapshot", fake_collect)
@@ -825,7 +1059,7 @@ def test_gate_dir_flag_is_wired_into_collect_snapshot(
         ]
     )
 
-    assert rc == 0  # idle snapshot
+    assert rc == 0
 
 
 def test_waking_first_run_does_not_write_state(
@@ -1029,6 +1263,52 @@ def test_idle_probe_with_drift_advances_baseline(
     assert "advanced idle" in capsys.readouterr().err
 
 
+def test_slot_claim_probe_takes_idle_auto_advance_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # A slot claim (new non-stale slug) moves the fingerprint but emits zero reasons, so
+    # the probe must take the idle auto-advance path — advancing the baseline directly
+    # rather than waking. Same for a stale→fresh flip (also reason-free); this pins the
+    # representative claim case end to end.
+    state = tmp_path / "state.json"
+    baseline = _snapshot(slots=[{"slug": "a", "stale": False}])
+    cpf.write_state(state, baseline)
+    claimed = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "b", "stale": False}]
+    )
+    assert claimed["fingerprint"] != baseline["fingerprint"]
+    _probe_env(monkeypatch, claimed)
+
+    rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
+
+    assert rc == 0  # idle — a claim never wakes
+    assert cpf.load_state(state) == claimed  # baseline advanced past the claim
+    assert "advanced idle" in capsys.readouterr().err
+
+
+def test_slot_freed_probe_wakes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # End to end: a freed slot under budget wakes the probe with the freed + dispatch
+    # reasons and stages the candidate WITHOUT advancing the baseline (a waking probe
+    # commits via --commit; a crash before that re-fires).
+    state = tmp_path / "state.json"
+    baseline = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "b", "stale": False}]
+    )
+    cpf.write_state(state, baseline)
+    freed = _snapshot(slots=[{"slug": "a", "stale": False}])
+    _probe_env(monkeypatch, freed)
+
+    rc = cpf.main(["--no-canonical-check", "--state-file", str(state)])
+
+    assert rc == cpf.WAKE_EXIT
+    reasons = json.loads(capsys.readouterr().out)["reasons"]
+    assert "pipeline slot freed: b" in reasons
+    assert "dispatch: 2 slot(s) free" in reasons
+    assert cpf.load_state(state) == baseline  # baseline NOT advanced on a waking probe
+
+
 def test_recurrence_after_idle_drift_still_wakes(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -1040,7 +1320,7 @@ def test_recurrence_after_idle_drift_still_wakes(
 
     # Baseline established at a benign idle fingerprint (idle bootstrap).
     base = _snapshot()  # remote == local_head, plan fresh, no PRs → idle
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: base)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: base)
     assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
     capsys.readouterr()
 
@@ -1049,7 +1329,7 @@ def test_recurrence_after_idle_drift_still_wakes(
         plan_exit=1,
         plan_report="projection delta:\nno status changes\nlanes: stale (re-rank)",
     )
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap_a)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: snap_a)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
@@ -1064,13 +1344,13 @@ def test_recurrence_after_idle_drift_still_wakes(
     # Idle drift to reason-free B (lanes repaired: plan fresh) → baseline advances to B.
     snap_b = _snapshot()  # fresh plan, no PRs → idle; fingerprint differs from A
     assert snap_b["fingerprint"] != fp_a
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap_b)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: snap_b)
     assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
     assert cpf.load_state(state)["fingerprint"] == snap_b["fingerprint"]
 
     # Wake condition recurs: live state returns to EXACTLY A. Because the baseline is now B,
     # the fingerprint-equality early return does not fire, so the recurrence wakes.
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: snap_a)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: snap_a)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
@@ -1185,7 +1465,7 @@ def test_mid_tick_event_is_caught(
 
     # Probe 1: state moved (remote changed) → wake + stage candidate.
     probed = _snapshot(remote="new")
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: probed)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: probed)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
@@ -1195,7 +1475,7 @@ def test_mid_tick_event_is_caught(
     # mid-window snapshot. If --commit ever collected, the committed baseline would be this
     # one; it must instead be exactly what probe 1 observed.
     mid_window = _snapshot(remote="mid-window")
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: mid_window)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: mid_window)
     assert (
         cpf.main(["--no-canonical-check", "--commit", fp, "--state-file", str(state)])
         == 0
@@ -1205,7 +1485,78 @@ def test_mid_tick_event_is_caught(
 
     # Re-probe: the mid-window event compares against the just-committed baseline and
     # wakes; it was not burned.
-    monkeypatch.setattr(cpf, "collect_snapshot", lambda _e, _l, _g: mid_window)
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: mid_window)
     assert (
         cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
     )
+
+
+def test_slot_transition_through_probe_commit_reprobe_cycle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # The full "commit bound to observation" cycle (from #987/#1010) for the SLOT ledger,
+    # which today only pins the wake leg. A mid-tick reclaim must not be absorbed by the
+    # commit of the probe that never saw it, and the reclaim's later free must still wake.
+    #
+    #   baseline {a,b}
+    #     → live loses b            → probe WAKES (freed b + dispatch)  [stages candidate {a}]
+    #     → live reclaims c ({a,c}) → mid-tick claim lands before commit
+    #     → --commit <probe fp>     → baseline = {a} (what the PROBE saw, NOT {a,c})
+    #     → re-probe live {a,c}     → c is a silent claim (no reasons) → idle auto-advance
+    #                                 records baseline {a,c}, rc 0
+    #     → later probe live {a}    → c frees → WAKES again (the reclaim was not burned)
+    state = tmp_path / "state.json"
+    monkeypatch.setattr(cpf, "require_canonical", lambda _c: None)
+
+    baseline = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "b", "stale": False}]
+    )
+    cpf.write_state(state, baseline)
+
+    # Probe: b freed under budget → wake + stage candidate {a}.
+    freed_b = _snapshot(slots=[{"slug": "a", "stale": False}])
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: freed_b)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+    out = json.loads(capsys.readouterr().out)
+    # busy=1 ({a}) against the default max_slots=3 → 2 free.
+    assert out["reasons"] == ["dispatch: 2 slot(s) free", "pipeline slot freed: b"]
+    fp_freed = out["fingerprint"]
+
+    # Mid-tick reclaim: the live ledger changes AGAIN before commit — slot c registered.
+    # If --commit ever collected, the baseline would capture {a,c}; it must instead promote
+    # only what the probe observed ({a}).
+    reclaimed = _snapshot(
+        slots=[{"slug": "a", "stale": False}, {"slug": "c", "stale": False}]
+    )
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: reclaimed)
+    assert (
+        cpf.main(
+            ["--no-canonical-check", "--commit", fp_freed, "--state-file", str(state)]
+        )
+        == 0
+    )
+    assert (
+        cpf.load_state(state) == freed_b
+    )  # committed the PROBE's {a}, not the reclaim
+    assert cpf.load_state(state) != reclaimed
+
+    # Re-probe against the live reclaimed {a,c}: c is a NEW non-stale slug → a silent claim
+    # (zero reasons), so the idle auto-advance path records it into the baseline (rc 0).
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: reclaimed)
+    assert cpf.main(["--no-canonical-check", "--state-file", str(state)]) == 0
+    err = capsys.readouterr().err
+    assert "advanced idle" in err
+    assert cpf.load_state(state) == reclaimed  # baseline now includes the claimed c
+
+    # Later probe: c frees ({a,c} → {a}). Because the baseline advanced to include c, its
+    # free is now visible and WAKES — the mid-tick reclaim was recorded, not burned.
+    c_frees = _snapshot(slots=[{"slug": "a", "stale": False}])
+    monkeypatch.setattr(cpf, "collect_snapshot", lambda *_a: c_frees)
+    assert (
+        cpf.main(["--no-canonical-check", "--state-file", str(state)]) == cpf.WAKE_EXIT
+    )
+    reasons = json.loads(capsys.readouterr().out)["reasons"]
+    assert "pipeline slot freed: c" in reasons
+    assert "dispatch: 2 slot(s) free" in reasons

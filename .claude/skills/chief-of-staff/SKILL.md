@@ -1,6 +1,6 @@
 ---
 name: chief-of-staff
-description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview and default reg_meta DB install current, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled /pr-pipeline sessions, report merged user-facing features with preview links, run /release minor when a merge creates a required build/release boundary, and recommend the next safe /pr-pipeline lanes. Usage: /loop 30m /chief-of-staff"
+description: "Run one registry chief-of-staff tick: invoke /issue-pulse, keep the reg_webapp dev preview and default reg_meta DB install current, inspect live issue and PR claim state, automatically maintain issue metadata/priorities, squash-merge PRs with current-head pr-pipeline handoff evidence, send unblock follow-ups to stalled /pr-pipeline sessions, report merged user-facing features with preview links, run /release minor or /release patch when a merge creates a required build/release boundary, recommend the next safe /pr-pipeline lanes, and — in opt-in `auto` mode — auto-dispatch those lanes into free slots. Usage: /loop 30m /chief-of-staff [auto]"
 ---
 
 # chief-of-staff — one coordination tick
@@ -89,16 +89,18 @@ It runs two tiers in one loop (both stores live under
   means the events are genuinely still unhandled.
 
 On any emission, run a normal tick — starting with your own preflight probe, exactly as
-below. Slot-ledger emissions (`dispatch:`, `stale slot:`) are themselves the actionable
-input: the preflight does not snapshot the slot ledger, so an idle probe (exit `0`) does
-NOT make them no-ops — read the ledger, handle the slot action (recommend lanes within
-budget / adjudicate the stale slot), then stop. They are advisory and session-scoped;
-the durable truth is the ledger itself, which every full tick re-reads. Do not schedule
-polling wakeups on top of the watcher; keep at most one long ScheduleWakeup (\~3600s) as
-a dead-monitor safety net, and on each wake re-arm it and verify (TaskList) the monitor
-is still alive — if the monitor reports the watcher process exited, re-arm the monitor;
-if arming keeps failing, fall back to a 15-30 min heartbeat, which is then the only wake
-path, including for merges.
+below. The preflight now snapshots the slot ledger too (membership + staleness,
+`SNAPSHOT_VERSION` 4), so slot transitions ride the same durable at-least-once
+probe/`--commit` handling as PR/gate events — the fast tier is the low-latency path and
+the probe is the durability net. That means the tick's own staging probe sees a slot
+transition against its baseline and wakes on it (exit `10`); an idle probe (exit `0`)
+after a `dispatch:` / `stale slot:` emission means a prior tick already committed that
+transition, so it is a genuine no-op — stop. The durable truth is the ledger itself,
+which every full tick re-reads. Do not schedule polling wakeups on top of the watcher;
+keep at most one long ScheduleWakeup (\~3600s) as a dead-monitor safety net, and on each
+wake re-arm it and verify (TaskList) the monitor is still alive — if the monitor reports
+the watcher process exited, re-arm the monitor; if arming keeps failing, fall back to a
+15-30 min heartbeat, which is then the only wake path, including for merges.
 
 Caveats: monitor and safety net are session-scoped — a dead session kills both, which is
 why an external fixed-cadence `/loop` or scheduled heartbeat is what revives the loop
@@ -130,12 +132,13 @@ uv run --no-project python scripts/cos_preflight.py
   probe whose fingerprint equals the baseline writes nothing. The probe's stdout JSON
   includes a `fingerprint` field — capture it; `--commit` needs it. The probe fires only
   when state moved enough to justify a tick: lane drift, issue-projection movement,
-  `origin/main` movement, or relevant issue-closing PR / merge-gate state changes.
+  `origin/main` movement, relevant issue-closing PR / merge-gate state changes, or a
+  slot transition (freed / dispatch / stale onset).
 
 - **Exit `0` (idle):** stop immediately with `DONT_NOTIFY` reason `idle`, spending
-  nothing beyond that one tool call — unless the wake carried slot-ledger emissions
-  (`dispatch:` / `stale slot:`), which the preflight cannot see: handle those from the
-  emission text (see Deterministic watcher) before stopping.
+  nothing beyond that one tool call. The probe now snapshots the slot ledger, so an idle
+  exit after a `dispatch:` / `stale slot:` emission means a prior tick already committed
+  that slot transition — it is a real no-op, not a slot action the probe missed.
 
 - **Exit `2` (tool error):** report the tool error and stop.
 
@@ -296,11 +299,13 @@ The pipeline-slot ledger is the machine-local concurrency budget: at most **3** 
 agents (Claude or Codex) run in parallel. One file per running pipeline at
 `pipeline-slots/<slug>.json` (`$XDG_STATE_HOME/registry-research-toolkit` root, default
 `~/.local/state/...`), written atomically by `/pr-pipeline` at lane claim with
-`{"slot": "<slug>", "issues": [...], "prs": [...], "surface": "claude"|"codex", ...}`. A
-file whose `slot` field disagrees with its filename stem is absent (same self-describing
-rule as `gate.json`). The ledger answers "how many agents are busy" — it does NOT
-replace the draft-PR `Closes #N` claim, which stays the per-issue in-flight marker that
-sequencing consumes.
+`{"slot": "<slug>", "issues": [...], "prs": [...], "surface": "claude"|"codex", "session": "<id>"|null, ...}`.
+An auto-dispatched slot additionally carries `pid` (the launched agent's process id).
+The `surface` + `session` ownership fields are the follow-up routing table (see Pipeline
+Follow-ups). A file whose `slot` field disagrees with its filename stem is absent (same
+self-describing rule as `gate.json`). The ledger answers "how many agents are busy" — it
+does NOT replace the draft-PR `Closes #N` claim, which stays the per-issue in-flight
+marker that sequencing consumes.
 
 - **Release at merge, and only at merge:** when a slot lists at least one PR and every
   listed PR is merged or closed, move the slot file to `pipeline-slots/done/<slug>.json`
@@ -311,10 +316,21 @@ sequencing consumes.
   deliberately precedes draft creation), not a completed one.
 - **Stale slots** (the watcher's `stale slot:` emission, or a slot whose listed PRs are
   all merged/closed but the file lingers): a slot with a non-empty `prs` list whose PRs
-  are all merged/closed is mechanical cleanup — release it. A slot with an empty `prs`
-  list and no file update for a day needs adjudication: check whether the pipeline
-  session/worktree still exists and ask the user rather than silently freeing budget an
-  active agent may still be using.
+  are all merged/closed is mechanical cleanup — release it. Otherwise, an
+  auto-dispatched slot carries a `pid`, so check process liveness first — but liveness
+  requires pid EXISTENCE **and** IDENTITY, never `kill -0 <pid>` alone: after the agent
+  exits the OS can recycle its pid, so a bare existence check lets a dead lane squat on
+  budget forever. Confirm `ps -p <pid> -o command=` still looks like the recorded
+  surface's agent (a `codex exec` / `claude` invocation naming this lane), corroborated
+  by recent dispatch-log or slot-file activity; a pid that exists but doesn't match is
+  treated as DEAD. Alive-and-matching means the lane is still running — leave it; dead
+  (gone, or a mismatched recycled pid) with open PRs or an incomplete gate — send a
+  resume follow-up via the recorded `session` (see Pipeline Follow-ups); dead with an
+  empty `prs` list and no registration activity — releasable under the empty-`prs`
+  adjudication (the `pid` evidence informs the call). A slot with an empty `prs` list
+  and no `pid`, no file update for a day, still needs adjudication: check whether the
+  pipeline session/worktree still exists and ask the user when it is genuinely
+  ambiguous, rather than silently freeing budget an active agent may still be using.
 - Registering a 4th slot is a deliberate human override, not an error — the ledger
   reflects reality; the watcher simply won't emit `dispatch:` until busy drops below
   budget.
@@ -326,6 +342,17 @@ Merge only on the current head and only when every item passes:
 - PR is open, non-draft, mergeable, and based on `main`, with no higher-level sequencing
   reason to wait: stacked predecessor unmerged, conflicting active PR, pending release
   coordination, or a maintainer stop note.
+- **Not in a maintainer-approval class.** Even with a current-head `ready-to-merge`
+  gate, do NOT automerge — instead NOTIFY and wait for explicit maintainer approval —
+  when the PR is: **(a)** a schema/DDL change (a `reg_meta` `SCHEMA_VERSION` bump, a
+  `reg_schema` major schema version, or a DB DDL shape change); **(b)** build-affecting
+  with a dbdiff content delta beyond what the PR/issue states as expected (a
+  stated-and-verified delta still automerges); **(c)** a change to the COS/merge-gate
+  machinery itself — `scripts/cos_*`, the merge-gate or slot protocol, or the
+  chief-of-staff / pr-pipeline skills (the autonomous loop never self-modifies
+  unattended); or **(d)** deploy/infra (fly/swecov deploy config, Cloudflare, CI
+  workflows with write permissions) or part of a MAJOR release. Minor and patch releases
+  remain autonomous.
 - The local gate store has `pr-<N>/gate.json` with `status: ready-to-merge`, a `pr`
   field matching the directory's PR number, and `head` matching GitHub's current
   `headRefOid`. Where the `visual` / `build_db` gates apply, their per-gate head stamps
@@ -422,9 +449,10 @@ Visual-gate gaps are NOT self-served: a missing `/reg-webapp-design-reviewer` re
 pipeline-owned work — route a follow-up.
 
 If the merge creates a required build/release boundary, such as DB content that must be
-published before dependent work can proceed, invoke `/release minor`. Let the release
-skill resolve package scope and run its own gates; stop if it requests input or if the
-required bump is not a minor release.
+published before dependent work can proceed, invoke `/release minor` or
+`/release patch`. Let the release skill resolve package scope and run its own gates;
+stop if it requests input or if the required bump is a major release (a major release is
+a maintainer-approval class — see Automerge — and is not autonomous).
 
 If a ready PR lacks a current-head Codex verdict, comment `@codex review` only when the
 gate entry shows implementation is finished, then skip the merge until a later tick
@@ -442,10 +470,15 @@ finished work, or a current-head gate mismatch after new pushes. Do NOT route a
 follow-up for a missing/stale `build_db` gate — that is self-served (see Self-serve
 build-db verification above).
 
-Use thread tools when exposed: search/list by PR number, issue number, branch, worktree,
-or recent title/history; send to the best matching existing pipeline thread; do not
-create a new thread; if the match is ambiguous, report that and include the exact
-message text to send.
+Route by the slot ledger, not a fuzzy search. The slot file carries agent ownership, so
+`pipeline-slots/<slug>.json` IS the routing table: read it, then route by `surface` —
+`codex` → `codex exec resume <session> '<follow-up text>'` (detached, logged); `claude`
+→ the session/thread tools pointed at that `session` id (or
+`claude -p --resume <session> '<follow-up text>'`). Fall back to the existing fuzzy
+thread search — search/list by PR number, issue number, branch, worktree, or recent
+title/history — ONLY when `session` is null or absent (e.g. a manual lane that couldn't
+self-identify). Either way, do not create a new thread; if no match resolves, report
+that and include the exact message text to send.
 
 The message must name the PR, issue, current head SHA, specific blocker, exact unblock
 steps, required gate-directory evidence, and
@@ -515,6 +548,76 @@ resolve contradictory live signals.
   lane set and current active work budget. Use `none` only when no safe launch is free,
   the active-work budget is saturated, metadata is too stale to trust, or a
   release/merge gate must clear first. Do not pad to three.
+
+## Auto dispatch
+
+`/chief-of-staff auto` is an **opt-in per-session mode** (pass `auto` as the skill
+argument, e.g. `/loop 30m /chief-of-staff auto`). In auto mode, when a `dispatch:` wake
+fires or a tick otherwise finds free slots plus fresh, safe ranked lanes, the
+chief-of-staff **launches** the lanes itself instead of only recommending them (Lane
+Recommendation), up to the slot budget. In non-auto mode the recommend-only behavior
+above is unchanged. Auto mode changes only WHO launches — nothing about what may merge:
+auto-dispatched pipelines hand off through the normal merge-gate store, and the
+chief-of-staff still owns every merge.
+
+Dispatch lanes SEQUENTIALLY within the single coordinator session — never run two
+auto-mode loops concurrently. `cos_dispatch`'s budget and collision guards protect
+against re-dispatching the same lane, not against two dispatchers racing; the
+one-coordinator rule in Scheduling is what excludes that.
+
+- **Kill switch, checked immediately before every launch:**
+  `$XDG_STATE_HOME/registry-research-toolkit/auto-dispatch.off` (default
+  `~/.local/state/...`). Present ⇒ do NOT dispatch; fall back to recommending and report
+  the kill switch as the reason. Touch the file to pause auto dispatch; remove it to
+  resume. (`scripts/cos_dispatch.py` re-checks it too and refuses with exit `3`.)
+
+- **Lane selection is UNCHANGED** from Lane Recommendation: the persisted `/plan-lanes`
+  ranking plus every guardrail there — no
+  blocked/parked/claimed/insufficiently-described work, at most `3 - busy` lanes, one
+  build-affecting lane at a time.
+
+- **Pick a launch tier** with `--tier {easy,hard}` (default `hard`). Each tier is one
+  blessed launch profile — surface plus the model/effort/advisor pins validated to work
+  together:
+  - `hard` (default): codex, `-m gpt-5.5 -c model_reasoning_effort=xhigh` — the default
+    pipeline solver for everything non-trivial.
+  - `easy`: claude, `--model claude-sonnet-5 --effort high --advisor opus` — a cheaper
+    Sonnet-5 pipeline that escalates planning / stuck-error / completion decisions to an
+    Opus advisor.
+
+  The easy/hard CHOICE is YOUR judgment at dispatch time. **Choose `--tier easy` only
+  for a small, straightforward, low-risk lane:** a doc-only change, a small curated-TOML
+  addition, or a single-file fix with existing test coverage — with NO schema/DDL
+  surface, not build-affecting, no cross-package contract change, and not touching the
+  COS/merge-gate machinery. Everything else — and any lane you are unsure about — stays
+  `hard` (the default). `--surface` remains an explicit override; when it contradicts
+  the tier's implied surface the launch runs on that surface with its AMBIENT defaults
+  (no model/effort/advisor pins). The chosen `tier` is recorded in both the slot file
+  and the dispatch result JSON.
+
+- **Launch each lane** from the canonical checkout with:
+
+  ```sh
+  uv run --no-project python scripts/cos_dispatch.py --issues <n[,m]> [--tier easy|hard] [--surface codex|claude] [--slug NAME]
+  ```
+
+  The tier's implied surface is the default (no `--surface` needed). The script is the
+  deterministic launcher: it re-checks the kill switch (exit `3`) and the slot budget
+  (exit `4`), refuses a slug/worktree collision (exit `2`), creates a fresh worktree off
+  `origin/main`, launches the agent DETACHED with the resolved tier profile (hard/codex:
+  `codex exec -C <worktree> -s workspace-write -c approval_policy=never --add-dir <state-root> --json -m gpt-5.5 -c model_reasoning_effort=xhigh '$pr-pipeline <issues>'`;
+  easy/claude:
+  `claude --session-id <uuid> --model claude-sonnet-5 --effort high --advisor opus -p '/pr-pipeline <issues>' --dangerously-skip-permissions`),
+  captures the session/thread id, and stamps the slot file with ownership (`surface`,
+  `tier`, `session`, `pid`, `dispatched`) — written LAST, only after a successful
+  launch, so a failed launch never leaks a slot. Its stdout JSON (`slot`, `worktree`,
+  `surface`, `tier`, `session`, `pid`, `log`) is what you report; dispatch logs live
+  under `<state-root>/dispatch-logs/<slug>.log`.
+
+- **Merge-approval classes still hold** (see Automerge): even in auto mode, a launched
+  pipeline's PR only merges through the same gate, and the maintainer-approval classes
+  (schema/DDL, unexplained dbdiff, COS/merge-gate machinery, deploy/infra or a major
+  release) wait for explicit maintainer approval.
 
 ## Subagents
 

@@ -1,0 +1,825 @@
+#!/usr/bin/env python3
+"""Deterministic pr-pipeline launcher for the chief-of-staff `auto` dispatch mode.
+
+On a `dispatch:` wake (cos_watch.py emits it once a freed slot leaves the pipeline
+ledger below --max-slots), the chief-of-staff in `auto` mode runs THIS script once per
+lane it decides to dispatch, instead of only recommending commands. The script is the
+side-effecting half of that decision: it claims a slot, materializes a worktree, and
+launches a detached pr-pipeline agent (codex or claude) on the given issues.
+
+It is deliberately dumb about WHICH lane to run — the agent (or /plan-lanes) picks the
+issues; this script just performs the launch atomically and records the claim. Order of
+operations is chosen so a failure never leaks a slot: the slot file is written only after
+the agent process is spawned, and it is written promptly so the unrecorded window is
+tiny. A failure after the worktree is created leaks only the worktree, which the error
+names for adjudication.
+
+Steps (fail-fast between each). After arg/canonical validation (require_canonical,
+parse_issues, resolve_profile, slug validation — all exit 2):
+  1. kill switch  — <state-root>/auto-dispatch.off present ⇒ refuse (exit 3).
+  2. budget       — busy slots >= --max-slots ⇒ refuse (exit 4).
+  3. collision    — slot file OR worktree dir already exists ⇒ refuse (exit 2).
+  4. worktree     — `git fetch origin main` then `git worktree add -b wt/<slug> …
+                    origin/main`, run in the canonical checkout. `wt/<slug>` is only the
+                    placeholder branch git requires; the pipeline skill creates its real
+                    `s/<slug>` branch from inside the worktree.
+  5. launch       — capture the dispatch-log byte offset, then spawn the agent DETACHED
+                    (start_new_session=True, stdin closed, stdout+stderr appended to
+                    <state-root>/dispatch-logs/<slug>.log; the child env carries the
+                    --state-root override as XDG_STATE_HOME so its ledger/gate writes land
+                    under the same root). We do not wait; the process re-parents when this
+                    session exits. Then a short HEALTH CHECK: wait a grace window and poll —
+                    Popen succeeding only means exec() worked, so ANY completed exit inside
+                    the window (a rejected flag, missing auth, bad config) is a launch
+                    failure. A launch failure here (spawn OSError, dispatch-log setup OSError,
+                    or an instant child exit) → exit 2 naming the leaked worktree; NO slot
+                    file is written. The pre-launch offset scopes the later codex-id poll to
+                    THIS run's log bytes, so a reused per-slug log from a prior dispatch can't
+                    yield a stale thread id.
+  6. slot file    — write of <state-root>/pipeline-slots/<slug>.json IMMEDIATELY after a
+                    healthy launch (session=null for codex, the pre-generated uuid for
+                    claude). An OVERLAY write: if the detached child reached its
+                    register-slot step first, we overlay only the ownership fields and
+                    preserve the child's fresher issues/prs (same discipline as step 7's
+                    session merge); else the full payload. The `slot` field MUST equal the
+                    filename stem or scan_slots treats it as absent. A write failure here
+                    (agent already running) becomes exit 2 naming the orphan, never a
+                    traceback.
+  7. session id   — codex only: poll the JSONL log (bytes past the step-5 offset) for the
+                    first event carrying a thread/session id, bounded; on timeout,
+                    session=null (the chief's fuzzy-thread-search fallback covers it) plus
+                    a stderr warning. Then RE-READ the slot file and merge-update ONLY the
+                    `session` field, preserving any issues/prs a fast child pipeline wrote
+                    during the poll window (its claim is fresher); a vanished/invalid file
+                    falls back to a full rewrite. A merge-update failure after the step-6
+                    write is a stderr warning but still exit 0 — the slot exists, only the
+                    session enrichment failed. claude's session is already final at step 6.
+
+Exit codes: 0 launched (or --dry-run OK); 2 usage/collision/tool error; 3 kill switch;
+4 no free slot budget.
+
+Launch profiles (`--tier`, default `hard`): each tier is ONE blessed launch profile —
+a surface plus the model/effort/advisor pins that are validated to work together, kept
+together in LAUNCH_PROFILES so the set can't drift apart:
+
+  hard (default): codex + `-m gpt-5.5 -c model_reasoning_effort=xhigh`. The default
+                  pipeline for everything non-trivial.
+  easy:           claude + `--model claude-sonnet-5 --effort high --advisor opus`. A
+                  cheaper Sonnet-5 main that escalates hard decisions to an Opus advisor.
+
+Rationale: small, straightforward lanes go to the cheaper Sonnet-5 pipeline (Opus advisor
+for the hard calls); everything else defaults to the Codex gpt-5.5 xhigh pipeline. The
+easy/hard CHOICE is the chief-of-staff's judgment at dispatch time — this script only
+encodes the profiles. The model+advisor stay paired in the profile because `claude` exits
+with an error on a rejected main/advisor pairing (Sonnet-5 main + Opus advisor is the
+accepted combo; requires Claude Code >= 2.1.98).
+
+`--surface` is an explicit override. When it CONTRADICTS the tier's implied surface, the
+launch runs on that surface with its AMBIENT defaults — NO model/effort/advisor pins, so
+we never invent an unblessed model combo. When `--surface` merely restates the tier's own
+surface (or is omitted), the tier's profile applies in full.
+
+Stores match the sibling cos_* scripts: --state-root defaults to the parent of
+cos_preflight.default_gate_root() ($XDG_STATE_HOME/registry-research-toolkit), so the
+pipeline-slots ledger, merge-gates, and dispatch logs all sit together and a --state-root
+override moves them as one. Like cos_preflight, the script must run from the canonical
+main checkout (reuse require_canonical, with the same --canonical/--no-canonical-check
+escape for tests).
+"""
+
+from __future__ import annotations
+
+import argparse
+import importlib.util
+import json
+import os
+import subprocess
+import sys
+import time
+import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from types import ModuleType
+
+DEFAULT_TIER = "hard"
+
+# The blessed launch profiles, kept in ONE place so surface + model/effort/advisor stay
+# together as a validated set (never composed ad hoc at a call site). Each value is
+# (surface, extra_flags): `surface` is the tier's implied dispatch surface; the flags are
+# the EXTRA launch flags layered on top of that surface's pinned base flags (see
+# build_launch_argv). The flags are validated to work together — notably the claude
+# main/advisor pairing, which `claude` rejects with an error if unblessed. An explicit
+# --surface that contradicts the tier surface drops the flags (see resolve_profile),
+# because the pins are only valid for their own surface.
+LAUNCH_PROFILES: dict[str, tuple[str, list[str]]] = {
+    "hard": ("codex", ["-m", "gpt-5.5", "-c", "model_reasoning_effort=xhigh"]),
+    "easy": (
+        "claude",
+        ["--model", "claude-sonnet-5", "--effort", "high", "--advisor", "opus"],
+    ),
+}
+
+# Bounded poll for the codex thread id in its JSONL log. 30s ceiling; a null session is
+# a tolerated outcome (the chief falls back to fuzzy thread search), so this never blocks
+# the dispatch. Injectable via dispatch() args so the timeout test doesn't sleep 30s.
+DEFAULT_CODEX_ID_TIMEOUT = 30.0
+DEFAULT_CODEX_ID_POLL = 0.25
+
+# Post-spawn health check. Popen returning a pid says nothing about whether the child
+# survived: a CLI that rejects a pinned flag, a missing auth token, or a bad config makes
+# the child exit within the first moments — yet we'd still write a slot and exit 0, and the
+# dead slot would squat on budget until the 24h stale path reclaims it. So after spawn we
+# wait a short grace window and poll: ANY completed exit inside it (zero OR nonzero — a real
+# pipeline runs for minutes, so an instant exit is failure either way) is a launch failure,
+# no slot written. Injectable via dispatch() args so tests shrink the grace to ~milliseconds
+# and don't slow the suite; the healthy-path stubs sleep just past it to survive the check.
+DEFAULT_LAUNCH_GRACE = 1.0
+DEFAULT_LAUNCH_GRACE_POLL = 0.1
+
+
+# Git-context env vars that override cwd-based repo discovery. A git hook (pre-push runs
+# our test suite) exports GIT_DIR / GIT_WORK_TREE / GIT_INDEX_FILE etc. into the child
+# environment; git then targets the HOOK's repo regardless of a subprocess's cwd or `-C`.
+# So passing an explicit cwd is NOT enough — every git call (and the launched agent, which
+# runs git internally) must run with these scrubbed. We drop all GIT_* keys wholesale:
+# none of git's config-affecting env vars belong in a fresh dispatch, and a blanket rule
+# can't miss a newly added repo-targeting var. (GIT_SSH/GIT_ASKPASS auth helpers live in
+# the user's shell config, not this exported hook set, so dropping them here is harmless.)
+def _scrubbed_env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+
+
+def resolve_profile(tier: str, surface_override: str | None) -> tuple[str, list[str]]:
+    """Resolve (surface, extra_flags) from the tier and an optional --surface override.
+
+    - No override, or an override that restates the tier's own surface → the tier's full
+      profile (its surface + its validated model/effort/advisor flags).
+    - An override that CONTRADICTS the tier's surface → that surface with AMBIENT defaults
+      (empty flags): the tier's pins are only valid for the tier's own surface, and we do
+      not synthesize an unblessed model combo for the other one.
+    """
+    tier_surface, flags = LAUNCH_PROFILES[tier]
+    if surface_override is None or surface_override == tier_surface:
+        return tier_surface, list(flags)
+    return surface_override, []
+
+
+def _load_cos_preflight() -> ModuleType:
+    # Spec-load the sibling like cos_watch.py does, so we reuse its store-root and slot
+    # leaf helpers (default_gate_root, default_slots_root, scan_slots, DEFAULT_MAX_SLOTS,
+    # require_canonical) instead of re-pasting them. These live in cos_preflight (the slot
+    # helpers were hoisted there from cos_watch on this branch); we depend on that module
+    # exporting them.
+    spec = importlib.util.spec_from_file_location(
+        "cos_preflight", Path(__file__).with_name("cos_preflight.py")
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_cos_preflight = _load_cos_preflight()
+
+
+def default_state_root() -> Path:
+    # Parent of the merge-gate root: $XDG_STATE_HOME/registry-research-toolkit. The slot
+    # ledger, gate store, and dispatch logs all live under it, so a --state-root override
+    # keeps them together (mirrors cos_watch's slots-dir = gate-dir.parent default).
+    return _cos_preflight.default_gate_root().parent
+
+
+def parse_issues(raw: str) -> list[int]:
+    """Comma-separated issue numbers → sorted-input-order list of ints (fail-fast)."""
+    issues: list[int] = []
+    for token in raw.split(","):
+        token = token.strip()
+        if not token:
+            continue
+        try:
+            issues.append(int(token))
+        except ValueError:
+            raise SystemExit(f"invalid issue number {token!r} in --issues {raw!r}")
+    if not issues:
+        raise SystemExit("--issues must name at least one issue number")
+    return issues
+
+
+def default_slug(surface: str, issues: list[int]) -> str:
+    return f"auto-{surface}-issue-{issues[0]}"
+
+
+def validate_slug(slug: str) -> None:
+    # The slot filename is <slug>.json and scan_slots requires slot==stem, so the slug
+    # must be a clean single-path-component stem — no separators, no traversal.
+    if not slug or "/" in slug or slug in {".", ".."} or slug != Path(slug).name:
+        raise SystemExit(f"invalid --slug {slug!r}: must be a valid filename stem")
+
+
+def build_launch_argv(
+    surface: str,
+    worktree: Path,
+    issues: list[int],
+    state_root: Path,
+    session_id: str | None,
+    profile_flags: list[str],
+) -> list[str]:
+    """The exact detached launch argv for the chosen surface + tier profile flags.
+
+    The pr-pipeline prompt is ONE string argument — `$pr-pipeline 1011 1012` (codex) /
+    `/pr-pipeline 1011 1012` (claude) — with issues space-separated. `profile_flags` are
+    the tier's validated model/effort/advisor pins (empty when a --surface override
+    contradicts the tier), inserted before the prompt but after the surface's own pinned
+    base flags.
+    """
+    issues_arg = " ".join(str(n) for n in issues)
+    if surface == "codex":
+        return [
+            "codex",
+            "exec",
+            "-C",
+            str(worktree),
+            "-s",
+            "workspace-write",
+            "-c",
+            "approval_policy=never",
+            "--add-dir",
+            str(state_root),
+            "--json",
+            *profile_flags,
+            f"$pr-pipeline {issues_arg}",
+        ]
+    # claude: the session id is pre-generated so we know it before launch.
+    assert session_id is not None
+    return [
+        "claude",
+        "--session-id",
+        session_id,
+        *profile_flags,
+        "-p",
+        f"/pr-pipeline {issues_arg}",
+        "--dangerously-skip-permissions",
+    ]
+
+
+# Observed codex 0.142.5 JSONL (from `codex exec --json --ephemeral -s read-only`):
+#   {"type":"thread.started","thread_id":"019f2334-4455-70a1-bc1b-2e86d5ecfccf"}
+#   {"type":"turn.started"}
+#   {"type":"item.completed","item":{...}}
+#   {"type":"turn.completed","usage":{...}}
+# The session/thread id is `thread_id` on the FIRST event. We take the id from the first
+# event that carries one (thread_id preferred, session_id/id tolerated) and ignore
+# unknown event types, so a future rename of the leading event can't strand the parser.
+_ID_KEYS = ("thread_id", "session_id", "id")
+
+
+def _extract_session_id(line: str) -> str | None:
+    try:
+        event = json.loads(line)
+    except ValueError:
+        return None
+    if not isinstance(event, dict):
+        return None
+    for key in _ID_KEYS:
+        value = event.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return None
+
+
+def log_size(log_path: Path) -> int:
+    """Byte size of the dispatch log, or 0 if it does not exist yet.
+
+    Captured immediately BEFORE launch so poll_codex_session_id parses only bytes this run
+    appended — dispatch logs are append-only and keyed by slug, so a retried dispatch with
+    the same slug would otherwise re-read a PRIOR run's `thread.started` and return its
+    stale id. Reading only past the pre-launch offset scopes the parse to this launch.
+    """
+    try:
+        return log_path.stat().st_size
+    except OSError:
+        # No prior log (FileNotFoundError) OR the log path is unusable (e.g. dispatch-logs
+        # wedged as a file → NotADirectoryError): offset 0 is correct either way; the actual
+        # open failure surfaces as the exit-2 log-setup path in launch_detached.
+        return 0
+
+
+def poll_codex_session_id(
+    log_path: Path, timeout: float, poll_interval: float, start_offset: int = 0
+) -> str | None:
+    """Tail the JSONL dispatch log for the codex thread id, bounded by timeout.
+
+    Only bytes at or after `start_offset` (the log size captured just before launch) are
+    parsed, so a reused per-slug log from a prior dispatch can't yield a stale thread id.
+
+    Returns the id, or None if none appeared within `timeout` (the caller warns and
+    records session=null; the chief's fuzzy thread search covers a null session).
+    """
+    deadline = time.monotonic() + timeout
+    while True:
+        try:
+            with log_path.open("r", encoding="utf-8", errors="replace") as fh:
+                fh.seek(start_offset)
+                text = fh.read()
+        except FileNotFoundError:
+            text = ""
+        for line in text.splitlines():
+            session_id = _extract_session_id(line)
+            if session_id is not None:
+                return session_id
+        if time.monotonic() >= deadline:
+            return None
+        time.sleep(poll_interval)
+
+
+def run_git(cwd: Path, args: list[str]) -> None:
+    """Run a git command in the canonical checkout, failing fast (exit 2) with stderr.
+
+    cwd is passed explicitly (not relied on as the ambient process cwd) so the fetch and
+    worktree-add always act on the canonical repo — never on whatever directory the
+    caller happens to be in, which under --no-canonical-check would corrupt an unrelated
+    checkout.
+    """
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=str(cwd),
+        env=_scrubbed_env(),  # cwd is not enough: scrub inherited GIT_DIR/GIT_WORK_TREE
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        tail = (
+            proc.stderr.strip() or proc.stdout.strip() or f"git {' '.join(args)} failed"
+        )
+        raise SystemExit(f"git {' '.join(args)} failed: {tail}")
+
+
+def require_git_checkout(canonical: Path) -> None:
+    """Refuse (exit 2) unless `canonical` is itself a git worktree root.
+
+    Belt-and-braces before the mutating fetch/worktree-add: git's `-C <dir>` walks UP to
+    the nearest enclosing repo, so a `canonical` that is NOT a checkout (an empty dir, a
+    stray path) would silently target whatever repo sits above it — the exact class of
+    accident that let a test's throwaway path resolve to the real checkout. Requiring the
+    resolved `show-toplevel` to EQUAL `canonical` (true for a main checkout and for a
+    linked worktree root, both valid dispatch origins) rejects that: an ambient parent
+    repo has a different toplevel, and a non-repo dir makes rev-parse fail outright. This
+    does not weaken the production contract — the real canonical checkout satisfies it.
+    """
+    proc = subprocess.run(
+        ["git", "-C", str(canonical), "rev-parse", "--show-toplevel"],
+        env=_scrubbed_env(),  # else an inherited GIT_DIR resolves the hook's repo, not canonical
+        capture_output=True,
+        text=True,
+    )
+    toplevel = proc.stdout.strip()
+    if proc.returncode != 0 or not toplevel:
+        raise SystemExit(
+            f"canonical checkout {canonical} is not a git worktree "
+            f"({proc.stderr.strip() or 'rev-parse failed'})"
+        )
+    if Path(toplevel).resolve() != canonical.resolve():
+        raise SystemExit(
+            f"canonical checkout {canonical} is not a worktree root; git resolved it to "
+            f"the enclosing repo {toplevel} — refusing to operate on an unintended repo"
+        )
+
+
+# The slot payload is split across two owners: the DISPATCHER owns the ownership fields
+# below; the launched child pipeline owns the rest (`issues`/`prs` and anything it adds).
+# Both the initial ownership write and the later session enrichment must overlay only their
+# own fields onto whatever the child may already have written, never clobbering the child's
+# fresher claim — so they share one overlay leaf (_write_or_overlay_slot) and can't drift.
+_OWNERSHIP_FIELDS = ("slot", "surface", "tier", "session", "pid", "dispatched")
+
+
+def _full_slot_payload(
+    slug: str,
+    issues: list[int],
+    surface: str,
+    tier: str,
+    session_id: str | None,
+    pid: int,
+) -> dict:
+    # `slot` MUST equal the filename stem or scan_slots drops the entry. `prs: []` is the
+    # dispatcher's empty starting point; the child (pr-pipeline SKILL.md) fills it in — the
+    # overlay path below never lets this empty list clobber a fresher child claim.
+    return {
+        "slot": slug,
+        "issues": issues,
+        "prs": [],
+        "surface": surface,
+        "tier": tier,
+        "session": session_id,
+        "pid": pid,
+        "dispatched": datetime.now(UTC).isoformat(),
+    }
+
+
+def _write_or_overlay_slot(
+    slot_path: Path, payload: dict, overlay_fields: tuple[str, ...]
+) -> None:
+    """Write the slot, overlaying only `overlay_fields` when a valid slot already exists.
+
+    Tolerantly reads the slot path; if a valid dict is already there (a fast child pipeline
+    reached its register-slot step first, or an earlier dispatcher write landed), overlay
+    ONLY `overlay_fields` from `payload` and preserve everything else — the child's
+    `issues`/`prs` are fresher than ours. If the file is absent/unreadable/invalid (never
+    written, torn, someone deleted it), write the full `payload` — the slot must exist for
+    the launched agent.
+
+    The torn-write guarantee (temp file + rename, so scan_slots never sees a partial read)
+    is the shared cos_preflight._atomic_write_json leaf. DELIBERATE divergence from
+    write_state's pre-step: we mkdir(parents=True) the ledger dir because the pipeline-slots
+    root always lives under $XDG_STATE_HOME (never a .git-relative path), so there is no risk
+    of conjuring a dir inside a missing checkout — unlike write_state, whose no-mkdir policy
+    guards that exact footgun. Only the parent-dir policy diverges; the write+rename tail is
+    shared.
+    """
+    slot_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        existing = json.loads(slot_path.read_text(encoding="utf-8"))
+        if not isinstance(existing, dict):
+            raise ValueError("slot file is not a JSON object")
+    except OSError, ValueError:
+        # Absent / torn / invalid: write the full payload from our known-good values.
+        _cos_preflight._atomic_write_json(slot_path, payload)
+        return
+    for field in overlay_fields:
+        existing[field] = payload[field]
+    _cos_preflight._atomic_write_json(slot_path, existing)
+
+
+def write_slot_file(
+    slot_path: Path,
+    slug: str,
+    issues: list[int],
+    surface: str,
+    tier: str,
+    session_id: str | None,
+    pid: int,
+) -> None:
+    """The dispatcher's initial ownership write, immediately after a successful launch.
+
+    Overlays only the ownership fields onto any pre-existing slot: if the detached child
+    reached its register-slot step BEFORE this write, an unconditional full write would
+    replace the child's fresher record with our empty `prs`. So we overlay our ownership
+    fields and preserve the child's `issues`/`prs` (the same discipline as the session
+    merge); if no valid slot exists yet we write the full payload. See _write_or_overlay_slot.
+    """
+    payload = _full_slot_payload(slug, issues, surface, tier, session_id, pid)
+    _write_or_overlay_slot(slot_path, payload, _OWNERSHIP_FIELDS)
+
+
+def merge_session_into_slot(
+    slot_path: Path,
+    slug: str,
+    issues: list[int],
+    surface: str,
+    tier: str,
+    session_id: str | None,
+    pid: int,
+) -> None:
+    """Enrich the codex slot with its polled session id WITHOUT clobbering the child claim.
+
+    Between the initial ownership write (write_slot_file) and the codex session id
+    resolving (up to the poll ceiling), a fast child pipeline may already have registered
+    drafts/PRs into the SAME slot file (see pr-pipeline SKILL.md). Its claim is fresher, so
+    we overlay ONLY the `session` field, preserving whatever `issues`/`prs`/other fields it
+    now carries. If the file vanished or is unreadable/invalid (torn write, someone deleted
+    it), we fall back to rewriting the full ownership payload from our own known-good values
+    — the slot must exist for the launched agent.
+
+    Written atomically (temp + rename) via the shared leaf, same as the initial write.
+    """
+    payload = _full_slot_payload(slug, issues, surface, tier, session_id, pid)
+    _write_or_overlay_slot(slot_path, payload, ("session",))
+
+
+def _child_env(state_root: Path) -> dict[str, str]:
+    """The launched child's env: GIT_*-scrubbed, with XDG_STATE_HOME set to the override.
+
+    The agent runs git in its own worktree, and an inherited GIT_DIR from a dispatching hook
+    would point every git call it makes at the wrong repo — so we scrub all GIT_* (see
+    _scrubbed_env). The child also derives its OWN pipeline-slots / merge-gate stores from
+    XDG_STATE_HOME; if the operator passed a non-default --state-root, that override is
+    invisible to the child unless we propagate it, so the child would split its ledger/gate
+    writes into the ambient store. We set XDG_STATE_HOME to <state_root>.parent ONLY when
+    state_root has the standard `.../registry-research-toolkit` shape (so the child re-derives
+    exactly this override under $XDG_STATE_HOME/registry-research-toolkit); for a non-standard
+    root we can't reconstruct a matching XDG_STATE_HOME, so we leave it ambient and warn.
+    """
+    env = _scrubbed_env()
+    if state_root.name == "registry-research-toolkit":
+        env["XDG_STATE_HOME"] = str(state_root.parent)
+    else:
+        print(
+            f"warning: --state-root {state_root} is not a "
+            "'.../registry-research-toolkit' path; the launched child will use the AMBIENT "
+            "state stores (its ledger/gate writes may not land under this root)",
+            file=sys.stderr,
+        )
+    return env
+
+
+def launch_detached(
+    argv: list[str],
+    worktree: Path,
+    log_path: Path,
+    state_root: Path,
+    *,
+    grace: float = DEFAULT_LAUNCH_GRACE,
+    grace_poll: float = DEFAULT_LAUNCH_GRACE_POLL,
+) -> int:
+    """Spawn the agent detached; health-check it survives the grace window; return its pid.
+
+    start_new_session=True detaches it into its own process group so it survives this
+    session ending (it re-parents to init on our exit). stdin is closed (codex exec
+    otherwise blocks reading stdin); stdout+stderr append to the per-slug log. The env is
+    GIT_*-scrubbed and carries the --state-root override as XDG_STATE_HOME (see _child_env).
+
+    After spawn we wait a short grace window and poll: Popen succeeding only means exec()
+    worked, not that the child is viable. A child that rejects a pinned flag / lacks auth /
+    hits a bad config exits within moments — a real pipeline runs for minutes, so ANY
+    completed exit inside the grace window (zero OR nonzero) is a launch failure. We raise a
+    SystemExit naming the child's exit code (the dispatch log holds its stderr) so the caller
+    treats it exactly like a spawn OSError: NO slot is written, and the leaked worktree is
+    named for adjudication.
+    """
+    # Dispatch-log setup can fail after the worktree exists (e.g. dispatch-logs wedged as a
+    # regular file). Convert that OSError to a SystemExit so the caller's wrapper names the
+    # leaked worktree for adjudication — the documented exit-2 contract, never a bare
+    # traceback (exit 1). No process has launched yet, so there is no orphan, only the
+    # worktree.
+    try:
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log = log_path.open("a", encoding="utf-8")
+    except OSError as exc:
+        raise SystemExit(f"failed to open dispatch log {log_path}: {exc}") from exc
+    try:
+        proc = subprocess.Popen(
+            argv,
+            cwd=str(worktree),
+            env=_child_env(state_root),
+            stdin=subprocess.DEVNULL,
+            stdout=log,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+        )
+    except OSError as exc:
+        raise SystemExit(f"failed to launch {argv[0]!r}: {exc}") from exc
+    finally:
+        # The child inherits its own dup of the fd; closing our handle is safe and avoids
+        # leaking it into this process (also runs on the OSError path — no double close).
+        log.close()
+
+    # Health check: give the child a moment, then confirm it is still running. An instant
+    # exit (a rejected flag, missing auth, bad config) is a launch failure, not a launch.
+    deadline = time.monotonic() + grace
+    while time.monotonic() < deadline:
+        rc = proc.poll()
+        if rc is not None:
+            raise SystemExit(
+                f"{argv[0]!r} exited immediately (rc={rc}) within the "
+                f"{grace}s launch grace window — treating as a launch failure; "
+                f"see {log_path} for its stderr"
+            )
+        time.sleep(grace_poll)
+    return proc.pid
+
+
+def dispatch(
+    args: argparse.Namespace,
+    *,
+    codex_id_timeout: float = DEFAULT_CODEX_ID_TIMEOUT,
+    codex_id_poll: float = DEFAULT_CODEX_ID_POLL,
+    launch_grace: float = DEFAULT_LAUNCH_GRACE,
+    launch_grace_poll: float = DEFAULT_LAUNCH_GRACE_POLL,
+) -> int:
+    canonical = None if args.no_canonical_check else args.canonical
+    _cos_preflight.require_canonical(canonical)
+
+    issues = parse_issues(args.issues)
+    tier = args.tier
+    # The tier picks the surface and its blessed pins; an explicit --surface can override
+    # the surface (dropping the pins if it contradicts the tier). See resolve_profile.
+    surface, profile_flags = resolve_profile(tier, args.surface)
+    slug = args.slug or default_slug(surface, issues)
+    validate_slug(slug)
+
+    state_root: Path = args.state_root
+    slots_root = state_root / "pipeline-slots"
+    slot_path = slots_root / f"{slug}.json"
+    worktree = args.canonical / ".claude" / "worktrees" / slug
+    log_path = state_root / "dispatch-logs" / f"{slug}.log"
+
+    # 1. Kill switch.
+    kill_switch = state_root / "auto-dispatch.off"
+    if kill_switch.exists():
+        print(f"auto-dispatch disabled: kill switch present at {kill_switch}")
+        return 3
+
+    # 2. Slot budget.
+    busy = len(_cos_preflight.scan_slots(slots_root)) if slots_root.is_dir() else 0
+    if busy >= args.max_slots:
+        print(f"no free slot budget: busy {busy}/{args.max_slots}")
+        return 4
+
+    # 3. Collision — an existing slot file or worktree dir means a concurrent claim.
+    if slot_path.exists():
+        raise SystemExit(f"slot collision: {slot_path} already exists")
+    if worktree.exists():
+        raise SystemExit(f"worktree collision: {worktree} already exists")
+
+    # A pre-generated uuid is the claude session id (known before launch); codex's is
+    # parsed from its JSONL log after launch.
+    pre_session = str(uuid.uuid4()) if surface == "claude" else None
+    argv = build_launch_argv(
+        surface, worktree, issues, state_root, pre_session, profile_flags
+    )
+
+    if args.dry_run:
+        # Checks 1–3 only; no worktree, no launch, no slot file, no log. The argv already
+        # reflects the resolved tier profile; surface/tier are echoed for the operator.
+        print(
+            json.dumps(
+                {
+                    "launch_argv": argv,
+                    "slot_path": str(slot_path),
+                    "surface": surface,
+                    "tier": tier,
+                },
+                indent=2,
+            )
+        )
+        return 0
+
+    # 4. Worktree — placeholder wt/<slug> branch off a freshly fetched origin/main.
+    canonical_repo: Path = args.canonical
+    # Guard the mutating git ops: confirm canonical is a worktree ROOT so `git -C` can't
+    # walk up into an unintended enclosing repo (see require_git_checkout).
+    require_git_checkout(canonical_repo)
+    run_git(canonical_repo, ["fetch", "origin", "main"])
+    run_git(
+        canonical_repo,
+        ["worktree", "add", "-b", f"wt/{slug}", str(worktree), "origin/main"],
+    )
+
+    # 5. Launch detached, then health-check it survived the grace window. A launch failure
+    # after the worktree exists (spawn OSError, log-setup OSError, or an instant child exit)
+    # leaks only the worktree (named in the error for adjudication); NO slot file is written.
+    # Capture the pre-launch log offset FIRST so the codex-id poll parses only bytes THIS
+    # launch appends — a reused per-slug log from a prior dispatch mustn't yield a stale id.
+    log_offset = log_size(log_path)
+    try:
+        pid = launch_detached(
+            argv,
+            worktree,
+            log_path,
+            state_root,
+            grace=launch_grace,
+            grace_poll=launch_grace_poll,
+        )
+    except SystemExit as exc:
+        raise SystemExit(
+            f"{exc.code} (worktree left at {worktree} for adjudication)"
+        ) from exc
+
+    # 6. Slot file — written IMMEDIATELY after a successful launch (not last), so a failed
+    # launch never leaks a slot AND the unrecorded window between launch and registration is
+    # as small as possible. The child pipeline is told to create/update this SAME slot file
+    # at its lane claim; writing our ownership record now (session=null for codex, the
+    # pre-generated uuid for claude) preserves the "slot only after launch" invariant while
+    # letting a fast child register its drafts/prs into it during the codex id poll (step 7).
+    #
+    # The agent is ALREADY running here: if the write fails (e.g. an unwritable ledger dir)
+    # we must NOT crash with a traceback (exit 1) — that would violate the exit-2 contract
+    # and leave a running agent with no ledger entry. Convert to exit 2 with everything
+    # needed to adjudicate the orphan by hand.
+    session_id = (
+        pre_session  # claude: final; codex: null placeholder, enriched in step 7
+    )
+    try:
+        write_slot_file(slot_path, slug, issues, surface, tier, session_id, pid)
+    except OSError as exc:
+        raise SystemExit(
+            f"slot write failed: {exc} — agent ALREADY LAUNCHED and now unrecorded "
+            f"(pid={pid}, surface={surface}, session={session_id}, "
+            f"log={log_path}, worktree={worktree}, slot={slot_path}); "
+            "adjudicate the orphan and register or kill it manually"
+        ) from exc
+
+    # 7. Codex session id — poll the log (only bytes past log_offset) for the thread id,
+    # then MERGE it into the slot's `session` field without clobbering whatever the child
+    # pipeline may have written into issues/prs during the poll window (its claim is
+    # fresher). A merge-update failure AFTER a successful step-6 write is non-fatal: the
+    # slot exists (budget is accounted, the agent is recorded), only the session enrichment
+    # failed — warn on stderr but still exit 0. claude's session is already final in step 6.
+    if surface == "codex":
+        session_id = poll_codex_session_id(
+            log_path, codex_id_timeout, codex_id_poll, start_offset=log_offset
+        )
+        if session_id is None:
+            print(
+                f"warning: no codex session id in {log_path} after "
+                f"{int(codex_id_timeout)}s; recording session=null "
+                "(fuzzy thread search will recover it)",
+                file=sys.stderr,
+            )
+        try:
+            merge_session_into_slot(
+                slot_path, slug, issues, surface, tier, session_id, pid
+            )
+        except OSError as exc:
+            print(
+                f"warning: could not enrich slot {slot_path} with codex session "
+                f"{session_id!r}: {exc}; slot is registered but its session field may be "
+                "stale (fuzzy thread search will recover the id)",
+                file=sys.stderr,
+            )
+
+    print(
+        json.dumps(
+            {
+                "slot": slug,
+                "worktree": str(worktree),
+                "surface": surface,
+                "tier": tier,
+                "session": session_id,
+                "pid": pid,
+                "log": str(log_path),
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "--issues",
+        required=True,
+        help="comma-separated issue numbers for the pr-pipeline lane, e.g. 1011,1012",
+    )
+    ap.add_argument(
+        "--tier",
+        choices=tuple(LAUNCH_PROFILES),
+        default=DEFAULT_TIER,
+        help="launch profile (default: hard = codex gpt-5.5 xhigh; easy = claude "
+        "sonnet-5 + opus advisor). See the module docstring for the full profiles",
+    )
+    ap.add_argument(
+        "--surface",
+        choices=("codex", "claude"),
+        default=None,
+        help="explicit surface override; defaults to the --tier's implied surface. When "
+        "it CONTRADICTS the tier surface the launch runs on it with ambient defaults "
+        "(no model/effort/advisor pins)",
+    )
+    ap.add_argument(
+        "--slug",
+        default=None,
+        help="slot/worktree slug; defaults to auto-<surface>-issue-<first issue>",
+    )
+    ap.add_argument(
+        "--state-root",
+        type=Path,
+        default=default_state_root(),
+        help="state store root holding pipeline-slots/, dispatch-logs/, and the kill "
+        "switch; defaults to $XDG_STATE_HOME/registry-research-toolkit",
+    )
+    ap.add_argument("--max-slots", type=int, default=_cos_preflight.DEFAULT_MAX_SLOTS)
+    ap.add_argument(
+        "--canonical",
+        type=Path,
+        default=_cos_preflight.DEFAULT_CANONICAL,
+        help="required canonical checkout path (git commands run here)",
+    )
+    ap.add_argument(
+        "--no-canonical-check",
+        action="store_true",
+        help="skip the canonical-checkout guard, for tests or local runs",
+    )
+    ap.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="run checks 1–3 only, print the launch argv + intended slot path as JSON, "
+        "and exit 0 with zero side effects",
+    )
+    args = ap.parse_args(argv)
+    try:
+        return dispatch(args)
+    except SystemExit as exc:
+        message = exc.code if isinstance(exc.code, str) else ""
+        if message:
+            print(message, file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

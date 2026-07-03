@@ -2,10 +2,10 @@
 name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
-  the release workflow, or when chief-of-staff invokes `$release minor` after an
-  authorized build/release boundary, bump and publish reg_meta or reg_meta_build, create
-  package tags/releases, upload reg_meta DB assets, or monitor publish workflows.
-  reg_schema is not a current release target.
+  the release workflow, or when chief-of-staff invokes `$release minor` or `$release
+  patch` after an authorized build/release boundary, bump and publish reg_meta or
+  reg_meta_build, create package tags/releases, upload reg_meta DB assets, or monitor
+  publish workflows. reg_schema is not a current release target.
 ---
 
 # Release pipeline
@@ -15,11 +15,11 @@ Create and publish a release for one or both PyPI packages.
 **Never start a release unless the user explicitly asks for one.** This skill may be
 invoked via `/release` or merely referenced in conversation — either way, do not proceed
 without clear intent to release. Exception: if `chief-of-staff` invokes exactly
-`$release minor` on Codex, or `/release minor` on a slash-command surface, after merging
-a PR that creates a required build/release boundary, treat that handoff as explicit user
-authorization for a minor release. Stop and ask if the package or bump level is
-ambiguous; **major bumps require explicit confirmation** after showing the current and
-planned versions.
+`$release minor`/`$release patch` on Codex, or `/release minor`/`/release patch` on a
+slash-command surface, after merging a PR that creates a required build/release
+boundary, treat that handoff as explicit user authorization for that minor or patch
+release. Stop and ask if the package or bump level is ambiguous; **major bumps require
+explicit confirmation** after showing the current and planned versions.
 
 ## Packages
 

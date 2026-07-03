@@ -35,38 +35,16 @@ def _write_slot(slots_root: Path, slug: str, slot: dict | None = None) -> Path:
     return path
 
 
-# --- scan_slots: ledger read protocol ---
+# scan_slots and the ledger constants now live in cos_preflight (so the durable probe
+# snapshots the SAME ledger the fast tier watches); cos_watch re-exports them. Their read
+# protocol is pinned in test_cos_preflight.py. Assert the re-export identity here so the
+# fast tier can never diverge from the probe's scan.
 
 
-def test_scan_slots_reads_valid_slots(tmp_path: Path) -> None:
-    _write_slot(tmp_path, "lane-a")
-    _write_slot(tmp_path, "lane-b")
-
-    assert cw.scan_slots(tmp_path) == {"lane-a", "lane-b"}
-
-
-def test_scan_slots_slot_field_stem_mismatch_ignored(tmp_path: Path) -> None:
-    _write_slot(tmp_path, "lane-a", {"slot": "other-name"})
-
-    assert cw.scan_slots(tmp_path) == set()
-
-
-def test_scan_slots_corrupt_file_skipped(tmp_path: Path) -> None:
-    path = _write_slot(tmp_path, "lane-a")
-    path.write_text("{ torn", encoding="utf-8")
-    _write_slot(tmp_path, "lane-b")
-
-    assert cw.scan_slots(tmp_path) == {"lane-b"}
-
-
-def test_scan_slots_done_archive_not_scanned(tmp_path: Path) -> None:
-    _write_slot(tmp_path / "done", "lane-a")
-
-    assert cw.scan_slots(tmp_path) == set()
-
-
-def test_scan_slots_missing_root_is_empty(tmp_path: Path) -> None:
-    assert cw.scan_slots(tmp_path / "does-not-exist") == set()
+def test_scan_slots_is_the_hoisted_preflight_function() -> None:
+    assert cw.scan_slots is cw._cos_preflight.scan_slots
+    assert cw.DEFAULT_MAX_SLOTS == cw._cos_preflight.DEFAULT_MAX_SLOTS
+    assert cw.DEFAULT_SLOT_STALE_HOURS == cw._cos_preflight.DEFAULT_SLOT_STALE_HOURS
 
 
 # --- slot_events: freed transitions gate the dispatch line ---
@@ -188,13 +166,17 @@ def test_probe_tool_error_without_stderr() -> None:
     assert cw.probe_events(2, "", "") == ["preflight error (exit 2): no stderr"]
 
 
-def test_probe_cmd_is_observe_only_and_forwards_gate_dir(tmp_path: Path) -> None:
-    # --observe: never touch the tick's candidate/baseline. --gate-dir: both tiers must
-    # read the SAME gate store when the default is overridden.
-    cmd = cw.probe_cmd(tmp_path / "gates")
+def test_probe_cmd_is_observe_only_and_forwards_ledger_config(tmp_path: Path) -> None:
+    # --observe: never touch the tick's candidate/baseline. --gate-dir / --slots-dir /
+    # --max-slots / --slot-stale-hours: the durable probe must read the SAME stores and
+    # thresholds the fast tier watches, so the two tiers can never disagree.
+    cmd = cw.probe_cmd(tmp_path / "gates", tmp_path / "slots", 5, 12.0)
 
     assert "--observe" in cmd
     assert cmd[cmd.index("--gate-dir") + 1] == str(tmp_path / "gates")
+    assert cmd[cmd.index("--slots-dir") + 1] == str(tmp_path / "slots")
+    assert cmd[cmd.index("--max-slots") + 1] == "5"
+    assert cmd[cmd.index("--slot-stale-hours") + 1] == "12.0"
 
 
 def test_probe_timeout_maps_to_error_line() -> None:
