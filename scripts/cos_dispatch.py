@@ -59,9 +59,10 @@ target resolution, resolve_profile, slug validation — all exit 2):
   7. session id   — codex only: poll the JSONL log (bytes past the step-5 offset) for the
                     first event carrying a thread/session id, bounded; on timeout,
                     session=null (the chief's fuzzy-thread-search fallback covers it) plus
-                    a stderr warning. Then RE-READ the slot file and merge-update ONLY the
-                    `session` field, preserving any issues/prs a fast child pipeline wrote
-                    during the poll window (its claim is fresher); a vanished/invalid file
+                    a stderr warning. Then RE-READ the slot file and merge-update the
+                    `session` field plus continue-owned `mode`/`prs`, preserving any other
+                    issues/prs a fast child pipeline wrote during the poll window (its claim
+                    is fresher); a vanished/invalid file
                     falls back to a full rewrite. A merge-update failure after the step-6
                     write is a stderr warning but still exit 0 — the slot exists, only the
                     session enrichment failed. claude's session is already final at step 6.
@@ -119,13 +120,12 @@ if TYPE_CHECKING:
 DEFAULT_TIER = "hard"
 RUN_STARTED_TYPE = "cos.run.started"
 MAIN_FETCH_REFSPEC = "+refs/heads/main:refs/remotes/origin/main"
-_CLOSING_LINE_RE = re.compile(
-    r"^\s*(?:[-*]\s*)?(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b",
-    re.IGNORECASE,
-)
-_NEGATED_CLOSING_RE = re.compile(
+_NEGATED_CLOSING_CLAUSE_RE = re.compile(
     r"\b(?:(?:but|and)\s+)?(?:does\s+not|do\s+not|doesn't|don't)\s+"
-    r"(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b",
+    r"(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s*:?[ \t]*"
+    r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+"
+    r"(?:(?:\s*,\s*(?:and\s+)?|\s+and\s+)"
+    r"(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#\d+)*",
     re.IGNORECASE,
 )
 # The blessed launch profiles, kept in ONE place so surface + model/effort/advisor stay
@@ -307,14 +307,7 @@ def _closing_issue_numbers(
     """Closing issue refs from local body clauses plus same-repo GitHub refs."""
     seen: set[int] = set()
     issues: list[int] = []
-    closing_lines: list[str] = []
-    for line in body.splitlines():
-        if not _CLOSING_LINE_RE.match(line):
-            continue
-        claim = _NEGATED_CLOSING_RE.split(line, maxsplit=1)[0].rstrip(" ,;")
-        if claim:
-            closing_lines.append(claim)
-    closing_body = "\n".join(closing_lines)
+    closing_body = _NEGATED_CLOSING_CLAUSE_RE.sub("", body)
     for number in sorted(
         _plan_sequence.closing_issue_numbers_from_body(
             closing_body, repository_name_with_owner
@@ -365,6 +358,7 @@ def resolve_continue_pr(pr: int) -> dict:
             "--json",
             "number,title,body,state,baseRefName,headRefName,headRepository,headRepositoryOwner,isCrossRepository,closingIssuesReferences",
         ],
+        env=_scrubbed_env(),
         capture_output=True,
         text=True,
     )
@@ -435,7 +429,14 @@ def read_brief(path: Path | None) -> str:
 
 
 def continuation_prompt(
-    surface: str, pr: int, issues: list[int], branch: str, base_branch: str, brief: str
+    surface: str,
+    pr: int,
+    issues: list[int],
+    branch: str,
+    base_branch: str,
+    brief: str,
+    *,
+    rebase: bool,
 ) -> str:
     prefix = "$pr-pipeline" if surface == "codex" else "/pr-pipeline"
     issue_text = ", ".join(f"#{issue}" for issue in issues) or "none"
@@ -449,10 +450,18 @@ def continuation_prompt(
         (
             "The branch has been checked out from the PR head and rebased onto "
             f"`origin/{base_branch}` unless this dispatch used `--no-rebase`. Inspect the "
-            "current diff, fix the requested follow-up, run the relevant gates, "
-            "push this same branch, and refresh the existing PR's merge-gate handoff."
+            "current diff, fix the requested follow-up, run the relevant gates, and "
+            "refresh the existing PR's merge-gate handoff."
         ),
     ]
+    if rebase:
+        parts.append(
+            "This continuation rebased the PR branch before launch; after committing, push "
+            f"with `git push --force-with-lease origin HEAD:{branch}` so the existing PR "
+            "updates safely."
+        )
+    else:
+        parts.append("Push this same branch normally after committing.")
     if brief:
         parts.append(f"Continuation brief:\n{brief}")
     return "\n\n".join(parts)
@@ -896,8 +905,9 @@ def merge_session_into_slot(
     Between the initial ownership write (write_slot_file) and the codex session id
     resolving (up to the poll ceiling), a fast child pipeline may already have registered
     drafts/PRs into the SAME slot file (see pr-pipeline SKILL.md). Its claim is fresher, so
-    we overlay ONLY the `session` field, preserving whatever `issues`/`prs`/other fields it
-    now carries. If the file vanished or is unreadable/invalid (torn write, someone deleted
+    we overlay only dispatcher-owned enrichment. Fresh lanes stamp just `session`; continue
+    lanes also restore their known `mode` and `prs: [<pr>]` claim so a child rewrite cannot
+    hide the in-flight PR from `live_slot_for_pr`. If the file vanished or is unreadable/invalid (torn write, someone deleted
     it), we fall back to rewriting the full ownership payload from our own known-good values
     — the slot must exist for the launched agent.
 
@@ -906,7 +916,12 @@ def merge_session_into_slot(
     payload = _full_slot_payload(
         slug, issues, surface, tier, session_id, pid, prs=prs, mode=mode
     )
-    _write_or_overlay_slot(slot_path, payload, ("session",))
+    overlay_fields = ("session",)
+    if mode is not None:
+        overlay_fields += ("mode",)
+    if mode == "continue":
+        overlay_fields += ("prs",)
+    _write_or_overlay_slot(slot_path, payload, overlay_fields)
 
 
 def _child_env(state_root: Path) -> dict[str, str]:
@@ -1082,6 +1097,7 @@ def dispatch(
             pr_branch,
             pr_base_branch,
             read_brief(brief_file),
+            rebase=not no_rebase,
         )
 
     # A pre-generated uuid is the claude session id (known before launch); codex's is
@@ -1220,9 +1236,9 @@ def dispatch(
         ) from exc
 
     # 7. Codex session id — poll the log (only bytes past log_offset) for the thread id,
-    # then MERGE it into the slot's `session` field without clobbering whatever the child
-    # pipeline may have written into issues/prs during the poll window (its claim is
-    # fresher). A merge-update failure AFTER a successful step-6 write is non-fatal: the
+    # then MERGE it into the slot's `session` field (and continue-owned mode/prs) without
+    # clobbering whatever else the child pipeline may have written during the poll window
+    # (its claim is fresher). A merge-update failure AFTER a successful step-6 write is non-fatal: the
     # slot exists (budget is accounted, the agent is recorded), only the session enrichment
     # failed — warn on stderr but still exit 0. claude's session is already final in step 6.
     if surface == "codex":

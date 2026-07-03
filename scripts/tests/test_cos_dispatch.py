@@ -365,6 +365,10 @@ def test_closing_issue_numbers_uses_github_refs_for_same_line_closures() -> None
     assert got == [10, 123]
 
 
+def test_closing_issue_numbers_accepts_non_line_leading_closing_clause() -> None:
+    assert cd._closing_issue_numbers("This PR fixes #123", None) == [123]
+
+
 def test_closing_issue_numbers_parses_body_multi_references_without_github_refs() -> (
     None
 ):
@@ -436,6 +440,38 @@ def test_resolve_continue_pr_refuses_closed_pr(
         cd.resolve_continue_pr(4242)
 
     assert "state is CLOSED" in str(exc.value.code)
+    _no_real_launch(tmp_path)
+
+
+def test_resolve_continue_pr_scrubs_git_env(
+    tmp_path: Path, _hermetic_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    payload = {
+        "state": "OPEN",
+        "isCrossRepository": False,
+        "headRefName": "codex/existing-pr",
+        "baseRefName": "main",
+        "headRepository": {"nameWithOwner": "adamaltmejd/registry-research-toolkit"},
+        "closingIssuesReferences": [
+            {
+                "number": 1011,
+                "repository": {
+                    "name": "registry-research-toolkit",
+                    "owner": {"login": "adamaltmejd"},
+                },
+            }
+        ],
+        "body": "",
+        "title": "Existing PR",
+    }
+    record = _stub_bin(_hermetic_env, "gh", jsonl=json.dumps(payload))
+    monkeypatch.setenv("GIT_DIR", str(tmp_path / "wrong.git"))
+    monkeypatch.setenv("GIT_WORK_TREE", str(tmp_path / "wrong"))
+
+    got = cd.resolve_continue_pr(4242)
+
+    assert got["issues"] == [1011]
+    assert json.loads(record.read_text(encoding="utf-8"))["git_env"] == []
     _no_real_launch(tmp_path)
 
 
@@ -998,6 +1034,7 @@ def test_continue_pr_dry_run_uses_existing_pr_prompt(
     prompt = result["launch_argv"][-1]
     assert "$pr-pipeline continue PR #4242" in prompt
     assert "Do NOT restart" in prompt
+    assert "git push --force-with-lease origin HEAD:codex/existing-pr" in prompt
     assert "Fix the current-head review finding." in prompt
     assert not (canonical / ".claude" / "worktrees" / "continue-codex-pr-4242").exists()
     _no_real_launch(tmp_path)
@@ -1575,6 +1612,39 @@ def test_merge_session_into_slot_invalid_json_rewrites_full_payload(
     assert slot["session"] is None
     assert slot["pid"] == 777
     assert slot["prs"] == []
+
+
+def test_continue_session_merge_restores_continue_owned_fields(tmp_path: Path) -> None:
+    slot_path = tmp_path / "pipeline-slots" / "continue-codex-pr-4242.json"
+    slot_path.parent.mkdir(parents=True)
+    slot_path.write_text(
+        json.dumps(
+            {
+                "slot": "continue-codex-pr-4242",
+                "issues": [1011],
+                "prs": [],
+                "surface": "codex",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    cd.merge_session_into_slot(
+        slot_path,
+        "continue-codex-pr-4242",
+        [1011],
+        "codex",
+        "hard",
+        "sid-continue",
+        888,
+        prs=[4242],
+        mode="continue",
+    )
+
+    slot = json.loads(slot_path.read_text(encoding="utf-8"))
+    assert slot["session"] == "sid-continue"
+    assert slot["mode"] == "continue"
+    assert slot["prs"] == [4242]
 
 
 # --- reused per-slug log must not leak a prior run's thread id (finding 2) -----
