@@ -365,6 +365,31 @@ def test_closing_issue_numbers_uses_github_refs_for_same_line_closures() -> None
     assert got == [10, 123]
 
 
+def test_closing_issue_numbers_filters_github_refs_to_local_repo() -> None:
+    got = cd._closing_issue_numbers(
+        "Closes #10",
+        [
+            {
+                "number": 10,
+                "repository": {
+                    "name": "registry-research-toolkit",
+                    "owner": {"login": "adamaltmejd"},
+                },
+            },
+            {
+                "number": 999,
+                "repository": {
+                    "name": "other-repo",
+                    "owner": {"login": "other-owner"},
+                },
+            },
+            {"number": 123},
+        ],
+        repository_name_with_owner="adamaltmejd/registry-research-toolkit",
+    )
+    assert got == [10]
+
+
 def test_closing_issue_numbers_falls_back_to_github_refs() -> None:
     got = cd._closing_issue_numbers(
         "PR body without closing keywords", [{"number": 10}]

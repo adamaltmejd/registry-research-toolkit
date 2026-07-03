@@ -506,9 +506,10 @@ that and include the exact message text to send.
 If the owning pipeline session is known dead or unreachable and the PR needs a current
 branch follow-up, use `cos_dispatch.py --continue-pr <pr> --brief-file <path>` from the
 canonical checkout instead of creating an ad hoc thread. Continue mode is the blessed
-dead-session path: it resolves the existing PR branch, rebases it onto `origin/main` by
-default, launches a continuation prompt, and records a `mode: "continue"` slot with
-`prs: [<pr>]`. Use `--no-rebase` only when keeping the exact PR base is intentional.
+dead-session path: it resolves the existing PR branch and PR base, rebases it onto
+`origin/<baseRefName>` by default, launches a continuation prompt, and records a
+`mode: "continue"` slot with `prs: [<pr>]`. Use `--no-rebase` only when keeping the
+exact PR head/base relationship is intentional.
 
 The message must name the PR, issue, current head SHA, specific blocker, exact unblock
 steps, required gate-directory evidence, and
@@ -647,10 +648,11 @@ one-coordinator rule in Scheduling is what excludes that.
   uv run --no-project python scripts/cos_dispatch.py --continue-pr <pr> [--brief-file <path>] [--tier easy|hard] [--surface codex|claude] [--slug NAME]
   ```
 
-  Continue mode resolves the same-repository PR head branch, creates or reuses a clean
-  worktree for that branch, rebases onto `origin/main` by default (`--no-rebase` only
-  when preserving the exact base is intentional), launches the same tier profile with a
-  continuation prompt, and records `mode: "continue"` plus `prs: [<pr>]` in the slot.
+  Continue mode resolves the same-repository PR head branch and base branch, creates or
+  reuses a clean worktree for the head branch, rebases onto `origin/<baseRefName>` by
+  default (`--no-rebase` only when preserving the exact PR head/base relationship is
+  intentional), launches the same tier profile with a continuation prompt, and records
+  `mode: "continue"` plus `prs: [<pr>]` in the slot.
 
   The tier's implied surface is the default (no `--surface` needed). The script is the
   deterministic launcher: it re-checks the kill switch (exit `3`) and the slot budget

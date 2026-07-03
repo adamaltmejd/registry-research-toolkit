@@ -272,8 +272,35 @@ def validate_slug(slug: str) -> None:
         raise SystemExit(f"invalid --slug {slug!r}: must be a valid filename stem")
 
 
-def _closing_issue_numbers(body: str, refs: list[dict] | None) -> list[int]:
-    """Closing issue refs from strict body keywords plus GitHub's complete refs."""
+def _ref_matches_repository(ref: dict, repository_name_with_owner: str | None) -> bool:
+    if repository_name_with_owner is None:
+        return True
+    repo = ref.get("repository")
+    if not isinstance(repo, dict):
+        return False
+    if repo.get("nameWithOwner") == repository_name_with_owner:
+        return True
+    expected_owner, sep, expected_name = repository_name_with_owner.partition("/")
+    if not sep:
+        return False
+    owner = repo.get("owner")
+    login = owner.get("login") if isinstance(owner, dict) else None
+    name = repo.get("name")
+    return (
+        isinstance(login, str)
+        and isinstance(name, str)
+        and login.lower() == expected_owner.lower()
+        and name.lower() == expected_name.lower()
+    )
+
+
+def _closing_issue_numbers(
+    body: str,
+    refs: list[dict] | None,
+    *,
+    repository_name_with_owner: str | None = None,
+) -> list[int]:
+    """Closing issue refs from local body keywords plus same-repo GitHub refs."""
     seen: set[int] = set()
     issues: list[int] = []
     for match in _CLOSING_KEYWORD_RE.finditer(body):
@@ -283,11 +310,29 @@ def _closing_issue_numbers(body: str, refs: list[dict] | None) -> list[int]:
             issues.append(number)
     if refs:
         for ref in refs:
-            number = ref.get("number") if isinstance(ref, dict) else None
+            if not isinstance(ref, dict) or not _ref_matches_repository(
+                ref, repository_name_with_owner
+            ):
+                continue
+            number = ref.get("number")
             if isinstance(number, int) and number not in seen:
                 seen.add(number)
                 issues.append(number)
     return issues
+
+
+def _head_repository_name_with_owner(data: dict, pr: int) -> str:
+    repo = data.get("headRepository")
+    owner_data = data.get("headRepositoryOwner")
+    if isinstance(repo, dict):
+        name_with_owner = repo.get("nameWithOwner")
+        if isinstance(name_with_owner, str) and "/" in name_with_owner:
+            return name_with_owner
+        name = repo.get("name")
+        owner = owner_data.get("login") if isinstance(owner_data, dict) else None
+        if isinstance(owner, str) and isinstance(name, str) and owner and name:
+            return f"{owner}/{name}"
+    raise SystemExit(f"PR #{pr} has no resolvable repository identity")
 
 
 def resolve_continue_pr(pr: int) -> dict:
@@ -304,7 +349,7 @@ def resolve_continue_pr(pr: int) -> dict:
             "view",
             str(pr),
             "--json",
-            "number,title,body,baseRefName,headRefName,isCrossRepository,closingIssuesReferences",
+            "number,title,body,baseRefName,headRefName,headRepository,headRepositoryOwner,isCrossRepository,closingIssuesReferences",
         ],
         capture_output=True,
         text=True,
@@ -327,8 +372,11 @@ def resolve_continue_pr(pr: int) -> dict:
     base_branch = data.get("baseRefName")
     if not isinstance(base_branch, str) or not base_branch:
         raise SystemExit(f"PR #{pr} has no resolvable base branch")
+    repository_name_with_owner = _head_repository_name_with_owner(data, pr)
     issues = _closing_issue_numbers(
-        str(data.get("body") or ""), data.get("closingIssuesReferences")
+        str(data.get("body") or ""),
+        data.get("closingIssuesReferences"),
+        repository_name_with_owner=repository_name_with_owner,
     )
     if not issues:
         raise SystemExit(
