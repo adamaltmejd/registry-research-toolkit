@@ -168,6 +168,7 @@ def test_strip_shell_wrapper_variants() -> None:
     assert ct.strip_shell_wrapper("/bin/zsh -lc 'echo hi'") == "echo hi"
     assert ct.strip_shell_wrapper('/bin/bash -c "echo hi"') == "echo hi"
     assert ct.strip_shell_wrapper("plain command") == "plain command"
+    assert ct.strip_shell_wrapper("/bin/zsh -l -c 'echo hi'") == "echo hi"
     # Multi-line payloads inside the wrapper survive.
     assert ct.strip_shell_wrapper("/bin/zsh -lc 'a\nb'") == "a\nb"
 
@@ -191,6 +192,18 @@ def test_follower_buffers_torn_lines(tmp_path: Path) -> None:
         fh.write(b'rn.completed"}\n')
     assert follower.poll() == ['{"type":"turn.completed"}']
     assert follower.poll() == []
+
+
+def test_follower_skip_to_end_discards_history(tmp_path: Path) -> None:
+    log = tmp_path / "lane.log"
+    log.write_bytes(b"old1\nold2\npartial")
+    follower = ct.LogFollower(log)
+    follower.skip_to_end()
+    with log.open("ab") as fh:
+        fh.write(b"-tail\nnew\n")
+    # History (including the torn tail it landed mid-write on) is gone; only
+    # complete lines appended after the skip are yielded.
+    assert follower.poll() == ["-tail", "new"]
 
 
 def test_follower_resets_on_truncation(tmp_path: Path) -> None:
@@ -269,6 +282,21 @@ def test_plan_pane_actions_spawns_and_retires() -> None:
 
 def test_plan_pane_actions_empty_state() -> None:
     assert ct.plan_pane_actions(set(), {}) == ([], [])
+
+
+def test_self_argv_puts_global_flags_before_subcommand(tmp_path: Path) -> None:
+    # Global flags after the subcommand are an argparse error, so the generated
+    # pane/session commands must round-trip through the parser.
+    args = ct.build_parser().parse_args(
+        ["--state-root", str(tmp_path), "--interval", "1", "-v", "manage"]
+    )
+    argv = ct._self_argv(args, "follow", "some-slug", "--from-start")
+    reparsed = ct.build_parser().parse_args(argv[2:])  # drop python + script path
+    assert reparsed.command == "follow"
+    assert reparsed.slug == "some-slug"
+    assert reparsed.state_root == tmp_path
+    assert reparsed.interval == 1.0
+    assert reparsed.verbose and reparsed.from_start
 
 
 # ---------------------------------------------------------------------------

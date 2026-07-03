@@ -31,6 +31,7 @@ import importlib.util
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -53,6 +54,9 @@ _CP_SPEC.loader.exec_module(_cos_preflight)
 DEFAULT_INTERVAL = 2.0
 FAIL_TAIL_LINES = 20
 TMUX_SESSION = "cos"
+# Target the window by NAME, never by index — a user's base-index setting moves the
+# first window's index, but `-n lanes` pins its name.
+TMUX_WINDOW = f"{TMUX_SESSION}:lanes"
 LANE_TITLE_PREFIX = "lane:"
 DONE_TITLE_PREFIX = "done:"
 
@@ -152,7 +156,7 @@ def status_table(slots: list[Slot], logs_root: Path, now: float) -> str:
 # ---------------------------------------------------------------------------
 # Event rendering (pure: JSONL line in, display text out)
 
-_SHELL_WRAPPER = re.compile(r"^\S*/(?:zsh|bash|sh)\s+-l?c\s+(.*)$", re.DOTALL)
+_SHELL_WRAPPER = re.compile(r"^\S*/(?:zsh|bash|sh)\s+(?:-l\s+)?-l?c\s+(.*)$", re.DOTALL)
 
 
 def strip_shell_wrapper(command: str) -> str:
@@ -298,6 +302,11 @@ class LogFollower:
         self._buf = lines.pop()
         return [raw.decode("utf-8", errors="replace") for raw in lines if raw.strip()]
 
+    def skip_to_end(self) -> None:
+        """Advance past existing content without yielding it (hot-join a live lane)."""
+        self.poll()
+        self._buf = b""
+
 
 def follow_one(
     slug: str,
@@ -332,8 +341,7 @@ def follow_one(
             break
     follower = LogFollower(log_path)
     if not from_start:
-        follower.poll()  # advance to end-of-file; discard history
-        follower._buf = b""
+        follower.skip_to_end()
     ended_notice = False
     while True:
         for line in follower.poll():
@@ -361,9 +369,10 @@ def follow_all(
         for slug in sorted(_cos_preflight.scan_slots(slots_root)):
             if slug not in followers:
                 follower = LogFollower(logs_root / f"{slug}.log")
-                if not (from_start and first_scan):
-                    follower.poll()
-                    follower._buf = b""
+                # A lane discovered mid-watch has a just-started log: always replay it
+                # in full. --from-start only governs lanes already live at startup.
+                if first_scan and not from_start:
+                    follower.skip_to_end()
                 followers[slug] = follower
                 print(renderer._c(_BOLD, f"== following {slug} =="), flush=True)
         first_scan = False
@@ -407,11 +416,21 @@ def _tmux(*args: str) -> str:
     return proc.stdout
 
 
-def _self_argv(state_root: Path | None) -> list[str]:
+def _self_argv(args: argparse.Namespace, *tail: str) -> list[str]:
+    """Re-invocation argv propagating the global flags, then `tail`.
+
+    Global flags live on the top-level parser, so they must precede the subcommand
+    in `tail` — argparse rejects them after it.
+    """
     argv = [sys.executable, str(Path(__file__).resolve())]
-    if state_root is not None:
-        argv += ["--state-root", str(state_root)]
-    return argv
+    if args.state_root is not None:
+        argv += ["--state-root", str(args.state_root)]
+    argv += ["--interval", str(args.interval)]
+    if args.verbose:
+        argv.append("-v")
+    if args.no_color:
+        argv.append("--no-color")
+    return argv + list(tail)
 
 
 def manage(args: argparse.Namespace) -> int:
@@ -423,30 +442,25 @@ def manage(args: argparse.Namespace) -> int:
         live = {slot.slug for slot in slots}
         panes = {}
         for line in _tmux(
-            "list-panes", "-t", f"{TMUX_SESSION}:0", "-F", "#{pane_id}\t#{pane_title}"
+            "list-panes", "-t", TMUX_WINDOW, "-F", "#{pane_id}\t#{pane_title}"
         ).splitlines():
             pane_id, _, title = line.partition("\t")
             panes[pane_id] = title
         spawn, retire = plan_pane_actions(live, panes)
         for slug in spawn:
-            follow_cmd = _self_argv(args.state_root) + [
-                "follow",
-                slug,
-                "--from-start",
-                *(["-v"] if args.verbose else []),
-            ]
+            follow_cmd = _self_argv(args, "follow", slug, "--from-start")
             pane_id = _tmux(
                 "split-window",
                 "-d",
                 "-t",
-                f"{TMUX_SESSION}:0",
+                TMUX_WINDOW,
                 "-P",
                 "-F",
                 "#{pane_id}",
-                " ".join(follow_cmd),
+                shlex.join(follow_cmd),
             ).strip()
             _tmux("select-pane", "-t", pane_id, "-T", f"{LANE_TITLE_PREFIX}{slug}")
-            _tmux("select-layout", "-t", f"{TMUX_SESSION}:0", "tiled")
+            _tmux("select-layout", "-t", TMUX_WINDOW, "tiled")
         for pane_id in retire:
             slug = panes[pane_id].removeprefix(LANE_TITLE_PREFIX)
             _tmux("select-pane", "-t", pane_id, "-T", f"{DONE_TITLE_PREFIX}{slug}")
@@ -469,12 +483,7 @@ def cmd_tmux(args: argparse.Namespace) -> int:
         == 0
     )
     if not has_session:
-        manage_cmd = _self_argv(args.state_root) + [
-            "manage",
-            "--interval",
-            str(args.interval),
-            *(["-v"] if args.verbose else []),
-        ]
+        manage_cmd = _self_argv(args, "manage")
         _tmux(
             "new-session",
             "-d",
@@ -482,7 +491,7 @@ def cmd_tmux(args: argparse.Namespace) -> int:
             TMUX_SESSION,
             "-n",
             "lanes",
-            " ".join(manage_cmd),
+            shlex.join(manage_cmd),
         )
         # Dead lane panes stay visible ([exited]) instead of vanishing mid-glance;
         # titled borders are how you tell lanes apart.
