@@ -656,7 +656,85 @@ interface TypeDerivationState {
   data_type?: string | null;
   is_identifier?: boolean;
   value_set_id?: number | null;
-  value_set?: unknown[] | null;
+  value_set?: VariableStateModel["value_set"];
+}
+
+type ValueSetMember = NonNullable<VariableStateModel["value_set"]>[number];
+
+export interface DenseIntegerValueSetRange {
+  min: number;
+  max: number;
+  count: number;
+}
+
+const DENSE_INTEGER_VALUE_SET_MIN_COUNT = 10;
+const DENSE_INTEGER_VALUE_SET_MIN_DENSITY = 0.9;
+const INTEGER_CODE_RE = /^-?(0|[1-9]\d*)$/;
+
+function parseCanonicalIntegerCode(code: string): number | null {
+  const trimmed = code.trim();
+  if (!INTEGER_CODE_RE.test(trimmed)) {
+    return null;
+  }
+  const value = Number(trimmed);
+  return Number.isSafeInteger(value) ? value : null;
+}
+
+function integerLabelMatchesCode(
+  label: string | null | undefined,
+  code: string,
+): boolean {
+  const trimmed = (label ?? "").trim().toLowerCase();
+  if (trimmed === "") {
+    return true;
+  }
+  const value = String(parseCanonicalIntegerCode(code));
+  return (
+    trimmed === value ||
+    trimmed === `${value} år` ||
+    trimmed === `${value} ar` ||
+    trimmed === `${value} year` ||
+    trimmed === `${value} years` ||
+    trimmed === `${value} yr` ||
+    trimmed === `${value} yrs` ||
+    trimmed === `age ${value}` ||
+    trimmed === `ålder ${value}`
+  );
+}
+
+export function denseIntegerValueSetRange(
+  valueSet:
+    | readonly Pick<ValueSetMember, "code" | "label">[]
+    | null
+    | undefined,
+): DenseIntegerValueSetRange | null {
+  if (!valueSet || valueSet.length < DENSE_INTEGER_VALUE_SET_MIN_COUNT) {
+    return null;
+  }
+  const values: number[] = [];
+  const seen = new Set<number>();
+  for (const member of valueSet) {
+    const value = parseCanonicalIntegerCode(member.code);
+    if (
+      value === null ||
+      seen.has(value) ||
+      !integerLabelMatchesCode(member.label, member.code)
+    ) {
+      return null;
+    }
+    values.push(value);
+    seen.add(value);
+  }
+  values.sort((a, b) => a - b);
+  const span = values[values.length - 1] - values[0] + 1;
+  if (values.length / span < DENSE_INTEGER_VALUE_SET_MIN_DENSITY) {
+    return null;
+  }
+  return {
+    min: values[0],
+    max: values[values.length - 1],
+    count: values.length,
+  };
 }
 
 export function deriveType(state: TypeDerivationState | undefined): string {
@@ -668,6 +746,9 @@ export function deriveType(state: TypeDerivationState | undefined): string {
   // integer-stored panel key is an "id", not "numeric" (or "categorical").
   if (state.is_identifier) {
     return "id";
+  }
+  if (denseIntegerValueSetRange(state.value_set) !== null) {
+    return "numeric";
   }
   if (state.value_set_id != null || (state.value_set?.length ?? 0) > 0) {
     return "categorical";

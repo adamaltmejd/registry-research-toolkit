@@ -71,6 +71,19 @@ const plainState = state({
     { code: "0115", label: "Vallentuna" },
   ],
 });
+const ageState = state({
+  state_id: 5,
+  value_set_id: 500,
+  classification_slug: null,
+  value_set_version_label: "Ålder",
+  variant: "personer",
+  valid_from: "2000-01-01",
+  valid_to: "2000-12-31",
+  value_set: Array.from({ length: 21 }, (_, age) => ({
+    code: String(age),
+    label: `${age} år`,
+  })),
+});
 
 describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () => {
   it("renders DISTINCT value sets, not raw states (the dedup)", async () => {
@@ -176,6 +189,25 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await expect.element(summary).toBeVisible();
     await summary.click();
     await expect.element(page.getByText("Upplands Väsby")).toBeVisible();
+  });
+
+  it("a dense integer value set renders as a range, not an expandable code dump", async () => {
+    render(ValueSetView, {
+      states: [ageState, plainState],
+      narrowed: false,
+    });
+    expect(normalizedText(".vs-numeric-range")).toContain(
+      "Integer values 0-20 (21 values)",
+    );
+    await expect.element(page.getByText("Values (21)")).not.toBeInTheDocument();
+  });
+
+  it("single-state dense integer detail renders the same range summary", async () => {
+    render(ValueSetView, { states: [ageState], narrowed: false });
+    expect(normalizedText(".vs-numeric-range")).toContain(
+      "Integer values 0-20 (21 values)",
+    );
+    await expect.element(page.getByText("0 år")).not.toBeInTheDocument();
   });
 
   it("collapses several value_set_ids that share one classification_slug into ONE row (M13)", async () => {
