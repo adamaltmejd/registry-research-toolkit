@@ -1832,6 +1832,32 @@ class TestVariableVintageSuccession:
         assert n == 1
         assert _lift_rows(conn) == [("sni-2002", "sni-2007", 2007)]
 
+    def test_clean_pair_with_different_streams_mints_nothing(self) -> None:
+        # Same-name and 1:1 by edition is not enough after #592: non-vintage
+        # slug tokens still define separate streams, so this clean-looking pair
+        # would fail the real-corpus stream guard and must be skipped at source.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Kommun", slug="u-ukom")
+        add_variable(conn, register_id=1, var_id=2, name="Kommun", slug="u-hkom")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-ukom",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-hkom",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0
+        assert _lift_rows(conn) == []
+
     def test_three_edition_chain_mints_adjacent_edges(self) -> None:
         # Adjacent-chain (NOT predecessor→latest): a 3-edition family → 2 edges.
         conn = _vintage_db()
@@ -1860,16 +1886,76 @@ class TestVariableVintageSuccession:
             ("sni-2007", "sni-2012", 2012),
         ]
 
-    def test_entangled_family_mints_nothing(self) -> None:
+    def test_entangled_parent_streams_mint_parallel_edges(self) -> None:
         # Two variables BOTH bind sni2002 (and two more bind sni2007): an edition
-        # bound by >1 variable in the family → entangled cross-product, skipped
-        # whole. A same-name key alone would cross-link the parallel variants.
+        # bound by >1 variable in the family. #592 partitions the same-name
+        # family by slug stream after stripping the classification vintage token,
+        # so fars-* links only to fars-* and mors-* only to mors-*.
         conn = _vintage_db()
         for vid, slug, cls in (
             (1, "fars-sni-2002", "sni2002"),
             (2, "mors-sni-2002", "sni2002"),
             (3, "fars-sni-2007", "sni2007"),
             (4, "mors-sni-2007", "sni2007"),
+        ):
+            add_variable(
+                conn,
+                register_id=1,
+                var_id=vid,
+                name="Föräldrars näringsgren",
+                slug=slug,
+            )
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                classification_id=_cid(conn, cls),
+            )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 2
+        assert _lift_rows(conn) == [
+            ("fars-sni-2002", "fars-sni-2007", 2007),
+            ("mors-sni-2002", "mors-sni-2007", 2007),
+        ]
+
+    def test_entangled_population_streams_do_not_cross_link(self) -> None:
+        # Same classification edge, same variable.name, parallel population
+        # streams. Stripping only the vintage years leaves the population token in
+        # the stream key, so no individ→foretag cross-link is possible.
+        conn = _vintage_db()
+        for vid, slug, cls in (
+            (1, "individ-sni-2002", "sni2002"),
+            (2, "foretag-sni-2002", "sni2002"),
+            (3, "individ-sni-2007", "sni2007"),
+            (4, "foretag-sni-2007", "sni2007"),
+        ):
+            add_variable(conn, register_id=1, var_id=vid, name="Näringsgren", slug=slug)
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                classification_id=_cid(conn, cls),
+            )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 2
+        assert _lift_rows(conn) == [
+            ("foretag-sni-2002", "foretag-sni-2007", 2007),
+            ("individ-sni-2002", "individ-sni-2007", 2007),
+        ]
+
+    def test_entangled_ambiguous_stream_is_skipped(self) -> None:
+        # Two predecessor variables collapse to the same non-vintage stream key.
+        # The lift refuses to choose one and skips that stream rather than minting
+        # a false cross-product edge.
+        conn = _vintage_db()
+        for vid, slug, cls in (
+            (1, "fars-sni-2002", "sni2002"),
+            (2, "fars-sni-2002-2002", "sni2002"),
+            (3, "fars-sni-2007", "sni2007"),
         ):
             add_variable(
                 conn,
@@ -1912,6 +1998,44 @@ class TestVariableVintageSuccession:
             register_variant_id=10,
             valid_from="2007-01-01",
             valid_to="9999-12-31",
+            classification_id=_cid(conn, "sni2007"),
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0
+        assert _lift_rows(conn) == []
+
+    def test_interval_native_variable_is_not_paired_with_neighbor(self) -> None:
+        # A chain-spanning variable is interval-native even when the same-name
+        # family has another variable on one edition. It must not be paired with
+        # that neighbor; the real corpus has municipality columns in this shape,
+        # where a false lift would close a reversed source edge into a cycle.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Kommun", slug="u-ukom")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-ukom",
+            register_variant_id=10,
+            valid_from="2002-01-01",
+            valid_to="2006-12-31",
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-ukom",
+            register_variant_id=10,
+            valid_from="2007-01-01",
+            valid_to="9999-12-31",
+            classification_id=_cid(conn, "sni2007"),
+        )
+        add_variable(conn, register_id=1, var_id=2, name="Kommun", slug="u-hkom")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="u-hkom",
+            register_variant_id=10,
             classification_id=_cid(conn, "sni2007"),
         )
         conn.commit()

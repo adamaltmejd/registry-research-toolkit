@@ -41,6 +41,7 @@ is a maintainer artifact — absent in wheel installs and synthetic test builds.
 from __future__ import annotations
 
 import functools
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -118,6 +119,7 @@ _REPLACED_BY_FIELDS: frozenset[str] = frozenset(
 
 _VarKey = tuple[str, str, str]
 _ClassKey = tuple[str, str]
+_SLUG_TOKEN_RE = re.compile(r"[a-z]+|\d+")
 
 
 # ── dataclasses ─────────────────────────────────────────────────────────────
@@ -209,6 +211,42 @@ class CuratedRelations:
 
 def _join_fqid(provider: str, register: str, variable: str | None) -> str:
     return f"{provider}/{register}" + (f"/{variable}" if variable is not None else "")
+
+
+def _slug_tokens(slug: str) -> tuple[str, ...]:
+    return tuple(_SLUG_TOKEN_RE.findall(slug.lower()))
+
+
+def _classification_vintage_tokens(
+    predecessor_slug: str, successor_slug: str
+) -> frozenset[str]:
+    """Tokens that differ between adjacent classification editions and look like
+    vintage markers.
+
+    Keep this deliberately conservative: only digit-bearing tokens are stripped
+    from variable slugs. Facet / population / level words such as ``individ``,
+    ``foretag``, ``grov``, or ``utokad`` stay in the stream key, so the entangled
+    lift cannot cross-link parallel streams merely because the classification
+    edition changed."""
+    pred = set(_slug_tokens(predecessor_slug))
+    succ = set(_slug_tokens(successor_slug))
+    return frozenset(tok for tok in pred ^ succ if any(ch.isdigit() for ch in tok))
+
+
+def _variable_vintage_stream_key(
+    variable_slug: str, predecessor_class_slug: str, successor_class_slug: str
+) -> tuple[str, ...]:
+    """Slug-stem stream key for one adjacent classification-edition edge (#592).
+
+    The key removes the edge's digit-bearing vintage tokens from the variable slug
+    and leaves every other token intact. Examples for ``sni2002 -> sni2007``:
+    ``fars-sni-2002`` and ``fars-sni-2007`` both key as ``("fars", "sni")``,
+    while ``mors-*`` remains a separate stream."""
+    vintage = _classification_vintage_tokens(
+        predecessor_class_slug, successor_class_slug
+    )
+    stem = tuple(tok for tok in _slug_tokens(variable_slug) if tok not in vintage)
+    return stem or ("",)
 
 
 # ---------------------------------------------------------------------------
@@ -1729,28 +1767,26 @@ def derive_variable_vintage_succession(
 
     Two variables A, B in the SAME register whose value-set classifications C_A,
     C_B are ADJACENT in a `classification_replaced_by` chain — and that are
-    otherwise the same series (same `variable.name`) — mint
-    `variable_replaced_by` (A → B) with `effective_year` from the classification
-    edge and `note = 'derived:classification_vintage_lift'`. Adjacent-chain (the
-    edge's predecessor→successor verbatim, NOT predecessor→latest), mirroring
+    otherwise the same series (same `variable.name`, and when needed the same
+    slug-stem stream inside that family) — mint `variable_replaced_by` (A → B)
+    with `effective_year` from the classification edge and
+    `note = 'derived:classification_vintage_lift'`. Adjacent-chain (the edge's
+    predecessor→successor verbatim, NOT predecessor→latest), mirroring
     `concept_groups.derive_classification_succession`.
 
-    Family key = `(register_id, variable.name)`. Only the **clean tier** fires:
-    a family where the chained editions map UNAMBIGUOUSLY 1:1 to variables — a
-    bijection edition↔variable. Two guards drop everything else:
+    Family key = `(register_id, variable.name)`. The original **clean tier** still
+    fires when an adjacent classification edge maps 1:1 to variables in a family,
+    but it must pass the same slug-stream guard as the entangled tier (#592). The
+    stream key removes the adjacent classification edge's digit-bearing vintage
+    tokens from the variable slug. That keeps parallel axes (population /
+    parental role / level / grain) in the key, so `fars-*` never links to
+    `mors-*`, `individ-*` never links to `foretag-*`, and `grov-*` never links to
+    `utokad-*`. A stream with more than one variable on either side is skipped
+    rather than guessed.
 
-      - **Entangled** (out of scope, #488 et al.): an edition bound by >1
-        variable in the family (näringsgren / parental utbildningsnivå /
-        fordonsreg / fek / rams Näringsgren cross-products). A same-name key
-        alone would cross-link parallel variants, so the whole family is skipped.
-      - **Interval-native** (#271, no lift owed): a single variable spanning >1
-        chained edition across its own states. That variable already carries the
-        lineage in ONE `variable_id`; the family is skipped (the variable appears
-        under >1 edition, breaking the bijection).
-
-    Level separation is free: each level binds its own classification lineage
-    (`sni2007-grov` ≠ `sni2007-utokad`), so the lift over distinct slugs never
-    crosses grov into utokad — no special level handling.
+    Interval-native variables (#271, no lift owed) stay out of all lifted
+    candidate pairs: a single variable spanning >1 chained edition across its
+    own states already carries the lineage in ONE `variable_id`.
 
     Dedup: an edge already in `variable_replaced_by` (curated #375/#440 or auto
     `timeseries_event`) WINS — `INSERT OR IGNORE` against the PK leaves it
@@ -1777,11 +1813,17 @@ def derive_variable_vintage_succession(
 
     # Per (register_id, variable.name) family: edition_slug → {variable_id}, and
     # variable_id → {edition_slug}. Built from the live state→classification
-    # bindings, restricted to chained editions.
+    # bindings, restricted to chained editions. Entangled cross-product families
+    # intentionally stay under this coarse human name; the adjacent-edge loop
+    # below partitions them by a slug-stem stream key only when the old clean
+    # bijection guard would have skipped the family whole. The reverse map keeps
+    # interval-native variables (one variable_id spanning >1 chained edition)
+    # out of all candidate pairs.
     family_edition_vars: dict[tuple[int, str], dict[str, set[int]]] = {}
     family_var_editions: dict[tuple[int, str], dict[int, set[str]]] = {}
+    variable_slug_of: dict[int, str] = {}
     rows = conn.execute(
-        "SELECT DISTINCT v.register_id, v.name, vs.variable_id, c.slug "
+        "SELECT DISTINCT v.register_id, v.name, vs.variable_id, v.slug, c.slug "
         "FROM variable_state vs "
         "JOIN variable v ON v.variable_id = vs.variable_id "
         "JOIN classification c ON c.id = vs.classification_id "
@@ -1790,12 +1832,17 @@ def derive_variable_vintage_succession(
         "  AND v.name IS NOT NULL "
         "  AND v.slug IS NOT NULL"
     ).fetchall()
-    for register_id, name, variable_id, slug in rows:
-        if slug not in chain_slugs:
+    for register_id, name, variable_id, variable_slug, classification_slug in rows:
+        if classification_slug not in chain_slugs:
             continue
         key = (register_id, name)
-        family_edition_vars.setdefault(key, {}).setdefault(slug, set()).add(variable_id)
-        family_var_editions.setdefault(key, {}).setdefault(variable_id, set()).add(slug)
+        family_edition_vars.setdefault(key, {}).setdefault(
+            classification_slug, set()
+        ).add(variable_id)
+        family_var_editions.setdefault(key, {}).setdefault(variable_id, set()).add(
+            classification_slug
+        )
+        variable_slug_of[variable_id] = variable_slug
 
     # Resolve a variable_id to its FQID slug tuple (provider, register, variable)
     # for the edge endpoints. The lift only links live, slugged variables.
@@ -1814,28 +1861,70 @@ def derive_variable_vintage_succession(
     for key in sorted(family_edition_vars):
         edition_vars = family_edition_vars[key]
         var_editions = family_var_editions[key]
-        # Bijection guard: every chained edition the family touches must bind
-        # exactly ONE variable (else entangled cross-product), and every variable
-        # must bind exactly ONE chained edition (else interval-native / spans
-        # editions in one variable_id). A family failing either is skipped whole.
-        if any(len(vids) != 1 for vids in edition_vars.values()):
-            continue  # entangled: an edition bound by >1 variable
-        if any(len(slugs) != 1 for slugs in var_editions.values()):
-            continue  # interval-native / multi-edition variable
-        # Clean bijection. Walk each classification edge whose BOTH endpoints are
-        # bound in this family and mint the adjacent variable edge.
+        # Walk each classification edge whose BOTH endpoints are bound in this
+        # family. Variables already bound to multiple chained editions are
+        # interval-native and never participate. The clean tier remains the fast
+        # path: exactly one remaining same-stream variable on each side mints the
+        # same edge as #584. When either side has several variables, partition by
+        # a slug-stem key with only the adjacent edge's digit-bearing vintage
+        # tokens stripped. Ambiguous streams (more than one variable on either
+        # side) are skipped rather than guessed.
         for pred_slug, succ_slug, year in edition_edges:
             if pred_slug not in edition_vars or succ_slug not in edition_vars:
                 continue
-            pred_vid = next(iter(edition_vars[pred_slug]))
-            succ_vid = next(iter(edition_vars[succ_slug]))
-            pred_fqid = fqid_of.get(pred_vid)
-            succ_fqid = fqid_of.get(succ_vid)
-            if pred_fqid is None or succ_fqid is None:
+            pred_vids = {
+                vid for vid in edition_vars[pred_slug] if len(var_editions[vid]) == 1
+            }
+            succ_vids = {
+                vid for vid in edition_vars[succ_slug] if len(var_editions[vid]) == 1
+            }
+            if not pred_vids or not succ_vids:
                 continue
-            if pred_fqid == succ_fqid:
-                continue  # same variable both ends — no self-edge
-            pending.append((*pred_fqid, *succ_fqid, year))
+            if len(pred_vids) == 1 and len(succ_vids) == 1:
+                pred_vid = next(iter(pred_vids))
+                succ_vid = next(iter(succ_vids))
+                if _variable_vintage_stream_key(
+                    variable_slug_of[pred_vid], pred_slug, succ_slug
+                ) == _variable_vintage_stream_key(
+                    variable_slug_of[succ_vid], pred_slug, succ_slug
+                ):
+                    candidate_pairs = [(pred_vid, succ_vid)]
+                else:
+                    candidate_pairs = []
+            else:
+                pred_by_stream: dict[tuple[str, ...], set[int]] = {}
+                succ_by_stream: dict[tuple[str, ...], set[int]] = {}
+                for pred_vid in pred_vids:
+                    pred_by_stream.setdefault(
+                        _variable_vintage_stream_key(
+                            variable_slug_of[pred_vid], pred_slug, succ_slug
+                        ),
+                        set(),
+                    ).add(pred_vid)
+                for succ_vid in succ_vids:
+                    succ_by_stream.setdefault(
+                        _variable_vintage_stream_key(
+                            variable_slug_of[succ_vid], pred_slug, succ_slug
+                        ),
+                        set(),
+                    ).add(succ_vid)
+                candidate_pairs = []
+                for stream in sorted(pred_by_stream.keys() & succ_by_stream.keys()):
+                    pred_stream = pred_by_stream[stream]
+                    succ_stream = succ_by_stream[stream]
+                    if len(pred_stream) == 1 and len(succ_stream) == 1:
+                        candidate_pairs.append(
+                            (next(iter(pred_stream)), next(iter(succ_stream)))
+                        )
+
+            for pred_vid, succ_vid in candidate_pairs:
+                pred_fqid = fqid_of.get(pred_vid)
+                succ_fqid = fqid_of.get(succ_vid)
+                if pred_fqid is None or succ_fqid is None:
+                    continue
+                if pred_fqid == succ_fqid:
+                    continue  # same variable both ends — no self-edge
+                pending.append((*pred_fqid, *succ_fqid, year))
 
     # INSERT OR IGNORE: a curated (#375/#440) or auto (timeseries_event) edge on
     # the same PK already present WINS — the derived row is silently dropped, never

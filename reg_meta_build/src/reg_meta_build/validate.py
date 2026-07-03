@@ -64,7 +64,10 @@ from reg_meta_build.db import (
     PROVIDER_ID_SOS,
 )
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
-from reg_meta_build.relations import _REPLACED_BY_NOTE_VINTAGE_LIFT
+from reg_meta_build.relations import (
+    _REPLACED_BY_NOTE_VINTAGE_LIFT,
+    _variable_vintage_stream_key,
+)
 
 # Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
 # mints into the high band). The global build's minted-id band check enforces
@@ -1592,16 +1595,14 @@ _CG_MIN_EDGE_GROUPS = 1800
 # lkf chain and would false-fail.
 _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES = 40
 
-# Variable vintage-lift floor (#584, corpus only): the clean tier lifts same-name
-# families (one variable per edition) from `classification_replaced_by` editions to
-# the variable grain, ~32 derived edges on the current corpus (the issue estimated
-# ~53; the conservative bijection — gaps and edition-spanning variables excluded —
-# lands lower). A floor well under the measured count catches a regression that
-# silently stops lifting (classification-binding backfill drift, bijection-guard
-# inversion) without false-failing on legitimate corpus churn (the entangled tier
-# moving in/out). Synthetic builds carry no vintage classifications, so the floor is
-# corpus-gated; it is additionally gated on SCB being in the build (#595) — a non-SCB
-# `--providers` subset carries no SCB-derived lifts and would false-fail.
+# Variable vintage-lift floor (#584/#592, corpus only): the stream-guarded lift maps
+# same-name families from `classification_replaced_by` editions to the variable grain
+# only when predecessor/successor variables share a slug-stem stream. A floor well under
+# the measured count catches a regression that silently stops lifting
+# (classification-binding backfill drift, stream-guard inversion) without false-failing
+# on legitimate corpus churn. Synthetic builds carry no vintage classifications, so the
+# floor is corpus-gated; it is additionally gated on SCB being in the build (#595) — a
+# non-SCB `--providers` subset carries no SCB-derived lifts and would false-fail.
 _MIN_VARIABLE_VINTAGE_LIFT_EDGES = 25
 
 
@@ -2023,18 +2024,19 @@ def _check_variable_replaced_by_vintage_lift(
     *,
     corpus: bool,
 ) -> None:
-    """#584 derived variable vintage-succession invariants — the clean-tier lift
-    of `classification_replaced_by` editions to the variable grain (rows in
-    `variable_replaced_by` with `note = 'derived:classification_vintage_lift'`).
+    """#584/#592 derived variable vintage-succession invariants — the
+    stream-guarded lift of `classification_replaced_by` editions to the variable
+    grain (rows in `variable_replaced_by` with
+    `note = 'derived:classification_vintage_lift'`).
 
     Structural (always): every derived edge is directional and non-self
     (predecessor != successor) and both endpoints resolve to live, slugged
     variables (a derived edge MUST point at real variables — unlike a curated
     succession whose predecessor may be dead).
 
-    Corpus (real build only): the clean tier carries >=
+    Corpus (real build only): the stream-guarded lift carries >=
     `_MIN_VARIABLE_VINTAGE_LIFT_EDGES` derived edges, so a pass that silently
-    stops lifting (classification-binding backfill drift, bijection-guard
+    stops lifting (classification-binding backfill drift, stream-guard
     regression) fails the gate. Synthetic builds carry no vintage classifications,
     so this floor is corpus-gated."""
     result.section("[variable vintage lift]")
@@ -2084,6 +2086,14 @@ def _check_variable_replaced_by_vintage_lift(
     else:
         result.ok("vintage-lift edges resolve to live variable slugs")
 
+    stream_mismatches = _count_vintage_lift_stream_mismatches(conn, note)
+    if stream_mismatches:
+        result.fail(
+            f"{stream_mismatches} vintage-lift edge(s) cross slug-stream boundaries"
+        )
+    else:
+        result.ok("vintage-lift edges stay within slug-stream boundaries")
+
     n_edges = conn.execute(
         "SELECT COUNT(*) FROM variable_replaced_by WHERE note = ?", (note,)
     ).fetchone()[0]
@@ -2109,6 +2119,77 @@ def _check_variable_replaced_by_vintage_lift(
             f"(< {_MIN_VARIABLE_VINTAGE_LIFT_EDGES}) — vintage-lift derivation "
             "regression?"
         )
+
+
+def _count_vintage_lift_stream_mismatches(conn: sqlite3.Connection, note: str) -> int:
+    """Count derived variable edges that cannot be justified by a same-stream
+    adjacent classification edge (#592).
+
+    This is the real-corpus guard against false entangled-family links: the build
+    may mint extra derived edges now, but every one must connect predecessor and
+    successor variables whose slug stems agree after stripping only the adjacent
+    classification edge's digit-bearing vintage tokens."""
+    edges = conn.execute(
+        """
+        SELECT e.predecessor_provider, e.predecessor_register,
+               e.predecessor_variable, e.successor_provider,
+               e.successor_register, e.successor_variable,
+               pv.variable_id AS predecessor_id, pv.slug AS predecessor_slug,
+               sv.variable_id AS successor_id, sv.slug AS successor_slug
+        FROM variable_replaced_by e
+        JOIN provider pp ON pp.slug = e.predecessor_provider
+        JOIN register pr
+          ON pr.provider_id = pp.provider_id
+         AND pr.slug = e.predecessor_register
+        JOIN variable pv
+          ON pv.register_id = pr.register_id
+         AND pv.slug = e.predecessor_variable
+        JOIN provider sp ON sp.slug = e.successor_provider
+        JOIN register sr
+          ON sr.provider_id = sp.provider_id
+         AND sr.slug = e.successor_register
+        JOIN variable sv
+          ON sv.register_id = sr.register_id
+         AND sv.slug = e.successor_variable
+        WHERE e.note = ?
+        """,
+        (note,),
+    ).fetchall()
+    mismatches = 0
+    for edge in edges:
+        pairs = conn.execute(
+            """
+            SELECT DISTINCT pc.slug AS predecessor_class_slug,
+                            sc.slug AS successor_class_slug
+            FROM variable_state pvs
+            JOIN classification pc ON pc.id = pvs.classification_id
+            JOIN variable_state svs ON svs.variable_id = ?
+            JOIN classification sc ON sc.id = svs.classification_id
+            JOIN classification_replaced_by cr
+              ON cr.predecessor_slug = pc.slug
+             AND cr.successor_slug = sc.slug
+            WHERE pvs.variable_id = ?
+              AND pc.slug IS NOT NULL
+              AND sc.slug IS NOT NULL
+            """,
+            (edge["successor_id"], edge["predecessor_id"]),
+        ).fetchall()
+        if any(
+            _variable_vintage_stream_key(
+                edge["predecessor_slug"],
+                pair["predecessor_class_slug"],
+                pair["successor_class_slug"],
+            )
+            == _variable_vintage_stream_key(
+                edge["successor_slug"],
+                pair["predecessor_class_slug"],
+                pair["successor_class_slug"],
+            )
+            for pair in pairs
+        ):
+            continue
+        mismatches += 1
+    return mismatches
 
 
 def _check_representation_replaced_by(

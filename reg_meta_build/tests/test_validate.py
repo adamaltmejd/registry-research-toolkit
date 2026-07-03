@@ -501,6 +501,95 @@ class TestValidateModule:
         assert not result.passed
         assert any("unknown variable slug" in f for f in result.failures)
 
+    def test_variable_vintage_lift_cross_stream_edge_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#592: a derived edge must stay within the slug-stem stream implied by
+        its adjacent classification edge."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_variable_replaced_by_vintage_lift,
+        )
+
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = connect_built_db(broken)
+        conn.row_factory = sqlite3.Row
+        register_id = conn.execute(
+            "SELECT register_id FROM register WHERE slug = 'testreg'"
+        ).fetchone()[0]
+        variant_id = conn.execute(
+            "SELECT register_variant_id FROM register_variant "
+            "WHERE register_id = ? LIMIT 1",
+            (register_id,),
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SNI2002', 'SNI 2002', 'sni2002')"
+        )
+        pred_class_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sni2002'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SNI2007', 'SNI 2007', 'sni2007')"
+        )
+        succ_class_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sni2007'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('sni2002', 'sni2007', 2007, 'derived:vintage_chain')"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key, slug, name) "
+            "VALUES (?, 'stream-pred', 'individ-sni-2002', 'Näringsgren')",
+            (register_id,),
+        )
+        pred_variable_id = conn.execute(
+            "SELECT variable_id FROM variable WHERE slug = 'individ-sni-2002'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key, slug, name) "
+            "VALUES (?, 'stream-succ', 'foretag-sni-2007', 'Näringsgren')",
+            (register_id,),
+        )
+        succ_variable_id = conn.execute(
+            "SELECT variable_id FROM variable WHERE slug = 'foretag-sni-2007'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            "value_set_version_label, classification_id) "
+            "VALUES (?, ?, '2002-01-01', '2006-12-31', '', ?)",
+            (pred_variable_id, variant_id, pred_class_id),
+        )
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            "value_set_version_label, classification_id) "
+            "VALUES (?, ?, '2007-01-01', '9999-12-31', '', ?)",
+            (succ_variable_id, variant_id, succ_class_id),
+        )
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, "
+            "effective_year, note) "
+            "VALUES ('scb', 'testreg', 'individ-sni-2002', 'scb', 'testreg', "
+            "'foretag-sni-2007', 2007, 'derived:classification_vintage_lift')"
+        )
+        conn.commit()
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=False)
+        conn.close()
+        assert any("cross slug-stream boundaries" in f for f in result.failures)
+
     def test_missing_value_code_fts_surfaces_failure(
         self, fixture_db: Path, tmp_path: Path
     ):

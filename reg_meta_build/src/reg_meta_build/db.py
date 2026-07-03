@@ -4816,9 +4816,9 @@ def materialize(
         apply_classification_conformance_gate(conn)
     )
 
-    # Variable vintage succession (#584) — lift `classification_replaced_by`
-    # edition edges (#571) to the variable grain through value-set bindings,
-    # clean tier only (a same-name family that maps 1:1 to editions). Its join
+    # Variable vintage succession (#584/#592) — lift `classification_replaced_by`
+    # edition edges (#571) to the variable grain through value-set bindings when
+    # same-name predecessor/successor variables share a slug-stem stream. Its join
     # filters `variable_state.classification_id IS NOT NULL`, so it MUST run
     # after `_backfill_state_classifications` (just above), which tags that
     # column — running it earlier (e.g. beside `_materialize_replaced_by_edges`)
