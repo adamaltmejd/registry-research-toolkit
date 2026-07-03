@@ -1,6 +1,12 @@
 ---
 name: pr-pipeline
-description: "Drive a feature, fix, or request from intake to merge-gate handoff: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, mark ready, and record current-head gate evidence for chief-of-staff automerge. The invoking session is the lead and owns git until handoff. Usage: /pr-pipeline <issue number(s), a feature/problem description, or `next` to carve a fresh lane from the sequencing projection>"
+description: >-
+  Drive a feature, fix, or request from intake to merge-gate handoff: plan the work into
+  one or more PRs, then for each dispatch implementer → tester → /code-review loop →
+  docs-updater, mark ready, and record current-head gate evidence for chief-of-staff
+  automerge. The invoking session is the lead and owns git until handoff. Usage:
+  /pr-pipeline <issue number(s), a feature/problem description, or `next` to carve a
+  fresh lane from the sequencing projection>
 argument-hint: "<issue number(s), a description, or `next` for a fresh lane>"
 disable-model-invocation: true
 ---

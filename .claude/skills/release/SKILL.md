@@ -1,6 +1,9 @@
 ---
 name: release
-description: "Create and publish a release. Usage: /release [package] <patch|minor|major>; chief-of-staff may invoke /release minor or /release patch after an authorized build/release boundary"
+description: >-
+  Create and publish a release. Usage: /release [package] <patch|minor|major>;
+  chief-of-staff may invoke /release minor or /release patch after an authorized
+  build/release boundary
 disable-model-invocation: false
 argument-hint: "[package] <patch|minor|major>"
 ---
@@ -136,7 +139,7 @@ bash scripts/check_versions.sh
 uv run python -m pytest <package>/ -x -q
 uv run ruff check
 uv run ruff format --check
-uvx --from ty==0.0.51 ty check
+uvx --from ty==0.0.54 ty check
 ```
 
 This pytest is a fast per-package pre-flight; the **full** suite runs at push time (step

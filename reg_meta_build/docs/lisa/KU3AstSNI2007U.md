@@ -1,6 +1,8 @@
 ---
 variable: KU3AstSNI2007U
-display_name: "Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, tredje största förvärvskälla), utökad nivå"
+display_name: >-
+  Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, tredje största förvärvskälla),
+  utökad nivå
 tags:
   - topic/identifier
   - type/variable

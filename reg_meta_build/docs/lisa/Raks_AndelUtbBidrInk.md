@@ -1,6 +1,8 @@
 ---
 variable: Raks_AndelUtbBidrInk
-display_name: "Andel av den totala inkomsten som utgörs avinkomst från arbetsmarknadspolitiska åtgärder"
+display_name: >-
+  Andel av den totala inkomsten som utgörs avinkomst från arbetsmarknadspolitiska
+  åtgärder
 tags:
   - topic/identifier
   - type/variable

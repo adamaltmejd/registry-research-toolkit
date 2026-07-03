@@ -1,6 +1,8 @@
 ---
 variable: ArbstIdJ
-display_name: "Kopplingsvariabel till arbetsställetabell (endastförvärvsarbetande vid faktiska arbetsställen),enligt justerad metod"
+display_name: >-
+  Kopplingsvariabel till arbetsställetabell (endastförvärvsarbetande vid faktiska
+  arbetsställen),enligt justerad metod
 tags:
   - topic/identifier
   - type/variable

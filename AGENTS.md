@@ -146,7 +146,7 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   (dev-only) is used for property-based tests on invariant-heavy surfaces
   (`test_*_properties.py` in `reg_meta` and `reg_meta_build`), additive to the
   example/snapshot suites.
-- **Type checking**: `uvx --from ty==0.0.51 ty check` (Astral, beta). Blocking in CI;
+- **Type checking**: `uvx --from ty==0.0.54 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
   keep `pyproject.toml` clean.
@@ -164,9 +164,9 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
-- `uvx --from panache-cli==2.57.0 panache format --check .` — markdown format check
+- `uvx --from panache-cli==2.59.0 panache format --check .` — markdown format check
   (config in `.panache.toml`; drop `--check` to fix)
-- `uvx --from panache-cli==2.57.0 panache lint --check .` — markdown lint
+- `uvx --from panache-cli==2.59.0 panache lint --check .` — markdown lint
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package

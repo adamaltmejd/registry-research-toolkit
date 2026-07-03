@@ -1,6 +1,8 @@
 ---
 variable: SsykStatus_J16
-display_name: "Yrkets överensstämmelse med det jobb som valts som huvudsaklig verksamhet under november, inkl. härledda yrken för företagare"
+display_name: >-
+  Yrkets överensstämmelse med det jobb som valts som huvudsaklig verksamhet under
+  november, inkl. härledda yrken för företagare
 tags:
   - topic/employment
   - type/variable

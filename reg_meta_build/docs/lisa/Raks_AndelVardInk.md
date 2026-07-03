@@ -1,6 +1,8 @@
 ---
 variable: Raks_AndelVardInk
-display_name: "Andel av den totala inkomsten som utgörs avinkomst från föräldraledighet eller vård avnärstående"
+display_name: >-
+  Andel av den totala inkomsten som utgörs avinkomst från föräldraledighet eller vård
+  avnärstående
 tags:
   - topic/identifier
   - type/variable

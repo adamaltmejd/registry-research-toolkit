@@ -1,6 +1,8 @@
 ---
 variable: ForTid
-display_name: "Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning"
+display_name: >-
+  Summa inkomst föranledd av
+  förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning
 tags:
   - topic/social-insurance
   - type/variable

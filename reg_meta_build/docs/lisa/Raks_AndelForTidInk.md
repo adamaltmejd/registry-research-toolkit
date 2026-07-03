@@ -1,6 +1,8 @@
 ---
 variable: Raks_AndelForTidInk
-display_name: "Andel av den totala inkomsten som utgörs avinkomst från sjuk- eller aktivitetsersättning"
+display_name: >-
+  Andel av den totala inkomsten som utgörs avinkomst från sjuk- eller
+  aktivitetsersättning
 tags:
   - topic/identifier
   - type/variable

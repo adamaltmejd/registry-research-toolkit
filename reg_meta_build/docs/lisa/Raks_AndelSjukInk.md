@@ -1,6 +1,8 @@
 ---
 variable: Raks_AndelSjukInk
-display_name: "Andel av den totala inkomsten som utgörs avinkomst från sjukdom/arbetsskada/rehabilitering"
+display_name: >-
+  Andel av den totala inkomsten som utgörs avinkomst från
+  sjukdom/arbetsskada/rehabilitering
 tags:
   - topic/identifier
   - type/variable

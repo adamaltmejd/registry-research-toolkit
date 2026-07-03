@@ -1,6 +1,8 @@
 ---
 variable: KU2AstSNI92G
-display_name: "Näringsgrenstillhörighet enligt SNI 92 (arbetsställe, näst största förvärvskälla), grov nivå"
+display_name: >-
+  Näringsgrenstillhörighet enligt SNI 92 (arbetsställe, näst största förvärvskälla),
+  grov nivå
 tags:
   - topic/identifier
   - type/variable

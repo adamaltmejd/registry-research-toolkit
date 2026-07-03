@@ -1,9 +1,9 @@
-/// <reference types="vitest/config" />
-
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { playwright } from "@vitest/browser-playwright";
-import { defineConfig } from "vite";
-import { configDefaults } from "vitest/config";
+// defineConfig from vitest/config (not vite): it natively types the `test` block.
+// Vitest 4 dropped the module augmentation that let a `/// <reference types="vitest/config" />`
+// add `test` to vite's own UserConfig, so import the vitest-aware defineConfig directly.
+import { configDefaults, defineConfig } from "vitest/config";
 
 // vite.config.ts runs under Node; read the env via globalThis so we don't pull a
 // @types/node dep for one lookup. REG_WEBAPP_BACKEND_URL repoints the dev /api proxy

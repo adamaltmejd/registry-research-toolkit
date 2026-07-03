@@ -1,6 +1,8 @@
 ---
 variable: KU3AstSNI92B
-display_name: "Näringsgrenstillhörighet enligt SNI 92 (arbetsställe, tredje största förvärvskälla), begränsad nivå"
+display_name: >-
+  Näringsgrenstillhörighet enligt SNI 92 (arbetsställe, tredje största förvärvskälla),
+  begränsad nivå
 tags:
   - topic/identifier
   - type/variable

@@ -1,6 +1,8 @@
 ---
 variable: ForvErsNettoA
-display_name: "Förvärvsinkomst och arbetsrelaterade ersättningarinkl. underskott av aktiv näringsverksamhet"
+display_name: >-
+  Förvärvsinkomst och arbetsrelaterade ersättningarinkl. underskott av aktiv
+  näringsverksamhet
 tags:
   - topic/identifier
   - type/variable
